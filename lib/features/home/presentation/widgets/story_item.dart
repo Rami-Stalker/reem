@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import '../../../stories/data/models/story_model.dart';
+import '../../../../core/shared/entities/story.dart';
 import '../../../../core/theme/app_theme.dart';
 
 class StoryItem extends StatelessWidget {
-  final StoryModel story;
+  final Story story;
 
   const StoryItem({
     super.key,
@@ -30,7 +30,7 @@ class StoryItem extends StatelessWidget {
             child: CircleAvatar(
               radius: 34,
               backgroundColor: Colors.white,
-              child: story.isAdd
+              child: story.isViewed
                   ? const Icon(
                       Icons.add,
                       size: 34,
@@ -39,12 +39,12 @@ class StoryItem extends StatelessWidget {
                   : CircleAvatar(
                       radius: 31,
                       backgroundImage:
-                          NetworkImage(story.image),
+                          NetworkImage(story.media.url),
                     ),
             ),
           ),
           const SizedBox(height: 8),
-          Text(story.name),
+          Text(story.user.name),
         ],
       ),
     );

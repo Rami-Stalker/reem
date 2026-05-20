@@ -1,143 +1,130 @@
-import '../../../stories/data/models/story_model.dart';
-import '../models/post_model.dart';
-import '../models/product_model.dart';
+import '../../../../core/shared/entities/post.dart';
+import '../../../../core/shared/entities/story.dart';
+import '../../../../core/shared/models/post_model.dart';
+import '../../../../core/shared/models/story_model.dart';
+import '../../../../core/shared/models/user_model.dart';
+import '../../../../core/shared/entities/product_media.dart';
+import '../../../../core/shared/models/product_media_model.dart';
+import '../../../../core/shared/models/product_model.dart';
 
-List<StoryModel> stories = [
+List<Story> stories = [
   StoryModel(
-    name: "أنت",
-    image:
-        "https://images.unsplash.com/photo-1494790108377-be9c29b29330",
-    isAdd: true,
+    id: '1',
+    isViewed: true,
+    media: ProductMediaModel(
+      url: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330',
+      type: MediaType.image,
+    ),
+    user: UserModel(
+      id: '1',
+      name: 'sara',
+      username: 'SaraAlenna',
+      email: 'saras@example.com',
+      createdAt: DateTime.now(),
+    ),
+    createdAt: DateTime.now(),
+    expiresAt: DateTime.now().add(Duration(hours: 24)),
   ),
   StoryModel(
-    name: "جديد",
-    image:
-        "https://images.unsplash.com/photo-1524504388940-b1c1722653e1",
-  ),
-  StoryModel(
-    name: "الاكثر تفاعلا",
-    image:
-        "https://images.unsplash.com/photo-1524504388940-b1c1722653e1",
-  ),
-  StoryModel(
-    name: "تخفيضات",
-    image:
-        "https://images.unsplash.com/photo-1524504388940-b1c1722653e1",
-  ),
-  StoryModel(
-    name: "تنسيقات جديدة",
-    image:
-        "https://images.unsplash.com/photo-1524504388940-b1c1722653e1",
+    id: '1',
+    isViewed: true,
+    media: ProductMediaModel(
+      url: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330',
+      type: MediaType.image,
+    ),
+    user: UserModel(
+      id: '1',
+      name: 'sara',
+      username: 'SaraAlenna',
+      email: 'adleb@example.com',
+      createdAt: DateTime.now(),
+    ),
+    createdAt: DateTime.now(),
+    expiresAt: DateTime.now().add(Duration(hours: 24)),
   ),
 ];
 
-List<PostModel> posts = [
+List<Post> posts = [
   PostModel(
-    user: "Sara Alenna",
-    userImage:
-        "https://images.unsplash.com/photo-1494790108377-be9c29b29330",
-    postImage:
-        "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f",
-    caption: "إطلالة ناعمة للدّوام 💗",
-    likes: 128,
-    comments: 32,
-    products: [
-      ProductModel(
-        name: "فستان",
-        image:
-            "https://images.unsplash.com/photo-1496747611176-843222e1e57c",
-        price: 290,
+    id: "1",
+    author: UserModel(
+      id: "u1",
+      name: "Sara Alenna",
+      username: 'SaraAlenna',
+      email: 'saras@example.com',
+      imageUrl: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330',
+      createdAt: DateTime.now(),
+    ),
+    likesCount: 128,
+    commentsCount: 32,
+    createdAt: DateTime.now(),
+    caption: 'رهيييب',
+    isLiked: false,
+    product: ProductModel(
+      id: '3',
+      seller: UserModel(
+        id: '1',
+        name: 'sara',
+        username: 'saraname',
+        email: 'sara@gmial.com',
+        createdAt: DateTime.now(),
       ),
-    ],
+      title: 'dd',
+      description: 'ff',
+      price: 123,
+      media: [
+        ProductMediaModel(
+        url: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330',
+        type: MediaType.image,
+      ),
+      ],
+      isAvailable: false,
+      isFeatured: true,
+      viewsCount: 33,
+      likesCount: 12,
+      createdAt: DateTime.now(),
+    ),
+    sharesCount: 76,
   ),
   PostModel(
-    user: "Sara Alenna",
-    userImage:
-        "https://images.unsplash.com/photo-1494790108377-be9c29b29330",
-    postImage:
-        "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f",
-    caption: "إطلالة ناعمة للدّوام 💗",
-    likes: 128,
-    comments: 32,
-    products: [
-      ProductModel(
-        name: "فستان",
-        image:
-            "https://images.unsplash.com/photo-1496747611176-843222e1e57c",
-        price: 290,
+    id: "1",
+    author: UserModel(
+      id: "u1",
+      name: "Sara Alenna",
+      username: 'SaraAlenna',
+      email: 'saras@example.com',
+      imageUrl: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330',
+      createdAt: DateTime.now(),
+    ),
+    likesCount: 128,
+    commentsCount: 32,
+    createdAt: DateTime.now(),
+    caption: 'رهيييب',
+    isLiked: false,
+    product: ProductModel(
+      id: '3',
+      seller: UserModel(
+        id: '1',
+        name: 'sara',
+        username: 'saraname',
+        email: 'sara@gmial.com',
+        createdAt: DateTime.now(),
       ),
-    ],
-  ),
-  PostModel(
-    user: "Sara Alenna",
-    userImage:
-        "https://images.unsplash.com/photo-1494790108377-be9c29b29330",
-    postImage:
-        "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f",
-    caption: "إطلالة ناعمة للدّوام 💗",
-    likes: 128,
-    comments: 32,
-    products: [
-      ProductModel(
-        name: "فستان",
-        image:
-            "https://images.unsplash.com/photo-1496747611176-843222e1e57c",
-        price: 290,
+      title: 'dd',
+      description: 'ff',
+      price: 123,
+      media: [
+        ProductMediaModel(
+        url: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330',
+        type: MediaType.image,
       ),
-    ],
-  ),
-  PostModel(
-    user: "Sara Alenna",
-    userImage:
-        "https://images.unsplash.com/photo-1494790108377-be9c29b29330",
-    postImage:
-        "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f",
-    caption: "إطلالة ناعمة للدّوام 💗",
-    likes: 128,
-    comments: 32,
-    products: [
-      ProductModel(
-        name: "فستان",
-        image:
-            "https://images.unsplash.com/photo-1496747611176-843222e1e57c",
-        price: 290,
-      ),
-    ],
-  ),
-  PostModel(
-    user: "Sara Alenna",
-    userImage:
-        "https://images.unsplash.com/photo-1494790108377-be9c29b29330",
-    postImage:
-        "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f",
-    caption: "إطلالة ناعمة للدّوام 💗",
-    likes: 128,
-    comments: 32,
-    products: [
-      ProductModel(
-        name: "فستان",
-        image:
-            "https://images.unsplash.com/photo-1496747611176-843222e1e57c",
-        price: 290,
-      ),
-    ],
-  ),
-  PostModel(
-    user: "Sara Alenna",
-    userImage:
-        "https://images.unsplash.com/photo-1494790108377-be9c29b29330",
-    postImage:
-        "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f",
-    caption: "إطلالة ناعمة للدّوام 💗",
-    likes: 128,
-    comments: 32,
-    products: [
-      ProductModel(
-        name: "فستان",
-        image:
-            "https://images.unsplash.com/photo-1496747611176-843222e1e57c",
-        price: 290,
-      ),
-    ],
+      ],
+      isAvailable: false,
+      isFeatured: true,
+      viewsCount: 33,
+      likesCount: 12,
+      createdAt: DateTime.now(),
+    ),
+    sharesCount: 76,
   ),
 ];

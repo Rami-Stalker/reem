@@ -1,7 +1,7 @@
 // product_card.dart
 
 import 'package:flutter/material.dart';
-import 'package:reem/features/home/data/models/product_model.dart';
+import '../../../../core/shared/models/product_model.dart';
 
 import '../../../../core/theme/app_theme.dart';
 
@@ -34,7 +34,7 @@ class ProductCard extends StatelessWidget {
 
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(.05),
+              color: Colors.black.withValues(alpha: 0.05),
               blurRadius: 18,
               offset: const Offset(0, 8),
             ),
@@ -53,7 +53,7 @@ class ProductCard extends StatelessWidget {
 
                   /// IMAGE
                   Hero(
-                    tag: product.image,
+                    tag: product.media[0].url,
                     child: ClipRRect(
                       borderRadius:
                           const BorderRadius
@@ -64,7 +64,7 @@ class ProductCard extends StatelessWidget {
                       ),
 
                       child: Image.network(
-                        product.image,
+                        product.media[0].url,
                         width:
                             double.infinity,
                         fit: BoxFit.cover,
@@ -84,7 +84,7 @@ class ProductCard extends StatelessWidget {
                       decoration:
                           BoxDecoration(
                         color: Colors.white
-                            .withOpacity(.9),
+                            .withValues(alpha: .9),
 
                         shape:
                             BoxShape.circle,
@@ -159,7 +159,7 @@ class ProductCard extends StatelessWidget {
 
                   /// PRODUCT NAME
                   Text(
-                    product.name,
+                    product.title,
 
                     maxLines: 1,
 
@@ -299,8 +299,8 @@ class ProductCard extends StatelessWidget {
                             BoxShadow(
                               color: AppColors
                                   .primary
-                                  .withOpacity(
-                                      .25),
+                                  .withValues(
+                                      alpha: 0.25),
 
                               blurRadius:
                                   12,

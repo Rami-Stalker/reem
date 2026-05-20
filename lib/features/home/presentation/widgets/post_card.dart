@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:reem/features/home/data/models/post_model.dart';
-import 'package:reem/features/home/presentation/widgets/product_card.dart';
+import '../../../../core/shared/entities/post.dart';
+
 
 import '../../../../core/theme/app_theme.dart';
 
 class PostCard extends StatelessWidget {
-  final PostModel post;
+  final Post post;
 
   const PostCard({super.key, required this.post});
 
@@ -41,11 +41,11 @@ class PostCard extends StatelessWidget {
                       // product details
                     },
                     child: Hero(
-                      tag: post.postImage,
+                      tag: post.product.media[0].url,
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(28),
                         child: Image.network(
-                          post.postImage,
+                          post.product.media[0].url,
                           height: 360,
                           width: double.infinity,
                           fit: BoxFit.cover,
@@ -76,7 +76,7 @@ class PostCard extends StatelessWidget {
                               ),
                               child: CircleAvatar(
                                 radius: 24,
-                                backgroundImage: NetworkImage(post.userImage),
+                                backgroundImage: NetworkImage(post.author.imageUrl.toString()),
                               ),
                             ),
                           ),
@@ -93,7 +93,7 @@ class PostCard extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    post.user,
+                                    post.author.name,
                                     style: const TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 16,
@@ -137,7 +137,7 @@ class PostCard extends StatelessWidget {
                   onPressedIcon: () {},
                   onPressedText: () {},
                   icon: Icons.favorite_rounded,
-                  text: post.likes.toString(),
+                  text: post.likesCount.toString(),
                   color: Colors.pink,
                 ),
 
@@ -148,7 +148,7 @@ class PostCard extends StatelessWidget {
                   onPressedIcon: () {},
                   onPressedText: () {},
                   icon: Icons.mode_comment_outlined,
-                  text: post.comments.toString(),
+                  text: post.commentsCount.toString(),
                 ),
 
                 const SizedBox(width: 20),
@@ -179,7 +179,7 @@ class PostCard extends StatelessWidget {
                     ),
                     boxShadow: [
                       BoxShadow(
-                        color: AppColors.primary.withOpacity(.25),
+                        color: AppColors.primary.withValues(alpha: .25),
                         blurRadius: 12,
                         offset: const Offset(0, 5),
                       ),
