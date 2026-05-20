@@ -48,11 +48,11 @@ dependencies:
   hive: ^2.2.3
 
   # Firebase suite
-  firebase_core: ^4.9.0
-  firebase_auth: ^6.5.1
-  cloud_firestore: ^6.4.1
-  firebase_storage: ^13.4.1
-  firebase_messaging: ^16.2.2
+  # firebase_core: ^4.9.0
+  # firebase_auth: ^6.5.1
+  # cloud_firestore: ^6.4.1
+  # firebase_storage: ^13.4.1
+  # firebase_messaging: ^16.2.2
 
   # Image/media
   image_picker: ^1.2.2
@@ -79,6 +79,8 @@ dependencies:
   connectivity_plus: ^7.1.1
   flutter_local_notifications: ^21.0.0
   flutter_localizations:
+  snippet_coder_utils: ^1.0.15
+  equatable: ^2.0.8
     sdk: flutter
 
 dev_dependencies:
