@@ -1,0 +1,21 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: reem-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: reem
+      POSTGRES_PASSWORD: reem_secret
+      POSTGRES_DB: reem_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - reem_pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U reem -d reem_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  reem_pg_data:

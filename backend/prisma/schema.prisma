@@ -1,0 +1,297 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  USER
+  ADMIN
+}
+
+enum OrderStatus {
+  PENDING
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+}
+
+enum MediaType {
+  image
+  video
+}
+
+enum NotificationType {
+  like
+  comment
+  follow
+  message
+  order
+  promo
+}
+
+model User {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  name         String
+  username     String   @unique
+  email        String   @unique
+  passwordHash String   @map("password_hash")
+  bio          String?
+  imageUrl     String?  @map("image_url")
+  isVerified   Boolean  @default(false) @map("is_verified")
+  role         UserRole @default(USER)
+  points       Int      @default(0)
+  lifetimePoints Int    @default(0) @map("lifetime_points")
+  tier         String   @default("Bronze")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  refreshTokens   RefreshToken[]
+  products        Product[]        @relation("SellerProducts")
+  posts           Post[]
+  postLikes       PostLike[]
+  stories         Story[]
+  orders          Order[]
+  favorites       Favorite[]
+  addresses       Address[]
+  sentMessages    Message[]          @relation("SentMessages")
+  chatParticipants ChatParticipant[]
+  notifications   Notification[]
+  paymentMethods  PaymentMethod[]
+
+  @@map("users")
+}
+
+model RefreshToken {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  token     String   @unique
+  userId    String   @map("user_id")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime @map("expires_at")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([userId])
+  @@map("refresh_tokens")
+}
+
+model Product {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  sellerId     String   @map("seller_id")
+  seller       User     @relation("SellerProducts", fields: [sellerId], references: [id], onDelete: Cascade)
+  title        String
+  description  String
+  price        Float
+  oldPrice     Float?   @map("old_price")
+  isAvailable  Boolean  @default(true) @map("is_available")
+  isFeatured   Boolean  @default(false) @map("is_featured")
+  viewsCount   Int      @default(0) @map("views_count")
+  likesCount   Int      @default(0) @map("likes_count")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  media     ProductMedia[]
+  posts     Post[]
+  favorites Favorite[]
+  orderItems OrderItem[]
+
+  @@index([sellerId])
+  @@index([isFeatured])
+  @@map("products")
+}
+
+model ProductMedia {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  productId String    @map("product_id")
+  product   Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
+  url       String
+  type      MediaType @default(image)
+  sortOrder Int       @default(0) @map("sort_order")
+
+  @@map("product_media")
+}
+
+model Post {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  authorId      String   @map("author_id")
+  author        User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  productId     String   @map("product_id")
+  product       Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  caption       String
+  likesCount    Int      @default(0) @map("likes_count")
+  commentsCount Int      @default(0) @map("comments_count")
+  sharesCount   Int      @default(0) @map("shares_count")
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  likes PostLike[]
+
+  @@index([authorId])
+  @@index([createdAt])
+  @@map("posts")
+}
+
+model PostLike {
+  id     String @id @default(auto()) @map("_id") @db.ObjectId
+  postId String @map("post_id")
+  post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+  userId String @map("user_id")
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([postId, userId])
+  @@map("post_likes")
+}
+
+model Story {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String   @map("user_id")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  mediaUrl  String   @map("media_url")
+  mediaType MediaType @default(image) @map("media_type")
+  link      String?
+  expiresAt DateTime @map("expires_at")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  views StoryView[]
+
+  @@index([expiresAt])
+  @@map("stories")
+}
+
+model StoryView {
+  id      String @id @default(auto()) @map("_id") @db.ObjectId
+  storyId String @map("story_id")
+  story   Story  @relation(fields: [storyId], references: [id], onDelete: Cascade)
+  userId  String @map("user_id")
+
+  @@unique([storyId, userId])
+  @@map("story_views")
+}
+
+model Order {
+  id         String      @id @default(auto()) @map("_id") @db.ObjectId
+  userId     String      @map("user_id")
+  user       User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  status     OrderStatus @default(PENDING)
+  total      Float
+  createdAt  DateTime    @default(now()) @map("created_at")
+  updatedAt  DateTime    @updatedAt @map("updated_at")
+
+  items OrderItem[]
+
+  @@index([userId])
+  @@map("orders")
+}
+
+model OrderItem {
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  orderId   String  @map("order_id")
+  order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId String  @map("product_id")
+  product   Product @relation(fields: [productId], references: [id])
+  quantity  Int     @default(1)
+  price     Float
+
+  @@map("order_items")
+}
+
+model Favorite {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String   @map("user_id")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  productId String   @map("product_id")
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@unique([userId, productId])
+  @@map("favorites")
+}
+
+model Chat {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  participants ChatParticipant[]
+  messages     Message[]
+
+  @@map("chats")
+}
+
+model ChatParticipant {
+  id       String @id @default(auto()) @map("_id") @db.ObjectId
+  chatId   String @map("chat_id")
+  chat     Chat   @relation(fields: [chatId], references: [id], onDelete: Cascade)
+  userId   String @map("user_id")
+  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([chatId, userId])
+  @@map("chat_participants")
+}
+
+model Message {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  chatId    String   @map("chat_id")
+  chat      Chat     @relation(fields: [chatId], references: [id], onDelete: Cascade)
+  senderId  String   @map("sender_id")
+  sender    User     @relation("SentMessages", fields: [senderId], references: [id], onDelete: Cascade)
+  content   String
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([chatId, createdAt])
+  @@map("messages")
+}
+
+model Address {
+  id         String  @id @default(auto()) @map("_id") @db.ObjectId
+  userId     String  @map("user_id")
+  user       User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  label      String  @default("Home")
+  street     String
+  city       String
+  country    String
+  postalCode String? @map("postal_code")
+  isDefault  Boolean @default(false) @map("is_default")
+
+  @@map("addresses")
+}
+
+model Coupon {
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  code            String   @unique
+  title           String
+  discountPercent Float    @map("discount_percent")
+  expiresAt       DateTime @map("expires_at")
+  isActive        Boolean  @default(true) @map("is_active")
+
+  @@map("coupons")
+}
+
+model Notification {
+  id        String           @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String           @map("user_id")
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title     String
+  body      String
+  type      NotificationType @default(promo)
+  isRead    Boolean          @default(false) @map("is_read")
+  createdAt DateTime         @default(now()) @map("created_at")
+
+  @@index([userId])
+  @@map("notifications")
+}
+
+model PaymentMethod {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String   @map("user_id")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  brand     String
+  last4     String
+  expMonth  Int      @map("exp_month")
+  expYear   Int      @map("exp_year")
+  isDefault Boolean  @default(false) @map("is_default")
+
+  @@map("payment_methods")
+}

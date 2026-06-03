@@ -1,77 +1,98 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
-import '../../../../core/theme/app_theme.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 
-class SettingsTile extends StatelessWidget {
-  final IconData icon;
-  final String title;
-  final bool danger;
+import '../../../../core/design_system/design_system.dart';
 
-  const SettingsTile({
+class LuxurySettingsTile extends StatefulWidget {
+  const LuxurySettingsTile({
     super.key,
     required this.icon,
     required this.title,
-    this.danger = false,
+    this.onTap,
   });
+
+  final IconData icon;
+  final String title;
+  final VoidCallback? onTap;
+
+  @override
+  State<LuxurySettingsTile> createState() => _LuxurySettingsTileState();
+}
+
+class _LuxurySettingsTileState extends State<LuxurySettingsTile> {
+  bool _pressed = false;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin:
-          const EdgeInsets.only(
-        bottom: 14,
-      ),
-
-      padding:
-          const EdgeInsets.symmetric(
-        horizontal: 18,
-        vertical: 18,
-      ),
-
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius:
-            BorderRadius.circular(20),
-
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(.04),
-            blurRadius: 10,
-          ),
-        ],
-      ),
-
-      child: Row(
-        children: [
-
-          Icon(
-            icon,
-            color: danger
-                ? Colors.red
-                : AppColors.primary,
-          ),
-
-          const SizedBox(width: 16),
-
-          Expanded(
-            child: Text(
-              title,
-              style: TextStyle(
-                fontSize: 16,
-                color: danger
-                    ? Colors.red
-                    : AppColors.textDark,
-                fontWeight:
-                    FontWeight.w600,
+    final colors = context.dsColors;
+    return GestureDetector(
+      onTapDown: (_) => setState(() => _pressed = true),
+      onTapUp: (_) {
+        setState(() => _pressed = false);
+        widget.onTap?.call();
+      },
+      onTapCancel: () => setState(() => _pressed = false),
+      child: AnimatedScale(
+        scale: _pressed ? 0.97 : 1,
+        duration: DsMotion.fast,
+        child: ClipRRect(
+          borderRadius: DsRadius.borderXxxl,
+          child: BackdropFilter(
+            filter: ImageFilter.blur(
+              sigmaX: DsBlur.medium,
+              sigmaY: DsBlur.medium,
+            ),
+            child: Container(
+              padding: const EdgeInsets.all(18),
+              decoration: BoxDecoration(
+                color: colors.glass.withValues(alpha: DsOpacity.medium),
+                borderRadius: DsRadius.borderXxxl,
+                border: Border.all(color: colors.glassBorder),
+                boxShadow: context.softShadow,
+              ),
+              child: Row(
+                children: [
+                  Container(
+                    width: 54,
+                    height: 54,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      gradient: context.primaryGradient,
+                    ),
+                    child: Icon(widget.icon, color: colors.onPrimary),
+                  ),
+                  const SizedBox(width: 18),
+                  Expanded(
+                    child: Text(
+                      widget.title,
+                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                            fontWeight: DsTypography.semiBold,
+                          ),
+                    ),
+                  ),
+                  Container(
+                    width: 42,
+                    height: 42,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: colors.glass.withValues(alpha: DsOpacity.soft),
+                    ),
+                    child: const Icon(
+                      Icons.arrow_forward_ios_rounded,
+                      size: 18,
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
-
-          const Icon(
-            Icons.arrow_forward_ios_rounded,
-            size: 16,
-          ),
-        ],
+        ),
       ),
-    );
+    )
+        .animate()
+        .fadeIn(duration: 500.ms)
+        .slideY(begin: 0.15);
   }
 }

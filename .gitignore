@@ -43,3 +43,11 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Node.js backend
+backend/node_modules/
+backend/dist/
+backend/.env
+!backend/.env.example
+backend/prisma/dev.db
+backend/prisma/dev.db-journal

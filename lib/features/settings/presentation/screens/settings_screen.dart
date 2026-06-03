@@ -1,106 +1,129 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
-import '../../../../core/theme/app_theme.dart';
+import '../../../../core/design_system/design_system.dart';
+import '../../../../core/localization/l10n_extension.dart';
+import '../../../../core/router/route_names.dart';
+import '../../../../core/router/route_paths.dart';
+import '../../../auth/presentation/providers/auth_provider.dart';
+import '../widgets/settings_category_card.dart';
+import '../widgets/settings_profile_header.dart';
 
-import '../widgets/settings_section.dart';
-import '../widgets/settings_tile.dart';
-import '../widgets/settings_switch_tile.dart';
-
-class SettingsScreen
-    extends StatelessWidget {
+class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.background,
-
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor:
-            AppColors.background,
-
-        centerTitle: true,
-
-        title: const Text(
-          "الإعدادات",
-          style: TextStyle(
-            color: AppColors.textDark,
-            fontWeight: FontWeight.bold,
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
+    return ReemScrollPage(
+      slivers: [
+        PremiumAppBar(title: l10n.settings),
+        SliverPadding(
+          padding: const EdgeInsets.fromLTRB(
+            DsSpacing.lg, DsSpacing.sm, DsSpacing.lg, 140,
+          ),
+          sliver: SliverList(
+            delegate: SliverChildListDelegate([
+              const SettingsProfileHeader(),
+              const SizedBox(height: DsSpacing.xl),
+              SettingsCategoryCard(
+                title: l10n.account,
+                items: [
+                  SettingsItemData(
+                    icon: Icons.person_outline,
+                    title: l10n.editProfile,
+                    onTap: () => context.pushNamed(RouteNames.editProfile),
+                  ),
+                  SettingsItemData(
+                    icon: Icons.favorite_border,
+                    title: l10n.wishlist,
+                    onTap: () => context.go(RoutePaths.favorites),
+                  ),
+                  SettingsItemData(
+                    icon: Icons.shopping_bag_outlined,
+                    title: l10n.orders,
+                    onTap: () => context.pushNamed(RouteNames.orders),
+                  ),
+                ],
+              ),
+              const SizedBox(height: DsSpacing.lg),
+              SettingsCategoryCard(
+                title: l10n.rewardsAndOffers,
+                items: [
+                  SettingsItemData(
+                    icon: Icons.stars_rounded,
+                    title: l10n.rewards,
+                    onTap: () => context.pushNamed(RouteNames.rewards),
+                  ),
+                  SettingsItemData(
+                    icon: Icons.local_offer_outlined,
+                    title: l10n.coupons,
+                    onTap: () => context.pushNamed(RouteNames.coupons),
+                  ),
+                  SettingsItemData(
+                    icon: Icons.notifications_none,
+                    title: l10n.notifications,
+                    onTap: () => context.pushNamed(RouteNames.notifications),
+                  ),
+                ],
+              ),
+              const SizedBox(height: DsSpacing.lg),
+              SettingsCategoryCard(
+                title: l10n.preferences,
+                items: [
+                  SettingsItemData(
+                    icon: Icons.palette_outlined,
+                    title: l10n.appearance,
+                    onTap: () => context.pushNamed(RouteNames.appearance),
+                  ),
+                  SettingsItemData(
+                    icon: Icons.language_rounded,
+                    title: l10n.language,
+                    onTap: () => context.pushNamed(RouteNames.language),
+                  ),
+                  SettingsItemData(
+                    icon: Icons.location_on_outlined,
+                    title: l10n.addresses,
+                    onTap: () => context.pushNamed(RouteNames.addresses),
+                  ),
+                  SettingsItemData(
+                    icon: Icons.credit_card_outlined,
+                    title: l10n.paymentMethods,
+                    onTap: () => context.pushNamed(RouteNames.paymentMethods),
+                  ),
+                  SettingsItemData(
+                    icon: Icons.admin_panel_settings_outlined,
+                    title: l10n.adminPanel,
+                    onTap: () => context.pushNamed(RouteNames.adminDashboard),
+                  ),
+                ],
+              ),
+              const SizedBox(height: DsSpacing.lg),
+              SettingsCategoryCard(
+                title: l10n.support,
+                items: [
+                  SettingsItemData(
+                    icon: Icons.help_outline,
+                    title: l10n.helpCenter,
+                    onTap: () {},
+                  ),
+                  SettingsItemData(
+                    icon: Icons.logout,
+                    title: l10n.signOut,
+                    onTap: () async {
+                      await ref.read(authNotifierProvider.notifier).logout();
+                      if (context.mounted) {
+                        context.go(RoutePaths.login);
+                      }
+                    },
+                  ),
+                ],
+              ),
+            ]),
           ),
         ),
-      ),
-
-      body: ListView(
-        physics:
-            const BouncingScrollPhysics(),
-
-        children: const [
-
-          SizedBox(height: 20),
-
-          SettingsSection(
-            title: "الحساب",
-            children: [
-
-              SettingsTile(
-                icon: Icons.person_outline,
-                title: "تعديل الملف الشخصي",
-              ),
-
-              SettingsTile(
-                icon: Icons.lock_outline,
-                title: "الخصوصية والأمان",
-              ),
-
-              SettingsTile(
-                icon: Icons.notifications_none,
-                title: "الإشعارات",
-              ),
-            ],
-          ),
-
-          SettingsSection(
-            title: "التطبيق",
-            children: [
-
-              SettingsSwitchTile(
-                icon: Icons.dark_mode_outlined,
-                title: "الوضع الليلي",
-              ),
-
-              SettingsSwitchTile(
-                icon: Icons.language_outlined,
-                title: "اللغة العربية",
-              ),
-            ],
-          ),
-
-          SettingsSection(
-            title: "أخرى",
-            children: [
-
-              SettingsTile(
-                icon: Icons.help_outline,
-                title: "المساعدة",
-              ),
-
-              SettingsTile(
-                icon: Icons.info_outline,
-                title: "حول التطبيق",
-              ),
-
-              SettingsTile(
-                icon: Icons.logout,
-                title: "تسجيل الخروج",
-                danger: true,
-              ),
-            ],
-          ),
-
-          SizedBox(height: 100),
-        ],
-      ),
+      ],
     );
   }
 }

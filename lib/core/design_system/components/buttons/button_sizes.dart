@@ -1,0 +1,36 @@
+import 'package:flutter/material.dart';
+
+import '../../foundation/tokens/ds_constraints.dart';
+import '../../foundation/tokens/ds_radius.dart';
+import '../../foundation/tokens/ds_spacing.dart';
+
+enum DsButtonSize { sm, md, lg }
+
+extension DsButtonSizeValues on DsButtonSize {
+  double get height => switch (this) {
+        DsButtonSize.sm => DsConstraints.minButtonHeight,
+        DsButtonSize.md => DsConstraints.buttonHeightMd,
+        DsButtonSize.lg => DsConstraints.buttonHeightLg,
+      };
+
+  EdgeInsets get padding => switch (this) {
+        DsButtonSize.sm =>
+          const EdgeInsets.symmetric(horizontal: DsSpacing.md, vertical: DsSpacing.xs),
+        DsButtonSize.md =>
+          const EdgeInsets.symmetric(horizontal: DsSpacing.xl, vertical: DsSpacing.sm),
+        DsButtonSize.lg =>
+          const EdgeInsets.symmetric(horizontal: DsSpacing.xxl, vertical: DsSpacing.md),
+      };
+
+  double get fontSize => switch (this) {
+        DsButtonSize.sm => 13,
+        DsButtonSize.md => 15,
+        DsButtonSize.lg => 16,
+      };
+
+  BorderRadius get borderRadius => switch (this) {
+        DsButtonSize.sm => DsRadius.borderMd,
+        DsButtonSize.md => DsRadius.borderXl,
+        DsButtonSize.lg => DsRadius.borderXxl,
+      };
+}

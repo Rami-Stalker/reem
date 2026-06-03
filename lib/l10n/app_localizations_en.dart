@@ -247,4 +247,164 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get saveChanges => 'Save Changes';
+
+  @override
+  String get welcomeToReem => 'Welcome to Reem';
+
+  @override
+  String get loginSubtitle => 'Sign in to shop, share & sparkle ✨';
+
+  @override
+  String get emailRequired => 'Email is required';
+
+  @override
+  String get validEmailRequired => 'Enter a valid email';
+
+  @override
+  String get passwordRequired => 'Password is required';
+
+  @override
+  String get signIn => 'Sign In';
+
+  @override
+  String get account => 'Account';
+
+  @override
+  String get rewardsAndOffers => 'Rewards & Offers';
+
+  @override
+  String get preferences => 'Preferences';
+
+  @override
+  String get support => 'Support';
+
+  @override
+  String get helpCenter => 'Help Center';
+
+  @override
+  String get signOut => 'Sign out';
+
+  @override
+  String get appearance => 'Appearance';
+
+  @override
+  String get addresses => 'Addresses';
+
+  @override
+  String get paymentMethods => 'Payment Methods';
+
+  @override
+  String get selectLanguage => 'Choose your language';
+
+  @override
+  String get followDeviceLanguage => 'Follow device language';
+
+  @override
+  String get appearanceDescription =>
+      'Choose how Reem looks on your device. Your preference is saved automatically.';
+
+  @override
+  String get themeLight => 'Light';
+
+  @override
+  String get themeLightSubtitle => 'Soft blush & daylight elegance';
+
+  @override
+  String get themeDark => 'Dark';
+
+  @override
+  String get themeDarkSubtitle => 'Plum noir & glowing rose accents';
+
+  @override
+  String get themeSystem => 'System';
+
+  @override
+  String get themeSystemSubtitle => 'Matches your device settings';
+
+  @override
+  String get preview => 'Preview';
+
+  @override
+  String get active => 'Active';
+
+  @override
+  String get themeLightActive => 'Light theme active';
+
+  @override
+  String get themeDarkActive => 'Dark theme active';
+
+  @override
+  String get themeSystemActive => 'Following system theme';
+
+  @override
+  String get trendingNow => 'Trending Now';
+
+  @override
+  String get systemLanguage => 'System';
+
+  @override
+  String get adminDashboard => 'Dashboard';
+
+  @override
+  String get adminOrders => 'Orders';
+
+  @override
+  String get adminProducts => 'Products';
+
+  @override
+  String get adminUsers => 'Users';
+
+  @override
+  String get adminAnalytics => 'Analytics';
+
+  @override
+  String get adminPanel => 'Admin Panel';
+
+  @override
+  String get adminWelcome => 'Welcome back';
+
+  @override
+  String get adminTotalSales => 'Total Sales';
+
+  @override
+  String get adminTotalOrders => 'Total Orders';
+
+  @override
+  String get adminActiveUsers => 'Active Users';
+
+  @override
+  String get adminConversion => 'Conversion';
+
+  @override
+  String get adminRecentOrders => 'Recent Orders';
+
+  @override
+  String get adminManageCatalog => 'Manage Catalog';
+
+  @override
+  String get adminViewReports => 'View Reports';
+
+  @override
+  String get adminBackToShop => 'Back to Shop';
+
+  @override
+  String get orders => 'Orders';
+
+  @override
+  String get passwordMinLength => 'At least 6 characters';
+
+  @override
+  String get createAccount => 'Create account';
+
+  @override
+  String get splashTagline => 'Where beauty meets social shopping';
+
+  @override
+  String get trendingSubtitle => 'Most loved this week';
+
+  @override
+  String get confirmPasswordMismatch => 'Passwords do not match';
+
+  @override
+  String get fullName => 'Full name';
 }

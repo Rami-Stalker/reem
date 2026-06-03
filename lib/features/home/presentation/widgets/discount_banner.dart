@@ -1,76 +1,94 @@
 import 'package:flutter/material.dart';
-import '../../../../core/theme/app_theme.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+
+import '../../../../core/design_system/design_system.dart';
 
 class DiscountBanner extends StatelessWidget {
   const DiscountBanner({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.dsColors;
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16),
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 22),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(30),
-
-        gradient: const LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [Color(0xffF8BBD0), Color(0xffE89AAE)],
-        ),
-
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.primary.withValues(alpha: .25),
-            blurRadius: 25,
-            offset: const Offset(0, 10),
-          ),
-        ],
+        borderRadius: DsRadius.borderXxxl,
+        gradient: DsGradients.sunset,
+        boxShadow: context.luxuryShadow,
       ),
-      child: Row(
+      child: Stack(
         children: [
-          /// TEXTS
-          Expanded(
+          Positioned(
+            right: -40,
+            top: -40,
+            child: Icon(
+              Icons.spa_rounded,
+              size: 140,
+              color: colors.onPrimary.withValues(alpha: 0.12),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(DsSpacing.xl),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
-                Text(
-                  "تخفيضات الصيف ✨",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: colors.onPrimary.withValues(alpha: 0.22),
+                    borderRadius: DsRadius.borderFull,
+                  ),
+                  child: Text(
+                    'Limited time',
+                    style: TextStyle(
+                      color: colors.onPrimary,
+                      fontWeight: DsTypography.semiBold,
+                      fontSize: DsTypography.labelSmall,
+                    ),
                   ),
                 ),
-
-                SizedBox(height: 8),
-
+                const SizedBox(height: DsSpacing.md),
                 Text(
-                  "خصومات تصل إلى 50% على أحدث المنتجات النسائية",
+                  'Summer Glow Sale',
                   style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 14,
-                    height: 1.5,
+                    fontFamily: DsTypography.fontFamily,
+                    color: colors.onPrimary,
+                    fontSize: 28,
+                    fontWeight: DsTypography.bold,
+                  ),
+                ),
+                const SizedBox(height: DsSpacing.sm),
+                Text(
+                  'Up to 70% off dresses, accessories & gifts',
+                  style: TextStyle(
+                    color: colors.onPrimary.withValues(alpha: 0.92),
+                    fontSize: DsTypography.bodyMedium,
+                    height: 1.45,
+                  ),
+                ),
+                const SizedBox(height: DsSpacing.lg),
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: DsSpacing.xl,
+                    vertical: DsSpacing.sm,
+                  ),
+                  decoration: BoxDecoration(
+                    color: colors.onPrimary,
+                    borderRadius: DsRadius.borderFull,
+                    boxShadow: context.softShadow,
+                  ),
+                  child: Text(
+                    'Shop the sale',
+                    style: TextStyle(
+                      color: colors.primary,
+                      fontWeight: DsTypography.bold,
+                    ),
                   ),
                 ),
               ],
             ),
           ),
-
-          /// ICON
-          Container(
-            padding: const EdgeInsets.all(18),
-            decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: .18),
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: const Icon(
-              Icons.local_offer_outlined,
-              color: Colors.white,
-              size: 38,
-            ),
-          ),
         ],
       ),
-    );
+    ).animate().fadeIn(duration: 700.ms).slideY(begin: 0.12);
   }
 }

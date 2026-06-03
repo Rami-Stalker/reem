@@ -577,6 +577,324 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Save Changes'**
   String get saveChanges;
+
+  /// No description provided for @welcomeToReem.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome to Reem'**
+  String get welcomeToReem;
+
+  /// No description provided for @loginSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in to shop, share & sparkle ✨'**
+  String get loginSubtitle;
+
+  /// No description provided for @emailRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Email is required'**
+  String get emailRequired;
+
+  /// No description provided for @validEmailRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a valid email'**
+  String get validEmailRequired;
+
+  /// No description provided for @passwordRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Password is required'**
+  String get passwordRequired;
+
+  /// No description provided for @signIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign In'**
+  String get signIn;
+
+  /// No description provided for @account.
+  ///
+  /// In en, this message translates to:
+  /// **'Account'**
+  String get account;
+
+  /// No description provided for @rewardsAndOffers.
+  ///
+  /// In en, this message translates to:
+  /// **'Rewards & Offers'**
+  String get rewardsAndOffers;
+
+  /// No description provided for @preferences.
+  ///
+  /// In en, this message translates to:
+  /// **'Preferences'**
+  String get preferences;
+
+  /// No description provided for @support.
+  ///
+  /// In en, this message translates to:
+  /// **'Support'**
+  String get support;
+
+  /// No description provided for @helpCenter.
+  ///
+  /// In en, this message translates to:
+  /// **'Help Center'**
+  String get helpCenter;
+
+  /// No description provided for @signOut.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign out'**
+  String get signOut;
+
+  /// No description provided for @appearance.
+  ///
+  /// In en, this message translates to:
+  /// **'Appearance'**
+  String get appearance;
+
+  /// No description provided for @addresses.
+  ///
+  /// In en, this message translates to:
+  /// **'Addresses'**
+  String get addresses;
+
+  /// No description provided for @paymentMethods.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment Methods'**
+  String get paymentMethods;
+
+  /// No description provided for @selectLanguage.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose your language'**
+  String get selectLanguage;
+
+  /// No description provided for @followDeviceLanguage.
+  ///
+  /// In en, this message translates to:
+  /// **'Follow device language'**
+  String get followDeviceLanguage;
+
+  /// No description provided for @appearanceDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose how Reem looks on your device. Your preference is saved automatically.'**
+  String get appearanceDescription;
+
+  /// No description provided for @themeLight.
+  ///
+  /// In en, this message translates to:
+  /// **'Light'**
+  String get themeLight;
+
+  /// No description provided for @themeLightSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Soft blush & daylight elegance'**
+  String get themeLightSubtitle;
+
+  /// No description provided for @themeDark.
+  ///
+  /// In en, this message translates to:
+  /// **'Dark'**
+  String get themeDark;
+
+  /// No description provided for @themeDarkSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Plum noir & glowing rose accents'**
+  String get themeDarkSubtitle;
+
+  /// No description provided for @themeSystem.
+  ///
+  /// In en, this message translates to:
+  /// **'System'**
+  String get themeSystem;
+
+  /// No description provided for @themeSystemSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Matches your device settings'**
+  String get themeSystemSubtitle;
+
+  /// No description provided for @preview.
+  ///
+  /// In en, this message translates to:
+  /// **'Preview'**
+  String get preview;
+
+  /// No description provided for @active.
+  ///
+  /// In en, this message translates to:
+  /// **'Active'**
+  String get active;
+
+  /// No description provided for @themeLightActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Light theme active'**
+  String get themeLightActive;
+
+  /// No description provided for @themeDarkActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Dark theme active'**
+  String get themeDarkActive;
+
+  /// No description provided for @themeSystemActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Following system theme'**
+  String get themeSystemActive;
+
+  /// No description provided for @trendingNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Trending Now'**
+  String get trendingNow;
+
+  /// No description provided for @systemLanguage.
+  ///
+  /// In en, this message translates to:
+  /// **'System'**
+  String get systemLanguage;
+
+  /// No description provided for @adminDashboard.
+  ///
+  /// In en, this message translates to:
+  /// **'Dashboard'**
+  String get adminDashboard;
+
+  /// No description provided for @adminOrders.
+  ///
+  /// In en, this message translates to:
+  /// **'Orders'**
+  String get adminOrders;
+
+  /// No description provided for @adminProducts.
+  ///
+  /// In en, this message translates to:
+  /// **'Products'**
+  String get adminProducts;
+
+  /// No description provided for @adminUsers.
+  ///
+  /// In en, this message translates to:
+  /// **'Users'**
+  String get adminUsers;
+
+  /// No description provided for @adminAnalytics.
+  ///
+  /// In en, this message translates to:
+  /// **'Analytics'**
+  String get adminAnalytics;
+
+  /// No description provided for @adminPanel.
+  ///
+  /// In en, this message translates to:
+  /// **'Admin Panel'**
+  String get adminPanel;
+
+  /// No description provided for @adminWelcome.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome back'**
+  String get adminWelcome;
+
+  /// No description provided for @adminTotalSales.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Sales'**
+  String get adminTotalSales;
+
+  /// No description provided for @adminTotalOrders.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Orders'**
+  String get adminTotalOrders;
+
+  /// No description provided for @adminActiveUsers.
+  ///
+  /// In en, this message translates to:
+  /// **'Active Users'**
+  String get adminActiveUsers;
+
+  /// No description provided for @adminConversion.
+  ///
+  /// In en, this message translates to:
+  /// **'Conversion'**
+  String get adminConversion;
+
+  /// No description provided for @adminRecentOrders.
+  ///
+  /// In en, this message translates to:
+  /// **'Recent Orders'**
+  String get adminRecentOrders;
+
+  /// No description provided for @adminManageCatalog.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage Catalog'**
+  String get adminManageCatalog;
+
+  /// No description provided for @adminViewReports.
+  ///
+  /// In en, this message translates to:
+  /// **'View Reports'**
+  String get adminViewReports;
+
+  /// No description provided for @adminBackToShop.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to Shop'**
+  String get adminBackToShop;
+
+  /// No description provided for @orders.
+  ///
+  /// In en, this message translates to:
+  /// **'Orders'**
+  String get orders;
+
+  /// No description provided for @passwordMinLength.
+  ///
+  /// In en, this message translates to:
+  /// **'At least 6 characters'**
+  String get passwordMinLength;
+
+  /// No description provided for @createAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Create account'**
+  String get createAccount;
+
+  /// No description provided for @splashTagline.
+  ///
+  /// In en, this message translates to:
+  /// **'Where beauty meets social shopping'**
+  String get splashTagline;
+
+  /// No description provided for @trendingSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Most loved this week'**
+  String get trendingSubtitle;
+
+  /// No description provided for @confirmPasswordMismatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Passwords do not match'**
+  String get confirmPasswordMismatch;
+
+  /// No description provided for @fullName.
+  ///
+  /// In en, this message translates to:
+  /// **'Full name'**
+  String get fullName;
 }
 
 class _AppLocalizationsDelegate

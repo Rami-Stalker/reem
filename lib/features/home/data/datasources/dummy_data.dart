@@ -10,7 +10,7 @@ import '../../../../core/shared/models/product_model.dart';
 List<Story> stories = [
   StoryModel(
     id: '1',
-    isViewed: true,
+    isViewed: false,
     media: ProductMediaModel(
       url: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330',
       type: MediaType.image,
@@ -27,7 +27,7 @@ List<Story> stories = [
   ),
   StoryModel(
     id: '1',
-    isViewed: true,
+    isViewed: false,
     media: ProductMediaModel(
       url: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330',
       type: MediaType.image,

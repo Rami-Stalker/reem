@@ -247,4 +247,164 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get saveChanges => 'حفظ التغييرات';
+
+  @override
+  String get welcomeToReem => 'مرحباً بك في ريم';
+
+  @override
+  String get loginSubtitle => 'سجّلي دخولكِ للتسوق والمشاركة والتألق ✨';
+
+  @override
+  String get emailRequired => 'البريد الإلكتروني مطلوب';
+
+  @override
+  String get validEmailRequired => 'أدخلي بريداً إلكترونياً صالحاً';
+
+  @override
+  String get passwordRequired => 'كلمة المرور مطلوبة';
+
+  @override
+  String get signIn => 'تسجيل الدخول';
+
+  @override
+  String get account => 'الحساب';
+
+  @override
+  String get rewardsAndOffers => 'المكافآت والعروض';
+
+  @override
+  String get preferences => 'التفضيلات';
+
+  @override
+  String get support => 'الدعم';
+
+  @override
+  String get helpCenter => 'مركز المساعدة';
+
+  @override
+  String get signOut => 'تسجيل الخروج';
+
+  @override
+  String get appearance => 'المظهر';
+
+  @override
+  String get addresses => 'العناوين';
+
+  @override
+  String get paymentMethods => 'طرق الدفع';
+
+  @override
+  String get selectLanguage => 'اختاري لغتك';
+
+  @override
+  String get followDeviceLanguage => 'اتباعي لغة الجهاز';
+
+  @override
+  String get appearanceDescription =>
+      'اختاري كيف يظهر تطبيق ريم على جهازك. يتم حفظ تفضيلك تلقائياً.';
+
+  @override
+  String get themeLight => 'فاتح';
+
+  @override
+  String get themeLightSubtitle => 'وردي ناعم وأناقة النهار';
+
+  @override
+  String get themeDark => 'داكن';
+
+  @override
+  String get themeDarkSubtitle => 'بنفسجي عميق ولمسات وردية متوهجة';
+
+  @override
+  String get themeSystem => 'النظام';
+
+  @override
+  String get themeSystemSubtitle => 'يتوافق مع إعدادات جهازك';
+
+  @override
+  String get preview => 'معاينة';
+
+  @override
+  String get active => 'نشط';
+
+  @override
+  String get themeLightActive => 'المظهر الفاتح مفعّل';
+
+  @override
+  String get themeDarkActive => 'المظهر الداكن مفعّل';
+
+  @override
+  String get themeSystemActive => 'يتبع مظهر النظام';
+
+  @override
+  String get trendingNow => 'الأكثر رواجاً';
+
+  @override
+  String get systemLanguage => 'النظام';
+
+  @override
+  String get adminDashboard => 'لوحة التحكم';
+
+  @override
+  String get adminOrders => 'الطلبات';
+
+  @override
+  String get adminProducts => 'المنتجات';
+
+  @override
+  String get adminUsers => 'المستخدمون';
+
+  @override
+  String get adminAnalytics => 'التحليلات';
+
+  @override
+  String get adminPanel => 'لوحة الإدارة';
+
+  @override
+  String get adminWelcome => 'مرحباً بعودتك';
+
+  @override
+  String get adminTotalSales => 'إجمالي المبيعات';
+
+  @override
+  String get adminTotalOrders => 'إجمالي الطلبات';
+
+  @override
+  String get adminActiveUsers => 'المستخدمون النشطون';
+
+  @override
+  String get adminConversion => 'معدل التحويل';
+
+  @override
+  String get adminRecentOrders => 'أحدث الطلبات';
+
+  @override
+  String get adminManageCatalog => 'إدارة الكتالوج';
+
+  @override
+  String get adminViewReports => 'عرض التقارير';
+
+  @override
+  String get adminBackToShop => 'العودة للمتجر';
+
+  @override
+  String get orders => 'الطلبات';
+
+  @override
+  String get passwordMinLength => 'ستة أحرف على الأقل';
+
+  @override
+  String get createAccount => 'إنشاء حساب';
+
+  @override
+  String get splashTagline => 'حيث تلتقي الجمال والتسوق الاجتماعي';
+
+  @override
+  String get trendingSubtitle => 'الأكثر حباً هذا الأسبوع';
+
+  @override
+  String get confirmPasswordMismatch => 'كلمتا المرور غير متطابقتين';
+
+  @override
+  String get fullName => 'الاسم الكامل';
 }

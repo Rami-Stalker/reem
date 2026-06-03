@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
-import 'app.dart';
-import 'core/di/di.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-void main() async {
+import 'app.dart';
+import 'app/bootstrap.dart';
+
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await configureDependencies();
-  runApp(const MyApp());
+  await AppBootstrap.initialize();
+  runApp(
+    const ProviderScope(
+      child: MyApp(),
+    ),
+  );
 }
