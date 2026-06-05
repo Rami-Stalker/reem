@@ -38,7 +38,7 @@ class AppShell extends StatelessWidget {
         child: FloatingActionButton(
           elevation: 0,
           backgroundColor: Colors.transparent,
-          onPressed: () => context.pushNamed(RouteNames.adminAnalytics),
+          onPressed: () => context.pushNamed(RouteNames.addPost),
           child: Icon(Icons.add_rounded, size: 30, color: colors.onPrimary),
         ),
       ),

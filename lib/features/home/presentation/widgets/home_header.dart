@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:reem/core/shared/wedgets/app/app_avatar.dart';
 
 import '../../../../core/design_system/design_system.dart';
 import '../../../../core/shared/wedgets/inputs/animated_search_bar.dart';
@@ -38,37 +39,12 @@ class HomeHeader extends StatelessWidget {
                 ],
               ),
             ),
-            _ProfileAvatar(colors: colors),
+            AppAvatar(radius: DsRadius.xxxl),
           ],
         ),
         const SizedBox(height: DsSpacing.xl),
         const AnimatedSearchBar(),
       ],
     ).animate().fadeIn(duration: 500.ms).slideY(begin: 0.08);
-  }
-}
-
-class _ProfileAvatar extends StatelessWidget {
-  const _ProfileAvatar({required this.colors});
-
-  final DsColorScheme colors;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(3),
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        gradient: context.storyRingGradient,
-        boxShadow: context.luxuryShadow,
-      ),
-      child: CircleAvatar(
-        radius: 26,
-        backgroundColor: colors.surface,
-        backgroundImage: const NetworkImage(
-          'https://images.unsplash.com/photo-1494790108377-be9c29b29330',
-        ),
-      ),
-    );
   }
 }

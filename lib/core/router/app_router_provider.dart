@@ -17,6 +17,10 @@ import 'package:reem/features/chat/presentation/screens/chat_media_gallery_scree
 import 'package:reem/features/chat/presentation/screens/chat_profile_screen.dart';
 import 'package:reem/features/chat/presentation/screens/story_share_chat_screen.dart';
 import 'package:reem/features/chat/presentation/screens/video_call_screen.dart';
+import 'package:reem/features/create/presentation/screens/add_post_screen.dart';
+import 'package:reem/features/create/presentation/screens/add_story_screen.dart';
+import 'package:reem/features/home/presentation/screens/categories_screen.dart';
+import 'package:reem/features/home/presentation/screens/category_screen.dart';
 import 'package:reem/features/home/presentation/screens/home_screen.dart';
 import 'package:reem/features/onboarding/presentation/screens/onboarding_screen.dart';
 import 'package:reem/features/product_details/presentation/screens/product_details_screen.dart';
@@ -26,7 +30,6 @@ import 'package:reem/features/profile/presentation/screens/profile_screen.dart';
 import 'package:reem/features/settings/presentation/screens/adresses_screen.dart';
 import 'package:reem/features/settings/presentation/screens/appearance_screen.dart';
 import 'package:reem/features/settings/presentation/screens/coupons_screen.dart';
-import 'package:reem/features/settings/presentation/screens/edit_profile_screen.dart';
 import 'package:reem/features/settings/presentation/screens/language_screen.dart';
 import 'package:reem/features/settings/presentation/screens/notifications_screen.dart';
 import 'package:reem/features/settings/presentation/screens/payment_methods_screen.dart';
@@ -112,9 +115,27 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         },
       ),
       GoRoute(
-        path: RoutePaths.editProfile,
-        name: RouteNames.editProfile,
-        builder: (context, state) => const EditProfileScreen(),
+        path: RoutePaths.addPost,
+        name: RouteNames.addPost,
+        builder: (context, state) => const AddPostScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.addStory,
+        name: RouteNames.addStory,
+        builder: (context, state) => const AddStoryScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.category,
+        name: RouteNames.category,
+        builder: (context, state) {
+          final category = state.pathParameters['category'] ?? '';
+          return CategoryScreen(category: category);
+        },
+      ),
+      GoRoute(
+        path: RoutePaths.categories,
+        name: RouteNames.categories,
+        builder: (context, state) => const CategoriesScreen(),
       ),
       GoRoute(
         path: RoutePaths.notifications,
@@ -154,27 +175,32 @@ final goRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: RoutePaths.admin,
         name: RouteNames.adminDashboard,
-        builder: (context, state) => const AdminShell(child: AdminDashboardScreen()),
+        builder: (context, state) =>
+            const AdminShell(child: AdminDashboardScreen()),
       ),
       GoRoute(
         path: RoutePaths.adminOrders,
         name: RouteNames.adminOrders,
-        builder: (context, state) => const AdminShell(child: AdminOrdersScreen()),
+        builder: (context, state) =>
+            const AdminShell(child: AdminOrdersScreen()),
       ),
       GoRoute(
         path: RoutePaths.adminProducts,
         name: RouteNames.adminProducts,
-        builder: (context, state) => const AdminShell(child: AdminProductsScreen()),
+        builder: (context, state) =>
+            const AdminShell(child: AdminProductsScreen()),
       ),
       GoRoute(
         path: RoutePaths.adminUsers,
         name: RouteNames.adminUsers,
-        builder: (context, state) => const AdminShell(child: AdminUsersScreen()),
+        builder: (context, state) =>
+            const AdminShell(child: AdminUsersScreen()),
       ),
       GoRoute(
         path: RoutePaths.adminAnalytics,
         name: RouteNames.adminAnalytics,
-        builder: (context, state) => const AdminShell(child: AdminAnalyticsScreen()),
+        builder: (context, state) =>
+            const AdminShell(child: AdminAnalyticsScreen()),
       ),
       GoRoute(
         path: RoutePaths.chatDetails,

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-
+import 'package:reem/core/shared/wedgets/app/app_avatar.dart';
 import '../../../../core/design_system/design_system.dart';
 
 class SettingsProfileHeader extends StatelessWidget {
@@ -10,24 +10,10 @@ class SettingsProfileHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.dsColors;
     return Padding(
-      padding: const EdgeInsets.only(top: 100, bottom: DsSpacing.lg),
+      padding: const EdgeInsets.only(top: DsSpacing.huge, bottom: DsSpacing.lg),
       child: Column(
         children: [
-          Container(
-            padding: const EdgeInsets.all(4),
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              gradient: context.storyRingGradient,
-              boxShadow: context.luxuryShadow,
-            ),
-            child: CircleAvatar(
-              radius: 50,
-              backgroundColor: colors.surface,
-              backgroundImage: const NetworkImage(
-                'https://images.unsplash.com/photo-1494790108377-be9c29b29330',
-              ),
-            ),
-          ).animate().scale(duration: 600.ms, curve: Curves.easeOutBack),
+          AppAvatar(radius: 58).animate().scale(duration: 600.ms, curve: Curves.easeOutBack),
           const SizedBox(height: DsSpacing.md),
           DsGradientText(
             'Lujain',

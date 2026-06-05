@@ -5,6 +5,18 @@ import 'package:equatable/equatable.dart';
 import 'product.dart';
 import 'user.dart';
 
+enum CategoryType {
+  clothing,
+  makeup,
+  perfumes,
+  bags, 
+  flowers,
+  shoes,
+  chocolate,
+  bathBody,
+  gifts,
+}
+
 class Post extends Equatable {
   final String id;
 
@@ -13,6 +25,8 @@ class Post extends Equatable {
   final Product product;
 
   final String caption;
+
+  final CategoryType category;
 
   final int likesCount;
   final int commentsCount;
@@ -27,6 +41,7 @@ class Post extends Equatable {
     required this.author,
     required this.product,
     required this.caption,
+    required this.category,
     required this.likesCount,
     required this.commentsCount,
     required this.sharesCount,
@@ -36,14 +51,15 @@ class Post extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
-        author,
-        product,
-        caption,
-        likesCount,
-        commentsCount,
-        sharesCount,
-        isLiked,
-        createdAt,
-      ];
+    id,
+    author,
+    product,
+    caption,
+    category,
+    likesCount,
+    commentsCount,
+    sharesCount,
+    isLiked,
+    createdAt,
+  ];
 }

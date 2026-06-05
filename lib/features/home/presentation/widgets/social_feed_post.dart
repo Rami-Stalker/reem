@@ -5,6 +5,8 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/design_system/design_system.dart';
 import '../../../../core/router/route_names.dart';
 import '../../../../core/shared/wedgets/buttons/animated_like_button.dart';
+import '../screens/comments_sheet_screen.dart';
+import '../screens/likes_sheet_screen.dart';
 
 /// Full-width social commerce post — shop + interact like Instagram.
 class SocialFeedPost extends StatelessWidget {
@@ -19,6 +21,7 @@ class SocialFeedPost extends StatelessWidget {
     this.productName,
     this.productPrice,
     this.timeAgo = '2h ago',
+    this.postId,
   });
 
   final String authorName;
@@ -30,6 +33,7 @@ class SocialFeedPost extends StatelessWidget {
   final String? productName;
   final String? productPrice;
   final String timeAgo;
+  final String? postId;
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +46,10 @@ class SocialFeedPost extends StatelessWidget {
         children: [
           Padding(
             padding: const EdgeInsets.fromLTRB(
-              DsSpacing.md, DsSpacing.md, DsSpacing.md, DsSpacing.sm,
+              DsSpacing.md,
+              DsSpacing.md,
+              DsSpacing.md,
+              DsSpacing.sm,
             ),
             child: Row(
               children: [
@@ -106,8 +113,11 @@ class SocialFeedPost extends StatelessWidget {
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Icon(Icons.shopping_bag_rounded,
-                              size: 16, color: colors.onPrimary),
+                          Icon(
+                            Icons.shopping_bag_rounded,
+                            size: 16,
+                            color: colors.onPrimary,
+                          ),
                           const SizedBox(width: 6),
                           Text(
                             productPrice != null
@@ -133,24 +143,50 @@ class SocialFeedPost extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    const AnimatedLikeButton(),
+                    GestureDetector(
+                      onTap: () => Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) => LikesSheetScreen(likesCount: likes),
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [const AnimatedLikeButton()],
+                      ),
+                    ),
                     const SizedBox(width: DsSpacing.md),
-                    Icon(Icons.chat_bubble_outline_rounded,
-                        color: colors.onSurface),
+                    GestureDetector(
+                      onTap: () => openCommentsSheet(context, postId ?? '1'),
+
+                      child: Icon(
+                        Icons.chat_bubble_outline_rounded,
+                        color: colors.onSurface,
+                      ),
+                    ),
                     const SizedBox(width: 4),
                     Text(comments, style: TextStyle(color: colors.onSurface)),
                     const Spacer(),
-                    Icon(Icons.bookmark_border_rounded, color: colors.onSurface),
+                    Icon(
+                      Icons.bookmark_border_rounded,
+                      color: colors.onSurface,
+                    ),
                     const SizedBox(width: DsSpacing.md),
                     Icon(Icons.share_rounded, color: colors.primary),
                   ],
                 ),
                 const SizedBox(height: DsSpacing.sm),
-                Text(
-                  '$likes likes',
-                  style: TextStyle(
-                    fontWeight: DsTypography.semiBold,
-                    color: colors.onSurface,
+                GestureDetector(
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) => LikesSheetScreen(likesCount: likes),
+                    ),
+                  ),
+                  child: Text(
+                    '$likes likes',
+                    style: TextStyle(
+                      fontWeight: DsTypography.semiBold,
+                      color: colors.onSurface,
+                    ),
                   ),
                 ),
                 const SizedBox(height: 4),
@@ -164,10 +200,7 @@ class SocialFeedPost extends StatelessWidget {
                       TextSpan(text: caption),
                     ],
                   ),
-                  style: TextStyle(
-                    color: colors.onSurface,
-                    height: 1.4,
-                  ),
+                  style: TextStyle(color: colors.onSurface, height: 1.4),
                 ),
               ],
             ),
@@ -176,4 +209,15 @@ class SocialFeedPost extends StatelessWidget {
       ),
     ).animate().fadeIn(duration: 500.ms).slideY(begin: 0.06);
   }
+}
+
+Future<void> openCommentsSheet(BuildContext context, String postId) async {
+  await showModalBottomSheet(
+    context: context,
+    isScrollControlled: true,
+    isDismissible: true,
+    enableDrag: true,
+    backgroundColor: Colors.transparent,
+    builder: (_) => CommentsSheetScreen(postId: postId),
+  );
 }

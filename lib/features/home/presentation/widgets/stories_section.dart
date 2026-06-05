@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:reem/core/router/route_names.dart';
+import 'package:reem/features/home/data/datasources/dummy_data.dart';
+
 
 import '../../../../core/design_system/design_system.dart';
-import '../../../../core/shared/wedgets/app/reem_section_header.dart';
 import 'story_avatar.dart';
+import '../screens/story_viewer_screen.dart';
 
-class StoriesSection extends StatelessWidget {
+class StoriesSection extends ConsumerWidget {
   const StoriesSection({super.key});
 
-  static const _storyImages = [
-    'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f',
-    'https://images.unsplash.com/photo-1529139574466-a303027c1d8b',
-    'https://images.unsplash.com/photo-1496747611176-843222e1e57c',
-    'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f',
-    'https://images.unsplash.com/photo-1534528741775-53994a69daeb',
-  ];
-
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    // final stories = ref.watch(homeNotifierProvider).stories;
+
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -29,20 +29,35 @@ class StoriesSection extends StatelessWidget {
           height: 108,
           child: ListView.separated(
             scrollDirection: Axis.horizontal,
-            itemCount: _storyImages.length + 1,
-            separatorBuilder: (_, __) => const SizedBox(width: DsSpacing.md),
+            itemCount: stories.length + 1,
+            separatorBuilder: (_, _) => const SizedBox(width: DsSpacing.md),
             itemBuilder: (context, index) {
               if (index == 0) {
-                return const StoryAvatar(
-                  image: '',
-                  username: 'Your Story',
-                  isAddStory: true,
+                return GestureDetector(
+                  onTap: () => context.pushNamed(RouteNames.addStory),
+                  child: const StoryAvatar(
+                    image: '',
+                    username: 'Your Story',
+                    isAddStory: true,
+                  ),
                 );
               }
-              return StoryAvatar(
-                image: _storyImages[index - 1],
-                username: index == 1 ? 'New ✨' : 'Style',
-                isViewed: index > 3,
+
+              final story = stories[index - 1];
+              return GestureDetector(
+                onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => StoryViewerScreen(
+                      stories: stories,
+                      initialIndex: index - 1,
+                    ),
+                  ),
+                ),
+                child: StoryAvatar(
+                  image: story.media.url,
+                  username: story.user.username,
+                  isViewed: story.isViewed,
+                ),
               );
             },
           ),
@@ -51,3 +66,4 @@ class StoriesSection extends StatelessWidget {
     );
   }
 }
+

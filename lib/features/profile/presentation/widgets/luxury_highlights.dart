@@ -13,7 +13,7 @@ class LuxuryHighlights extends StatelessWidget {
         scrollDirection: Axis.horizontal,
         padding: const EdgeInsets.symmetric(horizontal: DsSpacing.lg),
         itemCount: 5,
-        separatorBuilder: (_, __) => const SizedBox(width: DsSpacing.md),
+        separatorBuilder: (_, _) => const SizedBox(width: DsSpacing.md),
         itemBuilder: (context, index) {
           return Container(
             width: 80,

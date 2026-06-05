@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
 import '../../../../core/design_system/design_system.dart';
-import 'luxury_avatar.dart';
+// import 'luxury_avatar.dart';
 import 'luxury_highlights.dart';
 import 'premium_actions.dart';
 import 'premium_stats.dart';
@@ -15,8 +15,8 @@ class ProfileInfoSection extends StatelessWidget {
     final colors = context.dsColors;
     return Column(
       children: [
-        const SizedBox(height: DsSpacing.md),
-        const LuxuryAvatar(),
+        // const SizedBox(height: DsSpacing.md),
+        // const LuxuryAvatar(),
         const SizedBox(height: DsSpacing.lg),
         DsGradientText(
           'Lujain Beauty',

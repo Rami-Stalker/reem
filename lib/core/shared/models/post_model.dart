@@ -11,6 +11,7 @@ class PostModel extends Post {
     required super.author,
     required super.product,
     required super.caption,
+    required super.category,
     required super.likesCount,
     required super.commentsCount,
     required super.sharesCount,
@@ -27,6 +28,8 @@ class PostModel extends Post {
       product: ProductModel.fromJson(json['product']),
 
       caption: json['caption'],
+
+      category: _mapType(json['type']),
 
       likesCount: json['likes_count'] ?? 0,
       commentsCount: json['comments_count'] ?? 0,
@@ -48,6 +51,8 @@ class PostModel extends Post {
 
       'caption': caption,
 
+      'category': category.name,
+
       'likes_count': likesCount,
       'comments_count': commentsCount,
       'shares_count': sharesCount,
@@ -56,5 +61,33 @@ class PostModel extends Post {
 
       'created_at': createdAt.toIso8601String(),
     };
+  }
+
+    static CategoryType _mapType(String type) {
+    switch (type) {
+      case 'clothing':
+        return CategoryType.clothing;
+
+      case 'makeup':
+        return CategoryType.makeup;
+
+      case 'perfumes':
+        return CategoryType.perfumes;
+
+      case 'flowers':
+        return CategoryType.flowers;
+
+      case 'shoes':
+        return CategoryType.shoes;
+
+      case 'chocolate':
+        return CategoryType.chocolate;
+
+      case 'bathBody':
+        return CategoryType.bathBody;
+
+      default:
+        return CategoryType.gifts;
+    }
   }
 }

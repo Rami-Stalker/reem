@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:reem/features/home/data/datasources/dummy_data.dart';
 
 import '../../../../core/design_system/design_system.dart';
 import '../../../../core/shared/wedgets/app/reem_section_header.dart';
+import '../providers/home_provider.dart';
 import 'social_feed_post.dart';
 
-class PostFeed extends StatelessWidget {
+class PostFeed extends ConsumerWidget {
   const PostFeed({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    // final posts = ref.watch(homeNotifierProvider).posts;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -20,22 +25,26 @@ class PostFeed extends StatelessWidget {
         ListView.separated(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
-          itemCount: 3,
-          separatorBuilder: (_, __) => const SizedBox(height: DsSpacing.xl),
+          itemCount: posts.length,
+          separatorBuilder: (_, _) => const SizedBox(height: DsSpacing.xl),
           itemBuilder: (context, index) {
+            final post = posts[index];
+            final productMedia = post.product.media;
+            final imageUrl = productMedia.isNotEmpty ? productMedia.first.url : '';
+
             return SocialFeedPost(
-              authorName: 'Sara Alenna',
-              authorAvatar:
-                  'https://images.unsplash.com/photo-1494790108377-be9c29b29330',
-              imageUrl:
-                  'https://images.unsplash.com/photo-1496747611176-843222e1e57c',
-              caption:
-                  'Obsessed with this blush set 💕 Perfect for date night!',
-              likes: '${(index + 1) * 1.2}K',
-              comments: '${(index + 1) * 89}',
-              productName: 'Glow Blush Palette',
-              productPrice: '\$42',
-              timeAgo: '${index + 1}h ago',
+              authorName: post.author.name,
+              authorAvatar: post.author.imageUrl ?? '',
+              imageUrl: imageUrl,
+              caption: post.caption,
+              likes: '${post.likesCount}K',
+              comments: '${post.commentsCount}',
+              productName: post.product.title,
+              productPrice: '\$${post.product.price.toStringAsFixed(0)}',
+              timeAgo: post.createdAt.isAfter(DateTime.now().subtract(const Duration(hours: 2)))
+                  ? 'Just now'
+                  : '',
+              postId: post.id,
             );
           },
         ),
@@ -43,3 +52,4 @@ class PostFeed extends StatelessWidget {
     );
   }
 }
+

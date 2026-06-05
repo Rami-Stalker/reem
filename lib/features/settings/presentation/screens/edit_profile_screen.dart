@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:reem/core/shared/wedgets/app/app_avatar.dart';
 
 import '../../../../core/design_system/design_system.dart';
 import '../../../../core/design_system/patterns/reem_page_scaffold.dart';
 import '../../../../core/shared/wedgets/app/premium_app_bar.dart';
 import '../../../profile/presentation/widgets/editable_profile_field.dart';
-import '../../../profile/presentation/widgets/luxury_avatar.dart';
 
 class EditProfileScreen extends StatelessWidget {
   const EditProfileScreen({super.key});
@@ -19,7 +19,7 @@ class EditProfileScreen extends StatelessWidget {
           sliver: SliverList(
             delegate: SliverChildListDelegate([
               const SizedBox(height: DsSpacing.md),
-              const Center(child: LuxuryAvatar()),
+              const Center(child: AppAvatar(radius: 58)),
               const SizedBox(height: DsSpacing.xxl),
               const EditableProfileField(
                 hint: 'Full Name',

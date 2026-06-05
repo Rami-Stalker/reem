@@ -10,6 +10,12 @@ abstract final class RoutePaths {
   static const settings = '/settings';
   static const profile = '/profile';
 
+  static const addPost = '/add-post';
+  static const addStory = '/add-story';
+
+  static const category = '/category/:category';
+  static const categories = '/categories';
+
   static const orders = '/orders';
   static const productDetails = '/product-details';
 
@@ -22,6 +28,9 @@ abstract final class RoutePaths {
   static const coupons = '/coupons';
   static const rewards = '/rewards';
 
+  static const likeSheet = '/like-sheet';
+  static const commentSheet = '/comment-sheet';
+  
   static const admin = '/admin';
   static const adminOrders = '/admin/orders';
   static const adminProducts = '/admin/products';

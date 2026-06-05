@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/shared/wedgets/app/app_avatar.dart';
 
 import 'glass_circle_button.dart';
-import 'luxury_avatar.dart';
 
 class LuxuryAppBar
     extends StatelessWidget {
@@ -10,7 +11,7 @@ class LuxuryAppBar
   @override
   Widget build(BuildContext context) {
     return SliverAppBar(
-      expandedHeight: 320,
+      expandedHeight: 270,
       pinned: true,
       stretch: true,
       elevation: 0,
@@ -59,7 +60,7 @@ class LuxuryAppBar
                     EdgeInsets.only(
                   bottom: 30,
                 ),
-                child: LuxuryAvatar(),
+                child: AppAvatar(radius: 58),
               ),
             ),
           ],

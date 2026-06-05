@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 
 import '../backgrounds/animated_gradient_background.dart';
 
-class LuxuryScaffold
+class ReemScaffold
     extends StatelessWidget {
   final Widget body;
   final Widget? bottomNavigationBar;
   final Widget? floatingActionButton;
 
-  const LuxuryScaffold({
+  const ReemScaffold({
     super.key,
     required this.body,
     this.bottomNavigationBar,
