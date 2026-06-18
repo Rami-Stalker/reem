@@ -1,0 +1,258 @@
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+import { Prisma } from '@prisma/client';
+import { buildMeta } from '../../common/dto/pagination.dto';
+import { CacheService } from '../../common/cache/cache.service';
+import { serializeProduct } from '../../common/serializers';
+import {
+  AVAILABLE_WHERE,
+  DiscoveryProduct,
+  DiscoveryRepository,
+  ProductOrderBy,
+} from './discovery.repository';
+import {
+  isStaticCollection,
+  STATIC_COLLECTIONS,
+  STATIC_COLLECTION_KEYS,
+} from './discovery.specs';
+import { DiscoveryQueryDto, DiscoverySort } from './dto/discovery-query.dto';
+
+const PREFIX = 'disco:';
+
+interface CachedPage {
+  products: DiscoveryProduct[];
+  total: number;
+}
+
+@Injectable()
+export class DiscoveryService {
+  constructor(
+    private readonly repo: DiscoveryRepository,
+    private readonly cache: CacheService,
+  ) {}
+
+  async collection(key: string, dto: DiscoveryQueryDto, viewerId?: string) {
+    if (!isStaticCollection(key)) {
+      throw new BadRequestException(`Unknown collection: ${key}`);
+    }
+    const spec = STATIC_COLLECTIONS[key];
+    const where: Prisma.ProductWhereInput = {
+      ...AVAILABLE_WHERE,
+      ...(spec.extraWhere ?? {}),
+      ...this.buildFilters(dto),
+    };
+    return this.paginated(
+      `${PREFIX}col:${key}:${dto.filterSignature()}`,
+      where,
+      this.resolveOrderBy(dto.sort, spec.orderBy),
+      dto,
+      viewerId,
+      spec.ttlMs,
+    );
+  }
+
+  async category(category: string, dto: DiscoveryQueryDto, viewerId?: string) {
+    const cat = category.toLowerCase();
+    const where: Prisma.ProductWhereInput = {
+      ...AVAILABLE_WHERE,
+      category: cat,
+      ...this.buildFilters(dto),
+    };
+    return this.paginated(
+      `${PREFIX}cat:${cat}:${dto.filterSignature()}`,
+      where,
+      this.resolveOrderBy(dto.sort, [{ createdAt: 'desc' }]),
+      dto,
+      viewerId,
+      60_000,
+    );
+  }
+
+  async seller(sellerId: string, dto: DiscoveryQueryDto, viewerId?: string) {
+    const where: Prisma.ProductWhereInput = {
+      ...AVAILABLE_WHERE,
+      sellerId,
+      ...this.buildFilters(dto),
+    };
+    return this.paginated(
+      `${PREFIX}seller:${sellerId}:${dto.filterSignature()}`,
+      where,
+      this.resolveOrderBy(dto.sort, [{ createdAt: 'desc' }]),
+      dto,
+      viewerId,
+      60_000,
+    );
+  }
+
+  async similar(productId: string, dto: DiscoveryQueryDto, viewerId?: string) {
+    const category = await this.repo.categoryOf(productId);
+    if (category === null) throw new NotFoundException('Product not found');
+    const where: Prisma.ProductWhereInput = {
+      ...AVAILABLE_WHERE,
+      category,
+      id: { not: productId },
+    };
+    return this.paginated(
+      `${PREFIX}similar:${productId}:${dto.filterSignature()}`,
+      where,
+      [{ rating: 'desc' }, { ordersCount: 'desc' }],
+      dto,
+      viewerId,
+      120_000,
+    );
+  }
+
+  async recommended(dto: DiscoveryQueryDto, viewerId?: string) {
+    if (!viewerId) return this.collection('trending', dto, undefined);
+    const categories = await this.repo.preferredCategories(viewerId);
+    const where: Prisma.ProductWhereInput = {
+      ...AVAILABLE_WHERE,
+      ...(categories.length ? { category: { in: categories } } : {}),
+    };
+    const signature = [...categories].sort().join(',');
+    return this.paginated(
+      `${PREFIX}rec:${signature}:${dto.filterSignature()}`,
+      where,
+      [{ rating: 'desc' }, { ordersCount: 'desc' }],
+      dto,
+      viewerId,
+      60_000,
+    );
+  }
+
+  /** Aggregated home payload — sections are de-duplicated across each other. */
+  async home(viewerId?: string) {
+    const sections = await Promise.all(
+      STATIC_COLLECTION_KEYS.map(async (key) => {
+        const spec = STATIC_COLLECTIONS[key];
+        const where: Prisma.ProductWhereInput = {
+          ...AVAILABLE_WHERE,
+          ...(spec.extraWhere ?? {}),
+        };
+        // Over-fetch so dedup still leaves a full section.
+        const products = await this.cachedList(
+          `${PREFIX}home:${key}`,
+          where,
+          spec.orderBy,
+          spec.homeSize * 2,
+          spec.ttlMs,
+        );
+        return { key, homeSize: spec.homeSize, products };
+      }),
+    );
+
+    const seen = new Set<string>();
+    const trimmed = sections.map(({ key, homeSize, products }) => {
+      const unique = products
+        .filter((p) => !seen.has(p.id))
+        .slice(0, homeSize);
+      unique.forEach((p) => seen.add(p.id));
+      return { key, products: unique };
+    });
+
+    const allIds = trimmed.flatMap((t) => t.products.map((p) => p.id));
+    const favSet = viewerId
+      ? await this.repo.favoriteSet(viewerId, allIds)
+      : new Set<string>();
+
+    const payload: Record<string, unknown> = {};
+    for (const { key, products } of trimmed) {
+      payload[key] = products.map((p) =>
+        serializeProduct(p, { isLiked: favSet.has(p.id) }),
+      );
+    }
+    return payload;
+  }
+
+  /** Called after product mutations to drop stale collection caches. */
+  invalidate(): void {
+    this.cache.invalidate(PREFIX);
+  }
+
+  // ── internals ──────────────────────────────────────────────────────────
+
+  private cachedList(
+    cacheKey: string,
+    where: Prisma.ProductWhereInput,
+    orderBy: ProductOrderBy,
+    take: number,
+    ttlMs: number,
+  ): Promise<DiscoveryProduct[]> {
+    return this.cache.wrap(`${cacheKey}:take${take}`, ttlMs, () =>
+      this.repo.findMany(where, orderBy, 0, take),
+    );
+  }
+
+  private async paginated(
+    cacheKey: string,
+    where: Prisma.ProductWhereInput,
+    orderBy: ProductOrderBy,
+    dto: DiscoveryQueryDto,
+    viewerId: string | undefined,
+    ttlMs: number,
+  ) {
+    // The heavy query (findMany + count) is cached; per-user `is_liked` is a
+    // cheap overlay applied after the cache hit.
+    const { products, total } = await this.cache.wrap<CachedPage>(
+      cacheKey,
+      ttlMs,
+      async () => {
+        const [products, total] = await Promise.all([
+          this.repo.findMany(where, orderBy, dto.skip, dto.limit),
+          this.repo.count(where),
+        ]);
+        return { products, total };
+      },
+    );
+
+    const favSet = viewerId
+      ? await this.repo.favoriteSet(viewerId, products.map((p) => p.id))
+      : new Set<string>();
+
+    return {
+      data: products.map((p) =>
+        serializeProduct(p, { isLiked: favSet.has(p.id) }),
+      ),
+      pagination: buildMeta(dto.page, dto.limit, total, products.length),
+    };
+  }
+
+  private buildFilters(dto: DiscoveryQueryDto): Prisma.ProductWhereInput {
+    return {
+      ...(dto.rating ? { rating: { gte: dto.rating } } : {}),
+      ...(dto.min_price !== undefined || dto.max_price !== undefined
+        ? {
+            price: {
+              ...(dto.min_price !== undefined ? { gte: dto.min_price } : {}),
+              ...(dto.max_price !== undefined ? { lte: dto.max_price } : {}),
+            },
+          }
+        : {}),
+    };
+  }
+
+  private resolveOrderBy(
+    sort: DiscoverySort | undefined,
+    fallback: ProductOrderBy,
+  ): ProductOrderBy {
+    switch (sort) {
+      case 'newest':
+        return [{ createdAt: 'desc' }];
+      case 'price_asc':
+        return [{ price: 'asc' }];
+      case 'price_desc':
+        return [{ price: 'desc' }];
+      case 'best_selling':
+        return [{ ordersCount: 'desc' }];
+      case 'rating':
+        return [{ rating: 'desc' }, { reviewsCount: 'desc' }];
+      case 'popular':
+        return [{ viewsCount: 'desc' }, { favoritesCount: 'desc' }];
+      default:
+        return fallback;
+    }
+  }
+}

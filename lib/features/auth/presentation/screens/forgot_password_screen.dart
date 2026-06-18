@@ -3,10 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/design_system/design_system.dart';
-import '../../../../core/design_system/components/snackbars/app_snackbar.dart' show DsSnackbar, DsSnackbarType;
 import '../../../../core/localization/l10n_extension.dart';
 import '../../../../core/router/route_paths.dart';
-import '../providers/auth_provider.dart';
+import '../../domain/entities/auth_account.dart';
 
 class ForgotPasswordScreen extends ConsumerStatefulWidget {
   const ForgotPasswordScreen({super.key});
@@ -18,41 +17,25 @@ class ForgotPasswordScreen extends ConsumerStatefulWidget {
 
 class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
   final _formKey = GlobalKey<FormState>();
-  final _emailController = TextEditingController();
+  final _phoneController = TextEditingController();
 
   @override
   void dispose() {
-    _emailController.dispose();
+    _phoneController.dispose();
     super.dispose();
   }
 
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
-
-    final ok = await ref.read(authNotifierProvider.notifier).forgotPassword(
-          email: _emailController.text.trim(),
-        );
-
-    if (!mounted) return;
-    if (ok) {
-      DsSnackbar.show(
-        context,
-        message: ref.read(authNotifierProvider).successMessage ?? '',
-        type: DsSnackbarType.success,
-      );
-      context.go(RoutePaths.login);
-    } else {
-      final error = ref.read(authNotifierProvider).error;
-      if (error != null) {
-        DsSnackbar.show(context, message: error, type: DsSnackbarType.error);
-      }
-    }
+    final phone = Uri.encodeComponent(_phoneController.text.trim());
+    context.go(
+      '${RoutePaths.otpVerification}?phone=$phone&purpose=${OtpPurpose.passwordReset.wire}',
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final auth = ref.watch(authNotifierProvider);
     final colors = context.dsColors;
 
     return ReemScrollPage(
@@ -78,21 +61,23 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                   ),
                   const SizedBox(height: DsSpacing.xxxl),
                   DsInputField(
-                    controller: _emailController,
-                    label: l10n.email,
-                    keyboardType: TextInputType.emailAddress,
-                    prefixIcon: Icon(Icons.email_outlined, color: colors.primary),
+                    controller: _phoneController,
+                    label: 'Phone number',
+                    keyboardType: TextInputType.phone,
+                    prefixIcon: Icon(Icons.phone_outlined, color: colors.primary),
                     validator: (v) {
-                      if (v == null || v.isEmpty) return l10n.emailRequired;
-                      if (!v.contains('@')) return l10n.validEmailRequired;
+                      final value = v?.trim() ?? '';
+                      if (value.isEmpty) return 'Phone number is required';
+                      if (!RegExp(r'^\+?[0-9]{7,15}$').hasMatch(value)) {
+                        return 'Enter a valid phone number';
+                      }
                       return null;
                     },
                   ),
                   const SizedBox(height: DsSpacing.lg),
                   PrimaryButton(
                     label: l10n.send,
-                    onPressed: auth.isLoading ? null : _submit,
-                    isLoading: auth.isLoading,
+                    onPressed: _submit,
                   ),
                   const Spacer(flex: 2),
                 ],

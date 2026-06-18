@@ -45,6 +45,7 @@ dependencies:
 
   # HTTP & Network
   dio: ^5.9.2
+  web_socket_channel: ^3.0.3
 
   # Local storage
   hive: ^2.2.3
@@ -113,6 +114,17 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   generate: true
+
+  fonts:
+    # Body / UI — supports Latin + Arabic (RTL). Variable weight axis 200–1000.
+    - family: Cairo
+      fonts:
+        - asset: assets/fonts/Cairo-VariableFont.ttf
+    # Display — elegant high-contrast serif for headings (Latin only; falls
+    # back to Cairo for Arabic via DsTypography.fontFamilyFallback).
+    - family: PlayfairDisplay
+      fonts:
+        - asset: assets/fonts/PlayfairDisplay-VariableFont.ttf
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

@@ -34,7 +34,7 @@ class AdminPageHeader extends StatelessWidget {
                     fontSize: DsTypography.headlineMedium,
                     fontWeight: DsTypography.bold,
                     color: colors.onSurface,
-                    letterSpacing: -0.5,
+                    letterSpacing: 0,
                   ),
                 ),
                 if (subtitle != null) ...[

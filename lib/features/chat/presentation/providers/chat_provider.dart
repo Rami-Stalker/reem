@@ -5,6 +5,7 @@ import '../../../../core/providers/core_providers.dart';
 import '../../data/datasources/chat_remote_datasource.dart';
 import '../../data/datasources/impl/chat_remote_datasource_impl.dart';
 import '../../data/repositories/chat_repository_impl.dart';
+import '../../data/services/chat_realtime_service.dart';
 import '../../domain/repositories/chat_repository.dart';
 import '../../domain/usecases/get_messages_usecase.dart';
 import '../../domain/usecases/get_threads_usecase.dart';
@@ -19,6 +20,14 @@ final chatRemoteDataSourceProvider = Provider<ChatRemoteDataSource>(
 final chatRepositoryProvider = Provider<ChatRepository>(
   (ref) => ChatRepositoryImpl(remote: ref.watch(chatRemoteDataSourceProvider)),
 );
+
+final chatRealtimeServiceProvider = Provider<ChatRealtimeService>((ref) {
+  final service = ChatRealtimeService(ref.watch(secureStorageProvider));
+  ref.onDispose(() {
+    service.disconnect();
+  });
+  return service;
+});
 
 final getThreadsUseCaseProvider = Provider(
   (ref) => GetThreadsUseCase(ref.watch(chatRepositoryProvider)),

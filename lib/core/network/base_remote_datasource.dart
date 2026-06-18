@@ -1,7 +1,9 @@
 import 'package:dio/dio.dart';
 
+import '../domain/pagination/paginated_data.dart';
 import '../errors/app_exception.dart';
 import '../errors/error_mapper.dart';
+import '../data/models/paginated_response_mapper.dart';
 
 /// Shared HTTP helpers with consistent Dio error mapping.
 abstract base class BaseRemoteDataSource {
@@ -18,6 +20,29 @@ abstract base class BaseRemoteDataSource {
     } on DioException catch (e) {
       throw ErrorMapper.fromDio(e);
     }
+  }
+
+  Future<T> getDecoded<T>(
+    String path, {
+    Map<String, dynamic>? query,
+    required T Function(Map<String, dynamic> json) decode,
+  }) async {
+    final json = await getJson(path, query: query);
+    return decode(json);
+  }
+
+  Future<PaginatedData<T>> getPaginated<T>(
+    String path, {
+    Map<String, dynamic>? query,
+    required T Function(Map<String, dynamic> json) itemFromJson,
+  }) async {
+    final json = await getJson(path, query: query);
+    return PaginatedResponseMapper.fromJson<T>(
+      json,
+      itemFromJson: itemFromJson,
+      fallbackPage: query?['page'] as int? ?? 1,
+      fallbackLimit: query?['limit'] as int? ?? 20,
+    );
   }
 
   Future<List<dynamic>> getList(
@@ -64,6 +89,18 @@ abstract base class BaseRemoteDataSource {
   Future<void> deleteRequest(String path) async {
     try {
       await dio.delete<dynamic>(path);
+    } on DioException catch (e) {
+      throw ErrorMapper.fromDio(e);
+    }
+  }
+
+  Future<Map<String, dynamic>> deleteJson(
+    String path, {
+    Map<String, dynamic>? body,
+  }) async {
+    try {
+      final response = await dio.delete<dynamic>(path, data: body);
+      return _asMap(response.data);
     } on DioException catch (e) {
       throw ErrorMapper.fromDio(e);
     }

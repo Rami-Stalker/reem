@@ -4,8 +4,8 @@ import '../../../../core/shared/entities/story.dart';
 import '../../../../core/shared/models/post_model.dart';
 import '../../../../core/shared/models/story_model.dart';
 import '../../../../core/shared/models/user_model.dart';
-import '../../../../core/shared/entities/product_media.dart';
-import '../../../../core/shared/models/product_media_model.dart';
+import '../../../../core/shared/entities/media.dart';
+import '../../../../core/shared/models/media_model.dart';
 import '../../../../core/shared/models/product_model.dart';
 import '../../../../core/shared/models/comment_model.dart';
 
@@ -13,15 +13,17 @@ List<Story> stories = [
   StoryModel(
     id: '1',
     isViewed: false,
-    media: ProductMediaModel(
-      url: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330',
-      type: MediaType.image,
-    ),
+    media: [
+      MediaModel(
+        url: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330',
+        type: MediaType.image,
+      ),
+    ],
     user: UserModel(
       id: '1',
       name: 'sara',
       username: 'SaraAlenna',
-      email: 'saras@example.com',
+      phone: '+966500000000',
       createdAt: DateTime.now(),
     ),
     createdAt: DateTime.now(),
@@ -30,15 +32,17 @@ List<Story> stories = [
   StoryModel(
     id: '1',
     isViewed: false,
-    media: ProductMediaModel(
-      url: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330',
-      type: MediaType.image,
-    ),
+    media: [
+      MediaModel(
+        url: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330',
+        type: MediaType.image,
+      ),
+    ],
     user: UserModel(
       id: '1',
       name: 'sara',
       username: 'SaraAlenna',
-      email: 'adleb@example.com',
+      phone: '+966500000000',
       createdAt: DateTime.now(),
     ),
     createdAt: DateTime.now(),
@@ -53,7 +57,7 @@ List<Post> posts = [
       id: "u1",
       name: "Sara Alenna",
       username: 'SaraAlenna',
-      email: 'saras@example.com',
+      phone: '+966500000000',
       imageUrl: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330',
       createdAt: DateTime.now(),
     ),
@@ -69,14 +73,14 @@ List<Post> posts = [
         id: '1',
         name: 'sara',
         username: 'saraname',
-        email: 'sara@gmial.com',
+        phone: '+966500000000',
         createdAt: DateTime.now(),
       ),
       title: 'dd',
       description: 'ff',
       price: 123,
       media: [
-        ProductMediaModel(
+        MediaModel(
         url: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330',
         type: MediaType.image,
       ),
@@ -95,7 +99,7 @@ List<Post> posts = [
       id: "u1",
       name: "Sara Alenna",
       username: 'SaraAlenna',
-      email: 'saras@example.com',
+      phone: '+966500000000',
       imageUrl: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330',
       createdAt: DateTime.now(),
     ),
@@ -111,14 +115,14 @@ List<Post> posts = [
         id: '1',
         name: 'sara',
         username: 'saraname',
-        email: 'sara@gmial.com',
+        phone: '+966500000000',
         createdAt: DateTime.now(),
       ),
       title: 'dd',
       description: 'ff',
       price: 123,
       media: [
-        ProductMediaModel(
+        MediaModel(
         url: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330',
         type: MediaType.image,
       ),
@@ -137,7 +141,7 @@ List<Post> posts = [
       id: "u1",
       name: "Sara Alenna",
       username: 'SaraAlenna',
-      email: 'saras@example.com',
+      phone: '+966500000000',
       imageUrl: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330',
       createdAt: DateTime.now(),
     ),
@@ -153,14 +157,14 @@ List<Post> posts = [
         id: '1',
         name: 'sara',
         username: 'saraname',
-        email: 'sara@gmial.com',
+        phone: '+966500000000',
         createdAt: DateTime.now(),
       ),
       title: 'dd',
       description: 'ff',
       price: 123,
       media: [
-        ProductMediaModel(
+        MediaModel(
         url: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330',
         type: MediaType.image,
       ),
@@ -238,7 +242,7 @@ List<Comment> getCommentsForPost(String postId) {
       id: 'u2',
       name: 'Layla Ahmed',
       username: 'layla_ahmed',
-      email: 'layla@example.com',
+      phone: '+966500000000',
       imageUrl: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330',
       createdAt: DateTime.now().subtract(const Duration(days: 30)),
     ),
@@ -246,7 +250,7 @@ List<Comment> getCommentsForPost(String postId) {
       id: 'u3',
       name: 'Nour Hassan',
       username: 'nour_hassan',
-      email: 'nour@example.com',
+      phone: '+966500000000',
       imageUrl: 'https://images.unsplash.com/photo-1517841905240-472988babdf9',
       createdAt: DateTime.now().subtract(const Duration(days: 60)),
     ),
@@ -254,7 +258,7 @@ List<Comment> getCommentsForPost(String postId) {
       id: 'u4',
       name: 'Mariam Ali',
       username: 'mariam_ali',
-      email: 'mariam@example.com',
+      phone: '+966500000000',
       imageUrl: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1',
       createdAt: DateTime.now().subtract(const Duration(days: 90)),
     ),
@@ -262,7 +266,7 @@ List<Comment> getCommentsForPost(String postId) {
       id: 'u5',
       name: 'Hana Mahmoud',
       username: 'hana_mahmoud',
-      email: 'hana@example.com',
+      phone: '+966500000000',
       imageUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69da53',
       createdAt: DateTime.now().subtract(const Duration(days: 120)),
     ),
@@ -270,7 +274,7 @@ List<Comment> getCommentsForPost(String postId) {
       id: 'u6',
       name: 'Salma Ibrahim',
       username: 'salma_ibrahim',
-      email: 'salma@example.com',
+      phone: '+966500000000',
       imageUrl: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d',
       createdAt: DateTime.now().subtract(const Duration(days: 150)),
     ),
@@ -285,7 +289,7 @@ List<Comment> getCommentsForPost(String postId) {
                   id: c.userId,
                   name: 'User',
                   username: 'user',
-                  email: 'user@example.com',
+                  phone: '+966500000000',
                   createdAt: DateTime.now(),
                 ),
             content: c.content,

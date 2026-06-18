@@ -4,6 +4,11 @@ import 'package:reem/core/result/result.dart';
 import '../../domain/usecases/get_favorites_usecase.dart';
 import '../../domain/usecases/get_orders_usecase.dart';
 import '../../domain/usecases/get_profile_usecase.dart';
+import '../../domain/usecases/get_wishlist_overview_usecase.dart';
+import '../../domain/usecases/create_wishlist_collection_usecase.dart';
+import '../../domain/usecases/save_post_usecase.dart';
+import '../../domain/usecases/save_seller_usecase.dart';
+import '../../domain/usecases/share_wishlist_collection_usecase.dart';
 import '../../domain/usecases/toggle_favorite_usecase.dart';
 import 'profile_state.dart';
 
@@ -52,6 +57,85 @@ class FavoritesNotifier extends StateNotifier<FavoritesState> {
     if (result is Success) {
       await load();
     }
+  }
+}
+
+class WishlistNotifier extends StateNotifier<WishlistState> {
+  WishlistNotifier({
+    required GetWishlistOverviewUseCase getWishlistOverviewUseCase,
+    required CreateWishlistCollectionUseCase createWishlistCollectionUseCase,
+    required SaveSellerUseCase saveSellerUseCase,
+    required SavePostUseCase savePostUseCase,
+    required ShareWishlistCollectionUseCase shareWishlistCollectionUseCase,
+  })  : _getWishlistOverview = getWishlistOverviewUseCase,
+        _createWishlistCollection = createWishlistCollectionUseCase,
+        _saveSeller = saveSellerUseCase,
+        _savePost = savePostUseCase,
+        _shareWishlistCollection = shareWishlistCollectionUseCase,
+        super(const WishlistState());
+
+  final GetWishlistOverviewUseCase _getWishlistOverview;
+  final CreateWishlistCollectionUseCase _createWishlistCollection;
+  final SaveSellerUseCase _saveSeller;
+  final SavePostUseCase _savePost;
+  final ShareWishlistCollectionUseCase _shareWishlistCollection;
+
+  Future<void> load() async {
+    state = state.copyWith(
+      isLoading: true,
+      clearError: true,
+      clearShareLink: true,
+    );
+    final result = await _getWishlistOverview();
+    state = switch (result) {
+      Success(:final data) =>
+        state.copyWith(isLoading: false, overview: data),
+      Error(:final failure) =>
+        state.copyWith(isLoading: false, error: failure.message),
+    };
+  }
+
+  Future<void> createCollection({
+    required String name,
+    String? description,
+  }) async {
+    state = state.copyWith(isMutating: true, clearError: true);
+    final result = await _createWishlistCollection(
+      name: name,
+      description: description,
+    );
+    state = switch (result) {
+      Success() => state.copyWith(isMutating: false),
+      Error(:final failure) =>
+        state.copyWith(isMutating: false, error: failure.message),
+    };
+    if (result is Success) await load();
+  }
+
+  Future<void> saveSeller(String sellerId) => _runAndReload(_saveSeller(sellerId));
+
+  Future<void> savePost(String postId) => _runAndReload(_savePost(postId));
+
+  Future<void> shareCollection(String collectionId) async {
+    state = state.copyWith(isMutating: true, clearError: true);
+    final result = await _shareWishlistCollection(collectionId);
+    state = switch (result) {
+      Success(:final data) =>
+        state.copyWith(isMutating: false, shareLink: data),
+      Error(:final failure) =>
+        state.copyWith(isMutating: false, error: failure.message),
+    };
+  }
+
+  Future<void> _runAndReload(Future<Result<void>> future) async {
+    state = state.copyWith(isMutating: true, clearError: true);
+    final result = await future;
+    state = switch (result) {
+      Success() => state.copyWith(isMutating: false),
+      Error(:final failure) =>
+        state.copyWith(isMutating: false, error: failure.message),
+    };
+    if (result is Success) await load();
   }
 }
 

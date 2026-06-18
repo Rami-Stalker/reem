@@ -23,5 +23,26 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
       storage.read(SecureStorageKeys.refreshToken);
 
   @override
-  Future<void> clear() => storage.deleteAll();
+  Future<String> getOrCreateDeviceId() async {
+    final existing = await storage.read(SecureStorageKeys.deviceId);
+    if (existing != null && existing.isNotEmpty) return existing;
+    final generated = 'reem-${DateTime.now().microsecondsSinceEpoch}';
+    await storage.write(SecureStorageKeys.deviceId, generated);
+    return generated;
+  }
+
+  @override
+  Future<void> saveGuestMode(bool enabled) =>
+      storage.write(SecureStorageKeys.guestMode, enabled ? 'true' : 'false');
+
+  @override
+  Future<bool> isGuestMode() async =>
+      (await storage.read(SecureStorageKeys.guestMode)) == 'true';
+
+  @override
+  Future<void> clear() async {
+    await storage.delete(SecureStorageKeys.accessToken);
+    await storage.delete(SecureStorageKeys.refreshToken);
+    await storage.delete(SecureStorageKeys.guestMode);
+  }
 }

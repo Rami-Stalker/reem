@@ -3,6 +3,8 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 abstract final class SecureStorageKeys {
   static const accessToken = 'access_token';
   static const refreshToken = 'refresh_token';
+  static const deviceId = 'device_id';
+  static const guestMode = 'guest_mode';
 }
 
 class SecureStorageService {

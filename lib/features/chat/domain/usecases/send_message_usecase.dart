@@ -10,6 +10,13 @@ class SendMessageUseCase {
   Future<Result<ChatMessageEntity>> call({
     required String chatId,
     required String content,
+    String kind = 'TEXT',
+    List<Map<String, dynamic>> attachments = const [],
   }) =>
-      _repository.sendMessage(chatId: chatId, content: content);
+      _repository.sendMessage(
+        chatId: chatId,
+        content: content,
+        kind: kind,
+        attachments: attachments,
+      );
 }

@@ -1,0 +1,43 @@
+// shared/entities/media.dart
+//
+// Canonical media abstraction used everywhere media is shown — product
+// galleries, social posts, and stories. Replaces the old `ProductMedia` type,
+// which was misleadingly product-specific.
+
+import 'package:equatable/equatable.dart';
+
+enum MediaType { image, video }
+
+extension MediaTypeX on MediaType {
+  String get wire => name; // 'image' | 'video'
+
+  bool get isVideo => this == MediaType.video;
+  bool get isImage => this == MediaType.image;
+
+  static MediaType fromWire(String? value) =>
+      (value ?? '').toLowerCase() == 'video' ? MediaType.video : MediaType.image;
+}
+
+/// A single piece of media (image or video) with optional ordering + poster.
+class MediaItem extends Equatable {
+  final String url;
+  final MediaType type;
+  final int sortOrder;
+  final String? thumbnailUrl;
+
+  const MediaItem({
+    required this.url,
+    this.type = MediaType.image,
+    this.sortOrder = 0,
+    this.thumbnailUrl,
+  });
+
+  bool get isVideo => type.isVideo;
+  bool get isImage => type.isImage;
+
+  /// Best still-image to render (video poster when present, else the url).
+  String get displayUrl => thumbnailUrl ?? url;
+
+  @override
+  List<Object?> get props => [url, type, sortOrder, thumbnailUrl];
+}

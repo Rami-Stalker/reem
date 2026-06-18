@@ -1,7 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reem/core/shared/wedgets/backgrounds/luxury_blurred_background.dart';
 
+import '../../domain/entities/chat_message_entity.dart';
 import '../providers/chat_provider.dart';
 import '../widgets/chat_app_bar.dart';
 import '../widgets/chat_date_divider.dart';
@@ -9,11 +12,9 @@ import '../widgets/message_bubble.dart';
 import '../widgets/image_message_bubble.dart';
 import '../widgets/voice_message_bubble.dart';
 import '../widgets/typing_indicator.dart';
-import '../widgets/pinned_message_banner.dart';
-import '../widgets/swipe_reply_container.dart';
 import '../widgets/chat_input.dart';
-import '../widgets/product_share_message.dart';
 import '../widgets/chat_gradient_orb.dart';
+import '../widgets/message_delivery_status.dart';
 
 class ChatDetailsScreen extends ConsumerStatefulWidget {
   const ChatDetailsScreen({super.key, required this.chatId});
@@ -27,25 +28,44 @@ class ChatDetailsScreen extends ConsumerStatefulWidget {
 class _ChatDetailsScreenState extends ConsumerState<ChatDetailsScreen>
     with TickerProviderStateMixin {
   late AnimationController controller;
+  StreamSubscription<Map<String, dynamic>>? realtimeSub;
 
   @override
   void initState() {
     super.initState();
-
     controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 1200),
+      duration: const Duration(milliseconds: 900),
     )..forward();
 
     if (widget.chatId.isNotEmpty) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        ref.read(chatMessagesNotifierProvider.notifier).load(widget.chatId);
+        _bootstrap();
       });
     }
   }
 
+  Future<void> _bootstrap() async {
+    await ref.read(chatMessagesNotifierProvider.notifier).load(widget.chatId);
+    final realtime = ref.read(chatRealtimeServiceProvider);
+    await realtime.connect();
+    realtime.join(widget.chatId);
+    realtime.markRead(widget.chatId);
+    realtimeSub = realtime.events.listen((event) {
+      ref.read(chatMessagesNotifierProvider.notifier).applyRealtime(event);
+      if (event['event'] == 'message.created' &&
+          event['chat_id'] == widget.chatId) {
+        realtime.markRead(widget.chatId);
+      }
+    });
+  }
+
   @override
   void dispose() {
+    realtimeSub?.cancel();
+    if (widget.chatId.isNotEmpty) {
+      ref.read(chatRealtimeServiceProvider).leave(widget.chatId);
+    }
     controller.dispose();
     super.dispose();
   }
@@ -53,6 +73,8 @@ class _ChatDetailsScreenState extends ConsumerState<ChatDetailsScreen>
   @override
   Widget build(BuildContext context) {
     final messagesState = ref.watch(chatMessagesNotifierProvider);
+    final notifier = ref.read(chatMessagesNotifierProvider.notifier);
+    final realtime = ref.read(chatRealtimeServiceProvider);
 
     return Scaffold(
       resizeToAvoidBottomInset: true,
@@ -86,72 +108,173 @@ class _ChatDetailsScreenState extends ConsumerState<ChatDetailsScreen>
                       padding: const EdgeInsets.all(22),
                       physics: const BouncingScrollPhysics(),
                       children: [
-                        if (messagesState.messages.isEmpty) ...[
-                          const PinnedMessageBanner(
-                            message:
-                                "Luxury summer collection launches tomorrow at 8PM ✨",
-                          ),
-                          const SizedBox(height: 20),
-                          const ChatDateDivider(title: "Today"),
-                          const SizedBox(height: 24),
-                          FadeTransition(
-                            opacity: controller,
-                            child: const MessageBubble(
-                              isMe: false,
-                              message:
-                                  "Welcome to our luxury experience 💖",
-                            ),
-                          ),
-                          const SizedBox(height: 18),
-                          SlideTransition(
-                            position: Tween<Offset>(
-                              begin: const Offset(.4, 0),
-                              end: Offset.zero,
-                            ).animate(
-                              CurvedAnimation(
-                                parent: controller,
-                                curve: Curves.easeOutQuart,
-                              ),
-                            ),
-                            child: const MessageBubble(
-                              isMe: true,
-                              message:
-                                  "Everything looks absolutely stunning 😍",
-                            ),
-                          ),
-                          const SizedBox(height: 22),
-                          const SwipeReplyContainer(
-                            child: ImageMessageBubble(
-                              image:
-                                  "https://images.unsplash.com/photo-1529139574466-a303027c1d8b",
-                            ),
-                          ),
-                          const SizedBox(height: 22),
-                          const ProductShareMessage(),
-                          const SizedBox(height: 22),
-                          const VoiceMessageBubble(isMe: true),
-                          const SizedBox(height: 26),
-                          const TypingIndicator(),
-                        ] else
+                        const ChatDateDivider(title: 'Today'),
+                        const SizedBox(height: 18),
+                        if (messagesState.messages.isEmpty)
+                          _EmptyConversation(onImage: _sendImage)
+                        else
                           ...messagesState.messages.map(
-                            (msg) => Padding(
+                            (message) => Padding(
                               padding: const EdgeInsets.only(bottom: 12),
-                              child: MessageBubble(
-                                isMe: msg.isMine,
-                                message: msg.content,
-                              ),
+                              child: _MessageRow(message: message),
                             ),
                           ),
-                        const SizedBox(height: 40),
+                        if (messagesState.isPeerTyping) ...[
+                          const SizedBox(height: 8),
+                          const TypingIndicator(),
+                        ],
+                        const SizedBox(height: 30),
                       ],
                     ),
                   ),
-                const ChatInput(),
+                ChatInput(
+                  isSending: messagesState.isSending,
+                  onTyping: (typing) => realtime.typing(widget.chatId, typing),
+                  onImage: _sendImage,
+                  onVoice: _sendVoice,
+                  onSend: (text) => notifier.sendMessage(text),
+                ),
               ],
             ),
           ],
         ),
       ),
+    );
+  }
+
+  Future<void> _sendImage() async {
+    final url = await _askForUrl(
+      title: 'Share image',
+      hint: 'https://example.com/image.jpg',
+    );
+    if (url == null || url.isEmpty) return;
+    await ref.read(chatMessagesNotifierProvider.notifier).send(
+      content: 'Image',
+      kind: 'IMAGE',
+      attachments: [
+        {'kind': 'IMAGE', 'url': url, 'mime_type': 'image/jpeg'},
+      ],
+    );
+  }
+
+  Future<void> _sendVoice() async {
+    await ref.read(chatMessagesNotifierProvider.notifier).send(
+      content: 'Voice message',
+      kind: 'VOICE',
+      attachments: [
+        {
+          'kind': 'VOICE',
+          'url': 'voice://pending-${DateTime.now().millisecondsSinceEpoch}',
+          'mime_type': 'audio/mpeg',
+          'duration_ms': 28000,
+        },
+      ],
+    );
+  }
+
+  Future<String?> _askForUrl({
+    required String title,
+    required String hint,
+  }) async {
+    final controller = TextEditingController();
+    try {
+      return showDialog<String>(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text(title),
+            content: TextField(
+              controller: controller,
+              autofocus: true,
+              decoration: InputDecoration(hintText: hint),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('Cancel'),
+              ),
+              FilledButton(
+                onPressed: () => Navigator.pop(context, controller.text.trim()),
+                child: const Text('Share'),
+              ),
+            ],
+          );
+        },
+      );
+    } finally {
+      controller.dispose();
+    }
+  }
+}
+
+class _MessageRow extends StatelessWidget {
+  const _MessageRow({required this.message});
+
+  final ChatMessageEntity message;
+
+  @override
+  Widget build(BuildContext context) {
+    final bubble = switch (message.kind) {
+      'image' => ImageMessageBubble(
+          isMe: message.isMine,
+          image: message.attachments.isNotEmpty
+              ? message.attachments.first.url
+              : message.content,
+        ),
+      'voice' => VoiceMessageBubble(isMe: message.isMine),
+      _ => MessageBubble(isMe: message.isMine, message: message.content),
+    };
+
+    if (!message.isMine) return bubble;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        bubble,
+        const SizedBox(height: 4),
+        MessageDeliveryStatus(
+          delivered: message.isDelivered,
+          seen: message.isRead,
+        ),
+      ],
+    );
+  }
+}
+
+class _EmptyConversation extends StatelessWidget {
+  const _EmptyConversation({required this.onImage});
+
+  final VoidCallback onImage;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        padding: const EdgeInsets.all(22),
+        decoration: BoxDecoration(
+          color: Colors.white.withOpacity(.82),
+          borderRadius: BorderRadius.circular(24),
+        ),
+        child: Column(
+          children: [
+            const Icon(Icons.forum_rounded, size: 42, color: Color(0xffFF5C8A)),
+            const SizedBox(height: 12),
+            const Text(
+              'Start the conversation',
+              style: TextStyle(fontWeight: FontWeight.w700, fontSize: 16),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Ask about product details, order status, sizing, delivery, or share images and voice notes.',
+              textAlign: TextAlign.center,
+              style: TextStyle(color: Colors.grey[700], height: 1.4),
+            ),
+            const SizedBox(height: 14),
+            TextButton.icon(
+              onPressed: onImage,
+              icon: const Icon(Icons.photo_rounded),
+              label: const Text('Share image'),
+            ),
+          ],
+        ),
     );
   }
 }

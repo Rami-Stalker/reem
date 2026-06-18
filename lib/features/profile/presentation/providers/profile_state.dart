@@ -2,6 +2,7 @@ import 'package:reem/core/shared/entities/product.dart';
 import 'package:reem/core/shared/entities/user.dart';
 
 import '../../domain/entities/order_entity.dart';
+import '../../domain/entities/wishlist_entity.dart';
 
 class ProfileState {
   const ProfileState({
@@ -49,6 +50,40 @@ class FavoritesState {
     return FavoritesState(
       favorites: favorites ?? this.favorites,
       isLoading: isLoading ?? this.isLoading,
+      error: clearError ? null : (error ?? this.error),
+    );
+  }
+}
+
+class WishlistState {
+  const WishlistState({
+    this.overview = const WishlistOverview(),
+    this.shareLink,
+    this.isLoading = false,
+    this.isMutating = false,
+    this.error,
+  });
+
+  final WishlistOverview overview;
+  final WishlistShareLink? shareLink;
+  final bool isLoading;
+  final bool isMutating;
+  final String? error;
+
+  WishlistState copyWith({
+    WishlistOverview? overview,
+    WishlistShareLink? shareLink,
+    bool? isLoading,
+    bool? isMutating,
+    String? error,
+    bool clearError = false,
+    bool clearShareLink = false,
+  }) {
+    return WishlistState(
+      overview: overview ?? this.overview,
+      shareLink: clearShareLink ? null : (shareLink ?? this.shareLink),
+      isLoading: isLoading ?? this.isLoading,
+      isMutating: isMutating ?? this.isMutating,
       error: clearError ? null : (error ?? this.error),
     );
   }

@@ -1,6 +1,8 @@
 import 'package:flutter_riverpod/legacy.dart';
 import 'package:reem/core/result/result.dart';
 
+import '../../data/models/chat_message_model.dart';
+import '../../domain/entities/chat_message_entity.dart';
 import '../../domain/usecases/get_messages_usecase.dart';
 import '../../domain/usecases/get_threads_usecase.dart';
 import '../../domain/usecases/send_message_usecase.dart';
@@ -53,18 +55,36 @@ class ChatMessagesNotifier extends StateNotifier<ChatMessagesState> {
   }
 
   Future<bool> sendMessage(String content) async {
+    return send(
+      content: content,
+      kind: 'TEXT',
+    );
+  }
+
+  Future<bool> send({
+    required String content,
+    String kind = 'TEXT',
+    List<Map<String, dynamic>> attachments = const [],
+  }) async {
     final chatId = state.chatId;
-    if (chatId == null || chatId.isEmpty || content.trim().isEmpty) {
+    if (chatId == null ||
+        chatId.isEmpty ||
+        (content.trim().isEmpty && attachments.isEmpty)) {
       return false;
     }
 
     state = state.copyWith(isSending: true, clearError: true);
-    final result = await _sendMessage(chatId: chatId, content: content.trim());
+    final result = await _sendMessage(
+      chatId: chatId,
+      content: content.trim(),
+      kind: kind,
+      attachments: attachments,
+    );
     return switch (result) {
       Success(:final data) => () {
           state = state.copyWith(
             isSending: false,
-            messages: [...state.messages, data],
+            messages: _merge(data),
           );
           return true;
         }(),
@@ -73,5 +93,51 @@ class ChatMessagesNotifier extends StateNotifier<ChatMessagesState> {
           return false;
         }(),
     };
+  }
+
+  void applyRealtime(Map<String, dynamic> event) {
+    final eventName = event['event'];
+    if (eventName == 'message.created') {
+      final raw = event['message'];
+      if (raw is! Map) return;
+      final message = ChatMessageModel.fromJson(Map<String, dynamic>.from(raw));
+      if (message.chatId != state.chatId) return;
+      state = state.copyWith(messages: _merge(message), isPeerTyping: false);
+      return;
+    }
+    if (eventName == 'typing' && event['chat_id'] == state.chatId) {
+      state = state.copyWith(isPeerTyping: event['is_typing'] == true);
+      return;
+    }
+    if (eventName == 'messages.read' && event['chat_id'] == state.chatId) {
+      state = state.copyWith(
+        messages: state.messages
+            .map(
+              (message) => message.isMine
+                  ? ChatMessageModel(
+                      id: message.id,
+                      chatId: message.chatId,
+                      senderId: message.senderId,
+                      content: message.content,
+                      sentAt: message.sentAt,
+                      isMine: message.isMine,
+                      kind: message.kind,
+                      status: 'read',
+                      attachments: message.attachments,
+                      deliveredAt: message.deliveredAt,
+                      readAt: DateTime.tryParse(
+                        event['read_at'] as String? ?? '',
+                      ),
+                    )
+                  : message,
+            )
+            .toList(),
+      );
+    }
+  }
+
+  List<ChatMessageEntity> _merge(ChatMessageEntity message) {
+    final existing = state.messages.where((item) => item.id != message.id);
+    return [...existing, message]..sort((a, b) => a.sentAt.compareTo(b.sentAt));
   }
 }

@@ -35,14 +35,55 @@ final class ChatRemoteDataSourceImpl extends BaseRemoteDataSource
   Future<ChatMessageModel> sendMessage({
     required String chatId,
     required String content,
+    String kind = 'TEXT',
+    List<Map<String, dynamic>> attachments = const [],
   }) async {
     final json = await postJson(
       ApiEndpoints.chatMessages(chatId),
-      body: {'content': content},
+      body: {
+        'content': content,
+        'kind': kind,
+        if (attachments.isNotEmpty) 'attachments': attachments,
+      },
     );
     final messageJson = json['message'] is Map<String, dynamic>
         ? json['message'] as Map<String, dynamic>
         : json;
     return ChatMessageModel.fromJson(messageJson, chatId: chatId);
+  }
+
+  @override
+  Future<void> markRead(String chatId, {String? messageId}) async {
+    await patchJson(
+      ApiEndpoints.chatRead(chatId),
+      body: {if (messageId != null) 'message_id': messageId},
+    );
+  }
+
+  @override
+  Future<void> blockUser(String userId, {String? reason}) async {
+    await postJson(
+      ApiEndpoints.chatBlock(userId),
+      body: {if (reason != null) 'reason': reason},
+    );
+  }
+
+  @override
+  Future<void> reportUser({
+    required String chatId,
+    required String reportedUserId,
+    required String reason,
+    String? messageId,
+    String? description,
+  }) async {
+    await postJson(
+      ApiEndpoints.chatReports(chatId),
+      body: {
+        'reported_user_id': reportedUserId,
+        'reason': reason,
+        if (messageId != null) 'message_id': messageId,
+        if (description != null) 'description': description,
+      },
+    );
   }
 }

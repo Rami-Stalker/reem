@@ -28,6 +28,12 @@ extension DsButtonSizeValues on DsButtonSize {
         DsButtonSize.lg => 16,
       };
 
+  double get iconSize => switch (this) {
+        DsButtonSize.sm => DsConstraints.iconSm,
+        DsButtonSize.md => 22,
+        DsButtonSize.lg => DsConstraints.iconMd,
+      };
+
   BorderRadius get borderRadius => switch (this) {
         DsButtonSize.sm => DsRadius.borderMd,
         DsButtonSize.md => DsRadius.borderXl,

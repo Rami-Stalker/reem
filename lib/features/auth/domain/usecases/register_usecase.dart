@@ -9,8 +9,16 @@ class RegisterUseCase {
 
   Future<Result<User>> call({
     required String name,
-    required String email,
+    String? email,
+    required String phone,
     required String password,
+    UserRole role = UserRole.customer,
   }) =>
-      _repository.register(name: name, email: email, password: password);
+      _repository.register(
+        name: name,
+        email: email,
+        phone: phone,
+        password: password,
+        role: role,
+      );
 }

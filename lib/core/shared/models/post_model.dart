@@ -1,7 +1,8 @@
 // shared/models/post_model.dart
 
 import '../entities/post.dart';
-
+import '../entities/product.dart';
+import '../entities/user.dart';
 import 'product_model.dart';
 import 'user_model.dart';
 
@@ -11,83 +12,77 @@ class PostModel extends Post {
     required super.author,
     required super.product,
     required super.caption,
-    required super.category,
-    required super.likesCount,
-    required super.commentsCount,
-    required super.sharesCount,
-    required super.isLiked,
+    super.category,
+    super.likesCount,
+    super.commentsCount,
+    super.sharesCount,
+    super.savesCount,
+    super.isLiked,
+    super.isSaved,
     required super.createdAt,
   });
 
   factory PostModel.fromJson(Map<String, dynamic> json) {
+    final productJson = json['product'] as Map<String, dynamic>;
     return PostModel(
-      id: json['id'],
-
-      author: UserModel.fromJson(json['author']),
-
-      product: ProductModel.fromJson(json['product']),
-
-      caption: json['caption'],
-
-      category: _mapType(json['type']),
-
-      likesCount: json['likes_count'] ?? 0,
-      commentsCount: json['comments_count'] ?? 0,
-      sharesCount: json['shares_count'] ?? 0,
-
-      isLiked: json['is_liked'] ?? false,
-
-      createdAt: DateTime.parse(json['created_at']),
+      id: json['id'] as String,
+      author: UserModel.fromJson(json['author'] as Map<String, dynamic>),
+      product: ProductModel.fromJson(productJson),
+      caption: json['caption'] as String? ?? '',
+      // Derive the display category from the underlying product.
+      category: CategoryTypeX.fromString(productJson['category'] as String?),
+      likesCount: json['likes_count'] as int? ?? 0,
+      commentsCount: json['comments_count'] as int? ?? 0,
+      sharesCount: json['shares_count'] as int? ?? 0,
+      savesCount: json['saves_count'] as int? ?? 0,
+      isLiked: json['is_liked'] as bool? ?? false,
+      isSaved: json['is_saved'] as bool? ?? false,
+      createdAt: DateTime.parse(json['created_at'] as String),
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'author': UserModel.fromEntity(author).toJson(),
+        'product': ProductModel.fromEntity(product).toJson(),
+        'caption': caption,
+        'category': category.name,
+        'likes_count': likesCount,
+        'comments_count': commentsCount,
+        'shares_count': sharesCount,
+        'saves_count': savesCount,
+        'is_liked': isLiked,
+        'is_saved': isSaved,
+        'created_at': createdAt.toIso8601String(),
+      };
 
-      'author': (author as UserModel).toJson(),
-
-      'product': (product as ProductModel).toJson(),
-
-      'caption': caption,
-
-      'category': category.name,
-
-      'likes_count': likesCount,
-      'comments_count': commentsCount,
-      'shares_count': sharesCount,
-
-      'is_liked': isLiked,
-
-      'created_at': createdAt.toIso8601String(),
-    };
-  }
-
-    static CategoryType _mapType(String type) {
-    switch (type) {
-      case 'clothing':
-        return CategoryType.clothing;
-
-      case 'makeup':
-        return CategoryType.makeup;
-
-      case 'perfumes':
-        return CategoryType.perfumes;
-
-      case 'flowers':
-        return CategoryType.flowers;
-
-      case 'shoes':
-        return CategoryType.shoes;
-
-      case 'chocolate':
-        return CategoryType.chocolate;
-
-      case 'bathBody':
-        return CategoryType.bathBody;
-
-      default:
-        return CategoryType.gifts;
-    }
+  PostModel copyWith({
+    String? id,
+    User? author,
+    Product? product,
+    String? caption,
+    CategoryType? category,
+    int? likesCount,
+    int? commentsCount,
+    int? sharesCount,
+    int? savesCount,
+    bool? isLiked,
+    bool? isSaved,
+    DateTime? createdAt,
+  }) {
+    return PostModel(
+      id: id ?? this.id,
+      author: author ?? this.author,
+      product: product ?? this.product,
+      caption: caption ?? this.caption,
+      category: category ?? this.category,
+      likesCount: likesCount ?? this.likesCount,
+      commentsCount: commentsCount ?? this.commentsCount,
+      sharesCount: sharesCount ?? this.sharesCount,
+      savesCount: savesCount ?? this.savesCount,
+      isLiked: isLiked ?? this.isLiked,
+      isSaved: isSaved ?? this.isSaved,
+      createdAt: createdAt ?? this.createdAt,
+    );
   }
 }

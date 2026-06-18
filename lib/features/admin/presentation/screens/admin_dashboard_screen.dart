@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../core/design_system/design_system.dart';
 import '../../../../core/localization/l10n_extension.dart';
+import '../../../../core/router/route_paths.dart';
 import '../providers/admin_provider.dart';
 import '../widgets/admin_page_header.dart';
 
@@ -30,6 +32,7 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
     final colors = context.dsColors;
     final state = ref.watch(adminDashboardNotifierProvider);
     final stats = state.stats;
+    final audit = ref.watch(adminSectionProvider(adminSectionConfigs['audit']!));
 
     return SingleChildScrollView(
       child: Column(
@@ -41,7 +44,7 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
             actions: [
               PrimaryButton(
                 label: l10n.adminViewReports,
-                onPressed: () {},
+                onPressed: () => context.go(RoutePaths.adminReports),
               ),
             ],
           ),
@@ -139,28 +142,41 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
                     runSpacing: DsSpacing.md,
                     children: [
                       _QuickActionButton(
-                        icon: Icons.add_shopping_cart_rounded,
-                        label: 'Add Product',
-                        onPressed: () {},
+                        icon: Icons.storefront_rounded,
+                        label: 'Seller review',
+                        onPressed: () => context.go(RoutePaths.adminSellers),
                         index: 0,
                       ),
                       _QuickActionButton(
-                        icon: Icons.receipt_long_rounded,
-                        label: 'View Orders',
-                        onPressed: () {},
+                        icon: Icons.support_agent_rounded,
+                        label: 'Support queue',
+                        onPressed: () => context.go(RoutePaths.adminSupport),
                         index: 1,
                       ),
                       _QuickActionButton(
-                        icon: Icons.people_rounded,
-                        label: 'Manage Users',
-                        onPressed: () {},
+                        icon: Icons.campaign_rounded,
+                        label: 'Campaigns',
+                        onPressed: () => context.go(RoutePaths.adminCampaigns),
                         index: 2,
                       ),
                       _QuickActionButton(
-                        icon: Icons.analytics_rounded,
-                        label: 'Analytics',
-                        onPressed: () {},
+                        icon: Icons.account_balance_rounded,
+                        label: 'Financials',
+                        onPressed: () => context.go(RoutePaths.adminFinancials),
                         index: 3,
+                      ),
+                      _QuickActionButton(
+                        icon: Icons.gavel_rounded,
+                        label: 'Moderation',
+                        onPressed: () => context.go(RoutePaths.adminModeration),
+                        index: 4,
+                      ),
+                      _QuickActionButton(
+                        icon: Icons.query_stats_rounded,
+                        label: 'Notify analytics',
+                        onPressed: () =>
+                            context.go(RoutePaths.adminNotificationAnalytics),
+                        index: 5,
                       ),
                     ],
                   ),
@@ -178,26 +194,49 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
                   ),
                   const SizedBox(height: DsSpacing.md),
                   
-                  _RecentActivityCard(
-                    title: 'New Order #10284',
-                    subtitle: 'Sara M. ordered 3 items',
-                    time: '2 minutes ago',
-                    icon: Icons.shopping_bag_rounded,
-                    index: 0,
-                  ),
-                  _RecentActivityCard(
-                    title: 'New User Registered',
-                    subtitle: 'Layla K. joined the platform',
-                    time: '15 minutes ago',
-                    icon: Icons.person_add_rounded,
-                    index: 1,
-                  ),
-                  _RecentActivityCard(
-                    title: 'Product Review',
-                    subtitle: 'Nour A. reviewed "Silk Dress"',
-                    time: '1 hour ago',
-                    icon: Icons.star_rounded,
-                    index: 2,
+                  audit.when(
+                    loading: () => const Padding(
+                      padding: EdgeInsets.all(DsSpacing.lg),
+                      child: Center(child: DsLoadingIndicator()),
+                    ),
+                    error: (error, _) => _RecentActivityCard(
+                      title: 'Audit stream unavailable',
+                      subtitle: error.toString(),
+                      time: 'Retry from Audit logs',
+                      icon: Icons.warning_amber_rounded,
+                      index: 0,
+                    ),
+                    data: (section) {
+                      final records = section.records.take(5).toList();
+                      if (records.isEmpty) {
+                        return Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.all(DsSpacing.lg),
+                          decoration: BoxDecoration(
+                            color: colors.surface,
+                            borderRadius: DsRadius.borderXl,
+                            border: Border.all(color: colors.glassBorder),
+                          ),
+                          child: Text(
+                            'No recent administrative activity.',
+                            style: TextStyle(color: colors.onSurfaceVariant),
+                          ),
+                        );
+                      }
+                      return Column(
+                        children: [
+                          for (final entry in records.asMap().entries)
+                            _RecentActivityCard(
+                              title: entry.value.title,
+                              subtitle: entry.value.subtitle,
+                              time: entry.value.metrics['created_at'] ??
+                                  entry.value.status,
+                              icon: Icons.manage_search_rounded,
+                              index: entry.key,
+                            ),
+                        ],
+                      );
+                    },
                   ),
                 ],
               ),

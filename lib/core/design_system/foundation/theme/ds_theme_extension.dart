@@ -47,7 +47,7 @@ class DsThemeExtension extends ThemeExtension<DsThemeExtension> {
   static final DsThemeExtension dark = DsThemeExtension(
     colors: DsColorScheme.dark,
     isDark: true,
-    primaryGradient: DsGradients.primary,
+    primaryGradient: DsGradients.primaryDark,
     softGradient: DsGradients.backgroundDark,
     glassGradient: DsGradients.glassDark,
     meshGradient: DsGradients.backgroundDark,

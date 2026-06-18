@@ -2,10 +2,21 @@ import 'package:flutter/material.dart';
 
 import 'ds_colors.dart';
 
-/// Typography scale — pairs with `fontFamily: 'Cairo'` in theme.
+/// Typography scale for Reem.
+///
+/// Two family tokens are exposed: [fontFamily] (Cairo) for body/UI and Arabic/
+/// RTL, and [fontFamilyDisplay] (Playfair Display) — an elegant high-contrast
+/// serif applied to every display and headline style. Playfair is Latin-only,
+/// so [displayFallback] routes Arabic glyphs back to Cairo. Both families are
+/// bundled as variable fonts in `pubspec.yaml` (assets/fonts/).
 abstract final class DsTypography {
   static const String fontFamily = 'Cairo';
-  static const String fontFamilyDisplay = 'Cairo';
+  static const String fontFamilyDisplay = 'PlayfairDisplay';
+
+  /// Display fallback — Playfair Display is Latin-only, so Arabic (and any
+  /// glyph it lacks) falls back to [fontFamily]. Applied to every display /
+  /// headline style.
+  static const List<String> displayFallback = [fontFamily];
 
   static const double scaleFactor = 1.0;
 
@@ -34,57 +45,78 @@ abstract final class DsTypography {
   static const double labelMedium = 12;
   static const double labelSmall = 11;
 
+  // Weights
+  static const FontWeight thin = FontWeight.w200;
   static const FontWeight light = FontWeight.w300;
   static const FontWeight regular = FontWeight.w400;
   static const FontWeight medium = FontWeight.w500;
   static const FontWeight semiBold = FontWeight.w600;
   static const FontWeight bold = FontWeight.w700;
+  static const FontWeight extraBold = FontWeight.w800;
 
+  // Letter spacing — tighter on large display, airier on small labels for elegance.
+  static const double letterSpacingTighter = -1.0;
   static const double letterSpacingTight = -0.5;
+  static const double letterSpacingSnug = -0.25;
   static const double letterSpacingNormal = 0;
-  static const double letterSpacingWide = 0.5;
+  static const double letterSpacingWide = 0.25;
+  static const double letterSpacingWider = 0.5;
+  static const double letterSpacingWidest = 1.2; // overlines / eyebrows
 
-  static TextTheme textTheme({required Color onSurface, Color? onSurfaceVariant}) {
+  static TextTheme textTheme({
+    required Color onSurface,
+    Color? onSurfaceVariant,
+  }) {
     final variant = onSurfaceVariant ?? DsColors.neutral500;
     return TextTheme(
       displayLarge: TextStyle(
-        fontFamily: fontFamily,
+        fontFamily: fontFamilyDisplay,
+        fontFamilyFallback: displayFallback,
         fontSize: displayLarge,
         fontWeight: bold,
         letterSpacing: letterSpacingTight,
         color: onSurface,
-        height: 1.12,
+        height: 1.10,
       ),
       displayMedium: TextStyle(
-        fontFamily: fontFamily,
+        fontFamily: fontFamilyDisplay,
+        fontFamilyFallback: displayFallback,
         fontSize: displayMedium,
         fontWeight: bold,
+        letterSpacing: letterSpacingTight,
         color: onSurface,
-        height: 1.16,
+        height: 1.14,
       ),
       displaySmall: TextStyle(
-        fontFamily: fontFamily,
+        fontFamily: fontFamilyDisplay,
+        fontFamilyFallback: displayFallback,
         fontSize: displaySmall,
-        fontWeight: semiBold,
+        fontWeight: bold,
+        letterSpacing: letterSpacingTight,
         color: onSurface,
-        height: 1.22,
+        height: 1.20,
       ),
       headlineLarge: TextStyle(
-        fontFamily: fontFamily,
+        fontFamily: fontFamilyDisplay,
+        fontFamilyFallback: displayFallback,
         fontSize: headlineLarge,
         fontWeight: bold,
+        letterSpacing: letterSpacingSnug,
         color: onSurface,
         height: 1.25,
       ),
       headlineMedium: TextStyle(
-        fontFamily: fontFamily,
+        fontFamily: fontFamilyDisplay,
+        fontFamilyFallback: displayFallback,
         fontSize: headlineMedium,
         fontWeight: semiBold,
+        letterSpacing: letterSpacingSnug,
         color: onSurface,
         height: 1.28,
       ),
       headlineSmall: TextStyle(
-        fontFamily: fontFamily,
+        fontFamily: fontFamilyDisplay,
+        fontFamilyFallback: displayFallback,
         fontSize: headlineSmall,
         fontWeight: semiBold,
         color: onSurface,
@@ -100,14 +132,16 @@ abstract final class DsTypography {
       titleMedium: TextStyle(
         fontFamily: fontFamily,
         fontSize: titleMedium,
-        fontWeight: medium,
+        fontWeight: semiBold,
+        letterSpacing: letterSpacingWide,
         color: onSurface,
-        height: 1.5,
+        height: 1.45,
       ),
       titleSmall: TextStyle(
         fontFamily: fontFamily,
         fontSize: titleSmall,
         fontWeight: medium,
+        letterSpacing: letterSpacingWide,
         color: onSurface,
         height: 1.43,
       ),
@@ -123,19 +157,20 @@ abstract final class DsTypography {
         fontSize: bodyMedium,
         fontWeight: regular,
         color: onSurface,
-        height: 1.43,
+        height: 1.5,
       ),
       bodySmall: TextStyle(
         fontFamily: fontFamily,
         fontSize: bodySmall,
         fontWeight: regular,
         color: variant,
-        height: 1.33,
+        height: 1.4,
       ),
       labelLarge: TextStyle(
         fontFamily: fontFamily,
         fontSize: labelLarge,
-        fontWeight: medium,
+        fontWeight: semiBold,
+        letterSpacing: letterSpacingWide,
         color: onSurface,
         height: 1.43,
       ),
@@ -143,6 +178,7 @@ abstract final class DsTypography {
         fontFamily: fontFamily,
         fontSize: labelMedium,
         fontWeight: medium,
+        letterSpacing: letterSpacingWide,
         color: variant,
         height: 1.33,
       ),
@@ -150,9 +186,42 @@ abstract final class DsTypography {
         fontFamily: fontFamily,
         fontSize: labelSmall,
         fontWeight: medium,
+        letterSpacing: letterSpacingWider,
         color: variant,
         height: 1.45,
       ),
     );
   }
+
+  /// Eyebrow / overline style — uppercase, airy tracking. Premium section labels.
+  static TextStyle overline(Color color) => TextStyle(
+        fontFamily: fontFamily,
+        fontSize: labelSmall,
+        fontWeight: semiBold,
+        letterSpacing: letterSpacingWidest,
+        color: color,
+        height: 1.4,
+      );
+
+  /// Price emphasis style — tabular-leaning, confident.
+  static TextStyle price(Color color, {double size = titleMedium}) => TextStyle(
+        fontFamily: fontFamily,
+        fontSize: size,
+        fontWeight: bold,
+        letterSpacing: letterSpacingSnug,
+        color: color,
+        height: 1.2,
+      );
+
+  /// Strikethrough compare-at price.
+  static TextStyle priceStrike(Color color, {double size = bodySmall}) =>
+      TextStyle(
+        fontFamily: fontFamily,
+        fontSize: size,
+        fontWeight: regular,
+        color: color,
+        height: 1.2,
+        decoration: TextDecoration.lineThrough,
+        decorationColor: color,
+      );
 }

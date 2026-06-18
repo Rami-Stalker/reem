@@ -23,6 +23,41 @@ class ChatRepositoryImpl with RepositoryHandler implements ChatRepository {
   Future<Result<ChatMessageEntity>> sendMessage({
     required String chatId,
     required String content,
+    String kind = 'TEXT',
+    List<Map<String, dynamic>> attachments = const [],
   }) =>
-      guard(() => remote.sendMessage(chatId: chatId, content: content));
+      guard(
+        () => remote.sendMessage(
+          chatId: chatId,
+          content: content,
+          kind: kind,
+          attachments: attachments,
+        ),
+      );
+
+  @override
+  Future<Result<void>> markRead(String chatId, {String? messageId}) =>
+      guard(() => remote.markRead(chatId, messageId: messageId));
+
+  @override
+  Future<Result<void>> blockUser(String userId, {String? reason}) =>
+      guard(() => remote.blockUser(userId, reason: reason));
+
+  @override
+  Future<Result<void>> reportUser({
+    required String chatId,
+    required String reportedUserId,
+    required String reason,
+    String? messageId,
+    String? description,
+  }) =>
+      guard(
+        () => remote.reportUser(
+          chatId: chatId,
+          reportedUserId: reportedUserId,
+          reason: reason,
+          messageId: messageId,
+          description: description,
+        ),
+      );
 }

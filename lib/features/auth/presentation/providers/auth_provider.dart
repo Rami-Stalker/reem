@@ -6,11 +6,14 @@ import '../../data/datasources/impl/auth_local_datasource_impl.dart';
 import '../../data/datasources/impl/auth_remote_datasource_impl.dart';
 import '../../data/repositories/auth_repository_impl.dart';
 import '../../domain/repositories/auth_repository.dart';
+import '../../domain/usecases/continue_as_guest_usecase.dart';
 import '../../domain/usecases/forgot_password_usecase.dart';
 import '../../domain/usecases/get_current_user_usecase.dart';
 import '../../domain/usecases/login_usecase.dart';
 import '../../domain/usecases/logout_usecase.dart';
+import '../../domain/usecases/otp_usecases.dart';
 import '../../domain/usecases/register_usecase.dart';
+import '../../domain/usecases/social_sign_in_usecase.dart';
 import 'auth_notifier.dart';
 import 'auth_state.dart';
 import '../../data/datasources/auth_local_datasource.dart';
@@ -28,6 +31,7 @@ final authRepositoryProvider = Provider<AuthRepository>(
   (ref) => AuthRepositoryImpl(
     remote: ref.watch(authRemoteDataSourceProvider),
     local: ref.watch(authLocalDataSourceProvider),
+    networkInfo: ref.watch(networkInfoProvider),
   ),
 );
 
@@ -51,6 +55,26 @@ final forgotPasswordUseCaseProvider = Provider(
   (ref) => ForgotPasswordUseCase(ref.watch(authRepositoryProvider)),
 );
 
+final socialSignInUseCaseProvider = Provider(
+  (ref) => SocialSignInUseCase(ref.watch(authRepositoryProvider)),
+);
+
+final continueAsGuestUseCaseProvider = Provider(
+  (ref) => ContinueAsGuestUseCase(ref.watch(authRepositoryProvider)),
+);
+
+final requestOtpUseCaseProvider = Provider(
+  (ref) => RequestOtpUseCase(ref.watch(authRepositoryProvider)),
+);
+
+final verifyOtpUseCaseProvider = Provider(
+  (ref) => VerifyOtpUseCase(ref.watch(authRepositoryProvider)),
+);
+
+final resetPasswordUseCaseProvider = Provider(
+  (ref) => ResetPasswordUseCase(ref.watch(authRepositoryProvider)),
+);
+
 final authNotifierProvider =
     StateNotifierProvider<AuthNotifier, AuthState>((ref) {
   return AuthNotifier(
@@ -59,5 +83,11 @@ final authNotifierProvider =
     logoutUseCase: ref.watch(logoutUseCaseProvider),
     getCurrentUserUseCase: ref.watch(getCurrentUserUseCaseProvider),
     forgotPasswordUseCase: ref.watch(forgotPasswordUseCaseProvider),
+    socialSignInUseCase: ref.watch(socialSignInUseCaseProvider),
+    continueAsGuestUseCase: ref.watch(continueAsGuestUseCaseProvider),
+    requestOtpUseCase: ref.watch(requestOtpUseCaseProvider),
+    verifyOtpUseCase: ref.watch(verifyOtpUseCaseProvider),
+    resetPasswordUseCase: ref.watch(resetPasswordUseCaseProvider),
+    repository: ref.watch(authRepositoryProvider),
   );
 });

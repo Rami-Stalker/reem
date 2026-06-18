@@ -16,6 +16,8 @@ class SettingsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
+    final auth = ref.watch(authNotifierProvider);
+    final isSignedIn = auth.isAuthenticated;
     return ReemScrollPage(
       slivers: [
         PremiumAppBar(title: l10n.settings),
@@ -32,8 +34,38 @@ class SettingsScreen extends ConsumerWidget {
                 items: [
                   SettingsItemData(
                     icon: Icons.person_outline,
+                    title: 'Account settings',
+                    onTap: () => isSignedIn
+                        ? context.pushNamed(RouteNames.accountSettings)
+                        : context.go(RoutePaths.login),
+                  ),
+                  SettingsItemData(
+                    icon: Icons.security_outlined,
+                    title: 'Security',
+                    onTap: () => isSignedIn
+                        ? context.pushNamed(RouteNames.securitySettings)
+                        : context.go(RoutePaths.login),
+                  ),
+                  SettingsItemData(
+                    icon: Icons.devices_outlined,
+                    title: 'Devices',
+                    onTap: () => isSignedIn
+                        ? context.pushNamed(RouteNames.deviceManagement)
+                        : context.go(RoutePaths.login),
+                  ),
+                  SettingsItemData(
+                    icon: Icons.storefront_outlined,
+                    title: 'Seller verification',
+                    onTap: () => isSignedIn
+                        ? context.pushNamed(RouteNames.sellerVerification)
+                        : context.go(RoutePaths.login),
+                  ),
+                  SettingsItemData(
+                    icon: Icons.badge_outlined,
                     title: l10n.editProfile,
-                    onTap: () => context.pushNamed(RouteNames.editProfile),
+                    onTap: () => isSignedIn
+                        ? context.pushNamed(RouteNames.editProfile)
+                        : context.go(RoutePaths.login),
                   ),
                   SettingsItemData(
                     icon: Icons.favorite_border,
@@ -95,7 +127,9 @@ class SettingsScreen extends ConsumerWidget {
                   SettingsItemData(
                     icon: Icons.admin_panel_settings_outlined,
                     title: l10n.adminPanel,
-                    onTap: () => context.pushNamed(RouteNames.adminDashboard),
+                    onTap: auth.user?.isAdmin == true
+                        ? () => context.pushNamed(RouteNames.adminDashboard)
+                        : null,
                   ),
                 ],
               ),
@@ -110,10 +144,14 @@ class SettingsScreen extends ConsumerWidget {
                   ),
                   SettingsItemData(
                     icon: Icons.logout,
-                    title: l10n.signOut,
+                    title: isSignedIn ? l10n.signOut : l10n.signIn,
                     onTap: () async {
-                      await ref.read(authNotifierProvider.notifier).logout();
-                      if (context.mounted) {
+                      if (isSignedIn) {
+                        await ref.read(authNotifierProvider.notifier).logout();
+                        if (context.mounted) {
+                          context.go(RoutePaths.login);
+                        }
+                      } else {
                         context.go(RoutePaths.login);
                       }
                     },

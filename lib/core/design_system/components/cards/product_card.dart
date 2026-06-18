@@ -1,0 +1,364 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/material.dart';
+
+import '../../foundation/motion/animations/scale_animations.dart';
+import '../../foundation/theme/extensions/color_extension.dart';
+import '../../foundation/theme/extensions/shadow_extension.dart';
+import '../../foundation/tokens/ds_constraints.dart';
+import '../../foundation/tokens/ds_radius.dart';
+import '../../foundation/tokens/ds_spacing.dart';
+import '../../foundation/tokens/ds_typography.dart';
+import '../badges/ds_badge.dart';
+import '../buttons/ds_icon_button.dart';
+import '../loaders/ds_skeleton.dart';
+
+/// A premium product card for grids and carousels.
+///
+/// Generic by design — feature code passes already-formatted price strings and
+/// callbacks; the card owns layout, motion and theming only.
+class DsProductCard extends StatelessWidget {
+  const DsProductCard({
+    super.key,
+    required this.title,
+    required this.price,
+    this.imageUrl,
+    this.compareAtPrice,
+    this.discountPercent,
+    this.sellerName,
+    this.rating,
+    this.ratingCount,
+    this.isFavorite = false,
+    this.isNew = false,
+    this.soldOut = false,
+    this.badgeLabel,
+    this.onTap,
+    this.onFavoriteToggle,
+    this.onAddToCart,
+    this.imageAspectRatio = 3 / 4,
+  });
+
+  final String title;
+  final String price;
+  final String? imageUrl;
+  final String? compareAtPrice;
+  final int? discountPercent;
+  final String? sellerName;
+  final double? rating;
+  final int? ratingCount;
+  final bool isFavorite;
+  final bool isNew;
+  final bool soldOut;
+  final String? badgeLabel;
+  final VoidCallback? onTap;
+  final VoidCallback? onFavoriteToggle;
+  final VoidCallback? onAddToCart;
+  final double imageAspectRatio;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.dsColors;
+
+    final card = Container(
+      decoration: BoxDecoration(
+        color: c.card,
+        borderRadius: DsRadius.borderCard,
+        border: Border.all(color: c.border.withValues(alpha: 0.5)),
+        boxShadow: context.shadowSoft,
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _Media(
+            imageUrl: imageUrl,
+            aspectRatio: imageAspectRatio,
+            isFavorite: isFavorite,
+            soldOut: soldOut,
+            discountPercent: discountPercent,
+            isNew: isNew,
+            badgeLabel: badgeLabel,
+            onFavoriteToggle: onFavoriteToggle,
+          ),
+          Padding(
+            padding: const EdgeInsets.all(DsSpacing.sm),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (sellerName != null) ...[
+                  Text(
+                    sellerName!,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: DsTypography.overline(c.onSurfaceVariant),
+                  ),
+                  const SizedBox(height: DsSpacing.xxs),
+                ],
+                Text(
+                  title,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                        fontWeight: DsTypography.semiBold,
+                        height: 1.25,
+                      ),
+                ),
+                if (rating != null) ...[
+                  const SizedBox(height: DsSpacing.xs),
+                  _Rating(rating: rating!, count: ratingCount),
+                ],
+                const SizedBox(height: DsSpacing.xs),
+                _PriceRow(
+                  price: price,
+                  compareAt: compareAtPrice,
+                  onAddToCart: soldOut ? null : onAddToCart,
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+
+    if (onTap == null) return card;
+    return DsScaleAnimations.tapScale(
+      pressedScale: 0.98,
+      onTap: onTap!,
+      child: card,
+    );
+  }
+}
+
+class _Media extends StatelessWidget {
+  const _Media({
+    required this.imageUrl,
+    required this.aspectRatio,
+    required this.isFavorite,
+    required this.soldOut,
+    required this.discountPercent,
+    required this.isNew,
+    required this.badgeLabel,
+    required this.onFavoriteToggle,
+  });
+
+  final String? imageUrl;
+  final double aspectRatio;
+  final bool isFavorite;
+  final bool soldOut;
+  final int? discountPercent;
+  final bool isNew;
+  final String? badgeLabel;
+  final VoidCallback? onFavoriteToggle;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.dsColors;
+    return AspectRatio(
+      aspectRatio: aspectRatio,
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          if (imageUrl != null && imageUrl!.isNotEmpty)
+            CachedNetworkImage(
+              imageUrl: imageUrl!,
+              fit: BoxFit.cover,
+              placeholder: (_, _) => ColoredBox(color: c.shimmerBase),
+              errorWidget: (_, _, _) => _fallback(c),
+            )
+          else
+            _fallback(c),
+          if (soldOut)
+            Container(
+              color: c.surface.withValues(alpha: 0.55),
+              alignment: Alignment.center,
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: DsSpacing.sm,
+                  vertical: DsSpacing.xs,
+                ),
+                decoration: BoxDecoration(
+                  color: c.inverseSurface.withValues(alpha: 0.85),
+                  borderRadius: DsRadius.borderPill,
+                ),
+                child: Text(
+                  'Sold out',
+                  style: TextStyle(
+                    color: c.onInverseSurface,
+                    fontWeight: DsTypography.semiBold,
+                    fontSize: DsTypography.labelMedium,
+                    letterSpacing: DsTypography.letterSpacingWide,
+                  ),
+                ),
+              ),
+            ),
+          // Badges (top-start)
+          Positioned(
+            top: DsSpacing.xs,
+            left: DsSpacing.xs,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (discountPercent != null && discountPercent! > 0)
+                  DsDiscountBadge(percentOff: discountPercent!),
+                if (isNew) ...[
+                  if (discountPercent != null && discountPercent! > 0)
+                    const SizedBox(height: DsSpacing.xxs),
+                  const DsBadge.solid(label: 'NEW', tone: DsBadgeTone.accent),
+                ],
+                if (badgeLabel != null) ...[
+                  const SizedBox(height: DsSpacing.xxs),
+                  DsBadge.solid(label: badgeLabel!, tone: DsBadgeTone.primary),
+                ],
+              ],
+            ),
+          ),
+          // Favorite (top-end)
+          if (onFavoriteToggle != null)
+            Positioned(
+              top: DsSpacing.xxs,
+              right: DsSpacing.xxs,
+              child: DsIconButton(
+                icon: isFavorite
+                    ? Icons.favorite_rounded
+                    : Icons.favorite_border_rounded,
+                variant: DsIconButtonVariant.glass,
+                size: 36,
+                iconSize: DsConstraints.iconSm,
+                color: isFavorite ? c.favorite : c.onSurface,
+                onPressed: onFavoriteToggle,
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+
+  Widget _fallback(DsColorScheme c) => ColoredBox(
+        color: c.surfaceVariant,
+        child: Icon(Icons.image_outlined,
+            color: c.onSurfaceVariant.withValues(alpha: 0.5), size: 36),
+      );
+}
+
+class _Rating extends StatelessWidget {
+  const _Rating({required this.rating, this.count});
+
+  final double rating;
+  final int? count;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.dsColors;
+    return Row(
+      children: [
+        Icon(Icons.star_rounded, size: 15, color: c.rating),
+        const SizedBox(width: DsSpacing.xxs),
+        Text(
+          rating.toStringAsFixed(1),
+          style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                color: c.onSurface,
+                fontWeight: DsTypography.semiBold,
+              ),
+        ),
+        if (count != null) ...[
+          const SizedBox(width: DsSpacing.xxs),
+          Text(
+            '($count)',
+            style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                  color: c.onSurfaceVariant,
+                ),
+          ),
+        ],
+      ],
+    );
+  }
+}
+
+class _PriceRow extends StatelessWidget {
+  const _PriceRow({
+    required this.price,
+    this.compareAt,
+    this.onAddToCart,
+  });
+
+  final String price;
+  final String? compareAt;
+  final VoidCallback? onAddToCart;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.dsColors;
+    return Row(
+      children: [
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(price, style: DsTypography.price(c.price)),
+              if (compareAt != null)
+                Text(
+                  compareAt!,
+                  style: DsTypography.priceStrike(c.onSurfaceVariant),
+                ),
+            ],
+          ),
+        ),
+        if (onAddToCart != null)
+          DsIconButton(
+            icon: Icons.add_shopping_cart_rounded,
+            variant: DsIconButtonVariant.primary,
+            size: 38,
+            iconSize: DsConstraints.iconSm,
+            onPressed: onAddToCart,
+          ),
+      ],
+    );
+  }
+}
+
+/// Loading placeholder matching [DsProductCard]'s footprint.
+class DsProductCardSkeleton extends StatelessWidget {
+  const DsProductCardSkeleton({super.key, this.imageAspectRatio = 3 / 4});
+
+  final double imageAspectRatio;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.dsColors;
+    return Container(
+      decoration: BoxDecoration(
+        color: c.card,
+        borderRadius: DsRadius.borderCard,
+        border: Border.all(color: c.border.withValues(alpha: 0.5)),
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: DsShimmer(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            AspectRatio(
+              aspectRatio: imageAspectRatio,
+              child: const DsSkeleton(height: double.infinity, borderRadius: 0),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(DsSpacing.sm),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: const [
+                  DsSkeleton.line(width: 70),
+                  SizedBox(height: DsSpacing.xs),
+                  DsSkeleton.line(width: double.infinity),
+                  SizedBox(height: DsSpacing.xxs),
+                  DsSkeleton.line(width: 120),
+                  SizedBox(height: DsSpacing.sm),
+                  DsSkeleton.line(width: 80, height: 16),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

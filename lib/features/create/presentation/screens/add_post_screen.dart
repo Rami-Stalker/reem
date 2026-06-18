@@ -1,78 +1,57 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/design_system/design_system.dart';
-import '../../../../core/shared/wedgets/backgrounds/luxury_mesh_background.dart';
 
 import '../widgets/create_header.dart';
 import '../widgets/add_media_card.dart';
 import '../widgets/post_caption_field.dart';
 import '../widgets/audience_selector.dart';
 
-class AddPostScreen
-    extends StatelessWidget {
-
-  const AddPostScreen({
-    super.key,
-  });
+class AddPostScreen extends StatelessWidget {
+  const AddPostScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      body:
+          // LuxuryMeshBackground(
+          //   child:
+          SafeArea(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(22),
 
-      body: 
-      // LuxuryMeshBackground(
-      //   child: 
-        SafeArea(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
 
-          child: SingleChildScrollView(
+                children: [
+                  const CreateHeader(
+                    title: "Create Post",
 
-            padding:
-                const EdgeInsets.all(
-              22,
-            ),
+                    subtitle:
+                        "Design a premium post experience for your customers",
+                  ),
 
-            child: Column(
+                  const SizedBox(height: 28),
 
-              crossAxisAlignment:
-                  CrossAxisAlignment
-                      .start,
+                  AddMediaCard(onTap: () {}),
 
-              children: [
+                  const SizedBox(height: 26),
 
-                const CreateHeader(
+                  const PostCaptionField(),
 
-                  title: "Create Post",
+                  const SizedBox(height: 26),
 
-                  subtitle:
-                      "Design a premium post experience for your customers",
-                ),
+                  const AudienceSelector(),
 
-                const SizedBox(height: 28),
+                  const SizedBox(height: 34),
 
-                AddMediaCard(
-                  onTap: () {},
-                ),
+                  PrimaryButton(label: 'Publish Post', onPressed: () {}),
 
-                const SizedBox(height: 26),
-
-                const PostCaptionField(),
-
-                const SizedBox(height: 26),
-
-                const AudienceSelector(),
-
-                const SizedBox(height: 34),
-
-                PrimaryButton(
-                  label: 'Publish Post',
-                  onPressed: () {},
-                ),
-
-                const SizedBox(height: 40),
-              ],
+                  const SizedBox(height: 40),
+                ],
+              ),
             ),
           ),
-        ),
       // ),
     );
   }

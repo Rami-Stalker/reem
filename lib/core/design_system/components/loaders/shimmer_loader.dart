@@ -18,8 +18,8 @@ class DsShimmerLoader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final base = context.dsColors.surfaceVariant;
-    final highlight = context.dsColors.surface;
+    final base = context.dsColors.shimmerBase;
+    final highlight = context.dsColors.shimmerHighlight;
 
     return Shimmer.fromColors(
       baseColor: base,

@@ -1,8 +1,8 @@
 import 'dart:async';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 
 import '../../../../core/design_system/design_system.dart';
 import '../../../../core/shared/entities/story.dart';
@@ -122,30 +122,14 @@ class _StoryViewerScreenState extends State<StoryViewerScreen>
         children: [
           // Story image
           Positioned.fill(
-            child: Image.network(
-              currentStory.media.url,
+            child: CachedNetworkImage(
+              imageUrl: currentStory.coverUrl ?? '',
               fit: BoxFit.cover,
-              loadingBuilder: (context, child, loadingProgress) {
-                if (loadingProgress == null) return child;
-                return Center(
-                  child: CircularProgressIndicator(
-                    value: loadingProgress.expectedTotalBytes != null
-                        ? loadingProgress.cumulativeBytesLoaded /
-                            loadingProgress.expectedTotalBytes!
-                        : null,
-                    color: colors.primary,
-                  ),
-                );
-              },
-              errorBuilder: (context, error, stackTrace) {
-                return Center(
-                  child: Icon(
-                    Icons.error_outline,
-                    color: colors.error,
-                    size: 48,
-                  ),
-                );
-              },
+              placeholder: (_, _) => const ColoredBox(color: Colors.black),
+              errorWidget: (_, _, _) => Center(
+                child: Icon(Icons.broken_image_outlined,
+                    color: colors.onSurfaceVariant, size: 48),
+              ),
             ),
           ),
 
@@ -220,21 +204,11 @@ class _StoryViewerScreenState extends State<StoryViewerScreen>
                   // Header with user info
                   Row(
                     children: [
-                      CircleAvatar(
-                        radius: 18,
-                        backgroundColor: colors.surfaceVariant,
-                        backgroundImage: currentStory.user.imageUrl != null
-                            ? NetworkImage(currentStory.user.imageUrl!)
-                            : null,
-                        child: currentStory.user.imageUrl == null
-                            ? Text(
-                                currentStory.user.name.characters.first,
-                                style: TextStyle(
-                                  color: colors.primary,
-                                  fontWeight: DsTypography.bold,
-                                ),
-                              )
-                            : null,
+                      DsAvatar(
+                        imageUrl: currentStory.user.imageUrl,
+                        name: currentStory.user.name,
+                        size: 40,
+                        hasRing: true,
                       ),
                       const SizedBox(width: DsSpacing.sm),
                       Expanded(
@@ -410,18 +384,14 @@ class _ProgressBar extends StatelessWidget {
     return ClipRRect(
       borderRadius: DsRadius.borderFull,
       child: Container(
-        height: 2.5,
-        decoration: BoxDecoration(
-          color: Colors.white.withValues(alpha: 0.3),
-        ),
-        child: Align(
+        height: 3,
+        color: Colors.white.withValues(alpha: 0.3),
+        child: FractionallySizedBox(
           alignment: Alignment.centerLeft,
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 50),
-            width: MediaQuery.of(context).size.width * progress / 4, // Approximate
-            height: double.infinity,
+          widthFactor: progress.clamp(0.0, 1.0),
+          child: Container(
             decoration: BoxDecoration(
-              color: isActive ? Colors.white : Colors.white.withValues(alpha: 0.3),
+              color: isActive ? Colors.white : Colors.white.withValues(alpha: 0.6),
               borderRadius: DsRadius.borderFull,
             ),
           ),

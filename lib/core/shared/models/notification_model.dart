@@ -8,31 +8,29 @@ class NotificationModel extends AppNotification {
     required super.title,
     required super.body,
     required super.type,
-    required super.isRead,
+    super.isRead,
     required super.createdAt,
   });
 
   factory NotificationModel.fromJson(Map<String, dynamic> json) {
     return NotificationModel(
-      id: json['id'],
-      title: json['title'],
-      body: json['body'],
-      type: _mapType(json['type']),
-      isRead: json['is_read'] ?? false,
-      createdAt: DateTime.parse(json['created_at']),
+      id: json['id'] as String,
+      title: json['title'] as String,
+      body: json['body'] as String? ?? '',
+      type: NotificationTypeX.fromWire(json['type'] as String?),
+      isRead: json['is_read'] as bool? ?? false,
+      createdAt: DateTime.parse(json['created_at'] as String),
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'title': title,
-      'body': body,
-      'type': type.name,
-      'is_read': isRead,
-      'created_at': createdAt.toIso8601String(),
-    };
-  }
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'title': title,
+        'body': body,
+        'type': type.wire,
+        'is_read': isRead,
+        'created_at': createdAt.toIso8601String(),
+      };
 
   NotificationModel copyWith({
     String? id,
@@ -50,24 +48,5 @@ class NotificationModel extends AppNotification {
       isRead: isRead ?? this.isRead,
       createdAt: createdAt ?? this.createdAt,
     );
-  }
-
-  static NotificationType _mapType(String type) {
-    switch (type) {
-      case 'like':
-        return NotificationType.like;
-
-      case 'comment':
-        return NotificationType.comment;
-
-      case 'follow':
-        return NotificationType.follow;
-
-      case 'message':
-        return NotificationType.message;
-
-      default:
-        return NotificationType.like;
-    }
   }
 }

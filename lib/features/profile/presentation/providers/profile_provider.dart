@@ -9,6 +9,11 @@ import '../../domain/repositories/profile_repository.dart';
 import '../../domain/usecases/get_favorites_usecase.dart';
 import '../../domain/usecases/get_orders_usecase.dart';
 import '../../domain/usecases/get_profile_usecase.dart';
+import '../../domain/usecases/get_wishlist_overview_usecase.dart';
+import '../../domain/usecases/create_wishlist_collection_usecase.dart';
+import '../../domain/usecases/save_post_usecase.dart';
+import '../../domain/usecases/save_seller_usecase.dart';
+import '../../domain/usecases/share_wishlist_collection_usecase.dart';
 import '../../domain/usecases/toggle_favorite_usecase.dart';
 import 'profile_notifier.dart';
 import 'profile_state.dart';
@@ -39,6 +44,26 @@ final toggleFavoriteUseCaseProvider = Provider(
   (ref) => ToggleFavoriteUseCase(ref.watch(profileRepositoryProvider)),
 );
 
+final getWishlistOverviewUseCaseProvider = Provider(
+  (ref) => GetWishlistOverviewUseCase(ref.watch(profileRepositoryProvider)),
+);
+
+final createWishlistCollectionUseCaseProvider = Provider(
+  (ref) => CreateWishlistCollectionUseCase(ref.watch(profileRepositoryProvider)),
+);
+
+final saveSellerUseCaseProvider = Provider(
+  (ref) => SaveSellerUseCase(ref.watch(profileRepositoryProvider)),
+);
+
+final savePostUseCaseProvider = Provider(
+  (ref) => SavePostUseCase(ref.watch(profileRepositoryProvider)),
+);
+
+final shareWishlistCollectionUseCaseProvider = Provider(
+  (ref) => ShareWishlistCollectionUseCase(ref.watch(profileRepositoryProvider)),
+);
+
 final profileNotifierProvider =
     StateNotifierProvider<ProfileNotifier, ProfileState>((ref) {
   return ProfileNotifier(
@@ -51,6 +76,19 @@ final favoritesNotifierProvider =
   return FavoritesNotifier(
     getFavoritesUseCase: ref.watch(getFavoritesUseCaseProvider),
     toggleFavoriteUseCase: ref.watch(toggleFavoriteUseCaseProvider),
+  );
+});
+
+final wishlistNotifierProvider =
+    StateNotifierProvider<WishlistNotifier, WishlistState>((ref) {
+  return WishlistNotifier(
+    getWishlistOverviewUseCase: ref.watch(getWishlistOverviewUseCaseProvider),
+    createWishlistCollectionUseCase:
+        ref.watch(createWishlistCollectionUseCaseProvider),
+    saveSellerUseCase: ref.watch(saveSellerUseCaseProvider),
+    savePostUseCase: ref.watch(savePostUseCaseProvider),
+    shareWishlistCollectionUseCase:
+        ref.watch(shareWishlistCollectionUseCaseProvider),
   );
 });
 

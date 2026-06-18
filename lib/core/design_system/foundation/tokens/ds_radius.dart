@@ -10,7 +10,17 @@ abstract final class DsRadius {
   static const double xl = 20;
   static const double xxl = 24;
   static const double xxxl = 30;
+  static const double xxxxl = 36;
   static const double full = 9999;
+
+  // Semantic aliases — components should prefer these for intent clarity.
+  static const double pill = full;
+  static const double chip = full;
+  static const double field = lg; // 16 — inputs / search bars
+  static const double button = xl; // 20
+  static const double card = xxl; // 24
+  static const double sheet = xxxl; // 30 — bottom sheets / dialogs
+  static const double image = lg; // 16 — media inside cards
 
   static const BorderRadius borderNone = BorderRadius.zero;
   static const BorderRadius borderXs = BorderRadius.all(Radius.circular(xs));
@@ -23,6 +33,16 @@ abstract final class DsRadius {
       BorderRadius.all(Radius.circular(xxxl));
   static const BorderRadius borderFull =
       BorderRadius.all(Radius.circular(full));
+
+  // Semantic border-radius aliases.
+  static const BorderRadius borderPill = borderFull;
+  static const BorderRadius borderChip = borderFull;
+  static const BorderRadius borderField = borderLg;
+  static const BorderRadius borderButton = borderXl;
+  static const BorderRadius borderCard = borderXxl;
+  static const BorderRadius borderSheet =
+      BorderRadius.vertical(top: Radius.circular(sheet));
+  static const BorderRadius borderImage = borderLg;
 
   static const Radius circularXs = Radius.circular(xs);
   static const Radius circularSm = Radius.circular(sm);

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 
 import 'button_sizes.dart';
+import 'button_styles.dart';
+import 'ds_button.dart';
 
+/// Outlined rose secondary action. Thin wrapper over [DsButton].
 class SecondaryButton extends StatelessWidget {
   const SecondaryButton({
     super.key,
@@ -10,6 +13,7 @@ class SecondaryButton extends StatelessWidget {
     this.icon,
     this.size = DsButtonSize.md,
     this.isLoading = false,
+    this.isExpanded = true,
   });
 
   final String label;
@@ -17,22 +21,18 @@ class SecondaryButton extends StatelessWidget {
   final IconData? icon;
   final DsButtonSize size;
   final bool isLoading;
+  final bool isExpanded;
 
   @override
   Widget build(BuildContext context) {
-    return OutlinedButton(
-      onPressed: isLoading ? null : onPressed,
-      style: OutlinedButton.styleFrom(
-        minimumSize: Size(double.infinity, size.height),
-        shape: RoundedRectangleBorder(borderRadius: size.borderRadius),
-      ),
-      child: isLoading
-          ? const SizedBox(
-              width: 22,
-              height: 22,
-              child: CircularProgressIndicator(strokeWidth: 2.5),
-            )
-          : Text(label),
+    return DsButton(
+      label: label,
+      onPressed: onPressed,
+      icon: icon,
+      size: size,
+      isLoading: isLoading,
+      isExpanded: isExpanded,
+      variant: DsButtonVariant.secondary,
     );
   }
 }

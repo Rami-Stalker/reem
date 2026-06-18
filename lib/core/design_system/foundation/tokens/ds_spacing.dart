@@ -7,6 +7,7 @@ abstract final class DsSpacing {
   static const double unit = 4;
 
   static const double none = 0;
+  static const double xxxs = unit / 2; // 2 — hairline gaps, icon nudges
   static const double xxs = unit; // 4
   static const double xs = unit * 2; // 8
   static const double sm = unit * 3; // 12
@@ -17,6 +18,11 @@ abstract final class DsSpacing {
   static const double xxxl = unit * 10; // 40
   static const double huge = unit * 12; // 48
   static const double massive = unit * 16; // 64
+
+  /// Gap between repeating items in lists / grids.
+  static const double gutter = md; // 16
+  /// Vertical rhythm between page sections.
+  static const double sectionGap = xxl; // 32
 
   static const EdgeInsets paddingNone = EdgeInsets.zero;
   static const EdgeInsets paddingXs = EdgeInsets.all(xs);
@@ -32,8 +38,16 @@ abstract final class DsSpacing {
   static const EdgeInsets verticalMd = EdgeInsets.symmetric(vertical: md);
   static const EdgeInsets verticalLg = EdgeInsets.symmetric(vertical: lg);
 
+  static const EdgeInsets paddingXxl = EdgeInsets.all(xxl);
+
   static const EdgeInsets screenPadding =
       EdgeInsets.symmetric(horizontal: lg, vertical: md);
+
+  static const EdgeInsets screenHorizontal = EdgeInsets.symmetric(horizontal: lg);
+
+  /// Comfortable inner padding for cards and tiles.
+  static const EdgeInsets cardPadding = EdgeInsets.all(md);
+  static const EdgeInsets cardPaddingLg = EdgeInsets.all(lg);
 
   static double responsive(
     BuildContext context, {

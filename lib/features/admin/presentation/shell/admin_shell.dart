@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/design_system/design_system.dart';
+import '../../../../core/experience/role_experience.dart';
 import '../../../../core/localization/l10n_extension.dart';
 import '../../../../core/router/route_paths.dart';
 
@@ -14,98 +15,44 @@ class AdminShell extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final colors = context.dsColors;
-    final location = GoRouterState.of(context).uri.path;
+    final path = GoRouterState.of(context).uri.path;
+    final width = MediaQuery.sizeOf(context).width;
+    final destinations = AppRoleExperience.admin.navigation
+        .map(_AdminNavItem.fromRoleNavigation)
+        .toList(growable: false);
 
-    final destinations = [
-      _AdminNavItem(
-        path: RoutePaths.admin,
-        icon: Icons.dashboard_outlined,
-        selectedIcon: Icons.dashboard_rounded,
-        label: l10n.adminDashboard,
-      ),
-      _AdminNavItem(
-        path: RoutePaths.adminOrders,
-        icon: Icons.receipt_long_outlined,
-        selectedIcon: Icons.receipt_long_rounded,
-        label: l10n.adminOrders,
-      ),
-      _AdminNavItem(
-        path: RoutePaths.adminProducts,
-        icon: Icons.inventory_2_outlined,
-        selectedIcon: Icons.inventory_2_rounded,
-        label: l10n.adminProducts,
-      ),
-      _AdminNavItem(
-        path: RoutePaths.adminUsers,
-        icon: Icons.people_outline,
-        selectedIcon: Icons.people_rounded,
-        label: l10n.adminUsers,
-      ),
-      _AdminNavItem(
-        path: RoutePaths.adminAnalytics,
-        icon: Icons.insights_outlined,
-        selectedIcon: Icons.insights_rounded,
-        label: l10n.adminAnalytics,
-      ),
-    ];
+    if (width < 720) {
+      return Scaffold(
+        backgroundColor: colors.background,
+        appBar: AppBar(
+          title: Text(l10n.adminPanel),
+          actions: [
+            IconButton(
+              tooltip: 'Administrator settings',
+              onPressed: () => context.go(RoutePaths.adminSystemSettings),
+              icon: const Icon(Icons.admin_panel_settings_rounded),
+            ),
+          ],
+        ),
+        drawer: Drawer(
+          child: _AdminNavigation(
+            destinations: destinations,
+            selectedPath: path,
+            extended: true,
+          ),
+        ),
+        body: child,
+      );
+    }
 
     return Scaffold(
       backgroundColor: colors.background,
       body: Row(
         children: [
-          NavigationRail(
-            extended: MediaQuery.sizeOf(context).width > 900,
-            backgroundColor: colors.surface,
-            selectedIndex: _selectedIndex(location, destinations),
-            onDestinationSelected: (index) {
-              context.go(destinations[index].path);
-            },
-            leading: Padding(
-              padding: const EdgeInsets.symmetric(vertical: DsSpacing.lg),
-              child: Column(
-                children: [
-                  Container(
-                    width: 44,
-                    height: 44,
-                    decoration: BoxDecoration(
-                      color: colors.primary.withValues(alpha: 0.12),
-                      borderRadius: DsRadius.borderMd,
-                    ),
-                    child: Icon(Icons.storefront_rounded, color: colors.primary),
-                  ),
-                  const SizedBox(height: DsSpacing.sm),
-                  Text(
-                    l10n.adminPanel,
-                    style: TextStyle(
-                      fontSize: DsTypography.labelSmall,
-                      fontWeight: DsTypography.semiBold,
-                      color: colors.onSurfaceVariant,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            trailing: Expanded(
-              child: Align(
-                alignment: Alignment.bottomCenter,
-                child: Padding(
-                  padding: const EdgeInsets.only(bottom: DsSpacing.lg),
-                  child: IconButton(
-                    tooltip: l10n.adminBackToShop,
-                    onPressed: () => context.go(RoutePaths.home),
-                    icon: Icon(Icons.arrow_back_rounded, color: colors.primary),
-                  ),
-                ),
-              ),
-            ),
-            destinations: [
-              for (final item in destinations)
-                NavigationRailDestination(
-                  icon: Icon(item.icon),
-                  selectedIcon: Icon(item.selectedIcon),
-                  label: Text(item.label),
-                ),
-            ],
+          _AdminNavigation(
+            destinations: destinations,
+            selectedPath: path,
+            extended: width >= 1100,
           ),
           const VerticalDivider(width: 1),
           Expanded(child: child),
@@ -113,12 +60,196 @@ class AdminShell extends StatelessWidget {
       ),
     );
   }
+}
 
-  int _selectedIndex(String path, List<_AdminNavItem> items) {
-    for (var i = 0; i < items.length; i++) {
-      if (path == items[i].path) return i;
-    }
-    return 0;
+class _AdminNavigation extends StatelessWidget {
+  const _AdminNavigation({
+    required this.destinations,
+    required this.selectedPath,
+    required this.extended,
+  });
+
+  final List<_AdminNavItem> destinations;
+  final String selectedPath;
+  final bool extended;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.dsColors;
+
+    return Container(
+      width: extended ? 260 : 88,
+      color: colors.surface,
+      child: SafeArea(
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(
+                DsSpacing.md,
+                DsSpacing.lg,
+                DsSpacing.md,
+                DsSpacing.md,
+              ),
+              child: _AdminHeader(extended: extended),
+            ),
+            Expanded(
+              child: ListView.separated(
+                padding: const EdgeInsets.symmetric(horizontal: DsSpacing.sm),
+                itemCount: destinations.length,
+                separatorBuilder: (_, _) =>
+                    const SizedBox(height: DsSpacing.xxs),
+                itemBuilder: (context, index) {
+                  final item = destinations[index];
+                  return _AdminNavTile(
+                    item: item,
+                    selected: selectedPath == item.path,
+                    extended: extended,
+                    onTap: () {
+                      if (Scaffold.maybeOf(context)?.hasDrawer ?? false) {
+                        Navigator.of(context).maybePop();
+                      }
+                      context.go(item.path);
+                    },
+                  );
+                },
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(DsSpacing.md),
+              child: _AdminNavTile(
+                item: _AdminNavItem(
+                  path: RoutePaths.securitySettings,
+                  icon: Icons.lock_outline_rounded,
+                  selectedIcon: Icons.lock_rounded,
+                  label: 'Security',
+                ),
+                selected: false,
+                extended: extended,
+                onTap: () => context.go(RoutePaths.securitySettings),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _AdminHeader extends StatelessWidget {
+  const _AdminHeader({required this.extended});
+
+  final bool extended;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final colors = context.dsColors;
+    final mark = Container(
+      width: 44,
+      height: 44,
+      decoration: BoxDecoration(
+        color: colors.primary.withValues(alpha: 0.12),
+        borderRadius: DsRadius.borderMd,
+      ),
+      child: Icon(Icons.admin_panel_settings_rounded, color: colors.primary),
+    );
+
+    if (!extended) return mark;
+
+    return Row(
+      children: [
+        mark,
+        const SizedBox(width: DsSpacing.sm),
+        Expanded(
+          child: Text(
+            l10n.adminPanel,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              fontSize: DsTypography.titleSmall,
+              fontWeight: DsTypography.semiBold,
+              color: colors.onSurface,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _AdminNavTile extends StatelessWidget {
+  const _AdminNavTile({
+    required this.item,
+    required this.selected,
+    required this.extended,
+    required this.onTap,
+  });
+
+  final _AdminNavItem item;
+  final bool selected;
+  final bool extended;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.dsColors;
+    final icon = Icon(
+      selected ? item.selectedIcon : item.icon,
+      size: 22,
+      color: selected ? colors.primary : colors.onSurfaceVariant,
+    );
+    final content = AnimatedContainer(
+      duration: DsMotion.fast,
+      curve: DsCurves.emphasized,
+      height: 48,
+      decoration: BoxDecoration(
+        color: selected
+            ? colors.primary.withValues(alpha: 0.12)
+            : Colors.transparent,
+        borderRadius: DsRadius.borderMd,
+      ),
+      child: extended
+          ? Row(
+              children: [
+                const SizedBox(width: DsSpacing.sm),
+                icon,
+                const SizedBox(width: DsSpacing.sm),
+                Expanded(
+                  child: Text(
+                    item.label,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontSize: DsTypography.labelLarge,
+                      fontWeight: selected
+                          ? DsTypography.semiBold
+                          : DsTypography.medium,
+                      color: selected ? colors.primary : colors.onSurface,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: DsSpacing.xs),
+              ],
+            )
+          : Center(child: icon),
+    );
+
+    return Semantics(
+      button: true,
+      selected: selected,
+      label: item.label,
+      child: Tooltip(
+        message: item.label,
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            borderRadius: DsRadius.borderMd,
+            onTap: onTap,
+            child: content,
+          ),
+        ),
+      ),
+    );
   }
 }
 
@@ -134,4 +265,13 @@ class _AdminNavItem {
   final IconData icon;
   final IconData selectedIcon;
   final String label;
+
+  factory _AdminNavItem.fromRoleNavigation(RoleNavigationItem item) {
+    return _AdminNavItem(
+      path: item.path,
+      icon: item.icon,
+      selectedIcon: item.selectedIcon,
+      label: item.label,
+    );
+  }
 }

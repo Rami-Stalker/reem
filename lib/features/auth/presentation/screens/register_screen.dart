@@ -7,6 +7,8 @@ import '../../../../core/design_system/design_system.dart';
 import '../../../../core/design_system/components/snackbars/app_snackbar.dart' show DsSnackbar, DsSnackbarType;
 import '../../../../core/localization/l10n_extension.dart';
 import '../../../../core/router/route_paths.dart';
+import '../../../../core/shared/entities/user.dart';
+import '../../domain/entities/auth_account.dart';
 import '../providers/auth_provider.dart';
 
 class RegisterScreen extends ConsumerStatefulWidget {
@@ -20,13 +22,16 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
+  final _phoneController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
+  UserRole _role = UserRole.customer;
 
   @override
   void dispose() {
     _nameController.dispose();
     _emailController.dispose();
+    _phoneController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
     super.dispose();
@@ -37,13 +42,20 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
 
     final ok = await ref.read(authNotifierProvider.notifier).register(
           name: _nameController.text.trim(),
-          email: _emailController.text.trim(),
+          email: _emailController.text.trim().isEmpty
+              ? null
+              : _emailController.text.trim(),
+          phone: _phoneController.text.trim(),
           password: _passwordController.text,
+          role: _role,
         );
 
     if (!mounted) return;
     if (ok) {
-      context.go(RoutePaths.home);
+      final phone = Uri.encodeComponent(_phoneController.text.trim());
+      context.go(
+        '${RoutePaths.otpVerification}?phone=$phone&purpose=${OtpPurpose.phoneVerification.wire}',
+      );
     } else {
       final error = ref.read(authNotifierProvider).error;
       if (error != null) {
@@ -102,15 +114,31 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   const SizedBox(height: DsSpacing.md),
                   DsInputField(
                     controller: _emailController,
-                    label: l10n.email,
-                    hint: 'you@example.com',
+                    label: 'Email',
+                    hint: 'reem@example.com',
                     keyboardType: TextInputType.emailAddress,
-                    prefixIcon: Icon(Icons.email_outlined, color: colors.primary),
+                    prefixIcon: Icon(Icons.mail_outline, color: colors.primary),
+                  ),
+                  const SizedBox(height: DsSpacing.md),
+                  DsInputField(
+                    controller: _phoneController,
+                    label: 'Phone number',
+                    hint: '+9665XXXXXXXX',
+                    keyboardType: TextInputType.phone,
+                    prefixIcon: Icon(Icons.phone_outlined, color: colors.primary),
                     validator: (v) {
-                      if (v == null || v.isEmpty) return l10n.emailRequired;
-                      if (!v.contains('@')) return l10n.validEmailRequired;
+                      final value = v?.trim() ?? '';
+                      if (value.isEmpty) return 'Phone number is required';
+                      if (!RegExp(r'^\+?[0-9]{7,15}$').hasMatch(value)) {
+                        return 'Enter a valid phone number';
+                      }
                       return null;
                     },
+                  ),
+                  const SizedBox(height: DsSpacing.md),
+                  _RoleSelector(
+                    value: _role,
+                    onChanged: (r) => setState(() => _role = r),
                   ),
                   const SizedBox(height: DsSpacing.md),
                   DsInputField(
@@ -154,6 +182,98 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
           ),
         ),
       ],
+    );
+  }
+}
+
+/// Lets a new user choose how they want to join: shop as a Customer or sell on
+/// Reem as a Seller. Admins are provisioned separately (never self-registered).
+class _RoleSelector extends StatelessWidget {
+  const _RoleSelector({required this.value, required this.onChanged});
+
+  final UserRole value;
+  final ValueChanged<UserRole> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+          child: _RoleChip(
+            label: 'Shop as Customer',
+            icon: Icons.shopping_bag_outlined,
+            selected: value == UserRole.customer,
+            onTap: () => onChanged(UserRole.customer),
+          ),
+        ),
+        const SizedBox(width: DsSpacing.sm),
+        Expanded(
+          child: _RoleChip(
+            label: 'Sell on Reem',
+            icon: Icons.storefront_outlined,
+            selected: value == UserRole.seller,
+            onTap: () => onChanged(UserRole.seller),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _RoleChip extends StatelessWidget {
+  const _RoleChip({
+    required this.label,
+    required this.icon,
+    required this.selected,
+    required this.onTap,
+  });
+
+  final String label;
+  final IconData icon;
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.dsColors;
+    return InkWell(
+      borderRadius: BorderRadius.circular(DsRadius.lg),
+      onTap: onTap,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        padding: const EdgeInsets.symmetric(
+          vertical: DsSpacing.md,
+          horizontal: DsSpacing.sm,
+        ),
+        decoration: BoxDecoration(
+          color: selected
+              ? colors.primary.withValues(alpha: 0.12)
+              : colors.surfaceVariant,
+          borderRadius: BorderRadius.circular(DsRadius.lg),
+          border: Border.all(
+            color: selected ? colors.primary : colors.border,
+            width: selected ? 1.6 : 1,
+          ),
+        ),
+        child: Column(
+          children: [
+            Icon(
+              icon,
+              color: selected ? colors.primary : colors.onSurfaceVariant,
+            ),
+            const SizedBox(height: DsSpacing.xs),
+            Text(
+              label,
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                    color: selected ? colors.primary : colors.onSurfaceVariant,
+                    fontWeight:
+                        selected ? DsTypography.bold : DsTypography.regular,
+                  ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

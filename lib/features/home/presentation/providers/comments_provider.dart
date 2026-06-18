@@ -1,4 +1,3 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 
 import '../../../../core/shared/entities/comment.dart';
@@ -66,7 +65,7 @@ class CommentsNotifier extends StateNotifier<CommentsState> {
         id: 'current_user',
         name: 'You',
         username: 'you',
-        email: 'you@example.com',
+        phone: '+966500000000',
         createdAt: DateTime.now(),
       ),
       content: content,

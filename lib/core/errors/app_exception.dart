@@ -1,44 +1,215 @@
 import 'failure.dart';
 
 sealed class AppException implements Exception {
-  const AppException(this.message);
-  final String message;
+  const AppException(
+    this.message, {
+    this.code,
+    this.statusCode,
+    this.cause,
+    this.stackTrace,
+    this.isRetryable = false,
+  });
 
-  Failure toFailure();
+  final String message;
+  final String? code;
+  final int? statusCode;
+  final Object? cause;
+  final StackTrace? stackTrace;
+  final bool isRetryable;
+
+  Failure toFailure({StackTrace? stackTrace});
+
+  StackTrace? mergeStackTrace(StackTrace? fallback) => stackTrace ?? fallback;
+
+  @override
+  String toString() => '$runtimeType($message)';
 }
 
 final class ServerException extends AppException {
-  const ServerException(super.message);
+  const ServerException(
+    super.message, {
+    super.code,
+    super.statusCode,
+    super.cause,
+    super.stackTrace,
+    super.isRetryable = true,
+  });
+
   @override
-  Failure toFailure() => ServerFailure(message);
+  Failure toFailure({StackTrace? stackTrace}) => ServerFailure(
+    message,
+    code: code,
+    statusCode: statusCode,
+    cause: cause,
+    stackTrace: mergeStackTrace(stackTrace),
+    isRetryable: isRetryable,
+  );
 }
 
 final class UnauthorizedException extends AppException {
-  const UnauthorizedException(super.message);
+  const UnauthorizedException(
+    super.message, {
+    super.code,
+    super.statusCode = 401,
+    super.cause,
+    super.stackTrace,
+    super.isRetryable = false,
+  });
+
   @override
-  Failure toFailure() => UnauthorizedFailure(message);
+  Failure toFailure({StackTrace? stackTrace}) => UnauthorizedFailure(
+    message,
+    code: code,
+    statusCode: statusCode,
+    cause: cause,
+    stackTrace: mergeStackTrace(stackTrace),
+    isRetryable: isRetryable,
+  );
+}
+
+final class ForbiddenException extends AppException {
+  const ForbiddenException(
+    super.message, {
+    super.code,
+    super.statusCode = 403,
+    super.cause,
+    super.stackTrace,
+    super.isRetryable = false,
+  });
+
+  @override
+  Failure toFailure({StackTrace? stackTrace}) => ForbiddenFailure(
+    message,
+    code: code,
+    statusCode: statusCode,
+    cause: cause,
+    stackTrace: mergeStackTrace(stackTrace),
+    isRetryable: isRetryable,
+  );
 }
 
 final class NetworkException extends AppException {
-  const NetworkException(super.message);
+  const NetworkException(
+    super.message, {
+    super.code,
+    super.statusCode,
+    super.cause,
+    super.stackTrace,
+    super.isRetryable = true,
+  });
+
   @override
-  Failure toFailure() => NetworkFailure(message);
+  Failure toFailure({StackTrace? stackTrace}) => NetworkFailure(
+    message,
+    code: code,
+    statusCode: statusCode,
+    cause: cause,
+    stackTrace: mergeStackTrace(stackTrace),
+    isRetryable: isRetryable,
+  );
 }
 
 final class ValidationException extends AppException {
-  const ValidationException(super.message);
+  const ValidationException(
+    super.message, {
+    super.code,
+    super.statusCode = 422,
+    super.cause,
+    super.stackTrace,
+    super.isRetryable = false,
+  });
+
   @override
-  Failure toFailure() => ValidationFailure(message);
+  Failure toFailure({StackTrace? stackTrace}) => ValidationFailure(
+    message,
+    code: code,
+    statusCode: statusCode,
+    cause: cause,
+    stackTrace: mergeStackTrace(stackTrace),
+    isRetryable: isRetryable,
+  );
+}
+
+final class ConflictException extends AppException {
+  const ConflictException(
+    super.message, {
+    super.code,
+    super.statusCode = 409,
+    super.cause,
+    super.stackTrace,
+    super.isRetryable = false,
+  });
+
+  @override
+  Failure toFailure({StackTrace? stackTrace}) => ConflictFailure(
+    message,
+    code: code,
+    statusCode: statusCode,
+    cause: cause,
+    stackTrace: mergeStackTrace(stackTrace),
+    isRetryable: isRetryable,
+  );
 }
 
 final class NotFoundException extends AppException {
-  const NotFoundException(super.message);
+  const NotFoundException(
+    super.message, {
+    super.code,
+    super.statusCode = 404,
+    super.cause,
+    super.stackTrace,
+    super.isRetryable = false,
+  });
+
   @override
-  Failure toFailure() => NotFoundFailure(message);
+  Failure toFailure({StackTrace? stackTrace}) => NotFoundFailure(
+    message,
+    code: code,
+    statusCode: statusCode,
+    cause: cause,
+    stackTrace: mergeStackTrace(stackTrace),
+    isRetryable: isRetryable,
+  );
+}
+
+final class RateLimitException extends AppException {
+  const RateLimitException(
+    super.message, {
+    super.code,
+    super.statusCode = 429,
+    super.cause,
+    super.stackTrace,
+    super.isRetryable = true,
+  });
+
+  @override
+  Failure toFailure({StackTrace? stackTrace}) => RateLimitFailure(
+    message,
+    code: code,
+    statusCode: statusCode,
+    cause: cause,
+    stackTrace: mergeStackTrace(stackTrace),
+    isRetryable: isRetryable,
+  );
 }
 
 final class CacheException extends AppException {
-  const CacheException(super.message);
+  const CacheException(
+    super.message, {
+    super.code,
+    super.statusCode,
+    super.cause,
+    super.stackTrace,
+    super.isRetryable = false,
+  });
+
   @override
-  Failure toFailure() => CacheFailure(message);
+  Failure toFailure({StackTrace? stackTrace}) => CacheFailure(
+    message,
+    code: code,
+    statusCode: statusCode,
+    cause: cause,
+    stackTrace: mergeStackTrace(stackTrace),
+    isRetryable: isRetryable,
+  );
 }

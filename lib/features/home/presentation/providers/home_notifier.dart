@@ -1,52 +1,96 @@
 import 'package:flutter_riverpod/legacy.dart';
 import 'package:reem/core/result/result.dart';
 
+import '../../../discovery/domain/entities/product_collection.dart';
+import '../../../discovery/domain/usecases/discovery_usecases.dart';
 import '../../domain/usecases/get_feed_usecase.dart';
 import '../../domain/usecases/get_stories_usecase.dart';
 import 'home_state.dart';
 
+/// Orchestrates the home feed: fetches every product collection (each tracked
+/// independently) plus stories + the social feed, in parallel.
 class HomeNotifier extends StateNotifier<HomeState> {
   HomeNotifier({
-    required GetFeedUseCase getFeedUseCase,
-    required GetStoriesUseCase getStoriesUseCase,
-  })  : _getFeed = getFeedUseCase,
-        _getStories = getStoriesUseCase,
-        super(const HomeState()) {
-    load();
-  }
+    required this.collections,
+    required GetCollectionUseCase getCollection,
+    required GetRecommendedUseCase getRecommended,
+    required GetFeedUseCase getFeed,
+    required GetStoriesUseCase getStories,
+  })  : _getCollection = getCollection,
+        _getRecommended = getRecommended,
+        _getFeed = getFeed,
+        _getStories = getStories,
+        super(HomeState(
+          sections: {for (final c in collections) c: const HomeSection()},
+        ));
 
+  final List<ProductCollection> collections;
+  final GetCollectionUseCase _getCollection;
+  final GetRecommendedUseCase _getRecommended;
   final GetFeedUseCase _getFeed;
   final GetStoriesUseCase _getStories;
 
+  static const _railSize = 12;
+
   Future<void> load() async {
-    state = state.copyWith(isLoading: true, clearError: true);
-
-    final feedResult = await _getFeed();
-    final storiesResult = await _getStories();
-
-    String? error;
-    var posts = state.posts;
-    var stories = state.stories;
-
-    switch (feedResult) {
-      case Success(:final data):
-        posts = data;
-      case Error(:final failure):
-        error = failure.message;
-    }
-
-    switch (storiesResult) {
-      case Success(:final data):
-        stories = data;
-      case Error(:final failure):
-        error ??= failure.message;
-    }
-
-    state = state.copyWith(
-      isLoading: false,
-      posts: posts,
-      stories: stories,
-      error: error,
+    state = HomeState(
+      sections: {
+        for (final c in collections) c: const HomeSection(isLoading: true),
+      },
+      storiesLoading: true,
+      feedLoading: true,
     );
+    await Future.wait([
+      for (final collection in collections) _loadCollection(collection),
+      _loadStories(),
+      _loadFeed(),
+    ]);
+  }
+
+  Future<void> refresh() => load();
+
+  /// Reload a single rail (e.g. its "Retry" button) without touching the rest.
+  Future<void> refreshSection(ProductCollection collection) async {
+    state = state.copyWith(
+      sections: {
+        ...state.sections,
+        collection: const HomeSection(isLoading: true),
+      },
+    );
+    await _loadCollection(collection);
+  }
+
+  Future<void> _loadCollection(ProductCollection collection) async {
+    final result = collection == ProductCollection.recommended
+        ? await _getRecommended(limit: _railSize)
+        : await _getCollection(collection.key, limit: _railSize);
+
+    final section = switch (result) {
+      Success(:final data) =>
+        HomeSection(isLoading: false, products: data.items),
+      Error(:final failure) =>
+        HomeSection(isLoading: false, error: failure.message),
+    };
+    state = state.copyWith(sections: {...state.sections, collection: section});
+  }
+
+  Future<void> _loadStories() async {
+    final result = await _getStories();
+    switch (result) {
+      case Success(:final data):
+        state = state.copyWith(stories: data, storiesLoading: false);
+      case Error():
+        state = state.copyWith(storiesLoading: false);
+    }
+  }
+
+  Future<void> _loadFeed() async {
+    final result = await _getFeed();
+    switch (result) {
+      case Success(:final data):
+        state = state.copyWith(feed: data, feedLoading: false);
+      case Error():
+        state = state.copyWith(feedLoading: false);
+    }
   }
 }

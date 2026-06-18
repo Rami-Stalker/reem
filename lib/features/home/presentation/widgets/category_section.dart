@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:reem/core/router/route_names.dart';
 
 import '../../../../core/design_system/design_system.dart';
-import '../../../../core/shared/wedgets/app/reem_section_header.dart';
 
 class CategorySection extends StatelessWidget {
   const CategorySection({super.key});

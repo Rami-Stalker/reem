@@ -1,0 +1,161 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+
+import '../../../../core/design_system/design_system.dart';
+import '../../../../core/router/route_paths.dart';
+import '../../domain/entities/orders_overview.dart';
+import '../providers/profile_overview_provider.dart';
+import 'profile_section_header.dart';
+
+/// "My orders" — four status tiles (pending / processing / delivered /
+/// cancelled) with live counts, each routing into the orders list.
+class ProfileOrdersOverview extends ConsumerWidget {
+  const ProfileOrdersOverview({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isLoading = ref.watch(
+      profileOverviewNotifierProvider.select((s) => s.isInitialLoading),
+    );
+    final orders = ref.watch(
+      profileOverviewNotifierProvider
+          .select((s) => s.overview?.orders ?? const OrdersOverview()),
+    );
+    final c = context.dsColors;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        ProfileSectionHeader(
+          title: 'My orders',
+          onSeeAll: () => context.push(RoutePaths.orders),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: DsSpacing.lg),
+          child: isLoading
+              ? const DsShimmer(
+                  child: DsSkeleton.box(height: 84, borderRadius: DsRadius.xxl))
+              : Row(
+                  children: [
+                    _StatusTile(
+                      icon: Icons.schedule_rounded,
+                      count: orders.pending,
+                      label: 'Pending',
+                      color: c.warning,
+                    ),
+                    const SizedBox(width: DsSpacing.sm),
+                    _StatusTile(
+                      icon: Icons.autorenew_rounded,
+                      count: orders.processing,
+                      label: 'Processing',
+                      color: c.info,
+                    ),
+                    const SizedBox(width: DsSpacing.sm),
+                    _StatusTile(
+                      icon: Icons.local_shipping_outlined,
+                      count: orders.delivered,
+                      label: 'Delivered',
+                      color: c.success,
+                    ),
+                    const SizedBox(width: DsSpacing.sm),
+                    _StatusTile(
+                      icon: Icons.cancel_outlined,
+                      count: orders.cancelled,
+                      label: 'Cancelled',
+                      color: c.error,
+                    ),
+                  ],
+                ),
+        ),
+      ],
+    );
+  }
+}
+
+class _StatusTile extends StatelessWidget {
+  const _StatusTile({
+    required this.icon,
+    required this.count,
+    required this.label,
+    required this.color,
+  });
+
+  final IconData icon;
+  final int count;
+  final String label;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.dsColors;
+    return Expanded(
+      child: GestureDetector(
+        onTap: () => context.push(RoutePaths.orders),
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: DsSpacing.sm),
+          decoration: BoxDecoration(
+            color: c.surface,
+            borderRadius: DsRadius.borderXl,
+            border: Border.all(color: c.border.withValues(alpha: 0.5)),
+            boxShadow: context.shadowXs,
+          ),
+          child: Column(
+            children: [
+              Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  Container(
+                    width: 38,
+                    height: 38,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: color.withValues(alpha: 0.12),
+                      borderRadius: DsRadius.borderMd,
+                    ),
+                    child: Icon(icon, size: 19, color: color),
+                  ),
+                  if (count > 0)
+                    Positioned(
+                      top: -5,
+                      right: -5,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 5, vertical: 1),
+                        constraints: const BoxConstraints(minWidth: 17),
+                        decoration: BoxDecoration(
+                          color: color,
+                          borderRadius: DsRadius.borderFull,
+                          border: Border.all(color: c.surface, width: 1.5),
+                        ),
+                        child: Text(
+                          '$count',
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 10,
+                            fontWeight: DsTypography.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+              const SizedBox(height: DsSpacing.xs),
+              Text(
+                label,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontSize: DsTypography.labelSmall,
+                  fontWeight: DsTypography.medium,
+                  color: c.onSurfaceVariant,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}

@@ -1,0 +1,98 @@
+import 'package:flutter/material.dart';
+
+import '../../foundation/theme/extensions/color_extension.dart';
+import '../../foundation/tokens/ds_colors.dart';
+import '../../foundation/tokens/ds_radius.dart';
+import '../../foundation/tokens/ds_spacing.dart';
+import '../../foundation/tokens/ds_typography.dart';
+
+/// Semantic tone of a [DsBadge].
+enum DsBadgeTone { primary, accent, sale, success, info, warning, neutral }
+
+/// A small pill label — "New", "Sale", "Best seller", counts, statuses.
+class DsBadge extends StatelessWidget {
+  const DsBadge({
+    super.key,
+    required this.label,
+    this.tone = DsBadgeTone.primary,
+    this.icon,
+    this.solid = false,
+  });
+
+  /// Solid filled badge — high emphasis, sits on imagery.
+  const DsBadge.solid({
+    super.key,
+    required this.label,
+    this.tone = DsBadgeTone.sale,
+    this.icon,
+  }) : solid = true;
+
+  final String label;
+  final DsBadgeTone tone;
+  final IconData? icon;
+  final bool solid;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.dsColors;
+
+    final (fill, onFill, container, onContainer) = switch (tone) {
+      DsBadgeTone.primary => (c.primary, c.onPrimary, c.primaryContainer, c.onPrimaryContainer),
+      DsBadgeTone.accent => (c.accent, c.onAccent, c.accentContainer, c.onAccentContainer),
+      DsBadgeTone.sale => (c.discount, DsColors.white, c.errorContainer, c.error),
+      DsBadgeTone.success => (c.success, c.onSuccess, c.successContainer, c.success),
+      DsBadgeTone.info => (c.info, c.onInfo, c.infoContainer, c.info),
+      DsBadgeTone.warning => (c.warning, c.onWarning, c.warningContainer, c.warning),
+      DsBadgeTone.neutral => (c.onSurfaceVariant, c.surface, c.surfaceVariant, c.onSurface),
+    };
+
+    final bg = solid ? fill : container;
+    final fg = solid ? onFill : onContainer;
+
+    return Container(
+      padding: const EdgeInsets.symmetric(
+        horizontal: DsSpacing.xs,
+        vertical: DsSpacing.xxs,
+      ),
+      decoration: BoxDecoration(
+        color: bg,
+        borderRadius: BorderRadius.circular(DsRadius.sm),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (icon != null) ...[
+            Icon(icon, size: 12, color: fg),
+            const SizedBox(width: DsSpacing.xxs),
+          ],
+          Text(
+            label,
+            style: TextStyle(
+              fontFamily: DsTypography.fontFamily,
+              fontSize: DsTypography.labelSmall,
+              fontWeight: DsTypography.bold,
+              letterSpacing: DsTypography.letterSpacingWide,
+              color: fg,
+              height: 1.1,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// A discount badge that formats a percentage off, e.g. "-30%".
+class DsDiscountBadge extends StatelessWidget {
+  const DsDiscountBadge({super.key, required this.percentOff});
+
+  final int percentOff;
+
+  @override
+  Widget build(BuildContext context) {
+    return DsBadge.solid(
+      label: '-$percentOff%',
+      tone: DsBadgeTone.sale,
+    );
+  }
+}

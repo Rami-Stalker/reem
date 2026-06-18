@@ -4,84 +4,47 @@ import 'package:flutter/material.dart';
 import 'package:reem/core/shared/wedgets/backgrounds/luxury_blurred_background.dart';
 import 'package:reem/features/chat/presentation/widgets/chat_tile.dart';
 
-
 import '../widgets/glass_search_bar.dart';
 import '../widgets/luxury_chat_fab.dart';
 import '../widgets/chat_gradient_orb.dart';
 import '../widgets/encrypted_chat_banner.dart';
-import '../widgets/luxury_chat_empty_state.dart';
 import '../widgets/online_presence_ring.dart';
 
 class ChatsScreen extends StatefulWidget {
-
-  const ChatsScreen({
-    super.key,
-  });
+  const ChatsScreen({super.key});
 
   @override
-  State<ChatsScreen> createState() =>
-      _ChatsScreenState();
+  State<ChatsScreen> createState() => _ChatsScreenState();
 }
 
-class _ChatsScreenState
-    extends State<ChatsScreen>
+class _ChatsScreenState extends State<ChatsScreen>
+    with TickerProviderStateMixin {
+  late AnimationController headerController;
 
-    with
-        TickerProviderStateMixin {
+  late Animation<double> fadeAnimation;
 
-  late AnimationController
-      headerController;
-
-  late Animation<double>
-      fadeAnimation;
-
-  late Animation<Offset>
-      slideAnimation;
+  late Animation<Offset> slideAnimation;
 
   @override
   void initState() {
     super.initState();
 
-    headerController =
-        AnimationController(
-
+    headerController = AnimationController(
       vsync: this,
 
-      duration:
-          const Duration(
-        milliseconds: 1400,
-      ),
+      duration: const Duration(milliseconds: 1400),
     );
 
-    fadeAnimation =
-        CurvedAnimation(
-
+    fadeAnimation = CurvedAnimation(
       parent: headerController,
 
-      curve:
-          Curves.easeOutQuart,
+      curve: Curves.easeOutQuart,
     );
 
     slideAnimation =
-        Tween<Offset>(
-
-      begin:
-          const Offset(
-        0,
-        -.08,
-      ),
-
-      end: Offset.zero,
-    ).animate(
-
-      CurvedAnimation(
-
-        parent: headerController,
-
-        curve:
-            Curves.easeOutExpo,
-      ),
-    );
+        Tween<Offset>(begin: const Offset(0, -.08), end: Offset.zero).animate(
+          CurvedAnimation(parent: headerController, curve: Curves.easeOutExpo),
+        );
 
     headerController.forward();
   }
@@ -89,23 +52,12 @@ class _ChatsScreenState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
-      floatingActionButton:
-          LuxuryChatFab(
-        onTap: () {},
-      ),
+      floatingActionButton: LuxuryChatFab(onTap: () {}),
 
       body: LuxuryBlurredBackground(
-
         child: Stack(
-
           children: [
-
-            const Positioned(
-              top: -120,
-              right: -100,
-              child: ChatGradientOrb(),
-            ),
+            const Positioned(top: -120, right: -100, child: ChatGradientOrb()),
 
             const Positioned(
               bottom: -150,
@@ -114,109 +66,62 @@ class _ChatsScreenState
             ),
 
             SafeArea(
-
               child: FadeTransition(
-
-                opacity:
-                    fadeAnimation,
+                opacity: fadeAnimation,
 
                 child: SlideTransition(
-
-                  position:
-                      slideAnimation,
+                  position: slideAnimation,
 
                   child: Padding(
-
-                    padding:
-                        const EdgeInsets
-                            .all(22),
+                    padding: const EdgeInsets.all(22),
 
                     child: Column(
-
-                      crossAxisAlignment:
-                          CrossAxisAlignment
-                              .start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
 
                       children: [
-
                         /// HEADER
                         Row(
-
                           children: [
-
                             Expanded(
-
                               child: Column(
-
-                                crossAxisAlignment:
-                                    CrossAxisAlignment
-                                        .start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
 
                                 children: [
-
                                   ShaderMask(
-
-                                    shaderCallback:
-                                        (rect) {
-
+                                    shaderCallback: (rect) {
                                       return const LinearGradient(
-
                                         colors: [
+                                          Color(0xffFF9EB5),
 
-                                          Color(
-                                              0xffFF9EB5),
-
-                                          Color(
-                                              0xffFF5C8A),
+                                          Color(0xffFF5C8A),
                                         ],
-                                      ).createShader(
-                                        rect,
-                                      );
+                                      ).createShader(rect);
                                     },
 
-                                    child:
-                                        const Text(
-
+                                    child: const Text(
                                       "Luxury Chats",
 
-                                      style:
-                                          TextStyle(
+                                      style: TextStyle(
+                                        fontSize: 40,
 
-                                        fontSize:
-                                            40,
+                                        fontWeight: FontWeight.w900,
 
-                                        fontWeight:
-                                            FontWeight
-                                                .w900,
-
-                                        color:
-                                            Colors
-                                                .white,
+                                        color: Colors.white,
                                       ),
                                     ),
                                   ),
 
-                                  const SizedBox(
-                                      height:
-                                          12),
+                                  const SizedBox(height: 12),
 
                                   Text(
-
                                     "Elegant conversations with your premium audience ✨",
 
-                                    style:
-                                        TextStyle(
+                                    style: TextStyle(
+                                      color: Colors.grey[700],
 
-                                      color:
-                                          Colors
-                                                  .grey[
-                                              700],
+                                      height: 1.7,
 
-                                      height:
-                                          1.7,
-
-                                      fontSize:
-                                          15,
+                                      fontSize: 15,
                                     ),
                                   ),
                                 ],
@@ -224,99 +129,51 @@ class _ChatsScreenState
                             ),
 
                             ClipRRect(
+                              borderRadius: BorderRadius.circular(28),
 
-                              borderRadius:
-                                  BorderRadius
-                                      .circular(
-                                28,
-                              ),
+                              child: BackdropFilter(
+                                filter: ImageFilter.blur(
+                                  sigmaX: 20,
 
-                              child:
-                                  BackdropFilter(
-
-                                filter:
-                                    ImageFilter
-                                        .blur(
-
-                                  sigmaX:
-                                      20,
-
-                                  sigmaY:
-                                      20,
+                                  sigmaY: 20,
                                 ),
 
-                                child:
-                                    Container(
+                                child: Container(
+                                  width: 68,
 
-                                  width:
-                                      68,
+                                  height: 68,
 
-                                  height:
-                                      68,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white.withOpacity(.7),
 
-                                  decoration:
-                                      BoxDecoration(
-
-                                    color: Colors
-                                        .white
-                                        .withOpacity(
-                                            .7),
-
-                                    borderRadius:
-                                        BorderRadius
-                                            .circular(
-                                      28,
-                                    ),
+                                    borderRadius: BorderRadius.circular(28),
                                   ),
 
-                                  child:
-                                      Stack(
-
-                                    alignment:
-                                        Alignment
-                                            .center,
+                                  child: Stack(
+                                    alignment: Alignment.center,
 
                                     children: [
-
                                       const Icon(
+                                        Icons.notifications_active_rounded,
 
-                                        Icons
-                                            .notifications_active_rounded,
+                                        color: Color(0xffFF5C8A),
 
-                                        color:
-                                            Color(
-                                          0xffFF5C8A,
-                                        ),
-
-                                        size:
-                                            30,
+                                        size: 30,
                                       ),
 
                                       Positioned(
-
                                         top: 16,
-                                        right:
-                                            18,
+                                        right: 18,
 
-                                        child:
-                                            Container(
+                                        child: Container(
+                                          width: 10,
 
-                                          width:
-                                              10,
+                                          height: 10,
 
-                                          height:
-                                              10,
+                                          decoration: const BoxDecoration(
+                                            shape: BoxShape.circle,
 
-                                          decoration:
-                                              const BoxDecoration(
-
-                                            shape:
-                                                BoxShape
-                                                    .circle,
-
-                                            color:
-                                                Colors
-                                                    .red,
+                                            color: Colors.red,
                                           ),
                                         ),
                                       ),
@@ -328,195 +185,137 @@ class _ChatsScreenState
                           ],
                         ),
 
-                        const SizedBox(
-                            height: 28),
+                        const SizedBox(height: 28),
 
                         /// SEARCH
                         const GlassSearchBar(),
 
-                        const SizedBox(
-                            height: 24),
+                        const SizedBox(height: 24),
 
                         /// ENCRYPTED BANNER
                         const EncryptedChatBanner(),
 
-                        const SizedBox(
-                            height: 18),
+                        const SizedBox(height: 18),
 
                         /// ACTIVE USERS
                         SizedBox(
-
                           height: 100,
 
                           child: ListView.separated(
+                            scrollDirection: Axis.horizontal,
 
-                            scrollDirection:
-                                Axis.horizontal,
+                            physics: const BouncingScrollPhysics(),
 
-                            physics:
-                                const BouncingScrollPhysics(),
-
-                            itemBuilder:
-                                (_, index) {
-
+                            itemBuilder: (_, index) {
                               return Column(
-
                                 children: [
-
                                   OnlinePresenceRing(
+                                    child: CircleAvatar(
+                                      radius: 30,
 
-                                    child:
-                                        CircleAvatar(
-
-                                      radius:
-                                          30,
-
-                                      backgroundImage:
-                                          NetworkImage(
-
+                                      backgroundImage: NetworkImage(
                                         "https://picsum.photos/200/${index + 10}",
                                       ),
                                     ),
                                   ),
 
-                                  const SizedBox(
-                                      height:
-                                          10),
+                                  const SizedBox(height: 10),
 
                                   Text(
-
                                     "User ${index + 1}",
 
-                                    style:
-                                        const TextStyle(
-
-                                      fontWeight:
-                                          FontWeight
-                                              .w600,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.w600,
                                     ),
                                   ),
                                 ],
                               );
                             },
 
-                            separatorBuilder:
-                                (_, __) =>
-                                    const SizedBox(
-                              width: 18,
-                            ),
+                            separatorBuilder: (_, __) =>
+                                const SizedBox(width: 18),
 
                             itemCount: 10,
                           ),
                         ),
 
-                        const SizedBox(
-                            height: 22),
+                        const SizedBox(height: 22),
 
                         /// CHATS
                         Expanded(
-
                           child: ListView(
-
-                            physics:
-                                const BouncingScrollPhysics(),
+                            physics: const BouncingScrollPhysics(),
 
                             children: [
-
                               ChatTile(
-
-                                name:
-                                    "Lujain Fashion",
+                                name: "Lujain Fashion",
 
                                 image:
                                     "https://images.unsplash.com/photo-1494790108377-be9c29b29330",
 
-                                message:
-                                    "Your luxury order is ready ✨",
+                                message: "Your luxury order is ready ✨",
 
-                                unread:
-                                    5,
+                                unread: 5,
 
-                                online:
-                                    true,
+                                online: true,
 
-                                typing:
-                                    false,
+                                typing: false,
 
                                 onTap: () {},
                               ),
 
                               ChatTile(
-
-                                name:
-                                    "Pink Boutique",
+                                name: "Pink Boutique",
 
                                 image:
                                     "https://images.unsplash.com/photo-1524504388940-b1c1722653e1",
 
-                                message:
-                                    "Can you send more photos please 💕",
+                                message: "Can you send more photos please 💕",
 
-                                unread:
-                                    2,
+                                unread: 2,
 
-                                online:
-                                    true,
+                                online: true,
 
-                                typing:
-                                    true,
+                                typing: true,
 
                                 onTap: () {},
                               ),
 
                               ChatTile(
-
-                                name:
-                                    "Luxury Queen",
+                                name: "Luxury Queen",
 
                                 image:
                                     "https://images.unsplash.com/photo-1488426862026-3ee34a7d66df",
 
-                                message:
-                                    "Everything looks stunning 😍",
+                                message: "Everything looks stunning 😍",
 
-                                unread:
-                                    0,
+                                unread: 0,
 
-                                online:
-                                    false,
+                                online: false,
 
-                                typing:
-                                    false,
+                                typing: false,
 
                                 onTap: () {},
                               ),
 
                               ChatTile(
-
-                                name:
-                                    "Beauty Store",
+                                name: "Beauty Store",
 
                                 image:
                                     "https://images.unsplash.com/photo-1544005313-94ddf0286df2",
 
-                                message:
-                                    "Thank you for shopping with us ✨",
+                                message: "Thank you for shopping with us ✨",
 
-                                unread:
-                                    9,
+                                unread: 9,
 
-                                online:
-                                    true,
+                                online: true,
 
-                                typing:
-                                    false,
+                                typing: false,
 
                                 onTap: () {},
                               ),
 
-                              const SizedBox(
-                                  height:
-                                      120),
+                              const SizedBox(height: 120),
                             ],
                           ),
                         ),

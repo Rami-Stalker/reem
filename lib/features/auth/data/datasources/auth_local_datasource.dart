@@ -7,5 +7,11 @@ abstract interface class AuthLocalDataSource {
 
   Future<String?> getRefreshToken();
 
+  Future<String> getOrCreateDeviceId();
+
+  Future<void> saveGuestMode(bool enabled);
+
+  Future<bool> isGuestMode();
+
   Future<void> clear();
 }

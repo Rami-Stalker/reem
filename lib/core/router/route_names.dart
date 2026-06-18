@@ -4,11 +4,17 @@ abstract final class RouteNames {
   static const login = 'login';
   static const register = 'register';
   static const forgotPassword = 'forgot-password';
+  static const otpVerification = 'otp-verification';
 
   static const home = 'home';
+  static const activity = 'activity';
   static const favorites = 'favorites';
   static const settings = 'settings';
   static const profile = 'profile';
+  static const accountSettings = 'account-settings';
+  static const deviceManagement = 'device-management';
+  static const securitySettings = 'security-settings';
+  static const sellerVerification = 'seller-verification';
 
   static const addPost = 'add-post';
   static const addStory = 'add-story';
@@ -20,6 +26,20 @@ abstract final class RouteNames {
   static const productDetails = 'product-details';
 
   static const editProfile = 'edit-profile';
+  static const userProfile = 'user-profile';
+  static const myProducts = 'my-products';
+  static const productForm = 'product-form';
+  static const sellerDashboard = 'seller-dashboard';
+  static const sellerCustomers = 'seller-customers';
+  static const sellerMarketing = 'seller-marketing';
+  static const sellerAnalytics = 'seller-analytics';
+  static const sellerStore = 'seller-store';
+  static const storyViewer = 'story-viewer';
+  static const cart = 'cart';
+  static const checkout = 'checkout';
+  static const search = 'search';
+  static const orderDetail = 'order-detail';
+  static const collection = 'collection';
   static const notifications = 'notificatcations';
   static const addresses = 'addresses';
   static const paymentMethods = 'payment-methods';
@@ -35,7 +55,17 @@ abstract final class RouteNames {
   static const adminOrders = 'admin-orders';
   static const adminProducts = 'admin-products';
   static const adminUsers = 'admin-users';
+  static const adminSellers = 'admin-sellers';
+  static const adminFinancials = 'admin-financials';
+  static const adminCommissions = 'admin-commissions';
   static const adminAnalytics = 'admin-analytics';
+  static const adminReports = 'admin-reports';
+  static const adminModeration = 'admin-moderation';
+  static const adminSupport = 'admin-support';
+  static const adminAuditLogs = 'admin-audit-logs';
+  static const adminSystemSettings = 'admin-system-settings';
+  static const adminCampaigns = 'admin-notification-campaigns';
+  static const adminNotificationAnalytics = 'admin-notification-analytics';
 
   static const chats = 'chats';
   static const chatDetails = 'chat-details';
