@@ -1,4 +1,4 @@
-import '../../domain/entities/chat_thread_entity.dart';
+import 'package:reem/features/chat/domain/entities/chat_thread_entity.dart';
 
 class ChatThreadModel extends ChatThreadEntity {
   const ChatThreadModel({

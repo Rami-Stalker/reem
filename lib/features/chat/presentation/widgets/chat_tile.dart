@@ -2,7 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
-import 'unread_badge.dart';
+import 'package:reem/features/chat/presentation/widgets/unread_badge.dart';
 
 class ChatTile
     extends StatefulWidget {

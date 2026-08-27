@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'ds_breakpoints.dart';
+import 'package:reem/core/design_system/foundation/tokens/ds_breakpoints.dart';
 
 /// Spacing scale based on 4px grid (Material Design 3 compatible).
 abstract final class DsSpacing {

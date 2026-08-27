@@ -1,4 +1,4 @@
-import '../../domain/entities/order_entity.dart';
+import 'package:reem/features/profile/domain/entities/order_entity.dart';
 
 class OrderModel extends OrderEntity {
   const OrderModel({

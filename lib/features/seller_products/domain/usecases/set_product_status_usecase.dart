@@ -1,8 +1,8 @@
 import 'package:reem/core/result/result.dart';
 
-import '../entities/managed_product.dart';
-import '../entities/product_status.dart';
-import '../repositories/seller_products_repository.dart';
+import 'package:reem/features/seller_products/domain/entities/managed_product.dart';
+import 'package:reem/features/seller_products/domain/entities/product_status.dart';
+import 'package:reem/features/seller_products/domain/repositories/seller_products_repository.dart';
 
 class SetProductStatusUseCase {
   const SetProductStatusUseCase(this._repository);

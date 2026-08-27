@@ -2,7 +2,7 @@ import 'package:reem/core/result/result.dart';
 import 'package:reem/core/shared/entities/media.dart';
 import 'package:reem/core/shared/entities/story.dart';
 
-import '../repositories/create_repository.dart';
+import 'package:reem/features/create/domain/repositories/create_repository.dart';
 
 class CreateStoryUseCase {
   const CreateStoryUseCase(this._repository);

@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../core/design_system/design_system.dart';
-import '../../../../core/localization/l10n_extension.dart';
-import '../../../../core/router/route_paths.dart';
-import '../../domain/entities/auth_account.dart';
-import '../utils/auth_form_validators.dart';
+import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
+import 'package:reem/core/router/route_paths.dart';
+import 'package:reem/features/auth/domain/entities/auth_account.dart';
+import 'package:reem/features/auth/presentation/utils/auth_form_validators.dart';
 
 class ForgotPasswordScreen extends ConsumerStatefulWidget {
   const ForgotPasswordScreen({super.key});

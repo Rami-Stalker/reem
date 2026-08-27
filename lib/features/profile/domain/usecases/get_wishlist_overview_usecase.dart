@@ -1,7 +1,7 @@
 import 'package:reem/core/result/result.dart';
 
-import '../entities/wishlist_entity.dart';
-import '../repositories/profile_repository.dart';
+import 'package:reem/features/profile/domain/entities/wishlist_entity.dart';
+import 'package:reem/features/profile/domain/repositories/profile_repository.dart';
 
 class GetWishlistOverviewUseCase {
   const GetWishlistOverviewUseCase(this.repository);

@@ -3,9 +3,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../core/design_system/design_system.dart';
-import '../../../../core/localization/l10n_extension.dart';
-import '../../../../core/media/voice_recorder_service.dart';
+import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
+import 'package:reem/core/media/voice_recorder_service.dart';
 
 /// The composer while a voice note is being recorded.
 ///

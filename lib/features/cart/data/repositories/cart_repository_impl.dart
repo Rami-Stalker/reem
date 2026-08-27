@@ -1,9 +1,8 @@
 import 'package:reem/core/base/repository_handler.dart';
 import 'package:reem/core/result/result.dart';
-
-import '../../domain/entities/cart.dart';
-import '../../domain/repositories/cart_repository.dart';
-import '../datasources/cart_remote_datasource.dart';
+import 'package:reem/features/cart/data/datasources/cart_remote_datasource.dart';
+import 'package:reem/features/cart/domain/entities/cart.dart';
+import 'package:reem/features/cart/domain/repositories/cart_repository.dart';
 
 class CartRepositoryImpl with RepositoryHandler implements CartRepository {
   const CartRepositoryImpl(this.remote);

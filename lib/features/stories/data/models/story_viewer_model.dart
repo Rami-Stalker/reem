@@ -1,6 +1,6 @@
 import 'package:reem/core/shared/models/user_model.dart';
 
-import '../../domain/entities/story_viewer_entry.dart';
+import 'package:reem/features/stories/domain/entities/story_viewer_entry.dart';
 
 class StoryViewerModel extends StoryViewerEntry {
   const StoryViewerModel({

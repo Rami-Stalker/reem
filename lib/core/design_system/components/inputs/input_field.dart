@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../../foundation/theme/extensions/color_extension.dart';
-import '../../foundation/tokens/ds_spacing.dart';
-import '../../foundation/tokens/ds_typography.dart';
+import 'package:reem/core/design_system/foundation/theme/extensions/color_extension.dart';
+import 'package:reem/core/design_system/foundation/tokens/ds_spacing.dart';
+import 'package:reem/core/design_system/foundation/tokens/ds_typography.dart';
 
 /// The Reem text field — a premium, fully theme-driven input with an optional
 /// label above the field, helper/error text, and a built-in password toggle.

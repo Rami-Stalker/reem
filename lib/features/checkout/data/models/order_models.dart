@@ -1,5 +1,5 @@
-import '../../../../core/shared/value_objects/money.dart';
-import '../../domain/entities/order.dart';
+import 'package:reem/core/shared/value_objects/money.dart';
+import 'package:reem/features/checkout/domain/entities/order.dart';
 
 DateTime? _dt(dynamic v) =>
     v == null ? null : DateTime.tryParse(v as String);

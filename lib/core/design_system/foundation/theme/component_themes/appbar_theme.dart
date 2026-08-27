@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-
-import '../../tokens/ds_typography.dart';
-import '../ds_theme_extension.dart';
+import 'package:reem/core/design_system/foundation/theme/ds_theme_extension.dart';
+import 'package:reem/core/design_system/foundation/tokens/ds_typography.dart';
 
 AppBarTheme dsAppBarTheme(DsThemeExtension ds) {
   return AppBarTheme(

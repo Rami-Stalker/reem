@@ -1,9 +1,8 @@
 import 'package:reem/core/base/repository_handler.dart';
 import 'package:reem/core/result/result.dart';
-
-import '../../domain/entities/invoice.dart';
-import '../../domain/repositories/invoices_repository.dart';
-import '../datasources/invoices_remote_datasource.dart';
+import 'package:reem/features/invoices/data/datasources/invoices_remote_datasource.dart';
+import 'package:reem/features/invoices/domain/entities/invoice.dart';
+import 'package:reem/features/invoices/domain/repositories/invoices_repository.dart';
 
 class InvoicesRepositoryImpl with RepositoryHandler implements InvoicesRepository {
   const InvoicesRepositoryImpl(this.remote);

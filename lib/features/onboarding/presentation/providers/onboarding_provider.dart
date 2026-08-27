@@ -1,14 +1,14 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 
-import '../../data/datasources/impl/onboarding_local_datasource_impl.dart';
-import '../../data/datasources/onboarding_local_datasource.dart';
-import '../../data/repositories/onboarding_repository_impl.dart';
-import '../../domain/repositories/onboarding_repository.dart';
-import '../../domain/usecases/complete_onboarding_usecase.dart';
-import '../../domain/usecases/is_onboarding_complete_usecase.dart';
-import 'onboarding_notifier.dart';
-import 'onboarding_state.dart';
+import 'package:reem/features/onboarding/data/datasources/impl/onboarding_local_datasource_impl.dart';
+import 'package:reem/features/onboarding/data/datasources/onboarding_local_datasource.dart';
+import 'package:reem/features/onboarding/data/repositories/onboarding_repository_impl.dart';
+import 'package:reem/features/onboarding/domain/repositories/onboarding_repository.dart';
+import 'package:reem/features/onboarding/domain/usecases/complete_onboarding_usecase.dart';
+import 'package:reem/features/onboarding/domain/usecases/is_onboarding_complete_usecase.dart';
+import 'package:reem/features/onboarding/presentation/providers/onboarding_notifier.dart';
+import 'package:reem/features/onboarding/presentation/providers/onboarding_state.dart';
 
 final onboardingLocalDataSourceProvider = Provider<OnboardingLocalDataSource>(
   (ref) => OnboardingLocalDataSourceImpl(),

@@ -1,4 +1,4 @@
-import '../../domain/entities/notification_preferences.dart';
+import 'package:reem/features/settings/domain/entities/notification_preferences.dart';
 
 class NotificationPreferencesModel extends NotificationPreferences {
   const NotificationPreferencesModel({

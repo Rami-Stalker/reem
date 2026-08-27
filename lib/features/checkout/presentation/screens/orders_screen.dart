@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../core/design_system/design_system.dart';
-import '../../../../core/router/route_paths.dart';
-import '../../domain/entities/order.dart';
-import '../providers/checkout_providers.dart';
-import '../widgets/order_status_chip.dart';
+import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/router/route_paths.dart';
+import 'package:reem/features/checkout/domain/entities/order.dart';
+import 'package:reem/features/checkout/presentation/providers/checkout_providers.dart';
+import 'package:reem/features/checkout/presentation/widgets/order_status_chip.dart';
 
 class OrdersScreen extends ConsumerWidget {
   const OrdersScreen({super.key});

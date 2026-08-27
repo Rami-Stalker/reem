@@ -1,7 +1,7 @@
 import 'package:reem/core/result/result.dart';
 
-import '../entities/chat_message_entity.dart';
-import '../entities/chat_thread_entity.dart';
+import 'package:reem/features/chat/domain/entities/chat_message_entity.dart';
+import 'package:reem/features/chat/domain/entities/chat_thread_entity.dart';
 
 abstract interface class ChatRepository {
   Future<Result<List<ChatThreadEntity>>> getThreads();

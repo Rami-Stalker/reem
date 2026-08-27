@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
+import 'package:reem/features/seller_orders/domain/entities/seller_order.dart';
+import 'package:reem/features/seller_orders/presentation/seller_order_labels.dart';
 import 'package:url_launcher/url_launcher.dart';
-
-import '../../../../core/design_system/design_system.dart';
-import '../../../../core/localization/l10n_extension.dart';
-import '../../domain/entities/seller_order.dart';
-import '../seller_order_labels.dart';
 
 /// What the seller may see of the customer, and why.
 ///

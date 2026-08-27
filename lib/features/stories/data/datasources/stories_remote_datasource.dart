@@ -1,7 +1,7 @@
 import 'package:reem/core/shared/models/story_model.dart';
 
-import '../models/story_analytics_model.dart';
-import '../models/story_viewer_model.dart';
+import 'package:reem/features/stories/data/models/story_analytics_model.dart';
+import 'package:reem/features/stories/data/models/story_viewer_model.dart';
 
 abstract interface class StoriesRemoteDataSource {
   Future<List<StoryModel>> getActiveStories();

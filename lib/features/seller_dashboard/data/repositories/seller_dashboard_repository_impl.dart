@@ -1,6 +1,6 @@
-import '../../domain/entities/seller_dashboard_data.dart';
-import '../../domain/repositories/seller_dashboard_repository.dart';
-import '../datasources/seller_dashboard_datasource.dart';
+import 'package:reem/features/seller_dashboard/data/datasources/seller_dashboard_datasource.dart';
+import 'package:reem/features/seller_dashboard/domain/entities/seller_dashboard_data.dart';
+import 'package:reem/features/seller_dashboard/domain/repositories/seller_dashboard_repository.dart';
 
 final class SellerDashboardRepositoryImpl
     implements SellerDashboardRepository {

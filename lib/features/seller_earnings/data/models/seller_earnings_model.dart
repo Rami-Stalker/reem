@@ -1,5 +1,5 @@
-import '../../../../core/shared/value_objects/money.dart';
-import '../../domain/entities/seller_earnings.dart';
+import 'package:reem/core/shared/value_objects/money.dart';
+import 'package:reem/features/seller_earnings/domain/entities/seller_earnings.dart';
 
 /// Wire → domain.
 ///

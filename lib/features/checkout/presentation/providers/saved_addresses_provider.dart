@@ -1,8 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../core/result/result.dart';
-import '../../../settings/domain/entities/address_entity.dart';
-import '../../../settings/presentation/providers/settings_provider.dart';
+import 'package:reem/core/result/result.dart';
+import 'package:reem/features/settings/domain/entities/address_entity.dart';
+import 'package:reem/features/settings/presentation/providers/settings_provider.dart';
 
 /// Her saved addresses, for the checkout picker.
 ///

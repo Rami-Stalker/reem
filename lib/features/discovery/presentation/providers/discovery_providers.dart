@@ -1,15 +1,15 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 
-import '../../../../core/presentation/providers/core_providers.dart';
-import '../../data/datasources/discovery_remote_datasource.dart';
-import '../../data/datasources/impl/discovery_remote_datasource_impl.dart';
-import '../../data/repositories/discovery_repository_impl.dart';
-import '../../domain/entities/product_collection.dart';
-import '../../domain/repositories/discovery_repository.dart';
-import '../../domain/usecases/discovery_usecases.dart';
-import 'collection_notifier.dart';
-import 'collection_state.dart';
+import 'package:reem/core/presentation/providers/core_providers.dart';
+import 'package:reem/features/discovery/data/datasources/discovery_remote_datasource.dart';
+import 'package:reem/features/discovery/data/datasources/impl/discovery_remote_datasource_impl.dart';
+import 'package:reem/features/discovery/data/repositories/discovery_repository_impl.dart';
+import 'package:reem/features/discovery/domain/entities/product_collection.dart';
+import 'package:reem/features/discovery/domain/repositories/discovery_repository.dart';
+import 'package:reem/features/discovery/domain/usecases/discovery_usecases.dart';
+import 'package:reem/features/discovery/presentation/providers/collection_notifier.dart';
+import 'package:reem/features/discovery/presentation/providers/collection_state.dart';
 
 // ── Infrastructure / use cases ──────────────────────────────────────────────
 

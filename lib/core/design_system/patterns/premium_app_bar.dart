@@ -3,7 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../design_system.dart';
+import 'package:reem/core/design_system/design_system.dart';
 
 class PremiumAppBar extends StatelessWidget {
   const PremiumAppBar({

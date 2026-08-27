@@ -1,5 +1,5 @@
-import '../../domain/entities/address_draft.dart';
-import '../../domain/entities/address_entity.dart';
+import 'package:reem/features/settings/domain/entities/address_draft.dart';
+import 'package:reem/features/settings/domain/entities/address_entity.dart';
 
 class AddressModel extends AddressEntity {
   const AddressModel({

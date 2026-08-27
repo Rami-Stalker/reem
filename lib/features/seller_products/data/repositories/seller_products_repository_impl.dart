@@ -1,11 +1,10 @@
 import 'package:reem/core/base/repository_handler.dart';
 import 'package:reem/core/result/result.dart';
-
-import '../../domain/entities/managed_product.dart';
-import '../../domain/entities/product_draft.dart';
-import '../../domain/entities/product_status.dart';
-import '../../domain/repositories/seller_products_repository.dart';
-import '../datasources/seller_products_remote_datasource.dart';
+import 'package:reem/features/seller_products/data/datasources/seller_products_remote_datasource.dart';
+import 'package:reem/features/seller_products/domain/entities/managed_product.dart';
+import 'package:reem/features/seller_products/domain/entities/product_draft.dart';
+import 'package:reem/features/seller_products/domain/entities/product_status.dart';
+import 'package:reem/features/seller_products/domain/repositories/seller_products_repository.dart';
 
 class SellerProductsRepositoryImpl
     with RepositoryHandler

@@ -2,8 +2,8 @@ import 'package:reem/core/result/result.dart';
 import 'package:reem/core/shared/entities/product.dart';
 import 'package:reem/core/shared/entities/user.dart';
 
-import '../entities/order_entity.dart';
-import '../entities/wishlist_entity.dart';
+import 'package:reem/features/profile/domain/entities/order_entity.dart';
+import 'package:reem/features/profile/domain/entities/wishlist_entity.dart';
 
 abstract interface class ProfileRepository {
   Future<Result<User>> getProfile();

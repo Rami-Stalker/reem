@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
-import '../../../../core/design_system/design_system.dart';
-import '../../../../core/router/route_paths.dart';
-import '../../../seller_products/domain/entities/managed_product.dart';
-import '../../../seller_products/domain/entities/product_status.dart';
-import '../../../seller_products/presentation/providers/seller_products_providers.dart';
-import '../providers/create_provider.dart';
-import '../providers/create_state.dart';
-import '../widgets/create_header.dart';
-import '../widgets/post_caption_field.dart';
+import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/router/route_paths.dart';
+import 'package:reem/features/create/presentation/providers/create_provider.dart';
+import 'package:reem/features/create/presentation/providers/create_state.dart';
+import 'package:reem/features/create/presentation/widgets/create_header.dart';
+import 'package:reem/features/create/presentation/widgets/post_caption_field.dart';
+import 'package:reem/features/seller_products/domain/entities/managed_product.dart';
+import 'package:reem/features/seller_products/domain/entities/product_status.dart';
+import 'package:reem/features/seller_products/presentation/providers/seller_products_providers.dart';
 
 class AddPostScreen extends ConsumerStatefulWidget {
   const AddPostScreen({super.key});

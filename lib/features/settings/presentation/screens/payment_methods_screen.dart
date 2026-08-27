@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
-import '../../../../core/design_system/design_system.dart';
-import '../../../../core/router/route_paths.dart';
-import '../../../checkout/domain/entities/checkout.dart';
-import '../../../wallet/presentation/providers/wallet_provider.dart';
-import '../providers/payment_options_provider.dart';
+import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/router/route_paths.dart';
+import 'package:reem/features/checkout/domain/entities/checkout.dart';
+import 'package:reem/features/settings/presentation/providers/payment_options_provider.dart';
+import 'package:reem/features/wallet/presentation/providers/wallet_provider.dart';
 
 /// How she can pay.
 ///

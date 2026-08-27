@@ -1,13 +1,12 @@
 import 'package:reem/core/shared/models/user_model.dart';
-
-import '../../domain/entities/address_draft.dart';
-import '../../domain/entities/coupon_validation.dart';
-import '../../domain/entities/notification_preferences.dart';
-import '../models/address_model.dart';
-import '../models/coupon_model.dart';
-import '../models/notification_preferences_model.dart';
-import '../models/notification_settings_model.dart';
-import '../models/rewards_model.dart';
+import 'package:reem/features/settings/data/models/address_model.dart';
+import 'package:reem/features/settings/data/models/coupon_model.dart';
+import 'package:reem/features/settings/data/models/notification_preferences_model.dart';
+import 'package:reem/features/settings/data/models/notification_settings_model.dart';
+import 'package:reem/features/settings/data/models/rewards_model.dart';
+import 'package:reem/features/settings/domain/entities/address_draft.dart';
+import 'package:reem/features/settings/domain/entities/coupon_validation.dart';
+import 'package:reem/features/settings/domain/entities/notification_preferences.dart';
 
 abstract interface class SettingsRemoteDataSource {
   Future<List<AddressModel>> getAddresses();

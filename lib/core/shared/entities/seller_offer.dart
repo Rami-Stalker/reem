@@ -1,10 +1,9 @@
 // shared/entities/seller_offer.dart
 
 import 'package:equatable/equatable.dart';
-
-import '../value_objects/money.dart';
-import 'product_variant.dart';
-import 'user.dart';
+import 'package:reem/core/shared/entities/product_variant.dart';
+import 'package:reem/core/shared/entities/user.dart';
+import 'package:reem/core/shared/value_objects/money.dart';
 
 enum OfferStatus {
   draft,

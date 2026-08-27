@@ -1,9 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../core/experience/role_experience.dart';
-import '../../../../core/network/api_endpoints.dart';
-import '../../../../core/presentation/providers/core_providers.dart';
-import '../../../auth/presentation/providers/auth_provider.dart';
+import 'package:reem/core/experience/role_experience.dart';
+import 'package:reem/core/network/api_endpoints.dart';
+import 'package:reem/core/presentation/providers/core_providers.dart';
+import 'package:reem/features/auth/presentation/providers/auth_provider.dart';
 
 final roleExperienceProvider = Provider<AppRoleExperience>((ref) {
   final role = ref.watch(

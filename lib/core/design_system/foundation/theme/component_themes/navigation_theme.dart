@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../ds_theme_extension.dart';
+import 'package:reem/core/design_system/foundation/theme/ds_theme_extension.dart';
 
 NavigationBarThemeData dsNavigationBarTheme(DsThemeExtension ds) {
   return NavigationBarThemeData(

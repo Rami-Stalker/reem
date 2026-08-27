@@ -1,6 +1,6 @@
 import 'package:reem/core/result/result.dart';
 
-import '../entities/rewards_hub.dart';
+import 'package:reem/features/rewards/domain/entities/rewards_hub.dart';
 
 abstract interface class RewardsRepository {
   Future<Result<RewardsHub>> loadHub();

@@ -3,11 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../core/design_system/design_system.dart';
-import '../../../../core/router/route_paths.dart';
-import '../providers/collection_notifier.dart';
-import '../providers/collection_state.dart';
-import '../widgets/product_card_compact.dart';
+import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/router/route_paths.dart';
+import 'package:reem/features/discovery/presentation/providers/collection_notifier.dart';
+import 'package:reem/features/discovery/presentation/providers/collection_state.dart';
+import 'package:reem/features/discovery/presentation/widgets/product_card_compact.dart';
 
 /// Full, infinite-scrolling grid for a single collection / category / seller.
 class CollectionScreen extends ConsumerStatefulWidget {

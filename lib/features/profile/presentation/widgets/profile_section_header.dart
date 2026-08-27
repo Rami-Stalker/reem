@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/design_system/design_system.dart';
-import '../../../../core/localization/l10n_extension.dart';
+import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
 
 /// A premium section header for the profile centre: optional rose eyebrow, an
 /// elegant title and an optional "See all" affordance. Carries its own padding.

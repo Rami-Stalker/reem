@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:reem/core/design_system/design_system.dart';
 import 'package:reem/features/rewards/domain/entities/rewards_hub.dart';
 import 'package:reem/features/rewards/presentation/providers/rewards_hub_provider.dart';
-
-import '../../../../core/design_system/design_system.dart';
 
 class RewardsScreen extends ConsumerStatefulWidget {
   const RewardsScreen({super.key});

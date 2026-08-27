@@ -1,4 +1,4 @@
-import '../models/cart_model.dart';
+import 'package:reem/features/cart/data/models/cart_model.dart';
 
 abstract interface class CartRemoteDataSource {
   Future<CartModel> getCart();

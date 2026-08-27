@@ -4,12 +4,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:go_router/go_router.dart';
 
-import '../../../../core/design_system/design_system.dart';
-import '../../../../core/localization/l10n_extension.dart';
-import '../../../../core/router/route_paths.dart';
-import '../../../commissions/presentation/providers/commission_provider.dart';
-import '../providers/seller_dashboard_provider.dart';
-import 'seller_format.dart';
+import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
+import 'package:reem/core/router/route_paths.dart';
+import 'package:reem/features/commissions/presentation/providers/commission_provider.dart';
+import 'package:reem/features/seller_dashboard/presentation/providers/seller_dashboard_provider.dart';
+import 'package:reem/features/seller_dashboard/presentation/widgets/seller_format.dart';
 
 /// The payout card: what she can take out today, and what the platform has
 /// already paid, kept and is still holding.

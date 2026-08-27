@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-
-import '../../tokens/ds_motion.dart';
-import '../curves/ds_curves.dart';
+import 'package:reem/core/design_system/foundation/motion/curves/ds_curves.dart';
+import 'package:reem/core/design_system/foundation/tokens/ds_motion.dart';
 
 abstract final class DsSlideAnimations {
   static Widget slideUp({

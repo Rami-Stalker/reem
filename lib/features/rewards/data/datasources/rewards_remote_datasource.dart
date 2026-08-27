@@ -1,4 +1,4 @@
-import '../models/rewards_hub_model.dart';
+import 'package:reem/features/rewards/data/models/rewards_hub_model.dart';
 
 abstract interface class RewardsRemoteDataSource {
   Future<RewardsHubModel> loadHub();

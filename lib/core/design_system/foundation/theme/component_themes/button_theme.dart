@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-
-import '../../tokens/ds_constraints.dart';
-import '../../tokens/ds_radius.dart';
-import '../../tokens/ds_typography.dart';
-import '../ds_theme_extension.dart';
+import 'package:reem/core/design_system/foundation/theme/ds_theme_extension.dart';
+import 'package:reem/core/design_system/foundation/tokens/ds_constraints.dart';
+import 'package:reem/core/design_system/foundation/tokens/ds_radius.dart';
+import 'package:reem/core/design_system/foundation/tokens/ds_typography.dart';
 
 ElevatedButtonThemeData dsElevatedButtonTheme(DsThemeExtension ds) {
   return ElevatedButtonThemeData(

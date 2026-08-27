@@ -2,9 +2,9 @@
 
 import 'package:equatable/equatable.dart';
 
-import 'media.dart';
-import 'product.dart';
-import 'user.dart';
+import 'package:reem/core/shared/entities/media.dart';
+import 'package:reem/core/shared/entities/product.dart';
+import 'package:reem/core/shared/entities/user.dart';
 
 /// High-level merchandising category, used for feed filtering and iconography.
 enum CategoryType {

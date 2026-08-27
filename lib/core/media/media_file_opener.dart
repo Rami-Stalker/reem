@@ -6,9 +6,9 @@ import 'package:open_filex/open_filex.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
-import '../errors/app_exception.dart';
-import '../errors/error_mapper.dart';
-import '../presentation/providers/core_providers.dart';
+import 'package:reem/core/errors/app_exception.dart';
+import 'package:reem/core/errors/error_mapper.dart';
+import 'package:reem/core/presentation/providers/core_providers.dart';
 
 /// Fetches an attachment and hands it to whatever app opens that kind of file.
 ///

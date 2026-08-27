@@ -1,4 +1,4 @@
-import '../../domain/entities/chat_message_entity.dart';
+import 'package:reem/features/chat/domain/entities/chat_message_entity.dart';
 
 class ChatAttachmentModel extends ChatAttachmentEntity {
   const ChatAttachmentModel({

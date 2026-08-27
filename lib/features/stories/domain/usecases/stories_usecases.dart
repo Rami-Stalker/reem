@@ -1,9 +1,9 @@
 import 'package:reem/core/result/result.dart';
 import 'package:reem/core/shared/entities/story.dart';
 
-import '../entities/story_analytics.dart';
-import '../entities/story_viewer_entry.dart';
-import '../repositories/stories_repository.dart';
+import 'package:reem/features/stories/domain/entities/story_analytics.dart';
+import 'package:reem/features/stories/domain/entities/story_viewer_entry.dart';
+import 'package:reem/features/stories/domain/repositories/stories_repository.dart';
 
 class GetStoriesUseCase {
   const GetStoriesUseCase(this._repo);

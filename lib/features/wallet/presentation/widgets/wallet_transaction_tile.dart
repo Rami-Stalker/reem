@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import '../../../../core/design_system/design_system.dart';
-import '../../../../core/utils/arabic_numerals.dart';
-import '../../domain/entities/wallet_transaction.dart';
+import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/utils/arabic_numerals.dart';
+import 'package:reem/features/wallet/domain/entities/wallet_transaction.dart';
 
 /// One line of the statement.
 ///

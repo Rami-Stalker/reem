@@ -1,7 +1,7 @@
 import 'package:reem/core/result/result.dart';
 
-import '../entities/notification_entity.dart';
-import '../repositories/settings_repository.dart';
+import 'package:reem/features/settings/domain/entities/notification_entity.dart';
+import 'package:reem/features/settings/domain/repositories/settings_repository.dart';
 
 class GetNotificationsUseCase {
   const GetNotificationsUseCase(this._repository);

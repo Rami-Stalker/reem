@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../core/design_system/design_system.dart';
-import '../../../../core/shared/entities/comment.dart';
-import '../../../auth/presentation/providers/auth_provider.dart';
-import '../providers/comments_state.dart';
-import '../providers/social_posts_providers.dart';
+import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/shared/entities/comment.dart';
+import 'package:reem/features/auth/presentation/providers/auth_provider.dart';
+import 'package:reem/features/social_posts/presentation/providers/comments_state.dart';
+import 'package:reem/features/social_posts/presentation/providers/social_posts_providers.dart';
 
 /// Opens the comments for [postId] in a Reem-styled modal bottom sheet.
 Future<void> showCommentSheet(BuildContext context, String postId) {

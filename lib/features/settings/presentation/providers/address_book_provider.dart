@@ -1,11 +1,11 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 
-import '../../../../core/result/result.dart';
-import '../../../checkout/domain/entities/checkout.dart';
-import '../../../checkout/presentation/providers/checkout_providers.dart';
-import 'address_book_notifier.dart';
-import 'settings_provider.dart';
+import 'package:reem/core/result/result.dart';
+import 'package:reem/features/checkout/domain/entities/checkout.dart';
+import 'package:reem/features/checkout/presentation/providers/checkout_providers.dart';
+import 'package:reem/features/settings/presentation/providers/address_book_notifier.dart';
+import 'package:reem/features/settings/presentation/providers/settings_provider.dart';
 
 final addressBookProvider =
     StateNotifierProvider<AddressBookNotifier, AddressBookState>(

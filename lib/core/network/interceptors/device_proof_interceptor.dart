@@ -1,7 +1,6 @@
 import 'package:dio/dio.dart';
-
-import '../../security/device_proof_signer.dart';
-import '../api_endpoints.dart';
+import 'package:reem/core/network/api_endpoints.dart';
+import 'package:reem/core/security/device_proof_signer.dart';
 
 /// Attaches a device proof to the requests that are worth proving.
 ///

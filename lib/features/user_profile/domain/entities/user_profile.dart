@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:reem/core/shared/entities/user.dart';
 
-import 'seller_stats.dart';
+import 'package:reem/features/user_profile/domain/entities/seller_stats.dart';
 
 /// A user's profile as seen by a viewer: the user plus the viewer's
 /// relationship to them and aggregate engagement/commerce stats.

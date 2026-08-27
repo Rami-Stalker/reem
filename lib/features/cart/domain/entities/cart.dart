@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import '../../../../core/shared/value_objects/money.dart';
+import 'package:reem/core/shared/value_objects/money.dart';
 
 /// A single line in the cart.
 ///

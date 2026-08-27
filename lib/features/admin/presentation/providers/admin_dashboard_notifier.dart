@@ -1,8 +1,8 @@
 import 'package:flutter_riverpod/legacy.dart';
 import 'package:reem/core/result/result.dart';
 
-import '../../domain/usecases/get_admin_stats_usecase.dart';
-import 'admin_state.dart';
+import 'package:reem/features/admin/domain/usecases/get_admin_stats_usecase.dart';
+import 'package:reem/features/admin/presentation/providers/admin_state.dart';
 
 class AdminDashboardNotifier extends StateNotifier<AdminDashboardState> {
   AdminDashboardNotifier({required GetAdminStatsUseCase getAdminStatsUseCase})

@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../core/design_system/design_system.dart';
-import '../../../../core/experience/role_experience.dart';
-import '../../../../core/localization/l10n_extension.dart';
-import '../providers/role_experience_provider.dart';
+import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/experience/role_experience.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
+import 'package:reem/features/experience/presentation/providers/role_experience_provider.dart';
 
 class ExperienceSurfaceScreen extends ConsumerWidget {
   const ExperienceSurfaceScreen({super.key, required this.surface, this.title});

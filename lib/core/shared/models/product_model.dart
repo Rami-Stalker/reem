@@ -1,17 +1,17 @@
 // shared/models/product_model.dart
 
-import '../entities/brand.dart';
-import '../entities/category.dart';
-import '../entities/media.dart';
-import '../entities/product.dart';
-import '../entities/product_variant.dart';
-import '../entities/seller_offer.dart';
-import '../value_objects/money.dart';
-import 'brand_model.dart';
-import 'category_model.dart';
-import 'media_model.dart';
-import 'product_variant_model.dart';
-import 'seller_offer_model.dart';
+import 'package:reem/core/shared/entities/brand.dart';
+import 'package:reem/core/shared/entities/category.dart';
+import 'package:reem/core/shared/entities/media.dart';
+import 'package:reem/core/shared/entities/product.dart';
+import 'package:reem/core/shared/entities/product_variant.dart';
+import 'package:reem/core/shared/entities/seller_offer.dart';
+import 'package:reem/core/shared/models/brand_model.dart';
+import 'package:reem/core/shared/models/category_model.dart';
+import 'package:reem/core/shared/models/media_model.dart';
+import 'package:reem/core/shared/models/product_variant_model.dart';
+import 'package:reem/core/shared/models/seller_offer_model.dart';
+import 'package:reem/core/shared/value_objects/money.dart';
 
 class ProductModel extends Product {
   const ProductModel({

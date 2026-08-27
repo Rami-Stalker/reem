@@ -1,8 +1,7 @@
 import 'package:reem/core/network/api_endpoints.dart';
 import 'package:reem/core/network/base_remote_datasource.dart';
-
-import '../../models/wallet_models.dart';
-import '../wallet_remote_datasource.dart';
+import 'package:reem/features/wallet/data/datasources/wallet_remote_datasource.dart';
+import 'package:reem/features/wallet/data/models/wallet_models.dart';
 
 final class WalletRemoteDataSourceImpl extends BaseRemoteDataSource
     implements WalletRemoteDataSource {

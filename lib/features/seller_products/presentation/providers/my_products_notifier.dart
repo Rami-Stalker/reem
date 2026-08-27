@@ -1,12 +1,12 @@
 import 'package:flutter_riverpod/legacy.dart';
 import 'package:reem/core/result/result.dart';
 
-import '../../domain/entities/managed_product.dart';
-import '../../domain/entities/product_status.dart';
-import '../../domain/usecases/delete_product_usecase.dart';
-import '../../domain/usecases/get_my_products_usecase.dart';
-import '../../domain/usecases/set_product_status_usecase.dart';
-import 'my_products_state.dart';
+import 'package:reem/features/seller_products/domain/entities/managed_product.dart';
+import 'package:reem/features/seller_products/domain/entities/product_status.dart';
+import 'package:reem/features/seller_products/domain/usecases/delete_product_usecase.dart';
+import 'package:reem/features/seller_products/domain/usecases/get_my_products_usecase.dart';
+import 'package:reem/features/seller_products/domain/usecases/set_product_status_usecase.dart';
+import 'package:reem/features/seller_products/presentation/providers/my_products_state.dart';
 
 class MyProductsNotifier extends StateNotifier<MyProductsState> {
   MyProductsNotifier({

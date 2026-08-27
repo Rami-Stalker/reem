@@ -1,6 +1,6 @@
 import 'package:reem/core/shared/models/comment_model.dart';
 
-import '../../domain/entities/comment_page.dart';
+import 'package:reem/features/social_posts/domain/entities/comment_page.dart';
 
 class CommentPageModel extends CommentPage {
   const CommentPageModel({

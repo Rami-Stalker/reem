@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/design_system/design_system.dart';
+import 'package:reem/core/design_system/design_system.dart';
 
 class ProfileStatTile extends StatelessWidget {
   const ProfileStatTile({

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'screen_size.dart';
+import 'package:reem/core/design_system/foundation/layout/responsive/screen_size.dart';
 
 /// Holds values per breakpoint with fallback chain.
 class ResponsiveValues<T> {

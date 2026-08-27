@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../core/design_system/design_system.dart';
-import '../../../../core/localization/l10n_extension.dart';
-import '../../../../core/router/route_paths.dart';
-import '../../domain/entities/orders_overview.dart';
-import '../providers/profile_overview_provider.dart';
-import 'profile_section_header.dart';
+import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
+import 'package:reem/core/router/route_paths.dart';
+import 'package:reem/features/profile/domain/entities/orders_overview.dart';
+import 'package:reem/features/profile/presentation/providers/profile_overview_provider.dart';
+import 'package:reem/features/profile/presentation/widgets/profile_section_header.dart';
 
 /// "My orders" — four status tiles (pending / processing / delivered /
 /// cancelled) with live counts, each routing into the orders list.

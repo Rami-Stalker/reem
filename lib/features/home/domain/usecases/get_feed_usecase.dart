@@ -1,7 +1,7 @@
 import 'package:reem/core/result/result.dart';
 import 'package:reem/core/shared/entities/post.dart';
 
-import '../repositories/home_repository.dart';
+import 'package:reem/features/home/domain/repositories/home_repository.dart';
 
 class GetFeedUseCase {
   const GetFeedUseCase(this._repository);

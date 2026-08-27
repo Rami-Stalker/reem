@@ -1,9 +1,9 @@
 import 'package:flutter_riverpod/legacy.dart';
 import 'package:reem/core/result/result.dart';
 
-import '../../../../core/shared/value_objects/money.dart';
-import '../../domain/entities/checkout.dart';
-import '../../domain/usecases/checkout_usecases.dart';
+import 'package:reem/core/shared/value_objects/money.dart';
+import 'package:reem/features/checkout/domain/entities/checkout.dart';
+import 'package:reem/features/checkout/domain/usecases/checkout_usecases.dart';
 
 class CheckoutState {
   const CheckoutState({

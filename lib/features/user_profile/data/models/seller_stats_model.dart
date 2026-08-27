@@ -1,4 +1,4 @@
-import '../../domain/entities/seller_stats.dart';
+import 'package:reem/features/user_profile/domain/entities/seller_stats.dart';
 
 class SellerStatsModel extends SellerStats {
   const SellerStatsModel({

@@ -1,9 +1,8 @@
 import 'package:reem/core/base/repository_handler.dart';
 import 'package:reem/core/result/result.dart';
-
-import '../../domain/entities/reputation_entities.dart';
-import '../../domain/repositories/reputation_repository.dart';
-import '../datasources/reputation_remote_datasource.dart';
+import 'package:reem/features/reputation/data/datasources/reputation_remote_datasource.dart';
+import 'package:reem/features/reputation/domain/entities/reputation_entities.dart';
+import 'package:reem/features/reputation/domain/repositories/reputation_repository.dart';
 
 class ReputationRepositoryImpl
     with RepositoryHandler

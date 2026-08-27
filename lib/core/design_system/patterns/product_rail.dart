@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-
-import '../../../features/discovery/presentation/widgets/product_card_compact.dart';
-import '../../localization/l10n_extension.dart';
-import '../../shared/entities/product.dart';
-import '../design_system.dart';
+import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
+import 'package:reem/core/shared/entities/product.dart';
+import 'package:reem/features/discovery/presentation/widgets/product_card_compact.dart';
 
 /// A reusable, presentational horizontal product rail with a premium header
 /// (optional eyebrow + title + "See all"), skeleton loading and graceful empty

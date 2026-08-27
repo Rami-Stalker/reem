@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../core/design_system/design_system.dart';
-import '../../../../core/localization/l10n_extension.dart';
-import '../../../../core/shared/value_objects/money.dart';
-import '../../domain/entities/seller_earnings.dart';
-import '../providers/seller_earnings_provider.dart';
-import '../widgets/earnings_balance_cards.dart';
-import '../widgets/earnings_movement_tile.dart';
+import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
+import 'package:reem/core/shared/value_objects/money.dart';
+import 'package:reem/features/seller_earnings/domain/entities/seller_earnings.dart';
+import 'package:reem/features/seller_earnings/presentation/providers/seller_earnings_provider.dart';
+import 'package:reem/features/seller_earnings/presentation/widgets/earnings_balance_cards.dart';
+import 'package:reem/features/seller_earnings/presentation/widgets/earnings_movement_tile.dart';
 
 /// Q69 P1 «كشف حساب وطلب سحب الأرباح» / Q98 «الأرباح والكشوفات».
 ///

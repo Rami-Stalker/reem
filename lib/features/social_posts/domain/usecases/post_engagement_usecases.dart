@@ -1,7 +1,7 @@
 import 'package:reem/core/result/result.dart';
 
-import '../entities/post_engagement.dart';
-import '../repositories/post_social_repository.dart';
+import 'package:reem/features/social_posts/domain/entities/post_engagement.dart';
+import 'package:reem/features/social_posts/domain/repositories/post_social_repository.dart';
 
 class ToggleLikeUseCase {
   const ToggleLikeUseCase(this._repository);

@@ -3,9 +3,8 @@ import 'package:reem/core/result/result.dart';
 import 'package:reem/core/shared/entities/media.dart';
 import 'package:reem/core/shared/entities/post.dart';
 import 'package:reem/core/shared/entities/story.dart';
-
-import '../../domain/repositories/create_repository.dart';
-import '../datasources/create_remote_datasource.dart';
+import 'package:reem/features/create/data/datasources/create_remote_datasource.dart';
+import 'package:reem/features/create/domain/repositories/create_repository.dart';
 
 class CreateRepositoryImpl with RepositoryHandler implements CreateRepository {
   const CreateRepositoryImpl({required this.remote});

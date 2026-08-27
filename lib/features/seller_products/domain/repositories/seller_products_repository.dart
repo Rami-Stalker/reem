@@ -1,8 +1,8 @@
 import 'package:reem/core/result/result.dart';
 
-import '../entities/managed_product.dart';
-import '../entities/product_draft.dart';
-import '../entities/product_status.dart';
+import 'package:reem/features/seller_products/domain/entities/managed_product.dart';
+import 'package:reem/features/seller_products/domain/entities/product_draft.dart';
+import 'package:reem/features/seller_products/domain/entities/product_status.dart';
 
 abstract interface class SellerProductsRepository {
   Future<Result<ManagedProductPage>> getMyProducts({

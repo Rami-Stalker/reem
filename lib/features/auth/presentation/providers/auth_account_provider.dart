@@ -2,7 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reem/core/result/result.dart';
 import 'package:reem/features/auth/domain/entities/auth_account.dart';
 
-import 'auth_provider.dart';
+import 'package:reem/features/auth/presentation/providers/auth_provider.dart';
 
 final authAccountProvider = FutureProvider<AuthAccount>((ref) async {
   final result = await ref.watch(authRepositoryProvider).getAccount();

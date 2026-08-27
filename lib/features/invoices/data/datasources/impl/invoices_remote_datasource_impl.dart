@@ -1,8 +1,7 @@
 import 'package:reem/core/network/api_endpoints.dart';
 import 'package:reem/core/network/base_remote_datasource.dart';
-
-import '../../models/invoice_model.dart';
-import '../invoices_remote_datasource.dart';
+import 'package:reem/features/invoices/data/datasources/invoices_remote_datasource.dart';
+import 'package:reem/features/invoices/data/models/invoice_model.dart';
 
 final class InvoicesRemoteDataSourceImpl extends BaseRemoteDataSource
     implements InvoicesRemoteDataSource {

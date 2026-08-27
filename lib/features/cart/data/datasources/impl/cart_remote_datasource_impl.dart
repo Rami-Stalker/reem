@@ -1,8 +1,7 @@
 import 'package:reem/core/network/api_endpoints.dart';
 import 'package:reem/core/network/base_remote_datasource.dart';
-
-import '../../models/cart_model.dart';
-import '../cart_remote_datasource.dart';
+import 'package:reem/features/cart/data/datasources/cart_remote_datasource.dart';
+import 'package:reem/features/cart/data/models/cart_model.dart';
 
 final class CartRemoteDataSourceImpl extends BaseRemoteDataSource
     implements CartRemoteDataSource {

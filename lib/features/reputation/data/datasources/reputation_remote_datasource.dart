@@ -1,4 +1,4 @@
-import '../models/reputation_models.dart';
+import 'package:reem/features/reputation/data/models/reputation_models.dart';
 
 abstract interface class ReputationRemoteDataSource {
   Future<List<ReviewModel>> getProductReviews(String productId);

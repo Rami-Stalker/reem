@@ -4,11 +4,10 @@ import 'dart:typed_data';
 import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:image_picker/image_picker.dart';
-
-import '../errors/app_exception.dart';
-import '../errors/error_mapper.dart';
-import '../network/api_endpoints.dart';
-import 'media_asset.dart';
+import 'package:reem/core/errors/app_exception.dart';
+import 'package:reem/core/errors/error_mapper.dart';
+import 'package:reem/core/media/media_asset.dart';
+import 'package:reem/core/network/api_endpoints.dart';
 
 /// Picks a file and hands it to the API.
 ///

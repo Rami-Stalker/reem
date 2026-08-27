@@ -1,8 +1,8 @@
 import 'package:equatable/equatable.dart';
 
-import '../../domain/entities/seller_analytics.dart';
-import '../../domain/entities/seller_chart_data.dart';
-import '../../domain/entities/seller_dashboard_data.dart';
+import 'package:reem/features/seller_dashboard/domain/entities/seller_analytics.dart';
+import 'package:reem/features/seller_dashboard/domain/entities/seller_chart_data.dart';
+import 'package:reem/features/seller_dashboard/domain/entities/seller_dashboard_data.dart';
 
 class SellerDashboardState extends Equatable {
   const SellerDashboardState({

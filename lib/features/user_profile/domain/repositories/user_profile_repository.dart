@@ -1,8 +1,8 @@
 import 'package:reem/core/result/result.dart';
 import 'package:reem/core/shared/entities/user.dart';
 
-import '../entities/follow_result.dart';
-import '../entities/user_profile.dart';
+import 'package:reem/features/user_profile/domain/entities/follow_result.dart';
+import 'package:reem/features/user_profile/domain/entities/user_profile.dart';
 
 abstract interface class UserProfileRepository {
   Future<Result<UserProfile>> getMyProfile();

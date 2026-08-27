@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/media/authorized_media_image.dart';
 import 'package:reem/core/media/media_variants.dart';
-
-import '../../../../core/localization/l10n_extension.dart';
-import '../providers/chat_provider.dart';
+import 'package:reem/features/chat/presentation/providers/chat_provider.dart';
 
 /// Every photograph shared in one conversation.
 ///

@@ -1,12 +1,11 @@
 import 'package:reem/core/network/api_endpoints.dart';
 import 'package:reem/core/network/base_remote_datasource.dart';
-
-import '../../../domain/entities/product_draft.dart';
-import '../../../domain/entities/product_status.dart';
-import '../../models/managed_product_model.dart';
-import '../../models/managed_product_page_model.dart';
-import '../../models/product_draft_request.dart';
-import '../seller_products_remote_datasource.dart';
+import 'package:reem/features/seller_products/data/datasources/seller_products_remote_datasource.dart';
+import 'package:reem/features/seller_products/data/models/managed_product_model.dart';
+import 'package:reem/features/seller_products/data/models/managed_product_page_model.dart';
+import 'package:reem/features/seller_products/data/models/product_draft_request.dart';
+import 'package:reem/features/seller_products/domain/entities/product_draft.dart';
+import 'package:reem/features/seller_products/domain/entities/product_status.dart';
 
 final class SellerProductsRemoteDataSourceImpl extends BaseRemoteDataSource
     implements SellerProductsRemoteDataSource {

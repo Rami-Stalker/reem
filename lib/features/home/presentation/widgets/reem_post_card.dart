@@ -7,15 +7,15 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../core/design_system/design_system.dart';
-import '../../../../core/localization/l10n_extension.dart';
-import '../../../../core/router/route_paths.dart';
-import '../../../../core/shared/entities/media.dart';
-import '../../../../core/shared/entities/post.dart';
-import '../../../../core/shared/entities/product.dart';
-import '../../../cart/presentation/providers/cart_providers.dart';
-import '../../../social_posts/presentation/providers/social_posts_providers.dart';
-import '../../../social_posts/presentation/widgets/comment_sheet.dart';
+import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
+import 'package:reem/core/router/route_paths.dart';
+import 'package:reem/core/shared/entities/media.dart';
+import 'package:reem/core/shared/entities/post.dart';
+import 'package:reem/core/shared/entities/product.dart';
+import 'package:reem/features/cart/presentation/providers/cart_providers.dart';
+import 'package:reem/features/social_posts/presentation/providers/social_posts_providers.dart';
+import 'package:reem/features/social_posts/presentation/widgets/comment_sheet.dart';
 
 /// The centrepiece of Reem's home: a product told as a **post**.
 ///

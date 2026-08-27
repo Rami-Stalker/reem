@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../router/route_paths.dart';
-import '../shared/entities/user.dart';
+import 'package:reem/core/router/route_paths.dart';
+import 'package:reem/core/shared/entities/user.dart';
 
 enum ExperienceRole { buyer, seller, admin }
 

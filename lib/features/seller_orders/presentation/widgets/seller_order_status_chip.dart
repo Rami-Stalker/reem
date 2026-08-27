@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/design_system/design_system.dart';
-import '../../../../core/localization/l10n_extension.dart';
-import '../../domain/entities/seller_order.dart';
-import '../seller_order_labels.dart';
+import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
+import 'package:reem/features/seller_orders/domain/entities/seller_order.dart';
+import 'package:reem/features/seller_orders/presentation/seller_order_labels.dart';
 
 /// The parcel's state, in the seller's own words.
 ///

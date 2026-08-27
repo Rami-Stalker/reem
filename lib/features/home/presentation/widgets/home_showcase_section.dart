@@ -3,18 +3,17 @@ import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
-import '../../../../core/design_system/design_system.dart';
-import '../../../../core/localization/l10n_extension.dart';
-import '../../../../core/router/route_paths.dart';
-import '../../../../core/shared/entities/post.dart';
-import '../../../../core/shared/entities/product.dart';
-import '../../../discovery/domain/entities/product_collection.dart';
-import '../../../profile/presentation/providers/profile_provider.dart';
-import '../providers/home_provider.dart';
-import '../providers/home_showcase_provider.dart';
-import 'home_section_header.dart';
-import 'reem_post_card.dart';
+import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
+import 'package:reem/core/router/route_paths.dart';
+import 'package:reem/core/shared/entities/post.dart';
+import 'package:reem/core/shared/entities/product.dart';
+import 'package:reem/features/discovery/domain/entities/product_collection.dart';
+import 'package:reem/features/home/presentation/providers/home_provider.dart';
+import 'package:reem/features/home/presentation/providers/home_showcase_provider.dart';
+import 'package:reem/features/home/presentation/widgets/home_section_header.dart';
+import 'package:reem/features/home/presentation/widgets/reem_post_card.dart';
+import 'package:reem/features/profile/presentation/providers/profile_provider.dart';
 
 /// The heart of the home page: **one set of pieces, three ways to look at it.**
 ///

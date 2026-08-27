@@ -4,15 +4,15 @@ import 'package:reem/core/shared/entities/user.dart' show User, UserRole;
 import 'package:reem/features/auth/domain/entities/auth_account.dart';
 import 'package:reem/features/auth/domain/repositories/auth_repository.dart';
 
-import '../../domain/usecases/continue_as_guest_usecase.dart';
-import '../../domain/usecases/forgot_password_usecase.dart';
-import '../../domain/usecases/get_current_user_usecase.dart';
-import '../../domain/usecases/login_usecase.dart';
-import '../../domain/usecases/logout_usecase.dart';
-import '../../domain/usecases/otp_usecases.dart';
-import '../../domain/usecases/register_usecase.dart';
-import 'auth_message.dart';
-import 'auth_state.dart';
+import 'package:reem/features/auth/domain/usecases/continue_as_guest_usecase.dart';
+import 'package:reem/features/auth/domain/usecases/forgot_password_usecase.dart';
+import 'package:reem/features/auth/domain/usecases/get_current_user_usecase.dart';
+import 'package:reem/features/auth/domain/usecases/login_usecase.dart';
+import 'package:reem/features/auth/domain/usecases/logout_usecase.dart';
+import 'package:reem/features/auth/domain/usecases/otp_usecases.dart';
+import 'package:reem/features/auth/domain/usecases/register_usecase.dart';
+import 'package:reem/features/auth/presentation/providers/auth_message.dart';
+import 'package:reem/features/auth/presentation/providers/auth_state.dart';
 
 class AuthNotifier extends StateNotifier<AuthState> {
   AuthNotifier({

@@ -1,4 +1,4 @@
-import '../../domain/entities/notification_entity.dart';
+import 'package:reem/features/settings/domain/entities/notification_entity.dart';
 
 class NotificationSettingsModel extends NotificationEntity {
   const NotificationSettingsModel({

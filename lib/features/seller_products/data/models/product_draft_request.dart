@@ -1,5 +1,5 @@
-import '../../domain/entities/product_draft.dart';
-import '../../domain/entities/product_status.dart';
+import 'package:reem/features/seller_products/domain/entities/product_draft.dart';
+import 'package:reem/features/seller_products/domain/entities/product_status.dart';
 
 /// Serialises a [ProductDraft] to the backend's snake_case contract.
 class ProductDraftRequest {

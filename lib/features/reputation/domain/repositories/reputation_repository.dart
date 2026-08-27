@@ -1,6 +1,6 @@
 import 'package:reem/core/result/result.dart';
 
-import '../entities/reputation_entities.dart';
+import 'package:reem/features/reputation/domain/entities/reputation_entities.dart';
 
 abstract interface class ReputationRepository {
   Future<Result<List<ReviewEntity>>> getProductReviews(String productId);

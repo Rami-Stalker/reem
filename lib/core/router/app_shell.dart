@@ -3,12 +3,11 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
-import '../../features/cart/presentation/providers/cart_providers.dart';
-import '../../features/experience/presentation/providers/role_experience_provider.dart';
-import '../design_system/design_system.dart';
-import '../experience/role_experience.dart';
-import '../localization/l10n_extension.dart';
+import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/experience/role_experience.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
+import 'package:reem/features/cart/presentation/providers/cart_providers.dart';
+import 'package:reem/features/experience/presentation/providers/role_experience_provider.dart';
 
 class AppShell extends ConsumerWidget {
   const AppShell({super.key, required this.navigationShell});

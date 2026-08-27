@@ -2,13 +2,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 import 'package:reem/core/presentation/providers/core_providers.dart';
 
-import '../../data/datasources/home_content_datasource.dart';
-import '../../data/datasources/impl/home_content_remote_datasource.dart';
-import '../../data/repositories/home_content_repository_impl.dart';
-import '../../domain/repositories/home_content_repository.dart';
-import '../../domain/usecases/get_home_content_usecase.dart';
-import 'home_content_notifier.dart';
-import 'home_content_state.dart';
+import 'package:reem/features/home/data/datasources/home_content_datasource.dart';
+import 'package:reem/features/home/data/datasources/impl/home_content_remote_datasource.dart';
+import 'package:reem/features/home/data/repositories/home_content_repository_impl.dart';
+import 'package:reem/features/home/domain/repositories/home_content_repository.dart';
+import 'package:reem/features/home/domain/usecases/get_home_content_usecase.dart';
+import 'package:reem/features/home/presentation/providers/home_content_notifier.dart';
+import 'package:reem/features/home/presentation/providers/home_content_state.dart';
 
 /// The home page reads from the server.
 ///

@@ -1,12 +1,11 @@
 import 'package:reem/core/base/repository_handler.dart';
 import 'package:reem/core/result/result.dart';
 import 'package:reem/core/shared/entities/user.dart';
-
-import '../../domain/entities/follow_result.dart';
-import '../../domain/entities/user_profile.dart';
-import '../../domain/repositories/user_profile_repository.dart';
-import '../datasources/user_profile_remote_datasource.dart';
-import '../models/update_profile_request.dart';
+import 'package:reem/features/user_profile/data/datasources/user_profile_remote_datasource.dart';
+import 'package:reem/features/user_profile/data/models/update_profile_request.dart';
+import 'package:reem/features/user_profile/domain/entities/follow_result.dart';
+import 'package:reem/features/user_profile/domain/entities/user_profile.dart';
+import 'package:reem/features/user_profile/domain/repositories/user_profile_repository.dart';
 
 class UserProfileRepositoryImpl
     with RepositoryHandler

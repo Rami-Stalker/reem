@@ -1,8 +1,7 @@
 import 'package:reem/core/shared/models/user_model.dart';
+import 'package:reem/features/auth/data/models/account_models.dart';
+import 'package:reem/features/auth/data/models/token_model.dart';
 import 'package:reem/features/auth/domain/entities/auth_account.dart';
-
-import 'account_models.dart';
-import 'token_model.dart';
 
 /// The two shapes `POST /auth/otp/login/verify` can return.
 ///

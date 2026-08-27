@@ -1,4 +1,4 @@
-import '../../domain/entities/analytics_dashboard_entity.dart';
+import 'package:reem/features/admin/domain/entities/analytics_dashboard_entity.dart';
 
 class AnalyticsDashboardModel extends AnalyticsDashboardEntity {
   const AnalyticsDashboardModel({

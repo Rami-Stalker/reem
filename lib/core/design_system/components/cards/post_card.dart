@@ -1,16 +1,15 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-
-import '../../foundation/motion/animations/scale_animations.dart';
-import '../../foundation/theme/extensions/color_extension.dart';
-import '../../foundation/theme/extensions/shadow_extension.dart';
-import '../../foundation/tokens/ds_constraints.dart';
-import '../../foundation/tokens/ds_radius.dart';
-import '../../foundation/tokens/ds_spacing.dart';
-import '../../foundation/tokens/ds_typography.dart';
-import '../avatars/ds_avatar.dart';
-import '../buttons/ds_icon_button.dart';
-import '../loaders/ds_skeleton.dart';
+import 'package:reem/core/design_system/components/avatars/ds_avatar.dart';
+import 'package:reem/core/design_system/components/buttons/ds_icon_button.dart';
+import 'package:reem/core/design_system/components/loaders/ds_skeleton.dart';
+import 'package:reem/core/design_system/foundation/motion/animations/scale_animations.dart';
+import 'package:reem/core/design_system/foundation/theme/extensions/color_extension.dart';
+import 'package:reem/core/design_system/foundation/theme/extensions/shadow_extension.dart';
+import 'package:reem/core/design_system/foundation/tokens/ds_constraints.dart';
+import 'package:reem/core/design_system/foundation/tokens/ds_radius.dart';
+import 'package:reem/core/design_system/foundation/tokens/ds_spacing.dart';
+import 'package:reem/core/design_system/foundation/tokens/ds_typography.dart';
 
 /// A premium social post card — author header, media, engagement actions and
 /// an optional "shop this" product tag.

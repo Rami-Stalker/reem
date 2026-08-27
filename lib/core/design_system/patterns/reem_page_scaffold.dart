@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-
-import '../foundation/theme/extensions/color_extension.dart';
-import '../utilities/extensions/context_extensions.dart';
-import 'experience_design.dart';
+import 'package:reem/core/design_system/foundation/theme/extensions/color_extension.dart';
+import 'package:reem/core/design_system/patterns/experience_design.dart';
+import 'package:reem/core/design_system/utilities/extensions/context_extensions.dart';
 
 /// Standard scroll page with feminine mesh background.
 ///

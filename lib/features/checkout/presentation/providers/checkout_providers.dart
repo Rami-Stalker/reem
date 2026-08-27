@@ -1,15 +1,15 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 
-import '../../../../core/presentation/providers/core_providers.dart';
-import '../../data/datasources/checkout_remote_datasource.dart';
-import '../../data/datasources/impl/checkout_remote_datasource_impl.dart';
-import '../../data/repositories/checkout_repository_impl.dart';
-import '../../domain/repositories/checkout_repository.dart';
-import '../../domain/usecases/checkout_usecases.dart';
-import 'checkout_controller.dart';
-import 'order_detail_notifier.dart';
-import 'orders_notifier.dart';
+import 'package:reem/core/presentation/providers/core_providers.dart';
+import 'package:reem/features/checkout/data/datasources/checkout_remote_datasource.dart';
+import 'package:reem/features/checkout/data/datasources/impl/checkout_remote_datasource_impl.dart';
+import 'package:reem/features/checkout/data/repositories/checkout_repository_impl.dart';
+import 'package:reem/features/checkout/domain/repositories/checkout_repository.dart';
+import 'package:reem/features/checkout/domain/usecases/checkout_usecases.dart';
+import 'package:reem/features/checkout/presentation/providers/checkout_controller.dart';
+import 'package:reem/features/checkout/presentation/providers/order_detail_notifier.dart';
+import 'package:reem/features/checkout/presentation/providers/orders_notifier.dart';
 
 final checkoutRemoteDataSourceProvider = Provider<CheckoutRemoteDataSource>(
   (ref) => CheckoutRemoteDataSourceImpl(ref.watch(dioProvider)),

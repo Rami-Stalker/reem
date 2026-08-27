@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../../foundation/tokens/ds_constraints.dart';
-import '../../foundation/tokens/ds_radius.dart';
-import '../../foundation/tokens/ds_spacing.dart';
+import 'package:reem/core/design_system/foundation/tokens/ds_constraints.dart';
+import 'package:reem/core/design_system/foundation/tokens/ds_radius.dart';
+import 'package:reem/core/design_system/foundation/tokens/ds_spacing.dart';
 
 enum DsButtonSize { sm, md, lg }
 

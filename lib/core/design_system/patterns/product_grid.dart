@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-
-import '../../shared/entities/product.dart';
-import '../design_system.dart';
+import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/shared/entities/product.dart';
 
 /// The two-per-row catalogue grid that anchors the bottom of the home screen
 /// (Q78 «مختلط: ستوريات + بانر + شبكة منتجات», Q81 «اثنين» per row).

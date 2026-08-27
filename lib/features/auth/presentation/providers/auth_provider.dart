@@ -1,23 +1,22 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
+import 'package:reem/core/presentation/providers/core_providers.dart';
 import 'package:reem/core/security/device_identity_service.dart';
-
-import '../../../../core/presentation/providers/core_providers.dart';
-import '../../data/datasources/auth_local_datasource.dart';
-import '../../data/datasources/auth_remote_datasource.dart';
-import '../../data/datasources/impl/auth_local_datasource_impl.dart';
-import '../../data/datasources/impl/auth_remote_datasource_impl.dart';
-import '../../data/repositories/auth_repository_impl.dart';
-import '../../domain/repositories/auth_repository.dart';
-import '../../domain/usecases/continue_as_guest_usecase.dart';
-import '../../domain/usecases/forgot_password_usecase.dart';
-import '../../domain/usecases/get_current_user_usecase.dart';
-import '../../domain/usecases/login_usecase.dart';
-import '../../domain/usecases/logout_usecase.dart';
-import '../../domain/usecases/otp_usecases.dart';
-import '../../domain/usecases/register_usecase.dart';
-import 'auth_notifier.dart';
-import 'auth_state.dart';
+import 'package:reem/features/auth/data/datasources/auth_local_datasource.dart';
+import 'package:reem/features/auth/data/datasources/auth_remote_datasource.dart';
+import 'package:reem/features/auth/data/datasources/impl/auth_local_datasource_impl.dart';
+import 'package:reem/features/auth/data/datasources/impl/auth_remote_datasource_impl.dart';
+import 'package:reem/features/auth/data/repositories/auth_repository_impl.dart';
+import 'package:reem/features/auth/domain/repositories/auth_repository.dart';
+import 'package:reem/features/auth/domain/usecases/continue_as_guest_usecase.dart';
+import 'package:reem/features/auth/domain/usecases/forgot_password_usecase.dart';
+import 'package:reem/features/auth/domain/usecases/get_current_user_usecase.dart';
+import 'package:reem/features/auth/domain/usecases/login_usecase.dart';
+import 'package:reem/features/auth/domain/usecases/logout_usecase.dart';
+import 'package:reem/features/auth/domain/usecases/otp_usecases.dart';
+import 'package:reem/features/auth/domain/usecases/register_usecase.dart';
+import 'package:reem/features/auth/presentation/providers/auth_notifier.dart';
+import 'package:reem/features/auth/presentation/providers/auth_state.dart';
 
 final authLocalDataSourceProvider = Provider<AuthLocalDataSource>(
   (ref) => AuthLocalDataSourceImpl(ref.watch(secureStorageProvider)),

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../core/design_system/design_system.dart';
-import '../../../../core/localization/l10n_extension.dart';
-import '../../domain/entities/nearby_store.dart';
-import '../providers/home_content_provider.dart';
-import 'home_section_header.dart';
+import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
+import 'package:reem/features/home/domain/entities/nearby_store.dart';
+import 'package:reem/features/home/presentation/providers/home_content_provider.dart';
+import 'package:reem/features/home/presentation/widgets/home_section_header.dart';
 
 /// "Boutiques near you" — gated behind location. Until the customer opts in we
 /// show a soft permission card; once enabled, a rail of nearby stores with

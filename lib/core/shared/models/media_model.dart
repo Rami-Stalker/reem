@@ -1,6 +1,6 @@
 // shared/models/media_model.dart
 
-import '../entities/media.dart';
+import 'package:reem/core/shared/entities/media.dart';
 
 class MediaModel extends MediaItem {
   const MediaModel({

@@ -1,5 +1,5 @@
-import '../../../../core/result/result.dart';
-import '../entities/profile_overview.dart';
+import 'package:reem/core/result/result.dart';
+import 'package:reem/features/profile/domain/entities/profile_overview.dart';
 
 /// Source of the bespoke profile-centre data (completion, achievements,
 /// loyalty, orders snapshot, followed stores, referral, reviews summary).

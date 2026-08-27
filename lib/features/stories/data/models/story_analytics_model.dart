@@ -1,4 +1,4 @@
-import '../../domain/entities/story_analytics.dart';
+import 'package:reem/features/stories/domain/entities/story_analytics.dart';
 
 class StoryAnalyticsModel extends StoryAnalytics {
   const StoryAnalyticsModel({

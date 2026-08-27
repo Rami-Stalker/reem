@@ -1,20 +1,20 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 
-import '../../../../core/presentation/providers/core_providers.dart';
-import '../../data/datasources/impl/user_profile_remote_datasource_impl.dart';
-import '../../data/datasources/user_profile_remote_datasource.dart';
-import '../../data/repositories/user_profile_repository_impl.dart';
-import '../../domain/repositories/user_profile_repository.dart';
-import '../../domain/usecases/follow_seller_usecase.dart';
-import '../../domain/usecases/get_my_profile_usecase.dart';
-import '../../domain/usecases/get_user_profile_usecase.dart';
-import '../../domain/usecases/unfollow_seller_usecase.dart';
-import '../../domain/usecases/update_profile_usecase.dart';
-import 'edit_profile_notifier.dart';
-import 'edit_profile_state.dart';
-import 'user_profile_notifier.dart';
-import 'user_profile_state.dart';
+import 'package:reem/core/presentation/providers/core_providers.dart';
+import 'package:reem/features/user_profile/data/datasources/impl/user_profile_remote_datasource_impl.dart';
+import 'package:reem/features/user_profile/data/datasources/user_profile_remote_datasource.dart';
+import 'package:reem/features/user_profile/data/repositories/user_profile_repository_impl.dart';
+import 'package:reem/features/user_profile/domain/repositories/user_profile_repository.dart';
+import 'package:reem/features/user_profile/domain/usecases/follow_seller_usecase.dart';
+import 'package:reem/features/user_profile/domain/usecases/get_my_profile_usecase.dart';
+import 'package:reem/features/user_profile/domain/usecases/get_user_profile_usecase.dart';
+import 'package:reem/features/user_profile/domain/usecases/unfollow_seller_usecase.dart';
+import 'package:reem/features/user_profile/domain/usecases/update_profile_usecase.dart';
+import 'package:reem/features/user_profile/presentation/providers/edit_profile_notifier.dart';
+import 'package:reem/features/user_profile/presentation/providers/edit_profile_state.dart';
+import 'package:reem/features/user_profile/presentation/providers/user_profile_notifier.dart';
+import 'package:reem/features/user_profile/presentation/providers/user_profile_state.dart';
 
 final userProfileRemoteDataSourceProvider =
     Provider<UserProfileRemoteDataSource>(

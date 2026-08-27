@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 
-import '../../../../core/shared/value_objects/money.dart';
-import 'coupon_entity.dart';
+import 'package:reem/core/shared/value_objects/money.dart';
+import 'package:reem/features/settings/domain/entities/coupon_entity.dart';
 
 /// What the server says a coupon is worth on *this* basket.
 ///

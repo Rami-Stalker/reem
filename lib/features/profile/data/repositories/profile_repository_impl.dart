@@ -2,11 +2,10 @@ import 'package:reem/core/base/repository_handler.dart';
 import 'package:reem/core/result/result.dart';
 import 'package:reem/core/shared/entities/product.dart';
 import 'package:reem/core/shared/entities/user.dart';
-
-import '../../domain/entities/order_entity.dart';
-import '../../domain/entities/wishlist_entity.dart';
-import '../../domain/repositories/profile_repository.dart';
-import '../datasources/profile_remote_datasource.dart';
+import 'package:reem/features/profile/data/datasources/profile_remote_datasource.dart';
+import 'package:reem/features/profile/domain/entities/order_entity.dart';
+import 'package:reem/features/profile/domain/entities/wishlist_entity.dart';
+import 'package:reem/features/profile/domain/repositories/profile_repository.dart';
 
 class ProfileRepositoryImpl with RepositoryHandler implements ProfileRepository {
   const ProfileRepositoryImpl({required this.remote});

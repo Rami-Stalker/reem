@@ -1,16 +1,16 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 
-import '../../../../core/presentation/providers/core_providers.dart';
-import '../../../../core/result/result.dart';
-import '../../../discovery/presentation/providers/collection_notifier.dart';
-import '../../../discovery/presentation/providers/collection_state.dart';
-import '../../data/datasources/impl/search_remote_datasource_impl.dart';
-import '../../data/datasources/search_remote_datasource.dart';
-import '../../data/repositories/search_repository_impl.dart';
-import '../../domain/entities/search_suggestions.dart';
-import '../../domain/repositories/search_repository.dart';
-import '../../domain/usecases/search_products_usecase.dart';
+import 'package:reem/core/presentation/providers/core_providers.dart';
+import 'package:reem/core/result/result.dart';
+import 'package:reem/features/discovery/presentation/providers/collection_notifier.dart';
+import 'package:reem/features/discovery/presentation/providers/collection_state.dart';
+import 'package:reem/features/search/data/datasources/impl/search_remote_datasource_impl.dart';
+import 'package:reem/features/search/data/datasources/search_remote_datasource.dart';
+import 'package:reem/features/search/data/repositories/search_repository_impl.dart';
+import 'package:reem/features/search/domain/entities/search_suggestions.dart';
+import 'package:reem/features/search/domain/repositories/search_repository.dart';
+import 'package:reem/features/search/domain/usecases/search_products_usecase.dart';
 
 // ── Infrastructure / use cases ──────────────────────────────────────────────
 

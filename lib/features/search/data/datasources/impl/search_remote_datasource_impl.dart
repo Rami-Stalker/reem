@@ -1,9 +1,8 @@
 import 'package:reem/core/network/api_endpoints.dart';
 import 'package:reem/core/network/base_remote_datasource.dart';
+import 'package:reem/features/discovery/data/models/product_page_model.dart';
+import 'package:reem/features/search/data/datasources/search_remote_datasource.dart';
 import 'package:reem/features/search/domain/entities/search_suggestions.dart';
-
-import '../../../../discovery/data/models/product_page_model.dart';
-import '../search_remote_datasource.dart';
 
 final class SearchRemoteDataSourceImpl extends BaseRemoteDataSource
     implements SearchRemoteDataSource {

@@ -1,7 +1,7 @@
 import 'package:reem/core/result/result.dart';
 
-import '../entities/user_profile.dart';
-import '../repositories/user_profile_repository.dart';
+import 'package:reem/features/user_profile/domain/entities/user_profile.dart';
+import 'package:reem/features/user_profile/domain/repositories/user_profile_repository.dart';
 
 class GetUserProfileUseCase {
   const GetUserProfileUseCase(this._repository);

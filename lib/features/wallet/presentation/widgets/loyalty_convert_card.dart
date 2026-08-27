@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../core/design_system/design_system.dart';
-import '../../../../core/localization/l10n_extension.dart';
-import '../../../rewards/presentation/providers/rewards_hub_provider.dart';
-import '../providers/wallet_provider.dart';
+import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
+import 'package:reem/features/rewards/presentation/providers/rewards_hub_provider.dart';
+import 'package:reem/features/wallet/presentation/providers/wallet_provider.dart';
 
 /// Q43 — turning loyalty points into spendable credit.
 ///

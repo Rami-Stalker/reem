@@ -2,13 +2,12 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:reem/core/design_system/effects/backgrounds/luxury_blurred_background.dart';
+import 'package:reem/features/chat/presentation/widgets/chat_gradient_orb.dart';
 import 'package:reem/features/chat/presentation/widgets/chat_tile.dart';
-
-import '../widgets/chat_gradient_orb.dart';
-import '../widgets/encrypted_chat_banner.dart';
-import '../widgets/glass_search_bar.dart';
-import '../widgets/luxury_chat_fab.dart';
-import '../widgets/online_presence_ring.dart';
+import 'package:reem/features/chat/presentation/widgets/encrypted_chat_banner.dart';
+import 'package:reem/features/chat/presentation/widgets/glass_search_bar.dart';
+import 'package:reem/features/chat/presentation/widgets/luxury_chat_fab.dart';
+import 'package:reem/features/chat/presentation/widgets/online_presence_ring.dart';
 
 class ChatsScreen extends StatefulWidget {
   const ChatsScreen({super.key});

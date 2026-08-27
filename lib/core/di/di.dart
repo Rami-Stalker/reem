@@ -1,6 +1,6 @@
 import 'package:get_it/get_it.dart';
 
-import '../storage/secure_storage_service.dart';
+import 'package:reem/core/storage/secure_storage_service.dart';
 
 final sl = GetIt.instance;
 

@@ -1,7 +1,7 @@
 import 'package:reem/core/result/result.dart';
 
-import '../entities/address_entity.dart';
-import '../repositories/settings_repository.dart';
+import 'package:reem/features/settings/domain/entities/address_entity.dart';
+import 'package:reem/features/settings/domain/repositories/settings_repository.dart';
 
 class GetAddressesUseCase {
   const GetAddressesUseCase(this._repository);

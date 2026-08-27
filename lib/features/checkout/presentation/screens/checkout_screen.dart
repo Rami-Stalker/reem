@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
-import '../../../../core/design_system/design_system.dart';
-import '../../../../core/localization/l10n_extension.dart';
-import '../../../../core/router/route_paths.dart';
-import '../../../../core/shared/value_objects/money.dart';
-import '../../../auth/presentation/providers/auth_provider.dart';
-import '../../../cart/presentation/providers/cart_providers.dart';
-import '../../../settings/domain/entities/address_entity.dart';
-import '../../domain/entities/checkout.dart';
-import '../providers/applied_coupon_provider.dart';
-import '../providers/checkout_controller.dart';
-import '../providers/checkout_providers.dart';
-import '../providers/saved_addresses_provider.dart';
+import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
+import 'package:reem/core/router/route_paths.dart';
+import 'package:reem/core/shared/value_objects/money.dart';
+import 'package:reem/features/auth/presentation/providers/auth_provider.dart';
+import 'package:reem/features/cart/presentation/providers/cart_providers.dart';
+import 'package:reem/features/checkout/domain/entities/checkout.dart';
+import 'package:reem/features/checkout/presentation/providers/applied_coupon_provider.dart';
+import 'package:reem/features/checkout/presentation/providers/checkout_controller.dart';
+import 'package:reem/features/checkout/presentation/providers/checkout_providers.dart';
+import 'package:reem/features/checkout/presentation/providers/saved_addresses_provider.dart';
+import 'package:reem/features/settings/domain/entities/address_entity.dart';
 
 /// The last screen before she pays.
 ///

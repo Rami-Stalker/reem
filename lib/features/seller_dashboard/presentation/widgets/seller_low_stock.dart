@@ -3,12 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
-import '../../../../../core/design_system/design_system.dart';
-import '../../../../../core/router/route_paths.dart';
-import '../../../../core/localization/l10n_extension.dart';
-import '../../domain/entities/seller_low_stock_item.dart';
-import '../providers/seller_dashboard_provider.dart';
+import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
+import 'package:reem/core/router/route_paths.dart';
+import 'package:reem/features/seller_dashboard/domain/entities/seller_low_stock_item.dart';
+import 'package:reem/features/seller_dashboard/presentation/providers/seller_dashboard_provider.dart';
 
 class SellerLowStockAlert extends ConsumerWidget {
   const SellerLowStockAlert({super.key});

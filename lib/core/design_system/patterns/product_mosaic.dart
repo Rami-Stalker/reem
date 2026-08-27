@@ -1,10 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blurhash/flutter_blurhash.dart';
-
-import '../../media/media_variants.dart';
-import '../../shared/entities/product.dart';
-import '../design_system.dart';
+import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/media/media_variants.dart';
+import 'package:reem/core/shared/entities/product.dart';
 
 /// An **editorial mosaic** of products — the magazine spread shape.
 ///

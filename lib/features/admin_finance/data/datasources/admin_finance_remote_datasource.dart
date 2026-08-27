@@ -1,4 +1,4 @@
-import '../models/finance_overview_model.dart';
+import 'package:reem/features/admin_finance/data/models/finance_overview_model.dart';
 
 abstract interface class AdminFinanceRemoteDataSource {
   Future<FinanceOverviewModel> loadOverview();

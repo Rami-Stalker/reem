@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
-
-import '../../../router/route_names.dart';
-import '../../design_system.dart';
+import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/router/route_names.dart';
 
 class AnimatedProductCard extends StatelessWidget {
   const AnimatedProductCard({

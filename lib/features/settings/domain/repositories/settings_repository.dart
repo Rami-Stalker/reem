@@ -1,13 +1,13 @@
 import 'package:reem/core/result/result.dart';
 import 'package:reem/core/shared/entities/user.dart';
 
-import '../entities/address_draft.dart';
-import '../entities/address_entity.dart';
-import '../entities/coupon_entity.dart';
-import '../entities/coupon_validation.dart';
-import '../entities/notification_entity.dart';
-import '../entities/notification_preferences.dart';
-import '../entities/rewards_entity.dart';
+import 'package:reem/features/settings/domain/entities/address_draft.dart';
+import 'package:reem/features/settings/domain/entities/address_entity.dart';
+import 'package:reem/features/settings/domain/entities/coupon_entity.dart';
+import 'package:reem/features/settings/domain/entities/coupon_validation.dart';
+import 'package:reem/features/settings/domain/entities/notification_entity.dart';
+import 'package:reem/features/settings/domain/entities/notification_preferences.dart';
+import 'package:reem/features/settings/domain/entities/rewards_entity.dart';
 
 abstract interface class SettingsRepository {
   Future<Result<List<AddressEntity>>> getAddresses();

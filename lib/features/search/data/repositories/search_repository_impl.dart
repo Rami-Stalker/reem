@@ -1,10 +1,9 @@
 import 'package:reem/core/base/repository_handler.dart';
 import 'package:reem/core/result/result.dart';
-
-import '../../../discovery/domain/entities/product_page.dart';
-import '../../domain/entities/search_suggestions.dart';
-import '../../domain/repositories/search_repository.dart';
-import '../datasources/search_remote_datasource.dart';
+import 'package:reem/features/discovery/domain/entities/product_page.dart';
+import 'package:reem/features/search/data/datasources/search_remote_datasource.dart';
+import 'package:reem/features/search/domain/entities/search_suggestions.dart';
+import 'package:reem/features/search/domain/repositories/search_repository.dart';
 
 class SearchRepositoryImpl with RepositoryHandler implements SearchRepository {
   const SearchRepositoryImpl(this.remote);

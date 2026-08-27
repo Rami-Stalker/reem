@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'ds_colors.dart';
+import 'package:reem/core/design_system/foundation/tokens/ds_colors.dart';
 
 /// Feminine gradient presets for Reem — blush rose, mauve and champagne gold.
 ///

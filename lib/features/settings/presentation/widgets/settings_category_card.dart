@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'settings_tile.dart';
+import 'package:reem/features/settings/presentation/widgets/settings_tile.dart';
 
 class SettingsItemData {
   const SettingsItemData({

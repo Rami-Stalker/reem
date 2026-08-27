@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../tokens/ds_colors.dart';
-import '../tokens/ds_gradients.dart';
-import '../tokens/ds_shadows.dart';
+import 'package:reem/core/design_system/foundation/tokens/ds_colors.dart';
+import 'package:reem/core/design_system/foundation/tokens/ds_gradients.dart';
+import 'package:reem/core/design_system/foundation/tokens/ds_shadows.dart';
 
 /// Central design-system theme extension — access via `context.ds`.
 @immutable

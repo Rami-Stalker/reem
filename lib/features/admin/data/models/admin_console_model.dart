@@ -1,4 +1,4 @@
-import '../../domain/entities/admin_console_entity.dart';
+import 'package:reem/features/admin/domain/entities/admin_console_entity.dart';
 
 class AdminConsoleSectionModel extends AdminConsoleSection {
   const AdminConsoleSectionModel({

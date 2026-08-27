@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'button_sizes.dart';
-import 'button_styles.dart';
-import 'ds_button.dart';
+import 'package:reem/core/design_system/components/buttons/button_sizes.dart';
+import 'package:reem/core/design_system/components/buttons/button_styles.dart';
+import 'package:reem/core/design_system/components/buttons/ds_button.dart';
 
 /// Filled rose-gradient primary action. Thin wrapper over [DsButton].
 class PrimaryButton extends StatelessWidget {

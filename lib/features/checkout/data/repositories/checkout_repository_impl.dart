@@ -1,11 +1,10 @@
 import 'package:reem/core/base/repository_handler.dart';
 import 'package:reem/core/result/result.dart';
-
-import '../../../../core/shared/value_objects/money.dart';
-import '../../domain/entities/checkout.dart';
-import '../../domain/entities/order.dart';
-import '../../domain/repositories/checkout_repository.dart';
-import '../datasources/checkout_remote_datasource.dart';
+import 'package:reem/core/shared/value_objects/money.dart';
+import 'package:reem/features/checkout/data/datasources/checkout_remote_datasource.dart';
+import 'package:reem/features/checkout/domain/entities/checkout.dart';
+import 'package:reem/features/checkout/domain/entities/order.dart';
+import 'package:reem/features/checkout/domain/repositories/checkout_repository.dart';
 
 class CheckoutRepositoryImpl
     with RepositoryHandler

@@ -2,11 +2,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reem/core/presentation/providers/core_providers.dart';
 import 'package:reem/core/result/result.dart';
 
-import '../../data/datasources/impl/shipment_tracking_remote_datasource_impl.dart';
-import '../../data/datasources/shipment_tracking_remote_datasource.dart';
-import '../../data/repositories/shipment_tracking_repository_impl.dart';
-import '../../domain/entities/shipment_tracking.dart';
-import '../../domain/repositories/shipment_tracking_repository.dart';
+import 'package:reem/features/shipment_tracking/data/datasources/impl/shipment_tracking_remote_datasource_impl.dart';
+import 'package:reem/features/shipment_tracking/data/datasources/shipment_tracking_remote_datasource.dart';
+import 'package:reem/features/shipment_tracking/data/repositories/shipment_tracking_repository_impl.dart';
+import 'package:reem/features/shipment_tracking/domain/entities/shipment_tracking.dart';
+import 'package:reem/features/shipment_tracking/domain/repositories/shipment_tracking_repository.dart';
 
 final shipmentTrackingRemoteDataSourceProvider =
     Provider<ShipmentTrackingRemoteDataSource>(

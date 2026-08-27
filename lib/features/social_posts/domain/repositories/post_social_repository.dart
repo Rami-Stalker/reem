@@ -1,8 +1,8 @@
 import 'package:reem/core/result/result.dart';
 import 'package:reem/core/shared/entities/comment.dart';
 
-import '../entities/comment_page.dart';
-import '../entities/post_engagement.dart';
+import 'package:reem/features/social_posts/domain/entities/comment_page.dart';
+import 'package:reem/features/social_posts/domain/entities/post_engagement.dart';
 
 abstract interface class PostSocialRepository {
   Future<Result<CommentPage>> getComments(

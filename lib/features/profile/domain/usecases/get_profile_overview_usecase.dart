@@ -1,6 +1,6 @@
-import '../../../../core/result/result.dart';
-import '../entities/profile_overview.dart';
-import '../repositories/profile_overview_repository.dart';
+import 'package:reem/core/result/result.dart';
+import 'package:reem/features/profile/domain/entities/profile_overview.dart';
+import 'package:reem/features/profile/domain/repositories/profile_overview_repository.dart';
 
 /// Fetches the aggregated profile-centre overview.
 class GetProfileOverviewUseCase {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/design_system/design_system.dart';
-import '../../domain/entities/order.dart';
+import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/features/checkout/domain/entities/order.dart';
 
 /// Fallback for free-form status strings (payment status, shipment status).
 String humanizeStatus(String status) => switch (status) {

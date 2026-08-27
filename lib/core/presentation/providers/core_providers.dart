@@ -2,13 +2,13 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../data/cache/cache_store.dart';
-import '../../data/cache/memory_cache_store.dart';
-import '../../data/sync/data_synchronizer.dart';
-import '../../data/sync/retry_policy.dart';
-import '../../network/api_client.dart';
-import '../../network/network_info.dart';
-import '../../storage/secure_storage_service.dart';
+import 'package:reem/core/data/cache/cache_store.dart';
+import 'package:reem/core/data/cache/memory_cache_store.dart';
+import 'package:reem/core/data/sync/data_synchronizer.dart';
+import 'package:reem/core/data/sync/retry_policy.dart';
+import 'package:reem/core/network/api_client.dart';
+import 'package:reem/core/network/network_info.dart';
+import 'package:reem/core/storage/secure_storage_service.dart';
 
 final secureStorageProvider = Provider<SecureStorageService>(
   (ref) => SecureStorageService(),

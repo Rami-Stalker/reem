@@ -1,5 +1,5 @@
-import '../../../../core/shared/value_objects/money.dart';
-import '../../domain/entities/wallet_transaction.dart';
+import 'package:reem/core/shared/value_objects/money.dart';
+import 'package:reem/features/wallet/domain/entities/wallet_transaction.dart';
 
 /// Wire → domain for one statement row.
 ///

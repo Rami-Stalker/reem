@@ -1,7 +1,7 @@
 import 'package:reem/core/result/result.dart';
 
-import '../../../discovery/domain/entities/product_page.dart';
-import '../entities/search_suggestions.dart';
+import 'package:reem/features/discovery/domain/entities/product_page.dart';
+import 'package:reem/features/search/domain/entities/search_suggestions.dart';
 
 abstract interface class SearchRepository {
   Future<Result<ProductPage>> searchProducts(

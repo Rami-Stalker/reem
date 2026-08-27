@@ -3,15 +3,14 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/result/result.dart';
 import 'package:reem/core/router/route_paths.dart';
-
-import '../../../../core/localization/l10n_extension.dart';
-import '../../domain/entities/auth_account.dart';
-import '../providers/auth_account_provider.dart';
-import '../providers/auth_provider.dart';
-import '../utils/auth_form_validators.dart';
-import '../widgets/step_up_sheet.dart';
+import 'package:reem/features/auth/domain/entities/auth_account.dart';
+import 'package:reem/features/auth/presentation/providers/auth_account_provider.dart';
+import 'package:reem/features/auth/presentation/providers/auth_provider.dart';
+import 'package:reem/features/auth/presentation/utils/auth_form_validators.dart';
+import 'package:reem/features/auth/presentation/widgets/step_up_sheet.dart';
 
 /// The security centre.
 ///

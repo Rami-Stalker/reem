@@ -1,7 +1,7 @@
 import 'package:reem/core/result/result.dart';
 
-import '../entities/comment_page.dart';
-import '../repositories/post_social_repository.dart';
+import 'package:reem/features/social_posts/domain/entities/comment_page.dart';
+import 'package:reem/features/social_posts/domain/repositories/post_social_repository.dart';
 
 class GetCommentsUseCase {
   const GetCommentsUseCase(this._repository);

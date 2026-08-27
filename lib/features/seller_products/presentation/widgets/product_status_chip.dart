@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/design_system/design_system.dart';
-import '../../domain/entities/product_status.dart';
+import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/features/seller_products/domain/entities/product_status.dart';
 
 class ProductStatusChip extends StatelessWidget {
   const ProductStatusChip({super.key, required this.status});

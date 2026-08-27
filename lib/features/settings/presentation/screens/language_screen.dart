@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../../../../app/bootstrap.dart';
-import '../../../../core/design_system/design_system.dart';
-import '../../../../core/localization/l10n_extension.dart';
+import 'package:reem/app/bootstrap.dart';
+import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
 class LanguageScreen extends StatelessWidget {
   const LanguageScreen({super.key});
 

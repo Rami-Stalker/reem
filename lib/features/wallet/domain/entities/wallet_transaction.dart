@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import '../../../../core/shared/value_objects/money.dart';
+import 'package:reem/core/shared/value_objects/money.dart';
 
 /// Where a movement came from (Q41 P2).
 ///

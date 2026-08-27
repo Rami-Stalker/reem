@@ -1,21 +1,21 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 
-import '../../../../core/presentation/providers/core_providers.dart';
-import '../../data/datasources/impl/seller_products_remote_datasource_impl.dart';
-import '../../data/datasources/seller_products_remote_datasource.dart';
-import '../../data/repositories/seller_products_repository_impl.dart';
-import '../../domain/repositories/seller_products_repository.dart';
-import '../../domain/usecases/adjust_stock_usecase.dart';
-import '../../domain/usecases/create_product_usecase.dart';
-import '../../domain/usecases/delete_product_usecase.dart';
-import '../../domain/usecases/get_my_products_usecase.dart';
-import '../../domain/usecases/set_product_status_usecase.dart';
-import '../../domain/usecases/update_product_usecase.dart';
-import 'my_products_notifier.dart';
-import 'my_products_state.dart';
-import 'product_form_notifier.dart';
-import 'product_form_state.dart';
+import 'package:reem/core/presentation/providers/core_providers.dart';
+import 'package:reem/features/seller_products/data/datasources/impl/seller_products_remote_datasource_impl.dart';
+import 'package:reem/features/seller_products/data/datasources/seller_products_remote_datasource.dart';
+import 'package:reem/features/seller_products/data/repositories/seller_products_repository_impl.dart';
+import 'package:reem/features/seller_products/domain/repositories/seller_products_repository.dart';
+import 'package:reem/features/seller_products/domain/usecases/adjust_stock_usecase.dart';
+import 'package:reem/features/seller_products/domain/usecases/create_product_usecase.dart';
+import 'package:reem/features/seller_products/domain/usecases/delete_product_usecase.dart';
+import 'package:reem/features/seller_products/domain/usecases/get_my_products_usecase.dart';
+import 'package:reem/features/seller_products/domain/usecases/set_product_status_usecase.dart';
+import 'package:reem/features/seller_products/domain/usecases/update_product_usecase.dart';
+import 'package:reem/features/seller_products/presentation/providers/my_products_notifier.dart';
+import 'package:reem/features/seller_products/presentation/providers/my_products_state.dart';
+import 'package:reem/features/seller_products/presentation/providers/product_form_notifier.dart';
+import 'package:reem/features/seller_products/presentation/providers/product_form_state.dart';
 
 final sellerProductsRemoteDataSourceProvider =
     Provider<SellerProductsRemoteDataSource>(

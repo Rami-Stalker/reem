@@ -1,6 +1,6 @@
 import 'package:intl/intl.dart';
 
-import 'money.dart';
+import 'package:reem/core/shared/value_objects/money.dart';
 
 /// Renders a bare `double` as Syrian pounds.
 ///

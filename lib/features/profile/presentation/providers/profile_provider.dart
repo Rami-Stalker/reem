@@ -1,22 +1,22 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 
-import '../../../../core/presentation/providers/core_providers.dart';
-import '../../data/datasources/impl/profile_remote_datasource_impl.dart';
-import '../../data/datasources/profile_remote_datasource.dart';
-import '../../data/repositories/profile_repository_impl.dart';
-import '../../domain/repositories/profile_repository.dart';
-import '../../domain/usecases/create_wishlist_collection_usecase.dart';
-import '../../domain/usecases/get_favorites_usecase.dart';
-import '../../domain/usecases/get_orders_usecase.dart';
-import '../../domain/usecases/get_profile_usecase.dart';
-import '../../domain/usecases/get_wishlist_overview_usecase.dart';
-import '../../domain/usecases/save_post_usecase.dart';
-import '../../domain/usecases/save_seller_usecase.dart';
-import '../../domain/usecases/share_wishlist_collection_usecase.dart';
-import '../../domain/usecases/toggle_favorite_usecase.dart';
-import 'profile_notifier.dart';
-import 'profile_state.dart';
+import 'package:reem/core/presentation/providers/core_providers.dart';
+import 'package:reem/features/profile/data/datasources/impl/profile_remote_datasource_impl.dart';
+import 'package:reem/features/profile/data/datasources/profile_remote_datasource.dart';
+import 'package:reem/features/profile/data/repositories/profile_repository_impl.dart';
+import 'package:reem/features/profile/domain/repositories/profile_repository.dart';
+import 'package:reem/features/profile/domain/usecases/create_wishlist_collection_usecase.dart';
+import 'package:reem/features/profile/domain/usecases/get_favorites_usecase.dart';
+import 'package:reem/features/profile/domain/usecases/get_orders_usecase.dart';
+import 'package:reem/features/profile/domain/usecases/get_profile_usecase.dart';
+import 'package:reem/features/profile/domain/usecases/get_wishlist_overview_usecase.dart';
+import 'package:reem/features/profile/domain/usecases/save_post_usecase.dart';
+import 'package:reem/features/profile/domain/usecases/save_seller_usecase.dart';
+import 'package:reem/features/profile/domain/usecases/share_wishlist_collection_usecase.dart';
+import 'package:reem/features/profile/domain/usecases/toggle_favorite_usecase.dart';
+import 'package:reem/features/profile/presentation/providers/profile_notifier.dart';
+import 'package:reem/features/profile/presentation/providers/profile_state.dart';
 
 final profileRemoteDataSourceProvider = Provider<ProfileRemoteDataSource>(
   (ref) => ProfileRemoteDataSourceImpl(ref.watch(dioProvider)),

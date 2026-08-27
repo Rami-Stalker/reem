@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../core/design_system/design_system.dart';
-import '../../../../core/errors/failure.dart';
-import '../../../../core/result/result.dart';
-import '../../../auth/presentation/widgets/step_up_sheet.dart';
-import '../../domain/entities/address_entity.dart';
-import '../providers/address_book_provider.dart';
-import '../widgets/address_card.dart';
-import '../widgets/address_form_sheet.dart';
+import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/errors/failure.dart';
+import 'package:reem/core/result/result.dart';
+import 'package:reem/features/auth/presentation/widgets/step_up_sheet.dart';
+import 'package:reem/features/settings/domain/entities/address_entity.dart';
+import 'package:reem/features/settings/presentation/providers/address_book_provider.dart';
+import 'package:reem/features/settings/presentation/widgets/address_card.dart';
+import 'package:reem/features/settings/presentation/widgets/address_form_sheet.dart';
 
 /// Her address book.
 ///

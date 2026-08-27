@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-import '../foundation/theme/extensions/color_extension.dart';
-import '../foundation/tokens/ds_radius.dart';
-import '../foundation/tokens/ds_spacing.dart';
-import '../foundation/tokens/ds_typography.dart';
-import 'admin_console.dart';
-import 'seller_atelier.dart';
+import 'package:reem/core/design_system/foundation/theme/extensions/color_extension.dart';
+import 'package:reem/core/design_system/foundation/tokens/ds_radius.dart';
+import 'package:reem/core/design_system/foundation/tokens/ds_spacing.dart';
+import 'package:reem/core/design_system/foundation/tokens/ds_typography.dart';
+import 'package:reem/core/design_system/patterns/admin_console.dart';
+import 'package:reem/core/design_system/patterns/seller_atelier.dart';
 
 abstract final class CustomerExperience {
   static const Color ink = Color(0xFF21161C);

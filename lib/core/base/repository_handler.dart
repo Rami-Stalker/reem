@@ -1,6 +1,6 @@
-import '../errors/app_exception.dart';
-import '../errors/failure.dart';
-import '../result/result.dart';
+import 'package:reem/core/errors/app_exception.dart';
+import 'package:reem/core/errors/failure.dart';
+import 'package:reem/core/result/result.dart';
 
 mixin RepositoryHandler {
   Future<Result<T>> guard<T>(

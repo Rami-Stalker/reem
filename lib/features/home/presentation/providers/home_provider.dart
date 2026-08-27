@@ -1,17 +1,17 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 
-import '../../../../core/presentation/providers/core_providers.dart';
-import '../../../discovery/domain/entities/product_collection.dart';
-import '../../../discovery/presentation/providers/discovery_providers.dart';
-import '../../data/datasources/home_remote_datasource.dart';
-import '../../data/datasources/impl/home_remote_datasource_impl.dart';
-import '../../data/repositories/home_repository_impl.dart';
-import '../../domain/repositories/home_repository.dart';
-import '../../domain/usecases/get_feed_usecase.dart';
-import '../../domain/usecases/get_stories_usecase.dart';
-import 'home_notifier.dart';
-import 'home_state.dart';
+import 'package:reem/core/presentation/providers/core_providers.dart';
+import 'package:reem/features/discovery/domain/entities/product_collection.dart';
+import 'package:reem/features/discovery/presentation/providers/discovery_providers.dart';
+import 'package:reem/features/home/data/datasources/home_remote_datasource.dart';
+import 'package:reem/features/home/data/datasources/impl/home_remote_datasource_impl.dart';
+import 'package:reem/features/home/data/repositories/home_repository_impl.dart';
+import 'package:reem/features/home/domain/repositories/home_repository.dart';
+import 'package:reem/features/home/domain/usecases/get_feed_usecase.dart';
+import 'package:reem/features/home/domain/usecases/get_stories_usecase.dart';
+import 'package:reem/features/home/presentation/providers/home_notifier.dart';
+import 'package:reem/features/home/presentation/providers/home_state.dart';
 
 /// Product collections shown on the home feed, in display order.
 const homeCollections = <ProductCollection>[

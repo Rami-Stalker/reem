@@ -2,7 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reem/core/network/api_endpoints.dart';
 import 'package:reem/core/presentation/providers/core_providers.dart';
 
-import '../../data/commission_models.dart';
+import 'package:reem/features/commissions/data/commission_models.dart';
 
 final sellerCommissionEarningsProvider =
     FutureProvider<SellerCommissionEarnings>((ref) async {

@@ -1,6 +1,5 @@
+import 'package:reem/features/onboarding/data/datasources/onboarding_local_datasource.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import '../onboarding_local_datasource.dart';
 
 class OnboardingLocalDataSourceImpl implements OnboardingLocalDataSource {
   static const _key = 'onboarding_complete';

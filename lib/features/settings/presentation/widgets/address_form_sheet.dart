@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../core/design_system/design_system.dart';
-import '../../../checkout/domain/entities/checkout.dart';
-import '../../domain/entities/address_draft.dart';
-import '../../domain/entities/address_entity.dart';
-import '../providers/address_book_provider.dart';
+import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/features/checkout/domain/entities/checkout.dart';
+import 'package:reem/features/settings/domain/entities/address_draft.dart';
+import 'package:reem/features/settings/domain/entities/address_entity.dart';
+import 'package:reem/features/settings/presentation/providers/address_book_provider.dart';
 
 /// Adding an address, or correcting one.
 ///

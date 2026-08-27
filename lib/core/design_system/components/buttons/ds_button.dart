@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-
-import '../../foundation/motion/animations/scale_animations.dart';
-import '../../foundation/theme/extensions/color_extension.dart';
-import '../../foundation/tokens/ds_motion.dart';
-import '../../foundation/tokens/ds_spacing.dart';
-import '../../foundation/tokens/ds_typography.dart';
-import 'button_sizes.dart';
-import 'button_states.dart';
-import 'button_styles.dart';
+import 'package:reem/core/design_system/components/buttons/button_sizes.dart';
+import 'package:reem/core/design_system/components/buttons/button_states.dart';
+import 'package:reem/core/design_system/components/buttons/button_styles.dart';
+import 'package:reem/core/design_system/foundation/motion/animations/scale_animations.dart';
+import 'package:reem/core/design_system/foundation/theme/extensions/color_extension.dart';
+import 'package:reem/core/design_system/foundation/tokens/ds_motion.dart';
+import 'package:reem/core/design_system/foundation/tokens/ds_spacing.dart';
+import 'package:reem/core/design_system/foundation/tokens/ds_typography.dart';
 
 /// The Reem button — one widget, every variant, fully token-driven.
 ///

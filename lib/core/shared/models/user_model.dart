@@ -1,6 +1,6 @@
 // shared/models/user_model.dart
 
-import '../entities/user.dart';
+import 'package:reem/core/shared/entities/user.dart';
 
 class UserModel extends User {
   const UserModel({

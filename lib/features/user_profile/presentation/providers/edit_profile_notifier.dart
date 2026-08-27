@@ -1,9 +1,9 @@
 import 'package:flutter_riverpod/legacy.dart';
 import 'package:reem/core/result/result.dart';
 
-import '../../domain/usecases/get_my_profile_usecase.dart';
-import '../../domain/usecases/update_profile_usecase.dart';
-import 'edit_profile_state.dart';
+import 'package:reem/features/user_profile/domain/usecases/get_my_profile_usecase.dart';
+import 'package:reem/features/user_profile/domain/usecases/update_profile_usecase.dart';
+import 'package:reem/features/user_profile/presentation/providers/edit_profile_state.dart';
 
 class EditProfileNotifier extends StateNotifier<EditProfileState> {
   EditProfileNotifier({

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/design_system/design_system.dart';
-import 'interactive_reaction_bar.dart';
-import 'luxury_rating_bar.dart';
+import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/features/product_details/presentation/widgets/interactive_reaction_bar.dart';
+import 'package:reem/features/product_details/presentation/widgets/luxury_rating_bar.dart';
 
 class ProductInfoSection extends StatelessWidget {
   const ProductInfoSection({super.key});

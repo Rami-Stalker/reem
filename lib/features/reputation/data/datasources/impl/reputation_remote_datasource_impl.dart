@@ -1,8 +1,7 @@
 import 'package:reem/core/network/api_endpoints.dart';
 import 'package:reem/core/network/base_remote_datasource.dart';
-
-import '../../models/reputation_models.dart';
-import '../reputation_remote_datasource.dart';
+import 'package:reem/features/reputation/data/datasources/reputation_remote_datasource.dart';
+import 'package:reem/features/reputation/data/models/reputation_models.dart';
 
 final class ReputationRemoteDataSourceImpl extends BaseRemoteDataSource
     implements ReputationRemoteDataSource {

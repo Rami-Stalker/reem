@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../../foundation/theme/extensions/color_extension.dart';
-import '../../foundation/theme/extensions/gradient_extension.dart';
-import '../../foundation/theme/extensions/shadow_extension.dart';
-import '../../foundation/tokens/ds_gradients.dart';
+import 'package:reem/core/design_system/foundation/theme/extensions/color_extension.dart';
+import 'package:reem/core/design_system/foundation/theme/extensions/gradient_extension.dart';
+import 'package:reem/core/design_system/foundation/theme/extensions/shadow_extension.dart';
+import 'package:reem/core/design_system/foundation/tokens/ds_gradients.dart';
 
 /// The visual intent of a button.
 enum DsButtonVariant {

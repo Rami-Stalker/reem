@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../core/design_system/patterns/product_rail.dart';
-import '../../../../core/localization/l10n_extension.dart';
-import '../../../../core/router/route_paths.dart';
-import '../../../profile/presentation/providers/profile_provider.dart';
+import 'package:reem/core/design_system/patterns/product_rail.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
+import 'package:reem/core/router/route_paths.dart';
+import 'package:reem/features/profile/presentation/providers/profile_provider.dart';
 
 /// "From your wishlist" — surfaces a few saved pieces so the customer can pick
 /// back up. Reuses the live favorites provider; collapses when empty.

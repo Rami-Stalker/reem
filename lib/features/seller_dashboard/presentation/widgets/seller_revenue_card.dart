@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../core/design_system/design_system.dart';
-import '../../../../core/localization/l10n_extension.dart';
-import '../../domain/entities/seller_analytics.dart';
-import '../../domain/entities/seller_chart_data.dart';
-import '../providers/seller_dashboard_provider.dart';
-import 'seller_format.dart';
-import 'seller_labels.dart';
-import 'seller_mini_chart.dart';
+import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
+import 'package:reem/features/seller_dashboard/domain/entities/seller_analytics.dart';
+import 'package:reem/features/seller_dashboard/domain/entities/seller_chart_data.dart';
+import 'package:reem/features/seller_dashboard/presentation/providers/seller_dashboard_provider.dart';
+import 'package:reem/features/seller_dashboard/presentation/widgets/seller_format.dart';
+import 'package:reem/features/seller_dashboard/presentation/widgets/seller_labels.dart';
+import 'package:reem/features/seller_dashboard/presentation/widgets/seller_mini_chart.dart';
 
 /// The money card — the first figure a seller looks for.
 ///

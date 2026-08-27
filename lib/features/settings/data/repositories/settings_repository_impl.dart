@@ -1,16 +1,15 @@
 import 'package:reem/core/base/repository_handler.dart';
 import 'package:reem/core/result/result.dart';
 import 'package:reem/core/shared/entities/user.dart';
-
-import '../../domain/entities/address_draft.dart';
-import '../../domain/entities/address_entity.dart';
-import '../../domain/entities/coupon_entity.dart';
-import '../../domain/entities/coupon_validation.dart';
-import '../../domain/entities/notification_entity.dart';
-import '../../domain/entities/notification_preferences.dart';
-import '../../domain/entities/rewards_entity.dart';
-import '../../domain/repositories/settings_repository.dart';
-import '../datasources/settings_remote_datasource.dart';
+import 'package:reem/features/settings/data/datasources/settings_remote_datasource.dart';
+import 'package:reem/features/settings/domain/entities/address_draft.dart';
+import 'package:reem/features/settings/domain/entities/address_entity.dart';
+import 'package:reem/features/settings/domain/entities/coupon_entity.dart';
+import 'package:reem/features/settings/domain/entities/coupon_validation.dart';
+import 'package:reem/features/settings/domain/entities/notification_entity.dart';
+import 'package:reem/features/settings/domain/entities/notification_preferences.dart';
+import 'package:reem/features/settings/domain/entities/rewards_entity.dart';
+import 'package:reem/features/settings/domain/repositories/settings_repository.dart';
 
 class SettingsRepositoryImpl with RepositoryHandler implements SettingsRepository {
   const SettingsRepositoryImpl({required this.remote});

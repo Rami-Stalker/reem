@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-
-import '../../foundation/tokens/ds_spacing.dart';
-import '../chips/ds_chip.dart';
+import 'package:reem/core/design_system/components/chips/ds_chip.dart';
+import 'package:reem/core/design_system/foundation/tokens/ds_spacing.dart';
 
 /// One option in a [DsFilterBar].
 class DsFilterOption {

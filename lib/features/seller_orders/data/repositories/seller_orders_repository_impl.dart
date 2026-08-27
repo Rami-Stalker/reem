@@ -1,9 +1,8 @@
 import 'package:reem/core/base/repository_handler.dart';
 import 'package:reem/core/result/result.dart';
-
-import '../../domain/entities/seller_order.dart';
-import '../../domain/repositories/seller_orders_repository.dart';
-import '../datasources/seller_orders_remote_datasource.dart';
+import 'package:reem/features/seller_orders/data/datasources/seller_orders_remote_datasource.dart';
+import 'package:reem/features/seller_orders/domain/entities/seller_order.dart';
+import 'package:reem/features/seller_orders/domain/repositories/seller_orders_repository.dart';
 
 class SellerOrdersRepositoryImpl
     with RepositoryHandler

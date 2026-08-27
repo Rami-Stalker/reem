@@ -1,9 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
-
-import '../../config/app_env.dart';
-import '../../storage/secure_storage_service.dart';
-import '../api_endpoints.dart';
+import 'package:reem/core/config/app_env.dart';
+import 'package:reem/core/network/api_endpoints.dart';
+import 'package:reem/core/storage/secure_storage_service.dart';
 
 /// Attaches the access token to every request and transparently refreshes it on
 /// a 401 — the client never sees an expired-token failure for a still-valid

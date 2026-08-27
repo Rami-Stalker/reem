@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:reem/core/experience/role_experience.dart';
+import 'package:reem/core/router/app_shell.dart';
 import 'package:reem/core/router/auth_guard.dart';
+import 'package:reem/core/router/route_names.dart';
+import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/features/admin/presentation/providers/admin_provider.dart';
 import 'package:reem/features/admin/presentation/screens/admin_analytics_screen.dart';
 import 'package:reem/features/admin/presentation/screens/admin_dashboard_screen.dart';
@@ -10,6 +14,7 @@ import 'package:reem/features/admin/presentation/screens/admin_products_screen.d
 import 'package:reem/features/admin/presentation/screens/admin_section_screen.dart';
 import 'package:reem/features/admin/presentation/screens/admin_users_screen.dart';
 import 'package:reem/features/admin/presentation/shell/admin_shell.dart';
+import 'package:reem/features/admin_finance/presentation/screens/admin_finance_screen.dart';
 import 'package:reem/features/auth/domain/entities/auth_account.dart';
 import 'package:reem/features/auth/presentation/providers/auth_provider.dart';
 import 'package:reem/features/auth/presentation/providers/auth_state.dart';
@@ -35,6 +40,7 @@ import 'package:reem/features/chat/presentation/screens/video_call_screen.dart';
 import 'package:reem/features/checkout/presentation/screens/checkout_screen.dart';
 import 'package:reem/features/checkout/presentation/screens/order_detail_screen.dart';
 import 'package:reem/features/checkout/presentation/screens/orders_screen.dart';
+import 'package:reem/features/courier/presentation/screens/courier_day_screen.dart';
 import 'package:reem/features/create/presentation/screens/add_post_screen.dart';
 import 'package:reem/features/create/presentation/screens/add_story_screen.dart';
 import 'package:reem/features/discovery/domain/entities/product_collection.dart';
@@ -44,6 +50,8 @@ import 'package:reem/features/experience/presentation/screens/experience_surface
 import 'package:reem/features/home/presentation/screens/categories_screen.dart';
 import 'package:reem/features/home/presentation/screens/category_screen.dart';
 import 'package:reem/features/home/presentation/screens/home_screen.dart';
+import 'package:reem/features/invoices/presentation/screens/invoice_screen.dart';
+import 'package:reem/features/invoices/presentation/screens/order_invoices_screen.dart';
 import 'package:reem/features/onboarding/presentation/screens/onboarding_screen.dart';
 import 'package:reem/features/product_details/presentation/screens/product_details_screen.dart';
 import 'package:reem/features/profile/presentation/screens/favorites_screen.dart';
@@ -51,6 +59,9 @@ import 'package:reem/features/profile/presentation/screens/profile_screen.dart';
 import 'package:reem/features/search/presentation/screens/search_screen.dart';
 import 'package:reem/features/seller_dashboard/presentation/screens/seller_home_screen.dart';
 import 'package:reem/features/seller_dashboard/presentation/screens/seller_profile_screen.dart';
+import 'package:reem/features/seller_earnings/presentation/screens/seller_earnings_screen.dart';
+import 'package:reem/features/seller_orders/presentation/screens/seller_order_detail_screen.dart';
+import 'package:reem/features/seller_orders/presentation/screens/seller_orders_screen.dart';
 import 'package:reem/features/seller_products/domain/entities/managed_product.dart';
 import 'package:reem/features/seller_products/presentation/screens/my_products_screen.dart';
 import 'package:reem/features/seller_products/presentation/screens/product_form_screen.dart';
@@ -62,24 +73,12 @@ import 'package:reem/features/settings/presentation/screens/notifications_screen
 import 'package:reem/features/settings/presentation/screens/payment_methods_screen.dart';
 import 'package:reem/features/settings/presentation/screens/rewards_screen.dart';
 import 'package:reem/features/settings/presentation/screens/settings_screen.dart';
+import 'package:reem/features/shipment_tracking/presentation/screens/shipment_tracking_screen.dart';
 import 'package:reem/features/splash/presentation/screens/splash_screen.dart';
 import 'package:reem/features/stories/presentation/screens/story_viewer_screen.dart';
 import 'package:reem/features/user_profile/presentation/screens/edit_profile_screen.dart';
 import 'package:reem/features/user_profile/presentation/screens/user_profile_screen.dart';
-
-import '../../features/admin_finance/presentation/screens/admin_finance_screen.dart';
-import '../../features/courier/presentation/screens/courier_day_screen.dart';
-import '../../features/invoices/presentation/screens/invoice_screen.dart';
-import '../../features/invoices/presentation/screens/order_invoices_screen.dart';
-import '../../features/seller_earnings/presentation/screens/seller_earnings_screen.dart';
-import '../../features/seller_orders/presentation/screens/seller_order_detail_screen.dart';
-import '../../features/seller_orders/presentation/screens/seller_orders_screen.dart';
-import '../../features/shipment_tracking/presentation/screens/shipment_tracking_screen.dart';
-import '../../features/wallet/presentation/screens/wallet_screen.dart';
-import '../experience/role_experience.dart';
-import 'app_shell.dart';
-import 'route_names.dart';
-import 'route_paths.dart';
+import 'package:reem/features/wallet/presentation/screens/wallet_screen.dart';
 
 final rootNavigatorKey = GlobalKey<NavigatorState>();
 

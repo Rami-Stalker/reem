@@ -1,8 +1,7 @@
 import 'package:reem/core/network/api_endpoints.dart';
 import 'package:reem/core/network/base_remote_datasource.dart';
-
-import '../../models/finance_overview_model.dart';
-import '../admin_finance_remote_datasource.dart';
+import 'package:reem/features/admin_finance/data/datasources/admin_finance_remote_datasource.dart';
+import 'package:reem/features/admin_finance/data/models/finance_overview_model.dart';
 
 final class AdminFinanceRemoteDataSourceImpl extends BaseRemoteDataSource
     implements AdminFinanceRemoteDataSource {

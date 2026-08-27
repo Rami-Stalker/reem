@@ -2,7 +2,7 @@
 
 import 'package:equatable/equatable.dart';
 
-import 'user.dart';
+import 'package:reem/core/shared/entities/user.dart';
 
 class Comment extends Equatable {
   final String id;

@@ -2,7 +2,7 @@ import 'package:reem/core/shared/models/post_model.dart';
 import 'package:reem/core/shared/models/product_model.dart';
 import 'package:reem/core/shared/models/user_model.dart';
 
-import '../../domain/entities/wishlist_entity.dart';
+import 'package:reem/features/profile/domain/entities/wishlist_entity.dart';
 
 class SavedSellerModel extends SavedSeller {
   const SavedSellerModel({required super.seller, required super.savedAt});

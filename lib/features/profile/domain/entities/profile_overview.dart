@@ -1,11 +1,11 @@
 import 'package:equatable/equatable.dart';
 
-import '../../../../core/shared/entities/loyalty.dart';
-import '../../../../core/shared/entities/product.dart';
-import 'achievement.dart';
-import 'followed_store.dart';
-import 'orders_overview.dart';
-import 'referral.dart';
+import 'package:reem/core/shared/entities/loyalty.dart';
+import 'package:reem/core/shared/entities/product.dart';
+import 'package:reem/features/profile/domain/entities/achievement.dart';
+import 'package:reem/features/profile/domain/entities/followed_store.dart';
+import 'package:reem/features/profile/domain/entities/orders_overview.dart';
+import 'package:reem/features/profile/domain/entities/referral.dart';
 
 /// One step in the profile-completion checklist.
 class ProfileCompletionStep extends Equatable {

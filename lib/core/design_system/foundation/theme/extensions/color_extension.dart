@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:reem/core/design_system/foundation/theme/ds_theme_extension.dart';
+import 'package:reem/core/design_system/foundation/tokens/ds_colors.dart';
 
-import '../../tokens/ds_colors.dart';
-import '../ds_theme_extension.dart';
-
-export '../../tokens/ds_colors.dart' show DsColorScheme;
+export 'package:reem/core/design_system/foundation/tokens/ds_colors.dart' show DsColorScheme;
 
 /// Semantic color accessors on [BuildContext].
 ///

@@ -1,7 +1,7 @@
 import 'package:reem/core/shared/models/comment_model.dart';
 
-import '../models/comment_page_model.dart';
-import '../models/post_engagement_model.dart';
+import 'package:reem/features/social_posts/data/models/comment_page_model.dart';
+import 'package:reem/features/social_posts/data/models/post_engagement_model.dart';
 
 abstract interface class PostSocialRemoteDataSource {
   Future<CommentPageModel> getComments(String postId, {int page, int limit});

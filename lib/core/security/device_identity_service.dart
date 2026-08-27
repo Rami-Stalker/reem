@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:cryptography/cryptography.dart';
 import 'package:flutter/foundation.dart';
 
-import '../storage/secure_storage_service.dart';
+import 'package:reem/core/storage/secure_storage_service.dart';
 
 /// This device's cryptographic identity.
 ///

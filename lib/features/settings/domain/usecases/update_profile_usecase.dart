@@ -1,7 +1,7 @@
 import 'package:reem/core/result/result.dart';
 import 'package:reem/core/shared/entities/user.dart';
 
-import '../repositories/settings_repository.dart';
+import 'package:reem/features/settings/domain/repositories/settings_repository.dart';
 
 class UpdateProfileUseCase {
   const UpdateProfileUseCase(this._repository);

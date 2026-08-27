@@ -3,7 +3,7 @@ import 'dart:math';
 
 import 'package:crypto/crypto.dart';
 
-import 'device_identity_service.dart';
+import 'package:reem/core/security/device_identity_service.dart';
 
 /// Builds the signed assertion the server calls a device proof.
 ///

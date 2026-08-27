@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../core/design_system/design_system.dart';
-import '../../../../core/result/result.dart';
-import '../../domain/entities/notification_preferences.dart';
-import '../providers/settings_provider.dart';
+import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/result/result.dart';
+import 'package:reem/features/settings/domain/entities/notification_preferences.dart';
+import 'package:reem/features/settings/presentation/providers/settings_provider.dart';
 
 class NotificationsScreen extends ConsumerWidget {
   const NotificationsScreen({super.key});

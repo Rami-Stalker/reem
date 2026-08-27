@@ -1,3 +1,3 @@
-export 'responsive_builder.dart';
-export 'responsive_values.dart';
-export 'screen_size.dart';
+export 'package:reem/core/design_system/foundation/layout/responsive/responsive_builder.dart';
+export 'package:reem/core/design_system/foundation/layout/responsive/responsive_values.dart';
+export 'package:reem/core/design_system/foundation/layout/responsive/screen_size.dart';

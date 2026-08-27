@@ -4,11 +4,11 @@ import 'package:reem/core/network/network_info.dart';
 import 'package:reem/core/presentation/providers/core_providers.dart';
 import 'package:reem/core/result/result.dart';
 
-import '../../data/datasources/impl/wallet_remote_datasource_impl.dart';
-import '../../data/datasources/wallet_remote_datasource.dart';
-import '../../data/repositories/wallet_repository_impl.dart';
-import '../../domain/entities/wallet_transaction.dart';
-import '../../domain/repositories/wallet_repository.dart';
+import 'package:reem/features/wallet/data/datasources/impl/wallet_remote_datasource_impl.dart';
+import 'package:reem/features/wallet/data/datasources/wallet_remote_datasource.dart';
+import 'package:reem/features/wallet/data/repositories/wallet_repository_impl.dart';
+import 'package:reem/features/wallet/domain/entities/wallet_transaction.dart';
+import 'package:reem/features/wallet/domain/repositories/wallet_repository.dart';
 
 final walletRemoteDataSourceProvider = Provider<WalletRemoteDataSource>(
   (ref) => WalletRemoteDataSourceImpl(ref.watch(dioProvider)),

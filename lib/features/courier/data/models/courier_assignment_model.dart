@@ -1,6 +1,6 @@
-import '../../../../core/shared/value_objects/money.dart';
-import '../../../shipment_tracking/domain/entities/shipment_tracking.dart';
-import '../../domain/entities/courier_assignment.dart';
+import 'package:reem/core/shared/value_objects/money.dart';
+import 'package:reem/features/courier/domain/entities/courier_assignment.dart';
+import 'package:reem/features/shipment_tracking/domain/entities/shipment_tracking.dart';
 
 class CourierAssignmentModel extends CourierAssignment {
   const CourierAssignmentModel({

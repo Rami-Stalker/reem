@@ -1,6 +1,5 @@
+import 'package:reem/core/design_system/foundation/theme/theme_mode.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import 'theme_mode.dart';
 
 const _themeModeKey = 'reem_theme_mode';
 

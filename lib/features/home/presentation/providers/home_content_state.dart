@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import '../../domain/entities/home_content.dart';
+import 'package:reem/features/home/domain/entities/home_content.dart';
 
 /// State for the aggregated home merchandising content.
 class HomeContentState extends Equatable {

@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../core/design_system/design_system.dart';
-import '../../../../core/localization/l10n_extension.dart';
-import '../../../../core/router/route_paths.dart';
-import '../../../discovery/domain/entities/product_collection.dart';
-import '../../domain/entities/flash_deal.dart';
-import '../providers/home_content_provider.dart';
-import 'home_section_header.dart';
+import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
+import 'package:reem/core/router/route_paths.dart';
+import 'package:reem/features/discovery/domain/entities/product_collection.dart';
+import 'package:reem/features/home/domain/entities/flash_deal.dart';
+import 'package:reem/features/home/presentation/providers/home_content_provider.dart';
+import 'package:reem/features/home/presentation/widgets/home_section_header.dart';
 
 /// Flash deals — a horizontal rail of time-boxed, limited-quantity offers, each
 /// with a live countdown and a "claimed" stock meter that turns urgent as it

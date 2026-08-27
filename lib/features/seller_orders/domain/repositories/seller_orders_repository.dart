@@ -1,5 +1,5 @@
-import '../../../../core/result/result.dart';
-import '../entities/seller_order.dart';
+import 'package:reem/core/result/result.dart';
+import 'package:reem/features/seller_orders/domain/entities/seller_order.dart';
 
 abstract interface class SellerOrdersRepository {
   Future<Result<SellerOrderQueue>> queue({

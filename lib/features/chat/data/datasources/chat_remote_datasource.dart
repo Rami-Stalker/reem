@@ -1,5 +1,5 @@
-import '../models/chat_message_model.dart';
-import '../models/chat_thread_model.dart';
+import 'package:reem/features/chat/data/models/chat_message_model.dart';
+import 'package:reem/features/chat/data/models/chat_thread_model.dart';
 
 abstract interface class ChatRemoteDataSource {
   Future<List<ChatThreadModel>> getThreads();

@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 
-import '../../../../core/shared/value_objects/money.dart';
-import 'order.dart';
+import 'package:reem/core/shared/value_objects/money.dart';
+import 'package:reem/features/checkout/domain/entities/order.dart';
 
 /// A delivery destination the platform serves.
 ///

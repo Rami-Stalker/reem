@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-import '../../foundation/motion/animations/scale_animations.dart';
-import '../../foundation/theme/extensions/color_extension.dart';
-import '../../foundation/theme/extensions/gradient_extension.dart';
-import '../../foundation/theme/extensions/shadow_extension.dart';
-import '../../foundation/tokens/ds_constraints.dart';
-import '../../foundation/tokens/ds_motion.dart';
+import 'package:reem/core/design_system/foundation/motion/animations/scale_animations.dart';
+import 'package:reem/core/design_system/foundation/theme/extensions/color_extension.dart';
+import 'package:reem/core/design_system/foundation/theme/extensions/gradient_extension.dart';
+import 'package:reem/core/design_system/foundation/theme/extensions/shadow_extension.dart';
+import 'package:reem/core/design_system/foundation/tokens/ds_constraints.dart';
+import 'package:reem/core/design_system/foundation/tokens/ds_motion.dart';
 
 /// Background treatment for [DsIconButton].
 enum DsIconButtonVariant { primary, tonal, surface, ghost, glass }

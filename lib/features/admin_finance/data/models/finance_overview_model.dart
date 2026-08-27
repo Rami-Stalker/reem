@@ -1,5 +1,5 @@
-import '../../../../core/shared/value_objects/money.dart';
-import '../../domain/entities/finance_overview.dart';
+import 'package:reem/core/shared/value_objects/money.dart';
+import 'package:reem/features/admin_finance/domain/entities/finance_overview.dart';
 
 /// Wire → domain for the finance console.
 ///

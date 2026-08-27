@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../foundation/theme/extensions/gradient_extension.dart';
-import '../../foundation/tokens/ds_typography.dart';
+import 'package:reem/core/design_system/foundation/theme/extensions/gradient_extension.dart';
+import 'package:reem/core/design_system/foundation/tokens/ds_typography.dart';
 
 class DsGradientText extends StatelessWidget {
   const DsGradientText(

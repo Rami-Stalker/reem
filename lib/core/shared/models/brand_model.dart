@@ -1,6 +1,6 @@
 // shared/models/brand_model.dart
 
-import '../entities/brand.dart';
+import 'package:reem/core/shared/entities/brand.dart';
 
 class BrandModel extends Brand {
   const BrandModel({

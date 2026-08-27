@@ -1,9 +1,9 @@
 import 'package:reem/core/shared/entities/user.dart';
 
-import '../../domain/entities/address_entity.dart';
-import '../../domain/entities/coupon_entity.dart';
-import '../../domain/entities/notification_entity.dart';
-import '../../domain/entities/rewards_entity.dart';
+import 'package:reem/features/settings/domain/entities/address_entity.dart';
+import 'package:reem/features/settings/domain/entities/coupon_entity.dart';
+import 'package:reem/features/settings/domain/entities/notification_entity.dart';
+import 'package:reem/features/settings/domain/entities/rewards_entity.dart';
 
 class SettingsState {
   const SettingsState({

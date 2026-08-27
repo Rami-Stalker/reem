@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-
-import '../../foundation/theme/extensions/color_extension.dart';
-import '../../foundation/tokens/ds_constraints.dart';
-import '../../foundation/tokens/ds_spacing.dart';
-import '../../foundation/tokens/ds_typography.dart';
-import '../buttons/ds_icon_button.dart';
+import 'package:reem/core/design_system/components/buttons/ds_icon_button.dart';
+import 'package:reem/core/design_system/foundation/theme/extensions/color_extension.dart';
+import 'package:reem/core/design_system/foundation/tokens/ds_constraints.dart';
+import 'package:reem/core/design_system/foundation/tokens/ds_spacing.dart';
+import 'package:reem/core/design_system/foundation/tokens/ds_typography.dart';
 
 /// Helpers for presenting Reem-styled modal bottom sheets.
 ///

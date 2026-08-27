@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/legacy.dart';
 
-import '../../../../core/shared/value_objects/money.dart';
-import '../../../settings/domain/entities/coupon_validation.dart';
+import 'package:reem/core/shared/value_objects/money.dart';
+import 'package:reem/features/settings/domain/entities/coupon_validation.dart';
 
 /// The coupon she has chosen, waiting for checkout.
 ///

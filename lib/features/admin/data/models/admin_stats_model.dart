@@ -1,4 +1,4 @@
-import '../../domain/entities/admin_stats_entity.dart';
+import 'package:reem/features/admin/domain/entities/admin_stats_entity.dart';
 
 class AdminStatsModel extends AdminStatsEntity {
   const AdminStatsModel({

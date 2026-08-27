@@ -4,7 +4,7 @@ import 'package:reem/core/shared/entities/media.dart';
 import 'package:reem/core/shared/entities/product_variant.dart';
 import 'package:reem/core/shared/value_objects/money.dart';
 
-import 'product_status.dart';
+import 'package:reem/features/seller_products/domain/entities/product_status.dart';
 
 /// A seller's own listing.
 ///

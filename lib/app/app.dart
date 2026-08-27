@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../core/design_system/foundation/theme/app_theme.dart';
-import '../core/localization/app_localizations.dart';
-import '../core/localization/l10n_extension.dart';
-import '../core/router/app_router_provider.dart';
-import 'bootstrap.dart';
+import 'package:reem/app/bootstrap.dart';
+import 'package:reem/core/design_system/foundation/theme/app_theme.dart';
+import 'package:reem/core/localization/app_localizations.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
+import 'package:reem/core/router/app_router_provider.dart';
 
 class MyApp extends ConsumerWidget {
   const MyApp({super.key});

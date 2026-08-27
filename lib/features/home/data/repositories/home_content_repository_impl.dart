@@ -1,8 +1,8 @@
-import '../../../../core/base/repository_handler.dart';
-import '../../../../core/result/result.dart';
-import '../../domain/entities/home_content.dart';
-import '../../domain/repositories/home_content_repository.dart';
-import '../datasources/home_content_datasource.dart';
+import 'package:reem/core/base/repository_handler.dart';
+import 'package:reem/core/result/result.dart';
+import 'package:reem/features/home/data/datasources/home_content_datasource.dart';
+import 'package:reem/features/home/domain/entities/home_content.dart';
+import 'package:reem/features/home/domain/repositories/home_content_repository.dart';
 
 class HomeContentRepositoryImpl
     with RepositoryHandler

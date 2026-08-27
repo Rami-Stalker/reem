@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/design_system/design_system.dart';
-import '../../../../core/shared/entities/product.dart';
+import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/shared/entities/product.dart';
 
 /// Compact product card sized by its parent (rail gives width, grid gives cell).
 class ProductCardCompact extends StatelessWidget {

@@ -1,8 +1,8 @@
 import 'package:reem/core/shared/entities/product.dart';
 import 'package:reem/core/shared/entities/user.dart';
 
-import '../../domain/entities/order_entity.dart';
-import '../../domain/entities/wishlist_entity.dart';
+import 'package:reem/features/profile/domain/entities/order_entity.dart';
+import 'package:reem/features/profile/domain/entities/wishlist_entity.dart';
 
 class ProfileState {
   const ProfileState({

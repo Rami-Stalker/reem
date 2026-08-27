@@ -1,4 +1,4 @@
-import '../../domain/entities/coupon_entity.dart';
+import 'package:reem/features/settings/domain/entities/coupon_entity.dart';
 
 class CouponModel extends CouponEntity {
   const CouponModel({

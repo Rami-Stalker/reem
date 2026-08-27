@@ -1,10 +1,9 @@
 import 'package:reem/core/base/repository_handler.dart';
 import 'package:reem/core/result/result.dart';
 import 'package:reem/core/shared/entities/product.dart';
-
-import '../../domain/entities/product_page.dart';
-import '../../domain/repositories/discovery_repository.dart';
-import '../datasources/discovery_remote_datasource.dart';
+import 'package:reem/features/discovery/data/datasources/discovery_remote_datasource.dart';
+import 'package:reem/features/discovery/domain/entities/product_page.dart';
+import 'package:reem/features/discovery/domain/repositories/discovery_repository.dart';
 
 class DiscoveryRepositoryImpl
     with RepositoryHandler

@@ -1,12 +1,12 @@
 import 'package:flutter_riverpod/legacy.dart';
 import 'package:reem/core/result/result.dart';
 
-import '../../data/models/chat_message_model.dart';
-import '../../domain/entities/chat_message_entity.dart';
-import '../../domain/usecases/get_messages_usecase.dart';
-import '../../domain/usecases/get_threads_usecase.dart';
-import '../../domain/usecases/send_message_usecase.dart';
-import 'chat_state.dart';
+import 'package:reem/features/chat/data/models/chat_message_model.dart';
+import 'package:reem/features/chat/domain/entities/chat_message_entity.dart';
+import 'package:reem/features/chat/domain/usecases/get_messages_usecase.dart';
+import 'package:reem/features/chat/domain/usecases/get_threads_usecase.dart';
+import 'package:reem/features/chat/domain/usecases/send_message_usecase.dart';
+import 'package:reem/features/chat/presentation/providers/chat_state.dart';
 
 class ChatNotifier extends StateNotifier<ChatState> {
   ChatNotifier({required GetThreadsUseCase getThreadsUseCase})

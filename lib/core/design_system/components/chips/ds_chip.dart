@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-import '../../foundation/theme/extensions/color_extension.dart';
-import '../../foundation/tokens/ds_motion.dart';
-import '../../foundation/tokens/ds_radius.dart';
-import '../../foundation/tokens/ds_spacing.dart';
-import '../../foundation/tokens/ds_typography.dart';
+import 'package:reem/core/design_system/foundation/theme/extensions/color_extension.dart';
+import 'package:reem/core/design_system/foundation/tokens/ds_motion.dart';
+import 'package:reem/core/design_system/foundation/tokens/ds_radius.dart';
+import 'package:reem/core/design_system/foundation/tokens/ds_spacing.dart';
+import 'package:reem/core/design_system/foundation/tokens/ds_typography.dart';
 
 /// A premium selectable chip — filters, categories, tags, choices.
 ///

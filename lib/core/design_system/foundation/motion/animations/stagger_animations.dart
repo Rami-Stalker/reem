@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 
-import '../../tokens/ds_motion.dart';
+import 'package:reem/core/design_system/foundation/tokens/ds_motion.dart';
 
 abstract final class DsStaggerAnimations {
   static Widget list({

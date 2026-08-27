@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-
-import '../../tokens/ds_shadows.dart';
-import 'color_extension.dart';
+import 'package:reem/core/design_system/foundation/theme/extensions/color_extension.dart';
+import 'package:reem/core/design_system/foundation/tokens/ds_shadows.dart';
 
 /// Theme-aware shadow accessors. All resolve their color from the active
 /// theme (`dsColors.shadow`) so light (warm rose tint) and dark read correctly.

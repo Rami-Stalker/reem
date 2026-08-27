@@ -1,20 +1,19 @@
 import 'package:flutter/material.dart';
-
-import '../tokens/ds_colors.dart';
-import '../tokens/ds_typography.dart';
-import 'accessibility/accessibility_theme.dart';
-import 'component_themes/appbar_theme.dart';
-import 'component_themes/bottom_sheet_theme.dart';
-import 'component_themes/button_theme.dart';
-import 'component_themes/card_theme.dart';
-import 'component_themes/chip_theme.dart';
-import 'component_themes/dialog_theme.dart';
-import 'component_themes/input_theme.dart';
-import 'component_themes/navigation_theme.dart';
-import 'component_themes/progress_indicator_theme.dart';
-import 'component_themes/snack_bar_theme.dart';
-import 'component_themes/tooltip_theme.dart';
-import 'ds_theme_extension.dart';
+import 'package:reem/core/design_system/foundation/theme/accessibility/accessibility_theme.dart';
+import 'package:reem/core/design_system/foundation/theme/component_themes/appbar_theme.dart';
+import 'package:reem/core/design_system/foundation/theme/component_themes/bottom_sheet_theme.dart';
+import 'package:reem/core/design_system/foundation/theme/component_themes/button_theme.dart';
+import 'package:reem/core/design_system/foundation/theme/component_themes/card_theme.dart';
+import 'package:reem/core/design_system/foundation/theme/component_themes/chip_theme.dart';
+import 'package:reem/core/design_system/foundation/theme/component_themes/dialog_theme.dart';
+import 'package:reem/core/design_system/foundation/theme/component_themes/input_theme.dart';
+import 'package:reem/core/design_system/foundation/theme/component_themes/navigation_theme.dart';
+import 'package:reem/core/design_system/foundation/theme/component_themes/progress_indicator_theme.dart';
+import 'package:reem/core/design_system/foundation/theme/component_themes/snack_bar_theme.dart';
+import 'package:reem/core/design_system/foundation/theme/component_themes/tooltip_theme.dart';
+import 'package:reem/core/design_system/foundation/theme/ds_theme_extension.dart';
+import 'package:reem/core/design_system/foundation/tokens/ds_colors.dart';
+import 'package:reem/core/design_system/foundation/tokens/ds_typography.dart';
 
 /// Builds complete [ThemeData] from design tokens.
 abstract final class DsThemeFactory {

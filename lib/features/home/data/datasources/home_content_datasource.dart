@@ -1,4 +1,4 @@
-import '../../domain/entities/home_content.dart';
+import 'package:reem/features/home/domain/entities/home_content.dart';
 
 /// Boundary for the home merchandising content. Today this is fulfilled by
 /// [HomeContentMockDataSource]; swapping to a network implementation

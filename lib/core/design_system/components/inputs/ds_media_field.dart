@@ -4,17 +4,16 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
-
-import '../../../localization/l10n_extension.dart';
-import '../../../media/media_asset.dart';
-import '../../../media/media_limits.dart';
-import '../../../media/media_providers.dart';
-import '../../../media/media_variants.dart';
-import '../../foundation/theme/extensions/color_extension.dart';
-import '../../foundation/tokens/ds_radius.dart';
-import '../../foundation/tokens/ds_spacing.dart';
-import '../../foundation/tokens/ds_typography.dart';
-import '../sheets/ds_bottom_sheet.dart';
+import 'package:reem/core/design_system/components/sheets/ds_bottom_sheet.dart';
+import 'package:reem/core/design_system/foundation/theme/extensions/color_extension.dart';
+import 'package:reem/core/design_system/foundation/tokens/ds_radius.dart';
+import 'package:reem/core/design_system/foundation/tokens/ds_spacing.dart';
+import 'package:reem/core/design_system/foundation/tokens/ds_typography.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
+import 'package:reem/core/media/media_asset.dart';
+import 'package:reem/core/media/media_limits.dart';
+import 'package:reem/core/media/media_providers.dart';
+import 'package:reem/core/media/media_variants.dart';
 
 /// Pick photographs from the camera or the gallery and upload them as they are
 /// chosen.

@@ -1,4 +1,4 @@
-import 'product_status.dart';
+import 'package:reem/features/seller_products/domain/entities/product_status.dart';
 
 /// One media item being authored.
 class MediaDraft {

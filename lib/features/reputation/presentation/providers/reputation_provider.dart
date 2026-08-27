@@ -2,11 +2,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reem/core/presentation/providers/core_providers.dart';
 import 'package:reem/core/result/result.dart';
 
-import '../../data/datasources/impl/reputation_remote_datasource_impl.dart';
-import '../../data/datasources/reputation_remote_datasource.dart';
-import '../../data/repositories/reputation_repository_impl.dart';
-import '../../domain/entities/reputation_entities.dart';
-import '../../domain/repositories/reputation_repository.dart';
+import 'package:reem/features/reputation/data/datasources/impl/reputation_remote_datasource_impl.dart';
+import 'package:reem/features/reputation/data/datasources/reputation_remote_datasource.dart';
+import 'package:reem/features/reputation/data/repositories/reputation_repository_impl.dart';
+import 'package:reem/features/reputation/domain/entities/reputation_entities.dart';
+import 'package:reem/features/reputation/domain/repositories/reputation_repository.dart';
 
 final reputationRemoteDataSourceProvider = Provider<ReputationRemoteDataSource>(
   (ref) => ReputationRemoteDataSourceImpl(ref.watch(dioProvider)),

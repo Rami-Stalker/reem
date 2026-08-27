@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
-import '../../../../core/design_system/design_system.dart';
-import '../../../../core/localization/l10n_extension.dart';
-import '../../../../core/utils/arabic_numerals.dart';
-import '../../../admin/presentation/widgets/admin_page_header.dart';
-import '../../domain/entities/finance_overview.dart';
-import '../providers/admin_finance_provider.dart';
-import '../widgets/finance_position_grid.dart';
-import '../widgets/ledger_health_banner.dart';
+import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
+import 'package:reem/core/utils/arabic_numerals.dart';
+import 'package:reem/features/admin/presentation/widgets/admin_page_header.dart';
+import 'package:reem/features/admin_finance/domain/entities/finance_overview.dart';
+import 'package:reem/features/admin_finance/presentation/providers/admin_finance_provider.dart';
+import 'package:reem/features/admin_finance/presentation/widgets/finance_position_grid.dart';
+import 'package:reem/features/admin_finance/presentation/widgets/ledger_health_banner.dart';
 
 /// The finance console.
 ///

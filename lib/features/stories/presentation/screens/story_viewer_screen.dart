@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:reem/core/shared/entities/story.dart';
-import '../providers/stories_providers.dart';
+import 'package:reem/features/stories/presentation/providers/stories_providers.dart';
 
 /// Arguments for the story viewer route (passed via GoRouter `extra`).
 class StoryViewerArgs {

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-import '../../foundation/theme/extensions/color_extension.dart';
-import '../../foundation/tokens/ds_colors.dart';
-import '../../foundation/tokens/ds_radius.dart';
-import '../../foundation/tokens/ds_spacing.dart';
-import '../../foundation/tokens/ds_typography.dart';
+import 'package:reem/core/design_system/foundation/theme/extensions/color_extension.dart';
+import 'package:reem/core/design_system/foundation/tokens/ds_colors.dart';
+import 'package:reem/core/design_system/foundation/tokens/ds_radius.dart';
+import 'package:reem/core/design_system/foundation/tokens/ds_spacing.dart';
+import 'package:reem/core/design_system/foundation/tokens/ds_typography.dart';
 
 /// Semantic tone of a [DsBadge].
 enum DsBadgeTone { primary, accent, sale, success, info, warning, neutral }

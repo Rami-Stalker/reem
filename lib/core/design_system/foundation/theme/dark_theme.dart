@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'ds_theme_extension.dart';
-import 'theme_factory.dart';
+import 'package:reem/core/design_system/foundation/theme/ds_theme_extension.dart';
+import 'package:reem/core/design_system/foundation/theme/theme_factory.dart';
 
 /// Dark theme preset.
 abstract final class DsDarkTheme {

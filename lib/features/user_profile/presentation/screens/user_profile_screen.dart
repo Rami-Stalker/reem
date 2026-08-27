@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../core/design_system/design_system.dart';
-import '../../../../core/router/route_paths.dart';
-import '../../../../core/shared/entities/user.dart';
-import '../../domain/entities/user_profile.dart';
-import '../providers/user_profile_providers.dart';
-import '../widgets/follow_button.dart';
-import '../widgets/profile_stat_tile.dart';
-import '../widgets/seller_stats_card.dart';
+import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/router/route_paths.dart';
+import 'package:reem/core/shared/entities/user.dart';
+import 'package:reem/features/user_profile/domain/entities/user_profile.dart';
+import 'package:reem/features/user_profile/presentation/providers/user_profile_providers.dart';
+import 'package:reem/features/user_profile/presentation/widgets/follow_button.dart';
+import 'package:reem/features/user_profile/presentation/widgets/profile_stat_tile.dart';
+import 'package:reem/features/user_profile/presentation/widgets/seller_stats_card.dart';
 
 /// Social profile for any user. Pass [userId] = null to show the signed-in
 /// user's own profile.

@@ -1,8 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../core/result/result.dart';
-import '../../../checkout/domain/entities/checkout.dart';
-import '../../../checkout/presentation/providers/checkout_providers.dart';
+import 'package:reem/core/result/result.dart';
+import 'package:reem/features/checkout/domain/entities/checkout.dart';
+import 'package:reem/features/checkout/presentation/providers/checkout_providers.dart';
 
 /// The payment rails the platform currently accepts.
 ///

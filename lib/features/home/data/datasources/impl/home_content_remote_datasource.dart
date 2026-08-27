@@ -1,17 +1,16 @@
 import 'package:reem/core/network/api_endpoints.dart';
 import 'package:reem/core/network/base_remote_datasource.dart';
-
-import '../../../../../core/shared/entities/loyalty.dart';
-import '../../../../../core/shared/models/product_model.dart';
-import '../../../domain/entities/continue_shopping_item.dart';
-import '../../../domain/entities/featured_store.dart';
-import '../../../domain/entities/flash_deal.dart';
-import '../../../domain/entities/hero_banner.dart';
-import '../../../domain/entities/home_category.dart';
-import '../../../domain/entities/home_content.dart';
-import '../../../domain/entities/home_notification.dart';
-import '../../../domain/entities/search_suggestions.dart';
-import '../home_content_datasource.dart';
+import 'package:reem/core/shared/entities/loyalty.dart';
+import 'package:reem/core/shared/models/product_model.dart';
+import 'package:reem/features/home/data/datasources/home_content_datasource.dart';
+import 'package:reem/features/home/domain/entities/continue_shopping_item.dart';
+import 'package:reem/features/home/domain/entities/featured_store.dart';
+import 'package:reem/features/home/domain/entities/flash_deal.dart';
+import 'package:reem/features/home/domain/entities/hero_banner.dart';
+import 'package:reem/features/home/domain/entities/home_category.dart';
+import 'package:reem/features/home/domain/entities/home_content.dart';
+import 'package:reem/features/home/domain/entities/home_notification.dart';
+import 'package:reem/features/home/domain/entities/search_suggestions.dart';
 
 /// The home page, read from the server.
 ///

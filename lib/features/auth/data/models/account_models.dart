@@ -1,7 +1,6 @@
 import 'package:reem/core/shared/models/user_model.dart';
+import 'package:reem/features/auth/data/models/identity_models.dart';
 import 'package:reem/features/auth/domain/entities/auth_account.dart';
-
-import 'identity_models.dart';
 
 class OtpChallengeModel extends OtpChallenge {
   const OtpChallengeModel({

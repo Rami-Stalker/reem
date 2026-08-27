@@ -1,4 +1,4 @@
-import '../../domain/entities/seller_order.dart';
+import 'package:reem/features/seller_orders/domain/entities/seller_order.dart';
 
 abstract interface class SellerOrdersRemoteDataSource {
   Future<SellerOrderQueue> queue({SellerQueueTab? tab, int page, int limit});

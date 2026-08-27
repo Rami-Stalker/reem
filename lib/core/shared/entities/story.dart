@@ -2,8 +2,8 @@
 
 import 'package:equatable/equatable.dart';
 
-import 'media.dart';
-import 'user.dart';
+import 'package:reem/core/shared/entities/media.dart';
+import 'package:reem/core/shared/entities/user.dart';
 
 class Story extends Equatable {
   final String id;

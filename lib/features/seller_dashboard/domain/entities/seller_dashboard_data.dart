@@ -1,12 +1,12 @@
 import 'package:equatable/equatable.dart';
 
-import 'seller_analytics.dart';
-import 'seller_chart_data.dart';
-import 'seller_low_stock_item.dart';
-import 'seller_misc.dart';
-import 'seller_orders_summary.dart';
-import 'seller_store_info.dart';
-import 'seller_top_product.dart';
+import 'package:reem/features/seller_dashboard/domain/entities/seller_analytics.dart';
+import 'package:reem/features/seller_dashboard/domain/entities/seller_chart_data.dart';
+import 'package:reem/features/seller_dashboard/domain/entities/seller_low_stock_item.dart';
+import 'package:reem/features/seller_dashboard/domain/entities/seller_misc.dart';
+import 'package:reem/features/seller_dashboard/domain/entities/seller_orders_summary.dart';
+import 'package:reem/features/seller_dashboard/domain/entities/seller_store_info.dart';
+import 'package:reem/features/seller_dashboard/domain/entities/seller_top_product.dart';
 
 /// Root entity for everything the seller dashboard needs.
 class SellerDashboardData extends Equatable {

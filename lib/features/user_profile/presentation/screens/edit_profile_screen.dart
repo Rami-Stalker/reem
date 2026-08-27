@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../core/design_system/design_system.dart';
-import '../../../../core/shared/entities/user.dart';
-import '../../../auth/presentation/providers/auth_provider.dart';
-import '../providers/user_profile_providers.dart';
+import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/shared/entities/user.dart';
+import 'package:reem/features/auth/presentation/providers/auth_provider.dart';
+import 'package:reem/features/user_profile/presentation/providers/user_profile_providers.dart';
 
 class EditProfileScreen extends ConsumerStatefulWidget {
   const EditProfileScreen({super.key});

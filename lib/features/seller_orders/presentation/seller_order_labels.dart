@@ -1,6 +1,5 @@
+import 'package:reem/features/seller_orders/domain/entities/seller_order.dart';
 import 'package:reem/l10n/app_localizations.dart';
-
-import '../domain/entities/seller_order.dart';
 
 /// Wording for the seller's queue.
 ///

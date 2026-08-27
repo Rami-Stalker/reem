@@ -1,11 +1,10 @@
 import 'package:dio/dio.dart';
-
-import '../config/app_env.dart';
-import '../security/device_identity_service.dart';
-import '../security/device_proof_signer.dart';
-import '../storage/secure_storage_service.dart';
-import 'interceptors/auth_interceptor.dart';
-import 'interceptors/device_proof_interceptor.dart';
+import 'package:reem/core/config/app_env.dart';
+import 'package:reem/core/network/interceptors/auth_interceptor.dart';
+import 'package:reem/core/network/interceptors/device_proof_interceptor.dart';
+import 'package:reem/core/security/device_identity_service.dart';
+import 'package:reem/core/security/device_proof_signer.dart';
+import 'package:reem/core/storage/secure_storage_service.dart';
 
 class ApiClient {
   ApiClient._();

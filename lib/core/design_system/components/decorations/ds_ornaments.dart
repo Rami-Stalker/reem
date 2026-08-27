@@ -2,9 +2,9 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
-import '../../foundation/theme/extensions/color_extension.dart';
-import '../../foundation/theme/extensions/gradient_extension.dart';
-import '../../foundation/tokens/ds_spacing.dart';
+import 'package:reem/core/design_system/foundation/theme/extensions/color_extension.dart';
+import 'package:reem/core/design_system/foundation/theme/extensions/gradient_extension.dart';
+import 'package:reem/core/design_system/foundation/tokens/ds_spacing.dart';
 
 /// A hairline **gradient ring** drawn around [child].
 ///

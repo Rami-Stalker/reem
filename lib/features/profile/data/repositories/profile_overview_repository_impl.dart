@@ -1,8 +1,8 @@
-import '../../../../core/base/repository_handler.dart';
-import '../../../../core/result/result.dart';
-import '../../domain/entities/profile_overview.dart';
-import '../../domain/repositories/profile_overview_repository.dart';
-import '../datasources/profile_overview_datasource.dart';
+import 'package:reem/core/base/repository_handler.dart';
+import 'package:reem/core/result/result.dart';
+import 'package:reem/features/profile/data/datasources/profile_overview_datasource.dart';
+import 'package:reem/features/profile/domain/entities/profile_overview.dart';
+import 'package:reem/features/profile/domain/repositories/profile_overview_repository.dart';
 
 class ProfileOverviewRepositoryImpl
     with RepositoryHandler

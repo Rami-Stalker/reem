@@ -4,12 +4,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 // framework's, used to pin document codes left-to-right.
 import 'package:intl/intl.dart' hide TextDirection;
 
-import '../../../../core/design_system/design_system.dart';
-import '../../../../core/localization/l10n_extension.dart';
-import '../../../../core/utils/arabic_numerals.dart';
-import '../../domain/entities/shipment_tracking.dart';
-import '../providers/shipment_tracking_provider.dart';
-import '../widgets/shipment_journey.dart';
+import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
+import 'package:reem/core/utils/arabic_numerals.dart';
+import 'package:reem/features/shipment_tracking/domain/entities/shipment_tracking.dart';
+import 'package:reem/features/shipment_tracking/presentation/providers/shipment_tracking_provider.dart';
+import 'package:reem/features/shipment_tracking/presentation/widgets/shipment_journey.dart';
 
 /// Q64 — «تتبع الشحنة للزبونة».
 ///

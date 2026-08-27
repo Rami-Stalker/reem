@@ -4,14 +4,14 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../core/design_system/design_system.dart';
-import '../../../../core/router/route_paths.dart';
-import '../../../../core/shared/value_objects/money_format.dart';
-import '../../../cart/presentation/providers/cart_providers.dart';
-import '../../../checkout/presentation/providers/applied_coupon_provider.dart';
-import '../../domain/entities/coupon_entity.dart';
-import '../providers/coupon_apply_provider.dart';
-import '../providers/coupons_provider.dart';
+import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/router/route_paths.dart';
+import 'package:reem/core/shared/value_objects/money_format.dart';
+import 'package:reem/features/cart/presentation/providers/cart_providers.dart';
+import 'package:reem/features/checkout/presentation/providers/applied_coupon_provider.dart';
+import 'package:reem/features/settings/domain/entities/coupon_entity.dart';
+import 'package:reem/features/settings/presentation/providers/coupon_apply_provider.dart';
+import 'package:reem/features/settings/presentation/providers/coupons_provider.dart';
 
 /// Her coupons.
 ///

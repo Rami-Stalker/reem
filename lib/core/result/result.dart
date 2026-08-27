@@ -1,4 +1,4 @@
-import '../errors/failure.dart';
+import 'package:reem/core/errors/failure.dart';
 
 /// Functional result type for repository and use-case boundaries.
 sealed class Result<T> {

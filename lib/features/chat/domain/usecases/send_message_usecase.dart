@@ -1,7 +1,7 @@
 import 'package:reem/core/result/result.dart';
 
-import '../entities/chat_message_entity.dart';
-import '../repositories/chat_repository.dart';
+import 'package:reem/features/chat/domain/entities/chat_message_entity.dart';
+import 'package:reem/features/chat/domain/repositories/chat_repository.dart';
 
 class SendMessageUseCase {
   const SendMessageUseCase(this._repository);

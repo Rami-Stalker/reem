@@ -1,4 +1,4 @@
-import '../models/wallet_models.dart';
+import 'package:reem/features/wallet/data/models/wallet_models.dart';
 
 abstract interface class WalletRemoteDataSource {
   /// Balance plus the first page of the statement.

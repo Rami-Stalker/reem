@@ -1,10 +1,9 @@
 import 'package:reem/core/shared/entities/user.dart';
 import 'package:reem/core/shared/models/user_model.dart';
+import 'package:reem/features/auth/data/models/account_models.dart';
+import 'package:reem/features/auth/data/models/auth_response_model.dart';
+import 'package:reem/features/auth/data/models/identity_models.dart';
 import 'package:reem/features/auth/domain/entities/auth_account.dart';
-
-import '../models/account_models.dart';
-import '../models/auth_response_model.dart';
-import '../models/identity_models.dart';
 
 abstract interface class AuthRemoteDataSource {
   Future<String> createGuestSession();

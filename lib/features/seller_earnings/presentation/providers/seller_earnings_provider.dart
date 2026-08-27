@@ -4,11 +4,11 @@ import 'package:reem/core/network/network_info.dart';
 import 'package:reem/core/presentation/providers/core_providers.dart';
 import 'package:reem/core/result/result.dart';
 
-import '../../data/datasources/impl/seller_earnings_remote_datasource_impl.dart';
-import '../../data/datasources/seller_earnings_remote_datasource.dart';
-import '../../data/repositories/seller_earnings_repository_impl.dart';
-import '../../domain/entities/seller_earnings.dart';
-import '../../domain/repositories/seller_earnings_repository.dart';
+import 'package:reem/features/seller_earnings/data/datasources/impl/seller_earnings_remote_datasource_impl.dart';
+import 'package:reem/features/seller_earnings/data/datasources/seller_earnings_remote_datasource.dart';
+import 'package:reem/features/seller_earnings/data/repositories/seller_earnings_repository_impl.dart';
+import 'package:reem/features/seller_earnings/domain/entities/seller_earnings.dart';
+import 'package:reem/features/seller_earnings/domain/repositories/seller_earnings_repository.dart';
 
 final sellerEarningsRemoteDataSourceProvider =
     Provider<SellerEarningsRemoteDataSource>(

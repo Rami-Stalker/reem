@@ -1,4 +1,4 @@
-import '../../domain/pagination/paginated_data.dart';
+import 'package:reem/core/domain/pagination/paginated_data.dart';
 
 typedef JsonFactory<T> = T Function(Map<String, dynamic> json);
 

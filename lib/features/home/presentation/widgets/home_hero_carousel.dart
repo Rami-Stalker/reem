@@ -4,11 +4,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/features/home/domain/entities/hero_banner.dart';
+import 'package:reem/features/home/presentation/providers/home_content_provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-
-import '../../../../core/design_system/design_system.dart';
-import '../../domain/entities/hero_banner.dart';
-import '../providers/home_content_provider.dart';
 
 /// The dynamic hero — a swipeable, auto-advancing carousel of promotions,
 /// campaigns, seasonal moments and personalized offers. Peeking neighbours,

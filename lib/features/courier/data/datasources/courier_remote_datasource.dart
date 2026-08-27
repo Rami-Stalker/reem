@@ -1,5 +1,5 @@
-import '../../domain/entities/courier_assignment.dart';
-import '../models/courier_assignment_model.dart';
+import 'package:reem/features/courier/data/models/courier_assignment_model.dart';
+import 'package:reem/features/courier/domain/entities/courier_assignment.dart';
 
 abstract interface class CourierRemoteDataSource {
   /// Q55 — «يشوف طلباته لليوم».

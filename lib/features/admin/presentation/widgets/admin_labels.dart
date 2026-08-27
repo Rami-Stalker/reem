@@ -1,6 +1,5 @@
+import 'package:reem/features/admin/presentation/providers/admin_provider.dart';
 import 'package:reem/l10n/app_localizations.dart';
-
-import '../providers/admin_provider.dart';
 
 /// Localized titles for the admin sections.
 ///

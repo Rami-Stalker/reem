@@ -2,9 +2,9 @@ import 'package:flutter_riverpod/legacy.dart';
 import 'package:reem/core/result/result.dart';
 import 'package:reem/core/shared/entities/media.dart';
 
-import '../../domain/usecases/create_post_usecase.dart';
-import '../../domain/usecases/create_story_usecase.dart';
-import 'create_state.dart';
+import 'package:reem/features/create/domain/usecases/create_post_usecase.dart';
+import 'package:reem/features/create/domain/usecases/create_story_usecase.dart';
+import 'package:reem/features/create/presentation/providers/create_state.dart';
 
 class CreateNotifier extends StateNotifier<CreateState> {
   CreateNotifier({

@@ -1,7 +1,7 @@
-import '../../domain/entities/product_draft.dart';
-import '../../domain/entities/product_status.dart';
-import '../models/managed_product_model.dart';
-import '../models/managed_product_page_model.dart';
+import 'package:reem/features/seller_products/data/models/managed_product_model.dart';
+import 'package:reem/features/seller_products/data/models/managed_product_page_model.dart';
+import 'package:reem/features/seller_products/domain/entities/product_draft.dart';
+import 'package:reem/features/seller_products/domain/entities/product_status.dart';
 
 abstract interface class SellerProductsRemoteDataSource {
   Future<ManagedProductPageModel> getMyProducts({

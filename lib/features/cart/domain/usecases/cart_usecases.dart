@@ -1,7 +1,7 @@
 import 'package:reem/core/result/result.dart';
 
-import '../entities/cart.dart';
-import '../repositories/cart_repository.dart';
+import 'package:reem/features/cart/domain/entities/cart.dart';
+import 'package:reem/features/cart/domain/repositories/cart_repository.dart';
 
 class GetCartUseCase {
   const GetCartUseCase(this._repo);

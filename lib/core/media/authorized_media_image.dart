@@ -2,10 +2,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blurhash/flutter_blurhash.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../presentation/providers/core_providers.dart';
-import '../storage/secure_storage_service.dart';
-import 'media_variants.dart';
+import 'package:reem/core/media/media_variants.dart';
+import 'package:reem/core/presentation/providers/core_providers.dart';
+import 'package:reem/core/storage/secure_storage_service.dart';
 
 /// The bearer token, for the one client that is not Dio.
 ///

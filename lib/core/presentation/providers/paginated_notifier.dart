@@ -1,8 +1,7 @@
 import 'package:flutter_riverpod/legacy.dart';
-
-import '../../domain/pagination/paginated_data.dart';
-import '../../result/result.dart';
-import '../state/paginated_state.dart';
+import 'package:reem/core/domain/pagination/paginated_data.dart';
+import 'package:reem/core/presentation/state/paginated_state.dart';
+import 'package:reem/core/result/result.dart';
 
 typedef PageFetcher<T> =
     Future<Result<PaginatedData<T>>> Function(PageRequest request);

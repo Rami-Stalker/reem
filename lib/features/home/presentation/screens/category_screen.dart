@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../../discovery/presentation/providers/discovery_providers.dart';
-import '../../../discovery/presentation/screens/collection_screen.dart';
+import 'package:reem/features/discovery/presentation/providers/discovery_providers.dart';
+import 'package:reem/features/discovery/presentation/screens/collection_screen.dart';
 
 /// A category page is just a discovery collection scoped to one category —
 /// real, paginated, infinite-scrolling products from the backend.

@@ -1,7 +1,7 @@
 import 'package:reem/core/result/result.dart';
 
-import '../entities/admin_stats_entity.dart';
-import '../repositories/admin_repository.dart';
+import 'package:reem/features/admin/domain/entities/admin_stats_entity.dart';
+import 'package:reem/features/admin/domain/repositories/admin_repository.dart';
 
 class GetAdminStatsUseCase {
   const GetAdminStatsUseCase(this._repository);

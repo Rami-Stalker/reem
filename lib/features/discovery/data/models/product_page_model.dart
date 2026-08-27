@@ -1,6 +1,6 @@
 import 'package:reem/core/shared/models/product_model.dart';
 
-import '../../domain/entities/product_page.dart';
+import 'package:reem/features/discovery/domain/entities/product_page.dart';
 
 class ProductPageModel extends ProductPage {
   const ProductPageModel({

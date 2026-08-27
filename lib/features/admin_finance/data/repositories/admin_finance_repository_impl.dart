@@ -1,9 +1,8 @@
 import 'package:reem/core/base/repository_handler.dart';
 import 'package:reem/core/result/result.dart';
-
-import '../../domain/entities/finance_overview.dart';
-import '../../domain/repositories/admin_finance_repository.dart';
-import '../datasources/admin_finance_remote_datasource.dart';
+import 'package:reem/features/admin_finance/data/datasources/admin_finance_remote_datasource.dart';
+import 'package:reem/features/admin_finance/domain/entities/finance_overview.dart';
+import 'package:reem/features/admin_finance/domain/repositories/admin_finance_repository.dart';
 
 class AdminFinanceRepositoryImpl
     with RepositoryHandler

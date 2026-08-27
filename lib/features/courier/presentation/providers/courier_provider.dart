@@ -3,11 +3,11 @@ import 'package:flutter_riverpod/legacy.dart';
 import 'package:reem/core/presentation/providers/core_providers.dart';
 import 'package:reem/core/result/result.dart';
 
-import '../../data/datasources/courier_remote_datasource.dart';
-import '../../data/datasources/impl/courier_remote_datasource_impl.dart';
-import '../../data/repositories/courier_repository_impl.dart';
-import '../../domain/entities/courier_assignment.dart';
-import '../../domain/repositories/courier_repository.dart';
+import 'package:reem/features/courier/data/datasources/courier_remote_datasource.dart';
+import 'package:reem/features/courier/data/datasources/impl/courier_remote_datasource_impl.dart';
+import 'package:reem/features/courier/data/repositories/courier_repository_impl.dart';
+import 'package:reem/features/courier/domain/entities/courier_assignment.dart';
+import 'package:reem/features/courier/domain/repositories/courier_repository.dart';
 
 final courierRemoteDataSourceProvider = Provider<CourierRemoteDataSource>(
   (ref) => CourierRemoteDataSourceImpl(ref.watch(dioProvider)),

@@ -1,6 +1,6 @@
 import 'package:reem/core/result/result.dart';
 
-import '../repositories/seller_products_repository.dart';
+import 'package:reem/features/seller_products/domain/repositories/seller_products_repository.dart';
 
 class DeleteProductUseCase {
   const DeleteProductUseCase(this._repository);

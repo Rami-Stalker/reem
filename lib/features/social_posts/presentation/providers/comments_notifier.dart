@@ -3,10 +3,10 @@ import 'package:reem/core/result/result.dart';
 import 'package:reem/core/shared/entities/comment.dart';
 import 'package:reem/core/shared/entities/user.dart';
 
-import '../../domain/usecases/add_comment_usecase.dart';
-import '../../domain/usecases/delete_comment_usecase.dart';
-import '../../domain/usecases/get_comments_usecase.dart';
-import 'comments_state.dart';
+import 'package:reem/features/social_posts/domain/usecases/add_comment_usecase.dart';
+import 'package:reem/features/social_posts/domain/usecases/delete_comment_usecase.dart';
+import 'package:reem/features/social_posts/domain/usecases/get_comments_usecase.dart';
+import 'package:reem/features/social_posts/presentation/providers/comments_state.dart';
 
 class CommentsNotifier extends StateNotifier<CommentsState> {
   CommentsNotifier({

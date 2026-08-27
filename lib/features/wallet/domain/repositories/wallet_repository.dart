@@ -1,5 +1,5 @@
-import '../../../../core/result/result.dart';
-import '../entities/wallet_transaction.dart';
+import 'package:reem/core/result/result.dart';
+import 'package:reem/features/wallet/domain/entities/wallet_transaction.dart';
 
 /// Her store credit.
 ///

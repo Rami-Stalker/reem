@@ -34,6 +34,7 @@ analyzer:
 linter:
   rules:
     # --- Import & file organization -----------------------------------------
+    always_use_package_imports: true
     directives_ordering: true
     unnecessary_library_name: true
     implementation_imports: true

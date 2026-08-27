@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:reem/core/design_system/design_system.dart';
 import 'package:reem/core/result/result.dart';
-
-import '../../../../core/design_system/design_system.dart';
-import '../../../reputation/domain/entities/reputation_entities.dart';
-import '../../../reputation/presentation/providers/reputation_provider.dart';
+import 'package:reem/features/reputation/domain/entities/reputation_entities.dart';
+import 'package:reem/features/reputation/presentation/providers/reputation_provider.dart';
 
 class ProductReviewsSection extends ConsumerWidget {
   const ProductReviewsSection({super.key, required this.productId});

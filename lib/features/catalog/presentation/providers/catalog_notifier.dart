@@ -1,10 +1,10 @@
 import 'package:flutter_riverpod/legacy.dart';
 import 'package:reem/core/result/result.dart';
 
-import '../../domain/usecases/get_product_details_usecase.dart';
-import '../../domain/usecases/get_products_usecase.dart';
-import '../../domain/usecases/get_trending_products_usecase.dart';
-import 'catalog_state.dart';
+import 'package:reem/features/catalog/domain/usecases/get_product_details_usecase.dart';
+import 'package:reem/features/catalog/domain/usecases/get_products_usecase.dart';
+import 'package:reem/features/catalog/domain/usecases/get_trending_products_usecase.dart';
+import 'package:reem/features/catalog/presentation/providers/catalog_state.dart';
 
 class CatalogNotifier extends StateNotifier<CatalogState> {
   CatalogNotifier({

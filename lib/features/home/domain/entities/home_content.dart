@@ -1,16 +1,16 @@
 import 'package:equatable/equatable.dart';
 
-import '../../../../core/shared/entities/loyalty.dart';
-import '../../../../core/shared/entities/product.dart';
-import 'continue_shopping_item.dart';
-import 'dynamic_block.dart';
-import 'featured_store.dart';
-import 'flash_deal.dart';
-import 'hero_banner.dart';
-import 'home_category.dart';
-import 'home_notification.dart';
-import 'nearby_store.dart';
-import 'search_suggestions.dart';
+import 'package:reem/core/shared/entities/loyalty.dart';
+import 'package:reem/core/shared/entities/product.dart';
+import 'package:reem/features/home/domain/entities/continue_shopping_item.dart';
+import 'package:reem/features/home/domain/entities/dynamic_block.dart';
+import 'package:reem/features/home/domain/entities/featured_store.dart';
+import 'package:reem/features/home/domain/entities/flash_deal.dart';
+import 'package:reem/features/home/domain/entities/hero_banner.dart';
+import 'package:reem/features/home/domain/entities/home_category.dart';
+import 'package:reem/features/home/domain/entities/home_notification.dart';
+import 'package:reem/features/home/domain/entities/nearby_store.dart';
+import 'package:reem/features/home/domain/entities/search_suggestions.dart';
 
 /// The aggregate of all personalized, home-specific content fetched in one
 /// pass. Product *rails* (recommended / new arrivals / best sellers …) and the

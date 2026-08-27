@@ -1,4 +1,4 @@
-import '../../domain/entities/shipment_tracking.dart';
+import 'package:reem/features/shipment_tracking/domain/entities/shipment_tracking.dart';
 
 class ShipmentTrackingModel extends ShipmentTracking {
   const ShipmentTrackingModel({

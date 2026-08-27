@@ -58,6 +58,26 @@ for (const file of files) {
     }
   }
 
+  // Every directive inside lib/ must use `package:reem/...`. The
+  // `always_use_package_imports` lint covers `import` but not `export`, so the
+  // barrels -- which are almost entirely exports -- would drift back silently.
+  // Generated localizations are rewritten by `flutter gen-l10n`, so they are
+  // exempt rather than edited.
+  if (!file.startsWith('lib/l10n/app_localizations')) {
+    for (const [index, line] of lines.entries()) {
+      const match = /^\s*(import|export)\s+'([^']+)'/.exec(line);
+      if (!match) continue;
+      const uri = match[2];
+      if (uri.startsWith('package:') || uri.startsWith('dart:')) continue;
+      enforcedViolations.push({
+        file,
+        line: index + 1,
+        rule: 'lib-directives-must-use-package-imports',
+        detail: line.trim(),
+      });
+    }
+  }
+
   if (file.includes('/presentation/')) {
     const importsInfrastructure = lines.some(
       (line) =>

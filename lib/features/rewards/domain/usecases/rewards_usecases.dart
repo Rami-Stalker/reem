@@ -1,7 +1,7 @@
 import 'package:reem/core/result/result.dart';
 
-import '../entities/rewards_hub.dart';
-import '../repositories/rewards_repository.dart';
+import 'package:reem/features/rewards/domain/entities/rewards_hub.dart';
+import 'package:reem/features/rewards/domain/repositories/rewards_repository.dart';
 
 class LoadRewardsHubUseCase {
   const LoadRewardsHubUseCase(this.repository);

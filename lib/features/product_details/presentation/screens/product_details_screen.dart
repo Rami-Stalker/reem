@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../core/design_system/design_system.dart';
-import '../../../catalog/presentation/providers/catalog_provider.dart';
-import '../widgets/floating_buy_bar.dart';
-import '../widgets/parallax_product_header.dart';
-import '../widgets/product_color_selector.dart';
-import '../widgets/product_description.dart';
-import '../widgets/product_info_section.dart';
-import '../widgets/product_price_section.dart';
-import '../widgets/product_reviews_section.dart';
-import '../widgets/product_size_selector.dart';
-import '../widgets/product_story_preview.dart';
-import '../widgets/quantity_selector.dart';
-import '../widgets/related_products_section.dart';
+import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/features/catalog/presentation/providers/catalog_provider.dart';
+import 'package:reem/features/product_details/presentation/widgets/floating_buy_bar.dart';
+import 'package:reem/features/product_details/presentation/widgets/parallax_product_header.dart';
+import 'package:reem/features/product_details/presentation/widgets/product_color_selector.dart';
+import 'package:reem/features/product_details/presentation/widgets/product_description.dart';
+import 'package:reem/features/product_details/presentation/widgets/product_info_section.dart';
+import 'package:reem/features/product_details/presentation/widgets/product_price_section.dart';
+import 'package:reem/features/product_details/presentation/widgets/product_reviews_section.dart';
+import 'package:reem/features/product_details/presentation/widgets/product_size_selector.dart';
+import 'package:reem/features/product_details/presentation/widgets/product_story_preview.dart';
+import 'package:reem/features/product_details/presentation/widgets/quantity_selector.dart';
+import 'package:reem/features/product_details/presentation/widgets/related_products_section.dart';
 
 class ProductDetailsScreen extends ConsumerStatefulWidget {
   const ProductDetailsScreen({super.key, this.productId});

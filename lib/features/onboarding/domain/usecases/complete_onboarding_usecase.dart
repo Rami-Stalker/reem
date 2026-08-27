@@ -1,4 +1,4 @@
-import '../repositories/onboarding_repository.dart';
+import 'package:reem/features/onboarding/domain/repositories/onboarding_repository.dart';
 
 class CompleteOnboardingUseCase {
   const CompleteOnboardingUseCase(this._repository);

@@ -1,11 +1,10 @@
 import 'package:reem/core/network/api_endpoints.dart';
 import 'package:reem/core/network/base_remote_datasource.dart';
-
-import '../../../../../core/shared/value_objects/money.dart';
-import '../../../domain/entities/checkout.dart';
-import '../../models/checkout_models.dart';
-import '../../models/order_models.dart';
-import '../checkout_remote_datasource.dart';
+import 'package:reem/core/shared/value_objects/money.dart';
+import 'package:reem/features/checkout/data/datasources/checkout_remote_datasource.dart';
+import 'package:reem/features/checkout/data/models/checkout_models.dart';
+import 'package:reem/features/checkout/data/models/order_models.dart';
+import 'package:reem/features/checkout/domain/entities/checkout.dart';
 
 final class CheckoutRemoteDataSourceImpl extends BaseRemoteDataSource
     implements CheckoutRemoteDataSource {

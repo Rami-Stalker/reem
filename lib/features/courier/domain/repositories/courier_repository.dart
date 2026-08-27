@@ -1,5 +1,5 @@
-import '../../../../core/result/result.dart';
-import '../entities/courier_assignment.dart';
+import 'package:reem/core/result/result.dart';
+import 'package:reem/features/courier/domain/entities/courier_assignment.dart';
 
 abstract interface class CourierRepository {
   Future<Result<List<CourierAssignment>>> today();

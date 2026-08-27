@@ -1,5 +1,5 @@
-import '../../../../core/shared/value_objects/money.dart';
-import '../../domain/entities/seller_order.dart';
+import 'package:reem/core/shared/value_objects/money.dart';
+import 'package:reem/features/seller_orders/domain/entities/seller_order.dart';
 
 /// Wire → domain for the seller's queue.
 ///

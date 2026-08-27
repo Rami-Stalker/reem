@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../core/design_system/design_system.dart';
-import '../../../../core/localization/l10n_extension.dart';
-import '../../../ai_assistant/presentation/providers/ai_assistant_provider.dart';
-import '../../domain/entities/managed_product.dart';
-import '../../domain/entities/product_draft.dart';
-import '../../domain/entities/product_status.dart';
-import '../providers/seller_products_providers.dart';
+import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
+import 'package:reem/features/ai_assistant/presentation/providers/ai_assistant_provider.dart';
+import 'package:reem/features/seller_products/domain/entities/managed_product.dart';
+import 'package:reem/features/seller_products/domain/entities/product_draft.dart';
+import 'package:reem/features/seller_products/domain/entities/product_status.dart';
+import 'package:reem/features/seller_products/presentation/providers/seller_products_providers.dart';
 
 class ProductFormScreen extends ConsumerStatefulWidget {
   const ProductFormScreen({super.key, this.product});

@@ -1,8 +1,7 @@
 import 'package:reem/core/network/api_endpoints.dart';
 import 'package:reem/core/network/base_remote_datasource.dart';
-
-import '../../models/rewards_hub_model.dart';
-import '../rewards_remote_datasource.dart';
+import 'package:reem/features/rewards/data/datasources/rewards_remote_datasource.dart';
+import 'package:reem/features/rewards/data/models/rewards_hub_model.dart';
 
 final class RewardsRemoteDataSourceImpl extends BaseRemoteDataSource
     implements RewardsRemoteDataSource {
