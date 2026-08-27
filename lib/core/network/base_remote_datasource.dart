@@ -3,7 +3,7 @@ import 'package:dio/dio.dart';
 import '../domain/pagination/paginated_data.dart';
 import '../errors/app_exception.dart';
 import '../errors/error_mapper.dart';
-import '../data/models/paginated_response_mapper.dart';
+import '../data/pagination/paginated_response_mapper.dart';
 
 /// Shared HTTP helpers with consistent Dio error mapping.
 abstract base class BaseRemoteDataSource {

@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 import 'package:reem/core/network/network_info.dart';
-import 'package:reem/core/providers/core_providers.dart';
+import 'package:reem/core/presentation/providers/core_providers.dart';
 import 'package:reem/core/result/result.dart';
 
 import '../../data/datasources/impl/wallet_remote_datasource_impl.dart';

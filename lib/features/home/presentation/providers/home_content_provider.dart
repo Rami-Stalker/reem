@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:reem/core/providers/core_providers.dart';
+import 'package:reem/core/presentation/providers/core_providers.dart';
 import 'package:flutter_riverpod/legacy.dart';
 
 import '../../data/datasources/home_content_datasource.dart';

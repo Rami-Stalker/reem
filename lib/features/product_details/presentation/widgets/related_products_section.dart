@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:reem/core/shared/wedgets/cards/animated_product_card.dart';
+import 'package:reem/core/design_system/components/cards/animated_product_card.dart';
 
 
 class RelatedProductsSection

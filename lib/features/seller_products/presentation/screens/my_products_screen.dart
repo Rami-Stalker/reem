@@ -3,10 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/design_system/design_system.dart';
-import '../../../../core/design_system/components/snackbars/app_snackbar.dart'
-    show DsSnackbar, DsSnackbarType;
 import '../../../../core/router/route_paths.dart';
-import '../../../../core/shared/wedgets/app/premium_app_bar.dart';
 import '../../domain/entities/managed_product.dart';
 import '../../domain/entities/product_status.dart';
 import '../providers/seller_products_providers.dart';

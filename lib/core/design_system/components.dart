@@ -11,10 +11,13 @@ export 'components/buttons/secondary_button.dart';
 export 'components/buttons/button_sizes.dart';
 export 'components/buttons/button_states.dart';
 export 'components/buttons/button_styles.dart';
+export 'components/buttons/animated_like_button.dart';
+export 'components/buttons/gradient_icon_button.dart';
 
 // Badges & avatars
 export 'components/badges/ds_badge.dart';
 export 'components/avatars/ds_avatar.dart';
+export 'components/avatars/app_avatar.dart';
 
 // Decorations & ornaments
 export 'components/decorations/ds_ornaments.dart';
@@ -25,6 +28,8 @@ export 'components/cards/surface_card.dart';
 export 'components/cards/product_card.dart';
 export 'components/cards/post_card.dart';
 export 'components/cards/story_card.dart';
+export 'components/cards/animated_product_card.dart';
+export 'components/cards/product_card_luxe.dart';
 
 // Inputs & search
 export 'components/inputs/ds_media_field.dart';

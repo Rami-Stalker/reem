@@ -3,12 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/design_system/design_system.dart';
-import '../../../../core/design_system/components/snackbars/app_snackbar.dart'
-    show DsSnackbar, DsSnackbarType;
 import '../../../../core/localization/l10n_extension.dart';
 import '../../../../core/router/route_paths.dart';
 import '../../../../core/shared/value_objects/money.dart';
-import '../../../../core/shared/wedgets/app/premium_app_bar.dart';
 import '../../../auth/presentation/providers/auth_provider.dart';
 import '../../../cart/presentation/providers/cart_providers.dart';
 import '../../../settings/domain/entities/address_entity.dart';

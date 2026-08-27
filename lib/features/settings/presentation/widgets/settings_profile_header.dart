@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:reem/core/shared/wedgets/app/app_avatar.dart';
 import 'package:reem/features/auth/presentation/providers/auth_provider.dart';
 import '../../../../core/design_system/design_system.dart';
 

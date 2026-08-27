@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/localization/l10n_extension.dart';
 import '../../../../core/router/route_paths.dart';
-import '../../../../core/shared/wedgets/product/product_rail.dart';
+import '../../../../core/design_system/patterns/product_rail.dart';
 import '../../../profile/presentation/providers/profile_provider.dart';
 
 /// "From your wishlist" — surfaces a few saved pieces so the customer can pick

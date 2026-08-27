@@ -9,8 +9,6 @@ import '../../../../core/localization/l10n_extension.dart';
 import '../../../../core/router/route_paths.dart';
 import '../../../../core/shared/entities/post.dart';
 import '../../../../core/shared/entities/product.dart';
-import '../../../../core/shared/wedgets/product/product_grid.dart';
-import '../../../../core/shared/wedgets/product/product_mosaic.dart';
 import '../../../discovery/domain/entities/product_collection.dart';
 import '../../../profile/presentation/providers/profile_provider.dart';
 import '../providers/home_provider.dart';

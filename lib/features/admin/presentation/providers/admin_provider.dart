@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 
-import '../../../../core/providers/core_providers.dart';
+import '../../../../core/presentation/providers/core_providers.dart';
 import '../../../../core/network/api_endpoints.dart';
 import '../../../../core/result/result.dart';
 import '../../domain/entities/admin_console_entity.dart';

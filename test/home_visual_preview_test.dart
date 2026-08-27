@@ -20,7 +20,6 @@ import 'package:reem/core/shared/entities/product.dart';
 import 'package:reem/core/shared/entities/seller_offer.dart';
 import 'package:reem/core/shared/entities/user.dart';
 import 'package:reem/core/shared/value_objects/money.dart';
-import 'package:reem/core/shared/wedgets/product/product_grid.dart';
 import 'package:reem/l10n/app_localizations.dart' as gen;
 
 final _captureKey = GlobalKey();

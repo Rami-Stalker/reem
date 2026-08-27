@@ -7,7 +7,6 @@ import '../../../../core/design_system/design_system.dart';
 import '../../../../core/experience/role_experience.dart';
 import '../../../../core/localization/l10n_extension.dart';
 import '../../../../core/router/route_paths.dart';
-import '../../../../core/shared/wedgets/product/product_rail.dart';
 import '../../../discovery/domain/entities/product_collection.dart';
 import '../../../experience/presentation/providers/role_experience_provider.dart';
 import '../../../experience/presentation/screens/experience_surface_screen.dart';

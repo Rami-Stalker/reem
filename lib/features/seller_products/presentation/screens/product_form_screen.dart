@@ -4,9 +4,6 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/design_system/design_system.dart';
 import '../../../../core/localization/l10n_extension.dart';
-import '../../../../core/design_system/components/snackbars/app_snackbar.dart'
-    show DsSnackbar, DsSnackbarType;
-import '../../../../core/shared/wedgets/app/premium_app_bar.dart';
 import '../../../ai_assistant/presentation/providers/ai_assistant_provider.dart';
 import '../../domain/entities/managed_product.dart';
 import '../../domain/entities/product_draft.dart';

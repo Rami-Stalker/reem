@@ -8,7 +8,7 @@ import 'package:path_provider/path_provider.dart';
 
 import '../errors/app_exception.dart';
 import '../errors/error_mapper.dart';
-import '../providers/core_providers.dart';
+import '../presentation/providers/core_providers.dart';
 
 /// Fetches an attachment and hands it to whatever app opens that kind of file.
 ///

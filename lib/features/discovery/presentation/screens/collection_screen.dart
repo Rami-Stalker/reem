@@ -5,7 +5,6 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/design_system/design_system.dart';
 import '../../../../core/router/route_paths.dart';
-import '../../../../core/shared/wedgets/app/premium_app_bar.dart';
 import '../providers/collection_notifier.dart';
 import '../providers/collection_state.dart';
 import '../widgets/product_card_compact.dart';

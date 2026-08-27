@@ -8,8 +8,6 @@ import '../../../../core/router/route_names.dart';
 import '../../../../core/shared/entities/post.dart';
 import '../../../../core/shared/entities/product.dart';
 import '../../../../core/shared/entities/user.dart';
-import '../../../../core/shared/wedgets/app/premium_app_bar.dart';
-import '../../../../core/shared/wedgets/app/reem_section_header.dart';
 import '../../domain/entities/wishlist_entity.dart';
 import '../providers/profile_provider.dart';
 import '../widgets/favorite_product_card.dart';

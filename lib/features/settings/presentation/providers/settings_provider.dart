@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 
-import '../../../../core/providers/core_providers.dart';
+import '../../../../core/presentation/providers/core_providers.dart';
 import '../../../../core/result/result.dart';
 import '../../data/datasources/impl/settings_remote_datasource_impl.dart';
 import '../../data/datasources/settings_remote_datasource.dart';

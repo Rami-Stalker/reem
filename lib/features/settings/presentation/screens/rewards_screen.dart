@@ -5,8 +5,6 @@ import 'package:reem/features/rewards/domain/entities/rewards_hub.dart';
 import 'package:reem/features/rewards/presentation/providers/rewards_hub_provider.dart';
 
 import '../../../../core/design_system/design_system.dart';
-import '../../../../core/design_system/patterns/reem_page_scaffold.dart';
-import '../../../../core/shared/wedgets/app/premium_app_bar.dart';
 
 class RewardsScreen extends ConsumerStatefulWidget {
   const RewardsScreen({super.key});

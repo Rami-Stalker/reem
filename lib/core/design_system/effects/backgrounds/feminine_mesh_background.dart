@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../design_system/patterns/experience_design.dart';
+import '../../patterns/experience_design.dart';
 
 /// Soft customer silk background.
 class FeminineMeshBackground extends StatelessWidget {

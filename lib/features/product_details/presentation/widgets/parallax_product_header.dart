@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:reem/core/shared/wedgets/buttons/gradient_icon_button.dart';
+import 'package:reem/core/design_system/components/buttons/gradient_icon_button.dart';
 
 
 class ParallaxProductHeader

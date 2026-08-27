@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_blurhash/flutter_blurhash.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../providers/core_providers.dart';
+import '../presentation/providers/core_providers.dart';
 import '../storage/secure_storage_service.dart';
 import 'media_variants.dart';
 

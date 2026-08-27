@@ -2,7 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/experience/role_experience.dart';
 import '../../../../core/network/api_endpoints.dart';
-import '../../../../core/providers/core_providers.dart';
+import '../../../../core/presentation/providers/core_providers.dart';
 import '../../../auth/presentation/providers/auth_provider.dart';
 
 final roleExperienceProvider = Provider<AppRoleExperience>((ref) {

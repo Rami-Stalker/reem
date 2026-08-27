@@ -5,7 +5,6 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/design_system/design_system.dart';
 import '../../../../core/localization/l10n_extension.dart';
 import '../../../../core/router/route_paths.dart';
-import '../../../../core/shared/wedgets/product/product_rail.dart';
 import '../../domain/entities/continue_shopping_item.dart';
 import '../providers/home_content_provider.dart';
 

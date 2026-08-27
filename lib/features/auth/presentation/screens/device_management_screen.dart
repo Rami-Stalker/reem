@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/design_system/components/snackbars/app_snackbar.dart'
-    show DsSnackbar, DsSnackbarType;
 import 'package:reem/core/result/result.dart';
 
 import '../providers/auth_account_provider.dart';

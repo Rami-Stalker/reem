@@ -1,10 +1,12 @@
-// Reem screen patterns — page scaffolds, app chrome, brand backgrounds.
+// Reem screen patterns — page scaffolds, app chrome, product surfaces.
 export 'patterns/reem_page_scaffold.dart';
 export 'patterns/experience_design.dart';
 export 'patterns/seller_atelier.dart';
 export 'patterns/admin_console.dart';
-export '../shared/wedgets/app/premium_app_bar.dart';
-export '../shared/wedgets/app/reem_section_header.dart';
-export '../shared/wedgets/backgrounds/feminine_mesh_background.dart';
-export '../shared/wedgets/backgrounds/luxury_mesh_background.dart';
-export '../shared/wedgets/backgrounds/luxury_blurred_background.dart';
+export 'patterns/premium_app_bar.dart';
+export 'patterns/reem_section_header.dart';
+
+// Product surfaces -- composite layouts over the card components.
+export 'patterns/product_grid.dart';
+export 'patterns/product_mosaic.dart';
+export 'patterns/product_rail.dart';

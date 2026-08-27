@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:reem/core/shared/wedgets/backgrounds/luxury_blurred_background.dart';
+import 'package:reem/core/design_system/effects/backgrounds/luxury_blurred_background.dart';
 import 'package:reem/features/chat/presentation/widgets/chat_tile.dart';
 
 import '../widgets/glass_search_bar.dart';

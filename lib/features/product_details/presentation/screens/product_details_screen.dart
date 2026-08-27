@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/design_system/design_system.dart';
-import '../../../../core/shared/wedgets/backgrounds/feminine_mesh_background.dart';
 import '../../../catalog/presentation/providers/catalog_provider.dart';
 import '../widgets/floating_buy_bar.dart';
 import '../widgets/parallax_product_header.dart';

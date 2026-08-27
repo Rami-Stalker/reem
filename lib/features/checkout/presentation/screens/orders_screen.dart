@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/design_system/design_system.dart';
 import '../../../../core/router/route_paths.dart';
-import '../../../../core/shared/wedgets/app/premium_app_bar.dart';
 import '../../domain/entities/order.dart';
 import '../providers/checkout_providers.dart';
 import '../widgets/order_status_chip.dart';
