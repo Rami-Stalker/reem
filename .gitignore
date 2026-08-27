@@ -1,61 +1,89 @@
-# Miscellaneous
-*.class
-*.log
-*.pyc
-*.swp
+# ---------------------------------------------------------------------------
+# Reem — repository ignore rules
+#
+# Layout: a Flutter client at the repository root and a NestJS API in
+# `backend/`. Rules are grouped by the tool that produces the artifact, and
+# anchored with a leading `/` wherever a pattern must match the root only.
+# ---------------------------------------------------------------------------
+
+# --- Editors & OS ----------------------------------------------------------
 .DS_Store
 .atom/
-.build/
-.buildlog/
 .history
+.idea/
+.qodo/
 .svn/
 .swiftpm/
-migrate_working_dir/
-
-# IntelliJ related
+.vscode/
 *.iml
 *.ipr
 *.iws
-.idea/
+*.swp
 
-# The .vscode folder contains launch configuration and tasks you configure in
-# VS Code which you may wish to be included in version control, so this line
-# is commented out by default.
-#.vscode/
+# Claude Code: `launch.json` is shared with the team, machine-local
+# settings and transcripts are not.
+.claude/settings.local.json
+.claude/local/
 
-# Flutter/Dart/Pub related
+# --- Logs & scratch --------------------------------------------------------
+*.log
+*.pyc
+migrate_working_dir/
+
+# --- Dart / Flutter --------------------------------------------------------
 **/doc/api/
 **/ios/Flutter/.last_build_id
 .dart_tool/
+.flutter-plugins
 .flutter-plugins-dependencies
 .pub-cache/
 .pub/
 /build/
 /coverage/
 
-# Symbolication related
+# Symbolication & obfuscation output
 app.*.symbols
-
-# Obfuscation related
 app.*.map.json
 
-# Android Studio will place build artifacts here
+# --- Android ---------------------------------------------------------------
+/android/.gradle/
+/android/build/
+/android/app/build/
 /android/app/debug
 /android/app/profile
 /android/app/release
+/android/local.properties
+/android/key.properties
+*.jks
+*.keystore
 
-# Node.js backend
-backend/node_modules/
+# --- iOS / macOS -----------------------------------------------------------
+/ios/Pods/
+/ios/.symlinks/
+/ios/Flutter/Flutter.framework
+/ios/Flutter/Flutter.podspec
+/macos/Pods/
+
+# --- Node -----------------------------------------------------------------
+# Anchored so an accidental `npm install` at the repository root is caught,
+# not just the backend's own tree.
+node_modules/
+/node_modules/
+npm-debug.log*
+yarn-error.log*
+
+# --- Backend (NestJS) ------------------------------------------------------
 backend/dist/
 backend/.env
 !backend/.env.example
 backend/prisma/dev.db
 backend/prisma/dev.db-journal
 
-# Uploaded media. User content, not source — and `private/` holds photographs
+# Uploaded media. User content, not source -- and `private/` holds photographs
 # of identity documents, which must never reach a repository.
 backend/storage/
 
+# --- Test fixtures ---------------------------------------------------------
 # Contract fixtures are captured from a running API; keep them, they are the
 # only thing proving the client and server agree.
 !test/contract/*.json
