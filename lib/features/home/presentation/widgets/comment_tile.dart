@@ -55,8 +55,8 @@
 //                       (_) => Container(
 //                         width: 90,
 //                         margin:
-//                             const EdgeInsets.only(
-//                           right: 8,
+//                             const EdgeInsetsDirectional.only(
+//                           end: 8,
 //                         ),
 //                         decoration: BoxDecoration(
 //                           borderRadius:
@@ -102,6 +102,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:reem/core/design_system/design_system.dart';
 import 'package:reem/core/shared/entities/comment.dart';
 import 'package:reem/core/shared/models/comment_model.dart';
+import '../../../../core/localization/l10n_extension.dart';
 
 class CommentTile extends StatelessWidget {
   const CommentTile({super.key, required this.comment});
@@ -158,7 +159,7 @@ class CommentTile extends StatelessWidget {
                     if (comment.user.id ==
                         'current_user') // Check if current user
                       Container(
-                        margin: const EdgeInsets.only(left: DsSpacing.sm),
+                        margin: const EdgeInsetsDirectional.only(start: DsSpacing.sm),
                         padding: const EdgeInsets.symmetric(
                           horizontal: 6,
                           vertical: 2,
@@ -168,7 +169,7 @@ class CommentTile extends StatelessWidget {
                           borderRadius: DsRadius.borderFull,
                         ),
                         child: Text(
-                          'You',
+                          context.l10n.you,
                           style: TextStyle(
                             fontSize: DsTypography.labelSmall,
                             color: colors.primary,
@@ -244,7 +245,7 @@ class CommentTile extends StatelessWidget {
                         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                       ),
                       child: Text(
-                        'Reply',
+                        context.l10n.reply,
                         style: TextStyle(
                           fontSize: DsTypography.labelSmall,
                           color: colors.onSurfaceVariant,

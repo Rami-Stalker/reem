@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/design_system/design_system.dart';
+import '../../../../core/localization/l10n_extension.dart';
 
-/// A premium section header: a small rose eyebrow, an elegant serif title and
-/// an optional subtitle / "See all" affordance. Used across the home page.
+/// The editorial section header used across the home page.
+///
+/// Reads like a magazine masthead rather than a list label: a short rose
+/// eyebrow led by a gradient rule, the section name set in the display serif,
+/// an optional line of copy underneath, and — when there is somewhere to go —
+/// a soft blush pill instead of a bare blue-ish link.
 class HomeSectionHeader extends StatelessWidget {
   const HomeSectionHeader({
     super.key,
@@ -32,51 +37,120 @@ class HomeSectionHeader extends StatelessWidget {
 
     return Padding(
       padding: padding,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.end,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (eyebrow != null) ...[
-                  Text(eyebrow!.toUpperCase(),
-                      style: DsTypography.overline(c.primary)),
-                  const SizedBox(height: DsSpacing.xxs),
-                ],
-                Text(
+          if (eyebrow != null) ...[
+            _Eyebrow(text: eyebrow!),
+            const SizedBox(height: DsSpacing.xs),
+          ],
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Expanded(
+                child: Text(
                   title,
-                  style: theme.textTheme.headlineSmall
-                      ?.copyWith(fontWeight: DsTypography.bold),
+                  style: theme.textTheme.headlineSmall?.copyWith(
+                    fontWeight: DsTypography.bold,
+                    height: 1.15,
+                  ),
                 ),
-                if (subtitle != null) ...[
-                  const SizedBox(height: DsSpacing.xxs),
-                  Text(
-                    subtitle!,
-                    style: theme.textTheme.bodySmall
-                        ?.copyWith(color: c.onSurfaceVariant),
-                  ),
-                ],
+              ),
+              if (onSeeAll != null) ...[
+                const SizedBox(width: DsSpacing.sm),
+                _SeeAllPill(onTap: onSeeAll!),
               ],
-            ),
+            ],
           ),
-          if (onSeeAll != null)
-            GestureDetector(
-              onTap: onSeeAll,
-              child: Row(
-                children: [
-                  Text(
-                    'See all',
-                    style: theme.textTheme.labelLarge?.copyWith(
-                      color: c.primary,
-                      fontWeight: DsTypography.semiBold,
-                    ),
-                  ),
-                  Icon(Icons.chevron_right_rounded, size: 18, color: c.primary),
-                ],
+          if (subtitle != null) ...[
+            const SizedBox(height: DsSpacing.xxs),
+            Text(
+              subtitle!,
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: c.onSurfaceVariant,
+                height: 1.4,
               ),
             ),
+          ],
         ],
+      ),
+    );
+  }
+}
+
+/// A short gradient rule, then the label — the couture answer to a bullet.
+class _Eyebrow extends StatelessWidget {
+  const _Eyebrow({required this.text});
+
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.dsColors;
+    return Row(
+      children: [
+        Container(
+          width: 18,
+          height: 2,
+          decoration: BoxDecoration(
+            gradient: context.primaryGradient,
+            borderRadius: DsRadius.borderPill,
+          ),
+        ),
+        const SizedBox(width: DsSpacing.xs),
+        Flexible(
+          child: Text(
+            text.toUpperCase(),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: DsTypography.overline(c.primary),
+          ),
+        ),
+        const SizedBox(width: DsSpacing.xs),
+        DsSparkle(size: 9, color: c.accent, opacity: 0.85),
+      ],
+    );
+  }
+}
+
+class _SeeAllPill extends StatelessWidget {
+  const _SeeAllPill({required this.onTap});
+
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.dsColors;
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(
+          horizontal: DsSpacing.sm,
+          vertical: DsSpacing.xxs + 2,
+        ),
+        decoration: BoxDecoration(
+          color: c.primaryContainer,
+          borderRadius: DsRadius.borderPill,
+          border: Border.all(color: c.primary.withValues(alpha: 0.18)),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              context.l10n.viewAll,
+              style: TextStyle(
+                color: c.onPrimaryContainer,
+                fontSize: DsTypography.labelMedium,
+                fontWeight: DsTypography.bold,
+              ),
+            ),
+            Icon(
+              Icons.chevron_right_rounded,
+              size: 16,
+              color: c.onPrimaryContainer,
+            ),
+          ],
+        ),
       ),
     );
   }

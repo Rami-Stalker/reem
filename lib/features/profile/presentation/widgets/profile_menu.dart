@@ -6,6 +6,7 @@ import '../../../../core/design_system/design_system.dart';
 import '../../../../core/router/route_paths.dart';
 import '../../../auth/presentation/providers/auth_provider.dart';
 import '../providers/profile_overview_provider.dart';
+import '../../../../core/localization/l10n_extension.dart';
 
 /// The grouped account menu — Account, Preferences and Support sections plus a
 /// sign-out action. Real destinations route to their screens; surfaces without
@@ -25,71 +26,71 @@ class ProfileMenu extends ConsumerWidget {
     return Column(
       children: [
         _Group(
-          label: 'Account',
+          label: context.l10n.account,
           rows: [
             _MenuRow(
               icon: Icons.location_on_outlined,
-              label: 'Saved addresses',
+              label: context.l10n.savedAddresses,
               onTap: () => context.push(RoutePaths.addresses),
             ),
             _MenuRow(
               icon: Icons.credit_card_outlined,
-              label: 'Payment methods',
+              label: context.l10n.paymentMethods,
               onTap: () => context.push(RoutePaths.paymentMethods),
             ),
             _MenuRow(
               icon: Icons.reviews_outlined,
-              label: 'Reviews & ratings',
+              label: context.l10n.reviewsAndRatings,
               trailing: rating != null
                   ? '${rating.toStringAsFixed(1)} · $reviews'
                   : null,
-              onTap: () => _comingSoon(context, 'Reviews & ratings'),
+              onTap: () => _comingSoon(context, context.l10n.reviewsAndRatings),
             ),
             _MenuRow(
               icon: Icons.notifications_none_rounded,
-              label: 'Notifications',
+              label: context.l10n.notifications,
               onTap: () => context.push(RoutePaths.notifications),
             ),
           ],
         ),
         const SizedBox(height: DsSpacing.md),
         _Group(
-          label: 'Preferences',
+          label: context.l10n.preferences,
           rows: [
             _MenuRow(
               icon: Icons.palette_outlined,
-              label: 'App preferences',
+              label: context.l10n.appPreferences,
               onTap: () => context.push(RoutePaths.appearance),
             ),
             _MenuRow(
               icon: Icons.language_rounded,
-              label: 'Language',
+              label: context.l10n.language,
               onTap: () => context.push(RoutePaths.language),
             ),
             _MenuRow(
               icon: Icons.lock_outline_rounded,
-              label: 'Privacy & security',
+              label: context.l10n.securityTitle,
               onTap: () => context.push(RoutePaths.settings),
             ),
           ],
         ),
         const SizedBox(height: DsSpacing.md),
         _Group(
-          label: 'Support',
+          label: context.l10n.support,
           rows: [
             _MenuRow(
               icon: Icons.help_outline_rounded,
-              label: 'Help & FAQ',
+              label: context.l10n.helpAndFaq,
               onTap: () => _helpSheet(context),
             ),
             _MenuRow(
               icon: Icons.support_agent_rounded,
-              label: 'Support centre',
+              label: context.l10n.supportCentre,
               onTap: () => _supportSheet(context),
             ),
             _MenuRow(
               icon: Icons.info_outline_rounded,
-              label: 'About REEM',
+              label: context.l10n.aboutReem,
               onTap: () => _aboutSheet(context),
             ),
           ],
@@ -105,7 +106,7 @@ class ProfileMenu extends ConsumerWidget {
     DsBottomSheet.showTitled(
       context,
       title: title,
-      subtitle: 'Coming soon',
+      subtitle: context.l10n.comingSoon,
       child: const _ComingSoon(),
     );
   }
@@ -113,21 +114,21 @@ class ProfileMenu extends ConsumerWidget {
   void _helpSheet(BuildContext context) {
     DsBottomSheet.showTitled(
       context,
-      title: 'Help & FAQ',
-      child: const Column(
+      title: context.l10n.helpAndFaq,
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _Faq(
-            q: 'How do I track my order?',
-            a: 'Open My orders from your profile to see live status and delivery updates.',
+            q: context.l10n.faqTracking,
+            a: context.l10n.faqTrackingAnswer,
           ),
           _Faq(
-            q: 'How do loyalty points work?',
-            a: 'Earn points on every order and review. Redeem them for coupons and perks.',
+            q: context.l10n.faqPoints,
+            a: context.l10n.rewardsPointsBlurb,
           ),
           _Faq(
-            q: 'What is your returns policy?',
-            a: 'Most items can be returned within 14 days. Open an order to start a return.',
+            q: context.l10n.faqReturns,
+            a: context.l10n.faqReturnsAnswer,
           ),
         ],
       ),
@@ -137,24 +138,24 @@ class ProfileMenu extends ConsumerWidget {
   void _supportSheet(BuildContext context) {
     DsBottomSheet.showTitled(
       context,
-      title: 'Support centre',
-      subtitle: 'We usually reply within an hour',
+      title: context.l10n.supportCentre,
+      subtitle: context.l10n.replyWithinHour,
       child: Column(
         children: [
           _ContactRow(
             icon: Icons.chat_bubble_outline_rounded,
-            label: 'Live chat',
-            value: 'Start a conversation',
+            label: context.l10n.liveChat,
+            value: context.l10n.startConversation,
             onTap: () => context.push(RoutePaths.chats),
           ),
           _ContactRow(
             icon: Icons.mail_outline_rounded,
-            label: 'Email us',
+            label: context.l10n.emailUs,
             value: 'support@reem.shop',
           ),
           _ContactRow(
             icon: Icons.phone_outlined,
-            label: 'Call',
+            label: context.l10n.call,
             value: '+966 11 000 0000',
           ),
         ],
@@ -166,7 +167,7 @@ class ProfileMenu extends ConsumerWidget {
     final theme = Theme.of(context);
     DsBottomSheet.showTitled(
       context,
-      title: 'About REEM',
+      title: context.l10n.aboutReem,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -176,12 +177,11 @@ class ProfileMenu extends ConsumerWidget {
                   const TextStyle()),
           const SizedBox(height: DsSpacing.xs),
           Text(
-            'A premium social-commerce home for the pieces you love — shopping, '
-            'stories and rewards in one beautiful place.',
+            context.l10n.aboutReemBlurb,
             style: theme.textTheme.bodyMedium,
           ),
           const SizedBox(height: DsSpacing.md),
-          Text('Version 1.0.0',
+          Text(context.l10n.appVersion('1.0.0'),
               style: theme.textTheme.labelMedium
                   ?.copyWith(color: context.dsColors.onSurfaceVariant)),
         ],
@@ -193,19 +193,19 @@ class ProfileMenu extends ConsumerWidget {
     final confirmed = await DsBottomSheet.show<bool>(
       context,
       builder: (sheetContext) => DsSheetScaffold(
-        title: 'Sign out?',
-        subtitle: 'You can always sign back in.',
+        title: context.l10n.signOutQuestion,
+        subtitle: context.l10n.signBackInLater,
         child: Column(
           children: [
             DsButton(
-              label: 'Sign out',
+              label: context.l10n.signOut,
               variant: DsButtonVariant.danger,
               icon: Icons.logout_rounded,
               onPressed: () => Navigator.of(sheetContext).pop(true),
             ),
             const SizedBox(height: DsSpacing.sm),
             DsButton(
-              label: 'Cancel',
+              label: context.l10n.cancel,
               variant: DsButtonVariant.ghost,
               onPressed: () => Navigator.of(sheetContext).pop(false),
             ),
@@ -344,7 +344,7 @@ class _LogoutCard extends StatelessWidget {
                 ),
                 const SizedBox(width: DsSpacing.md),
                 Expanded(
-                  child: Text('Sign out',
+                  child: Text(context.l10n.signOut,
                       style: Theme.of(context).textTheme.titleSmall?.copyWith(
                             fontWeight: DsTypography.semiBold,
                             color: c.error,
@@ -440,7 +440,7 @@ class _ComingSoon extends StatelessWidget {
           const SizedBox(width: DsSpacing.sm),
           Expanded(
             child: Text(
-              'We’re polishing this experience — it’ll be here soon.',
+              context.l10n.comingSoonBlurb,
               style: Theme.of(context).textTheme.bodyMedium,
             ),
           ),

@@ -6,6 +6,7 @@ import '../../../../core/design_system/design_system.dart';
 import '../../../../core/router/route_paths.dart';
 import '../../../../core/shared/entities/loyalty.dart';
 import '../providers/profile_overview_provider.dart';
+import '../../../../core/localization/l10n_extension.dart';
 
 /// The loyalty dashboard — a jewel-toned membership card with points, tier
 /// progress and at-a-glance lifetime / coupons / redeemed stats.
@@ -120,11 +121,11 @@ class _Body extends StatelessWidget {
         const SizedBox(height: DsSpacing.md),
         Row(
           children: [
-            _Stat(value: '${loyalty.availableCoupons}', label: 'Coupons'),
+            _Stat(value: '${loyalty.availableCoupons}', label: context.l10n.coupons),
             _StatDivider(),
-            _Stat(value: '${loyalty.lifetimePoints ?? loyalty.points}', label: 'Lifetime'),
+            _Stat(value: '${loyalty.lifetimePoints ?? loyalty.points}', label: context.l10n.lifetime),
             _StatDivider(),
-            _Stat(value: '${loyalty.redeemedCount ?? 0}', label: 'Redeemed'),
+            _Stat(value: '${loyalty.redeemedCount ?? 0}', label: context.l10n.redeemed),
           ],
         ),
       ],

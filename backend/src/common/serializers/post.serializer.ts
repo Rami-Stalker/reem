@@ -1,10 +1,11 @@
 import { Post, User } from '@prisma/client';
 import { serializeUser } from './user.serializer';
-import { ProductWithRelations, serializeProduct } from './product.serializer';
+import { ProductRecord, serializeProduct } from './product.serializer';
 
 export type PostWithRelations = Post & {
   author: User;
-  product: ProductWithRelations;
+  /// Q5 — a post may carry a product, or be pure content.
+  product: ProductRecord | null;
   likes?: { userId: string }[];
   saves?: { userId: string }[];
 };
@@ -22,7 +23,7 @@ export function serializePost(post: PostWithRelations, currentUserId?: string) {
   return {
     id: post.id,
     author: serializeUser(post.author),
-    product: serializeProduct(post.product),
+    product: post.product ? serializeProduct(post.product) : null,
     caption: post.caption,
     likes_count: post.likesCount,
     comments_count: post.commentsCount,

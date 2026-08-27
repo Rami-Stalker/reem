@@ -1,5 +1,6 @@
 import 'package:reem/core/network/api_endpoints.dart';
 import 'package:reem/core/network/base_remote_datasource.dart';
+import 'package:reem/core/shared/entities/media.dart';
 import 'package:reem/core/shared/models/post_model.dart';
 import 'package:reem/core/shared/models/story_model.dart';
 import 'package:reem/features/create/data/datasources/create_remote_datasource.dart';
@@ -14,7 +15,7 @@ final class CreateRemoteDataSourceImpl extends BaseRemoteDataSource
     required String productId,
   }) async {
     final json = await postJson(
-      ApiEndpoints.posts,
+      ApiEndpoints.sellerPosts,
       body: {'caption': caption, 'product_id': productId},
     );
     final postData = json['post'] is Map<String, dynamic>
@@ -26,12 +27,16 @@ final class CreateRemoteDataSourceImpl extends BaseRemoteDataSource
   @override
   Future<StoryModel> createStory({
     required String mediaUrl,
+    MediaType type = MediaType.image,
     String? link,
   }) async {
-    final body = <String, dynamic>{'media_url': mediaUrl};
+    final body = <String, dynamic>{
+      'media_url': mediaUrl,
+      'type': type.wire,
+    };
     if (link != null) body['link'] = link;
 
-    final json = await postJson(ApiEndpoints.stories, body: body);
+    final json = await postJson(ApiEndpoints.sellerStories, body: body);
     final storyJson = json['story'] is Map<String, dynamic>
         ? json['story'] as Map<String, dynamic>
         : json;

@@ -2,7 +2,16 @@ abstract final class RoutePaths {
   static const splash = '/';
   static const onboarding = '/onboarding';
   static const login = '/login';
+  static const authRequired = '/auth-required';
   static const register = '/register';
+  /// The code step of the main sign-in journey.
+  ///
+  /// A real route rather than an imperative `Navigator.push`: GoRouter owns
+  /// this app's stack and rebuilds it whenever auth state changes — which it
+  /// does moments after the code is sent, when the guest session settles — and
+  /// a pushed `MaterialPageRoute` is simply discarded by that rebuild. The
+  /// symptom was the app bouncing back to Home with the code already sent.
+  static const signInCode = '/login/code';
   static const forgotPassword = '/forgot-password';
   static const otpVerification = '/otp-verification';
 
@@ -14,6 +23,11 @@ abstract final class RoutePaths {
   static const accountSettings = '/account-settings';
   static const deviceManagement = '/devices';
   static const securitySettings = '/security';
+  static const phoneChange = '/security/phone';
+
+  /// The last door, and unauthenticated by necessity: she cannot sign in, that
+  /// is the whole premise of being here.
+  static const accountRecovery = '/account-recovery';
   static const sellerVerification = '/seller-verification';
 
   static const addPost = '/add-post';
@@ -38,6 +52,11 @@ abstract final class RoutePaths {
   static const sellerAnalytics = '/seller/analytics';
   static const sellerStore = '/seller/store';
 
+  /// Her order queue, and one parcel inside it.
+  static const sellerOrders = '/seller/orders';
+  static const sellerOrderDetail = '/seller/orders/:id';
+  static String sellerOrderDetailFor(String id) => '/seller/orders/$id';
+
   static const storyViewer = '/story-viewer';
 
   // Commerce
@@ -46,6 +65,20 @@ abstract final class RoutePaths {
   static const search = '/search';
   static const orderDetail = '/order/:id';
   static String orderDetailOf(String id) => '/order/$id';
+
+  /// Q55/Q63 P1 — the courier's round. Guarded by an active Courier row on
+  /// the backend, not by role: there is no COURIER value in UserRole.
+  static const courierDay = '/courier';
+
+  /// Q64 — the tracking code is the credential, so this needs no session.
+  static const shipmentTracking = '/track/:code';
+  static String shipmentTrackingOf(String code) => '/track/$code';
+
+  /// Q51 — the documents raised against one order, and one of them.
+  static const orderInvoices = '/order/:id/invoices';
+  static String orderInvoicesOf(String id) => '/order/$id/invoices';
+  static const invoice = '/invoice/:id';
+  static String invoiceOf(String id) => '/invoice/$id';
   static const collection = '/collection/:key';
   static String collectionOf(String key) => '/collection/$key';
   static const notifications = '/notifications';
@@ -55,6 +88,8 @@ abstract final class RoutePaths {
   static const language = '/language';
   static const coupons = '/coupons';
   static const rewards = '/rewards';
+  static const wallet = '/wallet';
+  static const sellerEarnings = '/seller/earnings';
 
   static const likeSheet = '/like-sheet';
   static const commentSheet = '/comment-sheet';

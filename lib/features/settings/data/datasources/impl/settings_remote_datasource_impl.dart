@@ -4,8 +4,13 @@ import 'package:reem/core/shared/models/user_model.dart';
 import 'package:reem/features/settings/data/datasources/settings_remote_datasource.dart';
 import 'package:reem/features/settings/data/models/address_model.dart';
 import 'package:reem/features/settings/data/models/coupon_model.dart';
+import 'package:reem/features/settings/data/models/notification_preferences_model.dart';
 import 'package:reem/features/settings/data/models/notification_settings_model.dart';
 import 'package:reem/features/settings/data/models/rewards_model.dart';
+import 'package:reem/core/shared/value_objects/money.dart';
+import 'package:reem/features/settings/domain/entities/address_draft.dart';
+import 'package:reem/features/settings/domain/entities/coupon_validation.dart';
+import 'package:reem/features/settings/domain/entities/notification_preferences.dart';
 
 final class SettingsRemoteDataSourceImpl extends BaseRemoteDataSource
     implements SettingsRemoteDataSource {
@@ -21,12 +26,66 @@ final class SettingsRemoteDataSourceImpl extends BaseRemoteDataSource
   }
 
   @override
+  Future<AddressModel> createAddress(AddressDraft draft) async {
+    final json = await postJson(
+      ApiEndpoints.addresses,
+      body: AddressModel.bodyFrom(draft),
+    );
+    return AddressModel.fromJson(json);
+  }
+
+  @override
+  Future<AddressModel> updateAddress(String id, AddressDraft draft) async {
+    final json = await patchJson(
+      ApiEndpoints.addressById(id),
+      body: AddressModel.bodyFrom(draft),
+    );
+    return AddressModel.fromJson(json);
+  }
+
+  @override
+  Future<void> deleteAddress(String id) =>
+      deleteRequest(ApiEndpoints.addressById(id));
+
+  @override
+  Future<AddressModel> setDefaultAddress(String id) async {
+    final json = await postJson('${ApiEndpoints.addressById(id)}/default');
+    return AddressModel.fromJson(json);
+  }
+
+  @override
   Future<List<CouponModel>> getCoupons() async {
     final list = await getList(ApiEndpoints.coupons);
     return list
         .whereType<Map>()
         .map((e) => CouponModel.fromJson(Map<String, dynamic>.from(e)))
         .toList();
+  }
+
+  @override
+  Future<CouponValidation> validateCoupon({
+    required String code,
+    required double subtotal,
+    required String currency,
+  }) async {
+    final json = await postJson(
+      ApiEndpoints.couponsValidate,
+      body: {
+        'code': code,
+        // Whole units: the server takes a number here and the platform charges
+        // in Syrian pounds, which have no fraction.
+        'subtotal': subtotal.round(),
+        'currency': currency,
+      },
+    );
+
+    return CouponValidation(
+      code: json['code'] as String? ?? code,
+      kind: CouponModel.kindFromWire(json['type']),
+      discount:
+          Money.tryFromJson(json['discount']) ??
+          Money(raw: '0', currency: Currency.fromWire(currency)),
+    );
   }
 
   @override
@@ -40,6 +99,23 @@ final class SettingsRemoteDataSourceImpl extends BaseRemoteDataSource
           ),
         )
         .toList();
+  }
+
+  @override
+  Future<NotificationPreferencesModel> getNotificationPreferences() async {
+    final json = await getJson(ApiEndpoints.notificationPreferences);
+    return NotificationPreferencesModel.fromJson(json);
+  }
+
+  @override
+  Future<NotificationPreferencesModel> updateNotificationPreferences(
+    NotificationPreferences preferences,
+  ) async {
+    final json = await patchJson(
+      ApiEndpoints.notificationPreferences,
+      body: NotificationPreferencesModel.toJson(preferences),
+    );
+    return NotificationPreferencesModel.fromJson(json);
   }
 
   @override

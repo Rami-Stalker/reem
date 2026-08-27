@@ -7,8 +7,10 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/design_system/design_system.dart';
 import '../../../../core/router/route_paths.dart';
-import '../../../../core/shared/entities/post.dart';
+import '../../../../core/shared/entities/post.dart'
+    show CategoryType, CategoryTypeX;
 import '../../../../core/shared/entities/product.dart';
+import '../../domain/entities/search_suggestions.dart';
 import '../providers/search_providers.dart';
 
 class SearchScreen extends ConsumerStatefulWidget {
@@ -22,8 +24,9 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
   final _controller = TextEditingController();
   Timer? _debounce;
   String _query = '';
+  bool _seededFromRoute = false;
 
-  static const _trending = [
+  static const _fallbackTrending = [
     'Summer dresses',
     'Rose perfume',
     'Gift sets',
@@ -66,29 +69,60 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final c = context.dsColors;
+    if (!_seededFromRoute) {
+      final routedQuery = GoRouterState.of(context).uri.queryParameters['q'];
+      if (routedQuery != null && routedQuery.trim().isNotEmpty) {
+        _controller.text = routedQuery.trim();
+        _query = routedQuery.trim();
+      }
+      _seededFromRoute = true;
+    }
+
+    final trending = ref
+        .watch(trendingSearchesProvider)
+        .maybeWhen(
+          data: (items) => items.isEmpty ? _fallbackTrending : items,
+          orElse: () => _fallbackTrending,
+        );
+
     return Scaffold(
-      backgroundColor: c.background,
+      backgroundColor: CustomerExperience.pearl,
       body: Stack(
         children: [
-          const FeminineMeshBackground(),
+          const CustomerBackdrop(),
           SafeArea(
             child: Column(
               children: [
                 Padding(
                   padding: const EdgeInsets.fromLTRB(
-                      DsSpacing.md, DsSpacing.sm, DsSpacing.lg, DsSpacing.sm),
+                    DsSpacing.md,
+                    DsSpacing.sm,
+                    DsSpacing.lg,
+                    DsSpacing.sm,
+                  ),
                   child: Row(
                     children: [
-                      DsIconButton(
-                        icon: Icons.arrow_back_ios_new_rounded,
-                        variant: DsIconButtonVariant.ghost,
-                        iconSize: 20,
-                        onPressed: () => context.pop(),
+                      Container(
+                        width: 44,
+                        height: 44,
+                        decoration: BoxDecoration(
+                          color: Colors.white.withValues(alpha: .78),
+                          shape: BoxShape.circle,
+                          border: Border.all(color: Colors.white),
+                        ),
+                        child: IconButton(
+                          tooltip: 'Back',
+                          icon: const Icon(
+                            Icons.arrow_back_ios_new_rounded,
+                            color: CustomerExperience.plum,
+                            size: 18,
+                          ),
+                          onPressed: () => context.pop(),
+                        ),
                       ),
                       const SizedBox(width: DsSpacing.xs),
                       Expanded(
-                        child: DsSearchBar(
+                        child: _SearchInput(
                           controller: _controller,
                           hint: 'Search dresses, perfume, gifts…',
                           autofocus: true,
@@ -102,11 +136,8 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                 ),
                 Expanded(
                   child: _query.isEmpty
-                      ? _IdleView(
-                          trending: _trending,
-                          onSelect: _select,
-                        )
-                      : _ResultsView(query: _query),
+                      ? _IdleView(trending: trending, onSelect: _select)
+                      : _ResultsView(query: _query, onSelect: _select),
                 ),
               ],
             ),
@@ -119,6 +150,56 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
 
 // ── Idle: recent + trending + browse ────────────────────────────────────────
 
+class _SearchInput extends StatelessWidget {
+  const _SearchInput({
+    required this.controller,
+    required this.hint,
+    required this.onChanged,
+    required this.onSubmitted,
+    required this.onClear,
+    this.autofocus = false,
+  });
+
+  final TextEditingController controller;
+  final String hint;
+  final bool autofocus;
+  final ValueChanged<String> onChanged;
+  final ValueChanged<String> onSubmitted;
+  final VoidCallback onClear;
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomerPanel(
+      padding: const EdgeInsets.symmetric(horizontal: 14),
+      child: TextField(
+        controller: controller,
+        autofocus: autofocus,
+        onChanged: onChanged,
+        onSubmitted: onSubmitted,
+        textInputAction: TextInputAction.search,
+        decoration: InputDecoration(
+          hintText: 'Search dresses, perfume, gifts...',
+          border: InputBorder.none,
+          icon: const Icon(
+            Icons.search_rounded,
+            color: CustomerExperience.rose,
+          ),
+          suffixIcon: controller.text.isEmpty
+              ? null
+              : IconButton(
+                  tooltip: 'Clear search',
+                  onPressed: onClear,
+                  icon: const Icon(
+                    Icons.close_rounded,
+                    color: CustomerExperience.muted,
+                  ),
+                ),
+        ),
+      ),
+    );
+  }
+}
+
 class _IdleView extends ConsumerWidget {
   const _IdleView({required this.trending, required this.onSelect});
 
@@ -130,7 +211,11 @@ class _IdleView extends ConsumerWidget {
     final recents = ref.watch(recentSearchesProvider);
     return ListView(
       padding: const EdgeInsets.fromLTRB(
-          DsSpacing.lg, DsSpacing.sm, DsSpacing.lg, DsSpacing.huge),
+        DsSpacing.lg,
+        DsSpacing.sm,
+        DsSpacing.lg,
+        DsSpacing.huge,
+      ),
       children: [
         if (recents.isNotEmpty) ...[
           _Header(
@@ -191,58 +276,123 @@ class _IdleView extends ConsumerWidget {
 // ── Results ─────────────────────────────────────────────────────────────────
 
 class _ResultsView extends ConsumerWidget {
-  const _ResultsView({required this.query});
+  const _ResultsView({required this.query, required this.onSelect});
 
   final String query;
+  final ValueChanged<String> onSelect;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(searchResultsProvider(query));
+    final suggestionRail = _SuggestionRail(
+      suggestions: ref.watch(searchSuggestionsProvider(query)),
+      onSelect: onSelect,
+    );
+    Widget withSuggestions(Widget child) => Column(
+      children: [
+        suggestionRail,
+        Expanded(child: child),
+      ],
+    );
 
     if (state.isLoading) {
-      return GridView.builder(
-        padding: const EdgeInsets.all(DsSpacing.lg),
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          mainAxisSpacing: DsSpacing.md,
-          crossAxisSpacing: DsSpacing.md,
-          childAspectRatio: 0.62,
+      return withSuggestions(
+        GridView.builder(
+          padding: const EdgeInsets.all(DsSpacing.lg),
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            mainAxisSpacing: DsSpacing.md,
+            crossAxisSpacing: DsSpacing.md,
+            childAspectRatio: 0.62,
+          ),
+          itemCount: 6,
+          itemBuilder: (_, _) => const DsProductCardSkeleton(),
         ),
-        itemCount: 6,
-        itemBuilder: (_, _) => const DsProductCardSkeleton(),
       );
     }
 
     if (state.hasError) {
-      return DsErrorState(
-        message: state.error,
-        onRetry: () =>
-            ref.read(searchResultsProvider(query).notifier).refresh(),
+      return withSuggestions(
+        DsErrorState(
+          message: state.error,
+          onRetry: () =>
+              ref.read(searchResultsProvider(query).notifier).refresh(),
+        ),
       );
     }
 
     if (state.isEmpty) {
-      return DsEmptyState.search(
-        message: 'We couldn\'t find anything for “$query”.\nTry another search.',
+      return withSuggestions(
+        DsEmptyState.search(
+          message:
+              'We couldn\'t find anything for "$query".\nTry another search.',
+        ),
       );
     }
 
-    return NotificationListener<ScrollNotification>(
-      onNotification: (n) {
-        if (n.metrics.pixels >= n.metrics.maxScrollExtent - 400) {
-          ref.read(searchResultsProvider(query).notifier).loadMore();
-        }
-        return false;
-      },
-      child: MasonryGridView.count(
+    return withSuggestions(
+      NotificationListener<ScrollNotification>(
+        onNotification: (n) {
+          if (n.metrics.pixels >= n.metrics.maxScrollExtent - 400) {
+            ref.read(searchResultsProvider(query).notifier).loadMore();
+          }
+          return false;
+        },
+        child: MasonryGridView.count(
+          padding: const EdgeInsets.fromLTRB(
+            DsSpacing.lg,
+            DsSpacing.xs,
+            DsSpacing.lg,
+            DsSpacing.huge,
+          ),
+          crossAxisCount: 2,
+          mainAxisSpacing: DsSpacing.md,
+          crossAxisSpacing: DsSpacing.md,
+          itemCount: state.items.length,
+          itemBuilder: (context, index) =>
+              _ResultCard(product: state.items[index]),
+        ),
+      ),
+    );
+  }
+}
+
+class _SuggestionRail extends StatelessWidget {
+  const _SuggestionRail({required this.suggestions, required this.onSelect});
+
+  final AsyncValue<SearchSuggestions> suggestions;
+  final ValueChanged<String> onSelect;
+
+  @override
+  Widget build(BuildContext context) {
+    final terms = suggestions.maybeWhen(
+      data: (data) => data.combined.take(8).toList(),
+      orElse: () => const <String>[],
+    );
+    if (terms.isEmpty) return const SizedBox.shrink();
+
+    return SizedBox(
+      width: double.infinity,
+      child: SingleChildScrollView(
         padding: const EdgeInsets.fromLTRB(
-            DsSpacing.lg, DsSpacing.xs, DsSpacing.lg, DsSpacing.huge),
-        crossAxisCount: 2,
-        mainAxisSpacing: DsSpacing.md,
-        crossAxisSpacing: DsSpacing.md,
-        itemCount: state.items.length,
-        itemBuilder: (context, index) =>
-            _ResultCard(product: state.items[index]),
+          DsSpacing.lg,
+          DsSpacing.xs,
+          DsSpacing.lg,
+          DsSpacing.sm,
+        ),
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          children: [
+            for (final term in terms) ...[
+              DsChip(
+                label: term,
+                icon: Icons.search_rounded,
+                onTap: () => onSelect(term),
+              ),
+              const SizedBox(width: DsSpacing.xs),
+            ],
+          ],
+        ),
       ),
     );
   }
@@ -257,13 +407,13 @@ class _ResultCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return DsProductCard(
       title: product.title,
-      price: '\$${product.price.toStringAsFixed(0)}',
+      price: product.price?.format() ?? '',
       imageUrl: product.coverUrl,
-      compareAtPrice: product.hasDiscount
-          ? '\$${product.oldPrice!.toStringAsFixed(0)}'
-          : null,
+      blurHash: product.coverBlurHash,
+      compareAtPrice:
+          product.hasDiscount ? product.compareAtPrice?.format() : null,
       discountPercent: product.hasDiscount ? product.discountPercent : null,
-      sellerName: product.seller.name,
+      sellerName: product.displaySeller?.name ?? '',
       rating: product.rating > 0 ? product.rating : null,
       ratingCount: product.reviewsCount > 0 ? product.reviewsCount : null,
       soldOut: !product.inStock,
@@ -288,7 +438,6 @@ class _Header extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final c = context.dsColors;
     final theme = Theme.of(context);
     return Row(
       crossAxisAlignment: CrossAxisAlignment.end,
@@ -298,22 +447,36 @@ class _Header extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               if (eyebrow != null) ...[
-                Text(eyebrow!.toUpperCase(),
-                    style: DsTypography.overline(c.primary)),
+                Text(
+                  eyebrow!.toUpperCase(),
+                  style: const TextStyle(
+                    color: CustomerExperience.rose,
+                    fontSize: DsTypography.labelSmall,
+                    fontWeight: DsTypography.bold,
+                  ),
+                ),
                 const SizedBox(height: DsSpacing.xxs),
               ],
-              Text(title,
-                  style: theme.textTheme.titleLarge
-                      ?.copyWith(fontWeight: DsTypography.bold)),
+              Text(
+                title,
+                style: theme.textTheme.titleLarge?.copyWith(
+                  fontWeight: DsTypography.bold,
+                  color: CustomerExperience.ink,
+                ),
+              ),
             ],
           ),
         ),
         if (action != null && onAction != null)
           GestureDetector(
             onTap: onAction,
-            child: Text(action!,
-                style: theme.textTheme.labelLarge?.copyWith(
-                    color: c.primary, fontWeight: DsTypography.semiBold)),
+            child: Text(
+              action!,
+              style: theme.textTheme.labelLarge?.copyWith(
+                color: CustomerExperience.rose,
+                fontWeight: DsTypography.semiBold,
+              ),
+            ),
           ),
       ],
     );

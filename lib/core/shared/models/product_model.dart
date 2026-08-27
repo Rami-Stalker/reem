@@ -1,27 +1,36 @@
 // shared/models/product_model.dart
 
+import '../entities/brand.dart';
+import '../entities/category.dart';
 import '../entities/media.dart';
 import '../entities/product.dart';
 import '../entities/product_variant.dart';
-import '../entities/user.dart';
+import '../entities/seller_offer.dart';
+import '../value_objects/money.dart';
+import 'brand_model.dart';
+import 'category_model.dart';
 import 'media_model.dart';
 import 'product_variant_model.dart';
-import 'user_model.dart';
+import 'seller_offer_model.dart';
 
 class ProductModel extends Product {
   const ProductModel({
     required super.id,
-    required super.seller,
+    required super.slug,
     required super.title,
     required super.description,
-    super.category,
-    required super.price,
-    super.oldPrice,
-    super.stock,
+    required super.category,
+    required super.createdAt,
+    super.brand,
+    super.attributes,
+    super.gtin,
     super.media,
     super.variants,
-    super.isAvailable,
-    super.isFeatured,
+    super.offers,
+    super.offersCount,
+    super.priceFrom,
+    super.priceTo,
+    super.stock,
     super.isLiked,
     super.rating,
     super.reviewsCount,
@@ -29,27 +38,47 @@ class ProductModel extends Product {
     super.likesCount,
     super.ordersCount,
     super.favoritesCount,
-    required super.createdAt,
   });
 
   factory ProductModel.fromJson(Map<String, dynamic> json) {
+    // A card carries `best_offer` only; the detail screen also carries the full
+    // `offers` list. Normalising both into one list here means every widget
+    // reads offers the same way regardless of which endpoint produced it.
+    final offers = <SellerOffer>[
+      ...(json['offers'] as List? ?? const [])
+          .map((e) => SellerOfferModel.fromJson(e as Map<String, dynamic>)),
+    ];
+    if (offers.isEmpty && json['best_offer'] != null) {
+      offers.add(
+        SellerOfferModel.fromJson(json['best_offer'] as Map<String, dynamic>),
+      );
+    }
+
+    final categoryJson = json['category'];
     return ProductModel(
       id: json['id'] as String,
-      seller: UserModel.fromJson(json['seller'] as Map<String, dynamic>),
-      title: json['title'] as String,
+      slug: json['slug'] as String? ?? '',
+      title: json['title'] as String? ?? '',
       description: json['description'] as String? ?? '',
-      category: json['category'] as String? ?? 'general',
-      price: (json['price'] as num).toDouble(),
-      oldPrice: (json['old_price'] as num?)?.toDouble(),
-      stock: json['stock'] as int? ?? 0,
+      category: categoryJson is Map<String, dynamic>
+          ? CategoryModel.fromJson(categoryJson)
+          : CategoryModel.unknown,
+      brand: json['brand'] is Map<String, dynamic>
+          ? BrandModel.fromJson(json['brand'] as Map<String, dynamic>)
+          : null,
+      attributes: (json['attributes'] as Map?)?.cast<String, dynamic>() ?? {},
+      gtin: json['gtin'] as String?,
       media: (json['media'] as List? ?? [])
           .map((e) => MediaModel.fromJson(e as Map<String, dynamic>))
           .toList(),
       variants: (json['variants'] as List? ?? [])
           .map((e) => ProductVariantModel.fromJson(e as Map<String, dynamic>))
           .toList(),
-      isAvailable: json['is_available'] as bool? ?? true,
-      isFeatured: json['is_featured'] as bool? ?? false,
+      offers: offers,
+      offersCount: json['offers_count'] as int? ?? offers.length,
+      priceFrom: Money.tryFromJson(json['price_from']),
+      priceTo: Money.tryFromJson(json['price_to']),
+      stock: json['stock'] as int? ?? 0,
       isLiked: json['is_liked'] as bool? ?? false,
       rating: (json['rating'] as num?)?.toDouble() ?? 0,
       reviewsCount: json['reviews_count'] as int? ?? 0,
@@ -57,23 +86,27 @@ class ProductModel extends Product {
       likesCount: json['likes_count'] as int? ?? 0,
       ordersCount: json['orders_count'] as int? ?? 0,
       favoritesCount: json['favorites_count'] as int? ?? 0,
-      createdAt: DateTime.parse(json['created_at'] as String),
+      createdAt: DateTime.tryParse(json['created_at'] as String? ?? '') ??
+          DateTime.now(),
     );
   }
 
   factory ProductModel.fromEntity(Product p) => ProductModel(
         id: p.id,
-        seller: p.seller,
+        slug: p.slug,
         title: p.title,
         description: p.description,
         category: p.category,
-        price: p.price,
-        oldPrice: p.oldPrice,
-        stock: p.stock,
+        brand: p.brand,
+        attributes: p.attributes,
+        gtin: p.gtin,
         media: p.media,
         variants: p.variants,
-        isAvailable: p.isAvailable,
-        isFeatured: p.isFeatured,
+        offers: p.offers,
+        offersCount: p.offersCount,
+        priceFrom: p.priceFrom,
+        priceTo: p.priceTo,
+        stock: p.stock,
         isLiked: p.isLiked,
         rating: p.rating,
         reviewsCount: p.reviewsCount,
@@ -86,26 +119,24 @@ class ProductModel extends Product {
 
   Map<String, dynamic> toJson() => {
         'id': id,
-        'seller': UserModel.fromEntity(seller).toJson(),
+        'slug': slug,
         'title': title,
         'description': description,
-        'category': category,
-        'price': price,
-        'old_price': oldPrice,
-        'stock': stock,
+        'category': CategoryModel.fromEntity(category).toJson(),
+        'brand': brand == null ? null : BrandModel.fromEntity(brand!).toJson(),
+        'attributes': attributes,
+        'gtin': gtin,
         'media': media.map((m) => MediaModel.fromEntity(m).toJson()).toList(),
         'variants': variants
-            .map((v) => ProductVariantModel(
-                  id: v.id,
-                  name: v.name,
-                  sku: v.sku,
-                  price: v.price,
-                  stock: v.stock,
-                  sortOrder: v.sortOrder,
-                ).toJson())
+            .map((v) => ProductVariantModel.fromEntity(v).toJson())
             .toList(),
-        'is_available': isAvailable,
-        'is_featured': isFeatured,
+        'offers': offers
+            .map((o) => SellerOfferModel.fromEntity(o).toJson())
+            .toList(),
+        'offers_count': offersCount,
+        'price_from': priceFrom?.toJson(),
+        'price_to': priceTo?.toJson(),
+        'stock': stock,
         'is_liked': isLiked,
         'rating': rating,
         'reviews_count': reviewsCount,
@@ -118,17 +149,20 @@ class ProductModel extends Product {
 
   ProductModel copyWith({
     String? id,
-    User? seller,
+    String? slug,
     String? title,
     String? description,
-    String? category,
-    double? price,
-    double? oldPrice,
-    int? stock,
+    Category? category,
+    Brand? brand,
+    Map<String, dynamic>? attributes,
+    String? gtin,
     List<MediaItem>? media,
     List<ProductVariant>? variants,
-    bool? isAvailable,
-    bool? isFeatured,
+    List<SellerOffer>? offers,
+    int? offersCount,
+    Money? priceFrom,
+    Money? priceTo,
+    int? stock,
     bool? isLiked,
     double? rating,
     int? reviewsCount,
@@ -140,17 +174,20 @@ class ProductModel extends Product {
   }) {
     return ProductModel(
       id: id ?? this.id,
-      seller: seller ?? this.seller,
+      slug: slug ?? this.slug,
       title: title ?? this.title,
       description: description ?? this.description,
       category: category ?? this.category,
-      price: price ?? this.price,
-      oldPrice: oldPrice ?? this.oldPrice,
-      stock: stock ?? this.stock,
+      brand: brand ?? this.brand,
+      attributes: attributes ?? this.attributes,
+      gtin: gtin ?? this.gtin,
       media: media ?? this.media,
       variants: variants ?? this.variants,
-      isAvailable: isAvailable ?? this.isAvailable,
-      isFeatured: isFeatured ?? this.isFeatured,
+      offers: offers ?? this.offers,
+      offersCount: offersCount ?? this.offersCount,
+      priceFrom: priceFrom ?? this.priceFrom,
+      priceTo: priceTo ?? this.priceTo,
+      stock: stock ?? this.stock,
       isLiked: isLiked ?? this.isLiked,
       rating: rating ?? this.rating,
       reviewsCount: reviewsCount ?? this.reviewsCount,

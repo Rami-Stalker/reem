@@ -5,6 +5,7 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 import { PrismaService } from '../../../prisma/prisma.service';
 import { AuthUser } from '../../../common/decorators/current-user.decorator';
 import { JwtPayload } from '../interfaces/jwt-payload.interface';
+import { SessionStatus } from '@prisma/client';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
@@ -27,6 +28,23 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
     });
     if (!user || user.disabledAt) {
       throw new UnauthorizedException('User account no longer exists');
+    }
+    if (payload.sid) {
+      const session = await this.prisma.session.findFirst({
+        where: {
+          id: payload.sid,
+          userId: payload.sub,
+          status: SessionStatus.ACTIVE,
+          // Both clocks, every request: a session past its absolute lifetime
+          // must stop working even while its idle clock is still sliding.
+          idleExpiresAt: { gt: new Date() },
+          absoluteExpiresAt: { gt: new Date() },
+        },
+        select: { id: true },
+      });
+      if (!session) {
+        throw new UnauthorizedException('Session has expired');
+      }
     }
     return {
       id: user.id,

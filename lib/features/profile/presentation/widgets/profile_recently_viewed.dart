@@ -6,6 +6,7 @@ import '../../../../core/router/route_paths.dart';
 import '../../../../core/shared/entities/product.dart';
 import '../../../../core/shared/wedgets/product/product_rail.dart';
 import '../providers/profile_overview_provider.dart';
+import '../../../../core/localization/l10n_extension.dart';
 
 /// "Recently viewed" rail on the profile centre.
 class ProfileRecentlyViewed extends ConsumerWidget {
@@ -22,8 +23,8 @@ class ProfileRecentlyViewed extends ConsumerWidget {
     );
 
     return ProductRail(
-      eyebrow: 'Jump back in',
-      title: 'Recently viewed',
+      eyebrow: context.l10n.recentlyViewed,
+      title: context.l10n.recentlyViewed,
       products: products,
       isLoading: isLoading,
       onTapProduct: (p) =>

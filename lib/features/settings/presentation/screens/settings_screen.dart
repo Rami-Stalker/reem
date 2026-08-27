@@ -7,6 +7,7 @@ import '../../../../core/localization/l10n_extension.dart';
 import '../../../../core/router/route_names.dart';
 import '../../../../core/router/route_paths.dart';
 import '../../../auth/presentation/providers/auth_provider.dart';
+import '../../../auth/presentation/widgets/auth_prompt_sheet.dart';
 import '../widgets/settings_category_card.dart';
 import '../widgets/settings_profile_header.dart';
 
@@ -18,12 +19,41 @@ class SettingsScreen extends ConsumerWidget {
     final l10n = context.l10n;
     final auth = ref.watch(authNotifierProvider);
     final isSignedIn = auth.isAuthenticated;
+    Future<void> protectedPush(String route, String title) async {
+      final ok = await requireAuthenticatedUser(
+        context,
+        ref,
+        title: title,
+        message: 'Sign in to manage this securely across your devices.',
+        from: route,
+      );
+      if (ok && context.mounted) context.push(route);
+    }
+
+    Future<void> protectedPushNamed(
+      String name,
+      String path,
+      String title,
+    ) async {
+      final ok = await requireAuthenticatedUser(
+        context,
+        ref,
+        title: title,
+        message: 'Sign in to manage this securely across your devices.',
+        from: path,
+      );
+      if (ok && context.mounted) context.pushNamed(name);
+    }
+
     return ReemScrollPage(
       slivers: [
         PremiumAppBar(title: l10n.settings),
         SliverPadding(
           padding: const EdgeInsets.fromLTRB(
-            DsSpacing.lg, DsSpacing.sm, DsSpacing.lg, 140,
+            DsSpacing.lg,
+            DsSpacing.sm,
+            DsSpacing.lg,
+            140,
           ),
           sliver: SliverList(
             delegate: SliverChildListDelegate([
@@ -35,37 +65,47 @@ class SettingsScreen extends ConsumerWidget {
                   SettingsItemData(
                     icon: Icons.person_outline,
                     title: 'Account settings',
-                    onTap: () => isSignedIn
-                        ? context.pushNamed(RouteNames.accountSettings)
-                        : context.go(RoutePaths.login),
+                    onTap: () => protectedPushNamed(
+                      RouteNames.accountSettings,
+                      RoutePaths.accountSettings,
+                      'Sign in to manage your account',
+                    ),
                   ),
                   SettingsItemData(
                     icon: Icons.security_outlined,
                     title: 'Security',
-                    onTap: () => isSignedIn
-                        ? context.pushNamed(RouteNames.securitySettings)
-                        : context.go(RoutePaths.login),
+                    onTap: () => protectedPushNamed(
+                      RouteNames.securitySettings,
+                      RoutePaths.securitySettings,
+                      'Sign in to manage security',
+                    ),
                   ),
                   SettingsItemData(
                     icon: Icons.devices_outlined,
                     title: 'Devices',
-                    onTap: () => isSignedIn
-                        ? context.pushNamed(RouteNames.deviceManagement)
-                        : context.go(RoutePaths.login),
+                    onTap: () => protectedPushNamed(
+                      RouteNames.deviceManagement,
+                      RoutePaths.deviceManagement,
+                      'Sign in to manage devices',
+                    ),
                   ),
                   SettingsItemData(
                     icon: Icons.storefront_outlined,
                     title: 'Seller verification',
-                    onTap: () => isSignedIn
-                        ? context.pushNamed(RouteNames.sellerVerification)
-                        : context.go(RoutePaths.login),
+                    onTap: () => protectedPushNamed(
+                      RouteNames.sellerVerification,
+                      RoutePaths.sellerVerification,
+                      'Sign in to become a seller',
+                    ),
                   ),
                   SettingsItemData(
                     icon: Icons.badge_outlined,
                     title: l10n.editProfile,
-                    onTap: () => isSignedIn
-                        ? context.pushNamed(RouteNames.editProfile)
-                        : context.go(RoutePaths.login),
+                    onTap: () => protectedPushNamed(
+                      RouteNames.editProfile,
+                      RoutePaths.editProfile,
+                      'Sign in to edit your profile',
+                    ),
                   ),
                   SettingsItemData(
                     icon: Icons.favorite_border,
@@ -75,7 +115,11 @@ class SettingsScreen extends ConsumerWidget {
                   SettingsItemData(
                     icon: Icons.shopping_bag_outlined,
                     title: l10n.orders,
-                    onTap: () => context.pushNamed(RouteNames.orders),
+                    onTap: () => protectedPushNamed(
+                      RouteNames.orders,
+                      RoutePaths.orders,
+                      'Sign in to view orders',
+                    ),
                   ),
                 ],
               ),
@@ -117,12 +161,18 @@ class SettingsScreen extends ConsumerWidget {
                   SettingsItemData(
                     icon: Icons.location_on_outlined,
                     title: l10n.addresses,
-                    onTap: () => context.pushNamed(RouteNames.addresses),
+                    onTap: () => protectedPush(
+                      RoutePaths.addresses,
+                      'Sign in to manage addresses',
+                    ),
                   ),
                   SettingsItemData(
                     icon: Icons.credit_card_outlined,
                     title: l10n.paymentMethods,
-                    onTap: () => context.pushNamed(RouteNames.paymentMethods),
+                    onTap: () => protectedPush(
+                      RoutePaths.paymentMethods,
+                      'Sign in to manage payments',
+                    ),
                   ),
                   SettingsItemData(
                     icon: Icons.admin_panel_settings_outlined,

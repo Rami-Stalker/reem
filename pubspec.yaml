@@ -59,10 +59,16 @@ dependencies:
 
   # Image/media
   image_picker: ^1.2.2
+  # Verification documents. A commercial register often arrives as a PDF that
+  # was never on the camera roll, and `image_picker` only ever offers photos —
+  # so the documents pickers offer the file system as a third source.
+  file_picker: ^12.1.0
   cached_network_image: ^3.4.1
   photo_view: ^0.15.0
 
   # UI widgets
+  # Charts for the seller command centre (revenue / orders trend lines).
+  fl_chart: ^1.2.0
   story_view: ^0.16.6
   flutter_staggered_grid_view: ^0.7.0
   animations: ^2.2.0
@@ -75,6 +81,9 @@ dependencies:
   get_it: ^9.2.1
   freezed: ^3.2.5
   json_serializable: ^6.14.0
+  # Q55 — «يتصل بالزبونة بضغطة» and opening the address in a map. The
+  # standard Flutter package for handing a URI to the OS.
+  url_launcher: ^6.3.1
   intl: ^0.20.2
   pull_to_refresh: ^2.0.0
   flutter_spinkit: ^5.2.2
@@ -95,6 +104,28 @@ dependencies:
   shared_preferences: ^2.5.5
   flutter_secure_storage: ^10.3.0
   font_awesome_flutter: ^11.0.0
+  google_sign_in: ^7.2.0
+  sign_in_with_apple: ^8.1.0
+  cryptography: ^2.9.0
+  crypto: ^3.0.7
+  local_auth: ^3.0.2
+
+  # Voice notes. `record` writes AAC in an M4A container, which is what both
+  # phone platforms produce natively and what the server's sniffer recognises;
+  # `just_audio` plays one back from a URL with headers, which chat media needs
+  # because its bytes sit behind an authorised endpoint.
+  record: ^6.2.1
+  just_audio: ^0.10.6
+  # Where a voice note is written before it is uploaded. Already present
+  # transitively (cached_network_image uses it); declared because this code
+  # imports it directly.
+  path_provider: ^2.1.6
+  flutter_blurhash: ^0.9.1
+  open_filex: ^4.7.0
+  # Joining cache paths and taking the basename of a filename that arrived over
+  # the network. Already present transitively; declared because this code
+  # imports it directly.
+  path: ^1.9.1
 
 dev_dependencies:
   flutter_test:

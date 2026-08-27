@@ -13,6 +13,7 @@ import '../../../../core/shared/wedgets/app/reem_section_header.dart';
 import '../../domain/entities/wishlist_entity.dart';
 import '../providers/profile_provider.dart';
 import '../widgets/favorite_product_card.dart';
+import '../../../../core/localization/l10n_extension.dart';
 
 class FavoritesScreen extends ConsumerStatefulWidget {
   const FavoritesScreen({super.key});
@@ -37,7 +38,7 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
       if (link == null || link == previous?.shareLink) return;
       Clipboard.setData(ClipboardData(text: link.shareUrl));
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Wishlist link copied')),
+        SnackBar(content: Text(context.l10n.wishlistLinkCopied)),
       );
     });
 
@@ -48,7 +49,7 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
 
     return ReemScrollPage(
       slivers: [
-        const PremiumAppBar(title: 'Wishlist'),
+        PremiumAppBar(title: context.l10n.wishlist),
         SliverPadding(
           padding: const EdgeInsets.fromLTRB(
             DsSpacing.lg,
@@ -105,7 +106,7 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
               child: _SavedPostsStrip(posts: overview.posts),
             ),
           if (overview.products.isNotEmpty) ...[
-            const SliverPadding(
+            SliverPadding(
               padding: EdgeInsets.fromLTRB(
                 DsSpacing.lg,
                 DsSpacing.xl,
@@ -114,8 +115,8 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
               ),
               sliver: SliverToBoxAdapter(
                 child: ReemSectionHeader(
-                  title: 'Saved products',
-                  subtitle: 'Price drops and restocks stay on your radar',
+                  title: context.l10n.savedProducts,
+                  subtitle: context.l10n.priceDropsBlurb,
                 ),
               ),
             ),
@@ -170,7 +171,7 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'New collection',
+                context.l10n.newCollection,
                 style: Theme.of(context).textTheme.titleLarge?.copyWith(
                       fontWeight: DsTypography.bold,
                     ),
@@ -180,8 +181,8 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
                 controller: name,
                 autofocus: true,
                 textInputAction: TextInputAction.next,
-                decoration: const InputDecoration(
-                  labelText: 'Name',
+                decoration: InputDecoration(
+                  labelText: context.l10n.fullName,
                   prefixIcon: Icon(Icons.folder_special_outlined),
                 ),
               ),
@@ -189,8 +190,8 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
               TextField(
                 controller: description,
                 maxLines: 2,
-                decoration: const InputDecoration(
-                  labelText: 'Description',
+                decoration: InputDecoration(
+                  labelText: context.l10n.storeDescription,
                   prefixIcon: Icon(Icons.notes_outlined),
                 ),
               ),
@@ -200,7 +201,7 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
                   Expanded(
                     child: OutlinedButton(
                       onPressed: () => Navigator.of(context).pop(),
-                      child: const Text('Cancel'),
+                      child: Text(context.l10n.cancel),
                     ),
                   ),
                   const SizedBox(width: DsSpacing.sm),
@@ -216,7 +217,7 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
                         Navigator.of(context).pop();
                       },
                       icon: const Icon(Icons.add_rounded),
-                      label: const Text('Create'),
+                      label: Text(context.l10n.add),
                     ),
                   ),
                 ],
@@ -249,14 +250,14 @@ class _WishlistHeader extends StatelessWidget {
       children: [
         Expanded(
           child: ReemSectionHeader(
-            title: 'Saved items',
-            subtitle: isLoading ? 'Syncing your wishlist' : '$totalSaved saved',
+            title: context.l10n.savedItems,
+            subtitle: isLoading ? context.l10n.syncingWishlist : context.l10n.itemsCount(totalSaved),
           ),
         ),
         FilledButton.icon(
           onPressed: onCreateCollection,
           icon: const Icon(Icons.create_new_folder_outlined),
-          label: const Text('Collection'),
+          label: Text(context.l10n.collections),
         ),
       ],
     );
@@ -291,7 +292,7 @@ class _ErrorBanner extends StatelessWidget {
             ),
           ),
           IconButton(
-            tooltip: 'Retry',
+            tooltip: context.l10n.retry,
             onPressed: onRetry,
             icon: const Icon(Icons.refresh_rounded),
           ),
@@ -321,14 +322,14 @@ class _EmptyWishlistState extends StatelessWidget {
           ),
           const SizedBox(height: DsSpacing.md),
           Text(
-            'No saved items yet',
+            context.l10n.noSavedItems,
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
                   fontWeight: DsTypography.bold,
                 ),
           ),
           const SizedBox(height: DsSpacing.xs),
           Text(
-            'Products, sellers, posts, and collections will appear here.',
+            context.l10n.collectionsBlurb,
             textAlign: TextAlign.center,
             style: TextStyle(color: colors.onSurfaceVariant),
           ),
@@ -336,7 +337,7 @@ class _EmptyWishlistState extends StatelessWidget {
           FilledButton.icon(
             onPressed: onCreateCollection,
             icon: const Icon(Icons.create_new_folder_outlined),
-            label: const Text('Create collection'),
+            label: Text(context.l10n.createCollection),
           ),
         ],
       ),
@@ -367,9 +368,9 @@ class _CollectionsSection extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const ReemSectionHeader(
-            title: 'Collections',
-            subtitle: 'Shareable lists for products, sellers, and posts',
+          ReemSectionHeader(
+            title: context.l10n.collections,
+            subtitle: context.l10n.collectionsBlurb,
           ),
           const SizedBox(height: DsSpacing.md),
           ...collections.map(
@@ -439,7 +440,7 @@ class _CollectionTile extends StatelessWidget {
             ),
           ),
           IconButton(
-            tooltip: 'Share',
+            tooltip: context.l10n.a11yShare,
             onPressed: isMutating ? null : onShare,
             icon: const Icon(Icons.ios_share_rounded),
           ),
@@ -457,8 +458,8 @@ class _SavedSellersStrip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return _HorizontalSection(
-      title: 'Saved sellers',
-      subtitle: 'Stores you want to revisit',
+      title: context.l10n.savedSellers,
+      subtitle: context.l10n.storesToRevisit,
       height: 116,
       itemCount: sellers.length,
       itemBuilder: (context, index) => _SellerPill(seller: sellers[index].seller),
@@ -474,8 +475,8 @@ class _SavedPostsStrip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return _HorizontalSection(
-      title: 'Saved posts',
-      subtitle: 'Inspiration from your feed',
+      title: context.l10n.savedPosts,
+      subtitle: context.l10n.priceDropsBlurb,
       height: 132,
       itemCount: posts.length,
       itemBuilder: (context, index) => _PostPreview(post: posts[index].post),
@@ -537,7 +538,7 @@ class _SellerPill extends StatelessWidget {
     final colors = context.dsColors;
     return Semantics(
       button: true,
-      label: 'Open ${seller.name}',
+      label: context.l10n.a11yOpen(seller.name),
       child: InkWell(
         borderRadius: DsRadius.borderLg,
         onTap: () => context.pushNamed(
@@ -619,18 +620,23 @@ class _PostPreview extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  post.caption.isEmpty ? product.title : post.caption,
+                  post.caption.isEmpty
+                      ? (product?.title ?? post.author.name)
+                      : post.caption,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(fontWeight: DsTypography.semiBold),
                 ),
-                const SizedBox(height: 4),
-                Text(
-                  product.title,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(color: colors.onSurfaceVariant),
-                ),
+                // A post that tags nothing has no second line to give.
+                if (product != null) ...[
+                  const SizedBox(height: 4),
+                  Text(
+                    product.title,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(color: colors.onSurfaceVariant),
+                  ),
+                ],
               ],
             ),
           ),
@@ -643,12 +649,12 @@ class _PostPreview extends StatelessWidget {
 class _PostProductImage extends StatelessWidget {
   const _PostProductImage({required this.product});
 
-  final Product product;
+  final Product? product;
 
   @override
   Widget build(BuildContext context) {
     final colors = context.dsColors;
-    final url = product.coverUrl;
+    final url = product?.coverUrl;
     return ClipRRect(
       borderRadius: DsRadius.borderMd,
       child: SizedBox(

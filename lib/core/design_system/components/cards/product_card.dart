@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_blurhash/flutter_blurhash.dart';
 import 'package:flutter/material.dart';
 
 import '../../foundation/motion/animations/scale_animations.dart';
@@ -11,6 +12,7 @@ import '../../foundation/tokens/ds_typography.dart';
 import '../badges/ds_badge.dart';
 import '../buttons/ds_icon_button.dart';
 import '../loaders/ds_skeleton.dart';
+import '../../../media/media_variants.dart';
 
 /// A premium product card for grids and carousels.
 ///
@@ -22,6 +24,7 @@ class DsProductCard extends StatelessWidget {
     required this.title,
     required this.price,
     this.imageUrl,
+    this.blurHash,
     this.compareAtPrice,
     this.discountPercent,
     this.sellerName,
@@ -40,6 +43,11 @@ class DsProductCard extends StatelessWidget {
   final String title;
   final String price;
   final String? imageUrl;
+
+  /// A blurred stand-in for the photograph, drawn while it is still arriving.
+  /// Comes from `ProductMedia.blur_hash`; null for an external link, in which
+  /// case the card falls back to a plain placeholder.
+  final String? blurHash;
   final String? compareAtPrice;
   final int? discountPercent;
   final String? sellerName;
@@ -72,6 +80,7 @@ class DsProductCard extends StatelessWidget {
         children: [
           _Media(
             imageUrl: imageUrl,
+            blurHash: blurHash,
             aspectRatio: imageAspectRatio,
             isFavorite: isFavorite,
             soldOut: soldOut,
@@ -132,6 +141,7 @@ class DsProductCard extends StatelessWidget {
 class _Media extends StatelessWidget {
   const _Media({
     required this.imageUrl,
+    required this.blurHash,
     required this.aspectRatio,
     required this.isFavorite,
     required this.soldOut,
@@ -142,6 +152,7 @@ class _Media extends StatelessWidget {
   });
 
   final String? imageUrl;
+  final String? blurHash;
   final double aspectRatio;
   final bool isFavorite;
   final bool soldOut;
@@ -149,6 +160,14 @@ class _Media extends StatelessWidget {
   final bool isNew;
   final String? badgeLabel;
   final VoidCallback? onFavoriteToggle;
+
+  /// The hash when there is one, a flat swatch when there is not. Decoded at
+  /// 32×32 — all the detail a blur hash carries — so it costs nothing to draw.
+  Widget _placeholder(DsColorScheme c) {
+    final hash = blurHash;
+    if (hash == null || hash.isEmpty) return ColoredBox(color: c.shimmerBase);
+    return BlurHash(hash: hash, imageFit: BoxFit.cover);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -160,9 +179,9 @@ class _Media extends StatelessWidget {
         children: [
           if (imageUrl != null && imageUrl!.isNotEmpty)
             CachedNetworkImage(
-              imageUrl: imageUrl!,
+              imageUrl: MediaVariants.thumb(imageUrl!),
               fit: BoxFit.cover,
-              placeholder: (_, _) => ColoredBox(color: c.shimmerBase),
+              placeholder: (_, _) => _placeholder(c),
               errorWidget: (_, _, _) => _fallback(c),
             )
           else

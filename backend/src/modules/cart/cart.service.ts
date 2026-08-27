@@ -3,11 +3,19 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { ProductStatus } from '@prisma/client';
+import { OfferStatus } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
-import { CartRepository, CART_INCLUDE } from './cart.repository';
-import { CartItemRecord, serializeCart } from './cart.serializer';
+import { CartRepository } from './cart.repository';
+import {
+  CartItemRecord,
+  availableStockOf,
+  serializeCart,
+} from './cart.serializer';
 import { AddCartItemDto } from './dto/cart.dto';
+
+export type CartOwner =
+  | { kind: 'user'; userId: string }
+  | { kind: 'guest'; guestSessionId: string };
 
 @Injectable()
 export class CartService {
@@ -16,8 +24,12 @@ export class CartService {
     private readonly prisma: PrismaService,
   ) {}
 
-  async getCart(userId: string) {
-    const items = await this.repo.findItems(userId);
+  async getCart(owner: string | CartOwner) {
+    const resolved = this.resolveOwner(owner);
+    const items =
+      resolved.kind === 'user'
+        ? await this.repo.findItems(resolved.userId)
+        : await this.repo.findGuestItems(resolved.guestSessionId);
     return serializeCart(items as CartItemRecord[]);
   }
 
@@ -26,30 +38,50 @@ export class CartService {
     return (await this.repo.findItems(userId)) as CartItemRecord[];
   }
 
-  async addItem(userId: string, dto: AddCartItemDto) {
-    const product = await this.prisma.product.findUnique({
-      where: { id: dto.product_id },
-      include: { variants: true },
+  async addItem(owner: string | CartOwner, dto: AddCartItemDto) {
+    const resolved = this.resolveOwner(owner);
+    const offer = await this.prisma.sellerOffer.findUnique({
+      where: { id: dto.offer_id },
+      include: { variants: true, product: { select: { status: true } } },
     });
-    if (!product) throw new NotFoundException('Product not found');
-    if (product.status !== ProductStatus.ACTIVE) {
-      throw new BadRequestException('Product is not available for purchase');
+    if (!offer) throw new NotFoundException('Offer not found');
+    if (offer.status !== OfferStatus.ACTIVE || !offer.isActive) {
+      throw new BadRequestException('This listing is not available right now');
     }
 
-    let availableStock = product.stock;
-    if (dto.variant_id) {
-      const variant = product.variants.find((v) => v.id === dto.variant_id);
-      if (!variant) throw new NotFoundException('Variant not found');
+    let availableStock = offer.stock;
+    if (dto.offer_variant_id) {
+      const variant = offer.variants.find((v) => v.id === dto.offer_variant_id);
+      if (!variant) throw new NotFoundException('Variant not found on this offer');
       availableStock = variant.stock;
     }
 
     const quantity = dto.quantity ?? 1;
-    const existing = await this.repo.findExisting(
-      userId,
-      dto.product_id,
-      dto.variant_id ?? null,
-    );
+    const existing =
+      resolved.kind === 'user'
+        ? await this.repo.findExisting(
+            resolved.userId,
+            dto.offer_id,
+            dto.offer_variant_id ?? null,
+          )
+        : await this.repo.findGuestExisting(
+            resolved.guestSessionId,
+            dto.offer_id,
+            dto.offer_variant_id ?? null,
+          );
     const targetQty = (existing?.quantity ?? 0) + quantity;
+
+    // Q33 P2 — sellers set their own minimum and maximum order quantity.
+    if (targetQty < offer.minOrderQty) {
+      throw new BadRequestException(
+        `This seller requires at least ${offer.minOrderQty} per order`,
+      );
+    }
+    if (offer.maxOrderQty && targetQty > offer.maxOrderQty) {
+      throw new BadRequestException(
+        `This seller allows at most ${offer.maxOrderQty} per order`,
+      );
+    }
     if (targetQty > availableStock) {
       throw new BadRequestException(
         availableStock === 0
@@ -59,45 +91,78 @@ export class CartService {
     }
 
     if (existing) {
-      await this.repo.updateQuantity(existing.id, targetQty);
+      if (resolved.kind === 'user') {
+        await this.repo.updateQuantity(existing.id, targetQty);
+      } else {
+        await this.repo.updateGuestQuantity(existing.id, targetQty);
+      }
+    } else if (resolved.kind === 'user') {
+      await this.repo.create({
+        userId: resolved.userId,
+        offerId: dto.offer_id,
+        offerVariantId: dto.offer_variant_id ?? null,
+        quantity,
+      });
     } else {
-      await this.prisma.cartItem.create({
-        data: {
-          userId,
-          productId: dto.product_id,
-          variantId: dto.variant_id ?? null,
-          quantity,
-        },
-        include: CART_INCLUDE,
+      await this.repo.createGuest({
+        guestSessionId: resolved.guestSessionId,
+        offerId: dto.offer_id,
+        offerVariantId: dto.offer_variant_id ?? null,
+        quantity,
       });
     }
-    return this.getCart(userId);
+    return this.getCart(resolved);
   }
 
-  async updateItem(userId: string, id: string, quantity: number) {
-    const item = await this.requireItem(userId, id);
-    const stock = item.variant ? item.variant.stock : item.product.stock;
+  async updateItem(owner: string | CartOwner, id: string, quantity: number) {
+    const resolved = this.resolveOwner(owner);
+    const item = await this.requireItem(resolved, id);
+    const stock = availableStockOf(item);
     if (quantity > stock) {
       throw new BadRequestException(`Only ${stock} in stock`);
     }
-    await this.repo.updateQuantity(id, quantity);
-    return this.getCart(userId);
+    if (resolved.kind === 'user') {
+      await this.repo.updateQuantity(id, quantity);
+    } else {
+      await this.repo.updateGuestQuantity(id, quantity);
+    }
+    return this.getCart(resolved);
   }
 
-  async removeItem(userId: string, id: string) {
-    await this.requireItem(userId, id);
-    await this.repo.delete(id);
-    return this.getCart(userId);
+  async removeItem(owner: string | CartOwner, id: string) {
+    const resolved = this.resolveOwner(owner);
+    await this.requireItem(resolved, id);
+    if (resolved.kind === 'user') {
+      await this.repo.delete(id);
+    } else {
+      await this.repo.deleteGuest(id);
+    }
+    return this.getCart(resolved);
   }
 
-  async clear(userId: string) {
-    await this.repo.clear(userId);
-    return this.getCart(userId);
+  async clear(owner: string | CartOwner) {
+    const resolved = this.resolveOwner(owner);
+    if (resolved.kind === 'user') {
+      await this.repo.clear(resolved.userId);
+    } else {
+      await this.repo.clearGuest(resolved.guestSessionId);
+    }
+    return this.getCart(resolved);
   }
 
-  private async requireItem(userId: string, id: string): Promise<CartItemRecord> {
-    const item = await this.repo.findItem(id, userId);
+  private async requireItem(
+    owner: CartOwner,
+    id: string,
+  ): Promise<CartItemRecord> {
+    const item =
+      owner.kind === 'user'
+        ? await this.repo.findItem(id, owner.userId)
+        : await this.repo.findGuestItem(id, owner.guestSessionId);
     if (!item) throw new NotFoundException('Cart item not found');
     return item as CartItemRecord;
+  }
+
+  private resolveOwner(owner: string | CartOwner): CartOwner {
+    return typeof owner === 'string' ? { kind: 'user', userId: owner } : owner;
   }
 }

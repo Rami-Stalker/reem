@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/design_system/design_system.dart';
+import '../../../../core/localization/l10n_extension.dart';
 
 /// A premium section header for the profile centre: optional rose eyebrow, an
 /// elegant title and an optional "See all" affordance. Carries its own padding.
@@ -10,7 +11,7 @@ class ProfileSectionHeader extends StatelessWidget {
     required this.title,
     this.eyebrow,
     this.onSeeAll,
-    this.seeAllLabel = 'See all',
+    this.seeAllLabel,
     this.padding = const EdgeInsets.fromLTRB(
       DsSpacing.lg,
       0,
@@ -22,7 +23,8 @@ class ProfileSectionHeader extends StatelessWidget {
   final String title;
   final String? eyebrow;
   final VoidCallback? onSeeAll;
-  final String seeAllLabel;
+  /// Defaults to the localised "see all" when omitted.
+  final String? seeAllLabel;
   final EdgeInsets padding;
 
   @override
@@ -58,7 +60,7 @@ class ProfileSectionHeader extends StatelessWidget {
               child: Row(
                 children: [
                   Text(
-                    seeAllLabel,
+                    seeAllLabel ?? context.l10n.viewAll,
                     style: theme.textTheme.labelLarge?.copyWith(
                       color: c.primary,
                       fontWeight: DsTypography.semiBold,

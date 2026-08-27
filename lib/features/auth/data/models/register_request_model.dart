@@ -1,25 +1,52 @@
 import 'package:reem/core/shared/entities/user.dart';
 
 class RegisterRequestModel {
-  final String name;
-  final String? email;
+  final String firstName;
+  final String lastName;
   final String phone;
-  final String password;
+
+  /// Proof that the number was verified moments ago, minted by
+  /// `POST /auth/otp/login/verify`. The server refuses to create an account
+  /// without it — which is what stops one person claiming every number in a
+  /// contact list and locking those women out of signing up themselves.
+  final String registrationTicket;
+
+  /// Optional, and off by default. She signs in with a code on her SIM; a
+  /// password is an accelerator she can add later and can never, on its own,
+  /// admit a device the account has not used before.
+  final String? password;
+  final String country;
+  final String city;
   final UserRole role;
 
+  /// Q43/Q138 P1 — the platform is for women, enforced by self-declaration at
+  /// signup. The server rejects a registration that does not carry it, so this
+  /// is not optional and has no default: the attestation has to be something
+  /// she actually made on the form.
+  final bool declaredFemale;
+
   const RegisterRequestModel({
-    required this.name,
-    this.email,
+    required this.firstName,
+    required this.lastName,
     required this.phone,
-    required this.password,
+    required this.registrationTicket,
+    this.password,
+    required this.country,
+    required this.city,
+    required this.declaredFemale,
     this.role = UserRole.customer,
   });
 
   Map<String, dynamic> toJson() => {
-        'name': name,
-        if (email != null) 'email': email,
-        'phone': phone,
-        'password': password,
-        'role': role.wire,
-      };
+    'first_name': firstName,
+    'last_name': lastName,
+    'name': '$firstName $lastName',
+    'phone': phone,
+    'registration_ticket': registrationTicket,
+    if (password != null && password!.isNotEmpty) 'password': password,
+    'country': country,
+    'city': city,
+    'declared_female': declaredFemale,
+    'role': role.wire,
+  };
 }

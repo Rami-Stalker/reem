@@ -6,6 +6,7 @@ import '../../../../core/design_system/design_system.dart';
 import '../../../../core/router/route_paths.dart';
 import '../../domain/entities/home_notification.dart';
 import '../providers/home_content_provider.dart';
+import '../../../../core/localization/l10n_extension.dart';
 
 /// A glanceable summary of the notifications centre — unread count and the most
 /// recent few, each routed into the full centre.
@@ -46,7 +47,7 @@ class HomeNotificationsSummary extends ConsumerWidget {
                     size: 20, color: c.primary),
                 const SizedBox(width: DsSpacing.xs),
                 Text(
-                  'Notifications',
+                  context.l10n.notifications,
                   style: TextStyle(
                     fontFamily: DsTypography.fontFamily,
                     fontWeight: DsTypography.bold,

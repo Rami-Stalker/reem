@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/design_system/design_system.dart';
 import '../../../../core/router/route_paths.dart';
 import '../../../../core/shared/entities/user.dart';
+import '../../../../core/localization/l10n_extension.dart';
 
 /// Identity block beneath the cover: name + verification, @username, phone and
 /// the primary edit / share / settings actions.
@@ -53,7 +54,7 @@ class ProfileIdentity extends StatelessWidget {
                 icon: user.isVerified
                     ? Icons.verified_user_rounded
                     : Icons.gpp_maybe_outlined,
-                label: user.isVerified ? 'Verified' : 'Unverified',
+                label: user.isVerified ? context.l10n.verified : context.l10n.unverified,
                 tone: user.isVerified ? c.success : c.warning,
               ),
               if (user.phone.isNotEmpty)
@@ -67,7 +68,7 @@ class ProfileIdentity extends StatelessWidget {
             children: [
               Expanded(
                 child: DsButton(
-                  label: 'Edit profile',
+                  label: context.l10n.editProfile,
                   icon: Icons.edit_outlined,
                   variant: DsButtonVariant.tonal,
                   size: DsButtonSize.md,

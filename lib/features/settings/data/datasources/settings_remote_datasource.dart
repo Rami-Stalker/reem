@@ -1,16 +1,40 @@
 import 'package:reem/core/shared/models/user_model.dart';
 
+import '../../domain/entities/address_draft.dart';
 import '../models/address_model.dart';
+import '../../domain/entities/coupon_validation.dart';
 import '../models/coupon_model.dart';
+import '../models/notification_preferences_model.dart';
 import '../models/notification_settings_model.dart';
 import '../models/rewards_model.dart';
+import '../../domain/entities/notification_preferences.dart';
 
 abstract interface class SettingsRemoteDataSource {
   Future<List<AddressModel>> getAddresses();
 
+  Future<AddressModel> createAddress(AddressDraft draft);
+
+  Future<AddressModel> updateAddress(String id, AddressDraft draft);
+
+  Future<void> deleteAddress(String id);
+
+  Future<AddressModel> setDefaultAddress(String id);
+
   Future<List<CouponModel>> getCoupons();
 
+  Future<CouponValidation> validateCoupon({
+    required String code,
+    required double subtotal,
+    required String currency,
+  });
+
   Future<List<NotificationSettingsModel>> getNotifications();
+
+  Future<NotificationPreferencesModel> getNotificationPreferences();
+
+  Future<NotificationPreferencesModel> updateNotificationPreferences(
+    NotificationPreferences preferences,
+  );
 
   Future<UserModel> updateProfile({
     String? name,

@@ -12,6 +12,10 @@ import {
 
 const dashboardRoles = [
   UserRole.SUPER_ADMIN,
+  UserRole.OPERATIONS_ADMIN,
+  UserRole.SUPPORT_ADMIN,
+  UserRole.FINANCE_ADMIN,
+  UserRole.CONTENT_MODERATOR,
   UserRole.ADMIN,
   UserRole.SUPPORT,
   UserRole.SELLER,

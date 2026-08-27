@@ -3,6 +3,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/design_system/design_system.dart';
+import '../../../../core/localization/l10n_extension.dart';
 
 class CategoriesScreen extends StatelessWidget {
   const CategoriesScreen({super.key});  
@@ -27,7 +28,7 @@ class CategoriesScreen extends StatelessWidget {
                 blendMode: BlendMode.srcIn,
                 shaderCallback: (bounds) => context.primaryGradient.createShader(bounds),
                 child: Text(
-                  'Categories',
+                  context.l10n.categories,
                   style: TextStyle(
                     fontFamily: DsTypography.fontFamily,
                     fontWeight: DsTypography.bold,
@@ -73,57 +74,57 @@ class CategoriesScreen extends StatelessWidget {
   List<_Category> _getCategories() {
     return [
       _Category(
-        name: 'Dresses',
-        subtitle: 'Elegant & Casual',
+        name: 'فساتين',
+        subtitle: 'سهرة وكاجوال',
         icon: Icons.checkroom_rounded,
         gradient: DsGradients.primarySoft,
         count: 245,
       ),
       _Category(
-        name: 'Beauty',
-        subtitle: 'Makeup & Skincare',
+        name: 'مكياج',
+        subtitle: 'تجميل وعناية بالبشرة',
         icon: Icons.face_retouching_natural,
         gradient: DsGradients.lavenderBlush,
         count: 189,
       ),
       _Category(
-        name: 'Bags',
-        subtitle: 'Handbags & Purses',
+        name: 'حقائب',
+        subtitle: 'حقائب يد ومحافظ',
         icon: Icons.shopping_bag_rounded,
         gradient: DsGradients.sunset,
         count: 156,
       ),
       _Category(
-        name: 'Jewelry',
-        subtitle: 'Necklaces & Earrings',
+        name: 'مجوهرات',
+        subtitle: 'عقود وأقراط',
         icon: Icons.diamond_outlined,
         gradient: DsGradients.champagne,
         count: 98,
       ),
       _Category(
-        name: 'Gifts',
-        subtitle: 'Special Moments',
+        name: 'هدايا',
+        subtitle: 'لحظات خاصة',
         icon: Icons.card_giftcard_rounded,
         gradient: DsGradients.rewards,
         count: 134,
       ),
       _Category(
-        name: 'Shoes',
-        subtitle: 'Heels & Flats',
+        name: 'أحذية',
+        subtitle: 'كعب عالٍ ومسطّح',
         icon: Icons.checkroom_rounded,
         gradient: DsGradients.accent,
         count: 178,
       ),
       _Category(
-        name: 'Accessories',
-        subtitle: 'Scarves & More',
+        name: 'إكسسوارات',
+        subtitle: 'أوشحة وأكثر',
         icon: Icons.shopping_basket_rounded,
         gradient: DsGradients.primary,
         count: 112,
       ),
       _Category(
-        name: 'Perfumes',
-        subtitle: 'Fragrances',
+        name: 'عطور',
+        subtitle: 'روائح فاخرة',
         icon: Icons.spa_rounded,
         gradient: DsGradients.soft,
         count: 67,
@@ -209,7 +210,7 @@ class _CategoryCard extends StatelessWidget {
             const SizedBox(height: 4),
             // Product count
             Text(
-              '${category.count} Products',
+              context.l10n.piecesCount('${category.count}'),
               style: TextStyle(
                 fontSize: DsTypography.labelSmall,
                 color: colors.onSurfaceVariant,

@@ -11,6 +11,7 @@ import {
 } from '../../common/serializers';
 import { StoriesRepository } from './stories.repository';
 import { CreateStoryDto } from './dto/create-story.dto';
+import { MediaService } from '../media/media.service';
 
 const STORY_TTL_HOURS = 24;
 
@@ -20,6 +21,7 @@ export class SellerStoriesService {
   constructor(
     private readonly repo: StoriesRepository,
     private readonly events: EventEmitter2,
+    private readonly media: MediaService,
   ) {}
 
   async create(user: AuthUser, dto: CreateStoryDto) {
@@ -33,6 +35,11 @@ export class SellerStoriesService {
       link: dto.link ?? null,
       expiresAt,
     });
+    // The story now references the upload, so it is no longer an orphan the
+    // sweeper may delete. After the write, not before: a create that fails
+    // should leave the asset collectable.
+    await this.media.markAttached(user.id, [dto.media_url]);
+
     this.events.emit(AppEvent.StoryPublished, {
       sellerId: user.id,
       storyId: story.id,

@@ -2,25 +2,61 @@
 abstract final class ApiEndpoints {
   // Auth
   static const authLogin = '/auth/login';
+  static const authGuest = '/auth/guest';
   static const authRegister = '/auth/register';
   static const authRefresh = '/auth/refresh-token';
   static const authLogout = '/auth/logout';
   static const authLogoutAll = '/auth/logout-all';
-  static const authSocial = '/auth/social';
   static const authMe = '/auth/me';
   static const authForgotPassword = '/auth/forgot-password';
   static const authOtpRequest = '/auth/otp/request';
   static const authOtpVerify = '/auth/otp/verify';
+
+  /// The main door. `start` sends a code to whatever number she typed —
+  /// answering identically whether or not it has an account — and `verify`
+  /// either signs her in or hands back a ticket to create the account.
+  static const authOtpLoginStart = '/auth/otp/login/start';
+  static const authOtpLoginVerify = '/auth/otp/login/verify';
   static const authResetPassword = '/auth/reset-password';
   static const authAccount = '/auth/account';
   static const authAccountPassword = '/auth/account/password';
-  static const authAccountLink = '/auth/account/link';
-  static String authAccountUnlink(String provider) =>
-      '/auth/account/link/$provider';
   static const authSecurity = '/auth/security';
+
+  /// Moving the account to another number. Three steps, because the number
+  /// being *left* has to be proved too — one code on the incoming number is
+  /// exactly what a SIM swapper can produce.
+  static const authPhoneChangeStart = '/auth/account/phone/start';
+  static const authPhoneChangePending = '/auth/account/phone/pending';
+  static String authPhoneChangeVerifyCurrent(String id) =>
+      '/auth/account/phone/$id/verify-current';
+  static String authPhoneChangeConfirm(String id) =>
+      '/auth/account/phone/$id/confirm';
+  static String authPhoneChange(String id) => '/auth/account/phone/$id';
+
+  /// Step-up: a second factor before a sensitive action.
+  static const authStepUpRequest = '/auth/step-up/request';
+  static const authStepUpVerify = '/auth/step-up/verify';
+
+  /// Written-down single-use codes, and an authenticator app.
+  static const authRecoveryCodes = '/auth/recovery/codes';
+  static const authTotpEnroll = '/auth/totp/enroll';
+  static const authTotpConfirm = '/auth/totp/confirm';
+
+  /// The last door: the SIM is gone. Unauthenticated by necessity.
+  static const authRecoveryCases = '/auth/recovery/cases';
+  static String authRecoveryCaseStatus(String id) =>
+      '/auth/recovery/cases/$id/status';
+  static String authRecoveryCaseCancel(String id) =>
+      '/auth/recovery/cases/$id/cancel';
+  /// Registers this install's public key. Public: a visitor's device exists
+  /// before her account does, and holding a key proves nothing by itself.
+  static const authDeviceKeys = '/auth/device-keys';
   static const authDevices = '/auth/devices';
   static String authDevice(String id) => '/auth/devices/$id';
-  static String authTrustDevice(String id) => '/auth/devices/$id/trust';
+  // `authTrustDevice` is gone with the route behind it. Declaring a device
+  // trusted took nothing but a live session and a device id, which made
+  // "trusted device" a claim the client could simply assert. Trust is now
+  // earned by completing a code on the device, and by nothing else.
   static const authSessions = '/auth/sessions';
   static String authSession(String id) => '/auth/sessions/$id';
   static const authSellerVerification = '/auth/seller-verification';
@@ -72,6 +108,14 @@ abstract final class ApiEndpoints {
 
   // Discovery (collections, recommendations, similar)
   static const discoveryHome = '/discovery/home';
+
+  /// The editorial home page — banners, categories, deals, her cart, her
+  /// points. Distinct from [discoveryHome], which is the product-collection
+  /// feed underneath it.
+  static const homeContent = '/discovery/home-content';
+
+  /// Everything her profile centre renders, in one call.
+  static const profileOverview = '/users/me/overview';
   static const discoveryRecommended = '/discovery/recommended';
   static String discoveryCollection(String key) =>
       '/discovery/collections/$key';
@@ -84,6 +128,12 @@ abstract final class ApiEndpoints {
 
   // Seller — product management
   static const sellerProducts = '/seller/products';
+
+  /// The seller's own catalog listing. It is served by the *offers* controller,
+  /// not `/seller/products`: since the central-catalog split a seller does not
+  /// own products, they own offers on them, so the list is offers with their
+  /// product nested (which is exactly what `ManagedProductModel` parses).
+  static const sellerOffers = '/seller/offers';
   static String sellerProductById(String id) => '/seller/products/$id';
   static String sellerProductStatus(String id) => '/seller/products/$id/status';
   static String sellerProductStock(String id) => '/seller/products/$id/stock';
@@ -91,6 +141,18 @@ abstract final class ApiEndpoints {
       '/seller/products/$id/variants';
   static String sellerProductVariant(String id, String variantId) =>
       '/seller/products/$id/variants/$variantId';
+
+  // Seller commerce command centre
+  static const sellerCommerceOverview = '/seller/commerce/overview';
+
+  // The seller's order queue — the screen she works a sale from (Q37/Q57).
+  static const sellerOrders = '/seller/orders';
+  static String sellerOrderById(String id) => '/seller/orders/$id';
+  static String sellerOrderConfirm(String id) => '/seller/orders/$id/confirm';
+  static String sellerOrderReady(String id) => '/seller/orders/$id/ready';
+  static String sellerOrderHandOver(String id) => '/seller/orders/$id/hand-over';
+  static String sellerOrderDeliver(String id) => '/seller/orders/$id/deliver';
+  static String sellerOrderCancel(String id) => '/seller/orders/$id/cancel';
 
   // Search
   static const search = '/search';
@@ -206,6 +268,7 @@ abstract final class ApiEndpoints {
   static String addressById(String id) => '/addresses/$id';
   static const paymentMethods = '/payment-methods';
   static const coupons = '/coupons';
+  static const couponsValidate = '/coupons/validate';
   static const rewards = '/rewards';
   static const rewardsHistory = '/rewards/history';
   static const membershipSummary = '/rewards/membership';
@@ -217,7 +280,47 @@ abstract final class ApiEndpoints {
   static const referralsApply = '/referrals/apply';
   static const referralsCodes = '/referrals/codes';
   static const referralsAnalytics = '/referrals/analytics';
+
+  // Wallet and finance (Q41–Q43, Q107)
+  static const wallet = '/ledger/wallet';
+  static const walletTransactions = '/ledger/wallet/transactions';
+  static const loyaltyConvert = '/finance/loyalty/convert';
+  static const disputes = '/finance/disputes';
+  static const sellerEarnings = '/finance/seller/earnings';
+  static const adminFinanceOverview = '/finance/admin/overview';
+  static const adminFxSync = '/finance/admin/fx/sync';
+
+  // Invoices (Q51 — one per order, one per seller)
+  static String invoicesForOrder(String orderId) => '/invoices/order/$orderId';
+  static String invoiceById(String id) => '/invoices/$id';
+  static String issueSellerInvoice(String sellerOrderId) =>
+      '/invoices/seller-order/$sellerOrderId';
+
+  // Shipment tracking (Q64) — the tracking code is the credential, so this
+  // one needs no session.
+  static String shipmentTrack(String trackingCode) =>
+      '/shipments/track/$trackingCode';
+
+  // Courier app (Q55)
+  static const courierToday = '/shipments/courier/today';
+  static String shipmentPickUp(String id) => '/shipments/$id/pick-up';
+  static String shipmentOutForDelivery(String id) =>
+      '/shipments/$id/out-for-delivery';
+  static String shipmentDeliver(String id) => '/shipments/$id/deliver';
+  static String shipmentFail(String id) => '/shipments/$id/fail';
   static const notifications = '/notifications';
+  static const notificationPreferences = '/notifications/preferences';
+
+  // Media uploads
+  //
+  // One file per request, multipart, with `purpose` alongside it. Uploading is
+  // separate from creating the product or story the file belongs to on
+  // purpose: a woman who loses signal on submit should not lose four
+  // photographs with it.
+  static const mediaUploads = '/media/uploads';
+
+  /// Private assets — verification documents — are never on the public mount.
+  static String mediaFile(String id) => '/media/$id/file';
 
   // Admin
   static const adminStats = '/admin/stats';

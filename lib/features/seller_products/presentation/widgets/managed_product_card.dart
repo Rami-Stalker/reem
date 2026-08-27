@@ -1,13 +1,20 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/design_system/components/cards/surface_card.dart';
 import '../../../../core/design_system/design_system.dart';
+import '../../../../core/localization/l10n_extension.dart';
 import '../../domain/entities/managed_product.dart';
 import '../../domain/entities/product_status.dart';
 import 'product_status_chip.dart';
 
 enum ProductCardAction { edit, activate, draft, archive, delete }
 
+/// One listing in the seller's product list: its photo, price, stock, status
+/// and the menu of things she can do to it.
+///
+/// Colours come from the atelier palette rather than the old fixed slate set,
+/// and the row-menu labels are localized — they were English literals sitting
+/// next to a stock line that had already been hand-translated into Arabic, so
+/// the same row spoke both languages at once.
 class ManagedProductCard extends StatelessWidget {
   const ManagedProductCard({
     super.key,
@@ -22,23 +29,25 @@ class ManagedProductCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.dsColors;
-    return SurfaceCard(
+    final palette = context.atelier;
+    final l10n = context.l10n;
+
+    return SellerPanel(
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(DsRadius.md),
             child: SizedBox(
-              width: 64,
-              height: 64,
+              width: 74,
+              height: 74,
               child: product.coverImage != null
                   ? Image.network(
                       product.coverImage!,
                       fit: BoxFit.cover,
-                      errorBuilder: (_, __, ___) => _placeholder(context),
+                      errorBuilder: (_, _, _) => _Placeholder(palette: palette),
                     )
-                  : _placeholder(context),
+                  : _Placeholder(palette: palette),
             ),
           ),
           const SizedBox(width: DsSpacing.md),
@@ -52,33 +61,36 @@ class ManagedProductCard extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     fontFamily: DsTypography.fontFamily,
-                    fontWeight: DsTypography.semiBold,
-                    color: colors.onSurface,
+                    fontWeight: DsTypography.bold,
+                    color: palette.ink,
                   ),
                 ),
                 const SizedBox(height: 2),
                 Text(
-                  '\$${product.price.toStringAsFixed(0)} · ${product.stock} in stock',
+                  _priceAndStock(context),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     fontFamily: DsTypography.fontFamily,
                     fontSize: DsTypography.bodySmall,
-                    color: colors.onSurfaceVariant,
+                    color: palette.muted,
                   ),
                 ),
                 const SizedBox(height: DsSpacing.xs),
-                Row(
+                Wrap(
+                  spacing: DsSpacing.sm,
+                  runSpacing: DsSpacing.xs,
+                  crossAxisAlignment: WrapCrossAlignment.center,
                   children: [
                     ProductStatusChip(status: product.status),
-                    const SizedBox(width: DsSpacing.sm),
-                    Icon(Icons.favorite, size: 12, color: colors.onSurfaceVariant),
-                    const SizedBox(width: 2),
-                    Text(
-                      '${product.favoritesCount}',
-                      style: TextStyle(
-                        fontSize: DsTypography.bodySmall,
-                        color: colors.onSurfaceVariant,
+                    // A stat, not a status — and «0 حفظ» in an accent pill on
+                    // every card read like an action the seller had to take.
+                    if (product.favoritesCount > 0)
+                      SellerStatusPill(
+                        label: l10n.savedCount('${product.favoritesCount}'),
+                        icon: Icons.favorite,
+                        color: palette.muted,
                       ),
-                    ),
                   ],
                 ),
               ],
@@ -95,31 +107,31 @@ class ManagedProductCard extends StatelessWidget {
             )
           else
             PopupMenuButton<ProductCardAction>(
-              icon: Icon(Icons.more_vert, color: colors.onSurfaceVariant),
+              icon: Icon(Icons.more_vert, color: palette.muted),
               onSelected: onAction,
               itemBuilder: (_) => [
-                const PopupMenuItem(
+                PopupMenuItem(
                   value: ProductCardAction.edit,
-                  child: Text('Edit'),
+                  child: Text(l10n.sellerEditProduct),
                 ),
                 if (product.status != ProductStatus.active)
-                  const PopupMenuItem(
+                  PopupMenuItem(
                     value: ProductCardAction.activate,
-                    child: Text('Set Active'),
+                    child: Text(l10n.sellerSetActive),
                   ),
                 if (product.status != ProductStatus.draft)
-                  const PopupMenuItem(
+                  PopupMenuItem(
                     value: ProductCardAction.draft,
-                    child: Text('Move to Draft'),
+                    child: Text(l10n.sellerMoveToDraft),
                   ),
                 if (product.status != ProductStatus.archived)
-                  const PopupMenuItem(
+                  PopupMenuItem(
                     value: ProductCardAction.archive,
-                    child: Text('Archive'),
+                    child: Text(l10n.sellerArchive),
                   ),
-                const PopupMenuItem(
+                PopupMenuItem(
                   value: ProductCardAction.delete,
-                  child: Text('Delete'),
+                  child: Text(l10n.delete),
                 ),
               ],
             ),
@@ -128,11 +140,20 @@ class ManagedProductCard extends StatelessWidget {
     );
   }
 
-  Widget _placeholder(BuildContext context) {
-    final colors = context.dsColors;
-    return Container(
-      color: colors.surfaceVariant,
-      child: Icon(Icons.image_outlined, color: colors.onSurfaceVariant),
-    );
-  }
+  /// "12,000 ل.س · 8 in stock" — [ManagedProduct.price] is a non-null [Money],
+  /// so it formats itself; only the stock half needs translating.
+  String _priceAndStock(BuildContext context) =>
+      '${product.price.format()} · ${context.l10n.sellerStock('${product.stock}')}';
+}
+
+class _Placeholder extends StatelessWidget {
+  const _Placeholder({required this.palette});
+
+  final SellerAtelierPalette palette;
+
+  @override
+  Widget build(BuildContext context) => ColoredBox(
+    color: palette.background,
+    child: Icon(Icons.image_outlined, color: palette.muted),
+  );
 }

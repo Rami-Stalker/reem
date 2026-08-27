@@ -1,143 +1,74 @@
 import 'package:flutter/material.dart';
 
-class AttachmentSheet
-    extends StatelessWidget {
+import '../../../../core/design_system/design_system.dart';
+import '../../../../core/localization/l10n_extension.dart';
 
-  const AttachmentSheet({
-    super.key,
-  });
+/// Where a chat attachment comes from.
+enum ChatAttachmentSource { camera, gallery, files }
 
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-
-      padding:
-          const EdgeInsets.all(
-        28,
-      ),
-
-      decoration: const BoxDecoration(
-
-        color: Color(0xffFFF8FA),
-
-        borderRadius:
-            BorderRadius.vertical(
-
-          top: Radius.circular(38),
-        ),
-      ),
-
+/// Asks what she wants to attach and where it comes from.
+///
+/// Three sources. The mock this replaced offered location as well, backed by
+/// nothing — and a button that does nothing is worse than one that is not
+/// there. Voice lives on the composer's own row, where holding a recording is
+/// its own state rather than a menu choice.
+abstract final class ChatAttachmentSheet {
+  static Future<ChatAttachmentSource?> show(BuildContext context) {
+    final l10n = context.l10n;
+    return DsBottomSheet.showTitled<ChatAttachmentSource>(
+      context,
+      title: l10n.chatAttachTitle,
+      scrollable: false,
       child: Column(
-
-        mainAxisSize:
-            MainAxisSize.min,
-
+        mainAxisSize: MainAxisSize.min,
         children: [
-
-          Container(
-
-            width: 70,
-            height: 6,
-
-            decoration:
-                BoxDecoration(
-
-              borderRadius:
-                  BorderRadius
-                      .circular(20),
-
-              color:
-                  Colors.grey[300],
-            ),
+          _Option(
+            icon: Icons.photo_camera_outlined,
+            label: l10n.mediaFromCamera,
+            onTap: () =>
+                Navigator.of(context).pop(ChatAttachmentSource.camera),
           ),
-
-          const SizedBox(height: 32),
-
-          Row(
-
-            mainAxisAlignment:
-                MainAxisAlignment
-                    .spaceAround,
-
-            children: [
-
-              _item(
-                Icons.photo_rounded,
-                "Gallery",
-              ),
-
-              _item(
-                Icons.camera_alt_rounded,
-                "Camera",
-              ),
-
-              _item(
-                Icons.mic_rounded,
-                "Voice",
-              ),
-
-              _item(
-                Icons.location_on_rounded,
-                "Location",
-              ),
-            ],
+          _Option(
+            icon: Icons.photo_library_outlined,
+            label: l10n.mediaFromGallery,
+            onTap: () =>
+                Navigator.of(context).pop(ChatAttachmentSource.gallery),
           ),
-
-          const SizedBox(height: 34),
+          _Option(
+            icon: Icons.attach_file_rounded,
+            label: l10n.chatFromFiles,
+            onTap: () => Navigator.of(context).pop(ChatAttachmentSource.files),
+          ),
+          const SizedBox(height: DsSpacing.sm),
         ],
       ),
     );
   }
+}
 
-  Widget _item(
-    IconData icon,
-    String title,
-  ) {
-    return Column(
+class _Option extends StatelessWidget {
+  const _Option({
+    required this.icon,
+    required this.label,
+    required this.onTap,
+  });
 
-      children: [
+  final IconData icon;
+  final String label;
+  final VoidCallback onTap;
 
-        Container(
-
-          width: 72,
-          height: 72,
-
-          decoration:
-              const BoxDecoration(
-
-            shape: BoxShape.circle,
-
-            gradient:
-                LinearGradient(
-
-              colors: [
-
-                Color(0xffFF9EB5),
-                Color(0xffFF5C8A),
-              ],
-            ),
-          ),
-
-          child: Icon(
-            icon,
-            color: Colors.white,
-            size: 32,
-          ),
-        ),
-
-        const SizedBox(height: 12),
-
-        Text(
-
-          title,
-
-          style: const TextStyle(
-
-            fontWeight:
-                FontWeight.bold,
-          ),
-        ),
-      ],
+  @override
+  Widget build(BuildContext context) {
+    final c = context.dsColors;
+    return ListTile(
+      onTap: onTap,
+      contentPadding: EdgeInsets.zero,
+      leading: CircleAvatar(
+        backgroundColor: c.primary.withValues(alpha: 0.12),
+        child: Icon(icon, color: c.primary, size: 20),
+      ),
+      title: Text(label),
+      trailing: Icon(Icons.chevron_right_rounded, color: c.onSurfaceVariant),
     );
   }
 }

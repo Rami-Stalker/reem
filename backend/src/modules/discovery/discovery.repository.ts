@@ -1,23 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma, ProductStatus } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
-
-export const DISCOVERY_INCLUDE = {
-  seller: true,
-  media: { orderBy: { sortOrder: 'asc' as const } },
-  variants: { orderBy: { sortOrder: 'asc' as const } },
-} satisfies Prisma.ProductInclude;
+import {
+  PRODUCT_CARD_INCLUDE,
+  PURCHASABLE_PRODUCT_WHERE,
+} from '../../common/catalog/product-include';
 
 export type DiscoveryProduct = Prisma.ProductGetPayload<{
-  include: typeof DISCOVERY_INCLUDE;
+  include: typeof PRODUCT_CARD_INCLUDE;
 }>;
 
 /** Only ACTIVE, in-stock products are ever discoverable. */
-export const AVAILABLE_WHERE: Prisma.ProductWhereInput = {
-  status: ProductStatus.ACTIVE,
-  isAvailable: true,
-  stock: { gt: 0 },
-};
 
 export type ProductOrderBy = Prisma.ProductOrderByWithRelationInput[];
 
@@ -36,7 +29,7 @@ export class DiscoveryRepository {
       orderBy,
       skip,
       take,
-      include: DISCOVERY_INCLUDE,
+      include: PRODUCT_CARD_INCLUDE,
     });
   }
 
@@ -44,12 +37,13 @@ export class DiscoveryRepository {
     return this.prisma.product.count({ where });
   }
 
+  /** The product's leaf category slug — the key discovery rails group by. */
   async categoryOf(productId: string): Promise<string | null> {
     const product = await this.prisma.product.findUnique({
       where: { id: productId },
-      select: { category: true },
+      select: { category: { select: { slug: true } } },
     });
-    return product?.category ?? null;
+    return product?.category.slug ?? null;
   }
 
   async favoriteSet(
@@ -68,13 +62,14 @@ export class DiscoveryRepository {
   async preferredCategories(userId: string, limit = 3): Promise<string[]> {
     const favorites = await this.prisma.favorite.findMany({
       where: { userId },
-      select: { product: { select: { category: true } } },
+      select: { product: { select: { category: { select: { slug: true } } } } },
       take: 50,
     });
     const counts = new Map<string, number>();
-    for (const f of favorites) {
-      const c = f.product.category;
-      counts.set(c, (counts.get(c) ?? 0) + 1);
+    for (const favorite of favorites) {
+      if (!favorite.product) continue;
+      const slug = favorite.product.category.slug;
+      counts.set(slug, (counts.get(slug) ?? 0) + 1);
     }
     return [...counts.entries()]
       .sort((a, b) => b[1] - a[1])
@@ -82,3 +77,7 @@ export class DiscoveryRepository {
       .map(([category]) => category);
   }
 }
+
+export { PRODUCT_CARD_INCLUDE };
+
+export { PURCHASABLE_PRODUCT_WHERE };

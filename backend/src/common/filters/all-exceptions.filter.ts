@@ -14,9 +14,30 @@ interface ErrorBody {
   message: string | string[];
   error: string;
   code: string;
+  /**
+   * Everything else the thrower put in the body.
+   *
+   * This used to be discarded. The cost was silent and specific: the step-up
+   * guard refuses a new device with `{ code, message, scope, available_at }`
+   * so the client can say "try again after 9pm tomorrow", and the two fields
+   * that carry that were stripped here — leaving the app with a bare refusal
+   * and nothing to tell her. Anything a handler deliberately attached to an
+   * error body is part of the contract, so it survives.
+   */
+  details?: Record<string, unknown>;
   timestamp?: string;
   path?: string;
 }
+
+/** Keys that are part of the envelope itself rather than the payload. */
+const ENVELOPE_KEYS = new Set([
+  'statusCode',
+  'message',
+  'error',
+  'code',
+  'errorCode',
+  'error_code',
+]);
 
 /**
  * Single source of truth for error responses. Produces the
@@ -64,6 +85,9 @@ export class AllExceptionsFilter implements ExceptionFilter {
       const obj = res as Record<string, unknown>;
       const message =
         (obj.message as string | string[] | undefined) ?? exception.message;
+      const details = Object.fromEntries(
+        Object.entries(obj).filter(([key]) => !ENVELOPE_KEYS.has(key)),
+      );
       return {
         statusCode: status,
         message,
@@ -72,6 +96,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
           obj.code ?? obj.errorCode ?? obj.error_code,
           this.codeFor(status, message),
         ),
+        ...(Object.keys(details).length > 0 && { details }),
       };
     }
 

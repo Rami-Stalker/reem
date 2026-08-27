@@ -5,12 +5,39 @@ export const AppPermission = {
   deviceManage: 'device:manage',
   sellerVerificationSubmit: 'seller_verification:submit',
   sellerVerificationReview: 'seller_verification:review',
+  sellerVerifiedOperate: 'seller:verified_operate',
+  sellerPremiumTools: 'seller:premium_tools',
   productManage: 'product:manage',
+  contentManage: 'content:manage',
+  contentTypeManage: 'content_type:manage',
   postManage: 'post:manage',
   storyManage: 'story:manage',
   orderManage: 'order:manage',
+  orderRead: 'order:read',
+  checkoutCreate: 'checkout:create',
   userManage: 'user:manage',
+  supportRead: 'support:read',
+  supportWrite: 'support:write',
+  financeRead: 'finance:read',
+  financeWrite: 'finance:write',
+  contentModerate: 'content:moderate',
+  analyticsRead: 'analytics:read',
+  adminDashboard: 'admin:dashboard',
+  authorizationManage: 'authorization:manage',
+  guestSessionCreate: 'guest_session:create',
+  guestSessionMigrate: 'guest_session:migrate',
   auditRead: 'audit:read',
+  /**
+   * Reading the authentication record of an account that is not yours.
+   *
+   * Separate from `auditRead` because it is a different question with a
+   * different blast radius: audit answers "what did staff do", this answers
+   * "how has this woman been signing in, and from where". Support needs the
+   * second one to do its job and must not have it by accident.
+   */
+  securityForensicsRead: 'security_forensics:read',
+  /** Reviewing a support-mediated account recovery. Two holders required. */
+  accountRecoveryReview: 'account_recovery:review',
 } as const;
 
 export type AppPermissionKey =

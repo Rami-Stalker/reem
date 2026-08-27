@@ -8,6 +8,7 @@ import '../../../../../core/design_system/design_system.dart';
 import '../../../../../core/router/route_paths.dart';
 import '../../domain/entities/seller_top_product.dart';
 import '../providers/seller_dashboard_provider.dart';
+import '../../../../core/localization/l10n_extension.dart';
 
 class SellerTopProducts extends ConsumerWidget {
   const SellerTopProducts({super.key});
@@ -38,14 +39,14 @@ class SellerTopProducts extends ConsumerWidget {
             children: [
               Expanded(
                 child: Text(
-                  'Top performing products',
+                  context.l10n.sellerTopProducts,
                   style: theme.textTheme.titleMedium
                       ?.copyWith(fontWeight: DsTypography.bold),
                 ),
               ),
               TextButton(
                 onPressed: () => context.push(RoutePaths.myProducts),
-                child: Text('See all',
+                child: Text(context.l10n.viewAll,
                     style:
                         TextStyle(color: c.primary, fontSize: DsTypography.labelMedium)),
               ),
@@ -191,7 +192,7 @@ class _TopProductTile extends StatelessWidget {
             ),
             if (product.isLowStock || product.isOutOfStock)
               Padding(
-                padding: const EdgeInsets.only(left: DsSpacing.xs),
+                padding: const EdgeInsetsDirectional.only(start: DsSpacing.xs),
                 child: Container(
                   padding: const EdgeInsets.symmetric(
                       horizontal: 6, vertical: 2),

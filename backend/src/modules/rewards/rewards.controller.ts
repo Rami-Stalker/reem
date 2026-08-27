@@ -11,7 +11,7 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
-import { UserRole } from '@prisma/client';
+import { Currency, UserRole } from '@prisma/client';
 import { Roles } from '../../common/decorators/roles.decorator';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import { PaginationDto } from '../../common/dto/pagination.dto';
@@ -30,6 +30,7 @@ import {
   UpsertLoyaltyRewardDto,
   ValidateCouponDto,
 } from './dto/rewards.dto';
+import { Money } from '../../common/money';
 
 @Controller('coupons')
 export class CouponsController {
@@ -44,7 +45,11 @@ export class CouponsController {
   @Post('validate')
   @HttpCode(HttpStatus.OK)
   validate(@CurrentUser('id') userId: string, @Body() dto: ValidateCouponDto) {
-    return this.coupons.validate(dto.code, userId, dto.subtotal);
+    return this.coupons.validate(
+      dto.code,
+      userId,
+      Money.of(dto.subtotal, dto.currency ?? Currency.SYP),
+    );
   }
 
   // Admin / support (read) and admin (write)

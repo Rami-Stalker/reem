@@ -5,13 +5,26 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/design_system/design_system.dart';
 import '../../../../core/design_system/components/snackbars/app_snackbar.dart'
     show DsSnackbar, DsSnackbarType;
+import '../../../../core/localization/l10n_extension.dart';
 import '../../../../core/router/route_paths.dart';
+import '../../../../core/shared/value_objects/money.dart';
 import '../../../../core/shared/wedgets/app/premium_app_bar.dart';
 import '../../../auth/presentation/providers/auth_provider.dart';
 import '../../../cart/presentation/providers/cart_providers.dart';
+import '../../../settings/domain/entities/address_entity.dart';
 import '../../domain/entities/checkout.dart';
+import '../providers/applied_coupon_provider.dart';
+import '../providers/checkout_controller.dart';
 import '../providers/checkout_providers.dart';
+import '../providers/saved_addresses_provider.dart';
 
+/// The last screen before she pays.
+///
+/// Three things changed here that were each their own small betrayal: the copy
+/// was English in an Arabic-first app, the address book she could fill in her
+/// settings could not fill a single field of this form, and the district and
+/// rural flag that decide Q53's two delivery tiers were never asked for — so
+/// every village was quoted, charged and settled at the city-centre price.
 class CheckoutScreen extends ConsumerStatefulWidget {
   const CheckoutScreen({super.key});
 
@@ -30,12 +43,42 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
   final _coupon = TextEditingController();
 
   String? _governorate;
+  String? _district;
+  bool _isRural = false;
+  bool _saveAddress = true;
   String? _paymentMethod;
-  bool _seeded = false;
+
+  /// Null means "a new address" — the form. Anything else is a saved one.
+  String? _selectedAddressId;
+  bool _seededFromUser = false;
+  bool _seededFromBook = false;
+
+  /// A coupon she already applied from her coupons screen.
+  ///
+  /// Seeded once, so typing over it wins: the field is hers from that point
+  /// on, and re-seeding on every rebuild would fight her keystrokes.
+  bool _seededFromAppliedCoupon = false;
+  Money? _appliedDiscount;
+
+  /// Reads what the coupons screen validated against this basket.
+  ///
+  /// Only honoured while the basket still matches the one the discount was
+  /// quoted against — [AppliedCouponNotifier] clears it otherwise, because a
+  /// figure quoted against a different subtotal is one the order will not
+  /// keep.
+  void _seedAppliedCoupon() {
+    if (_seededFromAppliedCoupon) return;
+    final applied = ref.read(appliedCouponProvider);
+    if (applied == null) return;
+
+    _seededFromAppliedCoupon = true;
+    _coupon.text = applied.code;
+    _appliedDiscount = applied.discount;
+  }
 
   @override
   void dispose() {
-    for (final c in [
+    for (final controller in [
       _name,
       _phone,
       _city,
@@ -44,49 +87,106 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
       _instructions,
       _coupon,
     ]) {
-      c.dispose();
+      controller.dispose();
     }
     super.dispose();
   }
 
-  double get _subtotal =>
-      ref.read(cartNotifierProvider).cart.summary.subtotal;
+  Money? get _subtotal => ref.read(cartNotifierProvider).cart.summary.subtotal;
+
+  /// Re-quotes whenever the place changes. The fee on screen must be the fee
+  /// the server will charge, and that depends on all three of these.
+  void _requote() {
+    final governorate = _governorate;
+    if (governorate == null) return;
+    ref
+        .read(checkoutControllerProvider.notifier)
+        .selectPlace(
+          governorate,
+          _subtotal,
+          district: _district,
+          isRural: _isRural,
+        );
+  }
+
+  void _useSaved(AddressEntity address) {
+    setState(() {
+      _selectedAddressId = address.id;
+      _governorate = address.governorate;
+      _district = address.district;
+      _isRural = address.isRural;
+    });
+    _requote();
+  }
+
+  void _useNewAddress() {
+    setState(() {
+      _selectedAddressId = null;
+      _governorate = null;
+      _district = null;
+      _isRural = false;
+    });
+  }
 
   Future<void> _place() async {
-    if (!_formKey.currentState!.validate()) return;
-    if (_governorate == null) {
-      DsSnackbar.show(context,
-          message: 'Select a governorate', type: DsSnackbarType.error);
-      return;
+    final l10n = context.l10n;
+
+    // A saved address is already complete; only the typed one is validated.
+    if (_selectedAddressId == null) {
+      if (!_formKey.currentState!.validate()) return;
+      if (_governorate == null) {
+        DsSnackbar.show(
+          context,
+          message: l10n.checkoutChooseGovernorate,
+          type: DsSnackbarType.error,
+        );
+        return;
+      }
     }
     if (_paymentMethod == null) {
-      DsSnackbar.show(context,
-          message: 'Select a payment method', type: DsSnackbarType.error);
+      DsSnackbar.show(
+        context,
+        message: l10n.checkoutChoosePayment,
+        type: DsSnackbarType.error,
+      );
       return;
     }
 
-    final placed = await ref.read(checkoutControllerProvider.notifier).place(
-          shipping: ShippingInput(
-            recipientName: _name.text.trim(),
-            recipientPhone: _phone.text.trim(),
-            governorate: _governorate!,
-            city: _city.text.trim(),
-            addressLine: _address.text.trim(),
-            landmark: _landmark.text.trim().isEmpty ? null : _landmark.text.trim(),
-          ),
+    final placed = await ref
+        .read(checkoutControllerProvider.notifier)
+        .place(
+          addressId: _selectedAddressId,
+          shipping: _selectedAddressId != null
+              ? null
+              : ShippingInput(
+                  recipientName: _name.text.trim(),
+                  recipientPhone: _phone.text.trim(),
+                  governorate: _governorate!,
+                  district: _district,
+                  isRural: _isRural,
+                  city: _city.text.trim(),
+                  addressLine: _address.text.trim(),
+                  landmark: _landmark.text.trim().isEmpty
+                      ? null
+                      : _landmark.text.trim(),
+                ),
+          saveAddress: _selectedAddressId == null && _saveAddress,
           paymentMethod: _paymentMethod!,
           couponCode: _coupon.text.trim().isEmpty ? null : _coupon.text.trim(),
-          deliveryInstructions:
-              _instructions.text.trim().isEmpty ? null : _instructions.text.trim(),
+          deliveryInstructions: _instructions.text.trim().isEmpty
+              ? null
+              : _instructions.text.trim(),
         );
 
     if (!mounted) return;
     if (placed != null) {
       await ref.read(cartNotifierProvider.notifier).refresh();
       if (!mounted) return;
-      DsSnackbar.show(context,
-          message: 'Order ${placed.order.number} placed!',
-          type: DsSnackbarType.success);
+      DsSnackbar.show(
+        context,
+        message: context.l10n.checkoutPlacedSuccess(placed.order.number),
+        type: DsSnackbarType.success,
+      );
       context.pushReplacement(RoutePaths.orderDetailOf(placed.order.id));
     } else {
       final error = ref.read(checkoutControllerProvider).error;
@@ -99,31 +199,53 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
   @override
   Widget build(BuildContext context) {
     final colors = context.dsColors;
+    final l10n = context.l10n;
     final state = ref.watch(checkoutControllerProvider);
-    final controller = ref.read(checkoutControllerProvider.notifier);
     final cart = ref.watch(cartNotifierProvider).cart;
+    final saved = ref.watch(savedAddressesProvider);
 
-    // Prefill from the signed-in user once.
-    if (!_seeded) {
+    if (!_seededFromUser) {
       final user = ref.read(authNotifierProvider).user;
       if (user != null) {
         _name.text = user.name;
         _phone.text = user.phone;
-        _seeded = true;
+        _seededFromUser = true;
       }
     }
 
-    final deliveryFee = state.quote?.deliveryFee ?? 0;
-    final total = cart.summary.subtotal + deliveryFee;
+    // She may have chosen the offer on her coupons screen; arriving here to an
+    // empty field would make her type it again, or wonder whether it took.
+    _seedAppliedCoupon();
+
+    // Open on her default address, once, and quote for it straight away — so
+    // the delivery fee is on screen before she has touched anything.
+    final addresses = saved.asData?.value ?? const <AddressEntity>[];
+    if (!_seededFromBook && addresses.isNotEmpty) {
+      _seededFromBook = true;
+      final first = preselect(addresses);
+      if (first != null) {
+        WidgetsBinding.instance.addPostFrameCallback((_) => _useSaved(first));
+      }
+    }
+
+    final deliveryFee = state.quote?.deliveryFee;
+    final subtotal = cart.summary.subtotal;
+
+    // The charged total is NOT computed here. It needs the coupon, the shipping
+    // quote and a frozen exchange rate, all of which the server applies when the
+    // order is placed — adding two figures in the client would only produce a
+    // number that can disagree with the invoice. What is shown before placing
+    // is the subtotal and the quoted delivery, each on its own line.
 
     return ReemScrollPage(
       bottom: _BottomBar(
-        total: total,
+        subtotal: subtotal,
+        deliveryFee: deliveryFee,
         isPlacing: state.isPlacing,
         onPlace: _place,
       ),
       slivers: [
-        const PremiumAppBar(title: 'Checkout', showBack: true),
+        PremiumAppBar(title: l10n.checkoutTitle, showBack: true),
         if (state.isLoadingOptions)
           const SliverFillRemaining(
             hasScrollBody: false,
@@ -143,71 +265,38 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    _label(context, 'Delivery details'),
-                    DsInputField(
-                      controller: _name,
-                      label: 'Full name',
-                      validator: _required,
-                    ),
-                    DsInputField(
-                      controller: _phone,
-                      label: 'Phone number',
-                      keyboardType: TextInputType.phone,
-                      validator: (v) {
-                        final value = v?.trim() ?? '';
-                        if (!RegExp(r'^\+?[0-9]{7,15}$').hasMatch(value)) {
-                          return 'Enter a valid phone number';
-                        }
-                        return null;
-                      },
-                    ),
-                    DropdownButtonFormField<String>(
-                      value: _governorate,
-                      isExpanded: true,
-                      decoration: const InputDecoration(labelText: 'Governorate'),
-                      items: [
-                        for (final g in state.governorates)
-                          DropdownMenuItem(
-                            value: g.name,
-                            child: Text('${g.name}  ·  \$${g.fee.toStringAsFixed(0)}'),
-                          ),
-                      ],
-                      onChanged: (value) {
-                        setState(() => _governorate = value);
-                        if (value != null) {
-                          controller.selectGovernorate(value, _subtotal);
-                        }
-                      },
-                    ),
-                    const SizedBox(height: DsSpacing.md),
-                    DsInputField(
-                      controller: _city,
-                      label: 'City',
-                      validator: _required,
-                    ),
-                    DsInputField(
-                      controller: _address,
-                      label: 'Detailed address',
-                      maxLines: 2,
-                      validator: _required,
-                    ),
-                    DsInputField(
-                      controller: _landmark,
-                      label: 'Nearby landmark (optional)',
-                    ),
-                    DsInputField(
-                      controller: _instructions,
-                      label: 'Delivery instructions (optional)',
-                      hint: 'e.g. Call before delivery',
-                    ),
+                    _label(context, l10n.checkoutDeliveryAddress),
+
+                    if (addresses.isNotEmpty) ...[
+                      for (final address in addresses)
+                        _AddressOption(
+                          address: address,
+                          selected: _selectedAddressId == address.id,
+                          onTap: () => _useSaved(address),
+                        ),
+                      _NewAddressOption(
+                        selected: _selectedAddressId == null,
+                        onTap: _useNewAddress,
+                      ),
+                      const SizedBox(height: DsSpacing.sm),
+                    ],
+
+                    if (_selectedAddressId == null)
+                      ..._addressForm(context, state),
+
                     const SizedBox(height: DsSpacing.sm),
-                    _label(context, 'Coupon'),
+                    _label(context, l10n.checkoutCoupon),
                     DsInputField(
                       controller: _coupon,
-                      label: 'Coupon code (optional)',
+                      label: l10n.checkoutCouponOptional,
                     ),
+                    if (_appliedDiscount != null) ...[
+                      const SizedBox(height: DsSpacing.xs),
+                      _AppliedCouponNote(discount: _appliedDiscount!),
+                    ],
+
                     const SizedBox(height: DsSpacing.sm),
-                    _label(context, 'Payment method'),
+                    _label(context, l10n.checkoutPaymentMethod),
                     for (final method in state.paymentMethods)
                       _PaymentTile(
                         option: method,
@@ -215,17 +304,29 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                         onTap: () =>
                             setState(() => _paymentMethod = method.method),
                       ),
+
                     const SizedBox(height: DsSpacing.lg),
-                    _label(context, 'Order summary'),
-                    _summaryRow(context, 'Subtotal', cart.summary.subtotal),
-                    _summaryRow(context, 'Delivery', deliveryFee),
-                    const Divider(),
-                    _summaryRow(context, 'Total', total, emphasize: true),
+                    _label(context, l10n.checkoutOrderSummary),
+                    _summaryRow(context, l10n.checkoutSubtotal, subtotal),
+                    _summaryRow(context, l10n.checkoutDelivery, deliveryFee),
+                    if (cart.willSplit)
+                      Padding(
+                        padding: const EdgeInsets.only(top: DsSpacing.xs),
+                        child: Text(
+                          l10n.checkoutSplitNotice(
+                            '${cart.sellerGroups.length}',
+                          ),
+                          style: TextStyle(
+                            fontSize: DsTypography.bodySmall,
+                            color: colors.onSurfaceVariant,
+                          ),
+                        ),
+                      ),
                     if (state.quote != null)
                       Padding(
                         padding: const EdgeInsets.only(top: 4),
                         child: Text(
-                          'Estimated in ~${state.quote!.estimatedDays} day(s)',
+                          _etaLabel(state.quote!),
                           style: TextStyle(
                             fontSize: DsTypography.bodySmall,
                             color: colors.onSurfaceVariant,
@@ -241,49 +342,329 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
     );
   }
 
-  String? _required(String? v) =>
-      (v == null || v.trim().isEmpty) ? 'Required' : null;
+  List<Widget> _addressForm(BuildContext context, CheckoutState state) {
+    final l10n = context.l10n;
+    final governorate = state.governorates
+        .where((option) => option.name == _governorate)
+        .firstOrNull;
+    final districts = governorate?.districts ?? const <GovernorateDistrict>[];
+
+    return [
+      DsInputField(
+        controller: _name,
+        label: l10n.checkoutRecipientName,
+        validator: _required,
+      ),
+      DsInputField(
+        controller: _phone,
+        label: l10n.checkoutRecipientPhone,
+        keyboardType: TextInputType.phone,
+        validator: (value) {
+          final phone = value?.trim() ?? '';
+          if (!RegExp(r'^\+?[0-9]{7,15}$').hasMatch(phone)) {
+            return l10n.checkoutInvalidPhone;
+          }
+          return null;
+        },
+      ),
+      DropdownButtonFormField<String>(
+        initialValue: _governorate,
+        isExpanded: true,
+        decoration: InputDecoration(labelText: l10n.checkoutGovernorate),
+        items: [
+          for (final option in state.governorates)
+            DropdownMenuItem(
+              value: option.name,
+              child: Text('${option.name} · ${option.fee.format()}'),
+            ),
+        ],
+        onChanged: (value) {
+          setState(() {
+            _governorate = value;
+            // A district from the previous governorate would quote a zone that
+            // does not exist, so the choice below starts again.
+            _district = null;
+            _isRural = false;
+          });
+          _requote();
+        },
+      ),
+      const SizedBox(height: DsSpacing.md),
+
+      // Q53's two tiers, picked by choosing a district rather than by asking
+      // her to know which tier she lives in. Districts come from the shipping
+      // zones themselves, each carrying its own rural flag and fee.
+      if (districts.isNotEmpty)
+        DropdownButtonFormField<String>(
+          initialValue: _district,
+          isExpanded: true,
+          decoration: InputDecoration(labelText: l10n.checkoutDistrict),
+          items: [
+            for (final district in districts)
+              DropdownMenuItem(
+                value: district.name,
+                child: Text('${district.name} · ${district.fee.format()}'),
+              ),
+          ],
+          onChanged: (value) {
+            final chosen = districts
+                .where((district) => district.name == value)
+                .firstOrNull;
+            setState(() {
+              _district = value;
+              _isRural = chosen?.isRural ?? false;
+            });
+            _requote();
+          },
+        )
+      else
+        // No districts configured for this governorate: she says it herself.
+        SwitchListTile.adaptive(
+          contentPadding: EdgeInsets.zero,
+          value: _isRural,
+          title: Text(l10n.checkoutRural),
+          subtitle: Text(l10n.checkoutRuralHint),
+          onChanged: (value) {
+            setState(() => _isRural = value);
+            _requote();
+          },
+        ),
+      const SizedBox(height: DsSpacing.md),
+
+      DsInputField(
+        controller: _city,
+        label: l10n.checkoutCity,
+        validator: _required,
+      ),
+      DsInputField(
+        controller: _address,
+        label: l10n.checkoutAddressLine,
+        hint: l10n.checkoutAddressLineHint,
+        maxLines: 2,
+        validator: _required,
+      ),
+      DsInputField(
+        controller: _landmark,
+        label: l10n.checkoutLandmark,
+        hint: l10n.checkoutLandmarkHint,
+      ),
+      DsInputField(
+        controller: _instructions,
+        label: l10n.checkoutInstructions,
+        hint: l10n.checkoutInstructionsHint,
+      ),
+      CheckboxListTile(
+        contentPadding: EdgeInsets.zero,
+        controlAffinity: ListTileControlAffinity.leading,
+        value: _saveAddress,
+        onChanged: (value) => setState(() => _saveAddress = value ?? false),
+        title: Text(
+          l10n.checkoutSaveAddress,
+          style: const TextStyle(fontSize: DsTypography.bodySmall),
+        ),
+      ),
+    ];
+  }
+
+  String? _required(String? value) =>
+      (value == null || value.trim().isEmpty)
+      ? context.l10n.checkoutRequired
+      : null;
 
   Widget _label(BuildContext context, String text) => Padding(
-        padding: const EdgeInsets.only(
-          top: DsSpacing.sm,
-          bottom: DsSpacing.xs,
-        ),
-        child: Text(
-          text,
-          style: TextStyle(
-            fontFamily: DsTypography.fontFamily,
-            fontWeight: DsTypography.bold,
-            fontSize: DsTypography.titleSmall,
-            color: context.dsColors.onSurface,
-          ),
-        ),
-      );
+    padding: const EdgeInsets.only(top: DsSpacing.sm, bottom: DsSpacing.xs),
+    child: Text(
+      text,
+      style: TextStyle(
+        fontFamily: DsTypography.fontFamily,
+        fontSize: DsTypography.titleSmall,
+        fontWeight: DsTypography.semiBold,
+        color: context.dsColors.onSurface,
+      ),
+    ),
+  );
 
-  Widget _summaryRow(BuildContext context, String label, double value,
-      {bool emphasize = false}) {
+  Widget _summaryRow(BuildContext context, String label, Money? value) {
     final colors = context.dsColors;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 3),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label,
-              style: TextStyle(
-                  color: emphasize ? colors.onSurface : colors.onSurfaceVariant,
-                  fontWeight:
-                      emphasize ? DsTypography.bold : DsTypography.regular)),
-          Text('\$${value.toStringAsFixed(2)}',
-              style: TextStyle(
-                  fontFamily: DsTypography.fontFamily,
-                  fontWeight: emphasize ? DsTypography.bold : DsTypography.medium,
-                  color: emphasize ? colors.primary : colors.onSurface)),
+          Text(
+            label,
+            style: TextStyle(
+              fontFamily: DsTypography.fontFamily,
+              fontSize: DsTypography.bodySmall,
+              color: colors.onSurfaceVariant,
+            ),
+          ),
+          const Spacer(),
+          Text(
+            value?.format() ?? '—',
+            style: TextStyle(
+              fontFamily: DsTypography.fontFamily,
+              fontSize: DsTypography.bodyMedium,
+              fontWeight: DsTypography.semiBold,
+              color: colors.onSurface,
+            ),
+          ),
         ],
       ),
     );
   }
 }
 
+/// One saved address, offered rather than retyped.
+class _AddressOption extends StatelessWidget {
+  const _AddressOption({
+    required this.address,
+    required this.selected,
+    required this.onTap,
+  });
+
+  final AddressEntity address;
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.dsColors;
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: DsSpacing.xs),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(DsRadius.lg),
+          child: Ink(
+            padding: const EdgeInsets.all(DsSpacing.md),
+            decoration: BoxDecoration(
+              color: selected ? colors.primaryContainer : colors.card,
+              borderRadius: BorderRadius.circular(DsRadius.lg),
+              border: Border.all(
+                color: selected ? colors.primary : colors.border,
+                width: selected ? 1.5 : 1,
+              ),
+            ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Icon(
+                  selected
+                      ? Icons.radio_button_checked
+                      : Icons.radio_button_unchecked,
+                  size: 20,
+                  color: selected ? colors.primary : colors.onSurfaceVariant,
+                ),
+                const SizedBox(width: DsSpacing.sm),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Row(
+                        children: [
+                          Text(
+                            address.label,
+                            style: TextStyle(
+                              fontFamily: DsTypography.fontFamily,
+                              fontSize: DsTypography.bodyMedium,
+                              fontWeight: DsTypography.semiBold,
+                              color: colors.onSurface,
+                            ),
+                          ),
+                          if (address.isDefault) ...[
+                            const SizedBox(width: DsSpacing.xs),
+                            Icon(Icons.star, size: 13, color: colors.primary),
+                          ],
+                        ],
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        address.summary,
+                        style: TextStyle(
+                          fontFamily: DsTypography.fontFamily,
+                          fontSize: DsTypography.bodySmall,
+                          height: 1.5,
+                          color: colors.onSurfaceVariant,
+                        ),
+                      ),
+                      Text(
+                        address.recipientName,
+                        style: TextStyle(
+                          fontFamily: DsTypography.fontFamily,
+                          fontSize: DsTypography.labelSmall,
+                          color: colors.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _NewAddressOption extends StatelessWidget {
+  const _NewAddressOption({required this.selected, required this.onTap});
+
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.dsColors;
+
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(DsRadius.lg),
+        child: Ink(
+          padding: const EdgeInsets.all(DsSpacing.md),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(DsRadius.lg),
+            border: Border.all(
+              color: selected ? colors.primary : colors.border,
+              width: selected ? 1.5 : 1,
+            ),
+          ),
+          child: Row(
+            children: [
+              Icon(
+                selected
+                    ? Icons.radio_button_checked
+                    : Icons.radio_button_unchecked,
+                size: 20,
+                color: selected ? colors.primary : colors.onSurfaceVariant,
+              ),
+              const SizedBox(width: DsSpacing.sm),
+              Icon(Icons.add_location_alt_outlined, size: 18, color: colors.primary),
+              const SizedBox(width: DsSpacing.xs),
+              Text(
+                context.l10n.checkoutNewAddress,
+                style: TextStyle(
+                  fontFamily: DsTypography.fontFamily,
+                  fontSize: DsTypography.bodyMedium,
+                  fontWeight: DsTypography.medium,
+                  color: colors.onSurface,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// One way to pay (Q51 P1). The label comes from the server, so a rail added
+/// later needs no client release to appear.
 class _PaymentTile extends StatelessWidget {
   const _PaymentTile({
     required this.option,
@@ -298,68 +679,77 @@ class _PaymentTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.dsColors;
-    final icon = switch (option.method) {
-      'visa' => Icons.credit_card,
-      'sham_cash' => Icons.account_balance_wallet_outlined,
-      'bemo' => Icons.account_balance_outlined,
-      _ => Icons.payments_outlined,
-    };
-    return InkWell(
-      borderRadius: BorderRadius.circular(DsRadius.lg),
-      onTap: onTap,
-      child: Container(
-        margin: const EdgeInsets.only(bottom: DsSpacing.sm),
-        padding: const EdgeInsets.all(DsSpacing.md),
-        decoration: BoxDecoration(
-          color: selected
-              ? colors.primary.withValues(alpha: 0.1)
-              : colors.surfaceVariant,
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: DsSpacing.xs),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
           borderRadius: BorderRadius.circular(DsRadius.lg),
-          border: Border.all(
-            color: selected ? colors.primary : colors.border,
-            width: selected ? 1.6 : 1,
-          ),
-        ),
-        child: Row(
-          children: [
-            Icon(icon, color: selected ? colors.primary : colors.onSurfaceVariant),
-            const SizedBox(width: DsSpacing.md),
-            Expanded(
-              child: Text(
-                option.label,
-                style: TextStyle(
-                  fontFamily: DsTypography.fontFamily,
-                  fontWeight: DsTypography.semiBold,
-                  color: colors.onSurface,
-                ),
+          child: Ink(
+            padding: const EdgeInsets.all(DsSpacing.md),
+            decoration: BoxDecoration(
+              color: selected ? colors.primaryContainer : colors.card,
+              borderRadius: BorderRadius.circular(DsRadius.lg),
+              border: Border.all(
+                color: selected ? colors.primary : colors.border,
+                width: selected ? 1.5 : 1,
               ),
             ),
-            Icon(
-              selected ? Icons.radio_button_checked : Icons.radio_button_off,
-              color: selected ? colors.primary : colors.onSurfaceVariant,
-              size: 20,
+            child: Row(
+              children: [
+                Icon(
+                  selected
+                      ? Icons.radio_button_checked
+                      : Icons.radio_button_unchecked,
+                  size: 20,
+                  color: selected ? colors.primary : colors.onSurfaceVariant,
+                ),
+                const SizedBox(width: DsSpacing.sm),
+                Expanded(
+                  child: Text(
+                    option.label,
+                    style: TextStyle(
+                      fontFamily: DsTypography.fontFamily,
+                      fontSize: DsTypography.bodyMedium,
+                      color: colors.onSurface,
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );
   }
 }
 
+/// The pinned footer.
+///
+/// It shows the two figures the server has actually quoted and says plainly
+/// that the total is computed when the order is placed. Adding them here would
+/// produce a number that can disagree with the invoice — the coupon, the
+/// rounding policy (Q48) and the frozen exchange rate all apply server-side.
 class _BottomBar extends StatelessWidget {
   const _BottomBar({
-    required this.total,
+    required this.subtotal,
+    required this.deliveryFee,
     required this.isPlacing,
     required this.onPlace,
   });
 
-  final double total;
+  final Money? subtotal;
+  final Money? deliveryFee;
   final bool isPlacing;
   final VoidCallback onPlace;
 
   @override
   Widget build(BuildContext context) {
     final colors = context.dsColors;
+    final l10n = context.l10n;
+
     return Container(
       padding: EdgeInsets.fromLTRB(
         DsSpacing.lg,
@@ -376,24 +766,48 @@ class _BottomBar extends StatelessWidget {
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
               children: [
-                Text('Total',
-                    style: TextStyle(
-                        fontSize: DsTypography.bodySmall,
-                        color: colors.onSurfaceVariant)),
-                Text('\$${total.toStringAsFixed(2)}',
-                    style: TextStyle(
+                Row(
+                  children: [
+                    Text(
+                      subtotal?.format() ?? '—',
+                      style: TextStyle(
                         fontFamily: DsTypography.fontFamily,
-                        fontSize: DsTypography.titleMedium,
+                        fontSize: DsTypography.titleSmall,
                         fontWeight: DsTypography.bold,
-                        color: colors.onSurface)),
+                        color: colors.onSurface,
+                      ),
+                    ),
+                    if (deliveryFee != null) ...[
+                      const SizedBox(width: DsSpacing.xs),
+                      Text(
+                        '+ ${deliveryFee!.format()}',
+                        style: TextStyle(
+                          fontFamily: DsTypography.fontFamily,
+                          fontSize: DsTypography.bodySmall,
+                          color: colors.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+                Text(
+                  l10n.checkoutTotalPending,
+                  style: TextStyle(
+                    fontFamily: DsTypography.fontFamily,
+                    fontSize: DsTypography.labelSmall,
+                    color: colors.onSurfaceVariant,
+                  ),
+                ),
               ],
             ),
           ),
+          const SizedBox(width: DsSpacing.sm),
           SizedBox(
-            width: 180,
+            width: 160,
             child: PrimaryButton(
-              label: 'Place order',
+              label: l10n.checkoutPlaceOrder,
               isLoading: isPlacing,
               onPressed: isPlacing ? null : onPlace,
             ),
@@ -402,4 +816,43 @@ class _BottomBar extends StatelessWidget {
       ),
     );
   }
+}
+
+/// Confirms the coupon she applied before she got here, and what it is worth.
+///
+/// The figure is the server's, quoted against this exact basket by
+/// `POST /coupons/validate` — not arithmetic done here, which could disagree
+/// with the invoice the order raises.
+class _AppliedCouponNote extends StatelessWidget {
+  const _AppliedCouponNote({required this.discount});
+
+  final Money discount;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.dsColors;
+    return Row(
+      children: [
+        Icon(Icons.check_circle_rounded, size: 16, color: colors.success),
+        const SizedBox(width: DsSpacing.sm),
+        Text(
+          'تم تطبيق الكوبون — توفير ${discount.format()}',
+          style: TextStyle(
+            color: colors.success,
+            fontSize: DsTypography.labelSmall,
+            fontWeight: DsTypography.semiBold,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+/// «يصلكِ اليوم بإذن الله» / «خلال يومين».
+String _etaLabel(DeliveryQuote quote) {
+  if (quote.etaHoursMax <= 12) return 'يصلكِ اليوم بإذن الله';
+  final days = (quote.etaHoursMax / 24).ceil();
+  if (days <= 1) return 'يصلكِ خلال يوم';
+  if (days == 2) return 'يصلكِ خلال يومين';
+  return 'يصلكِ خلال $days أيام';
 }

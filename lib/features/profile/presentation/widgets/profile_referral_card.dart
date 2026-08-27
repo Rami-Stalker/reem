@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/design_system/design_system.dart';
 import '../../domain/entities/referral.dart';
 import '../providers/profile_overview_provider.dart';
+import '../../../../core/localization/l10n_extension.dart';
 
 /// The referral programme — share code, invited count and points earned, with
 /// copy + share affordances.
@@ -56,7 +57,7 @@ class ProfileReferralCard extends ConsumerWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Invite friends, earn rewards',
+                      Text(context.l10n.inviteFriends,
                           style: theme.textTheme.titleSmall
                               ?.copyWith(fontWeight: DsTypography.bold)),
                       const SizedBox(height: 2),
@@ -74,7 +75,7 @@ class ProfileReferralCard extends ConsumerWidget {
                 Expanded(child: _CodeBox(code: referral.code)),
                 const SizedBox(width: DsSpacing.sm),
                 DsButton(
-                  label: 'Share',
+                  label: context.l10n.a11yShare,
                   icon: Icons.ios_share_rounded,
                   size: DsButtonSize.md,
                   variant: DsButtonVariant.accent,
@@ -86,10 +87,10 @@ class ProfileReferralCard extends ConsumerWidget {
             const SizedBox(height: DsSpacing.md),
             Row(
               children: [
-                _Stat(value: '${referral.invited}', label: 'Friends invited'),
+                _Stat(value: '${referral.invited}', label: context.l10n.friendsInvited),
                 Container(
                     width: 1, height: 28, color: c.divider),
-                _Stat(value: '${referral.earnedPoints}', label: 'Points earned'),
+                _Stat(value: '${referral.earnedPoints}', label: context.l10n.pointsEarned),
               ],
             ),
           ],
@@ -105,7 +106,7 @@ class ProfileReferralCard extends ConsumerWidget {
       ..showSnackBar(
         SnackBar(
           behavior: SnackBarBehavior.floating,
-          content: Text('Invite code ${referral.code} copied — share it!'),
+          content: Text(context.l10n.inviteCodeCopied(referral.code)),
         ),
       );
   }
@@ -125,9 +126,9 @@ class _CodeBox extends StatelessWidget {
         ScaffoldMessenger.of(context)
           ..hideCurrentSnackBar()
           ..showSnackBar(
-            const SnackBar(
+            SnackBar(
               behavior: SnackBarBehavior.floating,
-              content: Text('Code copied to clipboard'),
+              content: Text(context.l10n.codeCopied),
             ),
           );
       },

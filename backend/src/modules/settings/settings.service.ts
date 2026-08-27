@@ -1,4 +1,5 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 import {
   serializeAddress,
@@ -6,7 +7,7 @@ import {
   serializeNotification,
   serializePaymentMethod,
 } from '../../common/serializers';
-import { CreateAddressDto } from './dto/create-address.dto';
+import { AddressDto, UpdateAddressDto } from './dto/address.dto';
 import { CreatePaymentMethodDto } from './dto/create-payment-method.dto';
 
 @Injectable()
@@ -16,30 +17,125 @@ export class SettingsService {
   async listAddresses(userId: string) {
     const addresses = await this.prisma.address.findMany({
       where: { userId },
-      orderBy: { isDefault: 'desc' },
+      orderBy: [{ isDefault: 'desc' }, { createdAt: 'desc' }],
     });
     return addresses.map(serializeAddress);
   }
 
-  async createAddress(userId: string, dto: CreateAddressDto) {
-    if (dto.is_default) {
-      await this.prisma.address.updateMany({
-        where: { userId },
-        data: { isDefault: false },
+  async createAddress(userId: string, dto: AddressDto) {
+    const isFirst = (await this.prisma.address.count({ where: { userId } })) === 0;
+    // Her first address is the default whether she said so or not — otherwise
+    // checkout opens with nothing selected on the one order she has ever made.
+    const isDefault = dto.is_default ?? isFirst;
+
+    return this.prisma.$transaction(async (tx) => {
+      if (isDefault) await this.clearDefault(tx, userId);
+
+      const address = await tx.address.create({
+        data: {
+          userId,
+          label: dto.label ?? 'المنزل',
+          recipientName: dto.recipient_name,
+          recipientPhone: dto.recipient_phone,
+          governorate: dto.governorate,
+          district: dto.district ?? null,
+          city: dto.city,
+          addressLine: dto.address_line,
+          landmark: dto.landmark ?? null,
+          isRural: dto.is_rural ?? false,
+          deliveryInstructions: dto.delivery_instructions ?? null,
+          isDefault,
+        },
       });
-    }
-    const address = await this.prisma.address.create({
-      data: {
-        userId,
-        label: dto.label,
-        street: dto.street,
-        city: dto.city,
-        country: dto.country,
-        postalCode: dto.postal_code ?? null,
-        isDefault: dto.is_default ?? false,
-      },
+      return serializeAddress(address);
     });
-    return serializeAddress(address);
+  }
+
+  async updateAddress(userId: string, id: string, dto: UpdateAddressDto) {
+    await this.requireAddress(userId, id);
+
+    return this.prisma.$transaction(async (tx) => {
+      if (dto.is_default) await this.clearDefault(tx, userId);
+
+      const address = await tx.address.update({
+        where: { id },
+        data: {
+          ...(dto.label !== undefined && { label: dto.label }),
+          ...(dto.recipient_name !== undefined && {
+            recipientName: dto.recipient_name,
+          }),
+          ...(dto.recipient_phone !== undefined && {
+            recipientPhone: dto.recipient_phone,
+          }),
+          ...(dto.governorate !== undefined && { governorate: dto.governorate }),
+          ...(dto.district !== undefined && { district: dto.district }),
+          ...(dto.city !== undefined && { city: dto.city }),
+          ...(dto.address_line !== undefined && {
+            addressLine: dto.address_line,
+          }),
+          ...(dto.landmark !== undefined && { landmark: dto.landmark }),
+          ...(dto.is_rural !== undefined && { isRural: dto.is_rural }),
+          ...(dto.delivery_instructions !== undefined && {
+            deliveryInstructions: dto.delivery_instructions,
+          }),
+          ...(dto.is_default !== undefined && { isDefault: dto.is_default }),
+        },
+      });
+      return serializeAddress(address);
+    });
+  }
+
+  async deleteAddress(userId: string, id: string) {
+    const address = await this.requireAddress(userId, id);
+
+    await this.prisma.$transaction(async (tx) => {
+      await tx.address.delete({ where: { id } });
+
+      // Deleting the default leaves the book with none, so the newest of what
+      // remains takes over rather than leaving checkout with nothing selected.
+      if (address.isDefault) {
+        const next = await tx.address.findFirst({
+          where: { userId },
+          orderBy: { createdAt: 'desc' },
+        });
+        if (next) {
+          await tx.address.update({
+            where: { id: next.id },
+            data: { isDefault: true },
+          });
+        }
+      }
+    });
+
+    return { message: 'Address deleted' };
+  }
+
+  async setDefaultAddress(userId: string, id: string) {
+    await this.requireAddress(userId, id);
+    return this.prisma.$transaction(async (tx) => {
+      await this.clearDefault(tx, userId);
+      const address = await tx.address.update({
+        where: { id },
+        data: { isDefault: true },
+      });
+      return serializeAddress(address);
+    });
+  }
+
+  private async clearDefault(tx: Prisma.TransactionClient, userId: string) {
+    await tx.address.updateMany({
+      where: { userId, isDefault: true },
+      data: { isDefault: false },
+    });
+  }
+
+  /** Ownership is checked here, not assumed from the token. */
+  private async requireAddress(userId: string, id: string) {
+    const address = await this.prisma.address.findFirst({
+      where: { id, userId },
+    });
+    if (!address) throw new NotFoundException('Address not found');
+    return address;
   }
 
   async listCoupons() {

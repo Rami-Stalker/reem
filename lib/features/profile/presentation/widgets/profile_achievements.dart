@@ -5,6 +5,7 @@ import '../../../../core/design_system/design_system.dart';
 import '../../domain/entities/achievement.dart';
 import '../providers/profile_overview_provider.dart';
 import 'profile_section_header.dart';
+import '../../../../core/localization/l10n_extension.dart';
 
 /// Gamified badges — a rail of achievement medallions. Earned badges glow in
 /// champagne gold; locked ones are muted with a lock. Tapping opens detail.
@@ -32,7 +33,7 @@ class ProfileAchievements extends ConsumerWidget {
       children: [
         ProfileSectionHeader(
           eyebrow: isLoading ? null : '$earned of ${achievements.length} earned',
-          title: 'Achievements',
+          title: context.l10n.achievements,
         ),
         SizedBox(
           height: 104,
@@ -81,7 +82,7 @@ class _Badge extends StatelessWidget {
     DsBottomSheet.showTitled(
       context,
       title: achievement.label,
-      subtitle: achievement.earned ? 'Earned' : 'Locked',
+      subtitle: achievement.earned ? context.l10n.earned : context.l10n.locked,
       child: Row(
         children: [
           Container(

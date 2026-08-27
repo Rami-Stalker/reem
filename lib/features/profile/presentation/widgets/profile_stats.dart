@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/design_system/design_system.dart';
 import '../../../../core/shared/entities/user.dart';
+import '../../../../core/localization/l10n_extension.dart';
 
 /// Three-up stat strip: following, followers and saved pieces.
 class ProfileStats extends StatelessWidget {
@@ -20,11 +21,11 @@ class ProfileStats extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: DsSpacing.md),
         child: Row(
           children: [
-            _Stat(value: user.followingCount, label: 'Following'),
+            _Stat(value: user.followingCount, label: context.l10n.following),
             _Divider(color: c.divider),
-            _Stat(value: user.followersCount, label: 'Followers'),
+            _Stat(value: user.followersCount, label: context.l10n.followers),
             _Divider(color: c.divider),
-            _Stat(value: savedCount, label: 'Saved'),
+            _Stat(value: savedCount, label: context.l10n.unfavorite),
           ],
         ),
       ),

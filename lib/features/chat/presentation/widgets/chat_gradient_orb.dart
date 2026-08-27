@@ -41,6 +41,15 @@ class _ChatGradientOrbState
   }
 
   @override
+  void dispose() {
+    // The controller repeats forever, so without this every conversation left
+    // a live ticker behind it — the framework says as much at teardown, and on
+    // a device it is a slow leak nobody would connect to chat.
+    controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
 

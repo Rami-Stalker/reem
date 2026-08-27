@@ -51,3 +51,11 @@ backend/.env
 !backend/.env.example
 backend/prisma/dev.db
 backend/prisma/dev.db-journal
+
+# Uploaded media. User content, not source — and `private/` holds photographs
+# of identity documents, which must never reach a repository.
+backend/storage/
+
+# Contract fixtures are captured from a running API; keep them, they are the
+# only thing proving the client and server agree.
+!test/contract/*.json

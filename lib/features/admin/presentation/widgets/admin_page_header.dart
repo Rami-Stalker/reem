@@ -16,7 +16,7 @@ class AdminPageHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.dsColors;
+    final palette = context.console;
     return Padding(
       padding: const EdgeInsets.fromLTRB(
         DsSpacing.xl, DsSpacing.xl, DsSpacing.xl, DsSpacing.lg,
@@ -33,9 +33,8 @@ class AdminPageHeader extends StatelessWidget {
                   style: TextStyle(
                     fontSize: DsTypography.headlineMedium,
                     fontWeight: DsTypography.bold,
-                    color: colors.onSurface,
-                    letterSpacing: 0,
-                  ),
+                  color: palette.ink,
+                ),
                 ),
                 if (subtitle != null) ...[
                   const SizedBox(height: DsSpacing.xs),
@@ -43,14 +42,21 @@ class AdminPageHeader extends StatelessWidget {
                     subtitle!,
                     style: TextStyle(
                       fontSize: DsTypography.bodyMedium,
-                      color: colors.onSurfaceVariant,
+                      color: palette.muted,
                     ),
                   ),
                 ],
               ],
             ),
           ),
-          if (actions != null) ...actions!,
+          if (actions != null)
+            IntrinsicWidth(
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: actions!,
+              ),
+            ),
         ],
       ),
     );

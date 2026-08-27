@@ -7,7 +7,8 @@ import { StoriesRepository } from './stories.repository';
 export class StoriesService {
   constructor(private readonly repo: StoriesRepository) {}
 
-  async list(userId: string) {
+  /** `userId` is absent for a signed-out visitor — see the controller. */
+  async list(userId?: string) {
     const stories = await this.repo.activeForViewer(userId);
     return stories.map((s) => serializeStory(s, userId));
   }

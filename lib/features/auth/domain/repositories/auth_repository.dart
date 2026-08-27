@@ -3,20 +3,113 @@ import 'package:reem/core/shared/entities/user.dart';
 import 'package:reem/features/auth/domain/entities/auth_account.dart';
 
 abstract interface class AuthRepository {
+  /// Step one of the main door: a code to whatever number she typed.
+  ///
+  /// Answers identically whether or not the number has an account, so the
+  /// screen after it is the same either way.
+  Future<Result<OtpChallenge>> startOtpLogin({required String phone});
+
+  /// Step two. Either she is signed in, or she is handed a ticket that is the
+  /// only way an account gets created for that number.
+  Future<Result<OtpLoginResult>> completeOtpLogin({
+    required String phone,
+    required String code,
+  });
+
+  /// Turns a password on, or replaces one. Needs a fresh second factor.
+  Future<Result<bool>> setPassword({
+    String? currentPassword,
+    required String newPassword,
+  });
+
+  /// Turns it off. Leaves her sessions alone — dropping a credential she is
+  /// not using should not sign her out of her own phone.
+  Future<Result<bool>> removePassword();
+
+  // ── Moving the account to another number ────────────────────────────────
+
+  Future<Result<PhoneChangeRequest>> startPhoneChange({
+    required String newPhone,
+  });
+
+  Future<Result<PhoneChangeRequest>> verifyCurrentPhone({
+    required String requestId,
+    required String code,
+  });
+
+  /// Completes the move. Every other session dies and payouts freeze for a
+  /// week; returns when the freeze lifts so the app can say so.
+  Future<Result<DateTime?>> confirmPhoneChange({
+    required String requestId,
+    required String code,
+  });
+
+  Future<Result<void>> cancelPhoneChange(String requestId);
+
+  Future<Result<PhoneChangeRequest?>> pendingPhoneChange();
+
+  // ── Step-up and the factors that satisfy it ─────────────────────────────
+
+  Future<Result<OtpChallenge>> requestStepUp(String scope);
+
+  Future<Result<void>> verifyStepUp({
+    required String scope,
+    required String code,
+    String? method,
+  });
+
+  /// Ten single-use codes. Regenerating silently invalidates the previous set,
+  /// so the screen has to show them once and say so.
+  Future<Result<List<String>>> generateRecoveryCodes();
+
+  Future<Result<int>> remainingRecoveryCodes();
+
+  // ── The last door ───────────────────────────────────────────────────────
+
+  Future<Result<RecoveryCaseReceipt>> submitRecoveryCase({
+    required String claimedPhone,
+    required String contactPhone,
+    required String contactCode,
+    String? registrationMonth,
+    String? displayName,
+    String? city,
+    String? lastOrderMonth,
+    double? lastOrderTotal,
+    String? deviceLabel,
+  });
+
+  Future<Result<String>> recoveryCaseStatus({
+    required String caseId,
+    required String claimSecret,
+  });
+
+  /// Cases open against the signed-in account — the warning she must see while
+  /// the 72-hour cool-off is running.
+  Future<Result<List<OpenRecoveryCase>>> openRecoveryCases();
+
+  Future<Result<void>> cancelRecoveryCase(String caseId);
+
   Future<Result<User>> login({
     required String phone,
     required String password,
+    required bool rememberMe,
   });
 
   Future<Result<User>> register({
-    required String name,
-    String? email,
+    required String firstName,
+    required String lastName,
     required String phone,
-    required String password,
+    required String registrationTicket,
+    String? password,
+    required String country,
+    required String city,
+    required bool declaredFemale,
     UserRole role,
   });
 
-  Future<Result<User>> socialSignIn(SocialAuthProvider provider);
+  /// Makes sure this device has an identity key registered with the server.
+  /// Safe to call on every launch — it is a no-op once enrolled.
+  Future<Result<void>> ensureDeviceRegistered();
 
   Future<Result<void>> continueAsGuest();
 
@@ -52,13 +145,7 @@ abstract interface class AuthRepository {
   Future<Result<User>> updateAccount({
     String? name,
     String? email,
-    String? phone,
     String? location,
-  });
-
-  Future<Result<void>> changePassword({
-    String? currentPassword,
-    required String newPassword,
   });
 
   Future<Result<SecuritySettings>> updateSecurity({
@@ -73,8 +160,6 @@ abstract interface class AuthRepository {
     required String name,
   });
 
-  Future<Result<void>> trustDevice(String id);
-
   Future<Result<void>> revokeDevice(String id);
 
   Future<Result<List<AccountSession>>> getSessions();
@@ -83,14 +168,30 @@ abstract interface class AuthRepository {
 
   Future<Result<void>> logoutAll();
 
-  Future<Result<AuthAccount>> linkAccount(SocialAuthProvider provider);
-
-  Future<Result<AuthAccount>> unlinkAccount(SocialAuthProvider provider);
-
   Future<Result<SellerVerification>> submitSellerVerification({
     required String businessName,
     required String legalName,
+    required String businessCategory,
+    required String storeDescription,
+    required String storeLogoUrl,
+    required String contactPhone,
+    required String contactEmail,
+    required String businessAddress,
+    required String warehouseAddress,
+    required String commercialRegistration,
+    required String governmentIdUrl,
+    required String businessLicenseUrl,
     String? taxId,
+    required String bankName,
+    required String accountHolder,
+    required String iban,
+    Map<String, dynamic>? paymentInformation,
+    required List<String> shippingMethods,
+    required String returnPolicy,
+    required List<String> productCategories,
+    required int yearsExperience,
+    String? website,
+    Map<String, dynamic>? socialMediaLinks,
     required List<String> documentUrls,
   });
 

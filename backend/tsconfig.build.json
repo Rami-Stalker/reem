@@ -1,4 +1,7 @@
 {
   "extends": "./tsconfig.json",
-  "exclude": ["node_modules", "test", "dist", "**/*spec.ts", "prisma/seed.ts"]
+  // `prisma` as a whole, not just `seed.ts`: the seed and its demo modules are
+  // run through ts-node, and compiling them would pull the build's rootDir up
+  // to the project root and emit `dist/src/main.js` instead of `dist/main.js`.
+  "exclude": ["node_modules", "test", "dist", "**/*spec.ts", "prisma"]
 }

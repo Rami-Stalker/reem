@@ -11,6 +11,11 @@ import {
 } from '@nestjs/common';
 import { Public } from '../../common/decorators/public.decorator';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
+import { Authorize } from '../../common/decorators/authorize.decorator';
+import {
+  CurrentPrincipal,
+  RequestPrincipal,
+} from '../../common/decorators/current-principal.decorator';
 import { FavoritesService } from './favorites.service';
 import {
   AddWishlistItemDto,
@@ -22,50 +27,68 @@ import {
 export class FavoritesController {
   constructor(private readonly favorites: FavoritesService) {}
 
+  @Authorize({ action: 'read', resource: 'favorite', allowGuest: true })
   @Get()
-  list(@CurrentUser('id') userId: string) {
-    return this.favorites.list(userId);
+  list(@CurrentPrincipal() principal: RequestPrincipal) {
+    return principal.kind === 'user'
+      ? this.favorites.list(principal.user.id)
+      : this.favorites.listGuest(principal.guest.id);
   }
 
+  @Authorize({ action: 'read', resource: 'favorite', allowGuest: true })
   @Get('overview')
-  overview(@CurrentUser('id') userId: string) {
-    return this.favorites.overview(userId);
+  overview(@CurrentPrincipal() principal: RequestPrincipal) {
+    return principal.kind === 'user'
+      ? this.favorites.overview(principal.user.id)
+      : this.favorites.overviewGuest(principal.guest.id);
   }
 
+  @Authorize({ action: 'write', resource: 'favorite', allowGuest: true })
   @Post('sellers/:sellerId')
   @HttpCode(HttpStatus.CREATED)
   saveSeller(
     @Param('sellerId', ParseUUIDPipe) sellerId: string,
-    @CurrentUser('id') userId: string,
+    @CurrentPrincipal() principal: RequestPrincipal,
   ) {
-    return this.favorites.saveSeller(userId, sellerId);
+    return principal.kind === 'user'
+      ? this.favorites.saveSeller(principal.user.id, sellerId)
+      : this.favorites.saveSellerGuest(principal.guest.id, sellerId);
   }
 
+  @Authorize({ action: 'write', resource: 'favorite', allowGuest: true })
   @Delete('sellers/:sellerId')
   @HttpCode(HttpStatus.OK)
   removeSeller(
     @Param('sellerId', ParseUUIDPipe) sellerId: string,
-    @CurrentUser('id') userId: string,
+    @CurrentPrincipal() principal: RequestPrincipal,
   ) {
-    return this.favorites.removeSeller(userId, sellerId);
+    return principal.kind === 'user'
+      ? this.favorites.removeSeller(principal.user.id, sellerId)
+      : this.favorites.removeSellerGuest(principal.guest.id, sellerId);
   }
 
+  @Authorize({ action: 'write', resource: 'favorite', allowGuest: true })
   @Post('posts/:postId')
   @HttpCode(HttpStatus.CREATED)
   savePost(
     @Param('postId', ParseUUIDPipe) postId: string,
-    @CurrentUser('id') userId: string,
+    @CurrentPrincipal() principal: RequestPrincipal,
   ) {
-    return this.favorites.savePost(userId, postId);
+    return principal.kind === 'user'
+      ? this.favorites.savePost(principal.user.id, postId)
+      : this.favorites.savePostGuest(principal.guest.id, postId);
   }
 
+  @Authorize({ action: 'write', resource: 'favorite', allowGuest: true })
   @Delete('posts/:postId')
   @HttpCode(HttpStatus.OK)
   removePost(
     @Param('postId', ParseUUIDPipe) postId: string,
-    @CurrentUser('id') userId: string,
+    @CurrentPrincipal() principal: RequestPrincipal,
   ) {
-    return this.favorites.removePost(userId, postId);
+    return principal.kind === 'user'
+      ? this.favorites.removePost(principal.user.id, postId)
+      : this.favorites.removePostGuest(principal.guest.id, postId);
   }
 
   @Get('collections')
@@ -112,22 +135,28 @@ export class FavoritesController {
     return this.favorites.share(userId, collectionId, dto);
   }
 
+  @Authorize({ action: 'write', resource: 'favorite', allowGuest: true })
   @Post(':productId')
   @HttpCode(HttpStatus.CREATED)
   add(
     @Param('productId', ParseUUIDPipe) productId: string,
-    @CurrentUser('id') userId: string,
+    @CurrentPrincipal() principal: RequestPrincipal,
   ) {
-    return this.favorites.add(userId, productId);
+    return principal.kind === 'user'
+      ? this.favorites.add(principal.user.id, productId)
+      : this.favorites.addGuest(principal.guest.id, productId);
   }
 
+  @Authorize({ action: 'write', resource: 'favorite', allowGuest: true })
   @Delete(':productId')
   @HttpCode(HttpStatus.OK)
   remove(
     @Param('productId', ParseUUIDPipe) productId: string,
-    @CurrentUser('id') userId: string,
+    @CurrentPrincipal() principal: RequestPrincipal,
   ) {
-    return this.favorites.remove(userId, productId);
+    return principal.kind === 'user'
+      ? this.favorites.remove(principal.user.id, productId)
+      : this.favorites.removeGuest(principal.guest.id, productId);
   }
 
   @Public()

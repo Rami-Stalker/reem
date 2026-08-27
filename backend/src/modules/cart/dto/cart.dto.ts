@@ -1,12 +1,18 @@
 import { IsInt, IsOptional, IsUUID, Max, Min } from 'class-validator';
 
+/**
+ * The cart references a seller's OFFER, not a product: the same product may be
+ * listed by several sellers at different prices, so "add to cart" has to say
+ * whose listing (Q23/Q27 P2).
+ */
 export class AddCartItemDto {
   @IsUUID()
-  product_id!: string;
+  offer_id!: string;
 
+  /** The seller's priced variant row, not the canonical product variant. */
   @IsOptional()
   @IsUUID()
-  variant_id?: string;
+  offer_variant_id?: string;
 
   @IsOptional()
   @IsInt()

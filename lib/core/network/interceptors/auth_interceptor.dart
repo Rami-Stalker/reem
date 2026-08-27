@@ -21,6 +21,10 @@ class AuthInterceptor extends Interceptor {
   /// Shared in-flight refresh, so N parallel 401s trigger exactly one refresh.
   static Future<bool>? _inFlightRefresh;
 
+  /// Whether the last failed refresh was a rejection (session really is gone)
+  /// or a transport failure (session is probably fine, the network is not).
+  static bool _refreshWasRejected = false;
+
   static const _retriedFlag = '__retried__';
 
   static Dio _buildBareClient() => Dio(
@@ -38,11 +42,33 @@ class AuthInterceptor extends Interceptor {
     RequestInterceptorHandler handler,
   ) async {
     await _attachDeviceHeaders(options);
+
+    // Refresh *before* the token dies rather than after. The reactive path
+    // costs a wasted request, a 401, a refresh and a replay — three sequential
+    // round-trips, which at Syrian latencies is seconds of dead UI at a random
+    // moment. `_isAuthRoute` is excluded so the refresh call cannot recurse.
+    if (!_isAuthRoute(options.path) && await _accessTokenIsStale()) {
+      await _refreshOnce();
+    }
+
     final token = await _storage.read(SecureStorageKeys.accessToken);
     if (token != null && token.isNotEmpty) {
       options.headers['Authorization'] = 'Bearer $token';
     }
     handler.next(options);
+  }
+
+  /// True once the access token is inside the last 20% of its life.
+  Future<bool> _accessTokenIsStale() async {
+    final raw = await _storage.read(SecureStorageKeys.accessTokenExpiresAt);
+    if (raw == null) return false;
+    final expiry = DateTime.tryParse(raw);
+    if (expiry == null) return false;
+    // 15-minute tokens mean this fires with ~3 minutes to spare, which is
+    // ample even on a slow connection.
+    return DateTime.now().isAfter(
+      expiry.subtract(const Duration(minutes: 3)),
+    );
   }
 
   @override
@@ -60,7 +86,8 @@ class AuthInterceptor extends Interceptor {
 
     final refreshed = await _refreshOnce();
     if (!refreshed) {
-      await _clearSession();
+      // Clear only when the server actually rejected the refresh token.
+      if (_refreshWasRejected) await _clearSession();
       return handler.next(err);
     }
 
@@ -108,15 +135,46 @@ class AuthInterceptor extends Interceptor {
         SecureStorageKeys.refreshToken,
         tokens['refresh_token'] as String,
       );
+      await _persistLifetimes(tokens);
       return true;
-    } catch (_) {
+    } on DioException catch (error) {
+      // Only a definitive rejection means the session is gone. A timeout or a
+      // dropped connection — routine on a Syrian mobile network — used to
+      // delete the refresh token and strand a perfectly valid session behind a
+      // UI that still believed it was signed in.
+      final status = error.response?.statusCode;
+      _refreshWasRejected = status == 401 || status == 403;
       return false;
+    } catch (_) {
+      _refreshWasRejected = false;
+      return false;
+    }
+  }
+
+  Future<void> _persistLifetimes(Map<dynamic, dynamic> tokens) async {
+    final expiresIn = tokens['expires_in'];
+    if (expiresIn is num) {
+      await _storage.write(
+        SecureStorageKeys.accessTokenExpiresAt,
+        DateTime.now()
+            .add(Duration(seconds: expiresIn.toInt()))
+            .toIso8601String(),
+      );
+    }
+    final refreshExpiresAt = tokens['refresh_expires_at'];
+    if (refreshExpiresAt is String) {
+      await _storage.write(
+        SecureStorageKeys.refreshTokenExpiresAt,
+        refreshExpiresAt,
+      );
     }
   }
 
   Future<void> _clearSession() async {
     await _storage.delete(SecureStorageKeys.accessToken);
     await _storage.delete(SecureStorageKeys.refreshToken);
+    await _storage.delete(SecureStorageKeys.accessTokenExpiresAt);
+    await _storage.delete(SecureStorageKeys.refreshTokenExpiresAt);
   }
 
   Future<void> _attachDeviceHeaders(RequestOptions options) async {
@@ -129,11 +187,14 @@ class AuthInterceptor extends Interceptor {
       deviceId = 'reem-${DateTime.now().microsecondsSinceEpoch}';
       await _storage.write(SecureStorageKeys.deviceId, deviceId);
     }
+    final guestToken = await _storage.read(SecureStorageKeys.guestToken);
     return {
       'X-Reem-Device-Id': deviceId,
       'X-Reem-Device-Fingerprint': deviceId,
       'X-Reem-Device-Name': 'Reem ${defaultTargetPlatform.name}',
       'X-Reem-Platform': defaultTargetPlatform.name,
+      if (guestToken != null && guestToken.isNotEmpty)
+        'X-Reem-Guest-Token': guestToken,
     };
   }
 }

@@ -8,17 +8,25 @@ class RegisterUseCase {
   final AuthRepository _repository;
 
   Future<Result<User>> call({
-    required String name,
-    String? email,
+    required String firstName,
+    required String lastName,
     required String phone,
-    required String password,
+    required String registrationTicket,
+    String? password,
+    required String country,
+    required String city,
+    required bool declaredFemale,
     UserRole role = UserRole.customer,
   }) =>
       _repository.register(
-        name: name,
-        email: email,
+        firstName: firstName,
+        lastName: lastName,
         phone: phone,
+        registrationTicket: registrationTicket,
         password: password,
+        country: country,
+        city: city,
+        declaredFemale: declaredFemale,
         role: role,
       );
 }

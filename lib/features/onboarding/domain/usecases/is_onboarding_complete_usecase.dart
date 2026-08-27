@@ -1,8 +1,8 @@
-import '../../data/datasources/onboarding_local_datasource.dart';
+import '../repositories/onboarding_repository.dart';
 
 class IsOnboardingCompleteUseCase {
-  const IsOnboardingCompleteUseCase(this._local);
-  final OnboardingLocalDataSource _local;
+  const IsOnboardingCompleteUseCase(this._repository);
+  final OnboardingRepository _repository;
 
-  Future<bool> call() => _local.isOnboardingComplete();
+  Future<bool> call() => _repository.isComplete();
 }

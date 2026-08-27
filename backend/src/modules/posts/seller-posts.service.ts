@@ -26,13 +26,23 @@ export class SellerPostsService {
   async create(user: AuthUser, dto: CreatePostDto) {
     const product = await this.prisma.product.findUnique({
       where: { id: dto.product_id },
-      select: { id: true, sellerId: true },
+      select: { id: true, offers: { select: { sellerId: true } } },
     });
     if (!product) throw new NotFoundException('Product not found');
 
     // A seller may only feature their own products.
-    if (user.role !== UserRole.ADMIN && product.sellerId !== user.id) {
-      throw new ForbiddenException('You can only post your own products');
+    const managerRoles: UserRole[] = [
+      UserRole.SUPER_ADMIN,
+      UserRole.OPERATIONS_ADMIN,
+      UserRole.CONTENT_MODERATOR,
+      UserRole.ADMIN,
+    ];
+    // A seller may post about any product they actually list.
+    const listsProduct = product.offers.some(
+      (offer) => offer.sellerId === user.id,
+    );
+    if (!managerRoles.includes(user.role) && !listsProduct) {
+      throw new ForbiddenException('You can only post about products you sell');
     }
 
     const post = await this.repo.create(

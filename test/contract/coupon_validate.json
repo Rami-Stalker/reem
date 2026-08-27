@@ -1,0 +1,9 @@
+{
+  "valid": true,
+  "code": "REEM20",
+  "type": "percentage",
+  "discount": {
+    "amount": "14000",
+    "currency": "SYP"
+  }
+}

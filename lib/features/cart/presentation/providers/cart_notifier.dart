@@ -31,14 +31,14 @@ class CartNotifier extends StateNotifier<CartState> {
   }
 
   Future<bool> add({
-    required String productId,
-    String? variantId,
+    required String offerId,
+    String? offerVariantId,
     int quantity = 1,
   }) async {
     state = state.copyWith(clearError: true);
     final result = await _addToCart(
-      productId: productId,
-      variantId: variantId,
+      offerId: offerId,
+      offerVariantId: offerVariantId,
       quantity: quantity,
     );
     return _apply(result);

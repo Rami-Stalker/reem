@@ -17,7 +17,7 @@ import '../providers/home_content_provider.dart';
 class HomeHeroCarousel extends ConsumerStatefulWidget {
   const HomeHeroCarousel({super.key});
 
-  static const double _height = 216;
+  static const double _height = 252;
 
   @override
   ConsumerState<HomeHeroCarousel> createState() => _HomeHeroCarouselState();
@@ -132,7 +132,7 @@ class _HeroSlide extends StatelessWidget {
         },
         child: Container(
           decoration: BoxDecoration(
-            borderRadius: DsRadius.borderXxl,
+            borderRadius: BorderRadius.circular(34),
             boxShadow: context.shadowSoft,
           ),
           clipBehavior: Clip.antiAlias,

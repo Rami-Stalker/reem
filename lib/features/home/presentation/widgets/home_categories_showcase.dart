@@ -4,17 +4,25 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/design_system/design_system.dart';
+import '../../../../core/localization/l10n_extension.dart';
 import '../../../../core/router/route_paths.dart';
 import '../../domain/entities/home_category.dart';
 import '../providers/home_content_provider.dart';
 import 'home_section_header.dart';
 
-/// "Shop by category" — a horizontal rail of circular image medallions.
-/// Featured categories wear a champagne-gold ring.
+/// "Shop by category" — a rail of landscape merchandising tiles.
+///
+/// These used to be circular medallions, which read as *stories*: the same
+/// shape, the same size, the same ring, sitting two sections above the actual
+/// stories rail. A department is not a person and has nothing to watch, so the
+/// shape now says shelf instead — a wide framed plate with the department name
+/// and its piece count set over the photo. Featured departments keep a
+/// champagne hairline as the only carry-over.
 class HomeCategoriesShowcase extends ConsumerWidget {
   const HomeCategoriesShowcase({super.key});
 
-  static const double _size = 72;
+  static const double _width = 138;
+  static const double _height = 92;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -22,8 +30,9 @@ class HomeCategoriesShowcase extends ConsumerWidget {
       homeContentNotifierProvider.select((s) => s.isInitialLoading),
     );
     final categories = ref.watch(
-      homeContentNotifierProvider
-          .select((s) => s.content?.featuredCategories ?? const <HomeCategory>[]),
+      homeContentNotifierProvider.select(
+        (s) => s.content?.featuredCategories ?? const <HomeCategory>[],
+      ),
     );
 
     if (!isLoading && categories.isEmpty) return const SizedBox.shrink();
@@ -32,21 +41,22 @@ class HomeCategoriesShowcase extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         HomeSectionHeader(
-          eyebrow: 'Browse',
-          title: 'Shop by category',
+          eyebrow: context.l10n.homeCategoriesEyebrow,
+          title: context.l10n.homeShopByCategory,
           onSeeAll: () => context.push(RoutePaths.categories),
         ),
         SizedBox(
-          height: _size + 38,
+          height: _height,
           child: isLoading
-              ? _skeleton(context)
+              ? _skeleton()
               : ListView.separated(
                   scrollDirection: Axis.horizontal,
                   physics: const BouncingScrollPhysics(),
                   padding: const EdgeInsets.symmetric(horizontal: DsSpacing.lg),
                   itemCount: categories.length,
-                  separatorBuilder: (_, _) => const SizedBox(width: DsSpacing.md),
-                  itemBuilder: (context, i) => _CategoryMedallion(
+                  separatorBuilder: (_, _) =>
+                      const SizedBox(width: DsSpacing.sm),
+                  itemBuilder: (context, i) => _CategoryTile(
                     category: categories[i],
                     onTap: () => context.push(
                       '/category/${Uri.encodeComponent(categories[i].label)}',
@@ -58,28 +68,26 @@ class HomeCategoriesShowcase extends ConsumerWidget {
     );
   }
 
-  Widget _skeleton(BuildContext context) {
+  Widget _skeleton() {
     return DsShimmer(
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
         physics: const NeverScrollableScrollPhysics(),
         padding: const EdgeInsets.symmetric(horizontal: DsSpacing.lg),
-        itemCount: 6,
-        separatorBuilder: (_, _) => const SizedBox(width: DsSpacing.md),
-        itemBuilder: (_, _) => Column(
-          children: [
-            const DsSkeleton.circle(size: _size),
-            const SizedBox(height: DsSpacing.xs),
-            DsSkeleton.line(width: 44),
-          ],
+        itemCount: 5,
+        separatorBuilder: (_, _) => const SizedBox(width: DsSpacing.sm),
+        itemBuilder: (_, _) => const DsSkeleton.box(
+          width: _width,
+          height: _height,
+          borderRadius: DsRadius.xl,
         ),
       ),
     );
   }
 }
 
-class _CategoryMedallion extends StatelessWidget {
-  const _CategoryMedallion({required this.category, required this.onTap});
+class _CategoryTile extends StatelessWidget {
+  const _CategoryTile({required this.category, required this.onTap});
 
   final HomeCategory category;
   final VoidCallback onTap;
@@ -87,55 +95,95 @@ class _CategoryMedallion extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = context.dsColors;
-    const size = HomeCategoriesShowcase._size;
+    final theme = Theme.of(context);
 
-    return GestureDetector(
-      onTap: onTap,
-      child: SizedBox(
-        width: size,
-        child: Column(
-          children: [
-            Container(
-              width: size,
-              height: size,
-              padding: const EdgeInsets.all(2.5),
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                gradient: category.isFeatured ? DsGradients.champagne : null,
-                color: category.isFeatured ? null : c.border,
-              ),
-              child: Container(
-                padding: const EdgeInsets.all(2),
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: c.surface,
-                ),
-                child: ClipOval(
-                  child: CachedNetworkImage(
-                    imageUrl: category.imageUrl,
-                    fit: BoxFit.cover,
-                    placeholder: (_, _) => ColoredBox(color: c.shimmerBase),
-                    errorWidget: (_, _, _) =>
-                        Icon(Icons.image_outlined, color: c.onSurfaceVariant),
+    final tile = Container(
+      width: HomeCategoriesShowcase._width,
+      height: HomeCategoriesShowcase._height,
+      clipBehavior: Clip.antiAlias,
+      decoration: BoxDecoration(
+        color: c.surfaceVariant,
+        borderRadius: BorderRadius.circular(DsRadius.xl),
+        boxShadow: context.shadowSoft,
+      ),
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          CachedNetworkImage(
+            imageUrl: category.imageUrl,
+            fit: BoxFit.cover,
+            fadeInDuration: DsMotion.normal,
+            placeholder: (_, _) => ColoredBox(color: c.shimmerBase),
+            errorWidget: (_, _, _) => ColoredBox(color: c.surfaceVariant),
+          ),
+          IgnorePointer(
+            child: DecoratedBox(
+              decoration: BoxDecoration(gradient: context.imageScrim),
+            ),
+          ),
+          if (category.isFeatured)
+            PositionedDirectional(
+              top: DsSpacing.xs,
+              end: DsSpacing.xs,
+              child: DsSparkle(size: 11, color: c.accent),
+            ),
+          PositionedDirectional(
+            start: DsSpacing.sm,
+            end: DsSpacing.xs,
+            bottom: DsSpacing.xs + 2,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  category.label,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: theme.textTheme.labelLarge?.copyWith(
+                    color: Colors.white,
+                    fontWeight: DsTypography.bold,
+                    height: 1.2,
+                    shadows: const [
+                      Shadow(blurRadius: 8, color: Colors.black54),
+                    ],
                   ),
                 ),
-              ),
+                if (category.productCount > 0)
+                  Text(
+                    context.l10n.piecesCount(_compact(category.productCount)),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: theme.textTheme.labelSmall?.copyWith(
+                      color: Colors.white.withValues(alpha: 0.86),
+                      shadows: const [
+                        Shadow(blurRadius: 8, color: Colors.black54),
+                      ],
+                    ),
+                  ),
+              ],
             ),
-            const SizedBox(height: DsSpacing.xs),
-            Text(
-              category.label,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                fontFamily: DsTypography.fontFamily,
-                fontSize: DsTypography.labelMedium,
-                fontWeight: DsTypography.semiBold,
-                color: c.onSurface,
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
+
+    return DsScaleAnimations.tapScale(
+      pressedScale: 0.97,
+      onTap: onTap,
+      child: category.isFeatured
+          ? DsGradientBorder(
+              radius: DsRadius.xl + 1.4,
+              width: 1.4,
+              gradient: context.champagneGradient,
+              backgroundColor: c.surfaceVariant,
+              child: tile,
+            )
+          : tile,
+    );
+  }
+
+  static String _compact(int n) {
+    if (n >= 1000) return '${(n / 1000).toStringAsFixed(1)}k';
+    return '$n';
   }
 }

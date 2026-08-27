@@ -61,8 +61,8 @@ class _ProductImageSliderState
                             350),
 
                 padding:
-                    EdgeInsets.only(
-                  right:
+                    EdgeInsetsDirectional.only(
+                  end:
                       current == index
                           ? 0
                           : 18,

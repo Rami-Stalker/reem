@@ -40,48 +40,56 @@ abstract final class ErrorMapper {
     final status = response?.statusCode ?? _extractStatusCode(data) ?? 0;
     final message = _extractMessage(data) ?? 'Request failed ($status)';
     final code = _extractCode(data) ?? _fallbackCode(status);
+    final details = _extractDetails(data);
 
     return switch (status) {
       400 || 422 => ValidationException(
         message,
         code: code,
         statusCode: status,
+        details: details,
         cause: response,
       ),
       401 => UnauthorizedException(
         message,
         code: code,
         statusCode: status,
+        details: details,
         cause: response,
       ),
       403 => ForbiddenException(
         message,
         code: code,
         statusCode: status,
+        details: details,
         cause: response,
       ),
       404 => NotFoundException(
         message,
         code: code,
         statusCode: status,
+        details: details,
         cause: response,
       ),
       409 => ConflictException(
         message,
         code: code,
         statusCode: status,
+        details: details,
         cause: response,
       ),
       429 => RateLimitException(
         message,
         code: code,
         statusCode: status,
+        details: details,
         cause: response,
       ),
       >= 500 => ServerException(
         message,
         code: code,
         statusCode: status,
+        details: details,
         cause: response,
         isRetryable: true,
       ),
@@ -89,6 +97,7 @@ abstract final class ErrorMapper {
         message,
         code: code,
         statusCode: status,
+        details: details,
         cause: response,
         isRetryable: false,
       ),
@@ -105,6 +114,15 @@ abstract final class ErrorMapper {
       }
     }
     if (data is String) return data;
+    return null;
+  }
+
+  /// The server puts anything a handler deliberately attached to an error body
+  /// under `details`. It is the difference between "confirm it is you" and
+  /// knowing *which* action to confirm for.
+  static Map<String, dynamic>? _extractDetails(dynamic data) {
+    final details = _asMap(data)?['details'];
+    if (details is Map) return Map<String, dynamic>.from(details);
     return null;
   }
 

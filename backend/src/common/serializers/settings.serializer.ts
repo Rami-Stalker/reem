@@ -4,10 +4,15 @@ export function serializeAddress(address: Address) {
   return {
     id: address.id,
     label: address.label,
-    street: address.street,
+    recipient_name: address.recipientName,
+    recipient_phone: address.recipientPhone,
+    governorate: address.governorate,
+    district: address.district,
     city: address.city,
-    country: address.country,
-    postal_code: address.postalCode,
+    address_line: address.addressLine,
+    landmark: address.landmark,
+    is_rural: address.isRural,
+    delivery_instructions: address.deliveryInstructions,
     is_default: address.isDefault,
   };
 }

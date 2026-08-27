@@ -5,6 +5,7 @@ sealed class Failure {
     this.message, {
     this.code,
     this.statusCode,
+    this.details,
     this.cause,
     this.stackTrace,
     this.isRetryable = false,
@@ -14,6 +15,16 @@ sealed class Failure {
   final String message;
   final String? code;
   final int? statusCode;
+
+  /// Everything the server attached to the refusal beyond a sentence.
+  ///
+  /// A code says *what* went wrong; this says what to do about it. The
+  /// step-up guard refuses with the scope to elevate for, the new-device
+  /// cooldown with the moment it lifts, and a password on an unenrolled
+  /// handset with the challenge already sent. Without these the app can only
+  /// show the sentence and stop, which is how a recoverable refusal turns into
+  /// a dead end.
+  final Map<String, dynamic>? details;
   final Object? cause;
   final StackTrace? stackTrace;
   final bool isRetryable;
@@ -42,6 +53,7 @@ final class ServerFailure extends Failure {
     super.message, {
     super.code,
     super.statusCode,
+    super.details,
     super.cause,
     super.stackTrace,
     super.isRetryable = true,
@@ -54,6 +66,7 @@ final class UnauthorizedFailure extends Failure {
     super.message, {
     super.code,
     super.statusCode = 401,
+    super.details,
     super.cause,
     super.stackTrace,
     super.isRetryable = false,
@@ -66,6 +79,7 @@ final class ForbiddenFailure extends Failure {
     super.message, {
     super.code,
     super.statusCode = 403,
+    super.details,
     super.cause,
     super.stackTrace,
     super.isRetryable = false,
@@ -78,6 +92,7 @@ final class NetworkFailure extends Failure {
     super.message, {
     super.code,
     super.statusCode,
+    super.details,
     super.cause,
     super.stackTrace,
     super.isRetryable = true,
@@ -90,6 +105,7 @@ final class ValidationFailure extends Failure {
     super.message, {
     super.code,
     super.statusCode = 422,
+    super.details,
     super.cause,
     super.stackTrace,
     super.isRetryable = false,
@@ -102,6 +118,7 @@ final class ConflictFailure extends Failure {
     super.message, {
     super.code,
     super.statusCode = 409,
+    super.details,
     super.cause,
     super.stackTrace,
     super.isRetryable = false,
@@ -114,6 +131,7 @@ final class NotFoundFailure extends Failure {
     super.message, {
     super.code,
     super.statusCode = 404,
+    super.details,
     super.cause,
     super.stackTrace,
     super.isRetryable = false,
@@ -126,6 +144,7 @@ final class RateLimitFailure extends Failure {
     super.message, {
     super.code,
     super.statusCode = 429,
+    super.details,
     super.cause,
     super.stackTrace,
     super.isRetryable = true,
@@ -138,6 +157,7 @@ final class CacheFailure extends Failure {
     super.message, {
     super.code,
     super.statusCode,
+    super.details,
     super.cause,
     super.stackTrace,
     super.isRetryable = false,

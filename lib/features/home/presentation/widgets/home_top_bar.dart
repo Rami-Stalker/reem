@@ -5,18 +5,22 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/design_system/design_system.dart';
+import '../../../../core/localization/l10n_extension.dart';
 import '../../../../core/router/route_paths.dart';
 import '../../../auth/presentation/providers/auth_provider.dart';
 
 /// Pinned, glassy home app bar: the Reem wordmark, notifications and the
 /// current user's avatar.
+///
+/// The wordmark comes from `appTitle`, so it reads «ريم» in Arabic and "Reem"
+/// in English — the two-script logo the client asked for in Q74.
 class HomeTopBar extends ConsumerWidget {
   const HomeTopBar({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final c = context.dsColors;
     final user = ref.watch(authNotifierProvider.select((s) => s.user));
+    final colors = context.dsColors;
 
     return SliverAppBar(
       pinned: true,
@@ -25,7 +29,7 @@ class HomeTopBar extends ConsumerWidget {
       backgroundColor: Colors.transparent,
       surfaceTintColor: Colors.transparent,
       titleSpacing: DsSpacing.lg,
-      toolbarHeight: 64,
+      toolbarHeight: 70,
       flexibleSpace: ClipRect(
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: DsBlur.medium, sigmaY: DsBlur.medium),
@@ -35,8 +39,8 @@ class HomeTopBar extends ConsumerWidget {
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: [
-                  c.background.withValues(alpha: 0.88),
-                  c.background.withValues(alpha: 0.30),
+                  colors.background.withValues(alpha: 0.96),
+                  colors.background.withValues(alpha: 0.42),
                 ],
               ),
             ),
@@ -46,15 +50,14 @@ class HomeTopBar extends ConsumerWidget {
       title: ShaderMask(
         blendMode: BlendMode.srcIn,
         shaderCallback: (bounds) =>
-            context.primaryGradient.createShader(bounds),
-        child: const Text(
-          'Reem',
-          style: TextStyle(
+            CustomerExperience.signatureGradient.createShader(bounds),
+        child: Text(
+          context.l10n.appTitle,
+          style: const TextStyle(
             fontFamily: DsTypography.fontFamilyDisplay,
             fontFamilyFallback: DsTypography.displayFallback,
-            fontSize: 30,
+            fontSize: 32,
             fontWeight: DsTypography.bold,
-            letterSpacing: 0.5,
             color: Colors.white,
           ),
         ),
@@ -65,7 +68,7 @@ class HomeTopBar extends ConsumerWidget {
         ),
         const SizedBox(width: DsSpacing.xs),
         Padding(
-          padding: const EdgeInsets.only(right: DsSpacing.lg),
+          padding: const EdgeInsetsDirectional.only(end: DsSpacing.lg),
           child: DsAvatar(
             imageUrl: user?.imageUrl,
             name: user?.name,
@@ -85,26 +88,39 @@ class _NotificationsBell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final c = context.dsColors;
+    final colors = context.dsColors;
+
     return Stack(
       clipBehavior: Clip.none,
       children: [
-        DsIconButton(
-          icon: Icons.notifications_none_rounded,
-          variant: DsIconButtonVariant.surface,
-          size: 40,
-          onPressed: onTap,
+        Container(
+          width: 42,
+          height: 42,
+          decoration: BoxDecoration(
+            color: colors.surfaceElevated.withValues(alpha: 0.76),
+            shape: BoxShape.circle,
+            border: Border.all(color: colors.border),
+          ),
+          child: IconButton(
+            tooltip: context.l10n.notifications,
+            icon: Icon(
+              Icons.notifications_none_rounded,
+              color: colors.onSurface,
+              size: 21,
+            ),
+            onPressed: onTap,
+          ),
         ),
-        Positioned(
+        PositionedDirectional(
           top: 8,
-          right: 9,
+          end: 9,
           child: Container(
             width: 9,
             height: 9,
             decoration: BoxDecoration(
-              color: c.favorite,
+              color: colors.primary,
               shape: BoxShape.circle,
-              border: Border.all(color: c.surface, width: 1.5),
+              border: Border.all(color: colors.surfaceElevated, width: 1.5),
             ),
           ),
         ),

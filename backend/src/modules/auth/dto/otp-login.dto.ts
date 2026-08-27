@@ -1,0 +1,85 @@
+import { Transform } from 'class-transformer';
+import {
+  IsEnum,
+  IsOptional,
+  IsString,
+  MaxLength,
+  MinLength,
+} from 'class-validator';
+import { OtpChannel } from '@prisma/client';
+import { foldDigits, PhoneField } from '../../../common/phone/phone';
+
+/**
+ * Device descriptors every entry point accepts, so a session can be named
+ * something a person recognises in her device list.
+ */
+export class DeviceDescriptorDto {
+  @IsOptional()
+  @IsString()
+  @MaxLength(120)
+  device_name?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(60)
+  platform?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(60)
+  app_version?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(256)
+  device_fingerprint?: string;
+}
+
+/**
+ * Step one of the only sign-in journey most Reem accounts will ever use: she
+ * types her number.
+ *
+ * The response is identical whether or not that number has an account, which
+ * is not a nicety on a women-only platform — a route that answers "yes, she is
+ * on Reem" to anybody who asks is a route that answers it to her family.
+ */
+export class StartOtpLoginDto extends DeviceDescriptorDto {
+  @PhoneField()
+  phone!: string;
+
+  @IsOptional()
+  @Transform(({ value }) =>
+    typeof value === 'string' ? value.toUpperCase() : value,
+  )
+  @IsEnum(OtpChannel)
+  channel?: OtpChannel;
+
+  /**
+   * Per-attempt random value from this app install. Stored hashed with the
+   * challenge and demanded back at verification, so a code recited over the
+   * phone to somebody else cannot be spent from their handset.
+   */
+  @IsOptional()
+  @IsString()
+  @MaxLength(128)
+  client_nonce?: string;
+}
+
+/** Step two: the code. Either signs her in, or hands back a ticket to sign up. */
+export class CompleteOtpLoginDto extends DeviceDescriptorDto {
+  @PhoneField()
+  phone!: string;
+
+  @Transform(({ value }) =>
+    typeof value === 'string' ? foldDigits(value).trim() : value,
+  )
+  @IsString()
+  @MinLength(4)
+  @MaxLength(8)
+  code!: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(128)
+  client_nonce?: string;
+}

@@ -2,19 +2,24 @@ import 'package:reem/core/result/result.dart';
 
 import '../entities/checkout.dart';
 import '../entities/order.dart';
+import '../../../../core/shared/value_objects/money.dart';
 
 abstract interface class CheckoutRepository {
   // Checkout options
   Future<Result<List<Governorate>>> getGovernorates();
   Future<Result<DeliveryQuote>> getDeliveryQuote({
     required String governorate,
-    double subtotal,
+    Money? subtotal,
+    String? district,
+    bool isRural,
   });
   Future<Result<List<PaymentMethodOption>>> getPaymentMethods();
 
   // Placing + paying
   Future<Result<PlacedOrder>> placeOrder({
-    required ShippingInput shipping,
+    ShippingInput? shipping,
+    String? addressId,
+    bool saveAddress = false,
     required String paymentMethod,
     String? couponCode,
     String? deliveryInstructions,

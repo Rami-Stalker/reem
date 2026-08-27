@@ -2,10 +2,28 @@ import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 
+/**
+ * The cart holds SELLER OFFERS, not bare products: price, currency, stock and
+ * fulfilment terms are all properties of one seller's listing. This is also
+ * what lets checkout group a basket into per-seller sub-orders without a
+ * second round of lookups.
+ */
+const OFFER_LINE_INCLUDE = {
+  seller: true,
+  product: {
+    include: { media: { orderBy: { sortOrder: 'asc' as const } }, category: true },
+  },
+};
+
 export const CART_INCLUDE = {
-  product: { include: { media: { orderBy: { sortOrder: 'asc' as const } } } },
-  variant: true,
+  offer: { include: OFFER_LINE_INCLUDE },
+  offerVariant: { include: { variant: true } },
 } satisfies Prisma.CartItemInclude;
+
+export const GUEST_CART_INCLUDE = {
+  offer: { include: OFFER_LINE_INCLUDE },
+  offerVariant: { include: { variant: true } },
+} satisfies Prisma.GuestCartItemInclude;
 
 @Injectable()
 export class CartRepository {
@@ -19,6 +37,14 @@ export class CartRepository {
     });
   }
 
+  findGuestItems(guestSessionId: string) {
+    return this.prisma.guestCartItem.findMany({
+      where: { guestSessionId },
+      include: GUEST_CART_INCLUDE,
+      orderBy: { createdAt: 'desc' },
+    });
+  }
+
   findItem(id: string, userId: string) {
     return this.prisma.cartItem.findFirst({
       where: { id, userId },
@@ -26,25 +52,61 @@ export class CartRepository {
     });
   }
 
-  findExisting(userId: string, productId: string, variantId: string | null) {
-    return this.prisma.cartItem.findFirst({
-      where: { userId, productId, variantId },
+  findGuestItem(id: string, guestSessionId: string) {
+    return this.prisma.guestCartItem.findFirst({
+      where: { id, guestSessionId },
+      include: GUEST_CART_INCLUDE,
     });
   }
 
-  create(data: Prisma.CartItemCreateInput) {
+  findExisting(userId: string, offerId: string, offerVariantId: string | null) {
+    return this.prisma.cartItem.findFirst({
+      where: { userId, offerId, offerVariantId },
+    });
+  }
+
+  findGuestExisting(
+    guestSessionId: string,
+    offerId: string,
+    offerVariantId: string | null,
+  ) {
+    return this.prisma.guestCartItem.findFirst({
+      where: { guestSessionId, offerId, offerVariantId },
+    });
+  }
+
+  create(data: Prisma.CartItemUncheckedCreateInput) {
     return this.prisma.cartItem.create({ data });
+  }
+
+  createGuest(data: Prisma.GuestCartItemUncheckedCreateInput) {
+    return this.prisma.guestCartItem.create({ data });
   }
 
   updateQuantity(id: string, quantity: number) {
     return this.prisma.cartItem.update({ where: { id }, data: { quantity } });
   }
 
+  updateGuestQuantity(id: string, quantity: number) {
+    return this.prisma.guestCartItem.update({
+      where: { id },
+      data: { quantity },
+    });
+  }
+
   delete(id: string) {
     return this.prisma.cartItem.delete({ where: { id } });
   }
 
+  deleteGuest(id: string) {
+    return this.prisma.guestCartItem.delete({ where: { id } });
+  }
+
   clear(userId: string) {
     return this.prisma.cartItem.deleteMany({ where: { userId } });
+  }
+
+  clearGuest(guestSessionId: string) {
+    return this.prisma.guestCartItem.deleteMany({ where: { guestSessionId } });
   }
 }

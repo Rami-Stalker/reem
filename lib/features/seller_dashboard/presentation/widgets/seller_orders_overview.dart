@@ -4,9 +4,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../../core/design_system/design_system.dart';
+import '../../../../core/localization/l10n_extension.dart';
 import '../../../../../core/router/route_paths.dart';
 import '../../domain/entities/seller_orders_summary.dart';
 import '../providers/seller_dashboard_provider.dart';
+import 'seller_labels.dart';
 
 class SellerOrdersOverview extends ConsumerWidget {
   const SellerOrdersOverview({super.key});
@@ -37,14 +39,14 @@ class SellerOrdersOverview extends ConsumerWidget {
             children: [
               Expanded(
                 child: Text(
-                  'Orders',
+                  context.l10n.orders,
                   style: theme.textTheme.titleMedium
                       ?.copyWith(fontWeight: DsTypography.bold),
                 ),
               ),
               TextButton(
-                onPressed: () => context.push(RoutePaths.orders),
-                child: Text('Manage all',
+                onPressed: () => context.push(RoutePaths.sellerOrders),
+                child: Text(context.l10n.sellerManageAll,
                     style: TextStyle(color: c.primary,
                         fontSize: DsTypography.labelMedium)),
               ),
@@ -120,7 +122,7 @@ class _OrderCard extends StatelessWidget {
 
     return Expanded(
       child: GestureDetector(
-        onTap: () => context.push(RoutePaths.orders),
+        onTap: () => context.push(RoutePaths.sellerOrders),
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
           padding: const EdgeInsets.symmetric(
@@ -144,7 +146,7 @@ class _OrderCard extends StatelessWidget {
                   Icon(status.icon, size: 14, color: color),
                   if (urgent && count > 0)
                     Padding(
-                      padding: const EdgeInsets.only(left: 4),
+                      padding: const EdgeInsetsDirectional.only(start: 4),
                       child: Container(
                         width: 6,
                         height: 6,
@@ -165,7 +167,7 @@ class _OrderCard extends StatelessWidget {
                 ),
               ),
               Text(
-                status.label,
+                status.labelOf(context.l10n),
                 style: theme.textTheme.labelSmall?.copyWith(
                   color: c.onSurfaceVariant,
                   fontSize: 10,

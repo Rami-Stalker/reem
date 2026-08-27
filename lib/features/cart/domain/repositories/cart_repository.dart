@@ -6,8 +6,8 @@ abstract interface class CartRepository {
   Future<Result<Cart>> getCart();
 
   Future<Result<Cart>> addItem({
-    required String productId,
-    String? variantId,
+    required String offerId,
+    String? offerVariantId,
     int quantity,
   });
 

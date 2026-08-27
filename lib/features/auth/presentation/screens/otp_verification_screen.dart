@@ -2,22 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/design_system/components/snackbars/app_snackbar.dart'
-    show DsSnackbar, DsSnackbarType;
 import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/features/auth/domain/entities/auth_account.dart';
 
 import '../providers/auth_provider.dart';
+import '../utils/auth_form_validators.dart';
+import '../../../../core/localization/l10n_extension.dart';
 
 class OtpVerificationScreen extends ConsumerStatefulWidget {
   const OtpVerificationScreen({
     super.key,
     required this.phone,
     required this.purpose,
+    this.from,
   });
 
   final String phone;
   final OtpPurpose purpose;
+  final String? from;
 
   @override
   ConsumerState<OtpVerificationScreen> createState() =>
@@ -27,7 +29,6 @@ class OtpVerificationScreen extends ConsumerStatefulWidget {
 class _OtpVerificationScreenState extends ConsumerState<OtpVerificationScreen> {
   final _codeController = TextEditingController();
   final _passwordController = TextEditingController();
-  String? _debugCode;
   bool _requested = false;
 
   bool get _isPasswordReset => widget.purpose == OtpPurpose.passwordReset;
@@ -46,14 +47,12 @@ class _OtpVerificationScreenState extends ConsumerState<OtpVerificationScreen> {
   }
 
   Future<void> _requestCode() async {
-    final challenge = await ref.read(authNotifierProvider.notifier).requestOtp(
-          phone: widget.phone,
-          purpose: widget.purpose,
-        );
+    final challenge = await ref
+        .read(authNotifierProvider.notifier)
+        .requestOtp(phone: widget.phone, purpose: widget.purpose);
     if (!mounted) return;
     setState(() {
       _requested = challenge != null;
-      _debugCode = challenge?.debugCode;
     });
     if (challenge == null) {
       final error = ref.read(authNotifierProvider).error;
@@ -68,10 +67,23 @@ class _OtpVerificationScreenState extends ConsumerState<OtpVerificationScreen> {
     if (code.length < 4) {
       DsSnackbar.show(
         context,
-        message: 'Enter the verification code.',
+        message: context.l10n.enterVerificationCode,
         type: DsSnackbarType.error,
       );
       return;
+    }
+    if (_isPasswordReset) {
+      final passwordError = AuthFormValidators.strongPassword(context.l10n, 
+        _passwordController.text,
+      );
+      if (passwordError != null) {
+        DsSnackbar.show(
+          context,
+          message: passwordError,
+          type: DsSnackbarType.error,
+        );
+        return;
+      }
     }
 
     final notifier = ref.read(authNotifierProvider.notifier);
@@ -92,17 +104,30 @@ class _OtpVerificationScreenState extends ConsumerState<OtpVerificationScreen> {
       DsSnackbar.show(
         context,
         message: _isPasswordReset
-            ? 'Password updated.'
-            : 'Phone number verified.',
+            ? context.l10n.passwordChanged
+            : context.l10n.phoneVerified,
         type: DsSnackbarType.success,
       );
-      context.go(_isPasswordReset ? RoutePaths.login : RoutePaths.home);
+      context.go(_postVerificationPath);
     } else {
       final error = ref.read(authNotifierProvider).error;
       if (error != null) {
         DsSnackbar.show(context, message: error, type: DsSnackbarType.error);
       }
     }
+  }
+
+  String get _postVerificationPath {
+    if (_isPasswordReset) return RoutePaths.login;
+    final target = widget.from;
+    if (target == null ||
+        target.isEmpty ||
+        target == RoutePaths.login ||
+        target == RoutePaths.register ||
+        target == RoutePaths.authRequired) {
+      return RoutePaths.home;
+    }
+    return target;
   }
 
   @override
@@ -112,7 +137,7 @@ class _OtpVerificationScreenState extends ConsumerState<OtpVerificationScreen> {
 
     return ReemScrollPage(
       slivers: [
-        PremiumAppBar(title: 'Verify code', showBack: true),
+        PremiumAppBar(title: context.l10n.verifyCode, showBack: true),
         SliverFillRemaining(
           hasScrollBody: false,
           child: Padding(
@@ -121,59 +146,57 @@ class _OtpVerificationScreenState extends ConsumerState<OtpVerificationScreen> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 const Spacer(),
-                Icon(Icons.verified_user_outlined, size: 48, color: colors.primary),
+                Icon(
+                  Icons.verified_user_outlined,
+                  size: 48,
+                  color: colors.primary,
+                ),
                 const SizedBox(height: DsSpacing.lg),
                 Text(
-                  _isPasswordReset ? 'Reset your password' : 'Verify your phone',
+                  _isPasswordReset
+                      ? context.l10n.resetYourPassword
+                      : context.l10n.verifyYourPhone,
                   textAlign: TextAlign.center,
                   style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 const SizedBox(height: DsSpacing.sm),
                 Text(
                   _requested
-                      ? 'We sent a one-time code to ${widget.phone}.'
-                      : 'Requesting a one-time code...',
+                      ? context.l10n.codeSentTo(widget.phone)
+                      : context.l10n.requestingCode,
                   textAlign: TextAlign.center,
                   style: TextStyle(color: colors.onSurfaceVariant),
                 ),
-                if (_debugCode != null) ...[
-                  const SizedBox(height: DsSpacing.sm),
-                  Text(
-                    'Development code: $_debugCode',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: colors.primary,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                ],
                 const SizedBox(height: DsSpacing.xl),
                 DsInputField(
                   controller: _codeController,
-                  label: 'Verification code',
+                  label: context.l10n.verificationCode,
                   keyboardType: TextInputType.number,
-                  prefixIcon: Icon(Icons.password_outlined, color: colors.primary),
+                  prefixIcon: Icon(
+                    Icons.password_outlined,
+                    color: colors.primary,
+                  ),
                 ),
                 if (_isPasswordReset) ...[
                   const SizedBox(height: DsSpacing.md),
                   DsInputField(
                     controller: _passwordController,
-                    label: 'New password',
+                    label: context.l10n.newPassword,
                     obscureText: true,
                     prefixIcon: Icon(Icons.lock_outline, color: colors.primary),
                   ),
                 ],
                 const SizedBox(height: DsSpacing.lg),
                 PrimaryButton(
-                  label: _isPasswordReset ? 'Reset password' : 'Verify',
+                  label: _isPasswordReset ? context.l10n.resetPassword : context.l10n.verify,
                   onPressed: auth.isLoading ? null : _submit,
                   isLoading: auth.isLoading,
                 ),
                 const SizedBox(height: DsSpacing.sm),
                 SecondaryButton(
-                  label: 'Resend code',
+                  label: context.l10n.resendCode,
                   onPressed: auth.isLoading ? null : _requestCode,
                 ),
                 const Spacer(flex: 2),

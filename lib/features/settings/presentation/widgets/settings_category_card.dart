@@ -30,7 +30,7 @@ class SettingsCategoryCard extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.only(bottom: 18, left: 8),
+          padding: const EdgeInsetsDirectional.only(bottom: 18, start: 8),
           child: Text(
             title,
             style: Theme.of(context).textTheme.headlineSmall?.copyWith(

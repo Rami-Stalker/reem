@@ -120,6 +120,10 @@ export class ExperienceService {
     switch (role) {
       case UserRole.SELLER:
         return 'seller';
+      case UserRole.OPERATIONS_ADMIN:
+      case UserRole.SUPPORT_ADMIN:
+      case UserRole.FINANCE_ADMIN:
+      case UserRole.CONTENT_MODERATOR:
       case UserRole.ADMIN:
       case UserRole.SUPER_ADMIN:
       case UserRole.SUPPORT:

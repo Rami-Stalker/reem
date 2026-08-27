@@ -17,6 +17,7 @@ import {
   UserRole,
 } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
+import { MediaService } from '../media/media.service';
 import {
   ChatWithRelations,
   MessageWithRelations,
@@ -58,6 +59,7 @@ export class ChatsService {
     private readonly prisma: PrismaService,
     private readonly events: EventEmitter2,
     private readonly notifications: NotificationsService,
+    private readonly media: MediaService,
   ) {}
 
   async threads(userId: string, query: ChatListQueryDto = {}) {
@@ -117,7 +119,7 @@ export class ChatsService {
         buyerId: resolved.buyerId,
         sellerId: resolved.sellerId,
         productId: resolved.productId,
-        orderId: resolved.orderId,
+        sellerOrderId: resolved.sellerOrderId,
       },
       include: chatInclude,
     });
@@ -129,7 +131,7 @@ export class ChatsService {
           buyerId: resolved.buyerId,
           sellerId: resolved.sellerId,
           productId: resolved.productId,
-          orderId: resolved.orderId,
+          sellerOrderId: resolved.sellerOrderId,
           title: resolved.title,
           participants: {
             create: resolved.participants.map((participant) => ({
@@ -186,6 +188,15 @@ export class ChatsService {
       .filter((id) => id !== userId);
     await this.assertNotBlocked(userId, recipientIds);
 
+    // Resolved before the write so the attachment rows carry the link from the
+    // moment they exist. Scoped to the sender: quoting somebody else's upload
+    // URL must not make it readable by this chat's participants.
+    const assetIds = await Promise.all(
+      attachments.map((attachment) =>
+        this.media.resolveAssetId(attachment.url, userId),
+      ),
+    );
+
     const message = await this.prisma.message.create({
       data: {
         chatId,
@@ -197,9 +208,13 @@ export class ChatsService {
         status: MessageDeliveryStatus.SENT,
         attachments: attachments.length
           ? {
-              create: attachments.map((attachment) => ({
+              create: attachments.map((attachment, index) => ({
                 kind: attachment.kind,
                 url: attachment.url,
+                // The link that later answers "may this person open it".
+                // Null for a URL that is not one of ours, which is fine — the
+                // reader of an external link is whoever the internet lets.
+                mediaAssetId: assetIds[index],
                 mimeType: attachment.mime_type,
                 fileName: attachment.file_name,
                 sizeBytes: attachment.size_bytes,
@@ -227,6 +242,12 @@ export class ChatsService {
       where: { id: chatId },
       data: { updatedAt: new Date() },
     });
+
+    // The upload is now part of a conversation, so it is no longer an orphan.
+    await this.media.markAttached(
+      userId,
+      attachments.map((attachment) => attachment.url),
+    );
 
     await this.notifyRecipients(chat, userId, message);
 
@@ -341,7 +362,23 @@ export class ChatsService {
   }
 
   async reportUser(chatId: string, userId: string, dto: ReportUserDto) {
-    await this.assertMember(chatId, userId);
+    const chat = await this.assertMember(chatId, userId);
+    const participantIds = chat.participants.map((participant) => participant.userId);
+    if (
+      dto.reported_user_id === userId ||
+      !participantIds.includes(dto.reported_user_id)
+    ) {
+      throw new BadRequestException('Reported user must be another chat participant');
+    }
+    if (dto.message_id) {
+      const message = await this.prisma.message.findFirst({
+        where: { id: dto.message_id, chatId },
+        select: { id: true },
+      });
+      if (!message) {
+        throw new BadRequestException('Reported message does not belong to this chat');
+      }
+    }
     const report = await this.prisma.chatReport.create({
       data: {
         chatId,
@@ -419,35 +456,60 @@ export class ChatsService {
 
   private async resolveConversation(userId: string, dto: StartConversationDto) {
     if (dto.order_id) {
-      const order = await this.prisma.order.findUnique({
+      // An order chat is really a chat about ONE seller's parcel. The old code
+      // took `order.items[0].product.sellerId` — silently binding a
+      // multi-seller order's conversation to whoever happened to be first.
+      const sellerOrder = await this.prisma.sellerOrder.findUnique({
         where: { id: dto.order_id },
-        include: { items: { include: { product: true } } },
+        include: { order: { select: { userId: true } } },
       });
-      if (!order) throw new NotFoundException('Order not found');
-      const sellerId = order.items[0]?.product.sellerId;
-      if (!sellerId) throw new BadRequestException('Order has no seller');
-      if (userId !== order.userId && userId !== sellerId) {
+      if (!sellerOrder) throw new NotFoundException('Order not found');
+
+      const buyerId = sellerOrder.order.userId;
+      if (!buyerId) {
+        throw new BadRequestException('Guest orders have no chat thread');
+      }
+      if (userId !== buyerId && userId !== sellerOrder.sellerId) {
         throw new ForbiddenException('You cannot access this order chat');
       }
+      await this.assertBuyerSellerPair(buyerId, sellerOrder.sellerId);
       return this.conversationShape({
         type: ChatContextType.ORDER,
-        buyerId: order.userId,
-        sellerId,
-        orderId: order.id,
-        title: `Order #${order.number}`,
+        buyerId,
+        sellerId: sellerOrder.sellerId,
+        sellerOrderId: sellerOrder.id,
+        title: `Order #${sellerOrder.number}`,
       });
     }
 
     if (dto.product_id) {
+      // A shared catalog entry has several sellers, so the caller must say
+      // which one they want to talk to.
       const product = await this.prisma.product.findUnique({
         where: { id: dto.product_id },
-        select: { id: true, title: true, sellerId: true },
+        select: {
+          id: true,
+          title: true,
+          offers: { select: { sellerId: true }, orderBy: { price: 'asc' } },
+        },
       });
       if (!product) throw new NotFoundException('Product not found');
+      if (product.offers.length === 0) {
+        throw new BadRequestException('Nobody currently sells this product');
+      }
+
+      const sellerId = dto.seller_id ?? product.offers[0].sellerId;
+      if (!product.offers.some((offer) => offer.sellerId === sellerId)) {
+        throw new BadRequestException(
+          'That seller does not list this product',
+        );
+      }
+
+      await this.assertBuyerSellerPair(userId, sellerId);
       return this.conversationShape({
         type: ChatContextType.PRODUCT,
         buyerId: userId,
-        sellerId: dto.seller_id ?? product.sellerId,
+        sellerId,
         productId: product.id,
         title: product.title,
       });
@@ -462,8 +524,7 @@ export class ChatsService {
       this.prisma.user.findUnique({ where: { id: peerId } }),
     ]);
     if (!me || !peer) throw new NotFoundException('Participant not found');
-    const buyerId = me.role === UserRole.SELLER ? peer.id : me.id;
-    const sellerId = me.role === UserRole.SELLER ? me.id : peer.id;
+    const { buyerId, sellerId } = this.resolveBuyerSellerPair(me, peer);
     return this.conversationShape({
       type: dto.type ?? ChatContextType.DIRECT,
       buyerId,
@@ -471,12 +532,50 @@ export class ChatsService {
     });
   }
 
+  private resolveBuyerSellerPair(
+    me: { id: string; role: UserRole },
+    peer: { id: string; role: UserRole },
+  ) {
+    if (me.id === peer.id) {
+      throw new BadRequestException('You cannot start a chat with yourself');
+    }
+    if (me.role === UserRole.CUSTOMER && peer.role === UserRole.SELLER) {
+      return { buyerId: me.id, sellerId: peer.id };
+    }
+    if (me.role === UserRole.SELLER && peer.role === UserRole.CUSTOMER) {
+      return { buyerId: peer.id, sellerId: me.id };
+    }
+    throw new ForbiddenException('Chats are only available between buyers and sellers');
+  }
+
+  private async assertBuyerSellerPair(buyerId: string, sellerId: string) {
+    if (buyerId === sellerId) {
+      throw new BadRequestException('Buyer and seller must be different users');
+    }
+    const [buyer, seller] = await Promise.all([
+      this.prisma.user.findUnique({
+        where: { id: buyerId },
+        select: { id: true, role: true },
+      }),
+      this.prisma.user.findUnique({
+        where: { id: sellerId },
+        select: { id: true, role: true },
+      }),
+    ]);
+    if (!buyer || !seller) {
+      throw new NotFoundException('Chat participant not found');
+    }
+    if (buyer.role !== UserRole.CUSTOMER || seller.role !== UserRole.SELLER) {
+      throw new ForbiddenException('Chats are only available between buyers and sellers');
+    }
+  }
+
   private conversationShape(input: {
     type: ChatContextType;
     buyerId: string;
     sellerId: string;
     productId?: string;
-    orderId?: string;
+    sellerOrderId?: string;
     title?: string;
   }) {
     const participants = [

@@ -1,37 +1,348 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../core/design_system/design_system.dart';
-import '../../../../core/design_system/patterns/reem_page_scaffold.dart';
-import '../../../../core/shared/wedgets/app/premium_app_bar.dart';
-import '../../../../core/shared/wedgets/app/reem_section_header.dart';
-import '../widgets/payment_card.dart';
+import '../../../../core/router/route_paths.dart';
+import '../../../checkout/domain/entities/checkout.dart';
+import '../../../wallet/presentation/providers/wallet_provider.dart';
+import '../providers/payment_options_provider.dart';
 
-class PaymentMethodsScreen extends StatelessWidget {
+/// How she can pay.
+///
+/// This screen used to render three invented cards and an «Add payment method»
+/// button wired to `() {}`. It was wrong twice over: there was nothing behind
+/// it, and it promised a saved-card wallet on a platform whose nine payment
+/// rails are cash on delivery, the mobile-money operators, a bank transfer, a
+/// hawala and the platform's own balance. Card processing is not something a
+/// Syrian merchant can offer, so a card manager is not a missing feature here
+/// — it is the wrong screen.
+///
+/// What she actually needs to know before checkout is which rails are open and
+/// what her balance is, so that is what this shows, read from the same
+/// endpoint checkout prices against.
+class PaymentMethodsScreen extends ConsumerWidget {
   const PaymentMethodsScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final options = ref.watch(paymentOptionsProvider);
+    final wallet = ref.watch(walletNotifierProvider);
+    final colors = context.dsColors;
+
     return ReemScrollPage(
       slivers: [
-        const PremiumAppBar(title: 'Payment Methods', showBack: true),
+        const PremiumAppBar(title: 'طرق الدفع', showBack: true),
         SliverPadding(
           padding: const EdgeInsets.all(DsSpacing.lg),
           sliver: SliverList(
             delegate: SliverChildListDelegate([
               const ReemSectionHeader(
-                title: 'Secure checkout',
-                subtitle: 'Manage cards & wallets',
+                title: 'الدفع عند الطلب',
+                subtitle: 'تختارين الطريقة عند إتمام الشراء',
               ),
               const SizedBox(height: DsSpacing.lg),
-              for (var i = 0; i < 3; i++) ...[
-                PaymentCard(index: i),
-                const SizedBox(height: DsSpacing.md),
-              ],
+
+              // Her balance first: it is the one method whose availability
+              // depends on a number, and the number is hers.
+              _WalletTile(
+                balance: wallet.summary?.balance.format(),
+                isLoading: wallet.isLoading && wallet.summary == null,
+                onTap: () => context.push(RoutePaths.wallet),
+              ),
+              const SizedBox(height: DsSpacing.lg),
+
+              Text(
+                'الطرق المتاحة',
+                style: TextStyle(
+                  fontSize: DsTypography.titleSmall,
+                  fontWeight: DsTypography.bold,
+                  color: colors.onSurface,
+                ),
+              ),
               const SizedBox(height: DsSpacing.md),
-              PrimaryButton(label: 'Add payment method', onPressed: () {}),
+
+              options.when(
+                loading: () => const _OptionsSkeleton(),
+                error: (_, _) => _OptionsFailed(
+                  onRetry: () => ref.invalidate(paymentOptionsProvider),
+                ),
+                data: (list) {
+                  if (list.isEmpty) return const _NoOptions();
+                  return Column(
+                    children: [
+                      for (final option in list)
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: DsSpacing.md),
+                          child: _MethodTile(option: option),
+                        ),
+                    ],
+                  );
+                },
+              ),
+
+              const SizedBox(height: DsSpacing.sm),
+              _Note(
+                text:
+                    'لا نحفظ بيانات بطاقات. تُدفع كل عملية عند إتمامها بالطريقة التي تختارينها.',
+              ),
             ]),
           ),
         ),
+      ],
+    );
+  }
+}
+
+class _WalletTile extends StatelessWidget {
+  const _WalletTile({
+    required this.balance,
+    required this.isLoading,
+    required this.onTap,
+  });
+
+  final String? balance;
+  final bool isLoading;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.dsColors;
+
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(DsSpacing.lg),
+        decoration: BoxDecoration(
+          borderRadius: DsRadius.borderXxl,
+          gradient: context.primaryGradient,
+          boxShadow: context.luxuryShadow,
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: colors.onPrimary.withValues(alpha: 0.2),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.account_balance_wallet_rounded,
+                color: colors.onPrimary,
+              ),
+            ),
+            const SizedBox(width: DsSpacing.md),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'محفظة ريم',
+                    style: TextStyle(
+                      color: colors.onPrimary,
+                      fontWeight: DsTypography.bold,
+                      fontSize: DsTypography.titleSmall,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  if (isLoading)
+                    SizedBox(
+                      height: 14,
+                      width: 90,
+                      child: DecoratedBox(
+                        decoration: BoxDecoration(
+                          color: colors.onPrimary.withValues(alpha: 0.25),
+                          borderRadius: DsRadius.borderFull,
+                        ),
+                      ),
+                    )
+                  else
+                    Text(
+                      balance ?? '—',
+                      style: TextStyle(
+                        color: colors.onPrimary.withValues(alpha: 0.92),
+                        fontSize: DsTypography.titleLarge,
+                        fontWeight: DsTypography.semiBold,
+                      ),
+                    ),
+                ],
+              ),
+            ),
+            Icon(Icons.chevron_left_rounded, color: colors.onPrimary),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _MethodTile extends StatelessWidget {
+  const _MethodTile({required this.option});
+
+  final PaymentMethodOption option;
+
+  /// The rails are distinct enough that one generic icon would lose the thing
+  /// that tells them apart at a glance.
+  IconData get _icon => switch (option.method) {
+    'cod' || 'courier_collect' => Icons.local_shipping_outlined,
+    'syriatel_cash' || 'mtn_cash' => Icons.smartphone_rounded,
+    'sham_cash' => Icons.account_balance_wallet_outlined,
+    'bank_transfer' => Icons.account_balance_outlined,
+    'bank_card' => Icons.credit_card_rounded,
+    'hawala' => Icons.swap_horiz_rounded,
+    'platform_wallet' => Icons.savings_outlined,
+    _ => Icons.payments_outlined,
+  };
+
+  String? get _hint => switch (option.method) {
+    'cod' => 'تدفعين نقداً للمندوبة عند الاستلام',
+    'courier_collect' => 'تحصيل عبر شركة التوصيل',
+    'platform_wallet' => 'يُخصم من رصيدكِ فوراً',
+    _ =>
+      option.requiresOnlineConfirmation
+          ? 'يُؤكَّد الدفع قبل تجهيز الطلب'
+          : null,
+  };
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.dsColors;
+    final hint = _hint;
+
+    return Container(
+      padding: const EdgeInsets.all(DsSpacing.lg),
+      decoration: BoxDecoration(
+        color: colors.card,
+        borderRadius: DsRadius.borderXxl,
+        border: Border.all(color: colors.border),
+        boxShadow: context.softShadow,
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 46,
+            height: 46,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: colors.primary.withValues(alpha: 0.12),
+            ),
+            child: Icon(_icon, color: colors.primary, size: 22),
+          ),
+          const SizedBox(width: DsSpacing.md),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  option.label,
+                  style: TextStyle(
+                    color: colors.onSurface,
+                    fontWeight: DsTypography.semiBold,
+                  ),
+                ),
+                if (hint != null) ...[
+                  const SizedBox(height: 3),
+                  Text(
+                    hint,
+                    style: TextStyle(
+                      color: colors.onSurfaceVariant,
+                      fontSize: DsTypography.labelSmall,
+                    ),
+                  ),
+                ],
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _Note extends StatelessWidget {
+  const _Note({required this.text});
+
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.dsColors;
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Icon(
+          Icons.lock_outline_rounded,
+          size: 16,
+          color: colors.onSurfaceVariant,
+        ),
+        const SizedBox(width: DsSpacing.sm),
+        Expanded(
+          child: Text(
+            text,
+            style: TextStyle(
+              color: colors.onSurfaceVariant,
+              fontSize: DsTypography.labelSmall,
+              height: 1.5,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _NoOptions extends StatelessWidget {
+  const _NoOptions();
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.dsColors;
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: DsSpacing.xl),
+      child: Text(
+        'لا طرق دفع متاحة حالياً',
+        textAlign: TextAlign.center,
+        style: TextStyle(color: colors.onSurfaceVariant),
+      ),
+    );
+  }
+}
+
+class _OptionsFailed extends StatelessWidget {
+  const _OptionsFailed({required this.onRetry});
+
+  final VoidCallback onRetry;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.dsColors;
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: DsSpacing.xl),
+      child: Column(
+        children: [
+          Text(
+            'تعذّر تحميل طرق الدفع',
+            style: TextStyle(color: colors.onSurfaceVariant),
+          ),
+          const SizedBox(height: DsSpacing.md),
+          SecondaryButton(label: 'إعادة المحاولة', onPressed: onRetry),
+        ],
+      ),
+    );
+  }
+}
+
+class _OptionsSkeleton extends StatelessWidget {
+  const _OptionsSkeleton();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        for (var i = 0; i < 4; i++) ...[
+          const DsShimmer(child: DsSkeleton.box(height: 78)),
+          const SizedBox(height: DsSpacing.md),
+        ],
       ],
     );
   }

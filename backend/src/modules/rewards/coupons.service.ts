@@ -5,6 +5,7 @@ import {
 } from '@nestjs/common';
 import { Coupon, CouponType } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
+import { Money } from '../../common/money';
 import { buildMeta, PaginationDto } from '../../common/dto/pagination.dto';
 import { serializeCoupon } from './rewards.serializer';
 import { CreateCouponDto, UpdateCouponDto } from './dto/rewards.dto';
@@ -13,7 +14,7 @@ const round = (n: number) => Math.round(n * 100) / 100;
 
 export interface CouponEvaluation {
   coupon: Coupon;
-  discount: number;
+  discount: Money;
 }
 
 @Injectable()
@@ -110,13 +111,13 @@ export class CouponsService {
     return coupons.map(serializeCoupon);
   }
 
-  async validate(code: string, userId: string, subtotal: number) {
+  async validate(code: string, userId: string, subtotal: Money) {
     const { coupon, discount } = await this.evaluate(code, userId, subtotal);
     return {
       valid: true,
       code: coupon.code,
       type: coupon.type.toLowerCase(),
-      discount,
+      discount: discount.toJSON(),
     };
   }
 
@@ -127,7 +128,7 @@ export class CouponsService {
   async evaluate(
     code: string,
     userId: string,
-    subtotal: number,
+    subtotal: Money,
   ): Promise<CouponEvaluation> {
     const coupon = await this.prisma.coupon.findUnique({ where: { code } });
     if (!coupon || !coupon.isActive || coupon.expiresAt < new Date()) {
@@ -139,10 +140,20 @@ export class CouponsService {
     if (coupon.maxUses != null && coupon.usedCount >= coupon.maxUses) {
       throw new BadRequestException('This coupon has reached its usage limit');
     }
-    if (coupon.minOrderAmount != null && subtotal < coupon.minOrderAmount) {
-      throw new BadRequestException(
-        `Minimum order of ${coupon.minOrderAmount} required for this coupon`,
-      );
+    if (coupon.minOrderAmount != null) {
+      const minimum = Money.of(coupon.minOrderAmount, coupon.currency);
+      // A minimum stated in another currency cannot be compared, so the
+      // coupon simply does not apply rather than silently passing.
+      if (minimum.currency !== subtotal.currency) {
+        throw new BadRequestException(
+          `This coupon applies to ${minimum.currency} orders only`,
+        );
+      }
+      if (subtotal.lessThan(minimum)) {
+        throw new BadRequestException(
+          `Minimum order of ${minimum.toString()} required for this coupon`,
+        );
+      }
     }
     if (coupon.perUserLimit != null) {
       const used = await this.prisma.couponRedemption.count({
@@ -160,11 +171,17 @@ export class CouponsService {
     couponId: string,
     userId: string,
     orderId: string,
-    amount: number,
+    amount: Money,
   ): Promise<void> {
     await this.prisma.$transaction([
       this.prisma.couponRedemption.create({
-        data: { couponId, userId, orderId, amount },
+        data: {
+          couponId,
+          userId,
+          orderId,
+          currency: amount.currency,
+          amount: amount.toPrisma(),
+        },
       }),
       this.prisma.coupon.update({
         where: { id: couponId },
@@ -173,11 +190,15 @@ export class CouponsService {
     ]);
   }
 
-  private computeDiscount(coupon: Coupon, subtotal: number): number {
+  private computeDiscount(coupon: Coupon, subtotal: Money): Money {
     if (coupon.type === CouponType.FIXED) {
-      return round(Math.min(coupon.amountOff ?? 0, subtotal));
+      const off = Money.of(coupon.amountOff ?? 0, coupon.currency);
+      // Never discount more than the basket is worth.
+      return off.currency === subtotal.currency ? off.clampMax(subtotal) : Money.zero(subtotal.currency);
     }
-    return round((subtotal * coupon.discountPercent) / 100);
+    return subtotal
+      .times(coupon.discountPercent.dividedBy(100))
+      .clampMax(subtotal);
   }
 
   private async requireCoupon(id: string): Promise<Coupon> {

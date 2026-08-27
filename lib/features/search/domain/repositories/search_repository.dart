@@ -1,6 +1,7 @@
 import 'package:reem/core/result/result.dart';
 
 import '../../../discovery/domain/entities/product_page.dart';
+import '../entities/search_suggestions.dart';
 
 abstract interface class SearchRepository {
   Future<Result<ProductPage>> searchProducts(
@@ -8,4 +9,8 @@ abstract interface class SearchRepository {
     int page,
     int limit,
   });
+
+  Future<Result<List<String>>> trendingSearches();
+
+  Future<Result<SearchSuggestions>> searchSuggestions(String query);
 }

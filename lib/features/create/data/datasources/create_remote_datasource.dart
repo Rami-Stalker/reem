@@ -1,5 +1,6 @@
 import 'package:reem/core/shared/models/post_model.dart';
 import 'package:reem/core/shared/models/story_model.dart';
+import 'package:reem/core/shared/entities/media.dart';
 
 abstract interface class CreateRemoteDataSource {
   Future<PostModel> createPost({
@@ -9,6 +10,7 @@ abstract interface class CreateRemoteDataSource {
 
   Future<StoryModel> createStory({
     required String mediaUrl,
+    MediaType type = MediaType.image,
     String? link,
   });
 }

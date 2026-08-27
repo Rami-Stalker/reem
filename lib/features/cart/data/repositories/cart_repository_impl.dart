@@ -15,13 +15,13 @@ class CartRepositoryImpl with RepositoryHandler implements CartRepository {
 
   @override
   Future<Result<Cart>> addItem({
-    required String productId,
-    String? variantId,
+    required String offerId,
+    String? offerVariantId,
     int quantity = 1,
   }) =>
       guard(() => remote.addItem(
-            productId: productId,
-            variantId: variantId,
+            offerId: offerId,
+            offerVariantId: offerVariantId,
             quantity: quantity,
           ));
 

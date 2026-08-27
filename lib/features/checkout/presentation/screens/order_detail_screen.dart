@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../core/design_system/design_system.dart';
 import '../../../../core/design_system/components/cards/surface_card.dart';
 import '../../../../core/design_system/components/snackbars/app_snackbar.dart'
     show DsSnackbar, DsSnackbarType;
+import '../../../../core/localization/l10n_extension.dart';
+import '../../../../core/router/route_paths.dart';
 import '../../../../core/shared/wedgets/app/premium_app_bar.dart';
 import '../../domain/entities/order.dart';
 import '../providers/checkout_providers.dart';
 import '../providers/order_detail_notifier.dart';
 import '../widgets/order_status_chip.dart';
+import '../../../../core/shared/value_objects/money.dart';
 
 class OrderDetailScreen extends ConsumerWidget {
   const OrderDetailScreen({super.key, required this.orderId});
@@ -79,38 +83,30 @@ class _Body extends StatelessWidget {
             children: [
               OrderStatusChip(status: order.status),
               const SizedBox(width: DsSpacing.sm),
-              Text(
-                'Delivery: ${humanizeStatus(order.deliveryStatus)}',
-                style: TextStyle(
-                  fontSize: DsTypography.bodySmall,
-                  color: colors.onSurfaceVariant,
+              if (order.isSplit)
+                Text(
+                  '${order.sellersCount} شحنات من ${order.sellersCount} بائعات',
+                  style: TextStyle(
+                    fontSize: DsTypography.bodySmall,
+                    color: colors.onSurfaceVariant,
+                  ),
                 ),
-              ),
             ],
           ),
-          if (order.estimatedDeliveryAt != null) ...[
-            const SizedBox(height: DsSpacing.xs),
-            Text(
-              'Estimated delivery: ${_date(order.estimatedDeliveryAt!)}',
-              style: TextStyle(
-                fontSize: DsTypography.bodySmall,
-                color: colors.onSurfaceVariant,
-              ),
-            ),
+          const SizedBox(height: DsSpacing.lg),
+
+          // One card per seller. A basket spanning several sellers becomes
+          // several parcels, each tracked, cancelled and returned on its own
+          // timeline — so the screen shows them as separate things rather than
+          // flattening them into one list of items (Q40/Q89).
+          _section(context, 'الشحنات'),
+          for (final parcel in order.sellerOrders) ...[
+            _ParcelCard(parcel: parcel),
+            const SizedBox(height: DsSpacing.sm),
           ],
           const SizedBox(height: DsSpacing.lg),
 
-          _section(context, 'Items'),
-          SurfaceCard(
-            child: Column(
-              children: [
-                for (final item in order.items) _ItemRow(item: item),
-              ],
-            ),
-          ),
-          const SizedBox(height: DsSpacing.lg),
-
-          _section(context, 'Delivery address'),
+          _section(context, 'عنوان التوصيل'),
           SurfaceCard(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -123,12 +119,12 @@ class _Body extends StatelessWidget {
                   style: TextStyle(color: colors.onSurfaceVariant),
                 ),
                 if (order.shipping.landmark != null)
-                  Text('Landmark: ${order.shipping.landmark}',
+                  Text('علامة مميزة: ${order.shipping.landmark}',
                       style: TextStyle(color: colors.onSurfaceVariant)),
                 if (order.deliveryInstructions != null)
                   Padding(
                     padding: const EdgeInsets.only(top: 4),
-                    child: Text('Note: ${order.deliveryInstructions}',
+                    child: Text('ملاحظة: ${order.deliveryInstructions}',
                         style: TextStyle(color: colors.onSurfaceVariant)),
                   ),
               ],
@@ -137,27 +133,27 @@ class _Body extends StatelessWidget {
           const SizedBox(height: DsSpacing.lg),
 
           if (payment != null) ...[
-            _section(context, 'Payment'),
+            _section(context, 'الدفع'),
             SurfaceCard(
               child: Row(
                 children: [
                   Expanded(
                     child: Text(
-                      humanizeStatus(payment.method),
+                      payment.methodLabel,
                       style: TextStyle(
                         fontWeight: DsTypography.semiBold,
                         color: colors.onSurface,
                       ),
                     ),
                   ),
-                  OrderStatusChip(status: payment.status),
+                  OrderStatusChip.raw(payment.status),
                 ],
               ),
             ),
             if (canConfirmPayment) ...[
               const SizedBox(height: DsSpacing.sm),
               PrimaryButton(
-                label: 'Confirm payment',
+                label: 'تأكيد الدفع',
                 isLoading: state.isActing,
                 onPressed: state.isActing
                     ? null
@@ -165,7 +161,7 @@ class _Body extends StatelessWidget {
                         final ok = await notifier.verifyPayment();
                         if (ok && context.mounted) {
                           DsSnackbar.show(context,
-                              message: 'Payment confirmed',
+                              message: 'تم تأكيد الدفع',
                               type: DsSnackbarType.success);
                         }
                       },
@@ -174,28 +170,35 @@ class _Body extends StatelessWidget {
             const SizedBox(height: DsSpacing.lg),
           ],
 
-          _section(context, 'Summary'),
+          _section(context, 'الملخّص'),
           SurfaceCard(
             child: Column(
               children: [
-                _money(context, 'Subtotal', order.subtotal),
-                if (order.discount > 0)
-                  _money(context, 'Discount', -order.discount),
-                _money(context, 'Delivery', order.deliveryFee),
+                _money(context, 'المجموع الفرعي', order.itemsSubtotal),
+                if (!order.discountTotal.isZero)
+                  _money(context, 'الخصم', order.discountTotal),
+                _money(context, 'التوصيل', order.shippingTotal),
+                if (!order.walletApplied.isZero)
+                  _money(context, 'من المحفظة', order.walletApplied),
                 const Divider(height: DsSpacing.lg),
-                _money(context, 'Total', order.total, emphasize: true),
+                _money(context, 'الإجمالي', order.grandTotal, emphasize: true),
               ],
             ),
           ),
           const SizedBox(height: DsSpacing.lg),
 
-          _section(context, 'Tracking'),
+          // Q51 — «الاثنين». Tapping through is what issues her invoice; see
+          // OrderInvoicesScreen for why that is not done on order placement.
+          _InvoicesAction(orderId: order.id),
+          const SizedBox(height: DsSpacing.lg),
+
+          _section(context, 'التتبّع'),
           _Timeline(events: order.timeline),
 
           if (order.isCancellable) ...[
             const SizedBox(height: DsSpacing.xl),
             SecondaryButton(
-              label: 'Cancel order',
+              label: 'إلغاء الطلب',
               isLoading: state.isActing,
               onPressed: state.isActing
                   ? null
@@ -255,7 +258,10 @@ class _Body extends StatelessWidget {
         ],
       );
 
-  Widget _money(BuildContext context, String label, double value,
+  Widget _money(
+    BuildContext context,
+    String label,
+    Money value,
       {bool emphasize = false}) {
     final colors = context.dsColors;
     return Padding(
@@ -269,7 +275,7 @@ class _Body extends StatelessWidget {
                   fontWeight:
                       emphasize ? DsTypography.bold : DsTypography.regular)),
           Text(
-            '\$${value.toStringAsFixed(2)}',
+            value.format(),
             style: TextStyle(
               fontFamily: DsTypography.fontFamily,
               fontWeight: emphasize ? DsTypography.bold : DsTypography.medium,
@@ -326,7 +332,7 @@ class _ItemRow extends StatelessWidget {
               ],
             ),
           ),
-          Text('\$${item.lineTotal.toStringAsFixed(2)}',
+          Text(item.lineTotal.format(),
               style: TextStyle(
                   fontWeight: DsTypography.semiBold, color: colors.onSurface)),
         ],
@@ -387,6 +393,141 @@ class _Timeline extends StatelessWidget {
               ],
             ),
         ],
+      ),
+    );
+  }
+}
+
+/// One seller's parcel: its own status, its own lines and its own tracking.
+class _ParcelCard extends StatelessWidget {
+  const _ParcelCard({required this.parcel});
+
+  final SellerOrder parcel;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.dsColors;
+
+    return SurfaceCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  parcel.sellerName,
+                  style: TextStyle(
+                    fontFamily: DsTypography.fontFamily,
+                    fontWeight: DsTypography.semiBold,
+                    color: colors.onSurface,
+                  ),
+                ),
+              ),
+              OrderStatusChip.parcel(parcel.status),
+            ],
+          ),
+          Text(
+            parcel.number,
+            style: TextStyle(
+              fontSize: DsTypography.bodySmall,
+              color: colors.onSurfaceVariant,
+            ),
+          ),
+          const SizedBox(height: DsSpacing.sm),
+          for (final item in parcel.items) _ItemRow(item: item),
+          if (parcel.shipment != null) ...[
+            const Divider(height: DsSpacing.lg),
+            // Q64 — «تتبع الشحنة للزبونة». The row already carried the code;
+            // making it the way *into* the tracking screen is what turns a
+            // number she cannot use into the thing she opens.
+            InkWell(
+              borderRadius: BorderRadius.circular(DsRadius.sm),
+              onTap: () => context.push(
+                RoutePaths.shipmentTrackingOf(parcel.shipment!.trackingCode),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: DsSpacing.xxs),
+                child: Row(
+                  children: [
+                    Icon(Icons.local_shipping_outlined,
+                        size: 16, color: colors.primary),
+                    const SizedBox(width: DsSpacing.xs),
+                    Expanded(
+                      child: Text(
+                        '${context.l10n.trackingCode} ${parcel.shipment!.trackingCode}',
+                        style: TextStyle(
+                          fontSize: DsTypography.bodySmall,
+                          fontWeight: DsTypography.semiBold,
+                          color: colors.primary,
+                        ),
+                      ),
+                    ),
+                    OrderStatusChip.raw(parcel.shipment!.status),
+                    Icon(Icons.chevron_left_rounded,
+                        size: 18, color: colors.onSurfaceVariant),
+                  ],
+                ),
+              ),
+            ),
+          ],
+          if (parcel.cancellationReason != null) ...[
+            const SizedBox(height: DsSpacing.xs),
+            Text(
+              parcel.cancellationReason!,
+              style: TextStyle(
+                fontSize: DsTypography.bodySmall,
+                color: colors.error,
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+/// The way into the order's documents (Q51).
+class _InvoicesAction extends StatelessWidget {
+  const _InvoicesAction({required this.orderId});
+
+  final String orderId;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.dsColors;
+
+    return InkWell(
+      borderRadius: BorderRadius.circular(DsRadius.lg),
+      onTap: () => context.push(RoutePaths.orderInvoicesOf(orderId)),
+      child: Container(
+        padding: const EdgeInsets.all(DsSpacing.md),
+        decoration: BoxDecoration(
+          color: colors.card,
+          borderRadius: BorderRadius.circular(DsRadius.lg),
+          border: Border.all(color: colors.border.withValues(alpha: 0.5)),
+        ),
+        child: Row(
+          children: [
+            Icon(Icons.receipt_long_rounded, size: 20, color: colors.primary),
+            const SizedBox(width: DsSpacing.sm),
+            Expanded(
+              child: Text(
+                context.l10n.invoices,
+                style: TextStyle(
+                  fontSize: DsTypography.bodyMedium,
+                  fontWeight: DsTypography.semiBold,
+                  color: colors.onSurface,
+                ),
+              ),
+            ),
+            Icon(
+              Icons.chevron_left_rounded,
+              size: 20,
+              color: colors.onSurfaceVariant,
+            ),
+          ],
+        ),
       ),
     );
   }

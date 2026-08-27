@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/design_system/design_system.dart';
+import '../../../../core/localization/l10n_extension.dart';
 import '../../../../core/router/route_paths.dart';
 import '../../../../core/shared/wedgets/product/product_rail.dart';
 import '../../domain/entities/continue_shopping_item.dart';
@@ -26,8 +27,8 @@ class HomeContinueShopping extends ConsumerWidget {
     final notes = {for (final e in items) e.product.id: e.note};
 
     return ProductRail(
-      eyebrow: 'Welcome back',
-      title: 'Continue shopping',
+      eyebrow: context.l10n.homeContinueShoppingEyebrow,
+      title: context.l10n.homeContinueShopping,
       products: items.map((e) => e.product).toList(),
       isLoading: isLoading,
       onTapProduct: (p) =>

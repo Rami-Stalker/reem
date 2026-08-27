@@ -1,4 +1,5 @@
 import { IsOptional, IsString, IsUrl, MaxLength, MinLength } from 'class-validator';
+import { MediaUrlField } from '../../../common/dto/media-url.decorator';
 
 export class UpdateProfileDto {
   @IsOptional()
@@ -13,7 +14,7 @@ export class UpdateProfileDto {
   bio?: string | null;
 
   @IsOptional()
-  @IsUrl({}, { message: 'image_url must be a valid URL' })
+  @MediaUrlField('image_url must be a valid URL')
   image_url?: string | null;
 
   @IsOptional()

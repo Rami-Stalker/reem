@@ -94,6 +94,9 @@ class _ChatInputState extends State<ChatInput>
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
+                      // Product and Order still have no implementation behind
+                      // them, and `_action` draws that rather than offering a
+                      // button that swallows the tap.
                       _action(Icons.photo_rounded, 'Image', widget.onImage),
                       _action(Icons.mic_rounded, 'Voice', widget.onVoice),
                       _action(Icons.shopping_bag_rounded, 'Product', null),
@@ -191,32 +194,40 @@ class _ChatInputState extends State<ChatInput>
     );
   }
 
+  /// A null [onTap] draws the action as unavailable rather than as a button
+  /// that quietly does nothing when pressed — which is what Product and Order
+  /// were, and what a tap on them is still worth telling her about honestly.
   Widget _action(IconData icon, String title, VoidCallback? onTap) {
+    final enabled = onTap != null;
     return Semantics(
       button: true,
+      enabled: enabled,
       label: title,
-      child: GestureDetector(
-        onTap: onTap,
-        child: Column(
-          children: [
-            Container(
-              width: 56,
-              height: 56,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.white,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(.05),
-                    blurRadius: 16,
-                  ),
-                ],
+      child: Opacity(
+        opacity: enabled ? 1 : 0.4,
+        child: GestureDetector(
+          onTap: onTap,
+          child: Column(
+            children: [
+              Container(
+                width: 56,
+                height: 56,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.white,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: .05),
+                      blurRadius: 16,
+                    ),
+                  ],
+                ),
+                child: Icon(icon, color: const Color(0xffFF5C8A)),
               ),
-              child: Icon(icon, color: const Color(0xffFF5C8A)),
-            ),
-            const SizedBox(height: 8),
-            Text(title, style: const TextStyle(fontWeight: FontWeight.w600)),
-          ],
+              const SizedBox(height: 8),
+              Text(title, style: const TextStyle(fontWeight: FontWeight.w600)),
+            ],
+          ),
         ),
       ),
     );

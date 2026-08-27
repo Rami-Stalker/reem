@@ -3,6 +3,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../../core/design_system/design_system.dart';
+import '../../../../core/localization/l10n_extension.dart';
 import '../../domain/entities/seller_misc.dart';
 import '../providers/seller_dashboard_provider.dart';
 
@@ -43,7 +44,7 @@ class SellerAiInsightsWidget extends ConsumerWidget {
               ),
               const SizedBox(width: DsSpacing.xs),
               Text(
-                'AI business insights',
+                context.l10n.sellerInsights,
                 style: theme.textTheme.titleMedium
                     ?.copyWith(fontWeight: DsTypography.bold),
               ),

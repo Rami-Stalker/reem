@@ -7,6 +7,7 @@ import '../../../../core/router/route_paths.dart';
 import '../../domain/entities/orders_overview.dart';
 import '../providers/profile_overview_provider.dart';
 import 'profile_section_header.dart';
+import '../../../../core/localization/l10n_extension.dart';
 
 /// "My orders" — four status tiles (pending / processing / delivered /
 /// cancelled) with live counts, each routing into the orders list.
@@ -28,7 +29,7 @@ class ProfileOrdersOverview extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         ProfileSectionHeader(
-          title: 'My orders',
+          title: context.l10n.myOrders,
           onSeeAll: () => context.push(RoutePaths.orders),
         ),
         Padding(
@@ -41,28 +42,28 @@ class ProfileOrdersOverview extends ConsumerWidget {
                     _StatusTile(
                       icon: Icons.schedule_rounded,
                       count: orders.pending,
-                      label: 'Pending',
+                      label: context.l10n.statusPending,
                       color: c.warning,
                     ),
                     const SizedBox(width: DsSpacing.sm),
                     _StatusTile(
                       icon: Icons.autorenew_rounded,
                       count: orders.processing,
-                      label: 'Processing',
+                      label: context.l10n.statusProcessing,
                       color: c.info,
                     ),
                     const SizedBox(width: DsSpacing.sm),
                     _StatusTile(
                       icon: Icons.local_shipping_outlined,
                       count: orders.delivered,
-                      label: 'Delivered',
+                      label: context.l10n.statusDelivered,
                       color: c.success,
                     ),
                     const SizedBox(width: DsSpacing.sm),
                     _StatusTile(
                       icon: Icons.cancel_outlined,
                       count: orders.cancelled,
-                      label: 'Cancelled',
+                      label: context.l10n.statusCancelled,
                       color: c.error,
                     ),
                   ],

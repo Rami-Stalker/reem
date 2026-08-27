@@ -1,0 +1,71 @@
+{
+  "data": [
+    {
+      "id": "8b1f0a3e-1f4a-4b2d-9c11-9a2e6d5c0001",
+      "number": "REEM-MB7K2X481-1",
+      "status": "AWAITING_SELLER_CONFIRMATION",
+      "fulfilment_mode": "PLATFORM_COURIER",
+      "placed_at": "2026-08-26T07:12:44.000Z",
+      "items_count": 2,
+      "net": { "amount": "340000.0000", "currency": "SYP" },
+      "commission": { "amount": "60000.0000", "currency": "SYP" },
+      "payment_method": "COD",
+      "payment_status": "PENDING",
+      "tracking_code": "REM-7F3K9QX2",
+      "customer": {
+        "name": "ريم",
+        "phone": null,
+        "governorate": "دمشق",
+        "city": "دمشق",
+        "district": null,
+        "address_line": null,
+        "landmark": null,
+        "delivery_instructions": "اتصلي قبل الوصول",
+        "is_masked": true,
+        "masked_because": "الشحن عبر مندوب المنصة — العنوان مع المندوب وليس مع البائعة"
+      },
+      "available_actions": ["confirm", "cancel"]
+    },
+    {
+      "id": "8b1f0a3e-1f4a-4b2d-9c11-9a2e6d5c0002",
+      "number": "REEM-MB7K2X482-1",
+      "status": "READY_TO_SHIP",
+      "fulfilment_mode": "SELLER_SHIPS",
+      "placed_at": "2026-08-25T15:02:10.000Z",
+      "items_count": 1,
+      "net": { "amount": "170000.0000", "currency": "SYP" },
+      "commission": { "amount": "30000.0000", "currency": "SYP" },
+      "payment_method": "SYRIATEL_CASH",
+      "payment_status": "PAID",
+      "tracking_code": null,
+      "customer": {
+        "name": "ليلى الحسن",
+        "phone": "+963900111222",
+        "governorate": "حلب",
+        "city": "حلب",
+        "district": "الفرقان",
+        "address_line": "شارع النيل، بناء 4",
+        "landmark": "مقابل الحديقة",
+        "delivery_instructions": null,
+        "is_masked": false,
+        "masked_because": null
+      },
+      "available_actions": ["hand_over", "cancel", "teleport"]
+    }
+  ],
+  "counts": {
+    "new": 3,
+    "preparing": 1,
+    "ready": 2,
+    "shipping": 0,
+    "returns": 1,
+    "completed": 27
+  },
+  "pagination": {
+    "page": 1,
+    "limit": 20,
+    "total": 6,
+    "count": 2,
+    "has_more": false
+  }
+}

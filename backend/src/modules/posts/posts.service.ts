@@ -18,7 +18,8 @@ export class PostsService {
     private readonly prisma: PrismaService,
   ) {}
 
-  async feed(userId: string, page: PaginationDto) {
+  /** `userId` is absent for a signed-out visitor — see the controller. */
+  async feed(userId: string | undefined, page: PaginationDto) {
     const [posts, total] = await Promise.all([
       this.repo.feed(userId, page.skip, page.limit),
       this.repo.countAll(),
@@ -29,7 +30,11 @@ export class PostsService {
     };
   }
 
-  async bySeller(sellerId: string, userId: string, page: PaginationDto) {
+  async bySeller(
+    sellerId: string,
+    userId: string | undefined,
+    page: PaginationDto,
+  ) {
     const [posts, total] = await Promise.all([
       this.repo.bySeller(sellerId, userId, page.skip, page.limit),
       this.repo.countBySeller(sellerId),
@@ -51,7 +56,7 @@ export class PostsService {
     };
   }
 
-  async single(id: string, userId: string) {
+  async single(id: string, userId?: string) {
     const post = await this.repo.findById(id, userId);
     if (!post) throw new NotFoundException('Post not found');
     return serializePost(post, userId);

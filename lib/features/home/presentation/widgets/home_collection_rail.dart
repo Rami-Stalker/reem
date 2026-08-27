@@ -5,6 +5,7 @@ import '../../../../core/design_system/design_system.dart';
 import '../../../../core/router/route_paths.dart';
 import '../../../discovery/presentation/widgets/product_card_compact.dart';
 import '../providers/home_state.dart';
+import '../../../../core/localization/l10n_extension.dart';
 
 /// Renders one home product collection (loading / items / error) as a
 /// horizontal rail. Empty sections collapse to nothing.
@@ -54,7 +55,7 @@ class HomeCollectionRail extends StatelessWidget {
                 GestureDetector(
                   onTap: onSeeAll,
                   child: Text(
-                    'See all',
+                    context.l10n.viewAll,
                     style: TextStyle(
                       color: colors.primary,
                       fontWeight: DsTypography.semiBold,
@@ -80,7 +81,7 @@ class HomeCollectionRail extends StatelessWidget {
       return Center(
         child: TextButton(
           onPressed: onRetry,
-          child: const Text('Retry'),
+          child: Text(context.l10n.retry),
         ),
       );
     }

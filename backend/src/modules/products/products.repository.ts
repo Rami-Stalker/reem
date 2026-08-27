@@ -1,16 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
+import {
+  PRODUCT_INCLUDE,
+  type ProductRecord,
+} from '../../common/catalog/product-include';
 
-export const PRODUCT_INCLUDE = {
-  seller: true,
-  media: { orderBy: { sortOrder: 'asc' as const } },
-  variants: { orderBy: { sortOrder: 'asc' as const } },
-} satisfies Prisma.ProductInclude;
-
-export type ProductRecord = Prisma.ProductGetPayload<{
-  include: typeof PRODUCT_INCLUDE;
-}>;
+// The include lives in common/catalog so the nine modules that load products
+// share one definition; re-exported here for the existing import sites.
+export {
+  PRODUCT_INCLUDE,
+  PRODUCT_CARD_INCLUDE,
+  type ProductRecord,
+} from '../../common/catalog/product-include';
 
 @Injectable()
 export class ProductsRepository {
@@ -23,10 +25,26 @@ export class ProductsRepository {
     });
   }
 
+  /**
+   * Ownership of a canonical product is expressed through its offers: a seller
+   * may manage the catalog entry they list on. Admin bypasses this entirely.
+   */
   findOwner(id: string) {
     return this.prisma.product.findUnique({
       where: { id },
-      select: { id: true, sellerId: true, price: true, stock: true, status: true },
+      select: {
+        id: true,
+        status: true,
+        createdBySellerId: true,
+        offers: { select: { id: true, sellerId: true } },
+      },
+    });
+  }
+
+  findOffer(offerId: string) {
+    return this.prisma.sellerOffer.findUnique({
+      where: { id: offerId },
+      include: { seller: true, variants: { include: { variant: true } } },
     });
   }
 

@@ -3,6 +3,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../../core/design_system/design_system.dart';
+import '../../../../core/localization/l10n_extension.dart';
 import '../../domain/entities/seller_misc.dart';
 import '../providers/seller_dashboard_provider.dart';
 
@@ -44,7 +45,7 @@ class SellerGoalsWidget extends ConsumerWidget {
                 Icon(Icons.flag_outlined, size: 18, color: c.primary),
                 const SizedBox(width: DsSpacing.xs),
                 Text(
-                  'Store goals',
+                  context.l10n.sellerGoals,
                   style: theme.textTheme.titleMedium
                       ?.copyWith(fontWeight: DsTypography.bold),
                 ),

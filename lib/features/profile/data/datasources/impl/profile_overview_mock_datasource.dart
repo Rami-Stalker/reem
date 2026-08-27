@@ -10,6 +10,9 @@ import '../../../domain/entities/orders_overview.dart';
 import '../../../domain/entities/profile_overview.dart';
 import '../../../domain/entities/referral.dart';
 import '../profile_overview_datasource.dart';
+import '../../../../../core/shared/entities/category.dart';
+import '../../../../../core/shared/entities/seller_offer.dart';
+import '../../../../../core/shared/value_objects/money.dart';
 
 /// Front-end-first mock of the profile-centre overview. Polished, deterministic
 /// sample data so the profile is fully alive before the backend ships these
@@ -28,19 +31,19 @@ final class ProfileOverviewMockDataSource implements ProfileOverviewDataSource {
 
     return ProfileOverview(
       completionSteps: const [
-        ProfileCompletionStep(label: 'Add a profile photo', done: true),
-        ProfileCompletionStep(label: 'Verify your phone', done: true),
-        ProfileCompletionStep(label: 'Add a delivery address', done: true),
-        ProfileCompletionStep(label: 'Add a payment method', done: false),
-        ProfileCompletionStep(label: 'Set your style preferences', done: false),
+        ProfileCompletionStep(label: 'أضيفي صورة شخصية', done: true),
+        ProfileCompletionStep(label: 'وثّقي رقم هاتفكِ', done: true),
+        ProfileCompletionStep(label: 'أضيفي عنوان توصيل', done: true),
+        ProfileCompletionStep(label: 'أضيفي وسيلة دفع', done: false),
+        ProfileCompletionStep(label: 'حدّدي تفضيلات ذوقكِ', done: false),
       ],
       achievements: const [
-        Achievement(id: 'a1', label: 'First order', description: 'Placed your very first Reem order.', icon: Icons.shopping_bag_rounded, earned: true),
-        Achievement(id: 'a2', label: 'Trendsetter', description: 'Shared 5 looks your friends loved.', icon: Icons.auto_awesome_rounded, earned: true),
-        Achievement(id: 'a3', label: 'Loyal one year', description: 'A whole year of beautiful finds.', icon: Icons.verified_rounded, earned: true),
-        Achievement(id: 'a4', label: 'Big spender', description: 'Reached \$2,000 in lifetime orders.', icon: Icons.diamond_rounded, earned: false),
-        Achievement(id: 'a5', label: 'Top reviewer', description: 'Write 10 helpful reviews.', icon: Icons.rate_review_rounded, earned: false),
-        Achievement(id: 'a6', label: 'Super referrer', description: 'Invite 5 friends who shop.', icon: Icons.group_add_rounded, earned: false),
+        Achievement(id: 'a1', label: 'أول طلب', description: 'أتممتِ أول طلب لكِ على ريم.', icon: Icons.shopping_bag_rounded, earned: true),
+        Achievement(id: 'a2', label: 'صانعة ذوق', description: 'شاركتِ 5 إطلالات أحبّتها صديقاتكِ.', icon: Icons.auto_awesome_rounded, earned: true),
+        Achievement(id: 'a3', label: 'سنة من الوفاء', description: 'سنة كاملة من الاكتشافات الجميلة.', icon: Icons.verified_rounded, earned: true),
+        Achievement(id: 'a4', label: 'زبونة مميّزة', description: 'بلغ مجموع طلباتكِ 9 مليون ل.س.', icon: Icons.diamond_rounded, earned: false),
+        Achievement(id: 'a5', label: 'مقيّمة نشِطة', description: 'اكتبي 10 تقييمات مفيدة.', icon: Icons.rate_review_rounded, earned: false),
+        Achievement(id: 'a6', label: 'سفيرة ريم', description: 'ادعي 5 صديقات يتسوّقن معكِ.', icon: Icons.group_add_rounded, earned: false),
       ],
       orders: const OrdersOverview(
         pending: 1,
@@ -49,10 +52,10 @@ final class ProfileOverviewMockDataSource implements ProfileOverviewDataSource {
         cancelled: 1,
       ),
       followedStores: [
-        FollowedStore(id: 's1', name: 'Atelier Rose', logoUrl: _img('logo-s1', w: 200, h: 200), isVerified: true, newCount: 3),
-        FollowedStore(id: 's2', name: 'Maison Lumière', logoUrl: _img('logo-s2', w: 200, h: 200), isVerified: true, newCount: 1),
-        FollowedStore(id: 's4', name: 'Velvet Petals', logoUrl: _img('logo-s4', w: 200, h: 200), isVerified: true),
-        FollowedStore(id: 's3', name: 'Bloom & Co', logoUrl: _img('logo-s3', w: 200, h: 200), newCount: 5),
+        FollowedStore(id: 's1', name: 'أتيليه الورد', logoUrl: _img('logo-s1', w: 200, h: 200), isVerified: true, newCount: 3),
+        FollowedStore(id: 's2', name: 'دار النور', logoUrl: _img('logo-s2', w: 200, h: 200), isVerified: true, newCount: 1),
+        FollowedStore(id: 's4', name: 'بتلات المخمل', logoUrl: _img('logo-s4', w: 200, h: 200), isVerified: true),
+        FollowedStore(id: 's3', name: 'بستان', logoUrl: _img('logo-s3', w: 200, h: 200), newCount: 5),
       ],
       recentlyViewed: _recentlyViewed,
       reviewsCount: 12,
@@ -61,7 +64,7 @@ final class ProfileOverviewMockDataSource implements ProfileOverviewDataSource {
         code: 'REEM-LAYLA',
         invited: 3,
         earnedPoints: 1500,
-        rewardHint: 'You both get 500 pts on their first order',
+        rewardHint: 'تحصلان معاً على 500 نقطة عند أول طلب لها',
       ),
       loyalty: const LoyaltySummary(
         points: 2450,
@@ -69,7 +72,7 @@ final class ProfileOverviewMockDataSource implements ProfileOverviewDataSource {
         nextTier: LoyaltyTier.platinum,
         pointsToNextTier: 550,
         availableCoupons: 4,
-        rewardHint: '550 pts until Platinum — and a free gift wrap',
+        rewardHint: '550 نقطة تفصلكِ عن البلاتينية — وتغليف هدية مجاني',
         lifetimePoints: 8200,
         redeemedCount: 9,
       ),
@@ -78,8 +81,8 @@ final class ProfileOverviewMockDataSource implements ProfileOverviewDataSource {
 
   static final _seller = User(
     id: 's1',
-    name: 'Atelier Rose',
-    username: 'atelier_rose',
+    name: 'أتيليه الورد',
+    username: 'atelier_alward',
     phone: '',
     role: UserRole.seller,
     isVerified: true,
@@ -93,16 +96,34 @@ final class ProfileOverviewMockDataSource implements ProfileOverviewDataSource {
     double? oldPrice,
     String category = 'general',
   }) {
+    final offer = SellerOffer(
+      id: 'offer-$id',
+      seller: _seller,
+      price: Money(raw: price.toStringAsFixed(0), currency: Currency.syp),
+      compareAtPrice: oldPrice == null
+          ? null
+          : Money(raw: oldPrice.toStringAsFixed(0), currency: Currency.syp),
+      stock: 24,
+      status: OfferStatus.active,
+    );
+
     return Product(
       id: id,
-      seller: _seller,
+      slug: id,
       title: title,
-      description: 'A piece you recently admired.',
-      category: category,
-      price: price,
-      oldPrice: oldPrice,
-      stock: 24,
+      description: 'قطعة أعجبتكِ مؤخراً.',
+      category: Category(
+        id: category,
+        slug: category,
+        nameAr: category,
+        nameEn: category,
+      ),
       media: [MediaItem(url: _img('prof-$id'))],
+      offers: [offer],
+      offersCount: 1,
+      priceFrom: offer.price,
+      priceTo: offer.price,
+      stock: 24,
       rating: 4.7,
       reviewsCount: 120,
       createdAt: DateTime(2024, 12, 1),
@@ -110,10 +131,10 @@ final class ProfileOverviewMockDataSource implements ProfileOverviewDataSource {
   }
 
   static final _recentlyViewed = <Product>[
-    _product(id: 'pv1', title: 'Silk Slip Dress', price: 189, oldPrice: 240, category: 'dress'),
-    _product(id: 'pv2', title: 'Oud Eau de Parfum', price: 95, category: 'fragrance'),
-    _product(id: 'pv3', title: 'Mini Shoulder Bag', price: 129, oldPrice: 170, category: 'bags'),
-    _product(id: 'pv4', title: 'Pearl Drop Earrings', price: 49, category: 'jewelry'),
-    _product(id: 'pv5', title: 'Satin Bow Mules', price: 110, category: 'shoes'),
+    _product(id: 'pv1', title: 'فستان حرير انسيابي', price: 850000, oldPrice: 1080000, category: 'فساتين'),
+    _product(id: 'pv2', title: 'عطر العود', price: 430000, category: 'عطور'),
+    _product(id: 'pv3', title: 'حقيبة كتف صغيرة', price: 580000, oldPrice: 765000, category: 'حقائب'),
+    _product(id: 'pv4', title: 'أقراط لؤلؤ متدلّية', price: 220000, category: 'مجوهرات'),
+    _product(id: 'pv5', title: 'حذاء ساتان بفيونكة', price: 495000, category: 'أحذية'),
   ];
 }

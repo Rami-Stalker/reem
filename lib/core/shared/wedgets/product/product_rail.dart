@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../design_system/design_system.dart';
 import '../../../../features/discovery/presentation/widgets/product_card_compact.dart';
 import '../../entities/product.dart';
+import '../../../../core/localization/l10n_extension.dart';
 
 /// A reusable, presentational horizontal product rail with a premium header
 /// (optional eyebrow + title + "See all"), skeleton loading and graceful empty
@@ -149,7 +150,7 @@ class _Header extends StatelessWidget {
               onTap: onSeeAll,
               child: Row(
                 children: [
-                  Text('See all',
+                  Text(context.l10n.viewAll,
                       style: theme.textTheme.labelLarge?.copyWith(
                           color: c.primary, fontWeight: DsTypography.semiBold)),
                   Icon(Icons.chevron_right_rounded, size: 18, color: c.primary),

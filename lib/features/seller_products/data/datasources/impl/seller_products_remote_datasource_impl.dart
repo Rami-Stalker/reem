@@ -21,7 +21,7 @@ final class SellerProductsRemoteDataSourceImpl extends BaseRemoteDataSource
     String? sort,
   }) async {
     final json = await getJson(
-      ApiEndpoints.sellerProducts,
+      ApiEndpoints.sellerOffers,
       query: {
         'page': page,
         'limit': limit,

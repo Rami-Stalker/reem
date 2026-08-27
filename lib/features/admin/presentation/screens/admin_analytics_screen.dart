@@ -1,9 +1,12 @@
 import 'package:dio/dio.dart';
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reem/core/design_system/design_system.dart';
 import 'package:reem/core/network/api_endpoints.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/providers/core_providers.dart';
+import 'package:reem/core/shared/value_objects/money_format.dart';
 import 'package:reem/features/admin/domain/entities/analytics_dashboard_entity.dart';
 import 'package:reem/features/admin/presentation/providers/admin_provider.dart';
 import 'package:reem/features/admin/presentation/widgets/admin_page_header.dart';
@@ -15,27 +18,28 @@ class AdminAnalyticsScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final dashboard = ref.watch(analyticsDashboardProvider);
     final colors = context.dsColors;
+    final l10n = context.l10n;
 
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           AdminPageHeader(
-            title: 'Business intelligence',
-            subtitle: 'Sales, revenue, conversion, cohorts, and live operations.',
+            title: l10n.adminBusinessIntelligence,
+            subtitle: l10n.adminAnalyticsSubtitle,
             actions: [
               IconButton(
-                tooltip: 'Refresh',
+                tooltip: l10n.refresh,
                 onPressed: () => ref.invalidate(analyticsDashboardProvider),
                 icon: const Icon(Icons.refresh_rounded),
               ),
               IconButton(
-                tooltip: 'Export PDF',
+                tooltip: l10n.adminExportPdf,
                 onPressed: () => _export(context, ref, 'PDF'),
                 icon: const Icon(Icons.picture_as_pdf_rounded),
               ),
               IconButton(
-                tooltip: 'Export Excel',
+                tooltip: l10n.adminExportExcel,
                 onPressed: () => _export(context, ref, 'EXCEL'),
                 icon: const Icon(Icons.table_chart_rounded),
               ),
@@ -121,6 +125,7 @@ class _Dashboard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -130,13 +135,17 @@ class _Dashboard extends StatelessWidget {
           builder: (context, constraints) {
             final wide = constraints.maxWidth > 980;
             final charts = [
+              // Revenue over time is a trend, so it gets a line. The
+              // funnel is a set of ranked steps, so it keeps its bars. Both
+              // used the same bar widget before, which drew a time series as
+              // an unordered ranking.
               _Panel(
-                title: 'Revenue trend',
-                child: _BarSeries(points: data.salesSeries, valuePrefix: '\$'),
+                title: l10n.adminRevenueTrend,
+                child: _TrendChart(points: data.salesSeries),
               ),
               _Panel(
-                title: 'Conversion funnel',
-                child: _BarSeries(points: data.funnel),
+                title: l10n.adminConversionFunnel,
+                child: _FunnelBars(points: data.funnel),
               ),
             ];
             return wide
@@ -163,11 +172,11 @@ class _Dashboard extends StatelessWidget {
             final wide = constraints.maxWidth > 980;
             final lists = [
               _Panel(
-                title: 'Top products',
+                title: l10n.adminTopProducts,
                 child: _RankedList(items: data.topProducts),
               ),
               _Panel(
-                title: 'Seller performance',
+                title: l10n.adminSellerPerformance,
                 child: _RankedList(items: data.topSellers),
               ),
             ];
@@ -201,15 +210,16 @@ class _MetricGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final items = [
-      _Metric('Gross revenue', '\$${data.grossRevenue.toStringAsFixed(0)}'),
-      _Metric('Net revenue', '\$${data.netRevenue.toStringAsFixed(0)}'),
-      _Metric('Orders', data.totalOrders.toString()),
-      _Metric('AOV', '\$${data.averageOrderValue.toStringAsFixed(1)}'),
-      _Metric('Customers', data.activeCustomers.toString()),
-      _Metric('Repeat rate', '${data.repeatRate.toStringAsFixed(1)}%'),
-      _Metric('Conversion', '${data.conversionRate.toStringAsFixed(1)}%'),
-      _Metric('Online now', data.onlineUsers.toString()),
+      _Metric(l10n.adminGrossRevenue, data.grossRevenue.sypCompact),
+      _Metric(l10n.adminNetRevenue, data.netRevenue.sypCompact),
+      _Metric(l10n.orders, formatCount(data.totalOrders)),
+      _Metric(l10n.adminAov, data.averageOrderValue.sypCompact),
+      _Metric(l10n.adminCustomers, formatCount(data.activeCustomers)),
+      _Metric(l10n.adminRepeatRate, '${data.repeatRate.toStringAsFixed(1)}%'),
+      _Metric(l10n.adminConversion, '${data.conversionRate.toStringAsFixed(1)}%'),
+      _Metric(l10n.adminOnlineNow, formatCount(data.onlineUsers)),
     ];
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -307,24 +317,180 @@ class _Panel extends StatelessWidget {
   }
 }
 
-class _BarSeries extends StatelessWidget {
-  const _BarSeries({required this.points, this.valuePrefix = ''});
+/// Revenue over the selected range, as an area line.
+class _TrendChart extends StatelessWidget {
+  const _TrendChart({required this.points});
 
   final List<AnalyticsPoint> points;
-  final String valuePrefix;
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.dsColors;
+    final palette = context.console;
+    final l10n = context.l10n;
+
     if (points.isEmpty) {
-      return Text('No data yet.', style: TextStyle(color: colors.onSurfaceVariant));
+      return Text(
+        l10n.adminNoDataYet,
+        style: TextStyle(color: palette.muted),
+      );
     }
-    final maxValue = points.map((point) => point.value).reduce(
-          (value, next) => value > next ? value : next,
-        );
+
+    final line = palette.series.first;
+    final maxValue = points
+        .map((point) => point.value)
+        .reduce((value, next) => value > next ? value : next);
+    // Headroom, so a flat range still reads as a line rather than a rule.
+    final ceiling = maxValue <= 0 ? 1.0 : maxValue * 1.18;
+
+    final labelStyle = TextStyle(
+      color: palette.muted,
+      fontFamily: DsTypography.fontFamily,
+      fontSize: DsTypography.labelSmall,
+    );
+
+    return SizedBox(
+      height: 220,
+      child: LineChart(
+        LineChartData(
+          minY: 0,
+          maxY: ceiling,
+          minX: 0,
+          maxX: (points.length - 1).toDouble(),
+          clipData: const FlClipData.all(),
+          gridData: FlGridData(
+            show: true,
+            drawVerticalLine: false,
+            horizontalInterval: ceiling / 3,
+            getDrawingHorizontalLine: (_) => FlLine(
+              color: palette.line.withValues(alpha: 0.6),
+              strokeWidth: 1,
+              dashArray: const [4, 5],
+            ),
+          ),
+          borderData: FlBorderData(show: false),
+          titlesData: FlTitlesData(
+            topTitles: const AxisTitles(),
+            rightTitles: const AxisTitles(),
+            leftTitles: AxisTitles(
+              sideTitles: SideTitles(
+                showTitles: true,
+                reservedSize: 46,
+                interval: ceiling / 3,
+                getTitlesWidget: (value, meta) {
+                  if (value <= 0 || value >= ceiling) {
+                    return const SizedBox.shrink();
+                  }
+                  return Padding(
+                    padding: const EdgeInsetsDirectional.only(
+                      end: DsSpacing.xxs,
+                    ),
+                    child: Text(
+                      value.compactBare,
+                      maxLines: 1,
+                      textAlign: TextAlign.end,
+                      style: labelStyle,
+                    ),
+                  );
+                },
+              ),
+            ),
+            bottomTitles: AxisTitles(
+              sideTitles: SideTitles(
+                showTitles: true,
+                reservedSize: 26,
+                interval: 1,
+                getTitlesWidget: (value, meta) {
+                  final index = value.round();
+                  if (index < 0 || index >= points.length) {
+                    return const SizedBox.shrink();
+                  }
+                  // Thin the labels on a long range so they never collide.
+                  final stride = (points.length / 6).ceil();
+                  if (stride > 1 && index % stride != 0) {
+                    return const SizedBox.shrink();
+                  }
+                  return Padding(
+                    padding: const EdgeInsets.only(top: DsSpacing.xs),
+                    child: Text(points[index].label, style: labelStyle),
+                  );
+                },
+              ),
+            ),
+          ),
+          lineTouchData: LineTouchData(
+            touchTooltipData: LineTouchTooltipData(
+              getTooltipColor: (_) => palette.ink.withValues(alpha: 0.92),
+              tooltipBorderRadius: DsRadius.borderMd,
+              getTooltipItems: (spots) => [
+                for (final spot in spots)
+                  LineTooltipItem(
+                    spot.y.sypFull,
+                    TextStyle(
+                      color: palette.background,
+                      fontFamily: DsTypography.fontFamily,
+                      fontSize: DsTypography.labelMedium,
+                      fontWeight: DsTypography.bold,
+                    ),
+                  ),
+              ],
+            ),
+          ),
+          lineBarsData: [
+            LineChartBarData(
+              spots: [
+                for (var i = 0; i < points.length; i++)
+                  FlSpot(i.toDouble(), points[i].value),
+              ],
+              isCurved: true,
+              curveSmoothness: 0.28,
+              preventCurveOverShooting: true,
+              barWidth: 2.6,
+              color: line,
+              dotData: const FlDotData(show: false),
+              belowBarData: BarAreaData(
+                show: true,
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    line.withValues(alpha: 0.26),
+                    line.withValues(alpha: 0.0),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// The conversion funnel: ranked steps, each a share of the widest.
+class _FunnelBars extends StatelessWidget {
+  const _FunnelBars({required this.points});
+
+  final List<AnalyticsPoint> points;
+
+  @override
+  Widget build(BuildContext context) {
+    final palette = context.console;
+    final l10n = context.l10n;
+
+    if (points.isEmpty) {
+      return Text(
+        l10n.adminNoDataYet,
+        style: TextStyle(color: palette.muted),
+      );
+    }
+
+    final maxValue = points
+        .map((point) => point.value)
+        .reduce((value, next) => value > next ? value : next);
+
     return Column(
       children: [
-        for (final point in points.take(10))
+        for (final entry in points.take(10).toList().asMap().entries)
           Padding(
             padding: const EdgeInsets.only(bottom: DsSpacing.sm),
             child: Row(
@@ -332,9 +498,10 @@ class _BarSeries extends StatelessWidget {
                 SizedBox(
                   width: 108,
                   child: Text(
-                    point.label,
+                    entry.value.label,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
+                    style: TextStyle(color: palette.ink),
                   ),
                 ),
                 Expanded(
@@ -342,18 +509,24 @@ class _BarSeries extends StatelessWidget {
                     borderRadius: DsRadius.borderFull,
                     child: LinearProgressIndicator(
                       minHeight: 10,
-                      value: maxValue == 0 ? 0 : point.value / maxValue,
-                      backgroundColor: colors.surfaceVariant,
-                      valueColor: AlwaysStoppedAnimation(colors.primary),
+                      value: maxValue == 0 ? 0 : entry.value.value / maxValue,
+                      backgroundColor: palette.surfaceAlt,
+                      valueColor: AlwaysStoppedAnimation(
+                        palette.series[entry.key % palette.series.length],
+                      ),
                     ),
                   ),
                 ),
                 const SizedBox(width: DsSpacing.sm),
                 SizedBox(
-                  width: 78,
+                  width: 72,
                   child: Text(
-                    '$valuePrefix${point.value.toStringAsFixed(0)}',
+                    formatCount(entry.value.value.round()),
                     textAlign: TextAlign.end,
+                    style: TextStyle(
+                      color: palette.ink,
+                      fontWeight: DsTypography.semiBold,
+                    ),
                   ),
                 ),
               ],
@@ -371,9 +544,13 @@ class _RankedList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.dsColors;
+    final palette = context.console;
+    final l10n = context.l10n;
     if (items.isEmpty) {
-      return Text('No ranked data yet.', style: TextStyle(color: colors.onSurfaceVariant));
+      return Text(
+        l10n.adminNoRankedData,
+        style: TextStyle(color: palette.muted),
+      );
     }
     return Column(
       children: [
@@ -386,7 +563,7 @@ class _RankedList extends StatelessWidget {
             ),
             title: Text(entry.value.title),
             subtitle: Text(entry.value.subtitle),
-            trailing: Text('\$${entry.value.value.toStringAsFixed(0)}'),
+            trailing: Text(entry.value.value.sypCompact),
           ),
       ],
     );
@@ -400,12 +577,13 @@ class _RangeSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return Wrap(
       spacing: DsSpacing.sm,
       children: [
         for (final days in [7, 30, 90, 180])
           ChoiceChip(
-            label: Text('${days}d'),
+            label: Text(l10n.adminLastDays(days)),
             selected: false,
             onSelected: (_) => onSelected(days),
           ),

@@ -1,20 +1,10 @@
 import { Transform } from 'class-transformer';
-import {
-  IsEnum,
-  IsOptional,
-  IsString,
-  Matches,
-  MaxLength,
-  MinLength,
-} from 'class-validator';
+import { IsEnum, IsOptional, IsString, MaxLength, MinLength } from 'class-validator';
 import { OtpChannel, OtpPurpose } from '@prisma/client';
-import { PHONE_REGEX } from '../../../common/constants';
+import { foldDigits, PhoneField } from '../../../common/phone/phone';
 
 export class RequestOtpDto {
-  @IsString()
-  @Matches(PHONE_REGEX, {
-    message: 'phone must be a valid phone number (7-15 digits, optional +)',
-  })
+  @PhoneField()
   phone!: string;
 
   @Transform(({ value }) =>
@@ -29,13 +19,20 @@ export class RequestOtpDto {
   )
   @IsEnum(OtpChannel)
   channel?: OtpChannel;
+
+  /**
+   * Opaque per-request value from the app instance. Stored hashed, so a later
+   * step can prove the code was verified by the same install that asked for
+   * it — the second half of the anti-relay defence that `match_code` starts.
+   */
+  @IsOptional()
+  @IsString()
+  @MaxLength(128)
+  client_nonce?: string;
 }
 
 export class VerifyOtpDto {
-  @IsString()
-  @Matches(PHONE_REGEX, {
-    message: 'phone must be a valid phone number (7-15 digits, optional +)',
-  })
+  @PhoneField()
   phone!: string;
 
   @Transform(({ value }) =>
@@ -44,13 +41,37 @@ export class VerifyOtpDto {
   @IsEnum(OtpPurpose)
   purpose!: OtpPurpose;
 
+  // Codes are typed on an Arabic keyboard as often as a Latin one.
+  @Transform(({ value }) =>
+    typeof value === 'string' ? foldDigits(value).trim() : value,
+  )
   @IsString()
   @MinLength(4)
   @MaxLength(8)
   code!: string;
 }
 
-export class ResetPasswordDto extends VerifyOtpDto {
+/**
+ * Deliberately NOT `extends VerifyOtpDto`.
+ *
+ * It used to, which inherited a required `purpose` field. The client never
+ * sent it — and could not sensibly send it, since the server hardcodes
+ * `PASSWORD_RESET` — so every reset attempt died in the ValidationPipe with a
+ * raw class-validator message. The last step of the only account-recovery
+ * journey in the product was unreachable.
+ */
+export class ResetPasswordDto {
+  @PhoneField()
+  phone!: string;
+
+  @Transform(({ value }) =>
+    typeof value === 'string' ? foldDigits(value).trim() : value,
+  )
+  @IsString()
+  @MinLength(4)
+  @MaxLength(8)
+  code!: string;
+
   @IsString()
   @MinLength(8)
   @MaxLength(128)

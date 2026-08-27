@@ -13,8 +13,10 @@ class ProductStatusChip extends StatelessWidget {
     final colors = context.dsColors;
     final color = switch (status) {
       ProductStatus.active => colors.success,
+      ProductStatus.pendingReview => colors.warning,
       ProductStatus.draft => colors.onSurfaceVariant,
       ProductStatus.outOfStock => colors.warning,
+      ProductStatus.paused => colors.onSurfaceVariant,
       ProductStatus.archived => colors.error,
     };
 

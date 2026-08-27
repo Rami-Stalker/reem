@@ -8,7 +8,10 @@ import { buildMeta } from '../../common/dto/pagination.dto';
 import { CacheService } from '../../common/cache/cache.service';
 import { serializeProduct } from '../../common/serializers';
 import {
-  AVAILABLE_WHERE,
+  LIVE_OFFER_WHERE,
+  PURCHASABLE_PRODUCT_WHERE,
+} from '../../common/catalog/product-include';
+import {
   DiscoveryProduct,
   DiscoveryRepository,
   ProductOrderBy,
@@ -40,7 +43,7 @@ export class DiscoveryService {
     }
     const spec = STATIC_COLLECTIONS[key];
     const where: Prisma.ProductWhereInput = {
-      ...AVAILABLE_WHERE,
+      ...PURCHASABLE_PRODUCT_WHERE,
       ...(spec.extraWhere ?? {}),
       ...this.buildFilters(dto),
     };
@@ -57,8 +60,8 @@ export class DiscoveryService {
   async category(category: string, dto: DiscoveryQueryDto, viewerId?: string) {
     const cat = category.toLowerCase();
     const where: Prisma.ProductWhereInput = {
-      ...AVAILABLE_WHERE,
-      category: cat,
+      ...PURCHASABLE_PRODUCT_WHERE,
+      category: { slug: cat },
       ...this.buildFilters(dto),
     };
     return this.paginated(
@@ -73,8 +76,10 @@ export class DiscoveryService {
 
   async seller(sellerId: string, dto: DiscoveryQueryDto, viewerId?: string) {
     const where: Prisma.ProductWhereInput = {
-      ...AVAILABLE_WHERE,
-      sellerId,
+      ...PURCHASABLE_PRODUCT_WHERE,
+      // "This seller's storefront" is the set of products they list LIVE —
+      // merged into the shared predicate rather than replacing it.
+      offers: { some: { ...LIVE_OFFER_WHERE, sellerId } },
       ...this.buildFilters(dto),
     };
     return this.paginated(
@@ -91,8 +96,8 @@ export class DiscoveryService {
     const category = await this.repo.categoryOf(productId);
     if (category === null) throw new NotFoundException('Product not found');
     const where: Prisma.ProductWhereInput = {
-      ...AVAILABLE_WHERE,
-      category,
+      ...PURCHASABLE_PRODUCT_WHERE,
+      category: { slug: category },
       id: { not: productId },
     };
     return this.paginated(
@@ -109,8 +114,8 @@ export class DiscoveryService {
     if (!viewerId) return this.collection('trending', dto, undefined);
     const categories = await this.repo.preferredCategories(viewerId);
     const where: Prisma.ProductWhereInput = {
-      ...AVAILABLE_WHERE,
-      ...(categories.length ? { category: { in: categories } } : {}),
+      ...PURCHASABLE_PRODUCT_WHERE,
+      ...(categories.length ? { category: { slug: { in: categories } } } : {}),
     };
     const signature = [...categories].sort().join(',');
     return this.paginated(
@@ -129,7 +134,7 @@ export class DiscoveryService {
       STATIC_COLLECTION_KEYS.map(async (key) => {
         const spec = STATIC_COLLECTIONS[key];
         const where: Prisma.ProductWhereInput = {
-          ...AVAILABLE_WHERE,
+          ...PURCHASABLE_PRODUCT_WHERE,
           ...(spec.extraWhere ?? {}),
         };
         // Over-fetch so dedup still leaves a full section.
@@ -223,9 +228,13 @@ export class DiscoveryService {
   private buildFilters(dto: DiscoveryQueryDto): Prisma.ProductWhereInput {
     return {
       ...(dto.rating ? { rating: { gte: dto.rating } } : {}),
+      // Price lives on the offer, not the product: filtering has to run
+      // against the SYP-normalised roll-up, the same column search and the
+      // public catalog already use. `price` is not a Product field at all, so
+      // the previous form failed at the database, not at validation.
       ...(dto.min_price !== undefined || dto.max_price !== undefined
         ? {
-            price: {
+            minPriceSyp: {
               ...(dto.min_price !== undefined ? { gte: dto.min_price } : {}),
               ...(dto.max_price !== undefined ? { lte: dto.max_price } : {}),
             },
@@ -241,10 +250,12 @@ export class DiscoveryService {
     switch (sort) {
       case 'newest':
         return [{ createdAt: 'desc' }];
+      // Price sorting runs off the SYP-normalised roll-up so offers priced
+      // in different currencies interleave correctly.
       case 'price_asc':
-        return [{ price: 'asc' }];
+        return [{ minPriceSyp: 'asc' }];
       case 'price_desc':
-        return [{ price: 'desc' }];
+        return [{ minPriceSyp: 'desc' }];
       case 'best_selling':
         return [{ ordersCount: 'desc' }];
       case 'rating':

@@ -5,6 +5,7 @@ import '../../domain/entities/checkout.dart';
 import '../../domain/entities/order.dart';
 import '../../domain/repositories/checkout_repository.dart';
 import '../datasources/checkout_remote_datasource.dart';
+import '../../../../core/shared/value_objects/money.dart';
 
 class CheckoutRepositoryImpl
     with RepositoryHandler
@@ -20,7 +21,9 @@ class CheckoutRepositoryImpl
   @override
   Future<Result<DeliveryQuote>> getDeliveryQuote({
     required String governorate,
-    double subtotal = 0,
+    Money? subtotal,
+    String? district,
+    bool isRural = false,
   }) =>
       guard(() => remote.getDeliveryQuote(governorate, subtotal));
 
@@ -30,7 +33,9 @@ class CheckoutRepositoryImpl
 
   @override
   Future<Result<PlacedOrder>> placeOrder({
-    required ShippingInput shipping,
+    ShippingInput? shipping,
+    String? addressId,
+    bool saveAddress = false,
     required String paymentMethod,
     String? couponCode,
     String? deliveryInstructions,

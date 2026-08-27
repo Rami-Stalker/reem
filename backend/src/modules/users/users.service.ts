@@ -11,12 +11,14 @@ import {
 } from '../../common/serializers';
 import { UsersRepository } from './users.repository';
 import { UpdateProfileDto } from './dto/update-profile.dto';
+import { MediaService } from '../media/media.service';
 
 @Injectable()
 export class UsersService {
   constructor(
     private readonly users: UsersRepository,
     private readonly prisma: PrismaService,
+    private readonly media: MediaService,
   ) {}
 
   /** The signed-in user's own profile (with stats). */
@@ -32,6 +34,7 @@ export class UsersService {
       ...(dto.image_url !== undefined && { imageUrl: dto.image_url }),
       ...(dto.location !== undefined && { location: dto.location }),
     });
+    if (dto.image_url) await this.media.markAttached(userId, [dto.image_url]);
     return serializeUser(user);
   }
 

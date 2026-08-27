@@ -7,12 +7,15 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
+import { UserRole } from '@prisma/client';
 import { OptionalAuth } from '../../common/decorators/optional-auth.decorator';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
+import { Authorize } from '../../common/decorators/authorize.decorator';
+import { AppPermission } from '../../common/permissions';
 import { ProductsService } from './products.service';
-import { OrderCountDto, ReduceStockDto } from './dto/product-actions.dto';
+import { OrderCountDto } from './dto/product-actions.dto';
+import { ProductQueryDto } from './dto/product-query.dto';
 
-type Query = Record<string, string | undefined>;
 
 @Controller('products')
 export class ProductsController {
@@ -58,7 +61,7 @@ export class ProductsController {
 
   @OptionalAuth()
   @Get('search')
-  search(@Query() query: Query, @CurrentUser('id') viewerId?: string) {
+  search(@Query() query: ProductQueryDto, @CurrentUser('id') viewerId?: string) {
     return this.products.search(query, viewerId);
   }
 
@@ -66,7 +69,7 @@ export class ProductsController {
   @Get('category/:category/trending')
   categoryTrending(
     @Param('category') category: string,
-    @Query() query: Query,
+    @Query() query: ProductQueryDto,
     @CurrentUser('id') viewerId?: string,
   ) {
     return this.products.byCategory(category, query, viewerId, [
@@ -79,7 +82,7 @@ export class ProductsController {
   @Get('category/:category/new-arrivals')
   categoryNewArrivals(
     @Param('category') category: string,
-    @Query() query: Query,
+    @Query() query: ProductQueryDto,
     @CurrentUser('id') viewerId?: string,
   ) {
     return this.products.byCategory(category, query, viewerId, [{ createdAt: 'desc' }]);
@@ -89,7 +92,7 @@ export class ProductsController {
   @Get('category/:category')
   category(
     @Param('category') category: string,
-    @Query() query: Query,
+    @Query() query: ProductQueryDto,
     @CurrentUser('id') viewerId?: string,
   ) {
     return this.products.byCategory(category, query, viewerId, [{ createdAt: 'desc' }]);
@@ -97,7 +100,7 @@ export class ProductsController {
 
   @OptionalAuth()
   @Get()
-  list(@Query() query: Query, @CurrentUser('id') viewerId?: string) {
+  list(@Query() query: ProductQueryDto, @CurrentUser('id') viewerId?: string) {
     return this.products.list(query, viewerId);
   }
 
@@ -118,6 +121,17 @@ export class ProductsController {
   }
 
   @Post(':id/orders')
+  @Authorize({
+    action: 'maintain',
+    resource: 'product',
+    roles: [
+      UserRole.SUPER_ADMIN,
+      UserRole.OPERATIONS_ADMIN,
+      UserRole.CONTENT_MODERATOR,
+      UserRole.ADMIN,
+    ],
+    permissions: [AppPermission.productManage],
+  })
   incrementOrders(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() dto: OrderCountDto,
@@ -125,11 +139,4 @@ export class ProductsController {
     return this.products.incrementOrders(id, dto.amount ?? 1);
   }
 
-  @Post(':id/stock/reduce')
-  reduceStock(
-    @Param('id', ParseUUIDPipe) id: string,
-    @Body() dto: ReduceStockDto,
-  ) {
-    return this.products.reduceStock(id, dto.quantity);
-  }
 }

@@ -2,10 +2,24 @@ import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 
-export const ORDER_DETAIL_INCLUDE = {
+const SELLER_ORDER_INCLUDE = {
+  seller: true,
   items: true,
+  shipment: true,
+  events: { orderBy: { createdAt: 'asc' as const } },
+};
+
+export const ORDER_DETAIL_INCLUDE = {
+  sellerOrders: {
+    orderBy: { number: 'asc' as const },
+    include: SELLER_ORDER_INCLUDE,
+  },
   payment: true,
   events: { orderBy: { createdAt: 'asc' as const } },
+} satisfies Prisma.OrderInclude;
+
+export const ORDER_LIST_INCLUDE = {
+  sellerOrders: { include: { items: true } },
 } satisfies Prisma.OrderInclude;
 
 @Injectable()
@@ -18,7 +32,7 @@ export class OrdersRepository {
       orderBy: { createdAt: 'desc' },
       skip,
       take,
-      include: { items: true },
+      include: ORDER_LIST_INCLUDE,
     });
   }
 
@@ -38,5 +52,32 @@ export class OrdersRepository {
       where: { id },
       include: ORDER_DETAIL_INCLUDE,
     });
+  }
+
+  /** A seller's own sub-order — never the whole parent. */
+  findSellerOrder(sellerOrderId: string, sellerId: string) {
+    return this.prisma.sellerOrder.findFirst({
+      where: { id: sellerOrderId, sellerId },
+      include: { ...SELLER_ORDER_INCLUDE, order: true },
+    });
+  }
+
+  listForSeller(
+    sellerId: string,
+    where: Prisma.SellerOrderWhereInput,
+    skip: number,
+    take: number,
+  ) {
+    return this.prisma.sellerOrder.findMany({
+      where: { sellerId, ...where },
+      orderBy: { createdAt: 'desc' },
+      skip,
+      take,
+      include: { ...SELLER_ORDER_INCLUDE, order: true },
+    });
+  }
+
+  countForSeller(sellerId: string, where: Prisma.SellerOrderWhereInput) {
+    return this.prisma.sellerOrder.count({ where: { sellerId, ...where } });
   }
 }

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../../shared/wedgets/backgrounds/feminine_mesh_background.dart';
 import '../foundation/theme/extensions/color_extension.dart';
 import '../utilities/extensions/context_extensions.dart';
+import 'experience_design.dart';
 
 /// Standard scroll page with feminine mesh background.
 ///
@@ -17,6 +17,8 @@ class ReemScrollPage extends StatelessWidget {
     this.extendBody = true,
     this.onRefresh,
     this.controller,
+    this.background,
+    this.backgroundColor,
   });
 
   final List<Widget> slivers;
@@ -29,6 +31,8 @@ class ReemScrollPage extends StatelessWidget {
 
   /// Optional external scroll controller (e.g. scroll-to-top affordances).
   final ScrollController? controller;
+  final Widget? background;
+  final Color? backgroundColor;
 
   @override
   Widget build(BuildContext context) {
@@ -57,12 +61,12 @@ class ReemScrollPage extends StatelessWidget {
     return Scaffold(
       extendBody: extendBody,
       extendBodyBehindAppBar: true,
-      backgroundColor: colors.background,
+      backgroundColor: backgroundColor ?? colors.background,
       floatingActionButton: floatingActionButton,
       bottomNavigationBar: bottom,
       body: Stack(
         children: [
-          const FeminineMeshBackground(),
+          background ?? const CustomerBackdrop(),
           scrollView,
         ],
       ),

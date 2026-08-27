@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/design_system/design_system.dart';
 import '../../../../core/experience/role_experience.dart';
+import '../../../../core/localization/l10n_extension.dart';
 import '../../../../core/router/route_paths.dart';
 import '../../../../core/shared/wedgets/product/product_rail.dart';
 import '../../../discovery/domain/entities/product_collection.dart';
@@ -14,7 +15,6 @@ import '../../../profile/presentation/providers/profile_provider.dart';
 import '../../../seller_dashboard/presentation/screens/seller_home_screen.dart';
 import '../providers/home_content_provider.dart';
 import '../providers/home_provider.dart';
-import '../widgets/feed_section.dart';
 import '../widgets/home_categories_showcase.dart';
 import '../widgets/home_continue_shopping.dart';
 import '../widgets/home_dynamic_blocks.dart';
@@ -26,6 +26,7 @@ import '../widgets/home_loyalty_card.dart';
 import '../widgets/home_nearby_stores.dart';
 import '../widgets/home_notifications_summary.dart';
 import '../widgets/home_recently_viewed.dart';
+import '../widgets/home_showcase_section.dart';
 import '../widgets/home_smart_search.dart';
 import '../widgets/home_stories_rail.dart';
 import '../widgets/home_top_bar.dart';
@@ -52,7 +53,21 @@ class HomeScreen extends ConsumerWidget {
   }
 }
 
-/// Buyer home — an intelligent, personalized social-commerce experience.
+/// Buyer home, read as a magazine in three chapters.
+///
+/// **The welcome** — greeting, search, the boutiques' stories and the banner:
+/// who she is and what the shops posted today. **The shelves** — deals,
+/// loyalty, the collection rails and the boutiques: the merchandising middle,
+/// scanned rather than dwelt in. **New in** — the showcase, where the newest
+/// pieces are told as posts (or, if she prefers, as a mosaic or a grid).
+///
+/// The showcase closes the page deliberately. It is the section she is meant
+/// to sink into, and putting it last gives it no floor: the feed simply keeps
+/// going, where a middle placement would have capped it at a handful of cards
+/// before the next shelf interrupted.
+///
+/// The running order still honours the client's Q78 pick — *«مختلط: ستوريات
+/// فوق + بانر + شبكة منتجات تحت»*.
 class _BuyerHomeScreen extends ConsumerWidget {
   const _BuyerHomeScreen();
 
@@ -68,95 +83,91 @@ class _BuyerHomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
+
     return ReemScrollPage(
       onRefresh: () => _refresh(ref),
       slivers: [
         const HomeTopBar(),
 
-        // Greeting + smart search.
+        // ── Chapter one: the welcome ─────────────────────────────────────
         const SliverToBoxAdapter(child: HomeGreeting()),
         const SliverToBoxAdapter(child: HomeSmartSearch()),
         const _Gap(DsSpacing.lg),
 
-        // Stories.
         const HomeStoriesRail(),
         const _Gap(DsSpacing.lg),
 
-        // Dynamic hero carousel.
         _box(const HomeHeroCarousel()),
         const _Gap(_gap),
 
-        // Shop by category.
         _box(const HomeCategoriesShowcase()),
         const _Gap(_gap),
 
-        // Flash deals.
+        // ── Chapter two: the shelves ─────────────────────────────────────
+        const _Ornament(),
         _box(const HomeFlashDeals()),
-        const _Gap(_gap),
-
-        // Loyalty & rewards.
-        _box(const HomeLoyaltyCard()),
-        const _Gap(_gap),
-
-        // AI-powered recommendations.
-        _box(
-          const _CollectionRail(
-            collection: ProductCollection.recommended,
-            eyebrow: 'Picked for you',
-            title: 'Recommended for you',
-          ),
-        ),
-        const _Gap(_gap),
-
-        // Continue shopping.
-        _box(const HomeContinueShopping()),
         const _Gap(_gap),
 
         // Admin-configured merchandising.
         _box(const HomeDynamicBlocks()),
 
-        // New arrivals.
+        _box(const HomeLoyaltyCard()),
+        const _Gap(_gap),
+
         _box(
-          const _CollectionRail(
-            collection: ProductCollection.newArrivals,
-            eyebrow: 'Just in',
-            title: 'New arrivals',
+          _CollectionRail(
+            collection: ProductCollection.recommended,
+            eyebrow: l10n.homeRecommendedEyebrow,
+            title: l10n.recommended,
           ),
         ),
         const _Gap(_gap),
 
-        // Featured boutiques.
+        _box(const HomeContinueShopping()),
+        const _Gap(_gap),
+
+        _box(
+          _CollectionRail(
+            collection: ProductCollection.newArrivals,
+            eyebrow: l10n.homeNewArrivalsEyebrow,
+            title: l10n.newArrivals,
+          ),
+        ),
+        const _Gap(_gap),
+
         _box(const HomeFeaturedStores()),
         const _Gap(_gap),
 
-        // Best sellers.
         _box(
-          const _CollectionRail(
+          _CollectionRail(
             collection: ProductCollection.bestSelling,
-            eyebrow: 'Loved by many',
-            title: 'Best sellers',
+            eyebrow: l10n.homeBestSellersEyebrow,
+            title: l10n.bestSeller,
           ),
         ),
         const _Gap(_gap),
 
-        // Recently viewed.
         _box(const HomeRecentlyViewed()),
         const _Gap(_gap),
 
-        // Wishlist highlights.
         _box(const HomeWishlistHighlights()),
         const _Gap(_gap),
 
-        // Nearby stores (location-gated).
         _box(const HomeNearbyStores()),
         const _Gap(_gap),
 
-        // Notifications summary.
         _box(const HomeNotificationsSummary()),
         const _Gap(_gap),
 
-        // Social feed preview.
-        const FeedSection(),
+        // ── Chapter three: "New in" closes the page, and owns it ─────────
+        //
+        // The finale rather than an aperitif: everything above is a shelf she
+        // scans, this is the one she stays in. Ending here also means the feed
+        // has no floor — she can keep scrolling posts for as long as she likes
+        // instead of hitting another section.
+        const _Ornament(),
+        const HomeShowcaseSection(),
 
         // Breathing room above the floating bottom bar.
         const _Gap(120),
@@ -178,6 +189,15 @@ class _BuyerHomeScreen extends ConsumerWidget {
           ),
     );
   }
+}
+
+/// The visual full stop between chapters.
+class _Ornament extends StatelessWidget {
+  const _Ornament();
+
+  @override
+  Widget build(BuildContext context) =>
+      const SliverToBoxAdapter(child: DsOrnamentDivider());
 }
 
 /// A single product-collection rail bound to its own slice of home state, so it

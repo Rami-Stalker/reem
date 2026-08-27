@@ -205,8 +205,8 @@ class _CommentTile extends StatelessWidget {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(
-                      left: DsSpacing.sm, top: DsSpacing.xxs),
+                  padding: const EdgeInsetsDirectional.only(
+                      start: DsSpacing.sm, top: DsSpacing.xxs),
                   child: Row(
                     children: [
                       Text(_ago(comment.createdAt),

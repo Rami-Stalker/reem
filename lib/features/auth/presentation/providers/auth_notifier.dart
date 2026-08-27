@@ -11,8 +11,8 @@ import '../../domain/usecases/login_usecase.dart';
 import '../../domain/usecases/logout_usecase.dart';
 import '../../domain/usecases/otp_usecases.dart';
 import '../../domain/usecases/register_usecase.dart';
-import '../../domain/usecases/social_sign_in_usecase.dart';
 import 'auth_state.dart';
+import 'auth_message.dart';
 
 class AuthNotifier extends StateNotifier<AuthState> {
   AuthNotifier({
@@ -21,24 +21,22 @@ class AuthNotifier extends StateNotifier<AuthState> {
     required LogoutUseCase logoutUseCase,
     required GetCurrentUserUseCase getCurrentUserUseCase,
     required ForgotPasswordUseCase forgotPasswordUseCase,
-    required SocialSignInUseCase socialSignInUseCase,
     required ContinueAsGuestUseCase continueAsGuestUseCase,
     required RequestOtpUseCase requestOtpUseCase,
     required VerifyOtpUseCase verifyOtpUseCase,
     required ResetPasswordUseCase resetPasswordUseCase,
     required AuthRepository repository,
-  })  : _login = loginUseCase,
-        _register = registerUseCase,
-        _logout = logoutUseCase,
-        _getCurrentUser = getCurrentUserUseCase,
-        _forgotPassword = forgotPasswordUseCase,
-        _socialSignIn = socialSignInUseCase,
-        _continueAsGuest = continueAsGuestUseCase,
-        _requestOtp = requestOtpUseCase,
-        _verifyOtp = verifyOtpUseCase,
-        _resetPassword = resetPasswordUseCase,
-        _repository = repository,
-        super(const AuthState()) {
+  }) : _login = loginUseCase,
+       _register = registerUseCase,
+       _logout = logoutUseCase,
+       _getCurrentUser = getCurrentUserUseCase,
+       _forgotPassword = forgotPasswordUseCase,
+       _continueAsGuest = continueAsGuestUseCase,
+       _requestOtp = requestOtpUseCase,
+       _verifyOtp = verifyOtpUseCase,
+       _resetPassword = resetPasswordUseCase,
+       _repository = repository,
+       super(const AuthState()) {
     restoreSession();
   }
 
@@ -47,7 +45,6 @@ class AuthNotifier extends StateNotifier<AuthState> {
   final LogoutUseCase _logout;
   final GetCurrentUserUseCase _getCurrentUser;
   final ForgotPasswordUseCase _forgotPassword;
-  final SocialSignInUseCase _socialSignIn;
   final ContinueAsGuestUseCase _continueAsGuest;
   final RequestOtpUseCase _requestOtp;
   final VerifyOtpUseCase _verifyOtp;
@@ -56,88 +53,221 @@ class AuthNotifier extends StateNotifier<AuthState> {
 
   Future<void> restoreSession() async {
     state = state.copyWith(isLoading: true, clearError: true);
+
+    // Before anything else: make sure this device has an identity key the
+    // server knows. Every device proof is signed under it, and a device that
+    // never enrolled simply cannot sign one — so this runs on every cold
+    // start, and is a no-op after the first.
+    await _repository.ensureDeviceRegistered();
+
     final result = await _getCurrentUser();
     switch (result) {
       case Success(:final data):
         state = await _restoreSuccessState(data);
       case Error(:final failure):
+        // No signed-in user — so she is browsing as a visitor, and a visitor
+        // needs a guest session on the server before she touches the cart or
+        // saves anything.
+        //
+        // This used to be created only by tapping "Continue as a guest" on the
+        // login screen. The app opens on /home, so anyone who simply started
+        // browsing had no guest token at all: every cart and favourites route
+        // answered 401, and the guest-cart migration on sign-up had nothing to
+        // migrate. Issuing it here is what makes browse-without-login real.
+        final isGuest = await _ensureGuestSession();
         state = state.copyWith(
           isLoading: false,
           isInitialized: true,
+          isGuest: isGuest,
           clearUser: true,
           error: failure.message,
         );
     }
   }
 
+  /// Reuses the existing guest session, or asks the server for one. The issue
+  /// endpoint is idempotent — it touches and returns the live session when the
+  /// device already has a valid token — so this is safe on every cold start.
+  Future<bool> _ensureGuestSession() async {
+    final existing = await _repository.isGuestSession();
+    if (existing case Success(data: true)) return true;
+
+    final created = await _continueAsGuest();
+    return created is Success;
+  }
+
+  /// The optional password path.
+  ///
+  /// On a handset the account has never signed in from, the server refuses with
+  /// `DEVICE_VERIFICATION_REQUIRED` and sends a code instead — by design, since
+  /// a password that could admit a new device would be exactly the credential
+  /// this design exists to neutralise. `passwordNeedsCode` reports that so the
+  /// screen can carry on to the code step rather than showing an error.
   Future<bool> login({
     required String phone,
     required String password,
+    required bool rememberMe,
   }) async {
-    state = state.copyWith(isLoading: true, clearError: true, clearSuccess: true);
-    final result = await _login(phone: phone, password: password);
+    state = state.copyWith(
+      isLoading: true,
+      clearError: true,
+      clearSuccess: true,
+      clearPasswordNeedsCode: true,
+    );
+    final result = await _login(
+      phone: phone,
+      password: password,
+      rememberMe: rememberMe,
+    );
+    if (result case Error(:final failure)
+        when failure.code == 'DEVICE_VERIFICATION_REQUIRED') {
+      state = state.copyWith(isLoading: false, passwordNeedsCode: true);
+      return false;
+    }
     return _handleAuthResult(result);
   }
 
+  /// Creates the account for a number whose control was just proved.
+  ///
+  /// `registrationTicket` comes from `verifyOtpLogin` and is not optional: the
+  /// server will not create an account without it. The password is the reverse
+  /// — leaving it null is the normal case, and the account signs in with a code
+  /// on her SIM.
   Future<bool> register({
-    required String name,
-    String? email,
+    required String firstName,
+    required String lastName,
     required String phone,
-    required String password,
+    required String registrationTicket,
+    String? password,
+    required String country,
+    required String city,
+    required bool declaredFemale,
     UserRole role = UserRole.customer,
   }) async {
-    state = state.copyWith(isLoading: true, clearError: true, clearSuccess: true);
+    state = state.copyWith(
+      isLoading: true,
+      clearError: true,
+      clearSuccess: true,
+    );
     final result = await _register(
-      name: name,
-      email: email,
+      firstName: firstName,
+      lastName: lastName,
       phone: phone,
+      registrationTicket: registrationTicket,
       password: password,
+      country: country,
+      city: city,
+      declaredFemale: declaredFemale,
       role: role,
     );
     return _handleAuthResult(result);
   }
 
-  Future<bool> socialSignIn(SocialAuthProvider provider) async {
-    state = state.copyWith(isLoading: true, clearError: true, clearSuccess: true);
-    final result = await _socialSignIn(provider);
-    return _handleAuthResult(result);
+  // ─────────────────── OTP-first sign-in (the main door) ──────────────────
+
+  /// Sends a code to the number she typed.
+  ///
+  /// Returns the challenge so the code screen can show her the two-digit match
+  /// code and where the message went. The answer is identical for a number
+  /// with an account and one without — the app cannot tell, and must not try
+  /// to guess before the code comes back.
+  Future<OtpChallenge?> startOtpLogin({required String phone}) async {
+    state = state.copyWith(
+      isLoading: true,
+      clearError: true,
+      clearSuccess: true,
+    );
+    final result = await _repository.startOtpLogin(phone: phone);
+    return switch (result) {
+      Success(:final data) => () {
+        state = state.copyWith(isLoading: false);
+        return data;
+      }(),
+      Error(:final failure) => () {
+        state = state.copyWith(isLoading: false, error: failure.message);
+        return null;
+      }(),
+    };
+  }
+
+  /// Spends the code. Signs her in, or hands back a ticket for the signup form.
+  ///
+  /// Returns null only on failure; the caller branches on the result type, so
+  /// "she needs to register" is never confused with "something went wrong".
+  Future<OtpLoginResult?> verifyOtpLogin({
+    required String phone,
+    required String code,
+  }) async {
+    state = state.copyWith(
+      isLoading: true,
+      clearError: true,
+      clearSuccess: true,
+    );
+    final result = await _repository.completeOtpLogin(phone: phone, code: code);
+    return switch (result) {
+      Success(:final data) => () {
+        switch (data) {
+          case OtpLoginAuthenticated(:final user):
+            state = state.copyWith(
+              isLoading: false,
+              user: user,
+              isGuest: false,
+            );
+          case OtpLoginRegistrationRequired():
+            state = state.copyWith(isLoading: false);
+        }
+        return data;
+      }(),
+      Error(:final failure) => () {
+        state = state.copyWith(isLoading: false, error: failure.message);
+        return null;
+      }(),
+    };
   }
 
   Future<bool> continueAsGuest() async {
-    state = state.copyWith(isLoading: true, clearError: true, clearSuccess: true);
+    state = state.copyWith(
+      isLoading: true,
+      clearError: true,
+      clearSuccess: true,
+    );
     final result = await _continueAsGuest();
     return switch (result) {
       Success() => () {
-          state = state.copyWith(
-            isLoading: false,
-            isInitialized: true,
-            isGuest: true,
-            clearUser: true,
-          );
-          return true;
-        }(),
+        state = state.copyWith(
+          isLoading: false,
+          isInitialized: true,
+          isGuest: true,
+          clearUser: true,
+        );
+        return true;
+      }(),
       Error(:final failure) => () {
-          state = state.copyWith(isLoading: false, error: failure.message);
-          return false;
-        }(),
+        state = state.copyWith(isLoading: false, error: failure.message);
+        return false;
+      }(),
     };
   }
 
   Future<bool> forgotPassword({required String phone}) async {
-    state = state.copyWith(isLoading: true, clearError: true, clearSuccess: true);
+    state = state.copyWith(
+      isLoading: true,
+      clearError: true,
+      clearSuccess: true,
+    );
     final result = await _forgotPassword(phone: phone);
     return switch (result) {
       Success() => () {
-          state = state.copyWith(
-            isLoading: false,
-            successMessage: 'Password reset link sent to your email.',
-          );
-          return true;
-        }(),
+        state = state.copyWith(
+          isLoading: false,
+          successMessage: AuthMessage.codeSent,
+        );
+        return true;
+      }(),
       Error(:final failure) => () {
-          state = state.copyWith(isLoading: false, error: failure.message);
-          return false;
-        }(),
+        state = state.copyWith(isLoading: false, error: failure.message);
+        return false;
+      }(),
     };
   }
 
@@ -145,17 +275,21 @@ class AuthNotifier extends StateNotifier<AuthState> {
     required String phone,
     required OtpPurpose purpose,
   }) async {
-    state = state.copyWith(isLoading: true, clearError: true, clearSuccess: true);
+    state = state.copyWith(
+      isLoading: true,
+      clearError: true,
+      clearSuccess: true,
+    );
     final result = await _requestOtp(phone: phone, purpose: purpose);
     return switch (result) {
       Success(:final data) => () {
-          state = state.copyWith(isLoading: false);
-          return data;
-        }(),
+        state = state.copyWith(isLoading: false);
+        return data;
+      }(),
       Error(:final failure) => () {
-          state = state.copyWith(isLoading: false, error: failure.message);
-          return null;
-        }(),
+        state = state.copyWith(isLoading: false, error: failure.message);
+        return null;
+      }(),
     };
   }
 
@@ -164,20 +298,24 @@ class AuthNotifier extends StateNotifier<AuthState> {
     required OtpPurpose purpose,
     required String code,
   }) async {
-    state = state.copyWith(isLoading: true, clearError: true, clearSuccess: true);
+    state = state.copyWith(
+      isLoading: true,
+      clearError: true,
+      clearSuccess: true,
+    );
     final result = await _verifyOtp(phone: phone, purpose: purpose, code: code);
     return switch (result) {
       Success() => () {
-          state = state.copyWith(
-            isLoading: false,
-            successMessage: 'Verification complete.',
-          );
-          return true;
-        }(),
+        state = state.copyWith(
+          isLoading: false,
+          successMessage: AuthMessage.verificationComplete,
+        );
+        return true;
+      }(),
       Error(:final failure) => () {
-          state = state.copyWith(isLoading: false, error: failure.message);
-          return false;
-        }(),
+        state = state.copyWith(isLoading: false, error: failure.message);
+        return false;
+      }(),
     };
   }
 
@@ -186,7 +324,11 @@ class AuthNotifier extends StateNotifier<AuthState> {
     required String code,
     required String newPassword,
   }) async {
-    state = state.copyWith(isLoading: true, clearError: true, clearSuccess: true);
+    state = state.copyWith(
+      isLoading: true,
+      clearError: true,
+      clearSuccess: true,
+    );
     final result = await _resetPassword(
       phone: phone,
       code: code,
@@ -194,16 +336,16 @@ class AuthNotifier extends StateNotifier<AuthState> {
     );
     return switch (result) {
       Success() => () {
-          state = state.copyWith(
-            isLoading: false,
-            successMessage: 'Password updated. Please sign in again.',
-          );
-          return true;
-        }(),
+        state = state.copyWith(
+          isLoading: false,
+          successMessage: AuthMessage.passwordUpdatedSignInAgain,
+        );
+        return true;
+      }(),
       Error(:final failure) => () {
-          state = state.copyWith(isLoading: false, error: failure.message);
-          return false;
-        }(),
+        state = state.copyWith(isLoading: false, error: failure.message);
+        return false;
+      }(),
     };
   }
 
@@ -212,14 +354,14 @@ class AuthNotifier extends StateNotifier<AuthState> {
     final result = await _logout();
     state = switch (result) {
       Success() => state.copyWith(
-          isLoading: false,
-          clearUser: true,
-          isGuest: false,
-        ),
+        isLoading: false,
+        clearUser: true,
+        isGuest: false,
+      ),
       Error(:final failure) => state.copyWith(
-          isLoading: false,
-          error: failure.message,
-        ),
+        isLoading: false,
+        error: failure.message,
+      ),
     };
   }
 
@@ -228,24 +370,20 @@ class AuthNotifier extends StateNotifier<AuthState> {
   Future<void> refreshUser() async {
     final result = await _getCurrentUser();
     if (result case Success(:final data) when data != null) {
-          state = state.copyWith(user: data);
+      state = state.copyWith(user: data);
     }
   }
 
   bool _handleAuthResult(Result<User> result) {
     return switch (result) {
       Success(:final data) => () {
-          state = state.copyWith(
-            isLoading: false,
-            user: data,
-            isGuest: false,
-          );
-          return true;
-        }(),
+        state = state.copyWith(isLoading: false, user: data, isGuest: false);
+        return true;
+      }(),
       Error(:final failure) => () {
-          state = state.copyWith(isLoading: false, error: failure.message);
-          return false;
-        }(),
+        state = state.copyWith(isLoading: false, error: failure.message);
+        return false;
+      }(),
     };
   }
 
@@ -263,6 +401,14 @@ class AuthNotifier extends StateNotifier<AuthState> {
       Success(:final data) => data,
       Error() => false,
     };
+    if (!isGuest) {
+      return state.copyWith(
+        isLoading: false,
+        isInitialized: true,
+        isGuest: false,
+        clearUser: true,
+      );
+    }
     return state.copyWith(
       isLoading: false,
       isInitialized: true,

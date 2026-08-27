@@ -10,7 +10,7 @@ class PostModel extends Post {
   const PostModel({
     required super.id,
     required super.author,
-    required super.product,
+    super.product,
     required super.caption,
     super.category,
     super.likesCount,
@@ -23,14 +23,22 @@ class PostModel extends Post {
   });
 
   factory PostModel.fromJson(Map<String, dynamic> json) {
-    final productJson = json['product'] as Map<String, dynamic>;
+    // A post need not tag anything (Q5) — the API sends `product: null` for a
+    // look or an announcement, and casting that to a map used to blow up the
+    // whole feed, not just the one post.
+    final productJson = json['product'] as Map<String, dynamic>?;
+    final product = productJson == null
+        ? null
+        : ProductModel.fromJson(productJson);
     return PostModel(
       id: json['id'] as String,
       author: UserModel.fromJson(json['author'] as Map<String, dynamic>),
-      product: ProductModel.fromJson(productJson),
+      product: product,
       caption: json['caption'] as String? ?? '',
-      // Derive the display category from the underlying product.
-      category: CategoryTypeX.fromString(productJson['category'] as String?),
+      // Derive the display category from the underlying product. The API sends
+      // a full category object, not a bare string — read the slug off the
+      // parsed entity rather than casting the raw node.
+      category: CategoryTypeX.fromString(product?.category.slug),
       likesCount: json['likes_count'] as int? ?? 0,
       commentsCount: json['comments_count'] as int? ?? 0,
       sharesCount: json['shares_count'] as int? ?? 0,
@@ -44,7 +52,9 @@ class PostModel extends Post {
   Map<String, dynamic> toJson() => {
         'id': id,
         'author': UserModel.fromEntity(author).toJson(),
-        'product': ProductModel.fromEntity(product).toJson(),
+        'product': product == null
+            ? null
+            : ProductModel.fromEntity(product!).toJson(),
         'caption': caption,
         'category': category.name,
         'likes_count': likesCount,

@@ -28,12 +28,12 @@ class SwipeReplyContainer
         ),
 
         padding:
-            const EdgeInsets.only(
-          left: 24,
+            const EdgeInsetsDirectional.only(
+          start: 24,
         ),
 
         alignment:
-            Alignment.centerLeft,
+            AlignmentDirectional.centerStart,
 
         decoration:
             BoxDecoration(

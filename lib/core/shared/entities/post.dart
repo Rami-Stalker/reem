@@ -69,11 +69,16 @@ extension CategoryTypeX on CategoryType {
   }
 }
 
-/// A product showcased as social content in the feed.
+/// Social content in the feed — usually a product, told as a post.
+///
+/// [product] is nullable on purpose (Q5): a boutique may post a look, a note
+/// or an announcement with nothing to tag. Such a post still has an author, a
+/// caption and engagement; it simply has nothing to shop, so surfaces must
+/// treat the shoppable half as optional rather than assume it.
 class Post extends Equatable {
   final String id;
   final User author;
-  final Product product;
+  final Product? product;
   final String caption;
   final CategoryType category;
 
@@ -90,7 +95,7 @@ class Post extends Equatable {
   const Post({
     required this.id,
     required this.author,
-    required this.product,
+    this.product,
     required this.caption,
     this.category = CategoryType.gifts,
     this.likesCount = 0,
@@ -102,9 +107,13 @@ class Post extends Equatable {
     required this.createdAt,
   });
 
-  /// A post's media is its product's gallery — exposed directly for convenience.
-  List<MediaItem> get media => product.media;
-  MediaItem? get cover => product.cover;
+  /// True when there is something to shop behind this post.
+  bool get hasProduct => product != null;
+
+  /// A post's media is its product's gallery — exposed directly for
+  /// convenience, and empty for a post that tags nothing.
+  List<MediaItem> get media => product?.media ?? const [];
+  MediaItem? get cover => product?.cover;
 
   @override
   List<Object?> get props => [

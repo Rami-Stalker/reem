@@ -13,13 +13,13 @@ class AddToCartUseCase {
   const AddToCartUseCase(this._repo);
   final CartRepository _repo;
   Future<Result<Cart>> call({
-    required String productId,
-    String? variantId,
+    required String offerId,
+    String? offerVariantId,
     int quantity = 1,
   }) =>
       _repo.addItem(
-        productId: productId,
-        variantId: variantId,
+        offerId: offerId,
+        offerVariantId: offerVariantId,
         quantity: quantity,
       );
 }

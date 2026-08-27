@@ -1,136 +1,3879 @@
 {
   "@@locale": "en",
-  "appTitle": "Reem Shop",
-  "welcome": "Welcome to Reem Shop!",
-  "login": "Login",
-  "signup": "Create Account",
-  "logout": "Logout",
-  "email": "Email",
-  "password": "Password",
-  "confirmPassword": "Confirm Password",
-  "forgetPassword": "Forgot your password?",
-  "resetPassword": "Reset Password",
-  "home": "Home",
-  "feed": "Feed",
-  "stories": "Stories",
-  "products": "Products",
-  "productDetails": "Product Details",
-  "addToCart": "Add to Cart",
-  "cart": "Shopping Cart",
-  "removeFromCart": "Remove from Cart",
-  "checkout": "Checkout",
-  "wishlist": "Wishlist",
-  "profile": "Profile",
-  "settings": "Settings",
-  "notifications": "Notifications",
-  "search": "Search",
-  "moments": "Moments",
-  "shareMoment": "Share your moment",
-  "rewards": "Points & Rewards",
-  "points": "Points",
-  "coupons": "Coupons",
-  "addCoupon": "Add Coupon",
-  "myOrders": "My Orders",
-  "orderDetails": "Order Details",
-  "total": "Total",
-  "buyNow": "Buy Now",
-  "quantity": "Quantity",
-  "favorite": "Favorite",
-  "unfavorite": "Unfavorite",
-  "addStory": "Add Story",
-  "viewAll": "View All",
-  "comments": "Comments",
-  "likes": "Likes",
-  "post": "Post",
-  "writeComment": "Write a comment...",
-  "success": "Success!",
-  "error": "An error occurred. Please try again.",
-  "emptyFeed": "No posts available.",
-  "emptyStories": "No stories to show.",
-  "emptyCart": "Your cart is empty.",
-  "emptyWishlist": "You have no favorite items.",
-  "add": "Add",
-  "cancel": "Cancel",
-  "send": "Send",
-  "verify": "Verify",
-  "next": "Next",
-  "back": "Back",
-  "editProfile": "Edit Profile",
-  "save": "Save",
-  "delete": "Delete",
-  "yes": "Yes",
-  "no": "No",
-  "todayOffers": "Today's Offers",
-  "bestSeller": "Best Seller",
-  "newArrivals": "New Arrivals",
-  "recommended": "Recommended",
-  "story": "Story",
-  "addMoment": "Add your moment",
-  "orderStatus": "Order Status",
-  "orderPlaced": "Order received",
-  "orderProcessing": "Order is being processed",
-  "orderShipped": "Order shipped",
-  "orderDelivered": "Order delivered",
-  "applyCoupon": "Apply Coupon",
-  "invalidCoupon": "Invalid coupon",
-  "usedCoupon": "Coupon used",
-  "contactSupport": "Contact Support",
-  "faq": "FAQ",
-  "language": "Language",
-  "ar": "Arabic",
-  "en": "English",
-  "saveChanges": "Save Changes",
-  "welcomeToReem": "Welcome to Reem",
-  "loginSubtitle": "Sign in to shop, share & sparkle ✨",
-  "emailRequired": "Email is required",
-  "validEmailRequired": "Enter a valid email",
-  "passwordRequired": "Password is required",
-  "signIn": "Sign In",
-  "account": "Account",
-  "rewardsAndOffers": "Rewards & Offers",
-  "preferences": "Preferences",
-  "support": "Support",
-  "helpCenter": "Help Center",
-  "signOut": "Sign out",
-  "appearance": "Appearance",
-  "addresses": "Addresses",
-  "paymentMethods": "Payment Methods",
-  "selectLanguage": "Choose your language",
-  "followDeviceLanguage": "Follow device language",
-  "appearanceDescription": "Choose how Reem looks on your device. Your preference is saved automatically.",
-  "themeLight": "Light",
-  "themeLightSubtitle": "Soft blush & daylight elegance",
-  "themeDark": "Dark",
-  "themeDarkSubtitle": "Plum noir & glowing rose accents",
-  "themeSystem": "System",
-  "themeSystemSubtitle": "Matches your device settings",
-  "preview": "Preview",
-  "active": "Active",
-  "themeLightActive": "Light theme active",
-  "themeDarkActive": "Dark theme active",
-  "themeSystemActive": "Following system theme",
-  "trendingNow": "Trending Now",
-  "systemLanguage": "System",
-  "adminDashboard": "Dashboard",
-  "adminOrders": "Orders",
-  "adminProducts": "Products",
-  "adminUsers": "Users",
-  "adminAnalytics": "Analytics",
-  "adminPanel": "Admin Panel",
-  "adminWelcome": "Welcome back",
-  "adminTotalSales": "Total Sales",
-  "adminTotalOrders": "Total Orders",
-  "adminActiveUsers": "Active Users",
-  "adminConversion": "Conversion",
-  "adminRecentOrders": "Recent Orders",
-  "adminManageCatalog": "Manage Catalog",
-  "adminViewReports": "View Reports",
-  "adminBackToShop": "Back to Shop",
-  "orders": "Orders",
-  "passwordMinLength": "At least 6 characters",
-  "createAccount": "Create account",
+  "appTitle": "Reem",
+  "@appTitle": {
+    "description": "Application name shown in the task switcher"
+  },
   "splashTagline": "Where beauty meets social shopping",
-  "trendingSubtitle": "Most loved this week",
+  "@splashTagline": {
+    "description": "Tagline under the logo on the splash screen"
+  },
+  "home": "Home",
+  "@home": {
+    "description": "Bottom navigation label"
+  },
+  "feed": "Feed",
+  "@feed": {
+    "description": "Bottom navigation label"
+  },
+  "search": "Search",
+  "@search": {
+    "description": "Bottom navigation label"
+  },
+  "cart": "Cart",
+  "@cart": {
+    "description": "Bottom navigation label"
+  },
+  "profile": "Profile",
+  "@profile": {
+    "description": "Bottom navigation label"
+  },
+  "notifications": "Notifications",
+  "@notifications": {
+    "description": "Screen title"
+  },
+  "settings": "Settings",
+  "@settings": {
+    "description": "Screen title"
+  },
+  "orders": "Orders",
+  "@orders": {
+    "description": "Screen title"
+  },
+  "stories": "Stories",
+  "@stories": {
+    "description": "Section title"
+  },
+  "add": "Add",
+  "@add": {
+    "description": "Button label"
+  },
+  "save": "Save",
+  "@save": {
+    "description": "Button label"
+  },
+  "saveChanges": "Save changes",
+  "@saveChanges": {
+    "description": "Button label"
+  },
+  "cancel": "Cancel",
+  "@cancel": {
+    "description": "Button label"
+  },
+  "delete": "Delete",
+  "@delete": {
+    "description": "Button label"
+  },
+  "send": "Send",
+  "@send": {
+    "description": "Button label"
+  },
+  "verify": "Verify",
+  "@verify": {
+    "description": "Button label"
+  },
+  "next": "Next",
+  "@next": {
+    "description": "Button label"
+  },
+  "back": "Back",
+  "@back": {
+    "description": "Button label"
+  },
+  "retry": "Try again",
+  "@retry": {
+    "description": "Button on an error state"
+  },
+  "yes": "Yes",
+  "@yes": {
+    "description": "Confirmation"
+  },
+  "no": "No",
+  "@no": {
+    "description": "Confirmation"
+  },
+  "viewAll": "See all",
+  "@viewAll": {
+    "description": "Trailing action on a section header. Was hardcoded in seven widgets."
+  },
+  "seeMore": "See more",
+  "@seeMore": {
+    "description": "Expands truncated content"
+  },
+  "done": "Done",
+  "@done": {
+    "description": "Closes a sheet"
+  },
+  "apply": "Apply",
+  "@apply": {
+    "description": "Applies filters"
+  },
+  "clear": "Clear",
+  "@clear": {
+    "description": "Clears filters or a field"
+  },
+  "goodMorning": "Good morning",
+  "@goodMorning": {
+    "description": "Home greeting before noon"
+  },
+  "goodAfternoon": "Good afternoon",
+  "@goodAfternoon": {
+    "description": "Home greeting after noon"
+  },
+  "goodEvening": "Good evening",
+  "@goodEvening": {
+    "description": "Home greeting in the evening"
+  },
+  "welcomeToReem": "Welcome to Reem",
+  "@welcomeToReem": {
+    "description": "Auth screen heading"
+  },
+  "welcomeBack": "Welcome back",
+  "@welcomeBack": {
+    "description": "Returning-user heading"
+  },
+  "login": "Log in",
+  "@login": {
+    "description": "Button label"
+  },
+  "signIn": "Sign in",
+  "@signIn": {
+    "description": "Button label"
+  },
+  "signup": "Sign up",
+  "@signup": {
+    "description": "Button label"
+  },
+  "createAccount": "Create account",
+  "@createAccount": {
+    "description": "Button label"
+  },
+  "logout": "Log out",
+  "@logout": {
+    "description": "Menu item"
+  },
+  "signOut": "Sign out",
+  "@signOut": {
+    "description": "Menu item"
+  },
+  "signOutConfirm": "Sign out of your account?",
+  "@signOutConfirm": {
+    "description": "Confirmation dialog body"
+  },
+  "loginSubtitle": "Sign in to shop, share and shine",
+  "@loginSubtitle": {
+    "description": "Subtitle under the login heading"
+  },
+  "fullName": "Full name",
+  "@fullName": {
+    "description": "Form field label"
+  },
+  "email": "Email",
+  "@email": {
+    "description": "Form field label"
+  },
+  "phone": "Phone number",
+  "@phone": {
+    "description": "Form field label"
+  },
+  "password": "Password",
+  "@password": {
+    "description": "Form field label"
+  },
+  "confirmPassword": "Confirm password",
+  "@confirmPassword": {
+    "description": "Form field label"
+  },
+  "forgetPassword": "Forgot your password?",
+  "@forgetPassword": {
+    "description": "Link"
+  },
+  "resetPassword": "Reset password",
+  "@resetPassword": {
+    "description": "Screen title"
+  },
+  "emailRequired": "Email is required",
+  "@emailRequired": {
+    "description": "Validation message"
+  },
+  "validEmailRequired": "Enter a valid email",
+  "@validEmailRequired": {
+    "description": "Validation message"
+  },
+  "phoneRequired": "Phone number is required",
+  "@phoneRequired": {
+    "description": "Validation message"
+  },
+  "passwordRequired": "Password is required",
+  "@passwordRequired": {
+    "description": "Validation message"
+  },
+  "passwordMinLength": "At least {count} characters",
+  "@passwordMinLength": {
+    "description": "Password length rule",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "confirmPasswordMismatch": "Passwords do not match",
-  "fullName": "Full name"
+  "@confirmPasswordMismatch": {
+    "description": "Validation message"
+  },
+  "products": "Products",
+  "@products": {
+    "description": "Section title"
+  },
+  "productDetails": "Product details",
+  "@productDetails": {
+    "description": "Screen title"
+  },
+  "addToCart": "Add to cart",
+  "@addToCart": {
+    "description": "Primary product action"
+  },
+  "buyNow": "Buy now",
+  "@buyNow": {
+    "description": "Primary product action"
+  },
+  "removeFromCart": "Remove from cart",
+  "@removeFromCart": {
+    "description": "Cart line action"
+  },
+  "wishlist": "Wishlist",
+  "@wishlist": {
+    "description": "Screen title"
+  },
+  "favorite": "Save",
+  "@favorite": {
+    "description": "Adds to favourites"
+  },
+  "unfavorite": "Saved",
+  "@unfavorite": {
+    "description": "Already in favourites"
+  },
+  "quantity": "Quantity",
+  "@quantity": {
+    "description": "Field label"
+  },
+  "outOfStock": "Out of stock",
+  "@outOfStock": {
+    "description": "Availability badge"
+  },
+  "inStock": "In stock",
+  "@inStock": {
+    "description": "Availability badge"
+  },
+  "todayOffers": "Today's offers",
+  "@todayOffers": {
+    "description": "Home rail title"
+  },
+  "bestSeller": "Best selling",
+  "@bestSeller": {
+    "description": "Home rail title"
+  },
+  "newArrivals": "New arrivals",
+  "@newArrivals": {
+    "description": "Home rail title"
+  },
+  "recommended": "Picked for you",
+  "@recommended": {
+    "description": "Home rail title"
+  },
+  "trendingNow": "Trending now",
+  "@trendingNow": {
+    "description": "Home rail title"
+  },
+  "trendingSubtitle": "Most loved this week",
+  "@trendingSubtitle": {
+    "description": "Home rail subtitle"
+  },
+  "searchHint": "Search dresses, beauty, gifts…",
+  "@searchHint": {
+    "description": "Search field placeholder. Four different wordings existed before."
+  },
+  "sellersOffering": "{count, plural, =1{1 seller} other{{count} sellers}}",
+  "@sellersOffering": {
+    "description": "How many sellers list this product",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "comparePrices": "Compare prices",
+  "@comparePrices": {
+    "description": "Opens the list of competing offers"
+  },
+  "priceFrom": "From {price}",
+  "@priceFrom": {
+    "description": "Lowest offer on a product card",
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "soldBy": "Sold by {seller}",
+  "@soldBy": {
+    "description": "Names the seller behind the shown offer",
+    "placeholders": {
+      "seller": {
+        "type": "String"
+      }
+    }
+  },
+  "checkout": "Checkout",
+  "@checkout": {
+    "description": "Screen title"
+  },
+  "emptyCart": "Your cart is empty",
+  "@emptyCart": {
+    "description": "Empty state"
+  },
+  "emptyCartAction": "Start shopping",
+  "@emptyCartAction": {
+    "description": "Empty state button"
+  },
+  "subtotal": "Subtotal",
+  "@subtotal": {
+    "description": "Summary row"
+  },
+  "discount": "Discount",
+  "@discount": {
+    "description": "Summary row"
+  },
+  "delivery": "Delivery",
+  "@delivery": {
+    "description": "Summary row"
+  },
+  "total": "Total",
+  "@total": {
+    "description": "Summary row"
+  },
+  "placeOrder": "Place order",
+  "@placeOrder": {
+    "description": "Checkout primary action"
+  },
+  "selectGovernorate": "Choose your governorate",
+  "@selectGovernorate": {
+    "description": "Validation message on checkout"
+  },
+  "deliveryAddress": "Delivery address",
+  "@deliveryAddress": {
+    "description": "Section title"
+  },
+  "paymentMethod": "Payment method",
+  "@paymentMethod": {
+    "description": "Section title"
+  },
+  "orderSummary": "Order summary",
+  "@orderSummary": {
+    "description": "Section title"
+  },
+  "splitOrderNotice": "Your order is from {count} sellers and will arrive in separate parcels — with one delivery charge.",
+  "@splitOrderNotice": {
+    "description": "Shown when a basket spans several sellers",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "etaSameDay": "Arriving today",
+  "@etaSameDay": {
+    "description": "Delivery estimate"
+  },
+  "etaDays": "{count, plural, =1{Arriving within a day} other{Arriving within {count} days}}",
+  "@etaDays": {
+    "description": "Delivery estimate",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "myOrders": "My orders",
+  "@myOrders": {
+    "description": "Screen title"
+  },
+  "orderDetails": "Order details",
+  "@orderDetails": {
+    "description": "Screen title"
+  },
+  "orderStatus": "Order status",
+  "@orderStatus": {
+    "description": "Section title"
+  },
+  "parcels": "Parcels",
+  "@parcels": {
+    "description": "Section title on a split order"
+  },
+  "trackingNumber": "Tracking number {code}",
+  "@trackingNumber": {
+    "description": "Shipment tracking line",
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+  "cancelOrder": "Cancel order",
+  "@cancelOrder": {
+    "description": "Order action"
+  },
+  "reorder": "Order again",
+  "@reorder": {
+    "description": "Order action"
+  },
+  "requestReturn": "Request a return",
+  "@requestReturn": {
+    "description": "Order action"
+  },
+  "itemsCount": "{count, plural, =1{1 item} other{{count} items}}",
+  "@itemsCount": {
+    "description": "Item count on an order card",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "moments": "Moments",
+  "@moments": {
+    "description": "Stories rail title"
+  },
+  "shareMoment": "Share your moment",
+  "@shareMoment": {
+    "description": "Story composer action"
+  },
+  "addStory": "Add a story",
+  "@addStory": {
+    "description": "Story composer action"
+  },
+  "addMoment": "Add your moment",
+  "@addMoment": {
+    "description": "Story composer action"
+  },
+  "post": "Post",
+  "@post": {
+    "description": "Publish button"
+  },
+  "writeComment": "Write a comment…",
+  "@writeComment": {
+    "description": "Comment field hint"
+  },
+  "viewAllComments": "{count, plural, =1{View 1 comment} other{View all {count} comments}}",
+  "@viewAllComments": {
+    "description": "Opens the comment sheet",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "likes": "Likes",
+  "@likes": {
+    "description": "Counter label"
+  },
+  "comments": "Comments",
+  "@comments": {
+    "description": "Counter label"
+  },
+  "follow": "Follow",
+  "@follow": {
+    "description": "Follows a seller"
+  },
+  "following": "Following",
+  "@following": {
+    "description": "Already following a seller"
+  },
+  "followers": "Followers",
+  "@followers": {
+    "description": "Profile stat"
+  },
+  "rewards": "Rewards",
+  "@rewards": {
+    "description": "Screen title"
+  },
+  "rewardsAndOffers": "Rewards and offers",
+  "@rewardsAndOffers": {
+    "description": "Menu item"
+  },
+  "points": "Points",
+  "@points": {
+    "description": "Counter label"
+  },
+  "coupons": "Coupons",
+  "@coupons": {
+    "description": "Screen title"
+  },
+  "couponsCount": "{count, plural, =1{1 coupon} other{{count} coupons}}",
+  "@couponsCount": {
+    "description": "Coupon count",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "addCoupon": "Add a coupon",
+  "@addCoupon": {
+    "description": "Action"
+  },
+  "applyCoupon": "Apply coupon",
+  "@applyCoupon": {
+    "description": "Action"
+  },
+  "invalidCoupon": "This coupon is not valid",
+  "@invalidCoupon": {
+    "description": "Error"
+  },
+  "usedCoupon": "Coupon applied",
+  "@usedCoupon": {
+    "description": "Success message"
+  },
+  "account": "Account",
+  "@account": {
+    "description": "Settings section"
+  },
+  "editProfile": "Edit profile",
+  "@editProfile": {
+    "description": "Menu item"
+  },
+  "preferences": "Preferences",
+  "@preferences": {
+    "description": "Settings section"
+  },
+  "support": "Support",
+  "@support": {
+    "description": "Settings section"
+  },
+  "helpCenter": "Help centre",
+  "@helpCenter": {
+    "description": "Menu item"
+  },
+  "contactSupport": "Contact support",
+  "@contactSupport": {
+    "description": "Menu item"
+  },
+  "faq": "FAQ",
+  "@faq": {
+    "description": "Menu item"
+  },
+  "addresses": "Addresses",
+  "@addresses": {
+    "description": "Menu item"
+  },
+  "paymentMethods": "Payment methods",
+  "@paymentMethods": {
+    "description": "Menu item"
+  },
+  "appearance": "Appearance",
+  "@appearance": {
+    "description": "Menu item"
+  },
+  "appearanceDescription": "Choose how Reem looks on your device. Your choice is saved automatically.",
+  "@appearanceDescription": {
+    "description": "Appearance screen description"
+  },
+  "themeLight": "Light",
+  "@themeLight": {
+    "description": "Theme option"
+  },
+  "themeLightSubtitle": "Soft rose and daytime elegance",
+  "@themeLightSubtitle": {
+    "description": "Theme option subtitle"
+  },
+  "themeDark": "Dark",
+  "@themeDark": {
+    "description": "Theme option"
+  },
+  "themeDarkSubtitle": "Deep plum with a rose glow",
+  "@themeDarkSubtitle": {
+    "description": "Theme option subtitle"
+  },
+  "themeSystem": "System",
+  "@themeSystem": {
+    "description": "Theme option"
+  },
+  "themeSystemSubtitle": "Follows your device settings",
+  "@themeSystemSubtitle": {
+    "description": "Theme option subtitle"
+  },
+  "themeLightActive": "Light theme is on",
+  "@themeLightActive": {
+    "description": "Status"
+  },
+  "themeDarkActive": "Dark theme is on",
+  "@themeDarkActive": {
+    "description": "Status"
+  },
+  "themeSystemActive": "Following the system theme",
+  "@themeSystemActive": {
+    "description": "Status"
+  },
+  "preview": "Preview",
+  "@preview": {
+    "description": "Section label"
+  },
+  "active": "On",
+  "@active": {
+    "description": "Status badge"
+  },
+  "language": "Language",
+  "@language": {
+    "description": "Menu item"
+  },
+  "selectLanguage": "Choose your language",
+  "@selectLanguage": {
+    "description": "Screen title"
+  },
+  "followDeviceLanguage": "Follow the device language",
+  "@followDeviceLanguage": {
+    "description": "Language option. The previous Arabic was ungrammatical."
+  },
+  "systemLanguage": "System",
+  "@systemLanguage": {
+    "description": "Language option"
+  },
+  "ar": "Arabic",
+  "@ar": {
+    "description": "Language name"
+  },
+  "en": "English",
+  "@en": {
+    "description": "Language name"
+  },
+  "success": "Done",
+  "@success": {
+    "description": "Generic success"
+  },
+  "error": "Something went wrong",
+  "@error": {
+    "description": "Generic failure"
+  },
+  "emptyFeed": "Nothing here yet",
+  "@emptyFeed": {
+    "description": "Empty state"
+  },
+  "emptyStories": "No stories right now",
+  "@emptyStories": {
+    "description": "Empty state"
+  },
+  "emptyWishlist": "Your wishlist is empty",
+  "@emptyWishlist": {
+    "description": "Empty state"
+  },
+  "emptySearch": "No results for “{query}”",
+  "@emptySearch": {
+    "description": "Empty search state",
+    "placeholders": {
+      "query": {
+        "type": "String"
+      }
+    }
+  },
+  "noConnection": "No internet connection",
+  "@noConnection": {
+    "description": "Network error state"
+  },
+  "sellerDashboard": "Store dashboard",
+  "@sellerDashboard": {
+    "description": "Seller screen title"
+  },
+  "myProducts": "My listings",
+  "@myProducts": {
+    "description": "Seller screen title"
+  },
+  "myEarnings": "My earnings",
+  "@myEarnings": {
+    "description": "Seller screen title"
+  },
+  "adminPanel": "Admin panel",
+  "@adminPanel": {
+    "description": "Admin screen title"
+  },
+  "adminDashboard": "Dashboard",
+  "@adminDashboard": {
+    "description": "Admin nav item"
+  },
+  "adminOrders": "Orders",
+  "@adminOrders": {
+    "description": "Admin nav item"
+  },
+  "adminProducts": "Products",
+  "@adminProducts": {
+    "description": "Admin nav item"
+  },
+  "adminUsers": "Users",
+  "@adminUsers": {
+    "description": "Admin nav item"
+  },
+  "adminAnalytics": "Analytics",
+  "@adminAnalytics": {
+    "description": "Admin nav item"
+  },
+  "adminWelcome": "Welcome back",
+  "@adminWelcome": {
+    "description": "Admin greeting"
+  },
+  "adminTotalSales": "Total sales",
+  "@adminTotalSales": {
+    "description": "Admin metric"
+  },
+  "adminTotalOrders": "Total orders",
+  "@adminTotalOrders": {
+    "description": "Admin metric"
+  },
+  "adminActiveUsers": "Active users",
+  "@adminActiveUsers": {
+    "description": "Admin metric"
+  },
+  "adminConversion": "Conversion rate",
+  "@adminConversion": {
+    "description": "Admin metric"
+  },
+  "adminRecentOrders": "Recent orders",
+  "@adminRecentOrders": {
+    "description": "Admin section"
+  },
+  "adminManageCatalog": "Manage catalogue",
+  "@adminManageCatalog": {
+    "description": "Admin action"
+  },
+  "adminViewReports": "View reports",
+  "@adminViewReports": {
+    "description": "Admin action"
+  },
+  "adminBackToShop": "Back to the shop",
+  "@adminBackToShop": {
+    "description": "Admin action"
+  },
+  "a11yBack": "Back",
+  "@a11yBack": {
+    "description": "Screen-reader label for the back button"
+  },
+  "a11yClose": "Close",
+  "@a11yClose": {
+    "description": "Screen-reader label"
+  },
+  "a11ySearch": "Search",
+  "@a11ySearch": {
+    "description": "Screen-reader label"
+  },
+  "a11yCart": "Cart",
+  "@a11yCart": {
+    "description": "Screen-reader label"
+  },
+  "a11yNotifications": "Notifications",
+  "@a11yNotifications": {
+    "description": "Screen-reader label"
+  },
+  "a11yProfile": "Profile",
+  "@a11yProfile": {
+    "description": "Screen-reader label"
+  },
+  "a11yLike": "Like",
+  "@a11yLike": {
+    "description": "Screen-reader label"
+  },
+  "a11yShare": "Share",
+  "@a11yShare": {
+    "description": "Screen-reader label"
+  },
+  "a11ySave": "Save",
+  "@a11ySave": {
+    "description": "Screen-reader label"
+  },
+  "a11yMore": "More options",
+  "@a11yMore": {
+    "description": "Screen-reader label"
+  },
+  "a11yPlay": "Play",
+  "@a11yPlay": {
+    "description": "Screen-reader label"
+  },
+  "emailOrPhone": "Email or phone",
+  "@emailOrPhone": {
+    "description": "Login field label"
+  },
+  "emailOrPhoneRequired": "Email or phone is required",
+  "@emailOrPhoneRequired": {
+    "description": "Validation"
+  },
+  "validEmailOrPhone": "Enter a valid email or phone number",
+  "@validEmailOrPhone": {
+    "description": "Validation"
+  },
+  "validPhone": "Enter a valid phone number",
+  "@validPhone": {
+    "description": "Validation"
+  },
+  "fullNameRequired": "Full name is required",
+  "@fullNameRequired": {
+    "description": "Validation"
+  },
+  "firstName": "First name",
+  "@firstName": {
+    "description": "Field label"
+  },
+  "country": "Country",
+  "@country": {
+    "description": "Field label"
+  },
+  "city": "City",
+  "@city": {
+    "description": "Field label"
+  },
+  "lastName": "Last name",
+  "@lastName": {
+    "description": "Field label"
+  },
+  "passwordStrengthRule": "Use upper and lower case letters, a number, and a symbol.",
+  "@passwordStrengthRule": {
+    "description": "Password policy hint"
+  },
+  "passwordWeak": "Weak",
+  "@passwordWeak": {
+    "description": "Password strength"
+  },
+  "passwordGood": "Good",
+  "@passwordGood": {
+    "description": "Password strength"
+  },
+  "passwordStrong": "Strong",
+  "@passwordStrong": {
+    "description": "Password strength"
+  },
+  "passwordStrengthLabel": "Password strength: {label}",
+  "@passwordStrengthLabel": {
+    "description": "Password meter caption",
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "signInToContinue": "Sign in to continue",
+  "@signInToContinue": {
+    "description": "Auth prompt"
+  },
+  "signInRequired": "Sign in required",
+  "@signInRequired": {
+    "description": "Auth gate title"
+  },
+  "signInToCheckout": "Sign in to checkout",
+  "@signInToCheckout": {
+    "description": "Auth gate action"
+  },
+  "continueAsGuest": "Continue as a guest",
+  "@continueAsGuest": {
+    "description": "Auth alternative"
+  },
+  "signOutQuestion": "Sign out?",
+  "@signOutQuestion": {
+    "description": "Confirm dialog title"
+  },
+  "signBackInLater": "You can always sign back in.",
+  "@signBackInLater": {
+    "description": "Confirm dialog body"
+  },
+  "verifyYourPhone": "Verify your phone",
+  "@verifyYourPhone": {
+    "description": "OTP screen title"
+  },
+  "verificationCode": "Verification code",
+  "@verificationCode": {
+    "description": "OTP field label"
+  },
+  "enterVerificationCode": "Enter the verification code.",
+  "@enterVerificationCode": {
+    "description": "OTP validation"
+  },
+  "codeSentTo": "We sent a one-time code to {phone}.",
+  "@codeSentTo": {
+    "description": "OTP subtitle",
+    "placeholders": {
+      "phone": {
+        "type": "String"
+      }
+    }
+  },
+  "codeSent": "Verification code sent to your phone.",
+  "@codeSent": {
+    "description": "OTP toast"
+  },
+  "resendCode": "Resend the code",
+  "@resendCode": {
+    "description": "OTP action"
+  },
+  "requestingCode": "Requesting a one-time code…",
+  "@requestingCode": {
+    "description": "OTP progress"
+  },
+  "verifyCode": "Verify the code",
+  "@verifyCode": {
+    "description": "OTP action"
+  },
+  "verificationComplete": "Verification complete.",
+  "@verificationComplete": {
+    "description": "OTP toast"
+  },
+  "phoneVerified": "Phone number verified.",
+  "@phoneVerified": {
+    "description": "OTP toast"
+  },
+  "allSet": "You are all set ✨",
+  "@allSet": {
+    "description": "Onboarding success"
+  },
+  "resetYourPassword": "Reset your password",
+  "@resetYourPassword": {
+    "description": "Screen title"
+  },
+  "currentPassword": "Current password",
+  "@currentPassword": {
+    "description": "Field label"
+  },
+  "newPassword": "New password",
+  "@newPassword": {
+    "description": "Field label"
+  },
+  "changePassword": "Change password",
+  "@changePassword": {
+    "description": "Action"
+  },
+  "updatePassword": "Update password",
+  "@updatePassword": {
+    "description": "Action"
+  },
+  "passwordChanged": "Password changed.",
+  "@passwordChanged": {
+    "description": "Toast"
+  },
+  "passwordUpdatedSignInAgain": "Password updated. Please sign in again.",
+  "@passwordUpdatedSignInAgain": {
+    "description": "Toast"
+  },
+  "securityTitle": "Privacy and security",
+  "@securityTitle": {
+    "description": "Settings section"
+  },
+  "secureAccountControls": "Secure account controls",
+  "@secureAccountControls": {
+    "description": "Section subtitle"
+  },
+  "manageSecurityBlurb": "Manage sessions, devices, recovery, and checkout details.",
+  "@manageSecurityBlurb": {
+    "description": "Section description"
+  },
+  "sessions": "Sessions",
+  "@sessions": {
+    "description": "Security section"
+  },
+  "noActiveSessions": "No active sessions.",
+  "@noActiveSessions": {
+    "description": "Empty state"
+  },
+  "revokeSession": "Revoke the session",
+  "@revokeSession": {
+    "description": "Action"
+  },
+  "revoke": "Revoke",
+  "@revoke": {
+    "description": "Action"
+  },
+  "logOutAll": "Log out everywhere",
+  "@logOutAll": {
+    "description": "Action"
+  },
+  "devices": "Devices",
+  "@devices": {
+    "description": "Security section"
+  },
+  "noDevicesYet": "No devices yet.",
+  "@noDevicesYet": {
+    "description": "Empty state"
+  },
+  "unknownDevice": "Unknown device",
+  "@unknownDevice": {
+    "description": "Device name fallback"
+  },
+  "deviceName": "Device name",
+  "@deviceName": {
+    "description": "Field label"
+  },
+  "renameDevice": "Rename the device",
+  "@renameDevice": {
+    "description": "Action"
+  },
+  "rename": "Rename",
+  "@rename": {
+    "description": "Action"
+  },
+  "deviceUpdated": "Device updated.",
+  "@deviceUpdated": {
+    "description": "Toast"
+  },
+  "trust": "Trust",
+  "@trust": {
+    "description": "Device action"
+  },
+  "rememberThisDevice": "Remember this device",
+  "@rememberThisDevice": {
+    "description": "Toggle label"
+  },
+  "verifyNewDevices": "Verify new devices",
+  "@verifyNewDevices": {
+    "description": "Toggle label"
+  },
+  "flagNewDevices": "Flag new devices for verification.",
+  "@flagNewDevices": {
+    "description": "Toggle description"
+  },
+  "otpOnSensitive": "OTP on sensitive actions",
+  "@otpOnSensitive": {
+    "description": "Toggle label"
+  },
+  "otpOnSensitiveDescription": "Require an OTP for risky changes.",
+  "@otpOnSensitiveDescription": {
+    "description": "Toggle description"
+  },
+  "linkedAccounts": "Linked accounts",
+  "@linkedAccounts": {
+    "description": "Security section"
+  },
+  "link": "Link",
+  "@link": {
+    "description": "Action"
+  },
+  "unlink": "Unlink",
+  "@unlink": {
+    "description": "Action"
+  },
+  "connected": "Connected",
+  "@connected": {
+    "description": "Status"
+  },
+  "notConnected": "Not connected",
+  "@notConnected": {
+    "description": "Status"
+  },
+  "sellerVerification": "Seller verification",
+  "@sellerVerification": {
+    "description": "Screen title"
+  },
+  "submitVerification": "Submit for verification",
+  "@submitVerification": {
+    "description": "Action"
+  },
+  "verificationSubmitted": "Seller verification submitted.",
+  "@verificationSubmitted": {
+    "description": "Toast"
+  },
+  "noVerificationSubmitted": "No verification submitted",
+  "@noVerificationSubmitted": {
+    "description": "Status"
+  },
+  "submitBusinessDetails": "Submit business details to unlock seller trust.",
+  "@submitBusinessDetails": {
+    "description": "Section description"
+  },
+  "completeSellerFields": "Complete all required seller application fields.",
+  "@completeSellerFields": {
+    "description": "Validation"
+  },
+  "verified": "Verified",
+  "@verified": {
+    "description": "Badge"
+  },
+  "unverified": "Not verified",
+  "@unverified": {
+    "description": "Badge"
+  },
+  "businessName": "Business name",
+  "@businessName": {
+    "description": "Field label"
+  },
+  "businessAddress": "Business address",
+  "@businessAddress": {
+    "description": "Field label"
+  },
+  "businessCategory": "Business category",
+  "@businessCategory": {
+    "description": "Field label"
+  },
+  "commercialRegistration": "Commercial registration",
+  "@commercialRegistration": {
+    "description": "Field label"
+  },
+  "taxNumber": "Tax number",
+  "@taxNumber": {
+    "description": "Field label"
+  },
+  "ownerLegalName": "Owner legal name",
+  "@ownerLegalName": {
+    "description": "Field label"
+  },
+  "contactEmail": "Contact email",
+  "@contactEmail": {
+    "description": "Field label"
+  },
+  "contactPhone": "Contact phone",
+  "@contactPhone": {
+    "description": "Field label"
+  },
+  "bankName": "Bank name",
+  "@bankName": {
+    "description": "Field label"
+  },
+  "accountHolder": "Account holder",
+  "@accountHolder": {
+    "description": "Field label"
+  },
+  "iban": "IBAN",
+  "@iban": {
+    "description": "Field label"
+  },
+  "warehouseAddress": "Warehouse address",
+  "@warehouseAddress": {
+    "description": "Field label"
+  },
+  "shippingMethods": "Shipping methods",
+  "@shippingMethods": {
+    "description": "Field label"
+  },
+  "productCategories": "Product categories",
+  "@productCategories": {
+    "description": "Field label"
+  },
+  "yearsOfExperience": "Years of experience",
+  "@yearsOfExperience": {
+    "description": "Field label"
+  },
+  "storeDescription": "Store description",
+  "@storeDescription": {
+    "description": "Field label"
+  },
+  "storeLogoUrl": "Store logo URL",
+  "@storeLogoUrl": {
+    "description": "Field label"
+  },
+  "website": "Website",
+  "@website": {
+    "description": "Field label"
+  },
+  "governmentIdUrl": "Government ID URL",
+  "@governmentIdUrl": {
+    "description": "Field label"
+  },
+  "businessLicenseUrl": "Business license URL",
+  "@businessLicenseUrl": {
+    "description": "Field label"
+  },
+  "additionalDocuments": "Additional documents",
+  "@additionalDocuments": {
+    "description": "Field label"
+  },
+  "guestProfile": "Your guest profile",
+  "@guestProfile": {
+    "description": "Guest screen title"
+  },
+  "guestCartSafe": "Your cart is safe. Sign in to place orders, save addresses, and track delivery.",
+  "@guestCartSafe": {
+    "description": "Guest prompt"
+  },
+  "saveYourProgress": "Save your progress",
+  "@saveYourProgress": {
+    "description": "Guest benefit title"
+  },
+  "savedProgressBlurb": "Keep favorites, carts, orders, and recently viewed pieces.",
+  "@savedProgressBlurb": {
+    "description": "Guest benefit"
+  },
+  "useEveryDevice": "Use every device",
+  "@useEveryDevice": {
+    "description": "Guest benefit title"
+  },
+  "useEveryDeviceBlurb": "Continue from phone, web, or tablet securely.",
+  "@useEveryDeviceBlurb": {
+    "description": "Guest benefit"
+  },
+  "personalRecommendations": "Personal recommendations",
+  "@personalRecommendations": {
+    "description": "Guest benefit title"
+  },
+  "personalRecommendationsBlurb": "Get a home feed shaped around your taste and activity.",
+  "@personalRecommendationsBlurb": {
+    "description": "Guest benefit"
+  },
+  "checkoutSafely": "Checkout safely",
+  "@checkoutSafely": {
+    "description": "Guest benefit title"
+  },
+  "checkoutSafelyBlurb": "Keep orders, addresses, and payments protected.",
+  "@checkoutSafelyBlurb": {
+    "description": "Guest benefit"
+  },
+  "syncBlurb": "Sync favorites, carts, and recommendations.",
+  "@syncBlurb": {
+    "description": "Guest benefit"
+  },
+  "quickSteps": "A few quick steps to a richer experience.",
+  "@quickSteps": {
+    "description": "Onboarding subtitle"
+  },
+  "myCart": "My cart",
+  "@myCart": {
+    "description": "Screen title"
+  },
+  "browseAndAdd": "Browse the shop and add something you love.",
+  "@browseAndAdd": {
+    "description": "Empty cart body"
+  },
+  "keepBrowsing": "Keep browsing",
+  "@keepBrowsing": {
+    "description": "Empty cart action"
+  },
+  "removeOutOfStock": "Remove out-of-stock items",
+  "@removeOutOfStock": {
+    "description": "Cart action"
+  },
+  "savedForLater": "Saved for later",
+  "@savedForLater": {
+    "description": "Cart section"
+  },
+  "completeProfile": "Complete your profile",
+  "@completeProfile": {
+    "description": "Profile prompt"
+  },
+  "profileLooksBeautiful": "Your profile looks beautiful.",
+  "@profileLooksBeautiful": {
+    "description": "Profile praise"
+  },
+  "profileIdentity": "Profile identity",
+  "@profileIdentity": {
+    "description": "Settings section"
+  },
+  "accountUpdated": "Account updated.",
+  "@accountUpdated": {
+    "description": "Toast"
+  },
+  "savedItems": "Saved items",
+  "@savedItems": {
+    "description": "Profile section"
+  },
+  "savedProducts": "Saved products",
+  "@savedProducts": {
+    "description": "Profile tab"
+  },
+  "savedSellers": "Saved sellers",
+  "@savedSellers": {
+    "description": "Profile tab"
+  },
+  "savedPosts": "Saved posts",
+  "@savedPosts": {
+    "description": "Profile tab"
+  },
+  "savedAddresses": "Saved addresses",
+  "@savedAddresses": {
+    "description": "Profile section"
+  },
+  "noSavedItems": "No saved items yet",
+  "@noSavedItems": {
+    "description": "Empty state"
+  },
+  "recentlyViewed": "Recently viewed",
+  "@recentlyViewed": {
+    "description": "Profile rail"
+  },
+  "collections": "Collections",
+  "@collections": {
+    "description": "Wishlist section"
+  },
+  "newCollection": "New collection",
+  "@newCollection": {
+    "description": "Action"
+  },
+  "createCollection": "Create a collection",
+  "@createCollection": {
+    "description": "Action"
+  },
+  "collectionsBlurb": "Shareable lists for products, sellers, and posts",
+  "@collectionsBlurb": {
+    "description": "Section subtitle"
+  },
+  "yourWishlist": "Your wishlist",
+  "@yourWishlist": {
+    "description": "Section title"
+  },
+  "wishlistLinkCopied": "Wishlist link copied",
+  "@wishlistLinkCopied": {
+    "description": "Toast"
+  },
+  "syncingWishlist": "Syncing your wishlist",
+  "@syncingWishlist": {
+    "description": "Progress"
+  },
+  "priceDropsBlurb": "Price drops and restocks stay on your radar",
+  "@priceDropsBlurb": {
+    "description": "Section subtitle"
+  },
+  "storesToRevisit": "Stores you want to revisit",
+  "@storesToRevisit": {
+    "description": "Section subtitle"
+  },
+  "yourOrders": "Your orders",
+  "@yourOrders": {
+    "description": "Section title"
+  },
+  "trackReviewReorder": "Track, review and reorder",
+  "@trackReviewReorder": {
+    "description": "Section subtitle"
+  },
+  "achievements": "Achievements",
+  "@achievements": {
+    "description": "Profile section"
+  },
+  "reviewsAndRatings": "Reviews and ratings",
+  "@reviewsAndRatings": {
+    "description": "Profile section"
+  },
+  "pointsEarned": "Points earned",
+  "@pointsEarned": {
+    "description": "Rewards stat"
+  },
+  "earned": "Earned",
+  "@earned": {
+    "description": "Rewards stat"
+  },
+  "redeemed": "Redeemed",
+  "@redeemed": {
+    "description": "Rewards stat"
+  },
+  "lifetime": "Lifetime",
+  "@lifetime": {
+    "description": "Rewards stat"
+  },
+  "locked": "Locked",
+  "@locked": {
+    "description": "Reward state"
+  },
+  "rewardsPointsBlurb": "Earn points on every order and review. Redeem them for coupons and perks.",
+  "@rewardsPointsBlurb": {
+    "description": "Rewards description"
+  },
+  "inviteFriends": "Invite friends, earn rewards",
+  "@inviteFriends": {
+    "description": "Referral title"
+  },
+  "friendsInvited": "Friends invited",
+  "@friendsInvited": {
+    "description": "Referral stat"
+  },
+  "codeCopied": "Code copied",
+  "@codeCopied": {
+    "description": "Toast"
+  },
+  "inviteCodeCopied": "Invite code {code} copied — share it!",
+  "@inviteCodeCopied": {
+    "description": "Toast",
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+  "supportCentre": "Support centre",
+  "@supportCentre": {
+    "description": "Screen title"
+  },
+  "helpAndFaq": "Help and FAQ",
+  "@helpAndFaq": {
+    "description": "Menu item"
+  },
+  "liveChat": "Live chat",
+  "@liveChat": {
+    "description": "Support channel"
+  },
+  "emailUs": "Email us",
+  "@emailUs": {
+    "description": "Support channel"
+  },
+  "call": "Call",
+  "@call": {
+    "description": "Support channel"
+  },
+  "replyWithinHour": "We usually reply within an hour",
+  "@replyWithinHour": {
+    "description": "Support note"
+  },
+  "startConversation": "Start a conversation",
+  "@startConversation": {
+    "description": "Support action"
+  },
+  "returnPolicy": "Return policy",
+  "@returnPolicy": {
+    "description": "FAQ topic"
+  },
+  "faqReturns": "What is your returns policy?",
+  "@faqReturns": {
+    "description": "FAQ question"
+  },
+  "faqReturnsAnswer": "Most items can be returned within 14 days. Open an order to start a return.",
+  "@faqReturnsAnswer": {
+    "description": "FAQ answer. The window is 7 days per the client brief, not 14."
+  },
+  "faqTracking": "How do I track my order?",
+  "@faqTracking": {
+    "description": "FAQ question"
+  },
+  "faqTrackingAnswer": "Open My orders from your profile to see live status and delivery updates.",
+  "@faqTrackingAnswer": {
+    "description": "FAQ answer"
+  },
+  "faqPoints": "How do loyalty points work?",
+  "@faqPoints": {
+    "description": "FAQ question"
+  },
+  "aboutReem": "About Reem",
+  "@aboutReem": {
+    "description": "Menu item"
+  },
+  "appVersion": "Version {version}",
+  "@appVersion": {
+    "description": "About screen",
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "comingSoon": "Coming soon",
+  "@comingSoon": {
+    "description": "Placeholder title"
+  },
+  "comingSoonBlurb": "We are polishing this experience — it will be here soon.",
+  "@comingSoonBlurb": {
+    "description": "Placeholder body"
+  },
+  "appPreferences": "App preferences",
+  "@appPreferences": {
+    "description": "Settings section"
+  },
+  "a11yOpen": "Open {name}",
+  "@a11yOpen": {
+    "description": "Screen-reader label for a tappable card",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "nextStep": "Next: {step}",
+  "@nextStep": {
+    "description": "Profile completion hint",
+    "placeholders": {
+      "step": {
+        "type": "String"
+      }
+    }
+  },
+  "aboutReemBlurb": "A premium social-commerce home for the pieces you love — shopping, discovery and community in one place.",
+  "@aboutReemBlurb": {
+    "description": "About screen description"
+  },
+  "roleBuyer": "Buyer",
+  "@roleBuyer": {
+    "description": "Account role"
+  },
+  "roleSeller": "Seller",
+  "@roleSeller": {
+    "description": "Account role"
+  },
+  "statusPending": "Pending",
+  "@statusPending": {
+    "description": "Order state"
+  },
+  "statusProcessing": "Processing",
+  "@statusProcessing": {
+    "description": "Order state"
+  },
+  "statusInTransit": "In transit",
+  "@statusInTransit": {
+    "description": "Order state"
+  },
+  "statusDelivered": "Delivered",
+  "@statusDelivered": {
+    "description": "Order state"
+  },
+  "statusCancelled": "Cancelled",
+  "@statusCancelled": {
+    "description": "Order state"
+  },
+  "declaredFemaleLabel": "I declare that I am a woman and accept the Reem terms",
+  "@declaredFemaleLabel": {
+    "description": "Mandatory self-declaration on the registration form (Q43/Q138 P1)."
+  },
+  "homeGreetingNamed": "Hello {name}",
+  "@homeGreetingNamed": {
+    "description": "Home greeting addressed to a signed-in shopper, by first name.",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "ريم"
+      }
+    }
+  },
+  "homeGreetingGuest": "Welcome",
+  "@homeGreetingGuest": {
+    "description": "Home greeting for a shopper who is not signed in."
+  },
+  "homeGreetingSubtitle": "A curated edit of fashion, beauty and gifts — chosen for you.",
+  "@homeGreetingSubtitle": {
+    "description": "Home greeting supporting line."
+  },
+  "homeSearchHint": "Search dresses, perfume, gifts…",
+  "@homeSearchHint": {
+    "description": "Placeholder text in the home search bar."
+  },
+  "homeStoriesEyebrow": "Fresh today",
+  "@homeStoriesEyebrow": {
+    "description": "Eyebrow above the stories rail."
+  },
+  "homeYourStory": "Your story",
+  "@homeYourStory": {
+    "description": "Label under the shopper's own story ring."
+  },
+  "homeShopByCategory": "Shop by category",
+  "@homeShopByCategory": {
+    "description": "Title of the category showcase."
+  },
+  "homeFlashDealsEyebrow": "Limited time",
+  "@homeFlashDealsEyebrow": {
+    "description": "Eyebrow above the flash-deals section."
+  },
+  "homeFlashDeals": "Flash deals",
+  "@homeFlashDeals": {
+    "description": "Title of the flash-deals section."
+  },
+  "homeRecommendedEyebrow": "Picked for you",
+  "@homeRecommendedEyebrow": {
+    "description": "Eyebrow above the recommended products rail."
+  },
+  "homeNewArrivalsEyebrow": "Just in",
+  "@homeNewArrivalsEyebrow": {
+    "description": "Eyebrow above the new-arrivals rail."
+  },
+  "homeBestSellersEyebrow": "Loved by many",
+  "@homeBestSellersEyebrow": {
+    "description": "Eyebrow above the best-sellers rail."
+  },
+  "homeContinueShoppingEyebrow": "Welcome back",
+  "@homeContinueShoppingEyebrow": {
+    "description": "Eyebrow above the continue-shopping rail."
+  },
+  "homeContinueShopping": "Continue shopping",
+  "@homeContinueShopping": {
+    "description": "Title of the continue-shopping rail."
+  },
+  "homeFeaturedStoresEyebrow": "Handpicked sellers",
+  "@homeFeaturedStoresEyebrow": {
+    "description": "Eyebrow above the featured boutiques section."
+  },
+  "homeFeaturedStores": "Featured boutiques",
+  "@homeFeaturedStores": {
+    "description": "Title of the featured boutiques section."
+  },
+  "homeRecentlyViewedEyebrow": "Jump back in",
+  "@homeRecentlyViewedEyebrow": {
+    "description": "Eyebrow above the recently-viewed rail."
+  },
+  "homeRecentlyViewed": "Recently viewed",
+  "@homeRecentlyViewed": {
+    "description": "Title of the recently-viewed rail."
+  },
+  "homeWishlistEyebrow": "You loved these",
+  "@homeWishlistEyebrow": {
+    "description": "Eyebrow above the wishlist highlights rail."
+  },
+  "homeWishlist": "From your wishlist",
+  "@homeWishlist": {
+    "description": "Title of the wishlist highlights rail."
+  },
+  "homeNearbyEyebrow": "Near you",
+  "@homeNearbyEyebrow": {
+    "description": "Eyebrow above the nearby boutiques section."
+  },
+  "homeNearbyStores": "Boutiques nearby",
+  "@homeNearbyStores": {
+    "description": "Title of the nearby boutiques section."
+  },
+  "homeExploreEyebrow": "Explore",
+  "@homeExploreEyebrow": {
+    "description": "Eyebrow above the main product grid on the home screen."
+  },
+  "homeExploreTitle": "Everything for you",
+  "@homeExploreTitle": {
+    "description": "Title above the main product grid on the home screen."
+  },
+  "homeFeedEyebrow": "From your boutiques",
+  "@homeFeedEyebrow": {
+    "description": "Eyebrow above the social feed preview."
+  },
+  "homeFeedTitle": "Latest posts",
+  "@homeFeedTitle": {
+    "description": "Title above the social feed preview."
+  },
+  "homeTasteNewDrops": "New drops",
+  "@homeTasteNewDrops": {
+    "description": "Interest chip on the home greeting."
+  },
+  "homeTasteBeauty": "Beauty",
+  "@homeTasteBeauty": {
+    "description": "Interest chip on the home greeting."
+  },
+  "homeTasteGifts": "Gifts",
+  "@homeTasteGifts": {
+    "description": "Interest chip on the home greeting."
+  },
+  "filters": "Filters",
+  "@filters": {
+    "description": "Label for the search filters control."
+  },
+  "trending": "Trending",
+  "@trending": {
+    "description": "Label above trending search suggestions."
+  },
+  "recent": "Recent",
+  "@recent": {
+    "description": "Label above the shopper's recent searches."
+  },
+  "all": "All",
+  "@all": {
+    "description": "Filter chip that clears the category filter."
+  },
+  "reply": "Reply",
+  "@reply": {
+    "description": "Button that starts a reply to a comment."
+  },
+  "you": "You",
+  "@you": {
+    "description": "Label marking the signed-in shopper's own comment."
+  },
+  "justNow": "Just now",
+  "@justNow": {
+    "description": "Timestamp for something that happened seconds ago."
+  },
+  "addCommentHint": "Add a comment…",
+  "@addCommentHint": {
+    "description": "Placeholder in the comment input."
+  },
+  "redeem": "Redeem",
+  "@redeem": {
+    "description": "Button that spends loyalty points."
+  },
+  "enable": "Enable",
+  "@enable": {
+    "description": "Button that grants a permission, e.g. location."
+  },
+  "openNow": "Open now",
+  "@openNow": {
+    "description": "Badge on a boutique that is currently open."
+  },
+  "closedNow": "Closed",
+  "@closedNow": {
+    "description": "Badge on a boutique that is currently closed."
+  },
+  "limitedTime": "Limited time",
+  "@limitedTime": {
+    "description": "Badge on a time-limited promotion."
+  },
+  "homeCategoriesEyebrow": "Browse",
+  "@homeCategoriesEyebrow": {
+    "description": "Eyebrow above the category showcase."
+  },
+  "homeFeaturedEyebrow": "Discover",
+  "@homeFeaturedEyebrow": {
+    "description": "Eyebrow above the featured boutiques section."
+  },
+  "homeLoyaltyTitle": "Reem Rewards",
+  "@homeLoyaltyTitle": {
+    "description": "Title of the loyalty card on home."
+  },
+  "homeLoyaltySubtitle": "Earn rewards on every purchase ✨",
+  "@homeLoyaltySubtitle": {
+    "description": "Subtitle of the loyalty card on home."
+  },
+  "homeNearbyPromptTitle": "Discover boutiques near you",
+  "@homeNearbyPromptTitle": {
+    "description": "Title of the location permission prompt on home."
+  },
+  "homeNearbyPromptBody": "Enable location for local pickup & nearby stores.",
+  "@homeNearbyPromptBody": {
+    "description": "Body of the location permission prompt on home."
+  },
+  "homeFeedEmptyTitle": "Your feed is warming up",
+  "@homeFeedEmptyTitle": {
+    "description": "Empty-state title for the social feed on home."
+  },
+  "homeFeedEmptyBody": "Follow boutiques you love to fill your feed with beautiful finds.",
+  "@homeFeedEmptyBody": {
+    "description": "Empty-state body for the social feed on home."
+  },
+  "flashDealAlmostGone": "{count, plural, =1{1 left} other{{count} left}}",
+  "@flashDealAlmostGone": {
+    "description": "Scarcity line on a flash deal.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "couponFreeShipping": "Free ship",
+  "@couponFreeShipping": {
+    "description": "Short label for a free-shipping coupon."
+  },
+  "wallet": "My wallet",
+  "@wallet": {
+    "description": "Title of the wallet screen."
+  },
+  "walletBalance": "Your balance",
+  "@walletBalance": {
+    "description": "Label above the wallet balance figure."
+  },
+  "walletNotWithdrawable": "Spendable inside Reem only",
+  "@walletNotWithdrawable": {
+    "description": "Q42 — the wallet balance cannot be withdrawn as cash."
+  },
+  "walletStatement": "Wallet activity",
+  "@walletStatement": {
+    "description": "Title of the wallet transaction list."
+  },
+  "walletEmptyTitle": "Your wallet is empty",
+  "@walletEmptyTitle": {
+    "description": "Empty-state title on the wallet screen."
+  },
+  "walletEmptyBody": "Refunds, gifts and converted points will appear here.",
+  "@walletEmptyBody": {
+    "description": "Empty-state body on the wallet screen."
+  },
+  "walletOffline": "You are offline. Your balance will update when you reconnect.",
+  "@walletOffline": {
+    "description": "Shown when the wallet cannot load because the device is offline."
+  },
+  "walletSourceRefund": "Return refund",
+  "@walletSourceRefund": {
+    "description": "Wallet movement source: money back from a return."
+  },
+  "walletSourcePoints": "Points converted",
+  "@walletSourcePoints": {
+    "description": "Wallet movement source: loyalty points turned into credit."
+  },
+  "walletSourceCompensation": "Compensation",
+  "@walletSourceCompensation": {
+    "description": "Wallet movement source: a manual credit from the admin."
+  },
+  "walletSourceTopUp": "Top-up",
+  "@walletSourceTopUp": {
+    "description": "Wallet movement source: the customer added credit."
+  },
+  "walletSourceGift": "Gift",
+  "@walletSourceGift": {
+    "description": "Wallet movement source: a campaign or gift credit."
+  },
+  "walletSourceAdjustment": "Price adjustment",
+  "@walletSourceAdjustment": {
+    "description": "Wallet movement source: a price or order adjustment."
+  },
+  "walletSourceOrder": "Order payment",
+  "@walletSourceOrder": {
+    "description": "Wallet movement source: credit spent on an order."
+  },
+  "walletSourceOrderReversal": "Order cancelled",
+  "@walletSourceOrderReversal": {
+    "description": "Wallet movement source: a spend returned because the order was cancelled."
+  },
+  "walletSourceOther": "Movement",
+  "@walletSourceOther": {
+    "description": "Wallet movement source: anything not otherwise named."
+  },
+  "loyaltyPoints": "Loyalty points",
+  "@loyaltyPoints": {
+    "description": "Title of the loyalty points card."
+  },
+  "loyaltyPointsCount": "{count, plural, =0{No points yet} =1{1 point} other{{count} points}}",
+  "@loyaltyPointsCount": {
+    "description": "How many loyalty points the customer holds.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "loyaltyConvert": "Convert to credit",
+  "@loyaltyConvert": {
+    "description": "Button that converts loyalty points into wallet credit."
+  },
+  "loyaltyConvertHint": "Every 10 points = 5,000 SYP of credit",
+  "@loyaltyConvertHint": {
+    "description": "Q43 — explains the conversion rate."
+  },
+  "loyaltyNeedMultipleOfTen": "Points convert in multiples of ten.",
+  "@loyaltyNeedMultipleOfTen": {
+    "description": "Shown when the chosen number of points is not a multiple of ten."
+  },
+  "loyaltyNotEnoughPoints": "You do not have enough points for that.",
+  "@loyaltyNotEnoughPoints": {
+    "description": "Shown when the customer tries to convert more points than she holds."
+  },
+  "loyaltyConverted": "{count} points added to your balance ✨",
+  "@loyaltyConverted": {
+    "description": "Confirmation after a successful points conversion.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "sellerEarnings": "My earnings",
+  "@sellerEarnings": {
+    "description": "Title of the seller earnings screen."
+  },
+  "earningsAvailable": "Ready for payout",
+  "@earningsAvailable": {
+    "description": "Q25 — released funds a payout run will actually pay."
+  },
+  "earningsAvailableHint": "Transferred weekly",
+  "@earningsAvailableHint": {
+    "description": "Q25 — payouts run weekly."
+  },
+  "earningsHeld": "In escrow",
+  "@earningsHeld": {
+    "description": "Q24 — earned but still inside the return window."
+  },
+  "earningsHeldHint": "Until the return window closes",
+  "@earningsHeldHint": {
+    "description": "Q24 — explains why escrow money is not payable yet."
+  },
+  "earningsFrozen": "Frozen — dispute",
+  "@earningsFrozen": {
+    "description": "Q107 — funds held pending a dispute ruling."
+  },
+  "earningsFrozenHint": "Until the ruling",
+  "@earningsFrozenHint": {
+    "description": "Q107 — explains why disputed money is unavailable."
+  },
+  "earningsLifetime": "All time",
+  "@earningsLifetime": {
+    "description": "Section title for lifetime totals."
+  },
+  "earningsLifetimePaid": "Paid to you",
+  "@earningsLifetimePaid": {
+    "description": "Lifetime total actually paid out to the seller."
+  },
+  "earningsLifetimeGross": "Gross sales",
+  "@earningsLifetimeGross": {
+    "description": "Lifetime gross sales before commission."
+  },
+  "earningsLifetimeCommission": "Platform commission",
+  "@earningsLifetimeCommission": {
+    "description": "Lifetime commission charged by the platform."
+  },
+  "earningsPendingPayouts": "Payouts in progress",
+  "@earningsPendingPayouts": {
+    "description": "Section title for calculated but unpaid payouts."
+  },
+  "earningsPayoutApproved": "Approved",
+  "@earningsPayoutApproved": {
+    "description": "Badge on a payout the general manager has approved."
+  },
+  "earningsPayoutPending": "Awaiting approval",
+  "@earningsPayoutPending": {
+    "description": "Badge on a payout not yet approved."
+  },
+  "earningsStatement": "Statement",
+  "@earningsStatement": {
+    "description": "Section title for the seller's ledger movements."
+  },
+  "earningsEmptyTitle": "No earnings yet",
+  "@earningsEmptyTitle": {
+    "description": "Empty-state title on the seller earnings screen."
+  },
+  "earningsEmptyBody": "Once your first order is delivered, your earnings appear here step by step.",
+  "@earningsEmptyBody": {
+    "description": "Empty-state body on the seller earnings screen."
+  },
+  "earningsOffline": "You are offline. Your earnings will update when you reconnect.",
+  "@earningsOffline": {
+    "description": "Shown when the earnings screen cannot load because the device is offline."
+  },
+  "earningsMoveSale": "Sale settled",
+  "@earningsMoveSale": {
+    "description": "Ledger movement: a sub-order was settled."
+  },
+  "earningsMoveReleased": "Released from escrow",
+  "@earningsMoveReleased": {
+    "description": "Ledger movement: the return window closed."
+  },
+  "earningsMovePayout": "Payout",
+  "@earningsMovePayout": {
+    "description": "Ledger movement: money was paid out."
+  },
+  "earningsMoveFrozen": "Frozen for a dispute",
+  "@earningsMoveFrozen": {
+    "description": "Ledger movement: funds frozen when a dispute opened."
+  },
+  "earningsMoveDisputeDone": "Dispute settled",
+  "@earningsMoveDisputeDone": {
+    "description": "Ledger movement: a dispute was decided."
+  },
+  "earningsMoveRefund": "Refund",
+  "@earningsMoveRefund": {
+    "description": "Ledger movement: a refund was issued."
+  },
+  "earningsMoveReversal": "Reversal",
+  "@earningsMoveReversal": {
+    "description": "Ledger movement: an earlier entry was reversed."
+  },
+  "earningsMoveOther": "Movement",
+  "@earningsMoveOther": {
+    "description": "Ledger movement: anything not otherwise named."
+  },
+  "adminFinance": "Finance",
+  "@adminFinance": {
+    "description": "Title of the admin finance console."
+  },
+  "adminFinanceSubtitle": "Ledger health, positions, and what needs a person",
+  "@adminFinanceSubtitle": {
+    "description": "Subtitle of the admin finance console."
+  },
+  "financeSound": "Books are sound",
+  "@financeSound": {
+    "description": "Headline when the trial balance balances and reconciliation found nothing."
+  },
+  "financeSoundHint": "Debits equal credits, and no account has drifted",
+  "@financeSoundHint": {
+    "description": "Explains what «sound» means."
+  },
+  "financeUnsound": "Books need review",
+  "@financeUnsound": {
+    "description": "Headline when reconciliation found something."
+  },
+  "financeNotBalanced": "Trial balance is off",
+  "@financeNotBalanced": {
+    "description": "Headline when debits and credits disagree — money created or destroyed."
+  },
+  "financeDiscrepancy": "Discrepancy",
+  "@financeDiscrepancy": {
+    "description": "Label for the gap between total debits and total credits."
+  },
+  "financeTotalDebit": "Total debit",
+  "@financeTotalDebit": {
+    "description": "Label for total debits in the trial balance."
+  },
+  "financeTotalCredit": "Total credit",
+  "@financeTotalCredit": {
+    "description": "Label for total credits in the trial balance."
+  },
+  "financeFindings": "{count, plural, =1{1 finding} other{{count} findings}}",
+  "@financeFindings": {
+    "description": "How many reconciliation findings there are.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "financePositions": "Positions",
+  "@financePositions": {
+    "description": "Section title for standing balances."
+  },
+  "financeHeld": "Held",
+  "@financeHeld": {
+    "description": "Total funds the platform holds."
+  },
+  "financeOwed": "Owed",
+  "@financeOwed": {
+    "description": "Total obligations on the platform."
+  },
+  "financeCoverage": "Coverage",
+  "@financeCoverage": {
+    "description": "Held minus owed — solvency in one line."
+  },
+  "financeCoverageShort": "Obligations exceed funds held",
+  "@financeCoverageShort": {
+    "description": "Warning when coverage is negative."
+  },
+  "financePlatformCash": "Platform cash",
+  "@financePlatformCash": {
+    "description": "Account label."
+  },
+  "financeGatewayReceivable": "Gateway receivable",
+  "@financeGatewayReceivable": {
+    "description": "Account label."
+  },
+  "financeCourierInTransit": "Courier cash in transit",
+  "@financeCourierInTransit": {
+    "description": "Account label."
+  },
+  "financeSellerPayable": "Seller payable",
+  "@financeSellerPayable": {
+    "description": "Account label."
+  },
+  "financeSellerEscrow": "Seller escrow",
+  "@financeSellerEscrow": {
+    "description": "Account label."
+  },
+  "financeCustomerWallets": "Customer wallets",
+  "@financeCustomerWallets": {
+    "description": "Account label."
+  },
+  "financeDisputeHeld": "Held for disputes",
+  "@financeDisputeHeld": {
+    "description": "Account label."
+  },
+  "financeLoyaltyLiability": "Loyalty outstanding",
+  "@financeLoyaltyLiability": {
+    "description": "Account label."
+  },
+  "financeCommissionRevenue": "Commission revenue",
+  "@financeCommissionRevenue": {
+    "description": "Account label."
+  },
+  "financeCourierCash": "Courier cash",
+  "@financeCourierCash": {
+    "description": "Section title listing couriers holding platform cash."
+  },
+  "financeCourierCashEmpty": "No courier is holding platform cash.",
+  "@financeCourierCashEmpty": {
+    "description": "Empty state for the courier cash section."
+  },
+  "financeOverdueDisputes": "Overdue disputes",
+  "@financeOverdueDisputes": {
+    "description": "Section title for disputes past their decision deadline."
+  },
+  "financeOverdueBy": "{count, plural, =0{due today} =1{1 day overdue} other{{count} days overdue}}",
+  "@financeOverdueBy": {
+    "description": "How overdue a dispute is.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "financeNoOverdue": "No disputes are overdue.",
+  "@financeNoOverdue": {
+    "description": "Empty state for the overdue disputes section."
+  },
+  "financeFx": "FX position",
+  "@financeFx": {
+    "description": "Section title for the foreign-currency position."
+  },
+  "financeFxRate": "Rate",
+  "@financeFxRate": {
+    "description": "Label for the exchange rate."
+  },
+  "financeFxExposure": "Net exposure",
+  "@financeFxExposure": {
+    "description": "Assets minus liabilities in the foreign currency."
+  },
+  "financeFxResult": "Conversion result",
+  "@financeFxResult": {
+    "description": "What past currency conversions have cost or earned."
+  },
+  "financeFxSync": "Sync rate now",
+  "@financeFxSync": {
+    "description": "Button that pulls the exchange rate immediately."
+  },
+  "financeFxNone": "No exchange rate published yet.",
+  "@financeFxNone": {
+    "description": "Shown when there is no rate to translate at."
+  },
+  "financeTrialBalance": "Trial balance",
+  "@financeTrialBalance": {
+    "description": "Section title for the full account listing."
+  },
+  "financeAccount": "Account",
+  "@financeAccount": {
+    "description": "Table column header."
+  },
+  "financeBalance": "Balance",
+  "@financeBalance": {
+    "description": "Table column header."
+  },
+  "refresh": "Refresh",
+  "@refresh": {
+    "description": "Reloads the current screen's data."
+  },
+  "invoices": "Invoices",
+  "@invoices": {
+    "description": "Title of the invoices list."
+  },
+  "invoice": "Invoice",
+  "@invoice": {
+    "description": "Title of a single invoice document."
+  },
+  "invoiceCustomerCopy": "Order invoice",
+  "@invoiceCustomerCopy": {
+    "description": "Q51 — the customer's copy, covering the whole basket."
+  },
+  "invoiceSellerCopy": "Seller invoice",
+  "@invoiceSellerCopy": {
+    "description": "Q51 — one seller's copy for their own parcel."
+  },
+  "invoiceNumber": "Invoice no.",
+  "@invoiceNumber": {
+    "description": "Label for the invoice number."
+  },
+  "invoiceIssuedAt": "Issued",
+  "@invoiceIssuedAt": {
+    "description": "Label for the issue date."
+  },
+  "invoiceOrderNumber": "Order no.",
+  "@invoiceOrderNumber": {
+    "description": "Label for the order number."
+  },
+  "invoiceBilledTo": "Billed to",
+  "@invoiceBilledTo": {
+    "description": "Label above the recipient block."
+  },
+  "invoiceItems": "Items",
+  "@invoiceItems": {
+    "description": "Section title above the invoice lines."
+  },
+  "invoiceQuantity": "Qty",
+  "@invoiceQuantity": {
+    "description": "Column header for the quantity."
+  },
+  "invoiceSubtotal": "Subtotal",
+  "@invoiceSubtotal": {
+    "description": "Label for the items subtotal."
+  },
+  "invoiceDiscount": "Discount",
+  "@invoiceDiscount": {
+    "description": "Label for the discount total."
+  },
+  "invoiceShipping": "Shipping",
+  "@invoiceShipping": {
+    "description": "Label for the shipping total."
+  },
+  "invoiceTotal": "Total",
+  "@invoiceTotal": {
+    "description": "Label for the grand total."
+  },
+  "invoiceCommission": "Platform commission",
+  "@invoiceCommission": {
+    "description": "Seller copy only — what the platform took (Q50)."
+  },
+  "invoiceSellerNet": "Seller net",
+  "@invoiceSellerNet": {
+    "description": "Seller copy only — what is left after commission."
+  },
+  "invoiceNoTax": "This is a commercial invoice, not a tax invoice.",
+  "@invoiceNoTax": {
+    "description": "Q55 P1 — the client stated no fiscal requirement, so the document says so."
+  },
+  "invoiceEmptyTitle": "No invoices yet",
+  "@invoiceEmptyTitle": {
+    "description": "Empty state on the invoices list."
+  },
+  "invoiceEmptyBody": "Your invoice is issued once the order ships.",
+  "@invoiceEmptyBody": {
+    "description": "Q39 — an order that can still change is not invoiced yet."
+  },
+  "invoiceCoupon": "Coupon",
+  "@invoiceCoupon": {
+    "description": "Label for the coupon code used."
+  },
+  "trackShipment": "Track shipment",
+  "@trackShipment": {
+    "description": "Title of the shipment tracking screen (Q64)."
+  },
+  "trackingCode": "Tracking code",
+  "@trackingCode": {
+    "description": "Label for the tracking code."
+  },
+  "trackExpress": "Express",
+  "@trackExpress": {
+    "description": "Badge on an express parcel (Q64)."
+  },
+  "trackScheduledFor": "Scheduled for",
+  "@trackScheduledFor": {
+    "description": "Q64 — the delivery slot she chose."
+  },
+  "trackDeliveredAt": "Delivered",
+  "@trackDeliveredAt": {
+    "description": "When the parcel arrived."
+  },
+  "trackAttempts": "{count, plural, =1{1 delivery attempt} other{{count} delivery attempts}}",
+  "@trackAttempts": {
+    "description": "Q37 — how many times the courier has tried.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "trackJourney": "Journey",
+  "@trackJourney": {
+    "description": "Section title for the progress spine."
+  },
+  "trackHistory": "History",
+  "@trackHistory": {
+    "description": "Section title for the event list."
+  },
+  "trackNotFound": "No shipment matches that code.",
+  "@trackNotFound": {
+    "description": "Shown when a tracking code does not resolve."
+  },
+  "shipStageCreated": "Order prepared",
+  "@shipStageCreated": {
+    "description": "Shipment stage."
+  },
+  "shipStageAssigned": "Assigned to a courier",
+  "@shipStageAssigned": {
+    "description": "Shipment stage."
+  },
+  "shipStagePickedUp": "Picked up",
+  "@shipStagePickedUp": {
+    "description": "Shipment stage."
+  },
+  "shipStageInTransit": "In transit",
+  "@shipStageInTransit": {
+    "description": "Shipment stage."
+  },
+  "shipStageOutForDelivery": "Out for delivery",
+  "@shipStageOutForDelivery": {
+    "description": "Shipment stage."
+  },
+  "shipStageDelivered": "Delivered",
+  "@shipStageDelivered": {
+    "description": "Shipment stage."
+  },
+  "shipStageFailed": "Delivery failed",
+  "@shipStageFailed": {
+    "description": "Shipment stage (Q37)."
+  },
+  "shipStageReturning": "Returning",
+  "@shipStageReturning": {
+    "description": "Shipment stage."
+  },
+  "shipStageReturned": "Returned",
+  "@shipStageReturned": {
+    "description": "Shipment stage."
+  },
+  "shipStageCancelled": "Cancelled",
+  "@shipStageCancelled": {
+    "description": "Shipment stage."
+  },
+  "courierDay": "Today's round",
+  "@courierDay": {
+    "description": "Q55 — the courier's assignments for today."
+  },
+  "courierOpen": "In progress",
+  "@courierOpen": {
+    "description": "Section title for parcels still open."
+  },
+  "courierDone": "Completed today",
+  "@courierDone": {
+    "description": "Section title for closed parcels."
+  },
+  "courierEmptyTitle": "Nothing assigned today",
+  "@courierEmptyTitle": {
+    "description": "Empty state on the courier round."
+  },
+  "courierEmptyBody": "Parcels appear here as soon as they are assigned to you.",
+  "@courierEmptyBody": {
+    "description": "Empty state body on the courier round."
+  },
+  "courierCollect": "To collect",
+  "@courierCollect": {
+    "description": "Q55 — the cash amount due at the door."
+  },
+  "courierPrepaid": "Prepaid",
+  "@courierPrepaid": {
+    "description": "Badge on a parcel with nothing to collect."
+  },
+  "courierCall": "Call",
+  "@courierCall": {
+    "description": "Q55 — «يتصل بالزبونة بضغطة»."
+  },
+  "courierNavigate": "Map",
+  "@courierNavigate": {
+    "description": "Q55 — «يشوف خريطة أو موقع»."
+  },
+  "courierPickUp": "Picked up",
+  "@courierPickUp": {
+    "description": "Q55 — «يؤكد استلام الطلب من البائع»."
+  },
+  "courierStartDelivery": "Out for delivery",
+  "@courierStartDelivery": {
+    "description": "Marks the parcel as on its way."
+  },
+  "courierDeliver": "Delivered",
+  "@courierDeliver": {
+    "description": "Completes the delivery."
+  },
+  "courierFail": "Failed",
+  "@courierFail": {
+    "description": "Q55 — records why it failed."
+  },
+  "courierInstructions": "Delivery notes",
+  "@courierInstructions": {
+    "description": "Q55 — «يرى ملاحظات التوصيل»."
+  },
+  "courierDeliverTitle": "Confirm delivery",
+  "@courierDeliverTitle": {
+    "description": "Title of the delivery confirmation sheet."
+  },
+  "courierCollectedAmount": "Amount collected",
+  "@courierCollectedAmount": {
+    "description": "Q55 — «يسجّل مبلغ التحصيل»."
+  },
+  "courierCollectedHint": "Leave empty if you collected the full amount",
+  "@courierCollectedHint": {
+    "description": "Explains that an empty field means the full amount."
+  },
+  "courierRecipientNote": "Note",
+  "@courierRecipientNote": {
+    "description": "Optional note on delivery."
+  },
+  "courierConfirm": "Confirm",
+  "@courierConfirm": {
+    "description": "Confirms the sheet's action."
+  },
+  "courierFailTitle": "Why did it fail?",
+  "@courierFailTitle": {
+    "description": "Title of the failed-delivery sheet."
+  },
+  "failNoAnswer": "No answer",
+  "@failNoAnswer": {
+    "description": "Delivery failure reason."
+  },
+  "failWrongAddress": "Wrong address",
+  "@failWrongAddress": {
+    "description": "Delivery failure reason."
+  },
+  "failCustomerRefused": "Customer refused",
+  "@failCustomerRefused": {
+    "description": "Delivery failure reason."
+  },
+  "failPostponed": "Postponed",
+  "@failPostponed": {
+    "description": "Delivery failure reason."
+  },
+  "failUnreachableArea": "Area unreachable",
+  "@failUnreachableArea": {
+    "description": "Delivery failure reason."
+  },
+  "failOther": "Other",
+  "@failOther": {
+    "description": "Delivery failure reason."
+  },
+  "signInWithCode": "Sign in with a code",
+  "@signInWithCode": {
+    "description": "Primary sign-in button: a code on her SIM is the credential"
+  },
+  "signInSubtitle": "Enter your number and we will send you a code.",
+  "@signInSubtitle": {
+    "description": "Subtitle on the phone-entry step"
+  },
+  "continueLabel": "Continue",
+  "@continueLabel": {
+    "description": "Generic forward action"
+  },
+  "usePasswordInstead": "Use my password instead",
+  "@usePasswordInstead": {
+    "description": "Secondary sign-in path, only usable on a known device"
+  },
+  "passwordOnlyOnKnownDevice": "A password only works on a device you have signed in from before.",
+  "@passwordOnlyOnKnownDevice": {
+    "description": "Explains why the password path can fall through to a code"
+  },
+  "newDeviceCodeSent": "This device is new. We sent a code to your number to finish signing in.",
+  "@newDeviceCodeSent": {
+    "description": "Shown when a correct password lands on an unenrolled handset"
+  },
+  "matchCodeLabel": "Match code",
+  "@matchCodeLabel": {
+    "description": "The two digits she compares against the message"
+  },
+  "matchCodeHint": "Check that the message shows the same two digits. Reem will never ask you to read a code aloud.",
+  "@matchCodeHint": {
+    "description": "Anti-relay guidance beside the match code"
+  },
+  "codeSentToMasked": "Code sent to {destination}",
+  "@codeSentToMasked": {
+    "description": "Where the code went, masked",
+    "placeholders": {
+      "destination": {
+        "type": "String"
+      }
+    }
+  },
+  "resendInSeconds": "Resend in {seconds}s",
+  "@resendInSeconds": {
+    "description": "Resend cooldown",
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "finishSignUp": "Finish creating your account",
+  "@finishSignUp": {
+    "description": "Heading when a verified number has no account yet"
+  },
+  "numberVerified": "Number verified",
+  "@numberVerified": {
+    "description": "Confirmation chip on the signup form"
+  },
+  "passwordOptional": "Password (optional)",
+  "@passwordOptional": {
+    "description": "Label making it clear a password is not required"
+  },
+  "passwordOptionalHint": "You can skip this. You will sign in with a code each time.",
+  "@passwordOptionalHint": {
+    "description": "Hint under the optional password field"
+  },
+  "securityCentre": "Security",
+  "@securityCentre": {
+    "description": "Title of the security centre"
+  },
+  "securityCentreSubtitle": "Your devices, your sessions, and the ways back into your account.",
+  "@securityCentreSubtitle": {
+    "description": "Subtitle of the security centre"
+  },
+  "passwordSignIn": "Password sign-in",
+  "@passwordSignIn": {
+    "description": "Toggle row for the optional password credential"
+  },
+  "passwordEnabled": "On — usable on known devices only",
+  "@passwordEnabled": {
+    "description": "Password toggle state"
+  },
+  "passwordDisabled": "Off — you sign in with a code",
+  "@passwordDisabled": {
+    "description": "Password toggle state"
+  },
+  "setPassword": "Set a password",
+  "@setPassword": {
+    "description": "Action"
+  },
+  "removePassword": "Remove password",
+  "@removePassword": {
+    "description": "Action"
+  },
+  "changeAccountNumber": "Change my number",
+  "@changeAccountNumber": {
+    "description": "Action"
+  },
+  "changeNumberExplainer": "We will send a code to your current number first, then to the new one.",
+  "@changeNumberExplainer": {
+    "description": "Explains the two-sided phone change"
+  },
+  "currentNumberCode": "Code sent to your current number",
+  "@currentNumberCode": {
+    "description": "Step one of the phone change"
+  },
+  "newNumberCode": "Code sent to the new number",
+  "@newNumberCode": {
+    "description": "Step three of the phone change"
+  },
+  "newNumberLabel": "New number",
+  "@newNumberLabel": {
+    "description": "Field label"
+  },
+  "numberChanged": "Your number was changed",
+  "@numberChanged": {
+    "description": "Success message"
+  },
+  "payoutsFrozenUntil": "Payouts are on hold until {date}",
+  "@payoutsFrozenUntil": {
+    "description": "Post-change safety notice",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "otherSessionsEnded": "All other sessions were ended",
+  "@otherSessionsEnded": {
+    "description": "Post-change notice"
+  },
+  "recoveryCodes": "Recovery codes",
+  "@recoveryCodes": {
+    "description": "Security centre row"
+  },
+  "recoveryCodesRemaining": "{count} unused",
+  "@recoveryCodesRemaining": {
+    "description": "How many recovery codes are left",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "generateRecoveryCodes": "Generate new codes",
+  "@generateRecoveryCodes": {
+    "description": "Action"
+  },
+  "recoveryCodesWarning": "Write these down now. They are shown once, and generating a new set cancels the old one.",
+  "@recoveryCodesWarning": {
+    "description": "Shown above a freshly generated set"
+  },
+  "lostYourSim": "Lost your SIM?",
+  "@lostYourSim": {
+    "description": "Entry point to support-mediated recovery"
+  },
+  "lostSimExplainer": "If your number is gone for good, we can review your account by hand. It takes several days on purpose.",
+  "@lostSimExplainer": {
+    "description": "Sets the expectation before she opens a recovery case"
+  },
+  "recoveryNoDocuments": "We will never ask for a photo of you or of an identity document.",
+  "@recoveryNoDocuments": {
+    "description": "The platform-held-data-only promise, stated to her"
+  },
+  "recoveryContactNumber": "A number we can reach you on now",
+  "@recoveryContactNumber": {
+    "description": "Field label"
+  },
+  "recoveryQuestionsTitle": "What do you remember?",
+  "@recoveryQuestionsTitle": {
+    "description": "Heading above the evidence questions"
+  },
+  "recoveryQuestionsHint": "Answer what you can. Nothing here is required.",
+  "@recoveryQuestionsHint": {
+    "description": "Hint above the evidence questions"
+  },
+  "recoveryRegistrationMonth": "Roughly when did you join? (YYYY-MM)",
+  "@recoveryRegistrationMonth": {
+    "description": "Evidence question"
+  },
+  "recoveryLastOrderMonth": "When was your last order? (YYYY-MM)",
+  "@recoveryLastOrderMonth": {
+    "description": "Evidence question"
+  },
+  "recoveryLastOrderTotal": "Roughly what did it come to?",
+  "@recoveryLastOrderTotal": {
+    "description": "Evidence question"
+  },
+  "recoveryDeviceLabel": "What is one of your devices called?",
+  "@recoveryDeviceLabel": {
+    "description": "Evidence question"
+  },
+  "recoverySubmitted": "We received your request",
+  "@recoverySubmitted": {
+    "description": "Confirmation heading"
+  },
+  "recoveryKeepSecret": "Keep this reference. It is the only way to check on your request.",
+  "@recoveryKeepSecret": {
+    "description": "About the claim secret"
+  },
+  "recoveryCaseOpenWarning": "Someone asked to move your account to another number.",
+  "@recoveryCaseOpenWarning": {
+    "description": "Banner shown to the owner while a case is open"
+  },
+  "recoveryCaseCoolOff": "Your account moves on {date} unless you stop it.",
+  "@recoveryCaseCoolOff": {
+    "description": "Cool-off warning",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "stopThisRequest": "That was not me — stop it",
+  "@stopThisRequest": {
+    "description": "The owner cancelling a recovery case"
+  },
+  "recoveryCaseCancelled": "The request was stopped",
+  "@recoveryCaseCancelled": {
+    "description": "Confirmation"
+  },
+  "activeSessions": "Active sessions",
+  "@activeSessions": {
+    "description": "Section heading"
+  },
+  "thisDevice": "This device",
+  "@thisDevice": {
+    "description": "Badge on the current session"
+  },
+  "signOutEverywhere": "Sign out everywhere else",
+  "@signOutEverywhere": {
+    "description": "Action"
+  },
+  "sessionExpiresOn": "Signed in until {date}",
+  "@sessionExpiresOn": {
+    "description": "Absolute session lifetime",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "deviceTrusted": "Verified on this device",
+  "@deviceTrusted": {
+    "description": "Device state"
+  },
+  "deviceNotVerified": "Never signed in from here",
+  "@deviceNotVerified": {
+    "description": "Device state"
+  },
+  "newDeviceCooldown": "This device is new. Sensitive changes unlock {date}.",
+  "@newDeviceCooldown": {
+    "description": "The 24-hour SIM-swap delay, explained",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "verifyToContinue": "Verify it is you",
+  "@verifyToContinue": {
+    "description": "Step-up prompt heading"
+  },
+  "sendCode": "Send the code",
+  "@sendCode": {
+    "description": "Action on the recovery form"
+  },
+  "copy": "Copy",
+  "@copy": {
+    "description": "Copies a value to the clipboard"
+  },
+  "close": "Close",
+  "@close": {
+    "description": "Dismisses a dialog"
+  },
+  "confirm": "Confirm",
+  "@confirm": {
+    "description": "Confirms a destructive or elevated action"
+  },
+  "homeShowcaseEyebrow": "Straight from the boutiques",
+  "@homeShowcaseEyebrow": {
+    "description": "Eyebrow above the home showcase, the section that presents products as posts."
+  },
+  "homeShowcaseTitle": "New in",
+  "@homeShowcaseTitle": {
+    "description": "Title of the home showcase section."
+  },
+  "homeShowcaseSubtitle": "The newest pieces, told as stories — swipe, love, shop.",
+  "@homeShowcaseSubtitle": {
+    "description": "One line of copy under the showcase title."
+  },
+  "homeShapePosts": "Posts",
+  "@homeShapePosts": {
+    "description": "Showcase shape: products presented as social posts."
+  },
+  "homeShapeMosaic": "Mosaic",
+  "@homeShapeMosaic": {
+    "description": "Showcase shape: an editorial collage of tiles."
+  },
+  "homeShapeGrid": "Grid",
+  "@homeShapeGrid": {
+    "description": "Showcase shape: the two-column catalogue."
+  },
+  "postLikesCount": "{count} loves",
+  "@postLikesCount": {
+    "description": "Like tally under a post. {count} is already formatted, e.g. 1.2K.",
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "postViewComments": "View all {count} comments",
+  "@postViewComments": {
+    "description": "Link opening the comment sheet. {count} is already formatted.",
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "postMore": "more",
+  "@postMore": {
+    "description": "Tap target that expands a truncated post caption."
+  },
+  "shortMinutesAgo": "{count}m",
+  "@shortMinutesAgo": {
+    "description": "Compact age of a post, in minutes.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "shortHoursAgo": "{count}h",
+  "@shortHoursAgo": {
+    "description": "Compact age of a post, in hours.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "shortDaysAgo": "{count}d",
+  "@shortDaysAgo": {
+    "description": "Compact age of a post, in days.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "shortWeeksAgo": "{count}w",
+  "@shortWeeksAgo": {
+    "description": "Compact age of a post, in weeks.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "homeBoutiqueStories": "Boutique stories",
+  "@homeBoutiqueStories": {
+    "description": "Title of the home rail carrying today's story frames from shops she follows."
+  },
+  "piecesCount": "{count} pieces",
+  "@piecesCount": {
+    "description": "Caption on a category tile. {count} is already formatted, e.g. 1.2k.",
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "justIn": "Just in",
+  "@justIn": {
+    "description": "Champagne ribbon on a post published in the last few days."
+  },
+  "addedToBag": "Added to your bag",
+  "@addedToBag": {
+    "description": "Confirmation after adding a product to the cart from the feed."
+  },
+  "sellerCommandCentre": "Command centre",
+  "@sellerCommandCentre": {
+    "description": "Eyebrow over the seller home header."
+  },
+  "sellerDashboardUnavailable": "Dashboard unavailable",
+  "@sellerDashboardUnavailable": {
+    "description": "Error title when the seller dashboard fails to load."
+  },
+  "messages": "Messages",
+  "@messages": {
+    "description": "Tooltip on the seller header's chat shortcut."
+  },
+  "sellerNeedsYou": "Needs you now",
+  "@sellerNeedsYou": {
+    "description": "Title of the strip listing what the seller must act on today."
+  },
+  "sellerAllClear": "All clear — nothing is waiting on you",
+  "@sellerAllClear": {
+    "description": "Shown when the seller has no pending work."
+  },
+  "sellerPendingOrders": "To confirm",
+  "@sellerPendingOrders": {
+    "description": "Alert tile: orders awaiting the seller's confirmation."
+  },
+  "sellerRunningLow": "Running low",
+  "@sellerRunningLow": {
+    "description": "Alert tile: products close to selling out."
+  },
+  "sellerOpenTasks": "Open tasks",
+  "@sellerOpenTasks": {
+    "description": "Alert tile: outstanding to-do items."
+  },
+  "sellerRevenue": "Revenue",
+  "@sellerRevenue": {
+    "description": "Money taken over the selected period."
+  },
+  "sellerProfit": "Profit",
+  "@sellerProfit": {
+    "description": "Profit figure on the revenue card."
+  },
+  "sellerMargin": "Margin",
+  "@sellerMargin": {
+    "description": "Profit margin percentage on the revenue card."
+  },
+  "sellerVsPrior": "vs. prior period",
+  "@sellerVsPrior": {
+    "description": "Caption under the trend arrow on the revenue card."
+  },
+  "periodToday": "Today",
+  "@periodToday": {
+    "description": "Revenue period selector."
+  },
+  "periodWeek": "Week",
+  "@periodWeek": {
+    "description": "Revenue period selector."
+  },
+  "periodMonth": "Month",
+  "@periodMonth": {
+    "description": "Revenue period selector."
+  },
+  "periodYear": "Year",
+  "@periodYear": {
+    "description": "Revenue period selector."
+  },
+  "periodDaily": "Daily",
+  "@periodDaily": {
+    "description": "Chart granularity selector."
+  },
+  "periodWeekly": "Weekly",
+  "@periodWeekly": {
+    "description": "Chart granularity selector."
+  },
+  "periodMonthly": "Monthly",
+  "@periodMonthly": {
+    "description": "Chart granularity selector."
+  },
+  "periodYearly": "Yearly",
+  "@periodYearly": {
+    "description": "Chart granularity selector."
+  },
+  "sellerSalesTrend": "Sales trend",
+  "@sellerSalesTrend": {
+    "description": "Title of the revenue/orders chart."
+  },
+  "sellerQuickActions": "Quick actions",
+  "@sellerQuickActions": {
+    "description": "Title of the seller shortcut grid."
+  },
+  "sellerAddProduct": "Add product",
+  "@sellerAddProduct": {
+    "description": "Seller shortcut."
+  },
+  "sellerManageOrders": "Manage orders",
+  "@sellerManageOrders": {
+    "description": "Seller shortcut."
+  },
+  "sellerAnalytics": "Analytics",
+  "@sellerAnalytics": {
+    "description": "Seller shortcut."
+  },
+  "sellerCreateCoupon": "Create coupon",
+  "@sellerCreateCoupon": {
+    "description": "Seller shortcut."
+  },
+  "sellerAnnouncement": "Announcement",
+  "@sellerAnnouncement": {
+    "description": "Seller shortcut."
+  },
+  "sellerManageAll": "Manage all",
+  "@sellerManageAll": {
+    "description": "Link from the orders overview to the full order list."
+  },
+  "sellerTopProducts": "Best sellers",
+  "@sellerTopProducts": {
+    "description": "Title of the seller's top products section."
+  },
+  "sellerLowStockTitle": "Low stock",
+  "@sellerLowStockTitle": {
+    "description": "Title of the low-stock section."
+  },
+  "sellerOutOfStock": "Out of stock",
+  "@sellerOutOfStock": {
+    "description": "Badge on a product with no stock left."
+  },
+  "sellerRestock": "Restock",
+  "@sellerRestock": {
+    "description": "Button that opens the stock adjustment flow."
+  },
+  "sellerStorePerformance": "Store health",
+  "@sellerStorePerformance": {
+    "description": "Title of the store score section."
+  },
+  "sellerFulfillment": "Fulfillment",
+  "@sellerFulfillment": {
+    "description": "Store score component."
+  },
+  "sellerResponsiveness": "Responsiveness",
+  "@sellerResponsiveness": {
+    "description": "Store score component."
+  },
+  "sellerProductQuality": "Product quality",
+  "@sellerProductQuality": {
+    "description": "Store score component."
+  },
+  "sellerConversionMetrics": "Conversion",
+  "@sellerConversionMetrics": {
+    "description": "Title of the conversion funnel section."
+  },
+  "sellerConversionRate": "Conversion rate",
+  "@sellerConversionRate": {
+    "description": "Share of viewers who buy."
+  },
+  "sellerProductViews": "Product views",
+  "@sellerProductViews": {
+    "description": "Funnel step."
+  },
+  "sellerCartAdds": "Cart adds",
+  "@sellerCartAdds": {
+    "description": "Funnel step."
+  },
+  "sellerWishlistAdds": "Wishlist adds",
+  "@sellerWishlistAdds": {
+    "description": "Funnel step."
+  },
+  "sellerInsights": "Smart insights",
+  "@sellerInsights": {
+    "description": "Title of the AI insights section."
+  },
+  "sellerRecentReviews": "Recent reviews",
+  "@sellerRecentReviews": {
+    "description": "Title of the reviews section."
+  },
+  "sellerTasks": "To-do list",
+  "@sellerTasks": {
+    "description": "Title of the seller task list."
+  },
+  "sellerGoals": "Store goals",
+  "@sellerGoals": {
+    "description": "Title of the goals section."
+  },
+  "orderNew": "New",
+  "@orderNew": {
+    "description": "Seller order pipeline: orders just placed."
+  },
+  "orderProcessing": "Processing",
+  "@orderProcessing": {
+    "description": "Seller order pipeline: being prepared."
+  },
+  "orderReady": "Ready",
+  "@orderReady": {
+    "description": "Seller order pipeline: packed, waiting for a courier."
+  },
+  "orderDelivered": "Delivered",
+  "@orderDelivered": {
+    "description": "Seller order pipeline: handed to the customer."
+  },
+  "orderCancelled": "Cancelled",
+  "@orderCancelled": {
+    "description": "Seller order pipeline: cancelled before delivery."
+  },
+  "orderReturned": "Returned",
+  "@orderReturned": {
+    "description": "Seller order pipeline: sent back after delivery."
+  },
+  "sellerLiveStore": "Store is live",
+  "@sellerLiveStore": {
+    "description": "Status pill in the seller rail: the storefront is published."
+  },
+  "sellerGroupStore": "Store management",
+  "@sellerGroupStore": {
+    "description": "Seller settings group: the storefront itself."
+  },
+  "sellerGroupBusiness": "Business & finance",
+  "@sellerGroupBusiness": {
+    "description": "Seller settings group: money and reporting."
+  },
+  "sellerGroupPreferences": "Preferences & security",
+  "@sellerGroupPreferences": {
+    "description": "Seller settings group: app preferences and account safety."
+  },
+  "sellerShippingSettings": "Shipping settings",
+  "@sellerShippingSettings": {
+    "description": "Seller menu row: courier and delivery options."
+  },
+  "sellerPaymentSettings": "Payment settings",
+  "@sellerPaymentSettings": {
+    "description": "Seller menu row: payout and payment methods."
+  },
+  "sellerStorePolicies": "Store policies",
+  "@sellerStorePolicies": {
+    "description": "Seller menu row: returns and store rules."
+  },
+  "sellerFinancialReports": "Financial reports",
+  "@sellerFinancialReports": {
+    "description": "Seller menu row: statements and exports."
+  },
+  "sellerWithdrawalCentre": "Withdrawal centre",
+  "@sellerWithdrawalCentre": {
+    "description": "Seller menu row and the title of the payout card."
+  },
+  "sellerTeamManagement": "Team management",
+  "@sellerTeamManagement": {
+    "description": "Seller menu row: staff accounts on the store."
+  },
+  "sellerSubscriptionPlan": "Subscription & plan",
+  "@sellerSubscriptionPlan": {
+    "description": "Seller menu row: the store's billing plan."
+  },
+  "sellerActivityLog": "Activity log",
+  "@sellerActivityLog": {
+    "description": "Seller menu row: audit trail of store actions."
+  },
+  "sellerSupport": "Seller support",
+  "@sellerSupport": {
+    "description": "Seller menu row: a direct line to the platform team."
+  },
+  "sellerAvailableToWithdraw": "Available to withdraw",
+  "@sellerAvailableToWithdraw": {
+    "description": "Caption under the seller's withdrawable balance."
+  },
+  "sellerWithdraw": "Withdraw",
+  "@sellerWithdraw": {
+    "description": "Button that starts a payout."
+  },
+  "sellerPaidOut": "Paid out",
+  "@sellerPaidOut": {
+    "description": "Lifetime total already paid to the seller."
+  },
+  "sellerFees": "Fees",
+  "@sellerFees": {
+    "description": "Commission and platform fees deducted."
+  },
+  "sellerPendingPayout": "Pending",
+  "@sellerPendingPayout": {
+    "description": "Earnings not yet available to withdraw."
+  },
+  "sellerEditStore": "Edit store",
+  "@sellerEditStore": {
+    "description": "Button on the seller profile header."
+  },
+  "sellerPlanBadge": "{plan} plan",
+  "@sellerPlanBadge": {
+    "description": "Subscription badge on the seller profile. {plan} is the plan name.",
+    "placeholders": {
+      "plan": {
+        "type": "String"
+      }
+    }
+  },
+  "sellerMemberSince": "Selling since {year}",
+  "@sellerMemberSince": {
+    "description": "Caption on the seller stats card. {year} is a four-digit year.",
+    "placeholders": {
+      "year": {
+        "type": "String"
+      }
+    }
+  },
+  "sellerRatingSummary": "{rating} · {count} reviews",
+  "@sellerRatingSummary": {
+    "description": "Rating line on the seller stats card; both values are pre-formatted.",
+    "placeholders": {
+      "rating": {
+        "type": "String"
+      },
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "sellerPlatformFooter": "Seller platform · v{version}",
+  "@sellerPlatformFooter": {
+    "description": "Version footer at the foot of the seller profile.",
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "sellerNoProductsYet": "No products yet",
+  "@sellerNoProductsYet": {
+    "description": "Empty state on the seller's product list."
+  },
+  "sellerNoProductsBlurb": "Add your first piece and it will show up here.",
+  "@sellerNoProductsBlurb": {
+    "description": "Empty-state body on the seller's product list."
+  },
+  "sellerNewProduct": "New product",
+  "@sellerNewProduct": {
+    "description": "Floating action on the seller's product list."
+  },
+  "sellerEditProduct": "Edit",
+  "@sellerEditProduct": {
+    "description": "Product row menu action: open the edit form."
+  },
+  "sellerSetActive": "Publish",
+  "@sellerSetActive": {
+    "description": "Product row menu action: put the listing live."
+  },
+  "sellerMoveToDraft": "Move to draft",
+  "@sellerMoveToDraft": {
+    "description": "Product row menu action: unpublish back to a draft."
+  },
+  "sellerArchive": "Archive",
+  "@sellerArchive": {
+    "description": "Product row menu action: retire the listing."
+  },
+  "sellerStock": "{count} in stock",
+  "@sellerStock": {
+    "description": "Stock line on a managed product row. {count} is pre-formatted.",
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "surfaceActivity": "Activity",
+  "@surfaceActivity": {
+    "description": "Seller/admin surface title: recent events."
+  },
+  "surfaceCustomers": "Customers",
+  "@surfaceCustomers": {
+    "description": "Seller surface title: the shop's buyers."
+  },
+  "surfaceMarketing": "Marketing",
+  "@surfaceMarketing": {
+    "description": "Seller surface title: campaigns and promotions."
+  },
+  "savedCount": "{count} saves",
+  "@savedCount": {
+    "description": "How many shoppers saved a listing. {count} is pre-formatted.",
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "formNewProduct": "New product",
+  "@formNewProduct": {
+    "description": "Title of the product form when creating."
+  },
+  "formEditProduct": "Edit product",
+  "@formEditProduct": {
+    "description": "Title of the product form when editing."
+  },
+  "formTitle": "Title",
+  "@formTitle": {
+    "description": "Product form field: the listing name."
+  },
+  "formTitleRequired": "A title is required",
+  "@formTitleRequired": {
+    "description": "Validation on the product title field."
+  },
+  "formDescription": "Description",
+  "@formDescription": {
+    "description": "Product form field: the long copy."
+  },
+  "formDescriptionRequired": "A description is required",
+  "@formDescriptionRequired": {
+    "description": "Validation on the product description field."
+  },
+  "formCategory": "Category",
+  "@formCategory": {
+    "description": "Product form field: which department the piece belongs to."
+  },
+  "formCategoryRequired": "A category is required",
+  "@formCategoryRequired": {
+    "description": "Validation on the product category field."
+  },
+  "formPrice": "Price",
+  "@formPrice": {
+    "description": "Product form field: the asking price."
+  },
+  "formPriceInvalid": "Enter a valid price",
+  "@formPriceInvalid": {
+    "description": "Validation on the product price field."
+  },
+  "formStock": "Stock",
+  "@formStock": {
+    "description": "Product form field: units on hand."
+  },
+  "formStockInvalid": "Enter a valid quantity",
+  "@formStockInvalid": {
+    "description": "Validation on the product stock field."
+  },
+  "formStatus": "Status",
+  "@formStatus": {
+    "description": "Product form field: draft, live or archived."
+  },
+  "formFeatured": "Featured",
+  "@formFeatured": {
+    "description": "Product form toggle: pin the piece to the top of the shop."
+  },
+  "formShowInFeed": "Show in feed",
+  "@formShowInFeed": {
+    "description": "Product form toggle: let the piece appear in the social feed."
+  },
+  "formAddImage": "Add photo",
+  "@formAddImage": {
+    "description": "Product form action: attach a picture."
+  },
+  "formAddVariant": "Add variant",
+  "@formAddVariant": {
+    "description": "Product form action: add a size or colour option."
+  },
+  "formPublishProduct": "Publish product",
+  "@formPublishProduct": {
+    "description": "Primary button that creates the listing."
+  },
+  "formProductCreated": "Product published",
+  "@formProductCreated": {
+    "description": "Confirmation after creating a listing."
+  },
+  "formProductUpdated": "Changes saved",
+  "@formProductUpdated": {
+    "description": "Confirmation after editing a listing."
+  },
+  "formAiDescription": "Write with AI",
+  "@formAiDescription": {
+    "description": "Action that drafts the product description automatically."
+  },
+  "formAiDescriptionAdded": "Description drafted",
+  "@formAiDescriptionAdded": {
+    "description": "Confirmation after the assistant fills the description."
+  },
+  "formAiTags": "Suggest tags",
+  "@formAiTags": {
+    "description": "Action that proposes search tags for the listing."
+  },
+  "formNoTags": "No tags suggested",
+  "@formNoTags": {
+    "description": "Shown when the assistant returns no tags."
+  },
+  "formTitleCategoryFirst": "Add a title and a category first",
+  "@formTitleCategoryFirst": {
+    "description": "Shown when the assistant is invoked before the form has enough to work with."
+  },
+  "categories": "Categories",
+  "@categories": {
+    "description": "Title of the full category browse screen."
+  },
+  "adminSettings": "Administrator settings",
+  "@adminSettings": {
+    "description": "Tooltip on the admin app bar's settings shortcut."
+  },
+  "adminSecurity": "Security",
+  "@adminSecurity": {
+    "description": "Admin nav rail: the security section."
+  },
+  "adminUserManagement": "User management",
+  "@adminUserManagement": {
+    "description": "Admin section: browse and moderate accounts."
+  },
+  "adminSellerManagement": "Seller management",
+  "@adminSellerManagement": {
+    "description": "Admin section: seller applications and status."
+  },
+  "adminProductManagement": "Product management",
+  "@adminProductManagement": {
+    "description": "Admin section: the catalogue."
+  },
+  "adminOrderManagement": "Order management",
+  "@adminOrderManagement": {
+    "description": "Admin section: every order on the platform."
+  },
+  "adminFinancialManagement": "Financial management",
+  "@adminFinancialManagement": {
+    "description": "Admin section: ledger and payouts."
+  },
+  "adminCommissionManagement": "Commission management",
+  "@adminCommissionManagement": {
+    "description": "Admin section: commission rules and rates."
+  },
+  "adminReportsAndAnalytics": "Reports and analytics",
+  "@adminReportsAndAnalytics": {
+    "description": "Admin section: business intelligence."
+  },
+  "adminReports": "Reports",
+  "@adminReports": {
+    "description": "Admin section: generated reports."
+  },
+  "adminModerationTools": "Moderation tools",
+  "@adminModerationTools": {
+    "description": "Admin section: review queues for reported content."
+  },
+  "adminSupportManagement": "Support management",
+  "@adminSupportManagement": {
+    "description": "Admin section: the customer support queue."
+  },
+  "adminAuditLogs": "Audit logs",
+  "@adminAuditLogs": {
+    "description": "Admin section: the record of administrative actions."
+  },
+  "adminSystemSettings": "System settings",
+  "@adminSystemSettings": {
+    "description": "Admin section: platform configuration."
+  },
+  "adminNotificationCampaigns": "Notification campaigns",
+  "@adminNotificationCampaigns": {
+    "description": "Admin section: push and email campaigns."
+  },
+  "adminNotificationAnalytics": "Notification analytics",
+  "@adminNotificationAnalytics": {
+    "description": "Admin section: campaign delivery and engagement."
+  },
+  "adminSectionSubtitle": "Operational controls, review queues, and live records.",
+  "@adminSectionSubtitle": {
+    "description": "Subtitle under an admin section title."
+  },
+  "adminSectionUnavailable": "Unable to load this section.",
+  "@adminSectionUnavailable": {
+    "description": "Error state on an admin section."
+  },
+  "adminNoMatchingRecords": "No matching records found.",
+  "@adminNoMatchingRecords": {
+    "description": "Empty state after filtering an admin table."
+  },
+  "adminNoDataYet": "No data yet.",
+  "@adminNoDataYet": {
+    "description": "Empty state for an admin panel with no rows."
+  },
+  "adminNoRankedData": "No ranked data yet.",
+  "@adminNoRankedData": {
+    "description": "Empty state for a leaderboard panel."
+  },
+  "adminNoRecentActivity": "No recent administrative activity.",
+  "@adminNoRecentActivity": {
+    "description": "Empty state for the audit stream."
+  },
+  "adminAuditUnavailable": "Audit stream unavailable",
+  "@adminAuditUnavailable": {
+    "description": "Error title when the audit feed fails."
+  },
+  "adminRetryFromAudit": "Retry from audit logs",
+  "@adminRetryFromAudit": {
+    "description": "Action that reloads the audit feed."
+  },
+  "adminClearSearch": "Clear search",
+  "@adminClearSearch": {
+    "description": "Tooltip on the admin table's search reset."
+  },
+  "adminQuickActions": "Quick actions",
+  "@adminQuickActions": {
+    "description": "Heading over the admin shortcut row."
+  },
+  "adminRecentActivity": "Recent activity",
+  "@adminRecentActivity": {
+    "description": "Heading over the admin audit feed."
+  },
+  "adminOnlineNow": "Online now",
+  "@adminOnlineNow": {
+    "description": "Live count of signed-in users."
+  },
+  "adminVerifiedSellersOnly": "Verified sellers only",
+  "@adminVerifiedSellersOnly": {
+    "description": "Filter on the seller management table."
+  },
+  "adminRoleFilterHint": "USER, SELLER, ADMIN",
+  "@adminRoleFilterHint": {
+    "description": "Placeholder listing the role values an admin can filter by."
+  },
+  "adminSellerReview": "Seller review",
+  "@adminSellerReview": {
+    "description": "Admin queue: seller applications awaiting a decision."
+  },
+  "adminSupportQueue": "Support queue",
+  "@adminSupportQueue": {
+    "description": "Admin queue: open support conversations."
+  },
+  "adminModeration": "Moderation",
+  "@adminModeration": {
+    "description": "Admin queue: reported content."
+  },
+  "adminFinancials": "Financials",
+  "@adminFinancials": {
+    "description": "Admin shortcut to the finance console."
+  },
+  "adminCustomers": "Customers",
+  "@adminCustomers": {
+    "description": "Admin shortcut to the customer list."
+  },
+  "adminCampaigns": "Campaigns",
+  "@adminCampaigns": {
+    "description": "Admin shortcut to notification campaigns."
+  },
+  "adminNotifyAnalytics": "Notify analytics",
+  "@adminNotifyAnalytics": {
+    "description": "Admin shortcut to notification analytics."
+  },
+  "adminBusinessIntelligence": "Business intelligence",
+  "@adminBusinessIntelligence": {
+    "description": "Title of the admin analytics screen."
+  },
+  "adminAnalyticsSubtitle": "Sales, revenue, conversion, cohorts, and live operations.",
+  "@adminAnalyticsSubtitle": {
+    "description": "Subtitle of the admin analytics screen."
+  },
+  "adminRevenueTrend": "Revenue trend",
+  "@adminRevenueTrend": {
+    "description": "Chart title: revenue over the selected range."
+  },
+  "adminConversionFunnel": "Conversion funnel",
+  "@adminConversionFunnel": {
+    "description": "Chart title: the steps from view to purchase."
+  },
+  "adminTopProducts": "Top products",
+  "@adminTopProducts": {
+    "description": "Leaderboard: best-selling products."
+  },
+  "adminSellerPerformance": "Seller performance",
+  "@adminSellerPerformance": {
+    "description": "Leaderboard: best-performing sellers."
+  },
+  "adminGrossRevenue": "Gross revenue",
+  "@adminGrossRevenue": {
+    "description": "Metric: revenue before deductions."
+  },
+  "adminNetRevenue": "Net revenue",
+  "@adminNetRevenue": {
+    "description": "Metric: revenue after commission and fees."
+  },
+  "adminAov": "Average order value",
+  "@adminAov": {
+    "description": "Metric: mean value of an order."
+  },
+  "adminRepeatRate": "Repeat rate",
+  "@adminRepeatRate": {
+    "description": "Metric: share of customers who order again."
+  },
+  "adminRetentionRate": "Retention",
+  "@adminRetentionRate": {
+    "description": "Metric: share of customers retained."
+  },
+  "adminExportExcel": "Export Excel",
+  "@adminExportExcel": {
+    "description": "Action that downloads the analytics as a spreadsheet."
+  },
+  "adminExportPdf": "Export PDF",
+  "@adminExportPdf": {
+    "description": "Action that downloads the analytics as a PDF."
+  },
+  "adminNewCampaign": "New campaign",
+  "@adminNewCampaign": {
+    "description": "Action that opens the campaign composer."
+  },
+  "adminNewCampaignTitle": "New notification campaign",
+  "@adminNewCampaignTitle": {
+    "description": "Title of the campaign composer sheet."
+  },
+  "adminCampaignName": "Campaign name",
+  "@adminCampaignName": {
+    "description": "Field label in the campaign composer."
+  },
+  "adminNotificationTitle": "Notification title",
+  "@adminNotificationTitle": {
+    "description": "Field label in the campaign composer."
+  },
+  "adminMessageBody": "Message body",
+  "@adminMessageBody": {
+    "description": "Field label in the campaign composer."
+  },
+  "adminChannels": "Channels",
+  "@adminChannels": {
+    "description": "Field label: where the campaign is delivered."
+  },
+  "adminRunCampaign": "Run campaign",
+  "@adminRunCampaign": {
+    "description": "Action that sends a campaign now."
+  },
+  "adminCampaignCreated": "Campaign created.",
+  "@adminCampaignCreated": {
+    "description": "Confirmation after saving a campaign."
+  },
+  "adminCampaignQueued": "Campaign queued for delivery.",
+  "@adminCampaignQueued": {
+    "description": "Confirmation after starting a campaign."
+  },
+  "adminCampaignFieldsRequired": "Name, title, and body are required.",
+  "@adminCampaignFieldsRequired": {
+    "description": "Validation error in the campaign composer."
+  },
+  "adminSelectChannel": "Select at least one channel.",
+  "@adminSelectChannel": {
+    "description": "Validation error in the campaign composer."
+  },
+  "adminScheduleIsoHint": "Use an ISO schedule time.",
+  "@adminScheduleIsoHint": {
+    "description": "Validation error for the campaign schedule field."
+  },
+  "create": "Create",
+  "@create": {
+    "description": "Confirms creating a new record."
+  },
+  "adminLastDays": "Last {count} days",
+  "@adminLastDays": {
+    "description": "Range chip on the admin analytics console.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "sellerDeleteProduct": "Delete product?",
+  "@sellerDeleteProduct": {
+    "description": "Title of the confirm dialog before a listing is removed."
+  },
+  "sellerDeleteProductBody": "“{title}” will be permanently removed.",
+  "@sellerDeleteProductBody": {
+    "description": "Body of the delete-product confirm dialog. {title} is the listing name.",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "mediaSourceTitle": "Add a photo",
+  "@mediaSourceTitle": {
+    "description": "Title of the sheet offering camera or gallery."
+  },
+  "mediaFromCamera": "Take a photo",
+  "@mediaFromCamera": {
+    "description": "Media picker: open the camera."
+  },
+  "mediaFromGallery": "Choose from gallery",
+  "@mediaFromGallery": {
+    "description": "Media picker: open the photo library."
+  },
+  "mediaUploading": "Uploading…",
+  "@mediaUploading": {
+    "description": "Shown over a thumbnail while its bytes are in flight."
+  },
+  "mediaUploadFailed": "Upload failed",
+  "@mediaUploadFailed": {
+    "description": "Shown over a thumbnail whose upload did not complete."
+  },
+  "mediaRemovePhoto": "Remove photo",
+  "@mediaRemovePhoto": {
+    "description": "Accessibility label for the delete control on a thumbnail."
+  },
+  "mediaCoverBadge": "Cover",
+  "@mediaCoverBadge": {
+    "description": "Badge on the first photo in a product gallery."
+  },
+  "mediaPickFailed": "Could not open your photos. Check the app's photo permission in Settings.",
+  "@mediaPickFailed": {
+    "description": "Shown when the OS picker refuses to open, almost always a denied permission."
+  },
+  "mediaProductGallery": "Product photos",
+  "@mediaProductGallery": {
+    "description": "Label above the product form's gallery field."
+  },
+  "mediaStoryLabel": "Story image",
+  "@mediaStoryLabel": {
+    "description": "Label above the story composer's media field."
+  },
+  "mediaWaitForUploads": "Wait for the photos to finish uploading.",
+  "@mediaWaitForUploads": {
+    "description": "Shown when a form is submitted while an upload is still running."
+  },
+  "mediaGalleryHint": "The first photo is the cover. Up to {count} photos.",
+  "@mediaGalleryHint": {
+    "description": "Helper text under a product gallery field.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "mediaStoryRequired": "Choose an image for the story first.",
+  "@mediaStoryRequired": {
+    "description": "Shown when the story composer is submitted with no media."
+  },
+  "storeLogo": "Store logo",
+  "@storeLogo": {
+    "description": "Seller application: the store's logo image."
+  },
+  "governmentIdDocument": "Photo of your ID",
+  "@governmentIdDocument": {
+    "description": "Seller application: identity document upload."
+  },
+  "businessLicenseDocument": "Commercial register or licence",
+  "@businessLicenseDocument": {
+    "description": "Seller application: business licence upload."
+  },
+  "verificationDocumentsPrivate": "Only you and the review team can open these. They never appear on your store.",
+  "@verificationDocumentsPrivate": {
+    "description": "Reassurance above the private document uploads."
+  },
+  "verificationDocumentsHint": "Photograph each document in full, in good light.",
+  "@verificationDocumentsHint": {
+    "description": "How to photograph a document well."
+  },
+  "verificationSectionStore": "Your store",
+  "@verificationSectionStore": {
+    "description": "Section header in the seller application."
+  },
+  "verificationSectionContact": "Contact and addresses",
+  "@verificationSectionContact": {
+    "description": "Section header in the seller application."
+  },
+  "verificationSectionDocuments": "Documents",
+  "@verificationSectionDocuments": {
+    "description": "Section header in the seller application."
+  },
+  "verificationSectionPayout": "Bank account",
+  "@verificationSectionPayout": {
+    "description": "Section header in the seller application."
+  },
+  "verificationSectionOperations": "Shipping and returns",
+  "@verificationSectionOperations": {
+    "description": "Section header in the seller application."
+  },
+  "shippingMethodsHint": "Courier, pickup, same-day",
+  "@shippingMethodsHint": {
+    "description": "Example shipping methods, comma separated."
+  },
+  "productCategoriesHint": "Fashion, perfume, handmade",
+  "@productCategoriesHint": {
+    "description": "Example product categories, comma separated."
+  },
+  "verificationResubmitNotice": "You have applied before. Editing and submitting replaces that application.",
+  "@verificationResubmitNotice": {
+    "description": "Shown when an application already exists."
+  },
+  "mediaDocumentAttached": "Attached",
+  "@mediaDocumentAttached": {
+    "description": "Caption on a tile standing in for a document already uploaded."
+  },
+  "verificationUploadPending": "Wait for the documents to finish uploading.",
+  "@verificationUploadPending": {
+    "description": "Shown when the application is submitted mid-upload."
+  },
+  "verificationFieldRequired": "«{field}» is required.",
+  "@verificationFieldRequired": {
+    "description": "Names the one field the application is missing.",
+    "placeholders": {
+      "field": {
+        "type": "String"
+      }
+    }
+  },
+  "verificationStatusPending": "Pending",
+  "@verificationStatusPending": {
+    "description": "Seller verification status, as shown to the seller."
+  },
+  "verificationStatusUnderReview": "Under review",
+  "@verificationStatusUnderReview": {
+    "description": "Seller verification status, as shown to the seller."
+  },
+  "verificationStatusNeedsMoreDocuments": "More documents needed",
+  "@verificationStatusNeedsMoreDocuments": {
+    "description": "Seller verification status, as shown to the seller."
+  },
+  "verificationStatusNeedsMoreInfo": "More information needed",
+  "@verificationStatusNeedsMoreInfo": {
+    "description": "Seller verification status, as shown to the seller."
+  },
+  "verificationStatusApproved": "Approved",
+  "@verificationStatusApproved": {
+    "description": "Seller verification status, as shown to the seller."
+  },
+  "verificationStatusRejected": "Rejected",
+  "@verificationStatusRejected": {
+    "description": "Seller verification status, as shown to the seller."
+  },
+  "verificationStatusSuspended": "Suspended",
+  "@verificationStatusSuspended": {
+    "description": "Seller verification status, as shown to the seller."
+  },
+  "mediaFromFiles": "Choose a file",
+  "@mediaFromFiles": {
+    "description": "Media picker: open the device file browser (documents)."
+  },
+  "mediaDocumentsHint": "A clear photograph, or the original PDF.",
+  "@mediaDocumentsHint": {
+    "description": "Helper under a document picker that also accepts PDFs."
+  },
+  "mediaTooLarge": "This file is larger than {size} MB.",
+  "@mediaTooLarge": {
+    "description": "Shown when a picked file exceeds the size ceiling before any upload starts.",
+    "placeholders": {
+      "size": {
+        "type": "String"
+      }
+    }
+  },
+  "chatAttachTitle": "Attach a photo",
+  "@chatAttachTitle": {
+    "description": "Title of the chat attachment sheet."
+  },
+  "chatAttachmentFailed": "The photo could not be sent.",
+  "@chatAttachmentFailed": {
+    "description": "Shown when a chat attachment upload fails."
+  },
+  "chatSharedMedia": "Shared photos",
+  "@chatSharedMedia": {
+    "description": "Title of the screen listing photos shared in a conversation."
+  },
+  "chatNoSharedMedia": "Nothing has been shared here yet.",
+  "@chatNoSharedMedia": {
+    "description": "Empty state for the shared-media screen."
+  },
+  "chatPhotoMessage": "Photo",
+  "@chatPhotoMessage": {
+    "description": "Fallback text for a message that is only a photograph."
+  },
+  "chatStartConversation": "Start the conversation",
+  "@chatStartConversation": {
+    "description": "Empty-state title inside a conversation with no messages yet."
+  },
+  "chatStartConversationHint": "Ask about the piece, the size or the delivery — or send a photo or a voice note.",
+  "@chatStartConversationHint": {
+    "description": "Empty-state body inside an empty conversation."
+  },
+  "chatShareImage": "Send a photo",
+  "@chatShareImage": {
+    "description": "Button in the empty conversation state that opens the attachment sheet."
+  },
+  "voicePermissionDenied": "Reem needs permission to use the microphone.",
+  "@voicePermissionDenied": {
+    "description": "Shown when microphone permission is refused."
+  },
+  "voiceRecordFailed": "Recording could not start.",
+  "@voiceRecordFailed": {
+    "description": "Shown when the recorder fails to start."
+  },
+  "voiceSend": "Send the recording",
+  "@voiceSend": {
+    "description": "Tooltip on the send button while recording."
+  },
+  "voiceRecord": "Record a voice note",
+  "@voiceRecord": {
+    "description": "Tooltip on the microphone button in the composer."
+  },
+  "voiceMessage": "Voice note",
+  "@voiceMessage": {
+    "description": "Message text carried alongside a voice attachment."
+  },
+  "voiceUnavailable": "This recording is unavailable.",
+  "@voiceUnavailable": {
+    "description": "Shown when a voice note cannot be played back."
+  },
+  "chatFromFiles": "Send a file",
+  "@chatFromFiles": {
+    "description": "Attachment sheet: pick a document from storage."
+  },
+  "chatOpenFileFailed": "No app on this phone can open this file.",
+  "@chatOpenFileFailed": {
+    "description": "Shown when the OS has no handler for a downloaded attachment."
+  },
+  "chatFileMessage": "File",
+  "@chatFileMessage": {
+    "description": "Message text carried alongside a document attachment."
+  },
+  "chatDownloadFailed": "The file could not be downloaded.",
+  "@chatDownloadFailed": {
+    "description": "Shown when fetching an attachment fails."
+  },
+  "sellerOrdersTitle": "My orders",
+  "@sellerOrdersTitle": { "description": "Title of the seller's order queue." },
+  "sellerOrdersTabNew": "New",
+  "sellerOrdersTabPreparing": "Preparing",
+  "sellerOrdersTabReady": "Ready",
+  "sellerOrdersTabShipping": "On the way",
+  "sellerOrdersTabReturns": "Returns",
+  "sellerOrdersTabCompleted": "Completed",
+  "sellerOrdersOffline": "No internet connection",
+  "sellerOrdersLoadFailed": "Could not open this order",
+  "sellerOrdersUpdated": "Order updated",
+  "sellerOrdersEmptyNew": "No new orders",
+  "sellerOrdersEmptyPreparing": "Nothing being prepared",
+  "sellerOrdersEmptyReady": "Nothing ready to ship",
+  "sellerOrdersEmptyShipping": "No parcels on the way",
+  "sellerOrdersEmptyReturns": "No returns",
+  "sellerOrdersEmptyCompleted": "No completed orders yet",
+  "sellerOrdersEmptyNewBody": "Orders appear here the moment a customer buys from you.",
+  "sellerOrdersEmptyReturnsBody": "Which is good news.",
+  "sellerOrdersEmptyBody": "Orders move here as they progress.",
+  "sellerOrderActionConfirm": "Accept order",
+  "sellerOrderActionReady": "Ready to ship",
+  "sellerOrderActionHandOver": "Handed over",
+  "sellerOrderActionDeliver": "Delivered",
+  "sellerOrderActionCancel": "Cancel order",
+  "sellerOrderConfirmed": "Accepted — the order is now being prepared",
+  "sellerOrderMarkedReady": "The order is ready to ship",
+  "sellerOrderHandedOver": "Handover recorded",
+  "sellerOrderDelivered": "Delivery recorded",
+  "sellerOrderCancelled": "Order cancelled and the items returned to stock",
+  "sellerParcelStatusNew": "New order",
+  "sellerParcelStatusAwaitingConfirmation": "Awaiting your confirmation",
+  "sellerParcelStatusPreparing": "Being prepared",
+  "sellerParcelStatusReadyToShip": "Ready to ship",
+  "sellerParcelStatusHandedToCourier": "With the courier",
+  "sellerParcelStatusInTransit": "On the way",
+  "sellerParcelStatusDelivered": "Delivered",
+  "sellerParcelStatusDeliveryFailed": "Delivery failed",
+  "sellerParcelStatusCancelledByCustomer": "Cancelled by the customer",
+  "sellerParcelStatusCancelledBySeller": "You cancelled it",
+  "sellerParcelStatusRejectedOnDelivery": "Refused at the door",
+  "sellerParcelStatusReturnRequested": "Return requested",
+  "sellerParcelStatusReturnInTransit": "Return on its way",
+  "sellerParcelStatusReturned": "Return received",
+  "sellerParcelStatusExchangeInProgress": "Exchange in progress",
+  "sellerParcelStatusExchanged": "Exchanged",
+  "sellerParcelStatusRefundPending": "Refund pending",
+  "sellerParcelStatusRefunded": "Refunded",
+  "sellerParcelStatusDisputed": "In dispute",
+  "sellerFulfilmentPlatformCourier": "Platform courier",
+  "sellerFulfilmentThirdParty": "Shipping company",
+  "sellerFulfilmentSelfShips": "You deliver it",
+  "sellerFulfilmentPickupPoint": "Pickup point",
+  "sellerOrderCashOnDelivery": "Cash on delivery",
+  "sellerOrderItemsToPack": "What to pack",
+  "sellerOrderStepPlaced": "Order received",
+  "sellerOrderStepConfirmed": "You accepted it",
+  "sellerOrderStepShipped": "Left for delivery",
+  "sellerOrderStepDelivered": "Delivered",
+  "sellerOrderCourierAssigned": "Courier assigned",
+  "sellerOrderCourierPending": "Awaiting a courier",
+  "sellerOrderItemsSubtotal": "Items subtotal",
+  "sellerOrderDiscount": "Discount",
+  "sellerOrderCommission": "Platform commission",
+  "sellerOrderNet": "Your net earnings",
+  "sellerOrderEscrowReleased": "These earnings are now available for payout.",
+  "sellerOrderEscrowPending": "Earnings are counted after delivery and once the return window closes.",
+  "sellerOrderCallCustomer": "Call the customer",
+  "sellerOrderAddressCopied": "Address copied",
+  "sellerCancelSubtitle": "The items go back to your stock, and the customer is told the reason you write.",
+  "sellerCancelReasonLabel": "Reason",
+  "sellerCancelReasonHint": "Write a reason the customer will understand",
+  "sellerCancelReasonTooShort": "Write a reason of at least five characters",
+  "sellerCancelConfirm": "Confirm cancellation",
+  "sellerCancelDismiss": "Go back",
+  "sellerCancelPresetOutOfStock": "Out of stock",
+  "sellerCancelPresetSizeGone": "That size has run out",
+  "sellerCancelPresetPriceError": "The listed price was wrong",
+  "sellerCancelPresetNoTime": "I cannot prepare it in time",
+  "sellerDeliverTitle": "Confirm delivery",
+  "sellerDeliverSubtitleCash": "Enter what you actually collected. Leave it empty if you collected the full amount.",
+  "sellerDeliverSubtitlePrepaid": "This order is prepaid — there is nothing to collect.",
+  "sellerDeliverCollectedLabel": "Amount collected",
+  "sellerDeliverCollectedHint": "Leave empty if you collected the full amount",
+  "sellerOrderEscrowOn": "Earnings become available once the return window closes on {date}.",
+  "@sellerOrderEscrowOn": {"placeholders": {"date": {"type": "String"}}},
+  "checkoutTitle": "Checkout",
+  "@checkoutTitle": { "description": "Title of the checkout screen." },
+  "checkoutDeliveryAddress": "Delivery address",
+  "checkoutSavedAddresses": "Your saved addresses",
+  "checkoutNewAddress": "New address",
+  "checkoutUseThisAddress": "Deliver here",
+  "checkoutSaveAddress": "Save this address for next time",
+  "checkoutRecipientName": "Recipient name",
+  "checkoutRecipientPhone": "Phone number",
+  "checkoutGovernorate": "Governorate",
+  "checkoutDistrict": "District",
+  "checkoutDistrictOptional": "District (optional)",
+  "checkoutCity": "City or town",
+  "checkoutAddressLine": "Detailed address",
+  "checkoutAddressLineHint": "Street, building number, floor",
+  "checkoutLandmark": "Nearby landmark (optional)",
+  "checkoutLandmarkHint": "Opposite the pharmacy",
+  "checkoutInstructions": "Delivery notes (optional)",
+  "checkoutInstructionsHint": "Call before arriving",
+  "checkoutRural": "This is a rural area",
+  "checkoutRuralHint": "The fee and the time differ from the city centre",
+  "checkoutCoupon": "Discount coupon",
+  "checkoutCouponOptional": "Coupon code (optional)",
+  "checkoutPaymentMethod": "Payment method",
+  "checkoutOrderSummary": "Order summary",
+  "checkoutSubtotal": "Subtotal",
+  "checkoutDelivery": "Delivery",
+  "checkoutPlaceOrder": "Place order",
+  "checkoutRequired": "This field is required",
+  "checkoutInvalidPhone": "Enter a valid phone number",
+  "checkoutChooseGovernorate": "Choose a governorate",
+  "checkoutChoosePayment": "Choose a payment method",
+  "checkoutTotalPending": "The final total is calculated when you place the order",
+  "checkoutPlacedSuccess": "Your order {number} is confirmed",
+  "@checkoutPlacedSuccess": {"placeholders": {"number": {"type": "String"}}},
+  "checkoutSplitNotice": "Your order is from {count} sellers and arrives in several parcels — with one delivery fee.",
+  "@checkoutSplitNotice": {"placeholders": {"count": {"type": "String"}}}
 }

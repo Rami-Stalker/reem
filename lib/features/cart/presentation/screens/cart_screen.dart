@@ -3,13 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/design_system/design_system.dart';
-import '../../../../core/design_system/components/cards/surface_card.dart';
-import '../../../../core/design_system/components/snackbars/app_snackbar.dart'
-    show DsSnackbar, DsSnackbarType;
 import '../../../../core/router/route_paths.dart';
-import '../../../../core/shared/wedgets/app/premium_app_bar.dart';
+import '../../../auth/presentation/widgets/auth_prompt_sheet.dart';
 import '../../domain/entities/cart.dart';
 import '../providers/cart_providers.dart';
+import '../../../../core/localization/l10n_extension.dart';
 
 class CartScreen extends ConsumerWidget {
   const CartScreen({super.key});
@@ -30,10 +28,20 @@ class CartScreen extends ConsumerWidget {
           ? null
           : _CheckoutBar(
               cart: state.cart,
-              onCheckout: () => context.push(RoutePaths.checkout),
+              onCheckout: () async {
+                final ok = await requireAuthenticatedUser(
+                  context,
+                  ref,
+                  title: context.l10n.signInToCheckout,
+                  message:
+                      context.l10n.guestCartSafe,
+                  from: RoutePaths.checkout,
+                );
+                if (ok && context.mounted) context.push(RoutePaths.checkout);
+              },
             ),
       slivers: [
-        const PremiumAppBar(title: 'My Cart', showBack: true),
+        PremiumAppBar(title: context.l10n.myCart, showBack: true),
         if (state.isLoading && state.cart.isEmpty)
           const SliverFillRemaining(
             hasScrollBody: false,
@@ -86,21 +94,23 @@ class _CartLineTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.dsColors;
-    return SurfaceCard(
+    return CustomerPanel(
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           ClipRRect(
-            borderRadius: BorderRadius.circular(DsRadius.md),
+            borderRadius: BorderRadius.circular(24),
             child: SizedBox(
-              width: 64,
-              height: 64,
+              width: 78,
+              height: 92,
               child: line.image != null
-                  ? Image.network(line.image!, fit: BoxFit.cover,
+                  ? Image.network(
+                      line.image!,
+                      fit: BoxFit.cover,
                       errorBuilder: (_, __, ___) =>
-                          Container(color: colors.surfaceVariant))
-                  : Container(color: colors.surfaceVariant),
+                          Container(color: CustomerExperience.ivory),
+                    )
+                  : Container(color: CustomerExperience.ivory),
             ),
           ),
           const SizedBox(width: DsSpacing.md),
@@ -114,8 +124,8 @@ class _CartLineTile extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     fontFamily: DsTypography.fontFamily,
-                    fontWeight: DsTypography.semiBold,
-                    color: colors.onSurface,
+                    fontWeight: DsTypography.bold,
+                    color: CustomerExperience.ink,
                   ),
                 ),
                 if (line.variantName != null)
@@ -123,24 +133,24 @@ class _CartLineTile extends StatelessWidget {
                     line.variantName!,
                     style: TextStyle(
                       fontSize: DsTypography.bodySmall,
-                      color: colors.onSurfaceVariant,
+                      color: CustomerExperience.muted,
                     ),
                   ),
                 const SizedBox(height: 4),
                 Text(
-                  '\$${line.lineTotal.toStringAsFixed(2)}',
+                  line.lineTotal.format(),
                   style: TextStyle(
                     fontFamily: DsTypography.fontFamily,
                     fontWeight: DsTypography.bold,
-                    color: colors.primary,
+                    color: CustomerExperience.rose,
                   ),
                 ),
                 if (!line.inStock)
                   Text(
-                    'Out of stock',
+                    'نفد المخزون',
                     style: TextStyle(
                       fontSize: DsTypography.bodySmall,
-                      color: colors.error,
+                      color: const Color(0xFFB91C1C),
                     ),
                   ),
               ],
@@ -151,7 +161,10 @@ class _CartLineTile extends StatelessWidget {
             children: [
               IconButton(
                 visualDensity: VisualDensity.compact,
-                icon: Icon(Icons.delete_outline, color: colors.onSurfaceVariant),
+                icon: const Icon(
+                  Icons.delete_outline,
+                  color: CustomerExperience.muted,
+                ),
                 onPressed: isMutating ? null : onRemove,
               ),
               _QtyStepper(
@@ -186,8 +199,9 @@ class _QtyStepper extends StatelessWidget {
     final colors = context.dsColors;
     return Container(
       decoration: BoxDecoration(
-        color: colors.surfaceVariant,
+        color: CustomerExperience.ivory,
         borderRadius: BorderRadius.circular(DsRadius.full),
+        border: Border.all(color: CustomerExperience.champagne),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -204,9 +218,9 @@ class _QtyStepper extends StatelessWidget {
                     )
                   : Text(
                       '$quantity',
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontWeight: DsTypography.bold,
-                        color: colors.onSurface,
+                        color: CustomerExperience.ink,
                       ),
                     ),
             ),
@@ -221,7 +235,10 @@ class _QtyStepper extends StatelessWidget {
     return IconButton(
       visualDensity: VisualDensity.compact,
       iconSize: 18,
-      icon: Icon(icon, color: onTap == null ? colors.disabled : colors.primary),
+      icon: Icon(
+        icon,
+        color: onTap == null ? colors.disabled : CustomerExperience.rose,
+      ),
       onPressed: onTap,
     );
   }
@@ -235,7 +252,6 @@ class _CheckoutBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.dsColors;
     final disabled = cart.hasOutOfStock;
     return Container(
       padding: EdgeInsets.fromLTRB(
@@ -245,8 +261,11 @@ class _CheckoutBar extends StatelessWidget {
         DsSpacing.md + MediaQuery.of(context).padding.bottom,
       ),
       decoration: BoxDecoration(
-        color: colors.surface,
-        border: Border(top: BorderSide(color: colors.border)),
+        color: Colors.white.withValues(alpha: .92),
+        border: Border(
+          top: BorderSide(color: CustomerExperience.champagne.withValues(alpha: .5)),
+        ),
+        boxShadow: CustomerExperience.softShadow,
       ),
       child: Row(
         children: [
@@ -255,19 +274,19 @@ class _CheckoutBar extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Subtotal',
+                  context.l10n.subtotal,
                   style: TextStyle(
                     fontSize: DsTypography.bodySmall,
-                    color: colors.onSurfaceVariant,
+                    color: CustomerExperience.muted,
                   ),
                 ),
                 Text(
-                  '\$${cart.summary.subtotal.toStringAsFixed(2)}',
+                  cart.summary.subtotal?.format() ?? '—',
                   style: TextStyle(
                     fontFamily: DsTypography.fontFamily,
                     fontSize: DsTypography.titleMedium,
                     fontWeight: DsTypography.bold,
-                    color: colors.onSurface,
+                    color: CustomerExperience.ink,
                   ),
                 ),
               ],
@@ -275,8 +294,9 @@ class _CheckoutBar extends StatelessWidget {
           ),
           SizedBox(
             width: 170,
-            child: PrimaryButton(
-              label: disabled ? 'Remove out-of-stock' : 'Checkout',
+            child: CustomerPrimaryButton(
+              label: disabled ? context.l10n.removeOutOfStock : context.l10n.checkout,
+              icon: Icons.lock_rounded,
               onPressed: disabled ? null : onCheckout,
             ),
           ),
@@ -291,28 +311,39 @@ class _EmptyCart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.dsColors;
     return Padding(
       padding: const EdgeInsets.all(DsSpacing.xl),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.shopping_bag_outlined, size: 56, color: colors.primary),
+          Container(
+            width: 88,
+            height: 88,
+            decoration: const BoxDecoration(
+              shape: BoxShape.circle,
+              gradient: CustomerExperience.signatureGradient,
+            ),
+            child: const Icon(
+              Icons.shopping_bag_outlined,
+              size: 42,
+              color: Colors.white,
+            ),
+          ),
           const SizedBox(height: DsSpacing.md),
           Text(
-            'Your cart is empty',
+            context.l10n.emptyCart,
             style: TextStyle(
               fontFamily: DsTypography.fontFamily,
               fontWeight: DsTypography.bold,
               fontSize: DsTypography.titleMedium,
-              color: colors.onSurface,
+              color: CustomerExperience.ink,
             ),
           ),
           const SizedBox(height: DsSpacing.xs),
           Text(
-            'Browse the shop and add something you love.',
+            context.l10n.browseAndAdd,
             textAlign: TextAlign.center,
-            style: TextStyle(color: colors.onSurfaceVariant),
+            style: TextStyle(color: CustomerExperience.muted),
           ),
         ],
       ),

@@ -2,21 +2,21 @@ import { Type } from 'class-transformer';
 import {
   ArrayMaxSize,
   IsArray,
-  IsBoolean,
-  IsEnum,
-  IsInt,
-  IsNumber,
+  IsObject,
   IsOptional,
   IsString,
+  IsUUID,
   MaxLength,
-  Min,
   MinLength,
   ValidateNested,
 } from 'class-validator';
-import { ProductStatus } from '@prisma/client';
 import { ProductMediaDto } from './product-media.dto';
 
-/** All fields optional. Providing `media` replaces the gallery wholesale. */
+/**
+ * Edits to the CANONICAL catalog entry — the copy every seller listing on this
+ * product shares. Price and stock are not here; they belong to the offer.
+ * Providing `media` replaces the gallery wholesale.
+ */
 export class UpdateProductDto {
   @IsOptional()
   @IsString()
@@ -31,41 +31,25 @@ export class UpdateProductDto {
   description?: string;
 
   @IsOptional()
+  @IsUUID()
+  category_id?: string;
+
+  @IsOptional()
+  @IsUUID()
+  brand_id?: string;
+
+  @IsOptional()
+  @IsObject()
+  attributes?: Record<string, unknown>;
+
+  @IsOptional()
   @IsString()
-  @MinLength(1)
-  @MaxLength(60)
-  category?: string;
-
-  @IsOptional()
-  @IsNumber()
-  @Min(0)
-  price?: number;
-
-  @IsOptional()
-  @IsNumber()
-  @Min(0)
-  old_price?: number;
-
-  @IsOptional()
-  @IsInt()
-  @Min(0)
-  stock?: number;
-
-  @IsOptional()
-  @IsEnum(ProductStatus)
-  status?: ProductStatus;
-
-  @IsOptional()
-  @IsBoolean()
-  is_featured?: boolean;
-
-  @IsOptional()
-  @IsBoolean()
-  show_in_feed?: boolean;
+  @MaxLength(64)
+  gtin?: string;
 
   @IsOptional()
   @IsArray()
-  @ArrayMaxSize(12)
+  @ArrayMaxSize(10)
   @ValidateNested({ each: true })
   @Type(() => ProductMediaDto)
   media?: ProductMediaDto[];

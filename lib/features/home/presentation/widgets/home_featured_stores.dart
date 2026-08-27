@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/design_system/design_system.dart';
+import '../../../../core/localization/l10n_extension.dart';
 import '../../../../core/router/route_paths.dart';
 import '../../domain/entities/featured_store.dart';
 import '../providers/home_content_provider.dart';
@@ -33,8 +34,8 @@ class HomeFeaturedStores extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         HomeSectionHeader(
-          eyebrow: 'Discover',
-          title: 'Featured boutiques',
+          eyebrow: context.l10n.homeFeaturedEyebrow,
+          title: context.l10n.homeFeaturedStores,
           onSeeAll: () => context.push(RoutePaths.categories),
         ),
         SizedBox(
@@ -184,7 +185,7 @@ class _StoreCardState extends State<_StoreCard> {
                     children: [
                       for (final img in store.previewImages.take(3))
                         Padding(
-                          padding: const EdgeInsets.only(right: DsSpacing.xs),
+                          padding: const EdgeInsetsDirectional.only(end: DsSpacing.xs),
                           child: ClipRRect(
                             borderRadius: DsRadius.borderSm,
                             child: CachedNetworkImage(
@@ -247,7 +248,7 @@ class _FollowButton extends StatelessWidget {
             ),
             const SizedBox(width: 3),
             Text(
-              following ? 'Following' : 'Follow',
+              following ? context.l10n.following : context.l10n.follow,
               style: TextStyle(
                 fontSize: DsTypography.labelMedium,
                 fontWeight: DsTypography.bold,

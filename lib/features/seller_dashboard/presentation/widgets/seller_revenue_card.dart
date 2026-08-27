@@ -1,83 +1,102 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../../core/design_system/design_system.dart';
+import '../../../../core/design_system/design_system.dart';
+import '../../../../core/localization/l10n_extension.dart';
 import '../../domain/entities/seller_analytics.dart';
+import '../../domain/entities/seller_chart_data.dart';
 import '../providers/seller_dashboard_provider.dart';
+import 'seller_format.dart';
+import 'seller_labels.dart';
 import 'seller_mini_chart.dart';
 
-/// The revenue dashboard card — period tabs (Today/Week/Month/Year) with a live
-/// revenue figure, profit split, trend arrow and a mini sparkline.
+/// The money card — the first figure a seller looks for.
+///
+/// Rebuilt on three counts. It quoted dollars on a platform that prices in
+/// Syrian pounds; its sparkline was a hardcoded literal in the widget rather
+/// than the store's own numbers; and it painted a fixed slate gradient that
+/// ignored the theme. Now it reads SYP through [Money], draws the real series
+/// from the dashboard's chart data, and wears the atelier's plum.
 class SellerRevenueCard extends ConsumerWidget {
   const SellerRevenueCard({super.key});
-
-  // Sparkline seeds per period (static mock values — replace with chart data).
-  static const _sparks = <RevenuePeriod, List<double>>{
-    RevenuePeriod.today: [120, 340, 580, 420, 680, 920, 1240, 1840],
-    RevenuePeriod.week: [1840, 2340, 1980, 2680, 3420, 2100, 1840],
-    RevenuePeriod.month: [12400, 14800, 18200, 16400, 21800, 58700],
-    RevenuePeriod.year: [42000, 86400, 137200, 184300],
-  };
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(sellerDashboardNotifierProvider);
     final notifier = ref.read(sellerDashboardNotifierProvider.notifier);
-    final c = context.dsColors;
+    final palette = context.atelier;
+    final l10n = context.l10n;
 
     if (state.isInitialLoading) {
-      return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: DsSpacing.lg),
+      return const Padding(
+        padding: EdgeInsets.symmetric(horizontal: DsSpacing.lg),
         child: DsShimmer(
-            child: DsSkeleton.box(height: 210, borderRadius: DsRadius.xxl)),
+          child: DsSkeleton.box(height: 214, borderRadius: DsRadius.xxl),
+        ),
       );
     }
 
-    final revenue = state.data?.revenue;
+    final data = state.data;
+    final revenue = data?.revenue;
     if (revenue == null) return const SizedBox.shrink();
 
     final period = state.selectedRevenuePeriod;
     final (value, trend) = _periodData(revenue, period);
+    final spark = _sparkFor(data!.charts, period);
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: DsSpacing.lg),
       child: Container(
         decoration: BoxDecoration(
-          gradient: context.primaryGradient,
-          borderRadius: DsRadius.borderXxl,
-          boxShadow:
-              context.glowShadow(c.primary, blur: 32, alpha: 0.28),
+          gradient: palette.headerGradient,
+          borderRadius: BorderRadius.circular(DsRadius.xxl),
+          boxShadow: [
+            BoxShadow(
+              color: palette.primary.withValues(alpha: 0.22),
+              blurRadius: 28,
+              offset: const Offset(0, 14),
+            ),
+          ],
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Period tabs.
             Padding(
               padding: const EdgeInsets.fromLTRB(
-                  DsSpacing.lg, DsSpacing.md, DsSpacing.md, 0),
+                DsSpacing.lg,
+                DsSpacing.md,
+                DsSpacing.sm,
+                0,
+              ),
               child: Row(
                 children: [
                   Expanded(
                     child: Text(
-                      'Revenue',
+                      l10n.sellerRevenue,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         fontFamily: DsTypography.fontFamily,
                         fontSize: DsTypography.labelMedium,
                         fontWeight: DsTypography.semiBold,
-                        color: Colors.white.withValues(alpha: 0.85),
+                        color: Colors.white.withValues(alpha: 0.82),
                       ),
                     ),
                   ),
-                  _PeriodTabs(selected: period, onSelect: notifier.setRevenuePeriod),
+                  _PeriodTabs(
+                    selected: period,
+                    onSelect: notifier.setRevenuePeriod,
+                  ),
                 ],
               ),
             ),
-
-            // Revenue + sparkline.
             Padding(
               padding: const EdgeInsets.fromLTRB(
-                  DsSpacing.lg, DsSpacing.sm, DsSpacing.lg, 0),
+                DsSpacing.lg,
+                DsSpacing.sm,
+                DsSpacing.lg,
+                0,
+              ),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
@@ -85,54 +104,83 @@ class SellerRevenueCard extends ConsumerWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          '\$${_format(value)}',
-                          style: const TextStyle(
-                            fontFamily: DsTypography.fontFamilyDisplay,
-                            fontFamilyFallback: DsTypography.displayFallback,
-                            fontSize: 38,
-                            fontWeight: DsTypography.bold,
-                            color: Colors.white,
-                            height: 1,
+                        // The figure is the reason the card exists, so it is
+                        // animated with a framework switcher rather than an
+                        // entrance effect: an effect that fails to finish
+                        // leaves the hero number invisible, which is exactly
+                        // what happened here.
+                        AnimatedSwitcher(
+                          duration: DsMotion.normal,
+                          switchInCurve: DsMotion.emphasized,
+                          transitionBuilder: (child, animation) => FadeTransition(
+                            opacity: animation,
+                            child: SizeTransition(
+                              sizeFactor: animation,
+                              axis: Axis.horizontal,
+                              axisAlignment: -1,
+                              child: child,
+                            ),
                           ),
-                        )
-                            .animate(key: ValueKey(period))
-                            .fadeIn(duration: 280.ms)
-                            .slideY(begin: 0.2, end: 0, duration: 280.ms),
+                          child: FittedBox(
+                            key: ValueKey(period),
+                            fit: BoxFit.scaleDown,
+                            alignment: AlignmentDirectional.centerStart,
+                            child: Text(
+                              value.sypFull,
+                              maxLines: 1,
+                              style: const TextStyle(
+                                fontFamily: DsTypography.fontFamily,
+                                fontSize: 34,
+                                fontWeight: DsTypography.bold,
+                                color: Colors.white,
+                                height: 1.1,
+                              ),
+                            ),
+                          ),
+                        ),
                         const SizedBox(height: DsSpacing.xs),
                         _TrendBadge(trend: trend),
                       ],
                     ),
                   ),
+                  const SizedBox(width: DsSpacing.sm),
                   MiniSparkline(
-                    values: _sparks[period] ?? [],
+                    values: spark,
                     color: Colors.white,
-                    width: 90,
-                    height: 44,
+                    width: 86,
+                    height: 42,
                   ),
                 ],
               ),
             ),
-
-            // Profit strip.
             Padding(
               padding: const EdgeInsets.fromLTRB(
-                  DsSpacing.lg, DsSpacing.md, DsSpacing.lg, DsSpacing.lg),
+                DsSpacing.lg,
+                DsSpacing.md,
+                DsSpacing.lg,
+                DsSpacing.lg,
+              ),
               child: Row(
                 children: [
-                  _Stat(
-                    label: 'Profit',
-                    value: '\$${_format(revenue.totalProfit)}',
+                  Expanded(
+                    child: _Stat(
+                      label: l10n.sellerProfit,
+                      value: revenue.totalProfit.sypCompact,
+                    ),
                   ),
-                  _Divider(),
-                  _Stat(
-                    label: 'Margin',
-                    value: '${revenue.profitMargin.toStringAsFixed(1)}%',
+                  const _Divider(),
+                  Expanded(
+                    child: _Stat(
+                      label: l10n.sellerMargin,
+                      value: '${revenue.profitMargin.toStringAsFixed(1)}%',
+                    ),
                   ),
-                  _Divider(),
-                  _Stat(
-                    label: 'Orders',
-                    value: '${revenue.totalOrders}',
+                  const _Divider(),
+                  Expanded(
+                    child: _Stat(
+                      label: l10n.orders,
+                      value: formatCount(revenue.totalOrders),
+                    ),
                   ),
                 ],
               ),
@@ -144,18 +192,30 @@ class SellerRevenueCard extends ConsumerWidget {
   }
 
   static (double, double) _periodData(
-      SellerRevenueData r, RevenuePeriod p) =>
-      switch (p) {
-        RevenuePeriod.today => (r.today, r.todayTrend),
-        RevenuePeriod.week => (r.thisWeek, r.weekTrend),
-        RevenuePeriod.month => (r.thisMonth, r.monthTrend),
-        RevenuePeriod.year => (r.thisYear, r.yearTrend),
-      };
+    SellerRevenueData revenue,
+    RevenuePeriod period,
+  ) => switch (period) {
+    RevenuePeriod.today => (revenue.today, revenue.todayTrend),
+    RevenuePeriod.week => (revenue.thisWeek, revenue.weekTrend),
+    RevenuePeriod.month => (revenue.thisMonth, revenue.monthTrend),
+    RevenuePeriod.year => (revenue.thisYear, revenue.yearTrend),
+  };
 
-  static String _format(double v) {
-    if (v >= 1000000) return '${(v / 1000000).toStringAsFixed(1)}M';
-    if (v >= 1000) return '${(v / 1000).toStringAsFixed(1)}k';
-    return v.toStringAsFixed(0);
+  /// The sparkline reads the store's own series rather than a literal: each
+  /// revenue period borrows the chart granularity that matches its shape.
+  static List<double> _sparkFor(
+    Map<ChartPeriod, SellerChartDataset> charts,
+    RevenuePeriod period,
+  ) {
+    final granularity = switch (period) {
+      RevenuePeriod.today => ChartPeriod.daily,
+      RevenuePeriod.week => ChartPeriod.weekly,
+      RevenuePeriod.month => ChartPeriod.monthly,
+      RevenuePeriod.year => ChartPeriod.yearly,
+    };
+    final dataset = charts[granularity] ??
+        (charts.isEmpty ? null : charts.values.first);
+    return [for (final point in dataset?.revenuePoints ?? const []) point.value];
   }
 }
 
@@ -167,43 +227,47 @@ class _PeriodTabs extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return Container(
-      padding: const EdgeInsets.all(2),
+      padding: const EdgeInsets.all(3),
       decoration: BoxDecoration(
         color: Colors.white.withValues(alpha: 0.14),
-        borderRadius: DsRadius.borderSm,
+        borderRadius: DsRadius.borderPill,
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
-        children: RevenuePeriod.values.map((p) {
-          final active = p == selected;
-          return GestureDetector(
-            onTap: () => onSelect(p),
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 160),
-              padding: const EdgeInsets.symmetric(
-                  horizontal: DsSpacing.xs, vertical: 3),
-              decoration: BoxDecoration(
-                color: active
-                    ? Colors.white.withValues(alpha: 0.22)
-                    : Colors.transparent,
-                borderRadius: DsRadius.borderXs,
-              ),
-              child: Text(
-                p.label,
-                style: TextStyle(
-                  fontFamily: DsTypography.fontFamily,
-                  fontSize: 11,
-                  fontWeight: active
-                      ? DsTypography.bold
-                      : DsTypography.regular,
-                  color: Colors.white
-                      .withValues(alpha: active ? 1.0 : 0.65),
+        children: [
+          for (final period in RevenuePeriod.values)
+            GestureDetector(
+              onTap: () => onSelect(period),
+              child: AnimatedContainer(
+                duration: DsMotion.fast,
+                curve: DsMotion.silk,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: DsSpacing.xs,
+                  vertical: 4,
+                ),
+                decoration: BoxDecoration(
+                  color: period == selected
+                      ? Colors.white
+                      : Colors.transparent,
+                  borderRadius: DsRadius.borderPill,
+                ),
+                child: Text(
+                  period.labelOf(l10n),
+                  style: TextStyle(
+                    fontFamily: DsTypography.fontFamily,
+                    fontSize: DsTypography.labelSmall,
+                    fontWeight: DsTypography.bold,
+                    color: period == selected
+                        ? context.atelier.primary
+                        : Colors.white.withValues(alpha: 0.82),
+                    height: 1.1,
+                  ),
                 ),
               ),
             ),
-          );
-        }).toList(),
+        ],
       ),
     );
   }
@@ -216,23 +280,49 @@ class _TrendBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isPositive = trend >= 0;
+    final up = trend >= 0;
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(
-          isPositive ? Icons.trending_up_rounded : Icons.trending_down_rounded,
-          size: 16,
-          color: Colors.white.withValues(alpha: 0.9),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: DsSpacing.xs, vertical: 2),
+          decoration: BoxDecoration(
+            color: Colors.white.withValues(alpha: 0.18),
+            borderRadius: DsRadius.borderPill,
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                up ? Icons.trending_up_rounded : Icons.trending_down_rounded,
+                size: 13,
+                color: Colors.white,
+              ),
+              const SizedBox(width: 3),
+              Text(
+                formatTrend(trend),
+                style: const TextStyle(
+                  fontFamily: DsTypography.fontFamily,
+                  fontSize: DsTypography.labelSmall,
+                  fontWeight: DsTypography.bold,
+                  color: Colors.white,
+                  height: 1.1,
+                ),
+              ),
+            ],
+          ),
         ),
-        const SizedBox(width: 4),
-        Text(
-          '${isPositive ? '+' : ''}${trend.toStringAsFixed(1)}% vs last period',
-          style: TextStyle(
-            fontFamily: DsTypography.fontFamily,
-            fontSize: DsTypography.labelSmall,
-            color: Colors.white.withValues(alpha: 0.85),
-            fontWeight: DsTypography.medium,
+        const SizedBox(width: DsSpacing.xs),
+        Flexible(
+          child: Text(
+            context.l10n.sellerVsPrior,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              fontFamily: DsTypography.fontFamily,
+              fontSize: DsTypography.labelSmall,
+              color: Colors.white.withValues(alpha: 0.7),
+            ),
           ),
         ),
       ],
@@ -248,40 +338,49 @@ class _Stat extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Column(
-        children: [
-          Text(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          label,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: TextStyle(
+            fontFamily: DsTypography.fontFamily,
+            fontSize: DsTypography.labelSmall,
+            color: Colors.white.withValues(alpha: 0.68),
+          ),
+        ),
+        const SizedBox(height: 2),
+        FittedBox(
+          fit: BoxFit.scaleDown,
+          alignment: AlignmentDirectional.centerStart,
+          child: Text(
             value,
+            maxLines: 1,
             style: const TextStyle(
               fontFamily: DsTypography.fontFamily,
               fontSize: DsTypography.titleSmall,
               fontWeight: DsTypography.bold,
               color: Colors.white,
+              height: 1.15,
             ),
           ),
-          const SizedBox(height: 2),
-          Text(
-            label,
-            style: TextStyle(
-              fontFamily: DsTypography.fontFamily,
-              fontSize: DsTypography.labelSmall,
-              color: Colors.white.withValues(alpha: 0.75),
-            ),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
 
 class _Divider extends StatelessWidget {
+  const _Divider();
+
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 1,
-      height: 28,
-      color: Colors.white.withValues(alpha: 0.2),
-    );
-  }
+  Widget build(BuildContext context) => Container(
+    width: 1,
+    height: 28,
+    margin: const EdgeInsets.symmetric(horizontal: DsSpacing.sm),
+    color: Colors.white.withValues(alpha: 0.16),
+  );
 }

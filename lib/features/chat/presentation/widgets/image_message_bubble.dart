@@ -1,125 +1,107 @@
 import 'package:flutter/material.dart';
 
-class ImageMessageBubble
-    extends StatelessWidget {
+import '../../../../core/media/authorized_media_image.dart';
+import '../../../../core/media/media_variants.dart';
 
-  final String image;
-
-  final bool isMe;
-
+/// A photograph in a conversation.
+///
+/// Two things this used to do are gone. It fetched with `Image.network`, which
+/// carries no session and therefore draws an error box for every photograph
+/// sent through chat — those live behind an authorised endpoint. And it painted
+/// a "2.4k ♥" badge over every image, a leftover from the mock that would have
+/// shipped as a like count nobody could explain.
+class ImageMessageBubble extends StatelessWidget {
   const ImageMessageBubble({
     super.key,
     required this.image,
     this.isMe = false,
+    this.width,
+    this.height,
   });
+
+  final String image;
+  final bool isMe;
+
+  /// The photograph's own dimensions, when the sender's client recorded them.
+  /// Used only to keep the bubble's shape: a portrait photo cropped into a
+  /// fixed landscape box loses whatever she was framing.
+  final int? width;
+  final int? height;
 
   @override
   Widget build(BuildContext context) {
+    final radius = BorderRadius.only(
+      topLeft: const Radius.circular(30),
+      topRight: const Radius.circular(30),
+      bottomLeft: Radius.circular(isMe ? 30 : 8),
+      bottomRight: Radius.circular(isMe ? 8 : 30),
+    );
+
     return Align(
-
-      alignment:
-          isMe
-              ? Alignment.centerRight
-              : Alignment.centerLeft,
-
-      child: ClipRRect(
-
-        borderRadius:
-            BorderRadius.only(
-
-          topLeft:
-              const Radius.circular(
-            30,
-          ),
-
-          topRight:
-              const Radius.circular(
-            30,
-          ),
-
-          bottomLeft:
-              Radius.circular(
-            isMe ? 30 : 8,
-          ),
-
-          bottomRight:
-              Radius.circular(
-            isMe ? 8 : 30,
+      // Directional, not absolute: the sender's own bubble sits on the trailing
+      // edge of the reading direction, which flips with the locale instead of
+      // staying pinned to a physical side.
+      alignment: isMe
+          ? AlignmentDirectional.centerEnd
+          : AlignmentDirectional.centerStart,
+      child: GestureDetector(
+        onTap: () => _openFullScreen(context),
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 260, maxHeight: 360),
+          child: AspectRatio(
+            aspectRatio: _aspectRatio,
+            child: AuthorizedMediaImage(
+              url: image,
+              // The bubble is 260 logical pixels wide; the full-screen view
+              // below asks for the original.
+              variantWidth: MediaVariants.thumbnail,
+              borderRadius: radius,
+            ),
           ),
         ),
+      ),
+    );
+  }
 
-        child: Stack(
+  /// 3:4 when the dimensions are unknown — the shape a phone camera produces
+  /// held portrait, which is what most of these are.
+  double get _aspectRatio {
+    final w = width;
+    final h = height;
+    if (w == null || h == null || w <= 0 || h <= 0) return 3 / 4;
+    return (w / h).clamp(0.6, 1.6);
+  }
 
-          children: [
+  void _openFullScreen(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        fullscreenDialog: true,
+        builder: (_) => _FullScreenPhoto(url: image),
+      ),
+    );
+  }
+}
 
-            Image.network(
+/// The photograph on its own, on black, with a way out.
+class _FullScreenPhoto extends StatelessWidget {
+  const _FullScreenPhoto({required this.url});
 
-              image,
+  final String url;
 
-              width: 260,
-              height: 320,
-
-              fit: BoxFit.cover,
-            ),
-
-            Positioned(
-
-              bottom: 16,
-              right: 16,
-
-              child: Container(
-
-                padding:
-                    const EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 8,
-                ),
-
-                decoration:
-                    BoxDecoration(
-
-                  borderRadius:
-                      BorderRadius
-                          .circular(18),
-
-                  color: Colors.black
-                      .withOpacity(.35),
-                ),
-
-                child: const Row(
-
-                  children: [
-
-                    Icon(
-
-                      Icons.favorite_rounded,
-
-                      color:
-                          Colors.white,
-
-                      size: 18,
-                    ),
-
-                    SizedBox(width: 8),
-
-                    Text(
-
-                      "2.4k",
-
-                      style: TextStyle(
-
-                        color:
-                            Colors.white,
-
-                        fontWeight:
-                            FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.black,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        foregroundColor: Colors.white,
+        elevation: 0,
+      ),
+      extendBodyBehindAppBar: true,
+      body: Center(
+        child: InteractiveViewer(
+          maxScale: 4,
+          child: AuthorizedMediaImage(url: url, fit: BoxFit.contain),
         ),
       ),
     );

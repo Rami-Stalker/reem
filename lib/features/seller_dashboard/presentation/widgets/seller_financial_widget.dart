@@ -2,17 +2,29 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../../core/design_system/design_system.dart';
+import 'package:go_router/go_router.dart';
+
+import '../../../../core/design_system/design_system.dart';
+import '../../../../core/localization/l10n_extension.dart';
+import '../../../../core/router/route_paths.dart';
 import '../../../commissions/presentation/providers/commission_provider.dart';
 import '../providers/seller_dashboard_provider.dart';
+import 'seller_format.dart';
 
+/// The payout card: what she can take out today, and what the platform has
+/// already paid, kept and is still holding.
+///
+/// It used to quote dollars and wear the buyer's rose gradient. Both are wrong
+/// here — the platform settles in Syrian pounds, and this is the seller's
+/// money, so it wears the atelier's champagne.
 class SellerFinancialWidget extends ConsumerWidget {
   const SellerFinancialWidget({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(sellerDashboardNotifierProvider);
-    final c = context.dsColors;
+    final palette = context.atelier;
+    final l10n = context.l10n;
 
     if (state.isInitialLoading) {
       return Padding(
@@ -48,9 +60,15 @@ class SellerFinancialWidget extends ConsumerWidget {
           child: Container(
             padding: const EdgeInsets.all(DsSpacing.lg),
             decoration: BoxDecoration(
-              gradient: context.rewardsGradient,
+              gradient: palette.headerGradient,
               borderRadius: DsRadius.borderXxl,
-              boxShadow: context.glowShadow(c.primary, blur: 28, alpha: 0.24),
+              boxShadow: [
+                BoxShadow(
+                  color: palette.primary.withValues(alpha: 0.24),
+                  blurRadius: 28,
+                  offset: const Offset(0, 14),
+                ),
+              ],
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -64,7 +82,7 @@ class SellerFinancialWidget extends ConsumerWidget {
                     ),
                     const SizedBox(width: DsSpacing.xs),
                     Text(
-                      'Withdrawal center',
+                      l10n.sellerWithdrawalCentre,
                       style: const TextStyle(
                         fontFamily: DsTypography.fontFamily,
                         fontSize: DsTypography.labelMedium,
@@ -82,20 +100,24 @@ class SellerFinancialWidget extends ConsumerWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            '\$${_fmt(withdrawable)}',
-                            style: const TextStyle(
-                              fontFamily: DsTypography.fontFamilyDisplay,
-                              fontFamilyFallback: DsTypography.displayFallback,
-                              fontSize: 32,
-                              fontWeight: DsTypography.bold,
-                              color: Colors.white,
-                              height: 1,
+                          FittedBox(
+                            fit: BoxFit.scaleDown,
+                            alignment: AlignmentDirectional.centerStart,
+                            child: Text(
+                              withdrawable.sypFull,
+                              maxLines: 1,
+                              style: const TextStyle(
+                                fontFamily: DsTypography.fontFamily,
+                                fontSize: 30,
+                                fontWeight: DsTypography.bold,
+                                color: Colors.white,
+                                height: 1.1,
+                              ),
                             ),
                           ),
                           const SizedBox(height: 4),
                           Text(
-                            'Available to withdraw',
+                            l10n.sellerAvailableToWithdraw,
                             style: TextStyle(
                               fontFamily: DsTypography.fontFamily,
                               fontSize: DsTypography.labelSmall,
@@ -106,10 +128,10 @@ class SellerFinancialWidget extends ConsumerWidget {
                       ),
                     ),
                     FilledButton(
-                      onPressed: () {},
+                      onPressed: () => context.push(RoutePaths.sellerEarnings),
                       style: FilledButton.styleFrom(
                         backgroundColor: Colors.white,
-                        foregroundColor: c.primary,
+                        foregroundColor: palette.primary,
                         padding: const EdgeInsets.symmetric(
                           horizontal: DsSpacing.md,
                           vertical: DsSpacing.xs,
@@ -120,21 +142,31 @@ class SellerFinancialWidget extends ConsumerWidget {
                           fontSize: DsTypography.labelMedium,
                         ),
                       ),
-                      child: const Text('Withdraw'),
+                      child: Text(l10n.sellerWithdraw),
                     ),
                   ],
                 ),
                 const SizedBox(height: DsSpacing.md),
                 Row(
                   children: [
-                    _FinStat(label: 'Paid out', value: '\$${_fmt(paid)}'),
-                    _FDivider(),
-                    _FinStat(label: 'Fees', value: '\$${_fmt(fees)}'),
-                    _FDivider(),
                     _FinStat(
-                      label: 'Pending',
-                      value:
-                          '\$${_fmt(earnings.maybeWhen(data: (data) => data.pendingNet, orElse: () => 0))}',
+                      label: l10n.sellerPaidOut,
+                      value: paid.sypCompact,
+                    ),
+                    const _FDivider(),
+                    _FinStat(
+                      label: l10n.sellerFees,
+                      value: fees.sypCompact,
+                    ),
+                    const _FDivider(),
+                    _FinStat(
+                      label: l10n.sellerPendingPayout,
+                      value: earnings
+                          .maybeWhen(
+                            data: (data) => data.pendingNet,
+                            orElse: () => 0.0,
+                          )
+                          .sypCompact,
                     ),
                   ],
                 ),
@@ -147,11 +179,6 @@ class SellerFinancialWidget extends ConsumerWidget {
         .slideY(begin: 0.04, end: 0, duration: 380.ms);
   }
 
-  static String _fmt(double v) {
-    if (v >= 1000000) return '${(v / 1000000).toStringAsFixed(1)}M';
-    if (v >= 1000) return '${(v / 1000).toStringAsFixed(1)}k';
-    return v.toStringAsFixed(0);
-  }
 }
 
 class _FinStat extends StatelessWidget {
@@ -164,13 +191,17 @@ class _FinStat extends StatelessWidget {
   Widget build(BuildContext context) => Expanded(
     child: Column(
       children: [
-        Text(
-          value,
-          style: const TextStyle(
-            fontFamily: DsTypography.fontFamily,
-            fontSize: DsTypography.titleSmall,
-            fontWeight: DsTypography.bold,
-            color: Colors.white,
+        FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Text(
+            value,
+            maxLines: 1,
+            style: const TextStyle(
+              fontFamily: DsTypography.fontFamily,
+              fontSize: DsTypography.titleSmall,
+              fontWeight: DsTypography.bold,
+              color: Colors.white,
+            ),
           ),
         ),
         const SizedBox(height: 2),
@@ -188,6 +219,8 @@ class _FinStat extends StatelessWidget {
 }
 
 class _FDivider extends StatelessWidget {
+  const _FDivider();
+
   @override
   Widget build(BuildContext context) => Container(
     width: 1,

@@ -2,11 +2,14 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import {
   AnalyticsEventType,
   AnalyticsExportFormat,
+  Currency,
   OrderStatus,
   Prisma,
+  SellerOrderStatus,
   UserRole,
 } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
+import { Money, REVENUE_STATUSES } from '../../common/money';
 import {
   AnalyticsExportQueryDto,
   AnalyticsQueryDto,
@@ -23,12 +26,24 @@ interface DateRange {
   end: Date;
 }
 
-const revenueStatuses: OrderStatus[] = [
-  OrderStatus.PAID,
-  OrderStatus.PROCESSING,
-  OrderStatus.SHIPPED,
-  OrderStatus.DELIVERED,
-];
+/**
+ * Revenue is a property of a SUB-ORDER: one seller can have delivered while
+ * another is still preparing, so "was this order revenue?" is not a question
+ * the parent row can answer.
+ */
+const revenueStatuses = [...REVENUE_STATUSES];
+
+/** Money is aggregated within a currency, never across. */
+type CurrencyTotals = Map<Currency, Money>;
+
+function addTo(totals: CurrencyTotals, amount: Money): void {
+  const running = totals.get(amount.currency);
+  totals.set(amount.currency, running ? running.plus(amount) : amount);
+}
+
+function serializeTotals(totals: CurrencyTotals) {
+  return [...totals.values()].map((total) => total.toJSON());
+}
 
 @Injectable()
 export class AnalyticsService {
@@ -101,25 +116,44 @@ export class AnalyticsService {
     const where = this.orderWhere(query, user, range);
     const orders = await this.prisma.order.findMany({
       where,
-      select: { id: true, total: true, status: true, createdAt: true },
+      select: {
+        id: true,
+        currency: true,
+        grandTotal: true,
+        createdAt: true,
+        sellerOrders: { select: { status: true, itemsSubtotal: true, currency: true } },
+      },
       orderBy: { createdAt: 'asc' },
     });
-    const byDay = new Map<string, { orders: number; revenue: number }>();
+
+    const byDay = new Map<string, { orders: number; revenue: CurrencyTotals }>();
     const byStatus = new Map<string, number>();
+    const orderValues: CurrencyTotals = new Map();
+    let revenueBearing = 0;
+
     for (const order of orders) {
       const day = order.createdAt.toISOString().slice(0, 10);
-      const current = byDay.get(day) ?? { orders: 0, revenue: 0 };
+      const current = byDay.get(day) ?? { orders: 0, revenue: new Map() };
       current.orders += 1;
-      if (revenueStatuses.includes(order.status)) current.revenue += order.total;
+
+      let counted = false;
+      for (const sub of order.sellerOrders) {
+        byStatus.set(sub.status, (byStatus.get(sub.status) ?? 0) + 1);
+        if (!revenueStatuses.includes(sub.status)) continue;
+        addTo(current.revenue, Money.of(sub.itemsSubtotal, sub.currency));
+        counted = true;
+      }
+      if (counted) revenueBearing += 1;
+
       byDay.set(day, current);
-      byStatus.set(order.status, (byStatus.get(order.status) ?? 0) + 1);
+      addTo(orderValues, Money.of(order.grandTotal, order.currency));
     }
+
     return {
       total_orders: orders.length,
-      paid_orders: orders.filter((order) => revenueStatuses.includes(order.status))
-        .length,
-      average_order_value: this.round(
-        this.sum(orders.map((order) => order.total)) / Math.max(orders.length, 1),
+      paid_orders: revenueBearing,
+      average_order_value: [...orderValues.entries()].map(([, total]) =>
+        total.dividedBy(Math.max(orders.length, 1)).roundForCurrency().toJSON(),
       ),
       by_status: [...byStatus.entries()].map(([status, count]) => ({
         status: status.toLowerCase(),
@@ -128,7 +162,7 @@ export class AnalyticsService {
       series: [...byDay.entries()].map(([date, value]) => ({
         date,
         orders: value.orders,
-        revenue: this.round(value.revenue),
+        revenue: serializeTotals(value.revenue),
       })),
     };
   }
@@ -136,24 +170,49 @@ export class AnalyticsService {
   async revenue(query: AnalyticsQueryDto, user: AnalyticsUser) {
     const range = this.range(query);
     const where = this.orderWhere(query, user, range);
+
     const [gross, refunded, paid] = await Promise.all([
-      this.prisma.order.aggregate({ where, _sum: { total: true } }),
-      this.prisma.order.aggregate({
-        where: { ...where, status: OrderStatus.REFUNDED },
-        _sum: { total: true },
+      this.prisma.order.groupBy({
+        by: ['currency'],
+        where,
+        _sum: { grandTotal: true },
       }),
-      this.prisma.payment.aggregate({
+      this.prisma.order.groupBy({
+        by: ['currency'],
+        where: { ...where, status: OrderStatus.CANCELLED },
+        _sum: { grandTotal: true },
+      }),
+      this.prisma.payment.groupBy({
+        by: ['currency'],
         where: { order: { is: where }, status: 'PAID' },
-        _sum: { amount: true },
+        _sum: { capturedAmount: true },
       }),
     ]);
-    const grossRevenue = gross._sum.total ?? 0;
-    const refunds = refunded._sum.total ?? 0;
+
+    const grossTotals: CurrencyTotals = new Map();
+    for (const row of gross) {
+      addTo(grossTotals, Money.of(row._sum.grandTotal ?? 0, row.currency));
+    }
+    const refundTotals: CurrencyTotals = new Map();
+    for (const row of refunded) {
+      addTo(refundTotals, Money.of(row._sum.grandTotal ?? 0, row.currency));
+    }
+
+    const net: CurrencyTotals = new Map();
+    for (const [currency, amount] of grossTotals) {
+      net.set(
+        currency,
+        amount.minus(refundTotals.get(currency) ?? Money.zero(currency)),
+      );
+    }
+
     return {
-      gross_revenue: this.round(grossRevenue),
-      paid_revenue: this.round(paid._sum.amount ?? 0),
-      refunds: this.round(refunds),
-      net_revenue: this.round(grossRevenue - refunds),
+      gross_revenue: serializeTotals(grossTotals),
+      paid_revenue: paid.map((row) =>
+        Money.of(row._sum.capturedAmount ?? 0, row.currency).toJSON(),
+      ),
+      refunds: serializeTotals(refundTotals),
+      net_revenue: serializeTotals(net),
     };
   }
 
@@ -163,69 +222,89 @@ export class AnalyticsService {
     const items = await this.prisma.orderItem.findMany({
       where: {
         ...(query.product_id ? { productId: query.product_id } : {}),
-        order: { createdAt: { gte: range.start, lte: range.end } },
-        ...(sellerId ? { product: { sellerId } } : {}),
+        sellerOrder: {
+          createdAt: { gte: range.start, lte: range.end },
+          ...(sellerId ? { sellerId } : {}),
+        },
       },
-      include: { product: { select: { id: true, title: true, sellerId: true } } },
+      select: {
+        productId: true,
+        titleSnapshot: true,
+        quantity: true,
+        lineTotal: true,
+        currency: true,
+      },
     });
+
     const rows = new Map<
       string,
-      { product_id: string; title: string; units: number; revenue: number }
+      { product_id: string; title: string; units: number; revenue: CurrencyTotals }
     >();
     for (const item of items) {
+      // Deleted catalog entries still have their snapshot, so the line is
+      // still reportable — it just groups under its own id.
+      const key = item.productId ?? `snapshot:${item.titleSnapshot}`;
       const row =
-        rows.get(item.productId) ??
+        rows.get(key) ??
         {
-          product_id: item.productId,
-          title: item.product.title,
+          product_id: item.productId ?? '',
+          title: item.titleSnapshot,
           units: 0,
-          revenue: 0,
+          revenue: new Map(),
         };
       row.units += item.quantity;
-      row.revenue += item.quantity * item.price;
-      rows.set(item.productId, row);
+      addTo(row.revenue, Money.of(item.lineTotal, item.currency));
+      rows.set(key, row);
     }
+
     return [...rows.values()]
-      .sort((a, b) => b.revenue - a.revenue)
+      .sort((a, b) => b.units - a.units)
       .slice(0, 20)
-      .map((row) => ({ ...row, revenue: this.round(row.revenue) }));
+      .map((row) => ({ ...row, revenue: serializeTotals(row.revenue) }));
   }
 
   async sellerPerformance(query: AnalyticsQueryDto, user: AnalyticsUser) {
     const range = this.range(query);
     const sellerId = this.sellerScope(query, user);
-    const items = await this.prisma.orderItem.findMany({
+
+    // Seller attribution is a column on the sub-order now — no join through
+    // the catalog, which is what made this wrong once products became shared.
+    const subOrders = await this.prisma.sellerOrder.findMany({
       where: {
-        order: { createdAt: { gte: range.start, lte: range.end } },
-        ...(sellerId ? { product: { sellerId } } : {}),
+        createdAt: { gte: range.start, lte: range.end },
+        ...(sellerId ? { sellerId } : {}),
       },
-      include: {
-        product: {
-          select: { sellerId: true, seller: { select: { name: true } } },
-        },
+      select: {
+        sellerId: true,
+        currency: true,
+        itemsSubtotal: true,
+        seller: { select: { name: true } },
+        items: { select: { quantity: true } },
       },
     });
+
     const rows = new Map<
       string,
-      { seller_id: string; seller: string; units: number; revenue: number }
+      { seller_id: string; seller: string; units: number; revenue: CurrencyTotals }
     >();
-    for (const item of items) {
+    for (const sub of subOrders) {
       const row =
-        rows.get(item.product.sellerId) ??
+        rows.get(sub.sellerId) ??
         {
-          seller_id: item.product.sellerId,
-          seller: item.product.seller.name,
+          seller_id: sub.sellerId,
+          seller: sub.seller.name,
           units: 0,
-          revenue: 0,
+          revenue: new Map(),
         };
-      row.units += item.quantity;
-      row.revenue += item.quantity * item.price;
-      rows.set(item.product.sellerId, row);
+      row.units += sub.items.reduce((total, item) => total + item.quantity, 0);
+      addTo(row.revenue, Money.of(sub.itemsSubtotal, sub.currency));
+      rows.set(sub.sellerId, row);
     }
+
     return [...rows.values()]
-      .sort((a, b) => b.revenue - a.revenue)
+      .sort((a, b) => b.units - a.units)
       .slice(0, 20)
-      .map((row) => ({ ...row, revenue: this.round(row.revenue) }));
+      .map((row) => ({ ...row, revenue: serializeTotals(row.revenue) }));
   }
 
   async customerAnalytics(query: AnalyticsQueryDto, user: AnalyticsUser) {
@@ -238,13 +317,22 @@ export class AnalyticsService {
           createdAt: { gte: range.start, lte: range.end },
         },
       }),
-      this.prisma.order.findMany({ where, select: { userId: true, total: true } }),
+      this.prisma.order.findMany({
+        where,
+        select: { userId: true, grandTotal: true, currency: true },
+      }),
     ]);
-    const byCustomer = new Map<string, { orders: number; spend: number }>();
+    const byCustomer = new Map<string, { orders: number; spend: CurrencyTotals }>();
     for (const order of orders) {
-      const row = byCustomer.get(order.userId) ?? { orders: 0, spend: 0 };
+      // Guest checkouts have no user id and are excluded from per-customer
+      // metrics rather than being bucketed under a fake key.
+      if (!order.userId) continue;
+      const row = byCustomer.get(order.userId) ?? {
+        orders: 0,
+        spend: new Map<Currency, Money>(),
+      };
       row.orders += 1;
-      row.spend += order.total;
+      addTo(row.spend, Money.of(order.grandTotal, order.currency));
       byCustomer.set(order.userId, row);
     }
     const repeat = [...byCustomer.values()].filter((row) => row.orders > 1);
@@ -254,10 +342,15 @@ export class AnalyticsService {
       repeat_customers: repeat.length,
       repeat_rate:
         byCustomer.size === 0 ? 0 : this.round((repeat.length / byCustomer.size) * 100),
-      average_customer_value: this.round(
-        this.sum([...byCustomer.values()].map((row) => row.spend)) /
-          Math.max(byCustomer.size, 1),
-      ),
+      average_customer_value: (() => {
+        const totals: CurrencyTotals = new Map();
+        for (const row of byCustomer.values()) {
+          for (const amount of row.spend.values()) addTo(totals, amount);
+        }
+        return [...totals.values()].map((total) =>
+          total.dividedBy(Math.max(byCustomer.size, 1)).roundForCurrency().toJSON(),
+        );
+      })(),
     };
   }
 
@@ -301,6 +394,7 @@ export class AnalyticsService {
     });
     const byUser = new Map<string, Date[]>();
     for (const order of orders) {
+      if (!order.userId) continue;
       const dates = byUser.get(order.userId) ?? [];
       dates.push(order.createdAt);
       byUser.set(order.userId, dates);
@@ -346,7 +440,7 @@ export class AnalyticsService {
       cohorts.set(cohort, row);
     }
     for (const order of orders) {
-      const cohort = userCohort.get(order.userId);
+      const cohort = order.userId ? userCohort.get(order.userId) : undefined;
       if (!cohort) continue;
       const row = cohorts.get(cohort) ?? { users: 0, orders: 0 };
       row.orders += 1;
@@ -363,28 +457,31 @@ export class AnalyticsService {
   async realtime(user: AnalyticsUser) {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-    const sellerFilter =
+    const sellerFilter: Prisma.OrderWhereInput =
       user.role === UserRole.SELLER
-        ? { items: { some: { product: { sellerId: user.id } } } }
+        ? { sellerOrders: { some: { sellerId: user.id } } }
         : {};
     const [orders, revenue, onlineUsers, activeCarts] = await Promise.all([
       this.prisma.order.count({
         where: { createdAt: { gte: today }, ...sellerFilter },
       }),
-      this.prisma.order.aggregate({
+      this.prisma.sellerOrder.groupBy({
+        by: ['currency'],
         where: {
           createdAt: { gte: today },
           status: { in: revenueStatuses },
-          ...sellerFilter,
+          ...(user.role === UserRole.SELLER ? { sellerId: user.id } : {}),
         },
-        _sum: { total: true },
+        _sum: { itemsSubtotal: true },
       }),
       this.prisma.userPresence.count({ where: { status: 'ONLINE' } }),
       this.prisma.cartItem.count({ where: { updatedAt: { gte: today } } }),
     ]);
     return {
       today_orders: orders,
-      today_revenue: this.round(revenue._sum.total ?? 0),
+      today_revenue: revenue.map((row) =>
+        Money.of(row._sum.itemsSubtotal ?? 0, row.currency).toJSON(),
+      ),
       online_users: onlineUsers,
       active_carts: activeCarts,
       refreshed_at: new Date().toISOString(),
@@ -444,14 +541,16 @@ export class AnalyticsService {
     range: DateRange,
   ): Prisma.OrderWhereInput {
     const sellerId = this.sellerScope(query, user);
-    const itemFilter: Prisma.OrderItemWhereInput = {
-      ...(query.product_id ? { productId: query.product_id } : {}),
-      ...(sellerId ? { product: { sellerId } } : {}),
+    const subOrderFilter: Prisma.SellerOrderWhereInput = {
+      ...(sellerId ? { sellerId } : {}),
+      ...(query.product_id
+        ? { items: { some: { productId: query.product_id } } }
+        : {}),
     };
     return {
       createdAt: { gte: range.start, lte: range.end },
-      ...(Object.keys(itemFilter).length > 0
-        ? { items: { some: itemFilter } }
+      ...(Object.keys(subOrderFilter).length > 0
+        ? { sellerOrders: { some: subOrderFilter } }
         : {}),
     };
   }

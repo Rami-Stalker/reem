@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/legacy.dart';
 import 'package:reem/core/result/result.dart';
+import 'package:reem/core/shared/entities/media.dart';
 
 import '../../domain/usecases/create_post_usecase.dart';
 import '../../domain/usecases/create_story_usecase.dart';
@@ -40,10 +41,15 @@ class CreateNotifier extends StateNotifier<CreateState> {
 
   Future<bool> createStory({
     required String mediaUrl,
+    MediaType type = MediaType.image,
     String? link,
   }) async {
     state = state.copyWith(isLoading: true, clearError: true, clearSuccess: true);
-    final result = await _createStory(mediaUrl: mediaUrl, link: link);
+    final result = await _createStory(
+      mediaUrl: mediaUrl,
+      type: type,
+      link: link,
+    );
     return switch (result) {
       Success(:final data) => () {
           state = state.copyWith(

@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma, User } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
+import { Money, REVENUE_STATUSES } from '../../common/money';
 
 @Injectable()
 export class UsersRepository {
@@ -14,8 +15,9 @@ export class UsersRepository {
     return this.prisma.user.update({ where: { id }, data });
   }
 
+  /** A seller's catalog size is their live offer count. */
   countProducts(sellerId: string): Promise<number> {
-    return this.prisma.product.count({ where: { sellerId } });
+    return this.prisma.sellerOffer.count({ where: { sellerId } });
   }
 
   countPosts(authorId: string): Promise<number> {
@@ -44,26 +46,37 @@ export class UsersRepository {
     });
   }
 
-  /** Aggregate sales/rating for a seller from their products & order items. */
+  /**
+   * Seller sales and rating.
+   *
+   * The old version reduced over EVERY order item with no status filter at
+   * all, so cancelled and unpaid orders counted as sales. Revenue now comes
+   * from revenue-bearing sub-orders only, and stays inside its currency.
+   */
   async sellerStats(sellerId: string) {
-    const [productsCount, ratingAgg, items] = await Promise.all([
-      this.prisma.product.count({ where: { sellerId } }),
-      this.prisma.product.aggregate({
-        _avg: { rating: true },
-        where: { sellerId },
-      }),
-      this.prisma.orderItem.findMany({
-        where: { product: { sellerId } },
-        select: { price: true, quantity: true },
-      }),
-    ]);
-
-    const totalSales = items.reduce((sum, i) => sum + i.price * i.quantity, 0);
+    const [productsCount, ratingAgg, revenueRows, ordersCount] =
+      await Promise.all([
+        this.prisma.sellerOffer.count({ where: { sellerId } }),
+        this.prisma.product.aggregate({
+          _avg: { rating: true },
+          where: { offers: { some: { sellerId } } },
+        }),
+        this.prisma.sellerOrder.groupBy({
+          by: ['currency'],
+          where: { sellerId, status: { in: [...REVENUE_STATUSES] } },
+          _sum: { itemsSubtotal: true },
+        }),
+        this.prisma.sellerOrder.count({
+          where: { sellerId, status: { in: [...REVENUE_STATUSES] } },
+        }),
+      ]);
 
     return {
       productsCount,
-      ordersCount: items.length,
-      totalSales: Math.round(totalSales * 100) / 100,
+      ordersCount,
+      totalSales: revenueRows.map((row) =>
+        Money.of(row._sum.itemsSubtotal ?? 0, row.currency).toJSON(),
+      ),
       averageRating: Math.round((ratingAgg._avg.rating ?? 0) * 10) / 10,
     };
   }

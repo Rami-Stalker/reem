@@ -1,36 +1,51 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Prisma, ProductStatus } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
+import {
+  PRODUCT_CARD_INCLUDE,
+  PRODUCT_INCLUDE,
+  PURCHASABLE_PRODUCT_WHERE,
+} from '../../common/catalog/product-include';
 import { serializeProduct } from '../../common/serializers';
+import { ProductQueryDto } from './dto/product-query.dto';
 
-type Query = Record<string, string | undefined>;
+type Query = ProductQueryDto;
 type OrderBy = Prisma.ProductOrderByWithRelationInput[];
 
-const productInclude = {
-  seller: true,
-  media: { orderBy: { sortOrder: 'asc' as const } },
-  variants: { orderBy: { sortOrder: 'asc' as const } },
-} satisfies Prisma.ProductInclude;
-
-// Public browsing only ever surfaces ACTIVE, in-stock products.
-const availableWhere: Prisma.ProductWhereInput = {
-  status: ProductStatus.ACTIVE,
-  isAvailable: true,
-  stock: { gt: 0 },
-};
-
+/**
+ * Public catalog browsing.
+ *
+ * Everything here reads the CANONICAL product and the offers hanging off it —
+ * price, stock and availability are properties of an offer now, so "in stock"
+ * is `offers: { some: … }` rather than a column on the product row.
+ */
 @Injectable()
 export class ProductsService {
   constructor(private readonly prisma: PrismaService) {}
 
   async home(viewerId?: string) {
-    const [trending, newArrivals, featured, mostLoved, forYou] = await Promise.all([
-      this.find({ orderBy: [{ ordersCount: 'desc' }, { viewsCount: 'desc' }], take: 12 }),
-      this.find({ orderBy: [{ createdAt: 'desc' }], take: 12 }),
-      this.find({ where: { ...availableWhere, isFeatured: true }, orderBy: [{ createdAt: 'desc' }], take: 12 }),
-      this.find({ orderBy: [{ favoritesCount: 'desc' }, { rating: 'desc' }], take: 12 }),
-      this.find({ where: { ...availableWhere, showInFeed: true }, orderBy: [{ rating: 'desc' }, { createdAt: 'desc' }], take: 12 }),
-    ]);
+    const [trending, newArrivals, featured, mostLoved, forYou] =
+      await Promise.all([
+        this.find({
+          orderBy: [{ ordersCount: 'desc' }, { viewsCount: 'desc' }],
+          take: 12,
+        }),
+        this.find({ orderBy: [{ createdAt: 'desc' }], take: 12 }),
+        this.find({
+          where: { ...PURCHASABLE_PRODUCT_WHERE, isFeatured: true },
+          orderBy: [{ createdAt: 'desc' }],
+          take: 12,
+        }),
+        this.find({
+          orderBy: [{ favoritesCount: 'desc' }, { rating: 'desc' }],
+          take: 12,
+        }),
+        this.find({
+          where: { ...PURCHASABLE_PRODUCT_WHERE, showInFeed: true },
+          orderBy: [{ rating: 'desc' }, { createdAt: 'desc' }],
+          take: 12,
+        }),
+      ]);
 
     return {
       trending: await this.serializeList(trending, viewerId),
@@ -42,7 +57,10 @@ export class ProductsService {
   }
 
   trending(viewerId?: string) {
-    return this.collection({ orderBy: [{ ordersCount: 'desc' }, { viewsCount: 'desc' }] }, viewerId);
+    return this.collection(
+      { orderBy: [{ ordersCount: 'desc' }, { viewsCount: 'desc' }] },
+      viewerId,
+    );
   }
 
   newArrivals(viewerId?: string) {
@@ -51,21 +69,35 @@ export class ProductsService {
 
   featured(viewerId?: string) {
     return this.collection(
-      { where: { ...availableWhere, isFeatured: true }, orderBy: [{ createdAt: 'desc' }] },
+      {
+        where: { ...PURCHASABLE_PRODUCT_WHERE, isFeatured: true },
+        orderBy: [{ createdAt: 'desc' }],
+      },
       viewerId,
     );
   }
 
   mostLoved(viewerId?: string) {
-    return this.collection({ orderBy: [{ favoritesCount: 'desc' }, { createdAt: 'desc' }] }, viewerId);
+    return this.collection(
+      { orderBy: [{ favoritesCount: 'desc' }, { createdAt: 'desc' }] },
+      viewerId,
+    );
   }
 
   topRated(viewerId?: string) {
-    return this.collection({ orderBy: [{ rating: 'desc' }, { reviewsCount: 'desc' }] }, viewerId);
+    return this.collection(
+      { orderBy: [{ rating: 'desc' }, { reviewsCount: 'desc' }] },
+      viewerId,
+    );
   }
 
   async list(query: Query, viewerId?: string) {
-    return this.paginated(this.buildFilters(query), [{ createdAt: 'desc' }], query, viewerId);
+    return this.paginated(
+      this.buildFilters(query),
+      this.sortFor(query),
+      query,
+      viewerId,
+    );
   }
 
   async search(query: Query, viewerId?: string) {
@@ -77,45 +109,74 @@ export class ProductsService {
             OR: [
               { title: { contains: q, mode: 'insensitive' } },
               { description: { contains: q, mode: 'insensitive' } },
+              { brand: { nameAr: { contains: q, mode: 'insensitive' } } },
+              { brand: { nameEn: { contains: q, mode: 'insensitive' } } },
             ],
           }
         : {}),
     };
-    return this.paginated(where, [{ createdAt: 'desc' }], query, viewerId);
+    return this.paginated(where, this.sortFor(query), query, viewerId);
   }
 
-  async byCategory(category: string, query: Query, viewerId: string | undefined, orderBy: OrderBy) {
-    const where = { ...this.buildFilters(query), category: category.toLowerCase() };
+  /**
+   * Category browsing by slug. A leaf slug matches its own products; a parent
+   * slug matches everything beneath it, so `/women/clothing` still returns
+   * dresses without the client having to expand the tree itself.
+   */
+  async byCategory(
+    slug: string,
+    query: Query,
+    viewerId: string | undefined,
+    orderBy: OrderBy,
+  ) {
+    const categoryIds = await this.categorySubtree(slug);
+    if (categoryIds.length === 0) throw new NotFoundException('Category not found');
+
+    const where: Prisma.ProductWhereInput = {
+      ...this.buildFilters(query),
+      categoryId: { in: categoryIds },
+    };
     return this.paginated(where, orderBy, query, viewerId);
   }
 
   async detail(id: string, viewerId?: string) {
     const product = await this.prisma.product
-      .update({ where: { id }, data: { viewsCount: { increment: 1 } }, include: productInclude })
+      .update({
+        where: { id },
+        data: { viewsCount: { increment: 1 } },
+        include: PRODUCT_INCLUDE,
+      })
       .catch(() => null);
     if (!product) throw new NotFoundException('Product not found');
 
-    if (!viewerId) return serializeProduct(product, { isLiked: false });
-    const favSet = await this.favoriteSet(viewerId, [product.id]);
-    return serializeProduct(product, { isLiked: favSet.has(product.id) });
+    // The detail screen is where price comparison happens, so every live offer
+    // travels with it (Q23 P2).
+    const favSet = viewerId
+      ? await this.favoriteSet(viewerId, [product.id])
+      : new Set<string>();
+
+    return serializeProduct(product, {
+      isLiked: favSet.has(product.id),
+      includeOffers: true,
+    });
   }
 
   async recordView(id: string) {
     await this.requireProduct(id);
-    await this.prisma.product.update({ where: { id }, data: { viewsCount: { increment: 1 } } });
+    await this.prisma.product.update({
+      where: { id },
+      data: { viewsCount: { increment: 1 } },
+    });
     return { message: 'View recorded' };
   }
 
   async incrementOrders(id: string, amount = 1) {
     await this.requireProduct(id);
-    await this.prisma.product.update({ where: { id }, data: { ordersCount: { increment: amount } } });
+    await this.prisma.product.update({
+      where: { id },
+      data: { ordersCount: { increment: amount } },
+    });
     return { message: 'Order count updated' };
-  }
-
-  async reduceStock(id: string, quantity: number) {
-    await this.requireProduct(id);
-    await this.prisma.product.update({ where: { id }, data: { stock: { decrement: quantity } } });
-    return { message: 'Stock updated' };
   }
 
   // ── internals ──────────────────────────────────────────────────────────
@@ -126,13 +187,44 @@ export class ProductsService {
     return product;
   }
 
-  private find(args: { where?: Prisma.ProductWhereInput; orderBy: OrderBy; take?: number; skip?: number }) {
+  /** The category itself plus every descendant, for the 3-level tree (Q26). */
+  private async categorySubtree(slug: string): Promise<string[]> {
+    const root = await this.prisma.category.findUnique({
+      where: { slug },
+      select: { id: true },
+    });
+    if (!root) return [];
+
+    const children = await this.prisma.category.findMany({
+      where: { parentId: root.id },
+      select: { id: true },
+    });
+    if (children.length === 0) return [root.id];
+
+    const grandchildren = await this.prisma.category.findMany({
+      where: { parentId: { in: children.map((child) => child.id) } },
+      select: { id: true },
+    });
+
+    return [
+      root.id,
+      ...children.map((child) => child.id),
+      ...grandchildren.map((child) => child.id),
+    ];
+  }
+
+  private find(args: {
+    where?: Prisma.ProductWhereInput;
+    orderBy: OrderBy;
+    take?: number;
+    skip?: number;
+  }) {
     return this.prisma.product.findMany({
-      where: args.where ?? availableWhere,
+      where: args.where ?? PURCHASABLE_PRODUCT_WHERE,
       orderBy: args.orderBy,
       skip: args.skip ?? 0,
       take: args.take ?? 20,
-      include: productInclude,
+      include: PRODUCT_CARD_INCLUDE,
     });
   }
 
@@ -169,42 +261,83 @@ export class ProductsService {
   }
 
   private async serializeList(
-    products: Prisma.ProductGetPayload<{ include: typeof productInclude }>[],
+    products: Prisma.ProductGetPayload<{
+      include: typeof PRODUCT_CARD_INCLUDE;
+    }>[],
     viewerId?: string,
   ) {
-    if (!viewerId) return products.map((p) => serializeProduct(p, { isLiked: false }));
-    const favSet = await this.favoriteSet(viewerId, products.map((p) => p.id));
-    return products.map((p) => serializeProduct(p, { isLiked: favSet.has(p.id) }));
+    if (!viewerId) {
+      return products.map((product) =>
+        serializeProduct(product, { isLiked: false }),
+      );
+    }
+    const favSet = await this.favoriteSet(
+      viewerId,
+      products.map((product) => product.id),
+    );
+    return products.map((product) =>
+      serializeProduct(product, { isLiked: favSet.has(product.id) }),
+    );
   }
 
-  private async favoriteSet(userId: string, productIds: string[]): Promise<Set<string>> {
+  private async favoriteSet(
+    userId: string,
+    productIds: string[],
+  ): Promise<Set<string>> {
     if (productIds.length === 0) return new Set();
     const favorites = await this.prisma.favorite.findMany({
       where: { userId, productId: { in: productIds } },
       select: { productId: true },
     });
-    return new Set(favorites.map((f) => f.productId));
+    return new Set(favorites.map((favorite) => favorite.productId));
   }
 
   private pagination(query: Query) {
-    const page = Math.max(1, parseInt(query.page ?? '1', 10) || 1);
-    const limit = Math.min(50, Math.max(1, parseInt(query.limit ?? '20', 10) || 20));
+    const page = Math.max(1, query.page ?? 1);
+    const limit = Math.min(50, Math.max(1, query.limit ?? 20));
     return { page, limit, skip: (page - 1) * limit };
+  }
+
+  private sortFor(query: Query): OrderBy {
+    switch (query.sort) {
+      // Price sorts run off the SYP-normalised roll-up so offers priced in USD
+      // interleave correctly instead of sorting as raw numbers.
+      case 'price_asc':
+        return [{ minPriceSyp: 'asc' }, { createdAt: 'desc' }];
+      case 'price_desc':
+        return [{ minPriceSyp: 'desc' }, { createdAt: 'desc' }];
+      case 'rating':
+        return [{ rating: 'desc' }, { reviewsCount: 'desc' }];
+      case 'popular':
+        return [{ ordersCount: 'desc' }, { viewsCount: 'desc' }];
+      default:
+        return [{ createdAt: 'desc' }];
+    }
   }
 
   private buildFilters(query: Query): Prisma.ProductWhereInput {
     const minPrice = query.min_price ? Number(query.min_price) : undefined;
     const maxPrice = query.max_price ? Number(query.max_price) : undefined;
-    const featured = query.featured === undefined ? undefined : query.featured === 'true';
+    const rating = query.rating;
+    const featured =
+      query.featured === undefined ? undefined : query.featured === 'true';
 
     return {
-      ...availableWhere,
+      ...PURCHASABLE_PRODUCT_WHERE,
       ...(featured !== undefined ? { isFeatured: featured } : {}),
+      ...(query.brand_id ? { brandId: query.brand_id } : {}),
+      ...(rating !== undefined && !Number.isNaN(rating)
+        ? { rating: { gte: rating } }
+        : {}),
       ...(minPrice !== undefined || maxPrice !== undefined
         ? {
-            price: {
-              ...(minPrice !== undefined ? { gte: minPrice } : {}),
-              ...(maxPrice !== undefined ? { lte: maxPrice } : {}),
+            minPriceSyp: {
+              ...(minPrice !== undefined && !Number.isNaN(minPrice)
+                ? { gte: minPrice }
+                : {}),
+              ...(maxPrice !== undefined && !Number.isNaN(maxPrice)
+                ? { lte: maxPrice }
+                : {}),
             },
           }
         : {}),

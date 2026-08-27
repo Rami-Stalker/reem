@@ -7,13 +7,18 @@ import '../../../../core/shared/entities/product.dart';
 class FlashDeal extends Equatable {
   const FlashDeal({
     required this.product,
-    required this.endsAt,
+    this.endsAt,
     required this.soldCount,
     required this.totalQuantity,
   });
 
   final Product product;
-  final DateTime endsAt;
+  /// When the discount stops.
+  ///
+  /// Null where the seller set no expiry, and the card then shows no timer at
+  /// all — a countdown that resets on every refresh is a lie the customer
+  /// notices exactly once.
+  final DateTime? endsAt;
   final int soldCount;
   final int totalQuantity;
 
@@ -27,7 +32,11 @@ class FlashDeal extends Equatable {
   /// Drives the "Almost gone!" urgency treatment.
   bool get isAlmostGone => claimedFraction >= 0.7;
 
-  bool get hasEnded => DateTime.now().isAfter(endsAt);
+  /// A deal with no expiry never ends — it is simply a lower price.
+  bool get hasEnded {
+    final at = endsAt;
+    return at != null && DateTime.now().isAfter(at);
+  }
 
   @override
   List<Object?> get props => [product, endsAt, soldCount, totalQuantity];

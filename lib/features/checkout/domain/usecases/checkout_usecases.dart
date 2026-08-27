@@ -3,6 +3,7 @@ import 'package:reem/core/result/result.dart';
 import '../entities/checkout.dart';
 import '../entities/order.dart';
 import '../repositories/checkout_repository.dart';
+import '../../../../core/shared/value_objects/money.dart';
 
 class GetGovernoratesUseCase {
   const GetGovernoratesUseCase(this._repo);
@@ -13,8 +14,17 @@ class GetGovernoratesUseCase {
 class GetDeliveryQuoteUseCase {
   const GetDeliveryQuoteUseCase(this._repo);
   final CheckoutRepository _repo;
-  Future<Result<DeliveryQuote>> call(String governorate, double subtotal) =>
-      _repo.getDeliveryQuote(governorate: governorate, subtotal: subtotal);
+  Future<Result<DeliveryQuote>> call(
+    String governorate,
+    Money? subtotal, {
+    String? district,
+    bool isRural = false,
+  }) => _repo.getDeliveryQuote(
+    governorate: governorate,
+    subtotal: subtotal,
+    district: district,
+    isRural: isRural,
+  );
 }
 
 class GetPaymentMethodsUseCase {
@@ -27,7 +37,9 @@ class PlaceOrderUseCase {
   const PlaceOrderUseCase(this._repo);
   final CheckoutRepository _repo;
   Future<Result<PlacedOrder>> call({
-    required ShippingInput shipping,
+    ShippingInput? shipping,
+    String? addressId,
+    bool saveAddress = false,
     required String paymentMethod,
     String? couponCode,
     String? deliveryInstructions,
@@ -35,6 +47,8 @@ class PlaceOrderUseCase {
   }) =>
       _repo.placeOrder(
         shipping: shipping,
+        addressId: addressId,
+        saveAddress: saveAddress,
         paymentMethod: paymentMethod,
         couponCode: couponCode,
         deliveryInstructions: deliveryInstructions,

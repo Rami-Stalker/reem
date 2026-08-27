@@ -6,6 +6,7 @@ import '../../../../core/design_system/design_system.dart';
 import '../../../../core/localization/l10n_extension.dart';
 import '../../../../core/router/route_paths.dart';
 import '../../domain/entities/auth_account.dart';
+import '../utils/auth_form_validators.dart';
 
 class ForgotPasswordScreen extends ConsumerStatefulWidget {
   const ForgotPasswordScreen({super.key});
@@ -55,30 +56,24 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                     l10n.forgetPassword,
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          color: colors.onSurfaceVariant,
-                          height: 1.5,
-                        ),
+                      color: colors.onSurfaceVariant,
+                      height: 1.5,
+                    ),
                   ),
                   const SizedBox(height: DsSpacing.xxxl),
                   DsInputField(
                     controller: _phoneController,
-                    label: 'Phone number',
+                    label: context.l10n.phone,
                     keyboardType: TextInputType.phone,
-                    prefixIcon: Icon(Icons.phone_outlined, color: colors.primary),
-                    validator: (v) {
-                      final value = v?.trim() ?? '';
-                      if (value.isEmpty) return 'Phone number is required';
-                      if (!RegExp(r'^\+?[0-9]{7,15}$').hasMatch(value)) {
-                        return 'Enter a valid phone number';
-                      }
-                      return null;
-                    },
+                    prefixIcon: Icon(
+                      Icons.phone_outlined,
+                      color: colors.primary,
+                    ),
+                    validator: (value) =>
+                        AuthFormValidators.requiredPhone(context.l10n, value),
                   ),
                   const SizedBox(height: DsSpacing.lg),
-                  PrimaryButton(
-                    label: l10n.send,
-                    onPressed: _submit,
-                  ),
+                  PrimaryButton(label: l10n.send, onPressed: _submit),
                   const Spacer(flex: 2),
                 ],
               ),

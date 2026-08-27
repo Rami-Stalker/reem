@@ -8,17 +8,11 @@ import {
   serializeUser,
 } from '../../common/serializers';
 import { ProductSearchDto, SearchSort } from './dto/search-query.dto';
-
-const productInclude = {
-  seller: true,
-  media: { orderBy: { sortOrder: 'asc' as const } },
-} satisfies Prisma.ProductInclude;
-
-const activeWhere: Prisma.ProductWhereInput = {
-  status: ProductStatus.ACTIVE,
-  isAvailable: true,
-  stock: { gt: 0 },
-};
+import {
+  PRODUCT_CARD_INCLUDE,
+  LIVE_OFFER_WHERE,
+  PURCHASABLE_PRODUCT_WHERE,
+} from '../../common/catalog/product-include';
 
 /** Matches no user — keeps personalised includes static for anonymous viewers. */
 const NIL_UUID = '00000000-0000-0000-0000-000000000000';
@@ -46,7 +40,7 @@ export class SearchService {
         orderBy: this.sortBy(dto.sort),
         skip: dto.skip,
         take: dto.limit,
-        include: productInclude,
+        include: PRODUCT_CARD_INCLUDE,
       }),
       this.prisma.product.count({ where }),
     ]);
@@ -93,7 +87,7 @@ export class SearchService {
         take: page.limit,
         include: {
           author: true,
-          product: { include: productInclude },
+          product: { include: PRODUCT_CARD_INCLUDE },
           likes: { where: { userId: viewerId ?? NIL_UUID } },
           saves: { where: { userId: viewerId ?? NIL_UUID } },
         },
@@ -114,7 +108,7 @@ export class SearchService {
         where: this.buildProductWhere({ q } as ProductSearchDto),
         orderBy: [{ ordersCount: 'desc' }, { createdAt: 'desc' }],
         take: 8,
-        include: productInclude,
+        include: PRODUCT_CARD_INCLUDE,
       }),
       this.prisma.user.findMany({
         where: this.sellerWhere(q),
@@ -125,7 +119,7 @@ export class SearchService {
         where: this.postWhere(q),
         orderBy: { createdAt: 'desc' },
         take: 6,
-        include: { author: true, product: { include: productInclude } },
+        include: { author: true, product: { include: PRODUCT_CARD_INCLUDE } },
       }),
     ]);
 
@@ -149,24 +143,35 @@ export class SearchService {
 
     const [products, categories] = await Promise.all([
       this.prisma.product.findMany({
-        where: { ...activeWhere, title: { contains: query, mode: 'insensitive' } },
+        where: {
+          ...PURCHASABLE_PRODUCT_WHERE,
+          title: { contains: query, mode: 'insensitive' },
+        },
         select: { title: true },
         take: 8,
       }),
-      this.prisma.product.findMany({
+      // Suggestions come from the taxonomy itself now, in Arabic, rather than
+      // from DISTINCT over a free-text column.
+      this.prisma.category.findMany({
         where: {
-          ...activeWhere,
-          category: { contains: query, mode: 'insensitive' },
+          isActive: true,
+          OR: [
+            { nameAr: { contains: query, mode: 'insensitive' } },
+            { nameEn: { contains: query, mode: 'insensitive' } },
+            { slug: { contains: query, mode: 'insensitive' } },
+          ],
         },
-        select: { category: true },
-        distinct: ['category'],
+        select: { slug: true, nameAr: true },
         take: 5,
       }),
     ]);
 
     return {
-      products: products.map((p) => p.title),
-      categories: categories.map((c) => c.category),
+      products: products.map((product) => product.title),
+      categories: categories.map((category) => ({
+        slug: category.slug,
+        name: category.nameAr,
+      })),
     };
   }
 
@@ -220,7 +225,7 @@ export class SearchService {
   private buildProductWhere(dto: ProductSearchDto): Prisma.ProductWhereInput {
     const q = dto.q?.trim();
     return {
-      ...activeWhere,
+      ...PURCHASABLE_PRODUCT_WHERE,
       ...(q
         ? {
             OR: [
@@ -229,12 +234,18 @@ export class SearchService {
             ],
           }
         : {}),
-      ...(dto.category ? { category: dto.category.toLowerCase() } : {}),
-      ...(dto.seller_id ? { sellerId: dto.seller_id } : {}),
+      ...(dto.category
+        ? { category: { slug: dto.category.toLowerCase() } }
+        : {}),
+      // "Products this seller sells" is an offer filter now.
+      ...(dto.seller_id
+        ? { offers: { some: { ...LIVE_OFFER_WHERE, sellerId: dto.seller_id } } }
+        : {}),
       ...(dto.rating ? { rating: { gte: dto.rating } } : {}),
+      // Price filters run against the SYP-normalised roll-up.
       ...(dto.min_price !== undefined || dto.max_price !== undefined
         ? {
-            price: {
+            minPriceSyp: {
               ...(dto.min_price !== undefined ? { gte: dto.min_price } : {}),
               ...(dto.max_price !== undefined ? { lte: dto.max_price } : {}),
             },
@@ -271,10 +282,12 @@ export class SearchService {
 
   private sortBy(sort?: SearchSort): Prisma.ProductOrderByWithRelationInput[] {
     switch (sort) {
+      // Price sorting runs off the SYP-normalised roll-up so offers priced
+      // in different currencies interleave correctly.
       case 'price_asc':
-        return [{ price: 'asc' }];
+        return [{ minPriceSyp: 'asc' }];
       case 'price_desc':
-        return [{ price: 'desc' }];
+        return [{ minPriceSyp: 'desc' }];
       case 'best_selling':
         return [{ ordersCount: 'desc' }];
       case 'rating':

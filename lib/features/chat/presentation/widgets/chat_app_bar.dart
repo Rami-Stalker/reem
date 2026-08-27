@@ -7,7 +7,13 @@ class ChatAppBar
 
   const ChatAppBar({
     super.key,
+    this.onOpenSharedMedia,
   });
+
+  /// Opens the conversation's shared photographs. The call and video actions
+  /// beside it have no implementation and are drawn as unavailable rather than
+  /// silently swallowing a tap.
+  final VoidCallback? onOpenSharedMedia;
 
   @override
   Widget build(BuildContext context) {
@@ -154,6 +160,13 @@ class ChatAppBar
               ),
 
               _action(
+                Icons.photo_library_rounded,
+                onTap: onOpenSharedMedia,
+              ),
+
+              const SizedBox(width: 12),
+
+              _action(
                 Icons.call_rounded,
               ),
 
@@ -170,8 +183,20 @@ class ChatAppBar
   }
 
   Widget _action(
-    IconData icon,
-  ) {
+    IconData icon, {
+    VoidCallback? onTap,
+  }) {
+    final enabled = onTap != null;
+    return Opacity(
+      opacity: enabled ? 1 : 0.4,
+      child: GestureDetector(
+        onTap: onTap,
+        child: _circle(icon),
+      ),
+    );
+  }
+
+  Widget _circle(IconData icon) {
     return Container(
 
       width: 48,

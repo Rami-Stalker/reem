@@ -7,6 +7,7 @@ import '../../../../core/router/route_paths.dart';
 import '../../domain/entities/followed_store.dart';
 import '../providers/profile_overview_provider.dart';
 import 'profile_section_header.dart';
+import '../../../../core/localization/l10n_extension.dart';
 
 /// "Following" — a rail of the boutiques the customer follows, each with a
 /// new-arrivals badge. Tapping opens the store profile.
@@ -29,7 +30,7 @@ class ProfileFollowedStores extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         ProfileSectionHeader(
-          title: 'Following',
+          title: context.l10n.following,
           eyebrow: isLoading ? null : '${stores.length} boutiques',
         ),
         SizedBox(

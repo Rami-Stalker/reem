@@ -11,24 +11,60 @@ const _publicRoutes = <String>{
   RoutePaths.splash,
   RoutePaths.onboarding,
   RoutePaths.login,
+  RoutePaths.signInCode,
+  RoutePaths.authRequired,
   RoutePaths.register,
   RoutePaths.forgotPassword,
   RoutePaths.otpVerification,
-};
-
-const _guestRoutes = <String>{
+  // She cannot sign in — that is the entire premise of opening a recovery
+  // case, so gating this behind a session would make it unreachable by
+  // exactly the people it exists for.
+  RoutePaths.accountRecovery,
   RoutePaths.home,
   RoutePaths.search,
+  RoutePaths.cart,
+  RoutePaths.activity,
+  RoutePaths.profile,
   RoutePaths.categories,
+  RoutePaths.category,
   RoutePaths.productDetails,
   RoutePaths.collection,
+  RoutePaths.storyViewer,
+  RoutePaths.userProfile,
   RoutePaths.favorites,
   RoutePaths.settings,
+  RoutePaths.appearance,
+  RoutePaths.language,
+  RoutePaths.coupons,
+  RoutePaths.rewards,
+  RoutePaths.wallet,
+  RoutePaths.likeSheet,
+  RoutePaths.commentSheet,
+  // Q64 — the tracking code *is* the credential, and Q46 P1 lets guests buy.
+  // Requiring a login to follow a parcel would strand the very customers the
+  // guest checkout exists for, and matches the backend, which marks the same
+  // endpoint @Public() for exactly that reason.
+  RoutePaths.shipmentTracking,
+};
+
+const _sellerToolRoutes = <String>{
+  RoutePaths.addPost,
+  RoutePaths.addStory,
+  RoutePaths.myProducts,
+  RoutePaths.productForm,
+  RoutePaths.sellerDashboard,
+  RoutePaths.sellerCustomers,
+  RoutePaths.sellerMarketing,
+  RoutePaths.sellerAnalytics,
+  RoutePaths.sellerStore,
+  RoutePaths.sellerEarnings,
+  RoutePaths.sellerOrders,
 };
 
 /// Redirect logic for persistent login + role-based authorization.
 ///
-/// - Unauthenticated users are sent to login for any non-public route.
+/// - Unauthenticated users may browse public commerce/community routes.
+/// - Protected routes show a sign-in explainer instead of forcing login.
 /// - Authenticated users are bounced away from the auth screens.
 /// - Admin routes (`/admin*`) require the ADMIN role; others are sent home.
 String? authGuard(BuildContext context, GoRouterState state, AuthState auth) {
@@ -38,11 +74,10 @@ String? authGuard(BuildContext context, GoRouterState state, AuthState auth) {
   final location = state.matchedLocation;
   final isPublic = _publicRoutes.contains(location);
   final isAuthenticated = auth.isAuthenticated;
-  final isGuestAllowed =
-      auth.canBrowseAsGuest && _guestRoutes.contains(location);
 
-  if (!isAuthenticated && !isPublic && !isGuestAllowed) {
-    return RoutePaths.login;
+  if (!isAuthenticated && !isPublic) {
+    final from = Uri.encodeComponent(state.uri.toString());
+    return '${RoutePaths.authRequired}?from=$from';
   }
 
   if (isAuthenticated &&
@@ -64,21 +99,33 @@ String? authGuard(BuildContext context, GoRouterState state, AuthState auth) {
   }
 
   final isAdminRoute = location.startsWith(RoutePaths.admin);
-  if (isAdminRoute &&
-      role != UserRole.admin &&
-      role != UserRole.superAdmin &&
-      role != UserRole.support) {
+  if (isAdminRoute && auth.user?.isAdmin != true) {
     return RoutePaths.home;
   }
 
-  // Seller storefront routes are sellers/admins only.
-  final isSellerRoute = location.startsWith('/seller');
-  if (isSellerRoute &&
-      role != UserRole.seller &&
-      role != UserRole.admin &&
-      role != UserRole.superAdmin) {
+  // Seller tools are explicit so `/seller-verification` remains available to
+  // customers who are applying for seller access.
+  final isSellerToolRoute = _matchesRouteGroup(location, _sellerToolRoutes);
+  if (isSellerToolRoute && !_canUseSellerTools(role)) {
     return RoutePaths.home;
   }
 
   return null;
+}
+
+bool _matchesRouteGroup(String location, Set<String> routes) {
+  return routes.any(
+    (route) => location == route || location.startsWith('$route/'),
+  );
+}
+
+bool _canUseSellerTools(UserRole? role) {
+  return switch (role) {
+    UserRole.seller ||
+    UserRole.superAdmin ||
+    UserRole.operationsAdmin ||
+    UserRole.contentModerator ||
+    UserRole.admin => true,
+    _ => false,
+  };
 }

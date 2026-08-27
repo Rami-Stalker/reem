@@ -10,16 +10,25 @@ import {
   Post,
 } from '@nestjs/common';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
+import { OptionalAuth } from '../../common/decorators/optional-auth.decorator';
 import { StoriesService } from './stories.service';
 import { ReactStoryDto } from './dto/react-story.dto';
 
-/** Customer-facing story consumption + reactions. */
+/**
+ * Customer-facing story consumption + reactions.
+ *
+ * The rail itself is public — a visitor watches stories without an account.
+ * Recording a view and reacting are not: both write a row keyed by the user,
+ * so they stay behind the global guard and the client should skip them while
+ * signed out.
+ */
 @Controller('stories')
 export class StoriesController {
   constructor(private readonly stories: StoriesService) {}
 
+  @OptionalAuth()
   @Get()
-  list(@CurrentUser('id') userId: string) {
+  list(@CurrentUser('id') userId?: string) {
     return this.stories.list(userId);
   }
 

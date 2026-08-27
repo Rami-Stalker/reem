@@ -16,15 +16,15 @@ final class CartRemoteDataSourceImpl extends BaseRemoteDataSource
 
   @override
   Future<CartModel> addItem({
-    required String productId,
-    String? variantId,
+    required String offerId,
+    String? offerVariantId,
     int quantity = 1,
   }) async {
     final json = await postJson(
       ApiEndpoints.cartItems,
       body: {
-        'product_id': productId,
-        if (variantId != null) 'variant_id': variantId,
+        'offer_id': offerId,
+        if (offerVariantId != null) 'offer_variant_id': offerVariantId,
         'quantity': quantity,
       },
     );

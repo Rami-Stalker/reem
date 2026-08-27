@@ -127,7 +127,7 @@ class ChatProfileScreen extends StatelessWidget {
                         return Container(
                           width: 110,
 
-                          margin: const EdgeInsets.only(right: 16),
+                          margin: const EdgeInsetsDirectional.only(end: 16),
 
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(28),

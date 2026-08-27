@@ -5,7 +5,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reem/core/design_system/design_system.dart';
 import 'package:reem/features/admin/domain/entities/admin_console_entity.dart';
 import 'package:reem/features/admin/presentation/providers/admin_provider.dart';
+import 'package:reem/features/admin/presentation/widgets/admin_labels.dart';
 import 'package:reem/features/admin/presentation/widgets/admin_page_header.dart';
+import '../../../../core/localization/l10n_extension.dart';
 
 class AdminSectionScreen extends ConsumerStatefulWidget {
   const AdminSectionScreen({super.key, required this.config});
@@ -30,6 +32,7 @@ class _AdminSectionScreenState extends ConsumerState<AdminSectionScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final sectionProvider = adminSectionProvider(config);
     final section = ref.watch(sectionProvider);
 
@@ -38,19 +41,19 @@ class _AdminSectionScreenState extends ConsumerState<AdminSectionScreen> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           AdminPageHeader(
-            title: config.title,
-            subtitle: 'Operational controls, review queues, and live records.',
+            title: config.titleOf(l10n),
+            subtitle: l10n.adminSectionSubtitle,
             actions: [
               IconButton(
-                tooltip: 'Refresh',
+                tooltip: l10n.refresh,
                 onPressed: () => ref.invalidate(sectionProvider),
                 icon: const Icon(Icons.refresh_rounded),
               ),
               if (config.key == 'campaigns')
                 Padding(
-                  padding: const EdgeInsets.only(left: DsSpacing.sm),
+                  padding: const EdgeInsetsDirectional.only(start: DsSpacing.sm),
                   child: PrimaryButton(
-                    label: 'New campaign',
+                    label: l10n.adminNewCampaign,
                     icon: Icons.add_rounded,
                     isExpanded: false,
                     onPressed: _showCampaignDialog,
@@ -80,8 +83,8 @@ class _AdminSectionScreenState extends ConsumerState<AdminSectionScreen> {
                         runSpacing: DsSpacing.sm,
                         children: data.summary.entries
                             .map(
-                              (entry) => Chip(
-                                label: Text('${entry.key}: ${entry.value}'),
+                              (entry) => AdminMetricPill(
+                                label: '${entry.key}: ${entry.value}',
                               ),
                             )
                             .toList(),
@@ -97,21 +100,21 @@ class _AdminSectionScreenState extends ConsumerState<AdminSectionScreen> {
                         suffixIcon: _query.isEmpty
                             ? null
                             : IconButton(
-                                tooltip: 'Clear search',
+                                tooltip: l10n.adminClearSearch,
                                 onPressed: () {
                                   _searchController.clear();
                                   setState(() => _query = '');
                                 },
                                 icon: const Icon(Icons.close_rounded),
                               ),
-                        hintText: 'Search ${data.title.toLowerCase()}',
+                        hintText: l10n.search,
                       ),
                     ),
                     const SizedBox(height: DsSpacing.md),
                     if (records.isEmpty)
                       _EmptyRecords(
                         searched: _query.trim().isNotEmpty,
-                        title: data.title,
+                        title: config.titleOf(l10n),
                       )
                     else
                       _RecordsList(
@@ -146,6 +149,7 @@ class _AdminSectionScreenState extends ConsumerState<AdminSectionScreen> {
   }
 
   Future<void> _showCampaignDialog() async {
+    final l10n = context.l10n;
     final name = TextEditingController();
     final title = TextEditingController();
     final body = TextEditingController();
@@ -167,7 +171,7 @@ class _AdminSectionScreenState extends ConsumerState<AdminSectionScreen> {
           return StatefulBuilder(
             builder: (dialogContext, setDialogState) {
               return AlertDialog(
-                title: const Text('New notification campaign'),
+                title: Text(l10n.adminNewCampaignTitle),
                 content: SizedBox(
                   width: 560,
                   child: SingleChildScrollView(
@@ -176,24 +180,24 @@ class _AdminSectionScreenState extends ConsumerState<AdminSectionScreen> {
                       children: [
                         _AdminTextField(
                           controller: name,
-                          label: 'Campaign name',
+                          label: l10n.adminCampaignName,
                         ),
                         const SizedBox(height: DsSpacing.sm),
                         _AdminTextField(
                           controller: title,
-                          label: 'Notification title',
+                          label: l10n.adminNotificationTitle,
                         ),
                         const SizedBox(height: DsSpacing.sm),
                         _AdminTextField(
                           controller: body,
-                          label: 'Message body',
+                          label: l10n.adminMessageBody,
                           maxLines: 4,
                         ),
                         const SizedBox(height: DsSpacing.md),
                         Align(
                           alignment: Alignment.centerLeft,
                           child: Text(
-                            'Channels',
+                            l10n.adminChannels,
                             style: TextStyle(
                               fontSize: DsTypography.labelLarge,
                               fontWeight: DsTypography.semiBold,
@@ -221,14 +225,14 @@ class _AdminSectionScreenState extends ConsumerState<AdminSectionScreen> {
                         _AdminTextField(
                           controller: role,
                           label: 'Role segment (optional)',
-                          hint: 'USER, SELLER, ADMIN',
+                          hint: l10n.adminRoleFilterHint,
                         ),
                         const SizedBox(height: DsSpacing.sm),
                         SwitchListTile.adaptive(
                           value: verifiedSellers,
                           dense: true,
                           contentPadding: EdgeInsets.zero,
-                          title: const Text('Verified sellers only'),
+                          title: Text(l10n.adminVerifiedSellersOnly),
                           onChanged: isSubmitting
                               ? null
                               : (value) => setDialogState(
@@ -250,10 +254,10 @@ class _AdminSectionScreenState extends ConsumerState<AdminSectionScreen> {
                     onPressed: isSubmitting
                         ? null
                         : () => Navigator.pop(dialogContext),
-                    child: const Text('Cancel'),
+                    child: Text(context.l10n.cancel),
                   ),
                   PrimaryButton(
-                    label: 'Create',
+                    label: l10n.create,
                     isLoading: isSubmitting,
                     isExpanded: false,
                     onPressed: isSubmitting
@@ -280,7 +284,7 @@ class _AdminSectionScreenState extends ConsumerState<AdminSectionScreen> {
                               success: (_) {
                                 Navigator.pop(dialogContext);
                                 ref.invalidate(adminSectionProvider(config));
-                                _showSnack('Campaign created.');
+                                _showSnack(l10n.adminCampaignCreated);
                               },
                               error: (failure) {
                                 setDialogState(() => isSubmitting = false);
@@ -313,16 +317,17 @@ class _AdminSectionScreenState extends ConsumerState<AdminSectionScreen> {
     required Map<String, bool> channels,
     required bool verifiedSellers,
   }) {
+    final l10n = context.l10n;
     final selectedChannels = channels.entries
         .where((entry) => entry.value)
         .map((entry) => entry.key)
         .toList();
     if (name.trim().isEmpty || title.trim().isEmpty || body.trim().isEmpty) {
-      _showSnack('Name, title, and body are required.', isError: true);
+      _showSnack(l10n.adminCampaignFieldsRequired, isError: true);
       return null;
     }
     if (selectedChannels.isEmpty) {
-      _showSnack('Select at least one channel.', isError: true);
+      _showSnack(l10n.adminSelectChannel, isError: true);
       return null;
     }
 
@@ -343,7 +348,7 @@ class _AdminSectionScreenState extends ConsumerState<AdminSectionScreen> {
     if (scheduledAt.trim().isNotEmpty) {
       final parsed = DateTime.tryParse(scheduledAt.trim());
       if (parsed == null) {
-        _showSnack('Use an ISO schedule time.', isError: true);
+        _showSnack(l10n.adminScheduleIsoHint, isError: true);
         return null;
       }
       payload['scheduled_at'] = parsed.toUtc().toIso8601String();
@@ -353,6 +358,7 @@ class _AdminSectionScreenState extends ConsumerState<AdminSectionScreen> {
   }
 
   Future<void> _runCampaign(String id) async {
+    final l10n = context.l10n;
     if (id.isEmpty) return;
     final result = await ref
         .read(adminRepositoryProvider)
@@ -366,20 +372,20 @@ class _AdminSectionScreenState extends ConsumerState<AdminSectionScreen> {
         if (analyticsConfig != null) {
           ref.invalidate(adminSectionProvider(analyticsConfig));
         }
-        _showSnack('Campaign queued for delivery.');
+        _showSnack(l10n.adminCampaignQueued);
       },
       error: (failure) => _showSnack(failure.message, isError: true),
     );
   }
 
   void _showRecordSheet(AdminRecord record) {
+    final colors = context.dsColors;
     final pretty = const JsonEncoder.withIndent('  ').convert(record.raw);
     showModalBottomSheet<void>(
       context: context,
       showDragHandle: true,
       isScrollControlled: true,
       builder: (context) {
-        final colors = context.dsColors;
         return DraggableScrollableSheet(
           expand: false,
           initialChildSize: 0.72,
@@ -413,9 +419,12 @@ class _AdminSectionScreenState extends ConsumerState<AdminSectionScreen> {
                   spacing: DsSpacing.xs,
                   runSpacing: DsSpacing.xs,
                   children: [
-                    Chip(label: Text(record.status)),
+                    AdminMetricPill(
+                      label: record.status,
+                      color: context.console.positive,
+                    ),
                     for (final entry in record.metrics.entries)
-                      Chip(label: Text('${entry.key}: ${entry.value}')),
+                      AdminMetricPill(label: '${entry.key}: ${entry.value}'),
                   ],
                 ),
                 const SizedBox(height: DsSpacing.lg),
@@ -435,8 +444,8 @@ class _AdminSectionScreenState extends ConsumerState<AdminSectionScreen> {
   }
 
   void _showSnack(String message, {bool isError = false}) {
-    if (!mounted) return;
     final colors = context.dsColors;
+    if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
@@ -461,14 +470,14 @@ class _RecordsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.dsColors;
+    final palette = context.console;
     final compact = MediaQuery.sizeOf(context).width < 780;
 
     return Container(
       decoration: BoxDecoration(
-        color: colors.surface,
-        borderRadius: DsRadius.borderLg,
-        border: Border.all(color: colors.border),
+        color: palette.surface,
+        borderRadius: DsRadius.borderSm,
+        border: Border.all(color: palette.line),
       ),
       child: Column(
         children: [
@@ -483,7 +492,7 @@ class _RecordsList extends StatelessWidget {
                   : () => onRunCampaign!(entry.value.id),
             ),
             if (entry.key < records.length - 1)
-              Divider(height: 1, color: colors.border),
+              Divider(height: 1, color: palette.line),
           ],
         ],
       ),
@@ -508,7 +517,7 @@ class _RecordTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.dsColors;
+    final palette = context.console;
     final badges = _RecordBadges(record: record, onRunCampaign: onRunCampaign);
 
     return Semantics(
@@ -517,8 +526,12 @@ class _RecordTile extends StatelessWidget {
       child: ListTile(
         onTap: onOpen,
         leading: CircleAvatar(
-          backgroundColor: colors.primary.withValues(alpha: 0.12),
-          child: Icon(_iconFor(keyName), color: colors.primary, size: 20),
+          backgroundColor: palette.primary.withValues(alpha: 0.1),
+          child: Icon(
+            _iconFor(keyName),
+            color: palette.primary,
+            size: 20,
+          ),
         ),
         title: Text(record.title, maxLines: 1, overflow: TextOverflow.ellipsis),
         subtitle: Column(
@@ -546,17 +559,22 @@ class _RecordBadges extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final palette = context.console;
     return Wrap(
       crossAxisAlignment: WrapCrossAlignment.center,
       spacing: DsSpacing.xs,
       runSpacing: DsSpacing.xs,
       children: [
         for (final metric in record.metrics.entries.take(2))
-          Chip(label: Text(metric.value)),
-        Chip(label: Text(record.status)),
+          AdminMetricPill(label: metric.value),
+        AdminMetricPill(
+          label: record.status,
+          color: palette.positive,
+        ),
         if (onRunCampaign != null)
           IconButton(
-            tooltip: 'Run campaign',
+            tooltip: l10n.adminRunCampaign,
             onPressed: onRunCampaign,
             icon: const Icon(Icons.play_arrow_rounded),
           ),
@@ -574,6 +592,7 @@ class _SectionError extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.dsColors;
+    final l10n = context.l10n;
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(DsSpacing.xl),
@@ -586,7 +605,7 @@ class _SectionError extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Unable to load this section.',
+            l10n.adminSectionUnavailable,
             style: TextStyle(
               color: colors.error,
               fontWeight: DsTypography.semiBold,
@@ -596,7 +615,7 @@ class _SectionError extends StatelessWidget {
           Text(message, style: TextStyle(color: colors.onSurfaceVariant)),
           const SizedBox(height: DsSpacing.md),
           SecondaryButton(
-            label: 'Retry',
+            label: l10n.retry,
             icon: Icons.refresh_rounded,
             isExpanded: false,
             onPressed: onRetry,
@@ -616,6 +635,7 @@ class _EmptyRecords extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.dsColors;
+    final l10n = context.l10n;
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(DsSpacing.xl),
@@ -625,7 +645,7 @@ class _EmptyRecords extends StatelessWidget {
         border: Border.all(color: colors.border),
       ),
       child: Text(
-        searched ? 'No matching records found.' : 'No $title records yet.',
+        searched ? l10n.adminNoMatchingRecords : 'No $title records yet.',
         style: TextStyle(color: colors.onSurfaceVariant),
       ),
     );

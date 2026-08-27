@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../../core/design_system/design_system.dart';
+import '../../../../core/localization/l10n_extension.dart';
 import '../../../../../core/router/route_paths.dart';
 import '../../domain/entities/seller_low_stock_item.dart';
 import '../providers/seller_dashboard_provider.dart';
@@ -64,7 +65,7 @@ class SellerLowStockAlert extends ConsumerWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Low stock alert',
+                          context.l10n.sellerLowStockTitle,
                           style: theme.textTheme.titleSmall
                               ?.copyWith(fontWeight: DsTypography.bold),
                         ),
@@ -78,7 +79,7 @@ class SellerLowStockAlert extends ConsumerWidget {
                   ),
                   TextButton(
                     onPressed: () => context.push(RoutePaths.myProducts),
-                    child: const Text('Restock'),
+                    child: Text(context.l10n.sellerRestock),
                   ),
                 ],
               ),
@@ -170,7 +171,7 @@ class _LowStockCard extends StatelessWidget {
                         borderRadius: DsRadius.borderFull,
                       ),
                       child: Text(
-                        isOut ? 'Out of stock' : '${item.stock} left',
+                        isOut ? context.l10n.sellerOutOfStock : '${item.stock} left',
                         style: TextStyle(
                           fontFamily: DsTypography.fontFamily,
                           fontSize: 9,

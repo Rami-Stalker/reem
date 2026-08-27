@@ -5,6 +5,7 @@ import {
 } from '@nestjs/common';
 import {
   CashbackStatus,
+  Currency,
   CouponType,
   LoyaltyReward,
   LoyaltyRewardType,
@@ -15,6 +16,11 @@ import {
 } from '@prisma/client';
 import { randomUUID } from 'node:crypto';
 import { PrismaService } from '../../prisma/prisma.service';
+import {
+  POINTS_PER_REDEMPTION,
+  SYP_PER_REDEMPTION,
+} from '../finance/loyalty.service';
+import { Money } from '../../common/money';
 import {
   CreateMembershipTierDto,
   RedeemCashbackDto,
@@ -27,7 +33,9 @@ import {
   serializeMembershipTier,
 } from './rewards.serializer';
 
-const POINTS_PER_UNIT = 100;
+/** Cashback and wallet credit are settled in SYP. */
+const CASHBACK_CURRENCY = Currency.SYP;
+
 const CASHBACK_TTL_DAYS = 180;
 
 const round = (n: number) => Math.round(n * 100) / 100;
@@ -125,7 +133,9 @@ export class MembershipService {
       points: user.points,
       lifetime_points: user.lifetimePoints,
       tier: account.tierSnapshot,
-      redeem_rate: POINTS_PER_UNIT,
+      // Q43, from the service that owns the rate.
+      redeem_step: POINTS_PER_REDEMPTION,
+      redeem_value_syp: SYP_PER_REDEMPTION,
       membership: {
         tier: account.tier ? serializeMembershipTier(account.tier) : null,
         next_tier: nextTier ? serializeMembershipTier(nextTier) : null,
@@ -214,12 +224,12 @@ export class MembershipService {
     });
   }
 
-  async recordPurchase(userId: string, orderId: string, total: number) {
+  async recordPurchase(userId: string, orderId: string, total: Money) {
     const account = await this.refreshMembership(userId);
     const bonusPoints = Math.floor(
-      total * Math.max(0, account.pointsMultiplier - 1),
+      total.toUnsafeNumber() * Math.max(0, account.pointsMultiplier - 1),
     );
-    const cashbackAmount = round((total * account.cashbackBps) / 10000);
+    const cashback = total.percentBps(account.cashbackBps);
     const expiresAt = new Date(
       Date.now() + CASHBACK_TTL_DAYS * 24 * 60 * 60 * 1000,
     );
@@ -227,7 +237,10 @@ export class MembershipService {
     await this.prisma.$transaction(async (tx) => {
       await tx.membershipAccount.update({
         where: { userId },
-        data: { currentPeriodSpend: { increment: total } },
+        data: {
+          spendCurrency: total.currency,
+          currentPeriodSpend: { increment: total.toPrisma() },
+        },
       });
 
       if (bonusPoints > 0) {
@@ -245,7 +258,7 @@ export class MembershipService {
         }
       }
 
-      if (cashbackAmount > 0) {
+      if (!cashback.isZero()) {
         const existingCashback = await tx.cashbackLedger.findFirst({
           where: { userId, orderId, status: { not: CashbackStatus.REVERSED } },
         });
@@ -254,7 +267,8 @@ export class MembershipService {
             data: {
               userId,
               orderId,
-              amount: cashbackAmount,
+              currency: cashback.currency,
+              amount: cashback.toPrisma(),
               status: CashbackStatus.EARNED,
               expiresAt,
             },
@@ -318,12 +332,19 @@ export class MembershipService {
       }
 
       if (reward.type === LoyaltyRewardType.CASHBACK) {
-        const amount = reward.cashbackAmount ?? this.metadataNumber(reward.metadata, 'amount', 0);
-        if (amount <= 0) throw new BadRequestException('Cashback reward is misconfigured');
+        const amount = Money.of(
+          reward.cashbackAmount ??
+            this.metadataNumber(reward.metadata, 'amount', 0),
+          reward.currency,
+        );
+        if (amount.isZero() || amount.isNegative()) {
+          throw new BadRequestException('Cashback reward is misconfigured');
+        }
         const entry = await tx.cashbackLedger.create({
           data: {
             userId,
-            amount,
+            currency: amount.currency,
+            amount: amount.toPrisma(),
             status: CashbackStatus.EARNED,
             expiresAt: new Date(Date.now() + CASHBACK_TTL_DAYS * 24 * 60 * 60 * 1000),
           },
@@ -368,18 +389,23 @@ export class MembershipService {
       }),
     ]);
 
+    // Cashback is always held in the platform's settlement currency.
     return {
-      available: round(available._sum.amount ?? 0),
-      pending: round(pending._sum.amount ?? 0),
-      lifetime_earned: round(lifetime._sum.amount ?? 0),
+      available: Money.of(available._sum.amount ?? 0, CASHBACK_CURRENCY).toJSON(),
+      pending: Money.of(pending._sum.amount ?? 0, CASHBACK_CURRENCY).toJSON(),
+      lifetime_earned: Money.of(lifetime._sum.amount ?? 0, CASHBACK_CURRENCY).toJSON(),
       entries: entries.map(serializeCashbackEntry),
     };
   }
 
   async redeemCashback(userId: string, dto: RedeemCashbackDto = {}) {
     const balance = await this.cashbackBalance(userId);
-    const amount = round(dto.amount && dto.amount > 0 ? dto.amount : balance.available);
-    if (amount <= 0 || amount > balance.available) {
+    const available = Money.of(balance.available.amount, CASHBACK_CURRENCY);
+    const amount =
+      dto.amount && dto.amount > 0
+        ? Money.of(dto.amount, CASHBACK_CURRENCY)
+        : available;
+    if (amount.isZero() || amount.isNegative() || amount.greaterThan(available)) {
       throw new BadRequestException('Insufficient cashback balance');
     }
 
@@ -391,21 +417,22 @@ export class MembershipService {
       });
 
       for (const entry of entries) {
-        if (remaining <= 0) break;
-        if (entry.amount <= remaining) {
-          remaining = round(remaining - entry.amount);
+        if (remaining.isZero() || remaining.isNegative()) break;
+        const entryAmount = Money.of(entry.amount, entry.currency);
+        if (!entryAmount.greaterThan(remaining)) {
+          remaining = remaining.minus(entryAmount);
           await tx.cashbackLedger.update({
             where: { id: entry.id },
             data: { status: CashbackStatus.REDEEMED, redeemedAt: new Date() },
           });
         } else {
           const redeemed = remaining;
-          const leftover = round(entry.amount - remaining);
-          remaining = 0;
+          const leftover = entryAmount.minus(remaining);
+          remaining = Money.zero(CASHBACK_CURRENCY);
           await tx.cashbackLedger.update({
             where: { id: entry.id },
             data: {
-              amount: redeemed,
+              amount: redeemed.toPrisma(),
               status: CashbackStatus.REDEEMED,
               redeemedAt: new Date(),
             },
@@ -414,7 +441,8 @@ export class MembershipService {
             data: {
               userId,
               orderId: entry.orderId,
-              amount: leftover,
+              currency: entry.currency,
+              amount: leftover.toPrisma(),
               status: CashbackStatus.EARNED,
               expiresAt: entry.expiresAt,
             },
@@ -425,9 +453,12 @@ export class MembershipService {
       return tx.coupon.create({
         data: {
           code: `CASH-${randomUUID().split('-')[0].toUpperCase()}`,
-          title: `$${amount} cashback reward`,
+          // The currency travels with the figure — the old template baked a
+          // literal "$" into a row that holds SYP.
+          title: `${amount.toString()} cashback reward`,
           type: CouponType.FIXED,
-          amountOff: amount,
+          currency: amount.currency,
+          amountOff: amount.toPrisma(),
           userId,
           maxUses: 1,
           perUserLimit: 1,
@@ -437,7 +468,7 @@ export class MembershipService {
     });
 
     return {
-      amount_redeemed: amount,
+      amount_redeemed: amount.toJSON(),
       coupon: serializeCoupon(coupon),
       cashback: await this.cashbackBalance(userId),
     };
@@ -514,7 +545,7 @@ export class MembershipService {
       ),
       cashback: {
         entries: cashback._count._all,
-        total: round(cashback._sum.amount ?? 0),
+        total: Money.of(cashback._sum.amount ?? 0, CASHBACK_CURRENCY).toJSON(),
       },
       active_rewards: rewards,
       vip_customers: vipCustomers,

@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/design_system/design_system.dart';
 import '../../../../core/router/route_names.dart';
+import '../../../../core/localization/l10n_extension.dart';
 
 class RewardsPointsCard extends StatelessWidget {
   const RewardsPointsCard({super.key});
@@ -45,7 +46,7 @@ class RewardsPointsCard extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    'Earn rewards on every purchase ✨',
+                    context.l10n.homeLoyaltySubtitle,
                     style: TextStyle(
                       color: colors.onPrimary.withValues(alpha: 0.9),
                       fontSize: DsTypography.bodySmall,
@@ -61,7 +62,7 @@ class RewardsPointsCard extends StatelessWidget {
                 borderRadius: DsRadius.borderFull,
               ),
               child: Text(
-                'Redeem',
+                context.l10n.redeem,
                 style: TextStyle(
                   color: colors.primary,
                   fontWeight: DsTypography.bold,

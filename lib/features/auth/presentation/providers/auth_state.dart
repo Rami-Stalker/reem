@@ -1,4 +1,5 @@
 import 'package:reem/core/shared/entities/user.dart';
+import 'auth_message.dart';
 
 class AuthState {
   const AuthState({
@@ -8,6 +9,7 @@ class AuthState {
     this.user,
     this.error,
     this.successMessage,
+    this.passwordNeedsCode = false,
   });
 
   final bool isLoading;
@@ -15,7 +17,13 @@ class AuthState {
   final bool isGuest;
   final User? user;
   final String? error;
-  final String? successMessage;
+  /// The outcome to announce, resolved to text by the screen.
+  final AuthMessage? successMessage;
+
+  /// The password was right, but this handset is new to the account, so the
+  /// server sent a code instead of a session. Not an error — the next screen
+  /// is the code screen.
+  final bool passwordNeedsCode;
 
   bool get isAuthenticated => user != null;
   bool get canBrowseAsGuest => isGuest && user == null;
@@ -26,18 +34,25 @@ class AuthState {
     bool? isGuest,
     User? user,
     String? error,
-    String? successMessage,
+    AuthMessage? successMessage,
+    bool? passwordNeedsCode,
     bool clearUser = false,
     bool clearError = false,
     bool clearSuccess = false,
+    bool clearPasswordNeedsCode = false,
   }) {
     return AuthState(
       isLoading: isLoading ?? this.isLoading,
       isInitialized: isInitialized ?? this.isInitialized,
       isGuest: isGuest ?? this.isGuest,
       user: clearUser ? null : (user ?? this.user),
-      error: clearError ? null : error,
-      successMessage: clearSuccess ? null : successMessage,
+      error: clearError ? null : (error ?? this.error),
+      successMessage: clearSuccess
+          ? null
+          : (successMessage ?? this.successMessage),
+      passwordNeedsCode: clearPasswordNeedsCode
+          ? false
+          : (passwordNeedsCode ?? this.passwordNeedsCode),
     );
   }
 }

@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/design_system/design_system.dart';
 import '../../../../core/router/route_paths.dart';
+import '../../../../core/localization/l10n_extension.dart';
 
 /// Commerce hub — quick links to the customer's orders, saved items and
 /// account settings. All destinations are real registered routes.
@@ -12,17 +13,17 @@ class ProfileHub extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final items = <_HubItem>[
-      const _HubItem(Icons.local_mall_outlined, 'My orders', RoutePaths.orders),
-      const _HubItem(
-          Icons.favorite_border_rounded, 'Saved items', RoutePaths.favorites),
-      const _HubItem(
-          Icons.location_on_outlined, 'Addresses', RoutePaths.addresses),
-      const _HubItem(Icons.credit_card_outlined, 'Payment methods',
+      _HubItem(Icons.local_mall_outlined, context.l10n.myOrders, RoutePaths.orders),
+      _HubItem(
+          Icons.favorite_border_rounded, context.l10n.savedItems, RoutePaths.favorites),
+      _HubItem(
+          Icons.location_on_outlined, context.l10n.addresses, RoutePaths.addresses),
+      _HubItem(Icons.credit_card_outlined, context.l10n.paymentMethods,
           RoutePaths.paymentMethods),
-      const _HubItem(
-          Icons.confirmation_number_outlined, 'Coupons', RoutePaths.coupons),
-      const _HubItem(
-          Icons.card_giftcard_rounded, 'Rewards & points', RoutePaths.rewards),
+      _HubItem(
+          Icons.confirmation_number_outlined, context.l10n.coupons, RoutePaths.coupons),
+      _HubItem(
+          Icons.card_giftcard_rounded, context.l10n.rewardsAndOffers, RoutePaths.rewards),
     ];
 
     final c = context.dsColors;

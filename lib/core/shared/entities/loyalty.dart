@@ -11,6 +11,32 @@ extension LoyaltyTierX on LoyaltyTier {
         LoyaltyTier.platinum => 'Platinum',
         LoyaltyTier.diamond => 'Diamond',
       };
+
+  /// The server stores the tier as free text on the account. Anything it does
+  /// not recognise reads as the entry tier rather than throwing — a customer
+  /// must never lose her home page over a spelling.
+  static LoyaltyTier fromWire(String? value) =>
+      switch ((value ?? '').toLowerCase()) {
+        'gold' => LoyaltyTier.gold,
+        'platinum' => LoyaltyTier.platinum,
+        'diamond' => LoyaltyTier.diamond,
+        _ => LoyaltyTier.rose,
+      };
+
+  /// Lifetime points at which this tier begins.
+  int get threshold => switch (this) {
+        LoyaltyTier.rose => 0,
+        LoyaltyTier.gold => 1000,
+        LoyaltyTier.platinum => 5000,
+        LoyaltyTier.diamond => 15000,
+      };
+
+  LoyaltyTier? get next => switch (this) {
+        LoyaltyTier.rose => LoyaltyTier.gold,
+        LoyaltyTier.gold => LoyaltyTier.platinum,
+        LoyaltyTier.platinum => LoyaltyTier.diamond,
+        LoyaltyTier.diamond => null,
+      };
 }
 
 /// The customer's loyalty snapshot.

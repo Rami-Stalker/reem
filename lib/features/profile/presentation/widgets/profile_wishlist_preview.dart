@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/router/route_paths.dart';
 import '../../../../core/shared/wedgets/product/product_rail.dart';
 import '../providers/profile_provider.dart';
+import '../../../../core/localization/l10n_extension.dart';
 
 /// "Wishlist" preview rail — live favorites, with a route into the full grid.
 class ProfileWishlistPreview extends ConsumerWidget {
@@ -16,8 +17,8 @@ class ProfileWishlistPreview extends ConsumerWidget {
     final isLoading = state.isLoading && state.favorites.isEmpty;
 
     return ProductRail(
-      eyebrow: 'Saved for later',
-      title: 'Your wishlist',
+      eyebrow: context.l10n.savedForLater,
+      title: context.l10n.yourWishlist,
       products: state.favorites.take(10).toList(),
       isLoading: isLoading,
       onSeeAll: () => context.push(RoutePaths.favorites),

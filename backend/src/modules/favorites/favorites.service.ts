@@ -5,7 +5,9 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import {
+  Currency,
   NotificationType,
+  GuestSavedItemType,
   Prisma,
   User,
   UserRole,
@@ -15,27 +17,26 @@ import {
 import { randomBytes } from 'crypto';
 import { PrismaService } from '../../prisma/prisma.service';
 import { serializePost, serializeProduct, serializeUser } from '../../common/serializers';
+import { Money } from '../../common/money';
 import {
   AddWishlistItemDto,
   CreateWishlistCollectionDto,
   ShareWishlistDto,
 } from './dto/wishlist.dto';
-
-const productInclude = {
-  seller: true,
-  media: { orderBy: { sortOrder: 'asc' as const } },
-  variants: { orderBy: { sortOrder: 'asc' as const } },
-} satisfies Prisma.ProductInclude;
+import {
+  PRODUCT_CARD_INCLUDE,
+  PURCHASABLE_PRODUCT_WHERE,
+} from '../../common/catalog/product-include';
 
 const postInclude = {
   author: true,
-  product: { include: productInclude },
+  product: { include: PRODUCT_CARD_INCLUDE },
 } satisfies Prisma.PostInclude;
 
 const collectionInclude = {
   items: {
     include: {
-      product: { include: productInclude },
+      product: { include: PRODUCT_CARD_INCLUDE },
       seller: true,
       post: { include: postInclude },
     },
@@ -50,10 +51,26 @@ export class FavoritesService {
   async list(userId: string) {
     const favorites = await this.prisma.favorite.findMany({
       where: { userId },
-      include: { product: { include: productInclude } },
+      include: { product: { include: PRODUCT_CARD_INCLUDE } },
       orderBy: { createdAt: 'desc' },
     });
     return favorites.map((f) => serializeProduct(f.product, { isLiked: true }));
+  }
+
+  async listGuest(guestSessionId: string) {
+    const favorites = await this.prisma.guestSavedItem.findMany({
+      where: {
+        guestSessionId,
+        type: GuestSavedItemType.PRODUCT,
+        productId: { not: null },
+      },
+      include: { product: { include: PRODUCT_CARD_INCLUDE } },
+      orderBy: { createdAt: 'desc' },
+    });
+    return favorites
+      .map((f) => f.product)
+      .filter((product): product is NonNullable<typeof product> => !!product)
+      .map((product) => serializeProduct(product, { isLiked: true }));
   }
 
   async overview(userId: string) {
@@ -89,6 +106,45 @@ export class FavoritesService {
     };
   }
 
+  async overviewGuest(guestSessionId: string) {
+    const [products, sellers, posts] = await Promise.all([
+      this.listGuest(guestSessionId),
+      this.prisma.guestSavedItem.findMany({
+        where: {
+          guestSessionId,
+          type: GuestSavedItemType.SELLER,
+          sellerId: { not: null },
+        },
+        include: { seller: true },
+        orderBy: { createdAt: 'desc' },
+      }),
+      this.prisma.guestSavedItem.findMany({
+        where: {
+          guestSessionId,
+          type: GuestSavedItemType.POST,
+          postId: { not: null },
+        },
+        include: { post: { include: postInclude } },
+        orderBy: { createdAt: 'desc' },
+      }),
+    ]);
+
+    return {
+      products,
+      sellers: sellers
+        .map((row) => row.seller)
+        .filter((seller): seller is User => !!seller)
+        .map((seller) => this.serializeSavedSeller(seller, new Date())),
+      posts: posts
+        .filter((row) => !!row.post)
+        .map((row) => ({
+          saved_at: row.createdAt.toISOString(),
+          post: serializePost(row.post!, undefined),
+        })),
+      collections: [],
+    };
+  }
+
   async add(userId: string, productId: string) {
     const product = await this.prisma.product.findUnique({ where: { id: productId } });
     if (!product) throw new NotFoundException('Product not found');
@@ -108,6 +164,16 @@ export class FavoritesService {
     return { message: 'Added to favorites' };
   }
 
+  async addGuest(guestSessionId: string, productId: string) {
+    const product = await this.prisma.product.findUnique({ where: { id: productId } });
+    if (!product) throw new NotFoundException('Product not found');
+    await this.createGuestSavedOnce(guestSessionId, {
+      type: GuestSavedItemType.PRODUCT,
+      productId,
+    });
+    return { message: 'Saved temporarily' };
+  }
+
   async remove(userId: string, productId: string) {
     const existing = await this.prisma.favorite.findUnique({
       where: { userId_productId: { userId, productId } },
@@ -122,6 +188,17 @@ export class FavoritesService {
       ]);
     }
     return { message: 'Removed from favorites' };
+  }
+
+  async removeGuest(guestSessionId: string, productId: string) {
+    await this.prisma.guestSavedItem.deleteMany({
+      where: {
+        guestSessionId,
+        type: GuestSavedItemType.PRODUCT,
+        productId,
+      },
+    });
+    return { message: 'Removed from temporary saves' };
   }
 
   async saveSeller(userId: string, sellerId: string) {
@@ -140,9 +217,28 @@ export class FavoritesService {
     return { message: 'Seller saved' };
   }
 
+  async saveSellerGuest(guestSessionId: string, sellerId: string) {
+    const seller = await this.prisma.user.findUnique({ where: { id: sellerId } });
+    if (!seller || seller.role !== UserRole.SELLER) {
+      throw new NotFoundException('Seller not found');
+    }
+    await this.createGuestSavedOnce(guestSessionId, {
+      type: GuestSavedItemType.SELLER,
+      sellerId,
+    });
+    return { message: 'Seller saved temporarily' };
+  }
+
   async removeSeller(userId: string, sellerId: string) {
     await this.prisma.sellerFavorite.deleteMany({ where: { userId, sellerId } });
     return { message: 'Seller removed from favorites' };
+  }
+
+  async removeSellerGuest(guestSessionId: string, sellerId: string) {
+    await this.prisma.guestSavedItem.deleteMany({
+      where: { guestSessionId, type: GuestSavedItemType.SELLER, sellerId },
+    });
+    return { message: 'Seller removed from temporary saves' };
   }
 
   async savePost(userId: string, postId: string) {
@@ -163,6 +259,16 @@ export class FavoritesService {
     return { message: 'Post saved' };
   }
 
+  async savePostGuest(guestSessionId: string, postId: string) {
+    const post = await this.prisma.post.findUnique({ where: { id: postId } });
+    if (!post) throw new NotFoundException('Post not found');
+    await this.createGuestSavedOnce(guestSessionId, {
+      type: GuestSavedItemType.POST,
+      postId,
+    });
+    return { message: 'Post saved temporarily' };
+  }
+
   async removePost(userId: string, postId: string) {
     const deleted = await this.prisma.postFavorite.deleteMany({
       where: { userId, postId },
@@ -174,6 +280,13 @@ export class FavoritesService {
       });
     }
     return { message: 'Post removed from favorites' };
+  }
+
+  async removePostGuest(guestSessionId: string, postId: string) {
+    await this.prisma.guestSavedItem.deleteMany({
+      where: { guestSessionId, type: GuestSavedItemType.POST, postId },
+    });
+    return { message: 'Post removed from temporary saves' };
   }
 
   async collections(userId: string) {
@@ -225,7 +338,7 @@ export class FavoritesService {
               dto.notify_back_in_stock ?? existing.notifyBackInStock,
           },
           include: {
-            product: { include: productInclude },
+            product: { include: PRODUCT_CARD_INCLUDE },
             seller: true,
             post: { include: postInclude },
           },
@@ -243,7 +356,7 @@ export class FavoritesService {
             notifyBackInStock: dto.notify_back_in_stock ?? true,
           },
           include: {
-            product: { include: productInclude },
+            product: { include: PRODUCT_CARD_INCLUDE },
             seller: true,
             post: { include: postInclude },
           },
@@ -305,8 +418,22 @@ export class FavoritesService {
     };
   }
 
-  async notifyPriceDrop(productId: string, oldPrice: number, newPrice: number) {
-    if (newPrice >= oldPrice) return { recipients: 0 };
+  /**
+   * Q18 P2 — "منتج بمفضلتك نزل سعره". Prices are Decimal now, so the
+   * comparison and the message both go through Money rather than raw numbers,
+   * and the currency travels with the figures instead of being guessed at
+   * render time.
+   */
+  async notifyPriceDrop(
+    productId: string,
+    oldPrice: Prisma.Decimal,
+    newPrice: Prisma.Decimal,
+    currency: Currency = Currency.SYP,
+  ) {
+    const before = Money.of(oldPrice, currency);
+    const after = Money.of(newPrice, currency);
+    if (!after.lessThan(before)) return { recipients: 0 };
+
     const product = await this.prisma.product.findUnique({
       where: { id: productId },
       select: { id: true, title: true },
@@ -318,9 +445,13 @@ export class FavoritesService {
     });
     await this.createNotifications(recipients, {
       title: 'Price drop',
-      body: `${product.title} dropped from ${oldPrice} to ${newPrice}.`,
+      body: `${product.title} dropped from ${before.toString()} to ${after.toString()}.`,
       type: NotificationType.promo,
-      data: { product_id: product.id, old_price: oldPrice, new_price: newPrice },
+      data: {
+        product_id: product.id,
+        old_price: before.toJSON(),
+        new_price: after.toJSON(),
+      },
     });
     return { recipients: recipients.length };
   }
@@ -365,10 +496,25 @@ export class FavoritesService {
       if (!dto.product_id) throw new BadRequestException('product_id is required');
       const product = await this.prisma.product.findUnique({
         where: { id: dto.product_id },
-        select: { id: true, price: true },
+        select: {
+          id: true,
+          offers: {
+            where: { isActive: true },
+            orderBy: { price: 'asc' },
+            take: 1,
+            select: { price: true, currency: true },
+          },
+        },
       });
       if (!product) throw new NotFoundException('Product not found');
-      return { productId: product.id, priceWhenSaved: product.price };
+      // Snapshot the cheapest live offer, so "price dropped since you saved
+      // it" compares against something that was actually purchasable.
+      const cheapest = product.offers[0];
+      return {
+        productId: product.id,
+        priceWhenSaved: cheapest?.price ?? null,
+        priceCurrency: cheapest?.currency ?? null,
+      };
     }
     if (dto.type === WishlistItemType.SELLER) {
       if (!dto.seller_id) throw new BadRequestException('seller_id is required');
@@ -437,6 +583,37 @@ export class FavoritesService {
     });
   }
 
+  private async createGuestSavedOnce(
+    guestSessionId: string,
+    target: {
+      type: GuestSavedItemType;
+      productId?: string;
+      sellerId?: string;
+      postId?: string;
+    },
+  ) {
+    const existing = await this.prisma.guestSavedItem.findFirst({
+      where: {
+        guestSessionId,
+        type: target.type,
+        ...(target.productId ? { productId: target.productId } : {}),
+        ...(target.sellerId ? { sellerId: target.sellerId } : {}),
+        ...(target.postId ? { postId: target.postId } : {}),
+      },
+      select: { id: true },
+    });
+    if (existing) return;
+    await this.prisma.guestSavedItem.create({
+      data: {
+        guestSessionId,
+        type: target.type,
+        productId: target.productId,
+        sellerId: target.sellerId,
+        postId: target.postId,
+      },
+    });
+  }
+
   private serializeCollection(
     collection: Prisma.WishlistCollectionGetPayload<{
       include: typeof collectionInclude;
@@ -459,7 +636,7 @@ export class FavoritesService {
   private serializeItem(
     item: Prisma.WishlistCollectionItemGetPayload<{
       include: {
-        product: { include: typeof productInclude };
+        product: { include: typeof PRODUCT_CARD_INCLUDE };
         seller: true;
         post: { include: typeof postInclude };
       };

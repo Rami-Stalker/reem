@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/design_system/design_system.dart';
 import '../../../../core/experience/role_experience.dart';
 import '../providers/role_experience_provider.dart';
+import '../../../../core/localization/l10n_extension.dart';
 
 class ExperienceSurfaceScreen extends ConsumerWidget {
   const ExperienceSurfaceScreen({super.key, required this.surface, this.title});
@@ -15,12 +16,23 @@ class ExperienceSurfaceScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final experience = ref.watch(roleExperienceProvider);
+    final role = experience.role;
     final identity = experience.visualIdentity;
     final sections = experience.sectionsFor(surface).toList(growable: false);
     final menuGroups = experience.visibleMenuGroups.toList(growable: false);
-    final surfaceTitle = title ?? _titleFor(experience, surface);
+    final surfaceTitle = title ?? _titleFor(context, experience, surface);
 
     return ReemScrollPage(
+      background: switch (role) {
+        ExperienceRole.seller => const SellerAtelierBackground(),
+        ExperienceRole.admin => const AdminChromeBackground(),
+        ExperienceRole.buyer => const CustomerBackdrop(),
+      },
+      backgroundColor: switch (role) {
+        ExperienceRole.seller => context.atelier.background,
+        ExperienceRole.admin => AdminExperience.background,
+        ExperienceRole.buyer => CustomerExperience.pearl,
+      },
       slivers: [
         PremiumAppBar(title: surfaceTitle),
         SliverToBoxAdapter(
@@ -35,6 +47,7 @@ class ExperienceSurfaceScreen extends ConsumerWidget {
               title: surfaceTitle,
               subtitle: experience.tagline,
               identity: identity,
+              role: role,
             ),
           ),
         ),
@@ -61,6 +74,7 @@ class ExperienceSurfaceScreen extends ConsumerWidget {
                   return _SurfaceSectionCard(
                     section: section,
                     identity: identity,
+                    role: role,
                     onTap: section.path == null
                         ? null
                         : () => context.go(section.path!),
@@ -79,7 +93,11 @@ class ExperienceSurfaceScreen extends ConsumerWidget {
                 DsSpacing.lg,
                 0,
               ),
-              child: _RoleMenuGroups(groups: menuGroups, identity: identity),
+              child: _RoleMenuGroups(
+                groups: menuGroups,
+                identity: identity,
+                role: role,
+              ),
             ),
           ),
         const SliverToBoxAdapter(child: SizedBox(height: 140)),
@@ -87,23 +105,33 @@ class ExperienceSurfaceScreen extends ConsumerWidget {
     );
   }
 
-  String _titleFor(AppRoleExperience experience, ExperienceSurface surface) {
+  String _titleFor(
+    BuildContext context,
+    AppRoleExperience experience,
+    ExperienceSurface surface,
+  ) {
+    final l10n = context.l10n;
     return switch (surface) {
-      ExperienceSurface.activity => 'Activity',
-      ExperienceSurface.customers => 'Customers',
-      ExperienceSurface.marketing => 'Marketing',
-      ExperienceSurface.analytics => 'Analytics',
-      ExperienceSurface.settings => 'Settings',
+      ExperienceSurface.activity => l10n.surfaceActivity,
+      ExperienceSurface.customers => l10n.surfaceCustomers,
+      ExperienceSurface.marketing => l10n.surfaceMarketing,
+      ExperienceSurface.analytics => l10n.sellerAnalytics,
+      ExperienceSurface.settings => l10n.settings,
       _ => experience.title,
     };
   }
 }
 
 class _RoleMenuGroups extends StatelessWidget {
-  const _RoleMenuGroups({required this.groups, required this.identity});
+  const _RoleMenuGroups({
+    required this.groups,
+    required this.identity,
+    required this.role,
+  });
 
   final List<RoleMenuGroup> groups;
   final RoleVisualIdentity identity;
+  final ExperienceRole role;
 
   @override
   Widget build(BuildContext context) {
@@ -112,7 +140,7 @@ class _RoleMenuGroups extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Quick actions',
+          context.l10n.sellerQuickActions,
           style: TextStyle(
             fontSize: DsTypography.titleMedium,
             fontWeight: DsTypography.bold,
@@ -132,7 +160,11 @@ class _RoleMenuGroups extends StatelessWidget {
                 for (final group in groups)
                   SizedBox(
                     width: groupWidth,
-                    child: _RoleMenuGroupCard(group: group, identity: identity),
+                    child: _RoleMenuGroupCard(
+                      group: group,
+                      identity: identity,
+                      role: role,
+                    ),
                   ),
               ],
             );
@@ -144,21 +176,46 @@ class _RoleMenuGroups extends StatelessWidget {
 }
 
 class _RoleMenuGroupCard extends StatelessWidget {
-  const _RoleMenuGroupCard({required this.group, required this.identity});
+  const _RoleMenuGroupCard({
+    required this.group,
+    required this.identity,
+    required this.role,
+  });
 
   final RoleMenuGroup group;
   final RoleVisualIdentity identity;
+  final ExperienceRole role;
 
   @override
   Widget build(BuildContext context) {
     final colors = context.dsColors;
+    final seller = role == ExperienceRole.seller;
+    final admin = role == ExperienceRole.admin;
     return Container(
       padding: const EdgeInsets.all(DsSpacing.md),
       decoration: BoxDecoration(
-        color: colors.surface,
-        borderRadius: DsRadius.borderXl,
-        border: Border.all(color: colors.glassBorder),
-        boxShadow: context.softShadow,
+        color: seller
+            ? context.atelier.surface
+            : admin
+                ? AdminExperience.surface
+                : colors.surface,
+        borderRadius: seller
+            ? DsRadius.borderMd
+            : admin
+                ? DsRadius.borderSm
+                : DsRadius.borderXl,
+        border: Border.all(
+          color: seller
+              ? context.atelier.line
+              : admin
+                  ? AdminExperience.line
+                  : colors.glassBorder,
+        ),
+        boxShadow: seller
+            ? context.atelier.shadow
+            : admin
+                ? AdminExperience.shadow
+                : context.softShadow,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -206,22 +263,40 @@ class _SurfaceHero extends StatelessWidget {
     required this.title,
     required this.subtitle,
     required this.identity,
+    required this.role,
   });
 
   final String title;
   final String subtitle;
   final RoleVisualIdentity identity;
+  final ExperienceRole role;
 
   @override
   Widget build(BuildContext context) {
     final colors = context.dsColors;
+    final seller = role == ExperienceRole.seller;
+    final admin = role == ExperienceRole.admin;
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(DsSpacing.lg),
       decoration: BoxDecoration(
-        gradient: identity.gradient,
-        borderRadius: DsRadius.borderXxl,
-        boxShadow: context.softShadow,
+        gradient: seller
+            ? context.atelier.headerGradient
+            : admin
+                ? const LinearGradient(
+                    colors: [AdminExperience.nav, AdminExperience.primary],
+                  )
+                : identity.gradient,
+        borderRadius: seller
+            ? DsRadius.borderMd
+            : admin
+                ? DsRadius.borderSm
+                : DsRadius.borderXxl,
+        boxShadow: seller
+            ? context.atelier.shadow
+            : admin
+                ? AdminExperience.shadow
+                : context.softShadow,
       ),
       child: Row(
         children: [
@@ -272,23 +347,45 @@ class _SurfaceSectionCard extends StatelessWidget {
   const _SurfaceSectionCard({
     required this.section,
     required this.identity,
+    required this.role,
     this.onTap,
   });
 
   final RoleSurfaceSection section;
   final RoleVisualIdentity identity;
+  final ExperienceRole role;
   final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
     final colors = context.dsColors;
+    final seller = role == ExperienceRole.seller;
+    final admin = role == ExperienceRole.admin;
     final card = Container(
       padding: const EdgeInsets.all(DsSpacing.md),
       decoration: BoxDecoration(
-        color: colors.surface,
-        borderRadius: DsRadius.borderXl,
-        border: Border.all(color: colors.glassBorder),
-        boxShadow: context.softShadow,
+        color: seller
+            ? context.atelier.surface
+            : admin
+                ? AdminExperience.surface
+                : colors.surface,
+        borderRadius: seller
+            ? DsRadius.borderMd
+            : admin
+                ? DsRadius.borderSm
+                : DsRadius.borderXl,
+        border: Border.all(
+          color: seller
+              ? context.atelier.line
+              : admin
+                  ? AdminExperience.line
+                  : colors.glassBorder,
+        ),
+        boxShadow: seller
+            ? context.atelier.shadow
+            : admin
+                ? AdminExperience.shadow
+                : context.softShadow,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -299,10 +396,23 @@ class _SurfaceSectionCard extends StatelessWidget {
                 width: 42,
                 height: 42,
                 decoration: BoxDecoration(
-                  color: identity.primary.withValues(alpha: 0.12),
-                  borderRadius: DsRadius.borderMd,
+                  color: (seller
+                          ? context.atelier.primary
+                          : admin
+                              ? AdminExperience.primary
+                              : identity.primary)
+                      .withValues(alpha: 0.12),
+                  borderRadius:
+                      seller || admin ? DsRadius.borderSm : DsRadius.borderMd,
                 ),
-                child: Icon(section.icon, color: identity.primary),
+                child: Icon(
+                  section.icon,
+                  color: seller
+                      ? context.atelier.primary
+                      : admin
+                          ? AdminExperience.primary
+                          : identity.primary,
+                ),
               ),
               const Spacer(),
               if (onTap != null)

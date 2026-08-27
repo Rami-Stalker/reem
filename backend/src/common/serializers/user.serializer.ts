@@ -17,7 +17,17 @@ export type UserPublic = Pick<
   | 'followersCount'
   | 'followingCount'
   | 'createdAt'
->;
+> &
+  Partial<
+    Pick<
+      User,
+      | 'sellerLevel'
+      | 'sellerVerifiedAt'
+      | 'sellerPremiumUntil'
+      | 'phoneVerifiedAt'
+      | 'emailVerifiedAt'
+    >
+  >;
 
 /** Public user shape returned across the API (snake_case JSON contract). */
 export function serializeUser(user: UserPublic) {
@@ -31,7 +41,12 @@ export function serializeUser(user: UserPublic) {
     image_url: user.imageUrl,
     location: user.location,
     role: user.role.toLowerCase(),
+    seller_level: user.sellerLevel?.toLowerCase() ?? 'basic',
+    seller_verified_at: user.sellerVerifiedAt?.toISOString() ?? null,
+    seller_premium_until: user.sellerPremiumUntil?.toISOString() ?? null,
     is_verified: user.isVerified,
+    phone_verified_at: user.phoneVerifiedAt?.toISOString() ?? null,
+    email_verified_at: user.emailVerifiedAt?.toISOString() ?? null,
     mfa_enabled: user.mfaEnabled,
     device_verification_required: user.deviceVerificationRequired,
     followers_count: user.followersCount,
@@ -48,7 +63,8 @@ export interface ProfileExtras {
   /** Seller-only aggregate stats; omitted for non-sellers. */
   sellerStats?: {
     productsCount: number;
-    totalSales: number;
+    /** One entry per currency the seller has sold in. */
+    totalSales: { amount: string; currency: string }[];
     ordersCount: number;
     averageRating: number;
   } | null;

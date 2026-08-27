@@ -7,6 +7,7 @@ import 'package:reem/core/result/result.dart';
 
 import '../providers/auth_account_provider.dart';
 import '../providers/auth_provider.dart';
+import '../../../../core/localization/l10n_extension.dart';
 
 class DeviceManagementScreen extends ConsumerWidget {
   const DeviceManagementScreen({super.key});
@@ -16,19 +17,19 @@ class DeviceManagementScreen extends ConsumerWidget {
     final name = await showDialog<String>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Rename device'),
+        title: Text(context.l10n.renameDevice),
         content: TextField(
           controller: controller,
-          decoration: const InputDecoration(hintText: 'Device name'),
+          decoration: InputDecoration(hintText: context.l10n.deviceName),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
+            child: Text(context.l10n.cancel),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, controller.text.trim()),
-            child: const Text('Save'),
+            child: Text(context.l10n.save),
           ),
         ],
       ),
@@ -42,11 +43,12 @@ class DeviceManagementScreen extends ConsumerWidget {
     _handleVoidResult(context, ref, result);
   }
 
-  Future<void> _trust(BuildContext context, WidgetRef ref, String id) async {
-    final result = await ref.read(authRepositoryProvider).trustDevice(id);
-    if (!context.mounted) return;
-    _handleVoidResult(context, ref, result);
-  }
+  // `_trust` is gone with the endpoint behind it. Declaring a device trusted
+  // took nothing but a live session and a device id, which made "trusted
+  // device" a claim the client could simply assert — and one an attacker
+  // holding a stolen token could assert about their own handset. Trust is now
+  // conferred by completing a code on the device itself, and by nothing else,
+  // so there is no button for it.
 
   Future<void> _revoke(BuildContext context, WidgetRef ref, String id) async {
     final result = await ref.read(authRepositoryProvider).revokeDevice(id);
@@ -64,7 +66,7 @@ class DeviceManagementScreen extends ConsumerWidget {
         ref.invalidate(accountDevicesProvider);
         DsSnackbar.show(
           context,
-          message: 'Device updated.',
+          message: context.l10n.deviceUpdated,
           type: DsSnackbarType.success,
         );
       case Error(:final failure):
@@ -83,7 +85,7 @@ class DeviceManagementScreen extends ConsumerWidget {
 
     return ReemScrollPage(
       slivers: [
-        PremiumAppBar(title: 'Devices', showBack: true),
+        PremiumAppBar(title: context.l10n.devices, showBack: true),
         SliverPadding(
           padding: const EdgeInsets.fromLTRB(
             DsSpacing.lg,
@@ -100,8 +102,8 @@ class DeviceManagementScreen extends ConsumerWidget {
             ),
             data: (items) {
               if (items.isEmpty) {
-                return const SliverFillRemaining(
-                  child: Center(child: Text('No devices yet.')),
+                return SliverFillRemaining(
+                  child: Center(child: Text(context.l10n.noDevicesYet)),
                 );
               }
               return SliverList.separated(
@@ -119,22 +121,21 @@ class DeviceManagementScreen extends ConsumerWidget {
                         leading: Icon(Icons.devices_outlined, color: colors.primary),
                         title: Text(device.name),
                         subtitle: Text(
-                          '${device.platform ?? 'unknown'} • ${device.trustLevel}',
+                          device.isTrusted
+                              ? context.l10n.deviceTrusted
+                              : context.l10n.deviceNotVerified,
                         ),
                         trailing: PopupMenuButton<String>(
                           onSelected: (value) {
                             if (value == 'rename') {
                               _rename(context, ref, device.id);
-                            } else if (value == 'trust') {
-                              _trust(context, ref, device.id);
                             } else if (value == 'revoke') {
                               _revoke(context, ref, device.id);
                             }
                           },
-                          itemBuilder: (context) => const [
-                            PopupMenuItem(value: 'rename', child: Text('Rename')),
-                            PopupMenuItem(value: 'trust', child: Text('Trust')),
-                            PopupMenuItem(value: 'revoke', child: Text('Revoke')),
+                          itemBuilder: (context) => [
+                            PopupMenuItem(value: 'rename', child: Text(context.l10n.rename)),
+                            PopupMenuItem(value: 'revoke', child: Text(context.l10n.revoke)),
                           ],
                         ),
                       ),

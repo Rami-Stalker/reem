@@ -26,6 +26,13 @@
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsLocalNetworking</key>
+		<true/>
+	</dict>
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>Reem connects to your local development API while testing on this network.</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
@@ -47,6 +54,12 @@
 			</array>
 		</dict>
 	</dict>
+	<key>NSCameraUsageDescription</key>
+	<string>لالتقاط صور لمنتجاتكِ وقصصكِ مباشرةً من التطبيق.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>لتسجيل ملاحظة صوتية وإرسالها في المحادثة.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>لاختيار صور من معرضكِ وإضافتها إلى منتجاتكِ وقصصكِ.</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>

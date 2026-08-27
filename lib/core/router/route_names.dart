@@ -2,7 +2,9 @@ abstract final class RouteNames {
   static const splash = 'splash';
   static const onboarding = 'onboarding';
   static const login = 'login';
+  static const authRequired = 'auth-required';
   static const register = 'register';
+  static const signInCode = 'sign-in-code';
   static const forgotPassword = 'forgot-password';
   static const otpVerification = 'otp-verification';
 
@@ -14,6 +16,8 @@ abstract final class RouteNames {
   static const accountSettings = 'account-settings';
   static const deviceManagement = 'device-management';
   static const securitySettings = 'security-settings';
+  static const phoneChange = 'phone-change';
+  static const accountRecovery = 'account-recovery';
   static const sellerVerification = 'seller-verification';
 
   static const addPost = 'add-post';
@@ -34,19 +38,27 @@ abstract final class RouteNames {
   static const sellerMarketing = 'seller-marketing';
   static const sellerAnalytics = 'seller-analytics';
   static const sellerStore = 'seller-store';
+  static const sellerOrders = 'seller-orders';
+  static const sellerOrderDetail = 'seller-order-detail';
   static const storyViewer = 'story-viewer';
   static const cart = 'cart';
   static const checkout = 'checkout';
   static const search = 'search';
   static const orderDetail = 'order-detail';
+  static const courierDay = 'courier-day';
+  static const shipmentTracking = 'shipment-tracking';
+  static const orderInvoices = 'order-invoices';
+  static const invoice = 'invoice';
   static const collection = 'collection';
-  static const notifications = 'notificatcations';
+  static const notifications = 'notifications';
   static const addresses = 'addresses';
   static const paymentMethods = 'payment-methods';
   static const appearance = 'appearance';
   static const language = 'language';
   static const coupons = 'coupons';
   static const rewards = 'rewards';
+  static const wallet = 'wallet';
+  static const sellerEarnings = 'seller-earnings';
 
   static const likeSheet = 'like-sheet';
   static const commentSheet = 'comment-sheet';

@@ -45,9 +45,8 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
       }
     }
 
-    final user = ref.read(authNotifierProvider).user;
     if (!mounted) return;
-    context.go(user != null ? RoutePaths.home : RoutePaths.login);
+    context.go(RoutePaths.home);
   }
 
   @override
@@ -63,29 +62,29 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Container(
-                  width: 130,
-                  height: 130,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    gradient: DsGradients.storyRing,
-                    boxShadow: context.luxuryShadow,
-                  ),
-                  child: Center(
-                    child: Container(
-                      width: 118,
-                      height: 118,
+                      width: 130,
+                      height: 130,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        gradient: context.primaryGradient,
+                        gradient: DsGradients.storyRing,
+                        boxShadow: context.luxuryShadow,
                       ),
-                      child: Icon(
-                        Icons.favorite_rounded,
-                        size: 56,
-                        color: colors.onPrimary,
+                      child: Center(
+                        child: Container(
+                          width: 118,
+                          height: 118,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            gradient: context.primaryGradient,
+                          ),
+                          child: Icon(
+                            Icons.favorite_rounded,
+                            size: 56,
+                            color: colors.onPrimary,
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                )
+                    )
                     .animate()
                     .scale(duration: 900.ms, curve: Curves.easeOutExpo)
                     .fadeIn(),
@@ -103,9 +102,9 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
                 Text(
                   l10n.splashTagline,
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                        color: colors.onSurfaceVariant,
-                        letterSpacing: 1.2,
-                      ),
+                    color: colors.onSurfaceVariant,
+                    letterSpacing: 1.2,
+                  ),
                 ).animate().fadeIn(delay: 500.ms),
               ],
             ),

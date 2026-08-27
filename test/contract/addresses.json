@@ -1,0 +1,30 @@
+[
+  {
+    "id": "6f1f0a8e-2c5b-4a91-9f0e-1a2b3c4d5e6f",
+    "label": "المنزل",
+    "recipient_name": "ريم الدالي",
+    "recipient_phone": "0991234567",
+    "governorate": "دمشق",
+    "district": "المزة",
+    "city": "دمشق",
+    "address_line": "شارع الجلاء، بناء 12، الطابق الثالث",
+    "landmark": "قرب صيدلية النور",
+    "is_rural": false,
+    "delivery_instructions": "اتصلي قبل الوصول",
+    "is_default": true
+  },
+  {
+    "id": "7a2b1c9d-3e4f-5061-8273-94a5b6c7d8e9",
+    "label": "بيت أهلي",
+    "recipient_name": "سلمى الدالي",
+    "recipient_phone": "0937654321",
+    "governorate": "ريف دمشق",
+    "district": "التل",
+    "city": "التل",
+    "address_line": "حي الزهور، بناء 4",
+    "landmark": null,
+    "is_rural": true,
+    "delivery_instructions": null,
+    "is_default": false
+  }
+]

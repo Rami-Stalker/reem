@@ -1,71 +1,77 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 
 import '../../../../core/design_system/design_system.dart';
-import '../../../../core/router/route_names.dart';
+import '../../../../core/localization/l10n_extension.dart';
+import '../../../../core/shared/entities/story.dart';
 import '../providers/home_provider.dart';
 import '../screens/story_viewer_screen.dart';
 import 'home_section_header.dart';
 
-/// Horizontal stories rail — "add story" entry plus friends'/boutiques' stories.
+/// The boutiques' stories — today's frames from the shops she follows.
+///
+/// This is a shop-window rail, not a friends rail: it carries boutiques, so it
+/// shows the shop's name (with its verified tick) rather than a handle, and it
+/// no longer opens with a "your story" composer — a buyer posting into a row of
+/// storefronts made no sense. It collapses entirely when no shop has posted,
+/// instead of leaving a lone empty bubble on the page.
 class HomeStoriesRail extends ConsumerWidget {
   const HomeStoriesRail({super.key});
+
+  static const double _height = 108;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(homeNotifierProvider);
     final stories = state.stories;
-    final loading = state.storiesLoading;
+    final loading = state.storiesLoading && stories.isEmpty;
+
+    if (!loading && stories.isEmpty) {
+      return const SliverToBoxAdapter(child: SizedBox.shrink());
+    }
 
     return SliverMainAxisGroup(
       slivers: [
-        const SliverToBoxAdapter(
+        SliverToBoxAdapter(
           child: HomeSectionHeader(
-            eyebrow: 'Fresh today',
-            title: 'Stories',
-            padding: EdgeInsets.fromLTRB(
-                DsSpacing.lg, 0, DsSpacing.lg, DsSpacing.sm),
+            eyebrow: context.l10n.homeStoriesEyebrow,
+            title: context.l10n.homeBoutiqueStories,
+            padding: const EdgeInsets.fromLTRB(
+              DsSpacing.lg,
+              0,
+              DsSpacing.lg,
+              DsSpacing.sm,
+            ),
           ),
         ),
         SliverToBoxAdapter(
           child: SizedBox(
-            height: 104,
-            child: loading && stories.isEmpty
-                ? ListView.separated(
-                    scrollDirection: Axis.horizontal,
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: DsSpacing.lg),
-                    itemCount: 6,
-                    separatorBuilder: (_, _) =>
-                        const SizedBox(width: DsSpacing.sm),
-                    itemBuilder: (_, _) => const DsStoryCardSkeleton(),
-                  )
+            height: _height,
+            child: loading
+                ? _skeleton()
                 : ListView.separated(
                     scrollDirection: Axis.horizontal,
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: DsSpacing.lg),
                     physics: const BouncingScrollPhysics(),
-                    itemCount: stories.length + 1,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: DsSpacing.lg,
+                    ),
+                    itemCount: stories.length,
                     separatorBuilder: (_, _) =>
                         const SizedBox(width: DsSpacing.sm),
                     itemBuilder: (context, index) {
-                      if (index == 0) {
-                        return DsStoryAddCard(
-                          label: 'Your story',
-                          onTap: () => context.pushNamed(RouteNames.addStory),
-                        );
-                      }
-                      final story = stories[index - 1];
+                      final story = stories[index];
                       return DsStoryCard(
-                        label: story.user.username,
-                        imageUrl: story.coverUrl,
+                        label: _boutiqueName(story),
+                        imageUrl: story.user.imageUrl,
                         seen: story.isViewed,
+                        isVerified: story.user.isVerified,
+                        size: 68,
+                        width: 80,
                         onTap: () => Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (_) => StoryViewerScreen(
                               stories: stories,
-                              initialIndex: index - 1,
+                              initialIndex: index,
                             ),
                           ),
                         ),
@@ -75,6 +81,26 @@ class HomeStoriesRail extends ConsumerWidget {
           ),
         ),
       ],
+    );
+  }
+
+  /// The shop's display name, falling back to the handle for the rare account
+  /// that has not set one.
+  static String _boutiqueName(Story story) {
+    final name = story.user.name.trim();
+    return name.isEmpty ? story.user.username : name;
+  }
+
+  Widget _skeleton() {
+    return DsShimmer(
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        physics: const NeverScrollableScrollPhysics(),
+        padding: const EdgeInsets.symmetric(horizontal: DsSpacing.lg),
+        itemCount: 6,
+        separatorBuilder: (_, _) => const SizedBox(width: DsSpacing.sm),
+        itemBuilder: (_, _) => const DsStoryCardSkeleton(),
+      ),
     );
   }
 }

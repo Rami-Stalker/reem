@@ -9,23 +9,40 @@ import {
   ParseUUIDPipe,
   Patch,
   Post,
-  Query,
 } from '@nestjs/common';
 import { UserRole } from '@prisma/client';
-import { Roles } from '../../common/decorators/roles.decorator';
+import { Authorize } from '../../common/decorators/authorize.decorator';
+import { AppPermission } from '../../common/permissions';
 import { CurrentUser, AuthUser } from '../../common/decorators/current-user.decorator';
 import { SellerProductsService } from './seller-products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
-import { SellerProductQueryDto } from './dto/seller-product-query.dto';
 import { CreateVariantDto, UpdateVariantDto } from './dto/product-variant.dto';
-import { AdjustStockDto, SetProductStatusDto } from './dto/inventory.dto';
 
 /**
- * Seller storefront management. Every route requires the SELLER (or ADMIN) role
- * AND ownership of the target product — enforced server-side in the service.
+ * Authoring CANONICAL catalog entries. Price, stock and fulfilment terms are
+ * not here — they belong to the seller's offer (`/seller/offers`).
  */
-@Roles(UserRole.SELLER, UserRole.ADMIN)
+@Authorize(
+  {
+    action: 'manage',
+    resource: 'product',
+    roles: [UserRole.SELLER],
+    permissions: [AppPermission.productManage],
+    requireSellerVerified: true,
+  },
+  {
+    action: 'moderate',
+    resource: 'product',
+    roles: [
+      UserRole.SUPER_ADMIN,
+      UserRole.OPERATIONS_ADMIN,
+      UserRole.CONTENT_MODERATOR,
+      UserRole.ADMIN,
+    ],
+    permissions: [AppPermission.productManage],
+  },
+)
 @Controller('seller/products')
 export class SellerProductsController {
   constructor(private readonly seller: SellerProductsService) {}
@@ -36,13 +53,6 @@ export class SellerProductsController {
     return this.seller.create(user, dto);
   }
 
-  @Get()
-  listMine(
-    @CurrentUser() user: AuthUser,
-    @Query() query: SellerProductQueryDto,
-  ) {
-    return this.seller.listMine(user, query);
-  }
 
   @Get(':id')
   getMine(
@@ -61,33 +71,8 @@ export class SellerProductsController {
     return this.seller.update(user, id, dto);
   }
 
-  @Delete(':id')
-  @HttpCode(HttpStatus.OK)
-  remove(
-    @CurrentUser() user: AuthUser,
-    @Param('id', ParseUUIDPipe) id: string,
-  ) {
-    return this.seller.remove(user, id);
-  }
 
-  @Patch(':id/status')
-  setStatus(
-    @CurrentUser() user: AuthUser,
-    @Param('id', ParseUUIDPipe) id: string,
-    @Body() dto: SetProductStatusDto,
-  ) {
-    return this.seller.setStatus(user, id, dto.status);
-  }
 
-  @Post(':id/stock')
-  @HttpCode(HttpStatus.OK)
-  adjustStock(
-    @CurrentUser() user: AuthUser,
-    @Param('id', ParseUUIDPipe) id: string,
-    @Body() dto: AdjustStockDto,
-  ) {
-    return this.seller.adjustStock(user, id, dto.delta);
-  }
 
   @Post(':id/variants')
   @HttpCode(HttpStatus.CREATED)

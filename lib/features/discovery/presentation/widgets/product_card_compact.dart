@@ -71,28 +71,28 @@ class ProductCardCompact extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 2),
+          // A live price, a was-price and a rating do not fit a 152pt rail
+          // card: the row used to overflow rather than give — a red-striped
+          // "RIGHT OVERFLOWED BY 41 PIXELS" down the recommended rail — and
+          // squeezing all three only bought a clipped price ("217,000 …").
+          // The was-price is dropped here; the "-15%" flag on the photo above
+          // already tells the saving, and on this card the price she pays is
+          // the number that has to be whole.
           Row(
             children: [
-              Text(
-                '\$${product.price.toStringAsFixed(0)}',
-                style: TextStyle(
-                  fontFamily: DsTypography.fontFamily,
-                  fontWeight: DsTypography.bold,
-                  color: colors.primary,
-                ),
-              ),
-              if (product.hasDiscount) ...[
-                const SizedBox(width: 4),
-                Text(
-                  '\$${product.oldPrice!.toStringAsFixed(0)}',
+              Expanded(
+                child: Text(
+                  product.price?.format() ?? '',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   style: TextStyle(
-                    fontSize: DsTypography.bodySmall,
-                    color: colors.onSurfaceVariant,
-                    decoration: TextDecoration.lineThrough,
+                    fontFamily: DsTypography.fontFamily,
+                    fontWeight: DsTypography.bold,
+                    color: colors.primary,
                   ),
                 ),
-              ],
-              const Spacer(),
+              ),
+              const SizedBox(width: DsSpacing.xxs),
               Icon(Icons.star_rounded, size: 13, color: colors.warning),
               Text(
                 product.rating.toStringAsFixed(1),

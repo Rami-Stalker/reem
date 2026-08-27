@@ -6,14 +6,21 @@ import { PrismaService } from '../../prisma/prisma.service';
 export class StoriesRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  activeForViewer(userId: string) {
+  /**
+   * `userId` is absent for a signed-out visitor. The per-viewer relations are
+   * then dropped with `take: 0`: `where: { userId: undefined }` is "no filter"
+   * to Prisma, which would load every view and reaction on every live story
+   * just to compute `is_viewed: false`.
+   */
+  activeForViewer(userId?: string) {
+    const viewerScope = userId ? { where: { userId } } : { take: 0 };
     return this.prisma.story.findMany({
       where: { expiresAt: { gt: new Date() } },
       orderBy: { createdAt: 'desc' },
       include: {
         user: true,
-        views: { where: { userId } },
-        reactions: { where: { userId } },
+        views: viewerScope,
+        reactions: viewerScope,
       },
     });
   }

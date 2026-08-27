@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../../core/design_system/design_system.dart';
+import '../../../../core/design_system/design_system.dart';
+import '../../../../core/localization/l10n_extension.dart';
 import '../providers/seller_dashboard_provider.dart';
 import '../widgets/seller_ai_insights_widget.dart';
 import '../widgets/seller_financial_widget.dart';
@@ -12,8 +13,12 @@ import '../widgets/seller_store_header.dart';
 import '../widgets/seller_store_score_widget.dart';
 import '../widgets/seller_store_stats.dart';
 
-/// The Seller Store Management Profile — a complete store operations hub with
-/// store information, statistics, financial centre, performance, and settings.
+/// The seller's store profile — who the shop is, what it has earned, how it is
+/// performing, and every setting that governs it.
+///
+/// The page used to fall through to [ReemScrollPage]'s default ground, which
+/// is the buyer's blush silk: a seller opened her own store settings and found
+/// herself standing on the customer's carpet. It now paints the atelier.
 class SellerProfileScreen extends ConsumerWidget {
   const SellerProfileScreen({super.key});
 
@@ -25,6 +30,8 @@ class SellerProfileScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return ReemScrollPage(
       onRefresh: () => _refresh(ref),
+      background: const SellerAtelierBackground(),
+      backgroundColor: context.dsColors.background,
       slivers: [
         // Cover + logo + store info header.
         const SellerStoreHeader(),
@@ -74,29 +81,33 @@ class SellerProfileScreen extends ConsumerWidget {
 class _VersionFooter extends StatelessWidget {
   const _VersionFooter();
 
+  /// Kept in one place so the footer and the About sheet cannot drift apart.
+  static const String _version = '1.0.0';
+
   @override
   Widget build(BuildContext context) {
-    final c = context.dsColors;
+    final palette = context.atelier;
     return Center(
       child: Column(
         children: [
           Text(
-            'REEM',
+            context.l10n.appTitle,
             style: TextStyle(
               fontFamily: DsTypography.fontFamilyDisplay,
               fontFamilyFallback: DsTypography.displayFallback,
               fontSize: DsTypography.titleSmall,
               fontWeight: DsTypography.bold,
-              color: c.onSurfaceVariant,
+              color: palette.muted,
               letterSpacing: 2,
             ),
           ),
           const SizedBox(height: 2),
           Text(
-            'Seller Platform · Version 1.0.0',
+            context.l10n.sellerPlatformFooter(_version),
             style: TextStyle(
+              fontFamily: DsTypography.fontFamily,
               fontSize: DsTypography.labelSmall,
-              color: c.onSurfaceVariant,
+              color: palette.muted,
             ),
           ),
         ],

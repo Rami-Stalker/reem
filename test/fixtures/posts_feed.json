@@ -1,0 +1,378 @@
+{
+  "data": [
+    {
+      "id": "a934953b-a9c6-4521-8487-e6081987c0de",
+      "author": {
+        "id": "1ad675f2-7f7b-4ec6-a409-5c968881449f",
+        "name": "نور العبادي",
+        "username": "nour_chic",
+        "email": null,
+        "phone": "+966500000004",
+        "bio": null,
+        "image_url": "https://loremflickr.com/400/400/flowers%2Cpastel/all?lock=28388",
+        "location": "اللاذقية، سوريا",
+        "role": "seller",
+        "seller_level": "basic",
+        "seller_verified_at": null,
+        "seller_premium_until": null,
+        "is_verified": false,
+        "phone_verified_at": null,
+        "email_verified_at": null,
+        "mfa_enabled": false,
+        "device_verification_required": true,
+        "followers_count": 12,
+        "following_count": 2,
+        "created_at": "2026-08-19T02:14:10.517Z"
+      },
+      "product": {
+        "id": "38e37c08-ecc1-47c6-85c6-00d4c3fa3013",
+        "slug": "layered-necklace",
+        "title": "عقد متعدد الطبقات",
+        "description": "عقد بثلاث طبقات مطلي بالذهب الوردي.",
+        "category": {
+          "id": "406bd41b-a43f-4728-aeef-7357d720d8ef",
+          "slug": "jewellery",
+          "name_ar": "مجوهرات",
+          "name_en": "Jewellery",
+          "level": 2,
+          "parent_id": "703de1d8-2455-4083-a7ca-109e9721362e",
+          "icon_url": null,
+          "image_url": null,
+          "is_sensitive": false,
+          "returns_allowed": true
+        },
+        "brand": {
+          "id": "6301bbbf-19df-4332-8096-c66d7aef5008",
+          "slug": "damas-couture",
+          "name_ar": "دمشق كوتور",
+          "name_en": "Damas Couture",
+          "logo_url": null,
+          "is_verified": true
+        },
+        "attributes": {},
+        "gtin": null,
+        "status": "active",
+        "media": [
+          {
+            "url": "https://loremflickr.com/900/1125/jewellery%2Cnecklace/all?lock=79678",
+            "type": "image"
+          }
+        ],
+        "variants": [],
+        "offers_count": 1,
+        "best_offer": {
+          "id": "135cf585-b3e6-413c-be9f-594d861b0ccf",
+          "seller": {
+            "id": "1ad675f2-7f7b-4ec6-a409-5c968881449f",
+            "name": "نور العبادي",
+            "username": "nour_chic",
+            "email": null,
+            "phone": "+966500000004",
+            "bio": null,
+            "image_url": "https://loremflickr.com/400/400/flowers%2Cpastel/all?lock=28388",
+            "location": "اللاذقية، سوريا",
+            "role": "seller",
+            "seller_level": "basic",
+            "seller_verified_at": null,
+            "seller_premium_until": null,
+            "is_verified": false,
+            "phone_verified_at": null,
+            "email_verified_at": null,
+            "mfa_enabled": false,
+            "device_verification_required": true,
+            "followers_count": 12,
+            "following_count": 2,
+            "created_at": "2026-08-19T02:14:10.517Z"
+          },
+          "currency": "SYP",
+          "price": {
+            "amount": "600000.0000",
+            "currency": "SYP"
+          },
+          "compare_at_price": null,
+          "wholesale_price": null,
+          "wholesale_min_qty": null,
+          "stock": 50,
+          "min_order_qty": 1,
+          "max_order_qty": null,
+          "sku": "REEM-LAYERED-NECKLACE",
+          "handling_days": 1,
+          "is_made_to_order": false,
+          "requires_deposit": false,
+          "accepts_returns": true,
+          "status": "active",
+          "variants": []
+        },
+        "price_from": {
+          "amount": "600000.0000",
+          "currency": "SYP"
+        },
+        "price_to": {
+          "amount": "600000.0000",
+          "currency": "SYP"
+        },
+        "stock": 50,
+        "is_available": true,
+        "rating": 0,
+        "reviews_count": 0,
+        "views_count": 2901,
+        "likes_count": 205,
+        "orders_count": 0,
+        "favorites_count": 0,
+        "created_at": "2026-08-19T02:14:11.237Z"
+      },
+      "caption": "أحببنا عقد متعدد الطبقات 💕 تسوّقيه الآن على ريم!",
+      "likes_count": 23,
+      "comments_count": 6,
+      "shares_count": 8,
+      "saves_count": 0,
+      "is_liked": false,
+      "is_saved": false,
+      "created_at": "2026-08-19T02:14:11.299Z"
+    },
+    {
+      "id": "fa0d19a8-8cae-4c99-a602-c4466d597f5f",
+      "author": {
+        "id": "e1f85c01-3370-44d5-b4e3-9f93fcd8cd8b",
+        "name": "سارة المنصوري",
+        "username": "sara_reem",
+        "email": null,
+        "phone": "+966500000002",
+        "bio": "بوتيك أزياء راقية ✨",
+        "image_url": "https://loremflickr.com/400/400/peony%2Csoft/all?lock=29131",
+        "location": "دمشق، سوريا",
+        "role": "seller",
+        "seller_level": "verified",
+        "seller_verified_at": null,
+        "seller_premium_until": null,
+        "is_verified": true,
+        "phone_verified_at": null,
+        "email_verified_at": null,
+        "mfa_enabled": false,
+        "device_verification_required": true,
+        "followers_count": 19,
+        "following_count": 0,
+        "created_at": "2026-08-19T02:14:10.508Z"
+      },
+      "product": null,
+      "caption": "ثلاث طرق لتنسيق الفستان الحريري لإطلالة نهارية ☀️",
+      "likes_count": 16,
+      "comments_count": 5,
+      "shares_count": 0,
+      "saves_count": 0,
+      "is_liked": false,
+      "is_saved": false,
+      "created_at": "2026-08-19T02:14:11.301Z"
+    },
+    {
+      "id": "8830c3ec-7a8c-4e1a-b360-a617e01a85c6",
+      "author": {
+        "id": "c8f48128-aa7f-442e-bcd5-870450b6f354",
+        "name": "دانا العطّار",
+        "username": "dana_parfum",
+        "email": null,
+        "phone": "+963931000106",
+        "bio": "عطور شرقية وفرنسية بتركيز عالٍ وثبات طويل 🌸",
+        "image_url": "https://loremflickr.com/400/400/boutique%2Celegant/all?lock=38462",
+        "location": "دمشق، سوريا",
+        "role": "seller",
+        "seller_level": "verified",
+        "seller_verified_at": "2026-02-22T23:16:32.856Z",
+        "seller_premium_until": null,
+        "is_verified": true,
+        "phone_verified_at": "2026-02-22T23:16:32.856Z",
+        "email_verified_at": null,
+        "mfa_enabled": false,
+        "device_verification_required": true,
+        "followers_count": 13,
+        "following_count": 2,
+        "created_at": "2025-10-30T14:30:51.489Z"
+      },
+      "product": {
+        "id": "e0a45727-f9b4-46f7-8317-344c881e4224",
+        "slug": "moist-067",
+        "title": "كريم ليلي للبشرة الحساسة",
+        "description": "كريم ليلي للبشرة الحساسة. مُختبر تحت إشراف طبي.",
+        "category": {
+          "id": "0c7e1f98-60ea-4b17-9f46-0f2e9bc93990",
+          "slug": "moisturisers",
+          "name_ar": "مرطبات",
+          "name_en": "Moisturisers",
+          "level": 2,
+          "parent_id": "f19ea535-d245-4994-baad-0f703042bf1c",
+          "icon_url": null,
+          "image_url": null,
+          "is_sensitive": false,
+          "returns_allowed": false
+        },
+        "brand": null,
+        "attributes": {
+          "skin_type": "جافة"
+        },
+        "gtin": null,
+        "status": "active",
+        "media": [
+          {
+            "url": "https://loremflickr.com/900/1125/skincare%2Ccream/all?lock=13392",
+            "type": "image"
+          },
+          {
+            "url": "https://loremflickr.com/900/1125/skincare%2Ccream/all?lock=91011",
+            "type": "image"
+          },
+          {
+            "url": "https://loremflickr.com/900/1125/skincare%2Ccream/all?lock=68630",
+            "type": "image"
+          }
+        ],
+        "variants": [
+          {
+            "id": "f20e802b-be6e-47b0-bd71-829682446099",
+            "name": "٣٠ مل",
+            "attributes": {
+              "volume": "٣٠ مل"
+            },
+            "image_url": null,
+            "sort_order": 0
+          },
+          {
+            "id": "160a5696-cc48-47ff-b6e0-9a6e211980af",
+            "name": "٥٠ مل",
+            "attributes": {
+              "volume": "٥٠ مل"
+            },
+            "image_url": null,
+            "sort_order": 1
+          },
+          {
+            "id": "9da3caf7-9182-4fc3-945c-9eca3e100dfa",
+            "name": "١٠٠ مل",
+            "attributes": {
+              "volume": "١٠٠ مل"
+            },
+            "image_url": null,
+            "sort_order": 2
+          }
+        ],
+        "offers_count": 3,
+        "best_offer": {
+          "id": "eda06468-9ba2-40ee-8d1d-28eb48472eb3",
+          "seller": {
+            "id": "c8f48128-aa7f-442e-bcd5-870450b6f354",
+            "name": "دانا العطّار",
+            "username": "dana_parfum",
+            "email": null,
+            "phone": "+963931000106",
+            "bio": "عطور شرقية وفرنسية بتركيز عالٍ وثبات طويل 🌸",
+            "image_url": "https://loremflickr.com/400/400/boutique%2Celegant/all?lock=38462",
+            "location": "دمشق، سوريا",
+            "role": "seller",
+            "seller_level": "verified",
+            "seller_verified_at": "2026-02-22T23:16:32.856Z",
+            "seller_premium_until": null,
+            "is_verified": true,
+            "phone_verified_at": "2026-02-22T23:16:32.856Z",
+            "email_verified_at": null,
+            "mfa_enabled": false,
+            "device_verification_required": true,
+            "followers_count": 13,
+            "following_count": 2,
+            "created_at": "2025-10-30T14:30:51.489Z"
+          },
+          "currency": "USD",
+          "price": {
+            "amount": "38.5000",
+            "currency": "USD"
+          },
+          "compare_at_price": {
+            "amount": "50.0000",
+            "currency": "USD"
+          },
+          "wholesale_price": null,
+          "wholesale_min_qty": null,
+          "stock": 37,
+          "min_order_qty": 1,
+          "max_order_qty": 6,
+          "sku": "MOIST-67-2",
+          "handling_days": 2,
+          "is_made_to_order": true,
+          "requires_deposit": false,
+          "accepts_returns": true,
+          "status": "active",
+          "variants": [
+            {
+              "id": "39e74f02-572f-4267-b8c7-8f6a3727b313",
+              "variant_id": "f20e802b-be6e-47b0-bd71-829682446099",
+              "name": "٣٠ مل",
+              "attributes": {
+                "volume": "٣٠ مل"
+              },
+              "image_url": null,
+              "price": {
+                "amount": "38.5000",
+                "currency": "USD"
+              },
+              "stock": 9,
+              "sku": "MOIST-67-2-٣٠ مل"
+            },
+            {
+              "id": "7ca8e06e-f783-427c-9a69-0b5f6a81d6d9",
+              "variant_id": "160a5696-cc48-47ff-b6e0-9a6e211980af",
+              "name": "٥٠ مل",
+              "attributes": {
+                "volume": "٥٠ مل"
+              },
+              "image_url": null,
+              "price": {
+                "amount": "38.5000",
+                "currency": "USD"
+              },
+              "stock": 18,
+              "sku": "MOIST-67-2-٥٠ مل"
+            },
+            {
+              "id": "29ef7798-0f58-45d4-953c-f09d35c61d3a",
+              "variant_id": "9da3caf7-9182-4fc3-945c-9eca3e100dfa",
+              "name": "١٠٠ مل",
+              "attributes": {
+                "volume": "١٠٠ مل"
+              },
+              "image_url": null,
+              "price": {
+                "amount": "38.5000",
+                "currency": "USD"
+              },
+              "stock": 10,
+              "sku": "MOIST-67-2-١٠٠ مل"
+            }
+          ]
+        },
+        "price_from": {
+          "amount": "500000.0000",
+          "currency": "SYP"
+        },
+        "price_to": {
+          "amount": "539000.0000",
+          "currency": "SYP"
+        },
+        "stock": 37,
+        "is_available": true,
+        "rating": 5,
+        "reviews_count": 1,
+        "views_count": 2308,
+        "likes_count": 39,
+        "orders_count": 0,
+        "favorites_count": 2,
+        "created_at": "2026-07-19T22:00:59.806Z"
+      },
+      "caption": "وصلنا اليوم 😍 كمية محدودة وبأسعار الافتتاح\nكريم ليلي للبشرة الحساسة",
+      "likes_count": 40,
+      "comments_count": 1,
+      "shares_count": 28,
+      "saves_count": 4,
+      "is_liked": false,
+      "is_saved": false,
+      "created_at": "2026-08-17T21:16:50.739Z"
+    }
+  ]
+}

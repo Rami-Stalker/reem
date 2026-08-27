@@ -1,20 +1,29 @@
 import {
   BadRequestException,
+  Inject,
   Injectable,
   NotFoundException,
+  forwardRef,
 } from '@nestjs/common';
 import {
-  DeliveryStatus,
+  Currency,
+  JournalEntryType,
+  LedgerAccountCode,
+  LedgerDirection,
   OrderStatus,
   Payment,
   PaymentMethodType,
   PaymentStatus,
+  Prisma,
 } from '@prisma/client';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { PrismaService } from '../../prisma/prisma.service';
 import { serializePayment } from '../../common/serializers';
 import { AppEvent } from '../../common/events/app-events';
-import { CommissionsService } from '../commissions/commissions.service';
+import { Money } from '../../common/money';
+import { CheckoutService } from '../orders/checkout.service';
+import { LedgerService } from '../ledger/ledger.service';
+import { WalletService } from '../ledger/wallet.service';
 import { PaymentProviderRegistry } from './providers/payment-provider.registry';
 
 @Injectable()
@@ -23,8 +32,100 @@ export class PaymentsService {
     private readonly prisma: PrismaService,
     private readonly registry: PaymentProviderRegistry,
     private readonly events: EventEmitter2,
-    private readonly commissions: CommissionsService,
+    @Inject(forwardRef(() => CheckoutService))
+    private readonly checkout: CheckoutService,
+    private readonly ledger: LedgerService,
+    private readonly wallets: WalletService,
   ) {}
+
+  /**
+   * The moment an electronic payment clears.
+   *
+   * The order's settlement books the gross against `GATEWAY_RECEIVABLE` — the
+   * provider has the money, we do not yet. This is the other half: the funds
+   * land in our account and the receivable is discharged. Without it the
+   * receivable would grow forever and platform cash would understate what we
+   * actually hold.
+   *
+   * Cash on delivery and wallet payments are skipped: neither passes through a
+   * provider, and their cash movements are recorded by the courier settlement
+   * (Q56) and the wallet spend respectively.
+   */
+  private async postCapture(
+    tx: Prisma.TransactionClient,
+    payment: Payment,
+  ): Promise<void> {
+    if (!this.clearsThroughGateway(payment.method)) return;
+
+    const amount = Money.of(payment.amount, payment.currency);
+    if (amount.isZero()) return;
+
+    await this.ledger.post(
+      {
+        type: JournalEntryType.PAYMENT_CAPTURED,
+        reference: `payment-captured:${payment.id}`,
+        description: `Payment cleared — ${payment.method}`,
+        orderId: payment.orderId,
+        lines: [
+          {
+            account: { code: LedgerAccountCode.PLATFORM_CASH },
+            direction: LedgerDirection.DEBIT,
+            amount,
+          },
+          {
+            account: { code: LedgerAccountCode.GATEWAY_RECEIVABLE },
+            direction: LedgerDirection.CREDIT,
+            amount,
+            memo: 'Receivable discharged on clearing',
+          },
+        ],
+        metadata: { payment_id: payment.id } as Prisma.InputJsonValue,
+      },
+      tx,
+    );
+  }
+
+  /**
+   * Debits the customer's wallet for an order.
+   *
+   * Idempotent through the movement's reference, so a retry of the same order
+   * cannot spend twice; `WalletService.spend` takes the row lock and refuses an
+   * overdraw, which is what makes the balance check meaningful under two
+   * concurrent checkouts rather than merely reassuring.
+   */
+  private async spendWallet(
+    orderId: string,
+    orderNumber: string,
+    amount: Money,
+    userId?: string | null,
+  ): Promise<void> {
+    if (!userId) {
+      // Q46 P1 lets guests buy, but a guest has no wallet to spend from.
+      throw new BadRequestException(
+        'Paying from the wallet requires a signed-in account',
+      );
+    }
+
+    await this.wallets.spend({
+      userId,
+      amount,
+      reason: `دفع الطلب ${orderNumber}`,
+      orderId,
+      reference: `order-payment:${orderId}`,
+    });
+  }
+
+  /** The methods whose money sits with a provider before reaching us. */
+  private clearsThroughGateway(method: PaymentMethodType): boolean {
+    return (
+      method === PaymentMethodType.SYRIATEL_CASH ||
+      method === PaymentMethodType.MTN_CASH ||
+      method === PaymentMethodType.SHAM_CASH ||
+      method === PaymentMethodType.BANK_CARD ||
+      method === PaymentMethodType.BANK_TRANSFER ||
+      method === PaymentMethodType.HAWALA
+    );
+  }
 
   methods() {
     return this.registry.list();
@@ -34,21 +135,44 @@ export class PaymentsService {
   async initiateForOrder(
     orderId: string,
     orderNumber: string,
-    amount: number,
+    amount: Money,
     method: PaymentMethodType,
+    userId?: string | null,
   ): Promise<{
     payment: Payment;
     redirectUrl: string | null;
     requiresOnlineConfirmation: boolean;
   }> {
     const provider = this.registry.get(method);
-    const result = await provider.initiate({ amount, orderNumber });
+
+    // Paying from the wallet is the one method where the money moves *here*.
+    // Every other rail is a promise about cash somewhere else — a courier's
+    // pocket, a provider's account — that some later event confirms. The
+    // wallet is ours, and its provider used to answer PAID without anyone
+    // touching the balance, which meant a customer with an empty wallet could
+    // check out for free. The debit happens before the payment row exists, so
+    // an insufficient balance stops the order rather than recording a payment
+    // that never happened.
+    if (method === PaymentMethodType.PLATFORM_WALLET) {
+      await this.spendWallet(orderId, orderNumber, amount, userId);
+    }
+
+    const result = await provider.initiate({
+      amount: amount.toJSON().amount,
+      currency: amount.currency,
+      orderNumber,
+    });
 
     const payment = await this.prisma.payment.create({
       data: {
         orderId,
         method,
-        amount,
+        currency: amount.currency,
+        amount: amount.toPrisma(),
+        capturedAmount:
+          result.status === PaymentStatus.PAID
+            ? amount.toPrisma()
+            : Money.zero(amount.currency).toPrisma(),
         status: result.status,
         transactionRef: result.transactionRef,
         providerRef: result.providerRef ?? null,
@@ -57,7 +181,8 @@ export class PaymentsService {
             {
               event: 'initiated',
               status: result.status,
-              amount,
+              currency: amount.currency,
+              amount: amount.toPrisma(),
               message: result.message ?? null,
             },
           ],
@@ -100,23 +225,24 @@ export class PaymentsService {
           paymentId,
           event: result.status === PaymentStatus.PAID ? 'succeeded' : 'failed',
           status: result.status,
+          currency: payment.currency,
           amount: payment.amount,
           message: result.message ?? null,
         },
       });
       if (result.status === PaymentStatus.PAID) {
-        await tx.order.update({
-          where: { id: payment.orderId },
-          data: {
-            status: OrderStatus.PAID,
-            deliveryStatus: DeliveryStatus.CONFIRMED,
-          },
+        await tx.payment.update({
+          where: { id: paymentId },
+          data: { capturedAmount: payment.amount },
         });
+        await this.postCapture(tx, payment);
         await tx.orderEvent.create({
           data: {
             orderId: payment.orderId,
             title: 'Payment received',
             description: `${provider.displayName} payment confirmed`,
+            toStatus: OrderStatus.CONFIRMED,
+            actorRole: 'SYSTEM',
           },
         });
       }
@@ -124,7 +250,9 @@ export class PaymentsService {
     });
 
     if (result.status === PaymentStatus.PAID) {
-      await this.commissions.settleOrder(payment.orderId);
+      // Confirming the parent fans the sub-orders out to their sellers and
+      // starts each one's escrow clock.
+      await this.checkout.confirm(payment.orderId);
       const order = await this.prisma.order.findUnique({
         where: { id: payment.orderId },
         select: { userId: true, number: true },
@@ -134,7 +262,7 @@ export class PaymentsService {
           userId: order.userId,
           orderId: payment.orderId,
           orderNumber: order.number,
-          status: 'paid',
+          status: OrderStatus.CONFIRMED,
         });
       }
     }
@@ -158,7 +286,8 @@ export class PaymentsService {
       select: { number: true },
     });
     const result = await provider.initiate({
-      amount: payment.amount,
+      amount: payment.amount.toFixed(4),
+      currency: payment.currency,
       orderNumber: order?.number ?? '',
     });
 
@@ -173,6 +302,7 @@ export class PaymentsService {
             {
               event: 'initiated',
               status: result.status,
+              currency: payment.currency,
               amount: payment.amount,
               message: result.message ?? 'Retry initiated',
             },

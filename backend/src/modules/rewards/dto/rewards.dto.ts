@@ -14,6 +14,7 @@ import {
   MinLength,
 } from 'class-validator';
 import {
+  Currency,
   CouponType,
   LoyaltyRewardType,
   MembershipTierStatus,
@@ -93,6 +94,11 @@ export class ValidateCouponDto {
   @IsNumber()
   @Min(0)
   subtotal!: number;
+
+  /** The basket's currency — a discount is meaningless without it. */
+  @IsOptional()
+  @IsEnum(Currency)
+  currency?: Currency;
 }
 
 export class RedeemPointsDto {

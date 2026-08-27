@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '../../foundation/theme/extensions/color_extension.dart';
 import '../../foundation/theme/extensions/gradient_extension.dart';
 import '../../foundation/tokens/ds_typography.dart';
+import '../../../media/media_variants.dart';
 
 /// A circular avatar with image, initials fallback, optional story-style
 /// gradient ring and online indicator. Fully theme-driven.
@@ -103,7 +104,7 @@ class DsAvatar extends StatelessWidget {
     final c = context.dsColors;
     if (imageUrl != null && imageUrl!.isNotEmpty) {
       return CachedNetworkImage(
-        imageUrl: imageUrl!,
+        imageUrl: MediaVariants.thumb(imageUrl!),
         fit: BoxFit.cover,
         width: inner,
         height: inner,

@@ -54,14 +54,14 @@ abstract final class DsTypography {
   static const FontWeight bold = FontWeight.w700;
   static const FontWeight extraBold = FontWeight.w800;
 
-  // Letter spacing — tighter on large display, airier on small labels for elegance.
-  static const double letterSpacingTighter = -1.0;
-  static const double letterSpacingTight = -0.5;
-  static const double letterSpacingSnug = -0.25;
+  // Letter spacing stays neutral so text remains crisp in compact mobile UI.
+  static const double letterSpacingTighter = 0;
+  static const double letterSpacingTight = 0;
+  static const double letterSpacingSnug = 0;
   static const double letterSpacingNormal = 0;
-  static const double letterSpacingWide = 0.25;
-  static const double letterSpacingWider = 0.5;
-  static const double letterSpacingWidest = 1.2; // overlines / eyebrows
+  static const double letterSpacingWide = 0;
+  static const double letterSpacingWider = 0;
+  static const double letterSpacingWidest = 0;
 
   static TextTheme textTheme({
     required Color onSurface,

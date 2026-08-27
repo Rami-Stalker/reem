@@ -5,6 +5,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../../core/design_system/design_system.dart';
+import '../../../../core/localization/l10n_extension.dart';
 import '../../domain/entities/seller_misc.dart';
 import '../providers/seller_dashboard_provider.dart';
 
@@ -47,25 +48,25 @@ class SellerStoreScoreWidget extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Store performance',
+                    context.l10n.sellerStorePerformance,
                     style: theme.textTheme.titleSmall
                         ?.copyWith(fontWeight: DsTypography.bold),
                   ),
                   const SizedBox(height: DsSpacing.xs),
                   _ScoreBar(
-                    label: 'Fulfillment',
+                    label: context.l10n.sellerFulfillment,
                     value: score.fulfillment,
                     color: c.success,
                   ),
                   const SizedBox(height: DsSpacing.xs),
                   _ScoreBar(
-                    label: 'Responsiveness',
+                    label: context.l10n.sellerResponsiveness,
                     value: score.responsiveness,
                     color: c.info,
                   ),
                   const SizedBox(height: DsSpacing.xs),
                   _ScoreBar(
-                    label: 'Product quality',
+                    label: context.l10n.sellerProductQuality,
                     value: score.productQuality,
                     color: c.secondary,
                   ),

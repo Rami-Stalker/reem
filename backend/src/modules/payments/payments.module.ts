@@ -1,36 +1,48 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { PaymentsController } from './payments.controller';
 import { PaymentsService } from './payments.service';
 import { PaymentProviderRegistry } from './providers/payment-provider.registry';
 import { PAYMENT_PROVIDER } from './providers/payment-provider.interface';
 import {
-  BemoProvider,
+  BankCardProvider,
+  BankTransferProvider,
   CodProvider,
+  CourierCollectProvider,
+  HawalaProvider,
+  MtnCashProvider,
+  PlatformWalletProvider,
   ShamCashProvider,
-  VisaProvider,
+  SyriatelCashProvider,
 } from './providers/payment.providers';
-import { CommissionsModule } from '../commissions/commissions.module';
+import { OrdersModule } from '../orders/orders.module';
+import { LedgerModule } from '../ledger/ledger.module';
+
+const PROVIDERS = [
+  CodProvider,
+  CourierCollectProvider,
+  SyriatelCashProvider,
+  MtnCashProvider,
+  ShamCashProvider,
+  BankCardProvider,
+  BankTransferProvider,
+  HawalaProvider,
+  PlatformWalletProvider,
+] as const;
 
 @Module({
-  imports: [CommissionsModule],
+  imports: [LedgerModule, forwardRef(() => OrdersModule)],
   controllers: [PaymentsController],
   providers: [
     PaymentsService,
     PaymentProviderRegistry,
-    // Concrete providers. Add a new one here + to the factory below to support it.
-    CodProvider,
-    VisaProvider,
-    ShamCashProvider,
-    BemoProvider,
+    // Concrete providers. Adding a rail means adding its class to PROVIDERS —
+    // the factory below picks it up without a second edit.
+    ...PROVIDERS,
     {
       provide: PAYMENT_PROVIDER,
-      useFactory: (
-        cod: CodProvider,
-        visa: VisaProvider,
-        sham: ShamCashProvider,
-        bemo: BemoProvider,
-      ) => [cod, visa, sham, bemo],
-      inject: [CodProvider, VisaProvider, ShamCashProvider, BemoProvider],
+      useFactory: (...providers: InstanceType<(typeof PROVIDERS)[number]>[]) =>
+        providers,
+      inject: [...PROVIDERS],
     },
   ],
   exports: [PaymentsService],

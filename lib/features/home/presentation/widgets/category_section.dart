@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:reem/core/router/route_names.dart';
 
 import '../../../../core/design_system/design_system.dart';
+import '../../../../core/localization/l10n_extension.dart';
 
 class CategorySection extends StatelessWidget {
   const CategorySection({super.key});
@@ -11,23 +12,23 @@ class CategorySection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const categories = [
-      (title: 'Clothing', icon: FontAwesomeIcons.shirt),
-      (title: 'Makeup', icon: FontAwesomeIcons.wandMagicSparkles),
-      (title: 'Perfumes', icon: FontAwesomeIcons.sprayCanSparkles),
-      (title: 'Bags', icon: FontAwesomeIcons.bagShopping),
-      (title: 'Flowers', icon: FontAwesomeIcons.seedling),
-      (title: 'Shoes', icon: FontAwesomeIcons.shoePrints),
-      (title: 'Chocolate', icon: FontAwesomeIcons.cookieBite),
-      (title: 'Bath & Body', icon: FontAwesomeIcons.pumpSoap),
-      (title: 'Gifts', icon: FontAwesomeIcons.gift),
+      (title: 'ملابس', icon: FontAwesomeIcons.shirt),
+      (title: 'مكياج', icon: FontAwesomeIcons.wandMagicSparkles),
+      (title: 'عطور', icon: FontAwesomeIcons.sprayCanSparkles),
+      (title: 'حقائب', icon: FontAwesomeIcons.bagShopping),
+      (title: 'ورود', icon: FontAwesomeIcons.seedling),
+      (title: 'أحذية', icon: FontAwesomeIcons.shoePrints),
+      (title: 'شوكولا', icon: FontAwesomeIcons.cookieBite),
+      (title: 'العناية بالجسم', icon: FontAwesomeIcons.pumpSoap),
+      (title: 'هدايا', icon: FontAwesomeIcons.gift),
     ];
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const ReemSectionHeader(
-          title: 'Shop by Category',
-          subtitle: 'Curated for you',
+        ReemSectionHeader(
+          title: context.l10n.homeShopByCategory,
+          subtitle: context.l10n.homeRecommendedEyebrow,
         ),
         const SizedBox(height: DsSpacing.lg),
         SizedBox(

@@ -1,4 +1,28 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <!--
+      A camera is used for product photographs and stories, and is not
+      required: `required="false"` keeps the app installable on a device
+      without one, where she picks from the gallery instead.
+
+      No CAMERA permission is declared on purpose. image_picker hands the job
+      to the system camera app through ACTION_IMAGE_CAPTURE, which needs none —
+      and declaring it would oblige the app to ask for a runtime permission it
+      never uses.
+    -->
+    <uses-feature android:name="android.hardware.camera" android:required="false"/>
+    <uses-feature android:name="android.hardware.camera.autofocus" android:required="false"/>
+
+    <!--
+      Voice notes. Unlike the camera, this one *is* declared: recording happens
+      inside the app rather than by handing the job to another one, so there is
+      no system activity to borrow the permission from. `record` asks for it at
+      the moment she first holds the button.
+    -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <uses-feature android:name="android.hardware.microphone" android:required="false"/>
+
     <application
         android:label="reem"
         android:name="${applicationName}"

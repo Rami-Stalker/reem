@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/design_system/design_system.dart';
 import '../../../../core/shared/entities/user.dart';
-import '../../../../core/shared/wedgets/app/app_avatar.dart';
 import '../../../auth/presentation/providers/auth_provider.dart';
 import '../providers/user_profile_providers.dart';
 
@@ -20,7 +19,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
   final _name = TextEditingController();
   final _bio = TextEditingController();
   final _location = TextEditingController();
-  final _imageUrl = TextEditingController();
+  String? _imageUrl;
   bool _seeded = false;
 
   @override
@@ -28,7 +27,6 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
     _name.dispose();
     _bio.dispose();
     _location.dispose();
-    _imageUrl.dispose();
     super.dispose();
   }
 
@@ -36,14 +34,14 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
     _name.text = user.name;
     _bio.text = user.bio ?? '';
     _location.text = user.location ?? '';
-    _imageUrl.text = user.imageUrl ?? '';
+    _imageUrl = user.imageUrl;
     _seeded = true;
   }
 
   Future<void> _save() async {
     if (!_formKey.currentState!.validate()) return;
 
-    final image = _imageUrl.text.trim();
+    final image = _imageUrl?.trim() ?? '';
     final ok = await ref.read(editProfileNotifierProvider.notifier).save(
           name: _name.text.trim(),
           bio: _bio.text.trim(),
@@ -91,10 +89,14 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
               delegate: SliverChildListDelegate([
                 const SizedBox(height: DsSpacing.md),
                 Center(
-                  child: AppAvatar(
-                    radius: 54,
-                    imageUrl: _imageUrl.text,
-                    heroTag: 'profile_${state.user?.id ?? 'me'}',
+                  child: DsAvatarPicker(
+                    imageUrl: _imageUrl,
+                    enabled: !state.isLoading,
+                    // Saved with the rest of the form, not on pick: the upload
+                    // has happened, but until she taps save the profile still
+                    // points at the old photograph, and going back should mean
+                    // going back.
+                    onChanged: (url) => setState(() => _imageUrl = url),
                   ),
                 ),
                 const SizedBox(height: DsSpacing.xxl),
@@ -117,23 +119,6 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                         label: 'Location',
                         prefixIcon:
                             Icon(Icons.place_outlined, color: colors.primary),
-                      ),
-                      DsInputField(
-                        controller: _imageUrl,
-                        label: 'Profile image URL',
-                        keyboardType: TextInputType.url,
-                        prefixIcon:
-                            Icon(Icons.image_outlined, color: colors.primary),
-                        onChanged: (_) => setState(() {}),
-                        validator: (v) {
-                          final value = v?.trim() ?? '';
-                          if (value.isEmpty) return null;
-                          final uri = Uri.tryParse(value);
-                          if (uri == null || !uri.isAbsolute) {
-                            return 'Enter a valid URL';
-                          }
-                          return null;
-                        },
                       ),
                       DsInputField(
                         controller: _bio,

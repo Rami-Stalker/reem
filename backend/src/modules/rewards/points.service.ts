@@ -3,6 +3,11 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 import { CouponType, PointsTransactionType } from '@prisma/client';
 import { randomUUID } from 'node:crypto';
 import { PrismaService } from '../../prisma/prisma.service';
+import {
+  LoyaltyService,
+  POINTS_PER_REDEMPTION,
+  SYP_PER_REDEMPTION,
+} from '../finance/loyalty.service';
 import { buildMeta, PaginationDto } from '../../common/dto/pagination.dto';
 import { AppEvent } from '../../common/events/app-events';
 import {
@@ -10,16 +15,23 @@ import {
   serializePointsTransaction,
 } from './rewards.serializer';
 
-/** 100 points = 1 currency unit of discount. */
-const POINTS_PER_UNIT = 100;
-const MIN_REDEEM = 100;
-const REDEEM_TTL_DAYS = 30;
+/**
+ * What a point is worth lives in one place: `LoyaltyService`, which carries
+ * the client's own answer (Q43 — «كل 10 نقاط = 5000 ل.س رصيد»).
+ *
+ * This service used to hold a second rate of its own — 100 points to one
+ * currency unit, minted as a coupon denominated in dollars — which predated
+ * that answer and disagreed with it by orders of magnitude. Two instruments
+ * for the same points at two rates is not a feature with a preference; it is
+ * a bug with a screen in front of it.
+ */
 
 @Injectable()
 export class PointsService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly events: EventEmitter2,
+    private readonly loyalty: LoyaltyService,
   ) {}
 
   async balance(userId: string) {
@@ -31,7 +43,9 @@ export class PointsService {
       points: user?.points ?? 0,
       lifetime_points: user?.lifetimePoints ?? 0,
       tier: user?.tier ?? 'Bronze',
-      redeem_rate: POINTS_PER_UNIT,
+      // Q43's own numbers, read from the service that owns them.
+      redeem_step: POINTS_PER_REDEMPTION,
+      redeem_value_syp: SYP_PER_REDEMPTION,
     };
   }
 
@@ -80,58 +94,17 @@ export class PointsService {
     });
   }
 
-  /** Converts points into a one-time, user-specific discount coupon. */
+  /**
+   * Q43 — converts points into wallet credit.
+   *
+   * Delegates to `LoyaltyService`, which owns the rate, posts the ledger entry
+   * and carries the liability. What she receives changed with this: spendable
+   * credit (Q41/Q42) instead of a single-use coupon at a different rate.
+   */
   async redeem(userId: string, points: number) {
-    if (points < MIN_REDEEM || points % 100 !== 0) {
-      throw new BadRequestException('Redeem points in multiples of 100');
-    }
-    const user = await this.prisma.user.findUnique({ where: { id: userId } });
-    if (!user || user.points < points) {
-      throw new BadRequestException('Insufficient points balance');
-    }
-
-    const discount = points / POINTS_PER_UNIT;
-    const code = `PTS-${randomUUID().split('-')[0].toUpperCase()}`;
-    const expiresAt = new Date(Date.now() + REDEEM_TTL_DAYS * 24 * 60 * 60 * 1000);
-
-    const coupon = await this.prisma.$transaction(async (tx) => {
-      const updated = await tx.user.update({
-        where: { id: userId },
-        data: { points: { decrement: points } },
-      });
-      await tx.pointsTransaction.create({
-        data: {
-          userId,
-          type: PointsTransactionType.REDEEM,
-          points: -points,
-          reason: 'Redeemed for a discount coupon',
-          balanceAfter: updated.points,
-        },
-      });
-      return tx.coupon.create({
-        data: {
-          code,
-          title: `$${discount} reward`,
-          type: CouponType.FIXED,
-          amountOff: discount,
-          userId,
-          maxUses: 1,
-          perUserLimit: 1,
-          expiresAt,
-        },
-      });
-    });
-
-    this.events.emit(AppEvent.CouponIssued, {
-      userId,
-      couponCode: coupon.code,
-      title: coupon.title,
-    });
-
-    return {
-      points_redeemed: points,
-      discount,
-      coupon: serializeCoupon(coupon),
-    };
+    // The shape comes back from the loyalty service unchanged: one service
+    // describes a conversion, and a second wording of the same event is how
+    // two screens end up quoting different figures.
+    return this.loyalty.convertToWallet(userId, points);
   }
 }

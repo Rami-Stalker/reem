@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 
 import '../../../../core/design_system/design_system.dart';
+import '../../../../core/localization/l10n_extension.dart';
 
 class OrderCard extends StatelessWidget {
   const OrderCard({super.key, required this.index});
@@ -64,7 +65,7 @@ class OrderCard extends StatelessWidget {
                         borderRadius: DsRadius.borderFull,
                       ),
                       child: Text(
-                        index.isEven ? 'Delivered' : 'In transit',
+                        index.isEven ? context.l10n.statusDelivered : context.l10n.statusInTransit,
                         style: TextStyle(
                           color: colors.success,
                           fontWeight: DsTypography.semiBold,

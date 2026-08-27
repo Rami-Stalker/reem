@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../localization/l10n_extension.dart';
+
 import '../../foundation/motion/animations/fade_animations.dart';
 import '../../foundation/theme/extensions/color_extension.dart';
 import '../../foundation/tokens/ds_radius.dart';
@@ -10,34 +12,44 @@ import '../buttons/button_styles.dart';
 import '../buttons/ds_button.dart';
 
 /// A reassuring error state with a retry affordance.
+///
+/// Copy is nullable and resolved from the locale in [build] — a `const`
+/// default cannot reach `context.l10n`, so the previous English defaults were
+/// unlocalisable.
 class DsErrorState extends StatelessWidget {
   const DsErrorState({
     super.key,
-    this.title = 'Something went wrong',
-    this.message = 'We couldn\'t load this right now. Please try again.',
+    this.title,
+    this.message,
     this.icon = Icons.sentiment_dissatisfied_rounded,
-    this.retryLabel = 'Try again',
+    this.retryLabel,
     this.onRetry,
-  });
+  }) : isOffline = false;
 
   /// Offline / no-connection variant.
   const DsErrorState.offline({
     super.key,
-    this.title = 'No connection',
-    this.message = 'Check your internet connection and try again.',
+    this.title,
+    this.message,
     this.icon = Icons.wifi_off_rounded,
-    this.retryLabel = 'Retry',
+    this.retryLabel,
     this.onRetry,
-  });
+  }) : isOffline = true;
 
-  final String title;
+  final String? title;
   final String? message;
   final IconData icon;
-  final String retryLabel;
+  final String? retryLabel;
+  final bool isOffline;
   final VoidCallback? onRetry;
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final resolvedTitle =
+        title ?? (isOffline ? l10n.noConnection : l10n.error);
+    final resolvedRetry = retryLabel ?? l10n.retry;
+
     final c = context.dsColors;
     final theme = Theme.of(context);
 
@@ -59,7 +71,7 @@ class DsErrorState extends StatelessWidget {
               ),
               const SizedBox(height: DsSpacing.lg),
               Text(
-                title,
+                resolvedTitle,
                 textAlign: TextAlign.center,
                 style: theme.textTheme.titleLarge
                     ?.copyWith(fontWeight: DsTypography.bold),
@@ -76,7 +88,7 @@ class DsErrorState extends StatelessWidget {
               if (onRetry != null) ...[
                 const SizedBox(height: DsSpacing.xl),
                 DsButton(
-                  label: retryLabel,
+                  label: resolvedRetry,
                   icon: Icons.refresh_rounded,
                   variant: DsButtonVariant.secondary,
                   onPressed: onRetry,

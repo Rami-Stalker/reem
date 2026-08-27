@@ -10,6 +10,10 @@ class LoginUseCase {
   Future<Result<User>> call({
     required String phone,
     required String password,
-  }) =>
-      _repository.login(phone: phone, password: password);
+    required bool rememberMe,
+  }) => _repository.login(
+    phone: phone,
+    password: password,
+    rememberMe: rememberMe,
+  );
 }

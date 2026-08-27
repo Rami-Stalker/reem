@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../design_system/design_system.dart';
+import '../../../../core/localization/l10n_extension.dart';
 
 class ReemSectionHeader extends StatelessWidget {
   const ReemSectionHeader({
@@ -50,7 +51,7 @@ class ReemSectionHeader extends StatelessWidget {
           TextButton(
             onPressed: onSeeAll,
             child: Text(
-              'See all',
+              context.l10n.viewAll,
               style: TextStyle(
                 color: colors.primary,
                 fontWeight: DsTypography.semiBold,

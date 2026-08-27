@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/design_system/design_system.dart';
+import '../../../../core/localization/l10n_extension.dart';
 import '../../../../core/design_system/components/snackbars/app_snackbar.dart'
     show DsSnackbar, DsSnackbarType;
 import '../../../../core/shared/wedgets/app/premium_app_bar.dart';
@@ -31,12 +32,20 @@ class _ProductFormScreenState extends ConsumerState<ProductFormScreen> {
   final _oldPrice = TextEditingController();
   final _stock = TextEditingController();
 
-  final List<TextEditingController> _media = [];
+  /// URLs of photographs already uploaded. `DsMediaField` owns the tiles and
+  /// the in-flight state; the form only keeps what it will post.
+  List<String> _mediaUrls = const [];
+  bool _mediaUploading = false;
+
   final List<_VariantRow> _variants = [];
 
   ProductStatus _status = ProductStatus.draft;
   bool _isFeatured = false;
   bool _showInFeed = true;
+
+  /// Eight is what a listing can show without the grid turning into a scroll
+  /// of its own, and enough for a garment from every angle.
+  static const int _maxMedia = 8;
 
   bool get _isEditing => widget.product != null;
 
@@ -46,7 +55,7 @@ class _ProductFormScreenState extends ConsumerState<ProductFormScreen> {
     if (title.isEmpty || category.isEmpty) {
       DsSnackbar.show(
         context,
-        message: 'Add a title and category first',
+        message: context.l10n.formTitleCategoryFirst,
         type: DsSnackbarType.warning,
       );
       return;
@@ -68,7 +77,7 @@ class _ProductFormScreenState extends ConsumerState<ProductFormScreen> {
     setState(() => _description.text = description);
     DsSnackbar.show(
       context,
-      message: 'AI description added',
+      message: context.l10n.formAiDescriptionAdded,
       type: DsSnackbarType.success,
     );
   }
@@ -79,7 +88,7 @@ class _ProductFormScreenState extends ConsumerState<ProductFormScreen> {
     if (title.isEmpty || category.isEmpty) {
       DsSnackbar.show(
         context,
-        message: 'Add a title and category first',
+        message: context.l10n.formTitleCategoryFirst,
         type: DsSnackbarType.warning,
       );
       return;
@@ -95,7 +104,9 @@ class _ProductFormScreenState extends ConsumerState<ProductFormScreen> {
     if (!mounted) return;
     DsSnackbar.show(
       context,
-      message: tags.isEmpty ? 'No tags generated' : 'Tags: ${tags.join(', ')}',
+      message: tags.isEmpty
+          ? context.l10n.formNoTags
+          : tags.join('\u060C '),
       type: tags.isEmpty ? DsSnackbarType.warning : DsSnackbarType.success,
     );
   }
@@ -107,18 +118,17 @@ class _ProductFormScreenState extends ConsumerState<ProductFormScreen> {
     if (p != null) {
       _title.text = p.title;
       _description.text = p.description;
-      _category.text = p.category;
-      _price.text = p.price.toString();
-      _oldPrice.text = p.oldPrice?.toString() ?? '';
+      _category.text = p.category.slug;
+      // The raw decimal string, not a formatted figure — this feeds an input
+      // that is posted straight back to the server.
+      _price.text = p.price.raw;
+      _oldPrice.text = p.compareAtPrice?.raw ?? '';
       _stock.text = p.stock.toString();
       _status = p.status;
       _isFeatured = p.isFeatured;
       _showInFeed = p.showInFeed;
-      for (final m in p.media) {
-        _media.add(TextEditingController(text: m.url));
-      }
+      _mediaUrls = [for (final m in p.media) m.url];
     }
-    if (_media.isEmpty) _media.add(TextEditingController());
   }
 
   @override
@@ -133,9 +143,6 @@ class _ProductFormScreenState extends ConsumerState<ProductFormScreen> {
     ]) {
       c.dispose();
     }
-    for (final c in _media) {
-      c.dispose();
-    }
     for (final v in _variants) {
       v.dispose();
     }
@@ -145,11 +152,19 @@ class _ProductFormScreenState extends ConsumerState<ProductFormScreen> {
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
 
-    final media = _media
-        .map((c) => c.text.trim())
-        .where((url) => url.isNotEmpty)
-        .map((url) => MediaDraft(url))
-        .toList();
+    // Refuse rather than silently publish a product missing the photographs
+    // she is watching upload. The draft would be saved without them and she
+    // would have no way to tell that is what happened.
+    if (_mediaUploading) {
+      DsSnackbar.show(
+        context,
+        message: context.l10n.mediaWaitForUploads,
+        type: DsSnackbarType.warning,
+      );
+      return;
+    }
+
+    final media = [for (final url in _mediaUrls) MediaDraft(url)];
 
     final variants = _variants
         .where((v) => v.name.text.trim().isNotEmpty)
@@ -186,7 +201,9 @@ class _ProductFormScreenState extends ConsumerState<ProductFormScreen> {
       ref.read(myProductsNotifierProvider.notifier).refresh();
       DsSnackbar.show(
         context,
-        message: _isEditing ? 'Product updated' : 'Product created',
+        message: _isEditing
+            ? context.l10n.formProductUpdated
+            : context.l10n.formProductCreated,
         type: DsSnackbarType.success,
       );
       context.pop();
@@ -206,9 +223,15 @@ class _ProductFormScreenState extends ConsumerState<ProductFormScreen> {
     );
 
     return ReemScrollPage(
+      // Without these the form inherits the buyer's blush silk — the wrong
+      // room for a seller writing a listing.
+      background: const SellerAtelierBackground(),
+      backgroundColor: context.atelier.background,
       slivers: [
         PremiumAppBar(
-          title: _isEditing ? 'Edit Product' : 'New Product',
+          title: _isEditing
+              ? context.l10n.formEditProduct
+              : context.l10n.formNewProduct,
           showBack: true,
         ),
         SliverPadding(
@@ -226,24 +249,24 @@ class _ProductFormScreenState extends ConsumerState<ProductFormScreen> {
                 children: [
                   DsInputField(
                     controller: _title,
-                    label: 'Title',
+                    label: context.l10n.formTitle,
                     validator: (v) => (v == null || v.trim().length < 2)
-                        ? 'Title is required'
+                        ? context.l10n.formTitleRequired
                         : null,
                   ),
                   DsInputField(
                     controller: _description,
-                    label: 'Description',
+                    label: context.l10n.formDescription,
                     maxLines: 4,
                     validator: (v) => (v == null || v.trim().isEmpty)
-                        ? 'Description is required'
+                        ? context.l10n.formDescriptionRequired
                         : null,
                   ),
                   DsInputField(
                     controller: _category,
-                    label: 'Category',
+                    label: context.l10n.formCategory,
                     validator: (v) => (v == null || v.trim().isEmpty)
-                        ? 'Category is required'
+                        ? context.l10n.formCategoryRequired
                         : null,
                   ),
                   Align(
@@ -254,12 +277,12 @@ class _ProductFormScreenState extends ConsumerState<ProductFormScreen> {
                         TextButton.icon(
                           onPressed: _generateDescription,
                           icon: const Icon(Icons.auto_awesome_rounded),
-                          label: const Text('AI description'),
+                          label: Text(context.l10n.formAiDescription),
                         ),
                         TextButton.icon(
                           onPressed: _generateTags,
                           icon: const Icon(Icons.sell_outlined),
-                          label: const Text('AI tags'),
+                          label: Text(context.l10n.formAiTags),
                         ),
                       ],
                     ),
@@ -269,12 +292,12 @@ class _ProductFormScreenState extends ConsumerState<ProductFormScreen> {
                       Expanded(
                         child: DsInputField(
                           controller: _price,
-                          label: 'Price',
+                          label: context.l10n.formPrice,
                           keyboardType: TextInputType.number,
                           validator: (v) {
                             final value = double.tryParse((v ?? '').trim());
                             if (value == null || value < 0) {
-                              return 'Enter a valid price';
+                              return context.l10n.formPriceInvalid;
                             }
                             return null;
                           },
@@ -292,17 +315,17 @@ class _ProductFormScreenState extends ConsumerState<ProductFormScreen> {
                   ),
                   DsInputField(
                     controller: _stock,
-                    label: 'Stock',
+                    label: context.l10n.formStock,
                     keyboardType: TextInputType.number,
                     validator: (v) {
                       final value = int.tryParse((v ?? '').trim());
                       if (value == null || value < 0)
-                        return 'Enter valid stock';
+                        return context.l10n.formStockInvalid;
                       return null;
                     },
                   ),
                   const SizedBox(height: DsSpacing.md),
-                  _label(context, 'Status'),
+                  _label(context, context.l10n.formStatus),
                   const SizedBox(height: DsSpacing.xs),
                   Wrap(
                     spacing: DsSpacing.sm,
@@ -318,25 +341,26 @@ class _ProductFormScreenState extends ConsumerState<ProductFormScreen> {
                   ),
                   SwitchListTile(
                     contentPadding: EdgeInsets.zero,
-                    title: const Text('Featured'),
+                    title: Text(context.l10n.formFeatured),
                     value: _isFeatured,
                     onChanged: (v) => setState(() => _isFeatured = v),
                   ),
                   SwitchListTile(
                     contentPadding: EdgeInsets.zero,
-                    title: const Text('Show in feed'),
+                    title: Text(context.l10n.formShowInFeed),
                     value: _showInFeed,
                     onChanged: (v) => setState(() => _showInFeed = v),
                   ),
                   const SizedBox(height: DsSpacing.md),
-                  _label(context, 'Gallery (image URLs)'),
-                  const SizedBox(height: DsSpacing.xs),
-                  ..._buildMediaRows(),
-                  TextButton.icon(
-                    onPressed: () =>
-                        setState(() => _media.add(TextEditingController())),
-                    icon: const Icon(Icons.add_photo_alternate_outlined),
-                    label: const Text('Add image'),
+                  DsMediaField(
+                    label: context.l10n.mediaProductGallery,
+                    helperText: context.l10n.mediaGalleryHint(_maxMedia),
+                    initialUrls: _mediaUrls,
+                    maxItems: _maxMedia,
+                    enabled: !isSubmitting,
+                    onChanged: (urls) => _mediaUrls = urls,
+                    onUploadingChanged: (busy) =>
+                        setState(() => _mediaUploading = busy),
                   ),
                   if (!_isEditing) ...[
                     const SizedBox(height: DsSpacing.md),
@@ -347,12 +371,14 @@ class _ProductFormScreenState extends ConsumerState<ProductFormScreen> {
                       onPressed: () =>
                           setState(() => _variants.add(_VariantRow())),
                       icon: const Icon(Icons.tune),
-                      label: const Text('Add variant'),
+                      label: Text(context.l10n.formAddVariant),
                     ),
                   ],
                   const SizedBox(height: DsSpacing.lg),
                   PrimaryButton(
-                    label: _isEditing ? 'Save changes' : 'Publish product',
+                    label: _isEditing
+                        ? context.l10n.saveChanges
+                        : context.l10n.formPublishProduct,
                     isLoading: isSubmitting,
                     onPressed: isSubmitting ? null : _submit,
                   ),
@@ -363,30 +389,6 @@ class _ProductFormScreenState extends ConsumerState<ProductFormScreen> {
         ),
       ],
     );
-  }
-
-  List<Widget> _buildMediaRows() {
-    return [
-      for (var i = 0; i < _media.length; i++)
-        Row(
-          children: [
-            Expanded(
-              child: DsInputField(
-                controller: _media[i],
-                hint: 'https://…',
-                keyboardType: TextInputType.url,
-              ),
-            ),
-            if (_media.length > 1)
-              IconButton(
-                icon: const Icon(Icons.remove_circle_outline),
-                onPressed: () => setState(() {
-                  _media.removeAt(i).dispose();
-                }),
-              ),
-          ],
-        ),
-    ];
   }
 
   List<Widget> _buildVariantRows() {
@@ -400,7 +402,7 @@ class _ProductFormScreenState extends ConsumerState<ProductFormScreen> {
                 flex: 3,
                 child: DsInputField(
                   controller: _variants[i].name,
-                  hint: 'Name',
+                  hint: context.l10n.formTitle,
                 ),
               ),
               const SizedBox(width: DsSpacing.sm),
@@ -408,7 +410,7 @@ class _ProductFormScreenState extends ConsumerState<ProductFormScreen> {
                 flex: 2,
                 child: DsInputField(
                   controller: _variants[i].stock,
-                  hint: 'Stock',
+                  hint: context.l10n.formStock,
                   keyboardType: TextInputType.number,
                 ),
               ),

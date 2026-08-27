@@ -17,8 +17,8 @@ class LuxuryRatingBar
             (index) {
               return const Padding(
                 padding:
-                    EdgeInsets.only(
-                  right: 4,
+                    EdgeInsetsDirectional.only(
+                  end: 4,
                 ),
 
                 child: Icon(

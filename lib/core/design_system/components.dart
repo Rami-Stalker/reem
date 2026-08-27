@@ -16,6 +16,9 @@ export 'components/buttons/button_styles.dart';
 export 'components/badges/ds_badge.dart';
 export 'components/avatars/ds_avatar.dart';
 
+// Decorations & ornaments
+export 'components/decorations/ds_ornaments.dart';
+
 // Cards
 export 'components/cards/glass_card.dart';
 export 'components/cards/surface_card.dart';
@@ -24,6 +27,7 @@ export 'components/cards/post_card.dart';
 export 'components/cards/story_card.dart';
 
 // Inputs & search
+export 'components/inputs/ds_media_field.dart';
 export 'components/inputs/input_field.dart';
 export 'components/inputs/search_bar.dart';
 

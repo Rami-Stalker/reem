@@ -20,6 +20,10 @@ extension ExperienceRoleX on ExperienceRole {
 
   static ExperienceRole fromUserRole(UserRole? role) => switch (role) {
     UserRole.seller => ExperienceRole.seller,
+    UserRole.operationsAdmin ||
+    UserRole.supportAdmin ||
+    UserRole.financeAdmin ||
+    UserRole.contentModerator ||
     UserRole.admin ||
     UserRole.superAdmin ||
     UserRole.support => ExperienceRole.admin,
@@ -292,14 +296,16 @@ class AppRoleExperience {
   static const buyer = AppRoleExperience(
     role: ExperienceRole.buyer,
     title: 'Reem',
-    tagline: 'Personal discovery, shopping, and rewards.',
+    tagline: 'A soft luxury boutique shaped around your taste.',
     defaultPath: RoutePaths.home,
     profilePath: RoutePaths.profile,
     visualIdentity: RoleVisualIdentity(
-      primary: Color(0xFFE84C88),
-      secondary: Color(0xFF7C4DFF),
-      accent: Color(0xFFFFB86B),
-      gradient: LinearGradient(colors: [Color(0xFFE84C88), Color(0xFF7C4DFF)]),
+      primary: Color(0xFFC6386F),
+      secondary: Color(0xFF533447),
+      accent: Color(0xFFEACB8D),
+      gradient: LinearGradient(
+        colors: [Color(0xFFEF6C9B), Color(0xFFC84778), Color(0xFFEACB8D)],
+      ),
       icon: Icons.favorite_rounded,
     ),
     navigation: [
@@ -380,14 +386,14 @@ class AppRoleExperience {
   static const seller = AppRoleExperience(
     role: ExperienceRole.seller,
     title: 'Reem Seller',
-    tagline: 'Revenue, operations, growth, and performance.',
+    tagline: 'Inventory, orders, customers, and growth in one fast workspace.',
     defaultPath: RoutePaths.sellerDashboard,
     profilePath: RoutePaths.sellerStore,
     visualIdentity: RoleVisualIdentity(
-      primary: Color(0xFF146C94),
-      secondary: Color(0xFF19A7CE),
-      accent: Color(0xFFF4C430),
-      gradient: LinearGradient(colors: [Color(0xFF146C94), Color(0xFF19A7CE)]),
+      primary: Color(0xFF2563EB),
+      secondary: Color(0xFF0F766E),
+      accent: Color(0xFFD97706),
+      gradient: LinearGradient(colors: [Color(0xFF0F172A), Color(0xFF2563EB)]),
       icon: Icons.storefront_rounded,
     ),
     navigation: [
@@ -497,14 +503,14 @@ class AppRoleExperience {
   static const admin = AppRoleExperience(
     role: ExperienceRole.admin,
     title: 'Reem Admin',
-    tagline: 'Control, monitoring, governance, and platform growth.',
+    tagline: 'Enterprise control, governance, analytics, and operating health.',
     defaultPath: RoutePaths.admin,
     profilePath: RoutePaths.adminSystemSettings,
     visualIdentity: RoleVisualIdentity(
-      primary: Color(0xFF344054),
-      secondary: Color(0xFF175CD3),
-      accent: Color(0xFFD92D20),
-      gradient: LinearGradient(colors: [Color(0xFF344054), Color(0xFF175CD3)]),
+      primary: Color(0xFF3156D4),
+      secondary: Color(0xFF0B1220),
+      accent: Color(0xFFB91C1C),
+      gradient: LinearGradient(colors: [Color(0xFF0B1220), Color(0xFF3156D4)]),
       icon: Icons.admin_panel_settings_rounded,
     ),
     navigation: [

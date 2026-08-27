@@ -1,14 +1,17 @@
 import '../../domain/entities/checkout.dart';
 import '../models/checkout_models.dart';
 import '../models/order_models.dart';
+import '../../../../core/shared/value_objects/money.dart';
 
 abstract interface class CheckoutRemoteDataSource {
   Future<List<GovernorateModel>> getGovernorates();
-  Future<DeliveryQuoteModel> getDeliveryQuote(String governorate, double subtotal);
+  Future<DeliveryQuoteModel> getDeliveryQuote(String governorate, Money? subtotal);
   Future<List<PaymentMethodOptionModel>> getPaymentMethods();
 
   Future<PlacedOrderModel> placeOrder({
-    required ShippingInput shipping,
+    ShippingInput? shipping,
+    String? addressId,
+    bool saveAddress,
     required String paymentMethod,
     String? couponCode,
     String? deliveryInstructions,

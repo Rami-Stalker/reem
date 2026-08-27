@@ -3,6 +3,7 @@ import 'package:reem/core/result/result.dart';
 
 import '../../domain/entities/checkout.dart';
 import '../../domain/usecases/checkout_usecases.dart';
+import '../../../../core/shared/value_objects/money.dart';
 
 class CheckoutState {
   const CheckoutState({
@@ -82,9 +83,24 @@ class CheckoutController extends StateNotifier<CheckoutState> {
     );
   }
 
-  Future<void> selectGovernorate(String name, double subtotal) async {
-    state = state.copyWith(selectedGovernorate: name);
-    final result = await _getDeliveryQuote(name, subtotal);
+  /// Re-quotes for a place, not just a governorate.
+  ///
+  /// The district and the rural flag are what pick between Q53's two tiers, so
+  /// quoting without them showed her a city-centre price for a village and
+  /// charged it too.
+  Future<void> selectPlace(
+    String governorate,
+    Money? subtotal, {
+    String? district,
+    bool isRural = false,
+  }) async {
+    state = state.copyWith(selectedGovernorate: governorate);
+    final result = await _getDeliveryQuote(
+      governorate,
+      subtotal,
+      district: district,
+      isRural: isRural,
+    );
     if (result case Success(:final data)) {
       state = state.copyWith(quote: data);
     }
@@ -92,7 +108,9 @@ class CheckoutController extends StateNotifier<CheckoutState> {
 
   /// Places the order and, for online gateways, confirms the payment (sandbox).
   Future<PlacedOrder?> place({
-    required ShippingInput shipping,
+    ShippingInput? shipping,
+    String? addressId,
+    bool saveAddress = false,
     required String paymentMethod,
     String? couponCode,
     String? deliveryInstructions,
@@ -101,6 +119,8 @@ class CheckoutController extends StateNotifier<CheckoutState> {
     state = state.copyWith(isPlacing: true, clearError: true);
     final result = await _placeOrder(
       shipping: shipping,
+      addressId: addressId,
+      saveAddress: saveAddress,
       paymentMethod: paymentMethod,
       couponCode: couponCode,
       deliveryInstructions: deliveryInstructions,

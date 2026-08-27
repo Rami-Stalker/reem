@@ -1,4 +1,5 @@
 import 'package:reem/core/result/result.dart';
+import 'package:reem/core/shared/entities/media.dart';
 import 'package:reem/core/shared/entities/story.dart';
 
 import '../repositories/create_repository.dart';
@@ -9,7 +10,8 @@ class CreateStoryUseCase {
 
   Future<Result<Story>> call({
     required String mediaUrl,
+    MediaType type = MediaType.image,
     String? link,
   }) =>
-      _repository.createStory(mediaUrl: mediaUrl, link: link);
+      _repository.createStory(mediaUrl: mediaUrl, type: type, link: link);
 }

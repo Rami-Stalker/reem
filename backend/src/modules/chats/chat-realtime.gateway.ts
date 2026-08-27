@@ -3,20 +3,63 @@ import { ConfigService } from '@nestjs/config';
 import { HttpAdapterHost } from '@nestjs/core';
 import { OnEvent } from '@nestjs/event-emitter';
 import { JwtService } from '@nestjs/jwt';
-import { MessageKind, PresenceStatus } from '@prisma/client';
-import { createHash } from 'crypto';
+import { MessageKind, PresenceStatus, SessionStatus } from '@prisma/client';
+import { createHash, randomUUID } from 'crypto';
 import { IncomingMessage } from 'http';
 import { Socket } from 'net';
 import { URL } from 'url';
+import { PrismaService } from '../../prisma/prisma.service';
 import { JwtPayload } from '../auth/interfaces/jwt-payload.interface';
 import { ChatsService } from './chats.service';
+
+/**
+ * A socket is authorised once at the handshake and then held open for as long
+ * as the woman keeps the conversation on screen — so unlike an HTTP request,
+ * the decision has to be taken again while the connection is still alive.
+ * Signing out, revoking a stolen handset's session and disabling an account
+ * are the three things this platform can do about a compromise, and every one
+ * of them was invisible to this gateway.
+ */
+const SESSION_RECHECK_MS = 60_000;
+
+/**
+ * Ceilings on what one connection may make the server hold.
+ *
+ * The decoder buffers until a frame is complete, and a frame header may
+ * declare a 64-bit length, so without these a single client — any account, and
+ * accounts are free — sends a header claiming a gigabyte and then dribbles
+ * bytes, and the server holds every one of them in memory waiting for an end
+ * that never comes.
+ */
+const MAX_FRAME_BYTES = 64 * 1024;
+const MAX_BUFFERED_BYTES = 256 * 1024;
+
+/**
+ * The subprotocol a client names to say "my next value is a bearer token".
+ *
+ * A browser cannot put a header on a WebSocket — `WebSocket` takes a URL and a
+ * subprotocol list and nothing else — which is why tokens end up in query
+ * strings across the industry. A query string is the one part of a request
+ * that is written into the access log of every proxy between the handset and
+ * this process, and it is the whole access token: replayable until it expires,
+ * against HTTP as readily as against this socket. `Sec-WebSocket-Protocol` is
+ * a header, is not written into the request line, and is the only channel the
+ * browser's WebSocket API leaves open for a credential.
+ */
+const AUTH_SUBPROTOCOL = 'reem.auth.bearer';
+
+/** Mirrors `SendMessageDto`; the HTTP route gets these from the global pipe. */
+const MAX_CONTENT_CHARS = 5000;
+const MAX_ATTACHMENTS = 10;
 
 interface RealtimeClient {
   id: string;
   userId: string;
+  sessionId?: string;
   socket: Socket;
   rooms: Set<string>;
   buffer: Buffer;
+  recheck?: NodeJS.Timeout;
 }
 
 interface DecodedFrame {
@@ -48,6 +91,9 @@ interface PresenceEvent {
 export class ChatRealtimeGateway implements OnModuleInit {
   private readonly logger = new Logger(ChatRealtimeGateway.name);
   private readonly clients = new Map<string, RealtimeClient>();
+  /** Transition telemetry for the retired `?token=`; see `warnLegacyHandshake`. */
+  private legacyHandshakes = 0;
+  private lastLegacyWarnAt = 0;
   private readonly userClients = new Map<string, Set<string>>();
 
   constructor(
@@ -55,6 +101,7 @@ export class ChatRealtimeGateway implements OnModuleInit {
     private readonly jwt: JwtService,
     private readonly config: ConfigService,
     private readonly chats: ChatsService,
+    private readonly prisma: PrismaService,
   ) {}
 
   onModuleInit() {
@@ -112,31 +159,41 @@ export class ChatRealtimeGateway implements OnModuleInit {
       return;
     }
 
-    const token =
-      url.searchParams.get('token') ??
-      req.headers.authorization?.replace(/^Bearer\s+/i, '') ??
-      '';
+    const offered = this.offeredProtocols(req);
+    const token = this.bearerFrom(req, offered, url);
     const key = req.headers['sec-websocket-key'];
     if (!token || typeof key !== 'string') {
       this.reject(socket, 401, 'Unauthorized');
       return;
     }
 
-    const userId = await this.verifyToken(token);
-    if (!userId) {
+    const payload = await this.verifyToken(token);
+    if (!payload || !(await this.principalIsLive(payload))) {
       this.reject(socket, 401, 'Unauthorized');
       return;
     }
+    const userId = payload.sub;
 
-    socket.write(this.acceptResponse(key));
+    socket.write(this.acceptResponse(key, offered));
     const client: RealtimeClient = {
-      id: `${userId}:${Date.now()}:${Math.random().toString(36).slice(2)}`,
+      id: `${userId}:${Date.now()}:${randomUUID()}`,
       userId,
+      sessionId: payload.sid,
       socket,
       rooms: new Set(),
       buffer: Buffer.alloc(0),
     };
     this.register(client);
+
+    // The handshake decided once; this keeps deciding. A revoked session or a
+    // disabled account closes the socket within a minute rather than lasting
+    // as long as the woman leaves the screen open.
+    client.recheck = setInterval(() => {
+      void this.principalIsLive(payload).then((live) => {
+        if (!live) this.close(client, 4401, 'Session is no longer valid');
+      });
+    }, SESSION_RECHECK_MS);
+    client.recheck.unref?.();
 
     socket.on('data', (chunk) => {
       this.consume(client, chunk);
@@ -155,14 +212,52 @@ export class ChatRealtimeGateway implements OnModuleInit {
     });
   }
 
-  private async verifyToken(token: string) {
+  private async verifyToken(token: string): Promise<JwtPayload | null> {
     try {
-      const payload = await this.jwt.verifyAsync<JwtPayload>(token, {
+      return await this.jwt.verifyAsync<JwtPayload>(token, {
         secret: this.config.get<string>('jwt.accessSecret'),
       });
-      return payload.sub;
     } catch {
       return null;
+    }
+  }
+
+  /**
+   * The checks `JwtStrategy` runs on every HTTP request, run here too.
+   *
+   * A valid signature only says the token was minted by this platform, which
+   * is the least interesting question: it stays true after she signs out,
+   * after she revokes the handset she was pickpocketed, and after an
+   * administrator disables the account. Until now the gateway asked nothing
+   * else, so a token that HTTP had stopped accepting still carried full
+   * conversation access — reading her messages and sending in her name — for
+   * as long as it had left to run.
+   */
+  private async principalIsLive(payload: JwtPayload): Promise<boolean> {
+    try {
+      const user = await this.prisma.user.findUnique({
+        where: { id: payload.sub },
+        select: { id: true, disabledAt: true },
+      });
+      if (!user || user.disabledAt) return false;
+
+      if (!payload.sid) return true;
+
+      const now = new Date();
+      const session = await this.prisma.session.findFirst({
+        where: {
+          id: payload.sid,
+          userId: payload.sub,
+          status: SessionStatus.ACTIVE,
+          idleExpiresAt: { gt: now },
+          absoluteExpiresAt: { gt: now },
+        },
+        select: { id: true },
+      });
+      return Boolean(session);
+    } catch {
+      // A database blip must not hand out access it cannot verify.
+      return false;
     }
   }
 
@@ -175,6 +270,10 @@ export class ChatRealtimeGateway implements OnModuleInit {
   }
 
   private async unregister(client: RealtimeClient) {
+    if (client.recheck) {
+      clearInterval(client.recheck);
+      client.recheck = undefined;
+    }
     if (!this.clients.delete(client.id)) return;
     const set = this.userClients.get(client.userId);
     if (!set) return;
@@ -190,8 +289,22 @@ export class ChatRealtimeGateway implements OnModuleInit {
 
   private consume(client: RealtimeClient, chunk: Buffer) {
     client.buffer = Buffer.concat([client.buffer, chunk]);
-    const decoded = this.decodeFrames(client.buffer);
+    let decoded: { frames: DecodedFrame[]; remaining: Buffer };
+    try {
+      decoded = this.decodeFrames(client.buffer);
+    } catch {
+      // An oversized or malformed frame is not something to recover from: the
+      // stream is no longer synchronised with anything we can parse.
+      this.close(client, 1009, 'Frame too large');
+      return;
+    }
     client.buffer = decoded.remaining;
+
+    // A frame that never completes must not be allowed to grow without end.
+    if (client.buffer.length > MAX_BUFFERED_BYTES) {
+      this.close(client, 1009, 'Frame too large');
+      return;
+    }
 
     for (const frame of decoded.frames) {
       if (frame.opcode === 0x8) {
@@ -236,13 +349,10 @@ export class ChatRealtimeGateway implements OnModuleInit {
       if (event === 'message.send') {
         const chatId = String(payload.chat_id ?? '');
         await this.chats.send(chatId, client.userId, {
-          content: typeof payload.content === 'string' ? payload.content : '',
+          content: this.parseText(payload.content, MAX_CONTENT_CHARS),
           kind: this.parseKind(payload.kind),
-          client_id:
-            typeof payload.client_id === 'string' ? payload.client_id : undefined,
-          attachments: Array.isArray(payload.attachments)
-            ? (payload.attachments as never)
-            : undefined,
+          client_id: this.parseText(payload.client_id, 120) || undefined,
+          attachments: this.parseAttachments(payload.attachments),
           metadata: payload.metadata,
         });
         return;
@@ -309,6 +419,61 @@ export class ChatRealtimeGateway implements OnModuleInit {
     }
   }
 
+  /**
+   * The bounds `SendMessageDto` states, applied on the socket path too.
+   *
+   * Everything arriving here skips the global `ValidationPipe` — it is a JSON
+   * frame, not a request body — so the limits the HTTP route enforces were
+   * simply absent on this one. Same message, same table, two different sets of
+   * rules depending on which door it came through.
+   */
+  private parseText(value: unknown, max: number): string {
+    return typeof value === 'string' ? value.slice(0, max) : '';
+  }
+
+  /**
+   * Attachments were previously cast straight through with `as never`.
+   *
+   * The ownership check in `ChatsService.send` is what stops one woman
+   * attaching another's upload, and it holds regardless — but everything
+   * around it (kind, sizes, dimensions) reached the database unexamined.
+   */
+  private parseAttachments(value: unknown) {
+    if (!Array.isArray(value)) return undefined;
+
+    const attachments = value
+      .slice(0, MAX_ATTACHMENTS)
+      .filter(
+        (entry): entry is Record<string, unknown> =>
+          typeof entry === 'object' && entry !== null,
+      )
+      .map((entry) => {
+        const kind = this.parseKind(entry.kind);
+        const url = this.parseText(entry.url, 2048);
+        if (!kind || !url) return null;
+        return {
+          kind,
+          url,
+          mime_type: this.parseText(entry.mime_type, 120) || undefined,
+          file_name: this.parseText(entry.file_name, 180) || undefined,
+          size_bytes: this.parseCount(entry.size_bytes),
+          width: this.parseCount(entry.width),
+          height: this.parseCount(entry.height),
+          duration_ms: this.parseCount(entry.duration_ms),
+          metadata: entry.metadata,
+        };
+      })
+      .filter((entry): entry is NonNullable<typeof entry> => entry !== null);
+
+    return attachments.length ? attachments : undefined;
+  }
+
+  private parseCount(value: unknown): number | undefined {
+    return typeof value === 'number' && Number.isSafeInteger(value) && value >= 1
+      ? value
+      : undefined;
+  }
+
   private parseKind(value: unknown) {
     if (typeof value !== 'string') return undefined;
     const normalized = value.toUpperCase();
@@ -365,6 +530,13 @@ export class ChatRealtimeGateway implements OnModuleInit {
         headerLength = 10;
       }
 
+      // Checked against the *declared* length, before a single byte of it is
+      // waited for. Checking after the frame arrives would be no protection at
+      // all: arriving is the expensive part.
+      if (!Number.isSafeInteger(length) || length > MAX_FRAME_BYTES) {
+        throw new Error('WS_FRAME_TOO_LARGE');
+      }
+
       const maskLength = masked ? 4 : 0;
       const frameLength = headerLength + maskLength + length;
       if (offset + frameLength > buffer.length) break;
@@ -388,18 +560,127 @@ export class ChatRealtimeGateway implements OnModuleInit {
     return { frames, remaining: buffer.subarray(offset) };
   }
 
-  private acceptResponse(key: string) {
+  /** The subprotocols the client offered, in the order it offered them. */
+  private offeredProtocols(req: IncomingMessage): string[] {
+    const header = req.headers['sec-websocket-protocol'];
+    if (!header) return [];
+    return (Array.isArray(header) ? header.join(',') : header)
+      .split(',')
+      .map((entry) => entry.trim())
+      .filter(Boolean);
+  }
+
+  /**
+   * The bearer token, taken from a header rather than from the URL.
+   *
+   * Two sources, both headers. `Authorization` is the ordinary one, and what
+   * anything that is not a browser should send. The subprotocol pair —
+   * `AUTH_SUBPROTOCOL` followed by the token — is the browser's only way to
+   * say the same thing, because the `WebSocket` constructor accepts no
+   * headers of its own.
+   *
+   * The query string is read only while a transitional deadline is still
+   * running, and never otherwise. See `queryTokenDeadline`.
+   */
+  private bearerFrom(
+    req: IncomingMessage,
+    offered: string[],
+    url: URL,
+  ): string {
+    const header = req.headers.authorization;
+    if (header) return header.replace(/^Bearer\s+/i, '').trim();
+
+    const at = offered.indexOf(AUTH_SUBPROTOCOL);
+    if (at !== -1 && at + 1 < offered.length) return offered[at + 1];
+
+    const legacy = url.searchParams.get('token');
+    if (legacy && this.queryTokenAllowed()) {
+      this.warnLegacyHandshake();
+      return legacy;
+    }
+
+    return '';
+  }
+
+  /**
+   * Is the retired `?token=` still inside its transition?
+   *
+   * Evaluated per handshake rather than cached at boot, so the window closes
+   * on its own at the instant it names — a fallback that needs someone to
+   * remember to restart the process is a fallback that outlives its reason.
+   */
+  private queryTokenAllowed(): boolean {
+    const configured = (
+      this.config.get<string>('security.wsQueryTokenUntil') ?? ''
+    ).trim();
+    if (!configured) return false;
+
+    const deadline = new Date(configured);
+    // Boot validation already refused an unparseable value; if one reaches
+    // here anyway, the safe reading is that the transition is over.
+    if (Number.isNaN(deadline.getTime())) return false;
+
+    return deadline.getTime() > Date.now();
+  }
+
+  /**
+   * Says, at most once a minute, that a client is still on the old handshake.
+   *
+   * This is the signal the deadline is set against: when it stops appearing,
+   * the rollout is done and `WS_QUERY_TOKEN_UNTIL` can be cleared early. Rate
+   * limited because it fires per connection, and a chat screen reconnects
+   * every time it is opened — an unthrottled warning would bury the log it is
+   * meant to be read from.
+   */
+  private warnLegacyHandshake(): void {
+    this.legacyHandshakes += 1;
+    const now = Date.now();
+    if (now - this.lastLegacyWarnAt < 60_000) return;
+    this.lastLegacyWarnAt = now;
+    this.logger.warn(
+      `A client authenticated the chat socket with ?token= — the access token ` +
+        `is in the URL and therefore in every proxy log on the way. ` +
+        `${this.legacyHandshakes} such handshake(s) so far; this stops being ` +
+        `accepted at ${this.config.get<string>('security.wsQueryTokenUntil')}.`,
+    );
+  }
+
+  /**
+   * The 101, echoing the negotiated subprotocol when there was one.
+   *
+   * Not optional: a browser that offered subprotocols fails the connection
+   * outright if the server selects none of them. Only the marker is echoed,
+   * never the token beside it — putting the credential in a response header
+   * would undo the point of moving it out of the URL.
+   */
+  private acceptResponse(key: string, offered: string[] = []) {
     const accept = createHash('sha1')
       .update(`${key}258EAFA5-E914-47DA-95CA-C5AB0DC85B11`)
       .digest('base64');
-    return [
+    const lines = [
       'HTTP/1.1 101 Switching Protocols',
       'Upgrade: websocket',
       'Connection: Upgrade',
       `Sec-WebSocket-Accept: ${accept}`,
-      '',
-      '',
-    ].join('\r\n');
+    ];
+    if (offered.includes(AUTH_SUBPROTOCOL)) {
+      lines.push(`Sec-WebSocket-Protocol: ${AUTH_SUBPROTOCOL}`);
+    }
+    return [...lines, '', ''].join('\r\n');
+  }
+
+  /** Close an established connection with a WebSocket close frame. */
+  private close(client: RealtimeClient, code: number, reason: string) {
+    try {
+      const payload = Buffer.alloc(2 + Buffer.byteLength(reason));
+      payload.writeUInt16BE(code, 0);
+      payload.write(reason, 2);
+      this.sendFrame(client.socket, payload, 0x8);
+    } catch {
+      // The socket is already gone; `end()` below is still the right move.
+    }
+    client.socket.end();
+    void this.unregister(client);
   }
 
   private reject(socket: Socket, status: number, message: string) {

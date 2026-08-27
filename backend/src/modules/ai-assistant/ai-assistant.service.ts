@@ -2,8 +2,8 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import {
   AiGenerationType,
   AiInteractionType,
+  OfferStatus,
   Prisma,
-  ProductStatus,
   UserRole,
 } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
@@ -14,20 +14,12 @@ import {
   GenerateProductDescriptionDto,
   GenerateTagsDto,
 } from './dto/ai-assistant.dto';
+import {
+  PRODUCT_CARD_INCLUDE,
+  PURCHASABLE_PRODUCT_WHERE,
+} from '../../common/catalog/product-include';
 
-const productInclude = {
-  seller: true,
-  media: { orderBy: { sortOrder: 'asc' as const } },
-  variants: { orderBy: { sortOrder: 'asc' as const } },
-} satisfies Prisma.ProductInclude;
-
-const availableWhere: Prisma.ProductWhereInput = {
-  status: ProductStatus.ACTIVE,
-  isAvailable: true,
-  stock: { gt: 0 },
-};
-
-type ProductRecord = Prisma.ProductGetPayload<{ include: typeof productInclude }>;
+type ProductRecord = Prisma.ProductGetPayload<{ include: typeof PRODUCT_CARD_INCLUDE }>;
 
 interface BehaviorProfile {
   categories: Map<string, number>;
@@ -48,13 +40,15 @@ export class AiAssistantService {
     const profile = userId ? await this.behaviorProfile(userId) : this.emptyProfile();
     const products = await this.prisma.product.findMany({
       where: {
-        ...availableWhere,
-        ...(dto.category ? { category: dto.category.toLowerCase() } : {}),
+        ...PURCHASABLE_PRODUCT_WHERE,
+        ...(dto.category
+          ? { category: { slug: dto.category.toLowerCase() } }
+          : {}),
         ...(profile.purchasedProductIds.size
           ? { id: { notIn: [...profile.purchasedProductIds] } }
           : {}),
       },
-      include: productInclude,
+      include: PRODUCT_CARD_INCLUDE,
       take: Math.min(dto.limit * 4, 120),
       orderBy: [{ rating: 'desc' }, { ordersCount: 'desc' }, { createdAt: 'desc' }],
     });
@@ -78,21 +72,22 @@ export class AiAssistantService {
   ) {
     const product = await this.prisma.product.findUnique({
       where: { id: productId },
-      include: productInclude,
+      include: PRODUCT_CARD_INCLUDE,
     });
     if (!product) throw new NotFoundException('Product not found');
 
     const tokens = this.tokens(`${product.title} ${product.description}`);
     const candidates = await this.prisma.product.findMany({
       where: {
-        ...availableWhere,
+        ...PURCHASABLE_PRODUCT_WHERE,
         id: { not: productId },
         OR: [
-          { category: product.category },
+          { categoryId: product.categoryId },
+          ...(product.brandId ? [{ brandId: product.brandId }] : []),
           { title: { contains: product.title.split(' ')[0] ?? '', mode: 'insensitive' } },
         ],
       },
-      include: productInclude,
+      include: PRODUCT_CARD_INCLUDE,
       take: Math.min(dto.limit * 5, 120),
       orderBy: [{ rating: 'desc' }, { favoritesCount: 'desc' }],
     });
@@ -104,7 +99,8 @@ export class AiAssistantService {
           this.tokens(`${candidate.title} ${candidate.description}`),
         );
         const score =
-          (candidate.category === product.category ? 45 : 0) +
+          (candidate.categoryId === product.categoryId ? 45 : 0) +
+          (candidate.brandId && candidate.brandId === product.brandId ? 15 : 0) +
           overlap * 12 +
           candidate.rating * 6 +
           Math.log1p(candidate.ordersCount + candidate.favoritesCount);
@@ -135,17 +131,21 @@ export class AiAssistantService {
       where: {
         role: UserRole.SELLER,
         disabledAt: null,
-        products: {
+        sellerOffers: {
           some: {
-            ...availableWhere,
-            ...(dto.category ? { category: dto.category.toLowerCase() } : {}),
+            status: OfferStatus.ACTIVE,
+            isActive: true,
+            stock: { gt: 0 },
+            ...(dto.category
+              ? { product: { category: { slug: dto.category.toLowerCase() } } }
+              : {}),
           },
         },
       },
       include: {
         sellerReputation: true,
         sellerBadges: true,
-        _count: { select: { products: true, followers: true } },
+        _count: { select: { sellerOffers: true, followers: true } },
       },
       take: Math.min(dto.limit * 4, 80),
       orderBy: [{ followersCount: 'desc' }, { createdAt: 'desc' }],
@@ -179,23 +179,34 @@ export class AiAssistantService {
       this.prisma.product.findMany({
         where: query
           ? {
-              ...availableWhere,
+              ...PURCHASABLE_PRODUCT_WHERE,
               OR: [
                 { title: { contains: query, mode: 'insensitive' } },
                 { description: { contains: query, mode: 'insensitive' } },
               ],
             }
-          : { ...availableWhere },
-        select: { title: true, category: true },
+          : { ...PURCHASABLE_PRODUCT_WHERE },
+        select: { title: true, category: { select: { slug: true, nameAr: true } } },
         take: 20,
         orderBy: [{ ordersCount: 'desc' }, { rating: 'desc' }],
       }),
-      this.prisma.product.findMany({
-        where: query
-          ? { ...availableWhere, category: { contains: query, mode: 'insensitive' } }
-          : { ...availableWhere },
-        distinct: ['category'],
-        select: { category: true },
+      // Categories are a real tree now, so suggestions come from the taxonomy
+      // itself rather than from DISTINCT over a free-text product column.
+      this.prisma.category.findMany({
+        where: {
+          isActive: true,
+          level: 2,
+          ...(query
+            ? {
+                OR: [
+                  { nameAr: { contains: query, mode: 'insensitive' } },
+                  { nameEn: { contains: query, mode: 'insensitive' } },
+                  { slug: { contains: query, mode: 'insensitive' } },
+                ],
+              }
+            : {}),
+        },
+        select: { slug: true, nameAr: true },
         take: 12,
       }),
       userId
@@ -211,12 +222,12 @@ export class AiAssistantService {
       ...products.map((product) => ({
         text: product.title,
         type: 'product',
-        score: 70 + (profile.categories.get(product.category) ?? 0) * 8,
+        score: 70 + (profile.categories.get(product.category.slug) ?? 0) * 8,
       })),
       ...categories.map((category) => ({
-        text: category.category,
+        text: category.nameAr,
         type: 'category',
-        score: 65 + (profile.categories.get(category.category) ?? 0) * 10,
+        score: 65 + (profile.categories.get(category.slug) ?? 0) * 10,
       })),
       ...profile.queries.map((entry) => ({ text: entry, type: 'personal', score: 60 })),
     ];
@@ -242,8 +253,8 @@ export class AiAssistantService {
       this.productRecommendations(userId, { limit: 12, include_explanations: true }),
       this.sellerRecommendations(userId, { limit: 8 }),
       this.prisma.product.findMany({
-        where: availableWhere,
-        include: productInclude,
+        where: PURCHASABLE_PRODUCT_WHERE,
+        include: PRODUCT_CARD_INCLUDE,
         take: 12,
         orderBy: [{ ordersCount: 'desc' }, { viewsCount: 'desc' }],
       }),
@@ -332,15 +343,30 @@ export class AiAssistantService {
   private async behaviorProfile(userId: string): Promise<BehaviorProfile> {
     const profile = this.emptyProfile();
     const [orders, favorites, searches, views] = await Promise.all([
+      // Seller affinity comes off the sub-order now — the customer bought
+      // from a seller, not from whoever happens to own the catalog entry.
       this.prisma.orderItem.findMany({
-        where: { order: { userId } },
-        include: { product: { select: { id: true, category: true, sellerId: true } } },
+        where: { sellerOrder: { order: { userId } } },
+        select: {
+          productId: true,
+          quantity: true,
+          sellerOrder: { select: { sellerId: true } },
+          product: { select: { id: true, category: { select: { slug: true } } } },
+        },
         take: 200,
-        orderBy: { order: { createdAt: 'desc' } },
+        orderBy: { sellerOrder: { createdAt: 'desc' } },
       }),
       this.prisma.favorite.findMany({
         where: { userId },
-        include: { product: { select: { id: true, category: true, sellerId: true } } },
+        select: {
+          product: {
+            select: {
+              id: true,
+              category: { select: { slug: true } },
+              offers: { select: { sellerId: true }, take: 3 },
+            },
+          },
+        },
         take: 200,
         orderBy: { createdAt: 'desc' },
       }),
@@ -351,26 +377,36 @@ export class AiAssistantService {
       }),
       this.prisma.analyticsEvent.findMany({
         where: { userId, type: 'PRODUCT_VIEW' },
-        include: { product: { select: { id: true, category: true, sellerId: true } } },
+        select: {
+          sellerId: true,
+          product: {
+            select: { id: true, category: { select: { slug: true } } },
+          },
+        },
         take: 200,
         orderBy: { createdAt: 'desc' },
       }),
     ]);
 
     for (const item of orders) {
-      profile.purchasedProductIds.add(item.productId);
-      this.bump(profile.categories, item.product.category, 4 * item.quantity);
-      this.bump(profile.sellers, item.product.sellerId, 3 * item.quantity);
+      if (item.productId) profile.purchasedProductIds.add(item.productId);
+      if (item.product) {
+        this.bump(profile.categories, item.product.category.slug, 4 * item.quantity);
+      }
+      this.bump(profile.sellers, item.sellerOrder.sellerId, 3 * item.quantity);
     }
     for (const favorite of favorites) {
-      this.bump(profile.categories, favorite.product.category, 3);
-      this.bump(profile.sellers, favorite.product.sellerId, 2);
+      if (!favorite.product) continue;
+      this.bump(profile.categories, favorite.product.category.slug, 3);
+      for (const offer of favorite.product.offers) {
+        this.bump(profile.sellers, offer.sellerId, 2);
+      }
     }
     for (const view of views) {
       if (!view.product) continue;
       profile.viewedProductIds.add(view.product.id);
-      this.bump(profile.categories, view.product.category, 1);
-      this.bump(profile.sellers, view.product.sellerId, 0.8);
+      this.bump(profile.categories, view.product.category.slug, 1);
+      if (view.sellerId) this.bump(profile.sellers, view.sellerId, 0.8);
     }
     profile.queries = [...new Set(searches.map((entry) => entry.query))];
     return profile;
@@ -379,8 +415,15 @@ export class AiAssistantService {
   private rankProducts(products: ProductRecord[], profile: BehaviorProfile) {
     return products
       .map((product) => {
-        const categoryAffinity = profile.categories.get(product.category) ?? 0;
-        const sellerAffinity = profile.sellers.get(product.sellerId) ?? 0;
+        const categoryAffinity = profile.categories.get(product.category.slug) ?? 0;
+        // A shared catalog entry has several sellers; affinity to any of them
+        // counts.
+        const sellerAffinity = Math.max(
+          0,
+          ...product.offers.map(
+            (offer) => profile.sellers.get(offer.sellerId) ?? 0,
+          ),
+        );
         const score =
           product.rating * 12 +
           Math.log1p(product.ordersCount) * 8 +
@@ -395,11 +438,13 @@ export class AiAssistantService {
 
   private productReasons(product: ProductRecord, profile: BehaviorProfile) {
     const reasons = ['Strong marketplace performance'];
-    if ((profile.categories.get(product.category) ?? 0) > 0) {
-      reasons.push(`Matches your interest in ${product.category}`);
+    if ((profile.categories.get(product.category.slug) ?? 0) > 0) {
+      reasons.push(`Matches your interest in ${product.category.nameAr}`);
     }
-    if ((profile.sellers.get(product.sellerId) ?? 0) > 0) {
-      reasons.push(`From a seller you engage with`);
+    if (
+      product.offers.some((offer) => (profile.sellers.get(offer.sellerId) ?? 0) > 0)
+    ) {
+      reasons.push('From a seller you engage with');
     }
     if (product.rating >= 4.5) reasons.push('Highly rated by customers');
     return reasons.slice(0, 4);

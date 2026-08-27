@@ -5,6 +5,7 @@ import '../checkout_remote_datasource.dart';
 import '../../../domain/entities/checkout.dart';
 import '../../models/checkout_models.dart';
 import '../../models/order_models.dart';
+import '../../../../../core/shared/value_objects/money.dart';
 
 final class CheckoutRemoteDataSourceImpl extends BaseRemoteDataSource
     implements CheckoutRemoteDataSource {
@@ -21,11 +22,24 @@ final class CheckoutRemoteDataSourceImpl extends BaseRemoteDataSource
   @override
   Future<DeliveryQuoteModel> getDeliveryQuote(
     String governorate,
-    double subtotal,
-  ) async {
+    Money? subtotal, {
+    String? district,
+    bool isRural = false,
+  }) async {
     final json = await postJson(
       ApiEndpoints.deliveryQuote,
-      body: {'governorate': governorate, 'subtotal': subtotal},
+      body: {
+        'governorate': governorate,
+        // Q53 P2 — the two tiers. Without these every rural delivery was
+        // quoted, charged and settled at the city-centre price.
+        if (district != null && district.isNotEmpty) 'district': district,
+        'is_rural': isRural,
+        // The decimal string, not a float — see Money.
+        if (subtotal != null) ...{
+          'subtotal': subtotal.raw,
+          'currency': subtotal.currency.wire,
+        },
+      },
     );
     return DeliveryQuoteModel.fromJson(json);
   }
@@ -40,7 +54,9 @@ final class CheckoutRemoteDataSourceImpl extends BaseRemoteDataSource
 
   @override
   Future<PlacedOrderModel> placeOrder({
-    required ShippingInput shipping,
+    ShippingInput? shipping,
+    String? addressId,
+    bool saveAddress = false,
     required String paymentMethod,
     String? couponCode,
     String? deliveryInstructions,
@@ -49,10 +65,16 @@ final class CheckoutRemoteDataSourceImpl extends BaseRemoteDataSource
     final json = await postJson(
       ApiEndpoints.ordersCheckout,
       body: {
-        'shipping': {
+        if (addressId != null) 'address_id': addressId,
+        if (saveAddress) 'save_address': true,
+        if (shipping != null)
+          'shipping': {
           'recipient_name': shipping.recipientName,
           'recipient_phone': shipping.recipientPhone,
           'governorate': shipping.governorate,
+          if (shipping.district != null && shipping.district!.isNotEmpty)
+            'district': shipping.district,
+          'is_rural': shipping.isRural,
           'city': shipping.city,
           'address_line': shipping.addressLine,
           if (shipping.landmark != null && shipping.landmark!.isNotEmpty)

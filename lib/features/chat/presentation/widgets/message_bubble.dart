@@ -19,8 +19,11 @@ class MessageBubble
 
       alignment:
           isMe
-              ? Alignment.centerRight
-              : Alignment.centerLeft,
+              // Directional, not absolute: the sender's own bubble sits on
+              // the trailing edge of the reading direction, which flips with
+              // the locale instead of staying pinned to a physical side.
+              ? AlignmentDirectional.centerEnd
+              : AlignmentDirectional.centerStart,
 
       child: Container(
 

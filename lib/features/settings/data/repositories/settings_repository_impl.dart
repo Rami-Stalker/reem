@@ -2,9 +2,12 @@ import 'package:reem/core/base/repository_handler.dart';
 import 'package:reem/core/result/result.dart';
 import 'package:reem/core/shared/entities/user.dart';
 
+import '../../domain/entities/address_draft.dart';
 import '../../domain/entities/address_entity.dart';
 import '../../domain/entities/coupon_entity.dart';
+import '../../domain/entities/coupon_validation.dart';
 import '../../domain/entities/notification_entity.dart';
+import '../../domain/entities/notification_preferences.dart';
 import '../../domain/entities/rewards_entity.dart';
 import '../../domain/repositories/settings_repository.dart';
 import '../datasources/settings_remote_datasource.dart';
@@ -19,12 +22,51 @@ class SettingsRepositoryImpl with RepositoryHandler implements SettingsRepositor
       guard(() => remote.getAddresses());
 
   @override
+  Future<Result<AddressEntity>> createAddress(AddressDraft draft) =>
+      guard(() => remote.createAddress(draft));
+
+  @override
+  Future<Result<AddressEntity>> updateAddress(String id, AddressDraft draft) =>
+      guard(() => remote.updateAddress(id, draft));
+
+  @override
+  Future<Result<void>> deleteAddress(String id) =>
+      guard(() => remote.deleteAddress(id));
+
+  @override
+  Future<Result<AddressEntity>> setDefaultAddress(String id) =>
+      guard(() => remote.setDefaultAddress(id));
+
+  @override
   Future<Result<List<CouponEntity>>> getCoupons() =>
       guard(() => remote.getCoupons());
 
   @override
+  Future<Result<CouponValidation>> validateCoupon({
+    required String code,
+    required double subtotal,
+    required String currency,
+  }) => guard(
+    () => remote.validateCoupon(
+      code: code,
+      subtotal: subtotal,
+      currency: currency,
+    ),
+  );
+
+  @override
   Future<Result<List<NotificationEntity>>> getNotifications() =>
       guard(() => remote.getNotifications());
+
+  @override
+  Future<Result<NotificationPreferences>> getNotificationPreferences() =>
+      guard(() => remote.getNotificationPreferences());
+
+  @override
+  Future<Result<NotificationPreferences>> updateNotificationPreferences(
+    NotificationPreferences preferences,
+  ) =>
+      guard(() => remote.updateNotificationPreferences(preferences));
 
   @override
   Future<Result<User>> updateProfile({

@@ -1,30 +1,50 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-import 'package:reem/app.dart';
+import 'package:reem/features/auth/presentation/utils/auth_form_validators.dart';
+import 'package:reem/l10n/app_localizations_ar.dart';
+import 'package:reem/features/search/domain/entities/search_suggestions.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(MyApp());
+  group('AuthFormValidators', () {
+    // Validators take the localisations so their messages are translatable.
+    final l10n = AppLocalizationsAr();
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    test('validates email or phone identifiers', () {
+      expect(
+        AuthFormValidators.requiredEmailOrPhone(l10n, 'reem@example.com'),
+        isNull,
+      );
+      expect(AuthFormValidators.requiredEmailOrPhone(l10n, '+966555555555'), isNull);
+      expect(
+        AuthFormValidators.requiredEmailOrPhone(l10n, 'not valid'),
+        l10n.validEmailOrPhone,
+      );
+    });
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+    test('requires strong registration and reset passwords', () {
+      // The policy is 10+ characters with mixed case, a digit and a symbol.
+      expect(AuthFormValidators.strongPassword(l10n, 'Reem12345!'), isNull);
+      expect(
+        AuthFormValidators.strongPassword(l10n, 'Reem1234'),
+        l10n.passwordMinLength(10),
+      );
+      expect(
+        AuthFormValidators.strongPassword(l10n, 'reem123456'),
+        l10n.passwordStrengthRule,
+      );
+    });
+  });
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+  group('SearchSuggestions', () {
+    test(
+      'combines categories and products without duplicate display terms',
+      () {
+        const suggestions = SearchSuggestions(
+          categories: ['Dresses', 'Perfume'],
+          products: ['dresses', 'Silk dress'],
+        );
+
+        expect(suggestions.combined, ['Dresses', 'Perfume', 'Silk dress']);
+      },
+    );
   });
 }

@@ -1,5 +1,6 @@
 import 'package:reem/core/base/repository_handler.dart';
 import 'package:reem/core/result/result.dart';
+import 'package:reem/core/shared/entities/media.dart';
 import 'package:reem/core/shared/entities/post.dart';
 import 'package:reem/core/shared/entities/story.dart';
 
@@ -18,6 +19,12 @@ class CreateRepositoryImpl with RepositoryHandler implements CreateRepository {
   }) => guard(() => remote.createPost(caption: caption, productId: productId));
 
   @override
-  Future<Result<Story>> createStory({required String mediaUrl, String? link}) =>
-      guard(() => remote.createStory(mediaUrl: mediaUrl, link: link));
+  Future<Result<Story>> createStory({
+    required String mediaUrl,
+    MediaType type = MediaType.image,
+    String? link,
+  }) =>
+      guard(
+        () => remote.createStory(mediaUrl: mediaUrl, type: type, link: link),
+      );
 }

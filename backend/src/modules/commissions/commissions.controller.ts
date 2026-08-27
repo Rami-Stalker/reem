@@ -76,13 +76,22 @@ export class CommissionsController {
     return this.commissions.calculatePayout(dto);
   }
 
+  /**
+   * Q62 — «المدير العام + المحاسب» may work with payouts, but «اعتماد صرف
+   * الأرباح من المدير العام فقط»: the accountant prepares, only the general
+   * manager approves or releases. That second half is enforced in the service
+   * against the caller's own role, not here, so it cannot be bypassed by a
+   * route that forgets it.
+   */
   @Patch('admin/payouts/:id')
-  @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
+  @Roles(UserRole.SUPER_ADMIN, UserRole.FINANCE_ADMIN)
   updatePayout(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() dto: PayoutStatusDto,
+    @CurrentUser('id') actorId: string,
+    @CurrentUser('role') actorRole: UserRole,
   ) {
-    return this.commissions.updatePayoutStatus(id, dto);
+    return this.commissions.updatePayoutStatus(id, dto, actorId, actorRole);
   }
 
   @Patch('admin/ledgers/:id')

@@ -14,8 +14,11 @@ import { createHash } from 'crypto';
 import { buildMeta, PaginationDto } from '../../common/dto/pagination.dto';
 import { serializeNotification } from '../../common/serializers';
 import { PrismaService } from '../../prisma/prisma.service';
+import { PushOutcome, PushTransport } from './transports/push.transport';
 import {
   AppEvent,
+  CommerceContentPublishedPayload,
+  CommerceContentSubmittedPayload,
   CouponIssuedPayload,
   OrderStatusChangedPayload,
   PostPublishedPayload,
@@ -42,6 +45,7 @@ export class NotificationsService {
   private readonly logger = new Logger(NotificationsService.name);
 
   constructor(
+    private readonly push: PushTransport,
     private readonly repo: NotificationsRepository,
     private readonly prisma: PrismaService,
   ) {}
@@ -106,11 +110,16 @@ export class NotificationsService {
       create: {
         userId,
         tokenHash,
+        // Kept, not just hashed: a push provider's token is the address of a
+        // handset, and an address you cannot read is an address you cannot
+        // write to.
+        token: dto.token,
         provider: dto.provider,
         platform: dto.platform,
       },
       update: {
         userId,
+        token: dto.token,
         provider: dto.provider,
         platform: dto.platform,
         enabled: true,
@@ -334,6 +343,60 @@ export class NotificationsService {
     );
   }
 
+  /**
+   * A seller sent something for review — Q70 P1 puts approving it on the
+   * moderators, and until now the event was emitted into silence.
+   *
+   * Notifies the moderators rather than fanning out to followers: nothing is
+   * public yet, and telling a shop's followers about a post awaiting approval
+   * would announce content that may never appear.
+   */
+  @OnEvent(AppEvent.CommerceContentSubmitted)
+  async onContentSubmitted(
+    payload: CommerceContentSubmittedPayload,
+  ): Promise<void> {
+    const name = await this.repo.userName(payload.sellerId);
+    const moderators = await this.prisma.user.findMany({
+      where: {
+        role: {
+          in: [
+            UserRole.CONTENT_MODERATOR,
+            UserRole.OPERATIONS_ADMIN,
+            UserRole.SUPER_ADMIN,
+          ],
+        },
+      },
+      select: { id: true },
+      take: 20,
+    });
+
+    for (const moderator of moderators) {
+      await this.safeCreate({
+        userId: moderator.id,
+        type: NotificationType.system,
+        title: 'محتوى بانتظار المراجعة',
+        body: `${name} أرسلت ${payload.contentType} للمراجعة`,
+        data: { contentId: payload.contentId, sellerId: payload.sellerId },
+      });
+    }
+  }
+
+  /** And her followers hear about it once it is actually live. */
+  @OnEvent(AppEvent.CommerceContentPublished)
+  async onContentPublished(
+    payload: CommerceContentPublishedPayload,
+  ): Promise<void> {
+    const name = await this.repo.userName(payload.sellerId);
+    await this.fanout(
+      payload.sellerId,
+      'inAppPosts',
+      NotificationType.post,
+      'جديد في متجرها',
+      `${name} نشرت ${payload.contentType}`,
+      { contentId: payload.contentId },
+    );
+  }
+
   @OnEvent(AppEvent.CouponIssued)
   async onCouponIssued(payload: CouponIssuedPayload): Promise<void> {
     if (await this.optedOut(payload.userId, 'inAppCoupons')) return;
@@ -477,6 +540,33 @@ export class NotificationsService {
           notificationId = notification.id;
         }
 
+        // A push has to actually leave the building before it is called sent.
+        // Every channel used to be stamped SENT here, which meant the platform
+        // collected device tokens, wrote a delivery row, marked it delivered,
+        // and no phone ever rang.
+        if (delivery.channel === NotificationChannel.PUSH) {
+          const outcome = await this.pushOut(delivery);
+          await this.prisma.notificationDelivery.update({
+            where: { id: delivery.id },
+            data: outcome.delivered
+              ? {
+                  status: NotificationDeliveryStatus.SENT,
+                  sentAt: new Date(),
+                  provider: 'push',
+                  providerMessageId: outcome.providerMessageId,
+                }
+              : {
+                  // Skipped, not failed: nothing went wrong, there was simply
+                  // nowhere to send it. A failure would have a retry chasing
+                  // it for ever.
+                  status: NotificationDeliveryStatus.SKIPPED,
+                  failedAt: new Date(),
+                  failureReason: outcome.reason,
+                },
+          });
+          continue;
+        }
+
         await this.prisma.notificationDelivery.update({
           where: { id: delivery.id },
           data: {
@@ -583,6 +673,35 @@ export class NotificationsService {
       default:
         return 'Your order status was updated.';
     }
+  }
+
+  /**
+   * Sends one queued push to every handset the account has registered.
+   *
+   * Tokens are stored hashed for the *lookup*, so the sendable value lives on
+   * the row alongside it; a token that has been disabled — she turned pushes
+   * off, or the provider rejected it — is simply not in the list, which is why
+   * "no registered device" is a skip rather than an error.
+   */
+  private async pushOut(delivery: {
+    userId: string;
+    title: string;
+    body: string;
+  }): Promise<PushOutcome> {
+    if (!this.push.isConfigured()) {
+      return { delivered: false, reason: 'No push provider configured' };
+    }
+
+    const tokens = await this.prisma.pushToken.findMany({
+      where: { userId: delivery.userId, enabled: true },
+      select: { token: true },
+    });
+
+    return this.push.send({
+      tokens: tokens.map((row) => row.token).filter((token) => token.length > 0),
+      title: delivery.title,
+      body: delivery.body,
+    });
   }
 
   private serializePrefs(pref: NotificationPreference | null) {

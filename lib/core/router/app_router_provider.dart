@@ -11,6 +11,8 @@ import 'package:reem/features/admin/presentation/screens/admin_users_screen.dart
 import 'package:reem/features/admin/presentation/providers/admin_provider.dart';
 import 'package:reem/features/admin/presentation/shell/admin_shell.dart';
 import 'package:reem/features/auth/presentation/providers/auth_provider.dart';
+import 'package:reem/features/auth/presentation/providers/auth_state.dart';
+import 'package:reem/features/auth/presentation/screens/auth_required_screen.dart';
 import 'package:reem/features/auth/presentation/screens/forgot_password_screen.dart';
 import 'package:reem/features/auth/presentation/screens/login_screen.dart';
 import 'package:reem/features/auth/presentation/screens/account_settings_screen.dart';
@@ -18,6 +20,9 @@ import 'package:reem/features/auth/presentation/screens/device_management_screen
 import 'package:reem/features/auth/presentation/screens/otp_verification_screen.dart';
 import 'package:reem/features/auth/presentation/screens/register_screen.dart';
 import 'package:reem/features/auth/presentation/screens/security_settings_screen.dart';
+import 'package:reem/features/auth/presentation/screens/sign_in_code_screen.dart';
+import 'package:reem/features/auth/presentation/screens/phone_change_screen.dart';
+import 'package:reem/features/auth/presentation/screens/account_recovery_screen.dart';
 import 'package:reem/features/auth/presentation/screens/seller_verification_screen.dart';
 import 'package:reem/features/auth/domain/entities/auth_account.dart';
 import 'package:reem/features/user_profile/presentation/screens/edit_profile_screen.dart';
@@ -66,6 +71,15 @@ import 'app_shell.dart';
 import '../experience/role_experience.dart';
 import 'route_names.dart';
 import 'route_paths.dart';
+import '../../features/wallet/presentation/screens/wallet_screen.dart';
+import '../../features/seller_earnings/presentation/screens/seller_earnings_screen.dart';
+import '../../features/seller_orders/presentation/screens/seller_order_detail_screen.dart';
+import '../../features/seller_orders/presentation/screens/seller_orders_screen.dart';
+import '../../features/admin_finance/presentation/screens/admin_finance_screen.dart';
+import '../../features/invoices/presentation/screens/invoice_screen.dart';
+import '../../features/invoices/presentation/screens/order_invoices_screen.dart';
+import '../../features/shipment_tracking/presentation/screens/shipment_tracking_screen.dart';
+import '../../features/courier/presentation/screens/courier_day_screen.dart';
 
 final rootNavigatorKey = GlobalKey<NavigatorState>();
 
@@ -77,16 +91,62 @@ final rootNavigatorKey = GlobalKey<NavigatorState>();
 //   RoutePaths.forgotPassword,
 // };
 
+/// Re-evaluates the guard when the session changes, without rebuilding the
+/// router.
+///
+/// The distinction is the whole fix. The provider used to `watch` the auth
+/// state, so **every** change to it — including the `isLoading` flag flicking
+/// on and off during an ordinary request — constructed a brand-new [GoRouter],
+/// and a new router starts at its `initialLocation`. The navigation stack was
+/// silently thrown away and the app jumped to Home.
+///
+/// Nothing noticed while every journey was a single screen: sign in, land on
+/// Home, which is where the reset sent you anyway. It surfaced the moment a
+/// journey had two steps — ask for a code, then type it — because asking for
+/// the code is itself a request, and the loading flag it sets destroyed the
+/// screen that was about to show her the code.
+///
+/// So the router is built once and this listenable pokes it. It deliberately
+/// only fires on the three things the guard actually reads; a spurious refresh
+/// is cheap but not free, and this keeps redirect evaluation proportional to
+/// real session changes rather than to network chatter.
+class _AuthRouterRefresh extends ChangeNotifier {
+  _AuthRouterRefresh(Ref ref) {
+    _subscription = ref.listen<AuthState>(authNotifierProvider, (
+      previous,
+      next,
+    ) {
+      final changed =
+          previous?.isInitialized != next.isInitialized ||
+          previous?.isAuthenticated != next.isAuthenticated ||
+          previous?.isGuest != next.isGuest ||
+          previous?.user?.role != next.user?.role;
+      if (changed) notifyListeners();
+    });
+  }
+
+  late final ProviderSubscription<AuthState> _subscription;
+
+  @override
+  void dispose() {
+    _subscription.close();
+    super.dispose();
+  }
+}
+
 final goRouterProvider = Provider<GoRouter>((ref) {
-  // Watch auth so the router re-evaluates redirects when the session changes
-  // (login / logout / token-restore), enabling persistent login + role gating.
-  final auth = ref.watch(authNotifierProvider);
+  final refresh = _AuthRouterRefresh(ref);
+  ref.onDispose(refresh.dispose);
 
   return GoRouter(
     navigatorKey: rootNavigatorKey,
     initialLocation: RoutePaths.home,
     debugLogDiagnostics: true,
-    redirect: (context, state) => authGuard(context, state, auth),
+    refreshListenable: refresh,
+    // Read, not watch: the guard needs the state at the moment it runs, and
+    // `refreshListenable` is what tells the router to run it again.
+    redirect: (context, state) =>
+        authGuard(context, state, ref.read(authNotifierProvider)),
     routes: [
       GoRoute(
         path: RoutePaths.splash,
@@ -101,12 +161,48 @@ final goRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: RoutePaths.login,
         name: RouteNames.login,
-        builder: (context, state) => const LoginScreen(),
+        builder: (context, state) =>
+            LoginScreen(from: state.uri.queryParameters['from']),
+      ),
+      GoRoute(
+        path: RoutePaths.authRequired,
+        name: RouteNames.authRequired,
+        builder: (context, state) =>
+            AuthRequiredScreen(from: state.uri.queryParameters['from']),
       ),
       GoRoute(
         path: RoutePaths.register,
         name: RouteNames.register,
-        builder: (context, state) => const RegisterScreen(),
+        // Not an entry point: `phone` and `ticket` come from the verified code
+        // step, and the server refuses to create an account without the
+        // ticket. Reaching this path with neither sends her back to the front
+        // door rather than to a form that cannot succeed.
+        redirect: (context, state) {
+          final params = state.uri.queryParameters;
+          final hasProof =
+              (params['phone']?.isNotEmpty ?? false) &&
+              (params['ticket']?.isNotEmpty ?? false);
+          return hasProof ? null : RoutePaths.login;
+        },
+        builder: (context, state) => RegisterScreen(
+          phone: state.uri.queryParameters['phone'] ?? '',
+          registrationTicket: state.uri.queryParameters['ticket'] ?? '',
+          from: state.uri.queryParameters['from'],
+        ),
+      ),
+      GoRoute(
+        path: RoutePaths.signInCode,
+        name: RouteNames.signInCode,
+        // The challenge travels in `extra` rather than the query string: it is
+        // a whole object, and the two-digit match code has no business being
+        // written into a URL and a browser history.
+        builder: (context, state) => SignInCodeScreen(
+          phone: state.uri.queryParameters['phone'] ?? '',
+          challenge: state.extra is OtpChallenge
+              ? state.extra as OtpChallenge
+              : null,
+          from: state.uri.queryParameters['from'],
+        ),
       ),
       GoRoute(
         path: RoutePaths.forgotPassword,
@@ -119,6 +215,7 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => OtpVerificationScreen(
           phone: state.uri.queryParameters['phone'] ?? '',
           purpose: _otpPurposeFromWire(state.uri.queryParameters['purpose']),
+          from: state.uri.queryParameters['from'],
         ),
       ),
       GoRoute(
@@ -135,6 +232,16 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         path: RoutePaths.securitySettings,
         name: RouteNames.securitySettings,
         builder: (context, state) => const SecuritySettingsScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.phoneChange,
+        name: RouteNames.phoneChange,
+        builder: (context, state) => const PhoneChangeScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.accountRecovery,
+        name: RouteNames.accountRecovery,
+        builder: (context, state) => const AccountRecoveryScreen(),
       ),
       GoRoute(
         path: RoutePaths.sellerVerification,
@@ -164,6 +271,33 @@ final goRouterProvider = Provider<GoRouter>((ref) {
             title: collection.title,
           );
         },
+      ),
+      GoRoute(
+        path: RoutePaths.courierDay,
+        name: RouteNames.courierDay,
+        builder: (context, state) => const CourierDayScreen(),
+      ),
+      // Q64 — tracking by code. The code is the credential, so this sits
+      // outside the auth guard: a customer may hand it to whoever is waiting
+      // for the parcel without handing over her account.
+      GoRoute(
+        path: RoutePaths.shipmentTracking,
+        name: RouteNames.shipmentTracking,
+        builder: (context, state) => ShipmentTrackingScreen(
+          trackingCode: state.pathParameters['code'] ?? '',
+        ),
+      ),
+      GoRoute(
+        path: RoutePaths.orderInvoices,
+        name: RouteNames.orderInvoices,
+        builder: (context, state) =>
+            OrderInvoicesScreen(orderId: state.pathParameters['id'] ?? ''),
+      ),
+      GoRoute(
+        path: RoutePaths.invoice,
+        name: RouteNames.invoice,
+        builder: (context, state) =>
+            InvoiceScreen(invoiceId: state.pathParameters['id'] ?? ''),
       ),
       GoRoute(
         path: RoutePaths.productDetails,
@@ -242,6 +376,29 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const RewardsScreen(),
       ),
       GoRoute(
+        path: RoutePaths.wallet,
+        name: RouteNames.wallet,
+        builder: (context, state) => const WalletScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.sellerEarnings,
+        name: RouteNames.sellerEarnings,
+        builder: (context, state) => const SellerEarningsScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.sellerOrders,
+        name: RouteNames.sellerOrders,
+        builder: (context, state) => const SellerOrdersScreen(),
+      ),
+      GoRoute(
+        // Declared after the queue so `/seller/orders` is not swallowed by the
+        // `:id` segment.
+        path: RoutePaths.sellerOrderDetail,
+        name: RouteNames.sellerOrderDetail,
+        builder: (context, state) =>
+            SellerOrderDetailScreen(orderId: state.pathParameters['id']!),
+      ),
+      GoRoute(
         path: RoutePaths.editProfile,
         name: RouteNames.editProfile,
         builder: (context, state) => const EditProfileScreen(),
@@ -303,8 +460,8 @@ final goRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: RoutePaths.adminFinancials,
         name: RouteNames.adminFinancials,
-        builder: (context, state) => AdminShell(
-          child: AdminSectionScreen(config: adminSectionConfigs['financials']!),
+        builder: (context, state) => const AdminShell(
+          child: AdminFinanceScreen(),
         ),
       ),
       GoRoute(
@@ -384,7 +541,9 @@ final goRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: RoutePaths.chatMediaGallery,
         name: RouteNames.chatMediaGallery,
-        builder: (context, state) => const ChatMediaGalleryScreen(),
+        builder: (context, state) => ChatMediaGalleryScreen(
+          chatId: state.uri.queryParameters['id'] ?? '',
+        ),
       ),
       GoRoute(
         path: RoutePaths.chatProfile,
@@ -536,5 +695,8 @@ final goRouterProvider = Provider<GoRouter>((ref) {
 OtpPurpose _otpPurposeFromWire(String? value) => switch (value) {
   'password_reset' => OtpPurpose.passwordReset,
   'device_verification' => OtpPurpose.deviceVerification,
+  'login' => OtpPurpose.login,
+  'phone_change' => OtpPurpose.phoneChange,
+  'account_recovery' => OtpPurpose.accountRecovery,
   _ => OtpPurpose.phoneVerification,
 };

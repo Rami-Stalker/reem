@@ -8,6 +8,7 @@ import '../../../../core/router/route_paths.dart';
 import 'product_card_compact.dart';
 import '../providers/collection_notifier.dart';
 import '../providers/collection_state.dart';
+import '../../../../core/localization/l10n_extension.dart';
 
 /// Reusable horizontal collection rail with independent loading/error state.
 /// Drop one per home/category/profile section, each backed by its own provider.
@@ -58,7 +59,7 @@ class ProductCollectionSection extends ConsumerWidget {
                 GestureDetector(
                   onTap: onSeeAll,
                   child: Text(
-                    'See all',
+                    context.l10n.viewAll,
                     style: TextStyle(
                       color: colors.primary,
                       fontWeight: DsTypography.semiBold,
@@ -76,7 +77,7 @@ class ProductCollectionSection extends ConsumerWidget {
                   ? Center(
                       child: TextButton(
                         onPressed: () => ref.read(provider.notifier).refresh(),
-                        child: const Text('Retry'),
+                        child: Text(context.l10n.retry),
                       ),
                     )
                   : ListView.separated(

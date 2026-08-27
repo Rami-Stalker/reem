@@ -8,6 +8,7 @@ class MediaModel extends MediaItem {
     super.type,
     super.sortOrder,
     super.thumbnailUrl,
+    super.blurHash,
   });
 
   factory MediaModel.fromJson(Map<String, dynamic> json) {
@@ -16,6 +17,7 @@ class MediaModel extends MediaItem {
       type: MediaTypeX.fromWire(json['type'] as String?),
       sortOrder: json['sort_order'] as int? ?? 0,
       thumbnailUrl: json['thumbnail_url'] as String?,
+      blurHash: json['blur_hash'] as String?,
     );
   }
 
@@ -26,6 +28,7 @@ class MediaModel extends MediaItem {
         type: item.type,
         sortOrder: item.sortOrder,
         thumbnailUrl: item.thumbnailUrl,
+        blurHash: item.blurHash,
       );
 
   Map<String, dynamic> toJson() => {
@@ -33,6 +36,7 @@ class MediaModel extends MediaItem {
         'type': type.wire,
         'sort_order': sortOrder,
         if (thumbnailUrl != null) 'thumbnail_url': thumbnailUrl,
+        if (blurHash != null) 'blur_hash': blurHash,
       };
 
   MediaModel copyWith({
@@ -40,12 +44,14 @@ class MediaModel extends MediaItem {
     MediaType? type,
     int? sortOrder,
     String? thumbnailUrl,
+    String? blurHash,
   }) {
     return MediaModel(
       url: url ?? this.url,
       type: type ?? this.type,
       sortOrder: sortOrder ?? this.sortOrder,
       thumbnailUrl: thumbnailUrl ?? this.thumbnailUrl,
+      blurHash: blurHash ?? this.blurHash,
     );
   }
 }

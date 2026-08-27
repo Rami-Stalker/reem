@@ -11,16 +11,31 @@ import {
   Post,
 } from '@nestjs/common';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
+import { ProfileOverviewService } from './profile-overview.service';
 import { UsersService } from './users.service';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 
 @Controller('users')
 export class UsersController {
-  constructor(private readonly users: UsersService) {}
+  constructor(
+    private readonly users: UsersService,
+    private readonly profileOverview: ProfileOverviewService,
+  ) {}
 
   @Get('me')
   getMe(@CurrentUser('id') userId: string) {
     return this.users.getMe(userId);
+  }
+
+  /**
+   * Everything her profile centre renders, in one call.
+   *
+   * The screen was built against a mock and shipped unconnected, so the counts
+   * and balances it showed were invented. They are read from her own rows now.
+   */
+  @Get('me/overview')
+  overview(@CurrentUser('id') userId: string) {
+    return this.profileOverview.forUser(userId);
   }
 
   @Patch('me')

@@ -1,21 +1,64 @@
+## OPTIONAL containerised database — a fallback, not the default.
+##
+## The project normally uses the NATIVE PostgreSQL 18 service installed on this
+## machine (`postgresql-x64-18`, provisioned by `prisma/provision.sql`). This
+## compose file exists for a clean-room database that needs no superuser access
+## and no installer — useful on a fresh machine, in CI, or to reproduce a bug
+## against an empty cluster.
+##
+## It publishes on **5433** so it can run alongside the native server without a
+## port conflict. To use it, point DATABASE_URL at 5433:
+##
+##   DATABASE_URL="postgresql://reem_user:12345678@localhost:5433/reem_db?schema=public"
+##
+##   docker compose up -d --wait     start it
+##   docker compose down -v          stop it and drop the data
+
 services:
   postgres:
-    image: postgres:16-alpine
+    image: postgres:18-alpine
     container_name: reem-postgres
     restart: unless-stopped
     environment:
       POSTGRES_USER: reem_user
       POSTGRES_PASSWORD: 12345678
       POSTGRES_DB: reem_db
+      ## The catalog is Arabic-first, so the cluster is initialised with an
+      ## ICU locale: `ORDER BY title` puts أ before ب instead of sorting by
+      ## raw UTF-8 byte value, and case/diacritic handling follows Arabic
+      ## rules. Without this, category and product listings come back in an
+      ## order that looks random to an Arabic reader.
+      POSTGRES_INITDB_ARGS: >-
+        --encoding=UTF8
+        --locale-provider=icu
+        --icu-locale=ar-SY
+        --locale=C.UTF-8
     ports:
-      - "5432:5432"
+      - '5433:5432'
     volumes:
-      - reem_pg_data:/var/lib/postgresql/data
+      ## postgres:18 changed the data-directory convention: the mount goes at
+      ## /var/lib/postgresql and the server puts its cluster in a
+      ## major-version subdirectory (`18/docker`). Mounting the old
+      ## /var/lib/postgresql/data path makes the image refuse to start, because
+      ## it reads a directory there as an un-upgraded pre-18 cluster.
+      - reem_pg_data:/var/lib/postgresql
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U reem_user -d reem_db"]
+      ## `pg_isready` alone returns true while the server is still replaying
+      ## WAL, so the check runs a real query.
+      test: ['CMD-SHELL', 'pg_isready -U reem_user -d reem_db && psql -U reem_user -d reem_db -c "SELECT 1" > /dev/null']
       interval: 5s
       timeout: 5s
-      retries: 5
+      retries: 10
+      start_period: 10s
+    command:
+      ## Dev-friendly logging: every statement slower than 200ms is logged, so
+      ## an N+1 in a new endpoint shows up without extra tooling.
+      - postgres
+      - -c
+      - log_min_duration_statement=200
+      - -c
+      - max_connections=100
 
 volumes:
   reem_pg_data:
+    name: reem_pg_data

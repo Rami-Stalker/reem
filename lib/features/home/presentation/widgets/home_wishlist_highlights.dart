@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/localization/l10n_extension.dart';
 import '../../../../core/router/route_paths.dart';
 import '../../../../core/shared/wedgets/product/product_rail.dart';
 import '../../../profile/presentation/providers/profile_provider.dart';
@@ -35,8 +36,8 @@ class _HomeWishlistHighlightsState
     final isLoading = state.isLoading && state.favorites.isEmpty;
 
     return ProductRail(
-      eyebrow: 'You loved these',
-      title: 'From your wishlist',
+      eyebrow: context.l10n.homeWishlistEyebrow,
+      title: context.l10n.homeWishlist,
       products: state.favorites.take(10).toList(),
       isLoading: isLoading,
       onSeeAll: () => context.push(RoutePaths.favorites),

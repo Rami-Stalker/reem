@@ -11,11 +11,17 @@ import { PrismaModule } from './prisma/prisma.module';
 import { CacheModule } from './common/cache/cache.module';
 
 import { JwtAuthGuard } from './common/guards/jwt-auth.guard';
-import { RolesGuard } from './common/guards/roles.guard';
+import { DeviceProofGuard } from './common/guards/device-proof.guard';
+import { StepUpGuard } from './common/guards/step-up.guard';
+import { AuthorizationGuard } from './common/authorization/authorization.guard';
+import { AuthorizationService } from './common/authorization/authorization.service';
 
 import { AuthModule } from './modules/auth/auth.module';
+import { MediaModule } from './modules/media/media.module';
 import { UsersModule } from './modules/users/users.module';
+import { PricingModule } from './modules/pricing/pricing.module';
 import { ProductsModule } from './modules/products/products.module';
+import { CommerceContentModule } from './modules/commerce-content/commerce-content.module';
 import { PostsModule } from './modules/posts/posts.module';
 import { StoriesModule } from './modules/stories/stories.module';
 import { DiscoveryModule } from './modules/discovery/discovery.module';
@@ -34,6 +40,11 @@ import { AnalyticsModule } from './modules/analytics/analytics.module';
 import { ReputationModule } from './modules/reputation/reputation.module';
 import { AiAssistantModule } from './modules/ai-assistant/ai-assistant.module';
 import { CommissionsModule } from './modules/commissions/commissions.module';
+import { LedgerModule } from './modules/ledger/ledger.module';
+import { FinanceModule } from './modules/finance/finance.module';
+import { ReturnsModule } from './modules/returns/returns.module';
+import { SupportModule } from './modules/support/support.module';
+import { SellerCommerceModule } from './modules/seller-commerce/seller-commerce.module';
 import { ExperienceModule } from './modules/experience/experience.module';
 import { HealthModule } from './modules/health/health.module';
 
@@ -58,9 +69,13 @@ import { HealthModule } from './modules/health/health.module';
     PrismaModule,
     CacheModule,
 
+    // Global: every write path that stores a URL claims its upload here.
+    MediaModule,
     AuthModule,
     UsersModule,
+    PricingModule,
     ProductsModule,
+    CommerceContentModule,
     PostsModule,
     StoriesModule,
     DiscoveryModule,
@@ -79,6 +94,11 @@ import { HealthModule } from './modules/health/health.module';
     ReputationModule,
     AiAssistantModule,
     CommissionsModule,
+    LedgerModule,
+    FinanceModule,
+    ReturnsModule,
+    SupportModule,
+    SellerCommerceModule,
     ExperienceModule,
     HealthModule,
   ],
@@ -86,7 +106,13 @@ import { HealthModule } from './modules/health/health.module';
     // Order matters: throttle → authenticate → authorize.
     { provide: APP_GUARD, useClass: ThrottlerGuard },
     { provide: APP_GUARD, useClass: JwtAuthGuard },
-    { provide: APP_GUARD, useClass: RolesGuard },
+    // After JwtAuth so a proof can be bound to the presented access token,
+    // before AuthorizationGuard so a handler never runs on an unproven device.
+    { provide: APP_GUARD, useClass: DeviceProofGuard },
+    // After the proof guard, which is what populates `request.provenDevice`.
+    { provide: APP_GUARD, useClass: StepUpGuard },
+    AuthorizationService,
+    { provide: APP_GUARD, useClass: AuthorizationGuard },
   ],
 })
 export class AppModule {}

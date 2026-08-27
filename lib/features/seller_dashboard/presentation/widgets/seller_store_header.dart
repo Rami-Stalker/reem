@@ -6,8 +6,9 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../../core/design_system/design_system.dart';
-import '../../../../../core/router/route_paths.dart';
+import '../../../../core/design_system/design_system.dart';
+import '../../../../core/localization/l10n_extension.dart';
+import '../../../../core/router/route_paths.dart';
 import '../../domain/entities/seller_store_info.dart';
 import '../providers/seller_dashboard_provider.dart';
 
@@ -53,7 +54,8 @@ class _StoreHeaderBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final c = context.dsColors;
+    final palette = context.atelier;
+    final l10n = context.l10n;
     final theme = Theme.of(context);
     final topPad = MediaQuery.paddingOf(context).top;
 
@@ -70,9 +72,10 @@ class _StoreHeaderBody extends StatelessWidget {
               CachedNetworkImage(
                 imageUrl: store.coverUrl,
                 fit: BoxFit.cover,
-                placeholder: (_, _) => ColoredBox(color: c.surfaceVariant),
-                errorWidget: (_, _, _) => Container(
-                  decoration: BoxDecoration(gradient: context.meshGradient),
+                placeholder: (_, _) =>
+                    ColoredBox(color: context.dsColors.shimmerBase),
+                errorWidget: (_, _, _) => DecoratedBox(
+                  decoration: BoxDecoration(gradient: palette.headerGradient),
                 ),
               ),
               // Gradient scrim.
@@ -83,17 +86,17 @@ class _StoreHeaderBody extends StatelessWidget {
                     end: Alignment.bottomCenter,
                     colors: [
                       Colors.transparent,
-                      c.background.withValues(alpha: 0.8),
+                      palette.background.withValues(alpha: 0.86),
                     ],
                     stops: const [0.5, 1.0],
                   ),
                 ),
               ),
               // Top actions.
-              Positioned(
+              PositionedDirectional(
                 top: topPad + DsSpacing.sm,
-                right: DsSpacing.md,
-                child: _CoverActions(),
+                end: DsSpacing.md,
+                child: const _CoverActions(),
               ),
             ],
           ),
@@ -110,19 +113,23 @@ class _StoreHeaderBody extends StatelessWidget {
               height: 88,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                gradient: context.storyRingGradient,
-                boxShadow: context.luxuryShadow,
+                gradient: palette.goldGradient,
+                boxShadow: palette.shadow,
               ),
               padding: const EdgeInsets.all(3),
               child: ClipOval(
                 child: CachedNetworkImage(
                   imageUrl: store.logoUrl,
                   fit: BoxFit.cover,
-                  placeholder: (_, _) => ColoredBox(color: c.surfaceVariant),
-                  errorWidget: (_, _, _) => Container(
-                    color: c.primaryContainer,
-                    child: Icon(Icons.storefront_rounded,
-                        color: c.primary, size: 40),
+                  placeholder: (_, _) =>
+                      ColoredBox(color: context.dsColors.shimmerBase),
+                  errorWidget: (_, _, _) => ColoredBox(
+                    color: palette.primarySoft,
+                    child: Icon(
+                      Icons.storefront_rounded,
+                      color: palette.primary,
+                      size: 38,
+                    ),
                   ),
                 ),
               ),
@@ -143,19 +150,30 @@ class _StoreHeaderBody extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
-                      store.name,
-                      style: theme.textTheme.headlineSmall?.copyWith(
-                        fontFamily: DsTypography.fontFamilyDisplay,
-                        fontFamilyFallback: DsTypography.displayFallback,
-                        fontWeight: DsTypography.bold,
+                    Flexible(
+                      child: Text(
+                        store.name,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.center,
+                        style: theme.textTheme.headlineSmall?.copyWith(
+                          fontFamily: DsTypography.fontFamilyDisplay,
+                          fontFamilyFallback: DsTypography.displayFallback,
+                          fontWeight: DsTypography.bold,
+                          color: palette.ink,
+                        ),
                       ),
                     ),
                     if (store.isVerified)
                       Padding(
-                        padding: const EdgeInsets.only(left: DsSpacing.xs),
-                        child: Icon(Icons.verified_rounded,
-                            size: 20, color: c.info),
+                        padding: const EdgeInsetsDirectional.only(
+                          start: DsSpacing.xs,
+                        ),
+                        child: Icon(
+                          Icons.verified_rounded,
+                          size: 20,
+                          color: context.dsColors.secondary,
+                        ),
                       ),
                   ],
                 ),
@@ -171,7 +189,7 @@ class _StoreHeaderBody extends StatelessWidget {
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: theme.textTheme.bodySmall
-                      ?.copyWith(color: c.onSurfaceVariant),
+                      ?.copyWith(color: palette.muted),
                 ),
               ),
               const SizedBox(height: DsSpacing.md),
@@ -180,16 +198,18 @@ class _StoreHeaderBody extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(
                     horizontal: DsSpacing.md, vertical: DsSpacing.xxs + 1),
                 decoration: BoxDecoration(
-                  gradient: context.primaryGradient,
+                  gradient: palette.goldGradient,
                   borderRadius: DsRadius.borderFull,
                 ),
                 child: Text(
-                  '${store.subscriptionPlan} plan',
+                  l10n.sellerPlanBadge(store.subscriptionPlan),
                   style: const TextStyle(
                     fontFamily: DsTypography.fontFamily,
                     fontSize: DsTypography.labelSmall,
                     fontWeight: DsTypography.bold,
-                    color: Colors.white,
+                    // Deep gold ink on the champagne wash, fixed in both
+                    // themes because the badge's ground is a brand gradient.
+                    color: Color(0xFF79551F),
                   ),
                 ),
               ),
@@ -201,11 +221,14 @@ class _StoreHeaderBody extends StatelessWidget {
                 child: OutlinedButton.icon(
                   onPressed: () => context.push(RoutePaths.editProfile),
                   icon: const Icon(Icons.edit_outlined, size: 16),
-                  label: const Text('Edit store'),
+                  label: Text(l10n.sellerEditStore),
                   style: OutlinedButton.styleFrom(
                     minimumSize: const Size(double.infinity, 44),
+                    foregroundColor: palette.primary,
+                    side: BorderSide(color: palette.primary.withValues(alpha: 0.4)),
                     shape: RoundedRectangleBorder(
-                        borderRadius: DsRadius.borderLg),
+                      borderRadius: DsRadius.borderLg,
+                    ),
                   ),
                 ),
               ),
@@ -219,6 +242,8 @@ class _StoreHeaderBody extends StatelessWidget {
 }
 
 class _CoverActions extends StatelessWidget {
+  const _CoverActions();
+
   @override
   Widget build(BuildContext context) {
     return Row(

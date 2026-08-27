@@ -4,8 +4,8 @@ abstract interface class CartRemoteDataSource {
   Future<CartModel> getCart();
 
   Future<CartModel> addItem({
-    required String productId,
-    String? variantId,
+    required String offerId,
+    String? offerVariantId,
     int quantity,
   });
 

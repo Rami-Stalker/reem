@@ -5,6 +5,7 @@ sealed class AppException implements Exception {
     this.message, {
     this.code,
     this.statusCode,
+    this.details,
     this.cause,
     this.stackTrace,
     this.isRetryable = false,
@@ -13,6 +14,9 @@ sealed class AppException implements Exception {
   final String message;
   final String? code;
   final int? statusCode;
+
+  /// See [Failure.details] — the structured half of the refusal.
+  final Map<String, dynamic>? details;
   final Object? cause;
   final StackTrace? stackTrace;
   final bool isRetryable;
@@ -30,6 +34,7 @@ final class ServerException extends AppException {
     super.message, {
     super.code,
     super.statusCode,
+    super.details,
     super.cause,
     super.stackTrace,
     super.isRetryable = true,
@@ -40,6 +45,7 @@ final class ServerException extends AppException {
     message,
     code: code,
     statusCode: statusCode,
+    details: details,
     cause: cause,
     stackTrace: mergeStackTrace(stackTrace),
     isRetryable: isRetryable,
@@ -51,6 +57,7 @@ final class UnauthorizedException extends AppException {
     super.message, {
     super.code,
     super.statusCode = 401,
+    super.details,
     super.cause,
     super.stackTrace,
     super.isRetryable = false,
@@ -61,6 +68,7 @@ final class UnauthorizedException extends AppException {
     message,
     code: code,
     statusCode: statusCode,
+    details: details,
     cause: cause,
     stackTrace: mergeStackTrace(stackTrace),
     isRetryable: isRetryable,
@@ -72,6 +80,7 @@ final class ForbiddenException extends AppException {
     super.message, {
     super.code,
     super.statusCode = 403,
+    super.details,
     super.cause,
     super.stackTrace,
     super.isRetryable = false,
@@ -82,6 +91,7 @@ final class ForbiddenException extends AppException {
     message,
     code: code,
     statusCode: statusCode,
+    details: details,
     cause: cause,
     stackTrace: mergeStackTrace(stackTrace),
     isRetryable: isRetryable,
@@ -93,6 +103,7 @@ final class NetworkException extends AppException {
     super.message, {
     super.code,
     super.statusCode,
+    super.details,
     super.cause,
     super.stackTrace,
     super.isRetryable = true,
@@ -103,6 +114,7 @@ final class NetworkException extends AppException {
     message,
     code: code,
     statusCode: statusCode,
+    details: details,
     cause: cause,
     stackTrace: mergeStackTrace(stackTrace),
     isRetryable: isRetryable,
@@ -114,6 +126,7 @@ final class ValidationException extends AppException {
     super.message, {
     super.code,
     super.statusCode = 422,
+    super.details,
     super.cause,
     super.stackTrace,
     super.isRetryable = false,
@@ -124,6 +137,7 @@ final class ValidationException extends AppException {
     message,
     code: code,
     statusCode: statusCode,
+    details: details,
     cause: cause,
     stackTrace: mergeStackTrace(stackTrace),
     isRetryable: isRetryable,
@@ -135,6 +149,7 @@ final class ConflictException extends AppException {
     super.message, {
     super.code,
     super.statusCode = 409,
+    super.details,
     super.cause,
     super.stackTrace,
     super.isRetryable = false,
@@ -145,6 +160,7 @@ final class ConflictException extends AppException {
     message,
     code: code,
     statusCode: statusCode,
+    details: details,
     cause: cause,
     stackTrace: mergeStackTrace(stackTrace),
     isRetryable: isRetryable,
@@ -156,6 +172,7 @@ final class NotFoundException extends AppException {
     super.message, {
     super.code,
     super.statusCode = 404,
+    super.details,
     super.cause,
     super.stackTrace,
     super.isRetryable = false,
@@ -166,6 +183,7 @@ final class NotFoundException extends AppException {
     message,
     code: code,
     statusCode: statusCode,
+    details: details,
     cause: cause,
     stackTrace: mergeStackTrace(stackTrace),
     isRetryable: isRetryable,
@@ -177,6 +195,7 @@ final class RateLimitException extends AppException {
     super.message, {
     super.code,
     super.statusCode = 429,
+    super.details,
     super.cause,
     super.stackTrace,
     super.isRetryable = true,
@@ -187,6 +206,7 @@ final class RateLimitException extends AppException {
     message,
     code: code,
     statusCode: statusCode,
+    details: details,
     cause: cause,
     stackTrace: mergeStackTrace(stackTrace),
     isRetryable: isRetryable,
@@ -198,6 +218,7 @@ final class CacheException extends AppException {
     super.message, {
     super.code,
     super.statusCode,
+    super.details,
     super.cause,
     super.stackTrace,
     super.isRetryable = false,
@@ -208,6 +229,7 @@ final class CacheException extends AppException {
     message,
     code: code,
     statusCode: statusCode,
+    details: details,
     cause: cause,
     stackTrace: mergeStackTrace(stackTrace),
     isRetryable: isRetryable,

@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/design_system/design_system.dart';
 import '../../../../core/localization/l10n_extension.dart';
 import '../../../../core/router/route_paths.dart';
+import '../../../../core/shared/value_objects/money_format.dart';
 import '../providers/admin_provider.dart';
 import '../widgets/admin_page_header.dart';
 
@@ -28,8 +29,8 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final palette = context.console;
     final l10n = context.l10n;
-    final colors = context.dsColors;
     final state = ref.watch(adminDashboardNotifierProvider);
     final stats = state.stats;
     final audit = ref.watch(adminSectionProvider(adminSectionConfigs['audit']!));
@@ -44,6 +45,9 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
             actions: [
               PrimaryButton(
                 label: l10n.adminViewReports,
+                // The header's action slot is content-sized; an expanding
+                // button there asks for infinite width.
+                isExpanded: false,
                 onPressed: () => context.go(RoutePaths.adminReports),
               ),
             ],
@@ -57,7 +61,10 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
           else if (state.error != null)
             Padding(
               padding: const EdgeInsets.all(DsSpacing.xl),
-              child: Text(state.error!, style: TextStyle(color: colors.error)),
+              child: Text(
+                state.error!,
+                style: TextStyle(color: palette.critical),
+              ),
             )
           else
             Padding(
@@ -84,29 +91,26 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
                         children: [
                           _StatCard(
                             label: l10n.adminTotalSales,
-                            value: '\$${stats?.totalSales.toStringAsFixed(0) ?? '0'}',
+                            value: (stats?.totalSales ?? 0).sypCompact,
                             icon: Icons.payments_outlined,
                             trend: stats?.salesTrend ?? '+0%',
                             trendUp: true,
-                            gradient: DsGradients.primarySoft,
                             index: 0,
                           ),
                           _StatCard(
                             label: l10n.adminTotalOrders,
-                            value: '${stats?.totalOrders ?? 0}',
+                            value: formatCount(stats?.totalOrders ?? 0),
                             icon: Icons.shopping_bag_outlined,
                             trend: stats?.ordersTrend ?? '+0%',
                             trendUp: true,
-                            gradient: DsGradients.sunset,
                             index: 1,
                           ),
                           _StatCard(
                             label: l10n.adminActiveUsers,
-                            value: '${stats?.activeUsers ?? 0}',
+                            value: formatCount(stats?.activeUsers ?? 0),
                             icon: Icons.people_alt_outlined,
                             trend: stats?.usersTrend ?? '+0%',
                             trendUp: true,
-                            gradient: DsGradients.accent,
                             index: 2,
                           ),
                           _StatCard(
@@ -116,7 +120,6 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
                             trend: stats?.conversionTrend ?? '+0%',
                             trendUp: stats?.conversionTrend != null && 
                                 !(stats?.conversionTrend ?? '').startsWith('-'),
-                            gradient: DsGradients.lavenderBlush,
                             index: 3,
                           ),
                         ],
@@ -128,11 +131,11 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
 
                   // Quick Actions
                   Text(
-                    'Quick Actions',
+                    l10n.adminQuickActions,
                     style: TextStyle(
                       fontSize: DsTypography.titleMedium,
                       fontWeight: DsTypography.bold,
-                      color: colors.onSurface,
+                      color: palette.ink,
                     ),
                   ),
                   const SizedBox(height: DsSpacing.md),
@@ -143,37 +146,37 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
                     children: [
                       _QuickActionButton(
                         icon: Icons.storefront_rounded,
-                        label: 'Seller review',
+                        label: l10n.adminSellerReview,
                         onPressed: () => context.go(RoutePaths.adminSellers),
                         index: 0,
                       ),
                       _QuickActionButton(
                         icon: Icons.support_agent_rounded,
-                        label: 'Support queue',
+                        label: l10n.adminSupportQueue,
                         onPressed: () => context.go(RoutePaths.adminSupport),
                         index: 1,
                       ),
                       _QuickActionButton(
                         icon: Icons.campaign_rounded,
-                        label: 'Campaigns',
+                        label: l10n.adminCampaigns,
                         onPressed: () => context.go(RoutePaths.adminCampaigns),
                         index: 2,
                       ),
                       _QuickActionButton(
                         icon: Icons.account_balance_rounded,
-                        label: 'Financials',
+                        label: l10n.adminFinancials,
                         onPressed: () => context.go(RoutePaths.adminFinancials),
                         index: 3,
                       ),
                       _QuickActionButton(
                         icon: Icons.gavel_rounded,
-                        label: 'Moderation',
+                        label: l10n.adminModeration,
                         onPressed: () => context.go(RoutePaths.adminModeration),
                         index: 4,
                       ),
                       _QuickActionButton(
                         icon: Icons.query_stats_rounded,
-                        label: 'Notify analytics',
+                        label: l10n.adminNotifyAnalytics,
                         onPressed: () =>
                             context.go(RoutePaths.adminNotificationAnalytics),
                         index: 5,
@@ -185,11 +188,11 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
 
                   // Recent Activity
                   Text(
-                    'Recent Activity',
+                    l10n.adminRecentActivity,
                     style: TextStyle(
                       fontSize: DsTypography.titleMedium,
                       fontWeight: DsTypography.bold,
-                      color: colors.onSurface,
+                      color: palette.ink,
                     ),
                   ),
                   const SizedBox(height: DsSpacing.md),
@@ -200,9 +203,9 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
                       child: Center(child: DsLoadingIndicator()),
                     ),
                     error: (error, _) => _RecentActivityCard(
-                      title: 'Audit stream unavailable',
+                      title: l10n.adminAuditUnavailable,
                       subtitle: error.toString(),
-                      time: 'Retry from Audit logs',
+                      time: l10n.adminRetryFromAudit,
                       icon: Icons.warning_amber_rounded,
                       index: 0,
                     ),
@@ -213,13 +216,14 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
                           width: double.infinity,
                           padding: const EdgeInsets.all(DsSpacing.lg),
                           decoration: BoxDecoration(
-                            color: colors.surface,
-                            borderRadius: DsRadius.borderXl,
-                            border: Border.all(color: colors.glassBorder),
+                            color: palette.surface,
+                            borderRadius: DsRadius.borderSm,
+                            border: Border.all(color: palette.line),
                           ),
                           child: Text(
-                            'No recent administrative activity.',
-                            style: TextStyle(color: colors.onSurfaceVariant),
+                            l10n.adminNoRecentActivity,
+                            style:
+                                TextStyle(color: palette.muted),
                           ),
                         );
                       }
@@ -255,7 +259,6 @@ class _StatCard extends StatelessWidget {
     required this.icon,
     required this.trend,
     required this.trendUp,
-    required this.gradient,
     required this.index,
   });
 
@@ -264,21 +267,15 @@ class _StatCard extends StatelessWidget {
   final IconData icon;
   final String trend;
   final bool trendUp;
-  final Gradient gradient;
   final int index;
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.dsColors;
+    final palette = context.console;
+    final trendColor =
+        trendUp ? palette.positive : palette.critical;
 
-    return Container(
-      padding: const EdgeInsets.all(DsSpacing.lg),
-      decoration: BoxDecoration(
-        color: colors.surface,
-        borderRadius: DsRadius.borderXxl,
-        boxShadow: context.softShadow,
-        border: Border.all(color: colors.glassBorder),
-      ),
+    return AdminPanel(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -289,16 +286,17 @@ class _StatCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(DsSpacing.sm),
                 decoration: BoxDecoration(
-                  gradient: gradient,
-                  borderRadius: DsRadius.borderLg,
+                  color: palette.primary.withValues(alpha: .1),
+                  borderRadius: DsRadius.borderSm,
                 ),
-                child: Icon(icon, color: Colors.white, size: 20),
+                child: Icon(icon, color: palette.primary, size: 20),
               ),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
-                  color: trendUp ? colors.success.withValues(alpha: 0.15) : colors.error.withValues(alpha: 0.15),
-                  borderRadius: DsRadius.borderFull,
+                  color: trendColor.withValues(alpha: 0.1),
+                  borderRadius: DsRadius.borderSm,
+                  border: Border.all(color: trendColor.withValues(alpha: .18)),
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
@@ -306,7 +304,7 @@ class _StatCard extends StatelessWidget {
                     Icon(
                       trendUp ? Icons.trending_up_rounded : Icons.trending_down_rounded,
                       size: 14,
-                      color: trendUp ? colors.success : colors.error,
+                      color: trendColor,
                     ),
                     const SizedBox(width: 4),
                     Text(
@@ -314,7 +312,7 @@ class _StatCard extends StatelessWidget {
                       style: TextStyle(
                         fontSize: DsTypography.labelSmall,
                         fontWeight: DsTypography.semiBold,
-                        color: trendUp ? colors.success : colors.error,
+                        color: trendColor,
                       ),
                     ),
                   ],
@@ -328,7 +326,7 @@ class _StatCard extends StatelessWidget {
             style: TextStyle(
               fontSize: 28,
               fontWeight: DsTypography.bold,
-              color: colors.onSurface,
+              color: palette.ink,
               height: 1.2,
             ),
           ),
@@ -337,7 +335,7 @@ class _StatCard extends StatelessWidget {
             label,
             style: TextStyle(
               fontSize: DsTypography.labelMedium,
-              color: colors.onSurfaceVariant,
+              color: palette.muted,
             ),
           ),
         ],
@@ -361,28 +359,27 @@ class _QuickActionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.dsColors;
-
+    final palette = context.console;
     return GestureDetector(
       onTap: onPressed,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: DsSpacing.lg, vertical: DsSpacing.md),
         decoration: BoxDecoration(
-          color: colors.surface,
-          borderRadius: DsRadius.borderFull,
-          boxShadow: context.softShadow,
-          border: Border.all(color: colors.glassBorder),
+          color: palette.surface,
+          borderRadius: DsRadius.borderSm,
+          boxShadow: palette.shadow,
+          border: Border.all(color: palette.line),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon, size: 20, color: colors.primary),
+            Icon(icon, size: 20, color: palette.primary),
             const SizedBox(width: DsSpacing.sm),
             Text(
               label,
               style: TextStyle(
                 fontWeight: DsTypography.semiBold,
-                color: colors.onSurface,
+                color: palette.ink,
                 fontSize: DsTypography.labelLarge,
               ),
             ),
@@ -410,25 +407,24 @@ class _RecentActivityCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.dsColors;
-
+    final palette = context.console;
     return Container(
       margin: const EdgeInsets.only(bottom: DsSpacing.sm),
       padding: const EdgeInsets.all(DsSpacing.md),
       decoration: BoxDecoration(
-        color: colors.surface,
-        borderRadius: DsRadius.borderXl,
-        border: Border.all(color: colors.glassBorder),
+        color: palette.surface,
+        borderRadius: DsRadius.borderSm,
+        border: Border.all(color: palette.line),
       ),
       child: Row(
         children: [
           Container(
             padding: const EdgeInsets.all(DsSpacing.sm),
             decoration: BoxDecoration(
-              color: colors.surfaceVariant,
-              borderRadius: DsRadius.borderLg,
+              color: palette.surfaceAlt,
+              borderRadius: DsRadius.borderSm,
             ),
-            child: Icon(icon, size: 20, color: colors.primary),
+            child: Icon(icon, size: 20, color: palette.primary),
           ),
           const SizedBox(width: DsSpacing.md),
           Expanded(
@@ -439,7 +435,7 @@ class _RecentActivityCard extends StatelessWidget {
                   title,
                   style: TextStyle(
                     fontWeight: DsTypography.semiBold,
-                    color: colors.onSurface,
+                    color: palette.ink,
                   ),
                 ),
                 const SizedBox(height: 2),
@@ -447,7 +443,7 @@ class _RecentActivityCard extends StatelessWidget {
                   subtitle,
                   style: TextStyle(
                     fontSize: DsTypography.labelSmall,
-                    color: colors.onSurfaceVariant,
+                    color: palette.muted,
                   ),
                 ),
               ],
@@ -457,7 +453,7 @@ class _RecentActivityCard extends StatelessWidget {
             time,
             style: TextStyle(
               fontSize: DsTypography.labelSmall,
-              color: colors.onSurfaceVariant,
+              color: palette.muted,
             ),
           ),
         ],

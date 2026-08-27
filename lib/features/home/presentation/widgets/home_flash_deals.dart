@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/design_system/design_system.dart';
+import '../../../../core/localization/l10n_extension.dart';
 import '../../../../core/router/route_paths.dart';
 import '../../../discovery/domain/entities/product_collection.dart';
 import '../../domain/entities/flash_deal.dart';
@@ -36,7 +37,7 @@ class HomeFlashDeals extends ConsumerWidget {
       children: [
         HomeSectionHeader(
           eyebrow: '⚡ Limited time',
-          title: 'Flash deals',
+          title: context.l10n.homeFlashDeals,
           onSeeAll: () =>
               context.push(RoutePaths.collectionOf(ProductCollection.bestSelling.key)),
         ),
@@ -155,14 +156,16 @@ class _FlashDealCard extends StatelessWidget {
                       children: [
                         const Icon(Icons.bolt_rounded,
                             size: 14, color: Colors.white),
-                        const SizedBox(width: 4),
-                        DsCountdownTimer(
-                          endsAt: deal.endsAt,
-                          compact: true,
-                          boxColor: Colors.white.withValues(alpha: 0.18),
-                          foreground: Colors.white,
-                          separatorColor: Colors.white70,
-                        ),
+                        if (deal.endsAt != null) ...[
+                          const SizedBox(width: 4),
+                          DsCountdownTimer(
+                            endsAt: deal.endsAt!,
+                            compact: true,
+                            boxColor: Colors.white.withValues(alpha: 0.18),
+                            foreground: Colors.white,
+                            separatorColor: Colors.white70,
+                          ),
+                        ],
                       ],
                     ),
                   ),
@@ -183,16 +186,37 @@ class _FlashDealCard extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 3),
+          // Both prices are unbounded text in a fixed-width deal card, which
+          // overflowed the moment the figures became real SYP amounts
+          // («850,000 ل.س» beside a struck «1,440,000 ل.س»). The live price
+          // gets the larger share; the was-price gives way first.
           Row(
             crossAxisAlignment: CrossAxisAlignment.baseline,
             textBaseline: TextBaseline.alphabetic,
             children: [
-              Text('\$${product.price.toStringAsFixed(0)}',
-                  style: DsTypography.price(c.price, size: DsTypography.titleSmall)),
+              Flexible(
+                flex: 3,
+                child: Text(
+                  product.price?.format() ?? '',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: DsTypography.price(
+                    c.price,
+                    size: DsTypography.titleSmall,
+                  ),
+                ),
+              ),
               if (product.hasDiscount) ...[
                 const SizedBox(width: 4),
-                Text('\$${product.oldPrice!.toStringAsFixed(0)}',
-                    style: DsTypography.priceStrike(c.onSurfaceVariant)),
+                Flexible(
+                  flex: 2,
+                  child: Text(
+                    product.compareAtPrice?.format(includeSymbol: false) ?? '',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: DsTypography.priceStrike(c.onSurfaceVariant),
+                  ),
+                ),
               ],
             ],
           ),

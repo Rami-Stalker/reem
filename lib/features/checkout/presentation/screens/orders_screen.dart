@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/design_system/design_system.dart';
-import '../../../../core/design_system/components/cards/surface_card.dart';
 import '../../../../core/router/route_paths.dart';
 import '../../../../core/shared/wedgets/app/premium_app_bar.dart';
 import '../../domain/entities/order.dart';
@@ -56,8 +55,7 @@ class _OrderCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.dsColors;
-    return SurfaceCard(
+    return CustomerPanel(
       onTap: () => context.push(RoutePaths.orderDetailOf(order.id)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -70,7 +68,7 @@ class _OrderCard extends StatelessWidget {
                   style: TextStyle(
                     fontFamily: DsTypography.fontFamily,
                     fontWeight: DsTypography.bold,
-                    color: colors.onSurface,
+                    color: CustomerExperience.ink,
                   ),
                 ),
               ),
@@ -79,10 +77,12 @@ class _OrderCard extends StatelessWidget {
           ),
           const SizedBox(height: DsSpacing.xs),
           Text(
-            '${order.itemsCount} item(s) · ${_date(order.createdAt)}',
+            order.isSplit
+                ? '${order.itemsCount} قطعة من ${order.sellersCount} بائعات · ${_date(order.createdAt)}'
+                : '${order.itemsCount} قطعة · ${_date(order.createdAt)}',
             style: TextStyle(
               fontSize: DsTypography.bodySmall,
-              color: colors.onSurfaceVariant,
+              color: CustomerExperience.muted,
             ),
           ),
           const SizedBox(height: DsSpacing.sm),
@@ -91,14 +91,14 @@ class _OrderCard extends StatelessWidget {
             children: [
               Text(
                 'Total',
-                style: TextStyle(color: colors.onSurfaceVariant),
+                style: const TextStyle(color: CustomerExperience.muted),
               ),
               Text(
-                '\$${order.total.toStringAsFixed(2)}',
-                style: TextStyle(
+                order.grandTotal.format(),
+                style: const TextStyle(
                   fontFamily: DsTypography.fontFamily,
                   fontWeight: DsTypography.bold,
-                  color: colors.primary,
+                  color: CustomerExperience.rose,
                 ),
               ),
             ],
@@ -116,21 +116,32 @@ class _EmptyOrders extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.dsColors;
     return Padding(
       padding: const EdgeInsets.all(DsSpacing.xl),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.receipt_long_outlined, size: 52, color: colors.primary),
+          Container(
+            width: 84,
+            height: 84,
+            decoration: const BoxDecoration(
+              shape: BoxShape.circle,
+              gradient: CustomerExperience.signatureGradient,
+            ),
+            child: const Icon(
+              Icons.receipt_long_outlined,
+              size: 40,
+              color: Colors.white,
+            ),
+          ),
           const SizedBox(height: DsSpacing.md),
-          Text(
+          const Text(
             'No orders yet',
             style: TextStyle(
               fontFamily: DsTypography.fontFamily,
               fontWeight: DsTypography.bold,
               fontSize: DsTypography.titleMedium,
-              color: colors.onSurface,
+              color: CustomerExperience.ink,
             ),
           ),
         ],

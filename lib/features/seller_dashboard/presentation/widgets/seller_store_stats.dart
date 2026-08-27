@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../../core/design_system/design_system.dart';
+import '../../../../core/design_system/design_system.dart';
+import '../../../../core/localization/l10n_extension.dart';
 import '../providers/seller_dashboard_provider.dart';
+import 'seller_format.dart';
 
 class SellerStoreStats extends ConsumerWidget {
   const SellerStoreStats({super.key});
@@ -11,7 +13,8 @@ class SellerStoreStats extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(sellerDashboardNotifierProvider);
-    final c = context.dsColors;
+    final palette = context.atelier;
+    final l10n = context.l10n;
     final theme = Theme.of(context);
 
     if (state.isInitialLoading) {
@@ -29,10 +32,10 @@ class SellerStoreStats extends ConsumerWidget {
       padding: const EdgeInsets.symmetric(horizontal: DsSpacing.lg),
       child: Container(
         decoration: BoxDecoration(
-          color: c.card,
+          color: palette.surface,
           borderRadius: DsRadius.borderXxl,
-          border: Border.all(color: c.border.withValues(alpha: 0.5)),
-          boxShadow: context.softShadow,
+          border: Border.all(color: palette.line),
+          boxShadow: palette.shadow,
         ),
         child: Column(
           children: [
@@ -41,54 +44,74 @@ class SellerStoreStats extends ConsumerWidget {
               child: Row(
                 children: [
                   _Stat(
-                      label: 'Revenue',
-                      value: '\$${_fmt(store.totalRevenue)}',
-                      icon: Icons.attach_money_rounded,
-                      color: c.success),
-                  _Divider(c: c),
+                    label: l10n.sellerRevenue,
+                    value: store.totalRevenue.sypCompact,
+                    icon: Icons.payments_outlined,
+                    color: palette.gold,
+                  ),
+                  _Divider(color: palette.line),
                   _Stat(
-                      label: 'Orders',
-                      value: _fmtInt(store.totalOrders),
-                      icon: Icons.shopping_bag_outlined,
-                      color: c.info),
-                  _Divider(c: c),
+                    label: l10n.orders,
+                    value: formatCount(store.totalOrders),
+                    icon: Icons.shopping_bag_outlined,
+                    color: palette.series[0],
+                  ),
+                  _Divider(color: palette.line),
                   _Stat(
-                      label: 'Products',
-                      value: '${store.productsCount}',
-                      icon: Icons.inventory_2_outlined,
-                      color: c.secondary),
-                  _Divider(c: c),
+                    label: l10n.products,
+                    value: formatCount(store.productsCount),
+                    icon: Icons.inventory_2_outlined,
+                    color: palette.series[1],
+                  ),
+                  _Divider(color: palette.line),
                   _Stat(
-                      label: 'Followers',
-                      value: _fmtInt(store.followersCount),
-                      icon: Icons.people_outline_rounded,
-                      color: c.primary),
+                    label: l10n.followers,
+                    value: formatCount(store.followersCount),
+                    icon: Icons.people_outline_rounded,
+                    color: palette.series[3],
+                  ),
                 ],
               ),
             ),
-            Divider(height: 1, color: c.divider),
+            Divider(height: 1, color: palette.line),
             Padding(
               padding: const EdgeInsets.symmetric(
                   horizontal: DsSpacing.md, vertical: DsSpacing.sm),
               child: Row(
                 children: [
-                  Icon(Icons.star_rounded, size: 14, color: c.rating),
+                  Icon(
+                    Icons.star_rounded,
+                    size: 14,
+                    color: context.dsColors.rating,
+                  ),
                   const SizedBox(width: 4),
-                  Text(
-                    '${store.rating} · ${store.reviewsCount} reviews',
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      fontWeight: DsTypography.semiBold,
-                      color: c.onSurface,
+                  Flexible(
+                    child: Text(
+                      l10n.sellerRatingSummary(
+                        store.rating.toStringAsFixed(1),
+                        formatCount(store.reviewsCount),
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        fontWeight: DsTypography.semiBold,
+                        color: palette.ink,
+                      ),
                     ),
                   ),
                   const Spacer(),
-                  Icon(Icons.calendar_today_outlined,
-                      size: 12, color: c.onSurfaceVariant),
+                  Icon(
+                    Icons.calendar_today_outlined,
+                    size: 12,
+                    color: palette.muted,
+                  ),
                   const SizedBox(width: 4),
                   Text(
-                    'Member since ${store.memberSince.year}',
+                    l10n.sellerMemberSince('${store.memberSince.year}'),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                     style: theme.textTheme.labelSmall
-                        ?.copyWith(color: c.onSurfaceVariant),
+                        ?.copyWith(color: palette.muted),
                   ),
                 ],
               ),
@@ -102,16 +125,6 @@ class SellerStoreStats extends ConsumerWidget {
         .slideY(begin: 0.04, end: 0, duration: 380.ms);
   }
 
-  static String _fmt(double v) {
-    if (v >= 1000000) return '${(v / 1000000).toStringAsFixed(1)}M';
-    if (v >= 1000) return '${(v / 1000).toStringAsFixed(1)}k';
-    return v.toStringAsFixed(0);
-  }
-
-  static String _fmtInt(int v) {
-    if (v >= 1000) return '${(v / 1000).toStringAsFixed(1)}k';
-    return '$v';
-  }
 }
 
 class _Stat extends StatelessWidget {
@@ -130,7 +143,7 @@ class _Stat extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final c = context.dsColors;
+    final palette = context.atelier;
     return Expanded(
       child: Column(
         children: [
@@ -144,17 +157,29 @@ class _Stat extends StatelessWidget {
             child: Icon(icon, size: 16, color: color),
           ),
           const SizedBox(height: DsSpacing.xxs),
-          Text(
-            value,
-            style: theme.textTheme.titleSmall
-                ?.copyWith(fontWeight: DsTypography.bold, fontSize: 13),
+          // A quarter of a phone width is not enough for «184 ألف ل.س», which
+          // wrapped and pushed the currency onto its own line. Scale it down
+          // instead — a slightly smaller figure beats a broken one.
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              value,
+              maxLines: 1,
+              style: theme.textTheme.titleSmall?.copyWith(
+                fontWeight: DsTypography.bold,
+                fontSize: 13,
+                color: palette.ink,
+              ),
+            ),
           ),
           Text(
             label,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
             style: TextStyle(
               fontFamily: DsTypography.fontFamily,
               fontSize: 10,
-              color: c.onSurfaceVariant,
+              color: palette.muted,
             ),
           ),
         ],
@@ -164,11 +189,11 @@ class _Stat extends StatelessWidget {
 }
 
 class _Divider extends StatelessWidget {
-  const _Divider({required this.c});
+  const _Divider({required this.color});
 
-  final DsColorScheme c;
+  final Color color;
 
   @override
   Widget build(BuildContext context) =>
-      Container(width: 1, height: 48, color: c.divider);
+      Container(width: 1, height: 48, color: color);
 }

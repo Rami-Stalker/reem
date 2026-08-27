@@ -24,6 +24,7 @@ import '../widgets/profile_recently_viewed.dart';
 import '../widgets/profile_referral_card.dart';
 import '../widgets/profile_stats.dart';
 import '../widgets/profile_wishlist_preview.dart';
+import '../../../../core/localization/l10n_extension.dart';
 
 /// Role-aware profile dispatcher — renders [SellerProfileScreen] for sellers
 /// and the buyer profile hub for customers.
@@ -84,16 +85,10 @@ class _BuyerProfileScreenState extends ConsumerState<_BuyerProfileScreen> {
     if (user == null) {
       return ReemScrollPage(
         slivers: [
-          const PremiumAppBar(title: 'Profile'),
-          SliverFillRemaining(
+          PremiumAppBar(title: context.l10n.profile),
+          const SliverFillRemaining(
             hasScrollBody: false,
-            child: DsEmptyState(
-              icon: Icons.person_outline_rounded,
-              title: 'Sign in to Reem',
-              message: 'Access your profile, orders and saved pieces.',
-              actionLabel: 'Sign in',
-              onAction: () => context.push(RoutePaths.login),
-            ),
+            child: _GuestProfileExperience(),
           ),
         ],
       );
@@ -163,6 +158,124 @@ class _BuyerProfileScreenState extends ConsumerState<_BuyerProfileScreen> {
   }
 }
 
+class _GuestProfileExperience extends StatelessWidget {
+  const _GuestProfileExperience();
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.dsColors;
+    return Padding(
+      padding: DsSpacing.screenPadding,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Icon(Icons.person_outline_rounded, size: 58, color: c.primary),
+          const SizedBox(height: DsSpacing.xl),
+          Text(
+            context.l10n.guestProfile,
+            textAlign: TextAlign.center,
+            style: Theme.of(
+              context,
+            ).textTheme.headlineSmall?.copyWith(fontWeight: DsTypography.bold),
+          ),
+          const SizedBox(height: DsSpacing.sm),
+          Text(
+            'Browse freely, discover products, and explore Reem. Create an account when you are ready to save everything.',
+            textAlign: TextAlign.center,
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(color: c.onSurfaceVariant),
+          ),
+          const SizedBox(height: DsSpacing.xl),
+          SurfaceCard(
+            child: Column(
+              children: [
+                _GuestBenefit(
+                  icon: Icons.favorite_border_rounded,
+                  title: context.l10n.saveYourProgress,
+                  message:
+                      context.l10n.savedProgressBlurb,
+                ),
+                SizedBox(height: DsSpacing.md),
+                _GuestBenefit(
+                  icon: Icons.auto_awesome_rounded,
+                  title: context.l10n.personalRecommendations,
+                  message:
+                      context.l10n.personalRecommendationsBlurb,
+                ),
+                SizedBox(height: DsSpacing.md),
+                _GuestBenefit(
+                  icon: Icons.verified_user_outlined,
+                  title: context.l10n.secureAccountControls,
+                  message:
+                      context.l10n.manageSecurityBlurb,
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: DsSpacing.xl),
+          PrimaryButton(
+            label: context.l10n.signIn,
+            icon: Icons.login_rounded,
+            onPressed: () => context.push(RoutePaths.login),
+          ),
+          const SizedBox(height: DsSpacing.sm),
+          SecondaryButton(
+            label: context.l10n.createAccount,
+            icon: Icons.person_add_alt_rounded,
+            onPressed: () => context.push(RoutePaths.register),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _GuestBenefit extends StatelessWidget {
+  const _GuestBenefit({
+    required this.icon,
+    required this.title,
+    required this.message,
+  });
+
+  final IconData icon;
+  final String title;
+  final String message;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.dsColors;
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Icon(icon, color: c.primary, size: 22),
+        const SizedBox(width: DsSpacing.md),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                  fontWeight: DsTypography.semiBold,
+                ),
+              ),
+              const SizedBox(height: 2),
+              Text(
+                message,
+                style: Theme.of(
+                  context,
+                ).textTheme.bodySmall?.copyWith(color: c.onSurfaceVariant),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
 class _VersionFooter extends StatelessWidget {
   const _VersionFooter();
 
@@ -185,7 +298,7 @@ class _VersionFooter extends StatelessWidget {
           ),
           const SizedBox(height: 2),
           Text(
-            'Version 1.0.0',
+            context.l10n.appVersion('1.0.0'),
             style: TextStyle(
               fontSize: DsTypography.labelSmall,
               color: c.onSurfaceVariant,

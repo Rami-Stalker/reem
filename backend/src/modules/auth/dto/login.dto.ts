@@ -1,11 +1,15 @@
-import { IsNotEmpty, IsOptional, IsString, Matches, MaxLength } from 'class-validator';
-import { PHONE_REGEX } from '../../../common/constants';
+import { IsNotEmpty, IsOptional, IsString, MaxLength } from 'class-validator';
+import { PhoneField } from '../../../common/phone/phone';
 
+/**
+ * Identity is phone-only (Q43 P1). The `identifier` and `email` fields this
+ * DTO used to accept are gone: they gave the platform a second login namespace
+ * that the requirements do not have, and the `'@'` branch that routed to
+ * `findByEmail` meant an account could be reached by a column the product
+ * treats as optional contact data.
+ */
 export class LoginDto {
-  @IsString()
-  @Matches(PHONE_REGEX, {
-    message: 'phone must be a valid phone number (7–15 digits, optional +)',
-  })
+  @PhoneField()
   phone!: string;
 
   @IsString()

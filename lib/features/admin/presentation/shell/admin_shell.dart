@@ -13,8 +13,8 @@ class AdminShell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final palette = context.console;
     final l10n = context.l10n;
-    final colors = context.dsColors;
     final path = GoRouterState.of(context).uri.path;
     final width = MediaQuery.sizeOf(context).width;
     final destinations = AppRoleExperience.admin.navigation
@@ -23,12 +23,14 @@ class AdminShell extends StatelessWidget {
 
     if (width < 720) {
       return Scaffold(
-        backgroundColor: colors.background,
+        backgroundColor: palette.background,
         appBar: AppBar(
+          backgroundColor: palette.nav,
+          foregroundColor: Colors.white,
           title: Text(l10n.adminPanel),
           actions: [
             IconButton(
-              tooltip: 'Administrator settings',
+              tooltip: l10n.adminSettings,
               onPressed: () => context.go(RoutePaths.adminSystemSettings),
               icon: const Icon(Icons.admin_panel_settings_rounded),
             ),
@@ -46,16 +48,21 @@ class AdminShell extends StatelessWidget {
     }
 
     return Scaffold(
-      backgroundColor: colors.background,
-      body: Row(
+      backgroundColor: palette.background,
+      body: Stack(
         children: [
-          _AdminNavigation(
-            destinations: destinations,
-            selectedPath: path,
-            extended: width >= 1100,
+          const AdminChromeBackground(),
+          Row(
+            children: [
+              _AdminNavigation(
+                destinations: destinations,
+                selectedPath: path,
+                extended: width >= 1100,
+              ),
+              VerticalDivider(width: 1, color: palette.line),
+              Expanded(child: child),
+            ],
           ),
-          const VerticalDivider(width: 1),
-          Expanded(child: child),
         ],
       ),
     );
@@ -75,11 +82,11 @@ class _AdminNavigation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.dsColors;
-
+    final l10n = context.l10n;
+    final palette = context.console;
     return Container(
       width: extended ? 260 : 88,
-      color: colors.surface,
+      color: palette.nav,
       child: SafeArea(
         child: Column(
           children: [
@@ -121,7 +128,7 @@ class _AdminNavigation extends StatelessWidget {
                   path: RoutePaths.securitySettings,
                   icon: Icons.lock_outline_rounded,
                   selectedIcon: Icons.lock_rounded,
-                  label: 'Security',
+                  label: l10n.adminSecurity,
                 ),
                 selected: false,
                 extended: extended,
@@ -143,15 +150,15 @@ class _AdminHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final colors = context.dsColors;
     final mark = Container(
       width: 44,
       height: 44,
       decoration: BoxDecoration(
-        color: colors.primary.withValues(alpha: 0.12),
-        borderRadius: DsRadius.borderMd,
+        color: Colors.white.withValues(alpha: .08),
+        borderRadius: DsRadius.borderSm,
+        border: Border.all(color: Colors.white.withValues(alpha: .1)),
       ),
-      child: Icon(Icons.admin_panel_settings_rounded, color: colors.primary),
+      child: const Icon(Icons.admin_panel_settings_rounded, color: Colors.white),
     );
 
     if (!extended) return mark;
@@ -168,7 +175,7 @@ class _AdminHeader extends StatelessWidget {
             style: TextStyle(
               fontSize: DsTypography.titleSmall,
               fontWeight: DsTypography.semiBold,
-              color: colors.onSurface,
+              color: Colors.white,
             ),
           ),
         ),
@@ -192,11 +199,11 @@ class _AdminNavTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.dsColors;
+    final palette = context.console;
     final icon = Icon(
       selected ? item.selectedIcon : item.icon,
       size: 22,
-      color: selected ? colors.primary : colors.onSurfaceVariant,
+      color: selected ? Colors.white : palette.navMuted,
     );
     final content = AnimatedContainer(
       duration: DsMotion.fast,
@@ -204,9 +211,9 @@ class _AdminNavTile extends StatelessWidget {
       height: 48,
       decoration: BoxDecoration(
         color: selected
-            ? colors.primary.withValues(alpha: 0.12)
+            ? palette.primary.withValues(alpha: 0.28)
             : Colors.transparent,
-        borderRadius: DsRadius.borderMd,
+        borderRadius: DsRadius.borderSm,
       ),
       child: extended
           ? Row(
@@ -224,7 +231,7 @@ class _AdminNavTile extends StatelessWidget {
                       fontWeight: selected
                           ? DsTypography.semiBold
                           : DsTypography.medium,
-                      color: selected ? colors.primary : colors.onSurface,
+                      color: selected ? Colors.white : palette.navMuted,
                     ),
                   ),
                 ),
@@ -243,7 +250,7 @@ class _AdminNavTile extends StatelessWidget {
         child: Material(
           color: Colors.transparent,
           child: InkWell(
-            borderRadius: DsRadius.borderMd,
+            borderRadius: DsRadius.borderSm,
             onTap: onTap,
             child: content,
           ),

@@ -25,7 +25,7 @@ class ProfileCover extends StatelessWidget {
       automaticallyImplyLeading: false,
       leading: canPop
           ? Padding(
-              padding: const EdgeInsets.only(left: DsSpacing.sm),
+              padding: const EdgeInsetsDirectional.only(start: DsSpacing.sm),
               child: Center(
                 child: DsIconButton(
                   icon: Icons.arrow_back_ios_new_rounded,

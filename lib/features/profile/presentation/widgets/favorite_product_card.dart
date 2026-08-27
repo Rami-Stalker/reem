@@ -6,6 +6,7 @@ import 'package:reem/core/shared/entities/product.dart';
 
 import '../../../../core/design_system/design_system.dart';
 import '../../../../core/router/route_names.dart';
+import '../../../../core/localization/l10n_extension.dart';
 
 class FavoriteProductCard extends StatelessWidget {
   const FavoriteProductCard({super.key, required this.product});
@@ -17,7 +18,7 @@ class FavoriteProductCard extends StatelessWidget {
     final colors = context.dsColors;
     return Semantics(
       button: true,
-      label: 'Open ${product.title}',
+      label: context.l10n.a11yOpen(product.title),
       child: GestureDetector(
         onTap: () => context.pushNamed(
           RouteNames.productDetails,
@@ -94,7 +95,7 @@ class FavoriteProductCard extends StatelessWidget {
                             children: [
                               Expanded(
                                 child: Text(
-                                  '\$${product.price.toStringAsFixed(2)}',
+                                  product.price?.format() ?? '',
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(

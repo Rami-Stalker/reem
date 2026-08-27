@@ -3,6 +3,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../../core/design_system/design_system.dart';
+import '../../../../core/localization/l10n_extension.dart';
 import '../providers/seller_dashboard_provider.dart';
 
 class SellerConversionMetricsWidget extends ConsumerWidget {
@@ -31,7 +32,7 @@ class SellerConversionMetricsWidget extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Conversion metrics',
+            context.l10n.sellerConversionMetrics,
             style: theme.textTheme.titleMedium
                 ?.copyWith(fontWeight: DsTypography.bold),
           ),
@@ -39,7 +40,7 @@ class SellerConversionMetricsWidget extends ConsumerWidget {
           Row(
             children: [
               _MetricCard(
-                label: 'Product views',
+                label: context.l10n.sellerProductViews,
                 value: _fmt(m.productViews),
                 trend: m.viewsTrend,
                 icon: Icons.visibility_outlined,
@@ -47,7 +48,7 @@ class SellerConversionMetricsWidget extends ConsumerWidget {
               ),
               const SizedBox(width: DsSpacing.sm),
               _MetricCard(
-                label: 'Wishlist adds',
+                label: context.l10n.sellerWishlistAdds,
                 value: _fmt(m.wishlistAdds),
                 trend: m.wishlistTrend,
                 icon: Icons.favorite_outline_rounded,
@@ -59,7 +60,7 @@ class SellerConversionMetricsWidget extends ConsumerWidget {
           Row(
             children: [
               _MetricCard(
-                label: 'Cart adds',
+                label: context.l10n.sellerCartAdds,
                 value: _fmt(m.cartAdds),
                 trend: m.cartTrend,
                 icon: Icons.shopping_cart_outlined,
@@ -67,7 +68,7 @@ class SellerConversionMetricsWidget extends ConsumerWidget {
               ),
               const SizedBox(width: DsSpacing.sm),
               _MetricCard(
-                label: 'Conversion rate',
+                label: context.l10n.sellerConversionRate,
                 value: '${m.conversionRate.toStringAsFixed(2)}%',
                 trend: null,
                 icon: Icons.swap_vert_rounded,

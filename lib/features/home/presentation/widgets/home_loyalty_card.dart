@@ -6,6 +6,7 @@ import '../../../../core/design_system/design_system.dart';
 import '../../../../core/router/route_paths.dart';
 import '../../../../core/shared/entities/loyalty.dart';
 import '../providers/home_content_provider.dart';
+import '../../../../core/localization/l10n_extension.dart';
 
 /// The loyalty & rewards widget — a jewel-toned membership card showing points,
 /// tier progress, available coupons and a personalized reward nudge.
@@ -81,7 +82,7 @@ class _LoyaltyBody extends StatelessWidget {
                 Text('${loyalty.tier.label} member',
                     style: DsTypography.overline(faint)),
                 Text(
-                  'Reem Rewards',
+                  context.l10n.homeLoyaltyTitle,
                   style: TextStyle(
                     fontFamily: DsTypography.fontFamilyDisplay,
                     fontFamilyFallback: DsTypography.displayFallback,
@@ -156,7 +157,7 @@ class _LoyaltyBody extends StatelessWidget {
             Expanded(
               child: _LoyaltyAction(
                 icon: Icons.redeem_rounded,
-                label: 'Redeem',
+                label: context.l10n.redeem,
                 onTap: () => context.push(RoutePaths.rewards),
               ),
             ),

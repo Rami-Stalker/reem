@@ -10,13 +10,33 @@ import {
   Post,
 } from '@nestjs/common';
 import { UserRole } from '@prisma/client';
-import { Roles } from '../../common/decorators/roles.decorator';
+import { Authorize } from '../../common/decorators/authorize.decorator';
+import { AppPermission } from '../../common/permissions';
 import { CurrentUser, AuthUser } from '../../common/decorators/current-user.decorator';
 import { SellerStoriesService } from './seller-stories.service';
 import { CreateStoryDto } from './dto/create-story.dto';
 
 /** Seller-only story authoring + analytics (viewers, reactions, reach). */
-@Roles(UserRole.SELLER, UserRole.ADMIN)
+@Authorize(
+  {
+    action: 'manage',
+    resource: 'story',
+    roles: [UserRole.SELLER],
+    permissions: [AppPermission.storyManage],
+    requireSellerVerified: true,
+  },
+  {
+    action: 'moderate',
+    resource: 'story',
+    roles: [
+      UserRole.SUPER_ADMIN,
+      UserRole.OPERATIONS_ADMIN,
+      UserRole.CONTENT_MODERATOR,
+      UserRole.ADMIN,
+    ],
+    permissions: [AppPermission.storyManage],
+  },
+)
 @Controller('seller/stories')
 export class SellerStoriesController {
   constructor(private readonly seller: SellerStoriesService) {}

@@ -185,7 +185,7 @@ class _StoryViewerScreenState extends State<StoryViewerScreen>
                       widget.stories.length,
                       (index) => Expanded(
                         child: Padding(
-                          padding: const EdgeInsets.only(right: 2),
+                          padding: const EdgeInsetsDirectional.only(end: 2),
                           child: _ProgressBar(
                             progress: index < _currentIndex
                                 ? 1

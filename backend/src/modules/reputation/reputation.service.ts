@@ -4,7 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import {
-  OrderStatus,
+  SellerOrderStatus,
   Prisma,
   ReviewStatus,
   ReviewTargetType,
@@ -353,19 +353,24 @@ export class ReputationService {
             verifiedPurchase: true,
           },
         }),
-        this.prisma.order.count({
-          where: { items: { some: { product: { sellerId } } } },
+        // Counted per sub-order: the old query counted a whole multi-seller
+        // order as delivered (or cancelled) for EVERY participating seller, so
+        // one seller's cancellation damaged all their co-sellers' scores.
+        this.prisma.sellerOrder.count({ where: { sellerId } }),
+        this.prisma.sellerOrder.count({
+          where: { sellerId, status: SellerOrderStatus.DELIVERED },
         }),
-        this.prisma.order.count({
+        this.prisma.sellerOrder.count({
           where: {
-            status: OrderStatus.DELIVERED,
-            items: { some: { product: { sellerId } } },
-          },
-        }),
-        this.prisma.order.count({
-          where: {
-            status: { in: [OrderStatus.CANCELLED, OrderStatus.REFUNDED] },
-            items: { some: { product: { sellerId } } },
+            sellerId,
+            status: {
+              in: [
+                SellerOrderStatus.CANCELLED_BY_SELLER,
+                SellerOrderStatus.CANCELLED_BY_CUSTOMER,
+                SellerOrderStatus.REJECTED_ON_DELIVERY,
+                SellerOrderStatus.REFUNDED,
+              ],
+            },
           },
         }),
         this.prisma.trustedSellerVerification.findUnique({
@@ -442,8 +447,12 @@ export class ReputationService {
       where: {
         id: orderId,
         userId,
-        status: OrderStatus.DELIVERED,
-        items: { some: { productId } },
+        sellerOrders: {
+          some: {
+            status: SellerOrderStatus.DELIVERED,
+            items: { some: { productId } },
+          },
+        },
       },
       select: { id: true },
     });
@@ -459,8 +468,9 @@ export class ReputationService {
       where: {
         id: orderId,
         userId,
-        status: OrderStatus.DELIVERED,
-        items: { some: { product: { sellerId } } },
+        sellerOrders: {
+          some: { sellerId, status: SellerOrderStatus.DELIVERED },
+        },
       },
       select: { id: true },
     });

@@ -8,6 +8,7 @@ export interface RequestContext {
   platform?: string;
   appVersion?: string;
   fingerprint?: string;
+  guestToken?: string;
 }
 
 const firstHeader = (value: string | string[] | undefined) =>
@@ -25,5 +26,6 @@ export function requestContextFrom(req: Request): RequestContext {
     platform: firstHeader(req.headers['x-reem-platform']),
     appVersion: firstHeader(req.headers['x-reem-app-version']),
     fingerprint: firstHeader(req.headers['x-reem-device-fingerprint']),
+    guestToken: firstHeader(req.headers['x-reem-guest-token']),
   };
 }

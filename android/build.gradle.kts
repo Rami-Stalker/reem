@@ -5,6 +5,21 @@ allprojects {
     }
 }
 
+val androidBuildToolsVersion = "36.1.0"
+
+subprojects {
+    pluginManager.withPlugin("com.android.application") {
+        extensions.configure<com.android.build.gradle.BaseExtension>("android") {
+            buildToolsVersion(androidBuildToolsVersion)
+        }
+    }
+    pluginManager.withPlugin("com.android.library") {
+        extensions.configure<com.android.build.gradle.BaseExtension>("android") {
+            buildToolsVersion(androidBuildToolsVersion)
+        }
+    }
+}
+
 val newBuildDir: Directory =
     rootProject.layout.buildDirectory
         .dir("../../build")

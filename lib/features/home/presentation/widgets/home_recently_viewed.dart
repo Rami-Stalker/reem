@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/localization/l10n_extension.dart';
 import '../../../../core/router/route_paths.dart';
 import '../../../../core/shared/entities/product.dart';
 import '../../../../core/shared/wedgets/product/product_rail.dart';
@@ -22,8 +23,8 @@ class HomeRecentlyViewed extends ConsumerWidget {
     );
 
     return ProductRail(
-      eyebrow: 'Jump back in',
-      title: 'Recently viewed',
+      eyebrow: context.l10n.homeRecentlyViewedEyebrow,
+      title: context.l10n.homeRecentlyViewed,
       products: products,
       isLoading: isLoading,
       onTapProduct: (p) =>

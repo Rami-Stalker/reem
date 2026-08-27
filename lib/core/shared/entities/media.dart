@@ -25,11 +25,17 @@ class MediaItem extends Equatable {
   final int sortOrder;
   final String? thumbnailUrl;
 
+  /// A blurred stand-in, drawn while the photograph is still arriving. Null for
+  /// an external link and for anything uploaded before the server started
+  /// deriving one — the card then falls back to a plain placeholder.
+  final String? blurHash;
+
   const MediaItem({
     required this.url,
     this.type = MediaType.image,
     this.sortOrder = 0,
     this.thumbnailUrl,
+    this.blurHash,
   });
 
   bool get isVideo => type.isVideo;
@@ -39,5 +45,5 @@ class MediaItem extends Equatable {
   String get displayUrl => thumbnailUrl ?? url;
 
   @override
-  List<Object?> get props => [url, type, sortOrder, thumbnailUrl];
+  List<Object?> get props => [url, type, sortOrder, thumbnailUrl, blurHash];
 }

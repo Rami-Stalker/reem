@@ -2,27 +2,28 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
 import '../../../../core/design_system/design_system.dart';
+import '../../../../core/localization/l10n_extension.dart';
 
 class CouponsStrip extends StatelessWidget {
   const CouponsStrip({super.key});
 
-  static const _coupons = [
-    ('SUMMER20', '20% off'),
-    ('GIFT50', '\$50 gifts'),
-    ('VIP15', 'VIP 15%'),
-    ('FREESHIP', 'Free ship'),
-  ];
-
   @override
   Widget build(BuildContext context) {
+    final coupons = <(String, String)>[
+      ('SUMMER20', '20%'),
+      ('GIFT50', '\$50'),
+      ('VIP15', 'VIP 15%'),
+      ('FREESHIP', context.l10n.couponFreeShipping),
+    ];
+
     return SizedBox(
       height: 44,
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
-        itemCount: _coupons.length,
-        separatorBuilder: (_, __) => const SizedBox(width: DsSpacing.sm),
+        itemCount: coupons.length,
+        separatorBuilder: (_, _) => const SizedBox(width: DsSpacing.sm),
         itemBuilder: (context, index) {
-          final (code, label) = _coupons[index];
+          final (code, label) = coupons[index];
           return _CouponChip(code: code, label: label, index: index);
         },
       ),

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../localization/l10n_extension.dart';
+
 import '../../foundation/motion/animations/fade_animations.dart';
 import '../../foundation/theme/extensions/color_extension.dart';
 import '../../foundation/tokens/ds_radius.dart';
@@ -8,59 +10,73 @@ import '../../foundation/tokens/ds_typography.dart';
 import '../buttons/button_styles.dart';
 import '../buttons/ds_button.dart';
 
+/// The scenario an empty state describes, so its copy can be resolved from
+/// the current locale rather than frozen at construction.
+enum DsEmptyStateKind { custom, cart, favorites, search }
+
 /// A graceful empty state — soft icon medallion, friendly copy and an optional
 /// call to action. Use the named constructors for common scenarios.
+///
+/// Copy is nullable and defaults are resolved in [build] from [kind]. They used
+/// to be `const` English strings in the constructor, which made this component
+/// structurally impossible to localise: a `const` default cannot read
+/// `context.l10n`, so every empty state in the app was English in Arabic.
 class DsEmptyState extends StatelessWidget {
   const DsEmptyState({
     super.key,
     required this.icon,
-    required this.title,
+    this.title,
     this.message,
     this.actionLabel,
     this.onAction,
     this.secondaryActionLabel,
     this.onSecondaryAction,
     this.illustration,
+    this.kind = DsEmptyStateKind.custom,
   });
 
   /// Empty shopping bag / cart.
   const DsEmptyState.cart({
     super.key,
-    this.title = 'Your bag is empty',
-    this.message = 'Discover beautiful pieces made just for you.',
-    this.actionLabel = 'Start shopping',
-    this.onAction,
-    this.secondaryActionLabel,
-    this.onSecondaryAction,
-    this.illustration,
-  }) : icon = Icons.shopping_bag_outlined;
-
-  /// No favorites yet.
-  const DsEmptyState.favorites({
-    super.key,
-    this.title = 'No favorites yet',
-    this.message = 'Tap the heart on anything you love to save it here.',
+    this.title,
+    this.message,
     this.actionLabel,
     this.onAction,
     this.secondaryActionLabel,
     this.onSecondaryAction,
     this.illustration,
-  }) : icon = Icons.favorite_border_rounded;
+  })  : icon = Icons.shopping_bag_outlined,
+        kind = DsEmptyStateKind.cart;
+
+  /// No favourites yet.
+  const DsEmptyState.favorites({
+    super.key,
+    this.title,
+    this.message,
+    this.actionLabel,
+    this.onAction,
+    this.secondaryActionLabel,
+    this.onSecondaryAction,
+    this.illustration,
+  })  : icon = Icons.favorite_border_rounded,
+        kind = DsEmptyStateKind.favorites;
 
   /// Empty search results.
   const DsEmptyState.search({
     super.key,
-    this.title = 'No results found',
-    this.message = 'Try a different search or adjust your filters.',
+    this.title,
+    this.message,
     this.actionLabel,
     this.onAction,
     this.secondaryActionLabel,
     this.onSecondaryAction,
     this.illustration,
-  }) : icon = Icons.search_off_rounded;
+  })  : icon = Icons.search_off_rounded,
+        kind = DsEmptyStateKind.search;
 
   final IconData icon;
-  final String title;
+  final DsEmptyStateKind kind;
+  final String? title;
   final String? message;
   final String? actionLabel;
   final VoidCallback? onAction;
@@ -74,6 +90,17 @@ class DsEmptyState extends StatelessWidget {
   Widget build(BuildContext context) {
     final c = context.dsColors;
     final theme = Theme.of(context);
+    final l10n = context.l10n;
+
+    final resolvedTitle = title ??
+        switch (kind) {
+          DsEmptyStateKind.cart => l10n.emptyCart,
+          DsEmptyStateKind.favorites => l10n.emptyWishlist,
+          DsEmptyStateKind.search => l10n.emptyFeed,
+          DsEmptyStateKind.custom => '',
+        };
+    final resolvedAction = actionLabel ??
+        (kind == DsEmptyStateKind.cart ? l10n.emptyCartAction : null);
 
     return Center(
       child: DsFadeAnimations.fadeIn(
@@ -94,7 +121,7 @@ class DsEmptyState extends StatelessWidget {
                   ),
               const SizedBox(height: DsSpacing.lg),
               Text(
-                title,
+                resolvedTitle,
                 textAlign: TextAlign.center,
                 style: theme.textTheme.titleLarge
                     ?.copyWith(fontWeight: DsTypography.bold),
@@ -108,10 +135,10 @@ class DsEmptyState extends StatelessWidget {
                       ?.copyWith(color: c.onSurfaceVariant),
                 ),
               ],
-              if (actionLabel != null && onAction != null) ...[
+              if (resolvedAction != null && onAction != null) ...[
                 const SizedBox(height: DsSpacing.xl),
                 DsButton(
-                  label: actionLabel!,
+                  label: resolvedAction,
                   onPressed: onAction,
                   isExpanded: false,
                 ),

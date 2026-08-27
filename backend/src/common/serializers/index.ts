@@ -3,6 +3,7 @@ export * from './product.serializer';
 export * from './post.serializer';
 export * from './comment.serializer';
 export * from './story.serializer';
+export * from './commerce-content.serializer';
 export * from './order.serializer';
 export * from './settings.serializer';
 export * from './chat.serializer';

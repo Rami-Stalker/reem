@@ -6,6 +6,7 @@ import '../../../../core/design_system/design_system.dart';
 import '../../../../core/router/route_paths.dart';
 import '../../domain/entities/profile_overview.dart';
 import '../providers/profile_overview_provider.dart';
+import '../../../../core/localization/l10n_extension.dart';
 
 /// Profile completion — a progress ring, the next nudge and a checklist of
 /// steps. Collapses into a celebratory state at 100%.
@@ -52,17 +53,17 @@ class ProfileCompletionCard extends ConsumerWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        complete ? 'You’re all set ✨' : 'Complete your profile',
+                        complete ? context.l10n.allSet : context.l10n.completeProfile,
                         style: theme.textTheme.titleMedium
                             ?.copyWith(fontWeight: DsTypography.bold),
                       ),
                       const SizedBox(height: 2),
                       Text(
                         complete
-                            ? 'Your profile looks beautiful.'
+                            ? context.l10n.profileLooksBeautiful
                             : next != null
-                                ? 'Next: ${next.label}'
-                                : 'A few quick steps to a richer experience.',
+                                ? context.l10n.nextStep(next.label)
+                                : context.l10n.quickSteps,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style: theme.textTheme.bodySmall
@@ -71,7 +72,7 @@ class ProfileCompletionCard extends ConsumerWidget {
                       if (!complete) ...[
                         const SizedBox(height: DsSpacing.sm),
                         DsButton(
-                          label: 'Complete profile',
+                          label: context.l10n.completeProfile,
                           size: DsButtonSize.sm,
                           variant: DsButtonVariant.tonal,
                           isExpanded: false,

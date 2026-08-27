@@ -3,7 +3,8 @@ class RewardsHub {
     required this.points,
     required this.lifetimePoints,
     required this.tier,
-    required this.redeemRate,
+    required this.redeemStep,
+    required this.redeemValueSyp,
     required this.membership,
     required this.cashback,
     required this.referral,
@@ -13,7 +14,14 @@ class RewardsHub {
   final int points;
   final int lifetimePoints;
   final String tier;
-  final int redeemRate;
+  /// Q43 — points convert in steps of [redeemStep], each step worth
+  /// [redeemValueSyp] of wallet credit.
+  ///
+  /// A single ratio used to stand here, and it disagreed with the rate the
+  /// wallet actually credited by orders of magnitude. Two numbers, because the
+  /// client's answer has two: «كل 10 نقاط = 5000 ل.س».
+  final int redeemStep;
+  final int redeemValueSyp;
   final MembershipSummary membership;
   final CashbackSummary cashback;
   final ReferralSummary referral;

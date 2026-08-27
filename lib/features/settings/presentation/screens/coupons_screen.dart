@@ -1,45 +1,101 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../core/design_system/design_system.dart';
-import '../../../../core/design_system/patterns/reem_page_scaffold.dart';
-import '../../../../core/shared/wedgets/app/premium_app_bar.dart';
-import '../../../../core/shared/wedgets/app/reem_section_header.dart';
-class CouponsScreen extends StatelessWidget {
+import '../../../../core/router/route_paths.dart';
+import '../../../../core/shared/value_objects/money_format.dart';
+import '../../../cart/presentation/providers/cart_providers.dart';
+import '../../../checkout/presentation/providers/applied_coupon_provider.dart';
+import '../../domain/entities/coupon_entity.dart';
+import '../providers/coupon_apply_provider.dart';
+import '../providers/coupons_provider.dart';
+
+/// Her coupons.
+///
+/// This screen used to list four invented codes — `SUMMER20`, `GLOW15`,
+/// `FREESHIP`, `VIP25` — in English, priced in dollars, on a platform that
+/// charges in Syrian pounds. Tapping one copied it, and checkout then refused
+/// it, because no such coupon has ever existed. The server has answered
+/// `GET /coupons` with her real, unexpired, still-redeemable offers the whole
+/// time; the data layer to read it was already written and simply never
+/// called.
+///
+/// Applying happens here rather than only at checkout because this is where
+/// she is looking at the offer. The eligibility answer belongs next to the
+/// choice: «حد أدنى ٥٠٬٠٠٠ ل.س» said now is a basket she can still add to,
+/// said at checkout it is an order that fails at the end.
+class CouponsScreen extends ConsumerWidget {
   const CouponsScreen({super.key});
 
-  static const _coupons = [
-    ('SUMMER20', '20% off entire order', 'Min. \$50'),
-    ('GLOW15', '15% off beauty', 'Expires in 3 days'),
-    ('FREESHIP', 'Free shipping', 'No minimum'),
-    ('VIP25', '25% VIP exclusive', 'Members only'),
-  ];
-
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final coupons = ref.watch(couponsProvider);
+    final applied = ref.watch(appliedCouponProvider);
+    final cart = ref.watch(cartNotifierProvider).cart;
+
+    // A discount was quoted against one subtotal; once the basket moves, the
+    // figure on screen is a promise the order will not keep.
+    ref.listen(
+      cartNotifierProvider.select((state) => state.cart.summary.subtotal),
+      (_, subtotal) => ref
+          .read(appliedCouponProvider.notifier)
+          .invalidateForBasket(subtotal),
+    );
+
     return ReemScrollPage(
       slivers: [
-        const PremiumAppBar(title: 'Coupons', showBack: true),
+        const PremiumAppBar(title: 'الكوبونات', showBack: true),
         SliverPadding(
           padding: const EdgeInsets.all(DsSpacing.lg),
           sliver: SliverList(
             delegate: SliverChildListDelegate([
               const ReemSectionHeader(
-                title: 'Your offers',
-                subtitle: 'Tap to copy code at checkout',
+                title: 'عروضكِ',
+                subtitle: 'طبّقي العرض على سلّتكِ، أو انسخي الرمز',
               ),
               const SizedBox(height: DsSpacing.lg),
-              for (var i = 0; i < _coupons.length; i++)
-                Padding(
-                  padding: const EdgeInsets.only(bottom: DsSpacing.md),
-                  child: _CouponTicket(
-                    code: _coupons[i].$1,
-                    title: _coupons[i].$2,
-                    subtitle: _coupons[i].$3,
-                    index: i,
-                  ),
+
+              if (applied != null) ...[
+                _AppliedBanner(
+                  code: applied.code,
+                  discount: applied.discount.format(),
+                  onRemove: () =>
+                      ref.read(appliedCouponProvider.notifier).clear(),
+                  onCheckout: () => context.push(RoutePaths.checkout),
                 ),
+                const SizedBox(height: DsSpacing.lg),
+              ] else if (!cart.isEmpty) ...[
+                _BasketHint(subtotal: cart.summary.subtotal?.format()),
+                const SizedBox(height: DsSpacing.lg),
+              ],
+
+              coupons.when(
+                loading: () => const _CouponsSkeleton(),
+                error: (_, _) => _CouponsFailed(
+                  onRetry: () => ref.invalidate(couponsProvider),
+                ),
+                data: (list) {
+                  final redeemable = list
+                      .where((coupon) => coupon.isRedeemable)
+                      .toList();
+                  if (redeemable.isEmpty) return const _NoCoupons();
+                  return Column(
+                    children: [
+                      for (var i = 0; i < redeemable.length; i++)
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: DsSpacing.md),
+                          child: _CouponTicket(
+                            coupon: redeemable[i],
+                            index: i,
+                          ),
+                        ),
+                    ],
+                  );
+                },
+              ),
             ]),
           ),
         ),
@@ -48,85 +104,451 @@ class CouponsScreen extends StatelessWidget {
   }
 }
 
-class _CouponTicket extends StatelessWidget {
-  const _CouponTicket({
+class _CouponTicket extends ConsumerWidget {
+  const _CouponTicket({required this.coupon, required this.index});
+
+  final CouponEntity coupon;
+  final int index;
+
+  /// «خصم ٢٠٪» or «خصم ٥٬٠٠٠ ل.س», from what the coupon actually is.
+  String get _headline => switch (coupon.kind) {
+    CouponKind.percent => 'خصم ${coupon.discountPercent.toStringAsFixed(0)}٪',
+    CouponKind.fixed => 'خصم ${(coupon.amountOff ?? 0).sypFull}',
+    CouponKind.unknown => coupon.title,
+  };
+
+  /// The conditions, in the order they matter to her: the floor she has to
+  /// reach, how long she has, and whether it is nearly spent.
+  List<String> _conditions() {
+    final parts = <String>[];
+
+    final minimum = coupon.minOrderAmount;
+    if (minimum != null && minimum > 0) {
+      parts.add('حد أدنى ${minimum.sypFull}');
+    }
+
+    final days = coupon.expiresAt.difference(DateTime.now()).inDays;
+    parts.add(switch (days) {
+      <= 0 => 'ينتهي اليوم',
+      1 => 'يبقى يوم واحد',
+      2 => 'يبقى يومان',
+      < 11 => 'تبقّى $days أيام',
+      _ => 'تبقّى $days يوماً',
+    });
+
+    final remaining = coupon.remainingUses;
+    if (remaining != null && remaining <= 3) {
+      parts.add(remaining == 1 ? 'استخدام أخير' : 'يبقى $remaining استخدامات');
+    }
+
+    return parts;
+  }
+
+  Future<void> _apply(BuildContext context, WidgetRef ref) async {
+    final result = await ref
+        .read(couponApplyProvider.notifier)
+        .apply(coupon.code);
+    if (!context.mounted) return;
+
+    if (result.didApply) {
+      DsSnackbar.show(
+        context,
+        message: 'تم تطبيق ${coupon.code} — وفّرتِ ${result.discount!.format()}',
+        type: DsSnackbarType.success,
+      );
+      return;
+    }
+
+    final message = switch (result.issue) {
+      CouponApplyIssue.emptyBasket =>
+        'سلّتكِ فارغة — أضيفي منتجاً ثم طبّقي العرض',
+      CouponApplyIssue.unknownSubtotal =>
+        'سلّتكِ بعملتين، طبّقي العرض عند الدفع',
+      null => result.serverMessage ?? 'تعذّر تطبيق الكوبون',
+    };
+    DsSnackbar.show(context, message: message, type: DsSnackbarType.error);
+  }
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final colors = context.dsColors;
+    final pending = ref.watch(couponApplyProvider);
+    final applied = ref.watch(appliedCouponProvider);
+
+    final isPending = pending == coupon.code;
+    final isApplied = applied?.code == coupon.code;
+    // One at a time: two in flight would race to be the applied one.
+    final isBusy = pending != null;
+
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: DsRadius.borderXxl,
+        gradient: index.isEven ? context.primaryGradient : DsGradients.rewards,
+        boxShadow: context.luxuryShadow,
+        border: isApplied
+            ? Border.all(color: colors.onPrimary.withValues(alpha: 0.85), width: 2)
+            : null,
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(DsSpacing.lg),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: colors.onPrimary.withValues(alpha: 0.2),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    coupon.isUserSpecific
+                        ? Icons.card_giftcard_rounded
+                        : Icons.local_offer_rounded,
+                    color: colors.onPrimary,
+                  ),
+                ),
+                const SizedBox(width: DsSpacing.md),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        coupon.code,
+                        style: TextStyle(
+                          fontFamily: DsTypography.fontFamily,
+                          fontSize: DsTypography.titleLarge,
+                          fontWeight: DsTypography.bold,
+                          color: colors.onPrimary,
+                          letterSpacing: 2,
+                        ),
+                      ),
+                      Text(
+                        _headline,
+                        style: TextStyle(
+                          color: colors.onPrimary.withValues(alpha: 0.92),
+                          fontWeight: DsTypography.semiBold,
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        _conditions().join(' · '),
+                        style: TextStyle(
+                          color: colors.onPrimary.withValues(alpha: 0.75),
+                          fontSize: DsTypography.labelSmall,
+                        ),
+                      ),
+                      if (coupon.isUserSpecific) ...[
+                        const SizedBox(height: 6),
+                        _Chip(
+                          label: 'خاص بكِ',
+                          color: colors.onPrimary,
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: DsSpacing.md),
+            Divider(
+              height: 1,
+              color: colors.onPrimary.withValues(alpha: 0.25),
+            ),
+            const SizedBox(height: DsSpacing.sm),
+            Row(
+              children: [
+                _TicketAction(
+                  icon: Icons.copy_rounded,
+                  label: 'نسخ الرمز',
+                  onTap: () async {
+                    await Clipboard.setData(ClipboardData(text: coupon.code));
+                    if (!context.mounted) return;
+                    DsSnackbar.show(
+                      context,
+                      message: 'تم نسخ الرمز ${coupon.code}',
+                      type: DsSnackbarType.success,
+                    );
+                  },
+                ),
+                const Spacer(),
+                if (isApplied)
+                  _TicketAction(
+                    icon: Icons.check_circle_rounded,
+                    label: 'مُطبَّق',
+                    onTap: () =>
+                        ref.read(appliedCouponProvider.notifier).clear(),
+                    emphasised: true,
+                  )
+                else if (isPending)
+                  SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: colors.onPrimary,
+                    ),
+                  )
+                else
+                  _TicketAction(
+                    icon: Icons.shopping_bag_outlined,
+                    label: 'تطبيق على سلّتي',
+                    onTap: isBusy ? null : () => _apply(context, ref),
+                    emphasised: true,
+                  ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    ).animate().fadeIn(delay: (80 * index).ms).slideX(begin: 0.08);
+  }
+}
+
+/// What is currently applied, and the way straight to paying with it.
+class _AppliedBanner extends StatelessWidget {
+  const _AppliedBanner({
     required this.code,
-    required this.title,
-    required this.subtitle,
-    required this.index,
+    required this.discount,
+    required this.onRemove,
+    required this.onCheckout,
   });
 
   final String code;
-  final String title;
-  final String subtitle;
-  final int index;
+  final String discount;
+  final VoidCallback onRemove;
+  final VoidCallback onCheckout;
 
   @override
   Widget build(BuildContext context) {
     final colors = context.dsColors;
-    return GestureDetector(
-      onTap: () {
-        Clipboard.setData(ClipboardData(text: code));
-        DsSnackbar.show(
-          context,
-          message: 'Coupon $code copied!',
-          type: DsSnackbarType.success,
-        );
-      },
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: DsRadius.borderXxl,
-          gradient: index.isEven ? context.primaryGradient : DsGradients.rewards,
-          boxShadow: context.luxuryShadow,
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(DsSpacing.lg),
-          child: Row(
+
+    return Container(
+      padding: const EdgeInsets.all(DsSpacing.lg),
+      decoration: BoxDecoration(
+        color: colors.success.withValues(alpha: 0.10),
+        borderRadius: DsRadius.borderXxl,
+        border: Border.all(color: colors.success.withValues(alpha: 0.45)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
             children: [
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: colors.onPrimary.withValues(alpha: 0.2),
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(Icons.local_offer_rounded, color: colors.onPrimary),
-              ),
-              const SizedBox(width: DsSpacing.md),
+              Icon(Icons.check_circle_rounded, color: colors.success, size: 20),
+              const SizedBox(width: DsSpacing.sm),
               Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      code,
-                      style: TextStyle(
-                        fontFamily: DsTypography.fontFamily,
-                        fontSize: DsTypography.titleLarge,
-                        fontWeight: DsTypography.bold,
-                        color: colors.onPrimary,
-                        letterSpacing: 2,
-                      ),
-                    ),
-                    Text(
-                      title,
-                      style: TextStyle(
-                        color: colors.onPrimary.withValues(alpha: 0.92),
-                      ),
-                    ),
-                    Text(
-                      subtitle,
-                      style: TextStyle(
-                        color: colors.onPrimary.withValues(alpha: 0.75),
-                        fontSize: DsTypography.labelSmall,
-                      ),
-                    ),
-                  ],
+                child: Text(
+                  '$code مُطبَّق — توفير $discount',
+                  style: TextStyle(
+                    color: colors.onSurface,
+                    fontWeight: DsTypography.semiBold,
+                  ),
                 ),
               ),
-              Icon(Icons.copy_rounded, color: colors.onPrimary),
+              IconButton(
+                onPressed: onRemove,
+                icon: Icon(Icons.close_rounded, color: colors.onSurfaceVariant),
+                tooltip: 'إزالة',
+              ),
             ],
           ),
+          const SizedBox(height: DsSpacing.sm),
+          PrimaryButton(label: 'متابعة الدفع', onPressed: onCheckout),
+        ],
+      ),
+    );
+  }
+}
+
+/// The basket the offers will be measured against.
+///
+/// Shown so «حد أدنى ٥٠٬٠٠٠» has something to be compared with on the same
+/// screen, instead of sending her to the cart to find out what she has.
+class _BasketHint extends StatelessWidget {
+  const _BasketHint({required this.subtotal});
+
+  final String? subtotal;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.dsColors;
+    if (subtotal == null) return const SizedBox.shrink();
+
+    return Row(
+      children: [
+        Icon(
+          Icons.shopping_bag_outlined,
+          size: 16,
+          color: colors.onSurfaceVariant,
+        ),
+        const SizedBox(width: DsSpacing.sm),
+        Text(
+          'سلّتكِ الآن: $subtotal',
+          style: TextStyle(
+            color: colors.onSurfaceVariant,
+            fontSize: DsTypography.labelSmall,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _Chip extends StatelessWidget {
+  const _Chip({required this.label, required this.color});
+
+  final String label;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.18),
+        borderRadius: DsRadius.borderFull,
+      ),
+      child: Text(
+        label,
+        style: TextStyle(
+          color: color,
+          fontSize: DsTypography.labelSmall,
+          fontWeight: DsTypography.semiBold,
         ),
       ),
-    ).animate().fadeIn(delay: (80 * index).ms).slideX(begin: 0.08);
+    );
+  }
+}
+
+class _TicketAction extends StatelessWidget {
+  const _TicketAction({
+    required this.icon,
+    required this.label,
+    required this.onTap,
+    this.emphasised = false,
+  });
+
+  final IconData icon;
+  final String label;
+  final VoidCallback? onTap;
+  final bool emphasised;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.dsColors;
+    final tint = colors.onPrimary.withValues(alpha: onTap == null ? 0.45 : 1);
+
+    return InkWell(
+      onTap: onTap,
+      borderRadius: DsRadius.borderFull,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
+        decoration: emphasised
+            ? BoxDecoration(
+                color: colors.onPrimary.withValues(alpha: 0.18),
+                borderRadius: DsRadius.borderFull,
+              )
+            : null,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, size: 17, color: tint),
+            const SizedBox(width: 6),
+            Text(
+              label,
+              style: TextStyle(
+                color: tint,
+                fontSize: DsTypography.labelSmall,
+                fontWeight: DsTypography.semiBold,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _NoCoupons extends StatelessWidget {
+  const _NoCoupons();
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.dsColors;
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: DsSpacing.xxl),
+      child: Column(
+        children: [
+          Icon(
+            Icons.local_offer_outlined,
+            size: 48,
+            color: colors.onSurfaceVariant,
+          ),
+          const SizedBox(height: DsSpacing.md),
+          Text(
+            'لا كوبونات متاحة الآن',
+            style: TextStyle(
+              fontSize: DsTypography.titleSmall,
+              fontWeight: DsTypography.semiBold,
+              color: colors.onSurface,
+            ),
+          ),
+          const SizedBox(height: DsSpacing.sm),
+          Text(
+            'سنُعلمكِ حين يصلكِ عرض جديد',
+            textAlign: TextAlign.center,
+            style: TextStyle(color: colors.onSurfaceVariant),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _CouponsFailed extends StatelessWidget {
+  const _CouponsFailed({required this.onRetry});
+
+  final VoidCallback onRetry;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.dsColors;
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: DsSpacing.xxl),
+      child: Column(
+        children: [
+          Icon(
+            Icons.cloud_off_rounded,
+            size: 44,
+            color: colors.onSurfaceVariant,
+          ),
+          const SizedBox(height: DsSpacing.md),
+          Text(
+            'تعذّر تحميل الكوبونات',
+            style: TextStyle(color: colors.onSurfaceVariant),
+          ),
+          const SizedBox(height: DsSpacing.md),
+          SecondaryButton(label: 'إعادة المحاولة', onPressed: onRetry),
+        ],
+      ),
+    );
+  }
+}
+
+class _CouponsSkeleton extends StatelessWidget {
+  const _CouponsSkeleton();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        for (var i = 0; i < 3; i++) ...[
+          const DsShimmer(child: DsSkeleton.box(height: 132)),
+          const SizedBox(height: DsSpacing.md),
+        ],
+      ],
+    );
   }
 }

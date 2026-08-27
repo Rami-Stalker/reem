@@ -1,24 +1,65 @@
 import 'package:equatable/equatable.dart';
 
+import '../../../../core/shared/value_objects/money.dart';
 import 'order.dart';
 
+/// A delivery destination the platform serves.
+///
+/// Zones are split by governorate and, inside a governorate, by district and
+/// city-centre-versus-rural (Q53), each with its own fee and ETA.
 class Governorate extends Equatable {
   final String name;
-  final double fee;
-  final int etaDays;
+  final Money fee;
+
+  /// ETAs are in hours, not days: the client promised same-day delivery inside
+  /// a city and one to two days between governorates (Q61/Q62), and "0 days"
+  /// could not express that.
+  final int etaHoursMin;
+  final int etaHoursMax;
+
+  final List<GovernorateDistrict> districts;
 
   const Governorate({
     required this.name,
     required this.fee,
-    required this.etaDays,
+    required this.etaHoursMin,
+    required this.etaHoursMax,
+    this.districts = const [],
+  });
+
+  String get etaLabel {
+    if (etaHoursMax <= 12) return 'خلال اليوم';
+    final days = (etaHoursMax / 24).ceil();
+    return days <= 1 ? 'خلال يوم' : 'خلال $days أيام';
+  }
+
+  @override
+  List<Object?> get props => [name, fee, etaHoursMin, etaHoursMax, districts];
+}
+
+class GovernorateDistrict extends Equatable {
+  final String name;
+  final bool isRural;
+  final Money fee;
+  final int etaHoursMin;
+  final int etaHoursMax;
+
+  const GovernorateDistrict({
+    required this.name,
+    required this.fee,
+    required this.etaHoursMin,
+    required this.etaHoursMax,
+    this.isRural = false,
   });
 
   @override
-  List<Object?> get props => [name, fee, etaDays];
+  List<Object?> get props => [name, isRural, fee, etaHoursMin, etaHoursMax];
 }
 
 class PaymentMethodOption extends Equatable {
-  final String method; // visa | sham_cash | bemo | cod
+  /// cod | courier_collect | syriatel_cash | mtn_cash | sham_cash |
+  /// bank_card | bank_transfer | hawala | platform_wallet
+  final String method;
   final String label;
   final bool requiresOnlineConfirmation;
 
@@ -33,18 +74,23 @@ class PaymentMethodOption extends Equatable {
 }
 
 class DeliveryQuote extends Equatable {
-  final double deliveryFee;
+  final Money deliveryFee;
   final bool freeShipping;
-  final int estimatedDays;
+  final int etaHoursMin;
+  final int etaHoursMax;
+  final DateTime? estimatedDeliveryAt;
 
   const DeliveryQuote({
     required this.deliveryFee,
     required this.freeShipping,
-    required this.estimatedDays,
+    required this.etaHoursMin,
+    required this.etaHoursMax,
+    this.estimatedDeliveryAt,
   });
 
   @override
-  List<Object?> get props => [deliveryFee, freeShipping, estimatedDays];
+  List<Object?> get props =>
+      [deliveryFee, freeShipping, etaHoursMin, etaHoursMax];
 }
 
 /// Form payload captured during checkout.
@@ -54,6 +100,8 @@ class ShippingInput {
   final String governorate;
   final String city;
   final String addressLine;
+  final String? district;
+  final bool isRural;
   final String? landmark;
 
   const ShippingInput({
@@ -62,6 +110,8 @@ class ShippingInput {
     required this.governorate,
     required this.city,
     required this.addressLine,
+    this.district,
+    this.isRural = false,
     this.landmark,
   });
 }

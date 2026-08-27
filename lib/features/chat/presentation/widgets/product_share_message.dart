@@ -12,7 +12,7 @@ class ProductShareMessage
     return Align(
 
       alignment:
-          Alignment.centerLeft,
+          AlignmentDirectional.centerStart,
 
       child: Container(
 

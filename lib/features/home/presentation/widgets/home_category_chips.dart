@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/design_system/design_system.dart';
 import '../../../../core/router/route_paths.dart';
 import '../../../../core/shared/entities/post.dart';
+import '../../../../core/localization/l10n_extension.dart';
 
 /// Quick category filters. Tapping deep-links into a category browse screen.
 class HomeCategoryChips extends StatelessWidget {
@@ -14,7 +15,7 @@ class HomeCategoryChips extends StatelessWidget {
     return DsFilterBar(
       options: [
         DsFilterOption(
-          label: 'All',
+          label: context.l10n.all,
           icon: Icons.auto_awesome_rounded,
           selected: true,
           onTap: () => context.push(RoutePaths.categories),

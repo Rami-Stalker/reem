@@ -14,6 +14,9 @@ import '../../../domain/entities/home_notification.dart';
 import '../../../domain/entities/nearby_store.dart';
 import '../../../domain/entities/search_suggestions.dart';
 import '../home_content_datasource.dart';
+import '../../../../../core/shared/entities/category.dart';
+import '../../../../../core/shared/entities/seller_offer.dart';
+import '../../../../../core/shared/value_objects/money.dart';
 
 /// Front-end-first mock of the home merchandising content.
 ///
@@ -51,15 +54,24 @@ final class HomeContentMockDataSource implements HomeContentDataSource {
   }
 
   // ── Sellers ────────────────────────────────────────────────────────────────
-  static final _atelier = _seller('s1', 'Atelier Rose', verified: true);
-  static final _maison = _seller('s2', 'Maison Lumière', verified: true);
-  static final _bloom = _seller('s3', 'Bloom & Co', verified: false);
-  static final _velvet = _seller('s4', 'Velvet Petals', verified: true);
+  static final _atelier = _seller('s1', 'أتيليه الورد', verified: true);
+  static final _maison = _seller('s2', 'دار النور', verified: true);
+  static final _bloom = _seller('s3', 'بستان', verified: false);
+  static final _velvet = _seller('s4', 'بتلات المخمل', verified: true);
+
+  static const _handles = <String, String>{
+    's1': 'atelier_alward',
+    's2': 'dar_alnour',
+    's3': 'bustan',
+    's4': 'batalat_almakhmal',
+  };
 
   static User _seller(String id, String name, {bool verified = false}) => User(
         id: id,
         name: name,
-        username: name.toLowerCase().replaceAll(RegExp(r'[^a-z0-9]+'), '_'),
+        // Derived handles used to be built by stripping non-latin characters,
+        // which leaves an Arabic name with an empty username.
+        username: _handles[id] ?? id,
         phone: '',
         role: UserRole.seller,
         isVerified: verified,
@@ -68,6 +80,10 @@ final class HomeContentMockDataSource implements HomeContentDataSource {
         createdAt: DateTime(2023, 3, 14),
       );
 
+  /// Builds a canonical product with a single live offer.
+  ///
+  /// Prices are SYP, because that is what the platform charges in — the mock
+  /// used to carry bare numbers that the UI rendered with a dollar sign.
   static Product _product({
     required String id,
     required String title,
@@ -79,18 +95,35 @@ final class HomeContentMockDataSource implements HomeContentDataSource {
     int stock = 32,
     int reviews = 184,
   }) {
+    final offer = SellerOffer(
+      id: 'offer-$id',
+      seller: seller,
+      price: Money(raw: price.toStringAsFixed(0), currency: Currency.syp),
+      compareAtPrice: oldPrice == null
+          ? null
+          : Money(raw: oldPrice.toStringAsFixed(0), currency: Currency.syp),
+      stock: stock,
+      status: OfferStatus.active,
+    );
+
     return Product(
       id: id,
-      seller: seller,
+      slug: id,
       title: title,
       description:
-          'Thoughtfully crafted $category, made to feel like it was designed just for you.',
-      category: category,
-      price: price,
-      oldPrice: oldPrice,
-      stock: stock,
+          'قطعة مصنوعة بعناية من فئة $category، كأنها صُمّمت خصيصاً لكِ.',
+      category: Category(
+        id: category,
+        slug: category,
+        nameAr: category,
+        nameEn: category,
+      ),
       media: [MediaItem(url: _img('prod-$id'))],
-      isFeatured: true,
+      offers: [offer],
+      offersCount: 1,
+      priceFrom: offer.price,
+      priceTo: offer.price,
+      stock: stock,
       rating: rating,
       reviewsCount: reviews,
       viewsCount: 5400,
@@ -106,21 +139,21 @@ final class HomeContentMockDataSource implements HomeContentDataSource {
     HeroBanner(
       id: 'h1',
       kind: HeroBannerKind.seasonal,
-      eyebrow: 'Spring Atelier',
-      title: 'Petals & Silk',
-      subtitle: 'The new season collection has landed',
-      ctaLabel: 'Explore collection',
+      eyebrow: 'أتيليه الربيع',
+      title: 'بتلات وحرير',
+      subtitle: 'وصلت تشكيلة الموسم الجديد',
+      ctaLabel: 'اكتشفي التشكيلة',
       imageUrl: 'https://picsum.photos/seed/hero-spring/1200/800',
-      badge: 'New season',
+      badge: 'موسم جديد',
       targetRoute: RoutePaths.categories,
     ),
     HeroBanner(
       id: 'h2',
       kind: HeroBannerKind.promotion,
-      eyebrow: 'Members only',
-      title: 'Up to 40% off',
-      subtitle: 'Beauty & fragrance, this weekend only',
-      ctaLabel: 'Shop the edit',
+      eyebrow: 'للعضوات فقط',
+      title: 'خصم حتى 40٪',
+      subtitle: 'الجمال والعطور، هذا الأسبوع فقط',
+      ctaLabel: 'تسوّقي المختارات',
       imageUrl: 'https://picsum.photos/seed/hero-beauty/1200/800',
       badge: '−40%',
       targetRoute: RoutePaths.search,
@@ -128,66 +161,66 @@ final class HomeContentMockDataSource implements HomeContentDataSource {
     HeroBanner(
       id: 'h3',
       kind: HeroBannerKind.personalized,
-      eyebrow: 'Picked for you',
-      title: 'Your kind of pretty',
-      subtitle: 'Curated from the pieces you love',
-      ctaLabel: 'See your edit',
+      eyebrow: 'مختارة لكِ',
+      title: 'جمالٌ على ذوقكِ',
+      subtitle: 'منتقاة من القطع التي أحببتِها',
+      ctaLabel: 'شاهدي مختاراتكِ',
       imageUrl: 'https://picsum.photos/seed/hero-personal/1200/800',
       targetRoute: RoutePaths.search,
     ),
     HeroBanner(
       id: 'h4',
       kind: HeroBannerKind.campaign,
-      eyebrow: 'Reem x Local Makers',
-      title: 'Made with love, locally',
-      subtitle: 'Discover boutiques near you',
-      ctaLabel: 'Meet the makers',
+      eyebrow: 'ريم × صانعات محليات',
+      title: 'صُنع بحبّ، هنا',
+      subtitle: 'اكتشفي البوتيكات القريبة منكِ',
+      ctaLabel: 'تعرّفي على الصانعات',
       imageUrl: 'https://picsum.photos/seed/hero-makers/1200/800',
-      badge: 'Campaign',
+      badge: 'حملة',
       targetRoute: RoutePaths.categories,
     ),
   ];
 
   // ── Categories ─────────────────────────────────────────────────────────────
   static final _categories = <HomeCategory>[
-    HomeCategory(id: 'c1', label: 'Dresses', imageUrl: _img('cat-dress', w: 300, h: 300), productCount: 1240, isFeatured: true),
-    HomeCategory(id: 'c2', label: 'Fragrance', imageUrl: _img('cat-perfume', w: 300, h: 300), productCount: 860, isFeatured: true),
-    HomeCategory(id: 'c3', label: 'Bags', imageUrl: _img('cat-bags', w: 300, h: 300), productCount: 540),
-    HomeCategory(id: 'c4', label: 'Beauty', imageUrl: _img('cat-beauty', w: 300, h: 300), productCount: 2100, isFeatured: true),
-    HomeCategory(id: 'c5', label: 'Jewelry', imageUrl: _img('cat-jewelry', w: 300, h: 300), productCount: 430),
-    HomeCategory(id: 'c6', label: 'Shoes', imageUrl: _img('cat-shoes', w: 300, h: 300), productCount: 720),
-    HomeCategory(id: 'c7', label: 'Abayas', imageUrl: _img('cat-abaya', w: 300, h: 300), productCount: 380),
-    HomeCategory(id: 'c8', label: 'Gifts', imageUrl: _img('cat-gifts', w: 300, h: 300), productCount: 260),
+    HomeCategory(id: 'c1', label: 'فساتين', imageUrl: _img('cat-dress', w: 300, h: 300), productCount: 1240, isFeatured: true),
+    HomeCategory(id: 'c2', label: 'عطور', imageUrl: _img('cat-perfume', w: 300, h: 300), productCount: 860, isFeatured: true),
+    HomeCategory(id: 'c3', label: 'حقائب', imageUrl: _img('cat-bags', w: 300, h: 300), productCount: 540),
+    HomeCategory(id: 'c4', label: 'مكياج', imageUrl: _img('cat-beauty', w: 300, h: 300), productCount: 2100, isFeatured: true),
+    HomeCategory(id: 'c5', label: 'مجوهرات', imageUrl: _img('cat-jewelry', w: 300, h: 300), productCount: 430),
+    HomeCategory(id: 'c6', label: 'أحذية', imageUrl: _img('cat-shoes', w: 300, h: 300), productCount: 720),
+    HomeCategory(id: 'c7', label: 'عبايات', imageUrl: _img('cat-abaya', w: 300, h: 300), productCount: 380),
+    HomeCategory(id: 'c8', label: 'هدايا', imageUrl: _img('cat-gifts', w: 300, h: 300), productCount: 260),
   ];
 
   // ── Flash deals ──────────────────────────────────────────────────────────
   static List<FlashDeal> _flashDeals(DateTime now) => [
         FlashDeal(
-          product: _product(id: 'fd1', title: 'Rosewater Silk Slip Dress', price: 189, oldPrice: 320, category: 'dress', seller: _atelier, rating: 4.9),
+          product: _product(id: 'fd1', title: 'فستان حرير بماء الورد', price: 850000, oldPrice: 1440000, category: 'فساتين', seller: _atelier, rating: 4.9),
           endsAt: now.add(const Duration(hours: 3, minutes: 42)),
           soldCount: 78,
           totalQuantity: 100,
         ),
         FlashDeal(
-          product: _product(id: 'fd2', title: 'Velvet Bloom Eau de Parfum', price: 95, oldPrice: 140, category: 'fragrance', seller: _velvet, rating: 4.8),
+          product: _product(id: 'fd2', title: 'عطر زهر المخمل', price: 430000, oldPrice: 630000, category: 'عطور', seller: _velvet, rating: 4.8),
           endsAt: now.add(const Duration(hours: 5, minutes: 12)),
           soldCount: 44,
           totalQuantity: 60,
         ),
         FlashDeal(
-          product: _product(id: 'fd3', title: 'Quilted Mini Shoulder Bag', price: 129, oldPrice: 210, category: 'bags', seller: _maison, rating: 4.7),
+          product: _product(id: 'fd3', title: 'حقيبة كتف صغيرة مبطّنة', price: 580000, oldPrice: 945000, category: 'حقائب', seller: _maison, rating: 4.7),
           endsAt: now.add(const Duration(hours: 1, minutes: 55)),
           soldCount: 92,
           totalQuantity: 100,
         ),
         FlashDeal(
-          product: _product(id: 'fd4', title: 'Pearl Drop Earrings', price: 49, oldPrice: 85, category: 'jewelry', seller: _bloom, rating: 4.6),
+          product: _product(id: 'fd4', title: 'أقراط لؤلؤ متدلّية', price: 220000, oldPrice: 385000, category: 'مجوهرات', seller: _bloom, rating: 4.6),
           endsAt: now.add(const Duration(hours: 8)),
           soldCount: 30,
           totalQuantity: 120,
         ),
         FlashDeal(
-          product: _product(id: 'fd5', title: 'Satin Bow Heeled Mules', price: 110, oldPrice: 175, category: 'shoes', seller: _atelier, rating: 4.8),
+          product: _product(id: 'fd5', title: 'حذاء ساتان بفيونكة', price: 495000, oldPrice: 790000, category: 'أحذية', seller: _atelier, rating: 4.8),
           endsAt: now.add(const Duration(hours: 4, minutes: 20)),
           soldCount: 65,
           totalQuantity: 80,
@@ -198,8 +231,8 @@ final class HomeContentMockDataSource implements HomeContentDataSource {
   static final _stores = <FeaturedStore>[
     FeaturedStore(
       id: 's1',
-      name: 'Atelier Rose',
-      tagline: 'Romantic ready-to-wear, handmade in small batches',
+      name: 'أتيليه الورد',
+      tagline: 'أزياء رومانسية جاهزة، تُخاط يدوياً بكميّات قليلة',
       logoUrl: _img('logo-s1', w: 200, h: 200),
       coverUrl: _img('cover-s1', w: 800, h: 400),
       isVerified: true,
@@ -210,8 +243,8 @@ final class HomeContentMockDataSource implements HomeContentDataSource {
     ),
     FeaturedStore(
       id: 's2',
-      name: 'Maison Lumière',
-      tagline: 'Quiet-luxury leather goods & accessories',
+      name: 'دار النور',
+      tagline: 'جلديات وإكسسوارات بفخامة هادئة',
       logoUrl: _img('logo-s2', w: 200, h: 200),
       coverUrl: _img('cover-s2', w: 800, h: 400),
       isVerified: true,
@@ -223,8 +256,8 @@ final class HomeContentMockDataSource implements HomeContentDataSource {
     ),
     FeaturedStore(
       id: 's4',
-      name: 'Velvet Petals',
-      tagline: 'Botanical fragrance & home rituals',
+      name: 'بتلات المخمل',
+      tagline: 'عطور نباتية وطقوس للمنزل',
       logoUrl: _img('logo-s4', w: 200, h: 200),
       coverUrl: _img('cover-s4', w: 800, h: 400),
       isVerified: true,
@@ -235,8 +268,8 @@ final class HomeContentMockDataSource implements HomeContentDataSource {
     ),
     FeaturedStore(
       id: 's3',
-      name: 'Bloom & Co',
-      tagline: 'Everyday jewelry that never leaves your skin',
+      name: 'بستان',
+      tagline: 'مجوهرات يومية لا تفارق بشرتكِ',
       logoUrl: _img('logo-s3', w: 200, h: 200),
       coverUrl: _img('cover-s3', w: 800, h: 400),
       rating: 4.6,
@@ -248,27 +281,27 @@ final class HomeContentMockDataSource implements HomeContentDataSource {
 
   // ── Recently viewed ──────────────────────────────────────────────────────
   static final _recentlyViewed = <Product>[
-    _product(id: 'rv1', title: 'Ribbed Knit Midi Dress', price: 138, category: 'dress', seller: _atelier),
-    _product(id: 'rv2', title: 'Amber Oud Travel Spray', price: 62, oldPrice: 78, category: 'fragrance', seller: _velvet),
-    _product(id: 'rv3', title: 'Croc-Effect Card Holder', price: 54, category: 'bags', seller: _maison),
-    _product(id: 'rv4', title: 'Tinted Lip Oil Trio', price: 38, category: 'beauty', seller: _bloom),
-    _product(id: 'rv5', title: 'Gold Vermeil Anklet', price: 72, oldPrice: 96, category: 'jewelry', seller: _bloom),
-    _product(id: 'rv6', title: 'Strappy Block Sandals', price: 98, category: 'shoes', seller: _atelier),
+    _product(id: 'rv1', title: 'فستان تريكو مضلّع متوسط', price: 620000, category: 'فساتين', seller: _atelier),
+    _product(id: 'rv2', title: 'عطر عود وعنبر للسفر', price: 280000, oldPrice: 350000, category: 'عطور', seller: _velvet),
+    _product(id: 'rv3', title: 'محفظة بطاقات بنقشة الجلد', price: 245000, category: 'حقائب', seller: _maison),
+    _product(id: 'rv4', title: 'ثلاثية زيوت الشفاه الملوّنة', price: 170000, category: 'مكياج', seller: _bloom),
+    _product(id: 'rv5', title: 'خلخال مطلي بالذهب', price: 325000, oldPrice: 430000, category: 'مجوهرات', seller: _bloom),
+    _product(id: 'rv6', title: 'صندل بكعب عريض وأحزمة', price: 440000, category: 'أحذية', seller: _atelier),
   ];
 
   // ── Continue shopping ────────────────────────────────────────────────────
   static final _continueShopping = <ContinueShoppingItem>[
-    ContinueShoppingItem(product: _product(id: 'cs1', title: 'Linen Wrap Maxi Dress', price: 156, oldPrice: 195, category: 'dress', seller: _atelier), note: 'In your bag'),
-    ContinueShoppingItem(product: _product(id: 'cs2', title: 'Peony Hand Cream Set', price: 44, category: 'beauty', seller: _velvet), note: 'Viewed 2d ago'),
-    ContinueShoppingItem(product: _product(id: 'cs3', title: 'Mini Top-Handle Bag', price: 142, category: 'bags', seller: _maison, stock: 3), note: 'Only 3 left'),
-    ContinueShoppingItem(product: _product(id: 'cs4', title: 'Crystal Hair Claw', price: 28, category: 'jewelry', seller: _bloom), note: 'Back in stock'),
+    ContinueShoppingItem(product: _product(id: 'cs1', title: 'فستان كتّان ماكسي بلفّة', price: 700000, oldPrice: 880000, category: 'فساتين', seller: _atelier), note: 'في سلّتكِ'),
+    ContinueShoppingItem(product: _product(id: 'cs2', title: 'طقم كريم يدين بالفاوانيا', price: 198000, category: 'مكياج', seller: _velvet), note: 'شاهدتِه قبل يومين'),
+    ContinueShoppingItem(product: _product(id: 'cs3', title: 'حقيبة صغيرة بمقبض علوي', price: 640000, category: 'حقائب', seller: _maison, stock: 3), note: 'بقيت 3 قطع'),
+    ContinueShoppingItem(product: _product(id: 'cs4', title: 'مشبك شعر بالكريستال', price: 126000, category: 'مجوهرات', seller: _bloom), note: 'عاد للمخزون'),
   ];
 
   // ── Nearby stores ────────────────────────────────────────────────────────
   static final _nearbyStores = <NearbyStore>[
-    NearbyStore(id: 'n1', name: 'Atelier Rose — Olaya', logoUrl: _img('logo-s1', w: 200, h: 200), area: 'Riyadh · Al Olaya', distanceKm: 1.8, rating: 4.9),
-    NearbyStore(id: 'n2', name: 'Maison Lumière', logoUrl: _img('logo-s2', w: 200, h: 200), area: 'Riyadh · Al Nakheel', distanceKm: 3.4, rating: 4.8),
-    NearbyStore(id: 'n3', name: 'Velvet Petals Boutique', logoUrl: _img('logo-s4', w: 200, h: 200), area: 'Riyadh · Hittin', distanceKm: 5.1, rating: 4.7, isOpen: false),
+    NearbyStore(id: 'n1', name: 'أتيليه الورد — أبو رمّانة', logoUrl: _img('logo-s1', w: 200, h: 200), area: 'دمشق · أبو رمّانة', distanceKm: 1.8, rating: 4.9),
+    NearbyStore(id: 'n2', name: 'دار النور', logoUrl: _img('logo-s2', w: 200, h: 200), area: 'دمشق · المزّة', distanceKm: 3.4, rating: 4.8),
+    NearbyStore(id: 'n3', name: 'بوتيك بتلات المخمل', logoUrl: _img('logo-s4', w: 200, h: 200), area: 'دمشق · الشعلان', distanceKm: 5.1, rating: 4.7, isOpen: false),
   ];
 
   // ── Dynamic content blocks (admin-configured) ─────────────────────────────
@@ -276,35 +309,35 @@ final class HomeContentMockDataSource implements HomeContentDataSource {
     DynamicContentBlock(
       id: 'd1',
       kind: DynamicBlockKind.spotlight,
-      title: 'The Wedding Guest Edit',
-      subtitle: 'Show-stopping pieces for every celebration this season',
+      title: 'إطلالات المناسبات',
+      subtitle: 'قطع تخطف الأنظار في كل احتفال هذا الموسم',
       imageUrl: 'https://picsum.photos/seed/block-wedding/1000/600',
-      ctaLabel: 'Discover',
+      ctaLabel: 'اكتشفي',
       targetRoute: RoutePaths.categories,
     ),
     DynamicContentBlock(
       id: 'd2',
       kind: DynamicBlockKind.announcement,
-      title: 'Free express delivery',
-      subtitle: 'On all orders over \$75 — automatically at checkout',
-      ctaLabel: 'Learn more',
+      title: 'توصيل سريع مجاني',
+      subtitle: 'على كل طلب فوق 350 ألف ل.س — يُطبَّق تلقائياً عند الدفع',
+      ctaLabel: 'اعرفي المزيد',
     ),
   ];
 
   // ── Smart search ─────────────────────────────────────────────────────────
   static const _searchSuggestions = SearchSuggestions(
-    trending: ['Satin slip dress', 'Oud perfume', 'Gold hoops', 'Wedding guest', 'Quiet luxury bag'],
-    recent: ['Linen dress', 'Lip oil'],
-    suggested: ['Spring florals', 'Under \$50', 'New from Atelier Rose'],
+    trending: ['فستان ساتان', 'عطر عود', 'حلق ذهبي', 'إطلالة مناسبة', 'حقيبة فخامة هادئة'],
+    recent: ['فستان كتّان', 'زيت شفاه'],
+    suggested: ['ورود الربيع', 'تحت 200 ألف', 'جديد أتيليه الورد'],
   );
 
   // ── Notifications summary ──────────────────────────────────────────────────
   static const _notifications = NotificationSummary(
     unreadCount: 3,
     previews: [
-      HomeNotificationPreview(id: 'no1', kind: HomeNotificationKind.order, title: 'Your order #10284 is out for delivery', timeAgo: '12m'),
-      HomeNotificationPreview(id: 'no2', kind: HomeNotificationKind.promo, title: 'Flash deals end soon — up to 40% off', timeAgo: '1h'),
-      HomeNotificationPreview(id: 'no3', kind: HomeNotificationKind.social, title: 'Atelier Rose posted a new story', timeAgo: '3h', unread: false),
+      HomeNotificationPreview(id: 'no1', kind: HomeNotificationKind.order, title: 'طلبكِ رقم 10284 خرج للتوصيل', timeAgo: 'قبل 12 د'),
+      HomeNotificationPreview(id: 'no2', kind: HomeNotificationKind.promo, title: 'عروض اليوم تنتهي قريباً — خصم حتى 40٪', timeAgo: 'قبل ساعة'),
+      HomeNotificationPreview(id: 'no3', kind: HomeNotificationKind.social, title: 'أتيليه الورد نشرت ستوري جديدة', timeAgo: 'قبل 3 س', unread: false),
     ],
   );
 
@@ -315,6 +348,6 @@ final class HomeContentMockDataSource implements HomeContentDataSource {
     nextTier: LoyaltyTier.platinum,
     pointsToNextTier: 550,
     availableCoupons: 4,
-    rewardHint: '550 pts until Platinum — and a free gift wrap',
+    rewardHint: '550 نقطة تفصلكِ عن البلاتينية — وتغليف هدية مجاني',
   );
 }

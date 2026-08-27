@@ -10,7 +10,7 @@ import {
   MaxLength,
   Min,
 } from 'class-validator';
-import { CommissionStatus, PayoutStatus } from '@prisma/client';
+import { CommissionStatus, Currency, PayoutStatus } from '@prisma/client';
 
 export class CommissionRuleDto {
   @IsString()
@@ -29,6 +29,11 @@ export class CommissionRuleDto {
   @Min(0)
   @Max(2000)
   platform_fee_bps?: number;
+
+  /** Fixed fees and bounds are stated in the rule's own currency. */
+  @IsOptional()
+  @IsEnum(Currency)
+  currency?: Currency;
 
   @IsOptional()
   @Type(() => Number)
@@ -80,6 +85,11 @@ export class PayoutCalculationDto {
 
   @IsISO8601()
   period_end!: string;
+
+  /** A payout settles ONE currency — see CommissionsService.calculatePayout. */
+  @IsOptional()
+  @IsEnum(Currency)
+  currency?: Currency;
 
   @IsOptional()
   @Type(() => Number)

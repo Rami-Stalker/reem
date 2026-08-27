@@ -6,6 +6,20 @@ import 'package:web_socket_channel/web_socket_channel.dart';
 import '../../../../core/config/app_env.dart';
 import '../../../../core/storage/secure_storage_service.dart';
 
+/// Names the value that follows it as a bearer token.
+///
+/// The access token used to be a query parameter, which is the one part of a
+/// request that every proxy between the handset and the API writes into its
+/// access log — and it is the whole token, replayable against HTTP just as
+/// readily as against this socket until it expires. A header is the right
+/// place for a credential, but the browser's `WebSocket` accepts none: a URL
+/// and a subprotocol list are all it takes. So the token rides as the second
+/// subprotocol, which reaches the server as `Sec-WebSocket-Protocol`.
+///
+/// Deliberately one code path rather than headers on mobile and this on the
+/// web: the same handshake everywhere is the one that stays tested.
+const _authProtocol = 'reem.auth.bearer';
+
 class ChatRealtimeService {
   ChatRealtimeService(this._storage);
 
@@ -21,8 +35,12 @@ class ChatRealtimeService {
     final token = await _storage.read(SecureStorageKeys.accessToken);
     if (token == null || token.isEmpty) return;
 
-    final uri = _wsUri(token);
-    final channel = WebSocketChannel.connect(uri);
+    final uri = _wsUri();
+    // The token travels as a subprotocol, not in the URL — see [_authProtocol].
+    final channel = WebSocketChannel.connect(
+      uri,
+      protocols: [_authProtocol, token],
+    );
     _channel = channel;
     _subscription = channel.stream.listen(
       (event) {
@@ -72,13 +90,9 @@ class ChatRealtimeService {
     await channel?.sink.close();
   }
 
-  Uri _wsUri(String token) {
+  Uri _wsUri() {
     final base = Uri.parse(AppEnv.baseUrl);
     final scheme = base.scheme == 'https' ? 'wss' : 'ws';
-    return base.replace(
-      scheme: scheme,
-      path: '/ws/chats',
-      queryParameters: {'token': token},
-    );
+    return base.replace(scheme: scheme, path: '/ws/chats');
   }
 }

@@ -1,28 +1,35 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
-
-const productInclude = {
-  seller: true,
-  media: { orderBy: { sortOrder: 'asc' as const } },
-  variants: { orderBy: { sortOrder: 'asc' as const } },
-} satisfies Prisma.ProductInclude;
+import {
+  PRODUCT_CARD_INCLUDE,
+  PURCHASABLE_PRODUCT_WHERE,
+} from '../../common/catalog/product-include';
 
 @Injectable()
 export class PostsRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  /** Post include scoped to a viewer so `is_liked`/`is_saved` resolve. */
-  private include(userId: string) {
+  /**
+   * Post include scoped to a viewer so `is_liked`/`is_saved` resolve.
+   *
+   * A signed-out visitor has no like or save state to resolve. The relations
+   * are dropped with `take: 0` rather than left unfiltered, because
+   * `where: { userId: undefined }` means "no filter" to Prisma — it would drag
+   * every like row of every post in the page across the wire to compute a
+   * flag that is false by definition.
+   */
+  private include(userId?: string) {
+    const viewerScope = userId ? { where: { userId } } : { take: 0 };
     return {
       author: true,
-      product: { include: productInclude },
-      likes: { where: { userId } },
-      saves: { where: { userId } },
+      product: { include: PRODUCT_CARD_INCLUDE },
+      likes: viewerScope,
+      saves: viewerScope,
     } satisfies Prisma.PostInclude;
   }
 
-  feed(userId: string, skip: number, take: number) {
+  feed(userId: string | undefined, skip: number, take: number) {
     return this.prisma.post.findMany({
       orderBy: { createdAt: 'desc' },
       skip,
@@ -35,7 +42,12 @@ export class PostsRepository {
     return this.prisma.post.count();
   }
 
-  bySeller(sellerId: string, userId: string, skip: number, take: number) {
+  bySeller(
+    sellerId: string,
+    userId: string | undefined,
+    skip: number,
+    take: number,
+  ) {
     return this.prisma.post.findMany({
       where: { authorId: sellerId },
       orderBy: { createdAt: 'desc' },
@@ -63,7 +75,7 @@ export class PostsRepository {
     return this.prisma.post.count({ where: { saves: { some: { userId } } } });
   }
 
-  findById(id: string, userId: string) {
+  findById(id: string, userId?: string) {
     return this.prisma.post.findUnique({
       where: { id },
       include: this.include(userId),

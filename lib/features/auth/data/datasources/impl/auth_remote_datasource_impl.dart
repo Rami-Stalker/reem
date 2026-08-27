@@ -2,16 +2,239 @@ import 'package:reem/core/network/api_endpoints.dart';
 import 'package:reem/core/network/base_remote_datasource.dart';
 import 'package:reem/core/shared/entities/user.dart';
 import 'package:reem/core/shared/models/user_model.dart';
+import 'package:reem/features/auth/domain/entities/auth_account.dart';
 import 'package:reem/features/auth/data/datasources/auth_remote_datasource.dart';
 import 'package:reem/features/auth/data/models/account_models.dart';
 import 'package:reem/features/auth/data/models/auth_response_model.dart';
+import 'package:reem/features/auth/data/models/identity_models.dart';
 import 'package:reem/features/auth/data/models/login_request_model.dart';
 import 'package:reem/features/auth/data/models/register_request_model.dart';
-import 'package:reem/features/auth/domain/entities/auth_account.dart';
 
 final class AuthRemoteDataSourceImpl extends BaseRemoteDataSource
     implements AuthRemoteDataSource {
   const AuthRemoteDataSourceImpl(super.dio);
+
+  @override
+  Future<String> createGuestSession() async {
+    final json = await postJson(ApiEndpoints.authGuest);
+    final token = json['guest_token'];
+    if (token is String && token.isNotEmpty) return token;
+    throw StateError('Guest session response did not include guest_token');
+  }
+
+  @override
+  Future<String> registerDeviceKey({
+    required String publicKey,
+    required bool hardwareBacked,
+    String? label,
+    String? platform,
+    String? appVersion,
+  }) async {
+    final json = await postJson(
+      ApiEndpoints.authDeviceKeys,
+      body: {
+        'public_key': publicKey,
+        'key_storage': hardwareBacked ? 'hardware' : 'software',
+        'hardware_backed': hardwareBacked,
+        if (label != null) 'label': label,
+        if (platform != null) 'platform': platform,
+        if (appVersion != null) 'app_version': appVersion,
+      },
+    );
+    final id = json['device_key_id'];
+    if (id is String && id.isNotEmpty) return id;
+    throw StateError('Device key response did not include device_key_id');
+  }
+
+  @override
+  Future<OtpChallengeModel> startOtpLogin({
+    required String phone,
+    String? clientNonce,
+    String? deviceName,
+    String? platform,
+    String? appVersion,
+  }) async {
+    final json = await postJson(
+      ApiEndpoints.authOtpLoginStart,
+      body: {
+        'phone': phone,
+        if (clientNonce != null) 'client_nonce': clientNonce,
+        if (deviceName != null) 'device_name': deviceName,
+        if (platform != null) 'platform': platform,
+        if (appVersion != null) 'app_version': appVersion,
+      },
+    );
+    return OtpChallengeModel.fromJson(json);
+  }
+
+  @override
+  Future<OtpLoginResponse> completeOtpLogin({
+    required String phone,
+    required String code,
+    String? clientNonce,
+    String? deviceName,
+    String? platform,
+    String? appVersion,
+  }) async {
+    final json = await postJson(
+      ApiEndpoints.authOtpLoginVerify,
+      body: {
+        'phone': phone,
+        'code': code,
+        if (clientNonce != null) 'client_nonce': clientNonce,
+        if (deviceName != null) 'device_name': deviceName,
+        if (platform != null) 'platform': platform,
+        if (appVersion != null) 'app_version': appVersion,
+      },
+    );
+    return OtpLoginResponse.fromJson(json);
+  }
+
+  @override
+  Future<bool> setPassword({
+    String? currentPassword,
+    required String newPassword,
+  }) async {
+    final json = await postJson(
+      ApiEndpoints.authAccountPassword,
+      body: {
+        if (currentPassword != null) 'current_password': currentPassword,
+        'new_password': newPassword,
+      },
+    );
+    return json['password_enabled'] as bool? ?? true;
+  }
+
+  @override
+  Future<bool> removePassword() async {
+    final json = await deleteJson(ApiEndpoints.authAccountPassword);
+    return json['password_enabled'] as bool? ?? false;
+  }
+
+  @override
+  Future<PhoneChangeRequestModel> startPhoneChange({
+    required String newPhone,
+  }) async {
+    final json = await postJson(
+      ApiEndpoints.authPhoneChangeStart,
+      body: {'new_phone': newPhone},
+    );
+    return PhoneChangeRequestModel.fromJson(json);
+  }
+
+  @override
+  Future<PhoneChangeRequestModel> verifyCurrentPhone({
+    required String requestId,
+    required String code,
+  }) async {
+    final json = await postJson(
+      ApiEndpoints.authPhoneChangeVerifyCurrent(requestId),
+      body: {'code': code},
+    );
+    return PhoneChangeRequestModel.fromJson(json);
+  }
+
+  @override
+  Future<Map<String, dynamic>> confirmPhoneChange({
+    required String requestId,
+    required String code,
+  }) {
+    return postJson(
+      ApiEndpoints.authPhoneChangeConfirm(requestId),
+      body: {'code': code},
+    );
+  }
+
+  @override
+  Future<void> cancelPhoneChange(String requestId) async {
+    await deleteRequest(ApiEndpoints.authPhoneChange(requestId));
+  }
+
+  @override
+  Future<PhoneChangeRequestModel?> pendingPhoneChange() async {
+    final json = await getJson(ApiEndpoints.authPhoneChangePending);
+    final pending = json['pending'];
+    if (pending is! Map) return null;
+    return PhoneChangeRequestModel.fromJson(Map<String, dynamic>.from(pending));
+  }
+
+  @override
+  Future<OtpChallengeModel> requestStepUp(String scope) async {
+    final json = await postJson(
+      ApiEndpoints.authStepUpRequest,
+      body: {'scope': scope},
+    );
+    return OtpChallengeModel.fromJson(json);
+  }
+
+  @override
+  Future<void> verifyStepUp({
+    required String scope,
+    required String code,
+    String? method,
+  }) async {
+    await postJson(
+      ApiEndpoints.authStepUpVerify,
+      body: {
+        'scope': scope,
+        'code': code,
+        if (method != null) 'method': method,
+      },
+    );
+  }
+
+  @override
+  Future<List<String>> generateRecoveryCodes() async {
+    final json = await postJson(ApiEndpoints.authRecoveryCodes);
+    final codes = json['codes'];
+    return codes is List ? codes.map((e) => e.toString()).toList() : const [];
+  }
+
+  @override
+  Future<Map<String, dynamic>> recoveryCodeStatus() {
+    return getJson(ApiEndpoints.authRecoveryCodes);
+  }
+
+  @override
+  Future<RecoveryCaseReceiptModel> submitRecoveryCase(
+    RecoveryClaimModel claim,
+  ) async {
+    final json = await postJson(
+      ApiEndpoints.authRecoveryCases,
+      body: claim.toJson(),
+    );
+    return RecoveryCaseReceiptModel.fromJson(json);
+  }
+
+  @override
+  Future<Map<String, dynamic>> recoveryCaseStatus({
+    required String caseId,
+    required String claimSecret,
+  }) {
+    // POST, not GET: the claim secret must never travel in a URL, where every
+    // proxy between her handset and the server would write it to a log.
+    return postJson(
+      ApiEndpoints.authRecoveryCaseStatus(caseId),
+      body: {'claim_secret': claimSecret},
+    );
+  }
+
+  @override
+  Future<List<OpenRecoveryCaseModel>> openRecoveryCases() async {
+    final list = await getList(ApiEndpoints.authRecoveryCases);
+    return list
+        .whereType<Map>()
+        .map(
+          (item) =>
+              OpenRecoveryCaseModel.fromJson(Map<String, dynamic>.from(item)),
+        )
+        .toList();
+  }
+
+  @override
+  Future<void> cancelRecoveryCase(String caseId) async {
+    await postJson(ApiEndpoints.authRecoveryCaseCancel(caseId));
+  }
 
   @override
   Future<AuthResponseModel> login({
@@ -27,19 +250,27 @@ final class AuthRemoteDataSourceImpl extends BaseRemoteDataSource
 
   @override
   Future<AuthResponseModel> register({
-    required String name,
-    String? email,
+    required String firstName,
+    required String lastName,
     required String phone,
-    required String password,
+    required String registrationTicket,
+    String? password,
+    required String country,
+    required String city,
+    required bool declaredFemale,
     UserRole role = UserRole.customer,
   }) async {
     final json = await postJson(
       ApiEndpoints.authRegister,
       body: RegisterRequestModel(
-        name: name,
-        email: email,
+        firstName: firstName,
+        lastName: lastName,
         phone: phone,
+        registrationTicket: registrationTicket,
         password: password,
+        country: country,
+        city: city,
+        declaredFemale: declaredFemale,
         role: role,
       ).toJson(),
     );
@@ -51,27 +282,6 @@ final class AuthRemoteDataSourceImpl extends BaseRemoteDataSource
     final json = await postJson(
       ApiEndpoints.authRefresh,
       body: {'refresh_token': refreshToken},
-    );
-    return AuthResponseModel.fromJson(json);
-  }
-
-  @override
-  Future<AuthResponseModel> socialSignIn({
-    required SocialAuthProvider provider,
-    String? idToken,
-    String? providerUserId,
-    String? email,
-    String? name,
-  }) async {
-    final json = await postJson(
-      ApiEndpoints.authSocial,
-      body: {
-        'provider': provider.wire,
-        if (idToken != null) 'id_token': idToken,
-        if (providerUserId != null) 'provider_user_id': providerUserId,
-        if (email != null) 'email': email,
-        if (name != null) 'name': name,
-      },
     );
     return AuthResponseModel.fromJson(json);
   }
@@ -144,7 +354,6 @@ final class AuthRemoteDataSourceImpl extends BaseRemoteDataSource
   Future<UserModel> updateAccount({
     String? name,
     String? email,
-    String? phone,
     String? location,
   }) async {
     final json = await patchJson(
@@ -152,25 +361,10 @@ final class AuthRemoteDataSourceImpl extends BaseRemoteDataSource
       body: {
         if (name != null) 'name': name,
         if (email != null) 'email': email,
-        if (phone != null) 'phone': phone,
         if (location != null) 'location': location,
       },
     );
     return UserModel.fromJson(json['user'] as Map<String, dynamic>);
-  }
-
-  @override
-  Future<void> changePassword({
-    String? currentPassword,
-    required String newPassword,
-  }) async {
-    await patchJson(
-      ApiEndpoints.authAccountPassword,
-      body: {
-        if (currentPassword != null) 'current_password': currentPassword,
-        'new_password': newPassword,
-      },
-    );
   }
 
   @override
@@ -194,9 +388,10 @@ final class AuthRemoteDataSourceImpl extends BaseRemoteDataSource
     final list = await getList(ApiEndpoints.authDevices);
     return list
         .whereType<Map>()
-        .map((item) => AccountDeviceModel.fromJson(
-              Map<String, dynamic>.from(item),
-            ))
+        .map(
+          (item) =>
+              AccountDeviceModel.fromJson(Map<String, dynamic>.from(item)),
+        )
         .toList();
   }
 
@@ -213,11 +408,6 @@ final class AuthRemoteDataSourceImpl extends BaseRemoteDataSource
   }
 
   @override
-  Future<void> trustDevice(String id) async {
-    await postJson(ApiEndpoints.authTrustDevice(id));
-  }
-
-  @override
   Future<void> revokeDevice(String id) async {
     await deleteRequest(ApiEndpoints.authDevice(id));
   }
@@ -227,9 +417,10 @@ final class AuthRemoteDataSourceImpl extends BaseRemoteDataSource
     final list = await getList(ApiEndpoints.authSessions);
     return list
         .whereType<Map>()
-        .map((item) => AccountSessionModel.fromJson(
-              Map<String, dynamic>.from(item),
-            ))
+        .map(
+          (item) =>
+              AccountSessionModel.fromJson(Map<String, dynamic>.from(item)),
+        )
         .toList();
   }
 
@@ -244,37 +435,30 @@ final class AuthRemoteDataSourceImpl extends BaseRemoteDataSource
   }
 
   @override
-  Future<AuthAccountModel> linkAccount({
-    required SocialAuthProvider provider,
-    String? idToken,
-    String? providerUserId,
-    String? email,
-    String? name,
-  }) async {
-    final json = await postJson(
-      ApiEndpoints.authAccountLink,
-      body: {
-        'provider': provider.wire,
-        if (idToken != null) 'id_token': idToken,
-        if (providerUserId != null) 'provider_user_id': providerUserId,
-        if (email != null) 'email': email,
-        if (name != null) 'name': name,
-      },
-    );
-    return AuthAccountModel.fromJson(json);
-  }
-
-  @override
-  Future<AuthAccountModel> unlinkAccount(SocialAuthProvider provider) async {
-    final json = await deleteJson(ApiEndpoints.authAccountUnlink(provider.wire));
-    return AuthAccountModel.fromJson(json);
-  }
-
-  @override
   Future<SellerVerificationModel> submitSellerVerification({
     required String businessName,
     required String legalName,
+    required String businessCategory,
+    required String storeDescription,
+    required String storeLogoUrl,
+    required String contactPhone,
+    required String contactEmail,
+    required String businessAddress,
+    required String warehouseAddress,
+    required String commercialRegistration,
+    required String governmentIdUrl,
+    required String businessLicenseUrl,
     String? taxId,
+    required String bankName,
+    required String accountHolder,
+    required String iban,
+    Map<String, dynamic>? paymentInformation,
+    required List<String> shippingMethods,
+    required String returnPolicy,
+    required List<String> productCategories,
+    required int yearsExperience,
+    String? website,
+    Map<String, dynamic>? socialMediaLinks,
     required List<String> documentUrls,
   }) async {
     final json = await postJson(
@@ -282,7 +466,28 @@ final class AuthRemoteDataSourceImpl extends BaseRemoteDataSource
       body: {
         'business_name': businessName,
         'legal_name': legalName,
+        'business_category': businessCategory,
+        'store_description': storeDescription,
+        'store_logo_url': storeLogoUrl,
+        'contact_phone': contactPhone,
+        'contact_email': contactEmail,
+        'business_address': businessAddress,
+        'warehouse_address': warehouseAddress,
+        'commercial_registration': commercialRegistration,
+        'government_id_url': governmentIdUrl,
+        'business_license_url': businessLicenseUrl,
         if (taxId != null) 'tax_id': taxId,
+        'bank_name': bankName,
+        'account_holder': accountHolder,
+        'iban': iban,
+        if (paymentInformation != null)
+          'payment_information': paymentInformation,
+        'shipping_methods': shippingMethods,
+        'return_policy': returnPolicy,
+        'product_categories': productCategories,
+        'years_experience': yearsExperience,
+        if (website != null) 'website': website,
+        if (socialMediaLinks != null) 'social_media_links': socialMediaLinks,
         'document_urls': documentUrls,
       },
     );

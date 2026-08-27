@@ -1,8 +1,9 @@
-import { IsEnum, IsInt, IsOptional, IsUrl, Min } from 'class-validator';
+import { IsEnum, IsInt, IsOptional, Min } from 'class-validator';
 import { MediaType } from '@prisma/client';
+import { MediaUrlField } from '../../../common/dto/media-url.decorator';
 
 export class ProductMediaDto {
-  @IsUrl()
+  @MediaUrlField()
   url!: string;
 
   @IsOptional()

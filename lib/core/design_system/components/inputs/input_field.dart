@@ -34,6 +34,7 @@ class DsInputField extends StatefulWidget {
     this.autofocus = false,
     this.initialValue,
     this.inputFormatters,
+    this.autofillHints,
     this.labelAbove = true,
   });
 
@@ -59,6 +60,14 @@ class DsInputField extends StatefulWidget {
   final bool autofocus;
   final String? initialValue;
   final List<TextInputFormatter>? inputFormatters;
+
+  /// Lets the platform fill the field — most importantly
+  /// `AutofillHints.oneTimeCode`, which puts the code from the notification
+  /// one tap away. On Reem that code *is* the credential, so the difference
+  /// between one tap and retyping six digits from another app is the
+  /// difference between a sign-in that works on a bad connection and one that
+  /// times out halfway through.
+  final List<String>? autofillHints;
 
   /// Render the label as a styled caption above the field (premium look).
   /// When false, falls back to the Material floating label.
@@ -109,6 +118,7 @@ class _DsInputFieldState extends State<DsInputField> {
       readOnly: widget.readOnly,
       autofocus: widget.autofocus,
       inputFormatters: widget.inputFormatters,
+      autofillHints: widget.autofillHints,
       style: theme.textTheme.bodyLarge,
       cursorColor: c.primary,
       decoration: InputDecoration(
@@ -127,8 +137,8 @@ class _DsInputFieldState extends State<DsInputField> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.only(
-            left: DsSpacing.xxs,
+          padding: const EdgeInsetsDirectional.only(
+            start: DsSpacing.xxs,
             bottom: DsSpacing.xs,
           ),
           child: Text(

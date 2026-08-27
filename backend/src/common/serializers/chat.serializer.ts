@@ -44,7 +44,7 @@ export function serializeChatThread(
     buyer_id: chat.buyerId,
     seller_id: chat.sellerId,
     product_id: chat.productId,
-    order_id: chat.orderId,
+    seller_order_id: chat.sellerOrderId,
     last_message: lastMessage ? messagePreview(lastMessage) : '',
     unread_count: unreadCount,
     updated_at: (lastMessage?.createdAt ?? chat.updatedAt).toISOString(),

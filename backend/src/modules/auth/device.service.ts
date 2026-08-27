@@ -4,7 +4,13 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { createHash } from 'crypto';
-import { Device, DeviceTrustLevel, SessionStatus } from '@prisma/client';
+import {
+  Device,
+  DeviceTrustLevel,
+  RiskLevel,
+  SecurityEventType,
+  SessionStatus,
+} from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 import { RequestContext } from './interfaces/request-context.interface';
 
@@ -47,7 +53,7 @@ export class DeviceService {
       });
     }
 
-    return this.prisma.device.create({
+    const device = await this.prisma.device.create({
       data: {
         userId,
         fingerprintHash,
@@ -58,6 +64,21 @@ export class DeviceService {
         userAgent: context.userAgent,
       },
     });
+    await this.prisma.securityEvent.create({
+      data: {
+        actorId: userId,
+        deviceId: device.id,
+        type: SecurityEventType.DEVICE_CREATED,
+        riskLevel: RiskLevel.MEDIUM,
+        ipAddress: context.ipAddress,
+        userAgent: context.userAgent,
+        metadata: {
+          platform: context.platform,
+          app_version: context.appVersion,
+        },
+      },
+    });
+    return device;
   }
 
   async list(userId: string) {
@@ -86,6 +107,14 @@ export class DeviceService {
         verifiedAt: new Date(),
       },
     });
+    await this.prisma.securityEvent.create({
+      data: {
+        actorId: userId,
+        deviceId,
+        type: SecurityEventType.DEVICE_TRUSTED,
+        riskLevel: RiskLevel.LOW,
+      },
+    });
     return this.serializeDevice(device);
   }
 
@@ -106,6 +135,14 @@ export class DeviceService {
         data: { revokedAt: now },
       }),
     ]);
+    await this.prisma.securityEvent.create({
+      data: {
+        actorId: userId,
+        deviceId,
+        type: SecurityEventType.DEVICE_REVOKED,
+        riskLevel: RiskLevel.HIGH,
+      },
+    });
     return { message: 'Device revoked' };
   }
 

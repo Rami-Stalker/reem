@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/design_system/design_system.dart';
+import '../../../../core/localization/l10n_extension.dart';
 import '../../domain/entities/nearby_store.dart';
 import '../providers/home_content_provider.dart';
 import 'home_section_header.dart';
@@ -40,9 +41,9 @@ class _HomeNearbyStoresState extends ConsumerState<HomeNearbyStores> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const HomeSectionHeader(
-          eyebrow: 'Near you',
-          title: 'Boutiques nearby',
+        HomeSectionHeader(
+          eyebrow: context.l10n.homeNearbyEyebrow,
+          title: context.l10n.homeNearbyStores,
         ),
         SizedBox(
           height: 92,
@@ -88,7 +89,7 @@ class _LocationPrompt extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Discover boutiques near you',
+                  context.l10n.homeNearbyPromptTitle,
                   style: TextStyle(
                     fontFamily: DsTypography.fontFamily,
                     fontWeight: DsTypography.bold,
@@ -98,7 +99,7 @@ class _LocationPrompt extends StatelessWidget {
                 ),
                 const SizedBox(height: 2),
                 Text(
-                  'Enable location for local pickup & nearby stores.',
+                  context.l10n.homeNearbyPromptBody,
                   style: TextStyle(
                       fontSize: DsTypography.labelSmall,
                       color: c.onSurfaceVariant),
@@ -108,7 +109,7 @@ class _LocationPrompt extends StatelessWidget {
           ),
           const SizedBox(width: DsSpacing.sm),
           DsButton(
-            label: 'Enable',
+            label: context.l10n.enable,
             size: DsButtonSize.sm,
             variant: DsButtonVariant.tonal,
             isExpanded: false,
@@ -176,7 +177,7 @@ class _NearbyCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 3),
                 Text(
-                  store.isOpen ? 'Open now' : 'Closed',
+                  store.isOpen ? context.l10n.openNow : context.l10n.closedNow,
                   style: TextStyle(
                     fontSize: DsTypography.labelSmall,
                     fontWeight: DsTypography.bold,
