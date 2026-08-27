@@ -11,8 +11,8 @@ import '../../domain/usecases/login_usecase.dart';
 import '../../domain/usecases/logout_usecase.dart';
 import '../../domain/usecases/otp_usecases.dart';
 import '../../domain/usecases/register_usecase.dart';
-import 'auth_state.dart';
 import 'auth_message.dart';
+import 'auth_state.dart';
 
 class AuthNotifier extends StateNotifier<AuthState> {
   AuthNotifier({

@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/design_system/design_system.dart';
+import '../../../../core/localization/l10n_extension.dart';
 import '../../domain/entities/achievement.dart';
 import '../providers/profile_overview_provider.dart';
 import 'profile_section_header.dart';
-import '../../../../core/localization/l10n_extension.dart';
 
 /// Gamified badges — a rail of achievement medallions. Earned badges glow in
 /// champagne gold; locked ones are muted with a lock. Tapping opens detail.

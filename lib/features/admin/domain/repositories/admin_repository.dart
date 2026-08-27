@@ -1,7 +1,7 @@
 import 'package:reem/core/result/result.dart';
 
-import '../entities/admin_stats_entity.dart';
 import '../entities/admin_console_entity.dart';
+import '../entities/admin_stats_entity.dart';
 import '../entities/analytics_dashboard_entity.dart';
 
 abstract interface class AdminRepository {

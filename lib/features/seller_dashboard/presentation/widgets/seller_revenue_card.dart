@@ -215,7 +215,11 @@ class SellerRevenueCard extends ConsumerWidget {
     };
     final dataset = charts[granularity] ??
         (charts.isEmpty ? null : charts.values.first);
-    return [for (final point in dataset?.revenuePoints ?? const []) point.value];
+    return [
+      for (final point
+          in dataset?.revenuePoints ?? const <SellerChartPoint>[])
+        point.value,
+    ];
   }
 }
 

@@ -42,7 +42,7 @@ class OtpLoginResponse {
         UserModel.fromJson(Map<String, dynamic>.from(user)),
         passwordEnabled: json['password_enabled'] as bool? ?? false,
       ),
-      tokens: TokenModel.fromJson(json['tokens']),
+      tokens: TokenModel.fromJson(json['tokens'] as Map<String, dynamic>),
     );
   }
 }

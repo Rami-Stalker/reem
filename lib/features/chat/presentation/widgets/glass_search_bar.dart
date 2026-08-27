@@ -60,7 +60,7 @@ class GlassSearchBar
               ),
 
               hintText:
-                  "Search conversations...",
+                  'Search conversations...',
 
               hintStyle: TextStyle(
                 color: Colors.grey[500],

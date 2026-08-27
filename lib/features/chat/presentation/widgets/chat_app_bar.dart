@@ -90,7 +90,7 @@ class ChatAppBar
 
                 backgroundImage:
                     NetworkImage(
-                  "https://images.unsplash.com/photo-1494790108377-be9c29b29330",
+                  'https://images.unsplash.com/photo-1494790108377-be9c29b29330',
                 ),
               ),
 
@@ -108,7 +108,7 @@ class ChatAppBar
 
                     const Text(
 
-                      "Lujain Fashion",
+                      'Lujain Fashion',
 
                       style: TextStyle(
 
@@ -145,7 +145,7 @@ class ChatAppBar
 
                         Text(
 
-                          "Online",
+                          'Online',
 
                           style: TextStyle(
 

@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/design_system/design_system.dart';
 import '../../../../core/experience/role_experience.dart';
+import '../../../../core/localization/l10n_extension.dart';
 import '../../../../core/router/route_paths.dart';
 import '../../../auth/presentation/providers/auth_provider.dart';
 import '../../../experience/presentation/providers/role_experience_provider.dart';
@@ -24,7 +25,6 @@ import '../widgets/profile_recently_viewed.dart';
 import '../widgets/profile_referral_card.dart';
 import '../widgets/profile_stats.dart';
 import '../widgets/profile_wishlist_preview.dart';
-import '../../../../core/localization/l10n_extension.dart';
 
 /// Role-aware profile dispatcher — renders [SellerProfileScreen] for sellers
 /// and the buyer profile hub for customers.

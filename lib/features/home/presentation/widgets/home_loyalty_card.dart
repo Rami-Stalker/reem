@@ -3,10 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/design_system/design_system.dart';
+import '../../../../core/localization/l10n_extension.dart';
 import '../../../../core/router/route_paths.dart';
 import '../../../../core/shared/entities/loyalty.dart';
 import '../providers/home_content_provider.dart';
-import '../../../../core/localization/l10n_extension.dart';
 
 /// The loyalty & rewards widget — a jewel-toned membership card showing points,
 /// tier progress, available coupons and a personalized reward nudge.

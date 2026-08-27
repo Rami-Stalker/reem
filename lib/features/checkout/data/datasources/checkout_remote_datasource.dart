@@ -1,7 +1,7 @@
+import '../../../../core/shared/value_objects/money.dart';
 import '../../domain/entities/checkout.dart';
 import '../models/checkout_models.dart';
 import '../models/order_models.dart';
-import '../../../../core/shared/value_objects/money.dart';
 
 abstract interface class CheckoutRemoteDataSource {
   Future<List<GovernorateModel>> getGovernorates();

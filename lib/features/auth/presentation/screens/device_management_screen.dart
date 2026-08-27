@@ -3,9 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reem/core/design_system/design_system.dart';
 import 'package:reem/core/result/result.dart';
 
+import '../../../../core/localization/l10n_extension.dart';
 import '../providers/auth_account_provider.dart';
 import '../providers/auth_provider.dart';
-import '../../../../core/localization/l10n_extension.dart';
 
 class DeviceManagementScreen extends ConsumerWidget {
   const DeviceManagementScreen({super.key});

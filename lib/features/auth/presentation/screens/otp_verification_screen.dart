@@ -5,9 +5,9 @@ import 'package:reem/core/design_system/design_system.dart';
 import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/features/auth/domain/entities/auth_account.dart';
 
+import '../../../../core/localization/l10n_extension.dart';
 import '../providers/auth_provider.dart';
 import '../utils/auth_form_validators.dart';
-import '../../../../core/localization/l10n_extension.dart';
 
 class OtpVerificationScreen extends ConsumerStatefulWidget {
   const OtpVerificationScreen({

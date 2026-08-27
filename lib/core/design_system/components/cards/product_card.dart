@@ -1,7 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter_blurhash/flutter_blurhash.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_blurhash/flutter_blurhash.dart';
 
+import '../../../media/media_variants.dart';
 import '../../foundation/motion/animations/scale_animations.dart';
 import '../../foundation/theme/extensions/color_extension.dart';
 import '../../foundation/theme/extensions/shadow_extension.dart';
@@ -12,7 +13,6 @@ import '../../foundation/tokens/ds_typography.dart';
 import '../badges/ds_badge.dart';
 import '../buttons/ds_icon_button.dart';
 import '../loaders/ds_skeleton.dart';
-import '../../../media/media_variants.dart';
 
 /// A premium product card for grids and carousels.
 ///

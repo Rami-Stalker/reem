@@ -3,8 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/design_system/design_system.dart';
-import '../../../../core/shared/entities/user.dart';
 import '../../../../core/router/route_paths.dart';
+import '../../../../core/shared/entities/user.dart';
 import '../../domain/entities/user_profile.dart';
 import '../providers/user_profile_providers.dart';
 import '../widgets/follow_button.dart';

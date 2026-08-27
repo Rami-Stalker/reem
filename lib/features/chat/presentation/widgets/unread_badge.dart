@@ -41,7 +41,7 @@ class UnreadBadge
 
       child: Text(
 
-        "$count",
+        '$count',
 
         style: const TextStyle(
 

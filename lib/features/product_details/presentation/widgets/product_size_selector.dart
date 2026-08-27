@@ -17,11 +17,11 @@ class _ProductSizeSelectorState
   int selected = 1;
 
   final sizes = [
-    "XS",
-    "S",
-    "M",
-    "L",
-    "XL",
+    'XS',
+    'S',
+    'M',
+    'L',
+    'XL',
   ];
 
   @override
@@ -33,7 +33,7 @@ class _ProductSizeSelectorState
       children: [
 
         const Text(
-          "Select Size",
+          'Select Size',
 
           style: TextStyle(
             fontSize: 24,

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../design_system.dart';
 import '../../localization/l10n_extension.dart';
+import '../design_system.dart';
 
 class ReemSectionHeader extends StatelessWidget {
   const ReemSectionHeader({

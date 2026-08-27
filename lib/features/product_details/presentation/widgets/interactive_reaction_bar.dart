@@ -13,7 +13,7 @@ class InteractiveReactionBar
 
         _item(
           Icons.favorite,
-          "24K",
+          '24K',
           Colors.pink,
         ),
 
@@ -21,7 +21,7 @@ class InteractiveReactionBar
 
         _item(
           Icons.mode_comment,
-          "1.2K",
+          '1.2K',
           Colors.purple,
         ),
 
@@ -29,7 +29,7 @@ class InteractiveReactionBar
 
         _item(
           Icons.share,
-          "800",
+          '800',
           Colors.orange,
         ),
       ],

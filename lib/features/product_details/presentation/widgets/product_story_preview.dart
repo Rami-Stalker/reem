@@ -15,7 +15,7 @@ class ProductStoryPreview
       children: [
 
         const Text(
-          "Luxury Stories",
+          'Luxury Stories',
 
           style: TextStyle(
             fontSize: 24,
@@ -89,7 +89,7 @@ class ProductStoryPreview
                             const DecorationImage(
                           image:
                               NetworkImage(
-                            "https://images.unsplash.com/photo-1494790108377-be9c29b29330",
+                            'https://images.unsplash.com/photo-1494790108377-be9c29b29330',
                           ),
 
                           fit:
@@ -103,7 +103,7 @@ class ProductStoryPreview
                       height: 10),
 
                   const Text(
-                    "Luxury",
+                    'Luxury',
 
                     style: TextStyle(
                       fontWeight:

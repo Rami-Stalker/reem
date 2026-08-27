@@ -2,7 +2,6 @@
 //
 //   flutter test test/admin_finance_visual_preview_test.dart
 import 'dart:io';
-import 'dart:typed_data';
 import 'dart:ui' show ImageByteFormat;
 
 import 'package:flutter/material.dart';

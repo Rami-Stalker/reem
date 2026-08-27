@@ -4,14 +4,13 @@
 //
 //   flutter test test/home_visual_preview_test.dart
 import 'dart:io';
-import 'dart:typed_data';
 import 'dart:ui' show ImageByteFormat;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:reem/core/design_system/design_system.dart';
 import 'package:reem/core/localization/app_localizations.dart';
 import 'package:reem/core/shared/entities/brand.dart';

@@ -3,11 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/design_system/design_system.dart';
+import '../../../../core/localization/l10n_extension.dart';
 import '../../../../core/router/route_paths.dart';
 import '../../../auth/presentation/widgets/auth_prompt_sheet.dart';
 import '../../domain/entities/cart.dart';
 import '../providers/cart_providers.dart';
-import '../../../../core/localization/l10n_extension.dart';
 
 class CartScreen extends ConsumerWidget {
   const CartScreen({super.key});

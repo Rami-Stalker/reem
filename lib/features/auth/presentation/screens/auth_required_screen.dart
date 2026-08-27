@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/design_system/design_system.dart';
-import '../../../../core/router/route_paths.dart';
 import '../../../../core/localization/l10n_extension.dart';
+import '../../../../core/router/route_paths.dart';
 
 class AuthRequiredScreen extends StatelessWidget {
   const AuthRequiredScreen({super.key, this.from});

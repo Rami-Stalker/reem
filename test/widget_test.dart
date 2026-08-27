@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:reem/features/auth/presentation/utils/auth_form_validators.dart';
-import 'package:reem/l10n/app_localizations_ar.dart';
 import 'package:reem/features/search/domain/entities/search_suggestions.dart';
+import 'package:reem/l10n/app_localizations_ar.dart';
 
 void main() {
   group('AuthFormValidators', () {

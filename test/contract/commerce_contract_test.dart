@@ -5,7 +5,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:reem/core/shared/value_objects/money.dart';
 import 'package:reem/features/cart/data/models/cart_model.dart';
 import 'package:reem/features/checkout/data/models/checkout_models.dart';
-import 'package:reem/features/checkout/data/models/order_models.dart';
 import 'package:reem/features/checkout/domain/entities/order.dart';
 
 /// Contract tests for the commerce flow, run against responses captured from a

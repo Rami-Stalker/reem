@@ -65,7 +65,7 @@ class ProductPriceSection
               children: [
 
                 Text(
-                  "Price",
+                  'Price',
 
                   style: TextStyle(
                     color:
@@ -81,7 +81,7 @@ class ProductPriceSection
                   children: [
 
                     const Text(
-                      "\$240",
+                      '\$240',
 
                       style: TextStyle(
                         fontSize: 34,
@@ -98,7 +98,7 @@ class ProductPriceSection
                         width: 14),
 
                     Text(
-                      "\$420",
+                      '\$420',
 
                       style: TextStyle(
                         decoration:
@@ -143,7 +143,7 @@ class ProductPriceSection
               children: [
 
                 Text(
-                  "45%",
+                  '45%',
 
                   style: TextStyle(
                     color: Colors.white,
@@ -158,7 +158,7 @@ class ProductPriceSection
                 SizedBox(height: 4),
 
                 Text(
-                  "OFF",
+                  'OFF',
 
                   style: TextStyle(
                     color:

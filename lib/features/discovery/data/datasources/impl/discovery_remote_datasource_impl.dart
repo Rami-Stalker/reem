@@ -2,8 +2,8 @@ import 'package:reem/core/network/api_endpoints.dart';
 import 'package:reem/core/network/base_remote_datasource.dart';
 import 'package:reem/core/shared/models/product_model.dart';
 
-import '../discovery_remote_datasource.dart';
 import '../../models/product_page_model.dart';
+import '../discovery_remote_datasource.dart';
 
 final class DiscoveryRemoteDataSourceImpl extends BaseRemoteDataSource
     implements DiscoveryRemoteDataSource {

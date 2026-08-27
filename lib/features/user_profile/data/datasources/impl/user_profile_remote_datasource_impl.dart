@@ -2,10 +2,10 @@ import 'package:reem/core/network/api_endpoints.dart';
 import 'package:reem/core/network/base_remote_datasource.dart';
 import 'package:reem/core/shared/models/user_model.dart';
 
-import '../user_profile_remote_datasource.dart';
 import '../../models/follow_result_model.dart';
 import '../../models/update_profile_request.dart';
 import '../../models/user_profile_model.dart';
+import '../user_profile_remote_datasource.dart';
 
 final class UserProfileRemoteDataSourceImpl extends BaseRemoteDataSource
     implements UserProfileRemoteDataSource {

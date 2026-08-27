@@ -49,7 +49,7 @@ class _QuantitySelectorState
         children: [
 
           const Text(
-            "Quantity",
+            'Quantity',
 
             style: TextStyle(
               fontSize: 20,

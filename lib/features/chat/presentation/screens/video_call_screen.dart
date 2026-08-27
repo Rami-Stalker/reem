@@ -55,7 +55,7 @@ class _VideoCallScreenState
         
             Image.network(
         
-              "https://images.unsplash.com/photo-1494790108377-be9c29b29330",
+              'https://images.unsplash.com/photo-1494790108377-be9c29b29330',
         
               fit: BoxFit.cover,
             ),
@@ -162,7 +162,7 @@ class _VideoCallScreenState
                               child:
                                   const Text(
         
-                                "00:48",
+                                '00:48',
         
                                 style:
                                     TextStyle(
@@ -228,7 +228,7 @@ class _VideoCallScreenState
         
                             image:
                                 NetworkImage(
-                              "https://images.unsplash.com/photo-1494790108377-be9c29b29330",
+                              'https://images.unsplash.com/photo-1494790108377-be9c29b29330',
                             ),
         
                             fit:
@@ -242,7 +242,7 @@ class _VideoCallScreenState
         
                     const Text(
         
-                      "Lujain Fashion",
+                      'Lujain Fashion',
         
                       style: TextStyle(
         
@@ -259,7 +259,7 @@ class _VideoCallScreenState
         
                     Text(
         
-                      "Luxury Video Call ✨",
+                      'Luxury Video Call ✨',
         
                       style: TextStyle(
         

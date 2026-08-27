@@ -37,7 +37,7 @@ class ChatProfileScreen extends StatelessWidget {
                 const SizedBox(height: 40),
 
                 Hero(
-                  tag: "profile",
+                  tag: 'profile',
 
                   child: Container(
                     width: 150,
@@ -48,7 +48,7 @@ class ChatProfileScreen extends StatelessWidget {
 
                       image: const DecorationImage(
                         image: NetworkImage(
-                          "https://images.unsplash.com/photo-1494790108377-be9c29b29330",
+                          'https://images.unsplash.com/photo-1494790108377-be9c29b29330',
                         ),
 
                         fit: BoxFit.cover,
@@ -77,7 +77,7 @@ class ChatProfileScreen extends StatelessWidget {
                   },
 
                   child: const Text(
-                    "Lujain Fashion",
+                    'Lujain Fashion',
 
                     style: TextStyle(
                       fontSize: 34,
@@ -92,7 +92,7 @@ class ChatProfileScreen extends StatelessWidget {
                 const SizedBox(height: 12),
 
                 Text(
-                  "Luxury Fashion Brand ✨",
+                  'Luxury Fashion Brand ✨',
 
                   style: TextStyle(color: Colors.grey[700], fontSize: 16),
                 ),
@@ -103,20 +103,20 @@ class ChatProfileScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
 
                   children: [
-                    _action(Icons.call_rounded, "Call"),
+                    _action(Icons.call_rounded, 'Call'),
 
-                    _action(Icons.videocam_rounded, "Video"),
+                    _action(Icons.videocam_rounded, 'Video'),
 
-                    _action(Icons.search_rounded, "Search"),
+                    _action(Icons.search_rounded, 'Search'),
 
-                    _action(Icons.notifications, "Mute"),
+                    _action(Icons.notifications, 'Mute'),
                   ],
                 ),
 
                 const SizedBox(height: 42),
 
                 _section(
-                  title: "Shared Media",
+                  title: 'Shared Media',
                   child: SizedBox(
                     height: 120,
 
@@ -134,7 +134,7 @@ class ChatProfileScreen extends StatelessWidget {
 
                             image: DecorationImage(
                               image: NetworkImage(
-                                "https://picsum.photos/300/40$index",
+                                'https://picsum.photos/300/40$index',
                               ),
 
                               fit: BoxFit.cover,
@@ -149,28 +149,28 @@ class ChatProfileScreen extends StatelessWidget {
                 const SizedBox(height: 26),
 
                 _section(
-                  title: "Options",
+                  title: 'Options',
 
                   child: Column(
                     children: [
-                      _tile(Icons.photo_library, "Media & Files"),
+                      _tile(Icons.photo_library, 'Media & Files'),
 
-                      _tile(Icons.favorite, "Favorite Messages"),
+                      _tile(Icons.favorite, 'Favorite Messages'),
 
-                      _tile(Icons.wallpaper, "Chat Theme"),
+                      _tile(Icons.wallpaper, 'Chat Theme'),
 
-                      _tile(Icons.lock, "Privacy Settings"),
+                      _tile(Icons.lock, 'Privacy Settings'),
                     ],
                   ),
                 ),
 
                 const SizedBox(height: 26),
 
-                _dangerTile(Icons.delete_rounded, "Delete Conversation"),
+                _dangerTile(Icons.delete_rounded, 'Delete Conversation'),
 
                 const SizedBox(height: 20),
 
-                _dangerTile(Icons.block_rounded, "Block User"),
+                _dangerTile(Icons.block_rounded, 'Block User'),
               ],
             ),
           ),

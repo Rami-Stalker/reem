@@ -31,10 +31,10 @@ class ParallaxProductHeader
 
             /// IMAGE
             Hero(
-              tag: "product",
+              tag: 'product',
 
               child: Image.network(
-                "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f",
+                'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f',
 
                 fit: BoxFit.cover,
               ),

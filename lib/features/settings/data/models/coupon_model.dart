@@ -49,8 +49,8 @@ class CouponModel extends CouponEntity {
   /// them with `as num?` returns null for every one of them, which is how a
   /// fixed-amount coupon silently displays as «خصم ٠».
   static double? _number(Object? value) => switch (value) {
-    num n => n.toDouble(),
-    String s => double.tryParse(s),
+    final num n => n.toDouble(),
+    final String s => double.tryParse(s),
     _ => null,
   };
 }

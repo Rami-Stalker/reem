@@ -35,7 +35,7 @@ class LuxuryRatingBar
         const SizedBox(width: 12),
 
         const Text(
-          "4.9",
+          '4.9',
 
           style: TextStyle(
             fontWeight:
@@ -48,7 +48,7 @@ class LuxuryRatingBar
         const SizedBox(width: 10),
 
         Text(
-          "(2.4k reviews)",
+          '(2.4k reviews)',
 
           style: TextStyle(
             color: Colors.grey[600],

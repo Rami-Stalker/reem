@@ -5,8 +5,8 @@ import 'package:go_router/go_router.dart';
 import 'package:reem/core/shared/entities/product.dart';
 
 import '../../../../core/design_system/design_system.dart';
-import '../../../../core/router/route_names.dart';
 import '../../../../core/localization/l10n_extension.dart';
+import '../../../../core/router/route_names.dart';
 
 class FavoriteProductCard extends StatelessWidget {
   const FavoriteProductCard({super.key, required this.product});

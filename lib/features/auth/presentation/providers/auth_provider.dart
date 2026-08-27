@@ -1,7 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
+import 'package:reem/core/security/device_identity_service.dart';
 
 import '../../../../core/presentation/providers/core_providers.dart';
+import '../../data/datasources/auth_local_datasource.dart';
+import '../../data/datasources/auth_remote_datasource.dart';
 import '../../data/datasources/impl/auth_local_datasource_impl.dart';
 import '../../data/datasources/impl/auth_remote_datasource_impl.dart';
 import '../../data/repositories/auth_repository_impl.dart';
@@ -15,9 +18,6 @@ import '../../domain/usecases/otp_usecases.dart';
 import '../../domain/usecases/register_usecase.dart';
 import 'auth_notifier.dart';
 import 'auth_state.dart';
-import '../../data/datasources/auth_local_datasource.dart';
-import '../../data/datasources/auth_remote_datasource.dart';
-import 'package:reem/core/security/device_identity_service.dart';
 
 final authLocalDataSourceProvider = Provider<AuthLocalDataSource>(
   (ref) => AuthLocalDataSourceImpl(ref.watch(secureStorageProvider)),

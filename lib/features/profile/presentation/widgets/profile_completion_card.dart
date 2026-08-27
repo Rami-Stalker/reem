@@ -3,10 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/design_system/design_system.dart';
+import '../../../../core/localization/l10n_extension.dart';
 import '../../../../core/router/route_paths.dart';
 import '../../domain/entities/profile_overview.dart';
 import '../providers/profile_overview_provider.dart';
-import '../../../../core/localization/l10n_extension.dart';
 
 /// Profile completion — a progress ring, the next nudge and a checklist of
 /// steps. Collapses into a celebratory state at 100%.

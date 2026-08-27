@@ -310,7 +310,7 @@ class _ChatTileState
 
                               Text(
 
-                                "2:48 PM",
+                                '2:48 PM',
 
                                 style:
                                     TextStyle(
@@ -393,7 +393,7 @@ class _ChatTileState
 
                                     const Text(
 
-                                      "typing...",
+                                      'typing...',
 
                                       style:
                                           TextStyle(

@@ -1,21 +1,20 @@
-import 'package:reem/core/base/repository_handler.dart';
-import 'package:reem/core/errors/app_exception.dart';
-import 'package:reem/core/network/network_info.dart';
 import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/foundation.dart';
-
+import 'package:reem/core/base/repository_handler.dart';
+import 'package:reem/core/errors/app_exception.dart';
+import 'package:reem/core/network/network_info.dart';
 import 'package:reem/core/result/result.dart';
 import 'package:reem/core/security/device_identity_service.dart';
-import '../models/identity_models.dart';
-import '../models/token_model.dart';
 import 'package:reem/core/shared/entities/user.dart';
 import 'package:reem/features/auth/domain/entities/auth_account.dart';
 
 import '../../domain/repositories/auth_repository.dart';
 import '../datasources/auth_local_datasource.dart';
 import '../datasources/auth_remote_datasource.dart';
+import '../models/identity_models.dart';
+import '../models/token_model.dart';
 
 class AuthRepositoryImpl with RepositoryHandler implements AuthRepository {
   AuthRepositoryImpl({

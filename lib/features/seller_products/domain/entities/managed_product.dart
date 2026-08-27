@@ -2,9 +2,9 @@ import 'package:equatable/equatable.dart';
 import 'package:reem/core/shared/entities/category.dart';
 import 'package:reem/core/shared/entities/media.dart';
 import 'package:reem/core/shared/entities/product_variant.dart';
+import 'package:reem/core/shared/value_objects/money.dart';
 
 import 'product_status.dart';
-import 'package:reem/core/shared/value_objects/money.dart';
 
 /// A seller's own listing.
 ///

@@ -1,10 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-
-import '../design_system.dart';
-import '../../shared/entities/product.dart';
-import '../../media/media_variants.dart';
 import 'package:flutter_blurhash/flutter_blurhash.dart';
+
+import '../../media/media_variants.dart';
+import '../../shared/entities/product.dart';
+import '../design_system.dart';
 
 /// An **editorial mosaic** of products — the magazine spread shape.
 ///

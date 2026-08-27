@@ -17,7 +17,7 @@ class RelatedProductsSection
       children: [
 
         const Text(
-          "Related Products",
+          'Related Products',
 
           style: TextStyle(
             fontSize: 28,
@@ -51,13 +51,13 @@ class RelatedProductsSection
                 child:
                     AnimatedProductCard(
                   image:
-                      "https://images.unsplash.com/photo-1496747611176-843222e1e57c",
+                      'https://images.unsplash.com/photo-1496747611176-843222e1e57c',
 
                   title:
-                      "Luxury Collection",
+                      'Luxury Collection',
 
                   price:
-                      "\$${(index + 1) * 180}",
+                      '\$${(index + 1) * 180}',
                 ),
               );
             },

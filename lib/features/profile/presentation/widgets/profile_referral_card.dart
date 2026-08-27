@@ -3,9 +3,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/design_system/design_system.dart';
+import '../../../../core/localization/l10n_extension.dart';
 import '../../domain/entities/referral.dart';
 import '../providers/profile_overview_provider.dart';
-import '../../../../core/localization/l10n_extension.dart';
 
 /// The referral programme — share code, invited count and points earned, with
 /// copy + share affordances.

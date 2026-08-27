@@ -70,7 +70,7 @@ class _ProductDescriptionState
 
           /// TITLE
           const Text(
-            "Description",
+            'Description',
 
             style: TextStyle(
               fontSize: 26,
@@ -94,7 +94,7 @@ class _ProductDescriptionState
                     .showFirst,
 
             firstChild: Text(
-              "Elegant premium fashion crafted with luxurious materials and a timeless feminine silhouette. Designed to deliver beauty, confidence, and sophistication in every detail.",
+              'Elegant premium fashion crafted with luxurious materials and a timeless feminine silhouette. Designed to deliver beauty, confidence, and sophistication in every detail.',
 
               maxLines: 3,
               overflow:
@@ -108,7 +108,7 @@ class _ProductDescriptionState
             ),
 
             secondChild: Text(
-              "Elegant premium fashion crafted with luxurious materials and a timeless feminine silhouette. Designed to deliver beauty, confidence, and sophistication in every detail.\n\nThis collection combines modern luxury with soft feminine aesthetics, offering unmatched comfort and premium craftsmanship. Perfect for luxury lifestyle lovers seeking elegance, exclusivity, and high-end fashion experiences.",
+              'Elegant premium fashion crafted with luxurious materials and a timeless feminine silhouette. Designed to deliver beauty, confidence, and sophistication in every detail.\n\nThis collection combines modern luxury with soft feminine aesthetics, offering unmatched comfort and premium craftsmanship. Perfect for luxury lifestyle lovers seeking elegance, exclusivity, and high-end fashion experiences.',
 
               style: TextStyle(
                 color: Colors.grey[700],
@@ -136,8 +136,8 @@ class _ProductDescriptionState
 
                 Text(
                   expanded
-                      ? "Show Less"
-                      : "Read More",
+                      ? 'Show Less'
+                      : 'Read More',
 
                   style: const TextStyle(
                     color:

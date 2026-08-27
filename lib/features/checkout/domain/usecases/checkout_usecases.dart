@@ -1,9 +1,9 @@
 import 'package:reem/core/result/result.dart';
 
+import '../../../../core/shared/value_objects/money.dart';
 import '../entities/checkout.dart';
 import '../entities/order.dart';
 import '../repositories/checkout_repository.dart';
-import '../../../../core/shared/value_objects/money.dart';
 
 class GetGovernoratesUseCase {
   const GetGovernoratesUseCase(this._repo);

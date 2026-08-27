@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:reem/core/presentation/providers/core_providers.dart';
 import 'package:flutter_riverpod/legacy.dart';
+import 'package:reem/core/presentation/providers/core_providers.dart';
 
 import '../../data/datasources/impl/profile_overview_remote_datasource.dart';
 import '../../data/datasources/profile_overview_datasource.dart';

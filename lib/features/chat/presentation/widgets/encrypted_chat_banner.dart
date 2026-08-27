@@ -56,7 +56,7 @@ class EncryptedChatBanner
 
             Text(
 
-              "End-to-end encrypted",
+              'End-to-end encrypted',
 
               style: TextStyle(
 

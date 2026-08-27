@@ -6,6 +6,7 @@ import '../../../../core/result/result.dart';
 import '../../data/datasources/impl/settings_remote_datasource_impl.dart';
 import '../../data/datasources/settings_remote_datasource.dart';
 import '../../data/repositories/settings_repository_impl.dart';
+import '../../domain/entities/notification_preferences.dart';
 import '../../domain/repositories/settings_repository.dart';
 import '../../domain/usecases/get_addresses_usecase.dart';
 import '../../domain/usecases/get_coupons_usecase.dart';
@@ -14,7 +15,6 @@ import '../../domain/usecases/get_notifications_usecase.dart';
 import '../../domain/usecases/get_rewards_usecase.dart';
 import '../../domain/usecases/update_notification_preferences_usecase.dart';
 import '../../domain/usecases/update_profile_usecase.dart';
-import '../../domain/entities/notification_preferences.dart';
 import 'settings_notifier.dart';
 import 'settings_state.dart';
 

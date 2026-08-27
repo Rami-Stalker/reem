@@ -2,13 +2,13 @@ import 'package:reem/core/network/api_endpoints.dart';
 import 'package:reem/core/network/base_remote_datasource.dart';
 import 'package:reem/core/shared/entities/user.dart';
 import 'package:reem/core/shared/models/user_model.dart';
-import 'package:reem/features/auth/domain/entities/auth_account.dart';
 import 'package:reem/features/auth/data/datasources/auth_remote_datasource.dart';
 import 'package:reem/features/auth/data/models/account_models.dart';
 import 'package:reem/features/auth/data/models/auth_response_model.dart';
 import 'package:reem/features/auth/data/models/identity_models.dart';
 import 'package:reem/features/auth/data/models/login_request_model.dart';
 import 'package:reem/features/auth/data/models/register_request_model.dart';
+import 'package:reem/features/auth/domain/entities/auth_account.dart';
 
 final class AuthRemoteDataSourceImpl extends BaseRemoteDataSource
     implements AuthRemoteDataSource {

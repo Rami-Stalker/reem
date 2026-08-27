@@ -3,11 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/design_system/design_system.dart';
+import '../../../../core/localization/l10n_extension.dart';
 import '../../../../core/router/route_paths.dart';
 import '../../domain/entities/followed_store.dart';
 import '../providers/profile_overview_provider.dart';
 import 'profile_section_header.dart';
-import '../../../../core/localization/l10n_extension.dart';
 
 /// "Following" — a rail of the boutiques the customer follows, each with a
 /// new-arrivals badge. Tapping opens the store profile.

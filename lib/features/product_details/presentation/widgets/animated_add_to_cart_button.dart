@@ -96,7 +96,7 @@ class _AnimatedAddToCartButtonState
                       SizedBox(width: 12),
 
                       Text(
-                        "Added Successfully",
+                        'Added Successfully',
 
                         style: TextStyle(
                           color:
@@ -130,7 +130,7 @@ class _AnimatedAddToCartButtonState
                       SizedBox(width: 12),
 
                       Text(
-                        "Add To Cart",
+                        'Add To Cart',
 
                         style: TextStyle(
                           color:

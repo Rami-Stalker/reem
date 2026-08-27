@@ -3,12 +3,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/design_system/design_system.dart';
+import '../../../../core/localization/l10n_extension.dart';
 import '../../../../core/router/route_paths.dart';
 import '../../domain/entities/managed_product.dart';
 import '../../domain/entities/product_status.dart';
 import '../providers/seller_products_providers.dart';
 import '../widgets/managed_product_card.dart';
-import '../../../../core/localization/l10n_extension.dart';
 
 class MyProductsScreen extends ConsumerWidget {
   const MyProductsScreen({super.key});

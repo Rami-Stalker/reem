@@ -6,9 +6,9 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../../core/design_system/design_system.dart';
 import '../../../../../core/router/route_paths.dart';
+import '../../../../core/localization/l10n_extension.dart';
 import '../../domain/entities/seller_top_product.dart';
 import '../providers/seller_dashboard_provider.dart';
-import '../../../../core/localization/l10n_extension.dart';
 
 class SellerTopProducts extends ConsumerWidget {
   const SellerTopProducts({super.key});

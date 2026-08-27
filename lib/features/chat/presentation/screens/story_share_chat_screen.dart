@@ -64,7 +64,7 @@ class StoryShareChatScreen
 
                     const Text(
 
-                      "Share Story",
+                      'Share Story',
 
                       style: TextStyle(
 
@@ -129,7 +129,7 @@ class StoryShareChatScreen
                               backgroundImage:
                                   NetworkImage(
 
-                                "https://picsum.photos/200/$index",
+                                'https://picsum.photos/200/$index',
                               ),
                             ),
 
@@ -148,7 +148,7 @@ class StoryShareChatScreen
 
                                   Text(
 
-                                    "Luxury User ${index + 1}",
+                                    'Luxury User ${index + 1}',
 
                                     style:
                                         const TextStyle(
@@ -168,7 +168,7 @@ class StoryShareChatScreen
 
                                   Text(
 
-                                    "Tap to share story ✨",
+                                    'Tap to share story ✨',
 
                                     style:
                                         TextStyle(

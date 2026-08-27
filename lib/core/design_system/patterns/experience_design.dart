@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 import '../foundation/theme/extensions/color_extension.dart';
-import 'admin_console.dart';
 import '../foundation/tokens/ds_radius.dart';
 import '../foundation/tokens/ds_spacing.dart';
 import '../foundation/tokens/ds_typography.dart';
+import 'admin_console.dart';
 import 'seller_atelier.dart';
 
 abstract final class CustomerExperience {

@@ -1,11 +1,11 @@
 import 'package:flutter_riverpod/legacy.dart';
 import 'package:reem/core/result/result.dart';
 
+import '../../domain/usecases/create_wishlist_collection_usecase.dart';
 import '../../domain/usecases/get_favorites_usecase.dart';
 import '../../domain/usecases/get_orders_usecase.dart';
 import '../../domain/usecases/get_profile_usecase.dart';
 import '../../domain/usecases/get_wishlist_overview_usecase.dart';
-import '../../domain/usecases/create_wishlist_collection_usecase.dart';
 import '../../domain/usecases/save_post_usecase.dart';
 import '../../domain/usecases/save_seller_usecase.dart';
 import '../../domain/usecases/share_wishlist_collection_usecase.dart';

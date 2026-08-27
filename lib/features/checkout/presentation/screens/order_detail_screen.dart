@@ -5,11 +5,11 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/design_system/design_system.dart';
 import '../../../../core/localization/l10n_extension.dart';
 import '../../../../core/router/route_paths.dart';
+import '../../../../core/shared/value_objects/money.dart';
 import '../../domain/entities/order.dart';
 import '../providers/checkout_providers.dart';
 import '../providers/order_detail_notifier.dart';
 import '../widgets/order_status_chip.dart';
-import '../../../../core/shared/value_objects/money.dart';
 
 class OrderDetailScreen extends ConsumerWidget {
   const OrderDetailScreen({super.key, required this.orderId});

@@ -1,11 +1,11 @@
 import 'package:equatable/equatable.dart';
 
+import '../../../../core/shared/entities/loyalty.dart';
 import '../../../../core/shared/entities/product.dart';
 import 'continue_shopping_item.dart';
 import 'dynamic_block.dart';
 import 'featured_store.dart';
 import 'flash_deal.dart';
-import '../../../../core/shared/entities/loyalty.dart';
 import 'hero_banner.dart';
 import 'home_category.dart';
 import 'home_notification.dart';

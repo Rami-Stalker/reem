@@ -8,10 +8,17 @@ cross-cutting primitives that are stable enough for every feature to share.
 
 ```text
 lib/
+  main.dart          Entry point: bind, bootstrap, run
+  app/               MyApp + AppBootstrap (initialization, theme, locale)
   core/              Shared platform, network, result, cache, sync, state, DI
   features/          Feature modules: auth, discovery, checkout, profile, ...
   l10n/              Generated localization output
 ```
+
+`app/` holds only the two files that start the application. Everything else is
+either a cross-cutting primitive (`core/`) or a feature module (`features/`).
+There is no top-level `app.dart` beside the `app/` directory -- that collision
+is what the layout is written to avoid.
 
 ## Layer Rules
 
@@ -76,6 +83,69 @@ Providers should:
   state alive intentionally;
 - keep controllers focused on state transitions and user intents;
 - reuse `PaginatedNotifier<T>` for large lists instead of reimplementing paging.
+
+## Where Shared Code Lives
+
+Two homes exist for code more than one feature needs, and the boundary between
+them is what keeps a second widget library from growing beside the first.
+
+| Home | Holds | Test |
+| --- | --- | --- |
+| `core/design_system/` | Every shared widget, token, theme, effect, and screen pattern | Would a designer name it? Then it belongs here |
+| `core/shared/` | Entities, DTO models, value objects -- no UI at all | Would it survive a total visual redesign? |
+
+`core/design_system/` is entered through its barrels, and the barrel is the
+import surface: a call site that already imports `design_system.dart` must not
+also import the component file directly. `unnecessary_import` is promoted to an
+error precisely so that drift fails the build.
+
+Within the design system:
+
+- `foundation/` -- tokens, theme, motion, layout. No composite widgets.
+- `components/` -- single-purpose widgets, grouped by kind (`buttons/`,
+  `cards/`, `avatars/`, `inputs/`, ...).
+- `patterns/` -- composites over components: page scaffolds, app chrome,
+  product surfaces.
+- `effects/` -- glass, blur, brand backgrounds.
+- `utilities/` -- context extensions.
+
+## Structural Checks
+
+Rules the analyzer cannot express are enforced by two scripts. Both exit
+non-zero on failure, so either can gate CI.
+
+```bash
+node tools/architecture/check-flutter-boundaries.mjs
+```
+
+Fails when a `domain/` library imports Flutter, Riverpod, Dio, `go_router`, or
+a `data/`/`presentation/` sibling. It also prints advisory debt queues --
+presentation reaching for infrastructure, debug prints, DTOs inheriting from
+entities, files over 500 lines -- which are meant to be burned down gradually,
+not fixed in one pass.
+
+```bash
+node tools/architecture/find-unreachable-dart.mjs
+```
+
+Fails when any library under `lib/` is reachable from neither `main.dart` nor a
+test. Reachability is resolved through real paths, for both `package:reem/...`
+and relative URIs, and iterated to a fixed point so that a file kept alive only
+by another dead file is still reported.
+
+## Known Debt
+
+Recorded here rather than left as a silently failing gate:
+
+- `strict-raw-types` is off. Turning it on reports 31 bare `Map`/`List`
+  signatures, nearly all in `data/` model constructors. `strict-casts` is on
+  and green.
+- `deprecated_member_use` (59, mostly `withOpacity` -> `withValues`),
+  `use_null_aware_elements` (43), and `unnecessary_underscores` (27) are all
+  fixable with `dart fix --apply --code=<rule>`, but each rewrites many files
+  and is best done as its own change.
+- `unawaited_futures` (13) and `avoid_slow_async_io` (2) need a decision per
+  call site.
 
 ## Current Refactor Notes
 

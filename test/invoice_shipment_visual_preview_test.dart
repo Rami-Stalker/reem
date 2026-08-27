@@ -2,7 +2,6 @@
 //
 //   flutter test test/invoice_shipment_visual_preview_test.dart
 import 'dart:io';
-import 'dart:typed_data';
 import 'dart:ui' show ImageByteFormat;
 
 import 'package:flutter/material.dart';
@@ -13,6 +12,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:reem/core/design_system/design_system.dart';
 import 'package:reem/core/localization/app_localizations.dart';
+import 'package:reem/core/result/result.dart';
 import 'package:reem/core/shared/value_objects/money.dart';
 import 'package:reem/features/invoices/domain/entities/invoice.dart';
 import 'package:reem/features/invoices/domain/repositories/invoices_repository.dart';
@@ -22,7 +22,6 @@ import 'package:reem/features/shipment_tracking/domain/entities/shipment_trackin
 import 'package:reem/features/shipment_tracking/domain/repositories/shipment_tracking_repository.dart';
 import 'package:reem/features/shipment_tracking/presentation/providers/shipment_tracking_provider.dart';
 import 'package:reem/features/shipment_tracking/presentation/screens/shipment_tracking_screen.dart';
-import 'package:reem/core/result/result.dart';
 import 'package:reem/l10n/app_localizations.dart' as gen;
 
 final _captureKey = GlobalKey();

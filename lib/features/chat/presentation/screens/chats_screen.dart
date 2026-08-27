@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:reem/core/design_system/effects/backgrounds/luxury_blurred_background.dart';
 import 'package:reem/features/chat/presentation/widgets/chat_tile.dart';
 
-import '../widgets/glass_search_bar.dart';
-import '../widgets/luxury_chat_fab.dart';
 import '../widgets/chat_gradient_orb.dart';
 import '../widgets/encrypted_chat_banner.dart';
+import '../widgets/glass_search_bar.dart';
+import '../widgets/luxury_chat_fab.dart';
 import '../widgets/online_presence_ring.dart';
 
 class ChatsScreen extends StatefulWidget {
@@ -99,7 +99,7 @@ class _ChatsScreenState extends State<ChatsScreen>
                                     },
 
                                     child: const Text(
-                                      "Luxury Chats",
+                                      'Luxury Chats',
 
                                       style: TextStyle(
                                         fontSize: 40,
@@ -114,7 +114,7 @@ class _ChatsScreenState extends State<ChatsScreen>
                                   const SizedBox(height: 12),
 
                                   Text(
-                                    "Elegant conversations with your premium audience ✨",
+                                    'Elegant conversations with your premium audience ✨',
 
                                     style: TextStyle(
                                       color: Colors.grey[700],
@@ -214,7 +214,7 @@ class _ChatsScreenState extends State<ChatsScreen>
                                       radius: 30,
 
                                       backgroundImage: NetworkImage(
-                                        "https://picsum.photos/200/${index + 10}",
+                                        'https://picsum.photos/200/${index + 10}',
                                       ),
                                     ),
                                   ),
@@ -222,7 +222,7 @@ class _ChatsScreenState extends State<ChatsScreen>
                                   const SizedBox(height: 10),
 
                                   Text(
-                                    "User ${index + 1}",
+                                    'User ${index + 1}',
 
                                     style: const TextStyle(
                                       fontWeight: FontWeight.w600,
@@ -248,12 +248,12 @@ class _ChatsScreenState extends State<ChatsScreen>
 
                             children: [
                               ChatTile(
-                                name: "Lujain Fashion",
+                                name: 'Lujain Fashion',
 
                                 image:
-                                    "https://images.unsplash.com/photo-1494790108377-be9c29b29330",
+                                    'https://images.unsplash.com/photo-1494790108377-be9c29b29330',
 
-                                message: "Your luxury order is ready ✨",
+                                message: 'Your luxury order is ready ✨',
 
                                 unread: 5,
 
@@ -265,12 +265,12 @@ class _ChatsScreenState extends State<ChatsScreen>
                               ),
 
                               ChatTile(
-                                name: "Pink Boutique",
+                                name: 'Pink Boutique',
 
                                 image:
-                                    "https://images.unsplash.com/photo-1524504388940-b1c1722653e1",
+                                    'https://images.unsplash.com/photo-1524504388940-b1c1722653e1',
 
-                                message: "Can you send more photos please 💕",
+                                message: 'Can you send more photos please 💕',
 
                                 unread: 2,
 
@@ -282,12 +282,12 @@ class _ChatsScreenState extends State<ChatsScreen>
                               ),
 
                               ChatTile(
-                                name: "Luxury Queen",
+                                name: 'Luxury Queen',
 
                                 image:
-                                    "https://images.unsplash.com/photo-1488426862026-3ee34a7d66df",
+                                    'https://images.unsplash.com/photo-1488426862026-3ee34a7d66df',
 
-                                message: "Everything looks stunning 😍",
+                                message: 'Everything looks stunning 😍',
 
                                 unread: 0,
 
@@ -299,12 +299,12 @@ class _ChatsScreenState extends State<ChatsScreen>
                               ),
 
                               ChatTile(
-                                name: "Beauty Store",
+                                name: 'Beauty Store',
 
                                 image:
-                                    "https://images.unsplash.com/photo-1544005313-94ddf0286df2",
+                                    'https://images.unsplash.com/photo-1544005313-94ddf0286df2',
 
-                                message: "Thank you for shopping with us ✨",
+                                message: 'Thank you for shopping with us ✨',
 
                                 unread: 9,
 

@@ -2,8 +2,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 
 import '../../../../core/presentation/providers/core_providers.dart';
-import '../../data/datasources/impl/cart_remote_datasource_impl.dart';
 import '../../data/datasources/cart_remote_datasource.dart';
+import '../../data/datasources/impl/cart_remote_datasource_impl.dart';
 import '../../data/repositories/cart_repository_impl.dart';
 import '../../domain/repositories/cart_repository.dart';
 import '../../domain/usecases/cart_usecases.dart';

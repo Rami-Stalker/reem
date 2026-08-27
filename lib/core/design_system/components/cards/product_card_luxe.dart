@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../design_system.dart';
 import '../../../shared/entities/product.dart';
+import '../../design_system.dart';
 
 /// The catalogue card the client picked in Q80: *«صورة كبيرة بلا إطار — بصري
 /// وأنيق، معلومات أقل»*.

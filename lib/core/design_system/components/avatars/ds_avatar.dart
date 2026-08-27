@@ -1,10 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
+import '../../../media/media_variants.dart';
 import '../../foundation/theme/extensions/color_extension.dart';
 import '../../foundation/theme/extensions/gradient_extension.dart';
 import '../../foundation/tokens/ds_typography.dart';
-import '../../../media/media_variants.dart';
 
 /// A circular avatar with image, initials fallback, optional story-style
 /// gradient ring and online indicator. Fully theme-driven.

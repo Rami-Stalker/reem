@@ -36,7 +36,7 @@ class _ProductColorSelectorState
       children: [
 
         const Text(
-          "Select Color",
+          'Select Color',
 
           style: TextStyle(
             fontSize: 24,
