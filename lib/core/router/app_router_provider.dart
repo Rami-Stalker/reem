@@ -653,6 +653,20 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state) =>
             UserProfileScreen(userId: state.pathParameters['id']),
       ),
+      // One boutique's whole shelf. `CollectionScreen` takes any collection
+      // provider and already pages, switches shape, favourites and adds to the
+      // bag — `sellerProductsProvider` had simply never been handed to it.
+      GoRoute(
+        path: RoutePaths.sellerProducts,
+        name: RouteNames.sellerProducts,
+        builder: (context, state) {
+          final sellerId = state.pathParameters['id'] ?? '';
+          return CollectionScreen(
+            provider: sellerProductsProvider(sellerId),
+            title: state.uri.queryParameters['name'] ?? context.l10n.products,
+          );
+        },
+      ),
       GoRoute(
         path: RoutePaths.followList,
         name: RouteNames.followList,

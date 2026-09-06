@@ -362,3 +362,27 @@ class AuthAccount {
   /// cool-off, one tap from her is what stops the hand-over.
   final List<OpenRecoveryCase> openRecoveryCases;
 }
+
+/// What begins an authenticator enrolment.
+///
+/// A domain type, not a data model: `AuthRepository` returns it, and a domain
+/// contract that reaches into `data/` is the one boundary this project's
+/// fitness check refuses outright. The JSON mapping lives in `data/`, where
+/// mapping belongs.
+class TotpEnrolment {
+  const TotpEnrolment({
+    required this.secret,
+    required this.otpauthUri,
+    required this.digits,
+    required this.periodSeconds,
+  });
+
+  /// Shown once, before confirmation — the server never returns it again.
+  final String secret;
+
+  /// `otpauth://…`, for the authenticators that can be handed a link.
+  final String otpauthUri;
+
+  final int digits;
+  final int periodSeconds;
+}

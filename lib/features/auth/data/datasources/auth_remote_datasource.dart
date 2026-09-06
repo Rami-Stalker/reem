@@ -131,6 +131,18 @@ abstract interface class AuthRemoteDataSource {
 
   Future<Map<String, dynamic>> recoveryCodeStatus();
 
+  // ── An authenticator app ──────────────────────────────────────────────
+  //
+  // Both routes have existed since Identity v2 and neither had a caller, so an
+  // account the server marks `totp_required` could not be enrolled from the
+  // app at all.
+
+  /// Begins enrolment: the shared secret and the `otpauth://` URI for it.
+  Future<TotpEnrolment> enrolTotp();
+
+  /// Finishes it by proving she can read a code from her authenticator.
+  Future<void> confirmTotp(String code);
+
   // ── The last door ─────────────────────────────────────────────────────
   Future<RecoveryCaseReceiptModel> submitRecoveryCase(RecoveryClaimModel claim);
 

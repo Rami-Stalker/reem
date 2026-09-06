@@ -81,6 +81,7 @@ abstract final class RouteNames {
   static const shipmentTracking = 'shipment-tracking';
   static const orderInvoices = 'order-invoices';
   static const returnRequest = 'return-request';
+  static const sellerProducts = 'seller-products';
   static const invoice = 'invoice';
   static const collection = 'collection';
   static const notifications = 'notifications';

@@ -6204,6 +6204,58 @@
   "@total": {
     "description": "Summary row"
   },
+  "totpCodeLabel": "Code from the app",
+  "@totpCodeLabel": {
+    "description": "TOTP enrolment: totpCodeLabel"
+  },
+  "totpConfirm": "Confirm",
+  "@totpConfirm": {
+    "description": "TOTP enrolment: totpConfirm"
+  },
+  "totpConfirmed": "Authenticator app is on",
+  "@totpConfirmed": {
+    "description": "TOTP enrolment: totpConfirmed"
+  },
+  "totpCopied": "Key copied",
+  "@totpCopied": {
+    "description": "TOTP enrolment: totpCopied"
+  },
+  "totpCopySecret": "Copy key",
+  "@totpCopySecret": {
+    "description": "TOTP enrolment: totpCopySecret"
+  },
+  "totpDisabled": "Not set up",
+  "@totpDisabled": {
+    "description": "TOTP enrolment: totpDisabled"
+  },
+  "totpEnabled": "On — your app generates a code every 30 seconds",
+  "@totpEnabled": {
+    "description": "TOTP enrolment: totpEnabled"
+  },
+  "totpEnrol": "Set up",
+  "@totpEnrol": {
+    "description": "TOTP enrolment: totpEnrol"
+  },
+  "totpRequired": "Required for your account",
+  "@totpRequired": {
+    "description": "TOTP enrolment: totpRequired"
+  },
+  "totpSecretHint": "Copy it into Google Authenticator or similar. It is not shown again.",
+  "@totpSecretHint": {
+    "description": "TOTP enrolment: totpSecretHint"
+  },
+  "totpSecretLabel": "Secret key",
+  "@totpSecretLabel": {
+    "description": "TOTP enrolment: totpSecretLabel"
+  },
+  "totpSetupTitle": "Add Reem to your authenticator",
+  "@totpSetupTitle": {
+    "description": "TOTP enrolment: totpSetupTitle"
+  },
+  "totpTitle": "Authenticator app",
+  "@totpTitle": {
+    "description": "TOTP enrolment: totpTitle"
+  },
   "trackAttempts": "{count, plural, =1{1 delivery attempt} other{{count} delivery attempts}}",
   "@trackAttempts": {
     "description": "Q37 — how many times the courier has tried.",

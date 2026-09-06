@@ -9,6 +9,7 @@ import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/features/auth/presentation/providers/auth_provider.dart';
 import 'package:reem/features/cart/presentation/providers/cart_providers.dart';
 import 'package:reem/features/profile/presentation/providers/profile_overview_provider.dart';
+import 'package:reem/features/settings/presentation/widgets/about_sheet.dart';
 import 'package:reem/features/settings/presentation/widgets/help_sheet.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -110,7 +111,7 @@ class ProfileMenu extends ConsumerWidget {
             _MenuRow(
               icon: Icons.info_outline_rounded,
               label: context.l10n.aboutReem,
-              onTap: () => _aboutSheet(context),
+              onTap: () => showAboutSheet(context),
             ),
           ],
         ),
@@ -161,28 +162,6 @@ class ProfileMenu extends ConsumerWidget {
     if (!launched && context.mounted) {
       DsSnackbar.error(context, context.l10n.error);
     }
-  }
-
-  void _aboutSheet(BuildContext context) {
-    DsBottomSheet.showTitled(
-      context,
-      title: context.l10n.aboutReem,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          DsGradientText('REEM', style: context.dsText.pageTitle.bold),
-          const SizedBox(height: DsSpacing.xs),
-          Text(
-            context.l10n.aboutReemBlurb,
-            style: context.dsText.body,
-          ),
-          const SizedBox(height: DsSpacing.md),
-          Text(context.l10n.appVersion('1.0.0'),
-              style: context.dsText.label
-                  .copyWith(color: context.dsColors.onSurfaceVariant)),
-        ],
-      ),
-    );
   }
 
   Future<void> _confirmLogout(BuildContext context, WidgetRef ref) async {

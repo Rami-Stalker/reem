@@ -12,6 +12,7 @@ import 'package:reem/features/auth/presentation/providers/auth_account_provider.
 import 'package:reem/features/auth/presentation/providers/auth_provider.dart';
 import 'package:reem/features/auth/presentation/utils/auth_form_validators.dart';
 import 'package:reem/features/auth/presentation/widgets/step_up_sheet.dart';
+import 'package:reem/features/auth/presentation/widgets/totp_enrolment_sheet.dart';
 
 /// The security centre.
 ///
@@ -171,6 +172,20 @@ class _SecuritySettingsScreenState
   /// Ten codes, shown once. A fresh set silently cancels the previous one, so
   /// she is told that before it happens and shown them in a dialog she has to
   /// dismiss deliberately.
+  Future<void> _enrolTotp() async {
+    setState(() => _busy = true);
+    final ok = await showTotpEnrolment(context, ref);
+    if (!mounted) return;
+    setState(() => _busy = false);
+    if (ok) {
+      DsSnackbar.show(
+        context,
+        message: context.l10n.totpConfirmed,
+        type: DsSnackbarType.success,
+      );
+    }
+  }
+
   Future<void> _generateRecoveryCodes() async {
     final confirmed = await _confirm(
       title: context.l10n.generateRecoveryCodes,
@@ -405,6 +420,43 @@ class _SecuritySettingsScreenState
                         onPressed: _busy ? null : _generateRecoveryCodes,
                         child: Text(l10n.generateRecoveryCodes),
                       ),
+                    ),
+
+                    const SizedBox(height: DsSpacing.lg),
+
+                    // ── An authenticator app ────────────────────────────
+                    // The server has answered `totp_enabled` and
+                    // `totp_required` on every account payload since Identity
+                    // v2, and the client parsed both and drew neither — so an
+                    // account *required* to hold an authenticator had no way
+                    // to enrol one.
+                    _SectionHeader(title: l10n.totpTitle),
+                    ListTile(
+                      contentPadding: EdgeInsets.zero,
+                      leading: Icon(
+                        Icons.smartphone_rounded,
+                        color: data.security.totpEnabled
+                            ? colors.success
+                            : data.security.totpRequired
+                            ? colors.warning
+                            : colors.onSurfaceVariant,
+                      ),
+                      title: Text(
+                        data.security.totpEnabled
+                            ? l10n.totpEnabled
+                            : l10n.totpDisabled,
+                      ),
+                      subtitle:
+                          data.security.totpRequired &&
+                              !data.security.totpEnabled
+                          ? Text(l10n.totpRequired)
+                          : null,
+                      trailing: data.security.totpEnabled
+                          ? null
+                          : TextButton(
+                              onPressed: _busy ? null : _enrolTotp,
+                              child: Text(l10n.totpEnrol),
+                            ),
                     ),
 
                     const SizedBox(height: DsSpacing.lg),

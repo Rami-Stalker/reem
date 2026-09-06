@@ -12,6 +12,7 @@ import 'package:reem/features/user_profile/domain/entities/user_profile.dart';
 import 'package:reem/features/user_profile/presentation/providers/user_profile_providers.dart';
 import 'package:reem/features/user_profile/presentation/widgets/follow_button.dart';
 import 'package:reem/features/user_profile/presentation/widgets/profile_stat_tile.dart';
+import 'package:reem/features/user_profile/presentation/widgets/seller_shopfront.dart';
 import 'package:reem/features/user_profile/presentation/widgets/seller_stats_card.dart';
 
 /// Social profile for any user. Pass [userId] = null to show the signed-in
@@ -172,9 +173,19 @@ class _ProfileBody extends StatelessWidget {
               ),
             ],
           ],
-          if (profile.isSeller && profile.sellerStats != null) ...[
-            const SizedBox(height: DsSpacing.xl),
-            SellerStatsCard(stats: profile.sellerStats!),
+          if (profile.isSeller) ...[
+            if (profile.sellerStats != null) ...[
+              const SizedBox(height: DsSpacing.xl),
+              SellerStatsCard(stats: profile.sellerStats!),
+            ],
+            // What she came here to see. Until now the page stopped above
+            // this line: a boutique's profile named the shop and showed
+            // nothing it sells and nothing anyone said about it.
+            SellerShopfront(
+              sellerId: user.id,
+              sellerName: user.name,
+              isMe: profile.isMe,
+            ),
           ],
         ],
       ),

@@ -190,6 +190,18 @@ class AuthRepositoryImpl with RepositoryHandler implements AuthRepository {
   });
 
   @override
+  Future<Result<TotpEnrolment>> enrolTotp() => guard(() async {
+    await _ensureConnected();
+    return remote.enrolTotp();
+  });
+
+  @override
+  Future<Result<void>> confirmTotp(String code) => guard(() async {
+    await _ensureConnected();
+    return remote.confirmTotp(code);
+  });
+
+  @override
   Future<Result<RecoveryCaseReceipt>> submitRecoveryCase({
     required String claimedPhone,
     required String contactPhone,

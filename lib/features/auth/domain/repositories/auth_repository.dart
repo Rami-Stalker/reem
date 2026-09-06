@@ -64,6 +64,12 @@ abstract interface class AuthRepository {
 
   Future<Result<int>> remainingRecoveryCodes();
 
+  /// Begins authenticator enrolment — the secret, shown once.
+  Future<Result<TotpEnrolment>> enrolTotp();
+
+  /// Confirms it with a code read off her authenticator.
+  Future<Result<void>> confirmTotp(String code);
+
   // ── The last door ───────────────────────────────────────────────────────
 
   Future<Result<RecoveryCaseReceipt>> submitRecoveryCase({

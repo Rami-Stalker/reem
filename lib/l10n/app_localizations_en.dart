@@ -5195,6 +5195,46 @@ class AppLocalizationsEn extends AppLocalizations {
   String get total => 'Total';
 
   @override
+  String get totpCodeLabel => 'Code from the app';
+
+  @override
+  String get totpConfirm => 'Confirm';
+
+  @override
+  String get totpConfirmed => 'Authenticator app is on';
+
+  @override
+  String get totpCopied => 'Key copied';
+
+  @override
+  String get totpCopySecret => 'Copy key';
+
+  @override
+  String get totpDisabled => 'Not set up';
+
+  @override
+  String get totpEnabled => 'On — your app generates a code every 30 seconds';
+
+  @override
+  String get totpEnrol => 'Set up';
+
+  @override
+  String get totpRequired => 'Required for your account';
+
+  @override
+  String get totpSecretHint =>
+      'Copy it into Google Authenticator or similar. It is not shown again.';
+
+  @override
+  String get totpSecretLabel => 'Secret key';
+
+  @override
+  String get totpSetupTitle => 'Add Reem to your authenticator';
+
+  @override
+  String get totpTitle => 'Authenticator app';
+
+  @override
   String trackAttempts(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,

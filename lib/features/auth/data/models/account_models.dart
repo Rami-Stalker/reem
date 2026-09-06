@@ -246,3 +246,13 @@ class AuthAccountModel extends AuthAccount {
     );
   }
 }
+
+/// Parses `POST /auth/totp/enroll` into the domain's [TotpEnrolment].
+abstract final class TotpEnrolmentMapper {
+  static TotpEnrolment fromJson(Map<String, dynamic> json) => TotpEnrolment(
+    secret: json['secret'] as String? ?? '',
+    otpauthUri: json['otpauth_uri'] as String? ?? '',
+    digits: (json['digits'] as num?)?.toInt() ?? 6,
+    periodSeconds: (json['period_seconds'] as num?)?.toInt() ?? 30,
+  );
+}

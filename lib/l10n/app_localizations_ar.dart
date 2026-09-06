@@ -5195,6 +5195,46 @@ class AppLocalizationsAr extends AppLocalizations {
   String get total => 'الإجمالي';
 
   @override
+  String get totpCodeLabel => 'الرمز من التطبيق';
+
+  @override
+  String get totpConfirm => 'تأكيد';
+
+  @override
+  String get totpConfirmed => 'تم تفعيل تطبيق المصادقة';
+
+  @override
+  String get totpCopied => 'نُسخ المفتاح';
+
+  @override
+  String get totpCopySecret => 'نسخ المفتاح';
+
+  @override
+  String get totpDisabled => 'غير مُفعّل';
+
+  @override
+  String get totpEnabled => 'مُفعّل — تطبيقكِ يولّد رمزاً كل 30 ثانية';
+
+  @override
+  String get totpEnrol => 'تفعيل';
+
+  @override
+  String get totpRequired => 'مطلوب لحسابكِ';
+
+  @override
+  String get totpSecretHint =>
+      'انسخيه إلى Google Authenticator أو أي تطبيق مشابه. لن يُعرض مرة أخرى.';
+
+  @override
+  String get totpSecretLabel => 'المفتاح السرّي';
+
+  @override
+  String get totpSetupTitle => 'أضيفي ريم إلى تطبيق المصادقة';
+
+  @override
+  String get totpTitle => 'تطبيق المصادقة';
+
+  @override
   String trackAttempts(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,

@@ -9566,6 +9566,84 @@ abstract class AppLocalizations {
   /// **'Total'**
   String get total;
 
+  /// TOTP enrolment: totpCodeLabel
+  ///
+  /// In en, this message translates to:
+  /// **'Code from the app'**
+  String get totpCodeLabel;
+
+  /// TOTP enrolment: totpConfirm
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm'**
+  String get totpConfirm;
+
+  /// TOTP enrolment: totpConfirmed
+  ///
+  /// In en, this message translates to:
+  /// **'Authenticator app is on'**
+  String get totpConfirmed;
+
+  /// TOTP enrolment: totpCopied
+  ///
+  /// In en, this message translates to:
+  /// **'Key copied'**
+  String get totpCopied;
+
+  /// TOTP enrolment: totpCopySecret
+  ///
+  /// In en, this message translates to:
+  /// **'Copy key'**
+  String get totpCopySecret;
+
+  /// TOTP enrolment: totpDisabled
+  ///
+  /// In en, this message translates to:
+  /// **'Not set up'**
+  String get totpDisabled;
+
+  /// TOTP enrolment: totpEnabled
+  ///
+  /// In en, this message translates to:
+  /// **'On — your app generates a code every 30 seconds'**
+  String get totpEnabled;
+
+  /// TOTP enrolment: totpEnrol
+  ///
+  /// In en, this message translates to:
+  /// **'Set up'**
+  String get totpEnrol;
+
+  /// TOTP enrolment: totpRequired
+  ///
+  /// In en, this message translates to:
+  /// **'Required for your account'**
+  String get totpRequired;
+
+  /// TOTP enrolment: totpSecretHint
+  ///
+  /// In en, this message translates to:
+  /// **'Copy it into Google Authenticator or similar. It is not shown again.'**
+  String get totpSecretHint;
+
+  /// TOTP enrolment: totpSecretLabel
+  ///
+  /// In en, this message translates to:
+  /// **'Secret key'**
+  String get totpSecretLabel;
+
+  /// TOTP enrolment: totpSetupTitle
+  ///
+  /// In en, this message translates to:
+  /// **'Add Reem to your authenticator'**
+  String get totpSetupTitle;
+
+  /// TOTP enrolment: totpTitle
+  ///
+  /// In en, this message translates to:
+  /// **'Authenticator app'**
+  String get totpTitle;
+
   /// Q37 — how many times the courier has tried.
   ///
   /// In en, this message translates to:

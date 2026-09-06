@@ -56,6 +56,11 @@ abstract final class RoutePaths {
   static const userProfile = '/user/:id';
   static String userProfileOf(String id) => '/user/$id';
 
+  /// Everything one boutique sells. Rendered by the shared collection screen,
+  /// which already pages, switches shape and adds to the bag.
+  static const sellerProducts = '/user/:id/products';
+  static String sellerProductsOf(String id) => '/user/$id/products';
+
   /// The people behind a profile's counts. `kind` is `followers` or
   /// `following`.
   static const followList = '/user/:id/follows/:kind';

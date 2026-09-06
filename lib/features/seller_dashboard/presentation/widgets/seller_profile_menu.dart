@@ -6,6 +6,8 @@ import 'package:reem/core/design_system/design_system.dart';
 import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/features/auth/presentation/providers/auth_provider.dart';
+import 'package:reem/features/settings/presentation/widgets/about_sheet.dart';
+import 'package:reem/features/settings/presentation/widgets/help_sheet.dart';
 
 /// The seller's settings menu, grouped: the storefront, the money, the
 /// account, and the way to a human.
@@ -53,6 +55,12 @@ class SellerProfileMenu extends ConsumerWidget {
             label: l10n.sellerReviewsMenu,
             color: tint(3),
             onTap: () => context.push(RoutePaths.sellerReviews),
+          ),
+          _Row(
+            icon: Icons.route_outlined,
+            label: l10n.courierDay,
+            color: tint(9),
+            onTap: () => context.push(RoutePaths.courierDay),
           ),
           _Row(
             icon: Icons.assignment_return_outlined,
@@ -151,13 +159,13 @@ class SellerProfileMenu extends ConsumerWidget {
             icon: Icons.help_outline_rounded,
             label: l10n.helpAndFaq,
             color: tint(1),
-            onTap: () => _comingSoon(context, l10n.helpAndFaq),
+            onTap: () => showHelpSheet(context),
           ),
           _Row(
             icon: Icons.info_outline_rounded,
             label: l10n.aboutReem,
             color: tint(2),
-            onTap: () => _comingSoon(context, l10n.aboutReem),
+            onTap: () => showAboutSheet(context),
           ),
         ],
       ),

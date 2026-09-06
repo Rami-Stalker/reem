@@ -196,6 +196,15 @@ final class AuthRemoteDataSourceImpl extends BaseRemoteDataSource
   }
 
   @override
+  Future<TotpEnrolment> enrolTotp() async =>
+      TotpEnrolmentMapper.fromJson(await postJson(ApiEndpoints.authTotpEnroll));
+
+  @override
+  Future<void> confirmTotp(String code) async {
+    await postJson(ApiEndpoints.authTotpConfirm, body: {'code': code});
+  }
+
+  @override
   Future<RecoveryCaseReceiptModel> submitRecoveryCase(
     RecoveryClaimModel claim,
   ) async {
