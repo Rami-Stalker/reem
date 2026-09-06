@@ -25,6 +25,13 @@ final productReviewsProvider =
   return result.fold((failure) => throw failure.message, (reviews) => reviews);
 });
 
+/// Everything she has written. `autoDispose` so leaving the screen and coming
+/// back re-reads it — a review approved in the meantime should say so.
+final myReviewsProvider = FutureProvider.autoDispose<MyReviews>((ref) async {
+  final result = await ref.watch(reputationRepositoryProvider).getMyReviews();
+  return result.fold((failure) => throw failure.message, (reviews) => reviews);
+});
+
 final sellerReviewsProvider =
     FutureProvider.family<List<ReviewEntity>, String>((ref, sellerId) async {
   final result =

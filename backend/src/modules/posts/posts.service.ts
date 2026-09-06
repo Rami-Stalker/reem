@@ -5,6 +5,7 @@ import {
 } from '@nestjs/common';
 import { UserRole } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
+import { TrendSignalService } from '../trends/collection/trend-signal.service';
 import { AuthUser } from '../../common/decorators/current-user.decorator';
 import { buildMeta, PaginationDto } from '../../common/dto/pagination.dto';
 import { serializeComment, serializePost } from '../../common/serializers';
@@ -16,6 +17,7 @@ export class PostsService {
   constructor(
     private readonly repo: PostsRepository,
     private readonly prisma: PrismaService,
+    private readonly signals: TrendSignalService,
   ) {}
 
   /** `userId` is absent for a signed-out visitor — see the controller. */
@@ -83,8 +85,34 @@ export class PostsService {
           data: { likesCount: { increment: 1 } },
         }),
       ]);
+      // A like on a post that carries a product is demand for the product.
+      // Only on the way in — un-liking is not negative demand, it is a
+      // correction, and counting it as one would let a double-tap swing a
+      // trend.
+      await this.recordProductEngagement(postId, userId);
     }
     return this.single(postId, userId);
+  }
+
+  /**
+   * Feeds `contentEngagements` on the product a post is tagged with.
+   *
+   * Fire-and-forget through the trend signal seam, so a failure here can never
+   * cost somebody a like.
+   */
+  private async recordProductEngagement(
+    postId: string,
+    userId: string,
+  ): Promise<void> {
+    const post = await this.prisma.post
+      .findUnique({ where: { id: postId }, select: { productId: true } })
+      .catch(() => null);
+    if (!post?.productId) return;
+    this.signals.recordContentEngagement({
+      productId: post.productId,
+      kind: 'post',
+      userId,
+    });
   }
 
   async toggleSave(userId: string, postId: string) {

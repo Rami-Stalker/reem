@@ -18,6 +18,7 @@ import {
 } from '@prisma/client';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { PrismaService } from '../../prisma/prisma.service';
+import { PaymentRail, railOf } from '../../common/payments/payment-rails';
 import { serializePayment } from '../../common/serializers';
 import { AppEvent } from '../../common/events/app-events';
 import { Money } from '../../common/money';
@@ -315,6 +316,67 @@ export class PaymentsService {
       payment: serializePayment(updated),
       redirect_url: result.redirectUrl ?? null,
     };
+  }
+
+  /**
+   * Q51 — «تحويل بنكي / حوالة»: she has sent the money and is telling us how
+   * to find it.
+   *
+   * The manual rails have always instructed her to "submit your reference"
+   * and the app had nowhere to submit it: her order sat PENDING with a button
+   * that called `verify`, which for these rails answers "still waiting" by
+   * design. The reference is recorded against the payment and on the order's
+   * timeline, so finance can match it and she can see that it landed.
+   *
+   * The status deliberately does not move. Only an operator confirming the
+   * transfer marks it paid — a customer typing a number is a claim, not a
+   * receipt.
+   */
+  async submitReference(userId: string, paymentId: string, reference: string) {
+    const payment = await this.requireOwned(userId, paymentId);
+
+    if (railOf(payment.method) !== PaymentRail.MANUAL) {
+      throw new BadRequestException(
+        'This payment method does not take a transfer reference',
+      );
+    }
+    if (payment.status !== PaymentStatus.PENDING) {
+      throw new BadRequestException('This payment is already settled');
+    }
+
+    const trimmed = reference.trim();
+    const updated = await this.prisma.$transaction(async (tx) => {
+      const row = await tx.payment.update({
+        where: { id: paymentId },
+        data: {
+          providerRef: trimmed,
+          transactions: {
+            create: [
+              {
+                event: 'reference_submitted',
+                status: PaymentStatus.PENDING,
+                currency: payment.currency,
+                amount: payment.amount,
+                message: `Customer reference: ${trimmed}`,
+              },
+            ],
+          },
+        },
+      });
+
+      await tx.orderEvent.create({
+        data: {
+          orderId: payment.orderId,
+          title: 'أرسلت الزبونة رقم الحوالة',
+          description: trimmed,
+          actorRole: 'customer',
+        },
+      });
+
+      return row;
+    });
+
+    return serializePayment(updated);
   }
 
   async history(userId: string) {

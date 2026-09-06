@@ -23,7 +23,7 @@ class AppearanceScreen extends StatelessWidget {
                 delegate: SliverChildListDelegate([
                   Text(
                     l10n.appearanceDescription,
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    style: context.dsText.body.copyWith(
                           color: context.dsColors.onSurfaceVariant,
                           height: 1.5,
                         ),
@@ -123,22 +123,14 @@ class _ThemeOptionCard extends StatelessWidget {
                 children: [
                   Text(
                     title,
-                    style: TextStyle(
-                      fontFamily: DsTypography.fontFamily,
-                      fontWeight: DsTypography.bold,
-                      fontSize: DsTypography.titleMedium,
-                      color: selected ? colors.onPrimary : colors.onSurface,
-                    ),
+                    style: context.dsText.cardTitle.bold.tint(selected ? colors.onPrimary : colors.onSurface),
                   ),
-                  const SizedBox(height: 4),
+                  DsGaps.vXxs,
                   Text(
                     subtitle,
-                    style: TextStyle(
-                      fontSize: DsTypography.bodySmall,
-                      color: selected
+                    style: context.dsText.bodySmall.tint(selected
                           ? colors.onPrimary.withValues(alpha: 0.88)
-                          : colors.onSurfaceVariant,
-                    ),
+                          : colors.onSurfaceVariant),
                   ),
                 ],
               ),
@@ -168,7 +160,7 @@ class _LivePreview extends StatelessWidget {
       children: [
         Text(
           l10n.preview,
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+          style: context.dsText.cardTitle.copyWith(
                 fontWeight: DsTypography.bold,
               ),
         ),
@@ -199,34 +191,24 @@ class _LivePreview extends StatelessWidget {
                   children: [
                     Text(
                       l10n.appTitle,
-                      style: TextStyle(
-                        fontWeight: DsTypography.bold,
-                        color: colors.onSurface,
-                      ),
+                      style: context.dsText.body.bold.tint(colors.onSurface),
                     ),
                     Text(
                       _modeLabel(l10n, mode),
-                      style: TextStyle(
-                        color: colors.onSurfaceVariant,
-                        fontSize: DsTypography.bodySmall,
-                      ),
+                      style: context.dsText.bodySmall.tint(colors.onSurfaceVariant),
                     ),
                   ],
                 ),
               ),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                padding: const EdgeInsets.symmetric(horizontal: DsSpacing.sm, vertical: DsSpacing.xs),
                 decoration: BoxDecoration(
                   color: colors.primary.withValues(alpha: 0.15),
                   borderRadius: DsRadius.borderFull,
                 ),
                 child: Text(
                   l10n.active,
-                  style: TextStyle(
-                    color: colors.primary,
-                    fontWeight: DsTypography.semiBold,
-                    fontSize: DsTypography.labelSmall,
-                  ),
+                  style: context.dsText.caption.semibold.tint(colors.primary),
                 ),
               ),
             ],

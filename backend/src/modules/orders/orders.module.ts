@@ -11,6 +11,9 @@ import { CommissionsModule } from '../commissions/commissions.module';
 import { FinanceModule } from '../finance/finance.module';
 import { PricingModule } from '../pricing/pricing.module';
 import { OrderWorkflowModule } from './workflow/order-workflow.module';
+import { CodTrustModule } from '../cod-trust/cod-trust.module';
+import { MarketModule } from '../market/market.module';
+import { CodTrustScheduler } from '../cod-trust/cod-trust.scheduler';
 import { InvoicesController } from './invoices.controller';
 import { InvoicesService } from './invoices.service';
 
@@ -26,9 +29,22 @@ import { InvoicesService } from './invoices.service';
     PricingModule,
     OrderWorkflowModule,
     FinanceModule,
+    CodTrustModule,
+    // Drops record a conversion from the checkout that produced it. The
+    // dependency goes this way and only this way: the market layer never
+    // reaches into orders.
+    MarketModule,
   ],
   controllers: [InvoicesController, OrdersController],
-  providers: [InvoicesService, OrdersService, CheckoutService, OrdersRepository],
+  providers: [
+    InvoicesService,
+    OrdersService,
+    CheckoutService,
+    OrdersRepository,
+    // Lives in `cod-trust/` but is registered here: it cancels orders, and the
+    // trust engine is not allowed to depend on the module that owns them.
+    CodTrustScheduler,
+  ],
   // `OrdersService` is exported for `syncParentStatus`: the parent order's
   // status is a pure function of its children, and every module that moves a
   // sub-order has to re-derive it through the same code or the two drift.

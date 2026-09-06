@@ -20,14 +20,16 @@ class HomeNotificationsSummary extends ConsumerWidget {
     );
     final summary = ref.watch(
       homeContentNotifierProvider.select(
-          (s) => s.content?.notifications ?? const NotificationSummary()),
+        (s) => s.content?.notifications ?? const NotificationSummary(),
+      ),
     );
 
     if (isLoading) {
       return const Padding(
         padding: EdgeInsets.symmetric(horizontal: DsSpacing.lg),
         child: DsShimmer(
-            child: DsSkeleton.box(height: 140, borderRadius: DsRadius.xxl)),
+          child: DsSkeleton.box(height: 140, borderRadius: DsRadius.xxl),
+        ),
       );
     }
     if (summary.previews.isEmpty) return const SizedBox.shrink();
@@ -43,39 +45,38 @@ class HomeNotificationsSummary extends ConsumerWidget {
           children: [
             Row(
               children: [
-                Icon(Icons.notifications_active_rounded,
-                    size: 20, color: c.primary),
+                Icon(
+                  Icons.notifications_active_rounded,
+                  size: 20,
+                  color: c.primary,
+                ),
                 const SizedBox(width: DsSpacing.xs),
                 Text(
                   context.l10n.notifications,
-                  style: TextStyle(
-                    fontFamily: DsTypography.fontFamily,
-                    fontWeight: DsTypography.bold,
-                    fontSize: DsTypography.titleSmall,
-                    color: c.onSurface,
-                  ),
+                  style: context.dsText.tileTitle.bold.tint(c.onSurface),
                 ),
                 const SizedBox(width: DsSpacing.xs),
                 if (summary.hasUnread)
                   Container(
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 7, vertical: 1),
+                      horizontal: DsSpacing.xs,
+                      vertical: DsSpacing.xxxs,
+                    ),
                     decoration: BoxDecoration(
                       color: c.primary,
                       borderRadius: DsRadius.borderFull,
                     ),
                     child: Text(
                       '${summary.unreadCount} new',
-                      style: TextStyle(
-                        color: c.onPrimary,
-                        fontSize: 10,
-                        fontWeight: DsTypography.bold,
-                      ),
+                      style: context.dsText.micro.bold.tint(c.onPrimary),
                     ),
                   ),
                 const Spacer(),
-                Icon(Icons.chevron_right_rounded,
-                    size: 20, color: c.onSurfaceVariant),
+                Icon(
+                  Icons.chevron_right_rounded,
+                  size: 20,
+                  color: c.onSurfaceVariant,
+                ),
               ],
             ),
             const SizedBox(height: DsSpacing.xs),
@@ -98,8 +99,14 @@ class _NotificationRow extends StatelessWidget {
     final (icon, tint) = switch (item.kind) {
       HomeNotificationKind.order => (Icons.local_shipping_outlined, c.info),
       HomeNotificationKind.promo => (Icons.local_offer_outlined, c.discount),
-      HomeNotificationKind.social => (Icons.favorite_border_rounded, c.secondary),
-      HomeNotificationKind.system => (Icons.info_outline_rounded, c.onSurfaceVariant),
+      HomeNotificationKind.social => (
+        Icons.favorite_border_rounded,
+        c.secondary,
+      ),
+      HomeNotificationKind.system => (
+        Icons.info_outline_rounded,
+        c.onSurfaceVariant,
+      ),
     };
 
     return Padding(
@@ -122,18 +129,19 @@ class _NotificationRow extends StatelessWidget {
               item.title,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                fontSize: DsTypography.labelLarge,
-                fontWeight: item.unread ? DsTypography.semiBold : DsTypography.regular,
-                color: item.unread ? c.onSurface : c.onSurfaceVariant,
-              ),
+              style: context.dsText.labelLarge
+                  .tint(item.unread ? c.onSurface : c.onSurfaceVariant)
+                  .copyWith(
+                    fontWeight: item.unread
+                        ? DsTypography.semiBold
+                        : DsTypography.regular,
+                  ),
             ),
           ),
           const SizedBox(width: DsSpacing.xs),
           Text(
             item.timeAgo,
-            style: TextStyle(
-                fontSize: DsTypography.labelSmall, color: c.onSurfaceVariant),
+            style: context.dsText.caption.tint(c.onSurfaceVariant),
           ),
           if (item.unread) ...[
             const SizedBox(width: DsSpacing.xs),
@@ -141,7 +149,9 @@ class _NotificationRow extends StatelessWidget {
               width: 7,
               height: 7,
               decoration: BoxDecoration(
-                  color: c.primary, shape: BoxShape.circle),
+                color: c.primary,
+                shape: BoxShape.circle,
+              ),
             ),
           ],
         ],

@@ -247,11 +247,11 @@ export class GuestService {
     }
 
     if (item.type === GuestSavedItemType.POST && item.postId) {
-      const existing = await tx.postFavorite.findUnique({
-        where: { userId_postId: { userId, postId: item.postId } },
+      const existing = await tx.postSave.findUnique({
+        where: { postId_userId: { postId: item.postId, userId } },
       });
       if (!existing) {
-        await tx.postFavorite.create({
+        await tx.postSave.create({
           data: { userId, postId: item.postId },
         });
         await tx.post.update({

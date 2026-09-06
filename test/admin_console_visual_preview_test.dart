@@ -12,6 +12,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:reem/core/auth/app_permissions.dart';
 import 'package:reem/core/design_system/design_system.dart';
 import 'package:reem/core/localization/app_localizations.dart';
 import 'package:reem/core/result/result.dart';
@@ -22,9 +23,61 @@ import 'package:reem/features/admin/domain/repositories/admin_repository.dart';
 import 'package:reem/features/admin/presentation/providers/admin_provider.dart';
 import 'package:reem/features/admin/presentation/screens/admin_analytics_screen.dart';
 import 'package:reem/features/admin/presentation/screens/admin_dashboard_screen.dart';
+import 'package:reem/features/admin/presentation/screens/admin_section_screen.dart';
+import 'package:reem/features/admin/presentation/screens/admin_seller_applications_screen.dart';
+import 'package:reem/features/experience/presentation/providers/role_experience_provider.dart';
 import 'package:reem/l10n/app_localizations.dart' as gen;
 
 final _captureKey = GlobalKey();
+
+/// A review queue that reads like real work rather than six identical rows.
+const _applications = <Map<String, dynamic>>[
+  {
+    'id': 'app-1',
+    'status': 'PENDING',
+    'business_name': 'أتيليه الورد',
+    'legal_name': 'ريم الحلبي',
+    'business_category': 'أزياء نسائية',
+    'commercial_registration': 'DMS-44821',
+    'contact_phone': '+963 933 118 204',
+    'contact_email': 'rose@atelier.sy',
+    'business_address': 'دمشق · المزة · شارع الجلاء',
+    'bank_name': 'بنك بيمو السعودي الفرنسي',
+    'account_holder': 'ريم الحلبي',
+    'iban': 'SY86 0021 0000 0000 0011 2233',
+    'government_id_url': 'https://example.invalid/id.pdf',
+    'business_license_url': 'https://example.invalid/licence.pdf',
+    'years_experience': '6',
+    'history': [
+      {
+        'status': 'PENDING',
+        'admin_name': 'سلمى',
+        'reason': 'وصل الطلب وبانتظار قراءة المستندات',
+      },
+    ],
+  },
+  {
+    'id': 'app-2',
+    'status': 'UNDER_REVIEW',
+    'business_name': 'دار النور',
+    'legal_name': 'نور العطار',
+    'contact_phone': '+963 944 771 006',
+  },
+  {
+    'id': 'app-3',
+    'status': 'NEEDS_MORE_DOCUMENTS',
+    'business_name': 'بتلات المخمل',
+    'legal_name': 'ليلى منصور',
+    'contact_email': 'layla@velvet.sy',
+  },
+  {
+    'id': 'app-4',
+    'status': 'APPROVED',
+    'business_name': 'خيوط الياسمين',
+    'legal_name': 'هدى شامية',
+    'contact_phone': '+963 991 442 887',
+  },
+];
 
 Future<void> _loadFonts() async {
   for (final entry in const {
@@ -72,6 +125,38 @@ void main() {
     });
   }
 
+  testWidgets('renders the seller review queue', (tester) async {
+    tester.view.physicalSize = const Size(2000, 2200);
+    tester.view.devicePixelRatio = 2.0;
+    addTearDown(tester.view.reset);
+
+    await tester.pumpWidget(
+      const _Preview(
+        themeMode: ThemeMode.light,
+        screen: AdminSellerApplicationsScreen(),
+      ),
+    );
+    await _settle(tester);
+    await _capture(tester, 'admin_seller_applications');
+  });
+
+  testWidgets('renders the moderation console with its actions', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(2000, 2000);
+    tester.view.devicePixelRatio = 2.0;
+    addTearDown(tester.view.reset);
+
+    await tester.pumpWidget(
+      _Preview(
+        themeMode: ThemeMode.light,
+        screen: AdminSectionScreen(config: adminSectionConfigs['moderation']!),
+      ),
+    );
+    await _settle(tester);
+    await _capture(tester, 'admin_moderation');
+  });
+
   testWidgets('renders the admin analytics console', (tester) async {
     tester.view.physicalSize = const Size(2560, 2400);
     tester.view.devicePixelRatio = 2.0;
@@ -99,6 +184,23 @@ class _Preview extends StatelessWidget {
     return ProviderScope(
       overrides: [
         adminRepositoryProvider.overrideWithValue(const _FakeAdminRepository()),
+        // A super administrator, so a capture shows every action the console
+        // is capable of offering rather than a role's subset of them.
+        currentPermissionsProvider.overrideWithValue(const {
+          AppPermissions.adminDashboard,
+          AppPermissions.userManage,
+          AppPermissions.sellerVerificationReview,
+          AppPermissions.productManage,
+          AppPermissions.contentModerate,
+          AppPermissions.orderRead,
+          AppPermissions.supportRead,
+          AppPermissions.supportWrite,
+          AppPermissions.financeRead,
+          AppPermissions.financeWrite,
+          AppPermissions.analyticsRead,
+          AppPermissions.auditRead,
+          AppPermissions.authorizationManage,
+        }),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -153,22 +255,65 @@ final class _FakeAdminRepository implements AdminRepository {
     required String key,
     required String title,
     required String endpoint,
+    int page = 1,
+    int limit = 25,
+    String? query,
+    String? status,
   }) async => Success(
-    AdminConsoleSection(
-      key: key,
-      title: title,
-      records: [
-        for (var i = 1; i <= 6; i++)
-          AdminRecord(
-            id: '$key-$i',
-            title: 'وثّقت المشرِفة بائعة جديدة',
-            subtitle: 'أتيليه الورد · دمشق',
-            status: 'مكتمل',
-            metrics: const {},
-            raw: const {},
-          ),
-      ],
-    ),
+    switch (key) {
+      'sellerApplications' => AdminConsoleSection(
+        key: key,
+        title: title,
+        total: 14,
+        hasMore: true,
+        summary: const {'pending': '9'},
+        records: [
+          for (final application in _applications)
+            AdminRecord(
+              id: application['id']! as String,
+              title: application['business_name']! as String,
+              subtitle: application['legal_name']! as String,
+              status: application['status']! as String,
+              metrics: const {},
+              raw: application,
+            ),
+        ],
+      ),
+      'moderation' => AdminConsoleSection(
+        key: key,
+        title: title,
+        total: 23,
+        hasMore: true,
+        summary: const {'open': '11'},
+        records: [
+          for (var i = 1; i <= 6; i++)
+            AdminRecord(
+              id: 'case-$i',
+              title: 'صورة تخالف سياسة الاحتشام',
+              subtitle: 'منشور · أتيليه الورد',
+              status: i.isEven ? 'OPEN' : 'ESCALATED',
+              metrics: {'created_at': '2026-08-2$i'},
+              raw: {'id': 'case-$i', 'status': 'OPEN'},
+            ),
+        ],
+      ),
+      _ => AdminConsoleSection(
+        key: key,
+        title: title,
+        total: 6,
+        records: [
+          for (var i = 1; i <= 6; i++)
+            AdminRecord(
+              id: '$key-$i',
+              title: 'وثّقت المشرِفة بائعة جديدة',
+              subtitle: 'أتيليه الورد · دمشق',
+              status: 'APPROVED',
+              metrics: const {},
+              raw: const {},
+            ),
+        ],
+      ),
+    },
   );
 
   @override
@@ -247,6 +392,63 @@ final class _FakeAdminRepository implements AdminRepository {
   @override
   Future<Result<void>> runNotificationCampaign(String campaignId) async =>
       const Success(null);
+
+  // The console's governance actions are exercised by
+  // `admin_console_actions_test.dart`; this fake exists to paint pixels, so
+  // every write is a no-op that simply must not throw.
+  @override
+  Future<Result<void>> updateUser(String id, Map<String, dynamic> payload) async =>
+      const Success(null);
+
+  @override
+  Future<Result<void>> updateProduct(
+    String id,
+    Map<String, dynamic> payload,
+  ) async => const Success(null);
+
+  @override
+  Future<Result<void>> updateSupportTicket(
+    String id,
+    Map<String, dynamic> payload,
+  ) async => const Success(null);
+
+  @override
+  Future<Result<void>> updateModerationCase(
+    String id,
+    Map<String, dynamic> payload,
+  ) async => const Success(null);
+
+  @override
+  Future<Result<void>> updateReport(
+    String id,
+    Map<String, dynamic> payload,
+  ) async => const Success(null);
+
+  @override
+  Future<Result<void>> createCommissionRule(
+    Map<String, dynamic> payload,
+  ) async => const Success(null);
+
+  @override
+  Future<Result<void>> updateCommissionLedger(
+    String id,
+    Map<String, dynamic> payload,
+  ) async => const Success(null);
+
+  @override
+  Future<Result<void>> upsertSystemSetting(
+    Map<String, dynamic> payload,
+  ) async => const Success(null);
+
+  @override
+  Future<Result<Map<String, dynamic>>> getSellerApplication(String id) async =>
+      Success(_applications.first);
+
+  @override
+  Future<Result<void>> reviewSellerApplication(
+    String id,
+    Map<String, dynamic> payload,
+  ) async => const Success(null);
 }
 
 /// Lets the providers resolve and every entrance animation finish, so a

@@ -1,15 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
+import 'package:reem/core/presentation/providers/product_shape_provider.dart';
 import 'package:reem/core/router/route_paths.dart';
+import 'package:reem/core/shared/entities/product.dart';
+import 'package:reem/features/cart/presentation/providers/cart_providers.dart';
 import 'package:reem/features/discovery/presentation/providers/collection_notifier.dart';
 import 'package:reem/features/discovery/presentation/providers/collection_state.dart';
-import 'package:reem/features/discovery/presentation/widgets/product_card_compact.dart';
+import 'package:reem/features/profile/presentation/providers/profile_provider.dart';
 
-/// Full, infinite-scrolling grid for a single collection / category / seller.
+/// Every full listing of products — a department, a collection, "see all"
+/// under a rail — in whichever of the three shapes she prefers.
+///
+/// It used to be a fixed two-column grid. The switcher existed, but only on
+/// the home page's "new in" showcase, which made the three shapes look like a
+/// decoration on one section rather than the way this catalogue is read: she
+/// would set the page to posts, tap into «فساتين», and be handed a grid.
+/// Shape is chosen once, in [productShapeProvider], and every listing honours
+/// it.
 class CollectionScreen extends ConsumerStatefulWidget {
   const CollectionScreen({
     super.key,
@@ -48,9 +61,42 @@ class _CollectionScreenState extends ConsumerState<CollectionScreen> {
     }
   }
 
+  void _openProduct(Product product) =>
+      context.push(RoutePaths.productDetailsOf(product.id));
+
+  void _openSeller(Product product) {
+    final seller = product.displaySeller;
+    if (seller == null) return;
+    context.push(RoutePaths.userProfileOf(seller.id));
+  }
+
+  /// Drops the cheapest live offer into the bag without leaving the listing —
+  /// the same gesture the post shape offers in the feed.
+  Future<void> _addToBag(Product product) async {
+    final offer = product.bestOffer;
+    if (offer == null || !offer.isBuyable) return;
+
+    HapticFeedback.mediumImpact();
+    final added = await ref
+        .read(cartNotifierProvider.notifier)
+        .add(offerId: offer.id);
+    if (!mounted) return;
+
+    final l10n = context.l10n;
+    if (added) {
+      DsSnackbar.success(context, l10n.addedToBag);
+    } else {
+      DsSnackbar.error(context, l10n.error);
+    }
+  }
+
+  void _toggleFavorite(Product product) =>
+      ref.read(favoritesNotifierProvider.notifier).toggleFavorite(product.id);
+
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(widget.provider);
+    final shape = ref.watch(productShapeProvider);
     final colors = context.dsColors;
 
     return Scaffold(
@@ -67,35 +113,46 @@ class _CollectionScreenState extends ConsumerState<CollectionScreen> {
                 child: Center(child: CircularProgressIndicator()),
               )
             else if (state.isEmpty)
-              const SliverFillRemaining(
+              SliverFillRemaining(
                 hasScrollBody: false,
-                child: Center(child: Text('No products found')),
+                child: Center(child: Text(context.l10n.noProductsFound)),
               )
             else ...[
-              SliverPadding(
-                padding: const EdgeInsets.all(DsSpacing.lg),
-                sliver: SliverGrid(
-                  gridDelegate:
-                      const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    mainAxisSpacing: DsSpacing.md,
-                    crossAxisSpacing: DsSpacing.md,
-                    childAspectRatio: 0.62,
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(
+                    DsSpacing.lg,
+                    DsSpacing.xs,
+                    DsSpacing.lg,
+                    DsSpacing.lg,
                   ),
-                  delegate: SliverChildBuilderDelegate(
-                    (_, i) {
-                      final product = state.items[i];
-                      return ProductCardCompact(
-                        product: product,
-                        onTap: () => context.push(
-                          '${RoutePaths.productDetails}?id=${product.id}',
-                        ),
-                      );
+                  child: ShapeSwitcher(
+                    selected: shape,
+                    onSelect: (next) {
+                      HapticFeedback.selectionClick();
+                      ref.read(productShapeProvider.notifier).state = next;
                     },
-                    childCount: state.items.length,
                   ),
                 ),
               ),
+              switch (shape) {
+                DsProductShape.posts => SliverProductPosts(
+                  products: state.items,
+                  onTapProduct: _openProduct,
+                  onTapSeller: _openSeller,
+                  onAddToBag: _addToBag,
+                  onToggleFavorite: _toggleFavorite,
+                ),
+                DsProductShape.mosaic => SliverProductMosaic(
+                  products: state.items,
+                  onTapProduct: _openProduct,
+                ),
+                DsProductShape.grid => SliverProductGrid(
+                  products: state.items,
+                  onTapProduct: _openProduct,
+                  onToggleFavorite: _toggleFavorite,
+                ),
+              },
               if (state.isLoadingMore)
                 const SliverToBoxAdapter(
                   child: Padding(
@@ -103,6 +160,8 @@ class _CollectionScreenState extends ConsumerState<CollectionScreen> {
                     child: Center(child: CircularProgressIndicator()),
                   ),
                 ),
+              // Room under the last card for the floating bottom bar.
+              const SliverToBoxAdapter(child: SizedBox(height: DsSpacing.xxxl)),
             ],
           ],
         ),

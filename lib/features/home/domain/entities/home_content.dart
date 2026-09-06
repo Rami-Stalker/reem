@@ -45,16 +45,16 @@ class HomeContent extends Equatable {
 
   @override
   List<Object?> get props => [
-        heroBanners,
-        featuredCategories,
-        flashDeals,
-        featuredStores,
-        recentlyViewed,
-        continueShopping,
-        nearbyStores,
-        dynamicBlocks,
-        searchSuggestions,
-        notifications,
-        loyalty,
-      ];
+    heroBanners,
+    featuredCategories,
+    flashDeals,
+    featuredStores,
+    recentlyViewed,
+    continueShopping,
+    nearbyStores,
+    dynamicBlocks,
+    searchSuggestions,
+    notifications,
+    loyalty,
+  ];
 }

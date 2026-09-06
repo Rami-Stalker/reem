@@ -5,6 +5,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:reem/core/design_system/design_system.dart';
 import 'package:reem/core/localization/l10n_extension.dart';
+import 'package:reem/core/media/media_decode.dart';
+import 'package:reem/core/media/media_variants.dart';
 import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/features/seller_dashboard/domain/entities/seller_top_product.dart';
 import 'package:reem/features/seller_dashboard/presentation/providers/seller_dashboard_provider.dart';
@@ -16,7 +18,6 @@ class SellerTopProducts extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(sellerDashboardNotifierProvider);
     final c = context.dsColors;
-    final theme = Theme.of(context);
 
     if (state.isInitialLoading) {
       return Padding(
@@ -39,15 +40,15 @@ class SellerTopProducts extends ConsumerWidget {
               Expanded(
                 child: Text(
                   context.l10n.sellerTopProducts,
-                  style: theme.textTheme.titleMedium
-                      ?.copyWith(fontWeight: DsTypography.bold),
+                  style: context.dsText.cardTitle
+                      .copyWith(fontWeight: DsTypography.bold),
                 ),
               ),
               TextButton(
                 onPressed: () => context.push(RoutePaths.myProducts),
                 child: Text(context.l10n.viewAll,
                     style:
-                        TextStyle(color: c.primary, fontSize: DsTypography.labelMedium)),
+                        context.dsText.labelMedium.tint(c.primary)),
               ),
             ],
           ),
@@ -81,7 +82,6 @@ class _TopProductTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = context.dsColors;
-    final theme = Theme.of(context);
     final hasChange = product.revenueChange != null;
     final isPositive = (product.revenueChange ?? 0) >= 0;
     final changeColor =
@@ -89,7 +89,7 @@ class _TopProductTile extends StatelessWidget {
 
     return GestureDetector(
       onTap: () =>
-          context.push('${RoutePaths.productDetails}?id=${product.id}'),
+          context.push(RoutePaths.productDetailsOf(product.id)),
       child: Container(
         padding: const EdgeInsets.all(DsSpacing.sm),
         decoration: BoxDecoration(
@@ -104,16 +104,11 @@ class _TopProductTile extends StatelessWidget {
               width: 24,
               child: Text(
                 '#$rank',
-                style: TextStyle(
-                  fontFamily: DsTypography.fontFamily,
-                  fontSize: DsTypography.labelSmall,
-                  fontWeight: DsTypography.bold,
-                  color: rank == 1
-                      ? const Color(0xFFD9A94F)
+                style: context.dsText.caption.bold.tint(rank == 1
+                      ? DsColors.gold500
                       : rank == 2
                           ? c.onSurfaceVariant
-                          : c.disabled,
-                ),
+                          : c.disabled),
               ),
             ),
             const SizedBox(width: DsSpacing.xs),
@@ -121,10 +116,11 @@ class _TopProductTile extends StatelessWidget {
             ClipRRect(
               borderRadius: DsRadius.borderSm,
               child: CachedNetworkImage(
-                imageUrl: product.imageUrl,
+                imageUrl: MediaVariants.thumb(product.imageUrl),
                 width: 48,
                 height: 48,
                 fit: BoxFit.cover,
+                memCacheWidth: MediaDecode.widthFor(context, 48),
                 placeholder: (_, _) => ColoredBox(color: c.shimmerBase),
                 errorWidget: (_, _, _) =>
                     ColoredBox(color: c.surfaceVariant),
@@ -140,15 +136,15 @@ class _TopProductTile extends StatelessWidget {
                     product.title,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: theme.textTheme.bodySmall?.copyWith(
+                    style: context.dsText.cardSubtitle.copyWith(
                       fontWeight: DsTypography.semiBold,
                     ),
                   ),
-                  const SizedBox(height: 2),
+                  DsGaps.vXxxs,
                   Text(
                     '${product.unitsSold} sold · ★ ${product.rating}',
-                    style: theme.textTheme.labelSmall
-                        ?.copyWith(color: c.onSurfaceVariant),
+                    style: context.dsText.caption
+                        .copyWith(color: c.onSurfaceVariant),
                   ),
                 ],
               ),
@@ -160,7 +156,7 @@ class _TopProductTile extends StatelessWidget {
               children: [
                 Text(
                   '\$${_fmt(product.revenue)}',
-                  style: theme.textTheme.bodySmall?.copyWith(
+                  style: context.dsText.cardSubtitle.copyWith(
                     fontWeight: DsTypography.bold,
                     color: c.onSurface,
                   ),
@@ -178,12 +174,7 @@ class _TopProductTile extends StatelessWidget {
                       ),
                       Text(
                         '${product.revenueChange!.abs().toStringAsFixed(1)}%',
-                        style: TextStyle(
-                          fontFamily: DsTypography.fontFamily,
-                          fontSize: 10,
-                          fontWeight: DsTypography.bold,
-                          color: changeColor,
-                        ),
+                        style: context.dsText.micro.bold.tint(changeColor),
                       ),
                     ],
                   ),
@@ -194,7 +185,7 @@ class _TopProductTile extends StatelessWidget {
                 padding: const EdgeInsetsDirectional.only(start: DsSpacing.xs),
                 child: Container(
                   padding: const EdgeInsets.symmetric(
-                      horizontal: 6, vertical: 2),
+                      horizontal: DsSpacing.xs, vertical: DsSpacing.xxxs),
                   decoration: BoxDecoration(
                     color: product.isOutOfStock
                         ? c.error.withValues(alpha: 0.12)
@@ -202,12 +193,8 @@ class _TopProductTile extends StatelessWidget {
                     borderRadius: DsRadius.borderFull,
                   ),
                   child: Text(
-                    product.isOutOfStock ? 'OOS' : 'Low',
-                    style: TextStyle(
-                      fontSize: 9,
-                      fontWeight: DsTypography.bold,
-                      color: product.isOutOfStock ? c.error : c.warning,
-                    ),
+                    product.isOutOfStock ? context.l10n.stockOut : context.l10n.stockLow,
+                    style: context.dsText.micro.bold.tint(product.isOutOfStock ? c.error : c.warning),
                   ),
                 ),
               ),

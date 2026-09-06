@@ -70,6 +70,11 @@ import { SecurityForensicsService } from './admin/security-forensics.service';
     GuestService,
     PhoneChangeService,
     AccountRecoveryService,
+    // The cash-on-delivery trust engine sends its order-confirmation code
+    // through the same challenge table and the same transport chain as a
+    // login. A second code path would have been a second set of rate limits
+    // to get wrong.
+    OtpService,
   ],
 })
 export class AuthModule {}

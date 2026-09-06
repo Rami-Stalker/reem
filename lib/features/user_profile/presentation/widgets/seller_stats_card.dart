@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
+import 'package:reem/core/shared/value_objects/money.dart';
 import 'package:reem/features/user_profile/domain/entities/seller_stats.dart';
 
 /// Premium seller dashboard summary: products, sales, orders, rating.
@@ -12,9 +14,11 @@ class SellerStatsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.dsColors;
-    final money = stats.totalSales >= 1000
-        ? '\$${(stats.totalSales / 1000).toStringAsFixed(1)}k'
-        : '\$${stats.totalSales.toStringAsFixed(0)}';
+    // Her revenue, in the currency she actually earned it in. The tile used to
+    // hard-code a dollar sign in front of the figure and abbreviate it "k",
+    // which on a Damascus boutique's SYP takings was wrong twice over.
+    final sales = stats.totalSales.primary;
+    final money = sales == null ? '—' : sales.formatCompact();
 
     return DsGlassCard(
       child: Column(
@@ -25,13 +29,8 @@ class SellerStatsCard extends StatelessWidget {
               Icon(Icons.storefront_rounded, size: 18, color: colors.primary),
               const SizedBox(width: DsSpacing.xs),
               Text(
-                'Seller insights',
-                style: TextStyle(
-                  fontFamily: DsTypography.fontFamily,
-                  fontWeight: DsTypography.bold,
-                  fontSize: DsTypography.titleSmall,
-                  color: colors.onSurface,
-                ),
+                context.l10n.sellerInsights,
+                style: context.dsText.tileTitle.bold.tint(colors.onSurface),
               ),
             ],
           ),
@@ -41,22 +40,22 @@ class SellerStatsCard extends StatelessWidget {
               _Metric(
                 icon: Icons.inventory_2_outlined,
                 value: '${stats.productsCount}',
-                label: 'Products',
+                label: context.l10n.sellerProductsStat,
               ),
               _Metric(
                 icon: Icons.payments_outlined,
                 value: money,
-                label: 'Sales',
+                label: context.l10n.sellerSalesStat,
               ),
               _Metric(
                 icon: Icons.receipt_long_outlined,
                 value: '${stats.ordersCount}',
-                label: 'Orders',
+                label: context.l10n.sellerOrdersStat,
               ),
               _Metric(
                 icon: Icons.star_rounded,
                 value: stats.averageRating.toStringAsFixed(1),
-                label: 'Rating',
+                label: context.l10n.sellerRatingStat,
               ),
             ],
           ),
@@ -67,11 +66,7 @@ class SellerStatsCard extends StatelessWidget {
 }
 
 class _Metric extends StatelessWidget {
-  const _Metric({
-    required this.icon,
-    required this.value,
-    required this.label,
-  });
+  const _Metric({required this.icon, required this.value, required this.label});
 
   final IconData icon;
   final String value;
@@ -85,22 +80,11 @@ class _Metric extends StatelessWidget {
         children: [
           Icon(icon, color: colors.primary, size: 20),
           const SizedBox(height: DsSpacing.xs),
-          Text(
-            value,
-            style: TextStyle(
-              fontFamily: DsTypography.fontFamily,
-              fontWeight: DsTypography.bold,
-              color: colors.onSurface,
-            ),
-          ),
-          const SizedBox(height: 2),
+          Text(value, style: context.dsText.body.bold.tint(colors.onSurface)),
+          DsGaps.vXxxs,
           Text(
             label,
-            style: TextStyle(
-              fontFamily: DsTypography.fontFamily,
-              fontSize: DsTypography.bodySmall,
-              color: colors.onSurfaceVariant,
-            ),
+            style: context.dsText.bodySmall.tint(colors.onSurfaceVariant),
           ),
         ],
       ),

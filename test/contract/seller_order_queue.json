@@ -3,14 +3,20 @@
     {
       "id": "8b1f0a3e-1f4a-4b2d-9c11-9a2e6d5c0001",
       "number": "REEM-MB7K2X481-1",
-      "status": "AWAITING_SELLER_CONFIRMATION",
-      "fulfilment_mode": "PLATFORM_COURIER",
+      "status": "awaiting_seller_confirmation",
+      "fulfilment_mode": "platform_courier",
       "placed_at": "2026-08-26T07:12:44.000Z",
       "items_count": 2,
-      "net": { "amount": "340000.0000", "currency": "SYP" },
-      "commission": { "amount": "60000.0000", "currency": "SYP" },
-      "payment_method": "COD",
-      "payment_status": "PENDING",
+      "net": {
+        "amount": "340000.0000",
+        "currency": "SYP"
+      },
+      "commission": {
+        "amount": "60000.0000",
+        "currency": "SYP"
+      },
+      "payment_method": "cod",
+      "payment_status": "pending",
       "tracking_code": "REM-7F3K9QX2",
       "customer": {
         "name": "ريم",
@@ -24,19 +30,28 @@
         "is_masked": true,
         "masked_because": "الشحن عبر مندوب المنصة — العنوان مع المندوب وليس مع البائعة"
       },
-      "available_actions": ["confirm", "cancel"]
+      "available_actions": [
+        "confirm",
+        "cancel"
+      ]
     },
     {
       "id": "8b1f0a3e-1f4a-4b2d-9c11-9a2e6d5c0002",
       "number": "REEM-MB7K2X482-1",
-      "status": "READY_TO_SHIP",
-      "fulfilment_mode": "SELLER_SHIPS",
+      "status": "ready_to_ship",
+      "fulfilment_mode": "seller_ships",
       "placed_at": "2026-08-25T15:02:10.000Z",
       "items_count": 1,
-      "net": { "amount": "170000.0000", "currency": "SYP" },
-      "commission": { "amount": "30000.0000", "currency": "SYP" },
-      "payment_method": "SYRIATEL_CASH",
-      "payment_status": "PAID",
+      "net": {
+        "amount": "170000.0000",
+        "currency": "SYP"
+      },
+      "commission": {
+        "amount": "30000.0000",
+        "currency": "SYP"
+      },
+      "payment_method": "syriatel_cash",
+      "payment_status": "paid",
       "tracking_code": null,
       "customer": {
         "name": "ليلى الحسن",
@@ -50,7 +65,11 @@
         "is_masked": false,
         "masked_because": null
       },
-      "available_actions": ["hand_over", "cancel", "teleport"]
+      "available_actions": [
+        "hand_over",
+        "cancel",
+        "teleport"
+      ]
     }
   ],
   "counts": {

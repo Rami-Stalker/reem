@@ -7,6 +7,9 @@ import {
   DisputeStatus,
   FinancialLedgerType,
   FulfilmentMode,
+  JournalEntryType,
+  LedgerAccountCode,
+  LedgerDirection,
   OrderStatus,
   PaymentMethodType,
   PaymentStatus,
@@ -27,6 +30,14 @@ import {
   REVIEW_BODIES_POSITIVE,
   REVIEW_TITLES,
 } from './data';
+import { Money } from '../../src/common/money';
+import {
+  POINTS_PER_REDEMPTION,
+  SYP_PER_POINT,
+  SYP_PER_REDEMPTION,
+} from '../../src/modules/finance/loyalty.service';
+import { LedgerService } from '../../src/modules/ledger/ledger.service';
+import { PrismaService } from '../../src/prisma/prisma.service';
 import { roundSyp } from './rng';
 import { DemoContext, DemoProduct } from './context';
 
@@ -40,7 +51,8 @@ const COMMISSION_BPS: Record<string, number> = {
 };
 
 /** Q54 P1 — free shipping is a membership benefit, not a flat platform rule. */
-const FREE_SHIPPING_ABOVE = 300_000;
+/// New Syrian pounds — the old 300,000 threshold, redenominated.
+const FREE_SHIPPING_ABOVE = 3_000;
 const FREE_SHIPPING_TIERS = ['Gold', 'Platinum'];
 
 /**
@@ -300,7 +312,7 @@ export async function seedOrders(ctx: DemoContext): Promise<SeededOrder[]> {
           fxRate: ctx.fxRate,
           fxRateId: ctx.fxRateId,
           fxFrozenAt: placedAt,
-          roundingPolicy: RoundingPolicy.NEAREST_1000,
+          roundingPolicy: RoundingPolicy.NEAREST_10,
           itemsSubtotal: new D(itemsSubtotal),
           discountTotal: new D(discountTotal),
           shippingTotal: new D(shippingTotal),
@@ -936,7 +948,7 @@ async function seedCourierSettlements(
     for (let day = 1; day <= 5; day += 1) {
       const periodDate = new Date(Date.now() - day * 864e5);
       periodDate.setHours(0, 0, 0, 0);
-      const expected = roundSyp(rng.int(400_000, 4_000_000));
+      const expected = roundSyp(rng.int(4_000, 40_000));
       const collected = rng.bool(0.75)
         ? expected
         : roundSyp(expected * rng.float(0.8, 0.98, 3));
@@ -1097,6 +1109,54 @@ export async function seedReviews(
   }
 }
 
+/**
+ * Records what the platform owes on the points it just handed out.
+ *
+ * The seed minted `PointsTransaction` rows straight into the database, which
+ * is fine for the rewards screen and wrong for the books: a point is a promise
+ * to hand over credit later, so it belongs on the balance sheet the moment it
+ * is granted. Without this the `LOYALTY_LIABILITY` account sat at zero until
+ * the first shopper converted points in the app — and then went *negative*,
+ * because a conversion debits a liability nobody had ever credited. The
+ * finance console reported the books unsound, correctly.
+ *
+ * One accrual per shopper, for the credit her outstanding balance can actually
+ * be converted into (points only convert in tens), posted through the same
+ * `LedgerService` the app uses so the entry is shaped exactly like a real one.
+ */
+async function accrueLoyaltyLiability(
+  ctx: DemoContext,
+  balances: Map<string, number>,
+): Promise<void> {
+  const ledger = new LedgerService(ctx.prisma as unknown as PrismaService);
+
+  for (const [userId, points] of balances.entries()) {
+    const convertible =
+      Math.floor(points / POINTS_PER_REDEMPTION) * SYP_PER_REDEMPTION;
+    if (convertible <= 0) continue;
+
+    const owed = Money.of(convertible, Currency.SYP);
+    await ledger.post({
+      type: JournalEntryType.LOYALTY_ACCRUED,
+      reference: `demo:loyalty-accrue:${userId}`,
+      description: 'نقاط ولاء ممنوحة',
+      lines: [
+        {
+          account: { code: LedgerAccountCode.PLATFORM_PROMOTION_EXPENSE },
+          direction: LedgerDirection.DEBIT,
+          amount: owed,
+          memo: `${points} point(s)`,
+        },
+        {
+          account: { code: LedgerAccountCode.LOYALTY_LIABILITY },
+          direction: LedgerDirection.CREDIT,
+          amount: owed,
+        },
+      ],
+    });
+  }
+}
+
 /** Points, cashback and the weekly payout run that follows delivered orders. */
 export async function seedMoneyMovements(
   ctx: DemoContext,
@@ -1111,7 +1171,7 @@ export async function seedMoneyMovements(
     .sort((a, b) => a.placedAt.getTime() - b.placedAt.getTime());
 
   for (const order of delivered) {
-    const earned = Math.max(1, Math.round(order.grandTotal / 10_000));
+    const earned = Math.max(1, Math.round(order.grandTotal / SYP_PER_POINT));
     const balance = (balances.get(order.customerId) ?? 0) + earned;
     balances.set(order.customerId, balance);
 
@@ -1167,6 +1227,8 @@ export async function seedMoneyMovements(
   for (const [userId, points] of balances.entries()) {
     await prisma.user.update({ where: { id: userId }, data: { points } });
   }
+
+  await accrueLoyaltyLiability(ctx, balances);
 
   // ── Weekly payouts over the paid commission ledgers (Q19 P1) ─────────
   for (const seller of ctx.sellers) {

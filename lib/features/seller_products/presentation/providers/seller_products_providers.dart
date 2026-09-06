@@ -7,8 +7,9 @@ import 'package:reem/features/seller_products/data/datasources/seller_products_r
 import 'package:reem/features/seller_products/data/repositories/seller_products_repository_impl.dart';
 import 'package:reem/features/seller_products/domain/repositories/seller_products_repository.dart';
 import 'package:reem/features/seller_products/domain/usecases/adjust_stock_usecase.dart';
+import 'package:reem/features/seller_products/domain/usecases/archive_listing_usecase.dart';
 import 'package:reem/features/seller_products/domain/usecases/create_product_usecase.dart';
-import 'package:reem/features/seller_products/domain/usecases/delete_product_usecase.dart';
+import 'package:reem/features/seller_products/domain/usecases/get_low_stock_usecase.dart';
 import 'package:reem/features/seller_products/domain/usecases/get_my_products_usecase.dart';
 import 'package:reem/features/seller_products/domain/usecases/set_product_status_usecase.dart';
 import 'package:reem/features/seller_products/domain/usecases/update_product_usecase.dart';
@@ -37,8 +38,11 @@ final createProductUseCaseProvider = Provider(
 final updateProductUseCaseProvider = Provider(
   (ref) => UpdateProductUseCase(ref.watch(sellerProductsRepositoryProvider)),
 );
-final deleteProductUseCaseProvider = Provider(
-  (ref) => DeleteProductUseCase(ref.watch(sellerProductsRepositoryProvider)),
+final archiveListingUseCaseProvider = Provider(
+  (ref) => ArchiveListingUseCase(ref.watch(sellerProductsRepositoryProvider)),
+);
+final getLowStockUseCaseProvider = Provider(
+  (ref) => GetLowStockUseCase(ref.watch(sellerProductsRepositoryProvider)),
 );
 final setProductStatusUseCaseProvider = Provider(
   (ref) => SetProductStatusUseCase(ref.watch(sellerProductsRepositoryProvider)),
@@ -51,8 +55,9 @@ final myProductsNotifierProvider =
     StateNotifierProvider.autoDispose<MyProductsNotifier, MyProductsState>(
   (ref) => MyProductsNotifier(
     getMyProducts: ref.watch(getMyProductsUseCaseProvider),
-    deleteProduct: ref.watch(deleteProductUseCaseProvider),
+    archiveListing: ref.watch(archiveListingUseCaseProvider),
     setProductStatus: ref.watch(setProductStatusUseCaseProvider),
+    adjustStock: ref.watch(adjustStockUseCaseProvider),
   )..load(),
 );
 

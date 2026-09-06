@@ -25,9 +25,21 @@ final class AdminRemoteDataSourceImpl extends BaseRemoteDataSource
     required String key,
     required String title,
     required String endpoint,
+    int page = 1,
+    int limit = 25,
+    String? query,
+    String? status,
   }) async {
     try {
-      final response = await dio.get<dynamic>(endpoint);
+      final response = await dio.get<dynamic>(
+        endpoint,
+        queryParameters: {
+          'page': page,
+          'limit': limit,
+          if (query != null && query.trim().isNotEmpty) 'q': query.trim(),
+          if (status != null && status.isNotEmpty) 'status': status,
+        },
+      );
       final data = response.data;
       if (data is List) {
         return AdminConsoleSectionModel.fromList(
@@ -70,24 +82,76 @@ final class AdminRemoteDataSourceImpl extends BaseRemoteDataSource
 
   @override
   Future<void> createNotificationCampaign(Map<String, dynamic> payload) async {
-    try {
-      await dio.post<dynamic>(
-        ApiEndpoints.notificationAdminCampaigns,
-        data: payload,
-      );
-    } on DioException catch (error) {
-      throw ErrorMapper.fromDio(error);
-    }
+    await postJson(ApiEndpoints.notificationAdminCampaigns, body: payload);
   }
 
   @override
   Future<void> runNotificationCampaign(String campaignId) async {
-    try {
-      await dio.post<dynamic>(
-        ApiEndpoints.notificationAdminCampaignRun(campaignId),
-      );
-    } on DioException catch (error) {
-      throw ErrorMapper.fromDio(error);
-    }
+    await postJson(ApiEndpoints.notificationAdminCampaignRun(campaignId));
+  }
+
+  @override
+  Future<void> updateUser(String id, Map<String, dynamic> payload) async {
+    await patchJson(ApiEndpoints.adminUser(id), body: payload);
+  }
+
+  @override
+  Future<void> updateProduct(String id, Map<String, dynamic> payload) async {
+    await patchJson(ApiEndpoints.adminProduct(id), body: payload);
+  }
+
+  @override
+  Future<void> updateSupportTicket(
+    String id,
+    Map<String, dynamic> payload,
+  ) async {
+    await patchJson(ApiEndpoints.adminSupportTicket(id), body: payload);
+  }
+
+  @override
+  Future<void> updateModerationCase(
+    String id,
+    Map<String, dynamic> payload,
+  ) async {
+    await patchJson(ApiEndpoints.adminModerationCase(id), body: payload);
+  }
+
+  @override
+  Future<void> updateReport(String id, Map<String, dynamic> payload) async {
+    await patchJson(ApiEndpoints.adminReport(id), body: payload);
+  }
+
+  @override
+  Future<void> createCommissionRule(Map<String, dynamic> payload) async {
+    await postJson(ApiEndpoints.adminCommissionRules, body: payload);
+  }
+
+  @override
+  Future<void> updateCommissionLedger(
+    String id,
+    Map<String, dynamic> payload,
+  ) async {
+    await patchJson(ApiEndpoints.adminCommissionLedger(id), body: payload);
+  }
+
+  @override
+  Future<void> upsertSystemSetting(Map<String, dynamic> payload) async {
+    await postJson(ApiEndpoints.adminSystemSettings, body: payload);
+  }
+
+  @override
+  Future<Map<String, dynamic>> getSellerApplication(String id) {
+    return getJson(ApiEndpoints.adminSellerApplication(id));
+  }
+
+  @override
+  Future<void> reviewSellerApplication(
+    String id,
+    Map<String, dynamic> payload,
+  ) async {
+    await patchJson(
+      ApiEndpoints.adminSellerApplicationReview(id),
+      body: payload,
+    );
   }
 }

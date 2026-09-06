@@ -1,71 +1,59 @@
 import 'package:flutter/material.dart';
 
-class EncryptedChatBanner
-    extends StatelessWidget {
+import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
 
-  const EncryptedChatBanner({
-    super.key,
-  });
+/// A marketplace safety note above the conversation list.
+///
+/// This replaced a banner that read "End-to-end encrypted". That was not true:
+/// message bodies are stored in plain text and the server searches them, so
+/// the claim promised a protection Reem does not provide. What she actually
+/// needs warning about is the scam this surface enables — a "boutique" moving
+/// the payment off-platform, where none of the escrow applies.
+class EncryptedChatBanner extends StatelessWidget {
+  const EncryptedChatBanner({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Center(
+    final c = context.dsColors;
+    final l10n = context.l10n;
 
-      child: Container(
-
-        margin:
-            const EdgeInsets.symmetric(
-          vertical: 18,
-        ),
-
-        padding:
-            const EdgeInsets.symmetric(
-          horizontal: 18,
-          vertical: 12,
-        ),
-
-        decoration:
-            BoxDecoration(
-
-          color: const Color(
-            0xffE9FFF3,
-          ),
-
-          borderRadius:
-              BorderRadius.circular(
-            18,
-          ),
-        ),
-
-        child: const Row(
-
-          mainAxisSize:
-              MainAxisSize.min,
-
-          children: [
-
-            Icon(
-
-              Icons.lock_rounded,
-
-              color:
-                  Colors.green,
+    return Container(
+      padding: const EdgeInsets.all(DsSpacing.md),
+      decoration: BoxDecoration(
+        color: c.infoContainer.withValues(alpha: 0.55),
+        borderRadius: DsRadius.borderLg,
+        border: Border.all(color: c.info.withValues(alpha: 0.25)),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(Icons.verified_user_outlined, size: 20, color: c.info),
+          const SizedBox(width: DsSpacing.sm),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  l10n.chatSafetyNote,
+                  style: context.dsText.labelLarge.copyWith(
+                    color: c.info,
+                    fontWeight: DsTypography.semiBold,
+                  ),
+                ),
+                DsGaps.vXxxs,
+                Text(
+                  l10n.chatSafetyNoteBody,
+                  style: context.dsText.cardSubtitle.copyWith(
+                    color: c.info.withValues(alpha: 0.85),
+                    height: 1.4,
+                  ),
+                ),
+              ],
             ),
-
-            SizedBox(width: 10),
-
-            Text(
-
-              'End-to-end encrypted',
-
-              style: TextStyle(
-
-                fontWeight:
-                    FontWeight.w600,
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

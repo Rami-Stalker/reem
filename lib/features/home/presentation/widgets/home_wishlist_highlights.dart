@@ -41,8 +41,7 @@ class _HomeWishlistHighlightsState
       products: state.favorites.take(10).toList(),
       isLoading: isLoading,
       onSeeAll: () => context.push(RoutePaths.favorites),
-      onTapProduct: (p) =>
-          context.push('${RoutePaths.productDetails}?id=${p.id}'),
+      onTapProduct: (p) => context.push(RoutePaths.productDetailsOf(p.id)),
     );
   }
 }

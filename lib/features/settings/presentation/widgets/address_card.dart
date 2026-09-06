@@ -75,11 +75,7 @@ class AddressCard extends StatelessWidget {
                               child: Text(
                                 address.label,
                                 overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  fontWeight: DsTypography.bold,
-                                  fontSize: DsTypography.titleSmall,
-                                  color: colors.onSurface,
-                                ),
+                                style: context.dsText.tileTitle.bold.tint(colors.onSurface),
                               ),
                             ),
                             if (address.isDefault) ...[
@@ -88,31 +84,22 @@ class AddressCard extends StatelessWidget {
                             ],
                           ],
                         ),
-                        const SizedBox(height: 6),
+                        DsGaps.vXs,
                         Text(
                           address.summary,
-                          style: TextStyle(
-                            color: colors.onSurfaceVariant,
-                            height: 1.4,
-                          ),
+                          style: context.dsText.body.tint(colors.onSurfaceVariant).copyWith(height: 1.4),
                         ),
                         if (landmark.isNotEmpty) ...[
-                          const SizedBox(height: 4),
+                          DsGaps.vXxs,
                           Text(
                             'قرب $landmark',
-                            style: TextStyle(
-                              color: colors.onSurfaceVariant,
-                              fontSize: DsTypography.labelSmall,
-                            ),
+                            style: context.dsText.caption.tint(colors.onSurfaceVariant),
                           ),
                         ],
-                        const SizedBox(height: 6),
+                        DsGaps.vXs,
                         Text(
                           '${address.recipientName} · ${address.recipientPhone}',
-                          style: TextStyle(
-                            color: colors.onSurfaceVariant,
-                            fontSize: DsTypography.labelSmall,
-                          ),
+                          style: context.dsText.caption.tint(colors.onSurfaceVariant),
                         ),
                       ],
                     ),
@@ -122,7 +109,14 @@ class AddressCard extends StatelessWidget {
               if (onEdit != null || onDelete != null || onMakeDefault != null)
                 Padding(
                   padding: const EdgeInsets.only(top: DsSpacing.md),
-                  child: Row(
+                  // A `Row` with a `Spacer` between «اجعليه الافتراضي» and the
+                  // two edit/delete actions ran off both edges of a narrow
+                  // phone — three labelled buttons do not fit on one line in
+                  // Arabic. A `Wrap` puts the third on its own line instead of
+                  // painting the overflow stripe.
+                  child: Wrap(
+                    spacing: DsSpacing.md,
+                    runSpacing: DsSpacing.xs,
                     children: [
                       if (onMakeDefault != null && !address.isDefault)
                         _Action(
@@ -130,22 +124,19 @@ class AddressCard extends StatelessWidget {
                           label: 'اجعليه الافتراضي',
                           onTap: onMakeDefault!,
                         ),
-                      const Spacer(),
                       if (onEdit != null)
                         _Action(
                           icon: Icons.edit_outlined,
                           label: 'تعديل',
                           onTap: onEdit!,
                         ),
-                      if (onDelete != null) ...[
-                        const SizedBox(width: DsSpacing.md),
+                      if (onDelete != null)
                         _Action(
                           icon: Icons.delete_outline_rounded,
                           label: 'حذف',
                           onTap: onDelete!,
                           danger: true,
                         ),
-                      ],
                     ],
                   ),
                 ),
@@ -166,18 +157,14 @@ class _Pill extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: DsSpacing.sm, vertical: DsSpacing.xxs),
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.12),
         borderRadius: DsRadius.borderFull,
       ),
       child: Text(
         label,
-        style: TextStyle(
-          color: color,
-          fontSize: DsTypography.labelSmall,
-          fontWeight: DsTypography.semiBold,
-        ),
+        style: context.dsText.caption.semibold.tint(color),
       ),
     );
   }
@@ -205,19 +192,15 @@ class _Action extends StatelessWidget {
       onTap: onTap,
       borderRadius: DsRadius.borderFull,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+        padding: const EdgeInsets.symmetric(horizontal: DsSpacing.xs, vertical: DsSpacing.xs),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(icon, size: 18, color: tint),
-            const SizedBox(width: 6),
+            DsGaps.hXs,
             Text(
               label,
-              style: TextStyle(
-                color: tint,
-                fontSize: DsTypography.labelSmall,
-                fontWeight: DsTypography.semiBold,
-              ),
+              style: context.dsText.caption.semibold.tint(tint),
             ),
           ],
         ),

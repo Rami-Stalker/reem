@@ -64,4 +64,5 @@ export interface DemoContext {
   products: DemoProduct[];
 }
 
-export const SYP_PER_USD = 13_000;
+/// New Syrian pounds per US dollar. 13,000 old lira is 130 new.
+export const SYP_PER_USD = 130;

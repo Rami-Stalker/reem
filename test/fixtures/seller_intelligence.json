@@ -1,0 +1,1401 @@
+{
+  "health": {
+    "score": 62.44,
+    "band": "BUILDING",
+    "band_label": "لسا عم نتعرّف عليكِ",
+    "is_provisional": true,
+    "confidence": 0.21,
+    "momentum": 0,
+    "window_days": 90,
+    "dimensions": [
+      {
+        "key": "reliability",
+        "label": "الالتزام بالطلبات",
+        "blurb": "الطلبات يلي وصلت لصاحبتها من أصل يلي قبلتيها.",
+        "score": 25,
+        "weight": 0,
+        "evidence": 0.08,
+        "sample": 4,
+        "value": 25,
+        "counted": false
+      },
+      {
+        "key": "prepSpeed",
+        "label": "سرعة التجهيز",
+        "blurb": "الوقت من قبولك للطلب لحد ما يطلع من عندك.",
+        "score": 100,
+        "weight": 42.9,
+        "evidence": 0.3,
+        "sample": 9,
+        "value": 16.5,
+        "counted": true
+      },
+      {
+        "key": "productQuality",
+        "label": "جودة المنتجات",
+        "blurb": "تقييمات القطع نفسها، ونسبة يلي رجعت.",
+        "score": 38,
+        "weight": 42.9,
+        "evidence": 1,
+        "sample": 128,
+        "value": 63.34,
+        "counted": true
+      },
+      {
+        "key": "satisfaction",
+        "label": "رضا العميلات",
+        "blurb": "شو بيقولوا يلي اشتروا منك.",
+        "score": 80,
+        "weight": 0,
+        "evidence": 0.1,
+        "sample": 2,
+        "value": 4,
+        "counted": false
+      },
+      {
+        "key": "shipSpeed",
+        "label": "سرعة الشحن",
+        "blurb": "الوقت من تسليم الطلب للمندوب لحد ما يوصل.",
+        "score": 100,
+        "weight": 0,
+        "evidence": 0.1,
+        "sample": 3,
+        "value": 40,
+        "counted": false
+      },
+      {
+        "key": "returns",
+        "label": "المرتجعات",
+        "blurb": "نسبة الطلبات يلي رجعت بعد ما وصلت.",
+        "score": 0,
+        "weight": 0,
+        "evidence": 0.03,
+        "sample": 1,
+        "value": 100,
+        "counted": false
+      },
+      {
+        "key": "responsiveness",
+        "label": "سرعة الاستجابة",
+        "blurb": "قدّيش بتاخدي لترّدي على رسالة زبونة.",
+        "score": null,
+        "weight": 0,
+        "evidence": 0,
+        "sample": 0,
+        "value": null,
+        "counted": false
+      },
+      {
+        "key": "cancellation",
+        "label": "الإلغاء",
+        "blurb": "الطلبات يلي انلغت من طرفك بعد ما انطلبت.",
+        "score": 23.08,
+        "weight": 14.3,
+        "evidence": 0.33,
+        "sample": 13,
+        "value": 7.69,
+        "counted": true
+      }
+    ],
+    "weakest": [
+      "cancellation",
+      "productQuality"
+    ],
+    "advice": [
+      {
+        "code": "LISTING_QUALITY",
+        "dimension": "productQuality",
+        "severity": "opportunity",
+        "gain_points": 26.6,
+        "ar": "صفحات منتجاتك ناقصها صور أو معلومات. افتحي «ذكاء المنتجات» وشوفي القطع الأقل صحّة."
+      },
+      {
+        "code": "CANCEL_RATE",
+        "dimension": "cancellation",
+        "severity": "warning",
+        "gain_points": 11,
+        "ar": "ألغيتي 1 طلب من أصل 13. أكتر سبب بيكون المخزون مو محدّث — راجعي الكميات."
+      }
+    ],
+    "facts": {
+      "accepted_orders": 4,
+      "delivered_orders": 1,
+      "cancelled_by_seller": 1,
+      "cancelled_by_others": 0,
+      "returned_orders": 1,
+      "prep_hours": 16.5,
+      "ship_hours": 40,
+      "response_hours": null,
+      "average_rating": 4,
+      "review_count": 2
+    }
+  },
+  "products": {
+    "window_days": 30,
+    "average_score": 42.8,
+    "rows": [
+      {
+        "product_id": "2d9fae0b-6e28-4744-af3b-9112779551d7",
+        "title": "طقم مناديل قماشية مقاومة للماء",
+        "image_url": "https://loremflickr.com/900/1125/baby%20essentials%2Cnursery/all?lock=247",
+        "score": 30.92,
+        "confidence": 1,
+        "axes": [
+          {
+            "key": "content",
+            "label": "المعلومات",
+            "score": 44.57,
+            "weight": 15,
+            "evidence": "measured",
+            "counted": true
+          },
+          {
+            "key": "imagery",
+            "label": "الصور",
+            "score": 51,
+            "weight": 20,
+            "evidence": "measured",
+            "counted": true
+          },
+          {
+            "key": "attributes",
+            "label": "الخصائص",
+            "score": 12,
+            "weight": 10,
+            "evidence": "measured",
+            "counted": true
+          },
+          {
+            "key": "discoverability",
+            "label": "قابلية الاكتشاف",
+            "score": 42.8,
+            "weight": 20,
+            "evidence": "measured",
+            "counted": true
+          },
+          {
+            "key": "performance",
+            "label": "الأداء",
+            "score": 42.73,
+            "weight": 10,
+            "evidence": "measured",
+            "counted": true
+          },
+          {
+            "key": "conversion",
+            "label": "التحويل",
+            "score": 0,
+            "weight": 25,
+            "evidence": "measured",
+            "counted": true
+          }
+        ],
+        "peers": {
+          "peers": 6,
+          "price_premium_bps": 2181,
+          "conversion": 0,
+          "median_conversion": 0.0148,
+          "conversion_percentile": 0
+        },
+        "top_advice": {
+          "code": "VIEWS_NO_CONVERSION",
+          "axis": "conversion",
+          "severity": "critical",
+          "gain_points": 25,
+          "ar": "هالمنتج عم ياخد 59 مشاهدة بس التحويل ضعيف. غالبًا السعر أو الصور أو الوصف — جرّبي تغيّري وحدة وشوفي."
+        },
+        "advice_count": 5,
+        "views": 59,
+        "orders": 0,
+        "in_stock": true
+      },
+      {
+        "product_id": "8d036e7d-8ab5-4966-9aa9-748cd173bf60",
+        "title": "منظّم مكتب بلون الوردي",
+        "image_url": "https://loremflickr.com/900/1125/desk%20accessories%2Cstationery/all?lock=22416",
+        "score": 36.2,
+        "confidence": 1,
+        "axes": [
+          {
+            "key": "content",
+            "label": "المعلومات",
+            "score": 37.07,
+            "weight": 15,
+            "evidence": "measured",
+            "counted": true
+          },
+          {
+            "key": "imagery",
+            "label": "الصور",
+            "score": 51,
+            "weight": 20,
+            "evidence": "measured",
+            "counted": true
+          },
+          {
+            "key": "attributes",
+            "label": "الخصائص",
+            "score": 12,
+            "weight": 10,
+            "evidence": "measured",
+            "counted": true
+          },
+          {
+            "key": "discoverability",
+            "label": "قابلية الاكتشاف",
+            "score": 60,
+            "weight": 20,
+            "evidence": "measured",
+            "counted": true
+          },
+          {
+            "key": "performance",
+            "label": "الأداء",
+            "score": 59.06,
+            "weight": 10,
+            "evidence": "measured",
+            "counted": true
+          },
+          {
+            "key": "conversion",
+            "label": "التحويل",
+            "score": 5.33,
+            "weight": 25,
+            "evidence": "measured",
+            "counted": true
+          }
+        ],
+        "peers": {
+          "peers": 5,
+          "price_premium_bps": 16000,
+          "conversion": 0.0109,
+          "median_conversion": 0.1429,
+          "conversion_percentile": 0.04
+        },
+        "top_advice": {
+          "code": "VIEWS_NO_CONVERSION",
+          "axis": "conversion",
+          "severity": "critical",
+          "gain_points": 23.7,
+          "ar": "هالمنتج عم ياخد 92 مشاهدة بس التحويل ضعيف. غالبًا السعر أو الصور أو الوصف — جرّبي تغيّري وحدة وشوفي."
+        },
+        "advice_count": 5,
+        "views": 92,
+        "orders": 1,
+        "in_stock": true
+      },
+      {
+        "product_id": "779ea89c-644f-42c0-aa19-7123bd155ca1",
+        "title": "وشاح حريري من الحرير الطبيعي",
+        "image_url": "https://loremflickr.com/900/1125/scarf%2Csilk/all?lock=63769",
+        "score": 37.65,
+        "confidence": 0.55,
+        "axes": [
+          {
+            "key": "content",
+            "label": "المعلومات",
+            "score": 43.33,
+            "weight": 27.3,
+            "evidence": "measured",
+            "counted": true
+          },
+          {
+            "key": "imagery",
+            "label": "الصور",
+            "score": 51,
+            "weight": 36.4,
+            "evidence": "measured",
+            "counted": true
+          },
+          {
+            "key": "attributes",
+            "label": "الخصائص",
+            "score": 38.66,
+            "weight": 18.2,
+            "evidence": "measured",
+            "counted": true
+          },
+          {
+            "key": "discoverability",
+            "label": "قابلية الاكتشاف",
+            "score": null,
+            "weight": 0,
+            "evidence": "unmeasurable",
+            "counted": false
+          },
+          {
+            "key": "performance",
+            "label": "الأداء",
+            "score": 1.43,
+            "weight": 18.2,
+            "evidence": "measured",
+            "counted": true
+          },
+          {
+            "key": "conversion",
+            "label": "التحويل",
+            "score": null,
+            "weight": 0,
+            "evidence": "thin",
+            "counted": false
+          }
+        ],
+        "peers": {
+          "peers": 4,
+          "price_premium_bps": 282,
+          "conversion": 0,
+          "median_conversion": 0,
+          "conversion_percentile": null
+        },
+        "top_advice": {
+          "code": "THIN_DESCRIPTION",
+          "axis": "content",
+          "severity": "warning",
+          "gain_points": 15.5,
+          "ar": "الوصف قصير. اكتبي القماش والقياسات وكيف بتنلبس — هالكلمات هي يلي بتلاقيها البنات بالبحث."
+        },
+        "advice_count": 3,
+        "views": 2,
+        "orders": 0,
+        "in_stock": true
+      },
+      {
+        "product_id": "3891af0b-91a3-46d9-b63e-e3d1d007f357",
+        "title": "صندوق مولود بلون سماوي",
+        "image_url": "https://loremflickr.com/900/1125/newborn%20gift%2Cbaby/all?lock=93664",
+        "score": 40.59,
+        "confidence": 0.55,
+        "axes": [
+          {
+            "key": "content",
+            "label": "المعلومات",
+            "score": 38.32,
+            "weight": 27.3,
+            "evidence": "measured",
+            "counted": true
+          },
+          {
+            "key": "imagery",
+            "label": "الصور",
+            "score": 51,
+            "weight": 36.4,
+            "evidence": "measured",
+            "counted": true
+          },
+          {
+            "key": "attributes",
+            "label": "الخصائص",
+            "score": 12,
+            "weight": 18.2,
+            "evidence": "measured",
+            "counted": true
+          },
+          {
+            "key": "discoverability",
+            "label": "قابلية الاكتشاف",
+            "score": null,
+            "weight": 0,
+            "evidence": "unmeasurable",
+            "counted": false
+          },
+          {
+            "key": "performance",
+            "label": "الأداء",
+            "score": 51.79,
+            "weight": 18.2,
+            "evidence": "measured",
+            "counted": true
+          },
+          {
+            "key": "conversion",
+            "label": "التحويل",
+            "score": null,
+            "weight": 0,
+            "evidence": "thin",
+            "counted": false
+          }
+        ],
+        "peers": {
+          "peers": 5,
+          "price_premium_bps": -1660,
+          "conversion": 0,
+          "median_conversion": 0.0102,
+          "conversion_percentile": null
+        },
+        "top_advice": {
+          "code": "THIN_DESCRIPTION",
+          "axis": "content",
+          "severity": "warning",
+          "gain_points": 16.8,
+          "ar": "الوصف قصير. اكتبي القماش والقياسات وكيف بتنلبس — هالكلمات هي يلي بتلاقيها البنات بالبحث."
+        },
+        "advice_count": 3,
+        "views": 5,
+        "orders": 0,
+        "in_stock": true
+      },
+      {
+        "product_id": "3d436327-6727-4f28-93c8-4dffeeb93f7d",
+        "title": "ميدالية شوكولا بنسبة كاكاو ٧٠٪",
+        "image_url": "https://loremflickr.com/900/1125/chocolate%2Cdessert/all?lock=98812",
+        "score": 43.53,
+        "confidence": 0.75,
+        "axes": [
+          {
+            "key": "content",
+            "label": "المعلومات",
+            "score": 44.93,
+            "weight": 15,
+            "evidence": "measured",
+            "counted": true
+          },
+          {
+            "key": "imagery",
+            "label": "الصور",
+            "score": 51,
+            "weight": 20,
+            "evidence": "measured",
+            "counted": true
+          },
+          {
+            "key": "attributes",
+            "label": "الخصائص",
+            "score": 12,
+            "weight": 10,
+            "evidence": "measured",
+            "counted": true
+          },
+          {
+            "key": "discoverability",
+            "label": "قابلية الاكتشاف",
+            "score": 37.27,
+            "weight": 20,
+            "evidence": "measured",
+            "counted": true
+          },
+          {
+            "key": "performance",
+            "label": "الأداء",
+            "score": 38.12,
+            "weight": 10,
+            "evidence": "measured",
+            "counted": true
+          },
+          {
+            "key": "conversion",
+            "label": "التحويل",
+            "score": 56.5,
+            "weight": 25,
+            "evidence": "thin",
+            "counted": true
+          }
+        ],
+        "peers": {
+          "peers": 6,
+          "price_premium_bps": -3681,
+          "conversion": 0.0169,
+          "median_conversion": 0,
+          "conversion_percentile": 0.5
+        },
+        "top_advice": {
+          "code": "LOW_DISCOVERY",
+          "axis": "discoverability",
+          "severity": "warning",
+          "gain_points": 12.5,
+          "ar": "القطعة بتطلع بالبحث بس قليل يلي بيفتحوها. غالبًا العنوان أو الصورة الأولى مو جاذبين."
+        },
+        "advice_count": 5,
+        "views": 59,
+        "orders": 1,
+        "in_stock": true
+      },
+      {
+        "product_id": "0aed5199-323c-4f1e-be7c-771463dd9bfe",
+        "title": "طقم ضيافة رمضاني بتغليف ذهبي",
+        "image_url": "https://loremflickr.com/900/1125/ramadan%20gift%2Clantern/all?lock=26206",
+        "score": 44.52,
+        "confidence": 0.55,
+        "axes": [
+          {
+            "key": "content",
+            "label": "المعلومات",
+            "score": 46.34,
+            "weight": 27.3,
+            "evidence": "measured",
+            "counted": true
+          },
+          {
+            "key": "imagery",
+            "label": "الصور",
+            "score": 51,
+            "weight": 36.4,
+            "evidence": "measured",
+            "counted": true
+          },
+          {
+            "key": "attributes",
+            "label": "الخصائص",
+            "score": 0,
+            "weight": 18.2,
+            "evidence": "measured",
+            "counted": true
+          },
+          {
+            "key": "discoverability",
+            "label": "قابلية الاكتشاف",
+            "score": null,
+            "weight": 0,
+            "evidence": "unmeasurable",
+            "counted": false
+          },
+          {
+            "key": "performance",
+            "label": "الأداء",
+            "score": 73.34,
+            "weight": 18.2,
+            "evidence": "measured",
+            "counted": true
+          },
+          {
+            "key": "conversion",
+            "label": "التحويل",
+            "score": null,
+            "weight": 0,
+            "evidence": "thin",
+            "counted": false
+          }
+        ],
+        "peers": {
+          "peers": 6,
+          "price_premium_bps": 738,
+          "conversion": 0,
+          "median_conversion": 0,
+          "conversion_percentile": null
+        },
+        "top_advice": {
+          "code": "THIN_DESCRIPTION",
+          "axis": "content",
+          "severity": "warning",
+          "gain_points": 14.6,
+          "ar": "الوصف قصير. اكتبي القماش والقياسات وكيف بتنلبس — هالكلمات هي يلي بتلاقيها البنات بالبحث."
+        },
+        "advice_count": 3,
+        "views": 4,
+        "orders": 0,
+        "in_stock": true
+      },
+      {
+        "product_id": "1b71500f-6788-40fe-a999-ca0cbe167801",
+        "title": "صابونة طبيعية بزيت الأرغان",
+        "image_url": "https://loremflickr.com/900/1125/face%20wash%2Cskincare/all?lock=98472",
+        "score": 44.74,
+        "confidence": 0.55,
+        "axes": [
+          {
+            "key": "content",
+            "label": "المعلومات",
+            "score": 44.03,
+            "weight": 27.3,
+            "evidence": "measured",
+            "counted": true
+          },
+          {
+            "key": "imagery",
+            "label": "الصور",
+            "score": 51,
+            "weight": 36.4,
+            "evidence": "measured",
+            "counted": true
+          },
+          {
+            "key": "attributes",
+            "label": "الخصائص",
+            "score": 0,
+            "weight": 18.2,
+            "evidence": "measured",
+            "counted": true
+          },
+          {
+            "key": "discoverability",
+            "label": "قابلية الاكتشاف",
+            "score": null,
+            "weight": 0,
+            "evidence": "unmeasurable",
+            "counted": false
+          },
+          {
+            "key": "performance",
+            "label": "الأداء",
+            "score": 78,
+            "weight": 18.2,
+            "evidence": "measured",
+            "counted": true
+          },
+          {
+            "key": "conversion",
+            "label": "التحويل",
+            "score": null,
+            "weight": 0,
+            "evidence": "thin",
+            "counted": false
+          }
+        ],
+        "peers": {
+          "peers": 6,
+          "price_premium_bps": 6968,
+          "conversion": 0.25,
+          "median_conversion": 0.0163,
+          "conversion_percentile": null
+        },
+        "top_advice": {
+          "code": "THIN_DESCRIPTION",
+          "axis": "content",
+          "severity": "warning",
+          "gain_points": 15.3,
+          "ar": "الوصف قصير. اكتبي القماش والقياسات وكيف بتنلبس — هالكلمات هي يلي بتلاقيها البنات بالبحث."
+        },
+        "advice_count": 4,
+        "views": 4,
+        "orders": 1,
+        "in_stock": true
+      },
+      {
+        "product_id": "96ac2b33-8bf1-4ad1-b4c9-09e62705cedb",
+        "title": "جزمة صغيرة بنعل طري",
+        "image_url": "https://loremflickr.com/900/1125/baby%20shoes/all?lock=37970",
+        "score": 44.82,
+        "confidence": 0.55,
+        "axes": [
+          {
+            "key": "content",
+            "label": "المعلومات",
+            "score": 31.91,
+            "weight": 27.3,
+            "evidence": "measured",
+            "counted": true
+          },
+          {
+            "key": "imagery",
+            "label": "الصور",
+            "score": 51,
+            "weight": 36.4,
+            "evidence": "measured",
+            "counted": true
+          },
+          {
+            "key": "attributes",
+            "label": "الخصائص",
+            "score": 0,
+            "weight": 18.2,
+            "evidence": "measured",
+            "counted": true
+          },
+          {
+            "key": "discoverability",
+            "label": "قابلية الاكتشاف",
+            "score": null,
+            "weight": 0,
+            "evidence": "unmeasurable",
+            "counted": false
+          },
+          {
+            "key": "performance",
+            "label": "الأداء",
+            "score": 96.67,
+            "weight": 18.2,
+            "evidence": "measured",
+            "counted": true
+          },
+          {
+            "key": "conversion",
+            "label": "التحويل",
+            "score": null,
+            "weight": 0,
+            "evidence": "thin",
+            "counted": false
+          }
+        ],
+        "peers": {
+          "peers": 4,
+          "price_premium_bps": -3232,
+          "conversion": 0,
+          "median_conversion": 0.125,
+          "conversion_percentile": null
+        },
+        "top_advice": {
+          "code": "THIN_DESCRIPTION",
+          "axis": "content",
+          "severity": "warning",
+          "gain_points": 18.6,
+          "ar": "الوصف قصير. اكتبي القماش والقياسات وكيف بتنلبس — هالكلمات هي يلي بتلاقيها البنات بالبحث."
+        },
+        "advice_count": 4,
+        "views": 8,
+        "orders": 0,
+        "in_stock": true
+      },
+      {
+        "product_id": "2525f4a8-c262-4ff6-8e4a-bf4d85ab2fc9",
+        "title": "غسول وجه بدون كحول",
+        "image_url": "https://loremflickr.com/900/1125/face%20wash%2Cskincare/all?lock=63249",
+        "score": 45.87,
+        "confidence": 1,
+        "axes": [
+          {
+            "key": "content",
+            "label": "المعلومات",
+            "score": 32.61,
+            "weight": 15,
+            "evidence": "measured",
+            "counted": true
+          },
+          {
+            "key": "imagery",
+            "label": "الصور",
+            "score": 51,
+            "weight": 20,
+            "evidence": "measured",
+            "counted": true
+          },
+          {
+            "key": "attributes",
+            "label": "الخصائص",
+            "score": 12,
+            "weight": 10,
+            "evidence": "measured",
+            "counted": true
+          },
+          {
+            "key": "discoverability",
+            "label": "قابلية الاكتشاف",
+            "score": 60,
+            "weight": 20,
+            "evidence": "measured",
+            "counted": true
+          },
+          {
+            "key": "performance",
+            "label": "الأداء",
+            "score": 59.06,
+            "weight": 10,
+            "evidence": "measured",
+            "counted": true
+          },
+          {
+            "key": "conversion",
+            "label": "التحويل",
+            "score": 46.67,
+            "weight": 25,
+            "evidence": "measured",
+            "counted": true
+          }
+        ],
+        "peers": {
+          "peers": 6,
+          "price_premium_bps": 4810,
+          "conversion": 0.0109,
+          "median_conversion": 0.0163,
+          "conversion_percentile": 0.33
+        },
+        "top_advice": {
+          "code": "THIN_DESCRIPTION",
+          "axis": "content",
+          "severity": "warning",
+          "gain_points": 10.1,
+          "ar": "الوصف قصير. اكتبي القماش والقياسات وكيف بتنلبس — هالكلمات هي يلي بتلاقيها البنات بالبحث."
+        },
+        "advice_count": 4,
+        "views": 92,
+        "orders": 1,
+        "in_stock": true
+      },
+      {
+        "product_id": "1a3a7c36-c71e-46d5-a491-b127dcd5c131",
+        "title": "بطانية قطنية بلون هادئ",
+        "image_url": "https://loremflickr.com/900/1125/baby%20essentials%2Cnursery/all?lock=18555",
+        "score": 47.49,
+        "confidence": 1,
+        "axes": [
+          {
+            "key": "content",
+            "label": "المعلومات",
+            "score": 35.66,
+            "weight": 15,
+            "evidence": "measured",
+            "counted": true
+          },
+          {
+            "key": "imagery",
+            "label": "الصور",
+            "score": 51,
+            "weight": 20,
+            "evidence": "measured",
+            "counted": true
+          },
+          {
+            "key": "attributes",
+            "label": "الخصائص",
+            "score": 12,
+            "weight": 10,
+            "evidence": "measured",
+            "counted": true
+          },
+          {
+            "key": "discoverability",
+            "label": "قابلية الاكتشاف",
+            "score": 45.98,
+            "weight": 20,
+            "evidence": "measured",
+            "counted": true
+          },
+          {
+            "key": "performance",
+            "label": "الأداء",
+            "score": 44.36,
+            "weight": 10,
+            "evidence": "measured",
+            "counted": true
+          },
+          {
+            "key": "conversion",
+            "label": "التحويل",
+            "score": 68.44,
+            "weight": 25,
+            "evidence": "measured",
+            "counted": true
+          }
+        ],
+        "peers": {
+          "peers": 6,
+          "price_premium_bps": 1011,
+          "conversion": 0.0145,
+          "median_conversion": 0.0148,
+          "conversion_percentile": 0.49
+        },
+        "top_advice": {
+          "code": "THIN_DESCRIPTION",
+          "axis": "content",
+          "severity": "warning",
+          "gain_points": 9.7,
+          "ar": "الوصف قصير. اكتبي القماش والقياسات وكيف بتنلبس — هالكلمات هي يلي بتلاقيها البنات بالبحث."
+        },
+        "advice_count": 3,
+        "views": 69,
+        "orders": 1,
+        "in_stock": true
+      },
+      {
+        "product_id": "74704692-caca-4226-9c39-e70f08948f37",
+        "title": "حقيبة أمومة قابلة للغسل",
+        "image_url": "https://loremflickr.com/900/1125/baby%20essentials%2Cnursery/all?lock=52089",
+        "score": 47.95,
+        "confidence": 1,
+        "axes": [
+          {
+            "key": "content",
+            "label": "المعلومات",
+            "score": 37.08,
+            "weight": 15,
+            "evidence": "measured",
+            "counted": true
+          },
+          {
+            "key": "imagery",
+            "label": "الصور",
+            "score": 51,
+            "weight": 20,
+            "evidence": "measured",
+            "counted": true
+          },
+          {
+            "key": "attributes",
+            "label": "الخصائص",
+            "score": 0,
+            "weight": 10,
+            "evidence": "measured",
+            "counted": true
+          },
+          {
+            "key": "discoverability",
+            "label": "قابلية الاكتشاف",
+            "score": 46.62,
+            "weight": 20,
+            "evidence": "measured",
+            "counted": true
+          },
+          {
+            "key": "performance",
+            "label": "الأداء",
+            "score": 62.32,
+            "weight": 10,
+            "evidence": "measured",
+            "counted": true
+          },
+          {
+            "key": "conversion",
+            "label": "التحويل",
+            "score": 66.52,
+            "weight": 25,
+            "evidence": "measured",
+            "counted": true
+          }
+        ],
+        "peers": {
+          "peers": 6,
+          "price_premium_bps": -1011,
+          "conversion": 0.0141,
+          "median_conversion": 0.0148,
+          "conversion_percentile": 0.48
+        },
+        "top_advice": {
+          "code": "THIN_DESCRIPTION",
+          "axis": "content",
+          "severity": "warning",
+          "gain_points": 9.4,
+          "ar": "الوصف قصير. اكتبي القماش والقياسات وكيف بتنلبس — هالكلمات هي يلي بتلاقيها البنات بالبحث."
+        },
+        "advice_count": 3,
+        "views": 71,
+        "orders": 1,
+        "in_stock": true
+      },
+      {
+        "product_id": "79a75850-b9af-4afb-9c98-b58eb6dbb97b",
+        "title": "طقم مناديل قماشية بجيوب معزولة",
+        "image_url": "https://loremflickr.com/900/1125/baby%20essentials%2Cnursery/all?lock=21289",
+        "score": 49.32,
+        "confidence": 1,
+        "axes": [
+          {
+            "key": "content",
+            "label": "المعلومات",
+            "score": 44.57,
+            "weight": 15,
+            "evidence": "measured",
+            "counted": true
+          },
+          {
+            "key": "imagery",
+            "label": "الصور",
+            "score": 51,
+            "weight": 20,
+            "evidence": "measured",
+            "counted": true
+          },
+          {
+            "key": "attributes",
+            "label": "الخصائص",
+            "score": 0,
+            "weight": 10,
+            "evidence": "measured",
+            "counted": true
+          },
+          {
+            "key": "discoverability",
+            "label": "قابلية الاكتشاف",
+            "score": 44.39,
+            "weight": 20,
+            "evidence": "measured",
+            "counted": true
+          },
+          {
+            "key": "performance",
+            "label": "الأداء",
+            "score": 56.52,
+            "weight": 10,
+            "evidence": "measured",
+            "counted": true
+          },
+          {
+            "key": "conversion",
+            "label": "التحويل",
+            "score": 71.63,
+            "weight": 25,
+            "evidence": "measured",
+            "counted": true
+          }
+        ],
+        "peers": {
+          "peers": 6,
+          "price_premium_bps": 2340,
+          "conversion": 0.0156,
+          "median_conversion": 0.0148,
+          "conversion_percentile": 0.53
+        },
+        "top_advice": {
+          "code": "THIN_DESCRIPTION",
+          "axis": "content",
+          "severity": "warning",
+          "gain_points": 8.3,
+          "ar": "الوصف قصير. اكتبي القماش والقياسات وكيف بتنلبس — هالكلمات هي يلي بتلاقيها البنات بالبحث."
+        },
+        "advice_count": 4,
+        "views": 64,
+        "orders": 1,
+        "in_stock": true
+      }
+    ]
+  },
+  "radar": {
+    "as_of": "2026-09-05",
+    "window_days": 28,
+    "category_count": 10,
+    "opportunities": [
+      {
+        "code": "RISING_CATEGORY",
+        "score": 76.19,
+        "ar": "الطلب على «منظفات» طالع 234% وإنتِ عم تبيعي فيها — وقت مناسب تزيدي المعروض.",
+        "category_id": "81e74328-015e-44ca-8847-aa1591670518",
+        "product_id": null,
+        "term_key": null
+      },
+      {
+        "code": "UNMET_IN_CATEGORY",
+        "score": 75.44,
+        "ar": "36 بنت دوّرت على «عباية صيفية قطن» وما لقيت — وهي بفئة إنتِ عم تبيعي فيها.",
+        "category_id": "c923a7aa-5cd3-4ac7-af15-f0f4341027e8",
+        "product_id": null,
+        "term_key": "slot:ABAYA صيفيه قطن"
+      },
+      {
+        "code": "UNMET_IN_CATEGORY",
+        "score": 53.03,
+        "ar": "41 بنت دوّرت على «حذاء عريض مقاس 41» وما لقيت شي مناسب.",
+        "category_id": "bb5bdf57-432f-455e-b755-199f5aecf79e",
+        "product_id": null,
+        "term_key": "slot:SHOES عريض مقاس"
+      },
+      {
+        "code": "UNMET_IN_CATEGORY",
+        "score": 49.88,
+        "ar": "35 بنت دوّرت على «حقيبة ظهر جلد طبيعي» وما لقيت شي مناسب.",
+        "category_id": "fbbd8b97-0413-4a79-b327-de5e62c20f03",
+        "product_id": null,
+        "term_key": "slot:BAG جلد طبيعي ظهر"
+      },
+      {
+        "code": "UNMET_IN_CATEGORY",
+        "score": 46.72,
+        "ar": "29 بنت دوّرت على «فستان سهرة أخضر طويل» وما لقيت شي مناسب.",
+        "category_id": "e07b8526-966b-49fb-9c39-b225047670ca",
+        "product_id": null,
+        "term_key": "col:green occ:evening slot:DRESS طويل"
+      },
+      {
+        "code": "ENTER_CATEGORY",
+        "score": 46.39,
+        "ar": "«فساتين» طالعة 179% وما عندك شي فيها.",
+        "category_id": "e07b8526-966b-49fb-9c39-b225047670ca",
+        "product_id": null,
+        "term_key": null
+      },
+      {
+        "code": "ENTER_CATEGORY",
+        "score": 46.33,
+        "ar": "«مرطبات» طالعة 113% وما عندك شي فيها.",
+        "category_id": "092cd85d-d58c-4f31-b4cd-c90f82312629",
+        "product_id": null,
+        "term_key": null
+      },
+      {
+        "code": "ENTER_CATEGORY",
+        "score": 45.82,
+        "ar": "«دفاتر ومفكرات» طالعة 343% وما عندك شي فيها.",
+        "category_id": "e6f2ef91-3b3a-41b1-b158-d85c4e4c0380",
+        "product_id": null,
+        "term_key": null
+      },
+      {
+        "code": "RISING_CATEGORY",
+        "score": 43.17,
+        "ar": "الطلب على «عبايات ومحتشم» طالع 23% وإنتِ عم تبيعي فيها — وقت مناسب تزيدي المعروض.",
+        "category_id": "c923a7aa-5cd3-4ac7-af15-f0f4341027e8",
+        "product_id": null,
+        "term_key": null
+      },
+      {
+        "code": "ENTER_CATEGORY",
+        "score": 38.58,
+        "ar": "«مجوهرات» طالعة 47% وما عندك شي فيها.",
+        "category_id": "0ea53139-2fdf-44ca-9047-6b8b47bd11a9",
+        "product_id": null,
+        "term_key": null
+      }
+    ],
+    "rising": [
+      {
+        "category_id": "81e74328-015e-44ca-8847-aa1591670518",
+        "name": "منظفات",
+        "growth": 2.339,
+        "recent": 414,
+        "trend_score": 48.21,
+        "presence": "selling",
+        "relevance": 89.64
+      },
+      {
+        "category_id": "e07b8526-966b-49fb-9c39-b225047670ca",
+        "name": "فساتين",
+        "growth": 1.79,
+        "recent": 452,
+        "trend_score": 46.54,
+        "presence": "absent",
+        "relevance": 77.31
+      },
+      {
+        "category_id": "092cd85d-d58c-4f31-b4cd-c90f82312629",
+        "name": "مرطبات",
+        "growth": 1.134,
+        "recent": 493,
+        "trend_score": 46.08,
+        "presence": "absent",
+        "relevance": 77.22
+      },
+      {
+        "category_id": "e6f2ef91-3b3a-41b1-b158-d85c4e4c0380",
+        "name": "دفاتر ومفكرات",
+        "growth": 3.434,
+        "recent": 368,
+        "trend_score": 41.81,
+        "presence": "absent",
+        "relevance": 76.36
+      },
+      {
+        "category_id": "0ea53139-2fdf-44ca-9047-6b8b47bd11a9",
+        "name": "مجوهرات",
+        "growth": 0.471,
+        "recent": 750,
+        "trend_score": 45.98,
+        "presence": "absent",
+        "relevance": 64.3
+      },
+      {
+        "category_id": "c923a7aa-5cd3-4ac7-af15-f0f4341027e8",
+        "name": "عبايات ومحتشم",
+        "growth": 0.228,
+        "recent": 167,
+        "trend_score": 39.95,
+        "presence": "selling",
+        "relevance": 50.79
+      }
+    ],
+    "unmet": [
+      {
+        "term_key": "slot:ABAYA صيفيه قطن",
+        "display": "عباية صيفية قطن",
+        "searches": 36,
+        "zero_results": 36,
+        "miss_rate": 1,
+        "growth": 1.2657,
+        "in_her_categories": true,
+        "opportunity": 82,
+        "suggested_category_id": "c923a7aa-5cd3-4ac7-af15-f0f4341027e8",
+        "suggestion_ar": "طلب واضح على عباية ولا توجد نتائج مناسبة في التشكيلة الحالية."
+      },
+      {
+        "term_key": "slot:SHOES عريض مقاس",
+        "display": "حذاء عريض مقاس 41",
+        "searches": 41,
+        "zero_results": 41,
+        "miss_rate": 1,
+        "growth": 1.587,
+        "in_her_categories": false,
+        "opportunity": 75.75,
+        "suggested_category_id": "bb5bdf57-432f-455e-b755-199f5aecf79e",
+        "suggestion_ar": "طلب واضح على حذاء ولا توجد نتائج مناسبة في التشكيلة الحالية."
+      },
+      {
+        "term_key": "slot:BAG جلد طبيعي ظهر",
+        "display": "حقيبة ظهر جلد طبيعي",
+        "searches": 35,
+        "zero_results": 35,
+        "miss_rate": 1,
+        "growth": 1.5581,
+        "in_her_categories": false,
+        "opportunity": 71.25,
+        "suggested_category_id": "fbbd8b97-0413-4a79-b327-de5e62c20f03",
+        "suggestion_ar": "طلب واضح على حقيبة ولا توجد نتائج مناسبة في التشكيلة الحالية."
+      },
+      {
+        "term_key": "col:green occ:evening slot:DRESS طويل",
+        "display": "فستان سهرة أخضر طويل",
+        "searches": 29,
+        "zero_results": 29,
+        "miss_rate": 1,
+        "growth": 1.1632,
+        "in_her_categories": false,
+        "opportunity": 66.75,
+        "suggested_category_id": "e07b8526-966b-49fb-9c39-b225047670ca",
+        "suggestion_ar": "طلب واضح على فستان · سهرة · أخضر ولا توجد نتائج مناسبة في التشكيلة الحالية."
+      }
+    ],
+    "stock_alerts": [],
+    "price_trends": [
+      {
+        "category_id": "81e74328-015e-44ca-8847-aa1591670518",
+        "name": "منظفات",
+        "recent_median": 2100,
+        "change_bps": 5789,
+        "seller_premium_bps": 2976,
+        "ar": "أسعار «منظفات» طالعة وأسعارك أعلى بـ30%."
+      },
+      {
+        "category_id": "55037af3-4db1-4448-866e-69799a38d35a",
+        "name": "أحذية أطفال",
+        "recent_median": 2780,
+        "change_bps": -1203,
+        "seller_premium_bps": null,
+        "ar": "أسعار «أحذية أطفال» نازلة"
+      },
+      {
+        "category_id": "ccf8b94d-d5dc-408a-8aa4-47ac41837ed8",
+        "name": "أطقم مواليد",
+        "recent_median": 3340,
+        "change_bps": 1005,
+        "seller_premium_bps": -1826,
+        "ar": "أسعار «أطقم مواليد» طالعة وأسعارك أقل بـ18%."
+      },
+      {
+        "category_id": "c923a7aa-5cd3-4ac7-af15-f0f4341027e8",
+        "name": "عبايات ومحتشم",
+        "recent_median": 7750,
+        "change_bps": -719,
+        "seller_premium_bps": -877,
+        "ar": "أسعار «عبايات ومحتشم» نازلة وأسعارك قريبة من السوق."
+      },
+      {
+        "category_id": "bc5526f7-980d-4dd8-87d7-37a23bb7afbf",
+        "name": "شوكولا",
+        "recent_median": 3150,
+        "change_bps": -541,
+        "seller_premium_bps": -4222,
+        "ar": "أسعار «شوكولا» نازلة وأسعارك أقل بـ42%."
+      },
+      {
+        "category_id": "93ba2b0d-3fbd-4029-8aa7-1554535e1c46",
+        "name": "هدايا مواليد",
+        "recent_median": 7660,
+        "change_bps": 173,
+        "seller_premium_bps": null,
+        "ar": "أسعار «هدايا مواليد» ثابتة"
+      }
+    ]
+  },
+  "product_detail": {
+    "product_id": "2d9fae0b-6e28-4744-af3b-9112779551d7",
+    "title": "طقم مناديل قماشية مقاومة للماء",
+    "image_url": "https://loremflickr.com/900/1125/baby%20essentials%2Cnursery/all?lock=247",
+    "score": 30.92,
+    "confidence": 1,
+    "axes": [
+      {
+        "key": "content",
+        "label": "المعلومات",
+        "score": 44.57,
+        "weight": 15,
+        "evidence": "measured",
+        "counted": true
+      },
+      {
+        "key": "imagery",
+        "label": "الصور",
+        "score": 51,
+        "weight": 20,
+        "evidence": "measured",
+        "counted": true
+      },
+      {
+        "key": "attributes",
+        "label": "الخصائص",
+        "score": 12,
+        "weight": 10,
+        "evidence": "measured",
+        "counted": true
+      },
+      {
+        "key": "discoverability",
+        "label": "قابلية الاكتشاف",
+        "score": 42.8,
+        "weight": 20,
+        "evidence": "measured",
+        "counted": true
+      },
+      {
+        "key": "performance",
+        "label": "الأداء",
+        "score": 42.73,
+        "weight": 10,
+        "evidence": "measured",
+        "counted": true
+      },
+      {
+        "key": "conversion",
+        "label": "التحويل",
+        "score": 0,
+        "weight": 25,
+        "evidence": "measured",
+        "counted": true
+      }
+    ],
+    "peers": {
+      "peers": 6,
+      "price_premium_bps": 2181,
+      "conversion": 0,
+      "median_conversion": 0.0148,
+      "conversion_percentile": 0
+    },
+    "advice": [
+      {
+        "code": "VIEWS_NO_CONVERSION",
+        "axis": "conversion",
+        "severity": "critical",
+        "gain_points": 25,
+        "ar": "هالمنتج عم ياخد 59 مشاهدة بس التحويل ضعيف. غالبًا السعر أو الصور أو الوصف — جرّبي تغيّري وحدة وشوفي."
+      },
+      {
+        "code": "THIN_DESCRIPTION",
+        "axis": "content",
+        "severity": "warning",
+        "gain_points": 8.3,
+        "ar": "الوصف قصير. اكتبي القماش والقياسات وكيف بتنلبس — هالكلمات هي يلي بتلاقيها البنات بالبحث."
+      },
+      {
+        "code": "MORE_IMAGES",
+        "axis": "imagery",
+        "severity": "opportunity",
+        "gain_points": 9.8,
+        "ar": "عندك 3 صور. ضيفي صور إضافية — من قدام، من ورا، وتفصيل قريب — الأفضل 5."
+      },
+      {
+        "code": "ATTRIBUTES_INCOMPLETE",
+        "axis": "attributes",
+        "severity": "opportunity",
+        "gain_points": 8.8,
+        "ar": "الخصائص ناقصة (اللون، القياس، الخامة). هي يلي بتخلّي القطعة تطلع لما تفلتر البنت."
+      },
+      {
+        "code": "PRICE_ABOVE_PEERS",
+        "axis": "price",
+        "severity": "opportunity",
+        "gain_points": 0,
+        "ar": "سعرك أعلى بـ22% من المنتجات المشابهة بنفس الفئة. إذا في سبب (خامة أحسن مثلًا) اكتبيه بالوصف."
+      }
+    ],
+    "window_days": null,
+    "facts": {
+      "images": 3,
+      "attributes": 0,
+      "description_length": 54,
+      "impressions": 0,
+      "views": 59,
+      "search_hits": 16,
+      "search_clicks": 0,
+      "cart_adds": 1,
+      "favorites": 0,
+      "orders": 0,
+      "units": 0,
+      "price_syp": 2290,
+      "stock_units": 23,
+      "in_stock": true
+    }
+  }
+}

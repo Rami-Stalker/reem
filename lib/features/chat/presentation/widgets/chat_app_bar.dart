@@ -1,233 +1,134 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 
-class ChatAppBar
-    extends StatelessWidget {
+import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
+import 'package:reem/core/utils/relative_time.dart';
+import 'package:reem/features/chat/domain/entities/chat_thread_entity.dart';
 
+/// The head of one conversation: who she is talking to, and whether they are
+/// there right now.
+///
+/// [thread] is null only while the header is still loading, or when the server
+/// refused to describe the conversation. Both draw the same skeleton rather
+/// than a placeholder name — inventing an identity here is how the old build
+/// told every shopper she was talking to "Lujain Fashion".
+class ChatAppBar extends StatelessWidget {
   const ChatAppBar({
     super.key,
+    this.thread,
+    this.isPeerTyping = false,
     this.onOpenSharedMedia,
+    this.onOpenProfile,
   });
 
-  /// Opens the conversation's shared photographs. The call and video actions
-  /// beside it have no implementation and are drawn as unavailable rather than
-  /// silently swallowing a tap.
+  final ChatThreadEntity? thread;
+  final bool isPeerTyping;
+
+  /// Opens the conversation's shared photographs.
   final VoidCallback? onOpenSharedMedia;
+
+  /// Opens the boutique's storefront, when the conversation has one.
+  final VoidCallback? onOpenProfile;
 
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
+    final c = context.dsColors;
+    final l10n = context.l10n;
+    final title = _title(context);
 
-      child: BackdropFilter(
-
-        filter: ImageFilter.blur(
-          sigmaX: 20,
-          sigmaY: 20,
+    return Container(
+      padding: const EdgeInsets.fromLTRB(
+        DsSpacing.md,
+        DsSpacing.sm,
+        DsSpacing.md,
+        DsSpacing.md,
+      ),
+      decoration: BoxDecoration(
+        color: c.surface.withValues(alpha: 0.92),
+        border: Border(
+          bottom: BorderSide(color: c.divider.withValues(alpha: 0.6)),
         ),
-
-        child: Container(
-
-          padding:
-              const EdgeInsets.symmetric(
-            horizontal: 22,
-            vertical: 18,
+      ),
+      child: Row(
+        children: [
+          DsIconButton(
+            icon: Directionality.of(context) == TextDirection.rtl
+                ? Icons.arrow_forward_ios_rounded
+                : Icons.arrow_back_ios_new_rounded,
+            onPressed: () => Navigator.of(context).maybePop(),
           ),
-
-          decoration: BoxDecoration(
-
-            color:
-                Colors.white
-                    .withOpacity(.7),
-
-            border: Border(
-
-              bottom: BorderSide(
-
-                color: Colors.white
-                    .withOpacity(.25),
+          const SizedBox(width: DsSpacing.sm),
+          DsAvatar(
+            imageUrl: (thread?.avatarUrl.isEmpty ?? true)
+                ? null
+                : thread!.avatarUrl,
+            name: title,
+            size: 46,
+            isOnline: thread?.isOnline ?? false,
+            onTap: onOpenProfile,
+          ),
+          const SizedBox(width: DsSpacing.sm),
+          Expanded(
+            child: GestureDetector(
+              onTap: onOpenProfile,
+              behavior: HitTestBehavior.opaque,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    title,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: context.dsText.tileTitle
+                        .copyWith(fontWeight: DsTypography.bold),
+                  ),
+                  DsGaps.vXxxs,
+                  Text(
+                    _presence(context),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: context.dsText.caption.copyWith(
+                      color: isPeerTyping || (thread?.isOnline ?? false)
+                          ? c.success
+                          : c.onSurfaceVariant,
+                      fontWeight: isPeerTyping
+                          ? DsTypography.semiBold
+                          : DsTypography.regular,
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
-
-          child: Row(
-
-            children: [
-
-              GestureDetector(
-
-                onTap: () {
-                  Navigator.pop(
-                      context);
-                },
-
-                child: Container(
-
-                  width: 48,
-                  height: 48,
-
-                  decoration:
-                      BoxDecoration(
-
-                    shape:
-                        BoxShape.circle,
-
-                    color: Colors.white,
-                  ),
-
-                  child: const Icon(
-                    Icons
-                        .arrow_back_ios_new_rounded,
-                  ),
-                ),
-              ),
-
-              const SizedBox(width: 18),
-
-              const CircleAvatar(
-
-                radius: 26,
-
-                backgroundImage:
-                    NetworkImage(
-                  'https://images.unsplash.com/photo-1494790108377-be9c29b29330',
-                ),
-              ),
-
-              const SizedBox(width: 16),
-
-              Expanded(
-
-                child: Column(
-
-                  crossAxisAlignment:
-                      CrossAxisAlignment
-                          .start,
-
-                  children: [
-
-                    const Text(
-
-                      'Lujain Fashion',
-
-                      style: TextStyle(
-
-                        fontSize: 18,
-
-                        fontWeight:
-                            FontWeight.bold,
-                      ),
-                    ),
-
-                    const SizedBox(height: 4),
-
-                    Row(
-
-                      children: [
-
-                        Container(
-
-                          width: 10,
-                          height: 10,
-
-                          decoration:
-                              const BoxDecoration(
-
-                            shape:
-                                BoxShape.circle,
-
-                            color:
-                                Colors.green,
-                          ),
-                        ),
-
-                        const SizedBox(width: 8),
-
-                        Text(
-
-                          'Online',
-
-                          style: TextStyle(
-
-                            color:
-                                Colors.grey[600],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-
-              _action(
-                Icons.photo_library_rounded,
-                onTap: onOpenSharedMedia,
-              ),
-
-              const SizedBox(width: 12),
-
-              _action(
-                Icons.call_rounded,
-              ),
-
-              const SizedBox(width: 12),
-
-              _action(
-                Icons.videocam_rounded,
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _action(
-    IconData icon, {
-    VoidCallback? onTap,
-  }) {
-    final enabled = onTap != null;
-    return Opacity(
-      opacity: enabled ? 1 : 0.4,
-      child: GestureDetector(
-        onTap: onTap,
-        child: _circle(icon),
-      ),
-    );
-  }
-
-  Widget _circle(IconData icon) {
-    return Container(
-
-      width: 48,
-      height: 48,
-
-      decoration: BoxDecoration(
-
-        shape: BoxShape.circle,
-
-        color: Colors.white,
-
-        boxShadow: [
-
-          BoxShadow(
-
-            color: Colors.black
-                .withOpacity(.04),
-
-            blurRadius: 16,
-          ),
+          if (onOpenSharedMedia != null)
+            DsIconButton(
+              icon: Icons.photo_library_outlined,
+              tooltip: l10n.chatSharedMedia,
+              onPressed: onOpenSharedMedia,
+            ),
         ],
       ),
-
-      child: Icon(
-        icon,
-
-        color:
-            const Color(
-          0xffFF5C8A,
-        ),
-      ),
     );
+  }
+
+  String _title(BuildContext context) {
+    final current = thread;
+    if (current == null) return context.l10n.chatUntitled;
+    if (current.title.isNotEmpty) return current.title;
+    return current.peerName ?? context.l10n.chatUntitled;
+  }
+
+  /// Typing beats presence, presence beats a last-seen stamp, and a thread we
+  /// could not load says nothing at all rather than guessing "Online".
+  String _presence(BuildContext context) {
+    final l10n = context.l10n;
+    if (isPeerTyping) return l10n.chatTyping;
+    final current = thread;
+    if (current == null) return '';
+    if (current.isOnline) return l10n.chatOnlineNow;
+    final lastSeen = current.lastSeenAt;
+    if (lastSeen == null) return '';
+    return l10n.chatLastSeen(formatRelativeTime(l10n, lastSeen));
   }
 }

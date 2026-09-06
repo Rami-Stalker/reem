@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
 
 
 class PostCaptionField extends StatelessWidget {
@@ -15,9 +16,9 @@ class PostCaptionField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(24),
+      padding: const EdgeInsets.all(DsSpacing.xl),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: DsColors.onMedia,
         borderRadius: BorderRadius.circular(DsRadius.xl),
         boxShadow: DsShadows.medium(DsColors.primary600),
       ),
@@ -28,15 +29,13 @@ class PostCaptionField extends StatelessWidget {
         maxLines: 7,
         maxLength: 2000,
         decoration: InputDecoration(
-          hintText: 'Write your caption...',
-          hintStyle: TextStyle(color: Colors.grey[500]),
+          hintText: context.l10n.createCaptionHint,
+          hintStyle: context.dsText.body
+              .tint(context.dsColors.onSurfaceVariant),
           border: InputBorder.none,
           counterText: '',
         ),
-        style: const TextStyle(
-          height: 1.8,
-          fontSize: 16,
-        ),
+        style: context.dsText.bodyLarge.copyWith(height: 1.8),
       ),
     );
   }

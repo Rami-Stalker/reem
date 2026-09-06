@@ -1,24 +1,36 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/experience/experience_labels.dart';
 import 'package:reem/core/experience/role_experience.dart';
 import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/router/route_paths.dart';
+import 'package:reem/features/experience/presentation/providers/role_experience_provider.dart';
+import 'package:reem/l10n/app_localizations.dart';
 
-class AdminShell extends StatelessWidget {
+class AdminShell extends ConsumerWidget {
   const AdminShell({required this.child, super.key});
 
   final Widget child;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final palette = context.console;
     final l10n = context.l10n;
     final path = GoRouterState.of(context).uri.path;
     final width = MediaQuery.sizeOf(context).width;
+    final permissions = ref.watch(currentPermissionsProvider);
+    // The console draws only the doors this operator can walk through. The
+    // server decides again on every request; this is about not offering a
+    // finance screen to a support agent and calling the 403 a feature.
     final destinations = AppRoleExperience.admin.navigation
-        .map(_AdminNavItem.fromRoleNavigation)
+        .where(
+          (item) =>
+              item.permission == null || permissions.contains(item.permission),
+        )
+        .map((item) => _AdminNavItem.fromRoleNavigation(item, l10n))
         .toList(growable: false);
 
     if (width < 720) {
@@ -26,7 +38,7 @@ class AdminShell extends StatelessWidget {
         backgroundColor: palette.background,
         appBar: AppBar(
           backgroundColor: palette.nav,
-          foregroundColor: Colors.white,
+          foregroundColor: DsColors.onMedia,
           title: Text(l10n.adminPanel),
           actions: [
             IconButton(
@@ -154,11 +166,14 @@ class _AdminHeader extends StatelessWidget {
       width: 44,
       height: 44,
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: .08),
+        color: DsColors.onMedia.withValues(alpha: .08),
         borderRadius: DsRadius.borderSm,
-        border: Border.all(color: Colors.white.withValues(alpha: .1)),
+        border: Border.all(color: DsColors.onMedia.withValues(alpha: .1)),
       ),
-      child: const Icon(Icons.admin_panel_settings_rounded, color: Colors.white),
+      child: const Icon(
+        Icons.admin_panel_settings_rounded,
+        color: DsColors.onMedia,
+      ),
     );
 
     if (!extended) return mark;
@@ -172,11 +187,7 @@ class _AdminHeader extends StatelessWidget {
             l10n.adminPanel,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-              fontSize: DsTypography.titleSmall,
-              fontWeight: DsTypography.semiBold,
-              color: Colors.white,
-            ),
+            style: context.dsText.tileTitle.semibold.tint(DsColors.onMedia),
           ),
         ),
       ],
@@ -203,7 +214,7 @@ class _AdminNavTile extends StatelessWidget {
     final icon = Icon(
       selected ? item.selectedIcon : item.icon,
       size: 22,
-      color: selected ? Colors.white : palette.navMuted,
+      color: selected ? DsColors.onMedia : palette.navMuted,
     );
     final content = AnimatedContainer(
       duration: DsMotion.fast,
@@ -226,13 +237,13 @@ class _AdminNavTile extends StatelessWidget {
                     item.label,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      fontSize: DsTypography.labelLarge,
-                      fontWeight: selected
-                          ? DsTypography.semiBold
-                          : DsTypography.medium,
-                      color: selected ? Colors.white : palette.navMuted,
-                    ),
+                    style: context.dsText.labelLarge
+                        .tint(selected ? DsColors.onMedia : palette.navMuted)
+                        .copyWith(
+                          fontWeight: selected
+                              ? DsTypography.semiBold
+                              : DsTypography.medium,
+                        ),
                   ),
                 ),
                 const SizedBox(width: DsSpacing.xs),
@@ -273,12 +284,23 @@ class _AdminNavItem {
   final IconData selectedIcon;
   final String label;
 
-  factory _AdminNavItem.fromRoleNavigation(RoleNavigationItem item) {
+  /// The label is resolved at display time rather than stored on
+  /// [RoleNavigationItem]: that declaration is a `const` shared by every
+  /// locale, so its `label` is an English identifier for the destination.
+  ///
+  /// The mapping itself lives in `RoleNavigationItemLabel`, beside the one the
+  /// customer's bottom bar and the seller's rail read. It used to be a private
+  /// copy here, which is how a console rail and a nav bar end up calling the
+  /// same screen two different things.
+  factory _AdminNavItem.fromRoleNavigation(
+    RoleNavigationItem item,
+    AppLocalizations l10n,
+  ) {
     return _AdminNavItem(
       path: item.path,
       icon: item.icon,
       selectedIcon: item.selectedIcon,
-      label: item.label,
+      label: item.labelOf(l10n),
     );
   }
 }

@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:reem/core/design_system/design_system.dart';
 import 'package:reem/core/localization/l10n_extension.dart';
+import 'package:reem/features/market/presentation/widgets/market_entry_card.dart';
 import 'package:reem/features/seller_dashboard/presentation/providers/seller_dashboard_provider.dart';
 import 'package:reem/features/seller_dashboard/presentation/widgets/seller_ai_insights_widget.dart';
 import 'package:reem/features/seller_dashboard/presentation/widgets/seller_attention_strip.dart';
@@ -19,6 +20,7 @@ import 'package:reem/features/seller_dashboard/presentation/widgets/seller_sales
 import 'package:reem/features/seller_dashboard/presentation/widgets/seller_store_score_widget.dart';
 import 'package:reem/features/seller_dashboard/presentation/widgets/seller_tasks_widget.dart';
 import 'package:reem/features/seller_dashboard/presentation/widgets/seller_top_products.dart';
+import 'package:reem/features/seller_intelligence/presentation/widgets/intelligence_entry_card.dart';
 
 /// The seller's command centre.
 ///
@@ -60,14 +62,14 @@ class SellerHomeScreen extends ConsumerWidget {
             child: Padding(
               padding: const EdgeInsets.fromLTRB(
                 DsSpacing.lg,
-                0,
+                DsSpacing.xxxs,
                 DsSpacing.lg,
                 DsSpacing.md,
               ),
               child: DsErrorState(
                 icon: Icons.cloud_off_rounded,
                 title: l10n.sellerDashboardUnavailable,
-                message: error,
+                message: error.resolve(l10n),
                 retryLabel: l10n.retry,
                 onRetry: () => _refresh(ref),
               ),
@@ -102,6 +104,17 @@ class SellerHomeScreen extends ConsumerWidget {
 
         // ── Grow ─────────────────────────────────────────────────────────
         const _Rule(),
+        // Phase two's way in. Placed at the head of Grow because that is what
+        // it is for, and above the older store-score widget because it is the
+        // measured version of the same idea.
+        _box(const IntelligenceEntryCard()),
+        const _Gap(_gap),
+
+        // Phase four, directly under it: the same idea widened from her own
+        // shop to the market around it.
+        _box(const SellerMarketEntryCard()),
+        const _Gap(_gap),
+
         _box(const SellerStoreScoreWidget()),
         const _Gap(_gap),
 
@@ -150,7 +163,7 @@ class _Rule extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.fromLTRB(
           DsSpacing.lg,
-          0,
+          DsSpacing.xxxs,
           DsSpacing.lg,
           DsSpacing.xl,
         ),

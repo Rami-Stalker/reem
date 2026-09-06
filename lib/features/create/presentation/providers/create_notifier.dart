@@ -4,6 +4,7 @@ import 'package:reem/core/shared/entities/media.dart';
 
 import 'package:reem/features/create/domain/usecases/create_post_usecase.dart';
 import 'package:reem/features/create/domain/usecases/create_story_usecase.dart';
+import 'package:reem/features/create/presentation/providers/create_message.dart';
 import 'package:reem/features/create/presentation/providers/create_state.dart';
 
 class CreateNotifier extends StateNotifier<CreateState> {
@@ -28,7 +29,7 @@ class CreateNotifier extends StateNotifier<CreateState> {
           state = state.copyWith(
             isLoading: false,
             lastPost: data,
-            successMessage: 'Post created successfully.',
+            successMessage: CreateMessage.postCreated,
           );
           return true;
         }(),
@@ -55,7 +56,7 @@ class CreateNotifier extends StateNotifier<CreateState> {
           state = state.copyWith(
             isLoading: false,
             lastStory: data,
-            successMessage: 'Story created successfully.',
+            successMessage: CreateMessage.storyCreated,
           );
           return true;
         }(),

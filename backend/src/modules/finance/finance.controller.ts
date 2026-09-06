@@ -25,15 +25,18 @@ import { ExchangeRateSyncService } from '../pricing/exchange-rate-sync.service';
 import {
   AppealDisputeDto,
   ConvertPointsDto,
+  CourierExpectedCashQueryDto,
   CurrencyQueryDto,
   DecideDisputeDto,
   DisputeMessageDto,
   OpenDisputeDto,
+  RequestPayoutDto,
   SettleCourierCashDto,
 } from './dto/finance.dto';
 import { LoyaltyService } from './loyalty.service';
 import { ReconciliationService } from './reconciliation.service';
 import { SellerEarningsService } from './seller-earnings.service';
+import { SellerPayoutsService } from './seller-payouts.service';
 
 /**
  * Finance operations.
@@ -51,6 +54,7 @@ export class FinanceController {
     private readonly loyalty: LoyaltyService,
     private readonly reconciliation: ReconciliationService,
     private readonly sellerEarnings: SellerEarningsService,
+    private readonly sellerPayouts: SellerPayoutsService,
     private readonly fx: FxRevaluationService,
     private readonly fxSync: ExchangeRateSyncService,
     private readonly adminFinance: AdminFinanceService,
@@ -121,6 +125,62 @@ export class FinanceController {
       sellerId,
       query.currency ?? Currency.SYP,
     );
+  }
+
+  /**
+   * The other half of Q69 P1 — what she could withdraw, and why not.
+   *
+   * Read before the button is drawn, so a disabled «سحب» carries a reason
+   * rather than being mysteriously grey.
+   */
+  @Get('seller/payouts/availability')
+  @Roles(UserRole.SELLER)
+  payoutAvailability(
+    @CurrentUser('id') sellerId: string,
+    @Query() query: CurrencyQueryDto,
+  ) {
+    return this.sellerPayouts.availability(
+      sellerId,
+      query.currency ?? Currency.SYP,
+    );
+  }
+
+  /** Her withdrawal requests, newest first. */
+  @Get('seller/payouts')
+  @Roles(UserRole.SELLER)
+  payoutHistory(
+    @CurrentUser('id') sellerId: string,
+    @Query() query: CurrencyQueryDto,
+  ) {
+    return this.sellerPayouts.history(sellerId, query.currency);
+  }
+
+  /**
+   * She asks to be paid what is released.
+   *
+   * This creates a `PENDING` payout and nothing else. No money moves here:
+   * approving and releasing it stay with the general manager (Q62), and the
+   * cash movement is posted by the ledger when it is marked paid.
+   */
+  @Post('seller/payouts')
+  @Roles(UserRole.SELLER)
+  @HttpCode(HttpStatus.CREATED)
+  requestPayout(
+    @CurrentUser('id') sellerId: string,
+    @Body() dto: RequestPayoutDto,
+  ) {
+    return this.sellerPayouts.request(sellerId, dto.currency ?? Currency.SYP);
+  }
+
+  /** She withdraws the request while it is still waiting on a decision. */
+  @Post('seller/payouts/:id/cancel')
+  @Roles(UserRole.SELLER)
+  @HttpCode(HttpStatus.OK)
+  cancelPayout(
+    @CurrentUser('id') sellerId: string,
+    @Param('id', ParseUUIDPipe) id: string,
+  ) {
+    return this.sellerPayouts.cancel(sellerId, id);
   }
 
   // ── Disputes (Q107) ──────────────────────────────────────────────────
@@ -210,12 +270,11 @@ export class FinanceController {
   @Roles(UserRole.SUPER_ADMIN, UserRole.FINANCE_ADMIN)
   async expectedCash(
     @Param('courierId', ParseUUIDPipe) courierId: string,
-    @Query('date') date: string,
-    @Query() query: CurrencyQueryDto,
+    @Query() query: CourierExpectedCashQueryDto,
   ) {
     const expected = await this.couriers.expectedFor(
       courierId,
-      date ? new Date(date) : new Date(),
+      query.date ? new Date(query.date) : new Date(),
       query.currency ?? Currency.SYP,
     );
     return { expected: expected.toJSON() };

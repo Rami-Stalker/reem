@@ -11,9 +11,10 @@ import { PrismaClient } from '@prisma/client';
  * matters because the read paths serve the column, not the join, and a demo
  * whose numbers disagree with its own tables is worse than no demo.
  *
- * `views_count` and `likes_count` on products are deliberately left alone:
- * the schema has no per-view or per-product-like table, so those columns are
- * the source of truth rather than a cache of one.
+ * `views_count` is reconciled from `analytics_events` — the trend engine
+ * writes a PRODUCT_VIEW row for every open, so the column has a table behind
+ * it after all, and the figure on the product page is now the number of times
+ * the page was actually opened rather than a number the seed invented.
  */
 const STATEMENTS: { label: string; sql: string }[] = [
   {
@@ -46,6 +47,16 @@ const STATEMENTS: { label: string; sql: string }[] = [
             SELECT 1 FROM product_reviews pr
             WHERE pr.product_id = p.id AND pr.status = 'APPROVED'
           )`,
+  },
+  {
+    label: 'products.views_count',
+    sql: `UPDATE products p
+          SET views_count = COALESCE((
+            SELECT COUNT(*)
+            FROM analytics_events ae
+            WHERE ae.product_id = p.id
+              AND ae.type = 'PRODUCT_VIEW'
+          ), 0)`,
   },
   {
     label: 'products.orders_count',

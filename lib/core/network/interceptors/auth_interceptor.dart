@@ -2,6 +2,9 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:reem/core/config/app_env.dart';
 import 'package:reem/core/network/api_endpoints.dart';
+import 'package:reem/core/network/interceptors/device_proof_interceptor.dart';
+import 'package:reem/core/security/device_identity_service.dart';
+import 'package:reem/core/security/device_proof_signer.dart';
 import 'package:reem/core/storage/secure_storage_service.dart';
 
 /// Attaches the access token to every request and transparently refreshes it on
@@ -9,12 +12,13 @@ import 'package:reem/core/storage/secure_storage_service.dart';
 /// session. Concurrent 401s are coalesced into a single refresh (single-flight).
 class AuthInterceptor extends Interceptor {
   AuthInterceptor(this._storage, {Dio? refreshClient})
-      : _client = refreshClient ?? _buildBareClient();
+      : _client = refreshClient ?? _buildBareClient(_storage);
 
   final SecureStorageService _storage;
 
-  /// A dependency-free Dio used for both the refresh call and the retried
-  /// request, so neither re-enters this interceptor (no infinite loop).
+  /// A Dio of its own, used for both the refresh call and the retried
+  /// request, so neither re-enters this interceptor (no infinite loop). It
+  /// still signs device proofs — see [_buildBareClient].
   final Dio _client;
 
   /// Shared in-flight refresh, so N parallel 401s trigger exactly one refresh.
@@ -26,14 +30,33 @@ class AuthInterceptor extends Interceptor {
 
   static const _retriedFlag = '__retried__';
 
-  static Dio _buildBareClient() => Dio(
-        BaseOptions(
-          baseUrl: AppEnv.baseUrl,
-          connectTimeout: const Duration(seconds: 30),
-          receiveTimeout: const Duration(seconds: 30),
-          headers: const {'Accept': 'application/json'},
-        ),
-      );
+  /// The internal client: no auth interceptor (that is the recursion guard),
+  /// but it *does* carry the device-proof interceptor.
+  ///
+  /// It used to carry nothing at all, and that quietly ended every session.
+  /// A refresh token is bound to the handset that was issued it, so
+  /// `POST /auth/refresh-token` is refused without a proof — and this is the
+  /// only client that ever sends one. So the refresh always failed with
+  /// `refresh_without_device_proof`, and roughly fifteen minutes after signing
+  /// in, every screen started answering "Unauthorized" while the app still
+  /// believed it was signed in. The retried request needs it for the same
+  /// reason: replaying a step-up route without its proof gets it refused.
+  static Dio _buildBareClient(SecureStorageService storage) {
+    final client = Dio(
+      BaseOptions(
+        baseUrl: AppEnv.baseUrl,
+        connectTimeout: const Duration(seconds: 30),
+        receiveTimeout: const Duration(seconds: 30),
+        headers: const {'Accept': 'application/json'},
+      ),
+    );
+    client.interceptors.add(
+      DeviceProofInterceptor(
+        DeviceProofSigner(DeviceIdentityService(storage)),
+      ),
+    );
+    return client;
+  }
 
   @override
   Future<void> onRequest(

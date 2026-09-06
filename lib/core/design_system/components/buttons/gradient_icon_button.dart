@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:reem/core/design_system/foundation/theme/extensions/color_extension.dart';
+import 'package:reem/core/design_system/foundation/tokens/ds_colors.dart';
 
 class GradientIconButton
     extends StatefulWidget {
@@ -62,9 +64,7 @@ class _GradientIconButtonState
 
             boxShadow: [
               BoxShadow(
-                color: Colors.pink
-                    .withOpacity(.25),
-
+                color: context.dsColors.primary.withValues(alpha: .25),
                 blurRadius: 25,
                 spreadRadius: 2,
               ),
@@ -73,7 +73,7 @@ class _GradientIconButtonState
 
           child: Icon(
             widget.icon,
-            color: Colors.white,
+            color: DsColors.onMedia,
           ),
         ),
       ),

@@ -36,9 +36,9 @@ final class AuthRemoteDataSourceImpl extends BaseRemoteDataSource
         'public_key': publicKey,
         'key_storage': hardwareBacked ? 'hardware' : 'software',
         'hardware_backed': hardwareBacked,
-        if (label != null) 'label': label,
-        if (platform != null) 'platform': platform,
-        if (appVersion != null) 'app_version': appVersion,
+        'label': ?label,
+        'platform': ?platform,
+        'app_version': ?appVersion,
       },
     );
     final id = json['device_key_id'];
@@ -58,10 +58,10 @@ final class AuthRemoteDataSourceImpl extends BaseRemoteDataSource
       ApiEndpoints.authOtpLoginStart,
       body: {
         'phone': phone,
-        if (clientNonce != null) 'client_nonce': clientNonce,
-        if (deviceName != null) 'device_name': deviceName,
-        if (platform != null) 'platform': platform,
-        if (appVersion != null) 'app_version': appVersion,
+        'client_nonce': ?clientNonce,
+        'device_name': ?deviceName,
+        'platform': ?platform,
+        'app_version': ?appVersion,
       },
     );
     return OtpChallengeModel.fromJson(json);
@@ -81,10 +81,10 @@ final class AuthRemoteDataSourceImpl extends BaseRemoteDataSource
       body: {
         'phone': phone,
         'code': code,
-        if (clientNonce != null) 'client_nonce': clientNonce,
-        if (deviceName != null) 'device_name': deviceName,
-        if (platform != null) 'platform': platform,
-        if (appVersion != null) 'app_version': appVersion,
+        'client_nonce': ?clientNonce,
+        'device_name': ?deviceName,
+        'platform': ?platform,
+        'app_version': ?appVersion,
       },
     );
     return OtpLoginResponse.fromJson(json);
@@ -98,7 +98,7 @@ final class AuthRemoteDataSourceImpl extends BaseRemoteDataSource
     final json = await postJson(
       ApiEndpoints.authAccountPassword,
       body: {
-        if (currentPassword != null) 'current_password': currentPassword,
+        'current_password': ?currentPassword,
         'new_password': newPassword,
       },
     );
@@ -178,7 +178,7 @@ final class AuthRemoteDataSourceImpl extends BaseRemoteDataSource
       body: {
         'scope': scope,
         'code': code,
-        if (method != null) 'method': method,
+        'method': ?method,
       },
     );
   }
@@ -289,10 +289,7 @@ final class AuthRemoteDataSourceImpl extends BaseRemoteDataSource
   @override
   Future<UserModel> getCurrentUser() async {
     final json = await getJson(ApiEndpoints.authMe);
-    final userJson = json['user'] is Map<String, dynamic>
-        ? json['user'] as Map<String, dynamic>
-        : json;
-    return UserModel.fromJson(userJson);
+    return UserModel.fromAuthPayload(json);
   }
 
   @override
@@ -359,9 +356,9 @@ final class AuthRemoteDataSourceImpl extends BaseRemoteDataSource
     final json = await patchJson(
       ApiEndpoints.authAccount,
       body: {
-        if (name != null) 'name': name,
-        if (email != null) 'email': email,
-        if (location != null) 'location': location,
+        'name': ?name,
+        'email': ?email,
+        'location': ?location,
       },
     );
     return UserModel.fromJson(json['user'] as Map<String, dynamic>);
@@ -375,9 +372,8 @@ final class AuthRemoteDataSourceImpl extends BaseRemoteDataSource
     final json = await patchJson(
       ApiEndpoints.authSecurity,
       body: {
-        if (mfaEnabled != null) 'mfa_enabled': mfaEnabled,
-        if (deviceVerificationRequired != null)
-          'device_verification_required': deviceVerificationRequired,
+        'mfa_enabled': ?mfaEnabled,
+        'device_verification_required': ?deviceVerificationRequired,
       },
     );
     return SecuritySettingsModel.fromJson(json);
@@ -476,18 +472,17 @@ final class AuthRemoteDataSourceImpl extends BaseRemoteDataSource
         'commercial_registration': commercialRegistration,
         'government_id_url': governmentIdUrl,
         'business_license_url': businessLicenseUrl,
-        if (taxId != null) 'tax_id': taxId,
+        'tax_id': ?taxId,
         'bank_name': bankName,
         'account_holder': accountHolder,
         'iban': iban,
-        if (paymentInformation != null)
-          'payment_information': paymentInformation,
+        'payment_information': ?paymentInformation,
         'shipping_methods': shippingMethods,
         'return_policy': returnPolicy,
         'product_categories': productCategories,
         'years_experience': yearsExperience,
-        if (website != null) 'website': website,
-        if (socialMediaLinks != null) 'social_media_links': socialMediaLinks,
+        'website': ?website,
+        'social_media_links': ?socialMediaLinks,
         'document_urls': documentUrls,
       },
     );

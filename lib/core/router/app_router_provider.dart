@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:reem/core/experience/role_experience.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
+import 'package:reem/core/observability/breadcrumb_observers.dart';
 import 'package:reem/core/router/app_shell.dart';
 import 'package:reem/core/router/auth_guard.dart';
 import 'package:reem/core/router/route_names.dart';
@@ -12,9 +14,13 @@ import 'package:reem/features/admin/presentation/screens/admin_dashboard_screen.
 import 'package:reem/features/admin/presentation/screens/admin_orders_screen.dart';
 import 'package:reem/features/admin/presentation/screens/admin_products_screen.dart';
 import 'package:reem/features/admin/presentation/screens/admin_section_screen.dart';
+import 'package:reem/features/admin/presentation/screens/admin_seller_applications_screen.dart';
 import 'package:reem/features/admin/presentation/screens/admin_users_screen.dart';
 import 'package:reem/features/admin/presentation/shell/admin_shell.dart';
 import 'package:reem/features/admin_finance/presentation/screens/admin_finance_screen.dart';
+import 'package:reem/features/ai_stylist/presentation/screens/ai_stylist_screen.dart';
+import 'package:reem/features/ai_stylist/presentation/screens/style_preferences_screen.dart';
+import 'package:reem/features/ai_stylist/presentation/screens/stylist_outfit_screen.dart';
 import 'package:reem/features/auth/domain/entities/auth_account.dart';
 import 'package:reem/features/auth/presentation/providers/auth_provider.dart';
 import 'package:reem/features/auth/presentation/providers/auth_state.dart';
@@ -33,42 +39,68 @@ import 'package:reem/features/auth/presentation/screens/sign_in_code_screen.dart
 import 'package:reem/features/cart/presentation/screens/cart_screen.dart';
 import 'package:reem/features/chat/presentation/screens/chat_details_screen.dart';
 import 'package:reem/features/chat/presentation/screens/chat_media_gallery_screen.dart';
-import 'package:reem/features/chat/presentation/screens/chat_profile_screen.dart';
 import 'package:reem/features/chat/presentation/screens/chats_screen.dart';
-import 'package:reem/features/chat/presentation/screens/story_share_chat_screen.dart';
-import 'package:reem/features/chat/presentation/screens/video_call_screen.dart';
+import 'package:reem/features/checkout/presentation/providers/orders_notifier.dart';
 import 'package:reem/features/checkout/presentation/screens/checkout_screen.dart';
 import 'package:reem/features/checkout/presentation/screens/order_detail_screen.dart';
 import 'package:reem/features/checkout/presentation/screens/orders_screen.dart';
+import 'package:reem/features/closet/presentation/screens/add_personal_item_screen.dart';
+import 'package:reem/features/closet/presentation/screens/closet_gap_screen.dart';
+import 'package:reem/features/closet/presentation/screens/closet_item_screen.dart';
+import 'package:reem/features/closet/presentation/screens/closet_look_screen.dart';
+import 'package:reem/features/closet/presentation/screens/closet_looks_screen.dart';
+import 'package:reem/features/closet/presentation/screens/closet_today_screen.dart';
+import 'package:reem/features/closet/presentation/screens/my_closet_screen.dart';
 import 'package:reem/features/courier/presentation/screens/courier_day_screen.dart';
 import 'package:reem/features/create/presentation/screens/add_post_screen.dart';
 import 'package:reem/features/create/presentation/screens/add_story_screen.dart';
 import 'package:reem/features/discovery/domain/entities/product_collection.dart';
 import 'package:reem/features/discovery/presentation/providers/discovery_providers.dart';
 import 'package:reem/features/discovery/presentation/screens/collection_screen.dart';
+import 'package:reem/features/discovery/presentation/widgets/product_collection_title.dart';
 import 'package:reem/features/experience/presentation/screens/experience_surface_screen.dart';
 import 'package:reem/features/home/presentation/screens/categories_screen.dart';
 import 'package:reem/features/home/presentation/screens/category_screen.dart';
 import 'package:reem/features/home/presentation/screens/home_screen.dart';
 import 'package:reem/features/invoices/presentation/screens/invoice_screen.dart';
 import 'package:reem/features/invoices/presentation/screens/order_invoices_screen.dart';
+import 'package:reem/features/market/presentation/screens/bundle_screen.dart';
+import 'package:reem/features/market/presentation/screens/bundles_screen.dart';
+import 'package:reem/features/market/presentation/screens/drops_screen.dart';
+import 'package:reem/features/market/presentation/screens/missions_screen.dart';
+import 'package:reem/features/market/presentation/screens/resale_market_screen.dart';
+import 'package:reem/features/market/presentation/screens/seller_market_screen.dart';
+import 'package:reem/features/market/presentation/screens/wardrobe_care_screen.dart';
 import 'package:reem/features/onboarding/presentation/screens/onboarding_screen.dart';
 import 'package:reem/features/product_details/presentation/screens/product_details_screen.dart';
 import 'package:reem/features/profile/presentation/screens/favorites_screen.dart';
 import 'package:reem/features/profile/presentation/screens/profile_screen.dart';
+import 'package:reem/features/reputation/presentation/screens/my_reviews_screen.dart';
+import 'package:reem/features/rooms/presentation/screens/compare_screen.dart';
+import 'package:reem/features/rooms/presentation/screens/purchase_plan_screen.dart';
+import 'package:reem/features/rooms/presentation/screens/room_screen.dart';
+import 'package:reem/features/rooms/presentation/screens/rooms_screen.dart';
 import 'package:reem/features/search/presentation/screens/search_screen.dart';
+import 'package:reem/features/seller_analytics/presentation/screens/seller_analytics_screen.dart';
 import 'package:reem/features/seller_dashboard/presentation/screens/seller_home_screen.dart';
 import 'package:reem/features/seller_dashboard/presentation/screens/seller_profile_screen.dart';
 import 'package:reem/features/seller_earnings/presentation/screens/seller_earnings_screen.dart';
+import 'package:reem/features/seller_intelligence/presentation/screens/demand_radar_screen.dart';
+import 'package:reem/features/seller_intelligence/presentation/screens/product_intelligence_screen.dart';
+import 'package:reem/features/seller_intelligence/presentation/screens/seller_health_screen.dart';
 import 'package:reem/features/seller_orders/presentation/screens/seller_order_detail_screen.dart';
 import 'package:reem/features/seller_orders/presentation/screens/seller_orders_screen.dart';
 import 'package:reem/features/seller_products/domain/entities/managed_product.dart';
 import 'package:reem/features/seller_products/presentation/screens/my_products_screen.dart';
 import 'package:reem/features/seller_products/presentation/screens/product_form_screen.dart';
+import 'package:reem/features/seller_returns/presentation/screens/seller_return_detail_screen.dart';
+import 'package:reem/features/seller_returns/presentation/screens/seller_returns_screen.dart';
+import 'package:reem/features/seller_reviews/presentation/screens/seller_reviews_screen.dart';
 import 'package:reem/features/settings/presentation/screens/adresses_screen.dart';
 import 'package:reem/features/settings/presentation/screens/appearance_screen.dart';
 import 'package:reem/features/settings/presentation/screens/coupons_screen.dart';
 import 'package:reem/features/settings/presentation/screens/language_screen.dart';
+import 'package:reem/features/settings/presentation/screens/notification_inbox_screen.dart';
 import 'package:reem/features/settings/presentation/screens/notifications_screen.dart';
 import 'package:reem/features/settings/presentation/screens/payment_methods_screen.dart';
 import 'package:reem/features/settings/presentation/screens/rewards_screen.dart';
@@ -76,8 +108,14 @@ import 'package:reem/features/settings/presentation/screens/settings_screen.dart
 import 'package:reem/features/shipment_tracking/presentation/screens/shipment_tracking_screen.dart';
 import 'package:reem/features/splash/presentation/screens/splash_screen.dart';
 import 'package:reem/features/stories/presentation/screens/story_viewer_screen.dart';
+import 'package:reem/features/trends/presentation/screens/admin_trends_screen.dart';
+import 'package:reem/features/trends/presentation/screens/seller_trends_screen.dart';
 import 'package:reem/features/user_profile/presentation/screens/edit_profile_screen.dart';
+import 'package:reem/features/user_profile/presentation/screens/follow_list_screen.dart';
 import 'package:reem/features/user_profile/presentation/screens/user_profile_screen.dart';
+import 'package:reem/features/value/presentation/screens/admin_value_screen.dart';
+import 'package:reem/features/value/presentation/screens/value_screen.dart';
+import 'package:reem/features/visual_search/presentation/screens/visual_search_screen.dart';
 import 'package:reem/features/wallet/presentation/screens/wallet_screen.dart';
 
 final rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -142,6 +180,9 @@ final goRouterProvider = Provider<GoRouter>((ref) {
     initialLocation: RoutePaths.home,
     debugLogDiagnostics: true,
     refreshListenable: refresh,
+    // Route changes become breadcrumbs, so a crash report says which screens
+    // she passed through on the way to it. Names only — never a parameter.
+    observers: [NavigationBreadcrumbs()],
     // Read, not watch: the guard needs the state at the moment it runs, and
     // `refreshListenable` is what tells the router to run it again.
     redirect: (context, state) =>
@@ -267,7 +308,7 @@ final goRouterProvider = Provider<GoRouter>((ref) {
           );
           return CollectionScreen(
             provider: collectionProductsProvider(collection),
-            title: collection.title,
+            title: collection.titleOf(context.l10n),
           );
         },
       ),
@@ -306,6 +347,165 @@ final goRouterProvider = Provider<GoRouter>((ref) {
           return ProductDetailsScreen(productId: id);
         },
       ),
+
+      // Reem AI Stylist. Full-screen rather than a shell tab: a conversation
+      // owns the whole surface, and the bottom bar competing with the composer
+      // for the same thumb is the wrong trade.
+      GoRoute(
+        path: RoutePaths.stylist,
+        name: RouteNames.stylist,
+        builder: (context, state) => const AiStylistScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.stylistConversation,
+        name: RouteNames.stylistConversation,
+        builder: (context, state) =>
+            AiStylistScreen(conversationId: state.pathParameters['id']),
+      ),
+      GoRoute(
+        path: RoutePaths.stylistPreferences,
+        name: RouteNames.stylistPreferences,
+        builder: (context, state) => const StylePreferencesScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.stylistOutfit,
+        name: RouteNames.stylistOutfit,
+        builder: (context, state) =>
+            StylistOutfitScreen(outfitId: state.pathParameters['id'] ?? ''),
+      ),
+      // Reem Closet. Full-screen: her wardrobe is a place she goes into rather
+      // than a shelf she glances at, and the grid wants the whole surface.
+      //
+      // Note what is absent — every one of these is authenticated and none has
+      // a shareable form. A list of the clothes a woman owns, photographed in
+      // her home, has no public URL by design.
+      // Reem Market Evolution. Full-screen destinations, none of them in the
+      // shell: a bundle and a drop are each one thing she came to look at, and
+      // a bottom bar competing with them is the same trade the closet and the
+      // rooms already refused.
+      GoRoute(
+        path: RoutePaths.marketBundles,
+        name: RouteNames.marketBundles,
+        builder: (context, state) => const BundlesScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.marketBundle,
+        name: RouteNames.marketBundle,
+        builder: (context, state) =>
+            BundleScreen(bundleId: state.pathParameters['id'] ?? ''),
+      ),
+      GoRoute(
+        path: RoutePaths.marketDrops,
+        name: RouteNames.marketDrops,
+        builder: (context, state) => const DropsScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.marketMissions,
+        name: RouteNames.marketMissions,
+        builder: (context, state) => const MissionsScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.marketWardrobe,
+        name: RouteNames.marketWardrobe,
+        builder: (context, state) => const WardrobeCareScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.marketResale,
+        name: RouteNames.marketResale,
+        builder: (context, state) => const ResaleMarketScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.sellerMarket,
+        name: RouteNames.sellerMarket,
+        builder: (context, state) => const SellerMarketScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.closet,
+        name: RouteNames.closet,
+        builder: (context, state) => const MyClosetScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.closetToday,
+        name: RouteNames.closetToday,
+        builder: (context, state) => const ClosetTodayScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.closetAddItem,
+        name: RouteNames.closetAddItem,
+        builder: (context, state) => const AddPersonalItemScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.closetLooks,
+        name: RouteNames.closetLooks,
+        builder: (context, state) => const ClosetLooksScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.closetLook,
+        name: RouteNames.closetLook,
+        builder: (context, state) =>
+            ClosetLookScreen(lookId: state.pathParameters['id'] ?? ''),
+      ),
+      GoRoute(
+        path: RoutePaths.closetItem,
+        name: RouteNames.closetItem,
+        builder: (context, state) =>
+            ClosetItemScreen(itemId: state.pathParameters['id'] ?? ''),
+      ),
+      GoRoute(
+        path: RoutePaths.closetGap,
+        name: RouteNames.closetGap,
+        builder: (context, state) =>
+            ClosetGapScreen(gapId: state.pathParameters['id'] ?? ''),
+      ),
+      // Reem Rooms. Full-screen: a room is a place several people are working
+      // in, and a bottom bar competing with the decision cards is the wrong
+      // trade — the same call the stylist and the closet made.
+      GoRoute(
+        path: RoutePaths.rooms,
+        name: RouteNames.rooms,
+        builder: (context, state) => const RoomsScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.room,
+        name: RouteNames.room,
+        builder: (context, state) =>
+            RoomScreen(roomId: state.pathParameters['id'] ?? ''),
+      ),
+      GoRoute(
+        path: RoutePaths.roomPlan,
+        name: RouteNames.roomPlan,
+        builder: (context, state) =>
+            PurchasePlanScreen(roomId: state.pathParameters['id'] ?? ''),
+      ),
+      GoRoute(
+        path: RoutePaths.roomCompare,
+        name: RouteNames.roomCompare,
+        builder: (context, state) => CompareScreen(
+          roomId: state.pathParameters['id'] ?? '',
+          decisionId: state.pathParameters['decisionId'] ?? '',
+        ),
+      ),
+      // Reem Value. Reachable from the profile and from home; full-screen
+      // because reading where you stand is not a glance.
+      GoRoute(
+        path: RoutePaths.value,
+        name: RouteNames.value,
+        builder: (context, state) => const ValueScreen(),
+      ),
+      // Reem Visual Shopping. Full-screen for the same reason the stylist is:
+      // she is comparing a photograph against a grid, and a bottom bar eating
+      // the last row of that grid is the wrong trade.
+      GoRoute(
+        path: RoutePaths.visualSearch,
+        name: RouteNames.visualSearch,
+        builder: (context, state) => const VisualSearchScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.visualSearchSession,
+        name: RouteNames.visualSearchSession,
+        builder: (context, state) =>
+            VisualSearchScreen(sessionId: state.pathParameters['id']),
+      ),
       GoRoute(
         path: RoutePaths.addPost,
         name: RouteNames.addPost,
@@ -332,6 +532,11 @@ final goRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: RoutePaths.notifications,
         name: RouteNames.notifications,
+        builder: (context, state) => const NotificationInboxScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.notificationPreferences,
+        name: RouteNames.notificationPreferences,
         builder: (context, state) => const NotificationsScreen(),
       ),
       GoRoute(
@@ -370,6 +575,11 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const CouponsScreen(),
       ),
       GoRoute(
+        path: RoutePaths.myReviews,
+        name: RouteNames.myReviews,
+        builder: (context, state) => const MyReviewsScreen(),
+      ),
+      GoRoute(
         path: RoutePaths.rewards,
         name: RouteNames.rewards,
         builder: (context, state) => const RewardsScreen(),
@@ -385,9 +595,35 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const SellerEarningsScreen(),
       ),
       GoRoute(
-        path: RoutePaths.sellerOrders,
-        name: RouteNames.sellerOrders,
-        builder: (context, state) => const SellerOrdersScreen(),
+        path: RoutePaths.sellerReviews,
+        name: RouteNames.sellerReviews,
+        builder: (context, state) => const SellerReviewsScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.sellerReturns,
+        name: RouteNames.sellerReturns,
+        builder: (context, state) => const SellerReturnsScreen(),
+      ),
+      GoRoute(
+        // After the queue, so `/seller/returns` is not swallowed by `:id`.
+        path: RoutePaths.sellerReturnDetail,
+        name: RouteNames.sellerReturnDetail,
+        builder: (context, state) =>
+            SellerReturnDetailScreen(returnId: state.pathParameters['id']!),
+      ),
+      GoRoute(
+        // The CUSTOMER's purchase history, pushed from her profile. It is no
+        // longer a shell branch: it never was one of her tabs, and being one
+        // is what let the seller's Orders tab land on it.
+        path: RoutePaths.orders,
+        name: RouteNames.orders,
+        // `?bucket=cancelled` opens the pile her profile counted. An unknown
+        // value falls back to everything rather than to an empty screen.
+        builder: (context, state) => OrdersScreen(
+          initialBucket: OrderBucket.fromWire(
+            state.uri.queryParameters['bucket'],
+          ),
+        ),
       ),
       GoRoute(
         // Declared after the queue so `/seller/orders` is not swallowed by the
@@ -407,6 +643,16 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         name: RouteNames.userProfile,
         builder: (context, state) =>
             UserProfileScreen(userId: state.pathParameters['id']),
+      ),
+      GoRoute(
+        path: RoutePaths.followList,
+        name: RouteNames.followList,
+        builder: (context, state) => FollowListScreen(
+          userId: state.pathParameters['id']!,
+          kind: state.pathParameters['kind'] == 'followers'
+              ? FollowListKind.followers
+              : FollowListKind.following,
+        ),
       ),
       GoRoute(
         path: RoutePaths.productForm,
@@ -450,6 +696,12 @@ final goRouterProvider = Provider<GoRouter>((ref) {
             const AdminShell(child: AdminUsersScreen()),
       ),
       GoRoute(
+        path: RoutePaths.adminSellerApplications,
+        name: RouteNames.adminSellerApplications,
+        builder: (context, state) =>
+            const AdminShell(child: AdminSellerApplicationsScreen()),
+      ),
+      GoRoute(
         path: RoutePaths.adminSellers,
         name: RouteNames.adminSellers,
         builder: (context, state) => AdminShell(
@@ -459,9 +711,8 @@ final goRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: RoutePaths.adminFinancials,
         name: RouteNames.adminFinancials,
-        builder: (context, state) => const AdminShell(
-          child: AdminFinanceScreen(),
-        ),
+        builder: (context, state) =>
+            const AdminShell(child: AdminFinanceScreen()),
       ),
       GoRoute(
         path: RoutePaths.adminCommissions,
@@ -477,6 +728,23 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         name: RouteNames.adminAnalytics,
         builder: (context, state) =>
             const AdminShell(child: AdminAnalyticsScreen()),
+      ),
+      // Market intelligence sits beside the analytics console rather than
+      // inside it: one answers what happened, the other what is about to.
+      GoRoute(
+        path: RoutePaths.adminTrends,
+        name: RouteNames.adminTrends,
+        builder: (context, state) =>
+            const AdminShell(child: AdminTrendsScreen()),
+      ),
+      // Reem Value's console sits beside market intelligence rather than under
+      // settings: both are engines with a policy behind them, and both are
+      // operated rather than configured.
+      GoRoute(
+        path: RoutePaths.adminValue,
+        name: RouteNames.adminValue,
+        builder: (context, state) =>
+            const AdminShell(child: AdminValueScreen()),
       ),
       GoRoute(
         path: RoutePaths.adminReports,
@@ -545,24 +813,9 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         ),
       ),
       GoRoute(
-        path: RoutePaths.chatProfile,
-        name: RouteNames.chatProfile,
-        builder: (context, state) => const ChatProfileScreen(),
-      ),
-      GoRoute(
         path: RoutePaths.chats,
         name: RouteNames.chats,
         builder: (context, state) => const ChatsScreen(),
-      ),
-      GoRoute(
-        path: RoutePaths.storyShareChat,
-        name: RouteNames.storyShareChat,
-        builder: (context, state) => const StoryShareChatScreen(),
-      ),
-      GoRoute(
-        path: RoutePaths.videoCall,
-        name: RouteNames.videoCall,
-        builder: (context, state) => const VideoCallScreen(),
       ),
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) {
@@ -634,34 +887,16 @@ final goRouterProvider = Provider<GoRouter>((ref) {
               ),
             ],
           ),
+          // Her order queue — the screen she works a sale from. This branch
+          // used to hold `/orders`, the CUSTOMER's purchase history, so the
+          // seller's Orders tab opened someone else's receipts while her own
+          // queue sat outside the shell with no navigation around it.
           StatefulShellBranch(
             routes: [
               GoRoute(
-                path: RoutePaths.orders,
-                name: RouteNames.orders,
-                builder: (context, state) => const OrdersScreen(),
-              ),
-            ],
-          ),
-          StatefulShellBranch(
-            routes: [
-              GoRoute(
-                path: RoutePaths.sellerCustomers,
-                name: RouteNames.sellerCustomers,
-                builder: (context, state) => const ExperienceSurfaceScreen(
-                  surface: ExperienceSurface.customers,
-                ),
-              ),
-            ],
-          ),
-          StatefulShellBranch(
-            routes: [
-              GoRoute(
-                path: RoutePaths.sellerMarketing,
-                name: RouteNames.sellerMarketing,
-                builder: (context, state) => const ExperienceSurfaceScreen(
-                  surface: ExperienceSurface.marketing,
-                ),
+                path: RoutePaths.sellerOrders,
+                name: RouteNames.sellerOrders,
+                builder: (context, state) => const SellerOrdersScreen(),
               ),
             ],
           ),
@@ -670,9 +905,34 @@ final goRouterProvider = Provider<GoRouter>((ref) {
               GoRoute(
                 path: RoutePaths.sellerAnalytics,
                 name: RouteNames.sellerAnalytics,
-                builder: (context, state) => const ExperienceSurfaceScreen(
-                  surface: ExperienceSurface.analytics,
-                ),
+                builder: (context, state) => const SellerAnalyticsScreen(),
+              ),
+              // A sibling in the same branch rather than a tab of its own:
+              // the seller shell already carries as many tabs as a thumb can
+              // reach, and both pages belong to the same question.
+              GoRoute(
+                path: RoutePaths.sellerTrends,
+                name: RouteNames.sellerTrends,
+                builder: (context, state) => const SellerTrendsScreen(),
+              ),
+              // The three intelligence pages sit in the same branch for the
+              // same reason: they answer the same question at three ranges —
+              // the market, the listing, the shop — and a tab each would cost
+              // more thumb than the whole feature is worth.
+              GoRoute(
+                path: RoutePaths.sellerRadar,
+                name: RouteNames.sellerRadar,
+                builder: (context, state) => const DemandRadarScreen(),
+              ),
+              GoRoute(
+                path: RoutePaths.sellerProductIntelligence,
+                name: RouteNames.sellerProductIntelligence,
+                builder: (context, state) => const ProductIntelligenceScreen(),
+              ),
+              GoRoute(
+                path: RoutePaths.sellerHealth,
+                name: RouteNames.sellerHealth,
+                builder: (context, state) => const SellerHealthScreen(),
               ),
             ],
           ),

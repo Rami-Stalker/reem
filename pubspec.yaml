@@ -1,5 +1,5 @@
 name: reem
-description: "A new Flutter project."
+description: "Reem — a women's social marketplace: storefront, content, and wallet in one app."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -47,8 +47,9 @@ dependencies:
   dio: ^5.9.2
   web_socket_channel: ^3.0.3
 
-  # Local storage
-  hive: ^2.2.3
+  # Local storage. `hive` was declared here and never imported once; the app's
+  # durable state is `flutter_secure_storage` for secrets, `shared_preferences`
+  # for preferences, and a file-backed folder for the HTTP response cache.
 
   # Firebase suite
   # firebase_core: ^4.9.0
@@ -126,6 +127,10 @@ dependencies:
   # the network. Already present transitively; declared because this code
   # imports it directly.
   path: ^1.9.1
+  # Handing a post or a product to WhatsApp — which is how Reem actually
+  # travels between friends here. Opens the OS share sheet; the link it
+  # carries is built from `AppEnv.shareBaseUrl`.
+  share_plus: ^13.3.0
 
 dev_dependencies:
   flutter_test:

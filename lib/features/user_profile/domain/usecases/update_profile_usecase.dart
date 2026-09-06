@@ -12,11 +12,12 @@ class UpdateProfileUseCase {
     String? bio,
     String? imageUrl,
     String? location,
-  }) =>
-      _repository.updateProfile(
-        name: name,
-        bio: bio,
-        imageUrl: imageUrl,
-        location: location,
-      );
+    String? email,
+  }) => _repository.updateProfile(
+    name: name,
+    bio: bio,
+    imageUrl: imageUrl,
+    location: location,
+    email: email,
+  );
 }

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/media/media_variants.dart';
 import 'package:reem/features/home/domain/entities/hero_banner.dart';
 import 'package:reem/features/home/presentation/providers/home_content_provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
@@ -64,8 +65,9 @@ class _HomeHeroCarouselState extends ConsumerState<HomeHeroCarousel> {
       homeContentNotifierProvider.select((s) => s.isInitialLoading),
     );
     final banners = ref.watch(
-      homeContentNotifierProvider
-          .select((s) => s.content?.heroBanners ?? const <HeroBanner>[]),
+      homeContentNotifierProvider.select(
+        (s) => s.content?.heroBanners ?? const <HeroBanner>[],
+      ),
     );
 
     if (isLoading) return const _HeroSkeleton();
@@ -73,8 +75,9 @@ class _HomeHeroCarouselState extends ConsumerState<HomeHeroCarousel> {
 
     // (Re)arm autoplay once we know the count.
     if (_autoplay == null) {
-      WidgetsBinding.instance
-          .addPostFrameCallback((_) => _startAutoplay(banners.length));
+      WidgetsBinding.instance.addPostFrameCallback(
+        (_) => _startAutoplay(banners.length),
+      );
     }
 
     return Column(
@@ -120,7 +123,6 @@ class _HeroSlide extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = context.dsColors;
-    final theme = Theme.of(context);
     final tint = _kindGradient(banner.kind);
 
     return Padding(
@@ -131,7 +133,7 @@ class _HeroSlide extends StatelessWidget {
         },
         child: Container(
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(34),
+            borderRadius: DsRadius.borderCard,
             boxShadow: context.shadowSoft,
           ),
           clipBehavior: Clip.antiAlias,
@@ -144,7 +146,10 @@ class _HeroSlide extends StatelessWidget {
                 child: Transform.translate(
                   offset: Offset(parallax * -28, 0),
                   child: CachedNetworkImage(
-                    imageUrl: banner.imageUrl,
+                    imageUrl: MediaVariants.at(
+                      banner.imageUrl,
+                      MediaVariants.medium,
+                    ),
                     fit: BoxFit.cover,
                     placeholder: (_, _) => ColoredBox(color: c.shimmerBase),
                     errorWidget: (_, _, _) =>
@@ -159,8 +164,8 @@ class _HeroSlide extends StatelessWidget {
                     begin: Alignment.centerLeft,
                     end: Alignment.centerRight,
                     colors: [
-                      Colors.black.withValues(alpha: 0.62),
-                      Colors.black.withValues(alpha: 0.12),
+                      DsColors.black.withValues(alpha: 0.62),
+                      DsColors.black.withValues(alpha: 0.12),
                     ],
                   ),
                 ),
@@ -174,16 +179,17 @@ class _HeroSlide extends StatelessWidget {
                     if (banner.eyebrow != null)
                       Text(
                         banner.eyebrow!.toUpperCase(),
-                        style: DsTypography.overline(Colors.white)
-                            .copyWith(color: Colors.white.withValues(alpha: 0.85)),
+                        style: DsTypography.overline(DsColors.onMedia).copyWith(
+                          color: DsColors.onMedia.withValues(alpha: 0.85),
+                        ),
                       ),
                     const SizedBox(height: DsSpacing.xxs),
                     Text(
                       banner.title,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
-                      style: theme.textTheme.headlineSmall?.copyWith(
-                        color: Colors.white,
+                      style: context.dsText.screenTitle.copyWith(
+                        color: DsColors.onMedia,
                         fontWeight: DsTypography.bold,
                         height: 1.1,
                       ),
@@ -195,8 +201,8 @@ class _HeroSlide extends StatelessWidget {
                         banner.subtitle,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
-                        style: theme.textTheme.bodySmall?.copyWith(
-                          color: Colors.white.withValues(alpha: 0.9),
+                        style: context.dsText.cardSubtitle.copyWith(
+                          color: DsColors.onMedia.withValues(alpha: 0.9),
                         ),
                       ),
                     ),
@@ -211,7 +217,9 @@ class _HeroSlide extends StatelessWidget {
                   right: DsSpacing.md,
                   child: Container(
                     padding: const EdgeInsets.symmetric(
-                        horizontal: DsSpacing.sm, vertical: DsSpacing.xxs),
+                      horizontal: DsSpacing.sm,
+                      vertical: DsSpacing.xxs,
+                    ),
                     decoration: BoxDecoration(
                       gradient: tint,
                       borderRadius: DsRadius.borderFull,
@@ -219,11 +227,7 @@ class _HeroSlide extends StatelessWidget {
                     ),
                     child: Text(
                       banner.badge!,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: DsTypography.labelSmall,
-                        fontWeight: DsTypography.bold,
-                      ),
+                      style: context.dsText.caption.bold.tint(DsColors.onMedia),
                     ),
                   ),
                 ),
@@ -235,11 +239,11 @@ class _HeroSlide extends StatelessWidget {
   }
 
   LinearGradient _kindGradient(HeroBannerKind kind) => switch (kind) {
-        HeroBannerKind.promotion => DsGradients.sunset,
-        HeroBannerKind.campaign => DsGradients.mauve,
-        HeroBannerKind.seasonal => DsGradients.champagne,
-        HeroBannerKind.personalized => DsGradients.rewards,
-      };
+    HeroBannerKind.promotion => DsGradients.sunset,
+    HeroBannerKind.campaign => DsGradients.mauve,
+    HeroBannerKind.seasonal => DsGradients.champagne,
+    HeroBannerKind.personalized => DsGradients.rewards,
+  };
 }
 
 class _HeroCta extends StatelessWidget {
@@ -252,9 +256,11 @@ class _HeroCta extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(
-          horizontal: DsSpacing.md, vertical: DsSpacing.xs),
+        horizontal: DsSpacing.md,
+        vertical: DsSpacing.xs,
+      ),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: DsColors.onMedia,
         borderRadius: DsRadius.borderFull,
       ),
       child: Row(
@@ -262,15 +268,14 @@ class _HeroCta extends StatelessWidget {
         children: [
           Text(
             label,
-            style: const TextStyle(
-              color: Color(0xFF221A1F),
-              fontWeight: DsTypography.bold,
-              fontSize: DsTypography.labelMedium,
-            ),
+            style: context.dsText.labelMedium.bold.tint(DsColors.onGold),
           ),
           const SizedBox(width: DsSpacing.xxs),
-          const Icon(Icons.arrow_forward_rounded,
-              size: 15, color: Color(0xFF221A1F)),
+          const Icon(
+            Icons.arrow_forward_rounded,
+            size: 15,
+            color: DsColors.onGold,
+          ),
         ],
       ),
     );

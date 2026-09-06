@@ -6,10 +6,11 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/router/route_paths.dart';
-import 'package:reem/core/shared/entities/post.dart'
-    show CategoryType, CategoryTypeX;
 import 'package:reem/core/shared/entities/product.dart';
+import 'package:reem/features/catalog/domain/entities/category_node.dart';
+import 'package:reem/features/catalog/presentation/providers/categories_provider.dart';
 import 'package:reem/features/search/domain/entities/search_suggestions.dart';
 import 'package:reem/features/search/presentation/providers/search_providers.dart';
 
@@ -26,16 +27,21 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
   String _query = '';
   bool _seededFromRoute = false;
 
-  static const _fallbackTrending = [
-    'Summer dresses',
-    'Rose perfume',
-    'Gift sets',
-    'Heels',
-    'Handbags',
-    'Skincare',
-    'Birthday flowers',
-    'Bridal',
-  ];
+  /// Shown when the server has no trending terms yet. A method rather than
+  /// a `const` list, because these are copy and copy is localised.
+  static List<String> _fallbackTrending(BuildContext context) {
+    final l10n = context.l10n;
+    return [
+      l10n.searchTrendDresses,
+      l10n.searchTrendPerfume,
+      l10n.searchTrendGifts,
+      l10n.searchTrendHeels,
+      l10n.searchTrendBags,
+      l10n.searchTrendSkincare,
+      l10n.searchTrendFlowers,
+      l10n.searchTrendEvening,
+    ];
+  }
 
   @override
   void dispose() {
@@ -60,6 +66,18 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
     }
   }
 
+  /// Empties the field, not just the results.
+  ///
+  /// The X used to clear `_query` and leave `_controller.text` alone, so the
+  /// word she typed stayed sitting in the box while the page fell back to the
+  /// idle view — and because the button only shows while the text is
+  /// non-empty, it stayed there too, apparently doing nothing.
+  void _clear() {
+    _debounce?.cancel();
+    _controller.clear();
+    setState(() => _query = '');
+  }
+
   void _select(String term) {
     _controller
       ..text = term
@@ -78,15 +96,14 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
       _seededFromRoute = true;
     }
 
-    final trending = ref
-        .watch(trendingSearchesProvider)
-        .maybeWhen(
-          data: (items) => items.isEmpty ? _fallbackTrending : items,
-          orElse: () => _fallbackTrending,
+    final fallback = _fallbackTrending(context);
+    final trending = ref.watch(trendingSearchesProvider).maybeWhen(
+          data: (items) => items.isEmpty ? fallback : items,
+          orElse: () => fallback,
         );
 
     return Scaffold(
-      backgroundColor: CustomerExperience.pearl,
+      backgroundColor: context.boutique.surface,
       body: Stack(
         children: [
           const CustomerBackdrop(),
@@ -106,16 +123,16 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                         width: 44,
                         height: 44,
                         decoration: BoxDecoration(
-                          color: Colors.white.withValues(alpha: .78),
+                          color: DsColors.onMedia.withValues(alpha: .78),
                           shape: BoxShape.circle,
-                          border: Border.all(color: Colors.white),
+                          border: Border.all(color: DsColors.onMedia),
                         ),
                         child: IconButton(
-                          tooltip: 'Back',
-                          icon: const Icon(
-                            Icons.arrow_back_ios_new_rounded,
-                            color: CustomerExperience.plum,
-                            size: 18,
+                          tooltip: MaterialLocalizations.of(context).backButtonTooltip,
+                          icon: Icon(
+                            DsIcons.back,
+                            color: context.dsColors.secondary,
+                            size: DsSizes.iconSm,
                           ),
                           onPressed: () => context.pop(),
                         ),
@@ -124,11 +141,36 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                       Expanded(
                         child: _SearchInput(
                           controller: _controller,
-                          hint: 'Search dresses, perfume, gifts…',
+                          hint: context.l10n.searchHint,
                           autofocus: true,
                           onChanged: _onChanged,
                           onSubmitted: _commit,
-                          onClear: () => setState(() => _query = ''),
+                          onClear: _clear,
+                        ),
+                      ),
+                      const SizedBox(width: DsSpacing.xs),
+                      // Search by image sits beside the field, not inside it:
+                      // it is a different way to start a search, not a
+                      // decoration on the text one, and a woman holding a
+                      // screenshot is looking for a camera rather than reading
+                      // a placeholder.
+                      Container(
+                        width: 44,
+                        height: 44,
+                        decoration: BoxDecoration(
+                          color: DsColors.onMedia.withValues(alpha: .78),
+                          shape: BoxShape.circle,
+                          border: Border.all(color: DsColors.onMedia),
+                        ),
+                        child: IconButton(
+                          tooltip: context.l10n.visualSearchTitle,
+                          icon: Icon(
+                            Icons.image_search_rounded,
+                            color: context.boutique.primary,
+                            size: DsSizes.iconSm,
+                          ),
+                          onPressed: () =>
+                              context.push(RoutePaths.visualSearch),
                         ),
                       ),
                     ],
@@ -170,7 +212,7 @@ class _SearchInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomerPanel(
-      padding: const EdgeInsets.symmetric(horizontal: 14),
+      padding: const EdgeInsets.symmetric(horizontal: DsSpacing.md),
       child: TextField(
         controller: controller,
         autofocus: autofocus,
@@ -178,22 +220,23 @@ class _SearchInput extends StatelessWidget {
         onSubmitted: onSubmitted,
         textInputAction: TextInputAction.search,
         decoration: InputDecoration(
-          hintText: 'Search dresses, perfume, gifts...',
+          hintText: context.l10n.searchHint,
           border: InputBorder.none,
-          icon: const Icon(
-            Icons.search_rounded,
-            color: CustomerExperience.rose,
-          ),
-          suffixIcon: controller.text.isEmpty
-              ? null
-              : IconButton(
-                  tooltip: 'Clear search',
-                  onPressed: onClear,
-                  icon: const Icon(
-                    Icons.close_rounded,
-                    color: CustomerExperience.muted,
+          icon: Icon(DsIcons.search, color: context.boutique.primary),
+          // Rebuilt from the controller rather than from the parent's state:
+          // the parent only rebuilds after the 350ms debounce, so the X
+          // appeared a third of a second late and — worse — lingered after the
+          // field was emptied by hand.
+          suffixIcon: ValueListenableBuilder<TextEditingValue>(
+            valueListenable: controller,
+            builder: (context, value, _) => value.text.isEmpty
+                ? const SizedBox.shrink()
+                : IconButton(
+                    tooltip: context.l10n.searchClear,
+                    onPressed: onClear,
+                    icon: Icon(DsIcons.close, color: context.boutique.muted),
                   ),
-                ),
+          ),
         ),
       ),
     );
@@ -219,8 +262,8 @@ class _IdleView extends ConsumerWidget {
       children: [
         if (recents.isNotEmpty) ...[
           _Header(
-            title: 'Recent',
-            action: 'Clear',
+            title: context.l10n.searchRecent,
+            action: context.l10n.searchClearAll,
             onAction: () => ref.read(recentSearchesProvider.notifier).clear(),
           ),
           const SizedBox(height: DsSpacing.sm),
@@ -240,7 +283,10 @@ class _IdleView extends ConsumerWidget {
           ),
           const SizedBox(height: DsSpacing.sectionGap),
         ],
-        const _Header(title: 'Trending now', eyebrow: 'Popular'),
+        _Header(
+          title: context.l10n.searchTrendingNow,
+          eyebrow: context.l10n.searchTrendingEyebrow,
+        ),
         const SizedBox(height: DsSpacing.sm),
         Wrap(
           spacing: DsSpacing.xs,
@@ -255,19 +301,52 @@ class _IdleView extends ConsumerWidget {
           ],
         ),
         const SizedBox(height: DsSpacing.sectionGap),
-        const _Header(title: 'Browse categories', eyebrow: 'Discover'),
-        const SizedBox(height: DsSpacing.sm),
-        Wrap(
-          spacing: DsSpacing.xs,
-          runSpacing: DsSpacing.xs,
-          children: [
-            for (final category in CategoryType.values)
-              DsChip(
-                label: category.label,
-                onTap: () => onSelect(category.label),
-              ),
-          ],
+        _Header(
+          title: context.l10n.searchBrowseCategories,
+          eyebrow: context.l10n.searchDiscoverEyebrow,
         ),
+        const SizedBox(height: DsSpacing.sm),
+        // The shop's real departments, opened as departments.
+        //
+        // This row used to be a hardcoded English enum — Clothing, Makeup,
+        // Perfumes, Bags … — and each chip ran its own label as a free-text
+        // query. The catalogue is written in Arabic, so all nine matched
+        // nothing: every chip here opened an empty result page. These come
+        // from the category tree the shop actually has, carry its Arabic
+        // names, and navigate to the department rather than searching for its
+        // name.
+        const _DepartmentChips(),
+      ],
+    );
+  }
+}
+
+/// The level-one departments, from the catalogue's own tree.
+class _DepartmentChips extends ConsumerWidget {
+  const _DepartmentChips();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final departments = switch (ref.watch(categoryTreeProvider)) {
+      AsyncData(:final value) => [
+          for (final root in value)
+            ...root.children.isEmpty ? [root] : root.children,
+        ],
+      _ => const <CategoryNode>[],
+    };
+    if (departments.isEmpty) return const SizedBox.shrink();
+
+    return Wrap(
+      spacing: DsSpacing.xs,
+      runSpacing: DsSpacing.xs,
+      children: [
+        for (final department in departments)
+          DsChip(
+            label: department.name,
+            onTap: () => context.push(
+              RoutePaths.categoryOf(department.category.slug),
+            ),
+          ),
       ],
     );
   }
@@ -418,7 +497,7 @@ class _ResultCard extends StatelessWidget {
       ratingCount: product.reviewsCount > 0 ? product.reviewsCount : null,
       soldOut: !product.inStock,
       onTap: () =>
-          context.push('${RoutePaths.productDetails}?id=${product.id}'),
+          context.push(RoutePaths.productDetailsOf(product.id)),
     );
   }
 }
@@ -438,7 +517,6 @@ class _Header extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return Row(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
@@ -449,19 +527,15 @@ class _Header extends StatelessWidget {
               if (eyebrow != null) ...[
                 Text(
                   eyebrow!.toUpperCase(),
-                  style: const TextStyle(
-                    color: CustomerExperience.rose,
-                    fontSize: DsTypography.labelSmall,
-                    fontWeight: DsTypography.bold,
-                  ),
+                  style: context.dsText.caption.bold.tint(context.boutique.primary),
                 ),
                 const SizedBox(height: DsSpacing.xxs),
               ],
               Text(
                 title,
-                style: theme.textTheme.titleLarge?.copyWith(
+                style: context.dsText.sectionTitle.copyWith(
                   fontWeight: DsTypography.bold,
-                  color: CustomerExperience.ink,
+                  color: context.boutique.ink,
                 ),
               ),
             ],
@@ -472,8 +546,8 @@ class _Header extends StatelessWidget {
             onTap: onAction,
             child: Text(
               action!,
-              style: theme.textTheme.labelLarge?.copyWith(
-                color: CustomerExperience.rose,
+              style: context.dsText.labelLarge.copyWith(
+                color: context.boutique.primary,
                 fontWeight: DsTypography.semiBold,
               ),
             ),

@@ -62,31 +62,19 @@ class _LoyaltyConvertCardState extends ConsumerState<LoyaltyConvertCard> {
                 Expanded(
                   child: Text(
                     l10n.loyaltyPoints,
-                    style: TextStyle(
-                      fontFamily: DsTypography.fontFamily,
-                      fontSize: DsTypography.titleSmall,
-                      fontWeight: DsTypography.bold,
-                      color: colors.onSurface,
-                    ),
+                    style: context.dsText.tileTitle.bold.tint(colors.onSurface),
                   ),
                 ),
                 Text(
                   l10n.loyaltyPointsCount(available),
-                  style: TextStyle(
-                    fontSize: DsTypography.labelMedium,
-                    fontWeight: DsTypography.semiBold,
-                    color: colors.primary,
-                  ),
+                  style: context.dsText.labelMedium.semibold.tint(colors.primary),
                 ),
               ],
             ),
             const SizedBox(height: DsSpacing.xs),
             Text(
               l10n.loyaltyConvertHint,
-              style: TextStyle(
-                fontSize: DsTypography.labelSmall,
-                color: colors.onSurfaceVariant,
-              ),
+              style: context.dsText.caption.tint(colors.onSurfaceVariant),
             ),
             const SizedBox(height: DsSpacing.md),
 
@@ -104,12 +92,7 @@ class _LoyaltyConvertCardState extends ConsumerState<LoyaltyConvertCard> {
                   child: Center(
                     child: Text(
                       l10n.loyaltyPointsCount(selected),
-                      style: TextStyle(
-                        fontFamily: DsTypography.fontFamily,
-                        fontSize: DsTypography.bodyLarge,
-                        fontWeight: DsTypography.bold,
-                        color: colors.onSurface,
-                      ),
+                      style: context.dsText.bodyLarge.bold.tint(colors.onSurface),
                     ),
                   ),
                 ),

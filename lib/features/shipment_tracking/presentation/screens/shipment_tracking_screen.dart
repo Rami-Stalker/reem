@@ -30,13 +30,7 @@ class ShipmentTrackingScreen extends ConsumerWidget {
       onRefresh: () async =>
           ref.invalidate(shipmentTrackingProvider(trackingCode)),
       slivers: [
-        SliverAppBar(
-          pinned: true,
-          elevation: 0,
-          backgroundColor: Colors.transparent,
-          surfaceTintColor: Colors.transparent,
-          title: Text(l10n.trackShipment),
-        ),
+        PremiumAppBar(title: l10n.trackShipment, showBack: true),
         ...async.when(
           loading: () => const [
             SliverToBoxAdapter(child: _TrackingSkeleton()),
@@ -55,7 +49,7 @@ class ShipmentTrackingScreen extends ConsumerWidget {
           ],
           data: (tracking) => _content(context, tracking),
         ),
-        const SliverToBoxAdapter(child: SizedBox(height: 120)),
+        DsGaps.sliverBottomSafe,
       ],
     );
   }
@@ -93,7 +87,7 @@ class ShipmentTrackingScreen extends ConsumerWidget {
       child: Padding(
         padding: const EdgeInsets.fromLTRB(
           DsSpacing.lg,
-          0,
+          DsSpacing.xxxs,
           DsSpacing.lg,
           DsSpacing.md,
         ),
@@ -156,11 +150,7 @@ class _StatusHeader extends StatelessWidget {
                 Expanded(
                   child: Text(
                     shipmentStageLabel(context, tracking.stage),
-                    style: TextStyle(
-                      fontSize: DsTypography.titleMedium,
-                      fontWeight: DsTypography.bold,
-                      color: colors.onSurface,
-                    ),
+                    style: context.dsText.cardTitle.bold.tint(colors.onSurface),
                   ),
                 ),
                 if (tracking.isExpress)
@@ -208,11 +198,7 @@ class _StatusHeader extends StatelessWidget {
                   const SizedBox(width: DsSpacing.xxs),
                   Text(
                     l10n.trackAttempts(tracking.attemptCount),
-                    style: TextStyle(
-                      fontSize: DsTypography.labelSmall,
-                      fontWeight: DsTypography.semiBold,
-                      color: colors.warning,
-                    ),
+                    style: context.dsText.caption.semibold.tint(colors.warning),
                   ),
                 ],
               ),
@@ -240,10 +226,7 @@ class _Row extends StatelessWidget {
         children: [
           Text(
             label,
-            style: TextStyle(
-              fontSize: DsTypography.labelSmall,
-              color: colors.onSurfaceVariant,
-            ),
+            style: context.dsText.caption.tint(colors.onSurfaceVariant),
           ),
           const Spacer(),
           if (isCode)
@@ -251,23 +234,13 @@ class _Row extends StatelessWidget {
               textDirection: TextDirection.ltr,
               child: SelectableText(
                 value,
-                style: TextStyle(
-                  fontFamily: DsTypography.fontFamily,
-                  fontSize: DsTypography.bodySmall,
-                  fontWeight: DsTypography.bold,
-                  letterSpacing: 0.5,
-                  color: colors.onSurface,
-                ),
+                style: context.dsText.bodySmall.bold.tint(colors.onSurface).copyWith(letterSpacing: 0.5),
               ),
             )
           else
             Text(
               value,
-              style: TextStyle(
-                fontSize: DsTypography.bodySmall,
-                fontWeight: DsTypography.semiBold,
-                color: colors.onSurface,
-              ),
+              style: context.dsText.bodySmall.semibold.tint(colors.onSurface),
             ),
         ],
       ),
@@ -297,7 +270,7 @@ class _History extends StatelessWidget {
                     Container(
                       width: 10,
                       height: 10,
-                      margin: const EdgeInsets.only(top: 4),
+                      margin: const EdgeInsets.only(top: DsSpacing.xxs),
                       decoration: BoxDecoration(
                         color: colors.primary,
                         shape: BoxShape.circle,
@@ -318,30 +291,19 @@ class _History extends StatelessWidget {
                       children: [
                         Text(
                           shipmentStageLabel(context, events[i].stage),
-                          style: TextStyle(
-                            fontSize: DsTypography.bodySmall,
-                            fontWeight: DsTypography.semiBold,
-                            color: colors.onSurface,
-                          ),
+                          style: context.dsText.bodySmall.semibold.tint(colors.onSurface),
                         ),
                         Text(
                           _formatDateTime(context, events[i].at),
-                          style: TextStyle(
-                            fontSize: DsTypography.labelSmall,
-                            color: colors.onSurfaceVariant,
-                          ),
+                          style: context.dsText.caption.tint(colors.onSurfaceVariant),
                         ),
                         if (events[i].note != null &&
                             events[i].note!.isNotEmpty)
                           Padding(
-                            padding: const EdgeInsets.only(top: 2),
+                            padding: const EdgeInsets.only(top: DsSpacing.xxxs),
                             child: Text(
                               events[i].note!,
-                              style: TextStyle(
-                                fontSize: DsTypography.labelSmall,
-                                color: colors.onSurfaceVariant,
-                                height: 1.4,
-                              ),
+                              style: context.dsText.caption.tint(colors.onSurfaceVariant).copyWith(height: 1.4),
                             ),
                           ),
                       ],

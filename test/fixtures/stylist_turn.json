@@ -1,0 +1,4721 @@
+{
+  "turn": {
+    "conversation": {
+      "id": "21e3d823-a15b-464e-94a8-6e89d54b43ff",
+      "title": "عندي مناسبة بعد أسبوع وأريد فستانًا أنيقًا ومحتشمًا بميزا…",
+      "status": "ACTIVE",
+      "brief": {
+        "intent": "FIND_PRODUCT",
+        "occasion": "evening",
+        "occasion_label": "سهرة",
+        "slots": [
+          "DRESS"
+        ],
+        "slot_labels": [
+          "فستان"
+        ],
+        "category_slugs": [
+          "dresses"
+        ],
+        "budget_min": null,
+        "budget_max": 500000,
+        "colours": [],
+        "avoid_colours": [],
+        "sizes": {},
+        "modesty": "MODEST",
+        "modesty_label": "محتشم",
+        "personas": [
+          {
+            "key": "CLASSIC",
+            "label": "كلاسيكي"
+          }
+        ],
+        "materials": [],
+        "recipient_age": null,
+        "for_self": true,
+        "deadline_days": 7,
+        "keywords": [
+          "بعد",
+          "اسبوع",
+          "واريد",
+          "فستانا",
+          "انيقا",
+          "ومحتشما",
+          "بميزانيه",
+          "الف"
+        ],
+        "confidence": 1,
+        "chips": [
+          {
+            "key": "occasion",
+            "label": "سهرة"
+          },
+          {
+            "key": "budget",
+            "label": "حتى 500 ألف ل.س"
+          },
+          {
+            "key": "modesty",
+            "label": "محتشم"
+          }
+        ]
+      },
+      "messages_count": 2,
+      "last_message_at": "2026-08-30T18:15:36.644Z",
+      "created_at": "2026-08-30T18:15:36.471Z"
+    },
+    "user_message": {
+      "id": "fdb35eb9-9afc-4f96-a0d5-f0b2287dc77f",
+      "conversation_id": "21e3d823-a15b-464e-94a8-6e89d54b43ff",
+      "role": "USER",
+      "modality": "TEXT",
+      "content": "عندي مناسبة بعد أسبوع وأريد فستانًا أنيقًا ومحتشمًا بميزانية 500 ألف",
+      "brief": {
+        "intent": "FIND_PRODUCT",
+        "occasion": "evening",
+        "occasion_label": "سهرة",
+        "slots": [
+          "DRESS"
+        ],
+        "slot_labels": [
+          "فستان"
+        ],
+        "category_slugs": [
+          "dresses"
+        ],
+        "budget_min": null,
+        "budget_max": 500000,
+        "colours": [],
+        "avoid_colours": [],
+        "sizes": {},
+        "modesty": "MODEST",
+        "modesty_label": "محتشم",
+        "personas": [
+          {
+            "key": "CLASSIC",
+            "label": "كلاسيكي"
+          }
+        ],
+        "materials": [],
+        "recipient_age": null,
+        "for_self": true,
+        "deadline_days": 7,
+        "keywords": [
+          "بعد",
+          "اسبوع",
+          "واريد",
+          "فستانا",
+          "انيقا",
+          "ومحتشما",
+          "بميزانيه",
+          "الف"
+        ],
+        "confidence": 1,
+        "chips": [
+          {
+            "key": "occasion",
+            "label": "سهرة"
+          },
+          {
+            "key": "budget",
+            "label": "حتى 500 ألف ل.س"
+          },
+          {
+            "key": "modesty",
+            "label": "محتشم"
+          }
+        ]
+      },
+      "engine": null,
+      "latency_ms": null,
+      "created_at": "2026-08-30T18:15:36.634Z",
+      "recommendations": [],
+      "outfit": null,
+      "follow_ups": []
+    },
+    "message": {
+      "id": "1659d48a-9c4b-4329-a489-7dbd40b2d27f",
+      "conversation_id": "21e3d823-a15b-464e-94a8-6e89d54b43ff",
+      "role": "ASSISTANT",
+      "modality": "TEXT",
+      "content": "لقيتلك 5 خيارات فستان بتناسب سهرة، كلها متوفرة حاليًا. الأسعار من 1.2 مليون ل.س لـ2.1 مليون ل.س. ما في ولا قطعة بهالقسم تحت 500 ألف ل.س — هي أرخص الخيارات المتوفرة، حتى تكوني بالصورة. ما لقيت خيارات كافية تحت 500 ألف ل.س، فوسّعت الميزانية شوي. شو مقاسك بالملابس؟ لأعرض عليكِ المتوفر فعليًا بمقاسك.",
+      "brief": {
+        "intent": "FIND_PRODUCT",
+        "occasion": "evening",
+        "occasion_label": "سهرة",
+        "slots": [
+          "DRESS"
+        ],
+        "slot_labels": [
+          "فستان"
+        ],
+        "category_slugs": [
+          "dresses"
+        ],
+        "budget_min": null,
+        "budget_max": 500000,
+        "colours": [],
+        "avoid_colours": [],
+        "sizes": {},
+        "modesty": "MODEST",
+        "modesty_label": "محتشم",
+        "personas": [
+          {
+            "key": "CLASSIC",
+            "label": "كلاسيكي"
+          }
+        ],
+        "materials": [],
+        "recipient_age": null,
+        "for_self": true,
+        "deadline_days": 7,
+        "keywords": [
+          "بعد",
+          "اسبوع",
+          "واريد",
+          "فستانا",
+          "انيقا",
+          "ومحتشما",
+          "بميزانيه",
+          "الف"
+        ],
+        "confidence": 1,
+        "chips": [
+          {
+            "key": "occasion",
+            "label": "سهرة"
+          },
+          {
+            "key": "budget",
+            "label": "حتى 500 ألف ل.س"
+          },
+          {
+            "key": "modesty",
+            "label": "محتشم"
+          }
+        ]
+      },
+      "engine": "reem-stylist-rules-v1",
+      "latency_ms": 167,
+      "created_at": "2026-08-30T18:15:36.638Z",
+      "recommendations": [
+        {
+          "id": "3d8e8537-efbc-4fa2-ab61-e68e21826ff6",
+          "product": {
+            "id": "6b95113d-450f-4a1a-8dfb-a64136935018",
+            "slug": "dress-002",
+            "title": "فستان سهرة بأكمام منفوخة",
+            "description": "فستان سهرة بأكمام منفوخة. القياسات حسب جدول المقاسات، والغسيل الجاف مفضّل.",
+            "category": {
+              "id": "2481dc05-1a60-4450-ba8f-0a608d7a108b",
+              "slug": "dresses",
+              "name_ar": "فساتين",
+              "name_en": "Dresses",
+              "level": 2,
+              "parent_id": "4d1f48c0-1f9a-4c2a-8b8c-4595ee16a98c",
+              "icon_url": null,
+              "image_url": null,
+              "is_sensitive": false,
+              "returns_allowed": true
+            },
+            "brand": {
+              "id": "2056a5fe-48f9-4938-a743-9bdca8bd197d",
+              "slug": "lattakia-leather",
+              "name_ar": "جلود اللاذقية",
+              "name_en": "Lattakia Leather",
+              "logo_url": "https://loremflickr.com/900/1125/logo%2Cboutique/all?lock=97548",
+              "is_verified": true
+            },
+            "attributes": {
+              "material": "شيفون",
+              "sleeve_length": "كم ثلاثة أرباع"
+            },
+            "gtin": null,
+            "status": "active",
+            "media": [
+              {
+                "url": "https://loremflickr.com/900/1125/dress%2Celegant/all?lock=5274",
+                "type": "image",
+                "blur_hash": null
+              },
+              {
+                "url": "https://loremflickr.com/900/1125/dress%2Celegant/all?lock=82893",
+                "type": "image",
+                "blur_hash": null
+              },
+              {
+                "url": "https://loremflickr.com/900/1125/dress%2Celegant/all?lock=50036",
+                "type": "image",
+                "blur_hash": null
+              }
+            ],
+            "variants": [
+              {
+                "id": "d51a79d1-64e3-44b8-a7f1-943bbb98887b",
+                "name": "S",
+                "attributes": {
+                  "size": "S"
+                },
+                "image_url": null,
+                "sort_order": 0
+              },
+              {
+                "id": "ed78222b-4e0b-4bdc-942c-f5f858e22627",
+                "name": "M",
+                "attributes": {
+                  "size": "M"
+                },
+                "image_url": null,
+                "sort_order": 1
+              },
+              {
+                "id": "9e7037ce-1463-4b6f-b6af-813fcb7f8ddf",
+                "name": "L",
+                "attributes": {
+                  "size": "L"
+                },
+                "image_url": null,
+                "sort_order": 2
+              },
+              {
+                "id": "4c3b82eb-02eb-4fef-a649-6010163f2641",
+                "name": "XL",
+                "attributes": {
+                  "size": "XL"
+                },
+                "image_url": null,
+                "sort_order": 3
+              }
+            ],
+            "offers_count": 1,
+            "best_offer": {
+              "id": "201bd3a0-300e-434b-8767-ca4bb239f673",
+              "seller": {
+                "id": "1ad675f2-7f7b-4ec6-a409-5c968881449f",
+                "name": "نور العبادي",
+                "username": "nour_chic",
+                "email": null,
+                "phone": "+966500000004",
+                "bio": null,
+                "image_url": "https://loremflickr.com/400/400/flowers%2Cpastel/all?lock=28388",
+                "location": "اللاذقية، سوريا",
+                "role": "seller",
+                "seller_level": "basic",
+                "seller_verified_at": null,
+                "seller_premium_until": null,
+                "is_verified": false,
+                "phone_verified_at": null,
+                "email_verified_at": null,
+                "mfa_enabled": false,
+                "device_verification_required": true,
+                "followers_count": 12,
+                "following_count": 2,
+                "created_at": "2026-08-19T02:14:10.517Z"
+              },
+              "currency": "SYP",
+              "price": {
+                "amount": "1193000.0000",
+                "currency": "SYP"
+              },
+              "compare_at_price": null,
+              "wholesale_price": null,
+              "wholesale_min_qty": null,
+              "stock": 28,
+              "min_order_qty": 1,
+              "max_order_qty": null,
+              "sku": "DRESS-2-1",
+              "handling_days": 1,
+              "is_made_to_order": false,
+              "requires_deposit": false,
+              "accepts_returns": true,
+              "status": "active",
+              "variants": [
+                {
+                  "id": "179e8188-b64b-4390-a749-00f511648fbb",
+                  "variant_id": "d51a79d1-64e3-44b8-a7f1-943bbb98887b",
+                  "name": "S",
+                  "attributes": {
+                    "size": "S"
+                  },
+                  "image_url": null,
+                  "price": {
+                    "amount": "1193000.0000",
+                    "currency": "SYP"
+                  },
+                  "stock": 8,
+                  "sku": "DRESS-2-1-S"
+                },
+                {
+                  "id": "b1bec858-99e5-4202-baa1-1233c2128f35",
+                  "variant_id": "ed78222b-4e0b-4bdc-942c-f5f858e22627",
+                  "name": "M",
+                  "attributes": {
+                    "size": "M"
+                  },
+                  "image_url": null,
+                  "price": {
+                    "amount": "1193000.0000",
+                    "currency": "SYP"
+                  },
+                  "stock": 3,
+                  "sku": "DRESS-2-1-M"
+                },
+                {
+                  "id": "3025cbb8-74bf-4897-b9c6-88af17f2d09b",
+                  "variant_id": "9e7037ce-1463-4b6f-b6af-813fcb7f8ddf",
+                  "name": "L",
+                  "attributes": {
+                    "size": "L"
+                  },
+                  "image_url": null,
+                  "price": {
+                    "amount": "1193000.0000",
+                    "currency": "SYP"
+                  },
+                  "stock": 11,
+                  "sku": "DRESS-2-1-L"
+                },
+                {
+                  "id": "3bf3d24c-0960-4c2d-bcde-5900210d50c1",
+                  "variant_id": "4c3b82eb-02eb-4fef-a649-6010163f2641",
+                  "name": "XL",
+                  "attributes": {
+                    "size": "XL"
+                  },
+                  "image_url": null,
+                  "price": {
+                    "amount": "1193000.0000",
+                    "currency": "SYP"
+                  },
+                  "stock": 7,
+                  "sku": "DRESS-2-1-XL"
+                }
+              ]
+            },
+            "price_from": {
+              "amount": "1193000.0000",
+              "currency": "SYP"
+            },
+            "price_to": {
+              "amount": "1193000.0000",
+              "currency": "SYP"
+            },
+            "stock": 28,
+            "is_available": true,
+            "rating": 4.57,
+            "reviews_count": 7,
+            "views_count": 877,
+            "likes_count": 11,
+            "orders_count": 6,
+            "favorites_count": 4,
+            "created_at": "2026-01-18T18:13:53.232Z",
+            "is_liked": false
+          },
+          "offer_id": "201bd3a0-300e-434b-8767-ca4bb239f673",
+          "slot": "DRESS",
+          "slot_label": "فستان",
+          "score": -36.2,
+          "position": 0,
+          "reason": "اخترتلك هالقطعة لأنها قريب من النمط اللي طلبتيه ومن بائعة سبق واشتريتِ منها وبيوصل بالوقت.",
+          "reason_codes": [
+            "CATEGORY_MATCH",
+            "OCCASION_MATCH",
+            "FAST_DELIVERY",
+            "TOP_RATED",
+            "TRUSTED_SELLER",
+            "FAVOURITE_SELLER"
+          ],
+          "quoted_price": {
+            "amount": "1193000.0000",
+            "currency": "SYP"
+          },
+          "feedback": "NONE",
+          "created_at": "2026-08-30T18:15:36.640Z"
+        },
+        {
+          "id": "0c5cf26c-1bad-4ba2-98d6-f6e96aa1244f",
+          "product": {
+            "id": "8d31ea3c-03c8-483c-bade-64f506243f2b",
+            "slug": "dress-001",
+            "title": "فستان كلوش بلون الشامبانيا",
+            "description": "فستان كلوش بلون الشامبانيا. القياسات حسب جدول المقاسات، والغسيل الجاف مفضّل.",
+            "category": {
+              "id": "2481dc05-1a60-4450-ba8f-0a608d7a108b",
+              "slug": "dresses",
+              "name_ar": "فساتين",
+              "name_en": "Dresses",
+              "level": 2,
+              "parent_id": "4d1f48c0-1f9a-4c2a-8b8c-4595ee16a98c",
+              "icon_url": null,
+              "image_url": null,
+              "is_sensitive": false,
+              "returns_allowed": true
+            },
+            "brand": {
+              "id": "ce74636e-2c99-4b9d-998f-49c9d603c058",
+              "slug": "reem-atelier",
+              "name_ar": "ريم أتيليه",
+              "name_en": "Reem Atelier",
+              "logo_url": null,
+              "is_verified": true
+            },
+            "attributes": {
+              "material": "شيفون",
+              "sleeve_length": "كم طويل"
+            },
+            "gtin": null,
+            "status": "active",
+            "media": [
+              {
+                "url": "https://loremflickr.com/900/1125/dress%2Celegant/all?lock=21615",
+                "type": "image",
+                "blur_hash": null
+              },
+              {
+                "url": "https://loremflickr.com/900/1125/dress%2Celegant/all?lock=43996",
+                "type": "image",
+                "blur_hash": null
+              },
+              {
+                "url": "https://loremflickr.com/900/1125/dress%2Celegant/all?lock=76853",
+                "type": "image",
+                "blur_hash": null
+              }
+            ],
+            "variants": [
+              {
+                "id": "a67dc82a-54f7-4aa7-af29-07b4cd87c2df",
+                "name": "S",
+                "attributes": {
+                  "size": "S"
+                },
+                "image_url": null,
+                "sort_order": 0
+              },
+              {
+                "id": "2ea56a4d-e4c4-4757-ac93-44ce56aea2f8",
+                "name": "M",
+                "attributes": {
+                  "size": "M"
+                },
+                "image_url": null,
+                "sort_order": 1
+              },
+              {
+                "id": "d3836a59-4b7d-4c73-a75b-96dcd57e7660",
+                "name": "L",
+                "attributes": {
+                  "size": "L"
+                },
+                "image_url": null,
+                "sort_order": 2
+              },
+              {
+                "id": "3635c588-14ea-414b-9517-f02f009df261",
+                "name": "XL",
+                "attributes": {
+                  "size": "XL"
+                },
+                "image_url": null,
+                "sort_order": 3
+              }
+            ],
+            "offers_count": 1,
+            "best_offer": {
+              "id": "ab6e5ac5-70c9-4f89-be56-ffe18114bc49",
+              "seller": {
+                "id": "e1f85c01-3370-44d5-b4e3-9f93fcd8cd8b",
+                "name": "سارة المنصوري",
+                "username": "sara_reem",
+                "email": null,
+                "phone": "+966500000002",
+                "bio": "بوتيك أزياء راقية ✨",
+                "image_url": "https://loremflickr.com/400/400/peony%2Csoft/all?lock=29131",
+                "location": "دمشق، سوريا",
+                "role": "seller",
+                "seller_level": "verified",
+                "seller_verified_at": null,
+                "seller_premium_until": null,
+                "is_verified": true,
+                "phone_verified_at": null,
+                "email_verified_at": null,
+                "mfa_enabled": false,
+                "device_verification_required": true,
+                "followers_count": 19,
+                "following_count": 0,
+                "created_at": "2026-08-19T02:14:10.508Z"
+              },
+              "currency": "SYP",
+              "price": {
+                "amount": "1445000.0000",
+                "currency": "SYP"
+              },
+              "compare_at_price": null,
+              "wholesale_price": null,
+              "wholesale_min_qty": 5,
+              "stock": 6,
+              "min_order_qty": 1,
+              "max_order_qty": null,
+              "sku": "DRESS-1-0",
+              "handling_days": 1,
+              "is_made_to_order": false,
+              "requires_deposit": false,
+              "accepts_returns": true,
+              "status": "active",
+              "variants": [
+                {
+                  "id": "dd1f9006-b20d-4a7a-8597-fdd962bdd9c9",
+                  "variant_id": "a67dc82a-54f7-4aa7-af29-07b4cd87c2df",
+                  "name": "S",
+                  "attributes": {
+                    "size": "S"
+                  },
+                  "image_url": null,
+                  "price": {
+                    "amount": "1445000.0000",
+                    "currency": "SYP"
+                  },
+                  "stock": 2,
+                  "sku": "DRESS-1-0-S"
+                },
+                {
+                  "id": "1728c019-1d83-4d96-8aad-c1452cc65994",
+                  "variant_id": "2ea56a4d-e4c4-4757-ac93-44ce56aea2f8",
+                  "name": "M",
+                  "attributes": {
+                    "size": "M"
+                  },
+                  "image_url": null,
+                  "price": {
+                    "amount": "1445000.0000",
+                    "currency": "SYP"
+                  },
+                  "stock": 2,
+                  "sku": "DRESS-1-0-M"
+                },
+                {
+                  "id": "68ebee13-afab-4e61-a13f-e0785285fd67",
+                  "variant_id": "d3836a59-4b7d-4c73-a75b-96dcd57e7660",
+                  "name": "L",
+                  "attributes": {
+                    "size": "L"
+                  },
+                  "image_url": null,
+                  "price": {
+                    "amount": "1445000.0000",
+                    "currency": "SYP"
+                  },
+                  "stock": 1,
+                  "sku": "DRESS-1-0-L"
+                },
+                {
+                  "id": "cbfc5a34-d319-45ba-8b29-1595167d7547",
+                  "variant_id": "3635c588-14ea-414b-9517-f02f009df261",
+                  "name": "XL",
+                  "attributes": {
+                    "size": "XL"
+                  },
+                  "image_url": null,
+                  "price": {
+                    "amount": "1445000.0000",
+                    "currency": "SYP"
+                  },
+                  "stock": 1,
+                  "sku": "DRESS-1-0-XL"
+                }
+              ]
+            },
+            "price_from": {
+              "amount": "1445000.0000",
+              "currency": "SYP"
+            },
+            "price_to": {
+              "amount": "1445000.0000",
+              "currency": "SYP"
+            },
+            "stock": 6,
+            "is_available": true,
+            "rating": 4.4,
+            "reviews_count": 5,
+            "views_count": 4072,
+            "likes_count": 158,
+            "orders_count": 0,
+            "favorites_count": 0,
+            "created_at": "2026-06-05T07:54:48.201Z",
+            "is_liked": false
+          },
+          "offer_id": "ab6e5ac5-70c9-4f89-be56-ffe18114bc49",
+          "slot": "DRESS",
+          "slot_label": "فستان",
+          "score": -46.27,
+          "position": 1,
+          "reason": "اخترتلك هالقطعة لأنها قريب من النمط اللي طلبتيه ومحتشم متل ما بتحبّي ومن بائعة سبق واشتريتِ منها.",
+          "reason_codes": [
+            "CATEGORY_MATCH",
+            "OCCASION_MATCH",
+            "MODESTY_MATCH",
+            "FAST_DELIVERY",
+            "TRUSTED_SELLER",
+            "FAVOURITE_SELLER",
+            "FAVOURITE_COLOUR"
+          ],
+          "quoted_price": {
+            "amount": "1445000.0000",
+            "currency": "SYP"
+          },
+          "feedback": "NONE",
+          "created_at": "2026-08-30T18:15:36.640Z"
+        },
+        {
+          "id": "0d823a0c-58ad-4a6d-8712-b6bf56f103f2",
+          "product": {
+            "id": "7e158972-3b51-4019-a5ab-5b564adec716",
+            "slug": "silk-midi-dress",
+            "title": "فستان حرير ميدي أنيق",
+            "description": "فستان ميدي من الحرير بلون الورد الباهت، مثالي للسهرات.",
+            "category": {
+              "id": "2481dc05-1a60-4450-ba8f-0a608d7a108b",
+              "slug": "dresses",
+              "name_ar": "فساتين",
+              "name_en": "Dresses",
+              "level": 2,
+              "parent_id": "4d1f48c0-1f9a-4c2a-8b8c-4595ee16a98c",
+              "icon_url": null,
+              "image_url": null,
+              "is_sensitive": false,
+              "returns_allowed": true
+            },
+            "brand": {
+              "id": "ce74636e-2c99-4b9d-998f-49c9d603c058",
+              "slug": "reem-atelier",
+              "name_ar": "ريم أتيليه",
+              "name_en": "Reem Atelier",
+              "logo_url": null,
+              "is_verified": true
+            },
+            "attributes": {
+              "material": "حرير طبيعي",
+              "sleeve_length": "كم طويل"
+            },
+            "gtin": null,
+            "status": "active",
+            "media": [
+              {
+                "url": "https://loremflickr.com/900/1125/dress%2Celegant/all?lock=29656",
+                "type": "image",
+                "blur_hash": null
+              }
+            ],
+            "variants": [
+              {
+                "id": "da8705b0-823f-40fe-bc71-66e3bd4bc339",
+                "name": "S",
+                "attributes": {
+                  "size": "S"
+                },
+                "image_url": null,
+                "sort_order": 0
+              },
+              {
+                "id": "156d46a6-3b8b-4898-b34d-922f75888bd5",
+                "name": "M",
+                "attributes": {
+                  "size": "M"
+                },
+                "image_url": null,
+                "sort_order": 1
+              },
+              {
+                "id": "43dc683c-9bff-4e7a-af27-be1e2345e305",
+                "name": "L",
+                "attributes": {
+                  "size": "L"
+                },
+                "image_url": null,
+                "sort_order": 2
+              }
+            ],
+            "offers_count": 2,
+            "best_offer": {
+              "id": "eff02d78-d75a-4bf1-a6e9-e4f23b672988",
+              "seller": {
+                "id": "0efc3338-5f0f-42c8-9501-65fd653c312b",
+                "name": "ليلى الخوري",
+                "username": "layla_style",
+                "email": null,
+                "phone": "+966500000003",
+                "bio": "أناقة محتشمة منتقاة بعناية",
+                "image_url": "https://loremflickr.com/400/400/roses%2Cpink/all?lock=48357",
+                "location": "حلب، سوريا",
+                "role": "seller",
+                "seller_level": "verified",
+                "seller_verified_at": null,
+                "seller_premium_until": null,
+                "is_verified": true,
+                "phone_verified_at": null,
+                "email_verified_at": null,
+                "mfa_enabled": false,
+                "device_verification_required": true,
+                "followers_count": 22,
+                "following_count": 2,
+                "created_at": "2026-08-19T02:14:10.513Z"
+              },
+              "currency": "SYP",
+              "price": {
+                "amount": "1363000.0000",
+                "currency": "SYP"
+              },
+              "compare_at_price": null,
+              "wholesale_price": null,
+              "wholesale_min_qty": null,
+              "stock": 10,
+              "min_order_qty": 1,
+              "max_order_qty": null,
+              "sku": null,
+              "handling_days": 2,
+              "is_made_to_order": false,
+              "requires_deposit": false,
+              "accepts_returns": true,
+              "status": "active",
+              "variants": []
+            },
+            "price_from": {
+              "amount": "1363000.0000",
+              "currency": "SYP"
+            },
+            "price_to": {
+              "amount": "1450000.0000",
+              "currency": "SYP"
+            },
+            "stock": 10,
+            "is_available": true,
+            "rating": 0,
+            "reviews_count": 0,
+            "views_count": 1200,
+            "likes_count": 80,
+            "orders_count": 1,
+            "favorites_count": 1,
+            "created_at": "2026-08-19T02:14:11.015Z",
+            "is_liked": false
+          },
+          "offer_id": "eff02d78-d75a-4bf1-a6e9-e4f23b672988",
+          "slot": "DRESS",
+          "slot_label": "فستان",
+          "score": -59.66,
+          "position": 2,
+          "reason": "اخترتلك هالقطعة لأنها قريب من النمط اللي طلبتيه ومحتشم متل ما بتحبّي ومن بائعة سبق واشتريتِ منها.",
+          "reason_codes": [
+            "CATEGORY_MATCH",
+            "OCCASION_MATCH",
+            "MODESTY_MATCH",
+            "FAST_DELIVERY",
+            "TRUSTED_SELLER",
+            "FAVOURITE_SELLER"
+          ],
+          "quoted_price": {
+            "amount": "1363000.0000",
+            "currency": "SYP"
+          },
+          "feedback": "NONE",
+          "created_at": "2026-08-30T18:15:36.640Z"
+        },
+        {
+          "id": "ed6829ef-30e6-4088-9a5a-3e7fd72451b9",
+          "product": {
+            "id": "02acc97d-f590-415a-b1b2-e4a70776c6a4",
+            "slug": "dress-005",
+            "title": "فستان يومي بلون الشامبانيا",
+            "description": "فستان يومي بلون الشامبانيا. القياسات حسب جدول المقاسات، والغسيل الجاف مفضّل.",
+            "category": {
+              "id": "2481dc05-1a60-4450-ba8f-0a608d7a108b",
+              "slug": "dresses",
+              "name_ar": "فساتين",
+              "name_en": "Dresses",
+              "level": 2,
+              "parent_id": "4d1f48c0-1f9a-4c2a-8b8c-4595ee16a98c",
+              "icon_url": null,
+              "image_url": null,
+              "is_sensitive": false,
+              "returns_allowed": true
+            },
+            "brand": null,
+            "attributes": {
+              "material": "شيفون",
+              "sleeve_length": "كم ثلاثة أرباع"
+            },
+            "gtin": null,
+            "status": "active",
+            "media": [
+              {
+                "url": "https://loremflickr.com/900/1125/dress%2Celegant/all?lock=34811",
+                "type": "image",
+                "blur_hash": null
+              },
+              {
+                "url": "https://loremflickr.com/900/1125/dress%2Celegant/all?lock=57192",
+                "type": "image",
+                "blur_hash": null
+              },
+              {
+                "url": "https://loremflickr.com/900/1125/dress%2Celegant/all?lock=90049",
+                "type": "image",
+                "blur_hash": null
+              }
+            ],
+            "variants": [
+              {
+                "id": "5e336c87-978f-4650-a606-b670d44ff907",
+                "name": "S",
+                "attributes": {
+                  "size": "S"
+                },
+                "image_url": null,
+                "sort_order": 0
+              },
+              {
+                "id": "c7ec05d5-ca57-424b-a133-5bc3608de28f",
+                "name": "M",
+                "attributes": {
+                  "size": "M"
+                },
+                "image_url": null,
+                "sort_order": 1
+              },
+              {
+                "id": "62da0d7b-21ae-4b91-bc07-fcddb4087306",
+                "name": "L",
+                "attributes": {
+                  "size": "L"
+                },
+                "image_url": null,
+                "sort_order": 2
+              },
+              {
+                "id": "729adda4-2907-467d-8d2e-e174f2f9a0a6",
+                "name": "XL",
+                "attributes": {
+                  "size": "XL"
+                },
+                "image_url": null,
+                "sort_order": 3
+              }
+            ],
+            "offers_count": 1,
+            "best_offer": {
+              "id": "b3097cd6-d225-4c2d-ba4d-38eec0df518b",
+              "seller": {
+                "id": "0efc3338-5f0f-42c8-9501-65fd653c312b",
+                "name": "ليلى الخوري",
+                "username": "layla_style",
+                "email": null,
+                "phone": "+966500000003",
+                "bio": "أناقة محتشمة منتقاة بعناية",
+                "image_url": "https://loremflickr.com/400/400/roses%2Cpink/all?lock=48357",
+                "location": "حلب، سوريا",
+                "role": "seller",
+                "seller_level": "verified",
+                "seller_verified_at": null,
+                "seller_premium_until": null,
+                "is_verified": true,
+                "phone_verified_at": null,
+                "email_verified_at": null,
+                "mfa_enabled": false,
+                "device_verification_required": true,
+                "followers_count": 22,
+                "following_count": 2,
+                "created_at": "2026-08-19T02:14:10.513Z"
+              },
+              "currency": "SYP",
+              "price": {
+                "amount": "1295000.0000",
+                "currency": "SYP"
+              },
+              "compare_at_price": {
+                "amount": "1502000.0000",
+                "currency": "SYP"
+              },
+              "wholesale_price": {
+                "amount": "1100750.0000",
+                "currency": "SYP"
+              },
+              "wholesale_min_qty": null,
+              "stock": 6,
+              "min_order_qty": 1,
+              "max_order_qty": null,
+              "sku": "DRESS-5-0",
+              "handling_days": 2,
+              "is_made_to_order": false,
+              "requires_deposit": false,
+              "accepts_returns": true,
+              "status": "active",
+              "variants": [
+                {
+                  "id": "15ae3642-5cf6-4cc2-acb1-7687238a24f7",
+                  "variant_id": "5e336c87-978f-4650-a606-b670d44ff907",
+                  "name": "S",
+                  "attributes": {
+                    "size": "S"
+                  },
+                  "image_url": null,
+                  "price": {
+                    "amount": "1295000.0000",
+                    "currency": "SYP"
+                  },
+                  "stock": 1,
+                  "sku": "DRESS-5-0-S"
+                },
+                {
+                  "id": "239d4f9b-6115-4b87-a502-371efda3336b",
+                  "variant_id": "c7ec05d5-ca57-424b-a133-5bc3608de28f",
+                  "name": "M",
+                  "attributes": {
+                    "size": "M"
+                  },
+                  "image_url": null,
+                  "price": {
+                    "amount": "1295000.0000",
+                    "currency": "SYP"
+                  },
+                  "stock": 2,
+                  "sku": "DRESS-5-0-M"
+                },
+                {
+                  "id": "8098322e-cd47-401c-bc08-2999476f6cd1",
+                  "variant_id": "62da0d7b-21ae-4b91-bc07-fcddb4087306",
+                  "name": "L",
+                  "attributes": {
+                    "size": "L"
+                  },
+                  "image_url": null,
+                  "price": {
+                    "amount": "1295000.0000",
+                    "currency": "SYP"
+                  },
+                  "stock": 2,
+                  "sku": "DRESS-5-0-L"
+                },
+                {
+                  "id": "85ec5cb3-66a1-4303-bf0f-20f66407ae4e",
+                  "variant_id": "729adda4-2907-467d-8d2e-e174f2f9a0a6",
+                  "name": "XL",
+                  "attributes": {
+                    "size": "XL"
+                  },
+                  "image_url": null,
+                  "price": {
+                    "amount": "1295000.0000",
+                    "currency": "SYP"
+                  },
+                  "stock": 1,
+                  "sku": "DRESS-5-0-XL"
+                }
+              ]
+            },
+            "price_from": {
+              "amount": "1295000.0000",
+              "currency": "SYP"
+            },
+            "price_to": {
+              "amount": "1295000.0000",
+              "currency": "SYP"
+            },
+            "stock": 6,
+            "is_available": true,
+            "rating": 4.33,
+            "reviews_count": 3,
+            "views_count": 3901,
+            "likes_count": 55,
+            "orders_count": 0,
+            "favorites_count": 1,
+            "created_at": "2026-04-10T11:57:33.418Z",
+            "is_liked": false
+          },
+          "offer_id": "b3097cd6-d225-4c2d-ba4d-38eec0df518b",
+          "slot": "DRESS",
+          "slot_label": "فستان",
+          "score": -63.59,
+          "position": 3,
+          "reason": "اخترتلك هالقطعة لأنها قريب من النمط اللي طلبتيه ومن بائعة سبق واشتريتِ منها وبيوصل بالوقت.",
+          "reason_codes": [
+            "CATEGORY_MATCH",
+            "OCCASION_MATCH",
+            "FAST_DELIVERY",
+            "FAVOURITE_SELLER",
+            "FAVOURITE_COLOUR"
+          ],
+          "quoted_price": {
+            "amount": "1295000.0000",
+            "currency": "SYP"
+          },
+          "feedback": "NONE",
+          "created_at": "2026-08-30T18:15:36.640Z"
+        },
+        {
+          "id": "0248f912-e443-41a7-9b4e-664c7cc15772",
+          "product": {
+            "id": "a373aded-7b19-44d2-ba04-04218df6f309",
+            "slug": "dress-004",
+            "title": "فستان ميدي بأكمام منفوخة",
+            "description": "فستان ميدي بأكمام منفوخة. القياسات حسب جدول المقاسات، والغسيل الجاف مفضّل.",
+            "category": {
+              "id": "2481dc05-1a60-4450-ba8f-0a608d7a108b",
+              "slug": "dresses",
+              "name_ar": "فساتين",
+              "name_en": "Dresses",
+              "level": 2,
+              "parent_id": "4d1f48c0-1f9a-4c2a-8b8c-4595ee16a98c",
+              "icon_url": null,
+              "image_url": null,
+              "is_sensitive": false,
+              "returns_allowed": true
+            },
+            "brand": {
+              "id": "cfc3fe24-5967-4557-975d-00ff4458dfa7",
+              "slug": "sham-couture",
+              "name_ar": "شام كوتور",
+              "name_en": "Sham Couture",
+              "logo_url": "https://loremflickr.com/900/1125/logo%2Cboutique/all?lock=16538",
+              "is_verified": true
+            },
+            "attributes": {
+              "material": "حرير طبيعي",
+              "sleeve_length": "كم قصير"
+            },
+            "gtin": null,
+            "status": "active",
+            "media": [
+              {
+                "url": "https://loremflickr.com/900/1125/dress%2Celegant/all?lock=3436",
+                "type": "image",
+                "blur_hash": null
+              },
+              {
+                "url": "https://loremflickr.com/900/1125/dress%2Celegant/all?lock=81055",
+                "type": "image",
+                "blur_hash": null
+              },
+              {
+                "url": "https://loremflickr.com/900/1125/dress%2Celegant/all?lock=58674",
+                "type": "image",
+                "blur_hash": null
+              }
+            ],
+            "variants": [
+              {
+                "id": "83b72bae-5961-44bd-a89d-09f31ae686a8",
+                "name": "S",
+                "attributes": {
+                  "size": "S"
+                },
+                "image_url": null,
+                "sort_order": 0
+              },
+              {
+                "id": "93ecaeae-3b9a-4dab-8fa7-971c83505ec2",
+                "name": "M",
+                "attributes": {
+                  "size": "M"
+                },
+                "image_url": null,
+                "sort_order": 1
+              },
+              {
+                "id": "9d33c783-98b7-4cfc-9ae7-e67d43c0dc23",
+                "name": "L",
+                "attributes": {
+                  "size": "L"
+                },
+                "image_url": null,
+                "sort_order": 2
+              },
+              {
+                "id": "ab93cb21-5a92-4c17-817c-b9a07cd77eab",
+                "name": "XL",
+                "attributes": {
+                  "size": "XL"
+                },
+                "image_url": null,
+                "sort_order": 3
+              }
+            ],
+            "offers_count": 3,
+            "best_offer": {
+              "id": "fa84ff73-ae0f-42e4-9cdf-85d664dca202",
+              "seller": {
+                "id": "e1f85c01-3370-44d5-b4e3-9f93fcd8cd8b",
+                "name": "سارة المنصوري",
+                "username": "sara_reem",
+                "email": null,
+                "phone": "+966500000002",
+                "bio": "بوتيك أزياء راقية ✨",
+                "image_url": "https://loremflickr.com/400/400/peony%2Csoft/all?lock=29131",
+                "location": "دمشق، سوريا",
+                "role": "seller",
+                "seller_level": "verified",
+                "seller_verified_at": null,
+                "seller_premium_until": null,
+                "is_verified": true,
+                "phone_verified_at": null,
+                "email_verified_at": null,
+                "mfa_enabled": false,
+                "device_verification_required": true,
+                "followers_count": 19,
+                "following_count": 0,
+                "created_at": "2026-08-19T02:14:10.508Z"
+              },
+              "currency": "SYP",
+              "price": {
+                "amount": "2058000.0000",
+                "currency": "SYP"
+              },
+              "compare_at_price": {
+                "amount": "2443000.0000",
+                "currency": "SYP"
+              },
+              "wholesale_price": null,
+              "wholesale_min_qty": null,
+              "stock": 17,
+              "min_order_qty": 1,
+              "max_order_qty": null,
+              "sku": "DRESS-4-0",
+              "handling_days": 1,
+              "is_made_to_order": false,
+              "requires_deposit": false,
+              "accepts_returns": true,
+              "status": "active",
+              "variants": [
+                {
+                  "id": "f8ea0ef6-44ea-4e7d-ba7e-a9a152d6ceac",
+                  "variant_id": "83b72bae-5961-44bd-a89d-09f31ae686a8",
+                  "name": "S",
+                  "attributes": {
+                    "size": "S"
+                  },
+                  "image_url": null,
+                  "price": {
+                    "amount": "2058000.0000",
+                    "currency": "SYP"
+                  },
+                  "stock": 4,
+                  "sku": "DRESS-4-0-S"
+                },
+                {
+                  "id": "e7e0fc6f-795b-43c8-8d6b-0fbf8b61f973",
+                  "variant_id": "93ecaeae-3b9a-4dab-8fa7-971c83505ec2",
+                  "name": "M",
+                  "attributes": {
+                    "size": "M"
+                  },
+                  "image_url": null,
+                  "price": {
+                    "amount": "2058000.0000",
+                    "currency": "SYP"
+                  },
+                  "stock": 5,
+                  "sku": "DRESS-4-0-M"
+                },
+                {
+                  "id": "544f7549-b665-4016-bbab-8b6dfc8637df",
+                  "variant_id": "9d33c783-98b7-4cfc-9ae7-e67d43c0dc23",
+                  "name": "L",
+                  "attributes": {
+                    "size": "L"
+                  },
+                  "image_url": null,
+                  "price": {
+                    "amount": "2058000.0000",
+                    "currency": "SYP"
+                  },
+                  "stock": 3,
+                  "sku": "DRESS-4-0-L"
+                },
+                {
+                  "id": "7f3f96d1-cb10-4f40-9be4-1037b85bef3f",
+                  "variant_id": "ab93cb21-5a92-4c17-817c-b9a07cd77eab",
+                  "name": "XL",
+                  "attributes": {
+                    "size": "XL"
+                  },
+                  "image_url": null,
+                  "price": {
+                    "amount": "2058000.0000",
+                    "currency": "SYP"
+                  },
+                  "stock": 5,
+                  "sku": "DRESS-4-0-XL"
+                }
+              ]
+            },
+            "price_from": {
+              "amount": "2058000.0000",
+              "currency": "SYP"
+            },
+            "price_to": {
+              "amount": "2235000.0000",
+              "currency": "SYP"
+            },
+            "stock": 17,
+            "is_available": true,
+            "rating": 3,
+            "reviews_count": 4,
+            "views_count": 3064,
+            "likes_count": 113,
+            "orders_count": 0,
+            "favorites_count": 1,
+            "created_at": "2026-08-12T06:01:26.687Z",
+            "is_liked": false
+          },
+          "offer_id": "fa84ff73-ae0f-42e4-9cdf-85d664dca202",
+          "slot": "DRESS",
+          "slot_label": "فستان",
+          "score": -159.45,
+          "position": 4,
+          "reason": "اخترتلك هالقطعة لأنها قريب من النمط اللي طلبتيه ومن بائعة سبق واشتريتِ منها وبيوصل بالوقت.",
+          "reason_codes": [
+            "CATEGORY_MATCH",
+            "OCCASION_MATCH",
+            "FAST_DELIVERY",
+            "TRUSTED_SELLER",
+            "FAVOURITE_SELLER"
+          ],
+          "quoted_price": {
+            "amount": "2058000.0000",
+            "currency": "SYP"
+          },
+          "feedback": "NONE",
+          "created_at": "2026-08-30T18:15:36.640Z"
+        }
+      ],
+      "outfit": null,
+      "follow_ups": [
+        "رتّبيلي إطلالة كاملة",
+        "وريني أرخص",
+        "بلون تاني",
+        "وريني المزيد"
+      ]
+    },
+    "brief": {
+      "intent": "FIND_PRODUCT",
+      "occasion": "evening",
+      "occasion_label": "سهرة",
+      "slots": [
+        "DRESS"
+      ],
+      "slot_labels": [
+        "فستان"
+      ],
+      "category_slugs": [
+        "dresses"
+      ],
+      "budget_min": null,
+      "budget_max": 500000,
+      "colours": [],
+      "avoid_colours": [],
+      "sizes": {},
+      "modesty": "MODEST",
+      "modesty_label": "محتشم",
+      "personas": [
+        {
+          "key": "CLASSIC",
+          "label": "كلاسيكي"
+        }
+      ],
+      "materials": [],
+      "recipient_age": null,
+      "for_self": true,
+      "deadline_days": 7,
+      "keywords": [
+        "بعد",
+        "اسبوع",
+        "واريد",
+        "فستانا",
+        "انيقا",
+        "ومحتشما",
+        "بميزانيه",
+        "الف"
+      ],
+      "confidence": 1,
+      "chips": [
+        {
+          "key": "occasion",
+          "label": "سهرة"
+        },
+        {
+          "key": "budget",
+          "label": "حتى 500 ألف ل.س"
+        },
+        {
+          "key": "modesty",
+          "label": "محتشم"
+        }
+      ]
+    }
+  },
+  "outfit_turn": {
+    "conversation": {
+      "id": "5137fae6-e544-4341-8145-8d187f766306",
+      "title": "أريد فستانًا أسود مع حقيبة وحذاء مناسبين",
+      "status": "ACTIVE",
+      "brief": {
+        "intent": "BUILD_OUTFIT",
+        "occasion": null,
+        "occasion_label": null,
+        "slots": [
+          "DRESS",
+          "SHOES",
+          "BAG"
+        ],
+        "slot_labels": [
+          "فستان",
+          "حذاء",
+          "حقيبة"
+        ],
+        "category_slugs": [
+          "dresses",
+          "shoes",
+          "handbags"
+        ],
+        "budget_min": null,
+        "budget_max": null,
+        "colours": [
+          {
+            "key": "black",
+            "label": "أسود"
+          }
+        ],
+        "avoid_colours": [],
+        "sizes": {},
+        "modesty": "UNSPECIFIED",
+        "modesty_label": "غير محدد",
+        "personas": [],
+        "materials": [],
+        "recipient_age": null,
+        "for_self": true,
+        "deadline_days": null,
+        "keywords": [
+          "فستانا",
+          "اسود",
+          "حقيبه",
+          "وحذاء",
+          "مناسبين"
+        ],
+        "confidence": 0.33,
+        "chips": [
+          {
+            "key": "colour:black",
+            "label": "أسود"
+          }
+        ]
+      },
+      "messages_count": 2,
+      "last_message_at": "2026-08-30T18:15:36.778Z",
+      "created_at": "2026-08-30T18:15:36.650Z"
+    },
+    "user_message": {
+      "id": "d6b0ba58-b812-40a5-8968-4acd958cf803",
+      "conversation_id": "5137fae6-e544-4341-8145-8d187f766306",
+      "role": "USER",
+      "modality": "TEXT",
+      "content": "أريد فستانًا أسود مع حقيبة وحذاء مناسبين",
+      "brief": {
+        "intent": "BUILD_OUTFIT",
+        "occasion": null,
+        "occasion_label": null,
+        "slots": [
+          "DRESS",
+          "SHOES",
+          "BAG"
+        ],
+        "slot_labels": [
+          "فستان",
+          "حذاء",
+          "حقيبة"
+        ],
+        "category_slugs": [
+          "dresses",
+          "shoes",
+          "handbags"
+        ],
+        "budget_min": null,
+        "budget_max": null,
+        "colours": [
+          {
+            "key": "black",
+            "label": "أسود"
+          }
+        ],
+        "avoid_colours": [],
+        "sizes": {},
+        "modesty": "UNSPECIFIED",
+        "modesty_label": "غير محدد",
+        "personas": [],
+        "materials": [],
+        "recipient_age": null,
+        "for_self": true,
+        "deadline_days": null,
+        "keywords": [
+          "فستانا",
+          "اسود",
+          "حقيبه",
+          "وحذاء",
+          "مناسبين"
+        ],
+        "confidence": 0.33,
+        "chips": [
+          {
+            "key": "colour:black",
+            "label": "أسود"
+          }
+        ]
+      },
+      "engine": null,
+      "latency_ms": null,
+      "created_at": "2026-08-30T18:15:36.768Z",
+      "recommendations": [],
+      "outfit": null,
+      "follow_ups": []
+    },
+    "message": {
+      "id": "a1720ddd-76fe-428d-8403-fff33341fc9a",
+      "conversation_id": "5137fae6-e544-4341-8145-8d187f766306",
+      "role": "ASSISTANT",
+      "modality": "TEXT",
+      "content": "جهّزتلك إطلالة كاملة: فستان، حذاء وحقيبة. اللوحة اللونية وردي وأسود وبيج وكحلي، والقطع منسّقة مع بعضها. مجموع الإطلالة 3.2 مليون ل.س. اللون المطلوب محدود حاليًا، فضفت ألوان بتنسّق معه. خفّفت التفاصيل الدقيقة شوي حتى ما تضيع عليكِ خيارات حلوة.",
+      "brief": {
+        "intent": "BUILD_OUTFIT",
+        "occasion": null,
+        "occasion_label": null,
+        "slots": [
+          "DRESS",
+          "SHOES",
+          "BAG"
+        ],
+        "slot_labels": [
+          "فستان",
+          "حذاء",
+          "حقيبة"
+        ],
+        "category_slugs": [
+          "dresses",
+          "shoes",
+          "handbags"
+        ],
+        "budget_min": null,
+        "budget_max": null,
+        "colours": [
+          {
+            "key": "black",
+            "label": "أسود"
+          }
+        ],
+        "avoid_colours": [],
+        "sizes": {},
+        "modesty": "UNSPECIFIED",
+        "modesty_label": "غير محدد",
+        "personas": [],
+        "materials": [],
+        "recipient_age": null,
+        "for_self": true,
+        "deadline_days": null,
+        "keywords": [
+          "فستانا",
+          "اسود",
+          "حقيبه",
+          "وحذاء",
+          "مناسبين"
+        ],
+        "confidence": 0.33,
+        "chips": [
+          {
+            "key": "colour:black",
+            "label": "أسود"
+          }
+        ]
+      },
+      "engine": "reem-stylist-rules-v1",
+      "latency_ms": 119,
+      "created_at": "2026-08-30T18:15:36.770Z",
+      "recommendations": [
+        {
+          "id": "e4684d3d-7cde-404b-abb6-e3f4f4120a2d",
+          "product": {
+            "id": "6b95113d-450f-4a1a-8dfb-a64136935018",
+            "slug": "dress-002",
+            "title": "فستان سهرة بأكمام منفوخة",
+            "description": "فستان سهرة بأكمام منفوخة. القياسات حسب جدول المقاسات، والغسيل الجاف مفضّل.",
+            "category": {
+              "id": "2481dc05-1a60-4450-ba8f-0a608d7a108b",
+              "slug": "dresses",
+              "name_ar": "فساتين",
+              "name_en": "Dresses",
+              "level": 2,
+              "parent_id": "4d1f48c0-1f9a-4c2a-8b8c-4595ee16a98c",
+              "icon_url": null,
+              "image_url": null,
+              "is_sensitive": false,
+              "returns_allowed": true
+            },
+            "brand": {
+              "id": "2056a5fe-48f9-4938-a743-9bdca8bd197d",
+              "slug": "lattakia-leather",
+              "name_ar": "جلود اللاذقية",
+              "name_en": "Lattakia Leather",
+              "logo_url": "https://loremflickr.com/900/1125/logo%2Cboutique/all?lock=97548",
+              "is_verified": true
+            },
+            "attributes": {
+              "material": "شيفون",
+              "sleeve_length": "كم ثلاثة أرباع"
+            },
+            "gtin": null,
+            "status": "active",
+            "media": [
+              {
+                "url": "https://loremflickr.com/900/1125/dress%2Celegant/all?lock=5274",
+                "type": "image",
+                "blur_hash": null
+              },
+              {
+                "url": "https://loremflickr.com/900/1125/dress%2Celegant/all?lock=82893",
+                "type": "image",
+                "blur_hash": null
+              },
+              {
+                "url": "https://loremflickr.com/900/1125/dress%2Celegant/all?lock=50036",
+                "type": "image",
+                "blur_hash": null
+              }
+            ],
+            "variants": [
+              {
+                "id": "d51a79d1-64e3-44b8-a7f1-943bbb98887b",
+                "name": "S",
+                "attributes": {
+                  "size": "S"
+                },
+                "image_url": null,
+                "sort_order": 0
+              },
+              {
+                "id": "ed78222b-4e0b-4bdc-942c-f5f858e22627",
+                "name": "M",
+                "attributes": {
+                  "size": "M"
+                },
+                "image_url": null,
+                "sort_order": 1
+              },
+              {
+                "id": "9e7037ce-1463-4b6f-b6af-813fcb7f8ddf",
+                "name": "L",
+                "attributes": {
+                  "size": "L"
+                },
+                "image_url": null,
+                "sort_order": 2
+              },
+              {
+                "id": "4c3b82eb-02eb-4fef-a649-6010163f2641",
+                "name": "XL",
+                "attributes": {
+                  "size": "XL"
+                },
+                "image_url": null,
+                "sort_order": 3
+              }
+            ],
+            "offers_count": 1,
+            "best_offer": {
+              "id": "201bd3a0-300e-434b-8767-ca4bb239f673",
+              "seller": {
+                "id": "1ad675f2-7f7b-4ec6-a409-5c968881449f",
+                "name": "نور العبادي",
+                "username": "nour_chic",
+                "email": null,
+                "phone": "+966500000004",
+                "bio": null,
+                "image_url": "https://loremflickr.com/400/400/flowers%2Cpastel/all?lock=28388",
+                "location": "اللاذقية، سوريا",
+                "role": "seller",
+                "seller_level": "basic",
+                "seller_verified_at": null,
+                "seller_premium_until": null,
+                "is_verified": false,
+                "phone_verified_at": null,
+                "email_verified_at": null,
+                "mfa_enabled": false,
+                "device_verification_required": true,
+                "followers_count": 12,
+                "following_count": 2,
+                "created_at": "2026-08-19T02:14:10.517Z"
+              },
+              "currency": "SYP",
+              "price": {
+                "amount": "1193000.0000",
+                "currency": "SYP"
+              },
+              "compare_at_price": null,
+              "wholesale_price": null,
+              "wholesale_min_qty": null,
+              "stock": 28,
+              "min_order_qty": 1,
+              "max_order_qty": null,
+              "sku": "DRESS-2-1",
+              "handling_days": 1,
+              "is_made_to_order": false,
+              "requires_deposit": false,
+              "accepts_returns": true,
+              "status": "active",
+              "variants": [
+                {
+                  "id": "179e8188-b64b-4390-a749-00f511648fbb",
+                  "variant_id": "d51a79d1-64e3-44b8-a7f1-943bbb98887b",
+                  "name": "S",
+                  "attributes": {
+                    "size": "S"
+                  },
+                  "image_url": null,
+                  "price": {
+                    "amount": "1193000.0000",
+                    "currency": "SYP"
+                  },
+                  "stock": 8,
+                  "sku": "DRESS-2-1-S"
+                },
+                {
+                  "id": "b1bec858-99e5-4202-baa1-1233c2128f35",
+                  "variant_id": "ed78222b-4e0b-4bdc-942c-f5f858e22627",
+                  "name": "M",
+                  "attributes": {
+                    "size": "M"
+                  },
+                  "image_url": null,
+                  "price": {
+                    "amount": "1193000.0000",
+                    "currency": "SYP"
+                  },
+                  "stock": 3,
+                  "sku": "DRESS-2-1-M"
+                },
+                {
+                  "id": "3025cbb8-74bf-4897-b9c6-88af17f2d09b",
+                  "variant_id": "9e7037ce-1463-4b6f-b6af-813fcb7f8ddf",
+                  "name": "L",
+                  "attributes": {
+                    "size": "L"
+                  },
+                  "image_url": null,
+                  "price": {
+                    "amount": "1193000.0000",
+                    "currency": "SYP"
+                  },
+                  "stock": 11,
+                  "sku": "DRESS-2-1-L"
+                },
+                {
+                  "id": "3bf3d24c-0960-4c2d-bcde-5900210d50c1",
+                  "variant_id": "4c3b82eb-02eb-4fef-a649-6010163f2641",
+                  "name": "XL",
+                  "attributes": {
+                    "size": "XL"
+                  },
+                  "image_url": null,
+                  "price": {
+                    "amount": "1193000.0000",
+                    "currency": "SYP"
+                  },
+                  "stock": 7,
+                  "sku": "DRESS-2-1-XL"
+                }
+              ]
+            },
+            "price_from": {
+              "amount": "1193000.0000",
+              "currency": "SYP"
+            },
+            "price_to": {
+              "amount": "1193000.0000",
+              "currency": "SYP"
+            },
+            "stock": 28,
+            "is_available": true,
+            "rating": 4.57,
+            "reviews_count": 7,
+            "views_count": 877,
+            "likes_count": 11,
+            "orders_count": 6,
+            "favorites_count": 4,
+            "created_at": "2026-01-18T18:13:53.232Z",
+            "is_liked": false
+          },
+          "offer_id": "201bd3a0-300e-434b-8767-ca4bb239f673",
+          "slot": "DRESS",
+          "slot_label": "فستان",
+          "score": 87.96,
+          "position": 0,
+          "reason": "اخترتلك هالقطعة لأنها قريب من النمط اللي طلبتيه ومن بائعة سبق واشتريتِ منها.",
+          "reason_codes": [
+            "CATEGORY_MATCH",
+            "TOP_RATED",
+            "TRUSTED_SELLER",
+            "FAVOURITE_SELLER",
+            "USUAL_BUDGET"
+          ],
+          "quoted_price": {
+            "amount": "1193000.0000",
+            "currency": "SYP"
+          },
+          "feedback": "NONE",
+          "created_at": "2026-08-30T18:15:36.771Z"
+        },
+        {
+          "id": "c19078d1-480a-492c-9a5c-61d6a9d2782e",
+          "product": {
+            "id": "077d1ada-fd52-479d-aed2-a854c620395f",
+            "slug": "shoe-038",
+            "title": "صندل صيفي بتفاصيل معدنية",
+            "description": "صندل صيفي بتفاصيل معدنية. القياس مطابق للجدول الأوروبي.",
+            "category": {
+              "id": "27905f7f-0b4e-4866-bf2b-1f5e993aed6d",
+              "slug": "shoes",
+              "name_ar": "أحذية",
+              "name_en": "Shoes",
+              "level": 2,
+              "parent_id": "28e04c47-7231-4d71-8ae6-fe56242dca30",
+              "icon_url": null,
+              "image_url": null,
+              "is_sensitive": false,
+              "returns_allowed": true
+            },
+            "brand": null,
+            "attributes": {
+              "material": "جلد طبيعي"
+            },
+            "gtin": null,
+            "status": "active",
+            "media": [
+              {
+                "url": "https://loremflickr.com/900/1125/womens%20shoes%2Cheels/all?lock=44857",
+                "type": "image",
+                "blur_hash": null
+              },
+              {
+                "url": "https://loremflickr.com/900/1125/womens%20shoes%2Cheels/all?lock=67238",
+                "type": "image",
+                "blur_hash": null
+              },
+              {
+                "url": "https://loremflickr.com/900/1125/womens%20shoes%2Cheels/all?lock=89619",
+                "type": "image",
+                "blur_hash": null
+              }
+            ],
+            "variants": [
+              {
+                "id": "62456995-92b9-4547-a2e8-eb66e4d8dcae",
+                "name": "36",
+                "attributes": {
+                  "size": "36",
+                  "system": "EU"
+                },
+                "image_url": null,
+                "sort_order": 0
+              },
+              {
+                "id": "77f3bf0b-faf5-4521-b84f-e72e2c626850",
+                "name": "37",
+                "attributes": {
+                  "size": "37",
+                  "system": "EU"
+                },
+                "image_url": null,
+                "sort_order": 1
+              },
+              {
+                "id": "eb1ef253-9ea4-4339-9dcf-414bbdfbd60a",
+                "name": "38",
+                "attributes": {
+                  "size": "38",
+                  "system": "EU"
+                },
+                "image_url": null,
+                "sort_order": 2
+              },
+              {
+                "id": "2e25db5e-e5e6-44dc-90cc-89c341f513e4",
+                "name": "39",
+                "attributes": {
+                  "size": "39",
+                  "system": "EU"
+                },
+                "image_url": null,
+                "sort_order": 3
+              },
+              {
+                "id": "d3632bbf-6dab-4fe4-a7b1-829ec670f001",
+                "name": "40",
+                "attributes": {
+                  "size": "40",
+                  "system": "EU"
+                },
+                "image_url": null,
+                "sort_order": 4
+              },
+              {
+                "id": "38578607-f1f2-463d-8af4-b4c55de3e7c2",
+                "name": "41",
+                "attributes": {
+                  "size": "41",
+                  "system": "EU"
+                },
+                "image_url": null,
+                "sort_order": 5
+              }
+            ],
+            "offers_count": 2,
+            "best_offer": {
+              "id": "122d8d72-4b6e-4319-b32c-d730a3e0eccd",
+              "seller": {
+                "id": "585de3e2-9aab-45fb-b965-840bee7f83c9",
+                "name": "جنى اللاذقاني",
+                "username": "jana_bags",
+                "email": null,
+                "phone": "+963931000103",
+                "bio": "حقائب وأحذية أصلية بضمان الاستبدال خلال ٧ أيام 👜",
+                "image_url": "https://loremflickr.com/400/400/boutique%2Celegant/all?lock=78454",
+                "location": "اللاذقية، سوريا",
+                "role": "seller",
+                "seller_level": "verified",
+                "seller_verified_at": "2026-03-02T03:58:55.396Z",
+                "seller_premium_until": null,
+                "is_verified": true,
+                "phone_verified_at": "2026-03-02T03:58:55.396Z",
+                "email_verified_at": null,
+                "mfa_enabled": false,
+                "device_verification_required": true,
+                "followers_count": 14,
+                "following_count": 0,
+                "created_at": "2025-09-16T18:22:41.508Z"
+              },
+              "currency": "SYP",
+              "price": {
+                "amount": "723000.0000",
+                "currency": "SYP"
+              },
+              "compare_at_price": null,
+              "wholesale_price": null,
+              "wholesale_min_qty": 5,
+              "stock": 30,
+              "min_order_qty": 1,
+              "max_order_qty": 8,
+              "sku": "SHOE-38-0",
+              "handling_days": 2,
+              "is_made_to_order": true,
+              "requires_deposit": false,
+              "accepts_returns": true,
+              "status": "active",
+              "variants": [
+                {
+                  "id": "e9cc77ef-1164-4b76-9c37-817b1475a13c",
+                  "variant_id": "62456995-92b9-4547-a2e8-eb66e4d8dcae",
+                  "name": "36",
+                  "attributes": {
+                    "size": "36",
+                    "system": "EU"
+                  },
+                  "image_url": null,
+                  "price": {
+                    "amount": "723000.0000",
+                    "currency": "SYP"
+                  },
+                  "stock": 7,
+                  "sku": "SHOE-38-0-36"
+                },
+                {
+                  "id": "1c403109-a7c9-4fa9-9aab-623bab8374cf",
+                  "variant_id": "77f3bf0b-faf5-4521-b84f-e72e2c626850",
+                  "name": "37",
+                  "attributes": {
+                    "size": "37",
+                    "system": "EU"
+                  },
+                  "image_url": null,
+                  "price": {
+                    "amount": "723000.0000",
+                    "currency": "SYP"
+                  },
+                  "stock": 4,
+                  "sku": "SHOE-38-0-37"
+                },
+                {
+                  "id": "099da7ec-5bd1-483a-9288-60b182b4dd35",
+                  "variant_id": "eb1ef253-9ea4-4339-9dcf-414bbdfbd60a",
+                  "name": "38",
+                  "attributes": {
+                    "size": "38",
+                    "system": "EU"
+                  },
+                  "image_url": null,
+                  "price": {
+                    "amount": "723000.0000",
+                    "currency": "SYP"
+                  },
+                  "stock": 3,
+                  "sku": "SHOE-38-0-38"
+                },
+                {
+                  "id": "fb3243a3-2dbf-490b-b1d8-7bb7525039dd",
+                  "variant_id": "2e25db5e-e5e6-44dc-90cc-89c341f513e4",
+                  "name": "39",
+                  "attributes": {
+                    "size": "39",
+                    "system": "EU"
+                  },
+                  "image_url": null,
+                  "price": {
+                    "amount": "723000.0000",
+                    "currency": "SYP"
+                  },
+                  "stock": 9,
+                  "sku": "SHOE-38-0-39"
+                },
+                {
+                  "id": "d3ffad82-712e-40fe-adb0-1550e7e3b35a",
+                  "variant_id": "d3632bbf-6dab-4fe4-a7b1-829ec670f001",
+                  "name": "40",
+                  "attributes": {
+                    "size": "40",
+                    "system": "EU"
+                  },
+                  "image_url": null,
+                  "price": {
+                    "amount": "723000.0000",
+                    "currency": "SYP"
+                  },
+                  "stock": 4,
+                  "sku": "SHOE-38-0-40"
+                },
+                {
+                  "id": "88fc8bef-f1db-41f5-bc43-72869b0ec20d",
+                  "variant_id": "38578607-f1f2-463d-8af4-b4c55de3e7c2",
+                  "name": "41",
+                  "attributes": {
+                    "size": "41",
+                    "system": "EU"
+                  },
+                  "image_url": null,
+                  "price": {
+                    "amount": "723000.0000",
+                    "currency": "SYP"
+                  },
+                  "stock": 4,
+                  "sku": "SHOE-38-0-41"
+                }
+              ]
+            },
+            "price_from": {
+              "amount": "723000.0000",
+              "currency": "SYP"
+            },
+            "price_to": {
+              "amount": "782000.0000",
+              "currency": "SYP"
+            },
+            "stock": 30,
+            "is_available": true,
+            "rating": 4.33,
+            "reviews_count": 3,
+            "views_count": 1246,
+            "likes_count": 38,
+            "orders_count": 3,
+            "favorites_count": 0,
+            "created_at": "2026-02-03T11:05:02.037Z",
+            "is_liked": false
+          },
+          "offer_id": "122d8d72-4b6e-4319-b32c-d730a3e0eccd",
+          "slot": "SHOES",
+          "slot_label": "حذاء",
+          "score": 77.89,
+          "position": 1,
+          "reason": "اخترتلك هالقطعة لأنها قريب من النمط اللي طلبتيه ومن قسم بتتابعيه ومن بائعة سبق واشتريتِ منها.",
+          "reason_codes": [
+            "CATEGORY_MATCH",
+            "FAVOURITE_CATEGORY",
+            "FAVOURITE_SELLER",
+            "USUAL_BUDGET"
+          ],
+          "quoted_price": {
+            "amount": "723000.0000",
+            "currency": "SYP"
+          },
+          "feedback": "NONE",
+          "created_at": "2026-08-30T18:15:36.771Z"
+        },
+        {
+          "id": "9a00456d-5da9-4966-ae39-48361de93845",
+          "product": {
+            "id": "f3d90a12-8223-439d-b5a6-9f0aba0dd85e",
+            "slug": "bag-035",
+            "title": "حقيبة كتف بتصميم كلاسيكي",
+            "description": "حقيبة كتف بتصميم كلاسيكي. تأتي بكيس حماية قماشي.",
+            "category": {
+              "id": "7ae681fd-096b-4958-aa4c-d27d2b77e7e0",
+              "slug": "handbags",
+              "name_ar": "حقائب يد",
+              "name_en": "Handbags",
+              "level": 2,
+              "parent_id": "28e04c47-7231-4d71-8ae6-fe56242dca30",
+              "icon_url": null,
+              "image_url": null,
+              "is_sensitive": false,
+              "returns_allowed": true
+            },
+            "brand": {
+              "id": "0f389a3e-3fb3-40b8-9f74-781cd19bb48e",
+              "slug": "rose-damascus",
+              "name_ar": "وردة دمشق",
+              "name_en": "Rose of Damascus",
+              "logo_url": "https://loremflickr.com/900/1125/logo%2Cboutique/all?lock=47982",
+              "is_verified": true
+            },
+            "attributes": {
+              "material": "جلد صناعي فاخر"
+            },
+            "gtin": null,
+            "status": "active",
+            "media": [
+              {
+                "url": "https://loremflickr.com/900/1125/handbag%2Cpurse/all?lock=21053",
+                "type": "image",
+                "blur_hash": null
+              },
+              {
+                "url": "https://loremflickr.com/900/1125/handbag%2Cpurse/all?lock=43434",
+                "type": "image",
+                "blur_hash": null
+              },
+              {
+                "url": "https://loremflickr.com/900/1125/handbag%2Cpurse/all?lock=65815",
+                "type": "image",
+                "blur_hash": null
+              }
+            ],
+            "variants": [
+              {
+                "id": "0d4a956e-dbf6-47d8-8b26-d2b8782da6b6",
+                "name": "وردي فاتح",
+                "attributes": {
+                  "colour": "وردي فاتح"
+                },
+                "image_url": null,
+                "sort_order": 0
+              },
+              {
+                "id": "f87b9f7a-b017-40a9-a2ea-768d20cab7a7",
+                "name": "أسود",
+                "attributes": {
+                  "colour": "أسود"
+                },
+                "image_url": null,
+                "sort_order": 1
+              },
+              {
+                "id": "3e4d5d40-4d3d-4772-932a-79919d57092a",
+                "name": "بيج",
+                "attributes": {
+                  "colour": "بيج"
+                },
+                "image_url": null,
+                "sort_order": 2
+              },
+              {
+                "id": "2d135fb1-8d6d-4032-8482-1a11cd298d8b",
+                "name": "كحلي",
+                "attributes": {
+                  "colour": "كحلي"
+                },
+                "image_url": null,
+                "sort_order": 3
+              }
+            ],
+            "offers_count": 2,
+            "best_offer": {
+              "id": "f5b33677-a38d-4c43-860f-5e7697d09cbe",
+              "seller": {
+                "id": "1ad675f2-7f7b-4ec6-a409-5c968881449f",
+                "name": "نور العبادي",
+                "username": "nour_chic",
+                "email": null,
+                "phone": "+966500000004",
+                "bio": null,
+                "image_url": "https://loremflickr.com/400/400/flowers%2Cpastel/all?lock=28388",
+                "location": "اللاذقية، سوريا",
+                "role": "seller",
+                "seller_level": "basic",
+                "seller_verified_at": null,
+                "seller_premium_until": null,
+                "is_verified": false,
+                "phone_verified_at": null,
+                "email_verified_at": null,
+                "mfa_enabled": false,
+                "device_verification_required": true,
+                "followers_count": 12,
+                "following_count": 2,
+                "created_at": "2026-08-19T02:14:10.517Z"
+              },
+              "currency": "SYP",
+              "price": {
+                "amount": "1237000.0000",
+                "currency": "SYP"
+              },
+              "compare_at_price": {
+                "amount": "1659000.0000",
+                "currency": "SYP"
+              },
+              "wholesale_price": null,
+              "wholesale_min_qty": null,
+              "stock": 14,
+              "min_order_qty": 1,
+              "max_order_qty": null,
+              "sku": "BAG-35-0",
+              "handling_days": 4,
+              "is_made_to_order": false,
+              "requires_deposit": false,
+              "accepts_returns": true,
+              "status": "active",
+              "variants": [
+                {
+                  "id": "7beab954-3f46-4111-b0be-3ab924224546",
+                  "variant_id": "0d4a956e-dbf6-47d8-8b26-d2b8782da6b6",
+                  "name": "وردي فاتح",
+                  "attributes": {
+                    "colour": "وردي فاتح"
+                  },
+                  "image_url": null,
+                  "price": {
+                    "amount": "1237000.0000",
+                    "currency": "SYP"
+                  },
+                  "stock": 2,
+                  "sku": "BAG-35-0-وردي فاتح"
+                },
+                {
+                  "id": "6f439cc7-d725-4f34-b0a8-ca1f29d96a90",
+                  "variant_id": "f87b9f7a-b017-40a9-a2ea-768d20cab7a7",
+                  "name": "أسود",
+                  "attributes": {
+                    "colour": "أسود"
+                  },
+                  "image_url": null,
+                  "price": {
+                    "amount": "1237000.0000",
+                    "currency": "SYP"
+                  },
+                  "stock": 6,
+                  "sku": "BAG-35-0-أسود"
+                },
+                {
+                  "id": "b7f13580-9773-401c-98c3-2ab4323291f9",
+                  "variant_id": "3e4d5d40-4d3d-4772-932a-79919d57092a",
+                  "name": "بيج",
+                  "attributes": {
+                    "colour": "بيج"
+                  },
+                  "image_url": null,
+                  "price": {
+                    "amount": "1237000.0000",
+                    "currency": "SYP"
+                  },
+                  "stock": 4,
+                  "sku": "BAG-35-0-بيج"
+                },
+                {
+                  "id": "826b0861-d8b0-416f-ab9a-e2e75e3c1375",
+                  "variant_id": "2d135fb1-8d6d-4032-8482-1a11cd298d8b",
+                  "name": "كحلي",
+                  "attributes": {
+                    "colour": "كحلي"
+                  },
+                  "image_url": null,
+                  "price": {
+                    "amount": "1237000.0000",
+                    "currency": "SYP"
+                  },
+                  "stock": 2,
+                  "sku": "BAG-35-0-كحلي"
+                }
+              ]
+            },
+            "price_from": {
+              "amount": "1237000.0000",
+              "currency": "SYP"
+            },
+            "price_to": {
+              "amount": "1379000.0000",
+              "currency": "SYP"
+            },
+            "stock": 14,
+            "is_available": true,
+            "rating": 4,
+            "reviews_count": 2,
+            "views_count": 6979,
+            "likes_count": 283,
+            "orders_count": 1,
+            "favorites_count": 1,
+            "created_at": "2026-01-20T01:18:18.580Z",
+            "is_liked": false
+          },
+          "offer_id": "f5b33677-a38d-4c43-860f-5e7697d09cbe",
+          "slot": "BAG",
+          "slot_label": "حقيبة",
+          "score": 137.14,
+          "position": 2,
+          "reason": "اخترتلك هالقطعة لأنها قريب من النمط اللي طلبتيه وباللون أسود اللي حبّيتيه ومن قسم بتتابعيه.",
+          "reason_codes": [
+            "COLOUR_MATCH",
+            "COLOUR_HARMONY",
+            "CATEGORY_MATCH",
+            "TRUSTED_SELLER",
+            "FAVOURITE_CATEGORY",
+            "FAVOURITE_SELLER",
+            "FAVOURITE_COLOUR",
+            "USUAL_BUDGET"
+          ],
+          "quoted_price": {
+            "amount": "1237000.0000",
+            "currency": "SYP"
+          },
+          "feedback": "NONE",
+          "created_at": "2026-08-30T18:15:36.771Z"
+        }
+      ],
+      "outfit": {
+        "id": "89451be7-b51d-4a60-9004-5fe85c108ede",
+        "conversation_id": "5137fae6-e544-4341-8145-8d187f766306",
+        "message_id": "a1720ddd-76fe-428d-8403-fff33341fc9a",
+        "title": "إطلالة أسود",
+        "occasion": null,
+        "occasion_label": null,
+        "note": "الإطلالة بتضم فستان، حذاء وحقيبة، والقطع منسّقة مع بعضها بالألوان.",
+        "palette": [
+          {
+            "key": "blush",
+            "label": "وردي"
+          },
+          {
+            "key": "black",
+            "label": "أسود"
+          },
+          {
+            "key": "beige",
+            "label": "بيج"
+          },
+          {
+            "key": "navy",
+            "label": "كحلي"
+          }
+        ],
+        "total": {
+          "amount": "3153000.0000",
+          "currency": "SYP"
+        },
+        "status": "SUGGESTED",
+        "items": [
+          {
+            "id": "f3907404-d840-416b-9cb8-b14f1f2bb654",
+            "slot": "DRESS",
+            "slot_label": "فستان",
+            "offer_id": "201bd3a0-300e-434b-8767-ca4bb239f673",
+            "variant_id": null,
+            "price": {
+              "amount": "1193000.0000",
+              "currency": "SYP"
+            },
+            "reason": "اخترتلك هالقطعة لأنها قريب من النمط اللي طلبتيه ومن بائعة سبق واشتريتِ منها.",
+            "position": 0,
+            "product": {
+              "id": "6b95113d-450f-4a1a-8dfb-a64136935018",
+              "slug": "dress-002",
+              "title": "فستان سهرة بأكمام منفوخة",
+              "description": "فستان سهرة بأكمام منفوخة. القياسات حسب جدول المقاسات، والغسيل الجاف مفضّل.",
+              "category": {
+                "id": "2481dc05-1a60-4450-ba8f-0a608d7a108b",
+                "slug": "dresses",
+                "name_ar": "فساتين",
+                "name_en": "Dresses",
+                "level": 2,
+                "parent_id": "4d1f48c0-1f9a-4c2a-8b8c-4595ee16a98c",
+                "icon_url": null,
+                "image_url": null,
+                "is_sensitive": false,
+                "returns_allowed": true
+              },
+              "brand": {
+                "id": "2056a5fe-48f9-4938-a743-9bdca8bd197d",
+                "slug": "lattakia-leather",
+                "name_ar": "جلود اللاذقية",
+                "name_en": "Lattakia Leather",
+                "logo_url": "https://loremflickr.com/900/1125/logo%2Cboutique/all?lock=97548",
+                "is_verified": true
+              },
+              "attributes": {
+                "material": "شيفون",
+                "sleeve_length": "كم ثلاثة أرباع"
+              },
+              "gtin": null,
+              "status": "active",
+              "media": [
+                {
+                  "url": "https://loremflickr.com/900/1125/dress%2Celegant/all?lock=5274",
+                  "type": "image",
+                  "blur_hash": null
+                },
+                {
+                  "url": "https://loremflickr.com/900/1125/dress%2Celegant/all?lock=82893",
+                  "type": "image",
+                  "blur_hash": null
+                },
+                {
+                  "url": "https://loremflickr.com/900/1125/dress%2Celegant/all?lock=50036",
+                  "type": "image",
+                  "blur_hash": null
+                }
+              ],
+              "variants": [
+                {
+                  "id": "d51a79d1-64e3-44b8-a7f1-943bbb98887b",
+                  "name": "S",
+                  "attributes": {
+                    "size": "S"
+                  },
+                  "image_url": null,
+                  "sort_order": 0
+                },
+                {
+                  "id": "ed78222b-4e0b-4bdc-942c-f5f858e22627",
+                  "name": "M",
+                  "attributes": {
+                    "size": "M"
+                  },
+                  "image_url": null,
+                  "sort_order": 1
+                },
+                {
+                  "id": "9e7037ce-1463-4b6f-b6af-813fcb7f8ddf",
+                  "name": "L",
+                  "attributes": {
+                    "size": "L"
+                  },
+                  "image_url": null,
+                  "sort_order": 2
+                },
+                {
+                  "id": "4c3b82eb-02eb-4fef-a649-6010163f2641",
+                  "name": "XL",
+                  "attributes": {
+                    "size": "XL"
+                  },
+                  "image_url": null,
+                  "sort_order": 3
+                }
+              ],
+              "offers_count": 1,
+              "best_offer": {
+                "id": "201bd3a0-300e-434b-8767-ca4bb239f673",
+                "seller": {
+                  "id": "1ad675f2-7f7b-4ec6-a409-5c968881449f",
+                  "name": "نور العبادي",
+                  "username": "nour_chic",
+                  "email": null,
+                  "phone": "+966500000004",
+                  "bio": null,
+                  "image_url": "https://loremflickr.com/400/400/flowers%2Cpastel/all?lock=28388",
+                  "location": "اللاذقية، سوريا",
+                  "role": "seller",
+                  "seller_level": "basic",
+                  "seller_verified_at": null,
+                  "seller_premium_until": null,
+                  "is_verified": false,
+                  "phone_verified_at": null,
+                  "email_verified_at": null,
+                  "mfa_enabled": false,
+                  "device_verification_required": true,
+                  "followers_count": 12,
+                  "following_count": 2,
+                  "created_at": "2026-08-19T02:14:10.517Z"
+                },
+                "currency": "SYP",
+                "price": {
+                  "amount": "1193000.0000",
+                  "currency": "SYP"
+                },
+                "compare_at_price": null,
+                "wholesale_price": null,
+                "wholesale_min_qty": null,
+                "stock": 28,
+                "min_order_qty": 1,
+                "max_order_qty": null,
+                "sku": "DRESS-2-1",
+                "handling_days": 1,
+                "is_made_to_order": false,
+                "requires_deposit": false,
+                "accepts_returns": true,
+                "status": "active",
+                "variants": [
+                  {
+                    "id": "179e8188-b64b-4390-a749-00f511648fbb",
+                    "variant_id": "d51a79d1-64e3-44b8-a7f1-943bbb98887b",
+                    "name": "S",
+                    "attributes": {
+                      "size": "S"
+                    },
+                    "image_url": null,
+                    "price": {
+                      "amount": "1193000.0000",
+                      "currency": "SYP"
+                    },
+                    "stock": 8,
+                    "sku": "DRESS-2-1-S"
+                  },
+                  {
+                    "id": "b1bec858-99e5-4202-baa1-1233c2128f35",
+                    "variant_id": "ed78222b-4e0b-4bdc-942c-f5f858e22627",
+                    "name": "M",
+                    "attributes": {
+                      "size": "M"
+                    },
+                    "image_url": null,
+                    "price": {
+                      "amount": "1193000.0000",
+                      "currency": "SYP"
+                    },
+                    "stock": 3,
+                    "sku": "DRESS-2-1-M"
+                  },
+                  {
+                    "id": "3025cbb8-74bf-4897-b9c6-88af17f2d09b",
+                    "variant_id": "9e7037ce-1463-4b6f-b6af-813fcb7f8ddf",
+                    "name": "L",
+                    "attributes": {
+                      "size": "L"
+                    },
+                    "image_url": null,
+                    "price": {
+                      "amount": "1193000.0000",
+                      "currency": "SYP"
+                    },
+                    "stock": 11,
+                    "sku": "DRESS-2-1-L"
+                  },
+                  {
+                    "id": "3bf3d24c-0960-4c2d-bcde-5900210d50c1",
+                    "variant_id": "4c3b82eb-02eb-4fef-a649-6010163f2641",
+                    "name": "XL",
+                    "attributes": {
+                      "size": "XL"
+                    },
+                    "image_url": null,
+                    "price": {
+                      "amount": "1193000.0000",
+                      "currency": "SYP"
+                    },
+                    "stock": 7,
+                    "sku": "DRESS-2-1-XL"
+                  }
+                ]
+              },
+              "price_from": {
+                "amount": "1193000.0000",
+                "currency": "SYP"
+              },
+              "price_to": {
+                "amount": "1193000.0000",
+                "currency": "SYP"
+              },
+              "stock": 28,
+              "is_available": true,
+              "rating": 4.57,
+              "reviews_count": 7,
+              "views_count": 877,
+              "likes_count": 11,
+              "orders_count": 6,
+              "favorites_count": 4,
+              "created_at": "2026-01-18T18:13:53.232Z",
+              "is_liked": false
+            }
+          },
+          {
+            "id": "75a453ad-472b-46b7-a60d-2fb8ee0fa701",
+            "slot": "SHOES",
+            "slot_label": "حذاء",
+            "offer_id": "122d8d72-4b6e-4319-b32c-d730a3e0eccd",
+            "variant_id": null,
+            "price": {
+              "amount": "723000.0000",
+              "currency": "SYP"
+            },
+            "reason": "اخترتلك هالقطعة لأنها قريب من النمط اللي طلبتيه ومن قسم بتتابعيه ومن بائعة سبق واشتريتِ منها.",
+            "position": 1,
+            "product": {
+              "id": "077d1ada-fd52-479d-aed2-a854c620395f",
+              "slug": "shoe-038",
+              "title": "صندل صيفي بتفاصيل معدنية",
+              "description": "صندل صيفي بتفاصيل معدنية. القياس مطابق للجدول الأوروبي.",
+              "category": {
+                "id": "27905f7f-0b4e-4866-bf2b-1f5e993aed6d",
+                "slug": "shoes",
+                "name_ar": "أحذية",
+                "name_en": "Shoes",
+                "level": 2,
+                "parent_id": "28e04c47-7231-4d71-8ae6-fe56242dca30",
+                "icon_url": null,
+                "image_url": null,
+                "is_sensitive": false,
+                "returns_allowed": true
+              },
+              "brand": null,
+              "attributes": {
+                "material": "جلد طبيعي"
+              },
+              "gtin": null,
+              "status": "active",
+              "media": [
+                {
+                  "url": "https://loremflickr.com/900/1125/womens%20shoes%2Cheels/all?lock=44857",
+                  "type": "image",
+                  "blur_hash": null
+                },
+                {
+                  "url": "https://loremflickr.com/900/1125/womens%20shoes%2Cheels/all?lock=67238",
+                  "type": "image",
+                  "blur_hash": null
+                },
+                {
+                  "url": "https://loremflickr.com/900/1125/womens%20shoes%2Cheels/all?lock=89619",
+                  "type": "image",
+                  "blur_hash": null
+                }
+              ],
+              "variants": [
+                {
+                  "id": "62456995-92b9-4547-a2e8-eb66e4d8dcae",
+                  "name": "36",
+                  "attributes": {
+                    "size": "36",
+                    "system": "EU"
+                  },
+                  "image_url": null,
+                  "sort_order": 0
+                },
+                {
+                  "id": "77f3bf0b-faf5-4521-b84f-e72e2c626850",
+                  "name": "37",
+                  "attributes": {
+                    "size": "37",
+                    "system": "EU"
+                  },
+                  "image_url": null,
+                  "sort_order": 1
+                },
+                {
+                  "id": "eb1ef253-9ea4-4339-9dcf-414bbdfbd60a",
+                  "name": "38",
+                  "attributes": {
+                    "size": "38",
+                    "system": "EU"
+                  },
+                  "image_url": null,
+                  "sort_order": 2
+                },
+                {
+                  "id": "2e25db5e-e5e6-44dc-90cc-89c341f513e4",
+                  "name": "39",
+                  "attributes": {
+                    "size": "39",
+                    "system": "EU"
+                  },
+                  "image_url": null,
+                  "sort_order": 3
+                },
+                {
+                  "id": "d3632bbf-6dab-4fe4-a7b1-829ec670f001",
+                  "name": "40",
+                  "attributes": {
+                    "size": "40",
+                    "system": "EU"
+                  },
+                  "image_url": null,
+                  "sort_order": 4
+                },
+                {
+                  "id": "38578607-f1f2-463d-8af4-b4c55de3e7c2",
+                  "name": "41",
+                  "attributes": {
+                    "size": "41",
+                    "system": "EU"
+                  },
+                  "image_url": null,
+                  "sort_order": 5
+                }
+              ],
+              "offers_count": 2,
+              "best_offer": {
+                "id": "122d8d72-4b6e-4319-b32c-d730a3e0eccd",
+                "seller": {
+                  "id": "585de3e2-9aab-45fb-b965-840bee7f83c9",
+                  "name": "جنى اللاذقاني",
+                  "username": "jana_bags",
+                  "email": null,
+                  "phone": "+963931000103",
+                  "bio": "حقائب وأحذية أصلية بضمان الاستبدال خلال ٧ أيام 👜",
+                  "image_url": "https://loremflickr.com/400/400/boutique%2Celegant/all?lock=78454",
+                  "location": "اللاذقية، سوريا",
+                  "role": "seller",
+                  "seller_level": "verified",
+                  "seller_verified_at": "2026-03-02T03:58:55.396Z",
+                  "seller_premium_until": null,
+                  "is_verified": true,
+                  "phone_verified_at": "2026-03-02T03:58:55.396Z",
+                  "email_verified_at": null,
+                  "mfa_enabled": false,
+                  "device_verification_required": true,
+                  "followers_count": 14,
+                  "following_count": 0,
+                  "created_at": "2025-09-16T18:22:41.508Z"
+                },
+                "currency": "SYP",
+                "price": {
+                  "amount": "723000.0000",
+                  "currency": "SYP"
+                },
+                "compare_at_price": null,
+                "wholesale_price": null,
+                "wholesale_min_qty": 5,
+                "stock": 30,
+                "min_order_qty": 1,
+                "max_order_qty": 8,
+                "sku": "SHOE-38-0",
+                "handling_days": 2,
+                "is_made_to_order": true,
+                "requires_deposit": false,
+                "accepts_returns": true,
+                "status": "active",
+                "variants": [
+                  {
+                    "id": "e9cc77ef-1164-4b76-9c37-817b1475a13c",
+                    "variant_id": "62456995-92b9-4547-a2e8-eb66e4d8dcae",
+                    "name": "36",
+                    "attributes": {
+                      "size": "36",
+                      "system": "EU"
+                    },
+                    "image_url": null,
+                    "price": {
+                      "amount": "723000.0000",
+                      "currency": "SYP"
+                    },
+                    "stock": 7,
+                    "sku": "SHOE-38-0-36"
+                  },
+                  {
+                    "id": "1c403109-a7c9-4fa9-9aab-623bab8374cf",
+                    "variant_id": "77f3bf0b-faf5-4521-b84f-e72e2c626850",
+                    "name": "37",
+                    "attributes": {
+                      "size": "37",
+                      "system": "EU"
+                    },
+                    "image_url": null,
+                    "price": {
+                      "amount": "723000.0000",
+                      "currency": "SYP"
+                    },
+                    "stock": 4,
+                    "sku": "SHOE-38-0-37"
+                  },
+                  {
+                    "id": "099da7ec-5bd1-483a-9288-60b182b4dd35",
+                    "variant_id": "eb1ef253-9ea4-4339-9dcf-414bbdfbd60a",
+                    "name": "38",
+                    "attributes": {
+                      "size": "38",
+                      "system": "EU"
+                    },
+                    "image_url": null,
+                    "price": {
+                      "amount": "723000.0000",
+                      "currency": "SYP"
+                    },
+                    "stock": 3,
+                    "sku": "SHOE-38-0-38"
+                  },
+                  {
+                    "id": "fb3243a3-2dbf-490b-b1d8-7bb7525039dd",
+                    "variant_id": "2e25db5e-e5e6-44dc-90cc-89c341f513e4",
+                    "name": "39",
+                    "attributes": {
+                      "size": "39",
+                      "system": "EU"
+                    },
+                    "image_url": null,
+                    "price": {
+                      "amount": "723000.0000",
+                      "currency": "SYP"
+                    },
+                    "stock": 9,
+                    "sku": "SHOE-38-0-39"
+                  },
+                  {
+                    "id": "d3ffad82-712e-40fe-adb0-1550e7e3b35a",
+                    "variant_id": "d3632bbf-6dab-4fe4-a7b1-829ec670f001",
+                    "name": "40",
+                    "attributes": {
+                      "size": "40",
+                      "system": "EU"
+                    },
+                    "image_url": null,
+                    "price": {
+                      "amount": "723000.0000",
+                      "currency": "SYP"
+                    },
+                    "stock": 4,
+                    "sku": "SHOE-38-0-40"
+                  },
+                  {
+                    "id": "88fc8bef-f1db-41f5-bc43-72869b0ec20d",
+                    "variant_id": "38578607-f1f2-463d-8af4-b4c55de3e7c2",
+                    "name": "41",
+                    "attributes": {
+                      "size": "41",
+                      "system": "EU"
+                    },
+                    "image_url": null,
+                    "price": {
+                      "amount": "723000.0000",
+                      "currency": "SYP"
+                    },
+                    "stock": 4,
+                    "sku": "SHOE-38-0-41"
+                  }
+                ]
+              },
+              "price_from": {
+                "amount": "723000.0000",
+                "currency": "SYP"
+              },
+              "price_to": {
+                "amount": "782000.0000",
+                "currency": "SYP"
+              },
+              "stock": 30,
+              "is_available": true,
+              "rating": 4.33,
+              "reviews_count": 3,
+              "views_count": 1246,
+              "likes_count": 38,
+              "orders_count": 3,
+              "favorites_count": 0,
+              "created_at": "2026-02-03T11:05:02.037Z",
+              "is_liked": false
+            }
+          },
+          {
+            "id": "b9382ee9-d1b2-4e89-88d9-c6884ee7e0d9",
+            "slot": "BAG",
+            "slot_label": "حقيبة",
+            "offer_id": "f5b33677-a38d-4c43-860f-5e7697d09cbe",
+            "variant_id": null,
+            "price": {
+              "amount": "1237000.0000",
+              "currency": "SYP"
+            },
+            "reason": "اخترتلك هالقطعة لأنها قريب من النمط اللي طلبتيه وباللون أسود اللي حبّيتيه ومن قسم بتتابعيه.",
+            "position": 2,
+            "product": {
+              "id": "f3d90a12-8223-439d-b5a6-9f0aba0dd85e",
+              "slug": "bag-035",
+              "title": "حقيبة كتف بتصميم كلاسيكي",
+              "description": "حقيبة كتف بتصميم كلاسيكي. تأتي بكيس حماية قماشي.",
+              "category": {
+                "id": "7ae681fd-096b-4958-aa4c-d27d2b77e7e0",
+                "slug": "handbags",
+                "name_ar": "حقائب يد",
+                "name_en": "Handbags",
+                "level": 2,
+                "parent_id": "28e04c47-7231-4d71-8ae6-fe56242dca30",
+                "icon_url": null,
+                "image_url": null,
+                "is_sensitive": false,
+                "returns_allowed": true
+              },
+              "brand": {
+                "id": "0f389a3e-3fb3-40b8-9f74-781cd19bb48e",
+                "slug": "rose-damascus",
+                "name_ar": "وردة دمشق",
+                "name_en": "Rose of Damascus",
+                "logo_url": "https://loremflickr.com/900/1125/logo%2Cboutique/all?lock=47982",
+                "is_verified": true
+              },
+              "attributes": {
+                "material": "جلد صناعي فاخر"
+              },
+              "gtin": null,
+              "status": "active",
+              "media": [
+                {
+                  "url": "https://loremflickr.com/900/1125/handbag%2Cpurse/all?lock=21053",
+                  "type": "image",
+                  "blur_hash": null
+                },
+                {
+                  "url": "https://loremflickr.com/900/1125/handbag%2Cpurse/all?lock=43434",
+                  "type": "image",
+                  "blur_hash": null
+                },
+                {
+                  "url": "https://loremflickr.com/900/1125/handbag%2Cpurse/all?lock=65815",
+                  "type": "image",
+                  "blur_hash": null
+                }
+              ],
+              "variants": [
+                {
+                  "id": "0d4a956e-dbf6-47d8-8b26-d2b8782da6b6",
+                  "name": "وردي فاتح",
+                  "attributes": {
+                    "colour": "وردي فاتح"
+                  },
+                  "image_url": null,
+                  "sort_order": 0
+                },
+                {
+                  "id": "f87b9f7a-b017-40a9-a2ea-768d20cab7a7",
+                  "name": "أسود",
+                  "attributes": {
+                    "colour": "أسود"
+                  },
+                  "image_url": null,
+                  "sort_order": 1
+                },
+                {
+                  "id": "3e4d5d40-4d3d-4772-932a-79919d57092a",
+                  "name": "بيج",
+                  "attributes": {
+                    "colour": "بيج"
+                  },
+                  "image_url": null,
+                  "sort_order": 2
+                },
+                {
+                  "id": "2d135fb1-8d6d-4032-8482-1a11cd298d8b",
+                  "name": "كحلي",
+                  "attributes": {
+                    "colour": "كحلي"
+                  },
+                  "image_url": null,
+                  "sort_order": 3
+                }
+              ],
+              "offers_count": 2,
+              "best_offer": {
+                "id": "f5b33677-a38d-4c43-860f-5e7697d09cbe",
+                "seller": {
+                  "id": "1ad675f2-7f7b-4ec6-a409-5c968881449f",
+                  "name": "نور العبادي",
+                  "username": "nour_chic",
+                  "email": null,
+                  "phone": "+966500000004",
+                  "bio": null,
+                  "image_url": "https://loremflickr.com/400/400/flowers%2Cpastel/all?lock=28388",
+                  "location": "اللاذقية، سوريا",
+                  "role": "seller",
+                  "seller_level": "basic",
+                  "seller_verified_at": null,
+                  "seller_premium_until": null,
+                  "is_verified": false,
+                  "phone_verified_at": null,
+                  "email_verified_at": null,
+                  "mfa_enabled": false,
+                  "device_verification_required": true,
+                  "followers_count": 12,
+                  "following_count": 2,
+                  "created_at": "2026-08-19T02:14:10.517Z"
+                },
+                "currency": "SYP",
+                "price": {
+                  "amount": "1237000.0000",
+                  "currency": "SYP"
+                },
+                "compare_at_price": {
+                  "amount": "1659000.0000",
+                  "currency": "SYP"
+                },
+                "wholesale_price": null,
+                "wholesale_min_qty": null,
+                "stock": 14,
+                "min_order_qty": 1,
+                "max_order_qty": null,
+                "sku": "BAG-35-0",
+                "handling_days": 4,
+                "is_made_to_order": false,
+                "requires_deposit": false,
+                "accepts_returns": true,
+                "status": "active",
+                "variants": [
+                  {
+                    "id": "7beab954-3f46-4111-b0be-3ab924224546",
+                    "variant_id": "0d4a956e-dbf6-47d8-8b26-d2b8782da6b6",
+                    "name": "وردي فاتح",
+                    "attributes": {
+                      "colour": "وردي فاتح"
+                    },
+                    "image_url": null,
+                    "price": {
+                      "amount": "1237000.0000",
+                      "currency": "SYP"
+                    },
+                    "stock": 2,
+                    "sku": "BAG-35-0-وردي فاتح"
+                  },
+                  {
+                    "id": "6f439cc7-d725-4f34-b0a8-ca1f29d96a90",
+                    "variant_id": "f87b9f7a-b017-40a9-a2ea-768d20cab7a7",
+                    "name": "أسود",
+                    "attributes": {
+                      "colour": "أسود"
+                    },
+                    "image_url": null,
+                    "price": {
+                      "amount": "1237000.0000",
+                      "currency": "SYP"
+                    },
+                    "stock": 6,
+                    "sku": "BAG-35-0-أسود"
+                  },
+                  {
+                    "id": "b7f13580-9773-401c-98c3-2ab4323291f9",
+                    "variant_id": "3e4d5d40-4d3d-4772-932a-79919d57092a",
+                    "name": "بيج",
+                    "attributes": {
+                      "colour": "بيج"
+                    },
+                    "image_url": null,
+                    "price": {
+                      "amount": "1237000.0000",
+                      "currency": "SYP"
+                    },
+                    "stock": 4,
+                    "sku": "BAG-35-0-بيج"
+                  },
+                  {
+                    "id": "826b0861-d8b0-416f-ab9a-e2e75e3c1375",
+                    "variant_id": "2d135fb1-8d6d-4032-8482-1a11cd298d8b",
+                    "name": "كحلي",
+                    "attributes": {
+                      "colour": "كحلي"
+                    },
+                    "image_url": null,
+                    "price": {
+                      "amount": "1237000.0000",
+                      "currency": "SYP"
+                    },
+                    "stock": 2,
+                    "sku": "BAG-35-0-كحلي"
+                  }
+                ]
+              },
+              "price_from": {
+                "amount": "1237000.0000",
+                "currency": "SYP"
+              },
+              "price_to": {
+                "amount": "1379000.0000",
+                "currency": "SYP"
+              },
+              "stock": 14,
+              "is_available": true,
+              "rating": 4,
+              "reviews_count": 2,
+              "views_count": 6979,
+              "likes_count": 283,
+              "orders_count": 1,
+              "favorites_count": 1,
+              "created_at": "2026-01-20T01:18:18.580Z",
+              "is_liked": false
+            }
+          }
+        ],
+        "created_at": "2026-08-30T18:15:36.774Z"
+      },
+      "follow_ups": [
+        "بدّلي الحذاء",
+        "بدّلي الحقيبة",
+        "نفس الإطلالة بميزانية أقل",
+        "احفظي الإطلالة"
+      ]
+    },
+    "brief": {
+      "intent": "BUILD_OUTFIT",
+      "occasion": null,
+      "occasion_label": null,
+      "slots": [
+        "DRESS",
+        "SHOES",
+        "BAG"
+      ],
+      "slot_labels": [
+        "فستان",
+        "حذاء",
+        "حقيبة"
+      ],
+      "category_slugs": [
+        "dresses",
+        "shoes",
+        "handbags"
+      ],
+      "budget_min": null,
+      "budget_max": null,
+      "colours": [
+        {
+          "key": "black",
+          "label": "أسود"
+        }
+      ],
+      "avoid_colours": [],
+      "sizes": {},
+      "modesty": "UNSPECIFIED",
+      "modesty_label": "غير محدد",
+      "personas": [],
+      "materials": [],
+      "recipient_age": null,
+      "for_self": true,
+      "deadline_days": null,
+      "keywords": [
+        "فستانا",
+        "اسود",
+        "حقيبه",
+        "وحذاء",
+        "مناسبين"
+      ],
+      "confidence": 0.33,
+      "chips": [
+        {
+          "key": "colour:black",
+          "label": "أسود"
+        }
+      ]
+    }
+  },
+  "gift_turn": {
+    "conversation": {
+      "id": "fe47af61-1455-4a74-baa6-57b6dd8f231b",
+      "title": "أريد هدية لصديقتي عمرها 25 سنة وتحب الأشياء الناعمة",
+      "status": "ACTIVE",
+      "brief": {
+        "intent": "FIND_GIFT",
+        "occasion": null,
+        "occasion_label": null,
+        "slots": [
+          "GIFT"
+        ],
+        "slot_labels": [
+          "هدية"
+        ],
+        "category_slugs": [
+          "bouquets",
+          "chocolate",
+          "candy-boxes",
+          "graduation-gifts",
+          "newborn-gifts",
+          "ramadan-gifts",
+          "notebooks",
+          "desk-accessories",
+          "wall-art",
+          "perfumes",
+          "jewellery"
+        ],
+        "budget_min": null,
+        "budget_max": null,
+        "colours": [],
+        "avoid_colours": [],
+        "sizes": {},
+        "modesty": "MODEST",
+        "modesty_label": "محتشم",
+        "personas": [
+          {
+            "key": "ROMANTIC",
+            "label": "رومانسي ناعم"
+          },
+          {
+            "key": "CLASSIC",
+            "label": "كلاسيكي"
+          }
+        ],
+        "materials": [],
+        "recipient_age": 25,
+        "for_self": false,
+        "deadline_days": null,
+        "keywords": [
+          "هديه",
+          "لصديقتي",
+          "عمرها",
+          "سنه",
+          "وتحب",
+          "الاشياء",
+          "الناعمه"
+        ],
+        "confidence": 0.67,
+        "chips": [
+          {
+            "key": "modesty",
+            "label": "محتشم"
+          }
+        ]
+      },
+      "messages_count": 2,
+      "last_message_at": "2026-08-30T18:15:36.889Z",
+      "created_at": "2026-08-30T18:15:36.793Z"
+    },
+    "user_message": {
+      "id": "594a6cb9-0c6b-4f26-9a6b-b48822899399",
+      "conversation_id": "fe47af61-1455-4a74-baa6-57b6dd8f231b",
+      "role": "USER",
+      "modality": "TEXT",
+      "content": "أريد هدية لصديقتي عمرها 25 سنة وتحب الأشياء الناعمة",
+      "brief": {
+        "intent": "FIND_GIFT",
+        "occasion": null,
+        "occasion_label": null,
+        "slots": [
+          "GIFT"
+        ],
+        "slot_labels": [
+          "هدية"
+        ],
+        "category_slugs": [
+          "bouquets",
+          "chocolate",
+          "candy-boxes",
+          "graduation-gifts",
+          "newborn-gifts",
+          "ramadan-gifts",
+          "notebooks",
+          "desk-accessories",
+          "wall-art",
+          "perfumes",
+          "jewellery"
+        ],
+        "budget_min": null,
+        "budget_max": null,
+        "colours": [],
+        "avoid_colours": [],
+        "sizes": {},
+        "modesty": "UNSPECIFIED",
+        "modesty_label": "غير محدد",
+        "personas": [
+          {
+            "key": "ROMANTIC",
+            "label": "رومانسي ناعم"
+          }
+        ],
+        "materials": [],
+        "recipient_age": 25,
+        "for_self": false,
+        "deadline_days": null,
+        "keywords": [
+          "هديه",
+          "لصديقتي",
+          "عمرها",
+          "سنه",
+          "وتحب",
+          "الاشياء",
+          "الناعمه"
+        ],
+        "confidence": 0.67,
+        "chips": []
+      },
+      "engine": null,
+      "latency_ms": null,
+      "created_at": "2026-08-30T18:15:36.883Z",
+      "recommendations": [],
+      "outfit": null,
+      "follow_ups": []
+    },
+    "message": {
+      "id": "45599168-ecac-4575-904f-f7ada8cc9c27",
+      "conversation_id": "fe47af61-1455-4a74-baa6-57b6dd8f231b",
+      "role": "ASSISTANT",
+      "modality": "TEXT",
+      "content": "اخترتلك 6 خيارات هدية بعمر 25 متوفرة حاليًا. الأسعار من 186 ألف ل.س لـ1.1 مليون ل.س. خفّفت التفاصيل الدقيقة شوي حتى ما تضيع عليكِ خيارات حلوة. شو الميزانية اللي بتريّحك؟",
+      "brief": {
+        "intent": "FIND_GIFT",
+        "occasion": null,
+        "occasion_label": null,
+        "slots": [
+          "GIFT"
+        ],
+        "slot_labels": [
+          "هدية"
+        ],
+        "category_slugs": [
+          "bouquets",
+          "chocolate",
+          "candy-boxes",
+          "graduation-gifts",
+          "newborn-gifts",
+          "ramadan-gifts",
+          "notebooks",
+          "desk-accessories",
+          "wall-art",
+          "perfumes",
+          "jewellery"
+        ],
+        "budget_min": null,
+        "budget_max": null,
+        "colours": [],
+        "avoid_colours": [],
+        "sizes": {},
+        "modesty": "MODEST",
+        "modesty_label": "محتشم",
+        "personas": [
+          {
+            "key": "ROMANTIC",
+            "label": "رومانسي ناعم"
+          },
+          {
+            "key": "CLASSIC",
+            "label": "كلاسيكي"
+          }
+        ],
+        "materials": [],
+        "recipient_age": 25,
+        "for_self": false,
+        "deadline_days": null,
+        "keywords": [
+          "هديه",
+          "لصديقتي",
+          "عمرها",
+          "سنه",
+          "وتحب",
+          "الاشياء",
+          "الناعمه"
+        ],
+        "confidence": 0.67,
+        "chips": [
+          {
+            "key": "modesty",
+            "label": "محتشم"
+          }
+        ]
+      },
+      "engine": "reem-stylist-rules-v1",
+      "latency_ms": 92,
+      "created_at": "2026-08-30T18:15:36.885Z",
+      "recommendations": [
+        {
+          "id": "6452691a-a6c8-4f64-8e7e-fa42dbec4c8a",
+          "product": {
+            "id": "a6404793-2f3d-432e-86c4-a5608796c902",
+            "slug": "desk-137",
+            "title": "منظّم مكتب بلون الوردي",
+            "description": "منظّم مكتب بلون الوردي. هدية عملية للطالبات والموظفات.",
+            "category": {
+              "id": "fe16ea30-79dd-4e80-92aa-3c51b0949582",
+              "slug": "desk-accessories",
+              "name_ar": "إكسسوارات مكتب",
+              "name_en": "Desk accessories",
+              "level": 2,
+              "parent_id": "a7d90612-ea82-4ab2-8c06-6f4a19597a49",
+              "icon_url": null,
+              "image_url": null,
+              "is_sensitive": false,
+              "returns_allowed": true
+            },
+            "brand": {
+              "id": "ce74636e-2c99-4b9d-998f-49c9d603c058",
+              "slug": "reem-atelier",
+              "name_ar": "ريم أتيليه",
+              "name_en": "Reem Atelier",
+              "logo_url": null,
+              "is_verified": true
+            },
+            "attributes": {},
+            "gtin": null,
+            "status": "active",
+            "media": [
+              {
+                "url": "https://loremflickr.com/900/1125/desk%20accessories%2Cstationery/all?lock=23409",
+                "type": "image",
+                "blur_hash": null
+              },
+              {
+                "url": "https://loremflickr.com/900/1125/desk%20accessories%2Cstationery/all?lock=45790",
+                "type": "image",
+                "blur_hash": null
+              },
+              {
+                "url": "https://loremflickr.com/900/1125/desk%20accessories%2Cstationery/all?lock=68171",
+                "type": "image",
+                "blur_hash": null
+              }
+            ],
+            "variants": [],
+            "offers_count": 1,
+            "best_offer": {
+              "id": "5b06d7f5-8b90-4c02-a9e9-b0d75781854e",
+              "seller": {
+                "id": "8309d92f-439a-4063-b455-9a4ee3872a73",
+                "name": "لمى الحلبي",
+                "username": "lama_boutique",
+                "email": null,
+                "phone": "+963931000102",
+                "bio": "تريكو وكنزات شتوية بخامات طبيعية — من حلب إلى كل سوريا 🧶",
+                "image_url": "https://loremflickr.com/400/400/boutique%2Celegant/all?lock=49268",
+                "location": "حلب، سوريا",
+                "role": "seller",
+                "seller_level": "verified",
+                "seller_verified_at": "2025-09-11T11:53:59.519Z",
+                "seller_premium_until": null,
+                "is_verified": true,
+                "phone_verified_at": "2025-09-11T11:53:59.519Z",
+                "email_verified_at": null,
+                "mfa_enabled": false,
+                "device_verification_required": true,
+                "followers_count": 21,
+                "following_count": 2,
+                "created_at": "2026-03-03T07:16:43.207Z"
+              },
+              "currency": "USD",
+              "price": {
+                "amount": "14.5000",
+                "currency": "USD"
+              },
+              "compare_at_price": {
+                "amount": "18.0000",
+                "currency": "USD"
+              },
+              "wholesale_price": null,
+              "wholesale_min_qty": null,
+              "stock": 15,
+              "min_order_qty": 1,
+              "max_order_qty": null,
+              "sku": "DESK-137-0",
+              "handling_days": 2,
+              "is_made_to_order": false,
+              "requires_deposit": false,
+              "accepts_returns": true,
+              "status": "active",
+              "variants": []
+            },
+            "price_from": {
+              "amount": "186000.0000",
+              "currency": "SYP"
+            },
+            "price_to": {
+              "amount": "186000.0000",
+              "currency": "SYP"
+            },
+            "stock": 15,
+            "is_available": true,
+            "rating": 4,
+            "reviews_count": 4,
+            "views_count": 7555,
+            "likes_count": 235,
+            "orders_count": 1,
+            "favorites_count": 1,
+            "created_at": "2026-06-14T00:50:21.306Z",
+            "is_liked": false
+          },
+          "offer_id": "5b06d7f5-8b90-4c02-a9e9-b0d75781854e",
+          "slot": "GIFT",
+          "slot_label": "هدية",
+          "score": 94.66,
+          "position": 0,
+          "reason": "اخترتلك هالقطعة لأنها قريب من النمط اللي طلبتيه ومن قسم بتتابعيه ومن بائعة سبق واشتريتِ منها.",
+          "reason_codes": [
+            "CATEGORY_MATCH",
+            "TRUSTED_SELLER",
+            "FAVOURITE_CATEGORY",
+            "FAVOURITE_SELLER",
+            "FAVOURITE_COLOUR",
+            "USUAL_BUDGET",
+            "GIFT_READY"
+          ],
+          "quoted_price": {
+            "amount": "186000.0000",
+            "currency": "SYP"
+          },
+          "feedback": "NONE",
+          "created_at": "2026-08-30T18:15:36.887Z"
+        },
+        {
+          "id": "9645b843-19d8-456b-acc5-c3e587956c41",
+          "product": {
+            "id": "5ce2f729-757a-4acc-8bfa-ceb4531f268d",
+            "slug": "parfum-081",
+            "title": "مسك أبيض بثبات ١٢ ساعة",
+            "description": "مسك أبيض بثبات ١٢ ساعة. التركيز عالٍ، ترذاذ واحد يكفي.",
+            "category": {
+              "id": "5d165b98-f0e4-4f6a-bb8b-c2b6082d515f",
+              "slug": "perfumes",
+              "name_ar": "عطور نسائية",
+              "name_en": "Perfumes",
+              "level": 2,
+              "parent_id": "aacf589c-ecf9-4dfd-b496-7ee59f4b6e0c",
+              "icon_url": null,
+              "image_url": null,
+              "is_sensitive": false,
+              "returns_allowed": false
+            },
+            "brand": {
+              "id": "0a1e3b82-b413-4a64-bca5-1a1d724b02a8",
+              "slug": "nour-beauty",
+              "name_ar": "نور بيوتي",
+              "name_en": "Nour Beauty",
+              "logo_url": "https://loremflickr.com/900/1125/logo%2Cboutique/all?lock=42156",
+              "is_verified": true
+            },
+            "attributes": {},
+            "gtin": null,
+            "status": "active",
+            "media": [
+              {
+                "url": "https://loremflickr.com/900/1125/perfume%2Cfragrance%20bottle/all?lock=50487",
+                "type": "image",
+                "blur_hash": null
+              },
+              {
+                "url": "https://loremflickr.com/900/1125/perfume%2Cfragrance%20bottle/all?lock=72868",
+                "type": "image",
+                "blur_hash": null
+              },
+              {
+                "url": "https://loremflickr.com/900/1125/perfume%2Cfragrance%20bottle/all?lock=5725",
+                "type": "image",
+                "blur_hash": null
+              }
+            ],
+            "variants": [
+              {
+                "id": "6a350a3d-4d01-43a5-b932-cff1ffb65c9d",
+                "name": "٣٠ مل",
+                "attributes": {
+                  "volume": "٣٠ مل"
+                },
+                "image_url": null,
+                "sort_order": 0
+              },
+              {
+                "id": "6779ce36-a2ce-4920-bb2a-777f2214cac6",
+                "name": "٥٠ مل",
+                "attributes": {
+                  "volume": "٥٠ مل"
+                },
+                "image_url": null,
+                "sort_order": 1
+              },
+              {
+                "id": "82c1e5d5-97bb-4fd8-8778-154cba015ff7",
+                "name": "١٠٠ مل",
+                "attributes": {
+                  "volume": "١٠٠ مل"
+                },
+                "image_url": null,
+                "sort_order": 2
+              }
+            ],
+            "offers_count": 3,
+            "best_offer": {
+              "id": "c1cec88e-dc10-43a1-9cf3-6b0405e44b17",
+              "seller": {
+                "id": "c948f072-ee72-4a19-9124-f0cfcba85773",
+                "name": "رهف الشامي",
+                "username": "rahaf_atelier",
+                "email": null,
+                "phone": "+963931000101",
+                "bio": "فساتين سهرة وخطوبة مصمّمة يدوياً في قلب دمشق ✨",
+                "image_url": "https://loremflickr.com/400/400/boutique%2Celegant/all?lock=61419",
+                "location": "دمشق، سوريا",
+                "role": "seller",
+                "seller_level": "premium",
+                "seller_verified_at": "2026-05-20T09:35:48.129Z",
+                "seller_premium_until": "2026-11-30T08:51:56.102Z",
+                "is_verified": true,
+                "phone_verified_at": "2026-05-20T09:35:48.129Z",
+                "email_verified_at": null,
+                "mfa_enabled": false,
+                "device_verification_required": true,
+                "followers_count": 22,
+                "following_count": 1,
+                "created_at": "2025-04-09T18:33:21.881Z"
+              },
+              "currency": "SYP",
+              "price": {
+                "amount": "540000.0000",
+                "currency": "SYP"
+              },
+              "compare_at_price": null,
+              "wholesale_price": null,
+              "wholesale_min_qty": null,
+              "stock": 32,
+              "min_order_qty": 1,
+              "max_order_qty": 8,
+              "sku": "PARFUM-81-2",
+              "handling_days": 2,
+              "is_made_to_order": false,
+              "requires_deposit": false,
+              "accepts_returns": false,
+              "status": "active",
+              "variants": [
+                {
+                  "id": "46dd5470-60a7-49e1-8055-6ae2b0cddd60",
+                  "variant_id": "6a350a3d-4d01-43a5-b932-cff1ffb65c9d",
+                  "name": "٣٠ مل",
+                  "attributes": {
+                    "volume": "٣٠ مل"
+                  },
+                  "image_url": null,
+                  "price": {
+                    "amount": "540000.0000",
+                    "currency": "SYP"
+                  },
+                  "stock": 7,
+                  "sku": "PARFUM-81-2-٣٠ مل"
+                },
+                {
+                  "id": "46f7192c-4400-4669-b465-3f9f1f1caaf2",
+                  "variant_id": "6779ce36-a2ce-4920-bb2a-777f2214cac6",
+                  "name": "٥٠ مل",
+                  "attributes": {
+                    "volume": "٥٠ مل"
+                  },
+                  "image_url": null,
+                  "price": {
+                    "amount": "540000.0000",
+                    "currency": "SYP"
+                  },
+                  "stock": 12,
+                  "sku": "PARFUM-81-2-٥٠ مل"
+                },
+                {
+                  "id": "4e656303-c208-4a6a-8dc5-16c836cb7d51",
+                  "variant_id": "82c1e5d5-97bb-4fd8-8778-154cba015ff7",
+                  "name": "١٠٠ مل",
+                  "attributes": {
+                    "volume": "١٠٠ مل"
+                  },
+                  "image_url": null,
+                  "price": {
+                    "amount": "540000.0000",
+                    "currency": "SYP"
+                  },
+                  "stock": 13,
+                  "sku": "PARFUM-81-2-١٠٠ مل"
+                }
+              ]
+            },
+            "price_from": {
+              "amount": "540000.0000",
+              "currency": "SYP"
+            },
+            "price_to": {
+              "amount": "607000.0000",
+              "currency": "SYP"
+            },
+            "stock": 32,
+            "is_available": true,
+            "rating": 4.5,
+            "reviews_count": 4,
+            "views_count": 2362,
+            "likes_count": 11,
+            "orders_count": 0,
+            "favorites_count": 0,
+            "created_at": "2026-04-29T06:55:21.849Z",
+            "is_liked": false
+          },
+          "offer_id": "c1cec88e-dc10-43a1-9cf3-6b0405e44b17",
+          "slot": "GIFT",
+          "slot_label": "هدية",
+          "score": 94.64,
+          "position": 1,
+          "reason": "اخترتلك هالقطعة لأنها قريب من النمط اللي طلبتيه ومن قسم بتتابعيه ومن بائعة سبق واشتريتِ منها.",
+          "reason_codes": [
+            "CATEGORY_MATCH",
+            "TOP_RATED",
+            "TRUSTED_SELLER",
+            "FAVOURITE_CATEGORY",
+            "FAVOURITE_SELLER",
+            "USUAL_BUDGET",
+            "GIFT_READY"
+          ],
+          "quoted_price": {
+            "amount": "540000.0000",
+            "currency": "SYP"
+          },
+          "feedback": "NONE",
+          "created_at": "2026-08-30T18:15:36.887Z"
+        },
+        {
+          "id": "ce331415-0cb2-4626-8fa6-d0e219780130",
+          "product": {
+            "id": "627ac1df-a6ca-4685-bd0f-4070e27b3e62",
+            "slug": "parfum-079",
+            "title": "عطر زيتي بعبير الورد والعود",
+            "description": "عطر زيتي بعبير الورد والعود. التركيز عالٍ، ترذاذ واحد يكفي.",
+            "category": {
+              "id": "5d165b98-f0e4-4f6a-bb8b-c2b6082d515f",
+              "slug": "perfumes",
+              "name_ar": "عطور نسائية",
+              "name_en": "Perfumes",
+              "level": 2,
+              "parent_id": "aacf589c-ecf9-4dfd-b496-7ee59f4b6e0c",
+              "icon_url": null,
+              "image_url": null,
+              "is_sensitive": false,
+              "returns_allowed": false
+            },
+            "brand": null,
+            "attributes": {},
+            "gtin": null,
+            "status": "active",
+            "media": [
+              {
+                "url": "https://loremflickr.com/900/1125/perfume%2Cfragrance%20bottle/all?lock=97824",
+                "type": "image",
+                "blur_hash": null
+              },
+              {
+                "url": "https://loremflickr.com/900/1125/perfume%2Cfragrance%20bottle/all?lock=75443",
+                "type": "image",
+                "blur_hash": null
+              },
+              {
+                "url": "https://loremflickr.com/900/1125/perfume%2Cfragrance%20bottle/all?lock=53062",
+                "type": "image",
+                "blur_hash": null
+              }
+            ],
+            "variants": [
+              {
+                "id": "d189aad5-1e4f-423c-a6d0-0104cdf41bf7",
+                "name": "٣٠ مل",
+                "attributes": {
+                  "volume": "٣٠ مل"
+                },
+                "image_url": null,
+                "sort_order": 0
+              },
+              {
+                "id": "caac26c6-e3dc-4269-8d19-fd4728a2c5e0",
+                "name": "٥٠ مل",
+                "attributes": {
+                  "volume": "٥٠ مل"
+                },
+                "image_url": null,
+                "sort_order": 1
+              },
+              {
+                "id": "b2d2dd0c-da26-4749-a98b-fe18d7e14de8",
+                "name": "١٠٠ مل",
+                "attributes": {
+                  "volume": "١٠٠ مل"
+                },
+                "image_url": null,
+                "sort_order": 2
+              }
+            ],
+            "offers_count": 1,
+            "best_offer": {
+              "id": "294fc279-c7f6-467e-b4da-d877215d65c3",
+              "seller": {
+                "id": "c948f072-ee72-4a19-9124-f0cfcba85773",
+                "name": "رهف الشامي",
+                "username": "rahaf_atelier",
+                "email": null,
+                "phone": "+963931000101",
+                "bio": "فساتين سهرة وخطوبة مصمّمة يدوياً في قلب دمشق ✨",
+                "image_url": "https://loremflickr.com/400/400/boutique%2Celegant/all?lock=61419",
+                "location": "دمشق، سوريا",
+                "role": "seller",
+                "seller_level": "premium",
+                "seller_verified_at": "2026-05-20T09:35:48.129Z",
+                "seller_premium_until": "2026-11-30T08:51:56.102Z",
+                "is_verified": true,
+                "phone_verified_at": "2026-05-20T09:35:48.129Z",
+                "email_verified_at": null,
+                "mfa_enabled": false,
+                "device_verification_required": true,
+                "followers_count": 22,
+                "following_count": 1,
+                "created_at": "2025-04-09T18:33:21.881Z"
+              },
+              "currency": "SYP",
+              "price": {
+                "amount": "706000.0000",
+                "currency": "SYP"
+              },
+              "compare_at_price": {
+                "amount": "968000.0000",
+                "currency": "SYP"
+              },
+              "wholesale_price": null,
+              "wholesale_min_qty": null,
+              "stock": 8,
+              "min_order_qty": 1,
+              "max_order_qty": 5,
+              "sku": "PARFUM-79-1",
+              "handling_days": 1,
+              "is_made_to_order": false,
+              "requires_deposit": false,
+              "accepts_returns": false,
+              "status": "active",
+              "variants": [
+                {
+                  "id": "60be4c77-270b-4e1f-9de6-31d77f17acc3",
+                  "variant_id": "d189aad5-1e4f-423c-a6d0-0104cdf41bf7",
+                  "name": "٣٠ مل",
+                  "attributes": {
+                    "volume": "٣٠ مل"
+                  },
+                  "image_url": null,
+                  "price": {
+                    "amount": "706000.0000",
+                    "currency": "SYP"
+                  },
+                  "stock": 2,
+                  "sku": "PARFUM-79-1-٣٠ مل"
+                },
+                {
+                  "id": "68b9cba2-06b4-4bc4-a3cc-e90b4d1785cb",
+                  "variant_id": "caac26c6-e3dc-4269-8d19-fd4728a2c5e0",
+                  "name": "٥٠ مل",
+                  "attributes": {
+                    "volume": "٥٠ مل"
+                  },
+                  "image_url": null,
+                  "price": {
+                    "amount": "706000.0000",
+                    "currency": "SYP"
+                  },
+                  "stock": 3,
+                  "sku": "PARFUM-79-1-٥٠ مل"
+                },
+                {
+                  "id": "6675f73e-19f9-4bf0-9d43-78307e721b17",
+                  "variant_id": "b2d2dd0c-da26-4749-a98b-fe18d7e14de8",
+                  "name": "١٠٠ مل",
+                  "attributes": {
+                    "volume": "١٠٠ مل"
+                  },
+                  "image_url": null,
+                  "price": {
+                    "amount": "706000.0000",
+                    "currency": "SYP"
+                  },
+                  "stock": 3,
+                  "sku": "PARFUM-79-1-١٠٠ مل"
+                }
+              ]
+            },
+            "price_from": {
+              "amount": "706000.0000",
+              "currency": "SYP"
+            },
+            "price_to": {
+              "amount": "706000.0000",
+              "currency": "SYP"
+            },
+            "stock": 8,
+            "is_available": true,
+            "rating": 4.2,
+            "reviews_count": 5,
+            "views_count": 5188,
+            "likes_count": 240,
+            "orders_count": 3,
+            "favorites_count": 3,
+            "created_at": "2026-08-16T02:18:50.903Z",
+            "is_liked": false
+          },
+          "offer_id": "294fc279-c7f6-467e-b4da-d877215d65c3",
+          "slot": "GIFT",
+          "slot_label": "هدية",
+          "score": 93.76,
+          "position": 2,
+          "reason": "اخترتلك هالقطعة لأنها قريب من النمط اللي طلبتيه ومن قسم بتتابعيه ومن بائعة سبق واشتريتِ منها.",
+          "reason_codes": [
+            "CATEGORY_MATCH",
+            "FAVOURITE_CATEGORY",
+            "FAVOURITE_SELLER",
+            "USUAL_BUDGET",
+            "GIFT_READY"
+          ],
+          "quoted_price": {
+            "amount": "706000.0000",
+            "currency": "SYP"
+          },
+          "feedback": "NONE",
+          "created_at": "2026-08-30T18:15:36.887Z"
+        },
+        {
+          "id": "02e7b069-dc4d-4932-8f13-f98e80eb6b4e",
+          "product": {
+            "id": "b96a69a1-5b80-4a18-8046-b051179cc991",
+            "slug": "choco-100",
+            "title": "شوكولا داكنة بالبندق",
+            "description": "شوكولا داكنة بالبندق. يُحفظ في مكان بارد وجاف.",
+            "category": {
+              "id": "75567f6b-83cf-4fa3-9e38-a5d8129d0450",
+              "slug": "chocolate",
+              "name_ar": "شوكولا",
+              "name_en": "Chocolate",
+              "level": 2,
+              "parent_id": "1101cf1b-12e5-4af6-b7bf-505bcde106ed",
+              "icon_url": null,
+              "image_url": null,
+              "is_sensitive": false,
+              "returns_allowed": false
+            },
+            "brand": {
+              "id": "06ccb481-2b91-4877-bafa-7ecebd575a98",
+              "slug": "petit-baby",
+              "name_ar": "بوتي بيبي",
+              "name_en": "Petit Baby",
+              "logo_url": "https://loremflickr.com/900/1125/logo%2Cboutique/all?lock=3426",
+              "is_verified": false
+            },
+            "attributes": {},
+            "gtin": null,
+            "status": "active",
+            "media": [
+              {
+                "url": "https://loremflickr.com/900/1125/chocolate%2Cdessert/all?lock=41686",
+                "type": "image",
+                "blur_hash": null
+              },
+              {
+                "url": "https://loremflickr.com/900/1125/chocolate%2Cdessert/all?lock=19305",
+                "type": "image",
+                "blur_hash": null
+              },
+              {
+                "url": "https://loremflickr.com/900/1125/chocolate%2Cdessert/all?lock=86448",
+                "type": "image",
+                "blur_hash": null
+              }
+            ],
+            "variants": [],
+            "offers_count": 2,
+            "best_offer": {
+              "id": "d80d6ccb-10ab-470e-9e30-419b52d20066",
+              "seller": {
+                "id": "1ad675f2-7f7b-4ec6-a409-5c968881449f",
+                "name": "نور العبادي",
+                "username": "nour_chic",
+                "email": null,
+                "phone": "+966500000004",
+                "bio": null,
+                "image_url": "https://loremflickr.com/400/400/flowers%2Cpastel/all?lock=28388",
+                "location": "اللاذقية، سوريا",
+                "role": "seller",
+                "seller_level": "basic",
+                "seller_verified_at": null,
+                "seller_premium_until": null,
+                "is_verified": false,
+                "phone_verified_at": null,
+                "email_verified_at": null,
+                "mfa_enabled": false,
+                "device_verification_required": true,
+                "followers_count": 12,
+                "following_count": 2,
+                "created_at": "2026-08-19T02:14:10.517Z"
+              },
+              "currency": "SYP",
+              "price": {
+                "amount": "232000.0000",
+                "currency": "SYP"
+              },
+              "compare_at_price": null,
+              "wholesale_price": null,
+              "wholesale_min_qty": null,
+              "stock": 10,
+              "min_order_qty": 1,
+              "max_order_qty": 7,
+              "sku": "CHOCO-100-1",
+              "handling_days": 3,
+              "is_made_to_order": false,
+              "requires_deposit": false,
+              "accepts_returns": false,
+              "status": "active",
+              "variants": []
+            },
+            "price_from": {
+              "amount": "232000.0000",
+              "currency": "SYP"
+            },
+            "price_to": {
+              "amount": "257000.0000",
+              "currency": "SYP"
+            },
+            "stock": 10,
+            "is_available": true,
+            "rating": 5,
+            "reviews_count": 2,
+            "views_count": 3757,
+            "likes_count": 114,
+            "orders_count": 1,
+            "favorites_count": 2,
+            "created_at": "2025-12-26T06:06:16.243Z",
+            "is_liked": false
+          },
+          "offer_id": "d80d6ccb-10ab-470e-9e30-419b52d20066",
+          "slot": "GIFT",
+          "slot_label": "هدية",
+          "score": 93.55,
+          "position": 3,
+          "reason": "اخترتلك هالقطعة لأنها قريب من النمط اللي طلبتيه ومن قسم بتتابعيه ومن بائعة سبق واشتريتِ منها.",
+          "reason_codes": [
+            "CATEGORY_MATCH",
+            "FAVOURITE_CATEGORY",
+            "FAVOURITE_SELLER",
+            "USUAL_BUDGET",
+            "GIFT_READY"
+          ],
+          "quoted_price": {
+            "amount": "232000.0000",
+            "currency": "SYP"
+          },
+          "feedback": "NONE",
+          "created_at": "2026-08-30T18:15:36.887Z"
+        },
+        {
+          "id": "5b27356d-6003-4653-8815-67b0bfdb1584",
+          "product": {
+            "id": "edee6ab8-a31a-4ca8-bd41-673456ef72e0",
+            "slug": "jewel-047",
+            "title": "حلق مطلي بالذهب الوردي",
+            "description": "حلق مطلي بالذهب الوردي. لا يسبّب حساسية ولا يتغيّر لونه بسرعة.",
+            "category": {
+              "id": "406bd41b-a43f-4728-aeef-7357d720d8ef",
+              "slug": "jewellery",
+              "name_ar": "مجوهرات",
+              "name_en": "Jewellery",
+              "level": 2,
+              "parent_id": "703de1d8-2455-4083-a7ca-109e9721362e",
+              "icon_url": null,
+              "image_url": null,
+              "is_sensitive": false,
+              "returns_allowed": true
+            },
+            "brand": {
+              "id": "cfc3fe24-5967-4557-975d-00ff4458dfa7",
+              "slug": "sham-couture",
+              "name_ar": "شام كوتور",
+              "name_en": "Sham Couture",
+              "logo_url": "https://loremflickr.com/900/1125/logo%2Cboutique/all?lock=16538",
+              "is_verified": true
+            },
+            "attributes": {
+              "material": "فضة ٩٢٥"
+            },
+            "gtin": null,
+            "status": "active",
+            "media": [
+              {
+                "url": "https://loremflickr.com/900/1125/jewellery%2Cnecklace/all?lock=22485",
+                "type": "image",
+                "blur_hash": null
+              },
+              {
+                "url": "https://loremflickr.com/900/1125/jewellery%2Cnecklace/all?lock=44866",
+                "type": "image",
+                "blur_hash": null
+              },
+              {
+                "url": "https://loremflickr.com/900/1125/jewellery%2Cnecklace/all?lock=67247",
+                "type": "image",
+                "blur_hash": null
+              }
+            ],
+            "variants": [],
+            "offers_count": 1,
+            "best_offer": {
+              "id": "c51d2652-44d3-4957-a620-c5cac841323e",
+              "seller": {
+                "id": "1ad675f2-7f7b-4ec6-a409-5c968881449f",
+                "name": "نور العبادي",
+                "username": "nour_chic",
+                "email": null,
+                "phone": "+966500000004",
+                "bio": null,
+                "image_url": "https://loremflickr.com/400/400/flowers%2Cpastel/all?lock=28388",
+                "location": "اللاذقية، سوريا",
+                "role": "seller",
+                "seller_level": "basic",
+                "seller_verified_at": null,
+                "seller_premium_until": null,
+                "is_verified": false,
+                "phone_verified_at": null,
+                "email_verified_at": null,
+                "mfa_enabled": false,
+                "device_verification_required": true,
+                "followers_count": 12,
+                "following_count": 2,
+                "created_at": "2026-08-19T02:14:10.517Z"
+              },
+              "currency": "SYP",
+              "price": {
+                "amount": "1122000.0000",
+                "currency": "SYP"
+              },
+              "compare_at_price": null,
+              "wholesale_price": {
+                "amount": "953700.0000",
+                "currency": "SYP"
+              },
+              "wholesale_min_qty": null,
+              "stock": 21,
+              "min_order_qty": 1,
+              "max_order_qty": null,
+              "sku": "JEWEL-47-0",
+              "handling_days": 4,
+              "is_made_to_order": false,
+              "requires_deposit": false,
+              "accepts_returns": true,
+              "status": "active",
+              "variants": []
+            },
+            "price_from": {
+              "amount": "1122000.0000",
+              "currency": "SYP"
+            },
+            "price_to": {
+              "amount": "1122000.0000",
+              "currency": "SYP"
+            },
+            "stock": 21,
+            "is_available": true,
+            "rating": 4.25,
+            "reviews_count": 4,
+            "views_count": 4297,
+            "likes_count": 176,
+            "orders_count": 0,
+            "favorites_count": 1,
+            "created_at": "2026-07-31T05:52:53.825Z",
+            "is_liked": false
+          },
+          "offer_id": "c51d2652-44d3-4957-a620-c5cac841323e",
+          "slot": "GIFT",
+          "slot_label": "هدية",
+          "score": 92.48,
+          "position": 4,
+          "reason": "اخترتلك هالقطعة لأنها قريب من النمط اللي طلبتيه ومن بائعة سبق واشتريتِ منها ومناسب كهدية جاهزة.",
+          "reason_codes": [
+            "CATEGORY_MATCH",
+            "TRUSTED_SELLER",
+            "FAVOURITE_SELLER",
+            "FAVOURITE_COLOUR",
+            "USUAL_BUDGET",
+            "GIFT_READY"
+          ],
+          "quoted_price": {
+            "amount": "1122000.0000",
+            "currency": "SYP"
+          },
+          "feedback": "NONE",
+          "created_at": "2026-08-30T18:15:36.887Z"
+        },
+        {
+          "id": "b9fcfee7-6b1f-4ca9-994a-7bf5249a953c",
+          "product": {
+            "id": "325eb3c1-f8a9-4f5e-b405-d5346a89d2b3",
+            "slug": "ramadan-122",
+            "title": "صندوق رمضان بتغليف ذهبي",
+            "description": "صندوق رمضان بتغليف ذهبي. متوفّر بكميات محدودة قبل المناسبة.",
+            "category": {
+              "id": "a47df36b-9889-402d-b5b7-139f9d3fcd12",
+              "slug": "ramadan-gifts",
+              "name_ar": "هدايا رمضان والأعياد",
+              "name_en": "Ramadan and eid gifts",
+              "level": 2,
+              "parent_id": "60052a44-c6b8-4e64-91e6-62c7687c7766",
+              "icon_url": null,
+              "image_url": null,
+              "is_sensitive": false,
+              "returns_allowed": true
+            },
+            "brand": {
+              "id": "0a1e3b82-b413-4a64-bca5-1a1d724b02a8",
+              "slug": "nour-beauty",
+              "name_ar": "نور بيوتي",
+              "name_en": "Nour Beauty",
+              "logo_url": "https://loremflickr.com/900/1125/logo%2Cboutique/all?lock=42156",
+              "is_verified": true
+            },
+            "attributes": {},
+            "gtin": null,
+            "status": "active",
+            "media": [
+              {
+                "url": "https://loremflickr.com/900/1125/ramadan%20gift%2Clantern/all?lock=67954",
+                "type": "image",
+                "blur_hash": null
+              },
+              {
+                "url": "https://loremflickr.com/900/1125/ramadan%20gift%2Clantern/all?lock=45573",
+                "type": "image",
+                "blur_hash": null
+              },
+              {
+                "url": "https://loremflickr.com/900/1125/ramadan%20gift%2Clantern/all?lock=12716",
+                "type": "image",
+                "blur_hash": null
+              }
+            ],
+            "variants": [],
+            "offers_count": 1,
+            "best_offer": {
+              "id": "94823f49-77f4-4628-8e67-923096a615bc",
+              "seller": {
+                "id": "6411755a-4645-48cd-9e24-55401a326ea9",
+                "name": "ميساء الورد",
+                "username": "maysa_flowers",
+                "email": null,
+                "phone": "+963931000107",
+                "bio": "باقات ورد طبيعي وتنسيق هدايا المناسبات خلال ٢٤ ساعة 💐",
+                "image_url": "https://loremflickr.com/400/400/boutique%2Celegant/all?lock=51946",
+                "location": "دمشق، سوريا",
+                "role": "seller",
+                "seller_level": "verified",
+                "seller_verified_at": "2026-01-05T12:37:19.104Z",
+                "seller_premium_until": null,
+                "is_verified": true,
+                "phone_verified_at": "2026-01-05T12:37:19.104Z",
+                "email_verified_at": null,
+                "mfa_enabled": false,
+                "device_verification_required": true,
+                "followers_count": 19,
+                "following_count": 1,
+                "created_at": "2025-07-13T14:31:47.840Z"
+              },
+              "currency": "SYP",
+              "price": {
+                "amount": "288000.0000",
+                "currency": "SYP"
+              },
+              "compare_at_price": null,
+              "wholesale_price": null,
+              "wholesale_min_qty": null,
+              "stock": 17,
+              "min_order_qty": 1,
+              "max_order_qty": null,
+              "sku": "RAMADAN-122-0",
+              "handling_days": 3,
+              "is_made_to_order": false,
+              "requires_deposit": false,
+              "accepts_returns": true,
+              "status": "active",
+              "variants": []
+            },
+            "price_from": {
+              "amount": "288000.0000",
+              "currency": "SYP"
+            },
+            "price_to": {
+              "amount": "288000.0000",
+              "currency": "SYP"
+            },
+            "stock": 17,
+            "is_available": true,
+            "rating": 5,
+            "reviews_count": 5,
+            "views_count": 2740,
+            "likes_count": 32,
+            "orders_count": 0,
+            "favorites_count": 0,
+            "created_at": "2026-05-13T02:41:31.318Z",
+            "is_liked": false
+          },
+          "offer_id": "94823f49-77f4-4628-8e67-923096a615bc",
+          "slot": "GIFT",
+          "slot_label": "هدية",
+          "score": 90.85,
+          "position": 5,
+          "reason": "اخترتلك هالقطعة لأنها قريب من النمط اللي طلبتيه ومن قسم بتتابعيه ومن بائعة سبق واشتريتِ منها.",
+          "reason_codes": [
+            "CATEGORY_MATCH",
+            "TOP_RATED",
+            "TRUSTED_SELLER",
+            "FAVOURITE_CATEGORY",
+            "FAVOURITE_SELLER",
+            "FAVOURITE_COLOUR",
+            "USUAL_BUDGET",
+            "GIFT_READY"
+          ],
+          "quoted_price": {
+            "amount": "288000.0000",
+            "currency": "SYP"
+          },
+          "feedback": "NONE",
+          "created_at": "2026-08-30T18:15:36.887Z"
+        }
+      ],
+      "outfit": null,
+      "follow_ups": [
+        "رتّبيلي إطلالة كاملة",
+        "حدّدي ميزانية",
+        "بلون تاني",
+        "وريني المزيد"
+      ]
+    },
+    "brief": {
+      "intent": "FIND_GIFT",
+      "occasion": null,
+      "occasion_label": null,
+      "slots": [
+        "GIFT"
+      ],
+      "slot_labels": [
+        "هدية"
+      ],
+      "category_slugs": [
+        "bouquets",
+        "chocolate",
+        "candy-boxes",
+        "graduation-gifts",
+        "newborn-gifts",
+        "ramadan-gifts",
+        "notebooks",
+        "desk-accessories",
+        "wall-art",
+        "perfumes",
+        "jewellery"
+      ],
+      "budget_min": null,
+      "budget_max": null,
+      "colours": [],
+      "avoid_colours": [],
+      "sizes": {},
+      "modesty": "MODEST",
+      "modesty_label": "محتشم",
+      "personas": [
+        {
+          "key": "ROMANTIC",
+          "label": "رومانسي ناعم"
+        },
+        {
+          "key": "CLASSIC",
+          "label": "كلاسيكي"
+        }
+      ],
+      "materials": [],
+      "recipient_age": 25,
+      "for_self": false,
+      "deadline_days": null,
+      "keywords": [
+        "هديه",
+        "لصديقتي",
+        "عمرها",
+        "سنه",
+        "وتحب",
+        "الاشياء",
+        "الناعمه"
+      ],
+      "confidence": 0.67,
+      "chips": [
+        {
+          "key": "modesty",
+          "label": "محتشم"
+        }
+      ]
+    }
+  },
+  "bootstrap": {
+    "prompts": [
+      "عندي مناسبة بعد أسبوع وبدي فستان أنيق ومحتشم بميزانية ٥٠٠ ألف",
+      "بدي هدية لصديقتي عمرها ٢٥ سنة وبتحب الأشياء الناعمة"
+    ],
+    "conversations": [
+      {
+        "id": "21e3d823-a15b-464e-94a8-6e89d54b43ff",
+        "title": "عندي مناسبة بعد أسبوع وأريد فستانًا أنيقًا ومحتشمًا بميزا…",
+        "status": "ACTIVE",
+        "brief": {
+          "intent": "FIND_PRODUCT",
+          "occasion": "evening",
+          "occasion_label": "سهرة",
+          "slots": [
+            "DRESS"
+          ],
+          "slot_labels": [
+            "فستان"
+          ],
+          "category_slugs": [
+            "dresses"
+          ],
+          "budget_min": null,
+          "budget_max": 500000,
+          "colours": [],
+          "avoid_colours": [],
+          "sizes": {},
+          "modesty": "MODEST",
+          "modesty_label": "محتشم",
+          "personas": [
+            {
+              "key": "CLASSIC",
+              "label": "كلاسيكي"
+            }
+          ],
+          "materials": [],
+          "recipient_age": null,
+          "for_self": true,
+          "deadline_days": 7,
+          "keywords": [
+            "بعد",
+            "اسبوع",
+            "واريد",
+            "فستانا",
+            "انيقا",
+            "ومحتشما",
+            "بميزانيه",
+            "الف"
+          ],
+          "confidence": 1,
+          "chips": [
+            {
+              "key": "occasion",
+              "label": "سهرة"
+            },
+            {
+              "key": "budget",
+              "label": "حتى 500 ألف ل.س"
+            },
+            {
+              "key": "modesty",
+              "label": "محتشم"
+            }
+          ]
+        },
+        "messages_count": 2,
+        "last_message_at": "2026-08-30T18:15:36.644Z",
+        "created_at": "2026-08-30T18:15:36.471Z"
+      }
+    ],
+    "preferences": {
+      "modesty": "MODEST",
+      "modesty_label": "محتشم",
+      "personas": [
+        {
+          "key": "CLASSIC",
+          "label": "كلاسيكي"
+        }
+      ],
+      "favourite_colours": [],
+      "avoided_colours": [],
+      "preferred_category_slugs": [],
+      "avoided_category_slugs": [],
+      "sizes": {
+        "clothing": null,
+        "shoes": null
+      },
+      "budget_min": null,
+      "budget_max": null,
+      "typical_min": {
+        "amount": "233000.0000",
+        "currency": "SYP"
+      },
+      "typical_max": {
+        "amount": "1001000.0000",
+        "currency": "SYP"
+      },
+      "derived": {
+        "brands": [
+          {
+            "key": "2056a5fe-48f9-4938-a743-9bdca8bd197d",
+            "weight": 1
+          },
+          {
+            "key": "d7a3a91d-ecac-461e-9a42-a03d64e873e6",
+            "weight": 0.81
+          },
+          {
+            "key": "0f389a3e-3fb3-40b8-9f74-781cd19bb48e",
+            "weight": 0.76
+          },
+          {
+            "key": "0a1e3b82-b413-4a64-bca5-1a1d724b02a8",
+            "weight": 0.5
+          },
+          {
+            "key": "cfc3fe24-5967-4557-975d-00ff4458dfa7",
+            "weight": 0.46
+          },
+          {
+            "key": "e45de6e7-344a-4ce1-81db-31349f0f45a9",
+            "weight": 0.42
+          },
+          {
+            "key": "06ccb481-2b91-4877-bafa-7ecebd575a98",
+            "weight": 0.39
+          },
+          {
+            "key": "ce74636e-2c99-4b9d-998f-49c9d603c058",
+            "weight": 0.34
+          },
+          {
+            "key": "358b629e-6445-46ce-89a5-dfce02fe5b09",
+            "weight": 0.24
+          },
+          {
+            "key": "6301bbbf-19df-4332-8096-c66d7aef5008",
+            "weight": 0.18
+          }
+        ],
+        "counts": {
+          "saved": 12,
+          "viewed": 99,
+          "dismissed": 0,
+          "purchased": 10
+        },
+        "colours": [
+          {
+            "key": "blush",
+            "weight": 1
+          },
+          {
+            "key": "gold",
+            "weight": 0.591
+          },
+          {
+            "key": "beige",
+            "weight": 0.227
+          },
+          {
+            "key": "caramel",
+            "weight": 0.227
+          },
+          {
+            "key": "olive",
+            "weight": 0.182
+          },
+          {
+            "key": "white",
+            "weight": 0.136
+          },
+          {
+            "key": "green",
+            "weight": 0.045
+          }
+        ],
+        "sellers": [
+          {
+            "key": "c948f072-ee72-4a19-9124-f0cfcba85773",
+            "weight": 1
+          },
+          {
+            "key": "80404897-5d9b-4dc6-8ff2-05e6c4c05aef",
+            "weight": 0.774
+          },
+          {
+            "key": "8309d92f-439a-4063-b455-9a4ee3872a73",
+            "weight": 0.747
+          },
+          {
+            "key": "e1f85c01-3370-44d5-b4e3-9f93fcd8cd8b",
+            "weight": 0.737
+          },
+          {
+            "key": "1ad675f2-7f7b-4ec6-a409-5c968881449f",
+            "weight": 0.708
+          },
+          {
+            "key": "0efc3338-5f0f-42c8-9501-65fd653c312b",
+            "weight": 0.705
+          },
+          {
+            "key": "585de3e2-9aab-45fb-b965-840bee7f83c9",
+            "weight": 0.68
+          },
+          {
+            "key": "6411755a-4645-48cd-9e24-55401a326ea9",
+            "weight": 0.644
+          },
+          {
+            "key": "71e8d387-25bb-4cfb-9ce2-06d7c80598ff",
+            "weight": 0.573
+          },
+          {
+            "key": "0429b7e3-2f14-428e-b0ea-096ef89b1964",
+            "weight": 0.505
+          },
+          {
+            "key": "c8f48128-aa7f-442e-bcd5-870450b6f354",
+            "weight": 0.445
+          },
+          {
+            "key": "d4f86e0a-0e79-4de7-a4e5-37487e549535",
+            "weight": 0.404
+          }
+        ],
+        "maturity": "loyal",
+        "categories": [
+          {
+            "key": "lips",
+            "weight": 1
+          },
+          {
+            "key": "activewear",
+            "weight": 0.98
+          },
+          {
+            "key": "abayas",
+            "weight": 0.98
+          },
+          {
+            "key": "wall-art",
+            "weight": 0.745
+          },
+          {
+            "key": "desk-accessories",
+            "weight": 0.667
+          },
+          {
+            "key": "chocolate",
+            "weight": 0.608
+          },
+          {
+            "key": "ramadan-gifts",
+            "weight": 0.549
+          },
+          {
+            "key": "handbags",
+            "weight": 0.549
+          },
+          {
+            "key": "baby-skincare",
+            "weight": 0.51
+          },
+          {
+            "key": "perfumes",
+            "weight": 0.51
+          },
+          {
+            "key": "shoes",
+            "weight": 0.471
+          },
+          {
+            "key": "baby-essentials",
+            "weight": 0.431
+          }
+        ],
+        "recent_queries": [
+          "باقة ورد",
+          "كريم مرطب",
+          "عطر ياسمين",
+          "طقم مولود",
+          "أحمر شفاه مطفي",
+          "هدية تخرج",
+          "دفتر مخطط"
+        ]
+      },
+      "computed_at": "2026-08-30T18:15:36.933Z",
+      "updated_at": "2026-08-30T18:15:36.935Z"
+    },
+    "vocabulary": {
+      "occasions": [
+        {
+          "key": "wedding",
+          "label": "حفل زفاف"
+        },
+        {
+          "key": "evening",
+          "label": "سهرة"
+        }
+      ],
+      "colours": [
+        {
+          "key": "black",
+          "label": "أسود",
+          "neutral": true
+        },
+        {
+          "key": "blush",
+          "label": "وردي",
+          "neutral": false
+        }
+      ],
+      "slots": [
+        {
+          "key": "DRESS",
+          "label": "فستان"
+        },
+        {
+          "key": "BAG",
+          "label": "حقيبة"
+        }
+      ],
+      "modesty": [
+        "UNSPECIFIED",
+        "FULL_COVERAGE",
+        "MODEST",
+        "BALANCED",
+        "EXPRESSIVE"
+      ]
+    },
+    "seed_brief": {
+      "intent": "FIND_PRODUCT",
+      "occasion": "evening",
+      "occasion_label": "سهرة",
+      "slots": [
+        "DRESS"
+      ],
+      "slot_labels": [
+        "فستان"
+      ],
+      "category_slugs": [
+        "dresses"
+      ],
+      "budget_min": null,
+      "budget_max": 500000,
+      "colours": [],
+      "avoid_colours": [],
+      "sizes": {},
+      "modesty": "MODEST",
+      "modesty_label": "محتشم",
+      "personas": [
+        {
+          "key": "CLASSIC",
+          "label": "كلاسيكي"
+        }
+      ],
+      "materials": [],
+      "recipient_age": null,
+      "for_self": true,
+      "deadline_days": 7,
+      "keywords": [
+        "بعد",
+        "اسبوع",
+        "واريد",
+        "فستانا",
+        "انيقا",
+        "ومحتشما",
+        "بميزانيه",
+        "الف"
+      ],
+      "confidence": 1,
+      "chips": [
+        {
+          "key": "occasion",
+          "label": "سهرة"
+        },
+        {
+          "key": "budget",
+          "label": "حتى 500 ألف ل.س"
+        },
+        {
+          "key": "modesty",
+          "label": "محتشم"
+        }
+      ]
+    }
+  }
+}

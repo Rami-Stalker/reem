@@ -3,18 +3,37 @@ import 'package:reem/core/network/base_remote_datasource.dart';
 import 'package:reem/features/chat/data/datasources/chat_remote_datasource.dart';
 import 'package:reem/features/chat/data/models/chat_message_model.dart';
 import 'package:reem/features/chat/data/models/chat_thread_model.dart';
+import 'package:reem/features/chat/domain/entities/chat_start_request.dart';
 
 final class ChatRemoteDataSourceImpl extends BaseRemoteDataSource
     implements ChatRemoteDataSource {
   const ChatRemoteDataSourceImpl(super.dio);
 
   @override
-  Future<List<ChatThreadModel>> getThreads() async {
-    final list = await getList(ApiEndpoints.chats);
+  Future<List<ChatThreadModel>> getThreads({String? query}) async {
+    final term = query?.trim();
+    final list = await getList(
+      ApiEndpoints.chats,
+      query: {if (term != null && term.isNotEmpty) 'q': term},
+    );
     return list
         .whereType<Map>()
         .map((e) => ChatThreadModel.fromJson(Map<String, dynamic>.from(e)))
         .toList();
+  }
+
+  @override
+  Future<ChatThreadModel> getThread(String chatId) async {
+    return ChatThreadModel.fromJson(
+      await getJson(ApiEndpoints.chatThread(chatId)),
+    );
+  }
+
+  @override
+  Future<ChatThreadModel> startConversation(ChatStartRequest request) async {
+    return ChatThreadModel.fromJson(
+      await postJson(ApiEndpoints.chats, body: request.toJson()),
+    );
   }
 
   @override
@@ -56,7 +75,7 @@ final class ChatRemoteDataSourceImpl extends BaseRemoteDataSource
   Future<void> markRead(String chatId, {String? messageId}) async {
     await patchJson(
       ApiEndpoints.chatRead(chatId),
-      body: {if (messageId != null) 'message_id': messageId},
+      body: {'message_id': ?messageId},
     );
   }
 
@@ -64,7 +83,7 @@ final class ChatRemoteDataSourceImpl extends BaseRemoteDataSource
   Future<void> blockUser(String userId, {String? reason}) async {
     await postJson(
       ApiEndpoints.chatBlock(userId),
-      body: {if (reason != null) 'reason': reason},
+      body: {'reason': ?reason},
     );
   }
 
@@ -81,8 +100,8 @@ final class ChatRemoteDataSourceImpl extends BaseRemoteDataSource
       body: {
         'reported_user_id': reportedUserId,
         'reason': reason,
-        if (messageId != null) 'message_id': messageId,
-        if (description != null) 'description': description,
+        'message_id': ?messageId,
+        'description': ?description,
       },
     );
   }

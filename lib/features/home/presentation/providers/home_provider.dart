@@ -34,16 +34,19 @@ final homeRepositoryProvider = Provider<HomeRepository>(
   (ref) => HomeRepositoryImpl(remote: ref.watch(homeRemoteDataSourceProvider)),
 );
 
-final getFeedUseCaseProvider =
-    Provider((ref) => GetFeedUseCase(ref.watch(homeRepositoryProvider)));
+final getFeedUseCaseProvider = Provider(
+  (ref) => GetFeedUseCase(ref.watch(homeRepositoryProvider)),
+);
 
-final getStoriesUseCaseProvider =
-    Provider((ref) => GetStoriesUseCase(ref.watch(homeRepositoryProvider)));
+final getStoriesUseCaseProvider = Provider(
+  (ref) => GetStoriesUseCase(ref.watch(homeRepositoryProvider)),
+);
 
 /// Aggregates the home page's collections + social content. Reuses the
 /// discovery use cases so product fetching stays in one place.
-final homeNotifierProvider =
-    StateNotifierProvider<HomeNotifier, HomeState>((ref) {
+final homeNotifierProvider = StateNotifierProvider<HomeNotifier, HomeState>((
+  ref,
+) {
   return HomeNotifier(
     collections: homeCollections,
     getCollection: ref.watch(getCollectionUseCaseProvider),

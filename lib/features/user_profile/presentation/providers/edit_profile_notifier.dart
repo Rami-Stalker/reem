@@ -3,15 +3,16 @@ import 'package:reem/core/result/result.dart';
 
 import 'package:reem/features/user_profile/domain/usecases/get_my_profile_usecase.dart';
 import 'package:reem/features/user_profile/domain/usecases/update_profile_usecase.dart';
+import 'package:reem/features/user_profile/presentation/providers/edit_profile_message.dart';
 import 'package:reem/features/user_profile/presentation/providers/edit_profile_state.dart';
 
 class EditProfileNotifier extends StateNotifier<EditProfileState> {
   EditProfileNotifier({
     required GetMyProfileUseCase getMyProfile,
     required UpdateProfileUseCase updateProfile,
-  })  : _getMyProfile = getMyProfile,
-        _updateProfile = updateProfile,
-        super(const EditProfileState());
+  }) : _getMyProfile = getMyProfile,
+       _updateProfile = updateProfile,
+       super(const EditProfileState());
 
   final GetMyProfileUseCase _getMyProfile;
   final UpdateProfileUseCase _updateProfile;
@@ -20,10 +21,11 @@ class EditProfileNotifier extends StateNotifier<EditProfileState> {
     state = state.copyWith(isLoading: true, clearError: true);
     final result = await _getMyProfile();
     state = switch (result) {
-      Success(:final data) =>
-        state.copyWith(isLoading: false, user: data.user),
-      Error(:final failure) =>
-        state.copyWith(isLoading: false, error: failure.message),
+      Success(:final data) => state.copyWith(isLoading: false, user: data.user),
+      Error(:final failure) => state.copyWith(
+        isLoading: false,
+        error: failure.message,
+      ),
     };
   }
 
@@ -33,27 +35,33 @@ class EditProfileNotifier extends StateNotifier<EditProfileState> {
     String? bio,
     String? location,
     String? imageUrl,
+    String? email,
   }) async {
-    state = state.copyWith(isSaving: true, clearError: true, clearSuccess: true);
+    state = state.copyWith(
+      isSaving: true,
+      clearError: true,
+      clearSuccess: true,
+    );
     final result = await _updateProfile(
       name: name,
       bio: bio,
       location: location,
       imageUrl: imageUrl,
+      email: email,
     );
     return switch (result) {
       Success(:final data) => () {
-          state = state.copyWith(
-            isSaving: false,
-            user: data,
-            successMessage: 'Profile updated',
-          );
-          return true;
-        }(),
+        state = state.copyWith(
+          isSaving: false,
+          user: data,
+          successMessage: EditProfileMessage.updated,
+        );
+        return true;
+      }(),
       Error(:final failure) => () {
-          state = state.copyWith(isSaving: false, error: failure.message);
-          return false;
-        }(),
+        state = state.copyWith(isSaving: false, error: failure.message);
+        return false;
+      }(),
     };
   }
 }

@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import {
   CommerceContentPublicationChannel,
   CommerceContentStatus,
+  MediaType,
   OfferStatus,
   Prisma,
   ProductStatus,
@@ -41,6 +42,7 @@ export class HomeContentService {
       searchSuggestions,
       notifications,
       loyalty,
+      nearbyStores,
     ] = await Promise.all([
       this.heroBanners(),
       this.featuredCategories(),
@@ -50,6 +52,7 @@ export class HomeContentService {
       this.searchSuggestions(viewerId),
       this.notifications(viewerId),
       this.loyalty(viewerId),
+      this.nearbyStores(viewerId),
     ]);
 
     return {
@@ -61,11 +64,11 @@ export class HomeContentService {
       search_suggestions: searchSuggestions,
       notifications,
       loyalty,
+      nearby_stores: nearbyStores,
 
-      // Deliberately absent rather than invented: nothing records what a
-      // customer has looked at, and no address carries coordinates.
+      // Still deliberately absent rather than invented: nothing records what a
+      // customer has looked at, and no admin has configured a block.
       recently_viewed: [],
-      nearby_stores: [],
       dynamic_blocks: [],
     };
   }
@@ -97,13 +100,32 @@ export class HomeContentService {
         body: true,
         payload: true,
         contentType: true,
+        sellerId: true,
+        // The artwork lives on the media relation — that is where the content
+        // system, the composer and the seed all put it. Reading it out of
+        // `payload.image_url` alone meant every real banner failed the "no
+        // image" test below and the hero carousel was permanently empty.
+        media: {
+          where: { type: MediaType.image },
+          orderBy: { sortOrder: 'asc' },
+          take: 1,
+          select: { url: true },
+        },
+        // What the banner is actually advertising. Without this the carousel
+        // was scenery: an auto-advancing, tappable, gorgeous no-op.
+        productTags: {
+          orderBy: { sortOrder: 'asc' },
+          take: 1,
+          select: { productId: true },
+        },
       },
     });
 
     return rows
       .map((row) => {
         const payload = (row.payload ?? {}) as Record<string, unknown>;
-        const image = this.text(payload.image_url ?? payload.image);
+        const image =
+          row.media[0]?.url ?? this.text(payload.image_url ?? payload.image);
         // A banner is an image with something to tap. One without either is a
         // draft somebody published by accident, not a hero.
         if (!image) return null;
@@ -117,10 +139,37 @@ export class HomeContentService {
           image_url: image,
           eyebrow: this.text(payload.eyebrow),
           badge: this.text(payload.badge),
-          target_route: this.text(payload.target_route),
+          target_route: this.bannerRoute(row, payload),
         };
       })
       .filter((banner) => banner !== null);
+  }
+
+  /**
+   * Where a banner takes her.
+   *
+   * An explicit `target_route` in the payload wins — that is the campaign
+   * manager's own answer. Failing that the banner still has to lead somewhere,
+   * because a full-bleed hero with a CTA button that does nothing is worse
+   * than no hero at all: every one published so far carries tagged products
+   * and no route, so the carousel was five beautiful dead ends.
+   *
+   * The tagged piece comes first (it is what the artwork is showing), then the
+   * boutique that published it. Both are routes the client already answers —
+   * `/product-details?id=…` and `/user/:id` — and the shapes are the client's,
+   * so they are spelled exactly as `RoutePaths` builds them.
+   */
+  private bannerRoute(
+    row: { sellerId: string; productTags: { productId: string }[] },
+    payload: Record<string, unknown>,
+  ): string {
+    const explicit = this.text(payload.target_route);
+    if (explicit) return explicit;
+
+    const tagged = row.productTags[0]?.productId;
+    if (tagged) return `/product-details?id=${tagged}`;
+
+    return `/user/${row.sellerId}`;
   }
 
   /** The shelves she browses by, newest counts included. */
@@ -129,21 +178,75 @@ export class HomeContentService {
       where: { isActive: true, isSensitive: false, imageUrl: { not: null } },
       orderBy: [{ sortOrder: 'asc' }, { nameAr: 'asc' }],
       take: 10,
-      select: {
-        id: true,
-        nameAr: true,
-        imageUrl: true,
-        _count: { select: { products: true } },
-      },
+      select: { id: true, slug: true, nameAr: true, imageUrl: true },
     });
+    if (categories.length === 0) return [];
+
+    // The count has to cover the whole subtree, not the direct children.
+    // Products hang off leaves ("فساتين"), while the tiles on this rail are
+    // departments and roots — counting only the rows that point at the tile
+    // itself made every tile read "0".
+    const descendants = await this.descendantsOf(
+      categories.map((category) => category.id),
+    );
+    const counts = await this.prisma.product.groupBy({
+      by: ['categoryId'],
+      where: {
+        status: ProductStatus.ACTIVE,
+        categoryId: { in: [...new Set([...descendants.values()].flat())] },
+      },
+      _count: { _all: true },
+    });
+    const byCategory = new Map(
+      counts.map((row) => [row.categoryId, row._count._all]),
+    );
 
     return categories.map((category) => ({
       id: category.id,
+      // The tile has to be able to open the department. Without a slug the
+      // client had only the Arabic name to route with, and pushed
+      // `/category/أزياء` — a path nothing matches.
+      slug: category.slug,
       label: category.nameAr,
       image_url: category.imageUrl,
-      product_count: category._count.products,
+      product_count: (descendants.get(category.id) ?? []).reduce(
+        (sum, id) => sum + (byCategory.get(id) ?? 0),
+        0,
+      ),
       is_featured: false,
     }));
+  }
+
+  /**
+   * Every category id at or beneath each of [roots], keyed by root. The tree
+   * is three levels deep and tiny, so this walks it breadth-first rather than
+   * reaching for a recursive CTE.
+   */
+  private async descendantsOf(roots: string[]): Promise<Map<string, string[]>> {
+    const subtree = new Map(roots.map((id) => [id, [id]]));
+    let frontier = roots.map((id) => ({ root: id, id }));
+
+    while (frontier.length > 0) {
+      const children = await this.prisma.category.findMany({
+        where: {
+          isActive: true,
+          parentId: { in: frontier.map((node) => node.id) },
+        },
+        select: { id: true, parentId: true },
+      });
+      if (children.length === 0) break;
+
+      const rootOf = new Map(frontier.map((node) => [node.id, node.root]));
+      frontier = [];
+      for (const child of children) {
+        const root = child.parentId ? rootOf.get(child.parentId) : undefined;
+        if (!root) continue;
+        subtree.get(root)!.push(child.id);
+        frontier.push({ root, id: child.id });
+      }
+    }
+
+    return subtree;
   }
 
   /**
@@ -175,11 +278,20 @@ export class HomeContentService {
       },
     });
 
-    const worthShowing = offers.filter((offer) =>
-      Money.of(offer.compareAtPrice!, offer.currency).greaterThan(
+    // One card per product, not per offer. Two sellers discounting the same
+    // piece produced two identical tiles side by side in the rail — same
+    // photograph, same title, same price, because the card renders the
+    // product's best offer either way. The first offer wins, which is the
+    // most recently updated one and so the freshest deal.
+    const seen = new Set<string>();
+    const worthShowing = offers.filter((offer) => {
+      const isDeal = Money.of(offer.compareAtPrice!, offer.currency).greaterThan(
         Money.of(offer.price, offer.currency),
-      ),
-    );
+      );
+      if (!isDeal || seen.has(offer.productId)) return false;
+      seen.add(offer.productId);
+      return true;
+    });
     if (worthShowing.length === 0) return [];
 
     const products = await this.loadProducts(
@@ -238,6 +350,25 @@ export class HomeContentService {
         )
       : new Set<string>();
 
+    // The two things that made these cards look unfinished: no rating, and an
+    // empty teaser strip. Both were available all along — the rating on
+    // `SellerReputation`, the shots on the pieces each boutique is selling.
+    const [reputations, previews] = await Promise.all([
+      this.prisma.sellerReputation.findMany({
+        where: { sellerId: { in: sellers.map((seller) => seller.id) } },
+        select: { sellerId: true, averageRating: true, reviewsCount: true },
+      }),
+      this.storePreviews(sellers.map((seller) => seller.id)),
+    ]);
+    const ratingOf = new Map(
+      reputations.map((row) => [
+        row.sellerId,
+        // A boutique nobody has reviewed yet has no rating — not a zero, which
+        // on a five-star scale reads as "rated badly".
+        row.reviewsCount > 0 ? row.averageRating : null,
+      ]),
+    );
+
     return sellers.map((seller) => ({
       id: seller.id,
       name: seller.name,
@@ -247,15 +378,176 @@ export class HomeContentService {
       // its own gradient rather than being handed a duplicate of the avatar.
       cover_url: '',
       is_verified: seller.sellerVerifiedAt !== null,
-      // Seller ratings live on `SellerReview` and are aggregated by the
-      // reputation module. Sending a zero here would read as "rated badly", so
-      // the field carries null until this reads that aggregate.
-      rating: null,
+      rating: ratingOf.get(seller.id) ?? null,
       product_count: seller._count.sellerOffers,
       follower_count: seller.followersCount,
       is_following: following.has(seller.id),
-      preview_images: [],
+      preview_images: previews.get(seller.id) ?? [],
     }));
+  }
+
+  /**
+   * A few shots from each boutique's shelves — the teaser strip on its card.
+   *
+   * One query for every store on the rail, bucketed here, rather than eight
+   * round trips in a loop.
+   */
+  private async storePreviews(sellerIds: string[]): Promise<Map<string, string[]>> {
+    const previews = new Map<string, string[]>();
+    if (sellerIds.length === 0) return previews;
+
+    const offers = await this.prisma.sellerOffer.findMany({
+      where: {
+        sellerId: { in: sellerIds },
+        status: OfferStatus.ACTIVE,
+        isActive: true,
+        product: { status: ProductStatus.ACTIVE },
+      },
+      orderBy: { updatedAt: 'desc' },
+      // Enough rows that every store on the rail reaches its three, even when
+      // one boutique holds most of them.
+      take: sellerIds.length * 12,
+      select: {
+        sellerId: true,
+        product: {
+          select: {
+            media: {
+              where: { type: MediaType.image },
+              orderBy: { sortOrder: 'asc' },
+              take: 1,
+              select: { url: true },
+            },
+          },
+        },
+      },
+    });
+
+    for (const offer of offers) {
+      const url = offer.product.media[0]?.url;
+      if (!url) continue;
+      const bucket = previews.get(offer.sellerId) ?? [];
+      if (bucket.length >= 3 || bucket.includes(url)) continue;
+      previews.set(offer.sellerId, [...bucket, url]);
+    }
+
+    return previews;
+  }
+
+  /**
+   * Q?? — «بوتيكات قريبة منك».
+   *
+   * The platform has no coordinates: no address carries a lat/long and no
+   * store has opening hours, so the rail that used to sit here asked for
+   * "location", flipped a boolean nothing read, and then rendered an empty
+   * list forever. What the platform *does* know is where she has her orders
+   * delivered and where each boutique trades — and in Syria that is the
+   * distinction a shopper actually cares about, because it decides whether a
+   * piece arrives the same day (Q61/Q62).
+   *
+   * So "near you" means her governorate, with her own city first. No
+   * kilometres, because a kilometre figure would have to be invented.
+   */
+  private async nearbyStores(viewerId?: string) {
+    if (!viewerId) return [];
+
+    const where = await this.viewerLocality(viewerId);
+    if (!where) return [];
+
+    const sellers = await this.prisma.user.findMany({
+      where: {
+        role: UserRole.SELLER,
+        sellerVerifiedAt: { not: null },
+        sellerOffers: { some: { status: OfferStatus.ACTIVE, isActive: true } },
+      },
+      orderBy: [{ followersCount: 'desc' }, { createdAt: 'asc' }],
+      take: 60,
+      select: {
+        id: true,
+        name: true,
+        imageUrl: true,
+        location: true,
+        sellerVerification: {
+          select: { businessAddress: true, warehouseAddress: true },
+        },
+      },
+    });
+
+    const matches = sellers
+      .map((seller) => {
+        const haystack = [
+          seller.location,
+          seller.sellerVerification?.businessAddress,
+          seller.sellerVerification?.warehouseAddress,
+        ]
+          .filter((part): part is string => !!part)
+          .join(' | ');
+
+        const sameCity = where.city ? haystack.includes(where.city) : false;
+        const sameGovernorate = where.governorate
+          ? haystack.includes(where.governorate)
+          : false;
+        if (!sameCity && !sameGovernorate) return null;
+
+        return {
+          seller,
+          sameCity,
+          // Her own city reads first; the rest of the governorate follows.
+          area: sameCity ? where.city! : where.governorate!,
+        };
+      })
+      .filter((match) => match !== null)
+      .sort((a, b) => Number(b.sameCity) - Number(a.sameCity))
+      .slice(0, 10);
+
+    if (matches.length === 0) return [];
+
+    const reputations = await this.prisma.sellerReputation.findMany({
+      where: { sellerId: { in: matches.map((match) => match.seller.id) } },
+      select: { sellerId: true, averageRating: true, reviewsCount: true },
+    });
+    const ratingOf = new Map(
+      reputations.map((row) => [
+        row.sellerId,
+        row.reviewsCount > 0 ? row.averageRating : null,
+      ]),
+    );
+
+    return matches.map((match) => ({
+      id: match.seller.id,
+      name: match.seller.name,
+      logo_url: match.seller.imageUrl ?? '',
+      area: match.area,
+      same_city: match.sameCity,
+      rating: ratingOf.get(match.seller.id) ?? null,
+    }));
+  }
+
+  /**
+   * Where she is, as the platform actually knows it: the governorate and city
+   * on her default delivery address, falling back to the free-text locality on
+   * her profile («دمشق، سوريا») for a shopper who has not saved one yet.
+   */
+  private async viewerLocality(
+    viewerId: string,
+  ): Promise<{ governorate?: string; city?: string } | null> {
+    const address = await this.prisma.address.findFirst({
+      where: { userId: viewerId },
+      orderBy: [{ isDefault: 'desc' }, { createdAt: 'desc' }],
+      select: { governorate: true, city: true },
+    });
+    if (address) {
+      return {
+        governorate: address.governorate.trim() || undefined,
+        city: address.city.trim() || undefined,
+      };
+    }
+
+    const user = await this.prisma.user.findUnique({
+      where: { id: viewerId },
+      select: { location: true },
+    });
+    const city = user?.location?.split(/[,،]/)[0]?.trim();
+    return city ? { city } : null;
   }
 
   /** What is sitting in her cart, so the home page can hand it back to her. */

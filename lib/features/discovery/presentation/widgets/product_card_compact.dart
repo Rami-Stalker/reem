@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/media/authorized_media_image.dart';
+import 'package:reem/core/media/media_variants.dart';
 import 'package:reem/core/shared/entities/product.dart';
 
 /// Compact product card sized by its parent (rail gives width, grid gives cell).
@@ -26,11 +28,10 @@ class ProductCardCompact extends StatelessWidget {
                 child: AspectRatio(
                   aspectRatio: 1,
                   child: product.coverUrl != null
-                      ? Image.network(
-                          product.coverUrl!,
-                          fit: BoxFit.cover,
-                          errorBuilder: (_, __, ___) =>
-                              Container(color: colors.surfaceVariant),
+                      ? AuthorizedMediaImage(
+                          url: product.coverUrl!,
+                          blurHash: product.coverBlurHash,
+                          variantWidth: MediaVariants.thumbnail,
                         )
                       : Container(color: colors.surfaceVariant),
                 ),
@@ -40,19 +41,19 @@ class ProductCardCompact extends StatelessWidget {
                   top: 6,
                   left: 6,
                   child: Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: DsSpacing.xs,
+                      vertical: DsSpacing.xxxs,
+                    ),
                     decoration: BoxDecoration(
                       color: colors.error,
                       borderRadius: BorderRadius.circular(DsRadius.full),
                     ),
                     child: Text(
                       '-${product.discountPercent}%',
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 10,
-                        fontWeight: FontWeight.w700,
-                      ),
+                      style: context.dsText.micro
+                          .tint(DsColors.onMedia)
+                          .copyWith(fontWeight: FontWeight.w700),
                     ),
                   ),
                 ),
@@ -63,14 +64,9 @@ class ProductCardCompact extends StatelessWidget {
             product.title,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-              fontFamily: DsTypography.fontFamily,
-              fontWeight: DsTypography.semiBold,
-              fontSize: DsTypography.bodySmall,
-              color: colors.onSurface,
-            ),
+            style: context.dsText.bodySmall.semibold.tint(colors.onSurface),
           ),
-          const SizedBox(height: 2),
+          DsGaps.vXxxs,
           // A live price, a was-price and a rating do not fit a 152pt rail
           // card: the row used to overflow rather than give — a red-striped
           // "RIGHT OVERFLOWED BY 41 PIXELS" down the recommended rail — and
@@ -85,21 +81,14 @@ class ProductCardCompact extends StatelessWidget {
                   product.price?.format() ?? '',
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontFamily: DsTypography.fontFamily,
-                    fontWeight: DsTypography.bold,
-                    color: colors.primary,
-                  ),
+                  style: context.dsText.body.bold.tint(colors.primary),
                 ),
               ),
               const SizedBox(width: DsSpacing.xxs),
               Icon(Icons.star_rounded, size: 13, color: colors.warning),
               Text(
                 product.rating.toStringAsFixed(1),
-                style: TextStyle(
-                  fontSize: DsTypography.bodySmall,
-                  color: colors.onSurfaceVariant,
-                ),
+                style: context.dsText.bodySmall.tint(colors.onSurfaceVariant),
               ),
             ],
           ),

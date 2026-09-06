@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 import 'package:reem/core/design_system/foundation/theme/extensions/color_extension.dart';
+import 'package:reem/core/design_system/foundation/theme/extensions/typography_extension.dart';
 import 'package:reem/core/design_system/foundation/tokens/ds_radius.dart';
 import 'package:reem/core/design_system/foundation/tokens/ds_spacing.dart';
-import 'package:reem/core/design_system/foundation/tokens/ds_typography.dart';
 
 enum DsSnackbarType { info, success, warning, error }
 
@@ -36,12 +36,7 @@ abstract final class DsSnackbar {
             Expanded(
               child: Text(
                 message,
-                style: TextStyle(
-                  color: c.onInverseSurface,
-                  fontFamily: DsTypography.fontFamily,
-                  fontSize: DsTypography.bodyMedium,
-                  fontWeight: DsTypography.medium,
-                ),
+                style: context.dsText.body.medium.tint(c.onInverseSurface),
               ),
             ),
             if (actionLabel != null && onAction != null) ...[
@@ -50,12 +45,7 @@ abstract final class DsSnackbar {
                 onTap: onAction,
                 child: Text(
                   actionLabel,
-                  style: TextStyle(
-                    color: accent,
-                    fontFamily: DsTypography.fontFamily,
-                    fontSize: DsTypography.labelLarge,
-                    fontWeight: DsTypography.bold,
-                  ),
+                  style: context.dsText.labelLarge.bold.tint(accent),
                 ),
               ),
             ],

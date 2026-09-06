@@ -1,27 +1,38 @@
 import 'package:equatable/equatable.dart';
 
-/// A boutique near the customer, surfaced only when location is available.
+/// A boutique trading where she shops from.
+///
+/// "Near" is a locality, not a distance. No address on the platform carries
+/// coordinates and no storefront carries opening hours, so the card that used
+/// to promise a distance in kilometres and an open/closed light could only
+/// have been inventing both. What the platform genuinely knows is her
+/// governorate and her city -- which is also the line that decides same-day
+/// delivery (Q61/Q62) -- so that is what this carries.
 class NearbyStore extends Equatable {
   const NearbyStore({
     required this.id,
     required this.name,
     required this.logoUrl,
     required this.area,
-    required this.distanceKm,
-    this.rating = 0,
-    this.isOpen = true,
+    this.sameCity = false,
+    this.rating,
   });
 
   final String id;
   final String name;
   final String logoUrl;
 
-  /// Human-readable locality, e.g. "Riyadh · Al Olaya".
+  /// The locality she matched on -- her city where they share one, otherwise
+  /// the governorate.
   final String area;
-  final double distanceKm;
-  final double rating;
-  final bool isOpen;
+
+  /// True when the boutique trades in her own city rather than merely inside
+  /// her governorate.
+  final bool sameCity;
+
+  /// Null until customers have reviewed the boutique.
+  final double? rating;
 
   @override
-  List<Object?> get props => [id, name, logoUrl, area, distanceKm, rating, isOpen];
+  List<Object?> get props => [id, name, logoUrl, area, sameCity, rating];
 }

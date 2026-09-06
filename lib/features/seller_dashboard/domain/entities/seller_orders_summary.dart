@@ -1,6 +1,8 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
+import 'package:reem/core/design_system/foundation/tokens/ds_tone.dart';
+
 class SellerOrdersSummary extends Equatable {
   const SellerOrdersSummary({
     required this.newOrders,
@@ -45,13 +47,13 @@ extension SellerOrderStatusX on SellerOrderStatus {
         SellerOrderStatus.returned => 'Returned',
       };
 
-  Color get color => switch (this) {
-        SellerOrderStatus.newOrders => const Color(0xFF5B8DEF),
-        SellerOrderStatus.processing => const Color(0xFFE0A23C),
-        SellerOrderStatus.readyForShipment => const Color(0xFF8F5C99),
-        SellerOrderStatus.delivered => const Color(0xFF3FA86F),
-        SellerOrderStatus.cancelled => const Color(0xFFE5484D),
-        SellerOrderStatus.returned => const Color(0xFFF56B59),
+  DsTone get tone => switch (this) {
+        SellerOrderStatus.newOrders => DsTone.info,
+        SellerOrderStatus.processing => DsTone.caution,
+        SellerOrderStatus.readyForShipment => DsTone.accent,
+        SellerOrderStatus.delivered => DsTone.positive,
+        SellerOrderStatus.cancelled => DsTone.critical,
+        SellerOrderStatus.returned => DsTone.reversal,
       };
 
   IconData get icon => switch (this) {

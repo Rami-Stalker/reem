@@ -6,6 +6,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import {
+  CodAssuranceState,
   FulfilmentMode,
   PaymentStatus,
   Prisma,
@@ -19,6 +20,7 @@ import { Money, nextStatuses } from '../../common/money';
 import { PrismaService } from '../../prisma/prisma.service';
 import { CommissionsService } from '../commissions/commissions.service';
 import { CustomerRefundsService } from '../finance/customer-refunds.service';
+import { sellerLabelFor } from '../cod-trust/cod-trust.service';
 import {
   SellerOrderWorkflowService,
   WorkflowActor,
@@ -386,6 +388,9 @@ export class SellerOrdersService {
           landmark: true,
           deliveryInstructions: true,
           payment: { select: { method: true, status: true } },
+          codRiskAssessment: {
+            select: { tier: true, assurance: true, state: true },
+          },
         },
       },
     } satisfies Prisma.SellerOrderInclude;
@@ -470,6 +475,34 @@ export class SellerOrdersService {
 
   // ── Serialisation ─────────────────────────────────────────────────────
 
+  /**
+   * What the seller is told about the refusal risk on a cash parcel.
+   *
+   * She gets the tier and a phrase, never the score and never a factor. The
+   * number is a platform decision she cannot change and would only argue with;
+   * the factors are a map of exactly what to avoid, and sellers talk to
+   * customers. What is actionable to her — pack it, ring first, wait for the
+   * code — is entirely contained in the tier.
+   *
+   * Absent on a prepaid parcel, because nothing was assessed: there was no
+   * cash on the road to lose.
+   */
+  private codRisk(
+    parcel: Prisma.SellerOrderGetPayload<{
+      include: ReturnType<SellerOrdersService['listInclude']>;
+    }>,
+  ) {
+    const assessment = parcel.order.codRiskAssessment;
+    if (!assessment) return null;
+    return {
+      tier: assessment.tier.toLowerCase(),
+      label: sellerLabelFor(assessment.tier),
+      // True while the customer still owes a code — the parcel is hers to see
+      // but not yet hers to pack.
+      awaiting_confirmation: assessment.state === CodAssuranceState.PENDING,
+    };
+  }
+
   private serializeSummary(
     parcel: Prisma.SellerOrderGetPayload<{
       include: ReturnType<SellerOrdersService['listInclude']>;
@@ -479,8 +512,12 @@ export class SellerOrdersService {
     return {
       id: parcel.id,
       number: parcel.number,
-      status: parcel.status,
-      fulfilment_mode: parcel.fulfilmentMode,
+      // Lower-cased like every other status on the wire. The seller's queue
+      // and the customer's order are the same parcel seen from two sides; a
+      // client that had to know which side it asked to know how to compare a
+      // status is a client that will get it wrong on one of them.
+      status: parcel.status.toLowerCase(),
+      fulfilment_mode: parcel.fulfilmentMode.toLowerCase(),
       placed_at: parcel.createdAt,
       items_count: parcel.items.reduce((sum, item) => sum + item.quantity, 0),
       // The seller is shown her own net, never the customer's total: the
@@ -488,10 +525,11 @@ export class SellerOrdersService {
       // an argument about a number she was never going to receive.
       net: Money.of(parcel.sellerNet, currency).toJSON(),
       commission: Money.of(parcel.commissionAmount, currency).toJSON(),
-      payment_method: parcel.order.payment?.method ?? null,
-      payment_status: parcel.order.payment?.status ?? null,
+      payment_method: parcel.order.payment?.method.toLowerCase() ?? null,
+      payment_status: parcel.order.payment?.status.toLowerCase() ?? null,
       tracking_code: parcel.shipment?.trackingCode ?? null,
       customer: this.maskedCustomer(parcel),
+      cod_risk: this.codRisk(parcel),
       // What she can do next, straight from the lifecycle table — a button the
       // backend would refuse is worse than no button.
       available_actions: this.actionsFor(parcel),
@@ -521,7 +559,7 @@ export class SellerOrdersService {
       shipment: parcel.shipment
         ? {
             tracking_code: parcel.shipment.trackingCode,
-            status: parcel.shipment.status,
+            status: parcel.shipment.status.toLowerCase(),
             assigned: parcel.shipment.courierId != null,
           }
         : null,

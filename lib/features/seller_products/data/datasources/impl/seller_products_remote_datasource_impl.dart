@@ -7,6 +7,14 @@ import 'package:reem/features/seller_products/data/models/product_draft_request.
 import 'package:reem/features/seller_products/domain/entities/product_draft.dart';
 import 'package:reem/features/seller_products/domain/entities/product_status.dart';
 
+/// The seller's catalogue, spoken in the contract the server actually serves.
+///
+/// Reading was migrated to offers when the central catalogue landed; writing
+/// was not, and had been calling three routes that no longer existed
+/// (`/seller/products/:id/status`, `/seller/products/:id/stock`, and
+/// `DELETE /seller/products/:id`) plus posting a flat body that
+/// `POST /seller/products` rejects outright. Publishing a listing, restocking
+/// one, removing one and creating one had all been silently failing.
 final class SellerProductsRemoteDataSourceImpl extends BaseRemoteDataSource
     implements SellerProductsRemoteDataSource {
   const SellerProductsRemoteDataSourceImpl(super.dio);
@@ -24,57 +32,105 @@ final class SellerProductsRemoteDataSourceImpl extends BaseRemoteDataSource
       query: {
         'page': page,
         'limit': limit,
-        if (status != null) 'status': status.wire,
+        'status': ?status?.wire,
         if (query != null && query.isNotEmpty) 'q': query,
-        if (sort != null) 'sort': sort,
+        'sort': ?sort,
       },
     );
     return ManagedProductPageModel.fromJson(json);
   }
 
   @override
-  Future<ManagedProductModel> getProduct(String id) async {
-    final json = await getJson(ApiEndpoints.sellerProductById(id));
-    return ManagedProductModel.fromJson(json);
+  Future<List<ManagedProductModel>> lowStock({int threshold = 5}) async {
+    final json = await getList(
+      ApiEndpoints.sellerOffersLowStock,
+      query: {'threshold': threshold},
+    );
+    return [
+      for (final row in json.whereType<Map>())
+        ManagedProductModel.fromJson(row.cast<String, dynamic>()),
+    ];
   }
+
+  @override
+  Future<ManagedProductModel> getOffer(String offerId) async =>
+      ManagedProductModel.fromJson(
+        await getJson(ApiEndpoints.sellerOfferById(offerId)),
+      );
 
   @override
   Future<ManagedProductModel> create(ProductDraft draft) async {
+    final request = ProductDraftRequest(draft);
     final json = await postJson(
       ApiEndpoints.sellerProducts,
-      body: ProductDraftRequest(draft).toCreateJson(),
+      body: request.toCreateJson(),
     );
-    return ManagedProductModel.fromJson(json);
+
+    var created = ManagedProductModel.fromCreateResponse(json);
+
+    // Canonical variants only receive their ids when the product is written,
+    // so per-variant price and stock cannot ride along on the create call.
+    // They are attached here, in the one moment those ids are first known.
+    final offerVariants = request.offerVariantsFor(created.variants);
+    final wantsPublished = draft.status != ProductStatus.draft;
+
+    if (offerVariants.isNotEmpty || wantsPublished) {
+      created = ManagedProductModel.fromJson(
+        await patchJson(
+          ApiEndpoints.sellerOfferById(created.id),
+          body: {
+            if (offerVariants.isNotEmpty) 'variants': offerVariants,
+            if (wantsPublished) 'status': draft.status.wire,
+          },
+        ),
+        fallbackProduct: created,
+      );
+    }
+
+    return created;
   }
 
   @override
-  Future<ManagedProductModel> update(String id, ProductDraft draft) async {
-    final json = await patchJson(
-      ApiEndpoints.sellerProductById(id),
-      body: ProductDraftRequest(draft).toUpdateJson(),
-    );
-    return ManagedProductModel.fromJson(json);
-  }
+  Future<ManagedProductModel> updateOffer(
+    String offerId,
+    ProductDraft draft,
+  ) async =>
+      ManagedProductModel.fromJson(
+        await patchJson(
+          ApiEndpoints.sellerOfferById(offerId),
+          body: ProductDraftRequest(draft).toOfferJson(),
+        ),
+      );
 
   @override
-  Future<void> delete(String id) =>
-      deleteRequest(ApiEndpoints.sellerProductById(id));
+  Future<void> updateProduct(String productId, ProductDraft draft) =>
+      patchJson(
+        ApiEndpoints.sellerProductById(productId),
+        body: ProductDraftRequest(draft).toProductJson(),
+      );
 
   @override
-  Future<ManagedProductModel> setStatus(String id, ProductStatus status) async {
-    final json = await patchJson(
-      ApiEndpoints.sellerProductStatus(id),
-      body: {'status': status.wire},
-    );
-    return ManagedProductModel.fromJson(json);
-  }
+  Future<void> archive(String offerId) =>
+      deleteRequest(ApiEndpoints.sellerOfferById(offerId));
 
   @override
-  Future<ManagedProductModel> adjustStock(String id, int delta) async {
-    final json = await postJson(
-      ApiEndpoints.sellerProductStock(id),
-      body: {'delta': delta},
-    );
-    return ManagedProductModel.fromJson(json);
-  }
+  Future<ManagedProductModel> setStatus(
+    String offerId,
+    ProductStatus status,
+  ) async =>
+      ManagedProductModel.fromJson(
+        await patchJson(
+          ApiEndpoints.sellerOfferById(offerId),
+          body: {'status': status.wire},
+        ),
+      );
+
+  @override
+  Future<ManagedProductModel> adjustStock(String offerId, int delta) async =>
+      ManagedProductModel.fromJson(
+        await postJson(
+          ApiEndpoints.sellerOfferStock(offerId),
+          body: {'delta': delta},
+        ),
+      );
 }

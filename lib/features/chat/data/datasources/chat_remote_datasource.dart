@@ -1,8 +1,17 @@
 import 'package:reem/features/chat/data/models/chat_message_model.dart';
 import 'package:reem/features/chat/data/models/chat_thread_model.dart';
+import 'package:reem/features/chat/domain/entities/chat_start_request.dart';
 
 abstract interface class ChatRemoteDataSource {
-  Future<List<ChatThreadModel>> getThreads();
+  /// [query] is matched by the server against titles, participant names and
+  /// message bodies, so searching is one request rather than a local filter
+  /// over whatever happens to be loaded.
+  Future<List<ChatThreadModel>> getThreads({String? query});
+
+  Future<ChatThreadModel> getThread(String chatId);
+
+  /// Opens — or reopens — the conversation [request] describes and returns it.
+  Future<ChatThreadModel> startConversation(ChatStartRequest request);
 
   Future<List<ChatMessageModel>> getMessages(String chatId);
 

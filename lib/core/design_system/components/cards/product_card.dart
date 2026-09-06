@@ -7,10 +7,13 @@ import 'package:reem/core/design_system/components/loaders/ds_skeleton.dart';
 import 'package:reem/core/design_system/foundation/motion/animations/scale_animations.dart';
 import 'package:reem/core/design_system/foundation/theme/extensions/color_extension.dart';
 import 'package:reem/core/design_system/foundation/theme/extensions/shadow_extension.dart';
+import 'package:reem/core/design_system/foundation/theme/extensions/typography_extension.dart';
 import 'package:reem/core/design_system/foundation/tokens/ds_constraints.dart';
 import 'package:reem/core/design_system/foundation/tokens/ds_radius.dart';
 import 'package:reem/core/design_system/foundation/tokens/ds_spacing.dart';
 import 'package:reem/core/design_system/foundation/tokens/ds_typography.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
+import 'package:reem/core/media/media_decode.dart';
 import 'package:reem/core/media/media_variants.dart';
 
 /// A premium product card for grids and carousels.
@@ -130,6 +133,10 @@ class DsProductCard extends StatelessWidget {
 
     if (onTap == null) return card;
     return DsScaleAnimations.tapScale(
+      // The card's own text — name, price, badges — is what a screen reader
+      // should read, so no label is supplied here; the tap semantics are what
+      // was missing.
+      enabled: onTap != null,
       pressedScale: 0.98,
       onTap: onTap!,
       child: card,
@@ -177,11 +184,14 @@ class _Media extends StatelessWidget {
         fit: StackFit.expand,
         children: [
           if (imageUrl != null && imageUrl!.isNotEmpty)
-            CachedNetworkImage(
-              imageUrl: MediaVariants.thumb(imageUrl!),
-              fit: BoxFit.cover,
-              placeholder: (_, _) => _placeholder(c),
-              errorWidget: (_, _, _) => _fallback(c),
+            LayoutBuilder(
+              builder: (context, constraints) => CachedNetworkImage(
+                imageUrl: MediaVariants.thumb(imageUrl!),
+                fit: BoxFit.cover,
+                memCacheWidth: MediaDecode.widthFrom(context, constraints),
+                placeholder: (_, _) => _placeholder(c),
+                errorWidget: (_, _, _) => _fallback(c),
+              ),
             )
           else
             _fallback(c),
@@ -199,13 +209,8 @@ class _Media extends StatelessWidget {
                   borderRadius: DsRadius.borderPill,
                 ),
                 child: Text(
-                  'Sold out',
-                  style: TextStyle(
-                    color: c.onInverseSurface,
-                    fontWeight: DsTypography.semiBold,
-                    fontSize: DsTypography.labelMedium,
-                    letterSpacing: DsTypography.letterSpacingWide,
-                  ),
+                  context.l10n.soldOut,
+                  style: context.dsText.labelMedium.semibold.tint(c.onInverseSurface),
                 ),
               ),
             ),

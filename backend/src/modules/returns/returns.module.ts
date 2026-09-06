@@ -5,6 +5,7 @@ import { CommissionsModule } from '../commissions/commissions.module';
 import { FinanceModule } from '../finance/finance.module';
 import { LedgerModule } from '../ledger/ledger.module';
 import { OrderWorkflowModule } from '../orders/workflow/order-workflow.module';
+import { ValueModule } from '../value/value.module';
 import { ReturnRefundsService } from './return-refunds.service';
 import { ReturnsController } from './returns.controller';
 import { ReturnsScheduler } from './returns.scheduler';
@@ -25,6 +26,9 @@ import { ReturnsService } from './returns.service';
     CommissionsModule,
     FinanceModule,
     OrderWorkflowModule,
+    // Reem Value — read only, for the `ENHANCED_RETURNS` benefit. The value
+    // module knows nothing about returns; the dependency runs one way.
+    ValueModule,
   ],
   controllers: [ReturnsController],
   providers: [ReturnsService, ReturnRefundsService, ReturnsScheduler],

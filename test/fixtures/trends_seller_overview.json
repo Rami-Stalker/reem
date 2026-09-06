@@ -1,0 +1,2535 @@
+{
+  "as_of": "2026-08-31",
+  "window": "D7",
+  "window_days": 7,
+  "headline": {
+    "units": 0,
+    "previous_units": 1,
+    "revenue": {
+      "amount": "0.00",
+      "currency": "SYP"
+    },
+    "previous_revenue": {
+      "amount": "503000.00",
+      "currency": "SYP"
+    },
+    "views": 1613,
+    "average_score": 26.6,
+    "rising_products": 6,
+    "declining_products": 3
+  },
+  "demand_signals": {
+    "window_days": 7,
+    "views": 1613,
+    "previous_views": 1053,
+    "search_hits": 53,
+    "cart_adds": 104,
+    "favorites": 0,
+    "units": 0
+  },
+  "trending_products": [
+    {
+      "product_id": "dab7aa2b-d8d9-418a-b9a0-0b3f1d3fa498",
+      "title": "بوكيه مناسبات بورد طبيعي طازج",
+      "slug": "bouquet-088",
+      "image_url": "https://loremflickr.com/900/1125/flower%20bouquet%2Croses/all?lock=77342",
+      "category_id": "cdbfcf6a-938d-497b-ba51-8674e37dd9fc",
+      "category_name_ar": "باقات ورد",
+      "captured_on": "2026-08-31",
+      "trend_score": 42.28,
+      "previous_score": null,
+      "delta": 0,
+      "stage": {
+        "key": "EMERGING",
+        "label_ar": "صاعد مبكرًا"
+      },
+      "confidence": 0.8429,
+      "rank": 1,
+      "category_rank": 1,
+      "components": [
+        {
+          "key": "view_growth",
+          "value": 0.8129,
+          "weight": 0.13,
+          "label_ar": "نمو المشاهدات"
+        },
+        {
+          "key": "search_growth",
+          "value": 0.1712,
+          "weight": 0.1,
+          "label_ar": "نمو البحث"
+        },
+        {
+          "key": "cart_growth",
+          "value": 0.6525,
+          "weight": 0.12,
+          "label_ar": "نمو الإضافة للسلة"
+        },
+        {
+          "key": "conversion",
+          "value": 0.2845,
+          "weight": 0.13,
+          "label_ar": "معدل التحويل"
+        },
+        {
+          "key": "sales_velocity",
+          "value": 0,
+          "weight": 0.17,
+          "label_ar": "سرعة البيع"
+        },
+        {
+          "key": "acceleration",
+          "value": 0.7917,
+          "weight": 0.11,
+          "label_ar": "تسارع الطلب"
+        },
+        {
+          "key": "engagement",
+          "value": 0.4717,
+          "weight": 0.1,
+          "label_ar": "التفاعل"
+        },
+        {
+          "key": "quality",
+          "value": 0,
+          "weight": 0.08,
+          "label_ar": "جودة التقييمات"
+        },
+        {
+          "key": "availability",
+          "value": 0.8409,
+          "weight": 0.06,
+          "label_ar": "توفّر المخزون"
+        }
+      ],
+      "demand": {
+        "views": 247,
+        "previous_views": 101,
+        "search_hits": 3,
+        "cart_adds": 25,
+        "favorites": 0,
+        "view_to_cart_rate": 0.1012,
+        "cart_to_order_rate": 0,
+        "view_to_order_rate": 0
+      },
+      "mine": {
+        "units": 0,
+        "orders": 0,
+        "revenue": {
+          "amount": "0.0000",
+          "currency": "SYP"
+        },
+        "lifetime_units": 0,
+        "returns": 0,
+        "stock_units": 32,
+        "price": {
+          "amount": "597000.0000",
+          "currency": "SYP"
+        }
+      },
+      "forecast": {
+        "units": null,
+        "horizon_days": null,
+        "confidence": null,
+        "stockout_in_days": null
+      },
+      "alerts": {
+        "low_conversion": true,
+        "weak_cart_through": true,
+        "stock_risk": false,
+        "sold_out_with_demand": false,
+        "overstock": false
+      }
+    },
+    {
+      "product_id": "07da68e7-3dd5-4e59-9e88-a557b0a14426",
+      "title": "ملمّع شفاه بمفعول مطفي",
+      "slug": "lip-064",
+      "image_url": "https://loremflickr.com/900/1125/lipstick%2Cbeauty/all?lock=29400",
+      "category_id": "8c102d6f-d95f-406f-bc8f-7f922bb9f728",
+      "category_name_ar": "الشفاه",
+      "captured_on": "2026-08-31",
+      "trend_score": 40.7,
+      "previous_score": null,
+      "delta": 0,
+      "stage": {
+        "key": "EMERGING",
+        "label_ar": "صاعد مبكرًا"
+      },
+      "confidence": 0.8338,
+      "rank": 2,
+      "category_rank": 1,
+      "components": [
+        {
+          "key": "view_growth",
+          "value": 0.8111,
+          "weight": 0.13,
+          "label_ar": "نمو المشاهدات"
+        },
+        {
+          "key": "search_growth",
+          "value": 0.3204,
+          "weight": 0.1,
+          "label_ar": "نمو البحث"
+        },
+        {
+          "key": "cart_growth",
+          "value": 0.6273,
+          "weight": 0.12,
+          "label_ar": "نمو الإضافة للسلة"
+        },
+        {
+          "key": "conversion",
+          "value": 0.2832,
+          "weight": 0.13,
+          "label_ar": "معدل التحويل"
+        },
+        {
+          "key": "sales_velocity",
+          "value": 0,
+          "weight": 0.17,
+          "label_ar": "سرعة البيع"
+        },
+        {
+          "key": "acceleration",
+          "value": 0.7642,
+          "weight": 0.11,
+          "label_ar": "تسارع الطلب"
+        },
+        {
+          "key": "engagement",
+          "value": 0.2294,
+          "weight": 0.1,
+          "label_ar": "التفاعل"
+        },
+        {
+          "key": "quality",
+          "value": 0,
+          "weight": 0.08,
+          "label_ar": "جودة التقييمات"
+        },
+        {
+          "key": "availability",
+          "value": 0.8409,
+          "weight": 0.06,
+          "label_ar": "توفّر المخزون"
+        }
+      ],
+      "demand": {
+        "views": 232,
+        "previous_views": 95,
+        "search_hits": 6,
+        "cart_adds": 23,
+        "favorites": 0,
+        "view_to_cart_rate": 0.0991,
+        "cart_to_order_rate": 0,
+        "view_to_order_rate": 0
+      },
+      "mine": {
+        "units": 0,
+        "orders": 0,
+        "revenue": {
+          "amount": "0.0000",
+          "currency": "SYP"
+        },
+        "lifetime_units": 0,
+        "returns": 0,
+        "stock_units": 18,
+        "price": {
+          "amount": "193000.0000",
+          "currency": "SYP"
+        }
+      },
+      "forecast": {
+        "units": null,
+        "horizon_days": null,
+        "confidence": null,
+        "stockout_in_days": null
+      },
+      "alerts": {
+        "low_conversion": true,
+        "weak_cart_through": true,
+        "stock_risk": false,
+        "sold_out_with_demand": false,
+        "overstock": false
+      }
+    },
+    {
+      "product_id": "07d738a1-f744-4a85-97a8-cbf42c43f6a2",
+      "title": "وشاح مطبوع بحواف مطرّزة",
+      "slug": "scarf-051",
+      "image_url": "https://loremflickr.com/900/1125/scarf%2Csilk/all?lock=97596",
+      "category_id": "50388a0b-4aad-4e28-ac5d-6f8855aaaef6",
+      "category_name_ar": "أوشحة",
+      "captured_on": "2026-08-31",
+      "trend_score": 37.03,
+      "previous_score": null,
+      "delta": 0,
+      "stage": {
+        "key": "RISING",
+        "label_ar": "في ارتفاع"
+      },
+      "confidence": 0.8595,
+      "rank": 3,
+      "category_rank": 1,
+      "components": [
+        {
+          "key": "view_growth",
+          "value": 0.831,
+          "weight": 0.13,
+          "label_ar": "نمو المشاهدات"
+        },
+        {
+          "key": "search_growth",
+          "value": 0.2255,
+          "weight": 0.1,
+          "label_ar": "نمو البحث"
+        },
+        {
+          "key": "cart_growth",
+          "value": 0.6685,
+          "weight": 0.12,
+          "label_ar": "نمو الإضافة للسلة"
+        },
+        {
+          "key": "conversion",
+          "value": 0.2847,
+          "weight": 0.13,
+          "label_ar": "معدل التحويل"
+        },
+        {
+          "key": "sales_velocity",
+          "value": 0,
+          "weight": 0.17,
+          "label_ar": "سرعة البيع"
+        },
+        {
+          "key": "acceleration",
+          "value": 0.4467,
+          "weight": 0.11,
+          "label_ar": "تسارع الطلب"
+        },
+        {
+          "key": "engagement",
+          "value": 0.2294,
+          "weight": 0.1,
+          "label_ar": "التفاعل"
+        },
+        {
+          "key": "quality",
+          "value": 0,
+          "weight": 0.08,
+          "label_ar": "جودة التقييمات"
+        },
+        {
+          "key": "availability",
+          "value": 0.8409,
+          "weight": 0.06,
+          "label_ar": "توفّر المخزون"
+        }
+      ],
+      "demand": {
+        "views": 280,
+        "previous_views": 107,
+        "search_hits": 3,
+        "cart_adds": 29,
+        "favorites": 0,
+        "view_to_cart_rate": 0.1036,
+        "cart_to_order_rate": 0,
+        "view_to_order_rate": 0
+      },
+      "mine": {
+        "units": 0,
+        "orders": 0,
+        "revenue": {
+          "amount": "0.0000",
+          "currency": "SYP"
+        },
+        "lifetime_units": 1,
+        "returns": 0,
+        "stock_units": 3,
+        "price": {
+          "amount": "362000.0000",
+          "currency": "SYP"
+        }
+      },
+      "forecast": {
+        "units": null,
+        "horizon_days": null,
+        "confidence": null,
+        "stockout_in_days": null
+      },
+      "alerts": {
+        "low_conversion": true,
+        "weak_cart_through": true,
+        "stock_risk": false,
+        "sold_out_with_demand": false,
+        "overstock": false
+      }
+    },
+    {
+      "product_id": "31f17194-7d16-46bb-b90c-13cb1edc9d4a",
+      "title": "صندوق ورد بتنسيق فاخر",
+      "slug": "bouquet-089",
+      "image_url": "https://loremflickr.com/900/1125/flower%20bouquet%2Croses/all?lock=64005",
+      "category_id": "cdbfcf6a-938d-497b-ba51-8674e37dd9fc",
+      "category_name_ar": "باقات ورد",
+      "captured_on": "2026-08-31",
+      "trend_score": 35.07,
+      "previous_score": null,
+      "delta": 0,
+      "stage": {
+        "key": "EMERGING",
+        "label_ar": "صاعد مبكرًا"
+      },
+      "confidence": 0.8489,
+      "rank": 4,
+      "category_rank": 2,
+      "components": [
+        {
+          "key": "view_growth",
+          "value": 0.7659,
+          "weight": 0.13,
+          "label_ar": "نمو المشاهدات"
+        },
+        {
+          "key": "search_growth",
+          "value": 0.1667,
+          "weight": 0.1,
+          "label_ar": "نمو البحث"
+        },
+        {
+          "key": "cart_growth",
+          "value": 0.6198,
+          "weight": 0.12,
+          "label_ar": "نمو الإضافة للسلة"
+        },
+        {
+          "key": "conversion",
+          "value": 0.2827,
+          "weight": 0.13,
+          "label_ar": "معدل التحويل"
+        },
+        {
+          "key": "sales_velocity",
+          "value": 0,
+          "weight": 0.17,
+          "label_ar": "سرعة البيع"
+        },
+        {
+          "key": "acceleration",
+          "value": 0.6628,
+          "weight": 0.11,
+          "label_ar": "تسارع الطلب"
+        },
+        {
+          "key": "engagement",
+          "value": 0,
+          "weight": 0.1,
+          "label_ar": "التفاعل"
+        },
+        {
+          "key": "quality",
+          "value": 0,
+          "weight": 0.08,
+          "label_ar": "جودة التقييمات"
+        },
+        {
+          "key": "availability",
+          "value": 0.8409,
+          "weight": 0.06,
+          "label_ar": "توفّر المخزون"
+        }
+      ],
+      "demand": {
+        "views": 259,
+        "previous_views": 127,
+        "search_hits": 2,
+        "cart_adds": 26,
+        "favorites": 0,
+        "view_to_cart_rate": 0.1004,
+        "cart_to_order_rate": 0,
+        "view_to_order_rate": 0
+      },
+      "mine": {
+        "units": 0,
+        "orders": 0,
+        "revenue": {
+          "amount": "0.0000",
+          "currency": "SYP"
+        },
+        "lifetime_units": 1,
+        "returns": 0,
+        "stock_units": 27,
+        "price": {
+          "amount": "503000.0000",
+          "currency": "SYP"
+        }
+      },
+      "forecast": {
+        "units": null,
+        "horizon_days": null,
+        "confidence": null,
+        "stockout_in_days": null
+      },
+      "alerts": {
+        "low_conversion": true,
+        "weak_cart_through": true,
+        "stock_risk": false,
+        "sold_out_with_demand": false,
+        "overstock": false
+      }
+    },
+    {
+      "product_id": "2c2945b2-c7ab-41e2-870c-9f448568186e",
+      "title": "ميدالية شوكولا بالفستق الحلبي",
+      "slug": "choco-099",
+      "image_url": "https://loremflickr.com/900/1125/chocolate%2Cdessert/all?lock=31939",
+      "category_id": "75567f6b-83cf-4fa3-9e38-a5d8129d0450",
+      "category_name_ar": "شوكولا",
+      "captured_on": "2026-08-31",
+      "trend_score": 26.4,
+      "previous_score": null,
+      "delta": 0,
+      "stage": {
+        "key": "EMERGING",
+        "label_ar": "صاعد مبكرًا"
+      },
+      "confidence": 0.2857,
+      "rank": 18,
+      "category_rank": 1,
+      "components": [
+        {
+          "key": "view_growth",
+          "value": 0.6092,
+          "weight": 0.13,
+          "label_ar": "نمو المشاهدات"
+        },
+        {
+          "key": "search_growth",
+          "value": 0.3601,
+          "weight": 0.1,
+          "label_ar": "نمو البحث"
+        },
+        {
+          "key": "cart_growth",
+          "value": 0,
+          "weight": 0.12,
+          "label_ar": "نمو الإضافة للسلة"
+        },
+        {
+          "key": "conversion",
+          "value": 0.1167,
+          "weight": 0.13,
+          "label_ar": "معدل التحويل"
+        },
+        {
+          "key": "sales_velocity",
+          "value": 0,
+          "weight": 0.17,
+          "label_ar": "سرعة البيع"
+        },
+        {
+          "key": "acceleration",
+          "value": 0.7557,
+          "weight": 0.11,
+          "label_ar": "تسارع الطلب"
+        },
+        {
+          "key": "engagement",
+          "value": 0,
+          "weight": 0.1,
+          "label_ar": "التفاعل"
+        },
+        {
+          "key": "quality",
+          "value": 0,
+          "weight": 0.08,
+          "label_ar": "جودة التقييمات"
+        },
+        {
+          "key": "availability",
+          "value": 0.8409,
+          "weight": 0.06,
+          "label_ar": "توفّر المخزون"
+        }
+      ],
+      "demand": {
+        "views": 24,
+        "previous_views": 12,
+        "search_hits": 7,
+        "cart_adds": 0,
+        "favorites": 0,
+        "view_to_cart_rate": 0,
+        "cart_to_order_rate": 0,
+        "view_to_order_rate": 0
+      },
+      "mine": {
+        "units": 0,
+        "orders": 0,
+        "revenue": {
+          "amount": "0.0000",
+          "currency": "SYP"
+        },
+        "lifetime_units": 0,
+        "returns": 0,
+        "stock_units": 35,
+        "price": {
+          "amount": "117133.4424",
+          "currency": "SYP"
+        }
+      },
+      "forecast": {
+        "units": null,
+        "horizon_days": null,
+        "confidence": null,
+        "stockout_in_days": null
+      },
+      "alerts": {
+        "low_conversion": false,
+        "weak_cart_through": false,
+        "stock_risk": false,
+        "sold_out_with_demand": false,
+        "overstock": false
+      }
+    },
+    {
+      "product_id": "f297259d-7ab6-4000-ad91-234850fef785",
+      "title": "صندوق رمضان بتصميم شرقي",
+      "slug": "ramadan-124",
+      "image_url": "https://loremflickr.com/900/1125/ramadan%20gift%2Clantern/all?lock=82628",
+      "category_id": "a47df36b-9889-402d-b5b7-139f9d3fcd12",
+      "category_name_ar": "هدايا رمضان والأعياد",
+      "captured_on": "2026-08-31",
+      "trend_score": 24.81,
+      "previous_score": null,
+      "delta": 0,
+      "stage": {
+        "key": "EMERGING",
+        "label_ar": "صاعد مبكرًا"
+      },
+      "confidence": 0.2308,
+      "rank": 25,
+      "category_rank": 2,
+      "components": [
+        {
+          "key": "view_growth",
+          "value": 0.4939,
+          "weight": 0.13,
+          "label_ar": "نمو المشاهدات"
+        },
+        {
+          "key": "search_growth",
+          "value": 0.3799,
+          "weight": 0.1,
+          "label_ar": "نمو البحث"
+        },
+        {
+          "key": "cart_growth",
+          "value": 0,
+          "weight": 0.12,
+          "label_ar": "نمو الإضافة للسلة"
+        },
+        {
+          "key": "conversion",
+          "value": 0.0992,
+          "weight": 0.13,
+          "label_ar": "معدل التحويل"
+        },
+        {
+          "key": "sales_velocity",
+          "value": 0,
+          "weight": 0.17,
+          "label_ar": "سرعة البيع"
+        },
+        {
+          "key": "acceleration",
+          "value": 0.7508,
+          "weight": 0.11,
+          "label_ar": "تسارع الطلب"
+        },
+        {
+          "key": "engagement",
+          "value": 0,
+          "weight": 0.1,
+          "label_ar": "التفاعل"
+        },
+        {
+          "key": "quality",
+          "value": 0,
+          "weight": 0.08,
+          "label_ar": "جودة التقييمات"
+        },
+        {
+          "key": "availability",
+          "value": 0.8409,
+          "weight": 0.06,
+          "label_ar": "توفّر المخزون"
+        }
+      ],
+      "demand": {
+        "views": 18,
+        "previous_views": 13,
+        "search_hits": 6,
+        "cart_adds": 0,
+        "favorites": 0,
+        "view_to_cart_rate": 0,
+        "cart_to_order_rate": 0,
+        "view_to_order_rate": 0
+      },
+      "mine": {
+        "units": 0,
+        "orders": 0,
+        "revenue": {
+          "amount": "0.0000",
+          "currency": "SYP"
+        },
+        "lifetime_units": 0,
+        "returns": 0,
+        "stock_units": 19,
+        "price": {
+          "amount": "658000.0000",
+          "currency": "SYP"
+        }
+      },
+      "forecast": {
+        "units": null,
+        "horizon_days": null,
+        "confidence": null,
+        "stockout_in_days": null
+      },
+      "alerts": {
+        "low_conversion": false,
+        "weak_cart_through": false,
+        "stock_risk": false,
+        "sold_out_with_demand": false,
+        "overstock": false
+      }
+    }
+  ],
+  "emerging_products": [
+    {
+      "product_id": "dab7aa2b-d8d9-418a-b9a0-0b3f1d3fa498",
+      "title": "بوكيه مناسبات بورد طبيعي طازج",
+      "slug": "bouquet-088",
+      "image_url": "https://loremflickr.com/900/1125/flower%20bouquet%2Croses/all?lock=77342",
+      "category_id": "cdbfcf6a-938d-497b-ba51-8674e37dd9fc",
+      "category_name_ar": "باقات ورد",
+      "captured_on": "2026-08-31",
+      "trend_score": 42.28,
+      "previous_score": null,
+      "delta": 0,
+      "stage": {
+        "key": "EMERGING",
+        "label_ar": "صاعد مبكرًا"
+      },
+      "confidence": 0.8429,
+      "rank": 1,
+      "category_rank": 1,
+      "components": [
+        {
+          "key": "view_growth",
+          "value": 0.8129,
+          "weight": 0.13,
+          "label_ar": "نمو المشاهدات"
+        },
+        {
+          "key": "search_growth",
+          "value": 0.1712,
+          "weight": 0.1,
+          "label_ar": "نمو البحث"
+        },
+        {
+          "key": "cart_growth",
+          "value": 0.6525,
+          "weight": 0.12,
+          "label_ar": "نمو الإضافة للسلة"
+        },
+        {
+          "key": "conversion",
+          "value": 0.2845,
+          "weight": 0.13,
+          "label_ar": "معدل التحويل"
+        },
+        {
+          "key": "sales_velocity",
+          "value": 0,
+          "weight": 0.17,
+          "label_ar": "سرعة البيع"
+        },
+        {
+          "key": "acceleration",
+          "value": 0.7917,
+          "weight": 0.11,
+          "label_ar": "تسارع الطلب"
+        },
+        {
+          "key": "engagement",
+          "value": 0.4717,
+          "weight": 0.1,
+          "label_ar": "التفاعل"
+        },
+        {
+          "key": "quality",
+          "value": 0,
+          "weight": 0.08,
+          "label_ar": "جودة التقييمات"
+        },
+        {
+          "key": "availability",
+          "value": 0.8409,
+          "weight": 0.06,
+          "label_ar": "توفّر المخزون"
+        }
+      ],
+      "demand": {
+        "views": 247,
+        "previous_views": 101,
+        "search_hits": 3,
+        "cart_adds": 25,
+        "favorites": 0,
+        "view_to_cart_rate": 0.1012,
+        "cart_to_order_rate": 0,
+        "view_to_order_rate": 0
+      },
+      "mine": {
+        "units": 0,
+        "orders": 0,
+        "revenue": {
+          "amount": "0.0000",
+          "currency": "SYP"
+        },
+        "lifetime_units": 0,
+        "returns": 0,
+        "stock_units": 32,
+        "price": {
+          "amount": "597000.0000",
+          "currency": "SYP"
+        }
+      },
+      "forecast": {
+        "units": null,
+        "horizon_days": null,
+        "confidence": null,
+        "stockout_in_days": null
+      },
+      "alerts": {
+        "low_conversion": true,
+        "weak_cart_through": true,
+        "stock_risk": false,
+        "sold_out_with_demand": false,
+        "overstock": false
+      }
+    },
+    {
+      "product_id": "07da68e7-3dd5-4e59-9e88-a557b0a14426",
+      "title": "ملمّع شفاه بمفعول مطفي",
+      "slug": "lip-064",
+      "image_url": "https://loremflickr.com/900/1125/lipstick%2Cbeauty/all?lock=29400",
+      "category_id": "8c102d6f-d95f-406f-bc8f-7f922bb9f728",
+      "category_name_ar": "الشفاه",
+      "captured_on": "2026-08-31",
+      "trend_score": 40.7,
+      "previous_score": null,
+      "delta": 0,
+      "stage": {
+        "key": "EMERGING",
+        "label_ar": "صاعد مبكرًا"
+      },
+      "confidence": 0.8338,
+      "rank": 2,
+      "category_rank": 1,
+      "components": [
+        {
+          "key": "view_growth",
+          "value": 0.8111,
+          "weight": 0.13,
+          "label_ar": "نمو المشاهدات"
+        },
+        {
+          "key": "search_growth",
+          "value": 0.3204,
+          "weight": 0.1,
+          "label_ar": "نمو البحث"
+        },
+        {
+          "key": "cart_growth",
+          "value": 0.6273,
+          "weight": 0.12,
+          "label_ar": "نمو الإضافة للسلة"
+        },
+        {
+          "key": "conversion",
+          "value": 0.2832,
+          "weight": 0.13,
+          "label_ar": "معدل التحويل"
+        },
+        {
+          "key": "sales_velocity",
+          "value": 0,
+          "weight": 0.17,
+          "label_ar": "سرعة البيع"
+        },
+        {
+          "key": "acceleration",
+          "value": 0.7642,
+          "weight": 0.11,
+          "label_ar": "تسارع الطلب"
+        },
+        {
+          "key": "engagement",
+          "value": 0.2294,
+          "weight": 0.1,
+          "label_ar": "التفاعل"
+        },
+        {
+          "key": "quality",
+          "value": 0,
+          "weight": 0.08,
+          "label_ar": "جودة التقييمات"
+        },
+        {
+          "key": "availability",
+          "value": 0.8409,
+          "weight": 0.06,
+          "label_ar": "توفّر المخزون"
+        }
+      ],
+      "demand": {
+        "views": 232,
+        "previous_views": 95,
+        "search_hits": 6,
+        "cart_adds": 23,
+        "favorites": 0,
+        "view_to_cart_rate": 0.0991,
+        "cart_to_order_rate": 0,
+        "view_to_order_rate": 0
+      },
+      "mine": {
+        "units": 0,
+        "orders": 0,
+        "revenue": {
+          "amount": "0.0000",
+          "currency": "SYP"
+        },
+        "lifetime_units": 0,
+        "returns": 0,
+        "stock_units": 18,
+        "price": {
+          "amount": "193000.0000",
+          "currency": "SYP"
+        }
+      },
+      "forecast": {
+        "units": null,
+        "horizon_days": null,
+        "confidence": null,
+        "stockout_in_days": null
+      },
+      "alerts": {
+        "low_conversion": true,
+        "weak_cart_through": true,
+        "stock_risk": false,
+        "sold_out_with_demand": false,
+        "overstock": false
+      }
+    },
+    {
+      "product_id": "31f17194-7d16-46bb-b90c-13cb1edc9d4a",
+      "title": "صندوق ورد بتنسيق فاخر",
+      "slug": "bouquet-089",
+      "image_url": "https://loremflickr.com/900/1125/flower%20bouquet%2Croses/all?lock=64005",
+      "category_id": "cdbfcf6a-938d-497b-ba51-8674e37dd9fc",
+      "category_name_ar": "باقات ورد",
+      "captured_on": "2026-08-31",
+      "trend_score": 35.07,
+      "previous_score": null,
+      "delta": 0,
+      "stage": {
+        "key": "EMERGING",
+        "label_ar": "صاعد مبكرًا"
+      },
+      "confidence": 0.8489,
+      "rank": 4,
+      "category_rank": 2,
+      "components": [
+        {
+          "key": "view_growth",
+          "value": 0.7659,
+          "weight": 0.13,
+          "label_ar": "نمو المشاهدات"
+        },
+        {
+          "key": "search_growth",
+          "value": 0.1667,
+          "weight": 0.1,
+          "label_ar": "نمو البحث"
+        },
+        {
+          "key": "cart_growth",
+          "value": 0.6198,
+          "weight": 0.12,
+          "label_ar": "نمو الإضافة للسلة"
+        },
+        {
+          "key": "conversion",
+          "value": 0.2827,
+          "weight": 0.13,
+          "label_ar": "معدل التحويل"
+        },
+        {
+          "key": "sales_velocity",
+          "value": 0,
+          "weight": 0.17,
+          "label_ar": "سرعة البيع"
+        },
+        {
+          "key": "acceleration",
+          "value": 0.6628,
+          "weight": 0.11,
+          "label_ar": "تسارع الطلب"
+        },
+        {
+          "key": "engagement",
+          "value": 0,
+          "weight": 0.1,
+          "label_ar": "التفاعل"
+        },
+        {
+          "key": "quality",
+          "value": 0,
+          "weight": 0.08,
+          "label_ar": "جودة التقييمات"
+        },
+        {
+          "key": "availability",
+          "value": 0.8409,
+          "weight": 0.06,
+          "label_ar": "توفّر المخزون"
+        }
+      ],
+      "demand": {
+        "views": 259,
+        "previous_views": 127,
+        "search_hits": 2,
+        "cart_adds": 26,
+        "favorites": 0,
+        "view_to_cart_rate": 0.1004,
+        "cart_to_order_rate": 0,
+        "view_to_order_rate": 0
+      },
+      "mine": {
+        "units": 0,
+        "orders": 0,
+        "revenue": {
+          "amount": "0.0000",
+          "currency": "SYP"
+        },
+        "lifetime_units": 1,
+        "returns": 0,
+        "stock_units": 27,
+        "price": {
+          "amount": "503000.0000",
+          "currency": "SYP"
+        }
+      },
+      "forecast": {
+        "units": null,
+        "horizon_days": null,
+        "confidence": null,
+        "stockout_in_days": null
+      },
+      "alerts": {
+        "low_conversion": true,
+        "weak_cart_through": true,
+        "stock_risk": false,
+        "sold_out_with_demand": false,
+        "overstock": false
+      }
+    },
+    {
+      "product_id": "2c2945b2-c7ab-41e2-870c-9f448568186e",
+      "title": "ميدالية شوكولا بالفستق الحلبي",
+      "slug": "choco-099",
+      "image_url": "https://loremflickr.com/900/1125/chocolate%2Cdessert/all?lock=31939",
+      "category_id": "75567f6b-83cf-4fa3-9e38-a5d8129d0450",
+      "category_name_ar": "شوكولا",
+      "captured_on": "2026-08-31",
+      "trend_score": 26.4,
+      "previous_score": null,
+      "delta": 0,
+      "stage": {
+        "key": "EMERGING",
+        "label_ar": "صاعد مبكرًا"
+      },
+      "confidence": 0.2857,
+      "rank": 18,
+      "category_rank": 1,
+      "components": [
+        {
+          "key": "view_growth",
+          "value": 0.6092,
+          "weight": 0.13,
+          "label_ar": "نمو المشاهدات"
+        },
+        {
+          "key": "search_growth",
+          "value": 0.3601,
+          "weight": 0.1,
+          "label_ar": "نمو البحث"
+        },
+        {
+          "key": "cart_growth",
+          "value": 0,
+          "weight": 0.12,
+          "label_ar": "نمو الإضافة للسلة"
+        },
+        {
+          "key": "conversion",
+          "value": 0.1167,
+          "weight": 0.13,
+          "label_ar": "معدل التحويل"
+        },
+        {
+          "key": "sales_velocity",
+          "value": 0,
+          "weight": 0.17,
+          "label_ar": "سرعة البيع"
+        },
+        {
+          "key": "acceleration",
+          "value": 0.7557,
+          "weight": 0.11,
+          "label_ar": "تسارع الطلب"
+        },
+        {
+          "key": "engagement",
+          "value": 0,
+          "weight": 0.1,
+          "label_ar": "التفاعل"
+        },
+        {
+          "key": "quality",
+          "value": 0,
+          "weight": 0.08,
+          "label_ar": "جودة التقييمات"
+        },
+        {
+          "key": "availability",
+          "value": 0.8409,
+          "weight": 0.06,
+          "label_ar": "توفّر المخزون"
+        }
+      ],
+      "demand": {
+        "views": 24,
+        "previous_views": 12,
+        "search_hits": 7,
+        "cart_adds": 0,
+        "favorites": 0,
+        "view_to_cart_rate": 0,
+        "cart_to_order_rate": 0,
+        "view_to_order_rate": 0
+      },
+      "mine": {
+        "units": 0,
+        "orders": 0,
+        "revenue": {
+          "amount": "0.0000",
+          "currency": "SYP"
+        },
+        "lifetime_units": 0,
+        "returns": 0,
+        "stock_units": 35,
+        "price": {
+          "amount": "117133.4424",
+          "currency": "SYP"
+        }
+      },
+      "forecast": {
+        "units": null,
+        "horizon_days": null,
+        "confidence": null,
+        "stockout_in_days": null
+      },
+      "alerts": {
+        "low_conversion": false,
+        "weak_cart_through": false,
+        "stock_risk": false,
+        "sold_out_with_demand": false,
+        "overstock": false
+      }
+    },
+    {
+      "product_id": "f297259d-7ab6-4000-ad91-234850fef785",
+      "title": "صندوق رمضان بتصميم شرقي",
+      "slug": "ramadan-124",
+      "image_url": "https://loremflickr.com/900/1125/ramadan%20gift%2Clantern/all?lock=82628",
+      "category_id": "a47df36b-9889-402d-b5b7-139f9d3fcd12",
+      "category_name_ar": "هدايا رمضان والأعياد",
+      "captured_on": "2026-08-31",
+      "trend_score": 24.81,
+      "previous_score": null,
+      "delta": 0,
+      "stage": {
+        "key": "EMERGING",
+        "label_ar": "صاعد مبكرًا"
+      },
+      "confidence": 0.2308,
+      "rank": 25,
+      "category_rank": 2,
+      "components": [
+        {
+          "key": "view_growth",
+          "value": 0.4939,
+          "weight": 0.13,
+          "label_ar": "نمو المشاهدات"
+        },
+        {
+          "key": "search_growth",
+          "value": 0.3799,
+          "weight": 0.1,
+          "label_ar": "نمو البحث"
+        },
+        {
+          "key": "cart_growth",
+          "value": 0,
+          "weight": 0.12,
+          "label_ar": "نمو الإضافة للسلة"
+        },
+        {
+          "key": "conversion",
+          "value": 0.0992,
+          "weight": 0.13,
+          "label_ar": "معدل التحويل"
+        },
+        {
+          "key": "sales_velocity",
+          "value": 0,
+          "weight": 0.17,
+          "label_ar": "سرعة البيع"
+        },
+        {
+          "key": "acceleration",
+          "value": 0.7508,
+          "weight": 0.11,
+          "label_ar": "تسارع الطلب"
+        },
+        {
+          "key": "engagement",
+          "value": 0,
+          "weight": 0.1,
+          "label_ar": "التفاعل"
+        },
+        {
+          "key": "quality",
+          "value": 0,
+          "weight": 0.08,
+          "label_ar": "جودة التقييمات"
+        },
+        {
+          "key": "availability",
+          "value": 0.8409,
+          "weight": 0.06,
+          "label_ar": "توفّر المخزون"
+        }
+      ],
+      "demand": {
+        "views": 18,
+        "previous_views": 13,
+        "search_hits": 6,
+        "cart_adds": 0,
+        "favorites": 0,
+        "view_to_cart_rate": 0,
+        "cart_to_order_rate": 0,
+        "view_to_order_rate": 0
+      },
+      "mine": {
+        "units": 0,
+        "orders": 0,
+        "revenue": {
+          "amount": "0.0000",
+          "currency": "SYP"
+        },
+        "lifetime_units": 0,
+        "returns": 0,
+        "stock_units": 19,
+        "price": {
+          "amount": "658000.0000",
+          "currency": "SYP"
+        }
+      },
+      "forecast": {
+        "units": null,
+        "horizon_days": null,
+        "confidence": null,
+        "stockout_in_days": null
+      },
+      "alerts": {
+        "low_conversion": false,
+        "weak_cart_through": false,
+        "stock_risk": false,
+        "sold_out_with_demand": false,
+        "overstock": false
+      }
+    }
+  ],
+  "low_conversion_alerts": [
+    {
+      "product_id": "07d738a1-f744-4a85-97a8-cbf42c43f6a2",
+      "title": "وشاح مطبوع بحواف مطرّزة",
+      "slug": "scarf-051",
+      "image_url": "https://loremflickr.com/900/1125/scarf%2Csilk/all?lock=97596",
+      "category_id": "50388a0b-4aad-4e28-ac5d-6f8855aaaef6",
+      "category_name_ar": "أوشحة",
+      "captured_on": "2026-08-31",
+      "trend_score": 37.03,
+      "previous_score": null,
+      "delta": 0,
+      "stage": {
+        "key": "RISING",
+        "label_ar": "في ارتفاع"
+      },
+      "confidence": 0.8595,
+      "rank": 3,
+      "category_rank": 1,
+      "components": [
+        {
+          "key": "view_growth",
+          "value": 0.831,
+          "weight": 0.13,
+          "label_ar": "نمو المشاهدات"
+        },
+        {
+          "key": "search_growth",
+          "value": 0.2255,
+          "weight": 0.1,
+          "label_ar": "نمو البحث"
+        },
+        {
+          "key": "cart_growth",
+          "value": 0.6685,
+          "weight": 0.12,
+          "label_ar": "نمو الإضافة للسلة"
+        },
+        {
+          "key": "conversion",
+          "value": 0.2847,
+          "weight": 0.13,
+          "label_ar": "معدل التحويل"
+        },
+        {
+          "key": "sales_velocity",
+          "value": 0,
+          "weight": 0.17,
+          "label_ar": "سرعة البيع"
+        },
+        {
+          "key": "acceleration",
+          "value": 0.4467,
+          "weight": 0.11,
+          "label_ar": "تسارع الطلب"
+        },
+        {
+          "key": "engagement",
+          "value": 0.2294,
+          "weight": 0.1,
+          "label_ar": "التفاعل"
+        },
+        {
+          "key": "quality",
+          "value": 0,
+          "weight": 0.08,
+          "label_ar": "جودة التقييمات"
+        },
+        {
+          "key": "availability",
+          "value": 0.8409,
+          "weight": 0.06,
+          "label_ar": "توفّر المخزون"
+        }
+      ],
+      "demand": {
+        "views": 280,
+        "previous_views": 107,
+        "search_hits": 3,
+        "cart_adds": 29,
+        "favorites": 0,
+        "view_to_cart_rate": 0.1036,
+        "cart_to_order_rate": 0,
+        "view_to_order_rate": 0
+      },
+      "mine": {
+        "units": 0,
+        "orders": 0,
+        "revenue": {
+          "amount": "0.0000",
+          "currency": "SYP"
+        },
+        "lifetime_units": 1,
+        "returns": 0,
+        "stock_units": 3,
+        "price": {
+          "amount": "362000.0000",
+          "currency": "SYP"
+        }
+      },
+      "forecast": {
+        "units": null,
+        "horizon_days": null,
+        "confidence": null,
+        "stockout_in_days": null
+      },
+      "alerts": {
+        "low_conversion": true,
+        "weak_cart_through": true,
+        "stock_risk": false,
+        "sold_out_with_demand": false,
+        "overstock": false
+      }
+    },
+    {
+      "product_id": "31f17194-7d16-46bb-b90c-13cb1edc9d4a",
+      "title": "صندوق ورد بتنسيق فاخر",
+      "slug": "bouquet-089",
+      "image_url": "https://loremflickr.com/900/1125/flower%20bouquet%2Croses/all?lock=64005",
+      "category_id": "cdbfcf6a-938d-497b-ba51-8674e37dd9fc",
+      "category_name_ar": "باقات ورد",
+      "captured_on": "2026-08-31",
+      "trend_score": 35.07,
+      "previous_score": null,
+      "delta": 0,
+      "stage": {
+        "key": "EMERGING",
+        "label_ar": "صاعد مبكرًا"
+      },
+      "confidence": 0.8489,
+      "rank": 4,
+      "category_rank": 2,
+      "components": [
+        {
+          "key": "view_growth",
+          "value": 0.7659,
+          "weight": 0.13,
+          "label_ar": "نمو المشاهدات"
+        },
+        {
+          "key": "search_growth",
+          "value": 0.1667,
+          "weight": 0.1,
+          "label_ar": "نمو البحث"
+        },
+        {
+          "key": "cart_growth",
+          "value": 0.6198,
+          "weight": 0.12,
+          "label_ar": "نمو الإضافة للسلة"
+        },
+        {
+          "key": "conversion",
+          "value": 0.2827,
+          "weight": 0.13,
+          "label_ar": "معدل التحويل"
+        },
+        {
+          "key": "sales_velocity",
+          "value": 0,
+          "weight": 0.17,
+          "label_ar": "سرعة البيع"
+        },
+        {
+          "key": "acceleration",
+          "value": 0.6628,
+          "weight": 0.11,
+          "label_ar": "تسارع الطلب"
+        },
+        {
+          "key": "engagement",
+          "value": 0,
+          "weight": 0.1,
+          "label_ar": "التفاعل"
+        },
+        {
+          "key": "quality",
+          "value": 0,
+          "weight": 0.08,
+          "label_ar": "جودة التقييمات"
+        },
+        {
+          "key": "availability",
+          "value": 0.8409,
+          "weight": 0.06,
+          "label_ar": "توفّر المخزون"
+        }
+      ],
+      "demand": {
+        "views": 259,
+        "previous_views": 127,
+        "search_hits": 2,
+        "cart_adds": 26,
+        "favorites": 0,
+        "view_to_cart_rate": 0.1004,
+        "cart_to_order_rate": 0,
+        "view_to_order_rate": 0
+      },
+      "mine": {
+        "units": 0,
+        "orders": 0,
+        "revenue": {
+          "amount": "0.0000",
+          "currency": "SYP"
+        },
+        "lifetime_units": 1,
+        "returns": 0,
+        "stock_units": 27,
+        "price": {
+          "amount": "503000.0000",
+          "currency": "SYP"
+        }
+      },
+      "forecast": {
+        "units": null,
+        "horizon_days": null,
+        "confidence": null,
+        "stockout_in_days": null
+      },
+      "alerts": {
+        "low_conversion": true,
+        "weak_cart_through": true,
+        "stock_risk": false,
+        "sold_out_with_demand": false,
+        "overstock": false
+      }
+    },
+    {
+      "product_id": "dab7aa2b-d8d9-418a-b9a0-0b3f1d3fa498",
+      "title": "بوكيه مناسبات بورد طبيعي طازج",
+      "slug": "bouquet-088",
+      "image_url": "https://loremflickr.com/900/1125/flower%20bouquet%2Croses/all?lock=77342",
+      "category_id": "cdbfcf6a-938d-497b-ba51-8674e37dd9fc",
+      "category_name_ar": "باقات ورد",
+      "captured_on": "2026-08-31",
+      "trend_score": 42.28,
+      "previous_score": null,
+      "delta": 0,
+      "stage": {
+        "key": "EMERGING",
+        "label_ar": "صاعد مبكرًا"
+      },
+      "confidence": 0.8429,
+      "rank": 1,
+      "category_rank": 1,
+      "components": [
+        {
+          "key": "view_growth",
+          "value": 0.8129,
+          "weight": 0.13,
+          "label_ar": "نمو المشاهدات"
+        },
+        {
+          "key": "search_growth",
+          "value": 0.1712,
+          "weight": 0.1,
+          "label_ar": "نمو البحث"
+        },
+        {
+          "key": "cart_growth",
+          "value": 0.6525,
+          "weight": 0.12,
+          "label_ar": "نمو الإضافة للسلة"
+        },
+        {
+          "key": "conversion",
+          "value": 0.2845,
+          "weight": 0.13,
+          "label_ar": "معدل التحويل"
+        },
+        {
+          "key": "sales_velocity",
+          "value": 0,
+          "weight": 0.17,
+          "label_ar": "سرعة البيع"
+        },
+        {
+          "key": "acceleration",
+          "value": 0.7917,
+          "weight": 0.11,
+          "label_ar": "تسارع الطلب"
+        },
+        {
+          "key": "engagement",
+          "value": 0.4717,
+          "weight": 0.1,
+          "label_ar": "التفاعل"
+        },
+        {
+          "key": "quality",
+          "value": 0,
+          "weight": 0.08,
+          "label_ar": "جودة التقييمات"
+        },
+        {
+          "key": "availability",
+          "value": 0.8409,
+          "weight": 0.06,
+          "label_ar": "توفّر المخزون"
+        }
+      ],
+      "demand": {
+        "views": 247,
+        "previous_views": 101,
+        "search_hits": 3,
+        "cart_adds": 25,
+        "favorites": 0,
+        "view_to_cart_rate": 0.1012,
+        "cart_to_order_rate": 0,
+        "view_to_order_rate": 0
+      },
+      "mine": {
+        "units": 0,
+        "orders": 0,
+        "revenue": {
+          "amount": "0.0000",
+          "currency": "SYP"
+        },
+        "lifetime_units": 0,
+        "returns": 0,
+        "stock_units": 32,
+        "price": {
+          "amount": "597000.0000",
+          "currency": "SYP"
+        }
+      },
+      "forecast": {
+        "units": null,
+        "horizon_days": null,
+        "confidence": null,
+        "stockout_in_days": null
+      },
+      "alerts": {
+        "low_conversion": true,
+        "weak_cart_through": true,
+        "stock_risk": false,
+        "sold_out_with_demand": false,
+        "overstock": false
+      }
+    },
+    {
+      "product_id": "07da68e7-3dd5-4e59-9e88-a557b0a14426",
+      "title": "ملمّع شفاه بمفعول مطفي",
+      "slug": "lip-064",
+      "image_url": "https://loremflickr.com/900/1125/lipstick%2Cbeauty/all?lock=29400",
+      "category_id": "8c102d6f-d95f-406f-bc8f-7f922bb9f728",
+      "category_name_ar": "الشفاه",
+      "captured_on": "2026-08-31",
+      "trend_score": 40.7,
+      "previous_score": null,
+      "delta": 0,
+      "stage": {
+        "key": "EMERGING",
+        "label_ar": "صاعد مبكرًا"
+      },
+      "confidence": 0.8338,
+      "rank": 2,
+      "category_rank": 1,
+      "components": [
+        {
+          "key": "view_growth",
+          "value": 0.8111,
+          "weight": 0.13,
+          "label_ar": "نمو المشاهدات"
+        },
+        {
+          "key": "search_growth",
+          "value": 0.3204,
+          "weight": 0.1,
+          "label_ar": "نمو البحث"
+        },
+        {
+          "key": "cart_growth",
+          "value": 0.6273,
+          "weight": 0.12,
+          "label_ar": "نمو الإضافة للسلة"
+        },
+        {
+          "key": "conversion",
+          "value": 0.2832,
+          "weight": 0.13,
+          "label_ar": "معدل التحويل"
+        },
+        {
+          "key": "sales_velocity",
+          "value": 0,
+          "weight": 0.17,
+          "label_ar": "سرعة البيع"
+        },
+        {
+          "key": "acceleration",
+          "value": 0.7642,
+          "weight": 0.11,
+          "label_ar": "تسارع الطلب"
+        },
+        {
+          "key": "engagement",
+          "value": 0.2294,
+          "weight": 0.1,
+          "label_ar": "التفاعل"
+        },
+        {
+          "key": "quality",
+          "value": 0,
+          "weight": 0.08,
+          "label_ar": "جودة التقييمات"
+        },
+        {
+          "key": "availability",
+          "value": 0.8409,
+          "weight": 0.06,
+          "label_ar": "توفّر المخزون"
+        }
+      ],
+      "demand": {
+        "views": 232,
+        "previous_views": 95,
+        "search_hits": 6,
+        "cart_adds": 23,
+        "favorites": 0,
+        "view_to_cart_rate": 0.0991,
+        "cart_to_order_rate": 0,
+        "view_to_order_rate": 0
+      },
+      "mine": {
+        "units": 0,
+        "orders": 0,
+        "revenue": {
+          "amount": "0.0000",
+          "currency": "SYP"
+        },
+        "lifetime_units": 0,
+        "returns": 0,
+        "stock_units": 18,
+        "price": {
+          "amount": "193000.0000",
+          "currency": "SYP"
+        }
+      },
+      "forecast": {
+        "units": null,
+        "horizon_days": null,
+        "confidence": null,
+        "stockout_in_days": null
+      },
+      "alerts": {
+        "low_conversion": true,
+        "weak_cart_through": true,
+        "stock_risk": false,
+        "sold_out_with_demand": false,
+        "overstock": false
+      }
+    },
+    {
+      "product_id": "a96559d8-240b-4945-915b-5bc912c41097",
+      "title": "هدية تخرّج مع قبعة تخرّج",
+      "slug": "grad-109",
+      "image_url": "https://loremflickr.com/900/1125/graduation%20gift/all?lock=23793",
+      "category_id": "e0b749df-45cd-44f1-90a6-491aba95f15b",
+      "category_name_ar": "هدايا تخرّج",
+      "captured_on": "2026-08-31",
+      "trend_score": 28.47,
+      "previous_score": null,
+      "delta": 0,
+      "stage": {
+        "key": "STEADY",
+        "label_ar": "مستقر"
+      },
+      "confidence": 0.7345,
+      "rank": 7,
+      "category_rank": 1,
+      "components": [
+        {
+          "key": "view_growth",
+          "value": 0.475,
+          "weight": 0.13,
+          "label_ar": "نمو المشاهدات"
+        },
+        {
+          "key": "search_growth",
+          "value": 0.3984,
+          "weight": 0.1,
+          "label_ar": "نمو البحث"
+        },
+        {
+          "key": "cart_growth",
+          "value": 0.0698,
+          "weight": 0.12,
+          "label_ar": "نمو الإضافة للسلة"
+        },
+        {
+          "key": "conversion",
+          "value": 0.2151,
+          "weight": 0.13,
+          "label_ar": "معدل التحويل"
+        },
+        {
+          "key": "sales_velocity",
+          "value": 0,
+          "weight": 0.17,
+          "label_ar": "سرعة البيع"
+        },
+        {
+          "key": "acceleration",
+          "value": 0.6669,
+          "weight": 0.11,
+          "label_ar": "تسارع الطلب"
+        },
+        {
+          "key": "engagement",
+          "value": 0.2294,
+          "weight": 0.1,
+          "label_ar": "التفاعل"
+        },
+        {
+          "key": "quality",
+          "value": 0,
+          "weight": 0.08,
+          "label_ar": "جودة التقييمات"
+        },
+        {
+          "key": "availability",
+          "value": 0.8409,
+          "weight": 0.06,
+          "label_ar": "توفّر المخزون"
+        }
+      ],
+      "demand": {
+        "views": 163,
+        "previous_views": 168,
+        "search_hits": 7,
+        "cart_adds": 1,
+        "favorites": 0,
+        "view_to_cart_rate": 0.0061,
+        "cart_to_order_rate": 0,
+        "view_to_order_rate": 0
+      },
+      "mine": {
+        "units": 0,
+        "orders": 0,
+        "revenue": {
+          "amount": "0.0000",
+          "currency": "SYP"
+        },
+        "lifetime_units": 0,
+        "returns": 0,
+        "stock_units": 4,
+        "price": {
+          "amount": "446000.0000",
+          "currency": "SYP"
+        }
+      },
+      "forecast": {
+        "units": null,
+        "horizon_days": null,
+        "confidence": null,
+        "stockout_in_days": null
+      },
+      "alerts": {
+        "low_conversion": true,
+        "weak_cart_through": false,
+        "stock_risk": false,
+        "sold_out_with_demand": false,
+        "overstock": false
+      }
+    },
+    {
+      "product_id": "15eb04b8-7a82-4337-bdfc-20d1ee031780",
+      "title": "غسول وجه برغوة خفيفة",
+      "slug": "clean-078",
+      "image_url": "https://loremflickr.com/900/1125/face%20wash%2Cskincare/all?lock=63249",
+      "category_id": "b2b79051-afd8-49bb-aa7b-3d545c10983b",
+      "category_name_ar": "منظفات",
+      "captured_on": "2026-08-31",
+      "trend_score": 25.56,
+      "previous_score": null,
+      "delta": 0,
+      "stage": {
+        "key": "COOLING",
+        "label_ar": "يتباطأ"
+      },
+      "confidence": 0.7285,
+      "rank": 9,
+      "category_rank": 1,
+      "components": [
+        {
+          "key": "view_growth",
+          "value": 0.4306,
+          "weight": 0.13,
+          "label_ar": "نمو المشاهدات"
+        },
+        {
+          "key": "search_growth",
+          "value": 0.1392,
+          "weight": 0.1,
+          "label_ar": "نمو البحث"
+        },
+        {
+          "key": "cart_growth",
+          "value": 0.0413,
+          "weight": 0.12,
+          "label_ar": "نمو الإضافة للسلة"
+        },
+        {
+          "key": "conversion",
+          "value": 0.2132,
+          "weight": 0.13,
+          "label_ar": "معدل التحويل"
+        },
+        {
+          "key": "sales_velocity",
+          "value": 0,
+          "weight": 0.17,
+          "label_ar": "سرعة البيع"
+        },
+        {
+          "key": "acceleration",
+          "value": 0.5935,
+          "weight": 0.11,
+          "label_ar": "تسارع الطلب"
+        },
+        {
+          "key": "engagement",
+          "value": 0.3731,
+          "weight": 0.1,
+          "label_ar": "التفاعل"
+        },
+        {
+          "key": "quality",
+          "value": 0,
+          "weight": 0.08,
+          "label_ar": "جودة التقييمات"
+        },
+        {
+          "key": "availability",
+          "value": 0.8409,
+          "weight": 0.06,
+          "label_ar": "توفّر المخزون"
+        }
+      ],
+      "demand": {
+        "views": 161,
+        "previous_views": 184,
+        "search_hits": 2,
+        "cart_adds": 0,
+        "favorites": 0,
+        "view_to_cart_rate": 0,
+        "cart_to_order_rate": 0,
+        "view_to_order_rate": 0
+      },
+      "mine": {
+        "units": 0,
+        "orders": 0,
+        "revenue": {
+          "amount": "0.0000",
+          "currency": "SYP"
+        },
+        "lifetime_units": 0,
+        "returns": 0,
+        "stock_units": 21,
+        "price": {
+          "amount": "218000.0000",
+          "currency": "SYP"
+        }
+      },
+      "forecast": {
+        "units": null,
+        "horizon_days": null,
+        "confidence": null,
+        "stockout_in_days": null
+      },
+      "alerts": {
+        "low_conversion": true,
+        "weak_cart_through": false,
+        "stock_risk": false,
+        "sold_out_with_demand": false,
+        "overstock": false
+      }
+    },
+    {
+      "product_id": "d183d637-a16a-4110-b6bd-a35cafa50f73",
+      "title": "طقم ضيافة رمضاني مع تمر وشوكولا",
+      "slug": "ramadan-125",
+      "image_url": "https://loremflickr.com/900/1125/ramadan%20gift%2Clantern/all?lock=42547",
+      "category_id": "a47df36b-9889-402d-b5b7-139f9d3fcd12",
+      "category_name_ar": "هدايا رمضان والأعياد",
+      "captured_on": "2026-08-31",
+      "trend_score": 23.97,
+      "previous_score": null,
+      "delta": 0,
+      "stage": {
+        "key": "STEADY",
+        "label_ar": "مستقر"
+      },
+      "confidence": 0.717,
+      "rank": 11,
+      "category_rank": 1,
+      "components": [
+        {
+          "key": "view_growth",
+          "value": 0.452,
+          "weight": 0.13,
+          "label_ar": "نمو المشاهدات"
+        },
+        {
+          "key": "search_growth",
+          "value": 0.1,
+          "weight": 0.1,
+          "label_ar": "نمو البحث"
+        },
+        {
+          "key": "cart_growth",
+          "value": 0,
+          "weight": 0.12,
+          "label_ar": "نمو الإضافة للسلة"
+        },
+        {
+          "key": "conversion",
+          "value": 0.2113,
+          "weight": 0.13,
+          "label_ar": "معدل التحويل"
+        },
+        {
+          "key": "sales_velocity",
+          "value": 0,
+          "weight": 0.17,
+          "label_ar": "سرعة البيع"
+        },
+        {
+          "key": "acceleration",
+          "value": 0.6373,
+          "weight": 0.11,
+          "label_ar": "تسارع الطلب"
+        },
+        {
+          "key": "engagement",
+          "value": 0.2294,
+          "weight": 0.1,
+          "label_ar": "التفاعل"
+        },
+        {
+          "key": "quality",
+          "value": 0,
+          "weight": 0.08,
+          "label_ar": "جودة التقييمات"
+        },
+        {
+          "key": "availability",
+          "value": 0.8409,
+          "weight": 0.06,
+          "label_ar": "توفّر المخزون"
+        }
+      ],
+      "demand": {
+        "views": 152,
+        "previous_views": 165,
+        "search_hits": 1,
+        "cart_adds": 0,
+        "favorites": 0,
+        "view_to_cart_rate": 0,
+        "cart_to_order_rate": 0,
+        "view_to_order_rate": 0
+      },
+      "mine": {
+        "units": 0,
+        "orders": 0,
+        "revenue": {
+          "amount": "0.0000",
+          "currency": "SYP"
+        },
+        "lifetime_units": 0,
+        "returns": 0,
+        "stock_units": 3,
+        "price": {
+          "amount": "772000.0000",
+          "currency": "SYP"
+        }
+      },
+      "forecast": {
+        "units": null,
+        "horizon_days": null,
+        "confidence": null,
+        "stockout_in_days": null
+      },
+      "alerts": {
+        "low_conversion": true,
+        "weak_cart_through": false,
+        "stock_risk": false,
+        "sold_out_with_demand": false,
+        "overstock": false
+      }
+    }
+  ],
+  "stock_opportunities": [],
+  "forecast": {
+    "horizon_days": 14,
+    "total_units": 0.23,
+    "total_revenue": {
+      "amount": "134957.3300",
+      "currency": "SYP"
+    },
+    "confidence": 0.973,
+    "method": null,
+    "backtest_mae": null,
+    "products": 1,
+    "points": [
+      {
+        "date": "2026-09-01",
+        "units": 0.01,
+        "low": 0,
+        "high": 0.08
+      },
+      {
+        "date": "2026-09-02",
+        "units": 0.01,
+        "low": 0,
+        "high": 0.11
+      },
+      {
+        "date": "2026-09-03",
+        "units": 0.01,
+        "low": 0,
+        "high": 0.13
+      },
+      {
+        "date": "2026-09-04",
+        "units": 0.01,
+        "low": 0,
+        "high": 0.14
+      },
+      {
+        "date": "2026-09-05",
+        "units": 0.01,
+        "low": 0,
+        "high": 0.16
+      },
+      {
+        "date": "2026-09-06",
+        "units": 0.03,
+        "low": 0,
+        "high": 0.59
+      },
+      {
+        "date": "2026-09-07",
+        "units": 0.04,
+        "low": 0,
+        "high": 0.95
+      },
+      {
+        "date": "2026-09-08",
+        "units": 0.01,
+        "low": 0,
+        "high": 0.2
+      },
+      {
+        "date": "2026-09-09",
+        "units": 0.01,
+        "low": 0,
+        "high": 0.21
+      },
+      {
+        "date": "2026-09-10",
+        "units": 0.01,
+        "low": 0,
+        "high": 0.22
+      },
+      {
+        "date": "2026-09-11",
+        "units": 0.01,
+        "low": 0,
+        "high": 0.24
+      },
+      {
+        "date": "2026-09-12",
+        "units": 0.01,
+        "low": 0,
+        "high": 0.25
+      },
+      {
+        "date": "2026-09-13",
+        "units": 0.03,
+        "low": 0,
+        "high": 0.85
+      },
+      {
+        "date": "2026-09-14",
+        "units": 0.04,
+        "low": 0,
+        "high": 1.32
+      }
+    ],
+    "generated_on": "2026-08-31"
+  },
+  "series": [
+    {
+      "date": "2026-08-18",
+      "units": 0,
+      "orders": 0,
+      "revenue": {
+        "amount": "0.00",
+        "currency": "SYP"
+      }
+    },
+    {
+      "date": "2026-08-19",
+      "units": 1,
+      "orders": 1,
+      "revenue": {
+        "amount": "503000.00",
+        "currency": "SYP"
+      }
+    },
+    {
+      "date": "2026-08-20",
+      "units": 0,
+      "orders": 0,
+      "revenue": {
+        "amount": "0.00",
+        "currency": "SYP"
+      }
+    },
+    {
+      "date": "2026-08-21",
+      "units": 0,
+      "orders": 0,
+      "revenue": {
+        "amount": "0.00",
+        "currency": "SYP"
+      }
+    },
+    {
+      "date": "2026-08-22",
+      "units": 0,
+      "orders": 0,
+      "revenue": {
+        "amount": "0.00",
+        "currency": "SYP"
+      }
+    },
+    {
+      "date": "2026-08-23",
+      "units": 0,
+      "orders": 0,
+      "revenue": {
+        "amount": "0.00",
+        "currency": "SYP"
+      }
+    },
+    {
+      "date": "2026-08-24",
+      "units": 0,
+      "orders": 0,
+      "revenue": {
+        "amount": "0.00",
+        "currency": "SYP"
+      }
+    },
+    {
+      "date": "2026-08-25",
+      "units": 0,
+      "orders": 0,
+      "revenue": {
+        "amount": "0.00",
+        "currency": "SYP"
+      }
+    },
+    {
+      "date": "2026-08-26",
+      "units": 0,
+      "orders": 0,
+      "revenue": {
+        "amount": "0.00",
+        "currency": "SYP"
+      }
+    },
+    {
+      "date": "2026-08-27",
+      "units": 0,
+      "orders": 0,
+      "revenue": {
+        "amount": "0.00",
+        "currency": "SYP"
+      }
+    },
+    {
+      "date": "2026-08-28",
+      "units": 0,
+      "orders": 0,
+      "revenue": {
+        "amount": "0.00",
+        "currency": "SYP"
+      }
+    },
+    {
+      "date": "2026-08-29",
+      "units": 0,
+      "orders": 0,
+      "revenue": {
+        "amount": "0.00",
+        "currency": "SYP"
+      }
+    },
+    {
+      "date": "2026-08-30",
+      "units": 0,
+      "orders": 0,
+      "revenue": {
+        "amount": "0.00",
+        "currency": "SYP"
+      }
+    },
+    {
+      "date": "2026-08-31",
+      "units": 0,
+      "orders": 0,
+      "revenue": {
+        "amount": "0.00",
+        "currency": "SYP"
+      }
+    }
+  ],
+  "recommended_actions": [
+    {
+      "id": "16e4c957-e30a-4786-a21b-321c552a9b16",
+      "audience": "SELLER",
+      "kind": "EMERGING_PRODUCT",
+      "severity": "OPPORTUNITY",
+      "status": "OPEN",
+      "title_ar": "منتج صاعد مبكرًا: بوكيه مناسبات بورد طبيعي طازج",
+      "body_ar": "ارتفعت مشاهدات «بوكيه مناسبات بورد طبيعي طازج» بنسبة +143٪ وإضافات السلة بنسبة +136٪ خلال آخر 7 أيام، بينما لا تزال المبيعات عند 0 قطعة فقط. هذا هو نمط المنتج الذي يصبح الأكثر مبيعًا لاحقًا.",
+      "action_ar": "جهّزي المخزون وأبرزي المنتج قبل أن يتشبّع الطلب.",
+      "action_target": "product",
+      "subject": {
+        "kind": "PRODUCT",
+        "key": "dab7aa2b-d8d9-418a-b9a0-0b3f1d3fa498",
+        "product": {
+          "id": "dab7aa2b-d8d9-418a-b9a0-0b3f1d3fa498",
+          "title": "بوكيه مناسبات بورد طبيعي طازج",
+          "slug": "bouquet-088"
+        },
+        "category": {
+          "id": "cdbfcf6a-938d-497b-ba51-8674e37dd9fc",
+          "name_ar": "باقات ورد",
+          "slug": "bouquets"
+        }
+      },
+      "metrics": {
+        "score": 42.28,
+        "stage": "EMERGING",
+        "units": 0,
+        "views": 247,
+        "cart_adds": 25,
+        "window_days": 7,
+        "previous_views": 101,
+        "cart_growth_pct": 136.4,
+        "view_growth_pct": 143.1,
+        "previous_cart_adds": 10
+      },
+      "confidence": 0.8429,
+      "priority": 0.6675,
+      "narrator": "reem-trend-templates-v1",
+      "generated_on": "2026-08-31",
+      "expires_at": "2026-09-07T00:00:00.000Z"
+    },
+    {
+      "id": "485789be-3fff-417f-8365-d35bd641fbcb",
+      "audience": "SELLER",
+      "kind": "EMERGING_PRODUCT",
+      "severity": "OPPORTUNITY",
+      "status": "OPEN",
+      "title_ar": "منتج صاعد مبكرًا: صندوق ورد بتنسيق فاخر",
+      "body_ar": "ارتفعت مشاهدات «صندوق ورد بتنسيق فاخر» بنسبة +103٪ وإضافات السلة بنسبة +93٪ خلال آخر 7 أيام، بينما لا تزال المبيعات عند 0 قطعة فقط. هذا هو نمط المنتج الذي يصبح الأكثر مبيعًا لاحقًا.",
+      "action_ar": "جهّزي المخزون وأبرزي المنتج قبل أن يتشبّع الطلب.",
+      "action_target": "product",
+      "subject": {
+        "kind": "PRODUCT",
+        "key": "31f17194-7d16-46bb-b90c-13cb1edc9d4a",
+        "product": {
+          "id": "31f17194-7d16-46bb-b90c-13cb1edc9d4a",
+          "title": "صندوق ورد بتنسيق فاخر",
+          "slug": "bouquet-089"
+        },
+        "category": {
+          "id": "cdbfcf6a-938d-497b-ba51-8674e37dd9fc",
+          "name_ar": "باقات ورد",
+          "slug": "bouquets"
+        }
+      },
+      "metrics": {
+        "score": 35.07,
+        "stage": "EMERGING",
+        "units": 0,
+        "views": 259,
+        "cart_adds": 26,
+        "window_days": 7,
+        "previous_views": 127,
+        "cart_growth_pct": 92.9,
+        "view_growth_pct": 103.1,
+        "previous_cart_adds": 13
+      },
+      "confidence": 0.8489,
+      "priority": 0.6457,
+      "narrator": "reem-trend-templates-v1",
+      "generated_on": "2026-08-31",
+      "expires_at": "2026-09-07T00:00:00.000Z"
+    },
+    {
+      "id": "3d0b1a25-4d5e-4b2c-97ef-941e39e7207f",
+      "audience": "SELLER",
+      "kind": "HIGH_VIEW_NO_SALES",
+      "severity": "WARNING",
+      "status": "OPEN",
+      "title_ar": "مشاهدات عالية بلا مبيعات: صندوق ورد بتنسيق فاخر",
+      "body_ar": "حصل «صندوق ورد بتنسيق فاخر» على 259 مشاهدة خلال آخر 7 أيام دون أي طلب واحد، مع 26 إضافة للسلة. الاهتمام موجود والمشكلة في ما بعد المشاهدة.",
+      "action_ar": "راجعي السعر، وضوح الصور، ومعلومات المقاسات والتوفر.",
+      "action_target": "product",
+      "subject": {
+        "kind": "PRODUCT",
+        "key": "31f17194-7d16-46bb-b90c-13cb1edc9d4a",
+        "product": {
+          "id": "31f17194-7d16-46bb-b90c-13cb1edc9d4a",
+          "title": "صندوق ورد بتنسيق فاخر",
+          "slug": "bouquet-089"
+        },
+        "category": {
+          "id": "cdbfcf6a-938d-497b-ba51-8674e37dd9fc",
+          "name_ar": "باقات ورد",
+          "slug": "bouquets"
+        }
+      },
+      "metrics": {
+        "views": 259,
+        "orders": 0,
+        "cart_adds": 26,
+        "price_syp": 503000,
+        "window_days": 7,
+        "in_stock_rate": 1
+      },
+      "confidence": 0.764,
+      "priority": 0.6126,
+      "narrator": "reem-trend-templates-v1",
+      "generated_on": "2026-08-31",
+      "expires_at": "2026-09-07T00:00:00.000Z"
+    },
+    {
+      "id": "a37d7cb9-94b9-4cac-a94a-9be8456937e8",
+      "audience": "SELLER",
+      "kind": "HIGH_VIEW_NO_SALES",
+      "severity": "WARNING",
+      "status": "OPEN",
+      "title_ar": "مشاهدات عالية بلا مبيعات: بوكيه مناسبات بورد طبيعي طازج",
+      "body_ar": "حصل «بوكيه مناسبات بورد طبيعي طازج» على 247 مشاهدة خلال آخر 7 أيام دون أي طلب واحد، مع 25 إضافة للسلة. الاهتمام موجود والمشكلة في ما بعد المشاهدة.",
+      "action_ar": "راجعي السعر، وضوح الصور، ومعلومات المقاسات والتوفر.",
+      "action_target": "product",
+      "subject": {
+        "kind": "PRODUCT",
+        "key": "dab7aa2b-d8d9-418a-b9a0-0b3f1d3fa498",
+        "product": {
+          "id": "dab7aa2b-d8d9-418a-b9a0-0b3f1d3fa498",
+          "title": "بوكيه مناسبات بورد طبيعي طازج",
+          "slug": "bouquet-088"
+        },
+        "category": {
+          "id": "cdbfcf6a-938d-497b-ba51-8674e37dd9fc",
+          "name_ar": "باقات ورد",
+          "slug": "bouquets"
+        }
+      },
+      "metrics": {
+        "views": 247,
+        "orders": 0,
+        "cart_adds": 25,
+        "price_syp": 597000,
+        "window_days": 7,
+        "in_stock_rate": 1
+      },
+      "confidence": 0.7554,
+      "priority": 0.58,
+      "narrator": "reem-trend-templates-v1",
+      "generated_on": "2026-08-31",
+      "expires_at": "2026-09-07T00:00:00.000Z"
+    },
+    {
+      "id": "29bde8f3-bead-43d4-b5c8-0e338db202d2",
+      "audience": "SELLER",
+      "kind": "CART_ABANDONMENT",
+      "severity": "WARNING",
+      "status": "OPEN",
+      "title_ar": "سلات متروكة: صندوق ورد بتنسيق فاخر",
+      "body_ar": "أُضيف «صندوق ورد بتنسيق فاخر» إلى السلة 26 مرة خلال آخر 7 أيام ولم يكتمل سوى 0 طلب — 26 سلة متروكة.",
+      "action_ar": "تحقّقي من تكلفة التوصيل ومدة التجهيز، فهما أكثر سببين للترك.",
+      "action_target": "checkout",
+      "subject": {
+        "kind": "PRODUCT",
+        "key": "31f17194-7d16-46bb-b90c-13cb1edc9d4a",
+        "product": {
+          "id": "31f17194-7d16-46bb-b90c-13cb1edc9d4a",
+          "title": "صندوق ورد بتنسيق فاخر",
+          "slug": "bouquet-089"
+        },
+        "category": {
+          "id": "cdbfcf6a-938d-497b-ba51-8674e37dd9fc",
+          "name_ar": "باقات ورد",
+          "slug": "bouquets"
+        }
+      },
+      "metrics": {
+        "orders": 0,
+        "abandoned": 26,
+        "cart_adds": 26,
+        "window_days": 7,
+        "cart_to_order_rate": 0
+      },
+      "confidence": 0.5098,
+      "priority": 0.5583,
+      "narrator": "reem-trend-templates-v1",
+      "generated_on": "2026-08-31",
+      "expires_at": "2026-09-07T00:00:00.000Z"
+    },
+    {
+      "id": "5dfdef6f-8d8f-4de9-af44-044caa7cdacf",
+      "audience": "SELLER",
+      "kind": "CART_ABANDONMENT",
+      "severity": "WARNING",
+      "status": "OPEN",
+      "title_ar": "سلات متروكة: بوكيه مناسبات بورد طبيعي طازج",
+      "body_ar": "أُضيف «بوكيه مناسبات بورد طبيعي طازج» إلى السلة 25 مرة خلال آخر 7 أيام ولم يكتمل سوى 0 طلب — 25 سلة متروكة.",
+      "action_ar": "تحقّقي من تكلفة التوصيل ومدة التجهيز، فهما أكثر سببين للترك.",
+      "action_target": "checkout",
+      "subject": {
+        "kind": "PRODUCT",
+        "key": "dab7aa2b-d8d9-418a-b9a0-0b3f1d3fa498",
+        "product": {
+          "id": "dab7aa2b-d8d9-418a-b9a0-0b3f1d3fa498",
+          "title": "بوكيه مناسبات بورد طبيعي طازج",
+          "slug": "bouquet-088"
+        },
+        "category": {
+          "id": "cdbfcf6a-938d-497b-ba51-8674e37dd9fc",
+          "name_ar": "باقات ورد",
+          "slug": "bouquets"
+        }
+      },
+      "metrics": {
+        "orders": 0,
+        "abandoned": 25,
+        "cart_adds": 25,
+        "window_days": 7,
+        "cart_to_order_rate": 0
+      },
+      "confidence": 0.5,
+      "priority": 0.5525,
+      "narrator": "reem-trend-templates-v1",
+      "generated_on": "2026-08-31",
+      "expires_at": "2026-09-07T00:00:00.000Z"
+    }
+  ],
+  "product_count": 14
+}

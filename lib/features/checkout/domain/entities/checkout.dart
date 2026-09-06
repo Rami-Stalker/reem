@@ -116,18 +116,74 @@ class ShippingInput {
   });
 }
 
+/// A cash order the platform is holding until she reads back a code.
+///
+/// Present only when the trust engine asked for one. The customer is never
+/// shown a score or a reason code — [message] is the whole explanation she
+/// gets, and it is written by the server so that support reads the same
+/// sentence she does.
+class CodAssurance extends Equatable {
+  /// Only `order_confirmation` reaches the app today: the prepayment tier is
+  /// refused at checkout instead, so no order exists to carry it.
+  final String required;
+  final String? message;
+
+  /// Which number the code went to, already masked by the server.
+  final String? maskedDestination;
+
+  /// The two digits also printed in the message. If they differ, the message
+  /// did not come from this checkout — the same defence the login flow uses
+  /// against "this is Reem support, read me your code".
+  final String? matchCode;
+
+  final DateTime? expiresAt;
+  final DateTime? resendAfter;
+
+  /// The code could not be sent. The order is still held; she needs a resend.
+  final bool dispatchFailed;
+
+  const CodAssurance({
+    required this.required,
+    this.message,
+    this.maskedDestination,
+    this.matchCode,
+    this.expiresAt,
+    this.resendAfter,
+    this.dispatchFailed = false,
+  });
+
+  @override
+  List<Object?> get props => [
+        required,
+        message,
+        maskedDestination,
+        matchCode,
+        expiresAt,
+        resendAfter,
+        dispatchFailed,
+      ];
+}
+
 /// Result of placing an order — the order plus any required next payment step.
 class PlacedOrder extends Equatable {
   final OrderDetail order;
   final String? redirectUrl;
   final bool requiresOnlineConfirmation;
 
+  /// Set when the order is held for a cash-on-delivery confirmation code.
+  final CodAssurance? codAssurance;
+
   const PlacedOrder({
     required this.order,
     this.redirectUrl,
     required this.requiresOnlineConfirmation,
+    this.codAssurance,
   });
 
+  /// She has placed it, but nobody is preparing it until the code is in.
+  bool get awaitsCodConfirmation => codAssurance != null;
+
   @override
-  List<Object?> get props => [order, redirectUrl, requiresOnlineConfirmation];
+  List<Object?> get props =>
+      [order, redirectUrl, requiresOnlineConfirmation, codAssurance];
 }

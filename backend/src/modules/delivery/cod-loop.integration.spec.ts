@@ -243,6 +243,7 @@ dbTest('a courier is asked for what the customer owes, delivery fee included', a
       null as never,
       null as never,
       null as never,
+      null as never,
     );
     const parcel = await shipments.createForSellerOrder(sellerOrder.id, {}, tx);
 

@@ -30,13 +30,7 @@ class InvoiceScreen extends ConsumerWidget {
     return ReemScrollPage(
       onRefresh: () async => ref.invalidate(invoiceDetailProvider(invoiceId)),
       slivers: [
-        SliverAppBar(
-          pinned: true,
-          elevation: 0,
-          backgroundColor: Colors.transparent,
-          surfaceTintColor: Colors.transparent,
-          title: Text(l10n.invoice),
-        ),
+        PremiumAppBar(title: l10n.invoice, showBack: true),
         async.when(
           loading: () =>
               const SliverToBoxAdapter(child: _InvoiceSkeleton()),
@@ -56,7 +50,7 @@ class InvoiceScreen extends ConsumerWidget {
             ),
           ),
         ),
-        const SliverToBoxAdapter(child: SizedBox(height: 120)),
+        DsGaps.sliverBottomSafe,
       ],
     );
   }
@@ -94,13 +88,7 @@ class _Document extends StatelessWidget {
                       invoice.isSellerCopy
                           ? l10n.invoiceSellerCopy
                           : l10n.invoiceCustomerCopy,
-                      style: TextStyle(
-                        fontFamily: DsTypography.fontFamilyDisplay,
-                        fontFamilyFallback: DsTypography.displayFallback,
-                        fontSize: DsTypography.titleLarge,
-                        fontWeight: DsTypography.bold,
-                        color: colors.onSurface,
-                      ),
+                      style: context.dsText.sectionTitle.displayFamily.bold.tint(colors.onSurface),
                     ),
                     const SizedBox(height: DsSpacing.xxs),
                     _Meta(
@@ -139,19 +127,11 @@ class _Document extends StatelessWidget {
             const SizedBox(height: DsSpacing.xxs),
             Text(
               invoice.recipient!.name,
-              style: TextStyle(
-                fontSize: DsTypography.bodyMedium,
-                fontWeight: DsTypography.semiBold,
-                color: colors.onSurface,
-              ),
+              style: context.dsText.body.semibold.tint(colors.onSurface),
             ),
             Text(
               invoice.recipient!.fullAddress,
-              style: TextStyle(
-                fontSize: DsTypography.labelSmall,
-                color: colors.onSurfaceVariant,
-                height: 1.5,
-              ),
+              style: context.dsText.caption.tint(colors.onSurfaceVariant).copyWith(height: 1.5),
             ),
           ],
 
@@ -214,11 +194,7 @@ class _Document extends StatelessWidget {
           const SizedBox(height: DsSpacing.lg),
           Text(
             l10n.invoiceNoTax,
-            style: TextStyle(
-              fontSize: DsTypography.labelSmall,
-              color: colors.onSurfaceVariant,
-              height: 1.5,
-            ),
+            style: context.dsText.caption.tint(colors.onSurfaceVariant).copyWith(height: 1.5),
           ),
         ],
       ),
@@ -237,16 +213,13 @@ class _Meta extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.dsColors;
     return Padding(
-      padding: const EdgeInsets.only(top: 2),
+      padding: const EdgeInsets.only(top: DsSpacing.xxxs),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
             '$label: ',
-            style: TextStyle(
-              fontSize: DsTypography.labelSmall,
-              color: colors.onSurfaceVariant,
-            ),
+            style: context.dsText.caption.tint(colors.onSurfaceVariant),
           ),
           if (isCode)
             // Document numbers get read out and typed in; left-to-right keeps
@@ -255,22 +228,13 @@ class _Meta extends StatelessWidget {
               textDirection: TextDirection.ltr,
               child: SelectableText(
                 value,
-                style: TextStyle(
-                  fontFamily: DsTypography.fontFamily,
-                  fontSize: DsTypography.labelSmall,
-                  fontWeight: DsTypography.bold,
-                  color: colors.onSurface,
-                ),
+                style: context.dsText.caption.bold.tint(colors.onSurface),
               ),
             )
           else
             Text(
               value,
-              style: TextStyle(
-                fontSize: DsTypography.labelSmall,
-                fontWeight: DsTypography.semiBold,
-                color: colors.onSurface,
-              ),
+              style: context.dsText.caption.semibold.tint(colors.onSurface),
             ),
         ],
       ),
@@ -299,12 +263,7 @@ class _Line extends StatelessWidget {
               children: [
                 Text(
                   line.title,
-                  style: TextStyle(
-                    fontSize: DsTypography.bodySmall,
-                    fontWeight: DsTypography.semiBold,
-                    color: colors.onSurface,
-                    height: 1.4,
-                  ),
+                  style: context.dsText.bodySmall.semibold.tint(colors.onSurface).copyWith(height: 1.4),
                 ),
                 Text(
                   [
@@ -312,10 +271,7 @@ class _Line extends StatelessWidget {
                     if (line.seller != null) line.seller!,
                     '${context.l10n.invoiceQuantity} ${toWesternDigits('${line.quantity}')}',
                   ].join(' · '),
-                  style: TextStyle(
-                    fontSize: DsTypography.labelSmall,
-                    color: colors.onSurfaceVariant,
-                  ),
+                  style: context.dsText.caption.tint(colors.onSurfaceVariant),
                 ),
               ],
             ),
@@ -327,12 +283,7 @@ class _Line extends StatelessWidget {
             children: [
               Text(
                 line.lineTotal.format(),
-                style: TextStyle(
-                  fontFamily: DsTypography.fontFamily,
-                  fontSize: DsTypography.bodySmall,
-                  fontWeight: DsTypography.bold,
-                  color: colors.onSurface,
-                ),
+                style: context.dsText.bodySmall.bold.tint(colors.onSurface),
               ),
               // The discount is an amount taken off, not a former price — a
               // struck-through figure would read as "was 50,000", which is a
@@ -340,12 +291,7 @@ class _Line extends StatelessWidget {
               if (line.isDiscounted)
                 Text(
                   '−${line.unitDiscount.format()}',
-                  style: TextStyle(
-                    fontFamily: DsTypography.fontFamily,
-                    fontSize: DsTypography.labelSmall,
-                    fontWeight: DsTypography.semiBold,
-                    color: colors.success,
-                  ),
+                  style: context.dsText.caption.semibold.tint(colors.success),
                 ),
             ],
           ),
@@ -378,27 +324,17 @@ class _Total extends StatelessWidget {
           Expanded(
             child: Text(
               label,
-              style: TextStyle(
-                fontSize: emphasise
-                    ? DsTypography.bodyMedium
-                    : DsTypography.bodySmall,
-                fontWeight: emphasise
-                    ? DsTypography.bold
-                    : DsTypography.regular,
-                color: emphasise ? colors.onSurface : colors.onSurfaceVariant,
-              ),
+              style: emphasise
+                  ? context.dsText.body.bold
+                  : context.dsText.cardSubtitle,
             ),
           ),
           Text(
             '${isDeduction ? '−' : ''}${amount.format()}',
-            style: TextStyle(
-              fontFamily: DsTypography.fontFamily,
-              fontSize: emphasise
-                  ? DsTypography.titleSmall
-                  : DsTypography.bodySmall,
-              fontWeight: DsTypography.bold,
-              color: emphasise ? colors.price : colors.onSurface,
-            ),
+            style: (emphasise
+                    ? context.dsText.price
+                    : context.dsText.bodySmall.bold.tint(colors.onSurface))
+                .tabular,
           ),
         ],
       ),

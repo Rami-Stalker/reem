@@ -45,7 +45,7 @@ class _LuxurySettingsTileState extends State<LuxurySettingsTile> {
               sigmaY: DsBlur.medium,
             ),
             child: Container(
-              padding: const EdgeInsets.all(18),
+              padding: const EdgeInsets.all(DsSpacing.lg),
               decoration: BoxDecoration(
                 color: colors.glass.withValues(alpha: DsOpacity.medium),
                 borderRadius: DsRadius.borderXxxl,
@@ -63,11 +63,11 @@ class _LuxurySettingsTileState extends State<LuxurySettingsTile> {
                     ),
                     child: Icon(widget.icon, color: colors.onPrimary),
                   ),
-                  const SizedBox(width: 18),
+                  DsGaps.hLg,
                   Expanded(
                     child: Text(
                       widget.title,
-                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                      style: context.dsText.tileTitle.copyWith(
                             fontWeight: DsTypography.semiBold,
                           ),
                     ),

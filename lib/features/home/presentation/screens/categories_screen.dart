@@ -1,227 +1,175 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:reem/core/design_system/design_system.dart';
 import 'package:reem/core/localization/l10n_extension.dart';
+import 'package:reem/core/router/route_paths.dart';
 
+/// The shop's departments.
+///
+/// Three things were wrong here. The page built its own `SliverAppBar` on a
+/// flat surface, so it was the one buyer screen without the frosted gradient
+/// header. Every tile carried a fabricated product count — 245 dresses, 98
+/// pieces of jewellery — presented as fact. And the tap handler was an empty
+/// block, so the whole grid was decoration.
+///
+/// The taxonomy itself is curated rather than fetched: the client has no
+/// categories endpoint yet. What it can do honestly is hand the department to
+/// search, which is a real, filtered result set.
 class CategoriesScreen extends StatelessWidget {
-  const CategoriesScreen({super.key});  
+  const CategoriesScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.dsColors;
-    
-    final categories = _getCategories();
+    final categories = _departments(context);
 
-    return Scaffold(
-      body: CustomScrollView(
-        slivers: [
-          // Premium App Bar
-          SliverAppBar(
-            pinned: true,
-            expandedHeight: 120,
-            backgroundColor: colors.surface,
-            flexibleSpace: FlexibleSpaceBar(
-              titlePadding: const EdgeInsets.symmetric(horizontal: DsSpacing.lg),
-              title: ShaderMask(
-                blendMode: BlendMode.srcIn,
-                shaderCallback: (bounds) => context.primaryGradient.createShader(bounds),
-                child: Text(
-                  context.l10n.categories,
-                  style: TextStyle(
-                    fontFamily: DsTypography.fontFamily,
-                    fontWeight: DsTypography.bold,
-                    fontSize: DsTypography.titleLarge,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
+    return ReemScrollPage(
+      slivers: [
+        PremiumAppBar(title: context.l10n.categories, showBack: true),
+        SliverPadding(
+          padding: const EdgeInsets.all(DsSpacing.lg),
+          sliver: SliverGrid.builder(
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              mainAxisSpacing: DsSpacing.md,
+              crossAxisSpacing: DsSpacing.md,
+              childAspectRatio: 0.95,
             ),
-            leading: IconButton(
-              icon: Icon(Icons.arrow_back_ios_new_rounded, color: colors.onSurface),
-              onPressed: () => context.pop(),
-            ),
+            itemCount: categories.length,
+            itemBuilder: (context, index) =>
+                _DepartmentCard(department: categories[index], index: index),
           ),
-
-          // Categories Grid
-          SliverPadding(
-            padding: const EdgeInsets.all(DsSpacing.lg),
-            sliver: SliverGrid(
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                mainAxisSpacing: DsSpacing.md,
-                crossAxisSpacing: DsSpacing.md,
-                childAspectRatio: 0.85,
-              ),
-              delegate: SliverChildBuilderDelegate(
-                (context, index) {
-                  final category = categories[index];
-                  return _CategoryCard(
-                    category: category,
-                    index: index,
-                  );
-                },
-                childCount: categories.length,
-              ),
-            ),
-          ),
-        ],
-      ),
+        ),
+        DsGaps.sliverBottomSafe,
+      ],
     );
   }
 
-  List<_Category> _getCategories() {
+  List<_Department> _departments(BuildContext context) {
+    final l10n = context.l10n;
     return [
-      _Category(
-        name: 'فساتين',
-        subtitle: 'سهرة وكاجوال',
+      _Department(
+        name: l10n.categoryDresses,
+        subtitle: l10n.categoryDressesBlurb,
         icon: Icons.checkroom_rounded,
         gradient: DsGradients.primarySoft,
-        count: 245,
       ),
-      _Category(
-        name: 'مكياج',
-        subtitle: 'تجميل وعناية بالبشرة',
+      _Department(
+        name: l10n.categoryBeauty,
+        subtitle: l10n.categoryBeautyBlurb,
         icon: Icons.face_retouching_natural,
         gradient: DsGradients.lavenderBlush,
-        count: 189,
       ),
-      _Category(
-        name: 'حقائب',
-        subtitle: 'حقائب يد ومحافظ',
+      _Department(
+        name: l10n.categoryBags,
+        subtitle: l10n.categoryBagsBlurb,
         icon: Icons.shopping_bag_rounded,
         gradient: DsGradients.sunset,
-        count: 156,
       ),
-      _Category(
-        name: 'مجوهرات',
-        subtitle: 'عقود وأقراط',
+      _Department(
+        name: l10n.categoryJewellery,
+        subtitle: l10n.categoryJewelleryBlurb,
         icon: Icons.diamond_outlined,
         gradient: DsGradients.champagne,
-        count: 98,
       ),
-      _Category(
-        name: 'هدايا',
-        subtitle: 'لحظات خاصة',
+      _Department(
+        name: l10n.categoryGifts,
+        subtitle: l10n.categoryGiftsBlurb,
         icon: Icons.card_giftcard_rounded,
         gradient: DsGradients.rewards,
-        count: 134,
       ),
-      _Category(
-        name: 'أحذية',
-        subtitle: 'كعب عالٍ ومسطّح',
-        icon: Icons.checkroom_rounded,
+      _Department(
+        name: l10n.categoryShoes,
+        subtitle: l10n.categoryShoesBlurb,
+        icon: Icons.roller_skating_rounded,
         gradient: DsGradients.accent,
-        count: 178,
       ),
-      _Category(
-        name: 'إكسسوارات',
-        subtitle: 'أوشحة وأكثر',
+      _Department(
+        name: l10n.categoryAccessories,
+        subtitle: l10n.categoryAccessoriesBlurb,
         icon: Icons.shopping_basket_rounded,
         gradient: DsGradients.primary,
-        count: 112,
       ),
-      _Category(
-        name: 'عطور',
-        subtitle: 'روائح فاخرة',
+      _Department(
+        name: l10n.categoryFragrance,
+        subtitle: l10n.categoryFragranceBlurb,
         icon: Icons.spa_rounded,
         gradient: DsGradients.soft,
-        count: 67,
       ),
     ];
   }
 }
 
-class _Category {
-  final String name;
-  final String subtitle;
-  final IconData icon;
-  final Gradient gradient;
-  final int count;
-
-  _Category({
+class _Department {
+  const _Department({
     required this.name,
     required this.subtitle,
     required this.icon,
     required this.gradient,
-    required this.count,
   });
+
+  final String name;
+  final String subtitle;
+  final IconData icon;
+  final Gradient gradient;
 }
 
-class _CategoryCard extends StatelessWidget {
-  const _CategoryCard({
-    required this.category,
-    required this.index,
-  });
+class _DepartmentCard extends StatelessWidget {
+  const _DepartmentCard({required this.department, required this.index});
 
-  final _Category category;
+  final _Department department;
   final int index;
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.dsColors;
+    final text = context.dsText;
 
-    return GestureDetector(
-      onTap: () {
-        // Navigate to category products
-      },
-      child: Container(
-        decoration: BoxDecoration(
-          color: colors.surface,
-          borderRadius: DsRadius.borderXxl,
-          boxShadow: context.softShadow,
-          border: Border.all(color: colors.glassBorder),
-        ),
+    return DsStaggerAnimations.item(
+      index: index,
+      child: SurfaceCard(
+        onTap: () => context.push('${RoutePaths.search}?q=${department.name}'),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // Icon container
             Container(
-              width: 80,
-              height: 80,
+              width: DsSizes.avatarXl,
+              height: DsSizes.avatarXl,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                gradient: category.gradient,
+                gradient: department.gradient,
                 boxShadow: [
                   BoxShadow(
-                    color: category.gradient.colors.first.withValues(alpha: 0.3),
+                    color: department.gradient.colors.first.withValues(
+                      alpha: 0.3,
+                    ),
                     blurRadius: 20,
                     offset: const Offset(0, 8),
                   ),
                 ],
               ),
               child: Icon(
-                category.icon,
-                size: 36,
-                color: Colors.white,
+                department.icon,
+                size: DsSizes.iconLg,
+                color: DsColors.onMedia,
               ),
             ),
-            const SizedBox(height: DsSpacing.md),
-            // Category name
+            DsGaps.vMd,
             Text(
-              category.name,
-              style: TextStyle(
-                fontSize: DsTypography.titleSmall,
-                fontWeight: DsTypography.bold,
-                color: colors.onSurface,
-              ),
+              department.name,
+              textAlign: TextAlign.center,
+              style: text.tileTitle.bold,
             ),
-            const SizedBox(height: 4),
-            // Product count
+            DsGaps.vXxs,
             Text(
-              context.l10n.piecesCount('${category.count}'),
-              style: TextStyle(
-                fontSize: DsTypography.labelSmall,
-                color: colors.onSurfaceVariant,
-              ),
+              department.subtitle,
+              textAlign: TextAlign.center,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: text.caption,
             ),
           ],
         ),
-      ).animate().fadeIn(
-        delay: (100 * index).ms,
-        duration: 400.ms,
-      ).scale(begin: const Offset(0.9, 0.9), end: const Offset(1, 1)),
+      ),
     );
   }
 }

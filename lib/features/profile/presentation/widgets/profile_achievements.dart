@@ -32,7 +32,7 @@ class ProfileAchievements extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         ProfileSectionHeader(
-          eyebrow: isLoading ? null : '$earned of ${achievements.length} earned',
+          eyebrow: isLoading ? null : context.l10n.achievementsEarned(earned, achievements.length),
           title: context.l10n.achievements,
         ),
         SizedBox(
@@ -95,12 +95,12 @@ class _Badge extends StatelessWidget {
               shape: BoxShape.circle,
             ),
             child: Icon(achievement.icon,
-                color: achievement.earned ? Colors.white : c.onSurfaceVariant),
+                color: achievement.earned ? DsColors.onMedia : c.onSurfaceVariant),
           ),
           const SizedBox(width: DsSpacing.md),
           Expanded(
             child: Text(achievement.description,
-                style: Theme.of(context).textTheme.bodyMedium),
+                style: context.dsText.body),
           ),
         ],
       ),
@@ -137,7 +137,7 @@ class _Badge extends StatelessWidget {
                   child: Icon(
                     achievement.icon,
                     size: 28,
-                    color: earned ? Colors.white : c.onSurfaceVariant,
+                    color: earned ? DsColors.onMedia : c.onSurfaceVariant,
                   ),
                 ),
                 if (!earned)
@@ -145,7 +145,7 @@ class _Badge extends StatelessWidget {
                     right: -2,
                     bottom: -2,
                     child: Container(
-                      padding: const EdgeInsets.all(3),
+                      padding: const EdgeInsets.all(DsSpacing.xxs),
                       decoration: BoxDecoration(
                         color: c.surface,
                         shape: BoxShape.circle,
@@ -162,11 +162,7 @@ class _Badge extends StatelessWidget {
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: DsTypography.labelSmall,
-                fontWeight: DsTypography.medium,
-                color: earned ? c.onSurface : c.onSurfaceVariant,
-              ),
+              style: context.dsText.caption.tint(earned ? c.onSurface : c.onSurfaceVariant),
             ),
           ],
         ),

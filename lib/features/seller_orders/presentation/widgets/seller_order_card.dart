@@ -66,22 +66,13 @@ class SellerOrderCard extends StatelessWidget {
                           child: Text(
                             order.number,
                             textAlign: TextAlign.left,
-                            style: TextStyle(
-                              fontFamily: DsTypography.fontFamily,
-                              fontSize: DsTypography.titleSmall,
-                              fontWeight: DsTypography.bold,
-                              color: atelier.ink,
-                            ),
+                            style: context.dsText.tileTitle.bold.tint(atelier.ink),
                           ),
                         ),
-                        const SizedBox(height: 2),
+                        DsGaps.vXxxs,
                         Text(
                           _subtitle(context),
-                          style: TextStyle(
-                            fontFamily: DsTypography.fontFamily,
-                            fontSize: DsTypography.bodySmall,
-                            color: atelier.muted,
-                          ),
+                          style: context.dsText.bodySmall.tint(atelier.muted),
                         ),
                       ],
                     ),
@@ -97,17 +88,13 @@ class SellerOrderCard extends StatelessWidget {
               Row(
                 children: [
                   Icon(Icons.person_outline, size: 16, color: atelier.muted),
-                  const SizedBox(width: 4),
+                  DsGaps.hXxs,
                   Expanded(
                     child: Text(
                       order.customer.name,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        fontFamily: DsTypography.fontFamily,
-                        fontSize: DsTypography.bodySmall,
-                        color: atelier.ink,
-                      ),
+                      style: context.dsText.bodySmall.tint(atelier.ink),
                     ),
                   ),
 
@@ -115,12 +102,7 @@ class SellerOrderCard extends StatelessWidget {
                   // screen it is the only number that is hers.
                   Text(
                     order.net.format(),
-                    style: TextStyle(
-                      fontFamily: DsTypography.fontFamily,
-                      fontSize: DsTypography.titleSmall,
-                      fontWeight: DsTypography.bold,
-                      color: atelier.gold,
-                    ),
+                    style: context.dsText.tileTitle.bold.tint(atelier.gold),
                   ),
                 ],
               ),
@@ -134,13 +116,42 @@ class SellerOrderCard extends StatelessWidget {
                       size: 14,
                       color: atelier.caution,
                     ),
-                    const SizedBox(width: 4),
+                    DsGaps.hXxs,
                     Text(
                       l10n.sellerOrderCashOnDelivery,
-                      style: TextStyle(
-                        fontFamily: DsTypography.fontFamily,
-                        fontSize: DsTypography.labelSmall,
-                        color: atelier.caution,
+                      style: context.dsText.caption.tint(atelier.caution),
+                    ),
+                  ],
+                ),
+              ],
+
+              // Only shown when the platform actually wants her to do
+              // something differently. A "low risk" line on ninety per cent of
+              // her queue is a line she stops reading, and then the one that
+              // matters is invisible too.
+              if (order.codRisk case final risk?
+                  when risk.isElevated || risk.awaitingConfirmation) ...[
+                const SizedBox(height: DsSpacing.xs),
+                Row(
+                  children: [
+                    Icon(
+                      risk.awaitingConfirmation
+                          ? Icons.hourglass_empty_rounded
+                          : Icons.info_outline_rounded,
+                      size: 14,
+                      color: risk.tier == 'high'
+                          ? atelier.caution
+                          : atelier.muted,
+                    ),
+                    DsGaps.hXxs,
+                    Expanded(
+                      child: Text(
+                        risk.awaitingConfirmation
+                            ? l10n.sellerOrderAwaitingCustomerCode
+                            : risk.label,
+                        style: context.dsText.caption.tint(risk.tier == 'high'
+                              ? atelier.caution
+                              : atelier.muted),
                       ),
                     ),
                   ],
@@ -189,6 +200,7 @@ class SellerOrderCard extends StatelessWidget {
   /// cover most of a busy shop's rows.
   String _subtitle(BuildContext context) {
     final when = toWesternDigits(
+      // l10n-ignore: an intl pattern; the locale supplies the words
       DateFormat('d MMM • HH:mm', 'ar').format(order.placedAt),
     );
     return '${context.l10n.itemsCount(order.itemsCount)} • $when';

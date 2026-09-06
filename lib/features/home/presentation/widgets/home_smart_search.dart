@@ -27,7 +27,12 @@ class HomeSmartSearch extends ConsumerWidget {
     );
 
     return Padding(
-      padding: const EdgeInsets.fromLTRB(DsSpacing.lg, 0, DsSpacing.lg, 0),
+      padding: const EdgeInsets.fromLTRB(
+        DsSpacing.lg,
+        DsSpacing.xxxs,
+        DsSpacing.lg,
+        DsSpacing.xxxs,
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -46,7 +51,10 @@ class HomeSmartSearch extends ConsumerWidget {
                     shape: BoxShape.circle,
                     gradient: CustomerExperience.signatureGradient,
                   ),
-                  child: const Icon(Icons.search_rounded, color: Colors.white),
+                  child: const Icon(
+                    Icons.search_rounded,
+                    color: DsColors.onMedia,
+                  ),
                 ),
                 const SizedBox(width: DsSpacing.sm),
                 Expanded(
@@ -54,10 +62,8 @@ class HomeSmartSearch extends ConsumerWidget {
                     context.l10n.homeSearchHint,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      color: context.dsColors.onSurfaceVariant,
-                      fontSize: DsTypography.bodyMedium,
-                      fontWeight: DsTypography.medium,
+                    style: context.dsText.body.medium.tint(
+                      context.dsColors.onSurfaceVariant,
                     ),
                   ),
                 ),
@@ -138,11 +144,7 @@ class _SuggestionRail extends StatelessWidget {
           const SizedBox(width: DsSpacing.xxs),
           Text(
             label,
-            style: TextStyle(
-              color: colors.onSurfaceVariant,
-              fontSize: DsTypography.labelSmall,
-              fontWeight: DsTypography.bold,
-            ),
+            style: context.dsText.caption.bold.tint(colors.onSurfaceVariant),
           ),
           const SizedBox(width: DsSpacing.xs),
           ...children,
@@ -208,14 +210,7 @@ class _SuggestionChip extends StatelessWidget {
                 Icon(icon, size: 13, color: fg),
                 const SizedBox(width: DsSpacing.xxs),
               ],
-              Text(
-                label,
-                style: TextStyle(
-                  color: fg,
-                  fontSize: DsTypography.labelMedium,
-                  fontWeight: DsTypography.semiBold,
-                ),
-              ),
+              Text(label, style: context.dsText.labelMedium.semibold.tint(fg)),
             ],
           ),
         ),

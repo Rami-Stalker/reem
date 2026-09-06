@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import 'package:reem/core/design_system/foundation/theme/extensions/color_extension.dart';
+import 'package:reem/core/design_system/foundation/theme/extensions/typography_extension.dart';
 import 'package:reem/core/design_system/foundation/tokens/ds_radius.dart';
 import 'package:reem/core/design_system/foundation/tokens/ds_typography.dart';
 
@@ -159,12 +160,7 @@ class _Segment extends StatelessWidget {
           const SizedBox(height: 3),
           Text(
             label,
-            style: TextStyle(
-              fontFamily: DsTypography.fontFamily,
-              fontSize: DsTypography.labelSmall,
-              fontWeight: DsTypography.medium,
-              color: fg.withValues(alpha: 0.6),
-            ),
+            style: context.dsText.caption.tint(fg.withValues(alpha: 0.6)),
           ),
         ],
       ],

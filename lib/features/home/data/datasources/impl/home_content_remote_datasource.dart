@@ -10,6 +10,7 @@ import 'package:reem/features/home/domain/entities/hero_banner.dart';
 import 'package:reem/features/home/domain/entities/home_category.dart';
 import 'package:reem/features/home/domain/entities/home_content.dart';
 import 'package:reem/features/home/domain/entities/home_notification.dart';
+import 'package:reem/features/home/domain/entities/nearby_store.dart';
 import 'package:reem/features/home/domain/entities/search_suggestions.dart';
 
 /// The home page, read from the server.
@@ -32,14 +33,15 @@ final class HomeContentRemoteDataSource extends BaseRemoteDataSource
 
     return HomeContent(
       heroBanners: _list(json['hero_banners']).map(_banner).toList(),
-      featuredCategories: _list(json['featured_categories'])
-          .map(_category)
-          .toList(),
+      featuredCategories: _list(
+        json['featured_categories'],
+      ).map(_category).toList(),
       flashDeals: _list(json['flash_deals']).map(_deal).nonNulls.toList(),
       featuredStores: _list(json['featured_stores']).map(_store).toList(),
       continueShopping: _list(
         json['continue_shopping'],
       ).map(_continueItem).nonNulls.toList(),
+      nearbyStores: _list(json['nearby_stores']).map(_nearbyStore).toList(),
       searchSuggestions: _suggestions(json['search_suggestions']),
       notifications: _notifications(json['notifications']),
       loyalty: _loyalty(json['loyalty']),
@@ -65,6 +67,7 @@ final class HomeContentRemoteDataSource extends BaseRemoteDataSource
 
   HomeCategory _category(Map<String, dynamic> json) => HomeCategory(
     id: json['id'] as String? ?? '',
+    slug: json['slug'] as String? ?? '',
     label: json['label'] as String? ?? '',
     imageUrl: json['image_url'] as String? ?? '',
     productCount: (json['product_count'] as num?)?.toInt() ?? 0,
@@ -94,11 +97,23 @@ final class HomeContentRemoteDataSource extends BaseRemoteDataSource
     logoUrl: json['logo_url'] as String? ?? '',
     coverUrl: json['cover_url'] as String? ?? '',
     isVerified: json['is_verified'] as bool? ?? false,
-    rating: (json['rating'] as num?)?.toDouble() ?? 0,
+    rating: (json['rating'] as num?)?.toDouble(),
     productCount: (json['product_count'] as num?)?.toInt() ?? 0,
     followerCount: (json['follower_count'] as num?)?.toInt() ?? 0,
     isFollowing: json['is_following'] as bool? ?? false,
     previewImages: _strings(json['preview_images']),
+  );
+
+  /// Boutiques in her governorate. The field was on the wire and on the
+  /// entity, and nothing read it here -- so the section could not have drawn
+  /// anything even once the server started answering.
+  NearbyStore _nearbyStore(Map<String, dynamic> json) => NearbyStore(
+    id: json['id'] as String? ?? '',
+    name: json['name'] as String? ?? '',
+    logoUrl: json['logo_url'] as String? ?? '',
+    area: json['area'] as String? ?? '',
+    sameCity: json['same_city'] as bool? ?? false,
+    rating: (json['rating'] as num?)?.toDouble(),
   );
 
   ContinueShoppingItem? _continueItem(Map<String, dynamic> json) {
@@ -196,7 +211,6 @@ final class HomeContentRemoteDataSource extends BaseRemoteDataSource
       ? value.whereType<Map<String, dynamic>>().toList()
       : const [];
 
-  List<String> _strings(dynamic value) => value is List
-      ? value.whereType<String>().toList()
-      : const [];
+  List<String> _strings(dynamic value) =>
+      value is List ? value.whereType<String>().toList() : const [];
 }

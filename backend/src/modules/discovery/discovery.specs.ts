@@ -1,4 +1,5 @@
 import { Prisma } from '@prisma/client';
+import { LIVE_OFFER_WHERE } from '../../common/catalog/product-include';
 import { ProductOrderBy } from './discovery.repository';
 
 /**
@@ -20,7 +21,8 @@ export type StaticCollectionKey =
   | 'new_arrivals'
   | 'featured'
   | 'most_loved'
-  | 'top_rated';
+  | 'top_rated'
+  | 'deals';
 
 export const STATIC_COLLECTIONS: Record<StaticCollectionKey, CollectionSpec> = {
   trending: {
@@ -54,11 +56,42 @@ export const STATIC_COLLECTIONS: Record<StaticCollectionKey, CollectionSpec> = {
     ttlMs: 120_000,
     homeSize: 12,
   },
+  /**
+   * Everything currently marked down — where «عرض الكل» under the flash-deals
+   * rail leads. It used to lead to `best_selling`, so a shopper following a
+   * discount arrived at full-price merchandise.
+   *
+   * "Marked down" is read as *the seller entered a compare-at price on a live
+   * offer*. Comparing the two columns (compare-at strictly above price) needs
+   * a field reference the collection specs cannot express; a compare-at at or
+   * below the asking price is a data error rather than a deal, and the card
+   * itself shows no discount badge for one.
+   */
+  deals: {
+    extraWhere: {
+      offers: { some: { ...LIVE_OFFER_WHERE, compareAtPrice: { not: null } } },
+    },
+    orderBy: [{ updatedAt: 'desc' }],
+    ttlMs: 60_000,
+    homeSize: 12,
+  },
 };
 
 export const STATIC_COLLECTION_KEYS = Object.keys(
   STATIC_COLLECTIONS,
 ) as StaticCollectionKey[];
+
+/**
+ * The shelves the aggregated home payload carries.
+ *
+ * `deals` is addressable as a collection — it is where "see all" under the
+ * flash-deals rail goes — but it is not a home section: the home page already
+ * builds that rail from live offers, and adding it here would only cost a
+ * query and steal products from the shelves below it through the de-duping.
+ */
+export const HOME_COLLECTION_KEYS = STATIC_COLLECTION_KEYS.filter(
+  (key) => key !== 'deals',
+);
 
 export function isStaticCollection(key: string): key is StaticCollectionKey {
   return Object.prototype.hasOwnProperty.call(STATIC_COLLECTIONS, key);

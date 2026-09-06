@@ -13,4 +13,19 @@ class SellerEarningsRepositoryImpl
 
   @override
   Future<Result<SellerEarnings>> load() => guard(() => remote.load());
+
+  @override
+  Future<Result<PayoutAvailability>> payoutAvailability() =>
+      guard(remote.payoutAvailability);
+
+  @override
+  Future<Result<PendingPayout>> requestPayout() => guard(remote.requestPayout);
+
+  @override
+  Future<Result<PendingPayout>> cancelPayout(String id) =>
+      guard(() => remote.cancelPayout(id));
+
+  @override
+  Future<Result<List<PendingPayout>>> payoutHistory() =>
+      guard(remote.payoutHistory);
 }

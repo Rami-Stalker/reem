@@ -1,8 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:reem/core/design_system/foundation/motion/animations/scale_animations.dart';
 import 'package:reem/core/design_system/foundation/theme/extensions/color_extension.dart';
 import 'package:reem/core/design_system/foundation/theme/extensions/gradient_extension.dart';
 import 'package:reem/core/design_system/foundation/tokens/ds_typography.dart';
+import 'package:reem/core/media/media_decode.dart';
 import 'package:reem/core/media/media_variants.dart';
 
 /// A circular avatar with image, initials fallback, optional story-style
@@ -95,8 +97,24 @@ class DsAvatar extends StatelessWidget {
       );
     }
 
-    if (onTap == null) return avatar;
-    return GestureDetector(onTap: onTap, child: avatar);
+    // A portrait is decoration to a screen reader unless it is named. The
+    // person's name is the only thing worth announcing here — "avatar" is
+    // noise, and the initials fallback would be read letter by letter.
+    final labelled = Semantics(
+      label: name,
+      image: imageUrl != null && imageUrl!.isNotEmpty,
+      excludeSemantics: true,
+      child: avatar,
+    );
+
+    if (onTap == null) return labelled;
+    return DsScaleAnimations.tapScale(
+      pressedScale: 0.96,
+      onTap: onTap!,
+      semanticLabel: name,
+      excludeChildSemantics: true,
+      child: labelled,
+    );
   }
 
   Widget _content(BuildContext context, double inner) {
@@ -107,6 +125,11 @@ class DsAvatar extends StatelessWidget {
         fit: BoxFit.cover,
         width: inner,
         height: inner,
+        // An avatar is between 20 and 96 logical pixels. Decoding a portrait
+        // at its full width for a 28px bubble in a chat list is the single
+        // most repeated waste in the app, because this widget is on almost
+        // every screen and often dozens of times per screen.
+        memCacheWidth: MediaDecode.widthFor(context, inner),
         placeholder: (_, _) => ColoredBox(color: c.shimmerBase),
         errorWidget: (_, _, _) => _initials(context, inner),
       );

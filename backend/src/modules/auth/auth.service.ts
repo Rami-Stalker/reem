@@ -58,6 +58,7 @@ import { RegistrationTicketService } from './login/registration-ticket.service';
 import { PhoneChangeService } from './phone-change/phone-change.service';
 import { AccountRecoveryService } from './recovery/account-recovery.service';
 import { maskDestination } from './otp/otp-transport';
+import { resolvePermissions } from '../../common/authorization/permission-resolver';
 
 @Injectable()
 export class AuthService {
@@ -176,7 +177,7 @@ export class AuthService {
     );
 
     return {
-      ...this.authResponse(user, tokens),
+      ...(await this.authResponse(user, tokens)),
       guest_migration: guestMigration,
       verification: {
         phone_verified: true,
@@ -301,7 +302,7 @@ export class AuthService {
     );
 
     return {
-      ...this.authResponse(user, tokens),
+      ...(await this.authResponse(user, tokens)),
       guest_migration: guestMigration,
       device_verification_required:
         user.deviceVerificationRequired && !device.verifiedAt,
@@ -446,7 +447,7 @@ export class AuthService {
 
     return {
       status: 'authenticated',
-      ...this.authResponse(refreshed, tokens),
+      ...(await this.authResponse(refreshed, tokens)),
       guest_migration: guestMigration,
       password_enabled: refreshed.passwordSetAt !== null,
     };
@@ -799,9 +800,26 @@ export class AuthService {
     return { message: 'All other sessions were revoked' };
   }
 
+  /**
+   * Who is signed in, and what they are allowed to do.
+   *
+   * The permission set ships with the identity because the console has to draw
+   * itself before it can call anything. Without it the admin shell showed every
+   * staff role the same twelve destinations and let a support agent walk into
+   * the finance screen to collect a 403 — a menu that lies about what the
+   * person can do, which is worse than a shorter menu.
+   *
+   * This is presentation only. The server still decides on every request; the
+   * client is being told what to *offer*, never what to *permit*.
+   */
   async me(userId: string) {
     const user = await this.requireUser(userId);
-    return { user: serializeUser(user) };
+    const permissions = await resolvePermissions(
+      this.prisma,
+      user.id,
+      user.role,
+    );
+    return { user: serializeUser(user), permissions: [...permissions].sort() };
   }
 
   /**
@@ -1279,8 +1297,30 @@ export class AuthService {
     return this.serializeSellerVerification(verification);
   }
 
-  private authResponse(user: User, tokens: TokenPair) {
-    return { user: serializeUser(user), tokens };
+  /**
+   * The body every entry point that mints a session returns.
+   *
+   * Permissions ship with the session, not only from `/auth/me`. The console
+   * draws its navigation from this set, and when only `/auth/me` carried it an
+   * administrator who had just signed in got a shell with an empty sidebar —
+   * every destination filtered out — until something happened to refetch her.
+   * A client should never hold a signed-in user whose permissions it does not
+   * also hold.
+   *
+   * This is still presentation: the server resolves permissions again, from
+   * the database, on every request it judges.
+   */
+  private async authResponse(user: User, tokens: TokenPair) {
+    const permissions = await resolvePermissions(
+      this.prisma,
+      user.id,
+      user.role,
+    );
+    return {
+      user: serializeUser(user),
+      permissions: [...permissions].sort(),
+      tokens,
+    };
   }
 
   /**

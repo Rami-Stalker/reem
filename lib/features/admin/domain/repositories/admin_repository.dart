@@ -11,6 +11,10 @@ abstract interface class AdminRepository {
     required String key,
     required String title,
     required String endpoint,
+    int page,
+    int limit,
+    String? query,
+    String? status,
   });
 
   Future<Result<AnalyticsDashboardEntity>> getAnalyticsDashboard({
@@ -18,9 +22,39 @@ abstract interface class AdminRepository {
     DateTime? end,
   });
 
-  Future<Result<void>> createNotificationCampaign(
+  Future<Result<void>> createNotificationCampaign(Map<String, dynamic> payload);
+
+  Future<Result<void>> runNotificationCampaign(String campaignId);
+
+  Future<Result<void>> updateUser(String id, Map<String, dynamic> payload);
+
+  Future<Result<void>> updateProduct(String id, Map<String, dynamic> payload);
+
+  Future<Result<void>> updateSupportTicket(
+    String id,
     Map<String, dynamic> payload,
   );
 
-  Future<Result<void>> runNotificationCampaign(String campaignId);
+  Future<Result<void>> updateModerationCase(
+    String id,
+    Map<String, dynamic> payload,
+  );
+
+  Future<Result<void>> updateReport(String id, Map<String, dynamic> payload);
+
+  Future<Result<void>> createCommissionRule(Map<String, dynamic> payload);
+
+  Future<Result<void>> updateCommissionLedger(
+    String id,
+    Map<String, dynamic> payload,
+  );
+
+  Future<Result<void>> upsertSystemSetting(Map<String, dynamic> payload);
+
+  Future<Result<Map<String, dynamic>>> getSellerApplication(String id);
+
+  Future<Result<void>> reviewSellerApplication(
+    String id,
+    Map<String, dynamic> payload,
+  );
 }

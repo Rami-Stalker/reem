@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
 
 /// Pill follow/unfollow control with an in-place loading state.
 class FollowButton extends StatelessWidget {
@@ -54,12 +55,10 @@ class FollowButton extends StatelessWidget {
                     ),
                     const SizedBox(width: DsSpacing.xs),
                     Text(
-                      following ? 'Following' : 'Follow',
-                      style: TextStyle(
-                        fontFamily: DsTypography.fontFamily,
-                        fontWeight: DsTypography.semiBold,
-                        color: fg,
-                      ),
+                      following
+                          ? context.l10n.followingState
+                          : context.l10n.followAction,
+                      style: context.dsText.body.semibold.tint(fg),
                     ),
                   ],
                 ),

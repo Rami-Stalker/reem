@@ -2,11 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import 'package:reem/core/config/app_env.dart';
 import 'package:reem/core/design_system/design_system.dart';
 import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/features/auth/presentation/providers/auth_provider.dart';
 import 'package:reem/features/profile/presentation/providers/profile_overview_provider.dart';
+import 'package:reem/features/settings/presentation/widgets/help_sheet.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 /// The grouped account menu — Account, Preferences and Support sections plus a
 /// sign-out action. Real destinations route to their screens; surfaces without
@@ -44,7 +47,7 @@ class ProfileMenu extends ConsumerWidget {
               trailing: rating != null
                   ? '${rating.toStringAsFixed(1)} · $reviews'
                   : null,
-              onTap: () => _comingSoon(context, context.l10n.reviewsAndRatings),
+              onTap: () => context.push(RoutePaths.myReviews),
             ),
             _MenuRow(
               icon: Icons.notifications_none_rounded,
@@ -70,7 +73,7 @@ class ProfileMenu extends ConsumerWidget {
             _MenuRow(
               icon: Icons.lock_outline_rounded,
               label: context.l10n.securityTitle,
-              onTap: () => context.push(RoutePaths.settings),
+              onTap: () => context.push(RoutePaths.securitySettings),
             ),
           ],
         ),
@@ -81,13 +84,17 @@ class ProfileMenu extends ConsumerWidget {
             _MenuRow(
               icon: Icons.help_outline_rounded,
               label: context.l10n.helpAndFaq,
-              onTap: () => _helpSheet(context),
+              onTap: () => showHelpSheet(context),
             ),
-            _MenuRow(
-              icon: Icons.support_agent_rounded,
-              label: context.l10n.supportCentre,
-              onTap: () => _supportSheet(context),
-            ),
+            // Only offered when a real address or number was configured. It
+            // used to print an invented email and a Saudi landline, neither of
+            // which was even tappable.
+            if (AppEnv.hasSupportContact)
+              _MenuRow(
+                icon: Icons.support_agent_rounded,
+                label: context.l10n.supportCentre,
+                onTap: () => _supportSheet(context),
+              ),
             _MenuRow(
               icon: Icons.info_outline_rounded,
               label: context.l10n.aboutReem,
@@ -102,88 +109,65 @@ class ProfileMenu extends ConsumerWidget {
   }
 
   // ── Sheets ───────────────────────────────────────────────────────────────
-  void _comingSoon(BuildContext context, String title) {
-    DsBottomSheet.showTitled(
-      context,
-      title: title,
-      subtitle: context.l10n.comingSoon,
-      child: const _ComingSoon(),
-    );
-  }
-
-  void _helpSheet(BuildContext context) {
-    DsBottomSheet.showTitled(
-      context,
-      title: context.l10n.helpAndFaq,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _Faq(
-            q: context.l10n.faqTracking,
-            a: context.l10n.faqTrackingAnswer,
-          ),
-          _Faq(
-            q: context.l10n.faqPoints,
-            a: context.l10n.rewardsPointsBlurb,
-          ),
-          _Faq(
-            q: context.l10n.faqReturns,
-            a: context.l10n.faqReturnsAnswer,
-          ),
-        ],
-      ),
-    );
-  }
-
+  /// Only reachable when [AppEnv] carries a real address or number, so every
+  /// row here both exists and works.
   void _supportSheet(BuildContext context) {
+    final email = AppEnv.supportEmail.trim();
+    final phone = AppEnv.supportPhone.trim();
+
     DsBottomSheet.showTitled(
       context,
       title: context.l10n.supportCentre,
-      subtitle: context.l10n.replyWithinHour,
       child: Column(
         children: [
-          _ContactRow(
-            icon: Icons.chat_bubble_outline_rounded,
-            label: context.l10n.liveChat,
-            value: context.l10n.startConversation,
-            onTap: () => context.push(RoutePaths.chats),
-          ),
-          _ContactRow(
-            icon: Icons.mail_outline_rounded,
-            label: context.l10n.emailUs,
-            value: 'support@reem.shop',
-          ),
-          _ContactRow(
-            icon: Icons.phone_outlined,
-            label: context.l10n.call,
-            value: '+966 11 000 0000',
-          ),
+          if (email.isNotEmpty)
+            _ContactRow(
+              icon: Icons.mail_outline_rounded,
+              label: context.l10n.emailUs,
+              value: email,
+              onTap: () => _open(context, Uri(scheme: 'mailto', path: email)),
+            ),
+          if (phone.isNotEmpty)
+            _ContactRow(
+              icon: Icons.phone_outlined,
+              label: context.l10n.call,
+              value: phone,
+              onTap: () => _open(
+                context,
+                Uri(scheme: 'tel', path: phone.replaceAll(' ', '')),
+              ),
+            ),
         ],
       ),
     );
   }
 
+  /// Hands the address or number to the OS. A handset with no mail app is
+  /// real, so a refusal is reported rather than swallowed.
+  static Future<void> _open(BuildContext context, Uri uri) async {
+    final launched = await launchUrl(uri);
+    if (!launched && context.mounted) {
+      DsSnackbar.error(context, context.l10n.error);
+    }
+  }
+
   void _aboutSheet(BuildContext context) {
-    final theme = Theme.of(context);
     DsBottomSheet.showTitled(
       context,
       title: context.l10n.aboutReem,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          DsGradientText('REEM',
-              style: theme.textTheme.headlineMedium
-                      ?.copyWith(fontWeight: DsTypography.bold) ??
-                  const TextStyle()),
+          DsGradientText('REEM', style: context.dsText.pageTitle.bold),
           const SizedBox(height: DsSpacing.xs),
           Text(
             context.l10n.aboutReemBlurb,
-            style: theme.textTheme.bodyMedium,
+            style: context.dsText.body,
           ),
           const SizedBox(height: DsSpacing.md),
           Text(context.l10n.appVersion('1.0.0'),
-              style: theme.textTheme.labelMedium
-                  ?.copyWith(color: context.dsColors.onSurfaceVariant)),
+              style: context.dsText.label
+                  .copyWith(color: context.dsColors.onSurfaceVariant)),
         ],
       ),
     );
@@ -236,7 +220,7 @@ class _Group extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: const EdgeInsets.fromLTRB(DsSpacing.xs, 0, 0, DsSpacing.xs),
+            padding: const EdgeInsets.fromLTRB(DsSpacing.xs, DsSpacing.xxxs, DsSpacing.xxxs, DsSpacing.xs),
             child: Text(label.toUpperCase(),
                 style: DsTypography.overline(c.onSurfaceVariant)),
           ),
@@ -273,13 +257,12 @@ class _MenuRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = context.dsColors;
-    final theme = Theme.of(context);
     return InkWell(
       onTap: onTap,
       borderRadius: DsRadius.borderCard,
       child: Padding(
         padding: const EdgeInsets.symmetric(
-            horizontal: DsSpacing.md, vertical: DsSpacing.sm + 2),
+            horizontal: DsSpacing.md, vertical: DsSpacing.sm + DsSpacing.xxxs),
         child: Row(
           children: [
             Container(
@@ -295,13 +278,13 @@ class _MenuRow extends StatelessWidget {
             const SizedBox(width: DsSpacing.md),
             Expanded(
               child: Text(label,
-                  style: theme.textTheme.titleSmall
-                      ?.copyWith(fontWeight: DsTypography.medium)),
+                  style: context.dsText.tileTitle
+                      .copyWith(fontWeight: DsTypography.medium)),
             ),
             if (trailing != null) ...[
               Text(trailing!,
-                  style: theme.textTheme.labelMedium
-                      ?.copyWith(color: c.onSurfaceVariant)),
+                  style: context.dsText.label
+                      .copyWith(color: c.onSurfaceVariant)),
               const SizedBox(width: DsSpacing.xs),
             ],
             Icon(Icons.chevron_right_rounded, color: c.onSurfaceVariant, size: 20),
@@ -329,7 +312,7 @@ class _LogoutCard extends StatelessWidget {
           borderRadius: DsRadius.borderCard,
           child: Padding(
             padding: const EdgeInsets.symmetric(
-                horizontal: DsSpacing.md, vertical: DsSpacing.sm + 2),
+                horizontal: DsSpacing.md, vertical: DsSpacing.sm + DsSpacing.xxxs),
             child: Row(
               children: [
                 Container(
@@ -345,7 +328,7 @@ class _LogoutCard extends StatelessWidget {
                 const SizedBox(width: DsSpacing.md),
                 Expanded(
                   child: Text(context.l10n.signOut,
-                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                      style: context.dsText.tileTitle.copyWith(
                             fontWeight: DsTypography.semiBold,
                             color: c.error,
                           )),
@@ -354,33 +337,6 @@ class _LogoutCard extends StatelessWidget {
             ),
           ),
         ),
-      ),
-    );
-  }
-}
-
-class _Faq extends StatelessWidget {
-  const _Faq({required this.q, required this.a});
-
-  final String q;
-  final String a;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Padding(
-      padding: const EdgeInsets.only(bottom: DsSpacing.md),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(q,
-              style: theme.textTheme.titleSmall
-                  ?.copyWith(fontWeight: DsTypography.bold)),
-          const SizedBox(height: DsSpacing.xxs),
-          Text(a,
-              style: theme.textTheme.bodyMedium
-                  ?.copyWith(color: context.dsColors.onSurfaceVariant)),
-        ],
       ),
     );
   }
@@ -402,7 +358,6 @@ class _ContactRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = context.dsColors;
-    final theme = Theme.of(context);
     return ListTile(
       onTap: onTap,
       contentPadding: EdgeInsets.zero,
@@ -417,35 +372,12 @@ class _ContactRow extends StatelessWidget {
         child: Icon(icon, color: c.primary, size: 20),
       ),
       title: Text(label,
-          style: theme.textTheme.titleSmall
-              ?.copyWith(fontWeight: DsTypography.semiBold)),
+          style: context.dsText.tileTitle
+              .copyWith(fontWeight: DsTypography.semiBold)),
       subtitle: Text(value,
-          style: theme.textTheme.bodySmall
-              ?.copyWith(color: c.onSurfaceVariant)),
+          style: context.dsText.cardSubtitle
+              .copyWith(color: c.onSurfaceVariant)),
     );
   }
 }
 
-class _ComingSoon extends StatelessWidget {
-  const _ComingSoon();
-
-  @override
-  Widget build(BuildContext context) {
-    final c = context.dsColors;
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: DsSpacing.lg),
-      child: Row(
-        children: [
-          Icon(Icons.auto_awesome_rounded, color: c.primary),
-          const SizedBox(width: DsSpacing.sm),
-          Expanded(
-            child: Text(
-              context.l10n.comingSoonBlurb,
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}

@@ -74,14 +74,14 @@ class _AdminFinanceScreenState extends ConsumerState<AdminFinanceScreen> {
               padding: const EdgeInsets.all(DsSpacing.xl),
               child: Text(
                 state.error ?? '',
-                style: TextStyle(color: palette.critical),
+                style: context.dsText.body.tint(palette.critical),
               ),
             )
           else
             Padding(
               padding: const EdgeInsets.fromLTRB(
                 DsSpacing.xl,
-                0,
+                DsSpacing.xxxs,
                 DsSpacing.xl,
                 DsSpacing.xxl,
               ),
@@ -152,11 +152,7 @@ class _Section extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: DsSpacing.md),
       child: Text(
         title,
-        style: TextStyle(
-          fontSize: DsTypography.titleMedium,
-          fontWeight: DsTypography.bold,
-          color: palette.ink,
-        ),
+        style: context.dsText.cardTitle.bold.tint(palette.ink),
       ),
     );
   }
@@ -182,11 +178,7 @@ class _CourierCashSection extends StatelessWidget {
             if (overview.courierCash.isNotEmpty)
               Text(
                 overview.courierCashTotal.format(),
-                style: TextStyle(
-                  fontFamily: DsTypography.fontFamily,
-                  fontWeight: DsTypography.bold,
-                  color: palette.ink,
-                ),
+                style: context.dsText.body.bold.tint(palette.ink),
               ),
           ],
         ),
@@ -338,24 +330,16 @@ class _FxFigure extends StatelessWidget {
       children: [
         Text(
           label,
-          style: TextStyle(
-            fontSize: DsTypography.labelSmall,
-            color: palette.muted,
-          ),
+          style: context.dsText.caption.tint(palette.muted),
         ),
-        const SizedBox(height: 2),
+        DsGaps.vXxxs,
         FittedBox(
           fit: BoxFit.scaleDown,
           alignment: AlignmentDirectional.centerStart,
           child: Text(
             value,
             maxLines: 1,
-            style: TextStyle(
-              fontFamily: DsTypography.fontFamily,
-              fontSize: DsTypography.bodyMedium,
-              fontWeight: DsTypography.bold,
-              color: ink,
-            ),
+            style: context.dsText.body.bold.tint(ink),
           ),
         ),
       ],
@@ -397,27 +381,30 @@ class _TrialBalanceTable extends StatelessWidget {
               children: [
                 Expanded(
                   flex: 3,
-                  child: Text(l10n.financeAccount, style: _headerStyle(palette.muted)),
+                  child: Text(
+                    l10n.financeAccount,
+                    style: _headerStyle(context, palette.muted),
+                  ),
                 ),
                 Expanded(
                   child: Text(
                     l10n.financeTotalDebit,
                     textAlign: TextAlign.end,
-                    style: _headerStyle(palette.muted),
+                    style: _headerStyle(context, palette.muted),
                   ),
                 ),
                 Expanded(
                   child: Text(
                     l10n.financeTotalCredit,
                     textAlign: TextAlign.end,
-                    style: _headerStyle(palette.muted),
+                    style: _headerStyle(context, palette.muted),
                   ),
                 ),
                 Expanded(
                   child: Text(
                     l10n.financeBalance,
                     textAlign: TextAlign.end,
-                    style: _headerStyle(palette.muted),
+                    style: _headerStyle(context, palette.muted),
                   ),
                 ),
               ],
@@ -441,21 +428,14 @@ class _TrialBalanceTable extends StatelessWidget {
                           row.label,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            fontSize: DsTypography.bodySmall,
-                            fontWeight: DsTypography.semiBold,
-                            color: palette.ink,
-                          ),
+                          style: context.dsText.bodySmall.semibold.tint(palette.ink),
                         ),
                         // Per-party accounts show whose they are, shortened —
                         // the full uuid helps nobody read a table.
                         if (row.ownerId != null)
                           Text(
                             row.ownerId!.substring(0, 8),
-                            style: TextStyle(
-                              fontSize: 10,
-                              color: palette.muted,
-                            ),
+                            style: context.dsText.micro.tint(palette.muted),
                           ),
                       ],
                     ),
@@ -480,13 +460,10 @@ class _TrialBalanceTable extends StatelessWidget {
     );
   }
 
-  // A static const style cannot read the theme, so the colour is applied by
-  // the caller that has a context.
-  static TextStyle _headerStyle(Color color) => TextStyle(
-    fontSize: DsTypography.labelSmall,
-    fontWeight: DsTypography.bold,
-    color: color,
-  );
+  /// The column headers of the ledger table. Takes the context because the
+  /// role comes off the theme, not a frozen constant.
+  static TextStyle _headerStyle(BuildContext context, Color color) =>
+      context.dsText.caption.bold.tint(color);
 }
 
 class _Cell extends StatelessWidget {
@@ -510,12 +487,9 @@ class _Cell extends StatelessWidget {
       textAlign: TextAlign.end,
       maxLines: 1,
       overflow: TextOverflow.ellipsis,
-      style: TextStyle(
-        fontFamily: DsTypography.fontFamily,
-        fontSize: DsTypography.bodySmall,
-        fontWeight: bold ? DsTypography.bold : DsTypography.regular,
-        color: accent,
-      ),
+      style: context.dsText.bodySmall
+          .tint(accent ?? context.console.ink)
+          .copyWith(fontWeight: bold ? DsTypography.bold : DsTypography.regular),
     );
   }
 }
@@ -542,10 +516,10 @@ class _Row extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: DsSpacing.xs),
       padding: const EdgeInsets.all(DsSpacing.md),
       decoration: BoxDecoration(
-        color: isAlert ? const Color(0xFFFFF8EC) : palette.surface,
+        color: isAlert ? context.toneContainer(DsTone.caution) : palette.surface,
         borderRadius: BorderRadius.circular(DsRadius.lg),
         border: Border.all(
-          color: isAlert ? const Color(0xFFF0DCB0) : palette.line,
+          color: isAlert ? context.toneColor(DsTone.caution).withValues(alpha: 0.4) : palette.line,
         ),
       ),
       child: Row(
@@ -565,31 +539,19 @@ class _Row extends StatelessWidget {
                   title,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontSize: DsTypography.bodySmall,
-                    fontWeight: DsTypography.semiBold,
-                    color: palette.ink,
-                  ),
+                  style: context.dsText.bodySmall.semibold.tint(palette.ink),
                 ),
                 if (subtitle != null)
                   Text(
                     toWesternDigits(subtitle!),
-                    style: TextStyle(
-                      fontSize: DsTypography.labelSmall,
-                      color: palette.muted,
-                    ),
+                    style: context.dsText.caption.tint(palette.muted),
                   ),
               ],
             ),
           ),
           Text(
             trailing,
-            style: TextStyle(
-              fontFamily: DsTypography.fontFamily,
-              fontSize: DsTypography.bodySmall,
-              fontWeight: DsTypography.bold,
-              color: palette.ink,
-            ),
+            style: context.dsText.bodySmall.bold.tint(palette.ink),
           ),
         ],
       ),
@@ -613,10 +575,7 @@ class _EmptyNote extends StatelessWidget {
       ),
       child: Text(
         text,
-        style: TextStyle(
-          fontSize: DsTypography.bodySmall,
-          color: palette.muted,
-        ),
+        style: context.dsText.bodySmall.tint(palette.muted),
       ),
     );
   }

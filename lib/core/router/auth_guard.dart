@@ -52,12 +52,16 @@ const _sellerToolRoutes = <String>{
   RoutePaths.myProducts,
   RoutePaths.productForm,
   RoutePaths.sellerDashboard,
-  RoutePaths.sellerCustomers,
-  RoutePaths.sellerMarketing,
   RoutePaths.sellerAnalytics,
+  RoutePaths.sellerTrends,
+  RoutePaths.sellerRadar,
+  RoutePaths.sellerProductIntelligence,
+  RoutePaths.sellerHealth,
   RoutePaths.sellerStore,
   RoutePaths.sellerEarnings,
   RoutePaths.sellerOrders,
+  RoutePaths.sellerReturns,
+  RoutePaths.sellerReviews,
 };
 
 /// Redirect logic for persistent login + role-based authorization.
@@ -102,6 +106,24 @@ String? authGuard(BuildContext context, GoRouterState state, AuthState auth) {
     return RoutePaths.home;
   }
 
+  // Inside the console, the role gets you through the door and the permission
+  // decides which room. The dashboard needs `admin:dashboard`, which a support
+  // agent does not hold — and the console's default path sent her there anyway,
+  // so signing in as support opened a screen that could only 403. Land her on
+  // the first destination she is actually allowed to use instead.
+  if (isAdminRoute) {
+    final permissions = auth.user?.permissions ?? const <String>{};
+    final destination = AppRoleExperience.admin.navigation
+        .where((item) => item.path == location)
+        .firstOrNull;
+    final required = destination?.permission;
+    if (required != null &&
+        permissions.isNotEmpty &&
+        !permissions.contains(required)) {
+      return _firstPermittedAdminPath(permissions) ?? RoutePaths.home;
+    }
+  }
+
   // Seller tools are explicit so `/seller-verification` remains available to
   // customers who are applying for seller access.
   final isSellerToolRoute = _matchesRouteGroup(location, _sellerToolRoutes);
@@ -127,4 +149,21 @@ bool _canUseSellerTools(UserRole? role) {
     UserRole.admin => true,
     _ => false,
   };
+}
+
+/// The first console destination this operator can open.
+///
+/// The navigation list is already ordered by how central the screen is to the
+/// job, so walking it in order lands each staff role on something useful: the
+/// dashboard for an administrator, the support queue for an agent, the finance
+/// console for the accountant. `null` means the account holds a staff role but
+/// no console permission at all, which is a misconfiguration rather than a
+/// state to design a screen for — the caller sends her home.
+String? _firstPermittedAdminPath(Set<String> permissions) {
+  for (final item in AppRoleExperience.admin.navigation) {
+    if (item.permission == null || permissions.contains(item.permission)) {
+      return item.path;
+    }
+  }
+  return null;
 }

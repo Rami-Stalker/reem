@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 
 import 'package:reem/core/design_system/foundation/theme/extensions/color_extension.dart';
+import 'package:reem/core/design_system/foundation/theme/extensions/typography_extension.dart';
 import 'package:reem/core/design_system/foundation/tokens/ds_colors.dart';
+import 'package:reem/core/design_system/foundation/tokens/ds_gaps.dart';
 import 'package:reem/core/design_system/foundation/tokens/ds_radius.dart';
+import 'package:reem/core/design_system/foundation/tokens/ds_sizes.dart';
 import 'package:reem/core/design_system/foundation/tokens/ds_spacing.dart';
-import 'package:reem/core/design_system/foundation/tokens/ds_typography.dart';
 
 /// Semantic tone of a [DsBadge].
 enum DsBadgeTone { primary, accent, sale, success, info, warning, neutral }
@@ -50,32 +52,16 @@ class DsBadge extends StatelessWidget {
     final fg = solid ? onFill : onContainer;
 
     return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: DsSpacing.xs,
-        vertical: DsSpacing.xxs,
-      ),
-      decoration: BoxDecoration(
-        color: bg,
-        borderRadius: BorderRadius.circular(DsRadius.sm),
-      ),
+      padding: DsSpacing.badgePadding,
+      decoration: BoxDecoration(color: bg, borderRadius: DsRadius.borderSm),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           if (icon != null) ...[
-            Icon(icon, size: 12, color: fg),
-            const SizedBox(width: DsSpacing.xxs),
+            Icon(icon, size: DsSizes.iconXxs, color: fg),
+            DsGaps.hXxs,
           ],
-          Text(
-            label,
-            style: TextStyle(
-              fontFamily: DsTypography.fontFamily,
-              fontSize: DsTypography.labelSmall,
-              fontWeight: DsTypography.bold,
-              letterSpacing: DsTypography.letterSpacingWide,
-              color: fg,
-              height: 1.1,
-            ),
-          ),
+          Text(label, style: context.dsText.badge.tint(fg)),
         ],
       ),
     );

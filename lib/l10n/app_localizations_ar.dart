@@ -102,6 +102,48 @@ class AppLocalizationsAr extends AppLocalizations {
   String get goodEvening => 'مساء الخير';
 
   @override
+  String get greetingMorningKhair => 'صباح الخير';
+
+  @override
+  String get greetingMorningNour => 'صباح النور';
+
+  @override
+  String get greetingMorningWard => 'صباحك ورد';
+
+  @override
+  String get greetingMorningYasmine => 'صباح الياسمين';
+
+  @override
+  String get greetingMorningFull => 'صباح الفل';
+
+  @override
+  String get greetingMiddaySaeed => 'نهارك سعيد';
+
+  @override
+  String get greetingMiddayTab => 'طاب نهارك';
+
+  @override
+  String get greetingMiddayWard => 'نهارك ورد';
+
+  @override
+  String get greetingEveningNour => 'مساء النور';
+
+  @override
+  String get greetingEveningKhair => 'مساء الخير';
+
+  @override
+  String get greetingEveningYasmine => 'مساء الياسمين';
+
+  @override
+  String get greetingEveningWard => 'مساء الورد';
+
+  @override
+  String get greetingNightSahra => 'سهرة هنية';
+
+  @override
+  String get greetingNightFull => 'ليلتك فل';
+
+  @override
   String get welcomeToReem => 'مرحباً بكِ في ريم';
 
   @override
@@ -250,9 +292,7 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
-  String soldBy(String seller) {
-    return 'من $seller';
-  }
+  String get soldBy => 'تبيعه';
 
   @override
   String get checkout => 'إتمام الشراء';
@@ -1300,12 +1340,6 @@ class AppLocalizationsAr extends AppLocalizations {
   String get enable => 'تفعيل';
 
   @override
-  String get openNow => 'مفتوح الآن';
-
-  @override
-  String get closedNow => 'مغلق';
-
-  @override
   String get limitedTime => 'لوقت محدود';
 
   @override
@@ -1319,13 +1353,6 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get homeLoyaltySubtitle => 'اكسبي نقاطاً مع كل عملية شراء ✨';
-
-  @override
-  String get homeNearbyPromptTitle => 'اكتشفي بوتيكات قريبة منكِ';
-
-  @override
-  String get homeNearbyPromptBody =>
-      'فعّلي الموقع لعرض البوتيكات القريبة ونقاط الاستلام.';
 
   @override
   String get homeFeedEmptyTitle => 'فيدكِ يستعدّ';
@@ -3230,4 +3257,2526 @@ class AppLocalizationsAr extends AppLocalizations {
   String checkoutSplitNotice(String count) {
     return 'طلبكِ من $count بائعات، وسيصلكِ على عدة شحنات — بأجرة توصيل واحدة.';
   }
+
+  @override
+  String get notificationInboxTitle => 'الإشعارات';
+
+  @override
+  String get notificationInboxEmptyTitle => 'ما في جديد بعد';
+
+  @override
+  String get notificationInboxEmptyBody =>
+      'تحديثات طلباتك وردود البائعات والعروض رح تطلع هون.';
+
+  @override
+  String get notificationInboxLoadFailed => 'تعذّر تحميل الإشعارات';
+
+  @override
+  String get notificationMarkAllRead => 'علّمي الكل كمقروء';
+
+  @override
+  String get notificationAllRead => 'ما ضل شي غير مقروء';
+
+  @override
+  String notificationUnreadCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count إشعار غير مقروء',
+      few: '$count إشعارات غير مقروءة',
+      two: 'إشعاران غير مقروءين',
+      one: 'إشعار واحد غير مقروء',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get notificationPreferencesTitle => 'إعدادات الإشعارات';
+
+  @override
+  String get accountSettings => 'إعدادات الحساب';
+
+  @override
+  String get actionDidNotSave =>
+      'لم يُحفظ ذلك — تحقّقي من الاتصال وحاولي مجدداً';
+
+  @override
+  String get adminActionChangeRole => 'تغيير الدور';
+
+  @override
+  String get adminActionCuration => 'الإبراز في الواجهة';
+
+  @override
+  String get adminActionDecideCase => 'البتّ في الحالة';
+
+  @override
+  String get adminActionDecideReport => 'البتّ في البلاغ';
+
+  @override
+  String get adminActionDone => 'تم.';
+
+  @override
+  String get adminActionEditSetting => 'تعديل الإعداد';
+
+  @override
+  String get adminActionNewRule => 'قاعدة عمولة جديدة';
+
+  @override
+  String get adminActionNewSetting => 'إعداد جديد';
+
+  @override
+  String get adminActionRestoreAccount => 'استعادة الحساب';
+
+  @override
+  String get adminActionSetCommissionStatus => 'تغيير حالة التسوية';
+
+  @override
+  String get adminActionSetStatus => 'تغيير الحالة';
+
+  @override
+  String get adminActionSuspendAccount => 'تعليق الحساب';
+
+  @override
+  String get adminActionTriage => 'فرز التذكرة';
+
+  @override
+  String get adminActions => 'إجراءات';
+
+  @override
+  String get adminApply => 'تطبيق';
+
+  @override
+  String adminAwaitingReview(String count) {
+    return '$count بانتظار المراجعة';
+  }
+
+  @override
+  String get adminBankDetails => 'البيانات المصرفية';
+
+  @override
+  String get adminBusinessDetails => 'بيانات النشاط';
+
+  @override
+  String get adminCommissionRules => 'قواعد العمولة';
+
+  @override
+  String get adminContactDetails => 'جهة الاتصال';
+
+  @override
+  String get adminDecision => 'القرار';
+
+  @override
+  String get adminDocAttachment => 'مرفق';
+
+  @override
+  String get adminDocBusinessLicense => 'رخصة النشاط';
+
+  @override
+  String get adminDocGovernmentId => 'وثيقة الهوية';
+
+  @override
+  String get adminDocStoreLogo => 'شعار المتجر';
+
+  @override
+  String get adminDocuments => 'المستندات';
+
+  @override
+  String get adminFieldAccountHolder => 'صاحبة الحساب';
+
+  @override
+  String get adminFieldBankName => 'المصرف';
+
+  @override
+  String get adminFieldBusinessAddress => 'عنوان النشاط';
+
+  @override
+  String get adminFieldCategory => 'الفئة';
+
+  @override
+  String get adminFieldCommercialRegistration => 'السجل التجاري';
+
+  @override
+  String get adminFieldFeatured => 'مُبرز في الصفحة الرئيسية';
+
+  @override
+  String get adminFieldIban => 'رقم الآيبان';
+
+  @override
+  String get adminFieldLegalName => 'الاسم القانوني';
+
+  @override
+  String get adminFieldPriority => 'الأولوية';
+
+  @override
+  String get adminFieldRateBps => 'النسبة (بالنقاط الأساس)';
+
+  @override
+  String get adminFieldReason => 'السبب';
+
+  @override
+  String adminFieldRequired(String field) {
+    return '$field مطلوب.';
+  }
+
+  @override
+  String get adminFieldResolution => 'ملاحظة القرار';
+
+  @override
+  String get adminFieldRole => 'الدور';
+
+  @override
+  String get adminFieldRuleName => 'اسم القاعدة';
+
+  @override
+  String get adminFieldSellerTier => 'مستوى البائعة';
+
+  @override
+  String get adminFieldSensitive => 'قيمة حساسة';
+
+  @override
+  String get adminFieldSettingKey => 'مفتاح الإعداد';
+
+  @override
+  String get adminFieldSettingValue => 'القيمة';
+
+  @override
+  String get adminFieldShowInFeed => 'ظاهر في التغذية';
+
+  @override
+  String get adminFieldTaxId => 'الرقم الضريبي';
+
+  @override
+  String get adminFieldWarehouseAddress => 'عنوان المستودع';
+
+  @override
+  String get adminFieldWebsite => 'الموقع الإلكتروني';
+
+  @override
+  String get adminFieldYearsExperience => 'سنوات الخبرة';
+
+  @override
+  String get adminFilterAll => 'الكل';
+
+  @override
+  String get adminInvalidJson => 'يجب أن تكون القيمة بصيغة JSON صحيحة.';
+
+  @override
+  String get adminInvalidRate => 'أدخلي نسبة بين ٠ و٥٠٠٠ نقطة أساس.';
+
+  @override
+  String get adminJsonHint => 'قيمة بصيغة JSON، مثل: true أو 12 أو كائن';
+
+  @override
+  String get adminLoadMore => 'تحميل المزيد';
+
+  @override
+  String get adminNoApplications => 'لا توجد طلبات ضمن هذه التصفية.';
+
+  @override
+  String adminNoRecordsYet(String section) {
+    return 'لا توجد سجلات في $section بعد.';
+  }
+
+  @override
+  String get adminPendingCommission => 'عمولة معلّقة';
+
+  @override
+  String get adminPriorityHigh => 'مرتفعة';
+
+  @override
+  String get adminPriorityLow => 'منخفضة';
+
+  @override
+  String get adminPriorityNormal => 'عادية';
+
+  @override
+  String get adminPriorityUrgent => 'عاجلة';
+
+  @override
+  String get adminRateHint => '٢٥٠ تعني ٢٫٥٪';
+
+  @override
+  String get adminRawRecord => 'السجل الكامل';
+
+  @override
+  String get adminReasonReachesApplicant =>
+      'ما تكتبينه هنا يصل إلى مقدّمة الطلب.';
+
+  @override
+  String get adminReasonRequired => 'اكتبي سببًا من ثلاثة أحرف على الأقل.';
+
+  @override
+  String get adminReviewHistory => 'سجل المراجعات';
+
+  @override
+  String get adminReviewNotPermitted =>
+      'يمكنكِ الاطلاع على هذا الطلب دون البتّ فيه.';
+
+  @override
+  String get adminRoleAdmin => 'مسؤول';
+
+  @override
+  String get adminRoleContentModerator => 'مشرف المحتوى';
+
+  @override
+  String get adminRoleCustomer => 'عميلة';
+
+  @override
+  String get adminRoleFinanceAdmin => 'المحاسب';
+
+  @override
+  String get adminRoleOperationsAdmin => 'مدير العمليات';
+
+  @override
+  String get adminRoleSegment => 'شريحة الأدوار (اختياري)';
+
+  @override
+  String get adminRoleSeller => 'بائعة';
+
+  @override
+  String get adminRoleSuperAdmin => 'المدير العام';
+
+  @override
+  String get adminRoleSupport => 'موظف دعم';
+
+  @override
+  String get adminRoleSupportAdmin => 'مدير الدعم';
+
+  @override
+  String get adminScheduleTime => 'وقت الجدولة (اختياري)';
+
+  @override
+  String get adminSearchApplications =>
+      'ابحثي بالاسم التجاري أو السجل أو جهة الاتصال';
+
+  @override
+  String get adminSellerApplications => 'طلبات البائعات';
+
+  @override
+  String get adminSellerApplicationsSubtitle =>
+      'المستندات وبيانات النشاط والقرار الذي يسمح لها بالبيع.';
+
+  @override
+  String adminShowingCount(int shown, int total) {
+    return 'عرض $shown من $total';
+  }
+
+  @override
+  String get adminStatusActive => 'نشط';
+
+  @override
+  String get adminStatusApproved => 'مقبول';
+
+  @override
+  String get adminStatusArchived => 'مؤرشف';
+
+  @override
+  String get adminStatusClosed => 'مغلق';
+
+  @override
+  String get adminStatusDismissed => 'مستبعد';
+
+  @override
+  String get adminStatusDraft => 'مسودة';
+
+  @override
+  String get adminStatusEarned => 'مستحقة';
+
+  @override
+  String get adminStatusEscalated => 'مُصعَّد';
+
+  @override
+  String get adminStatusNotSubmitted => 'لم يُقدَّم';
+
+  @override
+  String get adminStatusOpen => 'مفتوح';
+
+  @override
+  String get adminStatusOutOfStock => 'نفدت الكمية';
+
+  @override
+  String get adminStatusPaid => 'مدفوعة';
+
+  @override
+  String get adminStatusPending => 'قيد الانتظار';
+
+  @override
+  String get adminStatusRejected => 'مرفوض';
+
+  @override
+  String get adminStatusResolved => 'تمت المعالجة';
+
+  @override
+  String get adminStatusReversed => 'معكوسة';
+
+  @override
+  String get adminStatusReviewing => 'قيد المراجعة';
+
+  @override
+  String get adminStatusSuspended => 'موقوف';
+
+  @override
+  String get adminSubmitDecision => 'إرسال القرار';
+
+  @override
+  String get analyticsActiveCarts => 'سلات مفتوحة';
+
+  @override
+  String get analyticsActiveCartsHint => 'سلات فيها بضاعتكِ ولم تُطلب بعد.';
+
+  @override
+  String get analyticsActiveCustomers => 'زبونات نشطات';
+
+  @override
+  String get analyticsAverageCustomer => 'متوسط إنفاق الزبونة';
+
+  @override
+  String get analyticsAverageOrder => 'متوسط الطلب';
+
+  @override
+  String get analyticsCollected => 'المحصّل';
+
+  @override
+  String get analyticsConversionOverall => 'نسبة التحويل';
+
+  @override
+  String get analyticsCustomersSection => 'الزبونات';
+
+  @override
+  String get analyticsEmpty => 'لا توجد بيانات في هذه الفترة';
+
+  @override
+  String get analyticsEmptyBlurb =>
+      'جرّبي فترة أطول، أو انشري منتجاً ليبدأ العدّ.';
+
+  @override
+  String get analyticsFailed => 'تعذّر تحميل التحليلات';
+
+  @override
+  String get analyticsFunnel => 'رحلة الشراء';
+
+  @override
+  String get analyticsFunnelHint => 'من مشاهدة المنتج إلى الطلب.';
+
+  @override
+  String get analyticsGross => 'الإجمالي';
+
+  @override
+  String get analyticsMultiCurrencyHint => 'المبالغ لا تُجمع بين عملتين.';
+
+  @override
+  String get analyticsNet => 'الصافي';
+
+  @override
+  String get analyticsNewCustomers => 'زبونات جديدات';
+
+  @override
+  String get analyticsOrdersSection => 'الطلبات';
+
+  @override
+  String get analyticsPaidOrders => 'طلبات محقّقة';
+
+  @override
+  String get analyticsPeriodMonth => '٣٠ يوماً';
+
+  @override
+  String get analyticsPeriodQuarter => '٣ أشهر';
+
+  @override
+  String get analyticsPeriodWeek => '٧ أيام';
+
+  @override
+  String get analyticsPeriodYear => 'سنة';
+
+  @override
+  String get analyticsRefunds => 'المُعاد';
+
+  @override
+  String get analyticsRepeatCustomers => 'عائدات';
+
+  @override
+  String get analyticsRepeatRate => 'نسبة العودة';
+
+  @override
+  String get analyticsRetention30 => 'عادت خلال شهر';
+
+  @override
+  String get analyticsRetention7 => 'عادت خلال أسبوع';
+
+  @override
+  String get analyticsRevenueSection => 'الإيرادات';
+
+  @override
+  String get analyticsToday => 'اليوم';
+
+  @override
+  String get analyticsTodayOrders => 'طلبات اليوم';
+
+  @override
+  String get analyticsTopProducts => 'الأكثر مبيعاً';
+
+  @override
+  String get analyticsTotalOrders => 'كل الطلبات';
+
+  @override
+  String get analyticsTrend => 'المنحنى';
+
+  @override
+  String get analyticsTrendOrders => 'عدد الطلبات';
+
+  @override
+  String get analyticsTrendRevenue => 'الإيراد';
+
+  @override
+  String analyticsUnitsSold(Object count) {
+    return '$count قطعة';
+  }
+
+  @override
+  String get askAboutThisPiece => 'اسألي عن هذه القطعة';
+
+  @override
+  String get averageYouGive => 'متوسّط تقييمكِ';
+
+  @override
+  String get beTheFirstToComment => 'كوني أول من تقول رأيها.';
+
+  @override
+  String get browsingWithoutAccount =>
+      'سجّلي الدخول لتحتفظي بسلّتكِ وطلباتكِ ومحفوظاتكِ';
+
+  @override
+  String get chatContextOrder => 'بخصوص طلب';
+
+  @override
+  String get chatContextProduct => 'بخصوص منتج';
+
+  @override
+  String get chatContextSupport => 'الدعم';
+
+  @override
+  String get chatDelivered => 'وصلت';
+
+  @override
+  String chatLastSeen(String when) {
+    return 'آخر ظهور $when';
+  }
+
+  @override
+  String get chatNoMessagesYet => 'لا رسائل بعد';
+
+  @override
+  String get chatOnlineNow => 'متصلة الآن';
+
+  @override
+  String get chatSafetyNote => 'أبقي الدفع داخل ريم';
+
+  @override
+  String get chatSafetyNoteBody =>
+      'لن يطلب منكِ أي متجر الدفع خارج التطبيق. أبلغي عن أي محاولة لذلك.';
+
+  @override
+  String get chatSeen => 'تمّت القراءة';
+
+  @override
+  String get chatStartFailed => 'تعذّر فتح المحادثة';
+
+  @override
+  String get chatTyping => 'تكتب الآن…';
+
+  @override
+  String get chatUntitled => 'محادثة';
+
+  @override
+  String get chatsEmptyAction => 'تصفّحي المتاجر';
+
+  @override
+  String get chatsEmptyMessage =>
+      'اسألي المتجر عن قطعة أو مقاس أو طلب، وستظهر المحادثة هنا.';
+
+  @override
+  String get chatsEmptyMessageSeller =>
+      'حين تسأل زبونة عن قطعة أو طلب، تصلكِ رسالتها هنا.';
+
+  @override
+  String get chatsEmptyTitle => 'لا توجد محادثات بعد';
+
+  @override
+  String get chatsLoadFailed => 'تعذّر تحميل المحادثات';
+
+  @override
+  String chatsSearchEmptyMessage(String query) {
+    return 'لا توجد محادثة تطابق «$query».';
+  }
+
+  @override
+  String get chatsSearchEmptyTitle => 'لا نتائج';
+
+  @override
+  String get chatsSearchHint => 'ابحثي عن اسم أو رسالة';
+
+  @override
+  String get chatsSubtitle => 'محادثاتكِ مع المتاجر التي تتسوّقين منها';
+
+  @override
+  String get chatsSubtitleSeller =>
+      'محادثاتكِ مع الزبونات اللواتي يتسوّقن من متجركِ';
+
+  @override
+  String get chatsTitle => 'الرسائل';
+
+  @override
+  String get codAwaitingBanner => 'هذا الطلب بانتظار رمز التأكيد.';
+
+  @override
+  String get codConfirmAction => 'تأكيد الطلب';
+
+  @override
+  String get codConfirmDispatchFailed => 'تعذّر إرسال الرمز. حاولي مرّة أخرى.';
+
+  @override
+  String get codConfirmFallback =>
+      'أرسلنا رمزاً إلى رقم التوصيل — أدخليه لتأكيد الطلب.';
+
+  @override
+  String get codConfirmLater => 'ليس الآن';
+
+  @override
+  String get codConfirmResend => 'أعيدي إرسال الرمز';
+
+  @override
+  String get codConfirmResent => 'الرمز في طريقه إليكِ';
+
+  @override
+  String get codConfirmTitle => 'أكّدي طلبكِ';
+
+  @override
+  String get codConfirmed => 'تم تأكيد طلبكِ';
+
+  @override
+  String get codEnterCode => 'أدخلي الرمز';
+
+  @override
+  String get deleteComment => 'حذف التعليق';
+
+  @override
+  String get deleteCommentBody => 'سيُحذف للجميع.';
+
+  @override
+  String get faqContactSeller => 'كيف أتواصل مع المتجر؟';
+
+  @override
+  String get faqContactSellerAnswer =>
+      'افتحي المنتج أو المتجر أو طلبكِ واضغطي «راسلي المتجر». محادثاتكِ محفوظة في «الرسائل».';
+
+  @override
+  String get faqPayment => 'كيف أدفع؟';
+
+  @override
+  String get faqPaymentAnswer =>
+      'الدفع عند الاستلام، أو من محفظتكِ في ريم. لا تدفعي لأي متجر خارج التطبيق — الطلب المدفوع خارجه غير محمي.';
+
+  @override
+  String get formAcceptsReturns => 'أقبل الإرجاع';
+
+  @override
+  String get formCategoryChange => 'تغيير';
+
+  @override
+  String get formCategoryDetails => 'تفاصيل يطلبها القسم';
+
+  @override
+  String get formCategoryEmpty => 'لا يوجد قسم بهذا الاسم';
+
+  @override
+  String get formCategoryFailed => 'تعذّر تحميل الأقسام';
+
+  @override
+  String get formCategoryNeedsDetails => 'أكملي التفاصيل التي يطلبها القسم';
+
+  @override
+  String get formCategoryPick => 'اختاري القسم';
+
+  @override
+  String get formCategorySearch => 'ابحثي عن قسم';
+
+  @override
+  String get formComparePrice => 'السعر قبل الخصم';
+
+  @override
+  String get formFieldRequired => 'هذا الحقل مطلوب';
+
+  @override
+  String get formHandlingDays => 'أيام التجهيز';
+
+  @override
+  String get formIdentitySection => 'تعريف المنتج';
+
+  @override
+  String get formListingTerms => 'شروط البيع';
+
+  @override
+  String get formMadeToOrder => 'يُصنَع عند الطلب';
+
+  @override
+  String get formMinOrderQty => 'أقل كمية للطلب';
+
+  @override
+  String get formNewListingReview =>
+      'المنتج الجديد يمرّ بمراجعة قصيرة قبل أن تراه الزبونات.';
+
+  @override
+  String get formOptional => 'اختياري';
+
+  @override
+  String get formPricingSection => 'السعر والمخزون';
+
+  @override
+  String get formSharedProductLocked =>
+      'بائعات أخريات يعرضن هذا المنتج، فصفحته مشتركة بينكنّ. يمكنكِ تعديل سعركِ ومخزونكِ وشروطكِ.';
+
+  @override
+  String get formSku => 'رمز التخزين';
+
+  @override
+  String get formVariantName => 'اسم الخيار';
+
+  @override
+  String get formVariantPrice => 'سعره';
+
+  @override
+  String get formVariantsHint => 'اتركيها فارغة إن كان المنتج بخيار واحد.';
+
+  @override
+  String get formVariantsTitle => 'الخيارات — المقاس واللون';
+
+  @override
+  String get guestShopper => 'تتصفّحين كضيفة';
+
+  @override
+  String get messageSeller => 'راسلي المتجر';
+
+  @override
+  String get messageSellerAboutOrder => 'راسلي المتجر بخصوص الطلب';
+
+  @override
+  String get myReviews => 'تقييماتي';
+
+  @override
+  String get myReviewsEmpty => 'لم تكتبي أي تقييم بعد';
+
+  @override
+  String get myReviewsEmptyAction => 'اعرضي طلباتي';
+
+  @override
+  String get myReviewsEmptyBody =>
+      'بعد وصول طلبكِ، أخبري من تأتي بعدكِ إن كان يستحق.';
+
+  @override
+  String get myReviewsFailed => 'تعذّر تحميل تقييماتكِ';
+
+  @override
+  String get myReviewsSubtitle => 'كل ما قلتِه عن قطعة أو عن متجر';
+
+  @override
+  String get noCommentsYet => 'لا تعليقات بعد';
+
+  @override
+  String get notifActivity => 'من المتاجر التي تتابعينها';
+
+  @override
+  String get notifChannels => 'كيف نصل إليكِ';
+
+  @override
+  String get notifCommerce => 'طلباتكِ وعروضكِ';
+
+  @override
+  String get notifEmail => 'البريد الإلكتروني';
+
+  @override
+  String get notifEmailBlurb => 'الفواتير وإشعارات الحساب والتحديثات المطوّلة.';
+
+  @override
+  String get notifOffers => 'العروض والكوبونات';
+
+  @override
+  String get notifOffersBlurb => 'الخصومات والكوبونات والمكافآت.';
+
+  @override
+  String get notifOrders => 'تحديثات الطلبات';
+
+  @override
+  String get notifOrdersBlurb => 'الدفع والتجهيز والشحن والتسليم.';
+
+  @override
+  String get notifPush => 'إشعارات التطبيق';
+
+  @override
+  String get notifPushBlurb => 'تنبيهات الرسائل وتحديثات الطلبات والعروض.';
+
+  @override
+  String get notifSellerPosts => 'منشورات جديدة';
+
+  @override
+  String get notifSellerPostsBlurb => 'حين ينشر متجر تتابعينه شيئاً جديداً.';
+
+  @override
+  String get notifSellerStories => 'قصص جديدة';
+
+  @override
+  String get notifSellerStoriesBlurb => 'قصص جديدة من المتاجر التي تتابعينها.';
+
+  @override
+  String get notifSms => 'الرسائل النصية';
+
+  @override
+  String get notifSmsBlurb => 'رسائل التوصيل والحساب التي لا تحتمل التأجيل.';
+
+  @override
+  String get notificationPrefsSaved => 'حُفظت تفضيلات الإشعارات';
+
+  @override
+  String get notificationsLoadFailed => 'تعذّر تحميل الإعدادات';
+
+  @override
+  String get notificationsLoading => 'عم نحمّل الإعدادات';
+
+  @override
+  String get payoutApprovedTitle => 'طلبكِ مُعتمَد — المبلغ في طريقه';
+
+  @override
+  String payoutBlockedFrozen(Object date) {
+    return 'السحب موقوف مؤقتاً لحماية حسابكِ. يُرفع تلقائياً $date.';
+  }
+
+  @override
+  String get payoutBlockedFrozenNoDate => 'السحب موقوف مؤقتاً لحماية حسابكِ.';
+
+  @override
+  String get payoutBlockedNothing =>
+      'لا شيء جاهز للسحب بعد. تصبح الأرباح متاحة بعد تسليم الطلب وانتهاء مهلة الإرجاع.';
+
+  @override
+  String get payoutCancelAction => 'إلغاء الطلب';
+
+  @override
+  String get payoutCancelBlurb =>
+      'يعود المبلغ إلى رصيدكِ المتاح، ويمكنكِ طلبه متى شئتِ.';
+
+  @override
+  String get payoutCancelConfirm => 'إلغاء طلب السحب؟';
+
+  @override
+  String get payoutCancelled => 'أُلغي الطلب';
+
+  @override
+  String get payoutClaimable => 'قيمة هذا الطلب';
+
+  @override
+  String payoutFromOrders(Object count) {
+    return 'من $count طلب';
+  }
+
+  @override
+  String get payoutPendingTitle => 'طلب سحب قيد المراجعة';
+
+  @override
+  String get payoutRequestAction => 'اطلبي السحب';
+
+  @override
+  String get payoutRequestBlurb =>
+      'يذهب الطلب إلى الإدارة للاعتماد. لا يُحوَّل المبلغ إلا بعد الموافقة عليه.';
+
+  @override
+  String payoutRequestConfirm(Object amount) {
+    return 'طلب سحب $amount؟';
+  }
+
+  @override
+  String get payoutRequestTitle => 'طلب سحب الأرباح';
+
+  @override
+  String get payoutRequested => 'وصل طلبكِ. سنخبركِ حين يُعتمد.';
+
+  @override
+  String payoutRequestedOn(Object date) {
+    return 'طُلب في $date';
+  }
+
+  @override
+  String get productArchive => 'إزالة من المتجر';
+
+  @override
+  String get productArchiveBlurb =>
+      'لن تظهر للزبونات بعد الآن، والطلبات السابقة عليها تبقى كما هي.';
+
+  @override
+  String productArchiveQuestion(Object title) {
+    return 'إزالة «$title» من المتجر؟';
+  }
+
+  @override
+  String get productArchived => 'أُزيلت من المتجر';
+
+  @override
+  String productChooseOption(Object axis) {
+    return 'اختاري $axis';
+  }
+
+  @override
+  String get productChooseSeller => 'اختاري البوتيك';
+
+  @override
+  String get productDetailsSection => 'التفاصيل';
+
+  @override
+  String productOffersFrom(Object count) {
+    return '$count بوتيك يعرضن هذه القطعة';
+  }
+
+  @override
+  String get productPause => 'إيقاف مؤقت';
+
+  @override
+  String get productPublish => 'نشر';
+
+  @override
+  String get productRelated => 'قد يعجبكِ أيضاً';
+
+  @override
+  String get productRestock => 'تعديل المخزون';
+
+  @override
+  String get productRestockAmount => 'الكمية';
+
+  @override
+  String get productStockUpdated => 'تم تحديث المخزون';
+
+  @override
+  String get productUnavailable => 'هذه القطعة غير متوفرة حالياً';
+
+  @override
+  String get returnActionApprove => 'الموافقة على الإرجاع';
+
+  @override
+  String get returnActionExchange => 'استبدال بدل الإرجاع';
+
+  @override
+  String get returnActionExchangeDelivered => 'وصل البديل للزبونة';
+
+  @override
+  String get returnActionInTransit => 'القطعة في الطريق';
+
+  @override
+  String get returnActionReceive => 'استلمتُ القطعة';
+
+  @override
+  String get returnActionReject => 'رفض الطلب';
+
+  @override
+  String get returnApproveTitle => 'الموافقة على الإرجاع';
+
+  @override
+  String get returnBearerCustomer => 'الزبونة';
+
+  @override
+  String get returnBearerDefault => 'حسب سبب الإرجاع';
+
+  @override
+  String get returnBearerPlatform => 'المنصّة';
+
+  @override
+  String get returnBearerSeller => 'أنا';
+
+  @override
+  String get returnEvidence => 'صور الزبونة';
+
+  @override
+  String get returnItems => 'القطع المُعادة';
+
+  @override
+  String get returnNoEvidence => 'لم ترفق صوراً';
+
+  @override
+  String get returnNoteOptional => 'ملاحظة (اختيارية)';
+
+  @override
+  String returnParcelLabel(Object number) {
+    return 'الطلب $number';
+  }
+
+  @override
+  String returnQuantity(Object count) {
+    return 'العدد $count';
+  }
+
+  @override
+  String get returnReasonChangedMind => 'غيّرت رأيها';
+
+  @override
+  String get returnReasonDamagedInTransit => 'تضرّرت في الشحن';
+
+  @override
+  String get returnReasonDefective => 'القطعة معطوبة';
+
+  @override
+  String get returnReasonLateDelivery => 'تأخّر التوصيل';
+
+  @override
+  String get returnReasonNotAsDescribed => 'مختلفة عن الوصف';
+
+  @override
+  String get returnReasonOther => 'سبب آخر';
+
+  @override
+  String get returnReasonSizeIssue => 'المقاس لا يناسبها';
+
+  @override
+  String get returnReasonWrongItem => 'وصلتها قطعة أخرى';
+
+  @override
+  String get returnReceiveTitle => 'استلام القطعة';
+
+  @override
+  String get returnRefundGoods => 'قيمة البضاعة';
+
+  @override
+  String get returnRefundIsPlatforms =>
+      'ردّ المبلغ تتولّاه المنصّة بعد تأكيدكِ الاستلام.';
+
+  @override
+  String get returnRefundQuote => 'المبلغ المتوقّع ردّه';
+
+  @override
+  String get returnRefundQuoteHint =>
+      'تقدير يعيد الخادم حسابه؛ ليس مبلغاً نهائياً بعد.';
+
+  @override
+  String get returnRefundSettled => 'المبلغ المردود';
+
+  @override
+  String get returnRefundShipping => 'أجرة الإرجاع';
+
+  @override
+  String get returnRejectHint =>
+      'الزبونة ستقرأ هذا، ويُقرأ أيضاً إن فتحت نزاعاً.';
+
+  @override
+  String get returnRejectReason => 'سبب الرفض';
+
+  @override
+  String get returnRejectTooShort => 'اكتبي سبباً واضحاً (٥ أحرف على الأقل)';
+
+  @override
+  String get returnRestock => 'إعادتها إلى المخزون';
+
+  @override
+  String get returnRestockHint =>
+      'اتركيه مغلقاً إن كانت القطعة غير صالحة للبيع.';
+
+  @override
+  String get returnShippingBearer => 'من يتحمّل أجرة الإرجاع؟';
+
+  @override
+  String get returnStatusApproved => 'تمّت الموافقة';
+
+  @override
+  String get returnStatusCancelled => 'ألغتْه الزبونة';
+
+  @override
+  String get returnStatusExchanged => 'تمّ الاستبدال';
+
+  @override
+  String get returnStatusInTransit => 'في الطريق إليكِ';
+
+  @override
+  String get returnStatusReceived => 'استلمتِها';
+
+  @override
+  String get returnStatusRefunded => 'تمّ ردّ المبلغ';
+
+  @override
+  String get returnStatusRejected => 'مرفوض';
+
+  @override
+  String get returnStatusRequested => 'بانتظار قراركِ';
+
+  @override
+  String returnWindowCloses(Object date) {
+    return 'تنتهي مهلة الإرجاع $date';
+  }
+
+  @override
+  String get returnsEmptyAwaiting => 'لا شيء بانتظار التسوية';
+
+  @override
+  String get returnsEmptyClosed => 'لا توجد طلبات منتهية بعد';
+
+  @override
+  String get returnsEmptyOpen => 'لا يوجد طلب إرجاع ينتظركِ';
+
+  @override
+  String get returnsEmptyOpenBody => 'حين تطلب زبونة إرجاع قطعة، تجدينها هنا.';
+
+  @override
+  String get returnsFailed => 'تعذّر تحميل طلبات الإرجاع';
+
+  @override
+  String get returnsTabAwaiting => 'بانتظار التسوية';
+
+  @override
+  String get returnsTabClosed => 'منتهية';
+
+  @override
+  String get returnsTabOpen => 'بانتظاركِ';
+
+  @override
+  String get returnsUpdated => 'تم تحديث الطلب';
+
+  @override
+  String get reviewAboutShop => 'عن المتجر';
+
+  @override
+  String get reviewPending => 'قيد المراجعة';
+
+  @override
+  String get reviewRejected => 'لم يُنشر';
+
+  @override
+  String get reviewsAboutShop => 'تقييم للمتجر';
+
+  @override
+  String get reviewsDeleteReply => 'حذف الردّ';
+
+  @override
+  String get reviewsEditReply => 'تعديل الردّ';
+
+  @override
+  String get reviewsEmptyAll => 'لا توجد تقييمات بعد';
+
+  @override
+  String get reviewsEmptyAllBody =>
+      'حين تقيّم زبونة قطعة منكِ أو متجركِ، تجدينها هنا.';
+
+  @override
+  String get reviewsEmptyUnanswered => 'رددتِ على كل شيء';
+
+  @override
+  String get reviewsFailed => 'تعذّر تحميل التقييمات';
+
+  @override
+  String get reviewsFilterAll => 'الكل';
+
+  @override
+  String get reviewsFilterUnanswered => 'بانتظار ردّك';
+
+  @override
+  String get reviewsReplied => 'نُشر ردّكِ';
+
+  @override
+  String get reviewsReplyAction => 'ردّي';
+
+  @override
+  String get reviewsReplyField => 'اكتبي ردّكِ';
+
+  @override
+  String get reviewsReplyHint => 'ردّكِ يظهر للجميع تحت التقييم.';
+
+  @override
+  String get reviewsReplyRemoved => 'حُذف ردّكِ';
+
+  @override
+  String get reviewsVerifiedBuyer => 'شراء مؤكَّد';
+
+  @override
+  String reviewsWritten(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count تقييمات',
+      two: 'تقييمان',
+      one: 'تقييم واحد',
+      zero: 'لا تقييمات',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get reviewsYourReply => 'ردّكِ';
+
+  @override
+  String get sellerOrderAwaitingCustomerCode => 'بانتظار رمز تأكيد الزبونة';
+
+  @override
+  String get sellerReplied => 'ردّ المتجر';
+
+  @override
+  String get sellerReturnsTitle => 'الإرجاع والاستبدال';
+
+  @override
+  String get sellerReviewsMenu => 'التقييمات والردود';
+
+  @override
+  String get sellerReviewsTitle => 'التقييمات والردود';
+
+  @override
+  String sellersCount(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count بائعة',
+      many: '$count بائعة',
+      few: '$count بائعات',
+      two: 'بائعتان',
+      one: 'بائعة واحدة',
+      zero: 'لا بائعات',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get showLess => 'عرض أقل';
+
+  @override
+  String get signInToComment => 'سجّلي الدخول للتعليق';
+
+  @override
+  String get signInToInteract => 'سجّلي الدخول للمشاركة';
+
+  @override
+  String get signInToInteractBody =>
+      'الإعجاب والحفظ والتعليق مرتبطة بحسابكِ، لتبقى معكِ أينما دخلتِ.';
+
+  @override
+  String get signInToManageSecurely =>
+      'سجّلي الدخول ليبقى هذا محفوظاً على كل أجهزتكِ';
+
+  @override
+  String get signInToMessage => 'سجّلي الدخول لمراسلة المتجر';
+
+  @override
+  String get signInToMessageBody =>
+      'المحادثات مرتبطة بحسابكِ، لتبقى معكِ على كل أجهزتكِ.';
+
+  @override
+  String timeAgoDays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'قبل $count يوم',
+      one: 'أمس',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String timeAgoHours(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'قبل $count ساعة',
+      one: 'قبل ساعة',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String timeAgoMinutes(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'قبل $count دقيقة',
+      one: 'قبل دقيقة',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get trendAlertCartAbandon => 'سلات متروكة';
+
+  @override
+  String get trendAlertLowConversion => 'تحويل منخفض';
+
+  @override
+  String get trendAlertOverstock => 'مخزون راكد';
+
+  @override
+  String get trendAlertSoldOut => 'نفد والطلب قائم';
+
+  @override
+  String trendAlertStockOutIn(int days) {
+    return 'ينفد خلال $days يومًا';
+  }
+
+  @override
+  String get trendAlertStockRisk => 'المخزون على وشك النفاد';
+
+  @override
+  String get trendAverageScore => 'متوسّط مؤشر الترند';
+
+  @override
+  String get trendCartAdds => 'إضافات السلة';
+
+  @override
+  String get trendConfidence => 'الثقة';
+
+  @override
+  String get trendConversion => 'التحويل من السلة';
+
+  @override
+  String trendDaysValue(int days) {
+    return '$days يومًا';
+  }
+
+  @override
+  String get trendDismiss => 'تجاهل';
+
+  @override
+  String get trendFavorites => 'الإضافات للمفضّلة';
+
+  @override
+  String trendForecastLine(int units, int days) {
+    return 'متوقّع بيع $units قطعة خلال $days يومًا';
+  }
+
+  @override
+  String get trendHideEvidence => 'إخفاء الأرقام';
+
+  @override
+  String get trendMarkDone => 'تم التنفيذ';
+
+  @override
+  String get trendMyUnits => 'مبيعاتكِ';
+
+  @override
+  String get trendOrders => 'الطلبات';
+
+  @override
+  String get trendPointsSuffix => ' نقطة';
+
+  @override
+  String trendRankValue(int rank) {
+    return 'المركز $rank';
+  }
+
+  @override
+  String get trendRevenue => 'الإيراد';
+
+  @override
+  String trendRisingCount(int count) {
+    return '$count منتجًا في ارتفاع';
+  }
+
+  @override
+  String get trendSearchHits => 'ظهور في البحث';
+
+  @override
+  String get trendSearches => 'عمليات البحث';
+
+  @override
+  String get trendShowEvidence => 'اعرضي الأرقام';
+
+  @override
+  String get trendStageCooling => 'يتباطأ';
+
+  @override
+  String get trendStageDeclining => 'في تراجع';
+
+  @override
+  String get trendStageDormant => 'خامل';
+
+  @override
+  String get trendStageEmerging => 'صاعد مبكرًا';
+
+  @override
+  String get trendStagePeaking => 'في الذروة';
+
+  @override
+  String get trendStageRising => 'في ارتفاع';
+
+  @override
+  String get trendStageSteady => 'مستقر';
+
+  @override
+  String get trendStock => 'المخزون';
+
+  @override
+  String get trendToday => 'اليوم';
+
+  @override
+  String get trendUnits => 'القطع';
+
+  @override
+  String get trendUnitsSold => 'القطع المباعة';
+
+  @override
+  String get trendUnmetAcknowledged => 'تمت المراجعة';
+
+  @override
+  String get trendUnmetAddressed => 'تمّت التغطية';
+
+  @override
+  String get trendUnmetDismissed => 'مُستبعد';
+
+  @override
+  String get trendUnmetOpen => 'جديد';
+
+  @override
+  String get trendUnmetSourcing => 'قيد التوريد';
+
+  @override
+  String trendUnmetSummary(int searches, int missRate) {
+    return '$searches عملية بحث · $missRate٪ بلا نتيجة مناسبة';
+  }
+
+  @override
+  String trendViewToCart(String rate) {
+    return 'من المشاهدة للسلة $rate';
+  }
+
+  @override
+  String get trendViews => 'المشاهدات';
+
+  @override
+  String get trendWindow14 => '١٤ يومًا';
+
+  @override
+  String get trendWindow30 => '٣٠ يومًا';
+
+  @override
+  String get trendWindow7 => '٧ أيام';
+
+  @override
+  String get trendsAdminEmptyBody =>
+      'لم تُنفَّذ عملية التحليل الليلية بعد، أو لا يوجد نشاط كافٍ. يمكنكِ تشغيلها الآن من زر إعادة الاحتساب.';
+
+  @override
+  String get trendsAdminEmptyTitle => 'لا توجد نتائج تحليل بعد';
+
+  @override
+  String get trendsAdminTitle => 'تحليل السوق';
+
+  @override
+  String trendsAsOf(String date) {
+    return 'الأرقام محسوبة في $date — تُحدَّث مرة واحدة يوميًا';
+  }
+
+  @override
+  String get trendsCategories => 'اتجاهات الفئات';
+
+  @override
+  String get trendsCategoriesHint =>
+      'مرتّبة بمؤشر الترند، مع نسبة التوفّر في كل فئة';
+
+  @override
+  String trendsCategorySupply(int inStock, int total) {
+    return '$inStock من $total منتجًا متوفّر';
+  }
+
+  @override
+  String get trendsColours => 'اتجاهات الألوان';
+
+  @override
+  String get trendsColoursHint =>
+      'حصّة كل لون من الطلب، الآن ومقارنةً بالفترة السابقة';
+
+  @override
+  String get trendsDeclining => 'منتجات في تراجع';
+
+  @override
+  String get trendsDecliningHint => 'أكبر انخفاض في مؤشر الترند';
+
+  @override
+  String get trendsDemandForecast => 'توقّع الطلب';
+
+  @override
+  String get trendsDemandForecastHint => 'إجمالي المنصّة خلال الأيام القادمة';
+
+  @override
+  String get trendsDemandSignals => 'مؤشرات الطلب';
+
+  @override
+  String get trendsDemandSignalsHint =>
+      'الاهتمام بمنتجاتكِ، منفصلًا عمّا بِيع فعلًا';
+
+  @override
+  String get trendsEmerging => 'منتجات صاعدة مبكرًا';
+
+  @override
+  String get trendsEmergingHint => 'طلبها يتسارع قبل أن تصبح الأكثر مبيعًا';
+
+  @override
+  String get trendsEmptyBody =>
+      'يحتاج محرّك الترند إلى أسبوع من النشاط ليبدأ في رصد الاتجاهات. تابعي عرض منتجاتكِ وستظهر النتائج هنا.';
+
+  @override
+  String get trendsEmptyTitle => 'لم يجمع المحرّك بيانات كافية بعد';
+
+  @override
+  String get trendsFailed => 'تعذّر تحميل تحليل الترند';
+
+  @override
+  String get trendsForecast => 'توقّع المبيعات';
+
+  @override
+  String get trendsForecastHint => 'مبني على تاريخ مبيعاتكِ، مع درجة الثقة به';
+
+  @override
+  String get trendsForecastInsufficient =>
+      'لا يوجد تاريخ مبيعات كافٍ بعد لبناء توقّع. سيظهر هنا تلقائيًا بعد أسبوعين من النشاط.';
+
+  @override
+  String trendsForecastMethod(String method, int confidence) {
+    return 'الطريقة: $method · الثقة $confidence٪';
+  }
+
+  @override
+  String trendsForecastUnitsLabel(int days) {
+    return 'القطع المتوقّعة خلال $days يومًا';
+  }
+
+  @override
+  String get trendsGapCategory => 'فجوة فئة';
+
+  @override
+  String get trendsGapPrice => 'فجوة سعرية';
+
+  @override
+  String get trendsGapSearch => 'بحث غير ملبّى';
+
+  @override
+  String get trendsLowConversion => 'تنبيهات ضعف التحويل';
+
+  @override
+  String get trendsLowConversionHint => 'مشاهدات مرتفعة لا تتحوّل إلى طلبات';
+
+  @override
+  String get trendsMarketInsights => 'ملاحظات السوق';
+
+  @override
+  String get trendsMarketInsightsHint => 'قراءات محسوبة من أرقام المنصّة';
+
+  @override
+  String trendsMissRate(int rate) {
+    return '$rate٪ بلا نتيجة';
+  }
+
+  @override
+  String trendsOfTotal(int total) {
+    return 'من أصل $total';
+  }
+
+  @override
+  String get trendsOpportunities => 'فرص السوق';
+
+  @override
+  String get trendsOpportunitiesHint => 'أين يوجد طلب لا تقابله تشكيلة';
+
+  @override
+  String get trendsOverall => 'المؤشرات العامة';
+
+  @override
+  String get trendsOverallHint =>
+      'حركة المنصّة خلال الفترة، مقارنةً بالفترة التي سبقتها';
+
+  @override
+  String get trendsPriceBands => 'اتجاهات النطاقات السعرية';
+
+  @override
+  String get trendsPriceBandsHint => 'إلى أين ينتقل الطلب في السعر';
+
+  @override
+  String get trendsRecommendedActions => 'ما الذي تفعلينه اليوم';
+
+  @override
+  String get trendsRecommendedActionsHint =>
+      'ملاحظات محسوبة من بيانات متجركِ، مرتّبة بالأهم';
+
+  @override
+  String get trendsRecompute => 'إعادة احتساب التحليل';
+
+  @override
+  String get trendsSearches => 'اتجاهات البحث';
+
+  @override
+  String get trendsSearchesHint =>
+      'أكثر ما تبحث عنه العميلات، ونسبة الإخفاق في كل بحث';
+
+  @override
+  String get trendsSellerPerformance => 'أداء البائعات';
+
+  @override
+  String get trendsSellerPerformanceHint => 'النمو، ومعه نسب الإلغاء والإرجاع';
+
+  @override
+  String trendsSellerQuality(int cancel, int returns) {
+    return 'إلغاء $cancel٪ · إرجاع $returns٪';
+  }
+
+  @override
+  String get trendsSellerTitle => 'محرّك الترند';
+
+  @override
+  String get trendsStageDistribution => 'توزيع المنتجات على منحنى الطلب';
+
+  @override
+  String trendsStageScored(int scored, int total) {
+    return '$scored منتجًا نشطًا من أصل $total مُقيَّمًا';
+  }
+
+  @override
+  String get trendsStockOpportunities => 'فرص المخزون';
+
+  @override
+  String get trendsStockOpportunitiesHint =>
+      'طلب قائم ومخزون على وشك النفاد أو نافد';
+
+  @override
+  String get trendsTrending => 'المنتجات الرائجة';
+
+  @override
+  String get trendsTrendingHint => 'الأعلى في مؤشر الترند ضمن الفترة المختارة';
+
+  @override
+  String get trendsUnmetDemand => 'طلب غير ملبّى';
+
+  @override
+  String get trendsUnmetDemandHint =>
+      'عمليات بحث لم تجد العميلات لها نتائج مناسبة';
+
+  @override
+  String get visitStore => 'زوري المتجر';
+
+  @override
+  String get onboardShopTitle => 'بوتيك في جيبكِ';
+
+  @override
+  String get onboardShopBody =>
+      'فساتين ومستحضرات وهدايا من بوتيكات سورية، في مكان واحد.';
+
+  @override
+  String get onboardStoriesTitle => 'شاهدي جديد اليوم';
+
+  @override
+  String get onboardStoriesBody =>
+      'تابعي البوتيكات التي تحبّينها، وشاهدي ستورياتها لحظة نشرها.';
+
+  @override
+  String get onboardShareTitle => 'شاركي ما يعجبكِ';
+
+  @override
+  String get onboardShareBody =>
+      'احفظي القطع، واكتبي تقييماتكِ، وأرسلي مفضّلاتكِ إلى صديقاتكِ.';
+
+  @override
+  String get onboardSkip => 'تخطّي';
+
+  @override
+  String get onboardContinue => 'متابعة';
+
+  @override
+  String get onboardStart => 'ابدئي التسوّق';
+
+  @override
+  String get categoryTitle => 'القسم';
+
+  @override
+  String get categoryDresses => 'فساتين';
+
+  @override
+  String get categoryDressesBlurb => 'للسهرة والمناسبات وكل يوم';
+
+  @override
+  String get categoryBeauty => 'جمال وعناية';
+
+  @override
+  String get categoryBeautyBlurb => 'مكياج وعناية بالبشرة';
+
+  @override
+  String get categoryFragrance => 'عطور';
+
+  @override
+  String get categoryFragranceBlurb => 'عطور ومعطّرات';
+
+  @override
+  String get categoryBags => 'حقائب';
+
+  @override
+  String get categoryBagsBlurb => 'حقائب يد وسهرة ويوميّة';
+
+  @override
+  String get categoryShoes => 'أحذية';
+
+  @override
+  String get categoryShoesBlurb => 'كعب عالٍ ومسطّح وصنادل';
+
+  @override
+  String get categoryJewellery => 'مجوهرات';
+
+  @override
+  String get categoryJewelleryBlurb => 'ذهب وفضّة وقطع يوميّة';
+
+  @override
+  String get categoryAccessories => 'إكسسوارات';
+
+  @override
+  String get categoryAccessoriesBlurb => 'أوشحة وأحزمة ولمسات أخيرة';
+
+  @override
+  String get categoryGifts => 'هدايا';
+
+  @override
+  String get categoryGiftsBlurb => 'ورود وشوكولا وعلب مناسبات';
+
+  @override
+  String get searchTrendingNow => 'الأكثر رواجاً';
+
+  @override
+  String get searchTrendingEyebrow => 'رائج';
+
+  @override
+  String get searchBrowseCategories => 'تصفّحي الأقسام';
+
+  @override
+  String get searchDiscoverEyebrow => 'اكتشفي';
+
+  @override
+  String get searchRecent => 'عمليات البحث الأخيرة';
+
+  @override
+  String get searchClearAll => 'مسح الكل';
+
+  @override
+  String get searchClear => 'مسح';
+
+  @override
+  String get searchTrendDresses => 'فستان';
+
+  @override
+  String get searchTrendPerfume => 'عطر';
+
+  @override
+  String get searchTrendBags => 'حقيبة';
+
+  @override
+  String get searchTrendHeels => 'حذاء';
+
+  @override
+  String get searchTrendGifts => 'هدية';
+
+  @override
+  String get searchTrendFlowers => 'ورد';
+
+  @override
+  String get searchTrendSkincare => 'كريم';
+
+  @override
+  String get noProductsFound => 'لا توجد قطع هنا بعد';
+
+  @override
+  String get profileTitle => 'حسابي';
+
+  @override
+  String get profileEdit => 'تعديل الملف الشخصي';
+
+  @override
+  String get profileEditTitle => 'تعديل الملف الشخصي';
+
+  @override
+  String get profileFullName => 'الاسم الكامل';
+
+  @override
+  String get profileBio => 'نبذة عنكِ';
+
+  @override
+  String get profileLocation => 'المدينة';
+
+  @override
+  String get profileSaveChanges => 'حفظ التغييرات';
+
+  @override
+  String get profileNameTooShort => 'الرجاء كتابة اسمكِ';
+
+  @override
+  String get profileBioTooLong => 'النبذة أطول من اللازم';
+
+  @override
+  String get profileUpdated => 'تم حفظ ملفكِ';
+
+  @override
+  String get profileFollowers => 'المتابِعات';
+
+  @override
+  String get profileFollowing => 'تتابعينها';
+
+  @override
+  String get profilePosts => 'المنشورات';
+
+  @override
+  String get profileManageStore => 'إدارة المتجر';
+
+  @override
+  String get profileLoadFailed => 'تعذّر تحميل هذا الملف';
+
+  @override
+  String get guestBrowseBlurb =>
+      'سجّلي الدخول لحفظ القطع ومتابعة البوتيكات وتتبّع طلباتكِ.';
+
+  @override
+  String get signUpBenefitsBlurb =>
+      'أنشئي حساباً لإتمام الشراء ومراسلة البائعات وحفظ مفضّلاتكِ.';
+
+  @override
+  String achievementsEarned(int earned, int total) {
+    return '$earned من $total';
+  }
+
+  @override
+  String loyaltyTierMember(String tier) {
+    return 'عضوة $tier';
+  }
+
+  @override
+  String get settingsProfileUpdated => 'تم حفظ ملفكِ';
+
+  @override
+  String get reviewsSectionTitle => 'التقييمات';
+
+  @override
+  String get reviewsWriteAction => 'اكتبي تقييماً';
+
+  @override
+  String get reviewsWriteShort => 'اكتبي';
+
+  @override
+  String get reviewsFieldTitle => 'العنوان';
+
+  @override
+  String get reviewsFieldBody => 'ما رأيكِ؟';
+
+  @override
+  String get reviewsSubmit => 'نشر التقييم';
+
+  @override
+  String get reviewsSubmitted => 'شكراً لكِ — تم نشر تقييمكِ';
+
+  @override
+  String get reviewsNoneTitle => 'لا توجد تقييمات بعد';
+
+  @override
+  String get reviewsNoneBody => 'كوني أول من تقول رأيها.';
+
+  @override
+  String get reviewsUnavailable => 'تعذّر تحميل التقييمات';
+
+  @override
+  String get reviewsVerified => 'شراء مؤكَّد';
+
+  @override
+  String reviewsStarsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count نجمة',
+      many: '$count نجمةً',
+      few: '$count نجوم',
+      two: 'نجمتان',
+      one: 'نجمة واحدة',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String productRatingSummary(String rating, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count تقييم',
+      many: '$count تقييماً',
+      few: '$count تقييمات',
+      two: 'تقييمان',
+      one: 'تقييم واحد',
+    );
+    return '$rating · $_temp0';
+  }
+
+  @override
+  String get orderTitle => 'الطلب';
+
+  @override
+  String get orderNotFound => 'لم نعثر على هذا الطلب';
+
+  @override
+  String get orderCancelTitle => 'إلغاء هذا الطلب؟';
+
+  @override
+  String get orderCancelBody => 'سنُبلغ البائعات ولن يُشحن شيء.';
+
+  @override
+  String get orderCancelConfirm => 'إلغاء الطلب';
+
+  @override
+  String get orderCancelKeep => 'الاحتفاظ به';
+
+  @override
+  String get createPostTitle => 'منشور جديد';
+
+  @override
+  String get createPostBody => 'اعرضي قطعة واذكري لماذا تستحق.';
+
+  @override
+  String get createPostAction => 'نشر';
+
+  @override
+  String get createPostAddProduct => 'أضيفي منتجاً';
+
+  @override
+  String get createPostFeatured => 'المنتج المميّز';
+
+  @override
+  String get createPostLoadingProducts => 'جارٍ تحميل منتجاتكِ';
+
+  @override
+  String get createPostNeedsCaption => 'اكتبي وصفاً أولاً';
+
+  @override
+  String get createPostNeedsProduct => 'اختاري منتجاً أولاً';
+
+  @override
+  String get createPostNoProducts => 'لا توجد منتجات بعد';
+
+  @override
+  String get createPostNoProductsBody =>
+      'أضيفي منتجاً إلى متجركِ، ثم انشري عنه.';
+
+  @override
+  String get createPostSuccess => 'تم نشر منشوركِ';
+
+  @override
+  String get createCaptionHint => 'اكتبي وصفاً…';
+
+  @override
+  String get createStoryTitle => 'ستوري جديدة';
+
+  @override
+  String get createStoryBody => 'لقطة من اليوم، تختفي بعد ٢٤ ساعة.';
+
+  @override
+  String get createStoryAction => 'نشر الستوري';
+
+  @override
+  String get createStoryOptionalLink => 'رابط (اختياري)';
+
+  @override
+  String get createStoryBadLink => 'الرابط غير صالح';
+
+  @override
+  String get createStorySuccess => 'تم نشر ستوريتكِ';
+
+  @override
+  String get mediaImage => 'صورة';
+
+  @override
+  String get mediaVideo => 'فيديو';
+
+  @override
+  String get chatWriteMessage => 'اكتبي رسالة…';
+
+  @override
+  String get chatAttachments => 'إرفاق';
+
+  @override
+  String get chatProduct => 'منتج';
+
+  @override
+  String get chatOrder => 'طلب';
+
+  @override
+  String get chatVoice => 'ملاحظة صوتية';
+
+  @override
+  String get chatSent => 'تم الإرسال';
+
+  @override
+  String get todayLabel => 'اليوم';
+
+  @override
+  String fileSizeMegabytes(String size) {
+    return '$size م.ب';
+  }
+
+  @override
+  String get soldOut => 'نفدت الكمية';
+
+  @override
+  String get stockOut => 'نفد المخزون';
+
+  @override
+  String get stockLow => 'بقي القليل';
+
+  @override
+  String get flashLimitedTime => 'لوقت محدود';
+
+  @override
+  String flashAlmostGone(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'بقيت $count قطعة',
+      few: 'بقيت $count قطع',
+      two: 'بقيت قطعتان',
+      one: 'بقيت قطعة واحدة',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get followAction => 'متابعة';
+
+  @override
+  String get followingState => 'تتابعينها';
+
+  @override
+  String get showMore => 'عرض المزيد';
+
+  @override
+  String get offlineShowingSaved => 'لا يوجد اتصال — نعرض ما هو محفوظ';
+
+  @override
+  String get dialogConfirm => 'تأكيد';
+
+  @override
+  String get dialogGotIt => 'حسناً';
+
+  @override
+  String get aiStylistTitle => 'مساعِدة ريم';
+
+  @override
+  String get stylistOutfitTitle => 'الإطلالة';
+
+  @override
+  String get stylistPreferencesTitle => 'ذوقكِ';
+
+  @override
+  String get visualSearchTitle => 'البحث بالصورة';
+
+  @override
+  String get sellerSalesStat => 'المبيعات';
+
+  @override
+  String get sellerOrdersStat => 'الطلبات';
+
+  @override
+  String get sellerProductsStat => 'المنتجات';
+
+  @override
+  String get sellerRatingStat => 'التقييم';
+
+  @override
+  String get sellerDashboardLoadFailed => 'تعذّر تحميل لوحة التحكم';
+
+  @override
+  String sellerCartAbandon(String rate) {
+    return '$rate% تركن السلة';
+  }
+
+  @override
+  String sellerRestockNeeded(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count قطعة تحتاج إعادة توريد',
+      many: '$count قطعةً تحتاج إعادة توريد',
+      few: '$count قطع تحتاج إعادة توريد',
+      two: 'قطعتان تحتاجان إعادة توريد',
+      one: 'قطعة واحدة تحتاج إعادة توريد',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get adminSectionNoActions => 'لا توجد إجراءات هنا بعد';
+
+  @override
+  String get adminSectionNoCreate => 'لا يمكن الإنشاء من هنا';
+
+  @override
+  String adminReportGenerated(String format, int count) {
+    return 'تقرير $format جاهز — $count سطر';
+  }
+
+  @override
+  String get rewardsTitle => 'المكافآت';
+
+  @override
+  String get rewardsLoadFailed => 'تعذّر تحميل المكافآت';
+
+  @override
+  String get rewardsUnavailable => 'المكافآت غير متاحة حالياً';
+
+  @override
+  String get rewardsAvailablePoints => 'النقاط المتاحة';
+
+  @override
+  String get rewardsPoints => 'النقاط';
+
+  @override
+  String rewardsBalanceSemantics(int points, String tier) {
+    return '$points نقطة، فئة $tier';
+  }
+
+  @override
+  String get rewardsTierSection => 'فئتكِ';
+
+  @override
+  String rewardsTierMember(String tier) {
+    return 'عضوة $tier';
+  }
+
+  @override
+  String rewardsTierVip(String tier) {
+    return 'عضوية $tier المميّزة';
+  }
+
+  @override
+  String get rewardsTopTier => 'أعلى فئة';
+
+  @override
+  String get rewardsTopTierUnlocked => 'وصلتِ إلى أعلى فئة';
+
+  @override
+  String rewardsNextTier(String tier) {
+    return 'التالية: $tier';
+  }
+
+  @override
+  String rewardsProgressToward(int percent, String tier) {
+    return '$percent% من الطريق إلى $tier';
+  }
+
+  @override
+  String rewardsMultiplier(String multiplier) {
+    return '$multiplier× نقاط مع كل طلب';
+  }
+
+  @override
+  String get rewardsTierBonusNote => 'تُحتسب تلقائياً مع كل طلب';
+
+  @override
+  String rewardsCashbackRate(String rate) {
+    return 'استرداد $rate%';
+  }
+
+  @override
+  String get rewardsCashbackNote => 'يُعاد إلى محفظتكِ بعد التسليم';
+
+  @override
+  String get rewardsBenefitPoints => 'نقاط مع كل طلب';
+
+  @override
+  String get rewardsBenefitOffers => 'عروض للعضوات فقط';
+
+  @override
+  String get rewardsBenefitReferrals => 'مكافأة عن كل صديقة تدعينها';
+
+  @override
+  String get rewardsRedeemSection => 'الاستبدال';
+
+  @override
+  String rewardsOffersCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count عرض',
+      many: '$count عرضاً',
+      few: '$count عروض',
+      two: 'عرضان',
+      one: 'عرض واحد',
+      zero: 'لا شيء للاستبدال بعد',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get rewardsEmptyTitle => 'لا توجد مكافآت بعد';
+
+  @override
+  String get rewardsEmptyBody => 'تابعي التسوّق وستظهر العروض هنا.';
+
+  @override
+  String get rewardsRedeem => 'استبدلي';
+
+  @override
+  String get rewardsClaim => 'احصلي عليها';
+
+  @override
+  String get rewardsRedeemed => 'تم الاستبدال — الرمز في كوبوناتكِ';
+
+  @override
+  String get rewardsExclusive => 'حصري';
+
+  @override
+  String get rewardsMemberReward => 'مكافأة للعضوات';
+
+  @override
+  String rewardsPointsCost(int points) {
+    return '$points نقطة';
+  }
+
+  @override
+  String get rewardsNotEnoughPoints => 'النقاط غير كافية بعد';
+
+  @override
+  String get rewardsCashback => 'الاسترداد النقدي';
+
+  @override
+  String get rewardsCashbackBody => 'جزء ممّا تنفقينه يعود إلى محفظتكِ.';
+
+  @override
+  String get rewardsAvailable => 'المتاح';
+
+  @override
+  String get rewardsPending => 'قيد الانتظار';
+
+  @override
+  String get rewardsLifetime => 'إجمالي المكتسب';
+
+  @override
+  String get rewardsBonus => 'مكافأة إضافية';
+
+  @override
+  String get rewardsConvertToCoupon => 'تحويل إلى كوبون';
+
+  @override
+  String get rewardsCashbackConverted => 'تم تحويل الاسترداد إلى كوبون';
+
+  @override
+  String get rewardsNoCashback => 'لا يوجد استرداد للتحويل بعد';
+
+  @override
+  String get rewardsInviteTitle => 'ادعي صديقة';
+
+  @override
+  String get rewardsInviteBody =>
+      'تحصل هي على عرض ترحيبي، وتحصلين أنتِ على نقاط.';
+
+  @override
+  String get rewardsCustomerCode => 'رمز الدعوة الخاص بكِ';
+
+  @override
+  String get rewardsSellerCode => 'رمز البائعة الخاص بكِ';
+
+  @override
+  String get rewardsGenerating => 'جارٍ الإنشاء…';
+
+  @override
+  String rewardsCopyLabel(String label) {
+    return 'نسخ $label';
+  }
+
+  @override
+  String rewardsCodeCopied(String code) {
+    return 'تم نسخ $code';
+  }
+
+  @override
+  String get rewardsInvited => 'صديقات مدعوّات';
+
+  @override
+  String get rewardsRewarded => 'مكافآت مستلَمة';
+
+  @override
+  String rewardsSuspiciousChecks(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count دعوة قيد المراجعة',
+      many: '$count دعوةً قيد المراجعة',
+      few: '$count دعوات قيد المراجعة',
+      two: 'دعوتان قيد المراجعة',
+      one: 'دعوة واحدة قيد المراجعة',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get rewardsHaveCode => 'لديكِ رمز؟';
+
+  @override
+  String get rewardsEnterCode => 'أدخلي الرمز';
+
+  @override
+  String get rewardsApplyCode => 'تطبيق';
+
+  @override
+  String get rewardsCodeApplied => 'تم تطبيق الرمز';
+
+  @override
+  String get rewardsCodeInvalid => 'هذا الرمز غير صالح';
+
+  @override
+  String get rewardsOfflineHint => 'لا يوجد اتصال — تحتاج هذه الخطوة إلى شبكة';
+
+  @override
+  String get rewardsOfflineRetry => 'حاولي مرة أخرى';
+
+  @override
+  String get searchTrendEvening => 'سهرة';
+
+  @override
+  String get navHome => 'الرئيسية';
+
+  @override
+  String get navSearch => 'البحث';
+
+  @override
+  String get navCart => 'السلة';
+
+  @override
+  String get navActivity => 'النشاط';
+
+  @override
+  String get navProfile => 'حسابي';
+
+  @override
+  String get navSellerDashboard => 'لوحة متجري';
+
+  @override
+  String get navSellerProducts => 'المنتجات';
+
+  @override
+  String get navSellerOrders => 'الطلبات';
+
+  @override
+  String get navSellerAnalytics => 'التحليلات';
+
+  @override
+  String get navSellerStore => 'متجري';
+
+  @override
+  String get actionStylist => 'مساعِدة ريم';
+
+  @override
+  String get actionSearch => 'البحث';
+
+  @override
+  String get actionCart => 'السلة';
+
+  @override
+  String get actionNewProduct => 'منتج جديد';
+
+  @override
+  String get actionNewPost => 'منشور جديد';
+
+  @override
+  String get actionModeration => 'الإشراف';
+
+  @override
+  String get actionReports => 'التقارير';
+
+  @override
+  String get actionOrders => 'الطلبات';
+
+  @override
+  String get actionWishlist => 'المفضّلة';
+
+  @override
+  String get actionRewards => 'المكافآت';
+
+  @override
+  String get actionCoupons => 'الكوبونات';
+
+  @override
+  String get actionAddresses => 'العناوين';
+
+  @override
+  String get actionPayments => 'طرق الدفع';
+
+  @override
+  String get actionNotifications => 'الإشعارات';
+
+  @override
+  String get actionSettings => 'الإعدادات';
+
+  @override
+  String get actionReturns => 'المرتجعات';
+
+  @override
+  String get actionConversations => 'المحادثات';
+
+  @override
+  String get actionAnalytics => 'التحليلات';
+
+  @override
+  String get actionTrends => 'محرّك الرائج';
+
+  @override
+  String get actionStoreProfile => 'صفحة المتجر';
+
+  @override
+  String get actionVerification => 'التوثيق';
+
+  @override
+  String get actionSecurity => 'الأمان';
+
+  @override
+  String get actionUsers => 'المستخدمات';
+
+  @override
+  String get actionSellers => 'البائعات';
+
+  @override
+  String get actionProducts => 'المنتجات';
+
+  @override
+  String get actionFinance => 'المالية';
+
+  @override
+  String get actionAudit => 'سجلّات التدقيق';
+
+  @override
+  String get menuGroupShopping => 'التسوّق';
+
+  @override
+  String get menuGroupRewards => 'المكافآت';
+
+  @override
+  String get menuGroupAccount => 'الحساب';
+
+  @override
+  String get menuGroupOperations => 'العمليات';
+
+  @override
+  String get menuGroupGrowth => 'النمو';
+
+  @override
+  String get menuGroupStore => 'المتجر';
+
+  @override
+  String get menuGroupGovernance => 'الحوكمة';
+
+  @override
+  String get menuGroupRisk => 'المخاطر';
+
+  @override
+  String get menuGroupControl => 'التحكّم';
+
+  @override
+  String get homeNearbyInYourCity => 'في مدينتكِ';
+
+  @override
+  String get homeNearbyInGovernorate => 'في محافظتكِ';
+
+  @override
+  String get homeNearbySubtitle => 'بوتيكات تشحن من محافظتكِ — وصول أسرع';
+
+  @override
+  String get postSaved => 'حُفظ المنشور في المفضّلة';
+
+  @override
+  String get postUnsaved => 'أُزيل المنشور من المفضّلة';
+
+  @override
+  String get viewSaved => 'عرض';
+
+  @override
+  String get collectionFeatured => 'مختارات ريم';
+
+  @override
+  String get collectionMostLoved => 'الأكثر إعجاباً';
+
+  @override
+  String get collectionTopRated => 'الأعلى تقييماً';
+
+  @override
+  String get collectionDeals => 'كل العروض';
+
+  @override
+  String galleryPhotoPosition(int index, int count) {
+    return 'صورة $index من $count';
+  }
+
+  @override
+  String get galleryOpenPhoto => 'تكبير الصورة';
+
+  @override
+  String get galleryClose => 'إغلاق';
+
+  @override
+  String get reviewsPendingYours => 'تقييمك وصلنا — سيظهر للجميع بعد المراجعة';
+
+  @override
+  String get profileRecoveryEmail => 'بريد إلكتروني للاستعادة';
+
+  @override
+  String get profileRecoveryEmailHint =>
+      'نستخدمه لاستعادة حسابكِ إن فقدتِ رقمكِ';
+
+  @override
+  String get profileEmailInvalid => 'اكتبي بريداً إلكترونياً صحيحاً';
+
+  @override
+  String get followListEmptyFollowing => 'لا تتابعين أحداً بعد';
+
+  @override
+  String get followListEmptyFollowers => 'لا متابِعات بعد';
+
+  @override
+  String get ordersFilterAll => 'الكل';
+
+  @override
+  String get ordersEmptyForFilter => 'لا طلبات في هذه القائمة';
+
+  @override
+  String get paymentActionTitle => 'إكمال الدفع';
+
+  @override
+  String get paymentOpenGateway => 'ادفعي الآن';
+
+  @override
+  String paymentGatewayHint(String method) {
+    return 'سنفتح صفحة $method لإتمام الدفع، ثم ارجعي وتحقّقي.';
+  }
+
+  @override
+  String paymentManualHint(String method) {
+    return 'حوّلي المبلغ عبر $method، ثم اكتبي رقم الحوالة هنا ليطابقه فريق المالية.';
+  }
+
+  @override
+  String get paymentReferenceLabel => 'رقم الحوالة أو الإشعار';
+
+  @override
+  String get paymentReferenceSubmit => 'إرسال الرقم';
+
+  @override
+  String get paymentReferenceSaved => 'وصلنا الرقم — سنؤكّد الدفع بعد المطابقة';
+
+  @override
+  String get paymentReferenceRequired => 'اكتبي رقم الحوالة أولاً';
+
+  @override
+  String get paymentStillPending => 'لم يصلنا الدفع بعد';
+
+  @override
+  String get paymentCheckAgain => 'تحقّقي من الدفع';
+
+  @override
+  String get paymentCouldNotOpen => 'تعذّر فتح صفحة الدفع';
+
+  @override
+  String get paymentReferenceOnFile => 'رقم الحوالة المسجّل';
+
+  @override
+  String get paymentConfirmed => 'تم تأكيد الدفع';
+
+  @override
+  String get checkoutPrivacyMask => 'أخفي اسمي الكامل عن البائعة';
+
+  @override
+  String get checkoutPrivacyMaskHint =>
+      'تصل البائعة اسمكِ الأول فقط. المندوبة تحتاج بياناتكِ كاملة لتوصيل الطلب.';
+
+  @override
+  String get orderPrivacyMaskOn => 'اسمكِ مخفي عن البائعة';
 }

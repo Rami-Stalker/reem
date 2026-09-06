@@ -1,5 +1,5 @@
 import { Story, StoryView, User } from '@prisma/client';
-import { serializeUser } from './user.serializer';
+import { serializePublicUser } from './user.serializer';
 
 export type StoryWithRelations = Story & {
   user: User;
@@ -19,7 +19,7 @@ export function serializeStory(story: StoryWithRelations, currentUserId?: string
 
   return {
     id: story.id,
-    user: serializeUser(story.user),
+    user: serializePublicUser(story.user),
     media: { url: story.mediaUrl, type: story.mediaType },
     link: story.link,
     is_viewed: isViewed,
@@ -35,7 +35,7 @@ export function serializeStoryViewer(
   reactionEmoji: string | null,
 ) {
   return {
-    user: serializeUser(view.user),
+    user: serializePublicUser(view.user),
     viewed_at: view.viewedAt.toISOString(),
     reaction: reactionEmoji,
   };

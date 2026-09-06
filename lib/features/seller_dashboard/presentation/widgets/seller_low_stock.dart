@@ -5,6 +5,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:reem/core/design_system/design_system.dart';
 import 'package:reem/core/localization/l10n_extension.dart';
+import 'package:reem/core/media/media_decode.dart';
+import 'package:reem/core/media/media_variants.dart';
 import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/features/seller_dashboard/domain/entities/seller_low_stock_item.dart';
 import 'package:reem/features/seller_dashboard/presentation/providers/seller_dashboard_provider.dart';
@@ -16,7 +18,6 @@ class SellerLowStockAlert extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(sellerDashboardNotifierProvider);
     final c = context.dsColors;
-    final theme = Theme.of(context);
 
     if (state.isInitialLoading) {
       return Padding(
@@ -46,7 +47,7 @@ class SellerLowStockAlert extends ConsumerWidget {
           children: [
             Padding(
               padding: const EdgeInsets.fromLTRB(
-                  DsSpacing.md, DsSpacing.md, DsSpacing.md, 0),
+                  DsSpacing.md, DsSpacing.md, DsSpacing.md, DsSpacing.xxxs),
               child: Row(
                 children: [
                   Container(
@@ -65,13 +66,13 @@ class SellerLowStockAlert extends ConsumerWidget {
                       children: [
                         Text(
                           context.l10n.sellerLowStockTitle,
-                          style: theme.textTheme.titleSmall
-                              ?.copyWith(fontWeight: DsTypography.bold),
+                          style: context.dsText.tileTitle
+                              .copyWith(fontWeight: DsTypography.bold),
                         ),
                         Text(
-                          '$criticalCount ${criticalCount == 1 ? 'item needs' : 'items need'} restocking now',
-                          style: theme.textTheme.labelSmall
-                              ?.copyWith(color: c.onSurfaceVariant),
+                          context.l10n.sellerRestockNeeded(criticalCount),
+                          style: context.dsText.caption
+                              .copyWith(color: c.onSurfaceVariant),
                         ),
                       ],
                     ),
@@ -89,7 +90,7 @@ class SellerLowStockAlert extends ConsumerWidget {
               child: ListView.separated(
                 scrollDirection: Axis.horizontal,
                 padding: const EdgeInsets.fromLTRB(
-                    DsSpacing.md, 0, DsSpacing.md, DsSpacing.md),
+                    DsSpacing.md, DsSpacing.xxxs, DsSpacing.md, DsSpacing.md),
                 itemCount: items.length,
                 separatorBuilder: (_, _) =>
                     const SizedBox(width: DsSpacing.sm),
@@ -133,10 +134,11 @@ class _LowStockCard extends StatelessWidget {
               borderRadius: const BorderRadius.horizontal(
                   left: Radius.circular(DsRadius.md)),
               child: CachedNetworkImage(
-                imageUrl: item.imageUrl,
+                imageUrl: MediaVariants.thumb(item.imageUrl),
                 width: 56,
                 height: double.infinity,
                 fit: BoxFit.cover,
+                memCacheWidth: MediaDecode.widthFor(context, 56),
                 placeholder: (_, _) => ColoredBox(color: c.shimmerBase),
                 errorWidget: (_, _, _) =>
                     ColoredBox(color: c.surfaceVariant),
@@ -153,30 +155,19 @@ class _LowStockCard extends StatelessWidget {
                       item.title,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        fontFamily: DsTypography.fontFamily,
-                        fontSize: 10,
-                        fontWeight: DsTypography.semiBold,
-                        color: c.onSurface,
-                        height: 1.2,
-                      ),
+                      style: context.dsText.micro.semibold.tint(c.onSurface).copyWith(height: 1.2),
                     ),
-                    const SizedBox(height: 4),
+                    DsGaps.vXxs,
                     Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 6, vertical: 2),
+                          horizontal: DsSpacing.xs, vertical: DsSpacing.xxxs),
                       decoration: BoxDecoration(
                         color: color.withValues(alpha: 0.15),
                         borderRadius: DsRadius.borderFull,
                       ),
                       child: Text(
                         isOut ? context.l10n.sellerOutOfStock : '${item.stock} left',
-                        style: TextStyle(
-                          fontFamily: DsTypography.fontFamily,
-                          fontSize: 9,
-                          fontWeight: DsTypography.bold,
-                          color: color,
-                        ),
+                        style: context.dsText.micro.bold.tint(color),
                       ),
                     ),
                   ],

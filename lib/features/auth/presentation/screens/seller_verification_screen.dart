@@ -510,7 +510,6 @@ class _Section extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = context.dsColors;
-    final theme = Theme.of(context);
 
     return Padding(
       padding: const EdgeInsets.only(bottom: DsSpacing.lg),
@@ -520,7 +519,7 @@ class _Section extends StatelessWidget {
           children: [
             Text(
               title,
-              style: theme.textTheme.titleMedium?.copyWith(
+              style: context.dsText.cardTitle.copyWith(
                 color: c.onSurface,
                 fontWeight: DsTypography.bold,
               ),
@@ -535,7 +534,7 @@ class _Section extends StatelessWidget {
                   Expanded(
                     child: Text(
                       note!,
-                      style: theme.textTheme.bodySmall?.copyWith(
+                      style: context.dsText.cardSubtitle.copyWith(
                         color: c.onSurfaceVariant,
                       ),
                     ),
@@ -607,7 +606,7 @@ class _StatusBanner extends StatelessWidget {
               children: [
                 Text(
                   _label(l10n, item?.status),
-                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                  style: context.dsText.tileTitle.copyWith(
                     fontWeight: DsTypography.bold,
                   ),
                 ),
@@ -620,7 +619,7 @@ class _StatusBanner extends StatelessWidget {
                       (item == null
                           ? l10n.submitBusinessDetails
                           : l10n.verificationResubmitNotice),
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  style: context.dsText.cardSubtitle.copyWith(
                     color: c.onSurfaceVariant,
                   ),
                 ),

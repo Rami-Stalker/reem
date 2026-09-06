@@ -1,12 +1,10 @@
 import {
   Body,
   Controller,
-  DefaultValuePipe,
   Get,
   HttpCode,
   HttpStatus,
   Param,
-  ParseIntPipe,
   ParseUUIDPipe,
   Post,
   Query,
@@ -52,12 +50,10 @@ export class LedgerController {
   async myWalletStatement(
     @CurrentUser('id') userId: string,
     @Query() query: WalletQueryDto,
-    @Query('skip', new DefaultValuePipe(0), ParseIntPipe) skip: number,
-    @Query('take', new DefaultValuePipe(50), ParseIntPipe) take: number,
   ) {
     return this.wallets.statement(userId, query.currency ?? Currency.SYP, {
-      skip,
-      take: Math.min(take, 100),
+      skip: query.skip ?? 0,
+      take: query.take ?? 50,
     });
   }
 

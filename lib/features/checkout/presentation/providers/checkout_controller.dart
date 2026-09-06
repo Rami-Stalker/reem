@@ -115,6 +115,7 @@ class CheckoutController extends StateNotifier<CheckoutState> {
     String? couponCode,
     String? deliveryInstructions,
     String? notes,
+    bool privacyMask = false,
   }) async {
     state = state.copyWith(isPlacing: true, clearError: true);
     final result = await _placeOrder(
@@ -125,6 +126,7 @@ class CheckoutController extends StateNotifier<CheckoutState> {
       couponCode: couponCode,
       deliveryInstructions: deliveryInstructions,
       notes: notes,
+      privacyMask: privacyMask,
     );
 
     if (result case Error(:final failure)) {

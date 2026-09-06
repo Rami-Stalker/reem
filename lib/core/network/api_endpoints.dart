@@ -121,6 +121,13 @@ abstract final class ApiEndpoints {
       '/discovery/collections/$key';
   static String discoveryCategory(String category) =>
       '/discovery/category/$category';
+
+  /// The catalogue's category tree. Public, because it drives the buyer's
+  /// browse rails as much as the seller's product form — and because a leaf's
+  /// UUID is the only thing `POST /seller/products` accepts.
+  static const categories = '/categories';
+  static const categoryLeaves = '/categories?leaves=true';
+  static String categoryById(String id) => '/categories/$id';
   static String discoverySeller(String sellerId) =>
       '/discovery/seller/$sellerId';
   static String discoverySimilar(String productId) =>
@@ -134,9 +141,20 @@ abstract final class ApiEndpoints {
   /// own products, they own offers on them, so the list is offers with their
   /// product nested (which is exactly what `ManagedProductModel` parses).
   static const sellerOffers = '/seller/offers';
+
+  /// Everything a seller owns about a listing — price, stock, currency,
+  /// fulfilment terms and its published status — is a property of her OFFER,
+  /// not of the shared catalogue entry. These five used to be spelled
+  /// `/seller/products/:id/status` and `/seller/products/:id/stock`, routes
+  /// that ceased to exist when offers were split out: publishing, restocking
+  /// and deleting a listing had all been answering 404 since.
+  static String sellerOfferById(String id) => '/seller/offers/$id';
+  static String sellerOfferStock(String id) => '/seller/offers/$id/stock';
+  static const sellerOffersLowStock = '/seller/offers/low-stock';
+
+  /// The canonical catalogue entry — title, description, category, gallery.
+  /// Editable only while she is the sole seller listing it.
   static String sellerProductById(String id) => '/seller/products/$id';
-  static String sellerProductStatus(String id) => '/seller/products/$id/status';
-  static String sellerProductStock(String id) => '/seller/products/$id/stock';
   static String sellerProductVariants(String id) =>
       '/seller/products/$id/variants';
   static String sellerProductVariant(String id, String variantId) =>
@@ -180,12 +198,18 @@ abstract final class ApiEndpoints {
   static String paymentVerify(String id) => '/payments/$id/verify';
   static String paymentRetry(String id) => '/payments/$id/retry';
 
+  /// The transfer reference for a bank or hawala payment she has already sent.
+  static String paymentReference(String id) => '/payments/$id/reference';
+
   // Orders & checkout
   static const orders = '/orders';
   static const ordersCheckout = '/orders/checkout';
   static String orderById(String id) => '/orders/$id';
   static String orderTimeline(String id) => '/orders/$id/timeline';
   static String orderCancel(String id) => '/orders/$id/cancel';
+  static String orderCodConfirmation(String id) => '/orders/$id/cod-confirmation';
+  static String orderCodConfirmationResend(String id) =>
+      '/orders/$id/cod-confirmation/resend';
   static String orderReorder(String id) => '/orders/$id/reorder';
 
   // Favorites
@@ -213,6 +237,13 @@ abstract final class ApiEndpoints {
       '/reputation/sellers/$sellerId';
   static const trustedSellerVerification =
       '/reputation/seller/trusted-verification';
+
+  /// Her review desk: everything said about her goods and her shop, merged,
+  /// and the public answer she may write under each one.
+  static const myReviews = '/reputation/me/reviews';
+  static const sellerReviewDesk = '/reputation/seller/reviews';
+  static String sellerReviewReply(String id) =>
+      '/reputation/seller/reviews/$id/reply';
   static const adminReviewModeration = '/reputation/admin/reviews';
   static const adminReviewModerationQueue =
       '/reputation/admin/moderation-queue';
@@ -229,6 +260,162 @@ abstract final class ApiEndpoints {
   static String aiSimilarProducts(String productId) =>
       '/ai/products/$productId/similar';
 
+  // Reem AI Stylist — the conversational assistant. Separate from the rails
+  // above: those answer "what should this shelf show", this answers a sentence.
+  static const stylistBootstrap = '/ai/stylist/bootstrap';
+  static const stylistConversations = '/ai/stylist/conversations';
+  static String stylistConversation(String id) =>
+      '/ai/stylist/conversations/$id';
+  static String stylistMessages(String conversationId) =>
+      '/ai/stylist/conversations/$conversationId/messages';
+  static const stylistOutfits = '/ai/stylist/outfits';
+  static String stylistOutfit(String id) => '/ai/stylist/outfits/$id';
+  static const stylistRecommendations = '/ai/stylist/recommendations';
+  static String stylistRecommendationFeedback(String id) =>
+      '/ai/stylist/recommendations/$id/feedback';
+  static const stylistPreferences = '/ai/stylist/preferences';
+  static const stylistPreferencesRefresh = '/ai/stylist/preferences/refresh';
+
+  // Reem Closet — her wardrobe. Not under `/ai`: nothing here is generated.
+  // A gap is arithmetic over her own rows, and the only route that reaches the
+  // catalog at all is `closetGapSuggestions`.
+  static const closet = '/closet';
+  static const closetSettings = '/closet/settings';
+  static const closetBackfill = '/closet/backfill';
+
+  static const closetItems = '/closet/items';
+  static String closetItem(String id) => '/closet/items/$id';
+  static const closetItemsCatalog = '/closet/items/catalog';
+  static const closetItemsPersonal = '/closet/items/personal';
+  static String closetItemStatus(String id) => '/closet/items/$id/status';
+  static String closetItemWear(String id) => '/closet/items/$id/wear';
+
+  static const closetLooks = '/closet/looks';
+  static String closetLook(String id) => '/closet/looks/$id';
+  static String closetLookItems(String id) => '/closet/looks/$id/items';
+  static String closetLookWear(String id) => '/closet/looks/$id/wear';
+  static String closetLookFromStylist(String outfitId) =>
+      '/closet/looks/from-stylist/$outfitId';
+
+  static const closetGaps = '/closet/gaps';
+  static const closetGapsRefresh = '/closet/gaps/refresh';
+  static String closetGapSuggestions(String id) =>
+      '/closet/gaps/$id/suggestions';
+  static String closetGapDismiss(String id) => '/closet/gaps/$id/dismiss';
+  static String closetGapRestore(String id) => '/closet/gaps/$id/restore';
+
+  /// "هل بتناسب خزانتي؟" — asked from a product page.
+  static String closetPairing(String productId) => '/closet/pairing/$productId';
+
+  static const closetToday = '/closet/today';
+
+  // Reem Value — her standing. Note the absence of an "earn" or "redeem"
+  // endpoint: standing is computed from evidence the platform already holds,
+  // and nothing a client sends can move it. Claiming a benefit costs nothing,
+  // which is why it is `claim` and not `redeem`.
+  static const value = '/value';
+  static const valueBadge = '/value/badge';
+  static const valueEvents = '/value/events';
+  static const valueRules = '/value/rules';
+  static const valueBenefits = '/value/benefits';
+  static const valueBenefitClaim = '/value/benefits/claim';
+  static String valueGrantUse(String id) => '/value/benefits/grants/$id/use';
+
+  // Reem Rooms — Intent → Room → Decision → Purchase.
+  //
+  // Read the verbs: propose, choose, skip, reject, stage. Not one of them is
+  // "add to cart", and there is no route that buys something that was never
+  // chosen — `roomPlan` refuses a room with open decisions and names them.
+  static const rooms = '/rooms';
+  static String room(String id) => '/rooms/$id';
+  static String roomTimeline(String id) => '/rooms/$id/timeline';
+
+  static String roomMembers(String id) => '/rooms/$id/members';
+  static String roomMember(String id, String memberId) =>
+      '/rooms/$id/members/$memberId';
+  static String roomLeave(String id) => '/rooms/$id/leave';
+  static String roomShare(String id) => '/rooms/$id/share';
+  static String roomJoin(String slug) => '/rooms/join/$slug';
+
+  static String roomDecisions(String id) => '/rooms/$id/decisions';
+  static String roomDecision(String id, String decisionId) =>
+      '/rooms/$id/decisions/$decisionId';
+  static String roomDecisionOrder(String id) => '/rooms/$id/decisions/order';
+  static String roomDecisionSkip(String id, String decisionId) =>
+      '/rooms/$id/decisions/$decisionId/skip';
+
+  static String roomCandidates(String id, String decisionId) =>
+      '/rooms/$id/decisions/$decisionId/candidates';
+  static String roomCandidate(String id, String candidateId) =>
+      '/rooms/$id/candidates/$candidateId';
+  static String roomCandidateChoose(String id, String candidateId) =>
+      '/rooms/$id/candidates/$candidateId/choose';
+  static String roomCandidateUnchoose(String id, String candidateId) =>
+      '/rooms/$id/candidates/$candidateId/unchoose';
+  static String roomCandidateReject(String id, String candidateId) =>
+      '/rooms/$id/candidates/$candidateId/reject';
+  static String roomCandidateShortlist(String id, String candidateId) =>
+      '/rooms/$id/candidates/$candidateId/shortlist';
+  static String roomCandidateVote(String id, String candidateId) =>
+      '/rooms/$id/candidates/$candidateId/vote';
+
+  static String roomCompare(String id, String decisionId) =>
+      '/rooms/$id/decisions/$decisionId/compare';
+
+  static String roomComments(String id) => '/rooms/$id/comments';
+  static String roomComment(String id, String commentId) =>
+      '/rooms/$id/comments/$commentId';
+
+  static String roomPlan(String id) => '/rooms/$id/plan';
+  static String roomPlanItemStage(String id, String planId, String itemId) =>
+      '/rooms/$id/plan/$planId/items/$itemId/stage';
+  static String roomPlanItemQuantity(String id, String planId, String itemId) =>
+      '/rooms/$id/plan/$planId/items/$itemId/quantity';
+  static String roomPlanItem(String id, String planId, String itemId) =>
+      '/rooms/$id/plan/$planId/items/$itemId';
+  static String roomPlanCheckout(String id, String planId) =>
+      '/rooms/$id/plan/$planId/checkout';
+
+  // Running the programme. A policy is drafted, simulated against the live
+  // population, and only then activated — three endpoints rather than one PUT,
+  // because retuning what a standing means should not be a single careless save.
+  static const adminValueDistribution = '/admin/value/distribution';
+  static const adminValueCost = '/admin/value/cost';
+  static const adminValueGrants = '/admin/value/grants';
+  static const adminValueSuspects = '/admin/value/suspects';
+  static String adminValueProfile(String userId) =>
+      '/admin/value/profiles/$userId';
+  static String adminValueFreeze(String userId) =>
+      '/admin/value/profiles/$userId/freeze';
+  static String adminValueUnfreeze(String userId) =>
+      '/admin/value/profiles/$userId/unfreeze';
+  static const adminValuePolicies = '/admin/value/policies';
+  static String adminValuePolicySimulate(String id) =>
+      '/admin/value/policies/$id/simulate';
+  static String adminValuePolicyActivate(String id) =>
+      '/admin/value/policies/$id/activate';
+  static const adminValueSweep = '/admin/value/sweep';
+  static const adminValueRecompute = '/admin/value/recompute';
+
+  // Reem Visual Shopping — search and shop by photograph. The image is posted
+  // to `visualSearches` directly rather than through `mediaUploads` first: the
+  // server has to be the one that decides the bytes are private, re-encodes
+  // them and stamps a retention clock on them, and a two-step flow would leave
+  // an uploaded photograph with nobody responsible for it.
+  static const visualSearchBootstrap = '/visual-search/bootstrap';
+  static const visualSearches = '/visual-search/searches';
+  static const visualSessions = '/visual-search/sessions';
+  static String visualSession(String id) => '/visual-search/sessions/$id';
+  static String visualRefine(String id) => '/visual-search/sessions/$id/refine';
+  static String visualLook(String id) => '/visual-search/sessions/$id/look';
+  static String visualResultFeedback(String id) =>
+      '/visual-search/results/$id/feedback';
+  static String visualSimilarProducts(String productId) =>
+      '/visual-search/products/$productId/similar';
+  static const visualTryOnCapability = '/visual-search/try-on/capability';
+  static const visualTryOn = '/visual-search/try-on';
+  static String visualTryOnRequest(String id) => '/visual-search/try-on/$id';
+
   // Commissions
   static const commissionSellerEarnings = '/commissions/seller/earnings';
   static const commissionSellerTransactions =
@@ -243,6 +430,7 @@ abstract final class ApiEndpoints {
   // Chat
   static const chats = '/chats';
   static const chatSearch = '/chats/search';
+  static String chatThread(String chatId) => '/chats/$chatId';
   static String chatMessages(String chatId) => '/chats/$chatId/messages';
   static String chatRead(String chatId) => '/chats/$chatId/read';
   static String chatReports(String chatId) => '/chats/$chatId/reports';
@@ -287,6 +475,14 @@ abstract final class ApiEndpoints {
   static const loyaltyConvert = '/finance/loyalty/convert';
   static const disputes = '/finance/disputes';
   static const sellerEarnings = '/finance/seller/earnings';
+
+  /// Q69 P1's second half — asking to be paid. Creating a request moves no
+  /// money: approving and releasing it stay with the platform (Q62).
+  static const sellerPayouts = '/finance/seller/payouts';
+  static const sellerPayoutAvailability =
+      '/finance/seller/payouts/availability';
+  static String sellerPayoutCancel(String id) =>
+      '/finance/seller/payouts/$id/cancel';
   static const adminFinanceOverview = '/finance/admin/overview';
   static const adminFxSync = '/finance/admin/fx/sync';
 
@@ -295,6 +491,24 @@ abstract final class ApiEndpoints {
   static String invoiceById(String id) => '/invoices/$id';
   static String issueSellerInvoice(String sellerOrderId) =>
       '/invoices/seller-order/$sellerOrderId';
+
+  // Returns and exchanges (Q56 P1, Q67 P1, Q37 P2)
+  //
+  // The whole subsystem existed on the server with no client at all: a seller
+  // could watch a parcel come back on her order queue and had no way to accept
+  // it, refuse it, or say she had it in her hands.
+  static const returns = '/returns';
+  static const sellerReturns = '/returns/seller';
+  static String returnById(String id) => '/returns/$id';
+  static String returnEligibility(String sellerOrderId) =>
+      '/returns/eligibility/$sellerOrderId';
+  static String returnApprove(String id) => '/returns/$id/approve';
+  static String returnReject(String id) => '/returns/$id/reject';
+  static String returnInTransit(String id) => '/returns/$id/in-transit';
+  static String returnReceive(String id) => '/returns/$id/receive';
+  static String returnExchange(String id) => '/returns/$id/exchange';
+  static String returnExchangeDelivered(String id) =>
+      '/returns/$id/exchange-delivered';
 
   // Shipment tracking (Q64) — the tracking code is the credential, so this
   // one needs no session.
@@ -309,6 +523,8 @@ abstract final class ApiEndpoints {
   static String shipmentDeliver(String id) => '/shipments/$id/deliver';
   static String shipmentFail(String id) => '/shipments/$id/fail';
   static const notifications = '/notifications';
+  static String notificationRead(String id) => '/notifications/$id/read';
+  static const notificationsReadAll = '/notifications/read-all';
   static const notificationPreferences = '/notifications/preferences';
 
   // Media uploads
@@ -330,15 +546,126 @@ abstract final class ApiEndpoints {
   static const adminSellers = '/admin/sellers';
   static const adminAnalytics = '/admin/analytics';
   static const adminFinancials = '/admin/financials';
-  static const adminCommissions = commissionAdminReports;
+  /// The console's commission screen reads `/admin/commissions` — rules,
+  /// ledger entries and the pending total in one payload — rather than
+  /// `/commissions/admin/reports`, because that is the shape the rule and
+  /// ledger actions on this screen write back to.
+  static const adminCommissions = '/admin/commissions';
+  static const adminCommissionRules = '/admin/commissions/rules';
+  static String adminCommissionLedger(String id) => '/admin/commissions/$id';
   static const adminReports = '/admin/reports';
+  static String adminReport(String id) => '/admin/reports/$id';
   static const adminModeration = '/admin/moderation';
+  static String adminModerationCase(String id) => '/admin/moderation/$id';
   static const adminSupport = '/admin/support';
+  static String adminSupportTicket(String id) => '/admin/support/$id';
   static const adminAuditLogs = '/admin/audit-logs';
   static const adminSystemSettings = '/admin/system-settings';
+  static String adminUser(String id) => '/admin/users/$id';
+  static String adminProduct(String id) => '/admin/products/$id';
+  static const adminSellerApplications = '/admin/seller-applications';
+  static String adminSellerApplication(String id) =>
+      '/admin/seller-applications/$id';
+  static String adminSellerApplicationReview(String id) =>
+      '/admin/seller-applications/$id/review';
   static const notificationAdminAnalytics = '/notifications/admin/analytics';
   static const notificationAdminCampaigns = '/notifications/admin/campaigns';
   static const notificationAdminDispatch = '/notifications/admin/dispatch';
   static String notificationAdminCampaignRun(String id) =>
       '/notifications/admin/campaigns/$id/run';
+
+  // ── Reem Trend Engine ──────────────────────────────────────────────────
+  //
+  // Two trees, not one parameterised by role. `/trends/seller/*` is always
+  // scoped to the caller on the server and accepts no seller id, so there is
+  // no path here by which one seller could ask for another's numbers.
+  static const trendsSellerOverview = '/trends/seller/overview';
+  static const trendsSellerProducts = '/trends/seller/products';
+  static String trendsSellerProduct(String id) => '/trends/seller/products/$id';
+  static const trendsSellerForecast = '/trends/seller/forecast';
+  static const trendsSellerInsights = '/trends/seller/insights';
+  static String trendsSellerInsight(String id) =>
+      '/trends/seller/insights/$id';
+
+  /// Reem Intelligence (phase three). Optional auth: a signed-out visitor
+  /// gets catalogue facts, a signed-in shopper gets what applies to her.
+  static String intelligenceNotes(String productId) =>
+      '/intelligence/products/$productId/notes';
+  static String intelligenceRelated(String productId) =>
+      '/intelligence/products/$productId/related';
+
+  // ── Reem Market Evolution (phase four) ───────────────────────────────
+  //
+  // The shopper's half. Drops, bundles and the resale market take optional
+  // auth — signed out shows what is open to everyone, signed in adds what she
+  // was invited to — and everything about her own wardrobe requires it.
+  static const marketDrops = '/market/drops';
+  static String marketDropOpened(String id) => '/market/drops/$id/opened';
+  static const marketBundles = '/market/bundles';
+  static String marketBundle(String id) => '/market/bundles/$id';
+  static String marketBundleAlternatives(String id) =>
+      '/market/bundles/$id/alternatives';
+  static String marketBundleCheckoutLines(String id) =>
+      '/market/bundles/$id/checkout-lines';
+  static const marketWardrobeSummary = '/market/wardrobe/summary';
+  static const marketWardrobeAttention = '/market/wardrobe/attention';
+  static String marketWardrobeItem(String id) => '/market/wardrobe/items/$id';
+  static String marketWardrobeResale(String id) =>
+      '/market/wardrobe/items/$id/resale';
+  static const marketResale = '/market/resale';
+  static const marketResaleMine = '/market/resale/mine';
+  static String marketResaleListing(String id) => '/market/resale/$id';
+  static String marketResaleStatus(String id) => '/market/resale/$id/status';
+  static const marketMissions = '/market/missions';
+  static String marketMissionDecline(String key) =>
+      '/market/missions/$key/decline';
+
+  /// The seller's half. Same rule as seller intelligence below: no seller id
+  /// in any path, because the server reads it from the token.
+  static const sellerMarketDrops = '/seller/market/drops';
+  static const sellerMarketDropCandidates = '/seller/market/drops/candidates';
+  static String sellerMarketDropAudience(String id) =>
+      '/seller/market/drops/$id/audience';
+  static String sellerMarketDropStatus(String id) =>
+      '/seller/market/drops/$id/status';
+  static String sellerMarketDropPerformance(String id) =>
+      '/seller/market/drops/$id/performance';
+  static const sellerMarketOpportunities = '/seller/market/opportunities';
+
+  static const adminMarketOpportunities = '/admin/market/opportunities';
+  static const adminMarketSignals = '/admin/market/signals';
+
+  // ── Seller Intelligence (phase two) ──────────────────────────────────
+  //
+  // No seller id in any of these: the server reads it from the token and the
+  // routes take no parameter for it, which is what makes it impossible for a
+  // caller to ask about somebody else's shop.
+  static const sellerIntelligenceRadar = '/seller/intelligence/radar';
+  static const sellerIntelligenceProducts = '/seller/intelligence/products';
+  static String sellerIntelligenceProduct(String id) =>
+      '/seller/intelligence/products/$id';
+  static const sellerIntelligenceHealth = '/seller/intelligence/health';
+  static const sellerIntelligenceHealthHistory =
+      '/seller/intelligence/health/history';
+  static const sellerIntelligenceSnapshot =
+      '/seller/intelligence/health/snapshot';
+
+  static const trendsAdminOverview = '/trends/admin/overview';
+  static const trendsAdminCategories = '/trends/admin/categories';
+  static const trendsAdminAttributes = '/trends/admin/attributes';
+  static const trendsAdminColors = '/trends/admin/colors';
+  static const trendsAdminPrices = '/trends/admin/prices';
+  static const trendsAdminProducts = '/trends/admin/products';
+  static String trendsAdminProduct(String id) => '/trends/admin/products/$id';
+  static const trendsAdminSearch = '/trends/admin/search';
+  static const trendsAdminUnmetDemand = '/trends/admin/unmet-demand';
+  static String trendsAdminUnmetDemandItem(String id) =>
+      '/trends/admin/unmet-demand/$id';
+  static const trendsAdminForecast = '/trends/admin/forecast';
+  static const trendsAdminSellers = '/trends/admin/sellers';
+  static const trendsAdminOpportunities = '/trends/admin/opportunities';
+  static const trendsAdminInsights = '/trends/admin/insights';
+  static String trendsAdminInsight(String id) => '/trends/admin/insights/$id';
+  static const trendsAdminRuns = '/trends/admin/runs';
+  static const trendsAdminRecompute = '/trends/admin/recompute';
 }

@@ -25,7 +25,9 @@ class HomeLoyaltyCard extends ConsumerWidget {
     if (isLoading) {
       return const Padding(
         padding: EdgeInsets.symmetric(horizontal: DsSpacing.lg),
-        child: DsShimmer(child: DsSkeleton.box(height: 168, borderRadius: DsRadius.xxl)),
+        child: DsShimmer(
+          child: DsSkeleton.box(height: 168, borderRadius: DsRadius.xxl),
+        ),
       );
     }
     if (loyalty == null) return const SizedBox.shrink();
@@ -39,8 +41,11 @@ class HomeLoyaltyCard extends ConsumerWidget {
           decoration: BoxDecoration(
             gradient: context.rewardsGradient,
             borderRadius: DsRadius.borderXxl,
-            boxShadow: context.glowShadow(context.dsColors.primary,
-                blur: 28, alpha: 0.28),
+            boxShadow: context.glowShadow(
+              context.dsColors.primary,
+              blur: 28,
+              alpha: 0.28,
+            ),
           ),
           child: _LoyaltyBody(loyalty: loyalty),
         ),
@@ -54,7 +59,7 @@ class _LoyaltyBody extends StatelessWidget {
 
   final LoyaltySummary loyalty;
 
-  static const _white = Colors.white;
+  static const _white = DsColors.onMedia;
 
   @override
   Widget build(BuildContext context) {
@@ -72,23 +77,24 @@ class _LoyaltyBody extends StatelessWidget {
                 color: _white.withValues(alpha: 0.18),
                 borderRadius: DsRadius.borderMd,
               ),
-              child: const Icon(Icons.workspace_premium_rounded,
-                  color: _white, size: 22),
+              child: const Icon(
+                Icons.workspace_premium_rounded,
+                color: _white,
+                size: 22,
+              ),
             ),
             const SizedBox(width: DsSpacing.sm),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('${loyalty.tier.label} member',
-                    style: DsTypography.overline(faint)),
+                Text(
+                  '${loyalty.tier.label} member',
+                  style: DsTypography.overline(faint),
+                ),
                 Text(
                   context.l10n.homeLoyaltyTitle,
-                  style: TextStyle(
-                    fontFamily: DsTypography.fontFamilyDisplay,
-                    fontFamilyFallback: DsTypography.displayFallback,
-                    fontSize: DsTypography.titleMedium,
-                    fontWeight: DsTypography.bold,
-                    color: _white,
+                  style: context.dsText.cardTitle.displayFamily.bold.tint(
+                    _white,
                   ),
                 ),
               ],
@@ -97,14 +103,12 @@ class _LoyaltyBody extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Text('${loyalty.points}',
-                    style: const TextStyle(
-                      fontFamily: DsTypography.fontFamily,
-                      fontSize: 26,
-                      fontWeight: DsTypography.bold,
-                      color: _white,
-                      height: 1,
-                    )),
+                Text(
+                  '${loyalty.points}',
+                  style: context.dsText.screenTitle.bold
+                      .tint(_white)
+                      .copyWith(height: 1),
+                ),
                 Text('points', style: DsTypography.overline(faint)),
               ],
             ),
@@ -135,10 +139,7 @@ class _LoyaltyBody extends StatelessWidget {
                 loyalty.rewardHint,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                    color: faint,
-                    fontSize: DsTypography.labelMedium,
-                    fontWeight: DsTypography.medium),
+                style: context.dsText.labelMedium.tint(faint),
               ),
             ),
           ],
@@ -186,21 +187,17 @@ class _LoyaltyAction extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: DsSpacing.xs),
         decoration: BoxDecoration(
-          color: Colors.white.withValues(alpha: 0.16),
+          color: DsColors.onMedia.withValues(alpha: 0.16),
           borderRadius: DsRadius.borderFull,
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, size: 16, color: Colors.white),
+            Icon(icon, size: 16, color: DsColors.onMedia),
             const SizedBox(width: DsSpacing.xxs),
             Text(
               label,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: DsTypography.labelMedium,
-                fontWeight: DsTypography.semiBold,
-              ),
+              style: context.dsText.labelMedium.semibold.tint(DsColors.onMedia),
             ),
           ],
         ),

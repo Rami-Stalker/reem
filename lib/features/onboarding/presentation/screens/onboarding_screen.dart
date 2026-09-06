@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
+import 'package:reem/core/media/authorized_media_image.dart';
 import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/features/onboarding/presentation/providers/onboarding_provider.dart';
 import 'package:reem/features/onboarding/presentation/screens/onboarding_data.dart';
@@ -25,7 +27,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   }
 
   Future<void> _next() async {
-    if (_index >= onboardingItems.length - 1) {
+    if (_index >= onboardingItemCount - 1) {
       await ref.read(onboardingNotifierProvider.notifier).complete();
       if (mounted) context.go(RoutePaths.login);
       return;
@@ -39,19 +41,20 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   @override
   Widget build(BuildContext context) {
     final colors = context.dsColors;
+    final items = onboardingItems(context);
     return Scaffold(
       body: Stack(
         children: [
           PageView.builder(
             controller: _controller,
-            itemCount: onboardingItems.length,
+            itemCount: items.length,
             onPageChanged: (i) => setState(() => _index = i),
             itemBuilder: (context, index) {
-              final item = onboardingItems[index];
+              final item = items[index];
               return Stack(
                 fit: StackFit.expand,
                 children: [
-                  Image.network(item.image, fit: BoxFit.cover),
+                  AuthorizedMediaImage(url: item.image),
                   Container(
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
@@ -70,27 +73,22 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                       mainAxisAlignment: MainAxisAlignment.end,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        // ds-ignore: no-hand-rolled-text-styles -- an emoji
+                        // rendered as an illustration, not as text in a role.
+                        // ds-ignore: no-literal-font-sizes -- same
                         Text(item.emoji, style: const TextStyle(fontSize: 48)),
                         const SizedBox(height: DsSpacing.md),
                         Text(
                           item.title,
-                          style: TextStyle(
-                            fontFamily: DsTypography.fontFamily,
-                            color: colors.onPrimary,
-                            fontSize: 36,
-                            fontWeight: DsTypography.bold,
-                          ),
+                          style: context.dsText.hero.tint(colors.onPrimary),
                         ),
                         const SizedBox(height: DsSpacing.sm),
                         Text(
                           item.subtitle,
-                          style: TextStyle(
-                            color: colors.onPrimary.withValues(alpha: 0.92),
-                            fontSize: DsTypography.bodyLarge,
-                            height: 1.5,
-                          ),
+                          style: context.dsText.bodyLarge.tint(colors.onPrimary.withValues(alpha: 0.92)).copyWith(height: 1.5),
                         ),
-                        const SizedBox(height: 100),
+                        // Clears the pager dots and the primary action.
+                        const SizedBox(height: DsSizes.bottomSafeGap),
                       ],
                     ),
                   ),
@@ -106,10 +104,10 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: List.generate(
-                      onboardingItems.length,
+                      items.length,
                       (i) => AnimatedContainer(
                         duration: DsMotion.fast,
-                        margin: const EdgeInsets.symmetric(horizontal: 4),
+                        margin: const EdgeInsets.symmetric(horizontal: DsSpacing.xxs),
                         width: _index == i ? 28 : 8,
                         height: 8,
                         decoration: BoxDecoration(
@@ -123,18 +121,18 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                   ),
                   const Spacer(),
                   PrimaryButton(
-                    label: _index == onboardingItems.length - 1
-                        ? 'Start shopping'
-                        : 'Continue',
+                    label: _index == items.length - 1
+                        ? context.l10n.onboardStart
+                        : context.l10n.onboardContinue,
                     onPressed: _next,
                   ),
                   const SizedBox(height: DsSpacing.md),
-                  if (_index < onboardingItems.length - 1)
+                  if (_index < items.length - 1)
                     TextButton(
                       onPressed: () => context.go(RoutePaths.home),
                       child: Text(
-                        'Skip',
-                        style: TextStyle(color: colors.onPrimary),
+                        context.l10n.onboardSkip,
+                        style: context.dsText.body.tint(colors.onPrimary),
                       ),
                     ),
                   const SizedBox(height: DsSpacing.lg),

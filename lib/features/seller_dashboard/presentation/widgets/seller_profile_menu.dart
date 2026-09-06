@@ -49,9 +49,21 @@ class SellerProfileMenu extends ConsumerWidget {
             onTap: () => context.push(RoutePaths.paymentMethods),
           ),
           _Row(
+            icon: Icons.reviews_outlined,
+            label: l10n.sellerReviewsMenu,
+            color: tint(3),
+            onTap: () => context.push(RoutePaths.sellerReviews),
+          ),
+          _Row(
+            icon: Icons.assignment_return_outlined,
+            label: l10n.sellerReturnsTitle,
+            color: tint(4),
+            onTap: () => context.push(RoutePaths.sellerReturns),
+          ),
+          _Row(
             icon: Icons.policy_outlined,
             label: l10n.sellerStorePolicies,
-            color: tint(3),
+            color: tint(5),
             onTap: () => _comingSoon(context, l10n.sellerStorePolicies),
           ),
         ],
@@ -69,7 +81,7 @@ class SellerProfileMenu extends ConsumerWidget {
             icon: Icons.receipt_long_outlined,
             label: l10n.sellerFinancialReports,
             color: tint(1),
-            onTap: () => _comingSoon(context, l10n.sellerFinancialReports),
+            onTap: () => context.push(RoutePaths.sellerEarnings),
           ),
           _Row(
             icon: Icons.account_balance_wallet_outlined,
@@ -286,7 +298,7 @@ class _Row extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(
           horizontal: DsSpacing.md,
-          vertical: DsSpacing.sm + 2,
+          vertical: DsSpacing.sm + DsSpacing.xxxs,
         ),
         child: Row(
           children: [
@@ -306,12 +318,7 @@ class _Row extends StatelessWidget {
                 label,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  fontFamily: DsTypography.fontFamily,
-                  fontSize: DsTypography.titleSmall,
-                  fontWeight: DsTypography.medium,
-                  color: palette.ink,
-                ),
+                style: context.dsText.tileTitle.tint(palette.ink),
               ),
             ),
             Icon(
@@ -349,7 +356,7 @@ class _LogoutCard extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.symmetric(
               horizontal: DsSpacing.md,
-              vertical: DsSpacing.sm + 2,
+              vertical: DsSpacing.sm + DsSpacing.xxxs,
             ),
             child: Row(
               children: [
@@ -371,12 +378,7 @@ class _LogoutCard extends StatelessWidget {
                 Expanded(
                   child: Text(
                     context.l10n.signOut,
-                    style: TextStyle(
-                      fontFamily: DsTypography.fontFamily,
-                      fontSize: DsTypography.titleSmall,
-                      fontWeight: DsTypography.semiBold,
-                      color: palette.critical,
-                    ),
+                    style: context.dsText.tileTitle.semibold.tint(palette.critical),
                   ),
                 ),
               ],

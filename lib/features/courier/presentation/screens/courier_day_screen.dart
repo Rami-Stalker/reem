@@ -33,13 +33,7 @@ class CourierDayScreen extends ConsumerWidget {
     return ReemScrollPage(
       onRefresh: notifier.load,
       slivers: [
-        SliverAppBar(
-          pinned: true,
-          elevation: 0,
-          backgroundColor: Colors.transparent,
-          surfaceTintColor: Colors.transparent,
-          title: Text(l10n.courierDay),
-        ),
+        PremiumAppBar(title: l10n.courierDay, showBack: true),
 
         if (state.isLoading && state.assignments.isEmpty)
           const SliverToBoxAdapter(child: _Skeleton())
@@ -66,7 +60,7 @@ class CourierDayScreen extends ConsumerWidget {
           ],
         ],
 
-        const SliverToBoxAdapter(child: SizedBox(height: 120)),
+        DsGaps.sliverBottomSafe,
       ],
     );
   }
@@ -76,7 +70,7 @@ class CourierDayScreen extends ConsumerWidget {
       child: Padding(
         padding: const EdgeInsets.fromLTRB(
           DsSpacing.lg,
-          0,
+          DsSpacing.xxxs,
           DsSpacing.lg,
           DsSpacing.md,
         ),
@@ -91,12 +85,7 @@ class CourierDayScreen extends ConsumerWidget {
             const SizedBox(width: DsSpacing.xs),
             Text(
               '$count',
-              style: TextStyle(
-                fontFamily: DsTypography.fontFamily,
-                fontSize: DsTypography.bodyMedium,
-                fontWeight: DsTypography.bold,
-                color: context.dsColors.onSurfaceVariant,
-              ),
+              style: context.dsText.body.bold.tint(context.dsColors.onSurfaceVariant),
             ),
           ],
         ),
@@ -220,20 +209,12 @@ class _DeliverySheetState extends State<_DeliverySheet> {
               children: [
                 Text(
                   l10n.courierCollect,
-                  style: TextStyle(
-                    fontSize: DsTypography.bodySmall,
-                    color: colors.onSurfaceVariant,
-                  ),
+                  style: context.dsText.bodySmall.tint(colors.onSurfaceVariant),
                 ),
                 const Spacer(),
                 Text(
                   widget.parcel.codAmount!.format(),
-                  style: TextStyle(
-                    fontFamily: DsTypography.fontFamily,
-                    fontSize: DsTypography.titleMedium,
-                    fontWeight: DsTypography.bold,
-                    color: colors.price,
-                  ),
+                  style: context.dsText.cardTitle.bold.tint(colors.price),
                 ),
               ],
             ),

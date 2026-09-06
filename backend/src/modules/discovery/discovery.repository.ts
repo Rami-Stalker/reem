@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma, ProductStatus } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
+import { categorySubtreeIds } from '../../common/catalog/category-subtree';
 import {
   PRODUCT_CARD_INCLUDE,
   PURCHASABLE_PRODUCT_WHERE,
@@ -35,6 +36,11 @@ export class DiscoveryRepository {
 
   count(where: Prisma.ProductWhereInput): Promise<number> {
     return this.prisma.product.count({ where });
+  }
+
+  /** A department and everything under it. Empty for an unknown slug. */
+  categorySubtree(slug: string): Promise<string[]> {
+    return categorySubtreeIds(this.prisma, slug);
   }
 
   /** The product's leaf category slug — the key discovery rails group by. */

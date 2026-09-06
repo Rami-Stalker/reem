@@ -66,11 +66,7 @@ class CourierParcelCard extends StatelessWidget {
                             assignment.recipient.name,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                              fontSize: DsTypography.bodyMedium,
-                              fontWeight: DsTypography.bold,
-                              color: colors.onSurface,
-                            ),
+                            style: context.dsText.body.bold.tint(colors.onSurface),
                           ),
                         ),
                         if (assignment.isExpress) ...[
@@ -82,22 +78,15 @@ class CourierParcelCard extends StatelessWidget {
                         ],
                       ],
                     ),
-                    const SizedBox(height: 2),
+                    DsGaps.vXxxs,
                     Text(
                       assignment.address.oneLine,
-                      style: TextStyle(
-                        fontSize: DsTypography.bodySmall,
-                        color: colors.onSurfaceVariant,
-                        height: 1.4,
-                      ),
+                      style: context.dsText.bodySmall.tint(colors.onSurfaceVariant).copyWith(height: 1.4),
                     ),
                     if (assignment.address.landmark != null)
                       Text(
                         assignment.address.landmark!,
-                        style: TextStyle(
-                          fontSize: DsTypography.labelSmall,
-                          color: colors.onSurfaceVariant,
-                        ),
+                        style: context.dsText.caption.tint(colors.onSurfaceVariant),
                       ),
                   ],
                 ),
@@ -130,11 +119,7 @@ class CourierParcelCard extends StatelessWidget {
                   Expanded(
                     child: Text(
                       assignment.deliveryInstructions!,
-                      style: TextStyle(
-                        fontSize: DsTypography.labelSmall,
-                        color: colors.onSurface,
-                        height: 1.4,
-                      ),
+                      style: context.dsText.caption.tint(colors.onSurface).copyWith(height: 1.4),
                     ),
                   ),
                 ],
@@ -151,11 +136,7 @@ class CourierParcelCard extends StatelessWidget {
                 const SizedBox(width: DsSpacing.xxs),
                 Text(
                   l10n.trackAttempts(assignment.attemptCount),
-                  style: TextStyle(
-                    fontSize: DsTypography.labelSmall,
-                    fontWeight: DsTypography.semiBold,
-                    color: colors.warning,
-                  ),
+                  style: context.dsText.caption.semibold.tint(colors.warning),
                 ),
               ],
             ),
@@ -194,7 +175,7 @@ class _StageChip extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(
         horizontal: DsSpacing.xs,
-        vertical: 3,
+        vertical: DsSpacing.xxs,
       ),
       decoration: BoxDecoration(
         color: trouble
@@ -206,15 +187,11 @@ class _StageChip extends StatelessWidget {
       ),
       child: Text(
         shipmentStageLabel(context, assignment.stage),
-        style: TextStyle(
-          fontSize: DsTypography.labelSmall,
-          fontWeight: DsTypography.bold,
-          color: trouble
+        style: context.dsText.caption.bold.tint(trouble
               ? colors.warning
               : (assignment.isClosed
                     ? colors.success
-                    : colors.onPrimaryContainer),
-        ),
+                    : colors.onPrimaryContainer)),
       ),
     );
   }
@@ -240,11 +217,7 @@ class _CollectionLine extends StatelessWidget {
           const SizedBox(width: DsSpacing.xxs),
           Text(
             l10n.courierPrepaid,
-            style: TextStyle(
-              fontSize: DsTypography.bodySmall,
-              fontWeight: DsTypography.semiBold,
-              color: colors.success,
-            ),
+            style: context.dsText.bodySmall.semibold.tint(colors.success),
           ),
         ],
       );
@@ -254,20 +227,12 @@ class _CollectionLine extends StatelessWidget {
       children: [
         Text(
           l10n.courierCollect,
-          style: TextStyle(
-            fontSize: DsTypography.labelSmall,
-            color: colors.onSurfaceVariant,
-          ),
+          style: context.dsText.caption.tint(colors.onSurfaceVariant),
         ),
         const SizedBox(width: DsSpacing.xs),
         Text(
           assignment.codAmount!.format(),
-          style: TextStyle(
-            fontFamily: DsTypography.fontFamily,
-            fontSize: DsTypography.titleSmall,
-            fontWeight: DsTypography.bold,
-            color: colors.price,
-          ),
+          style: context.dsText.tileTitle.bold.tint(colors.price),
         ),
       ],
     );
@@ -423,11 +388,7 @@ class _Secondary extends StatelessWidget {
             const SizedBox(width: DsSpacing.xxs),
             Text(
               label,
-              style: TextStyle(
-                fontSize: DsTypography.labelMedium,
-                fontWeight: DsTypography.semiBold,
-                color: accent,
-              ),
+              style: context.dsText.labelMedium.semibold.tint(accent),
             ),
           ],
         ),

@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 
 import 'package:reem/core/design_system/design_system.dart';
 import 'package:reem/core/localization/l10n_extension.dart';
+import 'package:reem/core/media/media_variants.dart';
 import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/features/home/domain/entities/home_category.dart';
 import 'package:reem/features/home/presentation/providers/home_content_provider.dart';
@@ -58,9 +59,8 @@ class HomeCategoriesShowcase extends ConsumerWidget {
                       const SizedBox(width: DsSpacing.sm),
                   itemBuilder: (context, i) => _CategoryTile(
                     category: categories[i],
-                    onTap: () => context.push(
-                      '/category/${Uri.encodeComponent(categories[i].label)}',
-                    ),
+                    onTap: () =>
+                        context.push(RoutePaths.categoryOf(categories[i].slug)),
                   ),
                 ),
         ),
@@ -95,7 +95,6 @@ class _CategoryTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = context.dsColors;
-    final theme = Theme.of(context);
 
     final tile = Container(
       width: HomeCategoriesShowcase._width,
@@ -110,7 +109,7 @@ class _CategoryTile extends StatelessWidget {
         fit: StackFit.expand,
         children: [
           CachedNetworkImage(
-            imageUrl: category.imageUrl,
+            imageUrl: MediaVariants.thumb(category.imageUrl),
             fit: BoxFit.cover,
             fadeInDuration: DsMotion.normal,
             placeholder: (_, _) => ColoredBox(color: c.shimmerBase),
@@ -139,12 +138,12 @@ class _CategoryTile extends StatelessWidget {
                   category.label,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: theme.textTheme.labelLarge?.copyWith(
-                    color: Colors.white,
+                  style: context.dsText.labelLarge.copyWith(
+                    color: DsColors.onMedia,
                     fontWeight: DsTypography.bold,
                     height: 1.2,
                     shadows: const [
-                      Shadow(blurRadius: 8, color: Colors.black54),
+                      Shadow(blurRadius: 8, color: DsColors.mediaScrim),
                     ],
                   ),
                 ),
@@ -153,10 +152,10 @@ class _CategoryTile extends StatelessWidget {
                     context.l10n.piecesCount(_compact(category.productCount)),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: theme.textTheme.labelSmall?.copyWith(
-                      color: Colors.white.withValues(alpha: 0.86),
+                    style: context.dsText.caption.copyWith(
+                      color: DsColors.onMedia.withValues(alpha: 0.86),
                       shadows: const [
-                        Shadow(blurRadius: 8, color: Colors.black54),
+                        Shadow(blurRadius: 8, color: DsColors.mediaScrim),
                       ],
                     ),
                   ),

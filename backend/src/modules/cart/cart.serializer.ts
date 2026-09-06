@@ -6,15 +6,47 @@ export type CartItemRecord =
   | Prisma.CartItemGetPayload<{ include: typeof CART_INCLUDE }>
   | Prisma.GuestCartItemGetPayload<{ include: typeof GUEST_CART_INCLUDE }>;
 
+/**
+ * What checkout actually needs from a line, whatever produced it.
+ *
+ * Checkout used to take `CartItemRecord[]`, which quietly made "a thing that
+ * can be bought" mean "a row in the cart table". Reem Rooms buys from a
+ * `PurchasePlan` and never writes a cart row, so the requirement is stated
+ * structurally instead: an offer, an optional variant of it, and how many.
+ *
+ * Both cart tables satisfy this, which the assertion below keeps true — if a
+ * future include drops a field checkout reads, this stops compiling here rather
+ * than at the six call sites downstream.
+ */
+export interface PurchasableLine {
+  offerId: string;
+  offerVariantId: string | null;
+  quantity: number;
+  offer: Prisma.SellerOfferGetPayload<{
+    include: {
+      seller: true;
+      product: { include: { media: true; category: true } };
+    };
+  }>;
+  offerVariant: Prisma.SellerOfferVariantGetPayload<{
+    include: { variant: true };
+  }> | null;
+}
+
+// A cart line is a purchasable line. Compile-time only.
+const _cartIsPurchasable: (line: CartItemRecord) => PurchasableLine = (line) =>
+  line;
+void _cartIsPurchasable;
+
 /** The unit price actually charged: the offer variant's, else the offer's. */
-export function unitPriceOf(item: CartItemRecord): Money {
+export function unitPriceOf(item: PurchasableLine): Money {
   return Money.of(
     item.offerVariant?.price ?? item.offer.price,
     item.offer.currency,
   );
 }
 
-export function availableStockOf(item: CartItemRecord): number {
+export function availableStockOf(item: PurchasableLine): number {
   return item.offerVariant ? item.offerVariant.stock : item.offer.stock;
 }
 

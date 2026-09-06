@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reem/core/design_system/design_system.dart';
 import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/media/authorized_media_image.dart';
+import 'package:reem/core/media/media_lightbox.dart';
 import 'package:reem/core/media/media_variants.dart';
 import 'package:reem/features/chat/presentation/providers/chat_provider.dart';
 
@@ -66,7 +67,7 @@ class _ChatMediaGalleryScreenState
                       child: Text(
                         l10n.chatNoSharedMedia,
                         textAlign: TextAlign.center,
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        style: context.dsText.body.copyWith(
                           color: context.dsColors.onSurfaceVariant,
                         ),
                       ),
@@ -117,7 +118,7 @@ class _Header extends StatelessWidget {
           const SizedBox(width: DsSpacing.xxs),
           Text(
             title,
-            style: Theme.of(context).textTheme.titleLarge?.copyWith(
+            style: context.dsText.sectionTitle.copyWith(
               fontWeight: DsTypography.bold,
             ),
           ),
@@ -135,26 +136,7 @@ class _Tile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => Navigator.of(context).push(
-        MaterialPageRoute<void>(
-          fullscreenDialog: true,
-          builder: (_) => Scaffold(
-            backgroundColor: Colors.black,
-            appBar: AppBar(
-              backgroundColor: Colors.transparent,
-              foregroundColor: Colors.white,
-              elevation: 0,
-            ),
-            extendBodyBehindAppBar: true,
-            body: Center(
-              child: InteractiveViewer(
-                maxScale: 4,
-                child: AuthorizedMediaImage(url: url, fit: BoxFit.contain),
-              ),
-            ),
-          ),
-        ),
-      ),
+      onTap: () => MediaLightbox.open(context, url: url),
       child: AuthorizedMediaImage(
         url: url,
         // A third of the screen; the full upload here would be a megabyte a

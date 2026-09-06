@@ -2,23 +2,39 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/shared/entities/comment.dart';
+import 'package:reem/core/utils/relative_time.dart';
 import 'package:reem/features/auth/presentation/providers/auth_provider.dart';
 import 'package:reem/features/social_posts/presentation/providers/comments_state.dart';
 import 'package:reem/features/social_posts/presentation/providers/social_posts_providers.dart';
 
 /// Opens the comments for [postId] in a Reem-styled modal bottom sheet.
-Future<void> showCommentSheet(BuildContext context, String postId) {
+///
+/// [onCountChanged] fires with `+1` / `-1` as the server takes a comment or a
+/// deletion — the card that opened the sheet keeps its own tally, and the
+/// `Post` it was built from is immutable and already stale by then. Without it
+/// a shopper commented, closed the sheet, and found the counter under the post
+/// still reading what it read before she typed.
+Future<void> showCommentSheet(
+  BuildContext context,
+  String postId, {
+  ValueChanged<int>? onCountChanged,
+}) {
   return DsBottomSheet.show<void>(
     context,
-    builder: (_) => CommentSheet(postId: postId),
+    builder: (_) =>
+        CommentSheet(postId: postId, onCountChanged: onCountChanged),
   );
 }
 
 class CommentSheet extends ConsumerStatefulWidget {
-  const CommentSheet({super.key, required this.postId});
+  const CommentSheet({super.key, required this.postId, this.onCountChanged});
 
   final String postId;
+
+  /// Reports committed changes to the thread's size, one at a time.
+  final ValueChanged<int>? onCountChanged;
 
   @override
   ConsumerState<CommentSheet> createState() => _CommentSheetState();
@@ -40,15 +56,28 @@ class _CommentSheetState extends ConsumerState<CommentSheet> {
     if (text.isEmpty) return;
     _controller.clear();
     _focus.unfocus();
-    await ref.read(commentsNotifierProvider(widget.postId).notifier).add(text);
+    final added = await ref
+        .read(commentsNotifierProvider(widget.postId).notifier)
+        .add(text);
+    if (added) widget.onCountChanged?.call(1);
   }
 
   @override
   Widget build(BuildContext context) {
     final c = context.dsColors;
-    final theme = Theme.of(context);
     final state = ref.watch(commentsNotifierProvider(widget.postId));
     final myId = ref.watch(authNotifierProvider.select((s) => s.user?.id));
+
+    // The notifier rolls a failed comment back out of the list. Without this
+    // the row simply vanished and she was left wondering whether it sent.
+    ref.listen(commentsNotifierProvider(widget.postId).select((s) => s.error), (
+      previous,
+      error,
+    ) {
+      if (error != null && error != previous) {
+        DsSnackbar.error(context, error);
+      }
+    });
 
     return SizedBox(
       height: MediaQuery.sizeOf(context).height * 0.82,
@@ -56,23 +85,40 @@ class _CommentSheetState extends ConsumerState<CommentSheet> {
         children: [
           Padding(
             padding: const EdgeInsets.fromLTRB(
-                DsSpacing.lg, DsSpacing.xs, DsSpacing.lg, DsSpacing.sm),
+              DsSpacing.lg,
+              DsSpacing.xs,
+              DsSpacing.lg,
+              DsSpacing.sm,
+            ),
             child: Row(
               children: [
-                Text('Comments',
-                    style: theme.textTheme.titleLarge
-                        ?.copyWith(fontWeight: DsTypography.bold)),
+                Text(
+                  context.l10n.comments,
+                  style: context.dsText.sectionTitle.copyWith(
+                    fontWeight: DsTypography.bold,
+                  ),
+                ),
                 if (state.comments.isNotEmpty) ...[
                   const SizedBox(width: DsSpacing.xs),
-                  Text('${state.comments.length}',
-                      style: theme.textTheme.titleMedium
-                          ?.copyWith(color: c.onSurfaceVariant)),
+                  Text(
+                    '${state.comments.length}',
+                    style: context.dsText.cardTitle.copyWith(
+                      color: c.onSurfaceVariant,
+                    ),
+                  ),
                 ],
               ],
             ),
           ),
           Divider(height: 1, color: c.divider),
-          Expanded(child: _List(state: state, myId: myId, postId: widget.postId)),
+          Expanded(
+            child: _List(
+              state: state,
+              myId: myId,
+              postId: widget.postId,
+              onCountChanged: widget.onCountChanged,
+            ),
+          ),
           _InputBar(
             controller: _controller,
             focusNode: _focus,
@@ -86,11 +132,17 @@ class _CommentSheetState extends ConsumerState<CommentSheet> {
 }
 
 class _List extends ConsumerWidget {
-  const _List({required this.state, required this.myId, required this.postId});
+  const _List({
+    required this.state,
+    required this.myId,
+    required this.postId,
+    this.onCountChanged,
+  });
 
   final CommentsState state;
   final String? myId;
   final String postId;
+  final ValueChanged<int>? onCountChanged;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -98,15 +150,17 @@ class _List extends ConsumerWidget {
       return const _LoadingList();
     }
     if (state.isEmpty) {
-      return const DsEmptyState(
+      return DsEmptyState(
         icon: Icons.chat_bubble_outline_rounded,
-        title: 'No comments yet',
-        message: 'Be the first to share what you think.',
+        title: context.l10n.noCommentsYet,
+        message: context.l10n.beTheFirstToComment,
       );
     }
     return ListView.separated(
       padding: const EdgeInsets.symmetric(
-          horizontal: DsSpacing.lg, vertical: DsSpacing.md),
+        horizontal: DsSpacing.lg,
+        vertical: DsSpacing.md,
+      ),
       itemCount: state.comments.length,
       separatorBuilder: (_, _) => const SizedBox(height: DsSpacing.lg),
       itemBuilder: (_, i) {
@@ -115,10 +169,26 @@ class _List extends ConsumerWidget {
         return _CommentTile(
           comment: comment,
           isMine: isMine,
+          // Deleting removes it for everyone and cannot be undone, so it is
+          // confirmed. It used to fire straight off a long press, which is
+          // easy to do by accident while scrolling.
           onDelete: isMine
-              ? () => ref
-                  .read(commentsNotifierProvider(postId).notifier)
-                  .remove(comment.id)
+              ? () async {
+                  final confirmed = await DsDialog.confirm(
+                    context,
+                    title: context.l10n.deleteComment,
+                    message: context.l10n.deleteCommentBody,
+                    confirmLabel: context.l10n.delete,
+                    cancelLabel: context.l10n.cancel,
+                    icon: Icons.delete_outline_rounded,
+                    destructive: true,
+                  );
+                  if (!confirmed || !context.mounted) return;
+                  final removed = await ref
+                      .read(commentsNotifierProvider(postId).notifier)
+                      .remove(comment.id);
+                  if (removed) onCountChanged?.call(-1);
+                }
               : null,
         );
       },
@@ -135,14 +205,13 @@ class _CommentTile extends StatelessWidget {
 
   final Comment comment;
   final bool isMine;
-  final VoidCallback? onDelete;
+  final Future<void> Function()? onDelete;
 
   @override
   Widget build(BuildContext context) {
     final c = context.dsColors;
-    final theme = Theme.of(context);
     return GestureDetector(
-      onLongPress: onDelete,
+      onLongPress: onDelete == null ? null : () => onDelete!(),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -158,7 +227,9 @@ class _CommentTile extends StatelessWidget {
               children: [
                 Container(
                   padding: const EdgeInsets.symmetric(
-                      horizontal: DsSpacing.md, vertical: DsSpacing.sm),
+                    horizontal: DsSpacing.md,
+                    vertical: DsSpacing.sm,
+                  ),
                   decoration: BoxDecoration(
                     color: isMine ? c.primaryContainer : c.surfaceVariant,
                     borderRadius: const BorderRadius.only(
@@ -177,7 +248,7 @@ class _CommentTile extends StatelessWidget {
                               comment.user.name,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                              style: theme.textTheme.labelLarge?.copyWith(
+                              style: context.dsText.labelLarge.copyWith(
                                 fontWeight: DsTypography.semiBold,
                                 color: isMine
                                     ? c.onPrimaryContainer
@@ -187,57 +258,64 @@ class _CommentTile extends StatelessWidget {
                           ),
                           if (comment.user.isVerified) ...[
                             const SizedBox(width: DsSpacing.xxs),
-                            Icon(Icons.verified_rounded,
-                                size: 13, color: c.secondary),
+                            Icon(
+                              Icons.verified_rounded,
+                              size: 13,
+                              color: c.secondary,
+                            ),
                           ],
                         ],
                       ),
                       const SizedBox(height: DsSpacing.xxs),
                       Text(
                         comment.content,
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          color:
-                              isMine ? c.onPrimaryContainer : c.onSurface,
+                        style: context.dsText.body.copyWith(
+                          color: isMine ? c.onPrimaryContainer : c.onSurface,
                           height: 1.4,
                         ),
                       ),
                     ],
                   ),
                 ),
+                // A "Reply" label and a heart used to sit here. Neither did
+                // anything — there is no comment threading and no comment
+                // like on the server — so they were decoration that read as
+                // broken. The timestamp is the only true thing in this row.
                 Padding(
                   padding: const EdgeInsetsDirectional.only(
-                      start: DsSpacing.sm, top: DsSpacing.xxs),
+                    start: DsSpacing.sm,
+                    top: DsSpacing.xxs,
+                  ),
                   child: Row(
                     children: [
-                      Text(_ago(comment.createdAt),
-                          style: theme.textTheme.labelSmall
-                              ?.copyWith(color: c.onSurfaceVariant)),
-                      const SizedBox(width: DsSpacing.md),
-                      Text('Reply',
-                          style: theme.textTheme.labelSmall?.copyWith(
-                              color: c.onSurfaceVariant,
-                              fontWeight: DsTypography.semiBold)),
+                      Text(
+                        formatRelativeTime(context.l10n, comment.createdAt),
+                        style: context.dsText.caption.copyWith(
+                          color: c.onSurfaceVariant,
+                        ),
+                      ),
+                      if (isMine && onDelete != null) ...[
+                        const SizedBox(width: DsSpacing.md),
+                        GestureDetector(
+                          onTap: () => onDelete!(),
+                          child: Text(
+                            context.l10n.delete,
+                            style: context.dsText.caption.copyWith(
+                              color: c.error,
+                              fontWeight: DsTypography.semiBold,
+                            ),
+                          ),
+                        ),
+                      ],
                     ],
                   ),
                 ),
               ],
             ),
           ),
-          const SizedBox(width: DsSpacing.xs),
-          Icon(Icons.favorite_border_rounded,
-              size: 16, color: c.onSurfaceVariant),
         ],
       ),
     );
-  }
-
-  String _ago(DateTime t) {
-    final d = DateTime.now().difference(t);
-    if (d.inMinutes < 1) return 'now';
-    if (d.inHours < 1) return '${d.inMinutes}m';
-    if (d.inDays < 1) return '${d.inHours}h';
-    if (d.inDays < 7) return '${d.inDays}d';
-    return '${(d.inDays / 7).floor()}w';
   }
 }
 
@@ -249,7 +327,9 @@ class _LoadingList extends StatelessWidget {
     return DsShimmer(
       child: ListView.separated(
         padding: const EdgeInsets.symmetric(
-            horizontal: DsSpacing.lg, vertical: DsSpacing.md),
+          horizontal: DsSpacing.lg,
+          vertical: DsSpacing.md,
+        ),
         itemCount: 6,
         separatorBuilder: (_, _) => const SizedBox(height: DsSpacing.lg),
         itemBuilder: (_, _) => Row(
@@ -293,6 +373,32 @@ class _InputBar extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final c = context.dsColors;
     final user = ref.watch(authNotifierProvider.select((s) => s.user));
+
+    // The sheet is opened behind an auth gate, so this is the rare case: her
+    // session expired while it was open. A composer that posts into a 401 is
+    // worse than one that says why it is closed.
+    if (user == null) {
+      return Container(
+        decoration: BoxDecoration(
+          color: c.surface,
+          border: Border(top: BorderSide(color: c.divider)),
+        ),
+        child: SafeArea(
+          top: false,
+          child: Padding(
+            padding: const EdgeInsets.all(DsSpacing.md),
+            child: Text(
+              context.l10n.signInToComment,
+              textAlign: TextAlign.center,
+              style: context.dsText.cardSubtitle.copyWith(
+                color: c.onSurfaceVariant,
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+
     return Container(
       decoration: BoxDecoration(
         color: c.surface,
@@ -302,10 +408,14 @@ class _InputBar extends ConsumerWidget {
         top: false,
         child: Padding(
           padding: const EdgeInsets.fromLTRB(
-              DsSpacing.md, DsSpacing.sm, DsSpacing.md, DsSpacing.sm),
+            DsSpacing.md,
+            DsSpacing.sm,
+            DsSpacing.md,
+            DsSpacing.sm,
+          ),
           child: Row(
             children: [
-              DsAvatar(imageUrl: user?.imageUrl, name: user?.name, size: 36),
+              DsAvatar(imageUrl: user.imageUrl, name: user.name, size: 36),
               const SizedBox(width: DsSpacing.sm),
               Expanded(
                 child: TextField(
@@ -316,11 +426,13 @@ class _InputBar extends ConsumerWidget {
                   textInputAction: TextInputAction.send,
                   onSubmitted: (_) => onSend(),
                   decoration: InputDecoration(
-                    hintText: 'Add a comment…',
+                    hintText: context.l10n.writeComment,
                     filled: true,
                     fillColor: c.surfaceVariant,
                     contentPadding: const EdgeInsets.symmetric(
-                        horizontal: DsSpacing.md, vertical: DsSpacing.sm),
+                      horizontal: DsSpacing.md,
+                      vertical: DsSpacing.sm,
+                    ),
                     border: OutlineInputBorder(
                       borderRadius: DsRadius.borderPill,
                       borderSide: BorderSide(color: c.border),

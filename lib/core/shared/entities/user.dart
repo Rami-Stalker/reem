@@ -70,6 +70,16 @@ class User extends Equatable {
   final int followingCount;
   final DateTime createdAt;
 
+  /// What this account is allowed to do, as the server resolved it.
+  ///
+  /// Only ever populated for the signed-in user (`/auth/me`); it is empty on
+  /// every other `User` the app parses, because a shopper's profile does not
+  /// carry anybody's permissions. The admin console reads it to decide which
+  /// destinations and which actions to *offer* — the server still decides what
+  /// to permit, so an empty set here degrades to a plainer console, never to
+  /// an unguarded one.
+  final Set<String> permissions;
+
   const User({
     required this.id,
     required this.name,
@@ -85,8 +95,20 @@ class User extends Equatable {
     this.deviceVerificationRequired = true,
     this.followersCount = 0,
     this.followingCount = 0,
+    this.permissions = const {},
     required this.createdAt,
   });
+
+  /// True when the server said this account holds [permission].
+  ///
+  /// A `super_admin` holds everything by construction on the server, and the
+  /// resolver returns the full set for that role, so no special case is needed
+  /// here — the set is the whole answer.
+  bool can(String permission) => permissions.contains(permission);
+
+  /// True when any one of [candidates] is held. Used for screens that a couple
+  /// of different permissions can each open.
+  bool canAny(Iterable<String> candidates) => candidates.any(can);
 
   bool get isAdmin =>
       role == UserRole.superAdmin ||
@@ -117,6 +139,7 @@ class User extends Equatable {
         deviceVerificationRequired,
         followersCount,
         followingCount,
+        permissions,
         createdAt,
       ];
 }

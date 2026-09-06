@@ -84,19 +84,51 @@ class DeliveryQuoteModel extends DeliveryQuote {
   }
 }
 
+class CodAssuranceModel extends CodAssurance {
+  const CodAssuranceModel({
+    required super.required,
+    super.message,
+    super.maskedDestination,
+    super.matchCode,
+    super.expiresAt,
+    super.resendAfter,
+    super.dispatchFailed,
+  });
+
+  factory CodAssuranceModel.fromJson(Map<String, dynamic> json) {
+    return CodAssuranceModel(
+      required: json['required'] as String? ?? 'order_confirmation',
+      message: json['message'] as String?,
+      maskedDestination: json['masked_destination'] as String?,
+      matchCode: json['match_code'] as String?,
+      expiresAt: _parseDate(json['expires_at']),
+      resendAfter: _parseDate(json['resend_after']),
+      dispatchFailed: json['dispatch_failed'] as bool? ?? false,
+    );
+  }
+}
+
+DateTime? _parseDate(Object? value) =>
+    value is String ? DateTime.tryParse(value) : null;
+
 class PlacedOrderModel extends PlacedOrder {
   const PlacedOrderModel({
     required super.order,
     super.redirectUrl,
     required super.requiresOnlineConfirmation,
+    super.codAssurance,
   });
 
   factory PlacedOrderModel.fromJson(Map<String, dynamic> json) {
+    final assurance = json['cod_assurance'];
     return PlacedOrderModel(
       order: OrderDetailModel.fromJson(json['order'] as Map<String, dynamic>),
       redirectUrl: json['redirect_url'] as String?,
       requiresOnlineConfirmation:
           json['requires_online_confirmation'] as bool? ?? false,
+      codAssurance: assurance is Map<String, dynamic>
+          ? CodAssuranceModel.fromJson(assurance)
+          : null,
     );
   }
 }

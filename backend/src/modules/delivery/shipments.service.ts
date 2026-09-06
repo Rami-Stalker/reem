@@ -24,6 +24,7 @@ import { Money } from '../../common/money';
 import { PrismaService } from '../../prisma/prisma.service';
 import { CommissionsService } from '../commissions/commissions.service';
 import { CustomerRefundsService } from '../finance/customer-refunds.service';
+import { CodTrustService } from '../cod-trust/cod-trust.service';
 import {
   SYSTEM_ACTOR,
   SellerOrderWorkflowService,
@@ -113,6 +114,7 @@ export class ShipmentsService {
     private readonly commissions: CommissionsService,
     private readonly workflow: SellerOrderWorkflowService,
     private readonly refunds: CustomerRefundsService,
+    private readonly codTrust: CodTrustService,
   ) {}
 
   // ── Creation and assignment ───────────────────────────────────────────
@@ -297,7 +299,7 @@ export class ShipmentsService {
       id: parcel.id,
       tracking_code: parcel.trackingCode,
       order_number: parcel.sellerOrder.number,
-      status: parcel.status,
+      status: parcel.status.toLowerCase(),
 
       // What to collect at the door. Null on a prepaid parcel — a courier who
       // is shown an amount will try to collect it.
@@ -478,6 +480,12 @@ export class ShipmentsService {
       );
     }
 
+    // Closes the loop the trust engine opened at checkout: the parcel it
+    // scored is now a fact. Best-effort, like everything else past the
+    // transaction — a model that learns a day late is fine, a delivery that
+    // fails to record is not.
+    await this.codTrust.observeBySellerOrder(delivered.sellerOrderId, 'delivered');
+
     return delivered;
   }
 
@@ -558,6 +566,11 @@ export class ShipmentsService {
       }
     }
 
+    await this.codTrust.observeBySellerOrder(
+      result.sellerOrderId,
+      reason === DeliveryFailureReason.CUSTOMER_REFUSED ? 'refused' : 'failed',
+    );
+
     return result;
   }
 
@@ -577,13 +590,13 @@ export class ShipmentsService {
     return {
       tracking_code: shipment.trackingCode,
       order_number: shipment.sellerOrder.number,
-      status: shipment.status,
+      status: shipment.status.toLowerCase(),
       scheduled_for: shipment.scheduledFor,
       is_express: shipment.isExpress,
       delivered_at: shipment.deliveredAt,
       attempt_count: shipment.attemptCount,
       events: shipment.events.map((event) => ({
-        status: event.status,
+        status: event.status.toLowerCase(),
         note: event.note,
         at: event.createdAt,
       })),

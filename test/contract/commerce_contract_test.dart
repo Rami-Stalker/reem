@@ -5,6 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:reem/core/shared/value_objects/money.dart';
 import 'package:reem/features/cart/data/models/cart_model.dart';
 import 'package:reem/features/checkout/data/models/checkout_models.dart';
+import 'package:reem/features/checkout/data/models/order_models.dart';
 import 'package:reem/features/checkout/domain/entities/order.dart';
 
 /// Contract tests for the commerce flow, run against responses captured from a
@@ -148,6 +149,79 @@ void main() {
           .fold<int>(0, (count, parcel) => count + parcel.items.length);
       expect(order.allItems.length, total);
       expect(order.allItems.every((item) => item.sellerName.isNotEmpty), isTrue);
+    });
+
+    test('an order nobody held carries no assurance block and no flag', () {
+      // The captured basket was placed by a customer the trust engine let
+      // through, so both must be absent rather than defaulted into something
+      // the screen would render.
+      final placed = PlacedOrderModel.fromJson(_fixture('placed_order.json'));
+      expect(placed.codAssurance, isNull);
+      expect(placed.awaitsCodConfirmation, isFalse);
+      expect(placed.order.awaitingCodConfirmation, isFalse);
+    });
+  });
+
+  /// The cash-on-delivery hold, on the wire.
+  ///
+  /// Written from the serializers rather than captured from a live server, so
+  /// it proves the parsers read the shape the backend produces but not that
+  /// the two have stayed in step — replace it with a capture the next time a
+  /// held order is placed against a running API.
+  group('cash-on-delivery assurance', () {
+    test('a held order carries the challenge the sheet needs', () {
+      final placed = PlacedOrderModel.fromJson({
+        'order': _fixture('placed_order.json')['order'],
+        'redirect_url': null,
+        'requires_online_confirmation': false,
+        'cod_assurance': {
+          'required': 'order_confirmation',
+          'message': 'أرسلنا رمزاً إلى رقم التوصيل للتأكد من الطلب.',
+          'otp_request_id': '0f1e2d3c-4b5a-6978-8796-a5b4c3d2e1f0',
+          'match_code': '47',
+          'masked_destination': '+9639•••••901',
+          'expires_at': '2026-09-01T10:30:00.000Z',
+          'resend_after': '2026-09-01T10:01:00.000Z',
+          'channel': 'whatsapp',
+        },
+      });
+
+      expect(placed.awaitsCodConfirmation, isTrue);
+      final assurance = placed.codAssurance!;
+      expect(assurance.required, 'order_confirmation');
+      expect(assurance.message, isNotEmpty);
+      // The two digits she compares against the message. Losing this to a key
+      // typo would silently drop the only defence against a code read out over
+      // the phone.
+      expect(assurance.matchCode, '47');
+      expect(assurance.maskedDestination, isNotNull);
+      expect(assurance.expiresAt, isNotNull);
+      expect(assurance.dispatchFailed, isFalse);
+    });
+
+    test('a challenge that never went out says so, and still holds the order',
+        () {
+      final placed = PlacedOrderModel.fromJson({
+        'order': _fixture('placed_order.json')['order'],
+        'requires_online_confirmation': false,
+        'cod_assurance': {
+          'required': 'order_confirmation',
+          'message': 'أرسلنا رمزاً إلى رقم التوصيل للتأكد من الطلب.',
+          'dispatch_failed': true,
+        },
+      });
+
+      expect(placed.awaitsCodConfirmation, isTrue);
+      expect(placed.codAssurance!.dispatchFailed, isTrue);
+      expect(placed.codAssurance!.matchCode, isNull);
+    });
+
+    test('the order detail carries one boolean and never a score', () {
+      final detail = OrderDetailModel.fromJson({
+        ..._fixture('order_detail.json'),
+        'awaiting_cod_confirmation': true,
+      });
+      expect(detail.awaitingCodConfirmation, isTrue);
     });
   });
 }

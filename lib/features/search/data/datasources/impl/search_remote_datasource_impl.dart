@@ -14,12 +14,14 @@ final class SearchRemoteDataSourceImpl extends BaseRemoteDataSource
     int page = 1,
     int limit = 20,
   }) async {
-    print('Search query: $query, page: $page, limit: $limit');
+    // No logging here. These two lines used to print the query and the whole
+    // response to the device log, where on some Android builds another app
+    // can read them — a woman's search history is not ours to leave lying
+    // about. `TelemetryInterceptor` records the request's shape, redacted.
     final json = await getJson(
       ApiEndpoints.searchProducts,
       query: {'q': query, 'page': page, 'limit': limit},
     );
-    print('Search response: $json');
     return ProductPageModel.fromJson(json);
   }
 

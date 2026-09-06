@@ -1,11 +1,14 @@
-import { Transform } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 import {
   IsEnum,
   IsIn,
+  IsInt,
   IsNumberString,
   IsOptional,
   IsString,
+  Max,
   MaxLength,
+  Min,
 } from 'class-validator';
 import { Currency, WalletTransactionSource } from '@prisma/client';
 
@@ -26,6 +29,25 @@ export class WalletQueryDto {
   @IsOptional()
   @IsEnum(Currency)
   currency?: Currency;
+
+  /**
+   * Paging for the statement. Declared here rather than as separate
+   * `@Query('skip')` parameters: the global pipe validates the whole query
+   * object with `forbidNonWhitelisted`, so anything absent from this DTO is
+   * refused before a per-parameter pipe ever sees it.
+   */
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  @Min(0)
+  skip?: number;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
+  @Max(100)
+  take?: number;
 }
 
 /**

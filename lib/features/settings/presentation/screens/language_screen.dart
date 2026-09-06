@@ -23,7 +23,7 @@ class LanguageScreen extends StatelessWidget {
                 delegate: SliverChildListDelegate([
                   Text(
                     l10n.selectLanguage,
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    style: context.dsText.body.copyWith(
                           color: context.dsColors.onSurfaceVariant,
                           height: 1.5,
                         ),
@@ -39,6 +39,7 @@ class LanguageScreen extends StatelessWidget {
                   const SizedBox(height: DsSpacing.md),
                   _LanguageOption(
                     title: l10n.en,
+                    // l10n-ignore: a language names itself, never translated
                     subtitle: 'English',
                     icon: Icons.translate_rounded,
                     selected: locale.isEnglish,
@@ -118,22 +119,14 @@ class _LanguageOption extends StatelessWidget {
                 children: [
                   Text(
                     title,
-                    style: TextStyle(
-                      fontFamily: DsTypography.fontFamily,
-                      fontWeight: DsTypography.bold,
-                      fontSize: DsTypography.titleMedium,
-                      color: selected ? colors.onPrimary : colors.onSurface,
-                    ),
+                    style: context.dsText.cardTitle.bold.tint(selected ? colors.onPrimary : colors.onSurface),
                   ),
-                  const SizedBox(height: 4),
+                  DsGaps.vXxs,
                   Text(
                     subtitle,
-                    style: TextStyle(
-                      fontSize: DsTypography.bodySmall,
-                      color: selected
+                    style: context.dsText.bodySmall.tint(selected
                           ? colors.onPrimary.withValues(alpha: 0.88)
-                          : colors.onSurfaceVariant,
-                    ),
+                          : colors.onSurfaceVariant),
                   ),
                 ],
               ),

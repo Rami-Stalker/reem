@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ConflictException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -28,14 +29,46 @@ export class UsersService {
   }
 
   async updateMe(userId: string, dto: UpdateProfileDto) {
+    const email = this.normaliseEmail(dto.email);
+    if (email) await this.assertEmailFree(email, userId);
+
     const user = await this.users.update(userId, {
       ...(dto.name !== undefined && { name: dto.name.trim() }),
       ...(dto.bio !== undefined && { bio: dto.bio }),
       ...(dto.image_url !== undefined && { imageUrl: dto.image_url }),
       ...(dto.location !== undefined && { location: dto.location }),
+      ...(dto.email !== undefined && {
+        email,
+        // A changed address is unverified until it answers. Clearing it clears
+        // the proof with it, so a stale verification cannot be inherited by a
+        // new address.
+        emailVerifiedAt: null,
+      }),
     });
     if (dto.image_url) await this.media.markAttached(userId, [dto.image_url]);
     return serializeUser(user);
+  }
+
+  /** Lower-cased and trimmed; an empty string means "remove it". */
+  private normaliseEmail(email?: string | null): string | null | undefined {
+    if (email === undefined) return undefined;
+    const trimmed = (email ?? '').trim().toLowerCase();
+    return trimmed.length === 0 ? null : trimmed;
+  }
+
+  /**
+   * `users.email` is unique, so a duplicate would surface as a Prisma P2002 —
+   * a 500 with a stack trace where the honest answer is "somebody already
+   * uses that address".
+   */
+  private async assertEmailFree(email: string, userId: string): Promise<void> {
+    const owner = await this.prisma.user.findUnique({
+      where: { email },
+      select: { id: true },
+    });
+    if (owner && owner.id !== userId) {
+      throw new ConflictException('هذا البريد مستخدم بحساب آخر');
+    }
   }
 
   /** Any user's public profile, annotated with the viewer's relationship. */

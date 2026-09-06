@@ -14,6 +14,7 @@ abstract interface class UserProfileRepository {
     String? bio,
     String? imageUrl,
     String? location,
+    String? email,
   });
 
   Future<Result<FollowResult>> follow(String userId);

@@ -14,19 +14,20 @@ enum ShipmentStage {
   cancelled,
   unknown;
 
-  static ShipmentStage fromWire(String? value) => switch (value) {
-    'CREATED' => ShipmentStage.created,
-    'ASSIGNED' => ShipmentStage.assigned,
-    'PICKED_UP' => ShipmentStage.pickedUp,
-    'IN_TRANSIT' => ShipmentStage.inTransit,
-    'OUT_FOR_DELIVERY' => ShipmentStage.outForDelivery,
-    'DELIVERED' => ShipmentStage.delivered,
-    'FAILED' => ShipmentStage.failed,
-    'RETURNING' => ShipmentStage.returning,
-    'RETURNED' => ShipmentStage.returned,
-    'CANCELLED' => ShipmentStage.cancelled,
-    _ => ShipmentStage.unknown,
-  };
+  static ShipmentStage fromWire(String? value) =>
+      switch ((value ?? '').toLowerCase()) {
+        'created' => ShipmentStage.created,
+        'assigned' => ShipmentStage.assigned,
+        'picked_up' => ShipmentStage.pickedUp,
+        'in_transit' => ShipmentStage.inTransit,
+        'out_for_delivery' => ShipmentStage.outForDelivery,
+        'delivered' => ShipmentStage.delivered,
+        'failed' => ShipmentStage.failed,
+        'returning' => ShipmentStage.returning,
+        'returned' => ShipmentStage.returned,
+        'cancelled' => ShipmentStage.cancelled,
+        _ => ShipmentStage.unknown,
+      };
 
   /// The journey is over, one way or another.
   bool get isTerminal =>

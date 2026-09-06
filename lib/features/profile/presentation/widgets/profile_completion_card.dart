@@ -34,7 +34,6 @@ class ProfileCompletionCard extends ConsumerWidget {
     }
 
     final c = context.dsColors;
-    final theme = Theme.of(context);
     final complete = overview.completionPercent >= 100;
     final next = overview.nextStep;
 
@@ -54,10 +53,10 @@ class ProfileCompletionCard extends ConsumerWidget {
                     children: [
                       Text(
                         complete ? context.l10n.allSet : context.l10n.completeProfile,
-                        style: theme.textTheme.titleMedium
-                            ?.copyWith(fontWeight: DsTypography.bold),
+                        style: context.dsText.cardTitle
+                            .copyWith(fontWeight: DsTypography.bold),
                       ),
-                      const SizedBox(height: 2),
+                      DsGaps.vXxxs,
                       Text(
                         complete
                             ? context.l10n.profileLooksBeautiful
@@ -66,17 +65,17 @@ class ProfileCompletionCard extends ConsumerWidget {
                                 : context.l10n.quickSteps,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
-                        style: theme.textTheme.bodySmall
-                            ?.copyWith(color: c.onSurfaceVariant),
+                        style: context.dsText.cardSubtitle
+                            .copyWith(color: c.onSurfaceVariant),
                       ),
-                      if (!complete) ...[
+                      if (!complete && next != null) ...[
                         const SizedBox(height: DsSpacing.sm),
                         DsButton(
                           label: context.l10n.completeProfile,
                           size: DsButtonSize.sm,
                           variant: DsButtonVariant.tonal,
                           isExpanded: false,
-                          onPressed: () => context.push(RoutePaths.editProfile),
+                          onPressed: () => context.push(_routeFor(next)),
                         ),
                       ],
                     ],
@@ -90,7 +89,15 @@ class ProfileCompletionCard extends ConsumerWidget {
               runSpacing: DsSpacing.xs,
               children: [
                 for (final step in overview.completionSteps)
-                  _StepChip(step: step),
+                  _StepChip(
+                    step: step,
+                    // A chip that cannot be acted on is a label, and a
+                    // checklist of labels reads as decoration. Each unfinished
+                    // step opens the screen that finishes it.
+                    onTap: step.done
+                        ? null
+                        : () => context.push(_routeFor(step)),
+                  ),
               ],
             ),
           ],
@@ -99,6 +106,16 @@ class ProfileCompletionCard extends ConsumerWidget {
     );
   }
 }
+
+/// Where a step is completed.
+///
+/// Her name, photograph, bio and recovery address are all fields on the edit
+/// screen; a phone number is proved somewhere else entirely, on the security
+/// screen, and sending her to the edit form for it would be a dead end.
+String _routeFor(ProfileCompletionStep step) => switch (step.key) {
+  'phone_verified' => RoutePaths.securitySettings,
+  _ => RoutePaths.editProfile,
+};
 
 class _CompletionRing extends StatelessWidget {
   const _CompletionRing({required this.percent});
@@ -140,12 +157,7 @@ class _CompletionRing extends StatelessWidget {
           ),
           Text(
             '$percent%',
-            style: TextStyle(
-              fontFamily: DsTypography.fontFamily,
-              fontWeight: DsTypography.bold,
-              fontSize: DsTypography.labelLarge,
-              color: c.onSurface,
-            ),
+            style: context.dsText.labelLarge.bold.tint(c.onSurface),
           ),
         ],
       ),
@@ -154,15 +166,16 @@ class _CompletionRing extends StatelessWidget {
 }
 
 class _StepChip extends StatelessWidget {
-  const _StepChip({required this.step});
+  const _StepChip({required this.step, this.onTap});
 
   final ProfileCompletionStep step;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
     final c = context.dsColors;
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: DsSpacing.sm, vertical: 5),
+    final chip = Container(
+      padding: const EdgeInsets.symmetric(horizontal: DsSpacing.sm, vertical: DsSpacing.xxs),
       decoration: BoxDecoration(
         color: step.done ? c.successContainer : c.surfaceVariant,
         borderRadius: DsRadius.borderFull,
@@ -181,13 +194,24 @@ class _StepChip extends StatelessWidget {
           const SizedBox(width: DsSpacing.xxs),
           Text(
             step.label,
-            style: TextStyle(
-              fontSize: DsTypography.labelSmall,
-              fontWeight: DsTypography.medium,
-              color: step.done ? c.onSurface : c.onSurfaceVariant,
-            ),
+            style: context.dsText.caption.tint(step.done ? c.onSurface : c.onSurfaceVariant),
           ),
+          if (onTap != null) ...[
+            const SizedBox(width: DsSpacing.xxs),
+            Icon(Icons.chevron_left_rounded, size: 14, color: c.primary),
+          ],
         ],
+      ),
+    );
+
+    if (onTap == null) return chip;
+    return Semantics(
+      button: true,
+      label: step.label,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: DsRadius.borderFull,
+        child: chip,
       ),
     );
   }

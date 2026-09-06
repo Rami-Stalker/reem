@@ -78,17 +78,12 @@ class SellerFinancialWidget extends ConsumerWidget {
                     const Icon(
                       Icons.account_balance_wallet_outlined,
                       size: 18,
-                      color: Colors.white,
+                      color: DsColors.onMedia,
                     ),
                     const SizedBox(width: DsSpacing.xs),
                     Text(
                       l10n.sellerWithdrawalCentre,
-                      style: const TextStyle(
-                        fontFamily: DsTypography.fontFamily,
-                        fontSize: DsTypography.labelMedium,
-                        fontWeight: DsTypography.semiBold,
-                        color: Colors.white,
-                      ),
+                      style: context.dsText.labelMedium.semibold.tint(DsColors.onMedia),
                     ),
                   ],
                 ),
@@ -106,23 +101,13 @@ class SellerFinancialWidget extends ConsumerWidget {
                             child: Text(
                               withdrawable.sypFull,
                               maxLines: 1,
-                              style: const TextStyle(
-                                fontFamily: DsTypography.fontFamily,
-                                fontSize: 30,
-                                fontWeight: DsTypography.bold,
-                                color: Colors.white,
-                                height: 1.1,
-                              ),
+                              style: context.dsText.pageTitle.bold.tint(DsColors.onMedia).copyWith(height: 1.1),
                             ),
                           ),
-                          const SizedBox(height: 4),
+                          DsGaps.vXxs,
                           Text(
                             l10n.sellerAvailableToWithdraw,
-                            style: TextStyle(
-                              fontFamily: DsTypography.fontFamily,
-                              fontSize: DsTypography.labelSmall,
-                              color: Colors.white.withValues(alpha: 0.8),
-                            ),
+                            style: context.dsText.caption.tint(DsColors.onMedia.withValues(alpha: 0.8)),
                           ),
                         ],
                       ),
@@ -130,17 +115,13 @@ class SellerFinancialWidget extends ConsumerWidget {
                     FilledButton(
                       onPressed: () => context.push(RoutePaths.sellerEarnings),
                       style: FilledButton.styleFrom(
-                        backgroundColor: Colors.white,
+                        backgroundColor: DsColors.onMedia,
                         foregroundColor: palette.primary,
                         padding: const EdgeInsets.symmetric(
                           horizontal: DsSpacing.md,
                           vertical: DsSpacing.xs,
                         ),
-                        textStyle: const TextStyle(
-                          fontFamily: DsTypography.fontFamily,
-                          fontWeight: DsTypography.bold,
-                          fontSize: DsTypography.labelMedium,
-                        ),
+                        textStyle: context.dsText.labelMedium.bold,
                       ),
                       child: Text(l10n.sellerWithdraw),
                     ),
@@ -196,22 +177,13 @@ class _FinStat extends StatelessWidget {
           child: Text(
             value,
             maxLines: 1,
-            style: const TextStyle(
-              fontFamily: DsTypography.fontFamily,
-              fontSize: DsTypography.titleSmall,
-              fontWeight: DsTypography.bold,
-              color: Colors.white,
-            ),
+            style: context.dsText.tileTitle.bold.tint(DsColors.onMedia),
           ),
         ),
-        const SizedBox(height: 2),
+        DsGaps.vXxxs,
         Text(
           label,
-          style: TextStyle(
-            fontFamily: DsTypography.fontFamily,
-            fontSize: DsTypography.labelSmall,
-            color: Colors.white.withValues(alpha: 0.75),
-          ),
+          style: context.dsText.caption.tint(DsColors.onMedia.withValues(alpha: 0.75)),
         ),
       ],
     ),
@@ -225,6 +197,6 @@ class _FDivider extends StatelessWidget {
   Widget build(BuildContext context) => Container(
     width: 1,
     height: 28,
-    color: Colors.white.withValues(alpha: 0.22),
+    color: DsColors.onMedia.withValues(alpha: 0.22),
   );
 }

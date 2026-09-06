@@ -88,9 +88,13 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
                     .animate()
                     .scale(duration: 900.ms, curve: Curves.easeOutExpo)
                     .fadeIn(),
-                const SizedBox(height: 36),
+                DsGaps.vXxxl,
                 DsGradientText(
                   'REEM',
+                  // ds-ignore: no-hand-rolled-text-styles -- the wordmark is
+                  // a logo, drawn once at a size and tracking that belong to
+                  // the mark rather than to the type scale.
+                  // ds-ignore: no-literal-font-sizes -- same
                   style: TextStyle(
                     fontFamily: DsTypography.fontFamily,
                     fontSize: 48,
@@ -98,10 +102,10 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
                     letterSpacing: 12,
                   ),
                 ).animate().fadeIn(delay: 300.ms).slideY(begin: 0.2),
-                const SizedBox(height: 12),
+                DsGaps.vSm,
                 Text(
                   l10n.splashTagline,
-                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                  style: context.dsText.bodyLarge.copyWith(
                     color: colors.onSurfaceVariant,
                     letterSpacing: 1.2,
                   ),

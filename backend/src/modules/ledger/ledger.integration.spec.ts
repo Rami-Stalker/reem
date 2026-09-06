@@ -58,6 +58,9 @@ function dbTest(name: string, body: () => Promise<void>): void {
   });
 }
 
+/** The transaction handle every test body is handed. */
+type Tx = Parameters<Parameters<typeof prisma.$transaction>[0]>[0];
+
 /** A sentinel thrown to roll the transaction back once assertions have run. */
 class Rollback extends Error {}
 
@@ -65,9 +68,7 @@ class Rollback extends Error {}
  * Runs [body] inside a transaction that always rolls back. Assertion failures
  * propagate; the rollback happens either way.
  */
-async function inRolledBackTx(
-  body: (tx: Parameters<Parameters<typeof prisma.$transaction>[0]>[0]) => Promise<void>,
-): Promise<void> {
+async function inRolledBackTx(body: (tx: Tx) => Promise<void>): Promise<void> {
   let failure: unknown;
   try {
     await prisma.$transaction(async (tx) => {
@@ -558,6 +559,13 @@ dbTest('paying a USD obligation with SYP cash balances in both currencies', asyn
       tx,
     );
 
+    // What the platform's own accounts held before this payout. The
+    // assertions below are about the movement this entry causes, and these
+    // three accounts are platform-wide: on a database with any history in it
+    // they already carry a balance, and asserting the absolute figure was
+    // really asserting "and nothing else has ever happened here".
+    const before = await platformBalances(tx);
+
     // Paid out in SYP at 15,000.
     const entry = await ledger.postConversion(
       {
@@ -592,36 +600,37 @@ dbTest('paying a USD obligation with SYP cash balances in both currencies', asyn
     });
     assert.equal(payable.balance.toString(), '0');
 
+    const after = await platformBalances(tx);
+
     // SYP cash fell by what was actually paid.
-    const sypCash = await tx.ledgerAccount.findFirstOrThrow({
-      where: {
-        code: LedgerAccountCode.PLATFORM_CASH,
-        ownerKey: 'platform',
-        currency: Currency.SYP,
-      },
-    });
-    assert.equal(sypCash.balance.toString(), '-1500000');
+    assert.equal(after.sypCash - before.sypCash, -1_500_000);
 
     // Both legs of the conversion sit in the bridge, one per currency.
-    const bridgeUsd = await tx.ledgerAccount.findFirstOrThrow({
-      where: {
-        code: LedgerAccountCode.FX_ADJUSTMENT,
-        ownerKey: 'platform',
-        currency: Currency.USD,
-      },
-    });
-    const bridgeSyp = await tx.ledgerAccount.findFirstOrThrow({
-      where: {
-        code: LedgerAccountCode.FX_ADJUSTMENT,
-        ownerKey: 'platform',
-        currency: Currency.SYP,
-      },
-    });
     // FX_ADJUSTMENT is debit-normal: credited in USD, debited in SYP.
-    assert.equal(bridgeUsd.balance.toString(), '-100');
-    assert.equal(bridgeSyp.balance.toString(), '1500000');
+    assert.equal(after.bridgeUsd - before.bridgeUsd, -100);
+    assert.equal(after.bridgeSyp - before.bridgeSyp, 1_500_000);
   });
 });
+
+/** The platform-wide balances this test measures movement against. */
+async function platformBalances(tx: Tx): Promise<{
+  sypCash: number;
+  bridgeUsd: number;
+  bridgeSyp: number;
+}> {
+  const read = async (code: LedgerAccountCode, currency: Currency) => {
+    const account = await tx.ledgerAccount.findFirst({
+      where: { code, ownerKey: 'platform', currency },
+    });
+    return account ? Number(account.balance) : 0;
+  };
+
+  return {
+    sypCash: await read(LedgerAccountCode.PLATFORM_CASH, Currency.SYP),
+    bridgeUsd: await read(LedgerAccountCode.FX_ADJUSTMENT, Currency.USD),
+    bridgeSyp: await read(LedgerAccountCode.FX_ADJUSTMENT, Currency.SYP),
+  };
+}
 
 dbTest('a conversion whose amounts contradict its rate writes nothing', async () => {
   await inRolledBackTx(async (tx) => {

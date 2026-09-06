@@ -81,7 +81,32 @@ class EarningsMovement extends Equatable {
   List<Object?> get props => [id, type, account, amount, occurredAt];
 }
 
-/// A payout that has been calculated but not yet paid.
+/// Where a withdrawal request has got to.
+enum PayoutStatus {
+  pending,
+  approved,
+  paid,
+  failed,
+  cancelled;
+
+  static PayoutStatus fromWire(String? value) =>
+      switch ((value ?? '').toUpperCase()) {
+        'APPROVED' => PayoutStatus.approved,
+        'PAID' => PayoutStatus.paid,
+        'FAILED' => PayoutStatus.failed,
+        'CANCELLED' => PayoutStatus.cancelled,
+        _ => PayoutStatus.pending,
+      };
+
+  /// Still waiting on the platform, and still counted against her balance.
+  bool get isOpen => this == PayoutStatus.pending || this == PayoutStatus.approved;
+
+  /// Only a request nobody has approved yet is hers to withdraw. Once the
+  /// general manager has approved it the money is on its way out.
+  bool get isCancellable => this == PayoutStatus.pending;
+}
+
+/// A withdrawal request — «طلب سحب».
 class PendingPayout extends Equatable {
   const PendingPayout({
     required this.id,
@@ -89,18 +114,79 @@ class PendingPayout extends Equatable {
     required this.net,
     required this.periodStart,
     required this.periodEnd,
+    this.createdAt,
+    this.paidAt,
   });
 
   final String id;
-  final String status;
+  final PayoutStatus status;
   final Money net;
+
+  /// What the request spans: the earliest sale still unpaid, through the
+  /// moment she asked.
   final DateTime periodStart;
   final DateTime periodEnd;
+  final DateTime? createdAt;
+  final DateTime? paidAt;
 
-  bool get isApproved => status == 'APPROVED';
+  bool get isApproved => status == PayoutStatus.approved;
 
   @override
-  List<Object?> get props => [id, status, net];
+  List<Object?> get props => [id, status, net, periodStart, periodEnd];
+}
+
+/// Why she cannot ask to be paid right now.
+enum PayoutBlocker {
+  /// A security freeze. Stamped by a phone change or account recovery — both
+  /// shaped like a takeover, and a payout is what a takeover is after.
+  frozen,
+
+  /// She already has a request waiting; it covers everything released.
+  requestOpen,
+
+  /// Nothing has come out of escrow yet.
+  nothingReleased;
+
+  static PayoutBlocker? fromWire(String? value) => switch (value) {
+    'payout_frozen' => PayoutBlocker.frozen,
+    'request_open' => PayoutBlocker.requestOpen,
+    'nothing_released' => PayoutBlocker.nothingReleased,
+    _ => null,
+  };
+}
+
+/// What a withdrawal request would be worth this second, and what stops one.
+///
+/// Read before the button is drawn, so a disabled «سحب» can say why instead
+/// of being mysteriously grey.
+class PayoutAvailability extends Equatable {
+  const PayoutAvailability({
+    required this.claimable,
+    this.ordersIncluded = 0,
+    this.canRequest = false,
+    this.blockedBy,
+    this.frozenUntil,
+    this.openRequest,
+  });
+
+  final Money claimable;
+
+  /// How many settled sales the request would gather.
+  final int ordersIncluded;
+  final bool canRequest;
+  final PayoutBlocker? blockedBy;
+  final DateTime? frozenUntil;
+  final PendingPayout? openRequest;
+
+  @override
+  List<Object?> get props => [
+    claimable,
+    ordersIncluded,
+    canRequest,
+    blockedBy,
+    frozenUntil,
+    openRequest,
+  ];
 }
 
 /// The seller's financial position.

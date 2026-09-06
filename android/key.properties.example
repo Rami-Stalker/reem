@@ -1,0 +1,30 @@
+# Release signing — copy to `android/key.properties` and fill in.
+#
+# The real file is git-ignored, and so is the keystore it points at. Neither
+# ever enters the repository: whoever holds them can publish updates to the
+# Play Store listing, and whoever loses them cannot — Google will not re-key an
+# existing listing. Keep the keystore in a password manager or an offline backup
+# before the first upload.
+#
+# Create the keystore once (25 years, RSA 2048 — Play's requirement), from the
+# repository root. `keytool` ships with the JDK that Android Studio installs:
+#
+#   keytool -genkeypair -v -keystore android/reem-release.p12 \
+#     -storetype PKCS12 -keyalg RSA -keysize 2048 -validity 10000 -alias reem
+#
+# PKCS12 is the current standard format; keytool warns that the older JKS is
+# proprietary. keytool asks for a keystore password, a key password, and the
+# certificate details (name, organisational unit, city, country code: SY).
+# Put the same passwords below.
+
+# Path to the keystore. Relative paths resolve against `android/`.
+storeFile=reem-release.p12
+
+# The password protecting the keystore file.
+storePassword=
+
+# The alias given to -alias above.
+keyAlias=reem
+
+# The password protecting that key. `keytool` lets it match storePassword.
+keyPassword=

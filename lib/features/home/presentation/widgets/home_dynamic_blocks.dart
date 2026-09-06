@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/media/media_variants.dart';
 import 'package:reem/features/home/domain/entities/dynamic_block.dart';
 import 'package:reem/features/home/presentation/providers/home_content_provider.dart';
 
@@ -15,8 +16,9 @@ class HomeDynamicBlocks extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final blocks = ref.watch(
-      homeContentNotifierProvider
-          .select((s) => s.content?.dynamicBlocks ?? const <DynamicContentBlock>[]),
+      homeContentNotifierProvider.select(
+        (s) => s.content?.dynamicBlocks ?? const <DynamicContentBlock>[],
+      ),
     );
 
     if (blocks.isEmpty) return const SizedBox.shrink();
@@ -26,7 +28,11 @@ class HomeDynamicBlocks extends ConsumerWidget {
         for (final block in blocks)
           Padding(
             padding: const EdgeInsets.fromLTRB(
-                DsSpacing.lg, 0, DsSpacing.lg, DsSpacing.md),
+              DsSpacing.lg,
+              DsSpacing.xxxs,
+              DsSpacing.lg,
+              DsSpacing.md,
+            ),
             child: switch (block.kind) {
               DynamicBlockKind.announcement => _AnnouncementBlock(block: block),
               _ => _SpotlightBlock(block: block),
@@ -48,7 +54,6 @@ class _SpotlightBlock extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return GestureDetector(
       onTap: () => _go(context, block),
       child: ClipRRect(
@@ -61,16 +66,21 @@ class _SpotlightBlock extends StatelessWidget {
             children: [
               if (block.imageUrl != null)
                 CachedNetworkImage(
-                  imageUrl: block.imageUrl!,
+                  imageUrl: MediaVariants.at(
+                    block.imageUrl!,
+                    MediaVariants.medium,
+                  ),
                   fit: BoxFit.cover,
                   placeholder: (_, _) =>
                       ColoredBox(color: context.dsColors.shimmerBase),
                   errorWidget: (_, _, _) => DecoratedBox(
-                      decoration: BoxDecoration(gradient: DsGradients.mauve)),
+                    decoration: BoxDecoration(gradient: DsGradients.mauve),
+                  ),
                 )
               else
                 DecoratedBox(
-                    decoration: BoxDecoration(gradient: DsGradients.mauve)),
+                  decoration: BoxDecoration(gradient: DsGradients.mauve),
+                ),
               const DecoratedBox(
                 decoration: BoxDecoration(gradient: DsGradients.imageScrim),
               ),
@@ -84,26 +94,29 @@ class _SpotlightBlock extends StatelessWidget {
                       block.title,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: theme.textTheme.titleLarge?.copyWith(
-                        color: Colors.white,
+                      style: context.dsText.sectionTitle.copyWith(
+                        color: DsColors.onMedia,
                         fontWeight: DsTypography.bold,
                       ),
                     ),
-                    const SizedBox(height: 2),
+                    DsGaps.vXxxs,
                     Text(
                       block.subtitle,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
-                      style: theme.textTheme.bodySmall
-                          ?.copyWith(color: Colors.white.withValues(alpha: 0.9)),
+                      style: context.dsText.cardSubtitle.copyWith(
+                        color: DsColors.onMedia.withValues(alpha: 0.9),
+                      ),
                     ),
                     if (block.ctaLabel != null) ...[
                       const SizedBox(height: DsSpacing.sm),
                       Container(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: DsSpacing.md, vertical: DsSpacing.xs),
+                          horizontal: DsSpacing.md,
+                          vertical: DsSpacing.xs,
+                        ),
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: DsColors.onMedia,
                           borderRadius: DsRadius.borderFull,
                         ),
                         child: Row(
@@ -111,15 +124,16 @@ class _SpotlightBlock extends StatelessWidget {
                           children: [
                             Text(
                               block.ctaLabel!,
-                              style: const TextStyle(
-                                color: Color(0xFF221A1F),
-                                fontWeight: DsTypography.bold,
-                                fontSize: DsTypography.labelMedium,
+                              style: context.dsText.labelMedium.bold.tint(
+                                DsColors.onGold,
                               ),
                             ),
-                            const SizedBox(width: 4),
-                            const Icon(Icons.arrow_forward_rounded,
-                                size: 14, color: Color(0xFF221A1F)),
+                            DsGaps.hXxs,
+                            const Icon(
+                              Icons.arrow_forward_rounded,
+                              size: 14,
+                              color: DsColors.onGold,
+                            ),
                           ],
                         ),
                       ),
@@ -162,18 +176,14 @@ class _AnnouncementBlock extends StatelessWidget {
                 children: [
                   Text(
                     block.title,
-                    style: TextStyle(
-                      fontFamily: DsTypography.fontFamily,
-                      fontWeight: DsTypography.bold,
-                      fontSize: DsTypography.labelLarge,
-                      color: c.onAccentContainer,
+                    style: context.dsText.labelLarge.bold.tint(
+                      c.onAccentContainer,
                     ),
                   ),
                   Text(
                     block.subtitle,
-                    style: TextStyle(
-                      fontSize: DsTypography.labelSmall,
-                      color: c.onAccentContainer.withValues(alpha: 0.8),
+                    style: context.dsText.caption.tint(
+                      c.onAccentContainer.withValues(alpha: 0.8),
                     ),
                   ),
                 ],

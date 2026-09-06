@@ -5,6 +5,7 @@ import {
 } from '@nestjs/common';
 import { OfferStatus } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
+import { TrendSignalService } from '../trends/collection/trend-signal.service';
 import { CartRepository } from './cart.repository';
 import {
   CartItemRecord,
@@ -22,6 +23,7 @@ export class CartService {
   constructor(
     private readonly repo: CartRepository,
     private readonly prisma: PrismaService,
+    private readonly signals: TrendSignalService,
   ) {}
 
   async getCart(owner: string | CartOwner) {
@@ -111,6 +113,18 @@ export class CartService {
         quantity,
       });
     }
+
+    // The strongest pre-purchase intent signal there is, and the one the
+    // `cart_items` table cannot supply on its own: those rows are deleted at
+    // checkout, so counting them would under-report by exactly the adds that
+    // converted.
+    this.signals.recordCartAdd({
+      productId: offer.productId,
+      sellerId: offer.sellerId,
+      userId: resolved.kind === 'user' ? resolved.userId : null,
+      quantity,
+    });
+
     return this.getCart(resolved);
   }
 
@@ -131,7 +145,14 @@ export class CartService {
 
   async removeItem(owner: string | CartOwner, id: string) {
     const resolved = this.resolveOwner(owner);
-    await this.requireItem(resolved, id);
+    const item = await this.requireItem(resolved, id);
+    // Netted against the adds, so a woman who changed her mind is not counted
+    // as demand that the seller then fails to convert.
+    this.signals.recordCartRemove({
+      productId: item.offer.productId,
+      sellerId: item.offer.sellerId,
+      userId: resolved.kind === 'user' ? resolved.userId : null,
+    });
     if (resolved.kind === 'user') {
       await this.repo.delete(id);
     } else {

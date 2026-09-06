@@ -8,6 +8,7 @@ import 'package:reem/features/seller_earnings/domain/entities/seller_earnings.da
 import 'package:reem/features/seller_earnings/presentation/providers/seller_earnings_provider.dart';
 import 'package:reem/features/seller_earnings/presentation/widgets/earnings_balance_cards.dart';
 import 'package:reem/features/seller_earnings/presentation/widgets/earnings_movement_tile.dart';
+import 'package:reem/features/seller_earnings/presentation/widgets/payout_request_card.dart';
 
 /// Q69 P1 «كشف حساب وطلب سحب الأرباح» / Q98 «الأرباح والكشوفات».
 ///
@@ -30,13 +31,7 @@ class SellerEarningsScreen extends ConsumerWidget {
       background: const SellerAtelierBackground(),
       backgroundColor: context.atelier.background,
       slivers: [
-        SliverAppBar(
-          pinned: true,
-          elevation: 0,
-          backgroundColor: Colors.transparent,
-          surfaceTintColor: Colors.transparent,
-          title: Text(l10n.sellerEarnings),
-        ),
+        PremiumAppBar(title: l10n.sellerEarnings, showBack: true),
 
         if (state.isLoading)
           const SliverToBoxAdapter(child: _EarningsSkeleton())
@@ -62,16 +57,21 @@ class SellerEarningsScreen extends ConsumerWidget {
           ),
           const SliverToBoxAdapter(child: SizedBox(height: DsSpacing.xl)),
 
-          if (earnings.pendingPayouts.isNotEmpty) ...[
+          // The half of Q69 P1 this screen was missing: asking to be paid.
+          const SliverToBoxAdapter(child: PayoutRequestCard()),
+          const SliverToBoxAdapter(child: SizedBox(height: DsSpacing.xl)),
+
+          // Anything else outstanding — a payout the platform prepared itself,
+          // for instance. The request the card above already renders is left
+          // out rather than shown twice.
+          if (_otherPayouts(state).isNotEmpty) ...[
             _sectionHeader(context, l10n.earningsPendingPayouts),
             SliverList.separated(
-              itemCount: earnings.pendingPayouts.length,
+              itemCount: _otherPayouts(state).length,
               separatorBuilder: (_, _) => const SizedBox(height: DsSpacing.xs),
               itemBuilder: (context, index) => Padding(
                 padding: const EdgeInsets.symmetric(horizontal: DsSpacing.lg),
-                child: _PendingPayoutTile(
-                  payout: earnings.pendingPayouts[index],
-                ),
+                child: _PendingPayoutTile(payout: _otherPayouts(state)[index]),
               ),
             ),
             const SliverToBoxAdapter(child: SizedBox(height: DsSpacing.xl)),
@@ -107,9 +107,19 @@ class SellerEarningsScreen extends ConsumerWidget {
           ],
         ],
 
-        const SliverToBoxAdapter(child: SizedBox(height: 120)),
+        DsGaps.sliverBottomSafe,
       ],
     );
+  }
+
+  /// Outstanding payouts the withdrawal card is not already showing.
+  List<PendingPayout> _otherPayouts(SellerEarningsState state) {
+    final shown = state.availability?.openRequest?.id;
+    final all = state.earnings?.pendingPayouts ?? const <PendingPayout>[];
+    return [
+      for (final payout in all)
+        if (payout.id != shown) payout,
+    ];
   }
 
   Widget _sectionHeader(BuildContext context, String title) {
@@ -117,7 +127,7 @@ class SellerEarningsScreen extends ConsumerWidget {
       child: Padding(
         padding: const EdgeInsets.fromLTRB(
           DsSpacing.lg,
-          0,
+          DsSpacing.xxxs,
           DsSpacing.lg,
           DsSpacing.md,
         ),
@@ -192,26 +202,18 @@ class _LifetimeCard extends StatelessWidget {
         Expanded(
           child: Text(
             label,
-            style: TextStyle(
-              fontSize: DsTypography.bodyMedium,
-              fontWeight: emphasise
+            style: context.dsText.body.tint(emphasise ? colors.onSurface : colors.onSurfaceVariant).copyWith(fontWeight: emphasise
                   ? DsTypography.bold
-                  : DsTypography.regular,
-              color: emphasise ? colors.onSurface : colors.onSurfaceVariant,
-            ),
+                  : DsTypography.regular),
           ),
         ),
         Text(
           // The minus makes it plain that commission came *out* of the gross.
           '${isDeduction ? '−' : ''}${amount.format()}',
-          style: TextStyle(
-            fontFamily: DsTypography.fontFamily,
-            fontSize: emphasise
-                ? DsTypography.titleSmall
-                : DsTypography.bodyMedium,
-            fontWeight: DsTypography.bold,
-            color: emphasise ? colors.price : colors.onSurface,
-          ),
+          style: (emphasise
+                    ? context.dsText.price
+                    : context.dsText.body.bold.tint(colors.onSurface))
+                .tabular,
         ),
       ],
     );
@@ -255,12 +257,7 @@ class _PendingPayoutTile extends StatelessWidget {
           ),
           Text(
             payout.net.format(),
-            style: TextStyle(
-              fontFamily: DsTypography.fontFamily,
-              fontSize: DsTypography.bodyMedium,
-              fontWeight: DsTypography.bold,
-              color: colors.onSurface,
-            ),
+            style: context.dsText.body.bold.tint(colors.onSurface),
           ),
         ],
       ),

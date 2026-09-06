@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 
 import 'package:reem/core/design_system/design_system.dart';
 import 'package:reem/core/localization/l10n_extension.dart';
+import 'package:reem/core/media/media_variants.dart';
 import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/features/seller_dashboard/presentation/providers/seller_dashboard_provider.dart';
 
@@ -103,7 +104,7 @@ class _StoreMark extends StatelessWidget {
     return Container(
       width: 46,
       height: 46,
-      padding: const EdgeInsets.all(2),
+      padding: const EdgeInsets.all(DsSpacing.xxxs),
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         gradient: palette.goldGradient,
@@ -112,7 +113,7 @@ class _StoreMark extends StatelessWidget {
         child: url.isEmpty
             ? _Fallback(palette: palette)
             : CachedNetworkImage(
-                imageUrl: url,
+                imageUrl: MediaVariants.thumb(url),
                 fit: BoxFit.cover,
                 placeholder: (_, _) =>
                     ColoredBox(color: context.dsColors.shimmerBase),
@@ -163,7 +164,7 @@ class _Identity extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: const [
             DsSkeleton.line(width: 92),
-            SizedBox(height: 5),
+            DsGaps.vXxs,
             DsSkeleton.line(width: 150),
           ],
         ),
@@ -195,7 +196,7 @@ class _Identity extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: 1),
+        DsGaps.vXxxs,
         Row(
           children: [
             Flexible(
@@ -203,14 +204,7 @@ class _Identity extends StatelessWidget {
                 storeName ?? l10n.sellerDashboard,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  color: palette.ink,
-                  fontFamily: DsTypography.fontFamilyDisplay,
-                  fontFamilyFallback: DsTypography.displayFallback,
-                  fontSize: DsTypography.titleMedium,
-                  fontWeight: DsTypography.bold,
-                  height: 1.2,
-                ),
+                style: context.dsText.cardTitle.displayFamily.bold.tint(palette.ink).copyWith(height: 1.2),
               ),
             ),
             if (isVerified) ...[
@@ -249,7 +243,7 @@ class _ScoreChip extends StatelessWidget {
     };
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: DsSpacing.xs, vertical: 2),
+      padding: const EdgeInsets.symmetric(horizontal: DsSpacing.xs, vertical: DsSpacing.xxxs),
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.14),
         borderRadius: DsRadius.borderPill,
@@ -259,16 +253,10 @@ class _ScoreChip extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(Icons.speed_rounded, size: 11, color: color),
-          const SizedBox(width: 2),
+          DsGaps.hXxxs,
           Text(
             '$score',
-            style: TextStyle(
-              fontFamily: DsTypography.fontFamily,
-              fontSize: 10,
-              fontWeight: DsTypography.bold,
-              color: color,
-              height: 1.1,
-            ),
+            style: context.dsText.micro.bold.tint(color).copyWith(height: 1.1),
           ),
         ],
       ),

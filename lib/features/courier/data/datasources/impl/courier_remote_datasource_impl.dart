@@ -39,9 +39,9 @@ final class CourierRemoteDataSourceImpl extends BaseRemoteDataSource
       body: {
         // Omitted entirely rather than sent as null: the backend reads absence
         // as "collected exactly what was due", which is the common case.
-        if (collected != null) 'collected': collected,
-        if (proofImageUrl != null) 'proof_image_url': proofImageUrl,
-        if (recipientNote != null) 'recipient_note': recipientNote,
+        'collected': ?collected,
+        'proof_image_url': ?proofImageUrl,
+        'recipient_note': ?recipientNote,
       },
     );
   }
@@ -54,7 +54,7 @@ final class CourierRemoteDataSourceImpl extends BaseRemoteDataSource
   }) async {
     await postJson(
       ApiEndpoints.shipmentFail(shipmentId),
-      body: {'reason': reason.wire, if (note != null) 'note': note},
+      body: {'reason': reason.wire, 'note': ?note},
     );
   }
 }

@@ -197,7 +197,7 @@ class _CouponTicket extends ConsumerWidget {
             Row(
               children: [
                 Container(
-                  padding: const EdgeInsets.all(12),
+                  padding: const EdgeInsets.all(DsSpacing.sm),
                   decoration: BoxDecoration(
                     color: colors.onPrimary.withValues(alpha: 0.2),
                     shape: BoxShape.circle,
@@ -216,31 +216,19 @@ class _CouponTicket extends ConsumerWidget {
                     children: [
                       Text(
                         coupon.code,
-                        style: TextStyle(
-                          fontFamily: DsTypography.fontFamily,
-                          fontSize: DsTypography.titleLarge,
-                          fontWeight: DsTypography.bold,
-                          color: colors.onPrimary,
-                          letterSpacing: 2,
-                        ),
+                        style: context.dsText.sectionTitle.bold.tint(colors.onPrimary).copyWith(letterSpacing: 2),
                       ),
                       Text(
                         _headline,
-                        style: TextStyle(
-                          color: colors.onPrimary.withValues(alpha: 0.92),
-                          fontWeight: DsTypography.semiBold,
-                        ),
+                        style: context.dsText.body.semibold.tint(colors.onPrimary.withValues(alpha: 0.92)),
                       ),
-                      const SizedBox(height: 2),
+                      DsGaps.vXxxs,
                       Text(
                         _conditions().join(' · '),
-                        style: TextStyle(
-                          color: colors.onPrimary.withValues(alpha: 0.75),
-                          fontSize: DsTypography.labelSmall,
-                        ),
+                        style: context.dsText.caption.tint(colors.onPrimary.withValues(alpha: 0.75)),
                       ),
                       if (coupon.isUserSpecific) ...[
-                        const SizedBox(height: 6),
+                        DsGaps.vXs,
                         _Chip(
                           label: 'خاص بكِ',
                           color: colors.onPrimary,
@@ -341,10 +329,7 @@ class _AppliedBanner extends StatelessWidget {
               Expanded(
                 child: Text(
                   '$code مُطبَّق — توفير $discount',
-                  style: TextStyle(
-                    color: colors.onSurface,
-                    fontWeight: DsTypography.semiBold,
-                  ),
+                  style: context.dsText.body.semibold.tint(colors.onSurface),
                 ),
               ),
               IconButton(
@@ -386,10 +371,7 @@ class _BasketHint extends StatelessWidget {
         const SizedBox(width: DsSpacing.sm),
         Text(
           'سلّتكِ الآن: $subtotal',
-          style: TextStyle(
-            color: colors.onSurfaceVariant,
-            fontSize: DsTypography.labelSmall,
-          ),
+          style: context.dsText.caption.tint(colors.onSurfaceVariant),
         ),
       ],
     );
@@ -405,18 +387,14 @@ class _Chip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+      padding: const EdgeInsets.symmetric(horizontal: DsSpacing.sm, vertical: DsSpacing.xxs),
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.18),
         borderRadius: DsRadius.borderFull,
       ),
       child: Text(
         label,
-        style: TextStyle(
-          color: color,
-          fontSize: DsTypography.labelSmall,
-          fontWeight: DsTypography.semiBold,
-        ),
+        style: context.dsText.caption.semibold.tint(color),
       ),
     );
   }
@@ -444,7 +422,7 @@ class _TicketAction extends StatelessWidget {
       onTap: onTap,
       borderRadius: DsRadius.borderFull,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
+        padding: const EdgeInsets.symmetric(horizontal: DsSpacing.sm, vertical: DsSpacing.xs),
         decoration: emphasised
             ? BoxDecoration(
                 color: colors.onPrimary.withValues(alpha: 0.18),
@@ -455,14 +433,10 @@ class _TicketAction extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(icon, size: 17, color: tint),
-            const SizedBox(width: 6),
+            DsGaps.hXs,
             Text(
               label,
-              style: TextStyle(
-                color: tint,
-                fontSize: DsTypography.labelSmall,
-                fontWeight: DsTypography.semiBold,
-              ),
+              style: context.dsText.caption.semibold.tint(tint),
             ),
           ],
         ),
@@ -489,17 +463,13 @@ class _NoCoupons extends StatelessWidget {
           const SizedBox(height: DsSpacing.md),
           Text(
             'لا كوبونات متاحة الآن',
-            style: TextStyle(
-              fontSize: DsTypography.titleSmall,
-              fontWeight: DsTypography.semiBold,
-              color: colors.onSurface,
-            ),
+            style: context.dsText.tileTitle.semibold.tint(colors.onSurface),
           ),
           const SizedBox(height: DsSpacing.sm),
           Text(
             'سنُعلمكِ حين يصلكِ عرض جديد',
             textAlign: TextAlign.center,
-            style: TextStyle(color: colors.onSurfaceVariant),
+            style: context.dsText.body.tint(colors.onSurfaceVariant),
           ),
         ],
       ),
@@ -527,7 +497,7 @@ class _CouponsFailed extends StatelessWidget {
           const SizedBox(height: DsSpacing.md),
           Text(
             'تعذّر تحميل الكوبونات',
-            style: TextStyle(color: colors.onSurfaceVariant),
+            style: context.dsText.body.tint(colors.onSurfaceVariant),
           ),
           const SizedBox(height: DsSpacing.md),
           SecondaryButton(label: 'إعادة المحاولة', onPressed: onRetry),

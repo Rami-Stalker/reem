@@ -30,6 +30,7 @@ import { CartModule } from './modules/cart/cart.module';
 import { DeliveryModule } from './modules/delivery/delivery.module';
 import { PaymentsModule } from './modules/payments/payments.module';
 import { OrdersModule } from './modules/orders/orders.module';
+import { CodTrustModule } from './modules/cod-trust/cod-trust.module';
 import { FavoritesModule } from './modules/favorites/favorites.module';
 import { ChatsModule } from './modules/chats/chats.module';
 import { SettingsModule } from './modules/settings/settings.module';
@@ -37,8 +38,18 @@ import { NotificationsModule } from './modules/notifications/notifications.modul
 import { RewardsModule } from './modules/rewards/rewards.module';
 import { AdminModule } from './modules/admin/admin.module';
 import { AnalyticsModule } from './modules/analytics/analytics.module';
+import { TrendsModule } from './modules/trends/trends.module';
+import { SellerIntelligenceModule } from './modules/seller-intelligence/seller-intelligence.module';
+import { GraphModule } from './modules/graph/graph.module';
+import { IntelligenceModule } from './modules/intelligence/intelligence.module';
+import { MarketModule } from './modules/market/market.module';
 import { ReputationModule } from './modules/reputation/reputation.module';
 import { AiAssistantModule } from './modules/ai-assistant/ai-assistant.module';
+import { AiStylistModule } from './modules/ai-stylist/ai-stylist.module';
+import { VisualSearchModule } from './modules/visual-search/visual-search.module';
+import { ClosetModule } from './modules/closet/closet.module';
+import { ValueModule } from './modules/value/value.module';
+import { RoomsModule } from './modules/rooms/rooms.module';
 import { CommissionsModule } from './modules/commissions/commissions.module';
 import { LedgerModule } from './modules/ledger/ledger.module';
 import { FinanceModule } from './modules/finance/finance.module';
@@ -83,6 +94,7 @@ import { HealthModule } from './modules/health/health.module';
     CartModule,
     DeliveryModule,
     PaymentsModule,
+    CodTrustModule,
     OrdersModule,
     FavoritesModule,
     ChatsModule,
@@ -91,8 +103,31 @@ import { HealthModule } from './modules/health/health.module';
     RewardsModule,
     AdminModule,
     AnalyticsModule,
+    TrendsModule,
+    // Phase two of the commerce OS. Reads the trend engine's tables, so it is
+    // registered after it — Nest does not care about the order, but the next
+    // person reading this list should see which way the dependency runs.
+    SellerIntelligenceModule,
+    // Phase three. The graph projects from everything above it; intelligence
+    // reads the graph. Registered last because that is the direction the
+    // dependency runs — nothing below knows either of them exists.
+    GraphModule,
+    IntelligenceModule,
+    MarketModule,
     ReputationModule,
     AiAssistantModule,
+    AiStylistModule,
+    // After AiStylistModule, which it imports for the brief extractor.
+    VisualSearchModule,
+    // After AiStylistModule too: a wardrobe gap is answered by the stylist's
+    // retrieval and ranker rather than by a second search of its own.
+    ClosetModule,
+    // Reem Value — standing, computed from evidence the other modules already
+    // hold. It reads them; none of them knows it exists.
+    ValueModule,
+    // Reem Rooms — deliberation before purchase. After OrdersModule, whose
+    // checkout it calls with its own lines rather than through a cart.
+    RoomsModule,
     CommissionsModule,
     LedgerModule,
     FinanceModule,

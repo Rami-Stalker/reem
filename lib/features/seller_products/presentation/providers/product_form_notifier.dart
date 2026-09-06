@@ -18,13 +18,19 @@ class ProductFormNotifier extends StateNotifier<ProductFormState> {
   final CreateProductUseCase _create;
   final UpdateProductUseCase _update;
 
-  /// Creates (id == null) or updates the product. Returns it on success.
+  /// Creates ([listing] == null) or saves the listing. Returns it on success.
+  ///
+  /// Saving takes the whole listing rather than an id because an edit may
+  /// touch both halves of the catalogue — the shared entry and this seller's
+  /// offer on it — and the offer's id will not open the catalogue's route.
   Future<ManagedProduct?> submit({
-    String? id,
+    ManagedProduct? listing,
     required ProductDraft draft,
   }) async {
     state = state.copyWith(isSubmitting: true, clearError: true);
-    final result = id == null ? await _create(draft) : await _update(id, draft);
+    final result = listing == null
+        ? await _create(draft)
+        : await _update(listing, draft);
     return switch (result) {
       Success(:final data) => () {
           state = state.copyWith(isSubmitting: false, saved: data);

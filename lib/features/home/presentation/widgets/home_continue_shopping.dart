@@ -20,7 +20,8 @@ class HomeContinueShopping extends ConsumerWidget {
     );
     final items = ref.watch(
       homeContentNotifierProvider.select(
-          (s) => s.content?.continueShopping ?? const <ContinueShoppingItem>[]),
+        (s) => s.content?.continueShopping ?? const <ContinueShoppingItem>[],
+      ),
     );
 
     final notes = {for (final e in items) e.product.id: e.note};
@@ -30,8 +31,7 @@ class HomeContinueShopping extends ConsumerWidget {
       title: context.l10n.homeContinueShopping,
       products: items.map((e) => e.product).toList(),
       isLoading: isLoading,
-      onTapProduct: (p) =>
-          context.push('${RoutePaths.productDetails}?id=${p.id}'),
+      onTapProduct: (p) => context.push(RoutePaths.productDetailsOf(p.id)),
       trailingBuilder: (context, product) =>
           _NoteChip(label: notes[product.id] ?? ''),
     );
@@ -47,18 +47,17 @@ class _NoteChip extends StatelessWidget {
   Widget build(BuildContext context) {
     if (label.isEmpty) return const SizedBox.shrink();
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: DsSpacing.xs, vertical: 3),
+      padding: const EdgeInsets.symmetric(
+        horizontal: DsSpacing.xs,
+        vertical: DsSpacing.xxs,
+      ),
       decoration: BoxDecoration(
-        color: Colors.black.withValues(alpha: 0.6),
+        color: DsColors.black.withValues(alpha: 0.6),
         borderRadius: DsRadius.borderFull,
       ),
       child: Text(
         label,
-        style: const TextStyle(
-          color: Colors.white,
-          fontSize: 10,
-          fontWeight: DsTypography.bold,
-        ),
+        style: context.dsText.micro.bold.tint(DsColors.onMedia),
       ),
     );
   }

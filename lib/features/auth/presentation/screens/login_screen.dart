@@ -212,17 +212,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   const SizedBox(height: DsSpacing.xl),
                   DsGradientText(
                     l10n.welcomeToReem,
-                    style: TextStyle(
-                      fontFamily: DsTypography.fontFamily,
-                      fontSize: 32,
-                      fontWeight: DsTypography.bold,
-                    ),
+                    style: context.dsText.pageTitle.bold,
                   ),
                   const SizedBox(height: DsSpacing.sm),
                   Text(
                     l10n.signInSubtitle,
                     textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    style: context.dsText.body.copyWith(
                       color: colors.onSurfaceVariant,
                     ),
                   ),
@@ -231,6 +227,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   DsInputField(
                     controller: _phoneController,
                     label: l10n.phone,
+                    // l10n-ignore: a dialling mask, not language
                     hint: '09XX XXX XXX',
                     keyboardType: TextInputType.phone,
                     autofillHints: const [AutofillHints.telephoneNumber],

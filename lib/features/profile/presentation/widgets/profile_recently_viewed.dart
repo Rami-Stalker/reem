@@ -28,7 +28,7 @@ class ProfileRecentlyViewed extends ConsumerWidget {
       products: products,
       isLoading: isLoading,
       onTapProduct: (p) =>
-          context.push('${RoutePaths.productDetails}?id=${p.id}'),
+          context.push(RoutePaths.productDetailsOf(p.id)),
     );
   }
 }

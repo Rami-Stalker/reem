@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/experience/experience_labels.dart';
 import 'package:reem/core/experience/role_experience.dart';
 import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/features/experience/presentation/providers/role_experience_provider.dart';
@@ -30,8 +31,8 @@ class ExperienceSurfaceScreen extends ConsumerWidget {
       },
       backgroundColor: switch (role) {
         ExperienceRole.seller => context.atelier.background,
-        ExperienceRole.admin => AdminExperience.background,
-        ExperienceRole.buyer => CustomerExperience.pearl,
+        ExperienceRole.admin => context.console.background,
+        ExperienceRole.buyer => context.boutique.surface,
       },
       slivers: [
         PremiumAppBar(title: surfaceTitle),
@@ -91,7 +92,7 @@ class ExperienceSurfaceScreen extends ConsumerWidget {
                 DsSpacing.lg,
                 DsSpacing.lg,
                 DsSpacing.lg,
-                0,
+                DsSpacing.xxxs,
               ),
               child: _RoleMenuGroups(
                 groups: menuGroups,
@@ -100,7 +101,7 @@ class ExperienceSurfaceScreen extends ConsumerWidget {
               ),
             ),
           ),
-        const SliverToBoxAdapter(child: SizedBox(height: 140)),
+        DsGaps.sliverBottomSafe,
       ],
     );
   }
@@ -114,7 +115,6 @@ class ExperienceSurfaceScreen extends ConsumerWidget {
     return switch (surface) {
       ExperienceSurface.activity => l10n.surfaceActivity,
       ExperienceSurface.customers => l10n.surfaceCustomers,
-      ExperienceSurface.marketing => l10n.surfaceMarketing,
       ExperienceSurface.analytics => l10n.sellerAnalytics,
       ExperienceSurface.settings => l10n.settings,
       _ => experience.title,
@@ -141,11 +141,7 @@ class _RoleMenuGroups extends StatelessWidget {
       children: [
         Text(
           context.l10n.sellerQuickActions,
-          style: TextStyle(
-            fontSize: DsTypography.titleMedium,
-            fontWeight: DsTypography.bold,
-            color: colors.onSurface,
-          ),
+          style: context.dsText.cardTitle.bold.tint(colors.onSurface),
         ),
         const SizedBox(height: DsSpacing.sm),
         LayoutBuilder(
@@ -197,38 +193,34 @@ class _RoleMenuGroupCard extends StatelessWidget {
         color: seller
             ? context.atelier.surface
             : admin
-                ? AdminExperience.surface
-                : colors.surface,
+            ? context.console.surface
+            : colors.surface,
         borderRadius: seller
             ? DsRadius.borderMd
             : admin
-                ? DsRadius.borderSm
-                : DsRadius.borderXl,
+            ? DsRadius.borderSm
+            : DsRadius.borderXl,
         border: Border.all(
           color: seller
               ? context.atelier.line
               : admin
-                  ? AdminExperience.line
-                  : colors.glassBorder,
+              ? context.console.line
+              : colors.glassBorder,
         ),
         boxShadow: seller
             ? context.atelier.shadow
             : admin
-                ? AdminExperience.shadow
-                : context.softShadow,
+            ? context.console.shadow
+            : context.softShadow,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            group.label,
+            group.labelOf(context.l10n),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-              fontSize: DsTypography.titleSmall,
-              fontWeight: DsTypography.bold,
-              color: colors.onSurface,
-            ),
+            style: context.dsText.tileTitle.bold.tint(colors.onSurface),
           ),
           const SizedBox(height: DsSpacing.sm),
           Wrap(
@@ -239,7 +231,10 @@ class _RoleMenuGroupCard extends StatelessWidget {
                 OutlinedButton.icon(
                   onPressed: () => context.go(action.path),
                   icon: Icon(action.icon, size: 17, color: identity.primary),
-                  label: Text(action.label, overflow: TextOverflow.ellipsis),
+                  label: Text(
+                    action.labelOf(context.l10n),
+                    overflow: TextOverflow.ellipsis,
+                  ),
                   style: OutlinedButton.styleFrom(
                     foregroundColor: colors.onSurface,
                     side: BorderSide(
@@ -283,20 +278,20 @@ class _SurfaceHero extends StatelessWidget {
         gradient: seller
             ? context.atelier.headerGradient
             : admin
-                ? const LinearGradient(
-                    colors: [AdminExperience.nav, AdminExperience.primary],
-                  )
-                : identity.gradient,
+            ? LinearGradient(
+                colors: [context.console.nav, context.console.primary],
+              )
+            : identity.gradient,
         borderRadius: seller
             ? DsRadius.borderMd
             : admin
-                ? DsRadius.borderSm
-                : DsRadius.borderXxl,
+            ? DsRadius.borderSm
+            : DsRadius.borderXxl,
         boxShadow: seller
             ? context.atelier.shadow
             : admin
-                ? AdminExperience.shadow
-                : context.softShadow,
+            ? context.console.shadow
+            : context.softShadow,
       ),
       child: Row(
         children: [
@@ -304,10 +299,10 @@ class _SurfaceHero extends StatelessWidget {
             width: 52,
             height: 52,
             decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.18),
+              color: DsColors.onMedia.withValues(alpha: 0.18),
               borderRadius: DsRadius.borderLg,
             ),
-            child: Icon(identity.icon, color: Colors.white, size: 28),
+            child: Icon(identity.icon, color: DsColors.onMedia, size: 28),
           ),
           const SizedBox(width: DsSpacing.md),
           Expanded(
@@ -318,10 +313,8 @@ class _SurfaceHero extends StatelessWidget {
                   title,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    fontSize: DsTypography.titleLarge,
-                    fontWeight: DsTypography.bold,
-                    color: Colors.white,
+                  style: context.dsText.sectionTitle.bold.tint(
+                    DsColors.onMedia,
                   ),
                 ),
                 const SizedBox(height: DsSpacing.xxs),
@@ -329,9 +322,8 @@ class _SurfaceHero extends StatelessWidget {
                   subtitle,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontSize: DsTypography.labelMedium,
-                    color: colors.onPrimary.withValues(alpha: 0.86),
+                  style: context.dsText.labelMedium.tint(
+                    colors.onPrimary.withValues(alpha: 0.86),
                   ),
                 ),
               ],
@@ -367,25 +359,25 @@ class _SurfaceSectionCard extends StatelessWidget {
         color: seller
             ? context.atelier.surface
             : admin
-                ? AdminExperience.surface
-                : colors.surface,
+            ? context.console.surface
+            : colors.surface,
         borderRadius: seller
             ? DsRadius.borderMd
             : admin
-                ? DsRadius.borderSm
-                : DsRadius.borderXl,
+            ? DsRadius.borderSm
+            : DsRadius.borderXl,
         border: Border.all(
           color: seller
               ? context.atelier.line
               : admin
-                  ? AdminExperience.line
-                  : colors.glassBorder,
+              ? context.console.line
+              : colors.glassBorder,
         ),
         boxShadow: seller
             ? context.atelier.shadow
             : admin
-                ? AdminExperience.shadow
-                : context.softShadow,
+            ? context.console.shadow
+            : context.softShadow,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -396,22 +388,24 @@ class _SurfaceSectionCard extends StatelessWidget {
                 width: 42,
                 height: 42,
                 decoration: BoxDecoration(
-                  color: (seller
-                          ? context.atelier.primary
-                          : admin
-                              ? AdminExperience.primary
+                  color:
+                      (seller
+                              ? context.atelier.primary
+                              : admin
+                              ? context.console.primary
                               : identity.primary)
-                      .withValues(alpha: 0.12),
-                  borderRadius:
-                      seller || admin ? DsRadius.borderSm : DsRadius.borderMd,
+                          .withValues(alpha: 0.12),
+                  borderRadius: seller || admin
+                      ? DsRadius.borderSm
+                      : DsRadius.borderMd,
                 ),
                 child: Icon(
                   section.icon,
                   color: seller
                       ? context.atelier.primary
                       : admin
-                          ? AdminExperience.primary
-                          : identity.primary,
+                      ? context.console.primary
+                      : identity.primary,
                 ),
               ),
               const Spacer(),
@@ -428,11 +422,7 @@ class _SurfaceSectionCard extends StatelessWidget {
             section.title,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-              fontSize: DsTypography.titleSmall,
-              fontWeight: DsTypography.bold,
-              color: colors.onSurface,
-            ),
+            style: context.dsText.tileTitle.bold.tint(colors.onSurface),
           ),
           const SizedBox(height: DsSpacing.xs),
           Expanded(
@@ -440,11 +430,9 @@ class _SurfaceSectionCard extends StatelessWidget {
               section.description,
               maxLines: 3,
               overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                fontSize: DsTypography.labelMedium,
-                height: 1.3,
-                color: colors.onSurfaceVariant,
-              ),
+              style: context.dsText.labelMedium
+                  .tint(colors.onSurfaceVariant)
+                  .copyWith(height: 1.3),
             ),
           ),
         ],

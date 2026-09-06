@@ -8,8 +8,10 @@ import 'package:reem/features/chat/data/repositories/chat_repository_impl.dart';
 import 'package:reem/features/chat/data/services/chat_realtime_service.dart';
 import 'package:reem/features/chat/domain/repositories/chat_repository.dart';
 import 'package:reem/features/chat/domain/usecases/get_messages_usecase.dart';
+import 'package:reem/features/chat/domain/usecases/get_thread_usecase.dart';
 import 'package:reem/features/chat/domain/usecases/get_threads_usecase.dart';
 import 'package:reem/features/chat/domain/usecases/send_message_usecase.dart';
+import 'package:reem/features/chat/domain/usecases/start_conversation_usecase.dart';
 import 'package:reem/features/chat/presentation/providers/chat_notifier.dart';
 import 'package:reem/features/chat/presentation/providers/chat_state.dart';
 
@@ -33,6 +35,14 @@ final getThreadsUseCaseProvider = Provider(
   (ref) => GetThreadsUseCase(ref.watch(chatRepositoryProvider)),
 );
 
+final getThreadUseCaseProvider = Provider(
+  (ref) => GetThreadUseCase(ref.watch(chatRepositoryProvider)),
+);
+
+final startConversationUseCaseProvider = Provider(
+  (ref) => StartConversationUseCase(ref.watch(chatRepositoryProvider)),
+);
+
 final getMessagesUseCaseProvider = Provider(
   (ref) => GetMessagesUseCase(ref.watch(chatRepositoryProvider)),
 );
@@ -45,8 +55,18 @@ final chatNotifierProvider =
     StateNotifierProvider<ChatNotifier, ChatState>((ref) {
   return ChatNotifier(
     getThreadsUseCase: ref.watch(getThreadsUseCaseProvider),
+    startConversationUseCase: ref.watch(startConversationUseCaseProvider),
   );
 });
+
+/// The conversation header, keyed by chat id. `autoDispose` so leaving a
+/// conversation forgets it — the peer's presence is stale the moment she does.
+final chatThreadNotifierProvider = StateNotifierProvider.autoDispose
+    .family<ChatThreadNotifier, ChatThreadState, String>(
+  (ref, chatId) => ChatThreadNotifier(
+    getThreadUseCase: ref.watch(getThreadUseCaseProvider),
+  )..load(chatId),
+);
 
 final chatMessagesNotifierProvider =
     StateNotifierProvider<ChatMessagesNotifier, ChatMessagesState>((ref) {

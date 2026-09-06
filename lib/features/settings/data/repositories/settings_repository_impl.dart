@@ -58,6 +58,14 @@ class SettingsRepositoryImpl with RepositoryHandler implements SettingsRepositor
       guard(() => remote.getNotifications());
 
   @override
+  Future<Result<void>> markNotificationRead(String id) =>
+      guard(() => remote.markNotificationRead(id));
+
+  @override
+  Future<Result<void>> markAllNotificationsRead() =>
+      guard(() => remote.markAllNotificationsRead());
+
+  @override
   Future<Result<NotificationPreferences>> getNotificationPreferences() =>
       guard(() => remote.getNotificationPreferences());
 

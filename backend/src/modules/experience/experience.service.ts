@@ -426,6 +426,33 @@ const experienceConfigs: Record<ExperienceRole, ExperienceConfig> = {
         ],
       },
       {
+        // Phase two of the commerce OS. Grouped on its own rather than folded
+        // into Analytics because it answers a different question: analytics
+        // says what happened, these say what to do about it.
+        id: 'intelligence',
+        label: 'Intelligence',
+        actions: [
+          {
+            id: 'demand-radar',
+            label: 'Demand radar',
+            path: '/seller/radar',
+            feature: 'seller_intelligence',
+          },
+          {
+            id: 'product-intelligence',
+            label: 'Product intelligence',
+            path: '/seller/product-intelligence',
+            feature: 'seller_intelligence',
+          },
+          {
+            id: 'store-health',
+            label: 'Store health',
+            path: '/seller/health',
+            feature: 'seller_intelligence',
+          },
+        ],
+      },
+      {
         id: 'growth',
         label: 'Growth',
         actions: [
@@ -457,6 +484,7 @@ const experienceConfigs: Record<ExperienceRole, ExperienceConfig> = {
     ],
     feature_flags: [
       'seller_operations',
+      'seller_intelligence',
       'inventory_management',
       'seller_analytics',
       'marketing_tools',

@@ -21,7 +21,32 @@ import { CUSTOMER_CANCELLABLE, canTransition } from '../../common/money';
 import { OrdersRepository } from './orders.repository';
 import { CartService } from '../cart/cart.service';
 import { CustomerRefundsService } from '../finance/customer-refunds.service';
+import { CodTrustService } from '../cod-trust/cod-trust.service';
 import { SellerOrderWorkflowService } from './workflow/seller-order-workflow.service';
+
+/**
+ * The four piles a customer thinks in — and the only definition of them.
+ *
+ * `ProfileOverviewService` counts orders into these same buckets for the
+ * profile screen; both read this table so a tile's number and the list behind
+ * it can never mean different things.
+ */
+export const ORDER_BUCKETS = {
+  pending: [OrderStatus.PENDING_PAYMENT, OrderStatus.CONFIRMED],
+  processing: [
+    OrderStatus.PARTIALLY_SHIPPED,
+    OrderStatus.SHIPPED,
+    OrderStatus.PARTIALLY_DELIVERED,
+  ],
+  delivered: [OrderStatus.DELIVERED, OrderStatus.CLOSED],
+  cancelled: [OrderStatus.CANCELLED, OrderStatus.PARTIALLY_CANCELLED],
+} as const satisfies Record<string, readonly OrderStatus[]>;
+
+export type OrderBucket = keyof typeof ORDER_BUCKETS;
+
+export function isOrderBucket(value: string): value is OrderBucket {
+  return Object.prototype.hasOwnProperty.call(ORDER_BUCKETS, value);
+}
 
 /**
  * The customer's view of their orders.
@@ -41,12 +66,24 @@ export class OrdersService {
     private readonly cart: CartService,
     private readonly workflow: SellerOrderWorkflowService,
     private readonly refunds: CustomerRefundsService,
+    private readonly codTrust: CodTrustService,
   ) {}
 
-  async list(userId: string, page: PaginationDto) {
+  /**
+   * Her orders, optionally narrowed to one of the four piles her profile
+   * counts.
+   *
+   * The profile screen has shown those four counts since it was built and
+   * every tile opened the same unfiltered list — tapping «ملغاة» gave her
+   * everything she had ever bought. The buckets are defined once, in
+   * `ORDER_BUCKETS`, so the count and the list can never disagree about what
+   * "processing" means.
+   */
+  async list(userId: string, page: PaginationDto, bucket?: OrderBucket) {
+    const statuses = bucket ? [...ORDER_BUCKETS[bucket]] : undefined;
     const [orders, total] = await Promise.all([
-      this.repo.listForUser(userId, page.skip, page.limit),
-      this.repo.countForUser(userId),
+      this.repo.listForUser(userId, page.skip, page.limit, statuses),
+      this.repo.countForUser(userId, statuses),
     ]);
     return {
       data: orders.map(serializeOrder),
@@ -81,6 +118,12 @@ export class OrdersService {
     for (const sellerOrder of cancellable) {
       await this.cancelSellerOrder(userId, sellerOrder.id, reason);
     }
+
+    // A basket she called off before it moved is not a refusal, and a trust
+    // engine that never learned the difference would read every change of mind
+    // as a parcel sent back at the door.
+    await this.codTrust.observe(id, 'cancelled');
+
     return this.detail(userId, id);
   }
 

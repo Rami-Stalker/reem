@@ -17,11 +17,11 @@ class UserProfileNotifier extends StateNotifier<UserProfileState> {
     required GetUserProfileUseCase getProfile,
     required FollowSellerUseCase follow,
     required UnfollowSellerUseCase unfollow,
-  })  : _getMyProfile = getMyProfile,
-        _getProfile = getProfile,
-        _follow = follow,
-        _unfollow = unfollow,
-        super(const UserProfileState());
+  }) : _getMyProfile = getMyProfile,
+       _getProfile = getProfile,
+       _follow = follow,
+       _unfollow = unfollow,
+       super(const UserProfileState());
 
   /// `null` => the signed-in user's own profile.
   final String? userId;
@@ -33,12 +33,15 @@ class UserProfileNotifier extends StateNotifier<UserProfileState> {
 
   Future<void> load() async {
     state = state.copyWith(isLoading: true, clearError: true);
-    final result =
-        userId == null ? await _getMyProfile() : await _getProfile(userId!);
+    final result = userId == null
+        ? await _getMyProfile()
+        : await _getProfile(userId!);
     state = switch (result) {
       Success(:final data) => state.copyWith(isLoading: false, profile: data),
-      Error(:final failure) =>
-        state.copyWith(isLoading: false, error: failure.message),
+      Error(:final failure) => state.copyWith(
+        isLoading: false,
+        error: failure.message,
+      ),
     };
   }
 
@@ -55,20 +58,20 @@ class UserProfileNotifier extends StateNotifier<UserProfileState> {
 
     state = switch (result) {
       Success(:final data) => state.copyWith(
-          isFollowLoading: false,
-          profile: _apply(profile, data),
-        ),
-      Error(:final failure) =>
-        state.copyWith(isFollowLoading: false, error: failure.message),
+        isFollowLoading: false,
+        profile: _apply(profile, data),
+      ),
+      Error(:final failure) => state.copyWith(
+        isFollowLoading: false,
+        error: failure.message,
+      ),
     };
   }
 
   UserProfile _apply(UserProfile profile, FollowResult result) {
-    final updatedUser = UserModel.fromEntity(profile.user)
-        .copyWith(followersCount: result.followersCount);
-    return profile.copyWith(
-      isFollowing: result.isFollowing,
-      user: updatedUser,
-    );
+    final updatedUser = UserModel.fromEntity(
+      profile.user,
+    ).copyWith(followersCount: result.followersCount);
+    return profile.copyWith(isFollowing: result.isFollowing, user: updatedUser);
   }
 }

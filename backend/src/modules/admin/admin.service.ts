@@ -4,14 +4,18 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import {
+  AuditSeverity,
   CommissionStatus,
   Currency,
   FinancialLedgerType,
+  ModerationStatus,
   OrderStatus,
   Prisma,
   ProductStatus,
   ReportStatus,
   SellerOrderStatus,
+  SellerVerificationStatus,
+  SupportTicketStatus,
   UserRole,
 } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
@@ -22,6 +26,7 @@ import {
   serializeUser,
 } from '../../common/serializers';
 import { AuthService } from '../auth/auth.service';
+import { AuditService } from '../auth/audit.service';
 import { PRIVILEGED_ROLES, TotpService } from '../auth/totp/totp.service';
 import { ReviewSellerVerificationDto } from '../auth/dto/account.dto';
 import {
@@ -52,13 +57,88 @@ function totalsByCurrency(
   );
 }
 
+/**
+ * The envelope every admin list speaks.
+ *
+ * These endpoints used to return a bare array cut at `take`, with no total and
+ * no way to ask for the second page — so a console listing "users" was really
+ * listing "the twenty-five newest users", and said nothing about the other
+ * eleven thousand. Search made it worse, not better: the client filtered the
+ * page it happened to be holding, so searching for a woman who signed up last
+ * year returned nothing and looked like an answer.
+ */
+export interface AdminPage<T> {
+  items: T[];
+  page: number;
+  limit: number;
+  total: number;
+  has_more: boolean;
+}
+
+/**
+ * The queue filter, only if the table understands it.
+ *
+ * `status` arrives as a free string because six different enums share one
+ * query DTO. Handing an unrecognised token straight to Prisma turns a typo in
+ * a URL into a 500; dropping it answers the unfiltered question instead, which
+ * is what an operator who mistyped a filter would rather see than a crash.
+ */
+function statusIn<T extends Record<string, string>>(
+  values: T,
+  token: string | undefined,
+): T[keyof T] | undefined {
+  if (!token) return undefined;
+  return Object.values(values).includes(token)
+    ? (token as T[keyof T])
+    : undefined;
+}
+
+function pageOf<T>(
+  items: T[],
+  total: number,
+  query: AdminListQueryDto,
+): AdminPage<T> {
+  return {
+    items,
+    page: query.page,
+    limit: query.limit,
+    total,
+    has_more: query.page * query.limit < total,
+  };
+}
+
 @Injectable()
 export class AdminService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly auth: AuthService,
     private readonly totp: TotpService,
+    private readonly audit: AuditService,
   ) {}
+
+  /**
+   * Every write on this service is a staff action taken on someone else's
+   * account, catalogue, money, or complaint. The console already has a screen
+   * that promises an audit trail; until now that trail recorded sign-ins and
+   * seller reviews and nothing an administrator did from the other eleven
+   * screens. `AuditService.record` swallows its own failures by design, so
+   * this never turns a successful moderation action into a 500.
+   */
+  private trace(
+    actorId: string,
+    action: string,
+    metadata: Prisma.InputJsonValue,
+    severity: AuditSeverity = AuditSeverity.INFO,
+  ) {
+    return this.audit.record({
+      actorId,
+      action,
+      category: 'admin',
+      outcome: 'success',
+      severity,
+      metadata,
+    });
+  }
 
   async stats() {
     const now = new Date();
@@ -189,95 +269,169 @@ export class AdminService {
         }
       : {};
 
-    const orders = await this.prisma.order.findMany({
-      where,
-      orderBy: { createdAt: 'desc' },
-      skip: this.skip(query),
-      take: query.limit,
-      include: {
-        sellerOrders: { include: { items: true } },
-        user: true,
-        payment: true,
-      },
-    });
+    const [orders, total] = await Promise.all([
+      this.prisma.order.findMany({
+        where,
+        orderBy: { createdAt: 'desc' },
+        skip: this.skip(query),
+        take: query.limit,
+        include: {
+          sellerOrders: { include: { items: true } },
+          user: true,
+          payment: true,
+        },
+      }),
+      this.prisma.order.count({ where }),
+    ]);
 
-    return orders.map((order) => ({
-      ...serializeOrder(order),
-      customer: order.user?.name ?? order.recipientName,
-      is_guest: order.userId === null,
-      payment_status: order.payment?.status.toLowerCase() ?? 'pending',
-      sellers_count: order.sellerOrders.length,
-    }));
+    return pageOf(
+      orders.map((order) => ({
+        ...serializeOrder(order),
+        customer: order.user?.name ?? order.recipientName,
+        is_guest: order.userId === null,
+        payment_status: order.payment?.status.toLowerCase() ?? 'pending',
+        sellers_count: order.sellerOrders.length,
+      })),
+      total,
+      query,
+    );
   }
 
   async products(query: AdminListQueryDto = new AdminListQueryDto()) {
-    const products = await this.prisma.product.findMany({
-      orderBy: { createdAt: 'desc' },
-      skip: this.skip(query),
-      take: query.limit,
-      include: PRODUCT_CARD_INCLUDE,
-    });
-    return products.map((product) => serializeProduct(product));
+    // `q` was accepted and thrown away here, so the catalogue screen searched
+    // whatever twenty-five rows it already had.
+    const where: Prisma.ProductWhereInput = {
+      ...(statusIn(ProductStatus, query.status) && {
+        status: statusIn(ProductStatus, query.status),
+      }),
+      ...(query.q && {
+        OR: [
+          { title: { contains: query.q, mode: 'insensitive' } },
+          { slug: { contains: query.q, mode: 'insensitive' } },
+          { gtin: { contains: query.q, mode: 'insensitive' } },
+        ],
+      }),
+    };
+
+    const [products, total] = await Promise.all([
+      this.prisma.product.findMany({
+        where,
+        orderBy: { createdAt: 'desc' },
+        skip: this.skip(query),
+        take: query.limit,
+        include: PRODUCT_CARD_INCLUDE,
+      }),
+      this.prisma.product.count({ where }),
+    ]);
+    return pageOf(
+      products.map((product) => serializeProduct(product)),
+      total,
+      query,
+    );
   }
 
   async users(query: AdminListQueryDto = new AdminListQueryDto()) {
-    const users = await this.prisma.user.findMany({
-      where: query.q
-        ? {
-            OR: [
-              { name: { contains: query.q, mode: 'insensitive' } },
-              { phone: { contains: query.q } },
-              { email: { contains: query.q, mode: 'insensitive' } },
-            ],
-          }
-        : undefined,
-      orderBy: { createdAt: 'desc' },
-      skip: this.skip(query),
-      take: query.limit,
-    });
-    return users.map(serializeUser);
+    const where: Prisma.UserWhereInput = query.q
+      ? {
+          OR: [
+            { name: { contains: query.q, mode: 'insensitive' } },
+            { username: { contains: query.q, mode: 'insensitive' } },
+            { phone: { contains: query.q } },
+            { email: { contains: query.q, mode: 'insensitive' } },
+          ],
+        }
+      : {};
+
+    const [users, total] = await Promise.all([
+      this.prisma.user.findMany({
+        where,
+        orderBy: { createdAt: 'desc' },
+        skip: this.skip(query),
+        take: query.limit,
+      }),
+      this.prisma.user.count({ where }),
+    ]);
+    return pageOf(users.map((user) => this.serializeAdminUser(user)), total, query);
   }
 
   async sellers(query: AdminListQueryDto = new AdminListQueryDto()) {
-    const sellers = await this.prisma.user.findMany({
-      where: { role: UserRole.SELLER },
-      orderBy: { createdAt: 'desc' },
-      skip: this.skip(query),
-      take: query.limit,
-      include: { sellerVerification: true },
-    });
-    return sellers.map((seller) => ({
-      ...serializeUser(seller),
-      verification_status:
-        seller.sellerVerification?.status.toLowerCase() ?? 'not_submitted',
-    }));
+    const where: Prisma.UserWhereInput = {
+      role: UserRole.SELLER,
+      ...(query.q && {
+        OR: [
+          { name: { contains: query.q, mode: 'insensitive' } },
+          { username: { contains: query.q, mode: 'insensitive' } },
+          { phone: { contains: query.q } },
+          { email: { contains: query.q, mode: 'insensitive' } },
+        ],
+      }),
+    };
+
+    const [sellers, total] = await Promise.all([
+      this.prisma.user.findMany({
+        where,
+        orderBy: { createdAt: 'desc' },
+        skip: this.skip(query),
+        take: query.limit,
+        include: { sellerVerification: true },
+      }),
+      this.prisma.user.count({ where }),
+    ]);
+    return pageOf(
+      sellers.map((seller) => ({
+        ...this.serializeAdminUser(seller),
+        verification_id: seller.sellerVerification?.id ?? null,
+        verification_status:
+          seller.sellerVerification?.status.toLowerCase() ?? 'not_submitted',
+      })),
+      total,
+      query,
+    );
   }
 
   async sellerApplications(query: AdminListQueryDto = new AdminListQueryDto()) {
-    const applications = await this.prisma.sellerVerification.findMany({
-      where: query.q
-        ? {
-            OR: [
-              { businessName: { contains: query.q, mode: 'insensitive' } },
-              { legalName: { contains: query.q, mode: 'insensitive' } },
-              {
-                commercialRegistration: {
-                  contains: query.q,
-                  mode: 'insensitive',
-                },
-              },
-              { contactEmail: { contains: query.q, mode: 'insensitive' } },
-            ],
-          }
-        : undefined,
-      orderBy: { submittedAt: 'desc' },
-      skip: this.skip(query),
-      take: query.limit,
-      include: { user: true },
-    });
-    return applications.map((application) =>
-      this.serializeSellerApplication(application),
-    );
+    const where: Prisma.SellerVerificationWhereInput = {
+      ...(statusIn(SellerVerificationStatus, query.status) && {
+        status: statusIn(SellerVerificationStatus, query.status),
+      }),
+      ...(query.q && {
+        OR: [
+          { businessName: { contains: query.q, mode: 'insensitive' } },
+          { legalName: { contains: query.q, mode: 'insensitive' } },
+          {
+            commercialRegistration: {
+              contains: query.q,
+              mode: 'insensitive',
+            },
+          },
+          { contactEmail: { contains: query.q, mode: 'insensitive' } },
+        ],
+      }),
+    };
+
+    const [applications, total, pending] = await Promise.all([
+      this.prisma.sellerVerification.findMany({
+        where,
+        // Pending work first: a queue sorted purely by recency buries the
+        // application that has been waiting longest under today's arrivals.
+        orderBy: [{ status: 'asc' }, { submittedAt: 'desc' }],
+        skip: this.skip(query),
+        take: query.limit,
+        include: { user: true },
+      }),
+      this.prisma.sellerVerification.count({ where }),
+      this.prisma.sellerVerification.count({ where: { status: 'PENDING' } }),
+    ]);
+    return {
+      ...pageOf(
+        applications.map((application) =>
+          this.serializeSellerApplication(application),
+        ),
+        total,
+        query,
+      ),
+      pending,
+    };
   }
 
   async sellerApplication(id: string) {
@@ -300,7 +454,15 @@ export class AdminService {
     return this.auth.reviewSellerVerification(reviewerId, id, dto);
   }
 
-  async updateUser(id: string, dto: UpdateUserAdminDto) {
+  async updateUser(actorId: string, id: string, dto: UpdateUserAdminDto) {
+    // Suspending yourself locks the console with nobody inside it, and
+    // demoting yourself is the same door closing more slowly.
+    if (actorId === id) {
+      throw new BadRequestException({
+        code: 'CANNOT_ADMINISTER_SELF',
+        message: 'Ask another administrator to change your own account',
+      });
+    }
     // A privileged account is only as strong as its weakest sign-in path, and
     // every other factor in this system arrives over a network that Syria can
     // lose for a day. Granting the role before the authenticator exists would
@@ -316,6 +478,12 @@ export class AdminService {
       }
     }
 
+    const before = await this.prisma.user.findUnique({
+      where: { id },
+      select: { role: true, disabledAt: true },
+    });
+    if (!before) throw new NotFoundException('User not found');
+
     const user = await this.prisma.user.update({
       where: { id },
       data: {
@@ -328,15 +496,68 @@ export class AdminService {
         }),
       },
     });
-    return serializeUser(user);
+
+    await this.trace(
+      actorId,
+      dto.disabled === undefined ? 'user_role_changed' : 'user_access_changed',
+      {
+        user_id: id,
+        reason: dto.reason ?? null,
+        ...(dto.role && {
+          role_from: before.role,
+          role_to: dto.role,
+        }),
+        ...(dto.disabled !== undefined && {
+          disabled_from: before.disabledAt !== null,
+          disabled_to: dto.disabled,
+        }),
+      },
+      // Granting a privileged role or locking an account out are the two
+      // entries an incident review actually goes looking for.
+      dto.disabled === true ||
+        (dto.role !== undefined && PRIVILEGED_ROLES.includes(dto.role))
+        ? AuditSeverity.WARNING
+        : AuditSeverity.INFO,
+    );
+
+    return this.serializeAdminUser(user);
   }
 
-  async updateProduct(id: string, dto: UpdateProductAdminDto) {
+  async updateProduct(
+    actorId: string,
+    id: string,
+    dto: UpdateProductAdminDto,
+  ) {
+    const before = await this.prisma.product.findUnique({
+      where: { id },
+      select: { status: true, isFeatured: true, showInFeed: true },
+    });
+    if (!before) throw new NotFoundException('Product not found');
+
     const product = await this.prisma.product.update({
       where: { id },
-      data: { ...(dto.status && { status: dto.status }) },
+      data: {
+        ...(dto.status && { status: dto.status }),
+        ...(dto.is_featured !== undefined && { isFeatured: dto.is_featured }),
+        ...(dto.show_in_feed !== undefined && { showInFeed: dto.show_in_feed }),
+      },
       include: PRODUCT_CARD_INCLUDE,
     });
+
+    await this.trace(actorId, 'product_curated', {
+      product_id: id,
+      reason: dto.reason ?? null,
+      ...(dto.status && { status_from: before.status, status_to: dto.status }),
+      ...(dto.is_featured !== undefined && {
+        featured_from: before.isFeatured,
+        featured_to: dto.is_featured,
+      }),
+      ...(dto.show_in_feed !== undefined && {
+        in_feed_from: before.showInFeed,
+        in_feed_to: dto.show_in_feed,
+      }),
+    });
+
     return serializeProduct(product);
   }
 
@@ -455,41 +676,79 @@ export class AdminService {
     };
   }
 
-  async commissions() {
-    const [rules, ledgers, pendingAgg] = await Promise.all([
+  /**
+   * The commission screen, as one list.
+   *
+   * Rules and ledger entries used to come back as two sibling arrays, and the
+   * console — which renders one list per screen — showed whichever array it
+   * found first and silently dropped the other. So the entries an operator
+   * needs to mark paid were the half that never appeared. They are one list
+   * now, each row saying which kind it is, and the settlement action offers
+   * itself only on the ledger rows.
+   */
+  async commissions(query: AdminListQueryDto = new AdminListQueryDto()) {
+    const ledgerStatus = statusIn(CommissionStatus, query.status);
+    const ledgerWhere: Prisma.CommissionLedgerWhereInput = ledgerStatus
+      ? { status: ledgerStatus }
+      : {};
+
+    const [rules, ledgers, ledgerCount, pendingAgg] = await Promise.all([
       this.prisma.commissionRule.findMany({ orderBy: { createdAt: 'desc' } }),
       this.prisma.commissionLedger.findMany({
+        where: ledgerWhere,
         orderBy: { createdAt: 'desc' },
-        take: 100,
+        skip: this.skip(query),
+        take: query.limit,
       }),
+      this.prisma.commissionLedger.count({ where: ledgerWhere }),
       this.prisma.commissionLedger.aggregate({
         _sum: { commission: true },
         where: { status: CommissionStatus.PENDING },
       }),
     ]);
+
+    // Rules ride on the first page only; they are a short, stable list that an
+    // operator reads once, not a queue she pages through.
+    const ruleRows =
+      query.page === 1
+        ? rules.map((rule) => ({
+            id: rule.id,
+            kind: 'rule',
+            name: rule.name,
+            rate_bps: rule.rateBps,
+            category: rule.category,
+            seller_tier: rule.sellerTier,
+            status: rule.active ? 'ACTIVE' : 'ARCHIVED',
+          }))
+        : [];
+
+    const ledgerRows = ledgers.map((entry) => ({
+      id: entry.id,
+      kind: 'ledger',
+      seller_id: entry.sellerId,
+      gross: entry.gross,
+      commission: entry.commission,
+      net: entry.net,
+      status: entry.status,
+      created_at: entry.createdAt.toISOString(),
+    }));
+
+    // The rules ride along on page one, so they count toward the total too —
+    // otherwise the console's "showing 8 of 68" describes eight rows of which
+    // three are not in the sixty-eight.
     return {
-      pending_commission: pendingAgg._sum.commission ?? 0,
-      rules: rules.map((rule) => ({
-        id: rule.id,
-        name: rule.name,
-        rate_bps: rule.rateBps,
-        category: rule.category,
-        active: rule.active,
-      })),
-      ledgers: ledgers.map((entry) => ({
-        id: entry.id,
-        seller_id: entry.sellerId,
-        gross: entry.gross,
-        commission: entry.commission,
-        net: entry.net,
-        status: entry.status.toLowerCase(),
-        created_at: entry.createdAt.toISOString(),
-      })),
+      ...pageOf<Record<string, unknown>>(
+        [...ruleRows, ...ledgerRows],
+        ledgerCount + rules.length,
+        query,
+      ),
+      pending_commission: (pendingAgg._sum.commission ?? 0).toString(),
+      rules_count: rules.length,
     };
   }
 
-  async createCommissionRule(dto: CreateCommissionRuleDto) {
-    return this.prisma.commissionRule.create({
+  async createCommissionRule(actorId: string, dto: CreateCommissionRuleDto) {
+    const rule = await this.prisma.commissionRule.create({
       data: {
         name: dto.name,
         rateBps: dto.rate_bps,
@@ -497,80 +756,282 @@ export class AdminService {
         sellerTier: dto.seller_tier,
       },
     });
+    await this.trace(
+      actorId,
+      'commission_rule_created',
+      {
+        rule_id: rule.id,
+        name: rule.name,
+        rate_bps: rule.rateBps,
+        category: rule.category,
+        seller_tier: rule.sellerTier,
+      },
+      AuditSeverity.WARNING,
+    );
+    return rule;
   }
 
-  async updateCommissionLedger(id: string, dto: UpdateCommissionLedgerDto) {
-    return this.prisma.commissionLedger.update({
+  async updateCommissionLedger(
+    actorId: string,
+    id: string,
+    dto: UpdateCommissionLedgerDto,
+  ) {
+    const before = await this.prisma.commissionLedger.findUnique({
+      where: { id },
+      select: { status: true, sellerId: true, commission: true },
+    });
+    if (!before) throw new NotFoundException('Commission entry not found');
+
+    const entry = await this.prisma.commissionLedger.update({
       where: { id },
       data: {
         status: dto.status,
         ...(dto.status === CommissionStatus.PAID && { paidAt: new Date() }),
       },
     });
+    await this.trace(
+      actorId,
+      'commission_ledger_updated',
+      {
+        ledger_id: id,
+        seller_id: before.sellerId,
+        commission: before.commission.toString(),
+        status_from: before.status,
+        status_to: dto.status,
+      },
+      // Marking commission paid is a money statement; it gets the same weight
+      // as a settlement in the ledger's own trail.
+      dto.status === CommissionStatus.PAID
+        ? AuditSeverity.WARNING
+        : AuditSeverity.INFO,
+    );
+    return entry;
   }
 
-  support() {
-    return this.prisma.supportTicket.findMany({
-      orderBy: [{ priority: 'desc' }, { updatedAt: 'desc' }],
-      take: 100,
-      include: { user: true, _count: { select: { messages: true } } },
+  async support(query: AdminListQueryDto = new AdminListQueryDto()) {
+    const where: Prisma.SupportTicketWhereInput = {
+      ...(statusIn(SupportTicketStatus, query.status) && {
+        status: statusIn(SupportTicketStatus, query.status),
+      }),
+      ...(query.q && {
+        OR: [
+          { subject: { contains: query.q, mode: 'insensitive' } },
+          { user: { name: { contains: query.q, mode: 'insensitive' } } },
+          { user: { phone: { contains: query.q } } },
+        ],
+      }),
+    };
+
+    const [tickets, total, open] = await Promise.all([
+      this.prisma.supportTicket.findMany({
+        where,
+        orderBy: [{ priority: 'desc' }, { updatedAt: 'desc' }],
+        skip: this.skip(query),
+        take: query.limit,
+        include: { user: true, _count: { select: { messages: true } } },
+      }),
+      this.prisma.supportTicket.count({ where }),
+      this.prisma.supportTicket.count({
+        where: { status: { in: ['OPEN', 'PENDING'] } },
+      }),
+    ]);
+    return { ...pageOf(tickets, total, query), open };
+  }
+
+  async updateSupportTicket(
+    actorId: string,
+    id: string,
+    dto: UpdateSupportTicketDto,
+  ) {
+    const before = await this.prisma.supportTicket.findUnique({
+      where: { id },
+      select: { status: true, priority: true, userId: true },
     });
-  }
+    if (!before) throw new NotFoundException('Support ticket not found');
 
-  updateSupportTicket(id: string, dto: UpdateSupportTicketDto) {
-    return this.prisma.supportTicket.update({
+    const ticket = await this.prisma.supportTicket.update({
       where: { id },
       data: {
         ...(dto.status && { status: dto.status }),
         ...(dto.priority && { priority: dto.priority }),
       },
     });
-  }
-
-  moderation() {
-    return this.prisma.moderationCase.findMany({
-      orderBy: { createdAt: 'desc' },
-      take: 100,
+    await this.trace(actorId, 'support_ticket_updated', {
+      ticket_id: id,
+      subject_user_id: before.userId,
+      ...(dto.status && { status_from: before.status, status_to: dto.status }),
+      ...(dto.priority && {
+        priority_from: before.priority,
+        priority_to: dto.priority,
+      }),
     });
+    return ticket;
   }
 
-  updateModeration(id: string, dto: UpdateModerationCaseDto) {
-    return this.prisma.moderationCase.update({
+  async moderation(query: AdminListQueryDto = new AdminListQueryDto()) {
+    const where: Prisma.ModerationCaseWhereInput = {
+      ...(statusIn(ModerationStatus, query.status) && {
+        status: statusIn(ModerationStatus, query.status),
+      }),
+      ...(query.q && {
+        OR: [
+          { reason: { contains: query.q, mode: 'insensitive' } },
+          { targetType: { contains: query.q, mode: 'insensitive' } },
+        ],
+      }),
+    };
+
+    const [cases, total, open] = await Promise.all([
+      this.prisma.moderationCase.findMany({
+        where,
+        orderBy: { createdAt: 'desc' },
+        skip: this.skip(query),
+        take: query.limit,
+      }),
+      this.prisma.moderationCase.count({ where }),
+      this.prisma.moderationCase.count({ where: { status: 'OPEN' } }),
+    ]);
+    return { ...pageOf(cases, total, query), open };
+  }
+
+  async updateModeration(
+    actorId: string,
+    id: string,
+    dto: UpdateModerationCaseDto,
+  ) {
+    const before = await this.prisma.moderationCase.findUnique({
+      where: { id },
+      select: { status: true, targetType: true, targetId: true },
+    });
+    if (!before) throw new NotFoundException('Moderation case not found');
+
+    const moderationCase = await this.prisma.moderationCase.update({
       where: { id },
       data: { status: dto.status, resolution: dto.resolution },
     });
+    await this.trace(
+      actorId,
+      'moderation_case_decided',
+      {
+        case_id: id,
+        target_type: before.targetType,
+        target_id: before.targetId,
+        status_from: before.status,
+        status_to: dto.status,
+        resolution: dto.resolution ?? null,
+      },
+      AuditSeverity.WARNING,
+    );
+    return moderationCase;
   }
 
-  reports() {
-    return this.prisma.adminReport.findMany({
-      orderBy: { createdAt: 'desc' },
-      take: 100,
+  async reports(query: AdminListQueryDto = new AdminListQueryDto()) {
+    const reportStatus = statusIn(ReportStatus, query.status);
+    const where: Prisma.AdminReportWhereInput = reportStatus
+      ? { status: reportStatus }
+      : {};
+
+    const [reports, total, open] = await Promise.all([
+      this.prisma.adminReport.findMany({
+        where,
+        orderBy: { createdAt: 'desc' },
+        skip: this.skip(query),
+        take: query.limit,
+      }),
+      this.prisma.adminReport.count({ where }),
+      this.prisma.adminReport.count({ where: { status: ReportStatus.OPEN } }),
+    ]);
+    return { ...pageOf(reports, total, query), open };
+  }
+
+  async updateReport(actorId: string, id: string, dto: UpdateReportDto) {
+    const before = await this.prisma.adminReport.findUnique({
+      where: { id },
+      select: { status: true, type: true, title: true },
     });
-  }
+    if (!before) throw new NotFoundException('Report not found');
 
-  updateReport(id: string, dto: UpdateReportDto) {
-    return this.prisma.adminReport.update({
+    const report = await this.prisma.adminReport.update({
       where: { id },
       data: {
         status: dto.status,
         ...(dto.status === ReportStatus.RESOLVED && { resolvedAt: new Date() }),
       },
     });
-  }
-
-  auditLogs() {
-    return this.prisma.auditLog.findMany({
-      orderBy: { createdAt: 'desc' },
-      take: 200,
-      include: { actor: true },
+    await this.trace(actorId, 'report_decided', {
+      report_id: id,
+      report_type: before.type,
+      title: before.title,
+      status_from: before.status,
+      status_to: dto.status,
     });
+    return report;
   }
 
-  systemSettings() {
-    return this.prisma.systemSetting.findMany({ orderBy: { key: 'asc' } });
+  async auditLogs(query: AdminListQueryDto = new AdminListQueryDto()) {
+    const where: Prisma.AuditLogWhereInput = query.q
+      ? {
+          OR: [
+            { action: { contains: query.q, mode: 'insensitive' } },
+            { category: { contains: query.q, mode: 'insensitive' } },
+            { actor: { name: { contains: query.q, mode: 'insensitive' } } },
+          ],
+        }
+      : {};
+
+    const [logs, total] = await Promise.all([
+      this.prisma.auditLog.findMany({
+        where,
+        orderBy: { createdAt: 'desc' },
+        skip: this.skip(query),
+        take: query.limit,
+        include: { actor: true },
+      }),
+      this.prisma.auditLog.count({ where }),
+    ]);
+    return pageOf(
+      logs.map((log) => ({
+        id: log.id,
+        action: log.action,
+        category: log.category,
+        outcome: log.outcome,
+        severity: log.severity.toLowerCase(),
+        actor_id: log.actorId,
+        actor_name: log.actor?.name ?? null,
+        ip_address: log.ipAddress,
+        metadata: log.metadata,
+        created_at: log.createdAt.toISOString(),
+      })),
+      total,
+      query,
+    );
+  }
+
+  async systemSettings() {
+    const settings = await this.prisma.systemSetting.findMany({
+      orderBy: { key: 'asc' },
+    });
+    return {
+      items: settings.map((setting) => ({
+        id: setting.id,
+        key: setting.key,
+        // A setting flagged sensitive holds a credential or a rate that is not
+        // for every operator's screen. Listing it is fine; printing it is not.
+        value: setting.sensitive ? null : setting.value,
+        sensitive: setting.sensitive,
+        updated_by: setting.updatedBy,
+        updated_at: setting.updatedAt.toISOString(),
+      })),
+      total: settings.length,
+    };
   }
 
   async upsertSystemSetting(actorId: string, dto: UpsertSystemSettingDto) {
+    const before = await this.prisma.systemSetting.findUnique({
+      where: { key: dto.key },
+      select: { sensitive: true },
+    });
+
     const setting = await this.prisma.systemSetting.upsert({
       where: { key: dto.key },
       create: {
@@ -585,6 +1046,18 @@ export class AdminService {
         updatedBy: actorId,
       },
     });
+    await this.trace(
+      actorId,
+      'system_setting_changed',
+      {
+        key: dto.key,
+        created: before === null,
+        // The value itself is deliberately absent for a sensitive key: the
+        // audit log is read by more people than the setting is.
+        ...(setting.sensitive ? {} : { value: setting.value }),
+      },
+      AuditSeverity.WARNING,
+    );
     return setting;
   }
 
@@ -592,6 +1065,25 @@ export class AdminService {
     const product = await this.prisma.product.findUnique({ where: { id } });
     if (!product) throw new NotFoundException('Product not found');
     return product;
+  }
+
+  /**
+   * `serializeUser` is the public shape — it is what a shopper sees on someone
+   * else's profile, so it deliberately says nothing about suspension. The
+   * console needs exactly that: without `disabled_at` the users screen cannot
+   * tell an active account from a locked one, and the operator who just
+   * suspended someone has no way to confirm it took.
+   */
+  private serializeAdminUser(user: Parameters<typeof serializeUser>[0] & {
+    disabledAt?: Date | null;
+    totpRequired?: boolean;
+  }) {
+    return {
+      ...serializeUser(user),
+      disabled_at: user.disabledAt?.toISOString() ?? null,
+      is_disabled: user.disabledAt != null,
+      totp_required: user.totpRequired ?? false,
+    };
   }
 
   private serializeSellerApplication(application: any) {

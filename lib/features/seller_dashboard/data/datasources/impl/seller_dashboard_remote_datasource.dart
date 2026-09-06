@@ -142,7 +142,10 @@ final class _SellerDashboardMapper {
   SellerStoreScore _storeScore(Map<String, dynamic> json) => SellerStoreScore(
         overall: _int(json['overall']),
         fulfillment: _int(json['fulfillment']),
-        responsiveness: _int(json['responsiveness']),
+        // Null stays null — see `SellerStoreScore.responsiveness`.
+        responsiveness: json['responsiveness'] == null
+            ? null
+            : _int(json['responsiveness']),
         productQuality: _int(json['product_quality']),
         rating: _double(json['rating']),
       );

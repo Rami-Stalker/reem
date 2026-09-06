@@ -68,22 +68,14 @@ class EarningsMovementTile extends StatelessWidget {
                   _label(context),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontFamily: DsTypography.fontFamily,
-                    fontSize: DsTypography.bodyMedium,
-                    fontWeight: DsTypography.medium,
-                    color: colors.onSurface,
-                  ),
+                  style: context.dsText.body.medium.tint(colors.onSurface),
                 ),
-                const SizedBox(height: 2),
+                DsGaps.vXxxs,
                 Text(
                   _when(context),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontSize: DsTypography.labelSmall,
-                    color: colors.onSurfaceVariant,
-                  ),
+                  style: context.dsText.caption.tint(colors.onSurfaceVariant),
                 ),
               ],
             ),
@@ -95,12 +87,7 @@ class EarningsMovementTile extends StatelessWidget {
             movement.isSigned
                 ? '${incoming ? '+' : '−'}${movement.amount.absolute.format()}'
                 : movement.amount.absolute.format(),
-            style: TextStyle(
-              fontFamily: DsTypography.fontFamily,
-              fontSize: DsTypography.bodyMedium,
-              fontWeight: DsTypography.bold,
-              color: accent,
-            ),
+            style: context.dsText.body.bold.tint(accent),
           ),
         ],
       ),

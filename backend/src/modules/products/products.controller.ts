@@ -116,8 +116,11 @@ export class ProductsController {
   // ── Authenticated mutations (global JwtAuthGuard enforces a token) ────────
 
   @Post(':id/views')
-  recordView(@Param('id', ParseUUIDPipe) id: string) {
-    return this.products.recordView(id);
+  recordView(
+    @Param('id', ParseUUIDPipe) id: string,
+    @CurrentUser('id') viewerId?: string,
+  ) {
+    return this.products.recordView(id, viewerId);
   }
 
   @Post(':id/orders')

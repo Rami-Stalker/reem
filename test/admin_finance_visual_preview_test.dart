@@ -74,7 +74,7 @@ class _Preview extends StatelessWidget {
       home: RepaintBoundary(
         key: _captureKey,
         child: Scaffold(
-          backgroundColor: AdminExperience.background,
+          backgroundColor: DsColorScheme.light.background,
           body: SingleChildScrollView(
             padding: const EdgeInsets.all(DsSpacing.xl),
             child: Column(

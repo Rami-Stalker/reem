@@ -28,7 +28,15 @@ export class StoriesRepository {
   findOwner(id: string) {
     return this.prisma.story.findUnique({
       where: { id },
-      select: { id: true, userId: true, expiresAt: true, createdAt: true },
+      // `link` is here for the trend signal: a story pointing at a product is
+      // discovery for that product, and the view path already loads this row.
+      select: {
+        id: true,
+        userId: true,
+        expiresAt: true,
+        createdAt: true,
+        link: true,
+      },
     });
   }
 

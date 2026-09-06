@@ -44,6 +44,7 @@ class PlaceOrderUseCase {
     String? couponCode,
     String? deliveryInstructions,
     String? notes,
+    bool privacyMask = false,
   }) =>
       _repo.placeOrder(
         shipping: shipping,
@@ -53,7 +54,23 @@ class PlaceOrderUseCase {
         couponCode: couponCode,
         deliveryInstructions: deliveryInstructions,
         notes: notes,
+        privacyMask: privacyMask,
       );
+}
+
+/// Releases a cash order the trust engine held for a confirmation code.
+class ConfirmCodOrderUseCase {
+  const ConfirmCodOrderUseCase(this._repo);
+  final CheckoutRepository _repo;
+  Future<Result<OrderDetail>> call(String orderId, String code) =>
+      _repo.confirmCodOrder(orderId, code);
+}
+
+class ResendCodConfirmationUseCase {
+  const ResendCodConfirmationUseCase(this._repo);
+  final CheckoutRepository _repo;
+  Future<Result<CodAssurance>> call(String orderId) =>
+      _repo.resendCodConfirmation(orderId);
 }
 
 class VerifyPaymentUseCase {
@@ -63,11 +80,28 @@ class VerifyPaymentUseCase {
       _repo.verifyPayment(paymentId);
 }
 
+class RetryPaymentUseCase {
+  const RetryPaymentUseCase(this._repo);
+  final CheckoutRepository _repo;
+  Future<Result<PaymentAttempt>> call(String paymentId) =>
+      _repo.retryPayment(paymentId);
+}
+
+class SubmitPaymentReferenceUseCase {
+  const SubmitPaymentReferenceUseCase(this._repo);
+  final CheckoutRepository _repo;
+  Future<Result<OrderPayment>> call(String paymentId, String reference) =>
+      _repo.submitPaymentReference(paymentId, reference);
+}
+
 class GetOrdersUseCase {
   const GetOrdersUseCase(this._repo);
   final CheckoutRepository _repo;
-  Future<Result<List<OrderSummary>>> call({int page = 1, int limit = 20}) =>
-      _repo.getOrders(page: page, limit: limit);
+  Future<Result<List<OrderSummary>>> call({
+    int page = 1,
+    int limit = 20,
+    String? bucket,
+  }) => _repo.getOrders(page: page, limit: limit, bucket: bucket);
 }
 
 class GetOrderUseCase {

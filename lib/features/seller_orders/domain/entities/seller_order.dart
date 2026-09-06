@@ -179,6 +179,40 @@ class SellerParcelShipment extends Equatable {
 }
 
 /// A parcel as it appears in the seller's queue.
+/// What the seller is told about the refusal risk on a cash parcel.
+///
+/// A tier and a phrase, never a score and never the signals behind it. The
+/// number is a platform decision she cannot change and would only argue with;
+/// the signals are a map of exactly what to avoid, and sellers talk to
+/// customers. Everything she can act on — pack it, ring first, wait for the
+/// code — is already in the tier.
+///
+/// Null on a prepaid parcel: nothing was assessed, because there was no cash
+/// on the road to lose.
+class SellerOrderCodRisk extends Equatable {
+  const SellerOrderCodRisk({
+    required this.tier,
+    required this.label,
+    this.awaitingConfirmation = false,
+  });
+
+  /// trusted | low | medium | high
+  final String tier;
+
+  /// Already phrased in Arabic by the server, so the seller app, the admin
+  /// console and support all read the parcel the same way.
+  final String label;
+
+  /// The customer still owes a confirmation code. The parcel is hers to see
+  /// but not yet hers to pack.
+  final bool awaitingConfirmation;
+
+  bool get isElevated => tier == 'medium' || tier == 'high';
+
+  @override
+  List<Object?> get props => [tier, label, awaitingConfirmation];
+}
+
 class SellerOrderSummary extends Equatable {
   const SellerOrderSummary({
     required this.id,
@@ -194,6 +228,7 @@ class SellerOrderSummary extends Equatable {
     this.paymentMethod,
     this.paymentStatus,
     this.trackingCode,
+    this.codRisk,
   });
 
   final String id;
@@ -213,11 +248,17 @@ class SellerOrderSummary extends Equatable {
   final String? paymentMethod;
   final String? paymentStatus;
   final String? trackingCode;
+  final SellerOrderCodRisk? codRisk;
 
-  bool get isCashOnDelivery =>
-      paymentMethod == 'COD' || paymentMethod == 'COURIER_COLLECT';
+  bool get isCashOnDelivery {
+    // Compared case-insensitively on purpose: these two arrive as raw strings
+    // rather than through a `fromWire`, so a change of case on the wire would
+    // otherwise turn "collect the cash" into "already paid" in silence.
+    final method = paymentMethod?.toLowerCase();
+    return method == 'cod' || method == 'courier_collect';
+  }
 
-  bool get isPaid => paymentStatus == 'PAID';
+  bool get isPaid => paymentStatus?.toLowerCase() == 'paid';
 
   /// The one action a card puts forward. Everything else lives behind the
   /// overflow, so the queue reads as a single column of next steps.

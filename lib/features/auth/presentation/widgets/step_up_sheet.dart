@@ -182,7 +182,7 @@ class _StepUpSheetState extends State<_StepUpSheet> {
         children: [
           Text(
             l10n.verifyToContinue,
-            style: Theme.of(context).textTheme.titleLarge,
+            style: context.dsText.sectionTitle,
           ),
           const SizedBox(height: DsSpacing.xs),
           Text(
@@ -197,11 +197,11 @@ class _StepUpSheetState extends State<_StepUpSheet> {
               children: [
                 Text(
                   '${l10n.matchCodeLabel}: ',
-                  style: Theme.of(context).textTheme.bodySmall,
+                  style: context.dsText.cardSubtitle,
                 ),
                 Text(
                   challenge.matchCode!,
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  style: context.dsText.cardTitle.copyWith(
                     color: colors.primary,
                     fontWeight: FontWeight.bold,
                   ),

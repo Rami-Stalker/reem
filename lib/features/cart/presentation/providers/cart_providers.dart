@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 
 import 'package:reem/core/presentation/providers/core_providers.dart';
+import 'package:reem/features/auth/presentation/providers/auth_provider.dart';
 import 'package:reem/features/cart/data/datasources/cart_remote_datasource.dart';
 import 'package:reem/features/cart/data/datasources/impl/cart_remote_datasource_impl.dart';
 import 'package:reem/features/cart/data/repositories/cart_repository_impl.dart';
@@ -30,15 +31,34 @@ final clearCartUseCaseProvider =
     Provider((ref) => ClearCartUseCase(ref.watch(cartRepositoryProvider)));
 
 /// App-wide cart (kept alive so the bottom-bar badge stays in sync).
-final cartNotifierProvider =
-    StateNotifierProvider<CartNotifier, CartState>((ref) {
-  return CartNotifier(
+///
+/// It reloads whenever the session changes hands. Because it is kept alive it
+/// used to load exactly once, as a guest, and then never again: signing in
+/// left the notifier holding the visitor's empty cart, so a returning customer
+/// opened the app to "your cart is empty" over a cart the server was still
+/// keeping for her, and the badge agreed. The server also merges the guest
+/// cart into hers at sign-in, so the state on this side is stale twice over.
+/// Signing out reloads too, which drops the previous account's lines.
+final cartNotifierProvider = StateNotifierProvider<CartNotifier, CartState>((
+  ref,
+) {
+  final notifier = CartNotifier(
     getCart: ref.watch(getCartUseCaseProvider),
     addToCart: ref.watch(addToCartUseCaseProvider),
     updateItem: ref.watch(updateCartItemUseCaseProvider),
     removeItem: ref.watch(removeCartItemUseCaseProvider),
     clearCart: ref.watch(clearCartUseCaseProvider),
-  )..load();
+  );
+
+  ref.listen<String?>(
+    authNotifierProvider.select((auth) => auth.user?.id),
+    (previous, next) {
+      if (previous == next) return;
+      notifier.load();
+    },
+  );
+
+  return notifier..load();
 });
 
 /// Total quantity for cart badges.

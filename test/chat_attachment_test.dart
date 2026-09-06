@@ -302,7 +302,7 @@ void main() {
       await tester.pump();
 
       expect(find.text('invoice.pdf'), findsOneWidget);
-      expect(find.text('2.0 MB'), findsOneWidget);
+      expect(find.text(_ar.fileSizeMegabytes('2.0')), findsOneWidget);
       // Nothing is downloaded until she asks for it.
       expect(find.byType(CircularProgressIndicator), findsNothing);
     });
@@ -558,7 +558,7 @@ Future<void> _attachFromGallery(WidgetTester tester) async {
 
 Future<void> _startRecording(WidgetTester tester) async {
   // The voice action lives in the composer's collapsed panel, behind the `+`.
-  await tester.tap(find.byTooltip('Attachments'));
+  await tester.tap(find.byTooltip(_ar.chatAttachments));
   await _settle(tester);
   await tester.tap(find.byIcon(Icons.mic_rounded));
   // Zero-duration frames: they flush the microtasks that start the recorder
@@ -736,7 +736,7 @@ class _FakeChatRepository implements ChatRepository {
   }
 
   @override
-  Future<Result<List<ChatThreadEntity>>> getThreads() async =>
+  Future<Result<List<ChatThreadEntity>>> getThreads({String? query}) async =>
       const Success([]);
 
   @override

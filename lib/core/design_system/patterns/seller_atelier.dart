@@ -95,7 +95,7 @@ class SellerAtelierPalette {
       raised: c.surfaceElevated,
       line: c.border,
       primary: isDark ? DsColors.mauve300 : DsColors.mauve600,
-      onPrimary: isDark ? DsColors.mauve900 : Colors.white,
+      onPrimary: isDark ? DsColors.mauve900 : DsColors.onMedia,
       primarySoft: isDark
           ? DsColors.mauve300.withValues(alpha: 0.18)
           : DsColors.mauve100,

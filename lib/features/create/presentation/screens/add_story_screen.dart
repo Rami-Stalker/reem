@@ -53,7 +53,7 @@ class _AddStoryScreenState extends ConsumerState<AddStoryScreen> {
         _linkController.clear();
         DsSnackbar.show(
           context,
-          message: next.successMessage!,
+          message: next.successMessage!.resolve(context.l10n),
           type: DsSnackbarType.success,
         );
       }
@@ -62,7 +62,7 @@ class _AddStoryScreenState extends ConsumerState<AddStoryScreen> {
     final state = ref.watch(createNotifierProvider);
     return ReemScrollPage(
       slivers: [
-        const PremiumAppBar(title: 'Create Story', showBack: true),
+        PremiumAppBar(title: context.l10n.createStoryTitle, showBack: true),
         SliverPadding(
           padding: const EdgeInsets.fromLTRB(
             DsSpacing.lg,
@@ -72,9 +72,9 @@ class _AddStoryScreenState extends ConsumerState<AddStoryScreen> {
           ),
           sliver: SliverList.list(
             children: [
-              const CreateHeader(
-                title: 'Create Story',
-                subtitle: 'Publish a 24-hour store moment for buyers',
+              CreateHeader(
+                title: context.l10n.createStoryTitle,
+                subtitle: context.l10n.createStoryBody,
               ),
               const SizedBox(height: DsSpacing.xl),
               _TypeSelector(
@@ -107,8 +107,8 @@ class _AddStoryScreenState extends ConsumerState<AddStoryScreen> {
                       controller: _linkController,
                       enabled: !state.isLoading,
                       keyboardType: TextInputType.url,
-                      decoration: const InputDecoration(
-                        labelText: 'Optional link',
+                      decoration: InputDecoration(
+                        labelText: context.l10n.createStoryOptionalLink,
                         hintText: 'https://example.com/product',
                         prefixIcon: Icon(Icons.open_in_new_rounded),
                       ),
@@ -118,7 +118,7 @@ class _AddStoryScreenState extends ConsumerState<AddStoryScreen> {
               ),
               const SizedBox(height: DsSpacing.xl),
               PrimaryButton(
-                label: 'Publish Story',
+                label: context.l10n.createStoryAction,
                 icon: Icons.auto_stories_rounded,
                 isLoading: state.isLoading,
                 onPressed: state.isLoading ? null : _submit,
@@ -153,7 +153,7 @@ class _AddStoryScreenState extends ConsumerState<AddStoryScreen> {
     if (link.isNotEmpty && !_isValidUrl(link)) {
       DsSnackbar.show(
         context,
-        message: 'Enter a valid story link or leave it blank.',
+        message: context.l10n.createStoryBadLink,
         type: DsSnackbarType.error,
       );
       return;
@@ -183,16 +183,16 @@ class _TypeSelector extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SegmentedButton<MediaType>(
-      segments: const [
+      segments: [
         ButtonSegment(
           value: MediaType.image,
           icon: Icon(Icons.image_rounded),
-          label: Text('Image'),
+          label: Text(context.l10n.mediaImage),
         ),
         ButtonSegment(
           value: MediaType.video,
           icon: Icon(Icons.play_circle_rounded),
-          label: Text('Video'),
+          label: Text(context.l10n.mediaVideo),
         ),
       ],
       selected: {selected},

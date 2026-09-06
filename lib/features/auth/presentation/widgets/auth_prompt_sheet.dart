@@ -112,11 +112,11 @@ class _BenefitRow extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                  style: context.dsText.tileTitle.copyWith(
                     fontWeight: DsTypography.semiBold,
                   ),
                 ),
-                const SizedBox(height: 2),
+                DsGaps.vXxxs,
                 Text(
                   subtitle,
                   style: Theme.of(

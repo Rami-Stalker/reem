@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { CommissionsModule } from '../commissions/commissions.module';
 import { FinanceModule } from '../finance/finance.module';
 import { OrderWorkflowModule } from '../orders/workflow/order-workflow.module';
+import { CodTrustModule } from '../cod-trust/cod-trust.module';
 import { DeliveryController } from './delivery.controller';
 import { DeliveryService } from './delivery.service';
 import { ShipmentsController } from './shipments.controller';
@@ -18,7 +19,7 @@ import { ShipmentsService } from './shipments.service';
  * what returns, escrow and reviews all read.
  */
 @Module({
-  imports: [CommissionsModule, OrderWorkflowModule, FinanceModule],
+  imports: [CommissionsModule, OrderWorkflowModule, FinanceModule, CodTrustModule],
   controllers: [DeliveryController, ShipmentsController],
   providers: [DeliveryService, ShipmentsService],
   exports: [DeliveryService, ShipmentsService],

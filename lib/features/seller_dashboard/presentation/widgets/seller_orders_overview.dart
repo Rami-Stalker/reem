@@ -16,7 +16,6 @@ class SellerOrdersOverview extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(sellerDashboardNotifierProvider);
     final c = context.dsColors;
-    final theme = Theme.of(context);
 
     if (state.isInitialLoading) {
       return Padding(
@@ -39,15 +38,14 @@ class SellerOrdersOverview extends ConsumerWidget {
               Expanded(
                 child: Text(
                   context.l10n.orders,
-                  style: theme.textTheme.titleMedium
-                      ?.copyWith(fontWeight: DsTypography.bold),
+                  style: context.dsText.cardTitle
+                      .copyWith(fontWeight: DsTypography.bold),
                 ),
               ),
               TextButton(
                 onPressed: () => context.push(RoutePaths.sellerOrders),
                 child: Text(context.l10n.sellerManageAll,
-                    style: TextStyle(color: c.primary,
-                        fontSize: DsTypography.labelMedium)),
+                    style: context.dsText.labelMedium.tint(c.primary)),
               ),
             ],
           ),
@@ -116,8 +114,7 @@ class _OrderCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = context.dsColors;
-    final theme = Theme.of(context);
-    final color = status.color;
+    final color = context.toneColor(status.tone);
 
     return Expanded(
       child: GestureDetector(
@@ -145,7 +142,7 @@ class _OrderCard extends StatelessWidget {
                   Icon(status.icon, size: 14, color: color),
                   if (urgent && count > 0)
                     Padding(
-                      padding: const EdgeInsetsDirectional.only(start: 4),
+                      padding: const EdgeInsetsDirectional.only(start: DsSpacing.xxs),
                       child: Container(
                         width: 6,
                         height: 6,
@@ -160,16 +157,16 @@ class _OrderCard extends StatelessWidget {
               const SizedBox(height: DsSpacing.xxs),
               Text(
                 '$count',
-                style: theme.textTheme.titleMedium?.copyWith(
+                style: context.dsText.cardTitle.copyWith(
                   fontWeight: DsTypography.bold,
                   color: urgent && count > 0 ? color : c.onSurface,
                 ),
               ),
               Text(
                 status.labelOf(context.l10n),
-                style: theme.textTheme.labelSmall?.copyWith(
+                style: context.dsText.caption.copyWith(
                   color: c.onSurfaceVariant,
-                  fontSize: 10,
+                  fontSize: DsTypography.labelMicro,
                 ),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,

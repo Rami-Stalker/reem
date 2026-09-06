@@ -71,7 +71,7 @@ class ChatRealtimeService {
     send({
       'event': 'message.read',
       'chat_id': chatId,
-      if (messageId != null) 'message_id': messageId,
+      'message_id': ?messageId,
     });
   }
 

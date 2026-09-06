@@ -13,6 +13,10 @@ abstract interface class ReputationRepository {
     String? orderId,
   });
 
+  /// Everything she has written, newest first, with the two figures her
+  /// profile already displayed.
+  Future<Result<MyReviews>> getMyReviews();
+
   Future<Result<List<ReviewEntity>>> getSellerReviews(String sellerId);
 
   Future<Result<ReviewEntity>> submitSellerReview({

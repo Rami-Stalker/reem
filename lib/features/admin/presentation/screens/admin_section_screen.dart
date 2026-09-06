@@ -1,14 +1,26 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/errors/failure.dart';
 import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/features/admin/domain/entities/admin_console_entity.dart';
+import 'package:reem/features/admin/presentation/providers/admin_actions.dart';
 import 'package:reem/features/admin/presentation/providers/admin_provider.dart';
+import 'package:reem/features/admin/presentation/widgets/admin_action_dialog.dart';
 import 'package:reem/features/admin/presentation/widgets/admin_labels.dart';
 import 'package:reem/features/admin/presentation/widgets/admin_page_header.dart';
+import 'package:reem/features/experience/presentation/providers/role_experience_provider.dart';
 
+/// One screen, twelve consoles.
+///
+/// Every admin section is the same shape — a filtered, searchable queue of
+/// records, each of which a permitted operator can act on — so it is one
+/// screen reading a [AdminSectionConfig] rather than twelve near-copies. What
+/// differs between sections lives in data: the endpoint, the queue filters,
+/// and the action catalogue in `admin_actions.dart`.
 class AdminSectionScreen extends ConsumerStatefulWidget {
   const AdminSectionScreen({super.key, required this.config});
 
@@ -20,23 +32,58 @@ class AdminSectionScreen extends ConsumerStatefulWidget {
 
 class _AdminSectionScreenState extends ConsumerState<AdminSectionScreen> {
   final _searchController = TextEditingController();
-  String _query = '';
+  final _scrollController = ScrollController();
+  Timer? _debounce;
 
   AdminSectionConfig get config => widget.config;
 
   @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_onScroll);
+  }
+
+  @override
   void dispose() {
+    _debounce?.cancel();
     _searchController.dispose();
+    _scrollController.removeListener(_onScroll);
+    _scrollController.dispose();
     super.dispose();
   }
+
+  /// Search runs on the server, so it is debounced: a keystroke per request
+  /// would put a query on the users table for every letter of a name.
+  void _onSearchChanged(String value) {
+    _debounce?.cancel();
+    _debounce = Timer(const Duration(milliseconds: 350), () {
+      if (!mounted) return;
+      unawaited(ref.read(_notifier.notifier).search(value));
+    });
+  }
+
+  void _onScroll() {
+    if (!_scrollController.hasClients) return;
+    final position = _scrollController.position;
+    if (position.pixels >= position.maxScrollExtent - 400) {
+      unawaited(ref.read(_notifier.notifier).loadMore());
+    }
+  }
+
+  late final _notifier = adminSectionNotifierProvider(widget.config);
 
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final sectionProvider = adminSectionProvider(config);
-    final section = ref.watch(sectionProvider);
+    final state = ref.watch(_notifier);
+    final permissions = ref.watch(currentPermissionsProvider);
+    final canWrite =
+        config.writePermission == null ||
+        permissions.contains(config.writePermission);
+    final createAction = config.createAction;
 
     return SingleChildScrollView(
+      controller: _scrollController,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -46,7 +93,7 @@ class _AdminSectionScreenState extends ConsumerState<AdminSectionScreen> {
             actions: [
               IconButton(
                 tooltip: l10n.refresh,
-                onPressed: () => ref.invalidate(sectionProvider),
+                onPressed: () => unawaited(ref.read(_notifier.notifier).load()),
                 icon: const Icon(Icons.refresh_rounded),
               ),
               if (config.key == 'campaigns')
@@ -59,76 +106,111 @@ class _AdminSectionScreenState extends ConsumerState<AdminSectionScreen> {
                     onPressed: _showCampaignDialog,
                   ),
                 ),
+              if (createAction != null &&
+                  permissions.contains(createAction.permission))
+                Padding(
+                  padding: const EdgeInsetsDirectional.only(start: DsSpacing.sm),
+                  child: PrimaryButton(
+                    label: createAction.label(l10n),
+                    icon: createAction.icon,
+                    isExpanded: false,
+                    onPressed: () => unawaited(_runCreate(createAction)),
+                  ),
+                ),
             ],
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: DsSpacing.xl),
-            child: section.when(
-              loading: () => const Padding(
-                padding: EdgeInsets.all(DsSpacing.xl),
-                child: Center(child: DsLoadingIndicator()),
-              ),
-              error: (error, _) => _SectionError(
-                message: error.toString(),
-                onRetry: () => ref.invalidate(sectionProvider),
-              ),
-              data: (data) {
-                final records = data.records.where(_matchesSearch).toList();
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    if (data.summary.isNotEmpty) ...[
-                      Wrap(
-                        spacing: DsSpacing.sm,
-                        runSpacing: DsSpacing.sm,
-                        children: data.summary.entries
-                            .map(
-                              (entry) => AdminMetricPill(
-                                label: '${entry.key}: ${entry.value}',
-                              ),
-                            )
-                            .toList(),
-                      ),
-                      const SizedBox(height: DsSpacing.lg),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (state.section?.summary.isNotEmpty ?? false) ...[
+                  Wrap(
+                    spacing: DsSpacing.sm,
+                    runSpacing: DsSpacing.sm,
+                    children: [
+                      for (final entry in state.section!.summary.entries)
+                        AdminMetricPill(
+                          label:
+                              '${adminSummaryLabel(l10n, entry.key)}: '
+                              '${entry.value}',
+                        ),
                     ],
-                    TextField(
-                      controller: _searchController,
-                      onChanged: (value) => setState(() => _query = value),
-                      textInputAction: TextInputAction.search,
-                      decoration: InputDecoration(
-                        prefixIcon: const Icon(Icons.search_rounded),
-                        suffixIcon: _query.isEmpty
-                            ? null
-                            : IconButton(
-                                tooltip: l10n.adminClearSearch,
-                                onPressed: () {
-                                  _searchController.clear();
-                                  setState(() => _query = '');
-                                },
-                                icon: const Icon(Icons.close_rounded),
-                              ),
-                        hintText: l10n.search,
-                      ),
+                  ),
+                  const SizedBox(height: DsSpacing.lg),
+                ],
+                TextField(
+                  controller: _searchController,
+                  onChanged: _onSearchChanged,
+                  onSubmitted: (value) =>
+                      unawaited(ref.read(_notifier.notifier).search(value)),
+                  textInputAction: TextInputAction.search,
+                  decoration: InputDecoration(
+                    prefixIcon: const Icon(Icons.search_rounded),
+                    suffixIcon: _searchController.text.isEmpty
+                        ? null
+                        : IconButton(
+                            tooltip: l10n.adminClearSearch,
+                            onPressed: () {
+                              _searchController.clear();
+                              unawaited(ref.read(_notifier.notifier).search(''));
+                            },
+                            icon: const Icon(Icons.close_rounded),
+                          ),
+                    hintText: l10n.search,
+                  ),
+                ),
+                if (config.statusFilters.isNotEmpty) ...[
+                  const SizedBox(height: DsSpacing.md),
+                  _StatusFilters(
+                    filters: config.statusFilters,
+                    selected: state.status,
+                    onSelected: (status) => unawaited(
+                      ref.read(_notifier.notifier).filterByStatus(status),
                     ),
-                    const SizedBox(height: DsSpacing.md),
-                    if (records.isEmpty)
-                      _EmptyRecords(
-                        searched: _query.trim().isNotEmpty,
-                        title: config.titleOf(l10n),
-                      )
-                    else
-                      _RecordsList(
-                        keyName: data.key,
-                        records: records,
-                        onOpen: _showRecordSheet,
-                        onRunCampaign: config.key == 'campaigns'
-                            ? _runCampaign
-                            : null,
-                      ),
-                    const SizedBox(height: DsSpacing.xxxl),
-                  ],
-                );
-              },
+                  ),
+                ],
+                const SizedBox(height: DsSpacing.md),
+                if (state.error != null)
+                  _SectionError(
+                    message: state.error!,
+                    onRetry: () =>
+                        unawaited(ref.read(_notifier.notifier).load()),
+                  )
+                else if (state.isLoading)
+                  const Padding(
+                    padding: EdgeInsets.all(DsSpacing.xl),
+                    child: Center(child: DsLoadingIndicator()),
+                  )
+                else if (state.records.isEmpty)
+                  _EmptyRecords(
+                    searched:
+                        state.query.trim().isNotEmpty || state.status != null,
+                    title: config.titleOf(l10n),
+                  )
+                else ...[
+                  _CountLine(shown: state.records.length, total: state.total),
+                  const SizedBox(height: DsSpacing.sm),
+                  _RecordsList(
+                    keyName: config.key,
+                    records: state.records,
+                    actions: canWrite ? config.actions : const [],
+                    permissions: permissions,
+                    onOpen: _showRecordSheet,
+                    onAction: (action, record) =>
+                        unawaited(_runAction(action, record)),
+                    onRunCampaign: config.key == 'campaigns'
+                        ? (id) => unawaited(_runCampaign(id))
+                        : null,
+                  ),
+                  if (state.isLoadingMore)
+                    const Padding(
+                      padding: EdgeInsets.all(DsSpacing.lg),
+                      child: Center(child: DsLoadingIndicator()),
+                    ),
+                ],
+                const SizedBox(height: DsSpacing.xxxl),
+              ],
             ),
           ),
         ],
@@ -136,16 +218,62 @@ class _AdminSectionScreenState extends ConsumerState<AdminSectionScreen> {
     );
   }
 
-  bool _matchesSearch(AdminRecord record) {
-    final needle = _query.trim().toLowerCase();
-    if (needle.isEmpty) return true;
-    return [
-      record.title,
-      record.subtitle,
-      record.status,
-      record.id,
-      ...record.metrics.values,
-    ].any((value) => value.toLowerCase().contains(needle));
+  Future<void> _runAction(AdminRecordAction action, AdminRecord record) async {
+    final payload = await showAdminActionDialog(
+      context: context,
+      action: action,
+      record: record,
+    );
+    if (payload == null || !mounted) return;
+
+    final result = await ref
+        .read(adminMutationProvider)
+        .submit(
+          sectionKey: config.key,
+          recordId: record.id,
+          payload: payload,
+        );
+    if (!mounted) return;
+
+    result.when(
+      success: (_) {
+        unawaited(ref.read(_notifier.notifier).load());
+        _showSnack(context.l10n.adminActionDone);
+      },
+      error: (failure) => _showSnack(_failureText(failure), isError: true),
+    );
+  }
+
+  /// Server messages arrive already in her language; the two failures this
+  /// feature raises itself arrive as codes, because the notifier that raised
+  /// them had no context to localise with.
+  String _failureText(Failure failure) => switch (failure.code) {
+        AdminFailureCodes.sectionHasNoActions =>
+          context.l10n.adminSectionNoActions,
+        AdminFailureCodes.sectionHasNoCreate =>
+          context.l10n.adminSectionNoCreate,
+        _ => failure.message,
+      };
+
+  Future<void> _runCreate(AdminRecordAction action) async {
+    final payload = await showAdminActionDialog(
+      context: context,
+      action: action,
+    );
+    if (payload == null || !mounted) return;
+
+    final result = await ref
+        .read(adminMutationProvider)
+        .create(sectionKey: config.key, payload: payload);
+    if (!mounted) return;
+
+    result.when(
+      success: (_) {
+        unawaited(ref.read(_notifier.notifier).load());
+        _showSnack(context.l10n.adminActionDone);
+      },
+      error: (failure) => _showSnack(_failureText(failure), isError: true),
+    );
   }
 
   Future<void> _showCampaignDialog() async {
@@ -198,11 +326,7 @@ class _AdminSectionScreenState extends ConsumerState<AdminSectionScreen> {
                           alignment: Alignment.centerLeft,
                           child: Text(
                             l10n.adminChannels,
-                            style: TextStyle(
-                              fontSize: DsTypography.labelLarge,
-                              fontWeight: DsTypography.semiBold,
-                              color: context.dsColors.onSurface,
-                            ),
+                            style: context.dsText.labelLarge.tint(context.dsColors.onSurface),
                           ),
                         ),
                         Wrap(
@@ -224,7 +348,7 @@ class _AdminSectionScreenState extends ConsumerState<AdminSectionScreen> {
                         const SizedBox(height: DsSpacing.md),
                         _AdminTextField(
                           controller: role,
-                          label: 'Role segment (optional)',
+                          label: l10n.adminRoleSegment,
                           hint: l10n.adminRoleFilterHint,
                         ),
                         const SizedBox(height: DsSpacing.sm),
@@ -235,14 +359,13 @@ class _AdminSectionScreenState extends ConsumerState<AdminSectionScreen> {
                           title: Text(l10n.adminVerifiedSellersOnly),
                           onChanged: isSubmitting
                               ? null
-                              : (value) => setDialogState(
-                                  () => verifiedSellers = value,
-                                ),
+                              : (value) =>
+                                    setDialogState(() => verifiedSellers = value),
                         ),
                         const SizedBox(height: DsSpacing.sm),
                         _AdminTextField(
                           controller: scheduledAt,
-                          label: 'Schedule time (optional)',
+                          label: l10n.adminScheduleTime,
                           hint: '2026-06-16T14:30:00Z',
                         ),
                       ],
@@ -283,12 +406,12 @@ class _AdminSectionScreenState extends ConsumerState<AdminSectionScreen> {
                             result.when(
                               success: (_) {
                                 Navigator.pop(dialogContext);
-                                ref.invalidate(adminSectionProvider(config));
+                                unawaited(ref.read(_notifier.notifier).load());
                                 _showSnack(l10n.adminCampaignCreated);
                               },
                               error: (failure) {
                                 setDialogState(() => isSubmitting = false);
-                                _showSnack(failure.message, isError: true);
+                                _showSnack(_failureText(failure), isError: true);
                               },
                             );
                           },
@@ -367,31 +490,46 @@ class _AdminSectionScreenState extends ConsumerState<AdminSectionScreen> {
 
     result.when(
       success: (_) {
-        ref.invalidate(adminSectionProvider(config));
+        unawaited(ref.read(_notifier.notifier).load());
         final analyticsConfig = adminSectionConfigs['notificationAnalytics'];
         if (analyticsConfig != null) {
-          ref.invalidate(adminSectionProvider(analyticsConfig));
+          ref.invalidate(adminSectionNotifierProvider(analyticsConfig));
         }
         _showSnack(l10n.adminCampaignQueued);
       },
-      error: (failure) => _showSnack(failure.message, isError: true),
+      error: (failure) => _showSnack(_failureText(failure), isError: true),
     );
   }
 
   void _showRecordSheet(AdminRecord record) {
+    final l10n = context.l10n;
     final colors = context.dsColors;
+    final permissions = ref.read(currentPermissionsProvider);
+    final canWrite =
+        config.writePermission == null ||
+        permissions.contains(config.writePermission);
+    final actions = canWrite
+        ? config.actions
+              .where(
+                (action) =>
+                    permissions.contains(action.permission) &&
+                    action.appliesTo(record),
+              )
+              .toList()
+        : const <AdminRecordAction>[];
     final pretty = const JsonEncoder.withIndent('  ').convert(record.raw);
+
     showModalBottomSheet<void>(
       context: context,
       showDragHandle: true,
       isScrollControlled: true,
-      builder: (context) {
+      builder: (sheetContext) {
         return DraggableScrollableSheet(
           expand: false,
           initialChildSize: 0.72,
           minChildSize: 0.4,
           maxChildSize: 0.92,
-          builder: (context, scrollController) {
+          builder: (sheetContext, scrollController) {
             return ListView(
               controller: scrollController,
               padding: const EdgeInsets.fromLTRB(
@@ -403,16 +541,12 @@ class _AdminSectionScreenState extends ConsumerState<AdminSectionScreen> {
               children: [
                 Text(
                   record.title,
-                  style: TextStyle(
-                    fontSize: DsTypography.titleLarge,
-                    fontWeight: DsTypography.bold,
-                    color: colors.onSurface,
-                  ),
+                  style: context.dsText.sectionTitle.bold.tint(colors.onSurface),
                 ),
                 const SizedBox(height: DsSpacing.xs),
                 Text(
                   record.subtitle,
-                  style: TextStyle(color: colors.onSurfaceVariant),
+                  style: context.dsText.body.tint(colors.onSurfaceVariant),
                 ),
                 const SizedBox(height: DsSpacing.md),
                 Wrap(
@@ -420,19 +554,45 @@ class _AdminSectionScreenState extends ConsumerState<AdminSectionScreen> {
                   runSpacing: DsSpacing.xs,
                   children: [
                     AdminMetricPill(
-                      label: record.status,
+                      label: adminStatusLabel(l10n, record.status),
                       color: context.console.positive,
                     ),
                     for (final entry in record.metrics.entries)
                       AdminMetricPill(label: '${entry.key}: ${entry.value}'),
                   ],
                 ),
+                if (actions.isNotEmpty) ...[
+                  const SizedBox(height: DsSpacing.lg),
+                  Wrap(
+                    spacing: DsSpacing.sm,
+                    runSpacing: DsSpacing.sm,
+                    children: [
+                      for (final action in actions)
+                        SecondaryButton(
+                          label: action.label(l10n),
+                          icon: action.icon,
+                          isExpanded: false,
+                          onPressed: () {
+                            Navigator.pop(sheetContext);
+                            unawaited(_runAction(action, record));
+                          },
+                        ),
+                    ],
+                  ),
+                ],
                 const SizedBox(height: DsSpacing.lg),
+                Text(
+                  l10n.adminRawRecord,
+                  style: context.dsText.body.semibold.tint(colors.onSurface),
+                ),
+                const SizedBox(height: DsSpacing.xs),
                 SelectableText(
                   pretty,
+                  // ds-ignore: no-hand-rolled-text-styles -- a raw JSON dump
+                  // needs a monospaced family the type scale does not carry.
                   style: TextStyle(
                     fontFamily: 'monospace',
-                    color: colors.onSurface,
+                    color: colors.onSurfaceVariant,
                   ),
                 ),
               ],
@@ -455,17 +615,73 @@ class _AdminSectionScreenState extends ConsumerState<AdminSectionScreen> {
   }
 }
 
+class _StatusFilters extends StatelessWidget {
+  const _StatusFilters({
+    required this.filters,
+    required this.selected,
+    required this.onSelected,
+  });
+
+  final List<String> filters;
+  final String? selected;
+  final ValueChanged<String?> onSelected;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    return Wrap(
+      spacing: DsSpacing.xs,
+      runSpacing: DsSpacing.xs,
+      children: [
+        ChoiceChip(
+          label: Text(l10n.adminFilterAll),
+          selected: selected == null,
+          onSelected: (_) => onSelected(null),
+        ),
+        for (final filter in filters)
+          ChoiceChip(
+            label: Text(adminStatusLabel(l10n, filter)),
+            selected: selected == filter,
+            onSelected: (isSelected) => onSelected(isSelected ? filter : null),
+          ),
+      ],
+    );
+  }
+}
+
+class _CountLine extends StatelessWidget {
+  const _CountLine({required this.shown, required this.total});
+
+  final int shown;
+  final int total;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.dsColors;
+    return Text(
+      context.l10n.adminShowingCount(shown, total),
+      style: context.dsText.labelMedium.tint(colors.onSurfaceVariant),
+    );
+  }
+}
+
 class _RecordsList extends StatelessWidget {
   const _RecordsList({
     required this.keyName,
     required this.records,
+    required this.actions,
+    required this.permissions,
     required this.onOpen,
+    required this.onAction,
     this.onRunCampaign,
   });
 
   final String keyName;
   final List<AdminRecord> records;
+  final List<AdminRecordAction> actions;
+  final Set<String> permissions;
   final ValueChanged<AdminRecord> onOpen;
+  final void Function(AdminRecordAction action, AdminRecord record) onAction;
   final ValueChanged<String>? onRunCampaign;
 
   @override
@@ -486,7 +702,15 @@ class _RecordsList extends StatelessWidget {
               keyName: keyName,
               record: entry.value,
               compact: compact,
+              actions: actions
+                  .where(
+                    (action) =>
+                        permissions.contains(action.permission) &&
+                        action.appliesTo(entry.value),
+                  )
+                  .toList(),
               onOpen: () => onOpen(entry.value),
+              onAction: (action) => onAction(action, entry.value),
               onRunCampaign: onRunCampaign == null
                   ? null
                   : () => onRunCampaign!(entry.value.id),
@@ -505,20 +729,29 @@ class _RecordTile extends StatelessWidget {
     required this.keyName,
     required this.record,
     required this.compact,
+    required this.actions,
     required this.onOpen,
+    required this.onAction,
     this.onRunCampaign,
   });
 
   final String keyName;
   final AdminRecord record;
   final bool compact;
+  final List<AdminRecordAction> actions;
   final VoidCallback onOpen;
+  final ValueChanged<AdminRecordAction> onAction;
   final VoidCallback? onRunCampaign;
 
   @override
   Widget build(BuildContext context) {
     final palette = context.console;
-    final badges = _RecordBadges(record: record, onRunCampaign: onRunCampaign);
+    final badges = _RecordBadges(
+      record: record,
+      actions: actions,
+      onAction: onAction,
+      onRunCampaign: onRunCampaign,
+    );
 
     return Semantics(
       button: true,
@@ -527,11 +760,7 @@ class _RecordTile extends StatelessWidget {
         onTap: onOpen,
         leading: CircleAvatar(
           backgroundColor: palette.primary.withValues(alpha: 0.1),
-          child: Icon(
-            _iconFor(keyName),
-            color: palette.primary,
-            size: 20,
-          ),
+          child: Icon(_iconFor(keyName), color: palette.primary, size: 20),
         ),
         title: Text(record.title, maxLines: 1, overflow: TextOverflow.ellipsis),
         subtitle: Column(
@@ -552,15 +781,24 @@ class _RecordTile extends StatelessWidget {
 }
 
 class _RecordBadges extends StatelessWidget {
-  const _RecordBadges({required this.record, this.onRunCampaign});
+  const _RecordBadges({
+    required this.record,
+    required this.actions,
+    required this.onAction,
+    this.onRunCampaign,
+  });
 
   final AdminRecord record;
+  final List<AdminRecordAction> actions;
+  final ValueChanged<AdminRecordAction> onAction;
   final VoidCallback? onRunCampaign;
 
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final palette = context.console;
+    final isDisabled = record.flag('is_disabled') ?? false;
+
     return Wrap(
       crossAxisAlignment: WrapCrossAlignment.center,
       spacing: DsSpacing.xs,
@@ -569,14 +807,47 @@ class _RecordBadges extends StatelessWidget {
         for (final metric in record.metrics.entries.take(2))
           AdminMetricPill(label: metric.value),
         AdminMetricPill(
-          label: record.status,
+          label: adminStatusLabel(l10n, record.status),
           color: palette.positive,
         ),
+        // A suspended account reads as "customer" like any other unless the
+        // suspension is said out loud, which is the one fact an operator
+        // scanning this list most needs.
+        if (isDisabled)
+          AdminMetricPill(
+            label: l10n.adminStatusSuspended,
+            color: palette.critical,
+          ),
         if (onRunCampaign != null)
           IconButton(
             tooltip: l10n.adminRunCampaign,
             onPressed: onRunCampaign,
             icon: const Icon(Icons.play_arrow_rounded),
+          ),
+        if (actions.isNotEmpty)
+          PopupMenuButton<AdminRecordAction>(
+            tooltip: l10n.adminActions,
+            icon: const Icon(Icons.more_vert_rounded),
+            onSelected: onAction,
+            itemBuilder: (context) => [
+              for (final action in actions)
+                PopupMenuItem(
+                  value: action,
+                  child: Row(
+                    children: [
+                      Icon(
+                        action.icon,
+                        size: 18,
+                        color: action.destructive
+                            ? context.dsColors.error
+                            : context.dsColors.onSurfaceVariant,
+                      ),
+                      const SizedBox(width: DsSpacing.sm),
+                      Text(action.label(l10n)),
+                    ],
+                  ),
+                ),
+            ],
           ),
       ],
     );
@@ -606,13 +877,10 @@ class _SectionError extends StatelessWidget {
         children: [
           Text(
             l10n.adminSectionUnavailable,
-            style: TextStyle(
-              color: colors.error,
-              fontWeight: DsTypography.semiBold,
-            ),
+            style: context.dsText.body.semibold.tint(colors.error),
           ),
           const SizedBox(height: DsSpacing.xs),
-          Text(message, style: TextStyle(color: colors.onSurfaceVariant)),
+          Text(message, style: context.dsText.body.tint(colors.onSurfaceVariant)),
           const SizedBox(height: DsSpacing.md),
           SecondaryButton(
             label: l10n.retry,
@@ -645,8 +913,8 @@ class _EmptyRecords extends StatelessWidget {
         border: Border.all(color: colors.border),
       ),
       child: Text(
-        searched ? l10n.adminNoMatchingRecords : 'No $title records yet.',
-        style: TextStyle(color: colors.onSurfaceVariant),
+        searched ? l10n.adminNoMatchingRecords : l10n.adminNoRecordsYet(title),
+        style: context.dsText.body.tint(colors.onSurfaceVariant),
       ),
     );
   }
@@ -678,6 +946,7 @@ class _AdminTextField extends StatelessWidget {
 IconData _iconFor(String key) => switch (key) {
   'users' => Icons.people_outline,
   'sellers' => Icons.storefront_outlined,
+  'sellerApplications' => Icons.assignment_ind_outlined,
   'products' => Icons.inventory_2_outlined,
   'orders' => Icons.receipt_long_outlined,
   'financials' => Icons.account_balance_outlined,

@@ -136,8 +136,10 @@ Within the design system:
 
 ## Structural Checks
 
-Rules the analyzer cannot express are enforced by two scripts. Both exit
-non-zero on failure, so either can gate CI.
+Rules the analyzer cannot express are enforced by three scripts. All exit
+non-zero on failure, so any of them can gate CI. The design-system rules --
+what feature code may say about colour, type and spacing -- live in
+[DESIGN_SYSTEM.md](DESIGN_SYSTEM.md).
 
 ```bash
 node tools/architecture/check-flutter-boundaries.mjs
@@ -149,6 +151,15 @@ relative path instead of `package:reem/...`. It also prints advisory debt queues
 presentation reaching for infrastructure, debug prints, DTOs inheriting from
 entities, files over 500 lines -- which are meant to be burned down gradually,
 not fixed in one pass.
+
+```bash
+node tools/architecture/check-design-system.mjs
+```
+
+Fails when feature code names a raw Material colour or a hex literal,
+hand-assembles a `TextStyle`, hard-codes a font size or corner radius, or
+spaces itself off the 4px grid. A genuine exception is marked inline with
+`// ds-ignore: <rule> -- <reason>`; the reason is mandatory.
 
 ```bash
 node tools/architecture/find-unreachable-dart.mjs
@@ -166,12 +177,14 @@ Recorded here rather than left as a silently failing gate:
 - `strict-raw-types` is off. Turning it on reports 31 bare `Map`/`List`
   signatures, nearly all in `data/` model constructors. `strict-casts` is on
   and green.
-- `deprecated_member_use` (59, mostly `withOpacity` -> `withValues`),
-  `use_null_aware_elements` (43), and `unnecessary_underscores` (27) are all
-  fixable with `dart fix --apply --code=<rule>`, but each rewrites many files
-  and is best done as its own change.
-- `unawaited_futures` (13) and `avoid_slow_async_io` (2) need a decision per
-  call site.
+- `unawaited_futures` (12) and `avoid_slow_async_io` (2) need a decision per
+  call site: each is a question about whether the caller should wait, which no
+  bulk fix can answer.
+- `library_private_types_in_public_api` (1) and `close_sinks` (1, in a test).
+
+`deprecated_member_use`, `use_null_aware_elements` and
+`unnecessary_underscores` were burned down with `dart fix` and are now clean.
+The analyzer sits at 17 informational hits and no warnings or errors.
 
 ## Current Refactor Notes
 

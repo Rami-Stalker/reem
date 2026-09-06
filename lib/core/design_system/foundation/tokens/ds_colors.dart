@@ -115,6 +115,44 @@ abstract final class DsColors {
   static const Color white = Colors.white;
   static const Color black = Colors.black;
 
+  // ---------------------------------------------------------------------------
+  // Over media.
+  //
+  // Content laid on a photograph, a video or a brand gradient does not sit on
+  // the page ground, so it must not follow the theme: white stays white in
+  // both modes because the thing behind it is the image. These names exist so
+  // that intent is legible — a `Colors.white` in feature code is a bug until
+  // proven otherwise, while [onMedia] says "this is over a picture".
+  // ---------------------------------------------------------------------------
+
+  /// Primary foreground over imagery — titles, icons, controls.
+  static const Color onMedia = white;
+
+  /// Secondary foreground over imagery — timestamps, captions, inactive rails.
+  static const Color onMediaMuted = Color(0xB3FFFFFF);
+
+  /// Hairlines and inactive tracks over imagery.
+  static const Color onMediaFaint = Color(0x3DFFFFFF);
+
+  /// A tinted plate under content that has to stay legible over any photo.
+  static const Color mediaPlate = Color(0x1FFFFFFF);
+
+  /// The darkening wash between a photograph and the copy over it.
+  static const Color mediaScrim = Color(0x66000000);
+
+  /// The ground of a full-bleed media surface — a story, a lightbox, a call.
+  /// Near-black rather than pure black so it reads as depth, not a hole.
+  static const Color mediaGround = Color(0xFF0B0710);
+
+  /// Ink on the champagne wash. Like [onMedia] this is deliberately
+  /// mode-independent: the champagne gradient is a fixed brand blend, so the
+  /// text on it must not follow the theme or it inverts into illegibility.
+  static const Color onChampagne = Color(0xFF79551F);
+
+  /// Ink on the gold gradient — a shade deeper again, for the smaller type
+  /// that rides the pill-shaped "new in" ribbons.
+  static const Color onGold = Color(0xFF221A1F);
+
   /// Material [ColorScheme] seed for light mode.
   static ColorScheme get lightScheme => ColorScheme.fromSeed(
         seedColor: primary500,

@@ -21,7 +21,12 @@ import {
 import * as bcrypt from 'bcryptjs';
 import { DEFAULT_SHIPPING_ZONES } from '../src/modules/delivery/delivery.service';
 import { seedDemo } from './demo';
-import { avatarImage, productImage, storyImage } from './demo/media';
+import {
+  avatarImage,
+  categoryImage,
+  productImage,
+  storyImage,
+} from './demo/media';
 
 const D = Prisma.Decimal;
 
@@ -59,6 +64,20 @@ async function main() {
   await prisma.post.deleteMany();
   await prisma.storyView.deleteMany();
   await prisma.story.deleteMany();
+  // The book of record, before anything it points at.
+  //
+  // `JournalLine.account` is RESTRICT, so a ledger account cannot go while a
+  // line still references it — and both `Courier` and `User` cascade *into*
+  // ledger accounts. The teardown below therefore used to be un-runnable the
+  // moment a single order settled: `courier.deleteMany()` tried to cascade into
+  // an account that journal lines were holding down, and the seed died there
+  // with a foreign-key error. Deleting the entries first (which cascades to the
+  // lines) frees the accounts, and the cascades further down then work.
+  //
+  // Wallets are left to cascade from `User`, which they already do.
+  await prisma.journalEntry.deleteMany();
+  await prisma.ledgerAccount.deleteMany();
+
   await prisma.shipmentEvent.deleteMany();
   await prisma.shipment.deleteMany();
   await prisma.cashSettlement.deleteMany();
@@ -550,7 +569,7 @@ async function main() {
     data: {
       base: Currency.USD,
       quote: Currency.SYP,
-      rate: new D('13000'),
+      rate: new D('130'),
       source: 'seed',
     },
   });
@@ -826,6 +845,34 @@ async function main() {
     },
   ];
 
+  /**
+   * Department artwork. Categories shipped with `imageUrl` null across the
+   * board, and the home page only renders departments that have a picture —
+   * so "Shop by category" collapsed to nothing on every install. Topics match
+   * the leaf photography beneath each department so the tile and the shelf it
+   * opens look like they belong together.
+   */
+  const departmentTopic: Record<string, string> = {
+    clothing: 'dress,elegant',
+    'bags-shoes': 'handbag,purse',
+    accessories: 'jewellery,necklace',
+    makeup: 'makeup,cosmetics',
+    skincare: 'skincare,cream',
+    fragrance: 'perfume,fragrance bottle',
+    'flowers-decor': 'flower bouquet,roses',
+    sweets: 'chocolate,dessert',
+    occasions: 'gift box,ribbon',
+    stationery: 'notebook,stationery',
+    'baby-clothing': 'baby clothes,newborn',
+    'baby-care': 'baby lotion,baby care',
+  };
+  const rootTopic: Record<string, string> = {
+    fashion: 'fashion,boutique',
+    beauty: 'cosmetics,beauty',
+    'home-gifts': 'gift,home decor',
+    baby: 'nursery,baby',
+  };
+
   const leafBySlug = new Map<string, string>();
   const noReturnLeaves = [
     'face-makeup',
@@ -846,6 +893,9 @@ async function main() {
         nameEn: root.nameEn,
         level: 0,
         sortOrder: rootIndex,
+        imageUrl: rootTopic[root.slug]
+          ? categoryImage(rootTopic[root.slug], root.slug)
+          : null,
       },
     });
     for (const [childIndex, child] of root.children.entries()) {
@@ -857,6 +907,9 @@ async function main() {
           level: 1,
           parentId: rootRow.id,
           sortOrder: childIndex,
+          imageUrl: departmentTopic[child.slug]
+            ? categoryImage(departmentTopic[child.slug], child.slug)
+            : null,
           sizeChartId: child.sizeChartId ?? null,
           attributeSchema: child.attributeSchema ?? Prisma.JsonNull,
         },
@@ -895,8 +948,8 @@ async function main() {
       slug: 'silk-midi-dress',
       category: 'dresses',
       brand: 0,
-      price: 1450000,
-      compareAt: 1790000,
+      price: 14500,
+      compareAt: 17900,
       image: productImage('dress,elegant', 'silk-midi-dress'),
       featured: true,
       attributes: { material: 'حرير طبيعي', sleeve_length: 'كم طويل' },
@@ -907,7 +960,7 @@ async function main() {
       slug: 'pearl-clutch',
       category: 'handbags',
       brand: 1,
-      price: 980000,
+      price: 9800,
       compareAt: null,
       image: productImage('handbag,clutch', 'pearl-clutch'),
       featured: true,
@@ -919,8 +972,8 @@ async function main() {
       slug: 'cashmere-cardigan',
       category: 'knitwear',
       brand: 0,
-      price: 2200000,
-      compareAt: 2750000,
+      price: 22000,
+      compareAt: 27500,
       image: productImage('knitwear,cardigan', 'cashmere-cardigan'),
       featured: false,
       attributes: { material: 'كشمير' },
@@ -931,7 +984,7 @@ async function main() {
       slug: 'satin-heels',
       category: 'shoes',
       brand: 2,
-      price: 1600000,
+      price: 16000,
       compareAt: null,
       image: productImage('womens shoes,heels', 'satin-heels'),
       featured: true,
@@ -943,8 +996,8 @@ async function main() {
       slug: 'floral-maxi-skirt',
       category: 'skirts',
       brand: 2,
-      price: 850000,
-      compareAt: 1100000,
+      price: 8500,
+      compareAt: 11000,
       image: productImage('skirt,floral', 'floral-maxi-skirt'),
       featured: false,
       attributes: { material: 'قطن' },
@@ -955,7 +1008,7 @@ async function main() {
       slug: 'layered-necklace',
       category: 'jewellery',
       brand: 1,
-      price: 600000,
+      price: 6000,
       compareAt: null,
       image: productImage('jewellery,necklace', 'layered-necklace'),
       featured: false,
@@ -988,7 +1041,6 @@ async function main() {
         rating: 4.2 + (index % 5) * 0.15,
         reviewsCount: 12 + index * 7,
         viewsCount: 1200 + index * 340,
-        likesCount: 80 + index * 25,
         ordersCount: 30 + index * 11,
         favoritesCount: 40 + index * 9,
         media: { create: [{ url: d.image, type: MediaType.image, sortOrder: 0 }] },
@@ -1013,6 +1065,7 @@ async function main() {
         sellerId: seller.id,
         currency: Currency.SYP,
         price: SYP(d.price),
+        priceSyp: SYP(d.price),
         compareAtPrice: d.compareAt ? SYP(d.compareAt) : null,
         stock: 25 + index * 5,
         status: OfferStatus.ACTIVE,
@@ -1039,6 +1092,7 @@ async function main() {
           sellerId: rival.id,
           currency: Currency.SYP,
           price: SYP(Math.round(d.price * 0.94)),
+          priceSyp: SYP(Math.round(d.price * 0.94)),
           stock: 10 + index,
           status: OfferStatus.ACTIVE,
           handlingDays: 2,
@@ -1121,7 +1175,7 @@ async function main() {
     landmark: 'قرب صيدلية الورد',
   };
 
-  const fxRate = new D('13000');
+  const fxRate = new D('130');
 
   /** Builds a parent order with per-seller sub-orders — what checkout does. */
   const createOrder = async (input: {
@@ -1147,7 +1201,7 @@ async function main() {
         currency: Currency.SYP,
         fxRate,
         fxFrozenAt: new Date(),
-        roundingPolicy: RoundingPolicy.NEAREST_1000,
+        roundingPolicy: RoundingPolicy.NEAREST_10,
         itemsSubtotal: SYP(itemsSubtotal),
         shippingTotal: SYP(input.shippingFee),
         grandTotal: SYP(grandTotal),
@@ -1254,7 +1308,7 @@ async function main() {
     number: 'REEM-100001',
     status: OrderStatus.DELIVERED,
     lines: [{ product: products[0], quantity: 1 }],
-    shippingFee: 15000,
+    shippingFee: 150,
     subStatus: SellerOrderStatus.DELIVERED,
     payment: {
       method: PaymentMethodType.SYRIATEL_CASH,
@@ -1271,7 +1325,7 @@ async function main() {
       { product: products[1], quantity: 1 },
       { product: products[2], quantity: 1 },
     ],
-    shippingFee: 15000,
+    shippingFee: 150,
     subStatus: SellerOrderStatus.PREPARING,
     payment: {
       method: PaymentMethodType.COD,

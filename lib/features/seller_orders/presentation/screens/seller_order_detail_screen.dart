@@ -77,7 +77,7 @@ class SellerOrderDetailScreen extends ConsumerWidget {
           SliverPadding(
             padding: const EdgeInsets.fromLTRB(
               DsSpacing.md,
-              0,
+              DsSpacing.xxxs,
               DsSpacing.md,
               DsSpacing.xxl,
             ),
@@ -167,11 +167,7 @@ class _Header extends StatelessWidget {
               const Spacer(),
               Text(
                 l10n.fulfilmentMode(order.summary.fulfilmentMode),
-                style: TextStyle(
-                  fontFamily: DsTypography.fontFamily,
-                  fontSize: DsTypography.labelSmall,
-                  color: atelier.muted,
-                ),
+                style: context.dsText.caption.tint(atelier.muted),
               ),
             ],
           ),
@@ -207,11 +203,7 @@ class _Header extends StatelessWidget {
                   textDirection: TextDirection.ltr,
                   child: SelectableText(
                     order.shipment!.trackingCode,
-                    style: TextStyle(
-                      fontFamily: DsTypography.fontFamily,
-                      fontSize: DsTypography.bodySmall,
-                      color: atelier.ink,
-                    ),
+                    style: context.dsText.bodySmall.tint(atelier.ink),
                   ),
                 ),
                 const Spacer(),
@@ -219,13 +211,9 @@ class _Header extends StatelessWidget {
                   order.shipment!.isAssigned
                       ? l10n.sellerOrderCourierAssigned
                       : l10n.sellerOrderCourierPending,
-                  style: TextStyle(
-                    fontFamily: DsTypography.fontFamily,
-                    fontSize: DsTypography.labelSmall,
-                    color: order.shipment!.isAssigned
+                  style: context.dsText.caption.tint(order.shipment!.isAssigned
                         ? atelier.positive
-                        : atelier.caution,
-                  ),
+                        : atelier.caution),
                 ),
               ],
             ),
@@ -258,20 +246,13 @@ class _Step extends StatelessWidget {
           const SizedBox(width: DsSpacing.xs),
           Text(
             label,
-            style: TextStyle(
-              fontFamily: DsTypography.fontFamily,
-              fontSize: DsTypography.bodySmall,
-              color: atelier.ink,
-            ),
+            style: context.dsText.bodySmall.tint(atelier.ink),
           ),
           const Spacer(),
           Text(
+            // l10n-ignore: an intl pattern; the locale supplies the words
             toWesternDigits(DateFormat('d MMM • HH:mm', 'ar').format(at)),
-            style: TextStyle(
-              fontFamily: DsTypography.fontFamily,
-              fontSize: DsTypography.labelSmall,
-              color: atelier.muted,
-            ),
+            style: context.dsText.caption.tint(atelier.muted),
           ),
         ],
       ),
@@ -300,12 +281,7 @@ class _Items extends StatelessWidget {
         children: [
           Text(
             context.l10n.sellerOrderItemsToPack,
-            style: TextStyle(
-              fontFamily: DsTypography.fontFamily,
-              fontSize: DsTypography.titleSmall,
-              fontWeight: DsTypography.semiBold,
-              color: atelier.ink,
-            ),
+            style: context.dsText.tileTitle.semibold.tint(atelier.ink),
           ),
           const SizedBox(height: DsSpacing.sm),
 
@@ -323,12 +299,7 @@ class _Items extends StatelessWidget {
                   ),
                   child: Text(
                     '×${toWesternDigits('${item.quantity}')}',
-                    style: TextStyle(
-                      fontFamily: DsTypography.fontFamily,
-                      fontSize: DsTypography.labelSmall,
-                      fontWeight: DsTypography.bold,
-                      color: atelier.primary,
-                    ),
+                    style: context.dsText.caption.bold.tint(atelier.primary),
                   ),
                 ),
                 const SizedBox(width: DsSpacing.sm),
@@ -339,20 +310,12 @@ class _Items extends StatelessWidget {
                     children: [
                       Text(
                         item.title,
-                        style: TextStyle(
-                          fontFamily: DsTypography.fontFamily,
-                          fontSize: DsTypography.bodyMedium,
-                          color: atelier.ink,
-                        ),
+                        style: context.dsText.body.tint(atelier.ink),
                       ),
                       if (item.variant != null)
                         Text(
                           item.variant!,
-                          style: TextStyle(
-                            fontFamily: DsTypography.fontFamily,
-                            fontSize: DsTypography.labelSmall,
-                            color: atelier.muted,
-                          ),
+                          style: context.dsText.caption.tint(atelier.muted),
                         ),
 
                       // Q30 — a made-to-order instruction is the difference
@@ -360,16 +323,12 @@ class _Items extends StatelessWidget {
                       // shown in full rather than behind a tap.
                       if (item.customisation != null)
                         Padding(
-                          padding: const EdgeInsets.only(top: 4),
+                          padding: const EdgeInsets.only(top: DsSpacing.xxs),
                           child: Text(
                             item.customisation!.entries
                                 .map((e) => '${e.key}: ${e.value}')
                                 .join(' • '),
-                            style: TextStyle(
-                              fontFamily: DsTypography.fontFamily,
-                              fontSize: DsTypography.labelSmall,
-                              color: atelier.caution,
-                            ),
+                            style: context.dsText.caption.tint(atelier.caution),
                           ),
                         ),
                     ],
@@ -377,11 +336,7 @@ class _Items extends StatelessWidget {
                 ),
                 Text(
                   item.lineTotal.format(),
-                  style: TextStyle(
-                    fontFamily: DsTypography.fontFamily,
-                    fontSize: DsTypography.bodySmall,
-                    color: atelier.muted,
-                  ),
+                  style: context.dsText.bodySmall.tint(atelier.muted),
                 ),
               ],
             ),
@@ -457,12 +412,7 @@ class _Money extends StatelessWidget {
               Expanded(
                 child: Text(
                   _escrowNote(context, order),
-                  style: TextStyle(
-                    fontFamily: DsTypography.fontFamily,
-                    fontSize: DsTypography.labelSmall,
-                    height: 1.5,
-                    color: atelier.muted,
-                  ),
+                  style: context.dsText.caption.tint(atelier.muted).copyWith(height: 1.5),
                 ),
               ),
             ],
@@ -505,19 +455,14 @@ class _Row extends StatelessWidget {
     final atelier = context.atelier;
 
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 3),
+      padding: const EdgeInsets.symmetric(vertical: DsSpacing.xxs),
       child: Row(
         children: [
           Text(
             label,
-            style: TextStyle(
-              fontFamily: DsTypography.fontFamily,
-              fontSize: emphasise
-                  ? DsTypography.bodyMedium
-                  : DsTypography.bodySmall,
-              fontWeight: emphasise ? DsTypography.semiBold : null,
-              color: emphasise ? atelier.ink : atelier.muted,
-            ),
+            style: emphasise
+                  ? context.dsText.bodyStrong.tint(atelier.ink)
+                  : context.dsText.bodySmall.tint(atelier.muted),
           ),
           const Spacer(),
           // Money keeps the page's own direction, the way it does on the card
@@ -525,14 +470,10 @@ class _Row extends StatelessWidget {
           // — the order number, the tracking code — are pinned LTR.
           Text(
             '${isNegative ? '−' : ''}${value.format()}',
-            style: TextStyle(
-              fontFamily: DsTypography.fontFamily,
-              fontSize: emphasise
-                  ? DsTypography.titleSmall
-                  : DsTypography.bodySmall,
-              fontWeight: emphasise ? DsTypography.bold : DsTypography.regular,
-              color: emphasise ? atelier.gold : atelier.ink,
-            ),
+            style: (emphasise
+                    ? context.dsText.tileTitle.bold.tint(atelier.gold)
+                    : context.dsText.bodySmall.tint(atelier.ink))
+                .tabular,
           ),
         ],
       ),
@@ -564,12 +505,7 @@ class _Note extends StatelessWidget {
           Expanded(
             child: Text(
               text,
-              style: TextStyle(
-                fontFamily: DsTypography.fontFamily,
-                fontSize: DsTypography.bodySmall,
-                height: 1.6,
-                color: tone,
-              ),
+              style: context.dsText.bodySmall.tint(tone).copyWith(height: 1.6),
             ),
           ),
         ],
@@ -634,10 +570,7 @@ class _ActionBar extends StatelessWidget {
                     : () => onAction(SellerOrderAction.cancel),
                 child: Text(
                   l10n.parcelAction(SellerOrderAction.cancel),
-                  style: TextStyle(
-                    fontFamily: DsTypography.fontFamily,
-                    color: atelier.critical,
-                  ),
+                  style: context.dsText.body.tint(atelier.critical),
                 ),
               ),
           ],

@@ -21,7 +21,7 @@ class ProductStatusChip extends StatelessWidget {
     };
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: DsSpacing.sm, vertical: 2),
+      padding: const EdgeInsets.symmetric(horizontal: DsSpacing.sm, vertical: DsSpacing.xxxs),
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.14),
         borderRadius: BorderRadius.circular(DsRadius.full),
@@ -29,12 +29,7 @@ class ProductStatusChip extends StatelessWidget {
       ),
       child: Text(
         status.label,
-        style: TextStyle(
-          fontFamily: DsTypography.fontFamily,
-          fontSize: DsTypography.bodySmall,
-          fontWeight: DsTypography.semiBold,
-          color: color,
-        ),
+        style: context.dsText.bodySmall.semibold.tint(color),
       ),
     );
   }

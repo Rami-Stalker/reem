@@ -1,0 +1,1974 @@
+{
+  "session": {
+    "id": "00000000-0000-4000-8000-000000000001",
+    "status": "READY",
+    "source": "SCREENSHOT",
+    "query_image_url": null,
+    "image_expires_at": null,
+    "engine": "reem-visual-pixels-v1",
+    "latency_ms": 340,
+    "refinements": [],
+    "refinements_count": 0,
+    "created_at": "2026-09-01T09:00:00.000Z",
+    "understanding": {
+      "colours": [
+        {
+          "key": "black",
+          "label": "أسود",
+          "share": 0.978
+        }
+      ],
+      "pattern": "plain",
+      "pattern_label": "سادة",
+      "tone": "light",
+      "tone_label": "ألوان فاتحة",
+      "framing": "full_look",
+      "framing_label": "إطلالة كاملة",
+      "studio_background": true,
+      "subject_fill": 0.178,
+      "categories": [
+        {
+          "slug": "abayas",
+          "label": "عبايات ومحتشم"
+        },
+        {
+          "slug": "skirts",
+          "label": "تنانير"
+        },
+        {
+          "slug": "dresses",
+          "label": "فساتين"
+        }
+      ],
+      "category_slugs": [
+        "abayas",
+        "skirts",
+        "dresses"
+      ],
+      "slots": [],
+      "provenance": {
+        "colours": "PIXELS",
+        "pattern": "PIXELS",
+        "tone": "PIXELS",
+        "framing": "PIXELS",
+        "studio_background": "PIXELS",
+        "subject_fill": "PIXELS",
+        "categories": "NEIGHBOURS"
+      },
+      "confidence": 0.978,
+      "chips": [
+        {
+          "key": "colour:black",
+          "label": "أسود"
+        },
+        {
+          "key": "pattern",
+          "label": "سادة"
+        },
+        {
+          "key": "tone",
+          "label": "ألوان فاتحة"
+        }
+      ]
+    },
+    "regions": [
+      {
+        "id": "00000000-0000-4000-8000-000000000002",
+        "detector": "WHOLE",
+        "slot": null,
+        "slot_label": null,
+        "label": "القطعة بالصورة",
+        "box": {
+          "x": 0,
+          "y": 0,
+          "w": 1,
+          "h": 1
+        },
+        "confidence": 1,
+        "matches": [
+          {
+            "id": "00000000-0000-4000-8000-000000000100",
+            "product": {
+              "id": "b1006008-a127-41f9-a8c7-77b6b8090708",
+              "slug": "abaya-008",
+              "title": "عباية سهرة بخامة صيفية",
+              "description": "عباية سهرة بخامة صيفية. خامة لا تشف ولا تحتاج كي.",
+              "category": {
+                "id": "af233f18-8371-446e-ac6b-ae011a535f50",
+                "slug": "abayas",
+                "name_ar": "عبايات ومحتشم",
+                "name_en": "Abayas and modest",
+                "level": 2,
+                "parent_id": "4d1f48c0-1f9a-4c2a-8b8c-4595ee16a98c",
+                "icon_url": null,
+                "image_url": null,
+                "is_sensitive": false,
+                "returns_allowed": true
+              },
+              "brand": {
+                "id": "0f389a3e-3fb3-40b8-9f74-781cd19bb48e",
+                "slug": "rose-damascus",
+                "name_ar": "وردة دمشق",
+                "name_en": "Rose of Damascus",
+                "logo_url": "https://loremflickr.com/900/1125/logo%2Cboutique/all?lock=47982",
+                "is_verified": true
+              },
+              "attributes": {
+                "material": "لينن"
+              },
+              "gtin": null,
+              "status": "active",
+              "media": [
+                {
+                  "url": "https://loremflickr.com/900/1125/abaya%2Cmodest%20fashion/all?lock=88123",
+                  "type": "image",
+                  "blur_hash": null
+                },
+                {
+                  "url": "https://fixture.reem.local/b1006008-a127-41f9-a8c7-77b6b8090708.jpg",
+                  "type": "image",
+                  "blur_hash": null
+                },
+                {
+                  "url": "https://loremflickr.com/900/1125/abaya%2Cmodest%20fashion/all?lock=10504",
+                  "type": "image",
+                  "blur_hash": null
+                },
+                {
+                  "url": "https://loremflickr.com/900/1125/abaya%2Cmodest%20fashion/all?lock=43361",
+                  "type": "image",
+                  "blur_hash": null
+                }
+              ],
+              "variants": [
+                {
+                  "id": "162d7afd-3c4c-499c-9bc2-0b4a83d1f20a",
+                  "name": "S",
+                  "attributes": {
+                    "size": "S"
+                  },
+                  "image_url": null,
+                  "sort_order": 0
+                },
+                {
+                  "id": "13b0386a-5fdd-4a22-96bc-278d67bbc574",
+                  "name": "M",
+                  "attributes": {
+                    "size": "M"
+                  },
+                  "image_url": null,
+                  "sort_order": 1
+                },
+                {
+                  "id": "0e5bcc6d-44d9-4026-8cbd-43bc5c9cfb89",
+                  "name": "L",
+                  "attributes": {
+                    "size": "L"
+                  },
+                  "image_url": null,
+                  "sort_order": 2
+                },
+                {
+                  "id": "46d8446b-9c1f-4186-968e-ec9fb79f0520",
+                  "name": "XL",
+                  "attributes": {
+                    "size": "XL"
+                  },
+                  "image_url": null,
+                  "sort_order": 3
+                }
+              ],
+              "offers_count": 1,
+              "best_offer": {
+                "id": "56e748f2-6f42-422b-8d50-7201dc85827d",
+                "seller": {
+                  "id": "c948f072-ee72-4a19-9124-f0cfcba85773",
+                  "name": "رهف الشامي",
+                  "username": "rahaf_atelier",
+                  "bio": "فساتين سهرة وخطوبة مصمّمة يدوياً في قلب دمشق ✨",
+                  "image_url": "https://loremflickr.com/400/400/boutique%2Celegant/all?lock=61419",
+                  "location": "دمشق، سوريا",
+                  "role": "seller",
+                  "seller_level": "premium",
+                  "seller_verified_at": "2026-05-20T09:35:48.129Z",
+                  "seller_premium_until": "2026-11-30T08:51:56.102Z",
+                  "is_verified": true,
+                  "followers_count": 22,
+                  "following_count": 1,
+                  "created_at": "2025-04-09T18:33:21.881Z"
+                },
+                "currency": "USD",
+                "price": {
+                  "amount": "77.0000",
+                  "currency": "USD"
+                },
+                "compare_at_price": null,
+                "wholesale_price": {
+                  "amount": "65.4500",
+                  "currency": "USD"
+                },
+                "wholesale_min_qty": null,
+                "stock": 10,
+                "min_order_qty": 1,
+                "max_order_qty": 9,
+                "sku": "ABAYA-8-0",
+                "handling_days": 3,
+                "is_made_to_order": false,
+                "requires_deposit": false,
+                "accepts_returns": true,
+                "status": "active",
+                "variants": [
+                  {
+                    "id": "c07aa413-08e2-421d-a3f1-99177e482218",
+                    "variant_id": "162d7afd-3c4c-499c-9bc2-0b4a83d1f20a",
+                    "name": "S",
+                    "attributes": {
+                      "size": "S"
+                    },
+                    "image_url": null,
+                    "price": {
+                      "amount": "77.0000",
+                      "currency": "USD"
+                    },
+                    "stock": 3,
+                    "sku": "ABAYA-8-0-S"
+                  },
+                  {
+                    "id": "c32db1c3-ee44-422a-9a83-265cd6228e0c",
+                    "variant_id": "13b0386a-5fdd-4a22-96bc-278d67bbc574",
+                    "name": "M",
+                    "attributes": {
+                      "size": "M"
+                    },
+                    "image_url": null,
+                    "price": {
+                      "amount": "77.0000",
+                      "currency": "USD"
+                    },
+                    "stock": 2,
+                    "sku": "ABAYA-8-0-M"
+                  },
+                  {
+                    "id": "77078495-1efb-4720-b035-f1f42b367b85",
+                    "variant_id": "0e5bcc6d-44d9-4026-8cbd-43bc5c9cfb89",
+                    "name": "L",
+                    "attributes": {
+                      "size": "L"
+                    },
+                    "image_url": null,
+                    "price": {
+                      "amount": "77.0000",
+                      "currency": "USD"
+                    },
+                    "stock": 3,
+                    "sku": "ABAYA-8-0-L"
+                  },
+                  {
+                    "id": "00a1e670-282a-475c-a1be-7b6877bad6b0",
+                    "variant_id": "46d8446b-9c1f-4186-968e-ec9fb79f0520",
+                    "name": "XL",
+                    "attributes": {
+                      "size": "XL"
+                    },
+                    "image_url": null,
+                    "price": {
+                      "amount": "77.0000",
+                      "currency": "USD"
+                    },
+                    "stock": 3,
+                    "sku": "ABAYA-8-0-XL"
+                  }
+                ]
+              },
+              "price_from": {
+                "amount": "1001000.0000",
+                "currency": "SYP"
+              },
+              "price_to": {
+                "amount": "1001000.0000",
+                "currency": "SYP"
+              },
+              "stock": 10,
+              "is_available": true,
+              "rating": 4.43,
+              "reviews_count": 7,
+              "views_count": 1372,
+              "likes_count": 10,
+              "orders_count": 2,
+              "favorites_count": 2,
+              "created_at": "2026-01-02T21:46:29.754Z",
+              "is_liked": false
+            },
+            "offer_id": "56e748f2-6f42-422b-8d50-7201dc85827d",
+            "matched_media_url": "https://fixture.reem.local/b1006008-a127-41f9-a8c7-77b6b8090708.jpg",
+            "similarity": 1,
+            "similarity_percent": 100,
+            "visual_score": 1,
+            "attribute_score": 1,
+            "reason": "شبه مطابق للصورة، ونفس القصّة تقريبًا.",
+            "reason_codes": [
+              "NEAR_IDENTICAL",
+              "SHAPE_MATCH",
+              "PATTERN_MATCH",
+              "LAYOUT_MATCH",
+              "COLOUR_MATCH"
+            ],
+            "quoted_price": {
+              "amount": "1001000.0000",
+              "currency": "SYP"
+            }
+          },
+          {
+            "id": "00000000-0000-4000-8000-000000000101",
+            "product": {
+              "id": "d38009e7-431d-4b73-9216-ba5294755b5c",
+              "slug": "skirt-021",
+              "title": "تنورة جينز مطبّعة",
+              "description": "تنورة جينز مطبّعة. مبطّنة بالكامل.",
+              "category": {
+                "id": "f1fbf9ab-a016-4904-968b-e402d2da2aa2",
+                "slug": "skirts",
+                "name_ar": "تنانير",
+                "name_en": "Skirts",
+                "level": 2,
+                "parent_id": "4d1f48c0-1f9a-4c2a-8b8c-4595ee16a98c",
+                "icon_url": null,
+                "image_url": null,
+                "is_sensitive": false,
+                "returns_allowed": true
+              },
+              "brand": {
+                "id": "2056a5fe-48f9-4938-a743-9bdca8bd197d",
+                "slug": "lattakia-leather",
+                "name_ar": "جلود اللاذقية",
+                "name_en": "Lattakia Leather",
+                "logo_url": "https://loremflickr.com/900/1125/logo%2Cboutique/all?lock=97548",
+                "is_verified": true
+              },
+              "attributes": {
+                "material": "جينز"
+              },
+              "gtin": null,
+              "status": "active",
+              "media": [
+                {
+                  "url": "https://fixture.reem.local/d38009e7-431d-4b73-9216-ba5294755b5c.jpg",
+                  "type": "image",
+                  "blur_hash": null
+                },
+                {
+                  "url": "https://loremflickr.com/900/1125/skirt%2Cfashion/all?lock=39889",
+                  "type": "image",
+                  "blur_hash": null
+                },
+                {
+                  "url": "https://loremflickr.com/900/1125/skirt%2Cfashion/all?lock=62270",
+                  "type": "image",
+                  "blur_hash": null
+                },
+                {
+                  "url": "https://loremflickr.com/900/1125/skirt%2Cfashion/all?lock=84651",
+                  "type": "image",
+                  "blur_hash": null
+                }
+              ],
+              "variants": [
+                {
+                  "id": "679a2b11-e764-41dc-a6e8-054448b544b1",
+                  "name": "S",
+                  "attributes": {
+                    "size": "S"
+                  },
+                  "image_url": null,
+                  "sort_order": 0
+                },
+                {
+                  "id": "6ac140db-b0bd-450d-a7c3-2a8621e269a2",
+                  "name": "M",
+                  "attributes": {
+                    "size": "M"
+                  },
+                  "image_url": null,
+                  "sort_order": 1
+                },
+                {
+                  "id": "49d87b50-cf7c-434a-a8d4-27cfe5b6a686",
+                  "name": "L",
+                  "attributes": {
+                    "size": "L"
+                  },
+                  "image_url": null,
+                  "sort_order": 2
+                },
+                {
+                  "id": "fbdd6934-5312-45a5-a71b-7e67ab17e295",
+                  "name": "XL",
+                  "attributes": {
+                    "size": "XL"
+                  },
+                  "image_url": null,
+                  "sort_order": 3
+                }
+              ],
+              "offers_count": 1,
+              "best_offer": {
+                "id": "9f9baf61-6ea4-4582-9e87-d8a65dde2bcb",
+                "seller": {
+                  "id": "0efc3338-5f0f-42c8-9501-65fd653c312b",
+                  "name": "ليلى الخوري",
+                  "username": "layla_style",
+                  "bio": "أناقة محتشمة منتقاة بعناية",
+                  "image_url": "https://loremflickr.com/400/400/roses%2Cpink/all?lock=48357",
+                  "location": "حلب، سوريا",
+                  "role": "seller",
+                  "seller_level": "verified",
+                  "seller_verified_at": null,
+                  "seller_premium_until": null,
+                  "is_verified": true,
+                  "followers_count": 22,
+                  "following_count": 2,
+                  "created_at": "2026-08-19T02:14:10.513Z"
+                },
+                "currency": "SYP",
+                "price": {
+                  "amount": "842000.0000",
+                  "currency": "SYP"
+                },
+                "compare_at_price": {
+                  "amount": "1138000.0000",
+                  "currency": "SYP"
+                },
+                "wholesale_price": null,
+                "wholesale_min_qty": null,
+                "stock": 9,
+                "min_order_qty": 1,
+                "max_order_qty": 10,
+                "sku": "SKIRT-21-0",
+                "handling_days": 2,
+                "is_made_to_order": true,
+                "requires_deposit": false,
+                "accepts_returns": true,
+                "status": "active",
+                "variants": [
+                  {
+                    "id": "7bff4a71-6c32-4cc8-81b7-1beb79293a3e",
+                    "variant_id": "679a2b11-e764-41dc-a6e8-054448b544b1",
+                    "name": "S",
+                    "attributes": {
+                      "size": "S"
+                    },
+                    "image_url": null,
+                    "price": {
+                      "amount": "842000.0000",
+                      "currency": "SYP"
+                    },
+                    "stock": 2,
+                    "sku": "SKIRT-21-0-S"
+                  },
+                  {
+                    "id": "883619bb-0077-4bdd-abc1-52d1a4c12a58",
+                    "variant_id": "6ac140db-b0bd-450d-a7c3-2a8621e269a2",
+                    "name": "M",
+                    "attributes": {
+                      "size": "M"
+                    },
+                    "image_url": null,
+                    "price": {
+                      "amount": "842000.0000",
+                      "currency": "SYP"
+                    },
+                    "stock": 3,
+                    "sku": "SKIRT-21-0-M"
+                  },
+                  {
+                    "id": "9e0392dd-b421-404a-b89e-05072ef7dadc",
+                    "variant_id": "49d87b50-cf7c-434a-a8d4-27cfe5b6a686",
+                    "name": "L",
+                    "attributes": {
+                      "size": "L"
+                    },
+                    "image_url": null,
+                    "price": {
+                      "amount": "842000.0000",
+                      "currency": "SYP"
+                    },
+                    "stock": 2,
+                    "sku": "SKIRT-21-0-L"
+                  },
+                  {
+                    "id": "678212d1-8947-4e68-a632-88e4c969a38d",
+                    "variant_id": "fbdd6934-5312-45a5-a71b-7e67ab17e295",
+                    "name": "XL",
+                    "attributes": {
+                      "size": "XL"
+                    },
+                    "image_url": null,
+                    "price": {
+                      "amount": "842000.0000",
+                      "currency": "SYP"
+                    },
+                    "stock": 2,
+                    "sku": "SKIRT-21-0-XL"
+                  }
+                ]
+              },
+              "price_from": {
+                "amount": "842000.0000",
+                "currency": "SYP"
+              },
+              "price_to": {
+                "amount": "842000.0000",
+                "currency": "SYP"
+              },
+              "stock": 9,
+              "is_available": true,
+              "rating": 0,
+              "reviews_count": 0,
+              "views_count": 4972,
+              "likes_count": 204,
+              "orders_count": 0,
+              "favorites_count": 1,
+              "created_at": "2025-12-22T04:53:09.431Z",
+              "is_liked": false
+            },
+            "offer_id": "9f9baf61-6ea4-4582-9e87-d8a65dde2bcb",
+            "matched_media_url": "https://fixture.reem.local/d38009e7-431d-4b73-9216-ba5294755b5c.jpg",
+            "similarity": 1,
+            "similarity_percent": 100,
+            "visual_score": 1,
+            "attribute_score": 1,
+            "reason": "شبه مطابق للصورة، ونفس القصّة تقريبًا.",
+            "reason_codes": [
+              "NEAR_IDENTICAL",
+              "SHAPE_MATCH",
+              "PATTERN_MATCH",
+              "LAYOUT_MATCH",
+              "COLOUR_MATCH"
+            ],
+            "quoted_price": {
+              "amount": "842000.0000",
+              "currency": "SYP"
+            }
+          },
+          {
+            "id": "00000000-0000-4000-8000-000000000102",
+            "product": {
+              "id": "3fe26fae-c01d-4340-9dce-5b009ab7bffe",
+              "slug": "skirt-020",
+              "title": "تنورة ماكسي بطبقتين",
+              "description": "تنورة ماكسي بطبقتين. مبطّنة بالكامل.",
+              "category": {
+                "id": "f1fbf9ab-a016-4904-968b-e402d2da2aa2",
+                "slug": "skirts",
+                "name_ar": "تنانير",
+                "name_en": "Skirts",
+                "level": 2,
+                "parent_id": "4d1f48c0-1f9a-4c2a-8b8c-4595ee16a98c",
+                "icon_url": null,
+                "image_url": null,
+                "is_sensitive": false,
+                "returns_allowed": true
+              },
+              "brand": {
+                "id": "e45de6e7-344a-4ce1-81db-31349f0f45a9",
+                "slug": "jasmin-parfum",
+                "name_ar": "ياسمين باروفان",
+                "name_en": "Jasmin Parfum",
+                "logo_url": "https://loremflickr.com/900/1125/logo%2Cboutique/all?lock=45651",
+                "is_verified": false
+              },
+              "attributes": {
+                "material": "بوليستر ناعم"
+              },
+              "gtin": null,
+              "status": "active",
+              "media": [
+                {
+                  "url": "https://loremflickr.com/900/1125/skirt%2Cfashion/all?lock=31050",
+                  "type": "image",
+                  "blur_hash": null
+                },
+                {
+                  "url": "https://fixture.reem.local/3fe26fae-c01d-4340-9dce-5b009ab7bffe.jpg",
+                  "type": "image",
+                  "blur_hash": null
+                },
+                {
+                  "url": "https://loremflickr.com/900/1125/skirt%2Cfashion/all?lock=8669",
+                  "type": "image",
+                  "blur_hash": null
+                },
+                {
+                  "url": "https://loremflickr.com/900/1125/skirt%2Cfashion/all?lock=75812",
+                  "type": "image",
+                  "blur_hash": null
+                }
+              ],
+              "variants": [
+                {
+                  "id": "cebd7f3e-d3b9-4a4e-a6e2-b3ef42593c03",
+                  "name": "S",
+                  "attributes": {
+                    "size": "S"
+                  },
+                  "image_url": null,
+                  "sort_order": 0
+                },
+                {
+                  "id": "e48b2fa8-d1a9-4f60-8f8f-ce3ba5b82012",
+                  "name": "M",
+                  "attributes": {
+                    "size": "M"
+                  },
+                  "image_url": null,
+                  "sort_order": 1
+                },
+                {
+                  "id": "4578eb3a-8eef-4e0f-b8d2-617109301b08",
+                  "name": "L",
+                  "attributes": {
+                    "size": "L"
+                  },
+                  "image_url": null,
+                  "sort_order": 2
+                },
+                {
+                  "id": "958098e9-51e7-4c6c-a775-83a37d156023",
+                  "name": "XL",
+                  "attributes": {
+                    "size": "XL"
+                  },
+                  "image_url": null,
+                  "sort_order": 3
+                }
+              ],
+              "offers_count": 3,
+              "best_offer": {
+                "id": "e5f2cadd-e7f0-4a8d-9a79-f2db07c8886d",
+                "seller": {
+                  "id": "0efc3338-5f0f-42c8-9501-65fd653c312b",
+                  "name": "ليلى الخوري",
+                  "username": "layla_style",
+                  "bio": "أناقة محتشمة منتقاة بعناية",
+                  "image_url": "https://loremflickr.com/400/400/roses%2Cpink/all?lock=48357",
+                  "location": "حلب، سوريا",
+                  "role": "seller",
+                  "seller_level": "verified",
+                  "seller_verified_at": null,
+                  "seller_premium_until": null,
+                  "is_verified": true,
+                  "followers_count": 22,
+                  "following_count": 2,
+                  "created_at": "2026-08-19T02:14:10.513Z"
+                },
+                "currency": "SYP",
+                "price": {
+                  "amount": "341000.0000",
+                  "currency": "SYP"
+                },
+                "compare_at_price": null,
+                "wholesale_price": null,
+                "wholesale_min_qty": null,
+                "stock": 39,
+                "min_order_qty": 1,
+                "max_order_qty": 3,
+                "sku": "SKIRT-20-2",
+                "handling_days": 3,
+                "is_made_to_order": false,
+                "requires_deposit": false,
+                "accepts_returns": true,
+                "status": "active",
+                "variants": [
+                  {
+                    "id": "451e8fb9-c05c-4953-96e9-b18806d78365",
+                    "variant_id": "958098e9-51e7-4c6c-a775-83a37d156023",
+                    "name": "XL",
+                    "attributes": {
+                      "size": "XL"
+                    },
+                    "image_url": null,
+                    "price": {
+                      "amount": "341000.0000",
+                      "currency": "SYP"
+                    },
+                    "stock": 9,
+                    "sku": "SKIRT-20-2-XL"
+                  },
+                  {
+                    "id": "6eaa107a-7fa9-4745-bdb5-409bf53bc7d9",
+                    "variant_id": "cebd7f3e-d3b9-4a4e-a6e2-b3ef42593c03",
+                    "name": "S",
+                    "attributes": {
+                      "size": "S"
+                    },
+                    "image_url": null,
+                    "price": {
+                      "amount": "341000.0000",
+                      "currency": "SYP"
+                    },
+                    "stock": 15,
+                    "sku": "SKIRT-20-2-S"
+                  },
+                  {
+                    "id": "ebdf610b-6e9c-4613-a3ad-22954ea24c90",
+                    "variant_id": "e48b2fa8-d1a9-4f60-8f8f-ce3ba5b82012",
+                    "name": "M",
+                    "attributes": {
+                      "size": "M"
+                    },
+                    "image_url": null,
+                    "price": {
+                      "amount": "341000.0000",
+                      "currency": "SYP"
+                    },
+                    "stock": 10,
+                    "sku": "SKIRT-20-2-M"
+                  },
+                  {
+                    "id": "8b852285-df20-4be5-a90c-25e1d8d1706e",
+                    "variant_id": "4578eb3a-8eef-4e0f-b8d2-617109301b08",
+                    "name": "L",
+                    "attributes": {
+                      "size": "L"
+                    },
+                    "image_url": null,
+                    "price": {
+                      "amount": "341000.0000",
+                      "currency": "SYP"
+                    },
+                    "stock": 6,
+                    "sku": "SKIRT-20-2-L"
+                  }
+                ]
+              },
+              "price_from": {
+                "amount": "341000.0000",
+                "currency": "SYP"
+              },
+              "price_to": {
+                "amount": "403000.0000",
+                "currency": "SYP"
+              },
+              "stock": 39,
+              "is_available": true,
+              "rating": 4.25,
+              "reviews_count": 4,
+              "views_count": 4108,
+              "likes_count": 51,
+              "orders_count": 4,
+              "favorites_count": 0,
+              "created_at": "2026-01-11T15:35:13.445Z",
+              "is_liked": false
+            },
+            "offer_id": "e5f2cadd-e7f0-4a8d-9a79-f2db07c8886d",
+            "matched_media_url": "https://fixture.reem.local/3fe26fae-c01d-4340-9dce-5b009ab7bffe.jpg",
+            "similarity": 1,
+            "similarity_percent": 100,
+            "visual_score": 1,
+            "attribute_score": 1,
+            "reason": "شبه مطابق للصورة، ونفس القصّة تقريبًا.",
+            "reason_codes": [
+              "NEAR_IDENTICAL",
+              "SHAPE_MATCH",
+              "PATTERN_MATCH",
+              "LAYOUT_MATCH",
+              "COLOUR_MATCH"
+            ],
+            "quoted_price": {
+              "amount": "341000.0000",
+              "currency": "SYP"
+            }
+          },
+          {
+            "id": "00000000-0000-4000-8000-000000000103",
+            "product": {
+              "id": "6b95113d-450f-4a1a-8dfb-a64136935018",
+              "slug": "dress-002",
+              "title": "فستان سهرة بأكمام منفوخة",
+              "description": "فستان سهرة بأكمام منفوخة. القياسات حسب جدول المقاسات، والغسيل الجاف مفضّل.",
+              "category": {
+                "id": "2481dc05-1a60-4450-ba8f-0a608d7a108b",
+                "slug": "dresses",
+                "name_ar": "فساتين",
+                "name_en": "Dresses",
+                "level": 2,
+                "parent_id": "4d1f48c0-1f9a-4c2a-8b8c-4595ee16a98c",
+                "icon_url": null,
+                "image_url": null,
+                "is_sensitive": false,
+                "returns_allowed": true
+              },
+              "brand": {
+                "id": "2056a5fe-48f9-4938-a743-9bdca8bd197d",
+                "slug": "lattakia-leather",
+                "name_ar": "جلود اللاذقية",
+                "name_en": "Lattakia Leather",
+                "logo_url": "https://loremflickr.com/900/1125/logo%2Cboutique/all?lock=97548",
+                "is_verified": true
+              },
+              "attributes": {
+                "material": "شيفون",
+                "sleeve_length": "كم ثلاثة أرباع"
+              },
+              "gtin": null,
+              "status": "active",
+              "media": [
+                {
+                  "url": "https://loremflickr.com/900/1125/dress%2Celegant/all?lock=5274",
+                  "type": "image",
+                  "blur_hash": null
+                },
+                {
+                  "url": "https://fixture.reem.local/6b95113d-450f-4a1a-8dfb-a64136935018.jpg",
+                  "type": "image",
+                  "blur_hash": null
+                },
+                {
+                  "url": "https://loremflickr.com/900/1125/dress%2Celegant/all?lock=82893",
+                  "type": "image",
+                  "blur_hash": null
+                },
+                {
+                  "url": "https://loremflickr.com/900/1125/dress%2Celegant/all?lock=50036",
+                  "type": "image",
+                  "blur_hash": null
+                }
+              ],
+              "variants": [
+                {
+                  "id": "d51a79d1-64e3-44b8-a7f1-943bbb98887b",
+                  "name": "S",
+                  "attributes": {
+                    "size": "S"
+                  },
+                  "image_url": null,
+                  "sort_order": 0
+                },
+                {
+                  "id": "ed78222b-4e0b-4bdc-942c-f5f858e22627",
+                  "name": "M",
+                  "attributes": {
+                    "size": "M"
+                  },
+                  "image_url": null,
+                  "sort_order": 1
+                },
+                {
+                  "id": "9e7037ce-1463-4b6f-b6af-813fcb7f8ddf",
+                  "name": "L",
+                  "attributes": {
+                    "size": "L"
+                  },
+                  "image_url": null,
+                  "sort_order": 2
+                },
+                {
+                  "id": "4c3b82eb-02eb-4fef-a649-6010163f2641",
+                  "name": "XL",
+                  "attributes": {
+                    "size": "XL"
+                  },
+                  "image_url": null,
+                  "sort_order": 3
+                }
+              ],
+              "offers_count": 1,
+              "best_offer": {
+                "id": "201bd3a0-300e-434b-8767-ca4bb239f673",
+                "seller": {
+                  "id": "1ad675f2-7f7b-4ec6-a409-5c968881449f",
+                  "name": "نور العبادي",
+                  "username": "nour_chic",
+                  "bio": null,
+                  "image_url": "https://loremflickr.com/400/400/flowers%2Cpastel/all?lock=28388",
+                  "location": "اللاذقية، سوريا",
+                  "role": "seller",
+                  "seller_level": "basic",
+                  "seller_verified_at": null,
+                  "seller_premium_until": null,
+                  "is_verified": true,
+                  "followers_count": 12,
+                  "following_count": 2,
+                  "created_at": "2026-08-19T02:14:10.517Z"
+                },
+                "currency": "SYP",
+                "price": {
+                  "amount": "1193000.0000",
+                  "currency": "SYP"
+                },
+                "compare_at_price": null,
+                "wholesale_price": null,
+                "wholesale_min_qty": null,
+                "stock": 28,
+                "min_order_qty": 1,
+                "max_order_qty": null,
+                "sku": "DRESS-2-1",
+                "handling_days": 1,
+                "is_made_to_order": false,
+                "requires_deposit": false,
+                "accepts_returns": true,
+                "status": "active",
+                "variants": [
+                  {
+                    "id": "179e8188-b64b-4390-a749-00f511648fbb",
+                    "variant_id": "d51a79d1-64e3-44b8-a7f1-943bbb98887b",
+                    "name": "S",
+                    "attributes": {
+                      "size": "S"
+                    },
+                    "image_url": null,
+                    "price": {
+                      "amount": "1193000.0000",
+                      "currency": "SYP"
+                    },
+                    "stock": 8,
+                    "sku": "DRESS-2-1-S"
+                  },
+                  {
+                    "id": "b1bec858-99e5-4202-baa1-1233c2128f35",
+                    "variant_id": "ed78222b-4e0b-4bdc-942c-f5f858e22627",
+                    "name": "M",
+                    "attributes": {
+                      "size": "M"
+                    },
+                    "image_url": null,
+                    "price": {
+                      "amount": "1193000.0000",
+                      "currency": "SYP"
+                    },
+                    "stock": 3,
+                    "sku": "DRESS-2-1-M"
+                  },
+                  {
+                    "id": "3025cbb8-74bf-4897-b9c6-88af17f2d09b",
+                    "variant_id": "9e7037ce-1463-4b6f-b6af-813fcb7f8ddf",
+                    "name": "L",
+                    "attributes": {
+                      "size": "L"
+                    },
+                    "image_url": null,
+                    "price": {
+                      "amount": "1193000.0000",
+                      "currency": "SYP"
+                    },
+                    "stock": 11,
+                    "sku": "DRESS-2-1-L"
+                  },
+                  {
+                    "id": "3bf3d24c-0960-4c2d-bcde-5900210d50c1",
+                    "variant_id": "4c3b82eb-02eb-4fef-a649-6010163f2641",
+                    "name": "XL",
+                    "attributes": {
+                      "size": "XL"
+                    },
+                    "image_url": null,
+                    "price": {
+                      "amount": "1193000.0000",
+                      "currency": "SYP"
+                    },
+                    "stock": 7,
+                    "sku": "DRESS-2-1-XL"
+                  }
+                ]
+              },
+              "price_from": {
+                "amount": "1193000.0000",
+                "currency": "SYP"
+              },
+              "price_to": {
+                "amount": "1193000.0000",
+                "currency": "SYP"
+              },
+              "stock": 28,
+              "is_available": true,
+              "rating": 4.57,
+              "reviews_count": 7,
+              "views_count": 877,
+              "likes_count": 11,
+              "orders_count": 6,
+              "favorites_count": 4,
+              "created_at": "2026-01-18T18:13:53.232Z",
+              "is_liked": false
+            },
+            "offer_id": "201bd3a0-300e-434b-8767-ca4bb239f673",
+            "matched_media_url": "https://fixture.reem.local/6b95113d-450f-4a1a-8dfb-a64136935018.jpg",
+            "similarity": 0.9543,
+            "similarity_percent": 95,
+            "visual_score": 0.939,
+            "attribute_score": 1,
+            "reason": "شبه مطابق للصورة، ونفس القصّة تقريبًا.",
+            "reason_codes": [
+              "NEAR_IDENTICAL",
+              "SHAPE_MATCH",
+              "PATTERN_MATCH",
+              "LAYOUT_MATCH",
+              "COLOUR_MATCH",
+              "TOP_RATED"
+            ],
+            "quoted_price": {
+              "amount": "1193000.0000",
+              "currency": "SYP"
+            }
+          },
+          {
+            "id": "00000000-0000-4000-8000-000000000104",
+            "product": {
+              "id": "07d738a1-f744-4a85-97a8-cbf42c43f6a2",
+              "slug": "scarf-051",
+              "title": "وشاح مطبوع بحواف مطرّزة",
+              "description": "وشاح مطبوع بحواف مطرّزة. مناسب لكل الفصول.",
+              "category": {
+                "id": "50388a0b-4aad-4e28-ac5d-6f8855aaaef6",
+                "slug": "scarves",
+                "name_ar": "أوشحة",
+                "name_en": "Scarves",
+                "level": 2,
+                "parent_id": "703de1d8-2455-4083-a7ca-109e9721362e",
+                "icon_url": null,
+                "image_url": null,
+                "is_sensitive": false,
+                "returns_allowed": true
+              },
+              "brand": {
+                "id": "2056a5fe-48f9-4938-a743-9bdca8bd197d",
+                "slug": "lattakia-leather",
+                "name_ar": "جلود اللاذقية",
+                "name_en": "Lattakia Leather",
+                "logo_url": "https://loremflickr.com/900/1125/logo%2Cboutique/all?lock=97548",
+                "is_verified": true
+              },
+              "attributes": {
+                "material": "حرير"
+              },
+              "gtin": null,
+              "status": "active",
+              "media": [
+                {
+                  "url": "https://loremflickr.com/900/1125/scarf%2Csilk/all?lock=97596",
+                  "type": "image",
+                  "blur_hash": null
+                },
+                {
+                  "url": "https://fixture.reem.local/07d738a1-f744-4a85-97a8-cbf42c43f6a2.jpg",
+                  "type": "image",
+                  "blur_hash": null
+                },
+                {
+                  "url": "https://loremflickr.com/900/1125/scarf%2Csilk/all?lock=75215",
+                  "type": "image",
+                  "blur_hash": null
+                },
+                {
+                  "url": "https://loremflickr.com/900/1125/scarf%2Csilk/all?lock=52834",
+                  "type": "image",
+                  "blur_hash": null
+                }
+              ],
+              "variants": [
+                {
+                  "id": "2a6bd398-f880-406d-b5ed-4f16ed74f7bd",
+                  "name": "وردي فاتح",
+                  "attributes": {
+                    "colour": "وردي فاتح"
+                  },
+                  "image_url": null,
+                  "sort_order": 0
+                },
+                {
+                  "id": "aba1cf3e-9fa7-4a47-a804-0f052e991d2f",
+                  "name": "أسود",
+                  "attributes": {
+                    "colour": "أسود"
+                  },
+                  "image_url": null,
+                  "sort_order": 1
+                },
+                {
+                  "id": "d898013b-9781-4624-8195-fa6ba911d4eb",
+                  "name": "بيج",
+                  "attributes": {
+                    "colour": "بيج"
+                  },
+                  "image_url": null,
+                  "sort_order": 2
+                },
+                {
+                  "id": "ab1d2d0d-33c8-4558-85a2-7e4a1c648ff6",
+                  "name": "كحلي",
+                  "attributes": {
+                    "colour": "كحلي"
+                  },
+                  "image_url": null,
+                  "sort_order": 3
+                }
+              ],
+              "offers_count": 2,
+              "best_offer": {
+                "id": "8f000d11-4e27-42f3-b161-ae3495b265d2",
+                "seller": {
+                  "id": "6411755a-4645-48cd-9e24-55401a326ea9",
+                  "name": "ميساء الورد",
+                  "username": "maysa_flowers",
+                  "bio": "باقات ورد طبيعي وتنسيق هدايا المناسبات خلال ٢٤ ساعة 💐",
+                  "image_url": "https://loremflickr.com/400/400/boutique%2Celegant/all?lock=51946",
+                  "location": "دمشق، سوريا",
+                  "role": "seller",
+                  "seller_level": "verified",
+                  "seller_verified_at": "2026-01-05T12:37:19.104Z",
+                  "seller_premium_until": null,
+                  "is_verified": true,
+                  "followers_count": 19,
+                  "following_count": 1,
+                  "created_at": "2025-07-13T14:31:47.840Z"
+                },
+                "currency": "SYP",
+                "price": {
+                  "amount": "362000.0000",
+                  "currency": "SYP"
+                },
+                "compare_at_price": {
+                  "amount": "497000.0000",
+                  "currency": "SYP"
+                },
+                "wholesale_price": {
+                  "amount": "307700.0000",
+                  "currency": "SYP"
+                },
+                "wholesale_min_qty": 5,
+                "stock": 3,
+                "min_order_qty": 1,
+                "max_order_qty": 3,
+                "sku": "SCARF-51-1",
+                "handling_days": 1,
+                "is_made_to_order": false,
+                "requires_deposit": false,
+                "accepts_returns": true,
+                "status": "active",
+                "variants": [
+                  {
+                    "id": "860180f8-7b47-4cca-8c28-2c26e4127e5e",
+                    "variant_id": "2a6bd398-f880-406d-b5ed-4f16ed74f7bd",
+                    "name": "وردي فاتح",
+                    "attributes": {
+                      "colour": "وردي فاتح"
+                    },
+                    "image_url": null,
+                    "price": {
+                      "amount": "362000.0000",
+                      "currency": "SYP"
+                    },
+                    "stock": 1,
+                    "sku": "SCARF-51-1-وردي فاتح"
+                  },
+                  {
+                    "id": "10cb0c7f-0933-4e71-beef-490fd5c66186",
+                    "variant_id": "aba1cf3e-9fa7-4a47-a804-0f052e991d2f",
+                    "name": "أسود",
+                    "attributes": {
+                      "colour": "أسود"
+                    },
+                    "image_url": null,
+                    "price": {
+                      "amount": "362000.0000",
+                      "currency": "SYP"
+                    },
+                    "stock": 1,
+                    "sku": "SCARF-51-1-أسود"
+                  },
+                  {
+                    "id": "b5544b8d-54b8-4a77-b238-8c2b19b6dd02",
+                    "variant_id": "d898013b-9781-4624-8195-fa6ba911d4eb",
+                    "name": "بيج",
+                    "attributes": {
+                      "colour": "بيج"
+                    },
+                    "image_url": null,
+                    "price": {
+                      "amount": "362000.0000",
+                      "currency": "SYP"
+                    },
+                    "stock": 1,
+                    "sku": "SCARF-51-1-بيج"
+                  },
+                  {
+                    "id": "29b81f54-2b76-448c-8377-d57f4b8661fc",
+                    "variant_id": "ab1d2d0d-33c8-4558-85a2-7e4a1c648ff6",
+                    "name": "كحلي",
+                    "attributes": {
+                      "colour": "كحلي"
+                    },
+                    "image_url": null,
+                    "price": {
+                      "amount": "362000.0000",
+                      "currency": "SYP"
+                    },
+                    "stock": 1,
+                    "sku": "SCARF-51-1-كحلي"
+                  }
+                ]
+              },
+              "price_from": {
+                "amount": "362000.0000",
+                "currency": "SYP"
+              },
+              "price_to": {
+                "amount": "367000.0000",
+                "currency": "SYP"
+              },
+              "stock": 3,
+              "is_available": true,
+              "rating": 4,
+              "reviews_count": 2,
+              "views_count": 3073,
+              "likes_count": 25,
+              "orders_count": 1,
+              "favorites_count": 1,
+              "created_at": "2026-01-11T16:43:23.271Z",
+              "is_liked": false
+            },
+            "offer_id": "8f000d11-4e27-42f3-b161-ae3495b265d2",
+            "matched_media_url": "https://fixture.reem.local/07d738a1-f744-4a85-97a8-cbf42c43f6a2.jpg",
+            "similarity": 0.8599,
+            "similarity_percent": 86,
+            "visual_score": 0.8133,
+            "attribute_score": 1,
+            "reason": "نفس الملمس (سادة)، ونفس توزيع الألوان.",
+            "reason_codes": [
+              "PATTERN_MATCH",
+              "LAYOUT_MATCH",
+              "COLOUR_MATCH"
+            ],
+            "quoted_price": {
+              "amount": "362000.0000",
+              "currency": "SYP"
+            }
+          },
+          {
+            "id": "00000000-0000-4000-8000-000000000105",
+            "product": {
+              "id": "fa46744f-5b54-4fbe-b307-cd12821b74f7",
+              "slug": "abaya-009",
+              "title": "عباية يومية بتفاصيل دانتيل",
+              "description": "عباية يومية بتفاصيل دانتيل. خامة لا تشف ولا تحتاج كي.",
+              "category": {
+                "id": "af233f18-8371-446e-ac6b-ae011a535f50",
+                "slug": "abayas",
+                "name_ar": "عبايات ومحتشم",
+                "name_en": "Abayas and modest",
+                "level": 2,
+                "parent_id": "4d1f48c0-1f9a-4c2a-8b8c-4595ee16a98c",
+                "icon_url": null,
+                "image_url": null,
+                "is_sensitive": false,
+                "returns_allowed": true
+              },
+              "brand": {
+                "id": "d7a3a91d-ecac-461e-9a42-a03d64e873e6",
+                "slug": "yasmine",
+                "name_ar": "ياسمين",
+                "name_en": "Yasmine",
+                "logo_url": null,
+                "is_verified": false
+              },
+              "attributes": {
+                "material": "لينن"
+              },
+              "gtin": null,
+              "status": "active",
+              "media": [
+                {
+                  "url": "https://loremflickr.com/900/1125/abaya%2Cmodest%20fashion/all?lock=24044",
+                  "type": "image",
+                  "blur_hash": null
+                },
+                {
+                  "url": "https://fixture.reem.local/fa46744f-5b54-4fbe-b307-cd12821b74f7.jpg",
+                  "type": "image",
+                  "blur_hash": null
+                },
+                {
+                  "url": "https://loremflickr.com/900/1125/abaya%2Cmodest%20fashion/all?lock=1663",
+                  "type": "image",
+                  "blur_hash": null
+                },
+                {
+                  "url": "https://loremflickr.com/900/1125/abaya%2Cmodest%20fashion/all?lock=79282",
+                  "type": "image",
+                  "blur_hash": null
+                }
+              ],
+              "variants": [
+                {
+                  "id": "b6c13af9-eb70-4523-8e33-8d0575d6bf84",
+                  "name": "S",
+                  "attributes": {
+                    "size": "S"
+                  },
+                  "image_url": null,
+                  "sort_order": 0
+                },
+                {
+                  "id": "f1780a58-1b38-4c3e-a5bb-7411df16b162",
+                  "name": "M",
+                  "attributes": {
+                    "size": "M"
+                  },
+                  "image_url": null,
+                  "sort_order": 1
+                },
+                {
+                  "id": "fd8e3fdf-f762-4865-bbe1-426679bbd85c",
+                  "name": "L",
+                  "attributes": {
+                    "size": "L"
+                  },
+                  "image_url": null,
+                  "sort_order": 2
+                },
+                {
+                  "id": "5916ae8e-c57f-4cc4-8b08-4876d734b130",
+                  "name": "XL",
+                  "attributes": {
+                    "size": "XL"
+                  },
+                  "image_url": null,
+                  "sort_order": 3
+                }
+              ],
+              "offers_count": 2,
+              "best_offer": {
+                "id": "5dd991aa-a3b4-4975-8c33-f310faf96e44",
+                "seller": {
+                  "id": "c8f48128-aa7f-442e-bcd5-870450b6f354",
+                  "name": "دانا العطّار",
+                  "username": "dana_parfum",
+                  "bio": "عطور شرقية وفرنسية بتركيز عالٍ وثبات طويل 🌸",
+                  "image_url": "https://loremflickr.com/400/400/boutique%2Celegant/all?lock=38462",
+                  "location": "دمشق، سوريا",
+                  "role": "seller",
+                  "seller_level": "verified",
+                  "seller_verified_at": "2026-02-22T23:16:32.856Z",
+                  "seller_premium_until": null,
+                  "is_verified": true,
+                  "followers_count": 13,
+                  "following_count": 2,
+                  "created_at": "2025-10-30T14:30:51.489Z"
+                },
+                "currency": "SYP",
+                "price": {
+                  "amount": "1176000.0000",
+                  "currency": "SYP"
+                },
+                "compare_at_price": {
+                  "amount": "1491000.0000",
+                  "currency": "SYP"
+                },
+                "wholesale_price": null,
+                "wholesale_min_qty": null,
+                "stock": 10,
+                "min_order_qty": 1,
+                "max_order_qty": 10,
+                "sku": "ABAYA-9-1",
+                "handling_days": 3,
+                "is_made_to_order": false,
+                "requires_deposit": false,
+                "accepts_returns": true,
+                "status": "active",
+                "variants": [
+                  {
+                    "id": "e72594a9-bd0a-4b02-a355-be480115d331",
+                    "variant_id": "b6c13af9-eb70-4523-8e33-8d0575d6bf84",
+                    "name": "S",
+                    "attributes": {
+                      "size": "S"
+                    },
+                    "image_url": null,
+                    "price": {
+                      "amount": "1176000.0000",
+                      "currency": "SYP"
+                    },
+                    "stock": 3,
+                    "sku": "ABAYA-9-1-S"
+                  },
+                  {
+                    "id": "1444a9ce-81d6-4280-abe0-896ce57724c6",
+                    "variant_id": "f1780a58-1b38-4c3e-a5bb-7411df16b162",
+                    "name": "M",
+                    "attributes": {
+                      "size": "M"
+                    },
+                    "image_url": null,
+                    "price": {
+                      "amount": "1176000.0000",
+                      "currency": "SYP"
+                    },
+                    "stock": 2,
+                    "sku": "ABAYA-9-1-M"
+                  },
+                  {
+                    "id": "4a854511-6f1c-48ce-993f-52723cf89bfe",
+                    "variant_id": "fd8e3fdf-f762-4865-bbe1-426679bbd85c",
+                    "name": "L",
+                    "attributes": {
+                      "size": "L"
+                    },
+                    "image_url": null,
+                    "price": {
+                      "amount": "1176000.0000",
+                      "currency": "SYP"
+                    },
+                    "stock": 2,
+                    "sku": "ABAYA-9-1-L"
+                  },
+                  {
+                    "id": "97849d37-a407-48d7-966d-5bc098d1878f",
+                    "variant_id": "5916ae8e-c57f-4cc4-8b08-4876d734b130",
+                    "name": "XL",
+                    "attributes": {
+                      "size": "XL"
+                    },
+                    "image_url": null,
+                    "price": {
+                      "amount": "1176000.0000",
+                      "currency": "SYP"
+                    },
+                    "stock": 3,
+                    "sku": "ABAYA-9-1-XL"
+                  }
+                ]
+              },
+              "price_from": {
+                "amount": "1176000.0000",
+                "currency": "SYP"
+              },
+              "price_to": {
+                "amount": "1311000.0000",
+                "currency": "SYP"
+              },
+              "stock": 10,
+              "is_available": true,
+              "rating": 4.33,
+              "reviews_count": 3,
+              "views_count": 1822,
+              "likes_count": 48,
+              "orders_count": 1,
+              "favorites_count": 0,
+              "created_at": "2026-02-11T20:55:31.928Z",
+              "is_liked": false
+            },
+            "offer_id": "5dd991aa-a3b4-4975-8c33-f310faf96e44",
+            "matched_media_url": "https://fixture.reem.local/fa46744f-5b54-4fbe-b307-cd12821b74f7.jpg",
+            "similarity": 0.8018,
+            "similarity_percent": 80,
+            "visual_score": 0.7357,
+            "attribute_score": 1,
+            "reason": "نفس القصّة تقريبًا، ونفس الملمس (سادة).",
+            "reason_codes": [
+              "SHAPE_MATCH",
+              "PATTERN_MATCH",
+              "LAYOUT_MATCH",
+              "COLOUR_MATCH"
+            ],
+            "quoted_price": {
+              "amount": "1176000.0000",
+              "currency": "SYP"
+            }
+          },
+          {
+            "id": "00000000-0000-4000-8000-000000000106",
+            "product": {
+              "id": "8d31ea3c-03c8-483c-bade-64f506243f2b",
+              "slug": "dress-001",
+              "title": "فستان كلوش بلون الشامبانيا",
+              "description": "فستان كلوش بلون الشامبانيا. القياسات حسب جدول المقاسات، والغسيل الجاف مفضّل.",
+              "category": {
+                "id": "2481dc05-1a60-4450-ba8f-0a608d7a108b",
+                "slug": "dresses",
+                "name_ar": "فساتين",
+                "name_en": "Dresses",
+                "level": 2,
+                "parent_id": "4d1f48c0-1f9a-4c2a-8b8c-4595ee16a98c",
+                "icon_url": null,
+                "image_url": null,
+                "is_sensitive": false,
+                "returns_allowed": true
+              },
+              "brand": {
+                "id": "ce74636e-2c99-4b9d-998f-49c9d603c058",
+                "slug": "reem-atelier",
+                "name_ar": "ريم أتيليه",
+                "name_en": "Reem Atelier",
+                "logo_url": null,
+                "is_verified": true
+              },
+              "attributes": {
+                "material": "شيفون",
+                "sleeve_length": "كم طويل"
+              },
+              "gtin": null,
+              "status": "active",
+              "media": [
+                {
+                  "url": "https://fixture.reem.local/8d31ea3c-03c8-483c-bade-64f506243f2b.jpg",
+                  "type": "image",
+                  "blur_hash": null
+                },
+                {
+                  "url": "https://loremflickr.com/900/1125/dress%2Celegant/all?lock=21615",
+                  "type": "image",
+                  "blur_hash": null
+                },
+                {
+                  "url": "https://loremflickr.com/900/1125/dress%2Celegant/all?lock=43996",
+                  "type": "image",
+                  "blur_hash": null
+                },
+                {
+                  "url": "https://loremflickr.com/900/1125/dress%2Celegant/all?lock=76853",
+                  "type": "image",
+                  "blur_hash": null
+                }
+              ],
+              "variants": [
+                {
+                  "id": "a67dc82a-54f7-4aa7-af29-07b4cd87c2df",
+                  "name": "S",
+                  "attributes": {
+                    "size": "S"
+                  },
+                  "image_url": null,
+                  "sort_order": 0
+                },
+                {
+                  "id": "2ea56a4d-e4c4-4757-ac93-44ce56aea2f8",
+                  "name": "M",
+                  "attributes": {
+                    "size": "M"
+                  },
+                  "image_url": null,
+                  "sort_order": 1
+                },
+                {
+                  "id": "d3836a59-4b7d-4c73-a75b-96dcd57e7660",
+                  "name": "L",
+                  "attributes": {
+                    "size": "L"
+                  },
+                  "image_url": null,
+                  "sort_order": 2
+                },
+                {
+                  "id": "3635c588-14ea-414b-9517-f02f009df261",
+                  "name": "XL",
+                  "attributes": {
+                    "size": "XL"
+                  },
+                  "image_url": null,
+                  "sort_order": 3
+                }
+              ],
+              "offers_count": 1,
+              "best_offer": {
+                "id": "ab6e5ac5-70c9-4f89-be56-ffe18114bc49",
+                "seller": {
+                  "id": "e1f85c01-3370-44d5-b4e3-9f93fcd8cd8b",
+                  "name": "سارة المنصوري",
+                  "username": "sara_reem",
+                  "bio": "بوتيك أزياء راقية ✨",
+                  "image_url": "https://loremflickr.com/400/400/peony%2Csoft/all?lock=29131",
+                  "location": "دمشق، سوريا",
+                  "role": "seller",
+                  "seller_level": "verified",
+                  "seller_verified_at": null,
+                  "seller_premium_until": null,
+                  "is_verified": true,
+                  "followers_count": 19,
+                  "following_count": 0,
+                  "created_at": "2026-08-19T02:14:10.508Z"
+                },
+                "currency": "SYP",
+                "price": {
+                  "amount": "1445000.0000",
+                  "currency": "SYP"
+                },
+                "compare_at_price": null,
+                "wholesale_price": null,
+                "wholesale_min_qty": 5,
+                "stock": 6,
+                "min_order_qty": 1,
+                "max_order_qty": null,
+                "sku": "DRESS-1-0",
+                "handling_days": 1,
+                "is_made_to_order": false,
+                "requires_deposit": false,
+                "accepts_returns": true,
+                "status": "active",
+                "variants": [
+                  {
+                    "id": "dd1f9006-b20d-4a7a-8597-fdd962bdd9c9",
+                    "variant_id": "a67dc82a-54f7-4aa7-af29-07b4cd87c2df",
+                    "name": "S",
+                    "attributes": {
+                      "size": "S"
+                    },
+                    "image_url": null,
+                    "price": {
+                      "amount": "1445000.0000",
+                      "currency": "SYP"
+                    },
+                    "stock": 2,
+                    "sku": "DRESS-1-0-S"
+                  },
+                  {
+                    "id": "1728c019-1d83-4d96-8aad-c1452cc65994",
+                    "variant_id": "2ea56a4d-e4c4-4757-ac93-44ce56aea2f8",
+                    "name": "M",
+                    "attributes": {
+                      "size": "M"
+                    },
+                    "image_url": null,
+                    "price": {
+                      "amount": "1445000.0000",
+                      "currency": "SYP"
+                    },
+                    "stock": 2,
+                    "sku": "DRESS-1-0-M"
+                  },
+                  {
+                    "id": "68ebee13-afab-4e61-a13f-e0785285fd67",
+                    "variant_id": "d3836a59-4b7d-4c73-a75b-96dcd57e7660",
+                    "name": "L",
+                    "attributes": {
+                      "size": "L"
+                    },
+                    "image_url": null,
+                    "price": {
+                      "amount": "1445000.0000",
+                      "currency": "SYP"
+                    },
+                    "stock": 1,
+                    "sku": "DRESS-1-0-L"
+                  },
+                  {
+                    "id": "cbfc5a34-d319-45ba-8b29-1595167d7547",
+                    "variant_id": "3635c588-14ea-414b-9517-f02f009df261",
+                    "name": "XL",
+                    "attributes": {
+                      "size": "XL"
+                    },
+                    "image_url": null,
+                    "price": {
+                      "amount": "1445000.0000",
+                      "currency": "SYP"
+                    },
+                    "stock": 1,
+                    "sku": "DRESS-1-0-XL"
+                  }
+                ]
+              },
+              "price_from": {
+                "amount": "1445000.0000",
+                "currency": "SYP"
+              },
+              "price_to": {
+                "amount": "1445000.0000",
+                "currency": "SYP"
+              },
+              "stock": 6,
+              "is_available": true,
+              "rating": 4.4,
+              "reviews_count": 5,
+              "views_count": 4072,
+              "likes_count": 158,
+              "orders_count": 0,
+              "favorites_count": 0,
+              "created_at": "2026-06-05T07:54:48.201Z",
+              "is_liked": false
+            },
+            "offer_id": "ab6e5ac5-70c9-4f89-be56-ffe18114bc49",
+            "matched_media_url": "https://fixture.reem.local/8d31ea3c-03c8-483c-bade-64f506243f2b.jpg",
+            "similarity": 0.5942,
+            "similarity_percent": 59,
+            "visual_score": 0.4589,
+            "attribute_score": 1,
+            "reason": "نفس القصّة تقريبًا، ونفس الملمس (سادة).",
+            "reason_codes": [
+              "SHAPE_MATCH",
+              "PATTERN_MATCH",
+              "LAYOUT_MATCH",
+              "COLOUR_MATCH"
+            ],
+            "quoted_price": {
+              "amount": "1445000.0000",
+              "currency": "SYP"
+            }
+          },
+          {
+            "id": "00000000-0000-4000-8000-000000000107",
+            "product": {
+              "id": "289bc2ba-9890-4503-92f4-c60065d8de07",
+              "slug": "abaya-007",
+              "title": "عباية كيمونو بتطريز ذهبي",
+              "description": "عباية كيمونو بتطريز ذهبي. خامة لا تشف ولا تحتاج كي.",
+              "category": {
+                "id": "af233f18-8371-446e-ac6b-ae011a535f50",
+                "slug": "abayas",
+                "name_ar": "عبايات ومحتشم",
+                "name_en": "Abayas and modest",
+                "level": 2,
+                "parent_id": "4d1f48c0-1f9a-4c2a-8b8c-4595ee16a98c",
+                "icon_url": null,
+                "image_url": null,
+                "is_sensitive": false,
+                "returns_allowed": true
+              },
+              "brand": {
+                "id": "e45de6e7-344a-4ce1-81db-31349f0f45a9",
+                "slug": "jasmin-parfum",
+                "name_ar": "ياسمين باروفان",
+                "name_en": "Jasmin Parfum",
+                "logo_url": "https://loremflickr.com/900/1125/logo%2Cboutique/all?lock=45651",
+                "is_verified": false
+              },
+              "attributes": {
+                "material": "لينن"
+              },
+              "gtin": null,
+              "status": "active",
+              "media": [
+                {
+                  "url": "https://fixture.reem.local/289bc2ba-9890-4503-92f4-c60065d8de07.jpg",
+                  "type": "image",
+                  "blur_hash": null
+                },
+                {
+                  "url": "https://loremflickr.com/900/1125/abaya%2Cmodest%20fashion/all?lock=2290",
+                  "type": "image",
+                  "blur_hash": null
+                },
+                {
+                  "url": "https://loremflickr.com/900/1125/abaya%2Cmodest%20fashion/all?lock=79909",
+                  "type": "image",
+                  "blur_hash": null
+                },
+                {
+                  "url": "https://loremflickr.com/900/1125/abaya%2Cmodest%20fashion/all?lock=47052",
+                  "type": "image",
+                  "blur_hash": null
+                }
+              ],
+              "variants": [
+                {
+                  "id": "93c2ed6f-1f01-425d-982a-8e201814d104",
+                  "name": "S",
+                  "attributes": {
+                    "size": "S"
+                  },
+                  "image_url": null,
+                  "sort_order": 0
+                },
+                {
+                  "id": "0b544420-5d09-43cd-84c7-fe2991f78ba6",
+                  "name": "M",
+                  "attributes": {
+                    "size": "M"
+                  },
+                  "image_url": null,
+                  "sort_order": 1
+                },
+                {
+                  "id": "c84f5260-a0a2-4fdc-b65c-ce9e2b337977",
+                  "name": "L",
+                  "attributes": {
+                    "size": "L"
+                  },
+                  "image_url": null,
+                  "sort_order": 2
+                },
+                {
+                  "id": "53ce0d0a-a6f0-4acd-af61-7c3d6de86b79",
+                  "name": "XL",
+                  "attributes": {
+                    "size": "XL"
+                  },
+                  "image_url": null,
+                  "sort_order": 3
+                }
+              ],
+              "offers_count": 1,
+              "best_offer": {
+                "id": "65add014-3298-45a5-93bf-3d7747451203",
+                "seller": {
+                  "id": "c948f072-ee72-4a19-9124-f0cfcba85773",
+                  "name": "رهف الشامي",
+                  "username": "rahaf_atelier",
+                  "bio": "فساتين سهرة وخطوبة مصمّمة يدوياً في قلب دمشق ✨",
+                  "image_url": "https://loremflickr.com/400/400/boutique%2Celegant/all?lock=61419",
+                  "location": "دمشق، سوريا",
+                  "role": "seller",
+                  "seller_level": "premium",
+                  "seller_verified_at": "2026-05-20T09:35:48.129Z",
+                  "seller_premium_until": "2026-11-30T08:51:56.102Z",
+                  "is_verified": true,
+                  "followers_count": 22,
+                  "following_count": 1,
+                  "created_at": "2025-04-09T18:33:21.881Z"
+                },
+                "currency": "SYP",
+                "price": {
+                  "amount": "1420000.0000",
+                  "currency": "SYP"
+                },
+                "compare_at_price": null,
+                "wholesale_price": null,
+                "wholesale_min_qty": null,
+                "stock": 38,
+                "min_order_qty": 1,
+                "max_order_qty": null,
+                "sku": "ABAYA-7-0",
+                "handling_days": 3,
+                "is_made_to_order": false,
+                "requires_deposit": false,
+                "accepts_returns": true,
+                "status": "active",
+                "variants": [
+                  {
+                    "id": "307e8fb0-68e5-4929-b333-374ff07819ad",
+                    "variant_id": "93c2ed6f-1f01-425d-982a-8e201814d104",
+                    "name": "S",
+                    "attributes": {
+                      "size": "S"
+                    },
+                    "image_url": null,
+                    "price": {
+                      "amount": "1420000.0000",
+                      "currency": "SYP"
+                    },
+                    "stock": 4,
+                    "sku": "ABAYA-7-0-S"
+                  },
+                  {
+                    "id": "b3a7d357-7903-4bae-a08b-01c191b401f2",
+                    "variant_id": "0b544420-5d09-43cd-84c7-fe2991f78ba6",
+                    "name": "M",
+                    "attributes": {
+                      "size": "M"
+                    },
+                    "image_url": null,
+                    "price": {
+                      "amount": "1420000.0000",
+                      "currency": "SYP"
+                    },
+                    "stock": 12,
+                    "sku": "ABAYA-7-0-M"
+                  },
+                  {
+                    "id": "e2068729-03ad-4abc-b9b5-156e9d81cb55",
+                    "variant_id": "c84f5260-a0a2-4fdc-b65c-ce9e2b337977",
+                    "name": "L",
+                    "attributes": {
+                      "size": "L"
+                    },
+                    "image_url": null,
+                    "price": {
+                      "amount": "1420000.0000",
+                      "currency": "SYP"
+                    },
+                    "stock": 16,
+                    "sku": "ABAYA-7-0-L"
+                  },
+                  {
+                    "id": "0c20bb99-82c6-4075-83ae-c177e8d29c05",
+                    "variant_id": "53ce0d0a-a6f0-4acd-af61-7c3d6de86b79",
+                    "name": "XL",
+                    "attributes": {
+                      "size": "XL"
+                    },
+                    "image_url": null,
+                    "price": {
+                      "amount": "1420000.0000",
+                      "currency": "SYP"
+                    },
+                    "stock": 6,
+                    "sku": "ABAYA-7-0-XL"
+                  }
+                ]
+              },
+              "price_from": {
+                "amount": "1420000.0000",
+                "currency": "SYP"
+              },
+              "price_to": {
+                "amount": "1420000.0000",
+                "currency": "SYP"
+              },
+              "stock": 38,
+              "is_available": true,
+              "rating": 4.25,
+              "reviews_count": 4,
+              "views_count": 7978,
+              "likes_count": 202,
+              "orders_count": 1,
+              "favorites_count": 2,
+              "created_at": "2026-05-13T07:08:15.363Z",
+              "is_liked": false
+            },
+            "offer_id": "65add014-3298-45a5-93bf-3d7747451203",
+            "matched_media_url": "https://fixture.reem.local/289bc2ba-9890-4503-92f4-c60065d8de07.jpg",
+            "similarity": 0.3661,
+            "similarity_percent": 37,
+            "visual_score": 0.1548,
+            "attribute_score": 1,
+            "reason": "نفس القصّة تقريبًا، ونفس الملمس (سادة).",
+            "reason_codes": [
+              "SHAPE_MATCH",
+              "PATTERN_MATCH",
+              "LAYOUT_MATCH",
+              "COLOUR_MATCH"
+            ],
+            "quoted_price": {
+              "amount": "1420000.0000",
+              "currency": "SYP"
+            }
+          }
+        ]
+      }
+    ],
+    "notice": null
+  },
+  "bootstrap": {
+    "ready": true,
+    "engine": "reem-visual-perceptual-v1",
+    "coverage": {
+      "indexed_products": 30,
+      "active_products": 145,
+      "indexed_images": 30
+    },
+    "limits": {
+      "max_image_bytes": 8388608,
+      "upload_max_edge": 1024,
+      "accepted": [
+        "image/jpeg",
+        "image/png",
+        "image/webp"
+      ]
+    },
+    "privacy": {
+      "image_retention_hours": 24,
+      "note": "صورتك بتنحفظ بشكل خاص وبتنمسح تلقائيًا بعد انتهاء البحث. النتائج بتضل بدون الصورة."
+    },
+    "try_on": {
+      "available": false,
+      "provider": "none",
+      "message": "التجربة الافتراضية لسا مو متوفرة. لما تتوفر، رح نطلب إذنك قبل ما نستخدم صورتك.",
+      "retention_hours": 2
+    },
+    "recent": [],
+    "prompts": [
+      "نفس هالفستان بس بالأسود",
+      "شي مشابه وأقل من ٤٠٠ ألف",
+      "شي أكتر احتشامًا من هيك",
+      "نفس الستايل بس بقماش أخف"
+    ]
+  }
+}

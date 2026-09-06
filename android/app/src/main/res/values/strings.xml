@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  The launcher label. Localised the same way the app itself is: Arabic is the
+  first language of the market, so `values-ar` carries the name a Syrian woman
+  reads under the icon, and this default serves everyone else.
+-->
+<resources>
+    <string name="app_name">Reem</string>
+</resources>

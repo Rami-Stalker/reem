@@ -26,7 +26,12 @@ import {
 const REFERRAL_TTL_DAYS = 45;
 const HIGH_RISK_THRESHOLD = 0.8;
 
-const REWARD_MATRIX = {
+/**
+ * What each side of an invite is paid. Exported because the profile centre
+ * quotes it to the shopper — a promise the screen makes has to be the same
+ * number the ledger later honours.
+ */
+export const REWARD_MATRIX = {
   [ReferralParticipantType.CUSTOMER]: {
     referrerPoints: 500,
     referredPoints: 250,

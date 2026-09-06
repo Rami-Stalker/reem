@@ -1,14 +1,18 @@
 import {
+  CodAssurance,
+  CodAssuranceState,
   Order,
   OrderEvent,
   OrderItem,
   Payment,
+  PaymentStatus,
   SellerOrder,
   Shipment,
   User,
 } from '@prisma/client';
 import { Money, deriveOrderStatus } from '../money';
-import { serializeUser } from './user.serializer';
+import { needsCustomerAction, railOf } from '../payments/payment-rails';
+import { serializePublicUser } from './user.serializer';
 
 /**
  * Order JSON.
@@ -33,6 +37,10 @@ export type OrderDetailRecord = Order & {
   sellerOrders: SellerOrderRecord[];
   payment: Payment | null;
   events: OrderEvent[];
+  codRiskAssessment?: {
+    state: CodAssuranceState;
+    assurance: CodAssurance;
+  } | null;
 };
 
 export function serializeOrderItem(item: OrderItem) {
@@ -83,7 +91,7 @@ export function serializeSellerOrder(sellerOrder: SellerOrderRecord) {
   return {
     id: sellerOrder.id,
     number: sellerOrder.number,
-    seller: serializeUser(sellerOrder.seller),
+    seller: serializePublicUser(sellerOrder.seller),
     status: sellerOrder.status.toLowerCase(),
     fulfilment_mode: sellerOrder.fulfilmentMode.toLowerCase(),
     currency: sellerOrder.currency,
@@ -168,6 +176,12 @@ export function serializePayment(payment: Payment) {
       payment.refundedAmount,
       payment.currency,
     ).toJSON(),
+    // What the rail asks of her, rather than leaving the app to infer it
+    // from the method name.
+    rail: railOf(payment.method),
+    needs_customer_action:
+      needsCustomerAction(payment.method) &&
+      payment.status === PaymentStatus.PENDING,
     transaction_ref: payment.transactionRef,
     provider_ref: payment.providerRef,
     failure_reason: payment.failureReason,
@@ -240,6 +254,12 @@ export function serializeOrderDetail(order: OrderDetailRecord) {
     },
     seller_orders: order.sellerOrders.map(serializeSellerOrder),
     payment: order.payment ? serializePayment(order.payment) : null,
+    // One boolean, and only when it is true. The customer's order does not
+    // carry a risk score, a tier or a reason: the single thing she can act on
+    // is whether a code is still owed, and anything more would be inviting her
+    // to argue with a number nobody in support can change.
+    awaiting_cod_confirmation:
+      order.codRiskAssessment?.state === CodAssuranceState.PENDING,
     timeline: order.events.map(serializeOrderEvent),
   };
 }

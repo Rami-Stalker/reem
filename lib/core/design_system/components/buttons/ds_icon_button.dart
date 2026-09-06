@@ -116,6 +116,12 @@ class DsIconButton extends StatelessWidget {
     final tappable = DsScaleAnimations.tapScale(
       pressedScale: DsMotion.pressedScale,
       onTap: disabled ? () {} : onPressed!,
+      enabled: !disabled,
+      // An icon button has no text of its own, so the tooltip is the only
+      // thing a screen reader can read. One without a tooltip is unusable
+      // without sight, which is why `tooltip` is worth passing everywhere.
+      semanticLabel: tooltip,
+      excludeChildSemantics: tooltip != null,
       child: button,
     );
 

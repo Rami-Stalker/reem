@@ -271,7 +271,8 @@ final class SellerDashboardMockDataSource
   static const _storeScore = SellerStoreScore(
     overall: 94,
     fulfillment: 97,
-    responsiveness: 91,
+    // Null on purpose: the unmeasured case is the one worth seeing in a mock.
+    responsiveness: null,
     productQuality: 96,
     rating: 4.9,
   );

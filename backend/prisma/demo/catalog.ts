@@ -150,10 +150,13 @@ export async function seedCatalog(ctx: DemoContext): Promise<DemoProduct[]> {
       // also has many views and favourites, so the "trending" and "most loved"
       // collections do not return unrelated noise.
       const popularity = rng.float(0.05, 1, 3);
-      const viewsCount = Math.round(400 + popularity * 9_000);
+      // Views are not invented here any more: `reconcileCounters` counts the
+      // PRODUCT_VIEW analytics rows this dataset actually writes, so the
+      // figure on the product page is the number of times the page was
+      // genuinely opened in the demo's history.
+      const viewsCount = 0;
       const ordersCount = Math.round(popularity * rng.int(10, 90));
       const favoritesCount = Math.round(popularity * rng.int(20, 260));
-      const likesCount = Math.round(favoritesCount * rng.float(1.2, 2.4));
 
       const status = rng.weighted<ProductStatus>([
         [ProductStatus.ACTIVE, 24],
@@ -174,7 +177,6 @@ export async function seedCatalog(ctx: DemoContext): Promise<DemoProduct[]> {
           isFeatured: rng.bool(0.14),
           showInFeed: true,
           viewsCount,
-          likesCount,
           ordersCount,
           favoritesCount,
           createdAt: rng.pastDate(240, 1),
@@ -250,6 +252,9 @@ export async function seedCatalog(ctx: DemoContext): Promise<DemoProduct[]> {
             sellerId: seller.id,
             currency,
             price: new D(price),
+            // The comparison key. Offers are ordered by this, never by
+            // `price`, so a USD boutique interleaves correctly with SYP ones.
+            priceSyp: new D(priceSyp),
             compareAtPrice: hasCompareAt
               ? new D(
                   inUsd

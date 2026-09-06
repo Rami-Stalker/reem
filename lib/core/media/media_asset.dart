@@ -87,7 +87,14 @@ enum MediaPurpose {
   /// Sent into a conversation. Private for the same reason the conversation
   /// is: the readers are the people in it, and nobody else — not support, not
   /// an administrator.
-  chat('chat');
+  chat('chat'),
+
+  /// A garment in her own wardrobe. Private, and stored with no reader but
+  /// her: photographing her clothes means photographing her bedroom and her
+  /// mirror. Unlike the other private purposes it carries no retention clock —
+  /// this picture is the permanent illustration of something she owns, and it
+  /// goes when she deletes the piece.
+  closet('closet');
 
   const MediaPurpose(this.wire);
 

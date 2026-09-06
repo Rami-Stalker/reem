@@ -12,7 +12,7 @@ import {
   serializeProduct,
   serializeVariant,
 } from './product.serializer';
-import { serializeUser } from './user.serializer';
+import { serializePublicUser } from './user.serializer';
 
 export type CommerceContentProductTagWithRelations =
   CommerceContentProductTag & {
@@ -71,7 +71,7 @@ export function serializeCommerceContentVersion(
 export function serializeCommerceContent(content: CommerceContentWithRelations) {
   return {
     id: content.id,
-    seller: serializeUser(content.seller),
+    seller: serializePublicUser(content.seller),
     content_type: content.contentType,
     type_definition: serializeCommerceContentType(content.typeDefinition),
     title: content.title,

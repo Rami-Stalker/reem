@@ -23,10 +23,21 @@ import {
 /** Q56 P1 — «خلال 7 أيام من الاستلام». */
 export const RETURN_WINDOW_DAYS = 7;
 
-/** When the right to return a parcel expires, counted from delivery. */
-export function returnWindowClosesAt(deliveredAt: Date): Date {
+/**
+ * When the right to return a parcel expires, counted from delivery.
+ *
+ * `extraDays` is Reem Value's `ENHANCED_RETURNS` benefit, passed in by the
+ * caller rather than looked up here — this file stays a pure function of facts
+ * somebody else has already read, which is what lets the eligibility screen and
+ * the check that runs when she asks share one implementation.
+ *
+ * It can only ever lengthen the window. A standing benefit that could shorten
+ * one would be a penalty wearing a reward's clothes, and `Math.max` is where
+ * that is ruled out rather than trusted.
+ */
+export function returnWindowClosesAt(deliveredAt: Date, extraDays = 0): Date {
   const closes = new Date(deliveredAt);
-  closes.setDate(closes.getDate() + RETURN_WINDOW_DAYS);
+  closes.setDate(closes.getDate() + RETURN_WINDOW_DAYS + Math.max(0, extraDays));
   return closes;
 }
 
@@ -142,6 +153,14 @@ export interface LineReturnFacts {
 export interface ParcelReturnFacts {
   readonly deliveredAt: Date | null;
   readonly now?: Date;
+  /**
+   * Extra days her standing buys her — Reem Value's `ENHANCED_RETURNS`.
+   *
+   * Optional and defaulting to none, so every existing caller keeps the Q56
+   * window unchanged and only the paths that have looked up her benefit pass
+   * anything here.
+   */
+  readonly extraWindowDays?: number;
 }
 
 /**
@@ -164,7 +183,7 @@ export function blockerFor(
   if (!parcel.deliveredAt) return ReturnBlocker.NotDelivered;
 
   const now = parcel.now ?? new Date();
-  if (now > returnWindowClosesAt(parcel.deliveredAt)) {
+  if (now > returnWindowClosesAt(parcel.deliveredAt, parcel.extraWindowDays)) {
     return ReturnBlocker.WindowClosed;
   }
 

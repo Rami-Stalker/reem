@@ -2,6 +2,7 @@ import 'package:reem/core/base/repository_handler.dart';
 import 'package:reem/core/result/result.dart';
 import 'package:reem/features/chat/data/datasources/chat_remote_datasource.dart';
 import 'package:reem/features/chat/domain/entities/chat_message_entity.dart';
+import 'package:reem/features/chat/domain/entities/chat_start_request.dart';
 import 'package:reem/features/chat/domain/entities/chat_thread_entity.dart';
 import 'package:reem/features/chat/domain/repositories/chat_repository.dart';
 
@@ -11,8 +12,18 @@ class ChatRepositoryImpl with RepositoryHandler implements ChatRepository {
   final ChatRemoteDataSource remote;
 
   @override
-  Future<Result<List<ChatThreadEntity>>> getThreads() =>
-      guard(() => remote.getThreads());
+  Future<Result<List<ChatThreadEntity>>> getThreads({String? query}) =>
+      guard(() => remote.getThreads(query: query));
+
+  @override
+  Future<Result<ChatThreadEntity>> getThread(String chatId) =>
+      guard(() => remote.getThread(chatId));
+
+  @override
+  Future<Result<ChatThreadEntity>> startConversation(
+    ChatStartRequest request,
+  ) =>
+      guard(() => remote.startConversation(request));
 
   @override
   Future<Result<List<ChatMessageEntity>>> getMessages(String chatId) =>

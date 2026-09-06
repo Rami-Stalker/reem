@@ -23,7 +23,7 @@ class ProfileWishlistPreview extends ConsumerWidget {
       isLoading: isLoading,
       onSeeAll: () => context.push(RoutePaths.favorites),
       onTapProduct: (p) =>
-          context.push('${RoutePaths.productDetails}?id=${p.id}'),
+          context.push(RoutePaths.productDetailsOf(p.id)),
     );
   }
 }

@@ -5,10 +5,14 @@ import 'package:go_router/go_router.dart';
 
 import 'package:reem/core/design_system/design_system.dart';
 import 'package:reem/core/localization/l10n_extension.dart';
+import 'package:reem/core/media/media_decode.dart';
+import 'package:reem/core/media/media_variants.dart';
+import 'package:reem/core/result/result.dart';
 import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/features/home/domain/entities/featured_store.dart';
 import 'package:reem/features/home/presentation/providers/home_content_provider.dart';
 import 'package:reem/features/home/presentation/widgets/home_section_header.dart';
+import 'package:reem/features/user_profile/presentation/providers/user_profile_providers.dart';
 
 /// "Featured boutiques" — rich store cards with cover, logo, trust signals and
 /// a teaser strip of their pieces, plus an optimistic follow toggle.
@@ -24,8 +28,9 @@ class HomeFeaturedStores extends ConsumerWidget {
       homeContentNotifierProvider.select((s) => s.isInitialLoading),
     );
     final stores = ref.watch(
-      homeContentNotifierProvider
-          .select((s) => s.content?.featuredStores ?? const <FeaturedStore>[]),
+      homeContentNotifierProvider.select(
+        (s) => s.content?.featuredStores ?? const <FeaturedStore>[],
+      ),
     );
 
     if (!isLoading && stores.isEmpty) return const SizedBox.shrink();
@@ -47,7 +52,8 @@ class HomeFeaturedStores extends ConsumerWidget {
                   physics: const BouncingScrollPhysics(),
                   padding: const EdgeInsets.symmetric(horizontal: DsSpacing.lg),
                   itemCount: stores.length,
-                  separatorBuilder: (_, _) => const SizedBox(width: DsSpacing.md),
+                  separatorBuilder: (_, _) =>
+                      const SizedBox(width: DsSpacing.md),
                   itemBuilder: (context, i) => SizedBox(
                     width: _cardWidth,
                     child: _StoreCard(store: stores[i]),
@@ -68,24 +74,56 @@ class HomeFeaturedStores extends ConsumerWidget {
         separatorBuilder: (_, _) => const SizedBox(width: DsSpacing.md),
         itemBuilder: (_, _) => const SizedBox(
           width: _cardWidth,
-          child: DsSkeleton.box(height: _railHeight, borderRadius: DsRadius.xxl),
+          child: DsSkeleton.box(
+            height: _railHeight,
+            borderRadius: DsRadius.xxl,
+          ),
         ),
       ),
     );
   }
 }
 
-class _StoreCard extends StatefulWidget {
+class _StoreCard extends ConsumerStatefulWidget {
   const _StoreCard({required this.store});
 
   final FeaturedStore store;
 
   @override
-  State<_StoreCard> createState() => _StoreCardState();
+  ConsumerState<_StoreCard> createState() => _StoreCardState();
 }
 
-class _StoreCardState extends State<_StoreCard> {
+class _StoreCardState extends ConsumerState<_StoreCard> {
   late bool _following = widget.store.isFollowing;
+  bool _busy = false;
+
+  /// Follow, for real.
+  ///
+  /// The button used to be a `setState` and nothing else: the pill filled in,
+  /// the boutique was never told, and the next refresh quietly un-followed her
+  /// again. It now calls the same endpoint the profile screen does, and rolls
+  /// the pill back if the call fails.
+  Future<void> _toggleFollow() async {
+    if (_busy) return;
+    final wasFollowing = _following;
+    setState(() {
+      _busy = true;
+      _following = !wasFollowing;
+    });
+
+    final result = wasFollowing
+        ? await ref.read(unfollowSellerUseCaseProvider).call(widget.store.id)
+        : await ref.read(followSellerUseCaseProvider).call(widget.store.id);
+
+    if (!mounted) return;
+    setState(() {
+      _busy = false;
+      if (result case Error()) _following = wasFollowing;
+    });
+    if (result case Error() when mounted) {
+      DsSnackbar.error(context, context.l10n.actionDidNotSave);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -109,17 +147,21 @@ class _StoreCardState extends State<_StoreCard> {
                 clipBehavior: Clip.none,
                 children: [
                   CachedNetworkImage(
-                    imageUrl: store.coverUrl,
+                    imageUrl: MediaVariants.at(
+                      store.coverUrl,
+                      MediaVariants.medium,
+                    ),
                     fit: BoxFit.cover,
                     width: double.infinity,
                     placeholder: (_, _) => ColoredBox(color: c.shimmerBase),
-                    errorWidget: (_, _, _) => ColoredBox(color: c.surfaceVariant),
+                    errorWidget: (_, _, _) =>
+                        ColoredBox(color: c.surfaceVariant),
                   ),
                   Positioned(
                     left: DsSpacing.md,
                     bottom: -22,
                     child: Container(
-                      padding: const EdgeInsets.all(2),
+                      padding: const EdgeInsets.all(DsSpacing.xxxs),
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         color: c.surface,
@@ -134,10 +176,14 @@ class _StoreCardState extends State<_StoreCard> {
                 ],
               ),
             ),
-            const SizedBox(height: 26),
+            DsGaps.vXl,
             Padding(
               padding: const EdgeInsets.fromLTRB(
-                  DsSpacing.md, 0, DsSpacing.md, DsSpacing.md),
+                DsSpacing.md,
+                DsSpacing.xxxs,
+                DsSpacing.md,
+                DsSpacing.md,
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -148,51 +194,57 @@ class _StoreCardState extends State<_StoreCard> {
                           store.name,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            fontFamily: DsTypography.fontFamily,
-                            fontWeight: DsTypography.bold,
-                            fontSize: DsTypography.titleSmall,
-                            color: c.onSurface,
+                          style: context.dsText.tileTitle.bold.tint(
+                            c.onSurface,
                           ),
                         ),
                       ),
                       if (store.isVerified) ...[
-                        const SizedBox(width: 3),
-                        Icon(Icons.verified_rounded, size: 15, color: c.secondary),
+                        DsGaps.hXxs,
+                        Icon(
+                          Icons.verified_rounded,
+                          size: 15,
+                          color: c.secondary,
+                        ),
                       ],
                       const Spacer(),
-                      Icon(Icons.star_rounded, size: 15, color: c.rating),
-                      const SizedBox(width: 2),
-                      Text(store.rating.toStringAsFixed(1),
-                          style: TextStyle(
-                            fontSize: DsTypography.labelMedium,
-                            fontWeight: DsTypography.semiBold,
-                            color: c.onSurface,
-                          )),
+                      // Only where customers have actually rated her. A shop
+                      // nobody has reviewed used to be labelled "0.0".
+                      if (store.rating != null) ...[
+                        Icon(Icons.star_rounded, size: 15, color: c.rating),
+                        DsGaps.hXxxs,
+                        Text(
+                          store.rating!.toStringAsFixed(1),
+                          style: context.dsText.labelMedium.semibold.tint(
+                            c.onSurface,
+                          ),
+                        ),
+                      ],
                     ],
                   ),
-                  const SizedBox(height: 2),
+                  DsGaps.vXxxs,
                   Text(
                     store.tagline,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                        fontSize: DsTypography.labelSmall,
-                        color: c.onSurfaceVariant),
+                    style: context.dsText.caption.tint(c.onSurfaceVariant),
                   ),
                   const SizedBox(height: DsSpacing.sm),
                   Row(
                     children: [
                       for (final img in store.previewImages.take(3))
                         Padding(
-                          padding: const EdgeInsetsDirectional.only(end: DsSpacing.xs),
+                          padding: const EdgeInsetsDirectional.only(
+                            end: DsSpacing.xs,
+                          ),
                           child: ClipRRect(
                             borderRadius: DsRadius.borderSm,
                             child: CachedNetworkImage(
-                              imageUrl: img,
+                              imageUrl: MediaVariants.thumb(img),
                               width: 38,
                               height: 38,
                               fit: BoxFit.cover,
+                              memCacheWidth: MediaDecode.widthFor(context, 38),
                               placeholder: (_, _) =>
                                   ColoredBox(color: c.shimmerBase),
                               errorWidget: (_, _, _) =>
@@ -203,7 +255,7 @@ class _StoreCardState extends State<_StoreCard> {
                       const Spacer(),
                       _FollowButton(
                         following: _following,
-                        onTap: () => setState(() => _following = !_following),
+                        onTap: _toggleFollow,
                       ),
                     ],
                   ),
@@ -231,7 +283,9 @@ class _FollowButton extends StatelessWidget {
       child: AnimatedContainer(
         duration: DsMotion.fast,
         padding: const EdgeInsets.symmetric(
-            horizontal: DsSpacing.md, vertical: DsSpacing.xs),
+          horizontal: DsSpacing.md,
+          vertical: DsSpacing.xs,
+        ),
         decoration: BoxDecoration(
           gradient: following ? null : context.primaryGradient,
           color: following ? c.surfaceVariant : null,
@@ -246,13 +300,11 @@ class _FollowButton extends StatelessWidget {
               size: 15,
               color: following ? c.onSurface : c.onPrimary,
             ),
-            const SizedBox(width: 3),
+            DsGaps.hXxs,
             Text(
               following ? context.l10n.following : context.l10n.follow,
-              style: TextStyle(
-                fontSize: DsTypography.labelMedium,
-                fontWeight: DsTypography.bold,
-                color: following ? c.onSurface : c.onPrimary,
+              style: context.dsText.labelMedium.bold.tint(
+                following ? c.onSurface : c.onPrimary,
               ),
             ),
           ],

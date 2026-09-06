@@ -79,7 +79,7 @@ class AuthorizedMediaImage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    if (!isPrivate(url)) return _image(const {});
+    if (!isPrivate(url)) return _image(context, const {});
 
     // The token resolves from secure storage, so the first frame has none.
     // Waiting for it beats fetching without it: an unauthorised attempt would
@@ -89,24 +89,61 @@ class AuthorizedMediaImage extends ConsumerWidget {
     return headers.when(
       loading: () => _placeholder(context),
       error: (_, _) => _placeholder(context),
-      data: _image,
+      data: (value) => _image(context, value),
     );
   }
 
-  Widget _image(Map<String, String> headers) {
-    final image = CachedNetworkImage(
+  Widget _image(BuildContext context, Map<String, String> headers) {
+    final Widget image;
+    final fixed = width;
+    if (fixed != null && fixed.isFinite && fixed > 0) {
+      image = _decoded(context, headers, fixed);
+    } else {
+      // The width comes from the parent — a card in a grid, a tile in a rail.
+      // One layout pass is a great deal cheaper than decoding a photograph at
+      // four times the size it will be drawn.
+      image = LayoutBuilder(
+        builder: (context, constraints) => _decoded(
+          context,
+          headers,
+          constraints.hasBoundedWidth ? constraints.maxWidth : null,
+        ),
+      );
+    }
+    final radius = borderRadius;
+    return radius == null
+        ? image
+        : ClipRRect(borderRadius: radius, child: image);
+  }
+
+  Widget _decoded(
+    BuildContext context,
+    Map<String, String> headers,
+    double? renderWidth,
+  ) {
+    return CachedNetworkImage(
       imageUrl: _resolved,
       httpHeaders: headers.isEmpty ? null : headers,
       fit: fit,
       width: width,
       height: height,
+      // The decode budget. Without it a 480px catalogue photograph is
+      // rasterised at full size into a 160px card — about 1.2 MB of ARGB per
+      // tile, so a screen of twenty is 24 MB of texture for pixels nobody can
+      // see. On the mid-range handsets this platform serves, that is the
+      // difference between a grid that scrolls and one that stutters.
+      memCacheWidth: _devicePixels(context, renderWidth),
       placeholder: (context, _) => _placeholder(context),
       errorWidget: (context, _, _) => _broken(context),
     );
-    final radius = borderRadius;
-    return radius == null
-        ? image
-        : ClipRRect(borderRadius: radius, child: image);
+  }
+
+  /// A logical width in *device* pixels — the most detail the screen can
+  /// actually show. Null leaves the decode unbudgeted, which is right for a
+  /// full-bleed image where guessing low would visibly soften it.
+  static int? _devicePixels(BuildContext context, double? logical) {
+    if (logical == null || !logical.isFinite || logical <= 0) return null;
+    return (logical * MediaQuery.devicePixelRatioOf(context)).ceil();
   }
 
   Widget _placeholder(BuildContext context) {

@@ -104,5 +104,6 @@ export function addDays(date: Date, days: number): Date {
 
 /** Q48 P1 — SYP is charged and displayed rounded to the nearest 1000. */
 export function roundSyp(amount: number): number {
-  return Math.round(amount / 1000) * 1000;
+  // Q48's «لأقرب ألف», at the new lira's scale: 1,000 old = 10 new.
+  return Math.round(amount / 10) * 10;
 }

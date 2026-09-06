@@ -7,7 +7,7 @@ import {
   UserRole,
 } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
-import { serializeProduct, serializeUser } from '../../common/serializers';
+import { serializeProduct, serializePublicUser } from '../../common/serializers';
 import {
   AiRecommendationQueryDto,
   AiSuggestionQueryDto,
@@ -165,7 +165,7 @@ export class AiAssistantService {
       metadata: { count: ranked.length, category: dto.category },
     });
     return ranked.map(({ seller, score }) => ({
-      seller: serializeUser(seller),
+      seller: serializePublicUser(seller),
       score: this.round(score),
       badges: seller.sellerBadges.map((badge) => badge.label),
       performance_score: seller.sellerReputation?.performanceScore ?? 0,

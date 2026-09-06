@@ -26,6 +26,7 @@ import { FinanceController } from './finance.controller';
 import { LoyaltyService } from './loyalty.service';
 import { ReconciliationService } from './reconciliation.service';
 import { SellerEarningsService } from './seller-earnings.service';
+import { SellerPayoutsService } from './seller-payouts.service';
 
 /**
  * Everything that moves money for a business reason, layered over the ledger
@@ -52,6 +53,7 @@ import { SellerEarningsService } from './seller-earnings.service';
     LoyaltyService,
     ReconciliationService,
     SellerEarningsService,
+    SellerPayoutsService,
     FxRevaluationService,
     AdminFinanceService,
     FinancialAuditService,
@@ -107,6 +109,7 @@ import { SellerEarningsService } from './seller-earnings.service';
     LoyaltyService,
     ReconciliationService,
     SellerEarningsService,
+    SellerPayoutsService,
     FxRevaluationService,
     AdminFinanceService,
     FinancialAuditService,

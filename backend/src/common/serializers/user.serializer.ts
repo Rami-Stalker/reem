@@ -29,7 +29,21 @@ export type UserPublic = Pick<
     >
   >;
 
-/** Public user shape returned across the API (snake_case JSON contract). */
+/**
+ * The full shape, contact details included — for the signed-in woman looking
+ * at her OWN account, and for staff who legitimately need to reach her.
+ *
+ * Never hand this to a third party. `serializeUser` used to be the only shape
+ * the API had, so every screen that mentions somebody else — a seller on an
+ * order, a reviewer under a product, the author of a post, any profile at all
+ * — published her `phone`, her `email`, and her `mfa_enabled` /
+ * `device_verification_required` posture to whoever asked. On a platform whose
+ * whole premise is that a woman can shop without her number circulating, that
+ * is the one thing the payload must not carry; the two security flags are
+ * worse still, because they tell an attacker which account is the soft target.
+ *
+ * Use {@link serializePublicUser} for anyone who is not the viewer.
+ */
 export function serializeUser(user: UserPublic) {
   return {
     id: user.id,
@@ -55,6 +69,31 @@ export function serializeUser(user: UserPublic) {
   };
 }
 
+/**
+ * What one woman may see of another: who she is, not how to reach her.
+ *
+ * Everything identifying stays — name, username, avatar, bio, location, seller
+ * standing, follower counts — because that is what a storefront header and a
+ * review byline are made of. What leaves is the contact pair (`email`,
+ * `phone`), the two verification timestamps that imply it, and the account's
+ * security posture (`mfa_enabled`, `device_verification_required`).
+ *
+ * The keys are dropped rather than nulled: a `phone: null` reads as "she has
+ * no number on file", which is a different and false claim.
+ */
+export function serializePublicUser(user: UserPublic) {
+  const {
+    email: _email,
+    phone: _phone,
+    phone_verified_at: _phoneVerifiedAt,
+    email_verified_at: _emailVerifiedAt,
+    mfa_enabled: _mfaEnabled,
+    device_verification_required: _deviceVerificationRequired,
+    ...visible
+  } = serializeUser(user);
+  return visible;
+}
+
 export interface ProfileExtras {
   isFollowing?: boolean;
   isMe?: boolean;
@@ -70,12 +109,20 @@ export interface ProfileExtras {
   } | null;
 }
 
-/** Richer shape for the profile screen: relationship + aggregate stats. */
+/**
+ * Richer shape for the profile screen: relationship + aggregate stats.
+ *
+ * `isMe` decides which base shape is used, so `GET /users/:id` cannot hand a
+ * stranger the contact details it correctly shows the account's owner. The
+ * flag is already computed by the caller for `is_me`, so the privacy boundary
+ * costs nothing and cannot drift out of step with the answer it reports.
+ */
 export function serializeUserProfile(user: UserPublic, extras: ProfileExtras = {}) {
+  const isMe = extras.isMe ?? false;
   return {
-    ...serializeUser(user),
+    ...(isMe ? serializeUser(user) : serializePublicUser(user)),
     is_following: extras.isFollowing ?? false,
-    is_me: extras.isMe ?? false,
+    is_me: isMe,
     products_count: extras.productsCount ?? 0,
     posts_count: extras.postsCount ?? 0,
     seller_stats: extras.sellerStats

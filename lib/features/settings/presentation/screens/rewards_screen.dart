@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
+import 'package:reem/core/shared/value_objects/money_format.dart';
 import 'package:reem/features/rewards/domain/entities/rewards_hub.dart';
 import 'package:reem/features/rewards/presentation/providers/rewards_hub_provider.dart';
 
@@ -23,25 +25,33 @@ class _RewardsScreenState extends ConsumerState<RewardsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     ref.listen<RewardsHubState>(rewardsHubNotifierProvider, (previous, next) {
       final messenger = ScaffoldMessenger.of(context);
-      if (next.error != null && next.error != previous?.error) {
+      final error = next.errorMessage?.resolve(context.l10n) ?? next.error;
+      final previousError =
+          previous?.errorMessage?.resolve(context.l10n) ?? previous?.error;
+      if (error != null && error != previousError) {
         messenger
           ..hideCurrentSnackBar()
           ..showSnackBar(
             SnackBar(
               behavior: SnackBarBehavior.floating,
-              content: Text(next.error!),
+              content: Text(error),
             ),
           );
       }
-      if (next.success != null && next.success != previous?.success) {
+      final success =
+          next.successMessage?.resolve(context.l10n) ?? next.success;
+      final previousSuccess =
+          previous?.successMessage?.resolve(context.l10n) ?? previous?.success;
+      if (success != null && success != previousSuccess) {
         messenger
           ..hideCurrentSnackBar()
           ..showSnackBar(
             SnackBar(
               behavior: SnackBarBehavior.floating,
-              content: Text(next.success!),
+              content: Text(success),
             ),
           );
       }
@@ -54,12 +64,14 @@ class _RewardsScreenState extends ConsumerState<RewardsScreen> {
       onRefresh: () =>
           ref.read(rewardsHubNotifierProvider.notifier).load(refresh: true),
       slivers: [
-        const PremiumAppBar(title: 'Rewards', showBack: true),
+        PremiumAppBar(title: context.l10n.rewardsTitle, showBack: true),
         if (state.isLoading && hub == null)
           const _LoadingSliver()
         else if (hub == null)
           _ErrorSliver(
-            message: state.error ?? 'Rewards are not available right now.',
+            message: state.errorMessage?.resolve(l10n) ??
+                state.error ??
+                l10n.rewardsUnavailable,
             onRetry: () => ref.read(rewardsHubNotifierProvider.notifier).load(),
           )
         else
@@ -83,6 +95,7 @@ class _RewardsScreenState extends ConsumerState<RewardsScreen> {
                         .read(rewardsHubNotifierProvider.notifier)
                         .applyCode(_referralController.text);
                     if (mounted &&
+                        ref.read(rewardsHubNotifierProvider).errorMessage == null &&
                         ref.read(rewardsHubNotifierProvider).error == null) {
                       _referralController.clear();
                     }
@@ -98,15 +111,15 @@ class _RewardsScreenState extends ConsumerState<RewardsScreen> {
                 ),
                 const SizedBox(height: DsSpacing.xl),
                 _SectionTitle(
-                  title: 'Redeem rewards',
-                  subtitle: '${hub.rewards.length} available offers',
+                  title: l10n.rewardsRedeemSection,
+                  subtitle: l10n.rewardsOffersCount(hub.rewards.length),
                 ),
                 const SizedBox(height: DsSpacing.md),
                 if (hub.rewards.isEmpty)
-                  const _EmptyState(
+                  _EmptyState(
                     icon: Icons.card_giftcard_rounded,
-                    title: 'No rewards yet',
-                    body: 'New membership offers will appear here.',
+                    title: l10n.rewardsEmptyTitle,
+                    body: l10n.rewardsEmptyBody,
                   )
                 else
                   for (final reward in hub.rewards)
@@ -120,10 +133,10 @@ class _RewardsScreenState extends ConsumerState<RewardsScreen> {
                     ),
                 const SizedBox(height: DsSpacing.xl),
                 _SectionTitle(
-                  title: 'Tier benefits',
+                  title: l10n.rewardsTierSection,
                   subtitle: hub.membership.nextTierName == null
-                      ? 'You are at the highest tier'
-                      : 'Next tier: ${hub.membership.nextTierName}',
+                      ? l10n.rewardsTopTier
+                      : l10n.rewardsNextTier(hub.membership.nextTierName!),
                 ),
                 const SizedBox(height: DsSpacing.md),
                 _BenefitsPanel(membership: hub.membership),
@@ -146,7 +159,8 @@ class _RewardsHero extends StatelessWidget {
     final colors = context.dsColors;
     final membership = hub.membership;
     return Semantics(
-      label: 'Rewards balance ${hub.points} points, ${membership.tierName} tier',
+      label: context.l10n
+          .rewardsBalanceSemantics(hub.points, membership.tierName),
       child: Container(
         padding: const EdgeInsets.all(DsSpacing.xl),
         decoration: BoxDecoration(
@@ -165,13 +179,9 @@ class _RewardsHero extends StatelessWidget {
                 Expanded(
                   child: Text(
                     membership.vip
-                        ? '${membership.tierName} VIP'
-                        : '${membership.tierName} member',
-                    style: TextStyle(
-                      color: colors.onPrimary,
-                      fontWeight: DsTypography.bold,
-                      fontSize: DsTypography.titleMedium,
-                    ),
+                        ? context.l10n.rewardsTierVip(membership.tierName)
+                        : context.l10n.rewardsTierMember(membership.tierName),
+                    style: context.dsText.cardTitle.bold.tint(colors.onPrimary),
                   ),
                 ),
                 if (refreshing)
@@ -188,20 +198,16 @@ class _RewardsHero extends StatelessWidget {
             const SizedBox(height: DsSpacing.lg),
             Text(
               '${hub.points}',
-              style: TextStyle(
-                fontFamily: DsTypography.fontFamily,
-                fontSize: 48,
-                height: 1,
-                fontWeight: DsTypography.bold,
-                color: colors.onPrimary,
-              ),
+              style: context.dsText.hero
+                    .uiFamily
+                    .tint(colors.onPrimary)
+                    // ds-ignore: no-literal-font-sizes -- the single figure
+                    // the whole rewards card exists to show, above the scale.
+                    .copyWith(fontSize: 48, height: 1),
             ),
             Text(
-              'available points',
-              style: TextStyle(
-                color: colors.onPrimary.withValues(alpha: 0.88),
-                fontSize: DsTypography.titleSmall,
-              ),
+              context.l10n.rewardsAvailablePoints,
+              style: context.dsText.tileTitle.tint(colors.onPrimary.withValues(alpha: 0.88)),
             ),
             const SizedBox(height: DsSpacing.lg),
             _ProgressBar(
@@ -212,26 +218,26 @@ class _RewardsHero extends StatelessWidget {
             const SizedBox(height: DsSpacing.sm),
             Text(
               membership.nextTierName == null
-                  ? 'Top tier unlocked'
-                  : '${(membership.progress * 100).round()}% toward ${membership.nextTierName}',
-              style: TextStyle(
-                color: colors.onPrimary.withValues(alpha: 0.86),
-                fontWeight: DsTypography.medium,
-              ),
+                  ? context.l10n.rewardsTopTierUnlocked
+                  : context.l10n.rewardsProgressToward(
+                      (membership.progress * 100).round(),
+                      membership.nextTierName!,
+                    ),
+              style: context.dsText.body.medium.tint(colors.onPrimary.withValues(alpha: 0.86)),
             ),
             const SizedBox(height: DsSpacing.lg),
             Row(
               children: [
                 _HeroMetric(
-                  label: 'Lifetime',
+                  label: context.l10n.rewardsLifetime,
                   value: '${hub.lifetimePoints}',
                 ),
                 _HeroMetric(
-                  label: 'Cashback',
+                  label: context.l10n.rewardsCashback,
                   value: _money(hub.cashback.available),
                 ),
                 _HeroMetric(
-                  label: 'Bonus',
+                  label: context.l10n.rewardsBonus,
                   value: '${membership.pointsMultiplier}x',
                 ),
               ],
@@ -259,16 +265,12 @@ class _HeroMetric extends StatelessWidget {
             value,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: const TextStyle(
-              color: Colors.white,
-              fontWeight: DsTypography.bold,
-              fontSize: DsTypography.titleMedium,
-            ),
+            style: context.dsText.cardTitle.bold.tint(DsColors.onMedia),
           ),
-          const SizedBox(height: 2),
+          DsGaps.vXxxs,
           Text(
             label,
-            style: TextStyle(color: Colors.white.withValues(alpha: 0.72)),
+            style: context.dsText.body.tint(DsColors.onMedia.withValues(alpha: 0.72)),
           ),
         ],
       ),
@@ -291,42 +293,43 @@ class _ReferralPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final colors = context.dsColors;
     return SurfaceCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const _SectionHeader(
+          _SectionHeader(
             icon: Icons.group_add_rounded,
-            title: 'Invite friends',
-            subtitle: 'Track customer and seller referrals in one place.',
+            title: l10n.rewardsInviteTitle,
+            subtitle: l10n.rewardsInviteBody,
           ),
           const SizedBox(height: DsSpacing.md),
           _CodeRow(
-            label: 'Customer code',
+            label: l10n.rewardsCustomerCode,
             code: referral.customerCode,
             onCopy: () => _copy(context, referral.customerCode),
           ),
           const SizedBox(height: DsSpacing.sm),
           _CodeRow(
-            label: 'Seller code',
+            label: l10n.rewardsSellerCode,
             code: referral.sellerCode,
             onCopy: () => _copy(context, referral.sellerCode),
           ),
           const SizedBox(height: DsSpacing.lg),
           Row(
             children: [
-              _CompactStat(value: '${referral.total}', label: 'Invited'),
-              _CompactStat(value: '${referral.rewarded}', label: 'Rewarded'),
-              _CompactStat(value: '${referral.pointsEarned}', label: 'Points'),
-              _CompactStat(value: _money(referral.cashbackEarned), label: 'Cashback'),
+              _CompactStat(value: '${referral.total}', label: l10n.rewardsInvited),
+              _CompactStat(value: '${referral.rewarded}', label: l10n.rewardsRewarded),
+              _CompactStat(value: '${referral.pointsEarned}', label: l10n.rewardsPoints),
+              _CompactStat(value: _money(referral.cashbackEarned), label: l10n.rewardsCashback),
             ],
           ),
           if (referral.suspicious > 0) ...[
             const SizedBox(height: DsSpacing.md),
             _InlineNotice(
               icon: Icons.shield_outlined,
-              text: '${referral.suspicious} referral checks are under review.',
+              text: l10n.rewardsSuspiciousChecks(referral.suspicious),
             ),
           ],
           const SizedBox(height: DsSpacing.lg),
@@ -335,8 +338,8 @@ class _ReferralPanel extends StatelessWidget {
             textInputAction: TextInputAction.done,
             textCapitalization: TextCapitalization.characters,
             decoration: InputDecoration(
-              labelText: 'Have a referral code?',
-              hintText: 'Enter code',
+              labelText: l10n.rewardsHaveCode,
+              hintText: l10n.rewardsEnterCode,
               prefixIcon: Icon(Icons.confirmation_number_outlined,
                   color: colors.primary),
             ),
@@ -344,7 +347,7 @@ class _ReferralPanel extends StatelessWidget {
           ),
           const SizedBox(height: DsSpacing.md),
           DsButton(
-            label: 'Apply code',
+            label: l10n.rewardsApplyCode,
             icon: Icons.check_circle_outline_rounded,
             size: DsButtonSize.md,
             isLoading: isApplying,
@@ -363,7 +366,7 @@ class _ReferralPanel extends StatelessWidget {
       ..showSnackBar(
         SnackBar(
           behavior: SnackBarBehavior.floating,
-          content: Text('$code copied'),
+          content: Text(context.l10n.rewardsCodeCopied(code)),
         ),
       );
   }
@@ -403,19 +406,13 @@ class _CodeRow extends StatelessWidget {
                     children: [
                       Text(
                         label,
-                        style: TextStyle(
-                          color: colors.onSurfaceVariant,
-                          fontSize: DsTypography.labelSmall,
-                        ),
+                        style: context.dsText.caption.tint(colors.onSurfaceVariant),
                       ),
                       Text(
-                        code.isEmpty ? 'Generating' : code,
+                        code.isEmpty ? context.l10n.rewardsGenerating : code,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          fontWeight: DsTypography.bold,
-                          color: colors.onSurface,
-                        ),
+                        style: context.dsText.body.bold.tint(colors.onSurface),
                       ),
                     ],
                   ),
@@ -426,7 +423,7 @@ class _CodeRow extends StatelessWidget {
         ),
         const SizedBox(width: DsSpacing.sm),
         Tooltip(
-          message: 'Copy $label',
+          message: context.l10n.rewardsCopyLabel(label),
           child: IconButton.filledTonal(
             onPressed: code.isEmpty ? null : onCopy,
             icon: const Icon(Icons.copy_rounded),
@@ -450,27 +447,29 @@ class _CashbackPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return SurfaceCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const _SectionHeader(
+          _SectionHeader(
             icon: Icons.savings_outlined,
-            title: 'Cashback',
-            subtitle: 'Convert earned cashback into checkout coupons.',
+            title: l10n.rewardsCashback,
+            subtitle: l10n.rewardsCashbackBody,
           ),
           const SizedBox(height: DsSpacing.md),
           Row(
             children: [
-              _CashbackMetric(label: 'Available', value: _money(cashback.available)),
-              _CashbackMetric(label: 'Pending', value: _money(cashback.pending)),
+              _CashbackMetric(label: l10n.rewardsAvailable, value: _money(cashback.available)),
+              _CashbackMetric(label: l10n.rewardsPending, value: _money(cashback.pending)),
               _CashbackMetric(
-                  label: 'Lifetime', value: _money(cashback.lifetimeEarned)),
+                  label: l10n.rewardsLifetime,
+                  value: _money(cashback.lifetimeEarned)),
             ],
           ),
           const SizedBox(height: DsSpacing.md),
           DsButton(
-            label: 'Convert to coupon',
+            label: l10n.rewardsConvertToCoupon,
             icon: Icons.local_offer_outlined,
             size: DsButtonSize.md,
             isLoading: isRedeeming,
@@ -498,6 +497,7 @@ class _RewardTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final colors = context.dsColors;
     final canRedeem = reward.canRedeem(availablePoints);
     return Padding(
@@ -527,24 +527,21 @@ class _RewardTile extends StatelessWidget {
                     reward.title,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(fontWeight: DsTypography.semiBold),
+                    style: context.dsText.body.semibold,
                   ),
-                  const SizedBox(height: 2),
+                  DsGaps.vXxxs,
                   Text(
-                    _rewardSubtitle(reward),
+                    _rewardSubtitle(context, reward),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      color: colors.onSurfaceVariant,
-                      fontSize: DsTypography.labelMedium,
-                    ),
+                    style: context.dsText.labelMedium.tint(colors.onSurfaceVariant),
                   ),
                 ],
               ),
             ),
             const SizedBox(width: DsSpacing.sm),
             DsButton(
-              label: reward.exclusive ? 'Claim' : 'Redeem',
+              label: reward.exclusive ? l10n.rewardsClaim : l10n.rewardsRedeem,
               size: DsButtonSize.sm,
               variant: canRedeem
                   ? DsButtonVariant.accent
@@ -567,22 +564,27 @@ class _BenefitsPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final benefits = membership.benefits.isEmpty
-        ? const ['Points on every order', 'Referral rewards', 'Member offers']
+        ? [
+            l10n.rewardsBenefitPoints,
+            l10n.rewardsBenefitReferrals,
+            l10n.rewardsBenefitOffers,
+          ]
         : membership.benefits;
     return SurfaceCard(
       child: Column(
         children: [
           _BenefitRow(
             icon: Icons.stars_rounded,
-            title: '${membership.pointsMultiplier}x point multiplier',
-            subtitle: 'Tier bonus is applied after eligible purchases.',
+            title: l10n.rewardsMultiplier('${membership.pointsMultiplier}'),
+            subtitle: l10n.rewardsTierBonusNote,
           ),
           const SizedBox(height: DsSpacing.md),
           _BenefitRow(
             icon: Icons.payments_outlined,
-            title: '${membership.cashbackRate}% cashback rate',
-            subtitle: 'Cashback can be converted into coupons.',
+            title: l10n.rewardsCashbackRate('${membership.cashbackRate}'),
+            subtitle: l10n.rewardsCashbackNote,
           ),
           const SizedBox(height: DsSpacing.md),
           for (final benefit in benefits)
@@ -621,13 +623,10 @@ class _BenefitRow extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(title, style: TextStyle(fontWeight: DsTypography.bold)),
+              Text(title, style: context.dsText.body.bold),
               Text(
                 subtitle,
-                style: TextStyle(
-                  color: colors.onSurfaceVariant,
-                  fontSize: DsTypography.labelMedium,
-                ),
+                style: context.dsText.labelMedium.tint(colors.onSurfaceVariant),
               ),
             ],
           ),
@@ -661,7 +660,7 @@ class _SectionTitle extends StatelessWidget {
               ),
               Text(
                 subtitle,
-                style: TextStyle(color: colors.onSurfaceVariant),
+                style: context.dsText.body.tint(colors.onSurfaceVariant),
               ),
             ],
           ),
@@ -693,13 +692,10 @@ class _SectionHeader extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(title, style: TextStyle(fontWeight: DsTypography.bold)),
+              Text(title, style: context.dsText.body.bold),
               Text(
                 subtitle,
-                style: TextStyle(
-                  color: colors.onSurfaceVariant,
-                  fontSize: DsTypography.labelMedium,
-                ),
+                style: context.dsText.labelMedium.tint(colors.onSurfaceVariant),
               ),
             ],
           ),
@@ -725,14 +721,11 @@ class _CompactStat extends StatelessWidget {
             value,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: TextStyle(fontWeight: DsTypography.bold),
+            style: context.dsText.body.bold,
           ),
           Text(
             label,
-            style: TextStyle(
-              color: colors.onSurfaceVariant,
-              fontSize: DsTypography.labelSmall,
-            ),
+            style: context.dsText.caption.tint(colors.onSurfaceVariant),
           ),
         ],
       ),
@@ -755,12 +748,9 @@ class _CashbackMetric extends StatelessWidget {
         children: [
           Text(
             value,
-            style: TextStyle(
-              fontSize: DsTypography.titleMedium,
-              fontWeight: DsTypography.bold,
-            ),
+            style: context.dsText.cardTitle.bold,
           ),
-          Text(label, style: TextStyle(color: colors.onSurfaceVariant)),
+          Text(label, style: context.dsText.body.tint(colors.onSurfaceVariant)),
         ],
       ),
     );
@@ -783,10 +773,7 @@ class _InlineNotice extends StatelessWidget {
         Expanded(
           child: Text(
             text,
-            style: TextStyle(
-              color: colors.onSurfaceVariant,
-              fontSize: DsTypography.labelMedium,
-            ),
+            style: context.dsText.labelMedium.tint(colors.onSurfaceVariant),
           ),
         ),
       ],
@@ -841,11 +828,11 @@ class _EmptyState extends StatelessWidget {
         children: [
           Icon(icon, color: colors.primary, size: 36),
           const SizedBox(height: DsSpacing.sm),
-          Text(title, style: TextStyle(fontWeight: DsTypography.bold)),
+          Text(title, style: context.dsText.body.bold),
           Text(
             body,
             textAlign: TextAlign.center,
-            style: TextStyle(color: colors.onSurfaceVariant),
+            style: context.dsText.body.tint(colors.onSurfaceVariant),
           ),
         ],
       ),
@@ -889,6 +876,7 @@ class _ErrorSliver extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final colors = context.dsColors;
     return SliverFillRemaining(
       hasScrollBody: false,
@@ -900,21 +888,18 @@ class _ErrorSliver extends StatelessWidget {
             Icon(Icons.wifi_off_rounded, size: 48, color: colors.primary),
             const SizedBox(height: DsSpacing.md),
             Text(
-              'Rewards could not load',
-              style: Theme.of(context)
-                  .textTheme
-                  .titleLarge
-                  ?.copyWith(fontWeight: DsTypography.bold),
+              context.l10n.rewardsLoadFailed,
+              style: context.dsText.sectionTitle.bold,
             ),
             const SizedBox(height: DsSpacing.sm),
             Text(
               message,
               textAlign: TextAlign.center,
-              style: TextStyle(color: colors.onSurfaceVariant),
+              style: context.dsText.body.tint(colors.onSurfaceVariant),
             ),
             const SizedBox(height: DsSpacing.lg),
             DsButton(
-              label: 'Retry',
+              label: l10n.retry,
               icon: Icons.refresh_rounded,
               isExpanded: false,
               onPressed: onRetry,
@@ -937,20 +922,22 @@ IconData _rewardIcon(String type) {
   };
 }
 
-String _rewardSubtitle(LoyaltyRewardItem reward) {
+String _rewardSubtitle(BuildContext context, LoyaltyRewardItem reward) {
   final parts = <String>[
     if (reward.description != null && reward.description!.isNotEmpty)
       reward.description!,
-    if (reward.pointsCost != null) '${reward.pointsCost} points',
+    if (reward.pointsCost != null)
+      context.l10n.rewardsPointsCost(reward.pointsCost!),
     if (reward.cashbackAmount != null) _money(reward.cashbackAmount!),
-    if (reward.exclusive) 'Exclusive',
+    if (reward.exclusive) context.l10n.rewardsExclusive,
   ];
-  return parts.isEmpty ? 'Member reward' : parts.join(' - ');
+  return parts.isEmpty ? context.l10n.rewardsMemberReward : parts.join(' - ');
 }
 
-String _money(double value) {
-  if (value == value.roundToDouble()) {
-    return '\$${value.toInt()}';
-  }
-  return '\$${value.toStringAsFixed(2)}';
-}
+/// Cashback, in the currency the platform actually charges.
+///
+/// This printed dollars — `$0`, `$50` — on a screen whose every other figure
+/// is in ل.س. `SypFormat` exists for exactly these bare-double dashboards and
+/// gives the right symbol, the right grouping and no fraction digits, since
+/// SYP is charged in whole units.
+String _money(double value) => value.sypFull;

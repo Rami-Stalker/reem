@@ -4,16 +4,28 @@ import 'package:go_router/go_router.dart';
 
 import 'package:reem/core/design_system/design_system.dart';
 import 'package:reem/core/localization/l10n_extension.dart';
+import 'package:reem/core/shared/value_objects/money.dart';
 import 'package:reem/features/ai_assistant/presentation/providers/ai_assistant_provider.dart';
+import 'package:reem/features/catalog/presentation/providers/categories_provider.dart';
 import 'package:reem/features/seller_products/domain/entities/managed_product.dart';
 import 'package:reem/features/seller_products/domain/entities/product_draft.dart';
 import 'package:reem/features/seller_products/domain/entities/product_status.dart';
 import 'package:reem/features/seller_products/presentation/providers/seller_products_providers.dart';
+import 'package:reem/features/seller_products/presentation/widgets/category_attribute_fields.dart';
+import 'package:reem/features/seller_products/presentation/widgets/category_picker_field.dart';
 
+/// Writing a listing.
+///
+/// The form is laid out along the seam the catalogue actually has. The first
+/// block is the product's identity — what every seller of it shows — and the
+/// second is this seller's own terms: her price, her stock, how long she needs
+/// to prepare it. She does not own the first half once a competitor lists the
+/// same item, and the form says so rather than letting her write an edit the
+/// server will refuse.
 class ProductFormScreen extends ConsumerStatefulWidget {
   const ProductFormScreen({super.key, this.product});
 
-  /// Non-null when editing.
+  /// Non-null when editing an existing listing.
   final ManagedProduct? product;
 
   @override
@@ -24,10 +36,22 @@ class _ProductFormScreenState extends ConsumerState<ProductFormScreen> {
   final _formKey = GlobalKey<FormState>();
   final _title = TextEditingController();
   final _description = TextEditingController();
-  final _category = TextEditingController();
   final _price = TextEditingController();
-  final _oldPrice = TextEditingController();
+  final _comparePrice = TextEditingController();
   final _stock = TextEditingController();
+  final _sku = TextEditingController();
+  final _handlingDays = TextEditingController(text: '1');
+  final _minOrderQty = TextEditingController(text: '1');
+
+  /// The leaf category's UUID. Nothing else opens `POST /seller/products`.
+  String? _categoryId;
+  String? _categoryError;
+
+  /// The extra fields that category governs. A leaf inherits its schema from
+  /// the nearest ancestor that declares one, and the endpoint refuses a draft
+  /// missing any required key — so these are not decoration.
+  final Map<String, String> _attributes = {};
+  bool _showAttributeErrors = false;
 
   /// URLs of photographs already uploaded. `DsMediaField` owns the tiles and
   /// the in-flight state; the form only keeps what it will post.
@@ -36,37 +60,113 @@ class _ProductFormScreenState extends ConsumerState<ProductFormScreen> {
 
   final List<_VariantRow> _variants = [];
 
+  Currency _currency = Currency.syp;
   ProductStatus _status = ProductStatus.draft;
-  bool _isFeatured = false;
-  bool _showInFeed = true;
+  bool _acceptsReturns = true;
+  bool _isMadeToOrder = false;
 
   /// Eight is what a listing can show without the grid turning into a scroll
   /// of its own, and enough for a garment from every angle.
   static const int _maxMedia = 8;
 
+  /// The states a seller may choose. `pendingReview` is the platform's to set
+  /// and `outOfStock` is derived from the stock figure — offering either as a
+  /// button would be offering work she cannot do.
+  static const _selectableStatuses = [
+    ProductStatus.draft,
+    ProductStatus.active,
+    ProductStatus.paused,
+    ProductStatus.archived,
+  ];
+
   bool get _isEditing => widget.product != null;
 
-  Future<void> _generateDescription() async {
-    final title = _title.text.trim();
-    final category = _category.text.trim();
-    if (title.isEmpty || category.isEmpty) {
-      DsSnackbar.show(
-        context,
-        message: context.l10n.formTitleCategoryFirst,
-        type: DsSnackbarType.warning,
+  /// The shared half is read-only once someone else lists the same product.
+  bool get _canEditIdentity => !(widget.product?.hasCompetition ?? false);
+
+  @override
+  void initState() {
+    super.initState();
+    final p = widget.product;
+    if (p == null) return;
+
+    _title.text = p.title;
+    _description.text = p.description;
+    _categoryId = p.category.id.isEmpty ? null : p.category.id;
+    // The raw decimal string, not a formatted figure — this feeds an input
+    // that is posted straight back to the server.
+    _price.text = p.price.raw;
+    _comparePrice.text = p.compareAtPrice?.raw ?? '';
+    _currency = p.price.currency;
+    _stock.text = p.stock.toString();
+    _sku.text = p.sku ?? '';
+    _handlingDays.text = p.handlingDays.toString();
+    _minOrderQty.text = p.minOrderQty.toString();
+    _status = p.status;
+    _acceptsReturns = p.acceptsReturns;
+    _isMadeToOrder = p.isMadeToOrder;
+    _mediaUrls = [for (final m in p.media) m.url];
+    _attributes.addAll({
+      for (final entry in p.attributes.entries)
+        entry.key: entry.value?.toString() ?? '',
+    });
+
+    // A listing's options are the product's names joined to this seller's own
+    // price and stock for each — two rows on two tables, one line on screen.
+    for (final variant in p.variants) {
+      final mine = p.offerVariants
+          .where((offer) => offer.variantId == variant.id)
+          .firstOrNull;
+      _variants.add(
+        _VariantRow()
+          ..name.text = variant.name
+          ..price.text = mine?.price.raw ?? ''
+          ..stock.text = (mine?.stock ?? 0).toString()
+          ..sku.text = mine?.sku ?? '',
       );
-      return;
     }
+  }
+
+  @override
+  void dispose() {
+    for (final c in [
+      _title,
+      _description,
+      _price,
+      _comparePrice,
+      _stock,
+      _sku,
+      _handlingDays,
+      _minOrderQty,
+    ]) {
+      c.dispose();
+    }
+    for (final v in _variants) {
+      v.dispose();
+    }
+    super.dispose();
+  }
+
+  // ── AI helpers ───────────────────────────────────────────────────────────
+
+  /// The AI helpers want a category *name*, not the id the server wants.
+  String get _categoryName {
+    final id = _categoryId;
+    if (id == null) return '';
+    return ref.read(categoryByIdProvider(id))?.name ??
+        widget.product?.category.nameAr ??
+        '';
+  }
+
+  Future<void> _generateDescription() async {
+    if (!_hasTitleAndCategory) return;
     final output = await ref
         .read(aiAssistantActionsProvider)
         .generateDescription(
-          title: title,
-          category: category,
-          productId: widget.product?.id,
-          attributes: _variants
-              .map((variant) => variant.name.text.trim())
-              .where((value) => value.isNotEmpty)
-              .toList(),
+          title: _title.text.trim(),
+          category: _categoryName,
+          productId: widget.product?.productId,
+          attributes: _variantNames,
         );
     final description = output['description']?.toString();
     if (description == null || description.isEmpty) return;
@@ -80,74 +180,65 @@ class _ProductFormScreenState extends ConsumerState<ProductFormScreen> {
   }
 
   Future<void> _generateTags() async {
-    final title = _title.text.trim();
-    final category = _category.text.trim();
-    if (title.isEmpty || category.isEmpty) {
-      DsSnackbar.show(
-        context,
-        message: context.l10n.formTitleCategoryFirst,
-        type: DsSnackbarType.warning,
-      );
-      return;
-    }
+    if (!_hasTitleAndCategory) return;
     final tags = await ref
         .read(aiAssistantActionsProvider)
         .generateTags(
-          title: title,
-          category: category,
-          productId: widget.product?.id,
+          title: _title.text.trim(),
+          category: _categoryName,
+          productId: widget.product?.productId,
           description: _description.text,
         );
     if (!mounted) return;
     DsSnackbar.show(
       context,
-      message: tags.isEmpty
-          ? context.l10n.formNoTags
-          : tags.join('\u060C '),
+      message: tags.isEmpty ? context.l10n.formNoTags : tags.join('، '),
       type: tags.isEmpty ? DsSnackbarType.warning : DsSnackbarType.success,
     );
   }
 
-  @override
-  void initState() {
-    super.initState();
-    final p = widget.product;
-    if (p != null) {
-      _title.text = p.title;
-      _description.text = p.description;
-      _category.text = p.category.slug;
-      // The raw decimal string, not a formatted figure — this feeds an input
-      // that is posted straight back to the server.
-      _price.text = p.price.raw;
-      _oldPrice.text = p.compareAtPrice?.raw ?? '';
-      _stock.text = p.stock.toString();
-      _status = p.status;
-      _isFeatured = p.isFeatured;
-      _showInFeed = p.showInFeed;
-      _mediaUrls = [for (final m in p.media) m.url];
-    }
+  bool get _hasTitleAndCategory {
+    if (_title.text.trim().isNotEmpty && _categoryId != null) return true;
+    DsSnackbar.show(
+      context,
+      message: context.l10n.formTitleCategoryFirst,
+      type: DsSnackbarType.warning,
+    );
+    return false;
   }
 
-  @override
-  void dispose() {
-    for (final c in [
-      _title,
-      _description,
-      _category,
-      _price,
-      _oldPrice,
-      _stock,
-    ]) {
-      c.dispose();
-    }
-    for (final v in _variants) {
-      v.dispose();
-    }
-    super.dispose();
-  }
+  List<String> get _variantNames => [
+    for (final v in _variants)
+      if (v.name.text.trim().isNotEmpty) v.name.text.trim(),
+  ];
+
+  // ── Saving ───────────────────────────────────────────────────────────────
 
   Future<void> _submit() async {
-    if (!_formKey.currentState!.validate()) return;
+    final categoryMissing = _categoryId == null;
+    setState(() {
+      _categoryError = categoryMissing
+          ? context.l10n.formCategoryRequired
+          : null;
+      _showAttributeErrors = true;
+    });
+    if (!_formKey.currentState!.validate() || categoryMissing) return;
+
+    // The same check the endpoint makes, made here so she is told which field
+    // is missing rather than handed `This category requires: material` from a
+    // server that does not speak her language.
+    final schema = switch (ref.read(categoryAttributesProvider(_categoryId!))) {
+      AsyncData(:final value) => value,
+      _ => null,
+    };
+    if (schema != null && schema.missingFrom(_attributes).isNotEmpty) {
+      DsSnackbar.show(
+        context,
+        message: context.l10n.formCategoryNeedsDetails,
+        type: DsSnackbarType.warning,
+      );
+      return;
+    }
 
     // Refuse rather than silently publish a product missing the photographs
     // she is watching upload. The draft would be saved without them and she
@@ -161,60 +252,68 @@ class _ProductFormScreenState extends ConsumerState<ProductFormScreen> {
       return;
     }
 
-    final media = [for (final url in _mediaUrls) MediaDraft(url)];
-
-    final variants = _variants
-        .where((v) => v.name.text.trim().isNotEmpty)
-        .map(
-          (v) => VariantDraft(
-            name: v.name.text.trim(),
-            sku: v.sku.text.trim().isEmpty ? null : v.sku.text.trim(),
-            price: double.tryParse(v.price.text.trim()),
-            stock: int.tryParse(v.stock.text.trim()) ?? 0,
-          ),
-        )
-        .toList();
-
     final draft = ProductDraft(
       title: _title.text.trim(),
       description: _description.text.trim(),
-      category: _category.text.trim(),
-      price: double.parse(_price.text.trim()),
-      oldPrice: double.tryParse(_oldPrice.text.trim()),
+      categoryId: _categoryId!,
+      currency: _currency,
+      price: _price.text.trim(),
+      compareAtPrice: _comparePrice.text.trim().isEmpty
+          ? null
+          : _comparePrice.text.trim(),
       stock: int.tryParse(_stock.text.trim()) ?? 0,
+      sku: _sku.text.trim().isEmpty ? null : _sku.text.trim(),
+      handlingDays: int.tryParse(_handlingDays.text.trim()) ?? 1,
+      minOrderQty: int.tryParse(_minOrderQty.text.trim()) ?? 1,
+      acceptsReturns: _acceptsReturns,
+      isMadeToOrder: _isMadeToOrder,
       status: _status,
-      isFeatured: _isFeatured,
-      showInFeed: _showInFeed,
-      media: media,
-      variants: variants,
+      attributes: {
+        for (final entry in _attributes.entries)
+          if (entry.value.trim().isNotEmpty) entry.key: entry.value.trim(),
+      },
+      media: [for (final url in _mediaUrls) MediaDraft(url)],
+      variants: [
+        for (final v in _variants)
+          if (v.name.text.trim().isNotEmpty)
+            VariantDraft(
+              name: v.name.text.trim(),
+              sku: v.sku.text.trim().isEmpty ? null : v.sku.text.trim(),
+              price: v.price.text.trim().isEmpty ? null : v.price.text.trim(),
+              stock: int.tryParse(v.stock.text.trim()) ?? 0,
+            ),
+      ],
     );
 
     final saved = await ref
         .read(productFormNotifierProvider.notifier)
-        .submit(id: widget.product?.id, draft: draft);
+        .submit(listing: widget.product, draft: draft);
 
     if (!mounted) return;
-    if (saved != null) {
-      ref.read(myProductsNotifierProvider.notifier).refresh();
-      DsSnackbar.show(
-        context,
-        message: _isEditing
-            ? context.l10n.formProductUpdated
-            : context.l10n.formProductCreated,
-        type: DsSnackbarType.success,
-      );
-      context.pop();
-    } else {
+    if (saved == null) {
       final error = ref.read(productFormNotifierProvider).error;
       if (error != null) {
         DsSnackbar.show(context, message: error, type: DsSnackbarType.error);
       }
+      return;
     }
+
+    ref.read(myProductsNotifierProvider.notifier).upsert(saved);
+    DsSnackbar.show(
+      context,
+      message: _isEditing
+          ? context.l10n.formProductUpdated
+          : context.l10n.formProductCreated,
+      type: DsSnackbarType.success,
+    );
+    context.pop();
   }
+
+  // ── Build ────────────────────────────────────────────────────────────────
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.dsColors;
+    final l10n = context.l10n;
     final isSubmitting = ref.watch(
       productFormNotifierProvider.select((s) => s.isSubmitting),
     );
@@ -226,9 +325,7 @@ class _ProductFormScreenState extends ConsumerState<ProductFormScreen> {
       backgroundColor: context.atelier.background,
       slivers: [
         PremiumAppBar(
-          title: _isEditing
-              ? context.l10n.formEditProduct
-              : context.l10n.formNewProduct,
+          title: _isEditing ? l10n.formEditProduct : l10n.formNewProduct,
           showBack: true,
         ),
         SliverPadding(
@@ -244,57 +341,105 @@ class _ProductFormScreenState extends ConsumerState<ProductFormScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
+                  if (!_canEditIdentity)
+                    _Notice(
+                      icon: Icons.groups_rounded,
+                      message: l10n.formSharedProductLocked,
+                    ),
+                  if (!_isEditing)
+                    _Notice(
+                      icon: Icons.verified_outlined,
+                      message: l10n.formNewListingReview,
+                    ),
+
+                  _SectionHeader(l10n.formIdentitySection),
                   DsInputField(
                     controller: _title,
-                    label: context.l10n.formTitle,
+                    label: l10n.formTitle,
+                    enabled: _canEditIdentity,
                     validator: (v) => (v == null || v.trim().length < 2)
-                        ? context.l10n.formTitleRequired
+                        ? l10n.formTitleRequired
                         : null,
                   ),
                   DsInputField(
                     controller: _description,
-                    label: context.l10n.formDescription,
+                    label: l10n.formDescription,
                     maxLines: 4,
+                    enabled: _canEditIdentity,
                     validator: (v) => (v == null || v.trim().isEmpty)
-                        ? context.l10n.formDescriptionRequired
+                        ? l10n.formDescriptionRequired
                         : null,
                   ),
-                  DsInputField(
-                    controller: _category,
-                    label: context.l10n.formCategory,
-                    validator: (v) => (v == null || v.trim().isEmpty)
-                        ? context.l10n.formCategoryRequired
-                        : null,
+                  const SizedBox(height: DsSpacing.sm),
+                  CategoryPickerField(
+                    selectedId: _categoryId,
+                    enabled: _canEditIdentity,
+                    errorText: _categoryError,
+                    onSelected: (node) => setState(() {
+                      // A different shelf governs different extra fields, so
+                      // the answers to the old one's do not carry over.
+                      if (node.id != _categoryId) _attributes.clear();
+                      _categoryId = node.id;
+                      _categoryError = null;
+                    }),
                   ),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Wrap(
-                      spacing: DsSpacing.sm,
-                      children: [
-                        TextButton.icon(
-                          onPressed: _generateDescription,
-                          icon: const Icon(Icons.auto_awesome_rounded),
-                          label: Text(context.l10n.formAiDescription),
-                        ),
-                        TextButton.icon(
-                          onPressed: _generateTags,
-                          icon: const Icon(Icons.sell_outlined),
-                          label: Text(context.l10n.formAiTags),
-                        ),
-                      ],
+                  CategoryAttributeFields(
+                    categoryId: _categoryId,
+                    values: _attributes,
+                    enabled: _canEditIdentity,
+                    showErrors: _showAttributeErrors,
+                    onChanged: (key, value) => setState(() {
+                      _attributes[key] = value;
+                    }),
+                  ),
+                  if (_canEditIdentity)
+                    Align(
+                      alignment: AlignmentDirectional.centerStart,
+                      child: Wrap(
+                        spacing: DsSpacing.sm,
+                        children: [
+                          TextButton.icon(
+                            onPressed: _generateDescription,
+                            icon: const Icon(Icons.auto_awesome_rounded),
+                            label: Text(l10n.formAiDescription),
+                          ),
+                          TextButton.icon(
+                            onPressed: _generateTags,
+                            icon: const Icon(Icons.sell_outlined),
+                            label: Text(l10n.formAiTags),
+                          ),
+                        ],
+                      ),
                     ),
+                  const SizedBox(height: DsSpacing.sm),
+                  DsMediaField(
+                    label: l10n.mediaProductGallery,
+                    helperText: l10n.mediaGalleryHint(_maxMedia),
+                    initialUrls: _mediaUrls,
+                    maxItems: _maxMedia,
+                    enabled: !isSubmitting && _canEditIdentity,
+                    onChanged: (urls) => _mediaUrls = urls,
+                    onUploadingChanged: (busy) =>
+                        setState(() => _mediaUploading = busy),
                   ),
+
+                  _SectionHeader(l10n.formPricingSection),
+                  _CurrencyChips(
+                    value: _currency,
+                    onChanged: (c) => setState(() => _currency = c),
+                  ),
+                  const SizedBox(height: DsSpacing.sm),
                   Row(
                     children: [
                       Expanded(
                         child: DsInputField(
                           controller: _price,
-                          label: context.l10n.formPrice,
+                          label: l10n.formPrice,
                           keyboardType: TextInputType.number,
                           validator: (v) {
                             final value = double.tryParse((v ?? '').trim());
-                            if (value == null || value < 0) {
-                              return context.l10n.formPriceInvalid;
+                            if (value == null || value <= 0) {
+                              return l10n.formPriceInvalid;
                             }
                             return null;
                           },
@@ -303,79 +448,119 @@ class _ProductFormScreenState extends ConsumerState<ProductFormScreen> {
                       const SizedBox(width: DsSpacing.md),
                       Expanded(
                         child: DsInputField(
-                          controller: _oldPrice,
-                          label: 'Old price (opt.)',
+                          controller: _comparePrice,
+                          label: l10n.formComparePrice,
+                          keyboardType: TextInputType.number,
+                          validator: (v) {
+                            final raw = (v ?? '').trim();
+                            if (raw.isEmpty) return null;
+                            final value = double.tryParse(raw);
+                            if (value == null || value <= 0) {
+                              return l10n.formPriceInvalid;
+                            }
+                            return null;
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: DsInputField(
+                          controller: _stock,
+                          label: l10n.formStock,
+                          keyboardType: TextInputType.number,
+                          validator: (v) {
+                            final value = int.tryParse((v ?? '').trim());
+                            if (value == null || value < 0) {
+                              return l10n.formStockInvalid;
+                            }
+                            return null;
+                          },
+                        ),
+                      ),
+                      const SizedBox(width: DsSpacing.md),
+                      Expanded(
+                        child: DsInputField(
+                          controller: _sku,
+                          label: l10n.formSku,
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  _SectionHeader(l10n.formListingTerms),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: DsInputField(
+                          controller: _handlingDays,
+                          label: l10n.formHandlingDays,
+                          keyboardType: TextInputType.number,
+                        ),
+                      ),
+                      const SizedBox(width: DsSpacing.md),
+                      Expanded(
+                        child: DsInputField(
+                          controller: _minOrderQty,
+                          label: l10n.formMinOrderQty,
                           keyboardType: TextInputType.number,
                         ),
                       ),
                     ],
                   ),
-                  DsInputField(
-                    controller: _stock,
-                    label: context.l10n.formStock,
-                    keyboardType: TextInputType.number,
-                    validator: (v) {
-                      final value = int.tryParse((v ?? '').trim());
-                      if (value == null || value < 0)
-                        return context.l10n.formStockInvalid;
-                      return null;
-                    },
+                  SwitchListTile(
+                    contentPadding: EdgeInsets.zero,
+                    title: Text(l10n.formAcceptsReturns),
+                    value: _acceptsReturns,
+                    onChanged: (v) => setState(() => _acceptsReturns = v),
                   ),
-                  const SizedBox(height: DsSpacing.md),
-                  _label(context, context.l10n.formStatus),
-                  const SizedBox(height: DsSpacing.xs),
+                  SwitchListTile(
+                    contentPadding: EdgeInsets.zero,
+                    title: Text(l10n.formMadeToOrder),
+                    value: _isMadeToOrder,
+                    onChanged: (v) => setState(() => _isMadeToOrder = v),
+                  ),
+
+                  _SectionHeader(l10n.formStatus),
                   Wrap(
                     spacing: DsSpacing.sm,
                     children: [
-                      for (final s in ProductStatus.values)
+                      for (final s in _selectableStatuses)
                         ChoiceChip(
                           label: Text(s.label),
                           selected: _status == s,
-                          selectedColor: colors.primary.withValues(alpha: 0.16),
+                          selectedColor: context.dsColors.primary.withValues(
+                            alpha: 0.16,
+                          ),
                           onSelected: (_) => setState(() => _status = s),
                         ),
                     ],
                   ),
-                  SwitchListTile(
-                    contentPadding: EdgeInsets.zero,
-                    title: Text(context.l10n.formFeatured),
-                    value: _isFeatured,
-                    onChanged: (v) => setState(() => _isFeatured = v),
+
+                  _SectionHeader(l10n.formVariantsTitle),
+                  Text(
+                    l10n.formVariantsHint,
+                    style: context.dsText.caption.tint(context.atelier.muted),
                   ),
-                  SwitchListTile(
-                    contentPadding: EdgeInsets.zero,
-                    title: Text(context.l10n.formShowInFeed),
-                    value: _showInFeed,
-                    onChanged: (v) => setState(() => _showInFeed = v),
-                  ),
-                  const SizedBox(height: DsSpacing.md),
-                  DsMediaField(
-                    label: context.l10n.mediaProductGallery,
-                    helperText: context.l10n.mediaGalleryHint(_maxMedia),
-                    initialUrls: _mediaUrls,
-                    maxItems: _maxMedia,
-                    enabled: !isSubmitting,
-                    onChanged: (urls) => _mediaUrls = urls,
-                    onUploadingChanged: (busy) =>
-                        setState(() => _mediaUploading = busy),
-                  ),
-                  if (!_isEditing) ...[
-                    const SizedBox(height: DsSpacing.md),
-                    _label(context, 'Variants (optional)'),
-                    const SizedBox(height: DsSpacing.xs),
-                    ..._buildVariantRows(),
-                    TextButton.icon(
+                  const SizedBox(height: DsSpacing.sm),
+                  ..._buildVariantRows(),
+                  Align(
+                    alignment: AlignmentDirectional.centerStart,
+                    child: TextButton.icon(
                       onPressed: () =>
                           setState(() => _variants.add(_VariantRow())),
                       icon: const Icon(Icons.tune),
-                      label: Text(context.l10n.formAddVariant),
+                      label: Text(l10n.formAddVariant),
                     ),
-                  ],
+                  ),
+
                   const SizedBox(height: DsSpacing.lg),
                   PrimaryButton(
                     label: _isEditing
-                        ? context.l10n.saveChanges
-                        : context.l10n.formPublishProduct,
+                        ? l10n.saveChanges
+                        : l10n.formPublishProduct,
                     isLoading: isSubmitting,
                     onPressed: isSubmitting ? null : _submit,
                   ),
@@ -389,17 +574,31 @@ class _ProductFormScreenState extends ConsumerState<ProductFormScreen> {
   }
 
   List<Widget> _buildVariantRows() {
+    final l10n = context.l10n;
     return [
       for (var i = 0; i < _variants.length; i++)
         Padding(
           padding: const EdgeInsets.only(bottom: DsSpacing.sm),
           child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Expanded(
+                flex: 4,
+                child: DsInputField(
+                  controller: _variants[i].name,
+                  hint: l10n.formVariantName,
+                  // Renaming an option would orphan this seller's price and
+                  // stock for it, which are keyed by the canonical variant.
+                  enabled: _canEditIdentity,
+                ),
+              ),
+              const SizedBox(width: DsSpacing.sm),
               Expanded(
                 flex: 3,
                 child: DsInputField(
-                  controller: _variants[i].name,
-                  hint: context.l10n.formTitle,
+                  controller: _variants[i].price,
+                  hint: l10n.formVariantPrice,
+                  keyboardType: TextInputType.number,
                 ),
               ),
               const SizedBox(width: DsSpacing.sm),
@@ -407,32 +606,105 @@ class _ProductFormScreenState extends ConsumerState<ProductFormScreen> {
                 flex: 2,
                 child: DsInputField(
                   controller: _variants[i].stock,
-                  hint: context.l10n.formStock,
+                  hint: l10n.formStock,
                   keyboardType: TextInputType.number,
                 ),
               ),
               IconButton(
                 icon: const Icon(Icons.remove_circle_outline),
-                onPressed: () =>
-                    setState(() => _variants.removeAt(i).dispose()),
+                onPressed: _canEditIdentity
+                    ? () => setState(() => _variants.removeAt(i).dispose())
+                    : null,
               ),
             ],
           ),
         ),
     ];
   }
+}
 
-  Widget _label(BuildContext context, String text) => Align(
-    alignment: AlignmentDirectional.centerStart,
-    child: Text(
-      text,
-      style: TextStyle(
-        fontFamily: DsTypography.fontFamily,
-        fontWeight: DsTypography.semiBold,
-        color: context.dsColors.onSurfaceVariant,
+// ── Internal components ─────────────────────────────────────────────────────
+
+class _SectionHeader extends StatelessWidget {
+  const _SectionHeader(this.label);
+
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(top: DsSpacing.lg, bottom: DsSpacing.xs),
+      child: Align(
+        alignment: AlignmentDirectional.centerStart,
+        child: Text(
+          label.toUpperCase(),
+          style: DsTypography.overline(context.atelier.muted),
+        ),
       ),
-    ),
-  );
+    );
+  }
+}
+
+/// A quiet explanation of something the form will not let her do, placed where
+/// she meets the restriction rather than behind an error she triggers.
+class _Notice extends StatelessWidget {
+  const _Notice({required this.icon, required this.message});
+
+  final IconData icon;
+  final String message;
+
+  @override
+  Widget build(BuildContext context) {
+    final palette = context.atelier;
+    return Container(
+      margin: const EdgeInsets.only(bottom: DsSpacing.sm),
+      padding: const EdgeInsets.all(DsSpacing.md),
+      decoration: BoxDecoration(
+        color: palette.surface,
+        borderRadius: DsRadius.borderMd,
+        border: Border.all(color: palette.line),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(icon, size: 18, color: context.dsColors.primary),
+          const SizedBox(width: DsSpacing.sm),
+          Expanded(
+            child: Text(
+              message,
+              style: context.dsText.labelMedium.tint(palette.muted).copyWith(height: 1.5),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _CurrencyChips extends StatelessWidget {
+  const _CurrencyChips({required this.value, required this.onChanged});
+
+  final Currency value;
+  final ValueChanged<Currency> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      alignment: AlignmentDirectional.centerStart,
+      child: Wrap(
+        spacing: DsSpacing.sm,
+        children: [
+          for (final currency in Currency.values)
+            ChoiceChip(
+              label: Text(currency.symbol),
+              selected: value == currency,
+              selectedColor: context.dsColors.primary.withValues(alpha: 0.16),
+              onSelected: (_) => onChanged(currency),
+            ),
+        ],
+      ),
+    );
+  }
 }
 
 class _VariantRow {

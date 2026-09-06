@@ -6,6 +6,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:reem/core/design_system/components/sheets/ds_bottom_sheet.dart';
 import 'package:reem/core/design_system/foundation/theme/extensions/color_extension.dart';
+import 'package:reem/core/design_system/foundation/theme/extensions/typography_extension.dart';
+import 'package:reem/core/design_system/foundation/tokens/ds_colors.dart';
 import 'package:reem/core/design_system/foundation/tokens/ds_radius.dart';
 import 'package:reem/core/design_system/foundation/tokens/ds_spacing.dart';
 import 'package:reem/core/design_system/foundation/tokens/ds_typography.dart';
@@ -494,14 +496,14 @@ class _DsAvatarPickerState extends ConsumerState<DsAvatarPicker> {
                         _image(c.surfaceVariant, c.onSurfaceVariant),
                         if (_busy)
                           ColoredBox(
-                            color: Colors.black.withValues(alpha: 0.45),
+                            color: DsColors.black.withValues(alpha: 0.45),
                             child: const Center(
                               child: SizedBox(
                                 width: 26,
                                 height: 26,
                                 child: CircularProgressIndicator(
                                   strokeWidth: 3,
-                                  color: Colors.white,
+                                  color: DsColors.onMedia,
                                 ),
                               ),
                             ),
@@ -822,7 +824,7 @@ class _MediaTile extends StatelessWidget {
 
   Widget _uploadingScrim(BuildContext context) {
     return ColoredBox(
-      color: Colors.black.withValues(alpha: 0.45),
+      color: DsColors.black.withValues(alpha: 0.45),
       child: Center(
         child: SizedBox(
           width: 32,
@@ -832,8 +834,8 @@ class _MediaTile extends StatelessWidget {
             // looks stalled, which is the one thing it is not.
             value: slot.progress > 0 ? slot.progress : null,
             strokeWidth: 3,
-            color: Colors.white,
-            backgroundColor: Colors.white24,
+            color: DsColors.onMedia,
+            backgroundColor: DsColors.onMediaFaint,
           ),
         ),
       ),
@@ -850,7 +852,7 @@ class _MediaTile extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Icon(Icons.refresh_rounded, color: Colors.white, size: 22),
+              const Icon(Icons.refresh_rounded, color: DsColors.onMedia, size: 22),
               const SizedBox(height: DsSpacing.xxxs),
               Padding(
                 padding: const EdgeInsets.symmetric(
@@ -861,11 +863,7 @@ class _MediaTile extends StatelessWidget {
                   textAlign: TextAlign.center,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: DsTypography.labelSmall,
-                    fontWeight: DsTypography.semiBold,
-                  ),
+                  style: context.dsText.caption.semibold.tint(DsColors.onMedia),
                 ),
               ),
             ],
@@ -1040,7 +1038,7 @@ class _Badge extends StatelessWidget {
   Widget build(BuildContext context) {
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: Colors.black.withValues(alpha: 0.6),
+        color: DsColors.black.withValues(alpha: 0.6),
         borderRadius: BorderRadius.circular(DsRadius.full),
       ),
       child: Padding(
@@ -1050,11 +1048,7 @@ class _Badge extends StatelessWidget {
         ),
         child: Text(
           label,
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: DsTypography.labelSmall,
-            fontWeight: DsTypography.semiBold,
-          ),
+          style: context.dsText.caption.semibold.tint(DsColors.onMedia),
         ),
       ),
     );
@@ -1077,14 +1071,14 @@ class _RoundAction extends StatelessWidget {
     return Tooltip(
       message: tooltip,
       child: Material(
-        color: Colors.black.withValues(alpha: 0.55),
+        color: DsColors.black.withValues(alpha: 0.55),
         shape: const CircleBorder(),
         child: InkWell(
           onTap: onTap,
           customBorder: const CircleBorder(),
           child: Padding(
             padding: const EdgeInsets.all(DsSpacing.xxxs),
-            child: Icon(icon, color: Colors.white, size: 16),
+            child: Icon(icon, color: DsColors.onMedia, size: 16),
           ),
         ),
       ),

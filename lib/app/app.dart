@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reem/app/bootstrap.dart';
-import 'package:reem/core/design_system/foundation/theme/app_theme.dart';
+import 'package:reem/core/design_system/design_system.dart';
 import 'package:reem/core/localization/app_localizations.dart';
 import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/router/app_router_provider.dart';
@@ -53,6 +53,17 @@ class MyApp extends ConsumerWidget {
         localizationsDelegates: L10nSetup.localizationsDelegates,
         supportedLocales: L10nSetup.supportedLocales,
         localeResolutionCallback: L10nSetup.localeResolutionCallback,
+        // One banner above every route, pushed pages included. It belongs
+        // here rather than in a page scaffold because losing the connection
+        // is a fact about the app, not about the screen she happens to be on
+        // — and because the response cache will quietly serve her the last
+        // saved copy, which she is owed a word about.
+        builder: (context, child) => Column(
+          children: [
+            const OfflineBanner(),
+            if (child != null) Expanded(child: child),
+          ],
+        ),
       ),
     );
   }

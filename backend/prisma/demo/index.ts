@@ -36,6 +36,7 @@ import {
   seedMessageAttachments,
 } from './auth-trail';
 import { reconcileCounters } from './reconcile';
+import { seedTrendActivity } from './trend-activity';
 
 /** Community accounts created so engagement counters are real, not invented. */
 const COMMUNITY_SIZE = 40;
@@ -143,7 +144,7 @@ async function bootstrap(prisma: PrismaClient): Promise<DemoContext> {
     customers,
     leafBySlug: new Map(leaves.map((leaf) => [leaf.slug, leaf.id])),
     brandIds: brands.map((brand) => brand.id),
-    fxRate: fxRate?.rate ?? new Prisma.Decimal(13_000),
+    fxRate: fxRate?.rate ?? new Prisma.Decimal(130),
     fxRateId: fxRate?.id ?? null,
     products: [],
   };
@@ -216,6 +217,13 @@ export async function seedDemo(prisma: PrismaClient): Promise<void> {
   await seedBackOffice(ctx);
   await seedNotificationOps(ctx);
   log('guest journeys, devices, auth trail, analytics, back-office');
+
+  // Last of the content passes, because it browses the catalogue the
+  // earlier ones built. The Trend Engine reads these rows and nothing else
+  // produces them: without this pass both trend dashboards are correct and
+  // empty, which is indistinguishable from broken.
+  const events = await seedTrendActivity(ctx);
+  log(`${events} browsing signals for the trend engine`);
 
   await reconcileCounters(prisma);
   log('counters reconciled against real rows');

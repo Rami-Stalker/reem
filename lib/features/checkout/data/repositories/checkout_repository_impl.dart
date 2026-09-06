@@ -39,13 +39,23 @@ class CheckoutRepositoryImpl
     String? couponCode,
     String? deliveryInstructions,
     String? notes,
+    bool privacyMask = false,
   }) =>
+      // `addressId` and `saveAddress` are forwarded, not swallowed. They used
+      // to stop here: the parameters were accepted and then simply left out of
+      // the call, so choosing a saved address posted `{payment_method}` alone
+      // and the server answered "choose a saved address or enter a delivery
+      // address" for an address the screen was already showing as chosen.
+      // Every order placed from the address book failed.
       guard(() => remote.placeOrder(
             shipping: shipping,
+            addressId: addressId,
+            saveAddress: saveAddress,
             paymentMethod: paymentMethod,
             couponCode: couponCode,
             deliveryInstructions: deliveryInstructions,
             notes: notes,
+            privacyMask: privacyMask,
           ));
 
   @override
@@ -53,8 +63,31 @@ class CheckoutRepositoryImpl
       guard(() => remote.verifyPayment(paymentId));
 
   @override
-  Future<Result<List<OrderSummary>>> getOrders({int page = 1, int limit = 20}) =>
-      guard<List<OrderSummary>>(() => remote.getOrders(page: page, limit: limit));
+  Future<Result<PaymentAttempt>> retryPayment(String paymentId) =>
+      guard(() => remote.retryPayment(paymentId));
+
+  @override
+  Future<Result<OrderPayment>> submitPaymentReference(
+    String paymentId,
+    String reference,
+  ) => guard(() => remote.submitPaymentReference(paymentId, reference));
+
+  @override
+  Future<Result<OrderDetail>> confirmCodOrder(String orderId, String code) =>
+      guard(() => remote.confirmCodOrder(orderId, code));
+
+  @override
+  Future<Result<CodAssurance>> resendCodConfirmation(String orderId) =>
+      guard(() => remote.resendCodConfirmation(orderId));
+
+  @override
+  Future<Result<List<OrderSummary>>> getOrders({
+    int page = 1,
+    int limit = 20,
+    String? bucket,
+  }) => guard<List<OrderSummary>>(
+    () => remote.getOrders(page: page, limit: limit, bucket: bucket),
+  );
 
   @override
   Future<Result<OrderDetail>> getOrder(String id) =>

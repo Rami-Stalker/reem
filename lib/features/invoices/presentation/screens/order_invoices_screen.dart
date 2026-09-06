@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart' hide TextDirection;
 
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/errors/failure.dart';
 import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/core/utils/arabic_numerals.dart';
@@ -31,54 +32,55 @@ class OrderInvoicesScreen extends ConsumerWidget {
     return ReemScrollPage(
       onRefresh: () async => ref.invalidate(orderInvoicesProvider(orderId)),
       slivers: [
-        SliverAppBar(
-          pinned: true,
-          elevation: 0,
-          backgroundColor: Colors.transparent,
-          surfaceTintColor: Colors.transparent,
-          title: Text(l10n.invoices),
-        ),
+        PremiumAppBar(title: l10n.invoices, showBack: true),
         async.when(
           loading: () => const SliverToBoxAdapter(child: _Skeleton()),
-          // An order that has not shipped yet cannot be invoiced (Q39). That
-          // is the ordinary case, not a failure, so it reads as an explanation
-          // rather than an error with a retry button.
-          error: (_, _) => SliverToBoxAdapter(
+          // A failure is a failure now. It used to render the same «لا فواتير
+          // بعد» as an order that is simply too early to invoice, so a request
+          // that never reached the server looked like a rule about shipping —
+          // and the screen offered nothing to try again with.
+          error: (error, _) => SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: DsSpacing.xxl),
-              child: DsEmptyState(
-                icon: Icons.receipt_long_outlined,
-                title: l10n.invoiceEmptyTitle,
-                message: l10n.invoiceEmptyBody,
+              child: DsErrorState(
+                message: error is Failure ? error.displayMessage : null,
+                onRetry: () => ref.invalidate(orderInvoicesProvider(orderId)),
               ),
             ),
           ),
-          data: (rows) => rows.isEmpty
-              ? SliverToBoxAdapter(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: DsSpacing.xxl,
-                    ),
-                    child: DsEmptyState(
-                      icon: Icons.receipt_long_outlined,
-                      title: l10n.invoiceEmptyTitle,
-                      message: l10n.invoiceEmptyBody,
-                    ),
-                  ),
-                )
-              : SliverList.separated(
-                  itemCount: rows.length,
-                  separatorBuilder: (_, _) =>
-                      const SizedBox(height: DsSpacing.xs),
-                  itemBuilder: (context, index) => Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: DsSpacing.lg,
-                    ),
-                    child: _InvoiceRow(summary: rows[index]),
-                  ),
+          data: (view) => switch (view) {
+            // Q39/Q51 — an order she can still change has nothing to invoice.
+            InvoicesNotYet() => SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: DsSpacing.xxl),
+                child: DsEmptyState(
+                  icon: Icons.schedule_rounded,
+                  title: l10n.invoiceEmptyTitle,
+                  message: l10n.invoiceEmptyBody,
                 ),
+              ),
+            ),
+            InvoicesIssued(:final rows) when rows.isEmpty => SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: DsSpacing.xxl),
+                child: DsEmptyState(
+                  icon: Icons.receipt_long_outlined,
+                  title: l10n.invoiceEmptyTitle,
+                  message: l10n.invoiceEmptyBody,
+                ),
+              ),
+            ),
+            InvoicesIssued(:final rows) => SliverList.separated(
+              itemCount: rows.length,
+              separatorBuilder: (_, _) => const SizedBox(height: DsSpacing.xs),
+              itemBuilder: (context, index) => Padding(
+                padding: const EdgeInsets.symmetric(horizontal: DsSpacing.lg),
+                child: _InvoiceRow(summary: rows[index]),
+              ),
+            ),
+          },
         ),
-        const SliverToBoxAdapter(child: SizedBox(height: 120)),
+        DsGaps.sliverBottomSafe,
       ],
     );
   }
@@ -132,43 +134,27 @@ class _InvoiceRow extends StatelessWidget {
                     summary.kind == InvoiceKind.sellerOrder
                         ? l10n.invoiceSellerCopy
                         : l10n.invoiceCustomerCopy,
-                    style: TextStyle(
-                      fontSize: DsTypography.bodyMedium,
-                      fontWeight: DsTypography.semiBold,
-                      color: colors.onSurface,
-                    ),
+                    style: context.dsText.body.semibold.tint(colors.onSurface),
                   ),
                   Directionality(
                     textDirection: TextDirection.ltr,
                     child: Text(
                       summary.number,
-                      style: TextStyle(
-                        fontFamily: DsTypography.fontFamily,
-                        fontSize: DsTypography.labelSmall,
-                        color: colors.onSurfaceVariant,
-                      ),
+                      style: context.dsText.caption.tint(colors.onSurfaceVariant),
                     ),
                   ),
                   Text(
                     toWesternDigits(
                       DateFormat.yMMMd(locale).format(summary.issuedAt),
                     ),
-                    style: TextStyle(
-                      fontSize: DsTypography.labelSmall,
-                      color: colors.onSurfaceVariant,
-                    ),
+                    style: context.dsText.caption.tint(colors.onSurfaceVariant),
                   ),
                 ],
               ),
             ),
             Text(
               summary.grandTotal.format(),
-              style: TextStyle(
-                fontFamily: DsTypography.fontFamily,
-                fontSize: DsTypography.bodyMedium,
-                fontWeight: DsTypography.bold,
-                color: colors.price,
-              ),
+              style: context.dsText.body.bold.tint(colors.price),
             ),
             const SizedBox(width: DsSpacing.xxs),
             Icon(

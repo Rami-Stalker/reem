@@ -1,30 +1,27 @@
 import 'package:flutter/material.dart';
 
 import 'package:reem/core/design_system/foundation/theme/extensions/color_extension.dart';
+import 'package:reem/core/design_system/foundation/theme/extensions/typography_extension.dart';
+import 'package:reem/core/design_system/foundation/tokens/ds_colors.dart';
+import 'package:reem/core/design_system/foundation/tokens/ds_gaps.dart';
 import 'package:reem/core/design_system/foundation/tokens/ds_radius.dart';
+import 'package:reem/core/design_system/foundation/tokens/ds_sizes.dart';
 import 'package:reem/core/design_system/foundation/tokens/ds_spacing.dart';
-import 'package:reem/core/design_system/foundation/tokens/ds_typography.dart';
 import 'package:reem/core/design_system/patterns/admin_console.dart';
+import 'package:reem/core/design_system/patterns/customer_boutique.dart';
 import 'package:reem/core/design_system/patterns/seller_atelier.dart';
 
+/// Brand blends that are the same in both themes.
+///
+/// Everything that used to live here as a fixed swatch -- `ink`, `muted`,
+/// `pearl`, `ivory` and the rest -- moved to [CustomerBoutiquePalette], where
+/// it resolves against the live theme like the seller's and the operator's
+/// palettes always did. What is left is the handful of values that genuinely
+/// do not change with the mode.
 abstract final class CustomerExperience {
-  static const Color ink = Color(0xFF21161C);
-  static const Color muted = Color(0xFF7A6470);
-  static const Color blush = Color(0xFFE95C8F);
-  static const Color rose = Color(0xFFC6386F);
-  static const Color plum = Color(0xFF533447);
-  static const Color champagne = Color(0xFFEACB8D);
-  static const Color pearl = Color(0xFFFFFAFC);
-  static const Color ivory = Color(0xFFFFF6F0);
-  static const Color sage = Color(0xFF5D977B);
-
-  static const LinearGradient silkGradient = LinearGradient(
-    begin: Alignment.topLeft,
-    end: Alignment.bottomRight,
-    colors: [Color(0xFFFFFBFD), Color(0xFFFFEEF5), Color(0xFFFFF8EA)],
-    stops: [0, .48, 1],
-  );
-
+  /// Rose into champagne. Reads on both grounds, which is why it survived the
+  /// move as a constant; prefer `context.boutique.signatureGradient` in new
+  /// code so a future dark variant reaches every caller.
   static const LinearGradient signatureGradient = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
@@ -32,47 +29,20 @@ abstract final class CustomerExperience {
     stops: [0, .58, 1],
   );
 
-  static const List<BoxShadow> softShadow = [
-    BoxShadow(
-      color: Color(0x1FC6386F),
-      blurRadius: 30,
-      offset: Offset(0, 18),
-    ),
-    BoxShadow(
-      color: Color(0x12EACB8D),
-      blurRadius: 18,
-      offset: Offset(0, 8),
-    ),
-  ];
+  /// The light-mode silk wash. Kept for the two painters that need it as a
+  /// compile-time constant; page grounds should use [CustomerBackdrop].
+  static const LinearGradient silkGradient = LinearGradient(
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+    colors: [Color(0xFFFFFBFD), Color(0xFFFFEEF5), Color(0xFFFFF8EA)],
+    stops: [0, .48, 1],
+  );
 }
 
-// The seller's palette used to live here as a fixed slate-and-blue set. It is
-// now `SellerAtelierPalette` in `patterns/seller_atelier.dart`, resolved from
-// the live theme — the old constants could not survive dark mode and did not
-// belong to Reem.
-
-abstract final class AdminExperience {
-  static const Color nav = Color(0xFF0B1220);
-  static const Color navMuted = Color(0xFF94A3B8);
-  static const Color background = Color(0xFFF4F6F9);
-  static const Color surface = Color(0xFFFFFFFF);
-  static const Color surfaceAlt = Color(0xFFF8FAFC);
-  static const Color ink = Color(0xFF111827);
-  static const Color muted = Color(0xFF64748B);
-  static const Color line = Color(0xFFD8DEE8);
-  static const Color primary = Color(0xFF3156D4);
-  static const Color success = Color(0xFF047857);
-  static const Color warning = Color(0xFFB45309);
-  static const Color danger = Color(0xFFB91C1C);
-
-  static const List<BoxShadow> shadow = [
-    BoxShadow(
-      color: Color(0x0D0F172A),
-      blurRadius: 18,
-      offset: Offset(0, 8),
-    ),
-  ];
-}
+// The seller's palette is `SellerAtelierPalette` (`context.atelier`), the
+// operator's is `AdminConsolePalette` (`context.console`), and the buyer's is
+// `CustomerBoutiquePalette` (`context.boutique`). All three resolve from the
+// live theme; none of them are constants any more.
 
 /// The page ground under every buyer screen: a soft silk wash crossed by two
 /// ribbons.
@@ -89,21 +59,8 @@ class CustomerBackdrop extends StatelessWidget {
     final colors = context.dsColors;
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    final gradient = isDark
-        ? LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              colors.background,
-              colors.surfaceDim,
-              colors.background,
-            ],
-            stops: const [0, .52, 1],
-          )
-        : CustomerExperience.silkGradient;
-
     return DecoratedBox(
-      decoration: BoxDecoration(gradient: gradient),
+      decoration: BoxDecoration(gradient: context.boutique.groundGradient),
       child: CustomPaint(
         painter: _SilkBackdropPainter(
           wash: isDark
@@ -134,7 +91,7 @@ class CustomerPanel extends StatelessWidget {
   const CustomerPanel({
     super.key,
     required this.child,
-    this.padding = const EdgeInsets.all(20),
+    this.padding = DsSpacing.paddingLg,
     this.margin,
     this.onTap,
   });
@@ -158,7 +115,7 @@ class CustomerPanel extends StatelessWidget {
       padding: padding,
       decoration: BoxDecoration(
         color: colors.surfaceElevated,
-        borderRadius: DsRadius.borderXxxl,
+        borderRadius: DsRadius.borderCard,
         border: Border.all(color: colors.border.withValues(alpha: 0.6)),
         boxShadow: [
           BoxShadow(
@@ -175,7 +132,7 @@ class CustomerPanel extends StatelessWidget {
     return Material(
       color: Colors.transparent,
       child: InkWell(
-        borderRadius: DsRadius.borderXxxl,
+        borderRadius: DsRadius.borderCard,
         onTap: onTap,
         child: panel,
       ),
@@ -199,37 +156,38 @@ class CustomerPrimaryButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final palette = context.boutique;
     return DecoratedBox(
       decoration: BoxDecoration(
-        gradient: CustomerExperience.signatureGradient,
+        gradient: palette.signatureGradient,
         borderRadius: DsRadius.borderFull,
-        boxShadow: CustomerExperience.softShadow,
+        boxShadow: palette.shadow,
       ),
       child: ElevatedButton.icon(
         onPressed: isLoading ? null : onPressed,
         icon: isLoading
             ? const SizedBox(
-                width: 16,
-                height: 16,
+                width: DsSizes.iconXs,
+                height: DsSizes.iconXs,
                 child: CircularProgressIndicator(
                   strokeWidth: 2,
-                  color: Colors.white,
+                  color: DsColors.onMedia,
                 ),
               )
-            : Icon(icon ?? Icons.arrow_forward_rounded, size: 18),
+            : Icon(icon ?? Icons.arrow_forward_rounded, size: DsSizes.iconXs),
         label: Text(label),
         style: ElevatedButton.styleFrom(
           elevation: 0,
-          foregroundColor: Colors.white,
+          // The ground here is the rose-to-champagne signature in both
+          // themes, so the label stays white rather than following the
+          // scheme onPrimary, which inverts in dark mode.
+          foregroundColor: DsColors.onMedia,
           backgroundColor: Colors.transparent,
           disabledBackgroundColor: Colors.transparent,
           shadowColor: Colors.transparent,
-          minimumSize: const Size.fromHeight(52),
+          minimumSize: const Size.fromHeight(DsSizes.controlLg),
           shape: const StadiumBorder(),
-          textStyle: const TextStyle(
-            fontWeight: DsTypography.bold,
-            fontSize: DsTypography.labelLarge,
-          ),
+          textStyle: context.dsText.button,
         ),
       ),
     );
@@ -250,8 +208,9 @@ class CustomerSectionTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final text = context.dsText;
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: DsSpacing.lg),
+      padding: DsSpacing.screenHorizontal,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
@@ -262,29 +221,15 @@ class CustomerSectionTitle extends StatelessWidget {
                 if (eyebrow != null) ...[
                   Text(
                     eyebrow!,
-                    style: const TextStyle(
-                      color: CustomerExperience.rose,
-                      fontSize: DsTypography.labelMedium,
-                      fontWeight: DsTypography.bold,
-                    ),
+                    style: text.overline.tint(context.boutique.primary),
                   ),
-                  const SizedBox(height: 4),
+                  DsGaps.vXxs,
                 ],
-                Text(
-                  title,
-                  style: const TextStyle(
-                    color: CustomerExperience.ink,
-                    fontFamily: DsTypography.fontFamilyDisplay,
-                    fontFamilyFallback: DsTypography.displayFallback,
-                    fontSize: DsTypography.headlineSmall,
-                    fontWeight: DsTypography.bold,
-                    height: 1.14,
-                  ),
-                ),
+                Text(title, style: text.screenTitle),
               ],
             ),
           ),
-          if (trailing != null) trailing!,
+          ?trailing,
         ],
       ),
     );
@@ -295,7 +240,7 @@ class SellerPanel extends StatelessWidget {
   const SellerPanel({
     super.key,
     required this.child,
-    this.padding = const EdgeInsets.all(18),
+    this.padding = DsSpacing.paddingMd,
     this.onTap,
   });
 
@@ -348,7 +293,7 @@ class SellerStatusPill extends StatelessWidget {
   Widget build(BuildContext context) {
     final color = this.color ?? context.atelier.primary;
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      padding: DsSpacing.pillPadding,
       decoration: BoxDecoration(
         color: color.withValues(alpha: .1),
         borderRadius: DsRadius.borderFull,
@@ -358,17 +303,10 @@ class SellerStatusPill extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           if (icon != null) ...[
-            Icon(icon, size: 14, color: color),
-            const SizedBox(width: 5),
+            Icon(icon, size: DsSizes.iconXxs, color: color),
+            DsGaps.hXxs,
           ],
-          Text(
-            label,
-            style: TextStyle(
-              color: color,
-              fontSize: DsTypography.labelSmall,
-              fontWeight: DsTypography.bold,
-            ),
-          ),
+          Text(label, style: context.dsText.badge.tint(color)),
         ],
       ),
     );
@@ -379,7 +317,7 @@ class AdminPanel extends StatelessWidget {
   const AdminPanel({
     super.key,
     required this.child,
-    this.padding = const EdgeInsets.all(20),
+    this.padding = DsSpacing.paddingLg,
   });
 
   final Widget child;
@@ -418,20 +356,13 @@ class AdminMetricPill extends StatelessWidget {
   Widget build(BuildContext context) {
     final tint = color ?? context.console.primary;
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      padding: DsSpacing.pillPadding,
       decoration: BoxDecoration(
         color: tint.withValues(alpha: .08),
         borderRadius: DsRadius.borderSm,
         border: Border.all(color: tint.withValues(alpha: .18)),
       ),
-      child: Text(
-        label,
-        style: TextStyle(
-          color: tint,
-          fontSize: DsTypography.labelSmall,
-          fontWeight: DsTypography.bold,
-        ),
-      ),
+      child: Text(label, style: context.dsText.badge.tint(tint)),
     );
   }
 }

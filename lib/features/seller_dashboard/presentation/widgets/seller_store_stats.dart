@@ -15,7 +15,6 @@ class SellerStoreStats extends ConsumerWidget {
     final state = ref.watch(sellerDashboardNotifierProvider);
     final palette = context.atelier;
     final l10n = context.l10n;
-    final theme = Theme.of(context);
 
     if (state.isInitialLoading) {
       return Padding(
@@ -84,7 +83,7 @@ class SellerStoreStats extends ConsumerWidget {
                     size: 14,
                     color: context.dsColors.rating,
                   ),
-                  const SizedBox(width: 4),
+                  DsGaps.hXxs,
                   Flexible(
                     child: Text(
                       l10n.sellerRatingSummary(
@@ -93,7 +92,7 @@ class SellerStoreStats extends ConsumerWidget {
                       ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: theme.textTheme.bodySmall?.copyWith(
+                      style: context.dsText.cardSubtitle.copyWith(
                         fontWeight: DsTypography.semiBold,
                         color: palette.ink,
                       ),
@@ -105,13 +104,13 @@ class SellerStoreStats extends ConsumerWidget {
                     size: 12,
                     color: palette.muted,
                   ),
-                  const SizedBox(width: 4),
+                  DsGaps.hXxs,
                   Text(
                     l10n.sellerMemberSince('${store.memberSince.year}'),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: theme.textTheme.labelSmall
-                        ?.copyWith(color: palette.muted),
+                    style: context.dsText.caption
+                        .copyWith(color: palette.muted),
                   ),
                 ],
               ),
@@ -142,7 +141,6 @@ class _Stat extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final palette = context.atelier;
     return Expanded(
       child: Column(
@@ -165,22 +163,14 @@ class _Stat extends StatelessWidget {
             child: Text(
               value,
               maxLines: 1,
-              style: theme.textTheme.titleSmall?.copyWith(
-                fontWeight: DsTypography.bold,
-                fontSize: 13,
-                color: palette.ink,
-              ),
+              style: context.dsText.captionStrong.bold.tint(palette.ink),
             ),
           ),
           Text(
             label,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-              fontFamily: DsTypography.fontFamily,
-              fontSize: 10,
-              color: palette.muted,
-            ),
+            style: context.dsText.micro.tint(palette.muted),
           ),
         ],
       ),

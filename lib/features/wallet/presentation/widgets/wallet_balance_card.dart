@@ -33,7 +33,7 @@ class WalletBalanceCard extends StatelessWidget {
         decoration: BoxDecoration(
           gradient: CustomerExperience.signatureGradient,
           borderRadius: DsRadius.borderCard,
-          boxShadow: CustomerExperience.softShadow,
+          boxShadow: context.boutique.shadow,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -43,12 +43,7 @@ class WalletBalanceCard extends StatelessWidget {
                 Expanded(
                   child: Text(
                     l10n.walletBalance,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: DsTypography.labelMedium,
-                      fontWeight: DsTypography.bold,
-                      letterSpacing: 0.6,
-                    ),
+                    style: context.dsText.labelMedium.bold.tint(DsColors.onMedia).copyWith(letterSpacing: 0.6),
                   ),
                 ),
                 if (isRefreshing)
@@ -57,7 +52,7 @@ class WalletBalanceCard extends StatelessWidget {
                     height: 16,
                     child: CircularProgressIndicator(
                       strokeWidth: 2,
-                      color: Colors.white,
+                      color: DsColors.onMedia,
                     ),
                   ),
               ],
@@ -72,14 +67,7 @@ class WalletBalanceCard extends StatelessWidget {
               child: Text(
                 amount.format(),
                 maxLines: 1,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontFamily: DsTypography.fontFamilyDisplay,
-                  fontFamilyFallback: DsTypography.displayFallback,
-                  fontSize: 40,
-                  fontWeight: DsTypography.bold,
-                  height: 1.1,
-                ),
+                style: context.dsText.hero.tint(DsColors.onMedia).copyWith(height: 1.1),
               ),
             ),
             const SizedBox(height: DsSpacing.md),
@@ -91,17 +79,13 @@ class WalletBalanceCard extends StatelessWidget {
                 const Icon(
                   Icons.verified_user_outlined,
                   size: 15,
-                  color: Colors.white70,
+                  color: DsColors.onMediaMuted,
                 ),
                 const SizedBox(width: DsSpacing.xxs),
                 Flexible(
                   child: Text(
                     l10n.walletNotWithdrawable,
-                    style: const TextStyle(
-                      color: Colors.white70,
-                      fontSize: DsTypography.labelSmall,
-                      fontWeight: DsTypography.medium,
-                    ),
+                    style: context.dsText.caption.tint(DsColors.onMediaMuted),
                   ),
                 ),
               ],

@@ -40,6 +40,12 @@ export function serializeChatThread(
     type: chat.type.toLowerCase(),
     title,
     avatar_url: otherUser?.imageUrl ?? '',
+    // The person on the other side, named outright. The client needs an id to
+    // block or report them, and a name for the conversation header; deriving
+    // it from `participant_ids` would mean the client re-implementing the
+    // "whoever is not me" rule this function already applied.
+    peer_id: otherUser?.id ?? null,
+    peer_name: otherUser?.name ?? null,
     participant_ids: chat.participants.map((p) => p.userId),
     buyer_id: chat.buyerId,
     seller_id: chat.sellerId,

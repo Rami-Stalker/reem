@@ -30,20 +30,13 @@ class AdminPageHeader extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: TextStyle(
-                    fontSize: DsTypography.headlineMedium,
-                    fontWeight: DsTypography.bold,
-                  color: palette.ink,
-                ),
+                  style: context.dsText.pageTitle.bold.tint(palette.ink),
                 ),
                 if (subtitle != null) ...[
                   const SizedBox(height: DsSpacing.xs),
                   Text(
                     subtitle!,
-                    style: TextStyle(
-                      fontSize: DsTypography.bodyMedium,
-                      color: palette.muted,
-                    ),
+                    style: context.dsText.body.tint(palette.muted),
                   ),
                 ],
               ],

@@ -1,9 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:reem/core/design_system/design_system.dart';
 import 'package:reem/core/localization/l10n_extension.dart';
+import 'package:reem/core/shared/services/share_service.dart';
 import 'package:reem/features/profile/domain/entities/referral.dart';
 import 'package:reem/features/profile/presentation/providers/profile_overview_provider.dart';
 
@@ -31,7 +34,6 @@ class ProfileReferralCard extends ConsumerWidget {
     if (referral == null) return const SizedBox.shrink();
 
     final c = context.dsColors;
-    final theme = Theme.of(context);
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: DsSpacing.lg),
@@ -50,7 +52,7 @@ class ProfileReferralCard extends ConsumerWidget {
                     borderRadius: DsRadius.borderLg,
                   ),
                   child: const Icon(Icons.card_giftcard_rounded,
-                      color: Colors.white, size: 22),
+                      color: DsColors.onMedia, size: 22),
                 ),
                 const SizedBox(width: DsSpacing.md),
                 Expanded(
@@ -58,12 +60,12 @@ class ProfileReferralCard extends ConsumerWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(context.l10n.inviteFriends,
-                          style: theme.textTheme.titleSmall
-                              ?.copyWith(fontWeight: DsTypography.bold)),
-                      const SizedBox(height: 2),
+                          style: context.dsText.tileTitle
+                              .copyWith(fontWeight: DsTypography.bold)),
+                      DsGaps.vXxxs,
                       Text(referral.rewardHint,
-                          style: theme.textTheme.bodySmall
-                              ?.copyWith(color: c.onSurfaceVariant)),
+                          style: context.dsText.cardSubtitle
+                              .copyWith(color: c.onSurfaceVariant)),
                     ],
                   ),
                 ),
@@ -80,7 +82,7 @@ class ProfileReferralCard extends ConsumerWidget {
                   size: DsButtonSize.md,
                   variant: DsButtonVariant.accent,
                   isExpanded: false,
-                  onPressed: () => _share(context, referral),
+                  onPressed: () => unawaited(_share(context, referral)),
                 ),
               ],
             ),
@@ -99,16 +101,21 @@ class ProfileReferralCard extends ConsumerWidget {
     );
   }
 
-  void _share(BuildContext context, Referral referral) {
-    Clipboard.setData(ClipboardData(text: referral.code));
-    ScaffoldMessenger.of(context)
-      ..hideCurrentSnackBar()
-      ..showSnackBar(
-        SnackBar(
-          behavior: SnackBarBehavior.floating,
-          content: Text(context.l10n.inviteCodeCopied(referral.code)),
-        ),
-      );
+  /// Opens the share sheet with her invite, rather than quietly copying it.
+  ///
+  /// The button said «مشاركة», carried the share glyph, and put the code on
+  /// the clipboard — so the invite went nowhere unless she then found
+  /// somewhere to paste it herself. It goes through `ShareService` now, like
+  /// every other share in the app, and the code is still copied so a paste
+  /// works too.
+  Future<void> _share(BuildContext context, Referral referral) async {
+    await Clipboard.setData(ClipboardData(text: referral.code));
+    if (!context.mounted) return;
+    await ShareService.referral(
+      context: context,
+      code: referral.code,
+      hint: referral.rewardHint,
+    );
   }
 }
 
@@ -147,12 +154,7 @@ class _CodeBox extends StatelessWidget {
                 code,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  fontFamily: DsTypography.fontFamily,
-                  fontWeight: DsTypography.bold,
-                  letterSpacing: 1,
-                  color: c.onSurface,
-                ),
+                style: context.dsText.body.bold.tint(c.onSurface).copyWith(letterSpacing: 1),
               ),
             ),
             Icon(Icons.copy_rounded, size: 18, color: c.primary),
@@ -172,17 +174,16 @@ class _Stat extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = context.dsColors;
-    final theme = Theme.of(context);
     return Expanded(
       child: Column(
         children: [
           Text(value,
-              style: theme.textTheme.titleMedium
-                  ?.copyWith(fontWeight: DsTypography.bold)),
-          const SizedBox(height: 2),
+              style: context.dsText.cardTitle
+                  .copyWith(fontWeight: DsTypography.bold)),
+          DsGaps.vXxxs,
           Text(label,
-              style: theme.textTheme.labelSmall
-                  ?.copyWith(color: c.onSurfaceVariant)),
+              style: context.dsText.caption
+                  .copyWith(color: c.onSurfaceVariant)),
         ],
       ),
     );

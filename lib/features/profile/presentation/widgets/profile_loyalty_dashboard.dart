@@ -54,7 +54,7 @@ class _Body extends StatelessWidget {
   const _Body({required this.loyalty});
 
   final LoyaltySummary loyalty;
-  static const _white = Colors.white;
+  static const _white = DsColors.onMedia;
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +68,7 @@ class _Body extends StatelessWidget {
           children: [
             const Icon(Icons.workspace_premium_rounded, color: _white, size: 22),
             const SizedBox(width: DsSpacing.xs),
-            Text('${loyalty.tier.label} member',
+            Text(context.l10n.loyaltyTierMember(loyalty.tier.label),
                 style: DsTypography.overline(faint)),
             const Spacer(),
             const Icon(Icons.chevron_right_rounded, color: _white, size: 20),
@@ -80,18 +80,12 @@ class _Body extends StatelessWidget {
           textBaseline: TextBaseline.alphabetic,
           children: [
             Text('${loyalty.points}',
-                style: const TextStyle(
-                  fontFamily: DsTypography.fontFamily,
-                  fontSize: 34,
-                  fontWeight: DsTypography.bold,
-                  color: _white,
-                  height: 1,
-                )),
+                style: context.dsText.hero.tint(_white).copyWith(height: 1)),
             const SizedBox(width: DsSpacing.xs),
             Padding(
-              padding: const EdgeInsets.only(bottom: 4),
+              padding: const EdgeInsets.only(bottom: DsSpacing.xxs),
               child: Text('points',
-                  style: TextStyle(color: faint, fontWeight: DsTypography.medium)),
+                  style: context.dsText.body.medium.tint(faint)),
             ),
           ],
         ),
@@ -113,10 +107,7 @@ class _Body extends StatelessWidget {
           Text(loyalty.rewardHint,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                  color: faint,
-                  fontSize: DsTypography.labelMedium,
-                  fontWeight: DsTypography.medium)),
+              style: context.dsText.labelMedium.tint(faint)),
         ],
         const SizedBox(height: DsSpacing.md),
         Row(
@@ -145,18 +136,10 @@ class _Stat extends StatelessWidget {
       child: Column(
         children: [
           Text(value,
-              style: const TextStyle(
-                fontFamily: DsTypography.fontFamily,
-                fontSize: DsTypography.titleSmall,
-                fontWeight: DsTypography.bold,
-                color: Colors.white,
-              )),
-          const SizedBox(height: 2),
+              style: context.dsText.tileTitle.bold.tint(DsColors.onMedia)),
+          DsGaps.vXxxs,
           Text(label,
-              style: TextStyle(
-                fontSize: DsTypography.labelSmall,
-                color: Colors.white.withValues(alpha: 0.8),
-              )),
+              style: context.dsText.caption.tint(DsColors.onMedia.withValues(alpha: 0.8))),
         ],
       ),
     );
@@ -166,5 +149,5 @@ class _Stat extends StatelessWidget {
 class _StatDivider extends StatelessWidget {
   @override
   Widget build(BuildContext context) =>
-      Container(width: 1, height: 28, color: Colors.white.withValues(alpha: 0.22));
+      Container(width: 1, height: 28, color: DsColors.onMedia.withValues(alpha: 0.22));
 }

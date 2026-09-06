@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/media/authorized_media_image.dart';
+import 'package:reem/core/media/media_variants.dart';
 import 'package:reem/core/shared/entities/product.dart';
 
 /// The catalogue card the client picked in Q80: *«صورة كبيرة بلا إطار — بصري
@@ -85,8 +87,6 @@ class _Image extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.dsColors;
-
     return ClipRRect(
       borderRadius: BorderRadius.circular(DsRadius.image),
       child: AspectRatio(
@@ -95,13 +95,10 @@ class _Image extends StatelessWidget {
           fit: StackFit.expand,
           children: [
             if (product.coverUrl != null)
-              Image.network(
-                product.coverUrl!,
-                fit: BoxFit.cover,
-                loadingBuilder: (context, child, progress) => progress == null
-                    ? child
-                    : Container(color: colors.shimmerBase),
-                errorBuilder: (_, _, _) => const _MissingPhoto(),
+              AuthorizedMediaImage(
+                url: product.coverUrl!,
+                blurHash: product.coverBlurHash,
+                variantWidth: MediaVariants.thumbnail,
               )
             else
               const _MissingPhoto(),

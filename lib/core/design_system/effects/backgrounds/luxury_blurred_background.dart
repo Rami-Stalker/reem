@@ -1,60 +1,39 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:reem/core/design_system/foundation/theme/extensions/color_extension.dart';
+import 'package:reem/core/design_system/foundation/tokens/ds_colors.dart';
 
-class LuxuryBlurredBackground
-    extends StatefulWidget {
-
+class LuxuryBlurredBackground extends StatefulWidget {
   final Widget child;
 
-  const LuxuryBlurredBackground({
-    super.key,
-    required this.child,
-  });
+  const LuxuryBlurredBackground({super.key, required this.child});
 
   @override
-  State<LuxuryBlurredBackground>
-      createState() =>
-          _LuxuryBlurredBackgroundState();
+  State<LuxuryBlurredBackground> createState() =>
+      _LuxuryBlurredBackgroundState();
 }
 
-class _LuxuryBlurredBackgroundState
-    extends State<
-        LuxuryBlurredBackground>
+class _LuxuryBlurredBackgroundState extends State<LuxuryBlurredBackground>
+    with TickerProviderStateMixin {
+  late AnimationController orbController;
 
-    with
-        TickerProviderStateMixin {
-
-  late AnimationController
-      orbController;
-
-  late AnimationController
-      glowController;
+  late AnimationController glowController;
 
   @override
   void initState() {
     super.initState();
 
-    orbController =
-        AnimationController(
-
+    orbController = AnimationController(
       vsync: this,
 
-      duration:
-          const Duration(
-        seconds: 12,
-      ),
+      duration: const Duration(seconds: 12),
     )..repeat(reverse: true);
 
-    glowController =
-        AnimationController(
-
+    glowController = AnimationController(
       vsync: this,
 
-      duration:
-          const Duration(
-        seconds: 6,
-      ),
+      duration: const Duration(seconds: 6),
     )..repeat(reverse: true);
   }
 
@@ -67,149 +46,75 @@ class _LuxuryBlurredBackgroundState
 
   @override
   Widget build(BuildContext context) {
+    // Read once, outside the builder: the backdrop is repainted on every
+    // animation tick and re-resolving the theme each time is wasted work.
+    final c = context.dsColors;
+
     return AnimatedBuilder(
+      animation: Listenable.merge([orbController, glowController]),
 
-      animation:
-          Listenable.merge([
-        orbController,
-        glowController,
-      ]),
-
-      builder:
-          (_, __) {
-
+      builder: (_, _) {
         return Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
 
-          decoration:
-              const BoxDecoration(
+              end: Alignment.bottomRight,
 
-            gradient:
-                LinearGradient(
-
-              begin:
-                  Alignment.topLeft,
-
-              end:
-                  Alignment.bottomRight,
-
-              colors: [
-
-                Color(0xffFFF7FA),
-
-                Color(0xffFFF0F6),
-
-                Color(0xffFFE8F1),
-              ],
+              colors: [c.background, c.surfaceVariant, c.primaryContainer],
             ),
           ),
 
           child: Stack(
-
             children: [
-
               /// TOP ORB
               Positioned(
+                top: -120 + orbController.value * 40,
 
-                top:
-                    -120 +
-                        orbController
-                                .value *
-                            40,
+                right: -90 + orbController.value * 30,
 
-                right:
-                    -90 +
-                        orbController
-                                .value *
-                            30,
-
-                child:
-                    _orb(
-
+                child: _orb(
                   size: 320,
 
                   colors: [
-
-                    const Color(
-                      0xffFF9EB5,
-                    ).withOpacity(.35),
-
-                    const Color(
-                      0xffFF5C8A,
-                    ).withOpacity(.12),
+                    c.primary.withValues(alpha: .35),
+                    c.primary.withValues(alpha: .12),
                   ],
                 ),
               ),
 
               /// BOTTOM ORB
               Positioned(
+                bottom: -150 + orbController.value * 40,
 
-                bottom:
-                    -150 +
-                        orbController
-                                .value *
-                            40,
+                left: -100 + orbController.value * 30,
 
-                left:
-                    -100 +
-                        orbController
-                                .value *
-                            30,
-
-                child:
-                    _orb(
-
+                child: _orb(
                   size: 340,
 
                   colors: [
-
-                    const Color(
-                      0xffFFD3E0,
-                    ).withOpacity(.35),
-
-                    const Color(
-                      0xffFFC1D6,
-                    ).withOpacity(.12),
+                    c.accent.withValues(alpha: .35),
+                    c.accent.withValues(alpha: .12),
                   ],
                 ),
               ),
 
               /// CENTER LIGHT
               Positioned.fill(
-
                 child: Center(
-
                   child: Container(
+                    width: 500 + glowController.value * 50,
 
-                    width:
-                        500 +
-                            glowController
-                                    .value *
-                                50,
+                    height: 500 + glowController.value * 50,
 
-                    height:
-                        500 +
-                            glowController
-                                    .value *
-                                50,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
 
-                    decoration:
-                        BoxDecoration(
-
-                      shape:
-                          BoxShape.circle,
-
-                      gradient:
-                          RadialGradient(
-
+                      gradient: RadialGradient(
                         colors: [
+                          DsColors.onMedia.withValues(alpha: .32),
 
-                          Colors.white
-                              .withOpacity(
-                                  .32),
-
-                          Colors.white
-                              .withOpacity(
-                                  .02),
+                          DsColors.onMedia.withValues(alpha: .02),
                         ],
                       ),
                     ),
@@ -219,54 +124,28 @@ class _LuxuryBlurredBackgroundState
 
               /// BLUR LAYER
               Positioned.fill(
-
                 child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 50, sigmaY: 50),
 
-                  filter:
-                      ImageFilter.blur(
-
-                    sigmaX: 50,
-                    sigmaY: 50,
-                  ),
-
-                  child:
-                      Container(
-                    color: Colors
-                        .transparent,
-                  ),
+                  child: Container(color: Colors.transparent),
                 ),
               ),
 
               /// NOISE OVERLAY
               Positioned.fill(
-
                 child: Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
 
-                  decoration:
-                      BoxDecoration(
-
-                    gradient:
-                        LinearGradient(
-
-                      begin:
-                          Alignment
-                              .topCenter,
-
-                      end:
-                          Alignment
-                              .bottomCenter,
+                      end: Alignment.bottomCenter,
 
                       colors: [
-
-                        Colors.white
-                            .withOpacity(
-                                .06),
+                        DsColors.onMedia.withValues(alpha: .06),
 
                         Colors.transparent,
 
-                        Colors.white
-                            .withOpacity(
-                                .03),
+                        DsColors.onMedia.withValues(alpha: .03),
                       ],
                     ),
                   ),
@@ -282,37 +161,18 @@ class _LuxuryBlurredBackgroundState
     );
   }
 
-  Widget _orb({
-    required double size,
-    required List<Color> colors,
-  }) {
+  Widget _orb({required double size, required List<Color> colors}) {
     return Container(
-
       width: size,
       height: size,
 
-      decoration:
-          BoxDecoration(
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
 
-        shape:
-            BoxShape.circle,
-
-        gradient:
-            RadialGradient(
-          colors: colors,
-        ),
+        gradient: RadialGradient(colors: colors),
 
         boxShadow: [
-
-          BoxShadow(
-
-            color:
-                colors.first,
-
-            blurRadius: 120,
-
-            spreadRadius: 40,
-          ),
+          BoxShadow(color: colors.first, blurRadius: 120, spreadRadius: 40),
         ],
       ),
     );

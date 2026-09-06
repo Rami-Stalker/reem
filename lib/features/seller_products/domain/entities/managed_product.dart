@@ -22,6 +22,10 @@ class ManagedProduct extends Equatable {
   final String description;
   final Category category;
 
+  /// The extra fields this category governs (Q27 P2) — «الخامة»، «طول الكم».
+  /// Kept so an edit does not silently drop what a category requires.
+  final Map<String, dynamic> attributes;
+
   final Money price;
   final Money? compareAtPrice;
   final int stock;
@@ -42,7 +46,6 @@ class ManagedProduct extends Equatable {
   final double rating;
   final int reviewsCount;
   final int viewsCount;
-  final int likesCount;
   final int ordersCount;
   final int favoritesCount;
 
@@ -63,6 +66,7 @@ class ManagedProduct extends Equatable {
     required this.category,
     required this.price,
     required this.createdAt,
+    this.attributes = const {},
     this.compareAtPrice,
     this.stock = 0,
     this.minOrderQty = 1,
@@ -77,7 +81,6 @@ class ManagedProduct extends Equatable {
     this.rating = 0,
     this.reviewsCount = 0,
     this.viewsCount = 0,
-    this.likesCount = 0,
     this.ordersCount = 0,
     this.favoritesCount = 0,
     this.offersCount = 1,
@@ -102,6 +105,7 @@ class ManagedProduct extends Equatable {
         title,
         description,
         category,
+        attributes,
         price,
         compareAtPrice,
         stock,
@@ -117,7 +121,6 @@ class ManagedProduct extends Equatable {
         rating,
         reviewsCount,
         viewsCount,
-        likesCount,
         ordersCount,
         favoritesCount,
         offersCount,

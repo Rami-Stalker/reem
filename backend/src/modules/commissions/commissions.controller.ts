@@ -39,7 +39,7 @@ export class CommissionsController {
   }
 
   @Get('admin/rules')
-  @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
+  @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.FINANCE_ADMIN)
   rules() {
     return this.commissions.rules();
   }
@@ -51,8 +51,16 @@ export class CommissionsController {
     return this.commissions.createRule(dto);
   }
 
+  // Q62 — «المحاسب» is the role that reads the commission report every week;
+  // leaving FINANCE_ADMIN off this list meant the console's own commissions
+  // screen 403'd for exactly the person it was built for.
   @Get('admin/reports')
-  @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.SUPPORT)
+  @Roles(
+    UserRole.SUPER_ADMIN,
+    UserRole.ADMIN,
+    UserRole.FINANCE_ADMIN,
+    UserRole.SUPPORT,
+  )
   report(@Query() query: CommissionReportQueryDto) {
     return this.commissions.adminReport(query);
   }
@@ -69,8 +77,10 @@ export class CommissionsController {
     return this.commissions.reverseOrder(orderId, 'Manual refund adjustment');
   }
 
+  // The accountant prepares the payout; releasing it stays with the general
+  // manager, and the service checks that against the caller's own role.
   @Post('admin/payouts/calculate')
-  @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
+  @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.FINANCE_ADMIN)
   @HttpCode(HttpStatus.CREATED)
   calculatePayout(@Body() dto: PayoutCalculationDto) {
     return this.commissions.calculatePayout(dto);
@@ -95,7 +105,7 @@ export class CommissionsController {
   }
 
   @Patch('admin/ledgers/:id')
-  @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
+  @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.FINANCE_ADMIN)
   updateLedger(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() dto: CommissionLedgerStatusDto,

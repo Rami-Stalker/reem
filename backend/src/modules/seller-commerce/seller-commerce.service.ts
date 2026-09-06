@@ -336,6 +336,10 @@ export class SellerCommerceService {
       where: { sellerId },
       _count: { _all: true },
     });
+    // Deliberately left as the raw enum: these rows never reach the wire.
+    // `ordersSummary` folds them into the named buckets the client reads, and
+    // it looks them up by `SellerOrderStatus`, so lower-casing here silently
+    // zeroes every badge on the seller's dashboard.
     return rows.map((row) => ({
       status: row.status as string,
       count: row._count._all,
@@ -710,7 +714,7 @@ export class SellerCommerceService {
           averageRating: number;
           performanceScore: number;
           fulfillmentScore: number;
-          responseScore: number;
+          responseScore: number | null;
           customerSatisfactionScore: number;
         }
       | null
@@ -720,7 +724,12 @@ export class SellerCommerceService {
     return {
       overall,
       fulfillment: Math.round(reputation?.fulfillmentScore ?? overall),
-      responsiveness: Math.round(reputation?.responseScore ?? overall),
+      // Null when she has never been messaged, rather than borrowing the
+      // overall score. Substituting one number for another is how a shop with
+      // no conversations ended up displaying a responsiveness rating.
+      responsiveness: reputation?.responseScore == null
+        ? null
+        : Math.round(reputation.responseScore),
       product_quality: Math.round(
         reputation?.customerSatisfactionScore ?? overall,
       ),

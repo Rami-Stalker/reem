@@ -1,6 +1,8 @@
 import 'package:reem/core/shared/entities/post.dart';
 import 'package:reem/core/shared/entities/story.dart';
 
+import 'package:reem/features/create/presentation/providers/create_message.dart';
+
 class CreateState {
   const CreateState({
     this.isLoading = false,
@@ -12,14 +14,15 @@ class CreateState {
 
   final bool isLoading;
   final String? error;
-  final String? successMessage;
+  /// Named, not spelled out — the screen resolves it in her locale.
+  final CreateMessage? successMessage;
   final Post? lastPost;
   final Story? lastStory;
 
   CreateState copyWith({
     bool? isLoading,
     String? error,
-    String? successMessage,
+    CreateMessage? successMessage,
     Post? lastPost,
     Story? lastStory,
     bool clearError = false,

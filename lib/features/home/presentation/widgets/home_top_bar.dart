@@ -32,7 +32,10 @@ class HomeTopBar extends ConsumerWidget {
       toolbarHeight: 70,
       flexibleSpace: ClipRect(
         child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: DsBlur.medium, sigmaY: DsBlur.medium),
+          filter: ImageFilter.blur(
+            sigmaX: DsBlur.medium,
+            sigmaY: DsBlur.medium,
+          ),
           child: Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
@@ -53,19 +56,11 @@ class HomeTopBar extends ConsumerWidget {
             CustomerExperience.signatureGradient.createShader(bounds),
         child: Text(
           context.l10n.appTitle,
-          style: const TextStyle(
-            fontFamily: DsTypography.fontFamilyDisplay,
-            fontFamilyFallback: DsTypography.displayFallback,
-            fontSize: 32,
-            fontWeight: DsTypography.bold,
-            color: Colors.white,
-          ),
+          style: context.dsText.pageTitle.bold.tint(DsColors.onMedia),
         ),
       ),
       actions: [
-        _NotificationsBell(
-          onTap: () => context.push(RoutePaths.notifications),
-        ),
+        _NotificationsBell(onTap: () => context.push(RoutePaths.notifications)),
         const SizedBox(width: DsSpacing.xs),
         Padding(
           padding: const EdgeInsetsDirectional.only(end: DsSpacing.lg),

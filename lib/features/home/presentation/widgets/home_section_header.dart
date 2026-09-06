@@ -18,7 +18,7 @@ class HomeSectionHeader extends StatelessWidget {
     this.onSeeAll,
     this.padding = const EdgeInsets.fromLTRB(
       DsSpacing.lg,
-      0,
+      DsSpacing.xxxs,
       DsSpacing.lg,
       DsSpacing.md,
     ),
@@ -33,7 +33,6 @@ class HomeSectionHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = context.dsColors;
-    final theme = Theme.of(context);
 
     return Padding(
       padding: padding,
@@ -50,7 +49,7 @@ class HomeSectionHeader extends StatelessWidget {
               Expanded(
                 child: Text(
                   title,
-                  style: theme.textTheme.headlineSmall?.copyWith(
+                  style: context.dsText.screenTitle.copyWith(
                     fontWeight: DsTypography.bold,
                     height: 1.15,
                   ),
@@ -66,7 +65,7 @@ class HomeSectionHeader extends StatelessWidget {
             const SizedBox(height: DsSpacing.xxs),
             Text(
               subtitle!,
-              style: theme.textTheme.bodySmall?.copyWith(
+              style: context.dsText.cardSubtitle.copyWith(
                 color: c.onSurfaceVariant,
                 height: 1.4,
               ),
@@ -126,7 +125,7 @@ class _SeeAllPill extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(
           horizontal: DsSpacing.sm,
-          vertical: DsSpacing.xxs + 2,
+          vertical: DsSpacing.xxs + DsSpacing.xxxs,
         ),
         decoration: BoxDecoration(
           color: c.primaryContainer,
@@ -138,11 +137,7 @@ class _SeeAllPill extends StatelessWidget {
           children: [
             Text(
               context.l10n.viewAll,
-              style: TextStyle(
-                color: c.onPrimaryContainer,
-                fontSize: DsTypography.labelMedium,
-                fontWeight: DsTypography.bold,
-              ),
+              style: context.dsText.labelMedium.bold.tint(c.onPrimaryContainer),
             ),
             Icon(
               Icons.chevron_right_rounded,

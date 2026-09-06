@@ -32,15 +32,15 @@ class AuthRequiredScreen extends StatelessWidget {
                 Text(
                   context.l10n.signInToContinue,
                   textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                  style: context.dsText.screenTitle.copyWith(
                     fontWeight: DsTypography.bold,
                   ),
                 ),
                 const SizedBox(height: DsSpacing.sm),
                 Text(
-                  'Create a secure account to checkout, message sellers, save your progress, and manage your profile across devices.',
+                  context.l10n.signUpBenefitsBlurb,
                   textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  style: context.dsText.body.copyWith(
                     color: context.dsColors.onSurfaceVariant,
                   ),
                 ),

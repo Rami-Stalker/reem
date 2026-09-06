@@ -1,0 +1,3650 @@
+{
+  "as_of": "2026-08-31",
+  "window": "D7",
+  "window_days": 7,
+  "headline": {
+    "window_days": 7,
+    "views": 3568,
+    "previous_views": 2801,
+    "views_growth_pct": 27.4,
+    "searches": 268,
+    "search_growth_pct": 1.9,
+    "cart_adds": 165,
+    "cart_growth_pct": 100,
+    "orders": 0,
+    "orders_growth_pct": -90.9,
+    "units": 0,
+    "revenue": {
+      "amount": "0.00",
+      "currency": "SYP"
+    },
+    "revenue_growth_pct": -99,
+    "view_to_cart_rate": 0.0462,
+    "cart_to_order_rate": 0,
+    "stages": {
+      "DORMANT": 51,
+      "EMERGING": 14,
+      "RISING": 3,
+      "PEAKING": 0,
+      "STEADY": 27,
+      "COOLING": 18,
+      "DECLINING": 1
+    }
+  },
+  "series": [
+    {
+      "date": "2026-08-18",
+      "views": 323,
+      "search_hits": 44,
+      "cart_adds": 9,
+      "orders": 5,
+      "units": 7,
+      "revenue": {
+        "amount": "796000.00",
+        "currency": "SYP"
+      }
+    },
+    {
+      "date": "2026-08-19",
+      "views": 343,
+      "search_hits": 33,
+      "cart_adds": 7,
+      "orders": 5,
+      "units": 5,
+      "revenue": {
+        "amount": "5419000.00",
+        "currency": "SYP"
+      }
+    },
+    {
+      "date": "2026-08-20",
+      "views": 357,
+      "search_hits": 47,
+      "cart_adds": 6,
+      "orders": 0,
+      "units": 0,
+      "revenue": {
+        "amount": "0.00",
+        "currency": "SYP"
+      }
+    },
+    {
+      "date": "2026-08-21",
+      "views": 653,
+      "search_hits": 44,
+      "cart_adds": 26,
+      "orders": 0,
+      "units": 0,
+      "revenue": {
+        "amount": "0.00",
+        "currency": "SYP"
+      }
+    },
+    {
+      "date": "2026-08-22",
+      "views": 361,
+      "search_hits": 29,
+      "cart_adds": 9,
+      "orders": 0,
+      "units": 0,
+      "revenue": {
+        "amount": "0.00",
+        "currency": "SYP"
+      }
+    },
+    {
+      "date": "2026-08-23",
+      "views": 386,
+      "search_hits": 30,
+      "cart_adds": 12,
+      "orders": 0,
+      "units": 0,
+      "revenue": {
+        "amount": "0.00",
+        "currency": "SYP"
+      }
+    },
+    {
+      "date": "2026-08-24",
+      "views": 378,
+      "search_hits": 36,
+      "cart_adds": 13,
+      "orders": 0,
+      "units": 0,
+      "revenue": {
+        "amount": "0.00",
+        "currency": "SYP"
+      }
+    },
+    {
+      "date": "2026-08-25",
+      "views": 426,
+      "search_hits": 54,
+      "cart_adds": 14,
+      "orders": 0,
+      "units": 0,
+      "revenue": {
+        "amount": "0.00",
+        "currency": "SYP"
+      }
+    },
+    {
+      "date": "2026-08-26",
+      "views": 473,
+      "search_hits": 19,
+      "cart_adds": 18,
+      "orders": 0,
+      "units": 0,
+      "revenue": {
+        "amount": "0.00",
+        "currency": "SYP"
+      }
+    },
+    {
+      "date": "2026-08-27",
+      "views": 424,
+      "search_hits": 29,
+      "cart_adds": 15,
+      "orders": 0,
+      "units": 0,
+      "revenue": {
+        "amount": "0.00",
+        "currency": "SYP"
+      }
+    },
+    {
+      "date": "2026-08-28",
+      "views": 768,
+      "search_hits": 27,
+      "cart_adds": 46,
+      "orders": 0,
+      "units": 0,
+      "revenue": {
+        "amount": "0.00",
+        "currency": "SYP"
+      }
+    },
+    {
+      "date": "2026-08-29",
+      "views": 496,
+      "search_hits": 55,
+      "cart_adds": 28,
+      "orders": 0,
+      "units": 0,
+      "revenue": {
+        "amount": "0.00",
+        "currency": "SYP"
+      }
+    },
+    {
+      "date": "2026-08-30",
+      "views": 501,
+      "search_hits": 52,
+      "cart_adds": 23,
+      "orders": 0,
+      "units": 0,
+      "revenue": {
+        "amount": "0.00",
+        "currency": "SYP"
+      }
+    },
+    {
+      "date": "2026-08-31",
+      "views": 480,
+      "search_hits": 32,
+      "cart_adds": 21,
+      "orders": 0,
+      "units": 0,
+      "revenue": {
+        "amount": "0.00",
+        "currency": "SYP"
+      }
+    }
+  ],
+  "category_trends": [
+    {
+      "category_id": "405c02ad-3f54-457e-924e-9467a4426d28",
+      "name_ar": "مكياج",
+      "name_en": "Makeup",
+      "slug": "makeup",
+      "level": 1,
+      "parent_id": "fe19f541-d943-45e7-a1ba-ec351f56ec78",
+      "trend_score": 39.74,
+      "previous_score": null,
+      "delta": 0,
+      "stage": {
+        "key": "EMERGING",
+        "label_ar": "صاعد مبكرًا"
+      },
+      "confidence": 0.8544,
+      "rank": 3,
+      "views": 283,
+      "views_growth_pct": 107.3,
+      "units": 0,
+      "units_growth_pct": -50,
+      "revenue": {
+        "amount": "0.0000",
+        "currency": "SYP"
+      },
+      "live_products": 4,
+      "in_stock_products": 4,
+      "median_price": {
+        "amount": "279000.0000",
+        "currency": "SYP"
+      }
+    },
+    {
+      "category_id": "cdbfcf6a-938d-497b-ba51-8674e37dd9fc",
+      "name_ar": "باقات ورد",
+      "name_en": "Bouquets",
+      "slug": "bouquets",
+      "level": 2,
+      "parent_id": "5f733023-cef3-4508-a146-23e03b7753ba",
+      "trend_score": 38.58,
+      "previous_score": null,
+      "delta": 0,
+      "stage": {
+        "key": "EMERGING",
+        "label_ar": "صاعد مبكرًا"
+      },
+      "confidence": 0.9226,
+      "rank": 1,
+      "views": 562,
+      "views_growth_pct": 94.1,
+      "units": 0,
+      "units_growth_pct": -50,
+      "revenue": {
+        "amount": "0.0000",
+        "currency": "SYP"
+      },
+      "live_products": 4,
+      "in_stock_products": 4,
+      "median_price": {
+        "amount": "527000.0000",
+        "currency": "SYP"
+      }
+    },
+    {
+      "category_id": "5f733023-cef3-4508-a146-23e03b7753ba",
+      "name_ar": "ورود وديكور",
+      "name_en": "Flowers and decor",
+      "slug": "flowers-decor",
+      "level": 1,
+      "parent_id": "83974776-efbb-4068-9d6b-72cb2ee5ba6d",
+      "trend_score": 38.4,
+      "previous_score": null,
+      "delta": 0,
+      "stage": {
+        "key": "EMERGING",
+        "label_ar": "صاعد مبكرًا"
+      },
+      "confidence": 0.9272,
+      "rank": 2,
+      "views": 608,
+      "views_growth_pct": 75,
+      "units": 0,
+      "units_growth_pct": -50,
+      "revenue": {
+        "amount": "0.0000",
+        "currency": "SYP"
+      },
+      "live_products": 6,
+      "in_stock_products": 6,
+      "median_price": {
+        "amount": "527000.0000",
+        "currency": "SYP"
+      }
+    },
+    {
+      "category_id": "8c102d6f-d95f-406f-bc8f-7f922bb9f728",
+      "name_ar": "الشفاه",
+      "name_en": "Lips",
+      "slug": "lips",
+      "level": 2,
+      "parent_id": "405c02ad-3f54-457e-924e-9467a4426d28",
+      "trend_score": 38.3,
+      "previous_score": null,
+      "delta": 0,
+      "stage": {
+        "key": "EMERGING",
+        "label_ar": "صاعد مبكرًا"
+      },
+      "confidence": 0.8421,
+      "rank": 8,
+      "views": 251,
+      "views_growth_pct": 121.1,
+      "units": 0,
+      "units_growth_pct": 0,
+      "revenue": {
+        "amount": "0.0000",
+        "currency": "SYP"
+      },
+      "live_products": 2,
+      "in_stock_products": 2,
+      "median_price": {
+        "amount": "201000.0000",
+        "currency": "SYP"
+      }
+    },
+    {
+      "category_id": "703de1d8-2455-4083-a7ca-109e9721362e",
+      "name_ar": "إكسسوارات",
+      "name_en": "Accessories",
+      "slug": "accessories",
+      "level": 1,
+      "parent_id": "0b3c2e08-c4b1-43a9-a9d6-4c41c5e72307",
+      "trend_score": 38.07,
+      "previous_score": null,
+      "delta": 0,
+      "stage": {
+        "key": "EMERGING",
+        "label_ar": "صاعد مبكرًا"
+      },
+      "confidence": 0.8778,
+      "rank": 6,
+      "views": 344,
+      "views_growth_pct": 110.4,
+      "units": 0,
+      "units_growth_pct": -50,
+      "revenue": {
+        "amount": "0.0000",
+        "currency": "SYP"
+      },
+      "live_products": 3,
+      "in_stock_products": 3,
+      "median_price": {
+        "amount": "362000.0000",
+        "currency": "SYP"
+      }
+    },
+    {
+      "category_id": "50388a0b-4aad-4e28-ac5d-6f8855aaaef6",
+      "name_ar": "أوشحة",
+      "name_en": "Scarves",
+      "slug": "scarves",
+      "level": 2,
+      "parent_id": "703de1d8-2455-4083-a7ca-109e9721362e",
+      "trend_score": 37,
+      "previous_score": null,
+      "delta": 0,
+      "stage": {
+        "key": "EMERGING",
+        "label_ar": "صاعد مبكرًا"
+      },
+      "confidence": 0.8655,
+      "rank": 9,
+      "views": 299,
+      "views_growth_pct": 122.2,
+      "units": 0,
+      "units_growth_pct": -50,
+      "revenue": {
+        "amount": "0.0000",
+        "currency": "SYP"
+      },
+      "live_products": 1,
+      "in_stock_products": 1,
+      "median_price": {
+        "amount": "362000.0000",
+        "currency": "SYP"
+      }
+    },
+    {
+      "category_id": "1101cf1b-12e5-4af6-b7bf-505bcde106ed",
+      "name_ar": "شوكولا وحلويات",
+      "name_en": "Chocolate and sweets",
+      "slug": "sweets",
+      "level": 1,
+      "parent_id": "83974776-efbb-4068-9d6b-72cb2ee5ba6d",
+      "trend_score": 36.86,
+      "previous_score": null,
+      "delta": 0,
+      "stage": {
+        "key": "EMERGING",
+        "label_ar": "صاعد مبكرًا"
+      },
+      "confidence": 0.8678,
+      "rank": 10,
+      "views": 316,
+      "views_growth_pct": 51.7,
+      "units": 0,
+      "units_growth_pct": -66.7,
+      "revenue": {
+        "amount": "0.0000",
+        "currency": "SYP"
+      },
+      "live_products": 5,
+      "in_stock_products": 5,
+      "median_price": {
+        "amount": "276000.0000",
+        "currency": "SYP"
+      }
+    },
+    {
+      "category_id": "0b3c2e08-c4b1-43a9-a9d6-4c41c5e72307",
+      "name_ar": "أزياء",
+      "name_en": "Fashion",
+      "slug": "fashion",
+      "level": 0,
+      "parent_id": null,
+      "trend_score": 36.77,
+      "previous_score": null,
+      "delta": 0,
+      "stage": {
+        "key": "EMERGING",
+        "label_ar": "صاعد مبكرًا"
+      },
+      "confidence": 0.9464,
+      "rank": 5,
+      "views": 958,
+      "views_growth_pct": 28.4,
+      "units": 0,
+      "units_growth_pct": -87.5,
+      "revenue": {
+        "amount": "0.0000",
+        "currency": "SYP"
+      },
+      "live_products": 15,
+      "in_stock_products": 15,
+      "median_price": {
+        "amount": "1002141.6741",
+        "currency": "SYP"
+      }
+    },
+    {
+      "category_id": "83974776-efbb-4068-9d6b-72cb2ee5ba6d",
+      "name_ar": "المنزل والهدايا",
+      "name_en": "Home and gifts",
+      "slug": "home-gifts",
+      "level": 0,
+      "parent_id": null,
+      "trend_score": 36.58,
+      "previous_score": null,
+      "delta": 0,
+      "stage": {
+        "key": "EMERGING",
+        "label_ar": "صاعد مبكرًا"
+      },
+      "confidence": 0.9684,
+      "rank": 4,
+      "views": 1596,
+      "views_growth_pct": 26.2,
+      "units": 0,
+      "units_growth_pct": -75,
+      "revenue": {
+        "amount": "0.0000",
+        "currency": "SYP"
+      },
+      "live_products": 23,
+      "in_stock_products": 23,
+      "median_price": {
+        "amount": "333000.0000",
+        "currency": "SYP"
+      }
+    },
+    {
+      "category_id": "fe19f541-d943-45e7-a1ba-ec351f56ec78",
+      "name_ar": "جمال وعناية",
+      "name_en": "Beauty and care",
+      "slug": "beauty",
+      "level": 0,
+      "parent_id": null,
+      "trend_score": 36.36,
+      "previous_score": null,
+      "delta": 0,
+      "stage": {
+        "key": "EMERGING",
+        "label_ar": "صاعد مبكرًا"
+      },
+      "confidence": 0.939,
+      "rank": 7,
+      "views": 779,
+      "views_growth_pct": 39.8,
+      "units": 0,
+      "units_growth_pct": -66.7,
+      "revenue": {
+        "amount": "0.0000",
+        "currency": "SYP"
+      },
+      "live_products": 11,
+      "in_stock_products": 11,
+      "median_price": {
+        "amount": "333000.0000",
+        "currency": "SYP"
+      }
+    },
+    {
+      "category_id": "150835f1-403f-418d-b7d8-b3bd0bc19c28",
+      "name_ar": "علب ضيافة",
+      "name_en": "Candy boxes",
+      "slug": "candy-boxes",
+      "level": 2,
+      "parent_id": "1101cf1b-12e5-4af6-b7bf-505bcde106ed",
+      "trend_score": 34.57,
+      "previous_score": null,
+      "delta": 0,
+      "stage": {
+        "key": "EMERGING",
+        "label_ar": "صاعد مبكرًا"
+      },
+      "confidence": 0.8383,
+      "rank": 11,
+      "views": 236,
+      "views_growth_pct": 75.6,
+      "units": 0,
+      "units_growth_pct": -66.7,
+      "revenue": {
+        "amount": "0.0000",
+        "currency": "SYP"
+      },
+      "live_products": 2,
+      "in_stock_products": 2,
+      "median_price": {
+        "amount": "431500.0000",
+        "currency": "SYP"
+      }
+    },
+    {
+      "category_id": "0c7e1f98-60ea-4b17-9f46-0f2e9bc93990",
+      "name_ar": "مرطبات",
+      "name_en": "Moisturisers",
+      "slug": "moisturisers",
+      "level": 2,
+      "parent_id": "f19ea535-d245-4994-baad-0f703042bf1c",
+      "trend_score": 34.47,
+      "previous_score": null,
+      "delta": 0,
+      "stage": {
+        "key": "EMERGING",
+        "label_ar": "صاعد مبكرًا"
+      },
+      "confidence": 0.8365,
+      "rank": 12,
+      "views": 235,
+      "views_growth_pct": 120.6,
+      "units": 0,
+      "units_growth_pct": 0,
+      "revenue": {
+        "amount": "0.0000",
+        "currency": "SYP"
+      },
+      "live_products": 1,
+      "in_stock_products": 1,
+      "median_price": {
+        "amount": "264000.0000",
+        "currency": "SYP"
+      }
+    }
+  ],
+  "colour_trends": [
+    {
+      "dimension": "COLOR",
+      "value": "blush",
+      "label_ar": "وردي",
+      "scope_key": "PLATFORM",
+      "views": 559,
+      "cart_adds": 29,
+      "orders": 0,
+      "units": 0,
+      "revenue": {
+        "amount": "0.0000",
+        "currency": "SYP"
+      },
+      "products": 8,
+      "demand": 704,
+      "previous_demand": 463,
+      "growth_pct": 51.9,
+      "share_pct": 21.4,
+      "previous_share_pct": 21.89,
+      "share_delta_pct": -0.49,
+      "window_days": 7
+    },
+    {
+      "dimension": "COLOR",
+      "value": "beige",
+      "label_ar": "بيج",
+      "scope_key": "PLATFORM",
+      "views": 495,
+      "cart_adds": 29,
+      "orders": 0,
+      "units": 0,
+      "revenue": {
+        "amount": "0.0000",
+        "currency": "SYP"
+      },
+      "products": 5,
+      "demand": 640,
+      "previous_demand": 396,
+      "growth_pct": 61.5,
+      "share_pct": 19.45,
+      "previous_share_pct": 18.72,
+      "share_delta_pct": 0.73,
+      "window_days": 7
+    },
+    {
+      "dimension": "COLOR",
+      "value": "black",
+      "label_ar": "أسود",
+      "scope_key": "PLATFORM",
+      "views": 495,
+      "cart_adds": 29,
+      "orders": 0,
+      "units": 0,
+      "revenue": {
+        "amount": "0.0000",
+        "currency": "SYP"
+      },
+      "products": 5,
+      "demand": 640,
+      "previous_demand": 396,
+      "growth_pct": 61.5,
+      "share_pct": 19.45,
+      "previous_share_pct": 18.72,
+      "share_delta_pct": 0.73,
+      "window_days": 7
+    },
+    {
+      "dimension": "COLOR",
+      "value": "navy",
+      "label_ar": "كحلي",
+      "scope_key": "PLATFORM",
+      "views": 495,
+      "cart_adds": 29,
+      "orders": 0,
+      "units": 0,
+      "revenue": {
+        "amount": "0.0000",
+        "currency": "SYP"
+      },
+      "products": 5,
+      "demand": 640,
+      "previous_demand": 396,
+      "growth_pct": 61.5,
+      "share_pct": 19.45,
+      "previous_share_pct": 18.72,
+      "share_delta_pct": 0.73,
+      "window_days": 7
+    },
+    {
+      "dimension": "COLOR",
+      "value": "caramel",
+      "label_ar": "كاراميل",
+      "scope_key": "PLATFORM",
+      "views": 301,
+      "cart_adds": 23,
+      "orders": 0,
+      "units": 0,
+      "revenue": {
+        "amount": "0.0000",
+        "currency": "SYP"
+      },
+      "products": 5,
+      "demand": 416,
+      "previous_demand": 209,
+      "growth_pct": 98.6,
+      "share_pct": 12.64,
+      "previous_share_pct": 9.88,
+      "share_delta_pct": 2.76,
+      "window_days": 7
+    },
+    {
+      "dimension": "COLOR",
+      "value": "gold",
+      "label_ar": "ذهبي",
+      "scope_key": "PLATFORM",
+      "views": 168,
+      "cart_adds": 0,
+      "orders": 0,
+      "units": 0,
+      "revenue": {
+        "amount": "0.0000",
+        "currency": "SYP"
+      },
+      "products": 1,
+      "demand": 168,
+      "previous_demand": 171,
+      "growth_pct": -1.7,
+      "share_pct": 5.11,
+      "previous_share_pct": 8.09,
+      "share_delta_pct": -2.98,
+      "window_days": 7
+    },
+    {
+      "dimension": "COLOR",
+      "value": "grey",
+      "label_ar": "رمادي",
+      "scope_key": "PLATFORM",
+      "views": 25,
+      "cart_adds": 1,
+      "orders": 0,
+      "units": 0,
+      "revenue": {
+        "amount": "0.0000",
+        "currency": "SYP"
+      },
+      "products": 1,
+      "demand": 30,
+      "previous_demand": 23,
+      "growth_pct": 29.2,
+      "share_pct": 0.91,
+      "previous_share_pct": 1.09,
+      "share_delta_pct": -0.18,
+      "window_days": 7
+    },
+    {
+      "dimension": "COLOR",
+      "value": "white",
+      "label_ar": "أبيض",
+      "scope_key": "PLATFORM",
+      "views": 27,
+      "cart_adds": 0,
+      "orders": 0,
+      "units": 0,
+      "revenue": {
+        "amount": "0.0000",
+        "currency": "SYP"
+      },
+      "products": 1,
+      "demand": 27,
+      "previous_demand": 23,
+      "growth_pct": 16.7,
+      "share_pct": 0.82,
+      "previous_share_pct": 1.09,
+      "share_delta_pct": -0.27,
+      "window_days": 7
+    },
+    {
+      "dimension": "COLOR",
+      "value": "olive",
+      "label_ar": "زيتي",
+      "scope_key": "PLATFORM",
+      "views": 20,
+      "cart_adds": 1,
+      "orders": 0,
+      "units": 0,
+      "revenue": {
+        "amount": "0.0000",
+        "currency": "SYP"
+      },
+      "products": 1,
+      "demand": 25,
+      "previous_demand": 38,
+      "growth_pct": -33.3,
+      "share_pct": 0.76,
+      "previous_share_pct": 1.8,
+      "share_delta_pct": -1.04,
+      "window_days": 7
+    }
+  ],
+  "price_trends": [
+    {
+      "dimension": "PRICE_BAND",
+      "value": "B5",
+      "label_ar": "٥٠٠ ألف – مليون",
+      "scope_key": "PLATFORM",
+      "views": 1093,
+      "cart_adds": 80,
+      "orders": 0,
+      "units": 0,
+      "revenue": {
+        "amount": "0.0000",
+        "currency": "SYP"
+      },
+      "products": 14,
+      "demand": 1493,
+      "previous_demand": 896,
+      "growth_pct": 66.6,
+      "share_pct": 34.24,
+      "previous_share_pct": 28.24,
+      "share_delta_pct": 6,
+      "window_days": 7
+    },
+    {
+      "dimension": "PRICE_BAND",
+      "value": "B4",
+      "label_ar": "٢٥٠–٥٠٠ ألف",
+      "scope_key": "PLATFORM",
+      "views": 1025,
+      "cart_adds": 55,
+      "orders": 0,
+      "units": 0,
+      "revenue": {
+        "amount": "0.0000",
+        "currency": "SYP"
+      },
+      "products": 20,
+      "demand": 1300,
+      "previous_demand": 884,
+      "growth_pct": 47,
+      "share_pct": 29.81,
+      "previous_share_pct": 27.86,
+      "share_delta_pct": 1.95,
+      "window_days": 7
+    },
+    {
+      "dimension": "PRICE_BAND",
+      "value": "B3",
+      "label_ar": "١٠٠–٢٥٠ ألف",
+      "scope_key": "PLATFORM",
+      "views": 867,
+      "cart_adds": 27,
+      "orders": 0,
+      "units": 0,
+      "revenue": {
+        "amount": "0.0000",
+        "currency": "SYP"
+      },
+      "products": 16,
+      "demand": 1002,
+      "previous_demand": 858,
+      "growth_pct": 16.8,
+      "share_pct": 22.98,
+      "previous_share_pct": 27.04,
+      "share_delta_pct": -4.06,
+      "window_days": 7
+    },
+    {
+      "dimension": "PRICE_BAND",
+      "value": "B6",
+      "label_ar": "أكثر من مليون",
+      "scope_key": "PLATFORM",
+      "views": 534,
+      "cart_adds": 3,
+      "orders": 0,
+      "units": 0,
+      "revenue": {
+        "amount": "0.0000",
+        "currency": "SYP"
+      },
+      "products": 11,
+      "demand": 549,
+      "previous_demand": 515,
+      "growth_pct": 6.6,
+      "share_pct": 12.59,
+      "previous_share_pct": 16.23,
+      "share_delta_pct": -3.64,
+      "window_days": 7
+    },
+    {
+      "dimension": "PRICE_BAND",
+      "value": "B2",
+      "label_ar": "٥٠–١٠٠ ألف",
+      "scope_key": "PLATFORM",
+      "views": 17,
+      "cart_adds": 0,
+      "orders": 0,
+      "units": 0,
+      "revenue": {
+        "amount": "0.0000",
+        "currency": "SYP"
+      },
+      "products": 1,
+      "demand": 17,
+      "previous_demand": 20,
+      "growth_pct": -14.3,
+      "share_pct": 0.39,
+      "previous_share_pct": 0.63,
+      "share_delta_pct": -0.24,
+      "window_days": 7
+    }
+  ],
+  "emerging_products": [
+    {
+      "product_id": "dab7aa2b-d8d9-418a-b9a0-0b3f1d3fa498",
+      "title": "بوكيه مناسبات بورد طبيعي طازج",
+      "slug": "bouquet-088",
+      "image_url": "https://loremflickr.com/900/1125/flower%20bouquet%2Croses/all?lock=77342",
+      "category_id": "cdbfcf6a-938d-497b-ba51-8674e37dd9fc",
+      "category_name_ar": "باقات ورد",
+      "sellers": [
+        {
+          "id": "6411755a-4645-48cd-9e24-55401a326ea9",
+          "name": "ميساء الورد"
+        }
+      ],
+      "trend_score": 42.28,
+      "previous_score": null,
+      "delta": 0,
+      "stage": {
+        "key": "EMERGING",
+        "label_ar": "صاعد مبكرًا"
+      },
+      "confidence": 0.8429,
+      "rank": 1,
+      "category_rank": 1,
+      "views": 247,
+      "views_growth_pct": 143.1,
+      "search_hits": 3,
+      "cart_adds": 25,
+      "units": 0,
+      "units_growth_pct": 0,
+      "revenue": {
+        "amount": "0.0000",
+        "currency": "SYP"
+      },
+      "view_to_order_rate": 0,
+      "stock_units": 32,
+      "days_of_cover": null,
+      "components": [
+        {
+          "key": "view_growth",
+          "value": 0.8129,
+          "weight": 0.13,
+          "label_ar": "نمو المشاهدات"
+        },
+        {
+          "key": "search_growth",
+          "value": 0.1712,
+          "weight": 0.1,
+          "label_ar": "نمو البحث"
+        },
+        {
+          "key": "cart_growth",
+          "value": 0.6525,
+          "weight": 0.12,
+          "label_ar": "نمو الإضافة للسلة"
+        },
+        {
+          "key": "conversion",
+          "value": 0.2845,
+          "weight": 0.13,
+          "label_ar": "معدل التحويل"
+        },
+        {
+          "key": "sales_velocity",
+          "value": 0,
+          "weight": 0.17,
+          "label_ar": "سرعة البيع"
+        },
+        {
+          "key": "acceleration",
+          "value": 0.7917,
+          "weight": 0.11,
+          "label_ar": "تسارع الطلب"
+        },
+        {
+          "key": "engagement",
+          "value": 0.4717,
+          "weight": 0.1,
+          "label_ar": "التفاعل"
+        },
+        {
+          "key": "quality",
+          "value": 0,
+          "weight": 0.08,
+          "label_ar": "جودة التقييمات"
+        },
+        {
+          "key": "availability",
+          "value": 0.8409,
+          "weight": 0.06,
+          "label_ar": "توفّر المخزون"
+        }
+      ]
+    },
+    {
+      "product_id": "07da68e7-3dd5-4e59-9e88-a557b0a14426",
+      "title": "ملمّع شفاه بمفعول مطفي",
+      "slug": "lip-064",
+      "image_url": "https://loremflickr.com/900/1125/lipstick%2Cbeauty/all?lock=29400",
+      "category_id": "8c102d6f-d95f-406f-bc8f-7f922bb9f728",
+      "category_name_ar": "الشفاه",
+      "sellers": [
+        {
+          "id": "80404897-5d9b-4dc6-8ff2-05e6c4c05aef",
+          "name": "ريما الحمصي"
+        },
+        {
+          "id": "6411755a-4645-48cd-9e24-55401a326ea9",
+          "name": "ميساء الورد"
+        }
+      ],
+      "trend_score": 40.7,
+      "previous_score": null,
+      "delta": 0,
+      "stage": {
+        "key": "EMERGING",
+        "label_ar": "صاعد مبكرًا"
+      },
+      "confidence": 0.8338,
+      "rank": 2,
+      "category_rank": 1,
+      "views": 232,
+      "views_growth_pct": 142.7,
+      "search_hits": 6,
+      "cart_adds": 23,
+      "units": 0,
+      "units_growth_pct": 0,
+      "revenue": {
+        "amount": "0.0000",
+        "currency": "SYP"
+      },
+      "view_to_order_rate": 0,
+      "stock_units": 25,
+      "days_of_cover": null,
+      "components": [
+        {
+          "key": "view_growth",
+          "value": 0.8111,
+          "weight": 0.13,
+          "label_ar": "نمو المشاهدات"
+        },
+        {
+          "key": "search_growth",
+          "value": 0.3204,
+          "weight": 0.1,
+          "label_ar": "نمو البحث"
+        },
+        {
+          "key": "cart_growth",
+          "value": 0.6273,
+          "weight": 0.12,
+          "label_ar": "نمو الإضافة للسلة"
+        },
+        {
+          "key": "conversion",
+          "value": 0.2832,
+          "weight": 0.13,
+          "label_ar": "معدل التحويل"
+        },
+        {
+          "key": "sales_velocity",
+          "value": 0,
+          "weight": 0.17,
+          "label_ar": "سرعة البيع"
+        },
+        {
+          "key": "acceleration",
+          "value": 0.7642,
+          "weight": 0.11,
+          "label_ar": "تسارع الطلب"
+        },
+        {
+          "key": "engagement",
+          "value": 0.2294,
+          "weight": 0.1,
+          "label_ar": "التفاعل"
+        },
+        {
+          "key": "quality",
+          "value": 0,
+          "weight": 0.08,
+          "label_ar": "جودة التقييمات"
+        },
+        {
+          "key": "availability",
+          "value": 0.8409,
+          "weight": 0.06,
+          "label_ar": "توفّر المخزون"
+        }
+      ]
+    },
+    {
+      "product_id": "31f17194-7d16-46bb-b90c-13cb1edc9d4a",
+      "title": "صندوق ورد بتنسيق فاخر",
+      "slug": "bouquet-089",
+      "image_url": "https://loremflickr.com/900/1125/flower%20bouquet%2Croses/all?lock=64005",
+      "category_id": "cdbfcf6a-938d-497b-ba51-8674e37dd9fc",
+      "category_name_ar": "باقات ورد",
+      "sellers": [
+        {
+          "id": "6411755a-4645-48cd-9e24-55401a326ea9",
+          "name": "ميساء الورد"
+        }
+      ],
+      "trend_score": 35.07,
+      "previous_score": null,
+      "delta": 0,
+      "stage": {
+        "key": "EMERGING",
+        "label_ar": "صاعد مبكرًا"
+      },
+      "confidence": 0.8489,
+      "rank": 4,
+      "category_rank": 2,
+      "views": 259,
+      "views_growth_pct": 103.1,
+      "search_hits": 2,
+      "cart_adds": 26,
+      "units": 0,
+      "units_growth_pct": -50,
+      "revenue": {
+        "amount": "0.0000",
+        "currency": "SYP"
+      },
+      "view_to_order_rate": 0,
+      "stock_units": 27,
+      "days_of_cover": null,
+      "components": [
+        {
+          "key": "view_growth",
+          "value": 0.7659,
+          "weight": 0.13,
+          "label_ar": "نمو المشاهدات"
+        },
+        {
+          "key": "search_growth",
+          "value": 0.1667,
+          "weight": 0.1,
+          "label_ar": "نمو البحث"
+        },
+        {
+          "key": "cart_growth",
+          "value": 0.6198,
+          "weight": 0.12,
+          "label_ar": "نمو الإضافة للسلة"
+        },
+        {
+          "key": "conversion",
+          "value": 0.2827,
+          "weight": 0.13,
+          "label_ar": "معدل التحويل"
+        },
+        {
+          "key": "sales_velocity",
+          "value": 0,
+          "weight": 0.17,
+          "label_ar": "سرعة البيع"
+        },
+        {
+          "key": "acceleration",
+          "value": 0.6628,
+          "weight": 0.11,
+          "label_ar": "تسارع الطلب"
+        },
+        {
+          "key": "engagement",
+          "value": 0,
+          "weight": 0.1,
+          "label_ar": "التفاعل"
+        },
+        {
+          "key": "quality",
+          "value": 0,
+          "weight": 0.08,
+          "label_ar": "جودة التقييمات"
+        },
+        {
+          "key": "availability",
+          "value": 0.8409,
+          "weight": 0.06,
+          "label_ar": "توفّر المخزون"
+        }
+      ]
+    },
+    {
+      "product_id": "49878574-0751-45f4-ab3a-238c4b87b4f6",
+      "title": "علبة ضيافة بتغليف مخملي",
+      "slug": "candy-104",
+      "image_url": "https://loremflickr.com/900/1125/candy%20box%2Cgift%20sweets/all?lock=45457",
+      "category_id": "150835f1-403f-418d-b7d8-b3bd0bc19c28",
+      "category_name_ar": "علب ضيافة",
+      "sellers": [
+        {
+          "id": "d4f86e0a-0e79-4de7-a4e5-37487e549535",
+          "name": "هبة الحلواني"
+        }
+      ],
+      "trend_score": 34.94,
+      "previous_score": null,
+      "delta": 0,
+      "stage": {
+        "key": "EMERGING",
+        "label_ar": "صاعد مبكرًا"
+      },
+      "confidence": 0.8338,
+      "rank": 5,
+      "category_rank": 1,
+      "views": 226,
+      "views_growth_pct": 87.6,
+      "search_hits": 2,
+      "cart_adds": 25,
+      "units": 0,
+      "units_growth_pct": -66.7,
+      "revenue": {
+        "amount": "0.0000",
+        "currency": "SYP"
+      },
+      "view_to_order_rate": 0,
+      "stock_units": 5,
+      "days_of_cover": null,
+      "components": [
+        {
+          "key": "view_growth",
+          "value": 0.739,
+          "weight": 0.13,
+          "label_ar": "نمو المشاهدات"
+        },
+        {
+          "key": "search_growth",
+          "value": 0.1667,
+          "weight": 0.1,
+          "label_ar": "نمو البحث"
+        },
+        {
+          "key": "cart_growth",
+          "value": 0.607,
+          "weight": 0.12,
+          "label_ar": "نمو الإضافة للسلة"
+        },
+        {
+          "key": "conversion",
+          "value": 0.2967,
+          "weight": 0.13,
+          "label_ar": "معدل التحويل"
+        },
+        {
+          "key": "sales_velocity",
+          "value": 0,
+          "weight": 0.17,
+          "label_ar": "سرعة البيع"
+        },
+        {
+          "key": "acceleration",
+          "value": 0.6803,
+          "weight": 0.11,
+          "label_ar": "تسارع الطلب"
+        },
+        {
+          "key": "engagement",
+          "value": 0,
+          "weight": 0.1,
+          "label_ar": "التفاعل"
+        },
+        {
+          "key": "quality",
+          "value": 0,
+          "weight": 0.08,
+          "label_ar": "جودة التقييمات"
+        },
+        {
+          "key": "availability",
+          "value": 0.8409,
+          "weight": 0.06,
+          "label_ar": "توفّر المخزون"
+        }
+      ]
+    },
+    {
+      "product_id": "ee5f871d-4ca0-4af5-b166-7d218389880a",
+      "title": "كريم عيون بخلاصة الورد الدمشقي",
+      "slug": "moist-070",
+      "image_url": "https://loremflickr.com/900/1125/skincare%2Ccream/all?lock=72908",
+      "category_id": "0c7e1f98-60ea-4b17-9f46-0f2e9bc93990",
+      "category_name_ar": "مرطبات",
+      "sellers": [
+        {
+          "id": "1ad675f2-7f7b-4ec6-a409-5c968881449f",
+          "name": "نور العبادي"
+        },
+        {
+          "id": "0429b7e3-2f14-428e-b0ea-096ef89b1964",
+          "name": "سلمى الطرطوسي"
+        },
+        {
+          "id": "e1f85c01-3370-44d5-b4e3-9f93fcd8cd8b",
+          "name": "سارة المنصوري"
+        }
+      ],
+      "trend_score": 34.47,
+      "previous_score": null,
+      "delta": 0,
+      "stage": {
+        "key": "EMERGING",
+        "label_ar": "صاعد مبكرًا"
+      },
+      "confidence": 0.8365,
+      "rank": 6,
+      "category_rank": 1,
+      "views": 235,
+      "views_growth_pct": 120.6,
+      "search_hits": 1,
+      "cart_adds": 24,
+      "units": 0,
+      "units_growth_pct": 0,
+      "revenue": {
+        "amount": "0.0000",
+        "currency": "SYP"
+      },
+      "view_to_order_rate": 0,
+      "stock_units": 55,
+      "days_of_cover": null,
+      "components": [
+        {
+          "key": "view_growth",
+          "value": 0.7871,
+          "weight": 0.13,
+          "label_ar": "نمو المشاهدات"
+        },
+        {
+          "key": "search_growth",
+          "value": 0.102,
+          "weight": 0.1,
+          "label_ar": "نمو البحث"
+        },
+        {
+          "key": "cart_growth",
+          "value": 0.6249,
+          "weight": 0.12,
+          "label_ar": "نمو الإضافة للسلة"
+        },
+        {
+          "key": "conversion",
+          "value": 0.2864,
+          "weight": 0.13,
+          "label_ar": "معدل التحويل"
+        },
+        {
+          "key": "sales_velocity",
+          "value": 0,
+          "weight": 0.17,
+          "label_ar": "سرعة البيع"
+        },
+        {
+          "key": "acceleration",
+          "value": 0.6315,
+          "weight": 0.11,
+          "label_ar": "تسارع الطلب"
+        },
+        {
+          "key": "engagement",
+          "value": 0,
+          "weight": 0.1,
+          "label_ar": "التفاعل"
+        },
+        {
+          "key": "quality",
+          "value": 0,
+          "weight": 0.08,
+          "label_ar": "جودة التقييمات"
+        },
+        {
+          "key": "availability",
+          "value": 0.8409,
+          "weight": 0.06,
+          "label_ar": "توفّر المخزون"
+        }
+      ]
+    },
+    {
+      "product_id": "25eae13a-e6a8-4826-bd7b-425eded274fc",
+      "title": "كارديجان كشمير",
+      "slug": "cashmere-cardigan",
+      "image_url": "https://loremflickr.com/900/1125/knitwear%2Ccardigan/all?lock=23885",
+      "category_id": "4e0dd44c-f149-41d2-a51c-f316c79d2e8a",
+      "category_name_ar": "تريكو",
+      "sellers": [
+        {
+          "id": "e1f85c01-3370-44d5-b4e3-9f93fcd8cd8b",
+          "name": "سارة المنصوري"
+        },
+        {
+          "id": "1ad675f2-7f7b-4ec6-a409-5c968881449f",
+          "name": "نور العبادي"
+        }
+      ],
+      "trend_score": 27.44,
+      "previous_score": null,
+      "delta": 0,
+      "stage": {
+        "key": "EMERGING",
+        "label_ar": "صاعد مبكرًا"
+      },
+      "confidence": 0.7541,
+      "rank": 8,
+      "category_rank": 1,
+      "views": 181,
+      "views_growth_pct": 10.3,
+      "search_hits": 8,
+      "cart_adds": 1,
+      "units": 0,
+      "units_growth_pct": -50,
+      "revenue": {
+        "amount": "0.0000",
+        "currency": "SYP"
+      },
+      "view_to_order_rate": 0,
+      "stock_units": 47,
+      "days_of_cover": null,
+      "components": [
+        {
+          "key": "view_growth",
+          "value": 0.5317,
+          "weight": 0.13,
+          "label_ar": "نمو المشاهدات"
+        },
+        {
+          "key": "search_growth",
+          "value": 0.4487,
+          "weight": 0.1,
+          "label_ar": "نمو البحث"
+        },
+        {
+          "key": "cart_growth",
+          "value": 0.0698,
+          "weight": 0.12,
+          "label_ar": "نمو الإضافة للسلة"
+        },
+        {
+          "key": "conversion",
+          "value": 0.2174,
+          "weight": 0.13,
+          "label_ar": "معدل التحويل"
+        },
+        {
+          "key": "sales_velocity",
+          "value": 0,
+          "weight": 0.17,
+          "label_ar": "سرعة البيع"
+        },
+        {
+          "key": "acceleration",
+          "value": 0.6663,
+          "weight": 0.11,
+          "label_ar": "تسارع الطلب"
+        },
+        {
+          "key": "engagement",
+          "value": 0,
+          "weight": 0.1,
+          "label_ar": "التفاعل"
+        },
+        {
+          "key": "quality",
+          "value": 0,
+          "weight": 0.08,
+          "label_ar": "جودة التقييمات"
+        },
+        {
+          "key": "availability",
+          "value": 0.8409,
+          "weight": 0.06,
+          "label_ar": "توفّر المخزون"
+        }
+      ]
+    },
+    {
+      "product_id": "5b0f396e-725d-4f76-8639-1159f59624b5",
+      "title": "أفرول قطني بلون محايد",
+      "slug": "babyset-139",
+      "image_url": "https://loremflickr.com/900/1125/baby%20clothes%2Cnewborn/all?lock=70044",
+      "category_id": "61f43943-e355-4546-b0c9-d391b6c688d2",
+      "category_name_ar": "أطقم مواليد",
+      "sellers": [
+        {
+          "id": "0efc3338-5f0f-42c8-9501-65fd653c312b",
+          "name": "ليلى الخوري"
+        },
+        {
+          "id": "71e8d387-25bb-4cfb-9ce2-06d7c80598ff",
+          "name": "آية الأم والطفل"
+        }
+      ],
+      "trend_score": 26.97,
+      "previous_score": null,
+      "delta": 0,
+      "stage": {
+        "key": "EMERGING",
+        "label_ar": "صاعد مبكرًا"
+      },
+      "confidence": 0.3333,
+      "rank": 13,
+      "category_rank": 1,
+      "views": 27,
+      "views_growth_pct": 600,
+      "search_hits": 4,
+      "cart_adds": 1,
+      "units": 0,
+      "units_growth_pct": 0,
+      "revenue": {
+        "amount": "0.0000",
+        "currency": "SYP"
+      },
+      "view_to_order_rate": 0,
+      "stock_units": 65,
+      "days_of_cover": null,
+      "components": [
+        {
+          "key": "view_growth",
+          "value": 0.7495,
+          "weight": 0.13,
+          "label_ar": "نمو المشاهدات"
+        },
+        {
+          "key": "search_growth",
+          "value": 0.1831,
+          "weight": 0.1,
+          "label_ar": "نمو البحث"
+        },
+        {
+          "key": "cart_growth",
+          "value": 0.0698,
+          "weight": 0.12,
+          "label_ar": "نمو الإضافة للسلة"
+        },
+        {
+          "key": "conversion",
+          "value": 0.1442,
+          "weight": 0.13,
+          "label_ar": "معدل التحويل"
+        },
+        {
+          "key": "sales_velocity",
+          "value": 0,
+          "weight": 0.17,
+          "label_ar": "سرعة البيع"
+        },
+        {
+          "key": "acceleration",
+          "value": 0.6947,
+          "weight": 0.11,
+          "label_ar": "تسارع الطلب"
+        },
+        {
+          "key": "engagement",
+          "value": 0,
+          "weight": 0.1,
+          "label_ar": "التفاعل"
+        },
+        {
+          "key": "quality",
+          "value": 0,
+          "weight": 0.08,
+          "label_ar": "جودة التقييمات"
+        },
+        {
+          "key": "availability",
+          "value": 0.8409,
+          "weight": 0.06,
+          "label_ar": "توفّر المخزون"
+        }
+      ]
+    },
+    {
+      "product_id": "2c2945b2-c7ab-41e2-870c-9f448568186e",
+      "title": "ميدالية شوكولا بالفستق الحلبي",
+      "slug": "choco-099",
+      "image_url": "https://loremflickr.com/900/1125/chocolate%2Cdessert/all?lock=31939",
+      "category_id": "75567f6b-83cf-4fa3-9e38-a5d8129d0450",
+      "category_name_ar": "شوكولا",
+      "sellers": [
+        {
+          "id": "6411755a-4645-48cd-9e24-55401a326ea9",
+          "name": "ميساء الورد"
+        },
+        {
+          "id": "d4f86e0a-0e79-4de7-a4e5-37487e549535",
+          "name": "هبة الحلواني"
+        }
+      ],
+      "trend_score": 26.4,
+      "previous_score": null,
+      "delta": 0,
+      "stage": {
+        "key": "EMERGING",
+        "label_ar": "صاعد مبكرًا"
+      },
+      "confidence": 0.2857,
+      "rank": 18,
+      "category_rank": 1,
+      "views": 24,
+      "views_growth_pct": 92.3,
+      "search_hits": 7,
+      "cart_adds": 0,
+      "units": 0,
+      "units_growth_pct": 0,
+      "revenue": {
+        "amount": "0.0000",
+        "currency": "SYP"
+      },
+      "view_to_order_rate": 0,
+      "stock_units": 37,
+      "days_of_cover": null,
+      "components": [
+        {
+          "key": "view_growth",
+          "value": 0.6092,
+          "weight": 0.13,
+          "label_ar": "نمو المشاهدات"
+        },
+        {
+          "key": "search_growth",
+          "value": 0.3601,
+          "weight": 0.1,
+          "label_ar": "نمو البحث"
+        },
+        {
+          "key": "cart_growth",
+          "value": 0,
+          "weight": 0.12,
+          "label_ar": "نمو الإضافة للسلة"
+        },
+        {
+          "key": "conversion",
+          "value": 0.1167,
+          "weight": 0.13,
+          "label_ar": "معدل التحويل"
+        },
+        {
+          "key": "sales_velocity",
+          "value": 0,
+          "weight": 0.17,
+          "label_ar": "سرعة البيع"
+        },
+        {
+          "key": "acceleration",
+          "value": 0.7557,
+          "weight": 0.11,
+          "label_ar": "تسارع الطلب"
+        },
+        {
+          "key": "engagement",
+          "value": 0,
+          "weight": 0.1,
+          "label_ar": "التفاعل"
+        },
+        {
+          "key": "quality",
+          "value": 0,
+          "weight": 0.08,
+          "label_ar": "جودة التقييمات"
+        },
+        {
+          "key": "availability",
+          "value": 0.8409,
+          "weight": 0.06,
+          "label_ar": "توفّر المخزون"
+        }
+      ]
+    },
+    {
+      "product_id": "e350b583-a05f-430b-b6a1-bb587c4db10d",
+      "title": "حلق بحجر الزركون",
+      "slug": "jewel-044",
+      "image_url": "https://loremflickr.com/900/1125/jewellery%2Cnecklace/all?lock=5300",
+      "category_id": "406bd41b-a43f-4728-aeef-7357d720d8ef",
+      "category_name_ar": "مجوهرات",
+      "sellers": [
+        {
+          "id": "1ad675f2-7f7b-4ec6-a409-5c968881449f",
+          "name": "نور العبادي"
+        }
+      ],
+      "trend_score": 26.22,
+      "previous_score": null,
+      "delta": 0,
+      "stage": {
+        "key": "EMERGING",
+        "label_ar": "صاعد مبكرًا"
+      },
+      "confidence": 0.3103,
+      "rank": 16,
+      "category_rank": 1,
+      "views": 27,
+      "views_growth_pct": 154.5,
+      "search_hits": 8,
+      "cart_adds": 0,
+      "units": 0,
+      "units_growth_pct": 0,
+      "revenue": {
+        "amount": "0.0000",
+        "currency": "SYP"
+      },
+      "view_to_order_rate": 0,
+      "stock_units": 40,
+      "days_of_cover": null,
+      "components": [
+        {
+          "key": "view_growth",
+          "value": 0.675,
+          "weight": 0.13,
+          "label_ar": "نمو المشاهدات"
+        },
+        {
+          "key": "search_growth",
+          "value": 0.4347,
+          "weight": 0.1,
+          "label_ar": "نمو البحث"
+        },
+        {
+          "key": "cart_growth",
+          "value": 0,
+          "weight": 0.12,
+          "label_ar": "نمو الإضافة للسلة"
+        },
+        {
+          "key": "conversion",
+          "value": 0.124,
+          "weight": 0.13,
+          "label_ar": "معدل التحويل"
+        },
+        {
+          "key": "sales_velocity",
+          "value": 0,
+          "weight": 0.17,
+          "label_ar": "سرعة البيع"
+        },
+        {
+          "key": "acceleration",
+          "value": 0.5856,
+          "weight": 0.11,
+          "label_ar": "تسارع الطلب"
+        },
+        {
+          "key": "engagement",
+          "value": 0,
+          "weight": 0.1,
+          "label_ar": "التفاعل"
+        },
+        {
+          "key": "quality",
+          "value": 0,
+          "weight": 0.08,
+          "label_ar": "جودة التقييمات"
+        },
+        {
+          "key": "availability",
+          "value": 0.8409,
+          "weight": 0.06,
+          "label_ar": "توفّر المخزون"
+        }
+      ]
+    },
+    {
+      "product_id": "5c697db2-75d5-43a8-ac50-1ce61de787fc",
+      "title": "حذاء أطفال بشريط لاصق",
+      "slug": "babyshoe-149",
+      "image_url": "https://loremflickr.com/900/1125/baby%20shoes/all?lock=37970",
+      "category_id": "3eb112b3-5f77-4161-bbb7-87c09d00d736",
+      "category_name_ar": "أحذية أطفال",
+      "sellers": [
+        {
+          "id": "71e8d387-25bb-4cfb-9ce2-06d7c80598ff",
+          "name": "آية الأم والطفل"
+        }
+      ],
+      "trend_score": 24.97,
+      "previous_score": null,
+      "delta": 0,
+      "stage": {
+        "key": "EMERGING",
+        "label_ar": "صاعد مبكرًا"
+      },
+      "confidence": 0.2308,
+      "rank": 23,
+      "category_rank": 1,
+      "views": 18,
+      "views_growth_pct": 171.4,
+      "search_hits": 5,
+      "cart_adds": 0,
+      "units": 0,
+      "units_growth_pct": 0,
+      "revenue": {
+        "amount": "0.0000",
+        "currency": "SYP"
+      },
+      "view_to_order_rate": 0,
+      "stock_units": 4,
+      "days_of_cover": null,
+      "components": [
+        {
+          "key": "view_growth",
+          "value": 0.6179,
+          "weight": 0.13,
+          "label_ar": "نمو المشاهدات"
+        },
+        {
+          "key": "search_growth",
+          "value": 0.334,
+          "weight": 0.1,
+          "label_ar": "نمو البحث"
+        },
+        {
+          "key": "cart_growth",
+          "value": 0,
+          "weight": 0.12,
+          "label_ar": "نمو الإضافة للسلة"
+        },
+        {
+          "key": "conversion",
+          "value": 0.0992,
+          "weight": 0.13,
+          "label_ar": "معدل التحويل"
+        },
+        {
+          "key": "sales_velocity",
+          "value": 0,
+          "weight": 0.17,
+          "label_ar": "سرعة البيع"
+        },
+        {
+          "key": "acceleration",
+          "value": 0.6605,
+          "weight": 0.11,
+          "label_ar": "تسارع الطلب"
+        },
+        {
+          "key": "engagement",
+          "value": 0,
+          "weight": 0.1,
+          "label_ar": "التفاعل"
+        },
+        {
+          "key": "quality",
+          "value": 0,
+          "weight": 0.08,
+          "label_ar": "جودة التقييمات"
+        },
+        {
+          "key": "availability",
+          "value": 0.8409,
+          "weight": 0.06,
+          "label_ar": "توفّر المخزون"
+        }
+      ]
+    },
+    {
+      "product_id": "f297259d-7ab6-4000-ad91-234850fef785",
+      "title": "صندوق رمضان بتصميم شرقي",
+      "slug": "ramadan-124",
+      "image_url": "https://loremflickr.com/900/1125/ramadan%20gift%2Clantern/all?lock=82628",
+      "category_id": "a47df36b-9889-402d-b5b7-139f9d3fcd12",
+      "category_name_ar": "هدايا رمضان والأعياد",
+      "sellers": [
+        {
+          "id": "6411755a-4645-48cd-9e24-55401a326ea9",
+          "name": "ميساء الورد"
+        },
+        {
+          "id": "d4f86e0a-0e79-4de7-a4e5-37487e549535",
+          "name": "هبة الحلواني"
+        }
+      ],
+      "trend_score": 24.81,
+      "previous_score": null,
+      "delta": 0,
+      "stage": {
+        "key": "EMERGING",
+        "label_ar": "صاعد مبكرًا"
+      },
+      "confidence": 0.2308,
+      "rank": 25,
+      "category_rank": 2,
+      "views": 18,
+      "views_growth_pct": 35.7,
+      "search_hits": 6,
+      "cart_adds": 0,
+      "units": 0,
+      "units_growth_pct": 0,
+      "revenue": {
+        "amount": "0.0000",
+        "currency": "SYP"
+      },
+      "view_to_order_rate": 0,
+      "stock_units": 57,
+      "days_of_cover": null,
+      "components": [
+        {
+          "key": "view_growth",
+          "value": 0.4939,
+          "weight": 0.13,
+          "label_ar": "نمو المشاهدات"
+        },
+        {
+          "key": "search_growth",
+          "value": 0.3799,
+          "weight": 0.1,
+          "label_ar": "نمو البحث"
+        },
+        {
+          "key": "cart_growth",
+          "value": 0,
+          "weight": 0.12,
+          "label_ar": "نمو الإضافة للسلة"
+        },
+        {
+          "key": "conversion",
+          "value": 0.0992,
+          "weight": 0.13,
+          "label_ar": "معدل التحويل"
+        },
+        {
+          "key": "sales_velocity",
+          "value": 0,
+          "weight": 0.17,
+          "label_ar": "سرعة البيع"
+        },
+        {
+          "key": "acceleration",
+          "value": 0.7508,
+          "weight": 0.11,
+          "label_ar": "تسارع الطلب"
+        },
+        {
+          "key": "engagement",
+          "value": 0,
+          "weight": 0.1,
+          "label_ar": "التفاعل"
+        },
+        {
+          "key": "quality",
+          "value": 0,
+          "weight": 0.08,
+          "label_ar": "جودة التقييمات"
+        },
+        {
+          "key": "availability",
+          "value": 0.8409,
+          "weight": 0.06,
+          "label_ar": "توفّر المخزون"
+        }
+      ]
+    },
+    {
+      "product_id": "7f24a031-12fe-4ebe-b2bd-fda9fcf046a7",
+      "title": "هدية استقبال مع بطانية قطنية",
+      "slug": "newborn-115",
+      "image_url": "https://loremflickr.com/900/1125/newborn%20gift%2Cbaby/all?lock=36819",
+      "category_id": "dcbe197e-f897-4c0c-ad70-b891e73c9f36",
+      "category_name_ar": "هدايا مواليد",
+      "sellers": [
+        {
+          "id": "e1f85c01-3370-44d5-b4e3-9f93fcd8cd8b",
+          "name": "سارة المنصوري"
+        },
+        {
+          "id": "c948f072-ee72-4a19-9124-f0cfcba85773",
+          "name": "رهف الشامي"
+        }
+      ],
+      "trend_score": 23.76,
+      "previous_score": null,
+      "delta": 0,
+      "stage": {
+        "key": "EMERGING",
+        "label_ar": "صاعد مبكرًا"
+      },
+      "confidence": 0.2405,
+      "rank": 28,
+      "category_rank": 1,
+      "views": 19,
+      "views_growth_pct": 53.8,
+      "search_hits": 4,
+      "cart_adds": 0,
+      "units": 0,
+      "units_growth_pct": 0,
+      "revenue": {
+        "amount": "0.0000",
+        "currency": "SYP"
+      },
+      "view_to_order_rate": 0,
+      "stock_units": 77,
+      "days_of_cover": null,
+      "components": [
+        {
+          "key": "view_growth",
+          "value": 0.5306,
+          "weight": 0.13,
+          "label_ar": "نمو المشاهدات"
+        },
+        {
+          "key": "search_growth",
+          "value": 0.2659,
+          "weight": 0.1,
+          "label_ar": "نمو البحث"
+        },
+        {
+          "key": "cart_growth",
+          "value": 0,
+          "weight": 0.12,
+          "label_ar": "نمو الإضافة للسلة"
+        },
+        {
+          "key": "conversion",
+          "value": 0.1025,
+          "weight": 0.13,
+          "label_ar": "معدل التحويل"
+        },
+        {
+          "key": "sales_velocity",
+          "value": 0,
+          "weight": 0.17,
+          "label_ar": "سرعة البيع"
+        },
+        {
+          "key": "acceleration",
+          "value": 0.7114,
+          "weight": 0.11,
+          "label_ar": "تسارع الطلب"
+        },
+        {
+          "key": "engagement",
+          "value": 0,
+          "weight": 0.1,
+          "label_ar": "التفاعل"
+        },
+        {
+          "key": "quality",
+          "value": 0,
+          "weight": 0.08,
+          "label_ar": "جودة التقييمات"
+        },
+        {
+          "key": "availability",
+          "value": 0.8409,
+          "weight": 0.06,
+          "label_ar": "توفّر المخزون"
+        }
+      ]
+    }
+  ],
+  "declining_products": [
+    {
+      "product_id": "ecbd2134-8d10-48e4-a478-24c422f6eea5",
+      "title": "بيجاما أطفال بأزرار سهلة",
+      "slug": "babyset-141",
+      "image_url": "https://loremflickr.com/900/1125/baby%20clothes%2Cnewborn/all?lock=9347",
+      "category_id": "61f43943-e355-4546-b0c9-d391b6c688d2",
+      "category_name_ar": "أطقم مواليد",
+      "sellers": [
+        {
+          "id": "71e8d387-25bb-4cfb-9ce2-06d7c80598ff",
+          "name": "آية الأم والطفل"
+        },
+        {
+          "id": "1ad675f2-7f7b-4ec6-a409-5c968881449f",
+          "name": "نور العبادي"
+        }
+      ],
+      "trend_score": 12.96,
+      "previous_score": null,
+      "delta": 0,
+      "stage": {
+        "key": "DECLINING",
+        "label_ar": "في تراجع"
+      },
+      "confidence": 0.1667,
+      "rank": 64,
+      "category_rank": 2,
+      "views": 12,
+      "views_growth_pct": -53.6,
+      "search_hits": 6,
+      "cart_adds": 0,
+      "units": 0,
+      "units_growth_pct": 0,
+      "revenue": {
+        "amount": "0.0000",
+        "currency": "SYP"
+      },
+      "view_to_order_rate": 0,
+      "stock_units": 53,
+      "days_of_cover": null,
+      "components": [
+        {
+          "key": "view_growth",
+          "value": 0.1831,
+          "weight": 0.13,
+          "label_ar": "نمو المشاهدات"
+        },
+        {
+          "key": "search_growth",
+          "value": 0.2799,
+          "weight": 0.1,
+          "label_ar": "نمو البحث"
+        },
+        {
+          "key": "cart_growth",
+          "value": 0,
+          "weight": 0.12,
+          "label_ar": "نمو الإضافة للسلة"
+        },
+        {
+          "key": "conversion",
+          "value": 0.0764,
+          "weight": 0.13,
+          "label_ar": "معدل التحويل"
+        },
+        {
+          "key": "sales_velocity",
+          "value": 0,
+          "weight": 0.17,
+          "label_ar": "سرعة البيع"
+        },
+        {
+          "key": "acceleration",
+          "value": 0.1579,
+          "weight": 0.11,
+          "label_ar": "تسارع الطلب"
+        },
+        {
+          "key": "engagement",
+          "value": 0,
+          "weight": 0.1,
+          "label_ar": "التفاعل"
+        },
+        {
+          "key": "quality",
+          "value": 0,
+          "weight": 0.08,
+          "label_ar": "جودة التقييمات"
+        },
+        {
+          "key": "availability",
+          "value": 0.8409,
+          "weight": 0.06,
+          "label_ar": "توفّر المخزون"
+        }
+      ]
+    }
+  ],
+  "search_trends": [
+    {
+      "term_key": "slot:BAG جلد طبيعي ظهر",
+      "display": "حقيبة ظهر جلد طبيعي",
+      "facets_ar": "حقيبة",
+      "searches": 28,
+      "previous_searches": 1,
+      "growth": 2.0477,
+      "zero_results": 28,
+      "miss_rate": 1,
+      "average_results": 0,
+      "clicks": 0,
+      "click_rate": 0,
+      "orders": 0,
+      "window_days": 30
+    },
+    {
+      "term_key": "col:green occ:evening slot:DRESS طويل",
+      "display": "فستان سهرة أخضر طويل",
+      "facets_ar": "فستان · سهرة · أخضر",
+      "searches": 27,
+      "previous_searches": 2,
+      "growth": 1.7918,
+      "zero_results": 27,
+      "miss_rate": 1,
+      "average_results": 0,
+      "clicks": 0,
+      "click_rate": 0,
+      "orders": 0,
+      "window_days": 30
+    },
+    {
+      "term_key": "slot:SHOES عريض مقاس",
+      "display": "حذاء عريض مقاس 41",
+      "facets_ar": "حذاء",
+      "searches": 24,
+      "previous_searches": 5,
+      "growth": 1.2164,
+      "zero_results": 24,
+      "miss_rate": 1,
+      "average_results": 0,
+      "clicks": 0,
+      "click_rate": 0,
+      "orders": 0,
+      "window_days": 30
+    },
+    {
+      "term_key": "slot:ABAYA صيفيه قطن",
+      "display": "عباية صيفية قطن",
+      "facets_ar": "عباية",
+      "searches": 27,
+      "previous_searches": 6,
+      "growth": 1.204,
+      "zero_results": 27,
+      "miss_rate": 1,
+      "average_results": 0,
+      "clicks": 0,
+      "click_rate": 0,
+      "orders": 0,
+      "window_days": 30
+    },
+    {
+      "term_key": "occ:newborn طقم",
+      "display": "طقم مولود",
+      "facets_ar": "مولود جديد",
+      "searches": 33,
+      "previous_searches": 17,
+      "growth": 0.5878,
+      "zero_results": 0,
+      "miss_rate": 0,
+      "average_results": 3.39,
+      "clicks": 0,
+      "click_rate": 0,
+      "orders": 0,
+      "window_days": 30
+    },
+    {
+      "term_key": "slot:TOP كشمير",
+      "display": "تريكو كشمير",
+      "facets_ar": "قطعة علوية",
+      "searches": 29,
+      "previous_searches": 21,
+      "growth": 0.2877,
+      "zero_results": 0,
+      "miss_rate": 0,
+      "average_results": 3.62,
+      "clicks": 0,
+      "click_rate": 0,
+      "orders": 0,
+      "window_days": 30
+    },
+    {
+      "term_key": "slot:PERFUME ياسمين",
+      "display": "عطر ياسمين",
+      "facets_ar": "عطر",
+      "searches": 22,
+      "previous_searches": 16,
+      "growth": 0.2744,
+      "zero_results": 0,
+      "miss_rate": 0,
+      "average_results": 3.77,
+      "clicks": 0,
+      "click_rate": 0,
+      "orders": 0,
+      "window_days": 30
+    },
+    {
+      "term_key": "دفتر مخطط",
+      "display": "دفتر مخطط",
+      "facets_ar": "",
+      "searches": 21,
+      "previous_searches": 18,
+      "growth": 0.1335,
+      "zero_results": 0,
+      "miss_rate": 0,
+      "average_results": 3.9,
+      "clicks": 0,
+      "click_rate": 0,
+      "orders": 0,
+      "window_days": 30
+    },
+    {
+      "term_key": "باقه ورد",
+      "display": "باقة ورد",
+      "facets_ar": "",
+      "searches": 27,
+      "previous_searches": 26,
+      "growth": 0.0339,
+      "zero_results": 0,
+      "miss_rate": 0,
+      "average_results": 4.3,
+      "clicks": 0,
+      "click_rate": 0,
+      "orders": 0,
+      "window_days": 30
+    },
+    {
+      "term_key": "slot:BAG جلد",
+      "display": "حقيبة جلد",
+      "facets_ar": "حقيبة",
+      "searches": 24,
+      "previous_searches": 26,
+      "growth": -0.0715,
+      "zero_results": 0,
+      "miss_rate": 0,
+      "average_results": 3.79,
+      "clicks": 0,
+      "click_rate": 0,
+      "orders": 0,
+      "window_days": 30
+    },
+    {
+      "term_key": "col:red slot:BEAUTY شفاه مطفي",
+      "display": "أحمر شفاه مطفي",
+      "facets_ar": "مكياج وعناية · أحمر",
+      "searches": 26,
+      "previous_searches": 29,
+      "growth": -0.0984,
+      "zero_results": 0,
+      "miss_rate": 0,
+      "average_results": 3.85,
+      "clicks": 0,
+      "click_rate": 0,
+      "orders": 0,
+      "window_days": 30
+    },
+    {
+      "term_key": "occ:graduation slot:GIFT",
+      "display": "هدية تخرج",
+      "facets_ar": "هدية · تخرّج",
+      "searches": 24,
+      "previous_searches": 27,
+      "growth": -0.1054,
+      "zero_results": 0,
+      "miss_rate": 0,
+      "average_results": 4.04,
+      "clicks": 0,
+      "click_rate": 0,
+      "orders": 0,
+      "window_days": 30
+    }
+  ],
+  "unmet_demand": [
+    {
+      "id": "680164c9-6b14-4a96-a363-5231db4c4190",
+      "term_key": "slot:BAG جلد طبيعي ظهر",
+      "display": "حقيبة ظهر جلد طبيعي",
+      "facets": {
+        "slots": [
+          "BAG"
+        ],
+        "colours": [],
+        "occasion": null,
+        "budgetSyp": null,
+        "priceBand": null,
+        "categorySlugs": [
+          "handbags"
+        ],
+        "residualTokens": [
+          "ظهر",
+          "جلد",
+          "طبيعي"
+        ]
+      },
+      "searches": 28,
+      "zero_results": 28,
+      "clicks": 0,
+      "orders": 0,
+      "miss_rate": 1,
+      "demand_score": 61.76,
+      "growth": 2.0477,
+      "suggested_category": {
+        "id": "7ae681fd-096b-4958-aa4c-d27d2b77e7e0",
+        "name_ar": "حقائب يد",
+        "slug": "handbags"
+      },
+      "suggestion_ar": "طلب واضح على حقيبة ولا توجد نتائج مناسبة في التشكيلة الحالية.",
+      "status": "OPEN",
+      "note": null,
+      "first_seen_at": "2026-08-31T10:08:47.916Z",
+      "last_seen_at": "2026-08-31T10:19:47.504Z"
+    },
+    {
+      "id": "719f01f8-0c24-4d9a-ae38-30e528507b70",
+      "term_key": "col:green occ:evening slot:DRESS طويل",
+      "display": "فستان سهرة أخضر طويل",
+      "facets": {
+        "slots": [
+          "DRESS"
+        ],
+        "colours": [
+          "green"
+        ],
+        "occasion": "evening",
+        "budgetSyp": null,
+        "priceBand": null,
+        "categorySlugs": [
+          "dresses"
+        ],
+        "residualTokens": [
+          "طويل"
+        ]
+      },
+      "searches": 27,
+      "zero_results": 27,
+      "clicks": 0,
+      "orders": 0,
+      "miss_rate": 1,
+      "demand_score": 60.45,
+      "growth": 1.7918,
+      "suggested_category": {
+        "id": "2481dc05-1a60-4450-ba8f-0a608d7a108b",
+        "name_ar": "فساتين",
+        "slug": "dresses"
+      },
+      "suggestion_ar": "طلب واضح على فستان · سهرة · أخضر ولا توجد نتائج مناسبة في التشكيلة الحالية.",
+      "status": "OPEN",
+      "note": null,
+      "first_seen_at": "2026-08-31T10:08:47.881Z",
+      "last_seen_at": "2026-08-31T10:19:47.483Z"
+    },
+    {
+      "id": "e23def1e-cf4a-49b1-89dd-57612b89c29d",
+      "term_key": "slot:ABAYA صيفيه قطن",
+      "display": "عباية صيفية قطن",
+      "facets": {
+        "slots": [
+          "ABAYA"
+        ],
+        "colours": [],
+        "occasion": null,
+        "budgetSyp": null,
+        "priceBand": null,
+        "categorySlugs": [
+          "abayas"
+        ],
+        "residualTokens": [
+          "صيفيه",
+          "قطن"
+        ]
+      },
+      "searches": 27,
+      "zero_results": 27,
+      "clicks": 0,
+      "orders": 0,
+      "miss_rate": 1,
+      "demand_score": 57.8,
+      "growth": 1.204,
+      "suggested_category": {
+        "id": "af233f18-8371-446e-ac6b-ae011a535f50",
+        "name_ar": "عبايات ومحتشم",
+        "slug": "abayas"
+      },
+      "suggestion_ar": "طلب واضح على عباية ولا توجد نتائج مناسبة في التشكيلة الحالية.",
+      "status": "OPEN",
+      "note": null,
+      "first_seen_at": "2026-08-31T10:08:47.903Z",
+      "last_seen_at": "2026-08-31T10:19:47.490Z"
+    },
+    {
+      "id": "437d950c-b9c8-4f23-9337-4dab04903fb0",
+      "term_key": "occ:newborn طقم",
+      "display": "طقم مولود",
+      "facets": {
+        "slots": [],
+        "colours": [],
+        "occasion": "newborn",
+        "budgetSyp": null,
+        "priceBand": null,
+        "categorySlugs": [],
+        "residualTokens": [
+          "طقم"
+        ]
+      },
+      "searches": 33,
+      "zero_results": 0,
+      "clicks": 0,
+      "orders": 0,
+      "miss_rate": 0,
+      "demand_score": 54.79,
+      "growth": 0.5878,
+      "suggested_category": null,
+      "suggestion_ar": "تظهر نتائج لـمولود جديد لكن العميلات لا يفتحن أيًّا منها — التشكيلة موجودة والمعروض لا يناسب الطلب.",
+      "status": "OPEN",
+      "note": null,
+      "first_seen_at": "2026-08-31T10:08:47.899Z",
+      "last_seen_at": "2026-08-31T10:19:47.512Z"
+    },
+    {
+      "id": "b3584c86-0dc6-4131-a525-e60f5d84344c",
+      "term_key": "slot:SHOES عريض مقاس",
+      "display": "حذاء عريض مقاس 41",
+      "facets": {
+        "slots": [
+          "SHOES"
+        ],
+        "colours": [],
+        "occasion": null,
+        "budgetSyp": null,
+        "priceBand": null,
+        "categorySlugs": [
+          "shoes"
+        ],
+        "residualTokens": [
+          "عريض",
+          "مقاس"
+        ]
+      },
+      "searches": 24,
+      "zero_results": 24,
+      "clicks": 0,
+      "orders": 0,
+      "miss_rate": 1,
+      "demand_score": 53.95,
+      "growth": 1.2164,
+      "suggested_category": {
+        "id": "27905f7f-0b4e-4866-bf2b-1f5e993aed6d",
+        "name_ar": "أحذية",
+        "slug": "shoes"
+      },
+      "suggestion_ar": "طلب واضح على حذاء ولا توجد نتائج مناسبة في التشكيلة الحالية.",
+      "status": "OPEN",
+      "note": null,
+      "first_seen_at": "2026-08-31T10:08:47.926Z",
+      "last_seen_at": "2026-08-31T10:19:47.533Z"
+    },
+    {
+      "id": "3270f611-b54e-4dc3-b190-5ea35ac3d447",
+      "term_key": "slot:TOP كشمير",
+      "display": "تريكو كشمير",
+      "facets": {
+        "slots": [
+          "TOP"
+        ],
+        "colours": [],
+        "occasion": null,
+        "budgetSyp": null,
+        "priceBand": null,
+        "categorySlugs": [
+          "knitwear",
+          "activewear"
+        ],
+        "residualTokens": [
+          "كشمير"
+        ]
+      },
+      "searches": 29,
+      "zero_results": 0,
+      "clicks": 0,
+      "orders": 0,
+      "miss_rate": 0,
+      "demand_score": 46.39,
+      "growth": 0.2877,
+      "suggested_category": {
+        "id": "4e0dd44c-f149-41d2-a51c-f316c79d2e8a",
+        "name_ar": "تريكو",
+        "slug": "knitwear"
+      },
+      "suggestion_ar": "تظهر نتائج لـقطعة علوية لكن العميلات لا يفتحن أيًّا منها — التشكيلة موجودة والمعروض لا يناسب الطلب.",
+      "status": "OPEN",
+      "note": null,
+      "first_seen_at": "2026-08-31T10:08:47.930Z",
+      "last_seen_at": "2026-08-31T10:19:47.537Z"
+    },
+    {
+      "id": "a1b607fe-34f4-46bc-9dc0-5ed208c6e0a9",
+      "term_key": "col:red slot:BEAUTY شفاه مطفي",
+      "display": "أحمر شفاه مطفي",
+      "facets": {
+        "slots": [
+          "BEAUTY"
+        ],
+        "colours": [
+          "red"
+        ],
+        "occasion": null,
+        "budgetSyp": null,
+        "priceBand": null,
+        "categorySlugs": [
+          "face-makeup",
+          "lips",
+          "moisturisers",
+          "cleansers"
+        ],
+        "residualTokens": [
+          "شفاه",
+          "مطفي"
+        ]
+      },
+      "searches": 26,
+      "zero_results": 0,
+      "clicks": 0,
+      "orders": 0,
+      "miss_rate": 0,
+      "demand_score": 39.39,
+      "growth": -0.0984,
+      "suggested_category": {
+        "id": "3fc27319-f8a3-4082-9150-3872085cca86",
+        "name_ar": "مكياج الوجه",
+        "slug": "face-makeup"
+      },
+      "suggestion_ar": "تظهر نتائج لـمكياج وعناية · أحمر لكن العميلات لا يفتحن أيًّا منها — التشكيلة موجودة والمعروض لا يناسب الطلب.",
+      "status": "OPEN",
+      "note": null,
+      "first_seen_at": "2026-08-31T10:08:47.885Z",
+      "last_seen_at": "2026-08-31T10:19:47.499Z"
+    },
+    {
+      "id": "28adb969-eea0-4cc5-820b-c1c57b9dc795",
+      "term_key": "slot:PERFUME ياسمين",
+      "display": "عطر ياسمين",
+      "facets": {
+        "slots": [
+          "PERFUME"
+        ],
+        "colours": [],
+        "occasion": null,
+        "budgetSyp": null,
+        "priceBand": null,
+        "categorySlugs": [
+          "perfumes"
+        ],
+        "residualTokens": [
+          "ياسمين"
+        ]
+      },
+      "searches": 22,
+      "zero_results": 0,
+      "clicks": 0,
+      "orders": 0,
+      "miss_rate": 0,
+      "demand_score": 39,
+      "growth": 0.2744,
+      "suggested_category": {
+        "id": "5d165b98-f0e4-4f6a-bb8b-c2b6082d515f",
+        "name_ar": "عطور نسائية",
+        "slug": "perfumes"
+      },
+      "suggestion_ar": "تظهر نتائج لـعطر لكن العميلات لا يفتحن أيًّا منها — التشكيلة موجودة والمعروض لا يناسب الطلب.",
+      "status": "OPEN",
+      "note": null,
+      "first_seen_at": "2026-08-31T10:08:47.920Z",
+      "last_seen_at": "2026-08-31T10:19:47.542Z"
+    },
+    {
+      "id": "b52e674c-1694-44bf-a5c9-e3e2dc74968c",
+      "term_key": "occ:graduation slot:GIFT",
+      "display": "هدية تخرج",
+      "facets": {
+        "slots": [
+          "GIFT"
+        ],
+        "colours": [],
+        "occasion": "graduation",
+        "budgetSyp": null,
+        "priceBand": null,
+        "categorySlugs": [
+          "bouquets",
+          "chocolate",
+          "candy-boxes",
+          "graduation-gifts",
+          "newborn-gifts",
+          "ramadan-gifts",
+          "notebooks",
+          "desk-accessories",
+          "wall-art",
+          "perfumes",
+          "jewellery"
+        ],
+        "residualTokens": []
+      },
+      "searches": 24,
+      "zero_results": 0,
+      "clicks": 0,
+      "orders": 0,
+      "miss_rate": 0,
+      "demand_score": 37.5,
+      "growth": -0.1054,
+      "suggested_category": {
+        "id": "cdbfcf6a-938d-497b-ba51-8674e37dd9fc",
+        "name_ar": "باقات ورد",
+        "slug": "bouquets"
+      },
+      "suggestion_ar": "تظهر نتائج لـهدية · تخرّج لكن العميلات لا يفتحن أيًّا منها — التشكيلة موجودة والمعروض لا يناسب الطلب.",
+      "status": "OPEN",
+      "note": null,
+      "first_seen_at": "2026-08-31T10:08:47.894Z",
+      "last_seen_at": "2026-08-31T10:19:47.520Z"
+    },
+    {
+      "id": "0d71c1ea-4f43-4116-ade6-f8596339359b",
+      "term_key": "slot:BAG جلد",
+      "display": "حقيبة جلد",
+      "facets": {
+        "slots": [
+          "BAG"
+        ],
+        "colours": [],
+        "occasion": null,
+        "budgetSyp": null,
+        "priceBand": null,
+        "categorySlugs": [
+          "handbags"
+        ],
+        "residualTokens": [
+          "جلد"
+        ]
+      },
+      "searches": 24,
+      "zero_results": 0,
+      "clicks": 0,
+      "orders": 0,
+      "miss_rate": 0,
+      "demand_score": 37.5,
+      "growth": -0.0715,
+      "suggested_category": {
+        "id": "7ae681fd-096b-4958-aa4c-d27d2b77e7e0",
+        "name_ar": "حقائب يد",
+        "slug": "handbags"
+      },
+      "suggestion_ar": "تظهر نتائج لـحقيبة لكن العميلات لا يفتحن أيًّا منها — التشكيلة موجودة والمعروض لا يناسب الطلب.",
+      "status": "OPEN",
+      "note": null,
+      "first_seen_at": "2026-08-31T10:08:47.912Z",
+      "last_seen_at": "2026-08-31T10:19:47.529Z"
+    }
+  ],
+  "unmet_demand_total": 15,
+  "forecast": {
+    "horizon_days": 30,
+    "total_units": 0.043,
+    "total_revenue": {
+      "amount": "17323.4800",
+      "currency": "SYP"
+    },
+    "confidence": 0.6121,
+    "method": "HOLT_DAMPED",
+    "backtest_mae": 1.4014,
+    "products": null,
+    "points": [
+      {
+        "date": "2026-09-01",
+        "units": 0.027,
+        "low": 0,
+        "high": 3.397
+      },
+      {
+        "date": "2026-09-02",
+        "units": 0.013,
+        "low": 0,
+        "high": 4.442
+      },
+      {
+        "date": "2026-09-03",
+        "units": 0.003,
+        "low": 0,
+        "high": 4.899
+      },
+      {
+        "date": "2026-09-04",
+        "units": 0,
+        "low": 0,
+        "high": 6.672
+      },
+      {
+        "date": "2026-09-05",
+        "units": 0,
+        "low": 0,
+        "high": 5.638
+      },
+      {
+        "date": "2026-09-06",
+        "units": 0,
+        "low": 0,
+        "high": 7.423
+      },
+      {
+        "date": "2026-09-07",
+        "units": 0,
+        "low": 0,
+        "high": 11.251
+      },
+      {
+        "date": "2026-09-08",
+        "units": 0,
+        "low": 0,
+        "high": 9.532
+      },
+      {
+        "date": "2026-09-09",
+        "units": 0,
+        "low": 0,
+        "high": 9.397
+      },
+      {
+        "date": "2026-09-10",
+        "units": 0,
+        "low": 0,
+        "high": 8.939
+      },
+      {
+        "date": "2026-09-11",
+        "units": 0,
+        "low": 0,
+        "high": 11.064
+      },
+      {
+        "date": "2026-09-12",
+        "units": 0,
+        "low": 0,
+        "high": 8.734
+      },
+      {
+        "date": "2026-09-13",
+        "units": 0,
+        "low": 0,
+        "high": 10.927
+      },
+      {
+        "date": "2026-09-14",
+        "units": 0,
+        "low": 0,
+        "high": 15.911
+      },
+      {
+        "date": "2026-09-15",
+        "units": 0,
+        "low": 0,
+        "high": 13.052
+      },
+      {
+        "date": "2026-09-16",
+        "units": 0,
+        "low": 0,
+        "high": 12.529
+      },
+      {
+        "date": "2026-09-17",
+        "units": 0,
+        "low": 0,
+        "high": 11.655
+      },
+      {
+        "date": "2026-09-18",
+        "units": 0,
+        "low": 0,
+        "high": 14.153
+      },
+      {
+        "date": "2026-09-19",
+        "units": 0,
+        "low": 0,
+        "high": 10.991
+      },
+      {
+        "date": "2026-09-20",
+        "units": 0,
+        "low": 0,
+        "high": 13.553
+      },
+      {
+        "date": "2026-09-21",
+        "units": 0,
+        "low": 0,
+        "high": 19.487
+      },
+      {
+        "date": "2026-09-22",
+        "units": 0,
+        "low": 0,
+        "high": 15.806
+      },
+      {
+        "date": "2026-09-23",
+        "units": 0,
+        "low": 0,
+        "high": 15.022
+      },
+      {
+        "date": "2026-09-24",
+        "units": 0,
+        "low": 0,
+        "high": 13.849
+      },
+      {
+        "date": "2026-09-25",
+        "units": 0,
+        "low": 0,
+        "high": 16.68
+      },
+      {
+        "date": "2026-09-26",
+        "units": 0,
+        "low": 0,
+        "high": 12.857
+      },
+      {
+        "date": "2026-09-27",
+        "units": 0,
+        "low": 0,
+        "high": 15.747
+      },
+      {
+        "date": "2026-09-28",
+        "units": 0,
+        "low": 0,
+        "high": 22.502
+      },
+      {
+        "date": "2026-09-29",
+        "units": 0,
+        "low": 0,
+        "high": 18.148
+      },
+      {
+        "date": "2026-09-30",
+        "units": 0,
+        "low": 0,
+        "high": 17.157
+      }
+    ],
+    "generated_on": "2026-08-31"
+  },
+  "insights": [
+    {
+      "id": "43cfb05f-6f66-4855-8b2e-8b8572382d8e",
+      "audience": "ADMIN",
+      "kind": "HIGH_VIEW_NO_SALES",
+      "severity": "WARNING",
+      "status": "OPEN",
+      "title_ar": "مشاهدات عالية بلا مبيعات: وشاح مطبوع بحواف مطرّزة",
+      "body_ar": "حصل «وشاح مطبوع بحواف مطرّزة» على 280 مشاهدة خلال آخر 7 أيام دون أي طلب واحد، مع 29 إضافة للسلة. الاهتمام موجود والمشكلة في ما بعد المشاهدة.",
+      "action_ar": "راجعي السعر، وضوح الصور، ومعلومات المقاسات والتوفر.",
+      "action_target": "product",
+      "subject": {
+        "kind": "PRODUCT",
+        "key": "07d738a1-f744-4a85-97a8-cbf42c43f6a2",
+        "product": {
+          "id": "07d738a1-f744-4a85-97a8-cbf42c43f6a2",
+          "title": "وشاح مطبوع بحواف مطرّزة",
+          "slug": "scarf-051"
+        },
+        "category": {
+          "id": "50388a0b-4aad-4e28-ac5d-6f8855aaaef6",
+          "name_ar": "أوشحة",
+          "slug": "scarves"
+        }
+      },
+      "metrics": {
+        "views": 280,
+        "orders": 0,
+        "cart_adds": 29,
+        "price_syp": 362000,
+        "window_days": 7,
+        "in_stock_rate": 1
+      },
+      "confidence": 0.7778,
+      "priority": 0.6699,
+      "narrator": "reem-trend-templates-v1",
+      "generated_on": "2026-08-31",
+      "expires_at": "2026-09-07T00:00:00.000Z"
+    },
+    {
+      "id": "362bf100-889f-4cf0-9937-24ac8ec84b5c",
+      "audience": "ADMIN",
+      "kind": "EMERGING_PRODUCT",
+      "severity": "OPPORTUNITY",
+      "status": "OPEN",
+      "title_ar": "منتج صاعد مبكرًا: ملمّع شفاه بمفعول مطفي",
+      "body_ar": "ارتفعت مشاهدات «ملمّع شفاه بمفعول مطفي» بنسبة +143٪ وإضافات السلة بنسبة +118٪ خلال آخر 7 أيام، بينما لا تزال المبيعات عند 0 قطعة فقط. هذا هو نمط المنتج الذي يصبح الأكثر مبيعًا لاحقًا.",
+      "action_ar": "جهّزي المخزون وأبرزي المنتج قبل أن يتشبّع الطلب.",
+      "action_target": "product",
+      "subject": {
+        "kind": "PRODUCT",
+        "key": "07da68e7-3dd5-4e59-9e88-a557b0a14426",
+        "product": {
+          "id": "07da68e7-3dd5-4e59-9e88-a557b0a14426",
+          "title": "ملمّع شفاه بمفعول مطفي",
+          "slug": "lip-064"
+        },
+        "category": {
+          "id": "8c102d6f-d95f-406f-bc8f-7f922bb9f728",
+          "name_ar": "الشفاه",
+          "slug": "lips"
+        }
+      },
+      "metrics": {
+        "score": 40.7,
+        "stage": "EMERGING",
+        "units": 0,
+        "views": 232,
+        "cart_adds": 23,
+        "window_days": 7,
+        "previous_views": 95,
+        "cart_growth_pct": 118.2,
+        "view_growth_pct": 142.7,
+        "previous_cart_adds": 10
+      },
+      "confidence": 0.8338,
+      "priority": 0.6627,
+      "narrator": "reem-trend-templates-v1",
+      "generated_on": "2026-08-31",
+      "expires_at": "2026-09-07T00:00:00.000Z"
+    },
+    {
+      "id": "ec1cc689-fc36-4538-a85b-3eeabd87a36b",
+      "audience": "ADMIN",
+      "kind": "EMERGING_PRODUCT",
+      "severity": "OPPORTUNITY",
+      "status": "OPEN",
+      "title_ar": "منتج صاعد مبكرًا: كريم عيون بخلاصة الورد الدمشقي",
+      "body_ar": "ارتفعت مشاهدات «كريم عيون بخلاصة الورد الدمشقي» بنسبة +121٪ وإضافات السلة بنسبة +108٪ خلال آخر 7 أيام، بينما لا تزال المبيعات عند 0 قطعة فقط. هذا هو نمط المنتج الذي يصبح الأكثر مبيعًا لاحقًا.",
+      "action_ar": "جهّزي المخزون وأبرزي المنتج قبل أن يتشبّع الطلب.",
+      "action_target": "product",
+      "subject": {
+        "kind": "PRODUCT",
+        "key": "ee5f871d-4ca0-4af5-b166-7d218389880a",
+        "product": {
+          "id": "ee5f871d-4ca0-4af5-b166-7d218389880a",
+          "title": "كريم عيون بخلاصة الورد الدمشقي",
+          "slug": "moist-070"
+        },
+        "category": {
+          "id": "0c7e1f98-60ea-4b17-9f46-0f2e9bc93990",
+          "name_ar": "مرطبات",
+          "slug": "moisturisers"
+        }
+      },
+      "metrics": {
+        "score": 34.47,
+        "stage": "EMERGING",
+        "units": 0,
+        "views": 235,
+        "cart_adds": 24,
+        "window_days": 7,
+        "previous_views": 106,
+        "cart_growth_pct": 108.3,
+        "view_growth_pct": 120.6,
+        "previous_cart_adds": 11
+      },
+      "confidence": 0.8365,
+      "priority": 0.6187,
+      "narrator": "reem-trend-templates-v1",
+      "generated_on": "2026-08-31",
+      "expires_at": "2026-09-07T00:00:00.000Z"
+    },
+    {
+      "id": "92404bf3-1b20-491e-815d-534e3434a228",
+      "audience": "ADMIN",
+      "kind": "EMERGING_PRODUCT",
+      "severity": "OPPORTUNITY",
+      "status": "OPEN",
+      "title_ar": "منتج صاعد مبكرًا: كارديجان كشمير",
+      "body_ar": "ارتفعت مشاهدات «كارديجان كشمير» بنسبة +10٪ وإضافات السلة بنسبة +100٪ خلال آخر 7 أيام، بينما لا تزال المبيعات عند 0 قطعة فقط. هذا هو نمط المنتج الذي يصبح الأكثر مبيعًا لاحقًا.",
+      "action_ar": "جهّزي المخزون وأبرزي المنتج قبل أن يتشبّع الطلب.",
+      "action_target": "product",
+      "subject": {
+        "kind": "PRODUCT",
+        "key": "25eae13a-e6a8-4826-bd7b-425eded274fc",
+        "product": {
+          "id": "25eae13a-e6a8-4826-bd7b-425eded274fc",
+          "title": "كارديجان كشمير",
+          "slug": "cashmere-cardigan"
+        },
+        "category": {
+          "id": "4e0dd44c-f149-41d2-a51c-f316c79d2e8a",
+          "name_ar": "تريكو",
+          "slug": "knitwear"
+        }
+      },
+      "metrics": {
+        "score": 27.44,
+        "stage": "EMERGING",
+        "units": 0,
+        "views": 181,
+        "cart_adds": 1,
+        "window_days": 7,
+        "previous_views": 164,
+        "cart_growth_pct": 100,
+        "view_growth_pct": 10.3,
+        "previous_cart_adds": 0
+      },
+      "confidence": 0.7541,
+      "priority": 0.6,
+      "narrator": "reem-trend-templates-v1",
+      "generated_on": "2026-08-31",
+      "expires_at": "2026-09-07T00:00:00.000Z"
+    },
+    {
+      "id": "41e80829-2ae6-49e4-8c98-021a92517aad",
+      "audience": "ADMIN",
+      "kind": "CART_ABANDONMENT",
+      "severity": "WARNING",
+      "status": "OPEN",
+      "title_ar": "سلات متروكة: وشاح مطبوع بحواف مطرّزة",
+      "body_ar": "أُضيف «وشاح مطبوع بحواف مطرّزة» إلى السلة 29 مرة خلال آخر 7 أيام ولم يكتمل سوى 0 طلب — 29 سلة متروكة.",
+      "action_ar": "تحقّقي من تكلفة التوصيل ومدة التجهيز، فهما أكثر سببين للترك.",
+      "action_target": "checkout",
+      "subject": {
+        "kind": "PRODUCT",
+        "key": "07d738a1-f744-4a85-97a8-cbf42c43f6a2",
+        "product": {
+          "id": "07d738a1-f744-4a85-97a8-cbf42c43f6a2",
+          "title": "وشاح مطبوع بحواف مطرّزة",
+          "slug": "scarf-051"
+        },
+        "category": {
+          "id": "50388a0b-4aad-4e28-ac5d-6f8855aaaef6",
+          "name_ar": "أوشحة",
+          "slug": "scarves"
+        }
+      },
+      "metrics": {
+        "orders": 0,
+        "abandoned": 29,
+        "cart_adds": 29,
+        "window_days": 7,
+        "cart_to_order_rate": 0
+      },
+      "confidence": 0.537,
+      "priority": 0.5745,
+      "narrator": "reem-trend-templates-v1",
+      "generated_on": "2026-08-31",
+      "expires_at": "2026-09-07T00:00:00.000Z"
+    },
+    {
+      "id": "3e4e51ce-f913-49a6-bfd8-5a4124e8f918",
+      "audience": "ADMIN",
+      "kind": "HIGH_VIEW_NO_SALES",
+      "severity": "WARNING",
+      "status": "OPEN",
+      "title_ar": "مشاهدات عالية بلا مبيعات: كريم عيون بخلاصة الورد الدمشقي",
+      "body_ar": "حصل «كريم عيون بخلاصة الورد الدمشقي» على 235 مشاهدة خلال آخر 7 أيام دون أي طلب واحد، مع 24 إضافة للسلة. الاهتمام موجود والمشكلة في ما بعد المشاهدة.",
+      "action_ar": "راجعي السعر، وضوح الصور، ومعلومات المقاسات والتوفر.",
+      "action_target": "product",
+      "subject": {
+        "kind": "PRODUCT",
+        "key": "ee5f871d-4ca0-4af5-b166-7d218389880a",
+        "product": {
+          "id": "ee5f871d-4ca0-4af5-b166-7d218389880a",
+          "title": "كريم عيون بخلاصة الورد الدمشقي",
+          "slug": "moist-070"
+        },
+        "category": {
+          "id": "0c7e1f98-60ea-4b17-9f46-0f2e9bc93990",
+          "name_ar": "مرطبات",
+          "slug": "moisturisers"
+        }
+      },
+      "metrics": {
+        "views": 235,
+        "orders": 0,
+        "cart_adds": 24,
+        "price_syp": 264000,
+        "window_days": 7,
+        "in_stock_rate": 1
+      },
+      "confidence": 0.746,
+      "priority": 0.5475,
+      "narrator": "reem-trend-templates-v1",
+      "generated_on": "2026-08-31",
+      "expires_at": "2026-09-07T00:00:00.000Z"
+    },
+    {
+      "id": "27760ade-1fd4-4060-b023-4446c12c2bb5",
+      "audience": "ADMIN",
+      "kind": "CART_ABANDONMENT",
+      "severity": "WARNING",
+      "status": "OPEN",
+      "title_ar": "سلات متروكة: كريم عيون بخلاصة الورد الدمشقي",
+      "body_ar": "أُضيف «كريم عيون بخلاصة الورد الدمشقي» إلى السلة 24 مرة خلال آخر 7 أيام ولم يكتمل سوى 0 طلب — 24 سلة متروكة.",
+      "action_ar": "تحقّقي من تكلفة التوصيل ومدة التجهيز، فهما أكثر سببين للترك.",
+      "action_target": "checkout",
+      "subject": {
+        "kind": "PRODUCT",
+        "key": "ee5f871d-4ca0-4af5-b166-7d218389880a",
+        "product": {
+          "id": "ee5f871d-4ca0-4af5-b166-7d218389880a",
+          "title": "كريم عيون بخلاصة الورد الدمشقي",
+          "slug": "moist-070"
+        },
+        "category": {
+          "id": "0c7e1f98-60ea-4b17-9f46-0f2e9bc93990",
+          "name_ar": "مرطبات",
+          "slug": "moisturisers"
+        }
+      },
+      "metrics": {
+        "orders": 0,
+        "abandoned": 24,
+        "cart_adds": 24,
+        "window_days": 7,
+        "cart_to_order_rate": 0
+      },
+      "confidence": 0.4898,
+      "priority": 0.5464,
+      "narrator": "reem-trend-templates-v1",
+      "generated_on": "2026-08-31",
+      "expires_at": "2026-09-07T00:00:00.000Z"
+    },
+    {
+      "id": "666d9bed-e771-45f8-a28f-3f871b386722",
+      "audience": "ADMIN",
+      "kind": "CATEGORY_MOMENTUM",
+      "severity": "OPPORTUNITY",
+      "status": "OPEN",
+      "title_ar": "فئة صاعدة: باقات ورد",
+      "body_ar": "الطلب على «باقات ورد» يتزايد بسرعة: +94٪ في المشاهدات و-50٪ في المبيعات خلال آخر 7 أيام، عبر 4 منتجًا معروضًا.",
+      "action_ar": "وسّعي التشكيلة في هذه الفئة وأبرزيها في الصفحة الرئيسية.",
+      "action_target": "category",
+      "subject": {
+        "kind": "CATEGORY",
+        "key": "cdbfcf6a-938d-497b-ba51-8674e37dd9fc",
+        "product": null,
+        "category": {
+          "id": "cdbfcf6a-938d-497b-ba51-8674e37dd9fc",
+          "name_ar": "باقات ورد",
+          "slug": "bouquets"
+        }
+      },
+      "metrics": {
+        "delta": null,
+        "score": 38.58,
+        "units": 0,
+        "views": 562,
+        "window_days": 7,
+        "live_products": 4,
+        "view_growth_pct": 94.1,
+        "units_growth_pct": -50
+      },
+      "confidence": 0.9226,
+      "priority": 0.5403,
+      "narrator": "reem-trend-templates-v1",
+      "generated_on": "2026-08-31",
+      "expires_at": "2026-09-07T00:00:00.000Z"
+    },
+    {
+      "id": "4b9f3108-79f1-44e1-8a42-60b33dd6ea04",
+      "audience": "ADMIN",
+      "kind": "CART_ABANDONMENT",
+      "severity": "WARNING",
+      "status": "OPEN",
+      "title_ar": "سلات متروكة: ملمّع شفاه بمفعول مطفي",
+      "body_ar": "أُضيف «ملمّع شفاه بمفعول مطفي» إلى السلة 23 مرة خلال آخر 7 أيام ولم يكتمل سوى 0 طلب — 23 سلة متروكة.",
+      "action_ar": "تحقّقي من تكلفة التوصيل ومدة التجهيز، فهما أكثر سببين للترك.",
+      "action_target": "checkout",
+      "subject": {
+        "kind": "PRODUCT",
+        "key": "07da68e7-3dd5-4e59-9e88-a557b0a14426",
+        "product": {
+          "id": "07da68e7-3dd5-4e59-9e88-a557b0a14426",
+          "title": "ملمّع شفاه بمفعول مطفي",
+          "slug": "lip-064"
+        },
+        "category": {
+          "id": "8c102d6f-d95f-406f-bc8f-7f922bb9f728",
+          "name_ar": "الشفاه",
+          "slug": "lips"
+        }
+      },
+      "metrics": {
+        "orders": 0,
+        "abandoned": 23,
+        "cart_adds": 23,
+        "window_days": 7,
+        "cart_to_order_rate": 0
+      },
+      "confidence": 0.4792,
+      "priority": 0.5401,
+      "narrator": "reem-trend-templates-v1",
+      "generated_on": "2026-08-31",
+      "expires_at": "2026-09-07T00:00:00.000Z"
+    },
+    {
+      "id": "8bce30d8-fdcb-44a4-869a-252446327455",
+      "audience": "ADMIN",
+      "kind": "HIGH_VIEW_NO_SALES",
+      "severity": "WARNING",
+      "status": "OPEN",
+      "title_ar": "مشاهدات عالية بلا مبيعات: ملمّع شفاه بمفعول مطفي",
+      "body_ar": "حصل «ملمّع شفاه بمفعول مطفي» على 232 مشاهدة خلال آخر 7 أيام دون أي طلب واحد، مع 23 إضافة للسلة. الاهتمام موجود والمشكلة في ما بعد المشاهدة.",
+      "action_ar": "راجعي السعر، وضوح الصور، ومعلومات المقاسات والتوفر.",
+      "action_target": "product",
+      "subject": {
+        "kind": "PRODUCT",
+        "key": "07da68e7-3dd5-4e59-9e88-a557b0a14426",
+        "product": {
+          "id": "07da68e7-3dd5-4e59-9e88-a557b0a14426",
+          "title": "ملمّع شفاه بمفعول مطفي",
+          "slug": "lip-064"
+        },
+        "category": {
+          "id": "8c102d6f-d95f-406f-bc8f-7f922bb9f728",
+          "name_ar": "الشفاه",
+          "slug": "lips"
+        }
+      },
+      "metrics": {
+        "views": 232,
+        "orders": 0,
+        "cart_adds": 23,
+        "price_syp": 177000,
+        "window_days": 7,
+        "in_stock_rate": 1
+      },
+      "confidence": 0.7436,
+      "priority": 0.5394,
+      "narrator": "reem-trend-templates-v1",
+      "generated_on": "2026-08-31",
+      "expires_at": "2026-09-07T00:00:00.000Z"
+    },
+    {
+      "id": "6ebde1a9-92b0-4046-a44d-2ac97c8751d4",
+      "audience": "ADMIN",
+      "kind": "CATEGORY_MOMENTUM",
+      "severity": "OPPORTUNITY",
+      "status": "OPEN",
+      "title_ar": "فئة صاعدة: أوشحة",
+      "body_ar": "الطلب على «أوشحة» يتزايد بسرعة: +122٪ في المشاهدات و-50٪ في المبيعات خلال آخر 7 أيام، عبر 1 منتجًا معروضًا.",
+      "action_ar": "وسّعي التشكيلة في هذه الفئة وأبرزيها في الصفحة الرئيسية.",
+      "action_target": "category",
+      "subject": {
+        "kind": "CATEGORY",
+        "key": "50388a0b-4aad-4e28-ac5d-6f8855aaaef6",
+        "product": null,
+        "category": {
+          "id": "50388a0b-4aad-4e28-ac5d-6f8855aaaef6",
+          "name_ar": "أوشحة",
+          "slug": "scarves"
+        }
+      },
+      "metrics": {
+        "delta": null,
+        "score": 37,
+        "units": 0,
+        "views": 299,
+        "window_days": 7,
+        "live_products": 1,
+        "view_growth_pct": 122.2,
+        "units_growth_pct": -50
+      },
+      "confidence": 0.8655,
+      "priority": 0.5392,
+      "narrator": "reem-trend-templates-v1",
+      "generated_on": "2026-08-31",
+      "expires_at": "2026-09-07T00:00:00.000Z"
+    },
+    {
+      "id": "8a2c2d32-c148-45c0-9c27-a68d64f4c092",
+      "audience": "ADMIN",
+      "kind": "CATEGORY_MOMENTUM",
+      "severity": "OPPORTUNITY",
+      "status": "OPEN",
+      "title_ar": "فئة صاعدة: إكسسوارات",
+      "body_ar": "الطلب على «إكسسوارات» يتزايد بسرعة: +110٪ في المشاهدات و-50٪ في المبيعات خلال آخر 7 أيام، عبر 3 منتجًا معروضًا.",
+      "action_ar": "وسّعي التشكيلة في هذه الفئة وأبرزيها في الصفحة الرئيسية.",
+      "action_target": "category",
+      "subject": {
+        "kind": "CATEGORY",
+        "key": "703de1d8-2455-4083-a7ca-109e9721362e",
+        "product": null,
+        "category": {
+          "id": "703de1d8-2455-4083-a7ca-109e9721362e",
+          "name_ar": "إكسسوارات",
+          "slug": "accessories"
+        }
+      },
+      "metrics": {
+        "delta": null,
+        "score": 38.07,
+        "units": 0,
+        "views": 344,
+        "window_days": 7,
+        "live_products": 3,
+        "view_growth_pct": 110.4,
+        "units_growth_pct": -50
+      },
+      "confidence": 0.8778,
+      "priority": 0.5354,
+      "narrator": "reem-trend-templates-v1",
+      "generated_on": "2026-08-31",
+      "expires_at": "2026-09-07T00:00:00.000Z"
+    },
+    {
+      "id": "2b028d5c-f79a-4065-a9b8-920f61996193",
+      "audience": "ADMIN",
+      "kind": "PRICE_BAND_SHIFT",
+      "severity": "OPPORTUNITY",
+      "status": "OPEN",
+      "title_ar": "تحوّل في النطاق السعري: ٥٠٠ ألف – مليون",
+      "body_ar": "انتقلت حصّة النطاق «٥٠٠ ألف – مليون» في المنزل والهدايا من +53٪ إلى +68٪ من الطلب خلال آخر 7 أيام.",
+      "action_ar": "هناك فرصة لإضافة منتجات أكثر ضمن هذا النطاق السعري.",
+      "action_target": "attribute",
+      "subject": {
+        "kind": "ATTRIBUTE",
+        "key": "PRICE_BAND:B5:83974776-efbb-4068-9d6b-72cb2ee5ba6d",
+        "product": null,
+        "category": null
+      },
+      "metrics": {
+        "scope": "المنزل والهدايا",
+        "value": "B5",
+        "orders": 0,
+        "current": 1353,
+        "previous": 769,
+        "dimension": "PRICE_BAND",
+        "share_pct": 67.62,
+        "growth_pct": 75.8,
+        "window_days": 7,
+        "share_delta_pct": 15.09,
+        "previous_share_pct": 52.53
+      },
+      "confidence": 0.9139,
+      "priority": 0.5318,
+      "narrator": "reem-trend-templates-v1",
+      "generated_on": "2026-08-31",
+      "expires_at": "2026-09-07T00:00:00.000Z"
+    },
+    {
+      "id": "3a139067-e42b-4547-b77a-8ac1901f2be3",
+      "audience": "ADMIN",
+      "kind": "CATEGORY_MOMENTUM",
+      "severity": "OPPORTUNITY",
+      "status": "OPEN",
+      "title_ar": "فئة صاعدة: الشفاه",
+      "body_ar": "الطلب على «الشفاه» يتزايد بسرعة: +121٪ في المشاهدات و0٪ في المبيعات خلال آخر 7 أيام، عبر 2 منتجًا معروضًا.",
+      "action_ar": "وسّعي التشكيلة في هذه الفئة وأبرزيها في الصفحة الرئيسية.",
+      "action_target": "category",
+      "subject": {
+        "kind": "CATEGORY",
+        "key": "8c102d6f-d95f-406f-bc8f-7f922bb9f728",
+        "product": null,
+        "category": {
+          "id": "8c102d6f-d95f-406f-bc8f-7f922bb9f728",
+          "name_ar": "الشفاه",
+          "slug": "lips"
+        }
+      },
+      "metrics": {
+        "delta": null,
+        "score": 38.3,
+        "units": 0,
+        "views": 251,
+        "window_days": 7,
+        "live_products": 2,
+        "view_growth_pct": 121.1,
+        "units_growth_pct": 0
+      },
+      "confidence": 0.8421,
+      "priority": 0.5264,
+      "narrator": "reem-trend-templates-v1",
+      "generated_on": "2026-08-31",
+      "expires_at": "2026-09-07T00:00:00.000Z"
+    },
+    {
+      "id": "07d19ff9-735c-4da9-b874-a5cdc1fea3a3",
+      "audience": "ADMIN",
+      "kind": "CATEGORY_MOMENTUM",
+      "severity": "OPPORTUNITY",
+      "status": "OPEN",
+      "title_ar": "فئة صاعدة: مرطبات",
+      "body_ar": "الطلب على «مرطبات» يتزايد بسرعة: +121٪ في المشاهدات و0٪ في المبيعات خلال آخر 7 أيام، عبر 1 منتجًا معروضًا.",
+      "action_ar": "وسّعي التشكيلة في هذه الفئة وأبرزيها في الصفحة الرئيسية.",
+      "action_target": "category",
+      "subject": {
+        "kind": "CATEGORY",
+        "key": "0c7e1f98-60ea-4b17-9f46-0f2e9bc93990",
+        "product": null,
+        "category": {
+          "id": "0c7e1f98-60ea-4b17-9f46-0f2e9bc93990",
+          "name_ar": "مرطبات",
+          "slug": "moisturisers"
+        }
+      },
+      "metrics": {
+        "delta": null,
+        "score": 34.47,
+        "units": 0,
+        "views": 235,
+        "window_days": 7,
+        "live_products": 1,
+        "view_growth_pct": 120.6,
+        "units_growth_pct": 0
+      },
+      "confidence": 0.8365,
+      "priority": 0.5228,
+      "narrator": "reem-trend-templates-v1",
+      "generated_on": "2026-08-31",
+      "expires_at": "2026-09-07T00:00:00.000Z"
+    },
+    {
+      "id": "44aec991-8b90-4bc0-9428-7c51502e6ee3",
+      "audience": "ADMIN",
+      "kind": "CATEGORY_MOMENTUM",
+      "severity": "OPPORTUNITY",
+      "status": "OPEN",
+      "title_ar": "فئة صاعدة: مكياج",
+      "body_ar": "الطلب على «مكياج» يتزايد بسرعة: +107٪ في المشاهدات و-50٪ في المبيعات خلال آخر 7 أيام، عبر 4 منتجًا معروضًا.",
+      "action_ar": "وسّعي التشكيلة في هذه الفئة وأبرزيها في الصفحة الرئيسية.",
+      "action_target": "category",
+      "subject": {
+        "kind": "CATEGORY",
+        "key": "405c02ad-3f54-457e-924e-9467a4426d28",
+        "product": null,
+        "category": {
+          "id": "405c02ad-3f54-457e-924e-9467a4426d28",
+          "name_ar": "مكياج",
+          "slug": "makeup"
+        }
+      },
+      "metrics": {
+        "delta": null,
+        "score": 39.74,
+        "units": 0,
+        "views": 283,
+        "window_days": 7,
+        "live_products": 4,
+        "view_growth_pct": 107.3,
+        "units_growth_pct": -50
+      },
+      "confidence": 0.8544,
+      "priority": 0.5209,
+      "narrator": "reem-trend-templates-v1",
+      "generated_on": "2026-08-31",
+      "expires_at": "2026-09-07T00:00:00.000Z"
+    },
+    {
+      "id": "d86d3fe6-7f1d-4d80-a9ba-0941e630730b",
+      "audience": "ADMIN",
+      "kind": "CATEGORY_MOMENTUM",
+      "severity": "OPPORTUNITY",
+      "status": "OPEN",
+      "title_ar": "فئة صاعدة: ورود وديكور",
+      "body_ar": "الطلب على «ورود وديكور» يتزايد بسرعة: +75٪ في المشاهدات و-50٪ في المبيعات خلال آخر 7 أيام، عبر 6 منتجًا معروضًا.",
+      "action_ar": "وسّعي التشكيلة في هذه الفئة وأبرزيها في الصفحة الرئيسية.",
+      "action_target": "category",
+      "subject": {
+        "kind": "CATEGORY",
+        "key": "5f733023-cef3-4508-a146-23e03b7753ba",
+        "product": null,
+        "category": {
+          "id": "5f733023-cef3-4508-a146-23e03b7753ba",
+          "name_ar": "ورود وديكور",
+          "slug": "flowers-decor"
+        }
+      },
+      "metrics": {
+        "delta": null,
+        "score": 38.4,
+        "units": 0,
+        "views": 608,
+        "window_days": 7,
+        "live_products": 6,
+        "view_growth_pct": 75,
+        "units_growth_pct": -50
+      },
+      "confidence": 0.9272,
+      "priority": 0.518,
+      "narrator": "reem-trend-templates-v1",
+      "generated_on": "2026-08-31",
+      "expires_at": "2026-09-07T00:00:00.000Z"
+    },
+    {
+      "id": "3aecf06d-e141-41e1-b4b0-74ef57e77b2e",
+      "audience": "ADMIN",
+      "kind": "CATEGORY_MOMENTUM",
+      "severity": "OPPORTUNITY",
+      "status": "OPEN",
+      "title_ar": "فئة صاعدة: علب ضيافة",
+      "body_ar": "الطلب على «علب ضيافة» يتزايد بسرعة: +76٪ في المشاهدات و-67٪ في المبيعات خلال آخر 7 أيام، عبر 2 منتجًا معروضًا.",
+      "action_ar": "وسّعي التشكيلة في هذه الفئة وأبرزيها في الصفحة الرئيسية.",
+      "action_target": "category",
+      "subject": {
+        "kind": "CATEGORY",
+        "key": "150835f1-403f-418d-b7d8-b3bd0bc19c28",
+        "product": null,
+        "category": {
+          "id": "150835f1-403f-418d-b7d8-b3bd0bc19c28",
+          "name_ar": "علب ضيافة",
+          "slug": "candy-boxes"
+        }
+      },
+      "metrics": {
+        "delta": null,
+        "score": 34.57,
+        "units": 0,
+        "views": 236,
+        "window_days": 7,
+        "live_products": 2,
+        "view_growth_pct": 75.6,
+        "units_growth_pct": -66.7
+      },
+      "confidence": 0.8383,
+      "priority": 0.4776,
+      "narrator": "reem-trend-templates-v1",
+      "generated_on": "2026-08-31",
+      "expires_at": "2026-09-07T00:00:00.000Z"
+    },
+    {
+      "id": "53eb4724-b9bc-4cf7-afb1-0dd2997a2762",
+      "audience": "ADMIN",
+      "kind": "CATEGORY_MOMENTUM",
+      "severity": "OPPORTUNITY",
+      "status": "OPEN",
+      "title_ar": "فئة صاعدة: جمال وعناية",
+      "body_ar": "الطلب على «جمال وعناية» يتزايد بسرعة: +40٪ في المشاهدات و-67٪ في المبيعات خلال آخر 7 أيام، عبر 11 منتجًا معروضًا.",
+      "action_ar": "وسّعي التشكيلة في هذه الفئة وأبرزيها في الصفحة الرئيسية.",
+      "action_target": "category",
+      "subject": {
+        "kind": "CATEGORY",
+        "key": "fe19f541-d943-45e7-a1ba-ec351f56ec78",
+        "product": null,
+        "category": {
+          "id": "fe19f541-d943-45e7-a1ba-ec351f56ec78",
+          "name_ar": "جمال وعناية",
+          "slug": "beauty"
+        }
+      },
+      "metrics": {
+        "delta": null,
+        "score": 36.36,
+        "units": 0,
+        "views": 779,
+        "window_days": 7,
+        "live_products": 11,
+        "view_growth_pct": 39.8,
+        "units_growth_pct": -66.7
+      },
+      "confidence": 0.939,
+      "priority": 0.4621,
+      "narrator": "reem-trend-templates-v1",
+      "generated_on": "2026-08-31",
+      "expires_at": "2026-09-07T00:00:00.000Z"
+    },
+    {
+      "id": "d11dff6b-9077-4f85-9fad-a8333b170bbd",
+      "audience": "ADMIN",
+      "kind": "CATEGORY_MOMENTUM",
+      "severity": "OPPORTUNITY",
+      "status": "OPEN",
+      "title_ar": "فئة صاعدة: شوكولا وحلويات",
+      "body_ar": "الطلب على «شوكولا وحلويات» يتزايد بسرعة: +52٪ في المشاهدات و-67٪ في المبيعات خلال آخر 7 أيام، عبر 5 منتجًا معروضًا.",
+      "action_ar": "وسّعي التشكيلة في هذه الفئة وأبرزيها في الصفحة الرئيسية.",
+      "action_target": "category",
+      "subject": {
+        "kind": "CATEGORY",
+        "key": "1101cf1b-12e5-4af6-b7bf-505bcde106ed",
+        "product": null,
+        "category": {
+          "id": "1101cf1b-12e5-4af6-b7bf-505bcde106ed",
+          "name_ar": "شوكولا وحلويات",
+          "slug": "sweets"
+        }
+      },
+      "metrics": {
+        "delta": null,
+        "score": 36.86,
+        "units": 0,
+        "views": 316,
+        "window_days": 7,
+        "live_products": 5,
+        "view_growth_pct": 51.7,
+        "units_growth_pct": -66.7
+      },
+      "confidence": 0.8678,
+      "priority": 0.4557,
+      "narrator": "reem-trend-templates-v1",
+      "generated_on": "2026-08-31",
+      "expires_at": "2026-09-07T00:00:00.000Z"
+    }
+  ]
+}

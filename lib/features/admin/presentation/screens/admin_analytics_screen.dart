@@ -77,7 +77,7 @@ class AdminAnalyticsScreen extends ConsumerWidget {
                     ),
                     child: Text(
                       error.toString(),
-                      style: TextStyle(color: colors.error),
+                      style: context.dsText.body.tint(colors.error),
                     ),
                   ),
                   data: (data) => _Dashboard(data: data),
@@ -111,7 +111,10 @@ class AdminAnalyticsScreen extends ConsumerWidget {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
-          '$format report generated (${response.data?.length ?? 0} bytes).',
+          context.l10n.adminReportGenerated(
+            format,
+            response.data?.length ?? 0,
+          ),
         ),
       ),
     );
@@ -263,18 +266,14 @@ class _MetricCard extends StatelessWidget {
         children: [
           Text(
             item.label,
-            style: TextStyle(color: colors.onSurfaceVariant),
+            style: context.dsText.body.tint(colors.onSurfaceVariant),
           ),
           const SizedBox(height: DsSpacing.xs),
           Text(
             item.value,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-              fontSize: DsTypography.headlineSmall,
-              fontWeight: DsTypography.bold,
-              color: colors.onSurface,
-            ),
+            style: context.dsText.screenTitle.bold.tint(colors.onSurface),
           ),
         ],
       ),
@@ -303,11 +302,7 @@ class _Panel extends StatelessWidget {
         children: [
           Text(
             title,
-            style: TextStyle(
-              fontSize: DsTypography.titleMedium,
-              fontWeight: DsTypography.bold,
-              color: colors.onSurface,
-            ),
+            style: context.dsText.cardTitle.bold.tint(colors.onSurface),
           ),
           const SizedBox(height: DsSpacing.md),
           child,
@@ -331,7 +326,7 @@ class _TrendChart extends StatelessWidget {
     if (points.isEmpty) {
       return Text(
         l10n.adminNoDataYet,
-        style: TextStyle(color: palette.muted),
+        style: context.dsText.body.tint(palette.muted),
       );
     }
 
@@ -342,11 +337,7 @@ class _TrendChart extends StatelessWidget {
     // Headroom, so a flat range still reads as a line rather than a rule.
     final ceiling = maxValue <= 0 ? 1.0 : maxValue * 1.18;
 
-    final labelStyle = TextStyle(
-      color: palette.muted,
-      fontFamily: DsTypography.fontFamily,
-      fontSize: DsTypography.labelSmall,
-    );
+    final labelStyle = context.dsText.caption.tint(palette.muted);
 
     return SizedBox(
       height: 220,
@@ -425,12 +416,7 @@ class _TrendChart extends StatelessWidget {
                 for (final spot in spots)
                   LineTooltipItem(
                     spot.y.sypFull,
-                    TextStyle(
-                      color: palette.background,
-                      fontFamily: DsTypography.fontFamily,
-                      fontSize: DsTypography.labelMedium,
-                      fontWeight: DsTypography.bold,
-                    ),
+                    context.dsText.labelMedium.bold.tint(palette.background),
                   ),
               ],
             ),
@@ -480,7 +466,7 @@ class _FunnelBars extends StatelessWidget {
     if (points.isEmpty) {
       return Text(
         l10n.adminNoDataYet,
-        style: TextStyle(color: palette.muted),
+        style: context.dsText.body.tint(palette.muted),
       );
     }
 
@@ -501,7 +487,7 @@ class _FunnelBars extends StatelessWidget {
                     entry.value.label,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(color: palette.ink),
+                    style: context.dsText.body.tint(palette.ink),
                   ),
                 ),
                 Expanded(
@@ -523,10 +509,7 @@ class _FunnelBars extends StatelessWidget {
                   child: Text(
                     formatCount(entry.value.value.round()),
                     textAlign: TextAlign.end,
-                    style: TextStyle(
-                      color: palette.ink,
-                      fontWeight: DsTypography.semiBold,
-                    ),
+                    style: context.dsText.body.semibold.tint(palette.ink),
                   ),
                 ),
               ],
@@ -549,7 +532,7 @@ class _RankedList extends StatelessWidget {
     if (items.isEmpty) {
       return Text(
         l10n.adminNoRankedData,
-        style: TextStyle(color: palette.muted),
+        style: context.dsText.body.tint(palette.muted),
       );
     }
     return Column(

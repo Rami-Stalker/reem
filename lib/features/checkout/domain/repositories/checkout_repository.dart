@@ -24,11 +24,25 @@ abstract interface class CheckoutRepository {
     String? couponCode,
     String? deliveryInstructions,
     String? notes,
+    bool privacyMask = false,
   });
   Future<Result<OrderPayment>> verifyPayment(String paymentId);
 
+  /// Re-opens the gateway and returns the link to send her to.
+  Future<Result<PaymentAttempt>> retryPayment(String paymentId);
+
+  /// Records the transfer reference for a bank or hawala payment.
+  Future<Result<OrderPayment>> submitPaymentReference(
+    String paymentId,
+    String reference,
+  );
+
+  // Cash-on-delivery confirmation
+  Future<Result<OrderDetail>> confirmCodOrder(String orderId, String code);
+  Future<Result<CodAssurance>> resendCodConfirmation(String orderId);
+
   // Orders
-  Future<Result<List<OrderSummary>>> getOrders({int page, int limit});
+  Future<Result<List<OrderSummary>>> getOrders({int page, int limit, String? bucket});
   Future<Result<OrderDetail>> getOrder(String id);
   Future<Result<OrderDetail>> cancelOrder(String id);
 }

@@ -16,11 +16,10 @@ class ProfileIdentity extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = context.dsColors;
-    final theme = Theme.of(context);
 
     return Padding(
       padding:
-          const EdgeInsets.fromLTRB(DsSpacing.lg, DsSpacing.md, DsSpacing.lg, 0),
+          const EdgeInsets.fromLTRB(DsSpacing.lg, DsSpacing.md, DsSpacing.lg, DsSpacing.xxxs),
       child: Column(
         children: [
           Row(
@@ -29,8 +28,7 @@ class ProfileIdentity extends StatelessWidget {
               Flexible(
                 child: DsGradientText(
                   user.name,
-                  style: (theme.textTheme.headlineMedium ?? const TextStyle())
-                      .copyWith(fontWeight: DsTypography.bold),
+                  style: context.dsText.pageTitle.bold,
                 ),
               ),
               if (user.isVerified) ...[
@@ -41,8 +39,8 @@ class ProfileIdentity extends StatelessWidget {
           ),
           const SizedBox(height: DsSpacing.xxs),
           Text('@${user.username}',
-              style: theme.textTheme.bodyMedium
-                  ?.copyWith(color: c.onSurfaceVariant)),
+              style: context.dsText.body
+                  .copyWith(color: c.onSurfaceVariant)),
           const SizedBox(height: DsSpacing.xs),
           // Verification + phone chips.
           Wrap(
@@ -108,7 +106,7 @@ class _Pill extends StatelessWidget {
     final color = tone ?? c.onSurfaceVariant;
     return Container(
       padding:
-          const EdgeInsets.symmetric(horizontal: DsSpacing.sm, vertical: 5),
+          const EdgeInsets.symmetric(horizontal: DsSpacing.sm, vertical: DsSpacing.xxs),
       decoration: BoxDecoration(
         color: c.surfaceVariant,
         borderRadius: DsRadius.borderFull,
@@ -121,11 +119,7 @@ class _Pill extends StatelessWidget {
           const SizedBox(width: DsSpacing.xxs),
           Text(
             label,
-            style: TextStyle(
-              fontSize: DsTypography.labelSmall,
-              fontWeight: DsTypography.semiBold,
-              color: c.onSurface,
-            ),
+            style: context.dsText.caption.semibold.tint(c.onSurface),
           ),
         ],
       ),

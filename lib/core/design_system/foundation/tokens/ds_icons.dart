@@ -1,12 +1,19 @@
 import 'package:flutter/material.dart';
 
-/// Standard icon sizes and commonly used icons across the app.
+import 'package:reem/core/design_system/foundation/tokens/ds_sizes.dart';
+
+/// The app's icon vocabulary: one glyph per concept, plus the size aliases.
+///
+/// Sizes forward to [DsSizes] so an icon and the control around it cannot
+/// disagree about what "small" means.
 abstract final class DsIcons {
-  static const double sizeXs = 16;
-  static const double sizeSm = 20;
-  static const double sizeMd = 24;
-  static const double sizeLg = 32;
-  static const double sizeXl = 40;
+  static const double sizeXxs = DsSizes.iconXxs;
+  static const double sizeXs = DsSizes.iconXs;
+  static const double sizeSm = DsSizes.iconSm;
+  static const double sizeMd = DsSizes.iconMd;
+  static const double sizeLg = DsSizes.iconLg;
+  static const double sizeXl = DsSizes.iconXl;
+  static const double sizeXxl = DsSizes.iconXxl;
 
   // Navigation
   static const IconData home = Icons.home_rounded;

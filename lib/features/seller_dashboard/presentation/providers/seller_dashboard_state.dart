@@ -4,6 +4,8 @@ import 'package:reem/features/seller_dashboard/domain/entities/seller_analytics.
 import 'package:reem/features/seller_dashboard/domain/entities/seller_chart_data.dart';
 import 'package:reem/features/seller_dashboard/domain/entities/seller_dashboard_data.dart';
 
+import 'package:reem/features/seller_dashboard/presentation/providers/seller_dashboard_message.dart';
+
 class SellerDashboardState extends Equatable {
   const SellerDashboardState({
     this.data,
@@ -15,7 +17,8 @@ class SellerDashboardState extends Equatable {
 
   final SellerDashboardData? data;
   final bool isLoading;
-  final String? error;
+  /// Named, not spelled out — the screen resolves it in her locale.
+  final SellerDashboardMessage? error;
   final RevenuePeriod selectedRevenuePeriod;
   final ChartPeriod selectedChartPeriod;
 
@@ -25,7 +28,7 @@ class SellerDashboardState extends Equatable {
   SellerDashboardState copyWith({
     SellerDashboardData? data,
     bool? isLoading,
-    String? error,
+    SellerDashboardMessage? error,
     RevenuePeriod? selectedRevenuePeriod,
     ChartPeriod? selectedChartPeriod,
   }) {

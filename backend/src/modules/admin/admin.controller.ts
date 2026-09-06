@@ -17,6 +17,7 @@ import { Authorize } from '../../common/decorators/authorize.decorator';
 import { AppPermission } from '../../common/permissions';
 import { ReviewSellerVerificationDto } from '../auth/dto/account.dto';
 import { AdminService } from './admin.service';
+import { CodTrustAdminService } from '../cod-trust/cod-trust.admin.service';
 import {
   AdminListQueryDto,
   CreateCommissionRuleDto,
@@ -29,10 +30,38 @@ import {
   UpsertSystemSettingDto,
 } from './dto/admin.dto';
 
-@Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.SUPPORT)
+/**
+ * Every staff role, and only staff roles.
+ *
+ * This list used to read `SUPER_ADMIN, ADMIN, SUPPORT`, which was harmless
+ * while `@Authorize` replaced the contextual `@Roles` instead of narrowing it.
+ * Once the guard started merging the two — correctly — that short list became
+ * the ceiling for the whole console: a `FINANCE_ADMIN` holding `finance:read`,
+ * an `OPERATIONS_ADMIN` holding `user:manage`, a `CONTENT_MODERATOR` holding
+ * `content:moderate` were all bounced from `/admin/*` with a 403 despite the
+ * role/permission map granting them exactly this work. The console routed them
+ * to the admin experience and then refused every request it made.
+ *
+ * The narrowing that matters is per route: each handler names the permission it
+ * needs, and `defaultPermissionsForRole` decides who holds it. This list is the
+ * outer fence — it keeps shoppers and sellers out even if a permission is ever
+ * granted too widely by mistake.
+ */
+@Roles(
+  UserRole.SUPER_ADMIN,
+  UserRole.ADMIN,
+  UserRole.OPERATIONS_ADMIN,
+  UserRole.SUPPORT_ADMIN,
+  UserRole.FINANCE_ADMIN,
+  UserRole.CONTENT_MODERATOR,
+  UserRole.SUPPORT,
+)
 @Controller('admin')
 export class AdminController {
-  constructor(private readonly admin: AdminService) {}
+  constructor(
+    private readonly admin: AdminService,
+    private readonly codTrustAdmin: CodTrustAdminService,
+  ) {}
 
   @Authorize({
     action: 'read',
@@ -71,10 +100,11 @@ export class AdminController {
   })
   @Patch('products/:id')
   updateProduct(
+    @CurrentUser() user: AuthUser,
     @Param('id', ParseUUIDPipe) id: string,
     @Body() dto: UpdateProductAdminDto,
   ) {
-    return this.admin.updateProduct(id, dto);
+    return this.admin.updateProduct(user.id, id, dto);
   }
 
   @Authorize({
@@ -94,10 +124,11 @@ export class AdminController {
   })
   @Patch('users/:id')
   updateUser(
+    @CurrentUser() user: AuthUser,
     @Param('id', ParseUUIDPipe) id: string,
     @Body() dto: UpdateUserAdminDto,
   ) {
-    return this.admin.updateUser(id, dto);
+    return this.admin.updateUser(user.id, id, dto);
   }
 
   @Authorize({
@@ -154,6 +185,26 @@ export class AdminController {
     return this.admin.analytics();
   }
 
+  /**
+   * How the cash-on-delivery trust engine is performing.
+   *
+   * Under `finance:read` rather than `analytics:read`: the table it returns is
+   * about money the platform chose not to put on the road, and the people who
+   * answer for that number are the ones who answer for the rest of the cash.
+   */
+  @Authorize({
+    action: 'read',
+    resource: 'finance',
+    permissions: [AppPermission.financeRead],
+  })
+  @Get('cod-trust')
+  codTrust(@Query('days') days?: string) {
+    const window = Number.parseInt(days ?? '30', 10);
+    return this.codTrustAdmin.overview(
+      Number.isFinite(window) ? Math.min(Math.max(window, 1), 365) : 30,
+    );
+  }
+
   @Authorize({
     action: 'read',
     resource: 'finance',
@@ -170,8 +221,8 @@ export class AdminController {
     permissions: [AppPermission.financeRead],
   })
   @Get('commissions')
-  commissions() {
-    return this.admin.commissions();
+  commissions(@Query() query: AdminListQueryDto) {
+    return this.admin.commissions(query);
   }
 
   @Authorize({
@@ -181,8 +232,11 @@ export class AdminController {
   })
   @Post('commissions/rules')
   @HttpCode(HttpStatus.CREATED)
-  createCommissionRule(@Body() dto: CreateCommissionRuleDto) {
-    return this.admin.createCommissionRule(dto);
+  createCommissionRule(
+    @CurrentUser() user: AuthUser,
+    @Body() dto: CreateCommissionRuleDto,
+  ) {
+    return this.admin.createCommissionRule(user.id, dto);
   }
 
   @Authorize({
@@ -192,10 +246,11 @@ export class AdminController {
   })
   @Patch('commissions/:id')
   updateCommissionLedger(
+    @CurrentUser() user: AuthUser,
     @Param('id', ParseUUIDPipe) id: string,
     @Body() dto: UpdateCommissionLedgerDto,
   ) {
-    return this.admin.updateCommissionLedger(id, dto);
+    return this.admin.updateCommissionLedger(user.id, id, dto);
   }
 
   @Authorize({
@@ -204,8 +259,8 @@ export class AdminController {
     permissions: [AppPermission.supportRead],
   })
   @Get('support')
-  support() {
-    return this.admin.support();
+  support(@Query() query: AdminListQueryDto) {
+    return this.admin.support(query);
   }
 
   @Authorize({
@@ -215,10 +270,11 @@ export class AdminController {
   })
   @Patch('support/:id')
   updateSupport(
+    @CurrentUser() user: AuthUser,
     @Param('id', ParseUUIDPipe) id: string,
     @Body() dto: UpdateSupportTicketDto,
   ) {
-    return this.admin.updateSupportTicket(id, dto);
+    return this.admin.updateSupportTicket(user.id, id, dto);
   }
 
   @Authorize({
@@ -227,8 +283,8 @@ export class AdminController {
     permissions: [AppPermission.contentModerate],
   })
   @Get('moderation')
-  moderation() {
-    return this.admin.moderation();
+  moderation(@Query() query: AdminListQueryDto) {
+    return this.admin.moderation(query);
   }
 
   @Authorize({
@@ -238,10 +294,11 @@ export class AdminController {
   })
   @Patch('moderation/:id')
   updateModeration(
+    @CurrentUser() user: AuthUser,
     @Param('id', ParseUUIDPipe) id: string,
     @Body() dto: UpdateModerationCaseDto,
   ) {
-    return this.admin.updateModeration(id, dto);
+    return this.admin.updateModeration(user.id, id, dto);
   }
 
   @Authorize({
@@ -250,8 +307,8 @@ export class AdminController {
     permissions: [AppPermission.supportRead],
   })
   @Get('reports')
-  reports() {
-    return this.admin.reports();
+  reports(@Query() query: AdminListQueryDto) {
+    return this.admin.reports(query);
   }
 
   @Authorize({
@@ -261,10 +318,11 @@ export class AdminController {
   })
   @Patch('reports/:id')
   updateReport(
+    @CurrentUser() user: AuthUser,
     @Param('id', ParseUUIDPipe) id: string,
     @Body() dto: UpdateReportDto,
   ) {
-    return this.admin.updateReport(id, dto);
+    return this.admin.updateReport(user.id, id, dto);
   }
 
   @Authorize({
@@ -273,8 +331,8 @@ export class AdminController {
     permissions: [AppPermission.auditRead],
   })
   @Get('audit-logs')
-  auditLogs() {
-    return this.admin.auditLogs();
+  auditLogs(@Query() query: AdminListQueryDto) {
+    return this.admin.auditLogs(query);
   }
 
   @Authorize({

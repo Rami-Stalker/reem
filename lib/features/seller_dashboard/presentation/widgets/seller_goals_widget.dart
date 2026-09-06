@@ -14,7 +14,6 @@ class SellerGoalsWidget extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(sellerDashboardNotifierProvider);
     final c = context.dsColors;
-    final theme = Theme.of(context);
 
     if (state.isInitialLoading) {
       return Padding(
@@ -46,8 +45,8 @@ class SellerGoalsWidget extends ConsumerWidget {
                 const SizedBox(width: DsSpacing.xs),
                 Text(
                   context.l10n.sellerGoals,
-                  style: theme.textTheme.titleMedium
-                      ?.copyWith(fontWeight: DsTypography.bold),
+                  style: context.dsText.cardTitle
+                      .copyWith(fontWeight: DsTypography.bold),
                 ),
               ],
             ),
@@ -55,7 +54,7 @@ class SellerGoalsWidget extends ConsumerWidget {
             ...goals.asMap().entries.map((e) {
               return Padding(
                 padding: EdgeInsets.only(
-                    bottom: e.key < goals.length - 1 ? DsSpacing.md : 0),
+                    bottom: e.key < goals.length - DsSpacing.xxxs ? DsSpacing.md : DsSpacing.xxxs),
                 child: _GoalRow(goal: e.value)
                     .animate(delay: (e.key * 70).ms)
                     .fadeIn(duration: 300.ms),
@@ -79,7 +78,6 @@ class _GoalRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = context.dsColors;
-    final theme = Theme.of(context);
     final isComplete = goal.isComplete;
     final color = isComplete ? c.success : c.primary;
     final pct = (goal.progress * 100).toInt();
@@ -94,19 +92,19 @@ class _GoalRow extends StatelessWidget {
             Expanded(
               child: Text(
                 goal.label,
-                style: theme.textTheme.bodySmall
-                    ?.copyWith(fontWeight: DsTypography.semiBold),
+                style: context.dsText.cardSubtitle
+                    .copyWith(fontWeight: DsTypography.semiBold),
               ),
             ),
             Text(
               isComplete
                   ? '✓ Done'
                   : '${goal.unit}${_fmt(goal.current)} / ${goal.unit}${_fmt(goal.target)}',
-              style: theme.textTheme.labelSmall?.copyWith(
+              style: context.dsText.caption.copyWith(
                 color: isComplete ? c.success : c.onSurfaceVariant,
                 fontWeight:
                     isComplete ? DsTypography.bold : DsTypography.regular,
-                fontSize: 11,
+                fontSize: DsTypography.labelSmall,
               ),
             ),
             const SizedBox(width: DsSpacing.xs),
@@ -115,12 +113,7 @@ class _GoalRow extends StatelessWidget {
               child: Text(
                 '$pct%',
                 textAlign: TextAlign.end,
-                style: TextStyle(
-                  fontFamily: DsTypography.fontFamily,
-                  fontSize: 11,
-                  fontWeight: DsTypography.bold,
-                  color: color,
-                ),
+                style: context.dsText.caption.bold.tint(color),
               ),
             ),
           ],

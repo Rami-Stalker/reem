@@ -30,12 +30,12 @@ class FinancePositionGrid extends StatelessWidget {
           padding: const EdgeInsets.all(DsSpacing.lg),
           decoration: BoxDecoration(
             color: undercovered
-                ? const Color(0xFFFEF1F1)
+                ? context.toneContainer(DsTone.critical)
                 : palette.surface,
             borderRadius: DsRadius.borderCard,
             border: Border.all(
               color: undercovered
-                  ? const Color(0xFFF2C4C4)
+                  ? context.toneColor(DsTone.critical).withValues(alpha: 0.4)
                   : palette.line,
             ),
           ),
@@ -83,11 +83,7 @@ class FinancePositionGrid extends StatelessWidget {
                     Expanded(
                       child: Text(
                         l10n.financeCoverageShort,
-                        style: TextStyle(
-                          fontSize: DsTypography.labelSmall,
-                          fontWeight: DsTypography.semiBold,
-                          color: palette.critical,
-                        ),
+                        style: context.dsText.caption.semibold.tint(palette.critical),
                       ),
                     ),
                   ],
@@ -189,26 +185,20 @@ class _Figure extends StatelessWidget {
       children: [
         Text(
           label,
-          style: TextStyle(
-            fontSize: DsTypography.labelSmall,
-            color: palette.muted,
-          ),
+          style: context.dsText.caption.tint(palette.muted),
         ),
-        const SizedBox(height: 2),
+        DsGaps.vXxxs,
         FittedBox(
           fit: BoxFit.scaleDown,
           alignment: AlignmentDirectional.centerStart,
           child: Text(
             amount.format(),
             maxLines: 1,
-            style: TextStyle(
-              fontFamily: DsTypography.fontFamily,
-              fontSize: emphasise
-                  ? DsTypography.titleMedium
-                  : DsTypography.bodyLarge,
-              fontWeight: DsTypography.bold,
-              color: accent,
-            ),
+            style: (emphasise
+                    ? context.dsText.cardTitle
+                    : context.dsText.bodyLarge)
+                .bold
+                .tint(accent),
           ),
         ),
       ],
@@ -237,10 +227,10 @@ class _Tile extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(DsSpacing.md),
       decoration: BoxDecoration(
-        color: isAlert ? const Color(0xFFFFF8EC) : palette.surface,
+        color: isAlert ? context.toneContainer(DsTone.caution) : palette.surface,
         borderRadius: BorderRadius.circular(DsRadius.lg),
         border: Border.all(
-          color: isAlert ? const Color(0xFFF0DCB0) : palette.line,
+          color: isAlert ? context.toneColor(DsTone.caution).withValues(alpha: 0.4) : palette.line,
         ),
       ),
       child: Column(
@@ -256,11 +246,7 @@ class _Tile extends StatelessWidget {
                   label,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontSize: DsTypography.labelSmall,
-                    fontWeight: DsTypography.semiBold,
-                    color: accent,
-                  ),
+                  style: context.dsText.caption.semibold.tint(accent),
                 ),
               ),
             ],
@@ -272,12 +258,7 @@ class _Tile extends StatelessWidget {
             child: Text(
               amount.format(),
               maxLines: 1,
-              style: TextStyle(
-                fontFamily: DsTypography.fontFamily,
-                fontSize: DsTypography.bodyLarge,
-                fontWeight: DsTypography.bold,
-                color: palette.ink,
-              ),
+              style: context.dsText.bodyLarge.bold.tint(palette.ink),
             ),
           ),
         ],

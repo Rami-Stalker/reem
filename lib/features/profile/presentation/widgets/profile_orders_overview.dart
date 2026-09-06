@@ -44,6 +44,7 @@ class ProfileOrdersOverview extends ConsumerWidget {
                       count: orders.pending,
                       label: context.l10n.statusPending,
                       color: c.warning,
+                      bucket: 'pending',
                     ),
                     const SizedBox(width: DsSpacing.sm),
                     _StatusTile(
@@ -51,6 +52,7 @@ class ProfileOrdersOverview extends ConsumerWidget {
                       count: orders.processing,
                       label: context.l10n.statusProcessing,
                       color: c.info,
+                      bucket: 'processing',
                     ),
                     const SizedBox(width: DsSpacing.sm),
                     _StatusTile(
@@ -58,6 +60,7 @@ class ProfileOrdersOverview extends ConsumerWidget {
                       count: orders.delivered,
                       label: context.l10n.statusDelivered,
                       color: c.success,
+                      bucket: 'delivered',
                     ),
                     const SizedBox(width: DsSpacing.sm),
                     _StatusTile(
@@ -65,6 +68,7 @@ class ProfileOrdersOverview extends ConsumerWidget {
                       count: orders.cancelled,
                       label: context.l10n.statusCancelled,
                       color: c.error,
+                      bucket: 'cancelled',
                     ),
                   ],
                 ),
@@ -80,6 +84,7 @@ class _StatusTile extends StatelessWidget {
     required this.count,
     required this.label,
     required this.color,
+    required this.bucket,
   });
 
   final IconData icon;
@@ -87,12 +92,16 @@ class _StatusTile extends StatelessWidget {
   final String label;
   final Color color;
 
+  /// Which pile this tile counts — carried into the orders list so tapping
+  /// «ملغاة» opens the cancelled orders rather than all of them.
+  final String bucket;
+
   @override
   Widget build(BuildContext context) {
     final c = context.dsColors;
     return Expanded(
       child: GestureDetector(
-        onTap: () => context.push(RoutePaths.orders),
+        onTap: () => context.push(RoutePaths.ordersInBucket(bucket)),
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: DsSpacing.sm),
           decoration: BoxDecoration(
@@ -122,7 +131,7 @@ class _StatusTile extends StatelessWidget {
                       right: -5,
                       child: Container(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 5, vertical: 1),
+                            horizontal: DsSpacing.xxs, vertical: DsSpacing.xxxs),
                         constraints: const BoxConstraints(minWidth: 17),
                         decoration: BoxDecoration(
                           color: color,
@@ -132,11 +141,7 @@ class _StatusTile extends StatelessWidget {
                         child: Text(
                           '$count',
                           textAlign: TextAlign.center,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 10,
-                            fontWeight: DsTypography.bold,
-                          ),
+                          style: context.dsText.micro.bold.tint(DsColors.onMedia),
                         ),
                       ),
                     ),
@@ -147,11 +152,7 @@ class _StatusTile extends StatelessWidget {
                 label,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  fontSize: DsTypography.labelSmall,
-                  fontWeight: DsTypography.medium,
-                  color: c.onSurfaceVariant,
-                ),
+                style: context.dsText.caption.tint(c.onSurfaceVariant),
               ),
             ],
           ),

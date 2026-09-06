@@ -20,6 +20,7 @@ class SurfaceCard extends StatelessWidget {
     this.elevation = DsCardElevation.low,
     this.showBorder = true,
     this.color,
+    this.semanticLabel,
     // Backwards-compatible flag (maps to elevation).
     this.useLuxuryShadow = true,
   });
@@ -31,6 +32,11 @@ class SurfaceCard extends StatelessWidget {
   final DsCardElevation elevation;
   final bool showBorder;
   final Color? color;
+
+  /// Names the card when it is tappable and its contents do not already say
+  /// what tapping it does.
+  final String? semanticLabel;
+
   final bool useLuxuryShadow;
 
   @override
@@ -61,6 +67,7 @@ class SurfaceCard extends StatelessWidget {
     return DsScaleAnimations.tapScale(
       pressedScale: 0.98,
       onTap: onTap!,
+      semanticLabel: semanticLabel,
       child: card,
     );
   }

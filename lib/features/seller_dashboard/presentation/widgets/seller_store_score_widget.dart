@@ -16,7 +16,6 @@ class SellerStoreScoreWidget extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(sellerDashboardNotifierProvider);
     final c = context.dsColors;
-    final theme = Theme.of(context);
 
     if (state.isInitialLoading) {
       return Padding(
@@ -49,8 +48,8 @@ class SellerStoreScoreWidget extends ConsumerWidget {
                 children: [
                   Text(
                     context.l10n.sellerStorePerformance,
-                    style: theme.textTheme.titleSmall
-                        ?.copyWith(fontWeight: DsTypography.bold),
+                    style: context.dsText.tileTitle
+                        .copyWith(fontWeight: DsTypography.bold),
                   ),
                   const SizedBox(height: DsSpacing.xs),
                   _ScoreBar(
@@ -115,8 +114,8 @@ class _ScoreGaugeState extends State<_ScoreGauge>
   @override
   Widget build(BuildContext context) {
     final c = context.dsColors;
-    final theme = Theme.of(context);
     final score = widget.score;
+    final gradeColor = context.toneColor(score.gradeTone);
 
     return AnimatedBuilder(
       animation: _anim,
@@ -124,7 +123,7 @@ class _ScoreGaugeState extends State<_ScoreGauge>
         size: const Size(88, 88),
         painter: _GaugePainter(
           value: score.overall / 100 * _anim.value,
-          color: score.gradeColor,
+          color: gradeColor,
           trackColor: c.surfaceVariant,
         ),
         child: SizedBox(
@@ -136,16 +135,19 @@ class _ScoreGaugeState extends State<_ScoreGauge>
               children: [
                 Text(
                   '${(score.overall * _anim.value).round()}',
-                  style: theme.textTheme.headlineSmall?.copyWith(
+                  style: context.dsText.screenTitle.copyWith(
                     fontWeight: DsTypography.bold,
-                    color: score.gradeColor,
+                    color: gradeColor,
                     height: 1,
                   ),
                 ),
                 Text(
                   score.grade,
-                  style: theme.textTheme.labelSmall
-                      ?.copyWith(color: c.onSurfaceVariant, fontSize: 9),
+                  style: context.dsText.caption
+                      .copyWith(
+                        color: c.onSurfaceVariant,
+                        fontSize: DsTypography.labelMicro,
+                      ),
                 ),
               ],
             ),
@@ -218,13 +220,15 @@ class _ScoreBar extends StatelessWidget {
   });
 
   final String label;
-  final int value;
+
+  /// Null means unmeasured, which is drawn as an empty track and a dash
+  /// rather than as a score of zero.
+  final int? value;
   final Color color;
 
   @override
   Widget build(BuildContext context) {
     final c = context.dsColors;
-    final theme = Theme.of(context);
 
     return Row(
       children: [
@@ -232,8 +236,8 @@ class _ScoreBar extends StatelessWidget {
           width: 100,
           child: Text(
             label,
-            style: theme.textTheme.labelSmall
-                ?.copyWith(color: c.onSurfaceVariant, fontSize: 10),
+            style: context.dsText.caption
+                .copyWith(color: c.onSurfaceVariant, fontSize: DsTypography.labelMicro),
           ),
         ),
         Expanded(
@@ -243,7 +247,7 @@ class _ScoreBar extends StatelessWidget {
               children: [
                 Container(height: 5, color: c.surfaceVariant),
                 FractionallySizedBox(
-                  widthFactor: value / 100,
+                  widthFactor: (value ?? 0) / 100,
                   child: Container(
                     height: 5,
                     decoration: BoxDecoration(
@@ -260,12 +264,12 @@ class _ScoreBar extends StatelessWidget {
         SizedBox(
           width: 28,
           child: Text(
-            '$value',
+            value == null ? '—' : '$value',
             textAlign: TextAlign.end,
-            style: theme.textTheme.labelSmall?.copyWith(
+            style: context.dsText.caption.copyWith(
               fontWeight: DsTypography.bold,
               color: color,
-              fontSize: 10,
+              fontSize: DsTypography.labelMicro,
             ),
           ),
         ),

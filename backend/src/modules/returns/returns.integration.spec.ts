@@ -140,7 +140,11 @@ function build(tx: Tx): World {
     customerRefunds,
   );
   const disputes = new DisputesService(db, ledger, wallets, audit);
-  const returns = new ReturnsService(db, refunds, disputes, workflow);
+  // Reem Value is not the subject of these cases, and a customer with no
+  // standing has no extra return days — so the benefit lookup is stubbed to the
+  // Q56 default rather than wired to a real profile.
+  const valueBenefits = { configFor: async () => null } as never;
+  const returns = new ReturnsService(db, refunds, disputes, workflow, valueBenefits);
   return { tx, ledger, wallets, commissions, refunds, returns };
 }
 

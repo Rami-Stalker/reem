@@ -1,40 +1,39 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import 'package:reem/core/design_system/design_system.dart';
 import 'package:reem/core/localization/l10n_extension.dart';
+import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/features/home/domain/entities/nearby_store.dart';
 import 'package:reem/features/home/presentation/providers/home_content_provider.dart';
 import 'package:reem/features/home/presentation/widgets/home_section_header.dart';
 
-/// "Boutiques near you" — gated behind location. Until the customer opts in we
-/// show a soft permission card; once enabled, a rail of nearby stores with
-/// distance and open/closed status.
-class HomeNearbyStores extends ConsumerStatefulWidget {
+/// "Boutiques near you" -- the shops trading in her governorate, her own city
+/// first.
+///
+/// This section did not work, and could not have. It opened with a card asking
+/// her to "enable location", which set a boolean in this widget and nothing
+/// else: no permission was requested, no coordinate was ever read, and the
+/// list behind it was hard-coded empty on the server. Tapping the button
+/// replaced the card with nothing at all.
+///
+/// It is answered from data the platform actually holds now -- the governorate
+/// on her delivery address, matched against where each boutique trades -- so
+/// there is no toggle, and nothing to enable. Where she has saved no address,
+/// or no boutique trades near her, the section simply is not there.
+class HomeNearbyStores extends ConsumerWidget {
   const HomeNearbyStores({super.key});
 
-  @override
-  ConsumerState<HomeNearbyStores> createState() => _HomeNearbyStoresState();
-}
-
-class _HomeNearbyStoresState extends ConsumerState<HomeNearbyStores> {
-  bool _locationEnabled = false;
+  static const double _railHeight = 96;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final stores = ref.watch(
-      homeContentNotifierProvider
-          .select((s) => s.content?.nearbyStores ?? const <NearbyStore>[]),
+      homeContentNotifierProvider.select(
+        (s) => s.content?.nearbyStores ?? const <NearbyStore>[],
+      ),
     );
-
-    if (!_locationEnabled) {
-      return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: DsSpacing.lg),
-        child: _LocationPrompt(
-          onEnable: () => setState(() => _locationEnabled = true),
-        ),
-      );
-    }
 
     if (stores.isEmpty) return const SizedBox.shrink();
 
@@ -44,9 +43,10 @@ class _HomeNearbyStoresState extends ConsumerState<HomeNearbyStores> {
         HomeSectionHeader(
           eyebrow: context.l10n.homeNearbyEyebrow,
           title: context.l10n.homeNearbyStores,
+          subtitle: context.l10n.homeNearbySubtitle,
         ),
         SizedBox(
-          height: 92,
+          height: _railHeight,
           child: ListView.separated(
             scrollDirection: Axis.horizontal,
             physics: const BouncingScrollPhysics(),
@@ -61,66 +61,6 @@ class _HomeNearbyStoresState extends ConsumerState<HomeNearbyStores> {
   }
 }
 
-class _LocationPrompt extends StatelessWidget {
-  const _LocationPrompt({required this.onEnable});
-
-  final VoidCallback onEnable;
-
-  @override
-  Widget build(BuildContext context) {
-    final c = context.dsColors;
-    return SurfaceCard(
-      child: Row(
-        children: [
-          Container(
-            width: 46,
-            height: 46,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              gradient: context.primaryGradient,
-              borderRadius: DsRadius.borderLg,
-            ),
-            child: const Icon(Icons.location_on_rounded,
-                color: Colors.white, size: 24),
-          ),
-          const SizedBox(width: DsSpacing.md),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  context.l10n.homeNearbyPromptTitle,
-                  style: TextStyle(
-                    fontFamily: DsTypography.fontFamily,
-                    fontWeight: DsTypography.bold,
-                    fontSize: DsTypography.labelLarge,
-                    color: c.onSurface,
-                  ),
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  context.l10n.homeNearbyPromptBody,
-                  style: TextStyle(
-                      fontSize: DsTypography.labelSmall,
-                      color: c.onSurfaceVariant),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(width: DsSpacing.sm),
-          DsButton(
-            label: context.l10n.enable,
-            size: DsButtonSize.sm,
-            variant: DsButtonVariant.tonal,
-            isExpanded: false,
-            onPressed: onEnable,
-          ),
-        ],
-      ),
-    );
-  }
-}
-
 class _NearbyCard extends StatelessWidget {
   const _NearbyCard({required this.store});
 
@@ -129,65 +69,75 @@ class _NearbyCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = context.dsColors;
-    return Container(
-      width: 248,
-      padding: const EdgeInsets.all(DsSpacing.sm),
-      decoration: BoxDecoration(
-        color: c.surface,
-        borderRadius: DsRadius.borderXl,
-        border: Border.all(color: c.border.withValues(alpha: 0.5)),
-      ),
-      child: Row(
-        children: [
-          DsAvatar(imageUrl: store.logoUrl, name: store.name, size: 48),
-          const SizedBox(width: DsSpacing.sm),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  store.name,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontFamily: DsTypography.fontFamily,
-                    fontWeight: DsTypography.semiBold,
-                    fontSize: DsTypography.labelLarge,
-                    color: c.onSurface,
+    final l10n = context.l10n;
+
+    return GestureDetector(
+      onTap: () => context.push(RoutePaths.userProfileOf(store.id)),
+      child: Container(
+        width: 248,
+        padding: const EdgeInsets.all(DsSpacing.sm),
+        decoration: BoxDecoration(
+          color: c.surface,
+          borderRadius: DsRadius.borderXl,
+          border: Border.all(color: c.border.withValues(alpha: 0.5)),
+        ),
+        child: Row(
+          children: [
+            DsAvatar(imageUrl: store.logoUrl, name: store.name, size: 48),
+            const SizedBox(width: DsSpacing.sm),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    store.name,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: context.dsText.labelLarge.tint(c.onSurface),
                   ),
-                ),
-                const SizedBox(height: 2),
-                Row(
-                  children: [
-                    Icon(Icons.near_me_rounded, size: 12, color: c.primary),
-                    const SizedBox(width: 2),
-                    Text('${store.distanceKm.toStringAsFixed(1)} km',
-                        style: TextStyle(
-                            fontSize: DsTypography.labelSmall,
-                            color: c.onSurfaceVariant)),
-                    const SizedBox(width: DsSpacing.xs),
-                    Icon(Icons.star_rounded, size: 12, color: c.rating),
-                    const SizedBox(width: 2),
-                    Text(store.rating.toStringAsFixed(1),
-                        style: TextStyle(
-                            fontSize: DsTypography.labelSmall,
-                            color: c.onSurfaceVariant)),
-                  ],
-                ),
-                const SizedBox(height: 3),
-                Text(
-                  store.isOpen ? context.l10n.openNow : context.l10n.closedNow,
-                  style: TextStyle(
-                    fontSize: DsTypography.labelSmall,
-                    fontWeight: DsTypography.bold,
-                    color: store.isOpen ? c.success : c.onSurfaceVariant,
+                  DsGaps.vXxxs,
+                  Row(
+                    children: [
+                      Icon(Icons.place_outlined, size: 12, color: c.primary),
+                      DsGaps.hXxxs,
+                      Flexible(
+                        child: Text(
+                          store.area,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: context.dsText.caption.tint(
+                            c.onSurfaceVariant,
+                          ),
+                        ),
+                      ),
+                      if (store.rating != null) ...[
+                        const SizedBox(width: DsSpacing.xs),
+                        Icon(Icons.star_rounded, size: 12, color: c.rating),
+                        DsGaps.hXxxs,
+                        Text(
+                          store.rating!.toStringAsFixed(1),
+                          style: context.dsText.caption.tint(
+                            c.onSurfaceVariant,
+                          ),
+                        ),
+                      ],
+                    ],
                   ),
-                ),
-              ],
+                  DsGaps.vXxs,
+                  Text(
+                    store.sameCity
+                        ? l10n.homeNearbyInYourCity
+                        : l10n.homeNearbyInGovernorate,
+                    style: context.dsText.caption.bold.tint(
+                      store.sameCity ? c.success : c.onSurfaceVariant,
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

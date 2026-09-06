@@ -3,30 +3,68 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/features/checkout/domain/entities/order.dart';
 import 'package:reem/features/checkout/presentation/providers/checkout_providers.dart';
+import 'package:reem/features/checkout/presentation/providers/orders_notifier.dart';
 import 'package:reem/features/checkout/presentation/widgets/order_status_chip.dart';
 
-class OrdersScreen extends ConsumerWidget {
-  const OrdersScreen({super.key});
+/// Her orders, in one of the four piles her profile counts.
+///
+/// The profile screen has shown those counts since it was built and every tile
+/// opened this screen unfiltered — tapping «ملغاة» handed her everything she
+/// had ever bought, which is how a real number ends up feeling invented. The
+/// pile arrives in the route and the row of chips keeps it switchable.
+class OrdersScreen extends ConsumerStatefulWidget {
+  const OrdersScreen({super.key, this.initialBucket});
+
+  final OrderBucket? initialBucket;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(ordersNotifierProvider);
+  ConsumerState<OrdersScreen> createState() => _OrdersScreenState();
+}
+
+class _OrdersScreenState extends ConsumerState<OrdersScreen> {
+  late OrderBucket? _bucket = widget.initialBucket;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final state = ref.watch(ordersNotifierProvider(_bucket));
 
     return ReemScrollPage(
+      onRefresh: () => ref.read(ordersNotifierProvider(_bucket).notifier).refresh(),
       slivers: [
-        const PremiumAppBar(title: 'My Orders', showBack: true),
+        PremiumAppBar(title: l10n.myOrders, showBack: true),
+        SliverToBoxAdapter(
+          child: _Filters(
+            selected: _bucket,
+            onSelect: (bucket) => setState(() => _bucket = bucket),
+          ),
+        ),
         if (state.isLoading && state.orders.isEmpty)
           const SliverFillRemaining(
             hasScrollBody: false,
-            child: Center(child: CircularProgressIndicator()),
+            child: DsLoadingIndicator(),
           )
         else if (state.isEmpty)
-          const SliverFillRemaining(
+          SliverFillRemaining(
             hasScrollBody: false,
-            child: _EmptyOrders(),
+            child: DsEmptyState(
+              icon: Icons.receipt_long_outlined,
+              title: l10n.myOrders,
+              // A pile that happens to be empty is not the same as never
+              // having ordered, and "browse the shop" is the wrong offer for
+              // a shopper filtering her own history.
+              message: _bucket == null
+                  ? l10n.browseAndAdd
+                  : l10n.ordersEmptyForFilter,
+              actionLabel: _bucket == null ? l10n.emptyCartAction : null,
+              onAction: _bucket == null
+                  ? () => context.go(RoutePaths.home)
+                  : null,
+            ),
           )
         else
           SliverPadding(
@@ -38,11 +76,56 @@ class OrdersScreen extends ConsumerWidget {
             ),
             sliver: SliverList.separated(
               itemCount: state.orders.length,
-              separatorBuilder: (_, __) => const SizedBox(height: DsSpacing.md),
+              separatorBuilder: (_, _) => DsGaps.vMd,
               itemBuilder: (_, i) => _OrderCard(order: state.orders[i]),
             ),
           ),
       ],
+    );
+  }
+}
+
+/// The pile switcher — «الكل» plus the four the profile counts.
+class _Filters extends StatelessWidget {
+  const _Filters({required this.selected, required this.onSelect});
+
+  final OrderBucket? selected;
+  final ValueChanged<OrderBucket?> onSelect;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+
+    String label(OrderBucket bucket) => switch (bucket) {
+      OrderBucket.pending => l10n.statusPending,
+      OrderBucket.processing => l10n.statusProcessing,
+      OrderBucket.delivered => l10n.statusDelivered,
+      OrderBucket.cancelled => l10n.statusCancelled,
+    };
+
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      padding: const EdgeInsets.symmetric(
+        horizontal: DsSpacing.lg,
+        vertical: DsSpacing.sm,
+      ),
+      child: Row(
+        children: [
+          DsChip(
+            label: l10n.ordersFilterAll,
+            selected: selected == null,
+            onTap: () => onSelect(null),
+          ),
+          for (final bucket in OrderBucket.values) ...[
+            const SizedBox(width: DsSpacing.xs),
+            DsChip(
+              label: label(bucket),
+              selected: selected == bucket,
+              onTap: () => onSelect(bucket),
+            ),
+          ],
+        ],
+      ),
     );
   }
 }
@@ -54,6 +137,14 @@ class _OrderCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final text = context.dsText;
+    final l10n = context.l10n;
+    final meta = [
+      l10n.itemsCount(order.itemsCount),
+      if (order.isSplit) l10n.sellersCount(order.sellersCount),
+      _date(order.createdAt),
+    ].join(' · ');
+
     return CustomerPanel(
       onTap: () => context.push(RoutePaths.orderDetailOf(order.id)),
       child: Column(
@@ -62,44 +153,19 @@ class _OrderCard extends StatelessWidget {
           Row(
             children: [
               Expanded(
-                child: Text(
-                  order.number,
-                  style: TextStyle(
-                    fontFamily: DsTypography.fontFamily,
-                    fontWeight: DsTypography.bold,
-                    color: CustomerExperience.ink,
-                  ),
-                ),
+                child: Text(order.number, style: text.cardTitle.bold),
               ),
               OrderStatusChip(status: order.status),
             ],
           ),
-          const SizedBox(height: DsSpacing.xs),
-          Text(
-            order.isSplit
-                ? '${order.itemsCount} قطعة من ${order.sellersCount} بائعات · ${_date(order.createdAt)}'
-                : '${order.itemsCount} قطعة · ${_date(order.createdAt)}',
-            style: TextStyle(
-              fontSize: DsTypography.bodySmall,
-              color: CustomerExperience.muted,
-            ),
-          ),
-          const SizedBox(height: DsSpacing.sm),
+          DsGaps.vXs,
+          Text(meta, style: text.cardSubtitle),
+          DsGaps.vSm,
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                'Total',
-                style: const TextStyle(color: CustomerExperience.muted),
-              ),
-              Text(
-                order.grandTotal.format(),
-                style: const TextStyle(
-                  fontFamily: DsTypography.fontFamily,
-                  fontWeight: DsTypography.bold,
-                  color: CustomerExperience.rose,
-                ),
-              ),
+              Text(l10n.total, style: text.caption),
+              Text(order.grandTotal.format(), style: text.price.tabular),
             ],
           ),
         ],
@@ -108,43 +174,4 @@ class _OrderCard extends StatelessWidget {
   }
 
   String _date(DateTime d) => '${d.day}/${d.month}/${d.year}';
-}
-
-class _EmptyOrders extends StatelessWidget {
-  const _EmptyOrders();
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(DsSpacing.xl),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            width: 84,
-            height: 84,
-            decoration: const BoxDecoration(
-              shape: BoxShape.circle,
-              gradient: CustomerExperience.signatureGradient,
-            ),
-            child: const Icon(
-              Icons.receipt_long_outlined,
-              size: 40,
-              color: Colors.white,
-            ),
-          ),
-          const SizedBox(height: DsSpacing.md),
-          const Text(
-            'No orders yet',
-            style: TextStyle(
-              fontFamily: DsTypography.fontFamily,
-              fontWeight: DsTypography.bold,
-              fontSize: DsTypography.titleMedium,
-              color: CustomerExperience.ink,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 }

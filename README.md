@@ -57,7 +57,7 @@ flutter analyze
 flutter test
 ```
 
-Two structural checks guard the layout. Both exit non-zero on failure.
+Four structural checks guard the layout. All exit non-zero on failure.
 
 ```bash
 node tools/architecture/check-flutter-boundaries.mjs
@@ -67,11 +67,65 @@ Fails when a `domain/` library imports Flutter, Riverpod, Dio, `go_router`, or
 a `data/`/`presentation/` sibling; also prints advisory debt queues.
 
 ```bash
+node tools/architecture/check-design-system.mjs
+```
+
+Fails when feature code names a raw colour, hand-assembles a `TextStyle`, or
+spaces itself off the 4px grid. See [docs/DESIGN_SYSTEM.md](docs/DESIGN_SYSTEM.md).
+
+```bash
+node tools/architecture/check-localization.mjs
+```
+
+Fails on any English literal in presentation code. Reem is Arabic-first; an
+English string in a widget is a screen a customer cannot read. A literal that
+genuinely is not copy — a dialling mask, an intl date pattern, a record id the
+server matches on — carries an inline `// l10n-ignore: <reason>`.
+
+```bash
 node tools/architecture/find-unreachable-dart.mjs
 ```
 
 Fails when a library under `lib/` is reachable from neither `main.dart` nor a
 test.
+
+## Response caching
+
+GET requests are cached at the transport layer — read-through, coalesced, and
+served stale when the connection drops. What is cached and what deliberately is
+not lives in [docs/CACHING.md](docs/CACHING.md).
+
+## Resilience
+
+Crash handling, PII-safe error reporting with breadcrumbs, and the offline
+write queue that keeps a tap taken on a dead connection: see
+[docs/RESILIENCE.md](docs/RESILIENCE.md).
+
+## Release builds
+
+The app ships as `shop.reem.app` on every platform — Play Store identity is the
+applicationId and cannot be changed after the first upload.
+
+Release signing reads `android/key.properties`, which is git-ignored along with
+the keystore it names. Without it the build falls back to the debug key and
+warns: `flutter run --release` still works, but the artifact cannot be
+published. Copy [`android/key.properties.example`](android/key.properties.example)
+and follow the `keytool` line in it to create the keystore.
+
+Point the build at a real API. Without `API_BASE_URL` the client talks to
+localhost, which is right for development and useless in a release:
+
+```bash
+flutter build appbundle --release --dart-define=APP_ENV=production --dart-define=API_BASE_URL=https://api.reem.shop
+```
+
+Launcher icons are painted from the design-system tokens rather than exported
+from a checked-in artwork file. Regenerating rewrites every Android density,
+every iOS slot, the web icons, and the store artwork under `docs/brand/`:
+
+```bash
+flutter test tools/icons/generate_app_icons.dart
+```
 
 ## Documentation
 

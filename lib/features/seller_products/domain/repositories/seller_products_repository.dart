@@ -4,6 +4,12 @@ import 'package:reem/features/seller_products/domain/entities/managed_product.da
 import 'package:reem/features/seller_products/domain/entities/product_draft.dart';
 import 'package:reem/features/seller_products/domain/entities/product_status.dart';
 
+/// The seller's listings.
+///
+/// Every mutation but [updateListing] is addressed by the OFFER's id — the
+/// thing the seller actually owns. [updateListing] takes the whole listing
+/// because editing it may touch both halves of the catalogue, each behind its
+/// own route.
 abstract interface class SellerProductsRepository {
   Future<Result<ManagedProductPage>> getMyProducts({
     int page,
@@ -13,15 +19,26 @@ abstract interface class SellerProductsRepository {
     String? sort,
   });
 
-  Future<Result<ManagedProduct>> getProduct(String id);
+  /// Listings at or below [threshold] — the dashboard's restock queue.
+  Future<Result<List<ManagedProduct>>> lowStock({int threshold});
+
+  Future<Result<ManagedProduct>> getOffer(String offerId);
 
   Future<Result<ManagedProduct>> create(ProductDraft draft);
 
-  Future<Result<ManagedProduct>> update(String id, ProductDraft draft);
+  Future<Result<ManagedProduct>> updateListing(
+    ManagedProduct listing,
+    ProductDraft draft,
+  );
 
-  Future<Result<void>> delete(String id);
+  /// Archives the seller's offer. The catalogue entry survives it: order
+  /// history points back at the listing for dispute evidence.
+  Future<Result<void>> archive(String offerId);
 
-  Future<Result<ManagedProduct>> setStatus(String id, ProductStatus status);
+  Future<Result<ManagedProduct>> setStatus(
+    String offerId,
+    ProductStatus status,
+  );
 
-  Future<Result<ManagedProduct>> adjustStock(String id, int delta);
+  Future<Result<ManagedProduct>> adjustStock(String offerId, int delta);
 }

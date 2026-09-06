@@ -18,6 +18,7 @@ class UserModel extends User {
     super.deviceVerificationRequired,
     super.followersCount,
     super.followingCount,
+    super.permissions,
     required super.createdAt,
   });
 
@@ -38,8 +39,36 @@ class UserModel extends User {
           json['device_verification_required'] as bool? ?? true,
       followersCount: json['followers_count'] as int? ?? 0,
       followingCount: json['following_count'] as int? ?? 0,
+      permissions: {
+        for (final permission in (json['permissions'] as List? ?? const []))
+          if (permission is String) permission,
+      },
       createdAt: DateTime.parse(json['created_at'] as String),
     );
+  }
+
+  /// The signed-in user out of an auth envelope.
+  ///
+  /// Every endpoint that hands back a session — `login`, `otp/login/verify`,
+  /// `register`, `refresh`, `me` — returns `{user, permissions, …}` with the
+  /// permission set *beside* the user rather than inside it, because it is
+  /// resolved per request and is not part of the public user shape.
+  ///
+  /// Three call sites folded that in by hand and one of them forgot, which is
+  /// the whole bug: an administrator who signed in through the code flow got a
+  /// console with an empty sidebar, because the nav is drawn from a permission
+  /// set the client had thrown away. One fold, so a fourth entry point cannot
+  /// repeat it.
+  factory UserModel.fromAuthPayload(Map<String, dynamic> envelope) {
+    final user = envelope['user'];
+    final json = user is Map
+        ? Map<String, dynamic>.from(user)
+        : Map<String, dynamic>.from(envelope);
+    return UserModel.fromJson({
+      ...json,
+      if (envelope['permissions'] is List)
+        'permissions': envelope['permissions'],
+    });
   }
 
   factory UserModel.fromEntity(User user) => UserModel(
@@ -57,6 +86,7 @@ class UserModel extends User {
         deviceVerificationRequired: user.deviceVerificationRequired,
         followersCount: user.followersCount,
         followingCount: user.followingCount,
+        permissions: user.permissions,
         createdAt: user.createdAt,
       );
 
@@ -76,6 +106,7 @@ class UserModel extends User {
       'device_verification_required': deviceVerificationRequired,
       'followers_count': followersCount,
       'following_count': followingCount,
+      'permissions': permissions.toList(),
       'created_at': createdAt.toIso8601String(),
     };
   }
@@ -95,6 +126,7 @@ class UserModel extends User {
     bool? deviceVerificationRequired,
     int? followersCount,
     int? followingCount,
+    Set<String>? permissions,
     DateTime? createdAt,
   }) {
     return UserModel(
@@ -113,6 +145,7 @@ class UserModel extends User {
           deviceVerificationRequired ?? this.deviceVerificationRequired,
       followersCount: followersCount ?? this.followersCount,
       followingCount: followingCount ?? this.followingCount,
+      permissions: permissions ?? this.permissions,
       createdAt: createdAt ?? this.createdAt,
     );
   }

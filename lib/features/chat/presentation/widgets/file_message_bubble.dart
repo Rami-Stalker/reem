@@ -75,12 +75,13 @@ class _FileMessageBubbleState extends ConsumerState<FileMessageBubble> {
   }
 
   static bool _isMissingHandler(Object error) =>
+      // l10n-ignore: probing a platform error string, not copy
       error.toString().toLowerCase().contains('no app');
 
   @override
   Widget build(BuildContext context) {
     final c = context.dsColors;
-    final onBubble = widget.isMe ? Colors.white : c.onSurface;
+    final onBubble = widget.isMe ? DsColors.onMedia : c.onSurface;
 
     return Align(
       // Directional, not absolute: the sender's own bubble sits on the trailing
@@ -107,7 +108,7 @@ class _FileMessageBubbleState extends ConsumerState<FileMessageBubble> {
                 _Leading(
                   busy: _busy,
                   progress: _progress,
-                  tint: widget.isMe ? Colors.white : c.primary,
+                  tint: widget.isMe ? DsColors.onMedia : c.primary,
                 ),
                 const SizedBox(width: DsSpacing.sm),
                 Expanded(
@@ -120,19 +121,15 @@ class _FileMessageBubbleState extends ConsumerState<FileMessageBubble> {
                             : context.l10n.chatFileMessage,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          color: onBubble,
-                          fontWeight: DsTypography.semiBold,
-                        ),
+                        style: context.dsText.body.semibold.tint(onBubble),
                       ),
                       if (widget.sizeBytes != null) ...[
                         const SizedBox(height: DsSpacing.xxxs),
                         Text(
-                          '${MediaLimits.megabytes(widget.sizeBytes!)} MB',
-                          style: TextStyle(
-                            color: onBubble.withValues(alpha: 0.75),
-                            fontSize: DsTypography.labelSmall,
+                          context.l10n.fileSizeMegabytes(
+                            '${MediaLimits.megabytes(widget.sizeBytes!)}',
                           ),
+                          style: context.dsText.caption.tint(onBubble.withValues(alpha: 0.75)),
                         ),
                       ],
                     ],

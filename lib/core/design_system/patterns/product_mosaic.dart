@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blurhash/flutter_blurhash.dart';
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/media/media_decode.dart';
 import 'package:reem/core/media/media_variants.dart';
 import 'package:reem/core/shared/entities/product.dart';
 
@@ -146,7 +147,11 @@ class _MosaicUnit extends StatelessWidget {
       height: SliverProductMosaic._unitHeight,
       child: Row(
         children: heroOnStart
-            ? [hero, const SizedBox(width: SliverProductMosaic._gap), companions]
+            ? [
+                hero,
+                const SizedBox(width: SliverProductMosaic._gap),
+                companions,
+              ]
             : [
                 companions,
                 const SizedBox(width: SliverProductMosaic._gap),
@@ -195,19 +200,22 @@ class _MosaicTile extends StatelessWidget {
             if (url.isEmpty)
               Center(child: DsSparkle(size: 26, color: c.primary, opacity: 0.4))
             else
-              CachedNetworkImage(
-                imageUrl: MediaVariants.thumb(url),
-                fit: BoxFit.cover,
-                fadeInDuration: DsMotion.normal,
-                placeholder: (_, _) {
-                  // The cover's own colours while it loads, rather than a grey
-                  // block that pops.
-                  final hash = product.coverBlurHash;
-                  return hash == null || hash.isEmpty
-                      ? ColoredBox(color: c.shimmerBase)
-                      : BlurHash(hash: hash, imageFit: BoxFit.cover);
-                },
-                errorWidget: (_, _, _) => ColoredBox(color: c.surfaceVariant),
+              LayoutBuilder(
+                builder: (context, constraints) => CachedNetworkImage(
+                  imageUrl: MediaVariants.thumb(url),
+                  fit: BoxFit.cover,
+                  fadeInDuration: DsMotion.normal,
+                  memCacheWidth: MediaDecode.widthFrom(context, constraints),
+                  placeholder: (_, _) {
+                    // The cover's own colours while it loads, rather than a grey
+                    // block that pops.
+                    final hash = product.coverBlurHash;
+                    return hash == null || hash.isEmpty
+                        ? ColoredBox(color: c.shimmerBase)
+                        : BlurHash(hash: hash, imageFit: BoxFit.cover);
+                  },
+                  errorWidget: (_, _, _) => ColoredBox(color: c.surfaceVariant),
+                ),
               ),
 
             IgnorePointer(
@@ -235,33 +243,38 @@ class _MosaicTile extends StatelessWidget {
                     product.title,
                     maxLines: _isHero ? 2 : 1,
                     overflow: TextOverflow.ellipsis,
-                    style: (_isHero
-                            ? theme.textTheme.titleSmall
-                            : theme.textTheme.labelLarge)
-                        ?.copyWith(
-                          color: Colors.white,
-                          fontWeight: DsTypography.semiBold,
-                          height: 1.25,
-                          shadows: const [
-                            Shadow(blurRadius: 8, color: Colors.black45),
-                          ],
-                        ),
+                    style:
+                        (_isHero
+                                ? theme.textTheme.titleSmall
+                                : theme.textTheme.labelLarge)
+                            ?.copyWith(
+                              color: DsColors.onMedia,
+                              fontWeight: DsTypography.semiBold,
+                              height: 1.25,
+                              shadows: const [
+                                Shadow(
+                                  blurRadius: 8,
+                                  color: DsColors.mediaScrim,
+                                ),
+                              ],
+                            ),
                   ),
                   const SizedBox(height: 2),
                   Text(
                     product.price?.format() ?? '',
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: DsTypography.price(
-                      Colors.white,
-                      size: _isHero
-                          ? DsTypography.titleSmall
-                          : DsTypography.labelMedium,
-                    ).copyWith(
-                      shadows: const [
-                        Shadow(blurRadius: 8, color: Colors.black45),
-                      ],
-                    ),
+                    style:
+                        DsTypography.price(
+                          DsColors.onMedia,
+                          size: _isHero
+                              ? DsTypography.titleSmall
+                              : DsTypography.labelMedium,
+                        ).copyWith(
+                          shadows: const [
+                            Shadow(blurRadius: 8, color: DsColors.mediaScrim),
+                          ],
+                        ),
                   ),
                 ],
               ),

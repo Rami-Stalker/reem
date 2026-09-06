@@ -9,13 +9,22 @@ import 'package:reem/features/profile/domain/entities/referral.dart';
 
 /// One step in the profile-completion checklist.
 class ProfileCompletionStep extends Equatable {
-  const ProfileCompletionStep({required this.label, required this.done});
+  const ProfileCompletionStep({
+    required this.key,
+    required this.label,
+    required this.done,
+  });
+
+  /// The server's stable name for the step — `name`, `phone_verified`,
+  /// `photo`, `bio`, `email`. The label is copy and may be translated; this is
+  /// what decides where tapping the step takes her.
+  final String key;
 
   final String label;
   final bool done;
 
   @override
-  List<Object?> get props => [label, done];
+  List<Object?> get props => [key, label, done];
 }
 
 /// The bespoke profile-centre data fetched in one pass: completion, gamified

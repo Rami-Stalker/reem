@@ -1,6 +1,8 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
+import 'package:reem/core/design_system/foundation/tokens/ds_tone.dart';
+
 // ── Store Performance Score ───────────────────────────────────────────────────
 
 class SellerStoreScore extends Equatable {
@@ -14,7 +16,14 @@ class SellerStoreScore extends Equatable {
 
   final int overall; // 0–100
   final int fulfillment;
-  final int responsiveness;
+
+  /// Null when she has never been messaged.
+  ///
+  /// Nullable rather than zero, because those are different claims and the
+  /// server can now tell them apart: this used to arrive as a hardcoded 90
+  /// for every seller, and rendering an unmeasured reply time as `0` would
+  /// swap one wrong number for a crueller one.
+  final int? responsiveness;
   final int productQuality;
   final double rating;
 
@@ -25,11 +34,13 @@ class SellerStoreScore extends Equatable {
         _ => 'Needs work',
       };
 
-  Color get gradeColor => switch (overall) {
-        >= 90 => const Color(0xFF3FA86F),
-        >= 75 => const Color(0xFF5B8DEF),
-        >= 60 => const Color(0xFFE0A23C),
-        _ => const Color(0xFFE5484D),
+  /// What the grade *means*. The colour that draws it belongs to the theme,
+  /// so the widget resolves this with `context.toneColor(...)`.
+  DsTone get gradeTone => switch (overall) {
+        >= 90 => DsTone.positive,
+        >= 75 => DsTone.info,
+        >= 60 => DsTone.caution,
+        _ => DsTone.critical,
       };
 
   @override
@@ -90,12 +101,12 @@ class SellerAiInsight extends Equatable {
   final String body;
   final String action;
 
-  Color get kindColor => switch (kind) {
-        AiInsightKind.revenue => const Color(0xFF3FA86F),
-        AiInsightKind.product => const Color(0xFF5B8DEF),
-        AiInsightKind.inventory => const Color(0xFFE0A23C),
-        AiInsightKind.customer => const Color(0xFF8F5C99),
-        AiInsightKind.warning => const Color(0xFFE5484D),
+  DsTone get kindTone => switch (kind) {
+        AiInsightKind.revenue => DsTone.positive,
+        AiInsightKind.product => DsTone.info,
+        AiInsightKind.inventory => DsTone.caution,
+        AiInsightKind.customer => DsTone.accent,
+        AiInsightKind.warning => DsTone.critical,
       };
 
   IconData get kindIcon => switch (kind) {
@@ -131,10 +142,10 @@ class SellerTask extends Equatable {
   final IconData icon;
   final int? count;
 
-  Color get priorityColor => switch (priority) {
-        TaskPriority.high => const Color(0xFFE5484D),
-        TaskPriority.medium => const Color(0xFFE0A23C),
-        TaskPriority.low => const Color(0xFF5B8DEF),
+  DsTone get priorityTone => switch (priority) {
+        TaskPriority.high => DsTone.critical,
+        TaskPriority.medium => DsTone.caution,
+        TaskPriority.low => DsTone.info,
       };
 
   @override

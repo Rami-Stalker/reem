@@ -29,6 +29,7 @@ final class ProfileOverviewRemoteDataSource extends BaseRemoteDataSource
       completionSteps: _list(json['completion_steps'])
           .map(
             (step) => ProfileCompletionStep(
+              key: step['key'] as String? ?? '',
               label: step['label'] as String? ?? '',
               done: step['done'] as bool? ?? false,
             ),

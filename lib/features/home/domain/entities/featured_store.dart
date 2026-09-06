@@ -10,7 +10,7 @@ class FeaturedStore extends Equatable {
     required this.logoUrl,
     required this.coverUrl,
     this.isVerified = false,
-    this.rating = 0,
+    this.rating,
     this.productCount = 0,
     this.followerCount = 0,
     this.isFollowing = false,
@@ -23,7 +23,11 @@ class FeaturedStore extends Equatable {
   final String logoUrl;
   final String coverUrl;
   final bool isVerified;
-  final double rating;
+
+  /// Null until customers have actually reviewed the boutique. A zero here
+  /// would be shown as «0.0 ★», which reads as a bad shop rather than a new
+  /// one.
+  final double? rating;
   final int productCount;
   final int followerCount;
   final bool isFollowing;
@@ -49,16 +53,16 @@ class FeaturedStore extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
-        name,
-        tagline,
-        logoUrl,
-        coverUrl,
-        isVerified,
-        rating,
-        productCount,
-        followerCount,
-        isFollowing,
-        previewImages,
-      ];
+    id,
+    name,
+    tagline,
+    logoUrl,
+    coverUrl,
+    isVerified,
+    rating,
+    productCount,
+    followerCount,
+    isFollowing,
+    previewImages,
+  ];
 }

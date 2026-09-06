@@ -19,6 +19,7 @@ const rolePermissions: Record<UserRole, string[]> = {
     AppPermission.orderRead,
     AppPermission.userManage,
     AppPermission.analyticsRead,
+    AppPermission.trendsManage,
     AppPermission.auditRead,
   ],
   [UserRole.SUPPORT_ADMIN]: [
@@ -68,6 +69,7 @@ const rolePermissions: Record<UserRole, string[]> = {
     AppPermission.orderManage,
     AppPermission.userManage,
     AppPermission.analyticsRead,
+    AppPermission.trendsManage,
     AppPermission.auditRead,
   ],
   [UserRole.SUPPORT]: [

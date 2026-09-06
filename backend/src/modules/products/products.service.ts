@@ -1,11 +1,14 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
+import { ValueVisibilityService } from '../value/value-visibility.service';
+import { TrendSignalService } from '../trends/collection/trend-signal.service';
 import {
   PRODUCT_CARD_INCLUDE,
   PRODUCT_INCLUDE,
   PURCHASABLE_PRODUCT_WHERE,
 } from '../../common/catalog/product-include';
+import { categorySubtreeIds } from '../../common/catalog/category-subtree';
 import { serializeProduct } from '../../common/serializers';
 import { ProductQueryDto } from './dto/product-query.dto';
 
@@ -21,7 +24,11 @@ type OrderBy = Prisma.ProductOrderByWithRelationInput[];
  */
 @Injectable()
 export class ProductsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly signals: TrendSignalService,
+    private readonly visibility: ValueVisibilityService,
+  ) {}
 
   async home(viewerId?: string) {
     const [trending, newArrivals, featured, mostLoved, forYou] =
@@ -140,6 +147,25 @@ export class ProductsService {
   }
 
   async detail(id: string, viewerId?: string) {
+    // The same visibility rule the listings apply, applied to the one-product
+    // read as well.
+    //
+    // Hiding an exclusive piece from the catalogue but serving it to anyone who
+    // holds its id is not a rule, it is an inconvenience: links travel through
+    // chats, posts and stories, which is precisely how a "members only" drop
+    // would leak. The listing gate is the wrong place to stop, so the gate is
+    // repeated here.
+    //
+    // A hidden product answers 404, not 403, and deliberately: refusing by name
+    // would confirm to someone without the standing that there is something
+    // there to want.
+    const visibility = await this.visibility.catalogFilter(viewerId);
+    const visible = await this.prisma.product.findFirst({
+      where: { id, ...visibility },
+      select: { id: true },
+    });
+    if (!visible) throw new NotFoundException('Product not found');
+
     const product = await this.prisma.product
       .update({
         where: { id },
@@ -148,6 +174,14 @@ export class ProductsService {
       })
       .catch(() => null);
     if (!product) throw new NotFoundException('Product not found');
+
+    // `viewsCount` above is a lifetime counter and cannot answer "was this
+    // product climbing last week". The dated signal can, so both are kept.
+    this.signals.recordProductView({
+      productId: product.id,
+      userId: viewerId ?? null,
+      source: 'product.detail',
+    });
 
     // The detail screen is where price comparison happens, so every live offer
     // travels with it (Q23 P2).
@@ -161,11 +195,16 @@ export class ProductsService {
     });
   }
 
-  async recordView(id: string) {
+  async recordView(id: string, viewerId?: string) {
     await this.requireProduct(id);
     await this.prisma.product.update({
       where: { id },
       data: { viewsCount: { increment: 1 } },
+    });
+    this.signals.recordProductView({
+      productId: id,
+      userId: viewerId ?? null,
+      source: 'product.view',
     });
     return { message: 'View recorded' };
   }
@@ -188,29 +227,8 @@ export class ProductsService {
   }
 
   /** The category itself plus every descendant, for the 3-level tree (Q26). */
-  private async categorySubtree(slug: string): Promise<string[]> {
-    const root = await this.prisma.category.findUnique({
-      where: { slug },
-      select: { id: true },
-    });
-    if (!root) return [];
-
-    const children = await this.prisma.category.findMany({
-      where: { parentId: root.id },
-      select: { id: true },
-    });
-    if (children.length === 0) return [root.id];
-
-    const grandchildren = await this.prisma.category.findMany({
-      where: { parentId: { in: children.map((child) => child.id) } },
-      select: { id: true },
-    });
-
-    return [
-      root.id,
-      ...children.map((child) => child.id),
-      ...grandchildren.map((child) => child.id),
-    ];
+  private categorySubtree(slug: string): Promise<string[]> {
+    return categorySubtreeIds(this.prisma, slug);
   }
 
   private find(args: {
@@ -243,9 +261,24 @@ export class ProductsService {
     viewerId?: string,
   ) {
     const { page, limit, skip } = this.pagination(query);
+
+    /**
+     * Reem Value's visibility rules, applied here rather than at each call
+     * site.
+     *
+     * `list`, `search` and `byCategory` all funnel through this method, so one
+     * clause covers every browse surface — and, because the same `where` feeds
+     * both the page and the count, a hidden product does not leave a gap in the
+     * pagination. Filtering after the fetch would have done both jobs badly.
+     */
+    const visibility = await this.visibility.catalogFilter(viewerId);
+    const gated: Prisma.ProductWhereInput = Object.keys(visibility).length
+      ? { AND: [where, visibility] }
+      : where;
+
     const [products, total] = await Promise.all([
-      this.find({ where, orderBy, take: limit, skip }),
-      this.prisma.product.count({ where }),
+      this.find({ where: gated, orderBy, take: limit, skip }),
+      this.prisma.product.count({ where: gated }),
     ]);
 
     return {

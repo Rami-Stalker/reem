@@ -217,6 +217,9 @@ class _SecuritySettingsScreenState
                   const SizedBox(height: DsSpacing.md),
                   SelectableText(
                     data.join('\n'),
+                    // ds-ignore: no-hand-rolled-text-styles -- recovery codes
+                    // are read character by character, so they need a
+                    // monospaced family the type scale does not carry.
                     style: const TextStyle(
                       fontFamily: 'monospace',
                       height: 1.8,
@@ -340,7 +343,7 @@ class _SecuritySettingsScreenState
             delegate: SliverChildListDelegate([
               Text(
                 l10n.securityCentreSubtitle,
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                style: context.dsText.body.copyWith(
                   color: colors.onSurfaceVariant,
                 ),
               ),
@@ -419,7 +422,7 @@ class _SecuritySettingsScreenState
                       ),
                       subtitle: Text(
                         l10n.passwordOnlyOnKnownDevice,
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        style: context.dsText.cardSubtitle.copyWith(
                           color: colors.onSurfaceVariant,
                         ),
                       ),
@@ -433,7 +436,7 @@ class _SecuritySettingsScreenState
                       title: Text(l10n.changeAccountNumber),
                       subtitle: Text(
                         l10n.changeNumberExplainer,
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        style: context.dsText.cardSubtitle.copyWith(
                           color: colors.onSurfaceVariant,
                         ),
                       ),
@@ -581,7 +584,7 @@ class _RecoveryCaseAlert extends StatelessWidget {
               Expanded(
                 child: Text(
                   l10n.recoveryCaseOpenWarning,
-                  style: Theme.of(context).textTheme.titleSmall,
+                  style: context.dsText.tileTitle,
                 ),
               ),
             ],
@@ -592,7 +595,7 @@ class _RecoveryCaseAlert extends StatelessWidget {
               l10n.recoveryCaseCoolOff(
                 _SecuritySettingsScreenState._date(completes),
               ),
-              style: Theme.of(context).textTheme.bodySmall,
+              style: context.dsText.cardSubtitle,
             ),
           ],
           const SizedBox(height: DsSpacing.md),
@@ -635,7 +638,7 @@ class _Notice extends StatelessWidget {
           Icon(icon, color: foreground, size: 20),
           const SizedBox(width: DsSpacing.sm),
           Expanded(
-            child: Text(text, style: Theme.of(context).textTheme.bodySmall),
+            child: Text(text, style: context.dsText.cardSubtitle),
           ),
         ],
       ),
@@ -682,7 +685,7 @@ class _SessionTile extends StatelessWidget {
             context.l10n.sessionExpiresOn(
               _SecuritySettingsScreenState._date(session.absoluteExpiresAt),
             ),
-            style: Theme.of(context).textTheme.bodySmall,
+            style: context.dsText.cardSubtitle,
           ),
           trailing: IconButton(
             tooltip: context.l10n.revokeSession,
@@ -714,7 +717,7 @@ class _DeviceTile extends StatelessWidget {
         device.isTrusted
             ? context.l10n.deviceTrusted
             : context.l10n.deviceNotVerified,
-        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+        style: context.dsText.cardSubtitle.copyWith(
           color: colors.onSurfaceVariant,
         ),
       ),

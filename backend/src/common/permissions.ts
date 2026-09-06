@@ -22,6 +22,15 @@ export const AppPermission = {
   financeWrite: 'finance:write',
   contentModerate: 'content:moderate',
   analyticsRead: 'analytics:read',
+  /**
+   * Acting on the Trend Engine: acknowledging an insight, moving an unmet
+   * demand signal along the sourcing workflow, re-running the pipeline.
+   *
+   * Separate from `analyticsRead` because reading the market and changing the
+   * buying team's queue are different jobs. Everyone who can see the numbers
+   * should not automatically be able to close a gap as "addressed".
+   */
+  trendsManage: 'trends:manage',
   adminDashboard: 'admin:dashboard',
   authorizationManage: 'authorization:manage',
   guestSessionCreate: 'guest_session:create',

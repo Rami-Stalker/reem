@@ -44,11 +44,11 @@ class UserProfile extends Equatable {
 
   @override
   List<Object?> get props => [
-        user,
-        isMe,
-        isFollowing,
-        productsCount,
-        postsCount,
-        sellerStats,
-      ];
+    user,
+    isMe,
+    isFollowing,
+    productsCount,
+    postsCount,
+    sellerStats,
+  ];
 }

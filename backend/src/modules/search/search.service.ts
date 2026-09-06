@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma, ProductStatus, UserRole } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
+import { TrendSignalService } from '../trends/collection/trend-signal.service';
 import { buildMeta, PaginationDto } from '../../common/dto/pagination.dto';
 import {
   serializePost,
@@ -17,18 +18,30 @@ import {
 /** Matches no user — keeps personalised includes static for anonymous viewers. */
 const NIL_UUID = '00000000-0000-0000-0000-000000000000';
 
+/**
+ * What the search screen offers before anyone has searched anything.
+ *
+ * In Arabic, because the catalogue is: these are run as real queries against
+ * `title`, `description` and brand, and the English list that used to sit here
+ * — dresses, perfume, handbags, heels, gifts, makeup — matched not one product
+ * in the shop. Every chip on the customer's search screen opened an empty
+ * result page. Each term below is one a listing actually contains.
+ */
 const TRENDING_FALLBACK = [
-  'dresses',
-  'perfume',
-  'handbags',
-  'heels',
-  'gifts',
-  'makeup',
+  'فستان',
+  'عطر',
+  'حقيبة',
+  'حذاء',
+  'هدية',
+  'ورد',
 ];
 
 @Injectable()
 export class SearchService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly signals: TrendSignalService,
+  ) {}
 
   // ── Products ─────────────────────────────────────────────────────────────
 
@@ -46,6 +59,16 @@ export class SearchService {
     ]);
 
     this.recordHistory(viewerId, dto.q);
+    // Search Intelligence: the query, how many rows answered it, and which
+    // products were on the page. A search that returns nothing is the clearest
+    // purchase intent this platform ever sees, and until now it left no trace.
+    this.signals.recordSearch({
+      query: dto.q,
+      resultCount: total,
+      productIds: products.map((p) => p.id),
+      userId: viewerId ?? null,
+      source: 'search.products',
+    });
     const favSet = await this.favoriteSet(viewerId, products.map((p) => p.id));
 
     return {
@@ -124,6 +147,15 @@ export class SearchService {
     ]);
 
     this.recordHistory(viewerId, q);
+    this.signals.recordSearch({
+      query: q,
+      // The unified search caps at eight products, so its own count is the
+      // honest answer to "did the catalogue have anything", not to "how many".
+      resultCount: products.length,
+      productIds: products.map((p) => p.id),
+      userId: viewerId ?? null,
+      source: 'search.unified',
+    });
     const favSet = await this.favoriteSet(viewerId, products.map((p) => p.id));
 
     return {

@@ -6,6 +6,7 @@ import 'package:reem/features/settings/domain/usecases/get_coupons_usecase.dart'
 import 'package:reem/features/settings/domain/usecases/get_notifications_usecase.dart';
 import 'package:reem/features/settings/domain/usecases/get_rewards_usecase.dart';
 import 'package:reem/features/settings/domain/usecases/update_profile_usecase.dart';
+import 'package:reem/features/settings/presentation/providers/settings_message.dart';
 import 'package:reem/features/settings/presentation/providers/settings_state.dart';
 
 class SettingsNotifier extends StateNotifier<SettingsState> {
@@ -85,7 +86,7 @@ class SettingsNotifier extends StateNotifier<SettingsState> {
           state = state.copyWith(
             isLoading: false,
             user: data,
-            successMessage: 'Profile updated successfully.',
+            successMessage: SettingsMessage.profileUpdated,
           );
           return true;
         }(),

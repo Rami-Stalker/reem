@@ -16,7 +16,7 @@ import {
 } from '@prisma/client';
 import { randomBytes } from 'crypto';
 import { PrismaService } from '../../prisma/prisma.service';
-import { serializePost, serializeProduct, serializeUser } from '../../common/serializers';
+import { serializePost, serializeProduct, serializePublicUser } from '../../common/serializers';
 import { Money } from '../../common/money';
 import {
   AddWishlistItemDto,
@@ -81,7 +81,13 @@ export class FavoritesService {
         include: { seller: true },
         orderBy: { createdAt: 'desc' },
       }),
-      this.prisma.postFavorite.findMany({
+      // `postSave`, not `postFavorite`. The platform had grown two tables for
+      // one gesture: the bookmark on a feed card wrote `post_saves` through
+      // `/posts/:id/save`, while this screen read `post_favorites`. So every
+      // post a shopper saved from the feed went somewhere she could not reach,
+      // and «منشورات محفوظة» stayed empty however many she bookmarked. One
+      // table now, and it is the one the card writes.
+      this.prisma.postSave.findMany({
         where: { userId },
         include: { post: { include: postInclude } },
         orderBy: { createdAt: 'desc' },
@@ -244,12 +250,12 @@ export class FavoritesService {
   async savePost(userId: string, postId: string) {
     const post = await this.prisma.post.findUnique({ where: { id: postId } });
     if (!post) throw new NotFoundException('Post not found');
-    const existing = await this.prisma.postFavorite.findUnique({
-      where: { userId_postId: { userId, postId } },
+    const existing = await this.prisma.postSave.findUnique({
+      where: { postId_userId: { postId, userId } },
     });
     if (!existing) {
       await this.prisma.$transaction([
-        this.prisma.postFavorite.create({ data: { userId, postId } }),
+        this.prisma.postSave.create({ data: { userId, postId } }),
         this.prisma.post.update({
           where: { id: postId },
           data: { savesCount: { increment: 1 } },
@@ -270,7 +276,7 @@ export class FavoritesService {
   }
 
   async removePost(userId: string, postId: string) {
-    const deleted = await this.prisma.postFavorite.deleteMany({
+    const deleted = await this.prisma.postSave.deleteMany({
       where: { userId, postId },
     });
     if (deleted.count > 0) {
@@ -413,7 +419,7 @@ export class FavoritesService {
       throw new NotFoundException('Wishlist share not found');
     }
     return {
-      owner: serializeUser(share.collection.user),
+      owner: serializePublicUser(share.collection.user),
       collection: this.serializeCollection(share.collection, share.userId),
     };
   }
@@ -647,7 +653,7 @@ export class FavoritesService {
       id: item.id,
       type: item.type.toLowerCase(),
       product: item.product ? serializeProduct(item.product, { isLiked: true }) : null,
-      seller: item.seller ? serializeUser(item.seller) : null,
+      seller: item.seller ? serializePublicUser(item.seller) : null,
       post: item.post ? serializePost(item.post, currentUserId) : null,
       price_when_saved: item.priceWhenSaved,
       notify_price_drop: item.notifyPriceDrop,
@@ -660,7 +666,7 @@ export class FavoritesService {
   private serializeSavedSeller(seller: User, createdAt: Date) {
     return {
       saved_at: createdAt.toISOString(),
-      seller: serializeUser(seller),
+      seller: serializePublicUser(seller),
     };
   }
 

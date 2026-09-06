@@ -102,6 +102,48 @@ class AppLocalizationsEn extends AppLocalizations {
   String get goodEvening => 'Good evening';
 
   @override
+  String get greetingMorningKhair => 'Good morning';
+
+  @override
+  String get greetingMorningNour => 'Morning light';
+
+  @override
+  String get greetingMorningWard => 'A rosy morning';
+
+  @override
+  String get greetingMorningYasmine => 'Jasmine morning';
+
+  @override
+  String get greetingMorningFull => 'Rise and shine';
+
+  @override
+  String get greetingMiddaySaeed => 'Good afternoon';
+
+  @override
+  String get greetingMiddayTab => 'Have a lovely day';
+
+  @override
+  String get greetingMiddayWard => 'A rosy afternoon';
+
+  @override
+  String get greetingEveningNour => 'Evening light';
+
+  @override
+  String get greetingEveningKhair => 'Good evening';
+
+  @override
+  String get greetingEveningYasmine => 'Jasmine evening';
+
+  @override
+  String get greetingEveningWard => 'A rosy evening';
+
+  @override
+  String get greetingNightSahra => 'A lovely night';
+
+  @override
+  String get greetingNightFull => 'Good night';
+
+  @override
   String get welcomeToReem => 'Welcome to Reem';
 
   @override
@@ -246,9 +288,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String soldBy(String seller) {
-    return 'Sold by $seller';
-  }
+  String get soldBy => 'Sold by';
 
   @override
   String get checkout => 'Checkout';
@@ -1285,12 +1325,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get enable => 'Enable';
 
   @override
-  String get openNow => 'Open now';
-
-  @override
-  String get closedNow => 'Closed';
-
-  @override
   String get limitedTime => 'Limited time';
 
   @override
@@ -1304,13 +1338,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get homeLoyaltySubtitle => 'Earn rewards on every purchase ✨';
-
-  @override
-  String get homeNearbyPromptTitle => 'Discover boutiques near you';
-
-  @override
-  String get homeNearbyPromptBody =>
-      'Enable location for local pickup & nearby stores.';
 
   @override
   String get homeFeedEmptyTitle => 'Your feed is warming up';
@@ -3225,4 +3252,2534 @@ class AppLocalizationsEn extends AppLocalizations {
   String checkoutSplitNotice(String count) {
     return 'Your order is from $count sellers and arrives in several parcels — with one delivery fee.';
   }
+
+  @override
+  String get notificationInboxTitle => 'Notifications';
+
+  @override
+  String get notificationInboxEmptyTitle => 'Nothing new yet';
+
+  @override
+  String get notificationInboxEmptyBody =>
+      'Order updates, seller replies and offers will appear here.';
+
+  @override
+  String get notificationInboxLoadFailed => 'Notifications could not load';
+
+  @override
+  String get notificationMarkAllRead => 'Mark all read';
+
+  @override
+  String get notificationAllRead => 'All caught up';
+
+  @override
+  String notificationUnreadCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count unread',
+      one: '1 unread',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get notificationPreferencesTitle => 'Notification settings';
+
+  @override
+  String get accountSettings => 'Account settings';
+
+  @override
+  String get actionDidNotSave =>
+      'That didn’t save — check your connection and try again';
+
+  @override
+  String get adminActionChangeRole => 'Change role';
+
+  @override
+  String get adminActionCuration => 'Homepage curation';
+
+  @override
+  String get adminActionDecideCase => 'Decide case';
+
+  @override
+  String get adminActionDecideReport => 'Decide report';
+
+  @override
+  String get adminActionDone => 'Done.';
+
+  @override
+  String get adminActionEditSetting => 'Edit setting';
+
+  @override
+  String get adminActionNewRule => 'New commission rule';
+
+  @override
+  String get adminActionNewSetting => 'New setting';
+
+  @override
+  String get adminActionRestoreAccount => 'Restore account';
+
+  @override
+  String get adminActionSetCommissionStatus => 'Change settlement status';
+
+  @override
+  String get adminActionSetStatus => 'Change status';
+
+  @override
+  String get adminActionSuspendAccount => 'Suspend account';
+
+  @override
+  String get adminActionTriage => 'Triage ticket';
+
+  @override
+  String get adminActions => 'Actions';
+
+  @override
+  String get adminApply => 'Apply';
+
+  @override
+  String adminAwaitingReview(String count) {
+    return '$count awaiting review';
+  }
+
+  @override
+  String get adminBankDetails => 'Bank details';
+
+  @override
+  String get adminBusinessDetails => 'Business details';
+
+  @override
+  String get adminCommissionRules => 'Commission rules';
+
+  @override
+  String get adminContactDetails => 'Contact';
+
+  @override
+  String get adminDecision => 'Decision';
+
+  @override
+  String get adminDocAttachment => 'Attachment';
+
+  @override
+  String get adminDocBusinessLicense => 'Business licence';
+
+  @override
+  String get adminDocGovernmentId => 'Identity document';
+
+  @override
+  String get adminDocStoreLogo => 'Store logo';
+
+  @override
+  String get adminDocuments => 'Documents';
+
+  @override
+  String get adminFieldAccountHolder => 'Account holder';
+
+  @override
+  String get adminFieldBankName => 'Bank';
+
+  @override
+  String get adminFieldBusinessAddress => 'Business address';
+
+  @override
+  String get adminFieldCategory => 'Category';
+
+  @override
+  String get adminFieldCommercialRegistration => 'Commercial registration';
+
+  @override
+  String get adminFieldFeatured => 'Featured on the homepage';
+
+  @override
+  String get adminFieldIban => 'IBAN';
+
+  @override
+  String get adminFieldLegalName => 'Legal name';
+
+  @override
+  String get adminFieldPriority => 'Priority';
+
+  @override
+  String get adminFieldRateBps => 'Rate (basis points)';
+
+  @override
+  String get adminFieldReason => 'Reason';
+
+  @override
+  String adminFieldRequired(String field) {
+    return '$field is required.';
+  }
+
+  @override
+  String get adminFieldResolution => 'Resolution note';
+
+  @override
+  String get adminFieldRole => 'Role';
+
+  @override
+  String get adminFieldRuleName => 'Rule name';
+
+  @override
+  String get adminFieldSellerTier => 'Seller tier';
+
+  @override
+  String get adminFieldSensitive => 'Sensitive value';
+
+  @override
+  String get adminFieldSettingKey => 'Setting key';
+
+  @override
+  String get adminFieldSettingValue => 'Value';
+
+  @override
+  String get adminFieldShowInFeed => 'Visible in the feed';
+
+  @override
+  String get adminFieldTaxId => 'Tax number';
+
+  @override
+  String get adminFieldWarehouseAddress => 'Warehouse address';
+
+  @override
+  String get adminFieldWebsite => 'Website';
+
+  @override
+  String get adminFieldYearsExperience => 'Years of experience';
+
+  @override
+  String get adminFilterAll => 'All';
+
+  @override
+  String get adminInvalidJson => 'The value must be valid JSON.';
+
+  @override
+  String get adminInvalidRate =>
+      'Enter a rate between 0 and 5000 basis points.';
+
+  @override
+  String get adminJsonHint =>
+      'A JSON value, for example: true, 12, or an object';
+
+  @override
+  String get adminLoadMore => 'Load more';
+
+  @override
+  String get adminNoApplications => 'No applications match this filter.';
+
+  @override
+  String adminNoRecordsYet(String section) {
+    return 'No $section records yet.';
+  }
+
+  @override
+  String get adminPendingCommission => 'Pending commission';
+
+  @override
+  String get adminPriorityHigh => 'High';
+
+  @override
+  String get adminPriorityLow => 'Low';
+
+  @override
+  String get adminPriorityNormal => 'Normal';
+
+  @override
+  String get adminPriorityUrgent => 'Urgent';
+
+  @override
+  String get adminRateHint => '250 means 2.5%';
+
+  @override
+  String get adminRawRecord => 'Raw record';
+
+  @override
+  String get adminReasonReachesApplicant =>
+      'The applicant is told what you write here.';
+
+  @override
+  String get adminReasonRequired =>
+      'Write a reason of at least three characters.';
+
+  @override
+  String get adminReviewHistory => 'Review history';
+
+  @override
+  String get adminReviewNotPermitted =>
+      'You can read this application but not decide it.';
+
+  @override
+  String get adminRoleAdmin => 'Administrator';
+
+  @override
+  String get adminRoleContentModerator => 'Content moderator';
+
+  @override
+  String get adminRoleCustomer => 'Customer';
+
+  @override
+  String get adminRoleFinanceAdmin => 'Finance admin';
+
+  @override
+  String get adminRoleOperationsAdmin => 'Operations admin';
+
+  @override
+  String get adminRoleSegment => 'Role segment (optional)';
+
+  @override
+  String get adminRoleSeller => 'Seller';
+
+  @override
+  String get adminRoleSuperAdmin => 'Super admin';
+
+  @override
+  String get adminRoleSupport => 'Support agent';
+
+  @override
+  String get adminRoleSupportAdmin => 'Support admin';
+
+  @override
+  String get adminScheduleTime => 'Schedule time (optional)';
+
+  @override
+  String get adminSearchApplications =>
+      'Search by business, registration, or contact';
+
+  @override
+  String get adminSellerApplications => 'Seller applications';
+
+  @override
+  String get adminSellerApplicationsSubtitle =>
+      'Documents, business details, and the decision that lets her sell.';
+
+  @override
+  String adminShowingCount(int shown, int total) {
+    return 'Showing $shown of $total';
+  }
+
+  @override
+  String get adminStatusActive => 'Active';
+
+  @override
+  String get adminStatusApproved => 'Approved';
+
+  @override
+  String get adminStatusArchived => 'Archived';
+
+  @override
+  String get adminStatusClosed => 'Closed';
+
+  @override
+  String get adminStatusDismissed => 'Dismissed';
+
+  @override
+  String get adminStatusDraft => 'Draft';
+
+  @override
+  String get adminStatusEarned => 'Earned';
+
+  @override
+  String get adminStatusEscalated => 'Escalated';
+
+  @override
+  String get adminStatusNotSubmitted => 'Not submitted';
+
+  @override
+  String get adminStatusOpen => 'Open';
+
+  @override
+  String get adminStatusOutOfStock => 'Out of stock';
+
+  @override
+  String get adminStatusPaid => 'Paid';
+
+  @override
+  String get adminStatusPending => 'Pending';
+
+  @override
+  String get adminStatusRejected => 'Rejected';
+
+  @override
+  String get adminStatusResolved => 'Resolved';
+
+  @override
+  String get adminStatusReversed => 'Reversed';
+
+  @override
+  String get adminStatusReviewing => 'Under review';
+
+  @override
+  String get adminStatusSuspended => 'Suspended';
+
+  @override
+  String get adminSubmitDecision => 'Submit decision';
+
+  @override
+  String get analyticsActiveCarts => 'Open carts';
+
+  @override
+  String get analyticsActiveCartsHint =>
+      'Carts holding your goods that have not been ordered yet.';
+
+  @override
+  String get analyticsActiveCustomers => 'Active';
+
+  @override
+  String get analyticsAverageCustomer => 'Average customer spend';
+
+  @override
+  String get analyticsAverageOrder => 'Average order';
+
+  @override
+  String get analyticsCollected => 'Collected';
+
+  @override
+  String get analyticsConversionOverall => 'Conversion';
+
+  @override
+  String get analyticsCustomersSection => 'Customers';
+
+  @override
+  String get analyticsEmpty => 'Nothing happened in this window';
+
+  @override
+  String get analyticsEmptyBlurb =>
+      'Try a longer window, or publish a product so the counting can start.';
+
+  @override
+  String get analyticsFailed => 'Analytics could not be loaded';
+
+  @override
+  String get analyticsFunnel => 'The path to a sale';
+
+  @override
+  String get analyticsFunnelHint =>
+      'From viewing a product to placing an order.';
+
+  @override
+  String get analyticsGross => 'Gross';
+
+  @override
+  String get analyticsMultiCurrencyHint =>
+      'Amounts in different currencies are never added together.';
+
+  @override
+  String get analyticsNet => 'Net';
+
+  @override
+  String get analyticsNewCustomers => 'New';
+
+  @override
+  String get analyticsOrdersSection => 'Orders';
+
+  @override
+  String get analyticsPaidOrders => 'Revenue-bearing';
+
+  @override
+  String get analyticsPeriodMonth => '30 days';
+
+  @override
+  String get analyticsPeriodQuarter => '3 months';
+
+  @override
+  String get analyticsPeriodWeek => '7 days';
+
+  @override
+  String get analyticsPeriodYear => 'A year';
+
+  @override
+  String get analyticsRefunds => 'Refunded';
+
+  @override
+  String get analyticsRepeatCustomers => 'Returning';
+
+  @override
+  String get analyticsRepeatRate => 'Repeat rate';
+
+  @override
+  String get analyticsRetention30 => 'Came back within a month';
+
+  @override
+  String get analyticsRetention7 => 'Came back within a week';
+
+  @override
+  String get analyticsRevenueSection => 'Revenue';
+
+  @override
+  String get analyticsToday => 'Today';
+
+  @override
+  String get analyticsTodayOrders => 'Orders today';
+
+  @override
+  String get analyticsTopProducts => 'Best sellers';
+
+  @override
+  String get analyticsTotalOrders => 'All orders';
+
+  @override
+  String get analyticsTrend => 'The trend';
+
+  @override
+  String get analyticsTrendOrders => 'Orders';
+
+  @override
+  String get analyticsTrendRevenue => 'Revenue';
+
+  @override
+  String analyticsUnitsSold(Object count) {
+    return '$count sold';
+  }
+
+  @override
+  String get askAboutThisPiece => 'Ask about this piece';
+
+  @override
+  String get averageYouGive => 'Your average';
+
+  @override
+  String get beTheFirstToComment => 'Be the first to say what you think.';
+
+  @override
+  String get browsingWithoutAccount =>
+      'Sign in to keep your bag, orders and saves';
+
+  @override
+  String get chatContextOrder => 'About an order';
+
+  @override
+  String get chatContextProduct => 'About a product';
+
+  @override
+  String get chatContextSupport => 'Support';
+
+  @override
+  String get chatDelivered => 'Delivered';
+
+  @override
+  String chatLastSeen(String when) {
+    return 'Last seen $when';
+  }
+
+  @override
+  String get chatNoMessagesYet => 'No messages yet';
+
+  @override
+  String get chatOnlineNow => 'Online now';
+
+  @override
+  String get chatSafetyNote => 'Keep payments inside Reem';
+
+  @override
+  String get chatSafetyNoteBody =>
+      'A boutique will never ask you to pay outside the app. Report anyone who does.';
+
+  @override
+  String get chatSeen => 'Seen';
+
+  @override
+  String get chatStartFailed => 'The conversation could not be opened';
+
+  @override
+  String get chatTyping => 'typing…';
+
+  @override
+  String get chatUntitled => 'Conversation';
+
+  @override
+  String get chatsEmptyAction => 'Browse the boutiques';
+
+  @override
+  String get chatsEmptyMessage =>
+      'Ask a boutique about a piece, a size or an order — the conversation will appear here.';
+
+  @override
+  String get chatsEmptyMessageSeller =>
+      'When a shopper asks about a piece or an order, her message lands here.';
+
+  @override
+  String get chatsEmptyTitle => 'No conversations yet';
+
+  @override
+  String get chatsLoadFailed => 'The conversations could not be loaded';
+
+  @override
+  String chatsSearchEmptyMessage(String query) {
+    return 'No conversation matches “$query”.';
+  }
+
+  @override
+  String get chatsSearchEmptyTitle => 'Nothing matched';
+
+  @override
+  String get chatsSearchHint => 'Search a name or a message';
+
+  @override
+  String get chatsSubtitle =>
+      'Your conversations with the boutiques you shop from';
+
+  @override
+  String get chatsSubtitleSeller =>
+      'Your conversations with the women who shop from you';
+
+  @override
+  String get chatsTitle => 'Messages';
+
+  @override
+  String get codAwaitingBanner =>
+      'This order is waiting for its confirmation code.';
+
+  @override
+  String get codConfirmAction => 'Confirm the order';
+
+  @override
+  String get codConfirmDispatchFailed =>
+      'The code could not be sent. Try again.';
+
+  @override
+  String get codConfirmFallback =>
+      'We sent a code to the delivery number \\\\u2014 enter it to confirm the order.';
+
+  @override
+  String get codConfirmLater => 'Not now';
+
+  @override
+  String get codConfirmResend => 'Send the code again';
+
+  @override
+  String get codConfirmResent => 'The code is on its way';
+
+  @override
+  String get codConfirmTitle => 'Confirm your order';
+
+  @override
+  String get codConfirmed => 'Your order is confirmed';
+
+  @override
+  String get codEnterCode => 'Enter the code';
+
+  @override
+  String get deleteComment => 'Delete comment';
+
+  @override
+  String get deleteCommentBody => 'This removes it for everyone.';
+
+  @override
+  String get faqContactSeller => 'How do I reach a boutique?';
+
+  @override
+  String get faqContactSellerAnswer =>
+      'Open the product, the store, or your order and tap “Message the boutique”. Your conversations are kept under Messages.';
+
+  @override
+  String get faqPayment => 'How do I pay?';
+
+  @override
+  String get faqPaymentAnswer =>
+      'Cash on delivery, or from your Reem wallet. Never pay a boutique outside the app — an order paid outside it is not protected.';
+
+  @override
+  String get formAcceptsReturns => 'Accept returns';
+
+  @override
+  String get formCategoryChange => 'Change';
+
+  @override
+  String get formCategoryDetails => 'What this category asks for';
+
+  @override
+  String get formCategoryEmpty => 'No category by that name';
+
+  @override
+  String get formCategoryFailed => 'Categories could not be loaded';
+
+  @override
+  String get formCategoryNeedsDetails => 'Fill in what this category asks for';
+
+  @override
+  String get formCategoryPick => 'Choose a category';
+
+  @override
+  String get formCategorySearch => 'Search categories';
+
+  @override
+  String get formComparePrice => 'Price before discount';
+
+  @override
+  String get formFieldRequired => 'This field is required';
+
+  @override
+  String get formHandlingDays => 'Handling days';
+
+  @override
+  String get formIdentitySection => 'Product identity';
+
+  @override
+  String get formListingTerms => 'Selling terms';
+
+  @override
+  String get formMadeToOrder => 'Made to order';
+
+  @override
+  String get formMinOrderQty => 'Minimum order quantity';
+
+  @override
+  String get formNewListingReview =>
+      'A new product goes through a short review before customers see it.';
+
+  @override
+  String get formOptional => 'optional';
+
+  @override
+  String get formPricingSection => 'Price and stock';
+
+  @override
+  String get formSharedProductLocked =>
+      'Other sellers list this product, so its page is shared. You can still change your price, stock and terms.';
+
+  @override
+  String get formSku => 'SKU';
+
+  @override
+  String get formVariantName => 'Option name';
+
+  @override
+  String get formVariantPrice => 'Its price';
+
+  @override
+  String get formVariantsHint =>
+      'Leave this empty for a single-option product.';
+
+  @override
+  String get formVariantsTitle => 'Options — size and colour';
+
+  @override
+  String get guestShopper => 'Browsing as a guest';
+
+  @override
+  String get messageSeller => 'Message the boutique';
+
+  @override
+  String get messageSellerAboutOrder => 'Message about this order';
+
+  @override
+  String get myReviews => 'My reviews';
+
+  @override
+  String get myReviewsEmpty => 'You haven’t written a review yet';
+
+  @override
+  String get myReviewsEmptyAction => 'See your orders';
+
+  @override
+  String get myReviewsEmptyBody =>
+      'After a parcel arrives, tell the next woman whether it was worth it.';
+
+  @override
+  String get myReviewsFailed => 'Your reviews could not be loaded';
+
+  @override
+  String get myReviewsSubtitle =>
+      'Everything you have said about a piece or a boutique';
+
+  @override
+  String get noCommentsYet => 'No comments yet';
+
+  @override
+  String get notifActivity => 'From the boutiques you follow';
+
+  @override
+  String get notifChannels => 'How we reach you';
+
+  @override
+  String get notifCommerce => 'Your orders and offers';
+
+  @override
+  String get notifEmail => 'Email';
+
+  @override
+  String get notifEmailBlurb => 'Receipts, account notices and longer updates.';
+
+  @override
+  String get notifOffers => 'Offers and coupons';
+
+  @override
+  String get notifOffersBlurb => 'Discounts, coupons and rewards.';
+
+  @override
+  String get notifOrders => 'Order updates';
+
+  @override
+  String get notifOrdersBlurb => 'Payment, packing, shipping and delivery.';
+
+  @override
+  String get notifPush => 'Push notifications';
+
+  @override
+  String get notifPushBlurb => 'Message alerts, order updates and offers.';
+
+  @override
+  String get notifSellerPosts => 'New posts';
+
+  @override
+  String get notifSellerPostsBlurb =>
+      'When a boutique you follow shares something.';
+
+  @override
+  String get notifSellerStories => 'New stories';
+
+  @override
+  String get notifSellerStoriesBlurb =>
+      'Fresh stories from the boutiques you follow.';
+
+  @override
+  String get notifSms => 'SMS';
+
+  @override
+  String get notifSmsBlurb => 'Delivery and account messages that cannot wait.';
+
+  @override
+  String get notificationPrefsSaved =>
+      'Your notification preferences are saved';
+
+  @override
+  String get notificationsLoadFailed => 'Preferences could not load';
+
+  @override
+  String get notificationsLoading => 'Loading preferences';
+
+  @override
+  String get payoutApprovedTitle => 'Approved — the money is on its way';
+
+  @override
+  String payoutBlockedFrozen(Object date) {
+    return 'Withdrawals are paused to protect your account. This lifts on its own $date.';
+  }
+
+  @override
+  String get payoutBlockedFrozenNoDate =>
+      'Withdrawals are paused to protect your account.';
+
+  @override
+  String get payoutBlockedNothing =>
+      'Nothing is ready yet. Earnings become available once a parcel is delivered and its return window closes.';
+
+  @override
+  String get payoutCancelAction => 'Cancel the request';
+
+  @override
+  String get payoutCancelBlurb =>
+      'The amount returns to your available balance, and you can ask for it again whenever you like.';
+
+  @override
+  String get payoutCancelConfirm => 'Cancel this withdrawal?';
+
+  @override
+  String get payoutCancelled => 'The request was cancelled';
+
+  @override
+  String get payoutClaimable => 'What this request covers';
+
+  @override
+  String payoutFromOrders(Object count) {
+    return 'From $count orders';
+  }
+
+  @override
+  String get payoutPendingTitle => 'A withdrawal is being reviewed';
+
+  @override
+  String get payoutRequestAction => 'Request it';
+
+  @override
+  String get payoutRequestBlurb =>
+      'The request goes to the platform for approval. Nothing is transferred until it is approved.';
+
+  @override
+  String payoutRequestConfirm(Object amount) {
+    return 'Withdraw $amount?';
+  }
+
+  @override
+  String get payoutRequestTitle => 'Request a withdrawal';
+
+  @override
+  String get payoutRequested =>
+      'Your request is in. We will tell you when it is approved.';
+
+  @override
+  String payoutRequestedOn(Object date) {
+    return 'Requested on $date';
+  }
+
+  @override
+  String get productArchive => 'Remove from the shop';
+
+  @override
+  String get productArchiveBlurb =>
+      'Customers will no longer see it, and past orders on it are untouched.';
+
+  @override
+  String productArchiveQuestion(Object title) {
+    return 'Remove “$title” from the shop?';
+  }
+
+  @override
+  String get productArchived => 'Removed from the shop';
+
+  @override
+  String productChooseOption(Object axis) {
+    return 'Choose $axis';
+  }
+
+  @override
+  String get productChooseSeller => 'Choose a boutique';
+
+  @override
+  String get productDetailsSection => 'Details';
+
+  @override
+  String productOffersFrom(Object count) {
+    return '$count boutiques list this';
+  }
+
+  @override
+  String get productPause => 'Pause';
+
+  @override
+  String get productPublish => 'Publish';
+
+  @override
+  String get productRelated => 'You may also like';
+
+  @override
+  String get productRestock => 'Adjust stock';
+
+  @override
+  String get productRestockAmount => 'Quantity';
+
+  @override
+  String get productStockUpdated => 'Stock updated';
+
+  @override
+  String get productUnavailable => 'This piece is not available right now';
+
+  @override
+  String get returnActionApprove => 'Accept the return';
+
+  @override
+  String get returnActionExchange => 'Exchange instead of refunding';
+
+  @override
+  String get returnActionExchangeDelivered => 'The replacement arrived';
+
+  @override
+  String get returnActionInTransit => 'Mark it on its way';
+
+  @override
+  String get returnActionReceive => 'I have it back';
+
+  @override
+  String get returnActionReject => 'Refuse the request';
+
+  @override
+  String get returnApproveTitle => 'Accept the return';
+
+  @override
+  String get returnBearerCustomer => 'The customer';
+
+  @override
+  String get returnBearerDefault => 'By the reason given';
+
+  @override
+  String get returnBearerPlatform => 'The platform';
+
+  @override
+  String get returnBearerSeller => 'Me';
+
+  @override
+  String get returnEvidence => 'Her photographs';
+
+  @override
+  String get returnItems => 'What is coming back';
+
+  @override
+  String get returnNoEvidence => 'She attached no photographs';
+
+  @override
+  String get returnNoteOptional => 'A note (optional)';
+
+  @override
+  String returnParcelLabel(Object number) {
+    return 'Order $number';
+  }
+
+  @override
+  String returnQuantity(Object count) {
+    return 'Qty $count';
+  }
+
+  @override
+  String get returnReasonChangedMind => 'Changed her mind';
+
+  @override
+  String get returnReasonDamagedInTransit => 'Damaged in transit';
+
+  @override
+  String get returnReasonDefective => 'The item is faulty';
+
+  @override
+  String get returnReasonLateDelivery => 'Delivered late';
+
+  @override
+  String get returnReasonNotAsDescribed => 'Not as described';
+
+  @override
+  String get returnReasonOther => 'Another reason';
+
+  @override
+  String get returnReasonSizeIssue => 'The size did not fit';
+
+  @override
+  String get returnReasonWrongItem => 'The wrong item arrived';
+
+  @override
+  String get returnReceiveTitle => 'Receiving the item';
+
+  @override
+  String get returnRefundGoods => 'The goods';
+
+  @override
+  String get returnRefundIsPlatforms =>
+      'The platform pays the refund once you confirm you have the item.';
+
+  @override
+  String get returnRefundQuote => 'Expected refund';
+
+  @override
+  String get returnRefundQuoteHint =>
+      'An estimate the server recalculates — not a final figure yet.';
+
+  @override
+  String get returnRefundSettled => 'Refunded';
+
+  @override
+  String get returnRefundShipping => 'Return shipping';
+
+  @override
+  String get returnRejectHint =>
+      'The customer reads this, and so does anyone reviewing a dispute.';
+
+  @override
+  String get returnRejectReason => 'Why are you refusing?';
+
+  @override
+  String get returnRejectTooShort =>
+      'Give a clear reason — at least 5 characters';
+
+  @override
+  String get returnRestock => 'Put it back in stock';
+
+  @override
+  String get returnRestockHint =>
+      'Leave this off if the item cannot be sold again.';
+
+  @override
+  String get returnShippingBearer => 'Who pays the return leg?';
+
+  @override
+  String get returnStatusApproved => 'Approved';
+
+  @override
+  String get returnStatusCancelled => 'Withdrawn by the customer';
+
+  @override
+  String get returnStatusExchanged => 'Exchanged';
+
+  @override
+  String get returnStatusInTransit => 'On its way back';
+
+  @override
+  String get returnStatusReceived => 'In your hands';
+
+  @override
+  String get returnStatusRefunded => 'Refunded';
+
+  @override
+  String get returnStatusRejected => 'Refused';
+
+  @override
+  String get returnStatusRequested => 'Awaiting your decision';
+
+  @override
+  String returnWindowCloses(Object date) {
+    return 'The return window closes $date';
+  }
+
+  @override
+  String get returnsEmptyAwaiting => 'Nothing is awaiting settlement';
+
+  @override
+  String get returnsEmptyClosed => 'Nothing has closed yet';
+
+  @override
+  String get returnsEmptyOpen => 'Nothing is waiting on you';
+
+  @override
+  String get returnsEmptyOpenBody =>
+      'When a customer asks to send something back, it appears here.';
+
+  @override
+  String get returnsFailed => 'Returns could not be loaded';
+
+  @override
+  String get returnsTabAwaiting => 'Awaiting settlement';
+
+  @override
+  String get returnsTabClosed => 'Closed';
+
+  @override
+  String get returnsTabOpen => 'Waiting on you';
+
+  @override
+  String get returnsUpdated => 'The request was updated';
+
+  @override
+  String get reviewAboutShop => 'About the boutique';
+
+  @override
+  String get reviewPending => 'Being reviewed';
+
+  @override
+  String get reviewRejected => 'Not published';
+
+  @override
+  String get reviewsAboutShop => 'About the shop';
+
+  @override
+  String get reviewsDeleteReply => 'Remove your reply';
+
+  @override
+  String get reviewsEditReply => 'Edit your reply';
+
+  @override
+  String get reviewsEmptyAll => 'No reviews yet';
+
+  @override
+  String get reviewsEmptyAllBody =>
+      'When a customer rates something of yours, or the shop itself, it appears here.';
+
+  @override
+  String get reviewsEmptyUnanswered => 'You have answered everything';
+
+  @override
+  String get reviewsFailed => 'Reviews could not be loaded';
+
+  @override
+  String get reviewsFilterAll => 'All';
+
+  @override
+  String get reviewsFilterUnanswered => 'Waiting on you';
+
+  @override
+  String get reviewsReplied => 'Your reply is published';
+
+  @override
+  String get reviewsReplyAction => 'Reply';
+
+  @override
+  String get reviewsReplyField => 'Write your reply';
+
+  @override
+  String get reviewsReplyHint =>
+      'Your reply appears publicly under the review.';
+
+  @override
+  String get reviewsReplyRemoved => 'Your reply was removed';
+
+  @override
+  String get reviewsVerifiedBuyer => 'Verified purchase';
+
+  @override
+  String reviewsWritten(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count reviews',
+      one: '1 review',
+      zero: 'No reviews',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get reviewsYourReply => 'Your reply';
+
+  @override
+  String get sellerOrderAwaitingCustomerCode =>
+      'Waiting for the customer\'s confirmation code';
+
+  @override
+  String get sellerReplied => 'The boutique replied';
+
+  @override
+  String get sellerReturnsTitle => 'Returns and exchanges';
+
+  @override
+  String get sellerReviewsMenu => 'Reviews and replies';
+
+  @override
+  String get sellerReviewsTitle => 'Reviews and replies';
+
+  @override
+  String sellersCount(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count sellers',
+      one: '1 seller',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get showLess => 'Show less';
+
+  @override
+  String get signInToComment => 'Sign in to comment';
+
+  @override
+  String get signInToInteract => 'Sign in to join in';
+
+  @override
+  String get signInToInteractBody =>
+      'Likes, saves and comments belong to your account, so they travel with you.';
+
+  @override
+  String get signInToManageSecurely =>
+      'Sign in to keep this safe across your devices';
+
+  @override
+  String get signInToMessage => 'Sign in to message the boutique';
+
+  @override
+  String get signInToMessageBody =>
+      'Conversations are tied to your account, so you keep them across your devices.';
+
+  @override
+  String timeAgoDays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count days ago',
+      one: 'yesterday',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String timeAgoHours(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count hours ago',
+      one: 'an hour ago',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String timeAgoMinutes(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count minutes ago',
+      one: 'a minute ago',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get trendAlertCartAbandon => 'Carts abandoned';
+
+  @override
+  String get trendAlertLowConversion => 'Low conversion';
+
+  @override
+  String get trendAlertOverstock => 'Overstocked';
+
+  @override
+  String get trendAlertSoldOut => 'Sold out, demand live';
+
+  @override
+  String trendAlertStockOutIn(int days) {
+    return 'Out in $days days';
+  }
+
+  @override
+  String get trendAlertStockRisk => 'Stock running out';
+
+  @override
+  String get trendAverageScore => 'Average trend score';
+
+  @override
+  String get trendCartAdds => 'Cart adds';
+
+  @override
+  String get trendConfidence => 'Confidence';
+
+  @override
+  String get trendConversion => 'Cart conversion';
+
+  @override
+  String trendDaysValue(int days) {
+    return '$days days';
+  }
+
+  @override
+  String get trendDismiss => 'Dismiss';
+
+  @override
+  String get trendFavorites => 'Favourites';
+
+  @override
+  String trendForecastLine(int units, int days) {
+    return '$units units forecast over $days days';
+  }
+
+  @override
+  String get trendHideEvidence => 'Hide the numbers';
+
+  @override
+  String get trendMarkDone => 'Done';
+
+  @override
+  String get trendMyUnits => 'Your sales';
+
+  @override
+  String get trendOrders => 'Orders';
+
+  @override
+  String get trendPointsSuffix => ' pts';
+
+  @override
+  String trendRankValue(int rank) {
+    return 'Rank $rank';
+  }
+
+  @override
+  String get trendRevenue => 'Revenue';
+
+  @override
+  String trendRisingCount(int count) {
+    return '$count products rising';
+  }
+
+  @override
+  String get trendSearchHits => 'Search appearances';
+
+  @override
+  String get trendSearches => 'Searches';
+
+  @override
+  String get trendShowEvidence => 'Show the numbers';
+
+  @override
+  String get trendStageCooling => 'Cooling';
+
+  @override
+  String get trendStageDeclining => 'Declining';
+
+  @override
+  String get trendStageDormant => 'Dormant';
+
+  @override
+  String get trendStageEmerging => 'Emerging';
+
+  @override
+  String get trendStagePeaking => 'Peaking';
+
+  @override
+  String get trendStageRising => 'Rising';
+
+  @override
+  String get trendStageSteady => 'Steady';
+
+  @override
+  String get trendStock => 'Stock';
+
+  @override
+  String get trendToday => 'today';
+
+  @override
+  String get trendUnits => 'Units';
+
+  @override
+  String get trendUnitsSold => 'Units sold';
+
+  @override
+  String get trendUnmetAcknowledged => 'Reviewed';
+
+  @override
+  String get trendUnmetAddressed => 'Covered';
+
+  @override
+  String get trendUnmetDismissed => 'Dismissed';
+
+  @override
+  String get trendUnmetOpen => 'New';
+
+  @override
+  String get trendUnmetSourcing => 'Sourcing';
+
+  @override
+  String trendUnmetSummary(int searches, int missRate) {
+    return '$searches searches · $missRate% with no suitable result';
+  }
+
+  @override
+  String trendViewToCart(String rate) {
+    return 'view to cart $rate';
+  }
+
+  @override
+  String get trendViews => 'Views';
+
+  @override
+  String get trendWindow14 => '14 days';
+
+  @override
+  String get trendWindow30 => '30 days';
+
+  @override
+  String get trendWindow7 => '7 days';
+
+  @override
+  String get trendsAdminEmptyBody =>
+      'The nightly run has not happened yet, or there is not enough activity. You can run it now from the recompute button.';
+
+  @override
+  String get trendsAdminEmptyTitle => 'No analysis results yet';
+
+  @override
+  String get trendsAdminTitle => 'Market intelligence';
+
+  @override
+  String trendsAsOf(String date) {
+    return 'Computed on $date — refreshed once a day';
+  }
+
+  @override
+  String get trendsCategories => 'Category trends';
+
+  @override
+  String get trendsCategoriesHint =>
+      'Ranked by trend score, with in-stock coverage';
+
+  @override
+  String trendsCategorySupply(int inStock, int total) {
+    return '$inStock of $total products in stock';
+  }
+
+  @override
+  String get trendsColours => 'Colour trends';
+
+  @override
+  String get trendsColoursHint =>
+      'Share of demand per colour, now against the previous window';
+
+  @override
+  String get trendsDeclining => 'Declining products';
+
+  @override
+  String get trendsDecliningHint => 'Largest drop in trend score';
+
+  @override
+  String get trendsDemandForecast => 'Demand forecast';
+
+  @override
+  String get trendsDemandForecastHint => 'Platform total over the coming days';
+
+  @override
+  String get trendsDemandSignals => 'Demand signals';
+
+  @override
+  String get trendsDemandSignalsHint =>
+      'Interest in your products, separately from what sold';
+
+  @override
+  String get trendsEmerging => 'Emerging products';
+
+  @override
+  String get trendsEmergingHint =>
+      'Demand accelerating before they become best sellers';
+
+  @override
+  String get trendsEmptyBody =>
+      'The trend engine needs about a week of activity before it can spot a direction. Keep listing, and results will appear here.';
+
+  @override
+  String get trendsEmptyTitle => 'The engine has not collected enough data yet';
+
+  @override
+  String get trendsFailed => 'Trend analysis could not be loaded';
+
+  @override
+  String get trendsForecast => 'Sales forecast';
+
+  @override
+  String get trendsForecastHint =>
+      'Built from your sales history, with how much to believe it';
+
+  @override
+  String get trendsForecastInsufficient =>
+      'There is not enough sales history yet to build a forecast. It will appear here automatically after about two weeks of activity.';
+
+  @override
+  String trendsForecastMethod(String method, int confidence) {
+    return 'Method: $method · confidence $confidence%';
+  }
+
+  @override
+  String trendsForecastUnitsLabel(int days) {
+    return 'Forecast units over $days days';
+  }
+
+  @override
+  String get trendsGapCategory => 'Category gap';
+
+  @override
+  String get trendsGapPrice => 'Price gap';
+
+  @override
+  String get trendsGapSearch => 'Unmet search';
+
+  @override
+  String get trendsLowConversion => 'Low conversion alerts';
+
+  @override
+  String get trendsLowConversionHint =>
+      'High views that are not turning into orders';
+
+  @override
+  String get trendsMarketInsights => 'Market insights';
+
+  @override
+  String get trendsMarketInsightsHint =>
+      'Readings computed from the platform own figures';
+
+  @override
+  String trendsMissRate(int rate) {
+    return '$rate% no result';
+  }
+
+  @override
+  String trendsOfTotal(int total) {
+    return 'of $total';
+  }
+
+  @override
+  String get trendsOpportunities => 'Market opportunities';
+
+  @override
+  String get trendsOpportunitiesHint =>
+      'Where there is demand with no assortment behind it';
+
+  @override
+  String get trendsOverall => 'Overall trends';
+
+  @override
+  String get trendsOverallHint =>
+      'Platform activity for the window, against the one before it';
+
+  @override
+  String get trendsPriceBands => 'Price band trends';
+
+  @override
+  String get trendsPriceBandsHint => 'Where demand is moving in price';
+
+  @override
+  String get trendsRecommendedActions => 'What to do today';
+
+  @override
+  String get trendsRecommendedActionsHint =>
+      'Findings computed from your shop data, most important first';
+
+  @override
+  String get trendsRecompute => 'Recompute analysis';
+
+  @override
+  String get trendsSearches => 'Search trends';
+
+  @override
+  String get trendsSearchesHint =>
+      'What customers search for most, and how often it misses';
+
+  @override
+  String get trendsSellerPerformance => 'Seller performance';
+
+  @override
+  String get trendsSellerPerformanceHint =>
+      'Growth, with cancellation and return rates beside it';
+
+  @override
+  String trendsSellerQuality(int cancel, int returns) {
+    return 'cancelled $cancel% · returned $returns%';
+  }
+
+  @override
+  String get trendsSellerTitle => 'Trend engine';
+
+  @override
+  String get trendsStageDistribution => 'Products across the demand curve';
+
+  @override
+  String trendsStageScored(int scored, int total) {
+    return '$scored active of $total scored products';
+  }
+
+  @override
+  String get trendsStockOpportunities => 'Stock opportunities';
+
+  @override
+  String get trendsStockOpportunitiesHint =>
+      'Live demand with stock running out or already gone';
+
+  @override
+  String get trendsTrending => 'Trending products';
+
+  @override
+  String get trendsTrendingHint => 'Highest trend score in the selected window';
+
+  @override
+  String get trendsUnmetDemand => 'Unmet demand';
+
+  @override
+  String get trendsUnmetDemandHint =>
+      'Searches that returned nothing customers wanted';
+
+  @override
+  String get visitStore => 'Visit the store';
+
+  @override
+  String get onboardShopTitle => 'A boutique in your pocket';
+
+  @override
+  String get onboardShopBody =>
+      'Dresses, beauty and gifts from Syrian boutiques, all in one place.';
+
+  @override
+  String get onboardStoriesTitle => 'See what is new today';
+
+  @override
+  String get onboardStoriesBody =>
+      'Follow the shops you love and catch their stories the moment they post.';
+
+  @override
+  String get onboardShareTitle => 'Share what you find';
+
+  @override
+  String get onboardShareBody =>
+      'Save pieces, write reviews and send your favourites to your friends.';
+
+  @override
+  String get onboardSkip => 'Skip';
+
+  @override
+  String get onboardContinue => 'Continue';
+
+  @override
+  String get onboardStart => 'Start shopping';
+
+  @override
+  String get categoryTitle => 'Category';
+
+  @override
+  String get categoryDresses => 'Dresses';
+
+  @override
+  String get categoryDressesBlurb => 'Evening, occasion and everyday';
+
+  @override
+  String get categoryBeauty => 'Beauty';
+
+  @override
+  String get categoryBeautyBlurb => 'Makeup and skincare';
+
+  @override
+  String get categoryFragrance => 'Fragrance';
+
+  @override
+  String get categoryFragranceBlurb => 'Perfumes and mists';
+
+  @override
+  String get categoryBags => 'Bags';
+
+  @override
+  String get categoryBagsBlurb => 'Handbags, clutches and totes';
+
+  @override
+  String get categoryShoes => 'Shoes';
+
+  @override
+  String get categoryShoesBlurb => 'Heels, flats and sandals';
+
+  @override
+  String get categoryJewellery => 'Jewellery';
+
+  @override
+  String get categoryJewelleryBlurb => 'Gold, silver and everyday pieces';
+
+  @override
+  String get categoryAccessories => 'Accessories';
+
+  @override
+  String get categoryAccessoriesBlurb =>
+      'Scarves, belts and the finishing touch';
+
+  @override
+  String get categoryGifts => 'Gifts';
+
+  @override
+  String get categoryGiftsBlurb => 'Flowers, chocolate and occasion boxes';
+
+  @override
+  String get searchTrendingNow => 'Trending now';
+
+  @override
+  String get searchTrendingEyebrow => 'Popular';
+
+  @override
+  String get searchBrowseCategories => 'Browse categories';
+
+  @override
+  String get searchDiscoverEyebrow => 'Discover';
+
+  @override
+  String get searchRecent => 'Recent searches';
+
+  @override
+  String get searchClearAll => 'Clear all';
+
+  @override
+  String get searchClear => 'Clear';
+
+  @override
+  String get searchTrendDresses => 'فستان';
+
+  @override
+  String get searchTrendPerfume => 'عطر';
+
+  @override
+  String get searchTrendBags => 'حقيبة';
+
+  @override
+  String get searchTrendHeels => 'حذاء';
+
+  @override
+  String get searchTrendGifts => 'هدية';
+
+  @override
+  String get searchTrendFlowers => 'ورد';
+
+  @override
+  String get searchTrendSkincare => 'كريم';
+
+  @override
+  String get noProductsFound => 'No pieces here yet';
+
+  @override
+  String get profileTitle => 'Profile';
+
+  @override
+  String get profileEdit => 'Edit profile';
+
+  @override
+  String get profileEditTitle => 'Edit profile';
+
+  @override
+  String get profileFullName => 'Full name';
+
+  @override
+  String get profileBio => 'Bio';
+
+  @override
+  String get profileLocation => 'City';
+
+  @override
+  String get profileSaveChanges => 'Save changes';
+
+  @override
+  String get profileNameTooShort => 'Please enter your name';
+
+  @override
+  String get profileBioTooLong => 'That is a little long';
+
+  @override
+  String get profileUpdated => 'Your profile is saved';
+
+  @override
+  String get profileFollowers => 'Followers';
+
+  @override
+  String get profileFollowing => 'Following';
+
+  @override
+  String get profilePosts => 'Posts';
+
+  @override
+  String get profileManageStore => 'Manage store';
+
+  @override
+  String get profileLoadFailed => 'This profile could not load';
+
+  @override
+  String get guestBrowseBlurb =>
+      'Sign in to save pieces, follow boutiques and track your orders.';
+
+  @override
+  String get signUpBenefitsBlurb =>
+      'Create an account to checkout, message sellers and keep your favourites.';
+
+  @override
+  String achievementsEarned(int earned, int total) {
+    return '$earned of $total';
+  }
+
+  @override
+  String loyaltyTierMember(String tier) {
+    return '$tier member';
+  }
+
+  @override
+  String get settingsProfileUpdated => 'Your profile is saved';
+
+  @override
+  String get reviewsSectionTitle => 'Reviews';
+
+  @override
+  String get reviewsWriteAction => 'Write a review';
+
+  @override
+  String get reviewsWriteShort => 'Write';
+
+  @override
+  String get reviewsFieldTitle => 'Headline';
+
+  @override
+  String get reviewsFieldBody => 'What did you think?';
+
+  @override
+  String get reviewsSubmit => 'Post review';
+
+  @override
+  String get reviewsSubmitted => 'Thank you — your review is posted';
+
+  @override
+  String get reviewsNoneTitle => 'No reviews yet';
+
+  @override
+  String get reviewsNoneBody => 'Be the first to say what you think.';
+
+  @override
+  String get reviewsUnavailable => 'Reviews could not load';
+
+  @override
+  String get reviewsVerified => 'Verified purchase';
+
+  @override
+  String reviewsStarsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count stars',
+      one: '1 star',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String productRatingSummary(String rating, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count reviews',
+      one: '1 review',
+    );
+    return '$rating · $_temp0';
+  }
+
+  @override
+  String get orderTitle => 'Order';
+
+  @override
+  String get orderNotFound => 'This order could not be found';
+
+  @override
+  String get orderCancelTitle => 'Cancel this order?';
+
+  @override
+  String get orderCancelBody =>
+      'The sellers will be told and nothing will be shipped.';
+
+  @override
+  String get orderCancelConfirm => 'Cancel order';
+
+  @override
+  String get orderCancelKeep => 'Keep it';
+
+  @override
+  String get createPostTitle => 'New post';
+
+  @override
+  String get createPostBody => 'Show a piece and tell her why it is worth it.';
+
+  @override
+  String get createPostAction => 'Publish';
+
+  @override
+  String get createPostAddProduct => 'Tag a product';
+
+  @override
+  String get createPostFeatured => 'Featured product';
+
+  @override
+  String get createPostLoadingProducts => 'Loading your products';
+
+  @override
+  String get createPostNeedsCaption => 'Write a caption first';
+
+  @override
+  String get createPostNeedsProduct => 'Choose a product first';
+
+  @override
+  String get createPostNoProducts => 'No products yet';
+
+  @override
+  String get createPostNoProductsBody =>
+      'Add a product to your store, then post about it.';
+
+  @override
+  String get createPostSuccess => 'Your post is live';
+
+  @override
+  String get createCaptionHint => 'Say something about it…';
+
+  @override
+  String get createStoryTitle => 'New story';
+
+  @override
+  String get createStoryBody =>
+      'A frame from today, gone in twenty-four hours.';
+
+  @override
+  String get createStoryAction => 'Share story';
+
+  @override
+  String get createStoryOptionalLink => 'Link (optional)';
+
+  @override
+  String get createStoryBadLink => 'That link does not look right';
+
+  @override
+  String get createStorySuccess => 'Your story is live';
+
+  @override
+  String get mediaImage => 'Photo';
+
+  @override
+  String get mediaVideo => 'Video';
+
+  @override
+  String get chatWriteMessage => 'Write a message…';
+
+  @override
+  String get chatAttachments => 'Attach';
+
+  @override
+  String get chatProduct => 'Product';
+
+  @override
+  String get chatOrder => 'Order';
+
+  @override
+  String get chatVoice => 'Voice note';
+
+  @override
+  String get chatSent => 'Sent';
+
+  @override
+  String get todayLabel => 'Today';
+
+  @override
+  String fileSizeMegabytes(String size) {
+    return '$size MB';
+  }
+
+  @override
+  String get soldOut => 'Sold out';
+
+  @override
+  String get stockOut => 'Out of stock';
+
+  @override
+  String get stockLow => 'Only a few left';
+
+  @override
+  String get flashLimitedTime => 'Limited time';
+
+  @override
+  String flashAlmostGone(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count left',
+      one: '1 left',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get followAction => 'Follow';
+
+  @override
+  String get followingState => 'Following';
+
+  @override
+  String get showMore => 'Show more';
+
+  @override
+  String get offlineShowingSaved => 'You are offline — showing what was saved';
+
+  @override
+  String get dialogConfirm => 'Confirm';
+
+  @override
+  String get dialogGotIt => 'Got it';
+
+  @override
+  String get aiStylistTitle => 'Reem Stylist';
+
+  @override
+  String get stylistOutfitTitle => 'The look';
+
+  @override
+  String get stylistPreferencesTitle => 'Your style';
+
+  @override
+  String get visualSearchTitle => 'Search by photo';
+
+  @override
+  String get sellerSalesStat => 'Sales';
+
+  @override
+  String get sellerOrdersStat => 'Orders';
+
+  @override
+  String get sellerProductsStat => 'Products';
+
+  @override
+  String get sellerRatingStat => 'Rating';
+
+  @override
+  String get sellerDashboardLoadFailed => 'The dashboard could not load';
+
+  @override
+  String sellerCartAbandon(String rate) {
+    return '$rate% left the cart';
+  }
+
+  @override
+  String sellerRestockNeeded(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count pieces need restocking',
+      one: '1 piece needs restocking',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get adminSectionNoActions => 'Nothing to do here yet';
+
+  @override
+  String get adminSectionNoCreate => 'Nothing can be created here';
+
+  @override
+  String adminReportGenerated(String format, int count) {
+    return '$format report ready — $count rows';
+  }
+
+  @override
+  String get rewardsTitle => 'Rewards';
+
+  @override
+  String get rewardsLoadFailed => 'Rewards could not load';
+
+  @override
+  String get rewardsUnavailable => 'Rewards are not available right now';
+
+  @override
+  String get rewardsAvailablePoints => 'Points available';
+
+  @override
+  String get rewardsPoints => 'Points';
+
+  @override
+  String rewardsBalanceSemantics(int points, String tier) {
+    return '$points points, $tier tier';
+  }
+
+  @override
+  String get rewardsTierSection => 'Your tier';
+
+  @override
+  String rewardsTierMember(String tier) {
+    return '$tier member';
+  }
+
+  @override
+  String rewardsTierVip(String tier) {
+    return '$tier membership';
+  }
+
+  @override
+  String get rewardsTopTier => 'Top tier';
+
+  @override
+  String get rewardsTopTierUnlocked => 'You are at the top tier';
+
+  @override
+  String rewardsNextTier(String tier) {
+    return 'Next: $tier';
+  }
+
+  @override
+  String rewardsProgressToward(int percent, String tier) {
+    return '$percent% of the way to $tier';
+  }
+
+  @override
+  String rewardsMultiplier(String multiplier) {
+    return '${multiplier}x points on every order';
+  }
+
+  @override
+  String get rewardsTierBonusNote => 'Earned automatically as you shop';
+
+  @override
+  String rewardsCashbackRate(String rate) {
+    return '$rate% cashback';
+  }
+
+  @override
+  String get rewardsCashbackNote => 'Paid back to your wallet after delivery';
+
+  @override
+  String get rewardsBenefitPoints => 'Points on every order';
+
+  @override
+  String get rewardsBenefitOffers => 'Member-only offers';
+
+  @override
+  String get rewardsBenefitReferrals => 'Rewards for every friend you invite';
+
+  @override
+  String get rewardsRedeemSection => 'Redeem';
+
+  @override
+  String rewardsOffersCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count offers',
+      one: '1 offer',
+      zero: 'Nothing to redeem yet',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get rewardsEmptyTitle => 'No rewards yet';
+
+  @override
+  String get rewardsEmptyBody => 'Keep shopping and offers will appear here.';
+
+  @override
+  String get rewardsRedeem => 'Redeem';
+
+  @override
+  String get rewardsClaim => 'Claim';
+
+  @override
+  String get rewardsRedeemed => 'Redeemed — the code is in your coupons';
+
+  @override
+  String get rewardsExclusive => 'Exclusive';
+
+  @override
+  String get rewardsMemberReward => 'Member reward';
+
+  @override
+  String rewardsPointsCost(int points) {
+    return '$points points';
+  }
+
+  @override
+  String get rewardsNotEnoughPoints => 'Not enough points yet';
+
+  @override
+  String get rewardsCashback => 'Cashback';
+
+  @override
+  String get rewardsCashbackBody =>
+      'A share of what you spend, back in your wallet.';
+
+  @override
+  String get rewardsAvailable => 'Available';
+
+  @override
+  String get rewardsPending => 'Pending';
+
+  @override
+  String get rewardsLifetime => 'Earned in total';
+
+  @override
+  String get rewardsBonus => 'Bonus';
+
+  @override
+  String get rewardsConvertToCoupon => 'Turn into a coupon';
+
+  @override
+  String get rewardsCashbackConverted => 'Your cashback is now a coupon';
+
+  @override
+  String get rewardsNoCashback => 'No cashback to convert yet';
+
+  @override
+  String get rewardsInviteTitle => 'Invite a friend';
+
+  @override
+  String get rewardsInviteBody => 'She gets a welcome offer, you get points.';
+
+  @override
+  String get rewardsCustomerCode => 'Your invite code';
+
+  @override
+  String get rewardsSellerCode => 'Your seller code';
+
+  @override
+  String get rewardsGenerating => 'Generating…';
+
+  @override
+  String rewardsCopyLabel(String label) {
+    return 'Copy $label';
+  }
+
+  @override
+  String rewardsCodeCopied(String code) {
+    return '$code copied';
+  }
+
+  @override
+  String get rewardsInvited => 'Invited';
+
+  @override
+  String get rewardsRewarded => 'Rewarded';
+
+  @override
+  String rewardsSuspiciousChecks(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count invites are being checked',
+      one: '1 invite is being checked',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get rewardsHaveCode => 'Have a code?';
+
+  @override
+  String get rewardsEnterCode => 'Enter a code';
+
+  @override
+  String get rewardsApplyCode => 'Apply';
+
+  @override
+  String get rewardsCodeApplied => 'Code applied';
+
+  @override
+  String get rewardsCodeInvalid => 'That code did not work';
+
+  @override
+  String get rewardsOfflineHint => 'You are offline — this needs a connection';
+
+  @override
+  String get rewardsOfflineRetry => 'Try again';
+
+  @override
+  String get searchTrendEvening => 'سهرة';
+
+  @override
+  String get navHome => 'Home';
+
+  @override
+  String get navSearch => 'Search';
+
+  @override
+  String get navCart => 'Cart';
+
+  @override
+  String get navActivity => 'Activity';
+
+  @override
+  String get navProfile => 'Profile';
+
+  @override
+  String get navSellerDashboard => 'Dashboard';
+
+  @override
+  String get navSellerProducts => 'Products';
+
+  @override
+  String get navSellerOrders => 'Orders';
+
+  @override
+  String get navSellerAnalytics => 'Analytics';
+
+  @override
+  String get navSellerStore => 'My store';
+
+  @override
+  String get actionStylist => 'Stylist';
+
+  @override
+  String get actionSearch => 'Search';
+
+  @override
+  String get actionCart => 'Cart';
+
+  @override
+  String get actionNewProduct => 'New product';
+
+  @override
+  String get actionNewPost => 'New post';
+
+  @override
+  String get actionModeration => 'Moderation';
+
+  @override
+  String get actionReports => 'Reports';
+
+  @override
+  String get actionOrders => 'Orders';
+
+  @override
+  String get actionWishlist => 'Wishlist';
+
+  @override
+  String get actionRewards => 'Rewards';
+
+  @override
+  String get actionCoupons => 'Coupons';
+
+  @override
+  String get actionAddresses => 'Addresses';
+
+  @override
+  String get actionPayments => 'Payment methods';
+
+  @override
+  String get actionNotifications => 'Notifications';
+
+  @override
+  String get actionSettings => 'Settings';
+
+  @override
+  String get actionReturns => 'Returns';
+
+  @override
+  String get actionConversations => 'Conversations';
+
+  @override
+  String get actionAnalytics => 'Analytics';
+
+  @override
+  String get actionTrends => 'Trend engine';
+
+  @override
+  String get actionStoreProfile => 'Store profile';
+
+  @override
+  String get actionVerification => 'Verification';
+
+  @override
+  String get actionSecurity => 'Security';
+
+  @override
+  String get actionUsers => 'Users';
+
+  @override
+  String get actionSellers => 'Sellers';
+
+  @override
+  String get actionProducts => 'Products';
+
+  @override
+  String get actionFinance => 'Finance';
+
+  @override
+  String get actionAudit => 'Audit logs';
+
+  @override
+  String get menuGroupShopping => 'Shopping';
+
+  @override
+  String get menuGroupRewards => 'Rewards';
+
+  @override
+  String get menuGroupAccount => 'Account';
+
+  @override
+  String get menuGroupOperations => 'Operations';
+
+  @override
+  String get menuGroupGrowth => 'Growth';
+
+  @override
+  String get menuGroupStore => 'Store';
+
+  @override
+  String get menuGroupGovernance => 'Governance';
+
+  @override
+  String get menuGroupRisk => 'Risk';
+
+  @override
+  String get menuGroupControl => 'Control';
+
+  @override
+  String get homeNearbyInYourCity => 'In your city';
+
+  @override
+  String get homeNearbyInGovernorate => 'In your governorate';
+
+  @override
+  String get homeNearbySubtitle =>
+      'Boutiques shipping from your governorate — they arrive sooner';
+
+  @override
+  String get postSaved => 'Saved to your wishlist';
+
+  @override
+  String get postUnsaved => 'Removed from your wishlist';
+
+  @override
+  String get viewSaved => 'View';
+
+  @override
+  String get collectionFeatured => 'Featured';
+
+  @override
+  String get collectionMostLoved => 'Most loved';
+
+  @override
+  String get collectionTopRated => 'Top rated';
+
+  @override
+  String get collectionDeals => 'All deals';
+
+  @override
+  String galleryPhotoPosition(int index, int count) {
+    return 'Photo $index of $count';
+  }
+
+  @override
+  String get galleryOpenPhoto => 'Open photo';
+
+  @override
+  String get galleryClose => 'Close';
+
+  @override
+  String get reviewsPendingYours =>
+      'Your review is in — it appears publicly once it is checked';
+
+  @override
+  String get profileRecoveryEmail => 'Recovery email';
+
+  @override
+  String get profileRecoveryEmailHint =>
+      'Used to get your account back if you lose your number';
+
+  @override
+  String get profileEmailInvalid => 'Enter a valid email address';
+
+  @override
+  String get followListEmptyFollowing => 'Not following anyone yet';
+
+  @override
+  String get followListEmptyFollowers => 'No followers yet';
+
+  @override
+  String get ordersFilterAll => 'All';
+
+  @override
+  String get ordersEmptyForFilter => 'Nothing in this pile';
+
+  @override
+  String get paymentActionTitle => 'Finish paying';
+
+  @override
+  String get paymentOpenGateway => 'Pay now';
+
+  @override
+  String paymentGatewayHint(String method) {
+    return 'We will open $method to take the payment, then come back and check.';
+  }
+
+  @override
+  String paymentManualHint(String method) {
+    return 'Transfer the amount via $method, then enter the reference here so finance can match it.';
+  }
+
+  @override
+  String get paymentReferenceLabel => 'Transfer reference';
+
+  @override
+  String get paymentReferenceSubmit => 'Send reference';
+
+  @override
+  String get paymentReferenceSaved =>
+      'Reference received — we will confirm once it is matched';
+
+  @override
+  String get paymentReferenceRequired => 'Enter the reference first';
+
+  @override
+  String get paymentStillPending => 'The payment has not reached us yet';
+
+  @override
+  String get paymentCheckAgain => 'Check the payment';
+
+  @override
+  String get paymentCouldNotOpen => 'Could not open the payment page';
+
+  @override
+  String get paymentReferenceOnFile => 'Reference on file';
+
+  @override
+  String get paymentConfirmed => 'Payment confirmed';
+
+  @override
+  String get checkoutPrivacyMask => 'Hide my full name from the boutique';
+
+  @override
+  String get checkoutPrivacyMaskHint =>
+      'The boutique sees only your first name. The courier still needs your details to deliver.';
+
+  @override
+  String get orderPrivacyMaskOn => 'Your name is hidden from the boutique';
 }

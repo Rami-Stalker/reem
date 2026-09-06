@@ -2,6 +2,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 
 import 'package:reem/core/presentation/providers/core_providers.dart';
+import 'package:reem/core/result/result.dart';
+import 'package:reem/core/shared/entities/user.dart';
 import 'package:reem/features/user_profile/data/datasources/impl/user_profile_remote_datasource_impl.dart';
 import 'package:reem/features/user_profile/data/datasources/user_profile_remote_datasource.dart';
 import 'package:reem/features/user_profile/data/repositories/user_profile_repository_impl.dart';
@@ -15,16 +17,16 @@ import 'package:reem/features/user_profile/presentation/providers/edit_profile_n
 import 'package:reem/features/user_profile/presentation/providers/edit_profile_state.dart';
 import 'package:reem/features/user_profile/presentation/providers/user_profile_notifier.dart';
 import 'package:reem/features/user_profile/presentation/providers/user_profile_state.dart';
+import 'package:reem/features/user_profile/presentation/screens/follow_list_screen.dart';
 
 final userProfileRemoteDataSourceProvider =
     Provider<UserProfileRemoteDataSource>(
-  (ref) => UserProfileRemoteDataSourceImpl(ref.watch(dioProvider)),
-);
+      (ref) => UserProfileRemoteDataSourceImpl(ref.watch(dioProvider)),
+    );
 
 final userProfileRepositoryProvider = Provider<UserProfileRepository>(
-  (ref) => UserProfileRepositoryImpl(
-    ref.watch(userProfileRemoteDataSourceProvider),
-  ),
+  (ref) =>
+      UserProfileRepositoryImpl(ref.watch(userProfileRemoteDataSourceProvider)),
 );
 
 final getMyProfileUseCaseProvider = Provider(
@@ -50,19 +52,39 @@ final unfollowSellerUseCaseProvider = Provider(
 /// View a profile by id; pass `null` to load the signed-in user's own profile.
 final userProfileNotifierProvider = StateNotifierProvider.autoDispose
     .family<UserProfileNotifier, UserProfileState, String?>((ref, userId) {
-  return UserProfileNotifier(
-    userId: userId,
-    getMyProfile: ref.watch(getMyProfileUseCaseProvider),
-    getProfile: ref.watch(getUserProfileUseCaseProvider),
-    follow: ref.watch(followSellerUseCaseProvider),
-    unfollow: ref.watch(unfollowSellerUseCaseProvider),
-  )..load();
-});
+      return UserProfileNotifier(
+        userId: userId,
+        getMyProfile: ref.watch(getMyProfileUseCaseProvider),
+        getProfile: ref.watch(getUserProfileUseCaseProvider),
+        follow: ref.watch(followSellerUseCaseProvider),
+        unfollow: ref.watch(unfollowSellerUseCaseProvider),
+      )..load();
+    });
 
 final editProfileNotifierProvider =
     StateNotifierProvider.autoDispose<EditProfileNotifier, EditProfileState>(
-  (ref) => EditProfileNotifier(
-    getMyProfile: ref.watch(getMyProfileUseCaseProvider),
-    updateProfile: ref.watch(updateProfileUseCaseProvider),
-  )..load(),
-);
+      (ref) => EditProfileNotifier(
+        getMyProfile: ref.watch(getMyProfileUseCaseProvider),
+        updateProfile: ref.watch(updateProfileUseCaseProvider),
+      )..load(),
+    );
+
+/// The people behind a profile's follower and following counts.
+///
+/// Both endpoints existed from the start and nothing called them; the counts
+/// on every profile were numbers with nothing behind them.
+final followListProvider = FutureProvider.autoDispose
+    .family<List<User>, ({String userId, FollowListKind kind})>((
+      ref,
+      args,
+    ) async {
+      final repository = ref.watch(userProfileRepositoryProvider);
+      final result = args.kind == FollowListKind.following
+          ? await repository.following(args.userId)
+          : await repository.followers(args.userId);
+
+      return switch (result) {
+        Success(:final data) => data,
+        Error(:final failure) => throw Exception(failure.message),
+      };
+    });

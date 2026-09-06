@@ -29,13 +29,7 @@ class WalletScreen extends ConsumerWidget {
     return ReemScrollPage(
       onRefresh: () => ref.read(walletNotifierProvider.notifier).refresh(),
       slivers: [
-        SliverAppBar(
-          pinned: true,
-          elevation: 0,
-          backgroundColor: Colors.transparent,
-          surfaceTintColor: Colors.transparent,
-          title: Text(l10n.wallet),
-        ),
+        PremiumAppBar(title: l10n.wallet, showBack: true),
 
         if (state.isLoading)
           const SliverToBoxAdapter(child: _WalletSkeleton())
@@ -67,13 +61,13 @@ class WalletScreen extends ConsumerWidget {
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(
                   DsSpacing.lg,
-                  0,
+                  DsSpacing.xxxs,
                   DsSpacing.lg,
                   DsSpacing.md,
                 ),
                 child: Text(
                   l10n.walletStatement,
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  style: context.dsText.cardTitle.copyWith(
                     fontWeight: DsTypography.bold,
                   ),
                 ),
@@ -95,7 +89,7 @@ class WalletScreen extends ConsumerWidget {
           ],
         ],
 
-        const SliverToBoxAdapter(child: SizedBox(height: 120)),
+        DsGaps.sliverBottomSafe,
       ],
     );
   }

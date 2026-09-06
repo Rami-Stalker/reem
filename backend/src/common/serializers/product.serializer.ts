@@ -6,7 +6,7 @@ import {
   totalStock,
 } from '../catalog/product-include';
 import { Money } from '../money';
-import { serializeUser } from './user.serializer';
+import { serializePublicUser } from './user.serializer';
 
 /**
  * The canonical product JSON.
@@ -75,7 +75,7 @@ export function serializeOffer(offer: OfferRecord) {
 
   return {
     id: offer.id,
-    seller: serializeUser(offer.seller),
+    seller: serializePublicUser(offer.seller),
     currency: offer.currency,
     price: price.toJSON(),
     compare_at_price: compareAt?.toJSON() ?? null,
@@ -148,7 +148,6 @@ export function serializeProduct(
     rating: product.rating,
     reviews_count: product.reviewsCount,
     views_count: product.viewsCount,
-    likes_count: product.likesCount,
     orders_count: product.ordersCount,
     favorites_count: product.favoritesCount,
     created_at: product.createdAt.toISOString(),

@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { TrendsModule } from '../trends/trends.module';
 import { StoriesController } from './stories.controller';
 import { StoriesService } from './stories.service';
 import { StoriesRepository } from './stories.repository';
@@ -7,6 +8,7 @@ import { SellerStoriesService } from './seller-stories.service';
 import { StoriesCleanupService } from './stories-cleanup.service';
 
 @Module({
+  imports: [TrendsModule],
   controllers: [SellerStoriesController, StoriesController],
   providers: [
     StoriesService,

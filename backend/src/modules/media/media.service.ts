@@ -199,6 +199,61 @@ export class MediaService {
   }
 
   /**
+   * Bytes for a PUBLIC asset of ours, addressed by the URL a row stored.
+   *
+   * For server-side readers only — the visual search indexer, which has to
+   * decode a product photograph to describe it. There is no authorisation
+   * decision here and there must never be one: PUBLIC means the same bytes are
+   * already served to anybody who asks over HTTP, so a caller inside the
+   * process learns nothing new. The method refuses a private asset outright
+   * rather than deciding who may see it, because that decision belongs to
+   * `readPrivate` and having it in two places is how the two drift.
+   *
+   * Returns null — never throws — for a URL that is not ours, points at
+   * nothing, or names a file the driver has lost. Every caller is a background
+   * pass over a catalogue, and one missing photograph is not a failed run.
+   */
+  async readPublicByUrl(url: string): Promise<Buffer | null> {
+    const key = this.keyFromUrl(url);
+    if (!key) return null;
+
+    const asset = await this.prisma.mediaAsset.findUnique({
+      where: { storageKey: key },
+      select: { storageKey: true, visibility: true },
+    });
+    if (!asset || asset.visibility !== MediaVisibility.PUBLIC) return null;
+
+    try {
+      return await this.storage.read(asset.storageKey, asset.visibility);
+    } catch (error) {
+      this.logger.warn(`Stored asset ${key} could not be read: ${String(error)}`);
+      return null;
+    }
+  }
+
+  /**
+   * Deletes an asset outright — bytes and row.
+   *
+   * Distinct from the orphan sweep, which only ever removes uploads nothing
+   * ever claimed. This is for media on a *retention clock*: a photograph she
+   * uploaded to search with, or of herself for a try-on, whose functional life
+   * is over. Those are attached, referenced, and must still go.
+   *
+   * Ownership is the caller's to establish. The one caller today reaches this
+   * through a row it has already scoped to a user.
+   */
+  async purge(assetId: string): Promise<boolean> {
+    const asset = await this.prisma.mediaAsset.findUnique({ where: { id: assetId } });
+    if (!asset) return false;
+
+    // Bytes first. A row without its file renders as a broken image; a file
+    // without its row is invisible and permanent.
+    await this.removeAllBytes(asset);
+    await this.prisma.mediaAsset.delete({ where: { id: asset.id } }).catch(() => undefined);
+    return true;
+  }
+
+  /**
    * Who, besides the uploader, may open a private asset.
    *
    * One rule per purpose, deliberately — there is no general "staff may read
@@ -236,6 +291,17 @@ export class MediaService {
       }
       case 'chat':
         return this.isInAChatWith(asset.id, actor.id);
+      case 'visual_search':
+      case 'try_on':
+      case 'closet':
+        // Nobody. The `ownerId` check above is the whole access rule for these
+        // three, and it is stated here rather than left to fall through the
+        // default so that anyone widening staff access has to walk past it. A
+        // screenshot she searched with, a photograph of her body, and a picture
+        // of her own wardrobe have no second legitimate reader — not support,
+        // not moderation, not an administrator. Moderating a *product* image is
+        // a different asset.
+        return false;
       default:
         return false;
     }
@@ -501,14 +567,7 @@ export class MediaService {
     let removed = 0;
     for (const asset of stale) {
       try {
-        await this.storage.remove(asset.storageKey, asset.visibility);
-        // The resized copies go with it. They are invisible to this sweep
-        // otherwise: nothing but the original has a row.
-        for (const width of asset.variants) {
-          await this.storage
-            .remove(variantKeyFor(asset.storageKey, width), asset.visibility)
-            .catch(() => undefined);
-        }
+        await this.removeAllBytes(asset);
         await this.prisma.mediaAsset.delete({ where: { id: asset.id } });
         removed += 1;
       } catch (error) {
@@ -521,6 +580,23 @@ export class MediaService {
       this.logger.log(`Swept ${removed} unreferenced media asset(s)`);
     }
     return removed;
+  }
+
+  /**
+   * Every file behind one asset: the original and each resized copy.
+   *
+   * The variants have no rows of their own, so anything that deletes an asset
+   * has to know the naming convention — and exactly one place should. Failures
+   * on the variants are swallowed: a resized copy left behind is wasted disk,
+   * while an exception here would leave the original in place too.
+   */
+  private async removeAllBytes(asset: MediaAsset): Promise<void> {
+    await this.storage.remove(asset.storageKey, asset.visibility);
+    for (const width of asset.variants) {
+      await this.storage
+        .remove(variantKeyFor(asset.storageKey, width), asset.visibility)
+        .catch(() => undefined);
+    }
   }
 }
 

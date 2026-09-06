@@ -99,6 +99,11 @@ class _ChatDetailsScreenState extends ConsumerState<ChatDetailsScreen>
     final messagesState = ref.watch(chatMessagesNotifierProvider);
     final notifier = ref.read(chatMessagesNotifierProvider.notifier);
     final realtime = ref.read(chatRealtimeServiceProvider);
+    // Who she is talking to. Loaded on its own so the header is correct even
+    // when this screen was opened by deep link and no list ever existed.
+    final thread = widget.chatId.isEmpty
+        ? null
+        : ref.watch(chatThreadNotifierProvider(widget.chatId)).thread;
 
     return Scaffold(
       resizeToAvoidBottomInset: true,
@@ -120,10 +125,17 @@ class _ChatDetailsScreenState extends ConsumerState<ChatDetailsScreen>
                 SafeArea(
                   bottom: false,
                   child: ChatAppBar(
+                    thread: thread,
+                    isPeerTyping: messagesState.isPeerTyping,
                     onOpenSharedMedia: widget.chatId.isEmpty
                         ? null
                         : () => context.push(
                             '${RoutePaths.chatMediaGallery}?id=${widget.chatId}',
+                          ),
+                    onOpenProfile: thread?.peerId == null
+                        ? null
+                        : () => context.push(
+                            RoutePaths.userProfileOf(thread!.peerId!),
                           ),
                   ),
                 ),
@@ -138,25 +150,25 @@ class _ChatDetailsScreenState extends ConsumerState<ChatDetailsScreen>
                 else
                   Expanded(
                     child: ListView(
-                      padding: const EdgeInsets.all(22),
+                      padding: const EdgeInsets.all(DsSpacing.xl),
                       physics: const BouncingScrollPhysics(),
                       children: [
-                        const ChatDateDivider(title: 'Today'),
-                        const SizedBox(height: 18),
+                        ChatDateDivider(title: context.l10n.todayLabel),
+                        DsGaps.vLg,
                         if (messagesState.messages.isEmpty)
                           _EmptyConversation(onImage: _attach)
                         else
                           ...messagesState.messages.map(
                             (message) => Padding(
-                              padding: const EdgeInsets.only(bottom: 12),
+                              padding: const EdgeInsets.only(bottom: DsSpacing.sm),
                               child: _MessageRow(message: message),
                             ),
                           ),
                         if (messagesState.isPeerTyping) ...[
-                          const SizedBox(height: 8),
+                          DsGaps.vXs,
                           const TypingIndicator(),
                         ],
-                        const SizedBox(height: 30),
+                        DsGaps.vXxl,
                       ],
                     ),
                   ),
@@ -350,7 +362,7 @@ class _MessageRow extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         bubble,
-        const SizedBox(height: 4),
+        DsGaps.vXxs,
         MessageDeliveryStatus(
           delivered: message.isDelivered,
           seen: message.isRead,
@@ -367,27 +379,33 @@ class _EmptyConversation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.dsColors;
     return Container(
-        padding: const EdgeInsets.all(22),
+        padding: DsSpacing.paddingLg,
         decoration: BoxDecoration(
-          color: Colors.white.withOpacity(.82),
-          borderRadius: BorderRadius.circular(24),
+          color: colors.surfaceElevated.withValues(alpha: 0.85),
+          borderRadius: DsRadius.borderCard,
+          border: Border.all(color: colors.border),
         ),
         child: Column(
           children: [
-            const Icon(Icons.forum_rounded, size: 42, color: Color(0xffFF5C8A)),
-            const SizedBox(height: 12),
+            Icon(
+              Icons.forum_rounded,
+              size: DsSizes.iconXl,
+              color: colors.primary,
+            ),
+            DsGaps.vSm,
             Text(
               context.l10n.chatStartConversation,
-              style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 16),
+              style: context.dsText.cardTitle.bold,
             ),
-            const SizedBox(height: 8),
+            DsGaps.vXs,
             Text(
               context.l10n.chatStartConversationHint,
               textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.grey[700], height: 1.4),
+              style: context.dsText.bodyMuted,
             ),
-            const SizedBox(height: 14),
+            DsGaps.vMd,
             TextButton.icon(
               onPressed: onImage,
               icon: const Icon(Icons.photo_rounded),

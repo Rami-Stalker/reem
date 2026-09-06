@@ -1,0 +1,99 @@
+{
+  "rich": [
+    {
+      "title": "عباية يومية بأكمام واسعة",
+      "notes": [
+        {
+          "code": "BETTER_VALUE",
+          "tone": "inform",
+          "ar": "في قطعة قريبة منها أرخص بـ52%.",
+          "evidence": {
+            "productId": "eeded305-c61f-4bb0-894b-fde76032f076",
+            "title": "عباية بحزام بلون الرملي",
+            "savingBps": 5216
+          }
+        },
+        {
+          "code": "TRUSTED_SELLER",
+          "tone": "inform",
+          "ar": "من متجر سبق واشتريتي منه.",
+          "evidence": {}
+        }
+      ]
+    },
+    {
+      "title": "فستان ميدي بأكمام منفوخة",
+      "notes": [
+        {
+          "code": "TRUSTED_SELLER",
+          "tone": "inform",
+          "ar": "من متجر سبق واشتريتي منه.",
+          "evidence": {}
+        },
+        {
+          "code": "RISING_DEMAND",
+          "tone": "inform",
+          "ar": "الطلب عليها عم يزيد — 59 بنت شافوها هالفترة.",
+          "evidence": {
+            "recentViews": 59,
+            "growth": 0.84
+          }
+        }
+      ]
+    },
+    {
+      "title": "صينية حلويات للأعراس",
+      "notes": [
+        {
+          "code": "BETTER_VALUE",
+          "tone": "inform",
+          "ar": "في قطعة قريبة منها أرخص بـ16%.",
+          "evidence": {
+            "productId": "03c39ceb-aa65-4120-a27c-153cc567a331",
+            "title": "صينية حلويات للمواليد",
+            "savingBps": 1648
+          }
+        },
+        {
+          "code": "TRUSTED_SELLER",
+          "tone": "inform",
+          "ar": "من متجر سبق واشتريتي منه.",
+          "evidence": {}
+        }
+      ]
+    },
+    {
+      "title": "فستان يومي بحزام مخصّر",
+      "notes": [
+        {
+          "code": "BETTER_VALUE",
+          "tone": "inform",
+          "ar": "في قطعة قريبة منها أرخص بـ44%.",
+          "evidence": {
+            "productId": "f5d64bfc-297a-4144-9e44-e11b33021acc",
+            "title": "فستان يومي بلون الشامبانيا",
+            "savingBps": 4447
+          }
+        },
+        {
+          "code": "TRUSTED_SELLER",
+          "tone": "inform",
+          "ar": "من متجر سبق واشتريتي منه.",
+          "evidence": {}
+        },
+        {
+          "code": "RISING_DEMAND",
+          "tone": "inform",
+          "ar": "الطلب عليها عم يزيد — 343 بنت شافوها هالفترة.",
+          "evidence": {
+            "recentViews": 343,
+            "growth": 3.45
+          }
+        }
+      ]
+    }
+  ],
+  "empty": {
+    "notes": []
+  }
+}

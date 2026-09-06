@@ -27,6 +27,19 @@ final getPaymentMethodsUseCaseProvider =
     Provider((ref) => GetPaymentMethodsUseCase(ref.watch(checkoutRepositoryProvider)));
 final placeOrderUseCaseProvider =
     Provider((ref) => PlaceOrderUseCase(ref.watch(checkoutRepositoryProvider)));
+final confirmCodOrderUseCaseProvider =
+    Provider((ref) => ConfirmCodOrderUseCase(ref.watch(checkoutRepositoryProvider)));
+final resendCodConfirmationUseCaseProvider = Provider(
+  (ref) => ResendCodConfirmationUseCase(ref.watch(checkoutRepositoryProvider)),
+);
+final retryPaymentUseCaseProvider = Provider(
+  (ref) => RetryPaymentUseCase(ref.watch(checkoutRepositoryProvider)),
+);
+
+final submitPaymentReferenceUseCaseProvider = Provider(
+  (ref) => SubmitPaymentReferenceUseCase(ref.watch(checkoutRepositoryProvider)),
+);
+
 final verifyPaymentUseCaseProvider =
     Provider((ref) => VerifyPaymentUseCase(ref.watch(checkoutRepositoryProvider)));
 final getOrdersUseCaseProvider =
@@ -36,10 +49,16 @@ final getOrderUseCaseProvider =
 final cancelOrderUseCaseProvider =
     Provider((ref) => CancelOrderUseCase(ref.watch(checkoutRepositoryProvider)));
 
-final ordersNotifierProvider =
-    StateNotifierProvider.autoDispose<OrdersNotifier, OrdersState>(
-  (ref) => OrdersNotifier(getOrders: ref.watch(getOrdersUseCaseProvider))..load(),
-);
+/// Her orders, filtered to one pile — or to all of them when the family key is
+/// null. Keyed so opening «ملغاة» from the profile does not disturb the
+/// unfiltered list behind it.
+final ordersNotifierProvider = StateNotifierProvider.autoDispose
+    .family<OrdersNotifier, OrdersState, OrderBucket?>(
+      (ref, bucket) => OrdersNotifier(
+        getOrders: ref.watch(getOrdersUseCaseProvider),
+        bucket: bucket,
+      )..load(),
+    );
 
 final orderDetailNotifierProvider = StateNotifierProvider.autoDispose
     .family<OrderDetailNotifier, OrderDetailState, String>((ref, id) {

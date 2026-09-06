@@ -31,7 +31,7 @@ export class CatalogRollupService {
   ): Promise<void> {
     const offers = await tx.sellerOffer.findMany({
       where: { productId, ...LIVE_OFFER_WHERE },
-      select: { price: true, currency: true },
+      select: { id: true, price: true, currency: true, priceSyp: true },
     });
 
     if (offers.length === 0) {
@@ -44,9 +44,19 @@ export class CatalogRollupService {
 
     const normalised: Money[] = [];
     for (const offer of offers) {
-      normalised.push(
-        await this.rates.toSyp(Money.of(offer.price, offer.currency)),
-      );
+      const syp = await this.rates.toSyp(Money.of(offer.price, offer.currency));
+      normalised.push(syp);
+
+      // Written back onto the offer, not just folded into the product's
+      // min/max, because the offer ordering itself has to be currency-blind:
+      // `orderBy: { price }` put a USD offer ahead of every SYP one.
+      const stored = syp.toPrisma();
+      if (offer.priceSyp === null || !offer.priceSyp.equals(stored)) {
+        await tx.sellerOffer.update({
+          where: { id: offer.id },
+          data: { priceSyp: stored },
+        });
+      }
     }
 
     let min = normalised[0];

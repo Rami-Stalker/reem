@@ -45,6 +45,11 @@ abstract final class DsTypography {
   static const double labelMedium = 12;
   static const double labelSmall = 11;
 
+  /// Below the Material scale, for text inside a shape that cannot grow: a
+  /// count bubble on an avatar, a rank on a chart marker. Six screens had
+  /// invented 8, 9 and 10 for exactly this; one number serves them all.
+  static const double labelMicro = 10;
+
   // Weights
   static const FontWeight thin = FontWeight.w200;
   static const FontWeight light = FontWeight.w300;

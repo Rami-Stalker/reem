@@ -9,14 +9,18 @@ final class DiscoveryRemoteDataSourceImpl extends BaseRemoteDataSource
   const DiscoveryRemoteDataSourceImpl(super.dio);
 
   Map<String, dynamic> _query(int page, int limit, String? sort) => {
-        'page': page,
-        'limit': limit,
-        if (sort != null) 'sort': sort,
-      };
+    'page': page,
+    'limit': limit,
+    'sort': ?sort,
+  };
 
   @override
-  Future<ProductPageModel> getCollection(String key,
-      {int page = 1, int limit = 20, String? sort}) async {
+  Future<ProductPageModel> getCollection(
+    String key, {
+    int page = 1,
+    int limit = 20,
+    String? sort,
+  }) async {
     final json = await getJson(
       ApiEndpoints.discoveryCollection(key),
       query: _query(page, limit, sort),
@@ -25,8 +29,12 @@ final class DiscoveryRemoteDataSourceImpl extends BaseRemoteDataSource
   }
 
   @override
-  Future<ProductPageModel> getCategory(String category,
-      {int page = 1, int limit = 20, String? sort}) async {
+  Future<ProductPageModel> getCategory(
+    String category, {
+    int page = 1,
+    int limit = 20,
+    String? sort,
+  }) async {
     final json = await getJson(
       ApiEndpoints.discoveryCategory(category),
       query: _query(page, limit, sort),
@@ -35,8 +43,11 @@ final class DiscoveryRemoteDataSourceImpl extends BaseRemoteDataSource
   }
 
   @override
-  Future<ProductPageModel> getSeller(String sellerId,
-      {int page = 1, int limit = 20}) async {
+  Future<ProductPageModel> getSeller(
+    String sellerId, {
+    int page = 1,
+    int limit = 20,
+  }) async {
     final json = await getJson(
       ApiEndpoints.discoverySeller(sellerId),
       query: _query(page, limit, null),
@@ -45,8 +56,11 @@ final class DiscoveryRemoteDataSourceImpl extends BaseRemoteDataSource
   }
 
   @override
-  Future<ProductPageModel> getSimilar(String productId,
-      {int page = 1, int limit = 20}) async {
+  Future<ProductPageModel> getSimilar(
+    String productId, {
+    int page = 1,
+    int limit = 20,
+  }) async {
     final json = await getJson(
       ApiEndpoints.discoverySimilar(productId),
       query: _query(page, limit, null),
@@ -55,7 +69,10 @@ final class DiscoveryRemoteDataSourceImpl extends BaseRemoteDataSource
   }
 
   @override
-  Future<ProductPageModel> getRecommended({int page = 1, int limit = 20}) async {
+  Future<ProductPageModel> getRecommended({
+    int page = 1,
+    int limit = 20,
+  }) async {
     final json = await getJson(
       ApiEndpoints.discoveryRecommended,
       query: _query(page, limit, null),

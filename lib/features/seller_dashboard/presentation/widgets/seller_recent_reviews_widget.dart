@@ -2,9 +2,13 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import 'package:reem/core/design_system/design_system.dart';
 import 'package:reem/core/localization/l10n_extension.dart';
+import 'package:reem/core/media/media_decode.dart';
+import 'package:reem/core/media/media_variants.dart';
+import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/features/seller_dashboard/domain/entities/seller_misc.dart';
 import 'package:reem/features/seller_dashboard/presentation/providers/seller_dashboard_provider.dart';
 
@@ -14,7 +18,6 @@ class SellerRecentReviewsWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(sellerDashboardNotifierProvider);
-    final theme = Theme.of(context);
 
     if (state.isInitialLoading) {
       return Padding(
@@ -32,16 +35,28 @@ class SellerRecentReviewsWidget extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            context.l10n.sellerRecentReviews,
-            style: theme.textTheme.titleMedium
-                ?.copyWith(fontWeight: DsTypography.bold),
+          // The reviews were readable here and answerable nowhere. The
+          // heading now leads to the desk where she can write back.
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  context.l10n.sellerRecentReviews,
+                  style: context.dsText.cardTitle
+                      .copyWith(fontWeight: DsTypography.bold),
+                ),
+              ),
+              TextButton(
+                onPressed: () => context.push(RoutePaths.sellerReviews),
+                child: Text(context.l10n.sellerManageAll),
+              ),
+            ],
           ),
           const SizedBox(height: DsSpacing.sm),
           ...reviews.asMap().entries.map((e) {
             return Padding(
               padding: EdgeInsets.only(
-                  bottom: e.key < reviews.length - 1 ? DsSpacing.sm : 0),
+                  bottom: e.key < reviews.length - DsSpacing.xxxs ? DsSpacing.sm : DsSpacing.xxxs),
               child: _ReviewCard(review: e.value)
                   .animate(delay: (e.key * 70).ms)
                   .fadeIn(duration: 300.ms),
@@ -61,7 +76,6 @@ class _ReviewCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = context.dsColors;
-    final theme = Theme.of(context);
 
     return Container(
       padding: const EdgeInsets.all(DsSpacing.md),
@@ -77,10 +91,11 @@ class _ReviewCard extends StatelessWidget {
             children: [
               ClipOval(
                 child: CachedNetworkImage(
-                  imageUrl: review.customerAvatarUrl,
+                  imageUrl: MediaVariants.thumb(review.customerAvatarUrl),
                   width: 36,
                   height: 36,
                   fit: BoxFit.cover,
+                  memCacheWidth: MediaDecode.widthFor(context, 36),
                   placeholder: (_, _) => ColoredBox(color: c.shimmerBase),
                   errorWidget: (_, _, _) => Container(
                     color: c.primaryContainer,
@@ -96,15 +111,15 @@ class _ReviewCard extends StatelessWidget {
                   children: [
                     Text(
                       review.customerName,
-                      style: theme.textTheme.titleSmall
-                          ?.copyWith(fontWeight: DsTypography.semiBold),
+                      style: context.dsText.tileTitle
+                          .copyWith(fontWeight: DsTypography.semiBold),
                     ),
                     Text(
                       review.productTitle,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: theme.textTheme.labelSmall
-                          ?.copyWith(color: c.onSurfaceVariant, fontSize: 10),
+                      style: context.dsText.caption
+                          .copyWith(color: c.onSurfaceVariant, fontSize: DsTypography.labelMicro),
                     ),
                   ],
                 ),
@@ -126,9 +141,9 @@ class _ReviewCard extends StatelessWidget {
                   ),
                   Text(
                     review.timeAgo,
-                    style: theme.textTheme.labelSmall?.copyWith(
+                    style: context.dsText.caption.copyWith(
                       color: c.onSurfaceVariant,
-                      fontSize: 10,
+                      fontSize: DsTypography.labelMicro,
                     ),
                   ),
                 ],
@@ -140,8 +155,8 @@ class _ReviewCard extends StatelessWidget {
             review.body,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
-            style: theme.textTheme.bodySmall
-                ?.copyWith(color: c.onSurfaceVariant),
+            style: context.dsText.cardSubtitle
+                .copyWith(color: c.onSurfaceVariant),
           ),
         ],
       ),

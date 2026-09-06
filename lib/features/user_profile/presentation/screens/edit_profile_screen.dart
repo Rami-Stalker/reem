@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/shared/entities/user.dart';
 import 'package:reem/features/auth/presentation/providers/auth_provider.dart';
 import 'package:reem/features/user_profile/presentation/providers/user_profile_providers.dart';
@@ -19,6 +20,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
   final _name = TextEditingController();
   final _bio = TextEditingController();
   final _location = TextEditingController();
+  final _email = TextEditingController();
   String? _imageUrl;
   bool _seeded = false;
 
@@ -27,6 +29,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
     _name.dispose();
     _bio.dispose();
     _location.dispose();
+    _email.dispose();
     super.dispose();
   }
 
@@ -34,6 +37,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
     _name.text = user.name;
     _bio.text = user.bio ?? '';
     _location.text = user.location ?? '';
+    _email.text = user.email ?? '';
     _imageUrl = user.imageUrl;
     _seeded = true;
   }
@@ -42,11 +46,16 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
     if (!_formKey.currentState!.validate()) return;
 
     final image = _imageUrl?.trim() ?? '';
-    final ok = await ref.read(editProfileNotifierProvider.notifier).save(
+    final ok = await ref
+        .read(editProfileNotifierProvider.notifier)
+        .save(
           name: _name.text.trim(),
           bio: _bio.text.trim(),
           location: _location.text.trim(),
           imageUrl: image.isEmpty ? null : image,
+          // Always sent, so clearing the field clears the address — the
+          // profile checklist asks for one and this is where it is given.
+          email: _email.text.trim(),
         );
 
     if (!mounted) return;
@@ -56,7 +65,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
       if (!mounted) return;
       DsSnackbar.show(
         context,
-        message: 'Profile updated',
+        message: context.l10n.profileUpdated,
         type: DsSnackbarType.success,
       );
       context.pop();
@@ -76,7 +85,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
 
     return ReemScrollPage(
       slivers: [
-        const PremiumAppBar(title: 'Edit Profile', showBack: true),
+        PremiumAppBar(title: context.l10n.profileEditTitle, showBack: true),
         if (state.isLoading && state.user == null)
           const SliverFillRemaining(
             hasScrollBody: false,
@@ -107,32 +116,60 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                     children: [
                       DsInputField(
                         controller: _name,
-                        label: 'Full name',
-                        prefixIcon:
-                            Icon(Icons.person_outline, color: colors.primary),
+                        label: context.l10n.profileFullName,
+                        prefixIcon: Icon(
+                          Icons.person_outline,
+                          color: colors.primary,
+                        ),
                         validator: (v) => (v == null || v.trim().length < 2)
-                            ? 'Name must be at least 2 characters'
+                            ? context.l10n.profileNameTooShort
                             : null,
                       ),
                       DsInputField(
                         controller: _location,
-                        label: 'Location',
-                        prefixIcon:
-                            Icon(Icons.place_outlined, color: colors.primary),
+                        label: context.l10n.profileLocation,
+                        prefixIcon: Icon(
+                          Icons.place_outlined,
+                          color: colors.primary,
+                        ),
+                      ),
+                      // Q34's «بريد إلكتروني للاستعادة» — the last step on the
+                      // profile checklist, and the one that had no field
+                      // anywhere in the app, so the completion ring could
+                      // never reach 100%.
+                      DsInputField(
+                        controller: _email,
+                        label: context.l10n.profileRecoveryEmail,
+                        helperText: context.l10n.profileRecoveryEmailHint,
+                        keyboardType: TextInputType.emailAddress,
+                        prefixIcon: Icon(
+                          Icons.alternate_email_rounded,
+                          color: colors.primary,
+                        ),
+                        validator: (value) {
+                          final email = value?.trim() ?? '';
+                          if (email.isEmpty) return null;
+                          final valid = RegExp(
+                            r'^[^@\s]+@[^@\s]+\.[^@\s]+$',
+                          ).hasMatch(email);
+                          return valid ? null : context.l10n.profileEmailInvalid;
+                        },
                       ),
                       DsInputField(
                         controller: _bio,
-                        label: 'Bio',
+                        label: context.l10n.profileBio,
                         maxLines: 4,
-                        prefixIcon: Icon(Icons.edit_note_outlined,
-                            color: colors.primary),
+                        prefixIcon: Icon(
+                          Icons.edit_note_outlined,
+                          color: colors.primary,
+                        ),
                         validator: (v) => (v != null && v.length > 500)
-                            ? 'Bio must be under 500 characters'
+                            ? context.l10n.profileBioTooLong
                             : null,
                       ),
                       const SizedBox(height: DsSpacing.xl),
                       PrimaryButton(
-                        label: 'Save changes',
+                        label: context.l10n.profileSaveChanges,
                         isLoading: state.isSaving,
                         onPressed: state.isSaving ? null : _save,
                       ),

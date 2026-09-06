@@ -5,6 +5,8 @@ import 'package:reem/features/settings/domain/entities/coupon_entity.dart';
 import 'package:reem/features/settings/domain/entities/notification_entity.dart';
 import 'package:reem/features/settings/domain/entities/rewards_entity.dart';
 
+import 'package:reem/features/settings/presentation/providers/settings_message.dart';
+
 class SettingsState {
   const SettingsState({
     this.addresses = const [],
@@ -24,7 +26,8 @@ class SettingsState {
   final User? user;
   final bool isLoading;
   final String? error;
-  final String? successMessage;
+  /// Named, not spelled out — the screen resolves it in her locale.
+  final SettingsMessage? successMessage;
 
   SettingsState copyWith({
     List<AddressEntity>? addresses,
@@ -34,7 +37,7 @@ class SettingsState {
     User? user,
     bool? isLoading,
     String? error,
-    String? successMessage,
+    SettingsMessage? successMessage,
     bool clearError = false,
     bool clearSuccess = false,
   }) {

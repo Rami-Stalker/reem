@@ -8,26 +8,34 @@ import {
   ParseUUIDPipe,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import { UserRole } from '@prisma/client';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
+import { OptionalAuth } from '../../common/decorators/optional-auth.decorator';
 import { Roles } from '../../common/decorators/roles.decorator';
 import { ReputationService } from './reputation.service';
 import {
   AwardSellerBadgeDto,
   CreateReviewDto,
   ModerateReviewDto,
+  ReplyToReviewDto,
   RequestTrustedSellerVerificationDto,
   ReviewTrustedSellerVerificationDto,
+  SellerReviewQueryDto,
 } from './dto/reputation.dto';
 
 @Controller('reputation')
 export class ReputationController {
   constructor(private readonly reputation: ReputationService) {}
 
+  @OptionalAuth()
   @Get('products/:productId/reviews')
-  productReviews(@Param('productId', ParseUUIDPipe) productId: string) {
-    return this.reputation.productReviews(productId);
+  productReviews(
+    @Param('productId', ParseUUIDPipe) productId: string,
+    @CurrentUser('id') viewerId?: string,
+  ) {
+    return this.reputation.productReviews(productId, viewerId);
   }
 
   @Post('products/:productId/reviews')
@@ -38,6 +46,15 @@ export class ReputationController {
     @Body() dto: CreateReviewDto,
   ) {
     return this.reputation.createProductReview(userId, productId, dto);
+  }
+
+  /**
+   * Her own reviews. Declared above `sellers/:sellerId` so the literal `me`
+   * segment is never parsed as a UUID.
+   */
+  @Get('me/reviews')
+  myReviews(@CurrentUser('id') userId: string) {
+    return this.reputation.reviewsByAuthor(userId);
   }
 
   @Get('sellers/:sellerId/reviews')
@@ -68,6 +85,44 @@ export class ReputationController {
     @Body() dto: RequestTrustedSellerVerificationDto,
   ) {
     return this.reputation.requestTrustedVerification(sellerId, dto);
+  }
+
+  // ── The seller ───────────────────────────────────────────────────────
+
+  /**
+   * Every review of her goods and her shop, merged and sorted together, with
+   * a count of the ones still unanswered.
+   */
+  @Get('seller/reviews')
+  @Roles(UserRole.SELLER)
+  sellerReviewDesk(
+    @CurrentUser('id') sellerId: string,
+    @Query() query: SellerReviewQueryDto,
+  ) {
+    return this.reputation.reviewsForSeller(sellerId, query.filter ?? 'all');
+  }
+
+  /**
+   * She answers one, publicly. An empty body removes her reply.
+   *
+   * The route is hers rather than the moderator's on purpose: a reply is not
+   * moderation. She cannot change the rating, the words, or whether the review
+   * is published — only add her side underneath it.
+   */
+  @Post('seller/reviews/:id/reply')
+  @HttpCode(HttpStatus.OK)
+  @Roles(UserRole.SELLER)
+  replyToReview(
+    @CurrentUser('id') sellerId: string,
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() dto: ReplyToReviewDto,
+  ) {
+    return this.reputation.replyToReview(
+      sellerId,
+      id,
+      dto.target_type,
+      dto.reply,
+    );
   }
 
   @Get('admin/moderation-queue')

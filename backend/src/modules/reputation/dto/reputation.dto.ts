@@ -2,6 +2,7 @@ import { Transform } from 'class-transformer';
 import {
   IsEnum,
   IsISO8601,
+  IsIn,
   IsInt,
   IsOptional,
   IsString,
@@ -36,6 +37,40 @@ export class CreateReviewDto {
   @IsString()
   @MaxLength(4000)
   body?: string;
+}
+
+/**
+ * The seller answering a review of her goods or her shop.
+ *
+ * The target type has to be told: a product review and a seller review are
+ * separate tables with separate ids, and guessing from the id would mean two
+ * lookups on every reply.
+ */
+export class ReplyToReviewDto {
+  @Transform(({ value }) =>
+    typeof value === 'string' ? value.toUpperCase() : value,
+  )
+  @IsEnum(ReviewTargetType)
+  target_type!: ReviewTargetType;
+
+  /**
+   * Empty removes the reply. A seller who answered in anger and thought
+   * better of it should not have to ask a moderator to unpublish her own
+   * sentence.
+   */
+  @IsString()
+  @MaxLength(2000)
+  reply!: string;
+}
+
+/** Which reviews the seller's desk is showing. */
+export class SellerReviewQueryDto {
+  @IsOptional()
+  @Transform(({ value }) =>
+    typeof value === 'string' ? value.toLowerCase() : value,
+  )
+  @IsIn(['all', 'unanswered'])
+  filter?: 'all' | 'unanswered';
 }
 
 export class ModerateReviewDto {

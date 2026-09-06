@@ -737,6 +737,18 @@ export class CommissionsService {
         },
       });
 
+      // A payout that will never pay must let go of its ledgers. They are
+      // gathered by `payoutItems: { none: {} }`, so a cancelled or failed
+      // payout that kept its links would hold that money outside every future
+      // payout — permanently, silently, and only noticed by a seller
+      // wondering why a delivered order never became payable.
+      if (
+        dto.status === PayoutStatus.CANCELLED ||
+        dto.status === PayoutStatus.FAILED
+      ) {
+        await tx.sellerPayoutLedger.deleteMany({ where: { payoutId: id } });
+      }
+
       if (dto.status === PayoutStatus.PAID) {
         await tx.commissionLedger.updateMany({
           where: { id: { in: payout.ledgers.map((item) => item.ledgerId) } },

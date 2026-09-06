@@ -182,23 +182,29 @@ export class DeliveryService {
   }
 }
 
-/** Default SYP zone rows, used by the seeder. */
+/**
+ * Default SYP zone rows, used by the seeder.
+ *
+ * Fees are in **new** Syrian pounds: 150 here is the 15,000 this table
+ * carried before the redenomination, which is the same delivery charge with
+ * two fewer zeros on it.
+ */
 export const DEFAULT_SHIPPING_ZONES: Prisma.ShippingZoneCreateManyInput[] = [
   // Q61 P1 — same-day inside a city; Q62 — one to two days between them.
-  zone('دمشق', null, false, 15000, 3, 8),
-  zone('ريف دمشق', null, true, 20000, 6, 24),
-  zone('حلب', null, false, 25000, 24, 48),
-  zone('حمص', null, false, 22000, 24, 48),
-  zone('حماة', null, false, 22000, 24, 48),
-  zone('اللاذقية', null, false, 25000, 24, 48),
-  zone('طرطوس', null, false, 25000, 24, 48),
-  zone('إدلب', null, true, 30000, 48, 72),
-  zone('درعا', null, false, 24000, 24, 48),
-  zone('السويداء', null, false, 26000, 24, 48),
-  zone('القنيطرة', null, true, 28000, 48, 72),
-  zone('دير الزور', null, true, 40000, 72, 120),
-  zone('الرقة', null, true, 40000, 72, 120),
-  zone('الحسكة', null, true, 40000, 72, 120),
+  zone('دمشق', null, false, 150, 3, 8),
+  zone('ريف دمشق', null, true, 200, 6, 24),
+  zone('حلب', null, false, 250, 24, 48),
+  zone('حمص', null, false, 220, 24, 48),
+  zone('حماة', null, false, 220, 24, 48),
+  zone('اللاذقية', null, false, 250, 24, 48),
+  zone('طرطوس', null, false, 250, 24, 48),
+  zone('إدلب', null, true, 300, 48, 72),
+  zone('درعا', null, false, 240, 24, 48),
+  zone('السويداء', null, false, 260, 24, 48),
+  zone('القنيطرة', null, true, 280, 48, 72),
+  zone('دير الزور', null, true, 400, 72, 120),
+  zone('الرقة', null, true, 400, 72, 120),
+  zone('الحسكة', null, true, 400, 72, 120),
 ];
 
 function zone(

@@ -28,15 +28,18 @@ class UserProfileRepositoryImpl
     String? bio,
     String? imageUrl,
     String? location,
-  }) =>
-      guard(() => remote.updateProfile(
-            UpdateProfileRequest(
-              name: name,
-              bio: bio,
-              imageUrl: imageUrl,
-              location: location,
-            ),
-          ));
+    String? email,
+  }) => guard(
+    () => remote.updateProfile(
+      UpdateProfileRequest(
+        name: name,
+        bio: bio,
+        imageUrl: imageUrl,
+        location: location,
+        email: email,
+      ),
+    ),
+  );
 
   @override
   Future<Result<FollowResult>> follow(String userId) =>

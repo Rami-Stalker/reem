@@ -177,7 +177,7 @@ class _SignInCodeScreenState extends ConsumerState<SignInCodeScreen> {
                 Text(
                   l10n.codeSentToMasked(destination),
                   textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.titleMedium,
+                  style: context.dsText.cardTitle,
                 ),
                 if (_challenge?.matchCode != null) ...[
                   const SizedBox(height: DsSpacing.lg),
@@ -255,14 +255,14 @@ class _MatchCodeCard extends StatelessWidget {
           children: [
             Text(
               context.l10n.matchCodeLabel,
-              style: Theme.of(context).textTheme.labelMedium?.copyWith(
+              style: context.dsText.label.copyWith(
                 color: colors.onSurfaceVariant,
               ),
             ),
             const SizedBox(height: DsSpacing.xs),
             Text(
               code,
-              style: Theme.of(context).textTheme.displaySmall?.copyWith(
+              style: context.dsText.hero.copyWith(
                 fontWeight: FontWeight.bold,
                 color: colors.primary,
                 letterSpacing: 8,
@@ -272,7 +272,7 @@ class _MatchCodeCard extends StatelessWidget {
             Text(
               context.l10n.matchCodeHint,
               textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+              style: context.dsText.cardSubtitle.copyWith(
                 color: colors.onSurfaceVariant,
               ),
             ),

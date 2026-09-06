@@ -445,19 +445,23 @@ dbTest('a dispute cannot be decided twice', async () => {
 
 // ── Loyalty (Q43) ─────────────────────────────────────────────────────────
 
-test('Q43 earn rate: 10,000 SYP of purchases is one point', () => {
+// Q43's rates were quoted in the old lira — 10,000 ل.س a point, 10 points for
+// 5,000 ل.س. Syria dropped two zeros, so the same programme is 100 ل.س a point
+// and 50 ل.س for ten. What is pinned here is that the rate moved with the
+// currency and not, say, a hundredfold cheaper loyalty scheme.
+test('Q43 earn rate: 100 new SYP of purchases is one point', () => {
   const service = Object.create(LoyaltyService.prototype) as LoyaltyService;
-  assert.equal(service.pointsFor(syp('10000')), 1);
-  assert.equal(service.pointsFor(syp('95000')), 9);
-  assert.equal(service.pointsFor(syp('9999')), 0);
+  assert.equal(service.pointsFor(syp('100')), 1);
+  assert.equal(service.pointsFor(syp('950')), 9);
+  assert.equal(service.pointsFor(syp('99')), 0);
   // A USD sub-order earns nothing until the client sets a USD rate.
   assert.equal(service.pointsFor(Money.of('100', Currency.USD)), 0);
 });
 
-test('Q43 redemption rate: 10 points is 5,000 SYP of credit', () => {
+test('Q43 redemption rate: 10 points is 50 new SYP of credit', () => {
   const service = Object.create(LoyaltyService.prototype) as LoyaltyService;
-  assert.equal(service.creditFor(10).toJSON().amount, '5000.0000');
-  assert.equal(service.creditFor(25).toJSON().amount, '10000.0000');
+  assert.equal(service.creditFor(10).toJSON().amount, '50.0000');
+  assert.equal(service.creditFor(25).toJSON().amount, '100.0000');
   assert.equal(service.creditFor(9).toJSON().amount, '0.0000');
 });
 
@@ -469,6 +473,24 @@ dbTest('converting points moves the loyalty liability into her wallet', async ()
       data: { points: 30 },
     });
 
+    /**
+     * `LOYALTY_LIABILITY` is a platform-wide singleton, so the seeded shop's
+     * own Q43 accruals are already sitting in it. The assertion below therefore
+     * measures the *change* this test causes rather than the account's absolute
+     * balance — the earlier absolute check only passed on a database whose
+     * liability happened to be zero, and broke the first time the demo data was
+     * reseeded with delivered orders in it.
+     */
+    const liabilityBefore = await tx.ledgerAccount
+      .findFirst({
+        where: {
+          code: LedgerAccountCode.LOYALTY_LIABILITY,
+          ownerKey: 'platform',
+        },
+        select: { balance: true },
+      })
+      .then((row) => Number(row?.balance ?? 0));
+
     // The liability has to exist before it can be converted.
     await ledger.post(
       {
@@ -479,12 +501,12 @@ dbTest('converting points moves the loyalty liability into her wallet', async ()
           {
             account: { code: LedgerAccountCode.PLATFORM_PROMOTION_EXPENSE },
             direction: LedgerDirection.DEBIT,
-            amount: syp('15000'),
+            amount: syp('150'),
           },
           {
             account: { code: LedgerAccountCode.LOYALTY_LIABILITY },
             direction: LedgerDirection.CREDIT,
-            amount: syp('15000'),
+            amount: syp('150'),
           },
         ],
       },
@@ -495,18 +517,18 @@ dbTest('converting points moves the loyalty liability into her wallet', async ()
 
     assert.equal(result.points_converted, 20);
     assert.equal(result.points_remaining, 10);
-    assert.equal(result.credited.amount, '10000.0000');
+    assert.equal(result.credited.amount, '100.0000');
 
     const walletAccount = await tx.ledgerAccount.findFirstOrThrow({
       where: { code: LedgerAccountCode.CUSTOMER_WALLET, ownerKey: customer.id },
     });
-    assert.equal(walletAccount.balance.toString(), '10000');
+    assert.equal(walletAccount.balance.toString(), '100');
 
-    // 15,000 accrued minus 10,000 converted leaves 5,000 still promised.
+    // 150 accrued minus 100 converted leaves 50 still promised.
     const liability = await tx.ledgerAccount.findFirstOrThrow({
       where: { code: LedgerAccountCode.LOYALTY_LIABILITY, ownerKey: 'platform' },
     });
-    assert.equal(liability.balance.toString(), '5000');
+    assert.equal(Number(liability.balance) - liabilityBefore, 50);
   });
 });
 

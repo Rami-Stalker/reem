@@ -13,7 +13,6 @@ class SellerAiInsightsWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(sellerDashboardNotifierProvider);
-    final theme = Theme.of(context);
 
     if (state.isInitialLoading) {
       return Padding(
@@ -34,19 +33,19 @@ class SellerAiInsightsWidget extends ConsumerWidget {
           Row(
             children: [
               Container(
-                padding: const EdgeInsets.all(6),
+                padding: const EdgeInsets.all(DsSpacing.xs),
                 decoration: BoxDecoration(
                   gradient: context.primaryGradient,
                   borderRadius: DsRadius.borderSm,
                 ),
                 child: const Icon(Icons.auto_awesome_rounded,
-                    size: 14, color: Colors.white),
+                    size: 14, color: DsColors.onMedia),
               ),
               const SizedBox(width: DsSpacing.xs),
               Text(
                 context.l10n.sellerInsights,
-                style: theme.textTheme.titleMedium
-                    ?.copyWith(fontWeight: DsTypography.bold),
+                style: context.dsText.cardTitle
+                    .copyWith(fontWeight: DsTypography.bold),
               ),
             ],
           ),
@@ -54,7 +53,7 @@ class SellerAiInsightsWidget extends ConsumerWidget {
           ...insights.asMap().entries.map((e) {
             return Padding(
               padding: EdgeInsets.only(
-                  bottom: e.key < insights.length - 1 ? DsSpacing.sm : 0),
+                  bottom: e.key < insights.length - DsSpacing.xxxs ? DsSpacing.sm : DsSpacing.xxxs),
               child: _InsightCard(insight: e.value)
                   .animate(delay: (e.key * 80).ms)
                   .fadeIn(duration: 320.ms)
@@ -82,9 +81,8 @@ class _InsightCardState extends State<_InsightCard> {
   @override
   Widget build(BuildContext context) {
     final c = context.dsColors;
-    final theme = Theme.of(context);
     final insight = widget.insight;
-    final color = insight.kindColor;
+    final color = context.toneColor(insight.kindTone);
 
     return GestureDetector(
       onTap: () => setState(() => _expanded = !_expanded),
@@ -118,7 +116,7 @@ class _InsightCardState extends State<_InsightCard> {
                     children: [
                       Text(
                         insight.title,
-                        style: theme.textTheme.titleSmall?.copyWith(
+                        style: context.dsText.tileTitle.copyWith(
                           fontWeight: DsTypography.bold,
                           color: c.onSurface,
                         ),
@@ -132,13 +130,13 @@ class _InsightCardState extends State<_InsightCard> {
                           insight.body,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: theme.textTheme.bodySmall
-                              ?.copyWith(color: c.onSurfaceVariant),
+                          style: context.dsText.cardSubtitle
+                              .copyWith(color: c.onSurfaceVariant),
                         ),
                         secondChild: Text(
                           insight.body,
-                          style: theme.textTheme.bodySmall
-                              ?.copyWith(color: c.onSurfaceVariant),
+                          style: context.dsText.cardSubtitle
+                              .copyWith(color: c.onSurfaceVariant),
                         ),
                       ),
                     ],
@@ -163,11 +161,7 @@ class _InsightCardState extends State<_InsightCard> {
                   foregroundColor: color,
                   padding: const EdgeInsets.symmetric(
                       horizontal: DsSpacing.sm, vertical: DsSpacing.xxs),
-                  textStyle: const TextStyle(
-                    fontFamily: DsTypography.fontFamily,
-                    fontSize: DsTypography.labelSmall,
-                    fontWeight: DsTypography.bold,
-                  ),
+                  textStyle: context.dsText.caption.bold,
                 ),
               ),
             ],

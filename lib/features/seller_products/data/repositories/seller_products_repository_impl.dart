@@ -30,25 +30,66 @@ class SellerProductsRepositoryImpl
           ));
 
   @override
-  Future<Result<ManagedProduct>> getProduct(String id) =>
-      guard(() => remote.getProduct(id));
+  Future<Result<List<ManagedProduct>>> lowStock({int threshold = 5}) =>
+      guard(() => remote.lowStock(threshold: threshold));
+
+  @override
+  Future<Result<ManagedProduct>> getOffer(String offerId) =>
+      guard(() => remote.getOffer(offerId));
 
   @override
   Future<Result<ManagedProduct>> create(ProductDraft draft) =>
       guard(() => remote.create(draft));
 
+  /// Saves an edit across both halves of the catalogue.
+  ///
+  /// The shared entry is written first and only when it actually changed and
+  /// the seller is still the only one listing it — the server refuses the edit
+  /// once a competitor lists the same product, which is the point: one seller
+  /// must not be able to rewrite the page another sells from. Her own terms
+  /// are then always saved, and it is the offer the caller gets back, because
+  /// that is the row this screen renders.
   @override
-  Future<Result<ManagedProduct>> update(String id, ProductDraft draft) =>
-      guard(() => remote.update(id, draft));
+  Future<Result<ManagedProduct>> updateListing(
+    ManagedProduct listing,
+    ProductDraft draft,
+  ) =>
+      guard(() async {
+        if (!listing.hasCompetition && _canonicalChanged(listing, draft)) {
+          await remote.updateProduct(listing.productId, draft);
+        }
+        return remote.updateOffer(listing.id, draft);
+      });
 
   @override
-  Future<Result<void>> delete(String id) => guard(() => remote.delete(id));
+  Future<Result<void>> archive(String offerId) =>
+      guard(() => remote.archive(offerId));
 
   @override
-  Future<Result<ManagedProduct>> setStatus(String id, ProductStatus status) =>
-      guard(() => remote.setStatus(id, status));
+  Future<Result<ManagedProduct>> setStatus(
+    String offerId,
+    ProductStatus status,
+  ) =>
+      guard(() => remote.setStatus(offerId, status));
 
   @override
-  Future<Result<ManagedProduct>> adjustStock(String id, int delta) =>
-      guard(() => remote.adjustStock(id, delta));
+  Future<Result<ManagedProduct>> adjustStock(String offerId, int delta) =>
+      guard(() => remote.adjustStock(offerId, delta));
+
+  /// Whether anything on the shared entry differs from what is on screen.
+  /// Skipping the call when nothing moved keeps a price edit from touching the
+  /// catalogue at all — and from failing on a product she no longer may edit.
+  bool _canonicalChanged(ManagedProduct listing, ProductDraft draft) {
+    final galleryChanged =
+        listing.media.length != draft.media.length ||
+        [
+          for (var i = 0; i < listing.media.length; i++)
+            listing.media[i].url != draft.media[i].url,
+        ].contains(true);
+
+    return listing.title != draft.title ||
+        listing.description != draft.description ||
+        listing.category.id != draft.categoryId ||
+        galleryChanged;
+  }
 }

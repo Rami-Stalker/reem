@@ -5,6 +5,7 @@ import 'package:reem/features/checkout/data/datasources/checkout_remote_datasour
 import 'package:reem/features/checkout/data/models/checkout_models.dart';
 import 'package:reem/features/checkout/data/models/order_models.dart';
 import 'package:reem/features/checkout/domain/entities/checkout.dart';
+import 'package:reem/features/checkout/domain/entities/order.dart';
 
 final class CheckoutRemoteDataSourceImpl extends BaseRemoteDataSource
     implements CheckoutRemoteDataSource {
@@ -60,11 +61,12 @@ final class CheckoutRemoteDataSourceImpl extends BaseRemoteDataSource
     String? couponCode,
     String? deliveryInstructions,
     String? notes,
+    bool privacyMask = false,
   }) async {
     final json = await postJson(
       ApiEndpoints.ordersCheckout,
       body: {
-        if (addressId != null) 'address_id': addressId,
+        'address_id': ?addressId,
         if (saveAddress) 'save_address': true,
         if (shipping != null)
           'shipping': {
@@ -85,10 +87,36 @@ final class CheckoutRemoteDataSourceImpl extends BaseRemoteDataSource
           'coupon_code': couponCode,
         if (deliveryInstructions != null && deliveryInstructions.isNotEmpty)
           'delivery_instructions': deliveryInstructions,
+        // Q44 — «أخفي اسمي عن البائعة». The server has taken this since
+        // checkout was written and the app never sent it, so the privacy
+        // promise was unreachable from the phone.
+        if (privacyMask) 'privacy_mask': true,
         if (notes != null && notes.isNotEmpty) 'notes': notes,
       },
     );
     return PlacedOrderModel.fromJson(json);
+  }
+
+  @override
+  Future<OrderDetailModel> confirmCodOrder(String orderId, String code) async {
+    final json = await postJson(
+      ApiEndpoints.orderCodConfirmation(orderId),
+      body: {'code': code},
+    );
+    return OrderDetailModel.fromJson(json['order'] as Map<String, dynamic>);
+  }
+
+  @override
+  Future<CodAssuranceModel> resendCodConfirmation(String orderId) async {
+    final json = await postJson(
+      ApiEndpoints.orderCodConfirmationResend(orderId),
+    );
+    // The resend route answers with the challenge alone, so the shape it
+    // carries is folded back into the same block checkout returned.
+    return CodAssuranceModel.fromJson({
+      'required': 'order_confirmation',
+      ...json,
+    });
   }
 
   @override
@@ -97,11 +125,40 @@ final class CheckoutRemoteDataSourceImpl extends BaseRemoteDataSource
     return OrderPaymentModel.fromJson(json);
   }
 
+  /// Re-opens the gateway for a payment that has not gone through, and hands
+  /// back the link to send her to.
   @override
-  Future<List<OrderSummaryModel>> getOrders({int page = 1, int limit = 20}) async {
+  Future<PaymentAttempt> retryPayment(String paymentId) async {
+    final json = await postJson(ApiEndpoints.paymentRetry(paymentId));
+    return PaymentAttempt(
+      payment: OrderPaymentModel.fromJson(
+        (json['payment'] as Map).cast<String, dynamic>(),
+      ),
+      redirectUrl: json['redirect_url'] as String?,
+    );
+  }
+
+  @override
+  Future<OrderPaymentModel> submitPaymentReference(
+    String paymentId,
+    String reference,
+  ) async {
+    final json = await postJson(
+      ApiEndpoints.paymentReference(paymentId),
+      body: {'reference': reference},
+    );
+    return OrderPaymentModel.fromJson(json);
+  }
+
+  @override
+  Future<List<OrderSummaryModel>> getOrders({
+    int page = 1,
+    int limit = 20,
+    String? bucket,
+  }) async {
     final json = await getJson(
       ApiEndpoints.orders,
-      query: {'page': page, 'limit': limit},
+      query: {'page': page, 'limit': limit, if (bucket != null) 'bucket': bucket},
     );
     return (json['data'] as List? ?? [])
         .map((e) => OrderSummaryModel.fromJson(e as Map<String, dynamic>))

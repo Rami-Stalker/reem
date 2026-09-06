@@ -8,6 +8,7 @@ import 'package:reem/core/router/route_names.dart';
 import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/features/auth/presentation/providers/auth_provider.dart';
 import 'package:reem/features/auth/presentation/widgets/auth_prompt_sheet.dart';
+import 'package:reem/features/settings/presentation/widgets/help_sheet.dart';
 import 'package:reem/features/settings/presentation/widgets/settings_category_card.dart';
 import 'package:reem/features/settings/presentation/widgets/settings_profile_header.dart';
 
@@ -24,7 +25,7 @@ class SettingsScreen extends ConsumerWidget {
         context,
         ref,
         title: title,
-        message: 'Sign in to manage this securely across your devices.',
+        message: l10n.signInToManageSecurely,
         from: route,
       );
       if (ok && context.mounted) context.push(route);
@@ -39,7 +40,7 @@ class SettingsScreen extends ConsumerWidget {
         context,
         ref,
         title: title,
-        message: 'Sign in to manage this securely across your devices.',
+        message: l10n.signInToManageSecurely,
         from: path,
       );
       if (ok && context.mounted) context.pushNamed(name);
@@ -64,38 +65,38 @@ class SettingsScreen extends ConsumerWidget {
                 items: [
                   SettingsItemData(
                     icon: Icons.person_outline,
-                    title: 'Account settings',
+                    title: l10n.accountSettings,
                     onTap: () => protectedPushNamed(
                       RouteNames.accountSettings,
                       RoutePaths.accountSettings,
-                      'Sign in to manage your account',
+                      l10n.signInToInteract,
                     ),
                   ),
                   SettingsItemData(
                     icon: Icons.security_outlined,
-                    title: 'Security',
+                    title: l10n.securityTitle,
                     onTap: () => protectedPushNamed(
                       RouteNames.securitySettings,
                       RoutePaths.securitySettings,
-                      'Sign in to manage security',
+                      l10n.signInToInteract,
                     ),
                   ),
                   SettingsItemData(
                     icon: Icons.devices_outlined,
-                    title: 'Devices',
+                    title: l10n.devices,
                     onTap: () => protectedPushNamed(
                       RouteNames.deviceManagement,
                       RoutePaths.deviceManagement,
-                      'Sign in to manage devices',
+                      l10n.signInToInteract,
                     ),
                   ),
                   SettingsItemData(
                     icon: Icons.storefront_outlined,
-                    title: 'Seller verification',
+                    title: l10n.sellerVerification,
                     onTap: () => protectedPushNamed(
                       RouteNames.sellerVerification,
                       RoutePaths.sellerVerification,
-                      'Sign in to become a seller',
+                      l10n.signInToInteract,
                     ),
                   ),
                   SettingsItemData(
@@ -104,7 +105,7 @@ class SettingsScreen extends ConsumerWidget {
                     onTap: () => protectedPushNamed(
                       RouteNames.editProfile,
                       RoutePaths.editProfile,
-                      'Sign in to edit your profile',
+                      l10n.signInToInteract,
                     ),
                   ),
                   SettingsItemData(
@@ -118,7 +119,7 @@ class SettingsScreen extends ConsumerWidget {
                     onTap: () => protectedPushNamed(
                       RouteNames.orders,
                       RoutePaths.orders,
-                      'Sign in to view orders',
+                      l10n.signInToInteract,
                     ),
                   ),
                 ],
@@ -140,7 +141,8 @@ class SettingsScreen extends ConsumerWidget {
                   SettingsItemData(
                     icon: Icons.notifications_none,
                     title: l10n.notifications,
-                    onTap: () => context.pushNamed(RouteNames.notifications),
+                    onTap: () =>
+                        context.pushNamed(RouteNames.notificationPreferences),
                   ),
                 ],
               ),
@@ -163,7 +165,7 @@ class SettingsScreen extends ConsumerWidget {
                     title: l10n.addresses,
                     onTap: () => protectedPush(
                       RoutePaths.addresses,
-                      'Sign in to manage addresses',
+                      l10n.signInToInteract,
                     ),
                   ),
                   SettingsItemData(
@@ -171,7 +173,7 @@ class SettingsScreen extends ConsumerWidget {
                     title: l10n.paymentMethods,
                     onTap: () => protectedPush(
                       RoutePaths.paymentMethods,
-                      'Sign in to manage payments',
+                      l10n.signInToInteract,
                     ),
                   ),
                   SettingsItemData(
@@ -190,7 +192,7 @@ class SettingsScreen extends ConsumerWidget {
                   SettingsItemData(
                     icon: Icons.help_outline,
                     title: l10n.helpCenter,
-                    onTap: () {},
+                    onTap: () => showHelpSheet(context),
                   ),
                   SettingsItemData(
                     icon: Icons.logout,

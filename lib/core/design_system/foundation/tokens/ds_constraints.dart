@@ -1,21 +1,26 @@
+import 'package:reem/core/design_system/foundation/tokens/ds_sizes.dart';
+
 /// Layout constraint constants for content width and touch targets.
+///
+/// Kept as a named vocabulary for layout code; every value forwards to
+/// [DsSizes] so there is exactly one number behind each concept.
 abstract final class DsConstraints {
   /// Minimum touch target (WCAG / Material).
-  static const double minTouchTarget = 48;
+  static const double minTouchTarget = DsSizes.minTouchTarget;
 
-  static const double minButtonHeight = 48;
-  static const double buttonHeightMd = 52;
-  static const double buttonHeightLg = 62;
+  static const double minButtonHeight = DsSizes.minTouchTarget;
+  static const double buttonHeightMd = DsSizes.controlLg;
+  static const double buttonHeightLg = DsSizes.controlXl;
 
-  static const double maxContentWidth = 600;
-  static const double maxFormWidth = 480;
-  static const double maxDialogWidth = 400;
+  static const double maxContentWidth = DsSizes.maxContentWidth;
+  static const double maxFormWidth = DsSizes.maxFormWidth;
+  static const double maxDialogWidth = DsSizes.maxDialogWidth;
 
-  static const double appBarHeight = 56;
-  static const double bottomBarHeight = 72;
-  static const double fabSize = 56;
+  static const double appBarHeight = DsSizes.appBarHeight;
+  static const double bottomBarHeight = DsSizes.bottomBarHeight;
+  static const double fabSize = DsSizes.fabSize;
 
-  static const double iconSm = 20;
-  static const double iconMd = 24;
-  static const double iconLg = 32;
+  static const double iconSm = DsSizes.iconSm;
+  static const double iconMd = DsSizes.iconMd;
+  static const double iconLg = DsSizes.iconLg;
 }

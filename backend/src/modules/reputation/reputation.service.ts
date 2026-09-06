@@ -14,7 +14,7 @@ import {
   UserRole,
 } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
-import { serializeUser } from '../../common/serializers';
+import { serializePublicUser } from '../../common/serializers';
 import {
   AwardSellerBadgeDto,
   CreateReviewDto,
@@ -45,12 +45,33 @@ const reviewUserSelect = {
 export class ReputationService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async productReviews(productId: string) {
+  /**
+   * What everyone can read about this product — plus, for the woman asking,
+   * her own review while it is still in moderation.
+   *
+   * Reviews are published only once a moderator approves them, which is right
+   * for everybody else's screen and wrong for hers: she wrote a review, the
+   * app said «تم إرسال تقييمك», the list reloaded without it and she
+   * reasonably concluded it had been lost. Her own row now comes back with its
+   * `status`, so the client can show it marked as under review. This is the
+   * same rule `myReviews` already follows.
+   */
+  async productReviews(productId: string, viewerId?: string) {
     const product = await this.prisma.product.findUnique({ where: { id: productId } });
     if (!product) throw new NotFoundException('Product not found');
 
     const reviews = await this.prisma.productReview.findMany({
-      where: { productId, status: ReviewStatus.APPROVED },
+      where: {
+        productId,
+        OR: [
+          { status: ReviewStatus.APPROVED },
+          // Never a rejected one: telling her it was refused belongs in a
+          // notification with a reason, not in the public list.
+          ...(viewerId
+            ? [{ userId: viewerId, status: ReviewStatus.PENDING }]
+            : []),
+        ],
+      },
       include: { user: { select: reviewUserSelect } },
       orderBy: { createdAt: 'desc' },
       take: 100,
@@ -67,6 +88,221 @@ export class ReputationService {
       take: 100,
     });
     return reviews.map((review) => this.serializeSellerReview(review));
+  }
+
+  /**
+   * Every review of her goods and of her shop, in one list.
+   *
+   * A seller does not think in terms of two tables — she thinks about what
+   * people are saying — so product reviews and shop reviews are merged and
+   * sorted together, each tagged with which it is. `unanswered` is the filter
+   * she actually works: an unanswered one-star review is the thing worth her
+   * afternoon.
+   *
+   * Only APPROVED reviews appear. A review still in moderation is not public,
+   * and answering one that may never be published would be answering nobody.
+   */
+  async reviewsForSeller(sellerId: string, filter: 'all' | 'unanswered' = 'all') {
+    await this.ensureSeller(sellerId);
+
+    const unanswered = filter === 'unanswered' ? { sellerReply: null } : {};
+
+    const [productReviews, sellerReviews] = await Promise.all([
+      this.prisma.productReview.findMany({
+        where: {
+          status: ReviewStatus.APPROVED,
+          ...unanswered,
+          // Hers is any product she lists — the catalogue entry is shared, so
+          // ownership runs through the offer, not the product.
+          product: { offers: { some: { sellerId } } },
+        },
+        include: {
+          user: { select: reviewUserSelect },
+          product: { select: { id: true, title: true, media: { take: 1, orderBy: { sortOrder: 'asc' } } } },
+        },
+        orderBy: { createdAt: 'desc' },
+        take: 100,
+      }),
+      this.prisma.sellerReview.findMany({
+        where: { sellerId, status: ReviewStatus.APPROVED, ...unanswered },
+        include: { user: { select: reviewUserSelect } },
+        orderBy: { createdAt: 'desc' },
+        take: 100,
+      }),
+    ]);
+
+    const merged = [
+      ...productReviews.map((review) => ({
+        ...this.serializeProductReview(review),
+        target_type: ReviewTargetType.PRODUCT,
+        product: {
+          id: review.product.id,
+          title: review.product.title,
+          image: review.product.media[0]?.url ?? null,
+        },
+      })),
+      ...sellerReviews.map((review) => ({
+        ...this.serializeSellerReview(review),
+        target_type: ReviewTargetType.SELLER,
+        product: null,
+      })),
+    ];
+
+    merged.sort((a, b) => b.created_at.localeCompare(a.created_at));
+
+    return {
+      data: merged,
+      unanswered: merged.filter((review) => !review.seller_reply).length,
+    };
+  }
+
+  /**
+   * Everything *she* has written, product reviews and shop reviews together.
+   *
+   * The profile already showed her a count and an average — the aggregate was
+   * computed and displayed — while the row that offered to open them was a
+   * "coming soon" sheet, because nothing could list them.
+   *
+   * Unlike every other read here this one is **not** filtered to APPROVED. A
+   * review of her own still in moderation is hers to see; hiding it would look
+   * like the app had lost it, and she would write it again.
+   */
+  async reviewsByAuthor(userId: string) {
+    const [productReviews, sellerReviews] = await Promise.all([
+      this.prisma.productReview.findMany({
+        where: { userId },
+        include: {
+          user: { select: reviewUserSelect },
+          product: {
+            select: {
+              id: true,
+              title: true,
+              media: { take: 1, orderBy: { sortOrder: 'asc' } },
+            },
+          },
+        },
+        orderBy: { createdAt: 'desc' },
+        take: 100,
+      }),
+      this.prisma.sellerReview.findMany({
+        where: { userId },
+        include: {
+          user: { select: reviewUserSelect },
+          seller: { select: { id: true, name: true, imageUrl: true } },
+        },
+        orderBy: { createdAt: 'desc' },
+        take: 100,
+      }),
+    ]);
+
+    const merged = [
+      ...productReviews.map((review) => ({
+        ...this.serializeProductReview(review),
+        target_type: ReviewTargetType.PRODUCT,
+        // What she reviewed, named — a list of bare star ratings tells her
+        // nothing about which one she is looking at.
+        subject: {
+          id: review.product.id,
+          title: review.product.title,
+          image: review.product.media[0]?.url ?? null,
+        },
+      })),
+      ...sellerReviews.map((review) => ({
+        ...this.serializeSellerReview(review),
+        target_type: ReviewTargetType.SELLER,
+        subject: {
+          id: review.seller.id,
+          title: review.seller.name,
+          image: review.seller.imageUrl ?? null,
+        },
+      })),
+    ];
+
+    merged.sort((a, b) => b.created_at.localeCompare(a.created_at));
+
+    const count = merged.length;
+    const average =
+      count === 0
+        ? 0
+        : Number(
+            (
+              merged.reduce((sum, review) => sum + review.rating, 0) / count
+            ).toFixed(2),
+          );
+
+    return { data: merged, count, average };
+  }
+
+  /**
+   * The seller answers a review, publicly.
+   *
+   * Ownership is checked against the thing being reviewed, not against the
+   * review row: for a product review that means she must actually list the
+   * product. Writing an empty reply removes it, which is the only way back for
+   * a sentence written in anger.
+   */
+  async replyToReview(
+    sellerId: string,
+    reviewId: string,
+    targetType: ReviewTargetType,
+    reply: string,
+  ) {
+    await this.ensureSeller(sellerId);
+    const trimmed = reply.trim();
+    const data = {
+      sellerReply: trimmed.length === 0 ? null : trimmed,
+      sellerRepliedAt: trimmed.length === 0 ? null : new Date(),
+    };
+
+    if (targetType === ReviewTargetType.SELLER) {
+      const review = await this.prisma.sellerReview.findUnique({
+        where: { id: reviewId },
+        select: { sellerId: true, status: true },
+      });
+      if (!review || review.sellerId !== sellerId) {
+        throw new NotFoundException('Review not found');
+      }
+      this.assertAnswerable(review.status);
+
+      const updated = await this.prisma.sellerReview.update({
+        where: { id: reviewId },
+        data,
+        include: { user: { select: reviewUserSelect } },
+      });
+      return this.serializeSellerReview(updated);
+    }
+
+    const review = await this.prisma.productReview.findUnique({
+      where: { id: reviewId },
+      select: {
+        status: true,
+        product: { select: { offers: { where: { sellerId }, take: 1 } } },
+      },
+    });
+    if (!review || review.product.offers.length === 0) {
+      throw new NotFoundException('Review not found');
+    }
+    this.assertAnswerable(review.status);
+
+    const updated = await this.prisma.productReview.update({
+      where: { id: reviewId },
+      data,
+      include: { user: { select: reviewUserSelect } },
+    });
+    return this.serializeProductReview(updated);
+  }
+
+  /**
+   * A review nobody can read is a review nobody can be answered in front of.
+   * Refusing here rather than silently accepting keeps a seller from writing a
+   * careful reply to something that is never published.
+   */
+  private assertAnswerable(status: ReviewStatus) {
+    if (status !== ReviewStatus.APPROVED) {
+      throw new BadRequestException(
+        'This review is not published, so there is nobody to answer yet',
+      );
+    }
   }
 
   async createProductReview(userId: string, productId: string, dto: CreateReviewDto) {
@@ -148,7 +384,7 @@ export class ReputationService {
     ]);
 
     return {
-      seller: serializeUser(seller),
+      seller: serializePublicUser(seller),
       reputation: this.serializeReputation(reputation),
       badges: badges.map((badge) => this.serializeBadge(badge)),
       trusted_verification: verification
@@ -318,7 +554,7 @@ export class ReputationService {
       })),
       seller_reviews: sellers.map((review) => ({
         ...this.serializeSellerReview(review),
-        seller: serializeUser(review.seller),
+        seller: serializePublicUser(review.seller),
       })),
     };
   }
@@ -382,9 +618,31 @@ export class ReputationService {
     const reviewScore = (averageRating / 5) * 70;
     const fulfillmentScore =
       orders === 0 ? 80 : Math.max(0, ((deliveredOrders - failedOrders) / orders) * 100);
-    const responseScore = 90;
+
+    // Response time is measured, not assumed.
+    //
+    // This used to be `const responseScore = 90` — a literal that every seller
+    // on the platform carried identically, whether she answered in ten minutes
+    // or never. Seller Intelligence measures it from the actual gap between a
+    // buyer's first message and the seller's first reply, and writes it onto
+    // this same row.
+    //
+    // So the existing value is read back rather than overwritten. `null` is
+    // the honest answer for a shop nobody has messaged yet, and the composite
+    // below renormalises without it rather than substituting a number.
+    const existing = await this.prisma.sellerReputation.findUnique({
+      where: { sellerId },
+      select: { responseScore: true },
+    });
+    const responseScore = existing?.responseScore ?? null;
+
     const performanceScore = this.round(
-      reviewScore + fulfillmentScore * 0.2 + responseScore * 0.1,
+      responseScore === null
+        ? // Without a measured response score the remaining components carry
+          // the whole weight, scaled up so a shop is not silently docked ten
+          // points for a conversation that never happened.
+          (reviewScore + fulfillmentScore * 0.2) / 0.9
+        : reviewScore + fulfillmentScore * 0.2 + responseScore * 0.1,
     );
     const customerSatisfactionScore = this.round(
       averageRating === 0 ? 0 : averageRating * 20,
@@ -404,7 +662,9 @@ export class ReputationService {
         verifiedReviewsCount: verifiedReviews,
         performanceScore,
         customerSatisfactionScore,
-        responseScore,
+        // Only written when it was measured. Writing a null through as a zero
+        // would put a fabricated number back on the row by another route.
+        ...(responseScore === null ? {} : { responseScore }),
         fulfillmentScore: this.round(fulfillmentScore),
         topSellerTier,
         trustedStatus,
@@ -561,13 +821,15 @@ export class ReputationService {
       id: review.id,
       product_id: review.productId,
       order_id: review.orderId,
-      user: serializeUser(review.user),
+      user: serializePublicUser(review.user),
       rating: review.rating,
       title: review.title,
       body: review.body,
       verified_purchase: review.verifiedPurchase,
       status: review.status.toLowerCase(),
       helpful_count: review.helpfulCount,
+      seller_reply: review.sellerReply,
+      seller_replied_at: review.sellerRepliedAt?.toISOString() ?? null,
       created_at: review.createdAt.toISOString(),
       updated_at: review.updatedAt.toISOString(),
     };
@@ -582,12 +844,14 @@ export class ReputationService {
       id: review.id,
       seller_id: review.sellerId,
       order_id: review.orderId,
-      user: serializeUser(review.user),
+      user: serializePublicUser(review.user),
       rating: review.rating,
       title: review.title,
       body: review.body,
       verified_purchase: review.verifiedPurchase,
       status: review.status.toLowerCase(),
+      seller_reply: review.sellerReply,
+      seller_replied_at: review.sellerRepliedAt?.toISOString() ?? null,
       created_at: review.createdAt.toISOString(),
       updated_at: review.updatedAt.toISOString(),
     };

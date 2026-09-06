@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:reem/core/media/authorized_media_image.dart';
+import 'package:reem/core/media/media_lightbox.dart';
 import 'package:reem/core/media/media_variants.dart';
 
 /// A photograph in a conversation.
@@ -90,20 +91,6 @@ class _FullScreenPhoto extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.black,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        foregroundColor: Colors.white,
-        elevation: 0,
-      ),
-      extendBodyBehindAppBar: true,
-      body: Center(
-        child: InteractiveViewer(
-          maxScale: 4,
-          child: AuthorizedMediaImage(url: url, fit: BoxFit.contain),
-        ),
-      ),
-    );
+    return MediaLightbox(url: url);
   }
 }

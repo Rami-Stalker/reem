@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
+import 'package:reem/core/media/authorized_media_image.dart';
+import 'package:reem/core/media/media_variants.dart';
 import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/features/create/presentation/providers/create_provider.dart';
 import 'package:reem/features/create/presentation/providers/create_state.dart';
@@ -43,7 +46,7 @@ class _AddPostScreenState extends ConsumerState<AddPostScreen> {
         _captionController.clear();
         DsSnackbar.show(
           context,
-          message: next.successMessage!,
+          message: next.successMessage!.resolve(context.l10n),
           type: DsSnackbarType.success,
         );
       }
@@ -65,7 +68,7 @@ class _AddPostScreenState extends ConsumerState<AddPostScreen> {
     return ReemScrollPage(
       onRefresh: () => ref.read(myProductsNotifierProvider.notifier).refresh(),
       slivers: [
-        const PremiumAppBar(title: 'Create Post', showBack: true),
+        PremiumAppBar(title: context.l10n.createPostTitle, showBack: true),
         SliverPadding(
           padding: const EdgeInsets.fromLTRB(
             DsSpacing.lg,
@@ -75,9 +78,9 @@ class _AddPostScreenState extends ConsumerState<AddPostScreen> {
           ),
           sliver: SliverList.list(
             children: [
-              const CreateHeader(
-                title: 'Create Post',
-                subtitle: 'Publish product-led content for your customers',
+              CreateHeader(
+                title: context.l10n.createPostTitle,
+                subtitle: context.l10n.createPostBody,
               ),
               const SizedBox(height: DsSpacing.xl),
               if (productsState.isLoading && productsState.products.isEmpty)
@@ -104,7 +107,7 @@ class _AddPostScreenState extends ConsumerState<AddPostScreen> {
               ),
               const SizedBox(height: DsSpacing.xl),
               PrimaryButton(
-                label: 'Publish Post',
+                label: context.l10n.createPostAction,
                 icon: Icons.send_rounded,
                 isLoading: createState.isLoading,
                 onPressed: createState.isLoading || products.isEmpty
@@ -136,7 +139,7 @@ class _AddPostScreenState extends ConsumerState<AddPostScreen> {
     if (productId == null || !ownsSelectedProduct) {
       DsSnackbar.show(
         context,
-        message: 'Choose an active product before publishing.',
+        message: context.l10n.createPostNeedsProduct,
         type: DsSnackbarType.error,
       );
       return;
@@ -144,7 +147,7 @@ class _AddPostScreenState extends ConsumerState<AddPostScreen> {
     if (caption.isEmpty) {
       DsSnackbar.show(
         context,
-        message: 'Write a caption before publishing.',
+        message: context.l10n.createPostNeedsCaption,
         type: DsSnackbarType.error,
       );
       return;
@@ -172,9 +175,9 @@ class _ProductPickerCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return SurfaceCard(
       child: DropdownButtonFormField<String>(
-        value: selectedId,
-        decoration: const InputDecoration(
-          labelText: 'Featured product',
+        initialValue: selectedId,
+        decoration: InputDecoration(
+          labelText: context.l10n.createPostFeatured,
           prefixIcon: Icon(Icons.inventory_2_outlined),
         ),
         items: [
@@ -215,13 +218,9 @@ class _SelectedProductCard extends StatelessWidget {
                       color: colors.surfaceVariant,
                       child: Icon(Icons.image_outlined, color: colors.primary),
                     )
-                  : Image.network(
-                      product.coverImage!,
-                      fit: BoxFit.cover,
-                      errorBuilder: (_, __, ___) => ColoredBox(
-                        color: colors.surfaceVariant,
-                        child: Icon(Icons.broken_image, color: colors.primary),
-                      ),
+                  : AuthorizedMediaImage(
+                      url: product.coverImage!,
+                      variantWidth: MediaVariants.thumbnail,
                     ),
             ),
           ),
@@ -234,12 +233,12 @@ class _SelectedProductCard extends StatelessWidget {
                   product.title,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(fontWeight: DsTypography.bold),
+                  style: context.dsText.body.bold,
                 ),
                 const SizedBox(height: DsSpacing.xxs),
                 Text(
-                  '${product.price?.format() ?? ''} · ${product.stock} في المخزون',
-                  style: TextStyle(color: colors.onSurfaceVariant),
+                  '${product.price.format()} · ${product.stock} في المخزون',
+                  style: context.dsText.body.tint(colors.onSurfaceVariant),
                 ),
               ],
             ),
@@ -260,14 +259,14 @@ class _NoProductsCard extends StatelessWidget {
     return SurfaceCard(
       child: Column(
         children: [
-          const DsEmptyState(
+          DsEmptyState(
             icon: Icons.inventory_2_outlined,
-            title: 'No active products',
-            message: 'Activate a product before creating a seller post.',
+            title: context.l10n.createPostNoProducts,
+            message: context.l10n.createPostNoProductsBody,
           ),
           const SizedBox(height: DsSpacing.md),
           SecondaryButton(
-            label: 'Create product',
+            label: context.l10n.createPostAddProduct,
             icon: Icons.add_business_rounded,
             onPressed: onCreateProduct,
           ),
@@ -282,8 +281,8 @@ class _LoadingProductsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const SurfaceCard(
-      child: DsLoadingIndicator(label: 'Loading products'),
+    return SurfaceCard(
+      child: DsLoadingIndicator(label: context.l10n.createPostLoadingProducts),
     );
   }
 }

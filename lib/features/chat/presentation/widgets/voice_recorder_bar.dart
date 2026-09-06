@@ -157,7 +157,7 @@ class _VoiceRecorderBarState extends ConsumerState<VoiceRecorderBar> {
           const SizedBox(width: DsSpacing.xs),
           Text(
             _format(_elapsed),
-            style: Theme.of(context).textTheme.titleSmall?.copyWith(
+            style: context.dsText.tileTitle.copyWith(
               fontWeight: DsTypography.bold,
               fontFeatures: const [FontFeature.tabularFigures()],
             ),

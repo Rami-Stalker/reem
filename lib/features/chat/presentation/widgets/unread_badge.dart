@@ -1,57 +1,43 @@
-  import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
-class UnreadBadge
-    extends StatelessWidget {
+import 'package:reem/core/design_system/design_system.dart';
+
+/// The count of unread messages on one conversation.
+///
+/// Caps at 99+: the difference between 140 and 200 unread is not a difference
+/// she acts on, and an uncapped count stretches the row.
+class UnreadBadge extends StatelessWidget {
+  const UnreadBadge({super.key, required this.count});
 
   final int count;
 
-  const UnreadBadge({
-    super.key,
-    required this.count,
-  });
-
   @override
   Widget build(BuildContext context) {
+    if (count <= 0) return const SizedBox.shrink();
+    final c = context.dsColors;
+    final label = count > 99 ? '99+' : '$count';
+
     return Container(
-
-      padding:
-          const EdgeInsets.symmetric(
-        horizontal: 10,
-        vertical: 6,
+      constraints: const BoxConstraints(minWidth: DsSizes.iconMd),
+      padding: DsSpacing.badgePadding,
+      decoration: BoxDecoration(
+        gradient: context.primaryGradient,
+        borderRadius: DsRadius.borderFull,
+        boxShadow: [
+          BoxShadow(
+            color: c.primary.withValues(alpha: 0.28),
+            blurRadius: 10,
+            offset: const Offset(0, 3),
+          ),
+        ],
       ),
-
-      decoration:
-          const BoxDecoration(
-
-        gradient:
-            LinearGradient(
-
-          colors: [
-
-            Color(0xffFF9EB5),
-            Color(0xffFF5C8A),
-          ],
-        ),
-
-        borderRadius:
-            BorderRadius.all(
-          Radius.circular(30),
-        ),
-      ),
-
       child: Text(
-
-        '$count',
-
-        style: const TextStyle(
-
-          color: Colors.white,
-
-          fontWeight:
-              FontWeight.bold,
-
-          fontSize: 12,
-        ),
+        label,
+        textAlign: TextAlign.center,
+        style: context.dsText.caption.copyWith(
+              color: c.onPrimary,
+              fontWeight: DsTypography.bold,
+            ),
       ),
     );
   }

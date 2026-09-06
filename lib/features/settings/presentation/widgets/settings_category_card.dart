@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:reem/core/design_system/foundation/theme/extensions/typography_extension.dart';
+import 'package:reem/core/design_system/foundation/tokens/ds_spacing.dart';
 import 'package:reem/features/settings/presentation/widgets/settings_tile.dart';
 
 class SettingsItemData {
@@ -30,17 +32,17 @@ class SettingsCategoryCard extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsetsDirectional.only(bottom: 18, start: 8),
+          padding: const EdgeInsetsDirectional.only(bottom: DsSpacing.lg, start: DsSpacing.xs),
           child: Text(
             title,
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+            style: context.dsText.screenTitle.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
           ),
         ),
         ...items.map(
           (item) => Padding(
-            padding: const EdgeInsets.only(bottom: 16),
+            padding: const EdgeInsets.only(bottom: DsSpacing.md),
             child: LuxurySettingsTile(
               icon: item.icon,
               title: item.title,

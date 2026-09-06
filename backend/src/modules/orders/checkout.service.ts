@@ -7,6 +7,8 @@ import {
   forwardRef,
 } from '@nestjs/common';
 import {
+  CodAssurance,
+  CodAssuranceState,
   Currency,
   FulfilmentMode,
   OfferStatus,
@@ -19,18 +21,25 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 import { PrismaService } from '../../prisma/prisma.service';
 import { serializeOrderDetail } from '../../common/serializers';
 import { AppEvent } from '../../common/events/app-events';
-import { Money } from '../../common/money';
+import { Money, SYP_ROUNDING } from '../../common/money';
 import { CartService } from '../cart/cart.service';
-import { CartItemRecord, unitPriceOf } from '../cart/cart.serializer';
+import { PurchasableLine, unitPriceOf } from '../cart/cart.serializer';
+import { DropsService } from '../market/drops/drops.service';
 import { DeliveryService } from '../delivery/delivery.service';
 import { ShipmentsService } from '../delivery/shipments.service';
 import { PaymentsService } from '../payments/payments.service';
+import { pointsForSpend } from '../finance/loyalty.service';
 import { CouponsService } from '../rewards/coupons.service';
 import { MembershipService } from '../rewards/membership.service';
 import { PointsService } from '../rewards/points.service';
 import { ReferralsService } from '../rewards/referrals.service';
 import { CommissionQuoteService } from '../commissions/commission-quote.service';
 import { ExchangeRateService } from '../pricing/exchange-rate.service';
+import {
+  CodAssessment,
+  CodTrustService,
+  customerMessageFor,
+} from '../cod-trust/cod-trust.service';
 import { OrdersRepository } from './orders.repository';
 import { CreateOrderDto, ShippingDetailsDto } from './dto/create-order.dto';
 import { RETURN_WINDOW_DAYS } from '../returns/return-policy';
@@ -38,7 +47,7 @@ import { RETURN_WINDOW_DAYS } from '../returns/return-policy';
 interface SellerGroup {
   sellerId: string;
   sellerName: string;
-  lines: { item: CartItemRecord; unitPrice: Money }[];
+  lines: { item: PurchasableLine; unitPrice: Money }[];
   itemsSubtotal: Money;
   categorySlugs: string[];
   sellerTier: string;
@@ -76,15 +85,45 @@ export class CheckoutService {
     private readonly rates: ExchangeRateService,
     private readonly events: EventEmitter2,
     private readonly ordersRepo: OrdersRepository,
+    private readonly codTrust: CodTrustService,
+    private readonly drops: DropsService,
   ) {}
 
+  /**
+   * The cart's door into checkout.
+   *
+   * Kept exactly as it was, and now one of two: Reem Rooms buys through
+   * [checkoutLines] with a plan's own lines, never by filling the cart first.
+   * Two doors, one till — see the section comment in `schema.prisma`.
+   */
   async checkout(userId: string, dto: CreateOrderDto) {
     const items = await this.cart.rawItems(userId);
     if (items.length === 0) {
       throw new BadRequestException('Your cart is empty');
     }
+    return this.checkoutLines(userId, dto, items, { clearCart: true });
+  }
 
-    const shipping = await this.resolveShipping(userId, dto);
+  /**
+   * Place an order from lines the caller assembled.
+   *
+   * `clearCart` is false for a plan, and that is the whole reason this
+   * parameter exists: emptying a woman's cart because she bought something out
+   * of a room would be the room reaching into a place it has nothing to do
+   * with. It stays true for the cart path, where clearing is the correct
+   * behaviour and the behaviour that has always happened.
+   */
+  async checkoutLines(
+    userId: string,
+    dto: CreateOrderDto,
+    items: PurchasableLine[],
+    options: { clearCart?: boolean } = {},
+  ) {
+    if (items.length === 0) {
+      throw new BadRequestException('There is nothing to buy');
+    }
+
+    const { shipping, fromAddressBook } = await this.resolveShipping(userId, dto);
     const orderCurrency = dto.currency ?? (await this.preferredCurrency(userId));
 
     // 1. Freeze the rate BEFORE any price is read, so every figure on this
@@ -120,16 +159,28 @@ export class CheckoutService {
     );
 
     const roundingPolicy =
-      orderCurrency === Currency.SYP
-        ? RoundingPolicy.NEAREST_1000
-        : RoundingPolicy.NONE;
+      orderCurrency === Currency.SYP ? SYP_ROUNDING : RoundingPolicy.NONE;
 
     const grandTotal = itemsSubtotal
       .minus(discountTotal)
       .plus(shippingTotal)
       .round(roundingPolicy);
 
-    // 5. Split the order-wide charges across sellers, weighted by their share
+    // 5. Cash going out on the road is assessed before anything is written.
+    //    A decision taken after the sellers have been told to prepare a parcel
+    //    is not a decision, it is a report — and the top of the ladder has to
+    //    be able to stop this basket from becoming a cash order at all.
+    const codAssessment = await this.assessCashRisk({
+      userId,
+      dto,
+      shipping,
+      fromAddressBook,
+      groups,
+      grandTotal,
+      usdRate: frozen.rate,
+    });
+
+    // 6. Split the order-wide charges across sellers, weighted by their share
     //    of the basket. Largest-remainder allocation guarantees the parts sum
     //    back to the whole — no stray unit left in either direction.
     const weights = groups.map((group) => group.itemsSubtotal.toPrisma());
@@ -265,11 +316,28 @@ export class CheckoutService {
         void sellerOrder;
       }
 
-      await tx.cartItem.deleteMany({ where: { userId } });
+      // Written inside the same transaction as the order it gated: an order
+      // that exists without the reasoning that let it exist is a gap somebody
+      // would otherwise have to fill in from memory months later.
+      if (codAssessment) {
+        await this.codTrust.record(tx, {
+          orderId: created.id,
+          userId,
+          assessment: codAssessment,
+          state:
+            codAssessment.decision.assurance === CodAssurance.ORDER_CONFIRMATION
+              ? CodAssuranceState.PENDING
+              : CodAssuranceState.NOT_REQUIRED,
+        });
+      }
+
+      if (options.clearCart) {
+        await tx.cartItem.deleteMany({ where: { userId } });
+      }
       return created;
     });
 
-    // 6. Payment for the parent — the customer pays once (provider call stays
+    // 7. Payment for the parent — the customer pays once (provider call stays
     //    outside the transaction).
     const { redirectUrl, requiresOnlineConfirmation } =
       await this.payments.initiateForOrder(
@@ -280,9 +348,20 @@ export class CheckoutService {
         userId,
       );
 
-    if (!requiresOnlineConfirmation) {
+    // A cash order awaiting its code is held exactly where an unpaid online
+    // order is held: no sellers told, no stock committed to a courier, no
+    // parcel opened. The two reach `CONFIRMED` through different proofs and
+    // the same door.
+    const heldForConfirmation =
+      codAssessment?.decision.assurance === CodAssurance.ORDER_CONFIRMATION;
+
+    if (!requiresOnlineConfirmation && !heldForConfirmation) {
       await this.confirm(order.id, userId);
     }
+
+    const codAssurance = heldForConfirmation
+      ? await this.beginCodConfirmation(order, codAssessment!, userId)
+      : null;
 
     if (coupon) {
       await this.coupons.recordRedemption(
@@ -292,22 +371,39 @@ export class CheckoutService {
         discountTotal,
       );
     }
+    // Q43's rate — 10,000 ل.س to the point — not the order total taken as a
+    // point count. The raw figure minted six-digit balances against rewards
+    // priced in the hundreds.
     await this.points.earn(
       userId,
-      Math.floor(grandTotal.toUnsafeNumber()),
+      pointsForSpend(grandTotal),
       'Order purchase',
       order.id,
     );
     await this.membership.recordPurchase(userId, order.id, grandTotal);
     await this.referrals.qualifyReferralForOrder(userId, order.id);
 
+    // A drop's conversion is a purchase, by somebody it invited, of something
+    // it carries. Recorded here rather than inferred later, because the only
+    // moment the three facts are together is this one. Failure is swallowed:
+    // a measurement must never cost a woman her order.
+    try {
+      await this.drops.markConverted(
+        userId,
+        items.map((item) => item.offer.productId),
+      );
+    } catch (error) {
+      this.logger.warn(`Drop conversion not recorded: ${String(error)}`);
+    }
+
     this.events.emit(AppEvent.OrderStatusChanged, {
       userId,
       orderId: order.id,
       orderNumber: order.number,
-      status: requiresOnlineConfirmation
-        ? OrderStatus.PENDING_PAYMENT
-        : OrderStatus.CONFIRMED,
+      status:
+        requiresOnlineConfirmation || heldForConfirmation
+          ? OrderStatus.PENDING_PAYMENT
+          : OrderStatus.CONFIRMED,
     });
 
     const detail = await this.ordersRepo.findDetailById(order.id);
@@ -315,7 +411,70 @@ export class CheckoutService {
       order: serializeOrderDetail(detail!),
       redirect_url: redirectUrl,
       requires_online_confirmation: requiresOnlineConfirmation,
+      cod_assurance: codAssurance,
     };
+  }
+
+  /**
+   * Releases a held cash order once the code has been read back.
+   *
+   * The code proves a live human at the delivery number is expecting a courier
+   * with a bill. That is all it proves, and all it is asked to prove — it
+   * grants no session and verifies no account.
+   */
+  async confirmCod(userId: string, orderId: string, code: string) {
+    const order = await this.prisma.order.findFirst({
+      where: { id: orderId, userId },
+      select: {
+        id: true,
+        number: true,
+        status: true,
+        recipientPhone: true,
+      },
+    });
+    if (!order) throw new NotFoundException('Order not found');
+
+    if (order.status !== OrderStatus.PENDING_PAYMENT) {
+      // Already confirmed, cancelled, or moved on. Re-entering a code cannot
+      // walk an order backwards.
+      throw new BadRequestException('This order is not awaiting confirmation');
+    }
+
+    const shouldConfirm = await this.codTrust.satisfyConfirmation({
+      orderId: order.id,
+      recipientPhone: order.recipientPhone,
+      code,
+      actorId: userId,
+    });
+
+    if (shouldConfirm) {
+      await this.confirm(order.id, userId);
+      this.events.emit(AppEvent.OrderStatusChanged, {
+        userId,
+        orderId: order.id,
+        orderNumber: order.number,
+        status: OrderStatus.CONFIRMED,
+      });
+    }
+
+    const detail = await this.ordersRepo.findDetailById(order.id);
+    return { order: serializeOrderDetail(detail!) };
+  }
+
+  /** Re-sends the confirmation code for a held cash order. */
+  async resendCodConfirmation(userId: string, orderId: string) {
+    const order = await this.prisma.order.findFirst({
+      where: { id: orderId, userId, status: OrderStatus.PENDING_PAYMENT },
+      select: { id: true, number: true, recipientPhone: true },
+    });
+    if (!order) throw new NotFoundException('Order not found');
+
+    return this.codTrust.requestConfirmation({
+      orderId: order.id,
+      orderNumber: order.number,
+      recipientPhone: order.recipientPhone,
+      userId,
+    });
   }
 
   /**
@@ -390,6 +549,125 @@ export class CheckoutService {
 
   // ── internals ───────────────────────────────────────────────────────────
 
+  /**
+   * Scores the basket when — and only when — a courier will be carrying its
+   * value in cash.
+   *
+   * A prepaid order is not assessed at all. There is nothing on the road to
+   * lose, so reading a customer's delivery history to decide how to treat her
+   * would be surveillance with no purpose behind it.
+   *
+   * The top of the ladder throws. That is not a refusal to sell: the same
+   * basket goes through on any other rail, and the message says so. What it
+   * refuses is to send three hundred dollars of another woman's stock out on
+   * credit to a customer who has already sent three parcels back.
+   */
+  private async assessCashRisk(input: {
+    userId: string;
+    dto: CreateOrderDto;
+    shipping: ShippingDetailsDto;
+    fromAddressBook: boolean;
+    groups: SellerGroup[];
+    grandTotal: Money;
+    usdRate: Prisma.Decimal;
+  }): Promise<CodAssessment | null> {
+    if (!CodTrustService.isCashRail(input.dto.payment_method)) return null;
+
+    // `usdRate` converts USD into the order's currency, so dividing recovers
+    // the dollar figure — the only unit in which a basket from March and a
+    // basket from September are comparable.
+    const orderValueUsd = input.usdRate.isZero()
+      ? 0
+      : input.grandTotal.toPrisma().dividedBy(input.usdRate).toNumber();
+
+    const lines = input.groups.flatMap((group) => group.lines);
+
+    const assessment = await this.codTrust.assess({
+      userId: input.userId,
+      destination: {
+        governorate: input.shipping.governorate,
+        addressLine: input.shipping.address_line,
+        landmark: input.shipping.landmark ?? null,
+        isRural: input.shipping.is_rural ?? false,
+        recipientPhone: input.shipping.recipient_phone,
+        fromAddressBook: input.fromAddressBook,
+      },
+      basket: {
+        orderValueUsd,
+        sellerCount: input.groups.length,
+        itemCount: lines.reduce((total, line) => total + line.item.quantity, 0),
+        maxUnitsOnOneLine: lines.reduce(
+          (most, line) => Math.max(most, line.item.quantity),
+          0,
+        ),
+      },
+    });
+
+    if (assessment.decision.assurance === CodAssurance.PREPAYMENT) {
+      // Nothing is written for a basket that never became an order — the
+      // assessment table holds assessments *of orders*. The decision itself
+      // still has to be answerable for, so it goes to the audit log.
+      await this.codTrust.auditDecision({
+        orderId: '',
+        orderNumber: '',
+        userId: input.userId,
+        assessment,
+      });
+      throw new BadRequestException({
+        code: 'COD_UNAVAILABLE',
+        message: customerMessageFor(CodAssurance.PREPAYMENT, []),
+      });
+    }
+
+    return assessment;
+  }
+
+  /**
+   * Sends the code and describes the hold to the client, in that order.
+   *
+   * A failure to dispatch must not strand a placed order in a state nobody can
+   * leave, so the block is returned either way and the client is told to ask
+   * for a resend.
+   */
+  private async beginCodConfirmation(
+    order: { id: string; number: string; recipientPhone: string },
+    assessment: CodAssessment,
+    userId: string,
+  ) {
+    await this.codTrust.auditDecision({
+      orderId: order.id,
+      orderNumber: order.number,
+      userId,
+      assessment,
+    });
+
+    const message = customerMessageFor(
+      assessment.decision.assurance,
+      assessment.decision.ruleCodes,
+    );
+
+    try {
+      const challenge = await this.codTrust.requestConfirmation({
+        orderId: order.id,
+        orderNumber: order.number,
+        recipientPhone: order.recipientPhone,
+        userId,
+      });
+      return { required: 'order_confirmation', message, ...challenge };
+    } catch (error) {
+      this.logger.error(
+        `Could not send the COD confirmation for ${order.number}: ${
+          (error as Error).message
+        }`,
+      );
+      return {
+        required: 'order_confirmation',
+        message,
+        dispatch_failed: true,
+      };
+    }
+  }
+
   private async preferredCurrency(userId: string): Promise<Currency> {
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
@@ -399,7 +677,7 @@ export class CheckoutService {
   }
 
   private async groupBySeller(
-    items: CartItemRecord[],
+    items: PurchasableLine[],
     orderCurrency: Currency,
   ): Promise<SellerGroup[]> {
     const bySeller = new Map<string, SellerGroup>();
@@ -434,7 +712,7 @@ export class CheckoutService {
     return [...bySeller.values()];
   }
 
-  private assertPurchasable(item: CartItemRecord) {
+  private assertPurchasable(item: PurchasableLine) {
     const title = item.offer.product.title;
     if (item.offer.status !== OfferStatus.ACTIVE || !item.offer.isActive) {
       throw new BadRequestException(`${title} is no longer available`);
@@ -472,7 +750,7 @@ export class CheckoutService {
   private async resolveShipping(
     userId: string,
     dto: CreateOrderDto,
-  ): Promise<ShippingDetailsDto> {
+  ): Promise<{ shipping: ShippingDetailsDto; fromAddressBook: boolean }> {
     if (dto.address_id) {
       const saved = await this.prisma.address.findFirst({
         where: { id: dto.address_id, userId },
@@ -480,14 +758,20 @@ export class CheckoutService {
       if (!saved) throw new NotFoundException('Address not found');
 
       return {
-        recipient_name: saved.recipientName,
-        recipient_phone: saved.recipientPhone,
-        governorate: saved.governorate,
-        district: saved.district ?? undefined,
-        city: saved.city,
-        address_line: saved.addressLine,
-        landmark: saved.landmark ?? undefined,
-        is_rural: saved.isRural,
+        shipping: {
+          recipient_name: saved.recipientName,
+          recipient_phone: saved.recipientPhone,
+          governorate: saved.governorate,
+          district: saved.district ?? undefined,
+          city: saved.city,
+          address_line: saved.addressLine,
+          landmark: saved.landmark ?? undefined,
+          is_rural: saved.isRural,
+        },
+        // An address she has used before is a address a courier has found
+        // before. That is worth something to the risk score, and it is knowledge
+        // only this branch has.
+        fromAddressBook: true,
       };
     }
 
@@ -524,7 +808,7 @@ export class CheckoutService {
       }
     }
 
-    return dto.shipping;
+    return { shipping: dto.shipping, fromAddressBook: false };
   }
 
   private orderNumber(): string {

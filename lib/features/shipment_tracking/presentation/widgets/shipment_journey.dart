@@ -161,14 +161,9 @@ class _Step extends StatelessWidget {
           shipmentStageLabel(context, stage),
           textAlign: TextAlign.center,
           maxLines: 2,
-          style: TextStyle(
-            fontSize: DsTypography.labelSmall,
-            fontWeight: isCurrent
+          style: context.dsText.caption.tint(isCurrent ? colors.onSurface : accent).copyWith(height: 1.3, fontWeight: isCurrent
                 ? DsTypography.bold
-                : DsTypography.regular,
-            color: isCurrent ? colors.onSurface : accent,
-            height: 1.3,
-          ),
+                : DsTypography.regular),
         ),
       ],
     );

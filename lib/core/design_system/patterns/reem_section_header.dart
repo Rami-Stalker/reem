@@ -28,11 +28,7 @@ class ReemSectionHeader extends StatelessWidget {
             children: [
               DsGradientText(
                 title,
-                style: TextStyle(
-                  fontFamily: DsTypography.fontFamily,
-                  fontSize: DsTypography.headlineSmall,
-                  fontWeight: DsTypography.bold,
-                ),
+                style: context.dsText.screenTitle.bold,
               ),
               if (subtitle != null) ...[
                 const SizedBox(height: 4),
@@ -57,8 +53,7 @@ class ReemSectionHeader extends StatelessWidget {
               ),
             ),
           )
-        else if (trailing != null)
-          trailing!,
+        else ?trailing,
       ],
     );
   }

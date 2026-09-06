@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
 
 class ChatInput extends StatefulWidget {
   const ChatInput({
@@ -77,30 +79,41 @@ class _ChatInputState extends State<ChatInput>
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.dsColors;
     return ClipRRect(
-      borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
+      borderRadius: DsRadius.borderSheet,
       child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 24, sigmaY: 24),
+        filter: ImageFilter.blur(sigmaX: DsBlur.heavy, sigmaY: DsBlur.heavy),
         child: Container(
-          padding: const EdgeInsets.fromLTRB(18, 14, 18, 22),
-          decoration: BoxDecoration(color: Colors.white.withOpacity(.86)),
+          padding: const EdgeInsets.fromLTRB(
+            DsSpacing.md,
+            DsSpacing.sm,
+            DsSpacing.md,
+            DsSpacing.xl,
+          ),
+          decoration: BoxDecoration(
+            // Reads from the theme: a fixed white plate left the composer
+            // glowing at the foot of an otherwise aubergine thread.
+            color: colors.surfaceElevated.withValues(alpha: 0.9),
+            border: Border(top: BorderSide(color: colors.border)),
+          ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               SizeTransition(
                 sizeFactor: controller,
                 child: Padding(
-                  padding: const EdgeInsets.only(bottom: 18),
+                  padding: const EdgeInsets.only(bottom: DsSpacing.md),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       // Product and Order still have no implementation behind
                       // them, and `_action` draws that rather than offering a
                       // button that swallows the tap.
-                      _action(Icons.photo_rounded, 'Image', widget.onImage),
-                      _action(Icons.mic_rounded, 'Voice', widget.onVoice),
-                      _action(Icons.shopping_bag_rounded, 'Product', null),
-                      _action(Icons.receipt_long_rounded, 'Order', null),
+                      _action(context, Icons.photo_rounded, context.l10n.mediaImage, widget.onImage),
+                      _action(context, Icons.mic_rounded, context.l10n.chatVoice, widget.onVoice),
+                      _action(context, Icons.shopping_bag_rounded, context.l10n.chatProduct, null),
+                      _action(context, Icons.receipt_long_rounded, context.l10n.chatOrder, null),
                     ],
                   ),
                 ),
@@ -108,38 +121,39 @@ class _ChatInputState extends State<ChatInput>
               Row(
                 children: [
                   Tooltip(
-                    message: 'Attachments',
+                    message: context.l10n.chatAttachments,
                     child: GestureDetector(
                       onTap: toggle,
                       child: AnimatedContainer(
-                        duration: const Duration(milliseconds: 300),
-                        width: 52,
-                        height: 52,
-                        decoration: const BoxDecoration(
+                        duration: DsMotion.moderate,
+                        width: DsSizes.controlLg,
+                        height: DsSizes.controlLg,
+                        decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          gradient: LinearGradient(
-                            colors: [Color(0xffFF9EB5), Color(0xffFF5C8A)],
-                          ),
+                          gradient: context.primaryGradient,
                         ),
                         child: AnimatedRotation(
                           turns: expanded ? .125 : 0,
-                          duration: const Duration(milliseconds: 250),
+                          duration: DsMotion.normal,
                           child: const Icon(
                             Icons.add_rounded,
-                            color: Colors.white,
-                            size: 28,
+                            color: DsColors.onMedia,
+                            size: DsSizes.iconMd,
                           ),
                         ),
                       ),
                     ),
                   ),
-                  const SizedBox(width: 12),
+                  DsGaps.hSm,
                   Expanded(
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 18),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: DsSpacing.md,
+                      ),
                       decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(22),
+                        color: colors.surfaceVariant,
+                        borderRadius: DsRadius.borderField,
+                        border: Border.all(color: colors.border),
                       ),
                       child: TextField(
                         controller: textController,
@@ -149,38 +163,37 @@ class _ChatInputState extends State<ChatInput>
                         onChanged: handleTyping,
                         onSubmitted: (_) => send(),
                         decoration: InputDecoration(
-                          hintText: 'Write a message...',
+                          hintText: context.l10n.chatWriteMessage,
                           border: InputBorder.none,
-                          hintStyle: TextStyle(color: Colors.grey[500]),
+                          hintStyle: context.dsText.body
+                              .tint(context.dsColors.onSurfaceVariant),
                         ),
                       ),
                     ),
                   ),
-                  const SizedBox(width: 12),
+                  DsGaps.hSm,
                   Tooltip(
-                    message: 'Send',
+                    message: context.l10n.send,
                     child: GestureDetector(
                       onTap: send,
                       child: Container(
-                        width: 54,
-                        height: 54,
-                        decoration: const BoxDecoration(
+                        width: DsSizes.controlLg,
+                        height: DsSizes.controlLg,
+                        decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          gradient: LinearGradient(
-                            colors: [Color(0xffFF9EB5), Color(0xffFF5C8A)],
-                          ),
+                          gradient: context.primaryGradient,
                         ),
                         child: widget.isSending
                             ? const Padding(
-                                padding: EdgeInsets.all(14),
+                                padding: EdgeInsets.all(DsSpacing.md),
                                 child: CircularProgressIndicator(
                                   strokeWidth: 2,
-                                  color: Colors.white,
+                                  color: DsColors.onMedia,
                                 ),
                               )
                             : const Icon(
                                 Icons.send_rounded,
-                                color: Colors.white,
+                                color: DsColors.onMedia,
                               ),
                       ),
                     ),
@@ -197,7 +210,12 @@ class _ChatInputState extends State<ChatInput>
   /// A null [onTap] draws the action as unavailable rather than as a button
   /// that quietly does nothing when pressed — which is what Product and Order
   /// were, and what a tap on them is still worth telling her about honestly.
-  Widget _action(IconData icon, String title, VoidCallback? onTap) {
+  Widget _action(
+    BuildContext context,
+    IconData icon,
+    String title,
+    VoidCallback? onTap,
+  ) {
     final enabled = onTap != null;
     return Semantics(
       button: true,
@@ -210,22 +228,18 @@ class _ChatInputState extends State<ChatInput>
           child: Column(
             children: [
               Container(
-                width: 56,
-                height: 56,
+                width: DsSizes.fabSize,
+                height: DsSizes.fabSize,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: Colors.white,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: .05),
-                      blurRadius: 16,
-                    ),
-                  ],
+                  color: context.dsColors.surfaceElevated,
+                  border: Border.all(color: context.dsColors.border),
+                  boxShadow: context.shadowXs,
                 ),
-                child: Icon(icon, color: const Color(0xffFF5C8A)),
+                child: Icon(icon, color: context.dsColors.primary),
               ),
-              const SizedBox(height: 8),
-              Text(title, style: const TextStyle(fontWeight: FontWeight.w600)),
+              DsGaps.vXs,
+              Text(title, style: context.dsText.labelStrong),
             ],
           ),
         ),

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
+import { OrderStatus, Prisma } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 
 const SELLER_ORDER_INCLUDE = {
@@ -16,6 +16,9 @@ export const ORDER_DETAIL_INCLUDE = {
   },
   payment: true,
   events: { orderBy: { createdAt: 'asc' as const } },
+  // Only the state reaches the customer's own order — never the score, the
+  // tier or the factors behind it.
+  codRiskAssessment: { select: { state: true, assurance: true } },
 } satisfies Prisma.OrderInclude;
 
 export const ORDER_LIST_INCLUDE = {
@@ -26,9 +29,14 @@ export const ORDER_LIST_INCLUDE = {
 export class OrdersRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  listForUser(userId: string, skip: number, take: number) {
+  listForUser(
+    userId: string,
+    skip: number,
+    take: number,
+    statuses?: OrderStatus[],
+  ) {
     return this.prisma.order.findMany({
-      where: { userId },
+      where: { userId, ...(statuses?.length ? { status: { in: statuses } } : {}) },
       orderBy: { createdAt: 'desc' },
       skip,
       take,
@@ -36,8 +44,10 @@ export class OrdersRepository {
     });
   }
 
-  countForUser(userId: string) {
-    return this.prisma.order.count({ where: { userId } });
+  countForUser(userId: string, statuses?: OrderStatus[]) {
+    return this.prisma.order.count({
+      where: { userId, ...(statuses?.length ? { status: { in: statuses } } : {}) },
+    });
   }
 
   findDetail(id: string, userId: string) {

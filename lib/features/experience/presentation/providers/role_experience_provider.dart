@@ -12,6 +12,19 @@ final roleExperienceProvider = Provider<AppRoleExperience>((ref) {
   return AppRoleExperience.forUserRole(role);
 });
 
+/// The permission set the server resolved for whoever is signed in.
+///
+/// Read by every surface that decides what to *offer* — the admin navigation,
+/// the row actions in the console. It is empty for a guest and for anyone the
+/// server did not send permissions for, which renders the plainest console
+/// rather than an unguarded one.
+final currentPermissionsProvider = Provider<Set<String>>((ref) {
+  return ref.watch(
+        authNotifierProvider.select((state) => state.user?.permissions),
+      ) ??
+      const <String>{};
+});
+
 final roleExperienceSnapshotProvider = FutureProvider<Map<String, dynamic>>((
   ref,
 ) async {

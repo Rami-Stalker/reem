@@ -8,7 +8,7 @@ import {
   RoundingPolicy,
 } from '@prisma/client';
 
-import { Money } from '../../common/money';
+import { Money, SYP_ROUNDING } from '../../common/money';
 import { PrismaService } from '../../prisma/prisma.service';
 import { ExchangeRateService } from '../pricing/exchange-rate.service';
 import { LedgerService } from '../ledger/ledger.service';
@@ -227,9 +227,9 @@ export class FxRevaluationService {
   }
 }
 
-/** Q48 — SYP is reported to the nearest 1000, as it is charged. */
+/** Q48 — SYP is reported the way it is charged; see `SYP_ROUNDING`. */
 const RoundingPolicyFor: Readonly<Record<Currency, RoundingPolicy>> =
   Object.freeze({
-    [Currency.SYP]: RoundingPolicy.NEAREST_1000,
+    [Currency.SYP]: SYP_ROUNDING,
     [Currency.USD]: RoundingPolicy.NONE,
   });

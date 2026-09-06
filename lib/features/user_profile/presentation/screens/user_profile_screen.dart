@@ -3,8 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/core/shared/entities/user.dart';
+import 'package:reem/features/chat/domain/entities/chat_start_request.dart';
+import 'package:reem/features/chat/presentation/widgets/message_seller_button.dart';
 import 'package:reem/features/user_profile/domain/entities/user_profile.dart';
 import 'package:reem/features/user_profile/presentation/providers/user_profile_providers.dart';
 import 'package:reem/features/user_profile/presentation/widgets/follow_button.dart';
@@ -20,6 +23,7 @@ class UserProfileScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
     final state = ref.watch(userProfileNotifierProvider(userId));
     final notifier = ref.read(userProfileNotifierProvider(userId).notifier);
     final profile = state.profile;
@@ -27,7 +31,9 @@ class UserProfileScreen extends ConsumerWidget {
     return ReemScrollPage(
       slivers: [
         PremiumAppBar(
-          title: profile != null ? '@${profile.user.username}' : 'Profile',
+          title: profile != null
+              ? '@${profile.user.username}'
+              : l10n.profileTitle,
           showBack: true,
         ),
         if (state.isLoading && profile == null)
@@ -39,7 +45,7 @@ class UserProfileScreen extends ConsumerWidget {
           SliverFillRemaining(
             hasScrollBody: false,
             child: _ErrorView(
-              message: state.error ?? 'Could not load profile',
+              message: state.error ?? context.l10n.profileLoadFailed,
               onRetry: notifier.load,
             ),
           )
@@ -94,12 +100,7 @@ class _ProfileBody extends StatelessWidget {
                 child: Text(
                   user.name,
                   textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontFamily: DsTypography.fontFamily,
-                    fontSize: DsTypography.headlineSmall,
-                    fontWeight: DsTypography.bold,
-                    color: colors.onSurface,
-                  ),
+                  style: context.dsText.screenTitle.bold.tint(colors.onSurface),
                 ),
               ),
               if (user.isVerified) ...[
@@ -115,11 +116,9 @@ class _ProfileBody extends StatelessWidget {
             Text(
               user.bio!,
               textAlign: TextAlign.center,
-              style: TextStyle(
-                fontFamily: DsTypography.fontFamily,
-                color: colors.onSurfaceVariant,
-                height: 1.4,
-              ),
+              style: context.dsText.body
+                  .tint(colors.onSurfaceVariant)
+                  .copyWith(height: 1.4),
             ),
           ],
           if (user.location != null && user.location!.isNotEmpty) ...[
@@ -127,16 +126,15 @@ class _ProfileBody extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.place_outlined,
-                    size: 16, color: colors.onSurfaceVariant),
-                const SizedBox(width: 4),
+                Icon(
+                  Icons.place_outlined,
+                  size: 16,
+                  color: colors.onSurfaceVariant,
+                ),
+                DsGaps.hXxs,
                 Text(
                   user.location!,
-                  style: TextStyle(
-                    fontFamily: DsTypography.fontFamily,
-                    fontSize: DsTypography.bodySmall,
-                    color: colors.onSurfaceVariant,
-                  ),
+                  style: context.dsText.bodySmall.tint(colors.onSurfaceVariant),
                 ),
               ],
             ),
@@ -146,23 +144,34 @@ class _ProfileBody extends StatelessWidget {
           const SizedBox(height: DsSpacing.lg),
           if (profile.isMe) ...[
             SecondaryButton(
-              label: 'Edit profile',
+              label: context.l10n.profileEdit,
               onPressed: () => context.push(RoutePaths.editProfile),
             ),
             if (user.isSeller) ...[
               const SizedBox(height: DsSpacing.sm),
               PrimaryButton(
-                label: 'Manage store',
+                label: context.l10n.profileManageStore,
                 icon: Icons.storefront_outlined,
                 onPressed: () => context.push(RoutePaths.myProducts),
               ),
             ],
-          ] else
+          ] else ...[
             FollowButton(
               isFollowing: profile.isFollowing,
               isLoading: isFollowLoading,
               onPressed: onToggleFollow,
             ),
+            // Only a boutique can be written to: the server refuses any
+            // pairing that is not buyer↔seller, so offering this on a fellow
+            // shopper's profile would be a button that always fails.
+            if (profile.isSeller) ...[
+              const SizedBox(height: DsSpacing.sm),
+              MessageSellerButton(
+                label: context.l10n.messageSeller,
+                request: ChatStartRequest.peer(peerId: user.id),
+              ),
+            ],
+          ],
           if (profile.isSeller && profile.sellerStats != null) ...[
             const SizedBox(height: DsSpacing.xl),
             SellerStatsCard(stats: profile.sellerStats!),
@@ -186,16 +195,25 @@ class _StatsRow extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        ProfileStatTile(value: '${profile.postsCount}', label: 'Posts'),
+        ProfileStatTile(
+          value: '${profile.postsCount}',
+          label: context.l10n.profilePosts,
+        ),
         divider(),
+        // Both counts open the list behind them — `ProfileStatTile` has taken
+        // an `onTap` since it was written and nobody ever passed one.
         ProfileStatTile(
           value: _compact(profile.user.followersCount),
-          label: 'Followers',
+          label: context.l10n.profileFollowers,
+          onTap: () =>
+              context.push(RoutePaths.followersOf(profile.user.id)),
         ),
         divider(),
         ProfileStatTile(
           value: _compact(profile.user.followingCount),
-          label: 'Following',
+          label: context.l10n.profileFollowing,
+          onTap: () =>
+              context.push(RoutePaths.followingOf(profile.user.id)),
         ),
       ],
     );
@@ -221,11 +239,14 @@ class _RoleBadge extends StatelessWidget {
     final color = isAdmin
         ? colors.error
         : isSeller
-            ? colors.primary
-            : colors.onSurfaceVariant;
+        ? colors.primary
+        : colors.onSurfaceVariant;
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: DsSpacing.sm, vertical: 3),
+      padding: const EdgeInsets.symmetric(
+        horizontal: DsSpacing.sm,
+        vertical: DsSpacing.xxs,
+      ),
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.12),
         borderRadius: BorderRadius.circular(DsRadius.full),
@@ -238,20 +259,15 @@ class _RoleBadge extends StatelessWidget {
             isAdmin
                 ? Icons.shield_outlined
                 : isSeller
-                    ? Icons.storefront_outlined
-                    : Icons.person_outline,
+                ? Icons.storefront_outlined
+                : Icons.person_outline,
             size: 13,
             color: color,
           ),
-          const SizedBox(width: 4),
+          DsGaps.hXxs,
           Text(
             role.label,
-            style: TextStyle(
-              fontFamily: DsTypography.fontFamily,
-              fontSize: DsTypography.bodySmall,
-              fontWeight: DsTypography.semiBold,
-              color: color,
-            ),
+            style: context.dsText.bodySmall.semibold.tint(color),
           ),
         ],
       ),
@@ -278,13 +294,10 @@ class _ErrorView extends StatelessWidget {
           Text(
             message,
             textAlign: TextAlign.center,
-            style: TextStyle(color: colors.onSurfaceVariant),
+            style: context.dsText.body.tint(colors.onSurfaceVariant),
           ),
           const SizedBox(height: DsSpacing.lg),
-          SecondaryButton(
-            label: 'Retry',
-            onPressed: onRetry,
-          ),
+          SecondaryButton(label: context.l10n.retry, onPressed: onRetry),
         ],
       ),
     );

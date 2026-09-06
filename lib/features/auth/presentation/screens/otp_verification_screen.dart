@@ -156,7 +156,7 @@ class _OtpVerificationScreenState extends ConsumerState<OtpVerificationScreen> {
                       ? context.l10n.resetYourPassword
                       : context.l10n.verifyYourPhone,
                   textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                  style: context.dsText.screenTitle.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -166,7 +166,7 @@ class _OtpVerificationScreenState extends ConsumerState<OtpVerificationScreen> {
                       ? context.l10n.codeSentTo(widget.phone)
                       : context.l10n.requestingCode,
                   textAlign: TextAlign.center,
-                  style: TextStyle(color: colors.onSurfaceVariant),
+                  style: context.dsText.body.tint(colors.onSurfaceVariant),
                 ),
                 const SizedBox(height: DsSpacing.xl),
                 DsInputField(

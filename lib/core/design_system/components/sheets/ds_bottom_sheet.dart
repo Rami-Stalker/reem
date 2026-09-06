@@ -11,6 +11,13 @@ import 'package:reem/core/design_system/foundation/tokens/ds_typography.dart';
 /// bottom-sheet theme; these helpers add safe sizing and ergonomics.
 abstract final class DsBottomSheet {
   /// Show arbitrary content. Wrap it in a [DsSheetScaffold] for a titled sheet.
+  ///
+  /// **On the root navigator.** The buyer's shell sets `extendBody: true` and
+  /// floats its navigation bar over the page, so a sheet raised on the tab's
+  /// own navigator was laid out *behind* that bar: the last lines of the help
+  /// and about sheets sat under the glass rail and could not be read or
+  /// scrolled to. Presenting above the shell puts the whole sheet on screen,
+  /// bar included, which is also what a modal is supposed to mean.
   static Future<T?> show<T>(
     BuildContext context, {
     required WidgetBuilder builder,
@@ -20,6 +27,7 @@ abstract final class DsBottomSheet {
   }) {
     return showModalBottomSheet<T>(
       context: context,
+      useRootNavigator: true,
       isScrollControlled: isScrollControlled,
       isDismissible: isDismissible,
       enableDrag: enableDrag,

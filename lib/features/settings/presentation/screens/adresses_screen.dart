@@ -229,17 +229,13 @@ class _EmptyBook extends StatelessWidget {
           const SizedBox(height: DsSpacing.md),
           Text(
             'لا عناوين محفوظة بعد',
-            style: TextStyle(
-              fontSize: DsTypography.titleSmall,
-              fontWeight: DsTypography.semiBold,
-              color: colors.onSurface,
-            ),
+            style: context.dsText.tileTitle.semibold.tint(colors.onSurface),
           ),
           const SizedBox(height: DsSpacing.sm),
           Text(
             'احفظي عنواناً الآن ليكون جاهزاً عند أول طلب',
             textAlign: TextAlign.center,
-            style: TextStyle(color: colors.onSurfaceVariant),
+            style: context.dsText.body.tint(colors.onSurfaceVariant),
           ),
         ],
       ),
@@ -265,7 +261,7 @@ class _LoadFailed extends StatelessWidget {
           Text(
             failure.displayMessage,
             textAlign: TextAlign.center,
-            style: TextStyle(color: colors.onSurfaceVariant),
+            style: context.dsText.body.tint(colors.onSurfaceVariant),
           ),
           const SizedBox(height: DsSpacing.md),
           SecondaryButton(label: 'إعادة المحاولة', onPressed: onRetry),

@@ -25,6 +25,8 @@ import { CustomerRefundsService } from '../finance/customer-refunds.service';
 import { FinancialAuditService } from '../finance/financial-audit.service';
 import { LoyaltyService } from '../finance/loyalty.service';
 import { ShipmentsService } from '../delivery/shipments.service';
+import { CodTrustService } from '../cod-trust/cod-trust.service';
+import { CodFactsService } from '../cod-trust/cod-facts.service';
 import { LedgerService } from '../ledger/ledger.service';
 import { WalletService } from '../ledger/wallet.service';
 import { SellerOrderWorkflowService } from '../orders/workflow/seller-order-workflow.service';
@@ -134,11 +136,21 @@ function build(tx: Tx): World {
     commissions,
     customerRefunds,
   );
+  // Real rather than stubbed: delivery now closes the cash-on-delivery trust
+  // loop, and a journey test that skipped that step would stop proving the
+  // journey. Only the Prisma dependency is exercised by the outcome write.
+  const codTrust = new CodTrustService(
+    db,
+    new CodFactsService(db),
+    null as never,
+    null as never,
+  );
   const shipments = new ShipmentsService(
     db,
     commissions,
     workflow,
     customerRefunds,
+    codTrust,
   );
   const refunds = new ReturnRefundsService(
     db,
@@ -149,7 +161,11 @@ function build(tx: Tx): World {
     customerRefunds,
   );
   const disputes = new DisputesService(db, ledger, wallets, audit);
-  const returns = new ReturnsService(db, refunds, disputes, workflow);
+  // Reem Value is not the subject of these cases, and a customer with no
+  // standing has no extra return days — so the benefit lookup is stubbed to the
+  // Q56 default rather than wired to a real profile.
+  const valueBenefits = { configFor: async () => null } as never;
+  const returns = new ReturnsService(db, refunds, disputes, workflow, valueBenefits);
   return {
     tx,
     ledger,

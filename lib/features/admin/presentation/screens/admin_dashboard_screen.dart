@@ -33,7 +33,9 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
     final l10n = context.l10n;
     final state = ref.watch(adminDashboardNotifierProvider);
     final stats = state.stats;
-    final audit = ref.watch(adminSectionProvider(adminSectionConfigs['audit']!));
+    final audit = ref.watch(
+      adminSectionNotifierProvider(adminSectionConfigs['audit']!),
+    );
 
     return SingleChildScrollView(
       child: Column(
@@ -63,7 +65,7 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
               padding: const EdgeInsets.all(DsSpacing.xl),
               child: Text(
                 state.error!,
-                style: TextStyle(color: palette.critical),
+                style: context.dsText.body.tint(palette.critical),
               ),
             )
           else
@@ -132,11 +134,7 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
                   // Quick Actions
                   Text(
                     l10n.adminQuickActions,
-                    style: TextStyle(
-                      fontSize: DsTypography.titleMedium,
-                      fontWeight: DsTypography.bold,
-                      color: palette.ink,
-                    ),
+                    style: context.dsText.cardTitle.bold.tint(palette.ink),
                   ),
                   const SizedBox(height: DsSpacing.md),
                   
@@ -189,59 +187,53 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
                   // Recent Activity
                   Text(
                     l10n.adminRecentActivity,
-                    style: TextStyle(
-                      fontSize: DsTypography.titleMedium,
-                      fontWeight: DsTypography.bold,
-                      color: palette.ink,
-                    ),
+                    style: context.dsText.cardTitle.bold.tint(palette.ink),
                   ),
                   const SizedBox(height: DsSpacing.md),
                   
-                  audit.when(
-                    loading: () => const Padding(
+                  if (audit.isLoading)
+                    const Padding(
                       padding: EdgeInsets.all(DsSpacing.lg),
                       child: Center(child: DsLoadingIndicator()),
-                    ),
-                    error: (error, _) => _RecentActivityCard(
+                    )
+                  else if (audit.error != null)
+                    _RecentActivityCard(
                       title: l10n.adminAuditUnavailable,
-                      subtitle: error.toString(),
+                      subtitle: audit.error!,
                       time: l10n.adminRetryFromAudit,
                       icon: Icons.warning_amber_rounded,
                       index: 0,
+                    )
+                  else if (audit.records.isEmpty)
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(DsSpacing.lg),
+                      decoration: BoxDecoration(
+                        color: palette.surface,
+                        borderRadius: DsRadius.borderSm,
+                        border: Border.all(color: palette.line),
+                      ),
+                      child: Text(
+                        l10n.adminNoRecentActivity,
+                        style: context.dsText.body.tint(palette.muted),
+                      ),
+                    )
+                  else
+                    Column(
+                      children: [
+                        for (final entry
+                            in audit.records.take(5).toList().asMap().entries)
+                          _RecentActivityCard(
+                            title: entry.value.title,
+                            subtitle: entry.value.subtitle,
+                            time:
+                                entry.value.metrics['created_at'] ??
+                                entry.value.status,
+                            icon: Icons.manage_search_rounded,
+                            index: entry.key,
+                          ),
+                      ],
                     ),
-                    data: (section) {
-                      final records = section.records.take(5).toList();
-                      if (records.isEmpty) {
-                        return Container(
-                          width: double.infinity,
-                          padding: const EdgeInsets.all(DsSpacing.lg),
-                          decoration: BoxDecoration(
-                            color: palette.surface,
-                            borderRadius: DsRadius.borderSm,
-                            border: Border.all(color: palette.line),
-                          ),
-                          child: Text(
-                            l10n.adminNoRecentActivity,
-                            style:
-                                TextStyle(color: palette.muted),
-                          ),
-                        );
-                      }
-                      return Column(
-                        children: [
-                          for (final entry in records.asMap().entries)
-                            _RecentActivityCard(
-                              title: entry.value.title,
-                              subtitle: entry.value.subtitle,
-                              time: entry.value.metrics['created_at'] ??
-                                  entry.value.status,
-                              icon: Icons.manage_search_rounded,
-                              index: entry.key,
-                            ),
-                        ],
-                      );
-                    },
-                  ),
                 ],
               ),
             ),
@@ -292,7 +284,7 @@ class _StatCard extends StatelessWidget {
                 child: Icon(icon, color: palette.primary, size: 20),
               ),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                padding: const EdgeInsets.symmetric(horizontal: DsSpacing.xs, vertical: DsSpacing.xxs),
                 decoration: BoxDecoration(
                   color: trendColor.withValues(alpha: 0.1),
                   borderRadius: DsRadius.borderSm,
@@ -306,14 +298,10 @@ class _StatCard extends StatelessWidget {
                       size: 14,
                       color: trendColor,
                     ),
-                    const SizedBox(width: 4),
+                    DsGaps.hXxs,
                     Text(
                       trend,
-                      style: TextStyle(
-                        fontSize: DsTypography.labelSmall,
-                        fontWeight: DsTypography.semiBold,
-                        color: trendColor,
-                      ),
+                      style: context.dsText.caption.semibold.tint(trendColor),
                     ),
                   ],
                 ),
@@ -323,20 +311,12 @@ class _StatCard extends StatelessWidget {
           const SizedBox(height: DsSpacing.md),
           Text(
             value,
-            style: TextStyle(
-              fontSize: 28,
-              fontWeight: DsTypography.bold,
-              color: palette.ink,
-              height: 1.2,
-            ),
+            style: context.dsText.pageTitle.bold.tint(palette.ink).copyWith(height: 1.2),
           ),
-          const SizedBox(height: 4),
+          DsGaps.vXxs,
           Text(
             label,
-            style: TextStyle(
-              fontSize: DsTypography.labelMedium,
-              color: palette.muted,
-            ),
+            style: context.dsText.labelMedium.tint(palette.muted),
           ),
         ],
       ),
@@ -377,11 +357,7 @@ class _QuickActionButton extends StatelessWidget {
             const SizedBox(width: DsSpacing.sm),
             Text(
               label,
-              style: TextStyle(
-                fontWeight: DsTypography.semiBold,
-                color: palette.ink,
-                fontSize: DsTypography.labelLarge,
-              ),
+              style: context.dsText.labelLarge.tint(palette.ink),
             ),
           ],
         ),
@@ -433,28 +409,19 @@ class _RecentActivityCard extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: TextStyle(
-                    fontWeight: DsTypography.semiBold,
-                    color: palette.ink,
-                  ),
+                  style: context.dsText.body.semibold.tint(palette.ink),
                 ),
-                const SizedBox(height: 2),
+                DsGaps.vXxxs,
                 Text(
                   subtitle,
-                  style: TextStyle(
-                    fontSize: DsTypography.labelSmall,
-                    color: palette.muted,
-                  ),
+                  style: context.dsText.caption.tint(palette.muted),
                 ),
               ],
             ),
           ),
           Text(
             time,
-            style: TextStyle(
-              fontSize: DsTypography.labelSmall,
-              color: palette.muted,
-            ),
+            style: context.dsText.caption.tint(palette.muted),
           ),
         ],
       ),

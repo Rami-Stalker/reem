@@ -5,12 +5,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:reem/core/design_system/design_system.dart';
 import 'package:reem/core/localization/l10n_extension.dart';
+import 'package:reem/core/presentation/providers/product_shape_provider.dart';
 import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/core/shared/entities/post.dart';
 import 'package:reem/core/shared/entities/product.dart';
 import 'package:reem/features/discovery/domain/entities/product_collection.dart';
 import 'package:reem/features/home/presentation/providers/home_provider.dart';
-import 'package:reem/features/home/presentation/providers/home_showcase_provider.dart';
 import 'package:reem/features/home/presentation/widgets/home_section_header.dart';
 import 'package:reem/features/home/presentation/widgets/reem_post_card.dart';
 import 'package:reem/features/profile/presentation/providers/profile_provider.dart';
@@ -30,7 +30,7 @@ class HomeShowcaseSection extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
     final state = ref.watch(homeNotifierProvider);
-    final shape = ref.watch(homeShowcaseShapeProvider);
+    final shape = ref.watch(productShapeProvider);
 
     final posts = state.feed;
     final loading = state.feedLoading && posts.isEmpty;
@@ -56,7 +56,7 @@ class HomeShowcaseSection extends ConsumerWidget {
             subtitle: l10n.homeShowcaseSubtitle,
             padding: const EdgeInsets.fromLTRB(
               DsSpacing.lg,
-              0,
+              DsSpacing.xxxs,
               DsSpacing.lg,
               DsSpacing.sm,
             ),
@@ -66,7 +66,7 @@ class HomeShowcaseSection extends ConsumerWidget {
           child: Padding(
             padding: const EdgeInsets.fromLTRB(
               DsSpacing.lg,
-              0,
+              DsSpacing.xxxs,
               DsSpacing.lg,
               DsSpacing.lg,
             ),
@@ -74,21 +74,21 @@ class HomeShowcaseSection extends ConsumerWidget {
               selected: shape,
               onSelect: (next) {
                 HapticFeedback.selectionClick();
-                ref.read(homeShowcaseShapeProvider.notifier).state = next;
+                ref.read(productShapeProvider.notifier).state = next;
               },
             ),
           ),
         ),
         ...switch (shape) {
-          HomeShowcaseShape.posts => _posts(context, posts, loading),
-          HomeShowcaseShape.mosaic => [
+          DsProductShape.posts => _posts(context, posts, loading),
+          DsProductShape.mosaic => [
             SliverProductMosaic(
               products: products,
               isLoading: productsLoading,
               onTapProduct: (p) => _openProduct(context, p),
             ),
           ],
-          HomeShowcaseShape.grid => [
+          DsProductShape.grid => [
             SliverProductGrid(
               products: products,
               isLoading: productsLoading,
@@ -104,7 +104,7 @@ class HomeShowcaseSection extends ConsumerWidget {
   }
 
   static void _openProduct(BuildContext context, Product product) =>
-      context.push('${RoutePaths.productDetails}?id=${product.id}');
+      context.push(RoutePaths.productDetailsOf(product.id));
 
   List<Widget> _posts(BuildContext context, List<Post> posts, bool loading) {
     if (loading) {
@@ -141,152 +141,17 @@ class HomeShowcaseSection extends ConsumerWidget {
         separatorBuilder: (_, _) => const SizedBox(height: DsSpacing.xl),
         itemBuilder: (context, index) => Padding(
           padding: _hPad,
-          child:
-              ReemPostCard(
-                    post: posts[index],
-                    featured: index == 0,
-                  )
-                  .animate()
-                  .fadeIn(duration: 420.ms, curve: Curves.easeOut)
-                  .slideY(
-                    begin: 0.04,
-                    end: 0,
-                    duration: 420.ms,
-                    curve: Curves.easeOutCubic,
-                  ),
+          child: ReemPostCard(post: posts[index], featured: index == 0)
+              .animate()
+              .fadeIn(duration: 420.ms, curve: Curves.easeOut)
+              .slideY(
+                begin: 0.04,
+                end: 0,
+                duration: 420.ms,
+                curve: Curves.easeOutCubic,
+              ),
         ),
       ),
     ];
-  }
-}
-
-/// The segmented pill that swaps shapes — a rose capsule gliding under three
-/// labels. Deliberately the only control on the page with this much colour:
-/// it is the one thing on home she is meant to notice she can change.
-class ShapeSwitcher extends StatelessWidget {
-  const ShapeSwitcher({
-    super.key,
-    required this.selected,
-    required this.onSelect,
-  });
-
-  final HomeShowcaseShape selected;
-  final ValueChanged<HomeShowcaseShape> onSelect;
-
-  static const double _inset = 4;
-  static const double _height = 46;
-
-  @override
-  Widget build(BuildContext context) {
-    final c = context.dsColors;
-    final l10n = context.l10n;
-    const shapes = HomeShowcaseShape.values;
-    final index = shapes.indexOf(selected);
-
-    return Container(
-      height: _height,
-      padding: const EdgeInsets.all(_inset),
-      decoration: BoxDecoration(
-        color: c.surfaceElevated.withValues(alpha: 0.9),
-        borderRadius: DsRadius.borderPill,
-        border: Border.all(color: c.border.withValues(alpha: 0.7)),
-        boxShadow: context.shadowXs,
-      ),
-      child: LayoutBuilder(
-        builder: (context, box) {
-          final segment = box.maxWidth / shapes.length;
-          // Expand, so the sliding capsule inherits the pill's full height
-          // rather than collapsing to the height of a label.
-          return Stack(
-            fit: StackFit.expand,
-            children: [
-              AnimatedPositionedDirectional(
-                duration: DsMotion.moderate,
-                curve: DsMotion.silk,
-                start: segment * index,
-                top: 0,
-                bottom: 0,
-                width: segment,
-                child: DecoratedBox(
-                  decoration: BoxDecoration(
-                    gradient: context.primaryGradient,
-                    borderRadius: DsRadius.borderPill,
-                    boxShadow: context.glowShadow(
-                      c.primary,
-                      blur: 16,
-                      alpha: 0.34,
-                    ),
-                  ),
-                ),
-              ),
-              Row(
-                children: [
-                  for (final shape in shapes)
-                    Expanded(
-                      child: _Segment(
-                        label: shape.label(l10n),
-                        icon: shape.icon,
-                        selected: shape == selected,
-                        onTap: () => onSelect(shape),
-                      ),
-                    ),
-                ],
-              ),
-            ],
-          );
-        },
-      ),
-    );
-  }
-}
-
-class _Segment extends StatelessWidget {
-  const _Segment({
-    required this.label,
-    required this.icon,
-    required this.selected,
-    required this.onTap,
-  });
-
-  final String label;
-  final IconData icon;
-  final bool selected;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final c = context.dsColors;
-    final fg = selected ? c.onPrimary : c.onSurfaceVariant;
-
-    return GestureDetector(
-      onTap: onTap,
-      behavior: HitTestBehavior.opaque,
-      child: Center(
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(icon, size: 16, color: fg),
-            const SizedBox(width: DsSpacing.xxs),
-            Flexible(
-              child: AnimatedDefaultTextStyle(
-                duration: DsMotion.fast,
-                style: TextStyle(
-                  color: fg,
-                  fontSize: DsTypography.labelMedium,
-                  fontWeight: selected
-                      ? DsTypography.bold
-                      : DsTypography.semiBold,
-                ),
-                child: Text(
-                  label,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
   }
 }

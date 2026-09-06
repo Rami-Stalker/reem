@@ -63,9 +63,9 @@ class AiAssistantActions {
       data: {
         'title': title,
         'category': category,
-        if (productId != null) 'product_id': productId,
-        if (tone != null) 'tone': tone,
-        if (audience != null) 'audience': audience,
+        'product_id': ?productId,
+        'tone': ?tone,
+        'audience': ?audience,
         if (attributes.isNotEmpty) 'attributes': attributes,
       },
     );
@@ -86,8 +86,8 @@ class AiAssistantActions {
       data: {
         'title': title,
         'category': category,
-        if (productId != null) 'product_id': productId,
-        if (description != null) 'description': description,
+        'product_id': ?productId,
+        'description': ?description,
         if (seedTags.isNotEmpty) 'seed_tags': seedTags,
       },
     );

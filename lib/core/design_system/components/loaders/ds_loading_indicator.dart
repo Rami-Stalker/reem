@@ -4,15 +4,17 @@ import 'package:flutter/material.dart';
 
 import 'package:reem/core/design_system/foundation/theme/extensions/color_extension.dart';
 import 'package:reem/core/design_system/foundation/theme/extensions/gradient_extension.dart';
+import 'package:reem/core/design_system/foundation/theme/extensions/typography_extension.dart';
+import 'package:reem/core/design_system/foundation/tokens/ds_colors.dart';
+import 'package:reem/core/design_system/foundation/tokens/ds_gaps.dart';
 import 'package:reem/core/design_system/foundation/tokens/ds_motion.dart';
-import 'package:reem/core/design_system/foundation/tokens/ds_spacing.dart';
-import 'package:reem/core/design_system/foundation/tokens/ds_typography.dart';
+import 'package:reem/core/design_system/foundation/tokens/ds_sizes.dart';
 
 /// A soft, gradient-swept circular loader — the Reem signature spinner.
 class DsLoadingIndicator extends StatefulWidget {
   const DsLoadingIndicator({
     super.key,
-    this.size = 32,
+    this.size = DsSizes.iconLg,
     this.strokeWidth = 3.5,
     this.label,
   });
@@ -57,7 +59,7 @@ class _DsLoadingIndicatorState extends State<DsLoadingIndicator>
           child: CircularProgressIndicator(
             strokeWidth: widget.strokeWidth,
             strokeCap: StrokeCap.round,
-            valueColor: const AlwaysStoppedAnimation(Colors.white),
+            valueColor: const AlwaysStoppedAnimation(DsColors.onMedia),
           ),
         ),
       ),
@@ -69,15 +71,8 @@ class _DsLoadingIndicatorState extends State<DsLoadingIndicator>
       mainAxisSize: MainAxisSize.min,
       children: [
         indicator,
-        const SizedBox(height: DsSpacing.sm),
-        Text(
-          widget.label!,
-          style: TextStyle(
-            fontFamily: DsTypography.fontFamily,
-            fontSize: DsTypography.bodySmall,
-            color: context.dsColors.onSurfaceVariant,
-          ),
-        ),
+        DsGaps.vSm,
+        Text(widget.label!, style: context.dsText.cardSubtitle),
       ],
     );
   }
@@ -97,7 +92,7 @@ class DsLoadingOverlay extends StatelessWidget {
     return Positioned.fill(
       child: ColoredBox(
         color: c.overlay,
-        child: DsLoadingIndicator(label: label, size: 40),
+        child: DsLoadingIndicator(label: label, size: DsSizes.iconXl),
       ),
     );
   }

@@ -1,7 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { OrderStatus, UserRole } from '@prisma/client';
+import { OrderStatus, ReferralParticipantType, UserRole } from '@prisma/client';
+
+import { REWARD_MATRIX } from '../rewards/referrals.service';
 
 import { PrismaService } from '../../prisma/prisma.service';
+import { ORDER_BUCKETS } from '../orders/orders.service';
 
 /**
  * The customer's profile centre, in one call.
@@ -86,23 +89,19 @@ export class ProfileOverviewService {
       _count: { _all: true },
     });
 
-    const count = (...statuses: OrderStatus[]) =>
+    // The buckets come from `ORDER_BUCKETS`, which is also what
+    // `GET /orders?bucket=` filters by — so the tile she taps and the list she
+    // lands on are counting the same thing.
+    const count = (statuses: readonly OrderStatus[]) =>
       rows
         .filter((row) => statuses.includes(row.status))
         .reduce((total, row) => total + row._count._all, 0);
 
     return {
-      pending: count(OrderStatus.PENDING_PAYMENT, OrderStatus.CONFIRMED),
-      processing: count(
-        OrderStatus.PARTIALLY_SHIPPED,
-        OrderStatus.SHIPPED,
-        OrderStatus.PARTIALLY_DELIVERED,
-      ),
-      delivered: count(OrderStatus.DELIVERED, OrderStatus.CLOSED),
-      cancelled: count(
-        OrderStatus.CANCELLED,
-        OrderStatus.PARTIALLY_CANCELLED,
-      ),
+      pending: count(ORDER_BUCKETS.pending),
+      processing: count(ORDER_BUCKETS.processing),
+      delivered: count(ORDER_BUCKETS.delivered),
+      cancelled: count(ORDER_BUCKETS.cancelled),
     };
   }
 
@@ -185,6 +184,10 @@ export class ProfileOverviewService {
       code: code.code,
       invited,
       earned_points: rewards._sum.points ?? 0,
+      // What the programme pays, from the table that pays it. The client has
+      // rendered a `reward_hint` since the card was built and the server never
+      // sent one, so the line under «ادعي صديقاتك» was blank on every account.
+      reward_hint: `لكِ ${REWARD_MATRIX[ReferralParticipantType.CUSTOMER].referrerPoints} نقطة ولها ${REWARD_MATRIX[ReferralParticipantType.CUSTOMER].referredPoints} عند أول طلب لها`,
     };
   }
 

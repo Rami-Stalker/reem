@@ -19,6 +19,7 @@ import { PrismaService } from '../../prisma/prisma.service';
 import {
   POINTS_PER_REDEMPTION,
   SYP_PER_REDEMPTION,
+  pointsForSpend,
 } from '../finance/loyalty.service';
 import { Money } from '../../common/money';
 import {
@@ -226,8 +227,10 @@ export class MembershipService {
 
   async recordPurchase(userId: string, orderId: string, total: Money) {
     const account = await this.refreshMembership(userId);
+    // The bonus is a multiple of the points the order actually earns, so it
+    // moves with Q43's rate instead of with the raw amount of money.
     const bonusPoints = Math.floor(
-      total.toUnsafeNumber() * Math.max(0, account.pointsMultiplier - 1),
+      pointsForSpend(total) * Math.max(0, account.pointsMultiplier - 1),
     );
     const cashback = total.percentBps(account.cashbackBps);
     const expiresAt = new Date(

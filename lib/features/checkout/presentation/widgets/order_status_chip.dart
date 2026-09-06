@@ -64,7 +64,7 @@ class OrderStatusChip extends StatelessWidget {
 
     return Container(
       padding:
-          const EdgeInsets.symmetric(horizontal: DsSpacing.sm, vertical: 2),
+          const EdgeInsets.symmetric(horizontal: DsSpacing.sm, vertical: DsSpacing.xxxs),
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.14),
         borderRadius: BorderRadius.circular(DsRadius.full),
@@ -72,12 +72,7 @@ class OrderStatusChip extends StatelessWidget {
       ),
       child: Text(
         label,
-        style: TextStyle(
-          fontFamily: DsTypography.fontFamily,
-          fontSize: DsTypography.bodySmall,
-          fontWeight: DsTypography.semiBold,
-          color: color,
-        ),
+        style: context.dsText.bodySmall.semibold.tint(color),
       ),
     );
   }

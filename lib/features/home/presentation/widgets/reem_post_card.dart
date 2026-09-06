@@ -1,19 +1,24 @@
 import 'dart:math' as math;
-import 'dart:ui';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/errors/failure.dart';
 import 'package:reem/core/localization/l10n_extension.dart';
+import 'package:reem/core/result/result.dart';
 import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/core/shared/entities/media.dart';
 import 'package:reem/core/shared/entities/post.dart';
 import 'package:reem/core/shared/entities/product.dart';
+import 'package:reem/core/shared/services/share_service.dart';
+import 'package:reem/core/shared/value_objects/money_format.dart';
+import 'package:reem/core/sync/outbox_providers.dart';
+import 'package:reem/features/auth/presentation/widgets/auth_prompt_sheet.dart';
 import 'package:reem/features/cart/presentation/providers/cart_providers.dart';
+import 'package:reem/features/social_posts/data/outbox_handlers.dart';
 import 'package:reem/features/social_posts/presentation/providers/social_posts_providers.dart';
 import 'package:reem/features/social_posts/presentation/widgets/comment_sheet.dart';
 
@@ -43,6 +48,8 @@ class _ReemPostCardState extends ConsumerState<ReemPostCard>
   late bool _liked = widget.post.isLiked;
   late bool _saved = widget.post.isSaved;
   late int _likes = widget.post.likesCount;
+  late int _shares = widget.post.sharesCount;
+  late int _comments = widget.post.commentsCount;
   bool _captionExpanded = false;
   bool _addingToBag = false;
   int _mediaIndex = 0;
@@ -51,6 +58,20 @@ class _ReemPostCardState extends ConsumerState<ReemPostCard>
     vsync: this,
     duration: const Duration(milliseconds: 900),
   );
+
+  @override
+  void didUpdateWidget(ReemPostCard oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // A refreshed feed hands the card a new `Post` carrying the server's own
+    // tallies. They win over anything this card counted locally — otherwise a
+    // comment she left would be added a second time on top of a count that
+    // already includes it.
+    final post = widget.post;
+    if (post.id != oldWidget.post.id ||
+        post.commentsCount != oldWidget.post.commentsCount) {
+      _comments = post.commentsCount;
+    }
+  }
 
   @override
   void dispose() {
@@ -62,27 +83,146 @@ class _ReemPostCardState extends ConsumerState<ReemPostCard>
 
   List<MediaItem> get _media => post.media;
 
-  void _toggleLike({bool fromDoubleTap = false}) {
-    final willLike = fromDoubleTap ? true : !_liked;
-    if (willLike != _liked) {
-      setState(() {
-        _likes += willLike ? 1 : -1;
-        _liked = willLike;
-      });
-      ref.read(toggleLikeUseCaseProvider).call(post.id);
+  /// Every engagement is account-bound on the server — `/posts/:id/like` and
+  /// its siblings carry no `@OptionalAuth`, unlike the read routes. Without
+  /// this gate a guest saw a filled heart and got a silent 401: the tap looked
+  /// like it worked and nothing was ever recorded.
+  Future<bool> _requireAccount() async {
+    return requireAuthenticatedUser(
+      context,
+      ref,
+      title: context.l10n.signInToInteract,
+      message: context.l10n.signInToInteractBody,
+      from: RoutePaths.home,
+    );
+  }
+
+  /// Decides what a failed engagement means, and does the right thing.
+  ///
+  /// Two failures wearing the same coat. A **network** failure means she is on
+  /// a lift or a bad street: her tap is good, it simply has not arrived, so it
+  /// goes in the outbox and the heart stays filled. Anything else — the post
+  /// was deleted, the server refused — means the tap cannot succeed, and
+  /// leaving it filled would be a lie she discovers weeks later.
+  Future<void> _settleFailure(
+    Failure failure, {
+    required String kind,
+    required bool desired,
+    required VoidCallback restore,
+  }) async {
+    if (failure is NetworkFailure) {
+      await ref
+          .read(outboxProvider)
+          .enqueue(kind: kind, entityId: post.id, desired: desired);
+      // No snackbar. She did the thing; the app is holding it. Telling her
+      // about our transport problem is our anxiety, not her business.
+      return;
     }
+    if (!mounted) return;
+    setState(restore);
+    DsSnackbar.error(context, context.l10n.actionDidNotSave);
+  }
+
+  Future<void> _toggleLike({bool fromDoubleTap = false}) async {
+    // The petals and the haptic fire first either way: they acknowledge the
+    // gesture, and a double tap on an already-liked post is still a gesture.
     if (fromDoubleTap) {
       _burst.forward(from: 0);
       HapticFeedback.lightImpact();
     } else {
       HapticFeedback.selectionClick();
     }
+
+    final willLike = fromDoubleTap ? true : !_liked;
+    if (willLike == _liked) return;
+    if (!await _requireAccount()) return;
+    if (!mounted) return;
+
+    final wasLiked = _liked;
+    final wasLikes = _likes;
+    setState(() {
+      _likes += willLike ? 1 : -1;
+      _liked = willLike;
+    });
+
+    final result = await ref.read(toggleLikeUseCaseProvider).call(post.id);
+    if (result case Error(:final failure)) {
+      await _settleFailure(
+        failure,
+        kind: EngagementIntents.like,
+        desired: willLike,
+        restore: () {
+          _liked = wasLiked;
+          _likes = wasLikes;
+        },
+      );
+    }
   }
 
-  void _toggleSave() {
-    setState(() => _saved = !_saved);
+  Future<void> _toggleSave() async {
     HapticFeedback.selectionClick();
-    ref.read(toggleSaveUseCaseProvider).call(post.id);
+    if (!await _requireAccount()) return;
+    if (!mounted) return;
+
+    final wasSaved = _saved;
+    setState(() => _saved = !_saved);
+
+    // Where it went. A silent bookmark left the shopper with no idea the post
+    // had gone anywhere at all — the answer is «المفضّلة», and the snackbar
+    // takes her there rather than only naming it.
+    final l10n = context.l10n;
+    DsSnackbar.show(
+      context,
+      message: wasSaved ? l10n.postUnsaved : l10n.postSaved,
+      type: DsSnackbarType.success,
+      actionLabel: wasSaved ? null : l10n.viewSaved,
+      onAction: wasSaved ? null : () => context.push(RoutePaths.favorites),
+    );
+
+    final result = await ref.read(toggleSaveUseCaseProvider).call(post.id);
+    if (result case Error(:final failure)) {
+      await _settleFailure(
+        failure,
+        kind: EngagementIntents.save,
+        desired: !wasSaved,
+        restore: () => _saved = wasSaved,
+      );
+    }
+  }
+
+  /// Opens the OS share sheet, and only tells the server about a share she
+  /// actually went through with — a sheet she dismissed is not a share.
+  Future<void> _share() async {
+    HapticFeedback.selectionClick();
+    final shared = await ShareService.post(
+      context: context,
+      postId: post.id,
+      caption: post.caption,
+      authorName: post.author.name,
+    );
+    if (!shared || !mounted) return;
+
+    setState(() => _shares += 1);
+    final result = await ref.read(sharePostUseCaseProvider).call(post.id);
+    if (result case Error()) {
+      // The share happened; only the tally failed. Correcting the number is
+      // right, but there is nothing here worth interrupting her about.
+      if (mounted) setState(() => _shares -= 1);
+    }
+  }
+
+  Future<void> _openComments() async {
+    if (!await _requireAccount()) return;
+    if (!mounted) return;
+    await showCommentSheet(
+      context,
+      post.id,
+      // The tally under the post moves as she comments, rather than staying
+      // frozen at whatever the feed was fetched with.
+      onCountChanged: (delta) {
+        if (mounted) setState(() => _comments += delta);
+      },
+    );
   }
 
   /// Only meaningful when the post tags something; a look or an announcement
@@ -90,12 +230,10 @@ class _ReemPostCardState extends ConsumerState<ReemPostCard>
   void _openProduct() {
     final product = post.product;
     if (product == null) return;
-    context.push('${RoutePaths.productDetails}?id=${product.id}');
+    context.push(RoutePaths.productDetailsOf(product.id));
   }
 
   void _openAuthor() => context.push(RoutePaths.userProfileOf(post.author.id));
-
-  void _openComments() => showCommentSheet(context, post.id);
 
   /// A post is "just in" for its first three days — long enough that the
   /// ribbon still means something on a feed she opens twice a week.
@@ -116,9 +254,9 @@ class _ReemPostCardState extends ConsumerState<ReemPostCard>
 
     setState(() => _addingToBag = true);
     HapticFeedback.mediumImpact();
-    final added = await ref.read(cartNotifierProvider.notifier).add(
-      offerId: offerId,
-    );
+    final added = await ref
+        .read(cartNotifierProvider.notifier)
+        .add(offerId: offerId);
     if (!mounted) return;
     setState(() => _addingToBag = false);
 
@@ -200,19 +338,17 @@ class _ReemPostCardState extends ConsumerState<ReemPostCard>
           _PostActions(
             liked: _liked,
             saved: _saved,
-            commentsCount: post.commentsCount,
-            sharesCount: post.sharesCount,
+            commentsCount: _comments,
+            sharesCount: _shares,
             onLike: _toggleLike,
             onComment: _openComments,
             onSave: _toggleSave,
-            onShare: () {
-              HapticFeedback.selectionClick();
-              ref.read(sharePostUseCaseProvider).call(post.id);
-            },
+            onShare: _share,
           ),
           _PostCaption(
             post: post,
             likes: _likes,
+            comments: _comments,
             // The quote canvas already set the caption in serif; repeating it
             // underneath would read as a stutter.
             showCaption: _media.isNotEmpty || post.hasProduct,
@@ -244,7 +380,6 @@ class _PostHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = context.dsColors;
-    final theme = Theme.of(context);
     final author = post.author;
 
     return Padding(
@@ -283,14 +418,9 @@ class _PostHeader extends StatelessWidget {
                           author.name,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            color: c.onSurface,
-                            fontFamily: DsTypography.fontFamilyDisplay,
-                            fontFamilyFallback: DsTypography.displayFallback,
-                            fontSize: DsTypography.titleSmall,
-                            fontWeight: DsTypography.bold,
-                            height: 1.25,
-                          ),
+                          style: context.dsText.tileTitle.displayFamily.bold
+                              .tint(c.onSurface)
+                              .copyWith(height: 1.25),
                         ),
                       ),
                       if (author.isVerified) ...[
@@ -303,7 +433,7 @@ class _PostHeader extends StatelessWidget {
                       ],
                     ],
                   ),
-                  const SizedBox(height: 1),
+                  DsGaps.vXxxs,
                   Row(
                     children: [
                       DsSparkle(size: 8, color: c.accent, opacity: 0.9),
@@ -313,7 +443,7 @@ class _PostHeader extends StatelessWidget {
                           _subtitle(context, post),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: theme.textTheme.labelSmall?.copyWith(
+                          style: context.dsText.caption.copyWith(
                             color: c.onSurfaceVariant,
                           ),
                         ),
@@ -411,7 +541,7 @@ class _PostMediaState extends State<_PostMedia> {
               fit: StackFit.expand,
               children: [
                 if (widget.media.isEmpty)
-                  const _MediaFallback()
+                  const DsMediaFallback()
                 else
                   PageView.builder(
                     controller: _pages,
@@ -420,7 +550,7 @@ class _PostMediaState extends State<_PostMedia> {
                         : const NeverScrollableScrollPhysics(),
                     onPageChanged: widget.onIndex,
                     itemCount: count,
-                    itemBuilder: (_, i) => _MediaFrame(item: widget.media[i]),
+                    itemBuilder: (_, i) => DsMediaFrame(item: widget.media[i]),
                   ),
 
                 // Scrims: a whisper at the top so the badges read, a deeper one
@@ -457,10 +587,10 @@ class _PostMediaState extends State<_PostMedia> {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       if (count > 1)
-                        _CounterPill(index: widget.index, count: count),
+                        DsCounterPill(index: widget.index, count: count),
                       if (product != null && product.rating > 0) ...[
                         if (count > 1) const SizedBox(height: DsSpacing.xxs),
-                        _RatingChip(
+                        DsRatingChip(
                           rating: product.rating,
                           reviews: product.reviewsCount,
                         ),
@@ -474,7 +604,7 @@ class _PostMediaState extends State<_PostMedia> {
                     start: DsSpacing.sm,
                     end: DsSpacing.sm,
                     bottom: DsSpacing.sm,
-                    child: _ShopPlate(
+                    child: DsShopPlate(
                       product: product,
                       onTap: widget.onTap,
                       onAddToBag: widget.onAddToBag,
@@ -493,64 +623,6 @@ class _PostMediaState extends State<_PostMedia> {
             ),
           ),
         ),
-      ),
-    );
-  }
-}
-
-class _MediaFrame extends StatelessWidget {
-  const _MediaFrame({required this.item});
-
-  final MediaItem item;
-
-  @override
-  Widget build(BuildContext context) {
-    final c = context.dsColors;
-    final url = item.displayUrl;
-    if (url.isEmpty) return const _MediaFallback();
-
-    return Stack(
-      fit: StackFit.expand,
-      children: [
-        CachedNetworkImage(
-          imageUrl: url,
-          fit: BoxFit.cover,
-          fadeInDuration: DsMotion.normal,
-          placeholder: (_, _) => ColoredBox(color: c.shimmerBase),
-          errorWidget: (_, _, _) => const _MediaFallback(),
-        ),
-        if (item.isVideo)
-          Center(
-            child: Container(
-              width: 58,
-              height: 58,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.black.withValues(alpha: 0.34),
-                border: Border.all(color: Colors.white70, width: 1.4),
-              ),
-              child: const Icon(
-                Icons.play_arrow_rounded,
-                color: Colors.white,
-                size: 30,
-              ),
-            ),
-          ),
-      ],
-    );
-  }
-}
-
-class _MediaFallback extends StatelessWidget {
-  const _MediaFallback();
-
-  @override
-  Widget build(BuildContext context) {
-    final c = context.dsColors;
-    return ColoredBox(
-      color: c.surfaceVariant,
-      child: Center(
-        child: DsSparkle(size: 34, color: c.primary, opacity: 0.4),
       ),
     );
   }
@@ -611,192 +683,14 @@ class _QuoteCanvas extends StatelessWidget {
                 textAlign: TextAlign.center,
                 maxLines: 6,
                 overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  color: c.onSurface,
-                  fontFamily: DsTypography.fontFamilyDisplay,
-                  fontFamilyFallback: DsTypography.displayFallback,
-                  fontSize: DsTypography.titleLarge,
-                  fontWeight: DsTypography.semiBold,
-                  height: 1.5,
-                ),
+                style: context.dsText.sectionTitle.displayFamily
+                    .tint(c.onSurface)
+                    .copyWith(height: 1.5),
               ),
               IgnorePointer(
                 child: _LoveBurst(controller: burst, color: c.favorite),
               ),
             ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-/// "1/3" over the gallery — frosted, never a hard black chip.
-class _CounterPill extends StatelessWidget {
-  const _CounterPill({required this.index, required this.count});
-
-  final int index;
-  final int count;
-
-  @override
-  Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: DsRadius.borderPill,
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: DsBlur.light, sigmaY: DsBlur.light),
-        child: Container(
-          padding: const EdgeInsets.symmetric(
-            horizontal: DsSpacing.xs,
-            vertical: 3,
-          ),
-          decoration: BoxDecoration(
-            color: Colors.black.withValues(alpha: 0.28),
-            borderRadius: DsRadius.borderPill,
-            border: Border.all(color: Colors.white24),
-          ),
-          child: Text(
-            '${index + 1}/$count',
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: DsTypography.labelSmall,
-              fontWeight: DsTypography.semiBold,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-/// The frosted "shop this" plate floating over the foot of the image.
-class _ShopPlate extends StatelessWidget {
-  const _ShopPlate({
-    required this.product,
-    required this.onTap,
-    this.onAddToBag,
-  });
-
-  final Product product;
-  final VoidCallback onTap;
-
-  /// Null when nothing is in stock to add — the plate then only navigates.
-  final VoidCallback? onAddToBag;
-
-  @override
-  Widget build(BuildContext context) {
-    final c = context.dsColors;
-    final theme = Theme.of(context);
-
-    return GestureDetector(
-      onTap: onTap,
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(DsRadius.xl),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(
-            sigmaX: DsBlur.medium,
-            sigmaY: DsBlur.medium,
-          ),
-          child: Container(
-            padding: const EdgeInsets.all(DsSpacing.xs),
-            decoration: BoxDecoration(
-              color: c.surface.withValues(alpha: 0.82),
-              borderRadius: BorderRadius.circular(DsRadius.xl),
-              border: Border.all(color: Colors.white.withValues(alpha: 0.28)),
-            ),
-            child: Row(
-              children: [
-                Container(
-                  width: 38,
-                  height: 38,
-                  decoration: BoxDecoration(
-                    gradient: context.primaryGradient,
-                    borderRadius: BorderRadius.circular(DsRadius.md),
-                    boxShadow: context.glowShadow(
-                      c.primary,
-                      blur: 14,
-                      alpha: 0.34,
-                    ),
-                  ),
-                  child: Icon(
-                    Icons.shopping_bag_outlined,
-                    size: 19,
-                    color: c.onPrimary,
-                  ),
-                ),
-                const SizedBox(width: DsSpacing.xs),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        product.title,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: theme.textTheme.labelLarge?.copyWith(
-                          color: c.onSurface,
-                          fontWeight: DsTypography.semiBold,
-                          height: 1.2,
-                        ),
-                      ),
-                      const SizedBox(height: 1),
-                      // Two flexible children split the row evenly when both
-                      // want more than half, which was clipping the live price
-                      // ("264,000 …") to make room for a decorative strike.
-                      // The weights hand the price the larger share; the
-                      // was-price gives way first.
-                      Row(
-                        children: [
-                          Flexible(
-                            flex: 3,
-                            child: Text(
-                              product.price?.format() ?? '',
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: DsTypography.price(
-                                c.price,
-                                size: DsTypography.labelLarge,
-                              ),
-                            ),
-                          ),
-                          if (product.hasDiscount) ...[
-                            const SizedBox(width: DsSpacing.xxs),
-                            Flexible(
-                              flex: 2,
-                              child: Text(
-                                product.compareAtPrice?.format() ?? '',
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: DsTypography.priceStrike(
-                                  c.onSurfaceVariant,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(width: DsSpacing.xxs),
-                // The plate now closes a sale rather than only pointing at
-                // one: tapping the bag drops the cheapest live offer straight
-                // into the cart, without leaving the feed.
-                if (onAddToBag != null)
-                  _AddToBagButton(onTap: onAddToBag!)
-                else
-                  Padding(
-                    padding: const EdgeInsetsDirectional.only(
-                      end: DsSpacing.xs,
-                    ),
-                    child: Icon(
-                      Icons.arrow_forward_rounded,
-                      size: 17,
-                      color: c.primary,
-                    ),
-                  ),
-              ],
-            ),
           ),
         ),
       ),
@@ -813,7 +707,7 @@ class _FreshRibbon extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(
         horizontal: DsSpacing.xs,
-        vertical: 3,
+        vertical: DsSpacing.xxs,
       ),
       decoration: BoxDecoration(
         gradient: context.champagneGradient,
@@ -823,103 +717,15 @@ class _FreshRibbon extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const DsSparkle(size: 9, color: Color(0xFF79551F)),
+          const DsSparkle(size: 9, color: DsColors.onChampagne),
           const SizedBox(width: DsSpacing.xxs),
           Text(
             context.l10n.justIn.toUpperCase(),
-            style: const TextStyle(
-              // Deep gold ink on the champagne wash — the one place a literal
-              // colour beats a token, because the ribbon's ground is a fixed
-              // brand gradient in both themes.
-              color: Color(0xFF79551F),
-              fontSize: DsTypography.labelSmall,
-              fontWeight: DsTypography.bold,
-              height: 1.1,
-            ),
+            // Deep gold ink: the ribbon's ground is the champagne gradient,
+            // which is fixed in both themes, so the text must be too.
+            style: context.dsText.badge.tint(DsColors.onChampagne),
           ),
         ],
-      ),
-    );
-  }
-}
-
-/// Rating over the media — social proof where the eye already is.
-class _RatingChip extends StatelessWidget {
-  const _RatingChip({required this.rating, required this.reviews});
-
-  final double rating;
-  final int reviews;
-
-  @override
-  Widget build(BuildContext context) {
-    final c = context.dsColors;
-    return ClipRRect(
-      borderRadius: DsRadius.borderPill,
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: DsBlur.light, sigmaY: DsBlur.light),
-        child: Container(
-          padding: const EdgeInsets.symmetric(
-            horizontal: DsSpacing.xs,
-            vertical: 3,
-          ),
-          decoration: BoxDecoration(
-            color: Colors.black.withValues(alpha: 0.28),
-            borderRadius: DsRadius.borderPill,
-            border: Border.all(color: Colors.white24),
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(Icons.star_rounded, size: 12, color: c.rating),
-              const SizedBox(width: 3),
-              Text(
-                rating.toStringAsFixed(1),
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: DsTypography.labelSmall,
-                  fontWeight: DsTypography.bold,
-                  height: 1.1,
-                ),
-              ),
-              if (reviews > 0) ...[
-                const SizedBox(width: 3),
-                Text(
-                  '(${formatCount(reviews)})',
-                  style: TextStyle(
-                    color: Colors.white.withValues(alpha: 0.78),
-                    fontSize: DsTypography.labelSmall,
-                    height: 1.1,
-                  ),
-                ),
-              ],
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-/// The gradient bag inside the shop plate.
-class _AddToBagButton extends StatelessWidget {
-  const _AddToBagButton({required this.onTap});
-
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final c = context.dsColors;
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        width: 38,
-        height: 38,
-        decoration: BoxDecoration(
-          gradient: context.primaryGradient,
-          borderRadius: BorderRadius.circular(DsRadius.md),
-          boxShadow: context.glowShadow(c.primary, blur: 12, alpha: 0.36),
-        ),
-        child: Icon(Icons.add_rounded, size: 22, color: c.onPrimary),
       ),
     );
   }
@@ -943,7 +749,7 @@ class _MediaDots extends StatelessWidget {
           AnimatedContainer(
             duration: DsMotion.fast,
             curve: Curves.easeOut,
-            margin: const EdgeInsets.symmetric(horizontal: 3),
+            margin: const EdgeInsets.symmetric(horizontal: DsSpacing.xxs),
             width: i == index ? 18 : 6,
             height: 6,
             decoration: BoxDecoration(
@@ -990,13 +796,13 @@ class _LoveBurst extends StatelessWidget {
                 child: Icon(
                   Icons.favorite_rounded,
                   size: 104,
-                  color: Colors.white.withValues(alpha: 0.94),
+                  color: DsColors.onMedia.withValues(alpha: 0.94),
                   shadows: [
                     Shadow(
                       blurRadius: 30,
                       color: color.withValues(alpha: 0.55),
                     ),
-                    const Shadow(blurRadius: 18, color: Colors.black26),
+                    const Shadow(blurRadius: 18, color: DsColors.mediaScrim),
                   ],
                 ),
               ),
@@ -1020,7 +826,7 @@ class _LoveBurst extends StatelessWidget {
           child: Icon(
             i.isEven ? Icons.favorite_rounded : Icons.auto_awesome_rounded,
             size: size,
-            color: i.isEven ? color : Colors.white,
+            color: i.isEven ? color : DsColors.onMedia,
           ),
         ),
       ),
@@ -1066,7 +872,9 @@ class _PostActions extends StatelessWidget {
       child: Row(
         children: [
           _ActionButton(
-            icon: liked ? Icons.favorite_rounded : Icons.favorite_border_rounded,
+            icon: liked
+                ? Icons.favorite_rounded
+                : Icons.favorite_border_rounded,
             color: liked ? c.favorite : c.onSurface,
             active: liked,
             onTap: onLike,
@@ -1085,7 +893,9 @@ class _PostActions extends StatelessWidget {
           ),
           const Spacer(),
           _ActionButton(
-            icon: saved ? Icons.bookmark_rounded : Icons.bookmark_border_rounded,
+            icon: saved
+                ? Icons.bookmark_rounded
+                : Icons.bookmark_border_rounded,
             color: saved ? c.secondary : c.onSurface,
             active: saved,
             onTap: onSave,
@@ -1131,7 +941,7 @@ class _ActionButton extends StatelessWidget {
               const SizedBox(width: DsSpacing.xxs),
               Text(
                 label!,
-                style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                style: context.dsText.label.copyWith(
                   color: context.dsColors.onSurface,
                   fontWeight: DsTypography.medium,
                 ),
@@ -1152,6 +962,7 @@ class _PostCaption extends StatelessWidget {
   const _PostCaption({
     required this.post,
     required this.likes,
+    required this.comments,
     required this.showCaption,
     required this.expanded,
     required this.onExpand,
@@ -1160,6 +971,10 @@ class _PostCaption extends StatelessWidget {
 
   final Post post;
   final int likes;
+
+  /// The card's live tally, not `post.commentsCount` — the two differ from the
+  /// moment she leaves a comment until the feed is next fetched.
+  final int comments;
   final bool showCaption;
   final bool expanded;
   final VoidCallback onExpand;
@@ -1168,7 +983,6 @@ class _PostCaption extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = context.dsColors;
-    final theme = Theme.of(context);
     final l10n = context.l10n;
 
     return Padding(
@@ -1188,7 +1002,7 @@ class _PostCaption extends StatelessWidget {
                 const SizedBox(width: DsSpacing.xxs),
                 Text(
                   l10n.postLikesCount(formatCount(likes)),
-                  style: theme.textTheme.labelLarge?.copyWith(
+                  style: context.dsText.labelLarge.copyWith(
                     fontWeight: DsTypography.semiBold,
                   ),
                 ),
@@ -1202,11 +1016,11 @@ class _PostCaption extends StatelessWidget {
                 maxLines: expanded ? null : 2,
                 overflow: expanded ? TextOverflow.clip : TextOverflow.ellipsis,
                 text: TextSpan(
-                  style: theme.textTheme.bodyMedium?.copyWith(height: 1.45),
+                  style: context.dsText.body.copyWith(height: 1.45),
                   children: [
                     TextSpan(
                       text: '${post.author.name}  ',
-                      style: theme.textTheme.bodyMedium?.copyWith(
+                      style: context.dsText.body.copyWith(
                         fontWeight: DsTypography.bold,
                       ),
                     ),
@@ -1214,7 +1028,7 @@ class _PostCaption extends StatelessWidget {
                     if (!expanded)
                       TextSpan(
                         text: '  ${l10n.postMore}',
-                        style: theme.textTheme.bodyMedium?.copyWith(
+                        style: context.dsText.body.copyWith(
                           color: c.onSurfaceVariant,
                           fontWeight: DsTypography.semiBold,
                         ),
@@ -1224,13 +1038,13 @@ class _PostCaption extends StatelessWidget {
               ),
             ),
           ],
-          if (post.commentsCount > 0) ...[
+          if (comments > 0) ...[
             const SizedBox(height: DsSpacing.xs),
             GestureDetector(
               onTap: onComments,
               child: Text(
-                l10n.postViewComments(formatCount(post.commentsCount)),
-                style: theme.textTheme.bodySmall?.copyWith(
+                l10n.postViewComments(formatCount(comments)),
+                style: context.dsText.cardSubtitle.copyWith(
                   color: c.onSurfaceVariant,
                 ),
               ),
@@ -1250,10 +1064,10 @@ class _PostCaption extends StatelessWidget {
         if (token.startsWith('#') || token.startsWith('@'))
           TextSpan(
             text: token,
-            style: TextStyle(
-              color: accent,
-              fontWeight: DsTypography.semiBold,
-            ),
+            // ds-ignore: no-hand-rolled-text-styles -- a TextSpan child is an
+            // overlay on the parent span, so it must not carry a full role or
+            // it overrides the caption size the caller chose.
+            style: TextStyle(color: accent, fontWeight: DsTypography.semiBold),
           )
         else
           TextSpan(text: token),
@@ -1264,13 +1078,6 @@ class _PostCaption extends StatelessWidget {
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
-
-/// Compact engagement counts — 1.2K, 3.4M.
-String formatCount(int n) {
-  if (n >= 1000000) return '${(n / 1000000).toStringAsFixed(1)}M';
-  if (n >= 1000) return '${(n / 1000).toStringAsFixed(1)}K';
-  return '$n';
-}
 
 String _shortTimeAgo(BuildContext context, DateTime date) {
   final l10n = context.l10n;

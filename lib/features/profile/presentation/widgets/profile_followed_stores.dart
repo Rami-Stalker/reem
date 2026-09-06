@@ -99,7 +99,7 @@ class _StoreAvatar extends StatelessWidget {
                     top: -2,
                     child: Container(
                       padding:
-                          const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
+                          const EdgeInsets.symmetric(horizontal: DsSpacing.xxs, vertical: DsSpacing.xxxs),
                       constraints: const BoxConstraints(minWidth: 16),
                       decoration: BoxDecoration(
                         color: c.primary,
@@ -109,11 +109,7 @@ class _StoreAvatar extends StatelessWidget {
                       child: Text(
                         '${store.newCount}',
                         textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: c.onPrimary,
-                          fontSize: 9,
-                          fontWeight: DsTypography.bold,
-                        ),
+                        style: context.dsText.micro.bold.tint(c.onPrimary),
                       ),
                     ),
                   ),
@@ -125,11 +121,7 @@ class _StoreAvatar extends StatelessWidget {
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: DsTypography.labelSmall,
-                fontWeight: DsTypography.medium,
-                color: c.onSurface,
-              ),
+              style: context.dsText.caption.tint(c.onSurface),
             ),
           ],
         ),

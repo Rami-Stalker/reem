@@ -75,7 +75,7 @@ class _PhoneChangeScreenState extends ConsumerState<PhoneChangeScreen> {
   Future<void> _start() async {
     if (!_formKey.currentState!.validate()) return;
     final newPhone = _newPhoneController.text.trim();
-    action() =>
+    Future<Result<PhoneChangeRequest>> action() =>
         ref.read(authRepositoryProvider).startPhoneChange(newPhone: newPhone);
 
     setState(() => _busy = true);
@@ -237,7 +237,7 @@ class _PhoneChangeScreenState extends ConsumerState<PhoneChangeScreen> {
               const SizedBox(height: DsSpacing.xl),
               Text(
                 l10n.changeNumberExplainer,
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                style: context.dsText.cardSubtitle.copyWith(
                   color: colors.onSurfaceVariant,
                 ),
               ),
@@ -273,6 +273,7 @@ class _StartStep extends StatelessWidget {
           DsInputField(
             controller: controller,
             label: context.l10n.newNumberLabel,
+            // l10n-ignore: a dialling mask, not language
             hint: '09XX XXX XXX',
             keyboardType: TextInputType.phone,
             prefixIcon: Icon(Icons.phone_iphone_rounded, color: colors.primary),
@@ -319,13 +320,13 @@ class _CodeStep extends StatelessWidget {
         // of the first one going wrong.
         Text(
           awaitingCurrent ? l10n.currentNumberCode : l10n.newNumberCode,
-          style: Theme.of(context).textTheme.titleMedium,
+          style: context.dsText.cardTitle,
         ),
         const SizedBox(height: DsSpacing.xs),
         Text(
           awaitingCurrent ? request.maskedCurrent : request.maskedNew,
           textDirection: TextDirection.ltr,
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+          style: context.dsText.body.copyWith(
             color: colors.onSurfaceVariant,
           ),
         ),
@@ -335,11 +336,11 @@ class _CodeStep extends StatelessWidget {
             children: [
               Text(
                 '${l10n.matchCodeLabel}: ',
-                style: Theme.of(context).textTheme.bodySmall,
+                style: context.dsText.cardSubtitle,
               ),
               Text(
                 request.challenge!.matchCode!,
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                style: context.dsText.cardTitle.copyWith(
                   color: colors.primary,
                   fontWeight: FontWeight.bold,
                 ),

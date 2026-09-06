@@ -124,17 +124,13 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   const SizedBox(height: DsSpacing.xl),
                   DsGradientText(
                     l10n.finishSignUp,
-                    style: TextStyle(
-                      fontFamily: DsTypography.fontFamily,
-                      fontSize: 32,
-                      fontWeight: DsTypography.bold,
-                    ),
+                    style: context.dsText.pageTitle.bold,
                   ),
                   const SizedBox(height: DsSpacing.sm),
                   Text(
                     l10n.loginSubtitle,
                     textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    style: context.dsText.body.copyWith(
                       color: colors.onSurfaceVariant,
                     ),
                   ),
@@ -233,11 +229,11 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     activeThumbColor: colors.primary,
                     title: Text(
                       l10n.passwordOptional,
-                      style: Theme.of(context).textTheme.bodyMedium,
+                      style: context.dsText.body,
                     ),
                     subtitle: Text(
                       l10n.passwordOptionalHint,
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      style: context.dsText.cardSubtitle.copyWith(
                         color: colors.onSurfaceVariant,
                       ),
                     ),
@@ -296,7 +292,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     activeColor: colors.primary,
                     title: Text(
                       l10n.declaredFemaleLabel,
-                      style: Theme.of(context).textTheme.bodyMedium,
+                      style: context.dsText.body,
                     ),
                   ),
                   const SizedBox(height: DsSpacing.md),
@@ -346,14 +342,14 @@ class _VerifiedNumber extends StatelessWidget {
               children: [
                 Text(
                   context.l10n.numberVerified,
-                  style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                  style: context.dsText.label.copyWith(
                     color: colors.onSurfaceVariant,
                   ),
                 ),
                 Text(
                   phone,
                   textDirection: TextDirection.ltr,
-                  style: Theme.of(context).textTheme.titleMedium,
+                  style: context.dsText.cardTitle,
                 ),
               ],
             ),
@@ -443,7 +439,7 @@ class _RoleChip extends StatelessWidget {
             Text(
               label,
               textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.labelMedium?.copyWith(
+              style: context.dsText.label.copyWith(
                 color: selected ? colors.primary : colors.onSurfaceVariant,
                 fontWeight: selected ? DsTypography.bold : DsTypography.regular,
               ),
@@ -490,7 +486,7 @@ class _PasswordStrengthIndicator extends StatelessWidget {
         const SizedBox(height: DsSpacing.xs),
         Text(
           context.l10n.passwordStrengthLabel(label),
-          style: Theme.of(context).textTheme.labelSmall?.copyWith(color: color),
+          style: context.dsText.caption.copyWith(color: color),
         ),
       ],
     );

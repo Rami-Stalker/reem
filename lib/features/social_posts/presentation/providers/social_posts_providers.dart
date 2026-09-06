@@ -14,15 +14,13 @@ import 'package:reem/features/social_posts/domain/usecases/post_engagement_useca
 import 'package:reem/features/social_posts/presentation/providers/comments_notifier.dart';
 import 'package:reem/features/social_posts/presentation/providers/comments_state.dart';
 
-final postSocialRemoteDataSourceProvider =
-    Provider<PostSocialRemoteDataSource>(
+final postSocialRemoteDataSourceProvider = Provider<PostSocialRemoteDataSource>(
   (ref) => PostSocialRemoteDataSourceImpl(ref.watch(dioProvider)),
 );
 
 final postSocialRepositoryProvider = Provider<PostSocialRepository>(
-  (ref) => PostSocialRepositoryImpl(
-    ref.watch(postSocialRemoteDataSourceProvider),
-  ),
+  (ref) =>
+      PostSocialRepositoryImpl(ref.watch(postSocialRemoteDataSourceProvider)),
 );
 
 final getCommentsUseCaseProvider = Provider(
@@ -47,11 +45,11 @@ final sharePostUseCaseProvider = Provider(
 /// Comment thread for a given post id.
 final commentsNotifierProvider = StateNotifierProvider.autoDispose
     .family<CommentsNotifier, CommentsState, String>((ref, postId) {
-  return CommentsNotifier(
-    postId: postId,
-    getComments: ref.watch(getCommentsUseCaseProvider),
-    addComment: ref.watch(addCommentUseCaseProvider),
-    deleteComment: ref.watch(deleteCommentUseCaseProvider),
-    currentUser: ref.watch(authNotifierProvider.select((s) => s.user)),
-  )..load();
-});
+      return CommentsNotifier(
+        postId: postId,
+        getComments: ref.watch(getCommentsUseCaseProvider),
+        addComment: ref.watch(addCommentUseCaseProvider),
+        deleteComment: ref.watch(deleteCommentUseCaseProvider),
+        currentUser: ref.watch(authNotifierProvider.select((s) => s.user)),
+      )..load();
+    });

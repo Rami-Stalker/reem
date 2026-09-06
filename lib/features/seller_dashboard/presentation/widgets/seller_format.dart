@@ -1,4 +1,6 @@
 /// Money and number formatting for the seller command centre.
+library;
+///
 ///
 /// The implementation moved to `core/shared/value_objects/money_format.dart`
 /// once the admin console needed the same helpers; this file stays as the

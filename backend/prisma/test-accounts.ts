@@ -1,0 +1,193 @@
+/**
+ * Creates (or repairs) three hand-made accounts for manual testing:
+ * one SUPER_ADMIN, one approved SELLER, one CUSTOMER — each with a password
+ * that works on the phone+password sign-in path.
+ *
+ * Idempotent: re-running resets the password, the role and the flags rather
+ * than creating a duplicate.
+ */
+import {
+  Currency,
+  PrismaClient,
+  SellerLevel,
+  SellerVerificationStatus,
+  UserRole,
+} from '@prisma/client';
+import * as argon2 from 'argon2';
+
+const prisma = new PrismaClient();
+
+const hash = (plain: string) =>
+  argon2.hash(plain, {
+    type: argon2.argon2id,
+    memoryCost: 64 * 1024,
+    timeCost: 3,
+    parallelism: 1,
+  });
+
+interface AccountSeed {
+  label: string;
+  name: string;
+  username: string;
+  phone: string;
+  password: string;
+  role: UserRole;
+  bio: string;
+  location: string;
+}
+
+const ACCOUNTS: AccountSeed[] = [
+  {
+    label: 'ADMIN',
+    name: 'إدارة ريم — تجريبي',
+    username: 'reem_owner',
+    phone: '+963911111111',
+    password: 'ReemAdmin#2026',
+    role: UserRole.SUPER_ADMIN,
+    bio: 'حساب إدارة المنصة للاختبار',
+    location: 'دمشق، سوريا',
+  },
+  {
+    label: 'SELLER',
+    name: 'بوتيك ريم — تجريبي',
+    username: 'reem_boutique',
+    phone: '+963922222222',
+    password: 'ReemSeller#2026',
+    role: UserRole.SELLER,
+    bio: 'بوتيك أزياء نسائية راقية ✨',
+    location: 'دمشق، سوريا',
+  },
+  {
+    label: 'CUSTOMER',
+    name: 'زبونة ريم — تجريبي',
+    username: 'reem_shopper',
+    phone: '+963933333333',
+    password: 'ReemBuyer#2026',
+    role: UserRole.CUSTOMER,
+    bio: 'أتسوّق على ريم',
+    location: 'دمشق، سوريا',
+  },
+];
+
+async function main() {
+  const now = new Date();
+
+  for (const seed of ACCOUNTS) {
+    const passwordHash = await hash(seed.password);
+
+    const shared = {
+      name: seed.name,
+      username: seed.username,
+      passwordHash,
+      passwordSetAt: now,
+      role: seed.role,
+      bio: seed.bio,
+      location: seed.location,
+      imageUrl: `https://i.pravatar.cc/300?u=${encodeURIComponent(seed.username)}`,
+      // Phone-verified: the account exists as if a code had already been
+      // completed, so nothing refuses the sign-in for an unverified number.
+      isVerified: true,
+      phoneVerifiedAt: now,
+      declaredFemale: true,
+      declaredFemaleAt: now,
+      // Cleared so a stale lockout from an earlier run cannot block a test.
+      failedLoginCount: 0,
+      lockedUntil: null,
+      disabledAt: null,
+      ...(seed.role === UserRole.SELLER && {
+        sellerLevel: SellerLevel.VERIFIED,
+        sellerVerifiedAt: now,
+      }),
+    };
+
+    const user = await prisma.user.upsert({
+      where: { phone: seed.phone },
+      update: shared,
+      create: { phone: seed.phone, tier: 'Platinum', ...shared },
+    });
+
+    // The role table drives permission lookups alongside `user.role`.
+    const role = await prisma.role.findUnique({ where: { name: seed.role } });
+    if (role) {
+      await prisma.userRoleAssignment.deleteMany({ where: { userId: user.id } });
+      await prisma.userRoleAssignment.create({
+        data: { userId: user.id, roleId: role.id },
+      });
+    }
+
+    // A wallet exists for every account so the money screens have something
+    // real to read.
+    await prisma.wallet.upsert({
+      where: { userId_currency: { userId: user.id, currency: Currency.SYP } },
+      update: {},
+      create: { userId: user.id, currency: Currency.SYP, balance: 0 },
+    });
+
+    if (seed.role === UserRole.SELLER) {
+      const admin = await prisma.user.findFirst({
+        where: { role: { in: [UserRole.SUPER_ADMIN, UserRole.ADMIN] } },
+        orderBy: { createdAt: 'asc' },
+      });
+      const verification = {
+        status: SellerVerificationStatus.APPROVED,
+        businessName: 'بوتيك ريم',
+        legalName: 'بوتيك ريم للأزياء',
+        businessCategory: 'fashion',
+        storeDescription: seed.bio,
+        storeLogoUrl: `https://i.pravatar.cc/300?u=${seed.username}`,
+        contactPhone: seed.phone,
+        businessAddress: 'دمشق - المزة',
+        warehouseAddress: 'دمشق - المزة',
+        commercialRegistration: 'CR-REEM-BOUTIQUE',
+        taxId: 'TAX-REEM-BOUTIQUE',
+        bankName: 'بنك بيمو السعودي الفرنسي',
+        accountHolder: 'بوتيك ريم للأزياء',
+        iban: 'SY350000123456',
+        shippingMethods: ['PLATFORM_COURIER', 'SELLER_SHIPS'],
+        returnPolicy: 'الاستبدال والإرجاع خلال ٧ أيام من الاستلام.',
+        productCategories: ['fashion'],
+        yearsExperience: 5,
+        documentUrls: [],
+        reviewedBy: admin?.id ?? null,
+        reviewedAt: now,
+      };
+      await prisma.sellerVerification.upsert({
+        where: { userId: user.id },
+        update: verification,
+        create: { userId: user.id, submittedAt: now, ...verification },
+      });
+    }
+
+    if (seed.role === UserRole.CUSTOMER) {
+      const existing = await prisma.address.findFirst({
+        where: { userId: user.id },
+      });
+      if (!existing) {
+        await prisma.address.create({
+          data: {
+            userId: user.id,
+            label: 'المنزل',
+            recipientName: seed.name,
+            recipientPhone: seed.phone,
+            governorate: 'دمشق',
+            district: 'المزة',
+            city: 'دمشق',
+            addressLine: 'شارع الجلاء - بناء ٢٤',
+            isDefault: true,
+          },
+        });
+      }
+    }
+
+    console.log(
+      `${seed.label.padEnd(9)} ${seed.phone}  ${seed.password}  (${user.username}, ${user.id})`,
+    );
+  }
+}
+
+main()
+  .catch((error) => {
+    console.error(error);
+    process.exitCode = 1;
+  })
+  .finally(() => prisma.$disconnect());

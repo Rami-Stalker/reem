@@ -135,7 +135,10 @@ class OrderPaymentModel extends OrderPayment {
     required super.capturedAmount,
     required super.refundedAmount,
     super.transactionRef,
+    super.providerRef,
     super.paidAt,
+    super.rail,
+    super.needsCustomerAction,
   });
 
   factory OrderPaymentModel.fromJson(Map<String, dynamic> json) {
@@ -148,7 +151,10 @@ class OrderPaymentModel extends OrderPayment {
       capturedAmount: _money(json['captured_amount'], fallback: currency),
       refundedAmount: _money(json['refunded_amount'], fallback: currency),
       transactionRef: json['transaction_ref'] as String?,
+      providerRef: json['provider_ref'] as String?,
       paidAt: _dt(json['paid_at']),
+      rail: PaymentRail.fromWire(json['rail'] as String?),
+      needsCustomerAction: json['needs_customer_action'] as bool? ?? false,
     );
   }
 }
@@ -261,6 +267,7 @@ class OrderDetailModel extends OrderDetail {
     super.sellerOrders,
     super.payment,
     super.timeline,
+    super.awaitingCodConfirmation,
   });
 
   factory OrderDetailModel.fromJson(Map<String, dynamic> json) {
@@ -283,6 +290,8 @@ class OrderDetailModel extends OrderDetail {
       notes: json['notes'] as String?,
       deliveryInstructions: json['delivery_instructions'] as String?,
       privacyMaskEnabled: json['privacy_mask_enabled'] as bool? ?? false,
+      awaitingCodConfirmation:
+          json['awaiting_cod_confirmation'] as bool? ?? false,
       shipping: OrderShippingModel.fromJson(
         (json['shipping'] as Map?)?.cast<String, dynamic>() ?? const {},
       ),

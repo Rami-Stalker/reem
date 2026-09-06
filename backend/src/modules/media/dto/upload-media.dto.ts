@@ -27,11 +27,38 @@ export const MEDIA_PURPOSES = [
   'category',
   'verification',
   'chat',
+  'visual_search',
+  'try_on',
+  'closet',
 ] as const;
 
 export type MediaPurpose = (typeof MEDIA_PURPOSES)[number];
 
-const PRIVATE_PURPOSES = new Set<MediaPurpose>(['verification', 'chat']);
+/**
+ * `visual_search` and `try_on` are private for a reason neither of the other
+ * two has. A verification document is sensitive because of what it proves; a
+ * chat photograph because of who it was addressed to. These are sensitive
+ * because of what they *are*: a screenshot from her own phone, and — in the
+ * try-on case — a photograph of her body. Both are also the only two purposes
+ * on a retention clock, deleted by `VisualRetentionService` once the search
+ * they served is over. Nothing else in the schema deletes a photograph the
+ * uploader never asked to delete.
+ *
+ * `closet` joins them on the same reasoning and differs on the clock. A woman
+ * photographing her own wardrobe is photographing her bedroom, her mirror and
+ * frequently herself, and the resulting picture is the single most private
+ * thing she can put into this application — so PRIVATE is not a judgement call.
+ * It is *not* on a retention clock, because unlike a search photograph this one
+ * is the permanent illustration of something she owns: deleting it would empty
+ * a tile in her own wardrobe. It goes when she deletes the piece.
+ */
+const PRIVATE_PURPOSES = new Set<MediaPurpose>([
+  'verification',
+  'chat',
+  'visual_search',
+  'try_on',
+  'closet',
+]);
 
 export function visibilityForPurpose(purpose: MediaPurpose): MediaVisibility {
   return PRIVATE_PURPOSES.has(purpose)
@@ -58,6 +85,17 @@ export function acceptedKinds(purpose: MediaPurpose): MediaType[] {
       return [MediaType.image, MediaType.document];
     case 'chat':
       return [MediaType.image, MediaType.audio, MediaType.document];
+    case 'visual_search':
+    case 'try_on':
+      // Images only, and deliberately narrower than the default: there is no
+      // reading of "search by video" or "try this on a clip of me" that this
+      // pipeline can honour, and accepting one would store a file nothing will
+      // ever look at.
+      return [MediaType.image];
+    case 'closet':
+      // Images only, for the same reason: a closet tile draws a photograph, and
+      // a video of a garment has nowhere to play.
+      return [MediaType.image];
     default:
       return [MediaType.image, MediaType.video];
   }

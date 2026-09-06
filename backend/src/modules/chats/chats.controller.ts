@@ -52,6 +52,18 @@ export class ChatsController {
     return this.chats.search(userId, query);
   }
 
+  /**
+   * Declared after `@Get('search')` so the literal segment is matched first —
+   * a UUID parameter placed above it would swallow `/chats/search`.
+   */
+  @Get(':id')
+  thread(
+    @Param('id', ParseUUIDPipe) id: string,
+    @CurrentUser('id') userId: string,
+  ) {
+    return this.chats.thread(id, userId);
+  }
+
   @Post('blocks/:userId')
   @HttpCode(HttpStatus.OK)
   block(

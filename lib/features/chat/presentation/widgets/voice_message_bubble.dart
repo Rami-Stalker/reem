@@ -110,7 +110,7 @@ class _VoiceMessageBubbleState extends ConsumerState<VoiceMessageBubble> {
   Widget build(BuildContext context) {
     final c = context.dsColors;
     final total = _player?.duration ?? widget.duration ?? Duration.zero;
-    final onBubble = widget.isMe ? Colors.white : c.onSurface;
+    final onBubble = widget.isMe ? DsColors.onMedia : c.onSurface;
 
     return Align(
       // Directional, not absolute: the sender's own bubble sits on the trailing
@@ -130,14 +130,14 @@ class _VoiceMessageBubbleState extends ConsumerState<VoiceMessageBubble> {
         child: _failed
             ? Text(
                 context.l10n.voiceUnavailable,
-                style: TextStyle(color: onBubble.withValues(alpha: 0.8)),
+                style: context.dsText.body.tint(onBubble.withValues(alpha: 0.8)),
               )
             : Row(
                 children: [
                   _PlayButton(
                     playing: _playing,
                     loading: _loading,
-                    tint: widget.isMe ? Colors.white : c.primary,
+                    tint: widget.isMe ? DsColors.onMedia : c.primary,
                     onTap: _toggle,
                   ),
                   const SizedBox(width: DsSpacing.sm),
@@ -162,11 +162,7 @@ class _VoiceMessageBubbleState extends ConsumerState<VoiceMessageBubble> {
                           _format(_playing || _position > Duration.zero
                               ? _position
                               : total),
-                          style: TextStyle(
-                            color: onBubble.withValues(alpha: 0.85),
-                            fontSize: DsTypography.labelSmall,
-                            fontFeatures: const [FontFeature.tabularFigures()],
-                          ),
+                          style: context.dsText.caption.tint(onBubble.withValues(alpha: 0.85)).copyWith(fontFeatures: const [FontFeature.tabularFigures()]),
                         ),
                       ],
                     ),

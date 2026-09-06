@@ -119,6 +119,16 @@ enum OrderStatus {
         _ => OrderStatus.draft,
       };
 
+  /// True while the order can still change on its own — a seller preparing,
+  /// a courier on the road. What the tracking screen watches.
+  bool get isInFlight => const {
+    OrderStatus.pendingPayment,
+    OrderStatus.confirmed,
+    OrderStatus.partiallyShipped,
+    OrderStatus.shipped,
+    OrderStatus.partiallyDelivered,
+  }.contains(this);
+
   String get label => switch (this) {
         OrderStatus.draft => 'مسودّة',
         OrderStatus.pendingPayment => 'بانتظار الدفع',
@@ -249,6 +259,29 @@ class SellerOrder extends Equatable {
       [id, number, sellerId, status, itemsSubtotal, items, shipment];
 }
 
+/// What a payment rail asks of her once the order is placed. Mirrors the
+/// server's `PaymentRail`.
+enum PaymentRail {
+  /// Cash at the door — nothing to do in the app.
+  cash,
+
+  /// Taken from her balance the moment she ordered.
+  wallet,
+
+  /// A gateway to visit, which answers back.
+  online,
+
+  /// A transfer she makes herself, then tells us the reference for.
+  manual;
+
+  static PaymentRail fromWire(String? value) => switch (value) {
+    'wallet' => PaymentRail.wallet,
+    'online' => PaymentRail.online,
+    'manual' => PaymentRail.manual,
+    _ => PaymentRail.cash,
+  };
+}
+
 class OrderPayment extends Equatable {
   final String id;
   final String method;
@@ -257,7 +290,15 @@ class OrderPayment extends Equatable {
   final Money capturedAmount;
   final Money refundedAmount;
   final String? transactionRef;
+  final String? providerRef;
   final DateTime? paidAt;
+
+  /// Which kind of rail this is, from the server rather than guessed from the
+  /// method name.
+  final PaymentRail rail;
+
+  /// True while the money still needs something from her.
+  final bool needsCustomerAction;
 
   const OrderPayment({
     required this.id,
@@ -267,7 +308,10 @@ class OrderPayment extends Equatable {
     required this.capturedAmount,
     required this.refundedAmount,
     this.transactionRef,
+    this.providerRef,
     this.paidAt,
+    this.rail = PaymentRail.cash,
+    this.needsCustomerAction = false,
   });
 
   bool get isPaid => status == 'paid';
@@ -289,6 +333,18 @@ class OrderPayment extends Equatable {
 
   @override
   List<Object?> get props => [id, method, status, amount, paidAt];
+}
+
+/// One attempt at settling a payment: the payment as it now stands, and the
+/// gateway link to send her to when there is one.
+class PaymentAttempt extends Equatable {
+  const PaymentAttempt({required this.payment, this.redirectUrl});
+
+  final OrderPayment payment;
+  final String? redirectUrl;
+
+  @override
+  List<Object?> get props => [payment, redirectUrl];
 }
 
 class OrderEvent extends Equatable {
@@ -393,6 +449,13 @@ class OrderDetail extends OrderSummary {
   final OrderPayment? payment;
   final List<OrderEvent> timeline;
 
+  /// The order is placed but held: a cash-on-delivery confirmation code is
+  /// still owed. Nothing is being prepared until it is read back.
+  ///
+  /// One boolean is all the server sends. She is never told a risk score
+  /// exists, only what she can do about it.
+  final bool awaitingCodConfirmation;
+
   const OrderDetail({
     required super.id,
     required super.number,
@@ -415,6 +478,7 @@ class OrderDetail extends OrderSummary {
     this.sellerOrders = const [],
     this.payment,
     this.timeline = const [],
+    this.awaitingCodConfirmation = false,
   });
 
   /// Every line across every parcel, for a flat list view.

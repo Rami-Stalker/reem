@@ -1,0 +1,485 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/features/admin/presentation/widgets/admin_page_header.dart';
+import 'package:reem/features/value/domain/entities/value_admin.dart';
+import 'package:reem/features/value/presentation/providers/value_admin_providers.dart';
+import 'package:reem/features/value/presentation/widgets/value_policy_editor.dart';
+
+/// Running Reem Value.
+///
+/// The order of this screen is the order an operator should think in, and it is
+/// deliberate:
+///
+///  1. **Can money buy the top?** The guarantee, first and unmissable. Every
+///     other number here is only meaningful if this one holds.
+///  2. **Where does everybody stand?** A ladder whose top rung holds nobody is
+///     decoration; one holding a third of the population is not a standing.
+///  3. **What does it cost?** Exposure, with unbudgeted spend called out.
+///  4. **Retune it.** Draft, simulate, then activate — never a single save.
+///  5. **Who is worth a look?** A queue for a person, not an automatic penalty.
+class AdminValueScreen extends ConsumerWidget {
+  const AdminValueScreen({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final distribution = ref.watch(valueDistributionProvider);
+
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          AdminPageHeader(
+            title: 'Reem Value',
+            subtitle:
+                'المكانة، وشو بتفتح — والضمان إنها ما بتنشرى.',
+            actions: [
+              IconButton(
+                tooltip: 'تحديث',
+                onPressed: () {
+                  ref.invalidate(valueDistributionProvider);
+                  ref.invalidate(valueCostProvider);
+                  ref.invalidate(valueSuspectsProvider);
+                },
+                icon: const Icon(Icons.refresh_rounded),
+              ),
+              IconButton(
+                tooltip: 'شغّل جمع الأدلة الآن',
+                onPressed: () => _sweep(context, ref),
+                icon: const Icon(Icons.cyclone_rounded),
+              ),
+            ],
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(
+              DsSpacing.xl,
+              0,
+              DsSpacing.xl,
+              DsSpacing.xxl,
+            ),
+            child: distribution.when(
+              loading: () => const Padding(
+                padding: EdgeInsets.all(DsSpacing.xxl),
+                child: Center(child: DsLoadingIndicator()),
+              ),
+              error: (_, _) => DsErrorState(
+                message: 'ما قدرنا نجيب بيانات المكانة.',
+                onRetry: () => ref.invalidate(valueDistributionProvider),
+              ),
+              data: (data) => Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _GuaranteeBanner(guarantee: data.guarantee),
+                  const SizedBox(height: DsSpacing.lg),
+                  _DistributionCard(distribution: data),
+                  const SizedBox(height: DsSpacing.lg),
+                  const _CostCard(),
+                  const SizedBox(height: DsSpacing.lg),
+                  const ValuePolicySection(),
+                  const SizedBox(height: DsSpacing.lg),
+                  const _SuspectsCard(),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _sweep(BuildContext context, WidgetRef ref) async {
+    final messenger = ScaffoldMessenger.of(context);
+    try {
+      final counts = await ref.read(valueAdminActionsProvider).sweep();
+      messenger.showSnackBar(
+        SnackBar(
+          content: Text('تم — أعيد احتساب ${counts['recomputed'] ?? 0} ملف.'),
+        ),
+      );
+    } catch (_) {
+      messenger.showSnackBar(const SnackBar(content: Text('ما نجح الجمع.')));
+    }
+  }
+}
+
+/// The programme's promise, checked.
+///
+/// Rendered as a banner rather than a row in a table because it is not a
+/// statistic — it is a pass/fail on the one claim Reem Value makes about
+/// itself. When it fails, the screen should be uncomfortable to look at.
+class _GuaranteeBanner extends StatelessWidget {
+  const _GuaranteeBanner({required this.guarantee});
+
+  final ValueGuarantee guarantee;
+
+  @override
+  Widget build(BuildContext context) {
+    final console = context.console;
+    final holds = guarantee.holds;
+    final accent = holds ? console.positive : console.critical;
+
+    return Container(
+      padding: const EdgeInsets.all(DsSpacing.lg),
+      decoration: BoxDecoration(
+        color: accent.withValues(alpha: 0.08),
+        borderRadius: BorderRadius.circular(DsRadius.card),
+        border: Border.all(color: accent.withValues(alpha: 0.35)),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(
+            holds ? Icons.verified_rounded : Icons.warning_amber_rounded,
+            color: accent,
+          ),
+          const SizedBox(width: DsSpacing.md),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  holds
+                      ? 'المكانة ما بتنشرى'
+                      : 'تحذير: الشرا لحاله صار يوصل لأعلى الدرجات',
+                  style: context.dsText.cardTitle.tint(accent),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  'حدا بس بيشتري وما بيساهم بشي تاني بيوصل لـ'
+                  '${guarantee.spendingCeiling} من ١٠٠٠'
+                  '${guarantee.highestRungReachableBySpending != null ? ' — أي درجة «${guarantee.highestRungReachableBySpending}»' : ''}'
+                  '${guarantee.topRung != null ? '، وأعلى درجة هي «${guarantee.topRung}».' : '.'}',
+                  style: context.dsText.body,
+                ),
+                if (!holds) ...[
+                  const SizedBox(height: DsSpacing.xs),
+                  Text(
+                    'نزّلي سقف الشرا (commerce ceiling) أو ارفعي عتبة الدرجات '
+                    'العليا — وإلا صار البرنامج سلّم إنفاق باسم تاني.',
+                    style: context.dsText.caption.tint(accent),
+                  ),
+                ],
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _DistributionCard extends StatelessWidget {
+  const _DistributionCard({required this.distribution});
+
+  final ValueDistribution distribution;
+
+  @override
+  Widget build(BuildContext context) {
+    final console = context.console;
+    final busiest = distribution.tiers.fold<int>(
+      1,
+      (max, tier) => tier.count > max ? tier.count : max,
+    );
+
+    return _Panel(
+      title: 'توزّع الدرجات',
+      subtitle: '${distribution.total} ملف — و${distribution.unranked} لسا بلا درجة',
+      child: Column(
+        children: [
+          for (final tier in distribution.tiers)
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: DsSpacing.xs),
+              child: Row(
+                children: [
+                  SizedBox(
+                    width: 120,
+                    child: Text(tier.name, style: context.dsText.labelStrong),
+                  ),
+                  SizedBox(
+                    width: 56,
+                    child: Text(
+                      '≥${tier.minScore}',
+                      style: context.dsText.micro.tint(console.muted),
+                    ),
+                  ),
+                  Expanded(
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(DsRadius.pill),
+                      child: LinearProgressIndicator(
+                        value: tier.count / busiest,
+                        minHeight: 10,
+                        backgroundColor: console.surfaceAlt,
+                        color: console.primary,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: DsSpacing.sm),
+                  SizedBox(
+                    width: 110,
+                    child: Text(
+                      '${tier.count} · ${tier.sharePercent.toStringAsFixed(1)}%',
+                      textAlign: TextAlign.end,
+                      style: context.dsText.numeric,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+class _CostCard extends ConsumerWidget {
+  const _CostCard();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final console = context.console;
+    final costAsync = ref.watch(valueCostProvider);
+
+    return _Panel(
+      title: 'الكلفة والالتزام',
+      subtitle: 'شو انصرف فعلًا، وشو أقصى ما ممكن ينصرف.',
+      child: costAsync.when(
+        loading: () => const Padding(
+          padding: EdgeInsets.all(DsSpacing.lg),
+          child: Center(child: DsLoadingIndicator()),
+        ),
+        error: (_, _) => const Text('ما قدرنا نجيب تقرير الكلفة.'),
+        data: (cost) => Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (cost.unboundedCount > 0)
+              Container(
+                margin: const EdgeInsets.only(bottom: DsSpacing.sm),
+                padding: const EdgeInsets.all(DsSpacing.sm),
+                decoration: BoxDecoration(
+                  color: console.caution.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(DsRadius.sm),
+                ),
+                child: Text(
+                  // The one state this report exists to surface: a benefit that
+                  // spends money with no ceiling on how much.
+                  '${cost.unboundedCount} ميزة بتصرف مصاري بلا سقف — حطّي '
+                  'ميزانية إلها.',
+                  style: context.dsText.caption.tint(console.caution),
+                ),
+              ),
+            Row(
+              children: [
+                _Metric(
+                  label: 'انصرف',
+                  value: cost.issuedTotal?.format() ?? '—',
+                ),
+                _Metric(
+                  label: 'أقصى التزام',
+                  value: cost.ceilingTotal?.format() ?? '—',
+                ),
+              ],
+            ),
+            const SizedBox(height: DsSpacing.sm),
+            for (final row in cost.benefits)
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 4),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(row.title, style: context.dsText.body),
+                    ),
+                    SizedBox(
+                      width: 90,
+                      child: Text(
+                        '${row.granted}${row.budget != null ? '/${row.budget}' : ''}',
+                        textAlign: TextAlign.end,
+                        style: context.dsText.numeric,
+                      ),
+                    ),
+                    SizedBox(
+                      width: 130,
+                      child: Text(
+                        row.issued?.format() ?? '—',
+                        textAlign: TextAlign.end,
+                        style: context.dsText.numeric.tint(
+                          row.unbounded ? console.caution : console.muted,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _SuspectsCard extends ConsumerWidget {
+  const _SuspectsCard();
+
+  static const _reasonLabels = {
+    'single_pillar': 'كل المكانة من جهة وحدة',
+    'burst': 'مساهمات مكثّفة بأيام قليلة',
+  };
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final console = context.console;
+    final suspectsAsync = ref.watch(valueSuspectsProvider);
+
+    return _Panel(
+      title: 'ملفات بتستاهل نظرة',
+      // Said plainly, because the word matters: these are shapes, not verdicts,
+      // and every one of them has an innocent explanation.
+      subtitle: 'مو اتهام — أشكال غير معتادة، والقرار لإنسان.',
+      child: suspectsAsync.when(
+        loading: () => const Padding(
+          padding: EdgeInsets.all(DsSpacing.lg),
+          child: Center(child: DsLoadingIndicator()),
+        ),
+        error: (_, _) => const Text('ما قدرنا نجيب القائمة.'),
+        data: (suspects) => suspects.isEmpty
+            ? Text(
+                'ما في شي لافت هلق.',
+                style: context.dsText.body.tint(console.muted),
+              )
+            : Column(
+                children: [
+                  for (final suspect in suspects)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: DsSpacing.xs),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  '${suspect.tierKey ?? '—'} · ${suspect.score}',
+                                  style: context.dsText.labelStrong,
+                                ),
+                                Text(
+                                  suspect.reasons
+                                      .map((r) => _reasonLabels[r] ?? r)
+                                      .join(' · '),
+                                  style: context.dsText.caption,
+                                ),
+                                Text(
+                                  'تركّز ${(suspect.concentration * 100).round()}% '
+                                  'على ${suspect.distinctDays} يوم',
+                                  style: context.dsText.micro.tint(console.muted),
+                                ),
+                              ],
+                            ),
+                          ),
+                          TextButton(
+                            onPressed: () => _freeze(context, ref, suspect),
+                            child: const Text('جمّدي مؤقتًا'),
+                          ),
+                        ],
+                      ),
+                    ),
+                ],
+              ),
+      ),
+    );
+  }
+
+  Future<void> _freeze(
+    BuildContext context,
+    WidgetRef ref,
+    ValueSuspect suspect,
+  ) async {
+    final controller = TextEditingController();
+    final reason = await showDialog<String>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('تجميد مؤقت'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'المكانة بتوقف عن الحركة والمزايا بتوقف — وما بيضيع ولا شي. '
+              'بترجع لما تشيلي التجميد.',
+            ),
+            const SizedBox(height: DsSpacing.md),
+            DsInputField(controller: controller, label: 'السبب'),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('إلغاء'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(context).pop(controller.text.trim()),
+            child: const Text('جمّدي'),
+          ),
+        ],
+      ),
+    );
+
+    if (reason == null || reason.isEmpty || !context.mounted) return;
+    await ref.read(valueAdminActionsProvider).freeze(suspect.userId, reason);
+  }
+}
+
+// ── Shared chrome ───────────────────────────────────────────────────────
+
+class _Panel extends StatelessWidget {
+  const _Panel({required this.title, required this.child, this.subtitle});
+
+  final String title;
+  final String? subtitle;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    final console = context.console;
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(DsSpacing.lg),
+      decoration: BoxDecoration(
+        color: console.surface,
+        borderRadius: BorderRadius.circular(DsRadius.card),
+        border: Border.all(color: console.line),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(title, style: context.dsText.sectionTitle),
+          if (subtitle != null) ...[
+            const SizedBox(height: 2),
+            Text(subtitle!, style: context.dsText.sectionSubtitle),
+          ],
+          const SizedBox(height: DsSpacing.md),
+          child,
+        ],
+      ),
+    );
+  }
+}
+
+class _Metric extends StatelessWidget {
+  const _Metric({required this.label, required this.value});
+
+  final String label;
+  final String value;
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(value, style: context.dsText.metricSmall),
+          Text(label, style: context.dsText.metricLabel),
+        ],
+      ),
+    );
+  }
+}

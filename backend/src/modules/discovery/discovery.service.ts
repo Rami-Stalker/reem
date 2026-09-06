@@ -6,6 +6,7 @@ import {
 import { Prisma } from '@prisma/client';
 import { buildMeta } from '../../common/dto/pagination.dto';
 import { CacheService } from '../../common/cache/cache.service';
+import { GraphQueryService } from '../graph/graph-query.service';
 import { serializeProduct } from '../../common/serializers';
 import {
   LIVE_OFFER_WHERE,
@@ -17,9 +18,9 @@ import {
   ProductOrderBy,
 } from './discovery.repository';
 import {
+  HOME_COLLECTION_KEYS,
   isStaticCollection,
   STATIC_COLLECTIONS,
-  STATIC_COLLECTION_KEYS,
 } from './discovery.specs';
 import { DiscoveryQueryDto, DiscoverySort } from './dto/discovery-query.dto';
 
@@ -35,6 +36,7 @@ export class DiscoveryService {
   constructor(
     private readonly repo: DiscoveryRepository,
     private readonly cache: CacheService,
+    private readonly graph: GraphQueryService,
   ) {}
 
   async collection(key: string, dto: DiscoveryQueryDto, viewerId?: string) {
@@ -59,9 +61,17 @@ export class DiscoveryService {
 
   async category(category: string, dto: DiscoveryQueryDto, viewerId?: string) {
     const cat = category.toLowerCase();
+    // The whole subtree, not the one row whose slug matches. Products hang
+    // off leaves, so matching `category.slug` alone answered with an empty
+    // shelf for every department and root the home page links to — the entire
+    // "Shop by category" rail opened onto nothing.
+    const categoryIds = await this.repo.categorySubtree(cat);
+    if (categoryIds.length === 0) {
+      throw new NotFoundException('Category not found');
+    }
     const where: Prisma.ProductWhereInput = {
       ...PURCHASABLE_PRODUCT_WHERE,
-      category: { slug: cat },
+      categoryId: { in: categoryIds },
       ...this.buildFilters(dto),
     };
     return this.paginated(
@@ -92,16 +102,35 @@ export class DiscoveryService {
     );
   }
 
+  /**
+   * Products genuinely like this one.
+   *
+   * Reads the commerce graph's `SIMILAR` affinities, which compare slot,
+   * colour, fabric, occasion and price. This used to mean "same category,
+   * ordered by rating" — which is not similarity: it put a child's raincoat
+   * next to an evening gown because both were highly rated in `clothing`.
+   *
+   * The category fallback is kept, deliberately. A product the affinity sweep
+   * has not reached yet — listed an hour ago — would otherwise show an empty
+   * rail, and the old behaviour is a worse answer than the graph but a better
+   * one than nothing.
+   */
   async similar(productId: string, dto: DiscoveryQueryDto, viewerId?: string) {
     const category = await this.repo.categoryOf(productId);
     if (category === null) throw new NotFoundException('Product not found');
-    const where: Prisma.ProductWhereInput = {
-      ...PURCHASABLE_PRODUCT_WHERE,
-      category: { slug: category },
-      id: { not: productId },
-    };
+
+    const relatedIds = await this.graph.similar(productId, 40);
+
+    const where: Prisma.ProductWhereInput = relatedIds.length
+      ? { ...PURCHASABLE_PRODUCT_WHERE, id: { in: relatedIds } }
+      : {
+          ...PURCHASABLE_PRODUCT_WHERE,
+          category: { slug: category },
+          id: { not: productId },
+        };
+
     return this.paginated(
-      `${PREFIX}similar:${productId}:${dto.filterSignature()}`,
+      `${PREFIX}similar:${productId}:${relatedIds.length}:${dto.filterSignature()}`,
       where,
       [{ rating: 'desc' }, { ordersCount: 'desc' }],
       dto,
@@ -131,7 +160,7 @@ export class DiscoveryService {
   /** Aggregated home payload — sections are de-duplicated across each other. */
   async home(viewerId?: string) {
     const sections = await Promise.all(
-      STATIC_COLLECTION_KEYS.map(async (key) => {
+      HOME_COLLECTION_KEYS.map(async (key) => {
         const spec = STATIC_COLLECTIONS[key];
         const where: Prisma.ProductWhereInput = {
           ...PURCHASABLE_PRODUCT_WHERE,

@@ -102,6 +102,14 @@ final class SettingsRemoteDataSourceImpl extends BaseRemoteDataSource
   }
 
   @override
+  Future<void> markNotificationRead(String id) =>
+      postJson(ApiEndpoints.notificationRead(id));
+
+  @override
+  Future<void> markAllNotificationsRead() =>
+      postJson(ApiEndpoints.notificationsReadAll);
+
+  @override
   Future<NotificationPreferencesModel> getNotificationPreferences() async {
     final json = await getJson(ApiEndpoints.notificationPreferences);
     return NotificationPreferencesModel.fromJson(json);

@@ -31,5 +31,6 @@ final getHomeContentUseCaseProvider = Provider(
 
 final homeContentNotifierProvider =
     StateNotifierProvider<HomeContentNotifier, HomeContentState>(
-  (ref) => HomeContentNotifier(ref.watch(getHomeContentUseCaseProvider))..load(),
-);
+      (ref) =>
+          HomeContentNotifier(ref.watch(getHomeContentUseCaseProvider))..load(),
+    );

@@ -18,8 +18,9 @@ class HomeRecentlyViewed extends ConsumerWidget {
       homeContentNotifierProvider.select((s) => s.isInitialLoading),
     );
     final products = ref.watch(
-      homeContentNotifierProvider
-          .select((s) => s.content?.recentlyViewed ?? const <Product>[]),
+      homeContentNotifierProvider.select(
+        (s) => s.content?.recentlyViewed ?? const <Product>[],
+      ),
     );
 
     return ProductRail(
@@ -27,8 +28,7 @@ class HomeRecentlyViewed extends ConsumerWidget {
       title: context.l10n.homeRecentlyViewed,
       products: products,
       isLoading: isLoading,
-      onTapProduct: (p) =>
-          context.push('${RoutePaths.productDetails}?id=${p.id}'),
+      onTapProduct: (p) => context.push(RoutePaths.productDetailsOf(p.id)),
     );
   }
 }

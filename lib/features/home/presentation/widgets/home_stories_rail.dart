@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 import 'package:reem/core/design_system/design_system.dart';
 import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/shared/entities/story.dart';
 import 'package:reem/features/home/presentation/providers/home_provider.dart';
-import 'package:reem/features/home/presentation/screens/story_viewer_screen.dart';
 import 'package:reem/features/home/presentation/widgets/home_section_header.dart';
+import 'package:reem/features/stories/presentation/screens/story_viewer_screen.dart';
 
 /// The boutiques' stories — today's frames from the shops she follows.
 ///
@@ -19,6 +18,10 @@ class HomeStoriesRail extends ConsumerWidget {
   const HomeStoriesRail({super.key});
 
   static const double _height = 108;
+
+  /// Carried by the rail rather than left as a sliver behind it, so a day when
+  /// no boutique has posted costs the page nothing at all.
+  static const double _trailingGap = DsSpacing.lg;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -38,7 +41,7 @@ class HomeStoriesRail extends ConsumerWidget {
             title: context.l10n.homeBoutiqueStories,
             padding: const EdgeInsets.fromLTRB(
               DsSpacing.lg,
-              0,
+              DsSpacing.xxxs,
               DsSpacing.lg,
               DsSpacing.sm,
             ),
@@ -80,6 +83,7 @@ class HomeStoriesRail extends ConsumerWidget {
                   ),
           ),
         ),
+        const SliverToBoxAdapter(child: SizedBox(height: _trailingGap)),
       ],
     );
   }

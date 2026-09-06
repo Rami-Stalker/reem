@@ -13,7 +13,6 @@ class SellerConversionMetricsWidget extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(sellerDashboardNotifierProvider);
     final c = context.dsColors;
-    final theme = Theme.of(context);
 
     if (state.isInitialLoading) {
       return Padding(
@@ -33,8 +32,8 @@ class SellerConversionMetricsWidget extends ConsumerWidget {
         children: [
           Text(
             context.l10n.sellerConversionMetrics,
-            style: theme.textTheme.titleMedium
-                ?.copyWith(fontWeight: DsTypography.bold),
+            style: context.dsText.cardTitle
+                .copyWith(fontWeight: DsTypography.bold),
           ),
           const SizedBox(height: DsSpacing.sm),
           Row(
@@ -74,7 +73,7 @@ class SellerConversionMetricsWidget extends ConsumerWidget {
                 icon: Icons.swap_vert_rounded,
                 color: c.secondary,
                 note:
-                    'Abandon: ${m.cartAbandonRate.toStringAsFixed(1)}%',
+                    context.l10n.sellerCartAbandon(m.cartAbandonRate.toStringAsFixed(1)),
               ),
             ],
           ),
@@ -112,7 +111,6 @@ class _MetricCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = context.dsColors;
-    final theme = Theme.of(context);
     final isPositive = (trend ?? 0) >= 0;
     final trendColor = isPositive ? c.success : c.error;
 
@@ -128,7 +126,7 @@ class _MetricCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              padding: const EdgeInsets.all(6),
+              padding: const EdgeInsets.all(DsSpacing.xs),
               decoration: BoxDecoration(
                 color: color.withValues(alpha: 0.12),
                 borderRadius: DsRadius.borderSm,
@@ -138,13 +136,13 @@ class _MetricCard extends StatelessWidget {
             const SizedBox(height: DsSpacing.xs),
             Text(
               value,
-              style: theme.textTheme.titleMedium
-                  ?.copyWith(fontWeight: DsTypography.bold),
+              style: context.dsText.cardTitle
+                  .copyWith(fontWeight: DsTypography.bold),
             ),
             Text(
               label,
-              style: theme.textTheme.labelSmall
-                  ?.copyWith(color: c.onSurfaceVariant, fontSize: 10),
+              style: context.dsText.caption
+                  .copyWith(color: c.onSurfaceVariant, fontSize: DsTypography.labelMicro),
             ),
             if (trend != null)
               Row(
@@ -158,21 +156,16 @@ class _MetricCard extends StatelessWidget {
                   ),
                   Text(
                     '${trend!.abs().toStringAsFixed(1)}%',
-                    style: TextStyle(
-                      fontFamily: DsTypography.fontFamily,
-                      fontSize: 10,
-                      fontWeight: DsTypography.bold,
-                      color: trendColor,
-                    ),
+                    style: context.dsText.micro.bold.tint(trendColor),
                   ),
                 ],
               ),
             if (note != null)
               Text(
                 note!,
-                style: theme.textTheme.labelSmall?.copyWith(
+                style: context.dsText.caption.copyWith(
                   color: c.onSurfaceVariant,
-                  fontSize: 10,
+                  fontSize: DsTypography.labelMicro,
                 ),
               ),
           ],

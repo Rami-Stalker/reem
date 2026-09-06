@@ -5,6 +5,8 @@ import 'package:go_router/go_router.dart';
 
 import 'package:reem/core/design_system/design_system.dart';
 import 'package:reem/core/localization/l10n_extension.dart';
+import 'package:reem/core/media/authorized_media_image.dart';
+import 'package:reem/core/media/media_variants.dart';
 import 'package:reem/core/router/route_names.dart';
 import 'package:reem/core/shared/entities/post.dart';
 import 'package:reem/core/shared/entities/product.dart';
@@ -121,7 +123,7 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
             SliverPadding(
               padding: const EdgeInsets.fromLTRB(
                 DsSpacing.lg,
-                0,
+                DsSpacing.xxxs,
                 DsSpacing.lg,
                 120,
               ),
@@ -170,7 +172,7 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
             children: [
               Text(
                 context.l10n.newCollection,
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                style: context.dsText.sectionTitle.copyWith(
                       fontWeight: DsTypography.bold,
                     ),
               ),
@@ -286,7 +288,7 @@ class _ErrorBanner extends StatelessWidget {
           Expanded(
             child: Text(
               message,
-              style: TextStyle(color: colors.error),
+              style: context.dsText.body.tint(colors.error),
             ),
           ),
           IconButton(
@@ -321,7 +323,7 @@ class _EmptyWishlistState extends StatelessWidget {
           const SizedBox(height: DsSpacing.md),
           Text(
             context.l10n.noSavedItems,
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+            style: context.dsText.cardTitle.copyWith(
                   fontWeight: DsTypography.bold,
                 ),
           ),
@@ -329,7 +331,7 @@ class _EmptyWishlistState extends StatelessWidget {
           Text(
             context.l10n.collectionsBlurb,
             textAlign: TextAlign.center,
-            style: TextStyle(color: colors.onSurfaceVariant),
+            style: context.dsText.body.tint(colors.onSurfaceVariant),
           ),
           const SizedBox(height: DsSpacing.lg),
           FilledButton.icon(
@@ -361,7 +363,7 @@ class _CollectionsSection extends StatelessWidget {
         DsSpacing.lg,
         DsSpacing.lg,
         DsSpacing.lg,
-        0,
+        DsSpacing.xxxs,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -428,11 +430,11 @@ class _CollectionTile extends StatelessWidget {
                   collection.name,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(fontWeight: DsTypography.semiBold),
+                  style: context.dsText.body.semibold,
                 ),
                 Text(
                   '${collection.itemsCount} items',
-                  style: TextStyle(color: colors.onSurfaceVariant),
+                  style: context.dsText.body.tint(colors.onSurfaceVariant),
                 ),
               ],
             ),
@@ -504,7 +506,7 @@ class _HorizontalSection extends StatelessWidget {
         DsSpacing.lg,
         DsSpacing.xl,
         DsSpacing.lg,
-        0,
+        DsSpacing.xxxs,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -516,7 +518,7 @@ class _HorizontalSection extends StatelessWidget {
             child: ListView.separated(
               scrollDirection: Axis.horizontal,
               itemCount: itemCount,
-              separatorBuilder: (_, __) => const SizedBox(width: DsSpacing.sm),
+              separatorBuilder: (_, _) => const SizedBox(width: DsSpacing.sm),
               itemBuilder: itemBuilder,
             ),
           ),
@@ -570,13 +572,13 @@ class _SellerPill extends StatelessWidget {
                       seller.name,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(fontWeight: DsTypography.semiBold),
+                      style: context.dsText.body.semibold,
                     ),
                     Text(
                       '@${seller.username}',
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: TextStyle(color: colors.onSurfaceVariant),
+                      style: context.dsText.body.tint(colors.onSurfaceVariant),
                     ),
                   ],
                 ),
@@ -623,16 +625,16 @@ class _PostPreview extends StatelessWidget {
                       : post.caption,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(fontWeight: DsTypography.semiBold),
+                  style: context.dsText.body.semibold,
                 ),
                 // A post that tags nothing has no second line to give.
                 if (product != null) ...[
-                  const SizedBox(height: 4),
+                  DsGaps.vXxs,
                   Text(
                     product.title,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(color: colors.onSurfaceVariant),
+                    style: context.dsText.body.tint(colors.onSurfaceVariant),
                   ),
                 ],
               ],
@@ -663,16 +665,9 @@ class _PostProductImage extends StatelessWidget {
                 color: colors.surfaceVariant,
                 child: Icon(Icons.image_outlined, color: colors.onSurfaceVariant),
               )
-            : Image.network(
-                url,
-                fit: BoxFit.cover,
-                errorBuilder: (_, __, ___) => ColoredBox(
-                  color: colors.surfaceVariant,
-                  child: Icon(
-                    Icons.broken_image_outlined,
-                    color: colors.onSurfaceVariant,
-                  ),
-                ),
+            : AuthorizedMediaImage(
+                url: url,
+                variantWidth: MediaVariants.thumbnail,
               ),
       ),
     );

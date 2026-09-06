@@ -14,7 +14,6 @@ class SellerTasksWidget extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(sellerDashboardNotifierProvider);
     final c = context.dsColors;
-    final theme = Theme.of(context);
 
     if (state.isInitialLoading) {
       return Padding(
@@ -42,14 +41,14 @@ class SellerTasksWidget extends ConsumerWidget {
                   children: [
                     Text(
                       context.l10n.sellerTasks,
-                      style: theme.textTheme.titleMedium
-                          ?.copyWith(fontWeight: DsTypography.bold),
+                      style: context.dsText.cardTitle
+                          .copyWith(fontWeight: DsTypography.bold),
                     ),
                     if (highPriority > 0)
                       Text(
                         '$highPriority urgent',
-                        style: theme.textTheme.labelSmall
-                            ?.copyWith(color: c.error, fontWeight: DsTypography.semiBold),
+                        style: context.dsText.caption
+                            .copyWith(color: c.error, fontWeight: DsTypography.semiBold),
                       ),
                   ],
                 ),
@@ -60,7 +59,7 @@ class SellerTasksWidget extends ConsumerWidget {
           ...tasks.asMap().entries.map((e) {
             return Padding(
               padding: EdgeInsets.only(
-                  bottom: e.key < tasks.length - 1 ? DsSpacing.xs : 0),
+                  bottom: e.key < tasks.length - DsSpacing.xxxs ? DsSpacing.xs : DsSpacing.xxxs),
               child: _TaskTile(task: e.value)
                   .animate(delay: (e.key * 60).ms)
                   .fadeIn(duration: 300.ms)
@@ -81,14 +80,13 @@ class _TaskTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = context.dsColors;
-    final theme = Theme.of(context);
     final isHigh = task.priority == TaskPriority.high;
-    final color = task.priorityColor;
+    final color = context.toneColor(task.priorityTone);
 
     return Container(
-      margin: const EdgeInsets.only(bottom: 0),
+      margin: const EdgeInsets.only(bottom: DsSpacing.xxxs),
       padding: const EdgeInsets.symmetric(
-          horizontal: DsSpacing.md, vertical: DsSpacing.sm + 2),
+          horizontal: DsSpacing.md, vertical: DsSpacing.sm + DsSpacing.xxxs),
       decoration: BoxDecoration(
         color: isHigh ? color.withValues(alpha: 0.06) : c.card,
         borderRadius: DsRadius.borderLg,
@@ -125,12 +123,7 @@ class _TaskTile extends StatelessWidget {
                       child: Center(
                         child: Text(
                           '${task.count}',
-                          style: const TextStyle(
-                            fontFamily: DsTypography.fontFamily,
-                            fontSize: 8,
-                            fontWeight: DsTypography.bold,
-                            color: Colors.white,
-                          ),
+                          style: context.dsText.micro.bold.tint(DsColors.onMedia),
                         ),
                       ),
                     ),
@@ -145,15 +138,15 @@ class _TaskTile extends StatelessWidget {
               children: [
                 Text(
                   task.title,
-                  style: theme.textTheme.titleSmall?.copyWith(
+                  style: context.dsText.tileTitle.copyWith(
                     fontWeight: DsTypography.semiBold,
                     color: isHigh ? color : c.onSurface,
                   ),
                 ),
                 Text(
                   task.subtitle,
-                  style: theme.textTheme.labelSmall
-                      ?.copyWith(color: c.onSurfaceVariant, fontSize: 11),
+                  style: context.dsText.caption
+                      .copyWith(color: c.onSurfaceVariant, fontSize: DsTypography.labelSmall),
                 ),
               ],
             ),
@@ -161,19 +154,14 @@ class _TaskTile extends StatelessWidget {
           const SizedBox(width: DsSpacing.xs),
           Container(
             padding: const EdgeInsets.symmetric(
-                horizontal: DsSpacing.xs, vertical: 3),
+                horizontal: DsSpacing.xs, vertical: DsSpacing.xxs),
             decoration: BoxDecoration(
               color: color.withValues(alpha: 0.12),
               borderRadius: DsRadius.borderFull,
             ),
             child: Text(
               task.priority.name.toUpperCase(),
-              style: TextStyle(
-                fontFamily: DsTypography.fontFamily,
-                fontSize: 9,
-                fontWeight: DsTypography.bold,
-                color: color,
-              ),
+              style: context.dsText.micro.bold.tint(color),
             ),
           ),
         ],

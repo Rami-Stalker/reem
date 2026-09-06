@@ -35,6 +35,9 @@ class ReputationRepositoryImpl
   }
 
   @override
+  Future<Result<MyReviews>> getMyReviews() => guard(remote.getMyReviews);
+
+  @override
   Future<Result<List<ReviewEntity>>> getSellerReviews(String sellerId) =>
       guard(() => remote.getSellerReviews(sellerId));
 

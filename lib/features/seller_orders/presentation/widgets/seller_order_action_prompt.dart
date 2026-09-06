@@ -148,10 +148,7 @@ class _ReasonFormState extends State<_ReasonForm> {
             onPressed: () => Navigator.of(context).pop(),
             child: Text(
               l10n.sellerCancelDismiss,
-              style: TextStyle(
-                fontFamily: DsTypography.fontFamily,
-                color: atelier.muted,
-              ),
+              style: context.dsText.body.tint(atelier.muted),
             ),
           ),
         ),

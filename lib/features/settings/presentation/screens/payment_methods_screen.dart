@@ -53,11 +53,7 @@ class PaymentMethodsScreen extends ConsumerWidget {
 
               Text(
                 'الطرق المتاحة',
-                style: TextStyle(
-                  fontSize: DsTypography.titleSmall,
-                  fontWeight: DsTypography.bold,
-                  color: colors.onSurface,
-                ),
+                style: context.dsText.tileTitle.bold.tint(colors.onSurface),
               ),
               const SizedBox(height: DsSpacing.md),
 
@@ -120,7 +116,7 @@ class _WalletTile extends StatelessWidget {
         child: Row(
           children: [
             Container(
-              padding: const EdgeInsets.all(12),
+              padding: const EdgeInsets.all(DsSpacing.sm),
               decoration: BoxDecoration(
                 color: colors.onPrimary.withValues(alpha: 0.2),
                 shape: BoxShape.circle,
@@ -137,13 +133,9 @@ class _WalletTile extends StatelessWidget {
                 children: [
                   Text(
                     'محفظة ريم',
-                    style: TextStyle(
-                      color: colors.onPrimary,
-                      fontWeight: DsTypography.bold,
-                      fontSize: DsTypography.titleSmall,
-                    ),
+                    style: context.dsText.tileTitle.bold.tint(colors.onPrimary),
                   ),
-                  const SizedBox(height: 4),
+                  DsGaps.vXxs,
                   if (isLoading)
                     SizedBox(
                       height: 14,
@@ -158,11 +150,7 @@ class _WalletTile extends StatelessWidget {
                   else
                     Text(
                       balance ?? '—',
-                      style: TextStyle(
-                        color: colors.onPrimary.withValues(alpha: 0.92),
-                        fontSize: DsTypography.titleLarge,
-                        fontWeight: DsTypography.semiBold,
-                      ),
+                      style: context.dsText.sectionTitle.tint(colors.onPrimary.withValues(alpha: 0.92)),
                     ),
                 ],
               ),
@@ -193,10 +181,21 @@ class _MethodTile extends StatelessWidget {
     _ => Icons.payments_outlined,
   };
 
+  /// What actually happens after she picks this at checkout.
+  ///
+  /// «يُؤكَّد الدفع قبل تجهيز الطلب» was the same sentence for a card, a bank
+  /// transfer and a hawala — three rails that ask three different things of
+  /// her. Each one now says what it will ask.
   String? get _hint => switch (option.method) {
     'cod' => 'تدفعين نقداً للمندوبة عند الاستلام',
     'courier_collect' => 'تحصيل عبر شركة التوصيل',
     'platform_wallet' => 'يُخصم من رصيدكِ فوراً',
+    'syriatel_cash' ||
+    'mtn_cash' ||
+    'sham_cash' => 'نفتح لكِ صفحة الدفع بعد تأكيد الطلب',
+    'bank_card' => 'صفحة دفع آمنة — لا نحفظ بيانات بطاقتك',
+    'bank_transfer' => 'تحوّلين المبلغ ثم ترسلين رقم الحوالة من صفحة الطلب',
+    'hawala' => 'حوالة داخلية، ثم ترسلين رقم الإشعار من صفحة الطلب',
     _ =>
       option.requiresOnlineConfirmation
           ? 'يُؤكَّد الدفع قبل تجهيز الطلب'
@@ -234,19 +233,13 @@ class _MethodTile extends StatelessWidget {
               children: [
                 Text(
                   option.label,
-                  style: TextStyle(
-                    color: colors.onSurface,
-                    fontWeight: DsTypography.semiBold,
-                  ),
+                  style: context.dsText.body.semibold.tint(colors.onSurface),
                 ),
                 if (hint != null) ...[
-                  const SizedBox(height: 3),
+                  DsGaps.vXxs,
                   Text(
                     hint,
-                    style: TextStyle(
-                      color: colors.onSurfaceVariant,
-                      fontSize: DsTypography.labelSmall,
-                    ),
+                    style: context.dsText.caption.tint(colors.onSurfaceVariant),
                   ),
                 ],
               ],
@@ -278,11 +271,7 @@ class _Note extends StatelessWidget {
         Expanded(
           child: Text(
             text,
-            style: TextStyle(
-              color: colors.onSurfaceVariant,
-              fontSize: DsTypography.labelSmall,
-              height: 1.5,
-            ),
+            style: context.dsText.caption.tint(colors.onSurfaceVariant).copyWith(height: 1.5),
           ),
         ),
       ],
@@ -301,7 +290,7 @@ class _NoOptions extends StatelessWidget {
       child: Text(
         'لا طرق دفع متاحة حالياً',
         textAlign: TextAlign.center,
-        style: TextStyle(color: colors.onSurfaceVariant),
+        style: context.dsText.body.tint(colors.onSurfaceVariant),
       ),
     );
   }
@@ -321,7 +310,7 @@ class _OptionsFailed extends StatelessWidget {
         children: [
           Text(
             'تعذّر تحميل طرق الدفع',
-            style: TextStyle(color: colors.onSurfaceVariant),
+            style: context.dsText.body.tint(colors.onSurfaceVariant),
           ),
           const SizedBox(height: DsSpacing.md),
           SecondaryButton(label: 'إعادة المحاولة', onPressed: onRetry),

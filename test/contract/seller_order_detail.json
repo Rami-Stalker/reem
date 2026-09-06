@@ -1,14 +1,20 @@
 {
   "id": "8b1f0a3e-1f4a-4b2d-9c11-9a2e6d5c0001",
   "number": "REEM-MB7K2X481-1",
-  "status": "DELIVERED",
-  "fulfilment_mode": "PLATFORM_COURIER",
+  "status": "delivered",
+  "fulfilment_mode": "platform_courier",
   "placed_at": "2026-08-26T07:12:44.000Z",
   "items_count": 3,
-  "net": { "amount": "340000.0000", "currency": "SYP" },
-  "commission": { "amount": "60000.0000", "currency": "SYP" },
-  "payment_method": "COD",
-  "payment_status": "PAID",
+  "net": {
+    "amount": "340000.0000",
+    "currency": "SYP"
+  },
+  "commission": {
+    "amount": "60000.0000",
+    "currency": "SYP"
+  },
+  "payment_method": "cod",
+  "payment_status": "paid",
   "tracking_code": "REM-7F3K9QX2",
   "customer": {
     "name": "ريم",
@@ -25,10 +31,22 @@
   "available_actions": [],
   "order_number": "REEM-MB7K2X481",
   "currency": "SYP",
-  "items_subtotal": { "amount": "400000.0000", "currency": "SYP" },
-  "discount_total": { "amount": "0.0000", "currency": "SYP" },
-  "shipping_cost": { "amount": "25000.0000", "currency": "SYP" },
-  "commission_base": { "amount": "400000.0000", "currency": "SYP" },
+  "items_subtotal": {
+    "amount": "400000.0000",
+    "currency": "SYP"
+  },
+  "discount_total": {
+    "amount": "0.0000",
+    "currency": "SYP"
+  },
+  "shipping_cost": {
+    "amount": "25000.0000",
+    "currency": "SYP"
+  },
+  "commission_base": {
+    "amount": "400000.0000",
+    "currency": "SYP"
+  },
   "confirmed_at": "2026-08-26T07:40:00.000Z",
   "shipped_at": "2026-08-26T10:05:00.000Z",
   "delivered_at": "2026-08-26T14:30:00.000Z",
@@ -37,7 +55,7 @@
   "cancellation_reason": null,
   "shipment": {
     "tracking_code": "REM-7F3K9QX2",
-    "status": "DELIVERED",
+    "status": "delivered",
     "assigned": true
   },
   "items": [
@@ -47,8 +65,14 @@
       "variant": "مقاس M",
       "image": "https://media.reem.test/abaya.jpg",
       "quantity": 2,
-      "unit_price": { "amount": "150000.0000", "currency": "SYP" },
-      "line_total": { "amount": "300000.0000", "currency": "SYP" },
+      "unit_price": {
+        "amount": "150000.0000",
+        "currency": "SYP"
+      },
+      "line_total": {
+        "amount": "300000.0000",
+        "currency": "SYP"
+      },
       "customisation": null
     },
     {
@@ -57,9 +81,17 @@
       "variant": null,
       "image": null,
       "quantity": 1,
-      "unit_price": { "amount": "100000.0000", "currency": "SYP" },
-      "line_total": { "amount": "100000.0000", "currency": "SYP" },
-      "customisation": { "التطريز": "ر.د" }
+      "unit_price": {
+        "amount": "100000.0000",
+        "currency": "SYP"
+      },
+      "line_total": {
+        "amount": "100000.0000",
+        "currency": "SYP"
+      },
+      "customisation": {
+        "التطريز": "ر.د"
+      }
     }
   ]
 }

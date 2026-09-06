@@ -50,6 +50,21 @@ export const OFFER_INCLUDE = {
   variants: { include: { variant: true } },
 } satisfies Prisma.SellerOfferInclude;
 
+/**
+ * How offers are ranked against each other, everywhere.
+ *
+ * `priceSyp`, never `price`: the raw column is a number in whatever currency
+ * the seller chose, so ordering by it compared 9.50 USD against 115,000 SYP
+ * and declared the dollar offer cheaper. It was not — at the stored rate that
+ * is ~123,600 SYP — but it won every "best offer" slot and put a `$` price on
+ * a card sitting beside SYP ones. `price` stays as the tiebreak so two offers
+ * that convert to the same figure still order deterministically.
+ */
+const OFFER_ORDER_BY = [
+  { priceSyp: 'asc' as const },
+  { price: 'asc' as const },
+];
+
 /** Full detail — the product page. Every live offer, for price comparison. */
 export const PRODUCT_INCLUDE = {
   category: true,
@@ -58,7 +73,7 @@ export const PRODUCT_INCLUDE = {
   variants: VARIANTS_INCLUDE,
   offers: {
     where: LIVE_OFFER_WHERE,
-    orderBy: { price: 'asc' as const },
+    orderBy: OFFER_ORDER_BY,
     include: OFFER_INCLUDE,
   },
 } satisfies Prisma.ProductInclude;
@@ -75,7 +90,7 @@ export const PRODUCT_CARD_INCLUDE = {
   variants: VARIANTS_INCLUDE,
   offers: {
     where: LIVE_OFFER_WHERE,
-    orderBy: { price: 'asc' as const },
+    orderBy: OFFER_ORDER_BY,
     take: 1,
     include: OFFER_INCLUDE,
   },
@@ -108,7 +123,8 @@ export type OfferRecord = Prisma.SellerOfferGetPayload<{
 
 /**
  * The offer shown by default on a card. `PRODUCT_INCLUDE` already sorts by
- * price ascending, so this is the cheapest live one — but the choice is
+ * SYP-normalised price ascending, so this is the cheapest live one whatever
+ * currency its seller quotes in — but the choice is
  * centralised here so a future ranking (seller rating, package tier, delivery
  * speed) changes in one place rather than at every call site.
  */

@@ -49,6 +49,45 @@ abstract final class AppEnv {
     };
   }
 
+  static const String _configuredShareBaseUrl = String.fromEnvironment(
+    'SHARE_BASE_URL',
+    defaultValue: '',
+  );
+
+  /// Where a shared link points.
+  ///
+  /// Separate from [baseUrl]: that one is the API, which is often a LAN address
+  /// or a private host, and a link she sends to a friend has to survive leaving
+  /// the phone. Defaults to the app's own domain — the same one its bundle id
+  /// (`shop.reem.app`) is derived from — and is overridable per build with
+  /// `--dart-define=SHARE_BASE_URL=…`.
+  static String get shareBaseUrl {
+    final configured = _configuredShareBaseUrl.trim();
+    final resolved = configured.isNotEmpty ? configured : 'https://reem.shop';
+    return resolved.endsWith('/')
+        ? resolved.substring(0, resolved.length - 1)
+        : resolved;
+  }
+
+  /// Where support reaches a human, as an address and a number.
+  ///
+  /// Both default to empty **on purpose**: the profile used to print
+  /// `support@reem.shop` and a Saudi landline that belonged to nobody, and an
+  /// inert row of invented contact details is worse than no row. Whichever of
+  /// these is left unset simply does not appear.
+  static const String supportEmail = String.fromEnvironment(
+    'SUPPORT_EMAIL',
+    defaultValue: '',
+  );
+
+  static const String supportPhone = String.fromEnvironment(
+    'SUPPORT_PHONE',
+    defaultValue: '',
+  );
+
+  static bool get hasSupportContact =>
+      supportEmail.trim().isNotEmpty || supportPhone.trim().isNotEmpty;
+
   /// Google OAuth client ID used by platforms that require a client identifier.
   static const String googleClientId = String.fromEnvironment(
     'GOOGLE_CLIENT_ID',

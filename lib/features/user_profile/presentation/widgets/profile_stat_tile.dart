@@ -30,21 +30,12 @@ class ProfileStatTile extends StatelessWidget {
           children: [
             Text(
               value,
-              style: TextStyle(
-                fontFamily: DsTypography.fontFamily,
-                fontSize: DsTypography.titleMedium,
-                fontWeight: DsTypography.bold,
-                color: colors.onSurface,
-              ),
+              style: context.dsText.cardTitle.bold.tint(colors.onSurface),
             ),
-            const SizedBox(height: 2),
+            DsGaps.vXxxs,
             Text(
               label,
-              style: TextStyle(
-                fontFamily: DsTypography.fontFamily,
-                fontSize: DsTypography.bodySmall,
-                color: colors.onSurfaceVariant,
-              ),
+              style: context.dsText.bodySmall.tint(colors.onSurfaceVariant),
             ),
           ],
         ),

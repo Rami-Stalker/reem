@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:reem/core/design_system/design_system.dart';
 
 class TypingIndicator
     extends StatefulWidget {
@@ -48,14 +49,14 @@ class _TypingIndicatorState
 
           padding:
               const EdgeInsets.symmetric(
-            horizontal: 22,
-            vertical: 18,
+            horizontal: DsSpacing.xl,
+            vertical: DsSpacing.lg,
           ),
 
           decoration:
               BoxDecoration(
 
-            color: Colors.white,
+            color: DsColors.onMedia,
 
             borderRadius:
                 BorderRadius.circular(
@@ -74,7 +75,7 @@ class _TypingIndicatorState
                   animation: controller,
 
                   builder:
-                      (_, __) {
+                      (_, _) {
 
                     return Container(
 
@@ -93,16 +94,9 @@ class _TypingIndicatorState
                         shape:
                             BoxShape.circle,
 
-                        color: Colors
-                            .pink
-                            .withOpacity(
-
-                          .3 +
-                              ((controller.value +
-                                              index *
-                                                  .2) %
-                                          1) *
-                                  .7,
+                        color: context.dsColors.primary.withValues(
+                          alpha: .3 +
+                              ((controller.value + index * .2) % 1) * .7,
                         ),
                       ),
                     );

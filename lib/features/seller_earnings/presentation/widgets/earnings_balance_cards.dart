@@ -99,12 +99,7 @@ class _AvailableCard extends StatelessWidget {
               Expanded(
                 child: Text(
                   l10n.earningsAvailable,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: DsTypography.labelMedium,
-                    fontWeight: DsTypography.bold,
-                    letterSpacing: 0.6,
-                  ),
+                  style: context.dsText.labelMedium.bold.tint(DsColors.onMedia).copyWith(letterSpacing: 0.6),
                 ),
               ),
               if (isRefreshing)
@@ -113,7 +108,7 @@ class _AvailableCard extends StatelessWidget {
                   height: 16,
                   child: CircularProgressIndicator(
                     strokeWidth: 2,
-                    color: Colors.white,
+                    color: DsColors.onMedia,
                   ),
                 ),
             ],
@@ -125,14 +120,7 @@ class _AvailableCard extends StatelessWidget {
             child: Text(
               amount.format(),
               maxLines: 1,
-              style: const TextStyle(
-                color: Colors.white,
-                fontFamily: DsTypography.fontFamilyDisplay,
-                fontFamilyFallback: DsTypography.displayFallback,
-                fontSize: 40,
-                fontWeight: DsTypography.bold,
-                height: 1.1,
-              ),
+              style: context.dsText.hero.tint(DsColors.onMedia).copyWith(height: 1.1),
             ),
           ),
           const SizedBox(height: DsSpacing.sm),
@@ -142,16 +130,12 @@ class _AvailableCard extends StatelessWidget {
               const Icon(
                 Icons.event_repeat_rounded,
                 size: 15,
-                color: Colors.white70,
+                color: DsColors.onMediaMuted,
               ),
               const SizedBox(width: DsSpacing.xxs),
               Text(
                 l10n.earningsAvailableHint,
-                style: const TextStyle(
-                  color: Colors.white70,
-                  fontSize: DsTypography.labelSmall,
-                  fontWeight: DsTypography.medium,
-                ),
+                style: context.dsText.caption.tint(DsColors.onMediaMuted),
               ),
             ],
           ),
@@ -205,11 +189,7 @@ class _SecondaryTile extends StatelessWidget {
                   label,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontSize: DsTypography.labelSmall,
-                    fontWeight: DsTypography.bold,
-                    color: accent,
-                  ),
+                  style: context.dsText.caption.bold.tint(accent),
                 ),
               ),
             ],
@@ -221,24 +201,15 @@ class _SecondaryTile extends StatelessWidget {
             child: Text(
               amount.format(),
               maxLines: 1,
-              style: TextStyle(
-                fontFamily: DsTypography.fontFamily,
-                fontSize: DsTypography.titleSmall,
-                fontWeight: DsTypography.bold,
-                color: colors.onSurface,
-              ),
+              style: context.dsText.tileTitle.bold.tint(colors.onSurface),
             ),
           ),
-          const SizedBox(height: 2),
+          DsGaps.vXxxs,
           Text(
             hint,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-              fontSize: DsTypography.labelSmall,
-              color: colors.onSurfaceVariant,
-              height: 1.3,
-            ),
+            style: context.dsText.caption.tint(colors.onSurfaceVariant).copyWith(height: 1.3),
           ),
         ],
       ),

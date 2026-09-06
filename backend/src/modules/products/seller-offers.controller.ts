@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  DefaultValuePipe,
   Delete,
   Get,
   HttpCode,
@@ -72,10 +73,10 @@ export class SellerOffersController {
   @Get('low-stock')
   lowStock(
     @CurrentUser() user: AuthUser,
-    @Query('threshold', new ParseIntPipe({ optional: true }))
-    threshold?: number,
+    @Query('threshold', new DefaultValuePipe(5), ParseIntPipe)
+    threshold: number,
   ) {
-    return this.offers.lowStock(user, threshold ?? 5);
+    return this.offers.lowStock(user, threshold);
   }
 
   @Get(':id')

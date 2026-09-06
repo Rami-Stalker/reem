@@ -8,35 +8,23 @@ class NotificationSettingsModel extends NotificationEntity {
     required super.type,
     required super.isRead,
     required super.createdAt,
+    super.imageUrl,
+    super.data,
   });
 
   factory NotificationSettingsModel.fromJson(Map<String, dynamic> json) {
+    final data = json['data'];
     return NotificationSettingsModel(
       id: json['id'] as String,
       title: json['title'] as String,
       body: json['body'] as String? ?? '',
-      type: _mapType(json['type'] as String?),
+      type: NotificationEntityType.fromWire(json['type'] as String?),
       isRead: json['is_read'] as bool? ?? false,
-      createdAt: DateTime.parse(
-        json['created_at'] as String? ?? DateTime.now().toIso8601String(),
-      ),
+      createdAt:
+          DateTime.tryParse(json['created_at'] as String? ?? '')?.toLocal() ??
+          DateTime.now(),
+      imageUrl: json['image_url'] as String?,
+      data: data is Map ? Map<String, dynamic>.from(data) : const {},
     );
-  }
-
-  static NotificationEntityType _mapType(String? type) {
-    switch (type) {
-      case 'comment':
-        return NotificationEntityType.comment;
-      case 'follow':
-        return NotificationEntityType.follow;
-      case 'message':
-        return NotificationEntityType.message;
-      case 'order':
-        return NotificationEntityType.order;
-      case 'promo':
-        return NotificationEntityType.promo;
-      default:
-        return NotificationEntityType.like;
-    }
   }
 }

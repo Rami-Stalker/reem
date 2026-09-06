@@ -1,60 +1,24 @@
 import 'package:flutter/material.dart';
 
-class ChatDateDivider
-    extends StatelessWidget {
+import 'package:reem/core/design_system/design_system.dart';
+
+/// The "اليوم" / "أمس" rule between days in a conversation.
+class ChatDateDivider extends StatelessWidget {
+  const ChatDateDivider({super.key, required this.title});
 
   final String title;
 
-  const ChatDateDivider({
-    super.key,
-    required this.title,
-  });
-
   @override
   Widget build(BuildContext context) {
+    final colors = context.dsColors;
     return Row(
-
       children: [
-
-        Expanded(
-
-          child: Divider(
-            color:
-                Colors.grey
-                    .withOpacity(.3),
-          ),
-        ),
-
+        Expanded(child: Divider(color: colors.divider)),
         Padding(
-
-          padding:
-              const EdgeInsets.symmetric(
-            horizontal: 18,
-          ),
-
-          child: Text(
-
-            title,
-
-            style: TextStyle(
-
-              color:
-                  Colors.grey[600],
-
-              fontWeight:
-                  FontWeight.w600,
-            ),
-          ),
+          padding: const EdgeInsets.symmetric(horizontal: DsSpacing.md),
+          child: Text(title, style: context.dsText.captionStrong),
         ),
-
-        Expanded(
-
-          child: Divider(
-            color:
-                Colors.grey
-                    .withOpacity(.3),
-          ),
-        ),
+        Expanded(child: Divider(color: colors.divider)),
       ],
     );
   }

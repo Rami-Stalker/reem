@@ -4,6 +4,8 @@ import 'package:go_router/go_router.dart';
 
 import 'package:reem/core/design_system/design_system.dart';
 import 'package:reem/core/localization/l10n_extension.dart';
+import 'package:reem/core/media/authorized_media_image.dart';
+import 'package:reem/core/media/media_variants.dart';
 import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/features/auth/presentation/widgets/auth_prompt_sheet.dart';
 import 'package:reem/features/cart/domain/entities/cart.dart';
@@ -33,8 +35,7 @@ class CartScreen extends ConsumerWidget {
                   context,
                   ref,
                   title: context.l10n.signInToCheckout,
-                  message:
-                      context.l10n.guestCartSafe,
+                  message: context.l10n.guestCartSafe,
                   from: RoutePaths.checkout,
                 );
                 if (ok && context.mounted) context.push(RoutePaths.checkout);
@@ -45,21 +46,28 @@ class CartScreen extends ConsumerWidget {
         if (state.isLoading && state.cart.isEmpty)
           const SliverFillRemaining(
             hasScrollBody: false,
-            child: Center(child: CircularProgressIndicator()),
+            child: DsLoadingIndicator(),
           )
         else if (state.isEmpty)
-          const SliverFillRemaining(hasScrollBody: false, child: _EmptyCart())
+          SliverFillRemaining(
+            hasScrollBody: false,
+            child: DsEmptyState.cart(
+              message: context.l10n.browseAndAdd,
+              onAction: () => context.go(RoutePaths.home),
+            ),
+          )
         else
           SliverPadding(
             padding: const EdgeInsets.fromLTRB(
               DsSpacing.lg,
               DsSpacing.sm,
               DsSpacing.lg,
-              140,
+              // Clears the checkout bar pinned to the bottom of the page.
+              DsSizes.bottomSafeGap + DsSpacing.xxl,
             ),
             sliver: SliverList.separated(
               itemCount: state.cart.items.length,
-              separatorBuilder: (_, __) => const SizedBox(height: DsSpacing.md),
+              separatorBuilder: (_, _) => DsGaps.vMd,
               itemBuilder: (_, i) {
                 final line = state.cart.items[i];
                 return _CartLineTile(
@@ -94,26 +102,27 @@ class _CartLineTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.dsColors;
+    final text = context.dsText;
+
     return CustomerPanel(
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           ClipRRect(
-            borderRadius: BorderRadius.circular(24),
+            borderRadius: DsRadius.borderImage,
             child: SizedBox(
-              width: 78,
-              height: 92,
+              width: DsSizes.thumbMd,
+              height: DsSizes.thumbMd / DsSizes.aspectPortrait,
               child: line.image != null
-                  ? Image.network(
-                      line.image!,
-                      fit: BoxFit.cover,
-                      errorBuilder: (_, __, ___) =>
-                          Container(color: CustomerExperience.ivory),
+                  ? AuthorizedMediaImage(
+                      url: line.image!,
+                      variantWidth: MediaVariants.thumbnail,
                     )
-                  : Container(color: CustomerExperience.ivory),
+                  : ColoredBox(color: colors.surfaceVariant),
             ),
           ),
-          const SizedBox(width: DsSpacing.md),
+          DsGaps.hMd,
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -122,36 +131,16 @@ class _CartLineTile extends StatelessWidget {
                   line.title,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontFamily: DsTypography.fontFamily,
-                    fontWeight: DsTypography.bold,
-                    color: CustomerExperience.ink,
-                  ),
+                  style: text.cardTitle.bold,
                 ),
                 if (line.variantName != null)
-                  Text(
-                    line.variantName!,
-                    style: TextStyle(
-                      fontSize: DsTypography.bodySmall,
-                      color: CustomerExperience.muted,
-                    ),
-                  ),
-                const SizedBox(height: 4),
-                Text(
-                  line.lineTotal.format(),
-                  style: TextStyle(
-                    fontFamily: DsTypography.fontFamily,
-                    fontWeight: DsTypography.bold,
-                    color: CustomerExperience.rose,
-                  ),
-                ),
+                  Text(line.variantName!, style: text.cardSubtitle),
+                DsGaps.vXxs,
+                Text(line.lineTotal.format(), style: text.price),
                 if (!line.inStock)
                   Text(
-                    'نفد المخزون',
-                    style: TextStyle(
-                      fontSize: DsTypography.bodySmall,
-                      color: const Color(0xFFB91C1C),
-                    ),
+                    context.l10n.outOfStock,
+                    style: text.caption.bold.tint(colors.error),
                   ),
               ],
             ),
@@ -161,9 +150,11 @@ class _CartLineTile extends StatelessWidget {
             children: [
               IconButton(
                 visualDensity: VisualDensity.compact,
-                icon: const Icon(
-                  Icons.delete_outline,
-                  color: CustomerExperience.muted,
+                tooltip: context.l10n.removeFromCart,
+                icon: Icon(
+                  DsIcons.delete,
+                  size: DsSizes.iconSm,
+                  color: colors.onSurfaceVariant,
                 ),
                 onPressed: isMutating ? null : onRemove,
               ),
@@ -199,45 +190,60 @@ class _QtyStepper extends StatelessWidget {
     final colors = context.dsColors;
     return Container(
       decoration: BoxDecoration(
-        color: CustomerExperience.ivory,
-        borderRadius: BorderRadius.circular(DsRadius.full),
-        border: Border.all(color: CustomerExperience.champagne),
+        color: colors.surfaceVariant,
+        borderRadius: DsRadius.borderFull,
+        border: Border.all(color: colors.border),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          _btn(Icons.remove, busy ? null : onDecrement, colors),
+          _StepperButton(
+            icon: Icons.remove_rounded,
+            onTap: busy ? null : onDecrement,
+          ),
           SizedBox(
-            width: 28,
+            width: DsSizes.iconLg,
             child: Center(
               child: busy
-                  ? const SizedBox(
-                      width: 14,
-                      height: 14,
-                      child: CircularProgressIndicator(strokeWidth: 2),
+                  ? SizedBox(
+                      width: DsSizes.iconXs,
+                      height: DsSizes.iconXs,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: colors.primary,
+                      ),
                     )
                   : Text(
                       '$quantity',
-                      style: const TextStyle(
-                        fontWeight: DsTypography.bold,
-                        color: CustomerExperience.ink,
-                      ),
+                      style: context.dsText.labelStrong.tabular,
                     ),
             ),
           ),
-          _btn(Icons.add, busy ? null : onIncrement, colors),
+          _StepperButton(
+            icon: Icons.add_rounded,
+            onTap: busy ? null : onIncrement,
+          ),
         ],
       ),
     );
   }
+}
 
-  Widget _btn(IconData icon, VoidCallback? onTap, DsColorScheme colors) {
+class _StepperButton extends StatelessWidget {
+  const _StepperButton({required this.icon, required this.onTap});
+
+  final IconData icon;
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.dsColors;
     return IconButton(
       visualDensity: VisualDensity.compact,
-      iconSize: 18,
+      iconSize: DsSizes.iconXs,
       icon: Icon(
         icon,
-        color: onTap == null ? colors.disabled : CustomerExperience.rose,
+        color: onTap == null ? colors.disabled : colors.primary,
       ),
       onPressed: onTap,
     );
@@ -252,98 +258,55 @@ class _CheckoutBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.dsColors;
+    final text = context.dsText;
     final disabled = cart.hasOutOfStock;
+
     return Container(
       padding: EdgeInsets.fromLTRB(
         DsSpacing.lg,
         DsSpacing.md,
         DsSpacing.lg,
-        DsSpacing.md + MediaQuery.of(context).padding.bottom,
+        DsSpacing.md + MediaQuery.paddingOf(context).bottom,
       ),
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: .92),
-        border: Border(
-          top: BorderSide(color: CustomerExperience.champagne.withValues(alpha: .5)),
-        ),
-        boxShadow: CustomerExperience.softShadow,
+        // Reads from the theme: a fixed white bar was the one part of the cart
+        // that stayed bright when the rest of the page went aubergine.
+        color: colors.surfaceElevated.withValues(alpha: 0.94),
+        border: Border(top: BorderSide(color: colors.border)),
+        boxShadow: context.boutique.shadow,
       ),
       child: Row(
         children: [
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              // Without this the bar swallowed the page. `Scaffold` lays a
+              // bottom bar out under *loose* height constraints, a `Row` gives
+              // its children the same loose height, and a `Column` that is
+              // free to be tall takes all of it — so this bar became the full
+              // screen: its translucent background veiled the cart behind it,
+              // "Subtotal" sat in the top-left corner and "Checkout" floated
+              // in the middle of the page.
+              mainAxisSize: MainAxisSize.min,
               children: [
-                Text(
-                  context.l10n.subtotal,
-                  style: TextStyle(
-                    fontSize: DsTypography.bodySmall,
-                    color: CustomerExperience.muted,
-                  ),
-                ),
+                Text(context.l10n.subtotal, style: text.caption),
                 Text(
                   cart.summary.subtotal?.format() ?? '—',
-                  style: TextStyle(
-                    fontFamily: DsTypography.fontFamily,
-                    fontSize: DsTypography.titleMedium,
-                    fontWeight: DsTypography.bold,
-                    color: CustomerExperience.ink,
-                  ),
+                  style: text.cardTitle.bold.tabular,
                 ),
               ],
             ),
           ),
-          SizedBox(
-            width: 170,
+          DsGaps.hMd,
+          Expanded(
             child: CustomerPrimaryButton(
-              label: disabled ? context.l10n.removeOutOfStock : context.l10n.checkout,
+              label: disabled
+                  ? context.l10n.removeOutOfStock
+                  : context.l10n.checkout,
               icon: Icons.lock_rounded,
               onPressed: disabled ? null : onCheckout,
             ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _EmptyCart extends StatelessWidget {
-  const _EmptyCart();
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(DsSpacing.xl),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            width: 88,
-            height: 88,
-            decoration: const BoxDecoration(
-              shape: BoxShape.circle,
-              gradient: CustomerExperience.signatureGradient,
-            ),
-            child: const Icon(
-              Icons.shopping_bag_outlined,
-              size: 42,
-              color: Colors.white,
-            ),
-          ),
-          const SizedBox(height: DsSpacing.md),
-          Text(
-            context.l10n.emptyCart,
-            style: TextStyle(
-              fontFamily: DsTypography.fontFamily,
-              fontWeight: DsTypography.bold,
-              fontSize: DsTypography.titleMedium,
-              color: CustomerExperience.ink,
-            ),
-          ),
-          const SizedBox(height: DsSpacing.xs),
-          Text(
-            context.l10n.browseAndAdd,
-            textAlign: TextAlign.center,
-            style: TextStyle(color: CustomerExperience.muted),
           ),
         ],
       ),

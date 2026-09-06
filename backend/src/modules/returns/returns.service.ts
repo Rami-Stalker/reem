@@ -18,6 +18,7 @@ import {
 import { AuthUser } from '../../common/decorators/current-user.decorator';
 import { Money, StatusActor, actorForRole } from '../../common/money';
 import { PrismaService } from '../../prisma/prisma.service';
+import { ValueBenefitService } from '../value/value-benefit.service';
 import { DisputesService } from '../finance/disputes.service';
 import {
   SellerOrderWorkflowService,
@@ -131,7 +132,23 @@ export class ReturnsService {
     private readonly refunds: ReturnRefundsService,
     private readonly disputes: DisputesService,
     private readonly workflow: SellerOrderWorkflowService,
+    private readonly valueBenefits: ValueBenefitService,
   ) {}
+
+  /**
+   * Extra return days her standing buys her.
+   *
+   * Reem Value's `ENHANCED_RETURNS`. Read here rather than inside
+   * `return-policy.ts` so that file stays a pure function of facts, and read on
+   * both paths — the eligibility screen and the request itself — so the two can
+   * never tell her different things about the same parcel.
+   */
+  private async extraWindowDays(userId: string | null): Promise<number> {
+    if (!userId) return 0;
+    const config = await this.valueBenefits.configFor(userId, 'extended-returns');
+    const extra = config?.['extraDays'];
+    return typeof extra === 'number' ? extra : 0;
+  }
 
   // ── Before she asks ───────────────────────────────────────────────────
 
@@ -148,16 +165,21 @@ export class ReturnsService {
     this.assertParticipant(sellerOrder, user);
 
     const claimed = await this.claimedQuantities(sellerOrderId, this.prisma);
-    const parcel = { deliveredAt: sellerOrder.deliveredAt };
+    const extraWindowDays = await this.extraWindowDays(sellerOrder.order.userId);
+    const parcel = { deliveredAt: sellerOrder.deliveredAt, extraWindowDays };
 
     return {
       seller_order_id: sellerOrder.id,
       order_number: sellerOrder.number,
       delivered_at: sellerOrder.deliveredAt,
       window_closes_at: sellerOrder.deliveredAt
-        ? returnWindowClosesAt(sellerOrder.deliveredAt)
+        ? returnWindowClosesAt(sellerOrder.deliveredAt, extraWindowDays)
         : null,
-      is_window_open: this.isWindowOpen(sellerOrder.deliveredAt),
+      // Surfaced so the screen can say *why* her window is longer than the
+      // seven days the policy page states, rather than silently disagreeing
+      // with it.
+      extra_window_days: extraWindowDays,
+      is_window_open: this.isWindowOpen(sellerOrder.deliveredAt, extraWindowDays),
       lines: sellerOrder.items.map((item) => {
         const facts = this.factsFor(item, claimed.get(item.id) ?? 0);
         const onFault = blockerFor(facts, parcel, ReturnReason.DEFECTIVE);
@@ -204,7 +226,10 @@ export class ReturnsService {
     this.assertCustomer(sellerOrder, user);
 
     const claimed = await this.claimedQuantities(sellerOrder.id, this.prisma);
-    const parcel = { deliveredAt: sellerOrder.deliveredAt };
+    const parcel = {
+      deliveredAt: sellerOrder.deliveredAt,
+      extraWindowDays: await this.extraWindowDays(sellerOrder.order.userId),
+    };
     const byId = new Map(sellerOrder.items.map((item) => [item.id, item]));
 
     for (const line of input.items) {
@@ -1055,8 +1080,15 @@ export class ReturnsService {
     }
   }
 
-  private isWindowOpen(deliveredAt: Date | null, now = new Date()): boolean {
-    return deliveredAt !== null && now <= returnWindowClosesAt(deliveredAt);
+  private isWindowOpen(
+    deliveredAt: Date | null,
+    extraWindowDays = 0,
+    now = new Date(),
+  ): boolean {
+    return (
+      deliveredAt !== null &&
+      now <= returnWindowClosesAt(deliveredAt, extraWindowDays)
+    );
   }
 
   private assertCustomer(

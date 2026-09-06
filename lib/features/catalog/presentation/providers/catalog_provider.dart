@@ -42,9 +42,19 @@ final catalogNotifierProvider =
   );
 });
 
-final productDetailsNotifierProvider =
-    StateNotifierProvider<ProductDetailsNotifier, ProductDetailsState>((ref) {
-  return ProductDetailsNotifier(
-    getProductDetailsUseCase: ref.watch(getProductDetailsUseCaseProvider),
-  );
-});
+/// One product page, one state — keyed by the product it is showing.
+///
+/// This was a single global notifier, which meant every product page in the
+/// navigation stack shared one slot. Opening a piece from "you may also like"
+/// overwrote it, so pressing back returned to a screen that had already been
+/// repainted as the product she had just left: the stack went back, the page
+/// did not.
+final productDetailsNotifierProvider = StateNotifierProvider.autoDispose
+    .family<ProductDetailsNotifier, ProductDetailsState, String>((
+      ref,
+      productId,
+    ) {
+      return ProductDetailsNotifier(
+        getProductDetailsUseCase: ref.watch(getProductDetailsUseCaseProvider),
+      )..load(productId);
+    });

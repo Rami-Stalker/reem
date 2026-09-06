@@ -25,7 +25,7 @@ class SellerOrderStatusChip extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(
         horizontal: compact ? DsSpacing.xs : DsSpacing.sm,
-        vertical: compact ? 2 : 4,
+        vertical: compact ? DsSpacing.xxxs : DsSpacing.xxs,
       ),
       decoration: BoxDecoration(
         color: tone.withValues(alpha: 0.12),
@@ -34,12 +34,10 @@ class SellerOrderStatusChip extends StatelessWidget {
       ),
       child: Text(
         context.l10n.parcelStatus(status),
-        style: TextStyle(
-          fontFamily: DsTypography.fontFamily,
-          fontSize: compact ? DsTypography.labelSmall : DsTypography.labelMedium,
-          fontWeight: DsTypography.semiBold,
-          color: tone,
-        ),
+        style: (compact
+                ? context.dsText.caption.semibold
+                : context.dsText.labelStrong)
+            .tint(tone),
       ),
     );
   }

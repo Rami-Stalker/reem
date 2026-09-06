@@ -1,0 +1,343 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/features/seller_intelligence/domain/entities/intelligence.dart';
+import 'package:reem/features/seller_intelligence/presentation/providers/intelligence_providers.dart';
+import 'package:reem/features/seller_intelligence/presentation/widgets/intelligence_pieces.dart';
+
+/// ذكاء المنتجات — her listings as a work queue.
+///
+/// Ordered worst first, deliberately. This is not a leaderboard and there is
+/// nothing to celebrate at the top of it: a seller opens this page to find the
+/// shortest path to more sales, and that is always the listing with the most
+/// recoverable points. Sorting it best-first would be flattering and useless.
+///
+/// Each row leads with the single most valuable thing to change, because a row
+/// that listed four suggestions would be a row nobody finishes reading.
+class ProductIntelligenceScreen extends ConsumerWidget {
+  const ProductIntelligenceScreen({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final palette = context.atelier;
+    final async = ref.watch(productIntelligenceProvider);
+
+    return ReemScrollPage(
+      onRefresh: () async => ref.invalidate(productIntelligenceProvider),
+      background: const SellerAtelierBackground(),
+      backgroundColor: palette.background,
+      slivers: [
+        const PremiumAppBar(title: 'ذكاء المنتجات'),
+        ...async.when(
+          loading: () => [
+            const SliverToBoxAdapter(
+              child: Padding(
+                padding: EdgeInsets.symmetric(vertical: DsSpacing.xxl),
+                child: Center(child: DsLoadingIndicator()),
+              ),
+            ),
+          ],
+          error: (_, _) => [
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: DsSpacing.xxl),
+                child: DsErrorState(
+                  message: 'ما قدرنا نقيّم منتجاتك.',
+                  onRetry: () => ref.invalidate(productIntelligenceProvider),
+                ),
+              ),
+            ),
+          ],
+          data: (list) => _body(context, list),
+        ),
+        const SliverToBoxAdapter(child: SizedBox(height: DsSpacing.xxl)),
+      ],
+    );
+  }
+
+  List<Widget> _body(BuildContext context, ProductHealthList list) {
+    if (list.isEmpty) {
+      return const [
+        SliverToBoxAdapter(
+          child: Padding(
+            padding: EdgeInsets.all(DsSpacing.lg),
+            child: DsEmptyState(
+              icon: Icons.inventory_2_outlined,
+              title: 'ما في منتجات',
+              message: 'ضيفي أول منتج ومنقلّك شو ينقصه.',
+            ),
+          ),
+        ),
+      ];
+    }
+
+    return [
+      SliverToBoxAdapter(child: _Summary(list: list)),
+      SliverList.builder(
+        itemCount: list.rows.length,
+        itemBuilder: (context, i) => _ProductCard(product: list.rows[i]),
+      ),
+    ];
+  }
+}
+
+class _Summary extends StatelessWidget {
+  const _Summary({required this.list});
+
+  final ProductHealthList list;
+
+  @override
+  Widget build(BuildContext context) {
+    final palette = context.atelier;
+    final urgent = list.urgent.length;
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(
+        DsSpacing.lg,
+        DsSpacing.md,
+        DsSpacing.lg,
+        DsSpacing.xs,
+      ),
+      child: SellerPanel(
+        padding: const EdgeInsets.all(DsSpacing.lg),
+        child: Row(
+          children: [
+            IntelligenceDial(score: list.averageScore, size: 78, label: 'وسطي'),
+            const SizedBox(width: DsSpacing.lg),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    '${list.rows.length} منتج',
+                    style: context.dsText.sectionTitle.tint(palette.ink),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    urgent == 0
+                        ? 'ما في شي مستعجل. مرتّبين من الأضعف للأقوى.'
+                        : '$urgent منها بدها انتباه هلق.',
+                    style: context.dsText.caption.tint(
+                      urgent == 0 ? palette.muted : palette.critical,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    'محسوبة على آخر ${list.windowDays} يوم',
+                    style: context.dsText.micro.tint(palette.muted),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _ProductCard extends ConsumerStatefulWidget {
+  const _ProductCard({required this.product});
+
+  final ProductHealth product;
+
+  @override
+  ConsumerState<_ProductCard> createState() => _ProductCardState();
+}
+
+class _ProductCardState extends ConsumerState<_ProductCard> {
+  bool _open = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final palette = context.atelier;
+    final product = widget.product;
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: DsSpacing.lg,
+        vertical: DsSpacing.xs,
+      ),
+      child: SellerPanel(
+        onTap: () => setState(() => _open = !_open),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                IntelligenceDial(
+                  score: product.score,
+                  confidence: product.confidence,
+                ),
+                const SizedBox(width: DsSpacing.md),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        product.title,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: context.dsText.body.semibold.tint(palette.ink),
+                      ),
+                      const SizedBox(height: 3),
+                      Row(
+                        children: [
+                          Text(
+                            '${product.views} مشاهدة · ${product.orders} طلب',
+                            style: context.dsText.micro.tint(palette.muted),
+                          ),
+                          if (!product.inStock) ...[
+                            const SizedBox(width: DsSpacing.xs),
+                            Text(
+                              'خلصت',
+                              style: context.dsText.micro.tint(
+                                palette.critical,
+                              ),
+                            ),
+                          ],
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                Icon(
+                  _open
+                      ? Icons.keyboard_arrow_up_rounded
+                      : Icons.keyboard_arrow_down_rounded,
+                  size: 18,
+                  color: palette.muted,
+                ),
+              ],
+            ),
+
+            if (product.topAdvice != null) ...[
+              const SizedBox(height: DsSpacing.xs),
+              AdviceTile(advice: product.topAdvice!, dense: true),
+              if (!_open && product.adviceCount > 1)
+                Padding(
+                  padding: const EdgeInsets.only(right: DsSpacing.md),
+                  child: Text(
+                    'و${product.adviceCount - 1} اقتراح كمان',
+                    style: context.dsText.micro.tint(palette.primary),
+                  ),
+                ),
+            ],
+
+            if (_open) _Detail(productId: product.productId),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// The axes and the rest of the advice, fetched only when she opens the row.
+///
+/// Lazily, because the detail endpoint runs a percentile over the category and
+/// there is no reason to pay that for forty rows she has not looked at.
+class _Detail extends ConsumerWidget {
+  const _Detail({required this.productId});
+
+  final String productId;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final palette = context.atelier;
+    final async = ref.watch(productHealthProvider(productId));
+
+    return async.when(
+      loading: () => const Padding(
+        padding: EdgeInsets.symmetric(vertical: DsSpacing.md),
+        child: Center(child: DsLoadingIndicator()),
+      ),
+      error: (_, _) => Padding(
+        padding: const EdgeInsets.only(top: DsSpacing.sm),
+        child: Text(
+          'ما قدرنا نجيب التفاصيل.',
+          style: context.dsText.caption.tint(palette.muted),
+        ),
+      ),
+      data: (detail) => Padding(
+        padding: const EdgeInsets.only(top: DsSpacing.sm),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Divider(color: palette.line, height: DsSpacing.lg),
+
+            for (final axis in detail.axes)
+              MeasureBar(
+                label: axis.label,
+                score: axis.score,
+                weight: axis.counted ? axis.weight : null,
+                provisional: !axis.counted,
+                // The three states are different and the wording says which:
+                // nothing has been shown yet, versus not enough of it to be
+                // sure, versus measured properly.
+                unmeasuredNote: axis.evidence == 'unmeasurable'
+                    ? 'ما في بيانات بعد'
+                    : 'لسا قليلة',
+              ),
+
+            if (detail.peers != null) ...[
+              const SizedBox(height: DsSpacing.sm),
+              _Peers(peers: detail.peers!),
+            ],
+
+            if (detail.advice.length > 1) ...[
+              Divider(color: palette.line, height: DsSpacing.lg),
+              for (final advice in detail.advice.skip(1))
+                AdviceTile(advice: advice, dense: true),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _Peers extends StatelessWidget {
+  const _Peers({required this.peers});
+
+  final PeerPosition peers;
+
+  @override
+  Widget build(BuildContext context) {
+    final palette = context.atelier;
+    final premium = peers.pricePremiumPercent;
+
+    return Container(
+      padding: const EdgeInsets.all(DsSpacing.sm),
+      decoration: BoxDecoration(
+        color: palette.raised,
+        borderRadius: DsRadius.borderMd,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'مقارنة مع ${peers.peers} منتج مشابه',
+            style: context.dsText.caption.semibold.tint(palette.ink),
+          ),
+          const SizedBox(height: 4),
+          if (premium != null)
+            Text(
+              premium.abs() < 5
+                  ? 'سعرك قريب من سعر السوق.'
+                  : premium > 0
+                  ? 'سعرك أعلى بـ${premium.round()}% من المشابه.'
+                  : 'سعرك أقل بـ${premium.abs().round()}% من المشابه.',
+              style: context.dsText.caption.tint(palette.muted),
+            ),
+          Text(
+            'التحويل عندك ${(peers.conversion * 100).toStringAsFixed(1)}% '
+            'مقابل ${(peers.medianConversion * 100).toStringAsFixed(1)}% بالفئة.',
+            style: context.dsText.caption.tint(palette.muted),
+          ),
+        ],
+      ),
+    );
+  }
+}

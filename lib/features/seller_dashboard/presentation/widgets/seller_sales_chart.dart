@@ -77,12 +77,7 @@ class _SellerSalesChartState extends ConsumerState<SellerSalesChart> {
                     l10n.sellerSalesTrend,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      color: palette.ink,
-                      fontFamily: DsTypography.fontFamily,
-                      fontSize: DsTypography.titleSmall,
-                      fontWeight: DsTypography.bold,
-                    ),
+                    style: context.dsText.tileTitle.bold.tint(palette.ink),
                   ),
                 ),
                 _MetricToggle(
@@ -126,11 +121,7 @@ class _Chart extends StatelessWidget {
     // so a steady week still reads as a line rather than a rule.
     final ceiling = maxValue <= 0 ? 1.0 : maxValue * 1.18;
 
-    final labelStyle = TextStyle(
-      color: palette.muted,
-      fontFamily: DsTypography.fontFamily,
-      fontSize: DsTypography.labelSmall,
-    );
+    final labelStyle = context.dsText.caption.tint(palette.muted);
 
     return LineChart(
       LineChartData(
@@ -205,12 +196,7 @@ class _Chart extends StatelessWidget {
               for (final spot in spots)
                 LineTooltipItem(
                   _tooltipLabel(spot.y),
-                  TextStyle(
-                    color: palette.background,
-                    fontFamily: DsTypography.fontFamily,
-                    fontSize: DsTypography.labelMedium,
-                    fontWeight: DsTypography.bold,
-                  ),
+                  context.dsText.labelMedium.bold.tint(palette.background),
                 ),
             ],
           ),
@@ -283,7 +269,7 @@ class _MetricToggle extends StatelessWidget {
     };
 
     return Container(
-      padding: const EdgeInsets.all(3),
+      padding: const EdgeInsets.all(DsSpacing.xxs),
       decoration: BoxDecoration(
         color: palette.primarySoft,
         borderRadius: DsRadius.borderPill,
@@ -299,7 +285,7 @@ class _MetricToggle extends StatelessWidget {
                 curve: DsMotion.silk,
                 padding: const EdgeInsets.symmetric(
                   horizontal: DsSpacing.xs,
-                  vertical: 4,
+                  vertical: DsSpacing.xxs,
                 ),
                 decoration: BoxDecoration(
                   color: metric == selected
@@ -309,15 +295,9 @@ class _MetricToggle extends StatelessWidget {
                 ),
                 child: Text(
                   labels[metric]!,
-                  style: TextStyle(
-                    fontFamily: DsTypography.fontFamily,
-                    fontSize: DsTypography.labelSmall,
-                    fontWeight: DsTypography.bold,
-                    color: metric == selected
+                  style: context.dsText.caption.bold.tint(metric == selected
                         ? palette.onPrimary
-                        : palette.primary,
-                    height: 1.1,
-                  ),
+                        : palette.primary).copyWith(height: 1.1),
                 ),
               ),
             ),
@@ -349,7 +329,7 @@ class _GranularityTabs extends StatelessWidget {
               duration: DsMotion.fast,
               padding: const EdgeInsets.symmetric(
                 horizontal: DsSpacing.sm,
-                vertical: 5,
+                vertical: DsSpacing.xxs,
               ),
               decoration: BoxDecoration(
                 color: period == selected
@@ -362,15 +342,9 @@ class _GranularityTabs extends StatelessWidget {
               ),
               child: Text(
                 period.labelOf(l10n),
-                style: TextStyle(
-                  fontFamily: DsTypography.fontFamily,
-                  fontSize: DsTypography.labelSmall,
-                  fontWeight: period == selected
+                style: context.dsText.caption.tint(period == selected ? palette.gold : palette.muted).copyWith(height: 1.1, fontWeight: period == selected
                       ? DsTypography.bold
-                      : DsTypography.medium,
-                  color: period == selected ? palette.gold : palette.muted,
-                  height: 1.1,
-                ),
+                      : DsTypography.medium),
               ),
             ),
           ),

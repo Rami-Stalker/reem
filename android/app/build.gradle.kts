@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     id("kotlin-android")
@@ -5,8 +7,45 @@ plugins {
     id("dev.flutter.flutter-gradle-plugin")
 }
 
+/**
+ * Release signing material, kept out of the repository.
+ *
+ * `android/key.properties` holds the keystore path and its three secrets; it is
+ * git-ignored, as is every `*.jks`/`*.keystore`. A machine that has not been
+ * given the keystore — a fresh clone, a contributor's laptop — simply has no
+ * such file, and the build below falls back to the debug key so that
+ * `flutter run --release` keeps working. Only a machine holding the real
+ * keystore can produce an artifact the Play Store will accept as an update.
+ *
+ * See `android/key.properties.example` for the expected keys.
+ */
+val keystoreProperties =
+    Properties().apply {
+        val file = rootProject.file("key.properties")
+        if (file.exists()) {
+            file.inputStream().use { load(it) }
+        }
+    }
+
+/** The path is read relative to `android/`, unless it is already absolute. */
+val releaseKeystoreFile =
+    keystoreProperties.getProperty("storeFile")?.trim()?.takeIf { it.isNotEmpty() }?.let { path ->
+        val candidate = File(path)
+        if (candidate.isAbsolute) candidate else rootProject.file(path)
+    }
+
+val hasReleaseKeystore = releaseKeystoreFile?.exists() == true
+
+if (!hasReleaseKeystore) {
+    logger.warn(
+        "reem: no release keystore configured (android/key.properties). " +
+            "Release builds will be signed with the DEBUG key and cannot be " +
+            "published. See android/key.properties.example.",
+    )
+}
+
 android {
-    namespace = "com.example.reem"
+    namespace = "shop.reem.app"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = "28.2.13676358"
 
@@ -21,21 +60,34 @@ android {
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "com.example.reem"
-        // You can update the following values to match your application needs.
-        // For more information, see: https://flutter.dev/to/review-gradle-config.
+        // Permanent once the first build reaches the Play Store: an app's
+        // identity there is its applicationId, and it cannot be changed.
+        applicationId = "shop.reem.app"
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
     }
 
+    signingConfigs {
+        if (hasReleaseKeystore) {
+            create("release") {
+                storeFile = releaseKeystoreFile
+                storePassword = keystoreProperties.getProperty("storePassword")
+                keyAlias = keystoreProperties.getProperty("keyAlias")
+                keyPassword = keystoreProperties.getProperty("keyPassword")
+            }
+        }
+    }
+
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig = signingConfigs.getByName("debug")
+            signingConfig =
+                if (hasReleaseKeystore) {
+                    signingConfigs.getByName("release")
+                } else {
+                    signingConfigs.getByName("debug")
+                }
         }
     }
 }

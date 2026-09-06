@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -25,10 +26,14 @@ import 'package:reem/features/home/presentation/widgets/home_recently_viewed.dar
 import 'package:reem/features/home/presentation/widgets/home_showcase_section.dart';
 import 'package:reem/features/home/presentation/widgets/home_smart_search.dart';
 import 'package:reem/features/home/presentation/widgets/home_stories_rail.dart';
+import 'package:reem/features/home/presentation/widgets/home_stylist_entry.dart';
 import 'package:reem/features/home/presentation/widgets/home_top_bar.dart';
 import 'package:reem/features/home/presentation/widgets/home_wishlist_highlights.dart';
+import 'package:reem/features/market/presentation/screens/drops_screen.dart';
+import 'package:reem/features/market/presentation/widgets/bundles_rail.dart';
 import 'package:reem/features/profile/presentation/providers/profile_provider.dart';
 import 'package:reem/features/seller_dashboard/presentation/screens/seller_home_screen.dart';
+import 'package:reem/features/value/presentation/widgets/value_standing_card.dart';
 
 /// Role-aware home screen dispatcher — renders [SellerHomeScreen] for sellers
 /// and the buyer home feed for customers. Both share the same tab slot so the
@@ -91,27 +96,38 @@ class _BuyerHomeScreen extends ConsumerWidget {
         // ── Chapter one: the welcome ─────────────────────────────────────
         const SliverToBoxAdapter(child: HomeGreeting()),
         const SliverToBoxAdapter(child: HomeSmartSearch()),
+        // Beside the search bar on purpose: search answers "I know what I
+        // want", the stylist answers "I know the occasion, not the piece".
+        const SliverToBoxAdapter(child: HomeStylistEntry()),
         const _Gap(DsSpacing.lg),
 
         const HomeStoriesRail(),
-        const _Gap(DsSpacing.lg),
 
         _box(const HomeHeroCarousel()),
-        const _Gap(_gap),
 
         _box(const HomeCategoriesShowcase()),
-        const _Gap(_gap),
 
         // ── Chapter two: the shelves ─────────────────────────────────────
         const _Ornament(),
+
+        // Phase four, above the deals on purpose: a drop she was invited to is
+        // addressed to her, and a discount is addressed to everybody. Both
+        // render nothing when there is nothing, so a quiet week leaves the
+        // page exactly as it was.
+        _box(const DropsRail()),
+
         _box(const HomeFlashDeals()),
-        const _Gap(_gap),
 
         // Admin-configured merchandising.
         _box(const HomeDynamicBlocks()),
 
+        // Reem Value, above the loyalty card for the same reason it sits above
+        // it on the profile: standing is who she is here, points are what she
+        // is owed. The card draws nothing at all until she has a rung, so a new
+        // shopper's home page is unchanged.
+        _box(const ValueStandingCard()),
+
         _box(const HomeLoyaltyCard()),
-        const _Gap(_gap),
 
         _box(
           _CollectionRail(
@@ -120,22 +136,20 @@ class _BuyerHomeScreen extends ConsumerWidget {
             title: l10n.recommended,
           ),
         ),
-        const _Gap(_gap),
+
+        // A solution rather than a shelf. Placed after the recommendations
+        // because it answers the question those leave open — "fine, but what
+        // do I wear it with".
+        _box(const BundlesRail()),
 
         _box(const HomeContinueShopping()),
-        const _Gap(_gap),
 
-        _box(
-          _CollectionRail(
-            collection: ProductCollection.newArrivals,
-            eyebrow: l10n.homeNewArrivalsEyebrow,
-            title: l10n.newArrivals,
-          ),
-        ),
-        const _Gap(_gap),
-
+        // "New in" is not a shelf here. It is the finale — `HomeShowcaseSection`
+        // at the foot of the page, under the same «وصل حديثاً» heading — and a
+        // horizontal rail of the same pieces higher up meant the shopper met
+        // the section twice on one screen. The rail was the lesser telling, so
+        // the rail went.
         _box(const HomeFeaturedStores()),
-        const _Gap(_gap),
 
         _box(
           _CollectionRail(
@@ -144,19 +158,14 @@ class _BuyerHomeScreen extends ConsumerWidget {
             title: l10n.bestSeller,
           ),
         ),
-        const _Gap(_gap),
 
         _box(const HomeRecentlyViewed()),
-        const _Gap(_gap),
 
         _box(const HomeWishlistHighlights()),
-        const _Gap(_gap),
 
         _box(const HomeNearbyStores()),
-        const _Gap(_gap),
 
         _box(const HomeNotificationsSummary()),
-        const _Gap(_gap),
 
         // ── Chapter three: "New in" closes the page, and owns it ─────────
         //
@@ -173,19 +182,95 @@ class _BuyerHomeScreen extends ConsumerWidget {
     );
   }
 
-  /// Wraps a box section in a sliver with a gentle entrance reveal.
+  /// Wraps a box section in a sliver with a gentle entrance reveal, and with
+  /// the breathing room that belongs *to that section* rather than sitting
+  /// between two of them.
+  ///
+  /// The spacing used to be its own `_Gap` sliver after every box, which meant
+  /// a section that collapsed left its gap behind. Half this page collapses on
+  /// a real account — nothing records what she has viewed, no address carries
+  /// coordinates, a new shopper has no loyalty tier and nothing to continue —
+  /// so the home screen opened with five stacked bands of unexplained
+  /// emptiness. Now the gap goes when the section goes.
   static Widget _box(Widget child) {
     return SliverToBoxAdapter(
-      child: child
-          .animate()
-          .fadeIn(duration: 420.ms, curve: Curves.easeOut)
-          .slideY(
-            begin: 0.05,
-            end: 0,
-            duration: 420.ms,
-            curve: Curves.easeOutCubic,
-          ),
+      child: _SectionGap(
+        gap: _gap,
+        child: child
+            .animate()
+            .fadeIn(duration: 420.ms, curve: Curves.easeOut)
+            .slideY(
+              begin: 0.05,
+              end: 0,
+              duration: 420.ms,
+              curve: Curves.easeOutCubic,
+            ),
+      ),
     );
+  }
+}
+
+/// Reserves [gap] below [child] — but only when the child drew something.
+///
+/// A `SizedBox` after the section cannot know whether the section rendered, so
+/// it always reserved its height. This measures the child first and simply has
+/// no height of its own when the child has none.
+class _SectionGap extends SingleChildRenderObjectWidget {
+  const _SectionGap({required this.gap, required Widget super.child});
+
+  final double gap;
+
+  @override
+  RenderObject createRenderObject(BuildContext context) =>
+      _RenderSectionGap(gap);
+
+  @override
+  void updateRenderObject(
+    BuildContext context,
+    _RenderSectionGap renderObject,
+  ) {
+    renderObject.gap = gap;
+  }
+}
+
+class _RenderSectionGap extends RenderShiftedBox {
+  _RenderSectionGap(this._gap) : super(null);
+
+  double _gap;
+
+  set gap(double value) {
+    if (_gap == value) return;
+    _gap = value;
+    markNeedsLayout();
+  }
+
+  @override
+  void performLayout() {
+    final child = this.child;
+    if (child == null) {
+      size = constraints.smallest;
+      return;
+    }
+
+    child.layout(constraints, parentUsesSize: true);
+    (child.parentData! as BoxParentData).offset = Offset.zero;
+
+    final height = child.size.height;
+    size = constraints.constrain(
+      Size(child.size.width, height == 0 ? 0 : height + _gap),
+    );
+  }
+
+  @override
+  double computeMinIntrinsicHeight(double width) {
+    final height = child?.getMinIntrinsicHeight(width) ?? 0;
+    return height == 0 ? 0 : height + _gap;
+  }
+
+  @override
+  double computeMaxIntrinsicHeight(double width) {
+    final height = child?.getMaxIntrinsicHeight(width) ?? 0;
+    return height == 0 ? 0 : height + _gap;
   }
 }
 
@@ -223,8 +308,7 @@ class _CollectionRail extends ConsumerWidget {
       products: section.products,
       isLoading: section.isLoading && !section.hasItems,
       onSeeAll: () => context.push(RoutePaths.collectionOf(collection.key)),
-      onTapProduct: (p) =>
-          context.push('${RoutePaths.productDetails}?id=${p.id}'),
+      onTapProduct: (p) => context.push(RoutePaths.productDetailsOf(p.id)),
     );
   }
 }

@@ -38,7 +38,7 @@ class OtpLoginResponse {
     }
     return OtpLoginResponse(
       result: OtpLoginAuthenticated(
-        UserModel.fromJson(Map<String, dynamic>.from(user)),
+        UserModel.fromAuthPayload(json),
         passwordEnabled: json['password_enabled'] as bool? ?? false,
       ),
       tokens: TokenModel.fromJson(json['tokens'] as Map<String, dynamic>),

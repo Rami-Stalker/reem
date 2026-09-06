@@ -1,4 +1,5 @@
 import {
+  Body,
   Controller,
   Get,
   HttpCode,
@@ -8,6 +9,7 @@ import {
   Post,
 } from '@nestjs/common';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
+import { SubmitPaymentReferenceDto } from './dto/submit-payment-reference.dto';
 import { PaymentsService } from './payments.service';
 
 @Controller('payments')
@@ -39,6 +41,17 @@ export class PaymentsController {
     @Param('id', ParseUUIDPipe) id: string,
   ) {
     return this.payments.verify(userId, id);
+  }
+
+  /** Q51 — the reference for a transfer she has already sent. */
+  @Post(':id/reference')
+  @HttpCode(HttpStatus.OK)
+  submitReference(
+    @CurrentUser('id') userId: string,
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() dto: SubmitPaymentReferenceDto,
+  ) {
+    return this.payments.submitReference(userId, id, dto.reference);
   }
 
   @Post(':id/retry')

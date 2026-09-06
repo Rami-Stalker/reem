@@ -76,7 +76,7 @@ class AdminConsolePalette {
     return AdminConsolePalette(
       nav: isDark ? const Color(0xFF15101B) : const Color(0xFF1B1420),
       navMuted: const Color(0xFF9C8FA6),
-      navSelected: Colors.white,
+      navSelected: DsColors.onMedia,
       ink: c.onSurface,
       muted: c.onSurfaceVariant,
       background: c.background,
@@ -84,7 +84,7 @@ class AdminConsolePalette {
       surfaceAlt: c.surfaceVariant,
       line: c.border,
       primary: isDark ? DsColors.mauve300 : DsColors.mauve600,
-      onPrimary: isDark ? DsColors.mauve900 : Colors.white,
+      onPrimary: isDark ? DsColors.mauve900 : DsColors.onMedia,
       primarySoft: isDark
           ? DsColors.mauve300.withValues(alpha: 0.18)
           : DsColors.mauve100,

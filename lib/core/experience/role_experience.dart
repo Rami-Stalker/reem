@@ -41,7 +41,6 @@ enum ExperienceSurface {
   products,
   orders,
   customers,
-  marketing,
   analytics,
   users,
   sellers,
@@ -271,8 +270,6 @@ class AppRoleExperience {
       ExperienceSurface.profile => profileSections,
       ExperienceSurface.dashboard => dashboardSections,
       ExperienceSurface.activity => _buyerActivitySections,
-      ExperienceSurface.customers => _sellerCustomerSections,
-      ExperienceSurface.marketing => _sellerMarketingSections,
       ExperienceSurface.analytics =>
         role == ExperienceRole.seller
             ? _sellerAnalyticsSections
@@ -325,12 +322,16 @@ class AppRoleExperience {
         selectedIcon: Icons.saved_search_rounded,
         feature: ExperienceFeature.personalizedDiscovery,
       ),
+      // Reem Rooms takes the tab the cart used to hold. What she is in the
+      // middle of is a set of decisions, not a basket — and the tab that greets
+      // her should say so. `/cart` still exists for the one-tap purchase that
+      // needs no deliberation; it simply is not a destination any more.
       RoleNavigationItem(
         surface: ExperienceSurface.cart,
-        label: 'Cart',
-        path: RoutePaths.cart,
-        icon: Icons.shopping_bag_outlined,
-        selectedIcon: Icons.shopping_bag_rounded,
+        label: 'Rooms',
+        path: RoutePaths.rooms,
+        icon: Icons.meeting_room_outlined,
+        selectedIcon: Icons.meeting_room_rounded,
         feature: ExperienceFeature.cartCheckout,
       ),
       RoleNavigationItem(
@@ -350,6 +351,26 @@ class AppRoleExperience {
       ),
     ],
     quickActions: [
+      // The stylist leads the buyer's quick actions: it is the only surface
+      // where she can describe a situation rather than name a product, and
+      // burying it behind search would make it the feature nobody discovers.
+      RoleAction(
+        id: 'ai-stylist',
+        label: 'Stylist',
+        path: RoutePaths.stylist,
+        icon: Icons.auto_awesome_rounded,
+        feature: ExperienceFeature.personalizedDiscovery,
+      ),
+      // The closet sits beside the stylist rather than under Profile: "شو
+      // بلبس اليوم؟" is a question she has every morning, and a wardrobe two
+      // taps deep is a wardrobe she keeps for a week and then forgets.
+      RoleAction(
+        id: 'closet',
+        label: 'Closet',
+        path: RoutePaths.closet,
+        icon: Icons.checkroom_rounded,
+        feature: ExperienceFeature.personalizedDiscovery,
+      ),
       RoleAction(
         id: 'scan-search',
         label: 'Search',
@@ -358,10 +379,10 @@ class AppRoleExperience {
         feature: ExperienceFeature.personalizedDiscovery,
       ),
       RoleAction(
-        id: 'cart',
-        label: 'Cart',
-        path: RoutePaths.cart,
-        icon: Icons.shopping_bag_rounded,
+        id: 'rooms',
+        label: 'Rooms',
+        path: RoutePaths.rooms,
+        icon: Icons.meeting_room_rounded,
         feature: ExperienceFeature.cartCheckout,
       ),
     ],
@@ -415,32 +436,23 @@ class AppRoleExperience {
         permission: 'product:manage',
         feature: ExperienceFeature.inventoryManagement,
       ),
+      // Her queue, not the customer's receipts. This entry pointed at
+      // `/orders` — the buyer's purchase history — so the seller's Orders tab
+      // opened a screen belonging to someone else entirely.
       RoleNavigationItem(
         surface: ExperienceSurface.orders,
         label: 'Orders',
-        path: RoutePaths.orders,
+        path: RoutePaths.sellerOrders,
         icon: Icons.receipt_long_outlined,
         selectedIcon: Icons.receipt_long_rounded,
         permission: 'order:manage',
         feature: ExperienceFeature.sellerOperations,
       ),
-      RoleNavigationItem(
-        surface: ExperienceSurface.customers,
-        label: 'Customers',
-        path: RoutePaths.sellerCustomers,
-        icon: Icons.groups_outlined,
-        selectedIcon: Icons.groups_rounded,
-        feature: ExperienceFeature.sellerOperations,
-      ),
-      RoleNavigationItem(
-        surface: ExperienceSurface.marketing,
-        label: 'Marketing',
-        path: RoutePaths.sellerMarketing,
-        icon: Icons.campaign_outlined,
-        selectedIcon: Icons.campaign_rounded,
-        permission: 'post:manage',
-        feature: ExperienceFeature.marketingTools,
-      ),
+      // Customers and Marketing used to sit here. Both were card directories
+      // over screens that did not exist, and half their cards led nowhere at
+      // all — five tabs, two of them scenery. The work behind them is real and
+      // lives where it belongs: conversations under Chats, content under the
+      // composer, both reachable from her profile menu.
       RoleNavigationItem(
         surface: ExperienceSurface.analytics,
         label: 'Analytics',
@@ -468,8 +480,8 @@ class AppRoleExperience {
       ),
       RoleAction(
         id: 'campaign',
-        label: 'Campaign',
-        path: RoutePaths.sellerMarketing,
+        label: 'New post',
+        path: RoutePaths.addPost,
         icon: Icons.campaign_rounded,
         permission: 'post:manage',
         feature: ExperienceFeature.marketingTools,
@@ -513,6 +525,12 @@ class AppRoleExperience {
       gradient: LinearGradient(colors: [Color(0xFF0B1220), Color(0xFF3156D4)]),
       icon: Icons.admin_panel_settings_rounded,
     ),
+    // Every destination names the permission the API demands to open it, and
+    // the shell hides the ones this operator does not hold. Several entries
+    // used to carry no permission at all — finance, moderation and reports —
+    // so a support agent was shown the finance console and handed a 403 for
+    // walking into it. A menu that offers work the person cannot do is worse
+    // than a shorter menu.
     navigation: [
       RoleNavigationItem(
         surface: ExperienceSurface.dashboard,
@@ -530,6 +548,15 @@ class AppRoleExperience {
         icon: Icons.people_outline_rounded,
         selectedIcon: Icons.people_rounded,
         permission: 'user:manage',
+        feature: ExperienceFeature.adminGovernance,
+      ),
+      RoleNavigationItem(
+        surface: ExperienceSurface.sellers,
+        label: 'Seller applications',
+        path: RoutePaths.adminSellerApplications,
+        icon: Icons.assignment_ind_outlined,
+        selectedIcon: Icons.assignment_ind_rounded,
+        permission: 'seller_verification:review',
         feature: ExperienceFeature.adminGovernance,
       ),
       RoleNavigationItem(
@@ -556,23 +583,16 @@ class AppRoleExperience {
         path: RoutePaths.adminOrders,
         icon: Icons.receipt_long_outlined,
         selectedIcon: Icons.receipt_long_rounded,
-        permission: 'order:manage',
+        permission: 'order:read',
         feature: ExperienceFeature.financialControls,
       ),
       RoleNavigationItem(
-        surface: ExperienceSurface.finance,
-        label: 'Finance',
-        path: RoutePaths.adminFinancials,
-        icon: Icons.account_balance_outlined,
-        selectedIcon: Icons.account_balance_rounded,
-        feature: ExperienceFeature.financialControls,
-      ),
-      RoleNavigationItem(
-        surface: ExperienceSurface.reports,
-        label: 'Reports',
-        path: RoutePaths.adminReports,
-        icon: Icons.assessment_outlined,
-        selectedIcon: Icons.assessment_rounded,
+        surface: ExperienceSurface.customers,
+        label: 'Support',
+        path: RoutePaths.adminSupport,
+        icon: Icons.support_agent_outlined,
+        selectedIcon: Icons.support_agent_rounded,
+        permission: 'support:read',
         feature: ExperienceFeature.adminGovernance,
       ),
       RoleNavigationItem(
@@ -581,7 +601,74 @@ class AppRoleExperience {
         path: RoutePaths.adminModeration,
         icon: Icons.gavel_outlined,
         selectedIcon: Icons.gavel_rounded,
+        permission: 'content:moderate',
         feature: ExperienceFeature.moderation,
+      ),
+      RoleNavigationItem(
+        surface: ExperienceSurface.reports,
+        label: 'Reports',
+        path: RoutePaths.adminReports,
+        icon: Icons.assessment_outlined,
+        selectedIcon: Icons.assessment_rounded,
+        permission: 'support:read',
+        feature: ExperienceFeature.adminGovernance,
+      ),
+      RoleNavigationItem(
+        surface: ExperienceSurface.finance,
+        label: 'Finance',
+        path: RoutePaths.adminFinancials,
+        icon: Icons.account_balance_outlined,
+        selectedIcon: Icons.account_balance_rounded,
+        permission: 'finance:read',
+        feature: ExperienceFeature.financialControls,
+      ),
+      RoleNavigationItem(
+        surface: ExperienceSurface.finance,
+        label: 'Commissions',
+        path: RoutePaths.adminCommissions,
+        icon: Icons.percent_outlined,
+        selectedIcon: Icons.percent_rounded,
+        permission: 'finance:read',
+        feature: ExperienceFeature.financialControls,
+      ),
+      RoleNavigationItem(
+        surface: ExperienceSurface.analytics,
+        label: 'Analytics',
+        path: RoutePaths.adminAnalytics,
+        icon: Icons.insights_outlined,
+        selectedIcon: Icons.insights_rounded,
+        permission: 'analytics:read',
+        feature: ExperienceFeature.adminGovernance,
+      ),
+      RoleNavigationItem(
+        surface: ExperienceSurface.analytics,
+        label: 'Market intelligence',
+        path: RoutePaths.adminTrends,
+        icon: Icons.auto_graph_outlined,
+        selectedIcon: Icons.auto_graph_rounded,
+        permission: 'analytics:read',
+        feature: ExperienceFeature.adminGovernance,
+      ),
+      // Reem Value beside it, for the same reason: both are scored engines
+      // with a policy behind them, and both are operated rather than
+      // configured.
+      RoleNavigationItem(
+        surface: ExperienceSurface.analytics,
+        label: 'Reem Value',
+        path: RoutePaths.adminValue,
+        icon: Icons.workspace_premium_outlined,
+        selectedIcon: Icons.workspace_premium_rounded,
+        permission: 'analytics:read',
+        feature: ExperienceFeature.adminGovernance,
+      ),
+      RoleNavigationItem(
+        surface: ExperienceSurface.settings,
+        label: 'Audit logs',
+        path: RoutePaths.adminAuditLogs,
+        icon: Icons.manage_search_outlined,
+        selectedIcon: Icons.manage_search_rounded,
+        permission: 'audit:read',
+        feature: ExperienceFeature.auditControls,
       ),
       RoleNavigationItem(
         surface: ExperienceSurface.settings,
@@ -589,7 +676,7 @@ class AppRoleExperience {
         path: RoutePaths.adminSystemSettings,
         icon: Icons.tune_outlined,
         selectedIcon: Icons.tune_rounded,
-        permission: 'audit:read',
+        permission: 'authorization:manage',
         feature: ExperienceFeature.auditControls,
       ),
     ],
@@ -668,6 +755,38 @@ const _buyerMenuGroups = [
     id: 'shopping',
     label: 'Shopping',
     actions: [
+      // Above orders and wishlist on purpose. Both of those are records of
+      // shopping; the closet is what the shopping was for, and it is the only
+      // one of the three she has a reason to open on a day she is not buying
+      // anything.
+      RoleAction(
+        id: 'rooms',
+        label: 'My Rooms',
+        path: RoutePaths.rooms,
+        icon: Icons.meeting_room_rounded,
+      ),
+      RoleAction(
+        id: 'closet',
+        label: 'My Closet',
+        path: RoutePaths.closet,
+        icon: Icons.checkroom_rounded,
+      ),
+      // Phase four's shopper surfaces, under the closet because that is what
+      // they are about: assembled looks, and the life of a piece after it is
+      // delivered. The resale market is reached from the wardrobe rather than
+      // listed here, so a second-hand shelf never sits beside the catalogue.
+      RoleAction(
+        id: 'market-bundles',
+        label: 'Ready looks',
+        path: RoutePaths.marketBundles,
+        icon: Icons.auto_awesome_motion_rounded,
+      ),
+      RoleAction(
+        id: 'market-wardrobe',
+        label: 'Wardrobe care',
+        path: RoutePaths.marketWardrobe,
+        icon: Icons.spa_rounded,
+      ),
       RoleAction(
         id: 'orders',
         label: 'Orders',
@@ -690,15 +809,37 @@ const _buyerMenuGroups = [
     ],
   ),
   RoleMenuGroup(
-    id: 'rewards',
-    label: 'Rewards',
+    id: 'standing',
+    // Renamed from "Rewards": what she has here is a standing, and the things
+    // under it are what it opens. "Rewards" is the vocabulary of a points
+    // programme and it framed the whole group as a balance to be spent.
+    label: 'Standing',
     feature: ExperienceFeature.loyaltyRewards,
     actions: [
+      // Reem Value leads. It is the thing that describes her; the two below are
+      // instruments — credit she has accrued and codes she has been given.
+      RoleAction(
+        id: 'value',
+        label: 'My standing',
+        path: RoutePaths.value,
+        icon: Icons.workspace_premium_rounded,
+      ),
+      // Missions sit under standing rather than under shopping, because what
+      // they ask for earns standing through the same evidence everything else
+      // does — and because they are emphatically not a shopping activity.
+      RoleAction(
+        id: 'market-missions',
+        label: 'Worth doing',
+        path: RoutePaths.marketMissions,
+        icon: Icons.checklist_rounded,
+      ),
       RoleAction(
         id: 'rewards',
-        label: 'Rewards',
+        // Demoted to what it always was: Q43's cashback credit, which is money
+        // rather than status. Naming it plainly is the point of the change.
+        label: 'Credit & cashback',
         path: RoutePaths.rewards,
-        icon: Icons.workspace_premium_rounded,
+        icon: Icons.savings_rounded,
       ),
       RoleAction(
         id: 'coupons',
@@ -791,14 +932,21 @@ const _sellerMenuGroups = [
       RoleAction(
         id: 'orders',
         label: 'Orders',
-        path: RoutePaths.orders,
+        path: RoutePaths.sellerOrders,
         icon: Icons.receipt_long_rounded,
         permission: 'order:manage',
       ),
       RoleAction(
+        id: 'returns',
+        label: 'Returns',
+        path: RoutePaths.sellerReturns,
+        icon: Icons.assignment_return_rounded,
+        permission: 'order:manage',
+      ),
+      RoleAction(
         id: 'customers',
-        label: 'Customers',
-        path: RoutePaths.sellerCustomers,
+        label: 'Conversations',
+        path: RoutePaths.chats,
         icon: Icons.groups_rounded,
       ),
       RoleAction(
@@ -806,6 +954,24 @@ const _sellerMenuGroups = [
         label: 'Analytics',
         path: RoutePaths.sellerAnalytics,
         icon: Icons.insights_rounded,
+        feature: ExperienceFeature.sellerAnalytics,
+      ),
+      // Analytics answers what happened; this answers what is about to.
+      RoleAction(
+        id: 'trends',
+        label: 'Trend engine',
+        path: RoutePaths.sellerTrends,
+        icon: Icons.auto_graph_rounded,
+        feature: ExperienceFeature.sellerAnalytics,
+      ),
+      // And this answers whether anybody is serving it. The trend engine reads
+      // demand; the market layer reads demand against supply, which is the
+      // question a seller deciding what to stock actually has.
+      RoleAction(
+        id: 'market',
+        label: 'Market',
+        path: RoutePaths.sellerMarket,
+        icon: Icons.trending_up_rounded,
         feature: ExperienceFeature.sellerAnalytics,
       ),
     ],
@@ -824,8 +990,8 @@ const _sellerMenuGroups = [
       ),
       RoleAction(
         id: 'marketing',
-        label: 'Marketing',
-        path: RoutePaths.sellerMarketing,
+        label: 'New post',
+        path: RoutePaths.addPost,
         icon: Icons.campaign_rounded,
         permission: 'post:manage',
         feature: ExperienceFeature.marketingTools,
@@ -963,6 +1129,12 @@ const _adminMenuGroups = [
         path: RoutePaths.adminFinancials,
         icon: Icons.account_balance_wallet_rounded,
         feature: ExperienceFeature.financialControls,
+      ),
+      RoleAction(
+        id: 'value',
+        label: 'Reem Value',
+        path: RoutePaths.adminValue,
+        icon: Icons.workspace_premium_rounded,
       ),
       RoleAction(
         id: 'audit',
@@ -1139,54 +1311,6 @@ const _sellerProfileSections = [
     description:
         'Staff roles, access control, MFA, sessions, and device trust.',
     icon: Icons.admin_panel_settings_rounded,
-  ),
-];
-
-const _sellerCustomerSections = [
-  RoleSurfaceSection(
-    id: 'segments',
-    title: 'Customer segments',
-    description:
-        'New, returning, high-value, at-risk, and campaign-ready customers.',
-    icon: Icons.groups_rounded,
-  ),
-  RoleSurfaceSection(
-    id: 'conversations',
-    title: 'Customer conversations',
-    description:
-        'Buyer messages, support follow-ups, and story-share conversations.',
-    icon: Icons.chat_rounded,
-    path: RoutePaths.chats,
-  ),
-  RoleSurfaceSection(
-    id: 'reviews',
-    title: 'Reviews and reputation',
-    description: 'Ratings, sentiment, response tasks, and trust signals.',
-    icon: Icons.reviews_rounded,
-  ),
-];
-
-const _sellerMarketingSections = [
-  RoleSurfaceSection(
-    id: 'posts',
-    title: 'Posts and stories',
-    description:
-        'Product-led content, launches, short videos, and store moments.',
-    icon: Icons.add_photo_alternate_rounded,
-    path: RoutePaths.addPost,
-  ),
-  RoleSurfaceSection(
-    id: 'promotions',
-    title: 'Promotions',
-    description:
-        'Flash deals, coupons, bundles, loyalty campaigns, and referrals.',
-    icon: Icons.campaign_rounded,
-  ),
-  RoleSurfaceSection(
-    id: 'ai-copy',
-    title: 'AI merchandising',
-    description: 'Product copy, tags, search keywords, and campaign ideas.',
-    icon: Icons.auto_awesome_rounded,
   ),
 ];
 

@@ -7,5 +7,6 @@ class GetThreadsUseCase {
   const GetThreadsUseCase(this._repository);
   final ChatRepository _repository;
 
-  Future<Result<List<ChatThreadEntity>>> call() => _repository.getThreads();
+  Future<Result<List<ChatThreadEntity>>> call({String? query}) =>
+      _repository.getThreads(query: query);
 }

@@ -150,11 +150,7 @@ class _AddressFormSheetState extends ConsumerState<_AddressFormSheet> {
                 const SizedBox(height: DsSpacing.lg),
                 Text(
                   isEditing ? 'تعديل العنوان' : 'عنوان جديد',
-                  style: TextStyle(
-                    fontSize: DsTypography.titleLarge,
-                    fontWeight: DsTypography.bold,
-                    color: colors.onSurface,
-                  ),
+                  style: context.dsText.sectionTitle.bold.tint(colors.onSurface),
                 ),
                 const SizedBox(height: DsSpacing.xl),
 
@@ -176,6 +172,7 @@ class _AddressFormSheetState extends ConsumerState<_AddressFormSheet> {
                 _Field(
                   controller: _recipientPhone,
                   label: 'رقم الهاتف',
+                  // l10n-ignore: a dialling mask, not language
                   hint: '09XX XXX XXX',
                   keyboardType: TextInputType.phone,
                   inputFormatters: [
@@ -250,14 +247,11 @@ class _AddressFormSheetState extends ConsumerState<_AddressFormSheet> {
                   onChanged: (value) => setState(() => _isDefault = value),
                   title: Text(
                     'اجعليه عنواني الافتراضي',
-                    style: TextStyle(color: colors.onSurface),
+                    style: context.dsText.body.tint(colors.onSurface),
                   ),
                   subtitle: Text(
                     'هو الذي يفتح عليه الدفع',
-                    style: TextStyle(
-                      color: colors.onSurfaceVariant,
-                      fontSize: DsTypography.labelSmall,
-                    ),
+                    style: context.dsText.caption.tint(colors.onSurfaceVariant),
                   ),
                 ),
 
@@ -309,11 +303,7 @@ class _GovernoratePicker extends StatelessWidget {
         children: [
           Text(
             'المحافظة',
-            style: TextStyle(
-              color: colors.onSurfaceVariant,
-              fontSize: DsTypography.labelSmall,
-              fontWeight: DsTypography.semiBold,
-            ),
+            style: context.dsText.caption.semibold.tint(colors.onSurfaceVariant),
           ),
           const SizedBox(height: DsSpacing.sm),
           DropdownButtonFormField<String>(
@@ -340,11 +330,7 @@ class _GovernoratePicker extends StatelessWidget {
             const SizedBox(height: DsSpacing.md),
             Text(
               'المنطقة',
-              style: TextStyle(
-                color: colors.onSurfaceVariant,
-                fontSize: DsTypography.labelSmall,
-                fontWeight: DsTypography.semiBold,
-              ),
+              style: context.dsText.caption.semibold.tint(colors.onSurfaceVariant),
             ),
             const SizedBox(height: DsSpacing.sm),
             DropdownButtonFormField<String>(
@@ -395,7 +381,7 @@ class _GovernorateUnavailable extends StatelessWidget {
           Expanded(
             child: Text(
               'تعذّر تحميل قائمة المحافظات',
-              style: TextStyle(color: colors.onSurfaceVariant),
+              style: context.dsText.body.tint(colors.onSurfaceVariant),
             ),
           ),
           TextButton(onPressed: onRetry, child: const Text('إعادة المحاولة')),
@@ -439,11 +425,7 @@ class _Field extends StatelessWidget {
         children: [
           Text(
             label,
-            style: TextStyle(
-              color: colors.onSurfaceVariant,
-              fontSize: DsTypography.labelSmall,
-              fontWeight: DsTypography.semiBold,
-            ),
+            style: context.dsText.caption.semibold.tint(colors.onSurfaceVariant),
           ),
           const SizedBox(height: DsSpacing.sm),
           TextFormField(

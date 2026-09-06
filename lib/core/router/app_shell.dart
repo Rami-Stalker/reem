@@ -4,8 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/experience/experience_labels.dart';
 import 'package:reem/core/experience/role_experience.dart';
 import 'package:reem/core/localization/l10n_extension.dart';
+import 'package:reem/core/router/route_paths.dart';
+import 'package:reem/core/sync/outbox_providers.dart';
 import 'package:reem/features/cart/presentation/providers/cart_providers.dart';
 import 'package:reem/features/experience/presentation/providers/role_experience_provider.dart';
 
@@ -28,6 +31,11 @@ class AppShell extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // Holds the drain alive for the life of the shell. Nothing else watches
+    // it, and a queue that only drains when a screen happens to ask would sit
+    // full for exactly as long as she is not looking at the right screen.
+    ref.watch(outboxDrainProvider);
+
     final experience = ref.watch(roleExperienceProvider);
     final path = GoRouterState.of(context).uri.path;
     final destinations = experience.visibleNavigation.toList(growable: false);
@@ -37,25 +45,25 @@ class AppShell extends ConsumerWidget {
 
     return switch (experience.role) {
       ExperienceRole.seller => _SellerProductShell(
-          navigationShell: navigationShell,
-          destinations: destinations,
-          selectedIndex: selectedIndex,
-          quickAction: action,
-          onSelected: (index) => _go(context, destinations[index]),
-          onQuickAction: action == null ? null : () => context.go(action.path),
-        ),
+        navigationShell: navigationShell,
+        destinations: destinations,
+        selectedIndex: selectedIndex,
+        quickAction: action,
+        onSelected: (index) => _go(context, destinations[index]),
+        onQuickAction: action == null ? null : () => context.go(action.path),
+      ),
       ExperienceRole.admin => _AdminFallbackShell(
-          navigationShell: navigationShell,
-          destinations: destinations,
-          selectedIndex: selectedIndex,
-          onSelected: (index) => _go(context, destinations[index]),
-        ),
+        navigationShell: navigationShell,
+        destinations: destinations,
+        selectedIndex: selectedIndex,
+        onSelected: (index) => _go(context, destinations[index]),
+      ),
       ExperienceRole.buyer => _CustomerProductShell(
-          navigationShell: navigationShell,
-          destinations: destinations,
-          selectedIndex: selectedIndex,
-          onSelected: (index) => _go(context, destinations[index]),
-        ),
+        navigationShell: navigationShell,
+        destinations: destinations,
+        selectedIndex: selectedIndex,
+        onSelected: (index) => _go(context, destinations[index]),
+      ),
     };
   }
 
@@ -66,21 +74,25 @@ class AppShell extends ConsumerWidget {
     return index < 0 ? 0 : index;
   }
 
+  /// Which stack in the shell a destination lives in.
+  ///
+  /// It mirrors the branch order in the router by hand, so the two must be
+  /// edited together — and were not, the last time the seller's tabs changed.
+  /// A path with no branch is pushed instead, which is the right answer for
+  /// every screen that is a destination but not a tab.
   int? _branchIndexForPath(String path) => switch (path) {
-        '/home' => 0,
-        '/search' => 1,
-        '/cart' => 2,
-        '/activity' => 3,
-        '/profile' => 4,
-        '/seller/dashboard' => 5,
-        '/seller/products' => 6,
-        '/orders' => 7,
-        '/seller/customers' => 8,
-        '/seller/marketing' => 9,
-        '/seller/analytics' => 10,
-        '/seller/store' => 11,
-        _ => null,
-      };
+    RoutePaths.home => 0,
+    RoutePaths.search => 1,
+    RoutePaths.cart => 2,
+    RoutePaths.activity => 3,
+    RoutePaths.profile => 4,
+    RoutePaths.sellerDashboard => 5,
+    RoutePaths.myProducts => 6,
+    RoutePaths.sellerOrders => 7,
+    RoutePaths.sellerAnalytics => 8,
+    RoutePaths.sellerStore => 9,
+    _ => null,
+  };
 }
 
 class _CustomerProductShell extends StatelessWidget {
@@ -101,12 +113,7 @@ class _CustomerProductShell extends StatelessWidget {
     return Scaffold(
       extendBody: true,
       backgroundColor: context.dsColors.background,
-      body: Stack(
-        children: [
-          const CustomerBackdrop(),
-          navigationShell,
-        ],
-      ),
+      body: Stack(children: [const CustomerBackdrop(), navigationShell]),
       // No docked action: the buyer's only quick action is Search, which is
       // already a tab. A floating button duplicating a tab and half-covering
       // the bar was the single ugliest thing on the screen.
@@ -168,7 +175,11 @@ class _CustomerNavigationBar extends ConsumerWidget {
                   blurRadius: 28,
                   offset: const Offset(0, 12),
                 ),
-                BoxShadow(color: c.shadow, blurRadius: 16, offset: const Offset(0, 4)),
+                BoxShadow(
+                  color: c.shadow,
+                  blurRadius: 16,
+                  offset: const Offset(0, 4),
+                ),
               ],
             ),
             child: Row(
@@ -210,8 +221,10 @@ class _CustomerNavItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final c = context.dsColors;
 
+    final label = item.labelOf(context.l10n);
+
     return Tooltip(
-      message: item.label,
+      message: label,
       child: InkResponse(
         radius: 34,
         onTap: onTap,
@@ -249,18 +262,19 @@ class _CustomerNavItem extends StatelessWidget {
                   ),
               ],
             ),
-            const SizedBox(height: 3),
+            DsGaps.vXxs,
             FittedBox(
               fit: BoxFit.scaleDown,
               child: Text(
-                item.label,
+                label,
                 maxLines: 1,
-                style: TextStyle(
-                  color: selected ? c.primary : c.onSurfaceVariant,
-                  fontSize: DsTypography.labelSmall,
-                  fontWeight:
-                      selected ? DsTypography.bold : DsTypography.medium,
-                ),
+                style: context.dsText.caption
+                    .tint(selected ? c.primary : c.onSurfaceVariant)
+                    .copyWith(
+                      fontWeight: selected
+                          ? DsTypography.bold
+                          : DsTypography.medium,
+                    ),
               ),
             ),
           ],
@@ -282,7 +296,7 @@ class _CountDot extends StatelessWidget {
     return Container(
       constraints: const BoxConstraints(minWidth: 17),
       height: 17,
-      padding: const EdgeInsets.symmetric(horizontal: 4),
+      padding: const EdgeInsets.symmetric(horizontal: DsSpacing.xxs),
       alignment: Alignment.center,
       decoration: BoxDecoration(
         color: c.primary,
@@ -291,12 +305,7 @@ class _CountDot extends StatelessWidget {
       ),
       child: Text(
         count > 99 ? '99+' : '$count',
-        style: TextStyle(
-          color: c.onPrimary,
-          fontSize: 9,
-          fontWeight: DsTypography.bold,
-          height: 1,
-        ),
+        style: context.dsText.micro.bold.tint(c.onPrimary).copyWith(height: 1),
       ),
     );
   }
@@ -327,11 +336,11 @@ class _SellerProductShell extends StatelessWidget {
       backgroundColor: palette.background,
       floatingActionButton: wide && quickAction != null
           ? FloatingActionButton.extended(
-              tooltip: quickAction!.label,
+              tooltip: quickAction!.labelOf(context.l10n),
               backgroundColor: palette.primary,
-              foregroundColor: Colors.white,
+              foregroundColor: DsColors.onMedia,
               icon: Icon(quickAction!.icon),
-              label: Text(quickAction!.label),
+              label: Text(quickAction!.labelOf(context.l10n)),
               onPressed: onQuickAction,
             )
           : null,
@@ -386,15 +395,17 @@ class _SellerSideNavigation extends StatelessWidget {
       ),
       child: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(18),
+          padding: const EdgeInsets.all(DsSpacing.lg),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const _SellerBrand(),
-              const SizedBox(height: 24),
+              DsGaps.vXl,
               Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 11),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: DsSpacing.sm,
+                  vertical: DsSpacing.sm,
+                ),
                 decoration: BoxDecoration(
                   color: palette.background,
                   borderRadius: DsRadius.borderMd,
@@ -403,26 +414,22 @@ class _SellerSideNavigation extends StatelessWidget {
                 child: Row(
                   children: [
                     Icon(Icons.search_rounded, size: 18, color: palette.muted),
-                    const SizedBox(width: 8),
+                    DsGaps.hXs,
                     Expanded(
                       child: Text(
                         context.l10n.search,
                         overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          color: palette.muted,
-                          fontSize: DsTypography.labelMedium,
-                          fontWeight: DsTypography.medium,
-                        ),
+                        style: context.dsText.labelMedium.tint(palette.muted),
                       ),
                     ),
                   ],
                 ),
               ),
-              const SizedBox(height: 18),
+              DsGaps.vLg,
               Expanded(
                 child: ListView.separated(
                   itemCount: destinations.length,
-                  separatorBuilder: (_, _) => const SizedBox(height: 4),
+                  separatorBuilder: (_, _) => DsGaps.vXxs,
                   itemBuilder: (context, index) => _SellerNavTile(
                     item: destinations[index],
                     selected: index == selectedIndex,
@@ -459,9 +466,9 @@ class _SellerBrand extends StatelessWidget {
             gradient: palette.headerGradient,
             borderRadius: DsRadius.borderMd,
           ),
-          child: const Icon(Icons.storefront_rounded, color: Colors.white),
+          child: const Icon(Icons.storefront_rounded, color: DsColors.onMedia),
         ),
-        const SizedBox(width: 12),
+        DsGaps.hSm,
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -470,23 +477,16 @@ class _SellerBrand extends StatelessWidget {
                 l10n.appTitle,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  color: palette.ink,
-                  fontFamily: DsTypography.fontFamilyDisplay,
-                  fontFamilyFallback: DsTypography.displayFallback,
-                  fontWeight: DsTypography.bold,
-                  fontSize: DsTypography.titleSmall,
+                style: context.dsText.tileTitle.displayFamily.bold.tint(
+                  palette.ink,
                 ),
               ),
-              const SizedBox(height: 2),
+              DsGaps.vXxxs,
               Text(
                 l10n.sellerCommandCentre,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  color: palette.muted,
-                  fontSize: DsTypography.labelSmall,
-                ),
+                style: context.dsText.caption.tint(palette.muted),
               ),
             ],
           ),
@@ -510,8 +510,9 @@ class _SellerNavTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final palette = context.atelier;
+    final label = item.labelOf(context.l10n);
     return Tooltip(
-      message: item.label,
+      message: label,
       child: Material(
         color: Colors.transparent,
         child: InkWell(
@@ -520,7 +521,7 @@ class _SellerNavTile extends StatelessWidget {
           child: AnimatedContainer(
             duration: DsMotion.fast,
             height: 46,
-            padding: const EdgeInsets.symmetric(horizontal: 12),
+            padding: const EdgeInsets.symmetric(horizontal: DsSpacing.sm),
             decoration: BoxDecoration(
               color: selected ? palette.primarySoft : Colors.transparent,
               borderRadius: DsRadius.borderMd,
@@ -537,17 +538,19 @@ class _SellerNavTile extends StatelessWidget {
                   size: 20,
                   color: selected ? palette.primary : palette.muted,
                 ),
-                const SizedBox(width: 12),
+                DsGaps.hSm,
                 Expanded(
                   child: Text(
-                    item.label,
+                    label,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      color: selected ? palette.primary : palette.ink,
-                      fontWeight:
-                          selected ? DsTypography.bold : DsTypography.medium,
-                    ),
+                    style: context.dsText.body
+                        .tint(selected ? palette.primary : palette.ink)
+                        .copyWith(
+                          fontWeight: selected
+                              ? DsTypography.bold
+                              : DsTypography.medium,
+                        ),
                   ),
                 ),
               ],
@@ -589,7 +592,7 @@ class _SellerMobileNavigation extends StatelessWidget {
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
         itemCount: destinations.length,
-        separatorBuilder: (_, _) => const SizedBox(width: 8),
+        separatorBuilder: (_, _) => DsGaps.hXs,
         itemBuilder: (context, index) {
           final item = destinations[index];
           final selected = index == selectedIndex;
@@ -623,7 +626,7 @@ class _AdminFallbackShell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AdminExperience.background,
+      backgroundColor: context.console.background,
       body: Stack(
         children: [
           const AdminChromeBackground(),
@@ -631,29 +634,31 @@ class _AdminFallbackShell extends StatelessWidget {
             children: [
               Container(
                 width: 88,
-                color: AdminExperience.nav,
+                color: context.console.nav,
                 child: SafeArea(
                   child: Column(
                     children: [
-                      const SizedBox(height: 16),
+                      DsGaps.vMd,
                       const Icon(
                         Icons.admin_panel_settings_rounded,
-                        color: Colors.white,
+                        color: DsColors.onMedia,
                       ),
-                      const SizedBox(height: 20),
+                      DsGaps.vLg,
                       for (final entry in destinations.asMap().entries)
                         Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 4),
+                          padding: const EdgeInsets.symmetric(
+                            vertical: DsSpacing.xxs,
+                          ),
                           child: IconButton(
-                            tooltip: entry.value.label,
+                            tooltip: entry.value.labelOf(context.l10n),
                             onPressed: () => onSelected(entry.key),
                             icon: Icon(
                               entry.key == selectedIndex
                                   ? entry.value.selectedIcon
                                   : entry.value.icon,
                               color: entry.key == selectedIndex
-                                  ? Colors.white
-                                  : AdminExperience.navMuted,
+                                  ? DsColors.onMedia
+                                  : context.console.navMuted,
                             ),
                           ),
                         ),

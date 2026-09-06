@@ -232,7 +232,11 @@ export async function seedSellerReputation(
         verifiedReviewsCount: reviews.filter((r) => r.verifiedPurchase).length,
         performanceScore: performance,
         customerSatisfactionScore: Number(satisfaction.toFixed(1)),
-        responseScore: response,
+        // Deliberately null: the demo dataset has no seller↔buyer chat
+        // history, so there is nothing to derive a reply time from. Seeding a
+        // plausible-looking number here is what made a fabricated score look
+        // measured on a real dashboard.
+        responseScore: null,
         fulfillmentScore: fulfillment,
         topSellerTier: tier,
         trustedStatus:

@@ -25,9 +25,27 @@ type Tx = Prisma.TransactionClient;
  * priced in USD accrues nothing until someone decides the USD rate — which is
  * a business decision, not one to guess at in code.
  */
-export const SYP_PER_POINT = 10_000;
+/// In **new** Syrian pounds. Q43's figures — 10,000 ل.س a point, 10 points for
+/// 5,000 ل.س — were stated in the old lira; dropping the two zeros keeps the
+/// programme worth exactly what the client priced it at.
+export const SYP_PER_POINT = 100;
 export const POINTS_PER_REDEMPTION = 10;
-export const SYP_PER_REDEMPTION = 5_000;
+export const SYP_PER_REDEMPTION = 50;
+
+/**
+ * How many points a spend of [spend] is worth — Q43's rate, as a plain
+ * function so that the write paths outside this module can use it without
+ * taking the whole service (and its ledger) as a dependency.
+ *
+ * Checkout used to award `Math.floor(total)` — one point per pound — which is
+ * ten thousand times this rate. On an order of 118,000 ل.س that minted 118,000
+ * points against a catalogue whose dearest reward costs 1,200, so a single
+ * purchase bought out the entire rewards programme several hundred times over.
+ */
+export function pointsForSpend(spend: Money): number {
+  if (spend.currency !== Currency.SYP) return 0;
+  return Math.floor(Number(spend.toJSON().amount) / SYP_PER_POINT);
+}
 
 /**
  * Loyalty points, and the money behind them.
@@ -62,8 +80,7 @@ export class LoyaltyService {
 
   /** How many points a completed purchase is worth (Q43). */
   pointsFor(spend: Money): number {
-    if (spend.currency !== Currency.SYP) return 0;
-    return Math.floor(Number(spend.toJSON().amount) / SYP_PER_POINT);
+    return pointsForSpend(spend);
   }
 
   /** What a number of points is worth as wallet credit (Q43). */

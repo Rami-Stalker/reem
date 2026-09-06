@@ -58,15 +58,9 @@ class WalletTransactionTile extends StatelessWidget {
                   transaction.reason,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontFamily: DsTypography.fontFamily,
-                    fontSize: DsTypography.bodyMedium,
-                    fontWeight: DsTypography.medium,
-                    color: colors.onSurface,
-                    height: 1.35,
-                  ),
+                  style: context.dsText.body.medium.tint(colors.onSurface).copyWith(height: 1.35),
                 ),
-                const SizedBox(height: 2),
+                DsGaps.vXxxs,
                 // Date only. The source label would repeat what `reason`
                 // already says in Arabic — «تحويل نقاط ولاء» under «تحويل ١٠٠
                 // نقطة ولاء» is noise, and it pushed the line to two rows.
@@ -74,10 +68,7 @@ class WalletTransactionTile extends StatelessWidget {
                   _when(context),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontSize: DsTypography.labelSmall,
-                    color: colors.onSurfaceVariant,
-                  ),
+                  style: context.dsText.caption.tint(colors.onSurfaceVariant),
                 ),
               ],
             ),
@@ -91,22 +82,14 @@ class WalletTransactionTile extends StatelessWidget {
               Text(
                 // The sign is explicit rather than implied by the colour.
                 '${isCredit ? '+' : '−'}${transaction.amount.absolute.format()}',
-                style: TextStyle(
-                  fontFamily: DsTypography.fontFamily,
-                  fontSize: DsTypography.bodyMedium,
-                  fontWeight: DsTypography.bold,
-                  color: accent,
-                ),
+                style: context.dsText.body.bold.tint(accent),
               ),
-              const SizedBox(height: 2),
+              DsGaps.vXxxs,
               // The running balance, so a statement reads down the page
               // without her adding anything up (Q41).
               Text(
                 transaction.balanceAfter.format(),
-                style: TextStyle(
-                  fontSize: DsTypography.labelSmall,
-                  color: colors.onSurfaceVariant,
-                ),
+                style: context.dsText.caption.tint(colors.onSurfaceVariant),
               ),
             ],
           ),

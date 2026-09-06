@@ -34,6 +34,8 @@ abstract interface class SettingsRepository {
   });
 
   Future<Result<List<NotificationEntity>>> getNotifications();
+  Future<Result<void>> markNotificationRead(String id);
+  Future<Result<void>> markAllNotificationsRead();
 
   Future<Result<NotificationPreferences>> getNotificationPreferences();
 

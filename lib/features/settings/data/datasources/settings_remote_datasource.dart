@@ -28,6 +28,8 @@ abstract interface class SettingsRemoteDataSource {
   });
 
   Future<List<NotificationSettingsModel>> getNotifications();
+  Future<void> markNotificationRead(String id);
+  Future<void> markAllNotificationsRead();
 
   Future<NotificationPreferencesModel> getNotificationPreferences();
 

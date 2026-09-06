@@ -109,6 +109,22 @@ export class ChatsService {
     );
   }
 
+  /**
+   * One conversation's header row — who she is talking to, and how many of
+   * their messages she has not read. The details screen opens straight from a
+   * deep link or a freshly created chat, where the list was never loaded, so
+   * it cannot borrow this from `threads()`.
+   */
+  async thread(chatId: string, userId: string) {
+    await this.assertMember(chatId, userId);
+    const chat = await this.prisma.chat.findUniqueOrThrow({
+      where: { id: chatId },
+      include: chatInclude,
+    });
+    const unread = await this.unreadCount(chatId, userId);
+    return serializeChatThread(chat as ChatWithRelations, userId, unread);
+  }
+
   async startConversation(userId: string, dto: StartConversationDto) {
     const resolved = await this.resolveConversation(userId, dto);
     await this.assertNotBlocked(userId, resolved.participantIds);

@@ -46,7 +46,6 @@ class Product extends Equatable {
   final double rating;
   final int reviewsCount;
   final int viewsCount;
-  final int likesCount;
   final int ordersCount;
   final int favoritesCount;
 
@@ -73,7 +72,6 @@ class Product extends Equatable {
     this.rating = 0,
     this.reviewsCount = 0,
     this.viewsCount = 0,
-    this.likesCount = 0,
     this.ordersCount = 0,
     this.favoritesCount = 0,
   });
@@ -92,8 +90,26 @@ class Product extends Equatable {
   /// the one whose offer is being shown, not an owner of the catalogue entry.
   User? get displaySeller => bestOffer?.seller;
 
-  Money? get price => bestOffer?.price ?? priceFrom;
-  Money? get compareAtPrice => bestOffer?.compareAtPrice;
+  /// The figure a **card** quotes, normalised to SYP.
+  ///
+  /// `priceFrom` first, not the raw offer price: the server keeps that roll-up
+  /// precisely "so cards from sellers pricing in USD stay comparable", and
+  /// quoting the offer's own currency threw that away — a boutique pricing in
+  /// dollars put `38.50 $` in a rail where every neighbour read `ل.س`, and
+  /// nothing on the card said the two were the same money. The product page
+  /// still shows the offer's own currency, because that is what she will
+  /// actually be charged.
+  Money? get price => priceFrom ?? bestOffer?.price;
+
+  /// The struck-through "was" price — only when it is in the same currency as
+  /// [price]. A SYP figure crossed out by a USD one is not a comparison.
+  Money? get compareAtPrice {
+    final was = bestOffer?.compareAtPrice;
+    if (was == null) return null;
+    final now = price;
+    if (now != null && was.currency != now.currency) return null;
+    return was;
+  }
 
   bool get inStock => stock > 0 || offers.any((offer) => offer.inStock);
   bool get isAvailable => offers.any((offer) => offer.isBuyable);
@@ -143,7 +159,6 @@ class Product extends Equatable {
         rating,
         reviewsCount,
         viewsCount,
-        likesCount,
         ordersCount,
         favoritesCount,
         createdAt,

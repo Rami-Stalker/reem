@@ -22,6 +22,33 @@ export class CurrencyQueryDto {
   currency?: Currency;
 }
 
+/**
+ * Q56 — a courier's cash for one specific day.
+ *
+ * `date` lives on the DTO rather than in its own `@Query('date')` parameter:
+ * the global pipe validates the whole query object with `forbidNonWhitelisted`,
+ * so a field this class does not declare is refused outright.
+ */
+export class CourierExpectedCashQueryDto extends CurrencyQueryDto {
+  @IsOptional()
+  @IsISO8601()
+  date?: string;
+}
+
+/**
+ * Asking to be paid — Q69 P1.
+ *
+ * There is no amount field, deliberately. A payout is a set of commission
+ * ledgers, each the settled record of one sale; paying half of one would mean
+ * splitting a row that the order, its commission and its escrow release all
+ * point at. She asks for what is released, or she waits for the rest.
+ */
+export class RequestPayoutDto {
+  @IsOptional()
+  @IsEnum(Currency)
+  currency?: Currency;
+}
+
 // ── Disputes (Q107) ────────────────────────────────────────────────────────
 
 export class OpenDisputeDto {

@@ -31,6 +31,7 @@ class MyProductsScreen extends ConsumerWidget {
       background: const SellerAtelierBackground(),
       backgroundColor: palette.background,
       floatingActionButton: FloatingActionButton.extended(
+        // l10n-ignore: a record id, matched server-side
         heroTag: 'new-product',
         onPressed: () => context.push(RoutePaths.productForm),
         backgroundColor: palette.primary,
@@ -63,7 +64,7 @@ class MyProductsScreen extends ConsumerWidget {
             ),
             sliver: SliverList.separated(
               itemCount: state.products.length,
-              separatorBuilder: (_, __) => const SizedBox(height: DsSpacing.md),
+              separatorBuilder: (_, _) => const SizedBox(height: DsSpacing.md),
               itemBuilder: (_, i) {
                 final product = state.products[i];
                 return ManagedProductCard(
@@ -86,37 +87,119 @@ class MyProductsScreen extends ConsumerWidget {
     ProductCardAction action,
   ) async {
     final notifier = ref.read(myProductsNotifierProvider.notifier);
+    final l10n = context.l10n;
+
     switch (action) {
       case ProductCardAction.edit:
-        context.push(RoutePaths.productForm, extra: product);
-      case ProductCardAction.activate:
-        notifier.changeStatus(product.id, ProductStatus.active);
+        await context.push(RoutePaths.productForm, extra: product);
+      case ProductCardAction.publish:
+        await notifier.changeStatus(product.id, ProductStatus.active);
+      case ProductCardAction.pause:
+        await notifier.changeStatus(product.id, ProductStatus.paused);
       case ProductCardAction.draft:
-        notifier.changeStatus(product.id, ProductStatus.draft);
-      case ProductCardAction.archive:
-        notifier.changeStatus(product.id, ProductStatus.archived);
-      case ProductCardAction.delete:
-        final confirmed = await showDialog<bool>(
-          context: context,
-          builder: (ctx) => AlertDialog(
-            title: Text(context.l10n.sellerDeleteProduct),
-            content: Text(
-              context.l10n.sellerDeleteProductBody(product.title),
+        await notifier.changeStatus(product.id, ProductStatus.draft);
+
+      case ProductCardAction.restock:
+        final delta = await _askForStockDelta(context, product);
+        if (delta == null) return;
+        if (await notifier.adjustStock(product.id, delta) && context.mounted) {
+          DsSnackbar.show(
+            context,
+            message: l10n.productStockUpdated,
+            type: DsSnackbarType.success,
+          );
+        }
+
+      case ProductCardAction.remove:
+        final confirmed = await DsBottomSheet.show<bool>(
+          context,
+          builder: (sheetContext) => DsSheetScaffold(
+            title: l10n.productArchiveQuestion(product.title),
+            subtitle: l10n.productArchiveBlurb,
+            child: Column(
+              children: [
+                DsButton(
+                  label: l10n.productArchive,
+                  variant: DsButtonVariant.danger,
+                  icon: Icons.remove_shopping_cart_outlined,
+                  onPressed: () => Navigator.of(sheetContext).pop(true),
+                ),
+                const SizedBox(height: DsSpacing.sm),
+                DsButton(
+                  label: l10n.cancel,
+                  variant: DsButtonVariant.ghost,
+                  onPressed: () => Navigator.of(sheetContext).pop(false),
+                ),
+              ],
             ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(ctx, false),
-                child: Text(context.l10n.cancel),
-              ),
-              TextButton(
-                onPressed: () => Navigator.pop(ctx, true),
-                child: Text(context.l10n.delete),
-              ),
-            ],
           ),
         );
-        if (confirmed == true) notifier.delete(product.id);
+        if (confirmed != true) return;
+        if (await notifier.archive(product.id) && context.mounted) {
+          DsSnackbar.show(
+            context,
+            message: l10n.productArchived,
+            type: DsSnackbarType.success,
+          );
+        }
     }
+  }
+
+  /// Asks for a change in stock, not a new total.
+  ///
+  /// `POST /seller/offers/:id/stock` takes a signed delta so two restocks
+  /// arriving at once add up instead of one overwriting the other — and
+  /// because a woman unpacking a delivery counts what she put on the shelf,
+  /// not what is now on it.
+  Future<int?> _askForStockDelta(
+    BuildContext context,
+    ManagedProduct product,
+  ) async {
+    final controller = TextEditingController();
+    final l10n = context.l10n;
+
+    final delta = await DsBottomSheet.show<int>(
+      context,
+      builder: (sheetContext) => DsSheetScaffold(
+        title: l10n.productRestock,
+        subtitle: '${product.title} · ${l10n.sellerStock('${product.stock}')}',
+        child: StatefulBuilder(
+          builder: (innerContext, setSheetState) {
+            final typed = int.tryParse(controller.text.trim()) ?? 0;
+            return Column(
+              children: [
+                DsInputField(
+                  controller: controller,
+                  label: l10n.productRestockAmount,
+                  keyboardType: const TextInputType.numberWithOptions(
+                    signed: true,
+                  ),
+                  autofocus: true,
+                  onChanged: (_) => setSheetState(() {}),
+                ),
+                const SizedBox(height: DsSpacing.sm),
+                Text(
+                  l10n.sellerStock('${product.stock + typed}'),
+                  style: context.dsText.bodySmall.tint(product.stock + typed < 0
+                        ? context.atelier.critical
+                        : context.atelier.muted),
+                ),
+                const SizedBox(height: DsSpacing.md),
+                DsButton(
+                  label: l10n.saveChanges,
+                  onPressed: typed == 0 || product.stock + typed < 0
+                      ? null
+                      : () => Navigator.of(sheetContext).pop(typed),
+                ),
+              ],
+            );
+          },
+        ),
+      ),
+    );
+
+    controller.dispose();
+    return delta;
   }
 }
 
@@ -161,11 +244,9 @@ class _FilterBar extends StatelessWidget {
       selectedColor: palette.primarySoft,
       backgroundColor: palette.surface,
       side: BorderSide(color: active ? palette.primary : palette.line),
-      labelStyle: TextStyle(
-        fontFamily: DsTypography.fontFamily,
-        color: active ? palette.primary : palette.ink,
-        fontWeight: active ? DsTypography.bold : DsTypography.medium,
-      ),
+      labelStyle: active
+                ? context.dsText.tab.bold.tint(palette.primary)
+                : context.dsText.tab.medium.tint(palette.ink),
     );
   }
 }
@@ -199,21 +280,13 @@ class _EmptyState extends StatelessWidget {
           const SizedBox(height: DsSpacing.md),
           Text(
             l10n.sellerNoProductsYet,
-            style: TextStyle(
-              fontFamily: DsTypography.fontFamily,
-              fontWeight: DsTypography.bold,
-              fontSize: DsTypography.titleMedium,
-              color: palette.ink,
-            ),
+            style: context.dsText.cardTitle.bold.tint(palette.ink),
           ),
           const SizedBox(height: DsSpacing.xs),
           Text(
             l10n.sellerNoProductsBlurb,
             textAlign: TextAlign.center,
-            style: TextStyle(
-              fontFamily: DsTypography.fontFamily,
-              color: palette.muted,
-            ),
+            style: context.dsText.body.tint(palette.muted),
           ),
         ],
       ),

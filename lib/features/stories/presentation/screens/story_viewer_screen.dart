@@ -1,7 +1,11 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/shared/entities/story.dart';
+import 'package:reem/core/utils/relative_time.dart';
 import 'package:reem/features/stories/presentation/providers/stories_providers.dart';
 
 /// Arguments for the story viewer route (passed via GoRouter `extra`).
@@ -13,6 +17,14 @@ class StoryViewerArgs {
 
 const _reactions = ['❤️', '🔥', '😍', '👏', '😮', '🎉'];
 
+/// The one story viewer.
+///
+/// There used to be two — this one behind the route, and a second, thinner
+/// copy under `features/home/` that the stories rail pushed directly. Opening
+/// the same story from the rail and from a deep link gave you two different
+/// screens: one recorded the view and offered reactions, the other did
+/// neither, and they did not even share a progress bar. The rail now comes
+/// here, and the duplicate is gone.
 class StoryViewerScreen extends ConsumerStatefulWidget {
   const StoryViewerScreen({
     super.key,
@@ -29,6 +41,9 @@ class StoryViewerScreen extends ConsumerStatefulWidget {
 
 class _StoryViewerScreenState extends ConsumerState<StoryViewerScreen>
     with SingleTickerProviderStateMixin {
+  /// How long a single frame is held before advancing.
+  static const Duration _dwell = Duration(seconds: 5);
+
   late final AnimationController _progress;
   late int _index;
   String? _myReaction;
@@ -37,10 +52,8 @@ class _StoryViewerScreenState extends ConsumerState<StoryViewerScreen>
   void initState() {
     super.initState();
     _index = widget.initialIndex.clamp(0, widget.stories.length - 1);
-    _progress = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 5),
-    )..addStatusListener((status) {
+    _progress = AnimationController(vsync: this, duration: _dwell)
+      ..addStatusListener((status) {
         if (status == AnimationStatus.completed) _next();
       });
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -95,15 +108,15 @@ class _StoryViewerScreenState extends ConsumerState<StoryViewerScreen>
   Widget build(BuildContext context) {
     if (widget.stories.isEmpty) {
       return const Scaffold(
-        backgroundColor: Colors.black,
+        backgroundColor: DsColors.mediaGround,
         body: SizedBox.shrink(),
       );
     }
     final story = widget.stories[_index];
-    final width = MediaQuery.of(context).size.width;
+    final width = MediaQuery.sizeOf(context).width;
 
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: DsColors.mediaGround,
       body: Stack(
         fit: StackFit.expand,
         children: [
@@ -117,23 +130,31 @@ class _StoryViewerScreenState extends ConsumerState<StoryViewerScreen>
             },
             onLongPressStart: (_) => _progress.stop(),
             onLongPressEnd: (_) => _progress.forward(),
-            child: Image.network(
-              story.media.first.url,
+            child: CachedNetworkImage(
+              imageUrl: story.media.first.url,
               fit: BoxFit.cover,
-              loadingBuilder: (_, child, progress) => progress == null
-                  ? child
-                  : const Center(
-                      child: CircularProgressIndicator(color: Colors.white),
-                    ),
-              errorBuilder: (_, __, ___) => const Center(
-                child: Icon(Icons.broken_image_outlined,
-                    color: Colors.white54, size: 48),
+              placeholder: (_, _) => const Center(
+                child: DsLoadingIndicator(),
+              ),
+              errorWidget: (_, _, _) => const Center(
+                child: Icon(
+                  Icons.broken_image_outlined,
+                  color: DsColors.onMediaMuted,
+                  size: DsSizes.iconXl,
+                ),
               ),
             ),
           ),
+          // A scrim at each end so the chrome stays legible over a bright photo.
+          const DecoratedBox(
+            decoration: BoxDecoration(gradient: DsGradients.imageScrimTop),
+          ),
           SafeArea(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              padding: const EdgeInsets.symmetric(
+                horizontal: DsSpacing.sm,
+                vertical: DsSpacing.xs,
+              ),
               child: Column(
                 children: [
                   _ProgressBar(
@@ -141,8 +162,11 @@ class _StoryViewerScreenState extends ConsumerState<StoryViewerScreen>
                     index: _index,
                     controller: _progress,
                   ),
-                  const SizedBox(height: 10),
-                  _Header(story: story, onClose: () => Navigator.of(context).maybePop()),
+                  DsGaps.vSm,
+                  _Header(
+                    story: story,
+                    onClose: () => Navigator.of(context).maybePop(),
+                  ),
                   const Spacer(),
                   _ReactionBar(selected: _myReaction, onReact: _react),
                 ],
@@ -166,46 +190,43 @@ class _ProgressBar extends StatelessWidget {
   final int index;
   final AnimationController controller;
 
+  static const double _trackHeight = 3;
+
   @override
   Widget build(BuildContext context) {
     return Row(
       children: List.generate(count, (i) {
-        double value;
-        if (i < index) {
-          value = 1;
-        } else if (i > index) {
-          value = 0;
-        } else {
-          value = -1; // animated
-        }
+        // -1 marks the frame currently playing, so it animates rather than
+        // sitting at a fixed fill.
+        final value = i < index
+            ? 1.0
+            : i > index
+                ? 0.0
+                : -1.0;
         return Expanded(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 2),
+            padding: const EdgeInsets.symmetric(horizontal: DsSpacing.xxxs),
             child: ClipRRect(
-              borderRadius: BorderRadius.circular(2),
+              borderRadius: BorderRadius.circular(DsRadius.xs),
               child: value == -1
                   ? AnimatedBuilder(
                       animation: controller,
-                      builder: (_, __) => LinearProgressIndicator(
-                        value: controller.value,
-                        minHeight: 3,
-                        backgroundColor: Colors.white24,
-                        valueColor:
-                            const AlwaysStoppedAnimation(Colors.white),
-                      ),
+                      builder: (_, _) => _track(controller.value),
                     )
-                  : LinearProgressIndicator(
-                      value: value,
-                      minHeight: 3,
-                      backgroundColor: Colors.white24,
-                      valueColor: const AlwaysStoppedAnimation(Colors.white),
-                    ),
+                  : _track(value),
             ),
           ),
         );
       }),
     );
   }
+
+  Widget _track(double value) => LinearProgressIndicator(
+        value: value,
+        minHeight: _trackHeight,
+        backgroundColor: DsColors.onMediaFaint,
+        valueColor: const AlwaysStoppedAnimation(DsColors.onMedia),
+      );
 }
 
 class _Header extends StatelessWidget {
@@ -218,28 +239,32 @@ class _Header extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        CircleAvatar(
-          radius: 18,
-          backgroundImage:
-              (story.user.imageUrl != null && story.user.imageUrl!.isNotEmpty)
-                  ? NetworkImage(story.user.imageUrl!)
-                  : null,
-          child: (story.user.imageUrl == null || story.user.imageUrl!.isEmpty)
-              ? const Icon(Icons.person, size: 18)
-              : null,
+        DsAvatar(
+          imageUrl: story.user.imageUrl,
+          name: story.user.name,
+          size: DsSizes.avatarSm,
         ),
-        const SizedBox(width: 10),
+        DsGaps.hSm,
         Expanded(
-          child: Text(
-            story.user.name,
-            style: const TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.w600,
-            ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                story.user.name,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: context.dsText.labelStrong.tint(DsColors.onMedia),
+              ),
+              Text(
+                formatRelativeTime(context.l10n, story.createdAt),
+                style: context.dsText.caption.tint(DsColors.onMediaMuted),
+              ),
+            ],
           ),
         ),
         IconButton(
-          icon: const Icon(Icons.close, color: Colors.white),
+          tooltip: MaterialLocalizations.of(context).closeButtonTooltip,
+          icon: const Icon(DsIcons.close, color: DsColors.onMedia),
           onPressed: onClose,
         ),
       ],
@@ -256,11 +281,12 @@ class _ReactionBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 8),
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+      margin: const EdgeInsets.only(bottom: DsSpacing.xs),
+      padding: DsSpacing.pillPadding,
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.12),
-        borderRadius: BorderRadius.circular(40),
+        color: DsColors.mediaPlate,
+        borderRadius: DsRadius.borderFull,
+        border: Border.all(color: DsColors.onMediaFaint),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -269,11 +295,16 @@ class _ReactionBar extends StatelessWidget {
             GestureDetector(
               onTap: () => onReact(e),
               child: AnimatedScale(
-                duration: const Duration(milliseconds: 180),
+                duration: DsMotion.fast,
+                curve: DsMotion.softSpring,
                 scale: selected == e ? 1.4 : 1,
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 4),
-                  child: Text(e, style: const TextStyle(fontSize: 26)),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: DsSpacing.xxs),
+                  child: Text(
+                    e,
+                    style: context.dsText.sectionTitle,
+                  ),
                 ),
               ),
             ),

@@ -55,6 +55,16 @@ export function bannerImage(topic: string, label: string): string {
 }
 
 /**
+ * A department plate on the home rail — landscape, because the tile is a wide
+ * framed shelf rather than a medallion. Categories shipped with no imagery at
+ * all, which left "Shop by category" permanently collapsed: the section only
+ * renders departments that have a picture.
+ */
+export function categoryImage(topic: string, label: string): string {
+  return url(topic, lockOf(`category:${label}`), { width: 552, height: 368 });
+}
+
+/**
  * Profile pictures and store logos use decorative imagery (florals, fabric,
  * pastel texture) rather than portraits — the platform is women-only and the
  * client's content policy keeps faces out of the product surface entirely.

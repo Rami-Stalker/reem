@@ -66,7 +66,7 @@ class SellerReputationEntity extends Equatable {
     this.verifiedReviewsCount = 0,
     this.performanceScore = 0,
     this.customerSatisfactionScore = 0,
-    this.responseScore = 0,
+    this.responseScore,
     this.fulfillmentScore = 0,
     this.topSellerTier = 'standard',
     this.trustedStatus = 'pending',
@@ -77,7 +77,9 @@ class SellerReputationEntity extends Equatable {
   final int verifiedReviewsCount;
   final double performanceScore;
   final double customerSatisfactionScore;
-  final double responseScore;
+  /// Null when she has never been messaged — see the backend column, which
+  /// is nullable for the same reason.
+  final double? responseScore;
   final double fulfillmentScore;
   final String topSellerTier;
   final String trustedStatus;
@@ -111,4 +113,93 @@ class SellerReputationSummary extends Equatable {
 
   @override
   List<Object?> get props => [seller, reputation, badges];
+}
+
+/// What a review was written *about*. A product review carries the piece; a
+/// shop review carries the boutique.
+class ReviewSubject extends Equatable {
+  const ReviewSubject({
+    required this.id,
+    required this.title,
+    this.imageUrl,
+  });
+
+  final String id;
+  final String title;
+  final String? imageUrl;
+
+  @override
+  List<Object?> get props => [id, title, imageUrl];
+}
+
+/// One review she wrote, with the thing she wrote it about attached.
+///
+/// Separate from [ReviewEntity] — which carries the *author* because it is read
+/// by people looking at a product — since here the author is always her and the
+/// interesting half is the subject.
+class AuthoredReview extends Equatable {
+  const AuthoredReview({
+    required this.id,
+    required this.rating,
+    required this.isAboutProduct,
+    required this.subject,
+    required this.createdAt,
+    this.title,
+    this.body,
+    this.status = 'pending',
+    this.sellerReply,
+    this.verifiedPurchase = false,
+  });
+
+  final String id;
+  final int rating;
+
+  /// False means it is a review of a boutique rather than a piece.
+  final bool isAboutProduct;
+  final ReviewSubject subject;
+  final DateTime createdAt;
+  final String? title;
+  final String? body;
+
+  /// Her own pending reviews are returned too, so this is worth showing: a
+  /// review being moderated has not been lost.
+  final String status;
+  final String? sellerReply;
+  final bool verifiedPurchase;
+
+  bool get isPending => status == 'pending';
+  bool get isRejected => status == 'rejected';
+  bool get hasReply => (sellerReply ?? '').trim().isNotEmpty;
+
+  @override
+  List<Object?> get props => [
+        id,
+        rating,
+        isAboutProduct,
+        subject,
+        createdAt,
+        title,
+        body,
+        status,
+        sellerReply,
+        verifiedPurchase,
+      ];
+}
+
+/// Her reviews plus the two figures the profile already displayed.
+class MyReviews extends Equatable {
+  const MyReviews({
+    this.reviews = const [],
+    this.count = 0,
+    this.average = 0,
+  });
+
+  final List<AuthoredReview> reviews;
+  final int count;
+  final double average;
+
+  bool get isEmpty => reviews.isEmpty;
+
+  @override
+  List<Object?> get props => [reviews, count, average];
 }

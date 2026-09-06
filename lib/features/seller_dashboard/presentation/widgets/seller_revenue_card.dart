@@ -66,7 +66,7 @@ class SellerRevenueCard extends ConsumerWidget {
                 DsSpacing.lg,
                 DsSpacing.md,
                 DsSpacing.sm,
-                0,
+                DsSpacing.xxxs,
               ),
               child: Row(
                 children: [
@@ -75,12 +75,7 @@ class SellerRevenueCard extends ConsumerWidget {
                       l10n.sellerRevenue,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        fontFamily: DsTypography.fontFamily,
-                        fontSize: DsTypography.labelMedium,
-                        fontWeight: DsTypography.semiBold,
-                        color: Colors.white.withValues(alpha: 0.82),
-                      ),
+                      style: context.dsText.labelMedium.semibold.tint(DsColors.onMedia.withValues(alpha: 0.82)),
                     ),
                   ),
                   _PeriodTabs(
@@ -95,7 +90,7 @@ class SellerRevenueCard extends ConsumerWidget {
                 DsSpacing.lg,
                 DsSpacing.sm,
                 DsSpacing.lg,
-                0,
+                DsSpacing.xxxs,
               ),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.end,
@@ -128,13 +123,7 @@ class SellerRevenueCard extends ConsumerWidget {
                             child: Text(
                               value.sypFull,
                               maxLines: 1,
-                              style: const TextStyle(
-                                fontFamily: DsTypography.fontFamily,
-                                fontSize: 34,
-                                fontWeight: DsTypography.bold,
-                                color: Colors.white,
-                                height: 1.1,
-                              ),
+                              style: context.dsText.hero.tint(DsColors.onMedia).copyWith(height: 1.1),
                             ),
                           ),
                         ),
@@ -146,7 +135,7 @@ class SellerRevenueCard extends ConsumerWidget {
                   const SizedBox(width: DsSpacing.sm),
                   MiniSparkline(
                     values: spark,
-                    color: Colors.white,
+                    color: DsColors.onMedia,
                     width: 86,
                     height: 42,
                   ),
@@ -233,9 +222,9 @@ class _PeriodTabs extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     return Container(
-      padding: const EdgeInsets.all(3),
+      padding: const EdgeInsets.all(DsSpacing.xxs),
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.14),
+        color: DsColors.onMedia.withValues(alpha: 0.14),
         borderRadius: DsRadius.borderPill,
       ),
       child: Row(
@@ -249,25 +238,19 @@ class _PeriodTabs extends StatelessWidget {
                 curve: DsMotion.silk,
                 padding: const EdgeInsets.symmetric(
                   horizontal: DsSpacing.xs,
-                  vertical: 4,
+                  vertical: DsSpacing.xxs,
                 ),
                 decoration: BoxDecoration(
                   color: period == selected
-                      ? Colors.white
+                      ? DsColors.onMedia
                       : Colors.transparent,
                   borderRadius: DsRadius.borderPill,
                 ),
                 child: Text(
                   period.labelOf(l10n),
-                  style: TextStyle(
-                    fontFamily: DsTypography.fontFamily,
-                    fontSize: DsTypography.labelSmall,
-                    fontWeight: DsTypography.bold,
-                    color: period == selected
+                  style: context.dsText.caption.bold.tint(period == selected
                         ? context.atelier.primary
-                        : Colors.white.withValues(alpha: 0.82),
-                    height: 1.1,
-                  ),
+                        : DsColors.onMedia.withValues(alpha: 0.82)).copyWith(height: 1.1),
                 ),
               ),
             ),
@@ -289,9 +272,9 @@ class _TrendBadge extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: DsSpacing.xs, vertical: 2),
+          padding: const EdgeInsets.symmetric(horizontal: DsSpacing.xs, vertical: DsSpacing.xxxs),
           decoration: BoxDecoration(
-            color: Colors.white.withValues(alpha: 0.18),
+            color: DsColors.onMedia.withValues(alpha: 0.18),
             borderRadius: DsRadius.borderPill,
           ),
           child: Row(
@@ -300,18 +283,12 @@ class _TrendBadge extends StatelessWidget {
               Icon(
                 up ? Icons.trending_up_rounded : Icons.trending_down_rounded,
                 size: 13,
-                color: Colors.white,
+                color: DsColors.onMedia,
               ),
-              const SizedBox(width: 3),
+              DsGaps.hXxs,
               Text(
                 formatTrend(trend),
-                style: const TextStyle(
-                  fontFamily: DsTypography.fontFamily,
-                  fontSize: DsTypography.labelSmall,
-                  fontWeight: DsTypography.bold,
-                  color: Colors.white,
-                  height: 1.1,
-                ),
+                style: context.dsText.caption.bold.tint(DsColors.onMedia).copyWith(height: 1.1),
               ),
             ],
           ),
@@ -322,11 +299,7 @@ class _TrendBadge extends StatelessWidget {
             context.l10n.sellerVsPrior,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-              fontFamily: DsTypography.fontFamily,
-              fontSize: DsTypography.labelSmall,
-              color: Colors.white.withValues(alpha: 0.7),
-            ),
+            style: context.dsText.caption.tint(DsColors.onMedia.withValues(alpha: 0.7)),
           ),
         ),
       ],
@@ -350,26 +323,16 @@ class _Stat extends StatelessWidget {
           label,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
-          style: TextStyle(
-            fontFamily: DsTypography.fontFamily,
-            fontSize: DsTypography.labelSmall,
-            color: Colors.white.withValues(alpha: 0.68),
-          ),
+          style: context.dsText.caption.tint(DsColors.onMedia.withValues(alpha: 0.68)),
         ),
-        const SizedBox(height: 2),
+        DsGaps.vXxxs,
         FittedBox(
           fit: BoxFit.scaleDown,
           alignment: AlignmentDirectional.centerStart,
           child: Text(
             value,
             maxLines: 1,
-            style: const TextStyle(
-              fontFamily: DsTypography.fontFamily,
-              fontSize: DsTypography.titleSmall,
-              fontWeight: DsTypography.bold,
-              color: Colors.white,
-              height: 1.15,
-            ),
+            style: context.dsText.tileTitle.bold.tint(DsColors.onMedia).copyWith(height: 1.15),
           ),
         ),
       ],
@@ -385,6 +348,6 @@ class _Divider extends StatelessWidget {
     width: 1,
     height: 28,
     margin: const EdgeInsets.symmetric(horizontal: DsSpacing.sm),
-    color: Colors.white.withValues(alpha: 0.16),
+    color: DsColors.onMedia.withValues(alpha: 0.16),
   );
 }

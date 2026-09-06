@@ -2,11 +2,77 @@
   "version": "0.0.1",
   "configurations": [
     {
+      "name": "reem-api",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "--prefix",
+        "backend",
+        "run",
+        "dev:alt"
+      ],
+      "port": 3001,
+      "url": "http://127.0.0.1:3001"
+    },
+    {
       "name": "reem-web",
       "runtimeExecutable": "flutter",
-      "runtimeArgs": ["run", "-d", "web-server", "--web-port", "8080", "--web-hostname", "127.0.0.1"],
+      "runtimeArgs": [
+        "run",
+        "-d",
+        "web-server",
+        "--web-port",
+        "8080",
+        "--web-hostname",
+        "127.0.0.1"
+      ],
       "port": 8080,
       "url": "http://127.0.0.1:8080"
+    },
+    {
+      "name": "reem-web-release",
+      "runtimeExecutable": "python",
+      "runtimeArgs": [
+        "-m",
+        "http.server",
+        "8081",
+        "--directory",
+        "build/web",
+        "--bind",
+        "127.0.0.1"
+      ],
+      "port": 8081,
+      "url": "http://127.0.0.1:8081"
+    },
+    {
+      "name": "reem-web-local-api",
+      "runtimeExecutable": "flutter",
+      "runtimeArgs": [
+        "run",
+        "-d",
+        "web-server",
+        "--web-port",
+        "8090",
+        "--web-hostname",
+        "127.0.0.1",
+        "--dart-define=API_BASE_URL=http://127.0.0.1:3001"
+      ],
+      "port": 8090,
+      "url": "http://127.0.0.1:8090"
+    },
+    {
+      "name": "reem-web-preview",
+      "runtimeExecutable": "python",
+      "runtimeArgs": [
+        "-m",
+        "http.server",
+        "8082",
+        "--directory",
+        "build/web",
+        "--bind",
+        "127.0.0.1"
+      ],
+      "port": 8082,
+      "url": "http://127.0.0.1:8082"
     }
   ]
 }

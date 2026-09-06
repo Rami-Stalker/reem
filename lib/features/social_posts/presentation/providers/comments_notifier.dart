@@ -15,10 +15,10 @@ class CommentsNotifier extends StateNotifier<CommentsState> {
     required AddCommentUseCase addComment,
     required DeleteCommentUseCase deleteComment,
     required this.currentUser,
-  })  : _getComments = getComments,
-        _addComment = addComment,
-        _deleteComment = deleteComment,
-        super(const CommentsState());
+  }) : _getComments = getComments,
+       _addComment = addComment,
+       _deleteComment = deleteComment,
+       super(const CommentsState());
 
   final String postId;
   final User? currentUser;
@@ -31,13 +31,15 @@ class CommentsNotifier extends StateNotifier<CommentsState> {
     final result = await _getComments(postId, page: 1);
     state = switch (result) {
       Success(:final data) => state.copyWith(
-          isLoading: false,
-          comments: data.items,
-          page: data.page,
-          hasNextPage: data.hasNextPage,
-        ),
-      Error(:final failure) =>
-        state.copyWith(isLoading: false, error: failure.message),
+        isLoading: false,
+        comments: data.items,
+        page: data.page,
+        hasNextPage: data.hasNextPage,
+      ),
+      Error(:final failure) => state.copyWith(
+        isLoading: false,
+        error: failure.message,
+      ),
     };
   }
 
@@ -54,9 +56,13 @@ class CommentsNotifier extends StateNotifier<CommentsState> {
   }
 
   /// Optimistically prepends the comment, then reconciles with the server.
-  Future<void> add(String content) async {
+  ///
+  /// Returns true only once the server has taken it, so the caller can move a
+  /// comment tally that lives outside this thread -- the card in the feed,
+  /// whose count is part of a `Post` this notifier has never seen.
+  Future<bool> add(String content) async {
     final text = content.trim();
-    if (text.isEmpty) return;
+    if (text.isEmpty) return false;
 
     final optimistic = currentUser == null
         ? null
@@ -78,21 +84,23 @@ class CommentsNotifier extends StateNotifier<CommentsState> {
     final result = await _addComment(postId, text);
     state = switch (result) {
       Success(:final data) => state.copyWith(
-          isSubmitting: false,
-          comments: [
-            data,
-            ...state.comments.where((c) => c.id != optimistic?.id),
-          ],
-        ),
+        isSubmitting: false,
+        comments: [
+          data,
+          ...state.comments.where((c) => c.id != optimistic?.id),
+        ],
+      ),
       Error(:final failure) => state.copyWith(
-          isSubmitting: false,
-          error: failure.message,
-          comments: state.comments.where((c) => c.id != optimistic?.id).toList(),
-        ),
+        isSubmitting: false,
+        error: failure.message,
+        comments: state.comments.where((c) => c.id != optimistic?.id).toList(),
+      ),
     };
+    return result is Success;
   }
 
-  Future<void> remove(String commentId) async {
+  /// Deletes a comment, reporting whether the server agreed.
+  Future<bool> remove(String commentId) async {
     final previous = state.comments;
     state = state.copyWith(
       comments: previous.where((c) => c.id != commentId).toList(),
@@ -101,6 +109,8 @@ class CommentsNotifier extends StateNotifier<CommentsState> {
     if (result case Error(:final failure)) {
       // Roll back on failure.
       state = state.copyWith(comments: previous, error: failure.message);
+      return false;
     }
+    return true;
   }
 }

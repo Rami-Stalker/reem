@@ -147,7 +147,7 @@ export class Money {
   roundForCurrency(): Money {
     return this.round(
       this.currency === Currency.SYP
-        ? RoundingPolicy.NEAREST_1000
+        ? SYP_ROUNDING
         : RoundingPolicy.NONE,
     );
   }
@@ -255,7 +255,18 @@ export class Money {
 
 const ROUNDING_STEP: Record<RoundingPolicy, number | null> = {
   [RoundingPolicy.NONE]: null,
+  [RoundingPolicy.NEAREST_10]: 10,
   [RoundingPolicy.NEAREST_100]: 100,
   [RoundingPolicy.NEAREST_500]: 500,
   [RoundingPolicy.NEAREST_1000]: 1000,
 };
+
+/**
+ * How a Syrian pound figure is rounded today.
+ *
+ * Q48 asked for the nearest thousand, in the old lira. Syria has since dropped
+ * two zeros, so the nearest **ten** is that same rule at the new scale — and
+ * writing it once means the changeover was one edit rather than a hunt through
+ * checkout, revaluation and the fee tables.
+ */
+export const SYP_ROUNDING = RoundingPolicy.NEAREST_10;

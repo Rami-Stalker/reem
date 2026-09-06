@@ -12,6 +12,7 @@ import 'package:reem/features/checkout/presentation/providers/applied_coupon_pro
 import 'package:reem/features/checkout/presentation/providers/checkout_controller.dart';
 import 'package:reem/features/checkout/presentation/providers/checkout_providers.dart';
 import 'package:reem/features/checkout/presentation/providers/saved_addresses_provider.dart';
+import 'package:reem/features/checkout/presentation/widgets/cod_confirmation_sheet.dart';
 import 'package:reem/features/settings/domain/entities/address_entity.dart';
 
 /// The last screen before she pays.
@@ -43,6 +44,9 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
   bool _isRural = false;
   bool _saveAddress = true;
   String? _paymentMethod;
+
+  /// Q44 — whether the boutique sees her full name.
+  bool _privacyMask = false;
 
   /// Null means "a new address" — the form. Anything else is a saved one.
   String? _selectedAddressId;
@@ -168,6 +172,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                 ),
           saveAddress: _selectedAddressId == null && _saveAddress,
           paymentMethod: _paymentMethod!,
+          privacyMask: _privacyMask,
           couponCode: _coupon.text.trim().isEmpty ? null : _coupon.text.trim(),
           deliveryInstructions: _instructions.text.trim().isEmpty
               ? null
@@ -178,6 +183,29 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
     if (placed != null) {
       await ref.read(cartNotifierProvider.notifier).refresh();
       if (!mounted) return;
+
+      // A cash order the trust engine held is placed but not yet on its way.
+      // The code is collected here, while she is still on the screen that
+      // asked for it — sending her to the order detail to discover a blocked
+      // order would turn ten seconds of typing into a support ticket.
+      if (placed.awaitsCodConfirmation) {
+        final confirmed = await showCodConfirmationSheet(
+          context,
+          orderId: placed.order.id,
+          assurance: placed.codAssurance!,
+        );
+        if (!mounted) return;
+        DsSnackbar.show(
+          context,
+          message: confirmed
+              ? context.l10n.codConfirmed
+              : context.l10n.codAwaitingBanner,
+          type: confirmed ? DsSnackbarType.success : DsSnackbarType.info,
+        );
+        context.pushReplacement(RoutePaths.orderDetailOf(placed.order.id));
+        return;
+      }
+
       DsSnackbar.show(
         context,
         message: context.l10n.checkoutPlacedSuccess(placed.order.number),
@@ -301,6 +329,31 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                             setState(() => _paymentMethod = method.method),
                       ),
 
+                    // Q44 — «إخفاء هوية الزبونة عن البائعة». The server has
+                    // honoured `privacy_mask` since checkout was written and
+                    // nothing ever sent it, so a promise the client asked for
+                    // could not be made from the phone.
+                    const SizedBox(height: DsSpacing.sm),
+                    SwitchListTile(
+                      value: _privacyMask,
+                      onChanged: (value) =>
+                          setState(() => _privacyMask = value),
+                      contentPadding: EdgeInsets.zero,
+                      activeThumbColor: colors.primary,
+                      title: Text(
+                        l10n.checkoutPrivacyMask,
+                        style: context.dsText.body.semibold.tint(
+                          colors.onSurface,
+                        ),
+                      ),
+                      subtitle: Text(
+                        l10n.checkoutPrivacyMaskHint,
+                        style: context.dsText.caption.tint(
+                          colors.onSurfaceVariant,
+                        ),
+                      ),
+                    ),
+
                     const SizedBox(height: DsSpacing.lg),
                     _label(context, l10n.checkoutOrderSummary),
                     _summaryRow(context, l10n.checkoutSubtotal, subtotal),
@@ -312,21 +365,15 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                           l10n.checkoutSplitNotice(
                             '${cart.sellerGroups.length}',
                           ),
-                          style: TextStyle(
-                            fontSize: DsTypography.bodySmall,
-                            color: colors.onSurfaceVariant,
-                          ),
+                          style: context.dsText.bodySmall.tint(colors.onSurfaceVariant),
                         ),
                       ),
                     if (state.quote != null)
                       Padding(
-                        padding: const EdgeInsets.only(top: 4),
+                        padding: const EdgeInsets.only(top: DsSpacing.xxs),
                         child: Text(
                           _etaLabel(state.quote!),
-                          style: TextStyle(
-                            fontSize: DsTypography.bodySmall,
-                            color: colors.onSurfaceVariant,
-                          ),
+                          style: context.dsText.bodySmall.tint(colors.onSurfaceVariant),
                         ),
                       ),
                   ],
@@ -456,7 +503,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
         onChanged: (value) => setState(() => _saveAddress = value ?? false),
         title: Text(
           l10n.checkoutSaveAddress,
-          style: const TextStyle(fontSize: DsTypography.bodySmall),
+          style: context.dsText.bodySmall,
         ),
       ),
     ];
@@ -471,38 +518,24 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
     padding: const EdgeInsets.only(top: DsSpacing.sm, bottom: DsSpacing.xs),
     child: Text(
       text,
-      style: TextStyle(
-        fontFamily: DsTypography.fontFamily,
-        fontSize: DsTypography.titleSmall,
-        fontWeight: DsTypography.semiBold,
-        color: context.dsColors.onSurface,
-      ),
+      style: context.dsText.tileTitle.semibold.tint(context.dsColors.onSurface),
     ),
   );
 
   Widget _summaryRow(BuildContext context, String label, Money? value) {
     final colors = context.dsColors;
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 3),
+      padding: const EdgeInsets.symmetric(vertical: DsSpacing.xxs),
       child: Row(
         children: [
           Text(
             label,
-            style: TextStyle(
-              fontFamily: DsTypography.fontFamily,
-              fontSize: DsTypography.bodySmall,
-              color: colors.onSurfaceVariant,
-            ),
+            style: context.dsText.bodySmall.tint(colors.onSurfaceVariant),
           ),
           const Spacer(),
           Text(
             value?.format() ?? '—',
-            style: TextStyle(
-              fontFamily: DsTypography.fontFamily,
-              fontSize: DsTypography.bodyMedium,
-              fontWeight: DsTypography.semiBold,
-              color: colors.onSurface,
-            ),
+            style: context.dsText.body.semibold.tint(colors.onSurface),
           ),
         ],
       ),
@@ -563,12 +596,7 @@ class _AddressOption extends StatelessWidget {
                         children: [
                           Text(
                             address.label,
-                            style: TextStyle(
-                              fontFamily: DsTypography.fontFamily,
-                              fontSize: DsTypography.bodyMedium,
-                              fontWeight: DsTypography.semiBold,
-                              color: colors.onSurface,
-                            ),
+                            style: context.dsText.body.semibold.tint(colors.onSurface),
                           ),
                           if (address.isDefault) ...[
                             const SizedBox(width: DsSpacing.xs),
@@ -576,23 +604,14 @@ class _AddressOption extends StatelessWidget {
                           ],
                         ],
                       ),
-                      const SizedBox(height: 2),
+                      DsGaps.vXxxs,
                       Text(
                         address.summary,
-                        style: TextStyle(
-                          fontFamily: DsTypography.fontFamily,
-                          fontSize: DsTypography.bodySmall,
-                          height: 1.5,
-                          color: colors.onSurfaceVariant,
-                        ),
+                        style: context.dsText.bodySmall.tint(colors.onSurfaceVariant).copyWith(height: 1.5),
                       ),
                       Text(
                         address.recipientName,
-                        style: TextStyle(
-                          fontFamily: DsTypography.fontFamily,
-                          fontSize: DsTypography.labelSmall,
-                          color: colors.onSurfaceVariant,
-                        ),
+                        style: context.dsText.caption.tint(colors.onSurfaceVariant),
                       ),
                     ],
                   ),
@@ -644,12 +663,7 @@ class _NewAddressOption extends StatelessWidget {
               const SizedBox(width: DsSpacing.xs),
               Text(
                 context.l10n.checkoutNewAddress,
-                style: TextStyle(
-                  fontFamily: DsTypography.fontFamily,
-                  fontSize: DsTypography.bodyMedium,
-                  fontWeight: DsTypography.medium,
-                  color: colors.onSurface,
-                ),
+                style: context.dsText.body.medium.tint(colors.onSurface),
               ),
             ],
           ),
@@ -706,11 +720,7 @@ class _PaymentTile extends StatelessWidget {
                 Expanded(
                   child: Text(
                     option.label,
-                    style: TextStyle(
-                      fontFamily: DsTypography.fontFamily,
-                      fontSize: DsTypography.bodyMedium,
-                      color: colors.onSurface,
-                    ),
+                    style: context.dsText.body.tint(colors.onSurface),
                   ),
                 ),
               ],
@@ -764,25 +774,34 @@ class _BottomBar extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
+                // Both figures give way before the bar does. A basket total
+                // beside a delivery fee, next to a fixed-width button, ran off
+                // the edge on a narrow phone — the price is what must survive,
+                // so it is the wider of the two flexes.
                 Row(
                   children: [
-                    Text(
-                      subtotal?.format() ?? '—',
-                      style: TextStyle(
-                        fontFamily: DsTypography.fontFamily,
-                        fontSize: DsTypography.titleSmall,
-                        fontWeight: DsTypography.bold,
-                        color: colors.onSurface,
+                    Flexible(
+                      flex: 3,
+                      child: Text(
+                        subtotal?.format() ?? '—',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: context.dsText.tileTitle.bold.tint(
+                          colors.onSurface,
+                        ),
                       ),
                     ),
                     if (deliveryFee != null) ...[
                       const SizedBox(width: DsSpacing.xs),
-                      Text(
-                        '+ ${deliveryFee!.format()}',
-                        style: TextStyle(
-                          fontFamily: DsTypography.fontFamily,
-                          fontSize: DsTypography.bodySmall,
-                          color: colors.onSurfaceVariant,
+                      Flexible(
+                        flex: 2,
+                        child: Text(
+                          '+ ${deliveryFee!.format()}',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: context.dsText.bodySmall.tint(
+                            colors.onSurfaceVariant,
+                          ),
                         ),
                       ),
                     ],
@@ -790,11 +809,7 @@ class _BottomBar extends StatelessWidget {
                 ),
                 Text(
                   l10n.checkoutTotalPending,
-                  style: TextStyle(
-                    fontFamily: DsTypography.fontFamily,
-                    fontSize: DsTypography.labelSmall,
-                    color: colors.onSurfaceVariant,
-                  ),
+                  style: context.dsText.caption.tint(colors.onSurfaceVariant),
                 ),
               ],
             ),
@@ -833,11 +848,7 @@ class _AppliedCouponNote extends StatelessWidget {
         const SizedBox(width: DsSpacing.sm),
         Text(
           'تم تطبيق الكوبون — توفير ${discount.format()}',
-          style: TextStyle(
-            color: colors.success,
-            fontSize: DsTypography.labelSmall,
-            fontWeight: DsTypography.semiBold,
-          ),
+          style: context.dsText.caption.semibold.tint(colors.success),
         ),
       ],
     );

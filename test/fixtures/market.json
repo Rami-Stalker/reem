@@ -1,0 +1,796 @@
+{
+  "bundles": {
+    "bundles": [
+      {
+        "id": "818ebf5c-58bc-4b2e-9e64-96265b924161",
+        "title": "إطلالة سهرة حول «عباية سهرة بلون الرملي»",
+        "occasion": "evening",
+        "occasion_label": "سهرة",
+        "total_syp": 31080,
+        "seller_count": 3,
+        "score": 64,
+        "slots": [
+          "ABAYA",
+          "SHOES",
+          "BAG"
+        ],
+        "items": [
+          {
+            "product_id": "653ad22e-698f-4f50-966b-ae1a15e0fb89",
+            "offer_id": "eaa1c5af-7d39-4414-b0eb-83dd1cabc3dd",
+            "title": "عباية سهرة بلون الرملي",
+            "image_url": "https://loremflickr.com/900/1125/abaya%2Cmodest%20fashion/all?lock=2290",
+            "slot": "ABAYA",
+            "slot_label": "عباية",
+            "price_syp": 7750,
+            "seller": {
+              "id": "226ecd92-4c18-4bfa-bb4d-f4e8cb09fd6b",
+              "name": "لمى الحلبي"
+            },
+            "reason": "القطعة الأساسية بالإطلالة."
+          },
+          {
+            "product_id": "0373f023-91c0-45cf-9e06-12ae1fc66700",
+            "offer_id": "5f701325-f91b-444e-b2ba-03ac1fe5bfff",
+            "title": "حذاء سهرة ساتان",
+            "image_url": "https://loremflickr.com/900/1125/womens%20shoes%2Cheels/all?lock=22034",
+            "slot": "SHOES",
+            "slot_label": "حذاء",
+            "price_syp": 16000,
+            "seller": {
+              "id": "49fbd24f-fab1-42bc-b304-83527e1583c2",
+              "name": "سارة المنصوري"
+            },
+            "reason": "بتكمّل «عباية سهرة بلون الرملي» بنفس المناسبة."
+          },
+          {
+            "product_id": "497dfcea-f188-43e0-bd01-ff9cdfa3b495",
+            "offer_id": "06b1ca8c-8f95-4839-8502-0ca72d1ea425",
+            "title": "حقيبة سهرة مطرّزة باللؤلؤ",
+            "image_url": "https://loremflickr.com/900/1125/handbag%2Cpurse/all?lock=50582",
+            "slot": "BAG",
+            "slot_label": "حقيبة",
+            "price_syp": 7330,
+            "seller": {
+              "id": "a121479e-d281-4b15-91a1-32bbe810a995",
+              "name": "ميساء الورد"
+            },
+            "reason": "بتكمّل «عباية سهرة بلون الرملي» بنفس المناسبة."
+          }
+        ]
+      },
+      {
+        "id": "5cdd4acb-18b9-4369-a7e2-74dcc276b4fb",
+        "title": "إطلالة سهرة حول «فستان سهرة بأكمام منفوخة»",
+        "occasion": "evening",
+        "occasion_label": "سهرة",
+        "total_syp": 24730,
+        "seller_count": 3,
+        "score": 58,
+        "slots": [
+          "DRESS",
+          "SHOES",
+          "BAG"
+        ],
+        "items": [
+          {
+            "product_id": "06eb0425-2ee1-4fc9-b609-db601a6f943b",
+            "offer_id": "b9c2459a-4cd9-47b5-b71d-7c8916404ccd",
+            "title": "فستان سهرة بأكمام منفوخة",
+            "image_url": "https://loremflickr.com/900/1125/dress%2Celegant/all?lock=5274",
+            "slot": "DRESS",
+            "slot_label": "فستان",
+            "price_syp": 10170,
+            "seller": {
+              "id": "73675c17-8cdd-4dcb-85c9-72affe9914be",
+              "name": "نور العبادي"
+            },
+            "reason": "القطعة الأساسية بالإطلالة."
+          },
+          {
+            "product_id": "e6a482a4-e46c-4dab-8402-3ff710d8c17e",
+            "offer_id": "b3e302a8-d2b5-4117-b7ae-70f7b21fde99",
+            "title": "حذاء سهرة بلون الأسود اللامع",
+            "image_url": "https://loremflickr.com/900/1125/womens%20shoes%2Cheels/all?lock=53622",
+            "slot": "SHOES",
+            "slot_label": "حذاء",
+            "price_syp": 7230,
+            "seller": {
+              "id": "52deb266-a302-4d76-9ad2-928708e622f5",
+              "name": "جنى اللاذقاني"
+            },
+            "reason": "بتكمّل «فستان سهرة بأكمام منفوخة» بنفس المناسبة."
+          },
+          {
+            "product_id": "497dfcea-f188-43e0-bd01-ff9cdfa3b495",
+            "offer_id": "06b1ca8c-8f95-4839-8502-0ca72d1ea425",
+            "title": "حقيبة سهرة مطرّزة باللؤلؤ",
+            "image_url": "https://loremflickr.com/900/1125/handbag%2Cpurse/all?lock=50582",
+            "slot": "BAG",
+            "slot_label": "حقيبة",
+            "price_syp": 7330,
+            "seller": {
+              "id": "a121479e-d281-4b15-91a1-32bbe810a995",
+              "name": "ميساء الورد"
+            },
+            "reason": "بتكمّل «فستان سهرة بأكمام منفوخة» بنفس المناسبة."
+          }
+        ]
+      },
+      {
+        "id": "4b7844ba-a66a-46b7-9f68-279e007143d8",
+        "title": "إطلالة سهرة حول «عباية سهرة بقماش الكريب الكوري»",
+        "occasion": "evening",
+        "occasion_label": "سهرة",
+        "total_syp": 33530,
+        "seller_count": 2,
+        "score": 58,
+        "slots": [
+          "ABAYA",
+          "SHOES",
+          "BAG"
+        ],
+        "items": [
+          {
+            "product_id": "eb4f3872-efb2-4b97-96bb-5f4b9762b31f",
+            "offer_id": "8b02f0d5-7613-46fb-8399-1a8e3f39b8eb",
+            "title": "عباية سهرة بقماش الكريب الكوري",
+            "image_url": "https://loremflickr.com/900/1125/abaya%2Cmodest%20fashion/all?lock=24044",
+            "slot": "ABAYA",
+            "slot_label": "عباية",
+            "price_syp": 18970,
+            "seller": {
+              "id": "52deb266-a302-4d76-9ad2-928708e622f5",
+              "name": "جنى اللاذقاني"
+            },
+            "reason": "القطعة الأساسية بالإطلالة."
+          },
+          {
+            "product_id": "e6a482a4-e46c-4dab-8402-3ff710d8c17e",
+            "offer_id": "b3e302a8-d2b5-4117-b7ae-70f7b21fde99",
+            "title": "حذاء سهرة بلون الأسود اللامع",
+            "image_url": "https://loremflickr.com/900/1125/womens%20shoes%2Cheels/all?lock=53622",
+            "slot": "SHOES",
+            "slot_label": "حذاء",
+            "price_syp": 7230,
+            "seller": {
+              "id": "52deb266-a302-4d76-9ad2-928708e622f5",
+              "name": "جنى اللاذقاني"
+            },
+            "reason": "بتكمّل «عباية سهرة بقماش الكريب الكوري» بنفس المناسبة."
+          },
+          {
+            "product_id": "497dfcea-f188-43e0-bd01-ff9cdfa3b495",
+            "offer_id": "06b1ca8c-8f95-4839-8502-0ca72d1ea425",
+            "title": "حقيبة سهرة مطرّزة باللؤلؤ",
+            "image_url": "https://loremflickr.com/900/1125/handbag%2Cpurse/all?lock=50582",
+            "slot": "BAG",
+            "slot_label": "حقيبة",
+            "price_syp": 7330,
+            "seller": {
+              "id": "a121479e-d281-4b15-91a1-32bbe810a995",
+              "name": "ميساء الورد"
+            },
+            "reason": "بتكمّل «عباية سهرة بقماش الكريب الكوري» بنفس المناسبة."
+          }
+        ]
+      }
+    ]
+  },
+  "bundle": {
+    "bundle": {
+      "id": "818ebf5c-58bc-4b2e-9e64-96265b924161",
+      "title": "إطلالة سهرة حول «عباية سهرة بلون الرملي»",
+      "occasion": "evening",
+      "occasion_label": "سهرة",
+      "total_syp": 31080,
+      "seller_count": 3,
+      "score": 64,
+      "slots": [
+        "ABAYA",
+        "SHOES",
+        "BAG"
+      ],
+      "items": [
+        {
+          "product_id": "653ad22e-698f-4f50-966b-ae1a15e0fb89",
+          "offer_id": "eaa1c5af-7d39-4414-b0eb-83dd1cabc3dd",
+          "title": "عباية سهرة بلون الرملي",
+          "image_url": "https://loremflickr.com/900/1125/abaya%2Cmodest%20fashion/all?lock=2290",
+          "slot": "ABAYA",
+          "slot_label": "عباية",
+          "price_syp": 7750,
+          "seller": {
+            "id": "226ecd92-4c18-4bfa-bb4d-f4e8cb09fd6b",
+            "name": "لمى الحلبي"
+          },
+          "reason": "القطعة الأساسية بالإطلالة."
+        },
+        {
+          "product_id": "0373f023-91c0-45cf-9e06-12ae1fc66700",
+          "offer_id": "5f701325-f91b-444e-b2ba-03ac1fe5bfff",
+          "title": "حذاء سهرة ساتان",
+          "image_url": "https://loremflickr.com/900/1125/womens%20shoes%2Cheels/all?lock=22034",
+          "slot": "SHOES",
+          "slot_label": "حذاء",
+          "price_syp": 16000,
+          "seller": {
+            "id": "49fbd24f-fab1-42bc-b304-83527e1583c2",
+            "name": "سارة المنصوري"
+          },
+          "reason": "بتكمّل «عباية سهرة بلون الرملي» بنفس المناسبة."
+        },
+        {
+          "product_id": "497dfcea-f188-43e0-bd01-ff9cdfa3b495",
+          "offer_id": "06b1ca8c-8f95-4839-8502-0ca72d1ea425",
+          "title": "حقيبة سهرة مطرّزة باللؤلؤ",
+          "image_url": "https://loremflickr.com/900/1125/handbag%2Cpurse/all?lock=50582",
+          "slot": "BAG",
+          "slot_label": "حقيبة",
+          "price_syp": 7330,
+          "seller": {
+            "id": "a121479e-d281-4b15-91a1-32bbe810a995",
+            "name": "ميساء الورد"
+          },
+          "reason": "بتكمّل «عباية سهرة بلون الرملي» بنفس المناسبة."
+        }
+      ]
+    }
+  },
+  "bundle_alternatives": {
+    "alternatives": [
+      {
+        "slot": "SHOES",
+        "slot_label": "حذاء",
+        "current": {
+          "product_id": "0373f023-91c0-45cf-9e06-12ae1fc66700",
+          "title": "حذاء سهرة ساتان",
+          "price_syp": 16000
+        },
+        "alternative": {
+          "product_id": "e6a482a4-e46c-4dab-8402-3ff710d8c17e",
+          "title": "حذاء سهرة بلون الأسود اللامع",
+          "price_syp": 7230
+        },
+        "saving_syp": 8770
+      }
+    ]
+  },
+  "wardrobe_summary": {
+    "items": 12,
+    "in_rotation": 0,
+    "needs_attention": 3,
+    "worn_share": 17,
+    "median_cost_per_wear_syp": 3500
+  },
+  "wardrobe_attention": {
+    "items": [
+      {
+        "closet_item_id": "83cef1e3-9429-4aa0-81da-255e7fc30f2d",
+        "title": "فستان سهرة أزرق (اختبار)",
+        "slot": "DRESS",
+        "slot_label": "فستان",
+        "image_url": null,
+        "blur_hash": null,
+        "wear_count": 2,
+        "last_worn_at": "2026-02-18T01:16:11.702Z",
+        "purchase_price_syp": 12000,
+        "product_id": null,
+        "reading": {
+          "rotation": "DORMANT",
+          "disposition": "RESELL",
+          "reason": "صار لها أشهر ما لبستيها، وبعدها بحالة منيحة تنباع فيها.",
+          "cost_per_wear_syp": 6000,
+          "confidence": 100,
+          "care": [
+            {
+              "code": "SILK",
+              "text": "الحرير بدو غسيل بارد بالإيد، وتنشيف بالظل — الشمس بتبهّت لونه."
+            }
+          ]
+        },
+        "style_with": [],
+        "suggested_price_syp": 6600,
+        "listing": null
+      },
+      {
+        "closet_item_id": "7fc155ce-cee0-41e3-8cc4-8351bef4a4e3",
+        "title": "توب قطن (اختبار)",
+        "slot": "TOP",
+        "slot_label": "قطعة علوية",
+        "image_url": null,
+        "blur_hash": null,
+        "wear_count": 0,
+        "last_worn_at": null,
+        "purchase_price_syp": 400,
+        "product_id": null,
+        "reading": {
+          "rotation": "UNWORN",
+          "disposition": "DONATE",
+          "reason": "ما لبستيها ولا مرة — في حدا غيرك بيستفيد منها أكتر.",
+          "cost_per_wear_syp": null,
+          "confidence": 90,
+          "care": [
+            {
+              "code": "COTTON",
+              "text": "القطن بيقصّر بالمي السخنة؛ غسيل بارد وبيضلّ ع مقاسه."
+            }
+          ]
+        },
+        "style_with": [],
+        "suggested_price_syp": null,
+        "listing": null
+      },
+      {
+        "closet_item_id": "d5f0e3f3-3dc7-438e-aac5-e0b444fd164d",
+        "title": "جاكيت جلد (اختبار)",
+        "slot": "OUTERWEAR",
+        "slot_label": "قطعة خارجية",
+        "image_url": null,
+        "blur_hash": null,
+        "wear_count": 22,
+        "last_worn_at": "2026-02-28T01:16:11.752Z",
+        "purchase_price_syp": 22000,
+        "product_id": null,
+        "reading": {
+          "rotation": "DORMANT",
+          "disposition": "RESTYLE",
+          "reason": "لبستيها كتير وبعدين وقفتي — غالبًا بدها تنسيقة جديدة مو استبدال.",
+          "cost_per_wear_syp": 1000,
+          "confidence": 100,
+          "care": [
+            {
+              "code": "LEATHER",
+              "text": "الجلد بينشف ويتشقّق؛ كريم ترطيب كل موسم وبعيد عن الشمس المباشرة."
+            }
+          ]
+        },
+        "style_with": [],
+        "suggested_price_syp": null,
+        "listing": null
+      }
+    ]
+  },
+  "missions": {
+    "missions": [
+      {
+        "key": "log_wears",
+        "kind": "COMPLETE",
+        "title": "سجّلي شو لبستي هالأسبوع",
+        "body": "كل لبسة بتسجّليها بتخلّي كلفة القطعة الحقيقية تبيّن — وبتعرفي شو عم يوقف بالخزانة بلا ما تنتبهي.",
+        "status": "OFFERED",
+        "progress": 0,
+        "remaining": 4,
+        "done": 0,
+        "target": 4,
+        "possible": 12,
+        "offered_at": "2026-09-05T21:13:35.224Z",
+        "expires_at": "2026-09-19T21:13:35.224Z",
+        "completed_at": null
+      },
+      {
+        "key": "build_look",
+        "kind": "CONTRIBUTE",
+        "title": "ركّبي إطلالة من قطعك",
+        "body": "من القطع اللي عندك، ركّبي إطلالة وحدة. بتضلّ محفوظة عندك، وبتصير ريم تعرف تكمّلها لما ينقصها شي.",
+        "status": "OFFERED",
+        "progress": 0,
+        "remaining": 1,
+        "done": 0,
+        "target": 1,
+        "possible": 6,
+        "offered_at": "2026-09-05T21:19:25.267Z",
+        "expires_at": "2026-09-26T21:19:25.267Z",
+        "completed_at": null
+      },
+      {
+        "key": "explore_categories",
+        "kind": "DISCOVER",
+        "title": "شوفي قسمين ما مريتي عليهن",
+        "body": "في أقسام بريم ما فتحتيها ولا مرة. مرّة وحدة بتكفي حتى تعرفي إذا فيها شي إلك.",
+        "status": "OFFERED",
+        "progress": 0,
+        "remaining": 2,
+        "done": 0,
+        "target": 2,
+        "possible": 12,
+        "offered_at": "2026-09-05T21:19:25.267Z",
+        "expires_at": "2026-09-19T21:19:25.267Z",
+        "completed_at": null
+      }
+    ]
+  },
+  "resale_market": {
+    "listings": [
+      {
+        "id": "b60e52d8-6fc5-4628-8d61-f4feba93521c",
+        "title": "فستان سهرة أزرق (اختبار)",
+        "note": "ملبوس مرتين، حالته ممتازة.",
+        "condition": "EXCELLENT",
+        "status": "LISTED",
+        "price_syp": 6600,
+        "original_price_syp": 12000,
+        "saving_bps": 4500,
+        "listed_at": "2026-09-06T01:16:13.931Z",
+        "sold_at": null,
+        "image_url": null,
+        "blur_hash": null,
+        "slot": "DRESS",
+        "slot_label": "فستان",
+        "colours": [
+          "navy"
+        ],
+        "size": null,
+        "brand_name": null,
+        "wear_count": 2,
+        "seller": {
+          "id": "fcc21b63-bc3d-4c3e-b84f-978bc25b7209",
+          "name": "نور الدين"
+        },
+        "product_id": null
+      }
+    ]
+  },
+  "resale_mine": {
+    "listings": [
+      {
+        "id": "b60e52d8-6fc5-4628-8d61-f4feba93521c",
+        "title": "فستان سهرة أزرق (اختبار)",
+        "note": "ملبوس مرتين، حالته ممتازة.",
+        "condition": "EXCELLENT",
+        "status": "LISTED",
+        "price_syp": 6600,
+        "original_price_syp": 12000,
+        "saving_bps": 4500,
+        "listed_at": "2026-09-06T01:16:13.931Z",
+        "sold_at": null,
+        "image_url": null,
+        "blur_hash": null,
+        "slot": "DRESS",
+        "slot_label": "فستان",
+        "colours": [],
+        "size": null,
+        "brand_name": null,
+        "wear_count": 2,
+        "seller": null,
+        "product_id": null
+      }
+    ]
+  },
+  "drops": {
+    "drops": [
+      {
+        "id": "46272286-2763-418b-a0ef-9c1c1b74a0ff",
+        "title": "نزول العبايات",
+        "note": null,
+        "status": "LIVE",
+        "audience": "EARLY_ACCESS",
+        "starts_at": "2026-09-06T12:00:00.000Z",
+        "early_access_at": "2026-09-05T12:00:00.000Z",
+        "ends_at": null,
+        "seller_id": "63e24877-4543-49c2-b01b-1deb784e98e9",
+        "early_access_only": true,
+        "invitation": {
+          "affinity": 63.67,
+          "reasons": [
+            {
+              "code": "OPEN_NEED",
+              "weight": 45
+            },
+            {
+              "code": "SELLER_CUSTOMER",
+              "weight": 12
+            },
+            {
+              "code": "TASTE_MATCH",
+              "weight": 6.67
+            }
+          ],
+          "seen": false
+        },
+        "products": [
+          {
+            "product_id": "3891af0b-91a3-46d9-b63e-e3d1d007f357",
+            "title": "صندوق مولود بلون سماوي",
+            "min_price_syp": 6280,
+            "image_url": "https://loremflickr.com/900/1125/newborn%20gift%2Cbaby/all?lock=93664",
+            "blur_hash": null
+          },
+          {
+            "product_id": "bf9876d5-0aa8-41da-b66b-09c2bc94c3ac",
+            "title": "عباية كلوش بتفاصيل دانتيل",
+            "min_price_syp": 7070,
+            "image_url": "https://loremflickr.com/900/1125/abaya%2Cmodest%20fashion/all?lock=28616",
+            "blur_hash": null
+          },
+          {
+            "product_id": "74704692-caca-4226-9c39-e70f08948f37",
+            "title": "حقيبة أمومة قابلة للغسل",
+            "min_price_syp": 1690,
+            "image_url": "https://loremflickr.com/900/1125/baby%20essentials%2Cnursery/all?lock=52089",
+            "blur_hash": null
+          }
+        ]
+      }
+    ]
+  },
+  "seller_opportunities": {
+    "opportunities": [
+      {
+        "code": "SUPPLY_GAP",
+        "subject_type": "CATEGORY",
+        "subject_id": "93ba2b0d-3fbd-4029-8aa7-1554535e1c46",
+        "subject_name": "هدايا مواليد",
+        "strength": 33,
+        "confidence": 1,
+        "headline": "الطلب على «هدايا مواليد» أعلى من المعروض حاليًا.",
+        "action": "لو عندك قطع بهالقسم، هلق وقتها تنزل.",
+        "evidence": {
+          "openNeeds": 0,
+          "demandScore": 77.98,
+          "supplyScore": 45.45,
+          "liveProducts": 5
+        }
+      },
+      {
+        "code": "RISING",
+        "subject_type": "CATEGORY",
+        "subject_id": "81e74328-015e-44ca-8847-aa1591670518",
+        "subject_name": "منظفات",
+        "strength": 100,
+        "confidence": 1,
+        "headline": "«منظفات» صاعد 179% عن النص الأول من الفترة.",
+        "action": "وقت منيح لتنزيل جديد أو Drop بهالخانة.",
+        "evidence": {
+          "growth": 1.788,
+          "recentViews": 382,
+          "previousViews": 137
+        }
+      },
+      {
+        "code": "COOLING",
+        "subject_type": "CATEGORY",
+        "subject_id": "4b5d95a2-4f55-4565-a40e-87438f25102f",
+        "subject_name": "أوشحة",
+        "strength": 51,
+        "confidence": 0.39,
+        "headline": "«أوشحة» نازل 38% عن النص الأول من الفترة.",
+        "action": "ما تكبّري المخزون هون هلق.",
+        "evidence": {
+          "growth": -0.385,
+          "recentViews": 67
+        }
+      },
+      {
+        "code": "COOLING",
+        "subject_type": "CATEGORY",
+        "subject_id": "b5dee392-4f6f-4ea3-909d-fce6aa38e5b1",
+        "subject_name": "مستلزمات يومية",
+        "strength": 44,
+        "confidence": 0.53,
+        "headline": "«مستلزمات يومية» نازل 33% عن النص الأول من الفترة.",
+        "action": "ما تكبّري المخزون هون هلق.",
+        "evidence": {
+          "growth": -0.333,
+          "recentViews": 94
+        }
+      },
+      {
+        "code": "COOLING",
+        "subject_type": "CATEGORY",
+        "subject_id": "effb59fa-d515-40e3-a542-259bb5e93bb4",
+        "subject_name": "هدايا رمضان والأعياد",
+        "strength": 37,
+        "confidence": 0.31,
+        "headline": "«هدايا رمضان والأعياد» نازل 28% عن النص الأول من الفترة.",
+        "action": "ما تكبّري المخزون هون هلق.",
+        "evidence": {
+          "growth": -0.278,
+          "recentViews": 57
+        }
+      },
+      {
+        "code": "COOLING",
+        "subject_type": "CATEGORY",
+        "subject_id": "ccf8b94d-d5dc-408a-8aa4-47ac41837ed8",
+        "subject_name": "أطقم مواليد",
+        "strength": 36,
+        "confidence": 0.7,
+        "headline": "«أطقم مواليد» نازل 27% عن النص الأول من الفترة.",
+        "action": "ما تكبّري المخزون هون هلق.",
+        "evidence": {
+          "growth": -0.273,
+          "recentViews": 133
+        }
+      }
+    ]
+  },
+  "drop_candidates": {
+    "candidates": [
+      {
+        "product_id": "3891af0b-91a3-46d9-b63e-e3d1d007f357",
+        "title": "صندوق مولود بلون سماوي",
+        "potential": 17,
+        "findings": [
+          "OVERSUPPLIED"
+        ],
+        "demand_score": 14.74,
+        "stock_units": 62
+      },
+      {
+        "product_id": "bf9876d5-0aa8-41da-b66b-09c2bc94c3ac",
+        "title": "عباية كلوش بتفاصيل دانتيل",
+        "potential": 14,
+        "findings": [],
+        "demand_score": 38.14,
+        "stock_units": 27
+      },
+      {
+        "product_id": "74704692-caca-4226-9c39-e70f08948f37",
+        "title": "حقيبة أمومة قابلة للغسل",
+        "potential": 12,
+        "findings": [],
+        "demand_score": 30.18,
+        "stock_units": 6
+      },
+      {
+        "product_id": "2525f4a8-c262-4ff6-8e4a-bf4d85ab2fc9",
+        "title": "غسول وجه بدون كحول",
+        "potential": 11,
+        "findings": [],
+        "demand_score": 31.09,
+        "stock_units": 24
+      },
+      {
+        "product_id": "3d436327-6727-4f28-93c8-4dffeeb93f7d",
+        "title": "ميدالية شوكولا بنسبة كاكاو ٧٠٪",
+        "potential": 9,
+        "findings": [],
+        "demand_score": 26.72,
+        "stock_units": 50
+      },
+      {
+        "product_id": "1b71500f-6788-40fe-a999-ca0cbe167801",
+        "title": "صابونة طبيعية بزيت الأرغان",
+        "potential": 5,
+        "findings": [
+          "OVERSUPPLIED"
+        ],
+        "demand_score": 13.64,
+        "stock_units": 21
+      },
+      {
+        "product_id": "96ac2b33-8bf1-4ad1-b4c9-09e62705cedb",
+        "title": "جزمة صغيرة بنعل طري",
+        "potential": 4,
+        "findings": [
+          "OVERSUPPLIED"
+        ],
+        "demand_score": 12.5,
+        "stock_units": 72
+      },
+      {
+        "product_id": "ffa716df-3283-467f-8fe2-4256d744840f",
+        "title": "حذاء أطفال بنعل طري",
+        "potential": 3,
+        "findings": [
+          "OVERSUPPLIED"
+        ],
+        "demand_score": 7.32,
+        "stock_units": 31
+      }
+    ]
+  },
+  "seller_drops": {
+    "drops": [
+      {
+        "id": "98909ae8-21bd-4b60-9331-ee07f99b8179",
+        "title": "إطلالة العيد",
+        "note": null,
+        "status": "SCHEDULED",
+        "audience": "EARLY_ACCESS",
+        "starts_at": "2026-09-20T18:00:00.000Z",
+        "early_access_at": "2026-09-19T18:00:00.000Z",
+        "ends_at": null,
+        "seller_id": "63e24877-4543-49c2-b01b-1deb784e98e9",
+        "early_access_only": false,
+        "invitation": null,
+        "products": [
+          {
+            "product_id": "bf9876d5-0aa8-41da-b66b-09c2bc94c3ac",
+            "title": "عباية كلوش بتفاصيل دانتيل",
+            "min_price_syp": 7070,
+            "image_url": "https://loremflickr.com/900/1125/abaya%2Cmodest%20fashion/all?lock=28616",
+            "blur_hash": null
+          },
+          {
+            "product_id": "74704692-caca-4226-9c39-e70f08948f37",
+            "title": "حقيبة أمومة قابلة للغسل",
+            "min_price_syp": 1690,
+            "image_url": "https://loremflickr.com/900/1125/baby%20essentials%2Cnursery/all?lock=52089",
+            "blur_hash": null
+          },
+          {
+            "product_id": "3891af0b-91a3-46d9-b63e-e3d1d007f357",
+            "title": "صندوق مولود بلون سماوي",
+            "min_price_syp": 6280,
+            "image_url": "https://loremflickr.com/900/1125/newborn%20gift%2Cbaby/all?lock=93664",
+            "blur_hash": null
+          }
+        ]
+      },
+      {
+        "id": "d890f970-b0ac-48d8-87df-69e3a6e7b39a",
+        "title": "إطلالة العيد",
+        "note": null,
+        "status": "SCHEDULED",
+        "audience": "EARLY_ACCESS",
+        "starts_at": "2026-09-20T18:00:00.000Z",
+        "early_access_at": "2026-09-19T18:00:00.000Z",
+        "ends_at": null,
+        "seller_id": "63e24877-4543-49c2-b01b-1deb784e98e9",
+        "early_access_only": false,
+        "invitation": null,
+        "products": [
+          {
+            "product_id": "bf9876d5-0aa8-41da-b66b-09c2bc94c3ac",
+            "title": "عباية كلوش بتفاصيل دانتيل",
+            "min_price_syp": 7070,
+            "image_url": "https://loremflickr.com/900/1125/abaya%2Cmodest%20fashion/all?lock=28616",
+            "blur_hash": null
+          },
+          {
+            "product_id": "74704692-caca-4226-9c39-e70f08948f37",
+            "title": "حقيبة أمومة قابلة للغسل",
+            "min_price_syp": 1690,
+            "image_url": "https://loremflickr.com/900/1125/baby%20essentials%2Cnursery/all?lock=52089",
+            "blur_hash": null
+          },
+          {
+            "product_id": "3891af0b-91a3-46d9-b63e-e3d1d007f357",
+            "title": "صندوق مولود بلون سماوي",
+            "min_price_syp": 6280,
+            "image_url": "https://loremflickr.com/900/1125/newborn%20gift%2Cbaby/all?lock=93664",
+            "blur_hash": null
+          }
+        ]
+      },
+      {
+        "id": "46272286-2763-418b-a0ef-9c1c1b74a0ff",
+        "title": "نزول العبايات",
+        "note": null,
+        "status": "LIVE",
+        "audience": "EARLY_ACCESS",
+        "starts_at": "2026-09-06T12:00:00.000Z",
+        "early_access_at": "2026-09-05T12:00:00.000Z",
+        "ends_at": null,
+        "seller_id": "63e24877-4543-49c2-b01b-1deb784e98e9",
+        "early_access_only": false,
+        "invitation": null,
+        "products": [
+          {
+            "product_id": "3891af0b-91a3-46d9-b63e-e3d1d007f357",
+            "title": "صندوق مولود بلون سماوي",
+            "min_price_syp": 6280,
+            "image_url": "https://loremflickr.com/900/1125/newborn%20gift%2Cbaby/all?lock=93664",
+            "blur_hash": null
+          },
+          {
+            "product_id": "bf9876d5-0aa8-41da-b66b-09c2bc94c3ac",
+            "title": "عباية كلوش بتفاصيل دانتيل",
+            "min_price_syp": 7070,
+            "image_url": "https://loremflickr.com/900/1125/abaya%2Cmodest%20fashion/all?lock=28616",
+            "blur_hash": null
+          },
+          {
+            "product_id": "74704692-caca-4226-9c39-e70f08948f37",
+            "title": "حقيبة أمومة قابلة للغسل",
+            "min_price_syp": 1690,
+            "image_url": "https://loremflickr.com/900/1125/baby%20essentials%2Cnursery/all?lock=52089",
+            "blur_hash": null
+          }
+        ]
+      }
+    ]
+  }
+}

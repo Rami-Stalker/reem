@@ -61,19 +61,12 @@ class LedgerHealthBanner extends StatelessWidget {
                   children: [
                     Text(
                       title,
-                      style: TextStyle(
-                        fontSize: DsTypography.titleMedium,
-                        fontWeight: DsTypography.bold,
-                        color: toned.accent,
-                      ),
+                      style: context.dsText.cardTitle.bold.tint(toned.accent),
                     ),
-                    const SizedBox(height: 2),
+                    DsGaps.vXxxs,
                     Text(
                       detail,
-                      style: TextStyle(
-                        fontSize: DsTypography.bodySmall,
-                        color: console.muted,
-                      ),
+                      style: context.dsText.bodySmall.tint(console.muted),
                     ),
                   ],
                 ),
@@ -134,11 +127,7 @@ class LedgerHealthBanner extends StatelessWidget {
                         textDirection: TextDirection.ltr,
                         child: Text(
                           finding.detail,
-                          style: TextStyle(
-                            fontSize: DsTypography.labelSmall,
-                            color: console.muted,
-                            height: 1.4,
-                          ),
+                          style: context.dsText.caption.tint(console.muted).copyWith(height: 1.4),
                         ),
                       ),
                     ),
@@ -198,24 +187,16 @@ class _Total extends StatelessWidget {
       children: [
         Text(
           label,
-          style: TextStyle(
-            fontSize: DsTypography.labelSmall,
-            color: palette.muted,
-          ),
+          style: context.dsText.caption.tint(palette.muted),
         ),
-        const SizedBox(height: 2),
+        DsGaps.vXxxs,
         FittedBox(
           fit: BoxFit.scaleDown,
           alignment: AlignmentDirectional.centerStart,
           child: Text(
             amount,
             maxLines: 1,
-            style: TextStyle(
-              fontFamily: DsTypography.fontFamily,
-              fontSize: DsTypography.bodyMedium,
-              fontWeight: DsTypography.bold,
-              color: palette.ink,
-            ),
+            style: context.dsText.body.bold.tint(palette.ink),
           ),
         ),
       ],

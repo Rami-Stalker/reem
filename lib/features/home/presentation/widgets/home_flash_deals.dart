@@ -5,6 +5,8 @@ import 'package:go_router/go_router.dart';
 
 import 'package:reem/core/design_system/design_system.dart';
 import 'package:reem/core/localization/l10n_extension.dart';
+import 'package:reem/core/media/media_decode.dart';
+import 'package:reem/core/media/media_variants.dart';
 import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/features/discovery/domain/entities/product_collection.dart';
 import 'package:reem/features/home/domain/entities/flash_deal.dart';
@@ -26,8 +28,9 @@ class HomeFlashDeals extends ConsumerWidget {
       homeContentNotifierProvider.select((s) => s.isInitialLoading),
     );
     final deals = ref.watch(
-      homeContentNotifierProvider
-          .select((s) => s.content?.flashDeals ?? const <FlashDeal>[]),
+      homeContentNotifierProvider.select(
+        (s) => s.content?.flashDeals ?? const <FlashDeal>[],
+      ),
     );
 
     if (!isLoading && deals.isEmpty) return const SizedBox.shrink();
@@ -36,10 +39,13 @@ class HomeFlashDeals extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         HomeSectionHeader(
-          eyebrow: '⚡ Limited time',
+          eyebrow: '⚡ ${context.l10n.flashLimitedTime}',
           title: context.l10n.homeFlashDeals,
-          onSeeAll: () =>
-              context.push(RoutePaths.collectionOf(ProductCollection.bestSelling.key)),
+          // «كل العروض», not the best-seller shelf. Following a discount used
+          // to land on full-price merchandise.
+          onSeeAll: () => context.push(
+            RoutePaths.collectionOf(ProductCollection.deals.key),
+          ),
         ),
         SizedBox(
           height: _railHeight,
@@ -50,7 +56,8 @@ class HomeFlashDeals extends ConsumerWidget {
                   physics: const BouncingScrollPhysics(),
                   padding: const EdgeInsets.symmetric(horizontal: DsSpacing.lg),
                   itemCount: deals.length,
-                  separatorBuilder: (_, _) => const SizedBox(width: DsSpacing.md),
+                  separatorBuilder: (_, _) =>
+                      const SizedBox(width: DsSpacing.md),
                   itemBuilder: (context, i) => SizedBox(
                     width: _cardWidth,
                     child: _FlashDealCard(deal: deals[i]),
@@ -100,7 +107,7 @@ class _FlashDealCard extends StatelessWidget {
     final meterColor = urgent ? c.discount : c.primary;
 
     return GestureDetector(
-      onTap: () => context.push('${RoutePaths.productDetails}?id=${product.id}'),
+      onTap: () => context.push(RoutePaths.productDetailsOf(product.id)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -110,12 +117,18 @@ class _FlashDealCard extends StatelessWidget {
               children: [
                 AspectRatio(
                   aspectRatio: 1,
-                  child: CachedNetworkImage(
-                    imageUrl: product.coverUrl ?? '',
-                    fit: BoxFit.cover,
-                    placeholder: (_, _) => ColoredBox(color: c.shimmerBase),
-                    errorWidget: (_, _, _) =>
-                        ColoredBox(color: c.surfaceVariant),
+                  child: LayoutBuilder(
+                    builder: (context, constraints) => CachedNetworkImage(
+                      imageUrl: MediaVariants.thumb(product.coverUrl ?? ''),
+                      fit: BoxFit.cover,
+                      memCacheWidth: MediaDecode.widthFrom(
+                        context,
+                        constraints,
+                      ),
+                      placeholder: (_, _) => ColoredBox(color: c.shimmerBase),
+                      errorWidget: (_, _, _) =>
+                          ColoredBox(color: c.surfaceVariant),
+                    ),
                   ),
                 ),
                 if (product.hasDiscount)
@@ -124,17 +137,17 @@ class _FlashDealCard extends StatelessWidget {
                     left: 8,
                     child: Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 3),
+                        horizontal: DsSpacing.xs,
+                        vertical: DsSpacing.xxs,
+                      ),
                       decoration: BoxDecoration(
                         color: c.discount,
                         borderRadius: DsRadius.borderFull,
                       ),
                       child: Text(
                         '−${product.discountPercent}%',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 11,
-                          fontWeight: DsTypography.bold,
+                        style: context.dsText.caption.bold.tint(
+                          DsColors.onMedia,
                         ),
                       ),
                     ),
@@ -146,24 +159,29 @@ class _FlashDealCard extends StatelessWidget {
                   bottom: 8,
                   child: Container(
                     padding: const EdgeInsets.symmetric(
-                        horizontal: DsSpacing.xs, vertical: 5),
+                      horizontal: DsSpacing.xs,
+                      vertical: DsSpacing.xxs,
+                    ),
                     decoration: BoxDecoration(
-                      color: Colors.black.withValues(alpha: 0.55),
+                      color: DsColors.black.withValues(alpha: 0.55),
                       borderRadius: DsRadius.borderFull,
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Icon(Icons.bolt_rounded,
-                            size: 14, color: Colors.white),
+                        const Icon(
+                          Icons.bolt_rounded,
+                          size: 14,
+                          color: DsColors.onMedia,
+                        ),
                         if (deal.endsAt != null) ...[
-                          const SizedBox(width: 4),
+                          DsGaps.hXxs,
                           DsCountdownTimer(
                             endsAt: deal.endsAt!,
                             compact: true,
-                            boxColor: Colors.white.withValues(alpha: 0.18),
-                            foreground: Colors.white,
-                            separatorColor: Colors.white70,
+                            boxColor: DsColors.onMedia.withValues(alpha: 0.18),
+                            foreground: DsColors.onMedia,
+                            separatorColor: DsColors.onMediaMuted,
                           ),
                         ],
                       ],
@@ -178,14 +196,9 @@ class _FlashDealCard extends StatelessWidget {
             product.title,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-              fontFamily: DsTypography.fontFamily,
-              fontWeight: DsTypography.semiBold,
-              fontSize: DsTypography.bodySmall,
-              color: c.onSurface,
-            ),
+            style: context.dsText.bodySmall.semibold.tint(c.onSurface),
           ),
-          const SizedBox(height: 3),
+          DsGaps.vXxs,
           // Both prices are unbounded text in a fixed-width deal card, which
           // overflowed the moment the figures became real SYP amounts
           // («850,000 ل.س» beside a struck «1,440,000 ل.س»). The live price
@@ -207,7 +220,7 @@ class _FlashDealCard extends StatelessWidget {
                 ),
               ),
               if (product.hasDiscount) ...[
-                const SizedBox(width: 4),
+                DsGaps.hXxs,
                 Flexible(
                   flex: 2,
                   child: Text(
@@ -226,7 +239,10 @@ class _FlashDealCard extends StatelessWidget {
             borderRadius: DsRadius.borderFull,
             child: Stack(
               children: [
-                Container(height: 6, color: c.onSurface.withValues(alpha: 0.08)),
+                Container(
+                  height: 6,
+                  color: c.onSurface.withValues(alpha: 0.08),
+                ),
                 FractionallySizedBox(
                   widthFactor: deal.claimedFraction,
                   child: Container(
@@ -240,17 +256,16 @@ class _FlashDealCard extends StatelessWidget {
               ],
             ),
           ),
-          const SizedBox(height: 4),
+          DsGaps.vXxs,
           Text(
             urgent
-                ? 'Almost gone — ${deal.remainingQuantity} left'
+                ? context.l10n.flashAlmostGone(deal.remainingQuantity)
                 : '${deal.soldCount} claimed',
-            style: TextStyle(
-              fontFamily: DsTypography.fontFamily,
-              fontSize: DsTypography.labelSmall,
-              fontWeight: urgent ? DsTypography.bold : DsTypography.medium,
-              color: urgent ? c.discount : c.onSurfaceVariant,
-            ),
+            style: context.dsText.caption
+                .tint(urgent ? c.discount : c.onSurfaceVariant)
+                .copyWith(
+                  fontWeight: urgent ? DsTypography.bold : DsTypography.medium,
+                ),
           ),
         ],
       ),

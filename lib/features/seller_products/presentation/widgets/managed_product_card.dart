@@ -2,11 +2,19 @@ import 'package:flutter/material.dart';
 
 import 'package:reem/core/design_system/design_system.dart';
 import 'package:reem/core/localization/l10n_extension.dart';
+import 'package:reem/core/media/authorized_media_image.dart';
+import 'package:reem/core/media/media_variants.dart';
 import 'package:reem/features/seller_products/domain/entities/managed_product.dart';
 import 'package:reem/features/seller_products/domain/entities/product_status.dart';
 import 'package:reem/features/seller_products/presentation/widgets/product_status_chip.dart';
 
-enum ProductCardAction { edit, activate, draft, archive, delete }
+/// What a seller can do to one of her listings from the list.
+///
+/// `archive` and `delete` used to sit side by side and did nearly the same
+/// thing, one of them against a route that no longer existed. Removal is one
+/// action now — it takes the listing off the shop and leaves the row behind,
+/// because an order placed against it still has to be explainable.
+enum ProductCardAction { edit, publish, pause, draft, restock, remove }
 
 /// One listing in the seller's product list: its photo, price, stock, status
 /// and the menu of things she can do to it.
@@ -42,10 +50,9 @@ class ManagedProductCard extends StatelessWidget {
               width: 74,
               height: 74,
               child: product.coverImage != null
-                  ? Image.network(
-                      product.coverImage!,
-                      fit: BoxFit.cover,
-                      errorBuilder: (_, _, _) => _Placeholder(palette: palette),
+                  ? AuthorizedMediaImage(
+                      url: product.coverImage!,
+                      variantWidth: MediaVariants.thumbnail,
                     )
                   : _Placeholder(palette: palette),
             ),
@@ -59,22 +66,14 @@ class ManagedProductCard extends StatelessWidget {
                   product.title,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontFamily: DsTypography.fontFamily,
-                    fontWeight: DsTypography.bold,
-                    color: palette.ink,
-                  ),
+                  style: context.dsText.body.bold.tint(palette.ink),
                 ),
-                const SizedBox(height: 2),
+                DsGaps.vXxxs,
                 Text(
                   _priceAndStock(context),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontFamily: DsTypography.fontFamily,
-                    fontSize: DsTypography.bodySmall,
-                    color: palette.muted,
-                  ),
+                  style: context.dsText.bodySmall.tint(palette.muted),
                 ),
                 const SizedBox(height: DsSpacing.xs),
                 Wrap(
@@ -116,23 +115,28 @@ class ManagedProductCard extends StatelessWidget {
                 ),
                 if (product.status != ProductStatus.active)
                   PopupMenuItem(
-                    value: ProductCardAction.activate,
-                    child: Text(l10n.sellerSetActive),
+                    value: ProductCardAction.publish,
+                    child: Text(l10n.productPublish),
+                  ),
+                if (product.status == ProductStatus.active)
+                  PopupMenuItem(
+                    value: ProductCardAction.pause,
+                    child: Text(l10n.productPause),
                   ),
                 if (product.status != ProductStatus.draft)
                   PopupMenuItem(
                     value: ProductCardAction.draft,
                     child: Text(l10n.sellerMoveToDraft),
                   ),
+                PopupMenuItem(
+                  value: ProductCardAction.restock,
+                  child: Text(l10n.productRestock),
+                ),
                 if (product.status != ProductStatus.archived)
                   PopupMenuItem(
-                    value: ProductCardAction.archive,
-                    child: Text(l10n.sellerArchive),
+                    value: ProductCardAction.remove,
+                    child: Text(l10n.productArchive),
                   ),
-                PopupMenuItem(
-                  value: ProductCardAction.delete,
-                  child: Text(l10n.delete),
-                ),
               ],
             ),
         ],

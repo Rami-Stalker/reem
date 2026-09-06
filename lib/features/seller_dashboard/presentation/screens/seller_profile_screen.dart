@@ -92,23 +92,12 @@ class _VersionFooter extends StatelessWidget {
         children: [
           Text(
             context.l10n.appTitle,
-            style: TextStyle(
-              fontFamily: DsTypography.fontFamilyDisplay,
-              fontFamilyFallback: DsTypography.displayFallback,
-              fontSize: DsTypography.titleSmall,
-              fontWeight: DsTypography.bold,
-              color: palette.muted,
-              letterSpacing: 2,
-            ),
+            style: context.dsText.tileTitle.displayFamily.bold.tint(palette.muted).copyWith(letterSpacing: 2),
           ),
-          const SizedBox(height: 2),
+          DsGaps.vXxxs,
           Text(
             context.l10n.sellerPlatformFooter(_version),
-            style: TextStyle(
-              fontFamily: DsTypography.fontFamily,
-              fontSize: DsTypography.labelSmall,
-              color: palette.muted,
-            ),
+            style: context.dsText.caption.tint(palette.muted),
           ),
         ],
       ),

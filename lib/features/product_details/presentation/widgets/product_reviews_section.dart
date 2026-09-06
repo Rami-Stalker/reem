@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/result/result.dart';
 import 'package:reem/features/reputation/domain/entities/reputation_entities.dart';
 import 'package:reem/features/reputation/presentation/providers/reputation_provider.dart';
@@ -29,27 +30,27 @@ class ProductReviewsSection extends ConsumerWidget {
           loading: () => const Center(child: CircularProgressIndicator.adaptive()),
           error: (error, _) => _ReviewsMessage(
             icon: Icons.error_outline_rounded,
-            title: 'Reviews unavailable',
+            title: context.l10n.reviewsUnavailable,
             message: error.toString(),
             action: IconButton(
-              tooltip: 'Retry',
+              tooltip: context.l10n.retry,
               onPressed: () => ref.invalidate(productReviewsProvider(id)),
               icon: const Icon(Icons.refresh_rounded),
             ),
           ),
           data: (items) {
             if (items.isEmpty) {
-              return const _ReviewsMessage(
+              return _ReviewsMessage(
                 icon: Icons.rate_review_outlined,
-                title: 'No reviews yet',
-                message: 'Approved reviews will appear here.',
+                title: context.l10n.reviewsNoneTitle,
+                message: context.l10n.reviewsNoneBody,
               );
             }
             return ListView.separated(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               itemCount: items.length,
-              separatorBuilder: (_, __) =>
+              separatorBuilder: (_, _) =>
                   const SizedBox(height: DsSpacing.md),
               itemBuilder: (context, index) =>
                   _LiveReviewCard(review: items[index]),
@@ -89,8 +90,8 @@ class ProductReviewsSection extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Write a review',
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                    context.l10n.reviewsWriteAction,
+                    style: context.dsText.sectionTitle.copyWith(
                           fontWeight: DsTypography.bold,
                         ),
                   ),
@@ -99,7 +100,7 @@ class ProductReviewsSection extends ConsumerWidget {
                     children: List.generate(5, (index) {
                       final selected = index < rating;
                       return IconButton(
-                        tooltip: '${index + 1} stars',
+                        tooltip: context.l10n.reviewsStarsCount(index + 1),
                         onPressed: () => setState(() => rating = index + 1),
                         icon: Icon(
                           selected
@@ -113,8 +114,8 @@ class ProductReviewsSection extends ConsumerWidget {
                   const SizedBox(height: DsSpacing.sm),
                   TextField(
                     controller: title,
-                    decoration: const InputDecoration(
-                      labelText: 'Title',
+                    decoration: InputDecoration(
+                      labelText: context.l10n.reviewsFieldTitle,
                       prefixIcon: Icon(Icons.short_text_rounded),
                     ),
                   ),
@@ -123,8 +124,8 @@ class ProductReviewsSection extends ConsumerWidget {
                     controller: body,
                     minLines: 3,
                     maxLines: 5,
-                    decoration: const InputDecoration(
-                      labelText: 'Review',
+                    decoration: InputDecoration(
+                      labelText: context.l10n.reviewsFieldBody,
                       prefixIcon: Icon(Icons.rate_review_outlined),
                     ),
                   ),
@@ -147,8 +148,8 @@ class ProductReviewsSection extends ConsumerWidget {
                             ref.invalidate(productReviewsProvider(productId));
                             Navigator.of(context).pop();
                             ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('Review submitted for moderation'),
+                              SnackBar(
+                                content: Text(context.l10n.reviewsSubmitted),
                               ),
                             );
                           case Error(:final failure):
@@ -158,7 +159,7 @@ class ProductReviewsSection extends ConsumerWidget {
                         }
                       },
                       icon: const Icon(Icons.send_rounded),
-                      label: const Text('Submit'),
+                      label: Text(context.l10n.reviewsSubmit),
                     ),
                   ),
                 ],
@@ -184,8 +185,8 @@ class _ReviewsHeader extends StatelessWidget {
     return Row(
       children: [
         Text(
-          'Reviews',
-          style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+          context.l10n.reviewsSectionTitle,
+          style: context.dsText.screenTitle.copyWith(
                 fontWeight: DsTypography.bold,
               ),
         ),
@@ -193,7 +194,7 @@ class _ReviewsHeader extends StatelessWidget {
         FilledButton.icon(
           onPressed: onWrite,
           icon: const Icon(Icons.edit_outlined),
-          label: const Text('Write'),
+          label: Text(context.l10n.reviewsWriteShort),
         ),
       ],
     );
@@ -234,16 +235,16 @@ class _ReviewsMessage extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: const TextStyle(fontWeight: DsTypography.semiBold),
+                  style: context.dsText.body.semibold,
                 ),
                 Text(
                   message,
-                  style: TextStyle(color: colors.onSurfaceVariant),
+                  style: context.dsText.body.tint(colors.onSurfaceVariant),
                 ),
               ],
             ),
           ),
-          if (action != null) action!,
+          ?action,
         ],
       ),
     );
@@ -288,7 +289,7 @@ class _LiveReviewCard extends StatelessWidget {
                       review.user.name,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(fontWeight: DsTypography.semiBold),
+                      style: context.dsText.body.semibold,
                     ),
                     Row(
                       children: List.generate(
@@ -305,7 +306,26 @@ class _LiveReviewCard extends StatelessWidget {
                   ],
                 ),
               ),
-              if (review.verifiedPurchase)
+              // Her own review, still with the moderators. It is in this list
+              // only for her — everyone else sees approved reviews — and it
+              // says so, because a review that appeared unlabelled would read
+              // as published.
+              if (review.status == 'pending')
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: DsSpacing.sm,
+                    vertical: DsSpacing.xxs,
+                  ),
+                  decoration: BoxDecoration(
+                    color: colors.warningContainer,
+                    borderRadius: DsRadius.borderPill,
+                  ),
+                  child: Text(
+                    context.l10n.reviewPending,
+                    style: context.dsText.body.semibold.tint(colors.warning),
+                  ),
+                )
+              else if (review.verifiedPurchase)
                 Container(
                   padding: const EdgeInsets.symmetric(
                     horizontal: DsSpacing.sm,
@@ -316,11 +336,8 @@ class _LiveReviewCard extends StatelessWidget {
                     borderRadius: DsRadius.borderPill,
                   ),
                   child: Text(
-                    'Verified',
-                    style: TextStyle(
-                      color: colors.success,
-                      fontWeight: DsTypography.semiBold,
-                    ),
+                    context.l10n.reviewsVerified,
+                    style: context.dsText.body.semibold.tint(colors.success),
                   ),
                 ),
             ],
@@ -329,14 +346,33 @@ class _LiveReviewCard extends StatelessWidget {
             const SizedBox(height: DsSpacing.md),
             Text(
               review.title!,
-              style: const TextStyle(fontWeight: DsTypography.bold),
+              style: context.dsText.body.bold,
             ),
           ],
           if (review.body?.isNotEmpty == true) ...[
             const SizedBox(height: DsSpacing.xs),
             Text(
               review.body!,
-              style: TextStyle(color: colors.onSurfaceVariant, height: 1.5),
+              style: context.dsText.body.tint(colors.onSurfaceVariant).copyWith(height: 1.5),
+            ),
+          ],
+          if (review.status == 'pending') ...[
+            const SizedBox(height: DsSpacing.sm),
+            Row(
+              children: [
+                Icon(
+                  Icons.schedule_rounded,
+                  size: DsSizes.iconXs,
+                  color: colors.onSurfaceVariant,
+                ),
+                DsGaps.hXxs,
+                Expanded(
+                  child: Text(
+                    context.l10n.reviewsPendingYours,
+                    style: context.dsText.caption.tint(colors.onSurfaceVariant),
+                  ),
+                ),
+              ],
             ),
           ],
         ],

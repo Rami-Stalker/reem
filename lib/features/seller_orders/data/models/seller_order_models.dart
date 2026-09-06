@@ -54,6 +54,16 @@ final class SellerOrderMapper {
       paymentMethod: json['payment_method'] as String?,
       paymentStatus: json['payment_status'] as String?,
       trackingCode: json['tracking_code'] as String?,
+      codRisk: codRiskFromJson(json['cod_risk']),
+    );
+  }
+
+  static SellerOrderCodRisk? codRiskFromJson(Object? value) {
+    if (value is! Map<String, dynamic>) return null;
+    return SellerOrderCodRisk(
+      tier: value['tier'] as String? ?? 'low',
+      label: value['label'] as String? ?? '',
+      awaitingConfirmation: value['awaiting_confirmation'] as bool? ?? false,
     );
   }
 

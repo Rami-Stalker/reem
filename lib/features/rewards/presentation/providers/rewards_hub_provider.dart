@@ -3,13 +3,13 @@ import 'package:flutter_riverpod/legacy.dart';
 import 'package:reem/core/network/network_info.dart';
 import 'package:reem/core/presentation/providers/core_providers.dart';
 import 'package:reem/core/result/result.dart';
-
 import 'package:reem/features/rewards/data/datasources/impl/rewards_remote_datasource_impl.dart';
 import 'package:reem/features/rewards/data/datasources/rewards_remote_datasource.dart';
 import 'package:reem/features/rewards/data/repositories/rewards_repository_impl.dart';
 import 'package:reem/features/rewards/domain/entities/rewards_hub.dart';
 import 'package:reem/features/rewards/domain/repositories/rewards_repository.dart';
 import 'package:reem/features/rewards/domain/usecases/rewards_usecases.dart';
+import 'package:reem/features/rewards/presentation/providers/rewards_message.dart';
 
 final rewardsRemoteDataSourceProvider = Provider<RewardsRemoteDataSource>(
   (ref) => RewardsRemoteDataSourceImpl(ref.watch(dioProvider)),
@@ -56,6 +56,8 @@ class RewardsHubState {
     this.busyRewardId,
     this.error,
     this.success,
+    this.errorMessage,
+    this.successMessage,
   });
 
   final RewardsHub? hub;
@@ -64,8 +66,14 @@ class RewardsHubState {
   final bool isApplyingCode;
   final bool isRedeemingCashback;
   final String? busyRewardId;
+  /// A message the *server* supplied, already in her language.
   final String? error;
   final String? success;
+
+  /// A message *we* supplied. Named rather than spelled out, because a
+  /// notifier has no context to localise with — the screen resolves it.
+  final RewardsMessage? errorMessage;
+  final RewardsMessage? successMessage;
 
   RewardsHubState copyWith({
     RewardsHub? hub,
@@ -76,6 +84,8 @@ class RewardsHubState {
     String? busyRewardId,
     String? error,
     String? success,
+    RewardsMessage? errorMessage,
+    RewardsMessage? successMessage,
     bool clearBusyReward = false,
     bool clearError = false,
     bool clearSuccess = false,
@@ -90,6 +100,10 @@ class RewardsHubState {
       busyRewardId: clearBusyReward ? null : (busyRewardId ?? this.busyRewardId),
       error: clearError ? null : (error ?? this.error),
       success: clearSuccess ? null : (success ?? this.success),
+      errorMessage:
+          clearError ? null : (errorMessage ?? this.errorMessage),
+      successMessage:
+          clearSuccess ? null : (successMessage ?? this.successMessage),
     );
   }
 }
@@ -119,7 +133,7 @@ class RewardsHubNotifier extends StateNotifier<RewardsHubState> {
       state = state.copyWith(
         isLoading: false,
         isRefreshing: false,
-        error: 'You are offline. Rewards will update when you reconnect.',
+        errorMessage: RewardsMessage.offlineHint,
         clearSuccess: true,
       );
       return;
@@ -150,11 +164,11 @@ class RewardsHubNotifier extends StateNotifier<RewardsHubState> {
   Future<void> applyCode(String code) async {
     final normalized = code.trim();
     if (normalized.length < 4) {
-      state = state.copyWith(error: 'Enter a valid referral code.');
+      state = state.copyWith(errorMessage: RewardsMessage.codeInvalid);
       return;
     }
     if (!await _networkInfo.isConnected) {
-      state = state.copyWith(error: 'You are offline. Try again once connected.');
+      state = state.copyWith(errorMessage: RewardsMessage.offlineRetry);
       return;
     }
 
@@ -168,7 +182,7 @@ class RewardsHubNotifier extends StateNotifier<RewardsHubState> {
       state = state.copyWith(
         hub: data,
         isApplyingCode: false,
-        success: 'Referral code applied.',
+        successMessage: RewardsMessage.codeApplied,
       );
     } else if (result case Error(:final failure)) {
       state = state.copyWith(isApplyingCode: false, error: failure.message);
@@ -177,11 +191,11 @@ class RewardsHubNotifier extends StateNotifier<RewardsHubState> {
 
   Future<void> redeemReward(LoyaltyRewardItem reward) async {
     if (!reward.canRedeem(state.hub?.points ?? 0)) {
-      state = state.copyWith(error: 'You need more points for this reward.');
+      state = state.copyWith(errorMessage: RewardsMessage.notEnoughPoints);
       return;
     }
     if (!await _networkInfo.isConnected) {
-      state = state.copyWith(error: 'You are offline. Try again once connected.');
+      state = state.copyWith(errorMessage: RewardsMessage.offlineRetry);
       return;
     }
 
@@ -195,7 +209,7 @@ class RewardsHubNotifier extends StateNotifier<RewardsHubState> {
       state = state.copyWith(
         hub: data,
         clearBusyReward: true,
-        success: 'Reward redeemed.',
+        successMessage: RewardsMessage.redeemed,
       );
     } else if (result case Error(:final failure)) {
       state = state.copyWith(clearBusyReward: true, error: failure.message);
@@ -205,11 +219,11 @@ class RewardsHubNotifier extends StateNotifier<RewardsHubState> {
   Future<void> redeemCashback() async {
     final available = state.hub?.cashback.available ?? 0;
     if (available <= 0) {
-      state = state.copyWith(error: 'No cashback is available yet.');
+      state = state.copyWith(errorMessage: RewardsMessage.noCashback);
       return;
     }
     if (!await _networkInfo.isConnected) {
-      state = state.copyWith(error: 'You are offline. Try again once connected.');
+      state = state.copyWith(errorMessage: RewardsMessage.offlineRetry);
       return;
     }
 
@@ -223,7 +237,7 @@ class RewardsHubNotifier extends StateNotifier<RewardsHubState> {
       state = state.copyWith(
         hub: data,
         isRedeemingCashback: false,
-        success: 'Cashback converted to a coupon.',
+        successMessage: RewardsMessage.cashbackConverted,
       );
     } else if (result case Error(:final failure)) {
       state = state.copyWith(

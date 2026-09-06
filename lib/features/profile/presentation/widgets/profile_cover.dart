@@ -32,7 +32,7 @@ class ProfileCover extends StatelessWidget {
                   variant: DsIconButtonVariant.glass,
                   size: 40,
                   iconSize: 18,
-                  color: Colors.white,
+                  color: DsColors.onMedia,
                   onPressed: () => context.pop(),
                 ),
               ),
@@ -52,7 +52,7 @@ class ProfileCover extends StatelessWidget {
                 gradient: LinearGradient(
                   begin: Alignment.topRight,
                   end: Alignment.bottomLeft,
-                  colors: [Color(0x33FFFFFF), Color(0x00FFFFFF)],
+                  colors: [DsColors.onMediaFaint, Colors.transparent],
                 ),
               ),
             ),
@@ -75,7 +75,7 @@ class ProfileCover extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.only(bottom: DsSpacing.xs),
                 child: Container(
-                  padding: const EdgeInsets.all(4),
+                  padding: const EdgeInsets.all(DsSpacing.xxs),
                   decoration: BoxDecoration(
                     color: c.surface,
                     shape: BoxShape.circle,

@@ -31,9 +31,16 @@ enum Currency {
   USD
 }
 
-/// Q48 — SYP amounts are rounded to the nearest 1000 for display and charging.
+/// Q48 — SYP amounts are rounded before display and charging.
+///
+/// The client's rule was «الأسعار بالليرة تُقرّب لأقرب ألف», written when the
+/// platform priced in the old lira. Syria redenominated by dropping two zeros,
+/// so the same real granularity is now the nearest **ten**: 1,000 old = 10
+/// new. `NEAREST_1000` stays in the enum because orders placed before the
+/// changeover carry it and an order's policy is frozen at creation.
 enum RoundingPolicy {
   NONE
+  NEAREST_10
   NEAREST_100
   NEAREST_500
   NEAREST_1000
@@ -202,6 +209,46 @@ enum PaymentStatus {
   REFUNDED
 }
 
+/// How likely a cash-on-delivery parcel is to come back unopened.
+///
+/// `TRUSTED` is not simply the bottom of the scale — it is reserved for a
+/// customer with a delivery history the platform can read. A low score on no
+/// evidence is `LOW`, because "we have no reason to worry" and "we have
+/// watched her take eleven parcels" are different claims and only one of them
+/// should buy a frictionless checkout.
+enum CodRiskTier {
+  TRUSTED
+  LOW
+  MEDIUM
+  HIGH
+}
+
+/// What the platform asks for before it will send cash out on the road.
+///
+/// The ladder only ever goes up, and it never ends in a refusal to sell: the
+/// top rung moves the money to a rail that does not put a courier's day at
+/// risk, it does not turn the customer away.
+enum CodAssurance {
+  /// Place it exactly as she asked.
+  NONE
+
+  /// One code to the number on the order before the sellers are told to
+  /// prepare it. Proves the number is live and that a human meant it.
+  ORDER_CONFIRMATION
+
+  /// Cash is not offered for this basket; it ships once it is paid for.
+  PREPAYMENT
+}
+
+/// Where an order stands against the assurance its assessment demanded.
+enum CodAssuranceState {
+  NOT_REQUIRED
+  PENDING
+  SATISFIED
+  /// The window closed with no code and no payment.
+  ABANDONED
+}
+
 enum MediaType {
   image
   video
@@ -258,6 +305,10 @@ enum NotificationType {
   story
   promo
   coupon
+
+  /// Reem Rooms — somebody voted, commented or decided in a room she is in.
+  /// Coalesced per room rather than one per gesture; see `RoomNotifier`.
+  room
   system
 }
 
@@ -349,6 +400,32 @@ enum AnalyticsEventType {
   CAMPAIGN_OPEN
   CAMPAIGN_CLICK
   CUSTOM
+
+  // ── Reem Trend Engine signals ────────────────────────────────────────
+  //
+  // Appended, never reordered: the enum is stored by name in Postgres, but
+  // client builds in the field send the old names and must keep working.
+  //
+  // These are the *soft* signals — the ones no other table records. The hard
+  // ones (a purchase, a favourite, a review) are read from their own tables
+  // by the collector, so the engine keeps working even when a client is old
+  // or an event is dropped.
+  /// A product card entered the viewport. Cheap, high-volume, and the
+  /// denominator every conversion rate on the seller dashboard divides by.
+  PRODUCT_IMPRESSION
+  /// A search returned nothing worth showing — the seed of Unmet Demand.
+  SEARCH_ZERO_RESULT
+  /// She tapped a result. Turns a search term from a question into a lead.
+  SEARCH_RESULT_CLICK
+  PRODUCT_SHARE
+  PRODUCT_FAVORITE
+  PRODUCT_UNFAVORITE
+  WISHLIST_ADD
+  CART_REMOVE
+  /// A cart that aged past the abandonment horizon without a checkout.
+  CART_ABANDONED
+  STORY_VIEW
+  POST_ENGAGEMENT
 }
 
 enum AnalyticsExportFormat {
@@ -506,6 +583,11 @@ enum OtpPurpose {
   /// approved, so the real owner — who is still holding her SIM in every
   /// scenario except the one recovery exists for — can stop it.
   ACCOUNT_RECOVERY
+
+  /// Proof that a live human at the delivery number meant to place a
+  /// cash-on-delivery order the trust engine was not sure about. It grants no
+  /// session and verifies no number — it releases exactly one order.
+  ORDER_CONFIRMATION
 }
 
 /// Q47/Q48 P1 — WhatsApp is the primary channel; SMS needs a local provider.
@@ -911,12 +993,12 @@ model User {
   storyViews                StoryView[]
   storyReactions            StoryReaction[]
   orders                    Order[]
+  codRiskAssessments        CodRiskAssessment[]
   cartItems                 CartItem[]
   searchHistory             SearchHistory[]
   favorites                 Favorite[]
   sellerFavorites           SellerFavorite[]                  @relation("UserSellerFavorites")
   savedByUsers              SellerFavorite[]                  @relation("SavedSellers")
-  postFavorites             PostFavorite[]
   wishlistCollections       WishlistCollection[]
   wishlistShares            WishlistShare[]
   addresses                 Address[]
@@ -962,6 +1044,46 @@ model User {
   exclusiveOfferClaims      ExclusiveOfferClaim[]
   following                 Follow[]                          @relation("Follower")
   followers                 Follow[]                          @relation("Following")
+
+  // Reem AI Stylist — her taste, her conversations, and what they produced.
+  stylePreference        UserStylePreference?
+  styleSignals           UserStyleSignal[]
+  stylistConversations   AiStylistConversation[]
+  stylistRecommendations AiStylistRecommendation[]
+  stylistOutfits         AiStylistOutfit[]
+
+  // Reem Trend Engine — her shop's daily facts, and the advice built on them.
+  trendDemandDaily       SellerDemandDaily[]     @relation("SellerDemandDaily")
+  productHealthSnapshots ProductHealthSnapshot[] @relation("SellerProductHealth")
+  healthSnapshots        SellerHealthSnapshot[]  @relation("SellerHealthSnapshots")
+  drops                  Drop[]                  @relation("SellerDrops")
+  dropInvites            DropInvite[]            @relation("DropInvites")
+  resaleSelling          ResaleListing[]         @relation("ResaleListings")
+  missions               MissionProgress[]       @relation("UserMissions")
+  trendInsights          TrendInsight[]          @relation("SellerTrendInsights")
+
+  // Reem Visual Shopping — what she photographed, and what she asked to see on
+  // herself.
+  visualSearchSessions VisualSearchSession[]
+  visualTryOnRequests  VisualTryOnRequest[]
+
+  // Reem Closet — what she owns, and what she puts together with it.
+  closet      Closet?
+  closetItems ClosetItem[]
+  closetLooks ClosetLook[]
+
+  // Reem Value — her standing, what earned it, and what it opened.
+  valueProfile ValueProfile?
+  valueEvents  ValueEvent[]
+  valueGrants  ValueBenefitGrant[]
+
+  // Reem Rooms — the intents she is shopping inside, and the plans they became.
+  roomsOwned      Room[]          @relation("RoomOwner")
+  roomsReceiving  Room[]          @relation("RoomRecipient")
+  roomMemberships RoomMember[]
+  roomCandidates  RoomCandidate[] @relation("RoomCandidateAuthor")
+  roomEvents      RoomEvent[]     @relation("RoomEventActor")
+  purchasePlans   PurchasePlan[]  @relation("PlanBuyer")
 
   @@index([role])
   @@index([email])
@@ -1771,6 +1893,14 @@ model MediaAsset {
 
   messageAttachments MessageAttachment[]
 
+  // Reem Visual Shopping. All three are private uploads on retention clocks,
+  // and all three are `SetNull` on the far side: deleting the photograph must
+  // leave the search that used it intact, because the search is a vector and a
+  // list of products rather than a picture of anybody.
+  visualSearchQueries VisualSearchSession[] @relation("VisualSearchQueryAsset")
+  visualTryOnSources  VisualTryOnRequest[]  @relation("VisualTryOnSourceAsset")
+  visualTryOnResults  VisualTryOnRequest[]  @relation("VisualTryOnResultAsset")
+
   @@index([ownerId, createdAt])
   @@index([status, createdAt])
   @@index([ownerId, checksum])
@@ -1813,6 +1943,12 @@ model Category {
 
   products Product[]
 
+  // Reem Trend Engine.
+  demandDaily        CategoryDemandDaily[]
+  trendScores        CategoryTrendScore[]
+  trendInsights      TrendInsight[]
+  unmetDemandSignals UnmetDemandSignal[]   @relation("UnmetDemandCategory")
+
   @@index([parentId, sortOrder])
   @@index([level, isActive])
   @@map("categories")
@@ -1831,7 +1967,8 @@ model Brand {
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")
 
-  products Product[]
+  products    Product[]
+  closetItems ClosetItem[]
 
   @@index([isActive])
   @@map("brands")
@@ -1894,12 +2031,21 @@ model Product {
   minPriceSyp Decimal? @map("min_price_syp") @db.Decimal(18, 4)
   maxPriceSyp Decimal? @map("max_price_syp") @db.Decimal(18, 4)
 
-  rating         Float @default(0)
-  reviewsCount   Int   @default(0) @map("reviews_count")
-  viewsCount     Int   @default(0) @map("views_count")
-  likesCount     Int   @default(0) @map("likes_count")
-  ordersCount    Int   @default(0) @map("orders_count")
-  favoritesCount Int   @default(0) @map("favorites_count")
+  rating       Float @default(0)
+  reviewsCount Int   @default(0) @map("reviews_count")
+
+  /// Lifetime opens of the product page. Incremented by `products.detail`, and
+  /// mirrored by a dated `AnalyticsEvent` of type PRODUCT_VIEW — the column
+  /// answers "how many", the events answer "when".
+  viewsCount Int @default(0) @map("views_count")
+
+  /// `likes_count` used to sit here beside these. Nothing ever wrote it: a
+  /// product cannot be liked on this platform, it can be favourited, which is
+  /// `favorites_count` below and has a table behind it. The column was an
+  /// invented number the product page displayed next to two real ones, so it
+  /// is gone rather than quietly reconciled to a duplicate.
+  ordersCount    Int @default(0) @map("orders_count")
+  favoritesCount Int @default(0) @map("favorites_count")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -1919,6 +2065,34 @@ model Product {
   aiGenerations           AiGeneration[]
   commerceContentTags     CommerceContentProductTag[]
   commerceContentEvents   CommerceContentEvent[]
+  styleSignals            UserStyleSignal[]
+  stylistRecommendations  AiStylistRecommendation[]
+  stylistOutfitItems      AiStylistOutfitItem[]
+
+  // Reem Trend Engine — the facts about this product, and what they said.
+  demandDaily       ProductDemandDaily[]
+  healthSnapshots   ProductHealthSnapshot[]
+  affinitiesFrom    ProductAffinity[]       @relation("AffinityFrom")
+  affinitiesTo      ProductAffinity[]       @relation("AffinityTo")
+  dropProducts      DropProduct[]
+  bundleItems       BundleItem[]
+  resaleListings    ResaleListing[]         @relation("ResaleOf")
+  sellerDemandDaily SellerDemandDaily[]
+  trendScores       ProductTrendScore[]
+  trendInsights     TrendInsight[]
+
+  // Reem Visual Shopping — its photographs as vectors, and the searches they
+  // answered.
+  imageEmbeddings     ProductImageEmbedding[]
+  visualSearchResults VisualSearchResult[]
+  visualTryOnRequests VisualTryOnRequest[]
+
+  // Reem Closet — the women who own this, and the looks it is wanted for.
+  closetItems     ClosetItem[]
+  closetLookItems ClosetLookItem[]
+
+  // Reem Rooms — where it is being considered.
+  roomCandidates RoomCandidate[]
 
   @@index([categoryId, status])
   @@index([brandId, status])
@@ -1968,6 +2142,7 @@ model ProductVariant {
 
   offerVariants       SellerOfferVariant[]
   commerceContentTags CommerceContentProductTag[]
+  closetItems         ClosetItem[]
 
   @@unique([productId, name])
   @@index([productId])
@@ -1990,6 +2165,15 @@ model SellerOffer {
   currency       Currency @default(SYP)
   price          Decimal  @db.Decimal(18, 4)
   compareAtPrice Decimal? @map("compare_at_price") @db.Decimal(18, 4)
+
+  /// [price] converted to SYP, refreshed by `CatalogRollupService` on every
+  /// offer mutation. It exists because ordering offers by the raw `price`
+  /// column compares numbers across currencies: a $9.50 offer sorted ahead of
+  /// every SYP one and was served as the "cheapest" on the card, so the price
+  /// a customer saw belonged to the more expensive seller. Every offer
+  /// ordering — the product page's comparison list and the single offer a
+  /// card carries — sorts on this instead. Null only until the first roll-up.
+  priceSyp Decimal? @map("price_syp") @db.Decimal(18, 4)
 
   /// Q35 — wholesale pricing for B2B accounts; null = retail only.
   wholesalePrice  Decimal? @map("wholesale_price") @db.Decimal(18, 4)
@@ -2017,12 +2201,17 @@ model SellerOffer {
   variants       SellerOfferVariant[]
   batches        InventoryBatch[]
   cartItems      CartItem[]
+  bundleItems    BundleItem[]         @relation("BundleOffers")
   guestCartItems GuestCartItem[]
   orderItems     OrderItem[]
+  closetItems    ClosetItem[]
+  roomCandidates RoomCandidate[]
+  planItems      PurchasePlanItem[]
 
   @@unique([productId, sellerId])
   @@index([sellerId, status])
   @@index([productId, status, price])
+  @@index([productId, status, priceSyp])
   @@index([status, isActive])
   @@map("seller_offers")
 }
@@ -2041,6 +2230,8 @@ model SellerOfferVariant {
 
   cartItems      CartItem[]
   guestCartItems GuestCartItem[]
+  roomCandidates RoomCandidate[]
+  planItems      PurchasePlanItem[]
 
   @@unique([offerId, variantId])
   @@index([variantId])
@@ -2103,7 +2294,6 @@ model Post {
   likes                   PostLike[]
   saves                   PostSave[]
   comments                Comment[]
-  favorites               PostFavorite[]
   guestSavedItems         GuestSavedItem[]
   wishlistCollectionItems WishlistCollectionItem[]
 
@@ -2123,6 +2313,13 @@ model PostLike {
   @@map("post_likes")
 }
 
+/// Every bookmark on a post, from every surface.
+///
+/// There used to be a second table for this — `post_favorites` — written by
+/// the wishlist endpoints while the feed card wrote this one. A post saved
+/// from the feed therefore never appeared under «منشورات محفوظة», and a post
+/// saved from the wishlist came back from the feed with `is_saved: false`.
+/// They are one table now.
 model PostSave {
   id        String   @id @default(uuid()) @db.Uuid
   postId    String   @map("post_id") @db.Uuid
@@ -2397,7 +2594,7 @@ model Order {
   fxRateId       String?        @map("fx_rate_id") @db.Uuid
   fxRateRef      ExchangeRate?  @relation(fields: [fxRateId], references: [id], onDelete: SetNull)
   fxFrozenAt     DateTime       @default(now()) @map("fx_frozen_at")
-  roundingPolicy RoundingPolicy @default(NEAREST_1000) @map("rounding_policy")
+  roundingPolicy RoundingPolicy @default(NEAREST_10) @map("rounding_policy")
 
   itemsSubtotal Decimal @map("items_subtotal") @db.Decimal(18, 4)
   discountTotal Decimal @default(0) @map("discount_total") @db.Decimal(18, 4)
@@ -2427,12 +2624,17 @@ model Order {
   createdAt            DateTime  @default(now()) @map("created_at")
   updatedAt            DateTime  @updatedAt @map("updated_at")
 
-  sellerOrders    SellerOrder[]
-  payment         Payment?
-  events          OrderEvent[]
-  analyticsEvents AnalyticsEvent[]
-  cashbackEntries CashbackLedger[]
-  invoices        Invoice[]
+  sellerOrders      SellerOrder[]
+  payment           Payment?
+  codRiskAssessment CodRiskAssessment?
+  events            OrderEvent[]
+  analyticsEvents   AnalyticsEvent[]
+  cashbackEntries   CashbackLedger[]
+  invoices          Invoice[]
+
+  /// The Reem Rooms plan this order was placed from, when it came from one
+  /// rather than from the cart. At most one — a plan orders once.
+  purchasePlans PurchasePlan[]
 
   @@index([userId, createdAt])
   @@index([guestSessionId])
@@ -2523,6 +2725,10 @@ model OrderItem {
   customisation Json?
 
   returnItems ReturnItem[]
+
+  /// At most one — a delivered line becomes at most one closet piece. Prisma
+  /// still models the far side of a unique foreign key as a list.
+  closetItems ClosetItem[]
 
   @@index([sellerOrderId])
   @@index([productId])
@@ -2636,6 +2842,75 @@ model PaymentTransaction {
 
   @@index([paymentId, createdAt])
   @@map("payment_transactions")
+}
+
+/// One order's cash-on-delivery risk assessment, kept forever.
+///
+/// Written before the sellers are told anything, and never updated except to
+/// record how the assurance it demanded turned out. Three reasons it is a row
+/// rather than a number computed on demand:
+///
+/// - The score is only meaningful next to the facts it was computed from. Six
+///   months later the customer has a different history, and re-deriving "why
+///   was she asked for a code in March" would produce a different answer than
+///   the one she was actually given.
+/// - `outcome` closes the loop. A parcel that was scored 81 and then refused
+///   is the only evidence that says whether the weights are any good, and
+///   without the pairing the engine can never be told it is wrong.
+/// - A decision that added friction to a woman's checkout is a decision
+///   somebody has to be able to answer for.
+model CodRiskAssessment {
+  id      String @id @default(uuid()) @db.Uuid
+  orderId String @unique @map("order_id") @db.Uuid
+  order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  /// Null on a guest checkout — the assessment still happens, and weighs the
+  /// absence of an account as its own signal.
+  userId String? @map("user_id") @db.Uuid
+  user   User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  /// 0–100, and 0–1. `confidence` says how much of the score came from her own
+  /// delivery history rather than from the platform's opening assumption.
+  score      Decimal @db.Decimal(5, 2)
+  confidence Decimal @db.Decimal(4, 2)
+
+  tier      CodRiskTier
+  assurance CodAssurance
+  state     CodAssuranceState @default(NOT_REQUIRED)
+
+  /// Every factor, its points, its evidence and the raw counts behind it —
+  /// the audit trail for one decision, frozen at the moment it was made.
+  factors Json
+
+  /// Hard rules that fired, e.g. `first_order_above_threshold`. A rule can
+  /// only ever raise the assurance, so this list explains any gap between the
+  /// score's tier and the assurance actually demanded.
+  ruleCodes String[] @map("rule_codes")
+
+  /// The value the courier would have carried, in USD at the order's own
+  /// frozen rate — the figure the "loss avoided" report sums.
+  exposureUsd Decimal @map("exposure_usd") @db.Decimal(18, 4)
+
+  /// The confirmation challenge sent for `ORDER_CONFIRMATION`, if any.
+  otpRequestId String? @map("otp_request_id") @db.Uuid
+
+  satisfiedAt DateTime? @map("satisfied_at")
+  expiresAt   DateTime? @map("expires_at")
+
+  /// How the parcel actually ended: `delivered`, `refused`, `failed`,
+  /// `cancelled`, or null while it is still moving. Written by the delivery
+  /// workflow, and the only column that makes the weights falsifiable.
+  observedOutcome String?   @map("observed_outcome")
+  observedAt      DateTime? @map("observed_at")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([tier, createdAt])
+  @@index([state, expiresAt])
+  @@index([userId, createdAt])
+  @@index([observedOutcome, createdAt])
+  @@map("cod_risk_assessments")
 }
 
 // ─────────────────── Returns, exchanges, disputes ───────────────────
@@ -2929,19 +3204,6 @@ model SellerFavorite {
   @@map("seller_favorites")
 }
 
-model PostFavorite {
-  id        String   @id @default(uuid()) @db.Uuid
-  userId    String   @map("user_id") @db.Uuid
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  postId    String   @map("post_id") @db.Uuid
-  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
-  createdAt DateTime @default(now()) @map("created_at")
-
-  @@unique([userId, postId])
-  @@index([postId])
-  @@map("post_favorites")
-}
-
 model WishlistCollection {
   id          String                  @id @default(uuid()) @db.Uuid
   userId      String                  @map("user_id") @db.Uuid
@@ -3015,8 +3277,14 @@ model ProductReview {
   verifiedPurchase Boolean      @default(false) @map("verified_purchase")
   status           ReviewStatus @default(PENDING)
   helpfulCount     Int          @default(0) @map("helpful_count")
-  createdAt        DateTime     @default(now()) @map("created_at")
-  updatedAt        DateTime     @updatedAt @map("updated_at")
+
+  /// The seller's answer, shown under the review. At most one, edited in
+  /// place: a thread would imply a conversation nobody moderates.
+  sellerReply     String?   @map("seller_reply")
+  sellerRepliedAt DateTime? @map("seller_replied_at")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   moderationLogs ReviewModerationLog[]
 
@@ -3038,8 +3306,13 @@ model SellerReview {
   body             String?
   verifiedPurchase Boolean      @default(false) @map("verified_purchase")
   status           ReviewStatus @default(PENDING)
-  createdAt        DateTime     @default(now()) @map("created_at")
-  updatedAt        DateTime     @updatedAt @map("updated_at")
+
+  /// Her answer to a review of the shop itself.
+  sellerReply     String?   @map("seller_reply")
+  sellerRepliedAt DateTime? @map("seller_replied_at")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   moderationLogs ReviewModerationLog[]
 
@@ -3092,7 +3365,18 @@ model SellerReputation {
   verifiedReviewsCount      Int                     @default(0) @map("verified_reviews_count")
   performanceScore          Float                   @default(0) @map("performance_score")
   customerSatisfactionScore Float                   @default(0) @map("customer_satisfaction_score")
-  responseScore             Float                   @default(0) @map("response_score")
+  /// Median hours to a first reply, scored — or **null when she has never
+  /// been messaged**.
+  ///
+  /// Nullable on purpose. This column used to be a non-null float that
+  /// `ReputationService` filled with the literal `90` for every seller on the
+  /// platform, and the demo seed filled with an invented figure, so a shop
+  /// with no conversations at all still showed a responsiveness score on its
+  /// own dashboard. Seller Intelligence measures it from real messages; where
+  /// there are none, the honest value is "nothing to measure", and only a
+  /// nullable column can say that. Readers must render null as unmeasured
+  /// rather than substituting a number.
+  responseScore             Float?                  @map("response_score")
   fulfillmentScore          Float                   @default(0) @map("fulfillment_score")
   topSellerTier             SellerProgramTier       @default(STANDARD) @map("top_seller_tier")
   trustedStatus             TrustVerificationStatus @default(PENDING) @map("trusted_status")
@@ -3618,17 +3902,22 @@ model Notification {
 }
 
 model NotificationPreference {
-  id           String   @id @default(uuid()) @db.Uuid
-  userId       String   @unique @map("user_id") @db.Uuid
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  inAppPosts   Boolean  @default(true) @map("in_app_posts")
-  inAppStories Boolean  @default(true) @map("in_app_stories")
-  inAppOrders  Boolean  @default(true) @map("in_app_orders")
-  inAppCoupons Boolean  @default(true) @map("in_app_coupons")
-  push         Boolean  @default(false)
-  email        Boolean  @default(false)
-  sms          Boolean  @default(false)
-  updatedAt    DateTime @updatedAt @map("updated_at")
+  id           String  @id @default(uuid()) @db.Uuid
+  userId       String  @unique @map("user_id") @db.Uuid
+  user         User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  inAppPosts   Boolean @default(true) @map("in_app_posts")
+  inAppStories Boolean @default(true) @map("in_app_stories")
+  inAppOrders  Boolean @default(true) @map("in_app_orders")
+  inAppCoupons Boolean @default(true) @map("in_app_coupons")
+
+  /// Activity in a shopping room she is a member of. On by default: being
+  /// invited into a room is asking to be told what happens in it, and a room
+  /// nobody hears about stops being a conversation.
+  inAppRooms Boolean  @default(true) @map("in_app_rooms")
+  push       Boolean  @default(false)
+  email      Boolean  @default(false)
+  sms        Boolean  @default(false)
+  updatedAt  DateTime @updatedAt @map("updated_at")
 
   @@map("notification_preferences")
 }
@@ -3647,7 +3936,7 @@ model PushToken {
   /// Only the hash was stored before, which made every push unsendable: a
   /// device token is an *address* issued by the push provider, not a secret of
   /// ours, and hashing an address means never being able to write to it.
-  token String @default("")
+  token      String   @default("")
   provider   String
   platform   String?
   enabled    Boolean  @default(true)
@@ -4323,4 +4612,3556 @@ model Invoice {
   @@index([sellerOrderId])
   @@index([issuedAt])
   @@map("invoices")
+}
+
+// ═══════════════════════ Reem AI Stylist ═══════════════════════
+//
+// The personal shopping assistant. The split that makes this trustworthy:
+// language understanding produces a *brief* (a structured intent), and the
+// brief is then answered out of the catalog by ordinary SQL and a scorer whose
+// every point is traceable. A model may phrase the reply; it never invents the
+// goods, the price, or the stock. Everything below stores one side of that
+// split — the brief, the turn it came from, and the real rows it selected.
+
+/// How covered she wants to be. Drives both a filter and a score, because
+/// "محتشم" is a hard requirement for some customers and a preference for
+/// others (Q33 — modesty is a first-class attribute here, not a tag).
+enum ModestyLevel {
+  UNSPECIFIED
+  /// عباية / تغطية كاملة
+  FULL_COVERAGE
+  /// أكمام طويلة، قصّة واسعة
+  MODEST
+  /// المتوسط — أكمام قصيرة مقبولة
+  BALANCED
+  /// بلا قيود
+  EXPRESSIVE
+}
+
+/// The taste vocabulary the stylist reasons in. Closed on purpose: an open
+/// string set cannot be scored, and cannot be validated against a model's
+/// output.
+enum StylePersona {
+  CLASSIC
+  ROMANTIC
+  MINIMAL
+  GLAM
+  BOHO
+  SPORTY
+  MODEST_CHIC
+  VINTAGE
+}
+
+/// A place in an outfit. `GIFT` is the odd one out — it is a whole-purchase
+/// slot rather than a body position, and exists so a gift brief can travel
+/// through the same builder as an outfit.
+enum OutfitSlot {
+  DRESS
+  TOP
+  BOTTOM
+  OUTERWEAR
+  ABAYA
+  SHOES
+  BAG
+  JEWELRY
+  ACCESSORY
+  PERFUME
+  BEAUTY
+  GIFT
+}
+
+enum AiStylistRole {
+  USER
+  ASSISTANT
+  SYSTEM
+}
+
+/// Present from the first migration although only `TEXT` is produced today.
+/// Voice and image are named here so the turn table does not have to change
+/// shape when they arrive — the transcript or the caption lands in `content`
+/// and the source media in `attachments`.
+enum AiStylistModality {
+  TEXT
+  VOICE
+  IMAGE
+}
+
+enum AiStylistConversationStatus {
+  ACTIVE
+  ARCHIVED
+}
+
+/// What she did with a card we showed her. This is the supervision signal the
+/// preference profile learns from — `DISMISSED` in particular, which no other
+/// table in the schema records.
+enum AiStylistFeedback {
+  NONE
+  LIKED
+  SAVED
+  DISMISSED
+  ADDED_TO_CART
+  PURCHASED
+}
+
+enum AiStylistOutfitStatus {
+  SUGGESTED
+  SAVED
+  DISMISSED
+}
+
+/// Her taste, in one row.
+///
+/// Two kinds of fact live here and they are deliberately not mixed: the
+/// columns she filled in herself (`modesty`, `sizes`, the budget band) and the
+/// affinities computed from what she actually did (`derivedSignals`). Stated
+/// preference wins on conflict — she knows her own size better than her
+/// clickstream does — which is only expressible because the two are apart.
+model UserStylePreference {
+  id     String @id @default(uuid()) @db.Uuid
+  userId String @unique @map("user_id") @db.Uuid
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // ── Stated ──────────────────────────────────────────────────────────
+  modesty  ModestyLevel   @default(UNSPECIFIED)
+  personas StylePersona[]
+
+  /// Normalised colour keys from the stylist lexicon (`black`, `blush`, …),
+  /// never raw user text — so a score can compare them.
+  favouriteColours String[] @map("favourite_colours")
+  avoidedColours   String[] @map("avoided_colours")
+
+  preferredCategorySlugs String[] @map("preferred_category_slugs")
+  avoidedCategorySlugs   String[] @map("avoided_category_slugs")
+
+  /// { "clothing": "M", "shoes": "38" } — keyed by the variant systems the
+  /// catalog actually uses (Q34), so it can be matched against
+  /// `product_variants.attributes` without a translation table.
+  sizes Json?
+
+  /// The band she asked to stay inside, normalised to SYP like
+  /// `products.min_price_syp` so the two compare without an FX lookup.
+  budgetMinSyp Decimal? @map("budget_min_syp") @db.Decimal(18, 4)
+  budgetMaxSyp Decimal? @map("budget_max_syp") @db.Decimal(18, 4)
+
+  // ── Derived ─────────────────────────────────────────────────────────
+  /// The band she actually buys in, from her own order history.
+  typicalMinSyp Decimal? @map("typical_min_syp") @db.Decimal(18, 4)
+  typicalMaxSyp Decimal? @map("typical_max_syp") @db.Decimal(18, 4)
+
+  /// Affinity maps: categories, sellers, colours, brands, each key to a
+  /// weight. JSON rather than columns because the set of keys belongs to the
+  /// catalog, and the catalog grows.
+  derivedSignals Json? @map("derived_signals")
+
+  /// When the derived half was last recomputed. Null = never.
+  computedAt DateTime? @map("computed_at")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("user_style_preferences")
+}
+
+/// Stylist-specific feedback on one product.
+///
+/// Views, likes, saves and purchases already exist elsewhere in this schema
+/// and are read from there rather than copied here — duplicating them is how
+/// two sources of the same truth start to disagree. What has no home anywhere
+/// else is the negative signal: the card she was shown and pushed away.
+model UserStyleSignal {
+  id     String @id @default(uuid()) @db.Uuid
+  userId String @map("user_id") @db.Uuid
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  productId String  @map("product_id") @db.Uuid
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  feedback AiStylistFeedback
+  /// Signed contribution to the score. Negative for a dismissal.
+  weight   Float             @default(0)
+  /// Which recommendation produced it, when it came from a card.
+  sourceId String?           @map("source_id") @db.Uuid
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@unique([userId, productId, feedback])
+  @@index([userId, createdAt])
+  @@index([productId])
+  @@map("user_style_signals")
+}
+
+/// One conversation with the stylist.
+///
+/// `brief` is the running merge of everything she has said so far, so a
+/// follow-up ("والحقيبة؟") is answered against the budget, colour and occasion
+/// established three turns ago without replaying the transcript through the
+/// extractor each time.
+model AiStylistConversation {
+  id     String @id @default(uuid()) @db.Uuid
+  userId String @map("user_id") @db.Uuid
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  title  String?
+  status AiStylistConversationStatus @default(ACTIVE)
+
+  /// The merged `StyleBrief`. Validated on write against the closed
+  /// vocabularies — never stored as free-form model output.
+  brief Json?
+
+  messagesCount Int       @default(0) @map("messages_count")
+  lastMessageAt DateTime? @map("last_message_at")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  messages        AiStylistMessage[]
+  recommendations AiStylistRecommendation[]
+  outfits         AiStylistOutfit[]
+
+  @@index([userId, status, lastMessageAt])
+  @@map("ai_stylist_conversations")
+}
+
+model AiStylistMessage {
+  id             String                @id @default(uuid()) @db.Uuid
+  conversationId String                @map("conversation_id") @db.Uuid
+  conversation   AiStylistConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  role     AiStylistRole
+  modality AiStylistModality @default(TEXT)
+  content  String
+
+  /// The brief extracted from THIS turn (user rows) or the brief answered
+  /// (assistant rows). Kept per-message as well as on the conversation so a
+  /// misread turn can be found and replayed.
+  brief Json?
+
+  /// Voice clips and reference photos, once those modalities land. Shaped
+  /// `[{ media_asset_id, kind }]`.
+  attachments Json?
+
+  /// Which engine produced an assistant turn — `reem-stylist-rules-v1` when
+  /// the deterministic path answered, the model id when one was consulted.
+  /// Null on user turns.
+  engine    String?
+  latencyMs Int?    @map("latency_ms")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  recommendations AiStylistRecommendation[]
+  outfits         AiStylistOutfit[]
+
+  @@index([conversationId, createdAt])
+  @@map("ai_stylist_messages")
+}
+
+/// One product the stylist put in front of her, and why.
+///
+/// `reasonCodes` is the machine-readable version of `reason`: the score
+/// components that fired, in order. The sentence is rendered from the codes,
+/// so a reason can never claim something the ranker did not actually use.
+model AiStylistRecommendation {
+  id String @id @default(uuid()) @db.Uuid
+
+  userId String @map("user_id") @db.Uuid
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  conversationId String?                @map("conversation_id") @db.Uuid
+  conversation   AiStylistConversation? @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  messageId String?           @map("message_id") @db.Uuid
+  message   AiStylistMessage? @relation(fields: [messageId], references: [id], onDelete: Cascade)
+
+  productId String  @map("product_id") @db.Uuid
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  /// The offer quoted on the card. Nullable because an offer can be pulled
+  /// between the recommendation and a later read of it.
+  offerId String? @map("offer_id") @db.Uuid
+
+  /// Set when the card was produced as part of an outfit rather than a list.
+  slot OutfitSlot?
+
+  score       Float
+  position    Int      @default(0)
+  reason      String
+  reasonCodes String[] @map("reason_codes")
+
+  /// Frozen at recommendation time so a later price change does not rewrite
+  /// what she was actually shown.
+  quotedPriceSyp Decimal? @map("quoted_price_syp") @db.Decimal(18, 4)
+
+  feedback   AiStylistFeedback @default(NONE)
+  feedbackAt DateTime?         @map("feedback_at")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([userId, createdAt])
+  @@index([conversationId, createdAt])
+  @@index([productId])
+  @@index([feedback])
+  @@map("ai_stylist_recommendations")
+}
+
+/// A complete look: several products chosen to sit together.
+model AiStylistOutfit {
+  id     String @id @default(uuid()) @db.Uuid
+  userId String @map("user_id") @db.Uuid
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  conversationId String?                @map("conversation_id") @db.Uuid
+  conversation   AiStylistConversation? @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  messageId String?           @map("message_id") @db.Uuid
+  message   AiStylistMessage? @relation(fields: [messageId], references: [id], onDelete: SetNull)
+
+  title    String
+  occasion String?
+  note     String?
+
+  /// The colour keys the look was built around, so it can be explained and so
+  /// a later "نفس الإطلالة بحقيبة ثانية" keeps the palette.
+  palette String[]
+
+  /// Sum of the quoted offer prices, normalised to SYP.
+  totalSyp Decimal? @map("total_syp") @db.Decimal(18, 4)
+
+  status AiStylistOutfitStatus @default(SUGGESTED)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  items AiStylistOutfitItem[]
+
+  /// The looks promoted out of this suggestion. Suggestions are evidence and
+  /// stay immutable; a look is hers and moves.
+  closetLooks ClosetLook[]
+
+  @@index([userId, status, createdAt])
+  @@index([conversationId])
+  @@map("ai_stylist_outfits")
+}
+
+model AiStylistOutfitItem {
+  id       String          @id @default(uuid()) @db.Uuid
+  outfitId String          @map("outfit_id") @db.Uuid
+  outfit   AiStylistOutfit @relation(fields: [outfitId], references: [id], onDelete: Cascade)
+
+  slot      OutfitSlot
+  productId String     @map("product_id") @db.Uuid
+  product   Product    @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  offerId   String? @map("offer_id") @db.Uuid
+  variantId String? @map("variant_id") @db.Uuid
+
+  priceSyp Decimal? @map("price_syp") @db.Decimal(18, 4)
+  reason   String?
+  position Int      @default(0)
+
+  @@unique([outfitId, slot, productId])
+  @@index([productId])
+  @@map("ai_stylist_outfit_items")
+}
+
+// ═══════════════════════ Reem Trend Engine ═══════════════════════
+//
+// Market intelligence: what she wants, what is climbing, what is dying, and
+// what nobody is selling her yet.
+//
+// The shape of this section is one decision repeated. Every number below is
+// **computed from rows, not from a model.** A language model is allowed to
+// read the finished numbers and write an Arabic sentence about them; it is
+// never allowed to produce one. That is why the tables are laid out in four
+// layers rather than one, and why each layer is durable:
+//
+//   1. FACTS      — `*DemandDaily`. One row per subject per day, built by the
+//                   collector out of orders, offers, favourites, reviews and
+//                   analytics events. Append-and-upsert, identity-free.
+//   2. SCORES     — `*TrendScore`. The deterministic 0–100 kernel applied to a
+//                   window of facts, with its component breakdown stored
+//                   beside the total so any figure on any dashboard can be
+//                   taken apart back to the rows that produced it.
+//   3. FORECASTS  — `TrendForecast`. Holt damped trend over the same facts.
+//   4. NARRATION  — `TrendInsight`, `UnmetDemandSignal`. A rule fires on the
+//                   numbers; the text is a rendering of the rule, whether the
+//                   renderer was a template or Claude.
+//
+// Privacy is a property of layer 1: the fact tables carry counts and money,
+// never a user id, never a query attributable to a person. Raw analytics rows
+// — the only place an identity appears — are aggregated and then pruned on a
+// retention clock. Distinct-viewer counts are k-anonymised at write time, so a
+// product seen by one woman reports zero rather than one.
+//
+// Scalability is a property of layer 2 and 3: nothing here reads the raw event
+// stream at request time. A dashboard reads pre-computed rows for the day, so
+// its cost does not move when traffic does, and a future ML model becomes a
+// new writer into `ProductTrendScore` / `TrendForecast` (its `method` column
+// already says who wrote it) rather than a rewrite of anything.
+
+/// The look-back a score was computed over. Short windows catch a spike, long
+/// ones survive a quiet Tuesday; the engine writes all three and lets the
+/// dashboard choose, because "trending" means different things to a
+/// merchandiser planning next week and a seller restocking tonight.
+enum TrendWindow {
+  D7
+  D14
+  D30
+}
+
+/// Where a subject sits on its own curve.
+///
+/// `EMERGING` is the one this whole engine exists for: growth is steep and
+/// accelerating while absolute volume is still small — the state a product is
+/// in *before* it becomes a best seller, and the only state in which acting on
+/// it is still cheap.
+enum TrendStage {
+  /// No meaningful signal in the window.
+  DORMANT
+  /// Climbing fast off a small base. Catch it here.
+  EMERGING
+  /// Climbing, and already material.
+  RISING
+  /// High volume, growth flattening — the top of the curve.
+  PEAKING
+  /// Material and flat. The dependable middle.
+  STEADY
+  /// Past the peak, easing off.
+  COOLING
+  /// Falling on both volume and growth.
+  DECLINING
+}
+
+enum TrendSubjectKind {
+  PRODUCT
+  CATEGORY
+  BRAND
+  ATTRIBUTE
+  SEARCH_TERM
+  SELLER
+  PLATFORM
+}
+
+/// The facets demand is sliced by beyond the category tree. Colour and price
+/// band are the two the client asked for by name; the rest cost nothing to
+/// carry because the collector reads them from the same product row.
+enum TrendAttributeDimension {
+  COLOR
+  PRICE_BAND
+  BRAND
+  SIZE
+  MATERIAL
+  OCCASION
+}
+
+enum TrendInsightAudience {
+  ADMIN
+  SELLER
+}
+
+/// Why an insight was raised. The kind — not the sentence — is what the app
+/// switches on: an icon, a colour, a deep link and a suggested action are all
+/// chosen from this, so a re-phrased body never changes the behaviour.
+enum TrendInsightKind {
+  RISING_DEMAND
+  EMERGING_PRODUCT
+  DECLINING_DEMAND
+  LOW_CONVERSION
+  HIGH_VIEW_NO_SALES
+  CART_ABANDONMENT
+  STOCK_OPPORTUNITY
+  STOCK_RISK
+  OVERSTOCK
+  PRICE_OPPORTUNITY
+  CATEGORY_MOMENTUM
+  COLOR_MOMENTUM
+  PRICE_BAND_SHIFT
+  UNMET_DEMAND
+  SEARCH_SURGE
+  RATING_RISK
+  RETURN_RISK
+  SELLER_PERFORMANCE
+  ASSORTMENT_GAP
+  FORECAST_SPIKE
+}
+
+enum TrendInsightSeverity {
+  INFO
+  OPPORTUNITY
+  WARNING
+  CRITICAL
+}
+
+enum TrendInsightStatus {
+  OPEN
+  ACKNOWLEDGED
+  ACTIONED
+  DISMISSED
+  EXPIRED
+}
+
+enum UnmetDemandStatus {
+  OPEN
+  ACKNOWLEDGED
+  SOURCING
+  ADDRESSED
+  DISMISSED
+}
+
+enum TrendForecastMethod {
+  /// Holt linear trend with a damping factor and a weekday index.
+  HOLT_DAMPED
+  /// Not enough history for a trend; last week repeated.
+  SEASONAL_NAIVE
+  /// Not enough history for a season either; a flat mean.
+  MOVING_AVERAGE
+  /// Nothing to forecast from. Points are zero and confidence is zero.
+  INSUFFICIENT_DATA
+  /// Reserved: a model wrote these points, not the arithmetic above.
+  MODEL
+}
+
+enum TrendRunKind {
+  DAILY_ROLLUP
+  SCORING
+  FORECAST
+  SEARCH_INTELLIGENCE
+  INSIGHTS
+  RETENTION
+  FULL
+  BACKFILL
+}
+
+enum TrendRunStatus {
+  RUNNING
+  SUCCEEDED
+  FAILED
+}
+
+/// Layer 1 — the market demand for one product on one day.
+///
+/// Product-level, not seller-level, and deliberately so: two sellers listing
+/// the same handbag compete for one product page, and the views, searches and
+/// favourites it collects are demand for the *bag*. What each of them actually
+/// sold lives in `SellerDemandDaily`, one model down.
+model ProductDemandDaily {
+  id        String  @id @default(uuid()) @db.Uuid
+  productId String  @map("product_id") @db.Uuid
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  /// Denormalised so a category roll-up is one index scan, not a join.
+  categoryId String  @map("category_id") @db.Uuid
+  brandId    String? @map("brand_id") @db.Uuid
+
+  /// Midnight UTC. `@db.Date` so a day is a day and not an instant.
+  day DateTime @db.Date
+
+  // ── Attention ──────────────────────────────────────────────────────────
+  impressions  Int @default(0)
+  views        Int @default(0)
+  /// Distinct signed-in viewers, k-anonymised: below the configured k this is
+  /// written as 0. A count of one is a person.
+  viewers      Int @default(0)
+  searchHits   Int @default(0) @map("search_hits")
+  searchClicks Int @default(0) @map("search_clicks")
+
+  // ── Intent ─────────────────────────────────────────────────────────────
+  cartAdds           Int @default(0) @map("cart_adds")
+  cartRemovals       Int @default(0) @map("cart_removals")
+  cartAbandons       Int @default(0) @map("cart_abandons")
+  favorites          Int @default(0)
+  wishlistAdds       Int @default(0) @map("wishlist_adds")
+  shares             Int @default(0)
+  contentEngagements Int @default(0) @map("content_engagements")
+  checkouts          Int @default(0)
+
+  // ── Outcome ────────────────────────────────────────────────────────────
+  orders     Int     @default(0)
+  units      Int     @default(0)
+  revenueSyp Decimal @default(0) @map("revenue_syp") @db.Decimal(18, 4)
+  cancels    Int     @default(0)
+  returns    Int     @default(0)
+  reviews    Int     @default(0)
+  /// Sum of stars, so an average survives being re-aggregated over a window.
+  ratingSum  Int     @default(0) @map("rating_sum")
+
+  // ── Supply, snapshotted at roll-up time ────────────────────────────────
+  stockUnits  Int      @default(0) @map("stock_units")
+  liveOffers  Int      @default(0) @map("live_offers")
+  minPriceSyp Decimal? @map("min_price_syp") @db.Decimal(18, 4)
+  inStock     Boolean  @default(false) @map("in_stock")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@unique([productId, day])
+  @@index([day])
+  @@index([categoryId, day])
+  @@index([brandId, day])
+  @@map("product_demand_daily")
+}
+
+/// Layer 1 — what one seller did with one product on one day.
+///
+/// Written only for a (seller, product, day) that saw activity or held stock,
+/// so the table tracks the liveness of the catalogue rather than its size.
+model SellerDemandDaily {
+  id        String  @id @default(uuid()) @db.Uuid
+  sellerId  String  @map("seller_id") @db.Uuid
+  seller    User    @relation("SellerDemandDaily", fields: [sellerId], references: [id], onDelete: Cascade)
+  productId String  @map("product_id") @db.Uuid
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  categoryId String   @map("category_id") @db.Uuid
+  day        DateTime @db.Date
+
+  orders     Int     @default(0)
+  units      Int     @default(0)
+  revenueSyp Decimal @default(0) @map("revenue_syp") @db.Decimal(18, 4)
+  cancels    Int     @default(0)
+  returns    Int     @default(0)
+
+  /// The cart adds that are hers, because the cart holds *her* offer.
+  cartAdds  Int @default(0) @map("cart_adds")
+  checkouts Int @default(0)
+
+  stockUnits Int      @default(0) @map("stock_units")
+  priceSyp   Decimal? @map("price_syp") @db.Decimal(18, 4)
+  isLive     Boolean  @default(false) @map("is_live")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@unique([sellerId, productId, day])
+  @@index([sellerId, day])
+  @@index([productId, day])
+  @@map("seller_demand_daily")
+}
+
+/// Layer 1 — demand for a whole category on one day, rolled up from its
+/// products *and every descendant category*, so «حقائب» answers for the
+/// subtree a merchandiser actually thinks in.
+model CategoryDemandDaily {
+  id         String   @id @default(uuid()) @db.Uuid
+  categoryId String   @map("category_id") @db.Uuid
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  day        DateTime @db.Date
+
+  views           Int      @default(0)
+  searchHits      Int      @default(0) @map("search_hits")
+  cartAdds        Int      @default(0) @map("cart_adds")
+  favorites       Int      @default(0)
+  orders          Int      @default(0)
+  units           Int      @default(0)
+  revenueSyp      Decimal  @default(0) @map("revenue_syp") @db.Decimal(18, 4)
+  returns         Int      @default(0)
+  reviews         Int      @default(0)
+  ratingSum       Int      @default(0) @map("rating_sum")
+  liveProducts    Int      @default(0) @map("live_products")
+  inStockProducts Int      @default(0) @map("in_stock_products")
+  /// Median live price in the subtree, in SYP. Moves before a price band does.
+  medianPriceSyp  Decimal? @map("median_price_syp") @db.Decimal(18, 4)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@unique([categoryId, day])
+  @@index([day])
+  @@map("category_demand_daily")
+}
+
+/// Layer 1 — demand for a facet value: the colour black, the 50–100k price
+/// band, a brand, a size.
+///
+/// `scopeKey` is the category id the slice is taken within, or the literal
+/// `ALL` for the platform-wide slice. A string rather than a nullable uuid
+/// because Postgres treats two NULLs as distinct, which would let the same
+/// platform-wide row be inserted twice.
+model TrendAttributeDaily {
+  id        String                  @id @default(uuid()) @db.Uuid
+  dimension TrendAttributeDimension
+  /// The canonical key — a lexicon colour key, a price-band code, a brand id.
+  value     String
+  /// Arabic label, denormalised so a dashboard never joins to render a chip.
+  labelAr   String                  @map("label_ar")
+  scopeKey  String                  @map("scope_key")
+  day       DateTime                @db.Date
+
+  views      Int     @default(0)
+  searchHits Int     @default(0) @map("search_hits")
+  cartAdds   Int     @default(0) @map("cart_adds")
+  favorites  Int     @default(0)
+  orders     Int     @default(0)
+  units      Int     @default(0)
+  revenueSyp Decimal @default(0) @map("revenue_syp") @db.Decimal(18, 4)
+  products   Int     @default(0)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@unique([dimension, value, scopeKey, day])
+  @@index([dimension, day])
+  @@index([scopeKey, day])
+  @@map("trend_attribute_daily")
+}
+
+/// Layer 1 — one normalised search term on one day.
+///
+/// The term is stored, the searcher is not. `termKey` is the output of the
+/// Arabic normaliser (diacritics stripped, alef and yaa folded, tokens
+/// sorted), so «فستان سهرة أخضر» and «فستان أخضر سهرة» are one row and one
+/// piece of evidence rather than two halves of it.
+model SearchTermDaily {
+  id      String   @id @default(uuid()) @db.Uuid
+  termKey String   @map("term_key")
+  /// The most frequent raw spelling, for display. Never joined on.
+  display String
+  day     DateTime @db.Date
+
+  searches    Int @default(0)
+  /// Searches that returned nothing. The numerator of Unmet Demand.
+  zeroResults Int @default(0) @map("zero_results")
+  /// Sum of result counts, so a mean survives window re-aggregation.
+  resultsSum  Int @default(0) @map("results_sum")
+  clicks      Int @default(0)
+  cartAdds    Int @default(0) @map("cart_adds")
+  orders      Int @default(0)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@unique([termKey, day])
+  @@index([day])
+  @@map("search_term_daily")
+}
+
+/// Layer 2 — the deterministic 0–100 score for one product, one window, on the
+/// day it was computed.
+///
+/// Keyed by `capturedOn` rather than overwritten, which buys three things for
+/// the price of one row a day: a sparkline on the product page, a "was this
+/// rising last week too?" check that does not touch the fact table, and an
+/// audit trail for a score somebody disputes.
+model ProductTrendScore {
+  id        String  @id @default(uuid()) @db.Uuid
+  productId String  @map("product_id") @db.Uuid
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  categoryId String      @map("category_id") @db.Uuid
+  window     TrendWindow
+  capturedOn DateTime    @map("captured_on") @db.Date
+
+  /// 0–100. The headline.
+  score         Float
+  /// The same score one capture ago, so the arrow beside it needs no query.
+  previousScore Float?     @map("previous_score")
+  /// Signed change in score, already computed.
+  delta         Float      @default(0)
+  stage         TrendStage
+  /// 0–1. How much evidence is behind the score. A product with nine views
+  /// can have a perfect growth rate and still not be a trend.
+  confidence    Float      @default(0)
+  /// Total exposure in the window — the denominator confidence comes from.
+  sampleSize    Int        @default(0) @map("sample_size")
+
+  // ── The breakdown. Every one is 0–1 before weighting. ──────────────────
+  viewGrowth    Float @default(0) @map("view_growth")
+  searchGrowth  Float @default(0) @map("search_growth")
+  cartGrowth    Float @default(0) @map("cart_growth")
+  conversion    Float @default(0)
+  salesVelocity Float @default(0) @map("sales_velocity")
+  acceleration  Float @default(0)
+  engagement    Float @default(0)
+  quality       Float @default(0)
+  availability  Float @default(0)
+
+  /// Raw figures the components were derived from, for the tooltip that
+  /// explains the score without re-querying the facts.
+  metrics Json?
+
+  /// Rank within the leaderboard for this window on this capture. 1 is top.
+  rank         Int?
+  categoryRank Int? @map("category_rank")
+
+  /// Which kernel wrote this. Bump on any weight change so an old score is
+  /// never silently compared against a new one — and set it to a model name
+  /// the day an ML ranker starts writing here.
+  method String @default("reem-trend-kernel-v1")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@unique([productId, window, capturedOn])
+  @@index([window, capturedOn, score])
+  @@index([categoryId, window, capturedOn])
+  @@index([window, capturedOn, stage])
+  @@map("product_trend_scores")
+}
+
+/// Layer 2 — the same kernel applied to a category subtree.
+model CategoryTrendScore {
+  id         String   @id @default(uuid()) @db.Uuid
+  categoryId String   @map("category_id") @db.Uuid
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  window     TrendWindow
+  capturedOn DateTime    @map("captured_on") @db.Date
+
+  score         Float
+  previousScore Float?     @map("previous_score")
+  delta         Float      @default(0)
+  stage         TrendStage
+  confidence    Float      @default(0)
+  sampleSize    Int        @default(0) @map("sample_size")
+
+  viewGrowth    Float @default(0) @map("view_growth")
+  searchGrowth  Float @default(0) @map("search_growth")
+  cartGrowth    Float @default(0) @map("cart_growth")
+  conversion    Float @default(0)
+  salesVelocity Float @default(0) @map("sales_velocity")
+  acceleration  Float @default(0)
+  engagement    Float @default(0)
+  quality       Float @default(0)
+  availability  Float @default(0)
+
+  metrics Json?
+  rank    Int?
+  method  String @default("reem-trend-kernel-v1")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@unique([categoryId, window, capturedOn])
+  @@index([window, capturedOn, score])
+  @@map("category_trend_scores")
+}
+
+/// Layer 3 — a forecast for one subject, generated on one day.
+///
+/// `subjectKey` and `scopeKey` are strings for the same reason
+/// `TrendAttributeDaily.scopeKey` is: a nullable column cannot carry a unique
+/// constraint that means "one per platform per day". A platform forecast has
+/// `subjectKey = 'PLATFORM'`; a seller-scoped product forecast has the product
+/// id in one and the seller id in the other.
+model TrendForecast {
+  id          String           @id @default(uuid()) @db.Uuid
+  subjectKind TrendSubjectKind @map("subject_kind")
+  subjectKey  String           @map("subject_key")
+  scopeKey    String           @default("PLATFORM") @map("scope_key")
+  generatedOn DateTime         @map("generated_on") @db.Date
+  horizonDays Int              @map("horizon_days")
+
+  method TrendForecastMethod
+
+  /// `[{ "date": "2026-09-01", "units": 4.2, "low": 1.8, "high": 7.1 }, …]`
+  points          Json
+  /// Sum of the point forecasts over the horizon — the number a dashboard
+  /// actually prints, precomputed so it is the same everywhere.
+  totalUnits      Float   @default(0) @map("total_units")
+  totalRevenueSyp Decimal @default(0) @map("total_revenue_syp") @db.Decimal(18, 4)
+  /// 0–1, from the in-sample residual spread against the level.
+  confidence      Float   @default(0)
+  /// Mean absolute error of the same method back-tested on the history it was
+  /// fitted to. Printed as the "±" on the chart, and the thing to watch when a
+  /// model replaces the arithmetic.
+  backtestMae     Float?  @map("backtest_mae")
+  /// Days of stock left at the forecast rate. Null when stock is unknown or
+  /// the forecast is flat at zero.
+  stockoutInDays  Float?  @map("stockout_in_days")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@unique([subjectKind, subjectKey, scopeKey, horizonDays, generatedOn])
+  @@index([generatedOn])
+  @@index([scopeKey, generatedOn])
+  @@map("trend_forecasts")
+}
+
+/// Layer 4 — one thing worth telling someone, in her language.
+///
+/// The row is the *finding*: kind, subject, numbers, severity. `titleAr` and
+/// `bodyAr` are a rendering of it. When Claude is configured it writes them;
+/// when it is not, an Arabic template does, and `narrator` says which — so a
+/// dashboard never depends on a model being reachable, and an insight is never
+/// a sentence with no arithmetic behind it.
+model TrendInsight {
+  id       String               @id @default(uuid()) @db.Uuid
+  audience TrendInsightAudience
+  /// Null for an admin insight; the recipient for a seller one.
+  sellerId String?              @map("seller_id") @db.Uuid
+  seller   User?                @relation("SellerTrendInsights", fields: [sellerId], references: [id], onDelete: Cascade)
+
+  kind     TrendInsightKind
+  severity TrendInsightSeverity @default(INFO)
+  status   TrendInsightStatus   @default(OPEN)
+
+  subjectKind TrendSubjectKind @map("subject_kind")
+  subjectKey  String           @map("subject_key")
+  /// Set when the subject is a product, so the app can deep-link and the
+  /// insight dies with the product.
+  productId   String?          @map("product_id") @db.Uuid
+  product     Product?         @relation(fields: [productId], references: [id], onDelete: Cascade)
+  categoryId  String?          @map("category_id") @db.Uuid
+  category    Category?        @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  titleAr      String  @map("title_ar")
+  bodyAr       String  @map("body_ar")
+  /// The one thing to do about it, phrased as an instruction. Null when the
+  /// finding is an observation rather than a prompt.
+  actionAr     String? @map("action_ar")
+  /// A stable route hint for the app: `product`, `category`, `search`, …
+  actionTarget String? @map("action_target")
+
+  /// The numbers the sentence was built from — always present, so the UI can
+  /// show the evidence under the prose and a reader can check the claim.
+  metrics    Json
+  confidence Float @default(0)
+  /// Sorts the feed. Severity × confidence × magnitude, precomputed.
+  priority   Float @default(0)
+
+  /// `reem-trend-templates-v1`, or the model id that phrased it.
+  narrator String @default("reem-trend-templates-v1")
+
+  /// Identity of the *finding*, not of the row: kind + subject + window. One
+  /// per generation day, so a nightly run refreshes today's copy instead of
+  /// stacking a seventh identical warning onto the pile.
+  dedupeKey   String   @map("dedupe_key")
+  generatedOn DateTime @map("generated_on") @db.Date
+  /// After this the insight stops being shown, whatever its status. A demand
+  /// signal has a shelf life.
+  expiresAt   DateTime @map("expires_at")
+
+  acknowledgedAt DateTime? @map("acknowledged_at")
+  acknowledgedBy String?   @map("acknowledged_by") @db.Uuid
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@unique([dedupeKey, generatedOn])
+  @@index([audience, status, priority])
+  @@index([sellerId, status, priority])
+  @@index([productId])
+  @@index([generatedOn])
+  @@index([expiresAt])
+  @@map("trend_insights")
+}
+
+/// Layer 4 — a question the catalogue could not answer.
+///
+/// Long-lived and keyed on the term rather than the day: unmet demand is a
+/// standing fact about the assortment, and the interesting column is `status`,
+/// which is a buyer workflow — seen it, sourcing it, filled it.
+model UnmetDemandSignal {
+  id      String @id @default(uuid()) @db.Uuid
+  termKey String @unique @map("term_key")
+  display String
+
+  /// What the normaliser understood: `{ colours: ["green"], occasion: "evening",
+  /// slots: ["DRESS"], priceBand: null }`. This is what makes the suggestion
+  /// specific enough to act on instead of "people searched for a thing".
+  facets Json
+
+  /// Rolling-window counters, refreshed by the nightly run.
+  searches    Int   @default(0)
+  zeroResults Int   @default(0) @map("zero_results")
+  clicks      Int   @default(0)
+  orders      Int   @default(0)
+  /// zeroResults / searches. 1.0 means the catalogue never had an answer.
+  missRate    Float @default(0) @map("miss_rate")
+  /// 0–100. Volume × miss rate × growth. What the list sorts by.
+  demandScore Float @default(0) @map("demand_score")
+  /// Log-ratio of this window searches against the previous one.
+  growth      Float @default(0)
+
+  /// The nearest category the facets resolve to, when they resolve to one.
+  suggestedCategoryId String?   @map("suggested_category_id") @db.Uuid
+  suggestedCategory   Category? @relation("UnmetDemandCategory", fields: [suggestedCategoryId], references: [id], onDelete: SetNull)
+  /// The sentence shown to the buying team.
+  suggestionAr        String?   @map("suggestion_ar")
+
+  status     UnmetDemandStatus @default(OPEN)
+  reviewedBy String?           @map("reviewed_by") @db.Uuid
+  reviewedAt DateTime?         @map("reviewed_at")
+  note       String?
+
+  firstSeenAt DateTime @default(now()) @map("first_seen_at")
+  lastSeenAt  DateTime @default(now()) @map("last_seen_at")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@index([status, demandScore])
+  @@index([lastSeenAt])
+  @@map("unmet_demand_signals")
+}
+
+/// Bookkeeping for the jobs the engine runs on itself.
+///
+/// Not decoration: the collector is idempotent per day, and this table is how
+/// it knows which days it already has, how a backfill resumes after a crash,
+/// and how an operator answers "are these numbers from last night or from
+/// Tuesday?" without reading a log file.
+model TrendEngineRun {
+  id     String         @id @default(uuid()) @db.Uuid
+  kind   TrendRunKind
+  status TrendRunStatus @default(RUNNING)
+
+  /// Inclusive range of days the run covered.
+  fromDay DateTime? @map("from_day") @db.Date
+  toDay   DateTime? @map("to_day") @db.Date
+
+  startedAt  DateTime  @default(now()) @map("started_at")
+  finishedAt DateTime? @map("finished_at")
+  durationMs Int?      @map("duration_ms")
+
+  rowsWritten Int     @default(0) @map("rows_written")
+  /// Per-stage counts, for the ops panel.
+  stats       Json?
+  error       String?
+  /// Who asked. Null for the scheduler.
+  triggeredBy String? @map("triggered_by") @db.Uuid
+
+  @@index([kind, startedAt])
+  @@index([status, startedAt])
+  @@map("trend_engine_runs")
+}
+
+// ═══════════════════════ Reem Visual Shopping ═══════════════════════
+//
+// Search and shop by photograph. She screenshots a dress on Instagram, hands
+// it to Reem, and gets the closest things anybody here actually sells.
+//
+// The section is shaped by one rule, the same one the Trend Engine is built
+// on: **a similarity percentage is computed from pixels and rows, never from a
+// model's opinion.** A number on a card ("٩٤٪ مشابه") is the cosine of two
+// vectors this system produced from two images it decoded itself, rescaled by
+// a documented curve. A vision model, when one is configured, is allowed to
+// *propose* attributes into a closed vocabulary that is then sanitised — the
+// same seam `AiStylistModule` uses. It never scores, never ranks, and never
+// names a product.
+//
+// Four layers, each durable and each replaceable on its own:
+//
+//   1. DESCRIPTORS — `ProductImageEmbedding`. One vector per product image per
+//      embedder, computed from the bytes by the indexer. Identity-free.
+//   2. QUERIES     — `VisualSearchSession` (+ `VisualSearchRegion`). What she
+//      uploaded, reduced to a vector and a validated brief. The photograph
+//      itself is a private `MediaAsset` on a retention clock; the session
+//      outlives it, because a vector is not a picture of anybody.
+//   3. MATCHES     — `VisualSearchResult`. What was shown and why, with the
+//      visual and attribute halves of the score stored apart so any percentage
+//      on any card can be taken back to the two numbers that made it.
+//   4. TRY-ON      — `VisualTryOnRequest`. Architecture, not a mock: with no
+//      provider configured every request is recorded `UNAVAILABLE` and no
+//      image is ever invented.
+//
+// The `embedder` column on the vector tables is what makes a better model a
+// migration rather than a rewrite: a new embedder writes new rows under its own
+// name, both generations coexist, and search reads whichever one is current.
+
+/// Where the query photograph came from. Recorded for analytics only — the
+/// pipeline treats every source identically, because a screenshot and a camera
+/// frame are both just bytes by the time they reach the sniffer.
+enum VisualSearchSource {
+  CAMERA
+  GALLERY
+  SCREENSHOT
+  SHARED
+  CATALOG
+}
+
+enum VisualSearchStatus {
+  /// Bytes accepted, descriptor not computed yet.
+  PENDING
+  READY
+  /// Decoding failed, or nothing in the catalogue was close enough to show.
+  FAILED
+  /// Past its retention window; the photograph is gone and the vector remains.
+  EXPIRED
+}
+
+/// How a region inside the photograph was found.
+///
+/// Named rather than boolean because the honesty of the outfit feature depends
+/// on it: `LAYOUT` is a geometric prior over fashion photography (a full-length
+/// portrait puts the top above the bottom above the shoes) and is worth a lower
+/// confidence than `VISION`, which is an actual detection.
+enum VisualRegionDetector {
+  /// The whole frame, when the photograph is one garment on a plain ground.
+  WHOLE
+  /// Bands split at visual discontinuities in a full-length portrait.
+  LAYOUT
+  /// A configured vision model returned a box and a slot.
+  VISION
+}
+
+enum VisualTryOnStatus {
+  /// Accepted and queued. Only reachable with a provider configured.
+  REQUESTED
+  PROCESSING
+  READY
+  FAILED
+  /// The default with no provider: recorded, answered honestly, never faked.
+  UNAVAILABLE
+  /// She withdrew consent, or the retention clock ran out.
+  REVOKED
+}
+
+/// One product image, as a vector.
+///
+/// Keyed by (product, image URL, embedder) rather than by product: a listing's
+/// second photograph is a different view of the same dress, and matching
+/// against all of them is what makes a back-of-the-garment screenshot work.
+/// `position` keeps the primary image identifiable for the card.
+model ProductImageEmbedding {
+  id        String  @id @default(uuid()) @db.Uuid
+  productId String  @map("product_id") @db.Uuid
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  /// The image this vector describes, as stored on `product_media.url`.
+  mediaUrl String @map("media_url")
+  position Int    @default(0)
+
+  /// Which implementation produced it, e.g. `reem-visual-perceptual-v1`. Two
+  /// embedders' vectors are never comparable, so every read filters on this.
+  embedder   String
+  dimensions Int
+
+  /// Unit-length. Cosine similarity is therefore a dot product.
+  vector Float[]
+
+  /// The interpretable half of the descriptor, denormalised so an attribute
+  /// pre-filter never has to decode a vector: lexicon colour keys in dominance
+  /// order, and the pattern reading.
+  paletteKeys String[] @map("palette_keys")
+  pattern     String?
+
+  /// SHA-256 of the bytes the vector was computed from. A re-uploaded
+  /// photograph with the same content is recognised and not recomputed; a
+  /// changed one is.
+  sourceChecksum String? @map("source_checksum")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@unique([productId, mediaUrl, embedder])
+  @@index([embedder, productId])
+  @@index([embedder, updatedAt])
+  @@map("product_image_embeddings")
+}
+
+/// One "search by image", and everything that followed from it.
+///
+/// A session rather than a request because refinement is the point: she
+/// uploads a photograph, then says "بس بالأسود" and then "وتحت ٤٠٠ ألف", and
+/// each sentence folds onto the brief the picture produced. The vector is
+/// computed once and reused for every turn.
+model VisualSearchSession {
+  id     String @id @default(uuid()) @db.Uuid
+  userId String @map("user_id") @db.Uuid
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  status VisualSearchStatus @default(PENDING)
+  source VisualSearchSource @default(GALLERY)
+
+  /// The uploaded photograph — always PRIVATE, purpose `visual_search`.
+  /// Nulled when the retention clock strikes; the session survives it.
+  queryAssetId String?     @map("query_asset_id") @db.Uuid
+  queryAsset   MediaAsset? @relation("VisualSearchQueryAsset", fields: [queryAssetId], references: [id], onDelete: SetNull)
+
+  /// SHA-256 of the query bytes, so the same screenshot uploaded twice reuses
+  /// the descriptor instead of decoding it again.
+  checksum String
+
+  embedder   String
+  dimensions Int
+  vector     Float[]
+
+  /// The validated reading of the photograph — colours, pattern, silhouette,
+  /// and where each one came from. Closed vocabularies only.
+  understanding Json?
+
+  /// The merged `StyleBrief`: what the picture said, plus every refinement she
+  /// has typed since. Same shape and same sanitiser as the stylist's.
+  brief Json?
+
+  /// Her sentences, oldest first, shaped `[{ text, at }]`. Kept so a reopened
+  /// session shows the thread that produced the current results.
+  refinements      Json?
+  refinementsCount Int   @default(0) @map("refinements_count")
+
+  /// Which engine read the image: the deterministic descriptor, or a model.
+  engine    String?
+  latencyMs Int?    @map("latency_ms")
+
+  /// When the photograph must be gone by. Enforced by the sweeper, not by a
+  /// read-time check — an expiry nobody deletes on is a promise, not a policy.
+  imageExpiresAt DateTime? @map("image_expires_at")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  regions VisualSearchRegion[]
+  results VisualSearchResult[]
+  tryOns  VisualTryOnRequest[]
+
+  @@index([userId, createdAt])
+  @@index([status, imageExpiresAt])
+  @@index([userId, checksum])
+  @@map("visual_search_sessions")
+}
+
+/// One item found inside the photograph — the dress, the bag, the shoes.
+///
+/// A single-garment picture produces exactly one region with detector `WHOLE`,
+/// so the outfit path and the simple path are the same code.
+model VisualSearchRegion {
+  id        String              @id @default(uuid()) @db.Uuid
+  sessionId String              @map("session_id") @db.Uuid
+  session   VisualSearchSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  detector VisualRegionDetector @default(WHOLE)
+  /// The outfit slot this region is believed to be, when that is knowable.
+  slot     OutfitSlot?
+  label    String
+
+  /// Normalised `{ x, y, w, h }` in 0–1, so it can be drawn over the
+  /// photograph at any size.
+  boundingBox Json @map("bounding_box")
+
+  /// 0–1. `LAYOUT` regions are capped well below `VISION` ones on purpose.
+  confidence Float @default(0)
+
+  vector      Float[]
+  paletteKeys String[] @map("palette_keys")
+  position    Int      @default(0)
+
+  results VisualSearchResult[]
+
+  @@index([sessionId, position])
+  @@map("visual_search_regions")
+}
+
+/// One card she was shown, and the arithmetic behind its percentage.
+model VisualSearchResult {
+  id        String              @id @default(uuid()) @db.Uuid
+  sessionId String              @map("session_id") @db.Uuid
+  session   VisualSearchSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  regionId String?             @map("region_id") @db.Uuid
+  region   VisualSearchRegion? @relation(fields: [regionId], references: [id], onDelete: Cascade)
+
+  productId String  @map("product_id") @db.Uuid
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  offerId String? @map("offer_id") @db.Uuid
+
+  /// The image that actually matched — a listing's third photograph often is.
+  matchedMediaUrl String? @map("matched_media_url")
+
+  /// 0–1, and the number rendered as "٩٤٪ مشابه". Derived, never taken from a
+  /// model.
+  similarity     Float
+  /// The two halves, kept apart so the total can be explained and audited.
+  visualScore    Float @map("visual_score")
+  attributeScore Float @map("attribute_score")
+
+  position    Int      @default(0)
+  reason      String
+  reasonCodes String[] @map("reason_codes")
+
+  /// Frozen at the moment the card was produced.
+  quotedPriceSyp Decimal? @map("quoted_price_syp") @db.Decimal(18, 4)
+
+  feedback   AiStylistFeedback @default(NONE)
+  feedbackAt DateTime?         @map("feedback_at")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([sessionId, position])
+  @@index([productId])
+  @@index([feedback])
+  @@map("visual_search_results")
+}
+
+/// A request to see a garment on her own photograph.
+///
+/// The table exists so the feature has a real shape — consent, retention, a
+/// provider name, a status — before any provider exists to fulfil it. With
+/// none configured, a request is written `UNAVAILABLE` and the API says so.
+/// Nothing here ever produces an image the platform did not receive from a
+/// provider that actually rendered one.
+model VisualTryOnRequest {
+  id     String @id @default(uuid()) @db.Uuid
+  userId String @map("user_id") @db.Uuid
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  sessionId String?              @map("session_id") @db.Uuid
+  session   VisualSearchSession? @relation(fields: [sessionId], references: [id], onDelete: SetNull)
+
+  productId String  @map("product_id") @db.Uuid
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  variantId String? @map("variant_id") @db.Uuid
+  offerId   String? @map("offer_id") @db.Uuid
+
+  /// Her photograph. PRIVATE, purpose `try_on`, and on the shortest retention
+  /// clock in the schema — a picture of a person's body is the most sensitive
+  /// thing this platform will ever hold.
+  sourceAssetId String?     @map("source_asset_id") @db.Uuid
+  sourceAsset   MediaAsset? @relation("VisualTryOnSourceAsset", fields: [sourceAssetId], references: [id], onDelete: SetNull)
+
+  /// The rendered result, when a provider returns one.
+  resultAssetId String?     @map("result_asset_id") @db.Uuid
+  resultAsset   MediaAsset? @relation("VisualTryOnResultAsset", fields: [resultAssetId], references: [id], onDelete: SetNull)
+
+  provider    String            @default("none")
+  status      VisualTryOnStatus @default(UNAVAILABLE)
+  /// Machine-readable, e.g. `NO_PROVIDER`, `PROVIDER_TIMEOUT`.
+  failureCode String?           @map("failure_code")
+
+  /// Explicit, per-request, and recorded. Not a profile setting: consenting to
+  /// one try-on is not consenting to the next.
+  consentAt DateTime? @map("consent_at")
+  expiresAt DateTime? @map("expires_at")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([userId, createdAt])
+  @@index([status, expiresAt])
+  @@index([productId])
+  @@map("visual_try_on_requests")
+}
+
+// ═══════════════════════════ Reem Closet ═══════════════════════════
+//
+// Her wardrobe as a first-class object, and the reason to buy derived from it.
+//
+// The whole section turns on one decision, made in `ClosetItem`: a garment she
+// bought here and a garment she already owned are **the same row**. A Reem
+// product contributes `product_id`; a personal piece contributes a photograph
+// and a title she typed. Everything downstream — looks, gaps, suggestions,
+// "what can I wear today" — reads the normalised descriptor (`slot`, `colours`,
+// `materials`, `modesty`, `seasons`, `occasions`) and never asks which of the
+// two it is holding.
+//
+// That is the difference between this and a wishlist, and it is structural
+// rather than cosmetic. A wishlist can only reason about the catalog, so the
+// best it can do is recommend more of what she looked at. A closet knows she
+// owns four black tops and no skirt, so it can recommend the skirt — and it can
+// only know that because the four tops she bought at a souq are in the same
+// table as the one she bought here.
+//
+// The layering mirrors the trend engine, for the same reason:
+//
+//   1. OWNERSHIP   — `ClosetItem`, `ClosetItemWear`. What she has, what she
+//                    wears. Facts, written by her.
+//   2. COMPOSITION — `ClosetLook`, `ClosetLookItem`, `ClosetLookWear`. What she
+//                    puts together, and when she wore it. A look may point at a
+//                    piece she owns *or* at a catalog product she does not —
+//                    the unowned slot is the gap, made concrete.
+//   3. NEED        — `ClosetGap`. Deterministically computed over 1 and 2 by
+//                    `gap-engine.ts`, with the component breakdown stored beside
+//                    the priority so any number shown to her can be taken apart.
+//   4. SUPPLY      — not a table. A gap is rendered into a `StyleBrief` and
+//                    answered by the stylist's existing retrieval and ranker, so
+//                    a closet suggestion is a live offer at today's price and
+//                    today's stock. Persisting suggestions would mean showing
+//                    her a sold-out piece from last week.
+//
+// No language model appears anywhere in this section. A gap is arithmetic over
+// her own rows; the sentence explaining it is rendered from the reason code.
+
+/// Where a piece came from. The three cases differ only in provenance — the
+/// engine treats them identically, which is the point of the table.
+enum ClosetItemSource {
+  /// She owns a Reem product and said so herself.
+  CATALOG
+  /// Added automatically when her order was delivered.
+  PURCHASE
+  /// Her own garment, photographed. Reem never sold it and may not stock it.
+  PERSONAL
+}
+
+enum ClosetItemStatus {
+  ACTIVE
+  /// Out of rotation but still hers — off-season, being repaired, lent out.
+  ARCHIVED
+  /// Gone. Kept as a row so replacement gaps and cost-per-wear survive it.
+  RELEASED
+}
+
+/// When a piece is wearable. Deliberately coarse: Syria has two real seasons
+/// and a shoulder between them, and a finer scale would be guessed rather than
+/// known.
+enum ClosetSeason {
+  ALL
+  SUMMER
+  WINTER
+  TRANSITIONAL
+}
+
+/// Why a gap exists. The code drives both the priority arithmetic and the
+/// Arabic sentence, so the two cannot disagree.
+enum ClosetGapKind {
+  /// A saved look has an empty slot. The most concrete need there is.
+  LOOK_SLOT
+  /// She has pieces for an occasion but cannot complete a single look for it.
+  OCCASION
+  /// Structural imbalance — six tops against one bottom caps how many
+  /// outfits the closet can produce.
+  COVERAGE
+  /// The season now starting is uncovered.
+  SEASON
+  /// Worn past what a garment lasts, and nothing behind it.
+  REPLACEMENT
+}
+
+enum ClosetGapStatus {
+  OPEN
+  /// She added a piece that answers it. Kept, not deleted — a closed gap is
+  /// the evidence that the engine was right.
+  FILLED
+  /// She said no. Suppressed on recompute rather than raised again.
+  DISMISSED
+  /// The closet moved and the gap no longer computes. Superseded, not wrong.
+  STALE
+}
+
+/// One per customer, created on first use.
+///
+/// Exists as a row rather than being implied by `closet_items.user_id` because
+/// a closet has settings and roll-ups of its own, and because "she has opened
+/// the closet" is a different fact from "she owns something".
+model Closet {
+  id     String @id @default(uuid()) @db.Uuid
+  userId String @unique @map("user_id") @db.Uuid
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  /// Add a line to the closet when its order is delivered. On by default: the
+  /// alternative is a closet that stays empty because filling it is a chore,
+  /// and a delivered order is the one moment we know for certain she owns it.
+  autoAddPurchases Boolean @default(true) @map("auto_add_purchases")
+
+  /// Suppresses the whole gap engine. Some women want a wardrobe log and no
+  /// advice, and the honest way to offer that is a switch.
+  suggestionsEnabled Boolean @default(true) @map("suggestions_enabled")
+
+  // Roll-ups, maintained in the same transaction as the rows they count.
+  itemsCount Int @default(0) @map("items_count")
+  looksCount Int @default(0) @map("looks_count")
+
+  /// When the gap engine last ran. Null = never.
+  gapsComputedAt DateTime? @map("gaps_computed_at")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  items ClosetItem[]
+  looks ClosetLook[]
+  gaps  ClosetGap[]
+
+  @@map("closets")
+}
+
+/// A garment she owns.
+///
+/// The catalog columns (`productId`, `offerId`, `variantId`, `orderItemId`) are
+/// all nullable and all optional: they enrich a row, they do not define it. A
+/// personal piece with a photograph and a slot is a complete, first-class
+/// member of this table, and the engine can reason about it exactly as far as
+/// it can reason about a purchase.
+///
+/// The descriptor block below is denormalised on purpose. It could be joined
+/// out of `products` for catalog rows, but then personal rows would need a
+/// parallel set of columns and every query would branch on which kind it was
+/// holding — which is precisely the design this table exists to avoid. So the
+/// descriptor is derived once at write time (see `garment-descriptor.ts`) and
+/// stored, and one index serves both kinds.
+model ClosetItem {
+  id       String @id @default(uuid()) @db.Uuid
+  closetId String @map("closet_id") @db.Uuid
+  closet   Closet @relation(fields: [closetId], references: [id], onDelete: Cascade)
+
+  /// Denormalised from `closets.user_id`. Every listing query filters by her
+  /// and orders by a descriptor column; without this each one pays a join to
+  /// reach the owner it already knows.
+  userId String @map("user_id") @db.Uuid
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  source ClosetItemSource
+  status ClosetItemStatus @default(ACTIVE)
+
+  // ── Catalog provenance (all optional) ─────────────────────────────────
+  productId String?  @map("product_id") @db.Uuid
+  product   Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
+
+  /// The offer she actually bought from, for cost-per-wear and for re-buying.
+  offerId String?      @map("offer_id") @db.Uuid
+  offer   SellerOffer? @relation(fields: [offerId], references: [id], onDelete: SetNull)
+
+  variantId String?         @map("variant_id") @db.Uuid
+  variant   ProductVariant? @relation(fields: [variantId], references: [id], onDelete: SetNull)
+
+  /// The delivered line this came from. Unique, so a re-delivered or
+  /// re-processed order cannot add the same garment twice.
+  orderItemId String?    @unique @map("order_item_id") @db.Uuid
+  orderItem   OrderItem? @relation(fields: [orderItemId], references: [id], onDelete: SetNull)
+
+  // ── Identity ──────────────────────────────────────────────────────────
+  /// Her label. Snapshotted from the product title for catalog rows so the
+  /// closet survives a seller renaming or delisting the product.
+  title String
+
+  /// For a personal piece this is her photograph, a PRIVATE upload claimed
+  /// through `MediaService.markAttached` with purpose `closet`. For a catalog
+  /// piece it is the product image, snapshotted for the same reason as the
+  /// title.
+  imageUrl String? @map("image_url")
+  blurHash String? @map("blur_hash")
+
+  // ── Descriptor — the vocabulary the engine reasons in ─────────────────
+  /// The spine of the whole feature. Everything else is optional; this is not.
+  slot OutfitSlot
+
+  /// Lexicon colour keys (`black`, `blush`, …) — never raw text, so the
+  /// harmony rules in `stylist-lexicon.ts` apply to a garment from a souq
+  /// exactly as they do to one from the catalog.
+  colours   String[]
+  materials String[]
+
+  modesty ModestyLevel   @default(UNSPECIFIED)
+  seasons ClosetSeason[]
+
+  /// Lexicon occasion keys this piece works for. Derived from its category and
+  /// its formality, overridable by her — she knows that one blazer is not
+  /// office wear.
+  occasions String[]
+
+  /// As worn, in the size system its slot uses.
+  size String?
+
+  brandId String? @map("brand_id") @db.Uuid
+  brand   Brand?  @relation(fields: [brandId], references: [id], onDelete: SetNull)
+
+  /// Free text for a personal piece whose label is not a brand we stock.
+  brandName String? @map("brand_name")
+
+  // ── Economics ─────────────────────────────────────────────────────────
+  /// Normalised to SYP like `products.min_price_syp`, so cost-per-wear and the
+  /// budget band of a gap compare without an FX lookup.
+  purchasePriceSyp Decimal?  @map("purchase_price_syp") @db.Decimal(18, 4)
+  acquiredAt       DateTime? @map("acquired_at")
+
+  // ── Rotation ──────────────────────────────────────────────────────────
+  /// Maintained with `ClosetItemWear` in one transaction. The column answers
+  /// "how many", the rows answer "when" — the same split the catalog uses for
+  /// views.
+  wearCount  Int       @default(0) @map("wear_count")
+  lastWornAt DateTime? @map("last_worn_at")
+
+  isFavourite Boolean @default(false) @map("is_favourite")
+  note        String?
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  wears         ClosetItemWear[]
+  lookItems     ClosetLookItem[]
+  filledGaps    ClosetGap[]      @relation("ClosetGapFilledBy")
+  resaleListing ResaleListing?   @relation("ResaleOfItem")
+
+  // The listing index: her closet, one slot, most recently added.
+  @@index([closetId, status, slot, createdAt])
+  // The engine's index: every active piece in one read, ordered by slot.
+  @@index([userId, status, slot])
+  // "Do I already own this?" from a product page.
+  @@index([productId])
+  // Neglected-piece and replacement passes.
+  @@index([closetId, lastWornAt])
+  @@map("closet_items")
+}
+
+/// She wore this piece on this day.
+///
+/// A separate table rather than a counter because the dates are the feature:
+/// "you have not worn this since March" and "you wore this twice last week"
+/// are both reads of this table, and neither survives being summed into an
+/// integer. Written both directly and as a fan-out of `ClosetLookWear`.
+model ClosetItemWear {
+  id     String     @id @default(uuid()) @db.Uuid
+  itemId String     @map("item_id") @db.Uuid
+  item   ClosetItem @relation(fields: [itemId], references: [id], onDelete: Cascade)
+
+  /// The look it was worn as part of, when it was worn as part of one.
+  lookWearId String?         @map("look_wear_id") @db.Uuid
+  lookWear   ClosetLookWear? @relation(fields: [lookWearId], references: [id], onDelete: SetNull)
+
+  /// Date, not timestamp: she logs "I wore this on Thursday", and a wear has
+  /// no meaningful time of day.
+  wornOn DateTime @map("worn_on") @db.Date
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  /// One wear per piece per day. Logging the same outfit twice on a Tuesday is
+  /// a double tap, not two wearings.
+  @@unique([itemId, wornOn])
+  @@index([itemId, wornOn])
+  @@map("closet_item_wears")
+}
+
+/// A composed outfit.
+///
+/// Distinct from `AiStylistOutfit`, and deliberately not merged with it. A
+/// stylist outfit is a *record of a suggestion*: immutable evidence of what was
+/// recommended in a conversation, carrying feedback semantics. A look is
+/// *hers*: mutable, composed of things she owns, worn on dates. Merging them
+/// would mean either mutating the audit trail or freezing her wardrobe.
+///
+/// The bridge runs one way, through `sourceOutfitId`: a suggestion she liked is
+/// promoted into a look, and the look then records which suggestion produced it.
+model ClosetLook {
+  id       String @id @default(uuid()) @db.Uuid
+  closetId String @map("closet_id") @db.Uuid
+  closet   Closet @relation(fields: [closetId], references: [id], onDelete: Cascade)
+
+  userId String @map("user_id") @db.Uuid
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  title String
+  note  String?
+
+  /// Lexicon occasion key. The single most load-bearing field on the row: it
+  /// is what "ماذا أرتدي اليوم؟" filters by and what an OCCASION gap is
+  /// computed against.
+  occasion String?
+
+  seasons ClosetSeason[]
+
+  /// The colour keys the look is built around, so a suggestion for its empty
+  /// slot can be told to harmonise.
+  palette String[]
+
+  /// Promoted from a stylist suggestion, when it was.
+  sourceOutfitId String?          @map("source_outfit_id") @db.Uuid
+  sourceOutfit   AiStylistOutfit? @relation(fields: [sourceOutfitId], references: [id], onDelete: SetNull)
+
+  /// Maintained on write. `false` when any slot is filled by a catalog product
+  /// she does not own — which is exactly the condition that produces a
+  /// LOOK_SLOT gap.
+  isComplete Boolean @default(false) @map("is_complete")
+
+  isFavourite Boolean @default(false) @map("is_favourite")
+  isArchived  Boolean @default(false) @map("is_archived")
+
+  wearCount  Int       @default(0) @map("wear_count")
+  lastWornAt DateTime? @map("last_worn_at")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  items ClosetLookItem[]
+  wears ClosetLookWear[]
+  gaps  ClosetGap[]
+
+  @@index([closetId, isArchived, updatedAt])
+  @@index([closetId, occasion, isComplete])
+  @@index([userId, lastWornAt])
+  @@map("closet_looks")
+}
+
+/// One slot of a look.
+///
+/// Exactly one of `closetItemId` (she owns it) or `productId` (she does not, and
+/// this is what would complete the look) is set. The invariant is enforced in
+/// `ClosetLookService` rather than by a check constraint so the violation can
+/// be reported as a field error in Arabic; the two-sided shape itself is the
+/// design, because a look that cannot name its missing piece cannot generate a
+/// gap worth acting on.
+model ClosetLookItem {
+  id     String     @id @default(uuid()) @db.Uuid
+  lookId String     @map("look_id") @db.Uuid
+  look   ClosetLook @relation(fields: [lookId], references: [id], onDelete: Cascade)
+
+  slot     OutfitSlot
+  position Int        @default(0)
+
+  // ── Owned ─────────────────────────────────────────────────────────────
+  closetItemId String?     @map("closet_item_id") @db.Uuid
+  closetItem   ClosetItem? @relation(fields: [closetItemId], references: [id], onDelete: Cascade)
+
+  // ── Wanted ────────────────────────────────────────────────────────────
+  productId String?  @map("product_id") @db.Uuid
+  product   Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
+
+  offerId   String? @map("offer_id") @db.Uuid
+  variantId String? @map("variant_id") @db.Uuid
+
+  /// Why this piece is here — rendered from the ranker's reason codes when the
+  /// slot was filled from a suggestion.
+  note String?
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  /// One piece per slot per look. A second necklace is an `ACCESSORY`, and if
+  /// that is too coarse the fix is a slot, not a duplicate row.
+  @@unique([lookId, slot])
+  @@index([closetItemId])
+  @@index([productId])
+  @@map("closet_look_items")
+}
+
+/// She wore this look on this day.
+///
+/// Fans out into one `ClosetItemWear` per owned piece, in the same transaction.
+/// Both tables are needed: this one answers "when did I last wear this outfit",
+/// which is what stops the daily suggestion repeating itself, and the item
+/// table answers "when did I last wear this dress", which is what finds the
+/// piece she is neglecting.
+model ClosetLookWear {
+  id     String     @id @default(uuid()) @db.Uuid
+  lookId String     @map("look_id") @db.Uuid
+  look   ClosetLook @relation(fields: [lookId], references: [id], onDelete: Cascade)
+
+  wornOn DateTime @map("worn_on") @db.Date
+
+  /// Where she wore it, when she says. Free text — this is a diary field, not
+  /// an input to the engine.
+  occasionNote String? @map("occasion_note")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  itemWears ClosetItemWear[]
+
+  @@unique([lookId, wornOn])
+  @@index([lookId, wornOn])
+  @@map("closet_look_wears")
+}
+
+/// A need, computed.
+///
+/// The row is the durable half of a suggestion. What it holds is the *reason*
+/// — the slot, the constraints, the priority and the arithmetic behind it —
+/// and never the products, because products go out of stock and change price
+/// while a reason stays true. Rendering a gap into cards happens at request
+/// time through the stylist's retrieval and ranker.
+///
+/// `fingerprint` is what makes recompute idempotent. Two of the five kinds
+/// carry a null `lookId` and three carry a null `occasion`, and Postgres treats
+/// nulls in a unique index as distinct — so a natural key over those columns
+/// would let every recompute insert a duplicate. The fingerprint is the same
+/// tuple, deterministically flattened to a string, which upserts cleanly.
+model ClosetGap {
+  id       String @id @default(uuid()) @db.Uuid
+  closetId String @map("closet_id") @db.Uuid
+  closet   Closet @relation(fields: [closetId], references: [id], onDelete: Cascade)
+
+  kind   ClosetGapKind
+  status ClosetGapStatus @default(OPEN)
+
+  /// Deterministic identity: `kind:slot:occasion:season:lookId`, empty
+  /// segments included. See `gapFingerprint` in `gap-engine.ts`.
+  fingerprint String
+
+  /// What is missing.
+  slot OutfitSlot
+
+  /// Lexicon occasion key, for OCCASION and LOOK_SLOT gaps.
+  occasion String?
+  season   ClosetSeason?
+
+  /// The look this gap belongs to, for LOOK_SLOT.
+  lookId String?     @map("look_id") @db.Uuid
+  look   ClosetLook? @relation(fields: [lookId], references: [id], onDelete: Cascade)
+
+  /// 0–100, deterministic. Stored beside `components` so any figure on the
+  /// screen can be taken apart back to the rows that produced it — the same
+  /// contract the trend scores keep.
+  priority   Float
+  components Json?
+
+  /// The constraints a filling piece should satisfy, computed from what she
+  /// already owns: colours that harmonise with the look or the closet's
+  /// palette, the size her other garments in this slot are, and the band she
+  /// actually buys in. These become a `StyleBrief`.
+  suggestedColours      String[] @map("suggested_colours")
+  suggestedSize         String?  @map("suggested_size")
+  suggestedBudgetMinSyp Decimal? @map("suggested_budget_min_syp") @db.Decimal(18, 4)
+  suggestedBudgetMaxSyp Decimal? @map("suggested_budget_max_syp") @db.Decimal(18, 4)
+
+  /// The piece that closed it, when one did.
+  filledByItemId String?     @map("filled_by_item_id") @db.Uuid
+  filledByItem   ClosetItem? @relation("ClosetGapFilledBy", fields: [filledByItemId], references: [id], onDelete: SetNull)
+  filledAt       DateTime?   @map("filled_at")
+
+  dismissedAt DateTime? @map("dismissed_at")
+
+  computedAt DateTime @default(now()) @map("computed_at")
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  @@unique([closetId, fingerprint])
+  @@index([closetId, status, priority])
+  @@index([lookId])
+  @@map("closet_gaps")
+}
+
+// ═══════════════════════════ Reem Value ═══════════════════════════
+//
+// Her standing on the platform, and the benefits it opens.
+//
+// This section replaces the tier half of the loyalty programme — `MembershipTier`
+// keyed on `lifetime_points`, and `LoyaltyReward` bought with points. It does
+// not replace `PointsTransaction` or `LoyaltyService`: those carry Q43's
+// «كل 10 نقاط = 5,000 ل.س رصيد», which is a ledger-backed monetary promise the
+// client specified verbatim. Points are now plainly what they always were —
+// cashback credit — and standing is a different thing entirely.
+//
+// ── Why this is not a points system with a new name ──────────────────────
+//
+// Five structural differences, each of which is enforced by a table below
+// rather than by intention:
+//
+//  1. **It is never spent.** No benefit decrements a score. `ValueBenefitGrant`
+//     has no amount column and no foreign key into any balance, because using
+//     early access is not a withdrawal. A currency that is not spent is not a
+//     currency; a standing that is spent is not a standing.
+//  2. **It is not linear in money.** `ValueEvent` carries a `pillar`, and the
+//     policy caps how much of the total COMMERCE may ever contribute. The top
+//     tier is deliberately **unreachable by spending alone** — see
+//     `ValuePolicy.commerceCeilingBps` and the assertion in `value-kernel.ts`.
+//  3. **It decays.** A contribution is discounted by its age on a half-life,
+//     so standing reflects the relationship as it is rather than as it once
+//     was. A points balance sits still forever; a relationship does not.
+//  4. **It is evidence-gated.** An event is written PENDING and only counts
+//     when its evidence matures — a review when other women found it helpful,
+//     a referral when the referred customer's own order was delivered and kept.
+//     Evidence that collapses reverses the event. This is the whole
+//     anti-manipulation design, and it lives in the status column.
+//  5. **It saturates.** Pillar scores are concave in contribution, so the
+//     fiftieth review is worth a fraction of the fifth. Volume cannot
+//     substitute for breadth.
+//
+// ── The layering, which mirrors the trend and COD engines ────────────────
+//
+//   1. EVENTS   — `ValueEvent`. One row per contribution, with its evidence and
+//                 a dedupe key. Append-only; status moves, weight never does.
+//   2. SCORE    — `ValueProfile` + `ValueSnapshot`. A pure kernel folds
+//                 confirmed events into six pillar scores and one standing,
+//                 storing the breakdown beside the total.
+//   3. TIER     — `ValueTier`. Admin rows, with hysteresis and a held-until
+//                 date so standing never yo-yos under her.
+//   4. BENEFIT  — `ValueBenefit` + `ValueBenefitGrant`. What standing opens,
+//                 with quotas and budgets so the programme's cost is bounded
+//                 before it is offered rather than discovered afterwards.
+//
+// No language model appears anywhere in this section.
+
+/// The dimensions standing is built from.
+///
+/// Six rather than one because the brief is "the quality of her relationship
+/// with Reem, not her spending" — and the only way to mean that structurally is
+/// to make spending one column among several, each scored on its own evidence.
+enum ValuePillar {
+  /// Purchases that stuck: delivered, past the return window, not sent back.
+  COMMERCE
+  /// Reviews and contributions other women actually found useful.
+  CRAFT
+  /// Posts, comments and answers that the community engaged with.
+  COMMUNITY
+  /// People she brought who became real customers.
+  ADVOCACY
+  /// Sellers and products she found early, that went on to do well.
+  DISCOVERY
+  /// How she behaves at the door and in disputes. The one pillar that can
+  /// subtract.
+  RELIABILITY
+}
+
+/// The life of one contribution.
+///
+/// The status column is the anti-manipulation design. Nothing counts the moment
+/// it happens; it counts when the evidence for it matures, and it stops
+/// counting if that evidence collapses.
+enum ValueEventStatus {
+  /// Recorded, not yet counted. Waiting on evidence.
+  PENDING
+  /// Evidence matured. Counts toward standing, subject to decay.
+  CONFIRMED
+  /// The evidence collapsed — the review was removed, the order came back, the
+  /// referral was flagged. Kept as a row, worth nothing.
+  REVERSED
+  /// Old enough that decay has made it irrelevant. Retired by the sweeper so
+  /// the scoring read stays bounded.
+  EXPIRED
+}
+
+/// What standing opens. Every one of these is a real benefit rather than a
+/// discount: a discount is what a coupon is for, and confusing the two is how a
+/// status programme becomes a sale.
+enum ValueBenefitKind {
+  /// She sees a drop before it opens to everyone.
+  EARLY_ACCESS
+  /// A product only offered at her standing.
+  EXCLUSIVE_PRODUCT
+  /// Her support tickets are worked first.
+  PRIORITY_SUPPORT
+  /// Her parcels are prioritised for dispatch.
+  PRIORITY_DELIVERY
+  /// A longer return window, or free return shipping.
+  ENHANCED_RETURNS
+  /// Something sent to her, costing her nothing.
+  GIFT
+  /// An offer built from her own taste — see `ValueBenefit.config`.
+  PERSONALISED_OFFER
+}
+
+enum ValueGrantStatus {
+  /// Available to her now.
+  OFFERED
+  /// She has taken it up; it is running.
+  ACTIVE
+  /// Consumed.
+  USED
+  /// Its window closed before she used it.
+  EXPIRED
+  /// Withdrawn by an administrator, with a reason.
+  REVOKED
+}
+
+/// A rung of standing.
+///
+/// Rows rather than an enum so the ladder can be reshaped — renamed, retuned,
+/// extended — without a migration, and so an administrator can see what a
+/// change would cost before shipping it.
+model ValueTier {
+  id     String @id @default(uuid()) @db.Uuid
+  key    String @unique
+  name   String
+  nameAr String @map("name_ar")
+
+  /// 0–1000. The standing at which this rung is reached.
+  minScore Int @map("min_score")
+
+  /// Display order, low to high. Kept apart from `minScore` so two rungs can
+  /// share a threshold during a migration between ladders.
+  rank Int
+
+  /// How far below `minScore` she may fall before demotion is even considered.
+  /// Hysteresis, in points — without it a score oscillating around a threshold
+  /// promotes and demotes her every night.
+  demotionBufferScore Int @default(40) @map("demotion_buffer_score")
+
+  /// Once reached, held for at least this long whatever the score does. A
+  /// standing that can be lost in a week was never a standing.
+  holdDays Int @default(90) @map("hold_days")
+
+  /// Free-form presentation: colour, icon, the sentence shown on the card.
+  presentation Json?
+
+  isActive  Boolean  @default(true) @map("is_active")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  profiles ValueProfile[]
+  benefits ValueBenefit[]
+
+  @@index([isActive, rank])
+  @@map("value_tiers")
+}
+
+/// Every tunable the engine has, as a row.
+///
+/// Versioned rather than edited in place, and only one is active. Two reasons,
+/// both learned from the COD engine: a score is only meaningful next to the
+/// policy that produced it, and an administrator changing weights needs to be
+/// able to simulate the change against the live population before it lands on
+/// anyone's profile.
+model ValuePolicy {
+  id      String @id @default(uuid()) @db.Uuid
+  version Int    @unique
+
+  /// Exactly one row is true. Enforced in `ValuePolicyService.activate`.
+  isActive Boolean @default(false) @map("is_active")
+
+  /// Pillar weights, keyed by `ValuePillar`. Relative, normalised at read time,
+  /// so an administrator can raise one without recomputing the rest.
+  pillarWeights Json @map("pillar_weights")
+
+  /// How much contribution saturates each pillar, keyed by pillar. Higher means
+  /// a pillar is harder to fill. This is what makes the fiftieth review worth
+  /// less than the fifth.
+  pillarScales Json @map("pillar_scales")
+
+  /// Per-event weights, keyed by event code (`review_helpful`, `referral_kept`,
+  /// …). The whole earning table, in one editable place.
+  eventWeights Json @map("event_weights")
+
+  /// The most any one pillar may accrue from a single day's events, keyed by
+  /// pillar. The blunt anti-farming instrument: a woman cannot write forty
+  /// reviews on a Tuesday and arrive at the top.
+  dailyPillarCaps Json @map("daily_pillar_caps")
+
+  /// Days for a contribution to lose half its weight.
+  halfLifeDays Int @default(365) @map("half_life_days")
+
+  /// Beyond this, a contribution is retired entirely.
+  horizonDays Int @default(1095) @map("horizon_days")
+
+  /// **The economic guarantee.** The most, in basis points of the final score,
+  /// that COMMERCE may ever contribute. At 3500 a woman who buys everything and
+  /// contributes nothing else tops out at 350/1000 — below the upper rungs by
+  /// construction. This is the column that makes "not just spending" a property
+  /// of the system rather than a claim about it.
+  commerceCeilingBps Int @default(3500) @map("commerce_ceiling_bps")
+
+  /// Where RELIABILITY sits for someone with no history. The only pillar with a
+  /// non-zero starting point, because the absence of trouble is not evidence of
+  /// trouble.
+  reliabilityBaseline Int @default(70) @map("reliability_baseline")
+
+  /// Minimum confirmed events in a pillar before it scores at all. Below this
+  /// the pillar reads as "not enough evidence" rather than as a low score —
+  /// the same distinction the COD kernel draws.
+  minEvidencePerPillar Int @default(2) @map("min_evidence_per_pillar")
+
+  note        String?
+  createdById String?   @map("created_by_id") @db.Uuid
+  createdAt   DateTime  @default(now()) @map("created_at")
+  activatedAt DateTime? @map("activated_at")
+
+  profiles ValueProfile[]
+
+  @@index([isActive])
+  @@map("value_policies")
+}
+
+/// Her standing, in one row.
+///
+/// A cache of the kernel's output rather than a source of truth: every number
+/// here is recomputable from `ValueEvent` and the active policy, which is what
+/// makes a policy change safe to simulate and safe to apply. The row exists
+/// because a home screen cannot fold three years of events on every open.
+model ValueProfile {
+  id     String @id @default(uuid()) @db.Uuid
+  userId String @unique @map("user_id") @db.Uuid
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  /// 0–1000.
+  score Int @default(0)
+
+  /// The six pillar scores, 0–100 each, keyed by `ValuePillar`, beside the raw
+  /// decayed contribution and the evidence count that produced each. Stored so
+  /// any figure she is shown can be taken apart back to the events behind it.
+  pillars Json
+
+  tierId String?    @map("tier_id") @db.Uuid
+  tier   ValueTier? @relation(fields: [tierId], references: [id], onDelete: SetNull)
+
+  /// Snapshotted so her card still renders if a tier row is retired mid-ladder.
+  tierKey  String? @map("tier_key")
+  tierName String? @map("tier_name")
+
+  tierAchievedAt DateTime? @map("tier_achieved_at")
+
+  /// Demotion is not even considered before this. See `ValueTier.holdDays`.
+  tierHeldUntil DateTime? @map("tier_held_until")
+
+  /// The highest she has ever stood. Never decays, never falls — a relationship
+  /// that dipped is not a relationship that never happened, and the card says
+  /// so.
+  peakScore      Int       @default(0) @map("peak_score")
+  peakAchievedAt DateTime? @map("peak_achieved_at")
+
+  /// Score minus the score thirty days ago, from `ValueSnapshot`. What turns a
+  /// number into a relationship she can feel moving.
+  momentum Int @default(0)
+
+  /// Which policy produced the numbers above.
+  policyId String?      @map("policy_id") @db.Uuid
+  policy   ValuePolicy? @relation(fields: [policyId], references: [id], onDelete: SetNull)
+
+  computedAt DateTime @default(now()) @map("computed_at")
+
+  /// Set by an administrator to freeze a profile under investigation. Standing
+  /// stops moving and benefits stop being granted; nothing is deleted.
+  frozenAt     DateTime? @map("frozen_at")
+  frozenReason String?   @map("frozen_reason")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  events    ValueEvent[]
+  snapshots ValueSnapshot[]
+  grants    ValueBenefitGrant[]
+
+  @@index([tierId, score])
+  @@index([score])
+  @@map("value_profiles")
+}
+
+/// One contribution.
+///
+/// Append-only. `weight` is stamped from the policy at write time and never
+/// changes afterwards — a woman who earned twelve for a helpful review keeps
+/// twelve when the weight is retuned, because retroactively repricing what
+/// somebody already did is the fastest way to make a standing feel arbitrary.
+/// A policy change moves future events; the past is the past.
+model ValueEvent {
+  id        String       @id @default(uuid()) @db.Uuid
+  profileId String       @map("profile_id") @db.Uuid
+  profile   ValueProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  userId String @map("user_id") @db.Uuid
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  pillar ValuePillar
+  /// The earning rule that fired, e.g. `review_helpful`, `referral_kept`,
+  /// `early_discovery`, `parcel_refused`. The key into `ValuePolicy.eventWeights`.
+  code   String
+
+  status ValueEventStatus @default(PENDING)
+
+  /// Signed. Negative only in RELIABILITY, where turning a courier away is a
+  /// real fact about the relationship.
+  weight Int
+
+  /// **The idempotency key, and the anti-double-count guarantee.** Shaped
+  /// `code:subjectId`, e.g. `review_helpful:<reviewId>`. Unique per user, so a
+  /// replayed webhook, a re-run sweeper and a second click all collapse onto one
+  /// row.
+  dedupeKey String @map("dedupe_key")
+
+  /// What this is about — a review id, an order id, a product id. Kept loose
+  /// because the subjects span six modules and a foreign key per pillar would
+  /// be six nullable columns nothing joins on.
+  subjectType String? @map("subject_type")
+  subjectId   String? @map("subject_id") @db.Uuid
+
+  /// The counts behind it, frozen: `{ helpful_count: 7, verified: true }`.
+  /// This is what a support agent reads when she is asked why something did or
+  /// did not count.
+  evidence Json?
+
+  /// When the contribution happened — which is what decay is measured from, not
+  /// when the row was written. A referral confirmed three months later still
+  /// dates from the day she made it.
+  occurredAt DateTime @map("occurred_at")
+
+  confirmedAt    DateTime? @map("confirmed_at")
+  reversedAt     DateTime? @map("reversed_at")
+  reversedReason String?   @map("reversed_reason")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@unique([userId, dedupeKey])
+  // The scoring read: one woman's confirmed events, newest first.
+  @@index([profileId, status, occurredAt])
+  // The maturity sweep: everything waiting on evidence.
+  @@index([status, code, occurredAt])
+  // Reversal by subject, when a review is deleted or an order comes back.
+  @@index([subjectType, subjectId])
+  @@map("value_events")
+}
+
+/// Her standing on one day.
+///
+/// Written by the nightly recompute, and the only source of `momentum`. Kept
+/// separate from the profile because a chart of the last year is a different
+/// read from "what is she now", and folding one into the other would make the
+/// common read carry the rare one.
+model ValueSnapshot {
+  id        String       @id @default(uuid()) @db.Uuid
+  profileId String       @map("profile_id") @db.Uuid
+  profile   ValueProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  /// Date, not timestamp: one row per profile per day.
+  capturedOn DateTime @map("captured_on") @db.Date
+
+  score   Int
+  pillars Json
+  tierKey String? @map("tier_key")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@unique([profileId, capturedOn])
+  @@index([profileId, capturedOn])
+  @@map("value_snapshots")
+}
+
+/// Something standing opens.
+///
+/// The economics live here. `totalBudget` and `perUserQuota` mean the cost of a
+/// benefit is decided when it is written rather than discovered when the
+/// invoice arrives — which is the difference between a programme and a leak.
+model ValueBenefit {
+  id            String           @id @default(uuid()) @db.Uuid
+  key           String           @unique
+  kind          ValueBenefitKind
+  title         String
+  titleAr       String           @map("title_ar")
+  description   String?
+  descriptionAr String?          @map("description_ar")
+
+  /// The rung this opens at. Null means every standing, including none — used
+  /// for the benefit that introduces the programme.
+  minTierId String?    @map("min_tier_id") @db.Uuid
+  minTier   ValueTier? @relation(fields: [minTierId], references: [id], onDelete: SetNull)
+
+  /// Kind-specific: `{ "product_ids": [...] }` for EXCLUSIVE_PRODUCT,
+  /// `{ "hours": 48 }` for EARLY_ACCESS, `{ "extra_days": 7 }` for
+  /// ENHANCED_RETURNS. Validated per kind in `value-benefit.service.ts`.
+  config Json?
+
+  /// How many times one woman may hold this within `quotaPeriodDays`. Null is
+  /// unlimited — appropriate for a standing benefit like priority support,
+  /// which costs nothing per use.
+  perUserQuota    Int? @map("per_user_quota")
+  quotaPeriodDays Int? @map("quota_period_days")
+
+  /// Total grants this benefit may ever issue. Null is unlimited. The one
+  /// number that bounds a gift campaign.
+  totalBudget  Int? @map("total_budget")
+  /// Maintained in the same transaction as the grant it counts.
+  grantedCount Int  @default(0) @map("granted_count")
+
+  /// What one grant is expected to cost, in SYP, for the projected-cost report.
+  /// Zero for benefits that cost nothing to give — priority in a queue is free.
+  unitCostSyp Decimal @default(0) @map("unit_cost_syp") @db.Decimal(18, 4)
+
+  /// How long a grant stays usable once offered.
+  grantTtlDays Int? @map("grant_ttl_days")
+
+  isActive Boolean   @default(true) @map("is_active")
+  startsAt DateTime  @default(now()) @map("starts_at")
+  endsAt   DateTime? @map("ends_at")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  grants ValueBenefitGrant[]
+
+  @@index([isActive, kind])
+  @@index([minTierId, isActive])
+  @@map("value_benefits")
+}
+
+/// One woman holding one benefit.
+///
+/// Note what this table does **not** have: a cost, a price, a balance, or any
+/// reference to a score. Taking up a benefit does not reduce her standing,
+/// because standing is not a currency. If a later change adds a column here
+/// that decrements `ValueProfile.score`, the programme has quietly become a
+/// points system and this comment is the place that said so first.
+model ValueBenefitGrant {
+  id        String       @id @default(uuid()) @db.Uuid
+  profileId String       @map("profile_id") @db.Uuid
+  profile   ValueProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  userId String @map("user_id") @db.Uuid
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  benefitId String       @map("benefit_id") @db.Uuid
+  benefit   ValueBenefit @relation(fields: [benefitId], references: [id], onDelete: Cascade)
+
+  status ValueGrantStatus @default(OFFERED)
+
+  /// The standing she held when it was granted, frozen. A benefit earned at
+  /// Gold is not withdrawn because she slipped to Silver in March — the grant
+  /// records what was true when it was given.
+  tierKeyAtGrant String? @map("tier_key_at_grant")
+  scoreAtGrant   Int?    @map("score_at_grant")
+
+  /// Idempotency for automatic grants: `benefitKey:period` for a recurring one,
+  /// `benefitKey:subjectId` for an event-driven one.
+  dedupeKey String @map("dedupe_key")
+
+  /// Where it was used — an order, a ticket, a claim.
+  usedOnType String?   @map("used_on_type")
+  usedOnId   String?   @map("used_on_id") @db.Uuid
+  usedAt     DateTime? @map("used_at")
+
+  expiresAt DateTime? @map("expires_at")
+
+  revokedAt     DateTime? @map("revoked_at")
+  revokedReason String?   @map("revoked_reason")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@unique([userId, dedupeKey])
+  @@index([profileId, status])
+  @@index([benefitId, status])
+  @@index([status, expiresAt])
+  @@map("value_benefit_grants")
+}
+
+// ═══════════════════════════ Reem Rooms ═══════════════════════════
+//
+// Buying, as a decision rather than a list.
+//
+// A cart answers one question — "what am I taking?" — and answers it as a flat
+// list of lines, each a quantity of a thing. It has no room for the questions a
+// woman actually has on the way there: *which* of these three, does it go with
+// the shoes, what does my sister think, can I afford both, and is this for me
+// at all.
+//
+// A Room is that middle. The shape of the tables below is one claim repeated:
+// **the unit of shopping is a decision, not a line.**
+//
+//   Intent   → `Room`. Why she is shopping: a wedding, a gift, a season, an
+//              afternoon with her sister. Durable, named, and the root of
+//              everything under it.
+//   Decision → `RoomDecision`. One question inside that intent — "the dress",
+//              "something for mama" — with the number of pieces it resolves to.
+//              This is the object a cart does not have and cannot represent.
+//   Candidate→ `RoomCandidate`. An offer *proposed* for a decision. Several per
+//              decision is the normal case; that is the whole point.
+//   Voice    → `RoomVote`, `RoomComment`, `RoomMember`. Other people, with
+//              roles that separate having an opinion from having a wallet.
+//   Purchase → `PurchasePlan`. What the resolved decisions come to, in stages,
+//              against a budget — and only then an order.
+//
+// ── What deliberately did not happen ─────────────────────────────────────
+//
+// `CartItem` is not dropped and Reem Rooms does not write to it. A plan reaches
+// `CheckoutService` with its own lines, so the cart is not a hidden staging
+// buffer that a room secretly fills — it is simply a different, older door into
+// the same checkout, still there for a one-tap purchase that needs no
+// deliberation at all. Two doors, one till.
+//
+// ── Money is not stored here ─────────────────────────────────────────────
+//
+// No table below carries a price. Prices, stock and availability belong to
+// `SellerOffer` and move; a plan that froze them would show a woman a total
+// that quietly stopped being true. Totals are computed when read and frozen
+// exactly once, by checkout, onto the order — which is where this codebase
+// already freezes an FX rate for the same reason.
+
+/// What a room is for. Drives which questions the room asks and which
+/// behaviours it turns on — a gift room hides its contents from its recipient,
+/// a group room has voting, a solo room has neither.
+enum RoomKind {
+  /// Her own deliberation. No members, no votes — but still decisions.
+  SOLO
+  /// Shopping with people. Votes and comments are the point.
+  GROUP
+  /// For somebody else. Carries a recipient, and may be a surprise.
+  GIFT
+  /// Anchored to an occasion in the stylist's lexicon, which seeds its
+  /// decisions from the slots that occasion implies.
+  OCCASION
+}
+
+enum RoomStatus {
+  /// Gathering candidates. Most rooms live here longest.
+  PLANNING
+  /// Candidates are in; the room is choosing between them.
+  DECIDING
+  /// Every decision that had to resolve has resolved. A plan can be drawn.
+  READY
+  /// A plan from this room became an order.
+  PURCHASED
+  ARCHIVED
+}
+
+/// Who somebody is inside a room.
+///
+/// The split that matters is `ADVISOR` against `CO_SHOPPER`: an opinion and a
+/// wallet are different things, and a room where anybody invited can change what
+/// gets bought is a room nobody will invite their sister to.
+enum RoomMemberRole {
+  /// Created it. The only role that can delete it or place the order.
+  OWNER
+  /// Adds candidates, resolves decisions, edits the plan.
+  CO_SHOPPER
+  /// Votes and comments. Cannot change what is chosen.
+  ADVISOR
+  /// Reads. Used for a shared link that should not become participation.
+  VIEWER
+}
+
+enum RoomMemberStatus {
+  INVITED
+  ACTIVE
+  DECLINED
+  REMOVED
+}
+
+/// One question the room has to answer.
+enum RoomDecisionStatus {
+  /// Still collecting or still arguing.
+  OPEN
+  /// A candidate has been chosen.
+  RESOLVED
+  /// Decided against buying anything for this at all — a real outcome, and one
+  /// a cart cannot record.
+  SKIPPED
+}
+
+/// Where a candidate stands in the argument.
+enum RoomCandidateStatus {
+  /// Proposed.
+  CANDIDATE
+  /// Survived the first cut.
+  SHORTLISTED
+  /// The answer to its decision.
+  CHOSEN
+  /// Ruled out, with the reason kept.
+  REJECTED
+}
+
+enum PurchasePlanStatus {
+  /// Drawn from the room, still editable.
+  DRAFT
+  /// Locked for buying.
+  CONFIRMED
+  /// An order was placed from it.
+  ORDERED
+  CANCELLED
+}
+
+/// When a plan line is meant to be bought.
+///
+/// The reason a plan is not a basket: "the dress now, the shoes next month" is
+/// an ordinary way to buy an expensive outfit, and a cart forces it to be two
+/// unrelated visits with nothing remembering that they were one plan.
+enum PurchaseStage {
+  NOW
+  LATER
+}
+
+/// What happened in a room. A closed vocabulary so the timeline can be rendered
+/// in Arabic from a code rather than from stored prose.
+enum RoomEventKind {
+  ROOM_CREATED
+  MEMBER_JOINED
+  MEMBER_INVITED
+  DECISION_ADDED
+  CANDIDATE_ADDED
+  CANDIDATE_REMOVED
+  VOTE_CAST
+  COMMENT_ADDED
+  DECISION_RESOLVED
+  DECISION_SKIPPED
+  PLAN_DRAWN
+  PLAN_ORDERED
+}
+
+/// A shopping intent, made durable.
+model Room {
+  id      String @id @default(uuid()) @db.Uuid
+  ownerId String @map("owner_id") @db.Uuid
+  owner   User   @relation("RoomOwner", fields: [ownerId], references: [id], onDelete: Cascade)
+
+  kind   RoomKind   @default(SOLO)
+  status RoomStatus @default(PLANNING)
+
+  title String
+  note  String?
+
+  /// Lexicon occasion key (`wedding`, `eid`, …) — the same closed vocabulary
+  /// the stylist and the closet reason in, so a room can seed its decisions
+  /// from what that occasion actually needs.
+  occasion String?
+
+  /// Her deadline. Drives the room's urgency and, later, whether a seller's
+  /// handling time can meet it.
+  targetDate DateTime? @map("target_date")
+
+  /// The band the room is trying to stay inside, normalised to SYP like
+  /// `products.min_price_syp` so a plan total compares without an FX lookup.
+  budgetMinSyp Decimal? @map("budget_min_syp") @db.Decimal(18, 4)
+  budgetMaxSyp Decimal? @map("budget_max_syp") @db.Decimal(18, 4)
+
+  // ── Gift ──────────────────────────────────────────────────────────────
+  /// Who it is for, when it is not for her.
+  recipientName String? @map("recipient_name")
+  recipientNote String? @map("recipient_note")
+
+  /// A recipient who must not see it. Enforced in `RoomAccessService`: a
+  /// surprise room refuses to admit the person it is about, which is the one
+  /// access rule that cannot be left to the client.
+  recipientUserId String? @map("recipient_user_id") @db.Uuid
+  recipientUser   User?   @relation("RoomRecipient", fields: [recipientUserId], references: [id], onDelete: SetNull)
+  isSurprise      Boolean @default(false) @map("is_surprise")
+
+  /// Cover image, snapshotted from the first candidate when she sets none.
+  coverUrl String? @map("cover_url")
+
+  // ── Sharing ───────────────────────────────────────────────────────────
+  /// Null until she shares. Rotating it revokes every link that was handed out,
+  /// which is the only revocation a link-shared room can honestly offer.
+  shareSlug String? @unique @map("share_slug")
+
+  /// What a person following the link becomes. Never OWNER or CO_SHOPPER —
+  /// see `RoomAccessService.joinByLink`. A link is an invitation to have an
+  /// opinion, not to spend somebody else's money.
+  shareRole RoomMemberRole @default(ADVISOR) @map("share_role")
+
+  // Roll-ups, maintained in the same transaction as the rows they count.
+  decisionsCount  Int @default(0) @map("decisions_count")
+  candidatesCount Int @default(0) @map("candidates_count")
+  membersCount    Int @default(1) @map("members_count")
+
+  lastActivityAt DateTime @default(now()) @map("last_activity_at")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  members   RoomMember[]
+  decisions RoomDecision[]
+  comments  RoomComment[]
+  events    RoomEvent[]
+  plans     PurchasePlan[]
+
+  @@index([ownerId, status, lastActivityAt])
+  @@index([status, targetDate])
+  @@map("rooms")
+}
+
+/// Somebody in a room.
+model RoomMember {
+  id     String @id @default(uuid()) @db.Uuid
+  roomId String @map("room_id") @db.Uuid
+  room   Room   @relation(fields: [roomId], references: [id], onDelete: Cascade)
+
+  userId String @map("user_id") @db.Uuid
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  role   RoomMemberRole   @default(ADVISOR)
+  status RoomMemberStatus @default(ACTIVE)
+
+  invitedById String? @map("invited_by_id") @db.Uuid
+
+  /// Snapshotted so a timeline still reads correctly after somebody leaves.
+  displayName String? @map("display_name")
+
+  joinedAt   DateTime  @default(now()) @map("joined_at")
+  lastSeenAt DateTime? @map("last_seen_at")
+
+  votes    RoomVote[]
+  comments RoomComment[]
+
+  @@unique([roomId, userId])
+  @@index([roomId, status])
+  @@index([userId, status])
+  @@map("room_members")
+}
+
+/// One question the room has to answer.
+///
+/// The object that makes this not a cart. `pickCount` is the heart of it: a
+/// decision resolves when that many candidates are CHOSEN, so "one dress" and
+/// "two pairs of earrings" are the same structure with a different number,
+/// where a cart can only express the second as two unrelated lines and the
+/// first as a line she has to remember to delete the alternatives of.
+model RoomDecision {
+  id     String @id @default(uuid()) @db.Uuid
+  roomId String @map("room_id") @db.Uuid
+  room   Room   @relation(fields: [roomId], references: [id], onDelete: Cascade)
+
+  /// "الفستان", "هدية لماما". Her words, not a category.
+  title String
+  note  String?
+
+  /// The stylist's slot, when the decision is about a garment. Optional
+  /// because a decision may be about anything — but when it is set, the room
+  /// can ask the stylist and the closet for candidates.
+  slot OutfitSlot?
+
+  status RoomDecisionStatus @default(OPEN)
+
+  /// How many candidates this decision resolves to. One, normally.
+  pickCount Int @default(1) @map("pick_count")
+
+  /// Ordering inside the room, so she can put the dress before the shoes.
+  position Int @default(0)
+
+  /// Set when the room seeded this decision from an occasion's slot list
+  /// rather than from her typing it. Kept so a seeded decision she never
+  /// engaged with can be quietly dropped rather than blocking readiness.
+  isSuggested Boolean @default(false) @map("is_suggested")
+
+  /// A decision can be marked optional — "a bag would be nice". Readiness
+  /// ignores these, which is what stops a room being held hostage by a nice-to-have.
+  isRequired Boolean @default(true) @map("is_required")
+
+  resolvedAt DateTime? @map("resolved_at")
+  skippedAt  DateTime? @map("skipped_at")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  candidates RoomCandidate[]
+  comments   RoomComment[]
+  planItems  PurchasePlanItem[]
+
+  @@index([roomId, status, position])
+  @@map("room_decisions")
+}
+
+/// An offer proposed as an answer.
+///
+/// Points at a `SellerOffer` rather than a `Product`, for the same reason the
+/// cart does: price, stock, currency and fulfilment terms all belong to one
+/// seller's listing, and a decision between "this dress from Rahaf" and "the
+/// same dress from Sara" is a real decision a room has to be able to hold.
+model RoomCandidate {
+  id         String       @id @default(uuid()) @db.Uuid
+  decisionId String       @map("decision_id") @db.Uuid
+  decision   RoomDecision @relation(fields: [decisionId], references: [id], onDelete: Cascade)
+
+  offerId String      @map("offer_id") @db.Uuid
+  offer   SellerOffer @relation(fields: [offerId], references: [id], onDelete: Cascade)
+
+  offerVariantId String?             @map("offer_variant_id") @db.Uuid
+  offerVariant   SellerOfferVariant? @relation(fields: [offerVariantId], references: [id], onDelete: SetNull)
+
+  /// Denormalised from the offer so a room can be listed and filtered by
+  /// product without a join through offers on every card.
+  productId String  @map("product_id") @db.Uuid
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  status RoomCandidateStatus @default(CANDIDATE)
+
+  quantity Int @default(1)
+  position Int @default(0)
+
+  addedById String? @map("added_by_id") @db.Uuid
+  addedBy   User?   @relation("RoomCandidateAuthor", fields: [addedById], references: [id], onDelete: SetNull)
+
+  /// Why she put it forward, and — on rejection — why it lost. The argument,
+  /// kept: a room that forgets why it ruled something out invites the same
+  /// suggestion again next week.
+  note          String?
+  rejectionNote String? @map("rejection_note")
+
+  /// Maintained with `RoomVote` in one transaction — the column answers "what
+  /// is the tally", the rows answer "who said so".
+  voteScore Int @default(0) @map("vote_score")
+  votesUp   Int @default(0) @map("votes_up")
+  votesDown Int @default(0) @map("votes_down")
+
+  chosenAt   DateTime? @map("chosen_at")
+  rejectedAt DateTime? @map("rejected_at")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  votes     RoomVote[]
+  comments  RoomComment[]
+  planItems PurchasePlanItem[]
+
+  /// One candidacy per offer-variant per decision. Proposing the same piece
+  /// twice is enthusiasm, not a second option.
+  @@unique([decisionId, offerId, offerVariantId])
+  @@index([decisionId, status, position])
+  @@index([productId])
+  @@map("room_candidates")
+}
+
+/// One person's opinion of one candidate.
+///
+/// Signed rather than a like: "I don't think so" is half of what a person
+/// invited to help actually wants to say, and a system that can only record
+/// approval turns a consultation into applause.
+model RoomVote {
+  id          String        @id @default(uuid()) @db.Uuid
+  candidateId String        @map("candidate_id") @db.Uuid
+  candidate   RoomCandidate @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+
+  memberId String     @map("member_id") @db.Uuid
+  member   RoomMember @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+  /// +1 or −1. Constrained in `RoomCollaborationService`, not by the column,
+  /// so a later "strongly prefer" can widen it without a migration.
+  value Int
+
+  note String?
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  /// One vote per person per candidate. Changing your mind updates it.
+  @@unique([candidateId, memberId])
+  @@index([memberId])
+  @@map("room_votes")
+}
+
+/// Something somebody said.
+///
+/// Attaches to a candidate *or* a decision, and the difference is real: "this
+/// one is too short" is about a dress, "should we even get a bag?" is about the
+/// question. Exactly one of the two is set.
+model RoomComment {
+  id     String @id @default(uuid()) @db.Uuid
+  roomId String @map("room_id") @db.Uuid
+  room   Room   @relation(fields: [roomId], references: [id], onDelete: Cascade)
+
+  memberId String     @map("member_id") @db.Uuid
+  member   RoomMember @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+  decisionId String?       @map("decision_id") @db.Uuid
+  decision   RoomDecision? @relation(fields: [decisionId], references: [id], onDelete: Cascade)
+
+  candidateId String?        @map("candidate_id") @db.Uuid
+  candidate   RoomCandidate? @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+
+  body String
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([roomId, createdAt])
+  @@index([candidateId, createdAt])
+  @@index([decisionId, createdAt])
+  @@map("room_comments")
+}
+
+/// The room's timeline.
+///
+/// Append-only, and rendered from `kind` plus `payload` rather than from stored
+/// sentences — so the same event reads correctly in Arabic today and in a
+/// second language later without a backfill.
+model RoomEvent {
+  id     String @id @default(uuid()) @db.Uuid
+  roomId String @map("room_id") @db.Uuid
+  room   Room   @relation(fields: [roomId], references: [id], onDelete: Cascade)
+
+  kind RoomEventKind
+
+  /// Who did it. Nullable because the room itself acts sometimes — seeding
+  /// decisions from an occasion, drawing a plan on a schedule.
+  actorId String? @map("actor_id") @db.Uuid
+  actor   User?   @relation("RoomEventActor", fields: [actorId], references: [id], onDelete: SetNull)
+
+  /// `{ "title": "الفستان", "product": "…" }` — whatever the sentence needs.
+  payload Json?
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([roomId, createdAt])
+  @@map("room_events")
+}
+
+/// What the room decided, as something buyable.
+///
+/// Deliberately **not** a snapshot of money. No total is stored: prices and
+/// stock move, and a plan that remembered last week's total would show a woman
+/// a number that had quietly stopped being true. What is durable here is the
+/// *decision* — these offers, these quantities, in these stages — and every
+/// figure is computed when read, then frozen exactly once by checkout onto the
+/// order, which is where this codebase already freezes an FX rate for the same
+/// reason.
+model PurchasePlan {
+  id     String @id @default(uuid()) @db.Uuid
+  roomId String @map("room_id") @db.Uuid
+  room   Room   @relation(fields: [roomId], references: [id], onDelete: Cascade)
+
+  /// Who will pay. The owner, normally — but a gift room may be drawn up by
+  /// one person and paid by another, and this is the column that allows it.
+  buyerId String @map("buyer_id") @db.Uuid
+  buyer   User   @relation("PlanBuyer", fields: [buyerId], references: [id], onDelete: Cascade)
+
+  status PurchasePlanStatus @default(DRAFT)
+
+  /// A plan may be drawn more than once as a room changes; only one is live.
+  version Int @default(1)
+
+  note String?
+
+  /// The order the `NOW` stage became, when it did. `SetNull` rather than
+  /// cascade: deleting an order must not erase the plan that reasoned about it.
+  orderId String? @map("order_id") @db.Uuid
+  order   Order?  @relation(fields: [orderId], references: [id], onDelete: SetNull)
+
+  confirmedAt DateTime? @map("confirmed_at")
+  orderedAt   DateTime? @map("ordered_at")
+  cancelledAt DateTime? @map("cancelled_at")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  items PurchasePlanItem[]
+
+  @@index([roomId, status])
+  @@index([buyerId, status])
+  @@map("purchase_plans")
+}
+
+/// One line of a plan.
+model PurchasePlanItem {
+  id     String       @id @default(uuid()) @db.Uuid
+  planId String       @map("plan_id") @db.Uuid
+  plan   PurchasePlan @relation(fields: [planId], references: [id], onDelete: Cascade)
+
+  /// Which question this line answers, and which candidate won it. Both kept:
+  /// the plan is the record of a decision, and a line that could not say what
+  /// it was decided *for* would be a cart line again.
+  decisionId String?       @map("decision_id") @db.Uuid
+  decision   RoomDecision? @relation(fields: [decisionId], references: [id], onDelete: SetNull)
+
+  candidateId String?        @map("candidate_id") @db.Uuid
+  candidate   RoomCandidate? @relation(fields: [candidateId], references: [id], onDelete: SetNull)
+
+  /// What is actually bought. Held directly rather than only through the
+  /// candidate, so a plan survives the room being tidied afterwards.
+  offerId String      @map("offer_id") @db.Uuid
+  offer   SellerOffer @relation(fields: [offerId], references: [id], onDelete: Restrict)
+
+  offerVariantId String?             @map("offer_variant_id") @db.Uuid
+  offerVariant   SellerOfferVariant? @relation(fields: [offerVariantId], references: [id], onDelete: SetNull)
+
+  quantity Int           @default(1)
+  stage    PurchaseStage @default(NOW)
+  position Int           @default(0)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@unique([planId, offerId, offerVariantId])
+  @@index([planId, stage, position])
+  @@map("purchase_plan_items")
+}
+
+// ═════════════════════════ Reem Seller Intelligence ═══════════════════════
+//
+// Phase two of the commerce OS: turning the seller's console from a set of
+// tables she reads into a system that tells her what to do next.
+//
+// ── Why there are only two tables here ───────────────────────────────────
+//
+// Because the facts already exist. `ProductDemandDaily`, `SellerDemandDaily`,
+// `CategoryDemandDaily`, `SearchTermDaily` and `UnmetDemandSignal` were built
+// for the Trend Engine and already carry every signal this phase needs —
+// searches, impressions, views, favourites, cart adds, orders, returns, stock
+// and price, rolled up per day. A second demand pipeline would not be more
+// intelligence, it would be a second set of numbers to disagree with the
+// first in front of a seller.
+//
+// So **Demand Radar has no table at all**: it is a read model over what the
+// trend engine already computes, scoped to one seller and answering her
+// question rather than the platform's. The two tables below exist only where
+// something genuinely new is computed and has to be auditable afterwards.
+//
+// ── Why these two are snapshots, not columns ─────────────────────────────
+//
+// A score that is only ever overwritten cannot answer "was I better last
+// month, and what changed" — which is the single most useful question a
+// seller asks of her own health. Both tables keep one row per subject per day
+// and every component that produced the number, so any score on either screen
+// can be taken apart into the arithmetic behind it. Same instinct as
+// `ValueSnapshot`: the score is a cache, the components are the evidence.
+
+/// One day's health for one product.
+model ProductHealthSnapshot {
+  id        String  @id @default(uuid()) @db.Uuid
+  productId String  @map("product_id") @db.Uuid
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  /// Whose console this was computed for.
+  ///
+  /// A product can carry offers from several sellers, and "how is my listing
+  /// doing" is a different question for each of them — her price, her stock
+  /// and her conversion, against the same shared catalogue entry. Scoping the
+  /// snapshot to a seller is what stops one seller's neglect showing up on
+  /// another's dashboard.
+  sellerId String @map("seller_id") @db.Uuid
+  seller   User   @relation("SellerProductHealth", fields: [sellerId], references: [id], onDelete: Cascade)
+
+  day DateTime @db.Date
+
+  /// 0-100. The weighted roll-up of `components`.
+  score Float @default(0)
+
+  /// The six axes, each 0-100, as `{key, score, weight, evidence}`. Kept whole
+  /// rather than as columns because the set is expected to grow and a widened
+  /// table would rewrite every historic row.
+  components Json
+
+  /// How much of the score to believe: a product with nine views has a
+  /// conversion rate, but not one worth acting on.
+  confidence Float @default(0)
+
+  /// What she should do next, already ordered by expected gain, as
+  /// `{code, severity, gainPoints, ar}`. Stored so the advice she acted on
+  /// last week can be shown to have worked.
+  advice Json
+
+  /// Where this listing sits against the same category's live cohort —
+  /// `{peers, priceRank, pricePremiumBps, conversionRank, medianConversion}`.
+  /// Null until the cohort is big enough to say anything honest.
+  peers Json?
+
+  computedAt DateTime @default(now()) @map("computed_at")
+
+  @@unique([sellerId, productId, day])
+  @@index([sellerId, day, score])
+  @@index([productId, day])
+  @@map("product_health_snapshots")
+}
+
+/// One day's health for one seller.
+model SellerHealthSnapshot {
+  id       String @id @default(uuid()) @db.Uuid
+  sellerId String @map("seller_id") @db.Uuid
+  seller   User   @relation("SellerHealthSnapshots", fields: [sellerId], references: [id], onDelete: Cascade)
+
+  day DateTime @db.Date
+
+  /// 0-100 over the eight dimensions.
+  score Float @default(0)
+
+  /// The band the score falls in. Stored rather than derived on read so a
+  /// later change to the thresholds cannot silently rewrite history.
+  band SellerHealthBand @default(BUILDING)
+
+  /// The eight dimensions as `{key, score, weight, evidence, sample, ar}`.
+  dimensions Json
+
+  /// Evidence-weighted, exactly as in Reem Value: a seller with four orders is
+  /// not *bad*, she is *unmeasured*, and scoring her as though the sample were
+  /// large is how a marketplace drives away the sellers it just recruited.
+  confidence Float @default(0)
+
+  /// Score minus the score thirty days ago. Read from the older snapshot
+  /// rather than recomputed, so it answers what she was under the rules of
+  /// the time.
+  momentum Float @default(0)
+
+  /// Named, ordered, and phrased for her — `{code, dimension, severity, ar}`.
+  advice Json
+
+  /// The window the dimensions were measured over, in days.
+  windowDays Int @default(90) @map("window_days")
+
+  computedAt DateTime @default(now()) @map("computed_at")
+
+  @@unique([sellerId, day])
+  @@index([sellerId, day])
+  @@index([band, score])
+  @@map("seller_health_snapshots")
+}
+
+/// Bands, not grades.
+///
+/// Deliberately not A/B/C/D: a letter grade invites a seller to read her
+/// standing as a verdict on her, and the point of this system is that every
+/// band names something she can move. `BUILDING` is the honest answer for
+/// somebody with too little history to score, and it is the *default* — a new
+/// seller starts unmeasured rather than starting at the bottom.
+enum SellerHealthBand {
+  /// Not enough evidence yet. Not a punishment.
+  BUILDING
+  /// Something is actively costing her customers.
+  AT_RISK
+  /// Meeting the bar.
+  STEADY
+  /// Above the marketplace median on most dimensions.
+  STRONG
+  /// The sellers Reem would put in front of a first-time buyer.
+  EXEMPLARY
+}
+
+// ═══════════════════════ Reem Commerce Graph ══════════════════════════════
+//
+// Phase three. The layer that lets Reem answer questions no single table can:
+// *does this go with what she owns*, *has she already got one of these*, *who
+// would want this*, *what sells alongside what*.
+//
+// ── Why a graph and not another analytics table ──────────────────────────
+//
+// The platform already counts things well. `ProductDemandDaily` knows how many
+// people viewed a product; `SellerDemandDaily` knows what sold. What none of
+// them records is a *relationship* — which woman, and to what, and how
+// strongly. Those facts exist, but scattered: a favourite is a row in
+// `favorites`, an owned garment is a `ClosetItem`, a considered piece is a
+// `RoomCandidate`, a purchase is an `OrderItem`, an interest is a
+// `SearchTermDaily`. Answering "she owns three navy dresses, so this fourth is
+// not a discovery" means joining five tables that were never designed to be
+// joined.
+//
+// So this is a **projection**, not a new source of truth. Every edge is
+// derived from a row that already exists somewhere else, and the whole thing
+// could be dropped and rebuilt from the tables it reads. That is the property
+// that makes it safe to change: nothing is lost if the shape turns out wrong.
+//
+// ── Two tables, and why they are not one ─────────────────────────────────
+//
+// `CommerceEdge` is *observed behaviour* — who did what, accreting over time
+// from events. `ProductAffinity` is *derived catalogue structure* — how two
+// products relate, recomputed wholesale in a sweep. Different lifecycles,
+// different write patterns, and product-to-product is read on every product
+// page so it earns its own index.
+
+/// What a node in the graph is.
+///
+/// Deliberately open-ended: adding `BRAND` or `LOOK` later is a value in this
+/// enum and a projector, not a migration of anything that exists. That is the
+/// whole reason the edge table is polymorphic rather than a column per
+/// relation.
+enum GraphNode {
+  USER
+  PRODUCT
+  SELLER
+  CATEGORY
+  /// A lexicon occasion key — `wedding`, `eid`, `daily`.
+  OCCASION
+  /// A normalised search term, as `SearchTermDaily` keys them.
+  TERM
+  /// An `OutfitSlot`, so "she needs a bag" is expressible as an edge.
+  SLOT
+}
+
+/// What one node did to, or means about, another.
+///
+/// Ordered from weakest evidence of interest to strongest. The weight a
+/// projector assigns reflects that ordering, and `graph.constants.ts` holds the
+/// actual numbers so they can be argued with in one place.
+enum GraphEdge {
+  /// She looked at it.
+  VIEWED
+  /// She searched for it, or the term led to it.
+  SEARCHED
+  /// She engaged with content about it.
+  ENGAGED
+  /// She favourited or wishlisted it.
+  SAVED
+  /// She put it in a room — considered, not bought.
+  CONSIDERED
+  /// She bought it.
+  PURCHASED
+  /// It is in her closet. The strongest statement about taste there is,
+  /// because it survived the decision to keep it.
+  OWNS
+  /// She buys from this seller.
+  BUYS_FROM
+  /// She shops for this occasion.
+  SHOPS_FOR
+  /// She is short of this slot — from a closet gap or a room decision.
+  NEEDS
+}
+
+/// One observed relationship.
+///
+/// The unique key is the four coordinates plus the kind, so a projector can
+/// re-run without duplicating: seeing the same behaviour again raises
+/// `weight` and `observations` and re-stamps `lastSeenAt` rather than
+/// inserting a second row.
+///
+/// **No foreign keys, on purpose.** A polymorphic edge cannot have them, and
+/// the trade is deliberate: integrity comes from the projector only ever
+/// writing ids it just read, and from a prune that drops edges whose subject
+/// or object has gone. In exchange the table can describe a relationship
+/// between any two kinds of thing without a schema change — which is what
+/// Phase 4 will need and what a column-per-relation design cannot give.
+model CommerceEdge {
+  id String @id @default(uuid()) @db.Uuid
+
+  subjectType GraphNode @map("subject_type")
+  subjectId   String    @map("subject_id") @db.Uuid
+  objectType  GraphNode @map("object_type")
+  /// Uuid for real rows; for `OCCASION`, `TERM` and `SLOT` this is a stable
+  /// key hashed into a uuid so one column can address both — see `nodeId()`.
+  objectId    String    @map("object_id") @db.Uuid
+  kind        GraphEdge
+
+  /// Decayed strength, 0-100. Recomputed on every projection rather than
+  /// incremented, so a stale edge cannot outlive the behaviour behind it.
+  weight Float @default(0)
+
+  /// How many times the behaviour was seen. Kept beside the weight because
+  /// "she viewed it once" and "she viewed it nine times" decay to similar
+  /// numbers but mean different things to a person reading an explanation.
+  observations Int @default(1)
+
+  /// Whatever the projector wants the explanation to be able to quote —
+  /// an order id, a closet item, the colours involved.
+  evidence Json?
+
+  firstSeenAt DateTime @default(now()) @map("first_seen_at")
+  lastSeenAt  DateTime @default(now()) @map("last_seen_at")
+
+  @@unique([subjectType, subjectId, objectType, objectId, kind])
+  @@index([subjectType, subjectId, kind, weight])
+  @@index([objectType, objectId, kind, weight])
+  @@index([lastSeenAt])
+  @@map("commerce_edges")
+}
+
+/// How two products relate.
+enum AffinityKind {
+  /// Alike enough to be alternatives to each other.
+  SIMILAR
+  /// Worn or used together — different slots, same occasion.
+  COMPLEMENT
+  /// The same thing, cheaper or better rated. What "أفضل قيمة" reads from.
+  SUBSTITUTE
+  /// Actually bought together, which is a fact rather than an inference.
+  BOUGHT_TOGETHER
+}
+
+/// A derived edge between two products.
+///
+/// Directed: `SUBSTITUTE` from an expensive dress to a cheaper equivalent is
+/// not the same statement in reverse, and a rail that treated it as symmetric
+/// would tell a woman looking at the cheap one that the expensive one is
+/// better value.
+model ProductAffinity {
+  id String @id @default(uuid()) @db.Uuid
+
+  productId String  @map("product_id") @db.Uuid
+  product   Product @relation("AffinityFrom", fields: [productId], references: [id], onDelete: Cascade)
+
+  relatedId String  @map("related_id") @db.Uuid
+  related   Product @relation("AffinityTo", fields: [relatedId], references: [id], onDelete: Cascade)
+
+  kind  AffinityKind
+  /// 0-100.
+  score Float        @default(0)
+
+  /// Why, as `{sharedColours, sameSlot, coPurchases, priceDeltaBps, …}`. The
+  /// difference between a recommendation and a black box.
+  basis Json?
+
+  computedAt DateTime @default(now()) @map("computed_at")
+
+  @@unique([productId, relatedId, kind])
+  @@index([productId, kind, score])
+  @@index([relatedId, kind])
+  @@map("product_affinities")
+}
+
+// ═════════════════════ Reem Market Evolution (phase 4) ════════════════════
+//
+// Where the model stops describing a shop and starts describing a *market*.
+//
+// ── The one table everything else reads ──────────────────────────────────
+//
+// `MarketSignal` is deliberately **not** another daily fact table.
+// `ProductDemandDaily` already counts views, orders, stock, live offers and
+// the minimum price; `CommerceEdge` already knows who wants what. Counting any
+// of it again would produce a second set of numbers to disagree with the
+// first.
+//
+// What nothing did was *interpret* those facts against each other. A category
+// with climbing demand and three listings is a supply gap; the same demand
+// with three hundred listings is a crowded aisle. Both are visible in the
+// existing rows and neither is stated anywhere. That reading is what this
+// table holds — derived, dated, and rebuildable from the facts beneath it.
+
+/// What a market reading is about.
+///
+/// Open-ended for the same reason `GraphNode` is: `BRAND` or `CITY` later is a
+/// value and a projector, not a migration.
+enum MarketSubject {
+  PRODUCT
+  CATEGORY
+  /// An `OutfitSlot`, so "nobody sells bags for weddings" is expressible.
+  SLOT
+}
+
+/// What the arithmetic concluded about a subject.
+enum MarketFinding {
+  /// Demand well ahead of what is listed. The most valuable thing a
+  /// marketplace can tell a seller.
+  SUPPLY_GAP
+  /// Plenty listed, little wanted. Worth knowing before adding more.
+  OVERSUPPLIED
+  /// Demand climbing faster than the market as a whole.
+  RISING
+  /// Demand falling away.
+  COOLING
+  /// Attention arrives and does not convert — a price or presentation problem
+  /// rather than a demand one.
+  WEAK_CONVERSION
+  /// Many sellers, close prices, thin room.
+  CROWDED
+  /// Demand exists and stock does not.
+  STOCKED_OUT
+}
+
+/// One day's economic reading of one subject.
+model MarketSignal {
+  id String @id @default(uuid()) @db.Uuid
+
+  subjectType MarketSubject @map("subject_type")
+  subjectId   String        @map("subject_id") @db.Uuid
+  day         DateTime      @db.Date
+
+  /// 0-100 each. Deliberately separate rather than folded into one number:
+  /// "high demand, low supply" and "low demand, high supply" would average to
+  /// the same score and mean opposite things.
+  demandScore     Float @default(0) @map("demand_score")
+  supplyScore     Float @default(0) @map("supply_score")
+  conversionScore Float @default(0) @map("conversion_score")
+  competition     Float @default(0)
+
+  /// Demand minus supply, -100…100. The headline: positive is a gap somebody
+  /// could fill, negative is an aisle already crowded.
+  tension Float @default(0)
+
+  /// Where its price sits against its category, in basis points.
+  priceIndexBps Int? @map("price_index_bps")
+
+  /// The counts the scores came from, so any reading can be taken apart.
+  components Json
+
+  /// The findings above, with their own evidence.
+  findings Json
+
+  /// How much of this to believe — thin windows produce thin readings.
+  confidence Float @default(0)
+
+  computedAt DateTime @default(now()) @map("computed_at")
+
+  @@unique([subjectType, subjectId, day])
+  @@index([subjectType, day, tension])
+  @@index([subjectId, day])
+  @@map("market_signals")
+}
+
+// ── Reem Drops ───────────────────────────────────────────────────────────
+//
+// A launch as an event rather than a row appearing in a list. The parts that
+// make it more than a scheduled sale are the *audience* — chosen from the
+// commerce graph rather than blasted at everyone — and the *measurement*,
+// which is per-invitation rather than per-drop, so "did the right women see
+// it" is answerable.
+
+enum DropStatus {
+  DRAFT
+  SCHEDULED
+  LIVE
+  ENDED
+  CANCELLED
+}
+
+enum DropAudience {
+  /// Anyone can see it.
+  EVERYONE
+  /// Invited shoppers see it first; everyone else when it opens.
+  EARLY_ACCESS
+  /// Only the invited, for the whole run.
+  INVITE_ONLY
+}
+
+model Drop {
+  id String @id @default(uuid()) @db.Uuid
+
+  /// Null for a platform drop curated by Reem itself.
+  sellerId String? @map("seller_id") @db.Uuid
+  seller   User?   @relation("SellerDrops", fields: [sellerId], references: [id], onDelete: Cascade)
+
+  title    String
+  note     String?
+  status   DropStatus   @default(DRAFT)
+  audience DropAudience @default(EVERYONE)
+
+  /// When the invited may buy, and when everyone may.
+  earlyAccessAt DateTime? @map("early_access_at")
+  startsAt      DateTime  @map("starts_at")
+  endsAt        DateTime? @map("ends_at")
+
+  /// Why these products — the market reading that produced the drop, when it
+  /// was generated rather than hand-made.
+  rationale Json?
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  products DropProduct[]
+  invites  DropInvite[]
+
+  @@index([status, startsAt])
+  @@index([sellerId, status])
+  @@map("drops")
+}
+
+model DropProduct {
+  id     String @id @default(uuid()) @db.Uuid
+  dropId String @map("drop_id") @db.Uuid
+  drop   Drop   @relation(fields: [dropId], references: [id], onDelete: Cascade)
+
+  productId String  @map("product_id") @db.Uuid
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  position Int @default(0)
+
+  /// What made this product worth launching — a market signal, a trend score.
+  reason Json?
+
+  @@unique([dropId, productId])
+  @@index([dropId, position])
+  @@map("drop_products")
+}
+
+/// One shopper invited to one drop.
+///
+/// The row exists so a drop can be *measured* rather than merely run: who was
+/// chosen, why, whether she looked, whether she bought. A drop with a thousand
+/// invitations and four opens is a targeting failure, and only a
+/// per-invitation row can say so.
+model DropInvite {
+  id     String @id @default(uuid()) @db.Uuid
+  dropId String @map("drop_id") @db.Uuid
+  drop   Drop   @relation(fields: [dropId], references: [id], onDelete: Cascade)
+
+  userId String @map("user_id") @db.Uuid
+  user   User   @relation("DropInvites", fields: [userId], references: [id], onDelete: Cascade)
+
+  /// Why the graph chose her. Auditable, because "why am I being shown this"
+  /// deserves an answer.
+  reason Json
+
+  /// 0-100. How well she matched, for ordering and for measuring precision.
+  affinity Float @default(0)
+
+  notifiedAt  DateTime? @map("notified_at")
+  openedAt    DateTime? @map("opened_at")
+  convertedAt DateTime? @map("converted_at")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@unique([dropId, userId])
+  @@index([userId, createdAt])
+  @@index([dropId, affinity])
+  @@map("drop_invites")
+}
+
+// ── Reem Bundle ──────────────────────────────────────────────────────────
+//
+// Selling a solution rather than a product. The pieces come from the commerce
+// graph's complement relations, which is what lets a bundle cross sellers —
+// and crossing sellers is the point, because an outfit rarely comes from one
+// shop.
+
+enum BundleStatus {
+  /// Assembled by the generator and not yet checked by anyone.
+  GENERATED
+  /// A person put it together or approved it.
+  CURATED
+  /// No longer offered.
+  RETIRED
+}
+
+model Bundle {
+  id String @id @default(uuid()) @db.Uuid
+
+  /// Stable across rebuilds, so a bundle keeps its identity when regenerated:
+  /// its sorted product ids, hashed.
+  fingerprint String @unique
+
+  title    String
+  occasion String?
+  status   BundleStatus @default(GENERATED)
+
+  /// Summed from the items at build time. Not what she is charged — the
+  /// offers are — but what the screen shows.
+  totalSyp Decimal @map("total_syp") @db.Decimal(18, 4)
+
+  /// How many different shops it draws on. The number that makes a bundle a
+  /// *marketplace* feature rather than one seller's upsell.
+  sellerCount Int @default(1) @map("seller_count")
+
+  /// 0-100: how well the pieces actually go together.
+  score Float @default(0)
+
+  /// The slots it fills, so "a complete wedding look" is checkable.
+  slots String[]
+
+  /// Why this set — coverage, shared occasion, observed co-purchase.
+  basis Json?
+
+  computedAt DateTime @default(now()) @map("computed_at")
+
+  items BundleItem[]
+
+  @@index([status, score])
+  @@index([occasion, score])
+  @@map("bundles")
+}
+
+model BundleItem {
+  id       String @id @default(uuid()) @db.Uuid
+  bundleId String @map("bundle_id") @db.Uuid
+  bundle   Bundle @relation(fields: [bundleId], references: [id], onDelete: Cascade)
+
+  productId String  @map("product_id") @db.Uuid
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  /// The offer priced into the total. Kept so a bundle can reach checkout
+  /// through the same door a room's purchase plan uses.
+  offerId String?      @map("offer_id") @db.Uuid
+  offer   SellerOffer? @relation("BundleOffers", fields: [offerId], references: [id], onDelete: SetNull)
+
+  slot     String?
+  position Int     @default(0)
+
+  /// Why *this* piece is in the set. The brief asked for it by name, and a
+  /// bundle whose members cannot explain themselves is a gift basket.
+  reason String?
+
+  @@unique([bundleId, productId])
+  @@index([bundleId, position])
+  @@map("bundle_items")
+}
+
+// ── Reem Life Cycle + Resale ─────────────────────────────────────────────
+//
+// What happens to a piece after it is bought. Reem Closet already knows what
+// she owns, when she last wore it and how often; nothing has ever read that
+// forward into "this has gone quiet — would you sell it".
+
+enum ResaleStatus {
+  DRAFT
+  LISTED
+  RESERVED
+  SOLD
+  WITHDRAWN
+}
+
+enum ResaleCondition {
+  /// Never worn, tags on.
+  NEW_WITH_TAGS
+  /// Worn once or twice.
+  EXCELLENT
+  /// Worn and cared for.
+  GOOD
+  /// Visibly used.
+  FAIR
+}
+
+/// A piece from her wardrobe, offered on.
+///
+/// Deliberately **not** a `SellerOffer`. A resale listing is one specific
+/// garment with a history, sold by somebody who is not a merchant, and folding
+/// it into the seller catalogue would put private wardrobes into the same
+/// tables as approved shops — with the same moderation, commission and
+/// fulfilment assumptions, none of which fit. Keeping it separate is what
+/// stops resale corrupting the marketplace it sits beside.
+model ResaleListing {
+  id String @id @default(uuid()) @db.Uuid
+
+  /// The wardrobe item being sold. One listing per item, ever.
+  closetItemId String     @unique @map("closet_item_id") @db.Uuid
+  closetItem   ClosetItem @relation("ResaleOfItem", fields: [closetItemId], references: [id], onDelete: Cascade)
+
+  sellerId String @map("seller_id") @db.Uuid
+  seller   User   @relation("ResaleListings", fields: [sellerId], references: [id], onDelete: Cascade)
+
+  /// The catalogue entry it came from, when it came from Reem. Null for a
+  /// piece she added herself.
+  productId String?  @map("product_id") @db.Uuid
+  product   Product? @relation("ResaleOf", fields: [productId], references: [id], onDelete: SetNull)
+
+  title     String
+  note      String?
+  condition ResaleCondition
+  status    ResaleStatus    @default(DRAFT)
+
+  priceSyp Decimal @map("price_syp") @db.Decimal(18, 4)
+
+  /// What it originally cost, when known — so a buyer can see the discount
+  /// and a seller can be advised on a fair price.
+  originalPriceSyp Decimal? @map("original_price_syp") @db.Decimal(18, 4)
+
+  listedAt DateTime? @map("listed_at")
+  soldAt   DateTime? @map("sold_at")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([status, listedAt])
+  @@index([sellerId, status])
+  @@map("resale_listings")
+}
+
+// ── Reem Missions ────────────────────────────────────────────────────────
+//
+// Not points with a new name — that mistake was already made and undone once,
+// in Reem Value. A mission is an *invitation to do something worth doing*:
+// finish the outfit you started, tell somebody whether the dress ran small,
+// try a shop nobody has tried. Each has to leave Reem better than it found it,
+// which is why every completion is measured from evidence the platform already
+// keeps rather than from a counter a client increments.
+
+enum MissionKind {
+  /// Look at parts of the market she has not seen.
+  DISCOVER
+  /// Add something others benefit from — a review, a look, a photograph.
+  CONTRIBUTE
+  /// Finish something of her own she left open.
+  COMPLETE
+  /// Bring somebody in, or help somebody choose.
+  SHARE
+}
+
+enum MissionStatus {
+  OFFERED
+  ACTIVE
+  COMPLETED
+  EXPIRED
+}
+
+/// A mission a shopper can be offered.
+///
+/// Definitions are rows rather than code so the set can change without a
+/// deploy, and `criteria` is the machine-readable form of the sentence in
+/// `titleAr` — evaluated against real tables by the mission evaluator.
+model Mission {
+  id  String @id @default(uuid()) @db.Uuid
+  key String @unique
+
+  kind    MissionKind
+  titleAr String      @map("title_ar")
+  bodyAr  String      @map("body_ar")
+
+  /// What has to happen, in a form the evaluator can check against rows it
+  /// did not write.
+  criteria Json
+
+  /// What it is worth in Reem Value, so the reward is standing rather than a
+  /// discount. Missions must not become coupons.
+  valuePoints Int @default(0) @map("value_points")
+
+  /// How long it lasts once offered.
+  ttlDays Int @default(14) @map("ttl_days")
+
+  isActive Boolean @default(true) @map("is_active")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  progress MissionProgress[]
+
+  @@index([isActive, kind])
+  @@map("missions")
+}
+
+model MissionProgress {
+  id String @id @default(uuid()) @db.Uuid
+
+  missionId String  @map("mission_id") @db.Uuid
+  mission   Mission @relation(fields: [missionId], references: [id], onDelete: Cascade)
+
+  userId String @map("user_id") @db.Uuid
+  user   User   @relation("UserMissions", fields: [userId], references: [id], onDelete: Cascade)
+
+  status MissionStatus @default(OFFERED)
+
+  /// 0-1. Recomputed from evidence on every evaluation, never incremented, so
+  /// a mission cannot be completed by a client that lies.
+  progress Float @default(0)
+
+  /// The counts behind the progress, so she can see how far along she is and
+  /// on what basis.
+  evidence Json?
+
+  offeredAt   DateTime  @default(now()) @map("offered_at")
+  completedAt DateTime? @map("completed_at")
+  expiresAt   DateTime? @map("expires_at")
+
+  @@unique([missionId, userId])
+  @@index([userId, status])
+  @@map("mission_progress")
 }

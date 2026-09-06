@@ -221,4 +221,202 @@ export default () => ({
     minRate: process.env.FX_MIN_RATE ?? '500',
     maxRate: process.env.FX_MAX_RATE ?? '100000',
   },
+  /**
+   * Reem AI Stylist.
+   *
+   * Off by default, and the feature works with it off — the stylist's
+   * understanding has a complete rules implementation and its retrieval is
+   * ordinary SQL either way. Configuring a provider buys better reading of an
+   * unusual sentence and warmer phrasing; it never buys a product, a price or
+   * a stock level, because the model is not on that path at all.
+   *
+   * So a missing key is not a degraded mode to apologise for. It is the
+   * deterministic mode, and it is the one the tests run in.
+   */
+  stylist: {
+    /** `none` (default) or `anthropic`. */
+    provider: process.env.AI_STYLIST_PROVIDER ?? 'none',
+    apiKey: process.env.AI_STYLIST_API_KEY ?? '',
+    baseUrl: process.env.AI_STYLIST_BASE_URL ?? 'https://api.anthropic.com',
+    model: process.env.AI_STYLIST_MODEL ?? 'claude-sonnet-5',
+    /**
+     * A turn that has not answered in this long is abandoned and the rules
+     * path answers instead. She is waiting on a chat bubble, so the ceiling is
+     * what a person will sit through, not what the provider's p99 is.
+     */
+    timeoutMs: parseInt(process.env.AI_STYLIST_TIMEOUT_MS ?? '8000', 10),
+    maxOutputTokens: parseInt(process.env.AI_STYLIST_MAX_TOKENS ?? '1024', 10),
+    /**
+     * Let the model phrase the reply sentence. Extraction and phrasing are
+     * separate switches because they carry different risk: a misread brief
+     * shows the wrong goods, whereas phrasing only ever rewrites a sentence
+     * around goods that were already chosen from the database.
+     */
+    composeReplies: process.env.AI_STYLIST_COMPOSE_REPLIES !== 'false',
+  },
+
+  /**
+   * Reem Visual Shopping.
+   *
+   * The feature is complete with none of this set. The default embedder is a
+   * deterministic perceptual descriptor computed in process, the default index
+   * is exact cosine over the rows the platform already has, and the default
+   * vision provider is off — so a missing key is not a degraded mode, it is
+   * the mode the tests run in.
+   *
+   * Two switches are worth reading before deploying:
+   *
+   *  - `VISUAL_SEARCH_INDEXER_ENABLED` gates the hourly pass that describes
+   *    product photographs. Off by default for the same reason the trend
+   *    scheduler is: a laptop running `nest start --watch` should not start
+   *    decoding the whole catalogue because it happened to be awake. Nothing
+   *    can be found by image until it has run somewhere.
+   *  - `VISUAL_SEARCH_IMAGE_RETENTION_HOURS` is the promise on the upload
+   *    screen. Lowering it is safe; raising it changes what the client tells
+   *    her, because the number is served from here.
+   */
+  visualSearch: {
+    /**
+     * 8 MB. Below the media module's 12 because this is a *query* image, not a
+     * listing photograph: it is resampled to 1024px and thrown away within the
+     * day, so the extra megabytes buy nothing but upload time on a Syrian
+     * mobile connection.
+     */
+    maxImageBytes: parseInt(process.env.VISUAL_SEARCH_MAX_IMAGE_BYTES ?? '8388608', 10),
+    /**
+     * The decompression-bomb ceiling, applied at decode. A 40 KB PNG can
+     * expand to a gigabyte, and the encoded-size limit above says nothing
+     * about that.
+     */
+    maxImagePixels: parseInt(process.env.VISUAL_SEARCH_MAX_IMAGE_PIXELS ?? '40000000', 10),
+    /** The longest edge of the copy actually stored, and what the client is told to resample to. */
+    storedWidth: parseInt(process.env.VISUAL_SEARCH_STORED_WIDTH ?? '1024', 10),
+
+    indexerEnabled: process.env.VISUAL_SEARCH_INDEXER_ENABLED === 'true',
+    /** Products described per hourly pass. A first run spreads over nights. */
+    indexerBatch: parseInt(process.env.VISUAL_SEARCH_INDEXER_BATCH ?? '120', 10),
+    /**
+     * Photographs described per listing. After the first two or three a
+     * listing's images are detail shots of a sleeve, and a detail shot matches
+     * every other detail shot in the shop — indexing them all costs time and
+     * loses precision.
+     */
+    imagesPerProduct: parseInt(process.env.VISUAL_SEARCH_IMAGES_PER_PRODUCT ?? '3', 10),
+    /**
+     * Whether the indexer may fetch a product photograph from an address it
+     * did not store itself. Needed in development, where the demo catalogue is
+     * entirely external links. The outbound path is fenced against SSRF in
+     * `CatalogImageService` — read that before turning it off in production,
+     * because in production every image is ours and this can be `false`.
+     */
+    indexRemoteImages: process.env.VISUAL_SEARCH_INDEX_REMOTE !== 'false',
+    // Fifteen seconds, not six: a catalogue image that lives on someone
+    // else's host often redirects before it answers, and a timeout here is
+    // not a slow page — it is a product that silently never becomes
+    // searchable by picture.
+    fetchTimeoutMs: parseInt(process.env.VISUAL_SEARCH_FETCH_TIMEOUT_MS ?? '15000', 10),
+
+    /** Vectors scored exactly per region. See the note in the Postgres index. */
+    candidateLimit: parseInt(process.env.VISUAL_SEARCH_CANDIDATES ?? '4000', 10),
+    resultsPerRegion: parseInt(process.env.VISUAL_SEARCH_RESULTS ?? '12', 10),
+
+    /**
+     * How long her uploaded photograph is kept. The search itself — the
+     * descriptor, the attributes, the matches — outlives it, which is what
+     * lets her reopen and refine a search without uploading again.
+     */
+    imageRetentionHours: parseInt(
+      process.env.VISUAL_SEARCH_IMAGE_RETENTION_HOURS ?? '24',
+      10,
+    ),
+    /**
+     * The shortest clock in the platform, for the most sensitive image in it.
+     * A photograph of her body has no reason to outlive the render it was
+     * uploaded for.
+     */
+    tryOnRetentionHours: parseInt(process.env.VISUAL_TRY_ON_RETENTION_HOURS ?? '2', 10),
+
+    /** `none` (default) or `anthropic`. Proposes attributes; never ranks. */
+    visionProvider: process.env.VISUAL_VISION_PROVIDER ?? 'none',
+    visionApiKey: process.env.VISUAL_VISION_API_KEY ?? '',
+    visionBaseUrl: process.env.VISUAL_VISION_BASE_URL ?? 'https://api.anthropic.com',
+    visionModel: process.env.VISUAL_VISION_MODEL ?? 'claude-sonnet-5',
+    /** She is waiting on an upload spinner, so the ceiling is what a person sits through. */
+    visionTimeoutMs: parseInt(process.env.VISUAL_VISION_TIMEOUT_MS ?? '9000', 10),
+    visionMaxTokens: parseInt(process.env.VISUAL_VISION_MAX_TOKENS ?? '900', 10),
+    /** Ask the model for garment boxes as well as a brief. */
+    visionDetectItems: process.env.VISUAL_VISION_DETECT_ITEMS !== 'false',
+  },
+
+  /**
+   * Reem Trend Engine.
+   *
+   * The scheduler is **off by default**, and that is not caution for its own
+   * sake: the nightly run reads the whole order history and rewrites ten
+   * tables, which is not something a `nest start --watch` on somebody's laptop
+   * should begin doing at 2am because the machine happened to be awake. Turn
+   * it on where the data is real.
+   *
+   * The model, like the stylist's, is off by default too. With no provider the
+   * insights are phrased by Arabic templates that are a complete
+   * implementation rather than a placeholder — so a missing key is the
+   * deterministic mode, and it is the one the tests run in.
+   */
+  trends: {
+    schedulerEnabled: process.env.TRENDS_SCHEDULER_ENABLED === 'true',
+    /**
+     * How many days each nightly run re-reads.
+     *
+     * Facts settle late: an order placed on Monday is cancelled on Wednesday
+     * and returned on Friday, and Monday's row should end up telling the truth
+     * about Monday. Three days catches nearly all of it and costs three cheap
+     * passes instead of one.
+     */
+    lookbackDays: parseInt(process.env.TRENDS_LOOKBACK_DAYS ?? '3', 10),
+    /**
+     * How long a cart may sit untouched before it counts as abandoned. Six
+     * hours: long enough that "she is still shopping" is not called a loss,
+     * short enough that the signal lands on the day it happened.
+     */
+    cartAbandonHours: parseInt(process.env.TRENDS_CART_ABANDON_HOURS ?? '6', 10),
+    llm: {
+      /** `none` (default) or `anthropic`. */
+      provider: process.env.TREND_LLM_PROVIDER ?? 'none',
+      apiKey: process.env.TREND_LLM_API_KEY ?? '',
+      baseUrl: process.env.TREND_LLM_BASE_URL ?? 'https://api.anthropic.com',
+      model: process.env.TREND_LLM_MODEL ?? 'claude-sonnet-5',
+      /**
+       * Generous compared with the stylist's eight seconds, because nobody is
+       * waiting: this runs inside the nightly job, and the only cost of a slow
+       * reply is a slightly longer run.
+       */
+      timeoutMs: parseInt(process.env.TREND_LLM_TIMEOUT_MS ?? '20000', 10),
+      maxOutputTokens: parseInt(process.env.TREND_LLM_MAX_TOKENS ?? '4096', 10),
+      /**
+       * Findings per request. Batched so one night's feed has one voice, and
+       * capped so a single failure costs eight sentences rather than forty.
+       */
+      batchSize: parseInt(process.env.TREND_LLM_BATCH_SIZE ?? '8', 10),
+    },
+  },
+
+  /**
+   * Reem Market Evolution.
+   *
+   * Its nightly sweep reads every live category and product against the
+   * platform's own medians, so it carries the same default as the trend engine
+   * for the same reason: not something a watch-mode process on a laptop should
+   * start doing at 3am. Falls back to `TRENDS_SCHEDULER_ENABLED` when unset,
+   * because in every real deployment the two are turned on together — the
+   * market reading is computed *from* the trend engine's daily facts, and
+   * running one without the other produces a market read against nothing.
+   */
+  market: {
+    schedulerEnabled:
+      process.env.MARKET_SCHEDULER_ENABLED === 'true'
+        ? true
+        : process.env.MARKET_SCHEDULER_ENABLED === 'false'
+          ? false
+          : undefined,
+  },
 });

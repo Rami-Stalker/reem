@@ -55,7 +55,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                   Text(
                     l10n.forgetPassword,
                     textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    style: context.dsText.cardTitle.copyWith(
                       color: colors.onSurfaceVariant,
                       height: 1.5,
                     ),

@@ -147,7 +147,7 @@ class _AccountRecoveryScreenState
                   : [
                       Text(
                         l10n.lostSimExplainer,
-                        style: Theme.of(context).textTheme.bodyMedium,
+                        style: context.dsText.body,
                       ),
                       const SizedBox(height: DsSpacing.md),
                       Container(
@@ -163,7 +163,7 @@ class _AccountRecoveryScreenState
                             Expanded(
                               child: Text(
                                 l10n.recoveryNoDocuments,
-                                style: Theme.of(context).textTheme.bodySmall,
+                                style: context.dsText.cardSubtitle,
                               ),
                             ),
                           ],
@@ -178,6 +178,7 @@ class _AccountRecoveryScreenState
                             DsInputField(
                               controller: _claimedPhone,
                               label: l10n.phone,
+                              // l10n-ignore: a dialling mask, not language
                               hint: '09XX XXX XXX',
                               keyboardType: TextInputType.phone,
                               validator: (value) =>
@@ -220,13 +221,13 @@ class _AccountRecoveryScreenState
                             const SizedBox(height: DsSpacing.xl),
                             Text(
                               l10n.recoveryQuestionsTitle,
-                              style: Theme.of(context).textTheme.titleMedium,
+                              style: context.dsText.cardTitle,
                             ),
                             const SizedBox(height: DsSpacing.xs),
                             Text(
                               l10n.recoveryQuestionsHint,
-                              style: Theme.of(context).textTheme.bodySmall
-                                  ?.copyWith(color: colors.onSurfaceVariant),
+                              style: context.dsText.cardSubtitle
+                                  .copyWith(color: colors.onSurfaceVariant),
                             ),
                             const SizedBox(height: DsSpacing.md),
                             DsInputField(
@@ -301,13 +302,13 @@ class _Receipt extends StatelessWidget {
         Text(
           l10n.recoverySubmitted,
           textAlign: TextAlign.center,
-          style: Theme.of(context).textTheme.headlineSmall,
+          style: context.dsText.screenTitle,
         ),
         const SizedBox(height: DsSpacing.sm),
         Text(
           receipt.message,
           textAlign: TextAlign.center,
-          style: Theme.of(context).textTheme.bodyMedium,
+          style: context.dsText.body,
         ),
         const SizedBox(height: DsSpacing.xl),
         Container(
@@ -321,12 +322,12 @@ class _Receipt extends StatelessWidget {
             children: [
               Text(
                 l10n.recoveryKeepSecret,
-                style: Theme.of(context).textTheme.bodySmall,
+                style: context.dsText.cardSubtitle,
               ),
               const SizedBox(height: DsSpacing.sm),
               SelectableText(
                 receipt.claimSecret,
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                style: context.dsText.cardSubtitle.copyWith(
                   fontFamily: 'monospace',
                 ),
               ),

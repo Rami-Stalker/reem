@@ -64,20 +64,11 @@ class SellerCustomerPanel extends StatelessWidget {
                   children: [
                     Text(
                       customer.name,
-                      style: TextStyle(
-                        fontFamily: DsTypography.fontFamily,
-                        fontSize: DsTypography.titleSmall,
-                        fontWeight: DsTypography.semiBold,
-                        color: atelier.ink,
-                      ),
+                      style: context.dsText.tileTitle.semibold.tint(atelier.ink),
                     ),
                     Text(
                       context.l10n.fulfilmentMode(mode),
-                      style: TextStyle(
-                        fontFamily: DsTypography.fontFamily,
-                        fontSize: DsTypography.labelSmall,
-                        color: atelier.muted,
-                      ),
+                      style: context.dsText.caption.tint(atelier.muted),
                     ),
                   ],
                 ),
@@ -136,12 +127,7 @@ class SellerCustomerPanel extends StatelessWidget {
                   Expanded(
                     child: Text(
                       customer.maskedBecause!,
-                      style: TextStyle(
-                        fontFamily: DsTypography.fontFamily,
-                        fontSize: DsTypography.labelSmall,
-                        height: 1.5,
-                        color: atelier.primary,
-                      ),
+                      style: context.dsText.caption.tint(atelier.primary).copyWith(height: 1.5),
                     ),
                   ),
                 ],
@@ -194,12 +180,7 @@ class _Line extends StatelessWidget {
             Expanded(
               child: Text(
                 text,
-                style: TextStyle(
-                  fontFamily: DsTypography.fontFamily,
-                  fontSize: DsTypography.bodySmall,
-                  height: 1.6,
-                  color: color,
-                ),
+                style: context.dsText.bodySmall.tint(color).copyWith(height: 1.6),
               ),
             ),
           ],

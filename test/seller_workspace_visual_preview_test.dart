@@ -222,25 +222,33 @@ final class _FakeProductsSource implements SellerProductsRemoteDataSource {
   }
 
   @override
-  Future<ManagedProductModel> getProduct(String id) => throw UnimplementedError();
+  Future<List<ManagedProductModel>> lowStock({int threshold = 5}) async =>
+      const [];
+
+  @override
+  Future<ManagedProductModel> getOffer(String offerId) =>
+      throw UnimplementedError();
 
   @override
   Future<ManagedProductModel> create(ProductDraft draft) =>
       throw UnimplementedError();
 
   @override
-  Future<ManagedProductModel> update(String id, ProductDraft draft) =>
+  Future<ManagedProductModel> updateOffer(String offerId, ProductDraft draft) =>
       throw UnimplementedError();
 
   @override
-  Future<void> delete(String id) async {}
+  Future<void> updateProduct(String productId, ProductDraft draft) async {}
 
   @override
-  Future<ManagedProductModel> setStatus(String id, ProductStatus status) =>
+  Future<void> archive(String offerId) async {}
+
+  @override
+  Future<ManagedProductModel> setStatus(String offerId, ProductStatus status) =>
       throw UnimplementedError();
 
   @override
-  Future<ManagedProductModel> adjustStock(String id, int delta) =>
+  Future<ManagedProductModel> adjustStock(String offerId, int delta) =>
       throw UnimplementedError();
 }
 
@@ -248,6 +256,28 @@ final class _FakeProductsSource implements SellerProductsRemoteDataSource {
 /// because the page's job is to keep those apart.
 final class _FakeEarningsRepository implements SellerEarningsRepository {
   const _FakeEarningsRepository();
+
+  /// Enough released earnings for the withdrawal card to offer its button,
+  /// which is the state worth looking at.
+  @override
+  Future<Result<PayoutAvailability>> payoutAvailability() async => Success(
+    PayoutAvailability(
+      claimable: _syp('12840000'),
+      ordersIncluded: 7,
+      canRequest: true,
+    ),
+  );
+
+  @override
+  Future<Result<PendingPayout>> requestPayout() => throw UnimplementedError();
+
+  @override
+  Future<Result<PendingPayout>> cancelPayout(String id) =>
+      throw UnimplementedError();
+
+  @override
+  Future<Result<List<PendingPayout>>> payoutHistory() async =>
+      const Success([]);
 
   @override
   Future<Result<SellerEarnings>> load() async => Success(

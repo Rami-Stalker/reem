@@ -1,26 +1,104 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:reem/core/design_system/design_system.dart';
 import 'package:reem/core/localization/l10n_extension.dart';
+import 'package:reem/core/media/authorized_media_image.dart';
+import 'package:reem/core/media/media_variants.dart';
 import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/core/shared/value_objects/money.dart';
+import 'package:reem/features/chat/domain/entities/chat_start_request.dart';
+import 'package:reem/features/chat/presentation/widgets/message_seller_button.dart';
+import 'package:reem/features/checkout/domain/entities/checkout.dart';
 import 'package:reem/features/checkout/domain/entities/order.dart';
 import 'package:reem/features/checkout/presentation/providers/checkout_providers.dart';
 import 'package:reem/features/checkout/presentation/providers/order_detail_notifier.dart';
+import 'package:reem/features/checkout/presentation/widgets/cod_confirmation_sheet.dart';
 import 'package:reem/features/checkout/presentation/widgets/order_status_chip.dart';
+import 'package:reem/features/checkout/presentation/widgets/payment_action_card.dart';
 
-class OrderDetailScreen extends ConsumerWidget {
+/// One order, and what is happening to it.
+///
+/// **Why it polls.** Tracking is the screen a shopper opens *because* she is
+/// waiting: the seller marks a parcel ready, a courier picks it up, the status
+/// moves — and the page was a snapshot taken when she opened it, with no pull
+/// to refresh either. So it re-reads itself every half minute while the order
+/// is still in flight, stops the moment it is delivered or cancelled, and
+/// stops whenever the app is in the background so a phone in a pocket is not
+/// polling the API all afternoon. Pull-to-refresh is there for the impatient.
+class OrderDetailScreen extends ConsumerStatefulWidget {
   const OrderDetailScreen({super.key, required this.orderId});
 
   final String orderId;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<OrderDetailScreen> createState() => _OrderDetailScreenState();
+}
+
+class _OrderDetailScreenState extends ConsumerState<OrderDetailScreen>
+    with WidgetsBindingObserver {
+  /// Often enough that a shipment notice arrives while she is looking at the
+  /// page; rarely enough to be invisible on a metered connection.
+  static const Duration _pollEvery = Duration(seconds: 30);
+
+  Timer? _poll;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    _poll?.cancel();
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      // Back from the background: whatever happened while she was away is
+      // exactly what she opened the app to see.
+      unawaited(ref.read(orderDetailNotifierProvider(widget.orderId).notifier).load());
+    } else {
+      _poll?.cancel();
+      _poll = null;
+    }
+  }
+
+  void _syncPolling({required bool inFlight}) {
+    if (!inFlight) {
+      _poll?.cancel();
+      _poll = null;
+      return;
+    }
+    _poll ??= Timer.periodic(_pollEvery, (_) {
+      if (!mounted) return;
+      unawaited(
+        ref.read(orderDetailNotifierProvider(widget.orderId).notifier).load(),
+      );
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final orderId = widget.orderId;
     final state = ref.watch(orderDetailNotifierProvider(orderId));
     final notifier = ref.read(orderDetailNotifierProvider(orderId).notifier);
     final order = state.order;
+
+    // Arm or disarm after the frame — the timer is a side effect of what the
+    // order now says, and build must stay free of them.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        _syncPolling(inFlight: order?.status.isInFlight ?? false);
+      }
+    });
 
     ref.listen(orderDetailNotifierProvider(orderId).select((s) => s.error),
         (_, error) {
@@ -30,23 +108,76 @@ class OrderDetailScreen extends ConsumerWidget {
     });
 
     return ReemScrollPage(
+      onRefresh: notifier.load,
       slivers: [
-        PremiumAppBar(title: order?.number ?? 'Order', showBack: true),
+        PremiumAppBar(
+          title: order?.number ?? context.l10n.orderTitle,
+          showBack: true,
+        ),
         if (state.isLoading && order == null)
           const SliverFillRemaining(
             hasScrollBody: false,
             child: Center(child: CircularProgressIndicator()),
           )
         else if (order == null)
-          const SliverFillRemaining(
+          SliverFillRemaining(
             hasScrollBody: false,
-            child: Center(child: Text('Order not found')),
+            child: Center(child: Text(context.l10n.orderNotFound)),
           )
         else
           SliverToBoxAdapter(
             child: _Body(order: order, state: state, notifier: notifier),
           ),
       ],
+    );
+  }
+}
+
+/// Tells her the order is waiting, and gives her the one field that ends it.
+class _CodConfirmationBanner extends StatelessWidget {
+  const _CodConfirmationBanner({required this.orderId, required this.notifier});
+
+  final String orderId;
+  final OrderDetailNotifier notifier;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.dsColors;
+    final l10n = context.l10n;
+
+    return SurfaceCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(
+            children: [
+              Icon(Icons.sms_outlined, size: 18, color: colors.warning),
+              const SizedBox(width: DsSpacing.sm),
+              Expanded(
+                child: Text(
+                  l10n.codAwaitingBanner,
+                  style: context.dsText.body.tint(colors.onSurface),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: DsSpacing.sm),
+          PrimaryButton(
+            label: l10n.codEnterCode,
+            onPressed: () async {
+              // The order is already held and its challenge already sent, so
+              // there is nothing to re-request here — the sheet opens on a
+              // resend if the first message never arrived.
+              final confirmed = await showCodConfirmationSheet(
+                context,
+                orderId: orderId,
+                assurance: const CodAssurance(required: 'order_confirmation'),
+              );
+              if (confirmed) await notifier.load();
+            },
+          ),
+        ],
+      ),
     );
   }
 }
@@ -62,8 +193,11 @@ class _Body extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.dsColors;
     final payment = order.payment;
-    final canConfirmPayment =
-        payment != null && payment.isPending && payment.method != 'cod';
+    // Whether she still has something to do is the server's answer now — the
+    // rail says so. `method != 'cod'` put a confirm button on a wallet payment
+    // that had already settled and on a courier-collect one that settles at
+    // the door.
+    final needsPaymentStep = payment != null && payment.needsCustomerAction;
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(
@@ -82,14 +216,22 @@ class _Body extends StatelessWidget {
               if (order.isSplit)
                 Text(
                   '${order.sellersCount} شحنات من ${order.sellersCount} بائعات',
-                  style: TextStyle(
-                    fontSize: DsTypography.bodySmall,
-                    color: colors.onSurfaceVariant,
-                  ),
+                  style: context.dsText.bodySmall.tint(colors.onSurfaceVariant),
                 ),
             ],
           ),
           const SizedBox(height: DsSpacing.lg),
+
+          // The way back into a held order.
+          //
+          // Without this the confirmation sheet at checkout would be the only
+          // door: dismiss it once — or lose signal on the way — and a placed
+          // order sits waiting for a code with nothing on screen saying so, and
+          // nowhere to type one.
+          if (order.awaitingCodConfirmation) ...[
+            _CodConfirmationBanner(orderId: order.id, notifier: notifier),
+            const SizedBox(height: DsSpacing.lg),
+          ],
 
           // One card per seller. A basket spanning several sellers becomes
           // several parcels, each tracked, cancelled and returned on its own
@@ -109,19 +251,38 @@ class _Body extends StatelessWidget {
               children: [
                 _kv(context, order.shipping.recipientName,
                     order.shipping.recipientPhone),
-                const SizedBox(height: 4),
+                DsGaps.vXxs,
                 Text(
                   '${order.shipping.addressLine}, ${order.shipping.city}, ${order.shipping.governorate}',
-                  style: TextStyle(color: colors.onSurfaceVariant),
+                  style: context.dsText.body.tint(colors.onSurfaceVariant),
                 ),
                 if (order.shipping.landmark != null)
                   Text('علامة مميزة: ${order.shipping.landmark}',
-                      style: TextStyle(color: colors.onSurfaceVariant)),
+                      style: context.dsText.body.tint(colors.onSurfaceVariant)),
+                if (order.privacyMaskEnabled) ...[
+                  DsGaps.vXxs,
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.visibility_off_outlined,
+                        size: DsSizes.iconXs,
+                        color: colors.primary,
+                      ),
+                      DsGaps.hXxs,
+                      Expanded(
+                        child: Text(
+                          context.l10n.orderPrivacyMaskOn,
+                          style: context.dsText.caption.tint(colors.primary),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
                 if (order.deliveryInstructions != null)
                   Padding(
-                    padding: const EdgeInsets.only(top: 4),
+                    padding: const EdgeInsets.only(top: DsSpacing.xxs),
                     child: Text('ملاحظة: ${order.deliveryInstructions}',
-                        style: TextStyle(color: colors.onSurfaceVariant)),
+                        style: context.dsText.body.tint(colors.onSurfaceVariant)),
                   ),
               ],
             ),
@@ -136,31 +297,18 @@ class _Body extends StatelessWidget {
                   Expanded(
                     child: Text(
                       payment.methodLabel,
-                      style: TextStyle(
-                        fontWeight: DsTypography.semiBold,
-                        color: colors.onSurface,
-                      ),
+                      style: context.dsText.body.semibold.tint(colors.onSurface),
                     ),
                   ),
                   OrderStatusChip.raw(payment.status),
                 ],
               ),
             ),
-            if (canConfirmPayment) ...[
+            if (needsPaymentStep) ...[
               const SizedBox(height: DsSpacing.sm),
-              PrimaryButton(
-                label: 'تأكيد الدفع',
-                isLoading: state.isActing,
-                onPressed: state.isActing
-                    ? null
-                    : () async {
-                        final ok = await notifier.verifyPayment();
-                        if (ok && context.mounted) {
-                          DsSnackbar.show(context,
-                              message: 'تم تأكيد الدفع',
-                              type: DsSnackbarType.success);
-                        }
-                      },
+              PaymentActionCard(
+                payment: payment,
+                onSettled: notifier.load,
               ),
             ],
             const SizedBox(height: DsSpacing.lg),
@@ -213,16 +361,16 @@ class _Body extends StatelessWidget {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Cancel order?'),
-        content: const Text('This will cancel the order and restock the items.'),
+        title: Text(context.l10n.orderCancelTitle),
+        content: Text(context.l10n.orderCancelBody),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
-            child: const Text('Keep'),
+            child: Text(context.l10n.orderCancelKeep),
           ),
           TextButton(
             onPressed: () => Navigator.pop(ctx, true),
-            child: const Text('Cancel order'),
+            child: Text(context.l10n.orderCancelConfirm),
           ),
         ],
       ),
@@ -234,12 +382,7 @@ class _Body extends StatelessWidget {
         padding: const EdgeInsets.only(bottom: DsSpacing.sm),
         child: Text(
           title,
-          style: TextStyle(
-            fontFamily: DsTypography.fontFamily,
-            fontWeight: DsTypography.bold,
-            fontSize: DsTypography.titleSmall,
-            color: context.dsColors.onSurface,
-          ),
+          style: context.dsText.tileTitle.bold.tint(context.dsColors.onSurface),
         ),
       );
 
@@ -247,10 +390,8 @@ class _Body extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(name,
-              style: TextStyle(
-                  fontWeight: DsTypography.semiBold,
-                  color: context.dsColors.onSurface)),
-          Text(phone, style: TextStyle(color: context.dsColors.onSurfaceVariant)),
+              style: context.dsText.body.semibold.tint(context.dsColors.onSurface)),
+          Text(phone, style: context.dsText.body.tint(context.dsColors.onSurfaceVariant)),
         ],
       );
 
@@ -261,29 +402,20 @@ class _Body extends StatelessWidget {
       {bool emphasize = false}) {
     final colors = context.dsColors;
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 3),
+      padding: const EdgeInsets.symmetric(vertical: DsSpacing.xxs),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(label,
-              style: TextStyle(
-                  color: emphasize ? colors.onSurface : colors.onSurfaceVariant,
-                  fontWeight:
-                      emphasize ? DsTypography.bold : DsTypography.regular)),
+              style: context.dsText.body.tint(emphasize ? colors.onSurface : colors.onSurfaceVariant).copyWith(fontWeight: emphasize ? DsTypography.bold : DsTypography.regular)),
           Text(
             value.format(),
-            style: TextStyle(
-              fontFamily: DsTypography.fontFamily,
-              fontWeight: emphasize ? DsTypography.bold : DsTypography.medium,
-              color: emphasize ? colors.primary : colors.onSurface,
-            ),
+            style: context.dsText.body.tint(emphasize ? colors.primary : colors.onSurface).copyWith(fontWeight: emphasize ? DsTypography.bold : DsTypography.medium),
           ),
         ],
       ),
     );
   }
-
-  String _date(DateTime d) => '${d.day}/${d.month}/${d.year}';
 }
 
 class _ItemRow extends StatelessWidget {
@@ -294,7 +426,7 @@ class _ItemRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.dsColors;
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 6),
+      padding: const EdgeInsets.symmetric(vertical: DsSpacing.xs),
       child: Row(
         children: [
           ClipRRect(
@@ -303,10 +435,10 @@ class _ItemRow extends StatelessWidget {
               width: 44,
               height: 44,
               child: item.image != null
-                  ? Image.network(item.image!,
-                      fit: BoxFit.cover,
-                      errorBuilder: (_, __, ___) =>
-                          Container(color: colors.surfaceVariant))
+                  ? AuthorizedMediaImage(
+                      url: item.image!,
+                      variantWidth: MediaVariants.thumbnail,
+                    )
                   : Container(color: colors.surfaceVariant),
             ),
           ),
@@ -318,19 +450,16 @@ class _ItemRow extends StatelessWidget {
                 Text(item.title,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(color: colors.onSurface)),
+                    style: context.dsText.body.tint(colors.onSurface)),
                 Text(
                   '${item.variantName != null ? '${item.variantName} · ' : ''}x${item.quantity}',
-                  style: TextStyle(
-                      fontSize: DsTypography.bodySmall,
-                      color: colors.onSurfaceVariant),
+                  style: context.dsText.bodySmall.tint(colors.onSurfaceVariant),
                 ),
               ],
             ),
           ),
           Text(item.lineTotal.format(),
-              style: TextStyle(
-                  fontWeight: DsTypography.semiBold, color: colors.onSurface)),
+              style: context.dsText.body.semibold.tint(colors.onSurface)),
         ],
       ),
     );
@@ -356,7 +485,7 @@ class _Timeline extends StatelessWidget {
                     Container(
                       width: 10,
                       height: 10,
-                      margin: const EdgeInsets.only(top: 4),
+                      margin: const EdgeInsets.only(top: DsSpacing.xxs),
                       decoration: BoxDecoration(
                         color: colors.primary,
                         shape: BoxShape.circle,
@@ -374,14 +503,10 @@ class _Timeline extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(events[i].title,
-                            style: TextStyle(
-                                fontWeight: DsTypography.semiBold,
-                                color: colors.onSurface)),
+                            style: context.dsText.body.semibold.tint(colors.onSurface)),
                         if (events[i].description != null)
                           Text(events[i].description!,
-                              style: TextStyle(
-                                  fontSize: DsTypography.bodySmall,
-                                  color: colors.onSurfaceVariant)),
+                              style: context.dsText.bodySmall.tint(colors.onSurfaceVariant)),
                       ],
                     ),
                   ),
@@ -394,7 +519,8 @@ class _Timeline extends StatelessWidget {
   }
 }
 
-/// One seller's parcel: its own status, its own lines and its own tracking.
+/// One seller's parcel: its own status, its own lines, its own tracking, and
+/// its own way of reaching the boutique that packed it.
 class _ParcelCard extends StatelessWidget {
   const _ParcelCard({required this.parcel});
 
@@ -413,11 +539,7 @@ class _ParcelCard extends StatelessWidget {
               Expanded(
                 child: Text(
                   parcel.sellerName,
-                  style: TextStyle(
-                    fontFamily: DsTypography.fontFamily,
-                    fontWeight: DsTypography.semiBold,
-                    color: colors.onSurface,
-                  ),
+                  style: context.dsText.body.semibold.tint(colors.onSurface),
                 ),
               ),
               OrderStatusChip.parcel(parcel.status),
@@ -425,10 +547,7 @@ class _ParcelCard extends StatelessWidget {
           ),
           Text(
             parcel.number,
-            style: TextStyle(
-              fontSize: DsTypography.bodySmall,
-              color: colors.onSurfaceVariant,
-            ),
+            style: context.dsText.bodySmall.tint(colors.onSurfaceVariant),
           ),
           const SizedBox(height: DsSpacing.sm),
           for (final item in parcel.items) _ItemRow(item: item),
@@ -452,11 +571,7 @@ class _ParcelCard extends StatelessWidget {
                     Expanded(
                       child: Text(
                         '${context.l10n.trackingCode} ${parcel.shipment!.trackingCode}',
-                        style: TextStyle(
-                          fontSize: DsTypography.bodySmall,
-                          fontWeight: DsTypography.semiBold,
-                          color: colors.primary,
-                        ),
+                        style: context.dsText.bodySmall.semibold.tint(colors.primary),
                       ),
                     ),
                     OrderStatusChip.raw(parcel.shipment!.status),
@@ -471,12 +586,19 @@ class _ParcelCard extends StatelessWidget {
             const SizedBox(height: DsSpacing.xs),
             Text(
               parcel.cancellationReason!,
-              style: TextStyle(
-                fontSize: DsTypography.bodySmall,
-                color: colors.error,
-              ),
+              style: context.dsText.bodySmall.tint(colors.error),
             ),
           ],
+          const SizedBox(height: DsSpacing.md),
+          // Scoped to this parcel, not to the order: a two-seller order has
+          // two boutiques to ask, and «أين طلبي؟» only makes sense addressed
+          // to the one who is holding it.
+          MessageSellerButton(
+            label: context.l10n.messageSellerAboutOrder,
+            variant: DsButtonVariant.tonal,
+            size: DsButtonSize.sm,
+            request: ChatStartRequest.order(sellerOrderId: parcel.id),
+          ),
         ],
       ),
     );
@@ -510,11 +632,7 @@ class _InvoicesAction extends StatelessWidget {
             Expanded(
               child: Text(
                 context.l10n.invoices,
-                style: TextStyle(
-                  fontSize: DsTypography.bodyMedium,
-                  fontWeight: DsTypography.semiBold,
-                  color: colors.onSurface,
-                ),
+                style: context.dsText.body.semibold.tint(colors.onSurface),
               ),
             ),
             Icon(

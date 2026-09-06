@@ -14,7 +14,7 @@ class ProfileSectionHeader extends StatelessWidget {
     this.seeAllLabel,
     this.padding = const EdgeInsets.fromLTRB(
       DsSpacing.lg,
-      0,
+      DsSpacing.xxxs,
       DsSpacing.lg,
       DsSpacing.md,
     ),
@@ -30,7 +30,6 @@ class ProfileSectionHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = context.dsColors;
-    final theme = Theme.of(context);
 
     return Padding(
       padding: padding,
@@ -48,8 +47,8 @@ class ProfileSectionHeader extends StatelessWidget {
                 ],
                 Text(
                   title,
-                  style: theme.textTheme.headlineSmall
-                      ?.copyWith(fontWeight: DsTypography.bold),
+                  style: context.dsText.screenTitle
+                      .copyWith(fontWeight: DsTypography.bold),
                 ),
               ],
             ),
@@ -61,7 +60,7 @@ class ProfileSectionHeader extends StatelessWidget {
                 children: [
                   Text(
                     seeAllLabel ?? context.l10n.viewAll,
-                    style: theme.textTheme.labelLarge?.copyWith(
+                    style: context.dsText.labelLarge.copyWith(
                       color: c.primary,
                       fontWeight: DsTypography.semiBold,
                     ),

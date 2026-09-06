@@ -17,6 +17,10 @@ final class ReputationRemoteDataSourceImpl extends BaseRemoteDataSource
   }
 
   @override
+  Future<MyReviewsModel> getMyReviews() async =>
+      MyReviewsModel.fromJson(await getJson(ApiEndpoints.myReviews));
+
+  @override
   Future<ReviewModel> submitProductReview({
     required String productId,
     required int rating,

@@ -16,13 +16,15 @@ class HomeNotifier extends StateNotifier<HomeState> {
     required GetRecommendedUseCase getRecommended,
     required GetFeedUseCase getFeed,
     required GetStoriesUseCase getStories,
-  })  : _getCollection = getCollection,
-        _getRecommended = getRecommended,
-        _getFeed = getFeed,
-        _getStories = getStories,
-        super(HomeState(
-          sections: {for (final c in collections) c: const HomeSection()},
-        ));
+  }) : _getCollection = getCollection,
+       _getRecommended = getRecommended,
+       _getFeed = getFeed,
+       _getStories = getStories,
+       super(
+         HomeState(
+           sections: {for (final c in collections) c: const HomeSection()},
+         ),
+       );
 
   final List<ProductCollection> collections;
   final GetCollectionUseCase _getCollection;
@@ -66,10 +68,14 @@ class HomeNotifier extends StateNotifier<HomeState> {
         : await _getCollection(collection.key, limit: _railSize);
 
     final section = switch (result) {
-      Success(:final data) =>
-        HomeSection(isLoading: false, products: data.items),
-      Error(:final failure) =>
-        HomeSection(isLoading: false, error: failure.message),
+      Success(:final data) => HomeSection(
+        isLoading: false,
+        products: data.items,
+      ),
+      Error(:final failure) => HomeSection(
+        isLoading: false,
+        error: failure.message,
+      ),
     };
     state = state.copyWith(sections: {...state.sections, collection: section});
   }

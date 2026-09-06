@@ -8,6 +8,7 @@ import 'package:go_router/go_router.dart';
 
 import 'package:reem/core/design_system/design_system.dart';
 import 'package:reem/core/localization/l10n_extension.dart';
+import 'package:reem/core/media/media_variants.dart';
 import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/features/seller_dashboard/domain/entities/seller_store_info.dart';
 import 'package:reem/features/seller_dashboard/presentation/providers/seller_dashboard_provider.dart';
@@ -28,7 +29,8 @@ class SellerStoreHeader extends ConsumerWidget {
           child: Column(
             children: [
               DsSkeleton.box(height: _coverHeight, borderRadius: 0.0),
-              const SizedBox(height: 60),
+              // Clears the status bar and the floating chrome above.
+              const SizedBox(height: DsSizes.appBarHeight),
               Center(child: DsSkeleton.line(width: 160)),
               const SizedBox(height: DsSpacing.xs),
               Center(child: DsSkeleton.line(width: 240)),
@@ -56,7 +58,6 @@ class _StoreHeaderBody extends StatelessWidget {
   Widget build(BuildContext context) {
     final palette = context.atelier;
     final l10n = context.l10n;
-    final theme = Theme.of(context);
     final topPad = MediaQuery.paddingOf(context).top;
 
     return Stack(
@@ -70,7 +71,10 @@ class _StoreHeaderBody extends StatelessWidget {
             fit: StackFit.expand,
             children: [
               CachedNetworkImage(
-                imageUrl: store.coverUrl,
+                imageUrl: MediaVariants.at(
+                  store.coverUrl,
+                  MediaVariants.medium,
+                ),
                 fit: BoxFit.cover,
                 placeholder: (_, _) =>
                     ColoredBox(color: context.dsColors.shimmerBase),
@@ -116,10 +120,10 @@ class _StoreHeaderBody extends StatelessWidget {
                 gradient: palette.goldGradient,
                 boxShadow: palette.shadow,
               ),
-              padding: const EdgeInsets.all(3),
+              padding: const EdgeInsets.all(DsSpacing.xxs),
               child: ClipOval(
                 child: CachedNetworkImage(
-                  imageUrl: store.logoUrl,
+                  imageUrl: MediaVariants.thumb(store.logoUrl),
                   fit: BoxFit.cover,
                   placeholder: (_, _) =>
                       ColoredBox(color: context.dsColors.shimmerBase),
@@ -140,7 +144,7 @@ class _StoreHeaderBody extends StatelessWidget {
         // Content below logo.
         Padding(
           padding: EdgeInsets.only(
-              top: SellerStoreHeader._coverHeight + topPad + 50),
+              top: SellerStoreHeader._coverHeight + topPad + DsSpacing.huge),
           child: Column(
             children: [
               // Store name + verified badge.
@@ -156,7 +160,7 @@ class _StoreHeaderBody extends StatelessWidget {
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         textAlign: TextAlign.center,
-                        style: theme.textTheme.headlineSmall?.copyWith(
+                        style: context.dsText.screenTitle.copyWith(
                           fontFamily: DsTypography.fontFamilyDisplay,
                           fontFamilyFallback: DsTypography.displayFallback,
                           fontWeight: DsTypography.bold,
@@ -188,29 +192,24 @@ class _StoreHeaderBody extends StatelessWidget {
                   textAlign: TextAlign.center,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                  style: theme.textTheme.bodySmall
-                      ?.copyWith(color: palette.muted),
+                  style: context.dsText.cardSubtitle
+                      .copyWith(color: palette.muted),
                 ),
               ),
               const SizedBox(height: DsSpacing.md),
               // Subscription badge.
               Container(
                 padding: const EdgeInsets.symmetric(
-                    horizontal: DsSpacing.md, vertical: DsSpacing.xxs + 1),
+                    horizontal: DsSpacing.md, vertical: DsSpacing.xxs + DsSpacing.xxxs),
                 decoration: BoxDecoration(
                   gradient: palette.goldGradient,
                   borderRadius: DsRadius.borderFull,
                 ),
                 child: Text(
                   l10n.sellerPlanBadge(store.subscriptionPlan),
-                  style: const TextStyle(
-                    fontFamily: DsTypography.fontFamily,
-                    fontSize: DsTypography.labelSmall,
-                    fontWeight: DsTypography.bold,
-                    // Deep gold ink on the champagne wash, fixed in both
-                    // themes because the badge's ground is a brand gradient.
-                    color: Color(0xFF79551F),
-                  ),
+                  // Deep gold ink on the champagne wash, fixed in both
+                  // themes because the badge's ground is a brand gradient.
+                  style: context.dsText.badge.tint(DsColors.onChampagne),
                 ),
               ),
               const SizedBox(height: DsSpacing.lg),
@@ -280,12 +279,12 @@ class _GlassIconButton extends StatelessWidget {
             width: 38,
             height: 38,
             decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.2),
+              color: DsColors.onMedia.withValues(alpha: 0.2),
               borderRadius: DsRadius.borderMd,
               border: Border.all(
-                  color: Colors.white.withValues(alpha: 0.3)),
+                  color: DsColors.onMedia.withValues(alpha: 0.3)),
             ),
-            child: Icon(icon, color: Colors.white, size: 20),
+            child: Icon(icon, color: DsColors.onMedia, size: 20),
           ),
         ),
       ),

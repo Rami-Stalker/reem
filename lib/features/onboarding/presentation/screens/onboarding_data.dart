@@ -1,3 +1,7 @@
+import 'package:flutter/widgets.dart';
+
+import 'package:reem/core/localization/l10n_extension.dart';
+
 class OnboardingData {
   const OnboardingData({
     required this.title,
@@ -12,26 +16,36 @@ class OnboardingData {
   final String emoji;
 }
 
-const onboardingItems = [
-  OnboardingData(
-    title: 'Shop in Style',
-    subtitle:
-        'Discover dresses, accessories, beauty & gifts curated for the modern woman.',
-    image: 'https://images.unsplash.com/photo-1529139574466-a303027c1d8b',
-    emoji: '👗',
-  ),
-  OnboardingData(
-    title: 'Stories & Posts',
-    subtitle:
-        'Watch stories, like posts, and shop directly from your favorite creators.',
-    image: 'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f',
-    emoji: '✨',
-  ),
-  OnboardingData(
-    title: 'Share Your Haul',
-    subtitle:
-        'Post your purchases as stories & feed posts. Earn points & unlock rewards.',
-    image: 'https://images.unsplash.com/photo-1496747611176-843222e1e57c',
-    emoji: '💕',
-  ),
-];
+/// The three panels of the first run.
+///
+/// A function rather than the `const` list it used to be: the copy is
+/// localised, and a localised string cannot be resolved at compile time. The
+/// count is stable, so the screen builds this once per frame and reads
+/// `length` off the result rather than calling back in.
+List<OnboardingData> onboardingItems(BuildContext context) {
+  final l10n = context.l10n;
+  return [
+    OnboardingData(
+      title: l10n.onboardShopTitle,
+      subtitle: l10n.onboardShopBody,
+      image: 'https://images.unsplash.com/photo-1529139574466-a303027c1d8b',
+      emoji: '👗',
+    ),
+    OnboardingData(
+      title: l10n.onboardStoriesTitle,
+      subtitle: l10n.onboardStoriesBody,
+      image: 'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f',
+      emoji: '✨',
+    ),
+    OnboardingData(
+      title: l10n.onboardShareTitle,
+      subtitle: l10n.onboardShareBody,
+      image: 'https://images.unsplash.com/photo-1496747611176-843222e1e57c',
+      emoji: '💕',
+    ),
+  ];
+}
+
+/// How many panels there are, for code that needs the count without a context
+/// — the `_next` handler deciding whether it is on the last one.
+const int onboardingItemCount = 3;

@@ -24,6 +24,7 @@ import 'package:reem/features/profile/presentation/widgets/profile_referral_card
 import 'package:reem/features/profile/presentation/widgets/profile_stats.dart';
 import 'package:reem/features/profile/presentation/widgets/profile_wishlist_preview.dart';
 import 'package:reem/features/seller_dashboard/presentation/screens/seller_profile_screen.dart';
+import 'package:reem/features/value/presentation/widgets/value_standing_card.dart';
 
 /// Role-aware profile dispatcher — renders [SellerProfileScreen] for sellers
 /// and the buyer profile hub for customers.
@@ -112,6 +113,12 @@ class _BuyerProfileScreenState extends ConsumerState<_BuyerProfileScreen> {
           child: ProfileStats(user: user, savedCount: savedCount),
         ),
 
+        // Reem Value sits above the loyalty dashboard, because standing is what
+        // she is on this platform and the points card below is what she is owed
+        // by it. The order is the argument.
+        _box(const ValueStandingCard()),
+        const _Gap(_gap),
+
         _box(const ProfileLoyaltyDashboard()),
         const _Gap(_gap),
 
@@ -180,7 +187,7 @@ class _GuestProfileExperience extends StatelessWidget {
           ),
           const SizedBox(height: DsSpacing.sm),
           Text(
-            'Browse freely, discover products, and explore Reem. Create an account when you are ready to save everything.',
+            context.l10n.guestBrowseBlurb,
             textAlign: TextAlign.center,
             style: Theme.of(
               context,
@@ -256,11 +263,11 @@ class _GuestBenefit extends StatelessWidget {
             children: [
               Text(
                 title,
-                style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                style: context.dsText.tileTitle.copyWith(
                   fontWeight: DsTypography.semiBold,
                 ),
               ),
-              const SizedBox(height: 2),
+              DsGaps.vXxxs,
               Text(
                 message,
                 style: Theme.of(
@@ -286,22 +293,12 @@ class _VersionFooter extends StatelessWidget {
         children: [
           Text(
             'REEM',
-            style: TextStyle(
-              fontFamily: DsTypography.fontFamilyDisplay,
-              fontFamilyFallback: DsTypography.displayFallback,
-              fontSize: DsTypography.titleSmall,
-              fontWeight: DsTypography.bold,
-              color: c.onSurfaceVariant,
-              letterSpacing: 2,
-            ),
+            style: context.dsText.tileTitle.displayFamily.bold.tint(c.onSurfaceVariant).copyWith(letterSpacing: 2),
           ),
-          const SizedBox(height: 2),
+          DsGaps.vXxxs,
           Text(
             context.l10n.appVersion('1.0.0'),
-            style: TextStyle(
-              fontSize: DsTypography.labelSmall,
-              color: c.onSurfaceVariant,
-            ),
+            style: context.dsText.caption.tint(c.onSurfaceVariant),
           ),
         ],
       ),

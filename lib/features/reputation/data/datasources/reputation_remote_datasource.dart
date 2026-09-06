@@ -11,6 +11,8 @@ abstract interface class ReputationRemoteDataSource {
     String? orderId,
   });
 
+  Future<MyReviewsModel> getMyReviews();
+
   Future<List<ReviewModel>> getSellerReviews(String sellerId);
 
   Future<ReviewModel> submitSellerReview({

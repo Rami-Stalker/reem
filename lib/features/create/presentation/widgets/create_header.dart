@@ -27,14 +27,10 @@ class CreateHeader
           title,
 
           style:
-             TextStyle(
-      fontFamily: DsTypography.fontFamily,
-      fontSize: DsTypography.titleLarge,
-      fontWeight: DsTypography.semiBold,
-    ),
+             context.dsText.sectionTitle,
         ),
 
-        const SizedBox(height: 10),
+        DsGaps.vSm,
 
         Text(
 

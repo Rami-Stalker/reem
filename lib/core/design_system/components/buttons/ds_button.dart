@@ -95,6 +95,11 @@ class DsButton extends StatelessWidget {
     final wrapped = DsScaleAnimations.tapScale(
       pressedScale: DsMotion.pressedScale,
       onTap: state.isInteractive ? onPressed! : () {},
+      // A disabled button still announces itself, so she is told the control
+      // exists and is unavailable rather than finding nothing there.
+      enabled: state.isInteractive,
+      semanticLabel: label,
+      excludeChildSemantics: true,
       child: button,
     );
 
@@ -129,16 +134,26 @@ class _Content extends StatelessWidget {
           Icon(icon, color: foreground, size: size.iconSize),
           const SizedBox(width: DsSpacing.xs),
         ],
+        // A call to action shrinks before it truncates. Cutting the label is
+        // the one thing a button must not do — «أضيفي إلى السلة» came out as
+        // «أضيفي إلى ا…» on the product page, which stops being an
+        // instruction. `scaleDown` only ever reduces, so a label that already
+        // fits is untouched; the ellipsis stays as the last resort.
         Flexible(
-          child: Text(
-            label,
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-              fontFamily: DsTypography.fontFamily,
-              fontSize: size.fontSize,
-              fontWeight: DsTypography.semiBold,
-              letterSpacing: DsTypography.letterSpacingWide,
-              color: foreground,
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              label,
+              maxLines: 1,
+              softWrap: false,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                fontFamily: DsTypography.fontFamily,
+                fontSize: size.fontSize,
+                fontWeight: DsTypography.semiBold,
+                letterSpacing: DsTypography.letterSpacingWide,
+                color: foreground,
+              ),
             ),
           ),
         ),

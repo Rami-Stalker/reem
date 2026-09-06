@@ -43,13 +43,7 @@ class SellerOrdersScreen extends ConsumerWidget {
       background: const SellerAtelierBackground(),
       backgroundColor: atelier.background,
       slivers: [
-        SliverAppBar(
-          pinned: true,
-          elevation: 0,
-          backgroundColor: Colors.transparent,
-          surfaceTintColor: Colors.transparent,
-          title: Text(l10n.sellerOrdersTitle),
-        ),
+        PremiumAppBar(title: l10n.sellerOrdersTitle, showBack: true),
 
         SliverToBoxAdapter(
           child: _Tabs(
@@ -80,11 +74,14 @@ class SellerOrdersScreen extends ConsumerWidget {
           )
         else
           SliverPadding(
+            // The queue is a shell TAB now, not a pushed page, so the last
+            // card has to clear the seller's navigation bar rather than
+            // hiding the final order of the day behind it.
             padding: const EdgeInsets.fromLTRB(
               DsSpacing.md,
               DsSpacing.xs,
               DsSpacing.md,
-              DsSpacing.xxl,
+              140,
             ),
             sliver: SliverList.separated(
               itemCount: state.orders.length,

@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:reem/core/design_system/design_system.dart';
 import 'package:reem/core/localization/l10n_extension.dart';
+import 'package:reem/core/media/authorized_media_image.dart';
+import 'package:reem/core/media/media_variants.dart';
 import 'package:reem/core/router/route_names.dart';
 import 'package:reem/core/shared/entities/product.dart';
 
@@ -71,7 +73,7 @@ class FavoriteProductCard extends StatelessWidget {
                       sigmaY: DsBlur.light,
                     ),
                     child: Container(
-                      padding: const EdgeInsets.all(12),
+                      padding: const EdgeInsets.all(DsSpacing.sm),
                       decoration: BoxDecoration(
                         gradient: context.ds.glassGradient,
                         border: Border.all(color: colors.glassBorder),
@@ -84,12 +86,9 @@ class FavoriteProductCard extends StatelessWidget {
                             product.title,
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                              color: colors.onSurface,
-                              fontWeight: DsTypography.semiBold,
-                            ),
+                            style: context.dsText.body.semibold.tint(colors.onSurface),
                           ),
-                          const SizedBox(height: 4),
+                          DsGaps.vXxs,
                           Row(
                             children: [
                               Expanded(
@@ -97,10 +96,7 @@ class FavoriteProductCard extends StatelessWidget {
                                   product.price?.format() ?? '',
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                    color: colors.primary,
-                                    fontWeight: DsTypography.bold,
-                                  ),
+                                  style: context.dsText.body.bold.tint(colors.primary),
                                 ),
                               ),
                               Icon(
@@ -110,10 +106,7 @@ class FavoriteProductCard extends StatelessWidget {
                               ),
                               Text(
                                 product.rating.toStringAsFixed(1),
-                                style: TextStyle(
-                                  color: colors.onSurface,
-                                  fontWeight: DsTypography.medium,
-                                ),
+                                style: context.dsText.body.medium.tint(colors.onSurface),
                               ),
                             ],
                           ),
@@ -149,17 +142,9 @@ class _ProductImage extends StatelessWidget {
         ),
       );
     }
-    return Image.network(
-      url!,
-      fit: BoxFit.cover,
-      errorBuilder: (_, __, ___) => ColoredBox(
-        color: colors.surfaceVariant,
-        child: Icon(
-          Icons.broken_image_outlined,
-          color: colors.onSurfaceVariant,
-          size: 40,
-        ),
-      ),
+    return AuthorizedMediaImage(
+      url: url!,
+      variantWidth: MediaVariants.thumbnail,
     );
   }
 }

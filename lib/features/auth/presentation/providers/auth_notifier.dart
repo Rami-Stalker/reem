@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter_riverpod/legacy.dart';
+import 'package:reem/core/network/http_cache/session_cache.dart';
 import 'package:reem/core/result/result.dart';
 import 'package:reem/core/shared/entities/user.dart' show User, UserRole;
 import 'package:reem/features/auth/domain/entities/auth_account.dart';
@@ -50,6 +53,26 @@ class AuthNotifier extends StateNotifier<AuthState> {
   final VerifyOtpUseCase _verifyOtp;
   final ResetPasswordUseCase _resetPassword;
   final AuthRepository _repository;
+
+  /// Keeps the response cache aligned with whoever is signed in.
+  ///
+  /// Every path that changes the session — sign-in, OTP verify, guest, restore,
+  /// sign-out — ends in a `state =`, so binding here catches all of them
+  /// instead of asking thirty call sites to remember. Signing out also empties
+  /// the cache, because a shared handset must not carry the last account's
+  /// reads on its disk.
+  @override
+  set state(AuthState value) {
+    final previous = super.state.user?.id;
+    super.state = value;
+    final next = value.user?.id;
+    if (previous == next) return;
+    if (next == null) {
+      unawaited(SessionCache.forget());
+    } else {
+      SessionCache.bind(next);
+    }
+  }
 
   Future<void> restoreSession() async {
     state = state.copyWith(isLoading: true, clearError: true);

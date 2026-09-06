@@ -42,19 +42,53 @@ class SellerEarningsModel extends SellerEarnings {
     );
   }
 
-  static PendingPayout _payout(Map<String, dynamic> json, Currency currency) {
+  /// Shared by the statement's `pending_payouts`, the request endpoint and the
+  /// history list — all three serialise a payout identically.
+  static PendingPayout payoutFromJson(
+    Map<String, dynamic> json, {
+    Currency currency = Currency.syp,
+  }) {
+    final resolved = Currency.fromWire(json['currency'] as String?);
     return PendingPayout(
       id: json['id'] as String? ?? '',
-      status: json['status'] as String? ?? 'PENDING',
-      net: Money.fromJson(json['net'], fallback: currency),
+      status: PayoutStatus.fromWire(json['status'] as String?),
+      net: Money.fromJson(
+        json['net'],
+        fallback: json['currency'] == null ? currency : resolved,
+      ),
       periodStart:
-          DateTime.tryParse(json['period_start'] as String? ?? '') ??
+          DateTime.tryParse(json['period_start'] as String? ?? '')?.toLocal() ??
           DateTime.now(),
       periodEnd:
-          DateTime.tryParse(json['period_end'] as String? ?? '') ??
+          DateTime.tryParse(json['period_end'] as String? ?? '')?.toLocal() ??
           DateTime.now(),
+      createdAt: DateTime.tryParse(
+        json['created_at'] as String? ?? '',
+      )?.toLocal(),
+      paidAt: DateTime.tryParse(json['paid_at'] as String? ?? '')?.toLocal(),
     );
   }
+
+  /// Parses `GET /finance/seller/payouts/availability`.
+  static PayoutAvailability availabilityFromJson(Map<String, dynamic> json) {
+    final currency = Currency.fromWire(json['currency'] as String?);
+    final open = json['open_request'];
+    return PayoutAvailability(
+      claimable: Money.fromJson(json['claimable'], fallback: currency),
+      ordersIncluded: (json['orders_included'] as num?)?.toInt() ?? 0,
+      canRequest: json['can_request'] as bool? ?? false,
+      blockedBy: PayoutBlocker.fromWire(json['blocked_by'] as String?),
+      frozenUntil: DateTime.tryParse(
+        json['frozen_until'] as String? ?? '',
+      )?.toLocal(),
+      openRequest: open is Map
+          ? payoutFromJson(open.cast<String, dynamic>(), currency: currency)
+          : null,
+    );
+  }
+
+  static PendingPayout _payout(Map<String, dynamic> json, Currency currency) =>
+      payoutFromJson(json, currency: currency);
 
   static EarningsMovement _movement(
     Map<String, dynamic> json,

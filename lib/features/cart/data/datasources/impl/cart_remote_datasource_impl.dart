@@ -23,7 +23,7 @@ final class CartRemoteDataSourceImpl extends BaseRemoteDataSource
       ApiEndpoints.cartItems,
       body: {
         'offer_id': offerId,
-        if (offerVariantId != null) 'offer_variant_id': offerVariantId,
+        'offer_variant_id': ?offerVariantId,
         'quantity': quantity,
       },
     );

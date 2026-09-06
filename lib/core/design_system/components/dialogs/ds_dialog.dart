@@ -5,6 +5,7 @@ import 'package:reem/core/design_system/foundation/theme/extensions/color_extens
 import 'package:reem/core/design_system/foundation/tokens/ds_radius.dart';
 import 'package:reem/core/design_system/foundation/tokens/ds_spacing.dart';
 import 'package:reem/core/design_system/foundation/tokens/ds_typography.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
 
 /// Tone for a [DsDialog] icon header.
 enum DsDialogTone { primary, success, warning, danger, info }
@@ -16,8 +17,10 @@ abstract final class DsDialog {
     BuildContext context, {
     required String title,
     String? message,
-    String confirmLabel = 'Confirm',
-    String cancelLabel = 'Cancel',
+    /// Null takes the localised default. A `const` default could not be
+    /// localised, which is what left every confirm dialog in English.
+    String? confirmLabel,
+    String? cancelLabel,
     IconData? icon,
     bool destructive = false,
   }) async {
@@ -30,12 +33,12 @@ abstract final class DsDialog {
         tone: destructive ? DsDialogTone.danger : DsDialogTone.primary,
         actions: [
           DsButton(
-            label: cancelLabel,
+            label: cancelLabel ?? context.l10n.cancel,
             variant: DsButtonVariant.tonal,
             onPressed: () => Navigator.of(context).pop(false),
           ),
           DsButton(
-            label: confirmLabel,
+            label: confirmLabel ?? context.l10n.dialogConfirm,
             variant:
                 destructive ? DsButtonVariant.danger : DsButtonVariant.primary,
             onPressed: () => Navigator.of(context).pop(true),
@@ -51,7 +54,7 @@ abstract final class DsDialog {
     BuildContext context, {
     required String title,
     String? message,
-    String buttonLabel = 'Got it',
+    String? buttonLabel,
     IconData? icon,
     DsDialogTone tone = DsDialogTone.primary,
   }) {
@@ -64,7 +67,7 @@ abstract final class DsDialog {
         tone: tone,
         actions: [
           DsButton(
-            label: buttonLabel,
+            label: buttonLabel ?? context.l10n.dialogGotIt,
             onPressed: () => Navigator.of(context).pop(),
           ),
         ],

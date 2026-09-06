@@ -5,22 +5,43 @@ class ChatState {
   const ChatState({
     this.threads = const [],
     this.isLoading = false,
+    this.hasLoadedOnce = false,
+    this.query = '',
     this.error,
   });
 
   final List<ChatThreadEntity> threads;
   final bool isLoading;
+
+  /// Separates "still loading the first page" from "loaded, and there is
+  /// nothing here" — the two need very different screens.
+  final bool hasLoadedOnce;
+
+  /// The search term the current [threads] answer. Held in state so a result
+  /// arriving after she has cleared the box can be recognised and dropped.
+  final String query;
   final String? error;
+
+  bool get isSearching => query.trim().isNotEmpty;
+  bool get isEmpty => threads.isEmpty;
+
+  /// Unread across every conversation — what a badge on the inbox shows.
+  int get totalUnread =>
+      threads.fold(0, (sum, thread) => sum + thread.unreadCount);
 
   ChatState copyWith({
     List<ChatThreadEntity>? threads,
     bool? isLoading,
+    bool? hasLoadedOnce,
+    String? query,
     String? error,
     bool clearError = false,
   }) {
     return ChatState(
       threads: threads ?? this.threads,
       isLoading: isLoading ?? this.isLoading,
+      hasLoadedOnce: hasLoadedOnce ?? this.hasLoadedOnce,
+      query: query ?? this.query,
       error: clearError ? null : (error ?? this.error),
     );
   }
@@ -62,4 +83,14 @@ class ChatMessagesState {
       chatId: chatId ?? this.chatId,
     );
   }
+}
+
+/// One conversation's header. Its [error] is deliberately non-fatal: the
+/// messages load on their own, so a failure here costs a name, not the screen.
+class ChatThreadState {
+  const ChatThreadState({this.thread, this.isLoading = false, this.error});
+
+  final ChatThreadEntity? thread;
+  final bool isLoading;
+  final String? error;
 }

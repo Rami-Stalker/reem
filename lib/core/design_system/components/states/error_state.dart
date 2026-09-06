@@ -136,7 +136,7 @@ class DsInlineError extends StatelessWidget {
           ),
           if (onRetry != null)
             DsButton(
-              label: 'Retry',
+              label: context.l10n.retry,
               variant: DsButtonVariant.ghost,
               size: DsButtonSize.sm,
               onPressed: onRetry,

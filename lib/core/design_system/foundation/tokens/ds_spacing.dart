@@ -49,6 +49,42 @@ abstract final class DsSpacing {
   static const EdgeInsets cardPadding = EdgeInsets.all(md);
   static const EdgeInsets cardPaddingLg = EdgeInsets.all(lg);
 
+  // ---------------------------------------------------------------------------
+  // Component insets.
+  //
+  // Small paddings are where the grid used to break down: pills and badges
+  // were padded 5/1, 6/2, 8/3, 10/4 and 12/6 across the app, which is why
+  // two chips side by side never looked like the same component. Each shape
+  // gets one inset, and components take it from here.
+  // ---------------------------------------------------------------------------
+
+  /// Count bubbles and status dots — the tightest shape in the system.
+  static const EdgeInsets badgePadding =
+      EdgeInsets.symmetric(horizontal: xs, vertical: xxxs);
+
+  /// Inline status pills ("Delivered", "-20%").
+  static const EdgeInsets pillPadding =
+      EdgeInsets.symmetric(horizontal: sm, vertical: xxs);
+
+  /// Tappable filter and choice chips.
+  static const EdgeInsets chipPadding =
+      EdgeInsets.symmetric(horizontal: md, vertical: xs);
+
+  /// A row in a list — settings, orders, addresses.
+  static const EdgeInsets listRowPadding =
+      EdgeInsets.symmetric(horizontal: md, vertical: sm);
+
+  /// Inner padding of a bottom sheet or dialog body.
+  static const EdgeInsets sheetPadding =
+      EdgeInsets.fromLTRB(lg, md, lg, xl);
+
+  /// Gutter around a page section that already sits inside [screenHorizontal].
+  static const EdgeInsets sectionPadding =
+      EdgeInsets.symmetric(vertical: md);
+
+  /// Clearance under scrollable content so it clears a floating bar or FAB.
+  static const EdgeInsets bottomSafe = EdgeInsets.only(bottom: massive + xl);
+
   static double responsive(
     BuildContext context, {
     required double compact,

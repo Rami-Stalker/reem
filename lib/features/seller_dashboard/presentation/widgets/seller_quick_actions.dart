@@ -39,16 +39,19 @@ class SellerQuickActions extends StatelessWidget {
         route: RoutePaths.myProducts,
         color: palette.series[3],
       ),
+      // «إنشاء كوبون» used to sit here and opened `/coupons` — the CUSTOMER's
+      // coupon wallet. Sellers cannot create coupons at all; that stays with
+      // the platform. Her returns desk is the work that actually waits.
       _Action(
-        icon: Icons.local_offer_outlined,
-        label: l10n.sellerCreateCoupon,
-        route: RoutePaths.coupons,
+        icon: Icons.assignment_return_outlined,
+        label: l10n.sellerReturnsTitle,
+        route: RoutePaths.sellerReturns,
         color: palette.series[2],
       ),
       _Action(
         icon: Icons.campaign_outlined,
         label: l10n.sellerAnnouncement,
-        route: RoutePaths.sellerMarketing,
+        route: RoutePaths.addPost,
         color: palette.series[4],
       ),
       _Action(
@@ -66,12 +69,7 @@ class SellerQuickActions extends StatelessWidget {
         children: [
           Text(
             l10n.sellerQuickActions,
-            style: TextStyle(
-              fontFamily: DsTypography.fontFamily,
-              color: palette.ink,
-              fontSize: DsTypography.titleSmall,
-              fontWeight: DsTypography.bold,
-            ),
+            style: context.dsText.tileTitle.bold.tint(palette.ink),
           ),
           const SizedBox(height: DsSpacing.sm),
           LayoutBuilder(
@@ -152,13 +150,7 @@ class _Action {
                 label,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  fontFamily: DsTypography.fontFamily,
-                  fontSize: DsTypography.labelMedium,
-                  fontWeight: DsTypography.bold,
-                  color: palette.ink,
-                  height: 1.2,
-                ),
+                style: context.dsText.labelMedium.bold.tint(palette.ink).copyWith(height: 1.2),
               ),
             ),
           ],

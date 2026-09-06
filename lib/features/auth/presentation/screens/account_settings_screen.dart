@@ -96,7 +96,7 @@ class _AccountSettingsScreenState extends ConsumerState<AccountSettingsScreen> {
                 delegate: SliverChildListDelegate([
                   Text(
                     context.l10n.profileIdentity,
-                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                    style: context.dsText.screenTitle.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -136,7 +136,7 @@ class _AccountSettingsScreenState extends ConsumerState<AccountSettingsScreen> {
                     subtitle: Text(
                       data.user.phone,
                       textDirection: TextDirection.ltr,
-                      style: Theme.of(context).textTheme.bodyLarge,
+                      style: context.dsText.bodyLarge,
                     ),
                     trailing: TextButton(
                       onPressed: () => context.push(RoutePaths.phoneChange),
