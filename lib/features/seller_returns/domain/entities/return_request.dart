@@ -84,6 +84,20 @@ enum ReturnReason {
       this == ReturnReason.wrongItem ||
       this == ReturnReason.notAsDescribed ||
       this == ReturnReason.damagedInTransit;
+
+  /// The value `POST /returns` expects. The mirror of [fromWire], added when
+  /// the customer gained a way to open a return — until then nothing in the
+  /// client ever had to send a reason, only read one back.
+  String get wire => switch (this) {
+    ReturnReason.defective => 'DEFECTIVE',
+    ReturnReason.wrongItem => 'WRONG_ITEM',
+    ReturnReason.notAsDescribed => 'NOT_AS_DESCRIBED',
+    ReturnReason.damagedInTransit => 'DAMAGED_IN_TRANSIT',
+    ReturnReason.changedMind => 'CHANGED_MIND',
+    ReturnReason.sizeIssue => 'SIZE_ISSUE',
+    ReturnReason.lateDelivery => 'LATE_DELIVERY',
+    ReturnReason.other => 'OTHER',
+  };
 }
 
 /// Who carries the cost of the return leg (Q67 P1).

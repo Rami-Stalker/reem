@@ -80,6 +80,7 @@ abstract final class RouteNames {
   static const courierDay = 'courier-day';
   static const shipmentTracking = 'shipment-tracking';
   static const orderInvoices = 'order-invoices';
+  static const returnRequest = 'return-request';
   static const invoice = 'invoice';
   static const collection = 'collection';
   static const notifications = 'notifications';

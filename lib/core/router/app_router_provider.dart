@@ -76,6 +76,7 @@ import 'package:reem/features/product_details/presentation/screens/product_detai
 import 'package:reem/features/profile/presentation/screens/favorites_screen.dart';
 import 'package:reem/features/profile/presentation/screens/profile_screen.dart';
 import 'package:reem/features/reputation/presentation/screens/my_reviews_screen.dart';
+import 'package:reem/features/returns/presentation/screens/return_request_screen.dart';
 import 'package:reem/features/rooms/presentation/screens/compare_screen.dart';
 import 'package:reem/features/rooms/presentation/screens/purchase_plan_screen.dart';
 import 'package:reem/features/rooms/presentation/screens/room_screen.dart';
@@ -334,6 +335,13 @@ final goRouterProvider = Provider<GoRouter>((ref) {
             OrderInvoicesScreen(orderId: state.pathParameters['id'] ?? ''),
       ),
       GoRoute(
+        path: RoutePaths.returnRequest,
+        name: RouteNames.returnRequest,
+        builder: (context, state) => ReturnRequestScreen(
+          sellerOrderId: state.pathParameters['sellerOrderId'] ?? '',
+        ),
+      ),
+      GoRoute(
         path: RoutePaths.invoice,
         name: RouteNames.invoice,
         builder: (context, state) =>
@@ -457,13 +465,14 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state) =>
             ClosetGapScreen(gapId: state.pathParameters['id'] ?? ''),
       ),
-      // Reem Rooms. Full-screen: a room is a place several people are working
-      // in, and a bottom bar competing with the decision cards is the wrong
-      // trade — the same call the stylist and the closet made.
+      // The cart is no longer a destination — Rooms took its tab, because what
+      // she is in the middle of is a set of decisions rather than a basket. It
+      // stays reachable from the profile menu for the one-tap purchase that
+      // needs no deliberation, which is what a pushed route is for.
       GoRoute(
-        path: RoutePaths.rooms,
-        name: RouteNames.rooms,
-        builder: (context, state) => const RoomsScreen(),
+        path: RoutePaths.cart,
+        name: RouteNames.cart,
+        builder: (context, state) => const CartScreen(),
       ),
       GoRoute(
         path: RoutePaths.room,
@@ -840,12 +849,16 @@ final goRouterProvider = Provider<GoRouter>((ref) {
               ),
             ],
           ),
+          // Reem Rooms holds the third tab. It has to be a branch, not a
+          // top-level route: a tab reached with `context.go` tears the shell
+          // down, and she arrives at a full-screen room with no bottom bar and
+          // nothing to press to get back to Home or Search.
           StatefulShellBranch(
             routes: [
               GoRoute(
-                path: RoutePaths.cart,
-                name: RouteNames.cart,
-                builder: (context, state) => const CartScreen(),
+                path: RoutePaths.rooms,
+                name: RouteNames.rooms,
+                builder: (context, state) => const RoomsScreen(),
               ),
             ],
           ),

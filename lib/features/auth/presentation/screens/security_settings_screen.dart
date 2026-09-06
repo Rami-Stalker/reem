@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/errors/failure_exception.dart';
 import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/result/result.dart';
 import 'package:reem/core/router/route_paths.dart';
@@ -351,7 +352,7 @@ class _SecuritySettingsScreenState
 
               account.when(
                 loading: () => const DsLoadingIndicator(),
-                error: (error, _) => Text(error.toString()),
+                error: (error, _) => Text(messageOf(error)),
                 data: (data) => Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
@@ -481,7 +482,7 @@ class _SecuritySettingsScreenState
               const SizedBox(height: DsSpacing.sm),
               sessions.when(
                 loading: () => const DsLoadingIndicator(),
-                error: (error, _) => Text(error.toString()),
+                error: (error, _) => Text(messageOf(error)),
                 data: (items) {
                   final live = items.where((s) => s.isActive).toList();
                   if (live.isEmpty) {
@@ -509,7 +510,7 @@ class _SecuritySettingsScreenState
               const SizedBox(height: DsSpacing.sm),
               devices.when(
                 loading: () => const DsLoadingIndicator(),
-                error: (error, _) => Text(error.toString()),
+                error: (error, _) => Text(messageOf(error)),
                 data: (items) {
                   if (items.isEmpty) {
                     return Padding(

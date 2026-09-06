@@ -94,7 +94,14 @@ enum MediaPurpose {
   /// mirror. Unlike the other private purposes it carries no retention clock —
   /// this picture is the permanent illustration of something she owns, and it
   /// goes when she deletes the piece.
-  closet('closet');
+  closet('closet'),
+
+  /// A photograph of the fault, attached to a return request. Public, unlike
+  /// the purposes above it: the boutique she is claiming against has to be
+  /// able to see it, and so does whoever arbitrates if they disagree. See the
+  /// server's `PRIVATE_PURPOSES` for why that is a decision rather than an
+  /// oversight.
+  returnEvidence('return_evidence');
 
   const MediaPurpose(this.wire);
 
@@ -108,6 +115,13 @@ enum MediaPurpose {
   /// fail (the bytes need a bearer token the image loader does not send) and,
   /// worse, would write a photograph of somebody's national ID into a shared
   /// on-disk cache if it ever succeeded.
+  /// The server's private set is `verification`, `chat`, `visual_search`,
+  /// `try_on` and `closet`. Only the three the client can actually upload as
+  /// are listed here; `closet` was missing, which made this getter disagree
+  /// with the mapping its own comment promises to mirror — and a closet
+  /// photograph is a picture of her bedroom and her mirror.
   bool get isPrivate =>
-      this == MediaPurpose.verification || this == MediaPurpose.chat;
+      this == MediaPurpose.verification ||
+      this == MediaPurpose.chat ||
+      this == MediaPurpose.closet;
 }

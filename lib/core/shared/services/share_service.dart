@@ -68,6 +68,24 @@ abstract final class ShareService {
     );
   }
 
+  /// A profile — hers, or a boutique's she wants to pass on.
+  ///
+  /// The share control on her own profile header had an empty `onPressed` from
+  /// the day it was drawn, which is a button that reads as broken rather than
+  /// as absent. The link shape matches the app's own `/user/:id` route so that
+  /// whatever resolves the other shares resolves this one too.
+  static Future<bool> profile({
+    required BuildContext context,
+    required String userId,
+    String? name,
+  }) {
+    return _share(
+      context: context,
+      text: name?.trim() ?? '',
+      uri: '${AppEnv.shareBaseUrl}/user/$userId',
+    );
+  }
+
   /// A saved collection she has chosen to publish. The server issues the token,
   /// so the whole URL arrives ready-made and is passed through untouched.
   static Future<bool> link({

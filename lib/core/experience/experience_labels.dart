@@ -90,6 +90,29 @@ extension RoleActionLabel on RoleAction {
   };
 }
 
+/// The cards on a surface built from the role manifest.
+///
+/// [RoleSurfaceSection] was the one entry in the manifest that never got this
+/// treatment, and the Activity tab is the one place a shopper sees them — so
+/// one of her five tabs was three cards reading «Notifications / Order
+/// activity / Messages» in English, in an Arabic-first app, no matter what she
+/// had set the language to.
+extension RoleSurfaceSectionLabel on RoleSurfaceSection {
+  String titleOf(AppLocalizations l10n) => switch (id) {
+    'notifications' => l10n.notifications,
+    'orders' => l10n.orders,
+    'messages' => l10n.messages,
+    _ => title,
+  };
+
+  String descriptionOf(AppLocalizations l10n) => switch (id) {
+    'notifications' => l10n.activityNotificationsBlurb,
+    'orders' => l10n.activityOrdersBlurb,
+    'messages' => l10n.activityMessagesBlurb,
+    _ => description,
+  };
+}
+
 /// The headings over the profile and console menus.
 extension RoleMenuGroupLabel on RoleMenuGroup {
   String labelOf(AppLocalizations l10n) => switch (id) {

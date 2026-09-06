@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ForbiddenException,
   Inject,
   Injectable,
   NotFoundException,
@@ -16,6 +17,7 @@ import {
   PaymentStatus,
   Prisma,
 } from '@prisma/client';
+import { ConfigService } from '@nestjs/config';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { PrismaService } from '../../prisma/prisma.service';
 import { PaymentRail, railOf } from '../../common/payments/payment-rails';
@@ -37,7 +39,13 @@ export class PaymentsService {
     private readonly checkout: CheckoutService,
     private readonly ledger: LedgerService,
     private readonly wallets: WalletService,
+    private readonly config: ConfigService,
   ) {}
+
+  /** See `configuration.ts` — off everywhere but a developer's machine. */
+  private get sandboxConfirmation(): boolean {
+    return this.config.get<boolean>('payments.sandboxConfirmation') === true;
+  }
 
   /**
    * The moment an electronic payment clears.
@@ -198,7 +206,23 @@ export class PaymentsService {
     };
   }
 
-  /** Confirms a pending online payment (simulated gateway callback). */
+  /**
+   * Confirms a pending payment.
+   *
+   * This is reachable by the customer who owns the payment, and every provider
+   * today is a stub whose `verify` returns PAID without asking anyone —
+   * because no merchant account exists yet and cash settles elsewhere. Those
+   * two facts together were a way to buy for free: confirm your own payment,
+   * the ledger takes a `PLATFORM_CASH` debit, `checkout.confirm` fans the
+   * sub-orders out and the sellers ship.
+   *
+   * So a rail may only settle here if its provider can genuinely attest that
+   * money moved. None can, which is why the sandbox switch exists and why
+   * `env.validation` refuses it in production. Nothing is lost by refusing:
+   * cash and courier-collect reach PAID through
+   * `SellerOrderWorkflowService.recordCollection`, on a real collection, with
+   * `capturedAmount` tracked — the path that was always the honest one.
+   */
   async verify(userId: string, paymentId: string) {
     const payment = await this.requireOwned(userId, paymentId);
     if (payment.status === PaymentStatus.PAID) {
@@ -206,6 +230,9 @@ export class PaymentsService {
     }
 
     const provider = this.registry.get(payment.method);
+    if (!provider.attestsSettlement && !this.sandboxConfirmation) {
+      throw new ForbiddenException('PAYMENT_CONFIRMATION_UNAVAILABLE');
+    }
     const result = await provider.verify(payment.transactionRef ?? '');
 
     const updated = await this.prisma.$transaction(async (tx) => {

@@ -74,6 +74,24 @@ import {
  * product or aggregates a raw event stream — that all happened last night, in
  * the scheduler.
  */
+/**
+ * Staff by default, and a seller only where a handler says so.
+ *
+ * `analytics:read` is held by sellers *and* by admins, because a seller
+ * reading her own shop's numbers and an operator reading the platform's are
+ * both "analytics". That made it the wrong thing to gate the `admin/*`
+ * surface on by itself: the guard resolves roles with `getAllAndOverride`, so
+ * the six `@Roles(UserRole.SELLER)` handlers below still override this, while
+ * every admin route that names no role of its own inherits staff-only access
+ * instead of admitting anyone holding the permission. Without this line a
+ * self-registered seller could read every competitor's revenue.
+ */
+@Roles(
+  UserRole.SUPER_ADMIN,
+  UserRole.ADMIN,
+  UserRole.OPERATIONS_ADMIN,
+  UserRole.FINANCE_ADMIN,
+)
 @Controller('trends')
 export class TrendsController {
   constructor(

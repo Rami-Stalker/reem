@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 
+import 'package:reem/core/errors/failure_exception.dart';
 import 'package:reem/core/presentation/providers/core_providers.dart';
 import 'package:reem/core/result/result.dart';
 import 'package:reem/features/settings/data/datasources/impl/settings_remote_datasource_impl.dart';
@@ -59,7 +60,7 @@ final notificationPreferencesProvider =
   final result = await ref.watch(getNotificationPreferencesUseCaseProvider)();
   return switch (result) {
     Success(:final data) => data,
-    Error(:final failure) => throw Exception(failure.message),
+    Error(:final failure) => throw FailureException(failure),
   };
 });
 

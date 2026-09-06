@@ -38,11 +38,11 @@ browsing that adds `is_liked` when signed in). Role rules via `@Roles(UserRole.A
 
 ```bash
 npm install
-npm run db:setup              # migrate + generate + seed (see docs/DATABASE.md)
+npm run db:setup:demo         # migrate + generate + seed (see docs/DATABASE.md)
 npm run dev                   # http://localhost:3000
 ```
 
-`db:setup` expects PostgreSQL on `localhost:5432`. On this machine that is the
+`db:setup:demo` expects PostgreSQL on `localhost:5432`. On this machine that is the
 native Windows service; `docker compose up -d` starts the fallback on **5433**
 instead. Provisioning the role and database is a one-off:
 `npm run db:provision`.
@@ -475,8 +475,9 @@ challenge on any handset the account has not used before.
 | `npm run start:prod` | Run `dist/main.js` |
 | `npm run db:push` | Sync schema to DB |
 | `npm run db:migrate` | Create a migration |
-| `npm run db:seed` | Seed reference + demo data |
-| `npm run db:setup` | Migrate, generate client, seed |
+| `npm run db:seed` | **Deletes every row**, then seeds reference + demo data. Refused when `NODE_ENV=production` unless `ALLOW_DESTRUCTIVE_SEED=true` |
+| `npm run db:setup` | Migrate and generate the client |
+| `npm run db:setup:demo` | Migrate, generate, then **wipe and seed** |
 | `npm run db:studio` | Prisma Studio |
 
 ## Production checklist

@@ -419,4 +419,22 @@ export default () => ({
           ? false
           : undefined,
   },
+  payments: {
+    /**
+     * Lets `POST /payments/:id/verify` settle a rail whose provider cannot
+     * actually attest that money moved.
+     *
+     * Every provider is a stub until a merchant account exists, so in
+     * development this is the only way to walk a checkout through to a
+     * confirmed order. In production it is fraud: the endpoint is reachable by
+     * the customer who owns the payment, so leaving it on lets anyone mark
+     * their own order paid, credit the ledger and start the sellers shipping.
+     *
+     * Explicit opt-in, absent from `.env.example`, refused at boot in
+     * production — the same shape as `OTP_DEV_ECHO`, and for the same reason:
+     * NODE_ENV being unset is exactly how a fail-open default reaches a
+     * running server.
+     */
+    sandboxConfirmation: process.env.PAYMENTS_SANDBOX_CONFIRMATION === 'true',
+  },
 });

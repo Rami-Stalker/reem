@@ -37,7 +37,42 @@ const prisma = new PrismaClient();
 
 const hash = (plain: string) => bcrypt.hash(plain, 12);
 
+/**
+ * This file's first act is seventy-one `deleteMany()` calls — every table,
+ * including `journalEntry` and `ledgerAccount`, which are the platform's
+ * double-entry book of record. It then writes a `SUPER_ADMIN` whose password
+ * is printed at the end and committed in this repository.
+ *
+ * It runs against whatever `DATABASE_URL` the environment happens to hold, and
+ * `npm run db:setup` used to end by calling it — so the command named "set up
+ * the database" finished by emptying it. Nothing about the wipe announces
+ * itself first.
+ *
+ * The refusal is not tied to NODE_ENV alone being *absent*: an unset NODE_ENV
+ * is exactly how a fail-open default reaches a production shell. Someone who
+ * genuinely means it can still say so out loud.
+ */
+function assertSafeToWipe(): void {
+  if (process.env.NODE_ENV !== 'production') return;
+  if (process.env.ALLOW_DESTRUCTIVE_SEED === 'true') {
+    console.warn(
+      'ALLOW_DESTRUCTIVE_SEED is set — wiping a production database on purpose.',
+    );
+    return;
+  }
+  throw new Error(
+    [
+      'Refusing to seed: NODE_ENV=production.',
+      '',
+      'This script deletes every row in every table, the ledger included, and',
+      'then creates an administrator whose password is public. If you truly',
+      'mean to do that here, set ALLOW_DESTRUCTIVE_SEED=true.',
+    ].join('\n'),
+  );
+}
+
 async function main() {
+  assertSafeToWipe();
   console.log('Seeding database...');
 
   // Clean (respecting FK order).

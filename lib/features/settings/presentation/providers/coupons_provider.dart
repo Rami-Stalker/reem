@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:reem/core/errors/failure_exception.dart';
 import 'package:reem/core/result/result.dart';
 import 'package:reem/features/settings/domain/entities/coupon_entity.dart';
 import 'package:reem/features/settings/presentation/providers/settings_provider.dart';
@@ -16,6 +17,6 @@ final couponsProvider = FutureProvider.autoDispose<List<CouponEntity>>((
   final result = await ref.watch(getCouponsUseCaseProvider)();
   return switch (result) {
     Success(:final data) => data,
-    Error(:final failure) => throw Exception(failure.message),
+    Error(:final failure) => throw FailureException(failure),
   };
 });

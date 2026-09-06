@@ -26,10 +26,11 @@
     "db:reset": "prisma migrate reset --force",
     "db:seed": "ts-node prisma/seed.ts",
     "db:studio": "prisma studio",
-    "db:setup": "npm run db:deploy && npm run db:generate && npm run db:seed",
+    "db:setup": "npm run db:deploy && npm run db:generate",
     "db:provision": "psql -U postgres -f prisma/provision.sql",
     "visual:index": "ts-node -r tsconfig-paths/register scripts/index-visual.ts",
-    "visual:fixtures": "ts-node -r tsconfig-paths/register prisma/demo/capture-visual-fixtures.ts"
+    "visual:fixtures": "ts-node -r tsconfig-paths/register prisma/demo/capture-visual-fixtures.ts",
+    "db:setup:demo": "npm run db:setup && npm run db:seed"
   },
   "dependencies": {
     "@nestjs/common": "^10.4.15",
@@ -63,6 +64,7 @@
     "@types/express": "^5.0.0",
     "@types/node": "^22.13.10",
     "@types/passport-jwt": "^4.0.1",
+    "dotenv": "^16.4.7",
     "prisma": "^6.5.0",
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",

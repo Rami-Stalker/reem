@@ -30,6 +30,7 @@ export const MEDIA_PURPOSES = [
   'visual_search',
   'try_on',
   'closet',
+  'return_evidence',
 ] as const;
 
 export type MediaPurpose = (typeof MEDIA_PURPOSES)[number];
@@ -51,6 +52,24 @@ export type MediaPurpose = (typeof MEDIA_PURPOSES)[number];
  * It is *not* on a retention clock, because unlike a search photograph this one
  * is the permanent illustration of something she owns: deleting it would empty
  * a tile in her own wardrobe. It goes when she deletes the piece.
+ */
+/**
+ * `return_evidence` is deliberately *not* here, and that is a judgement worth
+ * stating rather than leaving to be inferred from an omission.
+ *
+ * A return photograph has three legitimate readers from the moment it is
+ * taken — the shopper, the boutique she is claiming against, and whoever
+ * arbitrates if they disagree — so the owner-only rule the private purposes
+ * rest on does not describe it. Making it private would mean inventing a
+ * fourth `mayRead` branch that resolves an asset back to the return it is
+ * attached to, and `ReturnRequest.evidence` holds URLs rather than asset ids,
+ * so there is nothing to resolve through. The seller's return desk already
+ * renders these as plain image URLs.
+ *
+ * What protects them is the same thing that protects a product photograph: an
+ * unguessable key that is never listed. If returns evidence should be narrower
+ * than that, the change is a real one — an asset-id column on the return, and
+ * a `mayRead` branch for the parties to it — not a line added to this set.
  */
 const PRIVATE_PURPOSES = new Set<MediaPurpose>([
   'verification',
@@ -95,6 +114,11 @@ export function acceptedKinds(purpose: MediaPurpose): MediaType[] {
     case 'closet':
       // Images only, for the same reason: a closet tile draws a photograph, and
       // a video of a garment has nowhere to play.
+      return [MediaType.image];
+    case 'return_evidence':
+      // A photograph of the fault, which `POST /returns` requires before it
+      // will move money away from a seller. Stills only: a reviewer comparing
+      // a torn seam against a listing photograph is looking, not watching.
       return [MediaType.image];
     default:
       return [MediaType.image, MediaType.video];

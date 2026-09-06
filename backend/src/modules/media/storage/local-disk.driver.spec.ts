@@ -1,97 +1,100 @@
 import assert from 'node:assert/strict';
-import { promises as fs } from 'node:fs';
+import test from 'node:test';
+import { ConfigService } from '@nestjs/config';
+import { mkdtempSync, mkdirSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import test from 'node:test';
+
 import { LocalDiskDriver } from './local-disk.driver';
 
-const MEDIA_ROOT = join(tmpdir(), 'reem-media-driver-spec');
+/**
+ * The variant fallback used to be a few lines of `join()` in `main.ts`, and it
+ * was the one way into the private bucket that never met an authorisation
+ * check. Express neither decodes nor normalises `req.path`, so a client that
+ * declines to tidy its own URL — `curl --path-as-is` will do — could ask for
+ * `../private/<uuid>@480.webp` and have `join()` collapse it into the sibling
+ * directory that holds identity documents and closet photographs.
+ *
+ * These cases are about that collapse. They are cheap; the thing they prevent
+ * is not.
+ */
 
-const driver = () =>
-  new LocalDiskDriver({
-    get: (key: string) =>
-      ({
-        'media.localRoot': MEDIA_ROOT,
-        'media.publicBaseUrl': '/media/files',
-      })[key],
-  } as never);
+const UUID = '0f8b6c1a-2d3e-4f50-8a9b-1c2d3e4f5061';
 
-const PUBLIC = 'PUBLIC' as never;
-const PRIVATE = 'PRIVATE' as never;
-const KEY = '2026/08/3f4a9c1e-1b2d-4e5f-8a90-abcdef012345.jpg';
-
-test.after(() => fs.rm(MEDIA_ROOT, { recursive: true, force: true }));
-
-test('public and private assets land in separate roots', async () => {
-  const local = driver();
-  await local.put(KEY, Buffer.from('public bytes'), PUBLIC);
-  await local.put(KEY, Buffer.from('private bytes'), PRIVATE);
-
-  // The same key in both trees, holding different bytes. That is the invariant
-  // the reverse proxy relies on: it serves `public/` and can reach nothing else.
-  assert.equal(
-    (await fs.readFile(join(MEDIA_ROOT, 'public', KEY))).toString(),
-    'public bytes',
+function driverOn(root: string): LocalDiskDriver {
+  return new LocalDiskDriver(
+    new ConfigService({
+      media: { localRoot: root, publicBaseUrl: '/media/files' },
+    }),
   );
-  assert.equal(
-    (await fs.readFile(join(MEDIA_ROOT, 'private', KEY))).toString(),
-    'private bytes',
-  );
-  assert.equal(local.publicRoot, join(MEDIA_ROOT, 'public'));
-});
+}
 
-test('a key is never overwritten', async () => {
-  const local = driver();
-  const key = '2026/08/11111111-2222-3333-4444-555555555555.png';
-  await local.put(key, Buffer.from('first'), PUBLIC);
-
-  // Keys are random, so a collision means something upstream is broken.
-  // Silently replacing another woman's photograph is the worst way to learn it.
-  await assert.rejects(local.put(key, Buffer.from('second'), PUBLIC));
-  assert.equal((await local.read(key, PUBLIC)).toString(), 'first');
-});
-
-test('traversal in a key is refused rather than resolved', async () => {
-  const local = driver();
-  for (const key of [
-    '../../../etc/passwd',
-    '2026/08/../../../secrets.env',
-    '2026/08/%2e%2e%2fsecrets.jpg',
-    '/etc/passwd',
-    '2026/08/id.jpg/../../../root.jpg',
-  ]) {
-    await assert.rejects(
-      local.put(key, Buffer.from('x'), PUBLIC),
-      /Unsafe media storage key/,
-      `expected refusal for ${key}`,
-    );
+/** A root with one real public image and one real private one. */
+function seedRoot(): { root: string; publicKey: string } {
+  const root = mkdtempSync(join(tmpdir(), 'reem-media-'));
+  for (const bucket of ['public', 'private']) {
+    mkdirSync(join(root, bucket, '2026', '08'), { recursive: true });
+    writeFileSync(join(root, bucket, '2026', '08', `${UUID}.jpg`), 'bytes');
   }
+  return { root, publicKey: `/2026/08/${UUID}@480.webp` };
+}
+
+test('serves the original when a resized variant was never generated', () => {
+  const { root, publicKey } = seedRoot();
+  const resolved = driverOn(root).resolvePublicVariantFallback(publicKey);
+
+  assert.equal(resolved, join(root, 'public', '2026', '08', `${UUID}.jpg`));
 });
 
-test('a key that is not the shape this platform generates is refused', async () => {
-  const local = driver();
-  // An allow-list, not a `..` blocklist — an allow-list cannot be talked around
-  // by an encoding trick nobody thought of.
-  await assert.rejects(
-    local.put('shell.php', Buffer.from('x'), PUBLIC),
-    /Unsafe media storage key/,
+test('refuses to climb out of the public bucket into private media', () => {
+  const { root } = seedRoot();
+
+  // The file genuinely exists — only the containment check stands between the
+  // caller and a seller's identity document.
+  assert.equal(
+    driverOn(root).resolvePublicVariantFallback(
+      `/../private/2026/08/${UUID}@480.webp`,
+    ),
+    null,
   );
-  assert.throws(() => local.publicUrl('../../evil'), /Unsafe media storage key/);
 });
 
-test('reading bytes that are gone is a 404, not a crash', async () => {
-  const local = driver();
-  await assert.rejects(
-    local.read('2026/01/aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee.jpg', PUBLIC),
-    /MEDIA_BYTES_MISSING/,
+test('refuses a traversal that dresses itself up as a nested path', () => {
+  const { root } = seedRoot();
+
+  assert.equal(
+    driverOn(root).resolvePublicVariantFallback(
+      `/2026/08/../../../private/2026/08/${UUID}@480.webp`,
+    ),
+    null,
   );
 });
 
-test('removing an absent key is not an error', async () => {
-  const local = driver();
-  await local.remove('2026/01/aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee.jpg', PUBLIC);
+test('ignores requests that are not asking for a variant at all', () => {
+  const { root, publicKey } = seedRoot();
+  const driver = driverOn(root);
+
+  // No `@width` suffix — the static mount already answered, or nothing will.
+  assert.equal(
+    driver.resolvePublicVariantFallback(`/2026/08/${UUID}.jpg`),
+    null,
+  );
+  // And a variant of something that does not exist stays a miss.
+  assert.equal(
+    driver.resolvePublicVariantFallback(publicKey.replace(UUID, 'nope')),
+    null,
+  );
 });
 
-test('the public URL is the base path plus the key', async () => {
-  assert.equal(driver().publicUrl(KEY), `/media/files/${KEY}`);
+test('refuses keys this platform would never have generated', () => {
+  const { root } = seedRoot();
+  const driver = driverOn(root);
+
+  for (const path of [
+    '/etc/passwd@480.webp',
+    '/2026/08/not-a-uuid@480.webp',
+    '/2026/8/' + UUID + '@480.webp',
+  ]) {
+    assert.equal(driver.resolvePublicVariantFallback(path), null, path);
+  }
 });

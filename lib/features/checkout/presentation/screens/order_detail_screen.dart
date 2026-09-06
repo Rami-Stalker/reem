@@ -599,6 +599,22 @@ class _ParcelCard extends StatelessWidget {
             size: DsButtonSize.sm,
             request: ChatStartRequest.order(sellerOrderId: parcel.id),
           ),
+          // Q56 P1 — the way into a return, which the seller's desk has been
+          // waiting for since the module shipped. Offered once the parcel is
+          // delivered and no earlier; whether anything in it may actually go
+          // back is the server's answer, given on the screen this opens rather
+          // than guessed at here.
+          if (parcel.deliveredAt != null) ...[
+            const SizedBox(height: DsSpacing.xs),
+            DsButton(
+              label: context.l10n.returnRequestAction,
+              variant: DsButtonVariant.secondary,
+              size: DsButtonSize.sm,
+              icon: Icons.assignment_return_outlined,
+              onPressed: () =>
+                  context.push(RoutePaths.returnRequestOf(parcel.id)),
+            ),
+          ],
         ],
       ),
     );

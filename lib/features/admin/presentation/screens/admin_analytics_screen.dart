@@ -3,6 +3,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/errors/failure_exception.dart';
 import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/network/api_endpoints.dart';
 import 'package:reem/core/presentation/providers/core_providers.dart';
@@ -17,7 +18,6 @@ class AdminAnalyticsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final dashboard = ref.watch(analyticsDashboardProvider);
-    final colors = context.dsColors;
     final l10n = context.l10n;
 
     return SingleChildScrollView(
@@ -66,19 +66,11 @@ class AdminAnalyticsScreen extends ConsumerWidget {
                     padding: EdgeInsets.all(DsSpacing.xl),
                     child: Center(child: DsLoadingIndicator()),
                   ),
-                  error: (error, _) => Container(
-                    padding: const EdgeInsets.all(DsSpacing.xl),
-                    decoration: BoxDecoration(
-                      color: colors.surface,
-                      borderRadius: DsRadius.borderLg,
-                      border: Border.all(
-                        color: colors.error.withValues(alpha: .35),
-                      ),
-                    ),
-                    child: Text(
-                      error.toString(),
-                      style: context.dsText.body.tint(colors.error),
-                    ),
+                  // The operator used to read `Exception: ` in front of the
+                  // server's Arabic, with nothing to press afterwards.
+                  error: (error, _) => DsErrorState(
+                    message: messageOf(error),
+                    onRetry: () => ref.invalidate(analyticsDashboardProvider),
                   ),
                   data: (data) => _Dashboard(data: data),
                 ),

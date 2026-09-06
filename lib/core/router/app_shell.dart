@@ -83,7 +83,7 @@ class AppShell extends ConsumerWidget {
   int? _branchIndexForPath(String path) => switch (path) {
     RoutePaths.home => 0,
     RoutePaths.search => 1,
-    RoutePaths.cart => 2,
+    RoutePaths.rooms => 2,
     RoutePaths.activity => 3,
     RoutePaths.profile => 4,
     RoutePaths.sellerDashboard => 5,
@@ -146,7 +146,13 @@ class _CustomerNavigationBar extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final c = context.dsColors;
-    final cartCount = ref.watch(cartCountProvider);
+    // The badge belongs to whichever tab *is* the cart, and since Rooms took
+    // that slot no buyer tab is. Watching regardless would rebuild the whole
+    // bar on every basket change to render nothing.
+    final showsCart = destinations.any(
+      (item) => item.surface == ExperienceSurface.cart,
+    );
+    final cartCount = showsCart ? ref.watch(cartCountProvider) : 0;
 
     return Padding(
       padding: EdgeInsets.fromLTRB(

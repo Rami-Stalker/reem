@@ -34,6 +34,21 @@ export interface PaymentProvider {
   /** True for rails needing an async confirmation step (vs. cash). */
   readonly requiresOnlineConfirmation: boolean;
 
+  /**
+   * Whether this provider's `verify` can *establish* that money moved, rather
+   * than merely restate what the platform already assumed.
+   *
+   * False for every rail today, and that is the honest answer: cash and
+   * courier-collect settle when a courier records a collection, and the
+   * electronic rails are sandbox stubs with no merchant account behind them.
+   * A provider may set this only once its `verify` authenticates the gateway's
+   * own answer — a signed callback, a server-to-server lookup — because
+   * `verify` is reachable by the customer who owns the payment, and a rail
+   * that cannot tell "paid" from "asked to be marked paid" hands her the goods
+   * for free.
+   */
+  readonly attestsSettlement: boolean;
+
   initiate(input: InitiateInput): Promise<InitiateResult>;
   verify(transactionRef: string): Promise<VerifyResult>;
 }

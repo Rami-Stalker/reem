@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:reem/core/errors/failure_exception.dart';
 import 'package:reem/core/result/result.dart';
 import 'package:reem/features/auth/domain/entities/auth_account.dart';
 
@@ -8,7 +9,7 @@ final authAccountProvider = FutureProvider<AuthAccount>((ref) async {
   final result = await ref.watch(authRepositoryProvider).getAccount();
   return switch (result) {
     Success(:final data) => data,
-    Error(:final failure) => throw Exception(failure.message),
+    Error(:final failure) => throw FailureException(failure),
   };
 });
 
@@ -16,7 +17,7 @@ final accountDevicesProvider = FutureProvider<List<AccountDevice>>((ref) async {
   final result = await ref.watch(authRepositoryProvider).getDevices();
   return switch (result) {
     Success(:final data) => data,
-    Error(:final failure) => throw Exception(failure.message),
+    Error(:final failure) => throw FailureException(failure),
   };
 });
 
@@ -25,7 +26,7 @@ final accountSessionsProvider =
   final result = await ref.watch(authRepositoryProvider).getSessions();
   return switch (result) {
     Success(:final data) => data,
-    Error(:final failure) => throw Exception(failure.message),
+    Error(:final failure) => throw FailureException(failure),
   };
 });
 
@@ -34,6 +35,6 @@ final sellerVerificationProvider =
   final result = await ref.watch(authRepositoryProvider).getSellerVerification();
   return switch (result) {
     Success(:final data) => data,
-    Error(:final failure) => throw Exception(failure.message),
+    Error(:final failure) => throw FailureException(failure),
   };
 });

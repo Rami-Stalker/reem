@@ -1,7 +1,7 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { MediaVisibility } from '@prisma/client';
-import { promises as fs } from 'node:fs';
+import { existsSync, promises as fs } from 'node:fs';
 import { dirname, join, resolve, sep } from 'node:path';
 import { MediaStorageDriver } from './media-storage.driver';
 
@@ -90,6 +90,34 @@ export class LocalDiskDriver implements MediaStorageDriver {
       throw new Error(`Refusing to resolve media key outside its root: ${key}`);
     }
     return path;
+  }
+
+  /**
+   * The original bytes behind a request for a resized variant that was never
+   * generated, or `null` when the request is not asking for one — or is not
+   * asking for a key this platform produced.
+   *
+   * This lives on the driver rather than in the middleware that wants it
+   * because `SAFE_KEY` is the rule for what counts as one of our keys, and a
+   * second copy of that rule elsewhere is precisely how a public mount grows
+   * a path back into the private bucket.
+   */
+  resolvePublicVariantFallback(requestPath: string): string | null {
+    const withoutVariant = requestPath.replace(/@\d+\.webp$/i, '');
+    if (withoutVariant === requestPath) return null;
+
+    const stem = withoutVariant.replace(/^\/+/, '');
+    const base = resolve(join(this.root, 'public')) + sep;
+
+    // Only the extension is unknown, so try the ones the sniffer stores.
+    for (const extension of ['jpg', 'png', 'webp', 'gif']) {
+      const key = `${stem}.${extension}`;
+      if (!SAFE_KEY.test(key)) continue;
+      const candidate = resolve(join(this.root, 'public', key));
+      if (!candidate.startsWith(base)) continue;
+      if (existsSync(candidate)) return candidate;
+    }
+    return null;
   }
 
   private assertSafe(key: string): void {

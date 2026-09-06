@@ -173,6 +173,13 @@ abstract final class RoutePaths {
   static const shipmentTracking = '/track/:code';
   static String shipmentTrackingOf(String code) => '/track/$code';
 
+  /// Q56 P1 — she asks for some or all of a parcel back. Keyed by seller
+  /// order, not order: a two-boutique order is two parcels with two delivery
+  /// dates and two windows.
+  static const returnRequest = '/returns/request/:sellerOrderId';
+  static String returnRequestOf(String sellerOrderId) =>
+      '/returns/request/$sellerOrderId';
+
   /// Q51 — the documents raised against one order, and one of them.
   static const orderInvoices = '/order/:id/invoices';
   static String orderInvoicesOf(String id) => '/order/$id/invoices';

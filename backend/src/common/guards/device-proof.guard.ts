@@ -8,6 +8,7 @@ import {
 import { Reflector } from '@nestjs/core';
 import { Request } from 'express';
 import { DeviceProofService } from '../../modules/auth/device/device-proof.service';
+import { AuthUser } from '../decorators/current-user.decorator';
 
 export const DEVICE_PROOF_KEY = 'device_proof';
 
@@ -44,7 +45,7 @@ export class DeviceProofGuard implements CanActivate {
 
     const request = context
       .switchToHttp()
-      .getRequest<Request & { provenDevice?: ProvenDevice }>();
+      .getRequest<Request & { provenDevice?: ProvenDevice; user?: AuthUser }>();
     const header = request.get('x-reem-device-proof');
 
     if (!header) {
@@ -74,6 +75,25 @@ export class DeviceProofGuard implements CanActivate {
         code: 'DEVICE_PROOF_INVALID',
         message: 'Device proof rejected',
         reason: result.reason,
+      });
+    }
+
+    /**
+     * A valid signature proves somebody holds *a* registered key — not that
+     * the caller holds *their own*. `POST /auth/device-keys` is public, so an
+     * attacker with a stolen access token could enrol a key of their own and
+     * present a perfectly valid proof with it; `StepUpGuard` would then read
+     * `provenDevice` as "this came from her enrolled handset" and let the
+     * request through the AAL2 gate on, among other things, her shipping
+     * addresses. The proof has to be bound to the principal making the
+     * request, and this is the one call site that was not doing it.
+     */
+    const user = request.user;
+    if (user && result.deviceKey.userId !== user.id) {
+      throw new UnauthorizedException({
+        code: 'DEVICE_PROOF_INVALID',
+        message: 'Device proof rejected',
+        reason: 'foreign_key',
       });
     }
 

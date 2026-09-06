@@ -7,8 +7,6 @@ import helmet from 'helmet';
 import { AppModule } from './app.module';
 import { AllExceptionsFilter } from './common/filters/all-exceptions.filter';
 import type { NextFunction, Request, Response } from 'express';
-import { existsSync } from 'node:fs';
-import { join } from 'node:path';
 import { LocalDiskDriver } from './modules/media/storage/local-disk.driver';
 
 async function bootstrap() {
@@ -64,7 +62,8 @@ async function bootstrap() {
    * break every image the platform has ever saved.
    */
   if (config.get<string>('media.driver') === 'local') {
-    const mediaRoot = app.get(LocalDiskDriver).publicRoot;
+    const driver = app.get(LocalDiskDriver);
+    const mediaRoot = driver.publicRoot;
     app.useStaticAssets(mediaRoot, {
       prefix: config.get<string>('media.publicBaseUrl') ?? '/media/files',
       index: false,
@@ -97,19 +96,20 @@ async function bootstrap() {
     const mediaPrefix =
       config.get<string>('media.publicBaseUrl') ?? '/media/files';
     app.use(mediaPrefix, (req: Request, res: Response, next: NextFunction) => {
-      const original = req.path.replace(/@\d+\.webp$/i, '');
-      if (original === req.path) return next();
+      /**
+       * Resolution belongs to the driver, which holds the one definition of
+       * what a key this platform generated looks like. Joining `req.path`
+       * onto the public root here instead would trust a string Express
+       * neither decodes nor normalises: `../private/<uuid>@480.webp` would
+       * collapse into the sibling bucket and stream a woman's closet
+       * photograph or a seller's identity document to anyone who asked.
+       */
+      const original = driver.resolvePublicVariantFallback(req.path);
+      if (!original) return next();
 
-      // Only the extension is unknown, so try the ones the sniffer stores.
-      for (const extension of ['jpg', 'png', 'webp', 'gif']) {
-        const candidate = join(mediaRoot, `${original}.${extension}`);
-        if (existsSync(candidate)) {
-          res.setHeader('X-Content-Type-Options', 'nosniff');
-          res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
-          return res.sendFile(candidate);
-        }
-      }
-      return next();
+      res.setHeader('X-Content-Type-Options', 'nosniff');
+      res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
+      return res.sendFile(original);
     });
 
     Logger.log(`Serving public media from ${mediaRoot}`, 'Bootstrap');

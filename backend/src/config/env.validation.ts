@@ -167,6 +167,60 @@ export function validateEnv(config: Record<string, unknown>) {
     );
   }
 
+  if (
+    config.NODE_ENV === 'production' &&
+    config.PAYMENTS_SANDBOX_CONFIRMATION === 'true'
+  ) {
+    throw new Error(
+      [
+        'Invalid environment configuration:',
+        '  - PAYMENTS_SANDBOX_CONFIRMATION cannot be enabled in production; it',
+        '    lets a customer confirm her own payment on a rail no provider can',
+        '    attest, marking the order paid and shipping the goods for free.',
+      ].join('\n'),
+    );
+  }
+
+  /**
+   * `origin: true` reflects whatever `Origin` the caller sent, and the API
+   * pairs it with `credentials: true`. There are no cookies today, so this is
+   * defence in depth rather than a live hole — but it is the one production
+   * knob with no guard, and the day someone adds a cookie is not the day to
+   * discover that.
+   */
+  if (config.NODE_ENV === 'production') {
+    const origins = String(config.CORS_ORIGINS ?? '').trim();
+    if (!origins || origins === '*') {
+      throw new Error(
+        [
+          'Invalid environment configuration:',
+          '  - CORS_ORIGINS must name the allowed origins in production.',
+          '    "*" reflects any caller back with credentials enabled.',
+        ].join('\n'),
+      );
+    }
+  }
+
+  /**
+   * The placeholders in `.env.example` are 32+ characters and distinct, so
+   * they satisfy every rule above. `cp .env.example .env` would otherwise boot
+   * production with signing keys published in the repository.
+   */
+  const placeholders = KEYRING.filter((key) =>
+    String(config[key] ?? '')
+      .toLowerCase()
+      .includes('change-me'),
+  );
+  if (config.NODE_ENV === 'production' && placeholders.length > 0) {
+    throw new Error(
+      [
+        'Invalid environment configuration:',
+        `  - these secrets are still the published placeholders: ${placeholders.join(', ')}.`,
+        '    Generate real values; the ones in .env.example are public.',
+      ].join('\n'),
+    );
+  }
+
   const wsQueryTokenUntil = config.WS_QUERY_TOKEN_UNTIL;
   if (typeof wsQueryTokenUntil === 'string' && wsQueryTokenUntil.trim()) {
     const deadline = new Date(wsQueryTokenUntil.trim());

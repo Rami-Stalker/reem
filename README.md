@@ -35,13 +35,15 @@ flutter run
 
 From `backend/`. The first command brings up PostgreSQL in Docker; the second
 applies migrations, generates the Prisma client, and seeds the demo dataset.
+Use `db:setup` alone to migrate without seeding — the seed empties every
+table before it writes, so it is no longer part of "set up the database".
 
 ```bash
 npm install && npm run db:up
 ```
 
 ```bash
-npm run db:setup && npm run dev
+npm run db:setup:demo && npm run dev
 ```
 
 See [`backend/README.md`](backend/README.md) for the endpoint surface, auth

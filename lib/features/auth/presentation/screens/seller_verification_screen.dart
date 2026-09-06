@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reem/core/design_system/design_system.dart';
 import 'package:reem/core/errors/failure.dart';
+import 'package:reem/core/errors/failure_exception.dart';
 import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/media/media_asset.dart';
 import 'package:reem/core/result/result.dart';
@@ -42,7 +43,7 @@ class SellerVerificationScreen extends ConsumerWidget {
                 child: DsLoadingIndicator(),
               ),
               error: (error, _) => DsErrorState(
-                message: error.toString(),
+                message: messageOf(error),
                 onRetry: () => ref.invalidate(sellerVerificationProvider),
               ),
               data: (existing) => _ApplicationForm(

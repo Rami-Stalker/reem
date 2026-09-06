@@ -6,7 +6,9 @@ import 'package:reem/core/design_system/design_system.dart';
 import 'package:reem/core/experience/experience_labels.dart';
 import 'package:reem/core/experience/role_experience.dart';
 import 'package:reem/core/localization/l10n_extension.dart';
+import 'package:reem/features/chat/presentation/providers/chat_provider.dart';
 import 'package:reem/features/experience/presentation/providers/role_experience_provider.dart';
+import 'package:reem/features/settings/presentation/providers/settings_provider.dart';
 
 class ExperienceSurfaceScreen extends ConsumerWidget {
   const ExperienceSurfaceScreen({super.key, required this.surface, this.title});
@@ -76,6 +78,13 @@ class ExperienceSurfaceScreen extends ConsumerWidget {
                     section: section,
                     identity: identity,
                     role: role,
+                    // A tab called Activity that never shows any is the
+                    // complaint this answers. Only the activity surface reads
+                    // the counters; every other surface built from the
+                    // manifest would be paying for two fetches it never draws.
+                    badge: surface == ExperienceSurface.activity
+                        ? _SectionBadge(sectionId: section.id)
+                        : null,
                     onTap: section.path == null
                         ? null
                         : () => context.go(section.path!),
@@ -340,12 +349,14 @@ class _SurfaceSectionCard extends StatelessWidget {
     required this.section,
     required this.identity,
     required this.role,
+    this.badge,
     this.onTap,
   });
 
   final RoleSurfaceSection section;
   final RoleVisualIdentity identity;
   final ExperienceRole role;
+  final Widget? badge;
   final VoidCallback? onTap;
 
   @override
@@ -409,6 +420,7 @@ class _SurfaceSectionCard extends StatelessWidget {
                 ),
               ),
               const Spacer(),
+              ?badge,
               if (onTap != null)
                 Icon(
                   Icons.arrow_forward_rounded,
@@ -419,7 +431,7 @@ class _SurfaceSectionCard extends StatelessWidget {
           ),
           const SizedBox(height: DsSpacing.md),
           Text(
-            section.title,
+            section.titleOf(context.l10n),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: context.dsText.tileTitle.bold.tint(colors.onSurface),
@@ -427,7 +439,7 @@ class _SurfaceSectionCard extends StatelessWidget {
           const SizedBox(height: DsSpacing.xs),
           Expanded(
             child: Text(
-              section.description,
+              section.descriptionOf(context.l10n),
               maxLines: 3,
               overflow: TextOverflow.ellipsis,
               style: context.dsText.labelMedium
@@ -446,6 +458,68 @@ class _SurfaceSectionCard extends StatelessWidget {
         borderRadius: DsRadius.borderXl,
         onTap: onTap,
         child: card,
+      ),
+    );
+  }
+}
+
+/// The unread count behind one Activity card.
+///
+/// Loads on mount rather than assuming somebody else already has: neither the
+/// notification inbox nor the chat list fetches on construction, so reading
+/// their counters cold would have drawn a confident zero over an inbox with
+/// twelve unread notices in it — worse than drawing nothing.
+class _SectionBadge extends ConsumerStatefulWidget {
+  const _SectionBadge({required this.sectionId});
+
+  final String sectionId;
+
+  @override
+  ConsumerState<_SectionBadge> createState() => _SectionBadgeState();
+}
+
+class _SectionBadgeState extends ConsumerState<_SectionBadge> {
+  @override
+  void initState() {
+    super.initState();
+    // After the first frame: both notifiers publish synchronously on failure,
+    // and mutating a provider during a build is an error.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      switch (widget.sectionId) {
+        case 'notifications':
+          ref.read(notificationInboxProvider.notifier).load();
+        case 'messages':
+          ref.read(chatNotifierProvider.notifier).load();
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final count = switch (widget.sectionId) {
+      'notifications' => ref.watch(
+        notificationInboxProvider.select((s) => s.unreadCount),
+      ),
+      'messages' => ref.watch(chatNotifierProvider.select((s) => s.totalUnread)),
+      // Orders has no unread notion — a delivered parcel is not a message.
+      _ => 0,
+    };
+    if (count <= 0) return const SizedBox.shrink();
+
+    final colors = context.dsColors;
+    return Container(
+      padding: const EdgeInsets.symmetric(
+        horizontal: DsSpacing.xs,
+        vertical: DsSpacing.xxs,
+      ),
+      decoration: BoxDecoration(
+        color: colors.primary,
+        borderRadius: BorderRadius.circular(DsRadius.pill),
+      ),
+      child: Text(
+        '$count',
+        style: context.dsText.badge.tint(colors.onPrimary),
       ),
     );
   }

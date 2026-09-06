@@ -38,9 +38,34 @@ abstract final class AppEnv {
   /// localhost. Android emulators must use 10.0.2.2 because localhost points to
   /// the emulator itself. Physical phones still need the computer LAN IPv4
   /// address via --dart-define.
+  ///
+  /// A release build gets no such fallback. Without one it would ship pointing
+  /// at `10.0.2.2` — an emulator's view of its host — over cleartext, which
+  /// Android has refused by default since API 28. The app would not merely
+  /// talk to the wrong server; every request would fail and it would present
+  /// as dead, on a store listing, to everyone. Forgetting one `--dart-define`
+  /// should not be able to do that quietly, so it stops the build instead.
   static String get baseUrl {
     final configured = _configuredBaseUrl.trim();
-    if (configured.isNotEmpty) return configured;
+    if (configured.isNotEmpty) {
+      assert(
+        !isProduction || configured.startsWith('https://'),
+        'APP_ENV=production requires an https API_BASE_URL; got "$configured".',
+      );
+      return configured;
+    }
+
+    if (kReleaseMode || isProduction) {
+      throw StateError(
+        'API_BASE_URL was not set for this build.\n'
+        'A release build has no sensible localhost fallback — pass the real '
+        'host, e.g.\n'
+        '  flutter build apk --release '
+        '--dart-define=APP_ENV=production '
+        '--dart-define=API_BASE_URL=https://api.reem.shop',
+      );
+    }
+
     if (kIsWeb) return 'http://localhost:3000';
 
     return switch (defaultTargetPlatform) {

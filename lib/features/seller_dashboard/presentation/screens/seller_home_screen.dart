@@ -35,6 +35,14 @@ import 'package:reem/features/seller_intelligence/presentation/widgets/intellige
 ///
 /// Everything reads from the atelier palette, so the dashboard is legible in
 /// dark mode instead of painting white cards on aubergine.
+/// Anchors the tasks panel so the attention strip can bring it into view.
+///
+/// The strip's "open tasks" alert had `onTap: null` while the list it counts
+/// sits further down this same page — the one alert of the three that led
+/// nowhere. Scrolling to it is the honest destination; there is no separate
+/// tasks screen to push.
+final GlobalKey _tasksSectionKey = GlobalKey();
+
 class SellerHomeScreen extends ConsumerWidget {
   const SellerHomeScreen({super.key});
 
@@ -77,7 +85,20 @@ class SellerHomeScreen extends ConsumerWidget {
           ),
 
         // ── Act ──────────────────────────────────────────────────────────
-        _box(const SellerAttentionStrip()),
+        _box(
+          SellerAttentionStrip(
+            onOpenTasks: () {
+              final target = _tasksSectionKey.currentContext;
+              if (target == null) return;
+              Scrollable.ensureVisible(
+                target,
+                duration: const Duration(milliseconds: 420),
+                curve: Curves.easeOutCubic,
+                alignment: 0.1,
+              );
+            },
+          ),
+        ),
         const _Gap(_gap),
 
         _box(const SellerQuickActions()),
@@ -127,7 +148,7 @@ class SellerHomeScreen extends ConsumerWidget {
         _box(const SellerRecentReviewsWidget()),
         const _Gap(_gap),
 
-        _box(const SellerTasksWidget()),
+        _box(SellerTasksWidget(key: _tasksSectionKey)),
         const _Gap(_gap),
 
         _box(const SellerGoalsWidget()),

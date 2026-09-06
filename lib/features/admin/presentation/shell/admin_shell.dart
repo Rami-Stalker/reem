@@ -25,10 +25,22 @@ class AdminShell extends ConsumerWidget {
     // The console draws only the doors this operator can walk through. The
     // server decides again on every request; this is about not offering a
     // finance screen to a support agent and calling the 403 a feature.
+    //
+    // An empty set is "we were not told", not "she may do nothing" — the user
+    // model defaults `permissions` to `{}` when the payload omits the key, and
+    // every one of the sixteen destinations names a permission. Reading that
+    // as a denial drew a console with an empty rail: reachable by typing a URL
+    // and by nothing else. `authGuard` already treats an empty set as unknown
+    // and lets the request through; the two have to agree, and this is the
+    // side that was wrong. The server still answers 403 for anything she
+    // genuinely may not do.
+    final unknownPermissions = permissions.isEmpty;
     final destinations = AppRoleExperience.admin.navigation
         .where(
           (item) =>
-              item.permission == null || permissions.contains(item.permission),
+              item.permission == null ||
+              unknownPermissions ||
+              permissions.contains(item.permission),
         )
         .map((item) => _AdminNavItem.fromRoleNavigation(item, l10n))
         .toList(growable: false);

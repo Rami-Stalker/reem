@@ -19,7 +19,10 @@ import 'package:reem/features/seller_dashboard/presentation/widgets/seller_forma
 /// When there is genuinely nothing to do it says so, calmly, rather than
 /// inventing work to fill the space.
 class SellerAttentionStrip extends ConsumerWidget {
-  const SellerAttentionStrip({super.key});
+  const SellerAttentionStrip({super.key, this.onOpenTasks});
+
+  /// Brings the tasks panel — further down the same page — into view.
+  final VoidCallback? onOpenTasks;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -68,7 +71,7 @@ class SellerAttentionStrip extends ConsumerWidget {
           label: l10n.sellerOpenTasks,
           count: openTasks,
           tone: _Tone.calm,
-          onTap: null,
+          onTap: onOpenTasks,
         ),
     ];
 

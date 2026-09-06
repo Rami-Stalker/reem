@@ -5,6 +5,7 @@ import 'package:reem/core/design_system/design_system.dart';
 import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/core/shared/entities/user.dart';
+import 'package:reem/core/shared/services/share_service.dart';
 
 /// Identity block beneath the cover: name + verification, @username, phone and
 /// the primary edit / share / settings actions.
@@ -77,7 +78,11 @@ class ProfileIdentity extends StatelessWidget {
               DsIconButton(
                 icon: Icons.ios_share_rounded,
                 variant: DsIconButtonVariant.surface,
-                onPressed: () {},
+                onPressed: () => ShareService.profile(
+                  context: context,
+                  userId: user.id,
+                  name: user.name,
+                ),
               ),
               const SizedBox(width: DsSpacing.xs),
               DsIconButton(

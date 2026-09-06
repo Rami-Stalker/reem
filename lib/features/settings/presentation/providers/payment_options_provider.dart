@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:reem/core/errors/failure_exception.dart';
 import 'package:reem/core/result/result.dart';
 import 'package:reem/features/checkout/domain/entities/checkout.dart';
 import 'package:reem/features/checkout/presentation/providers/checkout_providers.dart';
@@ -18,6 +19,6 @@ final paymentOptionsProvider =
           .getPaymentMethods();
       return switch (result) {
         Success(:final data) => data,
-        Error(:final failure) => throw Exception(failure.message),
+        Error(:final failure) => throw FailureException(failure),
       };
     });

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/errors/failure_exception.dart';
 import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/result/result.dart';
 import 'package:reem/features/settings/domain/entities/notification_preferences.dart';
@@ -29,7 +30,7 @@ class NotificationsScreen extends ConsumerWidget {
           loading: () => const _LoadingSliver(),
           error: (error, _) => _ErrorSliver(
             // l10n-ignore: a prefix being stripped off an error string
-            message: error.toString().replaceFirst('Exception: ', ''),
+            message: messageOf(error),
             onRetry: () => ref.invalidate(notificationPreferencesProvider),
           ),
         ),

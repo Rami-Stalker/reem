@@ -502,6 +502,7 @@ abstract final class ApiEndpoints {
   static String returnById(String id) => '/returns/$id';
   static String returnEligibility(String sellerOrderId) =>
       '/returns/eligibility/$sellerOrderId';
+  static String returnCancel(String id) => '/returns/$id/cancel';
   static String returnApprove(String id) => '/returns/$id/approve';
   static String returnReject(String id) => '/returns/$id/reject';
   static String returnInTransit(String id) => '/returns/$id/in-transit';

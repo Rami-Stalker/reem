@@ -35,6 +35,7 @@ enum ExperienceSurface {
   home,
   search,
   cart,
+  rooms,
   activity,
   profile,
   dashboard,
@@ -327,7 +328,9 @@ class AppRoleExperience {
       // her should say so. `/cart` still exists for the one-tap purchase that
       // needs no deliberation; it simply is not a destination any more.
       RoleNavigationItem(
-        surface: ExperienceSurface.cart,
+        // Its own surface, not the cart's. Sharing the cart's identifier is
+        // what put a live basket count on a tab that opens a room.
+        surface: ExperienceSurface.rooms,
         label: 'Rooms',
         path: RoutePaths.rooms,
         icon: Icons.meeting_room_outlined,

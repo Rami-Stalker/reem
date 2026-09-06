@@ -3470,7 +3470,13 @@ model Message {
   @@index([chatId, createdAt])
   @@index([senderId, createdAt])
   @@index([kind])
-  @@index([content])
+  // No index on `content`. A btree entry cannot exceed ~2704 bytes, and this
+  // column is unbounded text the API accepts up to 5,000 characters of — at
+  // two bytes per Arabic character a long message failed to INSERT at all,
+  // with `54000: index row size exceeds btree version 4 maximum`. It could not
+  // have served the substring search it looks like it was for either; btree
+  // cannot answer `LIKE '%…%'`. Message search wants GIN trigram or a
+  // tsvector column, added deliberately.
   @@map("messages")
 }
 

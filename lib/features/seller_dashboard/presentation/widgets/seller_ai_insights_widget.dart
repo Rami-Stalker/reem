@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import 'package:reem/core/design_system/design_system.dart';
 import 'package:reem/core/localization/l10n_extension.dart';
+import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/features/seller_dashboard/domain/entities/seller_misc.dart';
 import 'package:reem/features/seller_dashboard/presentation/providers/seller_dashboard_provider.dart';
 
@@ -154,7 +156,11 @@ class _InsightCardState extends State<_InsightCard> {
             if (_expanded) ...[
               const SizedBox(height: DsSpacing.sm),
               TextButton.icon(
-                onPressed: () {},
+                // The server names the move — «راجعي المخزون» — and this was
+                // the button to make it, with an empty callback. The insight
+                // carries no target of its own, so the kind decides: each one
+                // opens the screen where that move is actually made.
+                onPressed: () => context.push(_destinationFor(insight.kind)),
                 icon: const Icon(Icons.arrow_forward_rounded, size: 14),
                 label: Text(insight.action),
                 style: TextButton.styleFrom(
@@ -171,3 +177,12 @@ class _InsightCardState extends State<_InsightCard> {
     );
   }
 }
+
+/// Where an insight of this kind is acted on.
+String _destinationFor(AiInsightKind kind) => switch (kind) {
+  AiInsightKind.revenue => RoutePaths.sellerAnalytics,
+  AiInsightKind.product => RoutePaths.myProducts,
+  AiInsightKind.inventory => RoutePaths.myProducts,
+  AiInsightKind.customer => RoutePaths.chats,
+  AiInsightKind.warning => RoutePaths.sellerOrders,
+};

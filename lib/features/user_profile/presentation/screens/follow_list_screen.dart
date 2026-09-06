@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/errors/failure_exception.dart';
 import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/core/shared/entities/user.dart';
@@ -47,7 +48,7 @@ class FollowListScreen extends ConsumerWidget {
           error: (error, _) => SliverFillRemaining(
             hasScrollBody: false,
             child: DsErrorState(
-              message: error.toString(),
+              message: messageOf(error),
               onRetry: () => ref.invalidate(
                 followListProvider((userId: userId, kind: kind)),
               ),

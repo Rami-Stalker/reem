@@ -24,6 +24,7 @@ export class CodProvider implements PaymentProvider {
   readonly method = PaymentMethodType.COD;
   readonly displayName = 'الدفع عند الاستلام';
   readonly requiresOnlineConfirmation = false;
+  readonly attestsSettlement = false;
 
   async initiate(): Promise<InitiateResult> {
     return {
@@ -44,6 +45,7 @@ export class CourierCollectProvider implements PaymentProvider {
   readonly method = PaymentMethodType.COURIER_COLLECT;
   readonly displayName = 'الدفع لمندوب الشحن';
   readonly requiresOnlineConfirmation = false;
+  readonly attestsSettlement = false;
 
   async initiate(): Promise<InitiateResult> {
     return {
@@ -68,6 +70,7 @@ abstract class ManualTransferProvider implements PaymentProvider {
   abstract readonly displayName: string;
   protected abstract readonly prefix: string;
   readonly requiresOnlineConfirmation = true;
+  readonly attestsSettlement = false;
 
   async initiate(): Promise<InitiateResult> {
     return {
@@ -92,6 +95,7 @@ abstract class OnlineGatewayProvider implements PaymentProvider {
   abstract readonly displayName: string;
   protected abstract readonly prefix: string;
   readonly requiresOnlineConfirmation = true;
+  readonly attestsSettlement = false;
 
   async initiate(input: InitiateInput): Promise<InitiateResult> {
     const transactionRef = ref(this.prefix);
@@ -162,6 +166,7 @@ export class PlatformWalletProvider implements PaymentProvider {
   readonly method = PaymentMethodType.PLATFORM_WALLET;
   readonly displayName = 'محفظة المنصة';
   readonly requiresOnlineConfirmation = false;
+  readonly attestsSettlement = false;
 
   async initiate(): Promise<InitiateResult> {
     return {
