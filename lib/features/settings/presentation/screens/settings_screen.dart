@@ -128,21 +128,35 @@ class SettingsScreen extends ConsumerWidget {
               SettingsCategoryCard(
                 title: l10n.rewardsAndOffers,
                 items: [
+                  // Account balances, so they ask the same way every other
+                  // account row on this screen asks — a sheet where she is,
+                  // rather than a redirect after the tap has already failed.
                   SettingsItemData(
                     icon: Icons.stars_rounded,
                     title: l10n.rewards,
-                    onTap: () => context.pushNamed(RouteNames.rewards),
+                    onTap: () => protectedPushNamed(
+                      RouteNames.rewards,
+                      RoutePaths.rewards,
+                      l10n.rewards,
+                    ),
                   ),
                   SettingsItemData(
                     icon: Icons.local_offer_outlined,
                     title: l10n.coupons,
-                    onTap: () => context.pushNamed(RouteNames.coupons),
+                    onTap: () => protectedPushNamed(
+                      RouteNames.coupons,
+                      RoutePaths.coupons,
+                      l10n.coupons,
+                    ),
                   ),
                   SettingsItemData(
                     icon: Icons.notifications_none,
                     title: l10n.notifications,
-                    onTap: () =>
-                        context.pushNamed(RouteNames.notificationPreferences),
+                    onTap: () => protectedPushNamed(
+                      RouteNames.notificationPreferences,
+                      RoutePaths.notificationPreferences,
+                      l10n.notifications,
+                    ),
                   ),
                 ],
               ),

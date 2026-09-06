@@ -1,3 +1,4 @@
+import 'package:reem/core/errors/app_exception.dart';
 import 'package:reem/core/errors/failure.dart';
 
 /// A [Failure] thrown out of a `FutureProvider`, carrying its own words.
@@ -26,8 +27,13 @@ class FailureException implements Exception {
 
 /// The message behind any error an `AsyncValue` surfaced.
 ///
-/// Falls back to `toString()` for anything that is not one of ours, which is
-/// no worse than what the call site did before and is never reached for a
-/// failure that came through a repository.
-String messageOf(Object error) =>
-    error is FailureException ? error.message : error.toString();
+/// Covers both shapes a provider can throw: a [FailureException] from a
+/// repository, and a raw [AppException] from a data source a provider calls
+/// straight through — `categoryTreeProvider` does exactly that. Falls back to
+/// `toString()` for anything that is neither, which is no worse than what the
+/// call sites did before.
+String messageOf(Object error) => switch (error) {
+  FailureException(:final message) => message,
+  AppException(:final message) => message,
+  _ => error.toString(),
+};

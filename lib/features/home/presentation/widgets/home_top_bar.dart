@@ -8,6 +8,7 @@ import 'package:reem/core/design_system/design_system.dart';
 import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/features/auth/presentation/providers/auth_provider.dart';
+import 'package:reem/features/cart/presentation/providers/cart_providers.dart';
 
 /// Pinned, glassy home app bar: the Reem wordmark, notifications and the
 /// current user's avatar.
@@ -60,6 +61,12 @@ class HomeTopBar extends ConsumerWidget {
         ),
       ),
       actions: [
+        // The bag lives here because it lives nowhere else. Rooms took the
+        // cart's tab — deliberately, a set of decisions is not a basket — but
+        // nothing replaced the way in, so she could add to her bag and then
+        // had no route to open it. This is where a shopper looks for it.
+        const _CartButton(),
+        const SizedBox(width: DsSpacing.xs),
         _NotificationsBell(onTap: () => context.push(RoutePaths.notifications)),
         const SizedBox(width: DsSpacing.xs),
         Padding(
@@ -119,6 +126,59 @@ class _NotificationsBell extends StatelessWidget {
             ),
           ),
         ),
+      ],
+    );
+  }
+}
+
+/// The bag, with what is in it.
+class _CartButton extends ConsumerWidget {
+  const _CartButton();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final colors = context.dsColors;
+    final count = ref.watch(cartCountProvider);
+
+    return Stack(
+      clipBehavior: Clip.none,
+      children: [
+        Container(
+          width: 42,
+          height: 42,
+          decoration: BoxDecoration(
+            color: colors.surfaceElevated.withValues(alpha: 0.76),
+            shape: BoxShape.circle,
+            border: Border.all(color: colors.border),
+          ),
+          child: IconButton(
+            tooltip: context.l10n.navCart,
+            icon: Icon(DsIcons.cart, color: colors.onSurface, size: 21),
+            onPressed: () => context.push(RoutePaths.cart),
+          ),
+        ),
+        if (count > 0)
+          PositionedDirectional(
+            top: 2,
+            end: 2,
+            child: Container(
+              padding: const EdgeInsets.symmetric(
+                horizontal: DsSpacing.xxs,
+                vertical: 1,
+              ),
+              constraints: const BoxConstraints(minWidth: 16),
+              decoration: BoxDecoration(
+                color: colors.primary,
+                borderRadius: BorderRadius.circular(DsRadius.pill),
+                border: Border.all(color: colors.surfaceElevated, width: 1.5),
+              ),
+              child: Text(
+                '$count',
+                textAlign: TextAlign.center,
+                style: context.dsText.badge.tint(colors.onPrimary),
+              ),
+            ),
+          ),
       ],
     );
   }

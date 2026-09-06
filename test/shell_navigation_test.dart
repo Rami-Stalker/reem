@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:reem/core/experience/role_experience.dart';
@@ -98,18 +100,55 @@ void main() {
       }
     });
 
-    test('the cart is still reachable, even though it is not a tab', () {
-      final entries = AppRoleExperience.buyer.menuGroups
-          .expand((group) => group.actions)
-          .where((action) => action.path == RoutePaths.cart);
+    test('a destination that is not a tab still has a way in', () {
+      // This replaces a weaker check that asked the role manifest whether the
+      // cart had a menu entry. It did — and the cart was still unreachable,
+      // because the manifest's menu groups are only rendered when the surface
+      // is *not* the activity tab, and the activity tab is the only place a
+      // buyer meets that screen. The manifest said yes; the app drew nothing.
+      //
+      // So this asks the source instead: does anything a woman can actually
+      // tap navigate here? Crude, and it is the question that was wrong.
+      const mustBeReachable = <String>[
+        'RoutePaths.cart',
+        'RoutePaths.orders',
+        'RoutePaths.favorites',
+        'RoutePaths.notifications',
+        'RoutePaths.addresses',
+      ];
 
-      expect(
-        entries,
-        isNotEmpty,
-        reason:
-            'Rooms took the cart’s tab, so the profile menu is the only way '
-            'left to it',
-      );
+      // Everything under lib/, minus the places that only *declare* routes.
+      const declaresOnly = [
+        'route_paths.dart',
+        'route_names.dart',
+        'app_router_provider.dart',
+        'auth_guard.dart',
+        'experience_labels.dart',
+        'role_experience.dart',
+      ];
+
+      final sources = Directory('lib')
+          .listSync(recursive: true)
+          .whereType<File>()
+          .where((f) => f.path.endsWith('.dart'))
+          .where((f) => !declaresOnly.any(f.path.endsWith))
+          .map((f) => f.readAsStringSync())
+          .join('\n');
+
+      for (final destination in mustBeReachable) {
+        // Formatting puts a long argument on its own line, so match the name
+        // inside a push/go call rather than an exact one-line spelling.
+        final called = RegExp(
+          r'(push|go)\(\s*' + RegExp.escape(destination) + r'\s*[,)]',
+        );
+        expect(
+          called.hasMatch(sources),
+          isTrue,
+          reason:
+              '$destination has no tab and nothing navigates to it either — '
+              'she can reach it only by typing the URL',
+        );
+      }
     });
   });
 

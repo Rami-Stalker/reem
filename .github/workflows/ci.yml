@@ -1,0 +1,130 @@
+name: CI
+
+# Nothing guarded this repository before. `flutter analyze`, `flutter test`,
+# `tsc` and the backend suite were all green at the pre-launch audit — and the
+# backend suite had, as far as anyone could tell, never been run: its
+# integration specs open a real PrismaClient and skip in silence when no
+# database answers. So this pipeline gives Postgres to the specs that need it,
+# rather than letting them pass by not running.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  FLUTTER_VERSION: '3.41.8'
+  NODE_VERSION: '20'
+
+jobs:
+  flutter:
+    name: Flutter — analyze, test, guards
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+
+      - run: flutter pub get
+
+      # The generated localisations are committed, so a stale checkout would
+      # analyze against strings the .arb files no longer describe.
+      - name: Localisations are up to date
+        run: |
+          flutter gen-l10n
+          git diff --exit-code -- lib/l10n \
+            || (echo "::error::lib/l10n is stale — run 'flutter gen-l10n' and commit" && exit 1)
+
+      - run: flutter analyze
+
+      - run: flutter test
+
+      # Four structural checks the analyzer cannot express. Three of them fail
+      # today on pre-existing debt in closet/market/rooms/intelligence, so they
+      # report without failing the build — turn `continue-on-error` off per
+      # check as each one reaches zero, and it can never drift back.
+      - name: Structural guards
+        continue-on-error: true
+        run: |
+          node tools/architecture/check-flutter-boundaries.mjs
+          node tools/architecture/check-design-system.mjs
+          node tools/architecture/check-localization.mjs
+
+      - name: No unreachable Dart
+        run: node tools/architecture/find-unreachable-dart.mjs
+
+  backend:
+    name: Backend — typecheck, lint, test
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:18
+        env:
+          POSTGRES_USER: reem_user
+          POSTGRES_PASSWORD: reem_password
+          POSTGRES_DB: reem_test
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 10
+
+    env:
+      # A throwaway database, never the developer's. The suite writes to it.
+      DATABASE_URL: postgresql://reem_user:reem_password@localhost:5432/reem_test?schema=public
+      NODE_ENV: test
+      # Distinct, ≥32 characters, and none of them the published placeholders —
+      # `env.validation.ts` refuses all three of those cases.
+      JWT_ACCESS_SECRET: ci-access-secret-not-a-real-key-0001
+      JWT_REFRESH_SECRET: ci-refresh-secret-not-a-real-key-002
+      OTP_PEPPER: ci-otp-pepper-not-a-real-key-0000003
+      GUEST_TOKEN_PEPPER: ci-guest-pepper-not-a-real-key-004
+      OTP_DELIVERY_KEY: ci-delivery-key-not-a-real-key-0005
+      TOTP_ENC_KEY: ci-totp-enc-key-not-a-real-key-0006
+      MEDIA_PUBLIC_ORIGIN: http://localhost:3000
+      CORS_ORIGINS: http://localhost:3000
+
+    defaults:
+      run:
+        working-directory: backend
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: backend/package-lock.json
+
+      - run: npm ci
+
+      - run: npx prisma generate
+
+      # `migrate deploy`, never `db push` and never the seed: the seed deletes
+      # every row in every table and is not something CI should be able to do.
+      - name: Apply migrations
+        run: npx prisma migrate deploy
+
+      - name: Migrations match the schema
+        run: npx prisma migrate status
+
+      - run: npx tsc --noEmit
+
+      # No lint step. `package.json` has a `lint` script, but there is no
+      # eslint config in the repository and eslint is not a dependency — the
+      # script cannot run. Wiring CI to it would only ever produce a red build
+      # that says "eslint: not found". Add the step when the config exists.
+
+      - run: npm test

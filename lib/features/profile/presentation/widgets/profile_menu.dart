@@ -7,6 +7,7 @@ import 'package:reem/core/design_system/design_system.dart';
 import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/features/auth/presentation/providers/auth_provider.dart';
+import 'package:reem/features/cart/presentation/providers/cart_providers.dart';
 import 'package:reem/features/profile/presentation/providers/profile_overview_provider.dart';
 import 'package:reem/features/settings/presentation/widgets/help_sheet.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -25,12 +26,23 @@ class ProfileMenu extends ConsumerWidget {
     final reviews = ref.watch(
       profileOverviewNotifierProvider.select((s) => s.overview?.reviewsCount ?? 0),
     );
+    final cartCount = ref.watch(cartCountProvider);
 
     return Column(
       children: [
         _Group(
           label: context.l10n.account,
           rows: [
+            // The bag is not a tab any more — Rooms took that slot — and it
+            // was not anywhere else either, so a woman could fill it and have
+            // no way back to it. The count is here for the same reason the
+            // rating is on the reviews row: the number is the reason to tap.
+            _MenuRow(
+              icon: DsIcons.cart,
+              label: context.l10n.navCart,
+              trailing: cartCount > 0 ? '$cartCount' : null,
+              onTap: () => context.push(RoutePaths.cart),
+            ),
             _MenuRow(
               icon: Icons.location_on_outlined,
               label: context.l10n.savedAddresses,

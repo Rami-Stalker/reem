@@ -34,9 +34,12 @@ const _publicRoutes = <String>{
   RoutePaths.settings,
   RoutePaths.appearance,
   RoutePaths.language,
-  RoutePaths.coupons,
-  RoutePaths.rewards,
-  RoutePaths.wallet,
+  // `coupons`, `rewards` and `wallet` are deliberately *not* here. Each one
+  // is a balance belonging to one account, so a guest opening it got a 401
+  // rendered as an error rather than an invitation to sign in. Off this list
+  // the guard sends her to `authRequired` with a `from`, and she lands back
+  // on the screen she wanted. `settings`, `appearance` and `language` stay
+  // public because they are device preferences, not account data.
   RoutePaths.likeSheet,
   RoutePaths.commentSheet,
   // Q64 — the tracking code *is* the credential, and Q46 P1 lets guests buy.

@@ -8,6 +8,22 @@ import 'package:reem/features/market/domain/entities/market.dart';
 import 'package:reem/features/market/presentation/providers/market_providers.dart';
 import 'package:reem/features/market/presentation/widgets/market_pieces.dart';
 
+/// Opens a drop, and records that she looked.
+///
+/// Shared by the full screen and the home rail because it was not: the rail's
+/// cards pushed the *list* instead, so tapping a specific drop on the home
+/// page showed her every drop — and, quietly worse, skipped the only call that
+/// marks a drop as opened. The seller's precision figure is the rate of drops
+/// looked at, so every tap through the rail was missing from the numerator.
+///
+/// Fire and forget: a measurement must never delay her, and a failed
+/// measurement must never stop her opening what she tapped.
+void openDrop(BuildContext context, WidgetRef ref, Drop drop) {
+  ref.read(marketRepositoryProvider).markDropOpened(drop.id);
+  if (drop.products.isEmpty) return;
+  context.push(RoutePaths.productDetailsOf(drop.products.first.productId));
+}
+
 /// نزولات — launches, addressed.
 ///
 /// Opening a drop records that she looked, which is what makes the seller's
@@ -50,7 +66,7 @@ class DropsScreen extends ConsumerWidget {
                     final drop = drops[index];
                     return DropCard(
                       drop: drop,
-                      onTap: () => _open(context, ref, drop),
+                      onTap: () => openDrop(context, ref, drop),
                     );
                   },
                 ),
@@ -59,13 +75,6 @@ class DropsScreen extends ConsumerWidget {
     );
   }
 
-  void _open(BuildContext context, WidgetRef ref, Drop drop) {
-    // Fire and forget: a measurement must never delay her, and a failed
-    // measurement must never stop her opening what she tapped.
-    ref.read(marketRepositoryProvider).markDropOpened(drop.id);
-    if (drop.products.isEmpty) return;
-    context.push(RoutePaths.productDetailsOf(drop.products.first.productId));
-  }
 }
 
 /// A drop rail for the home screen.
@@ -113,7 +122,7 @@ class DropsRail extends ConsumerWidget {
               width: 280,
               child: DropCard(
                 drop: drops[index],
-                onTap: () => context.push(RoutePaths.marketDrops),
+                onTap: () => openDrop(context, ref, drops[index]),
               ),
             ),
           ),

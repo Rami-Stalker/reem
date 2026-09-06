@@ -1,133 +1,138 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/errors/failure_exception.dart';
 import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/router/route_paths.dart';
+import 'package:reem/features/catalog/domain/entities/category_node.dart';
+import 'package:reem/features/catalog/presentation/providers/categories_provider.dart';
 
-/// The shop's departments.
+/// The shop's departments, from the catalogue's own tree.
 ///
-/// Three things were wrong here. The page built its own `SliverAppBar` on a
-/// flat surface, so it was the one buyer screen without the frosted gradient
-/// header. Every tile carried a fabricated product count — 245 dresses, 98
-/// pieces of jewellery — presented as fact. And the tap handler was an empty
-/// block, so the whole grid was decoration.
+/// This page used to hold a hand-written list of eight departments, on the
+/// stated grounds that "the client has no categories endpoint yet". It does —
+/// `GET /categories` is public and `categoryTreeProvider` has been reading it
+/// for the search screen all along. So the grid named departments the shop
+/// might not stock, in a fixed order, and could never show a ninth.
 ///
-/// The taxonomy itself is curated rather than fetched: the client has no
-/// categories endpoint yet. What it can do honestly is hand the department to
-/// search, which is a real, filtered result set.
-class CategoriesScreen extends StatelessWidget {
+/// Worse than the list was where a tile went: it pushed the department's
+/// *display name* into free-text search, while `home_categories_showcase` and
+/// the search screen both push `categoryOf(slug)`. The same tap meant two
+/// different things depending on where she made it, and one of them was a
+/// keyword guess against a translated label.
+///
+/// The palette stays local. A colour per department is presentation, and the
+/// catalogue has no opinion about it; it is assigned by position so the grid
+/// looks deliberate however many departments come back.
+class CategoriesScreen extends ConsumerWidget {
   const CategoriesScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final categories = _departments(context);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final tree = ref.watch(categoryTreeProvider);
 
     return ReemScrollPage(
       slivers: [
         PremiumAppBar(title: context.l10n.categories, showBack: true),
-        SliverPadding(
-          padding: const EdgeInsets.all(DsSpacing.lg),
-          sliver: SliverGrid.builder(
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              mainAxisSpacing: DsSpacing.md,
-              crossAxisSpacing: DsSpacing.md,
-              childAspectRatio: 0.95,
+        switch (tree) {
+          AsyncData(:final value) => _grid(_departmentsOf(value)),
+          AsyncError(:final error) => SliverFillRemaining(
+            hasScrollBody: false,
+            child: DsErrorState(
+              message: messageOf(error),
+              onRetry: () => ref.invalidate(categoryTreeProvider),
             ),
-            itemCount: categories.length,
-            itemBuilder: (context, index) =>
-                _DepartmentCard(department: categories[index], index: index),
           ),
-        ),
+          _ => const SliverFillRemaining(
+            hasScrollBody: false,
+            child: Center(child: DsLoadingIndicator()),
+          ),
+        },
         DsGaps.sliverBottomSafe,
       ],
     );
   }
 
-  List<_Department> _departments(BuildContext context) {
-    final l10n = context.l10n;
-    return [
-      _Department(
-        name: l10n.categoryDresses,
-        subtitle: l10n.categoryDressesBlurb,
-        icon: Icons.checkroom_rounded,
-        gradient: DsGradients.primarySoft,
+  /// Level one, or the roots themselves where a root has no children — the
+  /// same reading the search screen's chips take, so the two never disagree
+  /// about what a department is.
+  List<CategoryNode> _departmentsOf(List<CategoryNode> roots) => [
+    for (final root in roots) ...root.children.isEmpty ? [root] : root.children,
+  ];
+
+  Widget _grid(List<CategoryNode> departments) {
+    if (departments.isEmpty) {
+      return const SliverFillRemaining(
+        hasScrollBody: false,
+        child: _EmptyDepartments(),
+      );
+    }
+
+    return SliverPadding(
+      padding: const EdgeInsets.all(DsSpacing.lg),
+      sliver: SliverGrid.builder(
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          mainAxisSpacing: DsSpacing.md,
+          crossAxisSpacing: DsSpacing.md,
+          childAspectRatio: 0.95,
+        ),
+        itemCount: departments.length,
+        itemBuilder: (context, index) =>
+            _DepartmentCard(department: departments[index], index: index),
       ),
-      _Department(
-        name: l10n.categoryBeauty,
-        subtitle: l10n.categoryBeautyBlurb,
-        icon: Icons.face_retouching_natural,
-        gradient: DsGradients.lavenderBlush,
-      ),
-      _Department(
-        name: l10n.categoryBags,
-        subtitle: l10n.categoryBagsBlurb,
-        icon: Icons.shopping_bag_rounded,
-        gradient: DsGradients.sunset,
-      ),
-      _Department(
-        name: l10n.categoryJewellery,
-        subtitle: l10n.categoryJewelleryBlurb,
-        icon: Icons.diamond_outlined,
-        gradient: DsGradients.champagne,
-      ),
-      _Department(
-        name: l10n.categoryGifts,
-        subtitle: l10n.categoryGiftsBlurb,
-        icon: Icons.card_giftcard_rounded,
-        gradient: DsGradients.rewards,
-      ),
-      _Department(
-        name: l10n.categoryShoes,
-        subtitle: l10n.categoryShoesBlurb,
-        icon: Icons.roller_skating_rounded,
-        gradient: DsGradients.accent,
-      ),
-      _Department(
-        name: l10n.categoryAccessories,
-        subtitle: l10n.categoryAccessoriesBlurb,
-        icon: Icons.shopping_basket_rounded,
-        gradient: DsGradients.primary,
-      ),
-      _Department(
-        name: l10n.categoryFragrance,
-        subtitle: l10n.categoryFragranceBlurb,
-        icon: Icons.spa_rounded,
-        gradient: DsGradients.soft,
-      ),
-    ];
+    );
   }
 }
 
-class _Department {
-  const _Department({
-    required this.name,
-    required this.subtitle,
-    required this.icon,
-    required this.gradient,
-  });
+/// Colour and icon by position, cycled so the grid never runs out.
+const _palette = <Gradient>[
+  DsGradients.primarySoft,
+  DsGradients.lavenderBlush,
+  DsGradients.sunset,
+  DsGradients.champagne,
+  DsGradients.rewards,
+  DsGradients.accent,
+  DsGradients.primary,
+  DsGradients.soft,
+];
 
-  final String name;
-  final String subtitle;
-  final IconData icon;
-  final Gradient gradient;
-}
+const _icons = <IconData>[
+  Icons.checkroom_rounded,
+  Icons.face_retouching_natural,
+  Icons.shopping_bag_rounded,
+  Icons.diamond_outlined,
+  Icons.card_giftcard_rounded,
+  Icons.roller_skating_rounded,
+  Icons.shopping_basket_rounded,
+  Icons.spa_rounded,
+];
 
 class _DepartmentCard extends StatelessWidget {
   const _DepartmentCard({required this.department, required this.index});
 
-  final _Department department;
+  final CategoryNode department;
   final int index;
 
   @override
   Widget build(BuildContext context) {
     final text = context.dsText;
+    final gradient = _palette[index % _palette.length];
+    final icon = _icons[index % _icons.length];
+    // What sits under a department: its own children, or the pieces in it.
+    final subtitle = department.children.isEmpty
+        ? department.crumb
+        : department.children.map((child) => child.name).take(3).join(' · ');
 
     return DsStaggerAnimations.item(
       index: index,
       child: SurfaceCard(
-        onTap: () => context.push('${RoutePaths.search}?q=${department.name}'),
+        // The slug, like everywhere else that opens a category. The display
+        // name went to free-text search and matched whatever it happened to.
+        onTap: () =>
+            context.push(RoutePaths.categoryOf(department.category.slug)),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -136,22 +141,16 @@ class _DepartmentCard extends StatelessWidget {
               height: DsSizes.avatarXl,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                gradient: department.gradient,
+                gradient: gradient,
                 boxShadow: [
                   BoxShadow(
-                    color: department.gradient.colors.first.withValues(
-                      alpha: 0.3,
-                    ),
+                    color: gradient.colors.first.withValues(alpha: 0.3),
                     blurRadius: 20,
                     offset: const Offset(0, 8),
                   ),
                 ],
               ),
-              child: Icon(
-                department.icon,
-                size: DsSizes.iconLg,
-                color: DsColors.onMedia,
-              ),
+              child: Icon(icon, size: DsSizes.iconLg, color: DsColors.onMedia),
             ),
             DsGaps.vMd,
             Text(
@@ -161,7 +160,7 @@ class _DepartmentCard extends StatelessWidget {
             ),
             DsGaps.vXxs,
             Text(
-              department.subtitle,
+              subtitle,
               textAlign: TextAlign.center,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
@@ -172,4 +171,14 @@ class _DepartmentCard extends StatelessWidget {
       ),
     );
   }
+}
+
+class _EmptyDepartments extends StatelessWidget {
+  const _EmptyDepartments();
+
+  @override
+  Widget build(BuildContext context) => DsEmptyState(
+    icon: Icons.category_outlined,
+    title: context.l10n.emptyFeed,
+  );
 }

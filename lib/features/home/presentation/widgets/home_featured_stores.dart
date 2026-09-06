@@ -38,10 +38,15 @@ class HomeFeaturedStores extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        // No "see all". It used to open the departments grid — a list of
+        // categories under a heading that says boutiques, which is simply the
+        // wrong screen. There is no buyer-facing list of stores to send her to
+        // yet, and the header hides the control when it has nowhere to go;
+        // offering a link that lands somewhere unrelated is worse than not
+        // offering one. Give it a destination when that screen exists.
         HomeSectionHeader(
           eyebrow: context.l10n.homeFeaturedEyebrow,
           title: context.l10n.homeFeaturedStores,
-          onSeeAll: () => context.push(RoutePaths.categories),
         ),
         SizedBox(
           height: _railHeight,
