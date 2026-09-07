@@ -46,6 +46,7 @@ class AuthorizedMediaImage extends ConsumerWidget {
     this.borderRadius,
     this.blurHash,
     this.variantWidth,
+    this.fallback,
   });
 
   final String url;
@@ -63,6 +64,14 @@ class AuthorizedMediaImage extends ConsumerWidget {
   /// original, which is right for a full-screen view and wasteful anywhere
   /// else.
   final int? variantWidth;
+
+  /// What to draw when the photograph cannot be fetched.
+  ///
+  /// Some surfaces want something more specific than a broken-image glyph — a
+  /// hanger for a wardrobe tile, a flat panel behind a room cover — and a
+  /// failed private fetch on a flaky connection is an ordinary outcome there
+  /// rather than an error worth shouting about.
+  final Widget? fallback;
 
   /// `/media/<uuid>/file` — the shape `MediaService.urlFor` gives a private
   /// asset. Anything else is public and needs no header.
@@ -165,14 +174,16 @@ class AuthorizedMediaImage extends ConsumerWidget {
     );
   }
 
-  Widget _broken(BuildContext context) => Container(
-    width: width,
-    height: height,
-    color: Theme.of(context).colorScheme.surfaceContainerHighest,
-    alignment: Alignment.center,
-    child: Icon(
-      Icons.broken_image_outlined,
-      color: Theme.of(context).colorScheme.outline,
-    ),
-  );
+  Widget _broken(BuildContext context) =>
+      fallback ??
+      Container(
+        width: width,
+        height: height,
+        color: Theme.of(context).colorScheme.surfaceContainerHighest,
+        alignment: Alignment.center,
+        child: Icon(
+          Icons.broken_image_outlined,
+          color: Theme.of(context).colorScheme.outline,
+        ),
+      );
 }

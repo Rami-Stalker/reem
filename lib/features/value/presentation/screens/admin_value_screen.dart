@@ -31,8 +31,7 @@ class AdminValueScreen extends ConsumerWidget {
         children: [
           AdminPageHeader(
             title: 'Reem Value',
-            subtitle:
-                'المكانة، وشو بتفتح — والضمان إنها ما بتنشرى.',
+            subtitle: 'المكانة، وشو بتفتح — والضمان إنها ما بتنشرى.',
             actions: [
               IconButton(
                 tooltip: 'تحديث',
@@ -183,7 +182,8 @@ class _DistributionCard extends StatelessWidget {
 
     return _Panel(
       title: 'توزّع الدرجات',
-      subtitle: '${distribution.total} ملف — و${distribution.unranked} لسا بلا درجة',
+      subtitle:
+          '${distribution.total} ملف — و${distribution.unranked} لسا بلا درجة',
       child: Column(
         children: [
           for (final tier in distribution.tiers)
@@ -349,7 +349,9 @@ class _SuspectsCard extends ConsumerWidget {
                 children: [
                   for (final suspect in suspects)
                     Padding(
-                      padding: const EdgeInsets.symmetric(vertical: DsSpacing.xs),
+                      padding: const EdgeInsets.symmetric(
+                        vertical: DsSpacing.xs,
+                      ),
                       child: Row(
                         children: [
                           Expanded(
@@ -369,7 +371,9 @@ class _SuspectsCard extends ConsumerWidget {
                                 Text(
                                   'تركّز ${(suspect.concentration * 100).round()}% '
                                   'على ${suspect.distinctDays} يوم',
-                                  style: context.dsText.micro.tint(console.muted),
+                                  style: context.dsText.micro.tint(
+                                    console.muted,
+                                  ),
                                 ),
                               ],
                             ),
@@ -392,37 +396,22 @@ class _SuspectsCard extends ConsumerWidget {
     WidgetRef ref,
     ValueSuspect suspect,
   ) async {
-    final controller = TextEditingController();
-    final reason = await showDialog<String>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('تجميد مؤقت'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'المكانة بتوقف عن الحركة والمزايا بتوقف — وما بيضيع ولا شي. '
-              'بترجع لما تشيلي التجميد.',
-            ),
-            const SizedBox(height: DsSpacing.md),
-            DsInputField(controller: controller, label: 'السبب'),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('إلغاء'),
-          ),
-          FilledButton(
-            onPressed: () => Navigator.of(context).pop(controller.text.trim()),
-            child: const Text('جمّدي'),
-          ),
-        ],
-      ),
+    final reason = await DsDialog.prompt(
+      context,
+      title: 'تجميد مؤقت',
+      message:
+          'المكانة بتوقف عن الحركة والمزايا بتوقف — وما بيضيع ولا شي. '
+          'بترجع لما تشيلي التجميد.',
+      hintText: 'السبب',
+      confirmLabel: 'جمّدي',
+      cancelLabel: 'إلغاء',
+      maxLines: 3,
+      maxLength: 200,
     );
 
-    if (reason == null || reason.isEmpty || !context.mounted) return;
+    if (reason == null || reason.isEmpty || !context.mounted) {
+      return;
+    }
     await ref.read(valueAdminActionsProvider).freeze(suspect.userId, reason);
   }
 }

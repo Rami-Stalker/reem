@@ -1,8 +1,9 @@
 import 'dart:convert';
 
 import 'package:cryptography/cryptography.dart';
-import 'package:flutter/foundation.dart';
 
+import 'package:reem/core/observability/error_report.dart';
+import 'package:reem/core/observability/error_reporter.dart';
 import 'package:reem/core/storage/secure_storage_service.dart';
 
 /// This device's cryptographic identity.
@@ -42,8 +43,7 @@ class DeviceIdentityService {
 
   /// The server's id for this key, once registered. Null before first launch
   /// registration succeeds.
-  Future<String?> deviceKeyId() =>
-      _storage.read(SecureStorageKeys.deviceKeyId);
+  Future<String?> deviceKeyId() => _storage.read(SecureStorageKeys.deviceKeyId);
 
   Future<void> saveDeviceKeyId(String id) =>
       _storage.write(SecureStorageKeys.deviceKeyId, id);
@@ -81,7 +81,12 @@ class DeviceIdentityService {
       } catch (error) {
         // A key we cannot load is worse than no key: it would fail every proof
         // silently. Start over and let the app re-register.
-        debugPrint('Device key unreadable, regenerating: $error');
+        ErrorReporter.report(
+          error,
+          null,
+          severity: ErrorSeverity.warning,
+          context: 'device key unreadable, regenerating',
+        );
         await _storage.delete(SecureStorageKeys.deviceKeyId);
       }
     }

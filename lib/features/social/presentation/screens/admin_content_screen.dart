@@ -147,7 +147,7 @@ class _Filters extends StatelessWidget {
         children: [
           for (final filter in AdminContentFilter.values)
             Padding(
-              padding: const EdgeInsets.only(left: DsSpacing.xs),
+              padding: const EdgeInsetsDirectional.only(end: DsSpacing.xs),
               child: DsChip(
                 label: _label(context, filter),
                 selected: filter == selected,
@@ -309,11 +309,8 @@ Future<String?> showModerationReasonDialog(
 }) {
   return showDialog<String>(
     context: context,
-    builder: (context) => _ReasonDialog(
-      title: title,
-      body: body,
-      confirmLabel: confirmLabel,
-    ),
+    builder: (context) =>
+        _ReasonDialog(title: title, body: body, confirmLabel: confirmLabel),
   );
 }
 

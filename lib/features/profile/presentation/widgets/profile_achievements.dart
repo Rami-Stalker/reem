@@ -18,12 +18,14 @@ class ProfileAchievements extends ConsumerWidget {
       profileOverviewNotifierProvider.select((s) => s.isInitialLoading),
     );
     final achievements = ref.watch(
-      profileOverviewNotifierProvider
-          .select((s) => s.overview?.achievements ?? const <Achievement>[]),
+      profileOverviewNotifierProvider.select(
+        (s) => s.overview?.achievements ?? const <Achievement>[],
+      ),
     );
     final earned = ref.watch(
-      profileOverviewNotifierProvider
-          .select((s) => s.overview?.earnedAchievements ?? 0),
+      profileOverviewNotifierProvider.select(
+        (s) => s.overview?.earnedAchievements ?? 0,
+      ),
     );
 
     if (!isLoading && achievements.isEmpty) return const SizedBox.shrink();
@@ -32,7 +34,9 @@ class ProfileAchievements extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         ProfileSectionHeader(
-          eyebrow: isLoading ? null : context.l10n.achievementsEarned(earned, achievements.length),
+          eyebrow: isLoading
+              ? null
+              : context.l10n.achievementsEarned(earned, achievements.length),
           title: context.l10n.achievements,
         ),
         SizedBox(
@@ -41,11 +45,12 @@ class ProfileAchievements extends ConsumerWidget {
               ? _skeleton()
               : ListView.separated(
                   scrollDirection: Axis.horizontal,
-                  physics: const BouncingScrollPhysics(),
                   padding: const EdgeInsets.symmetric(horizontal: DsSpacing.lg),
                   itemCount: achievements.length,
-                  separatorBuilder: (_, _) => const SizedBox(width: DsSpacing.md),
-                  itemBuilder: (context, i) => _Badge(achievement: achievements[i]),
+                  separatorBuilder: (_, _) =>
+                      const SizedBox(width: DsSpacing.md),
+                  itemBuilder: (context, i) =>
+                      _Badge(achievement: achievements[i]),
                 ),
         ),
       ],
@@ -94,13 +99,14 @@ class _Badge extends StatelessWidget {
               color: achievement.earned ? null : c.surfaceVariant,
               shape: BoxShape.circle,
             ),
-            child: Icon(achievement.icon,
-                color: achievement.earned ? DsColors.onMedia : c.onSurfaceVariant),
+            child: Icon(
+              achievement.icon,
+              color: achievement.earned ? DsColors.onMedia : c.onSurfaceVariant,
+            ),
           ),
           const SizedBox(width: DsSpacing.md),
           Expanded(
-            child: Text(achievement.description,
-                style: context.dsText.body),
+            child: Text(achievement.description, style: context.dsText.body),
           ),
         ],
       ),
@@ -150,8 +156,11 @@ class _Badge extends StatelessWidget {
                         color: c.surface,
                         shape: BoxShape.circle,
                       ),
-                      child: Icon(Icons.lock_rounded,
-                          size: 12, color: c.onSurfaceVariant),
+                      child: Icon(
+                        Icons.lock_rounded,
+                        size: 12,
+                        color: c.onSurfaceVariant,
+                      ),
                     ),
                   ),
               ],
@@ -162,7 +171,9 @@ class _Badge extends StatelessWidget {
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               textAlign: TextAlign.center,
-              style: context.dsText.caption.tint(earned ? c.onSurface : c.onSurfaceVariant),
+              style: context.dsText.caption.tint(
+                earned ? c.onSurface : c.onSurfaceVariant,
+              ),
             ),
           ],
         ),

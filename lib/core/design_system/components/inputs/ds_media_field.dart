@@ -169,8 +169,7 @@ class _DsMediaFieldState extends ConsumerState<DsMediaField> {
         // renders inside a dialog on the admin console.
         final columns = constraints.maxWidth > 420 ? 4 : 3;
         const gap = DsSpacing.xs;
-        final side =
-            (constraints.maxWidth - gap * (columns - 1)) / columns;
+        final side = (constraints.maxWidth - gap * (columns - 1)) / columns;
 
         return Wrap(
           spacing: gap,
@@ -213,34 +212,33 @@ class _DsMediaFieldState extends ConsumerState<DsMediaField> {
     if (!widget.enabled) return;
     final l10n = context.l10n;
 
-    final source = await DsBottomSheet.showTitled<_PickSource>(
+    // "Camera or gallery?" is the archetypal action sheet, and the one place
+    // a Material list inside a rounded card reads as a port on an iPhone.
+    // `choose` answers with a `CupertinoActionSheet` there and this same list
+    // on Android.
+    final source = await DsBottomSheet.choose<_PickSource>(
       context,
       title: l10n.mediaSourceTitle,
-      scrollable: false,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          _SourceTile(
-            icon: widget.video
-                ? Icons.videocam_outlined
-                : Icons.photo_camera_outlined,
-            label: l10n.mediaFromCamera,
-            onTap: () => Navigator.of(context).pop(_PickSource.camera),
+      choices: [
+        DsSheetChoice(
+          value: _PickSource.camera,
+          label: l10n.mediaFromCamera,
+          icon: widget.video
+              ? Icons.videocam_outlined
+              : Icons.photo_camera_outlined,
+        ),
+        DsSheetChoice(
+          value: _PickSource.gallery,
+          label: l10n.mediaFromGallery,
+          icon: Icons.photo_library_outlined,
+        ),
+        if (widget.documents)
+          DsSheetChoice(
+            value: _PickSource.files,
+            label: l10n.mediaFromFiles,
+            icon: Icons.folder_open_outlined,
           ),
-          _SourceTile(
-            icon: Icons.photo_library_outlined,
-            label: l10n.mediaFromGallery,
-            onTap: () => Navigator.of(context).pop(_PickSource.gallery),
-          ),
-          if (widget.documents)
-            _SourceTile(
-              icon: Icons.folder_open_outlined,
-              label: l10n.mediaFromFiles,
-              onTap: () => Navigator.of(context).pop(_PickSource.files),
-            ),
-          const SizedBox(height: DsSpacing.sm),
-        ],
-      ),
+      ],
     );
 
     if (source == null || !mounted) return;
@@ -436,9 +434,9 @@ class _DsMediaFieldState extends ConsumerState<DsMediaField> {
   }
 
   void _showPickFailure() {
-    ScaffoldMessenger.maybeOf(context)?.showSnackBar(
-      SnackBar(content: Text(context.l10n.mediaPickFailed)),
-    );
+    ScaffoldMessenger.maybeOf(
+      context,
+    )?.showSnackBar(SnackBar(content: Text(context.l10n.mediaPickFailed)));
   }
 }
 
@@ -550,7 +548,11 @@ class _DsAvatarPickerState extends ConsumerState<DsAvatarPicker> {
     if (url == null || url.isEmpty) {
       return ColoredBox(
         color: background,
-        child: Icon(Icons.person_outline, size: widget.radius, color: iconColor),
+        child: Icon(
+          Icons.person_outline,
+          size: widget.radius,
+          color: iconColor,
+        ),
       );
     }
     return CachedNetworkImage(
@@ -567,26 +569,21 @@ class _DsAvatarPickerState extends ConsumerState<DsAvatarPicker> {
     final service = ref.read(mediaUploadServiceProvider);
     final l10n = context.l10n;
 
-    final source = await DsBottomSheet.showTitled<ImageSource>(
+    final source = await DsBottomSheet.choose<ImageSource>(
       context,
       title: l10n.mediaSourceTitle,
-      scrollable: false,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          _SourceTile(
-            icon: Icons.photo_camera_outlined,
-            label: l10n.mediaFromCamera,
-            onTap: () => Navigator.of(context).pop(ImageSource.camera),
-          ),
-          _SourceTile(
-            icon: Icons.photo_library_outlined,
-            label: l10n.mediaFromGallery,
-            onTap: () => Navigator.of(context).pop(ImageSource.gallery),
-          ),
-          const SizedBox(height: DsSpacing.sm),
-        ],
-      ),
+      choices: [
+        DsSheetChoice(
+          value: ImageSource.camera,
+          label: l10n.mediaFromCamera,
+          icon: Icons.photo_camera_outlined,
+        ),
+        DsSheetChoice(
+          value: ImageSource.gallery,
+          label: l10n.mediaFromGallery,
+          icon: Icons.photo_library_outlined,
+        ),
+      ],
     );
     if (source == null || !mounted) return;
 
@@ -595,9 +592,9 @@ class _DsAvatarPickerState extends ConsumerState<DsAvatarPicker> {
       file = await service.pickImage(source: source);
     } catch (_) {
       if (mounted) {
-        ScaffoldMessenger.maybeOf(context)?.showSnackBar(
-          SnackBar(content: Text(l10n.mediaPickFailed)),
-        );
+        ScaffoldMessenger.maybeOf(
+          context,
+        )?.showSnackBar(SnackBar(content: Text(l10n.mediaPickFailed)));
       }
       return;
     }
@@ -623,9 +620,9 @@ class _DsAvatarPickerState extends ConsumerState<DsAvatarPicker> {
       // Drop the preview: leaving it would show her a new photograph that the
       // server never received, and she would leave the screen believing it saved.
       setState(() => _preview = null);
-      ScaffoldMessenger.maybeOf(context)?.showSnackBar(
-        SnackBar(content: Text(context.l10n.mediaUploadFailed)),
-      );
+      ScaffoldMessenger.maybeOf(
+        context,
+      )?.showSnackBar(SnackBar(content: Text(context.l10n.mediaUploadFailed)));
     } finally {
       if (mounted) setState(() => _busy = false);
     }
@@ -852,12 +849,14 @@ class _MediaTile extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Icon(Icons.refresh_rounded, color: DsColors.onMedia, size: 22),
+              const Icon(
+                Icons.refresh_rounded,
+                color: DsColors.onMedia,
+                size: 22,
+              ),
               const SizedBox(height: DsSpacing.xxxs),
               Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: DsSpacing.xxs,
-                ),
+                padding: const EdgeInsets.symmetric(horizontal: DsSpacing.xxs),
                 child: Text(
                   l10n.mediaUploadFailed,
                   textAlign: TextAlign.center,
@@ -918,9 +917,9 @@ class _DocumentPlaceholder extends StatelessWidget {
               textAlign: TextAlign.center,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
-              style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                color: c.onSurfaceVariant,
-              ),
+              style: Theme.of(
+                context,
+              ).textTheme.labelSmall?.copyWith(color: c.onSurfaceVariant),
             ),
           ),
         ],
@@ -998,33 +997,6 @@ class _AddTile extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-}
-
-class _SourceTile extends StatelessWidget {
-  const _SourceTile({
-    required this.icon,
-    required this.label,
-    required this.onTap,
-  });
-
-  final IconData icon;
-  final String label;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final c = context.dsColors;
-    return ListTile(
-      onTap: onTap,
-      contentPadding: EdgeInsets.zero,
-      leading: CircleAvatar(
-        backgroundColor: c.primary.withValues(alpha: 0.12),
-        child: Icon(icon, color: c.primary, size: 20),
-      ),
-      title: Text(label),
-      trailing: Icon(Icons.chevron_right_rounded, color: c.onSurfaceVariant),
     );
   }
 }

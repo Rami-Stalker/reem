@@ -90,7 +90,8 @@ class _ProductGalleryHeaderState extends State<ProductGalleryHeader> {
     // Portrait, because that is how clothing photographs and how the rest of
     // the catalogue is cropped. The rail sits under the plate, inside the same
     // expanded header.
-    final imageHeight = MediaQuery.sizeOf(context).width / DsSizes.aspectPortrait;
+    final imageHeight =
+        MediaQuery.sizeOf(context).width / DsSizes.aspectPortrait;
     final height =
         imageHeight + (hasRail ? ProductGalleryHeader._railHeight : 0);
 
@@ -103,7 +104,7 @@ class _ProductGalleryHeaderState extends State<ProductGalleryHeader> {
       surfaceTintColor: Colors.transparent,
       leadingWidth: DsSizes.minTouchTarget + DsSpacing.md,
       leading: Padding(
-        padding: const EdgeInsets.only(left: DsSpacing.xs),
+        padding: const EdgeInsetsDirectional.only(start: DsSpacing.xs),
         child: DsIconButton(
           icon: DsIcons.back,
           variant: DsIconButtonVariant.glass,

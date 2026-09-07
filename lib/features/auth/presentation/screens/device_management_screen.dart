@@ -11,29 +11,16 @@ class DeviceManagementScreen extends ConsumerWidget {
   const DeviceManagementScreen({super.key});
 
   Future<void> _rename(BuildContext context, WidgetRef ref, String id) async {
-    final controller = TextEditingController();
-    final name = await showDialog<String>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(context.l10n.renameDevice),
-        content: TextField(
-          controller: controller,
-          decoration: InputDecoration(hintText: context.l10n.deviceName),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text(context.l10n.cancel),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(context, controller.text.trim()),
-            child: Text(context.l10n.save),
-          ),
-        ],
-      ),
+    final name = await DsDialog.prompt(
+      context,
+      title: context.l10n.renameDevice,
+      hintText: context.l10n.deviceName,
+      confirmLabel: context.l10n.save,
+      maxLength: 40,
     );
-    controller.dispose();
-    if (name == null || name.isEmpty) return;
+    if (name == null || name.isEmpty || !context.mounted) {
+      return;
+    }
     final result = await ref
         .read(authRepositoryProvider)
         .renameDevice(id: id, name: name);
@@ -106,7 +93,8 @@ class DeviceManagementScreen extends ConsumerWidget {
               }
               return SliverList.separated(
                 itemCount: items.length,
-                separatorBuilder: (_, _) => const SizedBox(height: DsSpacing.sm),
+                separatorBuilder: (_, _) =>
+                    const SizedBox(height: DsSpacing.sm),
                 itemBuilder: (context, index) {
                   final device = items[index];
                   return Semantics(
@@ -116,7 +104,10 @@ class DeviceManagementScreen extends ConsumerWidget {
                       color: colors.surface,
                       borderRadius: BorderRadius.circular(DsRadius.md),
                       child: ListTile(
-                        leading: Icon(Icons.devices_outlined, color: colors.primary),
+                        leading: Icon(
+                          Icons.devices_outlined,
+                          color: colors.primary,
+                        ),
                         title: Text(device.name),
                         subtitle: Text(
                           device.isTrusted
@@ -132,8 +123,14 @@ class DeviceManagementScreen extends ConsumerWidget {
                             }
                           },
                           itemBuilder: (context) => [
-                            PopupMenuItem(value: 'rename', child: Text(context.l10n.rename)),
-                            PopupMenuItem(value: 'revoke', child: Text(context.l10n.revoke)),
+                            PopupMenuItem(
+                              value: 'rename',
+                              child: Text(context.l10n.rename),
+                            ),
+                            PopupMenuItem(
+                              value: 'revoke',
+                              child: Text(context.l10n.revoke),
+                            ),
                           ],
                         ),
                       ),

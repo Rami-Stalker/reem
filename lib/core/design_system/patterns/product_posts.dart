@@ -187,7 +187,7 @@ class _DsProductPostCardState extends State<DsProductPostCard> {
                         PageView.builder(
                           controller: _pages,
                           physics: count > 1
-                              ? const BouncingScrollPhysics()
+                              ? null
                               : const NeverScrollableScrollPhysics(),
                           onPageChanged: (i) => setState(() => _index = i),
                           itemCount: count,

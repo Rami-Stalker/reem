@@ -52,7 +52,6 @@ class HomeCategoriesShowcase extends ConsumerWidget {
               ? _skeleton()
               : ListView.separated(
                   scrollDirection: Axis.horizontal,
-                  physics: const BouncingScrollPhysics(),
                   padding: const EdgeInsets.symmetric(horizontal: DsSpacing.lg),
                   itemCount: categories.length,
                   separatorBuilder: (_, _) =>

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/media/authorized_media_image.dart';
 import 'package:reem/features/closet/domain/entities/closet_item.dart';
 
 /// One garment in the grid.
@@ -55,7 +56,10 @@ class ClosetItemTile extends StatelessWidget {
                   Positioned(
                     bottom: DsSpacing.xs,
                     left: DsSpacing.xs,
-                    child: _Badge(label: 'قطعتي', color: colors.secondaryContainer),
+                    child: _Badge(
+                      label: 'قطعتي',
+                      color: colors.secondaryContainer,
+                    ),
                   ),
                 if (showWear && onWear != null)
                   Positioned(
@@ -118,13 +122,16 @@ class _Photo extends StatelessWidget {
       );
     }
 
-    return Image.network(
-      url,
-      fit: BoxFit.cover,
-      // A personal photograph is a PRIVATE asset behind her session, so a
-      // failed fetch is an ordinary outcome on a flaky connection rather than
-      // a broken tile worth shouting about.
-      errorBuilder: (context, _, _) => Container(
+    // A personal photograph is a PRIVATE asset behind her session — which is
+    // exactly why this cannot be `Image.network`. That loader has its own HTTP
+    // client, carries no bearer token, and got a 401 for every wardrobe photo
+    // she had ever taken: the tile below fell through to the hanger icon every
+    // single time, and looked like a design choice rather than a broken fetch.
+    // `AuthorizedMediaImage` attaches the session, caches the result, and
+    // decodes at the size the tile actually draws.
+    return AuthorizedMediaImage(
+      url: url,
+      fallback: Container(
         color: colors.surfaceVariant,
         alignment: Alignment.center,
         child: Icon(Icons.checkroom_rounded, color: colors.onSurfaceVariant),

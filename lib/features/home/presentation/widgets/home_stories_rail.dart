@@ -54,7 +54,6 @@ class HomeStoriesRail extends ConsumerWidget {
                 ? _skeleton()
                 : ListView.separated(
                     scrollDirection: Axis.horizontal,
-                    physics: const BouncingScrollPhysics(),
                     padding: const EdgeInsets.symmetric(
                       horizontal: DsSpacing.lg,
                     ),

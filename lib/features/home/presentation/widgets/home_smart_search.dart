@@ -137,7 +137,6 @@ class _SuggestionRail extends StatelessWidget {
     final colors = context.dsColors;
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
-      physics: const BouncingScrollPhysics(),
       child: Row(
         children: [
           Icon(icon, size: 16, color: colors.primary),

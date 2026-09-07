@@ -51,6 +51,25 @@ dependencies:
   # durable state is `flutter_secure_storage` for secrets, `shared_preferences`
   # for preferences, and a file-backed folder for the HTTP response cache.
 
+  # Nineteen packages were declared here and never imported once. They were
+  # not free: `flutter_stripe` drags the whole Stripe iOS/Android SDK in and
+  # pins a minimum iOS version; `pay` obliges an Apple Pay entitlement and a
+  # Google Pay merchant declaration; `google_sign_in` and `sign_in_with_apple`
+  # need a URL scheme and an entitlement the project does not have, so they
+  # were an App Store rejection waiting on a build that used them;
+  # `flutter_local_notifications` merges `SCHEDULE_EXACT_ALARM` and
+  # `RECEIVE_BOOT_COMPLETED` into the Android manifest, both of which Play
+  # asks a publisher to justify in writing; `local_auth` calls a Face ID API
+  # that crashes without an Info.plist key. Every one of them also ships a
+  # privacy manifest Apple now audits. Removed until something imports them:
+  # flutter_stripe, pay, google_sign_in, sign_in_with_apple, local_auth,
+  # flutter_local_notifications, photo_view, story_view, animations,
+  # pull_to_refresh, flutter_spinkit, awesome_dialog, snippet_coder_utils,
+  # glassmorphism, lottie, blur, like_button, flutter_svg,
+  # font_awesome_flutter. `freezed` and `json_serializable` went with them:
+  # both are build-time code generators that belonged in dev_dependencies,
+  # there is no `build_runner` and not one generated file in the tree.
+
   # Firebase suite
   # firebase_core: ^4.9.0
   # firebase_auth: ^6.5.1
@@ -65,51 +84,28 @@ dependencies:
   # so the documents pickers offer the file system as a third source.
   file_picker: ^12.1.0
   cached_network_image: ^3.4.1
-  photo_view: ^0.15.0
 
   # UI widgets
   # Charts for the seller command centre (revenue / orders trend lines).
   fl_chart: ^1.2.0
-  story_view: ^0.16.6
   flutter_staggered_grid_view: ^0.7.0
-  animations: ^2.2.0
-
-  # Payment
-  flutter_stripe: ^12.6.0
-  pay: ^3.3.0
 
   # Utilities & others
   get_it: ^9.2.1
-  freezed: ^3.2.5
-  json_serializable: ^6.14.0
   # Q55 — «يتصل بالزبونة بضغطة» and opening the address in a map. The
   # standard Flutter package for handing a URI to the OS.
   url_launcher: ^6.3.1
   intl: ^0.20.2
-  pull_to_refresh: ^2.0.0
-  flutter_spinkit: ^5.2.2
-  awesome_dialog: ^3.3.0
   connectivity_plus: ^7.1.1
-  flutter_local_notifications: ^21.0.0
-  snippet_coder_utils: ^1.0.15
   equatable: ^2.0.8
   flutter_animate: ^4.5.2
-  glassmorphism: ^3.0.0
-  lottie: ^3.3.3
   shimmer: ^3.0.0
   smooth_page_indicator: ^2.0.1
   flutter_staggered_animations: ^1.1.1
-  blur: ^4.0.2
-  like_button: ^2.1.0
-  flutter_svg: ^2.3.0
   shared_preferences: ^2.5.5
   flutter_secure_storage: ^10.3.0
-  font_awesome_flutter: ^11.0.0
-  google_sign_in: ^7.2.0
-  sign_in_with_apple: ^8.1.0
   cryptography: ^2.9.0
   crypto: ^3.0.7
-  local_auth: ^3.0.2
 
   # Voice notes. `record` writes AAC in an M4A container, which is what both
   # phone platforms produce natively and what the server's sniffer recognises;

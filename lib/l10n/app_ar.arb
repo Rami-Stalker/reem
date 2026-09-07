@@ -2063,5 +2063,9 @@
   "adminContentReinstateConfirm": "إعادة",
   "adminContentReasonLabel": "السبب",
   "adminContentReasonHint": "مثلاً: الصورة لا تلتزم بسياسة المحتوى…",
-  "adminContentReasonTooShort": "اكتبي سبباً واضحاً (١٠ أحرف على الأقل)"
+  "adminContentReasonTooShort": "اكتبي سبباً واضحاً (١٠ أحرف على الأقل)",
+  "discardChangesTitle": "بدك تتركي اللي كتبتيه؟",
+  "discardChangesBody": "إذا طلعتي هلق، كل شي على هالصفحة بيروح.",
+  "discardChangesConfirm": "اتركيه",
+  "discardChangesKeep": "كمّلي"
 }

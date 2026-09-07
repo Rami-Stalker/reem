@@ -55,13 +55,13 @@ class ValuePolicySection extends ConsumerWidget {
                   onPressed: policies.isEmpty
                       ? null
                       : () => _openEditor(
-                            context,
-                            ref,
-                            policies.firstWhere(
-                              (p) => p.isActive,
-                              orElse: () => policies.first,
-                            ),
+                          context,
+                          ref,
+                          policies.firstWhere(
+                            (p) => p.isActive,
+                            orElse: () => policies.first,
                           ),
+                        ),
                 ),
                 orElse: () => const SizedBox.shrink(),
               ),
@@ -119,14 +119,13 @@ class _PolicyRow extends ConsumerWidget {
                 width: 90,
                 child: Row(
                   children: [
-                    Text('v${policy.version}', style: context.dsText.labelStrong),
+                    Text(
+                      'v${policy.version}',
+                      style: context.dsText.labelStrong,
+                    ),
                     if (policy.isActive) ...[
                       const SizedBox(width: 6),
-                      Icon(
-                        Icons.circle,
-                        size: 8,
-                        color: console.positive,
-                      ),
+                      Icon(Icons.circle, size: 8, color: console.positive),
                     ],
                   ],
                 ),
@@ -177,9 +176,7 @@ class _PolicyRow extends ConsumerWidget {
     try {
       await ref.read(valueAdminActionsProvider).simulate(policy.id);
     } catch (_) {
-      messenger.showSnackBar(
-        const SnackBar(content: Text('ما نجحت التجربة.')),
-      );
+      messenger.showSnackBar(const SnackBar(content: Text('ما نجحت التجربة.')));
     }
   }
 
@@ -188,50 +185,29 @@ class _PolicyRow extends ConsumerWidget {
     WidgetRef ref,
     ValueSimulation simulation,
   ) async {
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('تفعيل السياسة'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'رح تنعاد حسبة كل الملفات على القواعد الجديدة.',
-              style: context.dsText.body,
-            ),
-            const SizedBox(height: DsSpacing.sm),
-            if (simulation.isDisruptive)
-              // The number that should make somebody stop. Spelled out rather
-              // than left in a table, because a demotion is the one change here
-              // that a customer feels as a loss.
-              Text(
-                '${simulation.movedDown} من ${simulation.sampled} رح ينزلوا درجة. '
-                'هيدا تغيير محسوس — تأكّدي إنك ناوية ياه.',
-                style: context.dsText.body.tint(context.console.critical),
-              )
-            else
-              Text(
-                '${simulation.movedUp} رح يطلعوا و${simulation.movedDown} رح ينزلوا '
-                'من أصل ${simulation.sampled}.',
-                style: context.dsText.body,
-              ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('إلغاء'),
-          ),
-          FilledButton(
-            onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('فعّلي'),
-          ),
-        ],
-      ),
+    // The number that should make somebody stop, spelled out rather than left
+    // in a table: a demotion is the one change here a customer feels as a
+    // loss. It used to be carried by a red tint as well; the words alone now
+    // say it, which is what a screen reader — and a colour-blind operator —
+    // actually receives.
+    final impact = simulation.isDisruptive
+        ? '${simulation.movedDown} من ${simulation.sampled} رح ينزلوا درجة. '
+              'هيدا تغيير محسوس — تأكّدي إنك ناوية ياه.'
+        : '${simulation.movedUp} رح يطلعوا و${simulation.movedDown} رح ينزلوا '
+              'من أصل ${simulation.sampled}.';
+
+    final confirmed = await DsDialog.confirm(
+      context,
+      title: 'تفعيل السياسة',
+      message: 'رح تنعاد حسبة كل الملفات على القواعد الجديدة.\n\n$impact',
+      confirmLabel: 'فعّلي',
+      cancelLabel: 'إلغاء',
+      destructive: simulation.isDisruptive,
     );
 
-    if (confirmed != true || !context.mounted) return;
+    if (!confirmed || !context.mounted) {
+      return;
+    }
 
     final messenger = ScaffoldMessenger.of(context);
     try {
@@ -295,7 +271,8 @@ class _PolicyEditorDialog extends ConsumerStatefulWidget {
   final ValuePolicyVersion base;
 
   @override
-  ConsumerState<_PolicyEditorDialog> createState() => _PolicyEditorDialogState();
+  ConsumerState<_PolicyEditorDialog> createState() =>
+      _PolicyEditorDialogState();
 }
 
 class _PolicyEditorDialogState extends ConsumerState<_PolicyEditorDialog> {
@@ -336,8 +313,9 @@ class _PolicyEditorDialogState extends ConsumerState<_PolicyEditorDialog> {
   int get _spendingCeiling {
     if (_totalWeight == 0) return 0;
     final commerceShare = (_weights['COMMERCE'] ?? 0) / _totalWeight;
-    final commerce =
-        (1000 * commerceShare).clamp(0, _ceilingBps / 10000 * 1000).toDouble();
+    final commerce = (1000 * commerceShare)
+        .clamp(0, _ceilingBps / 10000 * 1000)
+        .toDouble();
     final reliabilityShare = (_weights['RELIABILITY'] ?? 0) / _totalWeight;
     final reliability =
         1000 * reliabilityShare * (widget.base.reliabilityBaseline / 100);
@@ -371,8 +349,7 @@ class _PolicyEditorDialogState extends ConsumerState<_PolicyEditorDialog> {
                   max: 50,
                   suffix:
                       '${_totalWeight == 0 ? 0 : ((_weights[key]! / _totalWeight) * 100).round()}%',
-                  onChanged: (v) =>
-                      setState(() => _weights[key] = v.round()),
+                  onChanged: (v) => setState(() => _weights[key] = v.round()),
                 ),
 
               const Divider(height: DsSpacing.lg),
@@ -437,7 +414,9 @@ class _PolicyEditorDialogState extends ConsumerState<_PolicyEditorDialog> {
     final navigator = Navigator.of(context);
 
     try {
-      await ref.read(valueAdminActionsProvider).draft(
+      await ref
+          .read(valueAdminActionsProvider)
+          .draft(
             ValuePolicyDraft(
               pillarWeights: _weights,
               commerceCeilingBps: _ceilingBps,

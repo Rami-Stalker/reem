@@ -64,7 +64,9 @@ class _OrderDetailScreenState extends ConsumerState<OrderDetailScreen>
     if (state == AppLifecycleState.resumed) {
       // Back from the background: whatever happened while she was away is
       // exactly what she opened the app to see.
-      unawaited(ref.read(orderDetailNotifierProvider(widget.orderId).notifier).load());
+      unawaited(
+        ref.read(orderDetailNotifierProvider(widget.orderId).notifier).load(),
+      );
     } else {
       _poll?.cancel();
       _poll = null;
@@ -100,8 +102,10 @@ class _OrderDetailScreenState extends ConsumerState<OrderDetailScreen>
       }
     });
 
-    ref.listen(orderDetailNotifierProvider(orderId).select((s) => s.error),
-        (_, error) {
+    ref.listen(orderDetailNotifierProvider(orderId).select((s) => s.error), (
+      _,
+      error,
+    ) {
       if (error != null) {
         DsSnackbar.show(context, message: error, type: DsSnackbarType.error);
       }
@@ -183,7 +187,11 @@ class _CodConfirmationBanner extends StatelessWidget {
 }
 
 class _Body extends StatelessWidget {
-  const _Body({required this.order, required this.state, required this.notifier});
+  const _Body({
+    required this.order,
+    required this.state,
+    required this.notifier,
+  });
 
   final OrderDetail order;
   final OrderDetailState state;
@@ -249,16 +257,21 @@ class _Body extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _kv(context, order.shipping.recipientName,
-                    order.shipping.recipientPhone),
+                _kv(
+                  context,
+                  order.shipping.recipientName,
+                  order.shipping.recipientPhone,
+                ),
                 DsGaps.vXxs,
                 Text(
                   '${order.shipping.addressLine}, ${order.shipping.city}, ${order.shipping.governorate}',
                   style: context.dsText.body.tint(colors.onSurfaceVariant),
                 ),
                 if (order.shipping.landmark != null)
-                  Text('علامة مميزة: ${order.shipping.landmark}',
-                      style: context.dsText.body.tint(colors.onSurfaceVariant)),
+                  Text(
+                    'علامة مميزة: ${order.shipping.landmark}',
+                    style: context.dsText.body.tint(colors.onSurfaceVariant),
+                  ),
                 if (order.privacyMaskEnabled) ...[
                   DsGaps.vXxs,
                   Row(
@@ -281,8 +294,10 @@ class _Body extends StatelessWidget {
                 if (order.deliveryInstructions != null)
                   Padding(
                     padding: const EdgeInsets.only(top: DsSpacing.xxs),
-                    child: Text('ملاحظة: ${order.deliveryInstructions}',
-                        style: context.dsText.body.tint(colors.onSurfaceVariant)),
+                    child: Text(
+                      'ملاحظة: ${order.deliveryInstructions}',
+                      style: context.dsText.body.tint(colors.onSurfaceVariant),
+                    ),
                   ),
               ],
             ),
@@ -297,7 +312,9 @@ class _Body extends StatelessWidget {
                   Expanded(
                     child: Text(
                       payment.methodLabel,
-                      style: context.dsText.body.semibold.tint(colors.onSurface),
+                      style: context.dsText.body.semibold.tint(
+                        colors.onSurface,
+                      ),
                     ),
                   ),
                   OrderStatusChip.raw(payment.status),
@@ -306,10 +323,7 @@ class _Body extends StatelessWidget {
             ),
             if (needsPaymentStep) ...[
               const SizedBox(height: DsSpacing.sm),
-              PaymentActionCard(
-                payment: payment,
-                onSettled: notifier.load,
-              ),
+              PaymentActionCard(payment: payment, onSettled: notifier.load),
             ],
             const SizedBox(height: DsSpacing.lg),
           ],
@@ -358,59 +372,72 @@ class _Body extends StatelessWidget {
     BuildContext context,
     OrderDetailNotifier notifier,
   ) async {
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: Text(context.l10n.orderCancelTitle),
-        content: Text(context.l10n.orderCancelBody),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx, false),
-            child: Text(context.l10n.orderCancelKeep),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(ctx, true),
-            child: Text(context.l10n.orderCancelConfirm),
-          ),
-        ],
-      ),
+    final confirmed = await DsDialog.confirm(
+      context,
+      title: context.l10n.orderCancelTitle,
+      message: context.l10n.orderCancelBody,
+      confirmLabel: context.l10n.orderCancelConfirm,
+      cancelLabel: context.l10n.orderCancelKeep,
+      destructive: true,
     );
-    if (confirmed == true) await notifier.cancel();
+    if (confirmed) {
+      await notifier.cancel();
+    }
   }
 
   Widget _section(BuildContext context, String title) => Padding(
-        padding: const EdgeInsets.only(bottom: DsSpacing.sm),
-        child: Text(
-          title,
-          style: context.dsText.tileTitle.bold.tint(context.dsColors.onSurface),
-        ),
-      );
+    padding: const EdgeInsets.only(bottom: DsSpacing.sm),
+    child: Text(
+      title,
+      style: context.dsText.tileTitle.bold.tint(context.dsColors.onSurface),
+    ),
+  );
 
   Widget _kv(BuildContext context, String name, String phone) => Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(name,
-              style: context.dsText.body.semibold.tint(context.dsColors.onSurface)),
-          Text(phone, style: context.dsText.body.tint(context.dsColors.onSurfaceVariant)),
-        ],
-      );
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    children: [
+      Text(
+        name,
+        style: context.dsText.body.semibold.tint(context.dsColors.onSurface),
+      ),
+      Text(
+        phone,
+        style: context.dsText.body.tint(context.dsColors.onSurfaceVariant),
+      ),
+    ],
+  );
 
   Widget _money(
     BuildContext context,
     String label,
-    Money value,
-      {bool emphasize = false}) {
+    Money value, {
+    bool emphasize = false,
+  }) {
     final colors = context.dsColors;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: DsSpacing.xxs),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label,
-              style: context.dsText.body.tint(emphasize ? colors.onSurface : colors.onSurfaceVariant).copyWith(fontWeight: emphasize ? DsTypography.bold : DsTypography.regular)),
+          Text(
+            label,
+            style: context.dsText.body
+                .tint(emphasize ? colors.onSurface : colors.onSurfaceVariant)
+                .copyWith(
+                  fontWeight: emphasize
+                      ? DsTypography.bold
+                      : DsTypography.regular,
+                ),
+          ),
           Text(
             value.format(),
-            style: context.dsText.body.tint(emphasize ? colors.primary : colors.onSurface).copyWith(fontWeight: emphasize ? DsTypography.bold : DsTypography.medium),
+            style: context.dsText.body
+                .tint(emphasize ? colors.primary : colors.onSurface)
+                .copyWith(
+                  fontWeight: emphasize
+                      ? DsTypography.bold
+                      : DsTypography.medium,
+                ),
           ),
         ],
       ),
@@ -447,10 +474,12 @@ class _ItemRow extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(item.title,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: context.dsText.body.tint(colors.onSurface)),
+                Text(
+                  item.title,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: context.dsText.body.tint(colors.onSurface),
+                ),
                 Text(
                   '${item.variantName != null ? '${item.variantName} · ' : ''}x${item.quantity}',
                   style: context.dsText.bodySmall.tint(colors.onSurfaceVariant),
@@ -458,8 +487,10 @@ class _ItemRow extends StatelessWidget {
               ],
             ),
           ),
-          Text(item.lineTotal.format(),
-              style: context.dsText.body.semibold.tint(colors.onSurface)),
+          Text(
+            item.lineTotal.format(),
+            style: context.dsText.body.semibold.tint(colors.onSurface),
+          ),
         ],
       ),
     );
@@ -502,11 +533,19 @@ class _Timeline extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(events[i].title,
-                            style: context.dsText.body.semibold.tint(colors.onSurface)),
+                        Text(
+                          events[i].title,
+                          style: context.dsText.body.semibold.tint(
+                            colors.onSurface,
+                          ),
+                        ),
                         if (events[i].description != null)
-                          Text(events[i].description!,
-                              style: context.dsText.bodySmall.tint(colors.onSurfaceVariant)),
+                          Text(
+                            events[i].description!,
+                            style: context.dsText.bodySmall.tint(
+                              colors.onSurfaceVariant,
+                            ),
+                          ),
                       ],
                     ),
                   ),
@@ -565,18 +604,26 @@ class _ParcelCard extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(vertical: DsSpacing.xxs),
                 child: Row(
                   children: [
-                    Icon(Icons.local_shipping_outlined,
-                        size: 16, color: colors.primary),
+                    Icon(
+                      Icons.local_shipping_outlined,
+                      size: 16,
+                      color: colors.primary,
+                    ),
                     const SizedBox(width: DsSpacing.xs),
                     Expanded(
                       child: Text(
                         '${context.l10n.trackingCode} ${parcel.shipment!.trackingCode}',
-                        style: context.dsText.bodySmall.semibold.tint(colors.primary),
+                        style: context.dsText.bodySmall.semibold.tint(
+                          colors.primary,
+                        ),
                       ),
                     ),
                     OrderStatusChip.raw(parcel.shipment!.status),
-                    Icon(Icons.chevron_left_rounded,
-                        size: 18, color: colors.onSurfaceVariant),
+                    Icon(
+                      Icons.chevron_left_rounded,
+                      size: 18,
+                      color: colors.onSurfaceVariant,
+                    ),
                   ],
                 ),
               ),

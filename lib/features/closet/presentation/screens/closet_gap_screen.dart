@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/media/authorized_media_image.dart';
 import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/features/closet/domain/entities/closet_gap.dart';
 import 'package:reem/features/closet/presentation/providers/closet_providers.dart';
@@ -123,11 +124,9 @@ class _SuggestionCard extends StatelessWidget {
               height: 100,
               child: product.coverUrl == null
                   ? Container(color: colors.surfaceVariant)
-                  : Image.network(
-                      product.coverUrl!,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, _, _) =>
-                          Container(color: colors.surfaceVariant),
+                  : AuthorizedMediaImage(
+                      url: product.coverUrl!,
+                      fallback: Container(color: colors.surfaceVariant),
                     ),
             ),
           ),
@@ -144,7 +143,10 @@ class _SuggestionCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 2),
                 if (product.priceFrom != null)
-                  Text(product.priceFrom!.format(), style: context.dsText.price),
+                  Text(
+                    product.priceFrom!.format(),
+                    style: context.dsText.price,
+                  ),
                 const SizedBox(height: DsSpacing.xs),
                 // Why *her wardrobe* likes it. The catalog's own reasons are
                 // one tap away on the product page.

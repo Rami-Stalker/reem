@@ -76,6 +76,7 @@ abstract final class RouteNames {
   static const closetAddItem = 'closet-add-item';
   static const closetGap = 'closet-gap';
   static const rooms = 'rooms';
+  static const roomJoin = 'room-join';
   static const room = 'room';
   static const roomPlan = 'room-plan';
   static const roomCompare = 'room-compare';

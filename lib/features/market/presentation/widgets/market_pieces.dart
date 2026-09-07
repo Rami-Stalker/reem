@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/media/authorized_media_image.dart';
 import 'package:reem/core/shared/value_objects/money.dart';
 import 'package:reem/features/market/domain/entities/market.dart';
 
@@ -81,9 +82,7 @@ class ReasonLine extends StatelessWidget {
           child: Icon(icon, size: 14, color: colour),
         ),
         DsGaps.hXs,
-        Expanded(
-          child: Text(text, style: context.dsText.caption.tint(colour)),
-        ),
+        Expanded(child: Text(text, style: context.dsText.caption.tint(colour))),
       ],
     );
   }
@@ -119,10 +118,9 @@ class MarketThumb extends StatelessWidget {
                   color: colors.onSurfaceVariant,
                 ),
               )
-            : Image.network(
-                imageUrl!,
-                fit: BoxFit.cover,
-                errorBuilder: (_, _, _) => ColoredBox(
+            : AuthorizedMediaImage(
+                url: imageUrl!,
+                fallback: ColoredBox(
                   color: colors.surfaceVariant,
                   child: Icon(
                     icon,
@@ -280,8 +278,10 @@ class DropCard extends StatelessWidget {
               scrollDirection: Axis.horizontal,
               itemCount: drop.products.length,
               separatorBuilder: (_, _) => DsGaps.hXs,
-              itemBuilder: (_, index) =>
-                  MarketThumb(imageUrl: drop.products[index].imageUrl, size: 64),
+              itemBuilder: (_, index) => MarketThumb(
+                imageUrl: drop.products[index].imageUrl,
+                size: 64,
+              ),
             ),
           ),
         ],

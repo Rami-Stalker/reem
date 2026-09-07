@@ -166,7 +166,12 @@ class _CustomerNavigationBar extends ConsumerWidget {
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: DsBlur.heavy, sigmaY: DsBlur.heavy),
           child: Container(
-            height: 68,
+            // A floor, not a height. The rail used to be pinned at 68 while
+            // the label inside it grew with the system text setting, so at
+            // anything past ~130% the caption was clipped and then the whole
+            // column overflowed. Letting the bar grow costs a few pixels of
+            // page and keeps every tab readable.
+            constraints: const BoxConstraints(minHeight: 68),
             padding: const EdgeInsets.symmetric(
               horizontal: DsSpacing.xs,
               vertical: DsSpacing.xs,
@@ -229,61 +234,78 @@ class _CustomerNavItem extends StatelessWidget {
 
     final label = item.labelOf(context.l10n);
 
-    return Tooltip(
-      message: label,
-      child: InkResponse(
-        radius: 34,
-        onTap: onTap,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Stack(
-              clipBehavior: Clip.none,
+    // One node for the whole tab, announced as a selected/unselected tab
+    // rather than as an icon and a caption read out separately. `container`
+    // is what collapses the two children into it. The badge is drawn at a
+    // fixed size so it cannot swallow the icon at 160% text, so its number is
+    // carried here instead — otherwise a screen reader would never hear it.
+    return Semantics(
+      container: true,
+      selected: selected,
+      button: true,
+      label: badgeCount > 0 ? '$label ($badgeCount)' : label,
+      child: ExcludeSemantics(
+        child: Tooltip(
+          message: label,
+          child: InkResponse(
+            radius: 34,
+            onTap: onTap,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
               children: [
-                AnimatedContainer(
-                  duration: DsMotion.normal,
-                  curve: DsMotion.silk,
-                  width: 44,
-                  height: 30,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    gradient: selected ? context.primaryGradient : null,
-                    borderRadius: DsRadius.borderPill,
-                    boxShadow: selected
-                        ? context.glowShadow(c.primary, blur: 14, alpha: 0.34)
-                        : null,
-                  ),
-                  child: Icon(
-                    selected ? item.selectedIcon : item.icon,
-                    color: selected ? c.onPrimary : c.onSurfaceVariant,
-                    size: 21,
+                Stack(
+                  clipBehavior: Clip.none,
+                  children: [
+                    AnimatedContainer(
+                      duration: DsMotion.normal,
+                      curve: DsMotion.silk,
+                      width: 44,
+                      height: 30,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        gradient: selected ? context.primaryGradient : null,
+                        borderRadius: DsRadius.borderPill,
+                        boxShadow: selected
+                            ? context.glowShadow(
+                                c.primary,
+                                blur: 14,
+                                alpha: 0.34,
+                              )
+                            : null,
+                      ),
+                      child: Icon(
+                        selected ? item.selectedIcon : item.icon,
+                        color: selected ? c.onPrimary : c.onSurfaceVariant,
+                        size: 21,
+                      ),
+                    ),
+                    if (badgeCount > 0)
+                      PositionedDirectional(
+                        top: -3,
+                        end: -1,
+                        child: _CountDot(count: badgeCount),
+                      ),
+                  ],
+                ),
+                DsGaps.vXxs,
+                FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    label,
+                    maxLines: 1,
+                    style: context.dsText.caption
+                        .tint(selected ? c.primary : c.onSurfaceVariant)
+                        .copyWith(
+                          fontWeight: selected
+                              ? DsTypography.bold
+                              : DsTypography.medium,
+                        ),
                   ),
                 ),
-                if (badgeCount > 0)
-                  PositionedDirectional(
-                    top: -3,
-                    end: -1,
-                    child: _CountDot(count: badgeCount),
-                  ),
               ],
             ),
-            DsGaps.vXxs,
-            FittedBox(
-              fit: BoxFit.scaleDown,
-              child: Text(
-                label,
-                maxLines: 1,
-                style: context.dsText.caption
-                    .tint(selected ? c.primary : c.onSurfaceVariant)
-                    .copyWith(
-                      fontWeight: selected
-                          ? DsTypography.bold
-                          : DsTypography.medium,
-                    ),
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );
@@ -299,19 +321,25 @@ class _CountDot extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = context.dsColors;
-    return Container(
-      constraints: const BoxConstraints(minWidth: 17),
-      height: 17,
-      padding: const EdgeInsets.symmetric(horizontal: DsSpacing.xxs),
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        color: c.primary,
-        borderRadius: DsRadius.borderPill,
-        border: Border.all(color: c.surfaceElevated, width: 1.5),
-      ),
-      child: Text(
-        count > 99 ? '99+' : '$count',
-        style: context.dsText.micro.bold.tint(c.onPrimary).copyWith(height: 1),
+    // The tally is furniture, not prose: it stays a 17dp dot at every system
+    // text size rather than swelling over the icon it is pinned to. The count
+    // still reaches a screen reader — the tab's own semantic label carries it.
+    return MediaQuery.withNoTextScaling(
+      child: Container(
+        constraints: const BoxConstraints(minWidth: 17, minHeight: 17),
+        padding: const EdgeInsets.symmetric(horizontal: DsSpacing.xxs),
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: c.primary,
+          borderRadius: DsRadius.borderPill,
+          border: Border.all(color: c.surfaceElevated, width: 1.5),
+        ),
+        child: Text(
+          count > 99 ? '99+' : '$count',
+          style: context.dsText.micro.bold
+              .tint(c.onPrimary)
+              .copyWith(height: 1),
+        ),
       ),
     );
   }
@@ -639,9 +667,16 @@ class _AdminFallbackShell extends StatelessWidget {
           Row(
             children: [
               Container(
-                width: 88,
+                // The console is a landscape-tablet surface, but staff open it
+                // on whatever is in their pocket. 88dp of a 360dp phone is a
+                // quarter of the width, so the rail narrows on a small screen
+                // rather than squeezing the page it exists to navigate.
+                width: MediaQuery.sizeOf(context).width < DsBreakpoints.medium
+                    ? 64
+                    : 88,
                 color: context.console.nav,
                 child: SafeArea(
+                  right: false,
                   child: Column(
                     children: [
                       DsGaps.vMd,
@@ -650,24 +685,37 @@ class _AdminFallbackShell extends StatelessWidget {
                         color: DsColors.onMedia,
                       ),
                       DsGaps.vLg,
-                      for (final entry in destinations.asMap().entries)
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                            vertical: DsSpacing.xxs,
-                          ),
-                          child: IconButton(
-                            tooltip: entry.value.labelOf(context.l10n),
-                            onPressed: () => onSelected(entry.key),
-                            icon: Icon(
-                              entry.key == selectedIndex
-                                  ? entry.value.selectedIcon
-                                  : entry.value.icon,
-                              color: entry.key == selectedIndex
-                                  ? DsColors.onMedia
-                                  : context.console.navMuted,
-                            ),
-                          ),
+                      // Scrollable. The console gained sections faster than
+                      // the rail gained room: eight destinations on a short
+                      // handset ran the fixed column straight off the bottom
+                      // of the screen, and the last two could not be reached
+                      // at all.
+                      Expanded(
+                        child: ListView(
+                          padding: EdgeInsets.zero,
+                          children: [
+                            for (final entry in destinations.asMap().entries)
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: DsSpacing.xxs,
+                                ),
+                                child: IconButton(
+                                  tooltip: entry.value.labelOf(context.l10n),
+                                  isSelected: entry.key == selectedIndex,
+                                  onPressed: () => onSelected(entry.key),
+                                  icon: Icon(
+                                    entry.key == selectedIndex
+                                        ? entry.value.selectedIcon
+                                        : entry.value.icon,
+                                    color: entry.key == selectedIndex
+                                        ? DsColors.onMedia
+                                        : context.console.navMuted,
+                                  ),
+                                ),
+                              ),
+                          ],
                         ),
+                      ),
                     ],
                   ),
                 ),

@@ -218,7 +218,9 @@ class _ProductCardState extends ConsumerState<_ProductCard> {
               AdviceTile(advice: product.topAdvice!, dense: true),
               if (!_open && product.adviceCount > 1)
                 Padding(
-                  padding: const EdgeInsets.only(right: DsSpacing.md),
+                  padding: const EdgeInsetsDirectional.only(
+                    start: DsSpacing.md,
+                  ),
                   child: Text(
                     'و${product.adviceCount - 1} اقتراح كمان',
                     style: context.dsText.micro.tint(palette.primary),

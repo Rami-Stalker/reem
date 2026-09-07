@@ -4,6 +4,7 @@ abstract final class RoutePaths {
   static const login = '/login';
   static const authRequired = '/auth-required';
   static const register = '/register';
+
   /// The code step of the main sign-in journey.
   ///
   /// A real route rather than an imperative `Navigator.push`: GoRouter owns
@@ -157,6 +158,16 @@ abstract final class RoutePaths {
   /// the cart tab; `/cart` stays for the one-tap purchase that needs no
   /// deliberation.
   static const rooms = '/rooms';
+
+  /// Where a shared invite lands.
+  ///
+  /// The slug is the credential — the server exchanges it for membership — so
+  /// this sits outside the catalogue's id space and, deliberately, *before*
+  /// `/rooms/:id` in the route table: `:id` is greedy and would otherwise
+  /// match the literal segment `join` and try to open a room called "join".
+  static const roomJoin = '/rooms/join/:slug';
+  static String roomJoinOf(String slug) => '/rooms/join/$slug';
+
   static const room = '/rooms/:id';
   static String roomOf(String id) => '/rooms/$id';
   static const roomPlan = '/rooms/:id/plan';
@@ -205,6 +216,7 @@ abstract final class RoutePaths {
   static String invoiceOf(String id) => '/invoice/$id';
   static const collection = '/collection/:key';
   static String collectionOf(String key) => '/collection/$key';
+
   /// What the shop has told her. Every bell in the app opens this.
   static const notifications = '/notifications';
 
@@ -217,6 +229,7 @@ abstract final class RoutePaths {
   static const appearance = '/appearance';
   static const language = '/language';
   static const coupons = '/coupons';
+
   /// The reviews she has written. Distinct from `/seller/reviews`, which is
   /// the desk where a boutique answers the reviews written about her.
   static const myReviews = '/my-reviews';

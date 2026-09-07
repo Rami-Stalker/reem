@@ -20,8 +20,9 @@ class ProfileFollowedStores extends ConsumerWidget {
       profileOverviewNotifierProvider.select((s) => s.isInitialLoading),
     );
     final stores = ref.watch(
-      profileOverviewNotifierProvider
-          .select((s) => s.overview?.followedStores ?? const <FollowedStore>[]),
+      profileOverviewNotifierProvider.select(
+        (s) => s.overview?.followedStores ?? const <FollowedStore>[],
+      ),
     );
 
     if (!isLoading && stores.isEmpty) return const SizedBox.shrink();
@@ -39,10 +40,10 @@ class ProfileFollowedStores extends ConsumerWidget {
               ? _skeleton()
               : ListView.separated(
                   scrollDirection: Axis.horizontal,
-                  physics: const BouncingScrollPhysics(),
                   padding: const EdgeInsets.symmetric(horizontal: DsSpacing.lg),
                   itemCount: stores.length,
-                  separatorBuilder: (_, _) => const SizedBox(width: DsSpacing.md),
+                  separatorBuilder: (_, _) =>
+                      const SizedBox(width: DsSpacing.md),
                   itemBuilder: (context, i) => _StoreAvatar(store: stores[i]),
                 ),
         ),
@@ -98,8 +99,10 @@ class _StoreAvatar extends StatelessWidget {
                     right: -2,
                     top: -2,
                     child: Container(
-                      padding:
-                          const EdgeInsets.symmetric(horizontal: DsSpacing.xxs, vertical: DsSpacing.xxxs),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: DsSpacing.xxs,
+                        vertical: DsSpacing.xxxs,
+                      ),
                       constraints: const BoxConstraints(minWidth: 16),
                       decoration: BoxDecoration(
                         color: c.primary,

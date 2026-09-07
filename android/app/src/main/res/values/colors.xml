@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  The two colours the Android 12 splash screen needs, taken from the design
+  system's light palette so the system screen and the app's first Flutter frame
+  are the same cream rather than two shades of nearly-white.
+-->
+<resources>
+    <color name="splash_background">#FFFFF8FB</color>
+    <color name="splash_icon_background">#FFFFFFFF</color>
+</resources>

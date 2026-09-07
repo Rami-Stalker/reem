@@ -54,7 +54,6 @@ class HomeFeaturedStores extends ConsumerWidget {
               ? _skeleton(context)
               : ListView.separated(
                   scrollDirection: Axis.horizontal,
-                  physics: const BouncingScrollPhysics(),
                   padding: const EdgeInsets.symmetric(horizontal: DsSpacing.lg),
                   itemCount: stores.length,
                   separatorBuilder: (_, _) =>

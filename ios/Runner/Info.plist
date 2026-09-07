@@ -26,13 +26,18 @@
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
-	<key>NSAppTransportSecurity</key>
-	<dict>
-		<key>NSAllowsLocalNetworking</key>
-		<true/>
-	</dict>
-	<key>NSLocalNetworkUsageDescription</key>
-	<string>Reem connects to your local development API while testing on this network.</string>
+	<!--
+	  App Transport Security is left at its default: TLS only, no exceptions.
+
+	  This used to carry NSAllowsLocalNetworking with a usage string that said,
+	  in as many words, that the app talks to a development API on the local
+	  network. That is a development convenience shipped in a production
+	  binary: it triggers iOS 14's local-network permission prompt on first
+	  launch — a customer being asked to let a shop scan her home network — and
+	  it is exactly the kind of string an App Review notes. A debug build that
+	  needs to reach a laptop can add the exception back in a Debug-only plist;
+	  the release binary talks to https://api.reem.shop and nothing else.
+	-->
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
@@ -66,11 +71,70 @@
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
+	<!--
+	  Portrait only on iPhone. Reem's hundred-odd screens are single-column
+	  pages — a feed, a product, a checkout — and there is no landscape layout
+	  behind them: rotating produced a stretched column with empty gutters.
+	  The iPad list below stays complete, because a tablet held sideways is the
+	  normal way to hold a tablet and the layouts cap their content width.
+	  AppSystemChrome applies the same rule at runtime from the window's
+	  shortest side, so a foldable is judged by its size rather than its badge.
+	-->
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
+	</array>
+	<!--
+	  The languages the App Store lists this app under. Without it the listing
+	  claims English only, while the app opens in Arabic for the market it was
+	  built for.
+	-->
+	<key>CFBundleLocalizations</key>
+	<array>
+		<string>ar</string>
+		<string>en</string>
+	</array>
+	<!--
+	  Export compliance. Reem uses HTTPS and the platform keychain and nothing
+	  else — no proprietary or non-standard cryptography — which is the exempt
+	  case. Declaring it here answers the question App Store Connect otherwise
+	  asks by hand on every single upload.
+	-->
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
+	<!--
+	  A phone number opened from an order (Q55, «يتصل بالزبونة بضغطة») and a
+	  delivery address opened in Maps. iOS answers `canLaunchUrl` with false for
+	  any scheme not listed here, so without this the call and map buttons
+	  silently did nothing on an iPhone while working on Android.
+	-->
+	<!--
+	  Room invites — `reem://rooms/join/<slug>`. See the matching intent-filter
+	  in AndroidManifest.xml: the app has always handed this link out and no
+	  platform was listening for it. A custom scheme rather than a Universal
+	  Link because that needs an `apple-app-site-association` file served from
+	  reem.shop and an Associated Domains entitlement, which is a deployment
+	  step rather than a code change.
+	-->
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>shop.reem.app</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>reem</string>
+			</array>
+		</dict>
+	</array>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>tel</string>
+		<string>mailto</string>
+		<string>https</string>
+		<string>maps</string>
 	</array>
 	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>

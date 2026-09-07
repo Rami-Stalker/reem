@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:reem/core/design_system/design_system.dart';
 import 'package:reem/core/localization/l10n_extension.dart';
+import 'package:reem/core/platform/app_haptics.dart';
 import 'package:reem/core/presentation/providers/product_shape_provider.dart';
 import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/core/shared/entities/post.dart';
@@ -73,7 +73,7 @@ class HomeShowcaseSection extends ConsumerWidget {
             child: ShapeSwitcher(
               selected: shape,
               onSelect: (next) {
-                HapticFeedback.selectionClick();
+                AppHaptics.selection();
                 ref.read(productShapeProvider.notifier).state = next;
               },
             ),

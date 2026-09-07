@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -43,8 +45,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   }
 
   /// Where to land after signing in: back where she was blocked, or home.
-  String get _postAuthPath =>
-      widget.from == null || widget.from!.isEmpty
+  String get _postAuthPath => widget.from == null || widget.from!.isEmpty
       ? RoutePaths.home
       : widget.from!;
 
@@ -62,7 +63,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       return;
     }
 
-    context.push(_codePath(phone), extra: challenge);
+    unawaited(context.push(_codePath(phone), extra: challenge));
   }
 
   /// The code route, carrying where she was headed before she was stopped.
@@ -94,8 +95,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           left: DsSpacing.lg,
           right: DsSpacing.lg,
           top: DsSpacing.lg,
-          bottom:
-              MediaQuery.of(sheetContext).viewInsets.bottom + DsSpacing.lg,
+          bottom: MediaQuery.of(sheetContext).viewInsets.bottom + DsSpacing.lg,
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -119,8 +119,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               obscureText: true,
               autofocus: true,
               autofillHints: const [AutofillHints.password],
-              onSubmitted: (value) =>
-                  Navigator.pop(sheetContext, value.trim()),
+              onSubmitted: (value) => Navigator.pop(sheetContext, value.trim()),
             ),
             const SizedBox(height: DsSpacing.lg),
             PrimaryButton(
@@ -166,7 +165,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       );
       // No `extra`: the challenge was issued by the server as part of the
       // refusal, and the code screen asks for a fresh one if it arrives cold.
-      context.push(_codePath(phone));
+      unawaited(context.push(_codePath(phone)));
       return;
     }
 

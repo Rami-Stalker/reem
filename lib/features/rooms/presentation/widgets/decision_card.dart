@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/media/authorized_media_image.dart';
 import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/features/rooms/domain/entities/room.dart';
 import 'package:reem/features/rooms/presentation/providers/rooms_providers.dart';
@@ -48,7 +49,9 @@ class DecisionCard extends ConsumerWidget {
                       // it reads as an offer rather than an obligation.
                       Text(
                         'اقتراح',
-                        style: context.dsText.micro.tint(colors.onSurfaceVariant),
+                        style: context.dsText.micro.tint(
+                          colors.onSurfaceVariant,
+                        ),
                       ),
                     ],
                   ],
@@ -81,7 +84,9 @@ class DecisionCard extends ConsumerWidget {
                     ? 'الآراء منقسمة'
                     : 'الأغلبية مايلة لوحدة',
                 style: context.dsText.caption.tint(
-                  decision.consensus.contested ? colors.warning : colors.primary,
+                  decision.consensus.contested
+                      ? colors.warning
+                      : colors.primary,
                 ),
               ),
             ],
@@ -98,7 +103,8 @@ class DecisionCard extends ConsumerWidget {
                   itemCount: collapsed
                       ? decision.chosen.length
                       : decision.candidates.length,
-                  separatorBuilder: (_, _) => const SizedBox(width: DsSpacing.xs),
+                  separatorBuilder: (_, _) =>
+                      const SizedBox(width: DsSpacing.xs),
                   itemBuilder: (context, index) {
                     final candidate = collapsed
                         ? decision.chosen[index]
@@ -182,13 +188,17 @@ class _StatusPill extends StatelessWidget {
     final (label, color) = switch (decision.status) {
       DecisionStatus.resolved => ('محسوم', colors.success),
       DecisionStatus.skipped => ('متخطّى', colors.onSurfaceVariant),
-      DecisionStatus.open => decision.remaining > 0 && decision.candidates.isNotEmpty
-          ? ('لسا ما اخترتي', colors.warning)
-          : ('مفتوح', colors.onSurfaceVariant),
+      DecisionStatus.open =>
+        decision.remaining > 0 && decision.candidates.isNotEmpty
+            ? ('لسا ما اخترتي', colors.warning)
+            : ('مفتوح', colors.onSurfaceVariant),
     };
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: DsSpacing.xs, vertical: 2),
+      padding: const EdgeInsets.symmetric(
+        horizontal: DsSpacing.xs,
+        vertical: 2,
+      ),
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.12),
         borderRadius: BorderRadius.circular(DsRadius.pill),
@@ -273,11 +283,9 @@ class CandidateTile extends ConsumerWidget {
                     borderRadius: BorderRadius.circular(DsRadius.sm),
                     child: candidate.image == null
                         ? Container(color: colors.surfaceVariant)
-                        : Image.network(
-                            candidate.image!,
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, _, _) =>
-                                Container(color: colors.surfaceVariant),
+                        : AuthorizedMediaImage(
+                            url: candidate.image!,
+                            fallback: Container(color: colors.surfaceVariant),
                           ),
                   ),
                   if (candidate.isChosen)

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:reem/core/design_system/design_system.dart';
 import 'package:reem/core/localization/l10n_extension.dart';
+import 'package:reem/core/platform/app_haptics.dart';
 import 'package:reem/core/presentation/providers/product_shape_provider.dart';
 import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/core/shared/entities/product.dart';
@@ -76,7 +76,7 @@ class _CollectionScreenState extends ConsumerState<CollectionScreen> {
     final offer = product.bestOffer;
     if (offer == null || !offer.isBuyable) return;
 
-    HapticFeedback.mediumImpact();
+    AppHaptics.confirm();
     final added = await ref
         .read(cartNotifierProvider.notifier)
         .add(offerId: offer.id);
@@ -129,7 +129,7 @@ class _CollectionScreenState extends ConsumerState<CollectionScreen> {
                   child: ShapeSwitcher(
                     selected: shape,
                     onSelect: (next) {
-                      HapticFeedback.selectionClick();
+                      AppHaptics.selection();
                       ref.read(productShapeProvider.notifier).state = next;
                     },
                   ),

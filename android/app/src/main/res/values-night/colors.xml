@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The dark palette's background, so the splash does not flash white. -->
+<resources>
+    <color name="splash_background">#FF150F1A</color>
+    <color name="splash_icon_background">#FF2C2235</color>
+</resources>

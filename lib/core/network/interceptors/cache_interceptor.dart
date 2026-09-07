@@ -1,12 +1,13 @@
 import 'dart:async';
 
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
 
 import 'package:reem/core/data/cache/cache_policy.dart';
 import 'package:reem/core/network/http_cache/http_cache_entry.dart';
 import 'package:reem/core/network/http_cache/http_cache_rules.dart';
 import 'package:reem/core/network/http_cache/http_cache_store.dart';
+import 'package:reem/core/observability/error_report.dart';
+import 'package:reem/core/observability/error_reporter.dart';
 
 /// Whose cache this is.
 ///
@@ -46,7 +47,7 @@ abstract final class HttpCacheScope {
 /// [HttpCacheRules], or serve an entry across accounts.
 class CacheInterceptor extends Interceptor {
   CacheInterceptor(this._store, {DateTime Function()? now})
-      : _now = now ?? DateTime.now;
+    : _now = now ?? DateTime.now;
 
   final HttpCacheStore _store;
   final DateTime Function() _now;
@@ -187,10 +188,11 @@ class CacheInterceptor extends Interceptor {
   /// `scope|METHOD|path|sorted query`. The scope keeps accounts apart; the
   /// sorted query keeps `?a=1&b=2` and `?b=2&a=1` on one entry.
   String _keyFor(RequestOptions options) {
-    final query = options.queryParameters.entries
-        .map((e) => '${e.key}=${e.value}')
-        .toList()
-      ..sort();
+    final query =
+        options.queryParameters.entries
+            .map((e) => '${e.key}=${e.value}')
+            .toList()
+          ..sort();
     return '${HttpCacheScope.current}|${options.method.toUpperCase()}'
         '|${options.path}|${query.join('&')}';
   }
@@ -208,14 +210,13 @@ class CacheInterceptor extends Interceptor {
   /// 404 or a 422 is the server being clear, and must not be papered over
   /// with a stale success.
   bool _isRecoverable(DioException err) => switch (err.type) {
-        DioExceptionType.connectionTimeout ||
-        DioExceptionType.sendTimeout ||
-        DioExceptionType.receiveTimeout ||
-        DioExceptionType.connectionError =>
-          true,
-        DioExceptionType.unknown => err.response == null,
-        _ => false,
-      };
+    DioExceptionType.connectionTimeout ||
+    DioExceptionType.sendTimeout ||
+    DioExceptionType.receiveTimeout ||
+    DioExceptionType.connectionError => true,
+    DioExceptionType.unknown => err.response == null,
+    _ => false,
+  };
 
   Future<void> _invalidateFor(String path) async {
     final prefixes = HttpCacheRules.invalidationPrefixesFor(path);
@@ -257,7 +258,13 @@ class CacheInterceptor extends Interceptor {
     } on Object catch (error) {
       // A failed refresh is not a failure: the entry she is looking at stays,
       // and the next read tries again.
-      debugPrint('cache revalidation failed for ${options.path}: $error');
+      ErrorReporter.report(
+        error,
+        null,
+        severity: ErrorSeverity.info,
+        context: 'cache revalidation',
+        extra: {'path': options.path},
+      );
     }
   }
 

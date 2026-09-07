@@ -62,8 +62,8 @@ class RoomScreen extends ConsumerWidget {
   }
 
   Future<void> _share(BuildContext context, WidgetRef ref, Room room) async {
-    final slug = room.shareSlug ??
-        await ref.read(roomActionsProvider).share(room.id);
+    final slug =
+        room.shareSlug ?? await ref.read(roomActionsProvider).share(room.id);
     if (slug == null || !context.mounted) return;
 
     await Clipboard.setData(ClipboardData(text: 'reem://rooms/join/$slug'));
@@ -71,7 +71,8 @@ class RoomScreen extends ConsumerWidget {
     DsSnackbar.show(
       context,
       // Said plainly, because it is the guarantee that makes sharing safe.
-      message: 'نسخنا الرابط — يلي بيفتحه بيقدر ينصح ويصوّت، بس ما بيقدر يشتري.',
+      message:
+          'نسخنا الرابط — يلي بيفتحه بيقدر ينصح ويصوّت، بس ما بيقدر يشتري.',
     );
   }
 }
@@ -139,42 +140,19 @@ class _Body extends ConsumerWidget {
   }
 
   Future<void> _addDecision(BuildContext context, WidgetRef ref) async {
-    final controller = TextEditingController();
-    final title = await showDialog<String>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('قرار جديد'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'القرار سؤال بدها جواب — مو قطعة.',
-              style: context.dsText.caption,
-            ),
-            const SizedBox(height: DsSpacing.sm),
-            DsInputField(
-              controller: controller,
-              label: 'شو السؤال؟',
-              hint: 'مثلاً: الفستان',
-              autofocus: true,
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('إلغاء'),
-          ),
-          FilledButton(
-            onPressed: () => Navigator.of(context).pop(controller.text.trim()),
-            child: const Text('ضيفي'),
-          ),
-        ],
-      ),
+    final title = await DsDialog.prompt(
+      context,
+      title: 'قرار جديد',
+      message: 'القرار سؤال بدها جواب — مو قطعة.',
+      hintText: 'مثلاً: الفستان',
+      confirmLabel: 'ضيفي',
+      cancelLabel: 'إلغاء',
+      maxLength: 80,
     );
 
-    if (title == null || title.isEmpty) return;
+    if (title == null || title.isEmpty) {
+      return;
+    }
     await ref.read(roomActionsProvider).addDecision(room.id, title: title);
   }
 }

@@ -49,7 +49,6 @@ class HomeNearbyStores extends ConsumerWidget {
           height: _railHeight,
           child: ListView.separated(
             scrollDirection: Axis.horizontal,
-            physics: const BouncingScrollPhysics(),
             padding: const EdgeInsets.symmetric(horizontal: DsSpacing.lg),
             itemCount: stores.length,
             separatorBuilder: (_, _) => const SizedBox(width: DsSpacing.md),

@@ -37,11 +37,13 @@ class ReemScrollPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.dsColors;
 
+    // No `physics` on purpose. It used to force iOS bounce on every platform,
+    // which is the loudest tell that an Android app was drawn for an iPhone.
+    // `AppScrollBehavior` answers instead: bounce on iOS, clamp-and-stretch on
+    // Android, and always-scrollable on both so pull-to-refresh works on a
+    // page whose content fits.
     Widget scrollView = CustomScrollView(
       controller: controller,
-      physics: const BouncingScrollPhysics(
-        parent: AlwaysScrollableScrollPhysics(),
-      ),
       slivers: slivers,
     );
 
@@ -64,10 +66,7 @@ class ReemScrollPage extends StatelessWidget {
       floatingActionButton: floatingActionButton,
       bottomNavigationBar: bottom,
       body: Stack(
-        children: [
-          background ?? const CustomerBackdrop(),
-          scrollView,
-        ],
+        children: [background ?? const CustomerBackdrop(), scrollView],
       ),
     );
   }

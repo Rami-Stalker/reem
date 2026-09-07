@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  The rest of the edge-to-edge contract, for the API levels that have it.
+  `windowLightNavigationBar` arrived in 27 and the two contrast switches in 29;
+  declaring them in the base `values/` would be an API violation at this app's
+  minSdk of 24, so they live here and 24–28 keeps the transparent status bar
+  alone. Everything after the first frame is set from Dart by AppSystemChrome,
+  on every version.
+-->
+<resources>
+    <style name="NormalTheme" parent="@android:style/Theme.Light.NoTitleBar">
+        <item name="android:windowBackground">?android:colorBackground</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightNavigationBar">true</item>
+        <item name="android:enforceStatusBarContrast">false</item>
+        <item name="android:enforceNavigationBarContrast">false</item>
+    </style>
+</resources>

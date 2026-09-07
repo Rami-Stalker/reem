@@ -10,10 +10,19 @@ import 'package:reem/features/seller_dashboard/domain/entities/seller_store_info
 import 'package:reem/features/seller_dashboard/domain/entities/seller_top_product.dart';
 
 /// Front-end-first mock for the seller command centre. Simulated latency so
+///
+/// **A test fixture.** It lived under `lib/features/seller_dashboard/data/
+/// datasources/impl/` — beside the real remote datasource, implementing the
+/// same interface, four hundred lines of invented revenue and `picsum.photos`
+/// URLs — while its only caller was a widget test. Nothing in the app reached
+/// it, so the AOT compiler dropped it from the binary; the risk was never
+/// size, it was that the next person to open that folder would find two
+/// implementations of the seller's dashboard and no way to tell which one
+/// ships. It is here now, where a fixture belongs and where it cannot be
+/// wired by accident.
 /// skeleton states are exercised. Swap with a remote implementation when
 /// the backend analytics endpoints exist.
-final class SellerDashboardMockDataSource
-    implements SellerDashboardDataSource {
+final class SellerDashboardMockDataSource implements SellerDashboardDataSource {
   const SellerDashboardMockDataSource();
 
   static const _latency = Duration(milliseconds: 700);
@@ -44,26 +53,26 @@ final class SellerDashboardMockDataSource
 
   // ── Store info ─────────────────────────────────────────────────────────────
   static SellerStoreInfo _storeInfo(DateTime now) => SellerStoreInfo(
-        id: 'store_001',
-        name: 'أتيليه الورد',
-        tagline: 'أزياء رومانسية جاهزة، تُخاط يدوياً بكميّات قليلة',
-        description:
-            'نصنع أزياءً نسائية تدوم كإرث، تليق بجمال من ترتديها — بحبّ، '
-            'وهنا، قطعةً قطعة.',
-        logoUrl: _img('logo-s1', w: 200, h: 200),
-        coverUrl: _img('cover-store', w: 1200, h: 600),
-        isVerified: true,
-        rating: 4.9,
-        reviewsCount: 1284,
-        totalRevenue: 829350000,
-        totalOrders: 3420,
-        productsCount: 248,
-        followersCount: 32400,
-        storeScore: 94,
-        memberSince: DateTime(2023, 3, 14),
-        subscriptionPlan: 'برو',
-        withdrawableBalance: 57780000,
-      );
+    id: 'store_001',
+    name: 'أتيليه الورد',
+    tagline: 'أزياء رومانسية جاهزة، تُخاط يدوياً بكميّات قليلة',
+    description:
+        'نصنع أزياءً نسائية تدوم كإرث، تليق بجمال من ترتديها — بحبّ، '
+        'وهنا، قطعةً قطعة.',
+    logoUrl: _img('logo-s1', w: 200, h: 200),
+    coverUrl: _img('cover-store', w: 1200, h: 600),
+    isVerified: true,
+    rating: 4.9,
+    reviewsCount: 1284,
+    totalRevenue: 829350000,
+    totalOrders: 3420,
+    productsCount: 248,
+    followersCount: 32400,
+    storeScore: 94,
+    memberSince: DateTime(2023, 3, 14),
+    subscriptionPlan: 'برو',
+    withdrawableBalance: 57780000,
+  );
 
   // ── Revenue ────────────────────────────────────────────────────────────────
   static const _revenue = SellerRevenueData(
@@ -296,7 +305,8 @@ final class SellerDashboardMockDataSource
       id: 'ai1',
       kind: AiInsightKind.revenue,
       title: 'ارتفاع قادم في المبيعات',
-      body: 'فستان الحرير حُفظ في المفضّلة ثلاثة أضعاف المعتاد هذا الأسبوع — '
+      body:
+          'فستان الحرير حُفظ في المفضّلة ثلاثة أضعاف المعتاد هذا الأسبوع — '
           'عرض سريع محدود قد يحوّل هذا الاهتمام إلى طلبات.',
       action: 'إنشاء عرض سريع',
     ),
@@ -304,7 +314,8 @@ final class SellerDashboardMockDataSource
       id: 'ai2',
       kind: AiInsightKind.inventory,
       title: 'أعيدي توريد 4 أصناف الآن',
-      body: 'أقراط الكريستال (بقيت 2) وزيت العنبر (نفد) يُباعان أسرع من مدّة '
+      body:
+          'أقراط الكريستال (بقيت 2) وزيت العنبر (نفد) يُباعان أسرع من مدّة '
           'التوريد لديكِ. اطلبيها اليوم.',
       action: 'عرض المخزون المنخفض',
     ),
@@ -312,7 +323,8 @@ final class SellerDashboardMockDataSource
       id: 'ai3',
       kind: AiInsightKind.product,
       title: 'أضيفي ألواناً للحقيبة',
-      body: 'من اشترين الحقيبة المبطّنة بحثن عنها بلون العاج والبيج — '
+      body:
+          'من اشترين الحقيبة المبطّنة بحثن عنها بلون العاج والبيج — '
           'ولا يوجد أي إعلان بهذين اللونين.',
       action: 'إضافة خيار',
     ),
@@ -320,7 +332,8 @@ final class SellerDashboardMockDataSource
       id: 'ai4',
       kind: AiInsightKind.customer,
       title: 'نسبة عالية من الزبونات العائدات',
-      body: '38٪ من طلبات هذا الشهر جاءت من زبونات عائدات — أطلقي حملة وفاء '
+      body:
+          '38٪ من طلبات هذا الشهر جاءت من زبونات عائدات — أطلقي حملة وفاء '
           'تكافئهنّ عليها.',
       action: 'إنشاء كوبون',
     ),
@@ -405,7 +418,8 @@ final class SellerDashboardMockDataSource
       customerAvatarUrl: _img('av1', w: 100, h: 100),
       productTitle: 'فستان حرير بماء الورد',
       rating: 5,
-      body: 'رائع بكل معنى الكلمة. لبستُه في عرس وانهالت عليّ المجاملات. '
+      body:
+          'رائع بكل معنى الكلمة. لبستُه في عرس وانهالت عليّ المجاملات. '
           'الخامة لا تُضاهى.',
       timeAgo: 'قبل ساعتين',
     ),
@@ -424,7 +438,8 @@ final class SellerDashboardMockDataSource
       customerAvatarUrl: _img('av3', w: 100, h: 100),
       productTitle: 'حقيبة كتف صغيرة مبطّنة',
       rating: 4,
-      body: 'حقيبة جميلة وخامتها ممتازة. الحزام أقصر قليلاً مما توقّعت لكنها '
+      body:
+          'حقيبة جميلة وخامتها ممتازة. الحزام أقصر قليلاً مما توقّعت لكنها '
           'ما زالت أنيقة.',
       timeAgo: 'قبل يوم',
     ),
@@ -432,32 +447,32 @@ final class SellerDashboardMockDataSource
 
   // ── Campaigns ─────────────────────────────────────────────────────────────
   static List<SellerCampaignStat> _campaigns(DateTime now) => [
-        SellerCampaignStat(
-          id: 'c1',
-          name: 'مختارات الصيف — خصم 20٪',
-          kind: 'كوبون',
-          uses: 184,
-          revenue: 64260000,
-          endsAt: now.add(const Duration(days: 5)),
-          isActive: true,
-        ),
-        SellerCampaignStat(
-          id: 'c2',
-          name: 'إطلاق الوصول الجديد',
-          kind: 'حملة',
-          uses: 96,
-          revenue: 38880000,
-          endsAt: now.add(const Duration(days: 2)),
-          isActive: true,
-        ),
-        SellerCampaignStat(
-          id: 'c3',
-          name: 'عرض سريع — حقائب',
-          kind: 'عرض سريع',
-          uses: 234,
-          revenue: 102600000,
-          endsAt: now.subtract(const Duration(days: 3)),
-          isActive: false,
-        ),
-      ];
+    SellerCampaignStat(
+      id: 'c1',
+      name: 'مختارات الصيف — خصم 20٪',
+      kind: 'كوبون',
+      uses: 184,
+      revenue: 64260000,
+      endsAt: now.add(const Duration(days: 5)),
+      isActive: true,
+    ),
+    SellerCampaignStat(
+      id: 'c2',
+      name: 'إطلاق الوصول الجديد',
+      kind: 'حملة',
+      uses: 96,
+      revenue: 38880000,
+      endsAt: now.add(const Duration(days: 2)),
+      isActive: true,
+    ),
+    SellerCampaignStat(
+      id: 'c3',
+      name: 'عرض سريع — حقائب',
+      kind: 'عرض سريع',
+      uses: 234,
+      revenue: 102600000,
+      endsAt: now.subtract(const Duration(days: 3)),
+      isActive: false,
+    ),
+  ];
 }

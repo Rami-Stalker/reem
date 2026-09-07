@@ -98,7 +98,9 @@ class _AdminSectionScreenState extends ConsumerState<AdminSectionScreen> {
               ),
               if (config.key == 'campaigns')
                 Padding(
-                  padding: const EdgeInsetsDirectional.only(start: DsSpacing.sm),
+                  padding: const EdgeInsetsDirectional.only(
+                    start: DsSpacing.sm,
+                  ),
                   child: PrimaryButton(
                     label: l10n.adminNewCampaign,
                     icon: Icons.add_rounded,
@@ -109,7 +111,9 @@ class _AdminSectionScreenState extends ConsumerState<AdminSectionScreen> {
               if (createAction != null &&
                   permissions.contains(createAction.permission))
                 Padding(
-                  padding: const EdgeInsetsDirectional.only(start: DsSpacing.sm),
+                  padding: const EdgeInsetsDirectional.only(
+                    start: DsSpacing.sm,
+                  ),
                   child: PrimaryButton(
                     label: createAction.label(l10n),
                     icon: createAction.icon,
@@ -153,7 +157,9 @@ class _AdminSectionScreenState extends ConsumerState<AdminSectionScreen> {
                             tooltip: l10n.adminClearSearch,
                             onPressed: () {
                               _searchController.clear();
-                              unawaited(ref.read(_notifier.notifier).search(''));
+                              unawaited(
+                                ref.read(_notifier.notifier).search(''),
+                              );
                             },
                             icon: const Icon(Icons.close_rounded),
                           ),
@@ -228,11 +234,7 @@ class _AdminSectionScreenState extends ConsumerState<AdminSectionScreen> {
 
     final result = await ref
         .read(adminMutationProvider)
-        .submit(
-          sectionKey: config.key,
-          recordId: record.id,
-          payload: payload,
-        );
+        .submit(sectionKey: config.key, recordId: record.id, payload: payload);
     if (!mounted) return;
 
     result.when(
@@ -248,12 +250,10 @@ class _AdminSectionScreenState extends ConsumerState<AdminSectionScreen> {
   /// feature raises itself arrive as codes, because the notifier that raised
   /// them had no context to localise with.
   String _failureText(Failure failure) => switch (failure.code) {
-        AdminFailureCodes.sectionHasNoActions =>
-          context.l10n.adminSectionNoActions,
-        AdminFailureCodes.sectionHasNoCreate =>
-          context.l10n.adminSectionNoCreate,
-        _ => failure.message,
-      };
+    AdminFailureCodes.sectionHasNoActions => context.l10n.adminSectionNoActions,
+    AdminFailureCodes.sectionHasNoCreate => context.l10n.adminSectionNoCreate,
+    _ => failure.message,
+  };
 
   Future<void> _runCreate(AdminRecordAction action) async {
     final payload = await showAdminActionDialog(
@@ -300,8 +300,11 @@ class _AdminSectionScreenState extends ConsumerState<AdminSectionScreen> {
             builder: (dialogContext, setDialogState) {
               return AlertDialog(
                 title: Text(l10n.adminNewCampaignTitle),
-                content: SizedBox(
-                  width: 560,
+                // A width, not *the* width. Pinned at 560 the campaign form
+                // was wider than any phone the console is opened on, and the
+                // dialog overflowed off both sides of the screen.
+                content: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 560),
                   child: SingleChildScrollView(
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
@@ -326,7 +329,9 @@ class _AdminSectionScreenState extends ConsumerState<AdminSectionScreen> {
                           alignment: Alignment.centerLeft,
                           child: Text(
                             l10n.adminChannels,
-                            style: context.dsText.labelLarge.tint(context.dsColors.onSurface),
+                            style: context.dsText.labelLarge.tint(
+                              context.dsColors.onSurface,
+                            ),
                           ),
                         ),
                         Wrap(
@@ -359,8 +364,9 @@ class _AdminSectionScreenState extends ConsumerState<AdminSectionScreen> {
                           title: Text(l10n.adminVerifiedSellersOnly),
                           onChanged: isSubmitting
                               ? null
-                              : (value) =>
-                                    setDialogState(() => verifiedSellers = value),
+                              : (value) => setDialogState(
+                                  () => verifiedSellers = value,
+                                ),
                         ),
                         const SizedBox(height: DsSpacing.sm),
                         _AdminTextField(
@@ -411,7 +417,10 @@ class _AdminSectionScreenState extends ConsumerState<AdminSectionScreen> {
                               },
                               error: (failure) {
                                 setDialogState(() => isSubmitting = false);
-                                _showSnack(_failureText(failure), isError: true);
+                                _showSnack(
+                                  _failureText(failure),
+                                  isError: true,
+                                );
                               },
                             );
                           },
@@ -541,7 +550,9 @@ class _AdminSectionScreenState extends ConsumerState<AdminSectionScreen> {
               children: [
                 Text(
                   record.title,
-                  style: context.dsText.sectionTitle.bold.tint(colors.onSurface),
+                  style: context.dsText.sectionTitle.bold.tint(
+                    colors.onSurface,
+                  ),
                 ),
                 const SizedBox(height: DsSpacing.xs),
                 Text(
@@ -880,7 +891,10 @@ class _SectionError extends StatelessWidget {
             style: context.dsText.body.semibold.tint(colors.error),
           ),
           const SizedBox(height: DsSpacing.xs),
-          Text(message, style: context.dsText.body.tint(colors.onSurfaceVariant)),
+          Text(
+            message,
+            style: context.dsText.body.tint(colors.onSurfaceVariant),
+          ),
           const SizedBox(height: DsSpacing.md),
           SecondaryButton(
             label: l10n.retry,

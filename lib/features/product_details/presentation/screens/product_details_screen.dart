@@ -81,9 +81,9 @@ class _ProductDetailsScreenState extends ConsumerState<ProductDetailsScreen> {
       _likeInFlight = true;
     });
 
-    final result = await ref.read(toggleFavoriteUseCaseProvider).call(
-      product.id,
-    );
+    final result = await ref
+        .read(toggleFavoriteUseCaseProvider)
+        .call(product.id);
     if (!mounted) return;
     setState(() {
       _likeInFlight = false;
@@ -113,11 +113,11 @@ class _ProductDetailsScreenState extends ConsumerState<ProductDetailsScreen> {
   }
 
   void _selectOffer(SellerOffer offer) => setState(() {
-        _offerId = offer.id;
-        // The previous variant belonged to the previous seller's stock.
-        _variantId = null;
-        _quantity = offer.minOrderQty.clamp(1, 999);
-      });
+    _offerId = offer.id;
+    // The previous variant belonged to the previous seller's stock.
+    _variantId = null;
+    _quantity = offer.minOrderQty.clamp(1, 999);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -161,9 +161,6 @@ class _ProductDetailsScreenState extends ConsumerState<ProductDetailsScreen> {
         children: [
           const CustomerBackdrop(),
           CustomScrollView(
-            physics: const BouncingScrollPhysics(
-              parent: AlwaysScrollableScrollPhysics(),
-            ),
             slivers: [
               ProductGalleryHeader(
                 media: product.media,

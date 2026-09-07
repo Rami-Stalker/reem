@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -28,7 +30,9 @@ class SettingsScreen extends ConsumerWidget {
         message: l10n.signInToManageSecurely,
         from: route,
       );
-      if (ok && context.mounted) context.push(route);
+      if (ok && context.mounted) {
+        unawaited(context.push(route));
+      }
     }
 
     Future<void> protectedPushNamed(
@@ -43,7 +47,9 @@ class SettingsScreen extends ConsumerWidget {
         message: l10n.signInToManageSecurely,
         from: path,
       );
-      if (ok && context.mounted) context.pushNamed(name);
+      if (ok && context.mounted) {
+        unawaited(context.pushNamed(name));
+      }
     }
 
     return ReemScrollPage(

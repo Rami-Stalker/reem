@@ -65,6 +65,15 @@ Future<StepUpResult> runWithStepUp(
   if (first is Success) return const StepUpResult(StepUpOutcome.succeeded);
 
   final failure = (first as Error).failure;
+
+  // The request has been awaited, so the screen that asked may already be
+  // gone. Everything below reads `context` — for the localisations, and then
+  // to raise the second-factor sheet — and doing that on a dead element
+  // throws. The server's own message is the honest fallback.
+  if (!context.mounted) {
+    return StepUpResult(StepUpOutcome.blocked, failure.message);
+  }
+
   switch (failure.code) {
     case 'STEP_UP_REQUIRED':
       break;
@@ -81,7 +90,7 @@ Future<StepUpResult> runWithStepUp(
   }
 
   final scope = _detail(failure, 'scope');
-  if (scope == null || !context.mounted) {
+  if (scope == null) {
     return StepUpResult(StepUpOutcome.blocked, failure.message);
   }
 
@@ -180,10 +189,7 @@ class _StepUpSheetState extends State<_StepUpSheet> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text(
-            l10n.verifyToContinue,
-            style: context.dsText.sectionTitle,
-          ),
+          Text(l10n.verifyToContinue, style: context.dsText.sectionTitle),
           const SizedBox(height: DsSpacing.xs),
           Text(
             l10n.codeSentToMasked(challenge.maskedDestination ?? ''),

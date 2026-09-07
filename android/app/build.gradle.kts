@@ -88,7 +88,27 @@ android {
                 } else {
                     signingConfigs.getByName("debug")
                 }
+
+            // R8. Flutter leaves both off by default, so a release bundle
+            // shipped every unused class and every unreferenced drawable in
+            // every dependency — tens of megabytes a woman on a Syrian mobile
+            // plan pays for. `proguard-rules.pro` holds the keeps for the
+            // plugins that reach their own code reflectively.
+            isMinifyEnabled = true
+            isShrinkResources = true
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro",
+            )
         }
+    }
+
+    // A bundle Play can serve per-device rather than one universal APK.
+    bundle {
+        language { enableSplit = false } // Arabic and English ship together:
+        // the in-app language switcher must work without a Play delivery.
+        density { enableSplit = true }
+        abi { enableSplit = true }
     }
 }
 

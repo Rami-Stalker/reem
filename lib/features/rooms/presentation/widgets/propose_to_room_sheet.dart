@@ -51,9 +51,11 @@ class _ProposeToRoomSheetState extends ConsumerState<ProposeToRoomSheet> {
         ),
         data: (rooms) {
           final open = rooms
-              .where((room) =>
-                  room.status != RoomStatus.purchased &&
-                  room.status != RoomStatus.archived)
+              .where(
+                (room) =>
+                    room.status != RoomStatus.purchased &&
+                    room.status != RoomStatus.archived,
+              )
               .toList(growable: false);
 
           if (open.isEmpty) return _NoRooms(offerId: widget.offerId);
@@ -79,7 +81,9 @@ class _ProposeToRoomSheetState extends ConsumerState<ProposeToRoomSheet> {
     final navigator = Navigator.of(context);
 
     try {
-      await ref.read(roomActionsProvider).propose(
+      await ref
+          .read(roomActionsProvider)
+          .propose(
             _room!.id,
             decision.id,
             offerId: widget.offerId,
@@ -188,9 +192,7 @@ class _PickDecisionState extends ConsumerState<_PickDecision> {
               contentPadding: EdgeInsets.zero,
               title: Text(decision.title),
               subtitle: Text(
-                decision.settled
-                    ? 'محسوم'
-                    : '${decision.live.length} اقتراح',
+                decision.settled ? 'محسوم' : '${decision.live.length} اقتراح',
               ),
               trailing: const Icon(Icons.add_rounded),
               onTap: () => widget.onPick(decision),
@@ -213,31 +215,18 @@ class _PickDecisionState extends ConsumerState<_PickDecision> {
   }
 
   Future<void> _createDecision() async {
-    final controller = TextEditingController();
-    final title = await showDialog<String>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('سؤال جديد'),
-        content: DsInputField(
-          controller: controller,
-          label: 'شو السؤال؟',
-          hint: 'مثلاً: الحذاء',
-          autofocus: true,
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('إلغاء'),
-          ),
-          FilledButton(
-            onPressed: () => Navigator.of(context).pop(controller.text.trim()),
-            child: const Text('ضيفي'),
-          ),
-        ],
-      ),
+    final title = await DsDialog.prompt(
+      context,
+      title: 'سؤال جديد',
+      hintText: 'مثلاً: الحذاء',
+      confirmLabel: 'ضيفي',
+      cancelLabel: 'إلغاء',
+      maxLength: 80,
     );
 
-    if (title == null || title.isEmpty || !mounted) return;
+    if (title == null || title.isEmpty || !mounted) {
+      return;
+    }
     setState(() => _creating = true);
 
     await ref

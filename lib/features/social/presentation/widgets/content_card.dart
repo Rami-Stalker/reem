@@ -453,7 +453,7 @@ class _Action extends StatelessWidget {
         ),
         if (count != null && count > 0)
           Padding(
-            padding: const EdgeInsets.only(right: DsSpacing.xs),
+            padding: const EdgeInsetsDirectional.only(start: DsSpacing.xs),
             child: Text('$count', style: context.dsText.caption),
           ),
       ],
@@ -488,7 +488,11 @@ class StoryBubble extends StatelessWidget {
 
 /// The photograph itself, for a grid on somebody's page.
 class ContentGridTile extends StatelessWidget {
-  const ContentGridTile({super.key, required this.content, required this.onTap});
+  const ContentGridTile({
+    super.key,
+    required this.content,
+    required this.onTap,
+  });
 
   final Content content;
   final VoidCallback onTap;

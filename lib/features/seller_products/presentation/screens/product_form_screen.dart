@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import 'package:reem/core/design_system/design_system.dart';
 import 'package:reem/core/localization/l10n_extension.dart';
+import 'package:reem/core/platform/unsaved_changes_guard.dart';
 import 'package:reem/core/shared/value_objects/money.dart';
 import 'package:reem/features/ai_assistant/presentation/providers/ai_assistant_provider.dart';
 import 'package:reem/features/catalog/presentation/providers/categories_provider.dart';
@@ -13,6 +14,7 @@ import 'package:reem/features/seller_products/domain/entities/product_status.dar
 import 'package:reem/features/seller_products/presentation/providers/seller_products_providers.dart';
 import 'package:reem/features/seller_products/presentation/widgets/category_attribute_fields.dart';
 import 'package:reem/features/seller_products/presentation/widgets/category_picker_field.dart';
+import 'package:reem/l10n/app_localizations.dart';
 
 /// Writing a listing.
 ///
@@ -59,6 +61,10 @@ class _ProductFormScreenState extends ConsumerState<ProductFormScreen> {
   bool _mediaUploading = false;
 
   final List<_VariantRow> _variants = [];
+
+  /// Set once the listing has been accepted by the server. From that moment
+  /// the screen is closing on purpose and there is nothing left to protect.
+  bool _saved = false;
 
   Currency _currency = Currency.syp;
   ProductStatus _status = ProductStatus.draft;
@@ -298,6 +304,7 @@ class _ProductFormScreenState extends ConsumerState<ProductFormScreen> {
       return;
     }
 
+    _saved = true;
     ref.read(myProductsNotifierProvider.notifier).upsert(saved);
     DsSnackbar.show(
       context,
@@ -318,6 +325,39 @@ class _ProductFormScreenState extends ConsumerState<ProductFormScreen> {
       productFormNotifierProvider.select((s) => s.isSubmitting),
     );
 
+    return UnsavedChangesGuard(
+      // A listing is the longest form in the app — eight photographs, a
+      // category, a schema of attributes, a table of variants. Losing it to a
+      // stray edge swipe is half an hour of a seller's evening.
+      hasUnsavedChanges: !_saved && !isSubmitting && _isDirty,
+      child: _body(context, l10n, isSubmitting),
+    );
+  }
+
+  /// Whether anything on the form has been touched since it opened.
+  ///
+  /// An edit starts populated, so "not empty" would mean every edit screen
+  /// asks on the way out; it compares against what it was handed instead.
+  bool get _isDirty {
+    final original = widget.product;
+    if (original == null) {
+      return _title.text.trim().isNotEmpty ||
+          _description.text.trim().isNotEmpty ||
+          _price.text.trim().isNotEmpty ||
+          _categoryId != null ||
+          _mediaUrls.isNotEmpty ||
+          _variants.isNotEmpty;
+    }
+    return _title.text != original.title ||
+        _description.text != original.description ||
+        _price.text != original.price.raw ||
+        _categoryId !=
+            (original.category.id.isEmpty ? null : original.category.id) ||
+        _status != original.status ||
+        _currency != original.price.currency;
+  }
+
+  Widget _body(BuildContext context, AppLocalizations l10n, bool isSubmitting) {
     return ReemScrollPage(
       // Without these the form inherits the buyer's blush silk — the wrong
       // room for a seller writing a listing.
@@ -672,7 +712,9 @@ class _Notice extends StatelessWidget {
           Expanded(
             child: Text(
               message,
-              style: context.dsText.labelMedium.tint(palette.muted).copyWith(height: 1.5),
+              style: context.dsText.labelMedium
+                  .tint(palette.muted)
+                  .copyWith(height: 1.5),
             ),
           ),
         ],

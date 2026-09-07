@@ -4,11 +4,12 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:crypto/crypto.dart';
-import 'package:flutter/foundation.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
 import 'package:reem/core/network/http_cache/http_cache_entry.dart';
+import 'package:reem/core/observability/error_report.dart';
+import 'package:reem/core/observability/error_reporter.dart';
 
 /// Where cached responses live.
 abstract interface class HttpCacheStore {
@@ -68,7 +69,7 @@ final class MemoryHttpCacheStore implements HttpCacheStore {
 /// is exactly the stutter this is meant to remove.
 final class FileHttpCacheStore implements HttpCacheStore {
   FileHttpCacheStore({Directory? directory, this.maximumEntries = 400})
-      : _directory = directory;
+    : _directory = directory;
 
   static const _folder = 'reem_http_cache';
 
@@ -131,7 +132,7 @@ final class FileHttpCacheStore implements HttpCacheStore {
       if (!file.existsSync()) return null;
       return HttpCacheEntry.tryDecode(await file.readAsString());
     } on Object catch (error) {
-      debugPrint('http cache read failed: $error');
+      _note('read', error);
       return null;
     }
   }
@@ -147,8 +148,22 @@ final class FileHttpCacheStore implements HttpCacheStore {
       await _evictOverflow(dir);
       await _saveIndex(dir);
     } on Object catch (error) {
-      debugPrint('http cache write failed: $error');
+      _note('write', error);
     }
+  }
+
+  /// A cache that cannot read or write its own folder is not an emergency —
+  /// every path through this class already falls back to the network — but it
+  /// is worth carrying into the next crash report. It used to go to
+  /// `debugPrint`, which is not compiled out of a release build: a shipped app
+  /// wrote the failure, and the file path in it, to the device log.
+  void _note(String operation, Object error) {
+    ErrorReporter.report(
+      error,
+      null,
+      severity: ErrorSeverity.info,
+      context: 'http cache $operation',
+    );
   }
 
   /// Oldest-first eviction, by file modification time.
@@ -187,7 +202,7 @@ final class FileHttpCacheStore implements HttpCacheStore {
       }
       if (doomed.isNotEmpty) await _saveIndex(dir);
     } on Object catch (error) {
-      debugPrint('http cache invalidation failed: $error');
+      _note('invalidate', error);
     }
   }
 
@@ -202,7 +217,7 @@ final class FileHttpCacheStore implements HttpCacheStore {
         await dir.create(recursive: true);
       }
     } on Object catch (error) {
-      debugPrint('http cache clear failed: $error');
+      _note('clear', error);
     }
   }
 }

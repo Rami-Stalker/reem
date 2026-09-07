@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/media/authorized_media_image.dart';
 import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/features/closet/domain/entities/closet_item.dart';
 import 'package:reem/features/closet/domain/repositories/closet_repository.dart';
@@ -36,7 +37,9 @@ class ClosetItemScreen extends ConsumerWidget {
                     : Icons.favorite_outline_rounded,
                 color: item.isFavourite ? colors.favorite : null,
               ),
-              onPressed: () => ref.read(closetActionsProvider).updateItem(
+              onPressed: () => ref
+                  .read(closetActionsProvider)
+                  .updateItem(
                     itemId,
                     ClosetItemPatch(isFavourite: !item.isFavourite),
                   ),
@@ -81,11 +84,9 @@ class _Body extends ConsumerWidget {
                     color: colors.onSurfaceVariant,
                   ),
                 )
-              : Image.network(
-                  url,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, _, _) =>
-                      Container(color: colors.surfaceVariant),
+              : AuthorizedMediaImage(
+                  url: url,
+                  fallback: Container(color: colors.surfaceVariant),
                 ),
         ),
         Padding(
@@ -108,10 +109,7 @@ class _Body extends ConsumerWidget {
                     value: item.costPerWear?.format() ?? '—',
                     label: 'كلفة اللبسة',
                   ),
-                  _Stat(
-                    value: _lastWorn(),
-                    label: 'آخر مرة',
-                  ),
+                  _Stat(value: _lastWorn(), label: 'آخر مرة'),
                 ],
               ),
 
@@ -130,9 +128,12 @@ class _Body extends ConsumerWidget {
                 spacing: DsSpacing.xs,
                 runSpacing: DsSpacing.xs,
                 children: [
-                  for (final colour in item.colours) DsChip(label: colour.label),
-                  for (final material in item.materials) DsChip(label: material),
-                  for (final season in item.seasons) DsChip(label: season.label),
+                  for (final colour in item.colours)
+                    DsChip(label: colour.label),
+                  for (final material in item.materials)
+                    DsChip(label: material),
+                  for (final season in item.seasons)
+                    DsChip(label: season.label),
                   if (item.size != null) DsChip(label: 'مقاس ${item.size}'),
                   if (item.brandName != null) DsChip(label: item.brandName!),
                 ],

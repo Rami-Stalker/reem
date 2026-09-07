@@ -7310,5 +7310,21 @@
         "type": "String"
       }
     }
+  },
+  "discardChangesTitle": "Discard what you have written?",
+  "@discardChangesTitle": {
+    "description": "Title of the confirmation shown when a back gesture would abandon a half-filled form"
+  },
+  "discardChangesBody": "Leaving now throws away everything on this screen.",
+  "@discardChangesBody": {
+    "description": "Body of the discard-changes confirmation"
+  },
+  "discardChangesConfirm": "Discard",
+  "@discardChangesConfirm": {
+    "description": "Destructive action of the discard-changes confirmation"
+  },
+  "discardChangesKeep": "Keep editing",
+  "@discardChangesKeep": {
+    "description": "Cancel action of the discard-changes confirmation"
   }
 }

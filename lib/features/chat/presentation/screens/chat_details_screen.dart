@@ -110,16 +110,8 @@ class _ChatDetailsScreenState extends ConsumerState<ChatDetailsScreen>
       body: LuxuryBlurredBackground(
         child: Stack(
           children: [
-            const Positioned(
-              top: -100,
-              right: -100,
-              child: ChatGradientOrb(),
-            ),
-            const Positioned(
-              bottom: -120,
-              left: -80,
-              child: ChatGradientOrb(),
-            ),
+            const Positioned(top: -100, right: -100, child: ChatGradientOrb()),
+            const Positioned(bottom: -120, left: -80, child: ChatGradientOrb()),
             Column(
               children: [
                 SafeArea(
@@ -144,14 +136,11 @@ class _ChatDetailsScreenState extends ConsumerState<ChatDetailsScreen>
                     child: Center(child: CircularProgressIndicator()),
                   )
                 else if (messagesState.error != null)
-                  Expanded(
-                    child: Center(child: Text(messagesState.error!)),
-                  )
+                  Expanded(child: Center(child: Text(messagesState.error!)))
                 else
                   Expanded(
                     child: ListView(
                       padding: const EdgeInsets.all(DsSpacing.xl),
-                      physics: const BouncingScrollPhysics(),
                       children: [
                         ChatDateDivider(title: context.l10n.todayLabel),
                         DsGaps.vLg,
@@ -160,7 +149,9 @@ class _ChatDetailsScreenState extends ConsumerState<ChatDetailsScreen>
                         else
                           ...messagesState.messages.map(
                             (message) => Padding(
-                              padding: const EdgeInsets.only(bottom: DsSpacing.sm),
+                              padding: const EdgeInsets.only(
+                                bottom: DsSpacing.sm,
+                              ),
                               child: _MessageRow(message: message),
                             ),
                           ),
@@ -180,7 +171,8 @@ class _ChatDetailsScreenState extends ConsumerState<ChatDetailsScreen>
                 else
                   ChatInput(
                     isSending: messagesState.isSending || _attaching,
-                    onTyping: (typing) => realtime.typing(widget.chatId, typing),
+                    onTyping: (typing) =>
+                        realtime.typing(widget.chatId, typing),
                     onImage: _attach,
                     onVoice: () => setState(() => _recording = true),
                     onSend: (text) => notifier.sendMessage(text),
@@ -252,25 +244,27 @@ class _ChatDetailsScreenState extends ConsumerState<ChatDetailsScreen>
       // the extension the file happened to carry.
       final kind = asset.isDocument ? 'FILE' : 'IMAGE';
 
-      await ref.read(chatMessagesNotifierProvider.notifier).send(
-        // The bubble draws the photograph or names the document; the content
-        // is what a notification and a thread preview can say in one word.
-        content: asset.isDocument
-            ? context.l10n.chatFileMessage
-            : context.l10n.chatPhotoMessage,
-        kind: kind,
-        attachments: [
-          {
-            'kind': kind,
-            'url': asset.url,
-            'mime_type': asset.mimeType,
-            'size_bytes': asset.byteSize,
-            if (asset.isDocument) 'file_name': file.name,
-            if (asset.width != null) 'width': asset.width,
-            if (asset.height != null) 'height': asset.height,
-          },
-        ],
-      );
+      await ref
+          .read(chatMessagesNotifierProvider.notifier)
+          .send(
+            // The bubble draws the photograph or names the document; the content
+            // is what a notification and a thread preview can say in one word.
+            content: asset.isDocument
+                ? context.l10n.chatFileMessage
+                : context.l10n.chatPhotoMessage,
+            kind: kind,
+            attachments: [
+              {
+                'kind': kind,
+                'url': asset.url,
+                'mime_type': asset.mimeType,
+                'size_bytes': asset.byteSize,
+                if (asset.isDocument) 'file_name': file.name,
+                if (asset.width != null) 'width': asset.width,
+                if (asset.height != null) 'height': asset.height,
+              },
+            ],
+          );
     } catch (_) {
       if (mounted) _warn(context.l10n.chatAttachmentFailed);
     } finally {
@@ -294,21 +288,23 @@ class _ChatDetailsScreenState extends ConsumerState<ChatDetailsScreen>
           .upload(XFile(path), purpose: MediaPurpose.chat);
       if (!mounted) return;
 
-      await ref.read(chatMessagesNotifierProvider.notifier).send(
-        content: context.l10n.voiceMessage,
-        kind: 'VOICE',
-        attachments: [
-          {
-            'kind': 'VOICE',
-            'url': asset.url,
-            'mime_type': asset.mimeType,
-            'size_bytes': asset.byteSize,
-            // Measured by the recorder, not read back from the container: it
-            // is the one place the exact figure is already known.
-            'duration_ms': duration.inMilliseconds,
-          },
-        ],
-      );
+      await ref
+          .read(chatMessagesNotifierProvider.notifier)
+          .send(
+            content: context.l10n.voiceMessage,
+            kind: 'VOICE',
+            attachments: [
+              {
+                'kind': 'VOICE',
+                'url': asset.url,
+                'mime_type': asset.mimeType,
+                'size_bytes': asset.byteSize,
+                // Measured by the recorder, not read back from the container: it
+                // is the one place the exact figure is already known.
+                'duration_ms': duration.inMilliseconds,
+              },
+            ],
+          );
     } catch (_) {
       if (mounted) _warn(context.l10n.chatAttachmentFailed);
     } finally {
@@ -316,11 +312,8 @@ class _ChatDetailsScreenState extends ConsumerState<ChatDetailsScreen>
     }
   }
 
-  void _warn(String message) => DsSnackbar.show(
-    context,
-    message: message,
-    type: DsSnackbarType.warning,
-  );
+  void _warn(String message) =>
+      DsSnackbar.show(context, message: message, type: DsSnackbarType.warning);
 }
 
 class _MessageRow extends StatelessWidget {
@@ -381,38 +374,38 @@ class _EmptyConversation extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.dsColors;
     return Container(
-        padding: DsSpacing.paddingLg,
-        decoration: BoxDecoration(
-          color: colors.surfaceElevated.withValues(alpha: 0.85),
-          borderRadius: DsRadius.borderCard,
-          border: Border.all(color: colors.border),
-        ),
-        child: Column(
-          children: [
-            Icon(
-              Icons.forum_rounded,
-              size: DsSizes.iconXl,
-              color: colors.primary,
-            ),
-            DsGaps.vSm,
-            Text(
-              context.l10n.chatStartConversation,
-              style: context.dsText.cardTitle.bold,
-            ),
-            DsGaps.vXs,
-            Text(
-              context.l10n.chatStartConversationHint,
-              textAlign: TextAlign.center,
-              style: context.dsText.bodyMuted,
-            ),
-            DsGaps.vMd,
-            TextButton.icon(
-              onPressed: onImage,
-              icon: const Icon(Icons.photo_rounded),
-              label: Text(context.l10n.chatShareImage),
-            ),
-          ],
-        ),
+      padding: DsSpacing.paddingLg,
+      decoration: BoxDecoration(
+        color: colors.surfaceElevated.withValues(alpha: 0.85),
+        borderRadius: DsRadius.borderCard,
+        border: Border.all(color: colors.border),
+      ),
+      child: Column(
+        children: [
+          Icon(
+            Icons.forum_rounded,
+            size: DsSizes.iconXl,
+            color: colors.primary,
+          ),
+          DsGaps.vSm,
+          Text(
+            context.l10n.chatStartConversation,
+            style: context.dsText.cardTitle.bold,
+          ),
+          DsGaps.vXs,
+          Text(
+            context.l10n.chatStartConversationHint,
+            textAlign: TextAlign.center,
+            style: context.dsText.bodyMuted,
+          ),
+          DsGaps.vMd,
+          TextButton.icon(
+            onPressed: onImage,
+            icon: const Icon(Icons.photo_rounded),
+            label: Text(context.l10n.chatShareImage),
+          ),
+        ],
+      ),
     );
   }
 }

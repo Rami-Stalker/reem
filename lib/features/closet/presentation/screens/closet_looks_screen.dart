@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/media/authorized_media_image.dart';
 import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/features/closet/domain/entities/closet_look.dart';
 import 'package:reem/features/closet/presentation/providers/closet_providers.dart';
@@ -28,15 +29,15 @@ class ClosetLooksScreen extends ConsumerWidget {
             ? DsEmptyState(
                 icon: Icons.auto_awesome_rounded,
                 title: 'ما عندك إطلالات بعد',
-                message:
-                    'ركّبي إطلالة من قطعك، وإذا ناقصها شي منساعدك تلاقيه.',
+                message: 'ركّبي إطلالة من قطعك، وإذا ناقصها شي منساعدك تلاقيه.',
                 actionLabel: 'شوفي شو بتقدري تلبسي',
                 onAction: () => context.push(RoutePaths.closetToday),
               )
             : ListView.separated(
                 padding: const EdgeInsets.all(DsSpacing.md),
                 itemCount: looks.length,
-                separatorBuilder: (_, _) => const SizedBox(height: DsSpacing.sm),
+                separatorBuilder: (_, _) =>
+                    const SizedBox(height: DsSpacing.sm),
                 itemBuilder: (context, index) => ClosetLookCard(
                   look: looks[index],
                   onTap: () =>
@@ -114,7 +115,11 @@ class ClosetLookCard extends StatelessWidget {
           if (look.isComplete)
             Row(
               children: [
-                Icon(Icons.check_circle_rounded, size: 16, color: colors.success),
+                Icon(
+                  Icons.check_circle_rounded,
+                  size: 16,
+                  color: colors.success,
+                ),
                 const SizedBox(width: 4),
                 Expanded(
                   child: Text(
@@ -182,11 +187,9 @@ class _PieceThumb extends StatelessWidget {
                 ),
               )
             else
-              Image.network(
-                url,
-                fit: BoxFit.cover,
-                errorBuilder: (context, _, _) =>
-                    Container(color: colors.surfaceVariant),
+              AuthorizedMediaImage(
+                url: url,
+                fallback: Container(color: colors.surfaceVariant),
               ),
             // A wanted piece is marked, always. Without it a look reads as
             // finished when a third of it is still in a shop.

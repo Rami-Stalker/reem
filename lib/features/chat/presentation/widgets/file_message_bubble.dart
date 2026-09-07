@@ -127,9 +127,11 @@ class _FileMessageBubbleState extends ConsumerState<FileMessageBubble> {
                         const SizedBox(height: DsSpacing.xxxs),
                         Text(
                           context.l10n.fileSizeMegabytes(
-                            '${MediaLimits.megabytes(widget.sizeBytes!)}',
+                            MediaLimits.megabytes(widget.sizeBytes!),
                           ),
-                          style: context.dsText.caption.tint(onBubble.withValues(alpha: 0.75)),
+                          style: context.dsText.caption.tint(
+                            onBubble.withValues(alpha: 0.75),
+                          ),
                         ),
                       ],
                     ],

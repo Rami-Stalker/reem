@@ -48,7 +48,9 @@ final class CheckoutRemoteDataSourceImpl extends BaseRemoteDataSource
   Future<List<PaymentMethodOptionModel>> getPaymentMethods() async {
     final list = await getList(ApiEndpoints.paymentMethodsCatalog);
     return list
-        .map((e) => PaymentMethodOptionModel.fromJson(e as Map<String, dynamic>))
+        .map(
+          (e) => PaymentMethodOptionModel.fromJson(e as Map<String, dynamic>),
+        )
         .toList();
   }
 
@@ -70,17 +72,17 @@ final class CheckoutRemoteDataSourceImpl extends BaseRemoteDataSource
         if (saveAddress) 'save_address': true,
         if (shipping != null)
           'shipping': {
-          'recipient_name': shipping.recipientName,
-          'recipient_phone': shipping.recipientPhone,
-          'governorate': shipping.governorate,
-          if (shipping.district != null && shipping.district!.isNotEmpty)
-            'district': shipping.district,
-          'is_rural': shipping.isRural,
-          'city': shipping.city,
-          'address_line': shipping.addressLine,
-          if (shipping.landmark != null && shipping.landmark!.isNotEmpty)
-            'landmark': shipping.landmark,
-        },
+            'recipient_name': shipping.recipientName,
+            'recipient_phone': shipping.recipientPhone,
+            'governorate': shipping.governorate,
+            if (shipping.district != null && shipping.district!.isNotEmpty)
+              'district': shipping.district,
+            'is_rural': shipping.isRural,
+            'city': shipping.city,
+            'address_line': shipping.addressLine,
+            if (shipping.landmark != null && shipping.landmark!.isNotEmpty)
+              'landmark': shipping.landmark,
+          },
         // Backend expects the uppercase enum value.
         'payment_method': paymentMethod.toUpperCase(),
         if (couponCode != null && couponCode.isNotEmpty)
@@ -158,7 +160,7 @@ final class CheckoutRemoteDataSourceImpl extends BaseRemoteDataSource
   }) async {
     final json = await getJson(
       ApiEndpoints.orders,
-      query: {'page': page, 'limit': limit, if (bucket != null) 'bucket': bucket},
+      query: {'page': page, 'limit': limit, 'bucket': ?bucket},
     );
     return (json['data'] as List? ?? [])
         .map((e) => OrderSummaryModel.fromJson(e as Map<String, dynamic>))

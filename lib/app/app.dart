@@ -1,16 +1,62 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:reem/app/app_chrome.dart';
 import 'package:reem/app/bootstrap.dart';
 import 'package:reem/core/design_system/design_system.dart';
 import 'package:reem/core/localization/app_localizations.dart';
 import 'package:reem/core/localization/l10n_extension.dart';
+import 'package:reem/core/platform/app_scroll_behavior.dart';
+import 'package:reem/core/platform/system_chrome_controller.dart';
 import 'package:reem/core/router/app_router_provider.dart';
 
-class MyApp extends ConsumerWidget {
+class MyApp extends ConsumerStatefulWidget {
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
+  Size? _lastWindowSize;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    _syncOrientationPolicy();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  /// A foldable changes class in the user's hands, so the policy is re-read on
+  /// every metric change rather than pinned once at launch.
+  @override
+  void didChangeMetrics() {
+    super.didChangeMetrics();
+    _syncOrientationPolicy();
+  }
+
+  void _syncOrientationPolicy() {
+    final view = WidgetsBinding.instance.platformDispatcher.implicitView;
+    if (view == null) {
+      return;
+    }
+    final size = view.physicalSize / view.devicePixelRatio;
+    if (size.isEmpty || size == _lastWindowSize) {
+      return;
+    }
+    _lastWindowSize = size;
+    unawaited(AppSystemChrome.applyOrientationFor(size));
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final theme = AppBootstrap.themeController;
     final locale = AppBootstrap.localeController;
 
@@ -53,17 +99,15 @@ class MyApp extends ConsumerWidget {
         localizationsDelegates: L10nSetup.localizationsDelegates,
         supportedLocales: L10nSetup.supportedLocales,
         localeResolutionCallback: L10nSetup.localeResolutionCallback,
-        // One banner above every route, pushed pages included. It belongs
-        // here rather than in a page scaffold because losing the connection
-        // is a fact about the app, not about the screen she happens to be on
-        // — and because the response cache will quietly serve her the last
-        // saved copy, which she is owed a word about.
-        builder: (context, child) => Column(
-          children: [
-            const OfflineBanner(),
-            if (child != null) Expanded(child: child),
-          ],
-        ),
+        // Overscroll, drag devices and default physics per platform. See
+        // [AppScrollBehavior] — pages used to hardcode iOS bounce everywhere.
+        scrollBehavior: const AppScrollBehavior(),
+        // One frame above every route, pushed pages included: the offline
+        // band, the clamped text scale, and the system-bar style. It belongs
+        // here rather than in a page scaffold because none of the three is a
+        // fact about the screen she happens to be on.
+        builder: (context, child) =>
+            AppChrome(child: child ?? const SizedBox.shrink()),
       ),
     );
   }

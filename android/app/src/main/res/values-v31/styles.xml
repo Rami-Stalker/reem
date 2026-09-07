@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Android 12 replaced the launch theme with a system splash screen and shows it
+  whether an app opts in or not. Left unconfigured it draws the launcher icon
+  on the OEM's default plate — which on a light phone meant Reem's rose
+  monogram on stark white for a beat, then the app's own cream. These keys make
+  the system screen the app's own: the brand ground and the adaptive icon's
+  foreground layer, both resolved day/night through @color (see values/colors.xml
+  and values-night/colors.xml).
+
+  Only platform attributes are used here. `postSplashScreenTheme` belongs to
+  androidx.core:core-splashscreen, not to the framework, and naming it without
+  that dependency fails resource linking. It is not needed: Flutter hands the
+  window over to NormalTheme itself, through the `io.flutter.embedding.android
+  .NormalTheme` meta-data on the activity.
+-->
+<resources>
+    <style name="LaunchTheme" parent="@android:style/Theme.Light.NoTitleBar">
+        <item name="android:windowBackground">@drawable/launch_background</item>
+        <item name="android:windowSplashScreenBackground">@color/splash_background</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@mipmap/ic_launcher_foreground</item>
+        <item name="android:windowSplashScreenIconBackgroundColor">@color/splash_icon_background</item>
+    </style>
+</resources>

@@ -2,11 +2,11 @@ import 'dart:async';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:reem/core/design_system/design_system.dart';
 import 'package:reem/core/localization/l10n_extension.dart';
+import 'package:reem/core/platform/app_haptics.dart';
 import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/core/shared/entities/product_variant.dart';
 import 'package:reem/core/shared/entities/seller_offer.dart';
@@ -65,8 +65,10 @@ class _ProductBuyBarState extends ConsumerState<ProductBuyBar> {
     if (!ok || !mounted) return;
 
     setState(() => _adding = true);
-    unawaited(HapticFeedback.mediumImpact());
-    final added = await ref.read(cartNotifierProvider.notifier).add(
+    AppHaptics.confirm();
+    final added = await ref
+        .read(cartNotifierProvider.notifier)
+        .add(
           offerId: offer.id,
           offerVariantId: widget.variant?.id,
           quantity: widget.quantity,
@@ -75,7 +77,7 @@ class _ProductBuyBarState extends ConsumerState<ProductBuyBar> {
     setState(() => _adding = false);
 
     if (added) {
-      unawaited(HapticFeedback.selectionClick());
+      AppHaptics.selection();
       DsSnackbar.success(context, context.l10n.addedToBag);
     } else {
       DsSnackbar.error(context, context.l10n.actionDidNotSave);
@@ -109,7 +111,8 @@ class _ProductBuyBarState extends ConsumerState<ProductBuyBar> {
     final l10n = context.l10n;
 
     final offer = widget.offer;
-    final buyable = offer != null &&
+    final buyable =
+        offer != null &&
         offer.isBuyable &&
         (widget.variant == null || widget.variant!.inStock);
 

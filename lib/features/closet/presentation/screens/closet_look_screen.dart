@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/media/authorized_media_image.dart';
 import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/features/closet/domain/entities/closet_gap.dart';
 import 'package:reem/features/closet/domain/entities/closet_look.dart';
@@ -37,7 +38,9 @@ class ClosetLookScreen extends ConsumerWidget {
                     : Icons.favorite_outline_rounded,
                 color: look.isFavourite ? colors.favorite : null,
               ),
-              onPressed: () => ref.read(closetActionsProvider).updateLook(
+              onPressed: () => ref
+                  .read(closetActionsProvider)
+                  .updateLook(
                     lookId,
                     LookPatch(isFavourite: !look.isFavourite),
                   ),
@@ -116,10 +119,7 @@ class _Body extends ConsumerWidget {
 
         const SizedBox(height: DsSpacing.md),
         if (look.wearCount > 0)
-          Text(
-            'لبستيها ${look.wearCount} مرة.',
-            style: context.dsText.caption,
-          ),
+          Text('لبستيها ${look.wearCount} مرة.', style: context.dsText.caption),
 
         const SizedBox(height: DsSpacing.lg),
         TextButton(
@@ -197,11 +197,9 @@ class _PieceRow extends StatelessWidget {
                         color: colors.onSurfaceVariant,
                       ),
                     )
-                  : Image.network(
-                      url,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, _, _) =>
-                          Container(color: colors.surfaceVariant),
+                  : AuthorizedMediaImage(
+                      url: url,
+                      fallback: Container(color: colors.surfaceVariant),
                     ),
             ),
           ),

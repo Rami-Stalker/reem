@@ -6,6 +6,7 @@ import 'package:reem/core/design_system/foundation/tokens/ds_colors.dart';
 import 'package:reem/core/design_system/foundation/tokens/ds_sizes.dart';
 import 'package:reem/core/design_system/foundation/tokens/ds_spacing.dart';
 import 'package:reem/core/localization/l10n_extension.dart';
+import 'package:reem/core/media/authorized_media_image.dart';
 import 'package:video_player/video_player.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
@@ -261,10 +262,14 @@ class _Poster extends StatelessWidget {
     final thumb = thumbnailUrl;
 
     if (thumb != null && thumb.isNotEmpty) {
-      return Image.network(
-        thumb,
+      // A reel's poster is the frame the whole list is scrolled past, so it
+      // has to come from the cache rather than the wire on every pass — and a
+      // clip uploaded into a conversation is a private asset that `Image
+      // .network` could not authenticate for at all.
+      return AuthorizedMediaImage(
+        url: thumb,
         fit: fit,
-        errorBuilder: (_, _, _) => _hashOrGround(hash),
+        fallback: _hashOrGround(hash),
       );
     }
     return _hashOrGround(hash);
@@ -345,8 +350,9 @@ class _Progress extends StatelessWidget {
   Widget build(BuildContext context) {
     final value = controller.value;
     final total = value.duration.inMilliseconds;
-    final progress =
-        total <= 0 ? 0.0 : (value.position.inMilliseconds / total).clamp(0.0, 1.0);
+    final progress = total <= 0
+        ? 0.0
+        : (value.position.inMilliseconds / total).clamp(0.0, 1.0);
 
     return Positioned(
       left: 0,

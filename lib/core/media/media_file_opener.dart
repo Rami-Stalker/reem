@@ -39,7 +39,7 @@ class MediaFileOpener {
 
     // Downloaded once. Tapping an invoice twice should not cost her the
     // bytes twice, which on a metered connection is a real charge.
-    if (!await file.exists() || await file.length() == 0) {
+    if (!file.existsSync() || file.lengthSync() == 0) {
       await _download(url, file, onProgress);
     }
 
@@ -68,7 +68,9 @@ class MediaFileOpener {
     } on DioException catch (error) {
       // A half-written file would be treated as cached on the next tap and
       // opened as a corrupt document.
-      if (await file.exists()) await file.delete();
+      if (file.existsSync()) {
+        await file.delete();
+      }
       throw ErrorMapper.fromDio(error);
     }
   }

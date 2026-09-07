@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:flutter/foundation.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
@@ -32,8 +31,8 @@ class Outbox {
     this.maxAttempts = 5,
     this.maxAge = const Duration(days: 3),
     this.capacity = 200,
-  })  : _directory = directory,
-        _now = now ?? DateTime.now;
+  }) : _directory = directory,
+       _now = now ?? DateTime.now;
 
   static const _fileName = 'reem_outbox.json';
 
@@ -60,8 +59,9 @@ class Outbox {
   Future<void>? _draining;
 
   /// Intents still waiting, newest last.
-  List<OutboxIntent> get pending => _pending.values.toList(growable: false)
-    ..sort((a, b) => a.createdAt.compareTo(b.createdAt));
+  List<OutboxIntent> get pending =>
+      _pending.values.toList(growable: false)
+        ..sort((a, b) => a.createdAt.compareTo(b.createdAt));
 
   /// Emits whenever the queue changes, so a "syncing" indicator can follow it.
   Stream<List<OutboxIntent>> get changes => _changes.stream;
@@ -228,7 +228,12 @@ class Outbox {
     } on Object catch (error) {
       // A corrupt queue costs her the taps it held. Crashing on it would cost
       // her the app.
-      debugPrint('outbox load failed: $error');
+      ErrorReporter.report(
+        error,
+        null,
+        severity: ErrorSeverity.warning,
+        context: 'outbox load',
+      );
       _pending.clear();
     }
   }
@@ -240,7 +245,12 @@ class Outbox {
         jsonEncode(pending.map((i) => i.toJson()).toList(growable: false)),
       );
     } on Object catch (error) {
-      debugPrint('outbox persist failed: $error');
+      ErrorReporter.report(
+        error,
+        null,
+        severity: ErrorSeverity.warning,
+        context: 'outbox persist',
+      );
     }
   }
 

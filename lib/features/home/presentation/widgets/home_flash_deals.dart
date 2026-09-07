@@ -53,7 +53,6 @@ class HomeFlashDeals extends ConsumerWidget {
               ? _skeleton(context)
               : ListView.separated(
                   scrollDirection: Axis.horizontal,
-                  physics: const BouncingScrollPhysics(),
                   padding: const EdgeInsets.symmetric(horizontal: DsSpacing.lg),
                   itemCount: deals.length,
                   separatorBuilder: (_, _) =>

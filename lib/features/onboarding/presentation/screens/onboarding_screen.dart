@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -32,9 +34,11 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
       if (mounted) context.go(RoutePaths.login);
       return;
     }
-    _controller.nextPage(
-      duration: DsMotion.moderate,
-      curve: Curves.easeOutCubic,
+    unawaited(
+      _controller.nextPage(
+        duration: DsMotion.moderate,
+        curve: Curves.easeOutCubic,
+      ),
     );
   }
 
@@ -54,7 +58,21 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
               return Stack(
                 fit: StackFit.expand,
                 children: [
-                  AuthorizedMediaImage(url: item.image),
+                  AuthorizedMediaImage(
+                    url: item.image,
+                    // The first screen of a first run, on a Syrian mobile
+                    // connection, is the worst possible moment for a picture
+                    // to be missing — and these three are still fetched from
+                    // a third-party CDN (see `onboardingItems`). A brand
+                    // gradient behind the scrim reads as a designed panel
+                    // rather than as the grey box a failed fetch used to
+                    // leave.
+                    fallback: DecoratedBox(
+                      decoration: BoxDecoration(
+                        gradient: context.primaryGradient,
+                      ),
+                    ),
+                  ),
                   Container(
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
@@ -85,7 +103,9 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                         const SizedBox(height: DsSpacing.sm),
                         Text(
                           item.subtitle,
-                          style: context.dsText.bodyLarge.tint(colors.onPrimary.withValues(alpha: 0.92)).copyWith(height: 1.5),
+                          style: context.dsText.bodyLarge
+                              .tint(colors.onPrimary.withValues(alpha: 0.92))
+                              .copyWith(height: 1.5),
                         ),
                         // Clears the pager dots and the primary action.
                         const SizedBox(height: DsSizes.bottomSafeGap),
@@ -107,7 +127,9 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                       items.length,
                       (i) => AnimatedContainer(
                         duration: DsMotion.fast,
-                        margin: const EdgeInsets.symmetric(horizontal: DsSpacing.xxs),
+                        margin: const EdgeInsets.symmetric(
+                          horizontal: DsSpacing.xxs,
+                        ),
                         width: _index == i ? 28 : 8,
                         height: 8,
                         decoration: BoxDecoration(

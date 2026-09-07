@@ -157,7 +157,7 @@ class _CommentTile extends StatelessWidget {
     final c = context.dsColors;
 
     return Padding(
-      padding: EdgeInsets.only(right: isReply ? DsSpacing.xl : 0),
+      padding: EdgeInsetsDirectional.only(start: isReply ? DsSpacing.xl : 0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -186,10 +186,7 @@ class _CommentTile extends StatelessWidget {
                         ),
                         DsGaps.hXs,
                         Text(
-                          formatRelativeTime(
-                            context.l10n,
-                            comment.createdAt,
-                          ),
+                          formatRelativeTime(context.l10n, comment.createdAt),
                           style: context.dsText.micro.tint(c.onSurfaceVariant),
                         ),
                       ],
@@ -244,7 +241,7 @@ class _CommentTile extends StatelessWidget {
           ],
           if (comment.hiddenReplies > 0)
             Padding(
-              padding: const EdgeInsets.only(right: DsSpacing.xl),
+              padding: const EdgeInsetsDirectional.only(start: DsSpacing.xl),
               child: GestureDetector(
                 onTap: onShowReplies,
                 child: Text(

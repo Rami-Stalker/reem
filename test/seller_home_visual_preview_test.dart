@@ -14,7 +14,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:reem/core/design_system/design_system.dart';
 import 'package:reem/core/localization/app_localizations.dart';
-import 'package:reem/features/seller_dashboard/data/datasources/impl/seller_dashboard_mock_datasource.dart';
 import 'package:reem/features/seller_dashboard/data/datasources/seller_dashboard_datasource.dart';
 import 'package:reem/features/seller_dashboard/domain/entities/seller_dashboard_data.dart';
 import 'package:reem/features/seller_dashboard/domain/entities/seller_store_info.dart';
@@ -22,6 +21,7 @@ import 'package:reem/features/seller_dashboard/presentation/providers/seller_das
 import 'package:reem/features/seller_dashboard/presentation/screens/seller_home_screen.dart';
 import 'package:reem/features/seller_dashboard/presentation/screens/seller_profile_screen.dart';
 import 'package:reem/l10n/app_localizations.dart' as gen;
+import 'fixtures/seller_dashboard_mock_datasource.dart';
 
 final _captureKey = GlobalKey();
 
@@ -111,10 +111,7 @@ void main() {
     addTearDown(tester.view.reset);
 
     await tester.pumpWidget(
-      const _Preview(
-        themeMode: ThemeMode.light,
-        screen: SellerProfileScreen(),
-      ),
+      const _Preview(themeMode: ThemeMode.light, screen: SellerProfileScreen()),
     );
     await _settle(tester);
     await tester.drag(
@@ -147,7 +144,10 @@ void main() {
 }
 
 class _Preview extends StatelessWidget {
-  const _Preview({required this.themeMode, this.screen = const SellerHomeScreen()});
+  const _Preview({
+    required this.themeMode,
+    this.screen = const SellerHomeScreen(),
+  });
 
   final ThemeMode themeMode;
   final Widget screen;
@@ -243,7 +243,8 @@ Future<void> _settle(WidgetTester tester) async {
 Future<void> _capture(WidgetTester tester, String name) async {
   await tester.runAsync(() async {
     final boundary =
-        _captureKey.currentContext!.findRenderObject()! as RenderRepaintBoundary;
+        _captureKey.currentContext!.findRenderObject()!
+            as RenderRepaintBoundary;
     final image = await boundary.toImage(pixelRatio: 2);
     final data = await image.toByteData(format: ImageByteFormat.png);
     final dir = Directory('build/visual')..createSync(recursive: true);

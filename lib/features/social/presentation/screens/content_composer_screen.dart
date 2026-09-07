@@ -3,9 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reem/core/design_system/design_system.dart';
 import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/media/media_asset.dart';
+import 'package:reem/core/platform/unsaved_changes_guard.dart';
 import 'package:reem/core/shared/entities/media.dart';
 import 'package:reem/features/social/domain/entities/content.dart';
 import 'package:reem/features/social/domain/entities/content_draft.dart';
+import 'package:reem/features/social/presentation/providers/composer_notifier.dart';
 import 'package:reem/features/social/presentation/providers/social_providers.dart';
 import 'package:reem/features/social/presentation/widgets/product_tag_picker.dart';
 
@@ -28,8 +30,7 @@ class ContentComposerScreen extends ConsumerStatefulWidget {
       _ContentComposerScreenState();
 }
 
-class _ContentComposerScreenState
-    extends ConsumerState<ContentComposerScreen> {
+class _ContentComposerScreenState extends ConsumerState<ContentComposerScreen> {
   final _caption = TextEditingController();
   bool _uploading = false;
 
@@ -67,12 +68,31 @@ class _ContentComposerScreenState
     final draft = state.draft;
     final type = state.selectedType;
 
+    // A caption she has typed, or a photograph already uploaded, is work the
+    // back gesture must not silently throw away. `state.published` means the
+    // post has left — at that point the screen is closing on purpose and
+    // there is nothing to protect.
+    final hasWork =
+        !state.isSubmitting &&
+        state.published == null &&
+        (_caption.text.trim().isNotEmpty || (draft?.media.isNotEmpty ?? false));
+
+    return UnsavedChangesGuard(
+      hasUnsavedChanges: hasWork,
+      child: _body(context, state, notifier, draft, type),
+    );
+  }
+
+  Widget _body(
+    BuildContext context,
+    ComposerState state,
+    ComposerNotifier notifier,
+    ContentDraft? draft,
+    ContentTypeOption? type,
+  ) {
     return ReemScrollPage(
       slivers: [
-        PremiumAppBar(
-          title: context.l10n.composerTitle,
-          showBack: true,
-        ),
+        PremiumAppBar(title: context.l10n.composerTitle, showBack: true),
         if (state.isLoading)
           const SliverFillRemaining(
             hasScrollBody: false,
@@ -81,10 +101,7 @@ class _ContentComposerScreenState
         else if (draft == null || state.types.isEmpty)
           SliverFillRemaining(
             hasScrollBody: false,
-            child: DsErrorState(
-              message: state.error,
-              onRetry: notifier.load,
-            ),
+            child: DsErrorState(message: state.error, onRetry: notifier.load),
           )
         else
           SliverPadding(

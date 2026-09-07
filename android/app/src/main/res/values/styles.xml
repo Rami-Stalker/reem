@@ -14,5 +14,15 @@
          This Theme is only used starting with V2 of Flutter's Android embedding. -->
     <style name="NormalTheme" parent="@android:style/Theme.Light.NoTitleBar">
         <item name="android:windowBackground">?android:colorBackground</item>
+        <!--
+          Edge to edge. From Android 15 the platform draws every app under the
+          system bars whether it asked to or not, and an app that has not made
+          its bars transparent gets whatever scrim the OEM chose showing
+          through. Declaring it here means the very first frame — the one
+          drawn before Dart runs and calls SystemChrome — already looks right.
+        -->
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">true</item>
     </style>
 </resources>

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -38,7 +40,9 @@ class CartScreen extends ConsumerWidget {
                   message: context.l10n.guestCartSafe,
                   from: RoutePaths.checkout,
                 );
-                if (ok && context.mounted) context.push(RoutePaths.checkout);
+                if (ok && context.mounted) {
+                  unawaited(context.push(RoutePaths.checkout));
+                }
               },
             ),
       slivers: [
@@ -241,10 +245,7 @@ class _StepperButton extends StatelessWidget {
     return IconButton(
       visualDensity: VisualDensity.compact,
       iconSize: DsSizes.iconXs,
-      icon: Icon(
-        icon,
-        color: onTap == null ? colors.disabled : colors.primary,
-      ),
+      icon: Icon(icon, color: onTap == null ? colors.disabled : colors.primary),
       onPressed: onTap,
     );
   }

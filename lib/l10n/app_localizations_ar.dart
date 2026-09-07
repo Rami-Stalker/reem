@@ -6193,4 +6193,16 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get adminContentReasonTooShort =>
       'اكتبي سبباً واضحاً (١٠ أحرف على الأقل)';
+
+  @override
+  String get discardChangesTitle => 'بدك تتركي اللي كتبتيه؟';
+
+  @override
+  String get discardChangesBody => 'إذا طلعتي هلق، كل شي على هالصفحة بيروح.';
+
+  @override
+  String get discardChangesConfirm => 'اتركيه';
+
+  @override
+  String get discardChangesKeep => 'كمّلي';
 }

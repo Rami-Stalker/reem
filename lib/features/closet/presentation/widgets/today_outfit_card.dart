@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/media/authorized_media_image.dart';
 import 'package:reem/features/closet/domain/entities/closet_item.dart';
 import 'package:reem/features/closet/domain/entities/closet_overview.dart';
 
@@ -66,7 +67,8 @@ class TodayOutfitCard extends StatelessWidget {
                 // The gap, drawn in place. An outfit one piece short says so
                 // where the piece would be, rather than in a caption she has to
                 // connect back to the row.
-                final missing = outfit.missingSlots[index - outfit.pieces.length];
+                final missing =
+                    outfit.missingSlots[index - outfit.pieces.length];
                 return _MissingThumb(label: missing.label);
               },
             ),
@@ -138,11 +140,10 @@ class _PieceThumb extends StatelessWidget {
                         color: colors.onSurfaceVariant,
                       ),
                     )
-                  : Image.network(
-                      url,
+                  : AuthorizedMediaImage(
+                      url: url,
                       width: 72,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, _, _) => Container(
+                      fallback: Container(
                         color: colors.surfaceVariant,
                         alignment: Alignment.center,
                         child: Icon(

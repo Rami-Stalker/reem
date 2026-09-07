@@ -72,9 +72,7 @@ void main() {
 
     test('a public upload and an external link are not', () {
       expect(
-        AuthorizedMediaImage.isPrivate(
-          'http://host/media/files/2026/08/a.png',
-        ),
+        AuthorizedMediaImage.isPrivate('http://host/media/files/2026/08/a.png'),
         isFalse,
       );
       expect(
@@ -196,7 +194,10 @@ void main() {
       tester,
     ) async {
       await tester.pumpWidget(
-        _chatHarness(uploads: _FakeUploadService(), chat: _FakeChatRepository()),
+        _chatHarness(
+          uploads: _FakeUploadService(),
+          chat: _FakeChatRepository(),
+        ),
       );
       await _settle(tester);
 
@@ -580,7 +581,7 @@ Widget _chatHarness({
     overrides: [
       mediaUploadServiceProvider.overrideWithValue(uploads),
       chatRepositoryProvider.overrideWithValue(chat),
-      chatRealtimeServiceProvider.overrideWithValue(_SilentRealtime()),
+      chatRealtimeServiceProvider.overrideWithValue(_silentRealtime()),
       if (recorder != null)
         voiceRecorderServiceProvider.overrideWithValue(recorder),
     ],
@@ -598,16 +599,16 @@ class _Harness extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final app = MaterialApp(
-        debugShowCheckedModeBanner: false,
-        theme: AppTheme.light,
-        locale: const Locale('ar'),
-        supportedLocales: L10nSetup.supportedLocales,
-        localizationsDelegates: const [
-          gen.AppLocalizations.delegate,
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-        ],
+      debugShowCheckedModeBanner: false,
+      theme: AppTheme.light,
+      locale: const Locale('ar'),
+      supportedLocales: L10nSetup.supportedLocales,
+      localizationsDelegates: const [
+        gen.AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
       home: Scaffold(body: child),
     );
     return scope?.call(app) ?? ProviderScope(child: app);
@@ -616,6 +617,12 @@ class _Harness extends StatelessWidget {
 
 /// Never opens a socket. The real one reaches for secure storage and a WebSocket
 /// on the first frame, neither of which exists here.
+_SilentRealtime _silentRealtime() {
+  final service = _SilentRealtime();
+  addTearDown(service.close);
+  return service;
+}
+
 class _SilentRealtime extends ChatRealtimeService {
   _SilentRealtime() : super(SecureStorageService());
 
@@ -644,6 +651,12 @@ class _SilentRealtime extends ChatRealtimeService {
 
   @override
   Future<void> disconnect() async {}
+
+  /// The base service holds no stream of its own, so there is nothing to
+  /// override here — but a broadcast controller that is never closed keeps
+  /// the test isolate's event loop alive between cases. Closed by whoever
+  /// built it.
+  Future<void> close() => _controller.close();
 }
 
 class _FakeUploadService extends MediaUploadService {

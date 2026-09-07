@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Nothing leaves the device.
+
+  `allowBackup="false"` already refuses cloud backup, but Android 12 split the
+  two: device-to-device transfer is governed here and would otherwise carry the
+  app's data onto a new handset. What that data is matters — a session token in
+  `flutter_secure_storage`, an addressed order history, a cached catalogue with
+  her name on it — so a copy of it must be created by signing in, never by a
+  restore that a person holding the phone did not authenticate for.
+-->
+<data-extraction-rules>
+    <cloud-backup>
+        <exclude domain="root" />
+        <exclude domain="file" />
+        <exclude domain="database" />
+        <exclude domain="sharedpref" />
+        <exclude domain="external" />
+    </cloud-backup>
+    <device-transfer>
+        <exclude domain="root" />
+        <exclude domain="file" />
+        <exclude domain="database" />
+        <exclude domain="sharedpref" />
+        <exclude domain="external" />
+    </device-transfer>
+</data-extraction-rules>

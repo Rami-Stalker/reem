@@ -6202,4 +6202,17 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get adminContentReasonTooShort =>
       'Write a clear reason (at least 10 characters)';
+
+  @override
+  String get discardChangesTitle => 'Discard what you have written?';
+
+  @override
+  String get discardChangesBody =>
+      'Leaving now throws away everything on this screen.';
+
+  @override
+  String get discardChangesConfirm => 'Discard';
+
+  @override
+  String get discardChangesKeep => 'Keep editing';
 }

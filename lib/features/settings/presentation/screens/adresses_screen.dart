@@ -129,27 +129,17 @@ class AddressesScreen extends ConsumerWidget {
     WidgetRef ref,
     AddressEntity address,
   ) async {
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (dialogContext) => AlertDialog(
-        title: const Text('حذف العنوان'),
-        content: Text('سيُحذف «${address.label}» من عناوينكِ.'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(dialogContext).pop(false),
-            child: const Text('تراجع'),
-          ),
-          TextButton(
-            onPressed: () => Navigator.of(dialogContext).pop(true),
-            style: TextButton.styleFrom(
-              foregroundColor: dialogContext.dsColors.error,
-            ),
-            child: const Text('حذف'),
-          ),
-        ],
-      ),
+    final confirmed = await DsDialog.confirm(
+      context,
+      title: 'حذف العنوان',
+      message: 'سيُحذف «${address.label}» من عناوينكِ.',
+      confirmLabel: 'حذف',
+      cancelLabel: 'تراجع',
+      destructive: true,
     );
-    if (confirmed != true || !context.mounted) return;
+    if (!confirmed || !context.mounted) {
+      return;
+    }
 
     await _save(
       context,
@@ -195,9 +185,7 @@ class AddressesScreen extends ConsumerWidget {
         DsSnackbar.show(
           context,
           message: failure?.displayMessage ?? success,
-          type: failure == null
-              ? DsSnackbarType.success
-              : DsSnackbarType.error,
+          type: failure == null ? DsSnackbarType.success : DsSnackbarType.error,
         );
       case StepUpOutcome.cancelled:
         break;
@@ -256,7 +244,11 @@ class _LoadFailed extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: DsSpacing.xxl),
       child: Column(
         children: [
-          Icon(Icons.cloud_off_rounded, size: 44, color: colors.onSurfaceVariant),
+          Icon(
+            Icons.cloud_off_rounded,
+            size: 44,
+            color: colors.onSurfaceVariant,
+          ),
           const SizedBox(height: DsSpacing.md),
           Text(
             failure.displayMessage,

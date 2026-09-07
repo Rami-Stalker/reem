@@ -246,9 +246,8 @@ class _SecuritySettingsScreenState
             ),
             actions: [
               TextButton(
-                onPressed: () => Clipboard.setData(
-                  ClipboardData(text: data.join('\n')),
-                ),
+                onPressed: () =>
+                    Clipboard.setData(ClipboardData(text: data.join('\n'))),
                 child: Text(dialogContext.l10n.copy),
               ),
               TextButton(
@@ -306,25 +305,13 @@ class _SecuritySettingsScreenState
     }
   }
 
-  Future<bool> _confirm({required String title, required String body}) async {
-    final answer = await showDialog<bool>(
-      context: context,
-      builder: (dialogContext) => AlertDialog(
-        title: Text(title),
-        content: Text(body),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(dialogContext, false),
-            child: Text(dialogContext.l10n.cancel),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(dialogContext, true),
-            child: Text(dialogContext.l10n.confirm),
-          ),
-        ],
-      ),
+  Future<bool> _confirm({required String title, required String body}) {
+    return DsDialog.confirm(
+      context,
+      title: title,
+      message: body,
+      confirmLabel: context.l10n.confirm,
     );
-    return answer ?? false;
   }
 
   void _error(String message) {
@@ -690,9 +677,7 @@ class _Notice extends StatelessWidget {
         children: [
           Icon(icon, color: foreground, size: 20),
           const SizedBox(width: DsSpacing.sm),
-          Expanded(
-            child: Text(text, style: context.dsText.cardSubtitle),
-          ),
+          Expanded(child: Text(text, style: context.dsText.cardSubtitle)),
         ],
       ),
     );

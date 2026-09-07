@@ -1,13 +1,15 @@
+import 'dart:async';
+
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:reem/core/design_system/design_system.dart';
 import 'package:reem/core/errors/failure.dart';
 import 'package:reem/core/localization/l10n_extension.dart';
+import 'package:reem/core/platform/app_haptics.dart';
 import 'package:reem/core/result/result.dart';
 import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/core/shared/entities/media.dart';
@@ -127,10 +129,10 @@ class _ReemPostCardState extends ConsumerState<ReemPostCard>
     // The petals and the haptic fire first either way: they acknowledge the
     // gesture, and a double tap on an already-liked post is still a gesture.
     if (fromDoubleTap) {
-      _burst.forward(from: 0);
-      HapticFeedback.lightImpact();
+      unawaited(_burst.forward(from: 0));
+      AppHaptics.light();
     } else {
-      HapticFeedback.selectionClick();
+      AppHaptics.selection();
     }
 
     final willLike = fromDoubleTap ? true : !_liked;
@@ -160,7 +162,7 @@ class _ReemPostCardState extends ConsumerState<ReemPostCard>
   }
 
   Future<void> _toggleSave() async {
-    HapticFeedback.selectionClick();
+    AppHaptics.selection();
     if (!await _requireAccount()) return;
     if (!mounted) return;
 
@@ -193,7 +195,7 @@ class _ReemPostCardState extends ConsumerState<ReemPostCard>
   /// Opens the OS share sheet, and only tells the server about a share she
   /// actually went through with — a sheet she dismissed is not a share.
   Future<void> _share() async {
-    HapticFeedback.selectionClick();
+    AppHaptics.selection();
     final shared = await ShareService.post(
       context: context,
       postId: post.id,
@@ -253,7 +255,7 @@ class _ReemPostCardState extends ConsumerState<ReemPostCard>
     if (offerId == null || _addingToBag) return;
 
     setState(() => _addingToBag = true);
-    HapticFeedback.mediumImpact();
+    AppHaptics.confirm();
     final added = await ref
         .read(cartNotifierProvider.notifier)
         .add(offerId: offerId);
@@ -546,7 +548,7 @@ class _PostMediaState extends State<_PostMedia> {
                   PageView.builder(
                     controller: _pages,
                     physics: count > 1
-                        ? const BouncingScrollPhysics()
+                        ? null
                         : const NeverScrollableScrollPhysics(),
                     onPageChanged: widget.onIndex,
                     itemCount: count,

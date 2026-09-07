@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/media/authorized_media_image.dart';
 import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/features/rooms/data/datasources/rooms_remote_datasource.dart';
 import 'package:reem/features/rooms/domain/entities/room.dart';
@@ -43,10 +44,12 @@ class RoomsScreen extends ConsumerWidget {
                 child: ListView.separated(
                   padding: const EdgeInsets.all(DsSpacing.md),
                   itemCount: rooms.length,
-                  separatorBuilder: (_, _) => const SizedBox(height: DsSpacing.sm),
+                  separatorBuilder: (_, _) =>
+                      const SizedBox(height: DsSpacing.sm),
                   itemBuilder: (context, index) => RoomCard(
                     room: rooms[index],
-                    onTap: () => context.push(RoutePaths.roomOf(rooms[index].id)),
+                    onTap: () =>
+                        context.push(RoutePaths.roomOf(rooms[index].id)),
                   ),
                 ),
               ),
@@ -125,11 +128,9 @@ class RoomCard extends StatelessWidget {
                         color: colors.onSurfaceVariant,
                       ),
                     )
-                  : Image.network(
-                      room.coverUrl!,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, _, _) =>
-                          Container(color: colors.surfaceVariant),
+                  : AuthorizedMediaImage(
+                      url: room.coverUrl!,
+                      fallback: Container(color: colors.surfaceVariant),
                     ),
             ),
           ),
@@ -185,7 +186,9 @@ class RoomCard extends StatelessWidget {
                   Text(
                     _readinessLine(readiness, room),
                     style: context.dsText.micro.tint(
-                      readiness.ready ? colors.success : colors.onSurfaceVariant,
+                      readiness.ready
+                          ? colors.success
+                          : colors.onSurfaceVariant,
                     ),
                   ),
                 ],
@@ -209,11 +212,11 @@ class RoomCard extends StatelessWidget {
   }
 
   IconData _iconFor(RoomKind kind) => switch (kind) {
-        RoomKind.gift => Icons.card_giftcard_rounded,
-        RoomKind.group => Icons.people_rounded,
-        RoomKind.occasion => Icons.celebration_rounded,
-        RoomKind.solo => Icons.meeting_room_rounded,
-      };
+    RoomKind.gift => Icons.card_giftcard_rounded,
+    RoomKind.group => Icons.people_rounded,
+    RoomKind.occasion => Icons.celebration_rounded,
+    RoomKind.solo => Icons.meeting_room_rounded,
+  };
 }
 
 /// Opening a room.
@@ -326,13 +329,13 @@ class _RoomComposerSheetState extends ConsumerState<RoomComposerSheet> {
             label: 'افتحي الغرفة',
             onPressed: canSave
                 ? () => Navigator.of(context).pop(
-                      RoomDraft(
-                        title: _title.text.trim(),
-                        kind: _kind,
-                        occasion: _occasion,
-                        recipientName: _recipient.text.trim(),
-                      ),
-                    )
+                    RoomDraft(
+                      title: _title.text.trim(),
+                      kind: _kind,
+                      occasion: _occasion,
+                      recipientName: _recipient.text.trim(),
+                    ),
+                  )
                 : null,
           ),
         ],

@@ -1,9 +1,28 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:reem/core/design_system/components/buttons/ds_icon_button.dart';
 import 'package:reem/core/design_system/foundation/theme/extensions/color_extension.dart';
 import 'package:reem/core/design_system/foundation/tokens/ds_constraints.dart';
+import 'package:reem/core/design_system/foundation/tokens/ds_sizes.dart';
 import 'package:reem/core/design_system/foundation/tokens/ds_spacing.dart';
 import 'package:reem/core/design_system/foundation/tokens/ds_typography.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
+import 'package:reem/core/platform/app_platform.dart';
+
+/// One entry in a [DsBottomSheet.choose] menu.
+class DsSheetChoice<T> {
+  const DsSheetChoice({
+    required this.value,
+    required this.label,
+    this.icon,
+    this.destructive = false,
+  });
+
+  final T value;
+  final String label;
+  final IconData? icon;
+  final bool destructive;
+}
 
 /// Helpers for presenting Reem-styled modal bottom sheets.
 ///
@@ -32,7 +51,9 @@ abstract final class DsBottomSheet {
       isDismissible: isDismissible,
       enableDrag: enableDrag,
       useSafeArea: true,
-      constraints: const BoxConstraints(maxWidth: DsConstraints.maxContentWidth),
+      constraints: const BoxConstraints(
+        maxWidth: DsConstraints.maxContentWidth,
+      ),
       builder: builder,
     );
   }
@@ -54,6 +75,107 @@ abstract final class DsBottomSheet {
         showClose: showClose,
         scrollable: scrollable,
         child: child,
+      ),
+    );
+  }
+
+  /// A plain "which one?" menu — the sheet whose whole content is a short list
+  /// of choices.
+  ///
+  /// This is the one sheet shape the two platforms genuinely disagree about.
+  /// iOS answers a question like *camera or gallery?* with an action sheet
+  /// that rises from the bottom with a separated Cancel below it, and a
+  /// Material list inside a rounded card reads as a port there. Android
+  /// answers it with exactly that Material list. Sheets that carry real
+  /// content — a form, an explanation, a comment thread — stay Material on
+  /// both, because those are the app's own furniture rather than a system
+  /// idiom.
+  static Future<T?> choose<T>(
+    BuildContext context, {
+    required List<DsSheetChoice<T>> choices,
+    String? title,
+    String? message,
+    String? cancelLabel,
+  }) {
+    final cancelText = cancelLabel ?? context.l10n.cancel;
+
+    if (AppPlatform.isApple) {
+      return showCupertinoModalPopup<T>(
+        context: context,
+        useRootNavigator: true,
+        builder: (ctx) => CupertinoActionSheet(
+          title: title == null ? null : Text(title),
+          message: message == null ? null : Text(message),
+          actions: [
+            for (final choice in choices)
+              CupertinoActionSheetAction(
+                isDestructiveAction: choice.destructive,
+                onPressed: () => Navigator.of(ctx).pop(choice.value),
+                child: Text(choice.label),
+              ),
+          ],
+          cancelButton: CupertinoActionSheetAction(
+            isDefaultAction: true,
+            onPressed: () => Navigator.of(ctx).pop(),
+            child: Text(cancelText),
+          ),
+        ),
+      );
+    }
+
+    return show<T>(
+      context,
+      builder: (ctx) => DsSheetScaffold(
+        title: title,
+        subtitle: message,
+        scrollable: false,
+        padding: const EdgeInsets.fromLTRB(
+          DsSpacing.sm,
+          0,
+          DsSpacing.sm,
+          DsSpacing.sm,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            for (final choice in choices)
+              _ChoiceRow<T>(
+                choice: choice,
+                onTap: () => Navigator.of(ctx).pop(choice.value),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _ChoiceRow<T> extends StatelessWidget {
+  const _ChoiceRow({required this.choice, required this.onTap});
+
+  final DsSheetChoice<T> choice;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.dsColors;
+    final tint = choice.destructive ? c.error : c.primary;
+
+    return ListTile(
+      onTap: onTap,
+      minTileHeight: DsSizes.minTouchTarget,
+      leading: choice.icon == null
+          ? null
+          : CircleAvatar(
+              backgroundColor: tint.withValues(alpha: 0.12),
+              child: Icon(choice.icon, color: tint, size: DsSizes.iconSm),
+            ),
+      title: Text(
+        choice.label,
+        style: TextStyle(
+          color: choice.destructive ? c.error : c.onSurface,
+          fontWeight: DsTypography.medium,
+        ),
       ),
     );
   }
@@ -110,14 +232,20 @@ class DsSheetScaffold extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(title!,
-                          style: theme.textTheme.titleLarge
-                              ?.copyWith(fontWeight: DsTypography.bold)),
+                      Text(
+                        title!,
+                        style: theme.textTheme.titleLarge?.copyWith(
+                          fontWeight: DsTypography.bold,
+                        ),
+                      ),
                       if (subtitle != null) ...[
                         const SizedBox(height: DsSpacing.xxs),
-                        Text(subtitle!,
-                            style: theme.textTheme.bodySmall
-                                ?.copyWith(color: c.onSurfaceVariant)),
+                        Text(
+                          subtitle!,
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: c.onSurfaceVariant,
+                          ),
+                        ),
                       ],
                     ],
                   ),

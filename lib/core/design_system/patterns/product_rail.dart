@@ -53,10 +53,10 @@ class ProductRail extends StatelessWidget {
               ? _skeleton()
               : ListView.separated(
                   scrollDirection: Axis.horizontal,
-                  physics: const BouncingScrollPhysics(),
                   padding: const EdgeInsets.symmetric(horizontal: DsSpacing.lg),
                   itemCount: products.length,
-                  separatorBuilder: (_, _) => const SizedBox(width: DsSpacing.md),
+                  separatorBuilder: (_, _) =>
+                      const SizedBox(width: DsSpacing.md),
                   itemBuilder: (context, i) {
                     final product = products[i];
                     final card = ProductCardCompact(
@@ -125,7 +125,11 @@ class _Header extends StatelessWidget {
     final theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.fromLTRB(
-          DsSpacing.lg, 0, DsSpacing.lg, DsSpacing.md),
+        DsSpacing.lg,
+        0,
+        DsSpacing.lg,
+        DsSpacing.md,
+      ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
@@ -134,13 +138,18 @@ class _Header extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 if (eyebrow != null) ...[
-                  Text(eyebrow!.toUpperCase(),
-                      style: DsTypography.overline(c.primary)),
+                  Text(
+                    eyebrow!.toUpperCase(),
+                    style: DsTypography.overline(c.primary),
+                  ),
                   const SizedBox(height: DsSpacing.xxs),
                 ],
-                Text(title,
-                    style: theme.textTheme.headlineSmall
-                        ?.copyWith(fontWeight: DsTypography.bold)),
+                Text(
+                  title,
+                  style: theme.textTheme.headlineSmall?.copyWith(
+                    fontWeight: DsTypography.bold,
+                  ),
+                ),
               ],
             ),
           ),
@@ -149,9 +158,13 @@ class _Header extends StatelessWidget {
               onTap: onSeeAll,
               child: Row(
                 children: [
-                  Text(context.l10n.viewAll,
-                      style: theme.textTheme.labelLarge?.copyWith(
-                          color: c.primary, fontWeight: DsTypography.semiBold)),
+                  Text(
+                    context.l10n.viewAll,
+                    style: theme.textTheme.labelLarge?.copyWith(
+                      color: c.primary,
+                      fontWeight: DsTypography.semiBold,
+                    ),
+                  ),
                   Icon(Icons.chevron_right_rounded, size: 18, color: c.primary),
                 ],
               ),

@@ -12,63 +12,32 @@ enum ChatAttachmentSource { camera, gallery, files }
 /// nothing — and a button that does nothing is worse than one that is not
 /// there. Voice lives on the composer's own row, where holding a recording is
 /// its own state rather than a menu choice.
+///
+/// Presented through [DsBottomSheet.choose], so it arrives as an iOS action
+/// sheet on an iPhone and a Material list on Android.
 abstract final class ChatAttachmentSheet {
   static Future<ChatAttachmentSource?> show(BuildContext context) {
     final l10n = context.l10n;
-    return DsBottomSheet.showTitled<ChatAttachmentSource>(
+    return DsBottomSheet.choose<ChatAttachmentSource>(
       context,
       title: l10n.chatAttachTitle,
-      scrollable: false,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          _Option(
-            icon: Icons.photo_camera_outlined,
-            label: l10n.mediaFromCamera,
-            onTap: () =>
-                Navigator.of(context).pop(ChatAttachmentSource.camera),
-          ),
-          _Option(
-            icon: Icons.photo_library_outlined,
-            label: l10n.mediaFromGallery,
-            onTap: () =>
-                Navigator.of(context).pop(ChatAttachmentSource.gallery),
-          ),
-          _Option(
-            icon: Icons.attach_file_rounded,
-            label: l10n.chatFromFiles,
-            onTap: () => Navigator.of(context).pop(ChatAttachmentSource.files),
-          ),
-          const SizedBox(height: DsSpacing.sm),
-        ],
-      ),
-    );
-  }
-}
-
-class _Option extends StatelessWidget {
-  const _Option({
-    required this.icon,
-    required this.label,
-    required this.onTap,
-  });
-
-  final IconData icon;
-  final String label;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final c = context.dsColors;
-    return ListTile(
-      onTap: onTap,
-      contentPadding: EdgeInsets.zero,
-      leading: CircleAvatar(
-        backgroundColor: c.primary.withValues(alpha: 0.12),
-        child: Icon(icon, color: c.primary, size: 20),
-      ),
-      title: Text(label),
-      trailing: Icon(Icons.chevron_right_rounded, color: c.onSurfaceVariant),
+      choices: [
+        DsSheetChoice(
+          value: ChatAttachmentSource.camera,
+          label: l10n.mediaFromCamera,
+          icon: Icons.photo_camera_outlined,
+        ),
+        DsSheetChoice(
+          value: ChatAttachmentSource.gallery,
+          label: l10n.mediaFromGallery,
+          icon: Icons.photo_library_outlined,
+        ),
+        DsSheetChoice(
+          value: ChatAttachmentSource.files,
+          label: l10n.chatFromFiles,
+          icon: Icons.attach_file_rounded,
+        ),
+      ],
     );
   }
 }

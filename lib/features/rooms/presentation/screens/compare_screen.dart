@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/media/authorized_media_image.dart';
 import 'package:reem/features/rooms/domain/entities/room.dart';
 import 'package:reem/features/rooms/presentation/providers/rooms_providers.dart';
 
@@ -178,7 +179,11 @@ class _Verdict extends StatelessWidget {
         children: [
           Row(
             children: [
-              Icon(Icons.compare_arrows_rounded, size: 18, color: colors.primary),
+              Icon(
+                Icons.compare_arrows_rounded,
+                size: 18,
+                color: colors.primary,
+              ),
               const SizedBox(width: DsSpacing.xs),
               Expanded(
                 child: Text(
@@ -239,11 +244,9 @@ class _Heads extends ConsumerWidget {
                       borderRadius: BorderRadius.circular(DsRadius.sm),
                       child: entry.candidate?.image == null
                           ? Container(color: colors.surfaceVariant)
-                          : Image.network(
-                              entry.candidate!.image!,
-                              fit: BoxFit.cover,
-                              errorBuilder: (context, _, _) =>
-                                  Container(color: colors.surfaceVariant),
+                          : AuthorizedMediaImage(
+                              url: entry.candidate!.image!,
+                              fallback: Container(color: colors.surfaceVariant),
                             ),
                     ),
                   ),
@@ -288,11 +291,7 @@ class _Heads extends ConsumerWidget {
 
 /// One attribute, across the columns.
 class _Row extends StatelessWidget {
-  const _Row({
-    required this.row,
-    required this.candidates,
-    this.muted = false,
-  });
+  const _Row({required this.row, required this.candidates, this.muted = false});
 
   final CompareRow row;
   final List<({String id, RoomCandidate? candidate})> candidates;
@@ -320,10 +319,7 @@ class _Row extends StatelessWidget {
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 2),
-                child: _Cell(
-                  cell: row.values[entry.id],
-                  muted: muted,
-                ),
+                child: _Cell(cell: row.values[entry.id], muted: muted),
               ),
             ),
         ],
@@ -359,8 +355,8 @@ class _Cell extends StatelessWidget {
         style: muted
             ? context.dsText.micro.tint(colors.outline)
             : best
-                ? context.dsText.captionStrong.tint(colors.success)
-                : context.dsText.caption,
+            ? context.dsText.captionStrong.tint(colors.success)
+            : context.dsText.caption,
       ),
     );
   }

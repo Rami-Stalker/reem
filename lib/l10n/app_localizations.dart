@@ -11371,6 +11371,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Write a clear reason (at least 10 characters)'**
   String get adminContentReasonTooShort;
+
+  /// Title of the confirmation shown when a back gesture would abandon a half-filled form
+  ///
+  /// In en, this message translates to:
+  /// **'Discard what you have written?'**
+  String get discardChangesTitle;
+
+  /// Body of the discard-changes confirmation
+  ///
+  /// In en, this message translates to:
+  /// **'Leaving now throws away everything on this screen.'**
+  String get discardChangesBody;
+
+  /// Destructive action of the discard-changes confirmation
+  ///
+  /// In en, this message translates to:
+  /// **'Discard'**
+  String get discardChangesConfirm;
+
+  /// Cancel action of the discard-changes confirmation
+  ///
+  /// In en, this message translates to:
+  /// **'Keep editing'**
+  String get discardChangesKeep;
 }
 
 class _AppLocalizationsDelegate

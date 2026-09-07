@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -79,6 +80,7 @@ import 'package:reem/features/reputation/presentation/screens/my_reviews_screen.
 import 'package:reem/features/returns/presentation/screens/return_request_screen.dart';
 import 'package:reem/features/rooms/presentation/screens/compare_screen.dart';
 import 'package:reem/features/rooms/presentation/screens/purchase_plan_screen.dart';
+import 'package:reem/features/rooms/presentation/screens/room_join_screen.dart';
 import 'package:reem/features/rooms/presentation/screens/room_screen.dart';
 import 'package:reem/features/rooms/presentation/screens/rooms_screen.dart';
 import 'package:reem/features/search/presentation/screens/search_screen.dart';
@@ -177,6 +179,29 @@ class _AuthRouterRefresh extends ChangeNotifier {
   }
 }
 
+/// Folds a `reem://` link's authority back into its path.
+///
+/// The gotcha this exists for: in `reem://rooms/join/abc` the first segment is
+/// the URI's *authority*, not part of its path — `Uri.parse` gives host
+/// `rooms` and path `/join/abc`. GoRouter matches on the path alone, so an
+/// invite arriving from the OS looked like a request for `/join/abc`, matched
+/// nothing, and dropped the woman who tapped it on the 404 page.
+///
+/// Returns null for anything already shaped like a route, which is every
+/// in-app navigation and the `reem:///rooms/join/abc` spelling with an empty
+/// authority.
+@visibleForTesting
+String? deepLinkPath(Uri uri) {
+  if (uri.scheme != 'reem' || uri.host.isEmpty) {
+    return null;
+  }
+  final rebuilt = Uri(
+    path: '/${uri.host}${uri.path}',
+    queryParameters: uri.queryParameters.isEmpty ? null : uri.queryParameters,
+  );
+  return rebuilt.toString();
+}
+
 final goRouterProvider = Provider<GoRouter>((ref) {
   final refresh = _AuthRouterRefresh(ref);
   ref.onDispose(refresh.dispose);
@@ -184,15 +209,24 @@ final goRouterProvider = Provider<GoRouter>((ref) {
   return GoRouter(
     navigatorKey: rootNavigatorKey,
     initialLocation: RoutePaths.home,
-    debugLogDiagnostics: true,
+    // Debug only. GoRouter's diagnostics print every redirect, every match
+    // and every full location to the device log, and `debugLogDiagnostics`
+    // is not compiled out of a release build — a shipped app was narrating
+    // the whole navigation stack, path parameters included, to logcat.
+    debugLogDiagnostics: kDebugMode,
     refreshListenable: refresh,
     // Route changes become breadcrumbs, so a crash report says which screens
     // she passed through on the way to it. Names only — never a parameter.
     observers: [NavigationBreadcrumbs()],
     // Read, not watch: the guard needs the state at the moment it runs, and
     // `refreshListenable` is what tells the router to run it again.
-    redirect: (context, state) =>
-        authGuard(context, state, ref.read(authNotifierProvider)),
+    redirect: (context, state) {
+      final normalised = deepLinkPath(state.uri);
+      if (normalised != null) {
+        return normalised;
+      }
+      return authGuard(context, state, ref.read(authNotifierProvider));
+    },
     routes: [
       GoRoute(
         path: RoutePaths.splash,
@@ -478,6 +512,15 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         path: RoutePaths.cart,
         name: RouteNames.cart,
         builder: (context, state) => const CartScreen(),
+      ),
+      // Before `/rooms/:id`. GoRouter matches in declaration order and `:id`
+      // is greedy, so declared after this one it would swallow `join` and try
+      // to open a room whose id is the word "join".
+      GoRoute(
+        path: RoutePaths.roomJoin,
+        name: RouteNames.roomJoin,
+        builder: (context, state) =>
+            RoomJoinScreen(slug: state.pathParameters['slug'] ?? ''),
       ),
       GoRoute(
         path: RoutePaths.room,

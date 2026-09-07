@@ -26,7 +26,14 @@
     <application
         android:label="@string/app_name"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher"
+        android:supportsRtl="true"
+        android:localeConfig="@xml/locales_config"
+        android:allowBackup="false"
+        android:fullBackupContent="false"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:enableOnBackInvokedCallback="true">
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -47,6 +54,27 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+
+            <!--
+              Room invites. The app has always copied
+              `reem://rooms/join/<slug>` to the clipboard with a message
+              promising that whoever opens it can advise and vote — and no
+              scheme was registered on either platform, so the one link Reem
+              hands out opened nothing anywhere. The route behind it
+              (`/rooms/join/:slug`) and the endpoint it calls both already
+              existed; only this was missing.
+
+              A custom scheme rather than an https App Link because verifying
+              one needs `assetlinks.json` served from reem.shop carrying this
+              build's signing fingerprint. That is a deployment step, not a
+              code change; until it is done, this is what actually works.
+            -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:scheme="reem"/>
             </intent-filter>
         </activity>
         <!-- Don't delete the meta-data below.

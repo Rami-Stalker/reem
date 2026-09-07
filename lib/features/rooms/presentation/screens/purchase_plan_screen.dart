@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/media/authorized_media_image.dart';
 import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/features/rooms/domain/entities/room.dart';
 import 'package:reem/features/rooms/presentation/providers/rooms_providers.dart';
@@ -125,7 +126,9 @@ class _BudgetCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              Expanded(child: Text('المجموع', style: context.dsText.labelStrong)),
+              Expanded(
+                child: Text('المجموع', style: context.dsText.labelStrong),
+              ),
               Text(
                 plan.total?.format() ?? '—',
                 style: context.dsText.metricSmall,
@@ -136,8 +139,7 @@ class _BudgetCard extends StatelessWidget {
             const SizedBox(height: DsSpacing.xs),
             Text(
               switch (budget.verdict) {
-                'over' =>
-                  'فوق ميزانيتك بـ${budget.overBy?.format() ?? ''}',
+                'over' => 'فوق ميزانيتك بـ${budget.overBy?.format() ?? ''}',
                 'under' => 'تحت ميزانيتك',
                 _ => 'ضمن ميزانيتك',
               },
@@ -192,11 +194,9 @@ class _PlanLine extends ConsumerWidget {
                 height: 68,
                 child: item.image == null
                     ? Container(color: colors.surfaceVariant)
-                    : Image.network(
-                        item.image!,
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, _, _) =>
-                            Container(color: colors.surfaceVariant),
+                    : AuthorizedMediaImage(
+                        url: item.image!,
+                        fallback: Container(color: colors.surfaceVariant),
                       ),
               ),
             ),
@@ -297,10 +297,10 @@ class _CheckoutBar extends ConsumerWidget {
                   ? 'اشتري يلي لهلق (${plan.now.length})'
                   : 'اشتري (${plan.now.length})',
               onPressed: plan.canBuy
-                  ? () => context.push(RoutePaths.checkout, extra: {
-                        'room_id': room.id,
-                        'plan_id': plan.id,
-                      })
+                  ? () => context.push(
+                      RoutePaths.checkout,
+                      extra: {'room_id': room.id, 'plan_id': plan.id},
+                    )
                   : null,
             ),
           ],
