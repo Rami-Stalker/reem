@@ -13,6 +13,7 @@ import {
   seedCommerceContent,
   seedFollows,
   seedPosts,
+  seedCustomerContent,
   seedStories,
 } from './social';
 import {
@@ -199,6 +200,13 @@ export async function seedDemo(prisma: PrismaClient): Promise<void> {
   log(`${orders.length} orders across the lifecycle`);
 
   await seedReviews(ctx, orders, communityIds);
+
+  // After orders, and that is the whole point: a shopper may only tag a piece
+  // that was delivered to her, so her content cannot be seeded where the
+  // boutiques' is, before a single order exists.
+  await seedCustomerContent(ctx);
+  log('customer looks, open pages and reshares');
+
   await seedMoneyMovements(ctx, orders);
   await seedMemberships(ctx);
   await seedSellerReputation(prisma, ctx.rng, ctx.sellers, ctx.adminId);

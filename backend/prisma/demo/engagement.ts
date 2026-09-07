@@ -52,11 +52,11 @@ export async function seedSavedItems(
     }
 
     // Upsert, not create: the feed seed already bookmarks posts for part of
-    // this audience, and both now write the one `post_saves` table.
-    for (const postId of rng.sample(postIds, rng.int(0, 6))) {
-      await prisma.postSave.upsert({
-        where: { postId_userId: { postId, userId: customer.id } },
-        create: { userId: customer.id, postId },
+    // this audience, and both write the one saves table.
+    for (const contentId of rng.sample(postIds, rng.int(0, 6))) {
+      await prisma.commerceContentSave.upsert({
+        where: { contentId_userId: { contentId, userId: customer.id } },
+        create: { userId: customer.id, contentId },
         update: {},
       });
     }

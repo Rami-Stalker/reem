@@ -8,6 +8,7 @@ export type AuthorizationResource =
   | 'audit'
   | 'cart'
   | 'commission'
+  | 'comment'
   | 'content'
   | 'device'
   | 'favorite'
@@ -24,6 +25,13 @@ export type AuthorizationResource =
   | 'wishlist';
 
 export type OwnershipResource =
+  /**
+   * A piece of social content — a post, a reel, a story. One resource for all
+   * three: they differ by content type, which is registry data, and an
+   * ownership rule that had to be extended every time a format was added would
+   * be a rule that fails open on the newest one.
+   */
+  | 'commerceContent'
   | 'order'
   | 'post'
   /**

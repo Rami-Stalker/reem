@@ -16,6 +16,14 @@ const OWNERSHIP_BYPASS: Record<OwnershipResource, UserRole[]> = {
   // story she did not write.
   post: [UserRole.OPERATIONS_ADMIN, UserRole.CONTENT_MODERATOR, UserRole.ADMIN],
   story: [UserRole.OPERATIONS_ADMIN, UserRole.CONTENT_MODERATOR, UserRole.ADMIN],
+  // The same three, for the same reason, on the platform the other two are
+  // being folded into. Support is deliberately absent: answering "where is my
+  // parcel" is not a reason to edit somebody's photographs.
+  commerceContent: [
+    UserRole.OPERATIONS_ADMIN,
+    UserRole.CONTENT_MODERATOR,
+    UserRole.ADMIN,
+  ],
   // Catalog: operations and moderation curate listings.
   product: [
     UserRole.OPERATIONS_ADMIN,
@@ -213,18 +221,25 @@ export class AuthorizationService {
         return row?.sellerId === userId || row?.order.userId === userId;
       }
       case 'post': {
-        const row = await this.prisma.post.findUnique({
+        const row = await this.prisma.commerceContent.findFirst({
+          where: { id, contentType: 'product_post' },
+          select: { authorId: true },
+        });
+        return row?.authorId === userId;
+      }
+      case 'commerceContent': {
+        const row = await this.prisma.commerceContent.findUnique({
           where: { id },
           select: { authorId: true },
         });
         return row?.authorId === userId;
       }
       case 'story': {
-        const row = await this.prisma.story.findUnique({
-          where: { id },
-          select: { userId: true },
+        const row = await this.prisma.commerceContent.findFirst({
+          where: { id, contentType: 'story' },
+          select: { authorId: true },
         });
-        return row?.userId === userId;
+        return row?.authorId === userId;
       }
       case 'order': {
         const row = await this.prisma.order.findUnique({

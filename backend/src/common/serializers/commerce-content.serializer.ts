@@ -21,7 +21,7 @@ export type CommerceContentProductTagWithRelations =
   };
 
 export type CommerceContentWithRelations = CommerceContent & {
-  seller: User;
+  author: User;
   typeDefinition: CommerceContentTypeDefinition;
   media?: CommerceContentMedia[];
   productTags?: CommerceContentProductTagWithRelations[];
@@ -34,6 +34,36 @@ function count(value: bigint | number | null | undefined): number {
 
 function iso(value: Date | null | undefined): string | null {
   return value ? value.toISOString() : null;
+}
+
+export type ContentModerationState = 'active' | 'under_review' | 'removed';
+
+/**
+ * Active / قيد المراجعة / محذوف.
+ *
+ * Two enums drive behaviour here — `status` is the publishing lifecycle and
+ * `moderationStatus` is the review verdict — and the useful question ("can
+ * anyone see this, and if not why") is a function of both. Deriving it once,
+ * server-side, is what stops every client recomputing a tri-state from a
+ * four-by-nine matrix and getting it subtly different.
+ */
+export function moderationState(
+  content: Pick<CommerceContent, 'status' | 'moderationStatus'>,
+): ContentModerationState {
+  if (
+    content.status === 'REMOVED' ||
+    content.moderationStatus === 'REJECTED'
+  ) {
+    return 'removed';
+  }
+  if (
+    content.status === 'IN_REVIEW' ||
+    content.moderationStatus === 'FLAGGED' ||
+    content.moderationStatus === 'PENDING'
+  ) {
+    return 'under_review';
+  }
+  return 'active';
 }
 
 export function serializeCommerceContentType(
@@ -71,7 +101,11 @@ export function serializeCommerceContentVersion(
 export function serializeCommerceContent(content: CommerceContentWithRelations) {
   return {
     id: content.id,
-    seller: serializePublicUser(content.seller),
+    author: serializePublicUser(content.author),
+    /// What she was when she published it — see `CommerceContent.authorKind`.
+    /// A card renders a boutique post and a customer look differently, and it
+    /// must not decide that from the author's *current* role.
+    author_kind: content.authorKind.toLowerCase(),
     content_type: content.contentType,
     type_definition: serializeCommerceContentType(content.typeDefinition),
     title: content.title,
@@ -80,6 +114,12 @@ export function serializeCommerceContent(content: CommerceContentWithRelations) 
     status: content.status.toLowerCase(),
     visibility: content.visibility.toLowerCase(),
     moderation_status: content.moderationStatus.toLowerCase(),
+    /// The three states a woman and a moderator both reason about, derived
+    /// rather than stored so it can never drift from the two enums that
+    /// actually drive behaviour. The client must not recompute it.
+    moderation_state: moderationState(content),
+    removal_reason: content.removalReason,
+    removed_at: iso(content.removedAt),
     payload: content.payload,
     metadata: content.metadata,
     publication_targets: content.publicationTargets.map((target) =>

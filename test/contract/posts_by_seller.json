@@ -1,0 +1,558 @@
+{
+  "data": [
+    {
+      "id": "add12164-9270-45d7-85da-8dd31f1a5442",
+      "author": {
+        "id": "49fbd24f-fab1-42bc-b304-83527e1583c2",
+        "name": "سارة المنصوري",
+        "username": "sara_reem",
+        "bio": "بوتيك أزياء راقية ✨",
+        "image_url": "https://loremflickr.com/400/400/peony%2Csoft/all?lock=29131",
+        "location": "دمشق، سوريا",
+        "role": "seller",
+        "seller_level": "verified",
+        "seller_verified_at": null,
+        "seller_premium_until": null,
+        "is_verified": true,
+        "followers_count": 18,
+        "following_count": 1,
+        "created_at": "2026-09-03T15:15:51.642Z"
+      },
+      "product": null,
+      "caption": "ثلاث طرق لتنسيق الفستان الحريري لإطلالة نهارية ☀️",
+      "likes_count": 24,
+      "comments_count": 1,
+      "shares_count": 0,
+      "saves_count": 2,
+      "is_liked": false,
+      "is_saved": false,
+      "created_at": "2026-09-03T15:15:52.021Z"
+    },
+    {
+      "id": "515c7307-6297-4710-9729-2cfc138e82fc",
+      "author": {
+        "id": "49fbd24f-fab1-42bc-b304-83527e1583c2",
+        "name": "سارة المنصوري",
+        "username": "sara_reem",
+        "bio": "بوتيك أزياء راقية ✨",
+        "image_url": "https://loremflickr.com/400/400/peony%2Csoft/all?lock=29131",
+        "location": "دمشق، سوريا",
+        "role": "seller",
+        "seller_level": "verified",
+        "seller_verified_at": null,
+        "seller_premium_until": null,
+        "is_verified": true,
+        "followers_count": 18,
+        "following_count": 1,
+        "created_at": "2026-09-03T15:15:51.642Z"
+      },
+      "product": {
+        "id": "0373f023-91c0-45cf-9e06-12ae1fc66700",
+        "slug": "satin-heels",
+        "title": "حذاء سهرة ساتان",
+        "description": "كعب ستيليتو بلون الشامبانيا مع نعل مريح.",
+        "category": {
+          "id": "bb5bdf57-432f-455e-b755-199f5aecf79e",
+          "slug": "shoes",
+          "name_ar": "أحذية",
+          "name_en": "Shoes",
+          "level": 2,
+          "parent_id": "0ec4166b-40c2-4298-b4a0-fd9c5e4e441b",
+          "icon_url": null,
+          "image_url": null,
+          "is_sensitive": false,
+          "returns_allowed": true
+        },
+        "brand": {
+          "id": "8439e30d-0cb5-44ed-bfc2-1ed946b301bd",
+          "slug": "yasmine",
+          "name_ar": "ياسمين",
+          "name_en": "Yasmine",
+          "logo_url": null,
+          "is_verified": false
+        },
+        "attributes": {},
+        "gtin": null,
+        "status": "active",
+        "media": [
+          {
+            "url": "https://loremflickr.com/900/1125/womens%20shoes%2Cheels/all?lock=22034",
+            "type": "image",
+            "blur_hash": null
+          }
+        ],
+        "variants": [],
+        "offers_count": 1,
+        "best_offer": {
+          "id": "5f701325-f91b-444e-b2ba-03ac1fe5bfff",
+          "seller": {
+            "id": "49fbd24f-fab1-42bc-b304-83527e1583c2",
+            "name": "سارة المنصوري",
+            "username": "sara_reem",
+            "bio": "بوتيك أزياء راقية ✨",
+            "image_url": "https://loremflickr.com/400/400/peony%2Csoft/all?lock=29131",
+            "location": "دمشق، سوريا",
+            "role": "seller",
+            "seller_level": "verified",
+            "seller_verified_at": null,
+            "seller_premium_until": null,
+            "is_verified": true,
+            "followers_count": 18,
+            "following_count": 1,
+            "created_at": "2026-09-03T15:15:51.642Z"
+          },
+          "currency": "SYP",
+          "price": {
+            "amount": "16000.0000",
+            "currency": "SYP"
+          },
+          "compare_at_price": null,
+          "wholesale_price": null,
+          "wholesale_min_qty": null,
+          "stock": 40,
+          "min_order_qty": 1,
+          "max_order_qty": null,
+          "sku": "REEM-SATIN-HEELS",
+          "handling_days": 1,
+          "is_made_to_order": false,
+          "requires_deposit": false,
+          "accepts_returns": true,
+          "status": "active",
+          "variants": []
+        },
+        "price_from": {
+          "amount": "16000.0000",
+          "currency": "SYP"
+        },
+        "price_to": {
+          "amount": "16000.0000",
+          "currency": "SYP"
+        },
+        "stock": 40,
+        "is_available": true,
+        "rating": 0,
+        "reviews_count": 0,
+        "views_count": 0,
+        "orders_count": 0,
+        "favorites_count": 0,
+        "created_at": "2026-09-03T15:15:51.966Z"
+      },
+      "caption": "أحببنا حذاء سهرة ساتان 💕 تسوّقيه الآن على ريم!",
+      "likes_count": 32,
+      "comments_count": 1,
+      "shares_count": 17,
+      "saves_count": 0,
+      "is_liked": false,
+      "is_saved": false,
+      "created_at": "2026-09-03T15:15:52.017Z"
+    },
+    {
+      "id": "11c2229b-4fd3-43e8-af7a-e08f4e71167c",
+      "author": {
+        "id": "49fbd24f-fab1-42bc-b304-83527e1583c2",
+        "name": "سارة المنصوري",
+        "username": "sara_reem",
+        "bio": "بوتيك أزياء راقية ✨",
+        "image_url": "https://loremflickr.com/400/400/peony%2Csoft/all?lock=29131",
+        "location": "دمشق، سوريا",
+        "role": "seller",
+        "seller_level": "verified",
+        "seller_verified_at": null,
+        "seller_premium_until": null,
+        "is_verified": true,
+        "followers_count": 18,
+        "following_count": 1,
+        "created_at": "2026-09-03T15:15:51.642Z"
+      },
+      "product": {
+        "id": "66d2b74b-8696-43e6-a795-8caf93f60854",
+        "slug": "silk-midi-dress",
+        "title": "فستان حرير ميدي أنيق",
+        "description": "فستان ميدي من الحرير بلون الورد الباهت، مثالي للسهرات.",
+        "category": {
+          "id": "e07b8526-966b-49fb-9c39-b225047670ca",
+          "slug": "dresses",
+          "name_ar": "فساتين",
+          "name_en": "Dresses",
+          "level": 2,
+          "parent_id": "072add2a-3c2b-4a97-bc95-da23d506834b",
+          "icon_url": null,
+          "image_url": null,
+          "is_sensitive": false,
+          "returns_allowed": true
+        },
+        "brand": {
+          "id": "cfce5e75-2022-4137-b20a-cea8d79ccf5c",
+          "slug": "reem-atelier",
+          "name_ar": "ريم أتيليه",
+          "name_en": "Reem Atelier",
+          "logo_url": null,
+          "is_verified": true
+        },
+        "attributes": {
+          "material": "حرير طبيعي",
+          "sleeve_length": "كم طويل"
+        },
+        "gtin": null,
+        "status": "active",
+        "media": [
+          {
+            "url": "https://loremflickr.com/900/1125/dress%2Celegant/all?lock=29656",
+            "type": "image",
+            "blur_hash": null
+          }
+        ],
+        "variants": [
+          {
+            "id": "c995f73b-5deb-40e5-8ca5-ec135be22ab2",
+            "name": "S",
+            "attributes": {
+              "size": "S"
+            },
+            "image_url": null,
+            "sort_order": 0
+          },
+          {
+            "id": "b3b1e1f5-e216-4539-b9e9-184eeae3fb9f",
+            "name": "M",
+            "attributes": {
+              "size": "M"
+            },
+            "image_url": null,
+            "sort_order": 1
+          },
+          {
+            "id": "1058d0b8-2498-4d99-9600-a2cfc73554a8",
+            "name": "L",
+            "attributes": {
+              "size": "L"
+            },
+            "image_url": null,
+            "sort_order": 2
+          }
+        ],
+        "offers_count": 2,
+        "best_offer": {
+          "id": "fb54d607-3f06-42a2-bd81-941b0b760ef3",
+          "seller": {
+            "id": "b57733bd-bcae-4a15-9da9-1a571d211d06",
+            "name": "ليلى الخوري",
+            "username": "layla_style",
+            "bio": "أناقة محتشمة منتقاة بعناية",
+            "image_url": "https://loremflickr.com/400/400/roses%2Cpink/all?lock=48357",
+            "location": "حلب، سوريا",
+            "role": "seller",
+            "seller_level": "verified",
+            "seller_verified_at": null,
+            "seller_premium_until": null,
+            "is_verified": true,
+            "followers_count": 13,
+            "following_count": 2,
+            "created_at": "2026-09-03T15:15:51.646Z"
+          },
+          "currency": "SYP",
+          "price": {
+            "amount": "13630.0000",
+            "currency": "SYP"
+          },
+          "compare_at_price": null,
+          "wholesale_price": null,
+          "wholesale_min_qty": null,
+          "stock": 10,
+          "min_order_qty": 1,
+          "max_order_qty": null,
+          "sku": null,
+          "handling_days": 2,
+          "is_made_to_order": false,
+          "requires_deposit": false,
+          "accepts_returns": true,
+          "status": "active",
+          "variants": []
+        },
+        "price_from": {
+          "amount": "13630.0000",
+          "currency": "SYP"
+        },
+        "price_to": {
+          "amount": "14500.0000",
+          "currency": "SYP"
+        },
+        "stock": 10,
+        "is_available": true,
+        "rating": 0,
+        "reviews_count": 0,
+        "views_count": 0,
+        "orders_count": 1,
+        "favorites_count": 1,
+        "created_at": "2026-09-03T15:15:51.879Z"
+      },
+      "caption": "أحببنا فستان حرير ميدي أنيق 💕 تسوّقيه الآن على ريم!",
+      "likes_count": 11,
+      "comments_count": 3,
+      "shares_count": 9,
+      "saves_count": 0,
+      "is_liked": false,
+      "is_saved": false,
+      "created_at": "2026-09-03T15:15:52.011Z"
+    },
+    {
+      "id": "aa69667e-6deb-430d-9fa8-5629cb3aa489",
+      "author": {
+        "id": "49fbd24f-fab1-42bc-b304-83527e1583c2",
+        "name": "سارة المنصوري",
+        "username": "sara_reem",
+        "bio": "بوتيك أزياء راقية ✨",
+        "image_url": "https://loremflickr.com/400/400/peony%2Csoft/all?lock=29131",
+        "location": "دمشق، سوريا",
+        "role": "seller",
+        "seller_level": "verified",
+        "seller_verified_at": null,
+        "seller_premium_until": null,
+        "is_verified": true,
+        "followers_count": 18,
+        "following_count": 1,
+        "created_at": "2026-09-03T15:15:51.642Z"
+      },
+      "product": {
+        "id": "23b6125f-ca7a-4bae-99f4-0b89bc8a2ec6",
+        "slug": "desk-135",
+        "title": "طقم أقلام بلون الوردي",
+        "description": "طقم أقلام بلون الوردي. هدية عملية للطالبات والموظفات.",
+        "category": {
+          "id": "5cf12fa5-b8ac-4e0e-92a2-bb6e934e2222",
+          "slug": "desk-accessories",
+          "name_ar": "إكسسوارات مكتب",
+          "name_en": "Desk accessories",
+          "level": 2,
+          "parent_id": "e2e20bdb-c892-494c-b7dc-9d536db4eee5",
+          "icon_url": null,
+          "image_url": null,
+          "is_sensitive": false,
+          "returns_allowed": true
+        },
+        "brand": null,
+        "attributes": {},
+        "gtin": null,
+        "status": "active",
+        "media": [
+          {
+            "url": "https://loremflickr.com/900/1125/desk%20accessories%2Cstationery/all?lock=41439",
+            "type": "image",
+            "blur_hash": null
+          },
+          {
+            "url": "https://loremflickr.com/900/1125/desk%20accessories%2Cstationery/all?lock=63820",
+            "type": "image",
+            "blur_hash": null
+          },
+          {
+            "url": "https://loremflickr.com/900/1125/desk%20accessories%2Cstationery/all?lock=96677",
+            "type": "image",
+            "blur_hash": null
+          }
+        ],
+        "variants": [],
+        "offers_count": 1,
+        "best_offer": {
+          "id": "ae6d3607-b63e-4e55-b485-d120cb259627",
+          "seller": {
+            "id": "49fbd24f-fab1-42bc-b304-83527e1583c2",
+            "name": "سارة المنصوري",
+            "username": "sara_reem",
+            "bio": "بوتيك أزياء راقية ✨",
+            "image_url": "https://loremflickr.com/400/400/peony%2Csoft/all?lock=29131",
+            "location": "دمشق، سوريا",
+            "role": "seller",
+            "seller_level": "verified",
+            "seller_verified_at": null,
+            "seller_premium_until": null,
+            "is_verified": true,
+            "followers_count": 18,
+            "following_count": 1,
+            "created_at": "2026-09-03T15:15:51.642Z"
+          },
+          "currency": "SYP",
+          "price": {
+            "amount": "1220.0000",
+            "currency": "SYP"
+          },
+          "compare_at_price": {
+            "amount": "1560.0000",
+            "currency": "SYP"
+          },
+          "wholesale_price": null,
+          "wholesale_min_qty": null,
+          "stock": 6,
+          "min_order_qty": 1,
+          "max_order_qty": null,
+          "sku": "DESK-135-0",
+          "handling_days": 4,
+          "is_made_to_order": false,
+          "requires_deposit": false,
+          "accepts_returns": true,
+          "status": "active",
+          "variants": []
+        },
+        "price_from": {
+          "amount": "1220.0000",
+          "currency": "SYP"
+        },
+        "price_to": {
+          "amount": "1220.0000",
+          "currency": "SYP"
+        },
+        "stock": 6,
+        "is_available": true,
+        "rating": 4.5,
+        "reviews_count": 4,
+        "views_count": 19,
+        "orders_count": 0,
+        "favorites_count": 3,
+        "created_at": "2026-01-12T01:38:32.648Z"
+      },
+      "caption": "ثلاث طرق لتنسيق هالقطعة لإطلالة نهارية ☀️\nطقم أقلام بلون الوردي",
+      "likes_count": 28,
+      "comments_count": 4,
+      "shares_count": 27,
+      "saves_count": 7,
+      "is_liked": false,
+      "is_saved": false,
+      "created_at": "2026-08-08T23:25:02.096Z"
+    },
+    {
+      "id": "f3d2d38e-767c-42b7-826c-05e728f164cf",
+      "author": {
+        "id": "49fbd24f-fab1-42bc-b304-83527e1583c2",
+        "name": "سارة المنصوري",
+        "username": "sara_reem",
+        "bio": "بوتيك أزياء راقية ✨",
+        "image_url": "https://loremflickr.com/400/400/peony%2Csoft/all?lock=29131",
+        "location": "دمشق، سوريا",
+        "role": "seller",
+        "seller_level": "verified",
+        "seller_verified_at": null,
+        "seller_premium_until": null,
+        "is_verified": true,
+        "followers_count": 18,
+        "following_count": 1,
+        "created_at": "2026-09-03T15:15:51.642Z"
+      },
+      "product": {
+        "id": "05798c1e-c0c2-43c6-93e1-ee1c340a07ea",
+        "slug": "note-129",
+        "title": "مفكرة يومية بحلقات معدنية",
+        "description": "مفكرة يومية بحلقات معدنية. الورق سميك لا يسمح بتسريب الحبر.",
+        "category": {
+          "id": "e6f2ef91-3b3a-41b1-b158-d85c4e4c0380",
+          "slug": "notebooks",
+          "name_ar": "دفاتر ومفكرات",
+          "name_en": "Notebooks",
+          "level": 2,
+          "parent_id": "e2e20bdb-c892-494c-b7dc-9d536db4eee5",
+          "icon_url": null,
+          "image_url": null,
+          "is_sensitive": false,
+          "returns_allowed": true
+        },
+        "brand": {
+          "id": "d255e982-249b-4ec1-b0aa-905e3db79ed0",
+          "slug": "lattakia-leather",
+          "name_ar": "جلود اللاذقية",
+          "name_en": "Lattakia Leather",
+          "logo_url": "https://loremflickr.com/900/1125/logo%2Cboutique/all?lock=97548",
+          "is_verified": true
+        },
+        "attributes": {},
+        "gtin": null,
+        "status": "active",
+        "media": [
+          {
+            "url": "https://loremflickr.com/900/1125/notebook%2Cstationery/all?lock=26939",
+            "type": "image",
+            "blur_hash": null
+          },
+          {
+            "url": "https://loremflickr.com/900/1125/notebook%2Cstationery/all?lock=49320",
+            "type": "image",
+            "blur_hash": null
+          },
+          {
+            "url": "https://loremflickr.com/900/1125/notebook%2Cstationery/all?lock=82177",
+            "type": "image",
+            "blur_hash": null
+          }
+        ],
+        "variants": [],
+        "offers_count": 1,
+        "best_offer": {
+          "id": "b4d1cfe3-1b42-48b6-b25f-abfaa4536f9b",
+          "seller": {
+            "id": "49fbd24f-fab1-42bc-b304-83527e1583c2",
+            "name": "سارة المنصوري",
+            "username": "sara_reem",
+            "bio": "بوتيك أزياء راقية ✨",
+            "image_url": "https://loremflickr.com/400/400/peony%2Csoft/all?lock=29131",
+            "location": "دمشق، سوريا",
+            "role": "seller",
+            "seller_level": "verified",
+            "seller_verified_at": null,
+            "seller_premium_until": null,
+            "is_verified": true,
+            "followers_count": 18,
+            "following_count": 1,
+            "created_at": "2026-09-03T15:15:51.642Z"
+          },
+          "currency": "SYP",
+          "price": {
+            "amount": "1110.0000",
+            "currency": "SYP"
+          },
+          "compare_at_price": null,
+          "wholesale_price": null,
+          "wholesale_min_qty": null,
+          "stock": 30,
+          "min_order_qty": 1,
+          "max_order_qty": null,
+          "sku": "NOTE-129-0",
+          "handling_days": 2,
+          "is_made_to_order": false,
+          "requires_deposit": false,
+          "accepts_returns": true,
+          "status": "active",
+          "variants": []
+        },
+        "price_from": {
+          "amount": "1110.0000",
+          "currency": "SYP"
+        },
+        "price_to": {
+          "amount": "1110.0000",
+          "currency": "SYP"
+        },
+        "stock": 30,
+        "is_available": true,
+        "rating": 4,
+        "reviews_count": 5,
+        "views_count": 656,
+        "orders_count": 1,
+        "favorites_count": 2,
+        "created_at": "2026-02-04T11:01:58.222Z"
+      },
+      "caption": "سؤال متكرر: نعم، التوصيل لكل المحافظات 🚚\nمفكرة يومية بحلقات معدنية",
+      "likes_count": 43,
+      "comments_count": 2,
+      "shares_count": 33,
+      "saves_count": 8,
+      "is_liked": false,
+      "is_saved": false,
+      "created_at": "2026-08-06T19:42:41.840Z"
+    }
+  ],
+  "pagination": {
+    "page": 1,
+    "limit": 5,
+    "total": 9,
+    "total_pages": 2,
+    "has_next_page": true
+  }
+}

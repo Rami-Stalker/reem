@@ -419,6 +419,39 @@ export default () => ({
           ? false
           : undefined,
   },
+  /**
+   * The social content platform.
+   */
+  content: {
+    /**
+     * Whether the product-tag policy refuses, or merely logs what it would
+     * have refused.
+     *
+     * The policy is genuinely stricter than what shipped before it: the old
+     * check read a product's offers with no status filter, so a boutique with
+     * a draft, paused or archived listing can tag it today. Enforcing that in
+     * one release would start refusing sellers who have done nothing wrong and
+     * give them no way to find out why — so it ships off, the warnings are
+     * read, and then it is turned on.
+     *
+     * Off is not fail-open in any dangerous sense: an unentitled tag is still
+     * recorded with its basis, so the log names every case and the rows can be
+     * corrected. It is on in test, because a policy nobody exercises is a
+     * policy nobody has.
+     */
+    enforceTagPolicy:
+      process.env.CONTENT_ENFORCE_TAG_POLICY === 'true' ||
+      process.env.NODE_ENV === 'test',
+
+    /**
+     * How many approved pieces a shopper publishes under review before she is
+     * trusted to publish straight to the feed.
+     *
+     * A `SystemSetting` would be better still and is the next step; this is the
+     * floor, so the number is never a literal buried in a service.
+     */
+    reviewFreeAfter: Number(process.env.CONTENT_REVIEW_FREE_AFTER ?? 3),
+  },
   payments: {
     /**
      * Lets `POST /payments/:id/verify` settle a rail whose provider cannot

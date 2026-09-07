@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import {
+  CommerceAuthorKind,
   CommerceContentPublicationChannel,
   CommerceContentStatus,
   MediaType,
@@ -100,7 +101,8 @@ export class HomeContentService {
         body: true,
         payload: true,
         contentType: true,
-        sellerId: true,
+        authorId: true,
+        authorKind: true,
         // The artwork lives on the media relation — that is where the content
         // system, the composer and the seed all put it. Reading it out of
         // `payload.image_url` alone meant every real banner failed the "no
@@ -160,7 +162,11 @@ export class HomeContentService {
    * so they are spelled exactly as `RoutePaths` builds them.
    */
   private bannerRoute(
-    row: { sellerId: string; productTags: { productId: string }[] },
+    row: {
+      authorId: string;
+      authorKind: CommerceAuthorKind;
+      productTags: { productId: string }[];
+    },
     payload: Record<string, unknown>,
   ): string {
     const explicit = this.text(payload.target_route);
@@ -169,7 +175,14 @@ export class HomeContentService {
     const tagged = row.productTags[0]?.productId;
     if (tagged) return `/product-details?id=${tagged}`;
 
-    return `/user/${row.sellerId}`;
+    // The boutique that published it — but only if a boutique did. An
+    // editorial banner is published by Reem itself, and sending a shopper to
+    // the operations account's profile is a worse dead end than the one this
+    // fallback exists to prevent, because it looks like a real destination.
+    if (row.authorKind === CommerceAuthorKind.SELLER) {
+      return `/user/${row.authorId}`;
+    }
+    return '/categories';
   }
 
   /** The shelves she browses by, newest counts included. */

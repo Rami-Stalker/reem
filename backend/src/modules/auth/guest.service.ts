@@ -218,7 +218,7 @@ export class GuestService {
       type: GuestSavedItemType;
       productId: string | null;
       sellerId: string | null;
-      postId: string | null;
+      contentId: string | null;
     },
   ) {
     if (item.type === GuestSavedItemType.PRODUCT && item.productId) {
@@ -246,16 +246,18 @@ export class GuestService {
       return;
     }
 
-    if (item.type === GuestSavedItemType.POST && item.postId) {
-      const existing = await tx.postSave.findUnique({
-        where: { postId_userId: { postId: item.postId, userId } },
+    // `POST` keeps its wire spelling — it is in the shipped client's request
+    // bodies — while the column beneath it follows the rows onto the content
+    // platform.
+    if (item.type === GuestSavedItemType.POST && item.contentId) {
+      const contentId = item.contentId;
+      const existing = await tx.commerceContentSave.findUnique({
+        where: { contentId_userId: { contentId, userId } },
       });
       if (!existing) {
-        await tx.postSave.create({
-          data: { userId, postId: item.postId },
-        });
-        await tx.post.update({
-          where: { id: item.postId },
+        await tx.commerceContentSave.create({ data: { userId, contentId } });
+        await tx.commerceContent.update({
+          where: { id: contentId },
           data: { savesCount: { increment: 1 } },
         });
       }

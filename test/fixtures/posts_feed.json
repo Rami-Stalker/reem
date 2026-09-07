@@ -1,13 +1,391 @@
 {
   "data": [
     {
-      "id": "a934953b-a9c6-4521-8487-e6081987c0de",
+      "id": "f215e5a1-56f5-4f4e-bafa-23b3ed53c1ef",
       "author": {
-        "id": "1ad675f2-7f7b-4ec6-a409-5c968881449f",
+        "id": "63e24877-4543-49c2-b01b-1deb784e98e9",
+        "name": "آية الأم والطفل",
+        "username": "aya_baby",
+        "bio": "كل ما تحتاجه الأم الجديدة — أطقم مواليد ومستلزمات يومية 🍼",
+        "image_url": "https://loremflickr.com/400/400/boutique%2Celegant/all?lock=19570",
+        "location": "السويداء، سوريا",
+        "role": "seller",
+        "seller_level": "verified",
+        "seller_verified_at": "2025-12-08T06:23:11.028Z",
+        "seller_premium_until": null,
+        "is_verified": true,
+        "followers_count": 13,
+        "following_count": 2,
+        "created_at": "2025-05-28T02:24:45.434Z"
+      },
+      "product": {
+        "id": "74704692-caca-4226-9c39-e70f08948f37",
+        "slug": "babyess-157",
+        "title": "حقيبة أمومة قابلة للغسل",
+        "description": "حقيبة أمومة قابلة للغسل. قابل للغسل في الغسالة.",
+        "category": {
+          "id": "b5dee392-4f6f-4ea3-909d-fce6aa38e5b1",
+          "slug": "baby-essentials",
+          "name_ar": "مستلزمات يومية",
+          "name_en": "Daily essentials",
+          "level": 2,
+          "parent_id": "af8b6037-fefa-4a4d-a6f7-e924520a47fa",
+          "icon_url": null,
+          "image_url": null,
+          "is_sensitive": false,
+          "returns_allowed": true
+        },
+        "brand": null,
+        "attributes": {},
+        "gtin": null,
+        "status": "active",
+        "media": [
+          {
+            "url": "https://loremflickr.com/900/1125/baby%20essentials%2Cnursery/all?lock=52089",
+            "type": "image",
+            "blur_hash": null
+          },
+          {
+            "url": "https://loremflickr.com/900/1125/baby%20essentials%2Cnursery/all?lock=74470",
+            "type": "image",
+            "blur_hash": null
+          },
+          {
+            "url": "https://loremflickr.com/900/1125/baby%20essentials%2Cnursery/all?lock=96851",
+            "type": "image",
+            "blur_hash": null
+          }
+        ],
+        "variants": [],
+        "offers_count": 1,
+        "best_offer": {
+          "id": "08c15da6-4137-4373-bc31-a3db599ec151",
+          "seller": {
+            "id": "63e24877-4543-49c2-b01b-1deb784e98e9",
+            "name": "آية الأم والطفل",
+            "username": "aya_baby",
+            "bio": "كل ما تحتاجه الأم الجديدة — أطقم مواليد ومستلزمات يومية 🍼",
+            "image_url": "https://loremflickr.com/400/400/boutique%2Celegant/all?lock=19570",
+            "location": "السويداء، سوريا",
+            "role": "seller",
+            "seller_level": "verified",
+            "seller_verified_at": "2025-12-08T06:23:11.028Z",
+            "seller_premium_until": null,
+            "is_verified": true,
+            "followers_count": 13,
+            "following_count": 2,
+            "created_at": "2025-05-28T02:24:45.434Z"
+          },
+          "currency": "SYP",
+          "price": {
+            "amount": "1690.0000",
+            "currency": "SYP"
+          },
+          "compare_at_price": {
+            "amount": "2250.0000",
+            "currency": "SYP"
+          },
+          "wholesale_price": null,
+          "wholesale_min_qty": null,
+          "stock": 6,
+          "min_order_qty": 1,
+          "max_order_qty": null,
+          "sku": "BABYESS-157-0",
+          "handling_days": 4,
+          "is_made_to_order": false,
+          "requires_deposit": false,
+          "accepts_returns": true,
+          "status": "active",
+          "variants": []
+        },
+        "price_from": {
+          "amount": "1690.0000",
+          "currency": "SYP"
+        },
+        "price_to": {
+          "amount": "1690.0000",
+          "currency": "SYP"
+        },
+        "stock": 6,
+        "is_available": true,
+        "rating": 4.33,
+        "reviews_count": 6,
+        "views_count": 203,
+        "orders_count": 1,
+        "favorites_count": 2,
+        "created_at": "2026-07-08T23:03:30.661Z"
+      },
+      "caption": "تشكيلة متكاملة اخترناها لكِ — كل القطع متوفرة الآن.",
+      "likes_count": 0,
+      "comments_count": 0,
+      "shares_count": 37,
+      "saves_count": 28,
+      "is_liked": false,
+      "is_saved": false,
+      "created_at": "2026-09-03T15:15:58.515Z"
+    },
+    {
+      "id": "6d3ca8bd-c359-498e-9373-6007151cb646",
+      "author": {
+        "id": "4a013e9c-de2b-4391-8375-8b49fb340e05",
+        "name": "رهف الشامي",
+        "username": "rahaf_atelier",
+        "bio": "فساتين سهرة وخطوبة مصمّمة يدوياً في قلب دمشق ✨",
+        "image_url": "https://loremflickr.com/400/400/boutique%2Celegant/all?lock=61419",
+        "location": "دمشق، سوريا",
+        "role": "seller",
+        "seller_level": "premium",
+        "seller_verified_at": "2026-06-04T22:37:28.190Z",
+        "seller_premium_until": "2026-12-15T21:53:36.162Z",
+        "is_verified": true,
+        "followers_count": 24,
+        "following_count": 3,
+        "created_at": "2025-04-25T07:35:01.941Z"
+      },
+      "product": {
+        "id": "a6672c23-dc93-4b6b-a775-8cc854e66e8d",
+        "slug": "abaya-008",
+        "title": "عباية يومية بأكمام واسعة",
+        "description": "عباية يومية بأكمام واسعة. خامة لا تشف ولا تحتاج كي.",
+        "category": {
+          "id": "c923a7aa-5cd3-4ac7-af15-f0f4341027e8",
+          "slug": "abayas",
+          "name_ar": "عبايات ومحتشم",
+          "name_en": "Abayas and modest",
+          "level": 2,
+          "parent_id": "072add2a-3c2b-4a97-bc95-da23d506834b",
+          "icon_url": null,
+          "image_url": null,
+          "is_sensitive": false,
+          "returns_allowed": true
+        },
+        "brand": {
+          "id": "8439e30d-0cb5-44ed-bfc2-1ed946b301bd",
+          "slug": "yasmine",
+          "name_ar": "ياسمين",
+          "name_en": "Yasmine",
+          "logo_url": null,
+          "is_verified": false
+        },
+        "attributes": {
+          "material": "نيدا"
+        },
+        "gtin": null,
+        "status": "active",
+        "media": [
+          {
+            "url": "https://loremflickr.com/900/1125/abaya%2Cmodest%20fashion/all?lock=88123",
+            "type": "image",
+            "blur_hash": null
+          },
+          {
+            "url": "https://loremflickr.com/900/1125/abaya%2Cmodest%20fashion/all?lock=10504",
+            "type": "image",
+            "blur_hash": null
+          },
+          {
+            "url": "https://loremflickr.com/900/1125/abaya%2Cmodest%20fashion/all?lock=43361",
+            "type": "image",
+            "blur_hash": null
+          }
+        ],
+        "variants": [
+          {
+            "id": "784b43e0-a305-4066-9237-6df9f7c39e62",
+            "name": "S",
+            "attributes": {
+              "size": "S"
+            },
+            "image_url": null,
+            "sort_order": 0
+          },
+          {
+            "id": "9267a0c7-eee5-4c75-9a7e-8429566ae9dc",
+            "name": "M",
+            "attributes": {
+              "size": "M"
+            },
+            "image_url": null,
+            "sort_order": 1
+          },
+          {
+            "id": "1d4c33df-e148-41f6-b3a3-dacda0b97745",
+            "name": "L",
+            "attributes": {
+              "size": "L"
+            },
+            "image_url": null,
+            "sort_order": 2
+          },
+          {
+            "id": "c433042e-673f-4803-b1d9-dac3c8f43aac",
+            "name": "XL",
+            "attributes": {
+              "size": "XL"
+            },
+            "image_url": null,
+            "sort_order": 3
+          }
+        ],
+        "offers_count": 2,
+        "best_offer": {
+          "id": "a0688f23-cd9d-4863-8b3f-8c6b9a31607a",
+          "seller": {
+            "id": "4a013e9c-de2b-4391-8375-8b49fb340e05",
+            "name": "رهف الشامي",
+            "username": "rahaf_atelier",
+            "bio": "فساتين سهرة وخطوبة مصمّمة يدوياً في قلب دمشق ✨",
+            "image_url": "https://loremflickr.com/400/400/boutique%2Celegant/all?lock=61419",
+            "location": "دمشق، سوريا",
+            "role": "seller",
+            "seller_level": "premium",
+            "seller_verified_at": "2026-06-04T22:37:28.190Z",
+            "seller_premium_until": "2026-12-15T21:53:36.162Z",
+            "is_verified": true,
+            "followers_count": 24,
+            "following_count": 3,
+            "created_at": "2025-04-25T07:35:01.941Z"
+          },
+          "currency": "SYP",
+          "price": {
+            "amount": "18710.0000",
+            "currency": "SYP"
+          },
+          "compare_at_price": null,
+          "wholesale_price": null,
+          "wholesale_min_qty": 5,
+          "stock": 3,
+          "min_order_qty": 1,
+          "max_order_qty": 7,
+          "sku": "ABAYA-8-0",
+          "handling_days": 3,
+          "is_made_to_order": false,
+          "requires_deposit": false,
+          "accepts_returns": true,
+          "status": "active",
+          "variants": [
+            {
+              "id": "09c047ea-79d8-43ab-966e-9a7792f38681",
+              "variant_id": "784b43e0-a305-4066-9237-6df9f7c39e62",
+              "name": "S",
+              "attributes": {
+                "size": "S"
+              },
+              "image_url": null,
+              "price": {
+                "amount": "18710.0000",
+                "currency": "SYP"
+              },
+              "stock": 1,
+              "sku": "ABAYA-8-0-S"
+            },
+            {
+              "id": "d07d1202-b667-46fe-9594-eb1432eecb85",
+              "variant_id": "9267a0c7-eee5-4c75-9a7e-8429566ae9dc",
+              "name": "M",
+              "attributes": {
+                "size": "M"
+              },
+              "image_url": null,
+              "price": {
+                "amount": "18710.0000",
+                "currency": "SYP"
+              },
+              "stock": 1,
+              "sku": "ABAYA-8-0-M"
+            },
+            {
+              "id": "75869336-e6a2-4eeb-8eab-b1d5f4049535",
+              "variant_id": "1d4c33df-e148-41f6-b3a3-dacda0b97745",
+              "name": "L",
+              "attributes": {
+                "size": "L"
+              },
+              "image_url": null,
+              "price": {
+                "amount": "18710.0000",
+                "currency": "SYP"
+              },
+              "stock": 1,
+              "sku": "ABAYA-8-0-L"
+            },
+            {
+              "id": "7bf20334-be0d-447b-8eaf-3fc124cc15d9",
+              "variant_id": "c433042e-673f-4803-b1d9-dac3c8f43aac",
+              "name": "XL",
+              "attributes": {
+                "size": "XL"
+              },
+              "image_url": null,
+              "price": {
+                "amount": "18710.0000",
+                "currency": "SYP"
+              },
+              "stock": 1,
+              "sku": "ABAYA-8-0-XL"
+            }
+          ]
+        },
+        "price_from": {
+          "amount": "18710.0000",
+          "currency": "SYP"
+        },
+        "price_to": {
+          "amount": "19960.0000",
+          "currency": "SYP"
+        },
+        "stock": 3,
+        "is_available": true,
+        "rating": 4,
+        "reviews_count": 2,
+        "views_count": 17,
+        "orders_count": 3,
+        "favorites_count": 1,
+        "created_at": "2026-08-31T14:36:24.135Z"
+      },
+      "caption": "تشكيلة متكاملة اخترناها لكِ — كل القطع متوفرة الآن.",
+      "likes_count": 0,
+      "comments_count": 0,
+      "shares_count": 38,
+      "saves_count": 48,
+      "is_liked": false,
+      "is_saved": false,
+      "created_at": "2026-09-03T15:15:58.381Z"
+    },
+    {
+      "id": "add12164-9270-45d7-85da-8dd31f1a5442",
+      "author": {
+        "id": "49fbd24f-fab1-42bc-b304-83527e1583c2",
+        "name": "سارة المنصوري",
+        "username": "sara_reem",
+        "bio": "بوتيك أزياء راقية ✨",
+        "image_url": "https://loremflickr.com/400/400/peony%2Csoft/all?lock=29131",
+        "location": "دمشق، سوريا",
+        "role": "seller",
+        "seller_level": "verified",
+        "seller_verified_at": null,
+        "seller_premium_until": null,
+        "is_verified": true,
+        "followers_count": 18,
+        "following_count": 1,
+        "created_at": "2026-09-03T15:15:51.642Z"
+      },
+      "product": null,
+      "caption": "ثلاث طرق لتنسيق الفستان الحريري لإطلالة نهارية ☀️",
+      "likes_count": 24,
+      "comments_count": 1,
+      "shares_count": 0,
+      "saves_count": 2,
+      "is_liked": false,
+      "is_saved": false,
+      "created_at": "2026-09-03T15:15:52.021Z"
+    },
+    {
+      "id": "5e319d42-4399-4d38-8bfe-ccc0b67f3b83",
+      "author": {
+        "id": "73675c17-8cdd-4dcb-85c9-72affe9914be",
         "name": "نور العبادي",
         "username": "nour_chic",
-        "email": null,
-        "phone": "+966500000004",
         "bio": null,
         "image_url": "https://loremflickr.com/400/400/flowers%2Cpastel/all?lock=28388",
         "location": "اللاذقية، سوريا",
@@ -15,34 +393,30 @@
         "seller_level": "basic",
         "seller_verified_at": null,
         "seller_premium_until": null,
-        "is_verified": false,
-        "phone_verified_at": null,
-        "email_verified_at": null,
-        "mfa_enabled": false,
-        "device_verification_required": true,
-        "followers_count": 12,
-        "following_count": 2,
-        "created_at": "2026-08-19T02:14:10.517Z"
+        "is_verified": true,
+        "followers_count": 24,
+        "following_count": 1,
+        "created_at": "2026-09-03T15:15:51.649Z"
       },
       "product": {
-        "id": "38e37c08-ecc1-47c6-85c6-00d4c3fa3013",
+        "id": "8b0ec63e-f74b-48b1-9afc-483f3e032945",
         "slug": "layered-necklace",
         "title": "عقد متعدد الطبقات",
         "description": "عقد بثلاث طبقات مطلي بالذهب الوردي.",
         "category": {
-          "id": "406bd41b-a43f-4728-aeef-7357d720d8ef",
+          "id": "0ea53139-2fdf-44ca-9047-6b8b47bd11a9",
           "slug": "jewellery",
           "name_ar": "مجوهرات",
           "name_en": "Jewellery",
           "level": 2,
-          "parent_id": "703de1d8-2455-4083-a7ca-109e9721362e",
+          "parent_id": "b3a4191e-4ad4-4f40-b9d2-46b14f5fc9ed",
           "icon_url": null,
           "image_url": null,
           "is_sensitive": false,
           "returns_allowed": true
         },
         "brand": {
-          "id": "6301bbbf-19df-4332-8096-c66d7aef5008",
+          "id": "07dcf305-d7c8-472a-83e2-b4fdcb4a8708",
           "slug": "damas-couture",
           "name_ar": "دمشق كوتور",
           "name_en": "Damas Couture",
@@ -55,19 +429,18 @@
         "media": [
           {
             "url": "https://loremflickr.com/900/1125/jewellery%2Cnecklace/all?lock=79678",
-            "type": "image"
+            "type": "image",
+            "blur_hash": null
           }
         ],
         "variants": [],
         "offers_count": 1,
         "best_offer": {
-          "id": "135cf585-b3e6-413c-be9f-594d861b0ccf",
+          "id": "46d129fc-96f8-450e-a2e5-1b86c69d2c94",
           "seller": {
-            "id": "1ad675f2-7f7b-4ec6-a409-5c968881449f",
+            "id": "73675c17-8cdd-4dcb-85c9-72affe9914be",
             "name": "نور العبادي",
             "username": "nour_chic",
-            "email": null,
-            "phone": "+966500000004",
             "bio": null,
             "image_url": "https://loremflickr.com/400/400/flowers%2Cpastel/all?lock=28388",
             "location": "اللاذقية، سوريا",
@@ -75,18 +448,14 @@
             "seller_level": "basic",
             "seller_verified_at": null,
             "seller_premium_until": null,
-            "is_verified": false,
-            "phone_verified_at": null,
-            "email_verified_at": null,
-            "mfa_enabled": false,
-            "device_verification_required": true,
-            "followers_count": 12,
-            "following_count": 2,
-            "created_at": "2026-08-19T02:14:10.517Z"
+            "is_verified": true,
+            "followers_count": 24,
+            "following_count": 1,
+            "created_at": "2026-09-03T15:15:51.649Z"
           },
           "currency": "SYP",
           "price": {
-            "amount": "600000.0000",
+            "amount": "6000.0000",
             "currency": "SYP"
           },
           "compare_at_price": null,
@@ -104,275 +473,160 @@
           "variants": []
         },
         "price_from": {
-          "amount": "600000.0000",
+          "amount": "6000.0000",
           "currency": "SYP"
         },
         "price_to": {
-          "amount": "600000.0000",
+          "amount": "6000.0000",
           "currency": "SYP"
         },
         "stock": 50,
         "is_available": true,
         "rating": 0,
         "reviews_count": 0,
-        "views_count": 2901,
-        "likes_count": 205,
+        "views_count": 0,
         "orders_count": 0,
         "favorites_count": 0,
-        "created_at": "2026-08-19T02:14:11.237Z"
+        "created_at": "2026-09-03T15:15:51.984Z"
       },
       "caption": "أحببنا عقد متعدد الطبقات 💕 تسوّقيه الآن على ريم!",
-      "likes_count": 23,
-      "comments_count": 6,
-      "shares_count": 8,
+      "likes_count": 14,
+      "comments_count": 5,
+      "shares_count": 15,
       "saves_count": 0,
       "is_liked": false,
       "is_saved": false,
-      "created_at": "2026-08-19T02:14:11.299Z"
+      "created_at": "2026-09-03T15:15:52.019Z"
     },
     {
-      "id": "fa0d19a8-8cae-4c99-a602-c4466d597f5f",
+      "id": "2559ee9f-63cb-4fda-94e5-edff6caf04aa",
       "author": {
-        "id": "e1f85c01-3370-44d5-b4e3-9f93fcd8cd8b",
-        "name": "سارة المنصوري",
-        "username": "sara_reem",
-        "email": null,
-        "phone": "+966500000002",
-        "bio": "بوتيك أزياء راقية ✨",
-        "image_url": "https://loremflickr.com/400/400/peony%2Csoft/all?lock=29131",
-        "location": "دمشق، سوريا",
+        "id": "b57733bd-bcae-4a15-9da9-1a571d211d06",
+        "name": "ليلى الخوري",
+        "username": "layla_style",
+        "bio": "أناقة محتشمة منتقاة بعناية",
+        "image_url": "https://loremflickr.com/400/400/roses%2Cpink/all?lock=48357",
+        "location": "حلب، سوريا",
         "role": "seller",
         "seller_level": "verified",
         "seller_verified_at": null,
         "seller_premium_until": null,
         "is_verified": true,
-        "phone_verified_at": null,
-        "email_verified_at": null,
-        "mfa_enabled": false,
-        "device_verification_required": true,
-        "followers_count": 19,
-        "following_count": 0,
-        "created_at": "2026-08-19T02:14:10.508Z"
-      },
-      "product": null,
-      "caption": "ثلاث طرق لتنسيق الفستان الحريري لإطلالة نهارية ☀️",
-      "likes_count": 16,
-      "comments_count": 5,
-      "shares_count": 0,
-      "saves_count": 0,
-      "is_liked": false,
-      "is_saved": false,
-      "created_at": "2026-08-19T02:14:11.301Z"
-    },
-    {
-      "id": "8830c3ec-7a8c-4e1a-b360-a617e01a85c6",
-      "author": {
-        "id": "c8f48128-aa7f-442e-bcd5-870450b6f354",
-        "name": "دانا العطّار",
-        "username": "dana_parfum",
-        "email": null,
-        "phone": "+963931000106",
-        "bio": "عطور شرقية وفرنسية بتركيز عالٍ وثبات طويل 🌸",
-        "image_url": "https://loremflickr.com/400/400/boutique%2Celegant/all?lock=38462",
-        "location": "دمشق، سوريا",
-        "role": "seller",
-        "seller_level": "verified",
-        "seller_verified_at": "2026-02-22T23:16:32.856Z",
-        "seller_premium_until": null,
-        "is_verified": true,
-        "phone_verified_at": "2026-02-22T23:16:32.856Z",
-        "email_verified_at": null,
-        "mfa_enabled": false,
-        "device_verification_required": true,
         "followers_count": 13,
         "following_count": 2,
-        "created_at": "2025-10-30T14:30:51.489Z"
+        "created_at": "2026-09-03T15:15:51.646Z"
       },
       "product": {
-        "id": "e0a45727-f9b4-46f7-8317-344c881e4224",
-        "slug": "moist-067",
-        "title": "كريم ليلي للبشرة الحساسة",
-        "description": "كريم ليلي للبشرة الحساسة. مُختبر تحت إشراف طبي.",
+        "id": "7d3d3f87-8b0c-4a03-9421-d9422394cff6",
+        "slug": "floral-maxi-skirt",
+        "title": "تنورة ماكسي بنقشة زهور",
+        "description": "تنورة خفيفة بنقشة مرسومة يدوياً.",
         "category": {
-          "id": "0c7e1f98-60ea-4b17-9f46-0f2e9bc93990",
-          "slug": "moisturisers",
-          "name_ar": "مرطبات",
-          "name_en": "Moisturisers",
+          "id": "dfa52e51-a6cc-45bf-b463-62c9dc48c104",
+          "slug": "skirts",
+          "name_ar": "تنانير",
+          "name_en": "Skirts",
           "level": 2,
-          "parent_id": "f19ea535-d245-4994-baad-0f703042bf1c",
+          "parent_id": "072add2a-3c2b-4a97-bc95-da23d506834b",
           "icon_url": null,
           "image_url": null,
           "is_sensitive": false,
-          "returns_allowed": false
+          "returns_allowed": true
         },
-        "brand": null,
+        "brand": {
+          "id": "8439e30d-0cb5-44ed-bfc2-1ed946b301bd",
+          "slug": "yasmine",
+          "name_ar": "ياسمين",
+          "name_en": "Yasmine",
+          "logo_url": null,
+          "is_verified": false
+        },
         "attributes": {
-          "skin_type": "جافة"
+          "material": "قطن"
         },
         "gtin": null,
         "status": "active",
         "media": [
           {
-            "url": "https://loremflickr.com/900/1125/skincare%2Ccream/all?lock=13392",
-            "type": "image"
-          },
-          {
-            "url": "https://loremflickr.com/900/1125/skincare%2Ccream/all?lock=91011",
-            "type": "image"
-          },
-          {
-            "url": "https://loremflickr.com/900/1125/skincare%2Ccream/all?lock=68630",
-            "type": "image"
+            "url": "https://loremflickr.com/900/1125/skirt%2Cfloral/all?lock=91793",
+            "type": "image",
+            "blur_hash": null
           }
         ],
-        "variants": [
-          {
-            "id": "f20e802b-be6e-47b0-bd71-829682446099",
-            "name": "٣٠ مل",
-            "attributes": {
-              "volume": "٣٠ مل"
-            },
-            "image_url": null,
-            "sort_order": 0
-          },
-          {
-            "id": "160a5696-cc48-47ff-b6e0-9a6e211980af",
-            "name": "٥٠ مل",
-            "attributes": {
-              "volume": "٥٠ مل"
-            },
-            "image_url": null,
-            "sort_order": 1
-          },
-          {
-            "id": "9da3caf7-9182-4fc3-945c-9eca3e100dfa",
-            "name": "١٠٠ مل",
-            "attributes": {
-              "volume": "١٠٠ مل"
-            },
-            "image_url": null,
-            "sort_order": 2
-          }
-        ],
-        "offers_count": 3,
+        "variants": [],
+        "offers_count": 1,
         "best_offer": {
-          "id": "eda06468-9ba2-40ee-8d1d-28eb48472eb3",
+          "id": "74f3f81e-1de1-49c9-a1f5-ba6949c7a5cc",
           "seller": {
-            "id": "c8f48128-aa7f-442e-bcd5-870450b6f354",
-            "name": "دانا العطّار",
-            "username": "dana_parfum",
-            "email": null,
-            "phone": "+963931000106",
-            "bio": "عطور شرقية وفرنسية بتركيز عالٍ وثبات طويل 🌸",
-            "image_url": "https://loremflickr.com/400/400/boutique%2Celegant/all?lock=38462",
-            "location": "دمشق، سوريا",
+            "id": "b57733bd-bcae-4a15-9da9-1a571d211d06",
+            "name": "ليلى الخوري",
+            "username": "layla_style",
+            "bio": "أناقة محتشمة منتقاة بعناية",
+            "image_url": "https://loremflickr.com/400/400/roses%2Cpink/all?lock=48357",
+            "location": "حلب، سوريا",
             "role": "seller",
             "seller_level": "verified",
-            "seller_verified_at": "2026-02-22T23:16:32.856Z",
+            "seller_verified_at": null,
             "seller_premium_until": null,
             "is_verified": true,
-            "phone_verified_at": "2026-02-22T23:16:32.856Z",
-            "email_verified_at": null,
-            "mfa_enabled": false,
-            "device_verification_required": true,
             "followers_count": 13,
             "following_count": 2,
-            "created_at": "2025-10-30T14:30:51.489Z"
+            "created_at": "2026-09-03T15:15:51.646Z"
           },
-          "currency": "USD",
+          "currency": "SYP",
           "price": {
-            "amount": "38.5000",
-            "currency": "USD"
+            "amount": "8500.0000",
+            "currency": "SYP"
           },
           "compare_at_price": {
-            "amount": "50.0000",
-            "currency": "USD"
+            "amount": "11000.0000",
+            "currency": "SYP"
           },
           "wholesale_price": null,
           "wholesale_min_qty": null,
-          "stock": 37,
+          "stock": 45,
           "min_order_qty": 1,
-          "max_order_qty": 6,
-          "sku": "MOIST-67-2",
-          "handling_days": 2,
-          "is_made_to_order": true,
+          "max_order_qty": null,
+          "sku": "REEM-FLORAL-MAXI-SKIRT",
+          "handling_days": 1,
+          "is_made_to_order": false,
           "requires_deposit": false,
           "accepts_returns": true,
           "status": "active",
-          "variants": [
-            {
-              "id": "39e74f02-572f-4267-b8c7-8f6a3727b313",
-              "variant_id": "f20e802b-be6e-47b0-bd71-829682446099",
-              "name": "٣٠ مل",
-              "attributes": {
-                "volume": "٣٠ مل"
-              },
-              "image_url": null,
-              "price": {
-                "amount": "38.5000",
-                "currency": "USD"
-              },
-              "stock": 9,
-              "sku": "MOIST-67-2-٣٠ مل"
-            },
-            {
-              "id": "7ca8e06e-f783-427c-9a69-0b5f6a81d6d9",
-              "variant_id": "160a5696-cc48-47ff-b6e0-9a6e211980af",
-              "name": "٥٠ مل",
-              "attributes": {
-                "volume": "٥٠ مل"
-              },
-              "image_url": null,
-              "price": {
-                "amount": "38.5000",
-                "currency": "USD"
-              },
-              "stock": 18,
-              "sku": "MOIST-67-2-٥٠ مل"
-            },
-            {
-              "id": "29ef7798-0f58-45d4-953c-f09d35c61d3a",
-              "variant_id": "9da3caf7-9182-4fc3-945c-9eca3e100dfa",
-              "name": "١٠٠ مل",
-              "attributes": {
-                "volume": "١٠٠ مل"
-              },
-              "image_url": null,
-              "price": {
-                "amount": "38.5000",
-                "currency": "USD"
-              },
-              "stock": 10,
-              "sku": "MOIST-67-2-١٠٠ مل"
-            }
-          ]
+          "variants": []
         },
         "price_from": {
-          "amount": "500000.0000",
+          "amount": "8500.0000",
           "currency": "SYP"
         },
         "price_to": {
-          "amount": "539000.0000",
+          "amount": "8500.0000",
           "currency": "SYP"
         },
-        "stock": 37,
+        "stock": 45,
         "is_available": true,
-        "rating": 5,
-        "reviews_count": 1,
-        "views_count": 2308,
-        "likes_count": 39,
+        "rating": 0,
+        "reviews_count": 0,
+        "views_count": 0,
         "orders_count": 0,
-        "favorites_count": 2,
-        "created_at": "2026-07-19T22:00:59.806Z"
+        "favorites_count": 0,
+        "created_at": "2026-09-03T15:15:51.975Z"
       },
-      "caption": "وصلنا اليوم 😍 كمية محدودة وبأسعار الافتتاح\nكريم ليلي للبشرة الحساسة",
-      "likes_count": 40,
-      "comments_count": 1,
-      "shares_count": 28,
-      "saves_count": 4,
+      "caption": "أحببنا تنورة ماكسي بنقشة زهور 💕 تسوّقيه الآن على ريم!",
+      "likes_count": 14,
+      "comments_count": 3,
+      "shares_count": 20,
+      "saves_count": 1,
       "is_liked": false,
       "is_saved": false,
-      "created_at": "2026-08-17T21:16:50.739Z"
+      "created_at": "2026-09-03T15:15:52.018Z"
     }
-  ]
+  ],
+  "pagination": {
+    "page": 1,
+    "limit": 5,
+    "total": 83,
+    "total_pages": 17,
+    "has_next_page": true
+  }
 }

@@ -94,6 +94,8 @@ const rolePermissions: Record<UserRole, string[]> = {
     AppPermission.contentManage,
     AppPermission.postManage,
     AppPermission.storyManage,
+    AppPermission.contentAuthor,
+    AppPermission.contentInteract,
     AppPermission.orderRead,
     AppPermission.analyticsRead,
   ],
@@ -105,6 +107,11 @@ const rolePermissions: Record<UserRole, string[]> = {
     AppPermission.sellerVerificationSubmit,
     AppPermission.checkoutCreate,
     AppPermission.orderRead,
+    // She is a publisher now, not only a shopper. Until this landed a customer
+    // held no content permission at all, which is why every authoring route
+    // was seller-only by construction rather than by decision.
+    AppPermission.contentAuthor,
+    AppPermission.contentInteract,
   ],
 };
 

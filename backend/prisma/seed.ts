@@ -1,6 +1,7 @@
 import {
   PrismaClient,
   UserRole,
+  CommerceAuthorKind,
   Currency,
   FulfilmentMode,
   OfferStatus,
@@ -18,6 +19,8 @@ import {
   OtpTransportKind,
   Prisma,
 } from '@prisma/client';
+import { AppPermission } from '../src/common/permissions';
+import { defaultPermissionsForRole } from '../src/common/role-permissions';
 import * as bcrypt from 'bcryptjs';
 import { DEFAULT_SHIPPING_ZONES } from '../src/modules/delivery/delivery.service';
 import { seedDemo } from './demo';
@@ -95,10 +98,12 @@ async function main() {
   await prisma.message.deleteMany();
   await prisma.chatParticipant.deleteMany();
   await prisma.chat.deleteMany();
-  await prisma.postLike.deleteMany();
-  await prisma.post.deleteMany();
-  await prisma.storyView.deleteMany();
-  await prisma.story.deleteMany();
+  await prisma.commerceContentReaction.deleteMany();
+  await prisma.commerceContentSave.deleteMany();
+  await prisma.commerceContentComment.deleteMany();
+  await prisma.commerceContentViewer.deleteMany();
+  await prisma.commerceContentReshare.deleteMany();
+  await prisma.commerceContentAttribution.deleteMany();
   // The book of record, before anything it points at.
   //
   // `JournalLine.account` is RESTRICT, so a ledger account cannot go while a
@@ -159,142 +164,33 @@ async function main() {
   await prisma.coupon.deleteMany();
   await prisma.user.deleteMany();
 
-  const permissionKeys = [
-    'account:read',
-    'account:write',
-    'session:manage',
-    'device:manage',
-    'seller_verification:submit',
-    'seller_verification:review',
-    'seller:verified_operate',
-    'seller:premium_tools',
-    'product:manage',
-    'content:manage',
-    'content_type:manage',
-    'post:manage',
-    'story:manage',
-    'order:manage',
-    'order:read',
-    'checkout:create',
-    'user:manage',
-    'support:read',
-    'support:write',
-    'finance:read',
-    'finance:write',
-    'content:moderate',
-    'analytics:read',
-    'admin:dashboard',
-    'authorization:manage',
-    'guest_session:create',
-    'guest_session:migrate',
-    'audit:read',
-  ];
+  // Permissions and role grants are DERIVED from the code, not restated here.
+  //
+  // They used to be a second literal copy, and the two had already drifted:
+  // `trends:manage`, `security_forensics:read` and `account_recovery:review`
+  // existed in `AppPermission` and in no seeded database, so a freshly seeded
+  // environment quietly refused routes that were correct in review.
+  //
+  // `resolvePermissions` reads these tables and only falls back to the code
+  // defaults when a role has *no* rows at all — so a table that is present and
+  // stale is worse than one that is empty. Deriving is the only way to keep the
+  // two equal.
+  const permissionKeys = Object.values(AppPermission);
   for (const key of permissionKeys) {
     await prisma.permission.create({ data: { key } });
   }
 
-  const roleDefinitions: Record<UserRole, string[]> = {
-    [UserRole.SUPER_ADMIN]: permissionKeys,
-    [UserRole.OPERATIONS_ADMIN]: [
-      'admin:dashboard',
-      'account:read',
-      'session:manage',
-      'seller_verification:review',
-      'product:manage',
-      'content:manage',
-      'content_type:manage',
-      'order:manage',
-      'order:read',
-      'user:manage',
-      'analytics:read',
-      'audit:read',
-    ],
-    [UserRole.SUPPORT_ADMIN]: [
-      'account:read',
-      'session:manage',
-      'seller_verification:review',
-      'order:read',
-      'support:read',
-      'support:write',
-      'user:manage',
-      'audit:read',
-    ],
-    [UserRole.FINANCE_ADMIN]: [
-      'admin:dashboard',
-      'account:read',
-      'order:read',
-      'finance:read',
-      'finance:write',
-      'analytics:read',
-      'audit:read',
-    ],
-    [UserRole.CONTENT_MODERATOR]: [
-      'admin:dashboard',
-      'account:read',
-      'product:manage',
-      'content:manage',
-      'post:manage',
-      'story:manage',
-      'content:moderate',
-      'seller_verification:review',
-      'audit:read',
-    ],
-    [UserRole.ADMIN]: [
-      'admin:dashboard',
-      'account:read',
-      'session:manage',
-      'seller_verification:review',
-      'product:manage',
-      'content:manage',
-      'content_type:manage',
-      'post:manage',
-      'story:manage',
-      'order:manage',
-      'user:manage',
-      'analytics:read',
-      'audit:read',
-    ],
-    [UserRole.SUPPORT]: [
-      'account:read',
-      'session:manage',
-      'seller_verification:review',
-      'order:read',
-      'support:read',
-      'support:write',
-      'audit:read',
-    ],
-    [UserRole.SELLER]: [
-      'account:read',
-      'account:write',
-      'session:manage',
-      'device:manage',
-      'seller_verification:submit',
-      'seller:verified_operate',
-      'product:manage',
-      'content:manage',
-      'post:manage',
-      'story:manage',
-      'order:read',
-      'analytics:read',
-    ],
-    [UserRole.CUSTOMER]: [
-      'account:read',
-      'account:write',
-      'session:manage',
-      'device:manage',
-      'seller_verification:submit',
-      'checkout:create',
-      'order:read',
-    ],
-  };
-
-  for (const [name, keys] of Object.entries(roleDefinitions)) {
+  for (const name of Object.values(UserRole)) {
     const role = await prisma.role.create({
       data: {
         name,
         description: `${name.toLowerCase().replace('_', ' ')} permissions`,
       },
     });
+    const keys =
+      name === UserRole.SUPER_ADMIN
+        ? [...permissionKeys]
+        : defaultPermissionsForRole(name);
     const permissions = await prisma.permission.findMany({
       where: { key: { in: keys } },
     });
@@ -309,8 +205,11 @@ async function main() {
   const contentTypeDefinitions = [
     {
       key: 'product_post',
-      name: 'Product post',
-      description: 'A shoppable seller post centered on one or more products.',
+      name: 'Post',
+      // The key stays `product_post` — it is written on live rows — but the
+      // label must not say "product post" to a woman posting a photograph of
+      // herself in a dress she bought.
+      description: "A photo post — a boutique's look book, or hers.",
       schema: {
         type: 'object',
         required: ['caption'],
@@ -326,6 +225,11 @@ async function main() {
         supports_media: true,
         supports_ai_generation: true,
         moderation_required: false,
+        // Who may publish this format. Read by the authoring service, so
+        // enabling or pausing customer posts is a row edit rather than a
+        // deploy — and the composer builds itself from the same answer the
+        // server enforces, instead of a hard-coded list that has to agree.
+        audiences: ['seller', 'customer'],
       },
       lifecycle: {
         default_channels: ['HOME_FEED', 'STORE_FEED', 'FOLLOWING_FEED'],
@@ -351,10 +255,48 @@ async function main() {
         supports_replies: true,
         supports_ai_generation: true,
         moderation_required: false,
+        audiences: ['seller', 'customer'],
       },
       lifecycle: {
         expires_after_hours: 24,
         default_channels: ['STORY_FEED', 'STORE_FEED'],
+      },
+    },
+    {
+      key: 'reel',
+      name: 'Reel',
+      description:
+        'Short shoppable video — up to thirty seconds, tagged with what is in it.',
+      schema: {
+        type: 'object',
+        required: ['caption'],
+        properties: {
+          caption: { type: 'string' },
+          hashtags: { type: 'array', items: { type: 'string' } },
+          cta: { type: 'string' },
+        },
+      },
+      uiSchema: { layout: 'reel_editor' },
+      capabilities: {
+        supports_product_tags: true,
+        supports_media: true,
+        supports_replies: true,
+        video_required: true,
+        // Q142 — video is capped at thirty seconds, with compression and
+        // connection-adaptive quality, because the ops budget is $500/month and
+        // the uplink is Syrian.
+        max_duration_seconds: 30,
+        max_media: 1,
+        moderation_required: false,
+        audiences: ['seller', 'customer'],
+      },
+      lifecycle: {
+        default_channels: [
+          'VIDEO_FEED',
+          'HOME_FEED',
+          'FOLLOWING_FEED',
+          'STORE_FEED',
+        ],
       },
     },
     {
@@ -378,6 +320,7 @@ async function main() {
         supports_scheduling: true,
         supports_ai_generation: true,
         moderation_required: false,
+        audiences: ['seller'],
       },
       lifecycle: {
         default_channels: ['OFFER_FEED', 'HOME_FEED', 'STORE_FEED'],
@@ -403,6 +346,7 @@ async function main() {
         supports_localization: true,
         supports_ai_generation: true,
         moderation_required: false,
+        audiences: ['seller'],
       },
       lifecycle: {
         default_channels: ['COLLECTION_FEED', 'STORE_FEED', 'HOME_FEED'],
@@ -428,6 +372,7 @@ async function main() {
         supports_scheduling: true,
         supports_notifications: true,
         moderation_required: true,
+        audiences: ['seller'],
       },
       lifecycle: {
         default_channels: ['VIDEO_FEED', 'HOME_FEED', 'STORE_FEED'],
@@ -1164,37 +1109,69 @@ async function main() {
   }
 
   for (const product of products) {
-    await prisma.post.create({
+    const caption = `أحببنا ${product.title} 💕 تسوّقيه الآن على ريم!`;
+    await prisma.commerceContent.create({
       data: {
         authorId: product.sellerId,
-        productId: product.id,
-        caption: `أحببنا ${product.title} 💕 تسوّقيه الآن على ريم!`,
-        likesCount: 120 + Math.floor(Math.random() * 200),
-        commentsCount: 10 + Math.floor(Math.random() * 40),
-        sharesCount: 5 + Math.floor(Math.random() * 20),
+        authorKind: CommerceAuthorKind.SELLER,
+        authorIsPublic: true,
+        contentType: 'product_post',
+        body: caption,
+        locale: 'ar',
+        status: 'PUBLISHED',
+        moderationStatus: 'APPROVED',
+        publishedAt: new Date(),
+        payload: { caption } as Prisma.InputJsonValue,
+        publicationTargets: ['HOME_FEED', 'STORE_FEED', 'FOLLOWING_FEED'],
+        // Counters only — the demo seed writes the rows behind them, and
+        // `reconcile.ts` would otherwise zero these.
+        sharesCount: BigInt(5 + Math.floor(Math.random() * 20)),
+        productTags: {
+          create: [
+            { productId: product.id, role: 'featured', sortOrder: 0, basis: 'SELLER_OFFER' },
+          ],
+        },
       },
     });
   }
 
   // Q5 P2 — a content-only post, with no product attached at all.
-  await prisma.post.create({
+  await prisma.commerceContent.create({
     data: {
       authorId: sellers[0].id,
-      caption: 'ثلاث طرق لتنسيق الفستان الحريري لإطلالة نهارية ☀️',
-      likesCount: 310,
-      commentsCount: 42,
+      authorKind: CommerceAuthorKind.SELLER,
+      authorIsPublic: true,
+      contentType: 'product_post',
+      body: 'ثلاث طرق لتنسيق الفستان الحريري لإطلالة نهارية ☀️',
+      locale: 'ar',
+      status: 'PUBLISHED',
+      moderationStatus: 'APPROVED',
+      publishedAt: new Date(),
+      payload: {
+        caption: 'ثلاث طرق لتنسيق الفستان الحريري لإطلالة نهارية ☀️',
+      } as Prisma.InputJsonValue,
+      publicationTargets: ['HOME_FEED', 'STORE_FEED'],
     },
   });
 
   const expiresAt = new Date();
   expiresAt.setHours(expiresAt.getHours() + 20);
   for (const user of sellers) {
-    await prisma.story.create({
+    const url = storyImage('boutique,fashion', `foundation-${user.id}`);
+    await prisma.commerceContent.create({
       data: {
-        userId: user.id,
-        mediaUrl: storyImage('boutique,fashion', `foundation-${user.id}`),
-        mediaType: MediaType.image,
+        authorId: user.id,
+        authorKind: CommerceAuthorKind.SELLER,
+        authorIsPublic: true,
+        contentType: 'story',
+        locale: 'ar',
+        status: 'PUBLISHED',
+        moderationStatus: 'APPROVED',
+        publishedAt: new Date(),
         expiresAt,
+        payload: { frames: [{ media_url: url, link: null }] } as Prisma.InputJsonValue,
+        publicationTargets: ['STORY_FEED', 'STORE_FEED'],
+        media: { create: [{ url, type: MediaType.image, sortOrder: 0 }] },
       },
     });
   }

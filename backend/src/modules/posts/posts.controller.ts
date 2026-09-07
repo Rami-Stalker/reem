@@ -65,27 +65,27 @@ export class PostsController {
   @HttpCode(HttpStatus.OK)
   like(
     @Param('id', ParseUUIDPipe) id: string,
-    @CurrentUser('id') userId: string,
+    @CurrentUser() user: AuthUser,
   ) {
-    return this.posts.toggleLike(userId, id);
+    return this.posts.toggleLike(user, id);
   }
 
   @Post(':id/save')
   @HttpCode(HttpStatus.OK)
   save(
     @Param('id', ParseUUIDPipe) id: string,
-    @CurrentUser('id') userId: string,
+    @CurrentUser() user: AuthUser,
   ) {
-    return this.posts.toggleSave(userId, id);
+    return this.posts.toggleSave(user, id);
   }
 
   @Post(':id/share')
   @HttpCode(HttpStatus.OK)
   share(
     @Param('id', ParseUUIDPipe) id: string,
-    @CurrentUser('id') userId: string,
+    @CurrentUser() user: AuthUser,
   ) {
-    return this.posts.share(userId, id);
+    return this.posts.share(user, id);
   }
 
   @OptionalAuth()
@@ -101,10 +101,10 @@ export class PostsController {
   @HttpCode(HttpStatus.CREATED)
   addComment(
     @Param('id', ParseUUIDPipe) id: string,
-    @CurrentUser('id') userId: string,
+    @CurrentUser() user: AuthUser,
     @Body() dto: CreateCommentDto,
   ) {
-    return this.posts.addComment(userId, id, dto.content);
+    return this.posts.addComment(user, id, dto.content);
   }
 
   @Delete(':id/comments/:commentId')

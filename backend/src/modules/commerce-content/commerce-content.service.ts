@@ -4,9 +4,12 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import {
   CommerceContentAnalyticsEventType,
+  ContentTagBasis,
+  MediaType,
   CommerceContentModerationStatus,
   CommerceContentPublicationChannel,
   CommerceContentStatus,
@@ -38,6 +41,15 @@ import {
   UpdateCommerceContentDto,
 } from './dto/commerce-content.dto';
 import { RegisterContentTypeDto } from './dto/content-type.dto';
+import { ProductTagPolicyService } from './tagging/product-tag-policy.service';
+import {
+  maxDurationMs,
+  maxMedia,
+  mayPublish,
+  needsPrePublishReview,
+  requiresVideo,
+  screenText,
+} from './content-policy';
 
 const FEED_CACHE_PREFIX = 'commerce-content:feed';
 
@@ -74,6 +86,8 @@ export class CommerceContentService {
     private readonly registry: ContentTypeRegistryService,
     private readonly events: EventEmitter2,
     private readonly cache: CacheService,
+    private readonly tagPolicy: ProductTagPolicyService,
+    private readonly config: ConfigService,
   ) {}
 
   listTypes(includeInactive = false) {
@@ -86,16 +100,29 @@ export class CommerceContentService {
 
   async create(user: AuthUser, dto: CreateCommerceContentDto) {
     const definition = await this.registry.requireActive(dto.content_type);
+
+    // Who may publish this format is registry data, not a list in code — so
+    // the composer builds itself from the same answer the server enforces.
+    if (!mayPublish(definition, user.role)) {
+      throw new ForbiddenException('CONTENT_TYPE_NOT_AVAILABLE_TO_YOU');
+    }
     this.registry.validatePayload(definition, dto.payload);
+    this.assertMediaFits(definition, dto.media ?? []);
+
     const productTags = await this.productTagCreates(user, dto.product_tags ?? []);
     const scheduledAt = this.futureDate(dto.scheduled_at, 'scheduled_at');
     const expiresAt = this.expirationDate(dto.expires_at, definition);
-    const moderationStatus = this.registry.moderationRequired(definition)
+    const moderationStatus = (await this.reviewRequired(user, definition))
       ? CommerceContentModerationStatus.PENDING
       : CommerceContentModerationStatus.APPROVED;
 
+    const author = await this.repo.authorFacts(user.id);
+    if (!author) throw new NotFoundException('Author not found');
+
     const content = await this.repo.createContent({
-      seller: { connect: { id: user.id } },
+      author: { connect: { id: user.id } },
+      authorKind: author.kind,
+      authorIsPublic: author.isPublic,
       typeDefinition: { connect: { key: definition.key } },
       title: dto.title?.trim() ?? null,
       body: dto.body ?? null,
@@ -185,7 +212,7 @@ export class CommerceContentService {
   async listMine(user: AuthUser, query: SellerContentQueryDto) {
     const [items, total] = await Promise.all([
       this.repo.listSeller({
-        sellerId: user.id,
+        authorId: user.id,
         skip: query.skip,
         take: query.limit,
         status: query.status,
@@ -193,7 +220,7 @@ export class CommerceContentService {
         q: query.q,
       }),
       this.repo.countSeller({
-        sellerId: user.id,
+        authorId: user.id,
         status: query.status,
         contentType: query.content_type,
         q: query.q,
@@ -224,9 +251,10 @@ export class CommerceContentService {
       throw new BadRequestException('Rejected content must be edited before publishing');
     }
 
-    const moderationRequired = this.registry.moderationRequired(
-      content.typeDefinition,
-    );
+    const flagged = screenText(content.title, content.body);
+    const moderationRequired =
+      flagged.length > 0 ||
+      (await this.reviewRequired(user, content.typeDefinition));
     if (
       moderationRequired &&
       owner.moderationStatus !== CommerceContentModerationStatus.APPROVED
@@ -236,7 +264,7 @@ export class CommerceContentService {
         moderationStatus: CommerceContentModerationStatus.PENDING,
       });
       this.events.emit(AppEvent.CommerceContentSubmitted, {
-        sellerId: user.id,
+        authorId: user.id,
         contentId: id,
         contentType: submitted.contentType,
       });
@@ -255,7 +283,7 @@ export class CommerceContentService {
 
     if (!scheduledForFuture) {
       this.events.emit(AppEvent.CommerceContentPublished, {
-        sellerId: updated.sellerId,
+        authorId: updated.authorId,
         contentId: updated.id,
         contentType: updated.contentType,
         channels: updated.publicationTargets,
@@ -335,7 +363,7 @@ export class CommerceContentService {
 
     if (nextStatus === CommerceContentStatus.PUBLISHED) {
       this.events.emit(AppEvent.CommerceContentPublished, {
-        sellerId: updated.sellerId,
+        authorId: updated.authorId,
         contentId: updated.id,
         contentType: updated.contentType,
         channels: updated.publicationTargets,
@@ -353,7 +381,7 @@ export class CommerceContentService {
       query.limit,
       query.channel ?? 'all',
       query.content_type ?? 'all',
-      query.seller_id ?? 'all',
+      query.author_id ?? 'all',
     ].join(':');
     return this.cache.wrap(cacheKey, 15_000, async () => {
       const [items, total] = await Promise.all([
@@ -362,12 +390,12 @@ export class CommerceContentService {
           take: query.limit,
           channel: query.channel,
           contentType: query.content_type,
-          sellerId: query.seller_id,
+          authorId: query.author_id,
         }),
         this.repo.countFeed({
           channel: query.channel,
           contentType: query.content_type,
-          sellerId: query.seller_id,
+          authorId: query.author_id,
         }),
       ]);
       return {
@@ -431,10 +459,82 @@ export class CommerceContentService {
     return { published: published.count, expired: expired.count };
   }
 
+  /**
+   * Her own deletion.
+   *
+   * `DELETED`, never `REMOVED`: the second is a moderator's word and the two
+   * answer different questions — "did she change her mind" and "did we
+   * intervene". Conflating them would put her own tidying into the moderation
+   * trail and make a takedown look like a change of heart.
+   */
+  async deleteOwn(user: AuthUser, id: string) {
+    await this.ownedOrThrow(user, id);
+    const content = await this.repo.updateContent(id, {
+      status: CommerceContentStatus.DELETED,
+      archivedAt: new Date(),
+    });
+    this.invalidateFeeds();
+    return { deleted: true, id: content.id };
+  }
+
+  /**
+   * Whether this piece has to be looked at before anybody else sees it.
+   *
+   * The count is of her *approved* pieces, so the gate lifts itself once she
+   * has shown what she posts — nobody has to remember to lift it, and nobody
+   * has to be trusted in advance.
+   */
+  private async reviewRequired(
+    user: AuthUser,
+    definition: CommerceContentTypeDefinition,
+  ): Promise<boolean> {
+    const approvedCount = await this.repo.approvedCountFor(user.id);
+    return needsPrePublishReview({
+      definition,
+      role: user.role,
+      approvedCount,
+      reviewFreeAfter: this.config.get<number>('content.reviewFreeAfter') ?? 3,
+    });
+  }
+
+  /**
+   * What the format will carry.
+   *
+   * A reel without a video is not a reel; a story with nine frames is not the
+   * format the viewer will be shown. Both are refused here rather than
+   * rendered wrongly later, because the second failure is invisible to the
+   * woman who published it.
+   */
+  private assertMediaFits(
+    definition: CommerceContentTypeDefinition,
+    media: CommerceContentMediaInputDto[],
+  ) {
+    const limit = maxMedia(definition);
+    if (limit !== null && media.length > limit) {
+      throw new BadRequestException(`TOO_MANY_MEDIA_MAX_${limit}`);
+    }
+
+    if (!requiresVideo(definition)) return;
+
+    const video = media.find((item) => item.type === MediaType.video);
+    if (!video) throw new BadRequestException('VIDEO_REQUIRED');
+
+    const ceiling = maxDurationMs(definition);
+    // Only when the client told us. The duration is measured on the handset —
+    // reading it server-side would mean parsing an MP4 box tree for a number
+    // the recorder already knows exactly, which is the trade `MessageAttachment`
+    // already made for voice notes.
+    if (ceiling !== null && video.duration_ms && video.duration_ms > ceiling) {
+      throw new BadRequestException(
+        `VIDEO_TOO_LONG_MAX_${Math.round(ceiling / 1000)}S`,
+      );
+    }
+  }
+
   private async ownedOrThrow(user: AuthUser, id: string) {
     const owner = await this.repo.findOwner(id);
     if (!owner) throw new NotFoundException('Content not found');
-    assertCanManage(owner.sellerId, user);
+    assertCanManage(owner.authorId, user);
     return owner;
   }
 
@@ -457,6 +557,14 @@ export class CommerceContentService {
     }));
   }
 
+  /**
+   * Turns requested tags into rows, refusing the ones she is not entitled to.
+   *
+   * The entitlement question moved to `ProductTagPolicyService`, which answers
+   * it for a boutique (a live offer) and for a shopper (a delivered line)
+   * with one rule, and records *which* on the row. What stays here is the
+   * shape work: existence, variant coherence, ordering.
+   */
   private async productTagCreates(
     user: AuthUser,
     tags: CommerceContentProductTagInputDto[],
@@ -466,23 +574,17 @@ export class CommerceContentService {
     const variantIds = [
       ...new Set(tags.map((tag) => tag.variant_id).filter(Boolean) as string[]),
     ];
-    const [products, variants] = await Promise.all([
+    const [products, variants, verdicts] = await Promise.all([
       this.repo.productsForTags(productIds),
       this.repo.variantsForTags(variantIds),
+      this.tagPolicy.assert(user, productIds),
     ]);
     const productById = new Map(products.map((product) => [product.id, product]));
     const variantById = new Map(variants.map((variant) => [variant.id, variant]));
 
     for (const tag of tags) {
-      const product = productById.get(tag.product_id);
-      if (!product) throw new NotFoundException('Tagged product not found');
-      // A seller may tag any product they actually list, not only one they
-       // happened to create — the catalog entry is shared.
-      const listsProduct = product.offers.some(
-        (offer) => offer.sellerId === user.id,
-      );
-      if (!isAdmin(user) && !listsProduct) {
-        throw new ForbiddenException('You can only tag products you sell');
+      if (!productById.has(tag.product_id)) {
+        throw new NotFoundException('Tagged product not found');
       }
       if (tag.variant_id) {
         const variant = variantById.get(tag.variant_id);
@@ -492,19 +594,36 @@ export class CommerceContentService {
       }
     }
 
-    return tags.map((tag, index) => ({
-      product: { connect: { id: tag.product_id } },
-      ...(tag.variant_id
-        ? { variant: { connect: { id: tag.variant_id } } }
-        : {}),
-      role: tag.role ?? 'featured',
-      displayLabel: tag.display_label,
-      x: tag.x,
-      y: tag.y,
-      targetUrl: tag.target_url,
-      metadata: (tag.metadata as Prisma.InputJsonValue) ?? Prisma.JsonNull,
-      sortOrder: tag.sort_order ?? index,
-    }));
+    // One delivered line justifies one tag per post — the unique index on
+    // (content_id, source_order_item_id) enforces it — so a post tagging the
+    // same product twice must not carry the proof twice.
+    const claimed = new Set<string>();
+
+    return tags.map((tag, index) => {
+      const verdict = verdicts.get(tag.product_id);
+      const orderItemId = verdict?.sourceOrderItemId;
+      const proof =
+        orderItemId && !claimed.has(orderItemId) ? orderItemId : undefined;
+      if (proof) claimed.add(proof);
+
+      return {
+        product: { connect: { id: tag.product_id } },
+        ...(tag.variant_id
+          ? { variant: { connect: { id: tag.variant_id } } }
+          : {}),
+        role: tag.role ?? 'featured',
+        displayLabel: tag.display_label,
+        x: tag.x,
+        y: tag.y,
+        targetUrl: tag.target_url,
+        metadata: (tag.metadata as Prisma.InputJsonValue) ?? Prisma.JsonNull,
+        sortOrder: tag.sort_order ?? index,
+        basis: verdict?.basis ?? ContentTagBasis.SELLER_OFFER,
+        ...(proof
+          ? { sourceOrderItem: { connect: { id: proof } } }
+          : {}),
+      };
+    });
   }
 
   private futureDate(value: string | null | undefined, field: string) {
@@ -559,30 +678,23 @@ export class CommerceContentService {
           engagementCount: { increment: 1 },
           lastEngagementAt: now,
         };
+      // SHARE, SAVE, REPLY and REACTION deliberately do NOT touch their
+      // totals here any more.
+      //
+      // Real interaction rows exist now — `commerce_content_reactions`,
+      // `_saves`, `_comments`, `_reshares` — and `ContentInteractionsService`
+      // increments the four counters inside the same transaction that writes
+      // the row. This endpoint is client-driven, so leaving both paths live
+      // meant one like counted twice and the boutique's dashboard was quietly
+      // and permanently wrong, with nothing to notice it by.
+      //
+      // The ledger row is still written by the caller: "she liked it at 14:02"
+      // is exactly what a ledger is for. Only the totals moved.
       case CommerceContentAnalyticsEventType.SHARE:
-        return {
-          sharesCount: { increment: 1 },
-          engagementCount: { increment: 1 },
-          lastEngagementAt: now,
-        };
       case CommerceContentAnalyticsEventType.SAVE:
-        return {
-          savesCount: { increment: 1 },
-          engagementCount: { increment: 1 },
-          lastEngagementAt: now,
-        };
       case CommerceContentAnalyticsEventType.REPLY:
-        return {
-          repliesCount: { increment: 1 },
-          engagementCount: { increment: 1 },
-          lastEngagementAt: now,
-        };
       case CommerceContentAnalyticsEventType.REACTION:
-        return {
-          reactionsCount: { increment: 1 },
-          engagementCount: { increment: 1 },
-          lastEngagementAt: now,
-        };
+        return { lastEngagementAt: now };
       case CommerceContentAnalyticsEventType.ADD_TO_CART:
       case CommerceContentAnalyticsEventType.ENGAGEMENT:
       default:

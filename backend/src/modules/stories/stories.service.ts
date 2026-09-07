@@ -1,46 +1,113 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { serializeStory } from '../../common/serializers';
-import { StoriesRepository } from './stories.repository';
+import { CommerceContentStatus } from '@prisma/client';
+import { PrismaService } from '../../prisma/prisma.service';
+import {
+  LegacyViewerState,
+  NO_LEGACY_VIEWER,
+  serializeLegacyStory,
+} from '../../common/serializers';
 import { TrendSignalService } from '../trends/collection/trend-signal.service';
 
-/** Customer-facing story viewing + reactions. */
+/**
+ * `GET /stories` and the two engagement routes — the same contract, over the
+ * content platform.
+ *
+ * The `stories`, `story_views` and `story_reactions` tables are no longer the
+ * source of truth. A story is a `CommerceContent` of type `story`, its views
+ * are `commerce_content_viewers` and its reactions are
+ * `commerce_content_reactions` with an emoji — which is what the platform
+ * already modelled, and why the merge needed no new tables for any of it.
+ *
+ * The best part of the change is a deletion: `productIdFromLink` is gone. A
+ * story's product used to be recovered by running a uuid regex over a
+ * free-text link on every view, and it is a real `CommerceContentProductTag`
+ * now. The backfill converted the existing links.
+ */
 @Injectable()
 export class StoriesService {
   constructor(
-    private readonly repo: StoriesRepository,
+    private readonly prisma: PrismaService,
     private readonly signals: TrendSignalService,
   ) {}
 
   /** `userId` is absent for a signed-out visitor — see the controller. */
   async list(userId?: string) {
-    const stories = await this.repo.activeForViewer(userId);
-    return stories.map((s) => serializeStory(s, userId));
+    const stories = await this.prisma.commerceContent.findMany({
+      where: {
+        contentType: 'story',
+        status: CommerceContentStatus.PUBLISHED,
+        expiresAt: { gt: new Date() },
+        visibility: 'PUBLIC',
+        authorIsPublic: true,
+      },
+      orderBy: { createdAt: 'desc' },
+      include: { author: true, media: { orderBy: { sortOrder: 'asc' } } },
+    });
+
+    const viewer = await this.viewerState(
+      stories.map((story) => story.id),
+      userId,
+    );
+    return stories.map((story) => serializeLegacyStory(story, viewer));
   }
 
   async recordView(userId: string, storyId: string) {
     const story = await this.ensureActive(storyId);
-    // Owners viewing their own story should not inflate their analytics —
-    // and that applies to the trend signal for exactly the same reason.
-    if (story.userId !== userId) {
-      await this.repo.upsertView(storyId, userId);
-      this.recordProductEngagement(story, userId);
+
+    // Owners viewing their own story should not inflate their analytics — and
+    // that applies to the trend signal for exactly the same reason.
+    if (story.authorId !== userId) {
+      await this.prisma.$transaction(async (tx) => {
+        const existing = await tx.commerceContentViewer.findUnique({
+          where: { contentId_userId: { contentId: storyId, userId } },
+          select: { id: true },
+        });
+        if (existing) {
+          await tx.commerceContentViewer.update({
+            where: { id: existing.id },
+            data: { viewsCount: { increment: 1 }, lastViewedAt: new Date() },
+          });
+          await tx.commerceContent.update({
+            where: { id: storyId },
+            data: { viewsCount: { increment: 1 } },
+          });
+          return;
+        }
+        await tx.commerceContentViewer.create({
+          data: { contentId: storyId, userId },
+        });
+        await tx.commerceContent.update({
+          where: { id: storyId },
+          data: {
+            viewsCount: { increment: 1 },
+            uniqueViewersCount: { increment: 1 },
+          },
+        });
+      });
+      await this.recordProductEngagement(storyId, userId);
     }
     return { message: 'View recorded' };
   }
 
   /**
-   * A story that links to a product is discovery for it, and on this platform
-   * that is a large share of how discovery happens. Fire-and-forget: a
-   * dropped signal is a rounding error in a daily total, a failed view is not.
+   * A story that tags a product is discovery for it, and on this platform that
+   * is a large share of how discovery happens. Fire-and-forget: a dropped
+   * signal is a rounding error in a daily total, a failed view is not.
    */
-  private recordProductEngagement(
-    story: { link?: string | null },
+  private async recordProductEngagement(
+    contentId: string,
     userId: string,
-  ): void {
-    const productId = productIdFromLink(story.link);
-    if (!productId) return;
+  ): Promise<void> {
+    const tag = await this.prisma.commerceContentProductTag
+      .findFirst({
+        where: { contentId },
+        orderBy: { sortOrder: 'asc' },
+        select: { productId: true },
+      })
+      .catch(() => null);
+    if (!tag?.productId) return;
     this.signals.recordContentEngagement({
-      productId,
+      productId: tag.productId,
       kind: 'story',
       userId,
     });
@@ -48,43 +115,91 @@ export class StoriesService {
 
   async react(userId: string, storyId: string, emoji: string) {
     const story = await this.ensureActive(storyId);
-    await this.repo.upsertReaction(storyId, userId, emoji);
+
+    const existing = await this.prisma.commerceContentReaction.findUnique({
+      where: { contentId_userId: { contentId: storyId, userId } },
+      select: { id: true },
+    });
+
+    await this.prisma.$transaction(async (tx) => {
+      if (existing) {
+        await tx.commerceContentReaction.update({
+          where: { id: existing.id },
+          data: { emoji, kind: 'EMOJI' },
+        });
+        return;
+      }
+      await tx.commerceContentReaction.create({
+        data: { contentId: storyId, userId, kind: 'EMOJI', emoji },
+      });
+      await tx.commerceContent.update({
+        where: { id: storyId },
+        data: {
+          reactionsCount: { increment: 1 },
+          engagementCount: { increment: 1 },
+          lastEngagementAt: new Date(),
+        },
+      });
+    });
+
     // Reacting implies a view.
-    if (story.userId !== userId) {
-      await this.repo.upsertView(storyId, userId);
-    }
+    if (story.authorId !== userId) await this.recordView(userId, storyId);
     return { message: 'Reaction saved', emoji };
   }
 
   async unreact(userId: string, storyId: string) {
     await this.ensureActive(storyId);
-    await this.repo.deleteReaction(storyId, userId);
+    const existing = await this.prisma.commerceContentReaction.findUnique({
+      where: { contentId_userId: { contentId: storyId, userId } },
+      select: { id: true },
+    });
+    if (!existing) return { message: 'Reaction removed' };
+
+    await this.prisma.$transaction([
+      this.prisma.commerceContentReaction.delete({ where: { id: existing.id } }),
+      this.prisma.commerceContent.update({
+        where: { id: storyId },
+        data: { reactionsCount: { decrement: 1 } },
+      }),
+    ]);
     return { message: 'Reaction removed' };
   }
 
+  private async viewerState(
+    contentIds: string[],
+    userId?: string,
+  ): Promise<LegacyViewerState> {
+    if (!userId || contentIds.length === 0) return NO_LEGACY_VIEWER;
+    const [views, reactions] = await Promise.all([
+      this.prisma.commerceContentViewer.findMany({
+        where: { userId, contentId: { in: contentIds } },
+        select: { contentId: true },
+      }),
+      this.prisma.commerceContentReaction.findMany({
+        where: { userId, contentId: { in: contentIds } },
+        select: { contentId: true, emoji: true },
+      }),
+    ]);
+    return {
+      liked: new Set(),
+      saved: new Set(),
+      viewed: new Set(views.map((view) => view.contentId)),
+      reactions: new Map(reactions.map((r) => [r.contentId, r.emoji])),
+    };
+  }
+
   private async ensureActive(storyId: string) {
-    const story = await this.repo.findOwner(storyId);
-    if (!story || story.expiresAt < new Date()) {
+    const story = await this.prisma.commerceContent.findFirst({
+      where: { id: storyId, contentType: 'story' },
+      select: { id: true, authorId: true, expiresAt: true, status: true },
+    });
+    if (
+      !story ||
+      story.status !== CommerceContentStatus.PUBLISHED ||
+      (story.expiresAt && story.expiresAt < new Date())
+    ) {
       throw new NotFoundException('Story not found or expired');
     }
     return story;
   }
-}
-
-
-const UUID = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i;
-
-/**
- * The product a story points at, from its `link`.
- *
- * Stories carry a free-form link rather than a product relation, so this is a
- * parse and not a join. It accepts only `/product/<uuid>` shapes and only a
- * well-formed uuid, because a mis-parse here would attribute a story's
- * audience to whatever the malformed id happened to hit.
- */
-function productIdFromLink(link: string | null | undefined): string | null {
-  if (!link) return null;
-  if (!/\/products?\//i.test(link)) return null;
-  const match = UUID.exec(link);
-  return match ? match[0] : null;
 }

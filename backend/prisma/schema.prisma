@@ -841,6 +841,23 @@ enum ReportStatus {
   DISMISSED
 }
 
+/// Who wrote a piece of content — as she was at the moment she wrote it.
+///
+/// Deliberately not a cache of `users.role`. A shopper who later opens a
+/// boutique did not retroactively write marketing, and a product page whose
+/// «نساء يرتدينها» rail reclassified her year-old look as seller content
+/// would be lying about its own evidence. Same reasoning as
+/// `order_items.seller_snapshot`.
+///
+/// `PLATFORM` is Reem itself — an editorial home banner. It exists so
+/// `heroBanners()` can stop routing an operations banner to `/user/:id` as
+/// though a boutique had published it.
+enum CommerceAuthorKind {
+  SELLER
+  CUSTOMER
+  PLATFORM
+}
+
 enum CommerceContentStatus {
   DRAFT
   IN_REVIEW
@@ -849,7 +866,15 @@ enum CommerceContentStatus {
   EXPIRED
   ARCHIVED
   REJECTED
+
+  /// The author took it down herself.
   DELETED
+
+  /// A moderator took it down, with a reason she was told. Distinct from
+  /// DELETED because the two answer different questions — "did she change her
+  /// mind" and "did we intervene" — and only one of them is reachable by the
+  /// author. Nothing but `content-moderation.service` may write it.
+  REMOVED
 }
 
 enum CommerceContentVisibility {
@@ -951,6 +976,24 @@ model User {
   tier                       String             @default("Bronze")
   followersCount             Int                @default(0) @map("followers_count")
   followingCount             Int                @default(0) @map("following_count")
+
+  /// Whether her page may be looked at, and followed, by people she has not
+  /// chosen.
+  ///
+  /// Off by default, which is the whole point (Q15 — profile visibility is the
+  /// customer's own choice). A boutique is always public: a storefront nobody
+  /// may look at is not a storefront, so seller onboarding sets this true.
+  ///
+  /// Three things read it — who may follow her, whether her content reaches a
+  /// feed beyond her own followers, and whether a boutique sees her name in
+  /// its promoters list. The last one is what keeps Q44 intact while still
+  /// letting a seller thank the women who carry her products.
+  profileIsPublic    Boolean   @default(false) @map("profile_is_public")
+
+  /// When she opened it. Audit and copy only. Disclosure is always evaluated
+  /// against the *current* flag, never this one, so closing her page takes her
+  /// name off the boutique's screen at once.
+  profilePublicSince DateTime? @map("profile_public_since")
   createdAt                  DateTime           @default(now()) @map("created_at")
   updatedAt                  DateTime           @updatedAt @map("updated_at")
 
@@ -971,7 +1014,6 @@ model User {
   auditLogs                 AuditLog[]
   securityEvents            SecurityEvent[]
   migratedGuestSessions     GuestSession[]                    @relation("GuestMigrationUser")
-  commerceContents          CommerceContent[]                 @relation("SellerCommerceContents")
   commerceContentVersions   CommerceContentVersion[]          @relation("CommerceContentVersionAuthors")
   commerceContentEvents     CommerceContentEvent[]            @relation("CommerceContentEventActors")
   commerceModerationActions CommerceContentModerationAction[] @relation("CommerceContentModerators")
@@ -985,13 +1027,18 @@ model User {
   sellerOffers              SellerOffer[]                     @relation("SellerOffers")
   sellerOrders              SellerOrder[]                     @relation("SellerSubOrders")
   courierProfile            Courier?                          @relation("CourierAccount")
-  posts                     Post[]
-  postLikes                 PostLike[]
-  postSaves                 PostSave[]
-  comments                  Comment[]
-  stories                   Story[]
-  storyViews                StoryView[]
-  storyReactions            StoryReaction[]
+
+  // ── The content platform ──────────────────────────────────────────────
+  authoredContents          CommerceContent[]            @relation("AuthoredCommerceContents")
+  removedContents           CommerceContent[]            @relation("CommerceContentRemovers")
+  contentReactions          CommerceContentReaction[]    @relation("CommerceContentReactions")
+  contentSaves              CommerceContentSave[]        @relation("CommerceContentSaves")
+  contentComments           CommerceContentComment[]     @relation("CommerceContentComments")
+  removedContentComments    CommerceContentComment[]     @relation("CommerceCommentRemovers")
+  contentReshares           CommerceContentReshare[]     @relation("CommerceContentReshares")
+  resharesOfMyContent       CommerceContentReshare[]     @relation("ResharedFromAuthor")
+  contentAttributions       CommerceContentAttribution[] @relation("CommerceContentAttributions")
+  attributedPromotions      CommerceContentAttribution[] @relation("CommerceAttributionActors")
   orders                    Order[]
   codRiskAssessments        CodRiskAssessment[]
   cartItems                 CartItem[]
@@ -2053,7 +2100,7 @@ model Product {
   media                   ProductMedia[]
   variants                ProductVariant[]
   offers                  SellerOffer[]
-  posts                   Post[]
+  contentAttributions     CommerceContentAttribution[]
   favorites               Favorite[]
   guestSavedItems         GuestSavedItem[]
   orderItems              OrderItem[]
@@ -2275,121 +2322,15 @@ model ExchangeRate {
 }
 
 // ───────────────────────────── Social ─────────────────────────────
-
-model Post {
-  id            String   @id @default(uuid()) @db.Uuid
-  authorId      String   @map("author_id") @db.Uuid
-  author        User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  /// Q5 — nullable: a post may carry one product, many (via
-  /// CommerceContentProductTag) or none at all.
-  productId     String?  @map("product_id") @db.Uuid
-  product       Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
-  caption       String
-  likesCount    Int      @default(0) @map("likes_count")
-  commentsCount Int      @default(0) @map("comments_count")
-  sharesCount   Int      @default(0) @map("shares_count")
-  savesCount    Int      @default(0) @map("saves_count")
-  createdAt     DateTime @default(now()) @map("created_at")
-
-  likes                   PostLike[]
-  saves                   PostSave[]
-  comments                Comment[]
-  guestSavedItems         GuestSavedItem[]
-  wishlistCollectionItems WishlistCollectionItem[]
-
-  @@index([authorId])
-  @@index([createdAt])
-  @@map("posts")
-}
-
-model PostLike {
-  id     String @id @default(uuid()) @db.Uuid
-  postId String @map("post_id") @db.Uuid
-  post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
-  userId String @map("user_id") @db.Uuid
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([postId, userId])
-  @@map("post_likes")
-}
-
-/// Every bookmark on a post, from every surface.
-///
-/// There used to be a second table for this — `post_favorites` — written by
-/// the wishlist endpoints while the feed card wrote this one. A post saved
-/// from the feed therefore never appeared under «منشورات محفوظة», and a post
-/// saved from the wishlist came back from the feed with `is_saved: false`.
-/// They are one table now.
-model PostSave {
-  id        String   @id @default(uuid()) @db.Uuid
-  postId    String   @map("post_id") @db.Uuid
-  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
-  userId    String   @map("user_id") @db.Uuid
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  createdAt DateTime @default(now()) @map("created_at")
-
-  @@unique([postId, userId])
-  @@index([userId])
-  @@map("post_saves")
-}
-
-model Comment {
-  id        String   @id @default(uuid()) @db.Uuid
-  postId    String   @map("post_id") @db.Uuid
-  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
-  userId    String   @map("user_id") @db.Uuid
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  content   String
-  createdAt DateTime @default(now()) @map("created_at")
-
-  @@index([postId, createdAt])
-  @@map("comments")
-}
-
-model Story {
-  id        String    @id @default(uuid()) @db.Uuid
-  userId    String    @map("user_id") @db.Uuid
-  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  mediaUrl  String    @map("media_url")
-  mediaType MediaType @default(image) @map("media_type")
-  link      String?
-  expiresAt DateTime  @map("expires_at")
-  createdAt DateTime  @default(now()) @map("created_at")
-
-  views     StoryView[]
-  reactions StoryReaction[]
-
-  @@index([userId])
-  @@index([expiresAt])
-  @@map("stories")
-}
-
-model StoryView {
-  id       String   @id @default(uuid()) @db.Uuid
-  storyId  String   @map("story_id") @db.Uuid
-  story    Story    @relation(fields: [storyId], references: [id], onDelete: Cascade)
-  userId   String   @map("user_id") @db.Uuid
-  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  viewedAt DateTime @default(now()) @map("viewed_at")
-
-  @@unique([storyId, userId])
-  @@index([storyId])
-  @@map("story_views")
-}
-
-model StoryReaction {
-  id        String   @id @default(uuid()) @db.Uuid
-  storyId   String   @map("story_id") @db.Uuid
-  story     Story    @relation(fields: [storyId], references: [id], onDelete: Cascade)
-  userId    String   @map("user_id") @db.Uuid
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  emoji     String
-  createdAt DateTime @default(now()) @map("created_at")
-
-  @@unique([storyId, userId])
-  @@index([storyId])
-  @@map("story_reactions")
-}
+//
+// One content platform. `posts`, `post_likes`, `post_saves`, `comments`,
+// `stories`, `story_views` and `story_reactions` used to live here and were
+// folded into `commerce_contents` and its satellites — one object model for
+// posts, reels, stories and whatever the registry grows next, with one feed,
+// one analytics ledger and one moderation path.
+//
+// `/posts/*` and `/stories/*` still answer their original contract; they are
+// adapters over these tables now. See `legacy-social.serializer.ts`.
 
 model CommerceContentTypeDefinition {
   id           String   @id @default(uuid()) @db.Uuid
@@ -2412,9 +2353,28 @@ model CommerceContentTypeDefinition {
 }
 
 model CommerceContent {
-  id                 String                              @id @default(uuid()) @db.Uuid
-  sellerId           String                              @map("seller_id") @db.Uuid
-  seller             User                                @relation("SellerCommerceContents", fields: [sellerId], references: [id], onDelete: Cascade)
+  id       String @id @default(uuid()) @db.Uuid
+
+  /// Whoever published it. This column was `seller_id` until customers could
+  /// publish too; the platform is author-owned now, and a boutique is simply
+  /// one kind of author.
+  authorId String @map("author_id") @db.Uuid
+  author   User   @relation("AuthoredCommerceContents", fields: [authorId], references: [id], onDelete: Cascade)
+
+  /// What she was when she wrote it. See `CommerceAuthorKind` — it is a
+  /// historical fact, not a denormalisation of her current role, and every
+  /// feed, moderation queue and analytics split filters on it rather than
+  /// joining `users` to ask.
+  authorKind CommerceAuthorKind @map("author_kind")
+
+  /// Whether the author's page was public when this row was last touched.
+  ///
+  /// The one denormalisation here whose staleness would be a *privacy* bug
+  /// rather than a stale number, so it fails closed (`false` hides) and is
+  /// flipped inside the same transaction as `users.profile_is_public`. Always
+  /// true for a seller: a storefront nobody may look at is not a storefront.
+  authorIsPublic Boolean @default(false) @map("author_is_public")
+
   contentType        String                              @map("content_type")
   typeDefinition     CommerceContentTypeDefinition       @relation(fields: [contentType], references: [key], onDelete: Restrict)
   title              String?
@@ -2445,6 +2405,20 @@ model CommerceContent {
   revenueCurrency    Currency                            @default(SYP) @map("revenue_currency")
   revenueGenerated   Decimal                             @default(0) @map("revenue_generated") @db.Decimal(18, 4)
   lastEngagementAt   DateTime?                           @map("last_engagement_at")
+
+  /// The takedown, denormalised. The full trail lives in
+  /// `CommerceContentModerationAction`; these three are here because the
+  /// moderation queue and — more importantly — the author's own «لماذا اختفى
+  /// منشوري» screen both need the answer in the row they already loaded.
+  removedAt     DateTime? @map("removed_at")
+  removedById   String?   @map("removed_by_id") @db.Uuid
+  removedBy     User?     @relation("CommerceContentRemovers", fields: [removedById], references: [id], onDelete: SetNull)
+  removalReason String?   @map("removal_reason")
+
+  /// What the moderation queue sorts by. Incremented by the public report
+  /// endpoint, which writes a `ModerationCase` for the queue itself.
+  reportsCount Int @default(0) @map("reports_count")
+
   createdAt          DateTime                            @default(now()) @map("created_at")
   updatedAt          DateTime                            @updatedAt @map("updated_at")
 
@@ -2454,12 +2428,39 @@ model CommerceContent {
   events            CommerceContentEvent[]
   viewers           CommerceContentViewer[]
   moderationActions CommerceContentModerationAction[]
+  reactions         CommerceContentReaction[]
+  saves             CommerceContentSave[]
+  comments          CommerceContentComment[]
+  reshares          CommerceContentReshare[]          @relation("ResharedContent")
+  attributions      CommerceContentAttribution[]
+  guestSavedItems         GuestSavedItem[]
+  wishlistCollectionItems WishlistCollectionItem[]
 
-  @@index([sellerId, status, createdAt])
-  @@index([contentType, status, publishedAt])
+  /// Her authoring workspace: drafts and scheduled rows, most recently touched
+  /// first.
+  @@index([authorId, status, updatedAt(sort: Desc)])
+  /// Her page timeline, and branch A of the following feed. Keyset-ordered, so
+  /// the index carries the whole ORDER BY.
+  @@index([authorId, status, publishedAt(sort: Desc), id(sort: Desc)])
+  /// One index for every format-scoped feed — reels today, whatever the
+  /// registry grows tomorrow.
+  @@index([contentType, status, visibility, publishedAt(sort: Desc), id(sort: Desc)])
+  /// The stories tray: one format, still live.
+  @@index([contentType, status, expiresAt])
   @@index([status, scheduledAt])
   @@index([status, expiresAt])
-  @@index([publishedAt])
+  /// For the narrow channels (offers, collections) where array membership is
+  /// the selective term rather than recency.
+  @@index([publicationTargets(ops: ArrayOps)], map: "commerce_contents_publication_targets_gin", type: Gin)
+  /// One more index exists on this table that is NOT listed here, because the
+  /// schema language has no syntax for it: `commerce_contents_public_feed_idx`,
+  /// a PARTIAL index on (published_at DESC, id DESC) WHERE status = 'PUBLISHED'
+  /// AND visibility = 'PUBLIC' AND author_is_public, created in
+  /// `20260906190200_social_platform_tables`.
+  ///
+  /// It is the public feed's driving index — small, because it holds only the
+  /// rows a feed can ever return, and it carries the entire ORDER BY rather
+  /// than feeding a sort. Do not drop it for being absent from this list.
   @@map("commerce_contents")
 }
 
@@ -2497,11 +2498,31 @@ model CommerceContentProductTag {
   targetUrl    String?         @map("target_url")
   metadata     Json?
   sortOrder    Int             @default(0) @map("sort_order")
+
+  /// Why this tag was allowed to exist.
+  ///
+  /// Not decoration. A seller may tag what she sells; a shopper may tag what
+  /// she actually received. The creator-rewards programme will pay on tags,
+  /// and a payout against a tag nobody can justify is a chargeback — so the
+  /// justification is recorded at write time rather than re-derived later from
+  /// an order history that may since have changed.
+  basis ContentTagBasis @default(SELLER_OFFER)
+
+  /// The delivered line that proves a `PURCHASE` tag. Null for the other two
+  /// bases.
+  sourceOrderItemId String?    @map("source_order_item_id") @db.Uuid
+  sourceOrderItem   OrderItem? @relation(fields: [sourceOrderItemId], references: [id], onDelete: SetNull)
+
   createdAt    DateTime        @default(now()) @map("created_at")
 
+  /// One delivered line justifies one tag per post — so she may post the same
+  /// dress twice, and may not claim it twice within one post.
+  @@unique([contentId, sourceOrderItemId])
   @@index([contentId, sortOrder])
   @@index([productId])
   @@index([variantId])
+  /// The «نساء يرتدينها» rail on a product page, newest tag first.
+  @@index([productId, createdAt(sort: Desc)])
   @@map("commerce_content_product_tags")
 }
 
@@ -2552,7 +2573,262 @@ model CommerceContentViewer {
 
   @@unique([contentId, userId])
   @@index([contentId, lastViewedAt])
+  /// "Which of these sixty stories has she already seen" — one index scan
+  /// rather than sixty probes. The table had no viewer-keyed index at all.
+  @@index([userId, contentId])
   @@map("commerce_content_viewers")
+}
+
+/// A like on a post or reel, and an emoji on a story — one table, because it
+/// is one gesture under one rule: at most one per woman per piece. That is
+/// exactly what both legacy tables enforced (`post_likes(post_id, user_id)`
+/// and `story_reactions(story_id, user_id)`), and splitting them again would
+/// mean two answers to "has she reacted".
+///
+/// This is the table the counters cannot replace. `commerce_contents` carries
+/// `reactions_count`, but a number cannot answer *"has **this** viewer liked
+/// it"* — which is the one thing every feed card has to render.
+model CommerceContentReaction {
+  id        String          @id @default(uuid()) @db.Uuid
+  contentId String          @map("content_id") @db.Uuid
+  content   CommerceContent @relation(fields: [contentId], references: [id], onDelete: Cascade)
+  userId    String          @map("user_id") @db.Uuid
+  user      User            @relation("CommerceContentReactions", fields: [userId], references: [id], onDelete: Cascade)
+
+  kind CommerceContentReactionKind @default(LIKE)
+
+  /// Hers, verbatim, for a story reaction — `my_reaction` in the story
+  /// contract is this exact string. Null for a plain like.
+  emoji String?
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@unique([contentId, userId])
+  /// `is_liked` across a page of twenty, in one index scan rather than twenty
+  /// probes.
+  @@index([userId, contentId])
+  @@index([contentId, createdAt(sort: Desc)])
+  @@map("commerce_content_reactions")
+}
+
+enum CommerceContentReactionKind {
+  /// The double-tap on a feed card. What `post_likes` was.
+  LIKE
+
+  /// A story reaction, carrying its own glyph.
+  EMOJI
+}
+
+model CommerceContentSave {
+  id        String          @id @default(uuid()) @db.Uuid
+  contentId String          @map("content_id") @db.Uuid
+  content   CommerceContent @relation(fields: [contentId], references: [id], onDelete: Cascade)
+  userId    String          @map("user_id") @db.Uuid
+  user      User            @relation("CommerceContentSaves", fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime        @default(now()) @map("created_at")
+
+  @@unique([contentId, userId])
+  @@index([userId, contentId])
+  /// Her saved shelf, newest first. Replaces the `post_saves` read
+  /// (`where: { saves: { some: { userId } } }`), a correlated subquery no
+  /// index can serve at any size.
+  @@index([userId, createdAt(sort: Desc)])
+  @@map("commerce_content_saves")
+}
+
+enum CommerceContentCommentStatus {
+  VISIBLE
+
+  /// Hidden by the content's author or by a moderator. The row stays: a
+  /// deleted comment that leaves no trace is how a harassment report loses its
+  /// own evidence, and Q103 asks for hiding as an action distinct from
+  /// deleting.
+  REMOVED
+}
+
+model CommerceContentComment {
+  id        String          @id @default(uuid()) @db.Uuid
+  contentId String          @map("content_id") @db.Uuid
+  content   CommerceContent @relation(fields: [contentId], references: [id], onDelete: Cascade)
+  userId    String          @map("user_id") @db.Uuid
+  user      User            @relation("CommerceContentComments", fields: [userId], references: [id], onDelete: Cascade)
+
+  /// Null for a top-level comment. **One level only** — a reply to a reply is
+  /// re-parented to the thread root at write time, because the card renders
+  /// two levels and a third would be invisible rather than merely ugly.
+  parentId String?                  @map("parent_id") @db.Uuid
+  parent   CommerceContentComment?  @relation("CommentReplies", fields: [parentId], references: [id], onDelete: Cascade)
+  replies  CommerceContentComment[] @relation("CommentReplies")
+
+  body String
+
+  /// Denormalised so a thread header can say how many replies it has without a
+  /// second query per row.
+  repliesCount Int @default(0) @map("replies_count")
+
+  status        CommerceContentCommentStatus @default(VISIBLE)
+  removedAt     DateTime?                    @map("removed_at")
+  removedById   String?                      @map("removed_by_id") @db.Uuid
+  removedBy     User?                        @relation("CommerceCommentRemovers", fields: [removedById], references: [id], onDelete: SetNull)
+  removalReason String?                      @map("removal_reason")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  /// The thread read: top level newest-first, then each parent's replies.
+  @@index([contentId, parentId, createdAt(sort: Desc)])
+  @@index([userId, createdAt(sort: Desc)])
+  @@map("commerce_content_comments")
+}
+
+/// She put somebody else's post on her own page.
+///
+/// A pointer, never a copy. The media, the caption and the product tags stay
+/// on the original row and are read through it, so a boutique correcting a
+/// price or a moderator taking a post down reaches every page it was ever
+/// added to. The only thing that is hers is `note` — what she said about it.
+///
+/// Interactions attach to the ORIGINAL, always. Two women reshare the same
+/// look and a third likes it on both pages: one row, one like, one number on
+/// the boutique's dashboard. That is what "the same post" means.
+model CommerceContentReshare {
+  id String @id @default(uuid()) @db.Uuid
+
+  /// Always the root. Resharing a reshare records the root, so the chain
+  /// cannot deepen and no read ever has to walk it.
+  sourceContentId String          @map("source_content_id") @db.Uuid
+  sourceContent   CommerceContent @relation("ResharedContent", fields: [sourceContentId], references: [id], onDelete: Cascade)
+
+  resharerId String @map("resharer_id") @db.Uuid
+  resharer   User   @relation("CommerceContentReshares", fields: [resharerId], references: [id], onDelete: Cascade)
+
+  /// The original's author, denormalised. Every "who promoted me" read filters
+  /// on it; without the column each one joins back through `commerce_contents`
+  /// to reach an id the row already implies.
+  sourceAuthorId String @map("source_author_id") @db.Uuid
+  sourceAuthor   User   @relation("ResharedFromAuthor", fields: [sourceAuthorId], references: [id], onDelete: Cascade)
+
+  /// Whose page she found it on, when it was not the original's. A chain is a
+  /// referral path, and one that was never recorded cannot be reconstructed
+  /// when the ambassador programme comes asking for it.
+  viaReshareId String?                  @map("via_reshare_id") @db.Uuid
+  viaReshare   CommerceContentReshare?  @relation("ReshareChain", fields: [viaReshareId], references: [id], onDelete: SetNull)
+  chained      CommerceContentReshare[] @relation("ReshareChain")
+
+  note String?
+
+  visibility CommerceContentVisibility @default(PUBLIC)
+
+  /// Mirrors `users.profile_is_public`, flipped in the same transaction, for
+  /// the same fail-closed reason as `commerce_contents.author_is_public`. A
+  /// reshare by a woman who has closed her page must leave the feed even
+  /// though the boutique post behind it is still public.
+  resharerIsPublic Boolean @default(false) @map("resharer_is_public")
+
+  /// The programme this was made under. Unconstrained text, exactly as
+  /// `referral_codes.campaign` is — the table it would point at does not exist
+  /// yet, and a bare uuid pretending to be a foreign key is worse than a key
+  /// that admits it is one.
+  campaignKey String? @map("campaign_key")
+
+  /// The code she was given to promote with. Nullable today; the column is
+  /// here so the rewards programme becomes a write path and a read rather than
+  /// a migration of a live table.
+  couponId String? @map("coupon_id") @db.Uuid
+  coupon   Coupon? @relation("ReshareCoupons", fields: [couponId], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  attributions CommerceContentAttribution[]
+
+  /// Idempotent: adding the same post twice is a no-op, not a second row.
+  @@unique([sourceContentId, resharerId])
+  /// Her page timeline, branch B.
+  @@index([resharerId, createdAt(sort: Desc), id(sort: Desc)])
+  /// "Who promoted me", for the original author.
+  @@index([sourceAuthorId, createdAt(sort: Desc)])
+  @@index([sourceContentId, createdAt(sort: Desc)])
+  @@map("commerce_content_reshares")
+}
+
+/// What entitles somebody to tag a product in her content.
+///
+/// Evaluated as a set and OR'd, never switched on role: a seller who bought a
+/// dress from another boutique may post about it, and a role switch would
+/// refuse her forever.
+enum ContentTagBasis {
+  /// The tagger holds a live offer on it.
+  SELLER_OFFER
+
+  /// The tagger was actually delivered it.
+  PURCHASE
+
+  /// Staff, editing on somebody's behalf.
+  ADMIN
+}
+
+enum CommerceAttributionSource {
+  /// The seller wrote it herself.
+  AUTHOR
+
+  /// Somebody else wrote it and tagged a product this seller offers.
+  PRODUCT_TAG
+
+  /// Somebody put a piece attributed to this seller on her own page.
+  RESHARE
+}
+
+/// Which boutiques a piece of content earns credit for, and why.
+///
+/// **A projection, not a fact.** Every row is derivable from
+/// `commerce_contents.author_id`, `commerce_content_product_tags` and
+/// `commerce_content_reshares`. It exists because that derivation is a
+/// three-way join fanning out through `seller_offers`, and the boutique
+/// dashboard asks on every load — so the question that would get slower every
+/// week becomes one index scan instead.
+///
+/// Rebuildable in full, delete-then-insert per content id, which is also why
+/// it carries no unique constraint: uniqueness here is a property of the
+/// single writer (`ContentAttributionService`), not of an index over three
+/// nullable columns.
+model CommerceContentAttribution {
+  id String @id @default(uuid()) @db.Uuid
+
+  contentId String          @map("content_id") @db.Uuid
+  content   CommerceContent @relation(fields: [contentId], references: [id], onDelete: Cascade)
+
+  sellerId String @map("seller_id") @db.Uuid
+  seller   User   @relation("CommerceContentAttributions", fields: [sellerId], references: [id], onDelete: Cascade)
+
+  source CommerceAttributionSource
+
+  /// The product that earned the credit. Null for `AUTHOR`, where the credit
+  /// is the post itself. Non-null otherwise, because "which of my pieces did
+  /// she promote" is the question, and a content id cannot answer it.
+  productId String?  @map("product_id") @db.Uuid
+  product   Product? @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  reshareId String?                 @map("reshare_id") @db.Uuid
+  reshare   CommerceContentReshare? @relation(fields: [reshareId], references: [id], onDelete: Cascade)
+
+  /// Who did the promoting — the author for AUTHOR and PRODUCT_TAG, the
+  /// resharer for RESHARE. Denormalised so "how many different women" is a
+  /// COUNT(DISTINCT) on this table alone, with no join.
+  ///
+  /// Whether she may be *named* is deliberately not stored here. That is read
+  /// at serialization time off `users.profile_is_public`, so a woman who
+  /// closes her page becomes a number again on the boutique's screen
+  /// immediately rather than at the next rebuild.
+  actorId String @map("actor_id") @db.Uuid
+  actor   User   @relation("CommerceAttributionActors", fields: [actorId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([sellerId, source, createdAt(sort: Desc)])
+  @@index([sellerId, productId, createdAt(sort: Desc)])
+  @@index([sellerId, actorId])
+  @@index([contentId])
+  @@map("commerce_content_attributions")
 }
 
 model CommerceContentModerationAction {
@@ -2569,6 +2845,12 @@ model CommerceContentModerationAction {
 
   @@index([contentId, createdAt])
   @@index([moderatorId, createdAt])
+  /// A CHECK constraint lives on this table that the schema language cannot
+  /// express — `commerce_content_moderation_actions_reason_required`, which
+  /// demands a reason of at least ten characters for every decision except
+  /// APPROVED. `reason` is therefore nullable here and mandatory in practice
+  /// for a takedown: approving genuinely has nothing to explain, so the
+  /// obligation is conditional and nullability cannot model it.
   @@map("commerce_content_moderation_actions")
 }
 
@@ -2725,6 +3007,10 @@ model OrderItem {
   customisation Json?
 
   returnItems ReturnItem[]
+
+  /// The content tags this delivered line justifies. See
+  /// `CommerceContentProductTag.basis`.
+  contentProductTags CommerceContentProductTag[]
 
   /// At most one — a delivered line becomes at most one closet piece. Prisma
   /// still models the far side of a unique foreign key as a list.
@@ -3177,15 +3463,18 @@ model GuestSavedItem {
   product        Product?           @relation(fields: [productId], references: [id], onDelete: Cascade)
   sellerId       String?            @map("seller_id") @db.Uuid
   seller         User?              @relation("GuestSavedSeller", fields: [sellerId], references: [id], onDelete: Cascade)
-  postId         String?            @map("post_id") @db.Uuid
-  post           Post?              @relation(fields: [postId], references: [id], onDelete: Cascade)
+  /// The social content she saved. Named for the platform it now points at;
+  /// `GuestSavedItemType.POST` keeps its wire spelling, because that string is
+  /// in the shipped client's request bodies.
+  contentId      String?            @map("content_id") @db.Uuid
+  content        CommerceContent?   @relation(fields: [contentId], references: [id], onDelete: Cascade)
   metadata       Json?
   createdAt      DateTime           @default(now()) @map("created_at")
 
   @@index([guestSessionId, createdAt])
   @@index([productId])
   @@index([sellerId])
-  @@index([postId])
+  @@index([contentId])
   @@map("guest_saved_items")
 }
 
@@ -3231,8 +3520,8 @@ model WishlistCollectionItem {
   product           Product?           @relation(fields: [productId], references: [id], onDelete: Cascade)
   sellerId          String?            @map("seller_id") @db.Uuid
   seller            User?              @relation("WishlistItemSeller", fields: [sellerId], references: [id], onDelete: Cascade)
-  postId            String?            @map("post_id") @db.Uuid
-  post              Post?              @relation(fields: [postId], references: [id], onDelete: Cascade)
+  contentId         String?            @map("content_id") @db.Uuid
+  content           CommerceContent?   @relation(fields: [contentId], references: [id], onDelete: Cascade)
   priceCurrency     Currency?          @map("price_currency")
   priceWhenSaved    Decimal?           @map("price_when_saved") @db.Decimal(18, 4)
   notifyPriceDrop   Boolean            @default(true) @map("notify_price_drop")
@@ -3242,10 +3531,10 @@ model WishlistCollectionItem {
 
   @@unique([collectionId, productId])
   @@unique([collectionId, sellerId])
-  @@unique([collectionId, postId])
+  @@unique([collectionId, contentId])
   @@index([productId])
   @@index([sellerId])
-  @@index([postId])
+  @@index([contentId])
   @@map("wishlist_collection_items")
 }
 
@@ -3683,6 +3972,12 @@ model Coupon {
   loyaltyRewards  LoyaltyReward[]
 
   @@index([userId])
+
+  /// Codes handed to the women who promote a boutique. Empty until the
+  /// ambassador programme exists; the relation is here so that programme is
+  /// a write path rather than a migration of a live table.
+  reshares CommerceContentReshare[] @relation("ReshareCoupons")
+
   @@map("coupons")
 }
 
@@ -3919,7 +4214,21 @@ model NotificationPreference {
   /// Activity in a shopping room she is a member of. On by default: being
   /// invited into a room is asking to be told what happens in it, and a room
   /// nobody hears about stops being a conversation.
-  inAppRooms Boolean  @default(true) @map("in_app_rooms")
+  inAppRooms Boolean @default(true) @map("in_app_rooms")
+
+  /// Likes, comments, reshares, new followers. On by default — this is the
+  /// feedback loop that makes publishing worth doing, and a woman who posts
+  /// into silence stops posting.
+  inAppSocial Boolean @default(true) @map("in_app_social")
+
+  /// Moderation outcomes on her own content.
+  ///
+  /// The column exists so the preference is nameable, and the removal notice
+  /// deliberately does **not** consult it: a woman who muted likes has muted
+  /// likes, not the news that her page has changed. What it governs is the
+  /// softer half — a report resolved in her favour, a reinstatement.
+  inAppModeration Boolean @default(true) @map("in_app_moderation")
+
   push       Boolean  @default(false)
   email      Boolean  @default(false)
   sms        Boolean  @default(false)

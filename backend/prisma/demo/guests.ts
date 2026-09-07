@@ -108,7 +108,7 @@ export async function seedGuestJourneys(
         data: {
           guestSessionId: session.id,
           type: GuestSavedItemType.POST,
-          postId: rng.pick(postIds),
+          contentId: rng.pick(postIds),
         },
       });
     }

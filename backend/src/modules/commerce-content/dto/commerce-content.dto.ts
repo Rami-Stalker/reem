@@ -274,9 +274,11 @@ export class CommerceFeedQueryDto extends PaginationDto {
   @Matches(/^[a-z][a-z0-9_:-]{2,63}$/)
   content_type?: string;
 
+  /// Narrows the feed to one author. Named for the author rather than the
+  /// seller because a customer publishes here too now.
   @IsOptional()
   @IsUUID()
-  seller_id?: string;
+  author_id?: string;
 }
 
 export class RecordCommerceContentEventDto {

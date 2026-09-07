@@ -120,7 +120,9 @@ export class SellerCommerceService {
       }),
       this.prisma.commerceContent.groupBy({
         by: ['status'],
-        where: { sellerId },
+        // Her own content. The column was `seller_id` until customers could
+        // publish too; a boutique is simply one kind of author now.
+        where: { authorId: sellerId },
         _count: { _all: true },
       }),
       this.orderStatusCounts(sellerId),
@@ -520,7 +522,7 @@ export class SellerCommerceService {
     const now = new Date();
     const contents = await this.prisma.commerceContent.findMany({
       where: {
-        sellerId,
+        authorId: sellerId,
         status: {
           in: [
             CommerceContentStatus.PUBLISHED,

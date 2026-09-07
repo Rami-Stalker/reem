@@ -1,0 +1,22 @@
+[
+  {
+    "user": {
+      "id": "d33cdc9c-2d94-48cd-b308-434b103d4818",
+      "name": "مها",
+      "username": "maha_shops",
+      "bio": "أحب كل ما هو جميل 💕",
+      "image_url": "https://loremflickr.com/400/400/peony%2Csoft/all?lock=86533",
+      "location": "دمشق، سوريا",
+      "role": "customer",
+      "seller_level": "basic",
+      "seller_verified_at": null,
+      "seller_premium_until": null,
+      "is_verified": true,
+      "followers_count": 1,
+      "following_count": 6,
+      "created_at": "2026-09-03T15:15:51.652Z"
+    },
+    "viewed_at": "2026-09-06T18:28:32.919Z",
+    "reaction": "😍"
+  }
+]

@@ -1,0 +1,852 @@
+{
+  "data": [
+    {
+      "id": "2559ee9f-63cb-4fda-94e5-edff6caf04aa",
+      "author": {
+        "id": "b57733bd-bcae-4a15-9da9-1a571d211d06",
+        "name": "ليلى الخوري",
+        "username": "layla_style",
+        "bio": "أناقة محتشمة منتقاة بعناية",
+        "image_url": "https://loremflickr.com/400/400/roses%2Cpink/all?lock=48357",
+        "location": "حلب، سوريا",
+        "role": "seller",
+        "seller_level": "verified",
+        "seller_verified_at": null,
+        "seller_premium_until": null,
+        "is_verified": true,
+        "followers_count": 13,
+        "following_count": 2,
+        "created_at": "2026-09-03T15:15:51.646Z"
+      },
+      "product": {
+        "id": "7d3d3f87-8b0c-4a03-9421-d9422394cff6",
+        "slug": "floral-maxi-skirt",
+        "title": "تنورة ماكسي بنقشة زهور",
+        "description": "تنورة خفيفة بنقشة مرسومة يدوياً.",
+        "category": {
+          "id": "dfa52e51-a6cc-45bf-b463-62c9dc48c104",
+          "slug": "skirts",
+          "name_ar": "تنانير",
+          "name_en": "Skirts",
+          "level": 2,
+          "parent_id": "072add2a-3c2b-4a97-bc95-da23d506834b",
+          "icon_url": null,
+          "image_url": null,
+          "is_sensitive": false,
+          "returns_allowed": true
+        },
+        "brand": {
+          "id": "8439e30d-0cb5-44ed-bfc2-1ed946b301bd",
+          "slug": "yasmine",
+          "name_ar": "ياسمين",
+          "name_en": "Yasmine",
+          "logo_url": null,
+          "is_verified": false
+        },
+        "attributes": {
+          "material": "قطن"
+        },
+        "gtin": null,
+        "status": "active",
+        "media": [
+          {
+            "url": "https://loremflickr.com/900/1125/skirt%2Cfloral/all?lock=91793",
+            "type": "image",
+            "blur_hash": null
+          }
+        ],
+        "variants": [],
+        "offers_count": 1,
+        "best_offer": {
+          "id": "74f3f81e-1de1-49c9-a1f5-ba6949c7a5cc",
+          "seller": {
+            "id": "b57733bd-bcae-4a15-9da9-1a571d211d06",
+            "name": "ليلى الخوري",
+            "username": "layla_style",
+            "bio": "أناقة محتشمة منتقاة بعناية",
+            "image_url": "https://loremflickr.com/400/400/roses%2Cpink/all?lock=48357",
+            "location": "حلب، سوريا",
+            "role": "seller",
+            "seller_level": "verified",
+            "seller_verified_at": null,
+            "seller_premium_until": null,
+            "is_verified": true,
+            "followers_count": 13,
+            "following_count": 2,
+            "created_at": "2026-09-03T15:15:51.646Z"
+          },
+          "currency": "SYP",
+          "price": {
+            "amount": "8500.0000",
+            "currency": "SYP"
+          },
+          "compare_at_price": {
+            "amount": "11000.0000",
+            "currency": "SYP"
+          },
+          "wholesale_price": null,
+          "wholesale_min_qty": null,
+          "stock": 45,
+          "min_order_qty": 1,
+          "max_order_qty": null,
+          "sku": "REEM-FLORAL-MAXI-SKIRT",
+          "handling_days": 1,
+          "is_made_to_order": false,
+          "requires_deposit": false,
+          "accepts_returns": true,
+          "status": "active",
+          "variants": []
+        },
+        "price_from": {
+          "amount": "8500.0000",
+          "currency": "SYP"
+        },
+        "price_to": {
+          "amount": "8500.0000",
+          "currency": "SYP"
+        },
+        "stock": 45,
+        "is_available": true,
+        "rating": 0,
+        "reviews_count": 0,
+        "views_count": 0,
+        "orders_count": 0,
+        "favorites_count": 0,
+        "created_at": "2026-09-03T15:15:51.975Z"
+      },
+      "caption": "أحببنا تنورة ماكسي بنقشة زهور 💕 تسوّقيه الآن على ريم!",
+      "likes_count": 14,
+      "comments_count": 3,
+      "shares_count": 20,
+      "saves_count": 1,
+      "is_liked": false,
+      "is_saved": true,
+      "created_at": "2026-09-03T15:15:52.018Z"
+    },
+    {
+      "id": "dca2f20d-7383-461d-ba0a-626e5e4cfaa8",
+      "author": {
+        "id": "226ecd92-4c18-4bfa-bb4d-f4e8cb09fd6b",
+        "name": "لمى الحلبي",
+        "username": "lama_boutique",
+        "bio": "تريكو وكنزات شتوية بخامات طبيعية — من حلب إلى كل سوريا 🧶",
+        "image_url": "https://loremflickr.com/400/400/boutique%2Celegant/all?lock=49268",
+        "location": "حلب، سوريا",
+        "role": "seller",
+        "seller_level": "verified",
+        "seller_verified_at": "2025-09-27T00:55:39.551Z",
+        "seller_premium_until": null,
+        "is_verified": true,
+        "followers_count": 22,
+        "following_count": 2,
+        "created_at": "2026-03-18T20:18:23.240Z"
+      },
+      "product": {
+        "id": "33ce35fc-33dd-4ce7-8449-7fa6cd41a153",
+        "slug": "active-029",
+        "title": "بيجاما قطنية بلون الوردي الفاتح",
+        "description": "بيجاما قطنية بلون الوردي الفاتح. مناسب للرياضة وللبيت.",
+        "category": {
+          "id": "e1059a58-406f-4310-92b5-8f1b38347d28",
+          "slug": "activewear",
+          "name_ar": "ملابس رياضية ومنزلية",
+          "name_en": "Active and loungewear",
+          "level": 2,
+          "parent_id": "072add2a-3c2b-4a97-bc95-da23d506834b",
+          "icon_url": null,
+          "image_url": null,
+          "is_sensitive": false,
+          "returns_allowed": true
+        },
+        "brand": {
+          "id": "d255e982-249b-4ec1-b0aa-905e3db79ed0",
+          "slug": "lattakia-leather",
+          "name_ar": "جلود اللاذقية",
+          "name_en": "Lattakia Leather",
+          "logo_url": "https://loremflickr.com/900/1125/logo%2Cboutique/all?lock=97548",
+          "is_verified": true
+        },
+        "attributes": {
+          "material": "بوليستر رياضي"
+        },
+        "gtin": null,
+        "status": "active",
+        "media": [
+          {
+            "url": "https://loremflickr.com/900/1125/activewear%2Csportswear/all?lock=21222",
+            "type": "image",
+            "blur_hash": null
+          },
+          {
+            "url": "https://loremflickr.com/900/1125/activewear%2Csportswear/all?lock=98841",
+            "type": "image",
+            "blur_hash": null
+          },
+          {
+            "url": "https://loremflickr.com/900/1125/activewear%2Csportswear/all?lock=65984",
+            "type": "image",
+            "blur_hash": null
+          }
+        ],
+        "variants": [
+          {
+            "id": "f699bd0b-ca4c-4359-93cd-4ea22ec91196",
+            "name": "S",
+            "attributes": {
+              "size": "S"
+            },
+            "image_url": null,
+            "sort_order": 0
+          },
+          {
+            "id": "379fd4ad-0505-4290-9b03-6fc5c61c0113",
+            "name": "M",
+            "attributes": {
+              "size": "M"
+            },
+            "image_url": null,
+            "sort_order": 1
+          },
+          {
+            "id": "90d5c3c7-3ece-46d3-86b3-e2bbd89bdb0c",
+            "name": "L",
+            "attributes": {
+              "size": "L"
+            },
+            "image_url": null,
+            "sort_order": 2
+          },
+          {
+            "id": "9221b5a2-83df-4d69-83a6-e9842572da8e",
+            "name": "XL",
+            "attributes": {
+              "size": "XL"
+            },
+            "image_url": null,
+            "sort_order": 3
+          }
+        ],
+        "offers_count": 2,
+        "best_offer": {
+          "id": "462f4496-d1ff-4553-a4d7-badc69102641",
+          "seller": {
+            "id": "226ecd92-4c18-4bfa-bb4d-f4e8cb09fd6b",
+            "name": "لمى الحلبي",
+            "username": "lama_boutique",
+            "bio": "تريكو وكنزات شتوية بخامات طبيعية — من حلب إلى كل سوريا 🧶",
+            "image_url": "https://loremflickr.com/400/400/boutique%2Celegant/all?lock=49268",
+            "location": "حلب، سوريا",
+            "role": "seller",
+            "seller_level": "verified",
+            "seller_verified_at": "2025-09-27T00:55:39.551Z",
+            "seller_premium_until": null,
+            "is_verified": true,
+            "followers_count": 22,
+            "following_count": 2,
+            "created_at": "2026-03-18T20:18:23.240Z"
+          },
+          "currency": "SYP",
+          "price": {
+            "amount": "7990.0000",
+            "currency": "SYP"
+          },
+          "compare_at_price": {
+            "amount": "11030.0000",
+            "currency": "SYP"
+          },
+          "wholesale_price": null,
+          "wholesale_min_qty": null,
+          "stock": 15,
+          "min_order_qty": 1,
+          "max_order_qty": 6,
+          "sku": "ACTIVE-29-0",
+          "handling_days": 3,
+          "is_made_to_order": false,
+          "requires_deposit": false,
+          "accepts_returns": true,
+          "status": "active",
+          "variants": [
+            {
+              "id": "6504a6ed-3952-44c7-95ba-c45da1d64890",
+              "variant_id": "f699bd0b-ca4c-4359-93cd-4ea22ec91196",
+              "name": "S",
+              "attributes": {
+                "size": "S"
+              },
+              "image_url": null,
+              "price": {
+                "amount": "7990.0000",
+                "currency": "SYP"
+              },
+              "stock": 4,
+              "sku": "ACTIVE-29-0-S"
+            },
+            {
+              "id": "723b0abd-2e16-40f7-80bb-cec36433d470",
+              "variant_id": "379fd4ad-0505-4290-9b03-6fc5c61c0113",
+              "name": "M",
+              "attributes": {
+                "size": "M"
+              },
+              "image_url": null,
+              "price": {
+                "amount": "7990.0000",
+                "currency": "SYP"
+              },
+              "stock": 3,
+              "sku": "ACTIVE-29-0-M"
+            },
+            {
+              "id": "c9cf9cb5-174e-4739-8936-4a40d8136903",
+              "variant_id": "90d5c3c7-3ece-46d3-86b3-e2bbd89bdb0c",
+              "name": "L",
+              "attributes": {
+                "size": "L"
+              },
+              "image_url": null,
+              "price": {
+                "amount": "7990.0000",
+                "currency": "SYP"
+              },
+              "stock": 5,
+              "sku": "ACTIVE-29-0-L"
+            },
+            {
+              "id": "d54fa530-f8a8-41ef-be14-006aa55e8036",
+              "variant_id": "9221b5a2-83df-4d69-83a6-e9842572da8e",
+              "name": "XL",
+              "attributes": {
+                "size": "XL"
+              },
+              "image_url": null,
+              "price": {
+                "amount": "7990.0000",
+                "currency": "SYP"
+              },
+              "stock": 3,
+              "sku": "ACTIVE-29-0-XL"
+            }
+          ]
+        },
+        "price_from": {
+          "amount": "7990.0000",
+          "currency": "SYP"
+        },
+        "price_to": {
+          "amount": "8490.0000",
+          "currency": "SYP"
+        },
+        "stock": 15,
+        "is_available": true,
+        "rating": 3.71,
+        "reviews_count": 7,
+        "views_count": 814,
+        "orders_count": 1,
+        "favorites_count": 3,
+        "created_at": "2026-04-17T05:05:59.428Z"
+      },
+      "caption": "ثلاث طرق لتنسيق هالقطعة لإطلالة نهارية ☀️\nبيجاما قطنية بلون الوردي الفاتح",
+      "likes_count": 43,
+      "comments_count": 1,
+      "shares_count": 2,
+      "saves_count": 10,
+      "is_liked": false,
+      "is_saved": true,
+      "created_at": "2026-08-28T11:59:08.275Z"
+    },
+    {
+      "id": "cc12aab0-02e5-47a9-97d3-fe56f63ea32c",
+      "author": {
+        "id": "04de5dfa-276e-414d-a5d5-3d434638c576",
+        "name": "ريما الحمصي",
+        "username": "reema_beauty",
+        "bio": "مكياج ومستحضرات أصلية ١٠٠٪ مع فاتورة من الوكيل 💄",
+        "image_url": "https://loremflickr.com/400/400/boutique%2Celegant/all?lock=85083",
+        "location": "حمص، سوريا",
+        "role": "seller",
+        "seller_level": "premium",
+        "seller_verified_at": "2025-09-30T01:05:41.080Z",
+        "seller_premium_until": "2027-01-21T21:54:06.692Z",
+        "is_verified": true,
+        "followers_count": 16,
+        "following_count": 1,
+        "created_at": "2025-10-01T19:43:07.613Z"
+      },
+      "product": {
+        "id": "75ddfee7-8c90-4f92-a52c-e67c0cea74d4",
+        "slug": "face-055",
+        "title": "كريم أساس للبشرة الدهنية",
+        "description": "كريم أساس للبشرة الدهنية. خالٍ من البارابين ومناسب للبشرة الحساسة.",
+        "category": {
+          "id": "a7988822-887a-42f1-8ffa-6b6e28023995",
+          "slug": "face-makeup",
+          "name_ar": "مكياج الوجه",
+          "name_en": "Face makeup",
+          "level": 2,
+          "parent_id": "d0405605-829c-4db9-925a-3df58ef55d40",
+          "icon_url": null,
+          "image_url": null,
+          "is_sensitive": false,
+          "returns_allowed": false
+        },
+        "brand": {
+          "id": "8439e30d-0cb5-44ed-bfc2-1ed946b301bd",
+          "slug": "yasmine",
+          "name_ar": "ياسمين",
+          "name_en": "Yasmine",
+          "logo_url": null,
+          "is_verified": false
+        },
+        "attributes": {
+          "skin_type": "جافة"
+        },
+        "gtin": null,
+        "status": "active",
+        "media": [
+          {
+            "url": "https://loremflickr.com/900/1125/makeup%2Ccosmetics/all?lock=47102",
+            "type": "image",
+            "blur_hash": null
+          },
+          {
+            "url": "https://loremflickr.com/900/1125/makeup%2Ccosmetics/all?lock=24721",
+            "type": "image",
+            "blur_hash": null
+          },
+          {
+            "url": "https://loremflickr.com/900/1125/makeup%2Ccosmetics/all?lock=91864",
+            "type": "image",
+            "blur_hash": null
+          }
+        ],
+        "variants": [
+          {
+            "id": "bfa6589b-9fa6-4a2a-9e25-3d4c9a8518d8",
+            "name": "درجة ٠١ فاتح",
+            "attributes": {
+              "shade": "درجة ٠١ فاتح"
+            },
+            "image_url": null,
+            "sort_order": 0
+          },
+          {
+            "id": "7c3fb694-b104-4ad6-9d28-072f58ab8f73",
+            "name": "درجة ٠٢ طبيعي",
+            "attributes": {
+              "shade": "درجة ٠٢ طبيعي"
+            },
+            "image_url": null,
+            "sort_order": 1
+          },
+          {
+            "id": "de9e6c35-cba4-4e14-a2fe-503ad5d39ee9",
+            "name": "درجة ٠٣ متوسط",
+            "attributes": {
+              "shade": "درجة ٠٣ متوسط"
+            },
+            "image_url": null,
+            "sort_order": 2
+          },
+          {
+            "id": "10c85030-b83b-4a45-a2fb-358e7cb90466",
+            "name": "درجة ٠٤ عسلي",
+            "attributes": {
+              "shade": "درجة ٠٤ عسلي"
+            },
+            "image_url": null,
+            "sort_order": 3
+          },
+          {
+            "id": "838caa9d-1dba-4be4-9c61-7714188a6ac1",
+            "name": "درجة ٠٥ غامق",
+            "attributes": {
+              "shade": "درجة ٠٥ غامق"
+            },
+            "image_url": null,
+            "sort_order": 4
+          }
+        ],
+        "offers_count": 1,
+        "best_offer": {
+          "id": "35a059db-246a-446e-9bf5-b94844e1b5dd",
+          "seller": {
+            "id": "04de5dfa-276e-414d-a5d5-3d434638c576",
+            "name": "ريما الحمصي",
+            "username": "reema_beauty",
+            "bio": "مكياج ومستحضرات أصلية ١٠٠٪ مع فاتورة من الوكيل 💄",
+            "image_url": "https://loremflickr.com/400/400/boutique%2Celegant/all?lock=85083",
+            "location": "حمص، سوريا",
+            "role": "seller",
+            "seller_level": "premium",
+            "seller_verified_at": "2025-09-30T01:05:41.080Z",
+            "seller_premium_until": "2027-01-21T21:54:06.692Z",
+            "is_verified": true,
+            "followers_count": 16,
+            "following_count": 1,
+            "created_at": "2025-10-01T19:43:07.613Z"
+          },
+          "currency": "USD",
+          "price": {
+            "amount": "16.0000",
+            "currency": "USD"
+          },
+          "compare_at_price": {
+            "amount": "20.0000",
+            "currency": "USD"
+          },
+          "wholesale_price": null,
+          "wholesale_min_qty": null,
+          "stock": 37,
+          "min_order_qty": 1,
+          "max_order_qty": null,
+          "sku": "FACE-55-0",
+          "handling_days": 3,
+          "is_made_to_order": false,
+          "requires_deposit": false,
+          "accepts_returns": true,
+          "status": "active",
+          "variants": [
+            {
+              "id": "ec2cb208-eb5b-4a07-b4ff-e199b4e99fc8",
+              "variant_id": "bfa6589b-9fa6-4a2a-9e25-3d4c9a8518d8",
+              "name": "درجة ٠١ فاتح",
+              "attributes": {
+                "shade": "درجة ٠١ فاتح"
+              },
+              "image_url": null,
+              "price": {
+                "amount": "16.0000",
+                "currency": "USD"
+              },
+              "stock": 7,
+              "sku": "FACE-55-0-درجة ٠١ فاتح"
+            },
+            {
+              "id": "743614ee-ba22-4478-b9d0-afb991f1d09b",
+              "variant_id": "7c3fb694-b104-4ad6-9d28-072f58ab8f73",
+              "name": "درجة ٠٢ طبيعي",
+              "attributes": {
+                "shade": "درجة ٠٢ طبيعي"
+              },
+              "image_url": null,
+              "price": {
+                "amount": "16.0000",
+                "currency": "USD"
+              },
+              "stock": 3,
+              "sku": "FACE-55-0-درجة ٠٢ طبيعي"
+            },
+            {
+              "id": "1b1cda63-9d72-4799-9d28-d1cbad9702b7",
+              "variant_id": "de9e6c35-cba4-4e14-a2fe-503ad5d39ee9",
+              "name": "درجة ٠٣ متوسط",
+              "attributes": {
+                "shade": "درجة ٠٣ متوسط"
+              },
+              "image_url": null,
+              "price": {
+                "amount": "16.0000",
+                "currency": "USD"
+              },
+              "stock": 11,
+              "sku": "FACE-55-0-درجة ٠٣ متوسط"
+            },
+            {
+              "id": "e4321f95-b127-4524-b854-322d833b405a",
+              "variant_id": "10c85030-b83b-4a45-a2fb-358e7cb90466",
+              "name": "درجة ٠٤ عسلي",
+              "attributes": {
+                "shade": "درجة ٠٤ عسلي"
+              },
+              "image_url": null,
+              "price": {
+                "amount": "16.0000",
+                "currency": "USD"
+              },
+              "stock": 7,
+              "sku": "FACE-55-0-درجة ٠٤ عسلي"
+            },
+            {
+              "id": "02c97eb5-300a-49d3-9501-571ff00d87e2",
+              "variant_id": "838caa9d-1dba-4be4-9c61-7714188a6ac1",
+              "name": "درجة ٠٥ غامق",
+              "attributes": {
+                "shade": "درجة ٠٥ غامق"
+              },
+              "image_url": null,
+              "price": {
+                "amount": "16.0000",
+                "currency": "USD"
+              },
+              "stock": 9,
+              "sku": "FACE-55-0-درجة ٠٥ غامق"
+            }
+          ]
+        },
+        "price_from": {
+          "amount": "2100.0000",
+          "currency": "SYP"
+        },
+        "price_to": {
+          "amount": "2100.0000",
+          "currency": "SYP"
+        },
+        "stock": 37,
+        "is_available": true,
+        "rating": 4,
+        "reviews_count": 5,
+        "views_count": 189,
+        "orders_count": 2,
+        "favorites_count": 2,
+        "created_at": "2026-03-11T04:23:06.293Z"
+      },
+      "caption": "وصلنا اليوم 😍 كمية محدودة وبأسعار الافتتاح\nكريم أساس للبشرة الدهنية",
+      "likes_count": 23,
+      "comments_count": 1,
+      "shares_count": 35,
+      "saves_count": 10,
+      "is_liked": false,
+      "is_saved": true,
+      "created_at": "2026-07-26T01:44:15.223Z"
+    },
+    {
+      "id": "66ce81ff-34de-47d3-896b-dd080596118a",
+      "author": {
+        "id": "b57733bd-bcae-4a15-9da9-1a571d211d06",
+        "name": "ليلى الخوري",
+        "username": "layla_style",
+        "bio": "أناقة محتشمة منتقاة بعناية",
+        "image_url": "https://loremflickr.com/400/400/roses%2Cpink/all?lock=48357",
+        "location": "حلب، سوريا",
+        "role": "seller",
+        "seller_level": "verified",
+        "seller_verified_at": null,
+        "seller_premium_until": null,
+        "is_verified": true,
+        "followers_count": 13,
+        "following_count": 2,
+        "created_at": "2026-09-03T15:15:51.646Z"
+      },
+      "product": {
+        "id": "29eb595a-526e-41f8-8866-01cee6cce73e",
+        "slug": "lip-062",
+        "title": "ملمّع شفاه بلمسة لامعة",
+        "description": "ملمّع شفاه بلمسة لامعة. لا يجفّف الشفاه ولا يترك أثراً على الكوب.",
+        "category": {
+          "id": "4e3a95bf-d1c3-479d-adc3-46ca479de3ab",
+          "slug": "lips",
+          "name_ar": "الشفاه",
+          "name_en": "Lips",
+          "level": 2,
+          "parent_id": "d0405605-829c-4db9-925a-3df58ef55d40",
+          "icon_url": null,
+          "image_url": null,
+          "is_sensitive": false,
+          "returns_allowed": false
+        },
+        "brand": {
+          "id": "e8e695b1-820c-4415-bc22-4c769132164c",
+          "slug": "petit-baby",
+          "name_ar": "بوتي بيبي",
+          "name_en": "Petit Baby",
+          "logo_url": "https://loremflickr.com/900/1125/logo%2Cboutique/all?lock=3426",
+          "is_verified": false
+        },
+        "attributes": {},
+        "gtin": null,
+        "status": "active",
+        "media": [
+          {
+            "url": "https://loremflickr.com/900/1125/lipstick%2Cbeauty/all?lock=62590",
+            "type": "image",
+            "blur_hash": null
+          },
+          {
+            "url": "https://loremflickr.com/900/1125/lipstick%2Cbeauty/all?lock=40209",
+            "type": "image",
+            "blur_hash": null
+          },
+          {
+            "url": "https://loremflickr.com/900/1125/lipstick%2Cbeauty/all?lock=7352",
+            "type": "image",
+            "blur_hash": null
+          }
+        ],
+        "variants": [
+          {
+            "id": "6df20b53-9825-4f5b-b419-61cc67587228",
+            "name": "درجة ٠١ فاتح",
+            "attributes": {
+              "shade": "درجة ٠١ فاتح"
+            },
+            "image_url": null,
+            "sort_order": 0
+          },
+          {
+            "id": "77740e87-f53f-439b-bb32-2e9992c9ed96",
+            "name": "درجة ٠٢ طبيعي",
+            "attributes": {
+              "shade": "درجة ٠٢ طبيعي"
+            },
+            "image_url": null,
+            "sort_order": 1
+          },
+          {
+            "id": "33d800eb-62a9-4f0b-92dd-ad7a6d114341",
+            "name": "درجة ٠٣ متوسط",
+            "attributes": {
+              "shade": "درجة ٠٣ متوسط"
+            },
+            "image_url": null,
+            "sort_order": 2
+          },
+          {
+            "id": "4b97f974-3779-4b74-8be2-44d9f3b474c4",
+            "name": "درجة ٠٤ عسلي",
+            "attributes": {
+              "shade": "درجة ٠٤ عسلي"
+            },
+            "image_url": null,
+            "sort_order": 3
+          },
+          {
+            "id": "31da98bd-3fe8-42f7-87eb-c67e1b0bec00",
+            "name": "درجة ٠٥ غامق",
+            "attributes": {
+              "shade": "درجة ٠٥ غامق"
+            },
+            "image_url": null,
+            "sort_order": 4
+          }
+        ],
+        "offers_count": 0,
+        "best_offer": null,
+        "price_from": {
+          "amount": "1560.0000",
+          "currency": "SYP"
+        },
+        "price_to": {
+          "amount": "1560.0000",
+          "currency": "SYP"
+        },
+        "stock": 0,
+        "is_available": false,
+        "rating": 4.5,
+        "reviews_count": 4,
+        "views_count": 823,
+        "orders_count": 0,
+        "favorites_count": 0,
+        "created_at": "2026-04-21T02:14:33.603Z"
+      },
+      "caption": "جهّزنا لكن تشكيلة المناسبات كاملة 🎁\nملمّع شفاه بلمسة لامعة",
+      "likes_count": 14,
+      "comments_count": 5,
+      "shares_count": 16,
+      "saves_count": 9,
+      "is_liked": false,
+      "is_saved": true,
+      "created_at": "2026-07-25T22:48:39.077Z"
+    },
+    {
+      "id": "4d6432ba-c1ef-4cfa-9a5f-0ac79bd2e677",
+      "author": {
+        "id": "b57733bd-bcae-4a15-9da9-1a571d211d06",
+        "name": "ليلى الخوري",
+        "username": "layla_style",
+        "bio": "أناقة محتشمة منتقاة بعناية",
+        "image_url": "https://loremflickr.com/400/400/roses%2Cpink/all?lock=48357",
+        "location": "حلب، سوريا",
+        "role": "seller",
+        "seller_level": "verified",
+        "seller_verified_at": null,
+        "seller_premium_until": null,
+        "is_verified": true,
+        "followers_count": 13,
+        "following_count": 2,
+        "created_at": "2026-09-03T15:15:51.646Z"
+      },
+      "product": {
+        "id": "8921eefc-5921-4bbc-83cc-89d9713f7302",
+        "slug": "jewel-046",
+        "title": "خاتم باللؤلؤ الطبيعي",
+        "description": "خاتم باللؤلؤ الطبيعي. لا يسبّب حساسية ولا يتغيّر لونه بسرعة.",
+        "category": {
+          "id": "0ea53139-2fdf-44ca-9047-6b8b47bd11a9",
+          "slug": "jewellery",
+          "name_ar": "مجوهرات",
+          "name_en": "Jewellery",
+          "level": 2,
+          "parent_id": "b3a4191e-4ad4-4f40-b9d2-46b14f5fc9ed",
+          "icon_url": null,
+          "image_url": null,
+          "is_sensitive": false,
+          "returns_allowed": true
+        },
+        "brand": {
+          "id": "cfce5e75-2022-4137-b20a-cea8d79ccf5c",
+          "slug": "reem-atelier",
+          "name_ar": "ريم أتيليه",
+          "name_en": "Reem Atelier",
+          "logo_url": null,
+          "is_verified": true
+        },
+        "attributes": {
+          "material": "نحاس مطلي"
+        },
+        "gtin": null,
+        "status": "active",
+        "media": [
+          {
+            "url": "https://loremflickr.com/900/1125/jewellery%2Cnecklace/all?lock=13646",
+            "type": "image",
+            "blur_hash": null
+          },
+          {
+            "url": "https://loremflickr.com/900/1125/jewellery%2Cnecklace/all?lock=91265",
+            "type": "image",
+            "blur_hash": null
+          },
+          {
+            "url": "https://loremflickr.com/900/1125/jewellery%2Cnecklace/all?lock=58408",
+            "type": "image",
+            "blur_hash": null
+          }
+        ],
+        "variants": [],
+        "offers_count": 0,
+        "best_offer": null,
+        "price_from": {
+          "amount": "9720.0000",
+          "currency": "SYP"
+        },
+        "price_to": {
+          "amount": "9720.0000",
+          "currency": "SYP"
+        },
+        "stock": 0,
+        "is_available": false,
+        "rating": 3,
+        "reviews_count": 1,
+        "views_count": 145,
+        "orders_count": 0,
+        "favorites_count": 2,
+        "created_at": "2026-05-03T13:47:12.027Z"
+      },
+      "caption": "من كواليس التصوير — كل قطعة بتنتقى بعناية\nخاتم باللؤلؤ الطبيعي",
+      "likes_count": 44,
+      "comments_count": 6,
+      "shares_count": 19,
+      "saves_count": 13,
+      "is_liked": true,
+      "is_saved": true,
+      "created_at": "2026-07-25T06:44:13.648Z"
+    }
+  ],
+  "pagination": {
+    "page": 1,
+    "limit": 5,
+    "total": 10,
+    "total_pages": 2,
+    "has_next_page": true
+  }
+}

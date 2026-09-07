@@ -410,13 +410,17 @@ export class ValueCollectorService {
   private async sweepCommunity(since: Date): Promise<string[]> {
     const touched: string[] = [];
 
-    const posts = await this.prisma.post.findMany({
-      where: { createdAt: { gte: since } },
+    const posts = await this.prisma.commerceContent.findMany({
+      where: {
+        createdAt: { gte: since },
+        contentType: { in: ['product_post', 'reel'] },
+        status: 'PUBLISHED',
+      },
       select: {
         id: true,
         authorId: true,
         createdAt: true,
-        likesCount: true,
+        reactionsCount: true,
         savesCount: true,
       },
       take: ValueCollectorService.BATCH,
@@ -424,7 +428,8 @@ export class ValueCollectorService {
     });
 
     for (const post of posts) {
-      const engagement = post.likesCount + post.savesCount;
+      const engagement =
+        Number(post.reactionsCount) + Number(post.savesCount);
       if (engagement < MATURITY.postEngagement) continue;
 
       await this.record({
@@ -433,17 +438,21 @@ export class ValueCollectorService {
         subjectType: 'post',
         subjectId: post.id,
         occurredAt: post.createdAt,
-        evidence: { likes: post.likesCount, saves: post.savesCount },
+        evidence: {
+          likes: Number(post.reactionsCount),
+          saves: Number(post.savesCount),
+        },
       });
       touched.push(post.authorId);
     }
 
     // Comments on posts that themselves drew a crowd. A comment on a post
     // nobody read helped nobody, whatever it said.
-    const comments = await this.prisma.comment.findMany({
+    const comments = await this.prisma.commerceContentComment.findMany({
       where: {
         createdAt: { gte: since },
-        post: { likesCount: { gte: MATURITY.postEngagement } },
+        status: 'VISIBLE',
+        content: { reactionsCount: { gte: MATURITY.postEngagement } },
       },
       select: { id: true, userId: true, createdAt: true },
       take: ValueCollectorService.BATCH,

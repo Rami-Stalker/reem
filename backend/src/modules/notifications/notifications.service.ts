@@ -19,14 +19,22 @@ import {
   AppEvent,
   CommerceContentPublishedPayload,
   CommerceContentSubmittedPayload,
+  ContentEngagementPayload,
+  ContentModeratedPayload,
   CouponIssuedPayload,
   OrderStatusChangedPayload,
   PostPublishedPayload,
   StoryPublishedPayload,
+  UserFollowedPayload,
 } from '../../common/events/app-events';
 import {
   NotificationsRepository,
   PreferencePatch,
+  // One definition, in the file that owns the Prisma access. It lived here too
+  // until now, and the two copies had drifted: `inAppRooms` shipped as a column
+  // and a settings toggle and was missing from both, so muting room activity
+  // did nothing at all.
+  PreferenceKey as PrefKey,
 } from './notifications.repository';
 import { UpdatePreferencesDto } from './dto/update-preferences.dto';
 import {
@@ -38,7 +46,6 @@ import {
   UpdateCampaignStatusDto,
 } from './dto/notification-engine.dto';
 
-type PrefKey = 'inAppPosts' | 'inAppStories' | 'inAppOrders' | 'inAppCoupons';
 
 @Injectable()
 export class NotificationsService {
@@ -95,6 +102,11 @@ export class NotificationsService {
       ...(dto.in_app_orders !== undefined && { inAppOrders: dto.in_app_orders }),
       ...(dto.in_app_coupons !== undefined && {
         inAppCoupons: dto.in_app_coupons,
+      }),
+      ...(dto.in_app_rooms !== undefined && { inAppRooms: dto.in_app_rooms }),
+      ...(dto.in_app_social !== undefined && { inAppSocial: dto.in_app_social }),
+      ...(dto.in_app_moderation !== undefined && {
+        inAppModeration: dto.in_app_moderation,
       }),
       ...(dto.push !== undefined && { push: dto.push }),
       ...(dto.email !== undefined && { email: dto.email }),
@@ -355,7 +367,7 @@ export class NotificationsService {
   async onContentSubmitted(
     payload: CommerceContentSubmittedPayload,
   ): Promise<void> {
-    const name = await this.repo.userName(payload.sellerId);
+    const name = await this.repo.userName(payload.authorId);
     const moderators = await this.prisma.user.findMany({
       where: {
         role: {
@@ -376,7 +388,7 @@ export class NotificationsService {
         type: NotificationType.system,
         title: 'محتوى بانتظار المراجعة',
         body: `${name} أرسلت ${payload.contentType} للمراجعة`,
-        data: { contentId: payload.contentId, sellerId: payload.sellerId },
+        data: { contentId: payload.contentId, authorId: payload.authorId },
       });
     }
   }
@@ -386,15 +398,141 @@ export class NotificationsService {
   async onContentPublished(
     payload: CommerceContentPublishedPayload,
   ): Promise<void> {
-    const name = await this.repo.userName(payload.sellerId);
+    const name = await this.repo.userName(payload.authorId);
     await this.fanout(
-      payload.sellerId,
+      payload.authorId,
       'inAppPosts',
       NotificationType.post,
       'جديد في متجرها',
       `${name} نشرت ${payload.contentType}`,
       { contentId: payload.contentId },
     );
+  }
+
+  // ── The social feed ──────────────────────────────────────────────────────
+  //
+  // `NotificationType.like`, `.comment` and `.follow` have existed in the enum
+  // since the beginning and were emitted by nothing. These are the emitters.
+
+  @OnEvent(AppEvent.ContentLiked)
+  async onContentLiked(payload: ContentEngagementPayload): Promise<void> {
+    if (payload.actorId === payload.authorId) return;
+    if (await this.optedOut(payload.authorId, 'inAppSocial')) return;
+    const name = await this.repo.userName(payload.actorId);
+    await this.safeCreate({
+      userId: payload.authorId,
+      type: NotificationType.like,
+      title: 'إعجاب جديد',
+      body: `${name} أعجبها منشوركِ`,
+      data: { contentId: payload.contentId, actorId: payload.actorId },
+    });
+  }
+
+  @OnEvent(AppEvent.ContentCommented)
+  async onContentCommented(payload: ContentEngagementPayload): Promise<void> {
+    if (payload.actorId === payload.authorId) return;
+    if (await this.optedOut(payload.authorId, 'inAppSocial')) return;
+    const name = await this.repo.userName(payload.actorId);
+    await this.safeCreate({
+      userId: payload.authorId,
+      type: NotificationType.comment,
+      title: 'تعليق جديد',
+      body: `${name} علّقت على منشوركِ`,
+      data: {
+        contentId: payload.contentId,
+        commentId: payload.commentId ?? null,
+        actorId: payload.actorId,
+      },
+    });
+  }
+
+  /**
+   * Somebody added her post to their own page.
+   *
+   * This is the notification the whole reshare feature is *for* on the
+   * boutique's side: it is how she finds out a customer is carrying her
+   * products around, before she goes looking at a dashboard.
+   */
+  @OnEvent(AppEvent.ContentReshared)
+  async onContentReshared(payload: ContentEngagementPayload): Promise<void> {
+    if (payload.actorId === payload.authorId) return;
+    if (await this.optedOut(payload.authorId, 'inAppSocial')) return;
+    const name = await this.repo.userName(payload.actorId);
+    await this.safeCreate({
+      userId: payload.authorId,
+      type: NotificationType.post,
+      title: 'أضافت منشوركِ إلى صفحتها',
+      body: `${name} شاركت منشوركِ مع متابِعاتها`,
+      data: {
+        contentId: payload.contentId,
+        reshareId: payload.reshareId ?? null,
+        actorId: payload.actorId,
+      },
+    });
+  }
+
+  @OnEvent(AppEvent.UserFollowed)
+  async onUserFollowed(payload: UserFollowedPayload): Promise<void> {
+    if (payload.followerId === payload.userId) return;
+    if (await this.optedOut(payload.userId, 'inAppSocial')) return;
+    const name = await this.repo.userName(payload.followerId);
+    await this.safeCreate({
+      userId: payload.userId,
+      type: NotificationType.follow,
+      title: 'متابِعة جديدة',
+      body: `${name} تتابعكِ الآن`,
+      data: { followerId: payload.followerId },
+    });
+  }
+
+  /**
+   * Her content was taken down, and she is told why.
+   *
+   * The requirement is explicit that removal is never silent and that the
+   * reason reaches the woman who published it, worded respectfully. Two things
+   * follow from that and are easy to get wrong:
+   *
+   *   - **The reason is in the body, verbatim.** Not a code she cannot read,
+   *     and not a generic "violated our policies" that leaves her guessing
+   *     which of her three posts is meant.
+   *   - **This is not opt-out-able.** `inAppModeration` exists as a preference
+   *     and is deliberately not consulted here: a woman who muted social
+   *     notifications has muted likes, not the news that her page has changed.
+   */
+  @OnEvent(AppEvent.ContentRemoved)
+  async onContentRemoved(payload: ContentModeratedPayload): Promise<void> {
+    await this.safeCreate({
+      userId: payload.authorId,
+      // Deliberately `system` rather than a new enum value: the shipped client
+      // falls back to a plain notice for a type it does not know, so a new one
+      // would render unstyled on every handset already out there. It becomes
+      // its own type when the client ships support for it.
+      type: NotificationType.system,
+      title: 'أزلنا أحد منشوراتكِ',
+      body: `راجعنا منشوركِ وأزلناه للسبب التالي: ${payload.reason}. إن كنتِ ترين أن هذا خطأ، تواصلي معنا وسنراجعه من جديد.`,
+      data: {
+        contentId: payload.contentId,
+        contentType: payload.contentType,
+        reason: payload.reason,
+        moderationActionId: payload.moderationActionId,
+        kind: 'content_removed',
+      },
+    });
+  }
+
+  @OnEvent(AppEvent.ContentReinstated)
+  async onContentReinstated(payload: ContentModeratedPayload): Promise<void> {
+    await this.safeCreate({
+      userId: payload.authorId,
+      type: NotificationType.system,
+      title: 'أعدنا منشوركِ',
+      body: 'راجعنا القرار وأعدنا نشر منشوركِ. نعتذر عن الإزعاج.',
+      data: {
+        contentId: payload.contentId,
+        contentType: payload.contentType,
+        kind: 'content_reinstated',
+      },
+    });
   }
 
   @OnEvent(AppEvent.CouponIssued)
@@ -710,6 +848,9 @@ export class NotificationsService {
       in_app_stories: pref?.inAppStories ?? true,
       in_app_orders: pref?.inAppOrders ?? true,
       in_app_coupons: pref?.inAppCoupons ?? true,
+      in_app_rooms: pref?.inAppRooms ?? true,
+      in_app_social: pref?.inAppSocial ?? true,
+      in_app_moderation: pref?.inAppModeration ?? true,
       push: pref?.push ?? false,
       email: pref?.email ?? false,
       sms: pref?.sms ?? false,

@@ -1,79 +1,149 @@
+import { Injectable, NotFoundException } from '@nestjs/common';
 import {
-  ForbiddenException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
-import { UserRole } from '@prisma/client';
+  CommerceAuthorKind,
+  CommerceContentStatus,
+  ContentTagBasis,
+} from '@prisma/client';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { PrismaService } from '../../prisma/prisma.service';
+import { PRODUCT_CARD_INCLUDE } from '../../common/catalog/product-include';
 import { AuthUser } from '../../common/decorators/current-user.decorator';
 import { assertCanManage } from '../../common/authz';
 import { AppEvent } from '../../common/events/app-events';
-import { serializePost } from '../../common/serializers';
-import { PostsRepository } from './posts.repository';
+import { serializeLegacyPost } from '../../common/serializers';
+import { ContentAttributionService } from '../commerce-content/attribution/content-attribution.service';
+import { ProductTagPolicyService } from '../commerce-content/tagging/product-tag-policy.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 
-/** Seller-only authoring of social posts. */
+/**
+ * `POST|PATCH|DELETE /seller/posts` — writing to the content platform.
+ *
+ * Kept because the shipped app's composer calls it. What it creates is a
+ * `product_post` `CommerceContent`, indistinguishable from one made through
+ * `/content` except that this route takes exactly one product, which is all
+ * the old client can express.
+ *
+ * The entitlement check moved to `ProductTagPolicyService`. The one that lived
+ * here had the same defect as the platform's: it read `product.offers` with no
+ * status filter, so a boutique could feature a product whose listing she had
+ * archived.
+ */
 @Injectable()
 export class SellerPostsService {
   constructor(
-    private readonly repo: PostsRepository,
     private readonly prisma: PrismaService,
     private readonly events: EventEmitter2,
+    private readonly tagPolicy: ProductTagPolicyService,
+    private readonly attribution: ContentAttributionService,
   ) {}
+
+  private readonly include = {
+    author: true,
+    media: { orderBy: { sortOrder: 'asc' as const } },
+    productTags: {
+      orderBy: { sortOrder: 'asc' as const },
+      include: { product: { include: PRODUCT_CARD_INCLUDE }, variant: true },
+    },
+  };
 
   async create(user: AuthUser, dto: CreatePostDto) {
     const product = await this.prisma.product.findUnique({
       where: { id: dto.product_id },
-      select: { id: true, offers: { select: { sellerId: true } } },
+      select: { id: true },
     });
     if (!product) throw new NotFoundException('Product not found');
 
-    // A seller may only feature their own products.
-    const managerRoles: UserRole[] = [
-      UserRole.SUPER_ADMIN,
-      UserRole.OPERATIONS_ADMIN,
-      UserRole.CONTENT_MODERATOR,
-      UserRole.ADMIN,
-    ];
-    // A seller may post about any product they actually list.
-    const listsProduct = product.offers.some(
-      (offer) => offer.sellerId === user.id,
-    );
-    if (!managerRoles.includes(user.role) && !listsProduct) {
-      throw new ForbiddenException('You can only post about products you sell');
-    }
+    const verdicts = await this.tagPolicy.assert(user, [dto.product_id]);
+    const verdict = verdicts.get(dto.product_id);
+    const author = await this.prisma.user.findUnique({
+      where: { id: user.id },
+      select: { role: true, profileIsPublic: true },
+    });
 
-    const post = await this.repo.create(
-      {
-        author: { connect: { id: user.id } },
-        product: { connect: { id: dto.product_id } },
-        caption: dto.caption,
+    const post = await this.prisma.commerceContent.create({
+      data: {
+        authorId: user.id,
+        authorKind:
+          author?.role === 'CUSTOMER'
+            ? CommerceAuthorKind.CUSTOMER
+            : CommerceAuthorKind.SELLER,
+        authorIsPublic: author?.profileIsPublic ?? true,
+        contentType: 'product_post',
+        body: dto.caption,
+        locale: 'ar',
+        // This route has no draft step — the old composer publishes on submit,
+        // and giving it one would leave every post from the shipped app
+        // invisible in a workspace its client cannot open.
+        status: CommerceContentStatus.PUBLISHED,
+        moderationStatus: 'APPROVED',
+        publishedAt: new Date(),
+        payload: { caption: dto.caption, legacy: 'post' },
+        publicationTargets: ['HOME_FEED', 'STORE_FEED', 'FOLLOWING_FEED'],
+        productTags: {
+          create: [
+            {
+              productId: dto.product_id,
+              role: 'featured',
+              sortOrder: 0,
+              basis: verdict?.basis ?? ContentTagBasis.SELLER_OFFER,
+              ...(verdict?.sourceOrderItemId
+                ? { sourceOrderItemId: verdict.sourceOrderItemId }
+                : {}),
+            },
+          ],
+        },
       },
-      user.id,
-    );
+      include: this.include,
+    });
+
+    await this.attribution.rebuild(post.id);
     this.events.emit(AppEvent.PostPublished, {
       sellerId: user.id,
       postId: post.id,
     });
-    return serializePost(post, user.id);
+    return serializeLegacyPost(post);
   }
 
   async update(user: AuthUser, id: string, dto: UpdatePostDto) {
-    const owner = await this.ownedOrThrow(user, id);
-    const post = await this.repo.update(id, { caption: dto.caption }, owner.authorId);
-    return serializePost(post, user.id);
+    await this.ownedOrThrow(user, id);
+    const post = await this.prisma.commerceContent.update({
+      where: { id },
+      data: {
+        body: dto.caption,
+        payload: { caption: dto.caption, legacy: 'post' },
+      },
+      include: this.include,
+    });
+    return serializeLegacyPost(post);
   }
 
+  /**
+   * Her own deletion, which is `DELETED` and never `REMOVED`.
+   *
+   * The old implementation was a hard `prisma.post.delete`, so a post and
+   * every like and comment on it vanished with no record that it had existed.
+   * A soft delete keeps the trail an appeal or an incident review needs, and
+   * keeps the two words meaning different things: she changed her mind, or we
+   * intervened.
+   */
   async remove(user: AuthUser, id: string) {
     await this.ownedOrThrow(user, id);
-    await this.repo.delete(id);
+    await this.prisma.commerceContent.update({
+      where: { id },
+      data: {
+        status: CommerceContentStatus.DELETED,
+        archivedAt: new Date(),
+      },
+    });
     return { message: 'Post deleted' };
   }
 
   private async ownedOrThrow(user: AuthUser, id: string) {
-    const owner = await this.repo.findOwner(id);
+    const owner = await this.prisma.commerceContent.findFirst({
+      where: { id, contentType: 'product_post' },
+      select: { id: true, authorId: true },
+    });
     if (!owner) throw new NotFoundException('Post not found');
     assertCanManage(owner.authorId, user);
     return owner;

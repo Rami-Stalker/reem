@@ -11,6 +11,12 @@ export const AppEvent = {
   OrderStatusChanged: 'order.status_changed',
   CommerceContentPublished: 'commerce_content.published',
   CommerceContentSubmitted: 'commerce_content.submitted',
+  ContentLiked: 'content.liked',
+  ContentCommented: 'content.commented',
+  ContentReshared: 'content.reshared',
+  ContentRemoved: 'content.removed',
+  ContentReinstated: 'content.reinstated',
+  UserFollowed: 'user.followed',
   PostPublished: 'post.published',
   StoryPublished: 'story.published',
   CouponIssued: 'coupon.issued',
@@ -29,14 +35,14 @@ export interface PostPublishedPayload {
 }
 
 export interface CommerceContentPublishedPayload {
-  sellerId: string;
+  authorId: string;
   contentId: string;
   contentType: string;
   channels: string[];
 }
 
 export interface CommerceContentSubmittedPayload {
-  sellerId: string;
+  authorId: string;
   contentId: string;
   contentType: string;
 }
@@ -44,6 +50,40 @@ export interface CommerceContentSubmittedPayload {
 export interface StoryPublishedPayload {
   sellerId: string;
   storyId: string;
+}
+
+/**
+ * Somebody acted on a woman's content. One shape for all three gestures — the
+ * fan-out is identical and the only difference is the sentence.
+ */
+export interface ContentEngagementPayload {
+  /** Who is told. */
+  authorId: string;
+  /** Who did it. Never notified about her own gesture. */
+  actorId: string;
+  contentId: string;
+  commentId?: string;
+  reshareId?: string;
+}
+
+/**
+ * A moderator took content down, and the woman who published it is owed the
+ * reason. `reason` is required here for the same purpose the CHECK constraint
+ * on `commerce_content_moderation_actions` serves: a silent takedown is the
+ * thing the requirement forbids.
+ */
+export interface ContentModeratedPayload {
+  authorId: string;
+  contentId: string;
+  contentType: string;
+  reason: string;
+  moderationActionId: string;
+}
+
+export interface UserFollowedPayload {
+  /** The woman being followed. */
+  userId: string;
+  followerId: string;
 }
 
 export interface CouponIssuedPayload {

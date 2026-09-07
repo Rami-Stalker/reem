@@ -1,10 +1,12 @@
 import {
+  CommerceAuthorKind,
   CommerceContentAnalyticsEventType,
   CommerceContentModerationStatus,
   CommerceContentPublicationChannel,
   CommerceContentStatus,
   CommerceContentVisibility,
   Prisma,
+  UserRole,
 } from '@prisma/client';
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
@@ -14,7 +16,7 @@ import {
 } from '../../common/catalog/product-include';
 
 export const commerceContentInclude = {
-  seller: true,
+  author: true,
   typeDefinition: true,
   media: { orderBy: { sortOrder: 'asc' as const } },
   productTags: {
@@ -103,13 +105,57 @@ export class CommerceContentRepository {
       where: { id },
       select: {
         id: true,
-        sellerId: true,
+        authorId: true,
+        authorKind: true,
         status: true,
         moderationStatus: true,
         scheduledAt: true,
         expiresAt: true,
         contentType: true,
         publicationTargets: true,
+      },
+    });
+  }
+
+  /// The two author facts every new row records: what she was when she wrote
+  /// it, and whether her page was open at that moment. Both are snapshots by
+  /// design — see `CommerceContent.authorKind` — so they are read here rather
+  /// than joined at query time.
+  async authorFacts(userId: string) {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      select: { role: true, profileIsPublic: true },
+    });
+    if (!user) return null;
+    return {
+      kind:
+        user.role === UserRole.CUSTOMER
+          ? CommerceAuthorKind.CUSTOMER
+          : user.role === UserRole.SELLER
+            ? CommerceAuthorKind.SELLER
+            : CommerceAuthorKind.PLATFORM,
+      isPublic: user.profileIsPublic,
+    };
+  }
+
+  /**
+   * How many of her pieces have already been through review.
+   *
+   * The number the pre-publish gate lifts itself on. Counts published, approved
+   * content only — a draft proves nothing about what she posts.
+   */
+  approvedCountFor(authorId: string) {
+    return this.prisma.commerceContent.count({
+      where: {
+        authorId,
+        moderationStatus: CommerceContentModerationStatus.APPROVED,
+        status: {
+          in: [
+            CommerceContentStatus.PUBLISHED,
+            CommerceContentStatus.EXPIRED,
+            CommerceContentStatus.ARCHIVED,
+          ],
+        },
       },
     });
   }
@@ -129,7 +175,7 @@ export class CommerceContentRepository {
   }
 
   listSeller(input: {
-    sellerId: string;
+    authorId: string;
     skip: number;
     take: number;
     status?: CommerceContentStatus;
@@ -147,7 +193,7 @@ export class CommerceContentRepository {
   }
 
   countSeller(input: {
-    sellerId: string;
+    authorId: string;
     status?: CommerceContentStatus;
     contentType?: string;
     q?: string;
@@ -160,7 +206,7 @@ export class CommerceContentRepository {
     take: number;
     channel?: CommerceContentPublicationChannel;
     contentType?: string;
-    sellerId?: string;
+    authorId?: string;
   }) {
     const where = this.feedWhere(input);
     return this.prisma.commerceContent.findMany({
@@ -179,7 +225,7 @@ export class CommerceContentRepository {
   countFeed(input: {
     channel?: CommerceContentPublicationChannel;
     contentType?: string;
-    sellerId?: string;
+    authorId?: string;
   }) {
     return this.prisma.commerceContent.count({ where: this.feedWhere(input) });
   }
@@ -287,13 +333,13 @@ export class CommerceContentRepository {
   }
 
   private sellerWhere(input: {
-    sellerId: string;
+    authorId: string;
     status?: CommerceContentStatus;
     contentType?: string;
     q?: string;
   }): Prisma.CommerceContentWhereInput {
     return {
-      sellerId: input.sellerId,
+      authorId: input.authorId,
       ...(input.status ? { status: input.status } : {}),
       ...(input.contentType ? { contentType: input.contentType } : {}),
       ...(input.q
@@ -310,7 +356,7 @@ export class CommerceContentRepository {
   private feedWhere(input: {
     channel?: CommerceContentPublicationChannel;
     contentType?: string;
-    sellerId?: string;
+    authorId?: string;
   }): Prisma.CommerceContentWhereInput {
     return {
       status: CommerceContentStatus.PUBLISHED,
@@ -318,7 +364,7 @@ export class CommerceContentRepository {
       OR: [{ expiresAt: null }, { expiresAt: { gt: new Date() } }],
       ...(input.channel ? { publicationTargets: { has: input.channel } } : {}),
       ...(input.contentType ? { contentType: input.contentType } : {}),
-      ...(input.sellerId ? { sellerId: input.sellerId } : {}),
+      ...(input.authorId ? { authorId: input.authorId } : {}),
     };
   }
 }

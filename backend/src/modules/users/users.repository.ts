@@ -20,8 +20,21 @@ export class UsersRepository {
     return this.prisma.sellerOffer.count({ where: { sellerId } });
   }
 
+  /**
+   * The number under «منشورات» on her profile.
+   *
+   * Published social formats only — a draft, a scheduled piece or something
+   * taken down is not something a visitor can open, and a count that does not
+   * match the grid beneath it reads as a bug.
+   */
   countPosts(authorId: string): Promise<number> {
-    return this.prisma.post.count({ where: { authorId } });
+    return this.prisma.commerceContent.count({
+      where: {
+        authorId,
+        contentType: { in: ['product_post', 'reel'] },
+        status: 'PUBLISHED',
+      },
+    });
   }
 
   findFollow(followerId: string, followingId: string) {

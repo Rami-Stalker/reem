@@ -14,6 +14,7 @@ import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import { ProfileOverviewService } from './profile-overview.service';
 import { UsersService } from './users.service';
 import { UpdateProfileDto } from './dto/update-profile.dto';
+import { SetProfileVisibilityDto } from '../commerce-content/dto/social.dto';
 
 @Controller('users')
 export class UsersController {
@@ -44,6 +45,21 @@ export class UsersController {
     @Body() dto: UpdateProfileDto,
   ) {
     return this.users.updateMe(userId, dto);
+  }
+
+  /**
+   * «حسابي عام» — she chooses whether her page can be looked at and followed.
+   *
+   * Off by default (Q15: profile visibility is the customer's own choice), and
+   * the single switch that turns a shopper into somebody with an audience.
+   */
+  @Patch('me/profile-visibility')
+  @HttpCode(HttpStatus.OK)
+  setProfileVisibility(
+    @CurrentUser('id') userId: string,
+    @Body() dto: SetProfileVisibilityDto,
+  ) {
+    return this.users.setProfileVisibility(userId, dto.is_public);
   }
 
   @Get(':id')

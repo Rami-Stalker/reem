@@ -1,9 +1,11 @@
 import {
   BadRequestException,
   ConflictException,
+  ForbiddenException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { User, UserRole } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 import {
@@ -13,6 +15,7 @@ import {
 import { UsersRepository } from './users.repository';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { MediaService } from '../media/media.service';
+import { AppEvent } from '../../common/events/app-events';
 
 @Injectable()
 export class UsersService {
@@ -20,6 +23,7 @@ export class UsersService {
     private readonly users: UsersRepository,
     private readonly prisma: PrismaService,
     private readonly media: MediaService,
+    private readonly events: EventEmitter2,
   ) {}
 
   /** The signed-in user's own profile (with stats). */
@@ -85,7 +89,18 @@ export class UsersService {
     if (followerId === targetId) {
       throw new BadRequestException('You cannot follow yourself');
     }
-    await this.requireUser(targetId);
+    const target = await this.requireUser(targetId);
+
+    // A shopper's page is hers until she opens it.
+    //
+    // Q17 said customers may follow boutiques only, and nothing in the code
+    // ever enforced it — the rule lived in a comment in the demo seed, so any
+    // caller could already follow any account. The rule now is the owner's:
+    // she opts in, and until she does she cannot be followed. A boutique is
+    // always followable; a storefront nobody may follow is not a storefront.
+    if (target.role === UserRole.CUSTOMER && !target.profileIsPublic) {
+      throw new ForbiddenException('PROFILE_IS_PRIVATE');
+    }
 
     const existing = await this.users.findFollow(followerId, targetId);
     if (!existing) {
@@ -105,11 +120,57 @@ export class UsersService {
       ]);
     }
 
-    const target = await this.requireUser(targetId);
+    const updated = await this.requireUser(targetId);
+    this.events.emit(AppEvent.UserFollowed, {
+      userId: targetId,
+      followerId,
+    });
     return {
       message: 'Now following',
       is_following: true,
-      followers_count: target.followersCount,
+      followers_count: updated.followersCount,
+    };
+  }
+
+  /**
+   * Opening or closing her page.
+   *
+   * One transaction across three tables. `commerce_contents.author_is_public`
+   * and `commerce_content_reshares.resharer_is_public` are denormalised copies
+   * of this flag, and they are the one denormalisation here whose staleness
+   * would be a *privacy* bug rather than a stale number — a row left `true`
+   * publishes a woman's page to strangers. They fail closed and they move with
+   * her, in the same transaction, so there is no window where the two disagree.
+   *
+   * Going private does **not** drop her existing followers. She let them in;
+   * taking that back is a separate act, and silently severing every connection
+   * she has made is not what "make my page private" means to anybody.
+   */
+  async setProfileVisibility(userId: string, isPublic: boolean) {
+    const now = new Date();
+    await this.prisma.$transaction([
+      this.prisma.user.update({
+        where: { id: userId },
+        data: {
+          profileIsPublic: isPublic,
+          profilePublicSince: isPublic ? now : null,
+        },
+      }),
+      this.prisma.commerceContent.updateMany({
+        where: { authorId: userId },
+        data: { authorIsPublic: isPublic },
+      }),
+      this.prisma.commerceContentReshare.updateMany({
+        where: { resharerId: userId },
+        data: { resharerIsPublic: isPublic },
+      }),
+    ]);
+
+    return {
+      is_public: isPublic,
+      // What changes, said plainly, because "public profile" means different
+      // things on different platforms and she is entitled to know which.
+      followers_kept: true,
     };
   }
 

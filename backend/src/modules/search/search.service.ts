@@ -4,7 +4,7 @@ import { PrismaService } from '../../prisma/prisma.service';
 import { TrendSignalService } from '../trends/collection/trend-signal.service';
 import { buildMeta, PaginationDto } from '../../common/dto/pagination.dto';
 import {
-  serializePost,
+  serializeLegacyPost,
   serializeProduct,
   serializeUser,
 } from '../../common/serializers';
@@ -103,22 +103,32 @@ export class SearchService {
   async searchPosts(q: string | undefined, viewerId: string | undefined, page: PaginationDto) {
     const where = this.postWhere(q);
     const [posts, total] = await Promise.all([
-      this.prisma.post.findMany({
+      this.prisma.commerceContent.findMany({
         where,
         orderBy: { createdAt: 'desc' },
         skip: page.skip,
         take: page.limit,
         include: {
           author: true,
-          product: { include: PRODUCT_CARD_INCLUDE },
-          likes: { where: { userId: viewerId ?? NIL_UUID } },
+          productTags: {
+            orderBy: { sortOrder: 'asc' },
+            include: { product: { include: PRODUCT_CARD_INCLUDE } },
+          },
+          reactions: { where: { userId: viewerId ?? NIL_UUID } },
           saves: { where: { userId: viewerId ?? NIL_UUID } },
         },
       }),
-      this.prisma.post.count({ where }),
+      this.prisma.commerceContent.count({ where }),
     ]);
     return {
-      data: posts.map((p) => serializePost(p, viewerId)),
+      data: posts.map((post) =>
+        serializeLegacyPost(post, {
+          liked: new Set(post.reactions.map((r) => r.contentId)),
+          saved: new Set(post.saves.map((s) => s.contentId)),
+          viewed: new Set(),
+          reactions: new Map(),
+        }),
+      ),
       pagination: buildMeta(page.page, page.limit, total, posts.length),
     };
   }
@@ -138,11 +148,17 @@ export class SearchService {
         orderBy: { followersCount: 'desc' },
         take: 6,
       }),
-      this.prisma.post.findMany({
+      this.prisma.commerceContent.findMany({
         where: this.postWhere(q),
         orderBy: { createdAt: 'desc' },
         take: 6,
-        include: { author: true, product: { include: PRODUCT_CARD_INCLUDE } },
+        include: {
+          author: true,
+          productTags: {
+            orderBy: { sortOrder: 'asc' },
+            include: { product: { include: PRODUCT_CARD_INCLUDE } },
+          },
+        },
       }),
     ]);
 
@@ -163,7 +179,7 @@ export class SearchService {
         serializeProduct(p, { isLiked: favSet.has(p.id) }),
       ),
       sellers: sellers.map(serializeUser),
-      posts: posts.map((p) => serializePost(p, viewerId)),
+      posts: posts.map((post) => serializeLegacyPost(post)),
     };
   }
 
@@ -301,13 +317,33 @@ export class SearchService {
     };
   }
 
-  private postWhere(q: string | undefined): Prisma.PostWhereInput {
+  /**
+   * Searchable social content.
+   *
+   * Posts and reels, never stories: a story is gone in a day, and a search
+   * result that 404s by tomorrow afternoon is worse than no result.
+   */
+  private postWhere(q: string | undefined): Prisma.CommerceContentWhereInput {
+    const base: Prisma.CommerceContentWhereInput = {
+      contentType: { in: ['product_post', 'reel'] },
+      status: 'PUBLISHED',
+      visibility: 'PUBLIC',
+      authorIsPublic: true,
+    };
     const query = q?.trim();
-    if (!query) return {};
+    if (!query) return base;
     return {
+      ...base,
       OR: [
-        { caption: { contains: query, mode: 'insensitive' } },
-        { product: { title: { contains: query, mode: 'insensitive' } } },
+        { body: { contains: query, mode: 'insensitive' } },
+        { title: { contains: query, mode: 'insensitive' } },
+        {
+          productTags: {
+            some: {
+              product: { title: { contains: query, mode: 'insensitive' } },
+            },
+          },
+        },
       ],
     };
   }

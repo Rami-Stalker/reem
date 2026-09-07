@@ -2,11 +2,22 @@ import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 
-type PreferenceKey =
+/**
+ * The preference columns a notification may be muted by.
+ *
+ * Exported and used by the service too, because this union existed twice — in
+ * both files — and the two copies had already drifted: `inAppRooms` shipped as
+ * a column and a settings toggle, and was missing from both unions, so muting
+ * room activity did nothing at all. One definition is the fix.
+ */
+export type PreferenceKey =
   | 'inAppPosts'
   | 'inAppStories'
   | 'inAppOrders'
-  | 'inAppCoupons';
+  | 'inAppCoupons'
+  | 'inAppRooms'
+  | 'inAppSocial'
+  | 'inAppModeration';
 
 @Injectable()
 export class NotificationsRepository {
@@ -96,6 +107,9 @@ export interface PreferencePatch {
   inAppStories?: boolean;
   inAppOrders?: boolean;
   inAppCoupons?: boolean;
+  inAppRooms?: boolean;
+  inAppSocial?: boolean;
+  inAppModeration?: boolean;
   push?: boolean;
   email?: boolean;
   sms?: boolean;

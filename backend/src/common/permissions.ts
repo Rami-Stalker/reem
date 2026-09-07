@@ -9,6 +9,27 @@ export const AppPermission = {
   sellerPremiumTools: 'seller:premium_tools',
   productManage: 'product:manage',
   contentManage: 'content:manage',
+
+  /**
+   * Publishing to the social feed as yourself.
+   *
+   * Deliberately not `contentManage`, which is the boutique's publishing
+   * workspace — scheduling, versions, rollback, the campaign formats. A
+   * shopper posting a photograph of a dress she bought is doing something
+   * narrower, and giving her the seller permission to do it would hand her
+   * flash offers and live streams as well.
+   */
+  contentAuthor: 'content:author',
+
+  /**
+   * Liking, saving, commenting, resharing.
+   *
+   * Split from authoring because they are revoked separately: a spam account
+   * is silenced by taking this away, which stops it commenting everywhere
+   * without deleting the woman's own page.
+   */
+  contentInteract: 'content:interact',
+
   contentTypeManage: 'content_type:manage',
   postManage: 'post:manage',
   storyManage: 'story:manage',

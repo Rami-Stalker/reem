@@ -130,9 +130,18 @@ export async function seedAuthTrail(ctx: DemoContext): Promise<void> {
 export async function seedContentAnalytics(ctx: DemoContext): Promise<void> {
   const { prisma, rng } = ctx;
 
+  // Campaign-shaped formats only.
+  //
+  // Posts, reels and stories are `CommerceContent` too now, and they already
+  // carry real viewers and reactions from the social seed — piling synthetic
+  // analytics on top of them both collided on `(content_id, user_id)` and
+  // would have inflated numbers the reconciler then has to trust.
   const contents = await prisma.commerceContent.findMany({
-    where: { status: 'PUBLISHED' },
-    select: { id: true, sellerId: true, publishedAt: true },
+    where: {
+      status: 'PUBLISHED',
+      contentType: { in: ['flash_offer', 'collection', 'live_stream'] },
+    },
+    select: { id: true, authorId: true, publishedAt: true },
   });
 
   const audience = ctx.customers.map((customer) => customer.id);
@@ -140,14 +149,19 @@ export async function seedContentAnalytics(ctx: DemoContext): Promise<void> {
   for (const content of contents) {
     for (const userId of rng.sample(audience, rng.int(3, 9))) {
       const firstViewedAt = rng.pastDate(30, 0);
-      await prisma.commerceContentViewer.create({
-        data: {
+      // Upsert rather than create: `rng.sample` may hand back a woman who has
+      // already viewed this piece, and a demo seed that dies on a duplicate is
+      // a seed nobody can re-run.
+      await prisma.commerceContentViewer.upsert({
+        where: { contentId_userId: { contentId: content.id, userId } },
+        create: {
           contentId: content.id,
           userId,
           viewsCount: rng.int(1, 4),
           firstViewedAt,
           lastViewedAt: new Date(firstViewedAt.getTime() + rng.int(1, 72) * 36e5),
         },
+        update: {},
       });
 
       await prisma.commerceContentEvent.create({

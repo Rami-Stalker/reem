@@ -16,7 +16,11 @@ import {
 } from '@prisma/client';
 import { randomBytes } from 'crypto';
 import { PrismaService } from '../../prisma/prisma.service';
-import { serializePost, serializeProduct, serializePublicUser } from '../../common/serializers';
+import {
+  serializeLegacyPost,
+  serializeProduct,
+  serializePublicUser,
+} from '../../common/serializers';
 import { Money } from '../../common/money';
 import {
   AddWishlistItemDto,
@@ -28,17 +32,28 @@ import {
   PURCHASABLE_PRODUCT_WHERE,
 } from '../../common/catalog/product-include';
 
+/**
+ * A saved post, as a card needs it.
+ *
+ * `product` became `productTags` when posts moved onto the content platform:
+ * one post may now feature several pieces, and the legacy serializer renders
+ * the first.
+ */
 const postInclude = {
   author: true,
-  product: { include: PRODUCT_CARD_INCLUDE },
-} satisfies Prisma.PostInclude;
+  media: { orderBy: { sortOrder: 'asc' as const } },
+  productTags: {
+    orderBy: { sortOrder: 'asc' as const },
+    include: { product: { include: PRODUCT_CARD_INCLUDE } },
+  },
+} satisfies Prisma.CommerceContentInclude;
 
 const collectionInclude = {
   items: {
     include: {
       product: { include: PRODUCT_CARD_INCLUDE },
       seller: true,
-      post: { include: postInclude },
+      content: { include: postInclude },
     },
     orderBy: { createdAt: 'desc' as const },
   },
@@ -87,9 +102,9 @@ export class FavoritesService {
       // post a shopper saved from the feed went somewhere she could not reach,
       // and «منشورات محفوظة» stayed empty however many she bookmarked. One
       // table now, and it is the one the card writes.
-      this.prisma.postSave.findMany({
+      this.prisma.commerceContentSave.findMany({
         where: { userId },
-        include: { post: { include: postInclude } },
+        include: { content: { include: postInclude } },
         orderBy: { createdAt: 'desc' },
       }),
       this.prisma.wishlistCollection.findMany({
@@ -104,7 +119,12 @@ export class FavoritesService {
       sellers: sellers.map((row) => this.serializeSavedSeller(row.seller, row.createdAt)),
       posts: posts.map((row) => ({
         saved_at: row.createdAt.toISOString(),
-        post: serializePost(row.post, userId),
+        post: serializeLegacyPost(row.content, {
+          liked: new Set<string>(),
+          saved: new Set([row.contentId]),
+          viewed: new Set<string>(),
+          reactions: new Map<string, string | null>(),
+        }),
       })),
       collections: collections.map((collection) =>
         this.serializeCollection(collection, userId),
@@ -128,9 +148,9 @@ export class FavoritesService {
         where: {
           guestSessionId,
           type: GuestSavedItemType.POST,
-          postId: { not: null },
+          contentId: { not: null },
         },
-        include: { post: { include: postInclude } },
+        include: { content: { include: postInclude } },
         orderBy: { createdAt: 'desc' },
       }),
     ]);
@@ -142,10 +162,10 @@ export class FavoritesService {
         .filter((seller): seller is User => !!seller)
         .map((seller) => this.serializeSavedSeller(seller, new Date())),
       posts: posts
-        .filter((row) => !!row.post)
+        .filter((row) => !!row.content)
         .map((row) => ({
           saved_at: row.createdAt.toISOString(),
-          post: serializePost(row.post!, undefined),
+          post: serializeLegacyPost(row.content!),
         })),
       collections: [],
     };
@@ -248,15 +268,19 @@ export class FavoritesService {
   }
 
   async savePost(userId: string, postId: string) {
-    const post = await this.prisma.post.findUnique({ where: { id: postId } });
+    const post = await this.prisma.commerceContent.findUnique({
+      where: { id: postId },
+    });
     if (!post) throw new NotFoundException('Post not found');
-    const existing = await this.prisma.postSave.findUnique({
-      where: { postId_userId: { postId, userId } },
+    const existing = await this.prisma.commerceContentSave.findUnique({
+      where: { contentId_userId: { contentId: postId, userId } },
     });
     if (!existing) {
       await this.prisma.$transaction([
-        this.prisma.postSave.create({ data: { userId, postId } }),
-        this.prisma.post.update({
+        this.prisma.commerceContentSave.create({
+          data: { userId, contentId: postId },
+        }),
+        this.prisma.commerceContent.update({
           where: { id: postId },
           data: { savesCount: { increment: 1 } },
         }),
@@ -266,7 +290,9 @@ export class FavoritesService {
   }
 
   async savePostGuest(guestSessionId: string, postId: string) {
-    const post = await this.prisma.post.findUnique({ where: { id: postId } });
+    const post = await this.prisma.commerceContent.findUnique({
+      where: { id: postId },
+    });
     if (!post) throw new NotFoundException('Post not found');
     await this.createGuestSavedOnce(guestSessionId, {
       type: GuestSavedItemType.POST,
@@ -276,11 +302,11 @@ export class FavoritesService {
   }
 
   async removePost(userId: string, postId: string) {
-    const deleted = await this.prisma.postSave.deleteMany({
-      where: { userId, postId },
+    const deleted = await this.prisma.commerceContentSave.deleteMany({
+      where: { userId, contentId: postId },
     });
     if (deleted.count > 0) {
-      await this.prisma.post.update({
+      await this.prisma.commerceContent.update({
         where: { id: postId },
         data: { savesCount: { decrement: 1 } },
       });
@@ -290,7 +316,7 @@ export class FavoritesService {
 
   async removePostGuest(guestSessionId: string, postId: string) {
     await this.prisma.guestSavedItem.deleteMany({
-      where: { guestSessionId, type: GuestSavedItemType.POST, postId },
+      where: { guestSessionId, type: GuestSavedItemType.POST, contentId: postId },
     });
     return { message: 'Post removed from temporary saves' };
   }
@@ -346,7 +372,7 @@ export class FavoritesService {
           include: {
             product: { include: PRODUCT_CARD_INCLUDE },
             seller: true,
-            post: { include: postInclude },
+            content: { include: postInclude },
           },
         })
       : await this.prisma.wishlistCollectionItem.create({
@@ -355,7 +381,7 @@ export class FavoritesService {
             type: dto.type,
             productId: target.productId,
             sellerId: target.sellerId,
-            postId: target.postId,
+            contentId: target.postId,
             priceWhenSaved: target.priceWhenSaved,
             note: dto.note?.trim() || null,
             notifyPriceDrop: dto.notify_price_drop ?? true,
@@ -364,7 +390,7 @@ export class FavoritesService {
           include: {
             product: { include: PRODUCT_CARD_INCLUDE },
             seller: true,
-            post: { include: postInclude },
+            content: { include: postInclude },
           },
         });
 
@@ -534,7 +560,7 @@ export class FavoritesService {
       return { sellerId: seller.id };
     }
     if (!dto.post_id) throw new BadRequestException('post_id is required');
-    const post = await this.prisma.post.findUnique({
+    const post = await this.prisma.commerceContent.findUnique({
       where: { id: dto.post_id },
       select: { id: true },
     });
@@ -615,7 +641,7 @@ export class FavoritesService {
         type: target.type,
         productId: target.productId,
         sellerId: target.sellerId,
-        postId: target.postId,
+        contentId: target.postId,
       },
     });
   }
@@ -644,7 +670,7 @@ export class FavoritesService {
       include: {
         product: { include: typeof PRODUCT_CARD_INCLUDE };
         seller: true;
-        post: { include: typeof postInclude };
+        content: { include: typeof postInclude };
       };
     }>,
     currentUserId: string,
@@ -654,7 +680,7 @@ export class FavoritesService {
       type: item.type.toLowerCase(),
       product: item.product ? serializeProduct(item.product, { isLiked: true }) : null,
       seller: item.seller ? serializePublicUser(item.seller) : null,
-      post: item.post ? serializePost(item.post, currentUserId) : null,
+      post: item.content ? serializeLegacyPost(item.content) : null,
       price_when_saved: item.priceWhenSaved,
       notify_price_drop: item.notifyPriceDrop,
       notify_back_in_stock: item.notifyBackInStock,

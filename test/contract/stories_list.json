@@ -1,0 +1,30 @@
+[
+  {
+    "id": "9de885a8-32fa-4326-b9f7-09b9c05405ec",
+    "user": {
+      "id": "4a013e9c-de2b-4391-8375-8b49fb340e05",
+      "name": "رهف الشامي",
+      "username": "rahaf_atelier",
+      "bio": "فساتين سهرة وخطوبة مصمّمة يدوياً في قلب دمشق ✨",
+      "image_url": "https://loremflickr.com/400/400/boutique%2Celegant/all?lock=61419",
+      "location": "دمشق، سوريا",
+      "role": "seller",
+      "seller_level": "premium",
+      "seller_verified_at": "2026-06-04T22:37:28.190Z",
+      "seller_premium_until": "2026-12-15T21:53:36.162Z",
+      "is_verified": true,
+      "followers_count": 24,
+      "following_count": 3,
+      "created_at": "2025-04-25T07:35:01.941Z"
+    },
+    "media": {
+      "url": "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=1080",
+      "type": "image"
+    },
+    "link": null,
+    "is_viewed": true,
+    "my_reaction": "😍",
+    "expires_at": "2026-09-07T18:28:32.780Z",
+    "created_at": "2026-09-06T18:28:32.782Z"
+  }
+]
