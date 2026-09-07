@@ -131,6 +131,19 @@ dependencies:
   # travels between friends here. Opens the OS share sheet; the link it
   # carries is built from `AppEnv.shareBaseUrl`.
   share_plus: ^13.3.0
+  # Reels, and a story that is a clip rather than a photograph.
+  #
+  # The project had no video player at all until this: `MediaType.video` was
+  # modelled everywhere, accepted by the upload endpoint, and rendered as a
+  # static poster with a play icon that did nothing — while a video story went
+  # through `CachedNetworkImage` and simply failed to load.
+  #
+  # `video_player` was already here transitively; it is declared now because
+  # this code imports it. `visibility_detector` is what makes a reels list
+  # affordable: a controller is initialised only for the item actually on
+  # screen and released when it leaves. See `DsVideoPlayer`.
+  video_player: ^2.11.1
+  visibility_detector: ^0.4.0+2
 
 dev_dependencies:
   flutter_test:

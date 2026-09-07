@@ -33,6 +33,19 @@ abstract final class RoutePaths {
   static const addPost = '/add-post';
   static const addStory = '/add-story';
 
+  // ── The social platform ─────────────────────────────────────────────────
+  //
+  // `/compose` replaces `/add-post` and `/add-story` for everyone: one screen
+  // that asks which format, because a post, a reel and a story are one object
+  // with three shapes. The two older paths stay routed while the seller app
+  // still links to them.
+  static const compose = '/compose';
+  static const socialFeed = '/community';
+  static const reels = '/reels';
+  static String contentDetailOf(String id) => '/content/$id';
+  static const contentStudio = '/seller/content-studio';
+  static const adminContent = '/admin/content';
+
   static const category = '/category/:category';
 
   /// One department, by slug. Assembled here for the same reason

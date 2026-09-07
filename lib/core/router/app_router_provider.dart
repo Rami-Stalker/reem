@@ -107,6 +107,11 @@ import 'package:reem/features/settings/presentation/screens/payment_methods_scre
 import 'package:reem/features/settings/presentation/screens/rewards_screen.dart';
 import 'package:reem/features/settings/presentation/screens/settings_screen.dart';
 import 'package:reem/features/shipment_tracking/presentation/screens/shipment_tracking_screen.dart';
+import 'package:reem/features/social/presentation/screens/admin_content_screen.dart';
+import 'package:reem/features/social/presentation/screens/content_composer_screen.dart';
+import 'package:reem/features/social/presentation/screens/content_studio_screen.dart';
+import 'package:reem/features/social/presentation/screens/reels_screen.dart';
+import 'package:reem/features/social/presentation/screens/social_feed_screen.dart';
 import 'package:reem/features/splash/presentation/screens/splash_screen.dart';
 import 'package:reem/features/stories/presentation/screens/story_viewer_screen.dart';
 import 'package:reem/features/trends/presentation/screens/admin_trends_screen.dart';
@@ -525,6 +530,33 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         name: RouteNames.addStory,
         builder: (context, state) => const AddStoryScreen(),
       ),
+
+      // ── The social platform ─────────────────────────────────────────────
+      //
+      // `/compose` is the composer for everybody — one screen that asks which
+      // format, because a post, a reel and a story are one object with three
+      // shapes. `/add-post` and `/add-story` above stay routed while the
+      // seller app still links to them.
+      GoRoute(
+        path: RoutePaths.compose,
+        name: RouteNames.compose,
+        builder: (context, state) => const ContentComposerScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.socialFeed,
+        name: RouteNames.socialFeed,
+        builder: (context, state) => const SocialFeedScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.reels,
+        name: RouteNames.reels,
+        builder: (context, state) => const ReelsScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.contentStudio,
+        name: RouteNames.contentStudio,
+        builder: (context, state) => const ContentStudioScreen(),
+      ),
       GoRoute(
         path: RoutePaths.category,
         name: RouteNames.category,
@@ -782,6 +814,17 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => AdminShell(
           child: AdminSectionScreen(config: adminSectionConfigs['moderation']!),
         ),
+      ),
+      // Social content gets a purpose-built screen rather than the generic
+      // section table: the queue needs a thumbnail, the author's kind, and a
+      // removal dialog that will not submit without a reason — none of which
+      // `AdminSectionScreen` can express. Same precedent as
+      // `AdminSellerApplicationsScreen`.
+      GoRoute(
+        path: RoutePaths.adminContent,
+        name: RouteNames.adminContent,
+        builder: (context, state) =>
+            const AdminShell(child: AdminContentScreen()),
       ),
       GoRoute(
         path: RoutePaths.adminSupport,

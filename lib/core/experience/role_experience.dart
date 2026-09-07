@@ -388,6 +388,30 @@ class AppRoleExperience {
         icon: Icons.meeting_room_rounded,
         feature: ExperienceFeature.cartCheckout,
       ),
+      // The community, reels and the composer are quick actions rather than
+      // tabs. The client specified five bottom icons, and a sixth would be a
+      // stated requirement traded away for a shortcut.
+      RoleAction(
+        id: 'community',
+        label: 'Community',
+        path: RoutePaths.socialFeed,
+        icon: Icons.auto_awesome_motion_rounded,
+        feature: ExperienceFeature.socialCommerce,
+      ),
+      RoleAction(
+        id: 'reels',
+        label: 'Reels',
+        path: RoutePaths.reels,
+        icon: Icons.movie_creation_rounded,
+        feature: ExperienceFeature.socialCommerce,
+      ),
+      RoleAction(
+        id: 'compose',
+        label: 'Post',
+        path: RoutePaths.compose,
+        icon: Icons.add_box_rounded,
+        feature: ExperienceFeature.socialCommerce,
+      ),
     ],
     homeSections: _buyerHomeSections,
     profileSections: _buyerProfileSections,
@@ -400,7 +424,16 @@ class AppRoleExperience {
       ExperienceFeature.cartCheckout,
       ExperienceFeature.loyaltyRewards,
     },
-    permissions: {'browse:read', 'cart:write', 'order:read', 'profile:write'},
+    permissions: {
+      'browse:read',
+      'cart:write',
+      'order:read',
+      'profile:write',
+      // She publishes now, not only shops. Presentation only — the server
+      // judges every request again.
+      'content:author',
+      'content:interact',
+    },
     analyticsContext: {
       'experience': 'buyer',
       'north_star': 'personalized_discovery',
@@ -481,12 +514,23 @@ class AppRoleExperience {
         permission: 'product:manage',
         feature: ExperienceFeature.inventoryManagement,
       ),
+      // One composer for everybody. `/add-post` was seller-only, demanded a
+      // product, and had no media picker at all — a post borrowed the
+      // product's photographs.
       RoleAction(
         id: 'campaign',
         label: 'New post',
-        path: RoutePaths.addPost,
+        path: RoutePaths.compose,
         icon: Icons.campaign_rounded,
-        permission: 'post:manage',
+        permission: 'content:author',
+        feature: ExperienceFeature.marketingTools,
+      ),
+      RoleAction(
+        id: 'content-studio',
+        label: 'Content',
+        path: RoutePaths.contentStudio,
+        icon: Icons.insights_rounded,
+        permission: 'analytics:read',
         feature: ExperienceFeature.marketingTools,
       ),
     ],
@@ -506,6 +550,11 @@ class AppRoleExperience {
       'product:manage',
       'post:manage',
       'story:manage',
+      // The content platform's own two. Presentation only — the server judges
+      // every request again, and this list just stops a nav item advertising
+      // a screen that would 403.
+      'content:author',
+      'content:interact',
       'order:manage',
       'analytics:read',
     },
@@ -604,6 +653,18 @@ class AppRoleExperience {
         path: RoutePaths.adminModeration,
         icon: Icons.gavel_outlined,
         selectedIcon: Icons.gavel_rounded,
+        permission: 'content:moderate',
+        feature: ExperienceFeature.moderation,
+      ),
+      // The social platform's own queue, beside the generic moderation cases.
+      // Same permission — it is the same job — but its own screen, because a
+      // takedown needs a thumbnail and a mandatory reason.
+      RoleNavigationItem(
+        surface: ExperienceSurface.moderation,
+        label: 'Content',
+        path: RoutePaths.adminContent,
+        icon: Icons.photo_library_outlined,
+        selectedIcon: Icons.photo_library_rounded,
         permission: 'content:moderate',
         feature: ExperienceFeature.moderation,
       ),

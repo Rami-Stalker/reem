@@ -22,6 +22,12 @@ abstract final class RouteNames {
 
   static const addPost = 'add-post';
   static const addStory = 'add-story';
+  static const compose = 'compose';
+  static const socialFeed = 'community';
+  static const reels = 'reels';
+  static const contentDetail = 'content-detail';
+  static const contentStudio = 'content-studio';
+  static const adminContent = 'admin-content';
 
   static const category = 'category';
   static const categories = 'categories';

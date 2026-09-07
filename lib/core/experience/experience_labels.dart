@@ -42,6 +42,7 @@ extension RoleNavigationItemLabel on RoleNavigationItem {
     RoutePaths.adminOrders => l10n.adminOrders,
     RoutePaths.adminSupport => l10n.adminSupportQueue,
     RoutePaths.adminModeration => l10n.adminModeration,
+    RoutePaths.adminContent => l10n.adminContentTitle,
     RoutePaths.adminReports => l10n.adminReports,
     RoutePaths.adminFinancials => l10n.adminFinance,
     RoutePaths.adminCommissions => l10n.adminCommissionManagement,

@@ -24,6 +24,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get a11yMore => 'More options';
 
   @override
+  String get a11yMute => 'Mute';
+
+  @override
   String get a11yNotifications => 'Notifications';
 
   @override
@@ -5896,4 +5899,307 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get yourWishlist => 'Your wishlist';
+
+  @override
+  String get a11yUnmute => 'Unmute';
+
+  @override
+  String get composerPublished => 'Published ✨';
+
+  @override
+  String get composerPublishedForReview =>
+      'We have your post ✨ We will review it shortly and then everyone can see it.';
+
+  @override
+  String get composerNeedsMedia => 'Add a photo or a clip first';
+
+  @override
+  String get composerNeedsVideo => 'A reel needs a video';
+
+  @override
+  String get composerNeedsCaption => 'Write something, or add a photo';
+
+  @override
+  String get composerVideoTooLong => 'That clip is longer than 30 seconds';
+
+  @override
+  String contentResharedBy(String name) {
+    return '$name added this to her page';
+  }
+
+  @override
+  String get contentFromShopper => 'From a shopper';
+
+  @override
+  String get contentFromBoutique => 'From a boutique';
+
+  @override
+  String get contentUnderReview => 'Under review';
+
+  @override
+  String get contentAddToMyPage => 'Add to my page';
+
+  @override
+  String get contentShare => 'Share';
+
+  @override
+  String get contentReply => 'Reply';
+
+  @override
+  String contentReplyingTo(String name) {
+    return 'Replying to $name';
+  }
+
+  @override
+  String contentShowReplies(int count) {
+    return 'Show $count replies';
+  }
+
+  @override
+  String get socialFeedTitle => 'Community';
+
+  @override
+  String get socialFeedDiscover => 'Discover';
+
+  @override
+  String get socialFeedFollowing => 'Following';
+
+  @override
+  String get socialFeedEmptyTitle => 'No posts yet';
+
+  @override
+  String get socialFeedEmptyBody => 'Be the first to share your look 🌸';
+
+  @override
+  String get socialFeedFollowingEmptyTitle => 'Follow the boutiques you love';
+
+  @override
+  String get socialFeedFollowingEmptyBody =>
+      'Everything new from the boutiques and women you follow shows up here.';
+
+  @override
+  String get reelsTitle => 'Reels';
+
+  @override
+  String get reelsEmptyTitle => 'No reels yet';
+
+  @override
+  String get reelsEmptyBody => 'The first one could be yours 🎬';
+
+  @override
+  String get composerTitle => 'New post';
+
+  @override
+  String get contentAddToMyPageBody =>
+      'It will show on your page, and the boutique keeps the credit.';
+
+  @override
+  String get contentAddToMyPagePreview => 'Post preview';
+
+  @override
+  String get contentAddToMyPageCredit =>
+      'Originally hers — it stays in her name';
+
+  @override
+  String contentAddToMyPageProduct(String title) {
+    return 'Tagged with $title';
+  }
+
+  @override
+  String get contentAddToMyPageNote => 'Your note (optional)';
+
+  @override
+  String get contentAddToMyPageNoteHint => 'What would you say about it?';
+
+  @override
+  String get contentAddToMyPageConfirm => 'Add to my page';
+
+  @override
+  String get composerMediaLabel => 'Photos or clip';
+
+  @override
+  String get composerMediaVideoHelp => 'One clip, up to 30 seconds';
+
+  @override
+  String get composerCaptionLabel => 'Caption';
+
+  @override
+  String get composerCaptionHint => 'Tell us about the look…';
+
+  @override
+  String get composerPublish => 'Publish';
+
+  @override
+  String get composerAudience => 'Who can see it';
+
+  @override
+  String get composerAudiencePublic => 'Everyone';
+
+  @override
+  String get composerAudienceFollowers => 'My followers only';
+
+  @override
+  String get composerTagProducts => 'Tag the piece';
+
+  @override
+  String get composerTagProductsHelp =>
+      'Only pieces that were actually delivered to you';
+
+  @override
+  String get composerTagProductsEmpty =>
+      'Once your first order arrives, your pieces show up here.';
+
+  @override
+  String get studioTitle => 'Content studio';
+
+  @override
+  String get studioSubtitle => 'What is working, and how far it went';
+
+  @override
+  String get studioFormats => 'Content performance';
+
+  @override
+  String get studioFormatsEmpty => 'Nothing published yet';
+
+  @override
+  String get studioFormatPost => 'Posts';
+
+  @override
+  String get studioFormatStory => 'Stories';
+
+  @override
+  String get studioViews => 'Views';
+
+  @override
+  String get studioSaves => 'Saves';
+
+  @override
+  String get studioProductClicks => 'Product opens';
+
+  @override
+  String studioPublishedCount(int count) {
+    return '$count published';
+  }
+
+  @override
+  String studioClickThrough(String rate) {
+    return '$rate% of views opened the product';
+  }
+
+  @override
+  String get studioReach => 'Reach';
+
+  @override
+  String get studioReachEmpty => 'Nobody has added your posts yet';
+
+  @override
+  String get studioReachEmptyBody =>
+      'When a shopper adds your post to her page, you will see it here.';
+
+  @override
+  String get studioReshares => 'Added to pages';
+
+  @override
+  String get studioPromotersCount => 'Shoppers';
+
+  @override
+  String get studioTopProducts => 'Most shared pieces';
+
+  @override
+  String get studioPromoters => 'Who shared your products';
+
+  @override
+  String get studioPromotersHelp =>
+      'Names show only for shoppers with a public page. The rest are counted without a name.';
+
+  @override
+  String get studioPromotersEmpty => 'Nobody yet';
+
+  @override
+  String get studioPromotersEmptyBody =>
+      'The first shopper to add your post to her page shows up here.';
+
+  @override
+  String get studioPromoterAnonymous => 'A shopper (private page)';
+
+  @override
+  String studioPromoterSummary(int reshares, int products) {
+    return '$reshares added · $products pieces';
+  }
+
+  @override
+  String get viewProfile => 'View page';
+
+  @override
+  String get adminContentTitle => 'Content moderation';
+
+  @override
+  String adminContentReported(int count) {
+    return '$count reported';
+  }
+
+  @override
+  String get adminContentEmpty => 'Nothing waiting for review';
+
+  @override
+  String get adminContentNoCaption => '(no caption)';
+
+  @override
+  String get adminContentFilterAll => 'All';
+
+  @override
+  String get adminContentFilterReported => 'Reported';
+
+  @override
+  String get adminContentFilterUnderReview => 'Under review';
+
+  @override
+  String get adminContentFilterRemoved => 'Removed';
+
+  @override
+  String get adminContentFilterCustomers => 'From shoppers';
+
+  @override
+  String get adminContentFilterSellers => 'From boutiques';
+
+  @override
+  String get adminContentStateActive => 'Active';
+
+  @override
+  String get adminContentStateRemoved => 'Removed';
+
+  @override
+  String adminContentRemovedFor(String reason) {
+    return 'Removed for: $reason';
+  }
+
+  @override
+  String get adminContentRemoveTitle => 'Remove this post';
+
+  @override
+  String get adminContentRemoveBody =>
+      'The author receives a message with the reason you write here, so write it clearly and respectfully.';
+
+  @override
+  String get adminContentRemoveConfirm => 'Remove';
+
+  @override
+  String get adminContentReinstateTitle => 'Reinstate this post';
+
+  @override
+  String get adminContentReinstateBody => 'Record why it is going back up.';
+
+  @override
+  String get adminContentReinstateConfirm => 'Reinstate';
+
+  @override
+  String get adminContentReasonLabel => 'Reason';
+
+  @override
+  String get adminContentReasonHint =>
+      'e.g. The photo does not meet our content policy…';
+
+  @override
+  String get adminContentReasonTooShort =>
+      'Write a clear reason (at least 10 characters)';
 }

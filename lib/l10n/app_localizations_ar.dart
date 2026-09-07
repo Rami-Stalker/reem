@@ -24,6 +24,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get a11yMore => 'خيارات أخرى';
 
   @override
+  String get a11yMute => 'كتم الصوت';
+
+  @override
   String get a11yNotifications => 'الإشعارات';
 
   @override
@@ -5890,4 +5893,304 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get yourWishlist => 'مفضّلتكِ';
+
+  @override
+  String get a11yUnmute => 'تشغيل الصوت';
+
+  @override
+  String get composerPublished => 'تم النشر ✨';
+
+  @override
+  String get composerPublishedForReview =>
+      'وصلنا منشوركِ ✨ سنراجعه سريعاً ثم يظهر للجميع.';
+
+  @override
+  String get composerNeedsMedia => 'أضيفي صورة أو مقطعاً أولاً';
+
+  @override
+  String get composerNeedsVideo => 'الريلز بحاجة إلى مقطع فيديو';
+
+  @override
+  String get composerNeedsCaption => 'اكتبي شيئاً أو أضيفي صورة';
+
+  @override
+  String get composerVideoTooLong => 'المقطع أطول من ٣٠ ثانية';
+
+  @override
+  String contentResharedBy(String name) {
+    return 'أضافته $name إلى صفحتها';
+  }
+
+  @override
+  String get contentFromShopper => 'من زبونة';
+
+  @override
+  String get contentFromBoutique => 'من بوتيك';
+
+  @override
+  String get contentUnderReview => 'قيد المراجعة';
+
+  @override
+  String get contentAddToMyPage => 'أضيفي إلى صفحتي';
+
+  @override
+  String get contentShare => 'مشاركة';
+
+  @override
+  String get contentReply => 'رد';
+
+  @override
+  String contentReplyingTo(String name) {
+    return 'ردّاً على $name';
+  }
+
+  @override
+  String contentShowReplies(int count) {
+    return 'عرض $count من الردود';
+  }
+
+  @override
+  String get socialFeedTitle => 'المجتمع';
+
+  @override
+  String get socialFeedDiscover => 'اكتشفي';
+
+  @override
+  String get socialFeedFollowing => 'أتابع';
+
+  @override
+  String get socialFeedEmptyTitle => 'لسّا ما في منشورات';
+
+  @override
+  String get socialFeedEmptyBody => 'كوني أول وحدة تشاركي إطلالتك 🌸';
+
+  @override
+  String get socialFeedFollowingEmptyTitle => 'تابعي بوتيكات تحبيها';
+
+  @override
+  String get socialFeedFollowingEmptyBody =>
+      'هون بتشوفي كل جديد من البوتيكات والصبايا يلي بتتابعيهم.';
+
+  @override
+  String get reelsTitle => 'ريلز';
+
+  @override
+  String get reelsEmptyTitle => 'ما في ريلز بعد';
+
+  @override
+  String get reelsEmptyBody => 'أول مقطع ممكن يكون إلك 🎬';
+
+  @override
+  String get composerTitle => 'منشور جديد';
+
+  @override
+  String get contentAddToMyPageBody =>
+      'رح يظهر على صفحتك، والفضل يبقى للبوتيك.';
+
+  @override
+  String get contentAddToMyPagePreview => 'معاينة المنشور';
+
+  @override
+  String get contentAddToMyPageCredit => 'المنشور الأصلي منها — بيضل باسمها';
+
+  @override
+  String contentAddToMyPageProduct(String title) {
+    return 'مربوط بـ $title';
+  }
+
+  @override
+  String get contentAddToMyPageNote => 'تعليقك (اختياري)';
+
+  @override
+  String get contentAddToMyPageNoteHint => 'شو حابة تقولي عنه؟';
+
+  @override
+  String get contentAddToMyPageConfirm => 'أضيفيه إلى صفحتي';
+
+  @override
+  String get composerMediaLabel => 'الصور أو المقطع';
+
+  @override
+  String get composerMediaVideoHelp => 'مقطع واحد، حتى ٣٠ ثانية';
+
+  @override
+  String get composerCaptionLabel => 'الوصف';
+
+  @override
+  String get composerCaptionHint => 'احكي عن الإطلالة…';
+
+  @override
+  String get composerPublish => 'نشر';
+
+  @override
+  String get composerAudience => 'مين بيشوفه';
+
+  @override
+  String get composerAudiencePublic => 'الكل';
+
+  @override
+  String get composerAudienceFollowers => 'متابِعاتي فقط';
+
+  @override
+  String get composerTagProducts => 'اربطي القطعة';
+
+  @override
+  String get composerTagProductsHelp => 'بس القطع يلي وصلتك فعلياً';
+
+  @override
+  String get composerTagProductsEmpty =>
+      'لمّا يوصلك أول طلب، رح تلاقي قطعك هون.';
+
+  @override
+  String get studioTitle => 'استوديو المحتوى';
+
+  @override
+  String get studioSubtitle => 'شو بيشتغل، ووين وصل';
+
+  @override
+  String get studioFormats => 'أداء المحتوى';
+
+  @override
+  String get studioFormatsEmpty => 'ما في محتوى منشور بعد';
+
+  @override
+  String get studioFormatPost => 'منشورات';
+
+  @override
+  String get studioFormatStory => 'قصص';
+
+  @override
+  String get studioViews => 'مشاهدات';
+
+  @override
+  String get studioSaves => 'حفظ';
+
+  @override
+  String get studioProductClicks => 'فتح المنتج';
+
+  @override
+  String studioPublishedCount(int count) {
+    return '$count منشور';
+  }
+
+  @override
+  String studioClickThrough(String rate) {
+    return '$rate٪ من المشاهدات فتحت المنتج';
+  }
+
+  @override
+  String get studioReach => 'الانتشار';
+
+  @override
+  String get studioReachEmpty => 'لسّا ما حدا أضاف منشوراتك';
+
+  @override
+  String get studioReachEmptyBody =>
+      'لمّا تضيف زبونة منشورك على صفحتها، رح تشوفيها هون.';
+
+  @override
+  String get studioReshares => 'إضافات لصفحاتهن';
+
+  @override
+  String get studioPromotersCount => 'زبونة';
+
+  @override
+  String get studioTopProducts => 'أكتر قطع انتشرت';
+
+  @override
+  String get studioPromoters => 'مين نشر منتجاتك';
+
+  @override
+  String get studioPromotersHelp =>
+      'الأسماء بتظهر بس للي حسابها عام. الباقيات بينحسبن بدون أسماء.';
+
+  @override
+  String get studioPromotersEmpty => 'ما في أحد بعد';
+
+  @override
+  String get studioPromotersEmptyBody =>
+      'أول ما تضيف زبونة منشورك على صفحتها، رح تلاقيها هون.';
+
+  @override
+  String get studioPromoterAnonymous => 'زبونة (حساب خاص)';
+
+  @override
+  String studioPromoterSummary(int reshares, int products) {
+    return '$reshares إضافة · $products قطعة';
+  }
+
+  @override
+  String get viewProfile => 'عرض الصفحة';
+
+  @override
+  String get adminContentTitle => 'إدارة المحتوى';
+
+  @override
+  String adminContentReported(int count) {
+    return '$count منشور عليه بلاغ';
+  }
+
+  @override
+  String get adminContentEmpty => 'ما في شي بانتظار المراجعة';
+
+  @override
+  String get adminContentNoCaption => '(بدون وصف)';
+
+  @override
+  String get adminContentFilterAll => 'الكل';
+
+  @override
+  String get adminContentFilterReported => 'عليه بلاغ';
+
+  @override
+  String get adminContentFilterUnderReview => 'قيد المراجعة';
+
+  @override
+  String get adminContentFilterRemoved => 'محذوف';
+
+  @override
+  String get adminContentFilterCustomers => 'من الزبائن';
+
+  @override
+  String get adminContentFilterSellers => 'من المتاجر';
+
+  @override
+  String get adminContentStateActive => 'ظاهر';
+
+  @override
+  String get adminContentStateRemoved => 'محذوف';
+
+  @override
+  String adminContentRemovedFor(String reason) {
+    return 'سبب الحذف: $reason';
+  }
+
+  @override
+  String get adminContentRemoveTitle => 'حذف المنشور';
+
+  @override
+  String get adminContentRemoveBody =>
+      'رح توصل صاحبة المنشور رسالة فيها السبب يلي بتكتبيه هون، فاكتبيه بلغة واضحة ومحترمة.';
+
+  @override
+  String get adminContentRemoveConfirm => 'حذف';
+
+  @override
+  String get adminContentReinstateTitle => 'إعادة المنشور';
+
+  @override
+  String get adminContentReinstateBody => 'اكتبي سبب إعادة النشر للسجل.';
+
+  @override
+  String get adminContentReinstateConfirm => 'إعادة';
+
+  @override
+  String get adminContentReasonLabel => 'السبب';
+
+  @override
+  String get adminContentReasonHint => 'مثلاً: الصورة لا تلتزم بسياسة المحتوى…';
+
+  @override
+  String get adminContentReasonTooShort =>
+      'اكتبي سبباً واضحاً (١٠ أحرف على الأقل)';
 }

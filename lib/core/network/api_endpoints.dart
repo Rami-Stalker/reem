@@ -101,6 +101,84 @@ abstract final class ApiEndpoints {
       '/seller/stories/$id/analytics';
   static String sellerStoryViewers(String id) => '/seller/stories/$id/viewers';
 
+  // ── The content platform ────────────────────────────────────────────────
+  //
+  // One surface for posts, reels and stories, authored by boutiques and by
+  // shoppers alike. `/posts/*` and `/stories/*` above still answer their
+  // original contract — they are adapters over these same tables — so a
+  // handset running the old build keeps working while this one moves.
+  //
+  // Feeds are **cursor**-paged, not offset: a feed grows at the head, so page
+  // two of an offset query shows rows page one already showed. The envelope is
+  // `{data, pagination: {limit, has_next_page, next_cursor}}`.
+  static const contentFeed = '/content/feed';
+  static const contentReels = '/content/reels';
+  static const contentFollowing = '/content/following';
+  static const contentStories = '/content/stories';
+  static const contentSaved = '/content/saved';
+  static String contentByUser(String userId) => '/content/users/$userId';
+  static String contentByProduct(String productId) =>
+      '/content/products/$productId';
+
+  /// What she may tag: her live listings if she is a boutique, the pieces
+  /// actually delivered to her if she is a shopper.
+  static const contentTaggableProducts = '/content/taggable-products';
+
+  // Authoring — role-neutral. What a role may publish is decided by the
+  // content type's `audiences`, not by the route.
+  static const content = '/content';
+  static const contentMine = '/content/mine';
+  static String contentMineById(String id) => '/content/mine/$id';
+  static String contentById(String id) => '/content/$id';
+  static String contentPublish(String id) => '/content/$id/publish';
+  static String contentArchive(String id) => '/content/$id/archive';
+
+  // Interactions
+  static String contentLike(String id) => '/content/$id/like';
+  static String contentSave(String id) => '/content/$id/save';
+  static String contentShare(String id) => '/content/$id/share';
+
+  /// «أضيفي إلى صفحتي» — POST to add, DELETE to take it back off.
+  static String contentReshare(String id) => '/content/$id/reshare';
+
+  static String contentComments(String id) => '/content/$id/comments';
+  static String contentCommentReplies(String commentId) =>
+      '/content/comments/$commentId/replies';
+  static String contentComment(String commentId) =>
+      '/content/comments/$commentId';
+  static String contentReport(String id) => '/content/$id/report';
+  static String contentCommentReport(String commentId) =>
+      '/content/comments/$commentId/report';
+
+  /// Impressions, watch time, product clicks.
+  static String contentEvents(String id) => '/content/$id/events';
+
+  // Seller — content analytics
+  static const sellerContentOverview = '/seller/content/analytics/overview';
+  static const sellerContentReshares = '/seller/content/analytics/reshares';
+
+  /// The women promoting her products. Named only where their own page is
+  /// public — the server decides, and never sends a name it should not.
+  static const sellerContentPromoters = '/seller/content/analytics/promoters';
+  static String sellerContentAnalytics(String id) =>
+      '/seller/content/analytics/content/$id';
+
+  // Admin — moderation
+  static const adminContent = '/admin/content';
+  static const adminContentReports = '/admin/content/reports';
+  static String adminContentHistory(String id) => '/admin/content/$id/history';
+  static String adminContentRemove(String id) => '/admin/content/$id/remove';
+  static String adminContentReinstate(String id) =>
+      '/admin/content/$id/reinstate';
+  static String adminContentCommentRemove(String commentId) =>
+      '/admin/content/comments/$commentId/remove';
+
+  /// «حسابي عام» — opening or closing her page.
+  static const usersProfileVisibility = '/users/me/profile-visibility';
+
+  // Content type registry — what formats exist and who may publish them.
+  static const contentTypes = '/content-types';
+
   // Products (public browse)
   static const products = '/products';
   static const productsTrending = '/products/trending';

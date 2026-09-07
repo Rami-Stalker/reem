@@ -128,6 +128,12 @@ abstract class AppLocalizations {
   /// **'More options'**
   String get a11yMore;
 
+  /// No description provided for @a11yMute.
+  ///
+  /// In en, this message translates to:
+  /// **'Mute'**
+  String get a11yMute;
+
   /// Screen-reader label
   ///
   /// In en, this message translates to:
@@ -10819,6 +10825,552 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Your wishlist'**
   String get yourWishlist;
+
+  /// No description provided for @a11yUnmute.
+  ///
+  /// In en, this message translates to:
+  /// **'Unmute'**
+  String get a11yUnmute;
+
+  /// No description provided for @composerPublished.
+  ///
+  /// In en, this message translates to:
+  /// **'Published ✨'**
+  String get composerPublished;
+
+  /// No description provided for @composerPublishedForReview.
+  ///
+  /// In en, this message translates to:
+  /// **'We have your post ✨ We will review it shortly and then everyone can see it.'**
+  String get composerPublishedForReview;
+
+  /// No description provided for @composerNeedsMedia.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a photo or a clip first'**
+  String get composerNeedsMedia;
+
+  /// No description provided for @composerNeedsVideo.
+  ///
+  /// In en, this message translates to:
+  /// **'A reel needs a video'**
+  String get composerNeedsVideo;
+
+  /// No description provided for @composerNeedsCaption.
+  ///
+  /// In en, this message translates to:
+  /// **'Write something, or add a photo'**
+  String get composerNeedsCaption;
+
+  /// No description provided for @composerVideoTooLong.
+  ///
+  /// In en, this message translates to:
+  /// **'That clip is longer than 30 seconds'**
+  String get composerVideoTooLong;
+
+  /// No description provided for @contentResharedBy.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} added this to her page'**
+  String contentResharedBy(String name);
+
+  /// No description provided for @contentFromShopper.
+  ///
+  /// In en, this message translates to:
+  /// **'From a shopper'**
+  String get contentFromShopper;
+
+  /// No description provided for @contentFromBoutique.
+  ///
+  /// In en, this message translates to:
+  /// **'From a boutique'**
+  String get contentFromBoutique;
+
+  /// No description provided for @contentUnderReview.
+  ///
+  /// In en, this message translates to:
+  /// **'Under review'**
+  String get contentUnderReview;
+
+  /// No description provided for @contentAddToMyPage.
+  ///
+  /// In en, this message translates to:
+  /// **'Add to my page'**
+  String get contentAddToMyPage;
+
+  /// No description provided for @contentShare.
+  ///
+  /// In en, this message translates to:
+  /// **'Share'**
+  String get contentShare;
+
+  /// No description provided for @contentReply.
+  ///
+  /// In en, this message translates to:
+  /// **'Reply'**
+  String get contentReply;
+
+  /// No description provided for @contentReplyingTo.
+  ///
+  /// In en, this message translates to:
+  /// **'Replying to {name}'**
+  String contentReplyingTo(String name);
+
+  /// No description provided for @contentShowReplies.
+  ///
+  /// In en, this message translates to:
+  /// **'Show {count} replies'**
+  String contentShowReplies(int count);
+
+  /// No description provided for @socialFeedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Community'**
+  String get socialFeedTitle;
+
+  /// No description provided for @socialFeedDiscover.
+  ///
+  /// In en, this message translates to:
+  /// **'Discover'**
+  String get socialFeedDiscover;
+
+  /// No description provided for @socialFeedFollowing.
+  ///
+  /// In en, this message translates to:
+  /// **'Following'**
+  String get socialFeedFollowing;
+
+  /// No description provided for @socialFeedEmptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No posts yet'**
+  String get socialFeedEmptyTitle;
+
+  /// No description provided for @socialFeedEmptyBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Be the first to share your look 🌸'**
+  String get socialFeedEmptyBody;
+
+  /// No description provided for @socialFeedFollowingEmptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Follow the boutiques you love'**
+  String get socialFeedFollowingEmptyTitle;
+
+  /// No description provided for @socialFeedFollowingEmptyBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Everything new from the boutiques and women you follow shows up here.'**
+  String get socialFeedFollowingEmptyBody;
+
+  /// No description provided for @reelsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Reels'**
+  String get reelsTitle;
+
+  /// No description provided for @reelsEmptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No reels yet'**
+  String get reelsEmptyTitle;
+
+  /// No description provided for @reelsEmptyBody.
+  ///
+  /// In en, this message translates to:
+  /// **'The first one could be yours 🎬'**
+  String get reelsEmptyBody;
+
+  /// No description provided for @composerTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'New post'**
+  String get composerTitle;
+
+  /// No description provided for @contentAddToMyPageBody.
+  ///
+  /// In en, this message translates to:
+  /// **'It will show on your page, and the boutique keeps the credit.'**
+  String get contentAddToMyPageBody;
+
+  /// No description provided for @contentAddToMyPagePreview.
+  ///
+  /// In en, this message translates to:
+  /// **'Post preview'**
+  String get contentAddToMyPagePreview;
+
+  /// No description provided for @contentAddToMyPageCredit.
+  ///
+  /// In en, this message translates to:
+  /// **'Originally hers — it stays in her name'**
+  String get contentAddToMyPageCredit;
+
+  /// No description provided for @contentAddToMyPageProduct.
+  ///
+  /// In en, this message translates to:
+  /// **'Tagged with {title}'**
+  String contentAddToMyPageProduct(String title);
+
+  /// No description provided for @contentAddToMyPageNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Your note (optional)'**
+  String get contentAddToMyPageNote;
+
+  /// No description provided for @contentAddToMyPageNoteHint.
+  ///
+  /// In en, this message translates to:
+  /// **'What would you say about it?'**
+  String get contentAddToMyPageNoteHint;
+
+  /// No description provided for @contentAddToMyPageConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Add to my page'**
+  String get contentAddToMyPageConfirm;
+
+  /// No description provided for @composerMediaLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Photos or clip'**
+  String get composerMediaLabel;
+
+  /// No description provided for @composerMediaVideoHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'One clip, up to 30 seconds'**
+  String get composerMediaVideoHelp;
+
+  /// No description provided for @composerCaptionLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Caption'**
+  String get composerCaptionLabel;
+
+  /// No description provided for @composerCaptionHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Tell us about the look…'**
+  String get composerCaptionHint;
+
+  /// No description provided for @composerPublish.
+  ///
+  /// In en, this message translates to:
+  /// **'Publish'**
+  String get composerPublish;
+
+  /// No description provided for @composerAudience.
+  ///
+  /// In en, this message translates to:
+  /// **'Who can see it'**
+  String get composerAudience;
+
+  /// No description provided for @composerAudiencePublic.
+  ///
+  /// In en, this message translates to:
+  /// **'Everyone'**
+  String get composerAudiencePublic;
+
+  /// No description provided for @composerAudienceFollowers.
+  ///
+  /// In en, this message translates to:
+  /// **'My followers only'**
+  String get composerAudienceFollowers;
+
+  /// No description provided for @composerTagProducts.
+  ///
+  /// In en, this message translates to:
+  /// **'Tag the piece'**
+  String get composerTagProducts;
+
+  /// No description provided for @composerTagProductsHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Only pieces that were actually delivered to you'**
+  String get composerTagProductsHelp;
+
+  /// No description provided for @composerTagProductsEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Once your first order arrives, your pieces show up here.'**
+  String get composerTagProductsEmpty;
+
+  /// No description provided for @studioTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Content studio'**
+  String get studioTitle;
+
+  /// No description provided for @studioSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'What is working, and how far it went'**
+  String get studioSubtitle;
+
+  /// No description provided for @studioFormats.
+  ///
+  /// In en, this message translates to:
+  /// **'Content performance'**
+  String get studioFormats;
+
+  /// No description provided for @studioFormatsEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing published yet'**
+  String get studioFormatsEmpty;
+
+  /// No description provided for @studioFormatPost.
+  ///
+  /// In en, this message translates to:
+  /// **'Posts'**
+  String get studioFormatPost;
+
+  /// No description provided for @studioFormatStory.
+  ///
+  /// In en, this message translates to:
+  /// **'Stories'**
+  String get studioFormatStory;
+
+  /// No description provided for @studioViews.
+  ///
+  /// In en, this message translates to:
+  /// **'Views'**
+  String get studioViews;
+
+  /// No description provided for @studioSaves.
+  ///
+  /// In en, this message translates to:
+  /// **'Saves'**
+  String get studioSaves;
+
+  /// No description provided for @studioProductClicks.
+  ///
+  /// In en, this message translates to:
+  /// **'Product opens'**
+  String get studioProductClicks;
+
+  /// No description provided for @studioPublishedCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} published'**
+  String studioPublishedCount(int count);
+
+  /// No description provided for @studioClickThrough.
+  ///
+  /// In en, this message translates to:
+  /// **'{rate}% of views opened the product'**
+  String studioClickThrough(String rate);
+
+  /// No description provided for @studioReach.
+  ///
+  /// In en, this message translates to:
+  /// **'Reach'**
+  String get studioReach;
+
+  /// No description provided for @studioReachEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Nobody has added your posts yet'**
+  String get studioReachEmpty;
+
+  /// No description provided for @studioReachEmptyBody.
+  ///
+  /// In en, this message translates to:
+  /// **'When a shopper adds your post to her page, you will see it here.'**
+  String get studioReachEmptyBody;
+
+  /// No description provided for @studioReshares.
+  ///
+  /// In en, this message translates to:
+  /// **'Added to pages'**
+  String get studioReshares;
+
+  /// No description provided for @studioPromotersCount.
+  ///
+  /// In en, this message translates to:
+  /// **'Shoppers'**
+  String get studioPromotersCount;
+
+  /// No description provided for @studioTopProducts.
+  ///
+  /// In en, this message translates to:
+  /// **'Most shared pieces'**
+  String get studioTopProducts;
+
+  /// No description provided for @studioPromoters.
+  ///
+  /// In en, this message translates to:
+  /// **'Who shared your products'**
+  String get studioPromoters;
+
+  /// No description provided for @studioPromotersHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Names show only for shoppers with a public page. The rest are counted without a name.'**
+  String get studioPromotersHelp;
+
+  /// No description provided for @studioPromotersEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Nobody yet'**
+  String get studioPromotersEmpty;
+
+  /// No description provided for @studioPromotersEmptyBody.
+  ///
+  /// In en, this message translates to:
+  /// **'The first shopper to add your post to her page shows up here.'**
+  String get studioPromotersEmptyBody;
+
+  /// No description provided for @studioPromoterAnonymous.
+  ///
+  /// In en, this message translates to:
+  /// **'A shopper (private page)'**
+  String get studioPromoterAnonymous;
+
+  /// No description provided for @studioPromoterSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'{reshares} added · {products} pieces'**
+  String studioPromoterSummary(int reshares, int products);
+
+  /// No description provided for @viewProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'View page'**
+  String get viewProfile;
+
+  /// No description provided for @adminContentTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Content moderation'**
+  String get adminContentTitle;
+
+  /// No description provided for @adminContentReported.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} reported'**
+  String adminContentReported(int count);
+
+  /// No description provided for @adminContentEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing waiting for review'**
+  String get adminContentEmpty;
+
+  /// No description provided for @adminContentNoCaption.
+  ///
+  /// In en, this message translates to:
+  /// **'(no caption)'**
+  String get adminContentNoCaption;
+
+  /// No description provided for @adminContentFilterAll.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get adminContentFilterAll;
+
+  /// No description provided for @adminContentFilterReported.
+  ///
+  /// In en, this message translates to:
+  /// **'Reported'**
+  String get adminContentFilterReported;
+
+  /// No description provided for @adminContentFilterUnderReview.
+  ///
+  /// In en, this message translates to:
+  /// **'Under review'**
+  String get adminContentFilterUnderReview;
+
+  /// No description provided for @adminContentFilterRemoved.
+  ///
+  /// In en, this message translates to:
+  /// **'Removed'**
+  String get adminContentFilterRemoved;
+
+  /// No description provided for @adminContentFilterCustomers.
+  ///
+  /// In en, this message translates to:
+  /// **'From shoppers'**
+  String get adminContentFilterCustomers;
+
+  /// No description provided for @adminContentFilterSellers.
+  ///
+  /// In en, this message translates to:
+  /// **'From boutiques'**
+  String get adminContentFilterSellers;
+
+  /// No description provided for @adminContentStateActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Active'**
+  String get adminContentStateActive;
+
+  /// No description provided for @adminContentStateRemoved.
+  ///
+  /// In en, this message translates to:
+  /// **'Removed'**
+  String get adminContentStateRemoved;
+
+  /// No description provided for @adminContentRemovedFor.
+  ///
+  /// In en, this message translates to:
+  /// **'Removed for: {reason}'**
+  String adminContentRemovedFor(String reason);
+
+  /// No description provided for @adminContentRemoveTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove this post'**
+  String get adminContentRemoveTitle;
+
+  /// No description provided for @adminContentRemoveBody.
+  ///
+  /// In en, this message translates to:
+  /// **'The author receives a message with the reason you write here, so write it clearly and respectfully.'**
+  String get adminContentRemoveBody;
+
+  /// No description provided for @adminContentRemoveConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove'**
+  String get adminContentRemoveConfirm;
+
+  /// No description provided for @adminContentReinstateTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Reinstate this post'**
+  String get adminContentReinstateTitle;
+
+  /// No description provided for @adminContentReinstateBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Record why it is going back up.'**
+  String get adminContentReinstateBody;
+
+  /// No description provided for @adminContentReinstateConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Reinstate'**
+  String get adminContentReinstateConfirm;
+
+  /// No description provided for @adminContentReasonLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Reason'**
+  String get adminContentReasonLabel;
+
+  /// No description provided for @adminContentReasonHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. The photo does not meet our content policy…'**
+  String get adminContentReasonHint;
+
+  /// No description provided for @adminContentReasonTooShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Write a clear reason (at least 10 characters)'**
+  String get adminContentReasonTooShort;
 }
 
 class _AppLocalizationsDelegate

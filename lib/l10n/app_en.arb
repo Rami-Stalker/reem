@@ -19,6 +19,7 @@
   "@a11yMore": {
     "description": "Screen-reader label"
   },
+  "a11yMute": "Mute",
   "a11yNotifications": "Notifications",
   "@a11yNotifications": {
     "description": "Screen-reader label"
@@ -7152,5 +7153,162 @@
   "yourWishlist": "Your wishlist",
   "@yourWishlist": {
     "description": "Section title"
+  },
+  "a11yUnmute": "Unmute",
+  "composerPublished": "Published ✨",
+  "composerPublishedForReview": "We have your post ✨ We will review it shortly and then everyone can see it.",
+  "composerNeedsMedia": "Add a photo or a clip first",
+  "composerNeedsVideo": "A reel needs a video",
+  "composerNeedsCaption": "Write something, or add a photo",
+  "composerVideoTooLong": "That clip is longer than 30 seconds",
+  "contentResharedBy": "{name} added this to her page",
+  "contentFromShopper": "From a shopper",
+  "contentFromBoutique": "From a boutique",
+  "contentUnderReview": "Under review",
+  "contentAddToMyPage": "Add to my page",
+  "contentShare": "Share",
+  "@contentResharedBy": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "contentReply": "Reply",
+  "contentReplyingTo": "Replying to {name}",
+  "contentShowReplies": "Show {count} replies",
+  "@contentReplyingTo": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "@contentShowReplies": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "socialFeedTitle": "Community",
+  "socialFeedDiscover": "Discover",
+  "socialFeedFollowing": "Following",
+  "socialFeedEmptyTitle": "No posts yet",
+  "socialFeedEmptyBody": "Be the first to share your look 🌸",
+  "socialFeedFollowingEmptyTitle": "Follow the boutiques you love",
+  "socialFeedFollowingEmptyBody": "Everything new from the boutiques and women you follow shows up here.",
+  "reelsTitle": "Reels",
+  "reelsEmptyTitle": "No reels yet",
+  "reelsEmptyBody": "The first one could be yours 🎬",
+  "composerTitle": "New post",
+  "contentAddToMyPageBody": "It will show on your page, and the boutique keeps the credit.",
+  "contentAddToMyPagePreview": "Post preview",
+  "contentAddToMyPageCredit": "Originally hers — it stays in her name",
+  "contentAddToMyPageProduct": "Tagged with {title}",
+  "contentAddToMyPageNote": "Your note (optional)",
+  "contentAddToMyPageNoteHint": "What would you say about it?",
+  "contentAddToMyPageConfirm": "Add to my page",
+  "@contentAddToMyPageProduct": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "composerMediaLabel": "Photos or clip",
+  "composerMediaVideoHelp": "One clip, up to 30 seconds",
+  "composerCaptionLabel": "Caption",
+  "composerCaptionHint": "Tell us about the look…",
+  "composerPublish": "Publish",
+  "composerAudience": "Who can see it",
+  "composerAudiencePublic": "Everyone",
+  "composerAudienceFollowers": "My followers only",
+  "composerTagProducts": "Tag the piece",
+  "composerTagProductsHelp": "Only pieces that were actually delivered to you",
+  "composerTagProductsEmpty": "Once your first order arrives, your pieces show up here.",
+  "studioTitle": "Content studio",
+  "studioSubtitle": "What is working, and how far it went",
+  "studioFormats": "Content performance",
+  "studioFormatsEmpty": "Nothing published yet",
+  "studioFormatPost": "Posts",
+  "studioFormatStory": "Stories",
+  "studioViews": "Views",
+  "studioSaves": "Saves",
+  "studioProductClicks": "Product opens",
+  "studioPublishedCount": "{count} published",
+  "studioClickThrough": "{rate}% of views opened the product",
+  "studioReach": "Reach",
+  "studioReachEmpty": "Nobody has added your posts yet",
+  "studioReachEmptyBody": "When a shopper adds your post to her page, you will see it here.",
+  "studioReshares": "Added to pages",
+  "studioPromotersCount": "Shoppers",
+  "studioTopProducts": "Most shared pieces",
+  "studioPromoters": "Who shared your products",
+  "studioPromotersHelp": "Names show only for shoppers with a public page. The rest are counted without a name.",
+  "studioPromotersEmpty": "Nobody yet",
+  "studioPromotersEmptyBody": "The first shopper to add your post to her page shows up here.",
+  "studioPromoterAnonymous": "A shopper (private page)",
+  "studioPromoterSummary": "{reshares} added · {products} pieces",
+  "viewProfile": "View page",
+  "@studioPublishedCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@studioClickThrough": {
+    "placeholders": {
+      "rate": {
+        "type": "String"
+      }
+    }
+  },
+  "@studioPromoterSummary": {
+    "placeholders": {
+      "reshares": {
+        "type": "int"
+      },
+      "products": {
+        "type": "int"
+      }
+    }
+  },
+  "adminContentTitle": "Content moderation",
+  "adminContentReported": "{count} reported",
+  "adminContentEmpty": "Nothing waiting for review",
+  "adminContentNoCaption": "(no caption)",
+  "adminContentFilterAll": "All",
+  "adminContentFilterReported": "Reported",
+  "adminContentFilterUnderReview": "Under review",
+  "adminContentFilterRemoved": "Removed",
+  "adminContentFilterCustomers": "From shoppers",
+  "adminContentFilterSellers": "From boutiques",
+  "adminContentStateActive": "Active",
+  "adminContentStateRemoved": "Removed",
+  "adminContentRemovedFor": "Removed for: {reason}",
+  "adminContentRemoveTitle": "Remove this post",
+  "adminContentRemoveBody": "The author receives a message with the reason you write here, so write it clearly and respectfully.",
+  "adminContentRemoveConfirm": "Remove",
+  "adminContentReinstateTitle": "Reinstate this post",
+  "adminContentReinstateBody": "Record why it is going back up.",
+  "adminContentReinstateConfirm": "Reinstate",
+  "adminContentReasonLabel": "Reason",
+  "adminContentReasonHint": "e.g. The photo does not meet our content policy…",
+  "adminContentReasonTooShort": "Write a clear reason (at least 10 characters)",
+  "@adminContentReported": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@adminContentRemovedFor": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
   }
 }

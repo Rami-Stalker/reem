@@ -42,6 +42,13 @@ const _publicRoutes = <String>{
   // public because they are device preferences, not account data.
   RoutePaths.likeSheet,
   RoutePaths.commentSheet,
+  // A guest may browse the community and the reels feed, and that is the whole
+  // commerce case: she follows a link into a look, sees the dress and reaches
+  // the boutique before she has an account. Publishing and reacting are not
+  // here — those need a session, and the guard sends her to `authRequired`
+  // with a `from` so she lands back where she was.
+  RoutePaths.socialFeed,
+  RoutePaths.reels,
   // Q64 — the tracking code *is* the credential, and Q46 P1 lets guests buy.
   // Requiring a login to follow a parcel would strand the very customers the
   // guest checkout exists for, and matches the backend, which marks the same
