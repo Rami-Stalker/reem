@@ -43,6 +43,7 @@ import {
 import { OrdersRepository } from './orders.repository';
 import { CreateOrderDto, ShippingDetailsDto } from './dto/create-order.dto';
 import { RETURN_WINDOW_DAYS } from '../returns/return-policy';
+import { claimFlashSaleUnits, claimStock } from './workflow/stock-claim';
 
 interface SellerGroup {
   sellerId: string;
@@ -295,18 +296,22 @@ export class CheckoutService {
         });
 
         // Stock comes off the OFFER, and off the offer variant when one was
-        // chosen — the canonical product has no stock to decrement.
+        // chosen — the canonical product has no stock to decrement. The claim
+        // refuses rather than overselling; see `claimStock`.
         for (const { item } of group.lines) {
-          await tx.sellerOffer.update({
-            where: { id: item.offerId },
-            data: { stock: { decrement: item.quantity } },
+          await claimStock(tx, {
+            offerId: item.offerId,
+            offerVariantId: item.offerVariantId ?? null,
+            quantity: item.quantity,
+            title: item.offer.product.title,
           });
-          if (item.offerVariantId) {
-            await tx.sellerOfferVariant.update({
-              where: { id: item.offerVariantId },
-              data: { stock: { decrement: item.quantity } },
-            });
-          }
+          // A line priced by a live flash sale is counted against it, so the
+          // sale can end when its units are gone. Not an error when it does:
+          // see `claimFlashSaleUnits` for why the cap is soft.
+          await claimFlashSaleUnits(tx, {
+            offerId: item.offerId,
+            quantity: item.quantity,
+          });
           await tx.product.update({
             where: { id: item.offer.productId },
             data: { ordersCount: { increment: item.quantity } },
@@ -329,6 +334,20 @@ export class CheckoutService {
               ? CodAssuranceState.PENDING
               : CodAssuranceState.NOT_REQUIRED,
         });
+      }
+
+      // The coupon is claimed with the order, not after it. See
+      // `CouponsService.redeemInTransaction` for what recording it afterwards
+      // cost: a crash in the gap, or ten simultaneous baskets, and a
+      // single-use code has funded all of them.
+      if (coupon) {
+        await this.coupons.redeemInTransaction(
+          tx,
+          coupon.coupon.id,
+          userId,
+          created.id,
+          discountTotal,
+        );
       }
 
       if (options.clearCart) {
@@ -363,14 +382,6 @@ export class CheckoutService {
       ? await this.beginCodConfirmation(order, codAssessment!, userId)
       : null;
 
-    if (coupon) {
-      await this.coupons.recordRedemption(
-        coupon.coupon.id,
-        userId,
-        order.id,
-        discountTotal,
-      );
-    }
     // Q43's rate — 10,000 ل.س to the point — not the order total taken as a
     // point count. The raw figure minted six-digit balances against rewards
     // priced in the hundreds.

@@ -629,7 +629,15 @@ dbTest('a resale listing never enters the product catalogue', async (world) => {
   const closet = await world.db.closet.findFirst({ where: { userId: shopper } });
   if (!closet) return;
 
-  const productsBefore = await world.db.product.count();
+  // Scoped to her, not a global count.
+  //
+  // A global `product.count()` compares two reads of a table other test files
+  // are committing into in parallel, so it fails whenever an unrelated spec
+  // creates a listing between them — while saying nothing more than the
+  // scoped version does. Resale leaking into the catalogue would create a
+  // product attributed to *her*, and that is the thing worth asserting.
+  const mine = { createdBySellerId: shopper };
+  const productsBefore = await world.db.product.count({ where: mine });
 
   const item = await world.db.closetItem.create({
     data: {
@@ -652,7 +660,7 @@ dbTest('a resale listing never enters the product catalogue', async (world) => {
   await world.lifecycle.setStatus(shopper, listing.id, ResaleStatus.LISTED);
 
   assert.equal(
-    await world.db.product.count(),
+    await world.db.product.count({ where: mine }),
     productsBefore,
     'resale must not write into the catalogue',
   );

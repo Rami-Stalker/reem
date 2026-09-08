@@ -1,0 +1,14 @@
+-- A boutique can be flagged too.
+--
+-- `SellerHealth` already scores how well a shop is selling — fulfilment,
+-- response time, ratings — and answers "should she be doing better". Conduct
+-- is the other question: whether the platform is carrying a risk by listing
+-- her at all. Refunds running far above what her category does, disputes
+-- decided against her, review campaigns on her own listings, cancelling
+-- orders after customers have paid. None of that makes a shop *unhealthy* in
+-- the performance sense, and none of it was looked for.
+--
+-- It joins the existing subjects rather than opening a second queue, because
+-- the console works all of them the same way: a score, the evidence, a
+-- decision.
+ALTER TYPE "TrustSubject" ADD VALUE IF NOT EXISTS 'SELLER_CONDUCT';

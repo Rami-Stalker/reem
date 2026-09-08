@@ -1135,6 +1135,15 @@ model User {
   @@index([role])
   @@index([email])
   @@index([phone])
+  synonymGroupsCreated SearchSynonymGroup[]      @relation("SynonymGroupsCreated")
+  duplicateVerdicts    ProductDuplicateVerdict[] @relation("DuplicateVerdicts")
+
+  trustSignalsResolved TrustSignal[] @relation("TrustSignalsResolved")
+  reengagementTouches ReengagementTouch[] @relation("ReengagementTouches")
+  flashSalesRun     FlashSale[] @relation("FlashSalesRun")
+  flashSalesCreated FlashSale[] @relation("FlashSalesCreated")
+  promotionsBought ProductPromotion[] @relation("PromotionsBought")
+  experimentsCreated Experiment[] @relation("ExperimentsCreated")
   @@map("users")
 }
 
@@ -2150,6 +2159,8 @@ model Product {
   @@index([status, favoritesCount])
   @@index([status, isFeatured])
   @@index([moderationStatus])
+  duplicateLeft  ProductDuplicateVerdict[] @relation("DuplicateLeft")
+  duplicateRight ProductDuplicateVerdict[] @relation("DuplicateRight")
   @@map("products")
 }
 
@@ -2170,6 +2181,9 @@ model ProductMedia {
   /// falls back to a plain placeholder, exactly as it did before.
   blurHash String? @map("blur_hash")
 
+  /// Every product card loads its media, and this table had no index at all
+  /// — so each batch of cards read the whole of it.
+  @@index([productId, sortOrder])
   @@map("product_media")
 }
 
@@ -2260,6 +2274,8 @@ model SellerOffer {
   @@index([productId, status, price])
   @@index([productId, status, priceSyp])
   @@index([status, isActive])
+  flashSaleItems FlashSaleItem[] @relation("FlashSaleOffers")
+  promotions ProductPromotion[] @relation("PromotedOffers")
   @@map("seller_offers")
 }
 
@@ -2678,6 +2694,10 @@ model CommerceContentComment {
   /// The thread read: top level newest-first, then each parent's replies.
   @@index([contentId, parentId, createdAt(sort: Desc)])
   @@index([userId, createdAt(sort: Desc)])
+  /// `listReplies` filters on `parentId` alone. The composite above leads
+  /// with `contentId` and so cannot serve it — every tap on "show replies"
+  /// was reading the whole comment table.
+  @@index([parentId, createdAt])
   @@map("commerce_content_comments")
 }
 
@@ -3018,6 +3038,9 @@ model OrderItem {
 
   @@index([sellerOrderId])
   @@index([productId])
+  /// Sales per offer, and the scan a seller's listing deletion would
+  /// otherwise force over every line ever sold.
+  @@index([offerId])
   @@map("order_items")
 }
 
@@ -3063,6 +3086,9 @@ model CartItem {
 
   @@unique([userId, offerId, offerVariantId])
   @@index([userId])
+  /// From the offer's side: who is holding this in a basket, and the cascade
+  /// when a seller withdraws the listing.
+  @@index([offerId])
   @@map("cart_items")
 }
 
@@ -3442,6 +3468,483 @@ model SearchHistory {
   @@map("search_history")
 }
 
+/// Words that mean the same garment.
+///
+/// Arabic retail has several words for one thing and a customer uses whichever
+/// she grew up with: شنطة and حقيبة, جزمة and حذاء, تنورة and جيبة. Folding
+/// (`reem_search_key`) makes spellings of one word agree; it cannot make two
+/// different words agree, and no amount of typo tolerance will — شنطة and حقيبة
+/// share no letters. That has to be told to the system.
+///
+/// This is a table rather than a constant because the platform already knows
+/// which words are missing: `TrendSignalService` records every search that
+/// returned nothing. A merchandiser reading that list should be able to say
+/// "شنطة means حقيبة" and have it take effect, without a deploy.
+model SearchSynonymGroup {
+  id   String  @id @default(uuid()) @db.Uuid
+  /// Why this group exists, for whoever inherits it.
+  note String?
+
+  isActive Boolean @default(true) @map("is_active")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  createdById String? @map("created_by_id") @db.Uuid
+  createdBy   User?   @relation("SynonymGroupsCreated", fields: [createdById], references: [id], onDelete: SetNull)
+
+  terms SearchSynonymTerm[]
+
+  @@index([isActive])
+  @@index([createdById])
+  @@map("search_synonym_groups")
+}
+
+model SearchSynonymTerm {
+  id      String             @id @default(uuid()) @db.Uuid
+  groupId String             @map("group_id") @db.Uuid
+  group   SearchSynonymGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
+
+  /// As a merchandiser typed it, so the console can show her own words back.
+  term String
+
+  /// The same word through `reem_search_key`, which is what a query is
+  /// actually compared against. Stored rather than derived at read time
+  /// because expansion happens on every search.
+  ///
+  /// Unique across ALL groups, deliberately: a word belongs to one meaning.
+  /// Letting شنطة sit in both a handbag group and a suitcase group would make
+  /// expansion transitive — every search for a handbag would start returning
+  /// luggage — and there would be no rule for which group wins.
+  termKey String @unique @map("term_key")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([groupId])
+  @@map("search_synonym_terms")
+}
+
+/// A staff decision about two listings that look like the same garment.
+///
+/// Detection is a query, not a table — similarity is recomputed from the
+/// catalogue as it stands. What has to persist is the *answer*, so a pair a
+/// merchandiser has already looked at stops coming back. Without this the
+/// duplicate queue re-serves the same two dresses every morning forever, and
+/// the queue stops being read.
+model ProductDuplicateVerdict {
+  id String @id @default(uuid()) @db.Uuid
+
+  /// Ordered by uuid so a pair is stored once however it was found.
+  leftProductId  String  @map("left_product_id") @db.Uuid
+  leftProduct    Product @relation("DuplicateLeft", fields: [leftProductId], references: [id], onDelete: Cascade)
+  rightProductId String  @map("right_product_id") @db.Uuid
+  rightProduct   Product @relation("DuplicateRight", fields: [rightProductId], references: [id], onDelete: Cascade)
+
+  verdict DuplicateVerdict
+  note    String?
+
+  decidedById String?  @map("decided_by_id") @db.Uuid
+  decidedBy   User?    @relation("DuplicateVerdicts", fields: [decidedById], references: [id], onDelete: SetNull)
+  decidedAt   DateTime @default(now()) @map("decided_at")
+
+  @@unique([leftProductId, rightProductId])
+  @@index([rightProductId])
+  @@index([decidedById])
+  @@map("product_duplicate_verdicts")
+}
+
+/// A reading the trust engine took, and what a person did about it.
+///
+/// One table for reviews, customers and boutiques rather than three, because
+/// the console works them the same way: a score, the evidence behind it, and a
+/// decision. Splitting them would mean three queues, and the third one never
+/// gets opened.
+///
+/// The row is a *reading*, not a verdict — nothing in this module hides a
+/// review or freezes an account on its own. Accusing a woman of dishonesty is
+/// a person's decision, and `status` is where that person's answer is written.
+model TrustSignal {
+  id String @id @default(uuid()) @db.Uuid
+
+  subject   TrustSubject
+  /// The review, customer or seller this reading is about. Not a foreign key:
+  /// it points at three different tables depending on `subject`, and a
+  /// polymorphic FK is not a thing PostgreSQL has. The reader joins on
+  /// `subject` + `subjectId`.
+  subjectId String       @map("subject_id") @db.Uuid
+
+  /// 0–100, from the kernel.
+  score Float
+  band  TrustBand
+
+  /// Every reason that made up the score: `[{ code, weight, ar }]`. Stored
+  /// rather than recomputed so the queue shows the evidence as it stood when
+  /// the reading was taken — a moderator looking at a week-old flag needs to
+  /// see what triggered it, not what would trigger it today.
+  reasons Json
+
+  status TrustSignalStatus @default(OPEN)
+
+  /// What the person decided, in their own words.
+  note        String?
+  resolvedById String?   @map("resolved_by_id") @db.Uuid
+  resolvedBy   User?     @relation("TrustSignalsResolved", fields: [resolvedById], references: [id], onDelete: SetNull)
+  resolvedAt   DateTime? @map("resolved_at")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  /// One open reading per subject: a re-scan updates the row it already has
+  /// rather than stacking a new flag on every sweep, which is how a queue
+  /// becomes ten thousand copies of the same twelve cases.
+  @@unique([subject, subjectId])
+  @@index([status, band, score])
+  @@index([subject, band])
+  @@index([resolvedById])
+  @@map("trust_signals")
+}
+
+/// A re-engagement message the platform has already sent.
+///
+/// This table is the whole difference between a reminder and a nuisance. An
+/// abandoned-basket nudge with no record of having been sent goes out on every
+/// run of the job — every hour, to the same woman, about the same dress —
+/// until she uninstalls the app. What it costs to prevent that is one row.
+///
+/// `reference` is what the touch was *about*, and it is what makes "once" mean
+/// the right thing in each case. For a basket it is a fingerprint that changes
+/// when she adds or removes anything, so a new basket earns a new reminder and
+/// the same basket never does. For a win-back it is the month, so she hears
+/// from the platform at most once in it.
+model ReengagementTouch {
+  id String @id @default(uuid()) @db.Uuid
+
+  userId String @map("user_id") @db.Uuid
+  user   User   @relation("ReengagementTouches", fields: [userId], references: [id], onDelete: Cascade)
+
+  kind      ReengagementKind
+  reference String
+
+  /// What she was in when this went out, for measuring whether it worked.
+  stage String?
+
+  sentAt DateTime @default(now()) @map("sent_at")
+
+  /// Set when an order arrives from her after this touch and before the next.
+  /// Null is not "it failed" — it is "not yet", and the difference matters
+  /// when reading the numbers a week later.
+  convertedAt DateTime? @map("converted_at")
+
+  @@unique([userId, kind, reference])
+  @@index([kind, sentAt])
+  @@map("reengagement_touches")
+}
+
+/// A window in which some listings are cheaper.
+///
+/// Kept apart from `Coupon` because it answers a different question. A coupon
+/// is something a customer *has*; a flash sale is something a listing *is* —
+/// it needs no code, applies to everyone, and shows on the product card before
+/// anybody has reached a basket. Modelling one as the other would mean either
+/// minting a coupon nobody types or hiding the price until checkout.
+///
+/// Who pays for the discount is recorded on each line rather than on the sale,
+/// because a single sale routinely mixes both: a boutique cutting her own
+/// margin on two pieces while the platform funds a third to fill the page.
+/// Settlement already reads `fundedBySeller` for coupons and does the same
+/// thing here — commission on what she actually gave away, marketing expense
+/// on what the platform did.
+model FlashSale {
+  id    String @id @default(uuid()) @db.Uuid
+  title String
+  note  String?
+
+  status FlashSaleStatus @default(DRAFT)
+
+  startsAt DateTime @map("starts_at")
+  endsAt   DateTime @map("ends_at")
+
+  /// The boutique running it, or null for a platform-wide sale.
+  sellerId String? @map("seller_id") @db.Uuid
+  seller   User?   @relation("FlashSalesRun", fields: [sellerId], references: [id], onDelete: Cascade)
+
+  createdById String? @map("created_by_id") @db.Uuid
+  createdBy   User?   @relation("FlashSalesCreated", fields: [createdById], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  items FlashSaleItem[]
+
+  @@index([status, startsAt, endsAt])
+  @@index([sellerId, status])
+  @@index([createdById])
+  @@map("flash_sales")
+}
+
+model FlashSaleItem {
+  id     String    @id @default(uuid()) @db.Uuid
+  saleId String    @map("sale_id") @db.Uuid
+  sale   FlashSale @relation(fields: [saleId], references: [id], onDelete: Cascade)
+
+  offerId String      @map("offer_id") @db.Uuid
+  offer   SellerOffer @relation("FlashSaleOffers", fields: [offerId], references: [id], onDelete: Cascade)
+
+  /// What it costs during the window. An absolute price, not a percentage:
+  /// a percentage recomputed at checkout can disagree with the number she was
+  /// shown on the card, and the number she was shown is the one she agreed to.
+  salePrice Decimal  @map("sale_price") @db.Decimal(18, 4)
+  currency  Currency @default(SYP)
+
+  /// The price it was, frozen when the line was created, so a card can show
+  /// what she is saving without trusting a `price` the seller may have edited
+  /// upward the same morning.
+  compareAtPrice Decimal @map("compare_at_price") @db.Decimal(18, 4)
+
+  /// How many units may go at this price. Null means "all the stock there is".
+  ///
+  /// When set, it is claimed the same way stock is — conditionally, inside the
+  /// checkout transaction — because a doorbuster with no cap on the discount
+  /// is a doorbuster that sells the whole shelf at a loss.
+  quantityCap Int? @map("quantity_cap")
+  quantitySold Int @default(0) @map("quantity_sold")
+
+  /// Q49 again: whoever created the discount absorbs it.
+  fundedBySeller Boolean @default(true) @map("funded_by_seller")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  /// One price per offer per sale.
+  @@unique([saleId, offerId])
+  @@index([offerId])
+  @@map("flash_sale_items")
+}
+
+/// A boutique paying to be surfaced.
+///
+/// A flat fee for a window, not an auction and not cost-per-click, and that is
+/// a deliberate limit rather than a first step. An auction needs a bidding
+/// engine nobody here can tune yet; cost-per-click needs click-fraud defences,
+/// and charging real money against a counter anybody can inflate by tapping is
+/// how an ad product becomes a liability. A fixed price for a fixed window can
+/// be billed honestly on the day it starts, and it can be audited.
+///
+/// Impressions and clicks are still counted — a seller has to be able to see
+/// what she bought — but they are reporting, not billing. Nothing about the
+/// money depends on a number a phone can send.
+model ProductPromotion {
+  id String @id @default(uuid()) @db.Uuid
+
+  offerId String      @map("offer_id") @db.Uuid
+  offer   SellerOffer @relation("PromotedOffers", fields: [offerId], references: [id], onDelete: Cascade)
+
+  sellerId String @map("seller_id") @db.Uuid
+  seller   User   @relation("PromotionsBought", fields: [sellerId], references: [id], onDelete: Cascade)
+
+  placement PromotionPlacement
+
+  /// What she agreed to pay for the window, charged once when it starts.
+  feeAmount   Decimal  @map("fee_amount") @db.Decimal(18, 4)
+  feeCurrency Currency @default(SYP) @map("fee_currency")
+
+  status PromotionStatus @default(PENDING)
+
+  startsAt DateTime @map("starts_at")
+  endsAt   DateTime @map("ends_at")
+
+  /// The journal entry that took the fee. Null until it is charged, which is
+  /// also what makes charging idempotent: a promotion that already carries a
+  /// reference is not billed twice.
+  chargeReference String?   @unique @map("charge_reference")
+  chargedAt       DateTime? @map("charged_at")
+
+  /// Reporting only. See the note above.
+  impressions Int @default(0)
+  clicks      Int @default(0)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([status, startsAt, endsAt])
+  @@index([sellerId, status])
+  @@index([offerId])
+  @@map("product_promotions")
+}
+
+/// A change being tried on some customers and not others.
+///
+/// Assignment is *computed*, not stored: a hash of the experiment key and the
+/// subject decides the variant, so the same woman sees the same thing on her
+/// phone and her sister's laptop without a lookup, and a busy experiment costs
+/// no writes on the read path. The rows below record what was *shown* and what
+/// happened afterwards, which is a different question from what she was
+/// assigned — a variant nobody ever reached tells you nothing, and counting
+/// assignments as exposures is the commonest way an experiment reports a
+/// result it did not measure.
+model Experiment {
+  id  String @id @default(uuid()) @db.Uuid
+  /// Stable and human — it goes in the hash, so renaming it re-randomises
+  /// everybody and invalidates the run. Changing it is starting a new test.
+  key String @unique
+
+  name        String
+  hypothesis  String?
+
+  status ExperimentStatus @default(DRAFT)
+
+  /// `[{ "key": "control", "weight": 50 }, { "key": "wider_cards", "weight": 50 }]`
+  variants Json
+
+  /// What counts as success. Free text the analyst chooses, matched against
+  /// the `metric` recorded on a conversion.
+  metric String
+
+  startsAt DateTime  @map("starts_at")
+  endsAt   DateTime? @map("ends_at")
+
+  createdById String? @map("created_by_id") @db.Uuid
+  createdBy   User?   @relation("ExperimentsCreated", fields: [createdById], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  events ExperimentEvent[]
+
+  @@index([status, startsAt])
+  @@index([createdById])
+  @@map("experiments")
+}
+
+/// One thing that happened to one subject inside one experiment.
+///
+/// Exposures and conversions in one table rather than two, because they are
+/// the same shape and every question worth asking joins them. The unique key
+/// makes both idempotent: a screen that renders twice records one exposure,
+/// and a customer who reloads a confirmation page converts once.
+model ExperimentEvent {
+  id           String     @id @default(uuid()) @db.Uuid
+  experimentId String     @map("experiment_id") @db.Uuid
+  experiment   Experiment @relation(fields: [experimentId], references: [id], onDelete: Cascade)
+
+  /// The customer, or a guest session. Not a foreign key: an experiment that
+  /// could only measure signed-in women would miss the half of the funnel
+  /// where most of the drop-off is.
+  subjectKey String @map("subject_key")
+
+  /// The variant she was actually shown, stored rather than recomputed, so a
+  /// later change to the weights cannot silently rewrite history.
+  variant String
+
+  kind ExperimentEventKind
+
+  /// For a conversion: which metric. Empty string for an exposure.
+  ///
+  /// Not nullable, and that is the whole reason the idempotency below works.
+  /// PostgreSQL treats NULLs as *distinct* in a unique index, so a nullable
+  /// column here admitted three identical exposure rows for one subject and
+  /// the "one exposure per screen" guarantee was silently no guarantee at
+  /// all. The same trap `LedgerAccount.ownerKey` exists to avoid.
+  metric String @default("")
+
+  /// The value of the conversion, when it has one — an order total, say.
+  value    Decimal? @db.Decimal(18, 4)
+  currency Currency?
+
+  occurredAt DateTime @default(now()) @map("occurred_at")
+
+  /// One exposure and one conversion-per-metric per subject.
+  @@unique([experimentId, subjectKey, kind, metric])
+  @@index([experimentId, variant, kind])
+  @@map("experiment_events")
+}
+
+enum ExperimentStatus {
+  DRAFT
+  RUNNING
+  /// Stopped, and readable. Assignment returns the control from here on, so a
+  /// half-rolled-out change does not keep running because somebody forgot.
+  STOPPED
+}
+
+enum ExperimentEventKind {
+  /// She was shown the variant.
+  EXPOSURE
+  /// She did the thing the experiment is about.
+  CONVERSION
+}
+
+enum PromotionPlacement {
+  /// A labelled slot above organic search results.
+  SEARCH
+  /// A labelled slot on a category page.
+  CATEGORY
+}
+
+enum PromotionStatus {
+  /// Bought, not yet charged or shown.
+  PENDING
+  /// Charged and live inside its window.
+  ACTIVE
+  /// Stopped by the seller or by staff. The fee is not refunded here — that
+  /// is a decision for a person, through the normal refund path.
+  PAUSED
+  ENDED
+  /// The fee could not be taken. Never shown.
+  UNPAID
+}
+
+enum FlashSaleStatus {
+  DRAFT
+  /// Scheduled and visible; the window decides whether it is live right now.
+  ACTIVE
+  /// Stopped early. The window may still be open; the price is not.
+  PAUSED
+  ENDED
+}
+
+enum ReengagementKind {
+  /// She filled a basket and walked away.
+  ABANDONED_CART
+  /// She used to buy and stopped.
+  WIN_BACK
+}
+
+enum TrustSubject {
+  /// One review, scored for whether it was bought.
+  REVIEW
+  /// A customer, scored for returns and refunds.
+  CUSTOMER_REFUNDS
+  /// A customer, scored for looking like several people.
+  CUSTOMER_IDENTITY
+  /// A boutique, scored for conduct rather than performance. `SellerHealth`
+  /// already answers "is she selling well"; this answers the different
+  /// question of whether the platform is carrying a risk by listing her.
+  SELLER_CONDUCT
+}
+
+enum TrustBand {
+  CLEAR
+  WATCH
+  SUSPECT
+}
+
+enum TrustSignalStatus {
+  /// Nobody has looked yet.
+  OPEN
+  /// A person looked and agreed.
+  CONFIRMED
+  /// A person looked and disagreed. The subject is not re-flagged for the
+  /// same evidence, which is what stops the queue re-serving settled cases.
+  DISMISSED
+}
+
+enum DuplicateVerdict {
+  /// The same garment listed twice — merge or delist one.
+  DUPLICATE
+  /// They only read alike. Never offer this pair again.
+  DISTINCT
+}
+
 model Favorite {
   id        String   @id @default(uuid()) @db.Uuid
   userId    String   @map("user_id") @db.Uuid
@@ -3451,6 +3954,10 @@ model Favorite {
   createdAt DateTime @default(now()) @map("created_at")
 
   @@unique([userId, productId])
+  /// Reached from the product side too: how many women saved this piece, and
+  /// the cascade when a listing is removed. The unique above leads with
+  /// `userId`, so it cannot answer either.
+  @@index([productId])
   @@map("favorites")
 }
 
@@ -4618,6 +5125,11 @@ enum LedgerAccountCode {
   /// Marketplace commission — the platform's main revenue (Q17).
   COMMISSION_REVENUE
   SHIPPING_REVENUE
+  /// What boutiques pay to be surfaced. Kept apart from commission because
+  /// they are different businesses: one scales with what the marketplace
+  /// sells, the other with what sellers will pay to be seen, and a take rate
+  /// that silently mixes them stops meaning anything.
+  PROMOTION_REVENUE
   SHIPPING_EXPENSE
   /// Discounts the platform itself funded (Q49 — «حسب مين أنشأ الكوبون»).
   PLATFORM_PROMOTION_EXPENSE

@@ -1,5 +1,5 @@
-import { Injectable } from '@nestjs/common';
-import { Prisma, ProductStatus, UserRole } from '@prisma/client';
+import { Injectable, Logger } from '@nestjs/common';
+import { Prisma, ProductStatus, PromotionPlacement, UserRole } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 import { TrendSignalService } from '../trends/collection/trend-signal.service';
 import { buildMeta, PaginationDto } from '../../common/dto/pagination.dto';
@@ -9,6 +9,8 @@ import {
   serializeUser,
 } from '../../common/serializers';
 import { ProductSearchDto, SearchSort } from './dto/search-query.dto';
+import { ProductMatch, ProductMatcher } from './product-matcher.service';
+import { MAX_SLOTS, PromotionsService } from '../promotions/promotions.service';
 import {
   PRODUCT_CARD_INCLUDE,
   LIVE_OFFER_WHERE,
@@ -38,25 +40,37 @@ const TRENDING_FALLBACK = [
 
 @Injectable()
 export class SearchService {
+  private readonly logger = new Logger(SearchService.name);
+
   constructor(
     private readonly prisma: PrismaService,
     private readonly signals: TrendSignalService,
+    private readonly matcher: ProductMatcher,
+    private readonly promotions: PromotionsService,
   ) {}
 
   // ── Products ─────────────────────────────────────────────────────────────
 
   async searchProducts(dto: ProductSearchDto, viewerId?: string) {
-    const where = this.buildProductWhere(dto);
-    const [products, total] = await Promise.all([
-      this.prisma.product.findMany({
-        where,
-        orderBy: this.sortBy(dto.sort),
-        skip: dto.skip,
-        take: dto.limit,
-        include: PRODUCT_CARD_INCLUDE,
-      }),
-      this.prisma.product.count({ where }),
-    ]);
+    // The phrase decides which products are in play; every other filter is
+    // still Prisma's, applied to that set. See `ProductMatcher` for why the
+    // two are split.
+    const matches = await this.matcher.match(dto.q);
+    const where = this.buildProductWhere(dto, matches?.map((m) => m.id));
+
+    const relevance = matches !== null && (dto.sort ?? 'relevance') === 'relevance';
+    const [products, total] = relevance
+      ? await this.byRelevance(where, matches, dto)
+      : await Promise.all([
+          this.prisma.product.findMany({
+            where,
+            orderBy: this.sortBy(dto.sort),
+            skip: dto.skip,
+            take: dto.limit,
+            include: PRODUCT_CARD_INCLUDE,
+          }),
+          this.prisma.product.count({ where }),
+        ]);
 
     this.recordHistory(viewerId, dto.q);
     // Search Intelligence: the query, how many rows answered it, and which
@@ -75,14 +89,66 @@ export class SearchService {
       data: products.map((p) =>
         serializeProduct(p, { isLiked: favSet.has(p.id) }),
       ),
+      // Paid slots ride beside the results, never inside them. A sponsored
+      // listing mixed into `data` would be indistinguishable from something
+      // the search actually judged relevant — which is the whole objection to
+      // advertising in a marketplace, and it is avoided by keeping the two
+      // lists apart rather than by remembering to add a flag.
+      sponsored: await this.sponsored(dto, viewerId),
       pagination: buildMeta(dto.page, dto.limit, total, products.length),
     };
+  }
+
+  /**
+   * The paid slots for this search, as cards a client can label.
+   *
+   * Only on the first page: a sponsored slot repeated on page seven is not a
+   * placement, it is an obstruction. Failure is swallowed — a broken ad
+   * system must never take the search results down with it.
+   */
+  private async sponsored(dto: ProductSearchDto, viewerId?: string) {
+    if (dto.page > 1) return [];
+
+    try {
+      const offerIds = await this.promotions.slotsFor(
+        PromotionPlacement.SEARCH,
+        { limit: MAX_SLOTS },
+      );
+      if (offerIds.length === 0) return [];
+
+      const offers = await this.prisma.sellerOffer.findMany({
+        where: { id: { in: offerIds } },
+        select: { id: true, productId: true },
+      });
+      const products = await this.prisma.product.findMany({
+        where: {
+          id: { in: offers.map((offer) => offer.productId) },
+          ...PURCHASABLE_PRODUCT_WHERE,
+        },
+        include: PRODUCT_CARD_INCLUDE,
+      });
+
+      const favSet = await this.favoriteSet(
+        viewerId,
+        products.map((product) => product.id),
+      );
+
+      void this.promotions.recordImpressions(offerIds);
+
+      return products.map((product) => ({
+        ...serializeProduct(product, { isLiked: favSet.has(product.id) }),
+        is_sponsored: true,
+      }));
+    } catch (error) {
+      this.logger.warn(`Sponsored slots not served: ${String(error)}`);
+      return [];
+    }
   }
 
   // ── Sellers ──────────────────────────────────────────────────────────────
 
   async searchSellers(q: string | undefined, page: PaginationDto) {
-    const where = this.sellerWhere(q);
+    const where = this.sellerWhere(await this.matcher.matchSellerIds(q));
     const [sellers, total] = await Promise.all([
       this.prisma.user.findMany({
         where,
@@ -101,7 +167,7 @@ export class SearchService {
   // ── Posts ────────────────────────────────────────────────────────────────
 
   async searchPosts(q: string | undefined, viewerId: string | undefined, page: PaginationDto) {
-    const where = this.postWhere(q);
+    const where = this.postWhere(await this.matcher.matchContentIds(q));
     const [posts, total] = await Promise.all([
       this.prisma.commerceContent.findMany({
         where,
@@ -136,20 +202,31 @@ export class SearchService {
   // ── Unified (top hits per type) ──────────────────────────────────────────
 
   async unified(q: string | undefined, viewerId?: string) {
+    // Each surface is matched on the same folded key, so one phrase reaches
+    // products, boutiques and posts consistently.
+    const [productMatches, sellerIds, contentIds] = await Promise.all([
+      this.matcher.match(q),
+      this.matcher.matchSellerIds(q),
+      this.matcher.matchContentIds(q),
+    ]);
+
     const [products, sellers, posts] = await Promise.all([
       this.prisma.product.findMany({
-        where: this.buildProductWhere({ q } as ProductSearchDto),
+        where: this.buildProductWhere(
+          { q } as ProductSearchDto,
+          productMatches?.map((m) => m.id),
+        ),
         orderBy: [{ ordersCount: 'desc' }, { createdAt: 'desc' }],
         take: 8,
         include: PRODUCT_CARD_INCLUDE,
       }),
       this.prisma.user.findMany({
-        where: this.sellerWhere(q),
+        where: this.sellerWhere(sellerIds),
         orderBy: { followersCount: 'desc' },
         take: 6,
       }),
       this.prisma.commerceContent.findMany({
-        where: this.postWhere(q),
+        where: this.postWhere(contentIds),
         orderBy: { createdAt: 'desc' },
         take: 6,
         include: {
@@ -189,38 +266,13 @@ export class SearchService {
     const query = (q ?? '').trim();
     if (query.length < 1) return { products: [], categories: [] };
 
+    // Both sides fold through the same key, so typing عبايه offers عباية.
     const [products, categories] = await Promise.all([
-      this.prisma.product.findMany({
-        where: {
-          ...PURCHASABLE_PRODUCT_WHERE,
-          title: { contains: query, mode: 'insensitive' },
-        },
-        select: { title: true },
-        take: 8,
-      }),
-      // Suggestions come from the taxonomy itself now, in Arabic, rather than
-      // from DISTINCT over a free-text column.
-      this.prisma.category.findMany({
-        where: {
-          isActive: true,
-          OR: [
-            { nameAr: { contains: query, mode: 'insensitive' } },
-            { nameEn: { contains: query, mode: 'insensitive' } },
-            { slug: { contains: query, mode: 'insensitive' } },
-          ],
-        },
-        select: { slug: true, nameAr: true },
-        take: 5,
-      }),
+      this.matcher.suggest(query),
+      this.matcher.matchCategories(query),
     ]);
 
-    return {
-      products: products.map((product) => product.title),
-      categories: categories.map((category) => ({
-        slug: category.slug,
-        name: category.nameAr,
-      })),
-    };
+    return { products, categories };
   }
 
   async trending() {
@@ -270,18 +322,63 @@ export class SearchService {
 
   // ── helpers ──────────────────────────────────────────────────────────────
 
-  private buildProductWhere(dto: ProductSearchDto): Prisma.ProductWhereInput {
-    const q = dto.q?.trim();
+  /**
+   * A page of results in the order the phrase put them in.
+   *
+   * Prisma cannot order by a score the database computed in another query, so
+   * the ordering is applied here. The candidate set is capped by the matcher,
+   * which is what makes this affordable: the ids that survive the business
+   * filters are read once, sorted by score, and only the page itself is
+   * hydrated with the full card include.
+   */
+  private async byRelevance(
+    where: Prisma.ProductWhereInput,
+    matches: ProductMatch[],
+    dto: ProductSearchDto,
+  ): Promise<[Prisma.ProductGetPayload<{ include: typeof PRODUCT_CARD_INCLUDE }>[], number]> {
+    if (matches.length === 0) return [[], 0];
+
+    const rank = new Map(matches.map((m, index) => [m.id, index]));
+    const surviving = await this.prisma.product.findMany({
+      where,
+      select: { id: true },
+    });
+    surviving.sort(
+      (a, b) => (rank.get(a.id) ?? Infinity) - (rank.get(b.id) ?? Infinity),
+    );
+
+    const pageIds = surviving
+      .slice(dto.skip, dto.skip + dto.limit)
+      .map((row) => row.id);
+    if (pageIds.length === 0) return [[], surviving.length];
+
+    const rows = await this.prisma.product.findMany({
+      where: { id: { in: pageIds } },
+      include: PRODUCT_CARD_INCLUDE,
+    });
+    // `IN` comes back in whatever order the planner liked, so the page is put
+    // back into relevance order before it is serialized.
+    rows.sort((a, b) => (rank.get(a.id) ?? 0) - (rank.get(b.id) ?? 0));
+    return [rows, surviving.length];
+  }
+
+  /**
+   * The business filters, unchanged, plus whatever the phrase reached.
+   *
+   * `matchedIds` is undefined when there was no phrase to match — which is
+   * why it is not defaulted to an empty array. An empty array means the
+   * search found nothing and the result must be empty; undefined means the
+   * customer is browsing with filters alone and every product is still in
+   * play. Conflating them would empty the shop for anyone who cleared the
+   * search box.
+   */
+  private buildProductWhere(
+    dto: ProductSearchDto,
+    matchedIds?: string[],
+  ): Prisma.ProductWhereInput {
     return {
       ...PURCHASABLE_PRODUCT_WHERE,
-      ...(q
-        ? {
-            OR: [
-              { title: { contains: q, mode: 'insensitive' } },
-              { description: { contains: q, mode: 'insensitive' } },
-            ],
-          }
-        : {}),
+      ...(matchedIds ? { id: { in: matchedIds } } : {}),
       ...(dto.category
         ? { category: { slug: dto.category.toLowerCase() } }
         : {}),
@@ -302,18 +399,11 @@ export class SearchService {
     };
   }
 
-  private sellerWhere(q: string | undefined): Prisma.UserWhereInput {
-    const query = q?.trim();
+  /** `null` means no phrase was typed, so every boutique is still in play. */
+  private sellerWhere(matchedIds: string[] | null): Prisma.UserWhereInput {
     return {
       role: UserRole.SELLER,
-      ...(query
-        ? {
-            OR: [
-              { name: { contains: query, mode: 'insensitive' } },
-              { username: { contains: query, mode: 'insensitive' } },
-            ],
-          }
-        : {}),
+      ...(matchedIds ? { id: { in: matchedIds } } : {}),
     };
   }
 
@@ -323,29 +413,16 @@ export class SearchService {
    * Posts and reels, never stories: a story is gone in a day, and a search
    * result that 404s by tomorrow afternoon is worse than no result.
    */
-  private postWhere(q: string | undefined): Prisma.CommerceContentWhereInput {
+  private postWhere(
+    matchedIds: string[] | null,
+  ): Prisma.CommerceContentWhereInput {
     const base: Prisma.CommerceContentWhereInput = {
       contentType: { in: ['product_post', 'reel'] },
       status: 'PUBLISHED',
       visibility: 'PUBLIC',
       authorIsPublic: true,
     };
-    const query = q?.trim();
-    if (!query) return base;
-    return {
-      ...base,
-      OR: [
-        { body: { contains: query, mode: 'insensitive' } },
-        { title: { contains: query, mode: 'insensitive' } },
-        {
-          productTags: {
-            some: {
-              product: { title: { contains: query, mode: 'insensitive' } },
-            },
-          },
-        },
-      ],
-    };
+    return matchedIds ? { ...base, id: { in: matchedIds } } : base;
   }
 
   private sortBy(sort?: SearchSort): Prisma.ProductOrderByWithRelationInput[] {
@@ -362,6 +439,10 @@ export class SearchService {
         return [{ rating: 'desc' }, { reviewsCount: 'desc' }];
       case 'popular':
         return [{ viewsCount: 'desc' }, { favoritesCount: 'desc' }];
+      // Relevance is ordered by `byRelevance`, not here; reaching this arm
+      // means relevance was asked for with no phrase to rank against, and
+      // newest is the honest answer to that.
+      case 'relevance':
       case 'newest':
       default:
         return [{ createdAt: 'desc' }];

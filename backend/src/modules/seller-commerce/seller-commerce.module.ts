@@ -8,6 +8,9 @@ import { SellerCommerceController } from './seller-commerce.controller';
 import { SellerCommerceService } from './seller-commerce.service';
 import { SellerOrdersController } from './seller-orders.controller';
 import { SellerOrdersService } from './seller-orders.service';
+import { SellerCrmController } from './seller-crm.controller';
+import { SellerCrmService } from './seller-crm.service';
+import { SellerRetentionController } from './seller-retention.controller';
 
 /**
  * The seller's own commerce surface: the figures she reads and the orders she
@@ -21,8 +24,13 @@ import { SellerOrdersService } from './seller-orders.service';
     OrderWorkflowModule,
     FinanceModule,
   ],
-  controllers: [SellerCommerceController, SellerOrdersController],
-  providers: [SellerCommerceService, SellerOrdersService],
-  exports: [SellerOrdersService],
+  controllers: [
+    SellerCommerceController,
+    SellerOrdersController,
+    SellerCrmController,
+    SellerRetentionController,
+  ],
+  providers: [SellerCommerceService, SellerOrdersService, SellerCrmService],
+  exports: [SellerOrdersService, SellerCrmService],
 })
 export class SellerCommerceModule {}

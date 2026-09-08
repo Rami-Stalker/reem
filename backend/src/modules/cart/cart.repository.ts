@@ -13,6 +13,19 @@ const OFFER_LINE_INCLUDE = {
   product: {
     include: { media: { orderBy: { sortOrder: 'asc' as const } }, category: true },
   },
+  /**
+   * Flash-sale lines, so `unitPriceOf` can charge the sale price.
+   *
+   * Filtered on status here and on the *window* in `flashSalePriceOf`, because
+   * a window is a comparison against `now` and an include is a static shape.
+   * Loading the handful of active-status rows and deciding in one function is
+   * what keeps a single authority over price — the alternative is a time
+   * comparison written into every query that ever needs a price.
+   */
+  flashSaleItems: {
+    where: { sale: { status: 'ACTIVE' as const } },
+    include: { sale: true },
+  },
 };
 
 export const CART_INCLUDE = {

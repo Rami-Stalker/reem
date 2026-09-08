@@ -9,6 +9,8 @@ import { SellerProductsService } from './seller-products.service';
 import { SellerOffersController } from './seller-offers.controller';
 import { SellerOffersService } from './seller-offers.service';
 import { CatalogRollupService } from './catalog-rollup.service';
+import { CatalogDuplicatesController } from './catalog-duplicates.controller';
+import { CatalogDuplicatesService } from './catalog-duplicates.service';
 import { FavoritesModule } from '../favorites/favorites.module';
 import { PricingModule } from '../pricing/pricing.module';
 import { TrendsModule } from '../trends/trends.module';
@@ -19,6 +21,7 @@ import { ValueModule } from '../value/value.module';
   // her see. Nothing in the value module knows what a product is.
   imports: [FavoritesModule, PricingModule, TrendsModule, ValueModule],
   controllers: [
+    CatalogDuplicatesController,
     CategoriesController,
     SellerOffersController,
     SellerProductsController,
@@ -30,6 +33,7 @@ import { ValueModule } from '../value/value.module';
     SellerProductsService,
     SellerOffersService,
     CatalogRollupService,
+    CatalogDuplicatesService,
     ProductsRepository,
   ],
   exports: [
@@ -37,6 +41,7 @@ import { ValueModule } from '../value/value.module';
     CategoriesService,
     CatalogRollupService,
     SellerOffersService,
+    CatalogDuplicatesService,
   ],
 })
 export class ProductsModule {}

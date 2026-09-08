@@ -1,5 +1,6 @@
 import { Currency, Prisma } from '@prisma/client';
 import { Money } from '../../common/money';
+import { flashSalePriceOf } from '../pricing/flash-sale-price';
 import { CART_INCLUDE, GUEST_CART_INCLUDE } from './cart.repository';
 
 export type CartItemRecord =
@@ -26,6 +27,7 @@ export interface PurchasableLine {
     include: {
       seller: true;
       product: { include: { media: true; category: true } };
+      flashSaleItems: { include: { sale: true } };
     };
   }>;
   offerVariant: Prisma.SellerOfferVariantGetPayload<{
@@ -38,8 +40,32 @@ const _cartIsPurchasable: (line: CartItemRecord) => PurchasableLine = (line) =>
   line;
 void _cartIsPurchasable;
 
-/** The unit price actually charged: the offer variant's, else the offer's. */
-export function unitPriceOf(item: PurchasableLine): Money {
+/**
+ * The unit price actually charged.
+ *
+ * A live flash sale first, then the offer variant's price, then the offer's.
+ * Every screen and every charge comes through here — the card, the basket, the
+ * checkout summary, the order line — which is the only arrangement under which
+ * they cannot disagree about what a dress costs.
+ *
+ * A sale price beats a variant price rather than being applied on top of it.
+ * Stacking would let a large size in a sale cost less than the sale price the
+ * customer was shown, and the figure she was shown is the one she agreed to.
+ */
+export function unitPriceOf(item: PurchasableLine, now?: Date): Money {
+  const sale = flashSalePriceOf(item.offer, item.offer.currency, now);
+  if (sale) return sale;
+
+  return Money.of(
+    item.offerVariant?.price ?? item.offer.price,
+    item.offer.currency,
+  );
+}
+
+/** What this line would have cost without the sale, when it is on one. */
+export function compareAtPriceOf(item: PurchasableLine, now?: Date): Money | null {
+  const sale = flashSalePriceOf(item.offer, item.offer.currency, now);
+  if (!sale) return null;
   return Money.of(
     item.offerVariant?.price ?? item.offer.price,
     item.offer.currency,

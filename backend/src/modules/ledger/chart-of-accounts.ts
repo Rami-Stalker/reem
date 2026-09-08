@@ -86,6 +86,11 @@ export const CHART_OF_ACCOUNTS: Readonly<
     perOwner: false,
     label: 'Commission revenue',
   },
+  [LedgerAccountCode.PROMOTION_REVENUE]: {
+    kind: LedgerAccountKind.REVENUE,
+    perOwner: false,
+    label: 'Promotion revenue',
+  },
   [LedgerAccountCode.SHIPPING_REVENUE]: {
     kind: LedgerAccountKind.REVENUE,
     perOwner: false,

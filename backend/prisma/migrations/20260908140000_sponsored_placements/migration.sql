@@ -1,0 +1,19 @@
+-- Sponsored placements: a boutique paying to be surfaced.
+--
+-- A flat fee for a window, deliberately, rather than an auction or a
+-- cost-per-click. An auction needs a bidding engine nobody can tune on a
+-- catalogue this size; cost-per-click needs click-fraud defences, and charging
+-- real money against a counter a phone can inflate by tapping is how an ad
+-- product becomes a liability. A fixed price for a fixed window is billable on
+-- the day it starts and auditable afterwards.
+--
+-- `PROMOTION_REVENUE` is its own account rather than being folded into
+-- commission. They are different businesses — one scales with what the
+-- marketplace sells, the other with what sellers will pay to be seen — and a
+-- take rate that silently mixes them stops answering the question it exists
+-- for. The economics report reads both, and says which is which.
+--
+-- `charge_reference` is unique and null until charged, which is what makes
+-- billing idempotent: a promotion that already carries a reference cannot be
+-- charged a second time by a retry.
+ALTER TYPE "LedgerAccountCode" ADD VALUE IF NOT EXISTS 'PROMOTION_REVENUE';

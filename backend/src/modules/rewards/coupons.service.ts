@@ -3,7 +3,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { Coupon, CouponType } from '@prisma/client';
+import { Coupon, CouponType, Prisma } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 import { Money } from '../../common/money';
 import { buildMeta, PaginationDto } from '../../common/dto/pagination.dto';
@@ -166,28 +166,63 @@ export class CouponsService {
     return { coupon, discount: this.computeDiscount(coupon, subtotal) };
   }
 
-  /** Records a redemption once an order is placed (increments usage). */
-  async recordRedemption(
+  /**
+   * Claims one use of a coupon, inside the caller's transaction.
+   *
+   * Two things were wrong with recording this afterwards, and both of them
+   * are ways a coupon gets spent more times than it was issued for.
+   *
+   * The first is atomicity. The redemption used to be written in its own
+   * transaction after checkout had already committed, so a process that died
+   * in the gap left an order that carried the discount and a coupon that had
+   * never heard of it. Re-run often enough, a `max_uses: 1` code funds a
+   * hundred baskets. The write now commits with the order or not at all.
+   *
+   * The second is the race. `evaluate` reads `usedCount` and counts this
+   * woman's past redemptions, and both figures are already stale by the time
+   * the increment lands — ten concurrent checkouts of the same code all read
+   * zero and all pass. The row lock below is what makes the limits mean
+   * anything: redeemers of one coupon queue behind each other, so the count
+   * each of them re-reads includes everyone ahead in the queue. Different
+   * coupons never contend.
+   */
+  async redeemInTransaction(
+    tx: Prisma.TransactionClient,
     couponId: string,
     userId: string,
     orderId: string,
     amount: Money,
   ): Promise<void> {
-    await this.prisma.$transaction([
-      this.prisma.couponRedemption.create({
-        data: {
-          couponId,
-          userId,
-          orderId,
-          currency: amount.currency,
-          amount: amount.toPrisma(),
-        },
-      }),
-      this.prisma.coupon.update({
-        where: { id: couponId },
-        data: { usedCount: { increment: 1 } },
-      }),
-    ]);
+    await tx.$queryRaw`SELECT id FROM coupons WHERE id = ${couponId}::uuid FOR UPDATE`;
+
+    const coupon = await tx.coupon.findUnique({ where: { id: couponId } });
+    if (!coupon) throw new NotFoundException('Coupon not found');
+
+    if (coupon.maxUses != null && coupon.usedCount >= coupon.maxUses) {
+      throw new BadRequestException('This coupon has reached its usage limit');
+    }
+    if (coupon.perUserLimit != null) {
+      const used = await tx.couponRedemption.count({
+        where: { couponId, userId },
+      });
+      if (used >= coupon.perUserLimit) {
+        throw new BadRequestException('You have already used this coupon');
+      }
+    }
+
+    await tx.couponRedemption.create({
+      data: {
+        couponId,
+        userId,
+        orderId,
+        currency: amount.currency,
+        amount: amount.toPrisma(),
+      },
+    });
+    await tx.coupon.update({
+      where: { id: couponId },
+      data: { usedCount: { increment: 1 } },
+    });
   }
 
   private computeDiscount(coupon: Coupon, subtotal: Money): Money {

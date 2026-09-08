@@ -47,6 +47,13 @@ const PLAN_INCLUDE = {
               category: true,
             },
           },
+          // A room buys through the same till as a basket, so it has to load
+          // the same price inputs. Without this the plan charges list price
+          // during a sale — silently, since nothing would have failed.
+          flashSaleItems: {
+            where: { sale: { status: 'ACTIVE' as const } },
+            include: { sale: true },
+          },
         },
       },
       offerVariant: { include: { variant: true } },

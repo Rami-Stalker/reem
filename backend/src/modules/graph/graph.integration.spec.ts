@@ -236,30 +236,48 @@ dbTest('a keyed node carries its human key in the evidence', async (world) => {
 // ── Affinity ─────────────────────────────────────────────────────────────
 
 dbTest('similarity is a relation, not "same category"', async (world) => {
-  const category = await world.db.category.findFirst({
+  // Deterministic, and counted the same way twice.
+  //
+  // This used to pick by total product count and then measure against the
+  // ACTIVE ones, with the pair list truncated at fifty — three ways for the
+  // comparison to be between two different things. With several categories
+  // tied on size it also depended on which one `findFirst` happened to
+  // return, so it passed or failed according to what else was running.
+  const categories = await world.db.category.findMany({
     where: { products: { some: { status: 'ACTIVE' } } },
-    select: { id: true, _count: { select: { products: true } } },
-    orderBy: { products: { _count: 'desc' } },
+    select: {
+      id: true,
+      _count: { select: { products: { where: { status: 'ACTIVE' } } } },
+    },
   });
+  categories.sort(
+    (a, b) => b._count.products - a._count.products || a.id.localeCompare(b.id),
+  );
+  const category = categories[0];
   if (!category || category._count.products < 4) return;
 
   await world.affinities.buildCategory(category.id);
+
+  // Every pair, not the first fifty: comparing a truncated count against an
+  // untruncated maximum answers nothing.
+  const related = await world.db.productAffinity.count({
+    where: { kind: AffinityKind.SIMILAR, product: { categoryId: category.id } },
+  });
+  if (!related) return;
 
   const rows = await world.db.productAffinity.findMany({
     where: { kind: AffinityKind.SIMILAR, product: { categoryId: category.id } },
     take: 50,
   });
-  if (!rows.length) return;
 
-  const inCategory = await world.db.product.count({
-    where: { categoryId: category.id, status: 'ACTIVE' },
-  });
+  const inCategory = category._count.products;
 
   // The point: not everything in the category is related to everything else.
   const maxPossible = inCategory * (inCategory - 1);
   assert.ok(
-    rows.length < maxPossible,
-    'if every pair were similar this would just be the category again',
+    related < maxPossible,
+    `if every pair were similar this would just be the category again ` +
+      `(${related} of a possible ${maxPossible} across ${inCategory} listings)`,
   );
 
   for (const row of rows) {

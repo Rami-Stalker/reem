@@ -39,6 +39,9 @@ import { RewardsModule } from './modules/rewards/rewards.module';
 import { AdminModule } from './modules/admin/admin.module';
 import { AnalyticsModule } from './modules/analytics/analytics.module';
 import { TrendsModule } from './modules/trends/trends.module';
+import { TrustModule } from './modules/trust/trust.module';
+import { PromotionsModule } from './modules/promotions/promotions.module';
+import { ExperimentsModule } from './modules/experiments/experiments.module';
 import { SellerIntelligenceModule } from './modules/seller-intelligence/seller-intelligence.module';
 import { GraphModule } from './modules/graph/graph.module';
 import { IntelligenceModule } from './modules/intelligence/intelligence.module';
@@ -91,6 +94,9 @@ import { HealthModule } from './modules/health/health.module';
     StoriesModule,
     DiscoveryModule,
     SearchModule,
+    TrustModule,
+    PromotionsModule,
+    ExperimentsModule,
     CartModule,
     DeliveryModule,
     PaymentsModule,

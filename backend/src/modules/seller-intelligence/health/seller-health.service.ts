@@ -7,6 +7,7 @@ import {
   SellerOrderStatus,
 } from '@prisma/client';
 import { PrismaService } from '../../../prisma/prisma.service';
+import { utcTimestamp } from '../../../common/sql/utc-timestamp';
 import {
   HEALTH_BAND_AR,
   HEALTH_WINDOW_DAYS,
@@ -339,7 +340,7 @@ export class SellerHealthService {
           ON seller.chat_id = c.id AND seller.sender_id = c.seller_id
         WHERE c.seller_id = ${sellerId}::uuid
           AND c.buyer_id IS NOT NULL
-          AND buyer.created_at >= ${since}
+          AND buyer.created_at >= ${utcTimestamp(since)}
         GROUP BY c.id
       )
       SELECT

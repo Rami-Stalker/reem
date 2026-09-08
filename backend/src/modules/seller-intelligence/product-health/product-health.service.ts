@@ -1,6 +1,7 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { OfferStatus, Prisma, ProductStatus } from '@prisma/client';
 import { PrismaService } from '../../../prisma/prisma.service';
+import { utcTimestamp } from '../../../common/sql/utc-timestamp';
 import { PRODUCT_WINDOW_DAYS } from '../intelligence.constants';
 import {
   PeerCohort,
@@ -260,7 +261,7 @@ export class ProductHealthService {
           ) AS attributes
         FROM products p
         LEFT JOIN product_demand_daily d
-          ON d.product_id = p.id AND d.day >= ${since}
+          ON d.product_id = p.id AND d.day >= ${utcTimestamp(since)}::date
         WHERE p.category_id = ${categoryId}::uuid
           AND p.status = 'ACTIVE'
         GROUP BY p.id, p.min_price_syp, p.attributes

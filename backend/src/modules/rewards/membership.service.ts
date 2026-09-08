@@ -303,9 +303,21 @@ export class MembershipService {
 
     const result = await this.prisma.$transaction(async (tx) => {
       if (reward.pointsCost && reward.pointsCost > 0) {
-        const updated = await tx.user.update({
-          where: { id: userId },
+        // Conditional, for the same reason the loyalty conversion is: the
+        // balance check above read a number that another redemption may
+        // already have spent. Two rewards claimed at once against one
+        // balance both passed it and both decremented, leaving the points
+        // negative and two rewards granted for the price of one.
+        const claimed = await tx.user.updateMany({
+          where: { id: userId, points: { gte: reward.pointsCost } },
           data: { points: { decrement: reward.pointsCost } },
+        });
+        if (claimed.count === 0) {
+          throw new BadRequestException('Insufficient points balance');
+        }
+        const updated = await tx.user.findUniqueOrThrow({
+          where: { id: userId },
+          select: { points: true },
         });
         await tx.pointsTransaction.create({
           data: {

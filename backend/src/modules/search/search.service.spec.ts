@@ -13,6 +13,12 @@ const noSignals = {
   recordSearchClick: () => {},
 } as never;
 
+/** `trending` never touches the matcher; it reads history, not the catalogue. */
+const noMatcher = {} as never;
+
+/** Nor the ad slots — trending is search history, not a results page. */
+const noPromotions = {} as never;
+
 /** What `trending` offers before anyone has searched. */
 const FALLBACK = ['فستان', 'عطر', 'حقيبة', 'حذاء', 'هدية', 'ورد'];
 
@@ -25,7 +31,7 @@ test('trending merges search history with fallback terms without duplicates', as
       ],
     },
   };
-  const service = new SearchService(prisma as never, noSignals);
+  const service = new SearchService(prisma as never, noSignals, noMatcher, noPromotions);
 
   assert.deepEqual(await service.trending(), [
     'abaya',
@@ -40,7 +46,7 @@ test('trending falls back when no search history exists', async () => {
       groupBy: async () => [],
     },
   };
-  const service = new SearchService(prisma as never, noSignals);
+  const service = new SearchService(prisma as never, noSignals, noMatcher, noPromotions);
 
   assert.deepEqual(await service.trending(), FALLBACK);
 });

@@ -11,6 +11,10 @@ import {
 import { PaginationDto } from '../../../common/dto/pagination.dto';
 
 export const SEARCH_SORTS = [
+  // How well the phrase matched, and the default whenever there is a phrase —
+  // a customer who typed something wants the closest answer first, not the
+  // newest listing that happens to contain the word.
+  'relevance',
   'newest',
   'popular',
   'best_selling',

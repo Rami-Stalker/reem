@@ -230,9 +230,33 @@ export class LoyaltyService {
     }
 
     const run = async (inner: Tx) => {
-      const updated = await inner.user.update({
-        where: { id: userId },
+      // The balance check above ran against a read that is already stale — and
+      // when no transaction was handed in, it ran outside this one entirely.
+      // Two conversions of the same 10 points therefore both passed it, both
+      // decremented, and the customer walked away with twice the wallet credit
+      // and a negative points balance. Points are a liability the platform
+      // pays out in real money, so this is not a counter drifting.
+      //
+      // The condition moves into the UPDATE, where Postgres re-checks it
+      // against the locked row: the second conversion matches no rows and is
+      // refused with the same message it would have got a moment earlier.
+      const claimed = await inner.user.updateMany({
+        where: { id: userId, points: { gte: points } },
         data: { points: { decrement: points } },
+      });
+      if (claimed.count === 0) {
+        const current = await inner.user.findUnique({
+          where: { id: userId },
+          select: { points: true },
+        });
+        throw new BadRequestException(
+          `Not enough points: have ${current?.points ?? 0}, need ${points}`,
+        );
+      }
+      // Safe to re-read: our own UPDATE holds the row until this transaction
+      // commits, so nobody can move the balance underneath us.
+      const updated = await inner.user.findUniqueOrThrow({
+        where: { id: userId },
         select: { points: true },
       });
 
