@@ -301,6 +301,17 @@ class AppLocalizationsEn extends AppLocalizations {
   String get adminCampaignQueued => 'Campaign queued for delivery.';
 
   @override
+  String get adminBriefing => 'What needs you today';
+
+  @override
+  String get adminBriefingQuiet =>
+      'Nothing needs you today — the last read found nothing worth your time.';
+
+  @override
+  String get adminBriefingUnavailable =>
+      'The briefing could not be read right now.';
+
+  @override
   String get adminCampaigns => 'Campaigns';
 
   @override

@@ -31,7 +31,8 @@ class SellerHealthScreen extends ConsumerWidget {
       onRefresh: () async {
         ref
           ..invalidate(sellerHealthProvider)
-          ..invalidate(sellerHealthHistoryProvider);
+          ..invalidate(sellerHealthHistoryProvider)
+          ..invalidate(decliningListingsProvider);
       },
       background: const SellerAtelierBackground(),
       backgroundColor: palette.background,
@@ -91,6 +92,8 @@ class SellerHealthScreen extends ConsumerWidget {
         ),
       ],
 
+      ..._declining(context, ref),
+
       if (measured.isNotEmpty) ...[
         const SectionTitle(title: 'المقاييس'),
         SliverToBoxAdapter(
@@ -131,6 +134,132 @@ class SellerHealthScreen extends ConsumerWidget {
 
       SliverToBoxAdapter(child: _Facts(health: health)),
     ];
+  }
+
+  /// شو تراجع — listings that were selling and stopped.
+  ///
+  /// It sits directly under the advice because it answers a different
+  /// question with the same urgency: health says how good the shop is, this
+  /// says what *changed*. Telling a seller to improve her photographs when a
+  /// competitor undercut her by a third costs her a week.
+  ///
+  /// Nothing is drawn when there is nothing to say. A supplementary section
+  /// that renders an empty card teaches her to scroll past it, and the day it
+  /// has something she will scroll past that too.
+  List<Widget> _declining(BuildContext context, WidgetRef ref) {
+    final async = ref.watch(decliningListingsProvider);
+
+    return async.when(
+      // Silent: the page's subject is the health score, and a spinner for an
+      // adjunct section makes the whole screen feel slower than it is.
+      loading: () => const <Widget>[],
+      error: (_, _) => [
+        const SectionTitle(title: 'شو تراجع'),
+        SliverToBoxAdapter(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: DsSpacing.lg),
+            child: SellerPanel(
+              child: Text(
+                'ما قدرنا نقرأ المنتجات المتراجعة هلق.',
+                style: context.dsText.caption.tint(context.atelier.muted),
+              ),
+            ),
+          ),
+        ),
+      ],
+      data: (rows) => rows.isEmpty
+          ? const <Widget>[]
+          : [
+              const SectionTitle(
+                title: 'شو تراجع',
+                subtitle: 'كانت تبيع وخفّت — وسبب واحد لكل وحدة',
+              ),
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: DsSpacing.lg,
+                  ),
+                  child: SellerPanel(
+                    child: Column(
+                      children: [
+                        for (final row in rows) _DecliningTile(row: row),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
+    );
+  }
+}
+
+/// One declining listing: what fell, by how much, and the single named cause.
+///
+/// The runner-up cause is shown as context underneath rather than beside the
+/// first, because two instructions of equal weight is how a seller ends up
+/// following neither.
+class _DecliningTile extends StatelessWidget {
+  const _DecliningTile({required this.row});
+
+  final DecliningListing row;
+
+  @override
+  Widget build(BuildContext context) {
+    final palette = context.atelier;
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: DsSpacing.sm),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Text(
+                  row.title,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: context.dsText.bodyStrong.tint(palette.ink),
+                ),
+              ),
+              const SizedBox(width: DsSpacing.sm),
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 6,
+                  vertical: 2,
+                ),
+                decoration: BoxDecoration(
+                  color: palette.critical.withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(DsRadius.pill),
+                ),
+                child: Text(
+                  '${row.ordersBefore} ← ${row.ordersNow}',
+                  style: context.dsText.micro.tint(palette.critical),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: DsSpacing.xs),
+          Text(
+            row.diagnosis.title,
+            style: context.dsText.caption.tint(palette.ink),
+          ),
+          const SizedBox(height: 2),
+          Text(
+            row.diagnosis.action,
+            style: context.dsText.caption.tint(palette.muted),
+          ),
+          if (row.diagnosis.also case final also?) ...[
+            const SizedBox(height: 2),
+            Text(
+              also,
+              style: context.dsText.micro.tint(palette.muted),
+            ),
+          ],
+        ],
+      ),
+    );
   }
 }
 

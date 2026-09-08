@@ -12,6 +12,9 @@ abstract interface class SellerIntelligenceRemoteDataSource {
 
   Future<ProductHealth> product(String productId, {int? days});
 
+  /// Her listings that were selling and stopped, each with one named cause.
+  Future<List<DecliningListing>> declining();
+
   Future<SellerHealth> health({int? days});
 
   Future<List<HealthPoint>> healthHistory({int? days});

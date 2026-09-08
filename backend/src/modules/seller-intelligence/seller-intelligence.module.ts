@@ -3,6 +3,7 @@ import { DemandRadarService } from './radar/demand-radar.service';
 import { ProductHealthService } from './product-health/product-health.service';
 import { SellerHealthService } from './health/seller-health.service';
 import { SellerIntelligenceController } from './seller-intelligence.controller';
+import { SellerAdvisorService } from './advisor/seller-advisor.service';
 import { SellerIntelligenceScheduler } from './seller-intelligence.scheduler';
 
 /**
@@ -39,9 +40,15 @@ import { SellerIntelligenceScheduler } from './seller-intelligence.scheduler';
     ProductHealthService,
     SellerHealthService,
     SellerIntelligenceScheduler,
+    SellerAdvisorService,
   ],
   // Exported for the seller dashboard and for admin ranking later: both want
   // a shop's health without knowing how it is computed.
-  exports: [SellerHealthService, ProductHealthService, DemandRadarService],
+  exports: [
+    SellerHealthService,
+    ProductHealthService,
+    DemandRadarService,
+    SellerAdvisorService,
+  ],
 })
 export class SellerIntelligenceModule {}

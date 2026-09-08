@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/design_system/patterns/product_cues.dart';
 import 'package:reem/core/media/authorized_media_image.dart';
 import 'package:reem/core/media/media_variants.dart';
 import 'package:reem/core/shared/entities/product.dart';
@@ -56,6 +57,19 @@ class ProductCardCompact extends StatelessWidget {
                           .copyWith(fontWeight: FontWeight.w700),
                     ),
                   ),
+                ),
+              // The strongest honest claim, opposite the discount flag.
+              //
+              // One, not two: this card is 152pt wide in a rail, and the price
+              // row below it has already overflowed once in this file's
+              // history. On the photograph rather than under the title for the
+              // same reason — there is no vertical room left, and a scarcity
+              // badge belongs on the image anyway.
+              if (product.cues.strongestBadge case final cue?)
+                Positioned(
+                  top: 6,
+                  right: 6,
+                  child: DsBadge(label: cue.label, tone: cue.tone),
                 ),
             ],
           ),

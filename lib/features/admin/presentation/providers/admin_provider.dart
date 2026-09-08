@@ -10,6 +10,7 @@ import 'package:reem/core/presentation/providers/core_providers.dart';
 import 'package:reem/core/result/result.dart';
 import 'package:reem/features/admin/data/datasources/admin_remote_datasource.dart';
 import 'package:reem/features/admin/data/datasources/impl/admin_remote_datasource_impl.dart';
+import 'package:reem/features/admin/data/models/admin_briefing_model.dart';
 import 'package:reem/features/admin/data/repositories/admin_repository_impl.dart';
 import 'package:reem/features/admin/domain/entities/admin_console_entity.dart';
 import 'package:reem/features/admin/domain/entities/analytics_dashboard_entity.dart';
@@ -51,6 +52,17 @@ final analyticsDateRangeProvider = StateProvider<AnalyticsDateRange>((ref) {
     start: end.subtract(const Duration(days: 30)),
     end: end,
   );
+});
+
+/// What the marketplace thinks somebody should look at today.
+///
+/// Reads the datasource directly rather than going through a repository and a
+/// use case. Those layers exist to hold mapping and business rules, and there
+/// are none here — the server has already decided what the findings are, in
+/// what order, and what to do about each. A pass-through repository would add
+/// two files and no meaning.
+final adminBriefingProvider = FutureProvider<AdminBriefing>((ref) async {
+  return ref.watch(adminRemoteDataSourceProvider).getBriefing(windowDays: 30);
 });
 
 final analyticsDashboardProvider = FutureProvider<AnalyticsDashboardEntity>((

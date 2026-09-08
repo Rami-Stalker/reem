@@ -3,6 +3,11 @@ import { IsIn, IsNumber, IsOptional, Max, Min } from 'class-validator';
 import { PaginationDto } from '../../../common/dto/pagination.dto';
 
 export const DISCOVERY_SORTS = [
+  /**
+   * What the marketplace judges worth showing: conversion, quality, live
+   * demand and availability, weighed together. See `ranking/kernel`.
+   */
+  'recommended',
   'newest',
   'popular',
   'best_selling',

@@ -28,6 +28,10 @@ class SellerIntelligenceRepositoryImpl
   );
 
   @override
+  Future<Result<List<DecliningListing>>> declining() =>
+      guard(remote.declining, operation: 'declining listings');
+
+  @override
   Future<Result<SellerHealth>> health({int? days}) =>
       guard(() => remote.health(days: days), operation: 'seller health');
 

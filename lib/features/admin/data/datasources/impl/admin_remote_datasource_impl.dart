@@ -3,6 +3,7 @@ import 'package:reem/core/errors/error_mapper.dart';
 import 'package:reem/core/network/api_endpoints.dart';
 import 'package:reem/core/network/base_remote_datasource.dart';
 import 'package:reem/features/admin/data/datasources/admin_remote_datasource.dart';
+import 'package:reem/features/admin/data/models/admin_briefing_model.dart';
 import 'package:reem/features/admin/data/models/admin_console_model.dart';
 import 'package:reem/features/admin/data/models/admin_stats_model.dart';
 import 'package:reem/features/admin/data/models/analytics_dashboard_model.dart';
@@ -10,6 +11,15 @@ import 'package:reem/features/admin/data/models/analytics_dashboard_model.dart';
 final class AdminRemoteDataSourceImpl extends BaseRemoteDataSource
     implements AdminRemoteDataSource {
   const AdminRemoteDataSourceImpl(super.dio);
+
+  @override
+  Future<AdminBriefing> getBriefing({int windowDays = 30}) async {
+    final json = await getJson(
+      ApiEndpoints.adminBriefing,
+      query: {'window_days': windowDays},
+    );
+    return AdminBriefing.fromJson(json);
+  }
 
   @override
   Future<AdminStatsModel> getStats() async {

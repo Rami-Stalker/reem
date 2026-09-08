@@ -291,6 +291,12 @@ export class DiscoveryService {
         return [{ rating: 'desc' }, { reviewsCount: 'desc' }];
       case 'popular':
         return [{ viewsCount: 'desc' }, { favoritesCount: 'desc' }];
+      // What the marketplace thinks is worth showing, rather than any single
+      // counter. Ordered on the stored column so it is an index rather than a
+      // scan — see `ranking/kernel` for what it weighs, and why it is
+      // conversion rather than lifetime orders.
+      case 'recommended':
+        return [{ rankScore: 'desc' }, { createdAt: 'desc' }];
       default:
         return fallback;
     }

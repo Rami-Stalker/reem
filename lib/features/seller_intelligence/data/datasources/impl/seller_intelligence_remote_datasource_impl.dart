@@ -36,6 +36,12 @@ final class SellerIntelligenceRemoteDataSourceImpl extends BaseRemoteDataSource
   }
 
   @override
+  Future<List<DecliningListing>> declining() async {
+    final rows = await getList(ApiEndpoints.sellerIntelligenceDeclining);
+    return IntelligenceMappers.declining(rows);
+  }
+
+  @override
   Future<SellerHealth> health({int? days}) async {
     final json = await getJson(
       ApiEndpoints.sellerIntelligenceHealth,

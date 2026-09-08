@@ -380,6 +380,18 @@
   "@adminCampaignQueued": {
     "description": "Confirmation after starting a campaign."
   },
+  "adminBriefing": "What needs you today",
+  "@adminBriefing": {
+    "description": "Heading over the ordered list of findings on the admin dashboard."
+  },
+  "adminBriefingQuiet": "Nothing needs you today — the last read found nothing worth your time.",
+  "@adminBriefingQuiet": {
+    "description": "Shown when the briefing came back with no findings, so a quiet week does not look like a broken screen."
+  },
+  "adminBriefingUnavailable": "The briefing could not be read right now.",
+  "@adminBriefingUnavailable": {
+    "description": "Shown when the briefing request fails. Advisory, so it is stated plainly rather than as an error."
+  },
   "adminCampaigns": "Campaigns",
   "@adminCampaigns": {
     "description": "Admin shortcut to notification campaigns."

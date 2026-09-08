@@ -9,11 +9,13 @@ import {
   NotificationType,
   Prisma,
   UserRole,
+  NotificationCategory,
 } from '@prisma/client';
 import { createHash } from 'crypto';
 import { buildMeta, PaginationDto } from '../../common/dto/pagination.dto';
 import { serializeNotification } from '../../common/serializers';
 import { PrismaService } from '../../prisma/prisma.service';
+import { ContactPolicyService } from './contact-policy.service';
 import { PushOutcome, PushTransport } from './transports/push.transport';
 import {
   AppEvent,
@@ -55,6 +57,7 @@ export class NotificationsService {
     private readonly push: PushTransport,
     private readonly repo: NotificationsRepository,
     private readonly prisma: PrismaService,
+    private readonly contactPolicy: ContactPolicyService,
   ) {}
 
   // ── Reads / mutations ────────────────────────────────────────────────────
@@ -617,15 +620,43 @@ export class NotificationsService {
     type: NotificationType;
     payload?: unknown;
     scheduledAt?: Date;
+    /**
+     * Whether this is something she is waiting for or something the platform
+     * wants. Defaults to marketing, deliberately: a caller that has not
+     * thought about it is far more likely to be sending a promotion than an
+     * order update, and the safe default is the one that gets capped.
+     */
+    category?: NotificationCategory;
   }) {
     if (input.recipients.length === 0) return 0;
+    const category = input.category ?? NotificationCategory.MARKETING;
+
     const prefs = await this.prisma.notificationPreference.findMany({
       where: { userId: { in: input.recipients } },
     });
     const prefByUser = new Map(prefs.map((pref) => [pref.userId, pref]));
 
-    const deliveries: Prisma.NotificationDeliveryCreateManyInput[] = [];
+    // The frequency gate, applied here rather than in each campaign.
+    //
+    // The harm this prevents is cumulative and invisible from any single
+    // sender: an abandoned-basket reminder, a win-back, a price drop and a
+    // flash-sale announcement are each defensible alone, and four of them on
+    // one Tuesday is why she turns notifications off. Only this point can see
+    // the total, so this is where it is counted.
+    const allowed: string[] = [];
     for (const userId of input.recipients) {
+      const decision = await this.contactPolicy.mayContact(userId, {
+        category,
+        // A scheduled send has already chosen its hour; re-checking the clock
+        // here would refuse everything queued the night before.
+        ignoreQuietHours: Boolean(input.scheduledAt),
+      });
+      if (decision.allowed) allowed.push(userId);
+    }
+    if (allowed.length === 0) return 0;
+
+    const deliveries: Prisma.NotificationDeliveryCreateManyInput[] = [];
+    for (const userId of allowed) {
       const pref = prefByUser.get(userId);
       for (const channel of input.channels) {
         if (!this.channelAllowed(channel, input.type, pref)) continue;
@@ -633,6 +664,7 @@ export class NotificationsService {
           campaignId: input.campaignId,
           userId,
           channel,
+          category,
           title: input.title,
           body: input.body,
           payload: {

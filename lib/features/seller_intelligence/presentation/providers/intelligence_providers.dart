@@ -56,6 +56,18 @@ final sellerHealthProvider = FutureProvider.autoDispose<SellerHealth>((
   return result.fold((failure) => throw failure, (data) => data);
 });
 
+/// What is slipping, and why.
+///
+/// Live rather than nightly — it reads order rows directly — so it is not
+/// cached beyond the screen that shows it.
+final decliningListingsProvider =
+    FutureProvider.autoDispose<List<DecliningListing>>((ref) async {
+      final result = await ref
+          .watch(sellerIntelligenceRepositoryProvider)
+          .declining();
+      return result.fold((failure) => throw failure, (data) => data);
+    });
+
 final sellerHealthHistoryProvider =
     FutureProvider.autoDispose<List<HealthPoint>>((ref) async {
       final result = await ref

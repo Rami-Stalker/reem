@@ -10,6 +10,7 @@ import {
   NotificationCampaignStatus,
   NotificationChannel,
   NotificationType,
+  NotificationCategory,
 } from '@prisma/client';
 
 export class RegisterPushTokenDto {
@@ -42,6 +43,16 @@ export class NotificationSegmentDto {
 }
 
 export class DispatchNotificationDto {
+  /**
+   * Whether this is something the recipient is waiting for or something the
+   * platform wants. Omitted means marketing — the safe default, because a
+   * caller that has not thought about it is far likelier to be promoting than
+   * to be delivering an order update.
+   */
+  @IsOptional()
+  @IsEnum(NotificationCategory)
+  category?: NotificationCategory;
+
   @IsOptional()
   @IsArray()
   user_ids?: string[];

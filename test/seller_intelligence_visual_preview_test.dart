@@ -342,6 +342,15 @@ class _FixtureRepository implements SellerIntelligenceRepository {
   Future<Result<ProductHealth>> product(String productId, {int? days}) async =>
       Success(IntelligenceMappers.productDetail(_section('product_detail')));
 
+  /// The advisor reads live order rows rather than the nightly pipeline, so
+  /// the capture has no section for it. Empty is the honest replay: the
+  /// health screen draws nothing at all when nothing is declining.
+  @override
+  Future<Result<List<DecliningListing>>> declining() async =>
+      Success(IntelligenceMappers.declining(
+        _fixture['declining'] as List? ?? const [],
+      ));
+
   @override
   Future<Result<SellerHealth>> health({int? days}) async =>
       Success(IntelligenceMappers.sellerHealth(_section('health')));

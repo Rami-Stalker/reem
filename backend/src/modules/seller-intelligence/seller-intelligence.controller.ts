@@ -7,6 +7,7 @@ import {
   ParseUUIDPipe,
   Post,
   Query,
+  NotFoundException,
 } from '@nestjs/common';
 import { UserRole } from '@prisma/client';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
@@ -28,6 +29,7 @@ import {
 } from './intelligence.serializer';
 import { DemandRadarService } from './radar/demand-radar.service';
 import { ProductHealthService } from './product-health/product-health.service';
+import { SellerAdvisorService } from './advisor/seller-advisor.service';
 import { SellerHealthService } from './health/seller-health.service';
 
 /**
@@ -51,7 +53,41 @@ export class SellerIntelligenceController {
     private readonly radar: DemandRadarService,
     private readonly products: ProductHealthService,
     private readonly health: SellerHealthService,
+    private readonly advisor: SellerAdvisorService,
   ) {}
+
+  // ── The advisor ────────────────────────────────────────────────────────
+
+  /**
+   * Her listings that were selling and stopped, each with one named cause.
+   *
+   * The difference from product health, which sits beside it: health asks how
+   * good a listing is, this asks what *changed*. The remedies differ, and
+   * telling a seller to improve her photographs when a competitor undercut
+   * her by a third costs her a week.
+   */
+  @Get('declining')
+  declining(@CurrentUser('id') sellerId: string) {
+    return this.advisor.decliningListings(sellerId, 10);
+  }
+
+  /** Why one particular listing moved. */
+  @Get('products/:productId/diagnosis')
+  async diagnose(
+    @CurrentUser('id') sellerId: string,
+    @Param('productId', ParseUUIDPipe) productId: string,
+  ) {
+    const result = await this.advisor.diagnoseListing(sellerId, productId);
+    if (!result) throw new NotFoundException('Listing not found');
+    return {
+      window_days: result.window_days,
+      code: result.diagnosis.code,
+      title: result.diagnosis.ar,
+      action: result.diagnosis.actionAr,
+      also: result.diagnosis.alsoAr,
+      evidence: result.diagnosis.evidence,
+    };
+  }
 
   // ── Demand Radar ───────────────────────────────────────────────────────
 

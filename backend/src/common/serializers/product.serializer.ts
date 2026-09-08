@@ -6,6 +6,7 @@ import {
   totalStock,
 } from '../catalog/product-include';
 import { Money } from '../money';
+import { cuesFor } from '../../modules/ranking/kernel/behavioural';
 import { serializePublicUser } from './user.serializer';
 
 /**
@@ -114,10 +115,27 @@ export function serializeProduct(
 ) {
   const best = defaultOffer(product);
 
+  // What can honestly be said about this card. Empty when nothing can — see
+  // `ranking/kernel/behavioural.ts` for why silence is the correct output
+  // rather than a softened claim.
+  const cues = cuesFor({
+    recentOrders: product.recentOrders30 ?? 0,
+    windowDays: 30,
+    favourites: product.favoritesCount ?? 0,
+    stock: product.liveStock ?? 0,
+    liveOffers: product.liveOffersCount ?? 0,
+    rating: product.rating ?? 0,
+    reviews: product.reviewsCount ?? 0,
+    compareAtPrice: best?.compareAtPrice ? Number(best.compareAtPrice) : null,
+    price: best ? Number(best.price) : 0,
+  });
+
   return {
     id: product.id,
     slug: product.slug,
     title: product.title,
+    // Honest badges only; an empty list means there is nothing true to say.
+    cues,
     description: product.description,
     category: serializeCategory(product.category),
     brand: product.brand ? serializeBrand(product.brand) : null,

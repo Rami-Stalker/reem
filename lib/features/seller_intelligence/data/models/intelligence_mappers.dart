@@ -243,4 +243,40 @@ class IntelligenceMappers {
           .toList(growable: false),
     );
   }
+
+  // ── The advisor ────────────────────────────────────────────────────────
+
+  /// `/seller/intelligence/declining` — a bare JSON array.
+  ///
+  /// A row whose diagnosis did not survive the server's own checks is dropped
+  /// rather than shown with an empty cause: "this stopped selling, no idea
+  /// why" is worse than not raising it at all.
+  static List<DecliningListing> declining(List<dynamic> rows) {
+    return rows
+        .whereType<Map<String, dynamic>>()
+        .map((row) {
+          final diagnosis = row['diagnosis'];
+          if (diagnosis is! Map<String, dynamic>) return null;
+          final title = _string(diagnosis['title']);
+          if (title.isEmpty) return null;
+
+          return DecliningListing(
+            productId: _string(row['product_id']),
+            title: _string(row['title']),
+            ordersNow: _int(row['orders_now']),
+            ordersBefore: _int(row['orders_before']),
+            diagnosis: ListingDiagnosis(
+              code: _string(diagnosis['code']),
+              title: title,
+              action: _string(diagnosis['action']),
+              also: diagnosis['also'] is String
+                  ? diagnosis['also'] as String
+                  : null,
+              evidence: _facts(diagnosis['evidence']),
+            ),
+          );
+        })
+        .whereType<DecliningListing>()
+        .toList(growable: false);
+  }
 }

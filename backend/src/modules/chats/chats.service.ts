@@ -15,6 +15,7 @@ import {
   PresenceStatus,
   Prisma,
   UserRole,
+  NotificationCategory,
 } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 import { MediaService } from '../media/media.service';
@@ -688,6 +689,10 @@ export class ChatsService {
               ? 'Image shared'
               : 'Voice message shared',
         payload: { chat_id: chat.id, message_id: message.id },
+        // Somebody wrote to her. Transactional, so it is never held for quiet
+        // hours and never counted against a marketing cap — a message she is
+        // waiting for is not a promotion.
+        category: NotificationCategory.TRANSACTIONAL,
       });
     } catch {
       // Notification transport failures should not fail chat delivery.

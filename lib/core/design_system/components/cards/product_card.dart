@@ -36,6 +36,7 @@ class DsProductCard extends StatelessWidget {
     this.isNew = false,
     this.soldOut = false,
     this.badgeLabel,
+    this.cues = const [],
     this.onTap,
     this.onFavoriteToggle,
     this.onAddToCart,
@@ -59,6 +60,16 @@ class DsProductCard extends StatelessWidget {
   final bool isNew;
   final bool soldOut;
   final String? badgeLabel;
+
+  /// Honest badges from the server: real scarcity, real social proof, a real
+  /// anchor. Rendered verbatim and never composed here — the server has
+  /// already decided what it is willing to claim, and an empty list means the
+  /// truthful answer was to say nothing.
+  ///
+  /// At most two are drawn. A card wearing four badges is a card whose badges
+  /// have stopped meaning anything, and the list arrives strongest-first.
+  final List<DsProductCue> cues;
+
   final VoidCallback? onTap;
   final VoidCallback? onFavoriteToggle;
   final VoidCallback? onAddToCart;
@@ -118,6 +129,10 @@ class DsProductCard extends StatelessWidget {
                   const SizedBox(height: DsSpacing.xs),
                   _Rating(rating: rating!, count: ratingCount),
                 ],
+                if (cues.isNotEmpty) ...[
+                  const SizedBox(height: DsSpacing.xs),
+                  _Cues(cues: cues),
+                ],
                 const SizedBox(height: DsSpacing.xs),
                 _PriceRow(
                   price: price,
@@ -140,6 +155,40 @@ class DsProductCard extends StatelessWidget {
       pressedScale: 0.98,
       onTap: onTap!,
       child: card,
+    );
+  }
+}
+
+/// One thing the marketplace can honestly say, as the card needs it.
+///
+/// Deliberately a plain value rather than the domain entity: the design system
+/// does not depend on `core/shared`, and a card that imported an entity to
+/// read two strings would tie every screen's widget tree to the catalogue's
+/// shape.
+class DsProductCue {
+  const DsProductCue({required this.label, required this.tone});
+
+  final String label;
+  final DsBadgeTone tone;
+}
+
+class _Cues extends StatelessWidget {
+  const _Cues({required this.cues});
+
+  final List<DsProductCue> cues;
+
+  @override
+  Widget build(BuildContext context) {
+    // Two at most, strongest first. Wrapped rather than in a Row so a long
+    // Arabic phrase moves to its own line instead of being clipped — a
+    // half-shown claim is worse than an absent one.
+    return Wrap(
+      spacing: DsSpacing.xxs,
+      runSpacing: DsSpacing.xxs,
+      children: [
+        for (final cue in cues.take(2))
+          DsBadge(label: cue.label, tone: cue.tone),
+      ],
     );
   }
 }

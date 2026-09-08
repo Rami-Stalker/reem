@@ -8,6 +8,7 @@ import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/core/shared/value_objects/money_format.dart';
 import 'package:reem/features/admin/presentation/providers/admin_provider.dart';
+import 'package:reem/features/admin/presentation/widgets/admin_briefing_panel.dart';
 import 'package:reem/features/admin/presentation/widgets/admin_page_header.dart';
 
 class AdminDashboardScreen extends ConsumerStatefulWidget {
@@ -128,6 +129,13 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
                       );
                     },
                   ),
+
+                  const SizedBox(height: DsSpacing.xxl),
+
+                  // What the marketplace thinks needs a person today. Above
+                  // the quick actions on purpose: the counters say how the
+                  // month went, this says what to do about it.
+                  const AdminBriefingPanel(),
 
                   const SizedBox(height: DsSpacing.xxl),
 

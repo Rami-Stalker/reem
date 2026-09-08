@@ -319,6 +319,16 @@ enum NotificationChannel {
   SMS
 }
 
+enum NotificationCategory {
+  /// Something she is waiting for: an order, a return, a payment, a reply.
+  /// Never capped, never held for quiet hours.
+  TRANSACTIONAL
+  /// Something the platform wants: an offer, a reminder, a campaign. Capped,
+  /// held outside her waking hours, and skipped entirely if she has had
+  /// enough this week.
+  MARKETING
+}
+
 enum NotificationDeliveryStatus {
   QUEUED
   SENT
@@ -1144,6 +1154,15 @@ model User {
   flashSalesCreated FlashSale[] @relation("FlashSalesCreated")
   promotionsBought ProductPromotion[] @relation("PromotionsBought")
   experimentsCreated Experiment[] @relation("ExperimentsCreated")
+  customerProfile CustomerProfile? @relation("CustomerProfile")
+  /// How this boutique ranks against other boutiques, 0–100. Zero for anyone
+  /// who is not a seller. See `ranking/kernel` for what it weighs and why
+  /// reliability comes before volume.
+  sellerRankScore    Float     @default(0) @map("seller_rank_score")
+  sellerRankScoredAt DateTime? @map("seller_rank_scored_at")
+  sellerRankBreakdown Json?    @map("seller_rank_breakdown")
+
+  @@index([role, sellerRankScore])
   @@map("users")
 }
 
@@ -2084,6 +2103,26 @@ model Product {
   // mutates an offer. `minPrice`/`maxPrice` are normalised to SYP so the
   // catalog can be sorted and filtered by price in one currency.
   offersCount Int      @default(0) @map("offers_count")
+
+  /// What this listing is worth showing, 0–100, from `ranking/kernel`.
+  ///
+  /// Stored rather than computed per query, because ordering a catalogue by an
+  /// expression is a sequential scan and ordering it by a column is an index.
+  /// Refreshed by a sweep; `rankScoredAt` says when, so a screen can tell a
+  /// seller how fresh her position is instead of implying it is live.
+  rankScore     Float     @default(0) @map("rank_score")
+  rankScoredAt  DateTime? @map("rank_scored_at")
+  /// The components behind it, so "why is my dress on page three" has an
+  /// answer that does not require re-deriving the score.
+  rankBreakdown Json?     @map("rank_breakdown")
+
+  /// Derived facts the card needs, refreshed by the same sweep that scores
+  /// the listing. Denormalised so an honest badge ("bought by 12 women this
+  /// month", "only 2 left") does not cost a query per card — which is the
+  /// reason most catalogues either skip these or lie with a cached guess.
+  liveOffersCount Int @default(0) @map("live_offers_count")
+  liveStock       Int @default(0) @map("live_stock")
+  recentOrders30  Int @default(0) @map("recent_orders_30")
   minPriceSyp Decimal? @map("min_price_syp") @db.Decimal(18, 4)
   maxPriceSyp Decimal? @map("max_price_syp") @db.Decimal(18, 4)
 
@@ -2161,6 +2200,8 @@ model Product {
   @@index([moderationStatus])
   duplicateLeft  ProductDuplicateVerdict[] @relation("DuplicateLeft")
   duplicateRight ProductDuplicateVerdict[] @relation("DuplicateRight")
+
+  @@index([status, rankScore])
   @@map("products")
 }
 
@@ -3858,6 +3899,56 @@ model ExperimentEvent {
   @@map("experiment_events")
 }
 
+/// What the platform has worked out about one customer.
+///
+/// A cache, refreshed on a sweep, and never the source of truth — every figure
+/// is derived from orders and events that remain exactly where they were.
+/// It exists because the readings feed hot paths: a notification job deciding
+/// whom to reach, a ranking deciding what to show her. Recomputing four scores
+/// from a hundred thousand events on each of those is not a trade worth making,
+/// and a stale-by-a-day score is a far smaller error than the one it replaces.
+///
+/// `computedAt` is on the row rather than implied, so a screen can say how old
+/// the reading is instead of presenting yesterday's as today's.
+model CustomerProfile {
+  userId String @id @map("user_id") @db.Uuid
+  user   User   @relation("CustomerProfile", fields: [userId], references: [id], onDelete: Cascade)
+
+  /// 0–100, with the reasons behind each stored beside it. The reasons are
+  /// the point: a score nobody can explain is a score nobody acts on.
+  propensityScore Float  @map("propensity_score")
+  propensityBand  String @map("propensity_band")
+
+  churnScore Float  @map("churn_score")
+  churnBand  String @map("churn_band")
+  /// Her own average days between orders. Null below two orders.
+  cadenceDays Float? @map("cadence_days")
+
+  /// Net of refunds, and projected over `valueHorizonDays`.
+  realisedValue  Decimal @map("realised_value") @db.Decimal(18, 4)
+  projectedValue Decimal @map("projected_value") @db.Decimal(18, 4)
+  valueHorizonDays Int   @map("value_horizon_days")
+  currency       Currency @default(SYP)
+
+  /// The hour she is most often active, 0–23. Null when too little is known —
+  /// a "best hour" from four app opens is a random hour with an excuse.
+  bestContactHour Int? @map("best_contact_hour")
+
+  /// `{ propensity: [...], churn: [...] }` — every signal, in Arabic.
+  signals Json
+
+  /// False when the history behind the scores is too thin to spend money on.
+  confident Boolean @default(false)
+
+  computedAt DateTime @default(now()) @map("computed_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  @@index([churnBand, churnScore])
+  @@index([propensityBand, propensityScore])
+  @@index([computedAt])
+  @@map("customer_profiles")
+}
+
 enum ExperimentStatus {
   DRAFT
   RUNNING
@@ -4817,6 +4908,16 @@ model NotificationDelivery {
   userId            String                     @map("user_id") @db.Uuid
   user              User                       @relation(fields: [userId], references: [id], onDelete: Cascade)
   channel           NotificationChannel
+  /**
+   * Whether this message is something she asked for or something the platform
+   * wants.
+   *
+   * The whole basis of frequency capping. An order that has shipped must reach
+   * her whatever her recent volume; a third offer this week must not. Without
+   * the distinction a cap either throttles the messages she is waiting for or
+   * fails to throttle the ones she is not.
+   */
+  category          NotificationCategory       @default(TRANSACTIONAL)
   status            NotificationDeliveryStatus @default(QUEUED)
   provider          String?
   providerMessageId String?                    @map("provider_message_id")
@@ -4837,6 +4938,11 @@ model NotificationDelivery {
   @@index([campaignId])
   @@index([channel, status])
   @@index([scheduledAt, status])
+  /// The frequency cap counts this on every marketing send, so it gets its
+  /// own index rather than leaning on the user+status one. Ordered
+  /// (user, category, sent_at) because that is exactly the shape of the
+  /// question: "how much marketing has this woman had lately".
+  @@index([userId, category, sentAt])
   @@map("notification_deliveries")
 }
 

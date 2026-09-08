@@ -40,8 +40,12 @@ import { AdminModule } from './modules/admin/admin.module';
 import { AnalyticsModule } from './modules/analytics/analytics.module';
 import { TrendsModule } from './modules/trends/trends.module';
 import { TrustModule } from './modules/trust/trust.module';
+import { LifecycleModule } from './modules/lifecycle/lifecycle.module';
 import { PromotionsModule } from './modules/promotions/promotions.module';
 import { ExperimentsModule } from './modules/experiments/experiments.module';
+import { CustomerIntelligenceModule } from './modules/customer-intelligence/customer-intelligence.module';
+import { RankingModule } from './modules/ranking/ranking.module';
+import { AdminIntelligenceModule } from './modules/admin-intelligence/admin-intelligence.module';
 import { SellerIntelligenceModule } from './modules/seller-intelligence/seller-intelligence.module';
 import { GraphModule } from './modules/graph/graph.module';
 import { IntelligenceModule } from './modules/intelligence/intelligence.module';
@@ -95,8 +99,12 @@ import { HealthModule } from './modules/health/health.module';
     DiscoveryModule,
     SearchModule,
     TrustModule,
+    LifecycleModule,
     PromotionsModule,
     ExperimentsModule,
+    CustomerIntelligenceModule,
+    RankingModule,
+    AdminIntelligenceModule,
     CartModule,
     DeliveryModule,
     PaymentsModule,

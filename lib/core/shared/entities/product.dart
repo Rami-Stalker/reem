@@ -4,6 +4,7 @@ import 'package:equatable/equatable.dart';
 import 'package:reem/core/shared/entities/brand.dart';
 import 'package:reem/core/shared/entities/category.dart';
 import 'package:reem/core/shared/entities/media.dart';
+import 'package:reem/core/shared/entities/product_cue.dart';
 import 'package:reem/core/shared/entities/product_variant.dart';
 import 'package:reem/core/shared/entities/seller_offer.dart';
 import 'package:reem/core/shared/entities/user.dart';
@@ -49,6 +50,11 @@ class Product extends Equatable {
   final int ordersCount;
   final int favoritesCount;
 
+  /// What the marketplace can honestly say about this listing — real scarcity,
+  /// real social proof, a real anchor. Empty when there is nothing true to
+  /// say, and an empty list is a card that shows no badge at all.
+  final List<ProductCue> cues;
+
   final DateTime createdAt;
 
   const Product({
@@ -74,6 +80,7 @@ class Product extends Equatable {
     this.viewsCount = 0,
     this.ordersCount = 0,
     this.favoritesCount = 0,
+    this.cues = const [],
   });
 
   MediaItem? get cover => media.isNotEmpty ? media.first : null;
@@ -161,6 +168,7 @@ class Product extends Equatable {
         viewsCount,
         ordersCount,
         favoritesCount,
+        cues,
         createdAt,
       ];
 }

@@ -422,3 +422,57 @@ class DemandRadar {
   /// She sells nothing, so there is nothing to read the market against.
   bool get hasNoListings => categoryCount == 0;
 }
+
+/// Why one listing stopped selling.
+///
+/// A single named cause, not a list of things that correlate. The server
+/// deliberately picks one — out of stock beats undercut beats a cooling
+/// category — because a seller handed five possible reasons acts on none of
+/// them. Where a second cause was close, it arrives in [also] as context
+/// rather than as a competing instruction.
+@immutable
+class ListingDiagnosis {
+  const ListingDiagnosis({
+    required this.code,
+    required this.title,
+    required this.action,
+    this.also,
+    this.evidence = const {},
+  });
+
+  /// Machine-readable cause, e.g. `out_of_stock`, `undercut`.
+  final String code;
+
+  /// What happened, already phrased in Arabic by the server.
+  final String title;
+
+  /// What she could do about it.
+  final String action;
+
+  /// The runner-up cause, when one was close. May be null.
+  final String? also;
+
+  final Map<String, num?> evidence;
+}
+
+/// A listing that was selling and stopped, with its cause.
+@immutable
+class DecliningListing {
+  const DecliningListing({
+    required this.productId,
+    required this.title,
+    required this.ordersNow,
+    required this.ordersBefore,
+    required this.diagnosis,
+  });
+
+  final String productId;
+  final String title;
+  final int ordersNow;
+  final int ordersBefore;
+  final ListingDiagnosis diagnosis;
+
+  /// Orders lost against the previous window. Always positive here — the
+  /// server only returns listings that fell by at least a quarter.
+  int get lost => ordersBefore - ordersNow;
+}

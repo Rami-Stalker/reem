@@ -624,6 +624,10 @@ abstract final class ApiEndpoints {
   static const adminUsers = '/admin/users';
   static const adminSellers = '/admin/sellers';
   static const adminAnalytics = '/admin/analytics';
+
+  /// The morning briefing: what the marketplace thinks somebody should look at
+  /// today, each row carrying its evidence and an action.
+  static const adminBriefing = '/admin/intelligence/briefing';
   static const adminFinancials = '/admin/financials';
   /// The console's commission screen reads `/admin/commissions` — rules,
   /// ledger entries and the pending total in one payload — rather than
@@ -719,6 +723,9 @@ abstract final class ApiEndpoints {
   // No seller id in any of these: the server reads it from the token and the
   // routes take no parameter for it, which is what makes it impossible for a
   // caller to ask about somebody else's shop.
+  static const sellerIntelligenceDeclining = '/seller/intelligence/declining';
+  static String sellerIntelligenceDiagnosis(String id) =>
+      '/seller/intelligence/products/$id/diagnosis';
   static const sellerIntelligenceRadar = '/seller/intelligence/radar';
   static const sellerIntelligenceProducts = '/seller/intelligence/products';
   static String sellerIntelligenceProduct(String id) =>

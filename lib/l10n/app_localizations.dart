@@ -656,6 +656,24 @@ abstract class AppLocalizations {
   /// **'Campaign queued for delivery.'**
   String get adminCampaignQueued;
 
+  /// Heading over the ordered list of findings on the admin dashboard.
+  ///
+  /// In en, this message translates to:
+  /// **'What needs you today'**
+  String get adminBriefing;
+
+  /// Shown when the briefing came back with no findings, so a quiet week does not look like a broken screen.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing needs you today — the last read found nothing worth your time.'**
+  String get adminBriefingQuiet;
+
+  /// Shown when the briefing request fails. Advisory, so it is stated plainly rather than as an error.
+  ///
+  /// In en, this message translates to:
+  /// **'The briefing could not be read right now.'**
+  String get adminBriefingUnavailable;
+
   /// Admin shortcut to notification campaigns.
   ///
   /// In en, this message translates to:

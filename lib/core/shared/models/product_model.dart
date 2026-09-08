@@ -4,6 +4,7 @@ import 'package:reem/core/shared/entities/brand.dart';
 import 'package:reem/core/shared/entities/category.dart';
 import 'package:reem/core/shared/entities/media.dart';
 import 'package:reem/core/shared/entities/product.dart';
+import 'package:reem/core/shared/entities/product_cue.dart';
 import 'package:reem/core/shared/entities/product_variant.dart';
 import 'package:reem/core/shared/entities/seller_offer.dart';
 import 'package:reem/core/shared/models/brand_model.dart';
@@ -37,6 +38,7 @@ class ProductModel extends Product {
     super.viewsCount,
     super.ordersCount,
     super.favoritesCount,
+    super.cues,
   });
 
   factory ProductModel.fromJson(Map<String, dynamic> json) {
@@ -84,6 +86,21 @@ class ProductModel extends Product {
       viewsCount: json['views_count'] as int? ?? 0,
       ordersCount: json['orders_count'] as int? ?? 0,
       favoritesCount: json['favorites_count'] as int? ?? 0,
+      // Rendered exactly as the server worded them. Nothing is composed here:
+      // a badge assembled on the phone from a raw count can drift from what
+      // the server was actually willing to claim, and an honest badge that
+      // drifts is a dishonest one.
+      cues: (json['cues'] as List? ?? const [])
+          .whereType<Map<String, dynamic>>()
+          .map(
+            (cue) => ProductCue(
+              kind: ProductCue.kindFrom(cue['kind'] as String?),
+              label: (cue['ar'] as String?) ?? '',
+              value: (cue['value'] as num?) ?? 0,
+            ),
+          )
+          .where((cue) => cue.label.isNotEmpty)
+          .toList(growable: false),
       createdAt: DateTime.tryParse(json['created_at'] as String? ?? '') ??
           DateTime.now(),
     );
@@ -111,6 +128,7 @@ class ProductModel extends Product {
         viewsCount: p.viewsCount,
         ordersCount: p.ordersCount,
         favoritesCount: p.favoritesCount,
+        cues: p.cues,
         createdAt: p.createdAt,
       );
 

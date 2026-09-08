@@ -6,6 +6,7 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/design_system/patterns/product_cues.dart';
 import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/core/shared/entities/product.dart';
@@ -496,6 +497,7 @@ class _ResultCard extends StatelessWidget {
       rating: product.rating > 0 ? product.rating : null,
       ratingCount: product.reviewsCount > 0 ? product.reviewsCount : null,
       soldOut: !product.inStock,
+      cues: product.cues.asBadges,
       onTap: () =>
           context.push(RoutePaths.productDetailsOf(product.id)),
     );

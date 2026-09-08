@@ -411,6 +411,25 @@ export default () => ({
    * market reading is computed *from* the trend engine's daily facts, and
    * running one without the other produces a market read against nothing.
    */
+  /**
+   * When the marketplace thinks about itself, and when it speaks.
+   *
+   * Two switches on purpose. `INTELLIGENCE_SCHEDULER_ENABLED` runs the nightly
+   * reads — ranking, customer profiles, the trust sweeps — none of which is
+   * visible to anybody until a person opens a screen, so a stale one is simply
+   * a worse product than a fresh one.
+   *
+   * `REENGAGEMENT_SCHEDULER_ENABLED` is what lets the platform *send*, and it
+   * is deliberately a second switch: turning the intelligence on must never
+   * quietly turn on outbound marketing to several hundred women. There is no
+   * way to un-send a push notification, so this one stays off until somebody
+   * has read what the messages actually say.
+   */
+  intelligence: {
+    schedulerEnabled: process.env.INTELLIGENCE_SCHEDULER_ENABLED === 'true',
+    reengagementEnabled: process.env.REENGAGEMENT_SCHEDULER_ENABLED === 'true',
+  },
+
   market: {
     schedulerEnabled:
       process.env.MARKET_SCHEDULER_ENABLED === 'true'

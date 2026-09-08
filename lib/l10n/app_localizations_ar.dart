@@ -300,6 +300,16 @@ class AppLocalizationsAr extends AppLocalizations {
   String get adminCampaignQueued => 'الحملة في قائمة الإرسال.';
 
   @override
+  String get adminBriefing => 'ما يحتاج انتباهكِ اليوم';
+
+  @override
+  String get adminBriefingQuiet =>
+      'لا شيء يحتاج انتباهكِ اليوم — آخر قراءة لم تجد ما يستحقّ وقتكِ.';
+
+  @override
+  String get adminBriefingUnavailable => 'تعذّرت قراءة الملخّص الآن.';
+
+  @override
   String get adminCampaigns => 'الحملات';
 
   @override
