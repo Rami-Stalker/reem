@@ -619,6 +619,20 @@ abstract final class ApiEndpoints {
 
   // Admin
   static const adminStats = '/admin/stats';
+
+  // ── Delivery companies (Q63) ──────────────────────────────────────────
+  //
+  // Reem does not run drivers: parcels are carried by delivery companies, and
+  // these routes are the operations desk for them. The app never talks to a
+  // carrier — only to Reem, which holds every credential.
+  static const adminDeliveryProviders = '/admin/delivery/providers';
+  static String adminDeliveryProviderEnable(String id) =>
+      '/admin/delivery/providers/$id/enable';
+  static String adminDeliveryProviderDisable(String id) =>
+      '/admin/delivery/providers/$id/disable';
+  static const adminDeliveryDispatches = '/admin/delivery/dispatches';
+  static String adminDeliveryDispatchRetry(String id) =>
+      '/admin/delivery/dispatches/$id/retry';
   static const adminOrders = '/admin/orders';
   static const adminProducts = '/admin/products';
   static const adminUsers = '/admin/users';

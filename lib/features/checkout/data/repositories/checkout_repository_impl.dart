@@ -32,6 +32,7 @@ class CheckoutRepositoryImpl
 
   @override
   Future<Result<PlacedOrder>> placeOrder({
+    required String idempotencyKey,
     ShippingInput? shipping,
     String? addressId,
     bool saveAddress = false,
@@ -48,6 +49,7 @@ class CheckoutRepositoryImpl
       // address" for an address the screen was already showing as chosen.
       // Every order placed from the address book failed.
       guard(() => remote.placeOrder(
+            idempotencyKey: idempotencyKey,
             shipping: shipping,
             addressId: addressId,
             saveAddress: saveAddress,

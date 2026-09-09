@@ -12,6 +12,8 @@ import { AuthUser } from '../decorators/current-user.decorator';
 import { ROLES_KEY } from '../decorators/roles.decorator';
 import { PERMISSIONS_KEY } from '../decorators/permissions.decorator';
 import { AUTHORIZATION_POLICIES_KEY } from '../decorators/authorize.decorator';
+import { IS_PUBLIC_KEY } from '../decorators/public.decorator';
+import { SELF_SCOPED_KEY } from '../decorators/self-scoped.decorator';
 import { AuthorizationPolicy } from './authorization.types';
 import { AuthorizationService } from './authorization.service';
 import { GuestService } from '../../modules/auth/guest.service';
@@ -29,7 +31,43 @@ export class AuthorizationGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest<Request & { user?: AuthUser }>();
     const policies = this.policiesFor(context);
-    if (policies.length === 0) return true;
+
+    if (policies.length === 0) {
+      // `@Public()` is the opposite of an undeclared route: it is somebody
+      // stating, in one word, that this needs no session at all. The sign-in
+      // routes, the OTP exchange, the carrier webhooks and the public
+      // catalogue all live behind it, and failing closed on them would take
+      // the platform off the air.
+      if (
+        this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
+          context.getHandler(),
+          context.getClass(),
+        ])
+      ) {
+        return true;
+      }
+
+      // **Fail closed.** This used to `return true`, which meant a route that
+      // declared nothing was open to any authenticated account. In practice
+      // almost every such route was protected by an ownership check inside its
+      // service — but the guarantee could not be read from the declaration,
+      // only from opening 171 services, and a new route added to one of those
+      // controllers inherited "allowed" in silence.
+      //
+      // A controller that genuinely enforces ownership one layer down says so
+      // with `@SelfScoped('...')`, and the reason it gives is the thing a
+      // reviewer reads instead of the service.
+      const selfScoped = this.reflector.getAllAndOverride<string>(
+        SELF_SCOPED_KEY,
+        [context.getHandler(), context.getClass()],
+      );
+      if (selfScoped) return true;
+
+      await this.recordDenied(request, policies);
+      throw new ForbiddenException(
+        'This route declares no authorization policy',
+      );
+    }
 
     if (!request.user && policies.some((policy) => policy.allowGuest)) {
       const requestContext = requestContextFrom(request);

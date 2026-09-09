@@ -80,6 +80,14 @@ class User extends Equatable {
   /// an unguarded one.
   final Set<String> permissions;
 
+  /// True when a `Courier` row is attached to this account, as `/auth/me` and
+  /// the sign-in response report it.
+  ///
+  /// Carrying parcels is not a role — there is no COURIER in [UserRole] — so
+  /// nothing in the role tells the app that this woman has a round today. Only
+  /// ever set for the signed-in user, like [permissions].
+  final bool isCourier;
+
   const User({
     required this.id,
     required this.name,
@@ -96,6 +104,7 @@ class User extends Equatable {
     this.followersCount = 0,
     this.followingCount = 0,
     this.permissions = const {},
+    this.isCourier = false,
     required this.createdAt,
   });
 
@@ -140,6 +149,7 @@ class User extends Equatable {
         followersCount,
         followingCount,
         permissions,
+        isCourier,
         createdAt,
       ];
 }

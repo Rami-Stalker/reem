@@ -1,6 +1,7 @@
 import { Controller, Get, Param, ParseUUIDPipe, Query } from '@nestjs/common';
 import { OptionalAuth } from '../../common/decorators/optional-auth.decorator';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
+import { SelfScoped } from '../../common/decorators/self-scoped.decorator';
 import { DiscoveryService } from './discovery.service';
 import { HomeContentService } from './home-content.service';
 import { DiscoveryQueryDto } from './dto/discovery-query.dto';
@@ -10,6 +11,9 @@ import { DiscoveryQueryDto } from './dto/discovery-query.dto';
  * signed in) and cache-backed.
  */
 @OptionalAuth()
+@SelfScoped(
+  "public catalogue reading, personalised by the caller's own id where she has one",
+)
 @Controller('discovery')
 export class DiscoveryController {
   constructor(

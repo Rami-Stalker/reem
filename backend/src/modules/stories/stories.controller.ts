@@ -10,6 +10,7 @@ import {
   Post,
 } from '@nestjs/common';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
+import { SelfScoped } from '../../common/decorators/self-scoped.decorator';
 import { OptionalAuth } from '../../common/decorators/optional-auth.decorator';
 import { StoriesService } from './stories.service';
 import { ReactStoryDto } from './dto/react-story.dto';
@@ -22,6 +23,9 @@ import { ReactStoryDto } from './dto/react-story.dto';
  * so they stay behind the global guard and the client should skip them while
  * signed out.
  */
+@SelfScoped(
+  'reading is public; a story is deleted only by the author the service compares against',
+)
 @Controller('stories')
 export class StoriesController {
   constructor(private readonly stories: StoriesService) {}

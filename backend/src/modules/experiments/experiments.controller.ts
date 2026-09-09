@@ -1,4 +1,5 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
+import { SelfScoped } from '../../common/decorators/self-scoped.decorator';
 import {
   AuthUser,
   CurrentUser,
@@ -14,6 +15,9 @@ import { ExperimentsService } from './experiments.service';
  * population half of whom vanish between exposure and purchase reports the
  * survival rate of sessions rather than the effect of the change.
  */
+@SelfScoped(
+  "assignment and exposure are recorded against the caller's own id",
+)
 @Controller('experiments')
 export class ExperimentsController {
   constructor(private readonly experiments: ExperimentsService) {}

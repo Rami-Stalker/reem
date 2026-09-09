@@ -62,12 +62,29 @@ abstract base class BaseRemoteDataSource {
     }
   }
 
+  /// A POST, optionally protected against being sent twice.
+  ///
+  /// Pass [idempotencyKey] for anything that must not happen twice if she taps
+  /// again or the connection drops mid-flight. The server answers the repeat
+  /// from its record of the first instead of running it again — so a doubled
+  /// checkout is one order rather than two, with one collection at her door.
+  ///
+  /// The key must be **generated once per intent, not per attempt**: a fresh
+  /// key on every retry names a different request and defeats the whole
+  /// mechanism. Callers hold it across retries; see `CheckoutController`.
   Future<Map<String, dynamic>> postJson(
     String path, {
     Map<String, dynamic>? body,
+    String? idempotencyKey,
   }) async {
     try {
-      final response = await dio.post<dynamic>(path, data: body);
+      final response = await dio.post<dynamic>(
+        path,
+        data: body,
+        options: idempotencyKey == null
+            ? null
+            : Options(headers: {'Idempotency-Key': idempotencyKey}),
+      );
       return _asMap(response.data);
     } on DioException catch (e) {
       throw ErrorMapper.fromDio(e);

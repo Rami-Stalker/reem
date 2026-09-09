@@ -45,7 +45,7 @@ export class CodTrustScheduler {
         expiresAt: { lt: new Date() },
         order: { status: OrderStatus.PENDING_PAYMENT },
       },
-      select: { id: true, orderId: true, userId: true },
+      select: { id: true, orderId: true },
       take: 200,
     });
 
@@ -56,13 +56,15 @@ export class CodTrustScheduler {
           where: { id: assessment.id },
           data: { state: CodAssuranceState.ABANDONED },
         });
-        if (assessment.userId) {
-          await this.orders.cancel(
-            assessment.userId,
-            assessment.orderId,
-            'انتهت مهلة تأكيد الطلب',
-          );
-        }
+        // `expireUnpaid`, not `cancel`. Cancelling *as the customer* meant
+        // this line used to read `if (assessment.userId)` — and a guest
+        // checkout has no user id, so every guest's expired hold was marked
+        // abandoned and her stock was never given back. The system-actor path
+        // needs no account, so both kinds of buyer are released the same way.
+        await this.orders.expireUnpaid(
+          assessment.orderId,
+          'انتهت مهلة تأكيد الطلب',
+        );
         released += 1;
       } catch (error) {
         // One order that will not cancel — a parcel a seller already moved,

@@ -20,6 +20,7 @@ import { Money, nextStatuses } from '../../common/money';
 import { PrismaService } from '../../prisma/prisma.service';
 import { CommissionsService } from '../commissions/commissions.service';
 import { CustomerRefundsService } from '../finance/customer-refunds.service';
+import { DeliveryDispatchService } from '../delivery/dispatch/delivery-dispatch.service';
 import { sellerLabelFor } from '../cod-trust/cod-trust.service';
 import {
   SellerOrderWorkflowService,
@@ -99,6 +100,7 @@ export class SellerOrdersService {
     private readonly workflow: SellerOrderWorkflowService,
     private readonly commissions: CommissionsService,
     private readonly refunds: CustomerRefundsService,
+    private readonly dispatches: DeliveryDispatchService,
   ) {}
 
   // ── Reading ───────────────────────────────────────────────────────────
@@ -185,6 +187,21 @@ export class SellerOrdersService {
         },
       );
     });
+
+    // A packed parcel is handed to whichever delivery company serves that
+    // address — or to the in-house fleet, which is modelled as one more
+    // carrier. Outside the transaction and swallowed on failure on purpose: a
+    // carrier being slow, down or unconfigured must never undo a seller's
+    // honest "this is packed". The dispatch row records why, and ops can retry.
+    if (parcel.fulfilmentMode !== FulfilmentMode.SELLER_SHIPS) {
+      try {
+        await this.dispatches.dispatch(sellerOrderId);
+      } catch (error) {
+        this.logger.error(
+          `Could not dispatch parcel ${sellerOrderId}: ${(error as Error).message}`,
+        );
+      }
+    }
 
     return this.detail(user, sellerOrderId);
   }
@@ -320,7 +337,9 @@ export class SellerOrdersService {
         },
       );
 
-      await this.restock(tx, parcel.items);
+      // The workflow's own version, not a private copy: it also puts back the
+      // demand counters the checkout inflated, which this one never did.
+      await this.workflow.restock(tx, sellerOrderId);
 
       // A parcel nobody is carrying any more must not stay on a courier's
       // round; the shipment is cancelled with it where one exists.
@@ -372,7 +391,23 @@ export class SellerOrdersService {
     return {
       items: true,
       shipment: {
-        select: { id: true, trackingCode: true, status: true, courierId: true },
+        select: {
+          id: true,
+          trackingCode: true,
+          status: true,
+          courierId: true,
+          // Which company is carrying it, so the seller's screen can say so
+          // rather than leaving her to guess who to chase.
+          dispatch: {
+            select: {
+              status: true,
+              trackingNumber: true,
+              providerCode: true,
+              lastError: true,
+              provider: { select: { displayName: true } },
+            },
+          },
+        },
       },
       order: {
         select: {
@@ -425,25 +460,6 @@ export class SellerOrdersService {
   private assertSelfCarried(mode: FulfilmentMode, message: string): void {
     if (mode !== FulfilmentMode.SELLER_SHIPS) {
       throw new ForbiddenException(message);
-    }
-  }
-
-  private async restock(
-    tx: Tx,
-    items: Array<{ offerId: string | null; variantId: string | null; quantity: number }>,
-  ): Promise<void> {
-    for (const item of items) {
-      if (!item.offerId) continue;
-      await tx.sellerOffer.update({
-        where: { id: item.offerId },
-        data: { stock: { increment: item.quantity } },
-      });
-      if (item.variantId) {
-        await tx.sellerOfferVariant.updateMany({
-          where: { offerId: item.offerId, variantId: item.variantId },
-          data: { stock: { increment: item.quantity } },
-        });
-      }
     }
   }
 
@@ -560,7 +576,24 @@ export class SellerOrdersService {
         ? {
             tracking_code: parcel.shipment.trackingCode,
             status: parcel.shipment.status.toLowerCase(),
-            assigned: parcel.shipment.courierId != null,
+            // "Assigned" now means somebody is carrying it — one of our
+            // couriers, or a delivery company that accepted it.
+            assigned:
+              parcel.shipment.courierId != null ||
+              parcel.shipment.dispatch?.trackingNumber != null ||
+              parcel.shipment.dispatch?.status === ShipmentStatus.ASSIGNED,
+            carrier: parcel.shipment.dispatch
+              ? {
+                  name:
+                    parcel.shipment.dispatch.provider?.displayName ??
+                    parcel.shipment.dispatch.providerCode,
+                  status: parcel.shipment.dispatch.status.toLowerCase(),
+                  tracking_number: parcel.shipment.dispatch.trackingNumber,
+                  // Only the seller and the admin see why a dispatch failed;
+                  // it is an operations fact, not something the customer needs.
+                  last_error: parcel.shipment.dispatch.lastError,
+                }
+              : null,
           }
         : null,
       items: parcel.items.map((item) => ({

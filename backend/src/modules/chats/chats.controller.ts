@@ -12,6 +12,7 @@ import {
   Query,
 } from '@nestjs/common';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
+import { SelfScoped } from '../../common/decorators/self-scoped.decorator';
 import { ChatsService } from './chats.service';
 import {
   BlockUserDto,
@@ -23,6 +24,9 @@ import {
   StartConversationDto,
 } from './dto/chat.dto';
 
+@SelfScoped(
+  'ChatsService checks participation on every thread and message before it answers',
+)
 @Controller('chats')
 export class ChatsController {
   constructor(private readonly chats: ChatsService) {}

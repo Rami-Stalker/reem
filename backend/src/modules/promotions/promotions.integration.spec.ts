@@ -104,7 +104,7 @@ async function makeSeller(tx: Tx) {
     data: {
       name: 'بوتيك',
       username: `pr_${u}`,
-      phone: `+96392${u.slice(-7)}`,
+      phone: `+96392${Math.floor(1000000 + Math.random() * 8999999)}`,
       passwordHash: 'x',
       role: UserRole.SELLER,
     },

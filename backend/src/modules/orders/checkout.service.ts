@@ -30,6 +30,7 @@ import { ShipmentsService } from '../delivery/shipments.service';
 import { PaymentsService } from '../payments/payments.service';
 import { pointsForSpend } from '../finance/loyalty.service';
 import { CouponsService } from '../rewards/coupons.service';
+import { ScopedLine, eligibleBySeller } from '../rewards/coupon-scope';
 import { MembershipService } from '../rewards/membership.service';
 import { PointsService } from '../rewards/points.service';
 import { ReferralsService } from '../rewards/referrals.service';
@@ -43,7 +44,10 @@ import {
 import { OrdersRepository } from './orders.repository';
 import { CreateOrderDto, ShippingDetailsDto } from './dto/create-order.dto';
 import { RETURN_WINDOW_DAYS } from '../returns/return-policy';
-import { claimFlashSaleUnits, claimStock } from './workflow/stock-claim';
+import { Buyer, guestSessionIdOf, ownedByBuyer, userIdOf } from './buyer';
+import { expiryFor } from './order-expiry';
+import { InventoryReservationService } from './workflow/inventory-reservation.service';
+import { claimFlashSaleUnits } from './workflow/stock-claim';
 
 interface SellerGroup {
   sellerId: string;
@@ -88,6 +92,7 @@ export class CheckoutService {
     private readonly ordersRepo: OrdersRepository,
     private readonly codTrust: CodTrustService,
     private readonly drops: DropsService,
+    private readonly reservations: InventoryReservationService,
   ) {}
 
   /**
@@ -97,12 +102,12 @@ export class CheckoutService {
    * [checkoutLines] with a plan's own lines, never by filling the cart first.
    * Two doors, one till — see the section comment in `schema.prisma`.
    */
-  async checkout(userId: string, dto: CreateOrderDto) {
-    const items = await this.cart.rawItems(userId);
+  async checkout(buyer: Buyer, dto: CreateOrderDto) {
+    const items = await this.cart.rawItems(buyer);
     if (items.length === 0) {
       throw new BadRequestException('Your cart is empty');
     }
-    return this.checkoutLines(userId, dto, items, { clearCart: true });
+    return this.checkoutLines(buyer, dto, items, { clearCart: true });
   }
 
   /**
@@ -115,7 +120,7 @@ export class CheckoutService {
    * behaviour and the behaviour that has always happened.
    */
   async checkoutLines(
-    userId: string,
+    buyer: Buyer,
     dto: CreateOrderDto,
     items: PurchasableLine[],
     options: { clearCart?: boolean } = {},
@@ -124,8 +129,13 @@ export class CheckoutService {
       throw new BadRequestException('There is nothing to buy');
     }
 
-    const { shipping, fromAddressBook } = await this.resolveShipping(userId, dto);
-    const orderCurrency = dto.currency ?? (await this.preferredCurrency(userId));
+    // Null for a guest, and threaded rather than branched on at every call:
+    // most of what follows either takes a nullable id already or is skipped
+    // wholesale for a guest, and the two cases are named where they differ.
+    const userId = userIdOf(buyer);
+
+    const { shipping, fromAddressBook } = await this.resolveShipping(buyer, dto);
+    const orderCurrency = dto.currency ?? (await this.preferredCurrency(buyer));
 
     // 1. Freeze the rate BEFORE any price is read, so every figure on this
     //    order — including refunds computed months later — agrees (Q46 P2).
@@ -139,9 +149,40 @@ export class CheckoutService {
     );
 
     // 3. Coupon, evaluated once against the whole basket.
-    const coupon = dto.coupon_code
-      ? await this.coupons.evaluate(dto.coupon_code, userId, itemsSubtotal)
-      : null;
+    //
+    // Not for a guest, and refused rather than ignored. A coupon's limits are
+    // *per account* — `perUserLimit`, and a redemption row that names a user —
+    // so honouring one for a session that costs nothing to create would make
+    // every single-use code infinitely reusable. Telling her to sign in is the
+    // honest answer; silently dropping the discount would charge her more than
+    // the screen said.
+    if (dto.coupon_code && buyer.kind === 'guest') {
+      throw new BadRequestException({
+        code: 'COUPON_REQUIRES_ACCOUNT',
+        message: 'سجّلي الدخول لاستخدام الكوبون',
+      });
+    }
+    // The basket, flattened to what a coupon needs to judge each line. Passing
+    // it is what makes a scoped code discount only the part it covers rather
+    // than the whole subtotal.
+    const scopedLines: ScopedLine[] = groups.flatMap((group) =>
+      group.lines.map(({ item, unitPrice }) => ({
+        sellerId: group.sellerId,
+        productId: item.offer.productId,
+        categoryId: item.offer.product.categoryId,
+        lineTotal: unitPrice.times(item.quantity),
+      })),
+    );
+
+    const coupon =
+      dto.coupon_code && userId
+        ? await this.coupons.evaluate(
+            dto.coupon_code,
+            userId,
+            itemsSubtotal,
+            scopedLines,
+          )
+        : null;
     const discountTotal = coupon?.discount ?? Money.zero(orderCurrency);
 
     // 4. One shipping charge for the whole order (Q65 P1), regardless of how
@@ -185,16 +226,42 @@ export class CheckoutService {
     //    of the basket. Largest-remainder allocation guarantees the parts sum
     //    back to the whole — no stray unit left in either direction.
     const weights = groups.map((group) => group.itemsSubtotal.toPrisma());
-    const discountShares = discountTotal.allocate(weights);
+    // Shipping is an order-wide charge and splits by basket share. The
+    // discount does not: a code scoped to one boutique must land entirely on
+    // that boutique's parcel, or the other sellers' commission bases are
+    // reduced for a promotion they had no part in — which is precisely what
+    // used to happen, invisibly, on every seller-funded code.
+    const discountWeights = coupon
+      ? eligibleBySeller(
+          coupon.coupon,
+          scopedLines,
+          groups.map((group) => group.sellerId),
+          itemsSubtotal,
+        ).map((share) => share.toPrisma())
+      : weights;
+    const discountShares = discountTotal.allocate(discountWeights);
     const shippingShares = shippingTotal.allocate(weights);
 
     const number = this.orderNumber();
+
+    // One instant for the whole order: `placedAt` and the deadline derived
+    // from it must not straddle a millisecond boundary, or an order can appear
+    // to have been created after its own expiry.
+    const placedAt = new Date();
+    // Shared by the order row and every reservation it takes, so the basket
+    // and the units it is holding expire together.
+    const expiresAt = expiryFor(dto.payment_method, placedAt);
 
     const order = await this.prisma.$transaction(async (tx) => {
       const created = await tx.order.create({
         data: {
           number,
           userId,
+          // Exactly one of the two is set. This column has existed, indexed,
+          // since the schema was written and nothing ever wrote to it — which
+          // is what made a guest's order unreachable to the guest who placed
+          // it. It is her only claim on the order afterwards.
+          guestSessionId: guestSessionIdOf(buyer),
           status: OrderStatus.PENDING_PAYMENT,
           currency: orderCurrency,
           fxRate: frozen.rate,
@@ -216,13 +283,19 @@ export class CheckoutService {
           privacyMaskEnabled: dto.privacy_mask ?? false,
           deliveryInstructions: dto.delivery_instructions ?? null,
           notes: dto.notes ?? null,
-          placedAt: new Date(),
+          placedAt,
+          // The stock is already off the shelf by the end of this
+          // transaction. This is when it goes back if nobody pays. See
+          // `order-expiry.ts` for why the window depends on the rail.
+          expiresAt,
           events: {
             create: [
               {
                 title: 'Order created',
                 description: `Order ${number} placed`,
                 toStatus: OrderStatus.PENDING_PAYMENT,
+                // Null for a guest: the timeline records that a customer
+                // placed it, and there is no account to name.
                 actorId: userId,
                 actorRole: 'CUSTOMER',
               },
@@ -297,13 +370,21 @@ export class CheckoutService {
 
         // Stock comes off the OFFER, and off the offer variant when one was
         // chosen — the canonical product has no stock to decrement. The claim
-        // refuses rather than overselling; see `claimStock`.
+        // refuses rather than overselling, and now records *who* took the
+        // units and when the hold lapses, so releasing them later is an
+        // idempotent state change rather than a blind increment.
         for (const { item } of group.lines) {
-          await claimStock(tx, {
+          await this.reservations.reserve(tx, {
+            orderId: created.id,
+            sellerOrderId: sellerOrder.id,
             offerId: item.offerId,
             offerVariantId: item.offerVariantId ?? null,
             quantity: item.quantity,
             title: item.offer.product.title,
+            // The same deadline the order carries. Two clocks for one hold
+            // would eventually disagree about when the dress goes back on
+            // sale, and the seller would have no way to tell which was right.
+            expiresAt: expiresAt,
           });
           // A line priced by a live flash sale is counted against it, so the
           // sale can end when its units are gone. Not an error when it does:
@@ -318,7 +399,6 @@ export class CheckoutService {
           });
         }
 
-        void sellerOrder;
       }
 
       // Written inside the same transaction as the order it gated: an order
@@ -340,7 +420,7 @@ export class CheckoutService {
       // `CouponsService.redeemInTransaction` for what recording it afterwards
       // cost: a crash in the gap, or ten simultaneous baskets, and a
       // single-use code has funded all of them.
-      if (coupon) {
+      if (coupon && userId) {
         await this.coupons.redeemInTransaction(
           tx,
           coupon.coupon.id,
@@ -351,7 +431,16 @@ export class CheckoutService {
       }
 
       if (options.clearCart) {
-        await tx.cartItem.deleteMany({ where: { userId } });
+        // Whichever basket she was actually shopping from. Emptying
+        // `cart_items` for a guest cleared nothing, which would have left her
+        // guest basket full of goods she had just bought.
+        if (buyer.kind === 'user') {
+          await tx.cartItem.deleteMany({ where: { userId: buyer.userId } });
+        } else {
+          await tx.guestCartItem.deleteMany({
+            where: { guestSessionId: buyer.guestSessionId },
+          });
+        }
       }
       return created;
     });
@@ -382,29 +471,39 @@ export class CheckoutService {
       ? await this.beginCodConfirmation(order, codAssessment!, userId)
       : null;
 
-    // Q43's rate — 10,000 ل.س to the point — not the order total taken as a
-    // point count. The raw figure minted six-digit balances against rewards
-    // priced in the hundreds.
-    await this.points.earn(
-      userId,
-      pointsForSpend(grandTotal),
-      'Order purchase',
-      order.id,
-    );
-    await this.membership.recordPurchase(userId, order.id, grandTotal);
-    await this.referrals.qualifyReferralForOrder(userId, order.id);
+    // Everything below this line belongs to an account, and a guest has none:
+    // points accrue to a balance, a tier is a history, a referral names two
+    // people, and a drop's audience is a list of invited accounts. Skipped
+    // rather than faked — Q46 P1 lets her buy without an account, and the
+    // reward for opening one is precisely this.
+    if (userId) {
+      // Q43's rate — 10,000 ل.س to the point — not the order total taken as a
+      // point count. The raw figure minted six-digit balances against rewards
+      // priced in the hundreds.
+      await this.points.earn(
+        userId,
+        pointsForSpend(grandTotal),
+        'Order purchase',
+        order.id,
+      );
+      await this.membership.recordPurchase(userId, order.id, grandTotal);
+      await this.referrals.qualifyReferralForOrder(userId, order.id);
+    }
 
     // A drop's conversion is a purchase, by somebody it invited, of something
     // it carries. Recorded here rather than inferred later, because the only
     // moment the three facts are together is this one. Failure is swallowed:
-    // a measurement must never cost a woman her order.
-    try {
-      await this.drops.markConverted(
-        userId,
-        items.map((item) => item.offer.productId),
-      );
-    } catch (error) {
-      this.logger.warn(`Drop conversion not recorded: ${String(error)}`);
+    // a measurement must never cost a woman her order. A guest was invited to
+    // nothing, so there is no conversion to attribute.
+    if (userId) {
+      try {
+        await this.drops.markConverted(
+          userId,
+          items.map((item) => item.offer.productId),
+        );
+      } catch (error) {
+        this.logger.warn(`Drop conversion not recorded: ${String(error)}`);
+      }
     }
 
     this.events.emit(AppEvent.OrderStatusChanged, {
@@ -433,9 +532,13 @@ export class CheckoutService {
    * with a bill. That is all it proves, and all it is asked to prove — it
    * grants no session and verifies no account.
    */
-  async confirmCod(userId: string, orderId: string, code: string) {
+  async confirmCod(buyer: Buyer, orderId: string, code: string) {
+    const userId = userIdOf(buyer);
     const order = await this.prisma.order.findFirst({
-      where: { id: orderId, userId },
+      // Scoped to whoever owns the order — her account, or the guest session
+      // she placed it from. A guest holding a code for somebody else's order
+      // finds nothing here.
+      where: { id: orderId, ...ownedByBuyer(buyer) },
       select: {
         id: true,
         number: true,
@@ -473,9 +576,13 @@ export class CheckoutService {
   }
 
   /** Re-sends the confirmation code for a held cash order. */
-  async resendCodConfirmation(userId: string, orderId: string) {
+  async resendCodConfirmation(buyer: Buyer, orderId: string) {
     const order = await this.prisma.order.findFirst({
-      where: { id: orderId, userId, status: OrderStatus.PENDING_PAYMENT },
+      where: {
+        id: orderId,
+        ...ownedByBuyer(buyer),
+        status: OrderStatus.PENDING_PAYMENT,
+      },
       select: { id: true, number: true, recipientPhone: true },
     });
     if (!order) throw new NotFoundException('Order not found');
@@ -484,7 +591,7 @@ export class CheckoutService {
       orderId: order.id,
       orderNumber: order.number,
       recipientPhone: order.recipientPhone,
-      userId,
+      userId: userIdOf(buyer),
     });
   }
 
@@ -499,7 +606,7 @@ export class CheckoutService {
    * delivered at all it would have paid them for nothing. It is set instead by
    * `SellerOrderWorkflowService` at the moment a parcel is marked delivered.
    */
-  async confirm(orderId: string, actorId?: string): Promise<void> {
+  async confirm(orderId: string, actorId?: string | null): Promise<void> {
     await this.prisma.$transaction(async (tx) => {
       await tx.order.update({
         where: { id: orderId },
@@ -523,6 +630,12 @@ export class CheckoutService {
           actorRole: 'SYSTEM',
         },
       });
+
+      // The hold becomes a commitment. Clearing its deadline is the point:
+      // from here a seller is packing these goods, and no sweep may put them
+      // back on the shelf underneath her. Only a cancellation can, and that
+      // goes through `restock`.
+      await this.reservations.commit(tx, orderId);
 
       await this.openShipments(tx, orderId);
     });
@@ -574,7 +687,8 @@ export class CheckoutService {
    * credit to a customer who has already sent three parcels back.
    */
   private async assessCashRisk(input: {
-    userId: string;
+    /** Null for a guest — the engine already weighs that as its own signal. */
+    userId: string | null;
     dto: CreateOrderDto;
     shipping: ShippingDetailsDto;
     fromAddressBook: boolean;
@@ -643,7 +757,7 @@ export class CheckoutService {
   private async beginCodConfirmation(
     order: { id: string; number: string; recipientPhone: string },
     assessment: CodAssessment,
-    userId: string,
+    userId: string | null,
   ) {
     await this.codTrust.auditDecision({
       orderId: order.id,
@@ -679,9 +793,11 @@ export class CheckoutService {
     }
   }
 
-  private async preferredCurrency(userId: string): Promise<Currency> {
+  /** A guest has no stored preference, so the platform's own currency. */
+  private async preferredCurrency(buyer: Buyer): Promise<Currency> {
+    if (buyer.kind === 'guest') return Currency.SYP;
     const user = await this.prisma.user.findUnique({
-      where: { id: userId },
+      where: { id: buyer.userId },
       select: { preferredCurrency: true },
     });
     return user?.preferredCurrency ?? Currency.SYP;
@@ -759,10 +875,16 @@ export class CheckoutService {
    * she has already paid attention to fails to place.
    */
   private async resolveShipping(
-    userId: string,
+    buyer: Buyer,
     dto: CreateOrderDto,
   ): Promise<{ shipping: ShippingDetailsDto; fromAddressBook: boolean }> {
+    const userId = userIdOf(buyer);
+
     if (dto.address_id) {
+      // A guest has no address book, so an id from one is not hers. Refused as
+      // "not found" rather than "not yours": the two answers together would
+      // tell an unauthenticated caller which address ids exist.
+      if (!userId) throw new NotFoundException('Address not found');
       const saved = await this.prisma.address.findFirst({
         where: { id: dto.address_id, userId },
       });
@@ -792,7 +914,10 @@ export class CheckoutService {
       );
     }
 
-    if (dto.save_address) {
+    // `save_address` is silently a no-op for a guest rather than a refusal:
+    // there is no address book to save into, and an order must never fail over
+    // a convenience the client offered without knowing who was signed in.
+    if (dto.save_address && userId) {
       try {
         const isFirst =
           (await this.prisma.address.count({ where: { userId } })) === 0;

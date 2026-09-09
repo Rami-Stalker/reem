@@ -115,8 +115,11 @@ class ChatAppBar extends StatelessWidget {
   String _title(BuildContext context) {
     final current = thread;
     if (current == null) return context.l10n.chatUntitled;
+    // Whom she is talking to, not what about — the same order as the inbox.
+    final peer = current.peerName?.trim();
+    if (peer != null && peer.isNotEmpty) return peer;
     if (current.title.isNotEmpty) return current.title;
-    return current.peerName ?? context.l10n.chatUntitled;
+    return context.l10n.chatUntitled;
   }
 
   /// Typing beats presence, presence beats a last-seen stamp, and a thread we

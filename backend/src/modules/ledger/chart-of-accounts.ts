@@ -79,6 +79,16 @@ export const CHART_OF_ACCOUNTS: Readonly<
     perOwner: false,
     label: 'Loyalty points outstanding',
   },
+  [LedgerAccountCode.COURIER_PAYABLE]: {
+    kind: LedgerAccountKind.LIABILITY,
+    // One per carrier, and hung off `courierId` for the same reason the
+    // in-transit cash account is: a courier is not a user. The two together
+    // give an operator both sides of a carrier relationship — the cash it
+    // holds of ours, and the fees we owe it.
+    perOwner: true,
+    ownerType: 'COURIER',
+    label: 'Delivery fees payable to carrier',
+  },
 
   // ── Revenue ───────────────────────────────────────────────────────────
   [LedgerAccountCode.COMMISSION_REVENUE]: {

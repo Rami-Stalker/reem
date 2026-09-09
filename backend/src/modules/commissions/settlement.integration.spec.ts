@@ -111,7 +111,13 @@ async function makeUser(tx: Tx, tag: string, role: UserRole = UserRole.CUSTOMER)
     data: {
       name: `st-${tag}`,
       username: `st_${u}`,
-      phone: `+9639${u.slice(-8)}`,
+      // Eight genuinely random digits, not a slice of the timestamp.
+      // `uniq` is unique *within* a process; `node --test` runs spec files in
+      // parallel, so two of them entering `makeUser` in the same millisecond
+      // with the same counter produced the same eight digits and one of them
+      // died on the unique index — a failure that looked like the assertion
+      // under test rather than like the fixture it was.
+      phone: `+9639${Math.floor(10_000_000 + Math.random() * 89_999_999)}`,
       passwordHash: 'x',
       role,
     },
@@ -370,4 +376,249 @@ dbTest('the entry balances and names every party', async (world) => {
     LedgerAccountCode.SELLER_ESCROW,
     LedgerAccountCode.SHIPPING_REVENUE,
   ].sort());
+});
+
+// ── The escrow bridge ───────────────────────────────────────────────────
+//
+// `releaseDueEscrow` was written, correct, and called by nothing — no cron, no
+// route, no test. `SellerPayoutsService.claimableLedgers` will only pay a
+// ledger whose sub-order carries `escrowReleased`, so with nothing setting it
+// every payout request from every seller returned zero: the platform could
+// take money and never pay it out. These are the tests that would have caught
+// it, and they exercise the method the scheduler now calls.
+
+/** Backdates the return window so the parcel is due for release. */
+async function makeDue(world: World, sellerOrderId: string, daysAgo: number) {
+  const at = new Date(Date.now() - daysAgo * 24 * 60 * 60 * 1000);
+  await world.tx.sellerOrder.update({
+    where: { id: sellerOrderId },
+    data: { deliveredAt: at, escrowReleaseAt: at },
+  });
+}
+
+dbTest('escrow whose window has closed becomes payable', async (world) => {
+  const { sellerOrder, seller } = await makeParcel(world.tx, {
+    subtotal: '400000',
+    commissionBase: '400000',
+    sellerNet: '340000',
+  });
+  await makeDue(world, sellerOrder.id, 1);
+
+  const escrowBefore = await balance(
+    world,
+    LedgerAccountCode.SELLER_ESCROW,
+    seller.id,
+  );
+  const payableBefore = await balance(
+    world,
+    LedgerAccountCode.SELLER_PAYABLE,
+    seller.id,
+  );
+
+  const result = await world.commissions.releaseDueEscrow();
+  assert.ok(result.released >= 1, 'the due parcel was released');
+  assert.equal(result.failed, 0);
+
+  const released = await world.tx.sellerOrder.findUniqueOrThrow({
+    where: { id: sellerOrder.id },
+    select: { escrowReleased: true },
+  });
+  assert.equal(released.escrowReleased, true);
+
+  // The money moved from "hers, but not yet" to "hers, and payable". Escrow is
+  // credited on settlement and debited again here, so it comes back to where
+  // it started; the payable is what a payout run drains.
+  const escrowAfter = await balance(
+    world,
+    LedgerAccountCode.SELLER_ESCROW,
+    seller.id,
+  );
+  const payableAfter = await balance(
+    world,
+    LedgerAccountCode.SELLER_PAYABLE,
+    seller.id,
+  );
+  assert.equal(escrowAfter.toString(), escrowBefore.toString());
+  assert.equal(
+    payableAfter.minus(payableBefore).toString(),
+    syp('340000').toString(),
+  );
+});
+
+dbTest('escrow still inside its window is left alone', async (world) => {
+  const { sellerOrder } = await makeParcel(world.tx, {
+    subtotal: '100000',
+    commissionBase: '100000',
+    sellerNet: '85000',
+  });
+  // Delivered today, so the return window has days left to run.
+  await world.tx.sellerOrder.update({
+    where: { id: sellerOrder.id },
+    data: {
+      deliveredAt: new Date(),
+      escrowReleaseAt: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
+    },
+  });
+
+  await world.commissions.releaseDueEscrow();
+
+  const still = await world.tx.sellerOrder.findUniqueOrThrow({
+    where: { id: sellerOrder.id },
+    select: { escrowReleased: true },
+  });
+  assert.equal(
+    still.escrowReleased,
+    false,
+    'a customer can still send this back, so the seller is not paid for it yet',
+  );
+});
+
+dbTest('releasing the same parcel twice books nothing twice', async (world) => {
+  const { sellerOrder, seller } = await makeParcel(world.tx, {
+    subtotal: '200000',
+    commissionBase: '200000',
+    sellerNet: '170000',
+  });
+  await makeDue(world, sellerOrder.id, 2);
+
+  await world.commissions.releaseDueEscrow();
+  const once = await balance(
+    world,
+    LedgerAccountCode.SELLER_PAYABLE,
+    seller.id,
+  );
+
+  // The flag now excludes it, but the postings are idempotent on their
+  // reference anyway — belt and braces, because a sweep that double-pays is
+  // the failure nobody can undo by re-running it.
+  await world.tx.sellerOrder.update({
+    where: { id: sellerOrder.id },
+    data: { escrowReleased: false },
+  });
+  await world.commissions.releaseDueEscrow();
+
+  const twice = await balance(
+    world,
+    LedgerAccountCode.SELLER_PAYABLE,
+    seller.id,
+  );
+  assert.equal(twice.toString(), once.toString());
+});
+
+// ── What the journey cost ───────────────────────────────────────────────
+//
+// `SHIPPING_EXPENSE` sat in the chart of accounts, was read by
+// `EconomicsService` when it computed contribution margin, and was written by
+// nothing. The platform booked the fee it charged the customer and never the
+// fee it paid the carrier, so every margin figure on the admin dashboard was
+// overstated by the entire cost of delivery.
+
+/** Hands the parcel to a carrier that has quoted a fee for the journey. */
+async function dispatchParcel(
+  world: World,
+  sellerOrderId: string,
+  fee: string,
+) {
+  const u = uniq('d');
+  const courier = await world.tx.courier.create({
+    data: { displayName: `شركة ${u}`, phone: `+96311${Math.floor(100000 + Math.random() * 899999)}` },
+  });
+  const provider = await world.tx.deliveryProviderAccount.create({
+    data: { code: `prov-${u}`, displayName: `شركة ${u}`, courierId: courier.id },
+  });
+  const shipment = await world.tx.shipment.create({
+    data: {
+      trackingCode: `TRK-${u.slice(-10)}`,
+      sellerOrderId,
+      courierId: courier.id,
+      currency: Currency.SYP,
+    },
+  });
+  await world.tx.deliveryDispatch.create({
+    data: {
+      shipmentId: shipment.id,
+      providerId: provider.id,
+      providerCode: provider.code,
+      idempotencyKey: `idem-${u}`,
+      feeAmount: fee,
+      feeCurrency: Currency.SYP,
+    },
+  });
+  return { courier, provider, shipment };
+}
+
+dbTest('the carrier fee is booked as an expense we owe', async (world) => {
+  const { sellerOrder } = await makeParcel(world.tx, {
+    subtotal: '400000',
+    shipping: '25000',
+    commissionBase: '400000',
+    sellerNet: '340000',
+  });
+  const { courier } = await dispatchParcel(world, sellerOrder.id, '18000');
+
+  const expenseBefore = await balance(
+    world,
+    LedgerAccountCode.SHIPPING_EXPENSE,
+  );
+
+  await world.commissions.settleSellerOrder(sellerOrder.id);
+
+  const expenseAfter = await balance(world, LedgerAccountCode.SHIPPING_EXPENSE);
+  assert.equal(
+    expenseAfter.minus(expenseBefore).toString(),
+    syp('18000').toString(),
+    'what the carrier charged is now a cost, not an invisible one',
+  );
+
+  // And it is owed to a named carrier, not to nobody — a courier hands over
+  // the gross cash it collected, so its own fee has to accrue somewhere.
+  const payable = await balance(
+    world,
+    LedgerAccountCode.COURIER_PAYABLE,
+    courier.id,
+  );
+  assert.equal(payable.toString(), syp('18000').toString());
+
+  // The margin on this parcel is now readable: 25,000 charged, 18,000 paid.
+  const revenue = await balance(world, LedgerAccountCode.SHIPPING_REVENUE);
+  assert.ok(revenue.toPrisma().greaterThan(0));
+});
+
+dbTest('a parcel nobody dispatched accrues no delivery cost', async (world) => {
+  const { sellerOrder } = await makeParcel(world.tx, {
+    subtotal: '100000',
+    shipping: '10000',
+    commissionBase: '100000',
+    sellerNet: '85000',
+  });
+
+  const before = await balance(world, LedgerAccountCode.SHIPPING_EXPENSE);
+  await world.commissions.settleSellerOrder(sellerOrder.id);
+  const after = await balance(world, LedgerAccountCode.SHIPPING_EXPENSE);
+
+  assert.equal(
+    after.toString(),
+    before.toString(),
+    'no carrier quoted a fee, so there is nothing honest to book',
+  );
+});
+
+dbTest('re-settling does not bill the carrier twice', async (world) => {
+  const { sellerOrder } = await makeParcel(world.tx, {
+    subtotal: '400000',
+    shipping: '25000',
+    commissionBase: '400000',
+    sellerNet: '340000',
+  });
+  const { courier } = await dispatchParcel(world, sellerOrder.id, '18000');
+
+  await world.commissions.settleSellerOrder(sellerOrder.id);
+  await world.commissions.settleSellerOrder(sellerOrder.id);
+
+  const payable = await balance(
+    world,
+    LedgerAccountCode.COURIER_PAYABLE,
+    courier.id,
+  );
+  assert.equal(payable.toString(), syp('18000').toString());
 });

@@ -33,9 +33,14 @@ class ChatTile extends StatelessWidget {
     final c = context.dsColors;
     final l10n = context.l10n;
     final unread = thread.hasUnread;
-    final title = thread.title.isNotEmpty
-        ? thread.title
-        : (thread.peerName ?? l10n.chatUntitled);
+    // The person first. `title` is the *subject* the thread was opened about —
+    // for an order chat the server sends "Order #REEM-…" — so preferring it
+    // turned the seller's inbox into a column of order numbers with no name on
+    // any of them, and English ones at that. The subject is already carried by
+    // the caption below.
+    final title = thread.peerName?.trim().isNotEmpty == true
+        ? thread.peerName!
+        : (thread.title.isNotEmpty ? thread.title : l10n.chatUntitled);
 
     return SurfaceCard(
       onTap: onTap,

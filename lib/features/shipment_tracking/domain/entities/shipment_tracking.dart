@@ -66,6 +66,32 @@ class ShipmentEvent extends Equatable {
   List<Object?> get props => [stage, at, note];
 }
 
+/// The delivery company carrying a parcel.
+///
+/// Reem does not run drivers — a parcel past the boutique's door belongs to a
+/// carrier — so a tracking page that cannot name the company is a page that
+/// cannot answer "who do I ring". Nothing here is operational: no driver, no
+/// route, no carrier endpoint. Those live on the server.
+class TrackingCarrier extends Equatable {
+  const TrackingCarrier({
+    required this.name,
+    required this.stage,
+    this.trackingNumber,
+    this.trackingUrl,
+  });
+
+  final String name;
+  final ShipmentStage stage;
+
+  /// The carrier's own number for this box, which is what their support desk
+  /// asks for. Different from Reem's tracking code, and both are shown.
+  final String? trackingNumber;
+  final String? trackingUrl;
+
+  @override
+  List<Object?> get props => [name, stage, trackingNumber, trackingUrl];
+}
+
 /// A parcel, tracked by its code.
 class ShipmentTracking extends Equatable {
   const ShipmentTracking({
@@ -77,6 +103,7 @@ class ShipmentTracking extends Equatable {
     this.deliveredAt,
     this.isExpress = false,
     this.events = const [],
+    this.carrier,
   });
 
   final String trackingCode;
@@ -92,6 +119,9 @@ class ShipmentTracking extends Equatable {
   final int attemptCount;
 
   final List<ShipmentEvent> events;
+
+  /// Set once the parcel has been handed to a delivery company.
+  final TrackingCarrier? carrier;
 
   bool get isDelivered => stage == ShipmentStage.delivered;
   bool get hasFailedAttempt => attemptCount > 0;
@@ -113,5 +143,11 @@ class ShipmentTracking extends Equatable {
   }
 
   @override
-  List<Object?> get props => [trackingCode, stage, attemptCount, events];
+  List<Object?> get props => [
+    trackingCode,
+    stage,
+    attemptCount,
+    events,
+    carrier,
+  ];
 }

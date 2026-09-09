@@ -11,6 +11,7 @@ import {
   Post,
 } from '@nestjs/common';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
+import { SelfScoped } from '../../common/decorators/self-scoped.decorator';
 import { SettingsService } from './settings.service';
 import { AddressDto, UpdateAddressDto } from './dto/address.dto';
 import { CreatePaymentMethodDto } from './dto/create-payment-method.dto';
@@ -18,6 +19,9 @@ import { AssuranceLevel } from '@prisma/client';
 import { RequireStepUp } from '../../common/decorators/require-step-up.decorator';
 import { DeviceProof } from '../../common/guards/device-proof.guard';
 
+@SelfScoped(
+  "preferences, addresses and notification settings are all keyed on the caller's id",
+)
 @Controller('addresses')
 export class AddressesController {
   constructor(private readonly settings: SettingsService) {}

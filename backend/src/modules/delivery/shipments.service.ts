@@ -203,6 +203,117 @@ export class ShipmentsService {
       note: `Assigned to ${courier.displayName}`,
     });
   }
+  /**
+   * Applies what a delivery company said about a parcel.
+   *
+   * The one door an external carrier's status comes through. It is deliberately
+   * the *same* implementation the courier screens use — `deliverCore` and
+   * `failCore` — so a delivery reported by webhook settles commission, pays the
+   * order down and closes the trust loop exactly as a rider's tap does, and a
+   * refusal reported by webhook restocks the goods and gives the money back.
+   *
+   * The caller (the dispatch orchestrator) has already verified the callback
+   * and decided the event is newer than what we hold; this method's job is the
+   * consequences, not the authorisation.
+   */
+  async applyCarrierStatus(input: {
+    shipmentId: string;
+    status: ShipmentStatus;
+    note?: string | null;
+    at?: Date | null;
+    failureReason?: DeliveryFailureReason | null;
+    collectedAmount?: string | null;
+  }): Promise<Shipment | null> {
+    const { shipmentId, status } = input;
+    const note = input.note ?? undefined;
+
+    switch (status) {
+      case ShipmentStatus.DELIVERED:
+        return this.deliverCore({
+          shipmentId,
+          collected: input.collectedAmount ?? undefined,
+          recipientNote: note,
+          at: input.at ?? undefined,
+        });
+
+      case ShipmentStatus.FAILED:
+        return this.failCore({
+          shipmentId,
+          reason: input.failureReason ?? DeliveryFailureReason.OTHER,
+          note,
+        });
+
+      case ShipmentStatus.ASSIGNED:
+        return this.transition(shipmentId, ShipmentStatus.ASSIGNED, { note });
+
+      case ShipmentStatus.PICKED_UP:
+        return this.transition(shipmentId, ShipmentStatus.PICKED_UP, {
+          note,
+          actor: this.carrierActor(),
+          data: { pickedUpAt: input.at ?? new Date() },
+          parcel: {
+            to: SellerOrderStatus.HANDED_TO_COURIER,
+            title: 'Collected by the carrier',
+            description: note ?? 'The delivery company has the parcel',
+            require: [SellerOrderStatus.READY_TO_SHIP],
+            requireMessage:
+              'The carrier reported a pick-up for a parcel the seller has not marked ready',
+          },
+        });
+
+      case ShipmentStatus.IN_TRANSIT:
+        return this.transition(shipmentId, ShipmentStatus.IN_TRANSIT, {
+          note,
+          actor: this.carrierActor(),
+          parcel: {
+            to: SellerOrderStatus.IN_TRANSIT,
+            title: 'On its way',
+            description: note ?? 'The parcel is with the delivery company',
+          },
+        });
+
+      case ShipmentStatus.OUT_FOR_DELIVERY:
+        return this.transition(shipmentId, ShipmentStatus.OUT_FOR_DELIVERY, {
+          note,
+          actor: this.carrierActor(),
+          parcel: {
+            to: SellerOrderStatus.IN_TRANSIT,
+            title: 'Out for delivery',
+            description: note ?? 'The parcel is out for delivery today',
+          },
+        });
+
+      case ShipmentStatus.RETURNING:
+        return this.transition(shipmentId, ShipmentStatus.RETURNING, {
+          note,
+          actor: this.carrierActor(),
+          parcel: {
+            to: SellerOrderStatus.RETURN_IN_TRANSIT,
+            title: 'Coming back',
+            description: note ?? 'The carrier is returning the parcel',
+          },
+        });
+
+      case ShipmentStatus.RETURNED:
+        return this.transition(shipmentId, ShipmentStatus.RETURNED, {
+          note,
+          actor: this.carrierActor(),
+          parcel: {
+            to: SellerOrderStatus.RETURNED,
+            title: 'Back with the seller',
+            description: note ?? 'The carrier returned the parcel',
+          },
+        });
+
+      case ShipmentStatus.CANCELLED:
+        return this.transition(shipmentId, ShipmentStatus.CANCELLED, { note });
+
+      default:
+        // CREATED, and anything a future enum adds: nothing to do rather than
+        // an invented move. The status is still recorded on the dispatch row.
+        return null;
+    }
+  }
 
   // ── Courier actions (Q55) ─────────────────────────────────────────────
 
@@ -389,9 +500,32 @@ export class ShipmentsService {
    */
   async deliver(input: DeliverInput): Promise<Shipment> {
     const courier = await this.requireCourier(input.courierUserId);
+    return this.deliverCore({ ...input, courier });
+  }
+
+  /**
+   * A delivery, whoever recorded it.
+   *
+   * The courier screens and a carrier's callback are two ways of learning the
+   * same fact, and everything that follows from it — the sub-order landing,
+   * cash paying the order down, commission settling, the trust engine closing
+   * its loop — must not depend on which one arrived. `courier` is present when
+   * one of our own riders tapped the button (and the parcel must be his);
+   * absent when a delivery company told us.
+   */
+  private async deliverCore(
+    input: Omit<DeliverInput, 'courierUserId'> & {
+      courierUserId?: string;
+      courier?: Courier;
+      at?: Date;
+    },
+  ): Promise<Shipment> {
+    const courier = input.courier;
 
     const delivered = await this.prisma.$transaction(async (tx) => {
-      const parcel = await this.loadForCourier(tx, input.shipmentId, courier);
+      const parcel = courier
+        ? await this.loadForCourier(tx, input.shipmentId, courier)
+        : await this.loadShipment(tx, input.shipmentId);
       this.assertTransition(parcel.status, ShipmentStatus.DELIVERED);
 
       const currency = parcel.currency;
@@ -415,7 +549,7 @@ export class ShipmentsService {
         );
       }
 
-      const now = new Date();
+      const now = input.at ?? new Date();
       const updated = await tx.shipment.update({
         where: { id: parcel.id },
         data: {
@@ -436,7 +570,7 @@ export class ShipmentsService {
           note: input.recipientNote ?? null,
           latitude: input.latitude ?? null,
           longitude: input.longitude ?? null,
-          actorId: input.courierUserId,
+          actorId: input.courierUserId ?? null,
         },
       });
 
@@ -448,7 +582,7 @@ export class ShipmentsService {
         where: { id: parcel.sellerOrderId },
         select: { orderId: true },
       });
-      await this.syncParcel(tx, parcel.sellerOrderId, this.courierActor(input.courierUserId), {
+      await this.syncParcel(tx, parcel.sellerOrderId, this.carrierActor(input.courierUserId), {
         to: SellerOrderStatus.DELIVERED,
         title: 'Delivered',
         description: input.recipientNote ?? 'Handed to the customer',
@@ -497,9 +631,28 @@ export class ShipmentsService {
     note?: string,
   ): Promise<Shipment> {
     const courier = await this.requireCourier(courierUserId);
+    return this.failCore({ shipmentId, courierUserId, courier, reason, note });
+  }
+
+  /**
+   * A failed attempt, whoever recorded it — a rider on the doorstep or a
+   * carrier's callback. Everything that follows a refusal (restock, the
+   * customer's money back, the trust engine's observation) is here so it
+   * cannot depend on which one arrived.
+   */
+  private async failCore(input: {
+    shipmentId: string;
+    reason: DeliveryFailureReason;
+    note?: string;
+    courier?: Courier;
+    courierUserId?: string;
+  }): Promise<Shipment> {
+    const { shipmentId, reason, note, courier, courierUserId } = input;
 
     const result = await this.prisma.$transaction(async (tx) => {
-      const shipment = await this.loadForCourier(tx, shipmentId, courier);
+      const shipment = courier
+        ? await this.loadForCourier(tx, shipmentId, courier)
+        : await this.loadShipment(tx, shipmentId);
       this.assertTransition(shipment.status, ShipmentStatus.FAILED);
 
       const updated = await tx.shipment.update({
@@ -517,7 +670,7 @@ export class ShipmentsService {
           shipmentId: shipment.id,
           status: ShipmentStatus.FAILED,
           note: note ?? reason,
-          actorId: courierUserId,
+          actorId: courierUserId ?? null,
         },
       });
 
@@ -529,7 +682,7 @@ export class ShipmentsService {
       await this.syncParcel(
         tx,
         shipment.sellerOrderId,
-        this.courierActor(courierUserId),
+        this.carrierActor(courierUserId),
         {
           to: refused
             ? SellerOrderStatus.REJECTED_ON_DELIVERY
@@ -556,7 +709,7 @@ export class ShipmentsService {
       try {
         await this.refunds.refundUndeliveredParcel(
           result.sellerOrderId,
-          courierUserId,
+          courierUserId ?? null,
         );
       } catch (error) {
         this.logger.error(
@@ -583,6 +736,15 @@ export class ShipmentsService {
       include: {
         events: { orderBy: { createdAt: 'asc' } },
         sellerOrder: { select: { number: true } },
+        dispatch: {
+          select: {
+            status: true,
+            trackingNumber: true,
+            trackingUrl: true,
+            providerCode: true,
+            provider: { select: { displayName: true } },
+          },
+        },
       },
     });
     if (!shipment) throw new NotFoundException('Tracking code not found');
@@ -590,6 +752,18 @@ export class ShipmentsService {
     return {
       tracking_code: shipment.trackingCode,
       order_number: shipment.sellerOrder.number,
+      // Who is carrying it, and their own number for it — the two things a
+      // woman needs to chase a parcel that has left the platform's hands.
+      carrier: shipment.dispatch
+        ? {
+            name:
+              shipment.dispatch.provider?.displayName ??
+              shipment.dispatch.providerCode,
+            status: shipment.dispatch.status.toLowerCase(),
+            tracking_number: shipment.dispatch.trackingNumber,
+            tracking_url: shipment.dispatch.trackingUrl,
+          }
+        : null,
       status: shipment.status.toLowerCase(),
       scheduled_for: shipment.scheduledFor,
       is_express: shipment.isExpress,
@@ -653,12 +827,42 @@ export class ShipmentsService {
     return { id: courierUserId, role: 'COURIER' };
   }
 
+  /**
+   * Whoever is carrying it: one of our riders, or a delivery company.
+   *
+   * A carrier's callback has no user behind it, but it is not the *system*
+   * acting either — it is the carrier, reporting what its driver did. So it
+   * acts as `COURIER` with no id, which is the same reading the lifecycle
+   * table already takes of a self-shipping seller: the role names what the
+   * actor was doing, not which account they hold. That is what lets one
+   * implementation serve the courier screens and a webhook without widening
+   * the transition table for the system.
+   */
+  private carrierActor(courierUserId?: string): WorkflowActor {
+    return courierUserId
+      ? this.courierActor(courierUserId)
+      : { id: null, role: 'COURIER' };
+  }
+
+  /** A shipment, with no ownership claim attached. */
+  private async loadShipment(tx: Tx, shipmentId: string): Promise<Shipment> {
+    const shipment = await tx.shipment.findUnique({ where: { id: shipmentId } });
+    if (!shipment) throw new NotFoundException('Shipment not found');
+    return shipment;
+  }
+
   /** A generic status move by an admin or the system. */
   private async transition(
     shipmentId: string,
     to: ShipmentStatus,
     options: {
       actorId?: string;
+      /**
+       * Who the sub-order move is attributed to. Defaults to the admin who
+       * called, or to the system; a carrier's callback passes `COURIER`,
+       * because that is what a delivery company is.
+       */
+      actor?: WorkflowActor;
       data?: Prisma.ShipmentUpdateInput;
       note?: string;
       position?: { latitude?: number; longitude?: number };
@@ -680,9 +884,10 @@ export class ShipmentsService {
         await this.syncParcel(
           tx,
           shipment.sellerOrderId,
-          options.actorId
-            ? { id: options.actorId, role: 'ADMIN' }
-            : SYSTEM_ACTOR,
+          options.actor ??
+            (options.actorId
+              ? { id: options.actorId, role: 'ADMIN' }
+              : SYSTEM_ACTOR),
           options.parcel,
         );
       }

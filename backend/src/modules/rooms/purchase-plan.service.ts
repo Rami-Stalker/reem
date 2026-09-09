@@ -322,9 +322,14 @@ export class PurchasePlanService {
       offerVariant: item.offerVariant,
     }));
 
-    const order = await this.checkout.checkoutLines(userId, dto, lines, {
-      clearCart: false,
-    });
+    // A room always has signed-in members — a plan is a decision several
+    // named people voted on — so this door is never a guest's.
+    const order = await this.checkout.checkoutLines(
+      { kind: 'user', userId },
+      dto,
+      lines,
+      { clearCart: false },
+    );
 
     const remaining = plan.items.length - now.length;
     await this.prisma.$transaction([

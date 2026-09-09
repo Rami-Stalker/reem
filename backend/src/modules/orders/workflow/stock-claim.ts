@@ -101,3 +101,34 @@ export async function claimFlashSaleUnits(
   `;
   return { claimed: rows.length > 0 };
 }
+
+/**
+ * Gives a cancelled line's units back to the flash sale that priced it.
+ *
+ * The counter above was only ever incremented. A cap of fifty that had ten
+ * orders cancelled against it stopped offering its price after forty real
+ * sales, and the sale's own report claimed fifty had gone — so the seller was
+ * told a promotion sold out when a fifth of it never sold at all.
+ *
+ * Three differences from the claim, each deliberate:
+ *
+ * - **No time window.** The claim only counts against a *live* sale; the
+ *   release must reach a sale that has since ended, because that is exactly
+ *   the sale whose report is wrong. Matching the window here would leave the
+ *   overcount permanent on any sale that closed before the cancellation.
+ * - **Floored at zero.** `GREATEST(0, …)` — a counter that goes negative
+ *   would make the remaining units read as more than the cap.
+ * - **Every sale carrying the offer**, not one. The claim already writes to
+ *   whichever live sale matches; nothing guarantees a single row, and undoing
+ *   less than was claimed is the failure worth avoiding here.
+ */
+export async function releaseFlashSaleUnits(
+  tx: Tx,
+  claim: FlashSaleClaim,
+): Promise<void> {
+  await tx.$executeRaw`
+    UPDATE flash_sale_items
+    SET quantity_sold = GREATEST(0, quantity_sold - ${claim.quantity})
+    WHERE offer_id = ${claim.offerId}::uuid
+  `;
+}

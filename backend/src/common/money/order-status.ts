@@ -42,7 +42,13 @@ const SELLER_ORDER_TRANSITIONS: Readonly<
 > = {
   [T.NEW]: [
     { to: T.AWAITING_SELLER_CONFIRMATION, by: ['SYSTEM'] },
-    { to: T.CANCELLED_BY_CUSTOMER, by: ['CUSTOMER', 'ADMIN'] },
+    // SYSTEM may cancel here and **only** here. An order whose payment
+    // deadline passed is a customer who walked away, and something has to act
+    // for her or the stock her basket claimed is withdrawn from sale for ever
+    // (`OrdersService.expireUnpaid`). Confining it to NEW is what keeps that
+    // narrow: the moment a seller has confirmed the parcel and begun packing
+    // it, no timer may cancel her work — only a person can.
+    { to: T.CANCELLED_BY_CUSTOMER, by: ['CUSTOMER', 'SYSTEM', 'ADMIN'] },
     { to: T.CANCELLED_BY_SELLER, by: ['SELLER', 'ADMIN'] },
   ],
   [T.AWAITING_SELLER_CONFIRMATION]: [

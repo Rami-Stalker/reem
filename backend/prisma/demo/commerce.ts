@@ -24,7 +24,9 @@ import {
   RoundingPolicy,
   SellerOrderStatus,
   ShipmentStatus,
+  UserRole,
 } from '@prisma/client';
+import * as bcrypt from 'bcryptjs';
 import {
   REVIEW_BODIES_MIXED,
   REVIEW_BODIES_POSITIVE,
@@ -40,6 +42,9 @@ import { LedgerService } from '../../src/modules/ledger/ledger.service';
 import { PrismaService } from '../../src/prisma/prisma.service';
 import { roundSyp } from './rng';
 import { DemoContext, DemoProduct } from './context';
+
+/** Shared by every seeded courier, printed with the rest of the logins. */
+export const COURIER_PASSWORD = 'Courier123!';
 
 const D = Prisma.Decimal;
 
@@ -205,9 +210,18 @@ export interface SeededOrder {
   }[];
 }
 
-/** Couriers first — shipments point at them. */
+/**
+ * Couriers first — shipments point at them.
+ *
+ * Each one gets a login of her own. A `Courier` row with no `userId` is a name
+ * on a parcel and nothing else: the courier screens (today's round, pick-up,
+ * delivered, failed) all resolve the rider from her account, so a fleet seeded
+ * without accounts is a fleet that cannot move a single box — and with it no
+ * order in the whole demo ever reaches DELIVERED.
+ */
 async function seedCouriers(ctx: DemoContext) {
   const { prisma } = ctx;
+  const passwordHash = await bcrypt.hash(COURIER_PASSWORD, 12);
   const definitions = [
     {
       kind: CourierKind.PLATFORM_STAFF,
@@ -239,8 +253,24 @@ async function seedCouriers(ctx: DemoContext) {
   ];
 
   const couriers = [];
-  for (const definition of definitions) {
-    couriers.push(await prisma.courier.create({ data: definition }));
+  for (const [index, definition] of definitions.entries()) {
+    // A plain account, not a privileged one: what makes her a courier is the
+    // row below, and the courier routes check exactly that.
+    const user = await prisma.user.create({
+      data: {
+        name: definition.displayName,
+        username: `courier_${index + 1}`,
+        phone: definition.phone,
+        passwordHash,
+        passwordSetAt: new Date(),
+        role: UserRole.CUSTOMER,
+        isVerified: true,
+        phoneVerifiedAt: new Date(),
+      },
+    });
+    couriers.push(
+      await prisma.courier.create({ data: { ...definition, userId: user.id } }),
+    );
   }
   return couriers;
 }

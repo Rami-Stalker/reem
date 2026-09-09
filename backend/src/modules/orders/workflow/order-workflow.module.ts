@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 
 import { PrismaModule } from '../../../prisma/prisma.module';
+import { InventoryReservationService } from './inventory-reservation.service';
 import { SellerOrderWorkflowService } from './seller-order-workflow.service';
 
 /**
@@ -13,7 +14,7 @@ import { SellerOrderWorkflowService } from './seller-order-workflow.service';
  */
 @Module({
   imports: [PrismaModule],
-  providers: [SellerOrderWorkflowService],
-  exports: [SellerOrderWorkflowService],
+  providers: [InventoryReservationService, SellerOrderWorkflowService],
+  exports: [InventoryReservationService, SellerOrderWorkflowService],
 })
 export class OrderWorkflowModule {}

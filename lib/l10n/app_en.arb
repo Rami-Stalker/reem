@@ -6310,6 +6310,40 @@
   "@trackShipment": {
     "description": "Title of the shipment tracking screen (Q64)."
   },
+  "adminDelivery": "Delivery companies",
+  "@adminDelivery": {"description": "Title of the carrier administration screen."},
+  "adminDeliverySubtitle": "The companies that carry parcels, where each delivers, and what is stuck.",
+  "@adminDeliverySubtitle": {"description": "Subtitle of the carrier administration screen."},
+  "adminDeliveryNoProviders": "No delivery company is registered yet.",
+  "@adminDeliveryNoProviders": {"description": "Empty state for the carrier list."},
+  "adminDeliveryStuck": "Parcels no carrier accepted",
+  "@adminDeliveryStuck": {"description": "Heading for the failed dispatch queue."},
+  "adminDeliveryNothingStuck": "Nothing is stuck — every parcel is with a carrier.",
+  "@adminDeliveryNothingStuck": {"description": "Empty state for the failed dispatch queue."},
+  "adminDeliveryRetry": "Retry",
+  "@adminDeliveryRetry": {"description": "Button that re-offers a parcel to its carrier."},
+  "adminDeliveryEverywhere": "Everywhere",
+  "@adminDeliveryEverywhere": {"description": "Coverage tag for a carrier with no governorate list."},
+  "adminDeliveryDefault": "Default",
+  "@adminDeliveryDefault": {"description": "Tag for the default carrier."},
+  "adminDeliveryPriority": "Priority {value}",
+  "@adminDeliveryPriority": {"description": "Carrier priority tag.", "placeholders": {"value": {"type": "int"}}},
+  "adminDeliveryInternalFleet": "In-house delivery team",
+  "@adminDeliveryInternalFleet": {"description": "Subtitle for the internal courier provider."},
+  "adminDeliveryAdapterMissing": "This build has no adapter called {adapter}",
+  "@adminDeliveryAdapterMissing": {"description": "Shown when a carrier row names an adapter the build does not ship.", "placeholders": {"adapter": {"type": "String"}}},
+  "deliveryCarrier": "Delivery company",
+  "sellerOrderCarrierPendingRetry": "The delivery company has not accepted it yet — we keep trying.",
+  "@sellerOrderCarrierPendingRetry": {
+    "description": "Shown to a seller when a packed parcel has not been accepted by the carrier."
+  },
+  "@deliveryCarrier": {
+    "description": "Label for the delivery company carrying a parcel."
+  },
+  "deliveryCarrierTracking": "Carrier tracking number",
+  "@deliveryCarrierTracking": {
+    "description": "Label for the delivery company's own tracking number."
+  },
   "trackingCode": "Tracking code",
   "@trackingCode": {
     "description": "Label for the tracking code."

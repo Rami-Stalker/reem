@@ -10,6 +10,7 @@ import {
 import { UserRole } from '@prisma/client';
 
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
+import { SelfScoped } from '../../common/decorators/self-scoped.decorator';
 import { InvoicesService } from './invoices.service';
 
 /**
@@ -20,6 +21,9 @@ import { InvoicesService } from './invoices.service';
  * every call after that returns the same one. Reading is separate so a
  * customer opening her invoice twice does not look like two issues.
  */
+@SelfScoped(
+  "assertMayIssue and assertMayView compare the viewer against the order's customer and the parcel's seller",
+)
 @Controller('invoices')
 export class InvoicesController {
   constructor(private readonly invoices: InvoicesService) {}

@@ -1092,6 +1092,8 @@ model User {
   pointsTransactions        PointsTransaction[]
   couponRedemptions         CouponRedemption[]
   coupons                   Coupon[]                          @relation("UserCoupons")
+  /// Codes this seller issued, and pays for. See `Coupon.sellerId`.
+  sellerCoupons             Coupon[]                          @relation("SellerCoupons")
   referralCodes             ReferralCode[]                    @relation("ReferralCodeOwner")
   referralsMade             Referral[]                        @relation("Referrer")
   referralsReceived         Referral[]                        @relation("ReferredUser")
@@ -1763,6 +1765,17 @@ model AuditLog {
   category  String
   outcome   String
   severity  AuditSeverity @default(INFO)
+
+  /// **What was acted on**, and the reason this trail is now answerable.
+  ///
+  /// The log recorded who did what and when, and left the *what to* inside an
+  /// unindexed `metadata` blob — so "show me everything that happened to this
+  /// order" or "to this seller" had no answer, which is exactly the question
+  /// asked after an incident. Nullable because some actions have no single
+  /// subject (a sweep, a sign-in).
+  targetType String? @map("target_type")
+  targetId   String? @map("target_id")
+
   ipAddress String?       @map("ip_address")
   userAgent String?       @map("user_agent")
   metadata  Json?
@@ -1771,6 +1784,8 @@ model AuditLog {
   @@index([actorId, createdAt])
   @@index([category, createdAt])
   @@index([severity, createdAt])
+  /// The forensic query: one record's whole history, newest first.
+  @@index([targetType, targetId, createdAt])
   @@map("audit_logs")
 }
 
@@ -2017,6 +2032,7 @@ model Category {
   updatedAt DateTime @updatedAt @map("updated_at")
 
   products Product[]
+  coupons  Coupon[]
 
   // Reem Trend Engine.
   demandDaily        CategoryDemandDaily[]
@@ -2198,6 +2214,7 @@ model Product {
   @@index([status, favoritesCount])
   @@index([status, isFeatured])
   @@index([moderationStatus])
+  coupons        Coupon[]
   duplicateLeft  ProductDuplicateVerdict[] @relation("DuplicateLeft")
   duplicateRight ProductDuplicateVerdict[] @relation("DuplicateRight")
 
@@ -2302,6 +2319,7 @@ model SellerOffer {
 
   variants       SellerOfferVariant[]
   batches        InventoryBatch[]
+  reservations   InventoryReservation[]
   cartItems      CartItem[]
   bundleItems    BundleItem[]         @relation("BundleOffers")
   guestCartItems GuestCartItem[]
@@ -2336,6 +2354,7 @@ model SellerOfferVariant {
   guestCartItems GuestCartItem[]
   roomCandidates RoomCandidate[]
   planItems      PurchasePlanItem[]
+  reservations   InventoryReservation[]
 
   @@unique([offerId, variantId])
   @@index([variantId])
@@ -2357,6 +2376,141 @@ model InventoryBatch {
   @@unique([offerId, batchRef])
   @@index([expiresAt])
   @@map("inventory_batches")
+}
+
+/// Why a unit is off the shelf, and what will put it back.
+///
+/// Stock has always come off `SellerOffer.stock` inside the checkout
+/// transaction — that is what makes the oversell guarantee work — but nothing
+/// recorded *which* order took it or under what terms. Three things followed
+/// from that, and this table is what fixes all three:
+///
+///  1. **Releasing was not idempotent.** `restock` incremented the column
+///     unconditionally, so any path that ran twice — a retried cancellation, a
+///     refusal recorded by both the courier and the carrier's webhook — handed
+///     the seller units she never got back. A reservation can only leave
+///     `HELD`/`COMMITTED` once, and the state is the guard.
+///  2. **The release depended on the order lifecycle.** If a sub-order wedged
+///     in a state nobody could move it out of, its stock was gone for good.
+///     A reservation expires on its own clock, so the shelf recovers even when
+///     the order does not.
+///  3. **A seller could not tell "sold" from "spoken for".** `stock` answers
+///     "how many can I sell", and now this answers "where did the rest go".
+///
+/// `SellerOffer.stock` still means *available*, deliberately: every catalogue
+/// read, every card and every roll-up already reads it, and redefining it as
+/// "physically present" would have made availability a join on the hot path.
+model InventoryReservation {
+  id String @id @default(uuid()) @db.Uuid
+
+  offerId String      @map("offer_id") @db.Uuid
+  offer   SellerOffer @relation(fields: [offerId], references: [id], onDelete: Cascade)
+
+  /// The chosen size or colour, when the line named one. Its stock is a
+  /// separate counter and is reserved alongside the offer's.
+  offerVariantId String?             @map("offer_variant_id") @db.Uuid
+  offerVariant   SellerOfferVariant? @relation(fields: [offerVariantId], references: [id], onDelete: SetNull)
+
+  orderId String @map("order_id") @db.Uuid
+  order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  /// Null only for the instant between the parent order and its parcels.
+  sellerOrderId String?      @map("seller_order_id") @db.Uuid
+  sellerOrder   SellerOrder? @relation(fields: [sellerOrderId], references: [id], onDelete: Cascade)
+
+  quantity Int
+  state    InventoryReservationState @default(HELD)
+
+  /// When an unconfirmed hold lets go by itself. Cleared on COMMITTED — a
+  /// parcel a seller is packing must never be released by a timer.
+  expiresAt DateTime? @map("expires_at")
+
+  committedAt DateTime? @map("committed_at")
+  consumedAt  DateTime? @map("consumed_at")
+  releasedAt  DateTime? @map("released_at")
+  /// Why it went back on the shelf, for the seller's own inventory history.
+  releaseReason String? @map("release_reason")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  /// The sweeper's only query.
+  @@index([state, expiresAt])
+  @@index([orderId])
+  @@index([sellerOrderId])
+  /// "What is spoken for on this listing", for the seller's stock screen.
+  @@index([offerId, state])
+  @@map("inventory_reservations")
+}
+
+/// One unsafe request, and the answer it already got.
+///
+/// A woman on a Syrian mobile connection taps «إتمام الشراء», the request is in
+/// flight for eight seconds, and she taps again. Without this she has two
+/// orders: two stock claims, two cash collections at her door, and a support
+/// conversation to unpick it. The client sends an `Idempotency-Key` with every
+/// unsafe request; the second attempt with the same key is answered from here
+/// rather than executed.
+///
+/// Deliberately keyed on `(scope, key)` and not on the key alone. The scope is
+/// the principal — her account, or her guest session — so one customer's key
+/// can never collide with another's, and a key guessed by a stranger reaches
+/// nothing of hers.
+///
+/// `requestHash` is what makes the replay honest: the same key with a
+/// *different* body is a client bug, and answering it with the first response
+/// would silently drop the second order. It is refused instead.
+model IdempotencyRecord {
+  id String @id @default(uuid()) @db.Uuid
+
+  /// The client's key. Opaque to the platform.
+  key String
+  /// Who sent it: `user:<id>`, `guest:<id>`, or `ip:<address>` for a caller
+  /// with neither. Never a bare key — see the model comment.
+  scope String
+
+  /// `POST /orders/checkout`. Stored so a key reused across endpoints reads as
+  /// the mistake it is rather than replaying the wrong answer.
+  endpoint String
+  /// SHA-256 of the canonicalised body.
+  requestHash String @map("request_hash")
+
+  state IdempotencyState @default(IN_FLIGHT)
+
+  /// The answer, once there is one. Absent while in flight.
+  statusCode Int?  @map("status_code")
+  response   Json?
+
+  /// When this record stops answering for the request. A key is not a
+  /// permanent name for an order; it is a short window against a double tap.
+  expiresAt DateTime @map("expires_at")
+
+  createdAt   DateTime  @default(now()) @map("created_at")
+  completedAt DateTime? @map("completed_at")
+
+  @@unique([scope, key])
+  /// The sweeper's only query.
+  @@index([expiresAt])
+  @@map("idempotency_records")
+}
+
+enum IdempotencyState {
+  /// A request with this key is running right now.
+  IN_FLIGHT
+  /// It finished, and `response` is what it answered.
+  COMPLETED
+}
+
+enum InventoryReservationState {
+  /// Off the shelf, awaiting payment or confirmation. Expires by itself.
+  HELD
+  /// The order is confirmed and the seller is preparing it. No longer expires.
+  COMMITTED
+  /// Delivered. The units are gone; anything coming back is a return, which is
+  /// new stock arriving rather than this reservation being undone.
+  CONSUMED
+  /// Back on the shelf.
+  RELEASED
 }
 
 /// Q46/Q47 — rate history. An order freezes the row it was priced with, so
@@ -2964,6 +3118,22 @@ model Order {
   deliveryInstructions String?   @map("delivery_instructions")
   notes                String?
   placedAt             DateTime? @map("placed_at")
+
+  /// When an unpaid order stops holding its stock.
+  ///
+  /// Stock comes off the seller's offer the moment an order is created, so an
+  /// order that is never paid for is a garment nobody else can buy. Cash
+  /// orders held for a confirmation code already expire through
+  /// `CodRiskAssessment.expiresAt`; this is the deadline for every *other*
+  /// way an order can be left `PENDING_PAYMENT` — a transfer she never sent,
+  /// a gateway she closed, or a crash between creating the order and
+  /// confirming it. The window depends on what the rail asks of her: see
+  /// `orders/order-expiry.ts`.
+  ///
+  /// Only meaningful while the order is `PENDING_PAYMENT`. It is left in place
+  /// afterwards rather than cleared, so the row still records the deadline the
+  /// order beat.
+  expiresAt DateTime? @map("expires_at")
   createdAt            DateTime  @default(now()) @map("created_at")
   updatedAt            DateTime  @updatedAt @map("updated_at")
 
@@ -2979,9 +3149,16 @@ model Order {
   /// rather than from the cart. At most one — a plan orders once.
   purchasePlans PurchasePlan[]
 
+  /// What this order took off the shelf, and on what terms.
+  reservations InventoryReservation[]
+
   @@index([userId, createdAt])
   @@index([guestSessionId])
   @@index([status])
+  /// The expiry sweep's only query: unpaid orders past their deadline. Without
+  /// this it is a scan of every order the platform has ever taken, every ten
+  /// minutes, for ever.
+  @@index([status, expiresAt])
   @@map("orders")
 }
 
@@ -3025,6 +3202,7 @@ model SellerOrder {
 
   items            OrderItem[]
   events           OrderEvent[]
+  reservations     InventoryReservation[]
   shipment         Shipment?
   returns          ReturnRequest[]
   dispute          Dispute?
@@ -3411,6 +3589,11 @@ model Courier {
   settlements    CashSettlement[]
   ledgerAccounts LedgerAccount[]  @relation("LedgerAccounts")
 
+  /// Set when this carrier is also reachable as a dispatch provider — the
+  /// in-house fleet is modelled as one provider among the external companies,
+  /// so the dispatch path has no special case for it.
+  deliveryProviderAccount DeliveryProviderAccount?
+
   @@index([isActive])
   @@map("couriers")
 }
@@ -3455,6 +3638,10 @@ model Shipment {
   updatedAt DateTime @updatedAt @map("updated_at")
 
   events ShipmentEvent[]
+
+  /// The carrier this parcel was handed to, when it left the platform's own
+  /// fleet. Absent for a parcel nobody has dispatched yet.
+  dispatch DeliveryDispatch?
 
   @@index([courierId, status])
   @@index([status])
@@ -4175,7 +4362,17 @@ model ProductReview {
 
   moderationLogs ReviewModerationLog[]
 
-  @@unique([productId, userId, orderId])
+  /// One voice per customer per product.
+  ///
+  /// The old key included `orderId`, and Postgres treats NULLs as *distinct*
+  /// in a unique index — so an unverified review, which carried no order,
+  /// could be written any number of times. The service checked first, but a
+  /// check followed by an insert is two moments and two concurrent requests
+  /// both passed it. The database refuses the second one now.
+  ///
+  /// A customer who bought the same dress twice still gets one review of it,
+  /// which is the honest reading: her opinion of the garment is one opinion.
+  @@unique([productId, userId])
   @@index([productId, status, createdAt])
   @@index([userId, createdAt])
   @@map("product_reviews")
@@ -4203,7 +4400,9 @@ model SellerReview {
 
   moderationLogs ReviewModerationLog[]
 
-  @@unique([sellerId, userId, orderId])
+  /// One voice per customer per boutique — see `ProductReview` for why the
+  /// order is no longer part of the key.
+  @@unique([sellerId, userId])
   @@index([sellerId, status, createdAt])
   @@index([userId, createdAt])
   @@map("seller_reviews")
@@ -4562,6 +4761,31 @@ model Coupon {
   isActive        Boolean    @default(true) @map("is_active")
   /// Q49 P2 — who absorbs the discount: whoever created the coupon.
   fundedBySeller  Boolean    @default(false) @map("funded_by_seller")
+
+  // ── What the code may be spent on ─────────────────────────────────────
+  //
+  // All three null means the whole basket, which is what every coupon was
+  // until now — and was the bug. `fundedBySeller` said a seller paid for the
+  // discount, but nothing said *which* seller's goods it applied to, so a code
+  // one boutique created reduced the commission base of every boutique in the
+  // basket. Seller B paid part of seller A's promotion without being told.
+  //
+  // Scoping is evaluated per line, and the discount is computed on the
+  // eligible subtotal alone — never on the basket total — so a 20% code on one
+  // dress cannot take 20% off a basket of five.
+
+  /// Only this seller's lines. Set on any seller-funded code.
+  sellerId String? @map("seller_id") @db.Uuid
+  seller   User?   @relation("SellerCoupons", fields: [sellerId], references: [id], onDelete: Cascade)
+
+  /// Only lines in this category. Matched on the line's own category, not on
+  /// ancestry — a category tree walked at checkout is a query per line.
+  categoryId String?   @map("category_id") @db.Uuid
+  category   Category? @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  /// Only this product. The narrowest scope there is.
+  productId String?  @map("product_id") @db.Uuid
+  product   Product? @relation(fields: [productId], references: [id], onDelete: Cascade)
   createdAt       DateTime   @default(now()) @map("created_at")
   updatedAt       DateTime   @updatedAt @map("updated_at")
 
@@ -5227,6 +5451,16 @@ enum LedgerAccountCode {
   CUSTOMER_WALLET
   /// Amounts frozen pending a dispute ruling (Q107).
   DISPUTE_HELD
+  /// Delivery fees owed to a carrier for journeys it has already made.
+  ///
+  /// The platform contracts the carrier and pays it; the customer's delivery
+  /// fee is `SHIPPING_REVENUE` and is a different number. Before this account
+  /// existed the cost side was simply never booked, so every margin the
+  /// platform reported was overstated by the whole cost of carrying the goods.
+  /// A courier hands over the *gross* cash it collected (see
+  /// `CourierSettlementService`), so what it is owed accrues here rather than
+  /// being netted off the hand-over.
+  COURIER_PAYABLE
 
   /// Marketplace commission — the platform's main revenue (Q17).
   COMMISSION_REVENUE
@@ -5260,6 +5494,8 @@ enum JournalEntryType {
   ORDER_PLACED
   PAYMENT_CAPTURED
   COURIER_CASH_SETTLED
+  /// What a delivered parcel cost the platform to carry.
+  DELIVERY_COST_ACCRUED
   COMMISSION_EARNED
   ESCROW_RELEASED
   PAYOUT_ACCRUED
@@ -9097,4 +9333,209 @@ model MissionProgress {
   @@unique([missionId, userId])
   @@index([userId, status])
   @@map("mission_progress")
+}
+
+// ───────────────────────── Delivery integration (Q63 / Q55) ─────────────────
+//
+// Reem owns the order; a delivery company owns the journey. The platform does
+// not run drivers, routes or fleets — it hands a parcel to a carrier and reads
+// back what the carrier says about it.
+//
+// Three tables, deliberately separate from `Shipment`:
+//
+//   * `Shipment` stays what it always was — Reem's own record of the box: the
+//     tracking code the customer was given, the cash due at the door, the
+//     proof, the attempt count, the lifecycle every downstream system reads.
+//   * `DeliveryProviderAccount` is a carrier the platform can dispatch to, and
+//     everything about *how* to talk to it that is not a secret.
+//   * `DeliveryDispatch` is one parcel handed to one carrier: their id for it,
+//     their tracking number, their fee, their timestamps, their failure.
+//
+// Keeping the carrier's data out of `Shipment` is what makes a second carrier
+// — or a change of carrier — a row rather than a migration, and what keeps an
+// order readable when a carrier is gone.
+
+/// How the platform reaches a carrier.
+enum DeliveryProviderKind {
+  /// The in-house fleet: a `Courier` row, the courier screens, no third party.
+  INTERNAL
+  /// A delivery company with an HTTP API.
+  EXTERNAL_API
+  /// A company worked by phone or portal — dispatch is recorded, not called.
+  MANUAL
+}
+
+/// How a carrier's callbacks are authenticated.
+enum WebhookAuthScheme {
+  /// HMAC-SHA256 over the raw body, hex, in a header the config names.
+  HMAC_SHA256
+  /// A fixed shared secret compared in constant time.
+  SHARED_SECRET
+  /// No verification. Refused unless the account opts in explicitly.
+  NONE
+}
+
+/// A delivery company the platform can hand parcels to.
+///
+/// Rows, not code: enabling a carrier, changing its coverage or its priority
+/// is an operations decision made in the admin console. Credentials are **not**
+/// here — `credentialEnvKeys` names the environment variables that hold them,
+/// so the database can be dumped, replicated or read by support without
+/// leaking a key, and rotating one is a deploy secret change rather than a
+/// database write.
+model DeliveryProviderAccount {
+  id   String @id @default(uuid()) @db.Uuid
+  /// Stable machine name; the adapter is resolved by it. Never renamed.
+  code String @unique
+
+  displayName String               @map("display_name")
+  kind        DeliveryProviderKind @default(EXTERNAL_API)
+
+  /// Which adapter class serves this account.
+  ///
+  /// Separate from `code` on purpose: `code` is *this contract* — it names the
+  /// webhook URL the carrier is given and the row support talks about — while
+  /// `adapter` is the code that knows how to speak to it. Two companies can
+  /// share the generic HTTP adapter with different configuration, and one
+  /// company can have a sandbox account beside its production one.
+  adapter String @default("http_generic")
+
+  isEnabled Boolean @default(false) @map("is_enabled")
+  /// The carrier used when several cover the same destination.
+  isDefault Boolean @default(false) @map("is_default")
+  /// Lower wins. Ties break on `isDefault`, then on name.
+  priority  Int     @default(100)
+
+  /// Governorates this carrier serves. Empty means everywhere.
+  governorates String[]
+
+  supportsQuote    Boolean @default(false) @map("supports_quote")
+  supportsCancel   Boolean @default(false) @map("supports_cancel")
+  supportsTracking Boolean @default(false) @map("supports_tracking")
+  supportsWebhook  Boolean @default(false) @map("supports_webhook")
+
+  webhookAuth WebhookAuthScheme @default(HMAC_SHA256) @map("webhook_auth")
+  /// Header carrying the signature, e.g. `x-acme-signature`.
+  webhookSignatureHeader String? @map("webhook_signature_header")
+
+  /// Non-secret settings: base URL, paths, timeouts, field and status maps.
+  /// The shape is the adapter's business; `HttpDeliveryProvider` documents its own.
+  config Json?
+
+  /// Which environment variables hold this account's secrets, e.g.
+  /// `{"apiKey":"ACME_API_KEY","webhookSecret":"ACME_WEBHOOK_SECRET"}`.
+  credentialEnvKeys Json? @map("credential_env_keys")
+
+  /// The in-house carrier this account dispatches to, for `INTERNAL` accounts.
+  courierId String?  @unique @map("courier_id") @db.Uuid
+  courier   Courier? @relation(fields: [courierId], references: [id], onDelete: SetNull)
+
+  lastHealthyAt DateTime? @map("last_healthy_at")
+  lastErrorAt   DateTime? @map("last_error_at")
+  lastError     String?   @map("last_error")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  dispatches DeliveryDispatch[]
+
+  @@index([isEnabled, priority])
+  @@map("delivery_provider_accounts")
+}
+
+/// One parcel, handed to one carrier.
+///
+/// `status` is Reem's vocabulary — the same `ShipmentStatus` the rest of the
+/// platform speaks — and `providerStatus` is whatever the carrier called it.
+/// Both are kept: the first is what the app, the ledger and the return window
+/// read; the second is what support needs when a carrier is asked why.
+model DeliveryDispatch {
+  id String @id @default(uuid()) @db.Uuid
+
+  shipmentId String   @unique @map("shipment_id") @db.Uuid
+  shipment   Shipment @relation(fields: [shipmentId], references: [id], onDelete: Cascade)
+
+  providerId String                  @map("provider_id") @db.Uuid
+  provider   DeliveryProviderAccount @relation(fields: [providerId], references: [id], onDelete: Restrict)
+  /// Denormalised so a dispatch still reads after an account is renamed.
+  providerCode String @map("provider_code")
+
+  status         ShipmentStatus @default(CREATED)
+  providerStatus String?        @map("provider_status")
+
+  /// The carrier's own identifier for this delivery. Unique per carrier.
+  externalDeliveryId String? @map("external_delivery_id")
+  trackingNumber     String? @map("tracking_number")
+  trackingUrl        String? @map("tracking_url")
+  labelUrl           String? @map("label_url")
+
+  feeAmount   Decimal?  @map("fee_amount") @db.Decimal(18, 4)
+  feeCurrency Currency? @map("fee_currency")
+
+  /// What the platform sent with the request, so a duplicate cannot be created
+  /// by a retry, a double click, or a queue redelivery.
+  idempotencyKey String @unique @map("idempotency_key")
+
+  requestedAt DateTime? @map("requested_at")
+  assignedAt  DateTime? @map("assigned_at")
+  pickedUpAt  DateTime? @map("picked_up_at")
+  deliveredAt DateTime? @map("delivered_at")
+  cancelledAt DateTime? @map("cancelled_at")
+  returnedAt  DateTime? @map("returned_at")
+
+  failureReason DeliveryFailureReason? @map("failure_reason")
+  failureNote   String?                @map("failure_note")
+  attemptCount  Int                    @default(0) @map("attempt_count")
+  cancelReason  String?                @map("cancel_reason")
+
+  /// Last transport failure, for the ops screen. Never a credential.
+  lastError    String?   @map("last_error")
+  lastSyncedAt DateTime? @map("last_synced_at")
+
+  /// Redacted request/response of the last call, for support.
+  lastRequest  Json? @map("last_request")
+  lastResponse Json? @map("last_response")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  events DeliveryWebhookEvent[]
+
+  @@unique([providerId, externalDeliveryId])
+  @@index([providerCode, status])
+  @@index([trackingNumber])
+  @@map("delivery_dispatches")
+}
+
+/// Every callback a carrier made, verified or not.
+///
+/// Written before it is acted on and unique on the carrier's own event id, so
+/// a redelivered webhook — which every carrier eventually sends — moves a
+/// parcel exactly once. Also the audit trail for "we told you": if it arrived,
+/// it is here, signature verdict included.
+model DeliveryWebhookEvent {
+  id String @id @default(uuid()) @db.Uuid
+
+  providerCode String @map("provider_code")
+  /// The carrier's id for this event, where it sends one.
+  externalEventId String? @map("external_event_id")
+
+  dispatchId String?           @map("dispatch_id") @db.Uuid
+  dispatch   DeliveryDispatch? @relation(fields: [dispatchId], references: [id], onDelete: SetNull)
+
+  externalDeliveryId String?         @map("external_delivery_id")
+  signatureValid     Boolean         @default(false) @map("signature_valid")
+  status             ShipmentStatus?
+  providerStatus     String?         @map("provider_status")
+
+  /// The body as it arrived, for replay and dispute.
+  payload Json
+
+  error       String?
+  receivedAt  DateTime  @default(now()) @map("received_at")
+  processedAt DateTime? @map("processed_at")
+
+  @@unique([providerCode, externalEventId])
+  @@index([dispatchId, receivedAt])
+  @@map("delivery_webhook_events")
 }

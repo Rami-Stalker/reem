@@ -9,9 +9,13 @@ import {
   Post,
 } from '@nestjs/common';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
+import { SelfScoped } from '../../common/decorators/self-scoped.decorator';
 import { SubmitPaymentReferenceDto } from './dto/submit-payment-reference.dto';
 import { PaymentsService } from './payments.service';
 
+@SelfScoped(
+  'every payment is loaded by id together with the userId that owns its order',
+)
 @Controller('payments')
 export class PaymentsController {
   constructor(private readonly payments: PaymentsService) {}

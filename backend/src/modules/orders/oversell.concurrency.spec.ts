@@ -92,7 +92,7 @@ async function makeUser(
     data: {
       name: `race-${tag}`,
       username: `race_${u}`,
-      phone: `+9639${u.slice(-8)}`,
+      phone: `+9639${Math.floor(10000000 + Math.random() * 89999999)}`,
       passwordHash: 'x',
       role,
       points,

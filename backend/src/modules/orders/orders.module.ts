@@ -16,6 +16,7 @@ import { MarketModule } from '../market/market.module';
 import { CodTrustScheduler } from '../cod-trust/cod-trust.scheduler';
 import { InvoicesController } from './invoices.controller';
 import { InvoicesService } from './invoices.service';
+import { OrdersScheduler } from './orders.scheduler';
 
 @Module({
   imports: [
@@ -44,6 +45,8 @@ import { InvoicesService } from './invoices.service';
     // Lives in `cod-trust/` but is registered here: it cancels orders, and the
     // trust engine is not allowed to depend on the module that owns them.
     CodTrustScheduler,
+    // The backstop beneath it: every other way an order can be left unpaid.
+    OrdersScheduler,
   ],
   // `OrdersService` is exported for `syncParentStatus`: the parent order's
   // status is a pure function of its children, and every module that moves a

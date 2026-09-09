@@ -160,22 +160,46 @@ class SellerOrderLine extends Equatable {
   List<Object?> get props => [id, title, quantity, variant];
 }
 
-/// The parcel's journey, when the platform is carrying it.
+/// The parcel's journey, once it has left her hands.
 class SellerParcelShipment extends Equatable {
   const SellerParcelShipment({
     required this.trackingCode,
     required this.status,
     required this.isAssigned,
+    this.carrierName,
+    this.carrierTrackingNumber,
+    this.carrierError,
   });
 
   final String trackingCode;
   final String status;
 
-  /// Whether a courier has been put on it yet.
+  /// Whether anybody is carrying it yet — one of the platform's couriers, or a
+  /// delivery company that accepted it.
   final bool isAssigned;
 
+  /// The delivery company carrying it, when the parcel has been handed over.
+  final String? carrierName;
+  final String? carrierTrackingNumber;
+
+  /// Why the hand-over did not happen, when it did not.
+  ///
+  /// The seller sees this and the customer does not, on purpose: a carrier
+  /// refusing a parcel is her problem to chase — she packed it and it is not
+  /// moving — while to the customer it is noise about somebody else's API.
+  final String? carrierError;
+
+  bool get isWaitingForCarrier => carrierError != null;
+
   @override
-  List<Object?> get props => [trackingCode, status, isAssigned];
+  List<Object?> get props => [
+    trackingCode,
+    status,
+    isAssigned,
+    carrierName,
+    carrierTrackingNumber,
+    carrierError,
+  ];
 }
 
 /// A parcel as it appears in the seller's queue.

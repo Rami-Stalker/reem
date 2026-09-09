@@ -26,6 +26,8 @@ export interface GuestSessionEnvelope {
 export interface GuestMigrationSummary {
   cart_items: number;
   saved_items: number;
+  /** Orders she placed as a guest and now owns under her account. */
+  orders: number;
 }
 
 @Injectable()
@@ -165,6 +167,33 @@ export class GuestService {
         await this.migrateSavedItem(tx, userId, item);
       }
 
+      // Her orders come with her.
+      //
+      // Since guest checkout exists, a visitor can buy before she has an
+      // account — and her only claim on that order is this session. Marking
+      // the session MIGRATED below retires the token, so without this the
+      // orders she has already paid for would belong to a session she can no
+      // longer present and to no account at all: invisible to her, and
+      // reachable by nobody but support.
+      //
+      // `guestSessionId` is deliberately left in place rather than cleared. It
+      // is how the order came in, which is worth keeping — and the ownership
+      // check reads `userId` for a signed-in buyer, so the stale session id
+      // grants nothing once the session itself is retired.
+      const claimed = await tx.order.updateMany({
+        where: { guestSessionId: guest.id, userId: null },
+        data: { userId },
+      });
+
+      // And the reasoning behind any cash order she placed, so the trust
+      // engine reads her history as hers from here on rather than starting
+      // her at the platform's opening assumption.
+      await tx.codRiskAssessment.updateMany({
+        where: { order: { guestSessionId: guest.id }, userId: null },
+        data: { userId },
+      });
+
+
       await tx.guestSession.update({
         where: { id: guest.id },
         data: {
@@ -187,6 +216,7 @@ export class GuestService {
           metadata: this.json({
             cart_items: guest.cartItems.length,
             saved_items: guest.savedItems.length,
+            orders: claimed.count,
           }),
         },
       });
@@ -194,6 +224,7 @@ export class GuestService {
       return {
         cart_items: guest.cartItems.length,
         saved_items: guest.savedItems.length,
+        orders: claimed.count,
       };
     });
   }

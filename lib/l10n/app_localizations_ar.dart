@@ -5285,6 +5285,55 @@ class AppLocalizationsAr extends AppLocalizations {
   String get trackShipment => 'تتبّع الشحنة';
 
   @override
+  String get adminDelivery => 'شركات التوصيل';
+
+  @override
+  String get adminDeliverySubtitle =>
+      'الشركات التي تنقل الطرود، وتغطيتها، وما تعثّر منها.';
+
+  @override
+  String get adminDeliveryNoProviders => 'لا توجد شركة توصيل مسجّلة بعد.';
+
+  @override
+  String get adminDeliveryStuck => 'طرود لم تستلمها الشركة';
+
+  @override
+  String get adminDeliveryNothingStuck =>
+      'لا شيء متوقف — كل الطرود مع شركاتها.';
+
+  @override
+  String get adminDeliveryRetry => 'إعادة المحاولة';
+
+  @override
+  String get adminDeliveryEverywhere => 'كل المحافظات';
+
+  @override
+  String get adminDeliveryDefault => 'الافتراضية';
+
+  @override
+  String adminDeliveryPriority(int value) {
+    return 'الأولوية $value';
+  }
+
+  @override
+  String get adminDeliveryInternalFleet => 'فريق التوصيل الداخلي';
+
+  @override
+  String adminDeliveryAdapterMissing(String adapter) {
+    return 'لا يوجد في هذه النسخة موصّل باسم $adapter';
+  }
+
+  @override
+  String get deliveryCarrier => 'شركة التوصيل';
+
+  @override
+  String get sellerOrderCarrierPendingRetry =>
+      'لم تستلمها شركة التوصيل بعد — نعيد المحاولة تلقائيًا.';
+
+  @override
+  String get deliveryCarrierTracking => 'رقم الشحنة لدى الشركة';
+
+  @override
   String get trackingCode => 'رمز التتبّع';
 
   @override

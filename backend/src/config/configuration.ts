@@ -471,6 +471,29 @@ export default () => ({
      */
     reviewFreeAfter: Number(process.env.CONTENT_REVIEW_FREE_AFTER ?? 3),
   },
+  /**
+   * Routes that refuse a request arriving without an `Idempotency-Key`.
+   *
+   * Comma-separated `METHOD /route/path` entries, matched against the route
+   * *pattern* — `POST /orders/checkout`, not the URL with ids in it.
+   *
+   * **Empty by default, and that is a rollout decision rather than a
+   * preference.** The protection works the moment a client sends a key, and
+   * the app now does for checkout. Demanding one immediately would refuse
+   * every install still running the previous version — a woman with an old
+   * build could not buy anything. Turn it on once the update has reached the
+   * installs you care about, and the gap closes for good rather than depending
+   * on the client remembering:
+   *
+   *   IDEMPOTENCY_REQUIRED_ROUTES=POST /orders/checkout
+   */
+  idempotency: {
+    requiredRoutes: (process.env.IDEMPOTENCY_REQUIRED_ROUTES ?? '')
+      .split(',')
+      .map((route) => route.trim())
+      .filter(Boolean),
+  },
+
   payments: {
     /**
      * Lets `POST /payments/:id/verify` settle a rail whose provider cannot

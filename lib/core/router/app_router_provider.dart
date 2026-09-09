@@ -12,6 +12,7 @@ import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/features/admin/presentation/providers/admin_provider.dart';
 import 'package:reem/features/admin/presentation/screens/admin_analytics_screen.dart';
 import 'package:reem/features/admin/presentation/screens/admin_dashboard_screen.dart';
+import 'package:reem/features/admin/presentation/screens/admin_delivery_screen.dart';
 import 'package:reem/features/admin/presentation/screens/admin_orders_screen.dart';
 import 'package:reem/features/admin/presentation/screens/admin_products_screen.dart';
 import 'package:reem/features/admin/presentation/screens/admin_section_screen.dart';
@@ -798,6 +799,12 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         name: RouteNames.adminSellerApplications,
         builder: (context, state) =>
             const AdminShell(child: AdminSellerApplicationsScreen()),
+      ),
+      GoRoute(
+        path: RoutePaths.adminDelivery,
+        name: RouteNames.adminDelivery,
+        builder: (context, state) =>
+            const AdminShell(child: AdminDeliveryScreen()),
       ),
       GoRoute(
         path: RoutePaths.adminSellers,

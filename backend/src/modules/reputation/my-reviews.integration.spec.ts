@@ -92,7 +92,7 @@ async function makeUser(tx: Tx, role: UserRole = UserRole.CUSTOMER) {
   return tx.user.create({
     data: {
       name: role === UserRole.SELLER ? 'أتيليه لجين' : 'زبونة',
-      phone: `+9639${String(Date.now() + (counter += 1)).slice(-8)}`,
+      phone: `+9639${Math.floor(10000000 + Math.random() * 89999999)}`,
       username: uniq('mine_spec_'),
       role,
       ...(role === UserRole.SELLER ? { sellerVerifiedAt: new Date() } : {}),

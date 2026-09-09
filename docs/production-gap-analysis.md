@@ -1,0 +1,553 @@
+# Reem — Production Gap Analysis (المرحلة الأولى: Audit فقط)
+
+> تاريخ الفحص: 2026-09-09 · الفرع: `pre-launch-remediation` · آخر commit: `014474a`
+> لم تُعدَّل أي شيفرة إنتاجية أثناء الفحص نفسه.
+>
+> **تحديث — المرحلة 2 نُفِّذت.** قرارات العميل: **إطلاق نقدي فقط**، **خادم واحد**،
+> **إكمال guest checkout**، و**المنصة تتحمّل تكلفة التوصيل بالكامل**. ما أُغلق
+> موسوم ✅ أدناه؛ ما سقط من النطاق موسوم 🚫. التفاصيل التشغيلية في
+> [DEPLOYMENT.md](DEPLOYMENT.md).
+
+---
+
+## 0. تصحيح فرضيات قبل أي شيء
+
+طلبُك افترض ثلاثة أشياء غير صحيحة عن هذا المشروع، وتصحيحها يغيّر خطة العمل كلها:
+
+| الافتراض | الواقع |
+|---|---|
+| **MongoDB** | لا وجود لـ MongoDB. القاعدة **PostgreSQL 18** عبر **Prisma 6** — `backend/prisma/schema.prisma` فيه **203 model** و **79 migration** مُطبَّقة. |
+| مشروع يحتاج «بناء الميزات» | المشروع **مبني فعلياً**: 662 route، 120,877 سطر backend إنتاجي + 33,587 سطر اختبارات (109 spec)، 159,572 سطر Flutter عبر 46 feature. |
+| Delivery abstraction / Product-Offer split / Ledger — تحتاج تصميماً | **الثلاثة مبنية بالفعل** وبجودة عالية. التفاصيل في §2 و§11 و§12. |
+
+**الخلاصة التنفيذية:** هذا ليس مشروعاً ناقص الميزات. هذا مشروع **ناقص الجاهزية التشغيلية**. المشاكل الحقيقية ليست «ميزة مفقودة» بل: مهمة مجدولة غير مسجَّلة تمنع دفع البائعين، بنية أحادية العملية لا تحتمل أكثر من instance واحد، ومصاريف توصيل لا تُقيَّد في الدفاتر.
+
+---
+
+## 1. المعمارية الحالية (Current Architecture)
+
+### 1.1 الطبقات
+
+```
+Flutter (46 features · Clean Architecture: domain / data / presentation)
+   │  Riverpod · Dio · HTTP cache على طبقة النقل · Outbox للكتابات المؤجّلة
+   ▼  REST · snake_case · لا يوجد versioning
+NestJS 10 (50 modules · 76 controller · 171 service)
+   │  APP_GUARD chain: Throttler → JwtAuth → DeviceProof → StepUp → Authorization
+   ▼  Prisma 6
+PostgreSQL 18  (203 model · 582 index · ICU ar-SY · pg_trgm)
+```
+
+### 1.2 سلسلة الحراسة — فعّالة وسليمة
+
+`backend/src/app.module.ts:156-164` — أربعة حرّاس عامة بترتيب مقصود: التوثيق، ثم إثبات الجهاز (`DeviceProofGuard`)، ثم الـstep-up، ثم التفويض. و`AuthorizationGuard` يدمج `@Roles` مع `@Authorize` بدل أن يستبدلها (`authorization.guard.ts:66-98`) — وهذه كانت ثغرة أُصلحت سابقاً.
+
+### 1.3 نواة المال
+
+- `common/money/` — نوع `Money` بعملة ملزمة، `allocate()` بخوارزمية largest-remainder (فالأجزاء تجمع إلى الكل دون وحدة ضائعة)، وسياسة تقريب `NEAREST_10` لليرة.
+- `common/money/order-status.ts` — جدول انتقالات الحالة و`deriveOrderStatus`: حالة الطلب الأب دالّة نقيّة من أبنائه، لا تُكتب مباشرة أبداً.
+- `modules/ledger/` — **double-entry حقيقي**: `LedgerAccount` / `JournalEntry` / `JournalLine`، مفتاح `reference` فريد = idempotency، `reversesId` للعكس دون تعديل الأصل، و`ownerKey` بدل `ownerId` القابل لـNULL (لأن Postgres يعتبر NULL مميزاً في الفهارس الفريدة، فكان الرصيد سينقسم صامتاً على صفّين).
+
+### 1.4 دورة حياة الطلب
+
+`Order` (سلة واحدة) ← `SellerOrder[]` (طرد لكل بائعة) ← `OrderItem[]`.
+كل انتقال حالة يمرّ عبر `SellerOrderWorkflowService.move()` الذي يفعل أربعة أشياء معاً أو لا شيء: يتحقق من شرعية الانتقال بالنسبة للفاعل، يضبط الساعات (`shippedAt` / `deliveredAt` / `escrowReleaseAt` محسوبة من التسليم)، يكتب `OrderEvent`، ثم يعيد اشتقاق حالة الأب.
+
+### 1.5 ما لا يوجد في البنية التحتية
+
+**لا Redis · لا queue · لا object storage · لا search engine خارجي.**
+كل شيء in-process: الكاش `Map` داخل العملية، الـthrottler في الذاكرة، الـWebSocket gateway مكتوب يدوياً بلا pub/sub، والوسائط على قرص الخادم.
+
+---
+
+## 2. الموجود والمكتمل ✅
+
+| المجال | الحالة | الدليل |
+|---|---|---|
+| **Auth / Identity** | مكتمل بدرجة عالية: OTP-first، device-anchored، step-up، TOTP، recovery cases، تغيير رقم من ثلاث خطوات، إدارة الجلسات والأجهزة، security events. | `modules/auth/` — 58 ملف، 10,990 سطر |
+| **Authorization** | RBAC + permissions + ownership policies + guest principal. يسجّل كل رفض في `SecurityEvent`. | `common/authorization/` |
+| **فصل الكتالوج عن العرض** | `Product` (معياري) ↔ `SellerOffer` ↔ `SellerOfferVariant`. مفصول بالكامل. | `schema.prisma` |
+| **Double-entry Ledger** | 17 حساباً، 18 نوع قيد، idempotent، قابل للعكس، متعدد العملات مع `postConversion`. | `modules/ledger/` |
+| **Delivery Provider abstraction** | `DELIVERY_PROVIDER` interface + registry + `HttpDeliveryProvider` عام قابل للتهيئة بالـJSON + `InternalCourierProvider` (الأسطول الداخلي كمزوّد كأي مزوّد) + webhook موقَّع + `DeliveryDispatch` بـ`idempotencyKey` فريد. **هذا بالضبط ما طلبتَ تصميمه.** | `modules/delivery/providers/`, `dispatch/` |
+| **حماية من البيع الزائد** | `claimStock` يضع الشرط داخل `UPDATE ... WHERE stock >= n` فيعيد Postgres تقييمه على الصف المقفول؛ الخاسرة تُرفض عند الدفع لا بعد يوم. مغطّى باختبار تزامن. | `orders/workflow/stock-claim.ts` |
+| **سباق الكوبون** | قفل صفّي `SELECT ... FOR UPDATE` قبل قراءة العدّاد. | `rewards/coupons.service.ts:196` |
+| **المحفظة** | قفل صفّي، رفض السحب على المكشوف، حركات idempotent. | `ledger/wallet.service.ts` |
+| **الإرجاع والاسترداد** | دورة كاملة مع محاسبة مقابلة وتسوية مجدولة كل ساعة. | `modules/returns/`, `finance/customer-refunds.service.ts` |
+| **البحث العربي** | `reem_search_key` — طيّ الحركات والتطويل والهمزات والتاء المربوطة، ثم ترجمة صوتية إلى ASCII لأن `pg_trgm` يُرجع مجموعة trigram **فارغة** للعربية تحت `ctype=C`. | `migrations/20260907120000_arabic_search/` |
+| **عميل Flutter** | `flutter analyze` نظيف تماماً. 45 من 46 feature لها طبقة `data/` موصولة فعلياً بالـAPI. | — |
+| **تصليب الإعدادات** | `env.validation.ts` **يرفض الإقلاع** في الإنتاج مع `CORS_ORIGINS=*` أو `OTP_DEV_ECHO` أو `OTP_DEV_INBOX_ENABLED` أو `PAYMENTS_SANDBOX_CONFIRMATION`. | `config/env.validation.ts` |
+
+---
+
+## 3. موجود لكنه ناقص أو ضعيف ⚠️
+
+### 3.1 Payments — كل المزوّدات stubs
+`payments/providers/payment.providers.ts` — كل مزوّد يُرجع `PaymentStatus.PAID` من `verify()` دون اتصال بأحد. المشروع **واعٍ** بهذا: كل مزوّد يعلن `attestsSettlement = false`، و`payments.service.ts:233` يرفض `verify` بـ`PAYMENT_CONFIRMATION_UNAVAILABLE` ما لم يكن sandbox مفعّلاً (وهو ممنوع في الإنتاج).
+
+**النتيجة العملية: المنصة تعمل بالنقد فقط (COD / courier-collect).** ولا يوجد webhook للدفع أصلاً — مجلد `/webhooks/` فيه WhatsApp والتوصيل فقط.
+
+### 3.2 ✅ Guest checkout — كان نصف مبني، اكتمل
+`Order.guestSessionId` موجود، `GuestCartItem` يعمل، `POST /auth/guest` موجود، و`CartController` يقبل guest principal. لكن `POST /orders/checkout` يأخذ `@CurrentUser('id') userId` إجبارياً (`orders.controller.ts:29`)، و**لا شيء في الشيفرة يكتب `guestSessionId` على أي طلب**. الضيفة تبني سلة كاملة ثم تصطدم بجدار.
+
+### 3.3 Push notifications — قالب يستهدف API ميت
+`notifications/transports/push.transport.ts` صادق معمارياً (يسجّل `SKIPPED` لا `SENT` عند غياب مزوّد — وهذا إصلاح سابق لعيب كان يعلن كل إشعار «مُرسَل» دون أن يرنّ هاتف). لكن القالب الافتراضي هو جسم FCM legacy `/fcm/send` — **أوقفته Google في يونيو 2024** — والترويسة `authHeader` ثابتة، بينما FCM HTTP v1 يتطلب OAuth2 bearer متجدّداً. لن يعمل كما هو.
+
+### 3.4 Reviews — بلا شرط شراء
+`reputation.service.ts:308` — `order_id` اختياري. بدونه تُنشأ المراجعة بـ`verifiedPurchase=false` وتدخل `PENDING`. أي حساب يستطيع مراجعة أي منتج أو أي بائعة دون شراء. الاعتدال هو الحاجز الوحيد → طوفان طابور عند التوسّع.
+
+### 3.5 Audit log — بلا هدف مُفهرَس
+`AuditLog` فيه `actorId` و`action` و`category`، لكن **لا `targetType` ولا `targetId`**. الهدف يعيش داخل `metadata` (JSON غير مُفهرس). لا يمكن الإجابة على «أرِني كل ما حدث للطلب X» أو «للبائعة Y».
+
+وسطح الكتابة الإداري أوسع بكثير من الخدمات الاثنتي عشرة التي تكتب سجلاً: مزوّدو التوصيل، التجارب، flash sales، مرادفات البحث، سياسات القيمة، حملات الإشعارات، قواعد العمولة — كلها كتابات إدارية غير مُدقَّقة.
+
+### 3.6 دفترا حسابات متوازيان
+`FinancialLedgerEntry` (قيد مفرد، قديم) ما زال يُكتب من `commissions.service.ts` **وحدها** (السطور 267، 314، 345، 757) — بينما `JournalEntry` هو الدفتر الحقيقي وتكتب فيه تسع خدمات.
+
+و`admin.service.ts:635` **يقرأ الدفتر القديم** لشاشة «آخر 50 حركة مالية». النتيجة: الشاشة الإدارية ترى العمولات فقط، ولا ترى المحافظ ولا الاستردادات ولا النزاعات ولا تسويات المندوبين.
+
+### 3.7 Pagination بالإزاحة فقط
+`common/dto/pagination.dto.ts` — `page`/`limit` و`OFFSET`. لا cursor pagination في أي مكان. الصفحة 500 من كتالوج تعني مسح 10,000 صف قبل إرجاع 20.
+
+### 3.8 لا API versioning
+`main.ts` لا يستدعي `enableVersioning`. كل المسارات على الجذر. أي تغيير كاسر في العقد يكسر كل نسخة منشورة من التطبيق دفعة واحدة.
+
+---
+
+## 4. غير موجود ويجب بناؤه ❌
+
+| # | الفجوة | لماذا تهمّ |
+|---|---|---|
+| 1 | **Inventory Reservation** كمفهوم مستقل | المخزون يُخصم عند إنشاء الطلب مباشرة من `SellerOffer.stock`. لا جدول حجوزات، لا TTL، ولا تمييز بين «محجوز» و«مباع». |
+| 2 | **مكنسة الطلبات غير المدفوعة** | انظر §8.2 — أخطر فجوة تشغيلية بعد الضمان. |
+| 3 | **قيد مصروف التوصيل** | `SHIPPING_EXPENSE` معرَّف في دليل الحسابات وتقرأه `economics.service.ts:85` — و**لا شيء يكتب فيه أبداً**. `DeliveryDispatch.feeAmount` (ما يتقاضاه الناقل) يُخزَّن ويُعرض ولا يُقيَّد. |
+| 4 | **نطاق الكوبون** | `Coupon` بلا `sellerId` ولا `categoryId` ولا `productId`. |
+| 5 | **Payment webhook** | لا نقطة استقبال لتأكيد بوابة دفع. |
+| 6 | **Outbox على الخادم** | العميل عنده outbox؛ الخادم لا. الأحداث التي تلي `$transaction` (النقاط، العضوية، الإحالات، تحويل الـdrop) تُفقد عند التعطّل. |
+| 7 | **Distributed lock / leader election** | لا شيء يمنع تشغيل نفس الـcron على instance ثانٍ. |
+| 8 | **Observability** | لا OpenTelemetry، لا metrics، لا structured logging، ولا health check حقيقي (`modules/health/` = 42 سطراً). |
+
+---
+
+## 5. أخطاء ومشاكل معمارية 🏗️
+
+### 5.1 أربع نسخ من `restock`
+
+| الموقع | ملاحظة |
+|---|---|
+| `orders/workflow/seller-order-workflow.service.ts:170` | النسخة «الرسمية» |
+| `seller-commerce/seller-orders.service.ts:464` | نسخة خاصة |
+| `returns/returns.service.ts:1001` | نسخة خاصة |
+| `orders/orders.service.ts:158-172` | **مضمّنة inline داخل `cancel`** |
+
+الأربع متكافئة دلالياً اليوم. الخطر أن الخامسة لن تكون — وقد كُتب في تعليق الخدمة الرسمية أنها وُجدت لتوحيد ثلاث نسخ، ثم عادت أربعاً.
+
+### 5.2 عدّادات لا تُعكَس أبداً
+`checkout.service.ts:310` يزيد `Product.ordersCount`، و`claimFlashSaleUnits` يزيد `quantity_sold`. **لا مسار إلغاء ولا استرجاع ينقص أياً منهما.**
+
+و`ordersCount` مدخل في ترتيب الكتالوج (`discovery.service.ts:135`) وفي ترتيب المصممة (`stylist-ranker.ts:257`) وفي حقيقة البطاقة «اشترتها N امرأة». كل طلب ملغى يضخّم الرقم للأبد، والمنصة تعِد بأن هذه الأرقام صادقة.
+
+### 5.3 الـcheckout ليس ذرّياً من طرف إلى طرف
+`checkout.service.ts:193-355` معاملة واحدة نظيفة. لكن بعدها وخارجها: بدء الدفع، `confirm()`، كسب النقاط، تسجيل العضوية، تأهيل الإحالة، تحويل الـdrop. تعطّل في المنتصف يترك طلباً بمخزون مخصوم ونقاط غير مكتسبة. بعضها ملفوف بـ`try/catch` عمداً — وهو القرار الصحيح، لأن قياساً يجب ألا يكلّف امرأة طلبها — لكن لا آلية تعويض بعده.
+
+### 5.4 `EconomicsService` يحقن `PrismaService` لا `TransactionClient`
+`analytics/economics.service.ts:94` — وهذا سبب فشل اختباراته السبعة (§10).
+
+---
+
+## 6. المخاطر الأمنية 🔒
+
+**التقييم العام: قوي بشكل غير معتاد لمشروع بهذا الحجم.** لم أجد ثغرة IDOR واحدة في المسارات المالية التي فحصتها. الملكية تُفرض داخل الخدمات باستمرار (`invoices.service.ts:370-410` نموذج جيد). المسارات العامة 29 فقط وكلها مبرَّرة.
+
+| الخطورة | المسألة |
+|---|---|
+| 🟠 متوسط | **`AuthorizationGuard` يفشل مفتوحاً**: `authorization.guard.ts:32` — `if (policies.length === 0) return true`. المسار الذي لا يعلن سياسة يُسمح لأي حساب موثَّق. الحماية الفعلية تأتي من فحص الملكية داخل الخدمة، أي أن ضمان التفويض **لا يمكن قراءته من التصريحات** بل من قراءة 171 خدمة. `POST /invoices/seller-order/:id` مثال: لا decorator، والحماية كلها في `assertMayIssue`. |
+| 🟠 متوسط | **Throttler في الذاكرة**: مع N instance يصبح حدّ الـbrute-force على `/auth/otp/login/verify` أكبر N مرة. |
+| 🟠 متوسط | **مراجعات بلا شراء** (§3.4) — سطح إساءة لسمعة البائعات. |
+| 🟡 منخفض | **سباق قراءة-ثم-كتابة في تفرّد المراجعة**: `assertReviewIsUnique` يبحث ثم يكتب، والقيد الفريد `(productId, userId, orderId)` لا يمسك الحالة لأن `orderId = NULL` مميز عن نفسه في Postgres. طلبان متزامنان ينشئان مراجعتين. |
+| 🟡 منخفض | **`AuditLog` بلا هدف مُفهرَس** (§3.5) — تحقيق ما بعد الحادث أصعب مما ينبغي. |
+| ✅ سليم | `dev-inbox` (يكشف رموز OTP بلا جلسة) محمي بثلاث طبقات: علم صريح + رفض الإقلاع في الإنتاج + رفض المتحكم ذاتياً، ويردّ 404 لا 403 كي لا يتعلّم فاحصٌ بوجوده. |
+| ✅ سليم | webhook التوصيل يتحقق من التوقيع **قبل** أي تفسير، ويسجّل الحكم على صف الحدث للمراجعة. |
+| ✅ سليم | فصل الوسائط العامة/الخاصة مع حماية صريحة من path traversal في `main.ts` — وثيقة هوية بائعة لا يمكن أن تهبط في مجلد يُخدَم علناً. |
+
+---
+
+## 7. مشاكل الأداء ⚡
+
+| # | المسألة | القياس |
+|---|---|---|
+| 1 | **297 استدعاء `findMany` بلا `take`** — منها **108 على جداول عالية الحجم** (`order`, `sellerOrder`, `orderItem`, `product`, `user`, `commerceContent`, `walletTransaction`). | مسح آلي على كامل `src/` |
+| 2 | `analytics.service.ts:117` يحمّل **كل** طلبات النافذة في الذاكرة ثم يجمّعها في JS. والسطور 222 و272 و320 و390 و428 مثلها. عند 100 ألف طلب/شهر تُقرأ كلها في كل فتح للوحة. | — |
+| 3 | `commissions.service.ts:365` — `releaseDueEscrow` يجلب كل الطرود المستحقّة بلا `take` ثم يعالجها بحلقة `await` متسلسلة. | — |
+| 4 | Offset pagination في كل مكان (§3.7). | — |
+| 5 | كاش in-process بسعة 5000 وإخراج «أقدم إدخال» — ليس LRU، ولا تماسك بين النسخ. | `common/cache/cache.service.ts` |
+| 6 | 27 موضعاً فيه `await prisma` داخل حلقة `for` (N+1 كتابة). | — |
+| 7 | الوسائط تُخدَم من قرص الـAPI مع `sharp` للاشتقاقات — لا CDN، والمعالجة تنافس الـrequest loop على نفس الـCPU. | `main.ts` |
+
+**ما هو صحيح بالفعل:** 582 فهرساً بينها فهارس مسار ساخن مقصودة (`20260907130000_hot_path_indexes`)، وحقول roll-up مخزّنة (`rankScore`, `minPriceSyp`, `liveStock`) — لأن ترتيب كتالوج على تعبير هو مسح تسلسلي، وترتيبه على عمود هو فهرس.
+
+---
+
+## 8. مشاكل الـBusiness Logic 💼
+
+### 8.1 ✅ الضمان لا يُفرَج عنه أبداً — **كان مانع إطلاق، أُغلق**
+
+`CommissionsService.releaseDueEscrow()` (`commissions.service.ts:363`) مكتوبة بالكامل وصحيحة منطقياً. و**لا شيء يستدعيها**: لا `@Cron`، لا route، ولا مستدعٍ خارج الـspec الخاص بها. `CommissionsModule` لا يسجّل أي scheduler.
+
+سلسلة النتيجة:
+
+```
+escrowReleased يبقى false للأبد
+   ↓
+claimableLedgers (seller-payouts.service.ts:254) يشترط escrowReleased: true
+   ↓
+كل طلب دفع من كل بائعة يعود بصفر
+   ↓
+لا أحد يُدفع له، أبداً
+```
+
+تعليق في `returns.scheduler.ts:11` يشير إلى «المهام الليلية (الإفراج عن الضمان الساعة 3 فجراً)» — **تلك المهمة غير موجودة.** الوثيقة تصف نظاماً لم يُوصَل.
+
+### 8.2 ✅ لا مهلة على الطلبات غير المدفوعة — أُغلق
+
+`CodTrustScheduler` (كل 10 دقائق) يُطلق سراح طلبات النقد المعلّقة — لكن **فقط تلك التي لها `CodRiskAssessment` في حالة `PENDING`**.
+
+الطلب الإلكتروني الذي بدأ ولم يُدفع، أو طلب نقدي لم يتطلب تأكيداً، **يبقى `PENDING_PAYMENT` للأبد بمخزون مخصوم**. سلة مهجورة واحدة = فستان لا تستطيع امرأة أخرى شراءه، إلى الأبد، والبائعة لا تعرف السبب.
+
+### 8.3 🟠 الكوبون المموَّل من بائعة يُحمَّل على كل البائعات
+
+`Coupon` بلا `sellerId`. في `checkout.service.ts:240-247`: `sellerFundsDiscount = coupon.fundedBySeller` ثم تُخصم الحصة من `commissionBase` لـ**كل** مجموعة بائعة في السلة. لو أنشأت بائعة A كوبوناً، دفعت بائعة B جزءاً من ثمنه دون أن تعلم.
+
+### 8.4 ✅ هامش المساهمة مبالغ فيه هيكلياً — أُغلق
+
+لا شيء يقيّد `SHIPPING_EXPENSE` (§4، البند 3). المنصة تقيّد إيراد التوصيل ولا تقيّد تكلفته. **كل رقم ربحية في لوحة الإدارة أعلى من الحقيقة بكامل تكلفة الشحن** — وهذه هي الأرقام التي تُبنى عليها قرارات التسعير.
+
+### 8.5 ✅ عدّادات الترتيب لا تُعكس — أُغلق، §5.2
+
+---
+
+## 9. ماذا يحدث عند عدد كبير من المستخدمين والبائعين والطلبات 📈
+
+### 9.1 🚫 لا يمكن تشغيل أكثر من instance واحد — قيد مقبول وموثَّق
+
+هذه أهم فجوة في هذا القسم، وهي فجوة **بنية** لا كود:
+
+| المشترك | ما يحدث عند instance ثانٍ |
+|---|---|
+| **20 مهمة `@Cron`** | تعمل مرّتين. المال محمي بـ`reference` الفريد في الدفتر (idempotent) — لكن **حملات الإشعارات، مكنسة الوسائط، مزامنة أسعار الصرف، ومكانس الاتجاهات ليست كذلك** → إشعارات مكررة للعميلات. |
+| **`CacheService`** | ذاكرة لكل عملية → عميلة تقرأ كتالوجاً قديماً وأخرى جديداً. |
+| **`ThrottlerGuard`** | حد المعدل × عدد النسخ. |
+| **`ChatRealtimeGateway`** | WebSocket مكتوب يدوياً بلا pub/sub → رسالة لا تصل لمستخدمة متصلة بنسخة أخرى. |
+| **`LocalDiskDriver`** | صورة مرفوعة على النسخة A غير موجودة على B. |
+| **`EventEmitter2`** | أحداث in-process لا تعبر حدود العملية. |
+
+**الجيّد:** كل هذه المشتركات **خلف واجهات ضيّقة مقصودة** (`MediaStorageDriver`, `CacheService`, `PaymentProvider`, `DeliveryProvider`). الاستبدال إضافة صنف لا إعادة كتابة — وهذا ما يجعل المرحلة 3 أسبوعين لا شهرين.
+
+### 9.2 عند 10 آلاف طلب/يوم
+- لوحة التحليلات تصبح غير قابلة للاستخدام (§7، البند 2).
+- `releaseDueEscrow` — لو فُعّلت — تجلب آلاف الصفوف دفعة واحدة وتعالجها متسلسلة.
+- الصفحات العميقة في الكتالوج تتحوّل إلى مسح تسلسلي.
+
+### 9.3 عند 5 آلاف بائعة
+- `analytics.service.ts:421` و`economics.service.ts:170` يحمّلان كل المستخدمين.
+- مكانس `seller-intelligence` و`trends` الليلية تعالج كل بائعة على التسلسل في عملية واحدة.
+
+---
+
+## 10. حالة الاختبارات
+
+```
+1345 ✔  ·  7 ✖  ·  109 spec files  ·  npm test → exit 1
+flutter analyze → No issues found
+tsc --noEmit → clean
+```
+
+الفشل السبعة كلها في `analytics/economics.integration.spec.ts`: GMV، AOV، take rate، هامش المساهمة، رحلة توصيل خاسرة، والقيد المعكوس.
+
+**السبب — الرواية الأولى كانت خاطئة، وهذا ما ثبت فعلاً:**
+
+خمّنتُ أولاً أن الخدمة تقرأ خارج المعاملة وترى بيانات الـseed. **ليس صحيحاً.** الـspec يمرّر `tx` فعلاً، والمشكلة أعمق وأبسط: **المعاملة المرتدّة تمنع صفوف هذا الاختبار من الخروج، ولا تمنع صفوف غيره من الدخول.** والنافذة كانت `now ± ساعة`، وهي النافذة التي تكتب فيها كل الـspecs المئة التي تعمل بالتوازي.
+
+التحقّق النهائي: الاختبارات العشرة **تنجح كلها منفردة**، وسبعة منها تفشل داخل الـsuite. عدد الـsub-orders من الـseed داخل نافذة الساعة = **صفر**، لكن داخلها قيود يومية كتبتها specs مجاورة.
+
+**إذن: عيب عزل اختبار عبر الملفات، وليس خطأ حساب في الإنتاج.** لكنه لم يكن بريئاً — سبع تأكيدات على تعريفات GMV والـtake rate لم تكن تحرس شيئاً.
+
+**✅ مُصلَح (المرحلة 2):** كل اختبار صار يملك أسبوعاً خاصاً به في عام 1990، والـfixtures تُختَم بـ`createdAt`/`occurredAt` داخله. بعيد في الماضي فلا يبلغه أي كود يعمل بساعة حقيقية، ومنفصل لكل اختبار فلا يلوّث الملف نفسه.
+
+---
+
+## 11. تحليل: هل نفصل Product Catalog عن Seller Offer؟
+
+**السؤال محسوم — الفصل موجود ويعمل:**
+
+```
+Product                      المنتج المعياري: عنوان، وصف، فئة، ماركة، سمات، GTIN
+  ├─ ProductVariant          الخيارات المعيارية (مقاس، لون)
+  └─ SellerOffer             @@unique([productId, sellerId]) — عرض بائعة واحدة
+       └─ SellerOfferVariant  سعر ومخزون لكل خيار
+```
+
+**ما هو صحيح فيه بالفعل:**
+
+- المخزون على العرض لا على المنتج ✅
+- السعر بعملة البائعة + `priceSyp` مشتق — لأن الترتيب على `price` الخام يقارن أرقاماً عبر عملات: عرض بـ9.50$ كان يُسبَق كل العروض بالليرة ويُقدَّم كـ«الأرخص»، فكان السعر الظاهر يخصّ البائعة الأغلى ✅
+- roll-ups على المنتج (`offersCount`, `minPriceSyp`, `liveStock`) تُحدَّث في نفس معاملة تعديل العرض ✅
+- لقطات ثابتة على `OrderItem` (`titleSnapshot`, `sellerSnapshot`, `imageSnapshot`) فالطلبات التاريخية تنجو من أي تعديل على الكتالوج ✅
+
+**ما ينقص الفصل:**
+
+1. **لا Buy Box.** عند تعدد العروض للمنتج نفسه، البطاقة تعرض الأرخص بـ`priceSyp` فقط — دون وزن للسمعة أو نسبة الرفض أو سرعة التجهيز. هذا يُنشئ سباقاً نحو القاع ويكافئ البائعة الأسوأ خدمة إن كانت الأرخص بليرة واحدة.
+2. **لا مسار استباقي «أضِف عرضك على منتج قائم».** `POST /seller/products` و`POST /seller/offers` منفصلان، لكن اكتشاف المنتج الموجود يعتمد على `admin/catalog/duplicates` — كشف تكرار **إداري بعد الحدوث** — بدل بحث GTIN/عنوان لحظة الإنشاء.
+3. **لا سياسة تحرير للمنتج المشترك.** `Product.createdBySellerId` موجود، لكن ماذا يحدث حين تريد البائعة الثانية تصحيح وصف منتج أنشأته الأولى؟ لا إجابة في الشيفرة.
+
+**التوصية:** لا تعيدوا التصميم. أضيفوا Buy Box قابلاً للشرح — بنفس منهج `ranking/kernel` القائم: نتيجة مخزَّنة مع `rankBreakdown` تقول *لماذا* — وبحث GTIN عند إنشاء المنتج.
+
+---
+
+## 12. الـLedger المطلوب — مقارنة بالموجود
+
+طلبتَ تتبّع: order total / commission / delivery fee / discount / refund / seller payout / COD collection.
+
+| التدفّق | الحساب | الحالة |
+|---|---|---|
+| إجمالي الطلب | `PLATFORM_CASH` / `GATEWAY_RECEIVABLE` / `COURIER_CASH_IN_TRANSIT` حسب الوسيلة | ✅ `commissions.service.ts:410-436` |
+| العمولة | `COMMISSION_REVENUE` — على القاعدة بعد الخصم | ✅ |
+| رسوم التوصيل (إيراد) | `SHIPPING_REVENUE` | ✅ `commissions.service.ts:250` |
+| **تكلفة التوصيل (مصروف)** | `SHIPPING_EXPENSE` | ❌ **لا كاتب** |
+| الخصم | `PLATFORM_PROMOTION_EXPENSE` حين تموّله المنصة | ✅ |
+| الاسترجاع | `REFUND_ISSUED` / `RETURN_SETTLED` | ✅ |
+| مستحقات البائعة | `SELLER_ESCROW` → `SELLER_PAYABLE` → `PAYOUT_PAID` | ⚠️ مبني، **لكن الجسر الأول معطّل** (§8.1) |
+| تحصيل النقد | `COURIER_CASH_IN_TRANSIT` → `PLATFORM_CASH` عبر `CashSettlement` | ✅ |
+| النقاط | `LOYALTY_LIABILITY` | ✅ |
+| النزاعات | `DISPUTE_HELD` — يجعل المبلغ غير قابل للدفع هيكلياً لأن الدفع يستنزف `SELLER_PAYABLE` وحده | ✅ |
+| فروق الصرف | `FX_ADJUSTMENT` + إعادة تقييم يومية | ✅ |
+| المعلّق | `SUSPENSE` — يجب أن يكون صفراً عند الإقفال | ✅ معرَّف |
+
+**الخلاصة: التصميم الذي طلبته موجود بنسبة 90%.** الناقص بندان فقط: كاتب `SHIPPING_EXPENSE`، وتشغيل جسر الضمان.
+
+---
+
+## 13. المعمارية المستهدفة (Target Architecture)
+
+الفلسفة: **لا تُعِد البناء. أغلق الفجوات، واستبدل المشتركات in-process بمشتركات خارجية عبر الواجهات القائمة.**
+
+```
+                    ┌─────────────────────────────────┐
+                    │  API instances × N (stateless)  │
+                    └───┬──────────┬──────────┬───────┘
+                        │          │          │
+        ┌───────────────┘   ┌──────┘   ┌──────┘
+        ▼                   ▼          ▼
+   ┌──────────┐       ┌──────────┐  ┌──────────────┐
+   │ Postgres │       │  Redis   │  │  S3 / MinIO  │
+   │ (كما هي) │       │ cache +  │  │ خلف الواجهة  │
+   └──────────┘       │ throttle │  │ MediaStorage │
+                      │ + ws pub │  │    Driver    │
+                      │ + lock   │  └──────────────┘
+                      └────┬─────┘
+                           │ leader election
+                    ┌──────▼────────┐
+                    │ Worker (× 1)  │  ← كل الـ@Cron تنتقل هنا
+                    │ + Outbox pump │
+                    └───────────────┘
+```
+
+### الكيانات المستهدفة
+
+| الكيان | الحالة | التغيير المستهدف |
+|---|---|---|
+| **Order** | ✅ سليم | `expiresAt` + مكنسة انتهاء صلاحية |
+| **Seller Order** | ✅ سليم | لا تغيير |
+| **Delivery Shipment** | ✅ سليم | ربط `DeliveryDispatch.feeAmount` بقيد `SHIPPING_EXPENSE` عند التسليم |
+| **Inventory Reservation** | ❌ غير موجود | `InventoryReservation(offerId, offerVariantId, orderId, quantity, expiresAt, state)`. `claimStock` يصبح إنشاء حجز؛ التأكيد يحوّله إلى بيع؛ الانتهاء يعيده. يحلّ §8.2 و§5.2 معاً. |
+| **Financial Ledger** | ✅ ممتاز | إسقاط `FinancialLedgerEntry`، وتحويل قراءة الإدارة إلى `JournalEntry` |
+| **Payment** | ⚠️ stubs | `POST /webhooks/payments/:provider` بنفس نمط webhook التوصيل: توقيع → جدول أحداث → تفسير |
+| **Refund / Return** | ✅ سليم | لا تغيير |
+| **Review** | ⚠️ | `orderItemId` إلزامي + قيد فريد جزئي بدل NULL-distinct |
+| **Coupon** | ⚠️ | `sellerId` / `categoryId` / `productId` اختيارية للنطاق |
+| **Notification** | ⚠️ | FCM HTTP v1 + سكّ توكن OAuth2؛ الإرسال عبر Outbox |
+| **Delivery Provider** | ✅ ممتاز | لا تغيير — هذا هو النموذج المرجعي لبقية المشروع |
+| **Admin Audit Log** | ⚠️ | `targetType` + `targetId` + فهرس؛ interceptor يلتقط كل كتابة إدارية تلقائياً بدل الاعتماد على تذكّر كل خدمة |
+
+---
+
+## 14. قائمة المشاكل مرتبة حسب الأولوية
+
+### 🔴 P0 — موانع إطلاق
+
+| # | المشكلة | الموقع |
+|---|---|---|
+| P0-1 | ✅ **مُغلَق** — `CommissionsScheduler` جديد يشغّل `releaseDueEscrow` الساعة 02:30، مع `take` ومعالجة معزولة الأخطاء و3 اختبارات | `commissions/commissions.scheduler.ts` |
+| P0-2 | ✅ **مُغلَق** — `Order.expiresAt` + `OrdersScheduler` كل 10 دقائق + `expireUnpaid` بفاعل SYSTEM، ومهلة تعتمد على الرail | `orders/orders.scheduler.ts`, `order-expiry.ts` |
+| P0-3 | ✅ **مُغلَق** — حساب `COURIER_PAYABLE` جديد + قيد `DELIVERY_COST_ACCRUED` عند التسوية من `DeliveryDispatch.feeAmount` | `commissions/commissions.service.ts` |
+
+### 🟠 P1 — قبل أول عميلة حقيقية
+
+| # | المشكلة | الموقع |
+|---|---|---|
+| P1-1 | 🚫 **خارج النطاق بقرار العميل** — خادم واحد. القيد موثَّق صراحةً بدل تركه ضمنياً | [DEPLOYMENT.md](DEPLOYMENT.md) |
+| P1-2 | 🚫 **خارج النطاق** — إطلاق نقدي فقط. الحارس `attestsSettlement=false` يبقى فعّالاً | `payments/providers/` |
+| P1-3 | ✅ **مُغلَق** — `restock` صار يعكس `ordersCount` و`quantitySold`؛ نسختان مكررتان حُذفتا (بقيت نسخة الإرجاع عمداً) | `orders/workflow/` |
+| P1-4 | ✅ **مُغلَق** — نوع `Buyer`، `guestSessionId` يُكتب، سلة الضيفة تُقرأ وتُفرَّغ، والمسارات تُنطاق بجلستها | `orders/buyer.ts` |
+| P1-5 | ⏳ مفتوح — 108 استعلام غير محدود على جداول عالية الحجم | متعدد |
+| P1-6 | ⏳ مفتوح — نطاق الكوبون: بائعة تدفع ثمن كوبون بائعة أخرى | `orders/checkout.service.ts` |
+| P1-7 | ✅ **مُغلَق** — نافذة خاصة لكل اختبار في 1990 بدل `now ± ساعة` | `analytics/economics.integration.spec.ts` |
+
+### 🟡 P2 — قبل التوسّع
+
+P2-1 مراجعات بلا شراء · P2-2 قالب push يستهدف API ميت · P2-3 `AuditLog` بلا هدف · P2-4 الدفتر المزدوج وشاشة الإدارة تقرأ القديم · P2-5 لا API versioning · P2-6 لا observability · ~~P2-7 أربع نسخ من `restock`~~ ✅ صارت اثنتين متمايزتين دلالياً · P2-8 offset pagination · P2-9 `AuthorizationGuard` يفشل مفتوحاً
+
+**P2-10 — جديد، اكتُشف أثناء المرحلة 2: fixtures اختبار متصادمة.** 21 ملف spec يبني أرقام هواتف من `${Date.now()}${seq}` ثم `.slice(-8)`. الـ`seq` فريد **داخل العملية**، و`node --test` يشغّل الملفات بالتوازي — فملفّان يدخلان `makeUser` في نفس الميلي‑ثانية بنفس العدّاد يولّدان نفس الرقم، ويموت أحدهما على الفهرس الفريد. الفشل يظهر **باسم الاختبار المجاور** لا باسم الـfixture، وهو ما رأيناه فعلاً: `the entry balances and names every party` فشل في الـsuite ونجح منفرداً.
+
+أُصلحت الملفات الثلاثة التي لمستُها (رقم عشوائي حقيقي من ثماني خانات). الثمانية عشر الباقية تحمل النمط نفسه وستظل ترمش عشوائياً — إصلاحها sed واحد لكنه يمسّ ملفات خارج نطاق هذه المرحلة، فتُركت بقرار واعٍ. **ما دامت قائمة، فـ«الاختبارات خضراء» ليست جملة يُعتمد عليها في CI.**
+
+---
+
+## 14.b المرحلة 2 — الجولة الأولى (موانع الإطلاق)
+
+| التغيير | الملفات | الاختبار الذي يحرسه |
+|---|---|---|
+| **جدولة الإفراج عن الضمان** — `@Cron('0 30 2 * * *')`، مع `take: 500`، وعزل خطأ لكل طرد يُعيد `escrowReleased` إلى `false` عند الفشل فلا يضيع المال في فراغ | `commissions/commissions.scheduler.ts` (جديد) · `commissions.service.ts` · `commissions.module.ts` | 3 اختبارات في `settlement.integration.spec.ts` |
+| **مهلة الطلب غير المدفوع** — عمود `expiresAt` + فهرس `(status, expires_at)`، مهلة حسب الرail (نقد/محفظة/أونلاين 60 د، حوالة 72 س)، ومكنسة كل 10 دقائق | `orders/order-expiry.ts` (جديد) · `orders.scheduler.ts` (جديد) · `checkout.service.ts` · migration `20260909100000` | 4 اختبارات في `order-expiry.integration.spec.ts` |
+| **`SYSTEM` كفاعل إلغاء** — على حافة واحدة فقط: `NEW → CANCELLED_BY_CUSTOMER`. لا يستطيع مؤقّت أن يلغي طرداً بدأت البائعة بتجهيزه | `common/money/order-status.ts` | «طرد بدأت به البائعة لا ينتهي بالمهلة» |
+| **قيد تكلفة التوصيل** — حساب `COURIER_PAYABLE` (التزام، لكل ناقل) + نوع قيد `DELIVERY_COST_ACCRUED`، يُقيَّد من `DeliveryDispatch.feeAmount` عند التسوية بمرجع خاص فلا يتكرر | `ledger/chart-of-accounts.ts` · `commissions.service.ts` · migration `20260909110000` | 3 اختبارات |
+| **عكس عدّادات الطلب** — `restock` صار يعيد المخزون **و** `Product.ordersCount` **و** `quantitySold` للتخفيض؛ بحدّ أدنى صفر | `orders/workflow/seller-order-workflow.service.ts` · `stock-claim.ts` | 3 اختبارات |
+| **حذف نسختين مكررتين من `restock`** — بقيت نسخة الإرجاع عمداً، لأن طرداً سُلّم ثم عاد **بيع حصل فعلاً** ومحوه من تاريخ الطلب إخفاء للإرجاع لا تسجيل له | `orders.service.ts` · `seller-orders.service.ts` · `returns.service.ts` (توثيق الفرق) | — |
+| **Guest checkout** — نوع `Buyer`، كتابة `guestSessionId`، قراءة وتفريغ سلة الضيفة، ونطاق كل قراءة على جلستها. الكوبون **يُرفَض صراحةً** للضيفة (حدوده لكل حساب، فقبوله يجعل كل كود أحادي الاستخدام لا نهائياً) | `orders/buyer.ts` (جديد) · `checkout.service.ts` · `orders.service.ts` · `orders.repository.ts` · `orders.controller.ts` · `cart.service.ts` · `lib/core/router/auth_guard.dart` | 3 اختبارات نطاق |
+| **ترحيل طلبات الضيفة** — عند إنشاء حساب، `migrateToUser` كان ينقل السلة والمحفوظات فقط. وبما أن الضيفة صارت تشتري، فإن تقاعد جلستها كان سيترك طلباتها المدفوعة بلا مالك: لا هي تراها ولا حسابها. صارت تُنقل معها، ومعها تقييم مخاطر النقد فتتبعها سمعتها | `auth/guest.service.ts` | «طلبات الضيفة تتبعها إلى حسابها الجديد» |
+| **إصلاح جانبي** — مكنسة النقد كانت تتخطّى كل طلبات الضيوف (`if (assessment.userId)`)، فمخزونها لم يكن يُعاد أبداً. صارت تمرّ عبر `expireUnpaid` بلا حاجة لحساب | `cod-trust/cod-trust.scheduler.ts` | — |
+| **عزل اختبارات الاقتصاديات** — نافذة خاصة لكل اختبار في 1990 بدل `now ± ساعة` | `analytics/economics.integration.spec.ts` | الاختبارات العشرة نفسها |
+| **توثيق قيد الخادم الواحد** | `docs/DEPLOYMENT.md` (جديد) | — |
+
+**ملاحظة على `restock`:** أُبقيت نسخة `ReturnsService` عمداً وليس سهواً. الفرق دلالي: الإلغاء يعني «لم يحدث بيع» فتُعكس العدّادات، والإرجاع يعني «حدث بيع ثم عاد» فتبقى. توحيدهما في دالة واحدة كان سيخفي الفرق.
+
+---
+
+## 14.c المرحلة 2 — الجولة الثانية (النواة الخلفية ومنطق العمل)
+
+طلبٌ من تسعة بنود. **أربعة منها كانت مبنية بالفعل** وتحققتُ من ذلك قبل أن ألمس شيئاً بدل أن أعيد بناءها:
+
+| البند المطلوب | الحالة قبل العمل |
+|---|---|
+| State machine + منع الانتقالات غير الصحيحة | ✅ `common/money/order-status.ts` — جدول انتقالات بالفاعل، و`assertTransition` على كل حركة |
+| Delivery abstraction بالدوال الستّ | ✅ الستّ موجودة: `createDelivery` · `cancelDelivery` · `getDeliveryStatus` · `getTracking` · `calculateDeliveryFee` (اختيارية بـfallback) · `handleWebhook`. ومعها timeout، وretry محدود بـbackoff أسّي، وتمييز 4xx (جواب الناقل) عن عطل النقل، وتوقيع webhook، و`@@unique([providerCode, externalEventId])` ضد التكرار |
+| منع overselling + concurrency | ✅ `claimStock` بالشرط داخل الـUPDATE، مغطّى باختبارات سباق حقيقية على اتصالات متوازية |
+| دورة الإرجاع/الاسترداد/الاستبدال | ✅ مبنية بالكامل مع محاسبة مقابلة وتسويات مجدولة |
+
+**والخمسة الباقية هي ما بُني في هذه الجولة:**
+
+| ما بُني | لماذا | الملفات | الاختبارات |
+|---|---|---|---|
+| **Inventory Reservation** — جدول `InventoryReservation` بحالات HELD→COMMITTED→CONSUMED/RELEASED، ومكنسة مستقلة كل 10 دقائق | ثلاث مشاكل معاً: (1) الإرجاع لم يكن idempotent — `restock` كان `increment` بلا شرط، فإلغاء أُعيد تنفيذه أو رفض سجّله المندوب والـwebhook معاً كان يزيد الرصيد مرّتين ويبيع المتجر بضاعة لا يملكها؛ (2) طلب عالق في حالة لا يحرّكها شيء كان يأخذ مخزونه للأبد؛ (3) لا فرق بين «متاح» و«محجوز» | `orders/workflow/inventory-reservation.service.ts` (جديد) · `seller-order-workflow.service.ts` · `checkout.service.ts` · `orders.scheduler.ts` · migration `20260909130000` | 6 |
+| **Request Idempotency** — ترويسة `Idempotency-Key`، جدول `IdempotencyRecord`، وinterceptor عام | نقرة مزدوجة على «إتمام الشراء» كانت تُنشئ طلبين: حجزَي مخزون، ومندوباً بفاتورتين. الدفتر كان idempotent والـdispatch كان idempotent، **والطلب الذي يصنع المال لم يكن**. الإدراج نفسه هو القفل — لا read-then-write | `common/idempotency/` (جديد) · `app.module.ts` · migration `20260909140000` · وعميل Flutter عبر 5 طبقات | 10 |
+| **Coupon Scoping** — `sellerId` / `categoryId` / `productId` | `fundedBySeller` كان يقول إن بائعة دفعت ثمن الخصم ولا يقول **أي بائعة**، فكان الخصم يُحسب على السلة كلها ويُخفّض قاعدة عمولة كل بائعة فيها. بائعة B كانت تموّل حملة بائعة A دون أن تعلم | `rewards/coupon-scope.ts` (جديد) · `coupons.service.ts` · `checkout.service.ts` · migration `20260909150000` | 10 |
+| **Review Integrity** — شرط شراء مُسلَّم، والطلب يُحلّ في الخادم لا يأتي من الطلب | `order_id` كان اختيارياً، وبدونه تُكتب المراجعة بـ`verifiedPurchase:false` — فأي حساب يراجع أي منتج لم يشترِه. والمفتاح الفريد كان `(product, user, order)` وPostgres يعتبر NULL مميزاً عن نفسه، فالمراجعة غير الموثّقة لم تكن تصطدم بنفسها أبداً | `reputation/reputation.service.ts` · migration `20260909160000` | 9 |
+| **Admin Audit Coverage** — `targetType`/`targetId` + interceptor يلتقط كل كتابة إدارية | السجل كان يقول من ومتى، ويترك **على ماذا** داخل JSON غير مُفهرس — فسؤال ما بعد الحادث «أرِني كل ما جرى لهذا الطلب» بلا جواب. واثنتا عشرة خدمة فقط كانت تكتب سجلاً، والسطح الإداري أضعافها | `common/audit/` (جديد) · migration `20260909170000` | 9 |
+
+**ترحيل البيانات القائمة.** الطلبات الموجودة قبل النشر لا تحمل حجوزات، و`restock` يرفض — بحق — أن يخترع وحدات لا سجلّ لها. فطلب في طابور بائعة لحظة النشر كان سيُلغى دون أن يعود مخزونه. migration `20260909180000` يملأ حجزاً `COMMITTED` لكل سطر في طلب **ما زال حياً** (من `NEW` حتى `DELIVERY_FAILED`) — لا للمسلَّم ولا للملغى ولا للمرتجع، لأن هؤلاء تسوّى مخزونهم بالفعل تحت الكود القديم ومنحهم حجزاً كان سيعيد الوحدات مرّتين. طُبّق محلياً: **57 سطراً**. والاستعلام idempotent فإعادة تشغيله لا تضيف شيئاً.
+
+**قرارات تصميمية تستحق الذكر:**
+
+- **`SellerOffer.stock` بقي يعني «المتاح»** لا «الموجود فعلياً». كل استعلام كتالوج وبطاقة منتج وroll-up يقرأ هذا العمود؛ إعادة تعريفه كانت ستحوّل التوفّر إلى join على أسخن مسار في المنصة.
+- **نسخة `restock` في الإرجاع بقيت منفصلة** عمداً: الإلغاء يعني «لم يحدث بيع» فتُعكس العدّادات ويُفرَج عن الحجز، والإرجاع يعني «حدث بيع ثم عاد» — بضاعة جديدة تصل، لا حجز يُلغى. توحيدهما كان سيمحو الفرق.
+- **الـidempotency اختياري من العميل** لا إلزامي: إلزامه كان سيرفض كل نسخة منشورة من التطبيق. العميل يرسله حيث يهمّ.
+- **سجل التدقيق يحفظ أسماء الحقول لا قيمها.** سجل ينسخ الأجسام يصير مخزناً ثانياً غير محروس لعناوين العميلات وبيانات البائعات المصرفية؛ والمال الذي يحتاج المبالغ له مسار خاص في `FinancialAuditService`.
+
+---
+
+## 14.d المرحلة 2 — الجولة الثالثة (الأمن والموثوقية)
+
+| ما بُني | لماذا | الملفات | الاختبارات |
+|---|---|---|---|
+| **التفويض يفشل مغلقاً** — `@SelfScoped('السبب')` على مستوى المتحكّم، والحارس يرفض ما لا يعلن شيئاً | `if (policies.length === 0) return true` كان يفتح كل مسار لا يعلن سياسة لأي حساب موثَّق. عملياً كانت محميّة بفحص ملكية داخل الخدمة — لكن الضمان **لم يكن يُقرأ من التصريح**، بل من فتح 171 خدمة، ومسار جديد يُضاف إلى أحد تلك المتحكّمات كان يرث «مسموح» بصمت. 19 متحكّماً صار كلٌّ منها يقول **كيف** يفرض الملكية، والسبب هو ما يقرأه المراجع بدل الخدمة | `common/decorators/self-scoped.decorator.ts` (جديد) · `authorization.guard.ts` · 19 متحكّماً | 3 (فحص بنيوي يفشل في CI عند كتابة متحكّم غير مصنَّف) |
+| **`@Public()` يمرّ صراحةً** | الحارس لم يكن يعرف `@Public`؛ الفشل المغلق كان سيرفض تسجيل الدخول والـOTP والـwebhooks والكتالوج العام — أي يُخرج المنصة من الخدمة | `authorization.guard.ts` | مغطّى بالفحص البنيوي |
+| **Structured logging + معرّف طلب** | سطر Nest الملوّن لا يربط تحذيراً بالطلب الذي سبّبه. وبعملية واحدة تخدم كل العميلات، كل العمل متشابك في مجرى واحد — فـ«طلبها فشل حوالي الرابعة» تصير قراءة جدار أسطر وتخميناً. الآن كل سطر كائن JSON يحمل `requestId`، وهو **نفسه** ما يعود للعميلة في `request_id` وفي ترويسة `X-Request-Id` | `common/observability/` (جديد) · `all-exceptions.filter.ts` · `jwt-auth.guard.ts` · `main.ts` | 11 |
+| **تنقيح الأسرار في السجلّ** — بما فيها **رقم الهاتف** | الرقم على هذه المنصة **هو** الهوية: الدخول رمز يُرسل إليه. رقم في سجلّ هو معظم ما يحتاجه مهاجم | `structured-logger.ts` | مغطّى |
+| **مفتاح idempotency إلزامي — خلف مفتاح تشغيل** | جوابك «نعم». لكن إلزامه الآن يرفض كل نسخة منشورة من التطبيق. `IDEMPOTENCY_REQUIRED_ROUTES` فارغ افتراضياً؛ تُشغّله بعد انتشار التحديث فتُغلق الثغرة نهائياً بدل الاعتماد على أن العميل يتذكّر | `configuration.ts` · `idempotency.interceptor.ts` | 3 |
+| **شاشة مالية الإدارة تقرأ الدفتر الحقيقي** | كانت تقرأ `FinancialLedgerEntry` — بقايا قيد مفرد لا تكتب فيه إلا خدمة العمولات. فشاشة تسمّي نفسها «آخر 50 حركة مالية» كانت تعرض العمولات فقط: كل إنفاق محفظة واسترداد وحجز نزاع وتسوية مندوب واستحقاق نقاط ودفعة **غائب**، ولا شيء يميّز ذلك عن يوم هادئ | `admin/admin.service.ts` | — |
+| **إزالة رمش الاختبارات** — 29 ملف spec | أرقام هواتف من `Date.now()+seq` فريدة **داخل العملية**، و`node --test` يشغّل الملفات بالتوازي. الفشل كان يظهر **باسم الاختبار المجاور** لا باسم الـfixture | 29 spec | الـsuite نفسه |
+
+**تصحيح ذاتي:** كتبتُ أن الـaudit interceptor يلتقط رفض `AuthorizationGuard`. خطأ — الحرّاس تسبق الـinterceptors. صحّحتُ التعليق: تلك الرفوض تُكتب في `SecurityEvent` من الحارس نفسه، وما يلتقطه الـinterceptor هو الرفض المرمي **داخل** المعالج.
+
+**وثيقة النشر** ([DEPLOYMENT.md](DEPLOYMENT.md)) تحمل الآن: `LOG_FORMAT`، ومتى تُشغّل `IDEMPOTENCY_REQUIRED_ROUTES`، وقاعدة التصنيف الثلاثية للمسارات.
+
+---
+
+## 15. خطة التنفيذ
+
+### المرحلة 2 — إيقاف النزيف (~3–5 أيام)
+
+1. `CommissionsScheduler` + `@Cron(EVERY_DAY_AT_3AM)` → `releaseDueEscrow`، مع `take` وتقطيع دفعي
+2. `Order.expiresAt` + مكنسة تُلغي عبر `OrdersService.cancel` — أي عبر المسار الوحيد الذي يعرف كيف يُعيد المخزون
+3. قيد `SHIPPING_EXPENSE` عند التسليم من `DeliveryDispatch.feeAmount`
+4. عكس `ordersCount` و`quantity_sold` في مسار الإلغاء والاسترجاع
+5. حقن `TransactionClient` في `EconomicsService` → إصلاح الاختبارات السبعة
+
+**بوابة الخروج:** `npm test` → 1352/1352، وطلب تجريبي كامل ينتهي بمبلغ قابل للدفع في `SELLER_PAYABLE`.
+
+### المرحلة 3 — قابلية التوسّع الأفقي (~1–2 أسبوع)
+
+6. Redis: كاش + throttler storage + Chat pub/sub + distributed lock
+7. فصل عملية `worker` تحمل كل الـ`@Cron` مع leader election
+8. `S3Driver` خلف `MediaStorageDriver` القائم
+9. `take` + cursor pagination على الاستعلامات الـ108
+10. Outbox على الخادم للأحداث التالية للمعاملة
+
+### المرحلة 4 — جاهزية تجارية (~1–2 أسبوع)
+
+11. `InventoryReservation`
+12. Payment webhook + أول بوابة حقيقية
+13. نطاق الكوبون
+14. Buy Box قابل للشرح
+15. `orderItemId` إلزامي على المراجعة
+
+### المرحلة 5 — تصلّب (مستمر)
+
+16. `AuditLog.targetType/targetId` + interceptor · 17. إسقاط `FinancialLedgerEntry` · 18. OpenTelemetry + `/metrics` · 19. `/v1` وسياسة إهلاك · 20. توحيد `restock` · 21. `AuthorizationGuard` يفشل مغلقاً مع allowlist صريح
+
+---
+
+## 16. الملفات التي ستحتاج تعديلاً
+
+### المرحلة 2 — 11 ملفاً
+
+```
+backend/src/modules/commissions/commissions.module.ts        تسجيل scheduler
+backend/src/modules/commissions/commissions.scheduler.ts     جديد
+backend/src/modules/commissions/commissions.service.ts       take + معالجة دفعية
+backend/prisma/schema.prisma                                 Order.expiresAt
+backend/prisma/migrations/<new>/migration.sql                جديد
+backend/src/modules/orders/checkout.service.ts               ضبط expiresAt
+backend/src/modules/orders/orders.scheduler.ts               جديد
+backend/src/modules/orders/orders.service.ts                 عكس العدّادات
+backend/src/modules/returns/returns.service.ts               عكس العدّادات
+backend/src/modules/delivery/shipments.service.ts            قيد مصروف الشحن
+backend/src/modules/analytics/economics.service.ts           حقن Tx
+```
+
+### المرحلة 3 — ~14 ملفاً
+
+`app.module.ts` · `main.ts` · `common/cache/*` · `chats/chat-realtime.gateway.ts` · `modules/media/storage/s3.driver.ts` (جديد) · `media.module.ts` · `worker.ts` (جديد) · كل ملفات `*.scheduler.ts` (نقل) · `common/dto/pagination.dto.ts` · الخدمات الست الأثقل المذكورة في §7.
+
+### المرحلة 4 — ~12 ملفاً
+
+`schema.prisma` + migration · `orders/workflow/stock-claim.ts` · `orders/checkout.service.ts` · `payments/providers/*` · `payments/webhooks/payments.controller.ts` (جديد) · `rewards/coupons.service.ts` · `reputation/reputation.service.ts` · `ranking/` للـBuy Box.
+
+---
+
+## 17. قرارات أحتاجها منك قبل التنفيذ ❓
+
+1. **هل الإطلاق نقدي فقط؟** إن كان نعم، ينزل P1-2 إلى P2 ونركّز على مسار COD وحده. إن لا — **أي بوابة دفع سورية بالتحديد؟** الواجهة جاهزة، أحتاج العقد والوثائق فقط.
+
+2. **هل الإطلاق على خادم واحد؟** إن كان نعم للأشهر الأولى، **تُؤجَّل المرحلة 3 بالكامل** ونوفّر أسبوعين — لكن يجب توثيق «نسخة واحدة فقط» كقيد تشغيلي صريح، لأن تشغيل ثانية بالخطأ سيرسل إشعارات مكررة للعميلات.
+
+3. **من يتحمّل تكلفة التوصيل حين تخسر الرحلة؟** المنصة أم البائعة؟ هذا يحدد الطرف المقابل في قيد `SHIPPING_EXPENSE`، ولا يمكنني استنتاجه من الشيفرة.
+
+4. **نطاق الكوبون:** هل تريد كوبونات على مستوى البائعة أصلاً عند الإطلاق، أم كلها كوبونات منصة عامة؟ إن كانت الثانية، يتحوّل P1-6 من كود إلى توثيق.
+
+5. **مراجعات بلا شراء:** أُغلقها بالكامل (شراء مُسلَّم فقط)، أم أُبقيها مع وسم ظاهر «مراجعة غير موثَّقة»؟
+
+6. **Guest checkout:** أُكمله أم أُزيل النصف الموجود؟ الوضع الحالي — سلة ضيف تعمل وcheckout يرفض — أسوأ من كلا الخيارين.
+
+7. **قاعدة اختبار نظيفة:** هل أضيف `db:test` بقاعدة منفصلة؟ بدونها لا يمكن تشغيل الـ109 spec بثقة، ولا يمكنني الجزم بأن أرقام الاقتصاديات صحيحة في الإنتاج.
+
+8. **الأسطول الداخلي:** `InternalCourierProvider` موجود. هل ستشغّلون مندوبين خاصين بكم عند الإطلاق، أم شركات خارجية فقط؟ لا يغيّر الشيفرة — يغيّر ما نختبره أولاً.

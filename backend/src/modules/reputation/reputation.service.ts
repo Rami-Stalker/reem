@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ForbiddenException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -308,20 +309,31 @@ export class ReputationService {
   async createProductReview(userId: string, productId: string, dto: CreateReviewDto) {
     const product = await this.prisma.product.findUnique({ where: { id: productId } });
     if (!product) throw new NotFoundException('Product not found');
-    await this.assertReviewIsUnique('product', {
-      productId,
-      userId,
-      orderId: dto.order_id ?? null,
-    });
 
-    const verifiedPurchase = dto.order_id
-      ? await this.hasPurchasedProduct(userId, productId, dto.order_id)
-      : false;
+    // The purchase is the credential.
+    //
+    // `order_id` used to be optional and, when absent, the review was written
+    // anyway with `verifiedPurchase: false`. So any account could review any
+    // product it had never bought — and any seller — with moderation as the
+    // only thing standing between the catalogue and a competitor with a
+    // scripted client. The order is now **resolved here** rather than taken
+    // from the request: the client's hint is honoured when it names one of her
+    // own delivered orders, and ignored otherwise, so no id in a request body
+    // can make a purchase that did not happen.
+    const orderId = await this.requireDeliveredProductPurchase(
+      userId,
+      productId,
+      dto.order_id ?? null,
+    );
+
+    await this.assertReviewIsUnique('product', { productId, userId });
+
+    const verifiedPurchase = true;
     const review = await this.prisma.productReview.create({
       data: {
         productId,
         userId,
-        orderId: dto.order_id ?? null,
+        orderId,
         rating: dto.rating,
         title: dto.title?.trim() || null,
         body: dto.body?.trim() || null,
@@ -338,20 +350,22 @@ export class ReputationService {
     if (userId === sellerId) {
       throw new BadRequestException('Sellers cannot review themselves');
     }
-    await this.assertReviewIsUnique('seller', {
-      sellerId,
+    // Same rule as a product review: only a woman this boutique has actually
+    // delivered to may rate it. See `createProductReview`.
+    const orderId = await this.requireDeliveredSellerPurchase(
       userId,
-      orderId: dto.order_id ?? null,
-    });
+      sellerId,
+      dto.order_id ?? null,
+    );
 
-    const verifiedPurchase = dto.order_id
-      ? await this.hasPurchasedFromSeller(userId, sellerId, dto.order_id)
-      : false;
+    await this.assertReviewIsUnique('seller', { sellerId, userId });
+
+    const verifiedPurchase = true;
     const review = await this.prisma.sellerReview.create({
       data: {
         sellerId,
         userId,
-        orderId: dto.order_id ?? null,
+        orderId,
         rating: dto.rating,
         title: dto.title?.trim() || null,
         body: dto.body?.trim() || null,
@@ -737,27 +751,100 @@ export class ReputationService {
     return Boolean(order);
   }
 
+  /**
+   * The delivered order behind a product review, or a refusal.
+   *
+   * `DELIVERED` and not merely paid: a woman who has not received the garment
+   * has nothing to say about it yet, and a review written from the payment
+   * screen is the easiest kind to manufacture.
+   *
+   * A hint that does not check out is treated as absent rather than as an
+   * error — she may be reviewing from an old screen — and the search then
+   * finds any delivered order of hers containing the product. What she cannot
+   * do is name somebody else's order: every query here is scoped to `userId`.
+   */
+  private async requireDeliveredProductPurchase(
+    userId: string,
+    productId: string,
+    hint: string | null,
+  ): Promise<string> {
+    if (hint && (await this.hasPurchasedProduct(userId, productId, hint))) {
+      return hint;
+    }
+
+    const order = await this.prisma.order.findFirst({
+      where: {
+        userId,
+        sellerOrders: {
+          some: {
+            status: SellerOrderStatus.DELIVERED,
+            items: { some: { productId } },
+          },
+        },
+      },
+      orderBy: { createdAt: 'desc' },
+      select: { id: true },
+    });
+    if (!order) {
+      throw new ForbiddenException({
+        code: 'REVIEW_REQUIRES_PURCHASE',
+        message: 'يمكنكِ تقييم المنتجات التي استلمتِها فقط',
+      });
+    }
+    return order.id;
+  }
+
+  /** The same rule for a boutique: she must have received something from it. */
+  private async requireDeliveredSellerPurchase(
+    userId: string,
+    sellerId: string,
+    hint: string | null,
+  ): Promise<string> {
+    if (hint && (await this.hasPurchasedFromSeller(userId, sellerId, hint))) {
+      return hint;
+    }
+
+    const order = await this.prisma.order.findFirst({
+      where: {
+        userId,
+        sellerOrders: {
+          some: { sellerId, status: SellerOrderStatus.DELIVERED },
+        },
+      },
+      orderBy: { createdAt: 'desc' },
+      select: { id: true },
+    });
+    if (!order) {
+      throw new ForbiddenException({
+        code: 'REVIEW_REQUIRES_PURCHASE',
+        message: 'يمكنكِ تقييم المتاجر التي اشتريتِ منها فقط',
+      });
+    }
+    return order.id;
+  }
+
+  /**
+   * One voice per customer, checked here for the message and enforced by the
+   * database for the truth.
+   *
+   * This check alone was the whole defence, and it is a read followed by a
+   * write: two requests arriving together both found nothing and both wrote.
+   * The unique index added alongside this refuses the loser. This stays
+   * because "you have already reviewed this" is a better answer than a
+   * constraint violation.
+   */
   private async assertReviewIsUnique(
     type: 'product' | 'seller',
     input: {
       productId?: string;
       sellerId?: string;
       userId: string;
-      orderId: string | null;
     },
   ) {
     const where =
       type === 'product'
-        ? {
-            productId: input.productId,
-            userId: input.userId,
-            orderId: input.orderId,
-          }
-        : {
-            sellerId: input.sellerId,
-            userId: input.userId,
-            orderId: input.orderId,
-          };
+        ? { productId: input.productId, userId: input.userId }
+        : { sellerId: input.sellerId, userId: input.userId };
     const existing =
       type === 'product'
         ? await this.prisma.productReview.findFirst({ where })

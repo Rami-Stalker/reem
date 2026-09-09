@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter_riverpod/legacy.dart';
 import 'package:reem/core/result/result.dart';
 
@@ -64,6 +66,19 @@ class CheckoutController extends StateNotifier<CheckoutState> {
   final GetPaymentMethodsUseCase _getPaymentMethods;
   final GetDeliveryQuoteUseCase _getDeliveryQuote;
   final PlaceOrderUseCase _placeOrder;
+
+  /// Names the basket she is buying, across every attempt at buying it.
+  /// Null between orders; see [place].
+  String? _orderIntentKey;
+
+  /// 128 bits from the platform's secure source, hex-encoded. Not a UUID
+  /// library: the server treats the key as opaque, so a dependency to shape it
+  /// would buy nothing.
+  String _newIntentKey() {
+    final random = Random.secure();
+    final bytes = List<int>.generate(16, (_) => random.nextInt(256));
+    return bytes.map((b) => b.toRadixString(16).padLeft(2, '0')).join();
+  }
   final VerifyPaymentUseCase _verifyPayment;
 
   Future<void> init() async {
@@ -118,7 +133,23 @@ class CheckoutController extends StateNotifier<CheckoutState> {
     bool privacyMask = false,
   }) async {
     state = state.copyWith(isPlacing: true, clearError: true);
+
+    // One key per *intent*, not per attempt.
+    //
+    // Checkout takes seconds on a mobile connection, and a request that times
+    // out on the handset may well have succeeded on the server. Without a
+    // stable key, tapping again — or a transport-level retry — placed a second
+    // order: two stock claims and a courier at her door with two bills. The
+    // key is minted once for this basket and kept until an order actually
+    // comes back, so every retry of the same intent carries it.
+    //
+    // It is deliberately *not* cleared on failure: a failed request releases
+    // the key on the server, so reusing it is both safe and what makes the
+    // retry idempotent if the failure was only in the reply.
+    final key = _orderIntentKey ??= _newIntentKey();
+
     final result = await _placeOrder(
+      idempotencyKey: key,
       shipping: shipping,
       addressId: addressId,
       saveAddress: saveAddress,
@@ -135,6 +166,9 @@ class CheckoutController extends StateNotifier<CheckoutState> {
     }
 
     final placed = (result as Success<PlacedOrder>).data;
+    // The basket became an order. Anything she buys after this is a new
+    // intent and must not be answered from this one's record.
+    _orderIntentKey = null;
     if (placed.requiresOnlineConfirmation && placed.order.payment != null) {
       await _verifyPayment(placed.order.payment!.id);
     }

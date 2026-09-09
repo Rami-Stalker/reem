@@ -73,6 +73,22 @@
       ],
       "port": 8082,
       "url": "http://127.0.0.1:8082"
+    },
+    {
+      "name": "reem-web-buyer",
+      "runtimeExecutable": "flutter",
+      "runtimeArgs": [
+        "run",
+        "-d",
+        "web-server",
+        "--web-port",
+        "8091",
+        "--web-hostname",
+        "127.0.0.1",
+        "--dart-define=API_BASE_URL=http://127.0.0.1:3001"
+      ],
+      "port": 8091,
+      "url": "http://127.0.0.1:8091"
     }
   ]
 }

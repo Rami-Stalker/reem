@@ -11,9 +11,13 @@ import {
 import { OptionalAuth } from '../../common/decorators/optional-auth.decorator';
 import { Public } from '../../common/decorators/public.decorator';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
+import { SelfScoped } from '../../common/decorators/self-scoped.decorator';
 import { SearchService } from './search.service';
 import { ProductSearchDto, SearchQueryDto } from './dto/search-query.dto';
 
+@SelfScoped(
+  "search is public; history is read and cleared for the caller's own id",
+)
 @Controller('search')
 export class SearchController {
   constructor(private readonly search: SearchService) {}

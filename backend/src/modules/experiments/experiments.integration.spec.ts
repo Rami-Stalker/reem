@@ -101,7 +101,7 @@ async function startExperiment(world: World, over: { key?: string } = {}) {
         data: {
           name: 'مسؤولة',
           username: `ex_${uniq()}`,
-          phone: `+96391${uniq().slice(-7)}`,
+          phone: `+96391${Math.floor(1000000 + Math.random() * 8999999)}`,
           passwordHash: 'x',
         },
       })
@@ -117,7 +117,7 @@ dbTest('a draft experiment shows everybody the control', async (world) => {
     data: {
       name: 'مسؤولة',
       username: `ex_${uniq()}`,
-      phone: `+96391${uniq().slice(-7)}`,
+      phone: `+96391${Math.floor(1000000 + Math.random() * 8999999)}`,
       passwordHash: 'x',
     },
   });
@@ -283,7 +283,7 @@ dbTest('a misconfigured experiment serves the control rather than breaking', asy
     data: {
       name: 'مسؤولة',
       username: `ex_${uniq()}`,
-      phone: `+96391${uniq().slice(-7)}`,
+      phone: `+96391${Math.floor(1000000 + Math.random() * 8999999)}`,
       passwordHash: 'x',
     },
   });

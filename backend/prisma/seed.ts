@@ -1426,7 +1426,9 @@ async function main() {
   console.log('  Seller:   +963931000101 / Seller123!   (رهف الشامي — أتيليه رهف)');
   console.log('  Customer: +966500000005 / Password123! (مها)');
   console.log('  Customer: +963932000201 / Password123! (نور الدين)');
-  console.log('\n  Every demo seller uses Seller123!, every shopper Password123!.');
+  console.log('  Courier:  +963940000001 / Courier123!  (فريق ريم للتوصيل)');
+  console.log('\n  Every demo seller uses Seller123!, every shopper Password123!,');
+  console.log('  every courier Courier123! (+96394000000{1..4}).');
   console.log('  Backend: http://localhost:3000\n');
 }
 

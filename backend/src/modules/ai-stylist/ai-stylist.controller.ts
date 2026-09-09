@@ -12,6 +12,7 @@ import {
 import { Throttle } from '@nestjs/throttler';
 import { AiStylistOutfitStatus, ModestyLevel } from '@prisma/client';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
+import { SelfScoped } from '../../common/decorators/self-scoped.decorator';
 import { PRODUCT_CARD_INCLUDE } from '../../common/catalog/product-include';
 import { PrismaService } from '../../prisma/prisma.service';
 import {
@@ -46,6 +47,9 @@ import { COLOURS, OCCASIONS, SLOTS, slotLabel } from './understanding/stylist-le
  * someone told an assistant about her body, her budget and her occasions, and
  * that is not a thing to hang off an anonymous session token.
  */
+@SelfScoped(
+  "every conversation, outfit and recommendation is read and written through the caller's own id",
+)
 @Controller('ai/stylist')
 export class AiStylistController {
   constructor(

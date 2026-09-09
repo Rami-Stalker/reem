@@ -10,13 +10,28 @@ import {
   Query,
 } from '@nestjs/common';
 import { Throttle } from '@nestjs/throttler';
-import { CurrentUser } from '../../common/decorators/current-user.decorator';
-import { PaginationDto } from '../../common/dto/pagination.dto';
+import { Authorize } from '../../common/decorators/authorize.decorator';
+import {
+  CurrentPrincipal,
+  RequestPrincipal,
+} from '../../common/decorators/current-principal.decorator';
+import { buyerOf } from './buyer';
+import { OrderQueryDto } from './dto/order-query.dto';
 import { isOrderBucket, OrdersService } from './orders.service';
 import { CheckoutService } from './checkout.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { ConfirmCodOrderDto } from '../cod-trust/dto/cod-trust.dto';
 
+/**
+ * A customer's orders — and a guest's.
+ *
+ * `allowGuest`, the same policy the cart carries, because Q46 P1 lets a
+ * visitor buy. Before this she could fill a basket and not pay for it: the
+ * checkout route demanded a signed-in id, so the guest cart was a dead end.
+ * Every route here scopes to `buyerOf(principal)`, which resolves to her
+ * account or to the guest session she is holding — never to neither.
+ */
+@Authorize({ action: 'write', resource: 'cart', allowGuest: true })
 @Controller('orders')
 export class OrdersController {
   constructor(
@@ -27,8 +42,11 @@ export class OrdersController {
   @Throttle({ default: { limit: 20, ttl: 60_000 } })
   @Post('checkout')
   @HttpCode(HttpStatus.CREATED)
-  placeOrder(@CurrentUser('id') userId: string, @Body() dto: CreateOrderDto) {
-    return this.checkout.checkout(userId, dto);
+  placeOrder(
+    @CurrentPrincipal() principal: RequestPrincipal,
+    @Body() dto: CreateOrderDto,
+  ) {
+    return this.checkout.checkout(buyerOf(principal), dto);
   }
 
   /**
@@ -38,31 +56,30 @@ export class OrdersController {
    */
   @Get()
   list(
-    @CurrentUser('id') userId: string,
-    @Query() page: PaginationDto,
-    @Query('bucket') bucket?: string,
+    @CurrentPrincipal() principal: RequestPrincipal,
+    @Query() query: OrderQueryDto,
   ) {
     return this.orders.list(
-      userId,
-      page,
-      bucket && isOrderBucket(bucket) ? bucket : undefined,
+      buyerOf(principal),
+      query,
+      query.bucket && isOrderBucket(query.bucket) ? query.bucket : undefined,
     );
   }
 
   @Get(':id')
   detail(
-    @CurrentUser('id') userId: string,
+    @CurrentPrincipal() principal: RequestPrincipal,
     @Param('id', ParseUUIDPipe) id: string,
   ) {
-    return this.orders.detail(userId, id);
+    return this.orders.detail(buyerOf(principal), id);
   }
 
   @Get(':id/timeline')
   timeline(
-    @CurrentUser('id') userId: string,
+    @CurrentPrincipal() principal: RequestPrincipal,
     @Param('id', ParseUUIDPipe) id: string,
   ) {
-    return this.orders.timeline(userId, id);
+    return this.orders.timeline(buyerOf(principal), id);
   }
 
   /**
@@ -76,38 +93,38 @@ export class OrdersController {
   @Post(':id/cod-confirmation')
   @HttpCode(HttpStatus.OK)
   confirmCod(
-    @CurrentUser('id') userId: string,
+    @CurrentPrincipal() principal: RequestPrincipal,
     @Param('id', ParseUUIDPipe) id: string,
     @Body() dto: ConfirmCodOrderDto,
   ) {
-    return this.checkout.confirmCod(userId, id, dto.code);
+    return this.checkout.confirmCod(buyerOf(principal), id, dto.code);
   }
 
   @Throttle({ default: { limit: 3, ttl: 60_000 } })
   @Post(':id/cod-confirmation/resend')
   @HttpCode(HttpStatus.OK)
   resendCodConfirmation(
-    @CurrentUser('id') userId: string,
+    @CurrentPrincipal() principal: RequestPrincipal,
     @Param('id', ParseUUIDPipe) id: string,
   ) {
-    return this.checkout.resendCodConfirmation(userId, id);
+    return this.checkout.resendCodConfirmation(buyerOf(principal), id);
   }
 
   @Post(':id/cancel')
   @HttpCode(HttpStatus.OK)
   cancel(
-    @CurrentUser('id') userId: string,
+    @CurrentPrincipal() principal: RequestPrincipal,
     @Param('id', ParseUUIDPipe) id: string,
   ) {
-    return this.orders.cancel(userId, id);
+    return this.orders.cancel(buyerOf(principal), id);
   }
 
   @Post(':id/reorder')
   @HttpCode(HttpStatus.OK)
   reorder(
-    @CurrentUser('id') userId: string,
+    @CurrentPrincipal() principal: RequestPrincipal,
     @Param('id', ParseUUIDPipe) id: string,
   ) {
-    return this.orders.reorder(userId, id);
+    return this.orders.reorder(buyerOf(principal), id);
   }
 }

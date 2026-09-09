@@ -56,6 +56,7 @@ final class CheckoutRemoteDataSourceImpl extends BaseRemoteDataSource
 
   @override
   Future<PlacedOrderModel> placeOrder({
+    required String idempotencyKey,
     ShippingInput? shipping,
     String? addressId,
     bool saveAddress = false,
@@ -67,6 +68,7 @@ final class CheckoutRemoteDataSourceImpl extends BaseRemoteDataSource
   }) async {
     final json = await postJson(
       ApiEndpoints.ordersCheckout,
+      idempotencyKey: idempotencyKey,
       body: {
         'address_id': ?addressId,
         if (saveAddress) 'save_address': true,

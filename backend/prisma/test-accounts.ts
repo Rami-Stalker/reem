@@ -1,12 +1,17 @@
 /**
- * Creates (or repairs) three hand-made accounts for manual testing:
- * one SUPER_ADMIN, one approved SELLER, one CUSTOMER — each with a password
- * that works on the phone+password sign-in path.
+ * Creates (or repairs) four hand-made accounts for manual testing:
+ * one SUPER_ADMIN, one approved SELLER, one CUSTOMER and one courier — each
+ * with a password that works on the phone+password sign-in path.
+ *
+ * The courier is here because without one a parcel cannot be delivered, and
+ * without a delivery nothing downstream of it — returns, exchanges, escrow,
+ * reviews — can be tested at all.
  *
  * Idempotent: re-running resets the password, the role and the flags rather
  * than creating a duplicate.
  */
 import {
+  CourierKind,
   Currency,
   PrismaClient,
   SellerLevel,
@@ -65,6 +70,19 @@ const ACCOUNTS: AccountSeed[] = [
     password: 'ReemBuyer#2026',
     role: UserRole.CUSTOMER,
     bio: 'أتسوّق على ريم',
+    location: 'دمشق، سوريا',
+  },
+  {
+    label: 'COURIER',
+    name: 'مندوب ريم — تجريبي',
+    username: 'reem_courier',
+    phone: '+963944444444',
+    password: 'ReemCourier#2026',
+    // Deliberately not a privileged role. What makes this account a courier is
+    // the `Courier` row attached below, which is the only thing the courier
+    // screens check.
+    role: UserRole.CUSTOMER,
+    bio: 'مندوب توصيل للاختبار',
     location: 'دمشق، سوريا',
   },
 ];
@@ -158,7 +176,39 @@ async function main() {
       });
     }
 
-    if (seed.role === UserRole.CUSTOMER) {
+    if (seed.label === 'COURIER') {
+      // Attach the account to a courier the fleet already has — the demo seed
+      // ships four — and only invent one if the table is empty. Whichever it
+      // is, this account is now the rider `requireCourier` resolves.
+      const existing = await prisma.courier.findUnique({
+        where: { userId: user.id },
+      });
+      if (!existing) {
+        const unclaimed = await prisma.courier.findFirst({
+          where: { userId: null, isActive: true },
+          orderBy: { createdAt: 'asc' },
+        });
+        if (unclaimed) {
+          await prisma.courier.update({
+            where: { id: unclaimed.id },
+            data: { userId: user.id },
+          });
+        } else {
+          await prisma.courier.create({
+            data: {
+              userId: user.id,
+              kind: CourierKind.PLATFORM_STAFF,
+              displayName: 'فريق ريم للتوصيل',
+              phone: seed.phone,
+              governorates: [],
+              isActive: true,
+            },
+          });
+        }
+      }
+    }
+
+    if (seed.label === 'CUSTOMER') {
       const existing = await prisma.address.findFirst({
         where: { userId: user.id },
       });

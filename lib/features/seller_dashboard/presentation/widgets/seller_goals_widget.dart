@@ -97,9 +97,12 @@ class _GoalRow extends StatelessWidget {
               ),
             ),
             Text(
+              // The unit trails the number, the way a price is written in
+              // Arabic ("١٢٠٠٠ ل.س"), and "done" is a translated word rather
+              // than the English one this line used to hardcode.
               isComplete
-                  ? '✓ Done'
-                  : '${goal.unit}${_fmt(goal.current)} / ${goal.unit}${_fmt(goal.target)}',
+                  ? '✓ ${context.l10n.done}'
+                  : '${_fmt(goal.current)}${_unit(goal.unit)} / ${_fmt(goal.target)}${_unit(goal.unit)}',
               style: context.dsText.caption.copyWith(
                 color: isComplete ? c.success : c.onSurfaceVariant,
                 fontWeight:
@@ -144,6 +147,9 @@ class _GoalRow extends StatelessWidget {
       ],
     );
   }
+
+  /// A unit reads as a suffix with a space before it, or as nothing at all.
+  static String _unit(String unit) => unit.isEmpty ? '' : ' $unit';
 
   static String _fmt(double v) {
     if (v >= 1000000) return '${(v / 1000000).toStringAsFixed(1)}M';

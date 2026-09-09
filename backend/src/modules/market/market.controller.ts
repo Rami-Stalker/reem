@@ -9,6 +9,7 @@ import {
   Query,
 } from '@nestjs/common';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
+import { SelfScoped } from '../../common/decorators/self-scoped.decorator';
 import { OptionalAuth } from '../../common/decorators/optional-auth.decorator';
 import { BundlesService } from './bundles/bundles.service';
 import { DropsService } from './drops/drops.service';
@@ -39,6 +40,9 @@ import {
  * already owns; a mission asks for something worth doing. Nothing here ranks
  * the catalogue, because the catalogue already has a ranker.
  */
+@SelfScoped(
+  'drops, bundles and missions are read for the caller and claimed as her',
+)
 @Controller('market')
 export class MarketController {
   constructor(

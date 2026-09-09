@@ -1,6 +1,7 @@
 import {
   CodAssurance,
   CodAssuranceState,
+  DeliveryDispatch,
   Order,
   OrderEvent,
   OrderItem,
@@ -25,8 +26,19 @@ import { serializePublicUser } from './user.serializer';
 export type SellerOrderRecord = SellerOrder & {
   seller: User;
   items: OrderItem[];
-  shipment?: Shipment | null;
+  shipment?: (Shipment & { dispatch?: DeliveryDispatchRecord | null }) | null;
   events?: OrderEvent[];
+};
+
+/**
+ * What a customer may know about the delivery company carrying her parcel.
+ *
+ * Its name and its tracking number, because those are what she needs to chase
+ * it — and nothing else. The carrier's own identifiers, our request payloads
+ * and every credential stay on the server side of this line.
+ */
+export type DeliveryDispatchRecord = DeliveryDispatch & {
+  provider?: { displayName: string } | null;
 };
 
 export type OrderWithItems = Order & {
@@ -65,7 +77,9 @@ export function serializeOrderItem(item: OrderItem) {
   };
 }
 
-export function serializeShipment(shipment: Shipment) {
+export function serializeShipment(
+  shipment: Shipment & { dispatch?: DeliveryDispatchRecord | null },
+) {
   return {
     id: shipment.id,
     tracking_code: shipment.trackingCode,
@@ -83,6 +97,18 @@ export function serializeShipment(shipment: Shipment) {
       : null,
     collected_amount: shipment.collectedAmount
       ? Money.of(shipment.collectedAmount, shipment.currency).toJSON()
+      : null,
+    carrier: shipment.dispatch
+      ? {
+          name:
+            shipment.dispatch.provider?.displayName ??
+            shipment.dispatch.providerCode,
+          status: shipment.dispatch.status.toLowerCase(),
+          tracking_number: shipment.dispatch.trackingNumber,
+          tracking_url: shipment.dispatch.trackingUrl,
+          picked_up_at: shipment.dispatch.pickedUpAt?.toISOString() ?? null,
+          delivered_at: shipment.dispatch.deliveredAt?.toISOString() ?? null,
+        }
       : null,
   };
 }

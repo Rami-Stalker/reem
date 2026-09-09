@@ -54,6 +54,20 @@ const _publicRoutes = <String>{
   // guest checkout exists for, and matches the backend, which marks the same
   // endpoint @Public() for exactly that reason.
   RoutePaths.shipmentTracking,
+  // Q46 P1 — a guest may buy, so the till and what comes out of it are hers
+  // too. These three were behind the guard while the backend's checkout route
+  // demanded a signed-in id, which made the guest cart a dead end: she could
+  // fill a basket, tap «إتمام الشراء», and be sent to a sign-in screen. Both
+  // halves move together — `OrdersController` now carries
+  // `@Authorize({ allowGuest: true })` and scopes every read to her guest
+  // session, exactly as the cart already did.
+  //
+  // Her session token is her only claim on the order afterwards, which is a
+  // weaker credential than an account and is the trade Q46 P1 makes. What it
+  // is not is *unscoped*: one guest cannot read another's order.
+  RoutePaths.checkout,
+  RoutePaths.orders,
+  RoutePaths.orderDetail,
 };
 
 const _sellerToolRoutes = <String>{

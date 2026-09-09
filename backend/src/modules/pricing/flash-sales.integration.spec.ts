@@ -80,7 +80,7 @@ async function openShop(listPrice = '100000') {
     data: {
       name: 'بوتيك',
       username: `fs_s_${u}`,
-      phone: `+96395${u.slice(-7)}`,
+      phone: `+96395${Math.floor(1000000 + Math.random() * 8999999)}`,
       passwordHash: 'x',
       role: UserRole.SELLER,
     },
@@ -89,7 +89,7 @@ async function openShop(listPrice = '100000') {
     data: {
       name: 'ريم',
       username: `fs_b_${u}`,
-      phone: `+96394${u.slice(-7)}`,
+      phone: `+96394${Math.floor(1000000 + Math.random() * 8999999)}`,
       passwordHash: 'x',
       role: UserRole.CUSTOMER,
     },

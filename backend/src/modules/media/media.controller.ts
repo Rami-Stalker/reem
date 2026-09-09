@@ -17,6 +17,7 @@ import { ConfigService } from '@nestjs/config';
 import { Throttle } from '@nestjs/throttler';
 import type { Request, Response } from 'express';
 import { CurrentUser, AuthUser } from '../../common/decorators/current-user.decorator';
+import { SelfScoped } from '../../common/decorators/self-scoped.decorator';
 import { serializeMediaAsset } from '../../common/serializers/media.serializer';
 import { MediaService } from './media.service';
 import {
@@ -36,6 +37,9 @@ interface UploadedFileLike {
   size: number;
 }
 
+@SelfScoped(
+  "MediaService checks the asset's owner before it streams a private file",
+)
 @Controller('media')
 export class MediaController {
   constructor(

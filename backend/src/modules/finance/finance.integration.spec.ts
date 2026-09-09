@@ -128,7 +128,7 @@ async function makeUser(tx: Tx, tag: string) {
     data: {
       name: `fin-${tag}`,
       username: `fin_${u}`,
-      phone: `+9639${u.slice(-8)}`,
+      phone: `+9639${Math.floor(10000000 + Math.random() * 89999999)}`,
       passwordHash: 'x',
     },
   });
@@ -563,7 +563,7 @@ dbTest('a fully settled courier day nets their in-transit account to zero', asyn
     const courier = await tx.courier.create({
       data: {
         displayName: `courier-${unique('c').slice(-8)}`,
-        phone: `+9639${unique('c').slice(-8)}`,
+        phone: `+9639${Math.floor(10000000 + Math.random() * 89999999)}`,
         kind: CourierKind.PLATFORM_STAFF,
       },
     });
@@ -628,7 +628,7 @@ dbTest('a short settlement leaves the shortfall against that courier', async () 
     const courier = await tx.courier.create({
       data: {
         displayName: `courier-${unique('d').slice(-8)}`,
-        phone: `+9639${unique('d').slice(-8)}`,
+        phone: `+9639${Math.floor(10000000 + Math.random() * 89999999)}`,
         kind: CourierKind.PLATFORM_STAFF,
       },
     });
@@ -685,7 +685,7 @@ dbTest('settling the same courier day twice is refused', async () => {
     const courier = await tx.courier.create({
       data: {
         displayName: `courier-${unique('e').slice(-8)}`,
-        phone: `+9639${unique('e').slice(-8)}`,
+        phone: `+9639${Math.floor(10000000 + Math.random() * 89999999)}`,
         kind: CourierKind.PLATFORM_STAFF,
       },
     });

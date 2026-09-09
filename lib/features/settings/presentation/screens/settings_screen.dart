@@ -203,6 +203,16 @@ class SettingsScreen extends ConsumerWidget {
                         ? () => context.pushNamed(RouteNames.adminDashboard)
                         : null,
                   ),
+                  // A rider's own round. The only door to it used to be inside
+                  // the seller menu, so a courier — an ordinary account with a
+                  // `Courier` row, never a seller — could not reach the screen
+                  // built for her at all.
+                  if (auth.user?.isCourier == true)
+                    SettingsItemData(
+                      icon: Icons.delivery_dining_outlined,
+                      title: l10n.courierDay,
+                      onTap: () => context.push(RoutePaths.courierDay),
+                    ),
                 ],
               ),
               const SizedBox(height: DsSpacing.lg),

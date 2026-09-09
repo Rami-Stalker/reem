@@ -35,9 +35,21 @@ export class CartService {
     return serializeCart(items as CartItemRecord[]);
   }
 
-  /** Raw, included cart items — used by checkout to build the order. */
-  async rawItems(userId: string): Promise<CartItemRecord[]> {
-    return (await this.repo.findItems(userId)) as CartItemRecord[];
+  /**
+   * Raw, included cart items — used by checkout to build the order.
+   *
+   * Takes an owner rather than a user id because a guest's basket is a real
+   * basket: Q46 P1 lets her buy, and until now checkout could only read the
+   * `cart_items` table, so everything she had put in `guest_cart_items` was
+   * unreachable from the till.
+   */
+  async rawItems(owner: string | CartOwner): Promise<CartItemRecord[]> {
+    const resolved = this.resolveOwner(owner);
+    const items =
+      resolved.kind === 'user'
+        ? await this.repo.findItems(resolved.userId)
+        : await this.repo.findGuestItems(resolved.guestSessionId);
+    return items as CartItemRecord[];
   }
 
   async addItem(owner: string | CartOwner, dto: AddCartItemDto) {

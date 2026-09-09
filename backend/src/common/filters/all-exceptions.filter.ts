@@ -8,8 +8,11 @@ import {
 } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { Request, Response } from 'express';
+import { currentRequestId } from '../observability/request-context';
 
 interface ErrorBody {
+  /** Echoed to the client so an error screen can show something quotable. */
+  request_id?: string;
   statusCode: number;
   message: string | string[];
   error: string;
@@ -54,10 +57,19 @@ export class AllExceptionsFilter implements ExceptionFilter {
     const response = ctx.getResponse<Response>();
     const request = ctx.getRequest<Request>();
 
+    // The id the request was given on its way in. It goes back to the client
+    // in the body so a woman looking at "something went wrong" is holding the
+    // string that finds her request in the logs — and support can ask for it
+    // instead of asking her what time it was.
+    const requestId =
+      (request as Request & { requestContext?: { requestId: string } })
+        .requestContext?.requestId ?? currentRequestId();
+
     const body = {
       ...this.toBody(exception),
       timestamp: new Date().toISOString(),
       path: request.url,
+      ...(requestId ? { request_id: requestId } : {}),
     };
 
     if (body.statusCode >= 500) {

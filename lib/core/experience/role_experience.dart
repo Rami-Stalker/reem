@@ -638,6 +638,18 @@ class AppRoleExperience {
         permission: 'order:read',
         feature: ExperienceFeature.financialControls,
       ),
+      // Q63 — the delivery companies that carry the parcels. Behind
+      // `order:manage` rather than `order:read`: this screen turns a carrier on
+      // and off for the whole platform, which is not a reading job.
+      RoleNavigationItem(
+        surface: ExperienceSurface.orders,
+        label: 'Delivery',
+        path: RoutePaths.adminDelivery,
+        icon: Icons.local_shipping_outlined,
+        selectedIcon: Icons.local_shipping_rounded,
+        permission: 'order:manage',
+        feature: ExperienceFeature.financialControls,
+      ),
       RoleNavigationItem(
         surface: ExperienceSurface.customers,
         label: 'Support',

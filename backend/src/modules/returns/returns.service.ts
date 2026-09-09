@@ -997,7 +997,19 @@ export class ReturnsService {
     );
   }
 
-  /** Puts the units back on the offer they came off, variant included. */
+  /**
+   * Puts the units back on the offer they came off, variant included.
+   *
+   * Deliberately *not* `SellerOrderWorkflowService.restock`, and the
+   * difference is the whole point: that one undoes a checkout for a parcel
+   * that was never sold, so it also reverses `Product.ordersCount` and the
+   * flash-sale units. This parcel **was** sold — delivered, then sent back —
+   * and erasing it from the demand history would hide a return rather than
+   * record it. Two different events, two different reversals.
+   *
+   * It also runs per returned *line*, not per parcel: a partial return puts
+   * back only what came back.
+   */
   private async restock(
     tx: Tx,
     request: {

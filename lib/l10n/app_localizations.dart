@@ -9722,6 +9722,90 @@ abstract class AppLocalizations {
   /// **'Track shipment'**
   String get trackShipment;
 
+  /// Title of the carrier administration screen.
+  ///
+  /// In en, this message translates to:
+  /// **'Delivery companies'**
+  String get adminDelivery;
+
+  /// Subtitle of the carrier administration screen.
+  ///
+  /// In en, this message translates to:
+  /// **'The companies that carry parcels, where each delivers, and what is stuck.'**
+  String get adminDeliverySubtitle;
+
+  /// Empty state for the carrier list.
+  ///
+  /// In en, this message translates to:
+  /// **'No delivery company is registered yet.'**
+  String get adminDeliveryNoProviders;
+
+  /// Heading for the failed dispatch queue.
+  ///
+  /// In en, this message translates to:
+  /// **'Parcels no carrier accepted'**
+  String get adminDeliveryStuck;
+
+  /// Empty state for the failed dispatch queue.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing is stuck — every parcel is with a carrier.'**
+  String get adminDeliveryNothingStuck;
+
+  /// Button that re-offers a parcel to its carrier.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get adminDeliveryRetry;
+
+  /// Coverage tag for a carrier with no governorate list.
+  ///
+  /// In en, this message translates to:
+  /// **'Everywhere'**
+  String get adminDeliveryEverywhere;
+
+  /// Tag for the default carrier.
+  ///
+  /// In en, this message translates to:
+  /// **'Default'**
+  String get adminDeliveryDefault;
+
+  /// Carrier priority tag.
+  ///
+  /// In en, this message translates to:
+  /// **'Priority {value}'**
+  String adminDeliveryPriority(int value);
+
+  /// Subtitle for the internal courier provider.
+  ///
+  /// In en, this message translates to:
+  /// **'In-house delivery team'**
+  String get adminDeliveryInternalFleet;
+
+  /// Shown when a carrier row names an adapter the build does not ship.
+  ///
+  /// In en, this message translates to:
+  /// **'This build has no adapter called {adapter}'**
+  String adminDeliveryAdapterMissing(String adapter);
+
+  /// Label for the delivery company carrying a parcel.
+  ///
+  /// In en, this message translates to:
+  /// **'Delivery company'**
+  String get deliveryCarrier;
+
+  /// Shown to a seller when a packed parcel has not been accepted by the carrier.
+  ///
+  /// In en, this message translates to:
+  /// **'The delivery company has not accepted it yet — we keep trying.'**
+  String get sellerOrderCarrierPendingRetry;
+
+  /// Label for the delivery company's own tracking number.
+  ///
+  /// In en, this message translates to:
+  /// **'Carrier tracking number'**
+  String get deliveryCarrierTracking;
+
   /// Label for the tracking code.
   ///
   /// In en, this message translates to:

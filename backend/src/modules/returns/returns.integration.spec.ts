@@ -26,6 +26,7 @@ import { FinancialAuditService } from '../finance/financial-audit.service';
 import { LoyaltyService } from '../finance/loyalty.service';
 import { LedgerService } from '../ledger/ledger.service';
 import { WalletService } from '../ledger/wallet.service';
+import { InventoryReservationService } from '../orders/workflow/inventory-reservation.service';
 import { SellerOrderWorkflowService } from '../orders/workflow/seller-order-workflow.service';
 import { ReturnRefundsService } from './return-refunds.service';
 import { ReturnsService } from './returns.service';
@@ -123,7 +124,7 @@ function build(tx: Tx): World {
   const wallets = new WalletService(db, ledger);
   const loyalty = new LoyaltyService(db, ledger, wallets);
   const commissions = new CommissionsService(db, ledger, loyalty, audit);
-  const workflow = new SellerOrderWorkflowService(db);
+  const workflow = new SellerOrderWorkflowService(db, new InventoryReservationService(db));
   const customerRefunds = new CustomerRefundsService(
     db,
     ledger,
@@ -160,7 +161,7 @@ async function makeUser(tx: Tx, tag: string, role: UserRole = UserRole.CUSTOMER)
     data: {
       name: `ret-${tag}`,
       username: `ret_${u}`,
-      phone: `+9639${u.slice(-8)}`,
+      phone: `+9639${Math.floor(10000000 + Math.random() * 89999999)}`,
       passwordHash: 'x',
       role,
     },

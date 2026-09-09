@@ -5284,6 +5284,56 @@ class AppLocalizationsEn extends AppLocalizations {
   String get trackShipment => 'Track shipment';
 
   @override
+  String get adminDelivery => 'Delivery companies';
+
+  @override
+  String get adminDeliverySubtitle =>
+      'The companies that carry parcels, where each delivers, and what is stuck.';
+
+  @override
+  String get adminDeliveryNoProviders =>
+      'No delivery company is registered yet.';
+
+  @override
+  String get adminDeliveryStuck => 'Parcels no carrier accepted';
+
+  @override
+  String get adminDeliveryNothingStuck =>
+      'Nothing is stuck — every parcel is with a carrier.';
+
+  @override
+  String get adminDeliveryRetry => 'Retry';
+
+  @override
+  String get adminDeliveryEverywhere => 'Everywhere';
+
+  @override
+  String get adminDeliveryDefault => 'Default';
+
+  @override
+  String adminDeliveryPriority(int value) {
+    return 'Priority $value';
+  }
+
+  @override
+  String get adminDeliveryInternalFleet => 'In-house delivery team';
+
+  @override
+  String adminDeliveryAdapterMissing(String adapter) {
+    return 'This build has no adapter called $adapter';
+  }
+
+  @override
+  String get deliveryCarrier => 'Delivery company';
+
+  @override
+  String get sellerOrderCarrierPendingRetry =>
+      'The delivery company has not accepted it yet — we keep trying.';
+
+  @override
+  String get deliveryCarrierTracking => 'Carrier tracking number';
+
+  @override
   String get trackingCode => 'Tracking code';
 
   @override

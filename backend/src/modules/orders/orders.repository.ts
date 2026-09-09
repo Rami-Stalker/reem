@@ -1,11 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { OrderStatus, Prisma } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
+import { Buyer, ownedByBuyer } from './buyer';
 
 const SELLER_ORDER_INCLUDE = {
   seller: true,
   items: true,
-  shipment: true,
+  // The parcel, and the delivery company carrying it — she is told the
+  // carrier's name and its tracking number, which is what she needs to chase a
+  // parcel that has left the building.
+  shipment: {
+    include: { dispatch: { include: { provider: { select: { displayName: true } } } } },
+  },
   events: { orderBy: { createdAt: 'asc' as const } },
 };
 
@@ -29,14 +35,22 @@ export const ORDER_LIST_INCLUDE = {
 export class OrdersRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  listForUser(
-    userId: string,
+  /**
+   * One buyer's orders — hers by account, or by the guest session she placed
+   * them from. `ownedByBuyer` is the only place that choice is made, so a
+   * listing and a detail read can never scope differently.
+   */
+  listForBuyer(
+    buyer: Buyer,
     skip: number,
     take: number,
     statuses?: OrderStatus[],
   ) {
     return this.prisma.order.findMany({
-      where: { userId, ...(statuses?.length ? { status: { in: statuses } } : {}) },
+      where: {
+        ...ownedByBuyer(buyer),
+        ...(statuses?.length ? { status: { in: statuses } } : {}),
+      },
       orderBy: { createdAt: 'desc' },
       skip,
       take,
@@ -44,15 +58,18 @@ export class OrdersRepository {
     });
   }
 
-  countForUser(userId: string, statuses?: OrderStatus[]) {
+  countForBuyer(buyer: Buyer, statuses?: OrderStatus[]) {
     return this.prisma.order.count({
-      where: { userId, ...(statuses?.length ? { status: { in: statuses } } : {}) },
+      where: {
+        ...ownedByBuyer(buyer),
+        ...(statuses?.length ? { status: { in: statuses } } : {}),
+      },
     });
   }
 
-  findDetail(id: string, userId: string) {
+  findDetail(id: string, buyer: Buyer) {
     return this.prisma.order.findFirst({
-      where: { id, userId },
+      where: { id, ...ownedByBuyer(buyer) },
       include: ORDER_DETAIL_INCLUDE,
     });
   }

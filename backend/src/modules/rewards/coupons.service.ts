@@ -6,6 +6,7 @@ import {
 import { Coupon, CouponType, Prisma } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 import { Money } from '../../common/money';
+import { ScopedLine, eligibleSubtotal, scopeRefusal } from './coupon-scope';
 import { buildMeta, PaginationDto } from '../../common/dto/pagination.dto';
 import { serializeCoupon } from './rewards.serializer';
 import { CreateCouponDto, UpdateCouponDto } from './dto/rewards.dto';
@@ -129,6 +130,17 @@ export class CouponsService {
     code: string,
     userId: string,
     subtotal: Money,
+    /**
+     * The basket, when the caller has it.
+     *
+     * Checkout does; the coupon-preview screen may not. When lines are given,
+     * the discount is computed on the part of the basket the code actually
+     * covers — which is what stops a code for one dress taking its percentage
+     * off a basket of five, and stops a seller-funded code being charged to
+     * every seller in the order. Omitted, the code applies to the whole
+     * subtotal, which is how every coupon behaved before scopes existed.
+     */
+    lines?: readonly ScopedLine[],
   ): Promise<CouponEvaluation> {
     const coupon = await this.prisma.coupon.findUnique({ where: { code } });
     if (!coupon || !coupon.isActive || coupon.expiresAt < new Date()) {
@@ -163,7 +175,23 @@ export class CouponsService {
         throw new BadRequestException('You have already used this coupon');
       }
     }
-    return { coupon, discount: this.computeDiscount(coupon, subtotal) };
+    // The scope is applied last, after every reason the *coupon* might be
+    // refused, so "you have already used this" is never hidden behind "this is
+    // not in your basket".
+    const base = lines ? eligibleSubtotal(coupon, lines, subtotal) : subtotal;
+    if (base.isZero() && this.isScoped(coupon)) {
+      throw new BadRequestException({
+        code: 'COUPON_NOT_APPLICABLE',
+        message: scopeRefusal(coupon),
+      });
+    }
+
+    return { coupon, discount: this.computeDiscount(coupon, base) };
+  }
+
+  /** True when the code names a seller, a category or a product. */
+  private isScoped(coupon: Coupon): boolean {
+    return Boolean(coupon.sellerId || coupon.categoryId || coupon.productId);
   }
 
   /**

@@ -15,6 +15,8 @@ import {
   deriveOrderStatus,
 } from '../../../common/money';
 import { PrismaService } from '../../../prisma/prisma.service';
+import { InventoryReservationService } from './inventory-reservation.service';
+import { releaseFlashSaleUnits } from './stock-claim';
 // The escrow clock and the return window are the same seven days seen from
 // two sides, so they share one constant rather than agreeing by coincidence.
 import { RETURN_WINDOW_DAYS } from '../../returns/return-policy';
@@ -70,7 +72,10 @@ export interface MoveOptions {
  */
 @Injectable()
 export class SellerOrderWorkflowService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly reservations: InventoryReservationService,
+  ) {}
 
   /**
    * Moves one sub-order.
@@ -118,6 +123,13 @@ export class SellerOrderWorkflowService {
       },
     });
 
+    // The goods reached her. The units are gone for good, so the reservation
+    // is closed rather than left open — anything that comes back afterwards is
+    // a return, which is new stock arriving, and `ReturnsService` owns it.
+    if (to === SellerOrderStatus.DELIVERED) {
+      await this.reservations.consume(tx, sellerOrderId);
+    }
+
     await this.syncParent(tx, current.orderId);
     return current.status;
   }
@@ -155,34 +167,76 @@ export class SellerOrderWorkflowService {
   }
 
   /**
-   * Puts a parcel's goods back on the shelf.
+   * Undoes everything a checkout claimed for a parcel that was never sold.
    *
-   * Stock comes off the *offer* at checkout, and off the offer's variant when
-   * one was chosen — the canonical product has no stock of its own. Anything
-   * that stops a parcel reaching its customer has to undo that, or the seller
-   * loses inventory to an order nobody received. Three services were each
-   * doing this slightly differently before it moved here.
+   * Three things came off the shelf when the order was placed, and until now
+   * only the first was ever put back:
    *
-   * Whether goods *can* go back on sale is a different question, and not this
-   * one: a returned item may be damaged (see `isResaleable` in the returns
-   * policy). A cancelled or refused parcel never left its packaging.
+   * 1. **Stock**, off the *offer* — and off the offer's variant when one was
+   *    chosen, because the canonical product has no stock of its own. A
+   *    seller who loses inventory to an order nobody received cannot sell it
+   *    to anybody else.
+   * 2. **`Product.ordersCount`**, incremented per unit at checkout. Nothing
+   *    ever decremented it. That number is not decoration: it orders the
+   *    catalogue (`DiscoveryService`), it weights the stylist's ranking, and
+   *    it is the "bought by N women" the product card shows. Every cancelled
+   *    order inflated it permanently, so a listing could climb the catalogue
+   *    on sales that never happened.
+   * 3. **A flash sale's `quantitySold`**, which decides when the sale stops
+   *    offering its price. Units counted against a cancelled order closed the
+   *    sale early for everyone else.
+   *
+   * **This is for a parcel that never became a sale** — cancelled by either
+   * side before it shipped, refused at the door, or expired unpaid. A parcel
+   * that was *delivered* and then returned is a different case and keeps its
+   * own path in `ReturnsService`: the sale did happen, the goods may not even
+   * be resaleable (`isResaleable`), and erasing it from the demand history
+   * would hide the return rather than record it.
    */
-  async restock(tx: Tx, sellerOrderId: string): Promise<void> {
+  async restock(
+    tx: Tx,
+    sellerOrderId: string,
+    reason = 'Parcel did not complete',
+  ): Promise<void> {
+    // Stock goes back through the reservation that took it, never through a
+    // bare increment. The reservation's state is what makes this idempotent:
+    // a cancellation retried after a timeout, or a refusal recorded by both
+    // the rider and the carrier's webhook, releases once and adds nothing the
+    // second time. The old code incremented unconditionally, so the shelf
+    // drifted upward every time one of those happened twice.
+    const released = await this.reservations.releaseForSellerOrder(
+      tx,
+      sellerOrderId,
+      reason,
+    );
+
+    // The demand counters are undone only when the stock actually moved, for
+    // the same reason: releasing a parcel twice must not decrement
+    // `ordersCount` twice and leave a listing under-counting real sales.
+    if (released === 0) return;
+
     const items = await tx.orderItem.findMany({
       where: { sellerOrderId },
-      select: { offerId: true, variantId: true, quantity: true },
+      select: { offerId: true, productId: true, quantity: true },
     });
 
     for (const item of items) {
-      if (!item.offerId) continue;
-      await tx.sellerOffer.update({
-        where: { id: item.offerId },
-        data: { stock: { increment: item.quantity } },
-      });
-      if (item.variantId) {
-        await tx.sellerOfferVariant.updateMany({
-          where: { offerId: item.offerId, variantId: item.variantId },
-          data: { stock: { increment: item.quantity } },
+      if (item.offerId) {
+        await releaseFlashSaleUnits(tx, {
+          offerId: item.offerId,
+          quantity: item.quantity,
+        });
+      }
+
+      // Guarded because the product may have been deleted since — the line
+      // keeps its snapshots either way, and there is then no counter to undo.
+      if (item.productId) {
+        await tx.product.updateMany({
+          // `quantity` cannot take the counter below zero on a well-formed
+          // history, but a floor costs nothing and a negative "bought by N
+          // women" on a product card is not recoverable by explanation.
+          where: { id: item.productId, ordersCount: { gte: item.quantity } },
+          data: { ordersCount: { decrement: item.quantity } },
         });
       }
     }

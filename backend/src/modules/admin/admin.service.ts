@@ -7,6 +7,7 @@ import {
   AuditSeverity,
   CommissionStatus,
   Currency,
+  LedgerDirection,
   FinancialLedgerType,
   ModerationStatus,
   OrderStatus,
@@ -632,9 +633,25 @@ export class AdminService {
         _sum: { capturedAmount: true },
         _count: { _all: true },
       }),
-      this.prisma.financialLedgerEntry.findMany({
-        orderBy: { createdAt: 'desc' },
+      // The **real** book of record, not `FinancialLedgerEntry`.
+      //
+      // That table is a single-entry leftover, and only `CommissionsService`
+      // still writes to it — so this screen, which calls itself "the last 50
+      // financial movements", was showing commissions and nothing else. Every
+      // wallet spend, refund, dispute hold, courier settlement, loyalty
+      // accrual and payout was missing, and an operator reading it had no way
+      // to tell that from a quiet day.
+      //
+      // Read from the journal instead: an entry with its lines, so a row can
+      // say what moved and between which accounts.
+      this.prisma.journalEntry.findMany({
+        orderBy: { occurredAt: 'desc' },
         take: 50,
+        include: {
+          lines: {
+            include: { account: { select: { code: true } } },
+          },
+        },
       }),
     ]);
 
@@ -665,14 +682,38 @@ export class AdminService {
         ).toJSON(),
         count: payment._count._all,
       })),
-      ledger: ledger.map((entry) => ({
-        id: entry.id,
-        type: entry.type.toLowerCase(),
-        amount: Money.of(entry.amount, entry.currency).toJSON(),
-        currency: entry.currency,
-        description: entry.description,
-        created_at: entry.createdAt.toISOString(),
-      })),
+      ledger: ledger.map((entry) => {
+        // A journal entry balances, so either side is its size; the debits
+        // are the conventional one to report.
+        const currency = entry.lines[0]?.currency ?? Currency.SYP;
+        const amount = entry.lines
+          .filter((line) => line.direction === LedgerDirection.DEBIT)
+          .reduce(
+            (total, line) => total.plus(Money.of(line.amount, line.currency)),
+            Money.zero(currency),
+          );
+
+        return {
+          id: entry.id,
+          type: entry.type.toLowerCase(),
+          amount: amount.toJSON(),
+          currency,
+          description: entry.description,
+          // What the movement actually touched, which the old single-entry
+          // row could not express at all.
+          accounts: entry.lines.map((line) => ({
+            code: line.account.code.toLowerCase(),
+            direction: line.direction.toLowerCase(),
+            amount: Money.of(line.amount, line.currency).toJSON(),
+          })),
+          /// Set when this entry undoes another, so a reversal never reads as
+          /// a fresh movement on the operator's screen.
+          reverses_id: entry.reversesId,
+          order_id: entry.orderId,
+          seller_order_id: entry.sellerOrderId,
+          created_at: entry.occurredAt.toISOString(),
+        };
+      }),
     };
   }
 

@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { APP_GUARD } from '@nestjs/core';
+import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ScheduleModule } from '@nestjs/schedule';
 import { EventEmitterModule } from '@nestjs/event-emitter';
@@ -10,6 +10,9 @@ import { validateEnv } from './config/env.validation';
 import { PrismaModule } from './prisma/prisma.module';
 import { CacheModule } from './common/cache/cache.module';
 
+import { IdempotencyInterceptor } from './common/idempotency/idempotency.interceptor';
+import { AdminAuditInterceptor } from './common/audit/admin-audit.interceptor';
+import { IdempotencySweeper } from './common/idempotency/idempotency.sweeper';
 import { JwtAuthGuard } from './common/guards/jwt-auth.guard';
 import { DeviceProofGuard } from './common/guards/device-proof.guard';
 import { StepUpGuard } from './common/guards/step-up.guard';
@@ -162,6 +165,19 @@ import { HealthModule } from './modules/health/health.module';
     { provide: APP_GUARD, useClass: StepUpGuard },
     AuthorizationService,
     { provide: APP_GUARD, useClass: AuthorizationGuard },
+    // After the guards, so the principal is resolved before the key is scoped
+    // to it — an interceptor registered here runs inside the guard chain, and
+    // scoping an idempotency key to `ip:` when the caller is signed in would
+    // let two accounts behind one NAT collide.
+    { provide: APP_INTERCEPTOR, useClass: IdempotencyInterceptor },
+    IdempotencySweeper,
+    // Records every staff write, so coverage does not depend on each service
+    // remembering to. Note what it cannot see: guards run *before*
+    // interceptors, so a request `AuthorizationGuard` refuses never reaches
+    // this — that denial is written to `SecurityEvent` by the guard itself.
+    // What this catches is the refusal thrown *inside* a handler, which is
+    // where most of this platform's ownership checks live.
+    { provide: APP_INTERCEPTOR, useClass: AdminAuditInterceptor },
   ],
 })
 export class AppModule {}

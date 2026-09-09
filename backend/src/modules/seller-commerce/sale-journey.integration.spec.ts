@@ -5,6 +5,7 @@ import {
   Currency,
   DeliveryFailureReason,
   FulfilmentMode,
+  InventoryReservationState,
   LedgerAccountCode,
   OrderStatus,
   PaymentMethodType,
@@ -25,10 +26,12 @@ import { CustomerRefundsService } from '../finance/customer-refunds.service';
 import { FinancialAuditService } from '../finance/financial-audit.service';
 import { LoyaltyService } from '../finance/loyalty.service';
 import { ShipmentsService } from '../delivery/shipments.service';
+import { DeliveryDispatchService } from '../delivery/dispatch/delivery-dispatch.service';
 import { CodTrustService } from '../cod-trust/cod-trust.service';
 import { CodFactsService } from '../cod-trust/cod-facts.service';
 import { LedgerService } from '../ledger/ledger.service';
 import { WalletService } from '../ledger/wallet.service';
+import { InventoryReservationService } from '../orders/workflow/inventory-reservation.service';
 import { SellerOrderWorkflowService } from '../orders/workflow/seller-order-workflow.service';
 import { ReturnRefundsService } from '../returns/return-refunds.service';
 import { ReturnsService } from '../returns/returns.service';
@@ -122,19 +125,13 @@ function build(tx: Tx): World {
   const wallets = new WalletService(db, ledger);
   const loyalty = new LoyaltyService(db, ledger, wallets);
   const commissions = new CommissionsService(db, ledger, loyalty, audit);
-  const workflow = new SellerOrderWorkflowService(db);
+  const workflow = new SellerOrderWorkflowService(db, new InventoryReservationService(db));
   const customerRefunds = new CustomerRefundsService(
     db,
     ledger,
     wallets,
     workflow,
     audit,
-  );
-  const sellerOrders = new SellerOrdersService(
-    db,
-    workflow,
-    commissions,
-    customerRefunds,
   );
   // Real rather than stubbed: delivery now closes the cash-on-delivery trust
   // loop, and a journey test that skipped that step would stop proving the
@@ -151,6 +148,20 @@ function build(tx: Tx): World {
     workflow,
     customerRefunds,
     codTrust,
+  );
+  // Marking a parcel ready now hands it to a delivery company. These cases are
+  // about the sale, not about carriers, and the fixtures create their own
+  // shipments — so dispatch is stubbed to the no-op it would be with no carrier
+  // configured, which is exactly what `dispatch()` does in that case.
+  const dispatches = {
+    dispatch: async () => null,
+  } as unknown as DeliveryDispatchService;
+  const sellerOrders = new SellerOrdersService(
+    db,
+    workflow,
+    commissions,
+    customerRefunds,
+    dispatches,
   );
   const refunds = new ReturnRefundsService(
     db,
@@ -189,7 +200,7 @@ async function makeUser(tx: Tx, tag: string, role: UserRole = UserRole.CUSTOMER)
     data: {
       name: `sj-${tag}`,
       username: `sj_${u}`,
-      phone: `+9639${u.slice(-8)}`,
+      phone: `+9639${Math.floor(10000000 + Math.random() * 89999999)}`,
       passwordHash: 'x',
       role,
     },
@@ -303,6 +314,24 @@ async function makeSale(tx: Tx, options: SaleOptions = {}) {
       },
     },
     include: { items: true },
+  });
+
+  // The hold checkout would have written for this line.
+  //
+  // Stock now goes back through the reservation that took it, never through a
+  // bare increment — that is what makes releasing idempotent. A fixture that
+  // skipped this would be modelling an order shape the platform no longer
+  // produces, and every restock assertion below would be testing the absence
+  // of a record rather than the release of one.
+  await tx.inventoryReservation.create({
+    data: {
+      orderId: order.id,
+      sellerOrderId: sellerOrder.id,
+      offerId: offer.id,
+      quantity: 2,
+      state: InventoryReservationState.COMMITTED,
+      committedAt: new Date(),
+    },
   });
 
   let courierUser: { id: string } | null = null;

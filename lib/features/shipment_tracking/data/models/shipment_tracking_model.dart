@@ -10,6 +10,7 @@ class ShipmentTrackingModel extends ShipmentTracking {
     super.deliveredAt,
     super.isExpress,
     super.events,
+    super.carrier,
   });
 
   factory ShipmentTrackingModel.fromJson(Map<String, dynamic> json) {
@@ -31,8 +32,18 @@ class ShipmentTrackingModel extends ShipmentTracking {
             ),
           )
           .toList(growable: false),
+      carrier: json['carrier'] is Map<String, dynamic>
+          ? _carrier(json['carrier'] as Map<String, dynamic>)
+          : null,
     );
   }
+
+  static TrackingCarrier _carrier(Map<String, dynamic> json) => TrackingCarrier(
+    name: json['name'] as String? ?? '',
+    stage: ShipmentStage.fromWire(json['status'] as String?),
+    trackingNumber: json['tracking_number'] as String?,
+    trackingUrl: json['tracking_url'] as String?,
+  );
 
   static DateTime? _date(dynamic value) =>
       value is String ? DateTime.tryParse(value) : null;

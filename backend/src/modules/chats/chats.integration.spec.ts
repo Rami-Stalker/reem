@@ -95,7 +95,7 @@ async function makeUser(tx: Tx, tag: string, role: UserRole) {
     data: {
       name: `chat-${tag}`,
       username: `chat_${u}`,
-      phone: `+9638${u.slice(-8)}`,
+      phone: `+9638${Math.floor(10000000 + Math.random() * 89999999)}`,
       passwordHash: 'x',
       role,
     },

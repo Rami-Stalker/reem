@@ -94,6 +94,19 @@ final class SellerOrderMapper {
               trackingCode: shipment['tracking_code'] as String? ?? '',
               status: (shipment['status'] as String? ?? '').toLowerCase(),
               isAssigned: shipment['assigned'] == true,
+              carrierName: shipment['carrier'] is Map<String, dynamic>
+                  ? (shipment['carrier'] as Map<String, dynamic>)['name']
+                        as String?
+                  : null,
+              carrierTrackingNumber: shipment['carrier'] is Map<String, dynamic>
+                  ? (shipment['carrier']
+                            as Map<String, dynamic>)['tracking_number']
+                        as String?
+                  : null,
+              carrierError: shipment['carrier'] is Map<String, dynamic>
+                  ? (shipment['carrier'] as Map<String, dynamic>)['last_error']
+                        as String?
+                  : null,
             )
           : null,
     );

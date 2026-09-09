@@ -105,7 +105,7 @@ async function makeSeller(tx: Tx) {
   return tx.user.create({
     data: {
       name: 'بائعة اختبار',
-      phone: `+9639${String(Date.now() + (counter += 1)).slice(-8)}`,
+      phone: `+9639${Math.floor(10000000 + Math.random() * 89999999)}`,
       username: uniq('payout_spec_'),
       role: UserRole.SELLER,
       sellerVerifiedAt: new Date(),
@@ -131,7 +131,7 @@ async function makeSale(
   const customer = await tx.user.create({
     data: {
       name: 'زبونة',
-      phone: `+9639${String(Date.now() + (counter += 1)).slice(-8)}`,
+      phone: `+9639${Math.floor(10000000 + Math.random() * 89999999)}`,
       username: uniq('payout_cus_'),
     },
   });

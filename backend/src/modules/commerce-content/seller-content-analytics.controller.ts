@@ -6,7 +6,7 @@ import {
   CurrentUser,
 } from '../../common/decorators/current-user.decorator';
 import { AppPermission } from '../../common/permissions';
-import { PaginationDto } from '../../common/dto/pagination.dto';
+import { PromotersQueryDto } from './dto/promoters-query.dto';
 import { ContentAnalyticsService } from './analytics/content-analytics.service';
 
 /**
@@ -67,12 +67,8 @@ export class SellerContentAnalyticsController {
    * table.
    */
   @Get('promoters')
-  promoters(
-    @CurrentUser() user: AuthUser,
-    @Query() page: PaginationDto,
-    @Query('seller_id') sellerId?: string,
-  ) {
-    return this.analytics.promoters(user, page, sellerId);
+  promoters(@CurrentUser() user: AuthUser, @Query() query: PromotersQueryDto) {
+    return this.analytics.promoters(user, query, query.seller_id);
   }
 
   @Get('content/:id')

@@ -18,11 +18,15 @@ import {
   serializeOrderEvent,
 } from '../../common/serializers';
 import { CUSTOMER_CANCELLABLE, canTransition } from '../../common/money';
+import { Buyer, ownedByBuyer, userIdOf } from './buyer';
 import { OrdersRepository } from './orders.repository';
 import { CartService } from '../cart/cart.service';
 import { CustomerRefundsService } from '../finance/customer-refunds.service';
 import { CodTrustService } from '../cod-trust/cod-trust.service';
-import { SellerOrderWorkflowService } from './workflow/seller-order-workflow.service';
+import {
+  SYSTEM_ACTOR,
+  SellerOrderWorkflowService,
+} from './workflow/seller-order-workflow.service';
 
 /**
  * The four piles a customer thinks in — and the only definition of them.
@@ -79,11 +83,11 @@ export class OrdersService {
    * `ORDER_BUCKETS`, so the count and the list can never disagree about what
    * "processing" means.
    */
-  async list(userId: string, page: PaginationDto, bucket?: OrderBucket) {
+  async list(buyer: Buyer, page: PaginationDto, bucket?: OrderBucket) {
     const statuses = bucket ? [...ORDER_BUCKETS[bucket]] : undefined;
     const [orders, total] = await Promise.all([
-      this.repo.listForUser(userId, page.skip, page.limit, statuses),
-      this.repo.countForUser(userId, statuses),
+      this.repo.listForBuyer(buyer, page.skip, page.limit, statuses),
+      this.repo.countForBuyer(buyer, statuses),
     ]);
     return {
       data: orders.map(serializeOrder),
@@ -91,12 +95,12 @@ export class OrdersService {
     };
   }
 
-  async detail(userId: string, id: string) {
-    return serializeOrderDetail(await this.requireOrder(userId, id));
+  async detail(buyer: Buyer, id: string) {
+    return serializeOrderDetail(await this.requireOrder(buyer, id));
   }
 
-  async timeline(userId: string, id: string) {
-    const order = await this.requireOrder(userId, id);
+  async timeline(buyer: Buyer, id: string) {
+    const order = await this.requireOrder(buyer, id);
     const events = [
       ...order.events,
       ...order.sellerOrders.flatMap((sellerOrder) => sellerOrder.events ?? []),
@@ -105,8 +109,8 @@ export class OrdersService {
   }
 
   /** Cancels every sub-order that is still cancellable. */
-  async cancel(userId: string, id: string, reason?: string) {
-    const order = await this.requireOrder(userId, id);
+  async cancel(buyer: Buyer, id: string, reason?: string) {
+    const order = await this.requireOrder(buyer, id);
 
     const cancellable = order.sellerOrders.filter((sellerOrder) =>
       CUSTOMER_CANCELLABLE.includes(sellerOrder.status),
@@ -116,7 +120,7 @@ export class OrdersService {
     }
 
     for (const sellerOrder of cancellable) {
-      await this.cancelSellerOrder(userId, sellerOrder.id, reason);
+      await this.cancelSellerOrder(buyer, sellerOrder.id, reason);
     }
 
     // A basket she called off before it moved is not a refusal, and a trust
@@ -124,7 +128,7 @@ export class OrdersService {
     // as a parcel sent back at the door.
     await this.codTrust.observe(id, 'cancelled');
 
-    return this.detail(userId, id);
+    return this.detail(buyer, id);
   }
 
   /**
@@ -136,9 +140,12 @@ export class OrdersService {
    * second status, which meant the timeline showed a jump nobody had checked
    * was legal and `REFUND_PENDING` appeared with no cancellation behind it.
    */
-  async cancelSellerOrder(userId: string, sellerOrderId: string, reason?: string) {
+  async cancelSellerOrder(buyer: Buyer, sellerOrderId: string, reason?: string) {
+    const userId = userIdOf(buyer);
     const sellerOrder = await this.prisma.sellerOrder.findFirst({
-      where: { id: sellerOrderId, order: { userId } },
+      // Scoped through the parent to whoever owns it — an account, or the
+      // guest session that placed it.
+      where: { id: sellerOrderId, order: ownedByBuyer(buyer) },
       include: { items: true, order: { include: { payment: true } } },
     });
     if (!sellerOrder) throw new NotFoundException('Order not found');
@@ -156,26 +163,18 @@ export class OrdersService {
     const wasPaid = sellerOrder.order.payment?.status === PaymentStatus.PAID;
 
     await this.prisma.$transaction(async (tx) => {
-      // Put the reserved stock back on the OFFER it came off.
-      for (const item of sellerOrder.items) {
-        if (item.offerId) {
-          await tx.sellerOffer.update({
-            where: { id: item.offerId },
-            data: { stock: { increment: item.quantity } },
-          });
-        }
-        if (item.offerId && item.variantId) {
-          await tx.sellerOfferVariant.updateMany({
-            where: { offerId: item.offerId, variantId: item.variantId },
-            data: { stock: { increment: item.quantity } },
-          });
-        }
-      }
+      // Undo what the checkout claimed: stock back on the offer, and the
+      // demand counters this sale inflated back down. This was a fourth
+      // hand-written copy of the same loop, and the only one that also forgot
+      // `ordersCount` and the flash-sale units.
+      await this.workflow.restock(tx, sellerOrderId);
 
       await this.workflow.move(
         tx,
         sellerOrderId,
         SellerOrderStatus.CANCELLED_BY_CUSTOMER,
+        // Null id for a guest: a customer cancelled it, and there is no
+        // account to name on the timeline.
         { id: userId, role: 'CUSTOMER' },
         {
           title: 'Cancelled',
@@ -203,7 +202,7 @@ export class OrdersService {
 
   private async refundQuietly(
     sellerOrderId: string,
-    actorId: string,
+    actorId: string | null,
   ): Promise<void> {
     try {
       await this.refunds.refundUndeliveredParcel(sellerOrderId, actorId);
@@ -215,13 +214,15 @@ export class OrdersService {
     }
   }
 
-  async reorder(userId: string, id: string) {
-    const order = await this.requireOrder(userId, id);
+  async reorder(buyer: Buyer, id: string) {
+    const order = await this.requireOrder(buyer, id);
+    // `CartOwner` and `Buyer` are the same two-armed shape by design, so the
+    // basket a reorder fills is the one its buyer was already shopping from.
     for (const sellerOrder of order.sellerOrders) {
       for (const item of sellerOrder.items) {
         if (!item.offerId) continue;
         try {
-          await this.cart.addItem(userId, {
+          await this.cart.addItem(buyer, {
             offer_id: item.offerId,
             quantity: item.quantity,
           });
@@ -230,7 +231,86 @@ export class OrdersService {
         }
       }
     }
-    return this.cart.getCart(userId);
+    return this.cart.getCart(buyer);
+  }
+
+  /**
+   * Lets go of an order nobody paid for.
+   *
+   * **Why this is not `cancel`.** `cancel` is scoped to a signed-in customer,
+   * which is right for a woman calling off her own basket and wrong for
+   * everything this has to reach: a guest checkout has no `userId` to scope
+   * by, and there is no session behind a timer at all. The existing cash-hold
+   * sweep works around that by cancelling *as* the customer, which is why it
+   * silently skips every guest order (`if (assessment.userId)`).
+   *
+   * So the actor here is SYSTEM, and the transition table admits it on
+   * exactly one edge — `NEW → CANCELLED_BY_CUSTOMER`. A parcel a seller has
+   * already confirmed and started packing is past the point a timer may touch
+   * it; that one is for support to resolve with a person on each end.
+   *
+   * Refuses rather than guesses when the order has moved on: the status is
+   * re-read here and the sweep's own selection may be minutes old.
+   */
+  async expireUnpaid(orderId: string, reason: string): Promise<boolean> {
+    const order = await this.prisma.order.findUnique({
+      where: { id: orderId },
+      select: {
+        id: true,
+        status: true,
+        sellerOrders: { select: { id: true, status: true } },
+      },
+    });
+    if (!order) return false;
+    if (order.status !== OrderStatus.PENDING_PAYMENT) return false;
+
+    // An order with no parcels cannot be cancelled by cancelling its parcels,
+    // and reporting success would have the sweep pick it up again on every run
+    // for ever. Checkout never produces one; a hand-repaired row might.
+    if (order.sellerOrders.length === 0) {
+      this.logger.warn(
+        `Order ${orderId} is unpaid past its deadline but has no sub-orders; ` +
+          `leaving it for support rather than reporting it expired.`,
+      );
+      return false;
+    }
+
+    const cancellable = order.sellerOrders.filter((sellerOrder) =>
+      canTransition(
+        sellerOrder.status,
+        SellerOrderStatus.CANCELLED_BY_CUSTOMER,
+        'SYSTEM',
+      ),
+    );
+    // Nothing to do rather than a partial cancellation: an order whose parcels
+    // have all moved past NEW is not abandoned, it is in progress.
+    if (cancellable.length !== order.sellerOrders.length) return false;
+
+    for (const sellerOrder of cancellable) {
+      // One transaction per parcel, matching `cancelSellerOrder`. A basket
+      // split across five sellers should not hold five sellers' offer rows
+      // locked at once while it unwinds.
+      await this.prisma.$transaction(async (tx) => {
+        await this.workflow.restock(tx, sellerOrder.id);
+        await this.workflow.move(
+          tx,
+          sellerOrder.id,
+          SellerOrderStatus.CANCELLED_BY_CUSTOMER,
+          SYSTEM_ACTOR,
+          {
+            title: 'Cancelled — payment deadline passed',
+            description: reason,
+            data: { cancellationReason: reason },
+          },
+        );
+      });
+    }
+
+    // Not a refusal. A basket that expired unpaid says nothing about whether
+    // she would have taken the parcel at the door, and a trust engine that
+    // counted it would price her next cash order on a decision she never made.
+    await this.codTrust.observe(orderId, 'cancelled');
+    return true;
   }
 
   /**
@@ -247,8 +327,8 @@ export class OrdersService {
     return this.workflow.syncParent(tx, orderId);
   }
 
-  private async requireOrder(userId: string, id: string) {
-    const order = await this.repo.findDetail(id, userId);
+  private async requireOrder(buyer: Buyer, id: string) {
+    const order = await this.repo.findDetail(id, buyer);
     if (!order) throw new NotFoundException('Order not found');
     return order;
   }

@@ -246,6 +246,10 @@ abstract final class RoutePaths {
   static const adminUsers = '/admin/users';
   static const adminSellers = '/admin/sellers';
   static const adminSellerApplications = '/admin/seller-applications';
+
+  /// Q63 — the delivery companies desk. Carriers, coverage, and the parcels
+  /// none of them accepted. No drivers: Reem does not run a fleet.
+  static const adminDelivery = '/admin/delivery';
   static const adminFinancials = '/admin/financials';
   static const adminCommissions = '/admin/commissions';
   static const adminAnalytics = '/admin/analytics';

@@ -11,11 +11,15 @@ import {
   Post,
 } from '@nestjs/common';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
+import { SelfScoped } from '../../common/decorators/self-scoped.decorator';
 import { ProfileOverviewService } from './profile-overview.service';
 import { UsersService } from './users.service';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { SetProfileVisibilityDto } from '../commerce-content/dto/social.dto';
 
+@SelfScoped(
+  "public profiles are public; anything that writes is scoped to the caller's own account",
+)
 @Controller('users')
 export class UsersController {
   constructor(

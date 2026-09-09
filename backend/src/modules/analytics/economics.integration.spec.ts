@@ -54,6 +54,7 @@ function dbTest(name: string, body: (world: World) => Promise<void>): void {
       t.skip('no database reachable');
       return;
     }
+    currentWindow = nextWindow();
     let failure: unknown;
     try {
       await prisma.$transaction(
@@ -93,17 +94,59 @@ interface World {
   window: { from: Date; to: Date; currency: Currency };
 }
 
+/**
+ * Every test gets a week of its own, decades ago.
+ *
+ * **Why not "now".** These assertions are on *aggregates over a window*, and
+ * the service reads the whole database — a rollback keeps this test's rows
+ * from escaping, it does not keep anybody else's rows out. With the window at
+ * `now ± 1 hour`, every one of the hundred-odd spec files running beside this
+ * one was writing into it: any that commits a delivered parcel or posts a
+ * journal entry lands inside the window and is counted. That is exactly what
+ * happened — these ten passed alone and seven of them failed in the suite, and
+ * the numbers were off by whatever the neighbours had just booked.
+ *
+ * Two properties make a window safe, and it needs both:
+ *
+ * - **Far in the past**, so nothing that runs against a real clock can reach
+ *   it. Ordinary code stamps `now`; only a fixture deliberately backdating
+ *   itself can land in 1990.
+ * - **Distinct per test**, so the file cannot contaminate itself either — and
+ *   so a failure names one window rather than a shared one.
+ *
+ * The fixtures below stamp `createdAt` on the merchandise and `occurredAt` on
+ * the journal entries into whichever window is current, which is what puts
+ * them inside it.
+ */
+const WINDOW_EPOCH = Date.UTC(1990, 0, 1);
+const WINDOW_SPAN_MS = 7 * 24 * 60 * 60 * 1000;
+let windowSeq = 0;
+
+/** The window the test now running owns. Read by the fixtures. */
+let currentWindow: { from: Date; to: Date; currency: Currency };
+
+function nextWindow(): { from: Date; to: Date; currency: Currency } {
+  const from = new Date(WINDOW_EPOCH + windowSeq * WINDOW_SPAN_MS);
+  windowSeq += 1;
+  return {
+    from,
+    to: new Date(from.getTime() + WINDOW_SPAN_MS),
+    currency: Currency.SYP,
+  };
+}
+
+/** The instant fixtures are stamped at: comfortably inside the window. */
+function insideWindow(): Date {
+  return new Date(currentWindow.from.getTime() + WINDOW_SPAN_MS / 2);
+}
+
 function build(tx: Tx): World {
   const db = asPrisma(tx);
   return {
     tx,
     ledger: new LedgerService(db),
     economics: new EconomicsService(db),
-    window: {
-      from: new Date(Date.now() - 60 * 60 * 1000),
-      to: new Date(Date.now() + 60 * 60 * 1000),
-      currency: Currency.SYP,
-    },
+    window: currentWindow,
   };
 }
 
@@ -118,7 +161,13 @@ async function makeUser(tx: Tx, tag: string, role: UserRole = UserRole.CUSTOMER)
     data: {
       name: `ec-${tag}`,
       username: `ec_${u}`,
-      phone: `+9639${u.slice(-8)}`,
+      // Eight genuinely random digits, not a slice of the timestamp.
+      // `uniq` is unique *within* a process; `node --test` runs spec files in
+      // parallel, so two of them entering `makeUser` in the same millisecond
+      // with the same counter produced the same eight digits and one of them
+      // died on the unique index — a failure that looked like the assertion
+      // under test rather than like the fixture it was.
+      phone: `+9639${Math.floor(10_000_000 + Math.random() * 89_999_999)}`,
       passwordHash: 'x',
       role,
     },
@@ -167,10 +216,17 @@ async function makeParcel(tx: Tx, shape: ParcelShape) {
     },
   });
 
+  // Everything this parcel is made of is dated into the test's own window;
+  // `volume` filters sub-orders on `createdAt`, so a fixture stamped `now`
+  // would sit outside the window it is being measured in.
+  const at = insideWindow();
+
   let orderId = shape.orderId;
   if (!orderId) {
     const order = await tx.order.create({
       data: {
+        createdAt: at,
+        placedAt: at,
         number: `ORD-${uniq('o').slice(-12)}`,
         userId: customer.id,
         status: OrderStatus.DELIVERED,
@@ -192,6 +248,7 @@ async function makeParcel(tx: Tx, shape: ParcelShape) {
 
   const sellerOrder = await tx.sellerOrder.create({
     data: {
+      createdAt: at,
       orderId,
       number: `SO-${uniq('s').slice(-12)}`,
       sellerId: seller.id,
@@ -206,7 +263,7 @@ async function makeParcel(tx: Tx, shape: ParcelShape) {
         .minus(syp(discount))
         .minus(syp(shape.commission))
         .toPrisma(),
-      deliveredAt: new Date(),
+      deliveredAt: at,
       items: {
         create: {
           productId: product.id,
@@ -241,6 +298,9 @@ async function post(
         { account: { code: debit }, direction: LedgerDirection.DEBIT, amount: syp(amount) },
         { account: { code: credit }, direction: LedgerDirection.CREDIT, amount: syp(amount) },
       ],
+      // `movement` filters on the entry's `occurredAt`, so this is what puts
+      // the posting inside this test's window rather than in today.
+      occurredAt: insideWindow(),
     },
     world.tx,
   );
@@ -458,6 +518,10 @@ dbTest('a reversed entry stops counting as revenue', async (world) => {
           amount: syp('10000'),
         },
       ],
+      // Posted directly rather than through `post`, so it needs the window
+      // stamp of its own — without it the entry lands at today's date and the
+      // assertion below measures a window it is not in.
+      occurredAt: insideWindow(),
     },
     world.tx,
   );

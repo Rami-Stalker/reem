@@ -217,6 +217,35 @@ class _Header extends StatelessWidget {
                 ),
               ],
             ),
+            // Which company took it, and their number for it — so a seller
+            // chasing a late parcel knows who to ring without asking support.
+            if (order.shipment!.carrierName != null)
+              Padding(
+                padding: const EdgeInsets.only(
+                  top: DsSpacing.xxs,
+                  right: DsSpacing.lg,
+                ),
+                child: Text(
+                  order.shipment!.carrierTrackingNumber == null
+                      ? '${l10n.deliveryCarrier}: ${order.shipment!.carrierName}'
+                      : '${l10n.deliveryCarrier}: ${order.shipment!.carrierName}'
+                            ' · ${order.shipment!.carrierTrackingNumber}',
+                  style: context.dsText.caption.tint(atelier.muted),
+                ),
+              ),
+            // A parcel the carrier would not take is hers to chase: it is
+            // packed, it is not moving, and nobody else is watching this row.
+            if (order.shipment!.isWaitingForCarrier)
+              Padding(
+                padding: const EdgeInsets.only(
+                  top: DsSpacing.xxs,
+                  right: DsSpacing.lg,
+                ),
+                child: Text(
+                  l10n.sellerOrderCarrierPendingRetry,
+                  style: context.dsText.caption.tint(atelier.caution),
+                ),
+              ),
           ],
         ],
       ),

@@ -17,6 +17,7 @@ abstract interface class CheckoutRepository {
 
   // Placing + paying
   Future<Result<PlacedOrder>> placeOrder({
+    required String idempotencyKey,
     ShippingInput? shipping,
     String? addressId,
     bool saveAddress = false,

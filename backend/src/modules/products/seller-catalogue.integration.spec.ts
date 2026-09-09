@@ -124,7 +124,7 @@ async function seller(tx: Tx): Promise<AuthUser> {
   const user = await tx.user.create({
     data: {
       name: 'ريم — بائعة اختبار',
-      phone: `+96393${String(stamp).slice(-7)}`,
+      phone: `+96393${Math.floor(1000000 + Math.random() * 8999999)}`,
       username: `catalogue_spec_${stamp}`,
       role: UserRole.SELLER,
       sellerVerifiedAt: new Date(),

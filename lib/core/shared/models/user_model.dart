@@ -19,6 +19,7 @@ class UserModel extends User {
     super.followersCount,
     super.followingCount,
     super.permissions,
+    super.isCourier,
     required super.createdAt,
   });
 
@@ -43,6 +44,7 @@ class UserModel extends User {
         for (final permission in (json['permissions'] as List? ?? const []))
           if (permission is String) permission,
       },
+      isCourier: json['is_courier'] as bool? ?? false,
       createdAt: DateTime.parse(json['created_at'] as String),
     );
   }
@@ -87,6 +89,7 @@ class UserModel extends User {
         followersCount: user.followersCount,
         followingCount: user.followingCount,
         permissions: user.permissions,
+        isCourier: user.isCourier,
         createdAt: user.createdAt,
       );
 

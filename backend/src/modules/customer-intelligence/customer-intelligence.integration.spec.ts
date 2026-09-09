@@ -101,7 +101,7 @@ async function makeCustomer(tx: Tx) {
     data: {
       name: 'ريم',
       username: `ci_${u}`,
-      phone: `+9639${u.slice(-8)}`,
+      phone: `+9639${Math.floor(10000000 + Math.random() * 89999999)}`,
       passwordHash: 'x',
       role: UserRole.CUSTOMER,
     },
@@ -114,7 +114,7 @@ async function makeSeller(tx: Tx) {
     data: {
       name: 'بوتيك',
       username: `cis_${u}`,
-      phone: `+96388${u.slice(-7)}`,
+      phone: `+96388${Math.floor(1000000 + Math.random() * 8999999)}`,
       passwordHash: 'x',
       role: UserRole.SELLER,
     },

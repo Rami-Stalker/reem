@@ -95,7 +95,7 @@ async function makeUser(tx: Tx, tag: string, role: UserRole = UserRole.CUSTOMER)
     data: {
       name: `trust-${tag}`,
       username: `trust_${u}`,
-      phone: `+9639${u.slice(-8)}`,
+      phone: `+9639${Math.floor(10000000 + Math.random() * 89999999)}`,
       passwordHash: 'x',
       role,
       isVerified: true,

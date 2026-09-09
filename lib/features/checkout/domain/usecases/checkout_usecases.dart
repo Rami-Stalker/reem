@@ -37,6 +37,7 @@ class PlaceOrderUseCase {
   const PlaceOrderUseCase(this._repo);
   final CheckoutRepository _repo;
   Future<Result<PlacedOrder>> call({
+    required String idempotencyKey,
     ShippingInput? shipping,
     String? addressId,
     bool saveAddress = false,
@@ -47,6 +48,7 @@ class PlaceOrderUseCase {
     bool privacyMask = false,
   }) =>
       _repo.placeOrder(
+        idempotencyKey: idempotencyKey,
         shipping: shipping,
         addressId: addressId,
         saveAddress: saveAddress,

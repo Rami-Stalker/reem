@@ -21,6 +21,7 @@ import { Throttle } from '@nestjs/throttler';
 import { VisualSearchSource, VisualTryOnStatus } from '@prisma/client';
 import type { Request } from 'express';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
+import { SelfScoped } from '../../common/decorators/self-scoped.decorator';
 import { PrismaService } from '../../prisma/prisma.service';
 import { EmbeddingService } from './embedding/embedding.service';
 import { ProductIndexerService } from './embedding/product-indexer.service';
@@ -69,6 +70,9 @@ interface UploadedFileLike {
  * with no session, no expiry and nobody responsible for it whenever she backed
  * out between the two calls.
  */
+@SelfScoped(
+  'a search session, its regions and its results belong to the caller who opened it',
+)
 @Controller('visual-search')
 export class VisualSearchController {
   constructor(

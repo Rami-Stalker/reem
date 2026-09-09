@@ -174,6 +174,21 @@ class _StatusHeader extends StatelessWidget {
               value: tracking.orderNumber,
               isCode: true,
             ),
+            // The company carrying it, and their own number for her box. Reem
+            // hands the parcel over; from there the answer to "where is it" is
+            // partly theirs, and she should be able to ask them directly.
+            if (tracking.carrier != null) ...[
+              _Row(
+                label: l10n.deliveryCarrier,
+                value: tracking.carrier!.name,
+              ),
+              if (tracking.carrier!.trackingNumber != null)
+                _Row(
+                  label: l10n.deliveryCarrierTracking,
+                  value: tracking.carrier!.trackingNumber!,
+                  isCode: true,
+                ),
+            ],
             if (tracking.scheduledFor != null)
               _Row(
                 label: l10n.trackScheduledFor,

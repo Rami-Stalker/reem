@@ -23,6 +23,12 @@ const revenueStatuses = [...REVENUE_STATUSES];
 
 const lowStockThreshold = 10;
 
+/** How a currency is written on a seller's own screens. */
+const CURRENCY_UNITS: Record<Currency, string> = {
+  [Currency.SYP]: 'ل.س',
+  [Currency.USD]: '$',
+};
+
 type CountRow<TStatus extends string> = {
   status: TStatus;
   _count: { _all: number };
@@ -222,6 +228,7 @@ export class SellerCommerceService {
       goals: this.goals({
         monthRevenue: revenue.month.revenue,
         monthOrders: revenue.month.orders,
+        currency: revenue.month.currency,
         activeProducts,
         rating: seller.sellerReputation?.averageRating ?? 0,
       }),
@@ -864,13 +871,16 @@ export class SellerCommerceService {
     publishedContent: number;
     sellerVerifiedAt: Date | null;
   }) {
+    // Arabic, because the seller app prints these strings straight onto her
+    // dashboard — there is no key for them in the client's dictionary, so
+    // whatever is written here is what she reads.
     const tasks = [];
     if (!input.sellerVerifiedAt) {
       tasks.push({
         id: 'seller-verification',
         kind: 'verification',
-        title: 'Complete seller verification',
-        subtitle: 'Unlock publishing and advanced commerce operations',
+        title: 'أكملي توثيق المتجر',
+        subtitle: 'التوثيق يفتح النشر وأدوات البيع الكاملة',
         priority: 'high',
       });
     }
@@ -878,8 +888,8 @@ export class SellerCommerceService {
       tasks.push({
         id: 'ship-ready-orders',
         kind: 'fulfillment',
-        title: `Ship ${input.orders.ready_for_shipment} ready orders`,
-        subtitle: 'Keep fulfillment performance healthy',
+        title: `${input.orders.ready_for_shipment} طلب جاهز للشحن`,
+        subtitle: 'سلّميها للمندوب حتى لا يتأخر التسليم',
         priority: 'high',
         count: input.orders.ready_for_shipment,
       });
@@ -888,8 +898,8 @@ export class SellerCommerceService {
       tasks.push({
         id: 'review-low-stock',
         kind: 'inventory',
-        title: `Restock ${input.lowStockCount} products`,
-        subtitle: 'Avoid missed sales on active listings',
+        title: `${input.lowStockCount} منتج أوشك على النفاد`,
+        subtitle: 'أعيدي تعبئة المخزون قبل أن تضيع مبيعات',
         priority: input.lowStockCount >= 3 ? 'high' : 'medium',
         count: input.lowStockCount,
       });
@@ -898,8 +908,8 @@ export class SellerCommerceService {
       tasks.push({
         id: 'complete-product-drafts',
         kind: 'products',
-        title: `Complete ${input.draftProducts} product drafts`,
-        subtitle: 'Draft products are not visible to customers',
+        title: `${input.draftProducts} منتج ما زال مسودة`,
+        subtitle: 'المسودات لا تظهر للزبونات',
         priority: 'medium',
         count: input.draftProducts,
       });
@@ -908,17 +918,25 @@ export class SellerCommerceService {
       tasks.push({
         id: 'publish-commerce-content',
         kind: 'content',
-        title: 'Publish shoppable content',
-        subtitle: 'Connect catalog products to posts, stories, and campaigns',
+        title: 'انشري محتوى قابلًا للشراء',
+        subtitle: 'اربطي منتجاتك بمنشورات وقصص وحملات',
         priority: 'low',
       });
     }
     return tasks.slice(0, 6);
   }
 
+  /**
+   * The four numbers a boutique is asked to grow, as she reads them.
+   *
+   * Arabic and in her own currency: the labels used to be English and the
+   * revenue goal was denominated in `$` on a dashboard whose every other figure
+   * is in ل.س, so a seller compared a pound total against a dollar target.
+   */
   private goals(input: {
     monthRevenue: number;
     monthOrders: number;
+    currency: Currency;
     activeProducts: number;
     rating: number;
   }) {
@@ -926,15 +944,15 @@ export class SellerCommerceService {
       {
         id: 'monthly-revenue',
         kind: 'revenue',
-        label: 'Monthly revenue',
+        label: 'مبيعات الشهر',
         current: input.monthRevenue,
         target: this.goalTarget(input.monthRevenue, 1000),
-        unit: '$',
+        unit: CURRENCY_UNITS[input.currency],
       },
       {
         id: 'monthly-orders',
         kind: 'orders',
-        label: 'Orders this month',
+        label: 'طلبات هذا الشهر',
         current: input.monthOrders,
         target: this.goalTarget(input.monthOrders, 25),
         unit: '',
@@ -942,7 +960,7 @@ export class SellerCommerceService {
       {
         id: 'active-products',
         kind: 'products',
-        label: 'Active products',
+        label: 'منتجات معروضة',
         current: input.activeProducts,
         target: this.goalTarget(input.activeProducts, 20),
         unit: '',
@@ -950,10 +968,10 @@ export class SellerCommerceService {
       {
         id: 'store-rating',
         kind: 'rating',
-        label: 'Store rating',
+        label: 'تقييم المتجر',
         current: input.rating,
         target: 5,
-        unit: 'stars',
+        unit: 'نجمة',
       },
     ];
   }

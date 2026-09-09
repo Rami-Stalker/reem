@@ -14,6 +14,7 @@ import {
   CurrentUser,
 } from '../../common/decorators/current-user.decorator';
 import { OpenTicketDto, ReplyTicketDto } from './dto/support.dto';
+import { SelfScoped } from '../../common/decorators/self-scoped.decorator';
 import { SupportService } from './support.service';
 
 /**
@@ -25,6 +26,9 @@ import { SupportService } from './support.service';
  * than through a parallel set of endpoints, so there is one definition of what
  * a ticket is.
  */
+@SelfScoped(
+  'SupportService decides per ticket what each reader may see; staff reach the same routes with wider visibility',
+)
 @Controller('support/tickets')
 export class SupportController {
   constructor(private readonly support: SupportService) {}

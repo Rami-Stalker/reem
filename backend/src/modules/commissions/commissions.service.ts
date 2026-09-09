@@ -2,6 +2,7 @@ import {
   BadRequestException,
   ForbiddenException,
   Injectable,
+  Logger,
   NotFoundException,
 } from '@nestjs/common';
 import {
@@ -39,6 +40,17 @@ import {
 const Decimal = Prisma.Decimal;
 
 /**
+ * How many parcels one escrow sweep will release.
+ *
+ * Large enough that a normal night clears in a single run, small enough that
+ * the first run after a long outage does not hold every due parcel since
+ * launch in memory while it posts to the ledger for each one. A backlog
+ * drains over consecutive runs, which is safe because the sweep re-selects
+ * from the database every time.
+ */
+const ESCROW_RELEASE_BATCH = 500;
+
+/**
  * Commission settlement and seller payouts.
  *
  * Settlement is now per SUB-ORDER, not per order: the commission was already
@@ -50,6 +62,8 @@ const Decimal = Prisma.Decimal;
  */
 @Injectable()
 export class CommissionsService {
+  private readonly logger = new Logger(CommissionsService.name);
+
   constructor(
     private readonly prisma: PrismaService,
     private readonly ledger: LedgerService,
@@ -122,7 +136,18 @@ export class CommissionsService {
       where: { id: sellerOrderId },
       include: {
         items: true,
-        shipment: { select: { courierId: true } },
+        shipment: {
+          select: {
+            courierId: true,
+            // What the carrier charged for this journey. Lives on the dispatch
+            // because that is the row the adapter wrote after the carrier
+            // answered; a parcel carried without a dispatch (a rider assigned
+            // by hand) has no quoted fee and accrues nothing.
+            dispatch: {
+              select: { id: true, feeAmount: true, feeCurrency: true },
+            },
+          },
+        },
         order: { select: { payment: { select: { method: true } } } },
       },
     });
@@ -263,6 +288,8 @@ export class CommissionsService {
       lines,
     });
 
+    await this.accrueDeliveryCost(sellerOrder);
+
     if (!existing) {
       await this.prisma.financialLedgerEntry.createMany({
         data: [
@@ -359,9 +386,33 @@ export class CommissionsService {
 
   /**
    * Q24 P1 — releases escrow for sub-orders whose return window has closed and
-   * that carry no open dispute. Run on a schedule.
+   * that carry no open dispute.
+   *
+   * **This is the bridge between a completed sale and a payable one.**
+   * `SellerPayoutsService.claimableLedgers` will only pay a ledger whose
+   * sub-order has `escrowReleased: true`, so for as long as nothing calls
+   * this, every payout request from every seller returns zero. It was written
+   * and never scheduled; `CommissionsScheduler` is what runs it now.
+   *
+   * Bounded and fault-isolated, because it is a sweep over money:
+   *
+   * - `take` caps one run. A backlog drains over consecutive nights rather
+   *   than loading every due parcel since launch into memory at once — and
+   *   the sweep is idempotent, so draining across runs costs nothing.
+   * - One parcel that will not settle must not strand the rest. Each is
+   *   caught and counted; the flag stays unset on a failure, so tomorrow's
+   *   run picks it up again instead of leaving the money released but
+   *   unbooked.
+   *
+   * The flag is written **before** the postings, deliberately: `ledger.post`
+   * is idempotent on its `reference`, so a retry after a partial failure
+   * re-runs safely, while a flag written last could be lost after the money
+   * had already moved.
    */
-  async releaseDueEscrow(now = new Date()) {
+  async releaseDueEscrow(
+    now = new Date(),
+    options: { batchSize?: number } = {},
+  ): Promise<{ released: number; failed: number }> {
     const due = await this.prisma.sellerOrder.findMany({
       where: {
         escrowReleased: false,
@@ -376,20 +427,136 @@ export class CommissionsService {
         returns: { none: { status: { in: [...LIVE_RETURN_STATUSES] } } },
       },
       select: { id: true },
+      // Oldest first: a seller who has been waiting longest is paid first.
+      orderBy: { escrowReleaseAt: 'asc' },
+      take: options.batchSize ?? ESCROW_RELEASE_BATCH,
     });
 
+    let released = 0;
+    let failed = 0;
     for (const sellerOrder of due) {
-      await this.prisma.sellerOrder.update({
-        where: { id: sellerOrder.id },
-        data: { escrowReleased: true },
-      });
-      await this.settleSellerOrder(sellerOrder.id);
-      await this.postEscrowRelease(sellerOrder.id);
-      // Q43 — «مع احتساب النقاط بعد انتهاء مدة الاسترجاع». The sale is final
-      // at exactly this moment, which is when the client said points count.
-      await this.loyalty.accrueForSellerOrder(sellerOrder.id);
+      try {
+        await this.prisma.sellerOrder.update({
+          where: { id: sellerOrder.id },
+          data: { escrowReleased: true },
+        });
+        await this.settleSellerOrder(sellerOrder.id);
+        await this.postEscrowRelease(sellerOrder.id);
+        // Q43 — «مع احتساب النقاط بعد انتهاء مدة الاسترجاع». The sale is final
+        // at exactly this moment, which is when the client said points count.
+        await this.loyalty.accrueForSellerOrder(sellerOrder.id);
+        released += 1;
+      } catch (error) {
+        failed += 1;
+        // Put the flag back. Leaving it set on a parcel whose postings did not
+        // land would make the sale permanently invisible to this sweep — the
+        // seller's money would sit in escrow with nothing left to release it.
+        await this.prisma.sellerOrder
+          .update({
+            where: { id: sellerOrder.id },
+            data: { escrowReleased: false },
+          })
+          .catch(() => undefined);
+        this.logger.error(
+          `Escrow release failed for sub-order ${sellerOrder.id}; the next ` +
+            `sweep will retry: ${(error as Error).message}`,
+        );
+      }
     }
-    return { released: due.length };
+    return { released, failed };
+  }
+
+  /**
+   * Books what the carrier charged to carry this parcel.
+   *
+   * **The half of delivery the books never had.** `SHIPPING_REVENUE` records
+   * the fee the customer paid; this records what the journey cost. Without it
+   * `EconomicsService`'s contribution margin — which already reads
+   * `SHIPPING_EXPENSE` — was revenue with no cost against it, so every margin
+   * figure the platform reported was overstated by the entire delivery bill,
+   * and a route that loses money on every parcel looked profitable.
+   *
+   * **The platform bears it in full.** The seller's net is computed on goods
+   * alone (`sellerNet` never sees `shippingCost`), so the difference between
+   * what the customer paid for delivery and what the carrier charged is the
+   * platform's margin or the platform's loss. Nothing here touches
+   * `SELLER_PAYABLE`.
+   *
+   * **A separate entry, not a line on the settlement.** Three reasons, and all
+   * three are load-bearing:
+   *
+   * 1. A carrier may quote in a different currency from the order. A journal
+   *    entry balances within one currency, so a foreign fee cannot be a line
+   *    beside a Syrian-pound settlement.
+   * 2. The carrier's fee arrives from the adapter and can arrive *late* — a
+   *    webhook after delivery, a correction the next day. Its own `reference`
+   *    lets it be posted when it is known rather than held up the settlement.
+   * 3. Reversing a sale should not reverse a journey that physically
+   *    happened. The carrier is owed for it either way.
+   *
+   * Silent when there is nothing to book: a parcel with no dispatch (a rider
+   * assigned by hand), a carrier that quotes no fee, or a fee of zero.
+   */
+  private async accrueDeliveryCost(sellerOrder: {
+    id: string;
+    number: string;
+    orderId: string;
+    shipment: {
+      courierId: string | null;
+      dispatch: {
+        id: string;
+        feeAmount: Prisma.Decimal | null;
+        feeCurrency: Currency | null;
+      } | null;
+    } | null;
+  }): Promise<void> {
+    const dispatch = sellerOrder.shipment?.dispatch;
+    if (!dispatch?.feeAmount || !dispatch.feeCurrency) return;
+
+    const fee = Money.of(dispatch.feeAmount, dispatch.feeCurrency);
+    if (fee.isZero()) return;
+
+    // Without a courier row there is no party to owe. That happens for an
+    // external carrier the platform has not modelled as a `Courier`, and
+    // booking the debt against nobody would make the liability unattributable
+    // — worse than not booking it, because it would look settled.
+    const courierId = sellerOrder.shipment?.courierId;
+    if (!courierId) {
+      this.logger.warn(
+        `Parcel ${sellerOrder.number} was carried for ${fee.toString()} by a ` +
+          `dispatch with no courier row; the cost is not booked. Attach a ` +
+          `Courier to the provider account so the payable has an owner.`,
+      );
+      return;
+    }
+
+    await this.ledger.post({
+      type: JournalEntryType.DELIVERY_COST_ACCRUED,
+      // Keyed on the dispatch, not the sub-order: the dispatch is the thing
+      // the carrier billed, and re-settling a parcel must not re-book it.
+      reference: `delivery-cost:${dispatch.id}`,
+      description: `Delivery cost — ${sellerOrder.number}`,
+      orderId: sellerOrder.orderId,
+      sellerOrderId: sellerOrder.id,
+      lines: [
+        {
+          account: { code: LedgerAccountCode.SHIPPING_EXPENSE },
+          direction: LedgerDirection.DEBIT,
+          amount: fee,
+          memo: 'Carrier fee for this parcel',
+        },
+        {
+          account: {
+            code: LedgerAccountCode.COURIER_PAYABLE,
+            ownerId: courierId,
+          },
+          direction: LedgerDirection.CREDIT,
+          amount: fee,
+          memo: 'Owed to the carrier until the delivery bill is settled',
+        },
+      ],
+      metadata: { dispatch_id: dispatch.id } as Prisma.InputJsonValue,
+    });
   }
 
   /**

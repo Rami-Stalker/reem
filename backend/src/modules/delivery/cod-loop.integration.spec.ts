@@ -86,7 +86,7 @@ async function makeUser(tx: Tx, tag: string, role: UserRole = UserRole.CUSTOMER)
     data: {
       name: `cod-${tag}`,
       username: `cod_${u}`,
-      phone: `+9639${u.slice(-8)}`,
+      phone: `+9639${Math.floor(10000000 + Math.random() * 89999999)}`,
       passwordHash: 'x',
       role,
     },
@@ -103,7 +103,7 @@ async function makeCodParcel(
   const courier = await tx.courier.create({
     data: {
       displayName: `مندوب ${uniq('c').slice(-5)}`,
-      phone: `+9639${uniq('c').slice(-8)}`,
+      phone: `+9639${Math.floor(10000000 + Math.random() * 89999999)}`,
       kind: CourierKind.PLATFORM_STAFF,
     },
   });

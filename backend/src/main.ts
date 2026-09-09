@@ -8,6 +8,8 @@ import { AppModule } from './app.module';
 import { AllExceptionsFilter } from './common/filters/all-exceptions.filter';
 import type { NextFunction, Request, Response } from 'express';
 import { LocalDiskDriver } from './modules/media/storage/local-disk.driver';
+import { RequestContextMiddleware } from './common/observability/request-context.middleware';
+import { StructuredLogger } from './common/observability/structured-logger';
 
 async function bootstrap() {
   // `rawBody` is required by the WhatsApp webhook: Meta signs the exact bytes
@@ -15,8 +17,17 @@ async function bootstrap() {
   // any key-order or whitespace difference.
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
     rawBody: true,
+    // One JSON object per line in production, with the request id attached, so
+    // a support agent can search for the string the customer read off her
+    // screen. Development keeps the readable format — see `StructuredLogger`.
+    logger: new StructuredLogger('Reem'),
   });
   const config = app.get(ConfigService);
+
+  // First in the chain, before helmet and before every guard: a request that
+  // is refused by authentication still needs a name, or the one failure a
+  // customer reports is the one nothing can be found for.
+  app.use(new RequestContextMiddleware().use.bind(new RequestContextMiddleware()));
 
   // Security headers.
   app.use(helmet());

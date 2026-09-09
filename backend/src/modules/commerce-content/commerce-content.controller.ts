@@ -10,12 +10,16 @@ import {
   Query,
 } from '@nestjs/common';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
+import { SelfScoped } from '../../common/decorators/self-scoped.decorator';
 import { CommerceContentService } from './commerce-content.service';
 import {
   CommerceFeedQueryDto,
   RecordCommerceContentEventDto,
 } from './dto/commerce-content.dto';
 
+@SelfScoped(
+  'the feed is public reading; a reaction names the caller and nobody else',
+)
 @Controller('content')
 export class CommerceContentController {
   constructor(private readonly content: CommerceContentService) {}

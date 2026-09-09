@@ -12,6 +12,7 @@ import {
 } from '@nestjs/common';
 import { Throttle } from '@nestjs/throttler';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
+import { SelfScoped } from '../../common/decorators/self-scoped.decorator';
 import { ClosetService } from './closet.service';
 import { ClosetIntakeService } from './closet-intake.service';
 import { ClosetGapService } from './gaps/closet-gap.service';
@@ -61,6 +62,9 @@ import { seasonLabel } from './closet.serializer';
  * Gaps recompute after every write that could move them rather than on a
  * schedule — see `ClosetGapService.recompute` for why that is affordable.
  */
+@SelfScoped(
+  'a wardrobe belongs to one woman; every query is scoped to her id',
+)
 @Controller('closet')
 export class ClosetController {
   constructor(

@@ -80,7 +80,7 @@ async function makeUser(tx: Tx, tag: string) {
     data: {
       name: `addr-${tag}`,
       username: `addr_${u}`,
-      phone: `+9639${u.slice(-8)}`,
+      phone: `+9639${Math.floor(10000000 + Math.random() * 89999999)}`,
       passwordHash: 'x',
       role: UserRole.CUSTOMER,
     },

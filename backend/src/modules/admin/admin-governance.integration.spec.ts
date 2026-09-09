@@ -100,7 +100,7 @@ async function makeUser(tx: Tx, tag: string, role: UserRole = UserRole.CUSTOMER)
     data: {
       name: `adm-${tag}`,
       username: `adm_${u}`,
-      phone: `+9639${u.slice(-8)}`,
+      phone: `+9639${Math.floor(10000000 + Math.random() * 89999999)}`,
       passwordHash: 'x',
       role,
     },
@@ -272,7 +272,7 @@ dbTest('the users list pages and counts the whole table', () =>
         data: {
           name: `pager ${marker}`,
           username: `pager_${marker}_${i}`,
-          phone: `+9639${marker.slice(-7)}${i}`,
+          phone: `+9639${Math.floor(10000000 + Math.random() * 89999999)}`,
           passwordHash: 'x',
         },
       });

@@ -11,6 +11,7 @@ import {
   Query,
 } from '@nestjs/common';
 import { CurrentUser, AuthUser } from '../../common/decorators/current-user.decorator';
+import { SelfScoped } from '../../common/decorators/self-scoped.decorator';
 import { OptionalAuth } from '../../common/decorators/optional-auth.decorator';
 import { PaginationDto } from '../../common/dto/pagination.dto';
 import { PostsService } from './posts.service';
@@ -27,6 +28,9 @@ import { CreateCommentDto } from './dto/create-comment.dto';
  * Everything that writes — liking, saving, sharing, commenting, and the
  * personal "saved" list — stays behind the global guard.
  */
+@SelfScoped(
+  'reading is public; writing and deleting check the author against the caller',
+)
 @Controller('posts')
 export class PostsController {
   constructor(private readonly posts: PostsService) {}

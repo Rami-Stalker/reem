@@ -9,7 +9,11 @@ abstract interface class CheckoutRemoteDataSource {
   Future<DeliveryQuoteModel> getDeliveryQuote(String governorate, Money? subtotal);
   Future<List<PaymentMethodOptionModel>> getPaymentMethods();
 
+  /// [idempotencyKey] names the *intent*, not the attempt: the same key sent
+  /// twice is answered from the first result rather than placing a second
+  /// order. Generated once per basket and held across retries.
   Future<PlacedOrderModel> placeOrder({
+    required String idempotencyKey,
     ShippingInput? shipping,
     String? addressId,
     bool saveAddress,

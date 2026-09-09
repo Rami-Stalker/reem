@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 
 import { PrismaModule } from '../../prisma/prisma.module';
 import { CommissionsModule } from '../commissions/commissions.module';
+import { DeliveryModule } from '../delivery/delivery.module';
 import { FinanceModule } from '../finance/finance.module';
 import { OrderWorkflowModule } from '../orders/workflow/order-workflow.module';
 import { SellerCommerceController } from './seller-commerce.controller';
@@ -21,6 +22,7 @@ import { SellerRetentionController } from './seller-retention.controller';
   imports: [
     PrismaModule,
     CommissionsModule,
+    DeliveryModule,
     OrderWorkflowModule,
     FinanceModule,
   ],

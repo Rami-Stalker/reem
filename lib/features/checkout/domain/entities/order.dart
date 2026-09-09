@@ -188,6 +188,13 @@ class OrderShipment extends Equatable {
   final int attemptCount;
   final Money? codAmount;
 
+  /// The delivery company carrying this parcel, when one is.
+  ///
+  /// Reem does not run drivers: past the seller's door a parcel belongs to a
+  /// carrier, and the two things a woman needs then are its name and its own
+  /// number for her box.
+  final OrderCarrier? carrier;
+
   const OrderShipment({
     required this.id,
     required this.trackingCode,
@@ -198,10 +205,34 @@ class OrderShipment extends Equatable {
     this.failureReason,
     this.attemptCount = 0,
     this.codAmount,
+    this.carrier,
   });
 
   @override
-  List<Object?> get props => [id, trackingCode, status, deliveredAt];
+  List<Object?> get props => [id, trackingCode, status, deliveredAt, carrier];
+}
+
+/// What the app is told about a delivery company.
+///
+/// Deliberately four fields. The app has no carrier credential, calls no
+/// carrier API and knows nothing about drivers or routes — everything about
+/// the integration lives on the server, and this is the part a customer or a
+/// seller is allowed to read.
+class OrderCarrier extends Equatable {
+  final String name;
+  final String status;
+  final String? trackingNumber;
+  final String? trackingUrl;
+
+  const OrderCarrier({
+    required this.name,
+    required this.status,
+    this.trackingNumber,
+    this.trackingUrl,
+  });
+
+  @override
+  List<Object?> get props => [name, status, trackingNumber, trackingUrl];
 }
 
 /// One seller's parcel within an order.

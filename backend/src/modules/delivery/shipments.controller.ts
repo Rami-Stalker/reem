@@ -48,10 +48,18 @@ export class ShipmentsController {
   }
 
   // ── Courier app (Q55) ────────────────────────────────────────────────
+  //
+  // Authority here is the `Courier` row linked to the account, checked by
+  // `requireCourier` on every one of these calls — not a role. The role list
+  // that used to sit on them (SELLER, SUPPORT, OPERATIONS_ADMIN) added
+  // nothing, since a seller or a support agent without a courier row is
+  // refused anyway, and it cost a great deal: a delivery rider could only be
+  // given an account by making her SUPPORT, which is a privileged role — the
+  // support console, the recovery desk and a TOTP enrolment demanded at boot,
+  // handed out to move parcels.
 
   /** «يشوف طلباته لليوم». */
   @Get('courier/today')
-  @Roles(UserRole.SELLER, UserRole.SUPPORT, UserRole.OPERATIONS_ADMIN)
   today(
     @CurrentUser('id') userId: string,
     @Query() query: CourierDayQueryDto,
@@ -65,7 +73,6 @@ export class ShipmentsController {
   /** «يؤكد استلام الطلب من البائع». */
   @Post(':id/pick-up')
   @HttpCode(HttpStatus.OK)
-  @Roles(UserRole.SELLER, UserRole.SUPPORT, UserRole.OPERATIONS_ADMIN)
   pickUp(
     @Param('id', ParseUUIDPipe) id: string,
     @CurrentUser('id') userId: string,
@@ -75,7 +82,6 @@ export class ShipmentsController {
 
   @Post(':id/out-for-delivery')
   @HttpCode(HttpStatus.OK)
-  @Roles(UserRole.SELLER, UserRole.SUPPORT, UserRole.OPERATIONS_ADMIN)
   outForDelivery(
     @Param('id', ParseUUIDPipe) id: string,
     @CurrentUser('id') userId: string,
@@ -87,7 +93,6 @@ export class ShipmentsController {
   /** «يغيّر حالة الشحنة» + «يسجّل مبلغ التحصيل» + «صورة إثبات تسليم». */
   @Post(':id/deliver')
   @HttpCode(HttpStatus.OK)
-  @Roles(UserRole.SELLER, UserRole.SUPPORT, UserRole.OPERATIONS_ADMIN)
   deliver(
     @Param('id', ParseUUIDPipe) id: string,
     @CurrentUser('id') userId: string,
@@ -107,7 +112,6 @@ export class ShipmentsController {
   /** «يسجّل سبب فشل التسليم». */
   @Post(':id/fail')
   @HttpCode(HttpStatus.OK)
-  @Roles(UserRole.SELLER, UserRole.SUPPORT, UserRole.OPERATIONS_ADMIN)
   fail(
     @Param('id', ParseUUIDPipe) id: string,
     @CurrentUser('id') userId: string,

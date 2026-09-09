@@ -75,7 +75,7 @@ async function openShelf(
         data: {
           name: `بوتيك ${n}`,
           username: `dup_${u}_${n}`,
-          phone: `+9639${u.slice(-7)}${n}`,
+          phone: `+9639${Math.floor(10000000 + Math.random() * 89999999)}`,
           passwordHash: 'x',
           role: UserRole.SELLER,
         },

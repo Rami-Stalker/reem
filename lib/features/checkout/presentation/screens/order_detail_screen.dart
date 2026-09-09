@@ -628,6 +628,46 @@ class _ParcelCard extends StatelessWidget {
                 ),
               ),
             ),
+            // Who is actually carrying it. Reem hands a packed parcel to a
+            // delivery company, and once it has left the boutique the two
+            // things she needs are that company's name and its own number for
+            // her box — the number she quotes if she rings them.
+            if (parcel.shipment!.carrier != null) ...[
+              const SizedBox(height: DsSpacing.xxs),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: DsSpacing.xxs),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.business_outlined,
+                      size: 16,
+                      color: colors.onSurfaceVariant,
+                    ),
+                    const SizedBox(width: DsSpacing.xs),
+                    Expanded(
+                      child: Text(
+                        '${context.l10n.deliveryCarrier}: '
+                        '${parcel.shipment!.carrier!.name}',
+                        style: context.dsText.bodySmall.tint(
+                          colors.onSurfaceVariant,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              if (parcel.shipment!.carrier!.trackingNumber != null)
+                Padding(
+                  padding: const EdgeInsets.only(right: DsSpacing.lg),
+                  child: Text(
+                    '${context.l10n.deliveryCarrierTracking} '
+                    '${parcel.shipment!.carrier!.trackingNumber}',
+                    style: context.dsText.bodySmall.tint(
+                      colors.onSurfaceVariant,
+                    ),
+                  ),
+                ),
+            ],
           ],
           if (parcel.cancellationReason != null) ...[
             const SizedBox(height: DsSpacing.xs),

@@ -13,6 +13,7 @@ import {
 } from '@nestjs/common';
 import { PurchaseStage } from '@prisma/client';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
+import { SelfScoped } from '../../common/decorators/self-scoped.decorator';
 import { CreateOrderDto } from '../orders/dto/create-order.dto';
 import { PurchasePlanService } from './purchase-plan.service';
 import { RoomAccessService } from './room-access.service';
@@ -65,6 +66,9 @@ import {
  * open decisions and names them — the one place the whole model is enforced
  * rather than implied.
  */
+@SelfScoped(
+  "RoomsService checks membership, and the member's role inside the room, on every call",
+)
 @Controller('rooms')
 export class RoomsController {
   constructor(

@@ -95,7 +95,7 @@ async function makeUser(
     data: {
       name: `ledger-test-${suffix}`,
       username: `ledger_test_${unique}`,
-      phone: `+9639${unique.slice(-8)}`,
+      phone: `+9639${Math.floor(10000000 + Math.random() * 89999999)}`,
       passwordHash: 'x',
     },
   });

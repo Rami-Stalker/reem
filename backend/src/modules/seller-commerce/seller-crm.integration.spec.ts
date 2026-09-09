@@ -95,7 +95,7 @@ async function makeUser(tx: Tx, role: UserRole = UserRole.CUSTOMER) {
     data: {
       name: role === UserRole.SELLER ? 'بوتيك' : 'ريم',
       username: `crm_${u}`,
-      phone: `+9639${u.slice(-8)}`,
+      phone: `+9639${Math.floor(10000000 + Math.random() * 89999999)}`,
       passwordHash: 'x',
       role,
     },

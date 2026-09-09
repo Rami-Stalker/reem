@@ -495,7 +495,11 @@ export class ChatsService {
         buyerId,
         sellerId: sellerOrder.sellerId,
         sellerOrderId: sellerOrder.id,
-        title: `Order #${sellerOrder.number}`,
+        // Arabic, like everything else a woman reads in this product. The
+        // clients show the other party's name as the heading and keep this as
+        // the subject line, but it does surface — in a notification, in an
+        // inbox row for a thread whose peer could not be resolved.
+        title: `طلب ${sellerOrder.number}`,
       });
     }
 

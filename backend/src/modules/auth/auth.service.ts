@@ -819,7 +819,10 @@ export class AuthService {
       user.id,
       user.role,
     );
-    return { user: serializeUser(user), permissions: [...permissions].sort() };
+    return {
+      user: { ...serializeUser(user), is_courier: await this.isCourier(user.id) },
+      permissions: [...permissions].sort(),
+    };
   }
 
   /**
@@ -1311,16 +1314,34 @@ export class AuthService {
    * the database, on every request it judges.
    */
   private async authResponse(user: User, tokens: TokenPair) {
-    const permissions = await resolvePermissions(
-      this.prisma,
-      user.id,
-      user.role,
-    );
+    const [permissions, isCourier] = await Promise.all([
+      resolvePermissions(this.prisma, user.id, user.role),
+      this.isCourier(user.id),
+    ]);
     return {
-      user: serializeUser(user),
+      user: { ...serializeUser(user), is_courier: isCourier },
       permissions: [...permissions].sort(),
       tokens,
     };
+  }
+
+  /**
+   * Whether this account carries parcels.
+   *
+   * There is no COURIER value in `UserRole` — a rider is an ordinary account
+   * with a `Courier` row attached, which is what the shipment routes check.
+   * That makes the fact invisible to a client reading only the role, so the
+   * app had no way to offer a courier her own round: the only door to it sat
+   * in the seller menu. It is said here rather than inferred, and it is
+   * presentation like the permission list beside it — the server still resolves
+   * the courier on every call it judges.
+   */
+  private async isCourier(userId: string): Promise<boolean> {
+    const courier = await this.prisma.courier.findUnique({
+      where: { userId },
+      select: { isActive: true },
+    });
+    return courier?.isActive === true;
   }
 
   /**

@@ -137,4 +137,6 @@ flutter test tools/icons/generate_app_icons.dart
 | [DATABASE.md](docs/DATABASE.md) | Schema and data model |
 | [BACKEND_API.md](docs/BACKEND_API.md) | Endpoint surface |
 | [identity-authorization-architecture.md](docs/identity-authorization-architecture.md) | Identity, OTP, devices, roles |
+| [DEPLOYMENT.md](docs/DEPLOYMENT.md) | **Run one API process.** The single-instance constraint, the nightly job order, production env guards |
+| [production-gap-analysis.md](docs/production-gap-analysis.md) | Pre-launch audit: what is complete, what is thin, what is missing, in priority order |
 | [docs/client/](docs/client/) | Client requirement questionnaires |

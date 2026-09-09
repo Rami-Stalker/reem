@@ -16,7 +16,6 @@ import {
   AuthUser,
   CurrentUser,
 } from '../../common/decorators/current-user.decorator';
-import { PaginationDto } from '../../common/dto/pagination.dto';
 import { AppPermission } from '../../common/permissions';
 import {
   HandOverDto,
@@ -50,12 +49,8 @@ export class SellerOrdersController {
 
   /** Her queue with the counts each tab's badge needs. */
   @Get()
-  queue(
-    @CurrentUser() user: AuthUser,
-    @Query() query: SellerQueueQueryDto,
-    @Query() page: PaginationDto,
-  ) {
-    return this.orders.queue(user, query.tab, page);
+  queue(@CurrentUser() user: AuthUser, @Query() query: SellerQueueQueryDto) {
+    return this.orders.queue(user, query.tab, query);
   }
 
   @Get(':id')

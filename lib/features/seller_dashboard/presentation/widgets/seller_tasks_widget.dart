@@ -46,7 +46,7 @@ class SellerTasksWidget extends ConsumerWidget {
                     ),
                     if (highPriority > 0)
                       Text(
-                        '$highPriority urgent',
+                        '$highPriority ${context.l10n.adminPriorityUrgent}',
                         style: context.dsText.caption
                             .copyWith(color: c.error, fontWeight: DsTypography.semiBold),
                       ),
