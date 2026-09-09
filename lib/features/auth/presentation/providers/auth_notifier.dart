@@ -419,19 +419,18 @@ class AuthNotifier extends StateNotifier<AuthState> {
         isGuest: false,
       );
     }
-    final guest = await _repository.isGuestSession();
-    final isGuest = switch (guest) {
-      Success(:final data) => data,
-      Error() => false,
-    };
-    if (!isGuest) {
-      return state.copyWith(
-        isLoading: false,
-        isInitialized: true,
-        isGuest: false,
-        clearUser: true,
-      );
-    }
+    // A visitor, and this is the *common* path — not the error one.
+    //
+    // `getCurrentUser` answers `Success(null)` when there is simply no access
+    // token, which is what a first-time visitor looks like. So the guest
+    // session was being created only in the `Error` branch, which fires on a
+    // network failure or a refresh that was refused: a woman opening the app
+    // for the first time went straight past it. Her cart and her favourites
+    // then answered 401 on every call, and the guest checkout had no session
+    // to attach an order to — the whole guest path was unreachable from a cold
+    // start. Caught by watching a real first load: `/auth/device-keys` went
+    // out, `/auth/guest` never did.
+    final isGuest = await _ensureGuestSession();
     return state.copyWith(
       isLoading: false,
       isInitialized: true,

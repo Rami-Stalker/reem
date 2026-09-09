@@ -59,7 +59,7 @@ flutter analyze
 flutter test
 ```
 
-Four structural checks guard the layout. All exit non-zero on failure.
+Five structural checks guard the layout. All exit non-zero on failure.
 
 ```bash
 node tools/architecture/check-flutter-boundaries.mjs
@@ -90,6 +90,14 @@ node tools/architecture/find-unreachable-dart.mjs
 
 Fails when a library under `lib/` is reachable from neither `main.dart` nor a
 test.
+
+```bash
+node tools/architecture/check-api-contract.mjs
+```
+
+Fails when the client declares a path the API does not serve — a screen built
+on a route that was renamed, or on a feature the backend never had. Neither
+half fails to compile on its own, so nothing else catches it.
 
 ## Response caching
 

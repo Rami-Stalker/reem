@@ -61,6 +61,30 @@ export class CreateCouponDto {
   @Min(1)
   per_user_limit?: number;
 
+  /**
+   * Who pays for the discount, and — from now on — whose goods it covers.
+   *
+   * `funded_by_seller` recorded that a seller paid without recording *which*
+   * seller's items it applied to, so checkout reduced every seller's
+   * commission base in the basket and one boutique funded another's promotion.
+   * Setting `seller_id` scopes the code to her lines alone. It is validated
+   * against a real seller account, so a typo becomes a refusal rather than a
+   * code that silently covers nothing.
+   */
+  @IsOptional()
+  @IsUUID()
+  seller_id?: string;
+
+  /** Only lines in this category. Matched on the line's own category. */
+  @IsOptional()
+  @IsUUID()
+  category_id?: string;
+
+  /** Only this product — the narrowest scope there is. */
+  @IsOptional()
+  @IsUUID()
+  product_id?: string;
+
   /** Set for a user-specific coupon; omit for a global coupon. */
   @IsOptional()
   @IsUUID()
@@ -81,6 +105,14 @@ export class UpdateCouponDto {
   @IsOptional() @IsNumber() @Min(0) amount_off?: number;
   @IsOptional() @IsNumber() @Min(0) min_order_amount?: number;
   @IsOptional() @IsInt() @Min(1) max_uses?: number;
+  /**
+   * Scope, narrowable after issue. `null` clears it — an operator who scoped a
+   * code to the wrong boutique needs a way back to "the whole basket" without
+   * deleting a code customers may already be holding.
+   */
+  @IsOptional() @IsUUID() seller_id?: string | null;
+  @IsOptional() @IsUUID() category_id?: string | null;
+  @IsOptional() @IsUUID() product_id?: string | null;
   @IsOptional() @IsInt() @Min(1) per_user_limit?: number;
   @IsOptional() @IsDateString() expires_at?: string;
   @IsOptional() @IsBoolean() is_active?: boolean;

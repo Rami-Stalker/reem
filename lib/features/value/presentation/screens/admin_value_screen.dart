@@ -30,6 +30,9 @@ class AdminValueScreen extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           AdminPageHeader(
+            // The feature's name, which is a name in both languages: the
+            // Arabic console says «ريم فاليو» aloud and writes it this way.
+            // l10n-ignore: a product name, not copy.
             title: 'Reem Value',
             subtitle: 'المكانة، وشو بتفتح — والضمان إنها ما بتنشرى.',
             actions: [

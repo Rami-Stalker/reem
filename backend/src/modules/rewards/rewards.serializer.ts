@@ -22,6 +22,13 @@ export function serializeCoupon(c: Coupon) {
     used_count: c.usedCount,
     per_user_limit: c.perUserLimit,
     is_user_specific: c.userId != null,
+    funded_by_seller: c.fundedBySeller,
+    // What the code may be spent on. All three null means the whole basket,
+    // which is what every coupon meant before scoping existed — so a console
+    // reading these can show "everything" without a special case.
+    seller_id: c.sellerId,
+    category_id: c.categoryId,
+    product_id: c.productId,
     expires_at: c.expiresAt.toISOString(),
     is_active: c.isActive,
     created_at: c.createdAt.toISOString(),

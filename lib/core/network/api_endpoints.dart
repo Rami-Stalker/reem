@@ -75,7 +75,10 @@ abstract final class ApiEndpoints {
   // Feed & social (customer interactions)
   static const postsFeed = '/posts/feed';
   static const postsSaved = '/posts/saved';
-  static const posts = '/posts';
+  // A bare posts-collection constant used to sit here. Nothing referenced it
+  // and the backend serves no such route: `PostsController` has `feed`,
+  // `saved`, `seller/:sellerId` and `:id`, and no bare listing. A declared
+  // path that resolves to nothing is an invitation to build a screen on it.
   static String postById(String id) => '/posts/$id';
   static String postsBySeller(String sellerId) => '/posts/seller/$sellerId';
   static String postLike(String id) => '/posts/$id/like';

@@ -171,21 +171,33 @@ export class IdempotencyInterceptor implements NestInterceptor {
     endpoint: string;
     requestHash: string;
   }): Promise<unknown | null> {
-    try {
-      await this.prisma.idempotencyRecord.create({
-        data: {
-          key: input.key,
-          scope: input.scope,
-          endpoint: input.endpoint,
-          requestHash: input.requestHash,
-          state: IdempotencyState.IN_FLIGHT,
-          expiresAt: new Date(Date.now() + TTL_MS),
-        },
-      });
-      return null;
-    } catch (error) {
-      if (!this.isUniqueViolation(error)) throw error;
-    }
+    // `INSERT ... ON CONFLICT DO NOTHING` rather than an insert that throws.
+    //
+    // Losing this race is the *expected* path — it is what a second tap looks
+    // like — and letting Prisma raise a unique violation for it meant every
+    // double tap printed `prisma:error` with a stack trace. Found by watching
+    // the log of a live checkout: the guard was working perfectly and
+    // reporting itself as a fault, which is how real errors get buried.
+    //
+    // Winning is "a row came back". No exception, no error line, one
+    // round trip.
+    const claimed = await this.prisma.$queryRaw<{ id: string }[]>`
+      INSERT INTO idempotency_records
+        (id, key, scope, endpoint, request_hash, state, expires_at, created_at)
+      VALUES (
+        gen_random_uuid(),
+        ${input.key},
+        ${input.scope},
+        ${input.endpoint},
+        ${input.requestHash},
+        'IN_FLIGHT'::"IdempotencyState",
+        ${new Date(Date.now() + TTL_MS)},
+        now()
+      )
+      ON CONFLICT (scope, key) DO NOTHING
+      RETURNING id
+    `;
+    if (claimed.length > 0) return null;
 
     const existing = await this.prisma.idempotencyRecord.findUnique({
       where: { scope_key: { scope: input.scope, key: input.key } },
@@ -322,10 +334,4 @@ export class IdempotencyInterceptor implements NestInterceptor {
     return JSON.parse(serialised) as Prisma.InputJsonValue;
   }
 
-  private isUniqueViolation(error: unknown): boolean {
-    return (
-      error instanceof Prisma.PrismaClientKnownRequestError &&
-      error.code === 'P2002'
-    );
-  }
 }

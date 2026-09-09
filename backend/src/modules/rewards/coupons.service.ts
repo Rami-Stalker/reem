@@ -3,7 +3,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { Coupon, CouponType, Prisma } from '@prisma/client';
+import { Coupon, CouponType, Prisma, UserRole } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 import { Money } from '../../common/money';
 import { ScopedLine, eligibleSubtotal, scopeRefusal } from './coupon-scope';
@@ -25,9 +25,13 @@ export class CouponsService {
   // ── Admin CRUD ───────────────────────────────────────────────────────────
 
   async create(dto: CreateCouponDto) {
+    await this.assertScopeExists(dto);
     const coupon = await this.prisma.coupon.create({
       data: {
         code: dto.code.toUpperCase(),
+        sellerId: dto.seller_id ?? null,
+        categoryId: dto.category_id ?? null,
+        productId: dto.product_id ?? null,
         title: dto.title,
         type: dto.type,
         discountPercent: dto.discount_percent ?? 0,
@@ -45,9 +49,16 @@ export class CouponsService {
 
   async update(id: string, dto: UpdateCouponDto) {
     await this.requireCoupon(id);
+    await this.assertScopeExists(dto);
     const coupon = await this.prisma.coupon.update({
       where: { id },
       data: {
+        // `null` is meaningful and distinct from absent: it *clears* a scope.
+        // An operator who scoped a code to the wrong boutique needs a way back
+        // without deleting a code customers may already be holding.
+        ...(dto.seller_id !== undefined && { sellerId: dto.seller_id }),
+        ...(dto.category_id !== undefined && { categoryId: dto.category_id }),
+        ...(dto.product_id !== undefined && { productId: dto.product_id }),
         ...(dto.title !== undefined && { title: dto.title }),
         ...(dto.type !== undefined && { type: dto.type }),
         ...(dto.discount_percent !== undefined && {
@@ -262,6 +273,60 @@ export class CouponsService {
     return subtotal
       .times(coupon.discountPercent.dividedBy(100))
       .clampMax(subtotal);
+  }
+
+  /**
+   * Refuses a scope that names nothing.
+   *
+   * A mistyped id would otherwise create a code that silently covers no line
+   * in any basket — it would validate, activate, sit in the console looking
+   * live, and refuse every customer who typed it. The seller check also
+   * insists the account *is* a seller: scoping a discount to a shopper's id is
+   * a code nobody can ever spend.
+   */
+  private async assertScopeExists(scope: {
+    seller_id?: string | null;
+    category_id?: string | null;
+    product_id?: string | null;
+  }): Promise<void> {
+    if (scope.seller_id) {
+      const seller = await this.prisma.user.findUnique({
+        where: { id: scope.seller_id },
+        select: { role: true },
+      });
+      if (!seller || seller.role !== UserRole.SELLER) {
+        throw new BadRequestException({
+          code: 'COUPON_SCOPE_NOT_A_SELLER',
+          message: 'That account is not a seller',
+        });
+      }
+    }
+
+    if (scope.category_id) {
+      const category = await this.prisma.category.findUnique({
+        where: { id: scope.category_id },
+        select: { id: true },
+      });
+      if (!category) {
+        throw new BadRequestException({
+          code: 'COUPON_SCOPE_CATEGORY_NOT_FOUND',
+          message: 'Category not found',
+        });
+      }
+    }
+
+    if (scope.product_id) {
+      const product = await this.prisma.product.findUnique({
+        where: { id: scope.product_id },
+        select: { id: true },
+      });
+      if (!product) {
+        throw new BadRequestException({
+          code: 'COUPON_SCOPE_PRODUCT_NOT_FOUND',
+          message: 'Product not found',
+        });
+      }
+    }
   }
 
   private async requireCoupon(id: string): Promise<Coupon> {

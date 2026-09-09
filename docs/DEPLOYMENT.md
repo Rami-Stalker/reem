@@ -116,3 +116,23 @@ must carry one of:
 
 `route-classification.spec.ts` fails the build if a controller carries none of
 them, so a new one cannot inherit "allowed" in silence.
+
+## Running the test suite
+
+```bash
+cd backend && npm test
+```
+
+Concurrency is capped at four spec files at once, and that cap is load-bearing
+rather than tidiness. `node --test` otherwise runs all 109 spec files in
+parallel, each holding its own Prisma client and its own pool of database
+connections. On a developer machine with 8 GB — especially with the API and the
+Flutter web server also running — the workers are starved before they report
+anything, and the run ends part-way with no failing test named. It looks
+exactly like a broken suite and is not one.
+
+If a run still struggles, `npm run test:serial` walks the files one at a time.
+Slower, and it will finish.
+
+**Do not run the suite with a dev server attached to the same database.** The
+schedulers fire against it mid-run, and the two contend for the same rows.

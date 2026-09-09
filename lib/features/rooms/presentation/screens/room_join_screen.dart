@@ -26,6 +26,16 @@ class RoomJoinScreen extends ConsumerStatefulWidget {
   ConsumerState<RoomJoinScreen> createState() => _RoomJoinScreenState();
 }
 
+/// The invite could not be redeemed.
+///
+/// `_error` is a flag, not a message: the screen always shows the same Arabic
+/// sentence, because the client cannot tell a revoked invite from an expired
+/// one and guessing would be worse than saying what she can do. This exists so
+/// the "no slug at all" case has something to set that is not an English
+/// string pretending to be copy — which is what it was, and what the
+/// localisation check rightly objected to.
+enum _JoinFailure { noSlug }
+
 class _RoomJoinScreenState extends ConsumerState<RoomJoinScreen> {
   Object? _error;
 
@@ -38,7 +48,7 @@ class _RoomJoinScreenState extends ConsumerState<RoomJoinScreen> {
 
   Future<void> _join() async {
     if (widget.slug.isEmpty) {
-      setState(() => _error = 'empty slug');
+      setState(() => _error = _JoinFailure.noSlug);
       return;
     }
     try {
