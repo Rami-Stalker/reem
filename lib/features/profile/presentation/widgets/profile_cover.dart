@@ -28,6 +28,7 @@ class ProfileCover extends StatelessWidget {
               padding: const EdgeInsetsDirectional.only(start: DsSpacing.sm),
               child: Center(
                 child: DsIconButton(
+                  tooltip: 'رجوع',
                   icon: Icons.arrow_back_ios_new_rounded,
                   variant: DsIconButtonVariant.glass,
                   size: 40,

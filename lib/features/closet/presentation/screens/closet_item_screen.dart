@@ -31,6 +31,9 @@ class ClosetItemScreen extends ConsumerWidget {
         actions: [
           itemAsync.maybeWhen(
             data: (item) => IconButton(
+              tooltip: item.isFavourite
+                  ? 'إزالة من المفضّلة'
+                  : 'أضيفي إلى المفضّلة',
               icon: Icon(
                 item.isFavourite
                     ? Icons.favorite_rounded

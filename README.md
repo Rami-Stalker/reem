@@ -59,7 +59,7 @@ flutter analyze
 flutter test
 ```
 
-Five structural checks guard the layout. All exit non-zero on failure.
+Six structural checks guard the layout. All exit non-zero on failure.
 
 ```bash
 node tools/architecture/check-flutter-boundaries.mjs
@@ -98,6 +98,15 @@ node tools/architecture/check-api-contract.mjs
 Fails when the client declares a path the API does not serve — a screen built
 on a route that was renamed, or on a feature the backend never had. Neither
 half fails to compile on its own, so nothing else catches it.
+
+```bash
+node tools/architecture/check-icon-labels.mjs
+```
+
+Fails when an icon-only button carries no `tooltip`. A button whose whole
+content is an icon has no text for a screen reader to read, so Flutter
+announces it as "button" and nothing more — the same four letters for "add to
+cart", "remove from favourites" and "delete".
 
 ## Response caching
 

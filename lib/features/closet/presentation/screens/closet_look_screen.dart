@@ -32,6 +32,9 @@ class ClosetLookScreen extends ConsumerWidget {
         actions: [
           lookAsync.maybeWhen(
             data: (look) => IconButton(
+              tooltip: look.isFavourite
+                  ? 'إزالة من المفضّلة'
+                  : 'أضيفي إلى المفضّلة',
               icon: Icon(
                 look.isFavourite
                     ? Icons.favorite_rounded
@@ -238,6 +241,7 @@ class _PieceRow extends StatelessWidget {
           ),
           if (onRemove != null)
             IconButton(
+              tooltip: 'إزالة من الإطلالة',
               icon: const Icon(Icons.close_rounded, size: 18),
               onPressed: onRemove,
             ),

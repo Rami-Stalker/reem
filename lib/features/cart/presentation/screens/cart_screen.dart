@@ -203,6 +203,7 @@ class _QtyStepper extends StatelessWidget {
         children: [
           _StepperButton(
             icon: Icons.remove_rounded,
+            tooltip: 'إنقاص الكمية',
             onTap: busy ? null : onDecrement,
           ),
           SizedBox(
@@ -225,6 +226,7 @@ class _QtyStepper extends StatelessWidget {
           ),
           _StepperButton(
             icon: Icons.add_rounded,
+            tooltip: 'زيادة الكمية',
             onTap: busy ? null : onIncrement,
           ),
         ],
@@ -234,15 +236,26 @@ class _QtyStepper extends StatelessWidget {
 }
 
 class _StepperButton extends StatelessWidget {
-  const _StepperButton({required this.icon, required this.onTap});
+  const _StepperButton({
+    required this.icon,
+    required this.onTap,
+    required this.tooltip,
+  });
 
   final IconData icon;
   final VoidCallback? onTap;
+
+  /// Required, not optional. A plus and a minus are indistinguishable to a
+  /// screen reader — both announce as "button" — and a required parameter is
+  /// the only version of this rule that survives the next stepper somebody
+  /// adds.
+  final String tooltip;
 
   @override
   Widget build(BuildContext context) {
     final colors = context.dsColors;
     return IconButton(
+      tooltip: tooltip,
       visualDensity: VisualDensity.compact,
       iconSize: DsSizes.iconXs,
       icon: Icon(icon, color: onTap == null ? colors.disabled : colors.primary),

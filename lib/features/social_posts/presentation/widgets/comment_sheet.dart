@@ -460,6 +460,7 @@ class _InputBar extends ConsumerWidget {
                     )
                   : DsIconButton(
                       icon: Icons.send_rounded,
+            tooltip: 'إرسال',
                       variant: DsIconButtonVariant.primary,
                       size: 44,
                       onPressed: onSend,

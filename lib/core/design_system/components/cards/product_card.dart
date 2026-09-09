@@ -293,6 +293,10 @@ class _Media extends StatelessWidget {
                 icon: isFavorite
                     ? Icons.favorite_rounded
                     : Icons.favorite_border_rounded,
+                // The label states what the tap *does*, not what the heart
+                // currently is — a screen reader reads it before the action,
+                // and "favourite" on a filled heart would be a lie.
+                tooltip: isFavorite ? 'إزالة من المفضّلة' : 'أضيفي إلى المفضّلة',
                 variant: DsIconButtonVariant.glass,
                 size: 36,
                 iconSize: DsConstraints.iconSm,
@@ -378,6 +382,7 @@ class _PriceRow extends StatelessWidget {
         if (onAddToCart != null)
           DsIconButton(
             icon: Icons.add_shopping_cart_rounded,
+            tooltip: 'أضيفي إلى السلة',
             variant: DsIconButtonVariant.primary,
             size: 38,
             iconSize: DsConstraints.iconSm,

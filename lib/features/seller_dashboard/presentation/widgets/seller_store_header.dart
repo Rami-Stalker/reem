@@ -248,11 +248,13 @@ class _CoverActions extends StatelessWidget {
     return Row(
       children: [
         _GlassIconButton(
+          tooltip: 'الإشعارات',
           icon: Icons.notifications_none_rounded,
           onTap: () => context.push(RoutePaths.notifications),
         ),
         const SizedBox(width: DsSpacing.xs),
         _GlassIconButton(
+          tooltip: 'الإعدادات',
           icon: Icons.settings_outlined,
           onTap: () => context.push(RoutePaths.settings),
         ),
@@ -262,29 +264,44 @@ class _CoverActions extends StatelessWidget {
 }
 
 class _GlassIconButton extends StatelessWidget {
-  const _GlassIconButton({required this.icon, required this.onTap});
+  const _GlassIconButton({
+    required this.icon,
+    required this.onTap,
+    required this.tooltip,
+  });
 
   final IconData icon;
   final VoidCallback onTap;
 
+  /// Required: this is a bare `GestureDetector` around an icon, so without a
+  /// label it is invisible to a screen reader rather than merely unclear.
+  final String tooltip;
+
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: ClipRRect(
-        borderRadius: DsRadius.borderMd,
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-          child: Container(
-            width: 38,
-            height: 38,
-            decoration: BoxDecoration(
-              color: DsColors.onMedia.withValues(alpha: 0.2),
-              borderRadius: DsRadius.borderMd,
-              border: Border.all(
-                  color: DsColors.onMedia.withValues(alpha: 0.3)),
+    return Semantics(
+      button: true,
+      label: tooltip,
+      // `Tooltip` alone would not do here: this is a `GestureDetector`, not a
+      // button widget, so nothing declares it tappable to a screen reader.
+      // `Semantics(button: true)` is what makes it announce as one at all.
+      child: GestureDetector(
+        onTap: onTap,
+        child: ClipRRect(
+          borderRadius: DsRadius.borderMd,
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+            child: Container(
+              width: 38,
+              height: 38,
+              decoration: BoxDecoration(
+                color: DsColors.onMedia.withValues(alpha: 0.2),
+                borderRadius: DsRadius.borderMd,
+                border: Border.all(
+                    color: DsColors.onMedia.withValues(alpha: 0.3)),
+              ),
+              child: Icon(icon, color: DsColors.onMedia, size: 20),
             ),
-            child: Icon(icon, color: DsColors.onMedia, size: 20),
           ),
         ),
       ),

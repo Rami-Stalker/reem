@@ -65,6 +65,7 @@ class _GlassSearchBarState extends State<GlassSearchBar> {
           prefixIcon: Icon(Icons.search_rounded, color: c.onSurfaceVariant),
           suffixIcon: _hasText
               ? IconButton(
+                  tooltip: 'مسح البحث',
                   icon: Icon(Icons.close_rounded, color: c.onSurfaceVariant),
                   onPressed: _clear,
                 )

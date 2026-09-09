@@ -165,6 +165,7 @@ class _PickDecisionState extends ConsumerState<_PickDecision> {
         Row(
           children: [
             IconButton(
+              tooltip: 'رجوع',
               icon: const Icon(Icons.arrow_forward_rounded),
               onPressed: widget.onBack,
             ),

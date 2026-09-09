@@ -89,6 +89,10 @@ class _DsInputFieldState extends State<DsInputField> {
     Widget? suffix = widget.suffixIcon;
     if (widget.obscureText && suffix == null) {
       suffix = IconButton(
+        // Flips with the state: a screen reader announces the action she is
+        // about to take, and "show password" on an already-visible field
+        // would send her the wrong way.
+        tooltip: _obscured ? 'إظهار كلمة المرور' : 'إخفاء كلمة المرور',
         icon: Icon(
           _obscured
               ? Icons.visibility_off_outlined

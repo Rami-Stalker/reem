@@ -2,15 +2,27 @@ import 'package:flutter/material.dart';
 import 'package:reem/core/design_system/foundation/theme/extensions/color_extension.dart';
 import 'package:reem/core/design_system/foundation/tokens/ds_colors.dart';
 
+/// A round gradient action button.
+///
+/// Nothing uses this yet. That is precisely why [tooltip] is **required**: an
+/// icon has no text of its own, and a `GestureDetector` around one announces
+/// as nothing at all to a screen reader — so the first screen that reaches for
+/// this would have shipped a control a blind customer cannot find. A required
+/// parameter is the only version of that rule which survives contact with a
+/// deadline.
 class GradientIconButton
     extends StatefulWidget {
   final IconData icon;
   final VoidCallback onTap;
 
+  /// What the tap does, read aloud. Required — see the class comment.
+  final String tooltip;
+
   const GradientIconButton({
     super.key,
     required this.icon,
     required this.onTap,
+    required this.tooltip,
   });
 
   @override
@@ -25,7 +37,10 @@ class _GradientIconButtonState
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return Semantics(
+      button: true,
+      label: widget.tooltip,
+      child: GestureDetector(
       onTapDown: (_) {
         setState(() {
           pressed = true;
@@ -71,9 +86,10 @@ class _GradientIconButtonState
             ],
           ),
 
-          child: Icon(
-            widget.icon,
-            color: DsColors.onMedia,
+            child: Icon(
+              widget.icon,
+              color: DsColors.onMedia,
+            ),
           ),
         ),
       ),

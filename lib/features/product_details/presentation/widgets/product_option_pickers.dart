@@ -194,6 +194,7 @@ class ProductQuantityPicker extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 IconButton(
+                  tooltip: 'إنقاص الكمية',
                   visualDensity: VisualDensity.compact,
                   iconSize: DsSizes.iconXs,
                   icon: Icon(
@@ -210,6 +211,7 @@ class ProductQuantityPicker extends StatelessWidget {
                   ),
                 ),
                 IconButton(
+                  tooltip: 'زيادة الكمية',
                   visualDensity: VisualDensity.compact,
                   iconSize: DsSizes.iconXs,
                   icon: Icon(

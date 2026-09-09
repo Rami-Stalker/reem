@@ -206,6 +206,7 @@ class _PlayButton extends StatelessWidget {
               child: CircularProgressIndicator(strokeWidth: 2, color: tint),
             )
           : IconButton(
+              tooltip: playing ? 'إيقاف مؤقت' : 'تشغيل',
               onPressed: onTap,
               padding: EdgeInsets.zero,
               icon: Icon(

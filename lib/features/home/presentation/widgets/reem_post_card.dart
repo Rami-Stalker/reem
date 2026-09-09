@@ -459,6 +459,7 @@ class _PostHeader extends StatelessWidget {
           if (onMore != null)
             DsIconButton(
               icon: Icons.more_horiz_rounded,
+            tooltip: 'خيارات المنشور',
               variant: DsIconButtonVariant.ghost,
               size: 36,
               onPressed: onMore,
