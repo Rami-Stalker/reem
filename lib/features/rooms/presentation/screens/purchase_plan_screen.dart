@@ -149,7 +149,7 @@ class _BudgetCard extends StatelessWidget {
             ),
           ],
           if (budget.unpricedCount > 0) ...[
-            const SizedBox(height: 2),
+            DsGaps.vXxxs,
             Text(
               // An unknown price is not a free one, and the total says so.
               '${budget.unpricedCount} قطعة ما قدرنا نسعّرها',
@@ -219,13 +219,13 @@ class _PlanLine extends ConsumerWidget {
                     style: context.dsText.tileTitle,
                   ),
                   Text(item.sellerName, style: context.dsText.micro),
-                  const SizedBox(height: 2),
+                  DsGaps.vXxxs,
                   Text(
                     item.lineTotal?.format() ?? '—',
                     style: context.dsText.price,
                   ),
                   if (unavailable) ...[
-                    const SizedBox(height: 2),
+                    DsGaps.vXxxs,
                     Text(
                       'ما عادت متوفرة',
                       style: context.dsText.micro.tint(colors.error),

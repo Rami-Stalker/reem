@@ -245,13 +245,13 @@ class _DecliningTile extends StatelessWidget {
             row.diagnosis.title,
             style: context.dsText.caption.tint(palette.ink),
           ),
-          const SizedBox(height: 2),
+          DsGaps.vXxxs,
           Text(
             row.diagnosis.action,
             style: context.dsText.caption.tint(palette.muted),
           ),
           if (row.diagnosis.also case final also?) ...[
-            const SizedBox(height: 2),
+            DsGaps.vXxxs,
             Text(
               also,
               style: context.dsText.micro.tint(palette.muted),
@@ -300,7 +300,7 @@ class _Header extends StatelessWidget {
                         health.bandLabel,
                         style: context.dsText.sectionTitle.tint(palette.ink),
                       ),
-                      const SizedBox(height: 4),
+                      DsGaps.vXxs,
                       Text(
                         health.isProvisional
                             // Said plainly. A provisional score that looked
@@ -323,7 +323,7 @@ class _Header extends StatelessWidget {
                                   ? palette.positive
                                   : palette.caution,
                             ),
-                            const SizedBox(width: 3),
+                            DsGaps.hXxxs,
                             Text(
                               '${health.momentum.abs().round()} نقطة عن الشهر الماضي',
                               style: context.dsText.caption.tint(

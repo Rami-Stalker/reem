@@ -145,7 +145,7 @@ class _GuaranteeBanner extends StatelessWidget {
                       : 'تحذير: الشرا لحاله صار يوصل لأعلى الدرجات',
                   style: context.dsText.cardTitle.tint(accent),
                 ),
-                const SizedBox(height: 4),
+                DsGaps.vXxs,
                 Text(
                   'حدا بس بيشتري وما بيساهم بشي تاني بيوصل لـ'
                   '${guarantee.spendingCeiling} من ١٠٠٠'
@@ -445,7 +445,7 @@ class _Panel extends StatelessWidget {
         children: [
           Text(title, style: context.dsText.sectionTitle),
           if (subtitle != null) ...[
-            const SizedBox(height: 2),
+            DsGaps.vXxxs,
             Text(subtitle!, style: context.dsText.sectionSubtitle),
           ],
           const SizedBox(height: DsSpacing.md),

@@ -284,7 +284,7 @@ class MeasureBar extends StatelessWidget {
                 ),
             ],
           ),
-          const SizedBox(height: 4),
+          DsGaps.vXxs,
           ClipRRect(
             borderRadius: BorderRadius.circular(DsRadius.pill),
             child: LinearProgressIndicator(
@@ -295,7 +295,7 @@ class MeasureBar extends StatelessWidget {
             ),
           ),
           if (weight != null && weight! > 0) ...[
-            const SizedBox(height: 3),
+            DsGaps.vXxxs,
             Text(
               'وزنها ${weight!.round()}% من الصحّة',
               style: context.dsText.micro.tint(palette.muted),
@@ -339,7 +339,7 @@ class SectionTitle extends StatelessWidget {
           children: [
             Text(title, style: context.dsText.cardTitle.tint(palette.ink)),
             if (subtitle != null) ...[
-              const SizedBox(height: 2),
+              DsGaps.vXxxs,
               Text(
                 subtitle!,
                 style: context.dsText.caption.tint(palette.muted),

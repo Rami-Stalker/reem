@@ -120,8 +120,15 @@ void main() {
 
       // Every row must come from the repository. If these names are missing,
       // the screen has drifted back to showing something it invented.
+      //
+      // The **peer name**, not the thread's `title`. `title` is the subject a
+      // conversation was opened about, and for an order chat the server sends
+      // "Order #REEM-…" — so a tile that preferred it turned the inbox into a
+      // column of English order numbers with nobody's name on any of them.
+      // `ChatTile` was fixed to show the person; this assertion was left
+      // behind asserting the fault, and has been failing ever since.
       expect(find.text('أتيليه لجين'), findsOneWidget);
-      expect(find.text('فستان سهرة مطرّز'), findsOneWidget);
+      expect(find.text('بوتيك الوردة'), findsOneWidget);
       expect(find.text('نعم، المقاس M متوفر بلونين'), findsOneWidget);
 
       // The unread count is the thread's, not a decoration.

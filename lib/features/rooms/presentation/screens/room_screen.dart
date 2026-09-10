@@ -188,7 +188,7 @@ class _RoomHeader extends StatelessWidget {
             ],
           ),
           if (room.recipientName != null) ...[
-            const SizedBox(height: 2),
+            DsGaps.vXxxs,
             Text('لـ${room.recipientName}', style: context.dsText.caption),
           ],
 

@@ -145,7 +145,9 @@ class _FindingRow extends StatelessWidget {
             height: 36,
             decoration: BoxDecoration(
               color: accent,
-              borderRadius: BorderRadius.circular(2),
+              // Half the bar's own width, which is what `pill` resolves to
+              // on a 4px-wide rule: a stadium with semicircular caps.
+              borderRadius: BorderRadius.circular(DsRadius.pill),
             ),
           ),
           const SizedBox(width: DsSpacing.md),

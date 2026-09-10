@@ -5,6 +5,12 @@ import 'package:reem/core/media/authorized_media_image.dart';
 import 'package:reem/features/rooms/domain/entities/room.dart';
 import 'package:reem/features/rooms/presentation/providers/rooms_providers.dart';
 
+/// The row-label gutter. The header's spacer and every row's label column have
+/// to be the same width or the candidate columns below stop lining up with the
+/// heads above them, and they sit two hundred lines apart — so the number is
+/// named once rather than written twice and trusted to stay in step.
+const double _labelGutter = 92;
+
 /// المقارنة — the options side by side.
 ///
 /// What makes this worth having over the rail on the room screen is that it
@@ -230,8 +236,7 @@ class _Heads extends ConsumerWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // The label gutter, matched to the rows below.
-        const SizedBox(width: 92),
+        const SizedBox(width: _labelGutter),
         for (final entry in candidates)
           Expanded(
             child: Padding(
@@ -250,7 +255,7 @@ class _Heads extends ConsumerWidget {
                             ),
                     ),
                   ),
-                  const SizedBox(height: 4),
+                  DsGaps.vXxs,
                   Text(
                     entry.candidate?.title ?? '—',
                     maxLines: 2,
@@ -259,13 +264,13 @@ class _Heads extends ConsumerWidget {
                     style: context.dsText.micro,
                   ),
                   if (comparison.commentCounts[entry.id] != null) ...[
-                    const SizedBox(height: 2),
+                    DsGaps.vXxxs,
                     Text(
                       '${comparison.commentCounts[entry.id]} تعليق',
                       style: context.dsText.micro.tint(colors.onSurfaceVariant),
                     ),
                   ],
-                  const SizedBox(height: 4),
+                  DsGaps.vXxs,
                   if (entry.candidate?.isChosen == true)
                     Icon(
                       Icons.check_circle_rounded,
@@ -307,7 +312,7 @@ class _Row extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(
-            width: 92,
+            width: _labelGutter,
             child: Text(
               row.label,
               style: context.dsText.caption.tint(

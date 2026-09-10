@@ -69,7 +69,7 @@ class DecisionCard extends ConsumerWidget {
             ),
           ] else ...[
             if (decision.pickCount > 1) ...[
-              const SizedBox(height: 2),
+              DsGaps.vXxxs,
               Text(
                 'بدها ${decision.pickCount} قطع',
                 style: context.dsText.caption,
@@ -326,7 +326,7 @@ class CandidateTile extends ConsumerWidget {
                 ],
               ),
             ),
-            const SizedBox(height: 4),
+            DsGaps.vXxs,
             Text(
               candidate.title,
               maxLines: 1,
@@ -337,7 +337,7 @@ class CandidateTile extends ConsumerWidget {
               Text(candidate.price!.format(), style: context.dsText.priceSmall),
 
             if (!compact) ...[
-              const SizedBox(height: 2),
+              DsGaps.vXxxs,
               Row(
                 children: [
                   _VoteButton(
@@ -353,7 +353,7 @@ class CandidateTile extends ConsumerWidget {
                   ),
                 ],
               ),
-              const SizedBox(height: 4),
+              DsGaps.vXxs,
               if (candidate.isChosen)
                 DsButton(
                   label: 'رجّعي',
@@ -404,7 +404,7 @@ class _VoteButton extends StatelessWidget {
           children: [
             Icon(icon, size: 13, color: colors.onSurfaceVariant),
             if (count > 0) ...[
-              const SizedBox(width: 2),
+              DsGaps.hXxxs,
               Text('$count', style: context.dsText.micro),
             ],
           ],

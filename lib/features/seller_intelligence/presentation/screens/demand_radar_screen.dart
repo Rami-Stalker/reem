@@ -217,7 +217,7 @@ class _StockCard extends StatelessWidget {
             Row(
               children: [
                 Icon(Icons.inventory_rounded, size: 14, color: colour),
-                const SizedBox(width: 4),
+                DsGaps.hXxs,
                 Text(
                   alert.stockUnits == 0
                       ? 'ما ضل ولا قطعة'
@@ -284,7 +284,7 @@ class _RisingRow extends StatelessWidget {
                         size: 15,
                         color: palette.positive,
                       ),
-                      const SizedBox(width: 4),
+                      DsGaps.hXxs,
                       Text(
                         '+${row.growthPercent}%',
                         style: context.dsText.body.semibold.tint(
@@ -334,7 +334,7 @@ class _UnmetCard extends StatelessWidget {
                     '«${term.display}»',
                     style: context.dsText.body.semibold.tint(palette.ink),
                   ),
-                  const SizedBox(height: 2),
+                  DsGaps.vXxxs,
                   Text(
                     '${term.searches} بحث · ${(term.missRate * 100).round()}% ما لقوا شي',
                     style: context.dsText.caption.tint(palette.muted),

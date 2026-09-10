@@ -45,7 +45,7 @@ class SellerMarketEntryCard extends ConsumerWidget {
                       'السوق',
                       style: context.dsText.cardTitle.tint(palette.ink),
                     ),
-                    const SizedBox(height: 2),
+                    DsGaps.vXxxs,
                     Text(
                       opportunities.isLoading
                           ? 'عم نقرا السوق…'
@@ -104,7 +104,7 @@ class WardrobeCareEntryCard extends ConsumerWidget {
                     'خزانتك بعد الشرا',
                     style: context.dsText.cardTitle.tint(colors.onSurface),
                   ),
-                  const SizedBox(height: 2),
+                  DsGaps.vXxxs,
                   Text(
                     '${summary.needsAttention} قطع بدها انتباه — عناية، تنسيق، أو تنباع.',
                     style: context.dsText.caption.tint(

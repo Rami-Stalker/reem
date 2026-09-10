@@ -155,7 +155,7 @@ class _PieceThumb extends StatelessWidget {
                     ),
             ),
           ),
-          const SizedBox(height: 2),
+          DsGaps.vXxxs,
           Text(
             item.slotLabel,
             maxLines: 1,
@@ -193,7 +193,7 @@ class _MissingThumb extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(height: 2),
+          DsGaps.vXxxs,
           Text(
             label,
             maxLines: 1,

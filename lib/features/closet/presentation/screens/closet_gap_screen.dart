@@ -141,7 +141,7 @@ class _SuggestionCard extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                   style: context.dsText.cardTitle,
                 ),
-                const SizedBox(height: 2),
+                DsGaps.vXxxs,
                 if (product.priceFrom != null)
                   Text(
                     product.priceFrom!.format(),
@@ -164,7 +164,7 @@ class _SuggestionCard extends StatelessWidget {
                   ],
                 ),
                 if (suggestion.pairsWithItemIds.isNotEmpty) ...[
-                  const SizedBox(height: 4),
+                  DsGaps.vXxs,
                   Text(
                     'بتنسّق مع ${suggestion.pairsWithItemIds.length} قطعة عندك',
                     style: context.dsText.caption.tint(colors.primary),

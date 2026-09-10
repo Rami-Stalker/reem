@@ -98,7 +98,7 @@ class _Body extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(item.title, style: context.dsText.pageTitle),
-              const SizedBox(height: 2),
+              DsGaps.vXxxs,
               Text(
                 '${item.slotLabel} · ${item.sourceLabel}',
                 style: context.dsText.bodyMuted,
@@ -179,7 +179,7 @@ class _Body extends ConsumerWidget {
                 onPressed: () => _delete(context, ref),
                 child: Text(
                   'احذفيها نهائيًا',
-                  style: TextStyle(color: colors.error),
+                  style: context.dsText.button.tint(colors.error),
                 ),
               ),
             ],

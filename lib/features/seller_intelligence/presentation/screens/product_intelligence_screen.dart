@@ -113,7 +113,7 @@ class _Summary extends StatelessWidget {
                     '${list.rows.length} منتج',
                     style: context.dsText.sectionTitle.tint(palette.ink),
                   ),
-                  const SizedBox(height: 4),
+                  DsGaps.vXxs,
                   Text(
                     urgent == 0
                         ? 'ما في شي مستعجل. مرتّبين من الأضعف للأقوى.'
@@ -122,7 +122,7 @@ class _Summary extends StatelessWidget {
                       urgent == 0 ? palette.muted : palette.critical,
                     ),
                   ),
-                  const SizedBox(height: 2),
+                  DsGaps.vXxxs,
                   Text(
                     'محسوبة على آخر ${list.windowDays} يوم',
                     style: context.dsText.micro.tint(palette.muted),
@@ -182,7 +182,7 @@ class _ProductCardState extends ConsumerState<_ProductCard> {
                         overflow: TextOverflow.ellipsis,
                         style: context.dsText.body.semibold.tint(palette.ink),
                       ),
-                      const SizedBox(height: 3),
+                      DsGaps.vXxxs,
                       Row(
                         children: [
                           Text(
@@ -323,7 +323,7 @@ class _Peers extends StatelessWidget {
             'مقارنة مع ${peers.peers} منتج مشابه',
             style: context.dsText.caption.semibold.tint(palette.ink),
           ),
-          const SizedBox(height: 4),
+          DsGaps.vXxs,
           if (premium != null)
             Text(
               premium.abs() < 5

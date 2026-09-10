@@ -1,4 +1,4 @@
-import 'package:flutter/foundation.dart';
+import 'package:meta/meta.dart';
 
 /// One thing Reem has to say about a product, to this shopper.
 ///

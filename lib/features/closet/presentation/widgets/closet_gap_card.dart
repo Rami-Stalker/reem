@@ -68,7 +68,7 @@ class ClosetGapCard extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
             style: context.dsText.cardTitle,
           ),
-          const SizedBox(height: 2),
+          DsGaps.vXxxs,
           Text(
             gap.rationale,
             maxLines: compact ? 2 : 3,

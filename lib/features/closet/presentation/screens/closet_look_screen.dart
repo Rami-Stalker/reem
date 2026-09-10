@@ -127,7 +127,10 @@ class _Body extends ConsumerWidget {
         const SizedBox(height: DsSpacing.lg),
         TextButton(
           onPressed: () => _delete(context, ref),
-          child: Text('احذفي الإطلالة', style: TextStyle(color: colors.error)),
+          child: Text(
+            'احذفي الإطلالة',
+            style: context.dsText.button.tint(colors.error),
+          ),
         ),
       ],
     );
@@ -219,7 +222,7 @@ class _PieceRow extends StatelessWidget {
                   style: context.dsText.tileTitle,
                 ),
                 if (piece.isWanted) ...[
-                  const SizedBox(height: 2),
+                  DsGaps.vXxxs,
                   Text(
                     'لسا مو عندك',
                     style: context.dsText.caption.tint(colors.warning),

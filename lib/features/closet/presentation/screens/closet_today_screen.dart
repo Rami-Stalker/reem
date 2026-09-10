@@ -143,7 +143,10 @@ class _OccasionFilter extends StatelessWidget {
         scrollDirection: Axis.horizontal,
         padding: const EdgeInsets.symmetric(horizontal: DsSpacing.md),
         children: [
-          const SizedBox(height: 36),
+          // A `SizedBox(height: 36)` sat here. In a horizontal list the sliver
+          // hands every child a tight cross-axis constraint, so the 36 was
+          // discarded and what remained was a zero-width box painting nothing
+          // — the rail's height is the `SizedBox(height: 52)` above.
           DsChip(
             label: 'أي شي',
             selected: selected == null,

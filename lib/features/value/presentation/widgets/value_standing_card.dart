@@ -137,10 +137,10 @@ class _CompactRow extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(Icons.workspace_premium_rounded, size: 14, color: colors.primary),
-            const SizedBox(width: 4),
+            DsGaps.hXxs,
             Text(tierName, style: context.dsText.captionStrong),
             if (momentum != 0) ...[
-              const SizedBox(width: 4),
+              DsGaps.hXxs,
               _MomentumChip(momentum: momentum),
             ],
           ],
@@ -180,7 +180,7 @@ class _MomentumChip extends StatelessWidget {
             size: 12,
             color: rising ? colors.success : colors.onSurfaceVariant,
           ),
-          const SizedBox(width: 2),
+          DsGaps.hXxxs,
           Text(
             rising ? 'عم تصعدي' : 'هدوء',
             style: context.dsText.micro.tint(

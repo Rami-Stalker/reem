@@ -40,6 +40,13 @@ dependencies:
   # State management
   flutter_riverpod: ^3.3.1
 
+  # `@immutable` for domain entities. Flutter re-exports it from
+  # `foundation.dart`, and reaching for it there is what made three domain
+  # libraries import the framework — the one thing `domain/` must not do, and
+  # the only enforced violation `check-flutter-boundaries` was reporting. The
+  # annotation is pure Dart and lives here; the framework was never needed.
+  meta: ^1.17.0
+
   # Navigation
   go_router: ^17.2.3
 

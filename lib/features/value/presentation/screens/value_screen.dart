@@ -88,7 +88,7 @@ class _StandingHero extends StatelessWidget {
         children: [
           Text(tier?.name ?? 'لسا بالبداية', style: context.dsText.hero),
           if (tier?.blurb != null) ...[
-            const SizedBox(height: 2),
+            DsGaps.vXxxs,
             Text(tier!.blurb!, style: context.dsText.bodyMuted),
           ],
 
@@ -219,18 +219,18 @@ class _BenefitTile extends StatelessWidget {
                   if (benefit.description != null)
                     Text(benefit.description!, style: context.dsText.caption),
                   if (!benefit.unlocked && benefit.requiresTier != null) ...[
-                    const SizedBox(height: 4),
+                    DsGaps.vXxs,
                     Text(
                       'بتنفتح مع درجة أعلى',
                       style: context.dsText.micro.tint(colors.primary),
                     ),
                   ],
                   if (benefit.blockedBy == 'quota') ...[
-                    const SizedBox(height: 4),
+                    DsGaps.vXxs,
                     Text('أخدتيها هالفترة', style: context.dsText.micro),
                   ],
                   if (benefit.blockedBy == 'budget') ...[
-                    const SizedBox(height: 4),
+                    DsGaps.vXxs,
                     Text('خلصت هالفترة', style: context.dsText.micro),
                   ],
                 ],
@@ -393,7 +393,7 @@ class _Section extends StatelessWidget {
         children: [
           Text(title, style: context.dsText.sectionTitle),
           if (subtitle != null) ...[
-            const SizedBox(height: 2),
+            DsGaps.vXxxs,
             Text(subtitle!, style: context.dsText.sectionSubtitle),
           ],
           const SizedBox(height: DsSpacing.sm),

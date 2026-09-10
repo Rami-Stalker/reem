@@ -120,7 +120,7 @@ class ClosetLookCard extends StatelessWidget {
                   size: 16,
                   color: colors.success,
                 ),
-                const SizedBox(width: 4),
+                DsGaps.hXxs,
                 Expanded(
                   child: Text(
                     look.wearCount > 0
@@ -141,7 +141,7 @@ class ClosetLookCard extends StatelessWidget {
                   size: 16,
                   color: colors.warning,
                 ),
-                const SizedBox(width: 4),
+                DsGaps.hXxs,
                 Expanded(
                   child: Text(
                     look.isOnePieceShort

@@ -92,7 +92,7 @@ class _Panel extends ConsumerWidget {
               style: context.dsText.body,
             ),
             if (pairing.completesLookIds.isNotEmpty) ...[
-              const SizedBox(height: 2),
+              DsGaps.vXxxs,
               Text(
                 'وبتكمّل ${pairing.completesLookIds.length} إطلالة محفوظة.',
                 style: context.dsText.body.tint(colors.primary),

@@ -59,7 +59,7 @@ class _PillarRow extends StatelessWidget {
               ),
           ],
         ),
-        const SizedBox(height: 4),
+        DsGaps.vXxs,
         ClipRRect(
           borderRadius: BorderRadius.circular(DsRadius.pill),
           child: LinearProgressIndicator(
@@ -71,7 +71,7 @@ class _PillarRow extends StatelessWidget {
             color: pillar.isKnown ? colors.primary : colors.outline,
           ),
         ),
-        const SizedBox(height: 2),
+        DsGaps.vXxxs,
         Text(
           pillar.isKnown
               ? pillar.blurb

@@ -4,6 +4,11 @@ import 'package:reem/core/design_system/design_system.dart';
 import 'package:reem/features/value/domain/entities/value_admin.dart';
 import 'package:reem/features/value/presentation/providers/value_admin_providers.dart';
 
+/// The label column beside each slider. Every row in the editor shares it, so
+/// the sliders start on one line down the panel instead of stepping in and out
+/// with the length of each Arabic label.
+const double _sliderLabelWidth = 130;
+
 /// The economics, retuned.
 ///
 /// The whole point of this widget is the sequence it enforces: **draft →
@@ -124,7 +129,7 @@ class _PolicyRow extends ConsumerWidget {
                       style: context.dsText.labelStrong,
                     ),
                     if (policy.isActive) ...[
-                      const SizedBox(width: 6),
+                      DsGaps.hXxs,
                       Icon(Icons.circle, size: 8, color: console.positive),
                     ],
                   ],
@@ -503,7 +508,10 @@ class _SliderRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        SizedBox(width: 130, child: Text(label, style: context.dsText.body)),
+        SizedBox(
+          width: _sliderLabelWidth,
+          child: Text(label, style: context.dsText.body),
+        ),
         Expanded(
           child: Slider(
             value: value.clamp(min, max),

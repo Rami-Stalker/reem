@@ -157,7 +157,7 @@ class RoomCard extends StatelessWidget {
                             size: 14,
                             color: colors.onSurfaceVariant,
                           ),
-                          const SizedBox(width: 2),
+                          DsGaps.hXxxs,
                           Text(
                             '${room.membersCount}',
                             style: context.dsText.micro,
@@ -182,7 +182,7 @@ class RoomCard extends StatelessWidget {
                       color: readiness.ready ? colors.success : colors.primary,
                     ),
                   ),
-                  const SizedBox(height: 4),
+                  DsGaps.vXxs,
                   Text(
                     _readinessLine(readiness, room),
                     style: context.dsText.micro.tint(

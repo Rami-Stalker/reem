@@ -240,7 +240,20 @@ void main() {
         expect(story.media, hasLength(1));
         expect(story.isViewed, json['is_viewed']);
         expect(story.myReaction, json['my_reaction']);
-        expect(story.isActive, isTrue);
+
+        // The **window**, not `isActive`. `isActive` is
+        // `expiresAt.isAfter(DateTime.now())`, and these fixtures are a frozen
+        // capture — so asserting it here was asserting the wall clock, and it
+        // started failing the day the captured story aged past its own expiry.
+        // What the contract actually promises is the pair of timestamps and
+        // the 24-hour life between them; that holds no matter when the suite
+        // runs.
+        expect(story.expiresAt, DateTime.parse(json['expires_at'] as String));
+        expect(
+          story.expiresAt.difference(story.createdAt).inMinutes,
+          closeTo(24 * 60, 1),
+          reason: 'a story lives for a day from the moment it is posted',
+        );
       }
     });
   });
