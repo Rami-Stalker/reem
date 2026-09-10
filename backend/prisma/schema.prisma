@@ -998,14 +998,14 @@ model User {
   /// feed beyond her own followers, and whether a boutique sees her name in
   /// its promoters list. The last one is what keeps Q44 intact while still
   /// letting a seller thank the women who carry her products.
-  profileIsPublic    Boolean   @default(false) @map("profile_is_public")
+  profileIsPublic Boolean @default(false) @map("profile_is_public")
 
   /// When she opened it. Audit and copy only. Disclosure is always evaluated
   /// against the *current* flag, never this one, so closing her page takes her
   /// name off the boutique's screen at once.
   profilePublicSince DateTime? @map("profile_public_since")
-  createdAt                  DateTime           @default(now()) @map("created_at")
-  updatedAt                  DateTime           @updatedAt @map("updated_at")
+  createdAt          DateTime  @default(now()) @map("created_at")
+  updatedAt          DateTime  @updatedAt @map("updated_at")
 
   refreshTokens             RefreshToken[]
   sessions                  Session[]
@@ -1054,55 +1054,55 @@ model User {
   cartItems                 CartItem[]
   searchHistory             SearchHistory[]
   favorites                 Favorite[]
-  sellerFavorites           SellerFavorite[]                  @relation("UserSellerFavorites")
-  savedByUsers              SellerFavorite[]                  @relation("SavedSellers")
+  sellerFavorites           SellerFavorite[]             @relation("UserSellerFavorites")
+  savedByUsers              SellerFavorite[]             @relation("SavedSellers")
   wishlistCollections       WishlistCollection[]
   wishlistShares            WishlistShare[]
   addresses                 Address[]
-  sentMessages              Message[]                         @relation("SentMessages")
+  sentMessages              Message[]                    @relation("SentMessages")
   chatParticipants          ChatParticipant[]
-  buyerChats                Chat[]                            @relation("BuyerChats")
-  sellerChats               Chat[]                            @relation("SellerChats")
+  buyerChats                Chat[]                       @relation("BuyerChats")
+  sellerChats               Chat[]                       @relation("SellerChats")
   messageReceipts           MessageReadReceipt[]
-  blockedUsers              ChatBlock[]                       @relation("ChatBlocker")
-  blockedBy                 ChatBlock[]                       @relation("ChatBlocked")
-  chatReportsFiled          ChatReport[]                      @relation("ChatReporter")
-  chatReportsAgainst        ChatReport[]                      @relation("ChatReportedUser")
+  blockedUsers              ChatBlock[]                  @relation("ChatBlocker")
+  blockedBy                 ChatBlock[]                  @relation("ChatBlocked")
+  chatReportsFiled          ChatReport[]                 @relation("ChatReporter")
+  chatReportsAgainst        ChatReport[]                 @relation("ChatReportedUser")
   presence                  UserPresence?
   analyticsEvents           AnalyticsEvent[]
   analyticsExports          AnalyticsExport[]
-  productReviews            ProductReview[]                   @relation("CustomerProductReviews")
-  sellerReviewsWritten      SellerReview[]                    @relation("CustomerSellerReviews")
-  sellerReviewsReceived     SellerReview[]                    @relation("SellerReviews")
+  productReviews            ProductReview[]              @relation("CustomerProductReviews")
+  sellerReviewsWritten      SellerReview[]               @relation("CustomerSellerReviews")
+  sellerReviewsReceived     SellerReview[]               @relation("SellerReviews")
   reviewModerationLogs      ReviewModerationLog[]
-  sellerBadges              SellerBadge[]                     @relation("SellerBadges")
+  sellerBadges              SellerBadge[]                @relation("SellerBadges")
   sellerReputation          SellerReputation?
   trustedSellerVerification TrustedSellerVerification?
-  wishlistSellerItems       WishlistCollectionItem[]          @relation("WishlistItemSeller")
-  guestSellerSaves          GuestSavedItem[]                  @relation("GuestSavedSeller")
+  wishlistSellerItems       WishlistCollectionItem[]     @relation("WishlistItemSeller")
+  guestSellerSaves          GuestSavedItem[]             @relation("GuestSavedSeller")
   aiInteractions            AiInteraction[]
   aiGenerations             AiGeneration[]
-  commissionLedgers         CommissionLedger[]                @relation("SellerCommissionLedgers")
-  sellerPayouts             SellerPayout[]                    @relation("SellerPayouts")
-  ledgerAccounts            LedgerAccount[]                   @relation("LedgerAccounts")
-  wallet                    Wallet[]                          @relation("UserWallet")
+  commissionLedgers         CommissionLedger[]           @relation("SellerCommissionLedgers")
+  sellerPayouts             SellerPayout[]               @relation("SellerPayouts")
+  ledgerAccounts            LedgerAccount[]              @relation("LedgerAccounts")
+  wallet                    Wallet[]                     @relation("UserWallet")
   notifications             Notification[]
   notificationPreference    NotificationPreference?
   paymentMethods            PaymentMethod[]
   pointsTransactions        PointsTransaction[]
   couponRedemptions         CouponRedemption[]
-  coupons                   Coupon[]                          @relation("UserCoupons")
+  coupons                   Coupon[]                     @relation("UserCoupons")
   /// Codes this seller issued, and pays for. See `Coupon.sellerId`.
-  sellerCoupons             Coupon[]                          @relation("SellerCoupons")
-  referralCodes             ReferralCode[]                    @relation("ReferralCodeOwner")
-  referralsMade             Referral[]                        @relation("Referrer")
-  referralsReceived         Referral[]                        @relation("ReferredUser")
+  sellerCoupons             Coupon[]                     @relation("SellerCoupons")
+  referralCodes             ReferralCode[]               @relation("ReferralCodeOwner")
+  referralsMade             Referral[]                   @relation("Referrer")
+  referralsReceived         Referral[]                   @relation("ReferredUser")
   referralRewards           ReferralReward[]
   membership                MembershipAccount?
   cashbackEntries           CashbackLedger[]
   exclusiveOfferClaims      ExclusiveOfferClaim[]
-  following                 Follow[]                          @relation("Follower")
-  followers                 Follow[]                          @relation("Following")
+  following                 Follow[]                     @relation("Follower")
+  followers                 Follow[]                     @relation("Following")
 
   // Reem AI Stylist — her taste, her conversations, and what they produced.
   stylePreference        UserStylePreference?
@@ -1137,33 +1137,32 @@ model User {
   valueGrants  ValueBenefitGrant[]
 
   // Reem Rooms — the intents she is shopping inside, and the plans they became.
-  roomsOwned      Room[]          @relation("RoomOwner")
-  roomsReceiving  Room[]          @relation("RoomRecipient")
-  roomMemberships RoomMember[]
-  roomCandidates  RoomCandidate[] @relation("RoomCandidateAuthor")
-  roomEvents      RoomEvent[]     @relation("RoomEventActor")
-  purchasePlans   PurchasePlan[]  @relation("PlanBuyer")
+  roomsOwned           Room[]                    @relation("RoomOwner")
+  roomsReceiving       Room[]                    @relation("RoomRecipient")
+  roomMemberships      RoomMember[]
+  roomCandidates       RoomCandidate[]           @relation("RoomCandidateAuthor")
+  roomEvents           RoomEvent[]               @relation("RoomEventActor")
+  purchasePlans        PurchasePlan[]            @relation("PlanBuyer")
+  synonymGroupsCreated SearchSynonymGroup[]      @relation("SynonymGroupsCreated")
+  duplicateVerdicts    ProductDuplicateVerdict[] @relation("DuplicateVerdicts")
+
+  trustSignalsResolved TrustSignal[]       @relation("TrustSignalsResolved")
+  reengagementTouches  ReengagementTouch[] @relation("ReengagementTouches")
+  flashSalesRun        FlashSale[]         @relation("FlashSalesRun")
+  flashSalesCreated    FlashSale[]         @relation("FlashSalesCreated")
+  promotionsBought     ProductPromotion[]  @relation("PromotionsBought")
+  experimentsCreated   Experiment[]        @relation("ExperimentsCreated")
+  customerProfile      CustomerProfile?    @relation("CustomerProfile")
+  /// How this boutique ranks against other boutiques, 0–100. Zero for anyone
+  /// who is not a seller. See `ranking/kernel` for what it weighs and why
+  /// reliability comes before volume.
+  sellerRankScore      Float               @default(0) @map("seller_rank_score")
+  sellerRankScoredAt   DateTime?           @map("seller_rank_scored_at")
+  sellerRankBreakdown  Json?               @map("seller_rank_breakdown")
 
   @@index([role])
   @@index([email])
   @@index([phone])
-  synonymGroupsCreated SearchSynonymGroup[]      @relation("SynonymGroupsCreated")
-  duplicateVerdicts    ProductDuplicateVerdict[] @relation("DuplicateVerdicts")
-
-  trustSignalsResolved TrustSignal[] @relation("TrustSignalsResolved")
-  reengagementTouches ReengagementTouch[] @relation("ReengagementTouches")
-  flashSalesRun     FlashSale[] @relation("FlashSalesRun")
-  flashSalesCreated FlashSale[] @relation("FlashSalesCreated")
-  promotionsBought ProductPromotion[] @relation("PromotionsBought")
-  experimentsCreated Experiment[] @relation("ExperimentsCreated")
-  customerProfile CustomerProfile? @relation("CustomerProfile")
-  /// How this boutique ranks against other boutiques, 0–100. Zero for anyone
-  /// who is not a seller. See `ranking/kernel` for what it weighs and why
-  /// reliability comes before volume.
-  sellerRankScore    Float     @default(0) @map("seller_rank_score")
-  sellerRankScoredAt DateTime? @map("seller_rank_scored_at")
-  sellerRankBreakdown Json?    @map("seller_rank_breakdown")
-
   @@index([role, sellerRankScore])
   @@map("users")
 }
@@ -1213,6 +1212,7 @@ model GuestSession {
   @@index([status, expiresAt])
   @@index([fingerprintHash])
   @@index([migratedToUserId])
+  @@index([deviceKeyId])
   @@map("guest_sessions")
 }
 
@@ -1613,6 +1613,7 @@ model AccountRecoveryEvent {
   createdAt DateTime            @default(now()) @map("created_at")
 
   @@index([caseId, createdAt])
+  @@index([actorId])
   @@map("account_recovery_events")
 }
 
@@ -1682,6 +1683,7 @@ model RolePermission {
   permission   Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
 
   @@unique([roleId, permissionId])
+  @@index([permissionId])
   @@map("role_permissions")
 }
 
@@ -1697,6 +1699,7 @@ model UserRoleAssignment {
 
   @@unique([userId, roleId])
   @@index([userId])
+  @@index([roleId])
   @@map("user_role_assignments")
 }
 
@@ -1758,13 +1761,13 @@ model SellerVerificationStatusHistory {
 }
 
 model AuditLog {
-  id        String        @id @default(uuid()) @db.Uuid
-  actorId   String?       @map("actor_id") @db.Uuid
-  actor     User?         @relation(fields: [actorId], references: [id], onDelete: SetNull)
-  action    String
-  category  String
-  outcome   String
-  severity  AuditSeverity @default(INFO)
+  id       String        @id @default(uuid()) @db.Uuid
+  actorId  String?       @map("actor_id") @db.Uuid
+  actor    User?         @relation(fields: [actorId], references: [id], onDelete: SetNull)
+  action   String
+  category String
+  outcome  String
+  severity AuditSeverity @default(INFO)
 
   /// **What was acted on**, and the reason this trail is now answerable.
   ///
@@ -1776,10 +1779,10 @@ model AuditLog {
   targetType String? @map("target_type")
   targetId   String? @map("target_id")
 
-  ipAddress String?       @map("ip_address")
-  userAgent String?       @map("user_agent")
+  ipAddress String?  @map("ip_address")
+  userAgent String?  @map("user_agent")
   metadata  Json?
-  createdAt DateTime      @default(now()) @map("created_at")
+  createdAt DateTime @default(now()) @map("created_at")
 
   @@index([actorId, createdAt])
   @@index([category, createdAt])
@@ -1892,6 +1895,7 @@ model ChallengeDelivery {
   @@index([transport, createdAt])
   @@index([status, sentAt])
   @@index([providerMessageId])
+  @@index([routeId])
   @@map("challenge_deliveries")
 }
 
@@ -2042,6 +2046,7 @@ model Category {
 
   @@index([parentId, sortOrder])
   @@index([level, isActive])
+  @@index([sizeChartId])
   @@map("categories")
 }
 
@@ -2118,7 +2123,7 @@ model Product {
   // Roll-ups over live offers, refreshed inside the same transaction that
   // mutates an offer. `minPrice`/`maxPrice` are normalised to SYP so the
   // catalog can be sorted and filtered by price in one currency.
-  offersCount Int      @default(0) @map("offers_count")
+  offersCount Int @default(0) @map("offers_count")
 
   /// What this listing is worth showing, 0–100, from `ranking/kernel`.
   ///
@@ -2136,11 +2141,11 @@ model Product {
   /// the listing. Denormalised so an honest badge ("bought by 12 women this
   /// month", "only 2 left") does not cost a query per card — which is the
   /// reason most catalogues either skip these or lie with a cached guess.
-  liveOffersCount Int @default(0) @map("live_offers_count")
-  liveStock       Int @default(0) @map("live_stock")
-  recentOrders30  Int @default(0) @map("recent_orders_30")
-  minPriceSyp Decimal? @map("min_price_syp") @db.Decimal(18, 4)
-  maxPriceSyp Decimal? @map("max_price_syp") @db.Decimal(18, 4)
+  liveOffersCount Int      @default(0) @map("live_offers_count")
+  liveStock       Int      @default(0) @map("live_stock")
+  recentOrders30  Int      @default(0) @map("recent_orders_30")
+  minPriceSyp     Decimal? @map("min_price_syp") @db.Decimal(18, 4)
+  maxPriceSyp     Decimal? @map("max_price_syp") @db.Decimal(18, 4)
 
   rating       Float @default(0)
   reviewsCount Int   @default(0) @map("reviews_count")
@@ -2204,6 +2209,9 @@ model Product {
 
   // Reem Rooms — where it is being considered.
   roomCandidates RoomCandidate[]
+  coupons        Coupon[]
+  duplicateLeft  ProductDuplicateVerdict[] @relation("DuplicateLeft")
+  duplicateRight ProductDuplicateVerdict[] @relation("DuplicateRight")
 
   @@index([categoryId, status])
   @@index([brandId, status])
@@ -2214,11 +2222,8 @@ model Product {
   @@index([status, favoritesCount])
   @@index([status, isFeatured])
   @@index([moderationStatus])
-  coupons        Coupon[]
-  duplicateLeft  ProductDuplicateVerdict[] @relation("DuplicateLeft")
-  duplicateRight ProductDuplicateVerdict[] @relation("DuplicateRight")
-
   @@index([status, rankScore])
+  @@index([createdBySellerId])
   @@map("products")
 }
 
@@ -2321,20 +2326,20 @@ model SellerOffer {
   batches        InventoryBatch[]
   reservations   InventoryReservation[]
   cartItems      CartItem[]
-  bundleItems    BundleItem[]         @relation("BundleOffers")
+  bundleItems    BundleItem[]           @relation("BundleOffers")
   guestCartItems GuestCartItem[]
   orderItems     OrderItem[]
   closetItems    ClosetItem[]
   roomCandidates RoomCandidate[]
   planItems      PurchasePlanItem[]
+  flashSaleItems FlashSaleItem[]        @relation("FlashSaleOffers")
+  promotions     ProductPromotion[]     @relation("PromotedOffers")
 
   @@unique([productId, sellerId])
   @@index([sellerId, status])
   @@index([productId, status, price])
   @@index([productId, status, priceSyp])
   @@index([status, isActive])
-  flashSaleItems FlashSaleItem[] @relation("FlashSaleOffers")
-  promotions ProductPromotion[] @relation("PromotedOffers")
   @@map("seller_offers")
 }
 
@@ -2425,11 +2430,11 @@ model InventoryReservation {
   /// parcel a seller is packing must never be released by a timer.
   expiresAt DateTime? @map("expires_at")
 
-  committedAt DateTime? @map("committed_at")
-  consumedAt  DateTime? @map("consumed_at")
-  releasedAt  DateTime? @map("released_at")
+  committedAt   DateTime? @map("committed_at")
+  consumedAt    DateTime? @map("consumed_at")
+  releasedAt    DateTime? @map("released_at")
   /// Why it went back on the shelf, for the seller's own inventory history.
-  releaseReason String? @map("release_reason")
+  releaseReason String?   @map("release_reason")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -2440,6 +2445,7 @@ model InventoryReservation {
   @@index([sellerOrderId])
   /// "What is spoken for on this listing", for the seller's stock screen.
   @@index([offerId, state])
+  @@index([offerVariantId])
   @@map("inventory_reservations")
 }
 
@@ -2464,14 +2470,14 @@ model IdempotencyRecord {
   id String @id @default(uuid()) @db.Uuid
 
   /// The client's key. Opaque to the platform.
-  key String
+  key   String
   /// Who sent it: `user:<id>`, `guest:<id>`, or `ip:<address>` for a caller
   /// with neither. Never a bare key — see the model comment.
   scope String
 
   /// `POST /orders/checkout`. Stored so a key reused across endpoints reads as
   /// the mistake it is rather than replaying the wrong answer.
-  endpoint String
+  endpoint    String
   /// SHA-256 of the canonicalised body.
   requestHash String @map("request_hash")
 
@@ -2564,7 +2570,7 @@ model CommerceContentTypeDefinition {
 }
 
 model CommerceContent {
-  id       String @id @default(uuid()) @db.Uuid
+  id String @id @default(uuid()) @db.Uuid
 
   /// Whoever published it. This column was `seller_id` until customers could
   /// publish too; the platform is author-owned now, and a boutique is simply
@@ -2630,20 +2636,20 @@ model CommerceContent {
   /// endpoint, which writes a `ModerationCase` for the queue itself.
   reportsCount Int @default(0) @map("reports_count")
 
-  createdAt          DateTime                            @default(now()) @map("created_at")
-  updatedAt          DateTime                            @updatedAt @map("updated_at")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
-  media             CommerceContentMedia[]
-  productTags       CommerceContentProductTag[]
-  versions          CommerceContentVersion[]
-  events            CommerceContentEvent[]
-  viewers           CommerceContentViewer[]
-  moderationActions CommerceContentModerationAction[]
-  reactions         CommerceContentReaction[]
-  saves             CommerceContentSave[]
-  comments          CommerceContentComment[]
-  reshares          CommerceContentReshare[]          @relation("ResharedContent")
-  attributions      CommerceContentAttribution[]
+  media                   CommerceContentMedia[]
+  productTags             CommerceContentProductTag[]
+  versions                CommerceContentVersion[]
+  events                  CommerceContentEvent[]
+  viewers                 CommerceContentViewer[]
+  moderationActions       CommerceContentModerationAction[]
+  reactions               CommerceContentReaction[]
+  saves                   CommerceContentSave[]
+  comments                CommerceContentComment[]
+  reshares                CommerceContentReshare[]          @relation("ResharedContent")
+  attributions            CommerceContentAttribution[]
   guestSavedItems         GuestSavedItem[]
   wishlistCollectionItems WishlistCollectionItem[]
 
@@ -2672,6 +2678,7 @@ model CommerceContent {
   /// It is the public feed's driving index — small, because it holds only the
   /// rows a feed can ever return, and it carries the entire ORDER BY rather
   /// than feeding a sort. Do not drop it for being absent from this list.
+  @@index([removedById])
   @@map("commerce_contents")
 }
 
@@ -2724,7 +2731,7 @@ model CommerceContentProductTag {
   sourceOrderItemId String?    @map("source_order_item_id") @db.Uuid
   sourceOrderItem   OrderItem? @relation(fields: [sourceOrderItemId], references: [id], onDelete: SetNull)
 
-  createdAt    DateTime        @default(now()) @map("created_at")
+  createdAt DateTime @default(now()) @map("created_at")
 
   /// One delivered line justifies one tag per post — so she may post the same
   /// dress twice, and may not claim it twice within one post.
@@ -2734,6 +2741,7 @@ model CommerceContentProductTag {
   @@index([variantId])
   /// The «نساء يرتدينها» rail on a product page, newest tag first.
   @@index([productId, createdAt(sort: Desc)])
+  @@index([sourceOrderItemId])
   @@map("commerce_content_product_tags")
 }
 
@@ -2750,6 +2758,7 @@ model CommerceContentVersion {
 
   @@unique([contentId, version])
   @@index([contentId, createdAt])
+  @@index([createdById])
   @@map("commerce_content_versions")
 }
 
@@ -2893,6 +2902,7 @@ model CommerceContentComment {
   /// with `contentId` and so cannot serve it — every tap on "show replies"
   /// was reading the whole comment table.
   @@index([parentId, createdAt])
+  @@index([removedById])
   @@map("commerce_content_comments")
 }
 
@@ -2963,6 +2973,8 @@ model CommerceContentReshare {
   /// "Who promoted me", for the original author.
   @@index([sourceAuthorId, createdAt(sort: Desc)])
   @@index([sourceContentId, createdAt(sort: Desc)])
+  @@index([couponId])
+  @@index([viaReshareId])
   @@map("commerce_content_reshares")
 }
 
@@ -3043,6 +3055,9 @@ model CommerceContentAttribution {
   @@index([sellerId, productId, createdAt(sort: Desc)])
   @@index([sellerId, actorId])
   @@index([contentId])
+  @@index([actorId])
+  @@index([productId])
+  @@index([reshareId])
   @@map("commerce_content_attributions")
 }
 
@@ -3134,8 +3149,8 @@ model Order {
   /// afterwards rather than cleared, so the row still records the deadline the
   /// order beat.
   expiresAt DateTime? @map("expires_at")
-  createdAt            DateTime  @default(now()) @map("created_at")
-  updatedAt            DateTime  @updatedAt @map("updated_at")
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
 
   sellerOrders      SellerOrder[]
   payment           Payment?
@@ -3159,6 +3174,7 @@ model Order {
   /// this it is a scan of every order the platform has ever taken, every ten
   /// minutes, for ever.
   @@index([status, expiresAt])
+  @@index([fxRateId])
   @@map("orders")
 }
 
@@ -3308,6 +3324,7 @@ model CartItem {
   /// From the offer's side: who is holding this in a basket, and the cascade
   /// when a seller withdraws the listing.
   @@index([offerId])
+  @@index([offerVariantId])
   @@map("cart_items")
 }
 
@@ -3329,6 +3346,7 @@ model GuestCartItem {
   @@unique([guestSessionId, offerId, offerVariantId])
   @@index([guestSessionId])
   @@index([offerId])
+  @@index([offerVariantId])
   @@map("guest_cart_items")
 }
 
@@ -3645,6 +3663,7 @@ model Shipment {
 
   @@index([courierId, status])
   @@index([status])
+  @@index([zoneId])
   @@map("shipments")
 }
 
@@ -3814,7 +3833,7 @@ model TrustSignal {
   status TrustSignalStatus @default(OPEN)
 
   /// What the person decided, in their own words.
-  note        String?
+  note         String?
   resolvedById String?   @map("resolved_by_id") @db.Uuid
   resolvedBy   User?     @relation("TrustSignalsResolved", fields: [resolvedById], references: [id], onDelete: SetNull)
   resolvedAt   DateTime? @map("resolved_at")
@@ -3883,7 +3902,7 @@ model ReengagementTouch {
 /// thing here — commission on what she actually gave away, marketing expense
 /// on what the platform did.
 model FlashSale {
-  id    String @id @default(uuid()) @db.Uuid
+  id    String  @id @default(uuid()) @db.Uuid
   title String
   note  String?
 
@@ -3934,8 +3953,8 @@ model FlashSaleItem {
   /// When set, it is claimed the same way stock is — conditionally, inside the
   /// checkout transaction — because a doorbuster with no cap on the discount
   /// is a doorbuster that sells the whole shelf at a loss.
-  quantityCap Int? @map("quantity_cap")
-  quantitySold Int @default(0) @map("quantity_sold")
+  quantityCap  Int? @map("quantity_cap")
+  quantitySold Int  @default(0) @map("quantity_sold")
 
   /// Q49 again: whoever created the discount absorbs it.
   fundedBySeller Boolean @default(true) @map("funded_by_seller")
@@ -4015,8 +4034,8 @@ model Experiment {
   /// everybody and invalidates the run. Changing it is starting a new test.
   key String @unique
 
-  name        String
-  hypothesis  String?
+  name       String
+  hypothesis String?
 
   status ExperimentStatus @default(DRAFT)
 
@@ -4075,7 +4094,7 @@ model ExperimentEvent {
   metric String @default("")
 
   /// The value of the conversion, when it has one — an order total, say.
-  value    Decimal? @db.Decimal(18, 4)
+  value    Decimal?  @db.Decimal(18, 4)
   currency Currency?
 
   occurredAt DateTime @default(now()) @map("occurred_at")
@@ -4106,16 +4125,16 @@ model CustomerProfile {
   propensityScore Float  @map("propensity_score")
   propensityBand  String @map("propensity_band")
 
-  churnScore Float  @map("churn_score")
-  churnBand  String @map("churn_band")
+  churnScore  Float  @map("churn_score")
+  churnBand   String @map("churn_band")
   /// Her own average days between orders. Null below two orders.
   cadenceDays Float? @map("cadence_days")
 
   /// Net of refunds, and projected over `valueHorizonDays`.
-  realisedValue  Decimal @map("realised_value") @db.Decimal(18, 4)
-  projectedValue Decimal @map("projected_value") @db.Decimal(18, 4)
-  valueHorizonDays Int   @map("value_horizon_days")
-  currency       Currency @default(SYP)
+  realisedValue    Decimal  @map("realised_value") @db.Decimal(18, 4)
+  projectedValue   Decimal  @map("projected_value") @db.Decimal(18, 4)
+  valueHorizonDays Int      @map("value_horizon_days")
+  currency         Currency @default(SYP)
 
   /// The hour she is most often active, 0–23. Null when too little is known —
   /// a "best hour" from four app opens is a random hour with an excuse.
@@ -4424,6 +4443,8 @@ model ReviewModerationLog {
 
   @@index([moderatorId, createdAt])
   @@index([targetType, createdAt])
+  @@index([productReviewId])
+  @@index([sellerReviewId])
   @@map("review_moderation_logs")
 }
 
@@ -4512,6 +4533,7 @@ model Chat {
   @@index([productId])
   @@index([sellerOrderId])
   @@index([type, updatedAt])
+  @@index([sellerId])
   @@map("chats")
 }
 
@@ -4646,6 +4668,7 @@ model ChatReport {
 
   @@index([chatId, createdAt])
   @@index([reportedUserId, status])
+  @@index([reporterId])
   @@map("chat_reports")
 }
 
@@ -4786,20 +4809,26 @@ model Coupon {
   /// Only this product. The narrowest scope there is.
   productId String?  @map("product_id") @db.Uuid
   product   Product? @relation(fields: [productId], references: [id], onDelete: Cascade)
-  createdAt       DateTime   @default(now()) @map("created_at")
-  updatedAt       DateTime   @updatedAt @map("updated_at")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   redemptions     CouponRedemption[]
   referralRewards ReferralReward[]
   loyaltyRewards  LoyaltyReward[]
-
-  @@index([userId])
 
   /// Codes handed to the women who promote a boutique. Empty until the
   /// ambassador programme exists; the relation is here so that programme is
   /// a write path rather than a migration of a live table.
   reshares CommerceContentReshare[] @relation("ReshareCoupons")
 
+  @@index([userId])
+  // Declared here as well as in `20260909150000_coupon_scope`, which created
+  // them in raw SQL. Undeclared, the datamodel and the database disagreed, and
+  // the next `migrate dev` would have generated a migration dropping all three
+  // — silently turning every scoped-coupon lookup back into a sequential scan.
+  @@index([sellerId])
+  @@index([categoryId])
+  @@index([productId])
   @@map("coupons")
 }
 
@@ -4881,6 +4910,7 @@ model Referral {
   @@index([referrerId, status])
   @@index([participantType, status])
   @@index([createdAt])
+  @@index([codeId])
   @@map("referrals")
 }
 
@@ -4902,6 +4932,7 @@ model ReferralReward {
 
   @@index([referralId])
   @@index([userId])
+  @@index([couponId])
   @@map("referral_rewards")
 }
 
@@ -4971,6 +5002,7 @@ model LoyaltyReward {
 
   @@index([tierId, isActive])
   @@index([type, isActive])
+  @@index([couponId])
   @@map("loyalty_rewards")
 }
 
@@ -5051,10 +5083,10 @@ model NotificationPreference {
   /// softer half — a report resolved in her favour, a reinstatement.
   inAppModeration Boolean @default(true) @map("in_app_moderation")
 
-  push       Boolean  @default(false)
-  email      Boolean  @default(false)
-  sms        Boolean  @default(false)
-  updatedAt  DateTime @updatedAt @map("updated_at")
+  push      Boolean  @default(false)
+  email     Boolean  @default(false)
+  sms       Boolean  @default(false)
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   @@map("notification_preferences")
 }
@@ -5135,7 +5167,6 @@ model NotificationDelivery {
   /**
    * Whether this message is something she asked for or something the platform
    * wants.
-   *
    * The whole basis of frequency capping. An order that has shipped must reach
    * her whatever her recent volume; a third offer this week must not. Without
    * the distinction a cap either throttles the messages she is waiting for or
@@ -5213,6 +5244,7 @@ model SupportMessage {
   createdAt DateTime      @default(now()) @map("created_at")
 
   @@index([ticketId, createdAt])
+  @@index([authorId])
   @@map("support_messages")
 }
 
@@ -5295,6 +5327,7 @@ model CommissionLedger {
 
   @@index([sellerOrderId])
   @@index([sellerId, status])
+  @@index([ruleId])
   @@map("commission_ledgers")
 }
 
@@ -5408,6 +5441,7 @@ model PaymentMethod {
   expYear   Int     @map("exp_year")
   isDefault Boolean @default(false) @map("is_default")
 
+  @@index([userId])
   @@map("payment_methods")
 }
 
@@ -6069,6 +6103,7 @@ model AiStylistRecommendation {
   @@index([conversationId, createdAt])
   @@index([productId])
   @@index([feedback])
+  @@index([messageId])
   @@map("ai_stylist_recommendations")
 }
 
@@ -6108,6 +6143,7 @@ model AiStylistOutfit {
 
   @@index([userId, status, createdAt])
   @@index([conversationId])
+  @@index([messageId])
   @@map("ai_stylist_outfits")
 }
 
@@ -6709,6 +6745,7 @@ model TrendInsight {
   @@index([productId])
   @@index([generatedOn])
   @@index([expiresAt])
+  @@index([categoryId])
   @@map("trend_insights")
 }
 
@@ -6757,6 +6794,7 @@ model UnmetDemandSignal {
 
   @@index([status, demandScore])
   @@index([lastSeenAt])
+  @@index([suggestedCategoryId])
   @@map("unmet_demand_signals")
 }
 
@@ -6973,6 +7011,7 @@ model VisualSearchSession {
   @@index([userId, createdAt])
   @@index([status, imageExpiresAt])
   @@index([userId, checksum])
+  @@index([queryAssetId])
   @@map("visual_search_sessions")
 }
 
@@ -7046,6 +7085,7 @@ model VisualSearchResult {
   @@index([sessionId, position])
   @@index([productId])
   @@index([feedback])
+  @@index([regionId])
   @@map("visual_search_results")
 }
 
@@ -7096,6 +7136,9 @@ model VisualTryOnRequest {
   @@index([userId, createdAt])
   @@index([status, expiresAt])
   @@index([productId])
+  @@index([resultAssetId])
+  @@index([sessionId])
+  @@index([sourceAssetId])
   @@map("visual_try_on_requests")
 }
 
@@ -7345,6 +7388,9 @@ model ClosetItem {
   @@index([productId])
   // Neglected-piece and replacement passes.
   @@index([closetId, lastWornAt])
+  @@index([brandId])
+  @@index([offerId])
+  @@index([variantId])
   @@map("closet_items")
 }
 
@@ -7373,6 +7419,7 @@ model ClosetItemWear {
   /// a double tap, not two wearings.
   @@unique([itemId, wornOn])
   @@index([itemId, wornOn])
+  @@index([lookWearId])
   @@map("closet_item_wears")
 }
 
@@ -7433,6 +7480,7 @@ model ClosetLook {
   @@index([closetId, isArchived, updatedAt])
   @@index([closetId, occasion, isComplete])
   @@index([userId, lastWornAt])
+  @@index([sourceOutfitId])
   @@map("closet_looks")
 }
 
@@ -7569,6 +7617,7 @@ model ClosetGap {
   @@unique([closetId, fingerprint])
   @@index([closetId, status, priority])
   @@index([lookId])
+  @@index([filledByItemId])
   @@map("closet_gaps")
 }
 
@@ -7863,6 +7912,7 @@ model ValueProfile {
 
   @@index([tierId, score])
   @@index([score])
+  @@index([policyId])
   @@map("value_profiles")
 }
 
@@ -8284,6 +8334,7 @@ model Room {
 
   @@index([ownerId, status, lastActivityAt])
   @@index([status, targetDate])
+  @@index([recipientUserId])
   @@map("rooms")
 }
 
@@ -8425,6 +8476,9 @@ model RoomCandidate {
   @@unique([decisionId, offerId, offerVariantId])
   @@index([decisionId, status, position])
   @@index([productId])
+  @@index([addedById])
+  @@index([offerId])
+  @@index([offerVariantId])
   @@map("room_candidates")
 }
 
@@ -8483,6 +8537,7 @@ model RoomComment {
   @@index([roomId, createdAt])
   @@index([candidateId, createdAt])
   @@index([decisionId, createdAt])
+  @@index([memberId])
   @@map("room_comments")
 }
 
@@ -8509,6 +8564,7 @@ model RoomEvent {
   createdAt DateTime @default(now()) @map("created_at")
 
   @@index([roomId, createdAt])
+  @@index([actorId])
   @@map("room_events")
 }
 
@@ -8554,6 +8610,7 @@ model PurchasePlan {
 
   @@index([roomId, status])
   @@index([buyerId, status])
+  @@index([orderId])
   @@map("purchase_plans")
 }
 
@@ -8589,6 +8646,10 @@ model PurchasePlanItem {
 
   @@unique([planId, offerId, offerVariantId])
   @@index([planId, stage, position])
+  @@index([candidateId])
+  @@index([decisionId])
+  @@index([offerId])
+  @@index([offerVariantId])
   @@map("purchase_plan_items")
 }
 
@@ -9061,6 +9122,7 @@ model DropProduct {
 
   @@unique([dropId, productId])
   @@index([dropId, position])
+  @@index([productId])
   @@map("drop_products")
 }
 
@@ -9172,6 +9234,8 @@ model BundleItem {
 
   @@unique([bundleId, productId])
   @@index([bundleId, position])
+  @@index([offerId])
+  @@index([productId])
   @@map("bundle_items")
 }
 
@@ -9242,6 +9306,7 @@ model ResaleListing {
 
   @@index([status, listedAt])
   @@index([sellerId, status])
+  @@index([productId])
   @@map("resale_listings")
 }
 
@@ -9414,9 +9479,9 @@ model DeliveryProviderAccount {
   supportsTracking Boolean @default(false) @map("supports_tracking")
   supportsWebhook  Boolean @default(false) @map("supports_webhook")
 
-  webhookAuth WebhookAuthScheme @default(HMAC_SHA256) @map("webhook_auth")
+  webhookAuth            WebhookAuthScheme @default(HMAC_SHA256) @map("webhook_auth")
   /// Header carrying the signature, e.g. `x-acme-signature`.
-  webhookSignatureHeader String? @map("webhook_signature_header")
+  webhookSignatureHeader String?           @map("webhook_signature_header")
 
   /// Non-secret settings: base URL, paths, timeouts, field and status maps.
   /// The shape is the adapter's business; `HttpDeliveryProvider` documents its own.
@@ -9455,10 +9520,10 @@ model DeliveryDispatch {
   shipmentId String   @unique @map("shipment_id") @db.Uuid
   shipment   Shipment @relation(fields: [shipmentId], references: [id], onDelete: Cascade)
 
-  providerId String                  @map("provider_id") @db.Uuid
-  provider   DeliveryProviderAccount @relation(fields: [providerId], references: [id], onDelete: Restrict)
+  providerId   String                  @map("provider_id") @db.Uuid
+  provider     DeliveryProviderAccount @relation(fields: [providerId], references: [id], onDelete: Restrict)
   /// Denormalised so a dispatch still reads after an account is renamed.
-  providerCode String @map("provider_code")
+  providerCode String                  @map("provider_code")
 
   status         ShipmentStatus @default(CREATED)
   providerStatus String?        @map("provider_status")
@@ -9516,7 +9581,7 @@ model DeliveryDispatch {
 model DeliveryWebhookEvent {
   id String @id @default(uuid()) @db.Uuid
 
-  providerCode String @map("provider_code")
+  providerCode    String  @map("provider_code")
   /// The carrier's id for this event, where it sends one.
   externalEventId String? @map("external_event_id")
 

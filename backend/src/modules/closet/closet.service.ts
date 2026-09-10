@@ -20,6 +20,21 @@ import { seasonOf } from './items/garment-descriptor';
  * mean three subtly different definitions of "her active pieces", and they
  * would drift the first time one of them gained a filter.
  */
+/**
+ * Ceilings on the wardrobe read.
+ *
+ * The closet screen loads the whole wardrobe at once — the gap engine and the
+ * pairing suggestions both need every piece to reason about, so paging it
+ * would change what the feature *is*. What it must not do is have no bound:
+ * these two queries and their nested look items are the largest per-account
+ * read on the platform, and they run on every open of the tab.
+ *
+ * Set well past a real wardrobe. A woman with more than a thousand catalogued
+ * garments is a boutique, and a boutique has the seller tools.
+ */
+const MAX_CLOSET_ITEMS = 1000;
+const MAX_CLOSET_LOOKS = 500;
+
 @Injectable()
 export class ClosetService {
   constructor(private readonly prisma: PrismaService) {}
@@ -78,11 +93,13 @@ export class ClosetService {
       this.prisma.closetItem.findMany({
         where: { closetId: closet.id, status: ClosetItemStatus.ACTIVE },
         orderBy: [{ slot: 'asc' }, { createdAt: 'asc' }],
+        take: MAX_CLOSET_ITEMS,
       }),
       this.prisma.closetLook.findMany({
         where: { closetId: closet.id, isArchived: false },
         include: { items: true },
         orderBy: { updatedAt: 'desc' },
+        take: MAX_CLOSET_LOOKS,
       }),
       this.prisma.userStylePreference.findUnique({ where: { userId } }),
       this.prisma.closetGap.findMany({

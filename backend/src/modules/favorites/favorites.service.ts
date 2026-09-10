@@ -48,6 +48,29 @@ const postInclude = {
   },
 } satisfies Prisma.CommerceContentInclude;
 
+/**
+ * Safety ceilings on the saved-items reads.
+ *
+ * None of these endpoints is paged — the client renders one screen of
+ * everything she has saved, and changing that shape would break it. What they
+ * had instead was no bound at all: `overview` issued four unbounded
+ * `findMany`s in parallel, each joining full product cards, and one of them
+ * expanded every wishlist collection's items inside the same query. A shopper
+ * with a few thousand saves — which is a good customer, not an attacker —
+ * produced a response measured in megabytes over a Syrian mobile connection,
+ * and the server built all of it in memory first.
+ *
+ * A ceiling is not pagination and does not pretend to be. It is the line past
+ * which one account can no longer cost the whole platform its memory. Set high
+ * enough that a real person never reaches it, which is why nothing in the
+ * client had to change.
+ */
+const MAX_SAVED_PRODUCTS = 300;
+const MAX_SAVED_SELLERS = 200;
+const MAX_SAVED_POSTS = 200;
+const MAX_COLLECTIONS = 100;
+const MAX_COLLECTION_ITEMS = 200;
+
 const collectionInclude = {
   items: {
     include: {
@@ -56,6 +79,7 @@ const collectionInclude = {
       content: { include: postInclude },
     },
     orderBy: { createdAt: 'desc' as const },
+    take: MAX_COLLECTION_ITEMS,
   },
 } satisfies Prisma.WishlistCollectionInclude;
 
@@ -68,6 +92,7 @@ export class FavoritesService {
       where: { userId },
       include: { product: { include: PRODUCT_CARD_INCLUDE } },
       orderBy: { createdAt: 'desc' },
+      take: MAX_SAVED_PRODUCTS,
     });
     return favorites.map((f) => serializeProduct(f.product, { isLiked: true }));
   }
@@ -81,6 +106,7 @@ export class FavoritesService {
       },
       include: { product: { include: PRODUCT_CARD_INCLUDE } },
       orderBy: { createdAt: 'desc' },
+      take: MAX_SAVED_PRODUCTS,
     });
     return favorites
       .map((f) => f.product)
@@ -95,6 +121,7 @@ export class FavoritesService {
         where: { userId },
         include: { seller: true },
         orderBy: { createdAt: 'desc' },
+        take: MAX_SAVED_SELLERS,
       }),
       // `postSave`, not `postFavorite`. The platform had grown two tables for
       // one gesture: the bookmark on a feed card wrote `post_saves` through
@@ -106,11 +133,13 @@ export class FavoritesService {
         where: { userId },
         include: { content: { include: postInclude } },
         orderBy: { createdAt: 'desc' },
+        take: MAX_SAVED_POSTS,
       }),
       this.prisma.wishlistCollection.findMany({
         where: { userId },
         include: collectionInclude,
         orderBy: { updatedAt: 'desc' },
+        take: MAX_COLLECTIONS,
       }),
     ]);
 
@@ -143,6 +172,7 @@ export class FavoritesService {
         },
         include: { seller: true },
         orderBy: { createdAt: 'desc' },
+        take: MAX_SAVED_SELLERS,
       }),
       this.prisma.guestSavedItem.findMany({
         where: {
@@ -152,6 +182,7 @@ export class FavoritesService {
         },
         include: { content: { include: postInclude } },
         orderBy: { createdAt: 'desc' },
+        take: MAX_SAVED_POSTS,
       }),
     ]);
 
@@ -326,6 +357,7 @@ export class FavoritesService {
       where: { userId },
       include: collectionInclude,
       orderBy: { updatedAt: 'desc' },
+      take: MAX_COLLECTIONS,
     });
     return collections.map((collection) => this.serializeCollection(collection, userId));
   }

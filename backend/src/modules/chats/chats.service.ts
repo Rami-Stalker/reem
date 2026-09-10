@@ -54,6 +54,14 @@ const chatInclude = {
   },
 } satisfies Prisma.ChatInclude;
 
+/**
+ * The inbox is not paged — the client draws one list — so this is the line past
+ * which one account stops being able to cost the platform its memory. A seller
+ * whose shop generates three hundred live conversations is doing well; one with
+ * more needs search, which this endpoint already supports, not a longer list.
+ */
+const MAX_INBOX_THREADS = 300;
+
 @Injectable()
 export class ChatsService {
   constructor(
@@ -96,17 +104,20 @@ export class ChatsService {
       },
       include: { chat: { include: chatInclude } },
       orderBy: { chat: { updatedAt: 'desc' } },
+      take: MAX_INBOX_THREADS,
     });
 
-    return Promise.all(
-      participations.map(async (participation) => {
-        const unread = await this.unreadCount(participation.chatId, userId);
-        return serializeChatThread(
-          participation.chat as ChatWithRelations,
-          userId,
-          unread,
-        );
-      }),
+    const unread = await this.unreadCounts(
+      userId,
+      participations.map((participation) => participation.chatId),
+    );
+
+    return participations.map((participation) =>
+      serializeChatThread(
+        participation.chat as ChatWithRelations,
+        userId,
+        unread.get(participation.chatId) ?? 0,
+      ),
     );
   }
 
@@ -611,6 +622,45 @@ export class ChatsService {
       participants,
       participantIds: participants.map((participant) => participant.userId),
     };
+  }
+
+  /**
+   * Unread counts for a whole inbox, in one query.
+   *
+   * The list used to call `unreadCount` per thread, and that helper issues two
+   * queries of its own — so opening the inbox cost `1 + 2N`, fired
+   * concurrently at the connection pool. A seller with three hundred
+   * conversations opened six hundred queries to draw one screen, and the
+   * participant lookup inside each was redundant: `threads()` had just loaded
+   * that very row.
+   *
+   * Raw SQL rather than Prisma because the cutoff is per-chat — every
+   * conversation compares against its own `last_read_at` — which a `groupBy`
+   * cannot express. Chats with nothing unread simply do not come back, which
+   * is why the caller defaults to zero.
+   */
+  private async unreadCounts(
+    userId: string,
+    chatIds: string[],
+  ): Promise<Map<string, number>> {
+    if (chatIds.length === 0) return new Map();
+
+    const rows = await this.prisma.$queryRaw<
+      { chat_id: string; unread: bigint }[]
+    >`
+      SELECT m.chat_id, COUNT(*) AS unread
+      FROM messages m
+      JOIN chat_participants p
+        ON p.chat_id = m.chat_id
+       AND p.user_id = ${userId}::uuid
+      WHERE m.chat_id = ANY(${chatIds}::uuid[])
+        AND m.sender_id <> ${userId}::uuid
+        AND m.deleted_at IS NULL
+        AND (p.last_read_at IS NULL OR m.created_at > p.last_read_at)
+      GROUP BY m.chat_id
+    `;
+
+    return new Map(rows.map((row) => [row.chat_id, Number(row.unread)]));
   }
 
   private async unreadCount(chatId: string, userId: string) {

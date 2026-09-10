@@ -48,10 +48,19 @@ abstract final class AppEnv {
   static String get baseUrl {
     final configured = _configuredBaseUrl.trim();
     if (configured.isNotEmpty) {
-      assert(
-        !isProduction || configured.startsWith('https://'),
-        'APP_ENV=production requires an https API_BASE_URL; got "$configured".',
-      );
+      // `throw`, not `assert`. An assertion is compiled out of a release build,
+      // so the one check that mattered — is production talking over TLS? — was
+      // absent from exactly the build it was written to guard. A production
+      // bundle pointed at `http://` would have shipped every access token and
+      // every OTP over cleartext, and the debug run that "passed" would have
+      // proved nothing about it.
+      if (isProduction && !configured.startsWith('https://')) {
+        throw StateError(
+          'APP_ENV=production requires an https API_BASE_URL; got '
+          '"$configured". Cleartext would put every access token and one-time '
+          'code on the wire in the clear.',
+        );
+      }
       return configured;
     }
 

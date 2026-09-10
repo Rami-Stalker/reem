@@ -3,6 +3,7 @@ import { Logger, ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
+import compression from 'compression';
 import helmet from 'helmet';
 import { AppModule } from './app.module';
 import { AllExceptionsFilter } from './common/filters/all-exceptions.filter';
@@ -31,6 +32,38 @@ async function bootstrap() {
 
   // Security headers.
   app.use(helmet());
+
+  /**
+   * Compress every response.
+   *
+   * This API answered uncompressed. The home screen is 224 KB of Arabic JSON
+   * and gzips to 37 KB — an 84% reduction, because the payload is repetitive
+   * key names and UTF-8 Arabic, which is exactly what DEFLATE is good at. On
+   * the connections this platform actually serves, that is the difference
+   * between a home screen that arrives and one a woman gives up on; it was
+   * also, measured against everything else in the performance audit, the
+   * single largest win available and the one that required no change to any
+   * response shape.
+   *
+   * Two notes on the settings:
+   *
+   *  - Level 6 is zlib's default and the right trade. Level 9 costs roughly
+   *    twice the CPU for about 1% more compression on JSON.
+   *  - Below a kilobyte, compression makes responses *larger* once the gzip
+   *    header is counted, so the threshold leaves small ones alone.
+   *
+   * BREACH does not apply here: the attack extracts a secret that a response
+   * body reflects back beside attacker-controlled input, and this API carries
+   * its credential in a header — there are no cookies and no CSRF tokens in
+   * any body. `compression` also skips content types that are already
+   * compressed, so the media mount below is unaffected.
+   */
+  app.use(
+    compression({
+      level: 6,
+      threshold: 1024,
+    }),
+  );
 
   /**
    * Rate limiting is scoped by client IP. Behind a reverse proxy every request

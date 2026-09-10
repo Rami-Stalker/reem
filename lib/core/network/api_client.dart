@@ -4,6 +4,7 @@ import 'package:reem/core/network/http_cache/http_cache_store.dart';
 import 'package:reem/core/network/interceptors/auth_interceptor.dart';
 import 'package:reem/core/network/interceptors/cache_interceptor.dart';
 import 'package:reem/core/network/interceptors/device_proof_interceptor.dart';
+import 'package:reem/core/network/interceptors/retry_interceptor.dart';
 import 'package:reem/core/network/interceptors/telemetry_interceptor.dart';
 import 'package:reem/core/security/device_identity_service.dart';
 import 'package:reem/core/security/device_proof_signer.dart';
@@ -60,6 +61,15 @@ class ApiClient {
     _cacheStore = store;
     final cacheInterceptor = CacheInterceptor(store);
     dio.interceptors.add(cacheInterceptor);
+
+    // After the cache, so a hit is never retried — a cached response is not a
+    // failure — and before telemetry, so a call that succeeded on its second
+    // attempt leaves one breadcrumb saying so rather than a report saying it
+    // failed. Reads retry freely; a write only if it carries an
+    // `Idempotency-Key`, which is what makes repeating it safe.
+    final retryInterceptor = RetryInterceptor();
+    dio.interceptors.add(retryInterceptor);
+    retryInterceptor.client = dio;
 
     // After the cache, so a request served from cache leaves no network
     // breadcrumb — it never went to the network, and saying it did would

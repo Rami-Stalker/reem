@@ -223,6 +223,43 @@ dbTest('a stranger cannot read a conversation she is not in', async (world) => {
   );
 });
 
+dbTest('the inbox counts unread per conversation in one pass', async (world) => {
+  // The list used to call the single-thread counter per row, and that helper
+  // runs two queries of its own — so drawing the inbox cost `1 + 2N`, fired
+  // concurrently at the pool. The counts now come from one grouped query, and
+  // the property that has to survive that change is this one: each row carries
+  // *its own* cutoff, so two conversations read at different times must not
+  // borrow each other's number.
+  const seller = await makeUser(world.tx, 'p1', UserRole.SELLER);
+  const first = await makeUser(world.tx, 'p2', UserRole.CUSTOMER);
+  const second = await makeUser(world.tx, 'p3', UserRole.CUSTOMER);
+
+  const quiet = await world.chats.startConversation(first.id, {
+    participant_id: seller.id,
+    message: 'مرحبا',
+  });
+  const busy = await world.chats.startConversation(second.id, {
+    participant_id: seller.id,
+    message: 'عندك مقاس M؟',
+  });
+  await world.chats.send(busy.id, second.id, { content: 'وبلونين؟' });
+
+  // The seller reads one of them and leaves the other.
+  await world.chats.markRead(quiet.id, seller.id, {});
+
+  const inbox = await world.chats.threads(seller.id);
+  const byId = new Map(inbox.map((thread) => [thread.id, thread]));
+
+  assert.equal(byId.get(quiet.id)?.unread_count, 0, 'the one she read');
+  assert.equal(byId.get(busy.id)?.unread_count, 2, 'the one she did not');
+
+  // A conversation with nothing unread does not come back from the grouped
+  // query at all, so the zero above is the caller's default rather than a row —
+  // which is exactly the case a per-thread loop could not get wrong and this
+  // one can.
+  assert.ok(byId.has(quiet.id), 'a read conversation still appears in the list');
+});
+
 dbTest('unread counts only the other side, and clears on read', async (world) => {
   const buyer = await makeUser(world.tx, 'n', UserRole.CUSTOMER);
   const seller = await makeUser(world.tx, 'o', UserRole.SELLER);
