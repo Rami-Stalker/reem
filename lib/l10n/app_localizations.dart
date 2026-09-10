@@ -62,8 +62,7 @@ import 'app_localizations_en.dart';
 /// be consistent with the languages listed in the AppLocalizations.supportedLocales
 /// property.
 abstract class AppLocalizations {
-  AppLocalizations(String locale)
-    : localeName = intl.Intl.canonicalizedLocale(locale.toString());
+  AppLocalizations(String locale) : localeName = intl.Intl.canonicalizedLocale(locale.toString());
 
   final String localeName;
 
@@ -71,8 +70,7 @@ abstract class AppLocalizations {
     return Localizations.of<AppLocalizations>(context, AppLocalizations);
   }
 
-  static const LocalizationsDelegate<AppLocalizations> delegate =
-      _AppLocalizationsDelegate();
+  static const LocalizationsDelegate<AppLocalizations> delegate = _AppLocalizationsDelegate();
 
   /// A list of this localizations delegate along with the default localizations
   /// delegates.
@@ -84,18 +82,17 @@ abstract class AppLocalizations {
   /// Additional delegates can be added by appending to this list in
   /// MaterialApp. This list does not have to be used at all if a custom list
   /// of delegates is preferred or required.
-  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates =
-      <LocalizationsDelegate<dynamic>>[
-        delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-      ];
+  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates = <LocalizationsDelegate<dynamic>>[
+    delegate,
+    GlobalMaterialLocalizations.delegate,
+    GlobalCupertinoLocalizations.delegate,
+    GlobalWidgetsLocalizations.delegate,
+  ];
 
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[
     Locale('ar'),
-    Locale('en'),
+    Locale('en')
   ];
 
   /// Screen-reader label for the back button
@@ -1579,6 +1576,84 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'User management'**
   String get adminUserManagement;
+
+  /// Analytics ranked list: pieces sold by a product or a boutique.
+  ///
+  /// In en, this message translates to:
+  /// **'{units} units'**
+  String adminUnitsSold(int units);
+
+  /// Subtitle of the notification analytics screen.
+  ///
+  /// In en, this message translates to:
+  /// **'What went out, down which channel, and how much of it landed.'**
+  String get adminNotificationAnalyticsSubtitle;
+
+  /// Metric: in-app notifications nobody has opened.
+  ///
+  /// In en, this message translates to:
+  /// **'Unread in app'**
+  String get adminUnreadInApp;
+
+  /// Metric: notification deliveries that left the platform.
+  ///
+  /// In en, this message translates to:
+  /// **'Sent'**
+  String get adminNotificationsSent;
+
+  /// Metric: notification deliveries that did not land.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed'**
+  String get adminNotificationsFailed;
+
+  /// Panel title: delivery counts split by channel and status.
+  ///
+  /// In en, this message translates to:
+  /// **'Deliveries by channel'**
+  String get adminDeliveriesByChannel;
+
+  /// Panel title: campaign counts by status.
+  ///
+  /// In en, this message translates to:
+  /// **'Campaigns by status'**
+  String get adminCampaignsByStatus;
+
+  /// Panel title: counts of sent/opened/clicked/failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Delivery events'**
+  String get adminDeliveryEvents;
+
+  /// Notification channel.
+  ///
+  /// In en, this message translates to:
+  /// **'Push'**
+  String get adminChannelPush;
+
+  /// Notification channel.
+  ///
+  /// In en, this message translates to:
+  /// **'In app'**
+  String get adminChannelInApp;
+
+  /// Notification channel.
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get adminChannelEmail;
+
+  /// Notification channel.
+  ///
+  /// In en, this message translates to:
+  /// **'SMS'**
+  String get adminChannelSms;
+
+  /// Notification channel.
+  ///
+  /// In en, this message translates to:
+  /// **'WhatsApp'**
+  String get adminChannelWhatsapp;
 
   /// Admin nav item
   ///
@@ -11499,8 +11574,7 @@ abstract class AppLocalizations {
   String get discardChangesKeep;
 }
 
-class _AppLocalizationsDelegate
-    extends LocalizationsDelegate<AppLocalizations> {
+class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
   const _AppLocalizationsDelegate();
 
   @override
@@ -11509,26 +11583,25 @@ class _AppLocalizationsDelegate
   }
 
   @override
-  bool isSupported(Locale locale) =>
-      <String>['ar', 'en'].contains(locale.languageCode);
+  bool isSupported(Locale locale) => <String>['ar', 'en'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
 }
 
 AppLocalizations lookupAppLocalizations(Locale locale) {
+
+
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
-    case 'ar':
-      return AppLocalizationsAr();
-    case 'en':
-      return AppLocalizationsEn();
+    case 'ar': return AppLocalizationsAr();
+    case 'en': return AppLocalizationsEn();
   }
 
   throw FlutterError(
     'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
     'an issue with the localizations generation tool. Please file an issue '
     'on GitHub with a reproducible sample app and the gen-l10n configuration '
-    'that was used.',
+    'that was used.'
   );
 }

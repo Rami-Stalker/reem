@@ -6,6 +6,7 @@ class AdminRecord {
     required this.status,
     required this.metrics,
     required this.raw,
+    this.createdAt,
   });
 
   final String id;
@@ -14,6 +15,15 @@ class AdminRecord {
   final String status;
   final Map<String, String> metrics;
   final Map<String, dynamic> raw;
+
+  /// When the row was made, parsed rather than printed.
+  ///
+  /// This used to travel inside [metrics] as whatever string the server sent,
+  /// which put `2026-09-10T01:53:18.694Z` on the face of every row in the
+  /// console. A timestamp is only useful to an operator once it is in her
+  /// language and her calendar, and the data layer has neither, so the parsed
+  /// moment comes through here and the widget formats it.
+  final DateTime? createdAt;
 
   /// Reads a field off the untyped record.
   ///

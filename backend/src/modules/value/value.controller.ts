@@ -12,6 +12,7 @@ import {
 import { UserRole } from '@prisma/client';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import { Roles } from '../../common/decorators/roles.decorator';
+import { SelfScoped } from '../../common/decorators/self-scoped.decorator';
 import { ValueBenefitService } from './value-benefit.service';
 import { ValueCollectorService } from './value-collector.service';
 import { ValuePolicyService } from './value-policy.service';
@@ -45,6 +46,9 @@ import { EARNING_RULES } from './value.constants';
  * number. That is not an oversight to be filled in later — a status that can be
  * asked for is a status that can be manufactured.
  */
+@SelfScoped(
+  "her standing, her badge, her event ledger and her benefit grants are every one read for the caller's own user id",
+)
 @Controller('value')
 export class ValueController {
   constructor(

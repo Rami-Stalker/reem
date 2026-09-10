@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { Cron } from '@nestjs/schedule';
 import { OnEvent } from '@nestjs/event-emitter';
 import {
@@ -277,7 +277,25 @@ export class NotificationsService {
     };
   }
 
-  async trackDelivery(id: string, dto: TrackNotificationEventDto) {
+  /**
+   * Records what happened to one delivery.
+   *
+   * The delivery is looked up by id *and* owner. Without the owner the route
+   * was an open write on anyone's row: a receipt could be posted for a message
+   * sent to a different woman, and campaign open- and click-rates are read
+   * straight off these rows.
+   */
+  async trackDelivery(
+    userId: string,
+    id: string,
+    dto: TrackNotificationEventDto,
+  ) {
+    const delivery = await this.prisma.notificationDelivery.findFirst({
+      where: { id, userId },
+      select: { id: true },
+    });
+    if (!delivery) throw new NotFoundException('Notification not found');
+
     const now = new Date();
     await this.prisma.$transaction([
       this.prisma.notificationEvent.create({

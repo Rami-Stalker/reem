@@ -13,6 +13,7 @@ import 'package:reem/features/admin/presentation/providers/admin_provider.dart';
 import 'package:reem/features/admin/presentation/screens/admin_analytics_screen.dart';
 import 'package:reem/features/admin/presentation/screens/admin_dashboard_screen.dart';
 import 'package:reem/features/admin/presentation/screens/admin_delivery_screen.dart';
+import 'package:reem/features/admin/presentation/screens/admin_notification_analytics_screen.dart';
 import 'package:reem/features/admin/presentation/screens/admin_orders_screen.dart';
 import 'package:reem/features/admin/presentation/screens/admin_products_screen.dart';
 import 'package:reem/features/admin/presentation/screens/admin_section_screen.dart';
@@ -907,10 +908,8 @@ final goRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: RoutePaths.adminNotificationAnalytics,
         name: RouteNames.adminNotificationAnalytics,
-        builder: (context, state) => AdminShell(
-          child: AdminSectionScreen(
-            config: adminSectionConfigs['notificationAnalytics']!,
-          ),
+        builder: (context, state) => const AdminShell(
+          child: AdminNotificationAnalyticsScreen(),
         ),
       ),
       GoRoute(

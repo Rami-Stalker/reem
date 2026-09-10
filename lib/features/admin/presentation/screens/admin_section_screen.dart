@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reem/core/design_system/design_system.dart';
 import 'package:reem/core/errors/failure.dart';
 import 'package:reem/core/localization/l10n_extension.dart';
+import 'package:reem/core/utils/relative_time.dart';
 import 'package:reem/features/admin/domain/entities/admin_console_entity.dart';
 import 'package:reem/features/admin/presentation/providers/admin_actions.dart';
 import 'package:reem/features/admin/presentation/providers/admin_provider.dart';
@@ -777,11 +778,14 @@ class _RecordTile extends StatelessWidget {
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              record.subtitle,
-              maxLines: compact ? 2 : 1,
-              overflow: TextOverflow.ellipsis,
-            ),
+            // A row with nothing to say underneath its title says nothing,
+            // rather than repeating the name of the screen.
+            if (record.subtitle.isNotEmpty)
+              Text(
+                record.subtitle,
+                maxLines: compact ? 2 : 1,
+                overflow: TextOverflow.ellipsis,
+              ),
             if (compact) ...[const SizedBox(height: DsSpacing.xs), badges],
           ],
         ),
@@ -817,6 +821,10 @@ class _RecordBadges extends StatelessWidget {
       children: [
         for (final metric in record.metrics.entries.take(2))
           AdminMetricPill(label: metric.value),
+        // «قبل ٣ أيام» rather than `2026-09-10T01:53:18.694Z`, which is what
+        // every row in the console used to carry.
+        if (record.createdAt != null)
+          AdminMetricPill(label: formatRelativeTime(l10n, record.createdAt!)),
         AdminMetricPill(
           label: adminStatusLabel(l10n, record.status),
           color: palette.positive,

@@ -14,6 +14,7 @@ import { UserRole } from '@prisma/client';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import { OptionalAuth } from '../../common/decorators/optional-auth.decorator';
 import { Roles } from '../../common/decorators/roles.decorator';
+import { SelfScoped } from '../../common/decorators/self-scoped.decorator';
 import { ReputationService } from './reputation.service';
 import {
   AwardSellerBadgeDto,
@@ -25,6 +26,20 @@ import {
   SellerReviewQueryDto,
 } from './dto/reputation.dto';
 
+/**
+ * Reviews and the standing they add up to.
+ *
+ * A shop's reviews and its reputation are catalogue: a shopper reads them
+ * before she has an account, so they are `@OptionalAuth`. Writing one, and
+ * reading her own, are keyed on her id. The seller desk and the moderation
+ * queue below name their roles.
+ *
+ * Undeclared, none of that worked: reading a boutique's reviews, leaving one,
+ * and listing her own all answered 403.
+ */
+@SelfScoped(
+  "a review is written under the caller's own user id, and «my reviews» is filtered by authorship",
+)
 @Controller('reputation')
 export class ReputationController {
   constructor(private readonly reputation: ReputationService) {}
@@ -57,6 +72,8 @@ export class ReputationController {
     return this.reputation.reviewsByAuthor(userId);
   }
 
+  /** A boutique's reviews are catalogue — read before there is an account. */
+  @OptionalAuth()
   @Get('sellers/:sellerId/reviews')
   sellerReviews(@Param('sellerId', ParseUUIDPipe) sellerId: string) {
     return this.reputation.sellerReviews(sellerId);
@@ -72,6 +89,8 @@ export class ReputationController {
     return this.reputation.createSellerReview(userId, sellerId, dto);
   }
 
+  /** Her standing, shown on the shop header, to anyone looking at the shop. */
+  @OptionalAuth()
   @Get('sellers/:sellerId')
   sellerReputation(@Param('sellerId', ParseUUIDPipe) sellerId: string) {
     return this.reputation.sellerReputation(sellerId);

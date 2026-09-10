@@ -537,7 +537,7 @@ class _RankedList extends StatelessWidget {
               child: Text('${entry.key + 1}'),
             ),
             title: Text(entry.value.title),
-            subtitle: Text(entry.value.subtitle),
+            subtitle: Text(l10n.adminUnitsSold(entry.value.units)),
             trailing: Text(entry.value.value.sypCompact),
           ),
       ],

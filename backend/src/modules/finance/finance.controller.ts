@@ -16,6 +16,7 @@ import { AuthUser } from '../../common/decorators/current-user.decorator';
 
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import { Roles } from '../../common/decorators/roles.decorator';
+import { SelfScoped } from '../../common/decorators/self-scoped.decorator';
 import { Money } from '../../common/money';
 import { AdminFinanceService } from './admin-finance.service';
 import { CourierSettlementService } from './courier-settlement.service';
@@ -46,6 +47,22 @@ import { SellerPayoutsService } from './seller-payouts.service';
  * dispute — which a customer must be able to do herself — and converting her
  * own points.
  */
+/**
+ * The money surface: an accountant's console, a seller's earnings, and the
+ * few things a customer does with her own funds.
+ *
+ * Every administrative route here names `SUPER_ADMIN`/`FINANCE_ADMIN` and is
+ * judged by that. What is left — opening a dispute, reading and writing its
+ * messages, listing the disputes she is party to, converting her own points —
+ * turns on which side of the sale the caller is on, which the service decides
+ * from the `AuthUser` it is handed.
+ *
+ * Undeclared, that remainder was refused: a customer could not open a dispute
+ * or answer one, and neither could the seller she opened it against.
+ */
+@SelfScoped(
+  "the dispute routes hand the whole AuthUser to DisputeService, which admits only the two parties to the sub-order and support; the loyalty conversion moves the caller's own points",
+)
 @Controller('finance')
 export class FinanceController {
   constructor(

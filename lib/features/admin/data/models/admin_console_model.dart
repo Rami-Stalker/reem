@@ -1,3 +1,7 @@
+import 'dart:convert';
+
+import 'package:reem/core/shared/value_objects/money.dart';
+import 'package:reem/core/shared/value_objects/money_format.dart';
 import 'package:reem/features/admin/domain/entities/admin_console_entity.dart';
 
 class AdminConsoleSectionModel extends AdminConsoleSection {
@@ -25,10 +29,7 @@ class AdminConsoleSectionModel extends AdminConsoleSection {
     final records = items
         .whereType<Map>()
         .map(
-          (item) => AdminRecordModel.fromJson(
-            Map<String, dynamic>.from(item),
-            fallbackKey: key,
-          ),
+          (item) => AdminRecordModel.fromJson(Map<String, dynamic>.from(item)),
         )
         .toList();
     return AdminConsoleSectionModel(
@@ -53,10 +54,8 @@ class AdminConsoleSectionModel extends AdminConsoleSection {
         : (json[listKey] as List)
               .whereType<Map>()
               .map(
-                (item) => AdminRecordModel.fromJson(
-                  Map<String, dynamic>.from(item),
-                  fallbackKey: key,
-                ),
+                (item) =>
+                    AdminRecordModel.fromJson(Map<String, dynamic>.from(item)),
               )
               .toList();
 
@@ -89,36 +88,45 @@ class AdminRecordModel extends AdminRecord {
     required super.status,
     required super.metrics,
     required super.raw,
+    super.createdAt,
   });
 
-  factory AdminRecordModel.fromJson(
-    Map<String, dynamic> json, {
-    required String fallbackKey,
-  }) {
+  factory AdminRecordModel.fromJson(Map<String, dynamic> json) {
     final id = (json['id'] ?? json['number'] ?? json['key'] ?? '').toString();
-    final title =
-        (json['name'] ??
-                json['title'] ??
-                json['subject'] ??
-                json['number'] ??
-                json['business_name'] ??
-                json['action'] ??
-                json['key'] ??
-                id)
-            .toString();
-    final subtitle =
-        (json['email'] ??
-                json['phone'] ??
-                json['customer'] ??
-                json['seller_name'] ??
-                json['seller_id'] ??
-                json['description'] ??
-                json['reason'] ??
-                json['body'] ??
-                json['actor_name'] ??
-                json['category'] ??
-                fallbackKey)
-            .toString();
+    // `reason` sits high in the chain because a moderation case has no name of
+    // any kind — only the complaint that opened it. Without it the row fell
+    // through to `id` and a moderator read a queue of raw uuids.
+    final title = _text(
+          json['name'] ??
+              json['title'] ??
+              json['subject'] ??
+              json['number'] ??
+              json['business_name'] ??
+              json['action'] ??
+              json['reason'] ??
+              json['key'],
+        ) ??
+        id;
+    // No `fallbackKey` at the end of this one any more. Falling back to the
+    // section key printed the literal word "reports" under every report and
+    // "settings" under every setting — a line of text that told an operator
+    // only which screen she was already looking at. An empty subtitle is
+    // dropped by the row instead.
+    final subtitle = _text(
+          json['email'] ??
+              json['phone'] ??
+              json['customer'] ??
+              json['seller_name'] ??
+              json['description'] ??
+              json['body'] ??
+              json['actor_name'] ??
+              json['category'] ??
+              json['target_type'] ??
+              json['type'] ??
+              json['value'] ??
+              json['seller_id'],
+        ) ??
+        '';
     final status =
         (json['status'] ??
                 json['verification_status'] ??
@@ -129,6 +137,7 @@ class AdminRecordModel extends AdminRecord {
             .toString();
     final metrics = <String, String>{};
     for (final key in [
+      'grand_total',
       'total',
       'price',
       'amount',
@@ -139,12 +148,15 @@ class AdminRecordModel extends AdminRecord {
       'priority',
       'rate_bps',
       'deliveries_count',
-      'created_at',
     ]) {
       final value = json[key];
       if (value == null) continue;
-      metrics[key] = value is Map && value['amount'] != null
-          ? '${value['amount']} ${value['currency'] ?? ''}'.trim()
+      final money = value is Map ? Money.tryFromJson(Map<String, dynamic>.from(value)) : null;
+      // `17980.0000 SYP` was what the previous formatting produced, so the
+      // orders queue showed either that or — because `grand_total` was not on
+      // this list at all — no money whatsoever.
+      metrics[key] = money != null
+          ? money.approximateValue.sypCompact
           : value.toString();
     }
     return AdminRecordModel(
@@ -154,8 +166,20 @@ class AdminRecordModel extends AdminRecord {
       status: status,
       metrics: metrics,
       raw: json,
+      createdAt: DateTime.tryParse('${json['created_at'] ?? ''}')?.toLocal(),
     );
   }
+}
+
+/// A displayable string for a JSON value, or `null` when there is nothing to
+/// show. Structured values are encoded rather than passed through Dart's
+/// `toString`, which renders a map as `{a: 1}` — not JSON, and not anything an
+/// operator can copy back into the editor.
+String? _text(Object? value) {
+  if (value == null) return null;
+  if (value is String) return value.trim().isEmpty ? null : value;
+  if (value is Map || value is List) return jsonEncode(value);
+  return value.toString();
 }
 
 String? _firstListKey(Map<String, dynamic> json) {

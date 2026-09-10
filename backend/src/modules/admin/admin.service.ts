@@ -876,7 +876,14 @@ export class AdminService {
         where: { status: { in: ['OPEN', 'PENDING'] } },
       }),
     ]);
-    return { ...pageOf(tickets, total, query), open };
+    return {
+      ...pageOf(
+        tickets.map((ticket) => this.serializeSupportTicket(ticket)),
+        total,
+        query,
+      ),
+      open,
+    };
   }
 
   async updateSupportTicket(
@@ -906,7 +913,7 @@ export class AdminService {
         priority_to: dto.priority,
       }),
     });
-    return ticket;
+    return this.serializeSupportTicket(ticket);
   }
 
   async moderation(query: AdminListQueryDto = new AdminListQueryDto()) {
@@ -932,7 +939,14 @@ export class AdminService {
       this.prisma.moderationCase.count({ where }),
       this.prisma.moderationCase.count({ where: { status: 'OPEN' } }),
     ]);
-    return { ...pageOf(cases, total, query), open };
+    return {
+      ...pageOf(
+        cases.map((item) => this.serializeModerationCase(item)),
+        total,
+        query,
+      ),
+      open,
+    };
   }
 
   async updateModeration(
@@ -963,7 +977,7 @@ export class AdminService {
       },
       AuditSeverity.WARNING,
     );
-    return moderationCase;
+    return this.serializeModerationCase(moderationCase);
   }
 
   async reports(query: AdminListQueryDto = new AdminListQueryDto()) {
@@ -982,7 +996,14 @@ export class AdminService {
       this.prisma.adminReport.count({ where }),
       this.prisma.adminReport.count({ where: { status: ReportStatus.OPEN } }),
     ]);
-    return { ...pageOf(reports, total, query), open };
+    return {
+      ...pageOf(
+        reports.map((report) => this.serializeAdminReport(report)),
+        total,
+        query,
+      ),
+      open,
+    };
   }
 
   async updateReport(actorId: string, id: string, dto: UpdateReportDto) {
@@ -1006,7 +1027,7 @@ export class AdminService {
       status_from: before.status,
       status_to: dto.status,
     });
-    return report;
+    return this.serializeAdminReport(report);
   }
 
   async auditLogs(query: AdminListQueryDto = new AdminListQueryDto()) {
@@ -1124,6 +1145,67 @@ export class AdminService {
       disabled_at: user.disabledAt?.toISOString() ?? null,
       is_disabled: user.disabledAt != null,
       totp_required: user.totpRequired ?? false,
+    };
+  }
+
+  /**
+   * The three queues that used to answer in Prisma's own shape.
+   *
+   * `support`, `moderation` and `reports` returned their rows straight from
+   * the client, so the console received `targetType`, `createdAt`, `lastMessageAt`
+   * — and, on a ticket, the entire `user` record plus Prisma's `_count`. Every
+   * other list on this controller speaks snake_case, and the console's record
+   * mapper reads `created_at`, which is why these three rows alone showed no
+   * date: the field was there under a name nobody was looking for.
+   */
+  private serializeSupportTicket(ticket: any) {
+    return {
+      id: ticket.id,
+      subject: ticket.subject,
+      status: ticket.status,
+      priority: ticket.priority,
+      category: ticket.category,
+      user_id: ticket.userId,
+      // The name and the number, because a support agent works from them —
+      // and nothing else off the account.
+      customer: ticket.user?.name ?? null,
+      phone: ticket.user?.phone ?? null,
+      assigned_to: ticket.assignedTo,
+      messages_count: ticket._count?.messages ?? 0,
+      last_message_at: ticket.lastMessageAt?.toISOString() ?? null,
+      created_at: ticket.createdAt?.toISOString() ?? null,
+      updated_at: ticket.updatedAt?.toISOString() ?? null,
+    };
+  }
+
+  private serializeModerationCase(item: any) {
+    return {
+      id: item.id,
+      // The reason is the case. Without it the console had nothing to title a
+      // row with and fell back to the uuid, so a moderator read a queue of
+      // thirty-six hex digits.
+      reason: item.reason,
+      target_type: item.targetType,
+      target_id: item.targetId,
+      reporter_id: item.reporterId,
+      status: item.status,
+      assigned_to: item.assignedTo,
+      resolution: item.resolution,
+      created_at: item.createdAt?.toISOString() ?? null,
+      updated_at: item.updatedAt?.toISOString() ?? null,
+    };
+  }
+
+  private serializeAdminReport(report: any) {
+    return {
+      id: report.id,
+      title: report.title,
+      type: report.type,
+      status: report.status,
+      payload: report.payload,
+      created_by: report.createdBy,
+      created_at: report.createdAt?.toISOString() ?? null,
+      resolved_at: report.resolvedAt?.toISOString() ?? null,
     };
   }
 

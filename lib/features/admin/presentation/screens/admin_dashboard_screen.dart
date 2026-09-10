@@ -75,7 +75,17 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Stats Grid
+                  // The four counters.
+                  //
+                  // A `Wrap` of measured tiles rather than a `GridView` with a
+                  // `childAspectRatio`. That ratio fixed every tile's height at
+                  // 1/1.8 of its width, and the content does not obey it: a
+                  // sales figure like «713 ألف ل.س» is wider than «96», wraps
+                  // to a second line at four columns, and pushed the label out
+                  // the bottom — so the console's landing screen carried
+                  // Flutter's yellow overflow stripes across all four tiles.
+                  // Sized to their content, they cannot overflow at any width,
+                  // in either language, at any text scale.
                   LayoutBuilder(
                     builder: (context, constraints) {
                       final crossCount = constraints.maxWidth > 1100
@@ -83,14 +93,14 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
                           : constraints.maxWidth > 700
                               ? 2
                               : 1;
-                      
-                      return GridView.count(
-                        crossAxisCount: crossCount,
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        mainAxisSpacing: DsSpacing.md,
-                        crossAxisSpacing: DsSpacing.md,
-                        childAspectRatio: 1.8,
+                      const gap = DsSpacing.md;
+                      final tileWidth =
+                          (constraints.maxWidth - gap * (crossCount - 1)) /
+                          crossCount;
+
+                      return Wrap(
+                        spacing: gap,
+                        runSpacing: gap,
                         children: [
                           _StatCard(
                             label: l10n.adminTotalSales,
@@ -125,7 +135,7 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
                                 !(stats?.conversionTrend ?? '').startsWith('-'),
                             index: 3,
                           ),
-                        ],
+                        ].map((card) => SizedBox(width: tileWidth, child: card)).toList(),
                       );
                     },
                   ),
@@ -277,7 +287,7 @@ class _StatCard extends StatelessWidget {
 
     return AdminPanel(
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(

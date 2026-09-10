@@ -1027,6 +1027,63 @@
   "@adminUserManagement": {
     "description": "Admin section: browse and moderate accounts."
   },
+  "adminUnitsSold": "{units} units",
+  "@adminUnitsSold": {
+      "description": "Analytics ranked list: pieces sold by a product or a boutique.",
+      "placeholders": {
+          "units": {
+              "type": "int"
+          }
+      }
+  },
+  "adminNotificationAnalyticsSubtitle": "What went out, down which channel, and how much of it landed.",
+  "@adminNotificationAnalyticsSubtitle": {
+    "description": "Subtitle of the notification analytics screen."
+  },
+  "adminUnreadInApp": "Unread in app",
+  "@adminUnreadInApp": {
+    "description": "Metric: in-app notifications nobody has opened."
+  },
+  "adminNotificationsSent": "Sent",
+  "@adminNotificationsSent": {
+    "description": "Metric: notification deliveries that left the platform."
+  },
+  "adminNotificationsFailed": "Failed",
+  "@adminNotificationsFailed": {
+    "description": "Metric: notification deliveries that did not land."
+  },
+  "adminDeliveriesByChannel": "Deliveries by channel",
+  "@adminDeliveriesByChannel": {
+    "description": "Panel title: delivery counts split by channel and status."
+  },
+  "adminCampaignsByStatus": "Campaigns by status",
+  "@adminCampaignsByStatus": {
+    "description": "Panel title: campaign counts by status."
+  },
+  "adminDeliveryEvents": "Delivery events",
+  "@adminDeliveryEvents": {
+    "description": "Panel title: counts of sent/opened/clicked/failed."
+  },
+  "adminChannelPush": "Push",
+  "@adminChannelPush": {
+    "description": "Notification channel."
+  },
+  "adminChannelInApp": "In app",
+  "@adminChannelInApp": {
+    "description": "Notification channel."
+  },
+  "adminChannelEmail": "Email",
+  "@adminChannelEmail": {
+    "description": "Notification channel."
+  },
+  "adminChannelSms": "SMS",
+  "@adminChannelSms": {
+    "description": "Notification channel."
+  },
+  "adminChannelWhatsapp": "WhatsApp",
+  "@adminChannelWhatsapp": {
+    "description": "Notification channel."
+  },
   "adminUsers": "Users",
   "@adminUsers": {
     "description": "Admin nav item"

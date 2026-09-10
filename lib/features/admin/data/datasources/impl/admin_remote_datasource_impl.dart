@@ -7,6 +7,7 @@ import 'package:reem/features/admin/data/models/admin_briefing_model.dart';
 import 'package:reem/features/admin/data/models/admin_console_model.dart';
 import 'package:reem/features/admin/data/models/admin_stats_model.dart';
 import 'package:reem/features/admin/data/models/analytics_dashboard_model.dart';
+import 'package:reem/features/admin/data/models/notification_analytics_model.dart';
 
 final class AdminRemoteDataSourceImpl extends BaseRemoteDataSource
     implements AdminRemoteDataSource {
@@ -88,6 +89,12 @@ final class AdminRemoteDataSourceImpl extends BaseRemoteDataSource
       },
     );
     return AnalyticsDashboardModel.fromJson(json);
+  }
+
+  @override
+  Future<NotificationAnalytics> getNotificationAnalytics() async {
+    final json = await getJson(ApiEndpoints.notificationAdminAnalytics);
+    return NotificationAnalytics.fromJson(json);
   }
 
   @override

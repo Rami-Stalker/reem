@@ -97,14 +97,44 @@ export async function seedAnalytics(
     step(AnalyticsEventType.PAYMENT_SUCCESS, { productId: carted.id });
   }
 
-  // Real orders emit their own ORDER_PLACED / PAYMENT_SUCCESS pair, linked to
-  // the order row so revenue attribution has something to join on.
+  // Every real order gets the whole tail of the funnel, not just its ending.
+  //
+  // This loop used to push a bare `ORDER_PLACED` linked to the order row —
+  // which revenue attribution needs — and nothing before it. Six hundred and
+  // fifty-one orders therefore arrived with no cart-add and no checkout of
+  // their own, and the console's conversion funnel showed more orders placed
+  // than checkouts started: a funnel that widens at the bottom, which is the
+  // exact impossibility the note at the top of this file says the per-session
+  // generation exists to avoid.
+  //
+  // The three steps before it are stamped at fixed offsets rather than random
+  // ones so the seed stays reproducible.
   for (const order of orders) {
-    rows.push({
-      type: AnalyticsEventType.ORDER_PLACED,
+    const at = (minutesBefore: number) =>
+      new Date(order.placedAt.getTime() - minutesBefore * 60_000);
+    const session = `order-${order.number}`;
+    const base = {
       userId: order.customerId,
-      orderId: order.id,
+      sessionId: session,
       source: 'android',
+    };
+
+    rows.push({
+      ...base,
+      type: AnalyticsEventType.CART_ADD,
+      occurredAt: at(12),
+      createdAt: at(12),
+    });
+    rows.push({
+      ...base,
+      type: AnalyticsEventType.CHECKOUT_START,
+      occurredAt: at(4),
+      createdAt: at(4),
+    });
+    rows.push({
+      ...base,
+      type: AnalyticsEventType.ORDER_PLACED,
+      orderId: order.id,
       occurredAt: order.placedAt,
       createdAt: order.placedAt,
     });
