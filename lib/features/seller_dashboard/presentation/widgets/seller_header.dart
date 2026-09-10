@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 
 import 'package:reem/core/design_system/design_system.dart';
 import 'package:reem/core/localization/l10n_extension.dart';
+import 'package:reem/core/media/media_decode.dart';
 import 'package:reem/core/media/media_variants.dart';
 import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/features/seller_dashboard/presentation/providers/seller_dashboard_provider.dart';
@@ -114,6 +115,7 @@ class _StoreMark extends StatelessWidget {
             ? _Fallback(palette: palette)
             : CachedNetworkImage(
                 imageUrl: MediaVariants.thumb(url),
+                memCacheWidth: MediaDecode.widthFor(context, 46),
                 fit: BoxFit.cover,
                 placeholder: (_, _) =>
                     ColoredBox(color: context.dsColors.shimmerBase),

@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:reem/core/design_system/design_system.dart';
 import 'package:reem/core/localization/l10n_extension.dart';
+import 'package:reem/core/media/media_decode.dart';
 import 'package:reem/core/shared/entities/story.dart';
 import 'package:reem/core/utils/relative_time.dart';
 import 'package:reem/features/stories/presentation/providers/stories_providers.dart';
@@ -132,6 +133,9 @@ class _StoryViewerScreenState extends ConsumerState<StoryViewerScreen>
             onLongPressEnd: (_) => _progress.forward(),
             child: CachedNetworkImage(
               imageUrl: story.media.first.url,
+              // A story is a phone-camera photograph shown at phone width, and
+              // the viewer holds the next one ready while this one plays.
+              memCacheWidth: MediaDecode.widthFor(context, width),
               fit: BoxFit.cover,
               placeholder: (_, _) => const Center(
                 child: DsLoadingIndicator(),

@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:reem/core/design_system/design_system.dart';
 import 'package:reem/core/localization/l10n_extension.dart';
+import 'package:reem/core/media/media_decode.dart';
 import 'package:reem/core/media/media_variants.dart';
 import 'package:reem/features/social/domain/entities/content_draft.dart';
 
@@ -107,6 +108,10 @@ class _ProductTile extends StatelessWidget {
                         if (image != null && image.isNotEmpty)
                           CachedNetworkImage(
                             imageUrl: MediaVariants.thumb(image),
+                            memCacheWidth: MediaDecode.widthFor(
+                              context,
+                              DsSizes.thumbLg,
+                            ),
                             fit: BoxFit.cover,
                             placeholder: (_, _) =>
                                 ColoredBox(color: c.shimmerBase),

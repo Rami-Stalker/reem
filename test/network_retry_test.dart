@@ -14,7 +14,7 @@ import 'package:reem/core/network/interceptors/retry_interceptor.dart';
 
 /// A transport that fails a fixed number of times, then succeeds.
 class _FlakyAdapter implements HttpClientAdapter {
-  _FlakyAdapter({this.failures = 0, this.failure = _timeout, this.status = 200});
+  _FlakyAdapter({this.failures = 0, this.failure = _timeout});
 
   /// How many of the first attempts fail before one is allowed through.
   int failures;
@@ -22,7 +22,6 @@ class _FlakyAdapter implements HttpClientAdapter {
   /// How the failing attempts fail.
   DioException Function(RequestOptions) failure;
 
-  int status;
   int calls = 0;
   final List<String> methods = [];
 
@@ -41,7 +40,7 @@ class _FlakyAdapter implements HttpClientAdapter {
     calls++;
     methods.add(options.method);
     if (calls <= failures) throw failure(options);
-    return ResponseBody.fromString('{"ok":true}', status, headers: {
+    return ResponseBody.fromString('{"ok":true}', 200, headers: {
       Headers.contentTypeHeader: [Headers.jsonContentType],
     });
   }

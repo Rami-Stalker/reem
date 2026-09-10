@@ -249,6 +249,10 @@ class _Frame extends StatelessWidget {
     final colors = context.dsColors;
     return CachedNetworkImage(
       imageUrl: MediaVariants.at(item.displayUrl, width),
+      // The same number that chose the variant. Asking for a 720px copy and
+      // then decoding it at whatever the source happened to be is the one
+      // mistake this pairing exists to prevent.
+      memCacheWidth: width,
       fit: fit,
       fadeInDuration: DsMotion.normal,
       placeholder: (_, _) =>

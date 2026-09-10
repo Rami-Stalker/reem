@@ -13,6 +13,7 @@ import 'package:reem/core/design_system/foundation/tokens/ds_spacing.dart';
 import 'package:reem/core/design_system/foundation/tokens/ds_typography.dart';
 import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/media/media_asset.dart';
+import 'package:reem/core/media/media_decode.dart';
 import 'package:reem/core/media/media_limits.dart';
 import 'package:reem/core/media/media_providers.dart';
 import 'package:reem/core/media/media_variants.dart';
@@ -558,6 +559,10 @@ class _DsAvatarPickerState extends ConsumerState<DsAvatarPicker> {
     return CachedNetworkImage(
       // A tile is a third of the form's width.
       imageUrl: MediaVariants.thumb(url),
+      memCacheWidth: MediaDecode.widthFor(
+        context,
+        MediaQuery.sizeOf(context).width / 3,
+      ),
       fit: BoxFit.cover,
       placeholder: (_, _) => ColoredBox(color: background),
       errorWidget: (_, _, _) =>
@@ -752,7 +757,7 @@ class _MediaTile extends StatelessWidget {
       child: Stack(
         fit: StackFit.expand,
         children: [
-          _preview(c.shimmerBase),
+          _preview(context, c.shimmerBase),
           if (slot.isUploading) _uploadingScrim(context),
           if (slot.hasFailed) _failureScrim(context),
           if (showCoverBadge && !slot.isUploading && !slot.hasFailed)
@@ -776,7 +781,7 @@ class _MediaTile extends StatelessWidget {
     );
   }
 
-  Widget _preview(Color placeholder) {
+  Widget _preview(BuildContext context, Color placeholder) {
     switch (slot.kind) {
       case _TileKind.video:
         return _VideoPlaceholder(background: placeholder);
@@ -813,6 +818,10 @@ class _MediaTile extends StatelessWidget {
     }
     return CachedNetworkImage(
       imageUrl: url,
+      memCacheWidth: MediaDecode.widthFor(
+        context,
+        MediaQuery.sizeOf(context).width / 3,
+      ),
       fit: BoxFit.cover,
       placeholder: (_, _) => ColoredBox(color: placeholder),
       errorWidget: (_, _, _) => ColoredBox(color: placeholder),

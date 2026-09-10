@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:reem/core/design_system/design_system.dart';
 import 'package:reem/core/localization/l10n_extension.dart';
+import 'package:reem/core/media/media_decode.dart';
 import 'package:reem/core/media/media_variants.dart';
 import 'package:reem/core/shared/entities/user.dart';
 import 'package:reem/features/social/domain/entities/content.dart';
@@ -508,11 +509,14 @@ class ContentGridTile extends StatelessWidget {
         fit: StackFit.expand,
         children: [
           if (cover != null)
-            CachedNetworkImage(
-              imageUrl: MediaVariants.thumb(cover.displayUrl),
-              fit: BoxFit.cover,
-              placeholder: (_, _) => ColoredBox(color: c.shimmerBase),
-              errorWidget: (_, _, _) => const DsMediaFallback(),
+            LayoutBuilder(
+              builder: (context, constraints) => CachedNetworkImage(
+                imageUrl: MediaVariants.thumb(cover.displayUrl),
+                memCacheWidth: MediaDecode.widthFrom(context, constraints),
+                fit: BoxFit.cover,
+                placeholder: (_, _) => ColoredBox(color: c.shimmerBase),
+                errorWidget: (_, _, _) => const DsMediaFallback(),
+              ),
             )
           else
             const DsMediaFallback(),

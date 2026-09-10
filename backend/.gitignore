@@ -1,1 +1,6 @@
 boot.log
+
+# Database dumps. Never in the repository: a dump of this platform is every
+# customer's phone number, address and order history in one file.
+/backups/
+*.dump

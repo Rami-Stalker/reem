@@ -59,7 +59,7 @@ flutter analyze
 flutter test
 ```
 
-Six structural checks guard the layout. All exit non-zero on failure.
+Seven structural checks guard the layout. All exit non-zero on failure.
 
 ```bash
 node tools/architecture/check-flutter-boundaries.mjs
@@ -107,6 +107,16 @@ Fails when an icon-only button carries no `tooltip`. A button whose whole
 content is an icon has no text for a screen reader to read, so Flutter
 announces it as "button" and nothing more — the same four letters for "add to
 cart", "remove from favourites" and "delete".
+
+```bash
+node tools/architecture/check-image-budgets.mjs
+```
+
+Fails when a network image does not bound its own decode. A decoded bitmap
+costs four bytes per pixel of the *source file*, not of the widget — a 2400px
+photograph in a 138pt card is 30 MB of RAM for 0.2 MB of visible detail. A
+smaller server-side variant bounds the download; `memCacheWidth` bounds the
+decode, and they are different costs.
 
 ## Response caching
 

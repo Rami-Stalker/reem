@@ -14,6 +14,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/media/media_decode.dart';
 import 'package:reem/core/media/media_variants.dart';
 import 'package:reem/core/shared/entities/media.dart';
 import 'package:reem/core/shared/entities/product.dart';
@@ -34,15 +35,21 @@ class DsMediaFrame extends StatelessWidget {
     return Stack(
       fit: StackFit.expand,
       children: [
-        CachedNetworkImage(
-          // The feed's own photographs, drawn at card width. The original is
-          // whatever the boutique uploaded — often three thousand pixels wide
-          // for a card that is four hundred.
-          imageUrl: MediaVariants.at(url, MediaVariants.medium),
-          fit: BoxFit.cover,
-          fadeInDuration: DsMotion.normal,
-          placeholder: (_, _) => ColoredBox(color: c.shimmerBase),
-          errorWidget: (_, _, _) => const DsMediaFallback(),
+        LayoutBuilder(
+          builder: (context, constraints) => CachedNetworkImage(
+            // The feed's own photographs, drawn at card width. The original is
+            // whatever the boutique uploaded — often three thousand pixels wide
+            // for a card that is four hundred. `memCacheWidth` is the half that
+            // was missing: the variant bounds what is downloaded, this bounds
+            // what is decoded, and it is the decode that holds four bytes per
+            // pixel of RAM for as long as the card is on screen.
+            imageUrl: MediaVariants.at(url, MediaVariants.medium),
+            memCacheWidth: MediaDecode.widthFrom(context, constraints),
+            fit: BoxFit.cover,
+            fadeInDuration: DsMotion.normal,
+            placeholder: (_, _) => ColoredBox(color: c.shimmerBase),
+            errorWidget: (_, _, _) => const DsMediaFallback(),
+          ),
         ),
         if (item.isVideo)
           Center(

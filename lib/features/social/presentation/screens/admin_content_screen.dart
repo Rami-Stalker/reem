@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reem/core/design_system/design_system.dart';
 import 'package:reem/core/localization/l10n_extension.dart';
+import 'package:reem/core/media/media_decode.dart';
 import 'package:reem/core/media/media_variants.dart';
 import 'package:reem/core/utils/relative_time.dart';
 import 'package:reem/features/social/domain/entities/content.dart';
@@ -192,6 +193,10 @@ class _ModerationRow extends StatelessWidget {
                       ? const DsMediaFallback()
                       : CachedNetworkImage(
                           imageUrl: MediaVariants.thumb(cover.displayUrl),
+                          memCacheWidth: MediaDecode.widthFor(
+                            context,
+                            DsSizes.thumbMd,
+                          ),
                           fit: BoxFit.cover,
                           errorWidget: (_, _, _) => const DsMediaFallback(),
                         ),

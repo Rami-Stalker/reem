@@ -31,7 +31,10 @@
     "db:provision": "psql -U postgres -f prisma/provision.sql",
     "visual:index": "ts-node -r tsconfig-paths/register scripts/index-visual.ts",
     "visual:fixtures": "ts-node -r tsconfig-paths/register prisma/demo/capture-visual-fixtures.ts",
-    "db:setup:demo": "npm run db:setup && npm run db:seed"
+    "db:setup:demo": "npm run db:setup && npm run db:seed",
+    "db:backup": "node scripts/backup.mjs",
+    "db:restore": "node scripts/restore.mjs",
+    "db:restore:verify": "node scripts/restore.mjs --verify"
   },
   "dependencies": {
     "@nestjs/common": "^10.4.15",

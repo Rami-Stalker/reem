@@ -75,6 +75,92 @@ Wiring a real gateway means implementing `PaymentProvider`, setting
 and adding a signed webhook — the same shape
 `delivery/dispatch/delivery-webhook.controller.ts` already uses.
 
+## Backups
+
+There was no backup procedure before the pre-launch audit. Not a weak one —
+none. This platform keeps a double-entry ledger, escrow balances and cash
+orders, so the database *is* the business, and an hour of it lost is an hour of
+money nobody can account for.
+
+```bash
+cd backend && npm run db:backup
+```
+
+Writes `backups/reem-<timestamp>.dump` (custom format, compressed, restorable
+table by table) plus a `.json` manifest recording the server version, the
+migration the schema was at, and exact row counts for the fifteen tables that
+carry money. `--out <dir>` chooses where; `--keep <n>` prunes older dumps and
+defaults to 14. The manifest is what makes a restore *verifiable*: without it,
+"the restore worked" is an opinion.
+
+Two things this does not do, and neither is optional to solve:
+
+**It leaves the dump on the same host.** A dump beside the database survives a
+dropped table and nothing else — not a failed disk, not a lost server, not
+ransomware. Copying it somewhere else is a deployment step, and until it exists
+there is no backup.
+
+**It is not point-in-time recovery.** A nightly dump means up to a day of orders
+can be lost. Real PITR is `archive_mode = on` with WAL archiving to a second
+machine. That is a server configuration and a second host — a cost decision, so
+it is recorded here rather than assumed. **Until it exists, the recovery point
+objective is "the last dump", and everyone should know that number.**
+
+## Restores
+
+A backup nobody has restored is a hypothesis. The failure mode is not that
+`pg_restore` errors; it is that it succeeds and six tables are empty, which
+nobody discovers during an incident and stays calm.
+
+```bash
+cd backend && npm run db:restore:verify -- --into postgresql://…/reem_restore_check
+```
+
+Restores the newest dump into a scratch database and compares every row count
+against the manifest, failing loudly on any difference. **Run it on a schedule**,
+not once. Verified on 2026-09-10 against the development dataset: 15/15 tables
+matched, 5.3 MB dumped in 3.9s and restored in 10.3s.
+
+To actually recover:
+
+```bash
+cd backend && npm run db:restore -- --file backups/reem-….dump --into "$DATABASE_URL"
+```
+
+`--into` is required and never defaults. The one mistake the script must be
+incapable of is overwriting production because a flag was forgotten, so
+`--verify` also refuses a target equal to `DATABASE_URL`.
+
+Both scripts accept Prisma's connection string. libpq rejects `?schema=public`
+outright — `invalid URI query parameter: "schema"` — and that parameter is in
+`.env.example`, so a script written against `DATABASE_URL` naively fails on
+every real deployment. `scripts/pg-url.mjs` strips Prisma's parameters and
+carries the schema across as a `search_path`.
+
+Dumps are git-ignored. A dump of this platform is every customer's phone number,
+address and order history in one file.
+
+## Health probes
+
+Point them at different endpoints; they answer different questions.
+
+| Probe | Endpoint | Touches |
+| --- | --- | --- |
+| liveness | `/health/live` | Only this process. Answers 200 while the event loop turns. |
+| readiness | `/health/ready` (or `/health`) | Postgres, and reports the round-trip latency, not just reachable/unreachable. |
+| deploy check | `/health/version` | `APP_VERSION`, `GIT_COMMIT`, environment, node version, start time. |
+
+**Do not point a liveness probe at `/health`.** It was the only endpoint, and it
+answers the readiness question — so a thirty-second Postgres failover would have
+had the orchestrator restart every API process, discarding warm connections and
+in-flight requests at exactly the moment the platform was already struggling.
+The right response to an unreachable database is to stop taking traffic and keep
+running.
+
+Set `APP_VERSION` and `GIT_COMMIT` at build time. The first question during an
+incident is "which build is this?", and answering it by reading a file over SSH
+is how the wrong answer gets believed.
+
 ## Logging
 
 Set `LOG_FORMAT=json` in production. Each line becomes one JSON object

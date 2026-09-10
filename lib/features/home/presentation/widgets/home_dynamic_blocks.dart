@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/media/media_decode.dart';
 import 'package:reem/core/media/media_variants.dart';
 import 'package:reem/features/home/domain/entities/dynamic_block.dart';
 import 'package:reem/features/home/presentation/providers/home_content_provider.dart';
@@ -69,6 +70,10 @@ class _SpotlightBlock extends StatelessWidget {
                   imageUrl: MediaVariants.at(
                     block.imageUrl!,
                     MediaVariants.medium,
+                  ),
+                  memCacheWidth: MediaDecode.widthFor(
+                    context,
+                    MediaQuery.sizeOf(context).width,
                   ),
                   fit: BoxFit.cover,
                   placeholder: (_, _) =>

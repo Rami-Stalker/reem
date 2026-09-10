@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 
 import 'package:reem/core/design_system/design_system.dart';
 import 'package:reem/core/localization/l10n_extension.dart';
+import 'package:reem/core/media/media_decode.dart';
 import 'package:reem/core/media/media_variants.dart';
 import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/features/home/domain/entities/home_category.dart';
@@ -109,6 +110,10 @@ class _CategoryTile extends StatelessWidget {
         children: [
           CachedNetworkImage(
             imageUrl: MediaVariants.thumb(category.imageUrl),
+            memCacheWidth: MediaDecode.widthFor(
+              context,
+              HomeCategoriesShowcase._width,
+            ),
             fit: BoxFit.cover,
             fadeInDuration: DsMotion.normal,
             placeholder: (_, _) => ColoredBox(color: c.shimmerBase),

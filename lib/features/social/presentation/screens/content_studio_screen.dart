@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:reem/core/design_system/design_system.dart';
 import 'package:reem/core/localization/l10n_extension.dart';
+import 'package:reem/core/media/media_decode.dart';
 import 'package:reem/core/media/media_variants.dart';
 import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/core/utils/relative_time.dart';
@@ -363,6 +364,7 @@ class ContentThumb extends StatelessWidget {
             ? const DsMediaFallback()
             : CachedNetworkImage(
                 imageUrl: MediaVariants.thumb(url),
+                memCacheWidth: MediaDecode.widthFor(context, DsSizes.thumbMd),
                 fit: BoxFit.cover,
                 errorWidget: (_, _, _) => const DsMediaFallback(),
               ),

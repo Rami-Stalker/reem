@@ -155,6 +155,10 @@ class _StoreCardState extends ConsumerState<_StoreCard> {
                       store.coverUrl,
                       MediaVariants.medium,
                     ),
+                    memCacheWidth: MediaDecode.widthFor(
+                      context,
+                      HomeFeaturedStores._cardWidth,
+                    ),
                     fit: BoxFit.cover,
                     width: double.infinity,
                     placeholder: (_, _) => ColoredBox(color: c.shimmerBase),
