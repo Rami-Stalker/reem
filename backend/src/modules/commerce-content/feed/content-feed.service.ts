@@ -15,6 +15,7 @@ import {
   decodeCursor,
 } from '../../../common/dto/cursor-pagination.dto';
 import { commerceContentInclude } from '../commerce-content.repository';
+import { utcTimestamp } from '../../../common/sql/utc-timestamp';
 
 const FEED_CACHE_PREFIX = 'commerce-content:feed';
 
@@ -257,7 +258,7 @@ export class ContentFeedService {
         FROM "commerce_contents" c
         WHERE c."author_id" = ${ownerId}::uuid
           AND ${this.visibilitySql('c', viewerId)}
-          AND (COALESCE(c."published_at", c."created_at"), c."id") < (${cursor.at}, ${cursor.id}::uuid)
+          AND (COALESCE(c."published_at", c."created_at"), c."id") < (${utcTimestamp(cursor.at)}, ${cursor.id}::uuid)
         ORDER BY "sortAt" DESC, c."id" DESC
         LIMIT ${take}
       )
@@ -269,7 +270,7 @@ export class ContentFeedService {
         WHERE r."resharer_id" = ${ownerId}::uuid
           AND (r."resharer_is_public" OR r."resharer_id" = ${viewerId ?? null}::uuid)
           AND ${this.visibilitySql('c', viewerId)}
-          AND (r."created_at", r."id") < (${cursor.at}, ${cursor.id}::uuid)
+          AND (r."created_at", r."id") < (${utcTimestamp(cursor.at)}, ${cursor.id}::uuid)
         ORDER BY r."created_at" DESC, r."id" DESC
         LIMIT ${take}
       )
@@ -304,7 +305,7 @@ export class ContentFeedService {
         FROM "commerce_contents" c
         WHERE c."author_id" = ANY(${ids}::uuid[])
           AND ${this.visibilitySql('c', viewerId)}
-          AND (COALESCE(c."published_at", c."created_at"), c."id") < (${cursor.at}, ${cursor.id}::uuid)
+          AND (COALESCE(c."published_at", c."created_at"), c."id") < (${utcTimestamp(cursor.at)}, ${cursor.id}::uuid)
         ORDER BY "sortAt" DESC, c."id" DESC
         LIMIT ${take}
       )
@@ -316,7 +317,7 @@ export class ContentFeedService {
         WHERE r."resharer_id" = ANY(${ids}::uuid[])
           AND r."resharer_is_public"
           AND ${this.visibilitySql('c', viewerId)}
-          AND (r."created_at", r."id") < (${cursor.at}, ${cursor.id}::uuid)
+          AND (r."created_at", r."id") < (${utcTimestamp(cursor.at)}, ${cursor.id}::uuid)
         ORDER BY r."created_at" DESC, r."id" DESC
         LIMIT ${take}
       )

@@ -98,6 +98,51 @@ async function cleanup(scope: string) {
   await prisma.idempotencyRecord.deleteMany({ where: { scope } });
 }
 
+// ── The clock the claim is stamped with ─────────────────────────────────
+
+dbTest('a claim is stamped in UTC, whatever the database session thinks', async () => {
+  // This is not pedantry about zones. The claim's `created_at` was written with
+  // SQL `now()`, a `timestamptz`, into a column Prisma declares as `timestamp
+  // without time zone` — so PostgreSQL converted it to the *session's* wall
+  // clock on the way in, and Prisma read it back as though it were UTC. On a
+  // server set to `Europe/Istanbul`, which is where this platform runs, every
+  // claim was stamped three hours in the future.
+  //
+  // What that broke is the sweeper. It reclaims `IN_FLIGHT` claims left behind
+  // by a process that died mid-request, and a claim three hours ahead of the
+  // clock is not stale for three hours longer than intended — so retrying that
+  // request answered `409` all morning, which is the exact state the sweeper
+  // exists to prevent.
+  //
+  // The assertion is deliberately loose in one direction and tight in the
+  // other: a few seconds of drift is a slow test, three hours is the bug.
+  const userId = randomUUID();
+  const key = `k-${randomUUID()}`;
+  const calls = { count: 0 };
+
+  const before = Date.now();
+  await run(request({ key, userId }), handler({ id: 'order-1' }, calls));
+
+  const record = await prisma.idempotencyRecord.findFirstOrThrow({
+    where: { scope: `user:${userId}`, key },
+    select: { createdAt: true, expiresAt: true },
+  });
+
+  const skewMs = record.createdAt.getTime() - before;
+  assert.ok(
+    skewMs >= -5_000 && skewMs <= 60_000,
+    `created_at is ${Math.round(skewMs / 1000)}s from the app's clock — a ` +
+      'timezone conversion, not latency',
+  );
+  // And it agrees with the neighbouring column, which was always a bound Date.
+  assert.ok(
+    record.expiresAt > record.createdAt,
+    'a record cannot expire before it was created',
+  );
+
+  await cleanup(`user:${userId}`);
+});
+
 // ── The double tap ──────────────────────────────────────────────────────
 
 dbTest('a repeated request is answered, not re-run', async () => {

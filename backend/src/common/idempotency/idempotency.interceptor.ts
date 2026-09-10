@@ -25,6 +25,7 @@ import { ConfigService } from '@nestjs/config';
 
 import { PrismaService } from '../../prisma/prisma.service';
 import { AuthUser } from '../decorators/current-user.decorator';
+import { utcTimestamp } from '../sql/utc-timestamp';
 
 export const IDEMPOTENCY_HEADER = 'idempotency-key';
 
@@ -181,6 +182,24 @@ export class IdempotencyInterceptor implements NestInterceptor {
     //
     // Winning is "a row came back". No exception, no error line, one
     // round trip.
+    // Both timestamps go through `utcTimestamp`, and neither did before.
+    //
+    // Prisma maps `DateTime` to `timestamp without time zone` — 505 columns in
+    // this schema — and stores UTC instants in them. SQL `now()` is a
+    // `timestamptz`, and a bound JS `Date` is sent as one too, so assigning
+    // either to one of those columns converts it to the *session's* wall clock
+    // first. On a server whose `TimeZone` is `Europe/Istanbul`, which is where
+    // this platform runs, every claim was written three hours in the future and
+    // Prisma read it straight back as UTC.
+    //
+    // What that broke is the sweeper. It reclaims `IN_FLIGHT` claims left by a
+    // process that died mid-request, and a claim stamped three hours ahead is
+    // not stale for three hours longer than intended — so retrying that request
+    // answered `409` all morning, the exact state the sweeper exists to
+    // prevent. The expiry was three hours long too, for the same reason.
+    //
+    // `utcTimestamp` is the platform's answer to this and predates the bug; this
+    // file simply never used it.
     const claimed = await this.prisma.$queryRaw<{ id: string }[]>`
       INSERT INTO idempotency_records
         (id, key, scope, endpoint, request_hash, state, expires_at, created_at)
@@ -191,8 +210,8 @@ export class IdempotencyInterceptor implements NestInterceptor {
         ${input.endpoint},
         ${input.requestHash},
         'IN_FLIGHT'::"IdempotencyState",
-        ${new Date(Date.now() + TTL_MS)},
-        now()
+        ${utcTimestamp(new Date(Date.now() + TTL_MS))},
+        ${utcTimestamp(new Date())}
       )
       ON CONFLICT (scope, key) DO NOTHING
       RETURNING id

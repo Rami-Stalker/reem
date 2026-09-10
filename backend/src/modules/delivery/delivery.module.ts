@@ -14,6 +14,7 @@ import { InternalCourierProvider } from './providers/internal-courier.provider';
 import { ProviderCredentialsService } from './providers/provider-credentials.service';
 import { DeliveryAdminController } from './dispatch/delivery-admin.controller';
 import { DeliveryAdminService } from './dispatch/delivery-admin.service';
+import { DeliveryDispatchScheduler } from './dispatch/delivery-dispatch.scheduler';
 import { DeliveryDispatchService } from './dispatch/delivery-dispatch.service';
 import { DeliveryProviderBootstrap } from './dispatch/delivery-provider.bootstrap';
 import { DeliveryWebhookController } from './dispatch/delivery-webhook.controller';
@@ -64,6 +65,9 @@ const ADAPTERS = [InternalCourierProvider, HttpDeliveryProvider];
     DeliveryWebhookService,
     DeliveryAdminService,
     DeliveryProviderBootstrap,
+    // The retry endpoint existed and nothing called it, so a parcel the carrier
+    // refused once was never collected at all.
+    DeliveryDispatchScheduler,
   ],
   exports: [DeliveryService, ShipmentsService, DeliveryDispatchService],
 })
