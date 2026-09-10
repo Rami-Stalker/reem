@@ -166,4 +166,5 @@ flutter test tools/icons/generate_app_icons.dart
 | [identity-authorization-architecture.md](docs/identity-authorization-architecture.md) | Identity, OTP, devices, roles |
 | [DEPLOYMENT.md](docs/DEPLOYMENT.md) | **Run one API process.** The single-instance constraint, the nightly job order, production env guards |
 | [production-gap-analysis.md](docs/production-gap-analysis.md) | Pre-launch audit: what is complete, what is thin, what is missing, in priority order |
+| [production-launch-report.md](docs/production-launch-report.md) | **Read before deploying.** Launch readiness: what was tested and fixed, remaining risks, external dependencies, and the three blockers |
 | [docs/client/](docs/client/) | Client requirement questionnaires |
