@@ -1,8 +1,12 @@
 import 'package:reem/core/base/repository_handler.dart';
+import 'package:reem/core/domain/pagination/paginated_data.dart';
 import 'package:reem/core/result/result.dart';
+import 'package:reem/core/shared/entities/post.dart';
+import 'package:reem/core/shared/entities/user.dart';
 import 'package:reem/features/discovery/domain/entities/product_page.dart';
 import 'package:reem/features/search/data/datasources/search_remote_datasource.dart';
 import 'package:reem/features/search/domain/entities/search_suggestions.dart';
+import 'package:reem/features/search/domain/entities/unified_search.dart';
 import 'package:reem/features/search/domain/repositories/search_repository.dart';
 
 class SearchRepositoryImpl with RepositoryHandler implements SearchRepository {
@@ -16,6 +20,31 @@ class SearchRepositoryImpl with RepositoryHandler implements SearchRepository {
     int page = 1,
     int limit = 20,
   }) => guard(() => remote.searchProducts(query, page: page, limit: limit));
+
+  @override
+  Future<Result<UnifiedSearch>> searchAll(String query) =>
+      guard(() => remote.searchAll(query), operation: 'search all');
+
+  @override
+  Future<Result<PaginatedData<User>>> searchBoutiques(
+    String query, {
+    int page = 1,
+    int limit = 20,
+  }) => guard(() => remote.searchBoutiques(query, page: page, limit: limit));
+
+  @override
+  Future<Result<PaginatedData<User>>> searchShoppers(
+    String query, {
+    int page = 1,
+    int limit = 20,
+  }) => guard(() => remote.searchShoppers(query, page: page, limit: limit));
+
+  @override
+  Future<Result<PaginatedData<Post>>> searchPosts(
+    String query, {
+    int page = 1,
+    int limit = 20,
+  }) => guard(() => remote.searchPosts(query, page: page, limit: limit));
 
   @override
   Future<Result<List<String>>> trendingSearches() =>

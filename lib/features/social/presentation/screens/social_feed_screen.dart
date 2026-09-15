@@ -7,9 +7,12 @@ import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/core/shared/services/share_service.dart';
 import 'package:reem/features/auth/presentation/providers/auth_provider.dart';
 import 'package:reem/features/social/domain/entities/content.dart';
+import 'package:reem/features/social/presentation/open_stories.dart';
+import 'package:reem/features/social/presentation/providers/content_feed_notifier.dart';
 import 'package:reem/features/social/presentation/providers/social_providers.dart';
 import 'package:reem/features/social/presentation/widgets/content_card.dart';
 import 'package:reem/features/social/presentation/widgets/content_comments_sheet.dart';
+import 'package:reem/features/social/presentation/widgets/post_options_sheet.dart';
 import 'package:reem/features/social/presentation/widgets/reshare_sheet.dart';
 
 /// The social feed: what everyone is posting, and what the women she follows
@@ -200,15 +203,52 @@ class _FeedListState extends ConsumerState<_FeedList> {
             onReshare: content.author.id == me
                 ? null
                 : () => _reshare(context, notifier, content),
+            onMore: () => _openMenu(context, notifier, content, me),
           );
         },
       ),
     );
   }
 
+  /// The «…» menu. Hiding a post or an account takes the cards out of this
+  /// feed at once; «تراجع» puts them back where they stood.
+  Future<void> _openMenu(
+    BuildContext context,
+    ContentFeedNotifier notifier,
+    Content content,
+    String? me,
+  ) async {
+    var removed = <(int, Content)>[];
+    final authorId = content.author.id;
+    await showPostOptions(
+      context,
+      ref,
+      target: PostMenuTarget(
+        contentId: content.id,
+        author: content.author,
+        productId: content.productTags.isEmpty
+            ? null
+            : content.productTags.first.product.id,
+        isReshared: content.viewer.isReshared,
+      ),
+      callbacks: PostMenuCallbacks(
+        onHidden: () =>
+            removed = notifier.removeWhere((item) => item.id == content.id),
+        onUnhidden: () => notifier.restore(removed),
+        onMuted: () => removed = notifier.removeWhere(
+          (item) => item.author.id == authorId,
+        ),
+        onUnmuted: () => notifier.restore(removed),
+        onToggleReshare: authorId == me
+            ? null
+            : () => _reshare(context, notifier, content),
+      ),
+    );
+  }
+
   Future<void> _reshare(
     BuildContext context,
-    dynamic notifier,
+    ContentFeedNotifier notifier,
     Content content,
   ) async {
     if (content.viewer.isReshared) {
@@ -248,10 +288,8 @@ class _StoriesTray extends ConsumerWidget {
               return StoryBubble(
                 author: group.first.author,
                 allSeen: group.allSeen,
-                onTap: () => context.push(
-                  RoutePaths.storyViewer,
-                  extra: groups.skip(index).toList(),
-                ),
+                onTap: () =>
+                    openStoryGroups(context, groups, startGroup: index),
               );
             },
           ),

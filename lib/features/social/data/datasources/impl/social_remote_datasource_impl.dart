@@ -39,6 +39,24 @@ final class SocialRemoteDataSourceImpl extends BaseRemoteDataSource
       _contentPage(ApiEndpoints.contentFeed, cursor: cursor, limit: limit);
 
   @override
+  Future<PaginatedData<Content>> byAuthor(
+    String authorId, {
+    String? contentType,
+    String? cursor,
+    int limit = 20,
+  }) {
+    return getPaginated<Content>(
+      ApiEndpoints.contentFeed,
+      query: {
+        ..._cursorQuery(cursor, limit),
+        'author_id': authorId,
+        'content_type': ?contentType,
+      },
+      itemFromJson: ContentModel.fromJson,
+    );
+  }
+
+  @override
   Future<PaginatedData<Content>> reels({String? cursor, int limit = 10}) =>
       _contentPage(ApiEndpoints.contentReels, cursor: cursor, limit: limit);
 

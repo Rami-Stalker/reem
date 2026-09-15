@@ -36,6 +36,14 @@ abstract interface class SocialRepository {
   /// Reels only, newest first.
   Future<Result<PaginatedData<Content>>> reels({String? cursor, int limit});
 
+  /// One woman's own content of one format — the reels tab on her page.
+  Future<Result<PaginatedData<Content>>> byAuthor(
+    String authorId, {
+    String? contentType,
+    String? cursor,
+    int limit,
+  });
+
   /// What the women she follows have published or added to their pages.
   Future<Result<PaginatedData<Content>>> following({String? cursor, int limit});
 

@@ -24,6 +24,8 @@ import 'package:reem/features/profile/presentation/widgets/profile_referral_card
 import 'package:reem/features/profile/presentation/widgets/profile_stats.dart';
 import 'package:reem/features/profile/presentation/widgets/profile_wishlist_preview.dart';
 import 'package:reem/features/seller_dashboard/presentation/screens/seller_profile_screen.dart';
+import 'package:reem/features/user_profile/presentation/providers/user_profile_providers.dart';
+import 'package:reem/features/user_profile/presentation/widgets/my_page_card.dart';
 import 'package:reem/features/value/presentation/widgets/value_standing_card.dart';
 
 /// Role-aware profile dispatcher — renders [SellerProfileScreen] for sellers
@@ -75,6 +77,7 @@ class _BuyerProfileScreenState extends ConsumerState<_BuyerProfileScreen> {
       ref.read(profileOverviewNotifierProvider.notifier).refresh(),
       ref.read(favoritesNotifierProvider.notifier).load(),
       ref.read(authNotifierProvider.notifier).refreshUser(),
+      ref.read(userProfileNotifierProvider(null).notifier).refresh(),
     ]);
   }
 
@@ -112,6 +115,17 @@ class _BuyerProfileScreenState extends ConsumerState<_BuyerProfileScreen> {
         SliverToBoxAdapter(
           child: ProfileStats(user: user, savedCount: savedCount),
         ),
+        const _Gap(DsSpacing.md),
+
+        // «صفحتي»: her page as others see it, the switch that opens it, and
+        // the way to publish. None of the three was reachable from here.
+        _box(
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: DsSpacing.lg),
+            child: MyPageCard(),
+          ),
+        ),
+        const _Gap(_gap),
 
         // Reem Value sits above the loyalty dashboard, because standing is what
         // she is on this platform and the points card below is what she is owed

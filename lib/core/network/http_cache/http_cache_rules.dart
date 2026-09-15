@@ -132,6 +132,16 @@ abstract final class HttpCacheRules {
     if (normalised.startsWith('/stories')) {
       return const ['/stories', '/discovery'];
     }
+    if (normalised.startsWith('/content')) {
+      // The platform behind the legacy adapters: a hide, a mute, a reshare or
+      // a new post changes what `/posts/feed` and `/stories` answer too, and
+      // without this a post she marked «غير مهتمة» came back from the cache on
+      // the next pull.
+      return const ['/content', '/posts', '/stories', '/discovery'];
+    }
+    if (normalised.startsWith('/users/me/profile-visibility')) {
+      return const ['/users', '/content', '/search'];
+    }
     if (normalised.startsWith('/seller/products') ||
         normalised.startsWith('/seller/offers')) {
       return const ['/products', '/discovery', '/search'];

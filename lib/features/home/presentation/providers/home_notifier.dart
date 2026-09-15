@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/legacy.dart';
 import 'package:reem/core/result/result.dart';
+import 'package:reem/core/shared/entities/post.dart';
 
 import 'package:reem/features/discovery/domain/entities/product_collection.dart';
 import 'package:reem/features/discovery/domain/usecases/discovery_usecases.dart';
@@ -88,6 +89,37 @@ class HomeNotifier extends StateNotifier<HomeState> {
       case Error():
         state = state.copyWith(storiesLoading: false);
     }
+  }
+
+  /// Takes the posts matching [test] out of the feed and returns them with
+  /// where they stood, so an «تراجع» can put each back in its place.
+  ///
+  /// Used by the post menu: «غير مهتمة» removes one post, hiding an account
+  /// removes every post of hers on the page.
+  List<(int, Post)> removeFromFeed(bool Function(Post post) test) {
+    final removed = <(int, Post)>[];
+    final kept = <Post>[];
+    for (var i = 0; i < state.feed.length; i++) {
+      final post = state.feed[i];
+      if (test(post)) {
+        removed.add((i, post));
+      } else {
+        kept.add(post);
+      }
+    }
+    if (removed.isNotEmpty) state = state.copyWith(feed: kept);
+    return removed;
+  }
+
+  /// Puts back what [removeFromFeed] took, at the positions it took them from.
+  void restoreToFeed(List<(int, Post)> removed) {
+    if (removed.isEmpty) return;
+    final feed = [...state.feed];
+    for (final (index, post) in removed) {
+      if (feed.any((p) => p.id == post.id)) continue;
+      feed.insert(index.clamp(0, feed.length), post);
+    }
+    state = state.copyWith(feed: feed);
   }
 
   Future<void> _loadFeed() async {

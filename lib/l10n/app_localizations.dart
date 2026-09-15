@@ -11599,6 +11599,414 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Keep editing'**
   String get discardChangesKeep;
+
+  /// Post menu: hide this one post from her feeds.
+  ///
+  /// In en, this message translates to:
+  /// **'Not interested'**
+  String get postMenuNotInterested;
+
+  /// No description provided for @postMenuNotInterestedDone.
+  ///
+  /// In en, this message translates to:
+  /// **'You won\'t see this post again.'**
+  String get postMenuNotInterestedDone;
+
+  /// Post menu: mute the author quietly.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide posts from {name}'**
+  String postMenuMuteAuthor(String name);
+
+  /// No description provided for @postMenuMuteAuthorDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Posts from {name} are hidden.'**
+  String postMenuMuteAuthorDone(String name);
+
+  /// No description provided for @postMenuReport.
+  ///
+  /// In en, this message translates to:
+  /// **'Report post'**
+  String get postMenuReport;
+
+  /// No description provided for @productMenuReport.
+  ///
+  /// In en, this message translates to:
+  /// **'Report this piece'**
+  String get productMenuReport;
+
+  /// No description provided for @postMenuCopyLink.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy link'**
+  String get postMenuCopyLink;
+
+  /// No description provided for @linkCopied.
+  ///
+  /// In en, this message translates to:
+  /// **'Link copied'**
+  String get linkCopied;
+
+  /// No description provided for @postMenuViewAuthor.
+  ///
+  /// In en, this message translates to:
+  /// **'Visit {name}\'s page'**
+  String postMenuViewAuthor(String name);
+
+  /// No description provided for @postMenuViewProduct.
+  ///
+  /// In en, this message translates to:
+  /// **'View the piece'**
+  String get postMenuViewProduct;
+
+  /// No description provided for @postMenuRemoveFromMyPage.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove from my page'**
+  String get postMenuRemoveFromMyPage;
+
+  /// No description provided for @postMenuSave.
+  ///
+  /// In en, this message translates to:
+  /// **'Save to favourites'**
+  String get postMenuSave;
+
+  /// No description provided for @postMenuUnsave.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove from favourites'**
+  String get postMenuUnsave;
+
+  /// No description provided for @actionUndo.
+  ///
+  /// In en, this message translates to:
+  /// **'Undo'**
+  String get actionUndo;
+
+  /// No description provided for @reportTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Why are you reporting this?'**
+  String get reportTitle;
+
+  /// No description provided for @reportSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Reports are private — nobody is told who sent one.'**
+  String get reportSubtitle;
+
+  /// No description provided for @reportReasonImmodest.
+  ///
+  /// In en, this message translates to:
+  /// **'Immodest content'**
+  String get reportReasonImmodest;
+
+  /// No description provided for @reportReasonNotTheProduct.
+  ///
+  /// In en, this message translates to:
+  /// **'Doesn\'t match the piece'**
+  String get reportReasonNotTheProduct;
+
+  /// No description provided for @reportReasonStolenPhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Stolen photo'**
+  String get reportReasonStolenPhoto;
+
+  /// No description provided for @reportReasonSpam.
+  ///
+  /// In en, this message translates to:
+  /// **'Spam or annoying'**
+  String get reportReasonSpam;
+
+  /// No description provided for @reportReasonHarassment.
+  ///
+  /// In en, this message translates to:
+  /// **'Harassment or abuse'**
+  String get reportReasonHarassment;
+
+  /// No description provided for @reportReasonCounterfeit.
+  ///
+  /// In en, this message translates to:
+  /// **'Counterfeit'**
+  String get reportReasonCounterfeit;
+
+  /// No description provided for @reportReasonOther.
+  ///
+  /// In en, this message translates to:
+  /// **'Something else'**
+  String get reportReasonOther;
+
+  /// No description provided for @reportSent.
+  ///
+  /// In en, this message translates to:
+  /// **'Thank you — our team will look at it.'**
+  String get reportSent;
+
+  /// No description provided for @productPickedDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Added to your page'**
+  String get productPickedDone;
+
+  /// No description provided for @productPickedPrivate.
+  ///
+  /// In en, this message translates to:
+  /// **'Added — your page is private, so only you can see it.'**
+  String get productPickedPrivate;
+
+  /// No description provided for @productUnpickedDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Removed from your page'**
+  String get productUnpickedDone;
+
+  /// No description provided for @viewMyPage.
+  ///
+  /// In en, this message translates to:
+  /// **'View my page'**
+  String get viewMyPage;
+
+  /// No description provided for @productPicksCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} added it to their page'**
+  String productPicksCount(String count);
+
+  /// No description provided for @profileTabReels.
+  ///
+  /// In en, this message translates to:
+  /// **'Reels'**
+  String get profileTabReels;
+
+  /// No description provided for @profileTabPicks.
+  ///
+  /// In en, this message translates to:
+  /// **'Picks'**
+  String get profileTabPicks;
+
+  /// No description provided for @profileTabMyPicks.
+  ///
+  /// In en, this message translates to:
+  /// **'My picks'**
+  String get profileTabMyPicks;
+
+  /// No description provided for @profileTabStories.
+  ///
+  /// In en, this message translates to:
+  /// **'Stories'**
+  String get profileTabStories;
+
+  /// No description provided for @profilePrivateTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'This page is private'**
+  String get profilePrivateTitle;
+
+  /// No description provided for @profilePrivateBody.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} hasn\'t opened her page to others yet.'**
+  String profilePrivateBody(String name);
+
+  /// No description provided for @profileEmptyPosts.
+  ///
+  /// In en, this message translates to:
+  /// **'No posts yet'**
+  String get profileEmptyPosts;
+
+  /// No description provided for @profileEmptyReels.
+  ///
+  /// In en, this message translates to:
+  /// **'No reels yet'**
+  String get profileEmptyReels;
+
+  /// No description provided for @profileEmptyStories.
+  ///
+  /// In en, this message translates to:
+  /// **'No live stories right now'**
+  String get profileEmptyStories;
+
+  /// No description provided for @profileEmptyPicks.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing added to this page yet'**
+  String get profileEmptyPicks;
+
+  /// No description provided for @profileEmptyPicksMine.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap «Add to my page» on any piece to show it here.'**
+  String get profileEmptyPicksMine;
+
+  /// No description provided for @profileEmptyPostsMine.
+  ///
+  /// In en, this message translates to:
+  /// **'Share your first post, reel or story.'**
+  String get profileEmptyPostsMine;
+
+  /// No description provided for @myPageTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'My page'**
+  String get myPageTitle;
+
+  /// No description provided for @myPagePublicBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Your page is public — anyone can see your posts, reels and picks.'**
+  String get myPagePublicBody;
+
+  /// No description provided for @myPagePrivateBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Your page is private — only you can see it.'**
+  String get myPagePrivateBody;
+
+  /// No description provided for @myPagePublicToggle.
+  ///
+  /// In en, this message translates to:
+  /// **'Public page'**
+  String get myPagePublicToggle;
+
+  /// No description provided for @myPageMadePublic.
+  ///
+  /// In en, this message translates to:
+  /// **'Your page is now public'**
+  String get myPageMadePublic;
+
+  /// No description provided for @myPageMadePrivate.
+  ///
+  /// In en, this message translates to:
+  /// **'Your page is now private'**
+  String get myPageMadePrivate;
+
+  /// No description provided for @createSheetTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'What would you like to share?'**
+  String get createSheetTitle;
+
+  /// No description provided for @createPost.
+  ///
+  /// In en, this message translates to:
+  /// **'Post'**
+  String get createPost;
+
+  /// No description provided for @createPostHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Photos, a look, a piece you love'**
+  String get createPostHint;
+
+  /// No description provided for @createReel.
+  ///
+  /// In en, this message translates to:
+  /// **'Reel'**
+  String get createReel;
+
+  /// No description provided for @createReelHint.
+  ///
+  /// In en, this message translates to:
+  /// **'A short video, up to 30 seconds'**
+  String get createReelHint;
+
+  /// No description provided for @createStory.
+  ///
+  /// In en, this message translates to:
+  /// **'Story'**
+  String get createStory;
+
+  /// No description provided for @createStoryHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Gone in 24 hours'**
+  String get createStoryHint;
+
+  /// No description provided for @createTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Create'**
+  String get createTooltip;
+
+  /// No description provided for @createBrowseCommunity.
+  ///
+  /// In en, this message translates to:
+  /// **'Community'**
+  String get createBrowseCommunity;
+
+  /// No description provided for @createBrowseReels.
+  ///
+  /// In en, this message translates to:
+  /// **'Reels'**
+  String get createBrowseReels;
+
+  /// No description provided for @searchTabAll.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get searchTabAll;
+
+  /// No description provided for @searchTabProducts.
+  ///
+  /// In en, this message translates to:
+  /// **'Products'**
+  String get searchTabProducts;
+
+  /// No description provided for @searchTabBoutiques.
+  ///
+  /// In en, this message translates to:
+  /// **'Boutiques'**
+  String get searchTabBoutiques;
+
+  /// No description provided for @searchTabShoppers.
+  ///
+  /// In en, this message translates to:
+  /// **'Shoppers'**
+  String get searchTabShoppers;
+
+  /// No description provided for @searchTabPosts.
+  ///
+  /// In en, this message translates to:
+  /// **'Posts'**
+  String get searchTabPosts;
+
+  /// No description provided for @searchNoResultsFor.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing found for \"{query}\". Try another word.'**
+  String searchNoResultsFor(String query);
+
+  /// No description provided for @searchFollowersCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} followers'**
+  String searchFollowersCount(String count);
+
+  /// No description provided for @postMenuDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete post'**
+  String get postMenuDelete;
+
+  /// No description provided for @postDeleteTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete this post?'**
+  String get postDeleteTitle;
+
+  /// No description provided for @postDeleteBody.
+  ///
+  /// In en, this message translates to:
+  /// **'It disappears from your page and from every page it was added to. This can\'t be undone.'**
+  String get postDeleteBody;
+
+  /// No description provided for @postDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Post deleted'**
+  String get postDeleted;
 }
 
 class _AppLocalizationsDelegate

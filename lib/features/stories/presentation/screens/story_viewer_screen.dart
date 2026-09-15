@@ -1,10 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import 'package:reem/core/design_system/design_system.dart';
 import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/media/media_decode.dart';
+import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/core/shared/entities/story.dart';
 import 'package:reem/core/utils/relative_time.dart';
 import 'package:reem/features/stories/presentation/providers/stories_providers.dart';
@@ -239,6 +241,17 @@ class _Header extends StatelessWidget {
   final Story story;
   final VoidCallback onClose;
 
+  /// Her face and name lead to her page, as they do everywhere else. The
+  /// viewer closes first — it is opened both as a route and as a plain page
+  /// from the home rail — so back from her page returns to wherever the
+  /// stories were opened rather than into a finished story.
+  void _openAuthor(BuildContext context) {
+    if (story.user.id.isEmpty) return;
+    final router = GoRouter.of(context);
+    Navigator.of(context).maybePop();
+    router.push(RoutePaths.userProfileOf(story.user.id));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -247,10 +260,14 @@ class _Header extends StatelessWidget {
           imageUrl: story.user.imageUrl,
           name: story.user.name,
           size: DsSizes.avatarSm,
+          onTap: () => _openAuthor(context),
         ),
         DsGaps.hSm,
         Expanded(
-          child: Column(
+          child: GestureDetector(
+            onTap: () => _openAuthor(context),
+            behavior: HitTestBehavior.opaque,
+            child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
@@ -264,6 +281,7 @@ class _Header extends StatelessWidget {
                 style: context.dsText.caption.tint(DsColors.onMediaMuted),
               ),
             ],
+          ),
           ),
         ),
         IconButton(

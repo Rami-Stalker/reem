@@ -1,14 +1,20 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 
+import 'package:reem/core/errors/failure_exception.dart';
 import 'package:reem/core/presentation/providers/core_providers.dart';
+import 'package:reem/core/presentation/providers/paginated_notifier.dart';
+import 'package:reem/core/presentation/state/paginated_state.dart';
 import 'package:reem/core/result/result.dart';
+import 'package:reem/core/shared/entities/post.dart';
+import 'package:reem/core/shared/entities/user.dart';
 import 'package:reem/features/discovery/presentation/providers/collection_notifier.dart';
 import 'package:reem/features/discovery/presentation/providers/collection_state.dart';
 import 'package:reem/features/search/data/datasources/impl/search_remote_datasource_impl.dart';
 import 'package:reem/features/search/data/datasources/search_remote_datasource.dart';
 import 'package:reem/features/search/data/repositories/search_repository_impl.dart';
 import 'package:reem/features/search/domain/entities/search_suggestions.dart';
+import 'package:reem/features/search/domain/entities/unified_search.dart';
 import 'package:reem/features/search/domain/repositories/search_repository.dart';
 import 'package:reem/features/search/domain/usecases/search_products_usecase.dart';
 
@@ -32,6 +38,61 @@ final searchResultsProvider = StateNotifierProvider.autoDispose
     .family<CollectionNotifier, CollectionState, String>((ref, query) {
       return CollectionNotifier(
         (page) => ref.read(searchProductsUseCaseProvider)(query, page: page),
+      )..load();
+    });
+
+/// The top hits in every kind, for the «الكل» tab.
+final unifiedSearchProvider = FutureProvider.autoDispose
+    .family<UnifiedSearch, String>((ref, query) async {
+      final result = await ref.watch(searchRepositoryProvider).searchAll(query);
+      return switch (result) {
+        Success(:final data) => data,
+        Error(:final failure) => throw FailureException(failure),
+      };
+    });
+
+final boutiqueSearchProvider = StateNotifierProvider.autoDispose
+    .family<PaginatedNotifier<User>, PaginatedState<User>, String>((
+      ref,
+      query,
+    ) {
+      final repository = ref.watch(searchRepositoryProvider);
+      return PaginatedNotifier<User>(
+        (request) => repository.searchBoutiques(
+          query,
+          page: request.page,
+          limit: request.limit,
+        ),
+      )..load();
+    });
+
+final shopperSearchProvider = StateNotifierProvider.autoDispose
+    .family<PaginatedNotifier<User>, PaginatedState<User>, String>((
+      ref,
+      query,
+    ) {
+      final repository = ref.watch(searchRepositoryProvider);
+      return PaginatedNotifier<User>(
+        (request) => repository.searchShoppers(
+          query,
+          page: request.page,
+          limit: request.limit,
+        ),
+      )..load();
+    });
+
+final postSearchProvider = StateNotifierProvider.autoDispose
+    .family<PaginatedNotifier<Post>, PaginatedState<Post>, String>((
+      ref,
+      query,
+    ) {
+      final repository = ref.watch(searchRepositoryProvider);
+      return PaginatedNotifier<Post>(
+        (request) => repository.searchPosts(
+          query,
+          page: request.page,
+          limit: request.limit,
+        ),
       )..load();
     });
 

@@ -14,18 +14,31 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:reem/core/design_system/design_system.dart';
 import 'package:reem/core/localization/app_localizations.dart';
 import 'package:reem/core/presentation/providers/product_shape_provider.dart';
+import 'package:reem/core/result/result.dart';
 import 'package:reem/core/shared/entities/brand.dart';
 import 'package:reem/core/shared/entities/category.dart';
 import 'package:reem/core/shared/entities/product.dart';
 import 'package:reem/core/shared/entities/seller_offer.dart';
 import 'package:reem/core/shared/entities/user.dart';
 import 'package:reem/core/shared/value_objects/money.dart';
+import 'package:reem/features/discovery/domain/entities/product_page.dart';
+import 'package:reem/features/product_social/domain/entities/product_engagement.dart';
+import 'package:reem/features/product_social/domain/repositories/product_social_repository.dart';
+import 'package:reem/features/product_social/presentation/providers/product_social_providers.dart';
+import 'package:reem/features/product_social/presentation/widgets/product_post_card.dart';
 import 'package:reem/l10n/app_localizations.dart' as gen;
 import 'package:reem/l10n/app_localizations_ar.dart';
 
 void main() {
   Widget harness(Widget child) {
     return ProviderScope(
+      // The post shape reads the shared engagement store; a fake repository
+      // keeps the test off the network.
+      overrides: [
+        productSocialRepositoryProvider.overrideWithValue(
+          _SilentProductSocial(),
+        ),
+      ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: AppTheme.light,
@@ -42,25 +55,28 @@ void main() {
     );
   }
 
-  testWidgets('the post shape tells a product as an editorial card', (
-    tester,
-  ) async {
+  testWidgets('the post shape tells a product as a full post', (tester) async {
     await tester.pumpWidget(
       harness(
-        CustomScrollView(
-          slivers: [
-            SliverProductPosts(products: _products, onTapProduct: (_) {}),
-          ],
-        ),
+        CustomScrollView(slivers: [SliverProductPostCards(products: _products)]),
       ),
     );
     await tester.pump(const Duration(milliseconds: 300));
 
-    expect(find.byType(DsProductPostCard), findsWidgets);
+    expect(find.byType(ProductPostCard), findsWidgets);
     // The boutique heads its own piece, and the plate carries the price.
     expect(find.text('بوتيك ريم'), findsWidgets);
     expect(find.byType(DsShopPlate), findsWidgets);
     expect(find.text(_products.first.title), findsWidgets);
+    // What the client asked for: a department's posts carry the same gestures
+    // as «وصل حديثاً» — heart, thread, share, «أضيفي إلى صفحتي», bookmark — and
+    // a «…» that opens something.
+    final bar = tester.widget<DsPostActionBar>(
+      find.byType(DsPostActionBar).first,
+    );
+    expect(bar.onPick, isNotNull);
+    final header = tester.widget<DsPostHeader>(find.byType(DsPostHeader).first);
+    expect(header.onMore, isNotNull);
   });
 
   testWidgets('a bag only appears on a piece that can actually be bought', (
@@ -68,15 +84,7 @@ void main() {
   ) async {
     await tester.pumpWidget(
       harness(
-        CustomScrollView(
-          slivers: [
-            SliverProductPosts(
-              products: [_soldOut],
-              onTapProduct: (_) {},
-              onAddToBag: (_) {},
-            ),
-          ],
-        ),
+        CustomScrollView(slivers: [SliverProductPostCards(products: [_soldOut])]),
       ),
     );
     await tester.pump(const Duration(milliseconds: 300));
@@ -169,3 +177,40 @@ final _products = <Product>[
 ];
 
 final _soldOut = _product('3', 'عباية صوف', 300000, stock: 0);
+
+/// Answers every read with nothing and every write with success.
+class _SilentProductSocial implements ProductSocialRepository {
+  @override
+  Future<Result<Map<String, ProductEngagement>>> engagement(
+    List<String> ids,
+  ) async => const Success({});
+
+  @override
+  Future<Result<int>> setLiked(String productId, {required bool liked}) async =>
+      const Success(0);
+
+  @override
+  Future<Result<void>> setSaved(String productId, {required bool saved}) async =>
+      const Success(null);
+
+  @override
+  Future<Result<int>> setPicked(
+    String productId, {
+    required bool picked,
+    String? note,
+  }) async => const Success(0);
+
+  @override
+  Future<Result<int>> recordShare(String productId) async => const Success(0);
+
+  @override
+  Future<Result<void>> report(
+    String productId,
+    String reason, {
+    String? detail,
+  }) async => const Success(null);
+
+  @override
+  Future<Result<ProductPage>> picksOf(String userId, {int page = 1}) =>
+      throw UnimplementedError();
+}

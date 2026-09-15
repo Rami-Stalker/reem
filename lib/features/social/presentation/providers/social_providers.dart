@@ -119,6 +119,35 @@ final userTimelineProvider = StateNotifierProvider.autoDispose
       )..load();
     });
 
+/// One woman's reels, for the reels tab on her page.
+final userReelsProvider = StateNotifierProvider.autoDispose
+    .family<ContentFeedNotifier, PaginatedState<Content>, String>((
+      ref,
+      userId,
+    ) {
+      final repository = ref.watch(socialRepositoryProvider);
+      return ContentFeedNotifier(
+        repository,
+        (request) => repository.byAuthor(
+          userId,
+          contentType: 'reel',
+          cursor: request.cursor,
+          limit: request.limit,
+        ),
+        pageSize: 12,
+      )..load();
+    });
+
+/// One woman's live stories — the ring on her avatar and the stories tab.
+final userStoriesProvider = FutureProvider.autoDispose
+    .family<List<StoryGroup>, String>((ref, userId) async {
+      final result = await ref.watch(socialRepositoryProvider).storiesOf(userId);
+      return switch (result) {
+        Success(:final data) => data,
+        Error(:final failure) => throw FailureException(failure),
+      };
+    });
+
 /// Her own content, in every state — including what is under review and what
 /// was taken down. The only place either is visible to her.
 final myContentProvider = StateNotifierProvider.autoDispose<

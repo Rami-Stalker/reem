@@ -157,6 +157,34 @@ class ContentFeedNotifier extends PaginatedNotifier<Content> {
     );
   }
 
+  /// Takes out every card matching [test] — one post she is not interested
+  /// in, or every post of an account she hid — and says where each stood, so
+  /// «تراجع» can put them back.
+  List<(int, Content)> removeWhere(bool Function(Content item) test) {
+    final removed = <(int, Content)>[];
+    final kept = <Content>[];
+    for (var i = 0; i < state.items.length; i++) {
+      final item = state.items[i];
+      if (test(item)) {
+        removed.add((i, item));
+      } else {
+        kept.add(item);
+      }
+    }
+    if (removed.isNotEmpty) state = state.copyWith(items: kept);
+    return removed;
+  }
+
+  void restore(List<(int, Content)> removed) {
+    if (removed.isEmpty) return;
+    final items = [...state.items];
+    for (final (index, item) in removed) {
+      if (items.any((existing) => existing.id == item.id)) continue;
+      items.insert(index.clamp(0, items.length), item);
+    }
+    state = state.copyWith(items: items);
+  }
+
   /// Content that has just been taken down, or that she deleted, leaves the
   /// list rather than sitting there un-tappable.
   void drop(String contentId) {

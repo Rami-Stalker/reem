@@ -1,0 +1,231 @@
+import 'dart:async';
+
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+
+import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
+import 'package:reem/core/result/result.dart';
+import 'package:reem/core/router/route_paths.dart';
+import 'package:reem/core/shared/entities/user.dart';
+import 'package:reem/core/shared/services/share_service.dart';
+import 'package:reem/features/auth/presentation/providers/auth_provider.dart';
+import 'package:reem/features/auth/presentation/widgets/auth_prompt_sheet.dart';
+import 'package:reem/features/social/domain/entities/content.dart';
+import 'package:reem/features/social/presentation/providers/social_providers.dart';
+import 'package:reem/features/social/presentation/widgets/content_card.dart';
+import 'package:reem/features/social/presentation/widgets/content_comments_sheet.dart';
+import 'package:reem/features/social/presentation/widgets/post_options_sheet.dart';
+import 'package:reem/features/social/presentation/widgets/reshare_sheet.dart';
+
+/// A [ContentCard] that carries its own gestures.
+///
+/// The feeds keep likes and saves in their list notifier so a whole page moves
+/// together. A woman's page is a list too, but a list of *entries* — her own
+/// posts and the ones she added — and each tab reads a different endpoint, so
+/// the card owns its state here: optimistic, corrected by the server's answer,
+/// and put back exactly as it was on a failure.
+class InteractiveContentCard extends ConsumerStatefulWidget {
+  const InteractiveContentCard({
+    super.key,
+    required this.content,
+    this.resharedBy,
+    this.reshareNote,
+    this.featured = false,
+    this.onRemoved,
+  });
+
+  final Content content;
+
+  /// Set when this sits on a woman's page because she added it.
+  final User? resharedBy;
+  final String? reshareNote;
+  final bool featured;
+
+  /// The owning list should drop this card — she hid it, muted its author, or
+  /// deleted her own post.
+  final VoidCallback? onRemoved;
+
+  @override
+  ConsumerState<InteractiveContentCard> createState() =>
+      _InteractiveContentCardState();
+}
+
+class _InteractiveContentCardState
+    extends ConsumerState<InteractiveContentCard> {
+  late Content _content = widget.content;
+  bool _removed = false;
+
+  @override
+  void didUpdateWidget(InteractiveContentCard oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.content != oldWidget.content) _content = widget.content;
+  }
+
+  Future<bool> _signedIn() => requireAuthenticatedUser(
+    context,
+    ref,
+    title: context.l10n.signInToInteract,
+    message: context.l10n.signInToInteractBody,
+  );
+
+  Future<void> _like() async {
+    if (!await _signedIn() || !mounted) return;
+    final before = _content;
+    final liked = !before.viewer.isLiked;
+    setState(
+      () => _content = before.copyWith(
+        viewer: before.viewer.copyWith(isLiked: liked),
+        counts: before.counts.copyWith(
+          likes: (before.counts.likes + (liked ? 1 : -1)).clamp(0, 1 << 30),
+        ),
+      ),
+    );
+    final result = await ref.read(socialRepositoryProvider).react(before.id);
+    if (!mounted) return;
+    setState(() {
+      _content = switch (result) {
+        Success(:final data) => _content.copyWith(viewer: data),
+        Error() => before,
+      };
+    });
+  }
+
+  Future<void> _save() async {
+    if (!await _signedIn() || !mounted) return;
+    final before = _content;
+    setState(
+      () => _content = before.copyWith(
+        viewer: before.viewer.copyWith(isSaved: !before.viewer.isSaved),
+      ),
+    );
+    final result = await ref
+        .read(socialRepositoryProvider)
+        .toggleSave(before.id);
+    if (!mounted) return;
+    setState(() {
+      _content = switch (result) {
+        Success(:final data) => _content.copyWith(viewer: data),
+        Error() => before,
+      };
+    });
+  }
+
+  Future<void> _comment() async {
+    if (!await _signedIn() || !mounted) return;
+    final delta = await showContentComments(context, contentId: _content.id);
+    if (!mounted || delta == 0) return;
+    setState(
+      () => _content = _content.copyWith(
+        counts: _content.counts.copyWith(
+          comments: (_content.counts.comments + delta).clamp(0, 1 << 30),
+        ),
+      ),
+    );
+  }
+
+  Future<void> _share() async {
+    final shared = await ShareService.post(
+      context: context,
+      postId: _content.id,
+      caption: _content.caption,
+      authorName: _content.author.name,
+    );
+    if (!shared || !mounted) return;
+    final result = await ref
+        .read(socialRepositoryProvider)
+        .recordShare(_content.id);
+    if (!mounted) return;
+    if (result case Success(:final data)) {
+      setState(() => _content = _content.copyWith(viewer: data));
+    }
+  }
+
+  Future<void> _reshare() async {
+    if (!await _signedIn() || !mounted) return;
+    final before = _content;
+    final repository = ref.read(socialRepositoryProvider);
+
+    Result<bool> result;
+    if (before.viewer.isReshared) {
+      result = await repository.unreshare(before.id);
+    } else {
+      final note = await showReshareSheet(context, content: before);
+      if (note == null || !mounted) return;
+      result = await repository.reshare(
+        before.id,
+        note: note.isEmpty ? null : note,
+      );
+    }
+    if (!mounted) return;
+    switch (result) {
+      case Success(:final data):
+        setState(
+          () => _content = _content.copyWith(
+            viewer: _content.viewer.copyWith(isReshared: data),
+          ),
+        );
+      case Error(:final failure):
+        DsSnackbar.error(context, failure.message);
+    }
+  }
+
+  void _remove() {
+    if (_removed) return;
+    setState(() => _removed = true);
+    widget.onRemoved?.call();
+  }
+
+  void _restore() {
+    if (mounted) setState(() => _removed = false);
+  }
+
+  Future<void> _menu(String? me) async {
+    final content = _content;
+    await showPostOptions(
+      context,
+      ref,
+      target: PostMenuTarget(
+        contentId: content.id,
+        author: content.author,
+        productId: content.productTags.isEmpty
+            ? null
+            : content.productTags.first.product.id,
+        isReshared: content.viewer.isReshared,
+      ),
+      callbacks: PostMenuCallbacks(
+        onHidden: _remove,
+        onUnhidden: _restore,
+        // On a woman's own page a mute does not remove her posts — muting
+        // quiets feeds, and this is a page she opened on purpose.
+        onToggleReshare: content.author.id == me ? null : _reshare,
+        onDeleted: content.author.id == me ? _remove : null,
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_removed) return const SizedBox.shrink();
+    final me = ref.watch(authNotifierProvider.select((s) => s.user?.id));
+    final content = _content;
+
+    return ContentCard(
+      content: content,
+      featured: widget.featured,
+      resharedBy: widget.resharedBy,
+      reshareNote: widget.reshareNote,
+      onOpenAuthor: (userId) =>
+          unawaited(context.push(RoutePaths.userProfileOf(userId))),
+      onOpenProduct: (productId) =>
+          unawaited(context.push(RoutePaths.productDetailsOf(productId))),
+      onLike: _like,
+      onSave: _save,
+      onComment: _comment,
+      onShare: _share,
+      onReshare: content.author.id == me ? null : _reshare,
+      onMore: () => _menu(me),
+    );
+  }
+}

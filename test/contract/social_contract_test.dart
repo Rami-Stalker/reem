@@ -52,6 +52,7 @@ const _postKeys = <String>{
   'saves_count',
   'is_liked',
   'is_saved',
+  'is_reshared',
   'created_at',
 };
 
@@ -97,7 +98,7 @@ void main() {
       _expectEnvelope(body);
     });
 
-    test('every post carries exactly the eleven contract keys', () {
+    test('every post carries exactly the twelve contract keys', () {
       expect(data, isNotEmpty);
       for (final item in data) {
         expect((item as Map<String, dynamic>).keys.toSet(), _postKeys);
