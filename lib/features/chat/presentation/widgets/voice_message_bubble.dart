@@ -89,7 +89,10 @@ class _VoiceMessageBubbleState extends ConsumerState<VoiceMessageBubble> {
       // Chat media sits behind an authorised endpoint, so the player needs the
       // same bearer token the image loader does — and for the same reason:
       // neither goes through Dio.
-      final headers = await ref.read(mediaAuthHeadersProvider.future);
+      // Only to our own API: see [AuthorizedMediaImage.isPrivate].
+      final headers = AuthorizedMediaImage.isPrivate(widget.url)
+          ? await ref.read(mediaAuthHeadersProvider.future)
+          : const <String, String>{};
       await player.setAudioSource(
         AudioSource.uri(
           Uri.parse(widget.url),

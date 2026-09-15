@@ -1,0 +1,29 @@
+{
+  // Compiles the Supabase host *and* the backend it hosts in one pass.
+  //
+  // One pass matters: Nest resolves providers by class identity, so the
+  // `ChatRealtimeGateway` this host overrides must be the very class object
+  // `AppModule` imported. Compiling both trees together, into one output tree,
+  // is what guarantees there is exactly one copy of each. `backend/` itself is
+  // only read — its own tsconfig, dist/ and node_modules are left alone.
+  "extends": "../../backend/tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "../..",
+    "outDir": ".build/out",
+    "baseUrl": ".",
+    "incremental": false,
+    "declaration": false,
+    "sourceMap": false,
+    "removeComments": true,
+    // One copy of __decorate/__metadata/__awaiter from tslib instead of one per
+    // compiled file — a few hundred kilobytes across the backend.
+    "importHelpers": true,
+    "typeRoots": ["../../backend/node_modules/@types"],
+    "types": ["node"],
+    "paths": {
+      "*": ["../../backend/node_modules/*", "./node_modules/*"]
+    }
+  },
+  "include": ["src/**/*.ts", "../../backend/src/**/*.ts"],
+  "exclude": ["../../backend/src/**/*.spec.ts", "../../backend/src/main.ts"]
+}

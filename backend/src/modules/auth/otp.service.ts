@@ -4,8 +4,10 @@ import {
   HttpStatus,
   Injectable,
   Logger,
+  Optional,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import {
   OtpChannel,
   OtpOutboxStatus,
@@ -15,7 +17,7 @@ import {
 import { createHash, createHmac, randomInt, timingSafeEqual } from 'crypto';
 import { PrismaService } from '../../prisma/prisma.service';
 import { RequestContext } from './interfaces/request-context.interface';
-import { OtpDispatcherService } from './otp/otp-dispatcher.service';
+import { OtpDispatcherService, OTP_ENQUEUED } from './otp/otp-dispatcher.service';
 import { maskDestination } from './otp/otp-transport';
 
 interface RequestOtpInput {
@@ -71,6 +73,7 @@ export class OtpService {
     private readonly prisma: PrismaService,
     private readonly dispatcher: OtpDispatcherService,
     config: ConfigService,
+    @Optional() private readonly events?: EventEmitter2,
   ) {
     this.pepper = config.get<string>('security.otpPepper') as string;
     this.devEcho = config.get<boolean>('security.otpDevEcho') === true;
@@ -112,6 +115,11 @@ export class OtpService {
       await this.dispatcher.enqueue(created.id, code, tx);
       return created;
     });
+
+    // Delivered now, not at the outbox's next poll: the row is committed, so
+    // the drain can claim it. The poll stays as the net for a send this
+    // misses (a crash between commit and here, a transport to retry).
+    this.events?.emit(OTP_ENQUEUED, { challengeId: request.id });
 
     if (this.devEcho) {
       this.logger.warn(

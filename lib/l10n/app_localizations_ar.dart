@@ -566,6 +566,19 @@ class AppLocalizationsAr extends AppLocalizations {
   String get adminRateHint => '٢٥٠ تعني ٢٫٥٪';
 
   @override
+  String get adminRecordNoDetails => 'لا تفاصيل إضافية لهذا السجل.';
+
+  @override
+  String adminRecordNestedObject(int count) {
+    return '$count حقول';
+  }
+
+  @override
+  String adminRecordItemCount(int count) {
+    return '$count عناصر';
+  }
+
+  @override
   String get adminRawRecord => 'السجل الكامل';
 
   @override
@@ -777,6 +790,48 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get adminUserManagement => 'إدارة المستخدمات';
+
+  @override
+  String adminUnitsSold(int units) {
+    return '$units قطعة';
+  }
+
+  @override
+  String get adminNotificationAnalyticsSubtitle =>
+      'ما الذي أُرسل، عبر أي قناة، وكم منه وصل.';
+
+  @override
+  String get adminUnreadInApp => 'غير مقروء داخل التطبيق';
+
+  @override
+  String get adminNotificationsSent => 'أُرسلت';
+
+  @override
+  String get adminNotificationsFailed => 'فشلت';
+
+  @override
+  String get adminDeliveriesByChannel => 'الإرسال حسب القناة';
+
+  @override
+  String get adminCampaignsByStatus => 'الحملات حسب الحالة';
+
+  @override
+  String get adminDeliveryEvents => 'أحداث الإرسال';
+
+  @override
+  String get adminChannelPush => 'إشعار فوري';
+
+  @override
+  String get adminChannelInApp => 'داخل التطبيق';
+
+  @override
+  String get adminChannelEmail => 'بريد إلكتروني';
+
+  @override
+  String get adminChannelSms => 'رسالة نصية';
+
+  @override
+  String get adminChannelWhatsapp => 'واتساب';
 
   @override
   String get adminUsers => 'المستخدمات';
@@ -3306,6 +3361,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String postLikesCount(String count) {
     return '$count إعجاب';
   }
+
+  @override
+  String get postOptions => 'خيارات المنشور';
 
   @override
   String get postMore => 'المزيد';

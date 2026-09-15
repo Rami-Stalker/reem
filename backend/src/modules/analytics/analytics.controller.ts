@@ -3,6 +3,7 @@ import { Response } from 'express';
 import { UserRole } from '@prisma/client';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import { Roles } from '../../common/decorators/roles.decorator';
+import { SelfScoped } from '../../common/decorators/self-scoped.decorator';
 import { AnalyticsService } from './analytics.service';
 import {
   AnalyticsExportQueryDto,
@@ -21,6 +22,16 @@ const dashboardRoles = [
   UserRole.SELLER,
 ];
 
+/**
+ * The event firehose in, the dashboards out.
+ *
+ * Reading a dashboard is declarative and named below. Writing an event is not:
+ * the row is stamped with the caller's own id, and there is no parameter that
+ * would let her attribute it to somebody else.
+ */
+@SelfScoped(
+  "a tracked event is written against the caller's own user id, taken from her token and never from the body",
+)
 @Controller('analytics')
 export class AnalyticsController {
   constructor(private readonly analytics: AnalyticsService) {}

@@ -1,6 +1,7 @@
 import 'package:reem/core/base/repository_handler.dart';
 import 'package:reem/core/domain/pagination/paginated_data.dart';
 import 'package:reem/core/result/result.dart';
+import 'package:reem/core/shared/entities/user.dart';
 import 'package:reem/features/social/data/datasources/social_remote_datasource.dart';
 import 'package:reem/features/social/domain/entities/content.dart';
 import 'package:reem/features/social/domain/entities/content_analytics.dart';
@@ -30,6 +31,10 @@ class SocialRepositoryImpl with RepositoryHandler implements SocialRepository {
   @override
   Future<Result<List<StoryGroup>>> storiesTray() =>
       guard(() => remote.storiesTray());
+
+  @override
+  Future<Result<List<StoryGroup>>> storiesOf(String userId) =>
+      guard(() => remote.storiesOf(userId));
 
   @override
   Future<Result<PaginatedData<Content>>> saved({String? cursor, int limit = 20}) =>
@@ -145,6 +150,26 @@ class SocialRepositoryImpl with RepositoryHandler implements SocialRepository {
   @override
   Future<Result<bool>> setProfilePublic(bool isPublic) =>
       guard(() => remote.setProfilePublic(isPublic));
+
+  @override
+  Future<Result<void>> hide(String contentId) =>
+      guard(() => remote.hide(contentId));
+
+  @override
+  Future<Result<void>> unhide(String contentId) =>
+      guard(() => remote.unhide(contentId));
+
+  @override
+  Future<Result<void>> muteAuthor(String userId) =>
+      guard(() => remote.muteAuthor(userId));
+
+  @override
+  Future<Result<void>> unmuteAuthor(String userId) =>
+      guard(() => remote.unmuteAuthor(userId));
+
+  @override
+  Future<Result<List<User>>> mutedAccounts() =>
+      guard(() => remote.mutedAccounts());
 
   @override
   Future<Result<List<ContentFormatPerformance>>> formatPerformance() =>

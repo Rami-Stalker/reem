@@ -1,6 +1,6 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { Cron, CronExpression } from '@nestjs/schedule';
+import { CronExpression } from '@nestjs/schedule';
 import { MediaType, ProductStatus } from '@prisma/client';
 import { createHash } from 'node:crypto';
 import { PrismaService } from '../../../prisma/prisma.service';
@@ -9,6 +9,7 @@ import { ImageProcessingService } from '../processing/image-processing.service';
 import { VECTOR_INDEX, VectorIndex, VectorRecord } from '../vector/vector-index';
 import { EmbeddingService, paletteFrom } from './embedding.service';
 import { readingsToAttributes } from '../understanding/visual-attributes';
+import { ScheduledJob } from '../../../common/scheduling/scheduled-job.decorator';
 
 export interface IndexRunSummary {
   productsVisited: number;
@@ -76,7 +77,7 @@ export class ProductIndexerService {
    * that day, and the pass is cheap when there is nothing to do: one indexed
    * query returning no rows.
    */
-  @Cron(CronExpression.EVERY_HOUR)
+  @ScheduledJob({ cron: CronExpression.EVERY_HOUR, leaseSeconds: 300 })
   async scheduled(): Promise<void> {
     if (!this.enabled) return;
     await this.sweep();

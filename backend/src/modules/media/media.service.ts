@@ -454,10 +454,9 @@ export class MediaService {
    * path, because there is no URL for one that should work without a session.
    */
   urlFor(asset: MediaAsset, origin: string): string {
-    const base = this.originFor(origin);
     return asset.visibility === MediaVisibility.PUBLIC
-      ? `${base}${this.storage.publicUrl(asset.storageKey)}`
-      : `${base}/media/${asset.id}/file`;
+      ? this.publicUrlFor(asset.storageKey, origin)
+      : `${this.originFor(origin)}/media/${asset.id}/file`;
   }
 
   /**
@@ -468,10 +467,9 @@ export class MediaService {
   variantUrlFor(asset: MediaAsset, origin: string, width: number): string {
     if (!asset.variants.includes(width)) return this.urlFor(asset, origin);
 
-    const base = this.originFor(origin);
     return asset.visibility === MediaVisibility.PUBLIC
-      ? `${base}${this.storage.publicUrl(variantKeyFor(asset.storageKey, width))}`
-      : `${base}/media/${asset.id}/file?w=${width}`;
+      ? this.publicUrlFor(variantKeyFor(asset.storageKey, width), origin)
+      : `${this.originFor(origin)}/media/${asset.id}/file?w=${width}`;
   }
 
   /**
@@ -497,6 +495,19 @@ export class MediaService {
       // The copies are WebP whatever the original was.
       mimeType: 'image/webp',
     };
+  }
+
+  /**
+   * A driver that serves public bytes itself (local disk, mounted by
+   * `main.ts`) answers with a path on this API's origin; one that hands them
+   * to a CDN (Supabase Storage) answers with the CDN's absolute URL, which is
+   * used as it is.
+   */
+  private publicUrlFor(key: string, requestOrigin: string): string {
+    const url = this.storage.publicUrl(key);
+    return /^https?:\/\//i.test(url)
+      ? url
+      : `${this.originFor(requestOrigin)}${url}`;
   }
 
   private originFor(requestOrigin: string): string {

@@ -71,7 +71,15 @@ export class PostsService {
 
   /** `userId` is absent for a signed-out visitor — see the controller. */
   async feed(userId: string | undefined, page: PaginationDto) {
-    const where = this.legacyPostWhere;
+    // Her «غير مهتمة» and her mutes reach this feed too — it is the home
+    // page's «وصل حديثاً», the first feed she ever sees.
+    const where: Prisma.CommerceContentWhereInput = userId
+      ? {
+          ...this.legacyPostWhere,
+          hiddenBy: { none: { userId } },
+          author: { mutesReceived: { none: { muterId: userId } } },
+        }
+      : this.legacyPostWhere;
     const [posts, total] = await Promise.all([
       this.prisma.commerceContent.findMany({
         where,

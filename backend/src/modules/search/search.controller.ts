@@ -46,6 +46,13 @@ export class SearchController {
     return this.search.searchSellers(dto.q, dto);
   }
 
+  /** Shoppers with an open page. */
+  @OptionalAuth()
+  @Get('users')
+  users(@Query() dto: SearchQueryDto) {
+    return this.search.searchCustomers(dto.q, dto);
+  }
+
   @OptionalAuth()
   @Get('posts')
   posts(

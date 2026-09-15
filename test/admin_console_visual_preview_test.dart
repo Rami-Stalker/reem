@@ -350,34 +350,34 @@ final class _FakeAdminRepository implements AdminRepository {
         AnalyticsRankedItem(
           title: 'فستان حرير بماء الورد',
           value: 82890000,
-          subtitle: '97 قطعة',
+          units: 97,
         ),
         AnalyticsRankedItem(
           title: 'عطر زهر المخمل',
           value: 57060000,
-          subtitle: '134 قطعة',
+          units: 134,
         ),
         AnalyticsRankedItem(
           title: 'حقيبة كتف صغيرة مبطّنة',
           value: 44280000,
-          subtitle: '76 قطعة',
+          units: 76,
         ),
       ],
       topSellers: const [
         AnalyticsRankedItem(
           title: 'أتيليه الورد',
           value: 184300000,
-          subtitle: 'دمشق',
+          units: 612,
         ),
         AnalyticsRankedItem(
           title: 'دار النور',
           value: 132400000,
-          subtitle: 'حلب',
+          units: 448,
         ),
         AnalyticsRankedItem(
           title: 'بتلات المخمل',
           value: 97600000,
-          subtitle: 'اللاذقية',
+          units: 331,
         ),
       ],
       refreshedAt: DateTime(2026, 8, 24, 9),

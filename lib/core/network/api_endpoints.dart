@@ -72,6 +72,10 @@ abstract final class ApiEndpoints {
   static String userFollowers(String id) => '/users/$id/followers';
   static String userFollowing(String id) => '/users/$id/following';
 
+  /// The pieces she added to her page — empty, with `is_private`, while a
+  /// customer's page is closed to the viewer.
+  static String userPicks(String id) => '/users/$id/picks';
+
   // Feed & social (customer interactions)
   static const postsFeed = '/posts/feed';
   static const postsSaved = '/posts/saved';
@@ -120,6 +124,8 @@ abstract final class ApiEndpoints {
   static const contentStories = '/content/stories';
   static const contentSaved = '/content/saved';
   static String contentByUser(String userId) => '/content/users/$userId';
+  static String contentStoriesByUser(String userId) =>
+      '/content/users/$userId/stories';
   static String contentByProduct(String productId) =>
       '/content/products/$productId';
 
@@ -150,6 +156,12 @@ abstract final class ApiEndpoints {
   static String contentComment(String commentId) =>
       '/content/comments/$commentId';
   static String contentReport(String id) => '/content/$id/report';
+
+  /// The post menu's quiet options — private to her, never a report.
+  static String contentHide(String id) => '/content/$id/hide';
+  static String contentMuteAuthor(String userId) =>
+      '/content/authors/$userId/mute';
+  static const contentMuted = '/content/muted';
   static String contentCommentReport(String commentId) =>
       '/content/comments/$commentId/report';
 
@@ -186,6 +198,17 @@ abstract final class ApiEndpoints {
   static const products = '/products';
   static const productsTrending = '/products/trending';
   static String productById(String id) => '/products/$id';
+
+  // Product social — the post gestures on a product. Like and pick are desired
+  // states (PUT / DELETE), so the outbox may replay them safely.
+  static const productEngagementBatch = '/products/engagement/batch';
+  static String productLike(String id) => '/products/$id/like';
+  static String productShare(String id) => '/products/$id/share';
+  static String productPick(String id) => '/products/$id/pick';
+  static String productComments(String id) => '/products/$id/comments';
+  static String productComment(String id, String commentId) =>
+      '/products/$id/comments/$commentId';
+  static String productReport(String id) => '/products/$id/report';
 
   // Discovery (collections, recommendations, similar)
   static const discoveryHome = '/discovery/home';
@@ -258,6 +281,7 @@ abstract final class ApiEndpoints {
   static const searchProducts = '/search/products';
   static const searchSellers = '/search/sellers';
   static const searchPosts = '/search/posts';
+  static const searchUsers = '/search/users';
   static const searchSuggestions = '/search/suggestions';
   static const searchTrending = '/search/trending';
   static const searchRecent = '/search/recent';

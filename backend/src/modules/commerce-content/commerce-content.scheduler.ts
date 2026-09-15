@@ -1,6 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { Cron, CronExpression } from '@nestjs/schedule';
+import { CronExpression } from '@nestjs/schedule';
 import { CommerceContentService } from './commerce-content.service';
+import { ScheduledJob } from '../../common/scheduling/scheduled-job.decorator';
 
 /**
  * The content lifecycle clock: scheduled pieces go live, expired ones stop
@@ -22,7 +23,7 @@ export class CommerceContentScheduler {
 
   constructor(private readonly content: CommerceContentService) {}
 
-  @Cron(CronExpression.EVERY_MINUTE)
+  @ScheduledJob({ cron: CronExpression.EVERY_MINUTE, staleAfterMinutes: 10 })
   async processLifecycle(): Promise<void> {
     const result = await this.content.processDueContent();
     if (result.published || result.expired) {

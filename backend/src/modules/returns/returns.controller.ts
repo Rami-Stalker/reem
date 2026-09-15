@@ -13,6 +13,7 @@ import { UserRole } from '@prisma/client';
 
 import { AuthUser, CurrentUser } from '../../common/decorators/current-user.decorator';
 import { Roles } from '../../common/decorators/roles.decorator';
+import { SelfScoped } from '../../common/decorators/self-scoped.decorator';
 import {
   ApproveReturnDto,
   CreateReturnDto,
@@ -31,7 +32,15 @@ import { ReturnsService } from './returns.service';
  * seller accepts, refuses and receives, and only the platform pays. There is
  * no route that lets a seller refund herself and none that lets a customer
  * declare her own refund due.
+ *
+ * The customer half declares nothing the guard could check — whether she may
+ * see a return depends on whose order it came from — so the service is handed
+ * the whole `AuthUser` and decides per row. Undeclared, that half was refused
+ * outright: she could not list her returns, open one, or ask for one.
  */
+@SelfScoped(
+  'the customer routes pass the whole AuthUser to the service, which resolves every return through the order that produced it and refuses one that is not hers',
+)
 @Controller('returns')
 export class ReturnsController {
   constructor(private readonly returns: ReturnsService) {}

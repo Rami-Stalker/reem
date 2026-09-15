@@ -14,6 +14,7 @@ import { Currency, UserRole } from '@prisma/client';
 import { Money } from '../../common/money';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import { Roles } from '../../common/decorators/roles.decorator';
+import { SelfScoped } from '../../common/decorators/self-scoped.decorator';
 import { AdminWalletCreditDto, WalletQueryDto } from './dto/ledger.dto';
 import { LedgerService } from './ledger.service';
 import { WalletService } from './wallet.service';
@@ -25,6 +26,17 @@ import { WalletService } from './wallet.service';
  * so every admin route here is `SUPER_ADMIN` or `FINANCE_ADMIN` — support and
  * operations admins deliberately cannot see or move funds.
  */
+/**
+ * Her wallet is hers; the book of record is the accountant's.
+ *
+ * The two wallet reads take the id from the caller's own token. The admin
+ * routes below name `SUPER_ADMIN`/`FINANCE_ADMIN` and are judged by that.
+ * Undeclared, the guard refused the wallet balance and statement to the woman
+ * they belong to.
+ */
+@SelfScoped(
+  "the wallet balance and its statement are read for the caller's own user id, taken from her token",
+)
 @Controller('ledger')
 export class LedgerController {
   constructor(

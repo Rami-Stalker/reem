@@ -1,14 +1,18 @@
 import 'package:reem/core/shared/models/comment_model.dart';
-
 import 'package:reem/features/social_posts/data/models/comment_page_model.dart';
 import 'package:reem/features/social_posts/data/models/post_engagement_model.dart';
+import 'package:reem/features/social_posts/domain/entities/comment_thread.dart';
 
 abstract interface class PostSocialRemoteDataSource {
-  Future<CommentPageModel> getComments(String postId, {int page, int limit});
+  Future<CommentPageModel> getComments(
+    CommentThread thread, {
+    int page,
+    int limit,
+  });
 
-  Future<CommentModel> addComment(String postId, String content);
+  Future<CommentModel> addComment(CommentThread thread, String content);
 
-  Future<void> deleteComment(String postId, String commentId);
+  Future<void> deleteComment(CommentThread thread, String commentId);
 
   Future<PostEngagementModel> toggleLike(String postId);
 

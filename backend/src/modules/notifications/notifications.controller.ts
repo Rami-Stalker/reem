@@ -13,6 +13,7 @@ import {
 import { UserRole } from '@prisma/client';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import { Roles } from '../../common/decorators/roles.decorator';
+import { SelfScoped } from '../../common/decorators/self-scoped.decorator';
 import { NotificationsService } from './notifications.service';
 import { NotificationQueryDto } from './dto/notification-query.dto';
 import { UpdatePreferencesDto } from './dto/update-preferences.dto';
@@ -24,6 +25,21 @@ import {
   UpdateCampaignStatusDto,
 } from './dto/notification-engine.dto';
 
+/**
+ * Her own inbox, and the preferences that govern what reaches it.
+ *
+ * Every handler passes the id from her access token to a service that filters
+ * on it. The admin campaign routes further down carry their own `@Roles` and
+ * are judged by those instead.
+ *
+ * Undeclared, the guard's fail-closed default refused the lot: the bell in the
+ * app header, the unread badge, marking a notification read, registering a
+ * push token. Each answered 403 to the account they belonged to.
+ */
+@SelfScoped(
+  'the inbox, the unread count, the preferences and every read receipt are '
+  + "filtered on the caller's own user id",
+)
 @Controller('notifications')
 export class NotificationsController {
   constructor(private readonly notifications: NotificationsService) {}
@@ -78,13 +94,22 @@ export class NotificationsController {
     return this.notifications.markRead(userId, id);
   }
 
+  /**
+   * A read receipt for one message.
+   *
+   * Scoped to the caller: the delivery id used to be taken on trust, so any
+   * signed-in account could mark any other woman's notification opened,
+   * clicked, or failed — and the campaign analytics an operator reads are
+   * built from exactly those rows.
+   */
   @Post('deliveries/:id/track')
   @HttpCode(HttpStatus.OK)
   track(
+    @CurrentUser('id') userId: string,
     @Param('id', ParseUUIDPipe) id: string,
     @Body() dto: TrackNotificationEventDto,
   ) {
-    return this.notifications.trackDelivery(id, dto);
+    return this.notifications.trackDelivery(userId, id, dto);
   }
 
   @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.SUPPORT)

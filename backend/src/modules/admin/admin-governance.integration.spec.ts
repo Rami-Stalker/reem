@@ -257,7 +257,9 @@ dbTest('a report decision is recorded and stamps the resolution time', () =>
     });
 
     assert.equal(decided.status, ReportStatus.RESOLVED);
-    assert.ok(decided.resolvedAt);
+    // `resolved_at`, because this queue answers in the same snake_case as the
+    // rest of the console now. It used to hand the console a raw Prisma row.
+    assert.ok(decided.resolved_at);
     const entries = await auditEntries(tx, admin.id);
     assert.equal(entries[0].action, 'report_decided');
   }),

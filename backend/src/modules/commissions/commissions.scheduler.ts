@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { Cron } from '@nestjs/schedule';
 
 import { CommissionsService } from './commissions.service';
+import { ScheduledJob } from '../../common/scheduling/scheduled-job.decorator';
 
 /**
  * The nightly release of seller escrow.
@@ -28,11 +28,11 @@ import { CommissionsService } from './commissions.service';
  *    move, and report a discrepancy that fixes itself half an hour later.
  * 4. `FxRevaluationService` at 04:00 revalues what remains.
  *
- * **Single instance only.** This job posts to the ledger, and the postings are
- * idempotent on their `reference`, so a second instance running it in parallel
- * would not double-pay — but it would double the work and race on the
- * `escrowReleased` flag. See `docs/DEPLOYMENT.md`: the platform runs one API
- * process until a distributed lock exists.
+ * **One instance at a time.** This job posts to the ledger, and the postings
+ * are idempotent on their `reference`, so a second instance running it in
+ * parallel would not double-pay — but it would double the work and race on the
+ * `escrowReleased` flag. `@ScheduledJob` takes a database lease before each
+ * run, so that cannot happen however many instances are up.
  */
 @Injectable()
 export class CommissionsScheduler {
@@ -40,7 +40,7 @@ export class CommissionsScheduler {
 
   constructor(private readonly commissions: CommissionsService) {}
 
-  @Cron('0 30 2 * * *')
+  @ScheduledJob({ cron: '0 30 2 * * *', staleAfterMinutes: 1560, catchUp: true, critical: true })
   async releaseEscrow(): Promise<void> {
     try {
       const { released, failed } = await this.commissions.releaseDueEscrow();
@@ -54,11 +54,13 @@ export class CommissionsScheduler {
         );
       }
     } catch (error) {
-      // A sweep that throws must not take the scheduler down with it; the
-      // money stays exactly where it is and tomorrow's run tries again.
+      // The money stays exactly where it is and the next run tries again.
+      // Rethrown so the run is recorded as FAILED — `/health/jobs` alerts on a
+      // critical job that keeps failing, which a log line alone never did.
       this.logger.error(
         `Escrow sweep failed outright: ${(error as Error).message}`,
       );
+      throw error;
     }
   }
 }

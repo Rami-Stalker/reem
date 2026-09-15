@@ -1,8 +1,9 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { Cron, CronExpression } from '@nestjs/schedule';
+import { CronExpression } from '@nestjs/schedule';
 import { CodAssuranceState, OrderStatus } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 import { OrdersService } from '../orders/orders.service';
+import { ScheduledJob } from '../../common/scheduling/scheduled-job.decorator';
 
 /**
  * Lets go of orders nobody came back to confirm.
@@ -37,7 +38,7 @@ export class CodTrustScheduler {
     private readonly orders: OrdersService,
   ) {}
 
-  @Cron(CronExpression.EVERY_10_MINUTES)
+  @ScheduledJob({ cron: CronExpression.EVERY_10_MINUTES, staleAfterMinutes: 30, critical: true })
   async releaseExpiredHolds(): Promise<void> {
     const expired = await this.prisma.codRiskAssessment.findMany({
       where: {

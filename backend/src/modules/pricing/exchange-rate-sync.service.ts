@@ -1,9 +1,10 @@
 import { Inject, Injectable, Logger, Optional } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { Cron, CronExpression } from '@nestjs/schedule';
+import { CronExpression } from '@nestjs/schedule';
 import { Currency, Prisma } from '@prisma/client';
 
 import { ExchangeRateService } from './exchange-rate.service';
+import { ScheduledJob } from '../../common/scheduling/scheduled-job.decorator';
 
 /**
  * Records a rate change in the audit trail. A callback rather than a service
@@ -89,7 +90,7 @@ export class ExchangeRateSyncService {
    * quiet hours are 23:00–09:00 (Q88), so a repricing lands before sellers and
    * customers are active rather than in the middle of their day.
    */
-  @Cron(CronExpression.EVERY_DAY_AT_6AM)
+  @ScheduledJob({ cron: CronExpression.EVERY_DAY_AT_6AM, staleAfterMinutes: 1560, catchUp: true })
   async scheduled(): Promise<void> {
     const outcome = await this.syncNow();
     if (outcome.published) {

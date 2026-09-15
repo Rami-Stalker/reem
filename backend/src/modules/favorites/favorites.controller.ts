@@ -17,12 +17,24 @@ import {
   RequestPrincipal,
 } from '../../common/decorators/current-principal.decorator';
 import { FavoritesService } from './favorites.service';
+import { SelfScoped } from '../../common/decorators/self-scoped.decorator';
 import {
   AddWishlistItemDto,
   CreateWishlistCollectionDto,
   ShareWishlistDto,
 } from './dto/wishlist.dto';
 
+/**
+ * Saved things — hers, or her guest session's.
+ *
+ * The list and toggle routes state their own guest-aware policy. The wishlist
+ * collections do not: they are keyed on the signed-in user's id inside the
+ * service, which is a rule about the row rather than one the guard can state.
+ * Undeclared, every collection route answered 403.
+ */
+@SelfScoped(
+  "wishlist collections, their items and their shares are all keyed on the caller's user id inside the service",
+)
 @Controller('favorites')
 export class FavoritesController {
   constructor(private readonly favorites: FavoritesService) {}

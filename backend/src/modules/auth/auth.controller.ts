@@ -37,6 +37,7 @@ import { AssuranceLevel } from '@prisma/client';
 import { RequestStepUpDto, VerifyStepUpDto } from './dto/step-up.dto';
 import { TotpCodeDto } from './dto/recovery.dto';
 import { OptionalAuth } from '../../common/decorators/optional-auth.decorator';
+import { SelfScoped } from '../../common/decorators/self-scoped.decorator';
 import {
   RequestOtpDto,
   ResetPasswordDto,
@@ -64,6 +65,25 @@ import {
 } from './dto/account-recovery.dto';
 import { requestContextFrom } from './interfaces/request-context.interface';
 
+/**
+ * Everything a woman can do to her own account.
+ *
+ * Almost every handler here takes `@CurrentUser().id` and hands it to a
+ * service that reads or writes only that user's rows — her sessions, her
+ * devices, her recovery codes, her phone change. That is a rule about the row
+ * being touched, not one the guard can state, which is what `@SelfScoped` is
+ * for. The one route that *is* declarative — reviewing somebody else's seller
+ * application — carries its own `@Roles`/`@Authorize` and is judged by those.
+ *
+ * Without this the guard's fail-closed default refused `GET /auth/me`, and
+ * because that is the call every cold start makes to restore a session, no
+ * signed-in account could be restored on any client: the app opened, asked who
+ * she was, was told 403, and dropped her back at the sign-in wall. The admin
+ * console was unreachable for exactly that reason.
+ */
+@SelfScoped(
+  "every handler acts on the caller's own account, scoped by the user id taken from her access token and never from the request body",
+)
 @Controller('auth')
 export class AuthController {
   constructor(private readonly auth: AuthService) {}

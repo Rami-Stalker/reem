@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { Cron, CronExpression } from '@nestjs/schedule';
+import { CronExpression } from '@nestjs/schedule';
 import { MediaService } from './media.service';
+import { ScheduledJob } from '../../common/scheduling/scheduled-job.decorator';
 
 /**
  * Deletes uploads that were never attached to anything.
@@ -13,7 +14,7 @@ import { MediaService } from './media.service';
 export class MediaSweeperService {
   constructor(private readonly media: MediaService) {}
 
-  @Cron(CronExpression.EVERY_HOUR)
+  @ScheduledJob({ cron: CronExpression.EVERY_HOUR, staleAfterMinutes: 180 })
   async sweep(): Promise<void> {
     await this.media.sweepOrphans();
   }

@@ -14,6 +14,20 @@ export class PrismaService
         process.env.NODE_ENV === 'production'
           ? ['error']
           : ['error', 'warn'],
+      /**
+       * Interactive transactions (checkout, ledger postings, returns) are a
+       * sequence of round trips, so their budget depends on where this
+       * process runs relative to the database. Prisma's defaults — 5 s to run,
+       * 2 s to get a connection — are right for an API in the database's own
+       * region. An instance far from it (a developer machine against the
+       * Supabase database in Frankfurt) spends most of that on the network and
+       * fails checkout with "Transaction already closed". Configurable rather
+       * than raised for everyone: a long timeout also means locks held longer.
+       */
+      transactionOptions: {
+        timeout: positiveInt(process.env.DATABASE_TRANSACTION_TIMEOUT_MS, 5_000),
+        maxWait: positiveInt(process.env.DATABASE_TRANSACTION_MAX_WAIT_MS, 2_000),
+      },
     });
   }
 
@@ -38,4 +52,9 @@ export class PrismaService
     await this.$disconnect();
     this.logger.log('Disconnected from PostgreSQL');
   }
+}
+
+function positiveInt(value: string | undefined, fallback: number): number {
+  const parsed = Number.parseInt(value ?? '', 10);
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback;
 }

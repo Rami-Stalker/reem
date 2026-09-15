@@ -31,7 +31,18 @@ import {
   ValidateCouponDto,
 } from './dto/rewards.dto';
 import { Money } from '../../common/money';
+import { SelfScoped } from '../../common/decorators/self-scoped.decorator';
 
+/**
+ * The coupons she may use, and whether a code is good for her basket.
+ *
+ * Both take her id from the token and ask the service what *she* holds — a
+ * coupon's eligibility depends on her orders and her tier, so the rule lives
+ * in the row. The admin coupon routes carry their own `@Roles`.
+ */
+@SelfScoped(
+  "the available list and the validation both resolve against the caller's own id, orders and tier",
+)
 @Controller('coupons')
 export class CouponsController {
   constructor(private readonly coupons: CouponsService) {}
@@ -95,6 +106,16 @@ export class CouponsController {
   }
 }
 
+/**
+ * Points, tier, and what she can spend them on.
+ *
+ * Undeclared, the whole loyalty surface answered 403 — balance, history,
+ * redemption — while the admin analytics beneath it worked, because those
+ * name their roles.
+ */
+@SelfScoped(
+  "the balance, the ledger history and every redemption are keyed on the caller's own user id",
+)
 @Controller('rewards')
 export class RewardsController {
   constructor(
@@ -167,6 +188,12 @@ export class RewardsController {
   }
 }
 
+/**
+ * Her invite code and what it has earned her.
+ */
+@SelfScoped(
+  "the overview, the code and the application are all resolved for the caller's own user id",
+)
 @Controller('referrals')
 export class ReferralsController {
   constructor(private readonly referrals: ReferralsService) {}

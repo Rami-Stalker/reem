@@ -1,5 +1,5 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
-import { Cron, CronExpression } from '@nestjs/schedule';
+import { CronExpression } from '@nestjs/schedule';
 import {
   Currency,
   JournalEntryType,
@@ -25,6 +25,7 @@ import {
   FinancialAction,
   FinancialAuditService,
 } from './financial-audit.service';
+import { ScheduledJob } from '../../common/scheduling/scheduled-job.decorator';
 
 type Tx = Prisma.TransactionClient;
 
@@ -327,7 +328,7 @@ export class CustomerRefundsService {
    * doorstep with no signal to spare — so the parcel is left in its ending
    * state and picked up here. Hourly, next to the returns sweep.
    */
-  @Cron(CronExpression.EVERY_HOUR)
+  @ScheduledJob({ cron: CronExpression.EVERY_HOUR, staleAfterMinutes: 180, catchUp: true, critical: true })
   async settleUndeliveredRefunds(): Promise<{
     settled: number;
     failed: number;

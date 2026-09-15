@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  NotFoundException,
   Param,
   ParseUUIDPipe,
   Post,
@@ -54,10 +55,20 @@ export class CustomerIntelligenceAdminController {
     });
   }
 
-  /** One customer's cached profile, or null if she has never been scored. */
+  /**
+   * One customer's cached profile.
+   *
+   * A customer nobody has scored yet is a 404 rather than a `null`. Returning
+   * `null` from a handler is an empty 200 on the wire — no body at all — which
+   * no JSON client can read: the console's own `getJson` throws on it. "There
+   * is no reading for her yet" is exactly what a 404 says, and `POST
+   * :id/refresh` is how one gets made.
+   */
   @Get(':id')
-  profile(@Param('id', ParseUUIDPipe) id: string) {
-    return this.intelligence.profile(id);
+  async profile(@Param('id', ParseUUIDPipe) id: string) {
+    const profile = await this.intelligence.profile(id);
+    if (!profile) throw new NotFoundException('No reading for this customer yet');
+    return profile;
   }
 
   /** Recomputes one customer now, ignoring the cache. */

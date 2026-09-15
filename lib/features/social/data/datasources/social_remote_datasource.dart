@@ -1,4 +1,5 @@
 import 'package:reem/core/domain/pagination/paginated_data.dart';
+import 'package:reem/core/shared/entities/user.dart';
 import 'package:reem/features/social/data/models/content_model.dart';
 import 'package:reem/features/social/data/models/social_models.dart';
 import 'package:reem/features/social/domain/entities/content.dart';
@@ -23,6 +24,7 @@ abstract interface class SocialRemoteDataSource {
     int limit,
   });
   Future<List<StoryGroup>> storiesTray();
+  Future<List<StoryGroup>> storiesOf(String userId);
   Future<PaginatedData<Content>> mine({int page, int limit, String? status});
 
   Future<List<ContentTypeOptionModel>> contentTypes({required bool isSeller});
@@ -61,6 +63,12 @@ abstract interface class SocialRemoteDataSource {
   });
 
   Future<bool> setProfilePublic(bool isPublic);
+
+  Future<void> hide(String contentId);
+  Future<void> unhide(String contentId);
+  Future<void> muteAuthor(String userId);
+  Future<void> unmuteAuthor(String userId);
+  Future<List<User>> mutedAccounts();
 
   Future<List<ContentFormatPerformanceModel>> formatPerformance();
   Future<ReshareSummaryModel> reshareSummary();

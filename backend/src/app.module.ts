@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { ScheduleModule } from '@nestjs/schedule';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 
@@ -9,6 +8,7 @@ import configuration from './config/configuration';
 import { validateEnv } from './config/env.validation';
 import { PrismaModule } from './prisma/prisma.module';
 import { CacheModule } from './common/cache/cache.module';
+import { SchedulingModule } from './common/scheduling/scheduling.module';
 
 import { IdempotencyInterceptor } from './common/idempotency/idempotency.interceptor';
 import { AdminAuditInterceptor } from './common/audit/admin-audit.interceptor';
@@ -24,6 +24,7 @@ import { MediaModule } from './modules/media/media.module';
 import { UsersModule } from './modules/users/users.module';
 import { PricingModule } from './modules/pricing/pricing.module';
 import { ProductsModule } from './modules/products/products.module';
+import { ProductSocialModule } from './modules/product-social/product-social.module';
 import { CommerceContentModule } from './modules/commerce-content/commerce-content.module';
 import { PostsModule } from './modules/posts/posts.module';
 import { StoriesModule } from './modules/stories/stories.module';
@@ -85,7 +86,10 @@ import { HealthModule } from './modules/health/health.module';
         },
       ],
     }),
-    ScheduleModule.forRoot(),
+    // Every `@ScheduledJob`, run under a database lease so that no two
+    // instances run the same job at once. SCHEDULER_ENABLED=false keeps the
+    // timers off on an instance. Replaces `ScheduleModule.forRoot()`.
+    SchedulingModule,
     EventEmitterModule.forRoot(),
     PrismaModule,
     CacheModule,
@@ -96,6 +100,7 @@ import { HealthModule } from './modules/health/health.module';
     UsersModule,
     PricingModule,
     ProductsModule,
+    ProductSocialModule,
     CommerceContentModule,
     PostsModule,
     StoriesModule,

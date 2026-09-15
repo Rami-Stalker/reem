@@ -570,6 +570,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get adminRateHint => '250 means 2.5%';
 
   @override
+  String get adminRecordNoDetails => 'This record carries no further detail.';
+
+  @override
+  String adminRecordNestedObject(int count) {
+    return '$count fields';
+  }
+
+  @override
+  String adminRecordItemCount(int count) {
+    return '$count items';
+  }
+
+  @override
   String get adminRawRecord => 'Raw record';
 
   @override
@@ -782,6 +795,48 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get adminUserManagement => 'User management';
+
+  @override
+  String adminUnitsSold(int units) {
+    return '$units units';
+  }
+
+  @override
+  String get adminNotificationAnalyticsSubtitle =>
+      'What went out, down which channel, and how much of it landed.';
+
+  @override
+  String get adminUnreadInApp => 'Unread in app';
+
+  @override
+  String get adminNotificationsSent => 'Sent';
+
+  @override
+  String get adminNotificationsFailed => 'Failed';
+
+  @override
+  String get adminDeliveriesByChannel => 'Deliveries by channel';
+
+  @override
+  String get adminCampaignsByStatus => 'Campaigns by status';
+
+  @override
+  String get adminDeliveryEvents => 'Delivery events';
+
+  @override
+  String get adminChannelPush => 'Push';
+
+  @override
+  String get adminChannelInApp => 'In app';
+
+  @override
+  String get adminChannelEmail => 'Email';
+
+  @override
+  String get adminChannelSms => 'SMS';
+
+  @override
+  String get adminChannelWhatsapp => 'WhatsApp';
 
   @override
   String get adminUsers => 'Users';
@@ -3313,6 +3368,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String postLikesCount(String count) {
     return '$count loves';
   }
+
+  @override
+  String get postOptions => 'Post options';
 
   @override
   String get postMore => 'more';

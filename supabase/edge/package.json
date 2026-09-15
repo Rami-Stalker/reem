@@ -1,0 +1,31 @@
+{
+  "name": "reem-supabase-edge",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Builds the Reem API (backend/, unmodified) into the Supabase Edge Function `api`.",
+  "scripts": {
+    "build": "node build.mjs",
+    "typecheck": "node ../../backend/node_modules/typescript/bin/tsc -p tsconfig.json --noEmit",
+    "baseline": "node scripts/generate-baseline.mjs",
+    "baseline:check": "node scripts/generate-baseline.mjs --check",
+    "cron:sql": "node scripts/generate-cron.mjs",
+    "secrets:env": "node scripts/edge-secrets.mjs",
+    "data:export": "node scripts/migrate-data.mjs export",
+    "data:import": "node scripts/migrate-data.mjs import",
+    "deploy": "node scripts/deploy.mjs",
+    "smoke": "node scripts/smoke-api.mjs",
+    "load": "node scripts/concurrency.mjs"
+  },
+  "dependencies": {
+    "@prisma/adapter-pg": "6.19.3",
+    "hash-wasm": "4.12.0",
+    "light-my-request": "6.6.0"
+  },
+  "devDependencies": {
+    "@prisma/client": "6.19.3",
+    "@supabase/supabase-js": "^2.116.0",
+    "esbuild": "0.28.2",
+    "prisma": "6.19.3",
+    "supabase": "^2.117.0"
+  }
+}

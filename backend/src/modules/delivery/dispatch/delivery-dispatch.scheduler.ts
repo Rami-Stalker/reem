@@ -1,8 +1,8 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { Cron } from '@nestjs/schedule';
 
 import { PrismaService } from '../../../prisma/prisma.service';
 import { DeliveryDispatchService } from './delivery-dispatch.service';
+import { ScheduledJob } from '../../../common/scheduling/scheduled-job.decorator';
 
 /** One sweep's worth. A backlog drains over consecutive runs. */
 const BATCH = 50;
@@ -63,7 +63,7 @@ export class DeliveryDispatchScheduler {
     private readonly dispatches: DeliveryDispatchService,
   ) {}
 
-  @Cron('0 */5 * * * *')
+  @ScheduledJob({ cron: '0 */5 * * * *', staleAfterMinutes: 20, critical: true })
   async retryFailedDispatches(): Promise<void> {
     const now = Date.now();
 

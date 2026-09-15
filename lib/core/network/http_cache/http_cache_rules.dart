@@ -89,6 +89,9 @@ abstract final class HttpCacheRules {
     '/wallet',
     '/returns',
     '/disputes',
+    // Her own likes and picks, answered now. Under `/products` by path, but a
+    // heart painted from a five-minute-old cache is a heart that lies.
+    '/products/engagement',
   ];
 
   /// The policy for [path], or null when this GET must go to the network.

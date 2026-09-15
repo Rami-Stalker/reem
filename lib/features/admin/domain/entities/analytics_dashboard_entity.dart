@@ -14,12 +14,15 @@ class AnalyticsRankedItem {
   const AnalyticsRankedItem({
     required this.title,
     required this.value,
-    required this.subtitle,
+    required this.units,
   });
 
   final String title;
   final double value;
-  final String subtitle;
+
+  /// How many pieces moved. A number rather than a formatted line: the data
+  /// layer has no locale, and the console is read in Arabic.
+  final int units;
 }
 
 class AnalyticsDashboardEntity {

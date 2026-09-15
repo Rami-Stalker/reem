@@ -237,12 +237,6 @@ const adminSectionConfigs = {
     permission: AppPermissions.adminDashboard,
     writePermission: AppPermissions.adminDashboard,
   ),
-  'notificationAnalytics': AdminSectionConfig(
-    key: 'notificationAnalytics',
-    title: 'Notification analytics',
-    endpoint: ApiEndpoints.notificationAdminAnalytics,
-    permission: AppPermissions.adminDashboard,
-  ),
 };
 
 /// What one section screen is showing, including how it got there.

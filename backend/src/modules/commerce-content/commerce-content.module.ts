@@ -13,6 +13,7 @@ import { CommerceContentTypesController } from './commerce-content-types.control
 import { ContentTypeRegistryService } from './content-type-registry.service';
 import { ContentAnalyticsService } from './analytics/content-analytics.service';
 import { ContentFeedService } from './feed/content-feed.service';
+import { ContentFeedControlsService } from './feed/content-feed-controls.service';
 import { ContentAttributionService } from './attribution/content-attribution.service';
 import { ContentInteractionsService } from './interactions/content-interactions.service';
 import { ContentModerationService } from './moderation/content-moderation.service';
@@ -43,6 +44,7 @@ import { SellerCommerceContentController } from './seller-commerce-content.contr
     ContentInteractionsService,
     ContentModerationService,
     ContentFeedService,
+    ContentFeedControlsService,
     ContentAnalyticsService,
   ],
   exports: [

@@ -69,7 +69,11 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
         // Without this it used Flutter's default algorithm, so the very first
         // frame could be laid out LTR and then flip.
         localeResolutionCallback: L10nSetup.localeResolutionCallback,
-        locale: locale.locale,
+        // "Follow the device" means Arabic, not whatever the browser
+        // reports: the interface English bundle is a deferred phase
+        // (Q91), so an `en-US` laptop must not pick it up by accident.
+        // An explicit choice in settings still wins.
+        locale: locale.locale ?? L10nSetup.fallbackLocale,
         home: Scaffold(
           body: Center(
             child: CircularProgressIndicator(
@@ -94,7 +98,11 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
         theme: theme.lightTheme,
         darkTheme: theme.darkTheme,
         themeMode: theme.flutterThemeMode,
-        locale: locale.locale,
+        // "Follow the device" means Arabic, not whatever the browser
+        // reports: the interface English bundle is a deferred phase
+        // (Q91), so an `en-US` laptop must not pick it up by accident.
+        // An explicit choice in settings still wins.
+        locale: locale.locale ?? L10nSetup.fallbackLocale,
         routerConfig: router,
         localizationsDelegates: L10nSetup.localizationsDelegates,
         supportedLocales: L10nSetup.supportedLocales,

@@ -50,6 +50,16 @@ class Product extends Equatable {
   final int ordersCount;
   final int favoritesCount;
 
+  /// The post gestures on a product, as of the read that produced this card.
+  /// The live figures — and whether *she* liked or picked it — come from
+  /// `productEngagementProvider`, which starts from these.
+  final int likesCount;
+  final int commentsCount;
+  final int sharesCount;
+
+  /// How many women added it to their page.
+  final int picksCount;
+
   /// What the marketplace can honestly say about this listing — real scarcity,
   /// real social proof, a real anchor. Empty when there is nothing true to
   /// say, and an empty list is a card that shows no badge at all.
@@ -80,6 +90,10 @@ class Product extends Equatable {
     this.viewsCount = 0,
     this.ordersCount = 0,
     this.favoritesCount = 0,
+    this.likesCount = 0,
+    this.commentsCount = 0,
+    this.sharesCount = 0,
+    this.picksCount = 0,
     this.cues = const [],
   });
 
@@ -168,6 +182,10 @@ class Product extends Equatable {
         viewsCount,
         ordersCount,
         favoritesCount,
+        likesCount,
+        commentsCount,
+        sharesCount,
+        picksCount,
         cues,
         createdAt,
       ];

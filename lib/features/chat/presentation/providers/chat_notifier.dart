@@ -203,6 +203,19 @@ class ChatMessagesNotifier extends StateNotifier<ChatMessagesState> {
     };
   }
 
+  /// Fetches the conversation again without clearing it — after the socket
+  /// reconnects, for whatever arrived while it was down. A failure keeps what
+  /// is on screen; the next event or visit corrects it.
+  Future<void> resync() async {
+    final chatId = state.chatId;
+    if (chatId == null || chatId.isEmpty) return;
+    final result = await _getMessages(chatId);
+    if (!mounted || state.chatId != chatId) return;
+    if (result case Success(:final data)) {
+      state = state.copyWith(messages: data);
+    }
+  }
+
   void applyRealtime(Map<String, dynamic> event) {
     final eventName = event['event'];
     if (eventName == 'message.created') {

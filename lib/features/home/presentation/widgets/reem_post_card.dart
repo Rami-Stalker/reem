@@ -21,6 +21,7 @@ import 'package:reem/core/sync/outbox_providers.dart';
 import 'package:reem/features/auth/presentation/widgets/auth_prompt_sheet.dart';
 import 'package:reem/features/cart/presentation/providers/cart_providers.dart';
 import 'package:reem/features/social_posts/data/outbox_handlers.dart';
+import 'package:reem/features/social_posts/domain/entities/comment_thread.dart';
 import 'package:reem/features/social_posts/presentation/providers/social_posts_providers.dart';
 import 'package:reem/features/social_posts/presentation/widgets/comment_sheet.dart';
 
@@ -218,7 +219,7 @@ class _ReemPostCardState extends ConsumerState<ReemPostCard>
     if (!mounted) return;
     await showCommentSheet(
       context,
-      post.id,
+      CommentThread.post(post.id),
       // The tally under the post moves as she comments, rather than staying
       // frozen at whatever the feed was fetched with.
       onCountChanged: (delta) {

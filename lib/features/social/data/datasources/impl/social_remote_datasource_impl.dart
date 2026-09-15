@@ -1,6 +1,8 @@
 import 'package:reem/core/domain/pagination/paginated_data.dart';
 import 'package:reem/core/network/api_endpoints.dart';
 import 'package:reem/core/network/base_remote_datasource.dart';
+import 'package:reem/core/shared/entities/user.dart';
+import 'package:reem/core/shared/models/user_model.dart';
 import 'package:reem/features/social/data/datasources/social_remote_datasource.dart';
 import 'package:reem/features/social/data/models/content_model.dart';
 import 'package:reem/features/social/data/models/social_models.dart';
@@ -73,8 +75,14 @@ final class SocialRemoteDataSourceImpl extends BaseRemoteDataSource
   }
 
   @override
-  Future<List<StoryGroup>> storiesTray() async {
-    final raw = await getList(ApiEndpoints.contentStories);
+  Future<List<StoryGroup>> storiesTray() async =>
+      _storyGroups(await getList(ApiEndpoints.contentStories));
+
+  @override
+  Future<List<StoryGroup>> storiesOf(String userId) async =>
+      _storyGroups(await getList(ApiEndpoints.contentStoriesByUser(userId)));
+
+  List<StoryGroup> _storyGroups(List<dynamic> raw) {
     return raw.whereType<Map<String, dynamic>>().map((group) {
       final stories = (group['stories'] as List? ?? const [])
           .whereType<Map<String, dynamic>>()
@@ -306,6 +314,35 @@ final class SocialRemoteDataSourceImpl extends BaseRemoteDataSource
       body: {'is_public': isPublic},
     );
     return json['is_public'] as bool? ?? isPublic;
+  }
+
+  // ── Her feed, tuned by her ────────────────────────────────────────────────
+
+  @override
+  Future<void> hide(String contentId) =>
+      postJson(ApiEndpoints.contentHide(contentId));
+
+  @override
+  Future<void> unhide(String contentId) =>
+      deleteRequest(ApiEndpoints.contentHide(contentId));
+
+  @override
+  Future<void> muteAuthor(String userId) =>
+      postJson(ApiEndpoints.contentMuteAuthor(userId));
+
+  @override
+  Future<void> unmuteAuthor(String userId) =>
+      deleteRequest(ApiEndpoints.contentMuteAuthor(userId));
+
+  @override
+  Future<List<User>> mutedAccounts() async {
+    final rows = await getList(ApiEndpoints.contentMuted);
+    return rows
+        .whereType<Map<String, dynamic>>()
+        .map((row) => row['user'])
+        .whereType<Map<String, dynamic>>()
+        .map(UserModel.fromJson)
+        .toList(growable: false);
   }
 
   // ── A boutique's numbers ──────────────────────────────────────────────────

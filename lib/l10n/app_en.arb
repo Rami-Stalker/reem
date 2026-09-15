@@ -739,6 +739,12 @@
   "@adminRateHint": {
     "description": "Hint under the commission rate box."
   },
+  "adminRecordNoDetails": "This record carries no further detail.",
+  "@adminRecordNoDetails": {"description": "Empty state inside the console record sheet."},
+  "adminRecordNestedObject": "{count} fields",
+  "@adminRecordNestedObject": {"description": "Summary of a nested object inside a console record.", "placeholders": {"count": {"type": "int"}}},
+  "adminRecordItemCount": "{count} items",
+  "@adminRecordItemCount": {"description": "Summary of a list inside a console record.", "placeholders": {"count": {"type": "int"}}},
   "adminRawRecord": "Raw record",
   "@adminRawRecord": {
     "description": "Heading above the JSON dump in the record sheet."
@@ -1026,6 +1032,63 @@
   "adminUserManagement": "User management",
   "@adminUserManagement": {
     "description": "Admin section: browse and moderate accounts."
+  },
+  "adminUnitsSold": "{units} units",
+  "@adminUnitsSold": {
+      "description": "Analytics ranked list: pieces sold by a product or a boutique.",
+      "placeholders": {
+          "units": {
+              "type": "int"
+          }
+      }
+  },
+  "adminNotificationAnalyticsSubtitle": "What went out, down which channel, and how much of it landed.",
+  "@adminNotificationAnalyticsSubtitle": {
+    "description": "Subtitle of the notification analytics screen."
+  },
+  "adminUnreadInApp": "Unread in app",
+  "@adminUnreadInApp": {
+    "description": "Metric: in-app notifications nobody has opened."
+  },
+  "adminNotificationsSent": "Sent",
+  "@adminNotificationsSent": {
+    "description": "Metric: notification deliveries that left the platform."
+  },
+  "adminNotificationsFailed": "Failed",
+  "@adminNotificationsFailed": {
+    "description": "Metric: notification deliveries that did not land."
+  },
+  "adminDeliveriesByChannel": "Deliveries by channel",
+  "@adminDeliveriesByChannel": {
+    "description": "Panel title: delivery counts split by channel and status."
+  },
+  "adminCampaignsByStatus": "Campaigns by status",
+  "@adminCampaignsByStatus": {
+    "description": "Panel title: campaign counts by status."
+  },
+  "adminDeliveryEvents": "Delivery events",
+  "@adminDeliveryEvents": {
+    "description": "Panel title: counts of sent/opened/clicked/failed."
+  },
+  "adminChannelPush": "Push",
+  "@adminChannelPush": {
+    "description": "Notification channel."
+  },
+  "adminChannelInApp": "In app",
+  "@adminChannelInApp": {
+    "description": "Notification channel."
+  },
+  "adminChannelEmail": "Email",
+  "@adminChannelEmail": {
+    "description": "Notification channel."
+  },
+  "adminChannelSms": "SMS",
+  "@adminChannelSms": {
+    "description": "Notification channel."
+  },
+  "adminChannelWhatsapp": "WhatsApp",
+  "@adminChannelWhatsapp": {
+    "description": "Notification channel."
   },
   "adminUsers": "Users",
   "@adminUsers": {
@@ -4058,6 +4121,10 @@
         "type": "String"
       }
     }
+  },
+  "postOptions": "Post options",
+  "@postOptions": {
+    "description": "Tooltip for the overflow menu on a post card."
   },
   "postMore": "more",
   "@postMore": {

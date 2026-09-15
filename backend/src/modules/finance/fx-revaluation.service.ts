@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { Cron, CronExpression } from '@nestjs/schedule';
+import { CronExpression } from '@nestjs/schedule';
 import {
   Currency,
   LedgerAccountCode,
@@ -12,6 +12,7 @@ import { Money, SYP_ROUNDING } from '../../common/money';
 import { PrismaService } from '../../prisma/prisma.service';
 import { ExchangeRateService } from '../pricing/exchange-rate.service';
 import { LedgerService } from '../ledger/ledger.service';
+import { ScheduledJob } from '../../common/scheduling/scheduled-job.decorator';
 
 type Tx = Prisma.TransactionClient;
 
@@ -187,7 +188,7 @@ export class FxRevaluationService {
    * things that happened. When the client wants period-end recognition, it
    * belongs behind an explicit admin action with a stated closing rate.
    */
-  @Cron(CronExpression.EVERY_DAY_AT_4AM)
+  @ScheduledJob({ cron: CronExpression.EVERY_DAY_AT_4AM })
   async nightly(): Promise<void> {
     try {
       const report = await this.exposure();

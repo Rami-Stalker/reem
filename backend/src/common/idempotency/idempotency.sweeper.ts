@@ -1,8 +1,9 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { Cron, CronExpression } from '@nestjs/schedule';
+import { CronExpression } from '@nestjs/schedule';
 import { IdempotencyState } from '@prisma/client';
 
 import { PrismaService } from '../../prisma/prisma.service';
+import { ScheduledJob } from '../scheduling/scheduled-job.decorator';
 
 /**
  * A request key is a short window against a double tap, not a permanent name.
@@ -28,7 +29,7 @@ export class IdempotencySweeper {
 
   constructor(private readonly prisma: PrismaService) {}
 
-  @Cron(CronExpression.EVERY_HOUR)
+  @ScheduledJob({ cron: CronExpression.EVERY_HOUR, staleAfterMinutes: 180 })
   async sweep(): Promise<void> {
     try {
       const [expired, stale] = await Promise.all([

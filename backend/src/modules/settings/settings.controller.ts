@@ -82,6 +82,16 @@ export class AddressesController {
 // Coupons, rewards, and notifications are owned by the RewardsModule and
 // NotificationsModule respectively.
 
+/**
+ * The cards and wallets she has saved.
+ *
+ * Same rule as the address book above, and it needs saying again because this
+ * is a second controller in the file: the file-level check was satisfied by
+ * `AddressesController`'s declaration while every route here was refused.
+ */
+@SelfScoped(
+  "payment methods are listed and created against the caller's own user id",
+)
 @Controller('payment-methods')
 export class PaymentMethodsController {
   constructor(private readonly settings: SettingsService) {}

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import 'package:reem/core/design_system/design_system.dart';
 import 'package:reem/core/localization/l10n_extension.dart';
+import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/features/reputation/domain/entities/reputation_entities.dart';
 
 /// One review, wherever a review is shown.
@@ -15,6 +17,11 @@ class ReviewCard extends StatelessWidget {
   const ReviewCard({super.key, required this.review});
 
   final ReviewEntity review;
+
+  void _openAuthor(BuildContext context) {
+    if (review.user.id.isEmpty) return;
+    context.push(RoutePaths.userProfileOf(review.user.id));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,24 +39,26 @@ class ReviewCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              CircleAvatar(
-                backgroundImage: review.user.imageUrl == null
-                    ? null
-                    : NetworkImage(review.user.imageUrl!),
-                child: review.user.imageUrl == null
-                    ? Text(review.user.name.isEmpty ? '?' : review.user.name[0])
-                    : null,
+              // The reviewer's face opens her page, as it does on a comment.
+              DsAvatar(
+                imageUrl: review.user.imageUrl,
+                name: review.user.name,
+                size: 40,
+                onTap: () => _openAuthor(context),
               ),
               const SizedBox(width: DsSpacing.md),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      review.user.name,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: context.dsText.body.semibold,
+                    GestureDetector(
+                      onTap: () => _openAuthor(context),
+                      child: Text(
+                        review.user.name,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: context.dsText.body.semibold,
+                      ),
                     ),
                     Row(
                       children: List.generate(

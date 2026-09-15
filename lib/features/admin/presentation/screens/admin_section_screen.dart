@@ -6,12 +6,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reem/core/design_system/design_system.dart';
 import 'package:reem/core/errors/failure.dart';
 import 'package:reem/core/localization/l10n_extension.dart';
+import 'package:reem/core/utils/relative_time.dart';
 import 'package:reem/features/admin/domain/entities/admin_console_entity.dart';
 import 'package:reem/features/admin/presentation/providers/admin_actions.dart';
 import 'package:reem/features/admin/presentation/providers/admin_provider.dart';
 import 'package:reem/features/admin/presentation/widgets/admin_action_dialog.dart';
 import 'package:reem/features/admin/presentation/widgets/admin_labels.dart';
 import 'package:reem/features/admin/presentation/widgets/admin_page_header.dart';
+import 'package:reem/features/admin/presentation/widgets/admin_record_details.dart';
 import 'package:reem/features/experience/presentation/providers/role_experience_provider.dart';
 
 /// One screen, twelve consoles.
@@ -569,7 +571,11 @@ class _AdminSectionScreenState extends ConsumerState<AdminSectionScreen> {
                       color: context.console.positive,
                     ),
                     for (final entry in record.metrics.entries)
-                      AdminMetricPill(label: '${entry.key}: ${entry.value}'),
+                      AdminMetricPill(
+                        label:
+                            '${adminFieldLabel(context, entry.key)}: '
+                            '${entry.value}',
+                      ),
                   ],
                 ),
                 if (actions.isNotEmpty) ...[
@@ -592,18 +598,41 @@ class _AdminSectionScreenState extends ConsumerState<AdminSectionScreen> {
                   ),
                 ],
                 const SizedBox(height: DsSpacing.lg),
-                Text(
-                  l10n.adminRawRecord,
-                  style: context.dsText.body.semibold.tint(colors.onSurface),
-                ),
-                const SizedBox(height: DsSpacing.xs),
-                SelectableText(
-                  pretty,
-                  // ds-ignore: no-hand-rolled-text-styles -- a raw JSON dump
-                  // needs a monospaced family the type scale does not carry.
-                  style: TextStyle(
-                    fontFamily: 'monospace',
-                    color: colors.onSurfaceVariant,
+                // The record itself, read as a record: labelled lines in her
+                // language, money as money and timestamps as dates. What used
+                // to be here was `JsonEncoder.withIndent('  ')` over the same
+                // map — the API's language on a screen whose job is helping a
+                // person decide something.
+                AdminRecordDetails(raw: record.raw),
+                const SizedBox(height: DsSpacing.md),
+                // Kept, and folded away. Support occasionally needs the literal
+                // payload to answer "what did the server actually send"; an
+                // operator deciding about a woman's account never does.
+                Theme(
+                  data: Theme.of(
+                    context,
+                  ).copyWith(dividerColor: Colors.transparent),
+                  child: ExpansionTile(
+                    tilePadding: EdgeInsets.zero,
+                    childrenPadding: EdgeInsets.zero,
+                    title: Text(
+                      l10n.adminRawRecord,
+                      style: context.dsText.bodySmall.tint(
+                        colors.onSurfaceVariant,
+                      ),
+                    ),
+                    children: [
+                      SelectableText(
+                        pretty,
+                        // ds-ignore: no-hand-rolled-text-styles -- a raw JSON
+                        // dump needs a monospaced family the type scale does
+                        // not carry.
+                        style: TextStyle(
+                          fontFamily: 'monospace',
+                          color: colors.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],
@@ -777,11 +806,14 @@ class _RecordTile extends StatelessWidget {
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              record.subtitle,
-              maxLines: compact ? 2 : 1,
-              overflow: TextOverflow.ellipsis,
-            ),
+            // A row with nothing to say underneath its title says nothing,
+            // rather than repeating the name of the screen.
+            if (record.subtitle.isNotEmpty)
+              Text(
+                record.subtitle,
+                maxLines: compact ? 2 : 1,
+                overflow: TextOverflow.ellipsis,
+              ),
             if (compact) ...[const SizedBox(height: DsSpacing.xs), badges],
           ],
         ),
@@ -817,6 +849,10 @@ class _RecordBadges extends StatelessWidget {
       children: [
         for (final metric in record.metrics.entries.take(2))
           AdminMetricPill(label: metric.value),
+        // «قبل ٣ أيام» rather than `2026-09-10T01:53:18.694Z`, which is what
+        // every row in the console used to carry.
+        if (record.createdAt != null)
+          AdminMetricPill(label: formatRelativeTime(l10n, record.createdAt!)),
         AdminMetricPill(
           label: adminStatusLabel(l10n, record.status),
           color: palette.positive,

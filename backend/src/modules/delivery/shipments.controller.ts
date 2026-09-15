@@ -14,6 +14,7 @@ import { UserRole } from '@prisma/client';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import { Public } from '../../common/decorators/public.decorator';
 import { Roles } from '../../common/decorators/roles.decorator';
+import { SelfScoped } from '../../common/decorators/self-scoped.decorator';
 import {
   AssignCourierDto,
   CourierDayQueryDto,
@@ -30,7 +31,15 @@ import { ShipmentsService } from './shipments.service';
  * Q63 P1 has the courier updating status «عبر رابط أو تطبيق بسيط» — so the
  * courier routes are deliberately few and blunt: see today's parcels, pick up,
  * head out, delivered, or failed with a reason.
+ *
+ * That courier check is precisely a rule about the row, so it is declared as
+ * one. Undeclared, the guard refused all five: nobody could see today's round,
+ * pick a parcel up, or mark one delivered — and delivery is the gate every
+ * return, escrow release and review sits behind.
  */
+@SelfScoped(
+  "every courier route resolves the Courier row linked to the caller's account through requireCourier, and refuses a shipment assigned to anyone else",
+)
 @Controller('shipments')
 export class ShipmentsController {
   constructor(private readonly shipments: ShipmentsService) {}

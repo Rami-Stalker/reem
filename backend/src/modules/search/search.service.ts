@@ -6,6 +6,7 @@ import { buildMeta, PaginationDto } from '../../common/dto/pagination.dto';
 import {
   serializeLegacyPost,
   serializeProduct,
+  serializePublicUser,
   serializeUser,
 } from '../../common/serializers';
 import { ProductSearchDto, SearchSort } from './dto/search-query.dto';
@@ -164,6 +165,37 @@ export class SearchService {
     };
   }
 
+  // ── Shoppers ─────────────────────────────────────────────────────────────
+
+  /**
+   * Women with an open page. With no phrase there is nothing to list: a
+   * directory of every public shopper is a different feature, and not one
+   * anybody asked for.
+   */
+  async searchCustomers(q: string | undefined, page: PaginationDto) {
+    const ids = await this.matcher.matchCustomerIds(q);
+    if (!ids || ids.length === 0) {
+      return {
+        data: [],
+        pagination: buildMeta(page.page, page.limit, 0, 0),
+      };
+    }
+    const where = this.customerWhere(ids);
+    const [users, total] = await Promise.all([
+      this.prisma.user.findMany({
+        where,
+        orderBy: { followersCount: 'desc' },
+        skip: page.skip,
+        take: page.limit,
+      }),
+      this.prisma.user.count({ where }),
+    ]);
+    return {
+      data: users.map(serializePublicUser),
+      pagination: buildMeta(page.page, page.limit, total, users.length),
+    };
+  }
+
   // ── Posts ────────────────────────────────────────────────────────────────
 
   async searchPosts(q: string | undefined, viewerId: string | undefined, page: PaginationDto) {
@@ -204,13 +236,15 @@ export class SearchService {
   async unified(q: string | undefined, viewerId?: string) {
     // Each surface is matched on the same folded key, so one phrase reaches
     // products, boutiques and posts consistently.
-    const [productMatches, sellerIds, contentIds] = await Promise.all([
-      this.matcher.match(q),
-      this.matcher.matchSellerIds(q),
-      this.matcher.matchContentIds(q),
-    ]);
+    const [productMatches, sellerIds, contentIds, customerIds] =
+      await Promise.all([
+        this.matcher.match(q),
+        this.matcher.matchSellerIds(q),
+        this.matcher.matchContentIds(q),
+        this.matcher.matchCustomerIds(q),
+      ]);
 
-    const [products, sellers, posts] = await Promise.all([
+    const [products, sellers, posts, customers] = await Promise.all([
       this.prisma.product.findMany({
         where: this.buildProductWhere(
           { q } as ProductSearchDto,
@@ -237,6 +271,13 @@ export class SearchService {
           },
         },
       }),
+      customerIds && customerIds.length > 0
+        ? this.prisma.user.findMany({
+            where: this.customerWhere(customerIds),
+            orderBy: { followersCount: 'desc' },
+            take: 6,
+          })
+        : Promise.resolve([]),
     ]);
 
     this.recordHistory(viewerId, q);
@@ -256,6 +297,7 @@ export class SearchService {
         serializeProduct(p, { isLiked: favSet.has(p.id) }),
       ),
       sellers: sellers.map(serializeUser),
+      customers: customers.map(serializePublicUser),
       posts: posts.map((post) => serializeLegacyPost(post)),
     };
   }
@@ -397,6 +439,11 @@ export class SearchService {
           }
         : {}),
     };
+  }
+
+  /** Re-checked here, not only in the matcher: the page may have closed since. */
+  private customerWhere(ids: string[]): Prisma.UserWhereInput {
+    return { id: { in: ids }, role: UserRole.CUSTOMER, profileIsPublic: true };
   }
 
   /** `null` means no phrase was typed, so every boutique is still in play. */

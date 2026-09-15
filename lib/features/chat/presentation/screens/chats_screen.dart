@@ -52,7 +52,13 @@ class _ChatsScreenState extends ConsumerState<ChatsScreen> {
     await realtime.connect();
     if (!mounted) return;
     _realtimeSub = realtime.events.listen((event) {
-      const refreshing = {'message.created', 'messages.read', 'presence.changed'};
+      const refreshing = {
+        'message.created',
+        'messages.read',
+        'presence.changed',
+        // Back after a drop: the inbox may have moved while it was away.
+        'connection.restored',
+      };
       if (!refreshing.contains(event['event'])) return;
       _refreshDebounce?.cancel();
       _refreshDebounce = Timer(const Duration(milliseconds: 400), () {

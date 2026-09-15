@@ -1,10 +1,11 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { Cron, CronExpression } from '@nestjs/schedule';
+import { CronExpression } from '@nestjs/schedule';
 import { CodAssuranceState, OrderStatus } from '@prisma/client';
 
 import { PrismaService } from '../../prisma/prisma.service';
 import { OrdersService } from './orders.service';
 import { InventoryReservationService } from './workflow/inventory-reservation.service';
+import { ScheduledJob } from '../../common/scheduling/scheduled-job.decorator';
 
 /** One sweep's worth. A backlog drains over consecutive runs. */
 const BATCH = 200;
@@ -39,9 +40,10 @@ const REASON = 'انتهت مهلة الدفع';
  * checkout in full, and the customer's timeline records it the same way any
  * other cancellation is recorded.
  *
- * **Single instance only.** A second process running this would race to cancel
- * the same orders; the transition table would refuse the loser, but the log
- * would fill with false failures. See `docs/DEPLOYMENT.md`.
+ * **One instance at a time.** A second process running this would race to
+ * cancel the same orders; the transition table would refuse the loser, but the
+ * log would fill with false failures. `@ScheduledJob` takes a database lease
+ * before each run, so only one instance ever runs a sweep.
  */
 @Injectable()
 export class OrdersScheduler {
@@ -53,7 +55,7 @@ export class OrdersScheduler {
     private readonly reservations: InventoryReservationService,
   ) {}
 
-  @Cron(CronExpression.EVERY_10_MINUTES)
+  @ScheduledJob({ cron: CronExpression.EVERY_10_MINUTES, staleAfterMinutes: 30, critical: true })
   async expireUnpaidOrders(): Promise<void> {
     const expired = await this.prisma.order.findMany({
       where: {
@@ -130,7 +132,7 @@ export class OrdersScheduler {
    * cancelled at :00 releases its own reservations, and this finds only what
    * that could not reach.
    */
-  @Cron('0 5,15,25,35,45,55 * * * *')
+  @ScheduledJob({ cron: '0 5,15,25,35,45,55 * * * *', staleAfterMinutes: 30, critical: true })
   async releaseExpiredReservations(): Promise<void> {
     try {
       const { released, orders } = await this.reservations.releaseExpired();

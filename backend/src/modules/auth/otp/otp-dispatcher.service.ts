@@ -4,6 +4,9 @@ import { randomInt } from 'crypto';
 import { PrismaService } from '../../../prisma/prisma.service';
 import { OtpCipherService } from './otp-cipher.service';
 
+/** Emitted once a challenge and its outbox row are committed. */
+export const OTP_ENQUEUED = 'otp.enqueued';
+
 /**
  * Puts a freshly created challenge into the outbox.
  *

@@ -115,6 +115,15 @@ export class ProductsController {
 
   // ── Authenticated mutations (global JwtAuthGuard enforces a token) ────────
 
+  /**
+   * A view counts whether or not she has signed in.
+   *
+   * `@OptionalAuth` rather than a session: guests may browse (Q46 P1), and the
+   * service has always accepted a null viewer. Requiring a token here meant
+   * the product page a guest opened fired a refused request on every open, and
+   * the funnel this feeds counted only the traffic that had already signed up.
+   */
+  @OptionalAuth()
   @Post(':id/views')
   recordView(
     @Param('id', ParseUUIDPipe) id: string,

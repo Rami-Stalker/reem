@@ -11,6 +11,7 @@ import { UserRole } from '@prisma/client';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import { OptionalAuth } from '../../common/decorators/optional-auth.decorator';
 import { Roles } from '../../common/decorators/roles.decorator';
+import { SelfScoped } from '../../common/decorators/self-scoped.decorator';
 import { AiAssistantService } from './ai-assistant.service';
 import {
   AiRecommendationQueryDto,
@@ -19,6 +20,13 @@ import {
   GenerateTagsDto,
 } from './dto/ai-assistant.dto';
 
+/**
+ * Recommendations, which are public, and one reading of her own behaviour,
+ * which is not.
+ */
+@SelfScoped(
+  "the behaviour analysis is computed from the caller's own browsing and order history and never takes a user id from the request",
+)
 @Controller('ai')
 export class AiAssistantController {
   constructor(private readonly ai: AiAssistantService) {}

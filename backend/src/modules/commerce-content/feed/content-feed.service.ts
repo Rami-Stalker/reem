@@ -121,6 +121,34 @@ export class ContentFeedService {
       )`;
   }
 
+  // ── Her own controls ──────────────────────────────────────────────────────
+
+  /**
+   * What she asked not to see: pieces marked «غير مهتمة» and accounts she
+   * muted.
+   *
+   * Applied to **feeds** only — home, reels, following, stories. Not to a page
+   * she deliberately opens: muting an account quiets it, it does not make the
+   * boutique unreachable, and a woman who taps into a page she muted should
+   * find it there. Same two spellings as the visibility rule, same reason.
+   */
+  private controlsWhere(viewerId?: string): Prisma.CommerceContentWhereInput[] {
+    if (!viewerId) return [];
+    return [
+      { hiddenBy: { none: { userId: viewerId } } },
+      { author: { mutesReceived: { none: { muterId: viewerId } } } },
+    ];
+  }
+
+  private controlsSql(alias: string, viewerId: string): Prisma.Sql {
+    const a = Prisma.raw(`"${alias}"`);
+    return Prisma.sql`
+      NOT EXISTS (SELECT 1 FROM "content_hides" h
+                  WHERE h."user_id" = ${viewerId}::uuid AND h."content_id" = ${a}."id")
+      AND NOT EXISTS (SELECT 1 FROM "user_mutes" m
+                      WHERE m."muter_id" = ${viewerId}::uuid AND m."muted_id" = ${a}."author_id")`;
+  }
+
   // ── The simple feeds ──────────────────────────────────────────────────────
 
   /**
@@ -153,6 +181,11 @@ export class ContentFeedService {
         ...(filters.productId
           ? [{ productTags: { some: { productId: filters.productId } } }]
           : []),
+        // A page or a product rail is somewhere she went on purpose; a feed is
+        // something handed to her, and only a feed honours her mutes.
+        ...(filters.authorId || filters.productId
+          ? []
+          : this.controlsWhere(filters.viewerId)),
       ],
     };
 
@@ -182,13 +215,16 @@ export class ContentFeedService {
   }
 
   /** Live stories, grouped by the woman who posted them. */
-  async storiesTray(viewerId?: string) {
+  async storiesTray(viewerId?: string, authorId?: string) {
     const rows = await this.prisma.commerceContent.findMany({
       where: {
         AND: [
           this.visibilityWhere(viewerId),
           { contentType: 'story' },
           { expiresAt: { gt: new Date() } },
+          // One woman's stories, for her page's ring — or the whole tray,
+          // minus the accounts she muted.
+          ...(authorId ? [{ authorId }] : this.controlsWhere(viewerId)),
         ],
       },
       orderBy: [{ createdAt: 'asc' }],
@@ -305,6 +341,7 @@ export class ContentFeedService {
         FROM "commerce_contents" c
         WHERE c."author_id" = ANY(${ids}::uuid[])
           AND ${this.visibilitySql('c', viewerId)}
+          AND ${this.controlsSql('c', viewerId)}
           AND (COALESCE(c."published_at", c."created_at"), c."id") < (${utcTimestamp(cursor.at)}, ${cursor.id}::uuid)
         ORDER BY "sortAt" DESC, c."id" DESC
         LIMIT ${take}
@@ -317,6 +354,9 @@ export class ContentFeedService {
         WHERE r."resharer_id" = ANY(${ids}::uuid[])
           AND r."resharer_is_public"
           AND ${this.visibilitySql('c', viewerId)}
+          AND ${this.controlsSql('c', viewerId)}
+          AND NOT EXISTS (SELECT 1 FROM "user_mutes" m
+                          WHERE m."muter_id" = ${viewerId}::uuid AND m."muted_id" = r."resharer_id")
           AND (r."created_at", r."id") < (${utcTimestamp(cursor.at)}, ${cursor.id}::uuid)
         ORDER BY r."created_at" DESC, r."id" DESC
         LIMIT ${take}

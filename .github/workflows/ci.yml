@@ -19,7 +19,8 @@ concurrency:
 
 env:
   FLUTTER_VERSION: '3.41.8'
-  NODE_VERSION: '20'
+  # Matches the production image and the lock file's npm (11).
+  NODE_VERSION: '24'
 
 jobs:
   flutter:
@@ -128,3 +129,26 @@ jobs:
       # that says "eslint: not found". Add the step when the config exists.
 
       - run: npm test
+
+  api-image:
+    name: Backend — production image builds
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # The image the host deploys (render.yaml → backend/Dockerfile). Built,
+      # not pushed: a Dockerfile that only breaks on the host breaks at the
+      # worst possible moment — during a deploy.
+      - name: Build
+        run: docker build --tag reem-api:ci backend
+
+      - name: The image starts and refuses a bad environment
+        run: |
+          # No database or secrets here, so a healthy boot is not possible; what
+          # is checked is that Node, Prisma and the compiled app load, and that
+          # env validation — not a missing module — is what stops it.
+          set +e
+          docker run --rm -e NODE_ENV=production reem-api:ci > boot.log 2>&1
+          set -e
+          cat boot.log
+          grep -q 'Invalid environment configuration' boot.log

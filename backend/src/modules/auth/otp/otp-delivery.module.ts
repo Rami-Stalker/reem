@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { DeliveryOrchestrator } from './delivery.orchestrator';
 import { OtpCipherService } from './otp-cipher.service';
+import { OtpDeliveryReadiness } from './otp-delivery-readiness';
 import { OtpDispatcherService } from './otp-dispatcher.service';
 import { OtpOutboxCron } from './otp-outbox.cron';
 import { OTP_TRANSPORTS, OtpTransport } from './otp-transport';
@@ -34,6 +35,7 @@ import { WhatsAppCloudTransport } from './transports/whatsapp-cloud.transport';
     OtpDispatcherService,
     DeliveryOrchestrator,
     OtpOutboxCron,
+    OtpDeliveryReadiness,
     WhatsAppCloudTransport,
     SmsGatewayTransport,
     VoiceTransport,

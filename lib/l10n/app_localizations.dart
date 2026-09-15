@@ -1172,6 +1172,24 @@ abstract class AppLocalizations {
   /// **'250 means 2.5%'**
   String get adminRateHint;
 
+  /// Empty state inside the console record sheet.
+  ///
+  /// In en, this message translates to:
+  /// **'This record carries no further detail.'**
+  String get adminRecordNoDetails;
+
+  /// Summary of a nested object inside a console record.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} fields'**
+  String adminRecordNestedObject(int count);
+
+  /// Summary of a list inside a console record.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} items'**
+  String adminRecordItemCount(int count);
+
   /// Heading above the JSON dump in the record sheet.
   ///
   /// In en, this message translates to:
@@ -1579,6 +1597,84 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'User management'**
   String get adminUserManagement;
+
+  /// Analytics ranked list: pieces sold by a product or a boutique.
+  ///
+  /// In en, this message translates to:
+  /// **'{units} units'**
+  String adminUnitsSold(int units);
+
+  /// Subtitle of the notification analytics screen.
+  ///
+  /// In en, this message translates to:
+  /// **'What went out, down which channel, and how much of it landed.'**
+  String get adminNotificationAnalyticsSubtitle;
+
+  /// Metric: in-app notifications nobody has opened.
+  ///
+  /// In en, this message translates to:
+  /// **'Unread in app'**
+  String get adminUnreadInApp;
+
+  /// Metric: notification deliveries that left the platform.
+  ///
+  /// In en, this message translates to:
+  /// **'Sent'**
+  String get adminNotificationsSent;
+
+  /// Metric: notification deliveries that did not land.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed'**
+  String get adminNotificationsFailed;
+
+  /// Panel title: delivery counts split by channel and status.
+  ///
+  /// In en, this message translates to:
+  /// **'Deliveries by channel'**
+  String get adminDeliveriesByChannel;
+
+  /// Panel title: campaign counts by status.
+  ///
+  /// In en, this message translates to:
+  /// **'Campaigns by status'**
+  String get adminCampaignsByStatus;
+
+  /// Panel title: counts of sent/opened/clicked/failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Delivery events'**
+  String get adminDeliveryEvents;
+
+  /// Notification channel.
+  ///
+  /// In en, this message translates to:
+  /// **'Push'**
+  String get adminChannelPush;
+
+  /// Notification channel.
+  ///
+  /// In en, this message translates to:
+  /// **'In app'**
+  String get adminChannelInApp;
+
+  /// Notification channel.
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get adminChannelEmail;
+
+  /// Notification channel.
+  ///
+  /// In en, this message translates to:
+  /// **'SMS'**
+  String get adminChannelSms;
+
+  /// Notification channel.
+  ///
+  /// In en, this message translates to:
+  /// **'WhatsApp'**
+  String get adminChannelWhatsapp;
 
   /// Admin nav item
   ///
@@ -6229,6 +6325,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{count} loves'**
   String postLikesCount(String count);
+
+  /// Tooltip for the overflow menu on a post card.
+  ///
+  /// In en, this message translates to:
+  /// **'Post options'**
+  String get postOptions;
 
   /// Tap target that expands a truncated post caption.
   ///

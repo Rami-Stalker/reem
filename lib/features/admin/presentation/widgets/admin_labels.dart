@@ -24,7 +24,6 @@ extension AdminSectionTitle on AdminSectionConfig {
     'audit' => l10n.adminAuditLogs,
     'settings' => l10n.adminSystemSettings,
     'campaigns' => l10n.adminNotificationCampaigns,
-    'notificationAnalytics' => l10n.adminNotificationAnalytics,
     // A section added to the API before it is added here still renders — with
     // its English name — rather than throwing at the operator.
     _ => title,

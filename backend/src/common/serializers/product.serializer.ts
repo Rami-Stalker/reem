@@ -168,6 +168,12 @@ export function serializeProduct(
     views_count: product.viewsCount,
     orders_count: product.ordersCount,
     favorites_count: product.favoritesCount,
+    // The post gestures. Tallies as of this read; the viewer's own state and a
+    // fresher count come from `GET /products/engagement/batch`.
+    likes_count: product.likesCount ?? 0,
+    comments_count: product.commentsCount ?? 0,
+    shares_count: product.sharesCount ?? 0,
+    picks_count: product.picksCount ?? 0,
     created_at: product.createdAt.toISOString(),
     ...(options?.isLiked !== undefined ? { is_liked: options.isLiked } : {}),
   };

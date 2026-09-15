@@ -27,6 +27,7 @@ import {
   ViewerState,
 } from '../../common/serializers';
 import { ContentFeedService } from './feed/content-feed.service';
+import { ContentFeedControlsService } from './feed/content-feed-controls.service';
 import { ContentInteractionsService } from './interactions/content-interactions.service';
 import { ContentModerationService } from './moderation/content-moderation.service';
 import { ProductTagPolicyService } from './tagging/product-tag-policy.service';
@@ -62,6 +63,7 @@ const NO_VIEWER: ViewerState = {
 export class ContentSocialController {
   constructor(
     private readonly feed: ContentFeedService,
+    private readonly controls: ContentFeedControlsService,
     private readonly interactions: ContentInteractionsService,
     private readonly moderation: ContentModerationService,
     private readonly tagPolicy: ProductTagPolicyService,
@@ -155,6 +157,30 @@ export class ContentSocialController {
   ) {
     const page = await this.feed.userTimeline(userId, query, user?.id);
     return this.renderTimeline(page, user?.id);
+  }
+
+  /**
+   * One woman's live stories — the ring on her avatar and the stories tab on
+   * her page. The same visibility rule as the tray, scoped to her.
+   */
+  @Get('users/:userId/stories')
+  @OptionalAuth()
+  async userStories(
+    @Param('userId', ParseUUIDPipe) userId: string,
+    @CurrentUser() user: AuthUser | undefined,
+  ) {
+    const tray = await this.feed.storiesTray(user?.id, userId);
+    const viewer = await this.viewerStates(
+      tray.flatMap((group) => group.stories.map((story) => story.id)),
+      user?.id,
+    );
+    return tray.map((group) => ({
+      author: serializeFeedContent(group.stories[0]).author,
+      all_seen: group.all_seen,
+      stories: group.stories.map((story) =>
+        serializeFeedContent(story, viewer(story.id)),
+      ),
+    }));
   }
 
   /** «نساء يرتدينها» — what shoppers have posted wearing this product. */
@@ -359,6 +385,78 @@ export class ContentSocialController {
     @Body() dto: ReportContentDto,
   ) {
     return this.moderation.reportComment(user, commentId, dto.reason, dto.detail);
+  }
+
+  // ── Her feed, tuned by her ────────────────────────────────────────────────
+
+  /** «غير مهتمة» */
+  @Post(':id/hide')
+  @HttpCode(HttpStatus.OK)
+  @Authorize({
+    action: 'interact',
+    resource: 'content',
+    roles: [UserRole.CUSTOMER, UserRole.SELLER],
+    permissions: [AppPermission.contentInteract],
+  })
+  hide(@CurrentUser() user: AuthUser, @Param('id', ParseUUIDPipe) id: string) {
+    return this.controls.hide(user.id, id);
+  }
+
+  @Delete(':id/hide')
+  @HttpCode(HttpStatus.OK)
+  @Authorize({
+    action: 'interact',
+    resource: 'content',
+    roles: [UserRole.CUSTOMER, UserRole.SELLER],
+    permissions: [AppPermission.contentInteract],
+  })
+  unhide(
+    @CurrentUser() user: AuthUser,
+    @Param('id', ParseUUIDPipe) id: string,
+  ) {
+    return this.controls.unhide(user.id, id);
+  }
+
+  /** «إخفاء منشورات هذا الحساب» */
+  @Post('authors/:userId/mute')
+  @HttpCode(HttpStatus.OK)
+  @Authorize({
+    action: 'interact',
+    resource: 'content',
+    roles: [UserRole.CUSTOMER, UserRole.SELLER],
+    permissions: [AppPermission.contentInteract],
+  })
+  mute(
+    @CurrentUser() user: AuthUser,
+    @Param('userId', ParseUUIDPipe) userId: string,
+  ) {
+    return this.controls.mute(user.id, userId);
+  }
+
+  @Delete('authors/:userId/mute')
+  @HttpCode(HttpStatus.OK)
+  @Authorize({
+    action: 'interact',
+    resource: 'content',
+    roles: [UserRole.CUSTOMER, UserRole.SELLER],
+    permissions: [AppPermission.contentInteract],
+  })
+  unmute(
+    @CurrentUser() user: AuthUser,
+    @Param('userId', ParseUUIDPipe) userId: string,
+  ) {
+    return this.controls.unmute(user.id, userId);
+  }
+
+  @Get('muted')
+  @Authorize({
+    action: 'read',
+    resource: 'content',
+    roles: [UserRole.CUSTOMER, UserRole.SELLER],
+    permissions: [AppPermission.contentInteract],
+  })
+  muted(@CurrentUser() user: AuthUser) {
+    return this.controls.muted(user.id);
   }
 
   // ── Rendering ─────────────────────────────────────────────────────────────
