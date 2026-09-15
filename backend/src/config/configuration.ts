@@ -117,6 +117,13 @@ export default () => ({
      * production, and the controller refuses again on its own.
      */
     devInboxEnabled: process.env.OTP_DEV_INBOX_ENABLED === 'true',
+    /**
+     * Fixed LOGIN codes for named, existing test accounts, until a deadline —
+     * the stopgap for a hosted test environment with no provider contracted.
+     * Parsed and bounded in `auth/otp/otp-test-accounts.ts`.
+     */
+    testAccounts: process.env.OTP_TEST_ACCOUNTS ?? '',
+    testAccountsUntil: process.env.OTP_TEST_ACCOUNTS_UNTIL ?? '',
   },
   /**
    * Supabase, as this API uses it: a host for PostgreSQL (`DATABASE_URL`) and,
