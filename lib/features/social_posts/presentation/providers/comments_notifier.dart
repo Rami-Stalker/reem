@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/legacy.dart';
 import 'package:reem/core/result/result.dart';
 import 'package:reem/core/shared/entities/comment.dart';
 import 'package:reem/core/shared/entities/user.dart';
+import 'package:reem/features/social_posts/domain/entities/comment_thread.dart';
 
 import 'package:reem/features/social_posts/domain/usecases/add_comment_usecase.dart';
 import 'package:reem/features/social_posts/domain/usecases/delete_comment_usecase.dart';
@@ -10,7 +11,7 @@ import 'package:reem/features/social_posts/presentation/providers/comments_state
 
 class CommentsNotifier extends StateNotifier<CommentsState> {
   CommentsNotifier({
-    required this.postId,
+    required this.thread,
     required GetCommentsUseCase getComments,
     required AddCommentUseCase addComment,
     required DeleteCommentUseCase deleteComment,
@@ -20,7 +21,7 @@ class CommentsNotifier extends StateNotifier<CommentsState> {
        _deleteComment = deleteComment,
        super(const CommentsState());
 
-  final String postId;
+  final CommentThread thread;
   final User? currentUser;
   final GetCommentsUseCase _getComments;
   final AddCommentUseCase _addComment;
@@ -28,7 +29,7 @@ class CommentsNotifier extends StateNotifier<CommentsState> {
 
   Future<void> load() async {
     state = state.copyWith(isLoading: true, clearError: true);
-    final result = await _getComments(postId, page: 1);
+    final result = await _getComments(thread, page: 1);
     state = switch (result) {
       Success(:final data) => state.copyWith(
         isLoading: false,
@@ -45,7 +46,7 @@ class CommentsNotifier extends StateNotifier<CommentsState> {
 
   Future<void> loadMore() async {
     if (!state.hasNextPage || state.isLoading) return;
-    final result = await _getComments(postId, page: state.page + 1);
+    final result = await _getComments(thread, page: state.page + 1);
     if (result case Success(:final data)) {
       state = state.copyWith(
         comments: [...state.comments, ...data.items],
@@ -81,7 +82,7 @@ class CommentsNotifier extends StateNotifier<CommentsState> {
           : state.comments,
     );
 
-    final result = await _addComment(postId, text);
+    final result = await _addComment(thread, text);
     state = switch (result) {
       Success(:final data) => state.copyWith(
         isSubmitting: false,
@@ -105,7 +106,7 @@ class CommentsNotifier extends StateNotifier<CommentsState> {
     state = state.copyWith(
       comments: previous.where((c) => c.id != commentId).toList(),
     );
-    final result = await _deleteComment(postId, commentId);
+    final result = await _deleteComment(thread, commentId);
     if (result case Error(:final failure)) {
       // Roll back on failure.
       state = state.copyWith(comments: previous, error: failure.message);

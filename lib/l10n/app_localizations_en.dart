@@ -570,6 +570,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get adminRateHint => '250 means 2.5%';
 
   @override
+  String get adminRecordNoDetails => 'This record carries no further detail.';
+
+  @override
+  String adminRecordNestedObject(int count) {
+    return '$count fields';
+  }
+
+  @override
+  String adminRecordItemCount(int count) {
+    return '$count items';
+  }
+
+  @override
   String get adminRawRecord => 'Raw record';
 
   @override
@@ -3355,6 +3368,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String postLikesCount(String count) {
     return '$count loves';
   }
+
+  @override
+  String get postOptions => 'Post options';
 
   @override
   String get postMore => 'more';

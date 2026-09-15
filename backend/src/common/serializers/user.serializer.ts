@@ -26,6 +26,7 @@ export type UserPublic = Pick<
       | 'sellerPremiumUntil'
       | 'phoneVerifiedAt'
       | 'emailVerifiedAt'
+      | 'profileIsPublic'
     >
   >;
 
@@ -99,6 +100,10 @@ export interface ProfileExtras {
   isMe?: boolean;
   productsCount?: number;
   postsCount?: number;
+  /** Pieces she added to her page that this viewer may see. */
+  picksCount?: number;
+  /** Whether she has a live story this viewer may watch — the avatar ring. */
+  hasStory?: boolean;
   /** Seller-only aggregate stats; omitted for non-sellers. */
   sellerStats?: {
     productsCount: number;
@@ -125,6 +130,11 @@ export function serializeUserProfile(user: UserPublic, extras: ProfileExtras = {
     is_me: isMe,
     products_count: extras.productsCount ?? 0,
     posts_count: extras.postsCount ?? 0,
+    picks_count: extras.picksCount ?? 0,
+    has_story: extras.hasStory ?? false,
+    // Public by nature: a closed page has to be able to say it is closed,
+    // or a stranger reads an empty page as a woman who never posted.
+    profile_is_public: user.profileIsPublic ?? false,
     seller_stats: extras.sellerStats
       ? {
           products_count: extras.sellerStats.productsCount,

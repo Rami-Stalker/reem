@@ -225,18 +225,23 @@ export class UsersService {
 
   private async profileExtras(user: User, viewerId: string, isMe: boolean) {
     const isSeller = user.role === UserRole.SELLER;
-    const [postsCount, isFollowing, sellerStats] = await Promise.all([
-      this.users.countPosts(user.id),
-      isMe
-        ? Promise.resolve(false)
-        : this.users.findFollow(viewerId, user.id).then(Boolean),
-      isSeller ? this.users.sellerStats(user.id) : Promise.resolve(null),
-    ]);
+    const [postsCount, isFollowing, sellerStats, picksCount, hasStory] =
+      await Promise.all([
+        this.users.countPosts(user.id),
+        isMe
+          ? Promise.resolve(false)
+          : this.users.findFollow(viewerId, user.id).then(Boolean),
+        isSeller ? this.users.sellerStats(user.id) : Promise.resolve(null),
+        this.users.countVisiblePicks(user, viewerId),
+        this.users.hasVisibleStory(user, viewerId),
+      ]);
 
     return {
       isMe,
       isFollowing,
       postsCount,
+      picksCount,
+      hasStory,
       productsCount: sellerStats?.productsCount ?? 0,
       sellerStats,
     };

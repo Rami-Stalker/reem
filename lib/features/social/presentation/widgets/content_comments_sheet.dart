@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reem/core/design_system/design_system.dart';
 import 'package:reem/core/localization/l10n_extension.dart';
+import 'package:reem/core/router/open_profile.dart';
 import 'package:reem/core/utils/relative_time.dart';
 import 'package:reem/features/auth/presentation/providers/auth_provider.dart';
 import 'package:reem/features/social/domain/entities/content_comment.dart';
@@ -109,6 +110,8 @@ class _ContentCommentsSheetState extends ConsumerState<_ContentCommentsSheet> {
                       },
                       onRemove: () => notifier.remove(comment),
                       onShowReplies: () => notifier.loadReplies(comment.id),
+                      onOpenAuthor: (userId) =>
+                          openProfileFromSheet(context, userId),
                       currentUserId: me,
                     );
                   },
@@ -140,6 +143,7 @@ class _CommentTile extends StatelessWidget {
     required this.onReply,
     required this.onRemove,
     required this.onShowReplies,
+    required this.onOpenAuthor,
     this.currentUserId,
     this.isReply = false,
   });
@@ -149,6 +153,9 @@ class _CommentTile extends StatelessWidget {
   final VoidCallback onReply;
   final VoidCallback onRemove;
   final VoidCallback onShowReplies;
+
+  /// Her face and her name open her page.
+  final ValueChanged<String> onOpenAuthor;
   final String? currentUserId;
   final bool isReply;
 
@@ -168,6 +175,7 @@ class _CommentTile extends StatelessWidget {
                 imageUrl: comment.user.imageUrl,
                 name: comment.user.name,
                 size: isReply ? DsSizes.avatarXs : DsSizes.avatarSm,
+                onTap: () => onOpenAuthor(comment.user.id),
               ),
               DsGaps.hSm,
               Expanded(
@@ -177,11 +185,14 @@ class _CommentTile extends StatelessWidget {
                     Row(
                       children: [
                         Flexible(
-                          child: Text(
-                            comment.user.name,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: context.dsText.tileTitle,
+                          child: GestureDetector(
+                            onTap: () => onOpenAuthor(comment.user.id),
+                            child: Text(
+                              comment.user.name,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: context.dsText.tileTitle,
+                            ),
                           ),
                         ),
                         DsGaps.hXs,
@@ -234,6 +245,7 @@ class _CommentTile extends StatelessWidget {
                   onReply: onReply,
                   onRemove: onRemove,
                   onShowReplies: onShowReplies,
+                  onOpenAuthor: onOpenAuthor,
                   currentUserId: currentUserId,
                   isReply: true,
                 ),

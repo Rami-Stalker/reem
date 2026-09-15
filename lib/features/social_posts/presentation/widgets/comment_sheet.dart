@@ -3,13 +3,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:reem/core/design_system/design_system.dart';
 import 'package:reem/core/localization/l10n_extension.dart';
+import 'package:reem/core/router/open_profile.dart';
 import 'package:reem/core/shared/entities/comment.dart';
 import 'package:reem/core/utils/relative_time.dart';
 import 'package:reem/features/auth/presentation/providers/auth_provider.dart';
+import 'package:reem/features/social_posts/domain/entities/comment_thread.dart';
 import 'package:reem/features/social_posts/presentation/providers/comments_state.dart';
 import 'package:reem/features/social_posts/presentation/providers/social_posts_providers.dart';
 
-/// Opens the comments for [postId] in a Reem-styled modal bottom sheet.
+/// Opens the comments for [thread] — a post's or a product's — in a
+/// Reem-styled modal bottom sheet.
 ///
 /// [onCountChanged] fires with `+1` / `-1` as the server takes a comment or a
 /// deletion — the card that opened the sheet keeps its own tally, and the
@@ -18,20 +21,20 @@ import 'package:reem/features/social_posts/presentation/providers/social_posts_p
 /// still reading what it read before she typed.
 Future<void> showCommentSheet(
   BuildContext context,
-  String postId, {
+  CommentThread thread, {
   ValueChanged<int>? onCountChanged,
 }) {
   return DsBottomSheet.show<void>(
     context,
     builder: (_) =>
-        CommentSheet(postId: postId, onCountChanged: onCountChanged),
+        CommentSheet(thread: thread, onCountChanged: onCountChanged),
   );
 }
 
 class CommentSheet extends ConsumerStatefulWidget {
-  const CommentSheet({super.key, required this.postId, this.onCountChanged});
+  const CommentSheet({super.key, required this.thread, this.onCountChanged});
 
-  final String postId;
+  final CommentThread thread;
 
   /// Reports committed changes to the thread's size, one at a time.
   final ValueChanged<int>? onCountChanged;
@@ -57,7 +60,7 @@ class _CommentSheetState extends ConsumerState<CommentSheet> {
     _controller.clear();
     _focus.unfocus();
     final added = await ref
-        .read(commentsNotifierProvider(widget.postId).notifier)
+        .read(commentsNotifierProvider(widget.thread).notifier)
         .add(text);
     if (added) widget.onCountChanged?.call(1);
   }
@@ -65,12 +68,12 @@ class _CommentSheetState extends ConsumerState<CommentSheet> {
   @override
   Widget build(BuildContext context) {
     final c = context.dsColors;
-    final state = ref.watch(commentsNotifierProvider(widget.postId));
+    final state = ref.watch(commentsNotifierProvider(widget.thread));
     final myId = ref.watch(authNotifierProvider.select((s) => s.user?.id));
 
     // The notifier rolls a failed comment back out of the list. Without this
     // the row simply vanished and she was left wondering whether it sent.
-    ref.listen(commentsNotifierProvider(widget.postId).select((s) => s.error), (
+    ref.listen(commentsNotifierProvider(widget.thread).select((s) => s.error), (
       previous,
       error,
     ) {
@@ -115,7 +118,7 @@ class _CommentSheetState extends ConsumerState<CommentSheet> {
             child: _List(
               state: state,
               myId: myId,
-              postId: widget.postId,
+              thread: widget.thread,
               onCountChanged: widget.onCountChanged,
             ),
           ),
@@ -135,13 +138,13 @@ class _List extends ConsumerWidget {
   const _List({
     required this.state,
     required this.myId,
-    required this.postId,
+    required this.thread,
     this.onCountChanged,
   });
 
   final CommentsState state;
   final String? myId;
-  final String postId;
+  final CommentThread thread;
   final ValueChanged<int>? onCountChanged;
 
   @override
@@ -169,6 +172,9 @@ class _List extends ConsumerWidget {
         return _CommentTile(
           comment: comment,
           isMine: isMine,
+          // Her face and her name are the way to her page — the one gesture
+          // everybody tries first on a comment.
+          onOpenAuthor: () => openProfileFromSheet(context, comment.user.id),
           // Deleting removes it for everyone and cannot be undone, so it is
           // confirmed. It used to fire straight off a long press, which is
           // easy to do by accident while scrolling.
@@ -185,7 +191,7 @@ class _List extends ConsumerWidget {
                   );
                   if (!confirmed || !context.mounted) return;
                   final removed = await ref
-                      .read(commentsNotifierProvider(postId).notifier)
+                      .read(commentsNotifierProvider(thread).notifier)
                       .remove(comment.id);
                   if (removed) onCountChanged?.call(-1);
                 }
@@ -200,11 +206,13 @@ class _CommentTile extends StatelessWidget {
   const _CommentTile({
     required this.comment,
     required this.isMine,
+    required this.onOpenAuthor,
     this.onDelete,
   });
 
   final Comment comment;
   final bool isMine;
+  final VoidCallback onOpenAuthor;
   final Future<void> Function()? onDelete;
 
   @override
@@ -219,6 +227,7 @@ class _CommentTile extends StatelessWidget {
             imageUrl: comment.user.imageUrl,
             name: comment.user.name,
             size: 38,
+            onTap: onOpenAuthor,
           ),
           const SizedBox(width: DsSpacing.sm),
           Expanded(
@@ -244,7 +253,9 @@ class _CommentTile extends StatelessWidget {
                       Row(
                         children: [
                           Flexible(
-                            child: Text(
+                            child: GestureDetector(
+                              onTap: onOpenAuthor,
+                              child: Text(
                               comment.user.name,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
@@ -254,6 +265,7 @@ class _CommentTile extends StatelessWidget {
                                     ? c.onPrimaryContainer
                                     : c.onSurface,
                               ),
+                            ),
                             ),
                           ),
                           if (comment.user.isVerified) ...[
@@ -460,7 +472,7 @@ class _InputBar extends ConsumerWidget {
                     )
                   : DsIconButton(
                       icon: Icons.send_rounded,
-            tooltip: 'إرسال',
+                      tooltip: context.l10n.send,
                       variant: DsIconButtonVariant.primary,
                       size: 44,
                       onPressed: onSend,

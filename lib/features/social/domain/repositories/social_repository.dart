@@ -1,5 +1,6 @@
 import 'package:reem/core/domain/pagination/paginated_data.dart';
 import 'package:reem/core/result/result.dart';
+import 'package:reem/core/shared/entities/user.dart';
 import 'package:reem/features/social/domain/entities/content.dart';
 import 'package:reem/features/social/domain/entities/content_analytics.dart';
 import 'package:reem/features/social/domain/entities/content_comment.dart';
@@ -40,6 +41,9 @@ abstract interface class SocialRepository {
 
   /// Live stories, grouped by author.
   Future<Result<List<StoryGroup>>> storiesTray();
+
+  /// One woman's live stories — the ring on her avatar.
+  Future<Result<List<StoryGroup>>> storiesOf(String userId);
 
   /// Her saved shelf.
   Future<Result<PaginatedData<Content>>> saved({String? cursor, int limit});
@@ -127,6 +131,20 @@ abstract interface class SocialRepository {
 
   /// Opening or closing her page. Returns the state it ended in.
   Future<Result<bool>> setProfilePublic(bool isPublic);
+
+  // ── Her feed, tuned by her ────────────────────────────────────────────────
+
+  /// «غير مهتمة» — this piece leaves her feeds. Private; nobody is told.
+  Future<Result<void>> hide(String contentId);
+
+  Future<Result<void>> unhide(String contentId);
+
+  /// «إخفاء منشورات هذا الحساب» — a quiet mute, never a block.
+  Future<Result<void>> muteAuthor(String userId);
+
+  Future<Result<void>> unmuteAuthor(String userId);
+
+  Future<Result<List<User>>> mutedAccounts();
 
   // ── A boutique's numbers ──────────────────────────────────────────────────
 

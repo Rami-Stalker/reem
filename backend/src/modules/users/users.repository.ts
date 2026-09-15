@@ -37,6 +37,58 @@ export class UsersRepository {
     });
   }
 
+  /**
+   * The pieces on her page a viewer may see — none, to a stranger, while a
+   * customer's page is closed. Mirrors `ProductSocialService.picksOf`.
+   */
+  countVisiblePicks(owner: User, viewerId?: string): Promise<number> {
+    if (
+      owner.role === 'CUSTOMER' &&
+      !owner.profileIsPublic &&
+      owner.id !== viewerId
+    ) {
+      return Promise.resolve(0);
+    }
+    return this.prisma.productPick.count({
+      where: {
+        userId: owner.id,
+        product: { status: { in: ['ACTIVE', 'OUT_OF_STOCK'] } },
+      },
+    });
+  }
+
+  /** Whether she has a live story this viewer may watch. */
+  async hasVisibleStory(owner: User, viewerId?: string): Promise<boolean> {
+    const isOwner = owner.id === viewerId;
+    const story = await this.prisma.commerceContent.findFirst({
+      where: {
+        authorId: owner.id,
+        contentType: 'story',
+        status: 'PUBLISHED',
+        moderationStatus: { not: 'REJECTED' },
+        expiresAt: { gt: new Date() },
+        ...(isOwner
+          ? {}
+          : {
+              authorIsPublic: true,
+              OR: [
+                { visibility: 'PUBLIC' },
+                ...(viewerId
+                  ? [
+                      {
+                        visibility: 'FOLLOWERS' as const,
+                        author: { followers: { some: { followerId: viewerId } } },
+                      },
+                    ]
+                  : []),
+              ],
+            }),
+      },
+      select: { id: true },
+    });
+    return story !== null;
+  }
+
   findFollow(followerId: string, followingId: string) {
     return this.prisma.follow.findUnique({
       where: { followerId_followingId: { followerId, followingId } },

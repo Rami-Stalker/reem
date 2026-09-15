@@ -6,6 +6,7 @@ import 'package:reem/features/auth/presentation/providers/auth_provider.dart';
 import 'package:reem/features/social_posts/data/datasources/impl/post_social_remote_datasource_impl.dart';
 import 'package:reem/features/social_posts/data/datasources/post_social_remote_datasource.dart';
 import 'package:reem/features/social_posts/data/repositories/post_social_repository_impl.dart';
+import 'package:reem/features/social_posts/domain/entities/comment_thread.dart';
 import 'package:reem/features/social_posts/domain/repositories/post_social_repository.dart';
 import 'package:reem/features/social_posts/domain/usecases/add_comment_usecase.dart';
 import 'package:reem/features/social_posts/domain/usecases/delete_comment_usecase.dart';
@@ -42,11 +43,11 @@ final sharePostUseCaseProvider = Provider(
   (ref) => SharePostUseCase(ref.watch(postSocialRepositoryProvider)),
 );
 
-/// Comment thread for a given post id.
+/// One comment thread — a post's or a product's.
 final commentsNotifierProvider = StateNotifierProvider.autoDispose
-    .family<CommentsNotifier, CommentsState, String>((ref, postId) {
+    .family<CommentsNotifier, CommentsState, CommentThread>((ref, thread) {
       return CommentsNotifier(
-        postId: postId,
+        thread: thread,
         getComments: ref.watch(getCommentsUseCaseProvider),
         addComment: ref.watch(addCommentUseCaseProvider),
         deleteComment: ref.watch(deleteCommentUseCaseProvider),

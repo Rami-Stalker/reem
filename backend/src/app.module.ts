@@ -24,6 +24,7 @@ import { MediaModule } from './modules/media/media.module';
 import { UsersModule } from './modules/users/users.module';
 import { PricingModule } from './modules/pricing/pricing.module';
 import { ProductsModule } from './modules/products/products.module';
+import { ProductSocialModule } from './modules/product-social/product-social.module';
 import { CommerceContentModule } from './modules/commerce-content/commerce-content.module';
 import { PostsModule } from './modules/posts/posts.module';
 import { StoriesModule } from './modules/stories/stories.module';
@@ -96,6 +97,7 @@ import { HealthModule } from './modules/health/health.module';
     UsersModule,
     PricingModule,
     ProductsModule,
+    ProductSocialModule,
     CommerceContentModule,
     PostsModule,
     StoriesModule,

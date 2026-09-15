@@ -739,6 +739,12 @@
   "@adminRateHint": {
     "description": "Hint under the commission rate box."
   },
+  "adminRecordNoDetails": "This record carries no further detail.",
+  "@adminRecordNoDetails": {"description": "Empty state inside the console record sheet."},
+  "adminRecordNestedObject": "{count} fields",
+  "@adminRecordNestedObject": {"description": "Summary of a nested object inside a console record.", "placeholders": {"count": {"type": "int"}}},
+  "adminRecordItemCount": "{count} items",
+  "@adminRecordItemCount": {"description": "Summary of a list inside a console record.", "placeholders": {"count": {"type": "int"}}},
   "adminRawRecord": "Raw record",
   "@adminRawRecord": {
     "description": "Heading above the JSON dump in the record sheet."
@@ -4115,6 +4121,10 @@
         "type": "String"
       }
     }
+  },
+  "postOptions": "Post options",
+  "@postOptions": {
+    "description": "Tooltip for the overflow menu on a post card."
   },
   "postMore": "more",
   "@postMore": {

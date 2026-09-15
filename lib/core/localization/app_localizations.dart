@@ -28,6 +28,15 @@ final class L10nSetup {
 
   /// Matches on language code, ignoring country and script: `ar-SY`, `ar-EG`
   /// and bare `ar` all resolve to the same Arabic bundle.
+  ///
+  /// A device whose language is neither Arabic nor English lands on Arabic.
+  ///
+  /// An `en-US` device does *not* reach this callback any more: "follow the
+  /// device" is resolved to Arabic before `MaterialApp` is built (see
+  /// `ReemApp`), because the client deferred the English interface (Q91) and a
+  /// Syrian customer opening Reem in a browser that reports `en-US` was being
+  /// handed a half-translated product. English stays a deliberate choice made
+  /// in settings, and that choice arrives here as an explicit `Locale('en')`.
   static Locale localeResolutionCallback(
     Locale? locale,
     Iterable<Locale> supportedLocales,

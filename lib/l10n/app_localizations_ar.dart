@@ -566,6 +566,19 @@ class AppLocalizationsAr extends AppLocalizations {
   String get adminRateHint => '٢٥٠ تعني ٢٫٥٪';
 
   @override
+  String get adminRecordNoDetails => 'لا تفاصيل إضافية لهذا السجل.';
+
+  @override
+  String adminRecordNestedObject(int count) {
+    return '$count حقول';
+  }
+
+  @override
+  String adminRecordItemCount(int count) {
+    return '$count عناصر';
+  }
+
+  @override
   String get adminRawRecord => 'السجل الكامل';
 
   @override
@@ -3348,6 +3361,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String postLikesCount(String count) {
     return '$count إعجاب';
   }
+
+  @override
+  String get postOptions => 'خيارات المنشور';
 
   @override
   String get postMore => 'المزيد';

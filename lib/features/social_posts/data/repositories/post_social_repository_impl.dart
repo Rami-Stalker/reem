@@ -3,6 +3,7 @@ import 'package:reem/core/result/result.dart';
 import 'package:reem/core/shared/entities/comment.dart';
 import 'package:reem/features/social_posts/data/datasources/post_social_remote_datasource.dart';
 import 'package:reem/features/social_posts/domain/entities/comment_page.dart';
+import 'package:reem/features/social_posts/domain/entities/comment_thread.dart';
 import 'package:reem/features/social_posts/domain/entities/post_engagement.dart';
 import 'package:reem/features/social_posts/domain/repositories/post_social_repository.dart';
 
@@ -15,19 +16,19 @@ class PostSocialRepositoryImpl
 
   @override
   Future<Result<CommentPage>> getComments(
-    String postId, {
+    CommentThread thread, {
     int page = 1,
     int limit = 20,
   }) =>
-      guard(() => remote.getComments(postId, page: page, limit: limit));
+      guard(() => remote.getComments(thread, page: page, limit: limit));
 
   @override
-  Future<Result<Comment>> addComment(String postId, String content) =>
-      guard(() => remote.addComment(postId, content));
+  Future<Result<Comment>> addComment(CommentThread thread, String content) =>
+      guard(() => remote.addComment(thread, content));
 
   @override
-  Future<Result<void>> deleteComment(String postId, String commentId) =>
-      guard(() => remote.deleteComment(postId, commentId));
+  Future<Result<void>> deleteComment(CommentThread thread, String commentId) =>
+      guard(() => remote.deleteComment(thread, commentId));
 
   @override
   Future<Result<PostEngagement>> toggleLike(String postId) =>

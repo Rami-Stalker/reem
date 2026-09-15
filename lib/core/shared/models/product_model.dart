@@ -38,6 +38,10 @@ class ProductModel extends Product {
     super.viewsCount,
     super.ordersCount,
     super.favoritesCount,
+    super.likesCount,
+    super.commentsCount,
+    super.sharesCount,
+    super.picksCount,
     super.cues,
   });
 
@@ -86,6 +90,10 @@ class ProductModel extends Product {
       viewsCount: json['views_count'] as int? ?? 0,
       ordersCount: json['orders_count'] as int? ?? 0,
       favoritesCount: json['favorites_count'] as int? ?? 0,
+      likesCount: json['likes_count'] as int? ?? 0,
+      commentsCount: json['comments_count'] as int? ?? 0,
+      sharesCount: json['shares_count'] as int? ?? 0,
+      picksCount: json['picks_count'] as int? ?? 0,
       // Rendered exactly as the server worded them. Nothing is composed here:
       // a badge assembled on the phone from a raw count can drift from what
       // the server was actually willing to claim, and an honest badge that
@@ -128,6 +136,10 @@ class ProductModel extends Product {
         viewsCount: p.viewsCount,
         ordersCount: p.ordersCount,
         favoritesCount: p.favoritesCount,
+        likesCount: p.likesCount,
+        commentsCount: p.commentsCount,
+        sharesCount: p.sharesCount,
+        picksCount: p.picksCount,
         cues: p.cues,
         createdAt: p.createdAt,
       );
@@ -158,6 +170,10 @@ class ProductModel extends Product {
         'views_count': viewsCount,
         'orders_count': ordersCount,
         'favorites_count': favoritesCount,
+        'likes_count': likesCount,
+        'comments_count': commentsCount,
+        'shares_count': sharesCount,
+        'picks_count': picksCount,
         'created_at': createdAt.toIso8601String(),
       };
 

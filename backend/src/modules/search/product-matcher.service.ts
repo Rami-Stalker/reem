@@ -227,6 +227,42 @@ export class ProductMatcher {
     return rows.map((row) => row.id);
   }
 
+  /**
+   * Shoppers whose name or handle the phrase reaches — **only those whose page
+   * is open**. A closed page is hers; being findable by name is exactly the
+   * exposure she has not opted into, so a private account is not a search
+   * result at all rather than a result with a padlock.
+   */
+  async matchCustomerIds(
+    query: string | null | undefined,
+    take = 100,
+  ): Promise<string[] | null> {
+    const key = searchKey(query);
+    if (!key) return null;
+
+    const rows = await this.prisma.$queryRawUnsafe<{ id: string }[]>(
+      `
+      WITH q AS (SELECT $1::text AS key)
+      SELECT u.id
+      FROM users u, q
+      WHERE u.role = 'CUSTOMER'
+        AND u.profile_is_public
+        AND (
+             reem_search_key(u.name)     LIKE '%' || q.key || '%'
+          OR reem_search_key(u.username) LIKE '%' || q.key || '%'
+          OR q.key <% reem_search_key(u.name)
+        )
+      ORDER BY
+        CASE WHEN reem_search_key(u.name) LIKE q.key || '%' THEN 0 ELSE 1 END,
+        u.followers_count DESC
+      LIMIT $2
+      `,
+      key,
+      take,
+    );
+    return rows.map((row) => row.id);
+  }
+
   /** Boutiques whose name the phrase reaches. */
   async matchSellerIds(
     query: string | null | undefined,

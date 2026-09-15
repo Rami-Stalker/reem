@@ -1160,6 +1160,16 @@ model User {
   sellerRankScoredAt   DateTime?           @map("seller_rank_scored_at")
   sellerRankBreakdown  Json?               @map("seller_rank_breakdown")
 
+  // Product social — the post gestures, on the catalogue itself.
+  productLikes    ProductLike[]    @relation("ProductLikes")
+  productComments ProductComment[] @relation("ProductComments")
+  productPicks    ProductPick[]    @relation("ProductPicks")
+  // Her feed, tuned by her: pieces she said she is not interested in, and the
+  // accounts she asked to see less of.
+  contentHides    ContentHide[]    @relation("ContentHides")
+  mutesGiven      UserMute[]       @relation("MutesGiven")
+  mutesReceived   UserMute[]       @relation("MutesReceived")
+
   @@index([role])
   @@index([email])
   @@index([phone])
@@ -2163,6 +2173,16 @@ model Product {
   ordersCount    Int @default(0) @map("orders_count")
   favoritesCount Int @default(0) @map("favorites_count")
 
+  /// The post gestures, on a product. `likes_count` is back, and this time it
+  /// has a writer: `product_likes`, incremented in the same transaction as the
+  /// row. A like is public applause; a favourite (above) is her private
+  /// shelf — the same split a post has between its heart and its bookmark.
+  likesCount    Int @default(0) @map("likes_count")
+  commentsCount Int @default(0) @map("comments_count")
+  sharesCount   Int @default(0) @map("shares_count")
+  /// How many women added it to their own page («أضيفي إلى صفحتي»).
+  picksCount    Int @default(0) @map("picks_count")
+
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
@@ -2177,6 +2197,9 @@ model Product {
   analyticsEvents         AnalyticsEvent[]
   wishlistCollectionItems WishlistCollectionItem[]
   reviews                 ProductReview[]
+  likes                   ProductLike[]
+  comments                ProductComment[]
+  picks                   ProductPick[]
   aiInteractions          AiInteraction[]
   aiGenerations           AiGeneration[]
   commerceContentTags     CommerceContentProductTag[]
@@ -2652,11 +2675,12 @@ model CommerceContent {
   attributions            CommerceContentAttribution[]
   guestSavedItems         GuestSavedItem[]
   wishlistCollectionItems WishlistCollectionItem[]
+  /// Her page timeline, and branch A of the following feed. Keyset-ordered, so
+  hiddenBy                ContentHide[]
 
   /// Her authoring workspace: drafts and scheduled rows, most recently touched
   /// first.
   @@index([authorId, status, updatedAt(sort: Desc)])
-  /// Her page timeline, and branch A of the following feed. Keyset-ordered, so
   /// the index carries the whole ORDER BY.
   @@index([authorId, status, publishedAt(sort: Desc), id(sort: Desc)])
   /// One index for every format-scoped feed — reels today, whatever the
@@ -9603,4 +9627,98 @@ model DeliveryWebhookEvent {
   @@unique([providerCode, externalEventId])
   @@index([dispatchId, receivedAt])
   @@map("delivery_webhook_events")
+}
+
+// ── Product social ───────────────────────────────────────────────────────────
+//
+// A product is not an author's story, but the client asked for every piece in
+// the app to be liked, discussed, shared and added to a page the way a post is.
+// These hang off the canonical product rather than an offer: the conversation
+// is about the dress, and it must survive a boutique withdrawing her offer.
+
+model ProductLike {
+  id        String   @id @default(uuid()) @db.Uuid
+  productId String   @map("product_id") @db.Uuid
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  userId    String   @map("user_id") @db.Uuid
+  user      User     @relation("ProductLikes", fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@unique([productId, userId])
+  @@index([userId, productId])
+  @@map("product_likes")
+}
+
+/// Questions and chatter under a piece — «متوفر مقاس M؟». Not a review: a
+/// review is a verified buyer's rating and is moderated as evidence; a comment
+/// is conversation, open to anyone signed in.
+model ProductComment {
+  id            String                       @id @default(uuid()) @db.Uuid
+  productId     String                       @map("product_id") @db.Uuid
+  product       Product                      @relation(fields: [productId], references: [id], onDelete: Cascade)
+  userId        String                       @map("user_id") @db.Uuid
+  user          User                         @relation("ProductComments", fields: [userId], references: [id], onDelete: Cascade)
+  body          String
+  /// Removal keeps the row, for the same reason content comments do: a
+  /// deleted comment that leaves no trace is how a report loses its evidence.
+  status        CommerceContentCommentStatus @default(VISIBLE)
+  removedById   String?                      @map("removed_by_id") @db.Uuid
+  removalReason String?                      @map("removal_reason")
+  createdAt     DateTime                     @default(now()) @map("created_at")
+  updatedAt     DateTime                     @updatedAt @map("updated_at")
+
+  @@index([productId, status, createdAt(sort: Desc)])
+  @@index([userId])
+  @@map("product_comments")
+}
+
+/// «أضيفي إلى صفحتي» for a product: a pointer on her page, never a copy.
+/// Shown to others only while her page is open — decided at read time, like a
+/// reshare's resharer, so closing her page hides her picks on the next load.
+model ProductPick {
+  id        String   @id @default(uuid()) @db.Uuid
+  productId String   @map("product_id") @db.Uuid
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  userId    String   @map("user_id") @db.Uuid
+  user      User     @relation("ProductPicks", fields: [userId], references: [id], onDelete: Cascade)
+  note      String?  @db.VarChar(280)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@unique([userId, productId])
+  @@index([userId, createdAt(sort: Desc)])
+  @@index([productId])
+  @@map("product_picks")
+}
+
+// ── Her feed, tuned by her ───────────────────────────────────────────────────
+
+/// «غير مهتمة» — this piece leaves every feed she reads. Not a report: nobody
+/// is told, nothing is moderated, and the author's numbers are untouched.
+model ContentHide {
+  id        String          @id @default(uuid()) @db.Uuid
+  userId    String          @map("user_id") @db.Uuid
+  user      User            @relation("ContentHides", fields: [userId], references: [id], onDelete: Cascade)
+  contentId String          @map("content_id") @db.Uuid
+  content   CommerceContent @relation(fields: [contentId], references: [id], onDelete: Cascade)
+  createdAt DateTime        @default(now()) @map("created_at")
+
+  @@unique([userId, contentId])
+  @@index([contentId])
+  @@map("content_hides")
+}
+
+/// «إخفاء منشورات هذا الحساب» — a quiet mute. She still may visit the page,
+/// follow, buy; the account simply stops appearing in her feeds. The muted
+/// account is never told, which is the whole difference from a block.
+model UserMute {
+  id        String   @id @default(uuid()) @db.Uuid
+  muterId   String   @map("muter_id") @db.Uuid
+  muter     User     @relation("MutesGiven", fields: [muterId], references: [id], onDelete: Cascade)
+  mutedId   String   @map("muted_id") @db.Uuid
+  muted     User     @relation("MutesReceived", fields: [mutedId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@unique([muterId, mutedId])
+  @@index([mutedId])
+  @@map("user_mutes")
 }
