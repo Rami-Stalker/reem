@@ -1,0 +1,17 @@
+# Supabase
+.branches
+.temp
+
+# dotenvx
+.env.keys
+.env.local
+.env.*.local
+
+# Reem: generated edge bundle and build scratch — rebuilt by `npm run build` in edge/
+functions/api/reem-api.mjs
+functions/api/reem-api.mjs.map
+edge/.build/
+edge/node_modules/
+# Edge Function secrets file produced by `npm run secrets:env` — never commit
+.env.edge
+*.env.local

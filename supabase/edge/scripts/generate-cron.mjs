@@ -1,0 +1,148 @@
+// Writes the pg_cron schedule for every backend `@Cron` job.
+//
+//   node scripts/generate-cron.mjs --from http://127.0.0.1:8787/api --secret <REEM_CRON_SECRET>
+//
+// The job list is read from a running build of the api function
+// (`GET /internal/cron`), which discovers the jobs from the backend's own
+// decorators — so the schedule cannot drift from the code by a typo here.
+//
+// Two translations happen:
+//
+//  1. Syntax. `@nestjs/schedule` accepts six fields (with seconds); pg_cron
+//     takes five, or "N seconds" for sub-minute intervals.
+//  2. Time zone. On a server the backend's timers fire in the machine's local
+//     time, which for this platform is UTC+3 (Damascus, Istanbul). pg_cron on
+//     Supabase runs in UTC, so fixed hours move back three: the 03:00 nightly
+//     sweep is scheduled at 00:00 UTC, i.e. still 03:00 in Damascus.
+//
+// Jobs that run every few seconds or every minute are gated in SQL: pg_cron
+// only calls the function when the table the job drains has something in it,
+// so an idle platform makes no invocations for them.
+import { writeFileSync } from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const here = path.dirname(fileURLToPath(import.meta.url));
+const args = Object.fromEntries(
+  process.argv.slice(2).reduce((pairs, value, index, all) => {
+    if (value.startsWith('--')) pairs.push([value.slice(2), all[index + 1]]);
+    return pairs;
+  }, []),
+);
+const from = args.from ?? 'http://127.0.0.1:8787/api';
+const secret = args.secret ?? process.env.REEM_CRON_SECRET;
+const localOffsetHours = Number(args['local-offset'] ?? '3');
+if (!secret) {
+  console.error('Pass --secret <REEM_CRON_SECRET> (the value the running function was started with).');
+  process.exit(1);
+}
+
+const response = await fetch(`${from}/internal/cron`, { headers: { 'x-reem-cron-secret': secret } });
+if (!response.ok) {
+  console.error(`GET ${from}/internal/cron answered ${response.status}`);
+  process.exit(1);
+}
+const { jobs } = await response.json();
+
+/** SQL predicates: the job is only worth an invocation when this is true. */
+const GATES = {
+  'OtpOutboxCron.drain': `EXISTS (SELECT 1 FROM public.otp_outbox WHERE status IN ('PENDING', 'IN_FLIGHT', 'AWAITING_RECEIPT'))`,
+  'OtpOutboxCron.retireExpired': `EXISTS (SELECT 1 FROM public.otp_requests r JOIN public.otp_outbox o ON o.challenge_id = r.id WHERE r.status = 'PENDING' AND r.expires_at < (now() AT TIME ZONE 'utc') AND o.status NOT IN ('CANCELLED', 'EXHAUSTED'))`,
+  'NotificationsService.processScheduled': `EXISTS (SELECT 1 FROM public.notification_campaigns WHERE status = 'SCHEDULED' AND scheduled_at <= (now() AT TIME ZONE 'utc')) OR EXISTS (SELECT 1 FROM public.notification_deliveries WHERE status = 'QUEUED' AND (scheduled_at IS NULL OR scheduled_at <= (now() AT TIME ZONE 'utc')))`,
+  'CommerceContentScheduler.processLifecycle': `EXISTS (SELECT 1 FROM public.commerce_contents WHERE (status = 'SCHEDULED' AND moderation_status = 'APPROVED' AND scheduled_at <= (now() AT TIME ZONE 'utc')) OR (status = 'PUBLISHED' AND expires_at <= (now() AT TIME ZONE 'utc')))`,
+};
+
+function shiftHours(field) {
+  if (field === '*' || field.includes('/') || field.includes('-')) return field;
+  return field
+    .split(',')
+    .map((hour) => String((((Number(hour) - localOffsetHours) % 24) + 24) % 24))
+    .join(',');
+}
+
+function toPgCron(expression) {
+  let fields = expression.trim().split(/\s+/);
+  if (fields.length === 6) {
+    const [seconds, ...rest] = fields;
+    const everyNSeconds = /^\*\/(\d+)$/.exec(seconds);
+    if (everyNSeconds && rest.every((f) => f === '*')) return `${everyNSeconds[1]} seconds`;
+    if (seconds !== '0') throw new Error(`Cannot express "${expression}" in pg_cron`);
+    fields = rest;
+  }
+  if (fields.length !== 5) throw new Error(`Unexpected cron expression "${expression}"`);
+  let [minute, hour, dom, month, dow] = fields;
+  if (minute === '*/1') minute = '*';
+  if (hour === '0-23/1') hour = '*';
+  if (hour !== '*' && /^[\d,]+$/.test(hour) && (dom !== '*' || dow !== '*')) {
+    throw new Error(`"${expression}" pins a day and an hour; shifting it to UTC needs a human`);
+  }
+  return [minute.replace(/^0(\d)$/, '$1'), shiftHours(hour), dom, month, dow].join(' ');
+}
+
+const lines = [];
+for (const job of jobs) {
+  const schedule = toPgCron(job.cronTime);
+  const gate = GATES[job.id];
+  const command = gate
+    ? `SELECT reem_supabase.invoke_cron('${job.id}') WHERE ${gate}`
+    : `SELECT reem_supabase.invoke_cron('${job.id}')`;
+  lines.push(`-- ${job.id}: backend "${job.cronTime}" (UTC+${localOffsetHours}) → pg_cron "${schedule}" (UTC)${gate ? ', gated' : ''}`);
+  lines.push(`SELECT cron.schedule('reem.${job.id}', '${schedule}', $cmd$${command}$cmd$);`);
+  lines.push('');
+}
+
+const sql = `-- ─────────────────────────────────────────────────────────────────────────────
+-- Reem on Supabase · 5/5 · scheduled jobs
+--
+-- GENERATED by supabase/edge/scripts/generate-cron.mjs from the job list the
+-- api function discovers in the backend (${jobs.length} jobs). Regenerate when a
+-- backend \`@Cron\` changes.
+--
+-- pg_cron calls \`reem_supabase.invoke_cron(job)\`, which POSTs to
+-- \`<api>/internal/cron/<job>\` through pg_net with the shared secret. The URL
+-- and the secret are read from Vault at call time, so this file holds neither:
+--
+--   select vault.create_secret('https://<project-ref>.supabase.co/functions/v1/api', 'reem_api_url');
+--   select vault.create_secret('<REEM_CRON_SECRET>', 'reem_cron_secret');
+--
+-- Until both exist, every job is a logged no-op.
+-- ─────────────────────────────────────────────────────────────────────────────
+
+CREATE EXTENSION IF NOT EXISTS pg_cron;
+CREATE EXTENSION IF NOT EXISTS pg_net;
+
+CREATE OR REPLACE FUNCTION reem_supabase.invoke_cron(p_job text)
+RETURNS bigint
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = ''
+AS $$
+DECLARE
+  v_url    text;
+  v_secret text;
+BEGIN
+  SELECT decrypted_secret INTO v_url    FROM vault.decrypted_secrets WHERE name = 'reem_api_url';
+  SELECT decrypted_secret INTO v_secret FROM vault.decrypted_secrets WHERE name = 'reem_cron_secret';
+  IF v_url IS NULL OR v_secret IS NULL THEN
+    RAISE LOG 'reem cron %: reem_api_url / reem_cron_secret are not in Vault; skipped', p_job;
+    RETURN NULL;
+  END IF;
+
+  RETURN net.http_post(
+    url                  := rtrim(v_url, '/') || '/internal/cron/' || p_job,
+    headers              := jsonb_build_object('content-type', 'application/json', 'x-reem-cron-secret', v_secret),
+    body                 := '{}'::jsonb,
+    timeout_milliseconds := 150000
+  );
+END
+$$;
+REVOKE ALL ON FUNCTION reem_supabase.invoke_cron(text) FROM PUBLIC, anon, authenticated;
+
+-- Re-running this migration replaces the schedule rather than duplicating it.
+SELECT cron.unschedule(jobid) FROM cron.job WHERE jobname LIKE 'reem.%';
+
+${lines.join('\n')}`;
+
+const out = path.resolve(here, '../../migrations/20260914120400_reem_supabase_cron.sql');
+writeFileSync(out, sql);
+console.log(`${jobs.length} jobs → ${path.relative(process.cwd(), out)}`);
