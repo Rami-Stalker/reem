@@ -9722,3 +9722,36 @@ model UserMute {
   @@index([mutedId])
   @@map("user_mutes")
 }
+
+// ───────────────────────────── Scheduling ─────────────────────────────
+
+/// One row per scheduled job: the lease that lets exactly one API instance run
+/// it at a time, and the record of how its last run went.
+///
+/// The lease is a row rather than a Postgres advisory lock because the API
+/// reaches Supabase through the transaction pooler, where a session-level
+/// advisory lock is released — or worse, kept — on whichever server connection
+/// the pooler happened to hand out. A row with an expiry survives a pooler, a
+/// crash (the lease simply runs out) and a deploy that briefly runs the old and
+/// the new instance side by side. See `common/scheduling/job-runner.service.ts`.
+model ScheduledJobState {
+  name                String    @id @db.VarChar(160)
+  /// `host:pid:nonce` of the instance holding the lease; null when free.
+  lockedBy            String?   @map("locked_by") @db.VarChar(200)
+  /// The lease ends here unless its holder renews it. Null when free.
+  lockedUntil         DateTime? @map("locked_until")
+  lastStartedAt       DateTime? @map("last_started_at")
+  lastFinishedAt      DateTime? @map("last_finished_at")
+  lastSucceededAt     DateTime? @map("last_succeeded_at")
+  /// RUNNING | SUCCEEDED | FAILED
+  lastStatus          String?   @map("last_status") @db.VarChar(20)
+  lastError           String?   @map("last_error")
+  lastDurationMs      Int?      @map("last_duration_ms")
+  /// schedule | catch-up | manual
+  lastTrigger         String?   @map("last_trigger") @db.VarChar(20)
+  runCount            Int       @default(0) @map("run_count")
+  consecutiveFailures Int       @default(0) @map("consecutive_failures")
+  updatedAt           DateTime  @default(now()) @updatedAt @map("updated_at")
+
+  @@map("scheduled_job_states")
+}

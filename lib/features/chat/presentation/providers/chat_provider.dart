@@ -1,3 +1,4 @@
+import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 
@@ -25,7 +26,11 @@ final chatRepositoryProvider = Provider<ChatRepository>(
 
 final chatRealtimeServiceProvider = Provider<ChatRealtimeService>((ref) {
   final service = ChatRealtimeService(ref.watch(secureStorageProvider));
+  // Back from the background: reconnect now instead of at whatever backoff
+  // step the retries reached while the phone was asleep.
+  final lifecycle = AppLifecycleListener(onResume: service.reconnectNow);
   ref.onDispose(() {
+    lifecycle.dispose();
     service.disconnect();
   });
   return service;

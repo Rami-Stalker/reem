@@ -1,7 +1,8 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { Cron, CronExpression } from '@nestjs/schedule';
+import { CronExpression } from '@nestjs/schedule';
 
 import { ReturnsService } from './returns.service';
+import { ScheduledJob } from '../../common/scheduling/scheduled-job.decorator';
 
 /**
  * Pays out returns whose goods are back.
@@ -18,7 +19,7 @@ export class ReturnsScheduler {
 
   constructor(private readonly returns: ReturnsService) {}
 
-  @Cron(CronExpression.EVERY_HOUR)
+  @ScheduledJob({ cron: CronExpression.EVERY_HOUR, staleAfterMinutes: 180, catchUp: true, critical: true })
   async settleReceivedReturns(): Promise<void> {
     const { settled, failed } = await this.returns.settleDue();
     if (settled || failed) {

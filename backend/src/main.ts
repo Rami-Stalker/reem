@@ -176,6 +176,32 @@ async function bootstrap() {
 
   const port = config.get<number>('port') ?? 3000;
   const host = config.get<string>('host') ?? '0.0.0.0';
+
+  /**
+   * Keep-alive longer than the proxy's.
+   *
+   * Node closes an idle keep-alive connection after 5 s by default, while the
+   * load balancer in front of a hosted service keeps its side open for about a
+   * minute. When the two disagree the proxy reuses a connection Node has just
+   * closed and the client gets a sporadic 502 — rare, unreproducible, and on
+   * checkout as likely as anywhere. `headersTimeout` must exceed it or Node
+   * enforces the shorter one.
+   */
+  const server = app.getHttpServer() as import('http').Server;
+  server.keepAliveTimeout = 75_000;
+  server.headersTimeout = 76_000;
+
+  if (config.get<string>('nodeEnv') === 'production' && trustProxy === 'false') {
+    // Not refused: a server exposed directly is legitimate. But every hosted
+    // platform puts a proxy in front, and then rate limiting sees one address
+    // for the whole country.
+    Logger.warn(
+      'TRUST_PROXY is false in production. Behind a hosting proxy, rate limiting ' +
+        'will see the proxy address for every client — set TRUST_PROXY=1.',
+      'Bootstrap',
+    );
+  }
+
   await app.listen(port, host);
 
   const path = prefix ? `/${prefix}` : '';

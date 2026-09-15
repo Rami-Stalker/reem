@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { Cron, CronExpression } from '@nestjs/schedule';
+import { CronExpression } from '@nestjs/schedule';
 import {
   AccountRecoveryStatus,
   AuditSeverity,
@@ -9,6 +9,7 @@ import {
 } from '@prisma/client';
 import { PrismaService } from '../../../prisma/prisma.service';
 import { AccountRecoveryService } from '../recovery/account-recovery.service';
+import { ScheduledJob } from '../../../common/scheduling/scheduled-job.decorator';
 
 const HOUR = 60 * 60_000;
 const DAY = 24 * HOUR;
@@ -77,7 +78,7 @@ export class AuthRetentionCron {
    * it is marked, it still shows as "active" in her session list, which is the
    * one screen that has to be truthful.
    */
-  @Cron(CronExpression.EVERY_10_MINUTES)
+  @ScheduledJob({ cron: CronExpression.EVERY_10_MINUTES, staleAfterMinutes: 30, critical: true })
   async advanceClocks(): Promise<void> {
     const now = new Date();
 
@@ -160,7 +161,7 @@ export class AuthRetentionCron {
    * person can see: sessions and challenges are already dead by the time they
    * are eligible.
    */
-  @Cron(CronExpression.EVERY_DAY_AT_3AM)
+  @ScheduledJob({ cron: CronExpression.EVERY_DAY_AT_3AM, staleAfterMinutes: 1560, catchUp: true })
   async sweep(): Promise<void> {
     const now = Date.now();
     const before = (ms: number) => new Date(now - ms);

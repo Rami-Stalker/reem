@@ -16,6 +16,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:reem/core/config/app_env.dart';
 import 'package:reem/core/design_system/design_system.dart';
 import 'package:reem/core/errors/failure.dart';
 import 'package:reem/core/localization/app_localizations.dart';
@@ -67,7 +68,23 @@ void main() {
     test('an authorised media path is recognised', () {
       // This decides whether the bearer token is attached. Get it wrong and
       // every photograph in every conversation is a broken box.
-      expect(AuthorizedMediaImage.isPrivate(_privateUrl), isTrue);
+      expect(
+        AuthorizedMediaImage.isPrivate(
+          '${AppEnv.baseUrl}/media/3f4a9c1e-1b2d-4e5f-8a90-abcdef012345/file',
+        ),
+        isTrue,
+      );
+    });
+
+    test('the same path on another host gets no token', () {
+      // A chat attachment URL is text the sender wrote. Matching on the path
+      // alone would send the reader's session to whoever wrote it.
+      expect(
+        AuthorizedMediaImage.isPrivate(
+          'https://attacker.example/media/3f4a9c1e-1b2d-4e5f-8a90-abcdef012345/file',
+        ),
+        isFalse,
+      );
     });
 
     test('a public upload and an external link are not', () {

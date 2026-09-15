@@ -1,4 +1,9 @@
-import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
+import {
+  BeforeApplicationShutdown,
+  Injectable,
+  Logger,
+  OnModuleInit,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { HttpAdapterHost } from '@nestjs/core';
 import { OnEvent } from '@nestjs/event-emitter';
@@ -35,6 +40,37 @@ const MAX_FRAME_BYTES = 64 * 1024;
 const MAX_BUFFERED_BYTES = 256 * 1024;
 
 /**
+ * Heartbeat. The server pings every connection on this interval and closes any
+ * that has sent nothing back — not even the automatic pong — within
+ * `DEAD_AFTER_MS`.
+ *
+ * Two failures this closes, both invisible until it existed:
+ *
+ *  - **A phone that loses signal does not say goodbye.** No close frame, no
+ *    FIN; the TCP connection simply stops. Node enables no keep-alive on its
+ *    own, so the socket stayed in the table — and her presence stayed
+ *    "online" to everyone she talks to — for as long as the kernel took to
+ *    notice, which is hours.
+ *  - **Hosting proxies close idle WebSockets**, typically after 60–100 s
+ *    without a frame. A conversation left open on screen with nobody typing
+ *    was cut every minute or so. A ping every 25 s keeps it under every common
+ *    timeout, without depending on one host's particular number.
+ */
+const PING_INTERVAL_MS = 25_000;
+const DEAD_AFTER_MS = 65_000;
+
+/**
+ * Frames one connection may send in a window before it is closed.
+ *
+ * A person typing, reading and sending produces a few frames a second at
+ * most. HTTP routes are throttled per IP; a socket, once open, was not
+ * throttled at all, so one account could send messages in a loop as fast as
+ * the database accepted them.
+ */
+const FRAME_WINDOW_MS = 10_000;
+const MAX_FRAMES_PER_WINDOW = 120;
+
+/**
  * The subprotocol a client names to say "my next value is a bearer token".
  *
  * A browser cannot put a header on a WebSocket — `WebSocket` takes a URL and a
@@ -60,6 +96,10 @@ interface RealtimeClient {
   rooms: Set<string>;
   buffer: Buffer;
   recheck?: NodeJS.Timeout;
+  /** Last time any byte arrived — a frame, a pong. */
+  lastSeenAt: number;
+  windowStartedAt: number;
+  framesInWindow: number;
 }
 
 interface DecodedFrame {
@@ -88,13 +128,15 @@ interface PresenceEvent {
 }
 
 @Injectable()
-export class ChatRealtimeGateway implements OnModuleInit {
+export class ChatRealtimeGateway implements OnModuleInit, BeforeApplicationShutdown {
   private readonly logger = new Logger(ChatRealtimeGateway.name);
   private readonly clients = new Map<string, RealtimeClient>();
   /** Transition telemetry for the retired `?token=`; see `warnLegacyHandshake`. */
   private legacyHandshakes = 0;
   private lastLegacyWarnAt = 0;
   private readonly userClients = new Map<string, Set<string>>();
+  private heartbeat?: NodeJS.Timeout;
+  private closing = false;
 
   constructor(
     private readonly adapterHost: HttpAdapterHost,
@@ -111,7 +153,83 @@ export class ChatRealtimeGateway implements OnModuleInit {
     server.on('upgrade', (req, socket, head) => {
       void this.handleUpgrade(req, socket, head);
     });
+
+    this.heartbeat = setInterval(() => this.sweepConnections(), PING_INTERVAL_MS);
+    this.heartbeat.unref();
+
+    // Presence rows outlive the process that wrote them. After a crash or a
+    // deploy every "online" row points at a socket that no longer exists, and
+    // stays that way until its owner happens to reconnect — so clear them.
+    // Right for the single realtime instance this gateway supports (it has no
+    // cross-instance pub/sub); anyone genuinely connected reconnects within
+    // seconds and is marked online again.
+    void this.prisma.userPresence
+      .updateMany({
+        where: { status: PresenceStatus.ONLINE },
+        data: { status: PresenceStatus.OFFLINE, socketCount: 0 },
+      })
+      .then(
+        (reset) => {
+          if (reset.count) {
+            this.logger.log(`Cleared ${reset.count} stale presence row(s)`);
+          }
+        },
+        (error) => this.logger.warn(`Presence reset failed: ${String(error)}`),
+      );
+
     this.logger.log('Chat WebSocket endpoint mounted at /ws/chats');
+  }
+
+  /**
+   * Stops accepting sockets and closes the open ones with 1001 ("going
+   * away"), so every app reconnects at once — to this process's replacement —
+   * instead of discovering a dead connection on its next send.
+   */
+  async beforeApplicationShutdown(): Promise<void> {
+    this.closing = true;
+    if (this.heartbeat) clearInterval(this.heartbeat);
+    const userIds = [...this.userClients.keys()];
+    for (const client of [...this.clients.values()]) {
+      if (client.recheck) clearInterval(client.recheck);
+      try {
+        const reason = 'Server restarting';
+        const payload = Buffer.alloc(2 + Buffer.byteLength(reason));
+        payload.writeUInt16BE(1001, 0);
+        payload.write(reason, 2);
+        this.sendFrame(client.socket, payload, 0x8);
+      } catch {
+        // Already gone.
+      }
+      client.socket.end();
+    }
+    this.clients.clear();
+    this.userClients.clear();
+    if (userIds.length === 0) return;
+    try {
+      await this.prisma.userPresence.updateMany({
+        where: { userId: { in: userIds } },
+        data: { status: PresenceStatus.OFFLINE, socketCount: 0, lastSeenAt: new Date() },
+      });
+    } catch {
+      // The database may be going away too; the next boot clears these.
+    }
+  }
+
+  /** Pings every connection, and closes the ones that stopped answering. */
+  private sweepConnections(): void {
+    const now = Date.now();
+    for (const client of [...this.clients.values()]) {
+      if (now - client.lastSeenAt > DEAD_AFTER_MS) {
+        client.socket.destroy();
+        void this.unregister(client);
+        continue;
+      }
+      try {
+        this.sendFrame(client.socket, Buffer.alloc(0), 0x9);
+      } catch {
+        void this.unregister(client);
+      }
+    }
   }
 
   @OnEvent('chat.message.created')
@@ -158,6 +276,10 @@ export class ChatRealtimeGateway implements OnModuleInit {
       socket.destroy();
       return;
     }
+    if (this.closing) {
+      this.reject(socket, 503, 'Service Unavailable');
+      return;
+    }
 
     const offered = this.offeredProtocols(req);
     const token = this.bearerFrom(req, offered, url);
@@ -174,14 +296,26 @@ export class ChatRealtimeGateway implements OnModuleInit {
     }
     const userId = payload.sub;
 
+    // The authorisation above awaited the database; the client may have given
+    // up in the meantime.
+    if (socket.destroyed) return;
+
+    socket.setNoDelay(true);
+    // Under the heartbeat, not instead of it: lets the kernel notice a dead
+    // peer even while this process is too busy to sweep.
+    socket.setKeepAlive(true, 30_000);
     socket.write(this.acceptResponse(key, offered));
+    const now = Date.now();
     const client: RealtimeClient = {
-      id: `${userId}:${Date.now()}:${randomUUID()}`,
+      id: `${userId}:${now}:${randomUUID()}`,
       userId,
       sessionId: payload.sid,
       socket,
       rooms: new Set(),
       buffer: Buffer.alloc(0),
+      lastSeenAt: now,
+      windowStartedAt: now,
+      framesInWindow: 0,
     };
     this.register(client);
 
@@ -288,6 +422,7 @@ export class ChatRealtimeGateway implements OnModuleInit {
   }
 
   private consume(client: RealtimeClient, chunk: Buffer) {
+    client.lastSeenAt = Date.now();
     client.buffer = Buffer.concat([client.buffer, chunk]);
     let decoded: { frames: DecodedFrame[]; remaining: Buffer };
     try {
@@ -307,6 +442,10 @@ export class ChatRealtimeGateway implements OnModuleInit {
     }
 
     for (const frame of decoded.frames) {
+      if (!this.withinRate(client)) {
+        this.close(client, 1008, 'Too many messages');
+        return;
+      }
       if (frame.opcode === 0x8) {
         client.socket.end();
         continue;
@@ -405,6 +544,17 @@ export class ChatRealtimeGateway implements OnModuleInit {
         message: error instanceof Error ? error.message : 'Realtime error',
       });
     }
+  }
+
+  /** Counts a frame against its connection's window; false once over. */
+  private withinRate(client: RealtimeClient): boolean {
+    const now = Date.now();
+    if (now - client.windowStartedAt > FRAME_WINDOW_MS) {
+      client.windowStartedAt = now;
+      client.framesInWindow = 0;
+    }
+    client.framesInWindow += 1;
+    return client.framesInWindow <= MAX_FRAMES_PER_WINDOW;
   }
 
   private broadcastToUsers(userIds: string[], payload: unknown) {

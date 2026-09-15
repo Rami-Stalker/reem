@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blurhash/flutter_blurhash.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:reem/core/config/app_env.dart';
 import 'package:reem/core/media/media_variants.dart';
 import 'package:reem/core/presentation/providers/core_providers.dart';
 import 'package:reem/core/storage/secure_storage_service.dart';
@@ -80,7 +81,22 @@ class AuthorizedMediaImage extends ConsumerWidget {
     caseSensitive: false,
   );
 
-  static bool isPrivate(String url) => _privatePath.hasMatch(url);
+  /// Whether [url] is a private asset served by *this app's* API — the only
+  /// host the session's bearer token may be sent to.
+  ///
+  /// The path alone is not enough. A chat attachment's URL is text a sender
+  /// supplied, and `https://anywhere.example/media/<uuid>/file` matches the
+  /// same pattern; attaching the token on the path would hand her session to
+  /// whoever wrote that URL the moment the bubble rendered.
+  static bool isPrivate(String url) {
+    if (!_privatePath.hasMatch(url)) return false;
+    final target = Uri.tryParse(url);
+    final api = Uri.tryParse(AppEnv.baseUrl);
+    return target != null &&
+        api != null &&
+        target.hasAuthority &&
+        target.origin == api.origin;
+  }
 
   /// What is actually fetched: the requested copy when one was asked for.
   String get _resolved =>

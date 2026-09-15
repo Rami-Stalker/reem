@@ -1,9 +1,10 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { Cron, CronExpression } from '@nestjs/schedule';
+import { CronExpression } from '@nestjs/schedule';
 import { TrendSignalService } from './collection/trend-signal.service';
 import { PrismaService } from '../../prisma/prisma.service';
 import { TrendsOrchestrator } from './trends.orchestrator';
+import { ScheduledJob } from '../../common/scheduling/scheduled-job.decorator';
 
 /**
  * When the engine thinks.
@@ -37,7 +38,7 @@ export class TrendsScheduler {
     return this.config.get<boolean>('trends.schedulerEnabled') ?? false;
   }
 
-  @Cron('0 15 2 * * *')
+  @ScheduledJob({ cron: '0 15 2 * * *' })
   async nightly(): Promise<void> {
     if (!this.enabled) return;
     if (await this.orchestrator.isBusy()) {
@@ -74,7 +75,7 @@ export class TrendsScheduler {
    * `updatedAt` is the clock, not `createdAt`: a cart she keeps adding to is
    * not abandoned, and the marker moves every time she touches it.
    */
-  @Cron(CronExpression.EVERY_HOUR)
+  @ScheduledJob({ cron: CronExpression.EVERY_HOUR })
   async sweepAbandonedCarts(): Promise<void> {
     if (!this.enabled) return;
 

@@ -1,5 +1,4 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
-import { Cron } from '@nestjs/schedule';
 import { OnEvent } from '@nestjs/event-emitter';
 import {
   NotificationCampaignStatus,
@@ -47,6 +46,7 @@ import {
   TrackNotificationEventDto,
   UpdateCampaignStatusDto,
 } from './dto/notification-engine.dto';
+import { ScheduledJob } from '../../common/scheduling/scheduled-job.decorator';
 
 
 @Injectable()
@@ -320,7 +320,7 @@ export class NotificationsService {
     return { tracked: true };
   }
 
-  @Cron('0 * * * * *')
+  @ScheduledJob({ cron: '0 * * * * *', staleAfterMinutes: 10 })
   async processScheduled(): Promise<void> {
     const dueCampaigns = await this.prisma.notificationCampaign.findMany({
       where: {

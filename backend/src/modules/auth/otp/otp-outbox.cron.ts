@@ -1,5 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { Cron, CronExpression } from '@nestjs/schedule';
+import { OnEvent } from '@nestjs/event-emitter';
+import { CronExpression } from '@nestjs/schedule';
 import {
   OtpDeliveryStatus,
   OtpOutboxStatus,
@@ -8,7 +9,8 @@ import {
 import { PrismaService } from '../../../prisma/prisma.service';
 import { DeliveryOrchestrator } from './delivery.orchestrator';
 import { OtpCipherService } from './otp-cipher.service';
-import { OtpDispatcherService } from './otp-dispatcher.service';
+import { OTP_ENQUEUED, OtpDispatcherService } from './otp-dispatcher.service';
+import { ScheduledJob } from '../../../common/scheduling/scheduled-job.decorator';
 
 /** Retry backoff for a transport that errored, before escalating past it. */
 const RETRY_BACKOFF_MS = 8_000;
@@ -49,8 +51,64 @@ export class OtpOutboxCron {
     private readonly dispatcher: OtpDispatcherService,
   ) {}
 
-  @Cron(CronExpression.EVERY_5_SECONDS)
+  /** Set while a drain runs on this instance; see `drainNow`. */
+  private draining: Promise<void> | null = null;
+  private drainAgain = false;
+
+  /**
+   * The safety net, every ten seconds.
+   *
+   * A code is sent the moment it is created (`onEnqueued`), so this poll is
+   * no longer what a woman waits on. It catches what that misses — a process
+   * that died between committing the challenge and sending it, a transport
+   * backing off for a retry, a delivery that went silent and must move to the
+   * next channel. Ten seconds keeps a retry close to its eight-second backoff
+   * and costs a third of the idle database round trips the five-second poll
+   * did.
+   *
+   * No lease: claiming is `FOR UPDATE SKIP LOCKED`, so any number of
+   * instances may drain at once without sending a code twice.
+   */
+  @ScheduledJob({ cron: '*/10 * * * * *', lease: false })
   async drain(): Promise<void> {
+    await this.drainNow();
+  }
+
+  @OnEvent(OTP_ENQUEUED, { async: true, promisify: true })
+  async onEnqueued(): Promise<void> {
+    await this.drainNow().catch((error) =>
+      this.logger.error(
+        `Immediate OTP delivery failed; the poll will retry: ${
+          error instanceof Error ? error.message : String(error)
+        }`,
+      ),
+    );
+  }
+
+  /**
+   * One drain at a time on this instance. A request arriving mid-drain asks
+   * for one more pass rather than starting a second concurrent one, so a burst
+   * of sign-ins is drained in a couple of passes, never dropped.
+   */
+  private drainNow(): Promise<void> {
+    if (this.draining) {
+      this.drainAgain = true;
+      return this.draining;
+    }
+    this.draining = (async () => {
+      try {
+        do {
+          this.drainAgain = false;
+          await this.drainOnce();
+        } while (this.drainAgain);
+      } finally {
+        this.draining = null;
+      }
+    })();
+    return this.draining;
+  }
+
+  private async drainOnce(): Promise<void> {
     await this.escalateSilentDeliveries();
     await this.reclaimStale();
 
@@ -65,13 +123,33 @@ export class OtpOutboxCron {
   }
 
   /** Retires codes that can no longer be used, and their plaintext with them. */
-  @Cron(CronExpression.EVERY_MINUTE)
+  @ScheduledJob({ cron: CronExpression.EVERY_MINUTE, staleAfterMinutes: 10, critical: true })
   async retireExpired(): Promise<void> {
     const expired = await this.prisma.otpRequest.findMany({
       where: {
         status: OtpStatus.PENDING,
         expiresAt: { lt: new Date() },
-        outbox: { isNot: null },
+        // Only challenges that still have something to retire. `shred` ends
+        // the outbox row and leaves the challenge PENDING, so matching on
+        // "has an outbox" alone selected the same rows every minute for ever
+        // — and once 200 of them had piled up, no newer code's plaintext was
+        // ever shredded at all.
+        outbox: {
+          is: {
+            OR: [
+              { sealedCode: { not: null } },
+              {
+                status: {
+                  in: [
+                    OtpOutboxStatus.PENDING,
+                    OtpOutboxStatus.IN_FLIGHT,
+                    OtpOutboxStatus.AWAITING_RECEIPT,
+                  ],
+                },
+              },
+            ],
+          },
+        },
       },
       select: { id: true },
       take: 200,

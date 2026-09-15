@@ -1,10 +1,10 @@
 import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { Cron } from '@nestjs/schedule';
 import { BundlesService } from './bundles/bundles.service';
 import { DropsService } from './drops/drops.service';
 import { MarketEconomicsService } from './economics/market-economics.service';
 import { MissionsService } from './missions/missions.service';
+import { ScheduledJob } from '../../common/scheduling/scheduled-job.decorator';
 
 /**
  * When the market is read.
@@ -54,7 +54,7 @@ export class MarketScheduler implements OnModuleInit {
     );
   }
 
-  @Cron('0 25 3 * * *')
+  @ScheduledJob({ cron: '0 25 3 * * *' })
   async nightly(): Promise<void> {
     if (!this.enabled) return;
     await this.run();
@@ -66,10 +66,15 @@ export class MarketScheduler implements OnModuleInit {
    * A drop scheduled for 8pm that opens at 3am the next morning is not a drop.
    * This is separated from the sweep for that reason alone: the state machine
    * is cheap and time-sensitive, the sweep is expensive and not.
+   *
+   * **Not behind the sweep's switch.** It used to return early with the
+   * market scheduler off — the default everywhere, production included — so a
+   * drop a seller scheduled through `/seller/market/drops` never opened and
+   * never ended. Two conditional `UPDATE`s on an indexed status are not the
+   * expensive work that switch exists to hold back, and both are idempotent.
    */
-  @Cron('0 */15 * * * *')
+  @ScheduledJob({ cron: '0 */15 * * * *', staleAfterMinutes: 45 })
   async advanceDrops(): Promise<void> {
-    if (!this.enabled) return;
     const moved = await this.drops.advance();
     if (moved.opened || moved.closed) {
       this.logger.log(`Drops: ${moved.opened} opened, ${moved.closed} ended`);

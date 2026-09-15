@@ -1,9 +1,9 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { Cron } from '@nestjs/schedule';
 import { PrismaService } from '../../prisma/prisma.service';
 import { ProductHealthService } from './product-health/product-health.service';
 import { SellerHealthService } from './health/seller-health.service';
+import { ScheduledJob } from '../../common/scheduling/scheduled-job.decorator';
 
 /**
  * When the shop is measured.
@@ -43,7 +43,7 @@ export class SellerIntelligenceScheduler {
     );
   }
 
-  @Cron('0 10 3 * * *')
+  @ScheduledJob({ cron: '0 10 3 * * *' })
   async nightly(): Promise<void> {
     if (!this.enabled) return;
     await this.run();

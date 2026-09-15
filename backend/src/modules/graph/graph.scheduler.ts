@@ -1,8 +1,8 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { Cron } from '@nestjs/schedule';
 import { AffinityBuilderService } from './projection/affinity-builder.service';
 import { GraphProjectorService } from './projection/graph-projector.service';
+import { ScheduledJob } from '../../common/scheduling/scheduled-job.decorator';
 
 /**
  * When the graph is rebuilt.
@@ -34,7 +34,7 @@ export class GraphScheduler {
     );
   }
 
-  @Cron('0 45 2 * * *')
+  @ScheduledJob({ cron: '0 45 2 * * *' })
   async nightly(): Promise<void> {
     if (!this.enabled) return;
     await this.run();

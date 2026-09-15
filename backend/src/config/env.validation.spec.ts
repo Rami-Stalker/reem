@@ -25,6 +25,11 @@ const production: Record<string, unknown> = {
   TOTP_ENC_KEY: 'f'.repeat(40),
   MEDIA_PUBLIC_ORIGIN: 'https://cdn.reem.shop',
   CORS_ORIGINS: 'https://reem.shop',
+  MEDIA_DRIVER: 'supabase',
+  SUPABASE_URL: 'https://ref.supabase.co',
+  SUPABASE_SECRET_KEY: 'sb_secret_test',
+  SMS_GATEWAY_URL: 'https://sms.example.sy/send',
+  SMS_GATEWAY_KEY: 'k'.repeat(24),
 };
 
 const refuses = (patch: Record<string, unknown>, pattern: RegExp) =>
@@ -76,6 +81,95 @@ test('none of this constrains a development configuration', () => {
       CORS_ORIGINS: '*',
       OTP_DEV_ECHO: 'true',
       PAYMENTS_SANDBOX_CONFIRMATION: 'true',
+    }),
+  );
+});
+
+test('Supabase storage needs the project URL and the secret key', () => {
+  refuses(
+    { MEDIA_DRIVER: 'supabase', SUPABASE_URL: undefined },
+    /SUPABASE_URL must be set/,
+  );
+  refuses(
+    { MEDIA_DRIVER: 'supabase', SUPABASE_SECRET_KEY: undefined },
+    /SUPABASE_SECRET_KEY must be set/,
+  );
+  refuses(
+    {
+      MEDIA_DRIVER: 'supabase',
+      SUPABASE_URL: 'https://ref.supabase.co',
+      SUPABASE_SECRET_KEY: 'sb_publishable_abc',
+    },
+    /holds the publishable \(anon\) key/,
+  );
+  refuses(
+    {
+      MEDIA_DRIVER: 'supabase',
+      SUPABASE_URL: 'http://ref.supabase.co',
+      SUPABASE_SECRET_KEY: 'sb_secret_abc',
+    },
+    /must be the project's https:\/\/ origin/,
+  );
+  assert.doesNotThrow(() =>
+    validateEnv({
+      ...production,
+      MEDIA_DRIVER: 'supabase',
+      SUPABASE_URL: 'https://ref.supabase.co',
+      SUPABASE_SECRET_KEY: 'sb_secret_abc',
+    }),
+  );
+});
+
+test('a Supabase database URL must use TLS, and pgbouncer mode on the transaction pooler', () => {
+  const pooler = 'postgresql://postgres.ref:pw@aws-0-eu-central-1.pooler.supabase.com:6543/postgres';
+  refuses({ DATABASE_URL: `${pooler}?sslmode=require` }, /without pgbouncer=true/);
+  refuses({ DATABASE_URL: `${pooler}?pgbouncer=true` }, /without sslmode=require/);
+  assert.doesNotThrow(() =>
+    validateEnv({
+      ...production,
+      DATABASE_URL: `${pooler}?pgbouncer=true&sslmode=require&sslcert=./certs/supabase-root-2021.crt&sslaccept=strict`,
+    }),
+  );
+});
+
+test('production refuses to boot with no way to deliver a sign-in code', () => {
+  refuses(
+    { SMS_GATEWAY_URL: undefined, SMS_GATEWAY_KEY: undefined },
+    /no OTP delivery provider is configured/,
+  );
+  // Half a provider is no provider.
+  refuses({ SMS_GATEWAY_KEY: '' }, /no OTP delivery provider is configured/);
+  assert.doesNotThrow(() =>
+    validateEnv({
+      ...production,
+      SMS_GATEWAY_URL: undefined,
+      SMS_GATEWAY_KEY: undefined,
+      WHATSAPP_PHONE_NUMBER_ID: '1234567890',
+      WHATSAPP_ACCESS_TOKEN: 'EAAG' + 'x'.repeat(40),
+    }),
+  );
+});
+
+test('production refuses uploads on a container disk', () => {
+  refuses({ MEDIA_DRIVER: 'local' }, /MEDIA_DRIVER is local in production/);
+  refuses({ MEDIA_DRIVER: undefined }, /MEDIA_DRIVER is local in production/);
+  assert.doesNotThrow(() =>
+    validateEnv({ ...production, MEDIA_DRIVER: 'local', MEDIA_LOCAL_PERSISTENT: 'true' }),
+  );
+});
+
+test('a job trigger secret, when set, is long enough not to be guessed', () => {
+  refuses({ JOBS_TRIGGER_SECRET: 'short' }, /JOBS_TRIGGER_SECRET/);
+  assert.doesNotThrow(() => validateEnv({ ...production, JOBS_TRIGGER_SECRET: 's'.repeat(40) }));
+});
+
+test('on Render the public origin may come from RENDER_EXTERNAL_URL', () => {
+  refuses({ MEDIA_PUBLIC_ORIGIN: undefined }, /MEDIA_PUBLIC_ORIGIN must be set in production/);
+  assert.doesNotThrow(() =>
+    validateEnv({
+      ...production,
+      MEDIA_PUBLIC_ORIGIN: undefined,
+      RENDER_EXTERNAL_URL: 'https://reem-api.onrender.com',
     }),
   );
 });

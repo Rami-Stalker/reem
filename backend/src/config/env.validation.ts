@@ -68,8 +68,28 @@ class EnvironmentVariables {
    * origin, which is what a developer wants without configuring anything.
    */
   @IsOptional()
-  @IsIn(['local'])
+  @IsIn(['local', 'supabase'])
   MEDIA_DRIVER?: string;
+
+  /** `https://<project-ref>.supabase.co`. Required by `MEDIA_DRIVER=supabase`. */
+  @IsOptional()
+  @IsString()
+  SUPABASE_URL?: string;
+
+  /** The project's secret key. Server-only; see the checks below. */
+  @IsOptional()
+  @IsString()
+  SUPABASE_SECRET_KEY?: string;
+
+  @IsOptional()
+  @IsIn(['true', 'false'])
+  SCHEDULER_ENABLED?: string;
+
+  /** Enables the job trigger route; long enough not to be guessed. */
+  @IsOptional()
+  @IsString()
+  @MinLength(32)
+  JOBS_TRIGGER_SECRET?: string;
 
   @IsOptional()
   @IsString()
@@ -142,12 +162,71 @@ export function validateEnv(config: Record<string, unknown>) {
    * app's internal address. Every image on the platform would 404, and it
    * would 404 only for real users — never on the machine that deployed it.
    */
-  if (config.NODE_ENV === 'production' && !config.MEDIA_PUBLIC_ORIGIN) {
+  if (
+    config.NODE_ENV === 'production' &&
+    !config.MEDIA_PUBLIC_ORIGIN &&
+    !config.RENDER_EXTERNAL_URL
+  ) {
     throw new Error(
       [
         'Invalid environment configuration:',
-        '  - MEDIA_PUBLIC_ORIGIN must be set in production; without it media',
+        '  - MEDIA_PUBLIC_ORIGIN must be set in production (Render provides',
+        '    RENDER_EXTERNAL_URL, which is used when it is not); without it media',
         '    URLs are built from the origin each request happened to arrive on.',
+      ].join('\n'),
+    );
+  }
+
+  const hostingProblems = [
+    ...supabaseDatabaseUrlProblems(String(config.DATABASE_URL)),
+    ...(config.MEDIA_DRIVER === 'supabase' ? supabaseStorageProblems(config) : []),
+  ];
+  if (hostingProblems.length > 0) {
+    throw new Error(
+      [
+        'Invalid environment configuration:',
+        ...hostingProblems.map((problem) => `  - ${problem}`),
+      ].join('\n'),
+    );
+  }
+
+  /**
+   * Sign-in is a one-time code, so a production API with no way to deliver
+   * one cannot let anybody in — not a customer, not the first administrator.
+   * The development stand-ins (the dev inbox, log echo, the ops console) are
+   * each refused in production already; this refuses the state they left
+   * behind: nothing real configured at all. Boot fails loudly instead of the
+   * app answering "code sent" to every woman and delivering nothing.
+   */
+  if (config.NODE_ENV === 'production' && !hasRealOtpTransport(config)) {
+    throw new Error(
+      [
+        'Invalid environment configuration:',
+        '  - no OTP delivery provider is configured, so nobody could sign in.',
+        '    Set one of: SMS_GATEWAY_URL + SMS_GATEWAY_KEY, WHATSAPP_PHONE_NUMBER_ID +',
+        '    WHATSAPP_ACCESS_TOKEN, or VOICE_OTP_URL + VOICE_OTP_KEY.',
+      ].join('\n'),
+    );
+  }
+
+  /**
+   * A container's filesystem is not storage: it is wiped on every deploy and
+   * every restart on every managed host this API would run on. With the local
+   * driver in production each upload would 404 after the next deploy, and the
+   * rows pointing at it would outlive it. Opt back in only for a server with a
+   * persistent volume mounted at MEDIA_LOCAL_ROOT.
+   */
+  if (
+    config.NODE_ENV === 'production' &&
+    (config.MEDIA_DRIVER ?? 'local') === 'local' &&
+    config.MEDIA_LOCAL_PERSISTENT !== 'true'
+  ) {
+    throw new Error(
+      [
+        'Invalid environment configuration:',
+        '  - MEDIA_DRIVER is local in production. Uploads written to a container',
+        '    disk are lost on the next deploy. Use MEDIA_DRIVER=supabase, or set',
+        '    MEDIA_LOCAL_PERSISTENT=true if MEDIA_LOCAL_ROOT is a persistent volume.',
       ].join('\n'),
     );
   }
@@ -253,4 +332,93 @@ export function validateEnv(config: Record<string, unknown>) {
   }
 
   return config;
+}
+
+/**
+ * `MEDIA_DRIVER=supabase` needs the project URL and the *secret* key: Storage
+ * writes to a bucket with no client policy are refused to anything less. The
+ * publishable key is the one mistake worth naming, because it looks like it
+ * works — until the first upload answers 403 in front of a seller.
+ */
+function supabaseStorageProblems(config: Record<string, unknown>): string[] {
+  const problems: string[] = [];
+  const url = String(config.SUPABASE_URL ?? '').trim();
+  const key = String(config.SUPABASE_SECRET_KEY ?? '').trim();
+
+  if (!url) {
+    problems.push('SUPABASE_URL must be set when MEDIA_DRIVER=supabase.');
+  } else if (!/^https:\/\/[^/]+$/i.test(url.replace(/\/+$/, ''))) {
+    problems.push(
+      `SUPABASE_URL must be the project's https:// origin, e.g. https://<ref>.supabase.co (got "${url}").`,
+    );
+  }
+
+  if (!key) {
+    problems.push('SUPABASE_SECRET_KEY must be set when MEDIA_DRIVER=supabase.');
+  } else if (key.startsWith('sb_publishable_') || jwtRole(key) === 'anon') {
+    problems.push(
+      'SUPABASE_SECRET_KEY holds the publishable (anon) key; Storage needs the secret key.',
+    );
+  }
+  return problems;
+}
+
+/** The `role` claim of a legacy Supabase API key, or null for anything else. */
+function jwtRole(value: string): string | null {
+  const parts = value.split('.');
+  if (parts.length !== 3) return null;
+  try {
+    const payload = JSON.parse(Buffer.from(parts[1], 'base64url').toString('utf8'));
+    return typeof payload.role === 'string' ? payload.role : null;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * A Supabase-hosted `DATABASE_URL` has two ways to look right and fail later.
+ *
+ *  - The transaction pooler (port 6543) hands each transaction to whichever
+ *    server connection is free, so Prisma's named prepared statements collide
+ *    ("prepared statement \"s0\" already exists") on the second request, not
+ *    the first. `pgbouncer=true` tells Prisma not to prepare them.
+ *  - Without TLS the database password crosses the internet in the clear.
+ *    Supabase refuses plaintext anyway; saying so here beats a timeout.
+ */
+function supabaseDatabaseUrlProblems(databaseUrl: string): string[] {
+  let url: URL;
+  try {
+    url = new URL(databaseUrl);
+  } catch {
+    return [];
+  }
+  const host = url.hostname.toLowerCase();
+  if (!host.endsWith('.supabase.co') && !host.endsWith('.supabase.com')) {
+    return [];
+  }
+
+  const problems: string[] = [];
+  if (url.port === '6543' && url.searchParams.get('pgbouncer') !== 'true') {
+    problems.push(
+      'DATABASE_URL uses the Supabase transaction pooler (port 6543) without pgbouncer=true; Prisma prepared statements would collide.',
+    );
+  }
+  // Prisma's engine knows disable | prefer | require; verification is `sslaccept=strict`.
+  const sslmode = url.searchParams.get('sslmode');
+  if (sslmode !== 'require') {
+    problems.push(
+      'DATABASE_URL points at Supabase without sslmode=require; add sslmode=require&sslcert=./certs/supabase-root-2021.crt&sslaccept=strict.',
+    );
+  }
+  return problems;
+}
+
+/** A transport that reaches a handset, as each transport's `isConfigured` defines it. */
+function hasRealOtpTransport(config: Record<string, unknown>): boolean {
+  const set = (key: string) => String(config[key] ?? '').trim().length > 0;
+  return (
+    (set('SMS_GATEWAY_URL') && set('SMS_GATEWAY_KEY')) ||
+    (set('WHATSAPP_PHONE_NUMBER_ID') && set('WHATSAPP_ACCESS_TOKEN')) ||
+    (set('VOICE_OTP_URL') && set('VOICE_OTP_KEY'))
+  );
 }

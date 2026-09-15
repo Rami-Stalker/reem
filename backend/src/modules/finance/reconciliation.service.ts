@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { Cron, CronExpression } from '@nestjs/schedule';
+import { CronExpression } from '@nestjs/schedule';
 import {
   Currency,
   LedgerAccountCode,
@@ -12,6 +12,7 @@ import { PrismaService } from '../../prisma/prisma.service';
 
 type Tx = Prisma.TransactionClient;
 import { LedgerService } from '../ledger/ledger.service';
+import { ScheduledJob } from '../../common/scheduling/scheduled-job.decorator';
 
 export interface ReconciliationFinding {
   readonly kind:
@@ -65,7 +66,7 @@ export class ReconciliationService {
    * settlement (Q56), so a day's movements are complete before they are
    * checked.
    */
-  @Cron(CronExpression.EVERY_DAY_AT_3AM)
+  @ScheduledJob({ cron: CronExpression.EVERY_DAY_AT_3AM, staleAfterMinutes: 1560, catchUp: true })
   async nightly(): Promise<void> {
     for (const currency of [Currency.SYP, Currency.USD]) {
       const report = await this.run(currency);

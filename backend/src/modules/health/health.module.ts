@@ -80,7 +80,8 @@ class HealthController {
   version() {
     return {
       version: process.env.APP_VERSION ?? null,
-      commit: process.env.GIT_COMMIT ?? null,
+      // Hosts stamp their own: Render sets RENDER_GIT_COMMIT on every deploy.
+      commit: process.env.GIT_COMMIT ?? process.env.RENDER_GIT_COMMIT ?? null,
       environment: this.config.get<string>('nodeEnv') ?? null,
       node: process.version,
       started_at: new Date(this.startedAt).toISOString(),

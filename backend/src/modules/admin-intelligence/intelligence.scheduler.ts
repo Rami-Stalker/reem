@@ -1,10 +1,10 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { Cron } from '@nestjs/schedule';
 import { CustomerIntelligenceService } from '../customer-intelligence/customer-intelligence.service';
 import { RankingService } from '../ranking/ranking.service';
 import { ReengagementService } from '../lifecycle/reengagement.service';
 import { TrustService } from '../trust/trust.service';
+import { ScheduledJob } from '../../common/scheduling/scheduled-job.decorator';
 
 /**
  * When the marketplace thinks about itself.
@@ -54,7 +54,7 @@ export class IntelligenceScheduler {
    * reason the others are quarter- and half-past: nothing in this platform
    * should start on the hour alongside everything else.
    */
-  @Cron('0 10 3 * * *')
+  @ScheduledJob({ cron: '0 10 3 * * *' })
   async nightly(): Promise<void> {
     if (!this.computeEnabled) return;
 
@@ -80,7 +80,7 @@ export class IntelligenceScheduler {
    * has a live intention, and spending her one daily message on a win-back
    * instead would be the wrong trade.
    */
-  @Cron('0 30 6 * * *')
+  @ScheduledJob({ cron: '0 30 6 * * *' })
   async reminders(): Promise<void> {
     if (!this.computeEnabled || !this.sendEnabled) return;
 

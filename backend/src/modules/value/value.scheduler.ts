@@ -1,8 +1,9 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { Cron, CronExpression } from '@nestjs/schedule';
+import { CronExpression } from '@nestjs/schedule';
 import { ValueBenefitService } from './value-benefit.service';
 import { ValueCollectorService } from './value-collector.service';
 import { ValueScoringService } from './value-scoring.service';
+import { ScheduledJob } from '../../common/scheduling/scheduled-job.decorator';
 
 /**
  * The programme's clock.
@@ -28,7 +29,7 @@ export class ValueScheduler {
   ) {}
 
   /** New evidence, four times an hour's worth of latency at most. */
-  @Cron(CronExpression.EVERY_30_MINUTES)
+  @ScheduledJob({ cron: CronExpression.EVERY_30_MINUTES, staleAfterMinutes: 120 })
   async collect(): Promise<void> {
     try {
       const counts = await this.collector.sweep();
@@ -45,7 +46,7 @@ export class ValueScheduler {
    * point. A standing that only moved when she acted would not fade, and a
    * standing that does not fade is a balance.
    */
-  @Cron(CronExpression.EVERY_DAY_AT_3AM)
+  @ScheduledJob({ cron: CronExpression.EVERY_DAY_AT_3AM, staleAfterMinutes: 1560, catchUp: true })
   async nightly(): Promise<void> {
     try {
       const expired = await this.benefits.expireStale();

@@ -119,16 +119,57 @@ export default () => ({
     devInboxEnabled: process.env.OTP_DEV_INBOX_ENABLED === 'true',
   },
   /**
-   * Uploads. The platform stores bytes on the API host's disk for the closed
-   * beta — see `MediaStorageDriver` for why, and for the seam that lets a
-   * bucket replace it later without touching a call site.
+   * Supabase, as this API uses it: a host for PostgreSQL (`DATABASE_URL`) and,
+   * when `MEDIA_DRIVER=supabase`, for upload bytes. The app never talks to
+   * Supabase — only this process does, server to server.
+   *
+   * `secretKey` is the project's secret (service-role) key. It bypasses Row
+   * Level Security and so it stays in this environment; it is never sent to a
+   * client, logged, or accepted from one.
+   */
+  supabase: {
+    url: process.env.SUPABASE_URL ?? '',
+    secretKey: process.env.SUPABASE_SECRET_KEY ?? '',
+    publicBucket: process.env.SUPABASE_MEDIA_PUBLIC_BUCKET ?? 'reem-media-public',
+    privateBucket:
+      process.env.SUPABASE_MEDIA_PRIVATE_BUCKET ?? 'reem-media-private',
+  },
+  /**
+   * In-process scheduled jobs (`@Cron` methods: escrow release, OTP outbox,
+   * order expiry, media sweep, …). On by default — this API is the backend and
+   * runs its own schedule.
+   *
+   * Exactly one scheduler may drive a database. Turn this off for a second
+   * instance pointed at the same database (a developer's laptop against the
+   * shared one, a second replica), or while another deployment still triggers
+   * the same jobs, or the jobs run twice.
+   */
+  scheduler: {
+    enabled: process.env.SCHEDULER_ENABLED !== 'false',
+    /**
+     * Enables `POST /internal/jobs/:name/run` for an external scheduler or an
+     * operator. Unset, the route does not exist. The run still takes the job's
+     * lease, so an external trigger and the in-process timer never both run it.
+     */
+    triggerSecret: process.env.JOBS_TRIGGER_SECRET ?? '',
+  },
+  /**
+   * Uploads. `local` stores bytes on the API host's disk; `supabase` stores
+   * them in Supabase Storage. See `MediaStorageDriver` for the seam.
    */
   media: {
     driver: process.env.MEDIA_DRIVER ?? 'local',
     /** Resolved against the process working directory when relative. */
     localRoot: process.env.MEDIA_LOCAL_ROOT ?? 'storage/media',
-    /** Path public assets are served under. Mounted in `main.ts`. */
-    publicBaseUrl: process.env.MEDIA_PUBLIC_BASE_URL ?? '/media/files',
+    /**
+     * Path public assets are served under: mounted by `main.ts` for `local`,
+     * Storage's public-object path for `supabase`.
+     */
+    publicBaseUrl:
+      process.env.MEDIA_PUBLIC_BASE_URL ??
+      (process.env.MEDIA_DRIVER === 'supabase'
+        ? `/storage/v1/object/public/${process.env.SUPABASE_MEDIA_PUBLIC_BUCKET ?? 'reem-media-public'}`
+        : '/media/files'),
     /**
      * Origin prefixed onto public media URLs. Left unset it falls back to the
      * origin the request itself arrived on, which is the only value that works
@@ -137,7 +178,12 @@ export default () => ({
      * machine's LAN IP from a physical phone. Set it explicitly in production,
      * where the client-visible origin is the proxy's and not the app's.
      */
-    publicOrigin: process.env.MEDIA_PUBLIC_ORIGIN ?? '',
+    // On Render the service's own public URL is provided as
+    // RENDER_EXTERNAL_URL, so a first deploy works before anyone knows what
+    // onrender.com address the service will get. An explicit value (a custom
+    // domain) always wins.
+    publicOrigin:
+      process.env.MEDIA_PUBLIC_ORIGIN || process.env.RENDER_EXTERNAL_URL || '',
     /**
      * A phone camera photograph is 3–6 MB; 12 leaves room for a burst shot
      * without letting a single request pin a worker allocating a buffer.

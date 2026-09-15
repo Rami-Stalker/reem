@@ -1,8 +1,9 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { Cron, CronExpression } from '@nestjs/schedule';
+import { CronExpression } from '@nestjs/schedule';
 import { VisualSearchStatus, VisualTryOnStatus } from '@prisma/client';
 import { PrismaService } from '../../../prisma/prisma.service';
 import { MediaService } from '../../media/media.service';
+import { ScheduledJob } from '../../../common/scheduling/scheduled-job.decorator';
 
 export interface RetentionSweep {
   queryImagesDeleted: number;
@@ -53,7 +54,7 @@ export class VisualRetentionService {
    * gone" is the part of the promise that can be broken. Fifteen minutes keeps
    * that gap smaller than any window this feature offers.
    */
-  @Cron(CronExpression.EVERY_10_MINUTES)
+  @ScheduledJob({ cron: CronExpression.EVERY_10_MINUTES, staleAfterMinutes: 60 })
   async scheduled(): Promise<void> {
     await this.sweep();
   }

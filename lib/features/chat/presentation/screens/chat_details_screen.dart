@@ -74,6 +74,12 @@ class _ChatDetailsScreenState extends ConsumerState<ChatDetailsScreen>
     realtime.join(widget.chatId);
     realtime.markRead(widget.chatId);
     realtimeSub = realtime.events.listen((event) {
+      if (event['event'] == 'connection.restored') {
+        // Anything sent while the socket was down never reached it.
+        unawaited(ref.read(chatMessagesNotifierProvider.notifier).resync());
+        realtime.markRead(widget.chatId);
+        return;
+      }
       ref.read(chatMessagesNotifierProvider.notifier).applyRealtime(event);
       if (event['event'] == 'message.created' &&
           event['chat_id'] == widget.chatId) {
