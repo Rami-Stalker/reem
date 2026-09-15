@@ -19,6 +19,7 @@ class PostModel extends Post {
     super.savesCount,
     super.isLiked,
     super.isSaved,
+    super.isReshared,
     required super.createdAt,
   });
 
@@ -45,6 +46,7 @@ class PostModel extends Post {
       savesCount: json['saves_count'] as int? ?? 0,
       isLiked: json['is_liked'] as bool? ?? false,
       isSaved: json['is_saved'] as bool? ?? false,
+      isReshared: json['is_reshared'] as bool? ?? false,
       createdAt: DateTime.parse(json['created_at'] as String),
     );
   }
@@ -63,6 +65,7 @@ class PostModel extends Post {
         'saves_count': savesCount,
         'is_liked': isLiked,
         'is_saved': isSaved,
+        'is_reshared': isReshared,
         'created_at': createdAt.toIso8601String(),
       };
 
@@ -78,6 +81,7 @@ class PostModel extends Post {
     int? savesCount,
     bool? isLiked,
     bool? isSaved,
+    bool? isReshared,
     DateTime? createdAt,
   }) {
     return PostModel(
@@ -92,6 +96,7 @@ class PostModel extends Post {
       savesCount: savesCount ?? this.savesCount,
       isLiked: isLiked ?? this.isLiked,
       isSaved: isSaved ?? this.isSaved,
+      isReshared: isReshared ?? this.isReshared,
       createdAt: createdAt ?? this.createdAt,
     );
   }

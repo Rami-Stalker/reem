@@ -251,7 +251,7 @@ export class PostsService {
     userId?: string,
   ): Promise<LegacyViewerState> {
     if (!userId || contentIds.length === 0) return NO_LEGACY_VIEWER;
-    const [reactions, saves] = await Promise.all([
+    const [reactions, saves, reshares] = await Promise.all([
       this.prisma.commerceContentReaction.findMany({
         where: { userId, contentId: { in: contentIds } },
         select: { contentId: true, emoji: true },
@@ -260,10 +260,15 @@ export class PostsService {
         where: { userId, contentId: { in: contentIds } },
         select: { contentId: true },
       }),
+      this.prisma.commerceContentReshare.findMany({
+        where: { resharerId: userId, sourceContentId: { in: contentIds } },
+        select: { sourceContentId: true },
+      }),
     ]);
     return {
       liked: new Set(reactions.map((r) => r.contentId)),
       saved: new Set(saves.map((s) => s.contentId)),
+      reshared: new Set(reshares.map((r) => r.sourceContentId)),
       viewed: new Set(),
       reactions: new Map(reactions.map((r) => [r.contentId, r.emoji])),
     };

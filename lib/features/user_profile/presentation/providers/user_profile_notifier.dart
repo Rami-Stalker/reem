@@ -68,6 +68,13 @@ class UserProfileNotifier extends StateNotifier<UserProfileState> {
     };
   }
 
+  /// After she opened or closed her page — the server's answer, not a guess.
+  void applyVisibility(bool isPublic) {
+    final profile = state.profile;
+    if (profile == null) return;
+    state = state.copyWith(profile: profile.copyWith(profileIsPublic: isPublic));
+  }
+
   UserProfile _apply(UserProfile profile, FollowResult result) {
     final updatedUser = UserModel.fromEntity(
       profile.user,

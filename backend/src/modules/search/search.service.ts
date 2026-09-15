@@ -7,7 +7,6 @@ import {
   serializeLegacyPost,
   serializeProduct,
   serializePublicUser,
-  serializeUser,
 } from '../../common/serializers';
 import { ProductSearchDto, SearchSort } from './dto/search-query.dto';
 import { ProductMatch, ProductMatcher } from './product-matcher.service';
@@ -160,7 +159,10 @@ export class SearchService {
       this.prisma.user.count({ where }),
     ]);
     return {
-      data: sellers.map(serializeUser),
+      // The public shape: a boutique's search card is a storefront header, and
+      // `serializeUser` would hand every anonymous caller the owner's phone
+      // number and email.
+      data: sellers.map(serializePublicUser),
       pagination: buildMeta(page.page, page.limit, total, sellers.length),
     };
   }
@@ -296,7 +298,7 @@ export class SearchService {
       products: products.map((p) =>
         serializeProduct(p, { isLiked: favSet.has(p.id) }),
       ),
-      sellers: sellers.map(serializeUser),
+      sellers: sellers.map(serializePublicUser),
       customers: customers.map(serializePublicUser),
       posts: posts.map((post) => serializeLegacyPost(post)),
     };

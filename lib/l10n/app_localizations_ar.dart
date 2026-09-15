@@ -6322,4 +6322,226 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get discardChangesKeep => 'كمّلي';
+
+  @override
+  String get postMenuNotInterested => 'غير مهتمة بهذا المنشور';
+
+  @override
+  String get postMenuNotInterestedDone =>
+      'تمام، ما رح يظهر لكِ هالمنشور مرة تانية.';
+
+  @override
+  String postMenuMuteAuthor(String name) {
+    return 'إخفاء منشورات $name';
+  }
+
+  @override
+  String postMenuMuteAuthorDone(String name) {
+    return 'خبّينا منشورات $name عنكِ.';
+  }
+
+  @override
+  String get postMenuReport => 'الإبلاغ عن المنشور';
+
+  @override
+  String get productMenuReport => 'الإبلاغ عن المنتج';
+
+  @override
+  String get postMenuCopyLink => 'نسخ الرابط';
+
+  @override
+  String get linkCopied => 'تم نسخ الرابط';
+
+  @override
+  String postMenuViewAuthor(String name) {
+    return 'زيارة صفحة $name';
+  }
+
+  @override
+  String get postMenuViewProduct => 'عرض المنتج';
+
+  @override
+  String get postMenuRemoveFromMyPage => 'إزالة من صفحتي';
+
+  @override
+  String get postMenuSave => 'حفظ في المفضّلة';
+
+  @override
+  String get postMenuUnsave => 'إزالة من المفضّلة';
+
+  @override
+  String get actionUndo => 'تراجع';
+
+  @override
+  String get reportTitle => 'شو سبب البلاغ؟';
+
+  @override
+  String get reportSubtitle => 'البلاغ سرّي، وما حدا بيعرف مين بعته.';
+
+  @override
+  String get reportReasonImmodest => 'محتوى غير محتشم';
+
+  @override
+  String get reportReasonNotTheProduct => 'لا يطابق المنتج';
+
+  @override
+  String get reportReasonStolenPhoto => 'صورة مسروقة';
+
+  @override
+  String get reportReasonSpam => 'مزعج أو سبام';
+
+  @override
+  String get reportReasonHarassment => 'إساءة أو تنمّر';
+
+  @override
+  String get reportReasonCounterfeit => 'منتج مقلّد';
+
+  @override
+  String get reportReasonOther => 'سبب آخر';
+
+  @override
+  String get reportSent => 'شكراً إلكِ، فريقنا رح يراجعه.';
+
+  @override
+  String get productPickedDone => 'انضافت إلى صفحتكِ';
+
+  @override
+  String get productPickedPrivate => 'انضافت — صفحتكِ خاصة، فبس إنتِ بتشوفيها.';
+
+  @override
+  String get productUnpickedDone => 'انشالت من صفحتكِ';
+
+  @override
+  String get viewMyPage => 'عرض صفحتي';
+
+  @override
+  String productPicksCount(String count) {
+    return '$count أضافتها إلى صفحتها';
+  }
+
+  @override
+  String get profileTabReels => 'الريلز';
+
+  @override
+  String get profileTabPicks => 'اختياراتها';
+
+  @override
+  String get profileTabMyPicks => 'اختياراتي';
+
+  @override
+  String get profileTabStories => 'الستوريات';
+
+  @override
+  String get profilePrivateTitle => 'هالصفحة خاصة';
+
+  @override
+  String profilePrivateBody(String name) {
+    return '$name ما فتحت صفحتها للناس لسّا.';
+  }
+
+  @override
+  String get profileEmptyPosts => 'ما في منشورات لسّا';
+
+  @override
+  String get profileEmptyReels => 'ما في ريلز لسّا';
+
+  @override
+  String get profileEmptyStories => 'ما في ستوريات هلّق';
+
+  @override
+  String get profileEmptyPicks => 'ما انضافت قطع لهالصفحة لسّا';
+
+  @override
+  String get profileEmptyPicksMine =>
+      'اضغطي «أضيفي إلى صفحتي» على أي قطعة لتظهر هون.';
+
+  @override
+  String get profileEmptyPostsMine => 'شاركي أول منشور أو ريل أو ستوري إلكِ.';
+
+  @override
+  String get myPageTitle => 'صفحتي';
+
+  @override
+  String get myPagePublicBody =>
+      'صفحتكِ عامة — الكل بيقدر يشوف منشوراتكِ وريلزاتكِ واختياراتكِ.';
+
+  @override
+  String get myPagePrivateBody => 'صفحتكِ خاصة — بس إنتِ بتشوفيها.';
+
+  @override
+  String get myPagePublicToggle => 'صفحة عامة';
+
+  @override
+  String get myPageMadePublic => 'صارت صفحتكِ عامة';
+
+  @override
+  String get myPageMadePrivate => 'صارت صفحتكِ خاصة';
+
+  @override
+  String get createSheetTitle => 'شو حابة تنشري؟';
+
+  @override
+  String get createPost => 'منشور';
+
+  @override
+  String get createPostHint => 'صور، إطلالة، قطعة بتحبيها';
+
+  @override
+  String get createReel => 'ريل';
+
+  @override
+  String get createReelHint => 'فيديو قصير لحد ٣٠ ثانية';
+
+  @override
+  String get createStory => 'ستوري';
+
+  @override
+  String get createStoryHint => 'بتختفي بعد ٢٤ ساعة';
+
+  @override
+  String get createTooltip => 'إنشاء';
+
+  @override
+  String get createBrowseCommunity => 'المجتمع';
+
+  @override
+  String get createBrowseReels => 'الريلز';
+
+  @override
+  String get searchTabAll => 'الكل';
+
+  @override
+  String get searchTabProducts => 'المنتجات';
+
+  @override
+  String get searchTabBoutiques => 'البوتيكات';
+
+  @override
+  String get searchTabShoppers => 'الزبونات';
+
+  @override
+  String get searchTabPosts => 'المنشورات';
+
+  @override
+  String searchNoResultsFor(String query) {
+    return 'ما لقينا شي لـ «$query». جرّبي كلمة تانية.';
+  }
+
+  @override
+  String searchFollowersCount(String count) {
+    return '$count متابِعة';
+  }
+
+  @override
+  String get postMenuDelete => 'حذف المنشور';
+
+  @override
+  String get postDeleteTitle => 'بدكِ تحذفي هالمنشور؟';
+
+  @override
+  String get postDeleteBody =>
+      'رح يختفي من صفحتكِ ومن كل صفحة انضاف إلها، وما في تراجع.';
+
+  @override
+  String get postDeleted => 'انحذف المنشور';
 }

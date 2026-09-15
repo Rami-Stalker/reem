@@ -9,6 +9,9 @@ class UserProfileModel extends UserProfile {
     super.isFollowing,
     super.productsCount,
     super.postsCount,
+    super.picksCount,
+    super.hasStory,
+    super.profileIsPublic,
     super.sellerStats,
   });
 
@@ -22,6 +25,9 @@ class UserProfileModel extends UserProfile {
       isFollowing: json['is_following'] as bool? ?? false,
       productsCount: json['products_count'] as int? ?? 0,
       postsCount: json['posts_count'] as int? ?? 0,
+      picksCount: json['picks_count'] as int? ?? 0,
+      hasStory: json['has_story'] as bool? ?? false,
+      profileIsPublic: json['profile_is_public'] as bool? ?? false,
       sellerStats: statsJson is Map<String, dynamic>
           ? SellerStatsModel.fromJson(statsJson)
           : null,

@@ -6334,4 +6334,227 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get discardChangesKeep => 'Keep editing';
+
+  @override
+  String get postMenuNotInterested => 'Not interested';
+
+  @override
+  String get postMenuNotInterestedDone => 'You won\'t see this post again.';
+
+  @override
+  String postMenuMuteAuthor(String name) {
+    return 'Hide posts from $name';
+  }
+
+  @override
+  String postMenuMuteAuthorDone(String name) {
+    return 'Posts from $name are hidden.';
+  }
+
+  @override
+  String get postMenuReport => 'Report post';
+
+  @override
+  String get productMenuReport => 'Report this piece';
+
+  @override
+  String get postMenuCopyLink => 'Copy link';
+
+  @override
+  String get linkCopied => 'Link copied';
+
+  @override
+  String postMenuViewAuthor(String name) {
+    return 'Visit $name\'s page';
+  }
+
+  @override
+  String get postMenuViewProduct => 'View the piece';
+
+  @override
+  String get postMenuRemoveFromMyPage => 'Remove from my page';
+
+  @override
+  String get postMenuSave => 'Save to favourites';
+
+  @override
+  String get postMenuUnsave => 'Remove from favourites';
+
+  @override
+  String get actionUndo => 'Undo';
+
+  @override
+  String get reportTitle => 'Why are you reporting this?';
+
+  @override
+  String get reportSubtitle =>
+      'Reports are private — nobody is told who sent one.';
+
+  @override
+  String get reportReasonImmodest => 'Immodest content';
+
+  @override
+  String get reportReasonNotTheProduct => 'Doesn\'t match the piece';
+
+  @override
+  String get reportReasonStolenPhoto => 'Stolen photo';
+
+  @override
+  String get reportReasonSpam => 'Spam or annoying';
+
+  @override
+  String get reportReasonHarassment => 'Harassment or abuse';
+
+  @override
+  String get reportReasonCounterfeit => 'Counterfeit';
+
+  @override
+  String get reportReasonOther => 'Something else';
+
+  @override
+  String get reportSent => 'Thank you — our team will look at it.';
+
+  @override
+  String get productPickedDone => 'Added to your page';
+
+  @override
+  String get productPickedPrivate =>
+      'Added — your page is private, so only you can see it.';
+
+  @override
+  String get productUnpickedDone => 'Removed from your page';
+
+  @override
+  String get viewMyPage => 'View my page';
+
+  @override
+  String productPicksCount(String count) {
+    return '$count added it to their page';
+  }
+
+  @override
+  String get profileTabReels => 'Reels';
+
+  @override
+  String get profileTabPicks => 'Picks';
+
+  @override
+  String get profileTabMyPicks => 'My picks';
+
+  @override
+  String get profileTabStories => 'Stories';
+
+  @override
+  String get profilePrivateTitle => 'This page is private';
+
+  @override
+  String profilePrivateBody(String name) {
+    return '$name hasn\'t opened her page to others yet.';
+  }
+
+  @override
+  String get profileEmptyPosts => 'No posts yet';
+
+  @override
+  String get profileEmptyReels => 'No reels yet';
+
+  @override
+  String get profileEmptyStories => 'No live stories right now';
+
+  @override
+  String get profileEmptyPicks => 'Nothing added to this page yet';
+
+  @override
+  String get profileEmptyPicksMine =>
+      'Tap «Add to my page» on any piece to show it here.';
+
+  @override
+  String get profileEmptyPostsMine => 'Share your first post, reel or story.';
+
+  @override
+  String get myPageTitle => 'My page';
+
+  @override
+  String get myPagePublicBody =>
+      'Your page is public — anyone can see your posts, reels and picks.';
+
+  @override
+  String get myPagePrivateBody => 'Your page is private — only you can see it.';
+
+  @override
+  String get myPagePublicToggle => 'Public page';
+
+  @override
+  String get myPageMadePublic => 'Your page is now public';
+
+  @override
+  String get myPageMadePrivate => 'Your page is now private';
+
+  @override
+  String get createSheetTitle => 'What would you like to share?';
+
+  @override
+  String get createPost => 'Post';
+
+  @override
+  String get createPostHint => 'Photos, a look, a piece you love';
+
+  @override
+  String get createReel => 'Reel';
+
+  @override
+  String get createReelHint => 'A short video, up to 30 seconds';
+
+  @override
+  String get createStory => 'Story';
+
+  @override
+  String get createStoryHint => 'Gone in 24 hours';
+
+  @override
+  String get createTooltip => 'Create';
+
+  @override
+  String get createBrowseCommunity => 'Community';
+
+  @override
+  String get createBrowseReels => 'Reels';
+
+  @override
+  String get searchTabAll => 'All';
+
+  @override
+  String get searchTabProducts => 'Products';
+
+  @override
+  String get searchTabBoutiques => 'Boutiques';
+
+  @override
+  String get searchTabShoppers => 'Shoppers';
+
+  @override
+  String get searchTabPosts => 'Posts';
+
+  @override
+  String searchNoResultsFor(String query) {
+    return 'Nothing found for \"$query\". Try another word.';
+  }
+
+  @override
+  String searchFollowersCount(String count) {
+    return '$count followers';
+  }
+
+  @override
+  String get postMenuDelete => 'Delete post';
+
+  @override
+  String get postDeleteTitle => 'Delete this post?';
+
+  @override
+  String get postDeleteBody =>
+      'It disappears from your page and from every page it was added to. This can\'t be undone.';
+
+  @override
+  String get postDeleted => 'Post deleted';
 }

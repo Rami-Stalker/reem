@@ -78,9 +78,16 @@ export class ContentSocialController {
     @CurrentUser() user: AuthUser | undefined,
     @Query() query: ContentFeedQueryDto,
   ) {
-    const page = await (user
+    // The anonymous cache is keyed on the page and the channel only, so it
+    // may serve the unfiltered feed. A guest asking for one woman's reels —
+    // her page, opened from a shared link — is answered live instead, or she
+    // would be handed everybody's.
+    const filtered = Boolean(
+      query.content_type || query.author_id || query.author_kind,
+    );
+    const page = await (user || filtered
       ? this.feed.feed(query, {
-          viewerId: user.id,
+          viewerId: user?.id,
           channel: query.channel,
           contentType: query.content_type,
           authorId: query.author_id,

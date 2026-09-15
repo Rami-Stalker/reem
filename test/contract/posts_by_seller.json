@@ -26,6 +26,7 @@
       "saves_count": 2,
       "is_liked": false,
       "is_saved": false,
+      "is_reshared": false,
       "created_at": "2026-09-03T15:15:52.021Z"
     },
     {
@@ -144,6 +145,7 @@
       "saves_count": 0,
       "is_liked": false,
       "is_saved": false,
+      "is_reshared": false,
       "created_at": "2026-09-03T15:15:52.017Z"
     },
     {
@@ -293,6 +295,7 @@
       "saves_count": 0,
       "is_liked": false,
       "is_saved": false,
+      "is_reshared": false,
       "created_at": "2026-09-03T15:15:52.011Z"
     },
     {
@@ -417,6 +420,7 @@
       "saves_count": 7,
       "is_liked": false,
       "is_saved": false,
+      "is_reshared": false,
       "created_at": "2026-08-08T23:25:02.096Z"
     },
     {
@@ -545,6 +549,7 @@
       "saves_count": 8,
       "is_liked": false,
       "is_saved": false,
+      "is_reshared": false,
       "created_at": "2026-08-06T19:42:41.840Z"
     }
   ],

@@ -48,6 +48,11 @@ export interface LegacyViewerState {
   saved: Set<string>;
   viewed: Set<string>;
   reactions: Map<string, string | null>;
+  /**
+   * Posts she added to her own page. Optional because only the post reads
+   * need it — a story or a saved-shelf row has nothing to add.
+   */
+  reshared?: Set<string>;
 }
 
 export const NO_LEGACY_VIEWER: LegacyViewerState = {
@@ -57,7 +62,7 @@ export const NO_LEGACY_VIEWER: LegacyViewerState = {
   reactions: new Map(),
 };
 
-/** `GET /posts/*` — the eleven keys, in the order they always came. */
+/** `GET /posts/*` — the eleven original keys, plus `is_reshared`. */
 export function serializeLegacyPost(
   content: LegacyContentRecord,
   viewer: LegacyViewerState = NO_LEGACY_VIEWER,
@@ -80,6 +85,9 @@ export function serializeLegacyPost(
     saves_count: Number(content.savesCount),
     is_liked: viewer.liked.has(content.id),
     is_saved: viewer.saved.has(content.id),
+    // «أضيفي إلى صفحتي» on the post card. Without it the button could only
+    // guess, and a guess of "not added" offers to add what is already there.
+    is_reshared: viewer.reshared?.has(content.id) ?? false,
     created_at: content.createdAt.toISOString(),
   };
 }

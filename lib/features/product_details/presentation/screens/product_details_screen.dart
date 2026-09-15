@@ -1,17 +1,12 @@
-import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:reem/core/design_system/design_system.dart';
 import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/core/result/result.dart';
-import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/core/shared/entities/product.dart';
 import 'package:reem/core/shared/entities/product_variant.dart';
 import 'package:reem/core/shared/entities/seller_offer.dart';
-import 'package:reem/core/shared/services/share_service.dart';
-import 'package:reem/features/auth/presentation/widgets/auth_prompt_sheet.dart';
 import 'package:reem/features/catalog/presentation/providers/catalog_provider.dart';
 import 'package:reem/features/closet/presentation/widgets/closet_pairing_panel.dart';
 import 'package:reem/features/intelligence/presentation/widgets/product_intelligence_notes.dart';
@@ -24,7 +19,8 @@ import 'package:reem/features/product_details/presentation/widgets/product_price
 import 'package:reem/features/product_details/presentation/widgets/product_reviews_section.dart';
 import 'package:reem/features/product_details/presentation/widgets/product_seller_card.dart';
 import 'package:reem/features/product_details/presentation/widgets/related_products_rail.dart';
-import 'package:reem/features/profile/presentation/providers/profile_provider.dart';
+import 'package:reem/features/product_social/presentation/product_gestures.dart';
+import 'package:reem/features/product_social/presentation/widgets/product_social_bar.dart';
 import 'package:reem/features/visual_search/presentation/widgets/visually_similar_rail.dart';
 
 /// The product page.
@@ -52,52 +48,6 @@ class _ProductDetailsScreenState extends ConsumerState<ProductDetailsScreen> {
   String? _offerId;
   String? _variantId;
   int _quantity = 1;
-
-  /// Her own like on this piece. Seeded from the server's answer the first
-  /// time the product arrives, then owned here so the heart responds to the
-  /// tap rather than to a round trip.
-  bool? _liked;
-  bool _likeInFlight = false;
-
-  /// Saves the piece to «المفضّلة», for real.
-  ///
-  /// The heart over the photograph was decoration: `ProductGalleryHeader`
-  /// takes an `onToggleLike`, and this screen never passed one, so the icon
-  /// drew the server's state and swallowed every tap.
-  Future<void> _toggleLike(Product product) async {
-    if (_likeInFlight) return;
-    final signedIn = await requireAuthenticatedUser(
-      context,
-      ref,
-      title: context.l10n.signInToInteract,
-      message: context.l10n.signInToInteractBody,
-      from: RoutePaths.productDetailsOf(product.id),
-    );
-    if (!signedIn || !mounted) return;
-
-    final was = _liked ?? product.isLiked;
-    setState(() {
-      _liked = !was;
-      _likeInFlight = true;
-    });
-
-    final result = await ref
-        .read(toggleFavoriteUseCaseProvider)
-        .call(product.id);
-    if (!mounted) return;
-    setState(() {
-      _likeInFlight = false;
-      if (result case Error()) _liked = was;
-    });
-
-    if (result case Error()) {
-      DsSnackbar.error(context, context.l10n.actionDidNotSave);
-      return;
-    }
-    // «المفضّلة» is a list she can open from the same session, so it is
-    // refreshed rather than left to go stale behind her.
-    unawaited(ref.read(favoritesNotifierProvider.notifier).load());
-  }
 
   /// The offer she is buying from: her pick, or the cheapest buyable one.
   SellerOffer? _selectedOffer(Product product) =>
@@ -165,14 +115,14 @@ class _ProductDetailsScreenState extends ConsumerState<ProductDetailsScreen> {
               ProductGalleryHeader(
                 media: product.media,
                 title: product.title,
-                isLiked: _liked ?? product.isLiked,
+                // «المفضّلة», read from the same store as the bookmark in the
+                // action bar below, so the two can never disagree.
+                isLiked: ProductGestures.watch(ref, product).isSaved,
                 discountPercent: product.discountPercent,
-                onToggleLike: () => _toggleLike(product),
-                onShare: () => ShareService.product(
-                  context: context,
-                  productId: product.id,
-                  title: product.title,
-                ),
+                onToggleLike: () => ProductGestures(context, ref, product).save(),
+                // Through the gestures, so a share from the header is counted
+                // the same way as one from the action bar.
+                onShare: () => ProductGestures(context, ref, product).share(),
               ),
               SliverPadding(
                 padding: const EdgeInsets.fromLTRB(
@@ -184,6 +134,10 @@ class _ProductDetailsScreenState extends ConsumerState<ProductDetailsScreen> {
                 sliver: SliverList.list(
                   children: [
                     ProductHeadline(product: product),
+                    DsGaps.vMd,
+                    // The heart, the thread, the share, «أضيفي إلى صفحتي» and
+                    // the bookmark — everything a post has, on every product.
+                    ProductSocialBar(product: product),
                     DsGaps.vLg,
                     ProductPriceBlock(product: product, offer: offer),
                     if (product.hasMultipleOffers) ...[

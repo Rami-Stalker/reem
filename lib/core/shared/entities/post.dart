@@ -90,6 +90,9 @@ class Post extends Equatable {
   final bool isLiked;
   final bool isSaved;
 
+  /// She added it to her own page («أضيفي إلى صفحتي»).
+  final bool isReshared;
+
   final DateTime createdAt;
 
   const Post({
@@ -104,6 +107,7 @@ class Post extends Equatable {
     this.savesCount = 0,
     this.isLiked = false,
     this.isSaved = false,
+    this.isReshared = false,
     required this.createdAt,
   });
 
@@ -128,6 +132,7 @@ class Post extends Equatable {
         savesCount,
         isLiked,
         isSaved,
+        isReshared,
         createdAt,
       ];
 }

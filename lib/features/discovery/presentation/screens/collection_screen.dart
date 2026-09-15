@@ -9,9 +9,10 @@ import 'package:reem/core/platform/app_haptics.dart';
 import 'package:reem/core/presentation/providers/product_shape_provider.dart';
 import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/core/shared/entities/product.dart';
-import 'package:reem/features/cart/presentation/providers/cart_providers.dart';
 import 'package:reem/features/discovery/presentation/providers/collection_notifier.dart';
 import 'package:reem/features/discovery/presentation/providers/collection_state.dart';
+import 'package:reem/features/product_social/presentation/providers/product_social_providers.dart';
+import 'package:reem/features/product_social/presentation/widgets/product_post_card.dart';
 import 'package:reem/features/profile/presentation/providers/profile_provider.dart';
 
 /// Every full listing of products — a department, a collection, "see all"
@@ -64,32 +65,6 @@ class _CollectionScreenState extends ConsumerState<CollectionScreen> {
   void _openProduct(Product product) =>
       context.push(RoutePaths.productDetailsOf(product.id));
 
-  void _openSeller(Product product) {
-    final seller = product.displaySeller;
-    if (seller == null) return;
-    context.push(RoutePaths.userProfileOf(seller.id));
-  }
-
-  /// Drops the cheapest live offer into the bag without leaving the listing —
-  /// the same gesture the post shape offers in the feed.
-  Future<void> _addToBag(Product product) async {
-    final offer = product.bestOffer;
-    if (offer == null || !offer.isBuyable) return;
-
-    AppHaptics.confirm();
-    final added = await ref
-        .read(cartNotifierProvider.notifier)
-        .add(offerId: offer.id);
-    if (!mounted) return;
-
-    final l10n = context.l10n;
-    if (added) {
-      DsSnackbar.success(context, l10n.addedToBag);
-    } else {
-      DsSnackbar.error(context, l10n.error);
-    }
-  }
-
   void _toggleFavorite(Product product) =>
       ref.read(favoritesNotifierProvider.notifier).toggleFavorite(product.id);
 
@@ -102,7 +77,14 @@ class _CollectionScreenState extends ConsumerState<CollectionScreen> {
     return Scaffold(
       backgroundColor: colors.background,
       body: RefreshIndicator(
-        onRefresh: () => ref.read(widget.provider.notifier).refresh(),
+        onRefresh: () async {
+          await ref.read(widget.provider.notifier).refresh();
+          // Her hearts and picks are re-read with the page, not left as they
+          // were when it first opened.
+          ref
+              .read(productEngagementProvider.notifier)
+              .refresh(ref.read(widget.provider).items.map((p) => p.id));
+        },
         child: CustomScrollView(
           controller: _controller,
           slivers: [
@@ -136,12 +118,11 @@ class _CollectionScreenState extends ConsumerState<CollectionScreen> {
                 ),
               ),
               switch (shape) {
-                DsProductShape.posts => SliverProductPosts(
+                // The same card «وصل حديثاً» uses — heart, thread, share,
+                // «أضيفي إلى صفحتي» and bookmark — so a department's posts are
+                // the home page's posts.
+                DsProductShape.posts => SliverProductPostCards(
                   products: state.items,
-                  onTapProduct: _openProduct,
-                  onTapSeller: _openSeller,
-                  onAddToBag: _addToBag,
-                  onToggleFavorite: _toggleFavorite,
                 ),
                 DsProductShape.mosaic => SliverProductMosaic(
                   products: state.items,

@@ -2,16 +2,22 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/legacy.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:reem/core/design_system/design_system.dart';
 import 'package:reem/core/design_system/patterns/product_cues.dart';
 import 'package:reem/core/localization/l10n_extension.dart';
+import 'package:reem/core/presentation/providers/paginated_notifier.dart';
+import 'package:reem/core/presentation/state/paginated_state.dart';
 import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/core/shared/entities/product.dart';
+import 'package:reem/core/shared/entities/user.dart';
+import 'package:reem/core/shared/value_objects/money_format.dart';
 import 'package:reem/features/catalog/domain/entities/category_node.dart';
 import 'package:reem/features/catalog/presentation/providers/categories_provider.dart';
+import 'package:reem/features/home/presentation/widgets/reem_post_card.dart';
 import 'package:reem/features/search/domain/entities/search_suggestions.dart';
 import 'package:reem/features/search/presentation/providers/search_providers.dart';
 
@@ -355,83 +361,376 @@ class _DepartmentChips extends ConsumerWidget {
 
 // ── Results ─────────────────────────────────────────────────────────────────
 
-class _ResultsView extends ConsumerWidget {
+/// What a phrase can find.
+enum _SearchTab { all, products, boutiques, shoppers, posts }
+
+/// Results for a phrase, in every kind the platform has.
+///
+/// Search used to list products and nothing else: typing a boutique's name,
+/// or a friend's, found at best the pieces with that word in the title. The
+/// server matched boutiques, shoppers and posts on the same folded key the
+/// whole time. «الكل» shows the best of each; the other tabs page through one.
+class _ResultsView extends ConsumerStatefulWidget {
   const _ResultsView({required this.query, required this.onSelect});
 
   final String query;
   final ValueChanged<String> onSelect;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(searchResultsProvider(query));
-    final suggestionRail = _SuggestionRail(
-      suggestions: ref.watch(searchSuggestionsProvider(query)),
-      onSelect: onSelect,
-    );
-    Widget withSuggestions(Widget child) => Column(
+  ConsumerState<_ResultsView> createState() => _ResultsViewState();
+}
+
+class _ResultsViewState extends ConsumerState<_ResultsView> {
+  _SearchTab _tab = _SearchTab.all;
+
+  String _label(_SearchTab tab) {
+    final l10n = context.l10n;
+    return switch (tab) {
+      _SearchTab.all => l10n.searchTabAll,
+      _SearchTab.products => l10n.searchTabProducts,
+      _SearchTab.boutiques => l10n.searchTabBoutiques,
+      _SearchTab.shoppers => l10n.searchTabShoppers,
+      _SearchTab.posts => l10n.searchTabPosts,
+    };
+  }
+
+  void _go(_SearchTab tab) => setState(() => _tab = tab);
+
+  @override
+  Widget build(BuildContext context) {
+    final query = widget.query;
+    return Column(
       children: [
-        suggestionRail,
-        Expanded(child: child),
+        _SuggestionRail(
+          suggestions: ref.watch(searchSuggestionsProvider(query)),
+          onSelect: widget.onSelect,
+        ),
+        SizedBox(
+          height: 48,
+          child: ListView.separated(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.symmetric(
+              horizontal: DsSpacing.lg,
+              vertical: DsSpacing.xxs,
+            ),
+            itemCount: _SearchTab.values.length,
+            separatorBuilder: (_, _) => const SizedBox(width: DsSpacing.xs),
+            itemBuilder: (context, index) {
+              final tab = _SearchTab.values[index];
+              return DsChip(
+                label: _label(tab),
+                selected: tab == _tab,
+                onTap: () => _go(tab),
+              );
+            },
+          ),
+        ),
+        Expanded(
+          child: switch (_tab) {
+            _SearchTab.all => _AllResults(query: query, onSeeAll: _go),
+            _SearchTab.products => _ProductResults(query: query),
+            _SearchTab.boutiques => _PeopleResults(
+              provider: boutiqueSearchProvider(query),
+              query: query,
+            ),
+            _SearchTab.shoppers => _PeopleResults(
+              provider: shopperSearchProvider(query),
+              query: query,
+            ),
+            _SearchTab.posts => _PostResults(query: query),
+          },
+        ),
       ],
     );
+  }
+}
+
+/// The best of each kind, and a way into the rest.
+class _AllResults extends ConsumerWidget {
+  const _AllResults({required this.query, required this.onSeeAll});
+
+  final String query;
+  final ValueChanged<_SearchTab> onSeeAll;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
+    final results = ref.watch(unifiedSearchProvider(query));
+
+    return results.when(
+      loading: () => const Center(child: DsLoadingIndicator()),
+      error: (error, _) => DsErrorState(
+        onRetry: () => ref.invalidate(unifiedSearchProvider(query)),
+      ),
+      data: (hits) {
+        if (hits.isEmpty) {
+          return DsEmptyState.search(message: l10n.searchNoResultsFor(query));
+        }
+        return ListView(
+          padding: const EdgeInsets.fromLTRB(
+            DsSpacing.lg,
+            DsSpacing.sm,
+            DsSpacing.lg,
+            DsSpacing.huge,
+          ),
+          children: [
+            if (hits.boutiques.isNotEmpty) ...[
+              _Header(
+                title: l10n.searchTabBoutiques,
+                action: l10n.viewAll,
+                onAction: () => onSeeAll(_SearchTab.boutiques),
+              ),
+              const SizedBox(height: DsSpacing.xs),
+              for (final user in hits.boutiques.take(3)) _PersonTile(user: user),
+              const SizedBox(height: DsSpacing.sectionGap),
+            ],
+            if (hits.shoppers.isNotEmpty) ...[
+              _Header(
+                title: l10n.searchTabShoppers,
+                action: l10n.viewAll,
+                onAction: () => onSeeAll(_SearchTab.shoppers),
+              ),
+              const SizedBox(height: DsSpacing.xs),
+              for (final user in hits.shoppers.take(3)) _PersonTile(user: user),
+              const SizedBox(height: DsSpacing.sectionGap),
+            ],
+            if (hits.products.isNotEmpty) ...[
+              _Header(
+                title: l10n.searchTabProducts,
+                action: l10n.viewAll,
+                onAction: () => onSeeAll(_SearchTab.products),
+              ),
+              const SizedBox(height: DsSpacing.sm),
+              MasonryGridView.count(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                crossAxisCount: 2,
+                mainAxisSpacing: DsSpacing.md,
+                crossAxisSpacing: DsSpacing.md,
+                itemCount: hits.products.length.clamp(0, 6),
+                itemBuilder: (context, index) =>
+                    _ResultCard(product: hits.products[index]),
+              ),
+              const SizedBox(height: DsSpacing.sectionGap),
+            ],
+            if (hits.posts.isNotEmpty) ...[
+              _Header(
+                title: l10n.searchTabPosts,
+                action: l10n.viewAll,
+                onAction: () => onSeeAll(_SearchTab.posts),
+              ),
+              const SizedBox(height: DsSpacing.sm),
+              for (final post in hits.posts.take(2)) ...[
+                ReemPostCard(post: post),
+                const SizedBox(height: DsSpacing.lg),
+              ],
+            ],
+          ],
+        );
+      },
+    );
+  }
+}
+
+class _ProductResults extends ConsumerWidget {
+  const _ProductResults({required this.query});
+
+  final String query;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(searchResultsProvider(query));
 
     if (state.isLoading) {
-      return withSuggestions(
-        GridView.builder(
-          padding: const EdgeInsets.all(DsSpacing.lg),
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            mainAxisSpacing: DsSpacing.md,
-            crossAxisSpacing: DsSpacing.md,
-            childAspectRatio: 0.62,
-          ),
-          itemCount: 6,
-          itemBuilder: (_, _) => const DsProductCardSkeleton(),
+      return GridView.builder(
+        padding: const EdgeInsets.all(DsSpacing.lg),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          mainAxisSpacing: DsSpacing.md,
+          crossAxisSpacing: DsSpacing.md,
+          childAspectRatio: 0.62,
         ),
+        itemCount: 6,
+        itemBuilder: (_, _) => const DsProductCardSkeleton(),
       );
     }
 
     if (state.hasError) {
-      return withSuggestions(
-        DsErrorState(
-          message: state.error,
-          onRetry: () =>
-              ref.read(searchResultsProvider(query).notifier).refresh(),
-        ),
+      return DsErrorState(
+        message: state.error,
+        onRetry: () => ref.read(searchResultsProvider(query).notifier).refresh(),
       );
     }
 
     if (state.isEmpty) {
-      return withSuggestions(
-        DsEmptyState.search(
-          message:
-              'We couldn\'t find anything for "$query".\nTry another search.',
-        ),
+      return DsEmptyState.search(
+        message: context.l10n.searchNoResultsFor(query),
       );
     }
 
-    return withSuggestions(
-      NotificationListener<ScrollNotification>(
-        onNotification: (n) {
-          if (n.metrics.pixels >= n.metrics.maxScrollExtent - 400) {
-            ref.read(searchResultsProvider(query).notifier).loadMore();
-          }
-          return false;
-        },
-        child: MasonryGridView.count(
-          padding: const EdgeInsets.fromLTRB(
-            DsSpacing.lg,
-            DsSpacing.xs,
-            DsSpacing.lg,
-            DsSpacing.huge,
-          ),
-          crossAxisCount: 2,
-          mainAxisSpacing: DsSpacing.md,
-          crossAxisSpacing: DsSpacing.md,
-          itemCount: state.items.length,
-          itemBuilder: (context, index) =>
-              _ResultCard(product: state.items[index]),
+    return NotificationListener<ScrollNotification>(
+      onNotification: (n) {
+        if (n.metrics.pixels >= n.metrics.maxScrollExtent - 400) {
+          ref.read(searchResultsProvider(query).notifier).loadMore();
+        }
+        return false;
+      },
+      child: MasonryGridView.count(
+        padding: const EdgeInsets.fromLTRB(
+          DsSpacing.lg,
+          DsSpacing.xs,
+          DsSpacing.lg,
+          DsSpacing.huge,
         ),
+        crossAxisCount: 2,
+        mainAxisSpacing: DsSpacing.md,
+        crossAxisSpacing: DsSpacing.md,
+        itemCount: state.items.length,
+        itemBuilder: (context, index) =>
+            _ResultCard(product: state.items[index]),
+      ),
+    );
+  }
+}
+
+/// Boutiques or shoppers, a page at a time.
+class _PeopleResults extends ConsumerWidget {
+  const _PeopleResults({required this.provider, required this.query});
+
+  final StateNotifierProvider<PaginatedNotifier<User>, PaginatedState<User>>
+  provider;
+  final String query;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(provider);
+    if (state.isLoading && state.items.isEmpty) {
+      return const Center(child: DsLoadingIndicator());
+    }
+    if (state.hasError) {
+      return DsErrorState(
+        message: state.error,
+        onRetry: () => ref.read(provider.notifier).refresh(),
+      );
+    }
+    if (state.items.isEmpty) {
+      return DsEmptyState.search(
+        message: context.l10n.searchNoResultsFor(query),
+      );
+    }
+    return NotificationListener<ScrollNotification>(
+      onNotification: (n) {
+        if (n.metrics.pixels >= n.metrics.maxScrollExtent - 300) {
+          ref.read(provider.notifier).loadMore();
+        }
+        return false;
+      },
+      child: ListView.builder(
+        padding: const EdgeInsets.fromLTRB(
+          DsSpacing.lg,
+          DsSpacing.xs,
+          DsSpacing.lg,
+          DsSpacing.huge,
+        ),
+        itemCount: state.items.length,
+        itemBuilder: (context, index) => _PersonTile(user: state.items[index]),
+      ),
+    );
+  }
+}
+
+class _PostResults extends ConsumerWidget {
+  const _PostResults({required this.query});
+
+  final String query;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(postSearchProvider(query));
+    if (state.isLoading && state.items.isEmpty) {
+      return const Center(child: DsLoadingIndicator());
+    }
+    if (state.hasError) {
+      return DsErrorState(
+        message: state.error,
+        onRetry: () => ref.read(postSearchProvider(query).notifier).refresh(),
+      );
+    }
+    if (state.items.isEmpty) {
+      return DsEmptyState.search(
+        message: context.l10n.searchNoResultsFor(query),
+      );
+    }
+    return NotificationListener<ScrollNotification>(
+      onNotification: (n) {
+        if (n.metrics.pixels >= n.metrics.maxScrollExtent - 600) {
+          ref.read(postSearchProvider(query).notifier).loadMore();
+        }
+        return false;
+      },
+      child: ListView.separated(
+        padding: const EdgeInsets.fromLTRB(
+          DsSpacing.lg,
+          DsSpacing.xs,
+          DsSpacing.lg,
+          DsSpacing.huge,
+        ),
+        itemCount: state.items.length,
+        separatorBuilder: (_, _) => const SizedBox(height: DsSpacing.xl),
+        itemBuilder: (context, index) => ReemPostCard(
+          key: ValueKey(state.items[index].id),
+          post: state.items[index],
+        ),
+      ),
+    );
+  }
+}
+
+/// A boutique or a shopper in a list: face, name, handle, followers.
+class _PersonTile extends StatelessWidget {
+  const _PersonTile({required this.user});
+
+  final User user;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.dsColors;
+    final l10n = context.l10n;
+    final handle = user.username.isEmpty ? null : '@${user.username}';
+    final followers = l10n.searchFollowersCount(
+      formatCount(user.followersCount),
+    );
+
+    return ListTile(
+      contentPadding: EdgeInsets.zero,
+      minTileHeight: DsSizes.minTouchTarget,
+      onTap: () => context.push(RoutePaths.userProfileOf(user.id)),
+      leading: DsAvatar(imageUrl: user.imageUrl, name: user.name, size: 48),
+      title: Row(
+        children: [
+          Flexible(
+            child: Text(
+              user.name,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: context.dsText.tileTitle.bold.tint(c.onSurface),
+            ),
+          ),
+          if (user.isVerified) ...[
+            const SizedBox(width: DsSpacing.xxs),
+            Icon(Icons.verified_rounded, size: 15, color: c.secondary),
+          ],
+        ],
+      ),
+      subtitle: Text(
+        [?handle, followers].join(' · '),
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        style: context.dsText.caption.tint(c.onSurfaceVariant),
+      ),
+      trailing: Icon(
+        user.isSeller ? Icons.storefront_outlined : Icons.chevron_left_rounded,
+        color: c.onSurfaceVariant,
       ),
     );
   }

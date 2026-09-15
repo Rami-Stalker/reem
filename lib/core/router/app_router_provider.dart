@@ -585,7 +585,10 @@ final goRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: RoutePaths.compose,
         name: RouteNames.compose,
-        builder: (context, state) => const ContentComposerScreen(),
+        // `?format=post|reel|story` — which shape she chose before arriving.
+        builder: (context, state) => ContentComposerScreen(
+          initialFormat: state.uri.queryParameters['format'],
+        ),
       ),
       GoRoute(
         path: RoutePaths.socialFeed,

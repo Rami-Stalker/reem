@@ -11,6 +11,13 @@ import 'package:share_plus/share_plus.dart';
 /// link shape is defined once and the server is only told about a share that
 /// actually happened.
 abstract final class ShareService {
+  /// The public link to a post — what «نسخ الرابط» copies and what the share
+  /// sheet sends, so the two can never disagree.
+  static String postUrl(String postId) => '${AppEnv.shareBaseUrl}/p/$postId';
+
+  static String productUrl(String productId) =>
+      '${AppEnv.shareBaseUrl}/product/$productId';
+
   /// A post, with its caption as the invitation.
   ///
   /// Returns true when she went through with it. The engagement counter is the
@@ -31,7 +38,7 @@ abstract final class ShareService {
     return _share(
       context: context,
       text: headline,
-      uri: '${AppEnv.shareBaseUrl}/p/$postId',
+      uri: postUrl(postId),
     );
   }
 
@@ -45,7 +52,7 @@ abstract final class ShareService {
     return _share(
       context: context,
       text: title?.trim() ?? '',
-      uri: '${AppEnv.shareBaseUrl}/product/$productId',
+      uri: productUrl(productId),
     );
   }
 

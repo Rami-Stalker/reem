@@ -10,6 +10,12 @@ import 'package:reem/features/social/domain/repositories/social_repository.dart'
 /// The HTTP surface of the content platform.
 abstract interface class SocialRemoteDataSource {
   Future<PaginatedData<Content>> feed({String? cursor, int limit});
+  Future<PaginatedData<Content>> byAuthor(
+    String authorId, {
+    String? contentType,
+    String? cursor,
+    int limit,
+  });
   Future<PaginatedData<Content>> reels({String? cursor, int limit});
   Future<PaginatedData<Content>> following({String? cursor, int limit});
   Future<PaginatedData<Content>> saved({String? cursor, int limit});

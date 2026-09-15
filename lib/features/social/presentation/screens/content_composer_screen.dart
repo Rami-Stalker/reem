@@ -23,7 +23,11 @@ import 'package:reem/features/social/presentation/widgets/product_tag_picker.dar
 /// media picker at all — a post borrowed the product's photographs) and
 /// `AddStoryScreen`.
 class ContentComposerScreen extends ConsumerStatefulWidget {
-  const ContentComposerScreen({super.key});
+  const ContentComposerScreen({super.key, this.initialFormat});
+
+  /// `post`, `reel` or `story` — the shape she picked on the way in, from the
+  /// create sheet or her page. Unknown or absent leaves the registry's first.
+  final String? initialFormat;
 
   @override
   ConsumerState<ContentComposerScreen> createState() =>
@@ -33,6 +37,23 @@ class ContentComposerScreen extends ConsumerStatefulWidget {
 class _ContentComposerScreenState extends ConsumerState<ContentComposerScreen> {
   final _caption = TextEditingController();
   bool _uploading = false;
+  bool _formatApplied = false;
+
+  /// Selects the format she asked for, once, when the registry has answered —
+  /// and never over a choice she has since made herself.
+  void _applyInitialFormat(ComposerState state, ComposerNotifier notifier) {
+    if (_formatApplied || state.types.isEmpty || state.draft == null) return;
+    _formatApplied = true;
+    final wanted = ContentFormat.fromWire(widget.initialFormat);
+    if (widget.initialFormat == null) return;
+    final match = state.types.where((t) => t.format == wanted).firstOrNull;
+    if (match == null || match.key == state.draft!.contentType) return;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      notifier.selectType(match.key);
+      setState(() {});
+    });
+  }
 
   @override
   void dispose() {
@@ -65,6 +86,7 @@ class _ContentComposerScreenState extends ConsumerState<ContentComposerScreen> {
       }
     });
 
+    _applyInitialFormat(state, notifier);
     final draft = state.draft;
     final type = state.selectedType;
 
