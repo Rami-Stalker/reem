@@ -2,6 +2,7 @@ import { Inject, Injectable, Logger, OnApplicationBootstrap } from '@nestjs/comm
 import { ConfigService } from '@nestjs/config';
 import { OtpTransportKind } from '@prisma/client';
 import { DeliveryOrchestrator } from './delivery.orchestrator';
+import { parseOtpTestAccounts, testAccountsActive } from './otp-test-accounts';
 import { OTP_TRANSPORTS, OtpTransport } from './otp-transport';
 
 /**
@@ -48,6 +49,17 @@ export class OtpDeliveryReadiness implements OnApplicationBootstrap {
       'No enabled OTP route has a configured provider ' +
       `(enabled routes: ${chain.map((r) => r.transport).join(', ') || 'none'}). ` +
       'Sign-in codes cannot reach a handset.';
+    const testAccounts = parseOtpTestAccounts(
+      this.config.get<string>('otpDelivery.testAccounts'),
+      this.config.get<string>('otpDelivery.testAccountsUntil'),
+    );
+    if (testAccountsActive(testAccounts)) {
+      this.logger.warn(
+        `${message} Only the ${testAccounts.codes.size} fixed test account(s) can sign in, ` +
+          `until ${testAccounts.until?.toISOString()}.`,
+      );
+      return;
+    }
     if (this.config.get<string>('nodeEnv') === 'production') {
       throw new Error(message);
     }

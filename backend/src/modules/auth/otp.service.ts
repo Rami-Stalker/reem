@@ -18,6 +18,11 @@ import { createHash, createHmac, randomInt, timingSafeEqual } from 'crypto';
 import { PrismaService } from '../../prisma/prisma.service';
 import { RequestContext } from './interfaces/request-context.interface';
 import { OtpDispatcherService, OTP_ENQUEUED } from './otp/otp-dispatcher.service';
+import {
+  OtpTestAccounts,
+  parseOtpTestAccounts,
+  testAccountsActive,
+} from './otp/otp-test-accounts';
 import { maskDestination } from './otp/otp-transport';
 
 interface RequestOtpInput {
@@ -68,6 +73,7 @@ export class OtpService {
   private readonly maxPerHour = 5;
   private readonly pepper: string;
   private readonly devEcho: boolean;
+  private readonly testAccounts: OtpTestAccounts;
 
   constructor(
     private readonly prisma: PrismaService,
@@ -77,18 +83,23 @@ export class OtpService {
   ) {
     this.pepper = config.get<string>('security.otpPepper') as string;
     this.devEcho = config.get<boolean>('security.otpDevEcho') === true;
+    this.testAccounts = parseOtpTestAccounts(
+      config.get<string>('otpDelivery.testAccounts'),
+      config.get<string>('otpDelivery.testAccountsUntil'),
+    );
   }
 
   async request(input: RequestOtpInput) {
     await this.assertRateLimit(input.phone, input.purpose);
 
-    const code = this.generateCode();
     const matchCode = OtpDispatcherService.generateMatchCode();
     const expiresAt = new Date(Date.now() + this.ttlMs);
     const user =
       input.userId || !input.phone
         ? null
         : await this.prisma.user.findUnique({ where: { phone: input.phone } });
+    const fixedCode = this.fixedTestCode(input, Boolean(input.userId ?? user?.id));
+    const code = fixedCode ?? this.generateCode();
 
     // The challenge and its outbox row are written together: a code that
     // exists but was never queued is an account nobody can get into, and that
@@ -112,14 +123,21 @@ export class OtpService {
           userAgent: input.context?.userAgent,
         },
       });
-      await this.dispatcher.enqueue(created.id, code, tx);
+      // A fixed test code has nobody to be sent to: it is never queued.
+      if (!fixedCode) await this.dispatcher.enqueue(created.id, code, tx);
       return created;
     });
 
-    // Delivered now, not at the outbox's next poll: the row is committed, so
-    // the drain can claim it. The poll stays as the net for a send this
-    // misses (a crash between commit and here, a transport to retry).
-    this.events?.emit(OTP_ENQUEUED, { challengeId: request.id });
+    if (fixedCode) {
+      this.logger.warn(
+        `Fixed test code issued for ${maskDestination(input.phone)}; nothing sent`,
+      );
+    } else {
+      // Delivered now, not at the outbox's next poll: the row is committed, so
+      // the drain can claim it. The poll stays as the net for a send this
+      // misses (a crash between commit and here, a transport to retry).
+      this.events?.emit(OTP_ENQUEUED, { challengeId: request.id });
+    }
 
     if (this.devEcho) {
       this.logger.warn(
@@ -288,6 +306,19 @@ export class OtpService {
         HttpStatus.TOO_MANY_REQUESTS,
       );
     }
+  }
+
+  /**
+   * The configured code for a named test account signing in, or null.
+   *
+   * Only LOGIN, only an account that already exists (a listed number that was
+   * never registered gets a real code, and cannot be used to create one), and
+   * only inside the dated window. See `otp/otp-test-accounts.ts`.
+   */
+  private fixedTestCode(input: RequestOtpInput, accountExists: boolean): string | null {
+    if (input.purpose !== OtpPurpose.LOGIN || !accountExists) return null;
+    if (!testAccountsActive(this.testAccounts)) return null;
+    return this.testAccounts.codes.get(input.phone) ?? null;
   }
 
   /** Uniform over 000000-999999, from the CSPRNG. */

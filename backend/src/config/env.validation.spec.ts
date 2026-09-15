@@ -173,3 +173,34 @@ test('on Render the public origin may come from RENDER_EXTERNAL_URL', () => {
     }),
   );
 });
+
+test('fixed test codes open a dated window for named accounts, and nothing more', () => {
+  const soon = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString();
+  const noProvider = { SMS_GATEWAY_URL: undefined, SMS_GATEWAY_KEY: undefined };
+  // While the window is open, production may boot without a provider…
+  assert.doesNotThrow(() =>
+    validateEnv({
+      ...production,
+      ...noProvider,
+      OTP_TEST_ACCOUNTS: '+963911111111:123456',
+      OTP_TEST_ACCOUNTS_UNTIL: soon,
+    }),
+  );
+  // …not once it has closed…
+  refuses(
+    { ...noProvider, OTP_TEST_ACCOUNTS: '+963911111111:123456', OTP_TEST_ACCOUNTS_UNTIL: '2020-01-01T00:00:00Z' },
+    /no OTP delivery provider is configured/,
+  );
+  // …never undated, open-ended or malformed.
+  refuses({ OTP_TEST_ACCOUNTS: '+963911111111:123456' }, /requires OTP_TEST_ACCOUNTS_UNTIL/);
+  refuses(
+    { OTP_TEST_ACCOUNTS: '+963911111111:123456', OTP_TEST_ACCOUNTS_UNTIL: '2099-01-01T00:00:00Z' },
+    /more than 30 days out/,
+  );
+  refuses({ OTP_TEST_ACCOUNTS: '+963911111111:12', OTP_TEST_ACCOUNTS_UNTIL: soon }, /six-digit/);
+  // The development surfaces stay refused regardless.
+  refuses(
+    { ...noProvider, OTP_TEST_ACCOUNTS: '+963911111111:123456', OTP_TEST_ACCOUNTS_UNTIL: soon, OTP_DEV_INBOX_ENABLED: 'true' },
+    /OTP_DEV_INBOX_ENABLED cannot be enabled in production/,
+  );
+});

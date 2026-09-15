@@ -1,5 +1,10 @@
 import { plainToInstance } from 'class-transformer';
 import {
+  MAX_TEST_ACCOUNT_DAYS,
+  parseOtpTestAccounts,
+  testAccountsActive,
+} from '../modules/auth/otp/otp-test-accounts';
+import {
   IsIn,
   IsNotEmpty,
   IsOptional,
@@ -198,7 +203,39 @@ export function validateEnv(config: Record<string, unknown>) {
    * behind: nothing real configured at all. Boot fails loudly instead of the
    * app answering "code sent" to every woman and delivering nothing.
    */
-  if (config.NODE_ENV === 'production' && !hasRealOtpTransport(config)) {
+  /**
+   * Fixed test codes: malformed, undated or open-ended configuration is
+   * refused outright, in every environment.
+   */
+  let otpTestAccountsActive = false;
+  try {
+    const accounts = parseOtpTestAccounts(
+      config.OTP_TEST_ACCOUNTS as string | undefined,
+      config.OTP_TEST_ACCOUNTS_UNTIL as string | undefined,
+    );
+    if (
+      accounts.until &&
+      accounts.until.getTime() > Date.now() + MAX_TEST_ACCOUNT_DAYS * 24 * 60 * 60 * 1000
+    ) {
+      throw new Error(
+        `OTP_TEST_ACCOUNTS_UNTIL is more than ${MAX_TEST_ACCOUNT_DAYS} days out; fixed codes are a test window, not a configuration`,
+      );
+    }
+    otpTestAccountsActive = testAccountsActive(accounts);
+  } catch (error) {
+    throw new Error(
+      ['Invalid environment configuration:', `  - ${(error as Error).message}`].join('\n'),
+    );
+  }
+
+  // While a dated test window is open, the named accounts can sign in without
+  // a provider; everyone else still cannot. Once it closes, this refusal is
+  // back in force at the next start.
+  if (
+    config.NODE_ENV === 'production' &&
+    !hasRealOtpTransport(config) &&
+    !otpTestAccountsActive
+  ) {
     throw new Error(
       [
         'Invalid environment configuration:',
