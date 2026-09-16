@@ -78,9 +78,41 @@ export default () => ({
    * sent. Contracting one is three environment variables.
    */
   push: {
+    /**
+     * Firebase Cloud Messaging, HTTP v1 — the transport that reaches a phone
+     * whose owner has closed the app.
+     *
+     * Either paste the downloaded service-account key file whole into
+     * `FCM_SERVICE_ACCOUNT_JSON` (raw JSON or base64; both are accepted
+     * because a dashboard's environment editor and a shell disagree about
+     * what may contain a newline), or set the three fields separately.
+     *
+     * Note what is *not* here: a server key. The legacy `key=` credential and
+     * the `/fcm/send` endpoint it went to were decommissioned by Google in
+     * June 2024 and now answer 404 to everything — so a deployment could be
+     * configured perfectly and still never ring a phone.
+     */
+    fcm: {
+      serviceAccount: process.env.FCM_SERVICE_ACCOUNT_JSON,
+      projectId: process.env.FCM_PROJECT_ID,
+      clientEmail: process.env.FCM_CLIENT_EMAIL,
+      privateKey: process.env.FCM_PRIVATE_KEY,
+    },
+    /**
+     * The fallback: any provider that speaks JSON over HTTP. Kept for the
+     * handsets sold here without Google Play Services — a Huawei phone has no
+     * FCM at all, and that is not a small share of this market.
+     */
     endpoint: process.env.PUSH_ENDPOINT,
     authHeader: process.env.PUSH_AUTH_HEADER,
     bodyTemplate: process.env.PUSH_BODY_TEMPLATE,
+    /**
+     * How many times a transient failure is retried before the delivery gives
+     * up. Low on purpose: everything Reem pushes has a shelf life measured in
+     * hours, so a message that has failed five times over a rising backoff is
+     * one she no longer needs.
+     */
+    maxAttempts: parseInt(process.env.PUSH_MAX_ATTEMPTS ?? '5', 10),
   },
 
   otpDelivery: {

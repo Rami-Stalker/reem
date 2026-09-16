@@ -129,6 +129,25 @@
 			</array>
 		</dict>
 	</array>
+	<!--
+	  Push notifications.
+
+	  `remote-notification` lets iOS hand a push to the app while it is in the
+	  background — which is what makes the badge on the app icon correct at the
+	  moment she looks at her home screen, rather than at the moment she next
+	  opens Reem.
+
+	  Note what is deliberately NOT here: `fetch`. Background fetch is a
+	  different capability, App Review asks what it is for, and Reem has no
+	  answer — nothing in this app needs to wake up on a timer.
+
+	  The `aps-environment` entitlement in Runner.entitlements is the other
+	  half of this, and the one the build actually fails without.
+	-->
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>remote-notification</string>
+	</array>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>tel</string>

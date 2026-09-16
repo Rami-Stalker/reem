@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reem/core/design_system/design_system.dart';
 import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/shared/value_objects/money.dart';
+import 'package:reem/features/policies/presentation/widgets/policy_link.dart';
 import 'package:reem/features/seller_earnings/domain/entities/seller_earnings.dart';
 import 'package:reem/features/seller_earnings/presentation/providers/seller_earnings_provider.dart';
 import 'package:reem/features/seller_earnings/presentation/widgets/earnings_balance_cards.dart';
@@ -107,6 +108,30 @@ class SellerEarningsScreen extends ConsumerWidget {
           ],
         ],
 
+        // Why a figure is held and when it is released is a commissions
+        // question, and this is the screen where it gets asked. The policy is
+        // the platform's written answer, so the screen links to it rather than
+        // restating half of it in a tooltip that can drift from the document.
+        SliverToBoxAdapter(
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(
+              DsSpacing.lg,
+              DsSpacing.xl,
+              DsSpacing.lg,
+              0,
+            ),
+            child: PolicyNotice(
+              message: l10n.sellerEarningsPolicyNotice,
+              links: [
+                PolicyLink(
+                  label: l10n.policiesLinkCommissions,
+                  slug: PolicySlugs.commissions,
+                ),
+              ],
+            ),
+          ),
+        ),
+
         DsGaps.sliverBottomSafe,
       ],
     );
@@ -202,18 +227,23 @@ class _LifetimeCard extends StatelessWidget {
         Expanded(
           child: Text(
             label,
-            style: context.dsText.body.tint(emphasise ? colors.onSurface : colors.onSurfaceVariant).copyWith(fontWeight: emphasise
-                  ? DsTypography.bold
-                  : DsTypography.regular),
+            style: context.dsText.body
+                .tint(emphasise ? colors.onSurface : colors.onSurfaceVariant)
+                .copyWith(
+                  fontWeight: emphasise
+                      ? DsTypography.bold
+                      : DsTypography.regular,
+                ),
           ),
         ),
         Text(
           // The minus makes it plain that commission came *out* of the gross.
           '${isDeduction ? '−' : ''}${amount.format()}',
-          style: (emphasise
-                    ? context.dsText.price
-                    : context.dsText.body.bold.tint(colors.onSurface))
-                .tabular,
+          style:
+              (emphasise
+                      ? context.dsText.price
+                      : context.dsText.body.bold.tint(colors.onSurface))
+                  .tabular,
         ),
       ],
     );
@@ -281,11 +311,17 @@ class _EarningsSkeleton extends StatelessWidget {
             Row(
               children: [
                 Expanded(
-                  child: DsSkeleton.box(height: 96, borderRadius: DsRadius.card),
+                  child: DsSkeleton.box(
+                    height: 96,
+                    borderRadius: DsRadius.card,
+                  ),
                 ),
                 SizedBox(width: DsSpacing.sm),
                 Expanded(
-                  child: DsSkeleton.box(height: 96, borderRadius: DsRadius.card),
+                  child: DsSkeleton.box(
+                    height: 96,
+                    borderRadius: DsRadius.card,
+                  ),
                 ),
               ],
             ),

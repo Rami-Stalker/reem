@@ -15,7 +15,18 @@ import { buildMeta, PaginationDto } from '../../common/dto/pagination.dto';
 import { serializeNotification } from '../../common/serializers';
 import { PrismaService } from '../../prisma/prisma.service';
 import { ContactPolicyService } from './contact-policy.service';
-import { PushOutcome, PushTransport } from './transports/push.transport';
+import {
+  PushDevice,
+  PushOutcome,
+  PushTransport,
+} from './transports/push.transport';
+import {
+  channelFor,
+  collapseKeyFor,
+  deepLinkFor,
+  ttlFor,
+  urgencyFor,
+} from './notification-routing';
 import {
   AppEvent,
   CommerceContentPublishedPayload,
@@ -47,18 +58,25 @@ import {
   UpdateCampaignStatusDto,
 } from './dto/notification-engine.dto';
 import { ScheduledJob } from '../../common/scheduling/scheduled-job.decorator';
+import { ConfigService } from '@nestjs/config';
 
 
 @Injectable()
 export class NotificationsService {
   private readonly logger = new Logger(NotificationsService.name);
 
+  /** How many times a transient push failure is retried before giving up. */
+  private readonly maxAttempts: number;
+
   constructor(
     private readonly push: PushTransport,
     private readonly repo: NotificationsRepository,
     private readonly prisma: PrismaService,
     private readonly contactPolicy: ContactPolicyService,
-  ) {}
+    config?: ConfigService,
+  ) {
+    this.maxAttempts = config?.get<number>('push.maxAttempts') ?? 5;
+  }
 
   // ── Reads / mutations ────────────────────────────────────────────────────
 
@@ -118,30 +136,165 @@ export class NotificationsService {
     return this.serializePrefs(await this.repo.upsertPreference(userId, patch));
   }
 
+  /**
+   * A handset says where it can be reached.
+   *
+   * Called by the client every time it starts and every time the provider
+   * rotates the token, so this has to be idempotent and cheap. Three things
+   * happen here that are easy to leave out and expensive to leave out:
+   *
+   *  - **The handset's previous token is retired.** A push token is not
+   *    stable: it is reissued after a reinstall, a restore from backup, or a
+   *    long idle spell, and the old one keeps answering for a while. Without
+   *    this, a woman who reinstalls twice has three live rows and receives
+   *    every notification three times.
+   *  - **Her push preference is created switched on.** The client only gets
+   *    this far after the operating system has asked her and she has said yes.
+   *    That is a clearer answer than the column's default of `false` — without
+   *    this, every push she agreed to would be filtered out one layer later,
+   *    which is exactly the kind of bug that looks like a broken provider. An
+   *    *existing* preference is left alone; see below.
+   *  - **A previously disabled token row is revived.** The handset may have
+   *    been signed out of, or had one push refused against it.
+   */
   async registerPushToken(userId: string, dto: RegisterPushTokenDto) {
     const tokenHash = createHash('sha256').update(dto.token).digest('hex');
-    await this.prisma.pushToken.upsert({
-      where: { tokenHash },
-      create: {
-        userId,
-        tokenHash,
-        // Kept, not just hashed: a push provider's token is the address of a
-        // handset, and an address you cannot read is an address you cannot
-        // write to.
-        token: dto.token,
-        provider: dto.provider,
-        platform: dto.platform,
-      },
-      update: {
-        userId,
-        token: dto.token,
-        provider: dto.provider,
-        platform: dto.platform,
-        enabled: true,
-        lastSeenAt: new Date(),
+
+    await this.prisma.$transaction(async (tx) => {
+      if (dto.device_id) {
+        // Same phone, different address. Retire whatever it used to be,
+        // whoever it used to belong to — a shared handset that has been signed
+        // out of must stop receiving the previous account's notifications.
+        await tx.pushToken.updateMany({
+          where: { deviceId: dto.device_id, tokenHash: { not: tokenHash } },
+          data: {
+            enabled: false,
+            disabledAt: new Date(),
+            lastFailureReason: 'Replaced by a newer token on the same device',
+          },
+        });
+      }
+
+      await tx.pushToken.upsert({
+        where: { tokenHash },
+        create: {
+          userId,
+          tokenHash,
+          // Kept, not just hashed: a push provider's token is the address of a
+          // handset, and an address you cannot read is an address you cannot
+          // write to.
+          token: dto.token,
+          provider: dto.provider,
+          platform: dto.platform,
+          deviceId: dto.device_id,
+          appVersion: dto.app_version,
+          locale: dto.locale,
+        },
+        update: {
+          userId,
+          token: dto.token,
+          provider: dto.provider,
+          platform: dto.platform,
+          deviceId: dto.device_id,
+          appVersion: dto.app_version,
+          locale: dto.locale,
+          enabled: true,
+          disabledAt: null,
+          failureCount: 0,
+          lastFailureReason: null,
+          lastSeenAt: new Date(),
+        },
+      });
+
+      await tx.notificationPreference.upsert({
+        where: { userId },
+        create: { userId, push: true },
+        // Deliberately empty. Creating the row with `push: true` is right —
+        // the client only reaches this endpoint after the operating system
+        // has asked her and she has said yes, which is a clearer answer than
+        // the column's default of `false`. *Updating* it to true would not be:
+        // a woman who turned push off in the settings screen would have it
+        // silently turned back on the next time the app started and
+        // re-registered its token, which is the kind of thing an app gets
+        // uninstalled for.
+        update: {},
+      });
+    });
+
+    return { message: 'Push token registered' };
+  }
+
+  /**
+   * A handset says to stop.
+   *
+   * Signing out, or revoking the permission in the system settings. The row is
+   * disabled rather than deleted so a support question about why a woman
+   * stopped receiving notifications has an answer.
+   *
+   * Her `push` preference is deliberately *not* turned off here: signing out
+   * on one phone must not mute the other one she is still signed in on. The
+   * preference is a decision about her account; the token is a fact about a
+   * device.
+   */
+  async unregisterPushToken(userId: string, token: string) {
+    const tokenHash = createHash('sha256').update(token).digest('hex');
+    const result = await this.prisma.pushToken.updateMany({
+      // Scoped to the caller: a token is an address, and an unauthenticated
+      // guess at one must not be able to silence somebody else's phone.
+      where: { tokenHash, userId },
+      data: {
+        enabled: false,
+        disabledAt: new Date(),
+        lastFailureReason: 'Unregistered by the device',
       },
     });
-    return { message: 'Push token registered' };
+    return { message: 'Push token unregistered', updated: result.count };
+  }
+
+  /**
+   * Pushes a notification row somebody else already wrote.
+   *
+   * The seam for the modules that keep their own notification-writing logic
+   * because the *shape* of what they write is domain knowledge — `RoomNotifier`
+   * being the one that exists: it coalesces a room's activity into a single
+   * line that it rewrites in place, and that rule belongs with rooms rather
+   * than here.
+   *
+   * What those callers were missing is only the second half. They wrote a row
+   * and nothing rang, so an invitation into a shopping room — the one
+   * notification whose entire purpose is to pull somebody who is not in the
+   * app into it — reached nobody who was not already looking.
+   *
+   * Callers are expected to invoke this for a row they have *created* and not
+   * for one they coalesced into an existing line, which is what keeps a room's
+   * fourth vote in an hour from being a fourth buzz.
+   */
+  async pushExisting(
+    notification: {
+      id: string;
+      userId: string;
+      type: NotificationType;
+      title: string;
+      body: string;
+      data?: unknown;
+    },
+    category: NotificationCategory = NotificationCategory.TRANSACTIONAL,
+  ): Promise<void> {
+    try {
+      await this.pushFor({
+        userId: notification.userId,
+        type: notification.type,
+        title: notification.title,
+        body: notification.body,
+        data: notification.data,
+        notificationId: notification.id,
+        category,
+      });
+    } catch (error) {
+      this.logger.warn(
+        `Failed to push notification ${notification.id}: ${(error as Error).message}`,
+      );
+    }
   }
 
   async dispatch(actorId: string, dto: DispatchNotificationDto) {
@@ -157,6 +310,15 @@ export class NotificationsService {
       type: dto.type ?? NotificationType.system,
       payload: dto.payload,
       scheduledAt: new Date(),
+      // The caller's answer, not the default.
+      //
+      // This was dropped on the floor, and the consequence was specific and
+      // bad: chat messages come through here marked TRANSACTIONAL, the
+      // category fell back to MARKETING, and the frequency cap allows one
+      // marketing message a day. So a woman received a push for the first
+      // message anyone sent her each day and silence for the rest — while the
+      // delivery table recorded the others as correctly suppressed.
+      category: dto.category,
     });
 
     await this.processDueDeliveries(500);
@@ -403,15 +565,32 @@ export class NotificationsService {
       take: 20,
     });
 
+    const title = 'محتوى بانتظار المراجعة';
+    const body = `${name} أرسلت ${payload.contentType} للمراجعة`;
+    const data = { contentId: payload.contentId, authorId: payload.authorId };
+
     for (const moderator of moderators) {
-      await this.safeCreate({
-        userId: moderator.id,
-        type: NotificationType.system,
-        title: 'محتوى بانتظار المراجعة',
-        body: `${name} أرسلت ${payload.contentType} للمراجعة`,
-        data: { contentId: payload.contentId, authorId: payload.authorId },
-      });
+      // `push: false` here, and queued in bulk below instead. Twenty
+      // moderators sent one at a time is twenty sequential round-trips to the
+      // push provider inside one event handler — several seconds of a worker
+      // spent on a queue that can carry them together.
+      await this.safeCreate(
+        { userId: moderator.id, type: NotificationType.system, title, body, data },
+        { push: false },
+      );
     }
+
+    await this.queuePushes({
+      recipients: moderators.map((moderator) => moderator.id),
+      type: NotificationType.system,
+      title,
+      body,
+      data,
+      // A moderation queue filling up is work waiting for somebody, not a
+      // promotion: it is not held for quiet hours and not capped.
+      category: NotificationCategory.TRANSACTIONAL,
+    });
+    await this.processDueDeliveries(50);
   }
 
   /** And her followers hear about it once it is actually live. */
@@ -570,6 +749,18 @@ export class NotificationsService {
 
   // ── internals ────────────────────────────────────────────────────────────
 
+  /**
+   * Tells a shop's followers something, in the app and on their phones.
+   *
+   * The push half is queued in bulk and left for the delivery worker rather
+   * than sent inline, which is the one deliberate difference from
+   * [safeCreate]. A boutique with four hundred followers publishing a post is
+   * four hundred provider round-trips; doing them inside the request that
+   * created the post would make publishing feel broken. Up to a minute late is
+   * the right latency for "a shop you follow has something new" — and exactly
+   * the wrong one for "your order is out for delivery", which is why the two
+   * paths differ.
+   */
   private async fanout(
     sellerId: string,
     key: PrefKey,
@@ -582,10 +773,91 @@ export class NotificationsService {
     if (followers.length === 0) return;
     const optedOut = await this.repo.optedOut(followers, key);
     const recipients = followers.filter((id) => !optedOut.has(id));
+    if (recipients.length === 0) return;
+
     // Heavy write — in production this is the natural queue (BullMQ) boundary.
     await this.repo.createMany(
       recipients.map((userId) => ({ userId, type, title, body, data })),
     );
+
+    await this.queuePushes({
+      recipients,
+      type,
+      title,
+      body,
+      data,
+      // A shop she follows has posted. She asked for this by following, but it
+      // is still the platform choosing the moment rather than something
+      // happening to her — so it is held for quiet hours and counted.
+      category: NotificationCategory.MARKETING,
+    });
+  }
+
+  /**
+   * Queues push rows for many recipients at once, for the worker to send.
+   *
+   * Narrowed to the women who can actually receive one before anything is
+   * written: push turned on, at least one live handset, and the contact policy
+   * satisfied. Writing a row for everyone and filtering at send time is the
+   * version that fills the queue with permanent skips — at a few hundred a day
+   * they become the queue, and the sends that matter wait behind them.
+   */
+  private async queuePushes(input: {
+    recipients: string[];
+    type: NotificationType;
+    title: string;
+    body: string;
+    data: Prisma.InputJsonValue;
+    category: NotificationCategory;
+  }): Promise<number> {
+    if (!this.push.isConfigured() || input.recipients.length === 0) return 0;
+
+    const reachable = await this.prisma.pushToken.groupBy({
+      by: ['userId'],
+      where: {
+        userId: { in: input.recipients },
+        enabled: true,
+        token: { not: '' },
+      },
+    });
+    if (reachable.length === 0) return 0;
+
+    const candidates = reachable.map((row) => row.userId);
+    const muted = await this.prisma.notificationPreference.findMany({
+      where: { userId: { in: candidates }, push: false },
+      select: { userId: true },
+    });
+    const mutedIds = new Set(muted.map((row) => row.userId));
+
+    const allowed: string[] = [];
+    for (const userId of candidates) {
+      if (mutedIds.has(userId)) continue;
+      const decision = await this.contactPolicy.mayContact(userId, {
+        category: input.category,
+      });
+      if (decision.allowed) allowed.push(userId);
+    }
+    if (allowed.length === 0) return 0;
+
+    const payload = {
+      ...(typeof input.data === 'object' && input.data !== null
+        ? (input.data as Record<string, unknown>)
+        : {}),
+      type: input.type,
+    } as Prisma.InputJsonValue;
+
+    const result = await this.prisma.notificationDelivery.createMany({
+      data: allowed.map((userId) => ({
+        userId,
+        channel: NotificationChannel.PUSH,
+        category: input.category,
+        title: input.title,
+        body: input.body,
+        payload,
+        scheduledAt: new Date(),
+      })),
+    });
+    return result.count;
   }
 
   private async recipientsFor(segment: NotificationSegmentDto | Record<string, unknown>) {
@@ -703,11 +975,25 @@ export class NotificationsService {
     return result.count;
   }
 
-  private async processDueDeliveries(limit: number) {
+  /**
+   * Hands queued deliveries to their channel.
+   *
+   * Runs on the minute from the scheduler, and directly after anything that
+   * enqueues something she is waiting for. Both matter: the cron is what
+   * catches a scheduled campaign and a retry, and the direct call is why a
+   * message arrives on her phone in a second rather than in a minute.
+   */
+  private async processDueDeliveries(limit: number, ids?: string[]) {
+    const now = new Date();
     const deliveries = await this.prisma.notificationDelivery.findMany({
       where: {
+        ...(ids?.length ? { id: { in: ids } } : {}),
         status: NotificationDeliveryStatus.QUEUED,
-        OR: [{ scheduledAt: null }, { scheduledAt: { lte: new Date() } }],
+        OR: [{ scheduledAt: null }, { scheduledAt: { lte: now } }],
+        // A row that failed transiently is not due again until its backoff
+        // has elapsed. Without this the worker spends every pass replaying
+        // the same refusal and starves the deliveries behind it.
+        AND: [{ OR: [{ nextAttemptAt: null }, { nextAttemptAt: { lte: now } }] }],
       },
       take: limit,
       orderBy: { createdAt: 'asc' },
@@ -733,25 +1019,7 @@ export class NotificationsService {
         // collected device tokens, wrote a delivery row, marked it delivered,
         // and no phone ever rang.
         if (delivery.channel === NotificationChannel.PUSH) {
-          const outcome = await this.pushOut(delivery);
-          await this.prisma.notificationDelivery.update({
-            where: { id: delivery.id },
-            data: outcome.delivered
-              ? {
-                  status: NotificationDeliveryStatus.SENT,
-                  sentAt: new Date(),
-                  provider: 'push',
-                  providerMessageId: outcome.providerMessageId,
-                }
-              : {
-                  // Skipped, not failed: nothing went wrong, there was simply
-                  // nowhere to send it. A failure would have a retry chasing
-                  // it for ever.
-                  status: NotificationDeliveryStatus.SKIPPED,
-                  failedAt: new Date(),
-                  failureReason: outcome.reason,
-                },
-          });
+          await this.attemptPush(delivery);
           continue;
         }
 
@@ -760,6 +1028,7 @@ export class NotificationsService {
           data: {
             status: NotificationDeliveryStatus.SENT,
             sentAt: new Date(),
+            attempts: { increment: 1 },
             notificationId,
             provider: delivery.channel.toLowerCase(),
             providerMessageId: `${delivery.channel.toLowerCase()}-${delivery.id}`,
@@ -771,12 +1040,92 @@ export class NotificationsService {
           data: {
             status: NotificationDeliveryStatus.FAILED,
             failedAt: new Date(),
+            attempts: { increment: 1 },
             failureReason:
               error instanceof Error ? error.message : 'Unknown delivery error',
           },
         });
       }
     }
+  }
+
+  /**
+   * One push attempt, and what the row says afterwards.
+   *
+   * Three endings rather than two, and the distinction is the whole point of
+   * having a retry at all:
+   *
+   *  - **SENT.** At least one of her handsets took it.
+   *  - **SKIPPED.** There was nowhere to send it — no provider contracted, no
+   *    registered device, every token dead. Nothing went wrong, so a retry
+   *    would chase it for ever.
+   *  - **QUEUED again, later.** The provider was rate-limiting or broken.
+   *    This is the case that used to be lost outright: a ninety-second FCM
+   *    outage permanently dropped every order-shipped message sent during it.
+   */
+  private async attemptPush(delivery: {
+    id: string;
+    userId: string;
+    title: string;
+    body: string;
+    payload: Prisma.JsonValue;
+    category: NotificationCategory;
+    attempts: number;
+  }) {
+    const outcome = await this.pushOut(delivery);
+    const attempts = delivery.attempts + 1;
+
+    if (outcome.delivered) {
+      await this.prisma.notificationDelivery.update({
+        where: { id: delivery.id },
+        data: {
+          status: NotificationDeliveryStatus.SENT,
+          sentAt: new Date(),
+          attempts,
+          nextAttemptAt: null,
+          provider: this.push.providerName(),
+          providerMessageId: outcome.providerMessageId,
+          // Kept even on success: "three of her four phones failed" is worth
+          // seeing before it becomes four of four.
+          failureReason: outcome.reason,
+        },
+      });
+      return;
+    }
+
+    if (outcome.retryable && attempts < this.maxAttempts) {
+      // Exponential, from half a minute: 30s, 1m, 2m, 4m. Long enough to sit
+      // out an ordinary blip, short enough that a chat message still arrives
+      // while it is about something.
+      const delayMs = 30_000 * 2 ** (attempts - 1);
+      await this.prisma.notificationDelivery.update({
+        where: { id: delivery.id },
+        data: {
+          status: NotificationDeliveryStatus.QUEUED,
+          attempts,
+          nextAttemptAt: new Date(Date.now() + delayMs),
+          failureReason: outcome.reason,
+        },
+      });
+      return;
+    }
+
+    await this.prisma.notificationDelivery.update({
+      where: { id: delivery.id },
+      data: {
+        // Skipped when there was nowhere to send it; failed when we ran out of
+        // attempts. Both are terminal, and the analytics panel reads them
+        // differently — one is a customer without a phone registered, the
+        // other is a provider problem worth somebody's attention.
+        status: outcome.retryable
+          ? NotificationDeliveryStatus.FAILED
+          : NotificationDeliveryStatus.SKIPPED,
+        failedAt: new Date(),
+        attempts,
+        nextAttemptAt: null,
+        failureReason: outcome.reason,
+      },
+    });
   }
 
   private channelAllowed(
@@ -827,14 +1176,120 @@ export class NotificationsService {
     };
   }
 
+  /**
+   * Tells one woman one thing — in the app, and on her phone.
+   *
+   * This is the method every domain event goes through, and it is where the
+   * feature was missing. The whole event fan-out — an order shipped, somebody
+   * wrote to her, a post of hers was taken down, a new follower — used to
+   * write a `Notification` row and stop. That row is only visible to a woman
+   * who has already opened the app, which means the notifications with the
+   * most reason to exist were precisely the ones that never reached anybody:
+   * the entire point of "your order is out for delivery" is that she is not
+   * looking at her phone when it happens.
+   *
+   * The in-app row is still written first and directly rather than through the
+   * delivery queue, because the inbox is expected to be instantaneous and a
+   * push that fails must not take the record with it. The push is queued
+   * behind it and sent immediately.
+   */
   private async safeCreate(
     data: Prisma.NotificationUncheckedCreateInput,
+    options: { category?: NotificationCategory; push?: boolean } = {},
   ): Promise<void> {
+    let notificationId: string | undefined;
     try {
-      await this.repo.create(data);
+      const created = await this.repo.create(data);
+      notificationId = created.id;
     } catch (error) {
       this.logger.error('Failed to create notification', error as Error);
+      return;
     }
+
+    if (options.push === false) return;
+
+    try {
+      await this.pushFor({
+        userId: data.userId,
+        type: data.type ?? NotificationType.system,
+        title: data.title,
+        body: data.body,
+        data: data.data,
+        notificationId,
+        // Event-driven notifications are things that happened to her, not
+        // things the platform wants — so they are not held for quiet hours
+        // and not counted against a marketing cap. A campaign passes
+        // MARKETING explicitly and is.
+        category: options.category ?? NotificationCategory.TRANSACTIONAL,
+      });
+    } catch (error) {
+      // A push that could not be queued must never cost her the in-app row,
+      // and must never fail the order, comment or takedown that caused it.
+      this.logger.warn(
+        `Failed to queue push notification: ${(error as Error).message}`,
+      );
+    }
+  }
+
+  /**
+   * Queues the push half, and sends it now.
+   *
+   * Everything is checked before a row is written rather than after: her
+   * channel preference, whether she has a handset registered at all, and the
+   * contact policy. A delivery row for a woman with no phone is a SKIPPED row
+   * the worker has to walk past on every pass for ever, and at a few hundred a
+   * day that is the whole queue.
+   */
+  private async pushFor(input: {
+    userId: string;
+    type: NotificationType;
+    title: string;
+    body: string;
+    data?: unknown;
+    notificationId?: string;
+    category: NotificationCategory;
+  }): Promise<void> {
+    if (!this.push.isConfigured()) return;
+
+    const [pref, devices] = await Promise.all([
+      this.repo.getPreference(input.userId),
+      this.prisma.pushToken.count({
+        where: { userId: input.userId, enabled: true, token: { not: '' } },
+      }),
+    ]);
+    if (devices === 0) return;
+    if (pref && !pref.push) return;
+
+    const decision = await this.contactPolicy.mayContact(input.userId, {
+      category: input.category,
+    });
+    if (!decision.allowed) return;
+
+    const delivery = await this.prisma.notificationDelivery.create({
+      data: {
+        userId: input.userId,
+        notificationId: input.notificationId,
+        channel: NotificationChannel.PUSH,
+        category: input.category,
+        title: input.title,
+        body: input.body,
+        payload: {
+          ...(typeof input.data === 'object' && input.data !== null
+            ? (input.data as Record<string, unknown>)
+            : {}),
+          type: input.type,
+          ...(input.notificationId
+            ? { notificationId: input.notificationId }
+            : {}),
+        } as Prisma.InputJsonValue,
+        scheduledAt: new Date(),
+      },
+      select: { id: true },
+    });
+
+    // Now, not on the next minute boundary. The cron is the safety net for
+    // scheduled sends and retries; a woman waiting on a reply should not.
+    await this.processDueDeliveries(1, [delivery.id]);
   }
 
   private async optedOut(userId: string, key: PrefKey): Promise<boolean> {
@@ -870,26 +1325,167 @@ export class NotificationsService {
    * the row alongside it; a token that has been disabled — she turned pushes
    * off, or the provider rejected it — is simply not in the list, which is why
    * "no registered device" is a skip rather than an error.
+   *
+   * Everything that makes the notification *land* rather than merely be sent
+   * is assembled here: the channel it belongs in, the route it opens, what it
+   * replaces on the lock screen, the badge, and how long it is worth. All of
+   * it derives from the type and payload already on the delivery row, so a
+   * caller cannot forget to pass it.
    */
   private async pushOut(delivery: {
     userId: string;
     title: string;
     body: string;
+    payload: Prisma.JsonValue;
+    category: NotificationCategory;
   }): Promise<PushOutcome> {
     if (!this.push.isConfigured()) {
-      return { delivered: false, reason: 'No push provider configured' };
+      return {
+        delivered: false,
+        reason: 'No push provider configured',
+        devices: [],
+      };
     }
 
-    const tokens = await this.prisma.pushToken.findMany({
-      where: { userId: delivery.userId, enabled: true },
-      select: { token: true },
+    const rows = await this.prisma.pushToken.findMany({
+      where: { userId: delivery.userId, enabled: true, token: { not: '' } },
+      select: { id: true, token: true, platform: true },
     });
+    if (rows.length === 0) {
+      return { delivered: false, reason: 'No registered device', devices: [] };
+    }
 
-    return this.push.send({
-      tokens: tokens.map((row) => row.token).filter((token) => token.length > 0),
+    const payload = (delivery.payload ?? {}) as Record<string, unknown>;
+    const type =
+      (payload.type as NotificationType | undefined) ?? NotificationType.system;
+
+    // The count she will see on the icon. Read now rather than written into
+    // the payload at enqueue time, because between queuing and sending she may
+    // have read everything — and a badge that says 3 over an empty inbox is
+    // the kind of small wrongness that makes people stop trusting the number.
+    const badge = await this.repo.count(delivery.userId, { isRead: false });
+
+    const devices: PushDevice[] = rows.map((row) => ({
+      id: row.id,
+      token: row.token,
+      platform: row.platform,
+    }));
+
+    const outcome = await this.push.send({
+      devices,
       title: delivery.title,
       body: delivery.body,
+      deepLink: deepLinkFor(type, payload),
+      channelId: channelFor(type),
+      collapseKey: collapseKeyFor(type, payload),
+      ttlSeconds: ttlFor(type),
+      urgent: urgencyFor(delivery.category),
+      badge,
+      data: this.pushData(type, payload),
     });
+
+    await this.reconcileTokens(outcome);
+    return outcome;
+  }
+
+  /**
+   * The routing information the client gets, over and above the sentence.
+   *
+   * Kept small on purpose. This travels unencrypted through Google's
+   * infrastructure and sits in the notification centre of a phone that may be
+   * handed to somebody else, so it carries ids and never content: no message
+   * text beyond what is already on the visible line, no names, no amounts.
+   */
+  private pushData(
+    type: NotificationType,
+    payload: Record<string, unknown>,
+  ): Record<string, string> {
+    const data: Record<string, string> = { type };
+    for (const key of [
+      'orderId',
+      'order_id',
+      'chatId',
+      'chat_id',
+      'contentId',
+      'content_id',
+      'roomId',
+      'room_id',
+      'followerId',
+      'follower_id',
+      'notificationId',
+      'campaign_id',
+      'kind',
+    ]) {
+      const value = payload[key];
+      if (typeof value === 'string' && value.length > 0) data[key] = value;
+    }
+    return data;
+  }
+
+  /**
+   * Retires the addresses that no longer answer.
+   *
+   * Without this the table only grows: every uninstall leaves a token behind
+   * that is politely refused for ever, so reaching one woman's one phone
+   * gradually costs four requests, three of which are guaranteed to fail —
+   * and her delivery rows fill with failures that are nobody's problem.
+   *
+   * A transient refusal is counted rather than acted on. Three in a row with
+   * no success in between is a handset that is gone whether or not the
+   * provider ever says so; one is Google having a bad minute.
+   */
+  private async reconcileTokens(outcome: PushOutcome): Promise<void> {
+    const dead = outcome.devices.filter((device) => device.invalidToken);
+    const flaky = outcome.devices.filter(
+      (device) => !device.ok && !device.invalidToken,
+    );
+    const alive = outcome.devices.filter((device) => device.ok);
+
+    if (dead.length > 0) {
+      await this.prisma.pushToken.updateMany({
+        where: { id: { in: dead.map((device) => device.deviceId) } },
+        data: {
+          enabled: false,
+          disabledAt: new Date(),
+          lastFailureReason: dead[0].reason,
+        },
+      });
+    }
+
+    for (const device of flaky) {
+      await this.prisma.pushToken.updateMany({
+        where: { id: device.deviceId },
+        data: {
+          failureCount: { increment: 1 },
+          lastFailureReason: device.reason,
+        },
+      });
+    }
+
+    if (flaky.length > 0) {
+      await this.prisma.pushToken.updateMany({
+        where: {
+          id: { in: flaky.map((device) => device.deviceId) },
+          failureCount: { gte: 3 },
+        },
+        data: {
+          enabled: false,
+          disabledAt: new Date(),
+          lastFailureReason: 'Three consecutive delivery failures',
+        },
+      });
+    }
+
+    if (alive.length > 0) {
+      await this.prisma.pushToken.updateMany({
+        where: { id: { in: alive.map((device) => device.deviceId) } },
+        data: {
+          failureCount: 0,
+          lastFailureReason: null,
+          lastSeenAt: new Date(),
+        },
+      });
+    }
   }
 
   private serializePrefs(pref: NotificationPreference | null) {

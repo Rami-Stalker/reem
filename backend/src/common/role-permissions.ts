@@ -6,6 +6,7 @@ const allPermissions = Object.values(AppPermission);
 const rolePermissions: Record<UserRole, string[]> = {
   [UserRole.SUPER_ADMIN]: allPermissions,
   [UserRole.OPERATIONS_ADMIN]: [
+    AppPermission.policyManage,
     AppPermission.securityForensicsRead,
     AppPermission.accountRecoveryReview,
     AppPermission.adminDashboard,

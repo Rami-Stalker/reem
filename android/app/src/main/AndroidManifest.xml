@@ -1,5 +1,40 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
     <uses-permission android:name="android.permission.INTERNET"/>
+
+    <!--
+      Notifications, on Android 13 and later.
+
+      A runtime permission rather than an install-time one since API 33: the
+      app must ask, and a refusal is permanent — the system dialog never
+      appears a second time. That is why the app does not ask at first launch;
+      see `PushNotificationService.request`.
+
+      On API 32 and earlier this permission does not exist and notifications
+      are granted by default, so nothing here changes for those handsets.
+    -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+
+    <!--
+      Three permissions `flutter_local_notifications` merges into this manifest
+      that Reem must not ship, removed explicitly.
+
+      Nothing in this app schedules a notification for a later time or needs to
+      redraw one after a reboot — every notification Reem shows is drawn the
+      moment a push arrives. Both alarm permissions oblige a publisher to
+      justify them in writing to Google Play, and `RECEIVE_BOOT_COMPLETED`
+      makes the app start at boot, which is a battery cost with nothing on the
+      other side of it. This is also why the package was removed from
+      pubspec.yaml once before; it is back because it now has a job, and the
+      permissions it drags in do not.
+
+      If a future feature ever does schedule a local notification, deleting one
+      of these lines is how it gets its permission back — deliberately, rather
+      than by accident.
+    -->
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" tools:node="remove"/>
+    <uses-permission android:name="android.permission.USE_EXACT_ALARM" tools:node="remove"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" tools:node="remove"/>
 
     <!--
       A camera is used for product photographs and stories, and is not
@@ -77,6 +112,29 @@
                 <data android:scheme="reem"/>
             </intent-filter>
         </activity>
+        <!--
+          What a push looks like when the app is not running.
+
+          These three defaults are read by the Firebase Messaging SDK itself,
+          in the native code that draws a notification arriving at a terminated
+          app — where no Dart has run and nothing this project wrote gets a
+          say. Without them Android falls back to the launcher icon, which it
+          renders as a silhouette: a solid white square on the lock screen.
+
+          The channel named here is the fallback for a message that names none.
+          It must be one `notification_channels.dart` creates at startup, or
+          Android 8+ discards the notification without a word.
+        -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/ic_stat_reem" />
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@color/notification_accent" />
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="reem_system" />
+
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
         <meta-data

@@ -23,6 +23,8 @@ import 'package:reem/features/auth/domain/repositories/auth_repository.dart';
 import 'package:reem/features/auth/presentation/providers/auth_account_provider.dart';
 import 'package:reem/features/auth/presentation/providers/auth_provider.dart';
 import 'package:reem/features/auth/presentation/screens/seller_verification_screen.dart';
+import 'package:reem/features/policies/domain/entities/policy_document.dart';
+import 'package:reem/features/policies/presentation/providers/policies_provider.dart';
 import 'package:reem/l10n/app_localizations.dart' as gen;
 
 final _captureKey = GlobalKey();
@@ -136,6 +138,11 @@ class _Preview extends StatelessWidget {
       overrides: [
         authRepositoryProvider.overrideWithValue(_InertAuthRepository()),
         sellerVerificationProvider.overrideWith((ref) async => _application),
+        // The consent block, stubbed. Left alone it starts a real request for
+        // `/policies/required` whose connection timer is still pending when
+        // the tree is torn down — which fails the capture after the PNG has
+        // already been written.
+        requiredPoliciesProvider.overrideWith((ref, args) async => _policies),
       ],
       child: MaterialApp.router(
         debugShowCheckedModeBanner: false,
@@ -163,6 +170,37 @@ class _InertAuthRepository implements AuthRepository {
   dynamic noSuchMethod(Invocation invocation) =>
       Future.value(const Error<Never>(ServerFailure('preview')));
 }
+
+/// What a seller signs when she applies: the seller terms and the commission
+/// she is about to be charged.
+final _policies = [
+  PolicySummary(
+    id: 'doc-seller-terms',
+    kind: PolicyKind.sellerTerms,
+    slug: 'seller-terms',
+    audience: PolicyAudience.seller,
+    title: 'شروط استخدام البائع',
+    summary: 'شروط فتح متجر على ريم: التوثيق، البضاعة، التجهيز، المستحقات.',
+    versionId: '11111111-1111-1111-1111-111111111111',
+    version: 1,
+    requiredForConsent: true,
+    icon: 'storefront',
+    effectiveAt: DateTime.utc(2026, 9, 1),
+  ),
+  PolicySummary(
+    id: 'doc-commissions',
+    kind: PolicyKind.commissions,
+    slug: 'commissions',
+    audience: PolicyAudience.seller,
+    title: 'سياسة العمولات',
+    summary: 'كم تأخذ المنصة، على ماذا تُحتسب، ومتى تُصرف أرباح متجرك.',
+    versionId: '22222222-2222-2222-2222-222222222222',
+    version: 1,
+    requiredForConsent: true,
+    icon: 'commission',
+    effectiveAt: DateTime.utc(2026, 9, 1),
+  ),
+];
 
 final _application = SellerVerification(
   id: 'app-1',

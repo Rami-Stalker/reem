@@ -1,11 +1,14 @@
 import { Transform } from 'class-transformer';
 import {
+  ArrayMaxSize,
   Equals,
+  IsArray,
   IsBoolean,
   IsEnum,
   IsIn,
   IsOptional,
   IsString,
+  IsUUID,
   MaxLength,
   MinLength,
 } from 'class-validator';
@@ -82,6 +85,21 @@ export class RegisterDto {
     message: 'declared_female must be accepted to register on Reem',
   })
   declared_female!: boolean;
+
+
+  /**
+   * The version ids of every policy the form displayed and she accepted.
+   *
+   * Version ids rather than a bare `accepted_terms: true`, because the record
+   * this produces has to be able to answer "agreed to *what*" years later, and
+   * a boolean cannot. The server checks that every required document's
+   * currently published version is in this list and refuses otherwise.
+   */
+  @IsOptional()
+  @IsArray()
+  @ArrayMaxSize(20)
+  @IsUUID(undefined, { each: true })
+  accepted_policy_version_ids?: string[];
 
   @IsOptional()
   @IsString()

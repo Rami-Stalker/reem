@@ -609,8 +609,13 @@ export class AuthController {
   submitSellerVerification(
     @CurrentUser('id') userId: string,
     @Body() dto: SubmitSellerVerificationDto,
+    @Req() req: Request,
   ) {
-    return this.auth.submitSellerVerification(userId, dto);
+    return this.auth.submitSellerVerification(
+      userId,
+      dto,
+      requestContextFrom(req),
+    );
   }
 
   @Get('seller-verification/me')

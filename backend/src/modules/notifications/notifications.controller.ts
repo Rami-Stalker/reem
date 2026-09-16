@@ -22,6 +22,7 @@ import {
   DispatchNotificationDto,
   RegisterPushTokenDto,
   TrackNotificationEventDto,
+  UnregisterPushTokenDto,
   UpdateCampaignStatusDto,
 } from './dto/notification-engine.dto';
 
@@ -77,6 +78,22 @@ export class NotificationsController {
     @Body() dto: RegisterPushTokenDto,
   ) {
     return this.notifications.registerPushToken(userId, dto);
+  }
+
+  /**
+   * This handset is going quiet — she signed out, or revoked the permission.
+   *
+   * A POST rather than a DELETE with a body, because the token is several
+   * hundred characters and belongs nowhere near a URL: a query string is the
+   * one part of a request every proxy on the way writes into its access log.
+   */
+  @Post('push-tokens/unregister')
+  @HttpCode(HttpStatus.OK)
+  unregisterPushToken(
+    @CurrentUser('id') userId: string,
+    @Body() dto: UnregisterPushTokenDto,
+  ) {
+    return this.notifications.unregisterPushToken(userId, dto.token);
   }
 
   @Post('read-all')

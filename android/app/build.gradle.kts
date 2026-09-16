@@ -8,6 +8,41 @@ plugins {
 }
 
 /**
+ * Firebase Cloud Messaging, applied only when this machine actually has a
+ * Firebase project.
+ *
+ * `google-services.json` is git-ignored: it names a specific Firebase project,
+ * and local, staging and production are three different ones. Applying the
+ * plugin unconditionally would mean a fresh clone does not build at all —
+ * the plugin fails the build with "File google-services.json is missing" —
+ * which is a bad trade for a feature that is allowed to be absent.
+ *
+ * So: present, and Android push works. Absent, and the app builds, runs,
+ * and has no push. `PushNotificationService` degrades to nothing on the Dart
+ * side to match.
+ *
+ * Unlike iOS, Android genuinely needs this file rather than only the
+ * `--dart-define`s. The reason is a timing one: when a push arrives at a
+ * *terminated* app, the Firebase SDK's own `ContentProvider` initialises the
+ * default app from the string resources this plugin generates, and that
+ * happens before any Dart code — including `Firebase.initializeApp(options:)`
+ * — has run. Without the file there is nothing for it to read.
+ *
+ * Download it from the Firebase console (Project settings → Your apps →
+ * Android app with applicationId `shop.reem.app`) and drop it in
+ * `android/app/`.
+ */
+val googleServicesFile = file("google-services.json")
+if (googleServicesFile.exists()) {
+    apply(plugin = "com.google.gms.google-services")
+} else {
+    logger.lifecycle(
+        "reem: android/app/google-services.json not found — push notifications " +
+            "are disabled in this build. See lib/core/notifications/push_config.dart.",
+    )
+}
+
+/**
  * Release signing material, kept out of the repository.
  *
  * `android/key.properties` holds the keystore path and its three secrets; it is
@@ -118,4 +153,11 @@ flutter {
 
 dependencies {
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
+
+    // Pins one set of Firebase library versions across every Firebase
+    // dependency the Flutter plugins pull in, so `firebase_core` and
+    // `firebase_messaging` can never resolve to two versions of the same
+    // transitive artifact — which fails at runtime rather than at build time,
+    // with a NoSuchMethodError in a release build only.
+    implementation(platform("com.google.firebase:firebase-bom:34.9.0"))
 }

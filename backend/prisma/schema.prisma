@@ -1170,6 +1170,11 @@ model User {
   mutesGiven      UserMute[]       @relation("MutesGiven")
   mutesReceived   UserMute[]       @relation("MutesReceived")
 
+  // What she agreed to, and when. One row per policy version she accepted;
+  // never updated, never deleted — an acceptance that can be rewritten is not
+  // evidence of anything.
+  policyAcceptances PolicyAcceptance[] @relation("PolicyAcceptances")
+
   @@index([role])
   @@index([email])
   @@index([phone])
@@ -5136,7 +5141,38 @@ model PushToken {
   lastSeenAt DateTime @default(now()) @map("last_seen_at")
   createdAt  DateTime @default(now()) @map("created_at")
 
+  /// The handset, as the handset knows itself.
+  ///
+  /// A push token is not stable: the provider reissues it after a reinstall,
+  /// a restore from backup, or a long idle period, and the old one keeps
+  /// answering for a while. Without a device identity, a woman who reinstalls
+  /// twice accumulates three rows and gets every notification three times —
+  /// and the two dead ones are not discovered until a send fails against them.
+  /// With it, re-registering retires the handset's previous token.
+  deviceId String? @map("device_id")
+
+  /// What she is running, so a delivery problem traceable to one build is
+  /// traceable at all. Also what makes it possible to stop pushing a feature
+  /// to versions that cannot open it.
+  appVersion String? @map("app_version")
+
+  /// Her language, for the day a notification is composed rather than
+  /// translated — the body text is written server-side and there is no other
+  /// signal here about which language to write it in.
+  locale String?
+
+  /// Consecutive transient failures against this address. Reset on success.
+  /// A token that has failed repeatedly is retired even when the provider
+  /// never said the word UNREGISTERED, which some of them never do.
+  failureCount      Int       @default(0) @map("failure_count")
+  lastFailureReason String?   @map("last_failure_reason")
+  /// When and why it stopped being used — kept rather than deleted, because
+  /// "she has no device" and "her device went away on Tuesday" are different
+  /// answers to a support question.
+  disabledAt        DateTime? @map("disabled_at")
+
   @@index([userId, enabled])
+  @@index([deviceId])
   @@map("push_tokens")
 }
 
@@ -5211,12 +5247,29 @@ model NotificationDelivery {
   clickedAt         DateTime?                  @map("clicked_at")
   createdAt         DateTime                   @default(now()) @map("created_at")
 
+  /// How many times this has been handed to a provider.
+  ///
+  /// A push that fails because Google answered 503 is not a push that should
+  /// be abandoned — it is the order-shipped message she is waiting for, and
+  /// the outage lasts ninety seconds. But a failure retried for ever is worse
+  /// than one dropped: it occupies the worker on every pass and hides the
+  /// deliveries behind it. So attempts are counted and the row gives up.
+  attempts Int @default(0)
+
+  /// Not before this instant. Written on a transient failure with an
+  /// exponential backoff, so a provider having a bad minute is not hammered
+  /// by six hundred retries in that same minute.
+  nextAttemptAt DateTime? @map("next_attempt_at")
+
   events NotificationEvent[]
 
   @@index([userId, status])
   @@index([campaignId])
   @@index([channel, status])
   @@index([scheduledAt, status])
+  /// What the delivery worker actually asks for on every pass: queued rows
+  /// whose backoff has elapsed.
+  @@index([status, nextAttemptAt])
   /// The frequency cap counts this on every marketing send, so it gets its
   /// own index rather than leaning on the user+status one. Ordered
   /// (user, category, sent_at) because that is exactly the shape of the
@@ -9754,4 +9807,220 @@ model ScheduledJobState {
   updatedAt           DateTime  @default(now()) @updatedAt @map("updated_at")
 
   @@map("scheduled_job_states")
+}
+
+// ──────────────────── Policies, terms, and consent ────────────────────
+//
+// Eight documents the platform is legally answerable for — the two sets of
+// terms, privacy, returns, commissions, disputes, liability, and content —
+// held as rows rather than as strings compiled into an app.
+//
+// The shape is document → version → translation, and it is that way for one
+// reason: **a consent is only worth anything if the text it was given against
+// can still be produced.** Editing a policy in place would quietly rewrite
+// what ten thousand women agreed to. So a published version is immutable, an
+// edit is a new version, and `PolicyAcceptance` points at the version — with
+// the hash of the exact body she was shown alongside it, because the cheapest
+// way to answer "was this tampered with" is to have written the answer down at
+// the time.
+
+/// The eight. An enum rather than a free-form key because the app links to
+/// specific documents (checkout links to returns, the composer to content) and
+/// a typo in a slug is a dead link nobody notices until a customer finds it.
+enum PolicyDocumentKind {
+  CUSTOMER_TERMS
+  SELLER_TERMS
+  PRIVACY
+  RETURNS
+  COMMISSIONS
+  DISPUTES
+  LIABILITY
+  CONTENT
+}
+
+/// Who has to *accept* a document — not who may read one. Every published
+/// policy is readable by anyone, signed in or not; that is the point of
+/// publishing it. This column only decides whose signature is required.
+enum PolicyAudience {
+  EVERYONE
+  CUSTOMER
+  SELLER
+}
+
+enum PolicyVersionStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+/// One policy, across all of its versions.
+///
+/// The row itself carries nothing a reader sees — no title, no body. Those
+/// live on the translation, because the title of a policy can change with its
+/// text and a document whose name is pinned outside its versions would start
+/// lying the first time legal renamed one.
+model PolicyDocument {
+  id   String             @id @default(uuid()) @db.Uuid
+  kind PolicyDocumentKind @unique
+
+  /// The URL segment — `customer-terms`, `privacy`. Stable and human-readable,
+  /// because these are the links that end up in an email and a support reply.
+  slug String @unique @db.VarChar(64)
+
+  /// Whose acceptance this document requires. See [PolicyAudience].
+  audience PolicyAudience @default(EVERYONE)
+
+  /// Where it sits in the policy centre.
+  sortOrder Int @default(0) @map("sort_order")
+
+  /// Whether an account cannot be created (or a boutique opened) without
+  /// accepting this. Editable: the client may decide next month that the
+  /// commissions policy needs a signature, and that must not be a deploy.
+  requiredForConsent Boolean @default(false) @map("required_for_consent")
+
+  /// An icon name the app maps to a glyph. A string rather than a code point so
+  /// the admin console can offer a list without the app shipping a new build.
+  icon String? @db.VarChar(40)
+
+  /// A retired policy stops being offered and stops being required. Never
+  /// deleted — acceptances point at it.
+  isActive Boolean @default(true) @map("is_active")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  versions    PolicyDocumentVersion[]
+  acceptances PolicyAcceptance[]
+
+  @@index([isActive, sortOrder])
+  @@map("policy_documents")
+}
+
+/// One issue of one policy.
+///
+/// `DRAFT` is editable and invisible to everyone but the console. `PUBLISHED`
+/// is frozen — the service refuses to write to its translations — and exactly
+/// one version per document holds it at a time. `ARCHIVED` is what the
+/// previous published version becomes, and it stays readable forever so that
+/// an acceptance recorded against it can still be shown to the woman who made
+/// it.
+model PolicyDocumentVersion {
+  id         String         @id @default(uuid()) @db.Uuid
+  documentId String         @map("document_id") @db.Uuid
+  document   PolicyDocument @relation(fields: [documentId], references: [id], onDelete: Cascade)
+
+  /// 1, 2, 3 … per document. What the app shows next to «النسخة».
+  version Int
+
+  status PolicyVersionStatus @default(DRAFT)
+
+  /// **The re-consent switch**, decided per version at publication.
+  ///
+  /// A typo fix must not interrupt a hundred thousand women mid-checkout; a
+  /// change to how their data is used must interrupt every one of them. Only a
+  /// person can tell those two apart, so the console asks, and this is the
+  /// answer. True means everyone whose acceptance is against an older version
+  /// meets the consent gate on next launch.
+  requiresReacceptance Boolean @default(false) @map("requires_reacceptance")
+
+  /// When the terms in this version start to apply. Usually the moment of
+  /// publication; separable because a material change is often announced
+  /// before it bites.
+  effectiveAt DateTime? @map("effective_at")
+
+  publishedAt   DateTime? @map("published_at")
+  publishedById String?   @map("published_by_id") @db.Uuid
+
+  /// What changed, in one line, for the version history the app shows.
+  changeNote String? @map("change_note") @db.VarChar(400)
+
+  createdById String?  @map("created_by_id") @db.Uuid
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @default(now()) @updatedAt @map("updated_at")
+
+  translations PolicyDocumentTranslation[]
+  acceptances  PolicyAcceptance[]
+
+  @@unique([documentId, version])
+  @@index([documentId, status])
+  @@map("policy_document_versions")
+}
+
+/// One version, in one language.
+///
+/// Arabic is the authoritative text — Reem's customers and its sellers are
+/// Syrian, and the contract they are entering is the Arabic one. English is a
+/// courtesy translation and the reader is told so, which is why `locale` is a
+/// column rather than two sets of body fields: a third language is a row.
+model PolicyDocumentTranslation {
+  id        String                @id @default(uuid()) @db.Uuid
+  versionId String                @map("version_id") @db.Uuid
+  version   PolicyDocumentVersion @relation(fields: [versionId], references: [id], onDelete: Cascade)
+
+  /// `ar`, `en`. The app asks for its own locale and falls back to Arabic.
+  locale String @db.VarChar(8)
+
+  title String @db.VarChar(200)
+
+  /// One sentence, shown on the card in the policy centre and in the consent
+  /// sheet, so a woman knows what she is opening before she opens it.
+  summary String? @db.VarChar(400)
+
+  /// The policy itself, in the restricted Markdown the app renders: `##`
+  /// headings, `-` bullets, `1.` numbers, `**bold**`, blank-line paragraphs.
+  /// Deliberately not HTML — a policy body is admin-authored text that ends up
+  /// on a customer's screen, and a subset with no tags in it cannot carry a
+  /// script or a tracking pixel.
+  body String
+
+  /// SHA-256 of [body] at publication, hex. Copied onto every acceptance, so
+  /// "she agreed to *this* text" is answerable without trusting that nobody
+  /// ever ran an UPDATE.
+  contentHash String @map("content_hash") @db.VarChar(64)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@unique([versionId, locale])
+  @@map("policy_document_translations")
+}
+
+/// A signature: this account, this version, this moment.
+///
+/// Append-only. There is no route that updates one and no route that deletes
+/// one — withdrawing consent is closing the account, which is a different
+/// operation with a different record.
+model PolicyAcceptance {
+  id     String @id @default(uuid()) @db.Uuid
+  userId String @map("user_id") @db.Uuid
+  user   User   @relation("PolicyAcceptances", fields: [userId], references: [id], onDelete: Cascade)
+
+  documentId String         @map("document_id") @db.Uuid
+  document   PolicyDocument @relation(fields: [documentId], references: [id], onDelete: Cascade)
+
+  /// The exact issue she accepted. `documentId` sits beside it denormalised
+  /// because every query here asks "has she accepted *this document* at all",
+  /// and joining through the version to answer it is a join on every launch.
+  versionId String                @map("version_id") @db.Uuid
+  version   PolicyDocumentVersion @relation(fields: [versionId], references: [id], onDelete: Cascade)
+
+  /// Which language she read it in, and the hash of that exact body.
+  locale      String @db.VarChar(8)
+  contentHash String @map("content_hash") @db.VarChar(64)
+
+  /// `registration`, `reconsent`, `seller_application`. What she was doing.
+  source String @db.VarChar(40)
+
+  acceptedAt DateTime @default(now()) @map("accepted_at")
+
+  /// Evidence for a dispute, and nothing more. The address is stored as
+  /// recorded by the API's own request context — the same value the audit
+  /// trail already holds for every other consequential action.
+  ipAddress String? @map("ip_address") @db.VarChar(64)
+  userAgent String? @map("user_agent") @db.VarChar(400)
+
+  @@unique([userId, versionId])
+  @@index([userId, documentId])
+  @@index([versionId])
+  @@map("policy_acceptances")
 }

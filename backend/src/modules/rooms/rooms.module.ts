@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { NotificationsModule } from '../notifications/notifications.module';
 import { OrdersModule } from '../orders/orders.module';
 import { PricingModule } from '../pricing/pricing.module';
 import { PurchasePlanService } from './purchase-plan.service';
@@ -59,6 +60,10 @@ import { RoomsService } from './rooms.service';
     // For SYP normalisation, so a room's budget and a basket of dollar-priced
     // offers compare without a rate lookup at every comparison.
     PricingModule,
+    // So a room notice reaches the phone of somebody who is not in the app.
+    // `RoomNotifier` keeps writing its own rows — the coalescing rule is
+    // rooms' knowledge, not notifications' — and only asks to have them sent.
+    NotificationsModule,
   ],
   controllers: [RoomsController],
   providers: [

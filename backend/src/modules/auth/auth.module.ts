@@ -24,6 +24,7 @@ import { AccountRecoveryService } from './recovery/account-recovery.service';
 import { AuthRetentionCron } from './retention/auth-retention.cron';
 import { SecurityAdminController } from './admin/security-admin.controller';
 import { SecurityForensicsService } from './admin/security-forensics.service';
+import { PoliciesModule } from '../policies/policies.module';
 
 @Module({
   imports: [
@@ -33,6 +34,10 @@ import { SecurityForensicsService } from './admin/security-forensics.service';
     // Getting the code onto a handset is a subsystem of its own: an outbox, a
     // priority chain of transports, receipts and budget breakers.
     OtpDeliveryModule,
+    // Registration and the seller application both record a consent, and both
+    // must be able to refuse when the current version of a required policy was
+    // not among the ones the form displayed.
+    PoliciesModule,
   ],
   controllers: [AuthController, SecurityAdminController],
   providers: [

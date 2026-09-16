@@ -72,6 +72,21 @@ abstract final class HttpCacheRules {
       strategy: CacheStrategy.staleWhileRevalidate,
       ttl: Duration(minutes: 5),
     ),
+
+    // ── Policies ─────────────────────────────────────────────────────────
+    // The terms change a few times a year and are read at the worst possible
+    // moments — mid-checkout, mid-dispute, on a train. Cache-first means the
+    // returns policy opens on a dead connection, which is exactly when
+    // somebody needs to read it. The key carries `?locale`, so the Arabic and
+    // English texts are separate entries rather than one that flips.
+    //
+    // `/policies/pending` and `/policies/acceptances` are excluded below: one
+    // decides whether the app is usable, and the other is a legal receipt.
+    // Neither may ever be answered from yesterday.
+    '/policies': CachePolicy(
+      strategy: CacheStrategy.cacheFirst,
+      ttl: Duration(hours: 6),
+    ),
   };
 
   /// Prefixes that must never be cached even though a broader rule covers
@@ -92,6 +107,11 @@ abstract final class HttpCacheRules {
     // Her own likes and picks, answered now. Under `/products` by path, but a
     // heart painted from a five-minute-old cache is a heart that lies.
     '/products/engagement',
+    // The consent gate reads the first of these on every launch and blocks the
+    // app on the answer; the second is the record of what she agreed to. A
+    // stale answer to either is a bug with legal weight, not a slow screen.
+    '/policies/pending',
+    '/policies/acceptances',
   ];
 
   /// The policy for [path], or null when this GET must go to the network.

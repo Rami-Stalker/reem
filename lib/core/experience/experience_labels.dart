@@ -49,6 +49,7 @@ extension RoleNavigationItemLabel on RoleNavigationItem {
     RoutePaths.adminAnalytics => l10n.adminAnalytics,
     RoutePaths.adminTrends => l10n.trendsAdminTitle,
     RoutePaths.adminDelivery => l10n.adminDelivery,
+    RoutePaths.adminPolicies => l10n.adminPolicies,
     RoutePaths.adminAuditLogs => l10n.adminAuditLogs,
     RoutePaths.adminSystemSettings => l10n.adminSystemSettings,
     _ => label,

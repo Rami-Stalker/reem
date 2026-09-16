@@ -161,10 +161,18 @@ class SellerProfileMenu extends ConsumerWidget {
             color: tint(1),
             onTap: () => showHelpSheet(context),
           ),
+          // A boutique needs these more than a shopper does: the seller terms
+          // and the commissions policy are the contract she is trading under.
+          _Row(
+            icon: Icons.policy_outlined,
+            label: l10n.policiesTitle,
+            color: tint(2),
+            onTap: () => context.push(RoutePaths.policies),
+          ),
           _Row(
             icon: Icons.info_outline_rounded,
             label: l10n.aboutReem,
-            color: tint(2),
+            color: tint(3),
             onTap: () => showAboutSheet(context),
           ),
         ],

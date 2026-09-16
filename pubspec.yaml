@@ -64,25 +64,25 @@ dependencies:
   # Google Pay merchant declaration; `google_sign_in` and `sign_in_with_apple`
   # need a URL scheme and an entitlement the project does not have, so they
   # were an App Store rejection waiting on a build that used them;
-  # `flutter_local_notifications` merges `SCHEDULE_EXACT_ALARM` and
-  # `RECEIVE_BOOT_COMPLETED` into the Android manifest, both of which Play
-  # asks a publisher to justify in writing; `local_auth` calls a Face ID API
-  # that crashes without an Info.plist key. Every one of them also ships a
-  # privacy manifest Apple now audits. Removed until something imports them:
+  # `local_auth` calls a Face ID API that crashes without an Info.plist key.
+  # Every one of them also ships a privacy manifest Apple now audits. Removed
+  # until something imports them:
   # flutter_stripe, pay, google_sign_in, sign_in_with_apple, local_auth,
-  # flutter_local_notifications, photo_view, story_view, animations,
+  # photo_view, story_view, animations,
   # pull_to_refresh, flutter_spinkit, awesome_dialog, snippet_coder_utils,
   # glassmorphism, lottie, blur, like_button, flutter_svg,
   # font_awesome_flutter. `freezed` and `json_serializable` went with them:
   # both are build-time code generators that belonged in dev_dependencies,
   # there is no `build_runner` and not one generated file in the tree.
 
-  # Firebase suite
-  # firebase_core: ^4.9.0
+  # Firebase suite. Only the messaging half: Reem's identity is its own
+  # (OTP over WhatsApp, device-anchored), its catalogue is Postgres and its
+  # media is Supabase Storage, so `firebase_auth`, `cloud_firestore` and
+  # `firebase_storage` would each be a second answer to a question already
+  # answered.
   # firebase_auth: ^6.5.1
   # cloud_firestore: ^6.4.1
   # firebase_storage: ^13.4.1
-  # firebase_messaging: ^16.2.2
 
   # Image/media
   image_picker: ^1.2.2
@@ -147,6 +147,40 @@ dependencies:
   # screen and released when it leaves. See `DsVideoPlayer`.
   video_player: ^2.11.1
   visibility_detector: ^0.4.0+2
+
+  # ── Push notifications ──────────────────────────────────────────────────
+  #
+  # The one capability the app was missing entirely: everything the platform
+  # had to say was written into an in-app inbox and read only by whoever was
+  # already looking — which is exactly the wrong audience for "your order is
+  # out for delivery" or "someone replied to you".
+  #
+  # `firebase_messaging` is the only route to a closed app on Android and, via
+  # APNs, on iOS. It carries `firebase_core` with it; nothing else from the
+  # suite is here, deliberately — see above.
+  #
+  # `flutter_local_notifications` does two jobs FCM cannot. It creates the
+  # Android notification channels (Android 8+ silently *discards* a push
+  # naming a channel the device has not created, so without this every push
+  # would arrive and vanish), and it draws the notification while the app is
+  # in the foreground, where the system draws nothing at all.
+  #
+  # The manifest permissions that got this package removed before —
+  # `SCHEDULE_EXACT_ALARM` and `RECEIVE_BOOT_COMPLETED`, both of which Play
+  # asks a publisher to justify in writing — are removed again explicitly in
+  # `android/app/src/main/AndroidManifest.xml`. Nothing here schedules a
+  # notification for later, so neither is needed.
+  firebase_core: ^4.15.0
+  firebase_messaging: ^16.7.0
+  flutter_local_notifications: ^22.3.1
+
+  # Opens the OS notification settings page for this app.
+  #
+  # Needed because of a rule both platforms enforce: once she has said no to
+  # notifications, the permission prompt never appears again. An in-app switch
+  # that silently does nothing from then on is worse than no switch, so the
+  # toggle sends her to the only place the decision can still be changed.
+  app_settings: ^9.0.0
 
 dev_dependencies:
   flutter_test:

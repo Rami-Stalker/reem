@@ -6,6 +6,7 @@ import {
   RoomMemberStatus,
 } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
+import { NotificationsService } from '../notifications/notifications.service';
 
 /** What happened, in the vocabulary the notifier renders. */
 export interface RoomNotice {
@@ -62,7 +63,18 @@ export class RoomNotifier {
     RoomEventKind.MEMBER_INVITED,
   ]);
 
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    /**
+     * Only ever asked to *send* a row this class has already written.
+     *
+     * The dependency still runs one way — notifications knows nothing about
+     * rooms — but a row written and never pushed is a notification only a
+     * woman already inside the app can see, which is precisely the wrong
+     * audience for "you have been invited into a room".
+     */
+    private readonly notifications: NotificationsService,
+  ) {}
 
   /**
    * Tell everybody in the room except whoever did it.
@@ -127,7 +139,7 @@ export class RoomNotifier {
     const single = this.sentenceFor(notice, actorName);
 
     if (RoomNotifier.UNCOALESCED.has(notice.kind)) {
-      await this.prisma.notification.create({
+      const created = await this.prisma.notification.create({
         data: {
           userId,
           type: NotificationType.room,
@@ -136,6 +148,7 @@ export class RoomNotifier {
           data: { room_id: roomId, kind: notice.kind } as Prisma.InputJsonValue,
         },
       });
+      await this.notifications.pushExisting(created);
       return;
     }
 
@@ -157,7 +170,7 @@ export class RoomNotifier {
     });
 
     if (!existing) {
-      await this.prisma.notification.create({
+      const created = await this.prisma.notification.create({
         data: {
           userId,
           type: NotificationType.room,
@@ -170,6 +183,11 @@ export class RoomNotifier {
           } as Prisma.InputJsonValue,
         },
       });
+      // The first gesture in a window buzzes; the next twelve fold into the
+      // line it opened and do not. That is the whole bargain coalescing makes,
+      // and pushing on the update below would break it on the one surface
+      // where the noise is actually felt.
+      await this.notifications.pushExisting(created);
       return;
     }
 

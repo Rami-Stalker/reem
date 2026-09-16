@@ -1,5 +1,6 @@
 import { Transform } from 'class-transformer';
 import {
+  ArrayMaxSize,
   IsArray,
   IsBoolean,
   IsInt,
@@ -8,6 +9,7 @@ import {
   IsObject,
   IsOptional,
   IsString,
+  IsUUID,
   MaxLength,
   MinLength,
   Max,
@@ -171,6 +173,19 @@ export class SubmitSellerVerificationDto {
   @IsArray()
   @IsString({ each: true })
   document_urls!: string[];
+
+  /**
+   * The seller terms and the commissions policy, signed as part of applying.
+   *
+   * Version ids rather than a checkbox, for the same reason registration takes
+   * them: this is the moment the account becomes a seller, and the record has
+   * to be able to say which text she was shown when she agreed to be charged.
+   */
+  @IsOptional()
+  @IsArray()
+  @ArrayMaxSize(20)
+  @IsUUID(undefined, { each: true })
+  accepted_policy_version_ids?: string[];
 }
 
 export class ReviewSellerVerificationDto {

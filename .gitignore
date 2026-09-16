@@ -88,3 +88,14 @@ backend/storage/
 # Contract fixtures are captured from a running API; keep them, they are the
 # only thing proving the client and server agree.
 !test/contract/*.json
+
+# --- Firebase (push notifications) -----------------------------------------
+# Each names one specific Firebase project, and local, staging and production
+# are three different ones — so these belong to a machine or a build pipeline
+# rather than to the repository. The Android build applies the google-services
+# plugin only when the file is present; see android/app/build.gradle.kts.
+android/app/google-services.json
+ios/Runner/GoogleService-Info.plist
+# The API's half of the same credential. A service-account key is a private
+# key that can send a notification to every customer.
+**/firebase-service-account*.json

@@ -16,6 +16,7 @@ class RegisterUseCase {
     required String country,
     required String city,
     required bool declaredFemale,
+    List<String> acceptedPolicyVersionIds = const [],
     UserRole role = UserRole.customer,
   }) =>
       _repository.register(
@@ -27,6 +28,7 @@ class RegisterUseCase {
         country: country,
         city: city,
         declaredFemale: declaredFemale,
+        acceptedPolicyVersionIds: acceptedPolicyVersionIds,
         role: role,
       );
 }

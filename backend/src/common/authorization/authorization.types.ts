@@ -15,6 +15,8 @@ export type AuthorizationResource =
   | 'finance'
   | 'guest'
   | 'order'
+  /// The published terms, privacy and policy documents, and their versions.
+  | 'policy'
   | 'post'
   | 'product'
   | 'review'

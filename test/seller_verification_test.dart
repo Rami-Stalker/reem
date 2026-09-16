@@ -221,6 +221,7 @@ class _FakeAuthRepository implements AuthRepository {
     String? website,
     Map<String, dynamic>? socialMediaLinks,
     required List<String> documentUrls,
+    List<String> acceptedPolicyVersionIds = const [],
   }) async {
     submitCalls++;
     submitted = {
@@ -228,6 +229,7 @@ class _FakeAuthRepository implements AuthRepository {
       'government_id_url': governmentIdUrl,
       'business_license_url': businessLicenseUrl,
       'document_urls': documentUrls,
+      'accepted_policy_version_ids': acceptedPolicyVersionIds,
     };
     return Success(_application());
   }

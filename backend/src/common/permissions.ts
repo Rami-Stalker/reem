@@ -52,6 +52,17 @@ export const AppPermission = {
    * should not automatically be able to close a gap as "addressed".
    */
   trendsManage: 'trends:manage',
+  /**
+   * Editing and publishing the platform's policies — the two sets of terms,
+   * privacy, returns, commissions, disputes, liability, content.
+   *
+   * Its own permission rather than `contentManage`, which every seller holds:
+   * publishing a version of the terms of use changes the contract between Reem
+   * and a hundred thousand accounts, and the person who moderates a caption is
+   * not the person who should be able to do that. Held by SUPER_ADMIN and
+   * OPERATIONS_ADMIN, and by nobody else by default.
+   */
+  policyManage: 'policy:manage',
   adminDashboard: 'admin:dashboard',
   authorizationManage: 'authorization:manage',
   guestSessionCreate: 'guest_session:create',

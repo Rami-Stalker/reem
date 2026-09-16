@@ -5552,6 +5552,18 @@ abstract class AppLocalizations {
   /// **'Receipts, account notices and longer updates.'**
   String get notifEmailBlurb;
 
+  /// No description provided for @notifModeration.
+  ///
+  /// In en, this message translates to:
+  /// **'Review outcomes'**
+  String get notifModeration;
+
+  /// No description provided for @notifModerationBlurb.
+  ///
+  /// In en, this message translates to:
+  /// **'When a review decision on your content is reversed.'**
+  String get notifModerationBlurb;
+
   /// No description provided for @notifOffers.
   ///
   /// In en, this message translates to:
@@ -5588,6 +5600,48 @@ abstract class AppLocalizations {
   /// **'Message alerts, order updates and offers.'**
   String get notifPushBlurb;
 
+  /// No description provided for @notifPushBlocked.
+  ///
+  /// In en, this message translates to:
+  /// **'Your phone is blocking Reem\'s notifications.'**
+  String get notifPushBlocked;
+
+  /// No description provided for @notifPushBlockedBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Your phone is blocking Reem, so nothing below will reach you until you allow it in the system settings.'**
+  String get notifPushBlockedBody;
+
+  /// No description provided for @notifPushBlockedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications are turned off'**
+  String get notifPushBlockedTitle;
+
+  /// No description provided for @notifPushOpenSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Open settings'**
+  String get notifPushOpenSettings;
+
+  /// No description provided for @notifPushUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Push notifications are not available in this version.'**
+  String get notifPushUnavailable;
+
+  /// No description provided for @notifRooms.
+  ///
+  /// In en, this message translates to:
+  /// **'Shopping rooms'**
+  String get notifRooms;
+
+  /// No description provided for @notifRoomsBlurb.
+  ///
+  /// In en, this message translates to:
+  /// **'Suggestions, votes and decisions in rooms you are in.'**
+  String get notifRoomsBlurb;
+
   /// No description provided for @notifSellerPosts.
   ///
   /// In en, this message translates to:
@@ -5623,6 +5677,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Delivery and account messages that cannot wait.'**
   String get notifSmsBlurb;
+
+  /// No description provided for @notifSocial.
+  ///
+  /// In en, this message translates to:
+  /// **'Likes and comments'**
+  String get notifSocial;
+
+  /// No description provided for @notifSocialBlurb.
+  ///
+  /// In en, this message translates to:
+  /// **'When someone likes, comments on or reshares your post.'**
+  String get notifSocialBlurb;
 
   /// Confirmation after marking every notification read
   ///
@@ -12007,6 +12073,534 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Post deleted'**
   String get postDeleted;
+
+  /// No description provided for @policiesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Policies and terms'**
+  String get policiesTitle;
+
+  /// No description provided for @policiesSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'The documents that govern your use of Reem'**
+  String get policiesSubtitle;
+
+  /// No description provided for @policiesSectionForYou.
+  ///
+  /// In en, this message translates to:
+  /// **'For you'**
+  String get policiesSectionForYou;
+
+  /// No description provided for @policiesSectionEveryone.
+  ///
+  /// In en, this message translates to:
+  /// **'For everyone'**
+  String get policiesSectionEveryone;
+
+  /// No description provided for @policiesSectionSellers.
+  ///
+  /// In en, this message translates to:
+  /// **'For sellers'**
+  String get policiesSectionSellers;
+
+  /// No description provided for @policiesSectionCustomers.
+  ///
+  /// In en, this message translates to:
+  /// **'For shoppers'**
+  String get policiesSectionCustomers;
+
+  /// No description provided for @policiesEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No policies have been published yet'**
+  String get policiesEmpty;
+
+  /// No description provided for @policiesVersionLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Version {version}'**
+  String policiesVersionLabel(String version);
+
+  /// No description provided for @policiesEffectiveFrom.
+  ///
+  /// In en, this message translates to:
+  /// **'In force since {date}'**
+  String policiesEffectiveFrom(String date);
+
+  /// No description provided for @policiesAcceptedOn.
+  ///
+  /// In en, this message translates to:
+  /// **'You accepted this on {date}'**
+  String policiesAcceptedOn(String date);
+
+  /// No description provided for @policiesAcceptedOlderVersion.
+  ///
+  /// In en, this message translates to:
+  /// **'You accepted version {version} on {date}'**
+  String policiesAcceptedOlderVersion(String version, String date);
+
+  /// No description provided for @policiesNotAccepted.
+  ///
+  /// In en, this message translates to:
+  /// **'Not accepted yet'**
+  String get policiesNotAccepted;
+
+  /// No description provided for @policiesRequiredBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'Signature required'**
+  String get policiesRequiredBadge;
+
+  /// No description provided for @policiesUpdatedBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'Updated'**
+  String get policiesUpdatedBadge;
+
+  /// No description provided for @policiesMyConsents.
+  ///
+  /// In en, this message translates to:
+  /// **'What I have agreed to'**
+  String get policiesMyConsents;
+
+  /// No description provided for @policiesMyConsentsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Every policy you accepted, and the day you accepted it'**
+  String get policiesMyConsentsSubtitle;
+
+  /// No description provided for @policiesReceiptsEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'You have not accepted any policy yet'**
+  String get policiesReceiptsEmpty;
+
+  /// No description provided for @policiesSourceRegistration.
+  ///
+  /// In en, this message translates to:
+  /// **'At sign-up'**
+  String get policiesSourceRegistration;
+
+  /// No description provided for @policiesSourceReconsent.
+  ///
+  /// In en, this message translates to:
+  /// **'After an update'**
+  String get policiesSourceReconsent;
+
+  /// No description provided for @policiesSourceSellerApplication.
+  ///
+  /// In en, this message translates to:
+  /// **'When applying to sell'**
+  String get policiesSourceSellerApplication;
+
+  /// No description provided for @policiesHistoryTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Version history'**
+  String get policiesHistoryTitle;
+
+  /// No description provided for @policiesHistoryCurrent.
+  ///
+  /// In en, this message translates to:
+  /// **'Current'**
+  String get policiesHistoryCurrent;
+
+  /// No description provided for @policiesOpenVersion.
+  ///
+  /// In en, this message translates to:
+  /// **'Read this version'**
+  String get policiesOpenVersion;
+
+  /// No description provided for @policiesArchivedNotice.
+  ///
+  /// In en, this message translates to:
+  /// **'You are reading version {version}, which is no longer the current one.'**
+  String policiesArchivedNotice(String version);
+
+  /// No description provided for @policiesReadCurrent.
+  ///
+  /// In en, this message translates to:
+  /// **'Read the current version'**
+  String get policiesReadCurrent;
+
+  /// No description provided for @policiesConsentTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Before you carry on'**
+  String get policiesConsentTitle;
+
+  /// No description provided for @policiesConsentIntroNew.
+  ///
+  /// In en, this message translates to:
+  /// **'Please read and accept the following to keep using Reem.'**
+  String get policiesConsentIntroNew;
+
+  /// No description provided for @policiesConsentIntroUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'We have updated the following. Please read and accept them to carry on.'**
+  String get policiesConsentIntroUpdated;
+
+  /// No description provided for @policiesConsentAgree.
+  ///
+  /// In en, this message translates to:
+  /// **'I have read and accept the documents above'**
+  String get policiesConsentAgree;
+
+  /// No description provided for @policiesConsentContinue.
+  ///
+  /// In en, this message translates to:
+  /// **'Accept and continue'**
+  String get policiesConsentContinue;
+
+  /// No description provided for @policiesConsentFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Your acceptance could not be recorded. Please try again.'**
+  String get policiesConsentFailed;
+
+  /// No description provided for @policiesConsentSignOut.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign out instead'**
+  String get policiesConsentSignOut;
+
+  /// No description provided for @policiesConsentTapToRead.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to read'**
+  String get policiesConsentTapToRead;
+
+  /// No description provided for @policiesConsentRead.
+  ///
+  /// In en, this message translates to:
+  /// **'Read'**
+  String get policiesConsentRead;
+
+  /// No description provided for @registerConsentIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'By creating an account you accept:'**
+  String get registerConsentIntro;
+
+  /// No description provided for @registerConsentAgree.
+  ///
+  /// In en, this message translates to:
+  /// **'I have read and accept the documents above'**
+  String get registerConsentAgree;
+
+  /// No description provided for @registerConsentRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please accept the terms and the privacy policy to create an account'**
+  String get registerConsentRequired;
+
+  /// No description provided for @sellerConsentIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'By applying to sell you accept:'**
+  String get sellerConsentIntro;
+
+  /// No description provided for @sellerConsentAgree.
+  ///
+  /// In en, this message translates to:
+  /// **'I have read and accept the documents above'**
+  String get sellerConsentAgree;
+
+  /// No description provided for @sellerConsentRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please accept the seller terms and the commissions policy to apply'**
+  String get sellerConsentRequired;
+
+  /// No description provided for @policiesLinkReturns.
+  ///
+  /// In en, this message translates to:
+  /// **'Returns and exchanges policy'**
+  String get policiesLinkReturns;
+
+  /// No description provided for @policiesLinkContent.
+  ///
+  /// In en, this message translates to:
+  /// **'Content and removal policy'**
+  String get policiesLinkContent;
+
+  /// No description provided for @policiesLinkDisputes.
+  ///
+  /// In en, this message translates to:
+  /// **'Complaints and disputes'**
+  String get policiesLinkDisputes;
+
+  /// No description provided for @checkoutPolicyNotice.
+  ///
+  /// In en, this message translates to:
+  /// **'Placing this order means you accept the customer terms and the returns policy.'**
+  String get checkoutPolicyNotice;
+
+  /// No description provided for @adminPolicies.
+  ///
+  /// In en, this message translates to:
+  /// **'Policies'**
+  String get adminPolicies;
+
+  /// No description provided for @adminPoliciesSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit and publish the platform\'s policies. No app release needed.'**
+  String get adminPoliciesSubtitle;
+
+  /// No description provided for @adminPolicyStatusDraft.
+  ///
+  /// In en, this message translates to:
+  /// **'Draft'**
+  String get adminPolicyStatusDraft;
+
+  /// No description provided for @adminPolicyStatusPublished.
+  ///
+  /// In en, this message translates to:
+  /// **'Published'**
+  String get adminPolicyStatusPublished;
+
+  /// No description provided for @adminPolicyStatusArchived.
+  ///
+  /// In en, this message translates to:
+  /// **'Archived'**
+  String get adminPolicyStatusArchived;
+
+  /// No description provided for @adminPolicyAudience.
+  ///
+  /// In en, this message translates to:
+  /// **'Who must accept'**
+  String get adminPolicyAudience;
+
+  /// No description provided for @adminPolicyAudienceEveryone.
+  ///
+  /// In en, this message translates to:
+  /// **'Everyone'**
+  String get adminPolicyAudienceEveryone;
+
+  /// No description provided for @adminPolicyAudienceCustomer.
+  ///
+  /// In en, this message translates to:
+  /// **'Shoppers'**
+  String get adminPolicyAudienceCustomer;
+
+  /// No description provided for @adminPolicyAudienceSeller.
+  ///
+  /// In en, this message translates to:
+  /// **'Sellers'**
+  String get adminPolicyAudienceSeller;
+
+  /// No description provided for @adminPolicyRequiredForConsent.
+  ///
+  /// In en, this message translates to:
+  /// **'Required at sign-up'**
+  String get adminPolicyRequiredForConsent;
+
+  /// No description provided for @adminPolicyVisible.
+  ///
+  /// In en, this message translates to:
+  /// **'Shown in the app'**
+  String get adminPolicyVisible;
+
+  /// No description provided for @adminPolicyNewDraft.
+  ///
+  /// In en, this message translates to:
+  /// **'New draft'**
+  String get adminPolicyNewDraft;
+
+  /// No description provided for @adminPolicyEditDraft.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit draft'**
+  String get adminPolicyEditDraft;
+
+  /// No description provided for @adminPolicyDiscardDraft.
+  ///
+  /// In en, this message translates to:
+  /// **'Discard draft'**
+  String get adminPolicyDiscardDraft;
+
+  /// No description provided for @adminPolicyDiscardConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Discard this draft? Its text is not kept.'**
+  String get adminPolicyDiscardConfirm;
+
+  /// No description provided for @adminPolicyPublish.
+  ///
+  /// In en, this message translates to:
+  /// **'Publish'**
+  String get adminPolicyPublish;
+
+  /// No description provided for @adminPolicyPublishTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Publish version {version}'**
+  String adminPolicyPublishTitle(String version);
+
+  /// No description provided for @adminPolicyRequiresReacceptance.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask everyone to accept again'**
+  String get adminPolicyRequiresReacceptance;
+
+  /// No description provided for @adminPolicyRequiresReacceptanceHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn this on only for a material change. Everyone it applies to is asked to sign again before they can carry on using the app.'**
+  String get adminPolicyRequiresReacceptanceHint;
+
+  /// No description provided for @adminPolicyChangeNote.
+  ///
+  /// In en, this message translates to:
+  /// **'What changed'**
+  String get adminPolicyChangeNote;
+
+  /// No description provided for @adminPolicyChangeNoteHint.
+  ///
+  /// In en, this message translates to:
+  /// **'One line, shown in the version history'**
+  String get adminPolicyChangeNoteHint;
+
+  /// No description provided for @adminPolicyTitleField.
+  ///
+  /// In en, this message translates to:
+  /// **'Title'**
+  String get adminPolicyTitleField;
+
+  /// No description provided for @adminPolicySummaryField.
+  ///
+  /// In en, this message translates to:
+  /// **'One-line summary'**
+  String get adminPolicySummaryField;
+
+  /// No description provided for @adminPolicyBodyField.
+  ///
+  /// In en, this message translates to:
+  /// **'The text'**
+  String get adminPolicyBodyField;
+
+  /// No description provided for @adminPolicyBodyHint.
+  ///
+  /// In en, this message translates to:
+  /// **'## heading, - bullet, 1. numbered, **bold**, --- rule'**
+  String get adminPolicyBodyHint;
+
+  /// No description provided for @adminPolicyLocaleArabic.
+  ///
+  /// In en, this message translates to:
+  /// **'Arabic (binding)'**
+  String get adminPolicyLocaleArabic;
+
+  /// No description provided for @adminPolicyLocaleEnglish.
+  ///
+  /// In en, this message translates to:
+  /// **'English (courtesy)'**
+  String get adminPolicyLocaleEnglish;
+
+  /// No description provided for @adminPolicySaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Draft saved'**
+  String get adminPolicySaved;
+
+  /// No description provided for @adminPolicyPublished.
+  ///
+  /// In en, this message translates to:
+  /// **'Published'**
+  String get adminPolicyPublished;
+
+  /// No description provided for @adminPolicyDraftCreated.
+  ///
+  /// In en, this message translates to:
+  /// **'Draft opened'**
+  String get adminPolicyDraftCreated;
+
+  /// No description provided for @adminPolicyDraftDiscarded.
+  ///
+  /// In en, this message translates to:
+  /// **'Draft discarded'**
+  String get adminPolicyDraftDiscarded;
+
+  /// No description provided for @adminPolicyPreview.
+  ///
+  /// In en, this message translates to:
+  /// **'Preview'**
+  String get adminPolicyPreview;
+
+  /// No description provided for @adminPolicyConsentSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Acceptances'**
+  String get adminPolicyConsentSummary;
+
+  /// No description provided for @adminPolicyAcceptedCurrent.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} on the current version'**
+  String adminPolicyAcceptedCurrent(String count);
+
+  /// No description provided for @adminPolicyAcceptedAny.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} accounts have signed this policy'**
+  String adminPolicyAcceptedAny(String count);
+
+  /// No description provided for @adminPolicyNoDraft.
+  ///
+  /// In en, this message translates to:
+  /// **'No open draft. Start one to change the text.'**
+  String get adminPolicyNoDraft;
+
+  /// No description provided for @adminPolicyVersionsCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} versions'**
+  String adminPolicyVersionsCount(String count);
+
+  /// No description provided for @adminPolicyBodyTooShort.
+  ///
+  /// In en, this message translates to:
+  /// **'The text is too short to publish'**
+  String get adminPolicyBodyTooShort;
+
+  /// No description provided for @adminPolicyPublishConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Publish this version? The current one is archived and cannot be restored — a change after this needs a new version.'**
+  String get adminPolicyPublishConfirm;
+
+  /// No description provided for @policiesLinkCommissions.
+  ///
+  /// In en, this message translates to:
+  /// **'Commissions policy'**
+  String get policiesLinkCommissions;
+
+  /// No description provided for @policiesLinkCustomerTerms.
+  ///
+  /// In en, this message translates to:
+  /// **'Customer terms of use'**
+  String get policiesLinkCustomerTerms;
+
+  /// No description provided for @composerPolicyNotice.
+  ///
+  /// In en, this message translates to:
+  /// **'Publishing means you accept the content and removal policy.'**
+  String get composerPolicyNotice;
+
+  /// No description provided for @sellerEarningsPolicyNotice.
+  ///
+  /// In en, this message translates to:
+  /// **'How the commission is calculated, and when your earnings are paid.'**
+  String get sellerEarningsPolicyNotice;
+
+  /// No description provided for @orderPolicyNotice.
+  ///
+  /// In en, this message translates to:
+  /// **'A problem with this order? Start with the seller, then the complaints process.'**
+  String get orderPolicyNotice;
 }
 
 class _AppLocalizationsDelegate

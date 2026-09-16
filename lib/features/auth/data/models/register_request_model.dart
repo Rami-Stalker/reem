@@ -25,6 +25,15 @@ class RegisterRequestModel {
   /// she actually made on the form.
   final bool declaredFemale;
 
+  /// The exact issues of the policies she accepted on the signup form.
+  ///
+  /// Version ids, not a boolean: the server records one acceptance row per
+  /// document against the text that was on screen, which is what lets the
+  /// consent be reconstructed years later. Empty is legal and the server
+  /// decides — it refuses when a required document's current version is
+  /// missing, and accepts when nothing is published yet.
+  final List<String> acceptedPolicyVersionIds;
+
   const RegisterRequestModel({
     required this.firstName,
     required this.lastName,
@@ -34,6 +43,7 @@ class RegisterRequestModel {
     required this.country,
     required this.city,
     required this.declaredFemale,
+    this.acceptedPolicyVersionIds = const [],
     this.role = UserRole.customer,
   });
 
@@ -47,6 +57,8 @@ class RegisterRequestModel {
     'country': country,
     'city': city,
     'declared_female': declaredFemale,
+    if (acceptedPolicyVersionIds.isNotEmpty)
+      'accepted_policy_version_ids': acceptedPolicyVersionIds,
     'role': role.wire,
   };
 }

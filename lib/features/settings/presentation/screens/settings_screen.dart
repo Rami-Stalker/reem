@@ -224,6 +224,15 @@ class SettingsScreen extends ConsumerWidget {
                     title: l10n.helpCenter,
                     onTap: () => showHelpSheet(context),
                   ),
+                  // Not behind `protectedPush`: the terms are readable without
+                  // an account, on the server and here. Asking a woman to sign
+                  // in to read what she agreed to would be the opposite of the
+                  // point.
+                  SettingsItemData(
+                    icon: Icons.policy_outlined,
+                    title: l10n.policiesTitle,
+                    onTap: () => context.push(RoutePaths.policies),
+                  ),
                   SettingsItemData(
                     icon: Icons.logout,
                     title: isSignedIn ? l10n.signOut : l10n.signIn,

@@ -9,6 +9,7 @@ import {
   PaymentMethodType,
   PaymentStatus,
   MediaType,
+  PolicyVersionStatus,
   NotificationType,
   ProductStatus,
   RoundingPolicy,
@@ -23,6 +24,8 @@ import { AppPermission } from '../src/common/permissions';
 import { defaultPermissionsForRole } from '../src/common/role-permissions';
 import * as bcrypt from 'bcryptjs';
 import { DEFAULT_SHIPPING_ZONES } from '../src/modules/delivery/delivery.service';
+import { POLICY_SEED } from '../src/modules/policies/policy-content';
+import { policyContentHash } from '../src/modules/policies/policy-admin.service';
 import { seedDemo } from './demo';
 import {
   avatarImage,
@@ -89,6 +92,10 @@ async function main() {
   await prisma.commerceContentTypeDefinition.deleteMany();
   await prisma.auditLog.deleteMany();
   await prisma.loginAttempt.deleteMany();
+  await prisma.policyAcceptance.deleteMany();
+  await prisma.policyDocumentTranslation.deleteMany();
+  await prisma.policyDocumentVersion.deleteMany();
+  await prisma.policyDocument.deleteMany();
   await prisma.sellerVerification.deleteMany();
   await prisma.userRoleAssignment.deleteMany();
   await prisma.rolePermission.deleteMany();
@@ -199,6 +206,47 @@ async function main() {
         roleId: role.id,
         permissionId: permission.id,
       })),
+    });
+  }
+
+  // The eight policies, in their first published version.
+  //
+  // `PolicyBootstrap` writes these on boot too, and does so idempotently — so
+  // this block is not what production depends on. It is here because a seeded
+  // development database should be *complete*: without it the policy centre is
+  // empty and the consent gate silently has nothing to ask for until somebody
+  // happens to start the API, which is exactly the kind of "works on my
+  // machine" difference this seeder exists to remove.
+  const policyPublishedAt = new Date();
+  for (const policy of POLICY_SEED) {
+    await prisma.policyDocument.create({
+      data: {
+        kind: policy.kind,
+        slug: policy.slug,
+        audience: policy.audience,
+        sortOrder: policy.sortOrder,
+        requiredForConsent: policy.requiredForConsent,
+        icon: policy.icon,
+        versions: {
+          create: {
+            version: 1,
+            status: PolicyVersionStatus.PUBLISHED,
+            requiresReacceptance: false,
+            effectiveAt: policyPublishedAt,
+            publishedAt: policyPublishedAt,
+            changeNote: 'الإصدار الأول',
+            translations: {
+              create: policy.translations.map((translation) => ({
+                locale: translation.locale,
+                title: translation.title,
+                summary: translation.summary,
+                body: translation.body,
+                contentHash: policyContentHash(translation.body),
+              })),
+            },
+          },
+        },
+      },
     });
   }
 

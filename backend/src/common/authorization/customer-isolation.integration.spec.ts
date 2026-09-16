@@ -126,7 +126,11 @@ const noMedia = { markAttached: async () => 0 } as never;
 function build(tx: Tx): World {
   const db = asPrisma(tx);
   const closet = new ClosetService(db);
-  const notifier = new RoomNotifier(db);
+  // No push here: these cases assert who may read whose rows, and a real
+  // transport would only ever report "no provider configured".
+  const notifier = new RoomNotifier(db, {
+    pushExisting: async () => {},
+  } as never);
   return {
     db,
     closet,

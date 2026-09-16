@@ -75,6 +75,9 @@ import 'package:reem/features/market/presentation/screens/resale_market_screen.d
 import 'package:reem/features/market/presentation/screens/seller_market_screen.dart';
 import 'package:reem/features/market/presentation/screens/wardrobe_care_screen.dart';
 import 'package:reem/features/onboarding/presentation/screens/onboarding_screen.dart';
+import 'package:reem/features/policies/presentation/screens/admin_policies_screen.dart';
+import 'package:reem/features/policies/presentation/screens/policy_centre_screen.dart';
+import 'package:reem/features/policies/presentation/screens/policy_detail_screen.dart';
 import 'package:reem/features/product_details/presentation/screens/product_details_screen.dart';
 import 'package:reem/features/profile/presentation/screens/favorites_screen.dart';
 import 'package:reem/features/profile/presentation/screens/profile_screen.dart';
@@ -192,7 +195,12 @@ class _AuthRouterRefresh extends ChangeNotifier {
 /// Returns null for anything already shaped like a route, which is every
 /// in-app navigation and the `reem:///rooms/join/abc` spelling with an empty
 /// authority.
-@visibleForTesting
+///
+/// Called from two places now: the router's own redirect, for a link the
+/// operating system hands the app, and the push coordinator, for the
+/// `deep_link` a notification carries. One function, because a notification
+/// that opens a different screen than the same link pasted into a browser is
+/// a bug waiting to be found by a customer.
 String? deepLinkPath(Uri uri) {
   if (uri.scheme != 'reem' || uri.host.isEmpty) {
     return null;
@@ -914,6 +922,33 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const AdminShell(
           child: AdminNotificationAnalyticsScreen(),
         ),
+      ),
+      // ── Policies ────────────────────────────────────────────────────────
+      //
+      // Public by design — a woman reads the terms before she has an account,
+      // and a link to the returns policy has to open rather than bounce off a
+      // sign-in wall. `authGuard` lists both paths accordingly.
+      GoRoute(
+        path: RoutePaths.policies,
+        name: RouteNames.policies,
+        builder: (context, state) => const PolicyCentreScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.policyDetail,
+        name: RouteNames.policyDetail,
+        // `?version=` opens a specific issue, which for an older signature is
+        // an archived text the centre no longer lists. That is how a receipt
+        // shows the terms it was given against rather than today's.
+        builder: (context, state) => PolicyDetailScreen(
+          slug: state.pathParameters['slug'] ?? '',
+          versionId: state.uri.queryParameters['version'],
+        ),
+      ),
+      GoRoute(
+        path: RoutePaths.adminPolicies,
+        name: RouteNames.adminPolicies,
+        builder: (context, state) =>
+            const AdminShell(child: AdminPoliciesScreen()),
       ),
       GoRoute(
         path: RoutePaths.chatDetails,

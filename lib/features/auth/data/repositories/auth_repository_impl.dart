@@ -278,6 +278,7 @@ class AuthRepositoryImpl with RepositoryHandler implements AuthRepository {
     required String country,
     required String city,
     required bool declaredFemale,
+    List<String> acceptedPolicyVersionIds = const [],
     UserRole role = UserRole.customer,
   }) => guard(() async {
     await _ensureConnected();
@@ -290,6 +291,7 @@ class AuthRepositoryImpl with RepositoryHandler implements AuthRepository {
       country: country,
       city: city,
       declaredFemale: declaredFemale,
+      acceptedPolicyVersionIds: acceptedPolicyVersionIds,
       role: role,
     );
     await _persistTokens(response.tokens);
@@ -499,6 +501,7 @@ class AuthRepositoryImpl with RepositoryHandler implements AuthRepository {
     String? website,
     Map<String, dynamic>? socialMediaLinks,
     required List<String> documentUrls,
+    List<String> acceptedPolicyVersionIds = const [],
   }) => guard(() async {
     await _ensureConnected();
     return remote.submitSellerVerification(
@@ -526,6 +529,7 @@ class AuthRepositoryImpl with RepositoryHandler implements AuthRepository {
       website: website,
       socialMediaLinks: socialMediaLinks,
       documentUrls: documentUrls,
+      acceptedPolicyVersionIds: acceptedPolicyVersionIds,
     );
   });
 

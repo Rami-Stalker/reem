@@ -19,6 +19,7 @@ import 'package:reem/features/checkout/presentation/providers/order_detail_notif
 import 'package:reem/features/checkout/presentation/widgets/cod_confirmation_sheet.dart';
 import 'package:reem/features/checkout/presentation/widgets/order_status_chip.dart';
 import 'package:reem/features/checkout/presentation/widgets/payment_action_card.dart';
+import 'package:reem/features/policies/presentation/widgets/policy_link.dart';
 
 /// One order, and what is happening to it.
 ///
@@ -363,6 +364,25 @@ class _Body extends StatelessWidget {
                   : () => _confirmCancel(context, notifier),
             ),
           ],
+
+          // Where a complaint actually starts, and the two documents that
+          // govern it. On the order rather than in a help menu because a
+          // dispute is always *about* a specific parcel, and the process
+          // begins with the seller — which the copy says before the links do.
+          const SizedBox(height: DsSpacing.xl),
+          PolicyNotice(
+            message: context.l10n.orderPolicyNotice,
+            links: [
+              PolicyLink(
+                label: context.l10n.policiesLinkDisputes,
+                slug: PolicySlugs.disputes,
+              ),
+              PolicyLink(
+                label: context.l10n.policiesLinkReturns,
+                slug: PolicySlugs.returns,
+              ),
+            ],
+          ),
         ],
       ),
     );
