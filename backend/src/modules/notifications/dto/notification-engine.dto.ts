@@ -15,6 +15,7 @@ import {
 
 export class RegisterPushTokenDto {
   @IsString()
+  @MaxLength(4096)
   token!: string;
 
   @IsString()
@@ -25,6 +26,37 @@ export class RegisterPushTokenDto {
   @IsString()
   @MaxLength(40)
   platform?: string;
+
+  /**
+   * The handset, as the handset knows itself.
+   *
+   * Optional, because a client that predates this field still has to be able
+   * to register — but without it the server cannot tell a reinstall from a
+   * second phone, and she ends up with both rows and two of every
+   * notification. The client generates it once and keeps it in secure
+   * storage.
+   */
+  @IsOptional()
+  @IsString()
+  @MaxLength(128)
+  device_id?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(40)
+  app_version?: string;
+
+  /** `ar` or `en` — for the day a notification is composed rather than sent. */
+  @IsOptional()
+  @IsString()
+  @MaxLength(16)
+  locale?: string;
+}
+
+export class UnregisterPushTokenDto {
+  @IsString()
+  @MaxLength(4096)
+  token!: string;
 }
 
 export class NotificationSegmentDto {

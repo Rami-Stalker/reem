@@ -5136,7 +5136,38 @@ model PushToken {
   lastSeenAt DateTime @default(now()) @map("last_seen_at")
   createdAt  DateTime @default(now()) @map("created_at")
 
+  /// The handset, as the handset knows itself.
+  ///
+  /// A push token is not stable: the provider reissues it after a reinstall,
+  /// a restore from backup, or a long idle period, and the old one keeps
+  /// answering for a while. Without a device identity, a woman who reinstalls
+  /// twice accumulates three rows and gets every notification three times —
+  /// and the two dead ones are not discovered until a send fails against them.
+  /// With it, re-registering retires the handset's previous token.
+  deviceId String? @map("device_id")
+
+  /// What she is running, so a delivery problem traceable to one build is
+  /// traceable at all. Also what makes it possible to stop pushing a feature
+  /// to versions that cannot open it.
+  appVersion String? @map("app_version")
+
+  /// Her language, for the day a notification is composed rather than
+  /// translated — the body text is written server-side and there is no other
+  /// signal here about which language to write it in.
+  locale String?
+
+  /// Consecutive transient failures against this address. Reset on success.
+  /// A token that has failed repeatedly is retired even when the provider
+  /// never said the word UNREGISTERED, which some of them never do.
+  failureCount      Int       @default(0) @map("failure_count")
+  lastFailureReason String?   @map("last_failure_reason")
+  /// When and why it stopped being used — kept rather than deleted, because
+  /// "she has no device" and "her device went away on Tuesday" are different
+  /// answers to a support question.
+  disabledAt        DateTime? @map("disabled_at")
+
   @@index([userId, enabled])
+  @@index([deviceId])
   @@map("push_tokens")
 }
 
@@ -5211,12 +5242,29 @@ model NotificationDelivery {
   clickedAt         DateTime?                  @map("clicked_at")
   createdAt         DateTime                   @default(now()) @map("created_at")
 
+  /// How many times this has been handed to a provider.
+  ///
+  /// A push that fails because Google answered 503 is not a push that should
+  /// be abandoned — it is the order-shipped message she is waiting for, and
+  /// the outage lasts ninety seconds. But a failure retried for ever is worse
+  /// than one dropped: it occupies the worker on every pass and hides the
+  /// deliveries behind it. So attempts are counted and the row gives up.
+  attempts Int @default(0)
+
+  /// Not before this instant. Written on a transient failure with an
+  /// exponential backoff, so a provider having a bad minute is not hammered
+  /// by six hundred retries in that same minute.
+  nextAttemptAt DateTime? @map("next_attempt_at")
+
   events NotificationEvent[]
 
   @@index([userId, status])
   @@index([campaignId])
   @@index([channel, status])
   @@index([scheduledAt, status])
+  /// What the delivery worker actually asks for on every pass: queued rows
+  /// whose backoff has elapsed.
+  @@index([status, nextAttemptAt])
   /// The frequency cap counts this on every marketing send, so it gets its
   /// own index rather than leaning on the user+status one. Ordered
   /// (user, category, sent_at) because that is exactly the shape of the

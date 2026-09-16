@@ -2931,6 +2931,13 @@ class AppLocalizationsAr extends AppLocalizations {
   String get notifEmailBlurb => 'الفواتير وإشعارات الحساب والتحديثات المطوّلة.';
 
   @override
+  String get notifModeration => 'قرارات المراجعة';
+
+  @override
+  String get notifModerationBlurb =>
+      'لمّا يتغيّر قرار مراجعة على أحد منشوراتكِ.';
+
+  @override
   String get notifOffers => 'العروض والكوبونات';
 
   @override
@@ -2949,6 +2956,29 @@ class AppLocalizationsAr extends AppLocalizations {
   String get notifPushBlurb => 'تنبيهات الرسائل وتحديثات الطلبات والعروض.';
 
   @override
+  String get notifPushBlocked => 'جوّالكِ مانع إشعارات ريم.';
+
+  @override
+  String get notifPushBlockedBody =>
+      'جوّالكِ مانع ريم، فما رح يوصلكِ شي من اللي تحت لَحد ما تسمحي فيه من إعدادات النظام.';
+
+  @override
+  String get notifPushBlockedTitle => 'الإشعارات مطفية';
+
+  @override
+  String get notifPushOpenSettings => 'افتحي الإعدادات';
+
+  @override
+  String get notifPushUnavailable => 'إشعارات التطبيق مش متوفّرة بهالنسخة.';
+
+  @override
+  String get notifRooms => 'غرف التسوّق';
+
+  @override
+  String get notifRoomsBlurb =>
+      'الاقتراحات والأصوات والقرارات بالغرف اللي إنتِ فيها.';
+
+  @override
   String get notifSellerPosts => 'منشورات جديدة';
 
   @override
@@ -2965,6 +2995,13 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get notifSmsBlurb => 'رسائل التوصيل والحساب التي لا تحتمل التأجيل.';
+
+  @override
+  String get notifSocial => 'الإعجابات والتعليقات';
+
+  @override
+  String get notifSocialBlurb =>
+      'لمّا حدا يعجبه منشوركِ أو يعلّق عليه أو يشاركه.';
 
   @override
   String get notificationAllRead => 'ما ضل شي غير مقروء';

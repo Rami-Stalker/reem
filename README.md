@@ -124,6 +124,19 @@ GET requests are cached at the transport layer — read-through, coalesced, and
 served stale when the connection drops. What is cached and what deliberately is
 not lives in [docs/CACHING.md](docs/CACHING.md).
 
+## Notifications
+
+Push that reaches a woman who has closed the app, not only a row in an inbox
+she has to open to find. Six Android channels so she can mute the noise without
+silencing her orders, a frequency cap that counts across every sender, and a
+delivery worker that retires dead device tokens instead of pushing to them for
+ever. Configuring Firebase and reading a delivery that did not arrive:
+[docs/NOTIFICATIONS.md](docs/NOTIFICATIONS.md).
+
+With no Firebase project configured the whole thing degrades to nothing on
+purpose: the build succeeds, the app runs, and the API records each push as
+skipped rather than claiming it was sent.
+
 ## Resilience
 
 Crash handling, PII-safe error reporting with breadcrumbs, and the offline

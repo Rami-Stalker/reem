@@ -2934,6 +2934,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get notifEmailBlurb => 'Receipts, account notices and longer updates.';
 
   @override
+  String get notifModeration => 'Review outcomes';
+
+  @override
+  String get notifModerationBlurb =>
+      'When a review decision on your content is reversed.';
+
+  @override
   String get notifOffers => 'Offers and coupons';
 
   @override
@@ -2950,6 +2957,31 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get notifPushBlurb => 'Message alerts, order updates and offers.';
+
+  @override
+  String get notifPushBlocked =>
+      'Your phone is blocking Reem\'s notifications.';
+
+  @override
+  String get notifPushBlockedBody =>
+      'Your phone is blocking Reem, so nothing below will reach you until you allow it in the system settings.';
+
+  @override
+  String get notifPushBlockedTitle => 'Notifications are turned off';
+
+  @override
+  String get notifPushOpenSettings => 'Open settings';
+
+  @override
+  String get notifPushUnavailable =>
+      'Push notifications are not available in this version.';
+
+  @override
+  String get notifRooms => 'Shopping rooms';
+
+  @override
+  String get notifRoomsBlurb =>
+      'Suggestions, votes and decisions in rooms you are in.';
 
   @override
   String get notifSellerPosts => 'New posts';
@@ -2970,6 +3002,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get notifSmsBlurb => 'Delivery and account messages that cannot wait.';
+
+  @override
+  String get notifSocial => 'Likes and comments';
+
+  @override
+  String get notifSocialBlurb =>
+      'When someone likes, comments on or reshares your post.';
 
   @override
   String get notificationAllRead => 'All caught up';

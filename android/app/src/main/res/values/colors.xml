@@ -7,4 +7,12 @@
 <resources>
     <color name="splash_background">#FFFFF8FB</color>
     <color name="splash_icon_background">#FFFFFFFF</color>
+
+    <!--
+      The rose Android tints a notification's small icon and title with.
+      `primary500` from the design system's palette — the brand identity rose —
+      so a notification on the lock screen is recognisably Reem before it is
+      read.
+    -->
+    <color name="notification_accent">#FFE85A8A</color>
 </resources>

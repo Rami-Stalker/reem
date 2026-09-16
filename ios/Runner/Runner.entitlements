@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!--
+	  The Apple Push Notification service environment this build talks to.
+
+	  `development` is correct for every build made from Xcode and for
+	  TestFlight internal testing; the App Store re-signs the binary for
+	  production when it is uploaded, so shipping `development` here is the
+	  normal arrangement rather than a mistake. A build signed for one
+	  environment and sent a token minted in the other silently receives
+	  nothing, which is the single commonest reason iOS push "does not work".
+
+	  Without this entitlement the app cannot register with APNs at all, and
+	  Firebase then has no device token to exchange for an FCM one — so
+	  `getToken()` returns null for ever and the server never learns this
+	  handset exists.
+
+	  This file has to be attached to the Runner target in Xcode
+	  (Signing & Capabilities -> + Capability -> Push Notifications), which
+	  also requires the bundle id `shop.reem.app` to have the Push
+	  Notifications capability enabled in the Apple Developer portal, and an
+	  APNs authentication key uploaded to the Firebase console under
+	  Cloud Messaging -> Apple app configuration. All three, or nothing
+	  arrives.
+	-->
+	<key>aps-environment</key>
+	<string>development</string>
+</dict>
+</plist>

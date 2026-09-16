@@ -18,6 +18,7 @@ import { RoomCollaborationService } from './room-collaboration.service';
 import { RoomCompareService } from './room-compare.service';
 import { RoomDecisionService } from './room-decision.service';
 import { RoomEventService } from './room-event.service';
+import { NotificationsService } from '../notifications/notifications.service';
 import { RoomNotifier } from './room-notifier.service';
 import { RoomsService } from './rooms.service';
 
@@ -110,7 +111,11 @@ function build(tx: Tx): World {
   const db = asPrisma(tx);
   // Notifications are exercised by their own cases below; here the notifier is
   // real, so the coalescing runs on the same rows the assertions read.
-  const notifier = new RoomNotifier(db);
+  // Push is stubbed: this spec is about which rows the coalescing writes, and
+  // a real transport here would only ever report "no provider configured".
+  const notifier = new RoomNotifier(db, {
+    pushExisting: async () => {},
+  } as unknown as NotificationsService);
   const events = new RoomEventService(db, notifier);
   const access = new RoomAccessService(db);
   const rooms = new RoomsService(db, access, events);

@@ -632,6 +632,16 @@ abstract final class ApiEndpoints {
   static String notificationRead(String id) => '/notifications/$id/read';
   static const notificationsReadAll = '/notifications/read-all';
   static const notificationPreferences = '/notifications/preferences';
+  static const notificationsUnreadCount = '/notifications/unread-count';
+
+  /// Where this handset can be reached, and where to stop reaching it.
+  ///
+  /// The unregister is a POST rather than a DELETE because the token is
+  /// several hundred characters and belongs nowhere near a URL: a query
+  /// string is the one part of a request every proxy on the way writes into
+  /// its access log.
+  static const pushTokens = '/notifications/push-tokens';
+  static const pushTokenUnregister = '/notifications/push-tokens/unregister';
 
   // Media uploads
   //

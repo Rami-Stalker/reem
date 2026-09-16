@@ -5552,6 +5552,18 @@ abstract class AppLocalizations {
   /// **'Receipts, account notices and longer updates.'**
   String get notifEmailBlurb;
 
+  /// No description provided for @notifModeration.
+  ///
+  /// In en, this message translates to:
+  /// **'Review outcomes'**
+  String get notifModeration;
+
+  /// No description provided for @notifModerationBlurb.
+  ///
+  /// In en, this message translates to:
+  /// **'When a review decision on your content is reversed.'**
+  String get notifModerationBlurb;
+
   /// No description provided for @notifOffers.
   ///
   /// In en, this message translates to:
@@ -5588,6 +5600,48 @@ abstract class AppLocalizations {
   /// **'Message alerts, order updates and offers.'**
   String get notifPushBlurb;
 
+  /// No description provided for @notifPushBlocked.
+  ///
+  /// In en, this message translates to:
+  /// **'Your phone is blocking Reem\'s notifications.'**
+  String get notifPushBlocked;
+
+  /// No description provided for @notifPushBlockedBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Your phone is blocking Reem, so nothing below will reach you until you allow it in the system settings.'**
+  String get notifPushBlockedBody;
+
+  /// No description provided for @notifPushBlockedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications are turned off'**
+  String get notifPushBlockedTitle;
+
+  /// No description provided for @notifPushOpenSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Open settings'**
+  String get notifPushOpenSettings;
+
+  /// No description provided for @notifPushUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Push notifications are not available in this version.'**
+  String get notifPushUnavailable;
+
+  /// No description provided for @notifRooms.
+  ///
+  /// In en, this message translates to:
+  /// **'Shopping rooms'**
+  String get notifRooms;
+
+  /// No description provided for @notifRoomsBlurb.
+  ///
+  /// In en, this message translates to:
+  /// **'Suggestions, votes and decisions in rooms you are in.'**
+  String get notifRoomsBlurb;
+
   /// No description provided for @notifSellerPosts.
   ///
   /// In en, this message translates to:
@@ -5623,6 +5677,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Delivery and account messages that cannot wait.'**
   String get notifSmsBlurb;
+
+  /// No description provided for @notifSocial.
+  ///
+  /// In en, this message translates to:
+  /// **'Likes and comments'**
+  String get notifSocial;
+
+  /// No description provided for @notifSocialBlurb.
+  ///
+  /// In en, this message translates to:
+  /// **'When someone likes, comments on or reshares your post.'**
+  String get notifSocialBlurb;
 
   /// Confirmation after marking every notification read
   ///

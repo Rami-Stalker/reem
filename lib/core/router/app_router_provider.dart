@@ -192,7 +192,12 @@ class _AuthRouterRefresh extends ChangeNotifier {
 /// Returns null for anything already shaped like a route, which is every
 /// in-app navigation and the `reem:///rooms/join/abc` spelling with an empty
 /// authority.
-@visibleForTesting
+///
+/// Called from two places now: the router's own redirect, for a link the
+/// operating system hands the app, and the push coordinator, for the
+/// `deep_link` a notification carries. One function, because a notification
+/// that opens a different screen than the same link pasted into a browser is
+/// a bug waiting to be found by a customer.
 String? deepLinkPath(Uri uri) {
   if (uri.scheme != 'reem' || uri.host.isEmpty) {
     return null;

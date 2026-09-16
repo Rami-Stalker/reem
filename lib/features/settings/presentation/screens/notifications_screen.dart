@@ -1,20 +1,56 @@
+import 'package:app_settings/app_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:reem/core/design_system/design_system.dart';
 import 'package:reem/core/errors/failure_exception.dart';
 import 'package:reem/core/localization/l10n_extension.dart';
+import 'package:reem/core/notifications/push_notification_service.dart';
+import 'package:reem/core/notifications/push_providers.dart';
 import 'package:reem/core/result/result.dart';
 import 'package:reem/features/settings/domain/entities/notification_preferences.dart';
 import 'package:reem/features/settings/presentation/providers/settings_provider.dart';
 import 'package:reem/l10n/app_localizations.dart';
 
-class NotificationsScreen extends ConsumerWidget {
+class NotificationsScreen extends ConsumerStatefulWidget {
   const NotificationsScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<NotificationsScreen> createState() =>
+      _NotificationsScreenState();
+}
+
+class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
+    with WidgetsBindingObserver {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  /// Re-reads the system permission when she comes back from the OS settings.
+  ///
+  /// This is the only moment the answer can have changed without the app being
+  /// involved — neither platform notifies an app that its notification
+  /// permission was revoked — and so the only thing that can keep the banner
+  /// below honest.
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      ref.invalidate(pushPermissionProvider);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final preferences = ref.watch(notificationPreferencesProvider);
+    final permission = ref.watch(pushPermissionProvider).value;
 
     return ReemScrollPage(
       // Returned rather than awaited-and-dropped: `refresh` hands back the
@@ -22,10 +58,12 @@ class NotificationsScreen extends ConsumerWidget {
       onRefresh: () => ref.refresh(notificationPreferencesProvider.future),
       slivers: [
         PremiumAppBar(title: context.l10n.notifications, showBack: true),
+        if (permission == PushPermission.denied) const _BlockedBanner(),
         preferences.when(
           data: (prefs) => _PreferencesSliver(
             preferences: prefs,
-            onChanged: (updated) => _save(context, ref, updated),
+            onChanged: _save,
+            onPushChanged: (wanted) => _setPush(prefs, wanted),
           ),
           loading: () => const _LoadingSliver(),
           error: (error, _) => _ErrorSliver(
@@ -38,14 +76,60 @@ class NotificationsScreen extends ConsumerWidget {
     );
   }
 
-  Future<void> _save(
-    BuildContext context,
-    WidgetRef ref,
-    NotificationPreferences preferences,
-  ) async {
-    final result =
-        await ref.read(updateNotificationPreferencesUseCaseProvider)(preferences);
-    if (!context.mounted) return;
+  /// Turning push on is three things, not one.
+  ///
+  /// The switch used to save a boolean and nothing else, which on a handset
+  /// that had never been asked for permission produced the worst possible
+  /// outcome: a preference saying yes, a phone saying nothing, and no way for
+  /// her to tell which of them was wrong. So the order here is deliberate.
+  ///
+  ///  1. **Ask the phone first.** If she refuses, the preference is not saved:
+  ///     a switch left on over a system that will not deliver is a lie.
+  ///  2. **A permanent refusal opens the settings app.** Both platforms show
+  ///     their prompt once and once only, so from that point the only place
+  ///     the decision can be changed is the operating system — and an in-app
+  ///     switch that silently does nothing is worse than no switch at all.
+  ///  3. **Register the handset, last.** The token does not exist until the
+  ///     permission does, and the server cannot send to an address it has
+  ///     never been given.
+  Future<void> _setPush(NotificationPreferences prefs, bool wanted) async {
+    final push = ref.read(pushServiceProvider);
+    final l10n = context.l10n;
+
+    if (!wanted) {
+      await _save(prefs.copyWith(push: false));
+      return;
+    }
+
+    if (!push.isAvailable) {
+      if (!mounted) return;
+      DsSnackbar.error(context, l10n.notifPushUnavailable);
+      return;
+    }
+
+    var state = await push.permission();
+    if (state == PushPermission.notDetermined) {
+      state = await push.request();
+    }
+    if (!mounted) return;
+
+    if (state == PushPermission.denied ||
+        state == PushPermission.unavailable) {
+      DsSnackbar.error(context, l10n.notifPushBlocked);
+      await AppSettings.openAppSettings(type: AppSettingsType.notification);
+      return;
+    }
+
+    ref.invalidate(pushPermissionProvider);
+    await _save(prefs.copyWith(push: true));
+    await ref.read(pushRegistrarProvider).attach(locale: l10n.localeName);
+  }
+
+  Future<void> _save(NotificationPreferences preferences) async {
+    final result = await ref.read(
+      updateNotificationPreferencesUseCaseProvider,
+    )(preferences);
+    if (!mounted) return;
 
     switch (result) {
       case Success():
@@ -57,14 +141,81 @@ class NotificationsScreen extends ConsumerWidget {
   }
 }
 
+/// Shown when the phone will not deliver anything, whatever these switches say.
+///
+/// Without it the screen is actively misleading: every toggle can be on, the
+/// server can be sending correctly, and nothing arrives — with no clue anywhere
+/// in the app that the operating system is the one refusing.
+class _BlockedBanner extends StatelessWidget {
+  const _BlockedBanner();
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.dsColors;
+    return SliverToBoxAdapter(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(
+          DsSpacing.lg,
+          DsSpacing.sm,
+          DsSpacing.lg,
+          0,
+        ),
+        child: SurfaceCard(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Icon(Icons.notifications_off_rounded, color: c.warning),
+              const SizedBox(width: DsSpacing.md),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      context.l10n.notifPushBlockedTitle,
+                      style: context.dsText.tileTitle.copyWith(
+                        fontWeight: DsTypography.semiBold,
+                      ),
+                    ),
+                    const SizedBox(height: DsSpacing.xxs),
+                    Text(
+                      context.l10n.notifPushBlockedBody,
+                      style: context.dsText.cardSubtitle.copyWith(
+                        color: c.onSurfaceVariant,
+                      ),
+                    ),
+                    Align(
+                      alignment: AlignmentDirectional.centerStart,
+                      child: TextButton(
+                        onPressed: () => AppSettings.openAppSettings(
+                          type: AppSettingsType.notification,
+                        ),
+                        child: Text(context.l10n.notifPushOpenSettings),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 class _PreferencesSliver extends StatelessWidget {
   const _PreferencesSliver({
     required this.preferences,
     required this.onChanged,
+    required this.onPushChanged,
   });
 
   final NotificationPreferences preferences;
   final ValueChanged<NotificationPreferences> onChanged;
+
+  /// Push is not saved like the others: it has to negotiate with the operating
+  /// system before it can honestly be set. See `_setPush`.
+  final ValueChanged<bool> onPushChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -126,7 +277,7 @@ class _PreferencesSliver extends StatelessWidget {
           title: l10n.notifPush,
           subtitle: l10n.notifPushBlurb,
           value: prefs.push,
-          onChanged: (value) => save(prefs.copyWith(push: value)),
+          onChanged: onPushChanged,
         ),
         _Pref(
           icon: Icons.email_rounded,
@@ -158,6 +309,23 @@ class _PreferencesSliver extends StatelessWidget {
           value: prefs.inAppStories,
           onChanged: (value) => save(prefs.copyWith(inAppStories: value)),
         ),
+        // Three subjects the server has always honoured and the app had no
+        // switch for: a woman tired of being told somebody voted in her room
+        // had nowhere to say so.
+        _Pref(
+          icon: Icons.favorite_rounded,
+          title: l10n.notifSocial,
+          subtitle: l10n.notifSocialBlurb,
+          value: prefs.inAppSocial,
+          onChanged: (value) => save(prefs.copyWith(inAppSocial: value)),
+        ),
+        _Pref(
+          icon: Icons.groups_rounded,
+          title: l10n.notifRooms,
+          subtitle: l10n.notifRoomsBlurb,
+          value: prefs.inAppRooms,
+          onChanged: (value) => save(prefs.copyWith(inAppRooms: value)),
+        ),
       ]),
       _PrefGroup(l10n.notifCommerce, [
         _Pref(
@@ -173,6 +341,13 @@ class _PreferencesSliver extends StatelessWidget {
           subtitle: l10n.notifOffersBlurb,
           value: prefs.inAppCoupons,
           onChanged: (value) => save(prefs.copyWith(inAppCoupons: value)),
+        ),
+        _Pref(
+          icon: Icons.verified_user_rounded,
+          title: l10n.notifModeration,
+          subtitle: l10n.notifModerationBlurb,
+          value: prefs.inAppModeration,
+          onChanged: (value) => save(prefs.copyWith(inAppModeration: value)),
         ),
       ]),
     ];
