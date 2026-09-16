@@ -126,6 +126,12 @@ abstract final class RouteNames {
   static const adminCampaigns = 'admin-notification-campaigns';
   static const adminNotificationAnalytics = 'admin-notification-analytics';
 
+  /// The policy centre, one policy, and the console that publishes them. The
+  /// consent gate has no name because it has no route — see `RoutePaths`.
+  static const policies = 'policies';
+  static const policyDetail = 'policy-detail';
+  static const adminPolicies = 'admin-policies';
+
   static const chats = 'chats';
   static const chatDetails = 'chat-details';
   static const calls = 'calls';

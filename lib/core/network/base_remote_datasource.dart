@@ -91,6 +91,50 @@ abstract base class BaseRemoteDataSource {
     }
   }
 
+  /// A write whose answer is a list rather than an object.
+  ///
+  /// Some write endpoints answer with the whole collection they just changed —
+  /// the policy console does, because publishing one version archives another
+  /// and a response describing only the row that was posted would leave the
+  /// screen holding two current versions. Without these the caller has to
+  /// reach past the base class for `dio`, and loses the error mapping every
+  /// other call gets.
+  Future<List<dynamic>> postList(
+    String path, {
+    Map<String, dynamic>? body,
+  }) async {
+    try {
+      final response = await dio.post<dynamic>(path, data: body);
+      return _asList(response.data);
+    } on DioException catch (e) {
+      throw ErrorMapper.fromDio(e);
+    }
+  }
+
+  Future<List<dynamic>> patchList(
+    String path, {
+    Map<String, dynamic>? body,
+  }) async {
+    try {
+      final response = await dio.patch<dynamic>(path, data: body);
+      return _asList(response.data);
+    } on DioException catch (e) {
+      throw ErrorMapper.fromDio(e);
+    }
+  }
+
+  Future<List<dynamic>> deleteList(
+    String path, {
+    Map<String, dynamic>? body,
+  }) async {
+    try {
+      final response = await dio.delete<dynamic>(path, data: body);
+      return _asList(response.data);
+    } on DioException catch (e) {
+      throw ErrorMapper.fromDio(e);
+    }
+  }
+
   Future<Map<String, dynamic>> patchJson(
     String path, {
     Map<String, dynamic>? body,
@@ -121,6 +165,15 @@ abstract base class BaseRemoteDataSource {
     } on DioException catch (e) {
       throw ErrorMapper.fromDio(e);
     }
+  }
+
+  /// Mirrors `getList`: a bare array, or one wrapped in `data`.
+  List<dynamic> _asList(dynamic data) {
+    if (data is List) return data;
+    if (data is Map<String, dynamic> && data['data'] is List) {
+      return data['data'] as List;
+    }
+    return const [];
   }
 
   Map<String, dynamic> _asMap(dynamic data) {

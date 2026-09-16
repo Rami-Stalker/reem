@@ -6596,4 +6596,305 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get postDeleted => 'Post deleted';
+
+  @override
+  String get policiesTitle => 'Policies and terms';
+
+  @override
+  String get policiesSubtitle => 'The documents that govern your use of Reem';
+
+  @override
+  String get policiesSectionForYou => 'For you';
+
+  @override
+  String get policiesSectionEveryone => 'For everyone';
+
+  @override
+  String get policiesSectionSellers => 'For sellers';
+
+  @override
+  String get policiesSectionCustomers => 'For shoppers';
+
+  @override
+  String get policiesEmpty => 'No policies have been published yet';
+
+  @override
+  String policiesVersionLabel(String version) {
+    return 'Version $version';
+  }
+
+  @override
+  String policiesEffectiveFrom(String date) {
+    return 'In force since $date';
+  }
+
+  @override
+  String policiesAcceptedOn(String date) {
+    return 'You accepted this on $date';
+  }
+
+  @override
+  String policiesAcceptedOlderVersion(String version, String date) {
+    return 'You accepted version $version on $date';
+  }
+
+  @override
+  String get policiesNotAccepted => 'Not accepted yet';
+
+  @override
+  String get policiesRequiredBadge => 'Signature required';
+
+  @override
+  String get policiesUpdatedBadge => 'Updated';
+
+  @override
+  String get policiesMyConsents => 'What I have agreed to';
+
+  @override
+  String get policiesMyConsentsSubtitle =>
+      'Every policy you accepted, and the day you accepted it';
+
+  @override
+  String get policiesReceiptsEmpty => 'You have not accepted any policy yet';
+
+  @override
+  String get policiesSourceRegistration => 'At sign-up';
+
+  @override
+  String get policiesSourceReconsent => 'After an update';
+
+  @override
+  String get policiesSourceSellerApplication => 'When applying to sell';
+
+  @override
+  String get policiesHistoryTitle => 'Version history';
+
+  @override
+  String get policiesHistoryCurrent => 'Current';
+
+  @override
+  String get policiesOpenVersion => 'Read this version';
+
+  @override
+  String policiesArchivedNotice(String version) {
+    return 'You are reading version $version, which is no longer the current one.';
+  }
+
+  @override
+  String get policiesReadCurrent => 'Read the current version';
+
+  @override
+  String get policiesConsentTitle => 'Before you carry on';
+
+  @override
+  String get policiesConsentIntroNew =>
+      'Please read and accept the following to keep using Reem.';
+
+  @override
+  String get policiesConsentIntroUpdated =>
+      'We have updated the following. Please read and accept them to carry on.';
+
+  @override
+  String get policiesConsentAgree =>
+      'I have read and accept the documents above';
+
+  @override
+  String get policiesConsentContinue => 'Accept and continue';
+
+  @override
+  String get policiesConsentFailed =>
+      'Your acceptance could not be recorded. Please try again.';
+
+  @override
+  String get policiesConsentSignOut => 'Sign out instead';
+
+  @override
+  String get policiesConsentTapToRead => 'Tap to read';
+
+  @override
+  String get policiesConsentRead => 'Read';
+
+  @override
+  String get registerConsentIntro => 'By creating an account you accept:';
+
+  @override
+  String get registerConsentAgree =>
+      'I have read and accept the documents above';
+
+  @override
+  String get registerConsentRequired =>
+      'Please accept the terms and the privacy policy to create an account';
+
+  @override
+  String get sellerConsentIntro => 'By applying to sell you accept:';
+
+  @override
+  String get sellerConsentAgree => 'I have read and accept the documents above';
+
+  @override
+  String get sellerConsentRequired =>
+      'Please accept the seller terms and the commissions policy to apply';
+
+  @override
+  String get policiesLinkReturns => 'Returns and exchanges policy';
+
+  @override
+  String get policiesLinkContent => 'Content and removal policy';
+
+  @override
+  String get policiesLinkDisputes => 'Complaints and disputes';
+
+  @override
+  String get checkoutPolicyNotice =>
+      'Placing this order means you accept the customer terms and the returns policy.';
+
+  @override
+  String get adminPolicies => 'Policies';
+
+  @override
+  String get adminPoliciesSubtitle =>
+      'Edit and publish the platform\'s policies. No app release needed.';
+
+  @override
+  String get adminPolicyStatusDraft => 'Draft';
+
+  @override
+  String get adminPolicyStatusPublished => 'Published';
+
+  @override
+  String get adminPolicyStatusArchived => 'Archived';
+
+  @override
+  String get adminPolicyAudience => 'Who must accept';
+
+  @override
+  String get adminPolicyAudienceEveryone => 'Everyone';
+
+  @override
+  String get adminPolicyAudienceCustomer => 'Shoppers';
+
+  @override
+  String get adminPolicyAudienceSeller => 'Sellers';
+
+  @override
+  String get adminPolicyRequiredForConsent => 'Required at sign-up';
+
+  @override
+  String get adminPolicyVisible => 'Shown in the app';
+
+  @override
+  String get adminPolicyNewDraft => 'New draft';
+
+  @override
+  String get adminPolicyEditDraft => 'Edit draft';
+
+  @override
+  String get adminPolicyDiscardDraft => 'Discard draft';
+
+  @override
+  String get adminPolicyDiscardConfirm =>
+      'Discard this draft? Its text is not kept.';
+
+  @override
+  String get adminPolicyPublish => 'Publish';
+
+  @override
+  String adminPolicyPublishTitle(String version) {
+    return 'Publish version $version';
+  }
+
+  @override
+  String get adminPolicyRequiresReacceptance => 'Ask everyone to accept again';
+
+  @override
+  String get adminPolicyRequiresReacceptanceHint =>
+      'Turn this on only for a material change. Everyone it applies to is asked to sign again before they can carry on using the app.';
+
+  @override
+  String get adminPolicyChangeNote => 'What changed';
+
+  @override
+  String get adminPolicyChangeNoteHint =>
+      'One line, shown in the version history';
+
+  @override
+  String get adminPolicyTitleField => 'Title';
+
+  @override
+  String get adminPolicySummaryField => 'One-line summary';
+
+  @override
+  String get adminPolicyBodyField => 'The text';
+
+  @override
+  String get adminPolicyBodyHint =>
+      '## heading, - bullet, 1. numbered, **bold**, --- rule';
+
+  @override
+  String get adminPolicyLocaleArabic => 'Arabic (binding)';
+
+  @override
+  String get adminPolicyLocaleEnglish => 'English (courtesy)';
+
+  @override
+  String get adminPolicySaved => 'Draft saved';
+
+  @override
+  String get adminPolicyPublished => 'Published';
+
+  @override
+  String get adminPolicyDraftCreated => 'Draft opened';
+
+  @override
+  String get adminPolicyDraftDiscarded => 'Draft discarded';
+
+  @override
+  String get adminPolicyPreview => 'Preview';
+
+  @override
+  String get adminPolicyConsentSummary => 'Acceptances';
+
+  @override
+  String adminPolicyAcceptedCurrent(String count) {
+    return '$count on the current version';
+  }
+
+  @override
+  String adminPolicyAcceptedAny(String count) {
+    return '$count accounts have signed this policy';
+  }
+
+  @override
+  String get adminPolicyNoDraft =>
+      'No open draft. Start one to change the text.';
+
+  @override
+  String adminPolicyVersionsCount(String count) {
+    return '$count versions';
+  }
+
+  @override
+  String get adminPolicyBodyTooShort => 'The text is too short to publish';
+
+  @override
+  String get adminPolicyPublishConfirm =>
+      'Publish this version? The current one is archived and cannot be restored — a change after this needs a new version.';
+
+  @override
+  String get policiesLinkCommissions => 'Commissions policy';
+
+  @override
+  String get policiesLinkCustomerTerms => 'Customer terms of use';
+
+  @override
+  String get composerPolicyNotice =>
+      'Publishing means you accept the content and removal policy.';
+
+  @override
+  String get sellerEarningsPolicyNotice =>
+      'How the commission is calculated, and when your earnings are paid.';
+
+  @override
+  String get orderPolicyNotice =>
+      'A problem with this order? Start with the seller, then the complaints process.';
 }

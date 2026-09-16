@@ -10,6 +10,7 @@ import 'package:reem/features/auth/domain/entities/auth_account.dart';
 import 'package:reem/features/auth/presentation/providers/auth_account_provider.dart';
 import 'package:reem/features/auth/presentation/providers/auth_provider.dart';
 import 'package:reem/features/auth/presentation/widgets/step_up_sheet.dart';
+import 'package:reem/features/policies/presentation/widgets/policy_consent_field.dart';
 import 'package:reem/l10n/app_localizations.dart';
 
 /// The seller's application to be verified.
@@ -108,6 +109,13 @@ class _ApplicationFormState extends ConsumerState<_ApplicationForm> {
   final _uploading = <String, bool>{};
 
   bool _submitting = false;
+
+  /// The seller terms and the commissions policy, as she accepted them here.
+  ///
+  /// See `PolicyConsentField` for why these are version ids rather than a
+  /// flag, and why the flag starts true and is revoked by the field.
+  bool _acceptedPolicies = true;
+  List<String> _policyVersionIds = const [];
 
   bool get _isUploading => _uploading.values.any((busy) => busy);
 
@@ -276,6 +284,7 @@ class _ApplicationFormState extends ConsumerState<_ApplicationForm> {
           yearsExperience: int.parse(_yearsExperience.text.trim()),
           website: _nullIfEmpty(_website.text),
           documentUrls: _documentUrls,
+          acceptedPolicyVersionIds: _policyVersionIds,
         );
   }
 
@@ -463,10 +472,26 @@ class _ApplicationFormState extends ConsumerState<_ApplicationForm> {
         ),
 
         const SizedBox(height: DsSpacing.lg),
+        // Opening a shop is entering into the seller terms and agreeing to be
+        // charged a commission. The server refuses an application whose
+        // accepted ids do not cover both, so the button stays disabled until
+        // she has made the agreement rather than been told about it.
+        PolicyConsentField(
+          role: 'seller',
+          accepted: _acceptedPolicies,
+          enabled: !_submitting,
+          introText: l10n.sellerConsentIntro,
+          agreeText: l10n.sellerConsentAgree,
+          onChanged: (accepted, ids) => setState(() {
+            _acceptedPolicies = accepted;
+            _policyVersionIds = accepted ? ids : const [];
+          }),
+        ),
+        const SizedBox(height: DsSpacing.lg),
         PrimaryButton(
           label: l10n.submitVerification,
           icon: Icons.verified_user_outlined,
-          onPressed: _submitting ? null : _submit,
+          onPressed: _submitting || !_acceptedPolicies ? null : _submit,
           isLoading: _submitting,
         ),
       ],

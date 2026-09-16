@@ -805,4 +805,37 @@ abstract final class ApiEndpoints {
   static String trendsAdminInsight(String id) => '/trends/admin/insights/$id';
   static const trendsAdminRuns = '/trends/admin/runs';
   static const trendsAdminRecompute = '/trends/admin/recompute';
+
+  // ── Policies, terms and consent ───────────────────────────────────────
+  //
+  // The reads are open: a woman reads the terms *before* she has an account,
+  // and the signup form has to name the documents while there is no session to
+  // ask with. `policyAccept` is the only one here that needs one.
+  static const policies = '/policies';
+
+  /// What an account of this kind has to sign before it exists.
+  /// `role` is `buyer` or `seller`.
+  static const policiesRequired = '/policies/required';
+
+  /// What this account still owes a signature on. Usually empty.
+  static const policiesPending = '/policies/pending';
+
+  /// Her receipts: which policy, which version, which day.
+  static const policiesAcceptances = '/policies/acceptances';
+  static const policiesAccept = '/policies/accept';
+  static String policyDocument(String slug) => '/policies/$slug';
+
+  /// One issue by id, archived ones included — so a receipt can be opened
+  /// against the text it was signed against rather than against today's.
+  static String policyVersion(String id) => '/policies/versions/$id';
+
+  // Admin — the policy desk. Behind `policy:manage`.
+  static const adminPolicies = '/admin/policies';
+  static const adminPolicyConsentSummary = '/admin/policies/consent-summary';
+  static String adminPolicyDocument(String id) => '/admin/policies/$id';
+  static String adminPolicyVersions(String id) => '/admin/policies/$id/versions';
+  static String adminPolicyVersion(String versionId) =>
+      '/admin/policies/versions/$versionId';
+  static String adminPolicyVersionPublish(String versionId) =>
+      '/admin/policies/versions/$versionId/publish';
 }

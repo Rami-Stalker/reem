@@ -66,6 +66,7 @@ import { LedgerModule } from './modules/ledger/ledger.module';
 import { FinanceModule } from './modules/finance/finance.module';
 import { ReturnsModule } from './modules/returns/returns.module';
 import { SupportModule } from './modules/support/support.module';
+import { PoliciesModule } from './modules/policies/policies.module';
 import { SellerCommerceModule } from './modules/seller-commerce/seller-commerce.module';
 import { ExperienceModule } from './modules/experience/experience.module';
 import { HealthModule } from './modules/health/health.module';
@@ -155,6 +156,12 @@ import { HealthModule } from './modules/health/health.module';
     FinanceModule,
     ReturnsModule,
     SupportModule,
+    // The terms, privacy, returns, commissions, disputes, liability and
+    // content policies, and the consent record behind them. Before
+    // `AuthModule` in nothing but this list's reading order; Nest resolves the
+    // dependency the other way — registration imports this to write a consent
+    // in the same transaction that creates the account.
+    PoliciesModule,
     SellerCommerceModule,
     ExperienceModule,
     HealthModule,

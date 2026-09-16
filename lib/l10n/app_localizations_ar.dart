@@ -6581,4 +6581,300 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get postDeleted => 'انحذف المنشور';
+
+  @override
+  String get policiesTitle => 'السياسات والشروط';
+
+  @override
+  String get policiesSubtitle => 'الوثائق التي تحكم استخدامك لريم';
+
+  @override
+  String get policiesSectionForYou => 'يخصّك';
+
+  @override
+  String get policiesSectionEveryone => 'للجميع';
+
+  @override
+  String get policiesSectionSellers => 'للبائعات';
+
+  @override
+  String get policiesSectionCustomers => 'للمشتريات';
+
+  @override
+  String get policiesEmpty => 'ما في سياسات منشورة بعد';
+
+  @override
+  String policiesVersionLabel(String version) {
+    return 'النسخة $version';
+  }
+
+  @override
+  String policiesEffectiveFrom(String date) {
+    return 'سارية من $date';
+  }
+
+  @override
+  String policiesAcceptedOn(String date) {
+    return 'وافقتِ عليها في $date';
+  }
+
+  @override
+  String policiesAcceptedOlderVersion(String version, String date) {
+    return 'وافقتِ على النسخة $version في $date';
+  }
+
+  @override
+  String get policiesNotAccepted => 'لم توافقي عليها بعد';
+
+  @override
+  String get policiesRequiredBadge => 'تتطلّب موافقة';
+
+  @override
+  String get policiesUpdatedBadge => 'مُحدَّثة';
+
+  @override
+  String get policiesMyConsents => 'موافقاتي';
+
+  @override
+  String get policiesMyConsentsSubtitle =>
+      'كل سياسة وافقتِ عليها، وتاريخ موافقتك';
+
+  @override
+  String get policiesReceiptsEmpty => 'ما وافقتِ على أي سياسة لسا';
+
+  @override
+  String get policiesSourceRegistration => 'عند التسجيل';
+
+  @override
+  String get policiesSourceReconsent => 'بعد تحديث';
+
+  @override
+  String get policiesSourceSellerApplication => 'عند طلب البيع';
+
+  @override
+  String get policiesHistoryTitle => 'سجل النسخ';
+
+  @override
+  String get policiesHistoryCurrent => 'الحالية';
+
+  @override
+  String get policiesOpenVersion => 'اقرئي هذه النسخة';
+
+  @override
+  String policiesArchivedNotice(String version) {
+    return 'تقرئين النسخة $version، وهي ليست النسخة السارية حاليًا.';
+  }
+
+  @override
+  String get policiesReadCurrent => 'اقرئي النسخة السارية';
+
+  @override
+  String get policiesConsentTitle => 'قبل ما تكملي';
+
+  @override
+  String get policiesConsentIntroNew =>
+      'اقرئي الوثائق التالية ووافقي عليها لمتابعة استخدام ريم.';
+
+  @override
+  String get policiesConsentIntroUpdated =>
+      'حدّثنا الوثائق التالية. اقرئيها ووافقي عليها لتكملي.';
+
+  @override
+  String get policiesConsentAgree => 'قرأتُ الوثائق أعلاه وأوافق عليها';
+
+  @override
+  String get policiesConsentContinue => 'أوافق ومتابعة';
+
+  @override
+  String get policiesConsentFailed => 'ما انسجّلت موافقتك. جرّبي مرة تانية.';
+
+  @override
+  String get policiesConsentSignOut => 'تسجيل الخروج بدلًا من ذلك';
+
+  @override
+  String get policiesConsentTapToRead => 'اضغطي للقراءة';
+
+  @override
+  String get policiesConsentRead => 'قرأتها';
+
+  @override
+  String get registerConsentIntro => 'بإنشائك حسابًا فإنك توافقين على:';
+
+  @override
+  String get registerConsentAgree => 'قرأتُ الوثائق أعلاه وأوافق عليها';
+
+  @override
+  String get registerConsentRequired =>
+      'وافقي على شروط الاستخدام وسياسة الخصوصية لإنشاء الحساب';
+
+  @override
+  String get sellerConsentIntro => 'بتقديمك طلب البيع فإنك توافقين على:';
+
+  @override
+  String get sellerConsentAgree => 'قرأتُ الوثائق أعلاه وأوافق عليها';
+
+  @override
+  String get sellerConsentRequired =>
+      'وافقي على شروط البائع وسياسة العمولات لتقديم الطلب';
+
+  @override
+  String get policiesLinkReturns => 'سياسة الإرجاع والاستبدال';
+
+  @override
+  String get policiesLinkContent => 'سياسة المحتوى والحذف';
+
+  @override
+  String get policiesLinkDisputes => 'آلية الشكاوى والنزاعات';
+
+  @override
+  String get checkoutPolicyNotice =>
+      'تأكيدك للطلب يعني موافقتك على شروط الاستخدام وسياسة الإرجاع.';
+
+  @override
+  String get adminPolicies => 'السياسات';
+
+  @override
+  String get adminPoliciesSubtitle =>
+      'حرّري وانشري سياسات المنصة. بلا تحديث للتطبيق.';
+
+  @override
+  String get adminPolicyStatusDraft => 'مسودة';
+
+  @override
+  String get adminPolicyStatusPublished => 'منشورة';
+
+  @override
+  String get adminPolicyStatusArchived => 'مؤرشفة';
+
+  @override
+  String get adminPolicyAudience => 'من يجب أن يوافق';
+
+  @override
+  String get adminPolicyAudienceEveryone => 'الجميع';
+
+  @override
+  String get adminPolicyAudienceCustomer => 'المشتريات';
+
+  @override
+  String get adminPolicyAudienceSeller => 'البائعات';
+
+  @override
+  String get adminPolicyRequiredForConsent => 'مطلوبة عند التسجيل';
+
+  @override
+  String get adminPolicyVisible => 'ظاهرة في التطبيق';
+
+  @override
+  String get adminPolicyNewDraft => 'مسودة جديدة';
+
+  @override
+  String get adminPolicyEditDraft => 'تحرير المسودة';
+
+  @override
+  String get adminPolicyDiscardDraft => 'حذف المسودة';
+
+  @override
+  String get adminPolicyDiscardConfirm => 'حذف هذه المسودة؟ نصّها لا يُحفظ.';
+
+  @override
+  String get adminPolicyPublish => 'نشر';
+
+  @override
+  String adminPolicyPublishTitle(String version) {
+    return 'نشر النسخة $version';
+  }
+
+  @override
+  String get adminPolicyRequiresReacceptance => 'اطلبي موافقة جديدة من الجميع';
+
+  @override
+  String get adminPolicyRequiresReacceptanceHint =>
+      'فعّلي هذا للتغيير الجوهري فقط. كل من تسري عليه الوثيقة سيُطلب منه التوقيع مجددًا قبل أن يتابع استخدام التطبيق.';
+
+  @override
+  String get adminPolicyChangeNote => 'ما الذي تغيّر';
+
+  @override
+  String get adminPolicyChangeNoteHint => 'سطر واحد، يظهر في سجل النسخ';
+
+  @override
+  String get adminPolicyTitleField => 'العنوان';
+
+  @override
+  String get adminPolicySummaryField => 'ملخّص بسطر واحد';
+
+  @override
+  String get adminPolicyBodyField => 'النص';
+
+  @override
+  String get adminPolicyBodyHint =>
+      '## عنوان، - نقطة، 1. ترقيم، **عريض**، --- فاصل';
+
+  @override
+  String get adminPolicyLocaleArabic => 'العربية (المُلزِمة)';
+
+  @override
+  String get adminPolicyLocaleEnglish => 'الإنجليزية (للتيسير)';
+
+  @override
+  String get adminPolicySaved => 'انحفظت المسودة';
+
+  @override
+  String get adminPolicyPublished => 'تم النشر';
+
+  @override
+  String get adminPolicyDraftCreated => 'انفتحت مسودة';
+
+  @override
+  String get adminPolicyDraftDiscarded => 'انحذفت المسودة';
+
+  @override
+  String get adminPolicyPreview => 'معاينة';
+
+  @override
+  String get adminPolicyConsentSummary => 'الموافقات';
+
+  @override
+  String adminPolicyAcceptedCurrent(String count) {
+    return '$count على النسخة الحالية';
+  }
+
+  @override
+  String adminPolicyAcceptedAny(String count) {
+    return '$count حساب وقّع هذه السياسة';
+  }
+
+  @override
+  String get adminPolicyNoDraft =>
+      'ما في مسودة مفتوحة. افتحي واحدة لتغيير النص.';
+
+  @override
+  String adminPolicyVersionsCount(String count) {
+    return '$count نسخة';
+  }
+
+  @override
+  String get adminPolicyBodyTooShort => 'النص أقصر من أن يُنشر';
+
+  @override
+  String get adminPolicyPublishConfirm =>
+      'تنشرين هذه النسخة؟ النسخة الحالية تُؤرشف ولا تُستعاد — أي تغيير بعدها يحتاج نسخة جديدة.';
+
+  @override
+  String get policiesLinkCommissions => 'سياسة العمولات';
+
+  @override
+  String get policiesLinkCustomerTerms => 'شروط استخدام العميل';
+
+  @override
+  String get composerPolicyNotice =>
+      'بالنشر أنتِ توافقين على سياسة المحتوى والحذف.';
+
+  @override
+  String get sellerEarningsPolicyNotice =>
+      'كيف تُحتسب العمولة، ومتى تُصرف أرباح متجرك.';
+
+  @override
+  String get orderPolicyNotice =>
+      'في مشكلة بهالطلب؟ ابدئي مع البائعة، وبعدها آلية الشكاوى.';
 }

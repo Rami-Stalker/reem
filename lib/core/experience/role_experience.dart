@@ -746,6 +746,20 @@ class AppRoleExperience {
         permission: 'audit:read',
         feature: ExperienceFeature.auditControls,
       ),
+      // The terms, privacy, returns, commissions, disputes, liability and
+      // content policies. Behind `policy:manage` — its own permission, held by
+      // the owner and operations and nobody else: publishing a version of the
+      // terms of use changes the contract with every account, which is not the
+      // same job as moderating a caption.
+      RoleNavigationItem(
+        surface: ExperienceSurface.settings,
+        label: 'Policies',
+        path: RoutePaths.adminPolicies,
+        icon: Icons.policy_outlined,
+        selectedIcon: Icons.policy_rounded,
+        permission: 'policy:manage',
+        feature: ExperienceFeature.auditControls,
+      ),
       RoleNavigationItem(
         surface: ExperienceSurface.settings,
         label: 'Settings',

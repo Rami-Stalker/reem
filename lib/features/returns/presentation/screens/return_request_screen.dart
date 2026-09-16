@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import 'package:reem/core/design_system/design_system.dart';
 import 'package:reem/core/errors/failure_exception.dart';
 import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/media/media_asset.dart';
+import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/features/returns/domain/entities/return_eligibility.dart';
 import 'package:reem/features/returns/presentation/providers/returns_providers.dart';
 import 'package:reem/features/seller_returns/domain/entities/return_request.dart';
@@ -29,7 +31,21 @@ class ReturnRequestScreen extends ConsumerWidget {
 
     return ReemScrollPage(
       slivers: [
-        PremiumAppBar(title: context.l10n.returnRequestTitle, showBack: true),
+        PremiumAppBar(
+          title: context.l10n.returnRequestTitle,
+          showBack: true,
+          actions: [
+            // The rules she is about to be judged by, one tap from the form
+            // that applies them. The eligibility card below explains what *her*
+            // parcel can do; this explains why.
+            IconButton(
+              tooltip: context.l10n.policiesLinkReturns,
+              onPressed: () =>
+                  context.push(RoutePaths.policyDetailOf('returns')),
+              icon: const Icon(Icons.help_outline_rounded),
+            ),
+          ],
+        ),
         SliverPadding(
           padding: const EdgeInsets.fromLTRB(
             DsSpacing.lg,

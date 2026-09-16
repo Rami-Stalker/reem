@@ -109,6 +109,11 @@ class ProfileMenu extends ConsumerWidget {
                 onTap: () => _supportSheet(context),
               ),
             _MenuRow(
+              icon: Icons.policy_outlined,
+              label: context.l10n.policiesTitle,
+              onTap: () => context.push(RoutePaths.policies),
+            ),
+            _MenuRow(
               icon: Icons.info_outline_rounded,
               label: context.l10n.aboutReem,
               onTap: () => showAboutSheet(context),

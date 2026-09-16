@@ -265,6 +265,25 @@ abstract final class RoutePaths {
   static const adminCampaigns = '/admin/notification-campaigns';
   static const adminNotificationAnalytics = '/admin/notification-analytics';
 
+  // ── Policies and terms ──────────────────────────────────────────────────
+  //
+  // Public, and deliberately so: a woman reads the terms before she has an
+  // account, and a link to the returns policy sent over WhatsApp has to open
+  // in the app rather than bounce off a sign-in wall.
+  static const policies = '/policies';
+  /// The literal `doc` segment is not decoration: without it a greedy `:slug`
+  /// would swallow every sibling under `/policies/`.
+  static const policyDetail = '/policies/doc/:slug';
+  static String policyDetailOf(String slug) => '/policies/doc/$slug';
+
+  // There is no path for the consent gate, deliberately. `AppChrome` renders
+  // it *instead of* the router when a required policy is outstanding, so it
+  // has no location to be navigated to — and no location to be navigated away
+  // from, which is the point.
+
+  /// The console's policy desk — editing and publishing the eight documents.
+  static const adminPolicies = '/admin/policies';
+
   static const chats = '/chats';
   static const chatDetails = '/chat-details';
   static const calls = '/calls';

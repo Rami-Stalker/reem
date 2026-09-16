@@ -9,6 +9,7 @@ import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/core/shared/entities/user.dart';
 import 'package:reem/features/auth/presentation/providers/auth_provider.dart';
 import 'package:reem/features/auth/presentation/utils/auth_form_validators.dart';
+import 'package:reem/features/policies/presentation/widgets/policy_consent_field.dart';
 
 /// The signup form, reached only after the number has been verified.
 ///
@@ -50,6 +51,21 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   UserRole _role = UserRole.customer;
   bool _declaredFemale = false;
 
+  /// The terms she has agreed to, and the exact issues of them.
+  ///
+  /// Version ids rather than a bare flag: the server records one acceptance
+  /// per document against the text that was on this screen, which is what
+  /// makes the consent reconstructible.
+  ///
+  /// Starts **true** and `PolicyConsentField` revokes it the moment it knows
+  /// there is something to sign — see its class doc for why the default runs
+  /// that way round. Both are reset when she switches between buying and
+  /// selling: the two roles sign different documents, and carrying a shopper's
+  /// tick into a seller registration would record a signature against terms
+  /// she was never shown.
+  bool _acceptedPolicies = true;
+  List<String> _policyVersionIds = const [];
+
   /// Off by default, and that is the recommended state — see the class doc.
   bool _wantsPassword = false;
 
@@ -75,6 +91,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
           phone: widget.phone,
           registrationTicket: widget.registrationTicket,
           password: _wantsPassword ? _passwordController.text : null,
+          acceptedPolicyVersionIds: _policyVersionIds,
           country: _countryController.text.trim(),
           city: _cityController.text.trim(),
           declaredFemale: _declaredFemale,
@@ -139,7 +156,11 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     value: _role,
                     onChanged: auth.isLoading
                         ? (_) {}
-                        : (r) => setState(() => _role = r),
+                        : (r) => setState(() {
+                            _role = r;
+                            _acceptedPolicies = true;
+                            _policyVersionIds = const [];
+                          }),
                   ),
                   const SizedBox(height: DsSpacing.md),
                   Row(
@@ -296,9 +317,27 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     ),
                   ),
                   const SizedBox(height: DsSpacing.md),
+                  // The terms, named and linked, above one statement. The
+                  // server refuses a registration whose accepted ids do not
+                  // cover every required document, so this is a real gate
+                  // rather than a notice — the same shape as the declaration
+                  // above it.
+                  PolicyConsentField(
+                    role: _role == UserRole.seller ? 'seller' : 'buyer',
+                    accepted: _acceptedPolicies,
+                    enabled: !auth.isLoading,
+                    introText: l10n.registerConsentIntro,
+                    agreeText: l10n.registerConsentAgree,
+                    onChanged: (accepted, ids) => setState(() {
+                      _acceptedPolicies = accepted;
+                      _policyVersionIds = accepted ? ids : const [];
+                    }),
+                  ),
+                  const SizedBox(height: DsSpacing.md),
                   PrimaryButton(
                     label: l10n.signup,
-                    onPressed: auth.isLoading || !_declaredFemale
+                    onPressed:
+                        auth.isLoading || !_declaredFemale || !_acceptedPolicies
                         ? null
                         : _submit,
                     isLoading: auth.isLoading,

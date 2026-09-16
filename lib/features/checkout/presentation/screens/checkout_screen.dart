@@ -13,6 +13,7 @@ import 'package:reem/features/checkout/presentation/providers/checkout_controlle
 import 'package:reem/features/checkout/presentation/providers/checkout_providers.dart';
 import 'package:reem/features/checkout/presentation/providers/saved_addresses_provider.dart';
 import 'package:reem/features/checkout/presentation/widgets/cod_confirmation_sheet.dart';
+import 'package:reem/features/policies/presentation/widgets/policy_link.dart';
 import 'package:reem/features/settings/domain/entities/address_entity.dart';
 
 /// The last screen before she pays.
@@ -365,7 +366,9 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                           l10n.checkoutSplitNotice(
                             '${cart.sellerGroups.length}',
                           ),
-                          style: context.dsText.bodySmall.tint(colors.onSurfaceVariant),
+                          style: context.dsText.bodySmall.tint(
+                            colors.onSurfaceVariant,
+                          ),
                         ),
                       ),
                     if (state.quote != null)
@@ -373,9 +376,18 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                         padding: const EdgeInsets.only(top: DsSpacing.xxs),
                         child: Text(
                           _etaLabel(state.quote!),
-                          style: context.dsText.bodySmall.tint(colors.onSurfaceVariant),
+                          style: context.dsText.bodySmall.tint(
+                            colors.onSurfaceVariant,
+                          ),
                         ),
                       ),
+
+                    // What confirming this order commits her to, said where
+                    // she is about to confirm it. The returns policy in
+                    // particular belongs here rather than in a settings menu:
+                    // «كم يوم عندي أرجّع؟» is a question asked at the till.
+                    const SizedBox(height: DsSpacing.lg),
+                    _CheckoutPolicyNotice(),
                   ],
                 ),
               ),
@@ -501,16 +513,12 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
         controlAffinity: ListTileControlAffinity.leading,
         value: _saveAddress,
         onChanged: (value) => setState(() => _saveAddress = value ?? false),
-        title: Text(
-          l10n.checkoutSaveAddress,
-          style: context.dsText.bodySmall,
-        ),
+        title: Text(l10n.checkoutSaveAddress, style: context.dsText.bodySmall),
       ),
     ];
   }
 
-  String? _required(String? value) =>
-      (value == null || value.trim().isEmpty)
+  String? _required(String? value) => (value == null || value.trim().isEmpty)
       ? context.l10n.checkoutRequired
       : null;
 
@@ -596,7 +604,9 @@ class _AddressOption extends StatelessWidget {
                         children: [
                           Text(
                             address.label,
-                            style: context.dsText.body.semibold.tint(colors.onSurface),
+                            style: context.dsText.body.semibold.tint(
+                              colors.onSurface,
+                            ),
                           ),
                           if (address.isDefault) ...[
                             const SizedBox(width: DsSpacing.xs),
@@ -607,11 +617,15 @@ class _AddressOption extends StatelessWidget {
                       DsGaps.vXxxs,
                       Text(
                         address.summary,
-                        style: context.dsText.bodySmall.tint(colors.onSurfaceVariant).copyWith(height: 1.5),
+                        style: context.dsText.bodySmall
+                            .tint(colors.onSurfaceVariant)
+                            .copyWith(height: 1.5),
                       ),
                       Text(
                         address.recipientName,
-                        style: context.dsText.caption.tint(colors.onSurfaceVariant),
+                        style: context.dsText.caption.tint(
+                          colors.onSurfaceVariant,
+                        ),
                       ),
                     ],
                   ),
@@ -659,7 +673,11 @@ class _NewAddressOption extends StatelessWidget {
                 color: selected ? colors.primary : colors.onSurfaceVariant,
               ),
               const SizedBox(width: DsSpacing.sm),
-              Icon(Icons.add_location_alt_outlined, size: 18, color: colors.primary),
+              Icon(
+                Icons.add_location_alt_outlined,
+                size: 18,
+                color: colors.primary,
+              ),
               const SizedBox(width: DsSpacing.xs),
               Text(
                 context.l10n.checkoutNewAddress,
@@ -825,6 +843,26 @@ class _BottomBar extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+/// The terms this order is placed under, and the way back to them.
+class _CheckoutPolicyNotice extends StatelessWidget {
+  const _CheckoutPolicyNotice();
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    return PolicyNotice(
+      message: l10n.checkoutPolicyNotice,
+      links: [
+        PolicyLink(label: l10n.policiesLinkReturns, slug: PolicySlugs.returns),
+        PolicyLink(
+          label: l10n.policiesLinkCustomerTerms,
+          slug: PolicySlugs.customerTerms,
+        ),
+      ],
     );
   }
 }

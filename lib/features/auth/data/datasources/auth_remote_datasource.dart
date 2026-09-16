@@ -54,6 +54,7 @@ abstract interface class AuthRemoteDataSource {
     required String country,
     required String city,
     required bool declaredFemale,
+    List<String> acceptedPolicyVersionIds,
     UserRole role,
   });
 
@@ -200,6 +201,14 @@ abstract interface class AuthRemoteDataSource {
     String? website,
     Map<String, dynamic>? socialMediaLinks,
     required List<String> documentUrls,
+
+    /// The seller terms and the commissions policy, signed here.
+    ///
+    /// This route is where a customer becomes a seller, so it is the only
+    /// honest moment to ask: at registration those documents did not address
+    /// her, and after approval she is already selling. Version ids, for the
+    /// same reason registration takes them.
+    List<String> acceptedPolicyVersionIds,
   });
 
   Future<SellerVerificationModel?> getSellerVerification();

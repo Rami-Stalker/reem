@@ -42,4 +42,5 @@ export 'package:reem/core/design_system/components/states/error_state.dart';
 export 'package:reem/core/design_system/components/states/offline_banner.dart';
 // Time
 export 'package:reem/core/design_system/components/time/countdown_timer.dart';
+export 'package:reem/core/design_system/components/typography/ds_rich_text.dart';
 export 'package:reem/core/design_system/components/typography/gradient_text.dart';

@@ -5,6 +5,7 @@ import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/media/media_asset.dart';
 import 'package:reem/core/platform/unsaved_changes_guard.dart';
 import 'package:reem/core/shared/entities/media.dart';
+import 'package:reem/features/policies/presentation/widgets/policy_link.dart';
 import 'package:reem/features/social/domain/entities/content.dart';
 import 'package:reem/features/social/domain/entities/content_draft.dart';
 import 'package:reem/features/social/presentation/providers/composer_notifier.dart';
@@ -209,6 +210,23 @@ class _ContentComposerScreenState extends ConsumerState<ContentComposerScreen> {
                     style: context.dsText.caption,
                   ),
                 ],
+
+                // The rules a removal will be judged by, under the button that
+                // publishes. The content policy promises that nothing is taken
+                // down in silence and that every removal names the rule it
+                // broke — a promise worth putting where the risk is taken,
+                // rather than only in the notification that follows one.
+                DsGaps.vLg,
+                PolicyNotice(
+                  alignment: CrossAxisAlignment.center,
+                  message: context.l10n.composerPolicyNotice,
+                  links: [
+                    PolicyLink(
+                      label: context.l10n.policiesLinkContent,
+                      slug: PolicySlugs.content,
+                    ),
+                  ],
+                ),
                 DsGaps.sliverBottomSafe,
               ],
             ),

@@ -40,6 +40,11 @@ const _publicRoutes = <String>{
   // the guard sends her to `authRequired` with a `from`, and she lands back
   // on the screen she wanted. `settings`, `appearance` and `language` stay
   // public because they are device preferences, not account data.
+  // The published policies, readable without an account. A woman deciding
+  // whether to sign up has to be able to read what she would be agreeing to,
+  // and the server answers these routes unauthenticated for the same reason.
+  RoutePaths.policies,
+  RoutePaths.policyDetail,
   RoutePaths.likeSheet,
   RoutePaths.commentSheet,
   // A guest may browse the community and the reels feed, and that is the whole

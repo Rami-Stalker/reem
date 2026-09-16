@@ -267,6 +267,7 @@ final class AuthRemoteDataSourceImpl extends BaseRemoteDataSource
     required String country,
     required String city,
     required bool declaredFemale,
+    List<String> acceptedPolicyVersionIds = const [],
     UserRole role = UserRole.customer,
   }) async {
     final json = await postJson(
@@ -280,6 +281,7 @@ final class AuthRemoteDataSourceImpl extends BaseRemoteDataSource
         country: country,
         city: city,
         declaredFemale: declaredFemale,
+        acceptedPolicyVersionIds: acceptedPolicyVersionIds,
         role: role,
       ).toJson(),
     );
@@ -465,6 +467,7 @@ final class AuthRemoteDataSourceImpl extends BaseRemoteDataSource
     String? website,
     Map<String, dynamic>? socialMediaLinks,
     required List<String> documentUrls,
+    List<String> acceptedPolicyVersionIds = const [],
   }) async {
     final json = await postJson(
       ApiEndpoints.authSellerVerification,
@@ -493,6 +496,8 @@ final class AuthRemoteDataSourceImpl extends BaseRemoteDataSource
         'website': ?website,
         'social_media_links': ?socialMediaLinks,
         'document_urls': documentUrls,
+        if (acceptedPolicyVersionIds.isNotEmpty)
+          'accepted_policy_version_ids': acceptedPolicyVersionIds,
       },
     );
     return SellerVerificationModel.fromJson(json);

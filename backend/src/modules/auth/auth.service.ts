@@ -59,6 +59,10 @@ import { PhoneChangeService } from './phone-change/phone-change.service';
 import { AccountRecoveryService } from './recovery/account-recovery.service';
 import { maskDestination } from './otp/otp-transport';
 import { resolvePermissions } from '../../common/authorization/permission-resolver';
+import {
+  PoliciesService,
+  PolicyConsentSource,
+} from '../policies/policies.service';
 
 @Injectable()
 export class AuthService {
@@ -81,6 +85,7 @@ export class AuthService {
     private readonly phoneChanges: PhoneChangeService,
     private readonly accountRecovery: AccountRecoveryService,
     private readonly media: MediaService,
+    private readonly policies: PoliciesService,
   ) {}
 
   /**
@@ -118,6 +123,15 @@ export class AuthService {
     }
 
     if (dto.password !== undefined) this.assertStrongPassword(dto.password);
+
+    // Before the account exists, not after. A refusal here costs her a tap;
+    // the same refusal after `users.create` would leave an orphan account for
+    // a number that can then never be registered again.
+    const consentVersionIds = await this.requiredPolicyConsent(
+      role,
+      dto.accepted_policy_version_ids,
+    );
+
     const name = this.displayNameFor(dto);
 
     // Already canonical E.164 — RegisterDto normalises at the boundary.
@@ -150,6 +164,26 @@ export class AuthService {
       location: `${dto.city.trim()}, ${dto.country.trim()}`,
       imageUrl: `https://i.pravatar.cc/150?u=${encodeURIComponent(phone)}`,
     });
+
+    // The signature, written against the account it belongs to.
+    //
+    // Not inside a transaction with `users.create`, and that is a considered
+    // trade rather than an oversight: the account is created through a
+    // repository that owns its own client, and the failure mode of writing the
+    // consent a moment late is one this system already handles — an account
+    // with no acceptance on file is exactly what `PoliciesService.pending`
+    // treats as outstanding, so she meets the consent gate on her next launch
+    // and signs there. The reverse ordering has no such recovery.
+    await this.policies.record(
+      user.id,
+      consentVersionIds,
+      PolicyConsentSource.Registration,
+      {
+        locale: dto.preferred_language,
+        ipAddress: context.ipAddress,
+        userAgent: context.userAgent,
+      },
+    );
 
     const device = await this.devices.resolveDevice(user.id, context);
     const deviceKeyId = await this.bindDeviceKey(provenDeviceKeyId, user.id);
@@ -1095,8 +1129,20 @@ export class AuthService {
   async submitSellerVerification(
     userId: string,
     dto: SubmitSellerVerificationDto,
+    context?: RequestContext,
   ) {
     await this.assertUniqueSellerIdentifiers(userId, dto);
+
+    // This route is where a customer becomes a seller — it sets
+    // `role: SELLER` further down. So it is also the only honest moment to ask
+    // her to sign the seller terms and the commission she is about to be
+    // charged: at registration she was a shopper and those documents did not
+    // address her, and after approval she is already selling.
+    const consentVersionIds = await this.requiredPolicyConsent(
+      UserRole.SELLER,
+      dto.accepted_policy_version_ids,
+    );
+
     const verification = await this.prisma.sellerVerification.upsert({
       where: { userId },
       update: {
@@ -1168,6 +1214,15 @@ export class AuthService {
         sellerLevel: SellerLevel.BASIC,
       },
     });
+    await this.policies.record(
+      userId,
+      consentVersionIds,
+      PolicyConsentSource.SellerApplication,
+      {
+        ipAddress: context?.ipAddress,
+        userAgent: context?.userAgent,
+      },
+    );
     await this.prisma.sellerVerificationStatusHistory.create({
       data: {
         verificationId: verification.id,
@@ -1411,6 +1466,62 @@ export class AuthService {
     message: string,
   ): HttpException {
     return new HttpException({ code, message }, status);
+  }
+
+  /**
+   * The policy gate, shared by registration and the seller application.
+   *
+   * Returns the version ids to write a signature against, having checked that
+   * every document this side of the marketplace must sign was among the ones
+   * the client actually displayed. The check is against **version ids**, not
+   * document ids: a client that cached the signup screen last month and posts
+   * last month's version id has not shown her the terms she is agreeing to,
+   * and it is told so by name so it can fetch and redisplay them.
+   *
+   * It fails *open* in two cases, both deliberate.
+   *
+   * **No published policies at all** — see `PoliciesService.requiredVersionIds`.
+   * A platform nobody can register for is a worse failure than an hour of
+   * accounts that signed nothing.
+   *
+   * **The field is absent entirely**, which is what an app build older than
+   * this feature sends. The API deploys before a new app can reach every
+   * handset — a store rollout takes days — so refusing those requests would
+   * mean nobody on the shipped build could create an account until she
+   * updated. An old client is not *withholding* consent; it does not know the
+   * question exists. It is recorded as unsigned and meets the consent gate on
+   * its next launch, which is precisely the case that gate was built for.
+   *
+   * An empty array is **not** the same thing: a client that sends the field
+   * has been asked, and an answer that covers nothing is refused. That is the
+   * whole distinction — `undefined` is "did not know", `[]` is "said no".
+   */
+  private async requiredPolicyConsent(
+    role: UserRole,
+    provided: string[] | undefined,
+  ): Promise<string[]> {
+    if (provided === undefined) return [];
+
+    const required = await this.policies.requiredVersionIds(role);
+    if (required.length === 0) return [];
+
+    const supplied = new Set(provided);
+    const missing = required.filter((item) => !supplied.has(item.versionId));
+    if (missing.length > 0) {
+      throw new HttpException(
+        {
+          code: 'POLICY_CONSENT_REQUIRED',
+          message: 'The current version of every required policy must be accepted',
+          policies: missing.map((item) => ({
+            slug: item.slug,
+            version_id: item.versionId,
+          })),
+        },
+        HttpStatus.UNPROCESSABLE_ENTITY,
+      );
+    }
+
+    return required.map((item) => item.versionId);
   }
 
   private async assertUniqueSellerIdentifiers(
