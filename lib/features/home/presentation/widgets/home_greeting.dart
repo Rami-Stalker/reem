@@ -5,21 +5,35 @@ import 'package:reem/core/design_system/design_system.dart';
 import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/utils/damascus_time.dart';
 import 'package:reem/features/auth/presentation/providers/auth_provider.dart';
+import 'package:reem/features/home/presentation/providers/home_provider.dart';
 import 'package:reem/l10n/app_localizations.dart';
 
-/// The opening line of the home screen.
+/// The opening lines of the home screen.
 ///
 /// Deliberately unboxed — the old panel spent a full card on a hello and
 /// pushed the merchandise below the fold. Set straight on the silk backdrop,
-/// the display serif does the welcoming and the products start higher. Her
-/// name is the one word on the page painted in the brand gradient, so the
+/// her name is the one line on the page painted in the brand gradient, so the
 /// greeting reads personal without a card around it.
+///
+/// Kept short because the feed now starts right under it: a section-sized
+/// hello rather than a display-sized one, and in place of the standing
+/// tagline a line of news — how many boutiques have a story up today — so
+/// the second line says something that is true this morning and was not
+/// yesterday. The tagline comes back on a day with no stories.
 class HomeGreeting extends ConsumerWidget {
   const HomeGreeting({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(authNotifierProvider.select((s) => s.user));
+    final boutiquesWithStories = ref.watch(
+      homeNotifierProvider.select(
+        (s) => {
+          for (final story in s.stories)
+            if (story.user.id != user?.id) story.user.id,
+        }.length,
+      ),
+    );
     final colors = context.dsColors;
     final l10n = context.l10n;
 
@@ -28,9 +42,9 @@ class HomeGreeting extends ConsumerWidget {
         ? l10n.homeGreetingGuest
         : l10n.homeGreetingNamed(firstName);
 
-    final headlineStyle = context.dsText.hero
+    final headlineStyle = context.dsText.sectionTitle
         .tint(colors.onBackground)
-        .copyWith(height: 1.15);
+        .copyWith(height: 1.2);
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(
@@ -63,7 +77,9 @@ class HomeGreeting extends ConsumerWidget {
           ),
           const SizedBox(height: DsSpacing.xs),
           Text(
-            l10n.homeGreetingSubtitle,
+            boutiquesWithStories > 0
+                ? l10n.homeStoriesToday(boutiquesWithStories)
+                : l10n.homeGreetingSubtitle,
             style: context.dsText.body
                 .tint(colors.onSurfaceVariant)
                 .copyWith(height: 1.45),

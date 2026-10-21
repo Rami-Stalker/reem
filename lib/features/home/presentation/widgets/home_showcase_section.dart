@@ -10,6 +10,7 @@ import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/core/shared/entities/post.dart';
 import 'package:reem/core/shared/entities/product.dart';
 import 'package:reem/features/discovery/domain/entities/product_collection.dart';
+import 'package:reem/features/home/presentation/feed_interleave.dart';
 import 'package:reem/features/home/presentation/providers/home_provider.dart';
 import 'package:reem/features/home/presentation/widgets/home_section_header.dart';
 import 'package:reem/features/home/presentation/widgets/reem_post_card.dart';
@@ -21,8 +22,18 @@ import 'package:reem/features/profile/presentation/providers/profile_provider.da
 /// around — and the mosaic and grid sit behind a switcher for the moods where
 /// storytelling is not what she wants. All three read the same feed, so
 /// switching never changes *what* she is looking at, only how.
+///
+/// It is also the page's spine now rather than its finale. The shop modules
+/// the home page used to stack above it — deals, drops, bundles, rails — are
+/// handed in as [modules] and set between the posts by [interleaveFeed]; in
+/// the mosaic and grid shapes, which have no posts to set them between, they
+/// follow the pieces.
 class HomeShowcaseSection extends ConsumerWidget {
-  const HomeShowcaseSection({super.key});
+  const HomeShowcaseSection({super.key, this.modules = const []});
+
+  /// Box widgets, each already carrying its own spacing and collapsing to
+  /// nothing when it has nothing to show.
+  final List<Widget> modules;
 
   static const _hPad = EdgeInsets.symmetric(horizontal: DsSpacing.lg);
 
@@ -87,6 +98,7 @@ class HomeShowcaseSection extends ConsumerWidget {
               isLoading: productsLoading,
               onTapProduct: (p) => _openProduct(context, p),
             ),
+            ..._trailingModules(),
           ],
           DsProductShape.grid => [
             SliverProductGrid(
@@ -97,16 +109,28 @@ class HomeShowcaseSection extends ConsumerWidget {
                   .read(favoritesNotifierProvider.notifier)
                   .toggleFavorite(p.id),
             ),
+            ..._trailingModules(),
           ],
         },
       ],
     );
   }
 
+  /// The modules in one run below whatever came before them.
+  List<Widget> _trailingModules() => [
+    if (modules.isNotEmpty)
+      SliverPadding(
+        padding: const EdgeInsets.only(top: DsSpacing.xl),
+        sliver: SliverList.list(children: modules),
+      ),
+  ];
+
   static void _openProduct(BuildContext context, Product product) =>
       context.push(RoutePaths.productDetailsOf(product.id));
 
   List<Widget> _posts(BuildContext context, List<Post> posts, bool loading) {
+    // While the posts load the modules wait below the skeletons rather than
+    // standing in for them: the first thing on the page stays a post.
     if (loading) {
       return [
         SliverList.separated(
@@ -117,6 +141,7 @@ class HomeShowcaseSection extends ConsumerWidget {
             child: DsPostCardSkeleton(mediaAspectRatio: 4 / 5),
           ),
         ),
+        ..._trailingModules(),
       ];
     }
 
@@ -132,25 +157,33 @@ class HomeShowcaseSection extends ConsumerWidget {
             ),
           ),
         ),
+        ..._trailingModules(),
       ];
     }
 
+    final slots = interleaveFeed<Post, Widget>(posts, modules);
+
     return [
-      SliverList.separated(
-        itemCount: posts.length,
-        separatorBuilder: (_, _) => const SizedBox(height: DsSpacing.xl),
-        itemBuilder: (context, index) => Padding(
-          padding: _hPad,
-          child: ReemPostCard(post: posts[index], featured: index == 0)
-              .animate()
-              .fadeIn(duration: 420.ms, curve: Curves.easeOut)
-              .slideY(
-                begin: 0.04,
-                end: 0,
-                duration: 420.ms,
-                curve: Curves.easeOutCubic,
-              ),
-        ),
+      SliverList.builder(
+        itemCount: slots.length,
+        itemBuilder: (context, index) => switch (slots[index]) {
+          // Each post carries the gap beneath it, and each module its own,
+          // so a module that collapses takes its spacing with it instead of
+          // leaving a double gap between two posts.
+          FeedPost(:final post) => Padding(
+            padding: _hPad.copyWith(bottom: DsSpacing.xl),
+            child: ReemPostCard(post: post, featured: index == 0)
+                .animate()
+                .fadeIn(duration: 420.ms, curve: Curves.easeOut)
+                .slideY(
+                  begin: 0.04,
+                  end: 0,
+                  duration: 420.ms,
+                  curve: Curves.easeOutCubic,
+                ),
+          ),
+          FeedModule(:final module) => module,
+        },
       ),
     ];
   }

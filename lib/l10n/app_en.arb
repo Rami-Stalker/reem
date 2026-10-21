@@ -3058,6 +3058,15 @@
   "@homeStoriesEyebrow": {
     "description": "Eyebrow above the stories rail."
   },
+  "homeStoriesToday": "{count, plural, =1{One boutique posted a story today} other{{count} boutiques posted stories today}}",
+  "@homeStoriesToday": {
+    "description": "The news half of the one-line home greeting: how many boutiques have a live story.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "homeTasteBeauty": "Beauty",
   "@homeTasteBeauty": {
     "description": "Interest chip on the home greeting."
@@ -3495,13 +3504,21 @@
   "@navCart": {
     "description": "Bottom navigation — cart tab"
   },
+  "navCloset": "Closet",
+  "@navCloset": {
+    "description": "Bottom navigation — the buyer's closet tab (what she owns, is deciding on, and wants)"
+  },
+  "navDiscover": "Discover",
+  "@navDiscover": {
+    "description": "Bottom navigation — the buyer's discovery tab, opening on search"
+  },
   "navHome": "Home",
   "@navHome": {
     "description": "Bottom navigation — buyer home tab"
   },
-  "navProfile": "Profile",
+  "navProfile": "Me",
   "@navProfile": {
-    "description": "Bottom navigation — profile tab"
+    "description": "Bottom navigation — the buyer's own profile tab"
   },
   "navSearch": "Search",
   "@navSearch": {
@@ -4123,6 +4140,32 @@
   "post": "Post",
   "@post": {
     "description": "Publish button"
+  },
+  "postClosetCompletes": "{count, plural, =1{and finishes a saved look} other{and finishes {count} saved looks}}",
+  "@postClosetCompletes": {
+    "description": "Second line of the closet strip under a feed post: saved looks the tagged piece would complete.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "postClosetOpen": "My closet",
+  "@postClosetOpen": {
+    "description": "Button on the closet strip under a feed post that opens her closet."
+  },
+  "postClosetOwned": "You already own one like it",
+  "@postClosetOwned": {
+    "description": "Closet strip under a feed post when the tagged piece duplicates something she owns."
+  },
+  "postClosetPairs": "{count, plural, =1{Goes with a piece in your closet} other{Goes with {count} pieces in your closet}}",
+  "@postClosetPairs": {
+    "description": "Closet strip under a feed post: how many of her own pieces the tagged product pairs with.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   },
   "postLikesCount": "{count} loves",
   "@postLikesCount": {

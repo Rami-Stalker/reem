@@ -2480,6 +2480,20 @@ class AppLocalizationsAr extends AppLocalizations {
   String get homeStoriesEyebrow => 'جديد اليوم';
 
   @override
+  String homeStoriesToday(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count بوتيك نشر ستوري اليوم',
+      many: '$count بوتيكاً نشر ستوري اليوم',
+      few: '$count بوتيكات نشرت ستوري اليوم',
+      two: 'بوتيكان نشرا ستوري اليوم',
+      one: 'بوتيك واحد نشر ستوري اليوم',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String get homeTasteBeauty => 'الجمال';
 
   @override
@@ -2833,10 +2847,16 @@ class AppLocalizationsAr extends AppLocalizations {
   String get navCart => 'السلة';
 
   @override
+  String get navCloset => 'خزانتي';
+
+  @override
+  String get navDiscover => 'اكتشفي';
+
+  @override
   String get navHome => 'الرئيسية';
 
   @override
-  String get navProfile => 'حسابي';
+  String get navProfile => 'أنا';
 
   @override
   String get navSearch => 'البحث';
@@ -3393,6 +3413,38 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get post => 'نشر';
+
+  @override
+  String postClosetCompletes(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'ويُكمل $count إطلالة محفوظة',
+      few: 'ويُكمل $count إطلالات محفوظة',
+      two: 'ويُكمل إطلالتين محفوظتين',
+      one: 'ويُكمل إطلالة محفوظة',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get postClosetOpen => 'خزانتي';
+
+  @override
+  String get postClosetOwned => 'عندكِ مثلها في خزانتكِ';
+
+  @override
+  String postClosetPairs(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'يُنسَّق مع $count قطعة من خزانتكِ',
+      few: 'يُنسَّق مع $count قطع من خزانتكِ',
+      two: 'يُنسَّق مع قطعتين من خزانتكِ',
+      one: 'يُنسَّق مع قطعة من خزانتكِ',
+    );
+    return '$_temp0';
+  }
 
   @override
   String postLikesCount(String count) {

@@ -56,21 +56,21 @@ class HomeScreen extends ConsumerWidget {
   }
 }
 
-/// Buyer home, read as a magazine in three chapters.
+/// Buyer home: a feed with the shop set into it, not a shop with a feed at
+/// the bottom.
 ///
-/// **The welcome** — greeting, search, the boutiques' stories and the banner:
-/// who she is and what the shops posted today. **The shelves** — deals,
-/// loyalty, the collection rails and the boutiques: the merchandising middle,
-/// scanned rather than dwelt in. **New in** — the showcase, where the newest
-/// pieces are told as posts (or, if she prefers, as a mosaic or a grid).
-///
-/// The showcase closes the page deliberately. It is the section she is meant
-/// to sink into, and putting it last gives it no floor: the feed simply keeps
-/// going, where a middle placement would have capped it at a handful of cards
-/// before the next shelf interrupted.
+/// It used to read as a magazine in three chapters — a welcome, then some
+/// twenty shelves, then «وصل حديثاً» as the finale. That made the posts, the
+/// part that makes Reem a place with people in it, the last thing on the
+/// page: six to eight screens of rails before the first boutique spoke. Now
+/// the welcome is short, the stories follow it, and the feed starts straight
+/// after. Every shelf is still here — handed to [HomeShowcaseSection] as a
+/// module and set between the posts — so the merchandising lost nothing but
+/// its place in front of the queue.
 ///
 /// The running order still honours the client's Q78 pick — *«مختلط: ستوريات
-/// فوق + بانر + شبكة منتجات تحت»*.
+/// فوق + بانر + شبكة منتجات تحت»*: stories on top, the banner as the first
+/// module, products below.
 class _BuyerHomeScreen extends ConsumerWidget {
   const _BuyerHomeScreen();
 
@@ -93,7 +93,7 @@ class _BuyerHomeScreen extends ConsumerWidget {
       slivers: [
         const HomeTopBar(),
 
-        // ── Chapter one: the welcome ─────────────────────────────────────
+        // ── The welcome: short, so the feed starts on the first screen ──
         const SliverToBoxAdapter(child: HomeGreeting()),
         const SliverToBoxAdapter(child: HomeSmartSearch()),
         // Beside the search bar on purpose: search answers "I know what I
@@ -102,79 +102,56 @@ class _BuyerHomeScreen extends ConsumerWidget {
         const _Gap(DsSpacing.lg),
 
         const HomeStoriesRail(),
+        const _Gap(DsSpacing.lg),
 
-        _box(const HomeHeroCarousel()),
-
-        _box(const HomeCategoriesShowcase()),
-
-        // ── Chapter two: the shelves ─────────────────────────────────────
-        const _Ornament(),
-
-        // Phase four, above the deals on purpose: a drop she was invited to is
-        // addressed to her, and a discount is addressed to everybody. Both
-        // render nothing when there is nothing, so a quiet week leaves the
-        // page exactly as it was.
-        _box(const DropsRail()),
-
-        _box(const HomeFlashDeals()),
-
-        // Admin-configured merchandising.
-        _box(const HomeDynamicBlocks()),
-
-        // Reem Value, above the loyalty card for the same reason it sits above
-        // it on the profile: standing is who she is here, points are what she
-        // is owed. The card draws nothing at all until she has a rung, so a new
-        // shopper's home page is unchanged.
-        _box(const ValueStandingCard()),
-
-        _box(const HomeLoyaltyCard()),
-
-        _box(
-          _CollectionRail(
-            collection: ProductCollection.recommended,
-            eyebrow: l10n.homeRecommendedEyebrow,
-            title: l10n.recommended,
-          ),
-        ),
-
-        // A solution rather than a shelf. Placed after the recommendations
-        // because it answers the question those leave open — "fine, but what
-        // do I wear it with".
-        _box(const BundlesRail()),
-
-        _box(const HomeContinueShopping()),
-
-        // "New in" is not a shelf here. It is the finale — `HomeShowcaseSection`
-        // at the foot of the page, under the same «وصل حديثاً» heading — and a
-        // horizontal rail of the same pieces higher up meant the shopper met
-        // the section twice on one screen. The rail was the lesser telling, so
-        // the rail went.
-        _box(const HomeFeaturedStores()),
-
-        _box(
-          _CollectionRail(
-            collection: ProductCollection.bestSelling,
-            eyebrow: l10n.homeBestSellersEyebrow,
-            title: l10n.bestSeller,
-          ),
-        ),
-
-        _box(const HomeRecentlyViewed()),
-
-        _box(const HomeWishlistHighlights()),
-
-        _box(const HomeNearbyStores()),
-
-        _box(const HomeNotificationsSummary()),
-
-        // ── Chapter three: "New in" closes the page, and owns it ─────────
+        // ── The feed, with the shop set into it ──────────────────────────
         //
-        // The finale rather than an aperitif: everything above is a shelf she
-        // scans, this is the one she stays in. Ending here also means the feed
-        // has no floor — she can keep scrolling posts for as long as she likes
-        // instead of hitting another section.
-        const _Ornament(),
-        const HomeShowcaseSection(),
+        // The order below is the order the modules meet her in: one after
+        // the second post, then one every third. Most valuable first —
+        // what the admin is promoting, then what was sent to her, then
+        // what is ending soon — and the personal records last, because
+        // they are the ones that are empty for a new shopper.
+        HomeShowcaseSection(
+          modules: [
+            // Admin-configured banners, the client's «بانر» in Q78.
+            _module(const HomeHeroCarousel()),
+            // A drop she was invited to is addressed to her; a discount is
+            // addressed to everybody. Both draw nothing in a quiet week.
+            _module(const DropsRail()),
+            _module(const HomeFlashDeals()),
+            _module(const HomeCategoriesShowcase()),
+            _module(
+              _CollectionRail(
+                collection: ProductCollection.recommended,
+                eyebrow: l10n.homeRecommendedEyebrow,
+                title: l10n.recommended,
+              ),
+            ),
+            // A solution rather than a shelf: it answers the question the
+            // recommendations leave open — "fine, but what do I wear it with".
+            _module(const BundlesRail()),
+            // Admin-configured merchandising.
+            _module(const HomeDynamicBlocks()),
+            _module(const HomeFeaturedStores()),
+            _module(const HomeContinueShopping()),
+            _module(
+              _CollectionRail(
+                collection: ProductCollection.bestSelling,
+                eyebrow: l10n.homeBestSellersEyebrow,
+                title: l10n.bestSeller,
+              ),
+            ),
+            // Standing above points for the same reason as on the profile:
+            // standing is who she is here, points are what she is owed. Both
+            // draw nothing until there is something to say.
+            _module(const ValueStandingCard()),
+            _module(const HomeLoyaltyCard()),
+            _module(const HomeRecentlyViewed()),
+            _module(const HomeWishlistHighlights()),
+            _module(const HomeNearbyStores()),
+            _module(const HomeNotificationsSummary()),
+          ],
+        ),
 
         // Breathing room above the floating bottom bar.
         const _Gap(120),
@@ -182,30 +159,27 @@ class _BuyerHomeScreen extends ConsumerWidget {
     );
   }
 
-  /// Wraps a box section in a sliver with a gentle entrance reveal, and with
-  /// the breathing room that belongs *to that section* rather than sitting
-  /// between two of them.
+  /// Wraps a shop module in a gentle entrance reveal and the breathing room
+  /// that belongs *to that module* rather than sitting between two of them.
   ///
   /// The spacing used to be its own `_Gap` sliver after every box, which meant
-  /// a section that collapsed left its gap behind. Half this page collapses on
-  /// a real account — nothing records what she has viewed, no address carries
-  /// coordinates, a new shopper has no loyalty tier and nothing to continue —
-  /// so the home screen opened with five stacked bands of unexplained
-  /// emptiness. Now the gap goes when the section goes.
-  static Widget _box(Widget child) {
-    return SliverToBoxAdapter(
-      child: _SectionGap(
-        gap: _gap,
-        child: child
-            .animate()
-            .fadeIn(duration: 420.ms, curve: Curves.easeOut)
-            .slideY(
-              begin: 0.05,
-              end: 0,
-              duration: 420.ms,
-              curve: Curves.easeOutCubic,
-            ),
-      ),
+  /// a section that collapsed left its gap behind. Half these modules collapse
+  /// on a real account — nothing records what she has viewed, no address
+  /// carries coordinates, a new shopper has no loyalty tier and nothing to
+  /// continue — and set between posts an orphaned gap would show as a hole in
+  /// the feed. Now the gap goes when the module goes.
+  static Widget _module(Widget child) {
+    return _SectionGap(
+      gap: _gap,
+      child: child
+          .animate()
+          .fadeIn(duration: 420.ms, curve: Curves.easeOut)
+          .slideY(
+            begin: 0.05,
+            end: 0,
+            duration: 420.ms,
+            curve: Curves.easeOutCubic,
+          ),
     );
   }
 }
@@ -272,15 +246,6 @@ class _RenderSectionGap extends RenderShiftedBox {
     final height = child?.getMaxIntrinsicHeight(width) ?? 0;
     return height == 0 ? 0 : height + _gap;
   }
-}
-
-/// The visual full stop between chapters.
-class _Ornament extends StatelessWidget {
-  const _Ornament();
-
-  @override
-  Widget build(BuildContext context) =>
-      const SliverToBoxAdapter(child: DsOrnamentDivider());
 }
 
 /// A single product-collection rail bound to its own slice of home state, so it

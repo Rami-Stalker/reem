@@ -4736,6 +4736,12 @@ abstract class AppLocalizations {
   /// **'Fresh today'**
   String get homeStoriesEyebrow;
 
+  /// The news half of the one-line home greeting: how many boutiques have a live story.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{One boutique posted a story today} other{{count} boutiques posted stories today}}'**
+  String homeStoriesToday(int count);
+
   /// Interest chip on the home greeting.
   ///
   /// In en, this message translates to:
@@ -5366,16 +5372,28 @@ abstract class AppLocalizations {
   /// **'Cart'**
   String get navCart;
 
+  /// Bottom navigation — the buyer's closet tab (what she owns, is deciding on, and wants)
+  ///
+  /// In en, this message translates to:
+  /// **'Closet'**
+  String get navCloset;
+
+  /// Bottom navigation — the buyer's discovery tab, opening on search
+  ///
+  /// In en, this message translates to:
+  /// **'Discover'**
+  String get navDiscover;
+
   /// Bottom navigation — buyer home tab
   ///
   /// In en, this message translates to:
   /// **'Home'**
   String get navHome;
 
-  /// Bottom navigation — profile tab
+  /// Bottom navigation — the buyer's own profile tab
   ///
   /// In en, this message translates to:
-  /// **'Profile'**
+  /// **'Me'**
   String get navProfile;
 
   /// Bottom navigation — search tab
@@ -6385,6 +6403,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Post'**
   String get post;
+
+  /// Second line of the closet strip under a feed post: saved looks the tagged piece would complete.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{and finishes a saved look} other{and finishes {count} saved looks}}'**
+  String postClosetCompletes(int count);
+
+  /// Button on the closet strip under a feed post that opens her closet.
+  ///
+  /// In en, this message translates to:
+  /// **'My closet'**
+  String get postClosetOpen;
+
+  /// Closet strip under a feed post when the tagged piece duplicates something she owns.
+  ///
+  /// In en, this message translates to:
+  /// **'You already own one like it'**
+  String get postClosetOwned;
+
+  /// Closet strip under a feed post: how many of her own pieces the tagged product pairs with.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Goes with a piece in your closet} other{Goes with {count} pieces in your closet}}'**
+  String postClosetPairs(int count);
 
   /// Like tally under a post. {count} is already formatted, e.g. 1.2K.
   ///

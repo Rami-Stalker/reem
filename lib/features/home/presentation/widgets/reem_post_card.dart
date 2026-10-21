@@ -17,6 +17,7 @@ import 'package:reem/features/auth/presentation/providers/auth_provider.dart';
 import 'package:reem/features/auth/presentation/widgets/auth_prompt_sheet.dart';
 import 'package:reem/features/cart/presentation/providers/cart_providers.dart';
 import 'package:reem/features/home/presentation/providers/home_provider.dart';
+import 'package:reem/features/home/presentation/widgets/post_closet_strip.dart';
 import 'package:reem/features/social/presentation/providers/social_providers.dart';
 import 'package:reem/features/social/presentation/widgets/post_options_sheet.dart';
 import 'package:reem/features/social_posts/data/outbox_handlers.dart';
@@ -426,6 +427,10 @@ class _ReemPostCardState extends ConsumerState<ReemPostCard>
             onExpand: () => setState(() => _captionExpanded = true),
             onComments: _openComments,
           ),
+          // A guest has no closet, and asking for one would only collect a
+          // 401 per post.
+          if (post.product case final product? when me != null)
+            PostClosetStrip(productId: product.id),
         ],
       ),
     );

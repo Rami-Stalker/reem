@@ -35,7 +35,18 @@ class _MyClosetScreenState extends ConsumerState<MyClosetScreen> {
       backgroundColor: colors.background,
       appBar: ReemAppBar(
         title: 'خزانتي',
+        // A tab when she reaches it from the bar, a pushed page when she
+        // reaches it from a product: only the second has somewhere to go back.
+        showBack: GoRouter.of(context).canPop(),
         actions: [
+          // In the bar rather than a floating button: the closet is a tab
+          // now, and a button floating at the foot of a tab sits under the
+          // floating navigation bar.
+          IconButton(
+            tooltip: 'ضيفي قطعة',
+            icon: const Icon(Icons.add_a_photo_rounded),
+            onPressed: () => context.push(RoutePaths.closetAddItem),
+          ),
           IconButton(
             tooltip: 'إطلالاتي',
             icon: const Icon(Icons.auto_awesome_rounded),
@@ -48,27 +59,81 @@ class _MyClosetScreenState extends ConsumerState<MyClosetScreen> {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => context.push(RoutePaths.closetAddItem),
-        icon: const Icon(Icons.add_a_photo_rounded),
-        label: const Text('ضيفي قطعة'),
-      ),
-      body: overviewAsync.when(
-        loading: () => const Center(child: DsLoadingIndicator()),
-        error: (_, _) => DsErrorState(
-          message: 'ما قدرنا نفتح خزانتك.',
-          onRetry: () => ref.invalidate(closetOverviewProvider),
-        ),
-        data: (overview) => overview.isEmpty
-            ? _EmptyCloset(overview: overview)
-            : RefreshIndicator(
-                onRefresh: () async => ref.invalidate(closetOverviewProvider),
-                child: _Body(
-                  overview: overview,
-                  slot: _slot,
-                  onSlot: (slot) => setState(() => _slot = slot),
-                ),
+      body: Column(
+        children: [
+          const _Spectrum(),
+          Expanded(
+            child: overviewAsync.when(
+              loading: () => const Center(child: DsLoadingIndicator()),
+              error: (_, _) => DsErrorState(
+                message: 'ما قدرنا نفتح خزانتك.',
+                onRetry: () => ref.invalidate(closetOverviewProvider),
               ),
+              data: (overview) => overview.isEmpty
+                  ? _EmptyCloset(overview: overview)
+                  : RefreshIndicator(
+                      onRefresh: () async =>
+                          ref.invalidate(closetOverviewProvider),
+                      child: _Body(
+                        overview: overview,
+                        slot: _slot,
+                        onSlot: (slot) => setState(() => _slot = slot),
+                      ),
+                    ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Room under the last row for the floating bottom bar — the same clearance
+/// the home feed leaves.
+const double _clearsBottomBar = 120;
+
+/// أريد · أفكّر فيها · عندي — one piece's life, read left to right.
+///
+/// The wishlist, Rooms and the closet used to be three unrelated corners of
+/// the app. They are one journey: a piece she wants, then a piece she is
+/// deciding on with her friends, then a piece she owns. The closet is the
+/// last step and the one this tab shows; the other two are a tap away, and
+/// this is the door Rooms kept when it gave its tab to the closet.
+class _Spectrum extends StatelessWidget {
+  const _Spectrum();
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(
+        DsSpacing.md,
+        DsSpacing.sm,
+        DsSpacing.md,
+        DsSpacing.xxs,
+      ),
+      child: Row(
+        children: [
+          DsChip(
+            label: 'أريد',
+            icon: Icons.favorite_border_rounded,
+            onTap: () => context.push(RoutePaths.favorites),
+          ),
+          DsGaps.hXs,
+          DsChip(
+            label: 'أفكّر فيها',
+            icon: Icons.meeting_room_outlined,
+            onTap: () => context.push(RoutePaths.rooms),
+          ),
+          DsGaps.hXs,
+          // The step she is on. Without a handler DsChip draws it as
+          // unavailable, which is the opposite of what it is.
+          DsChip(
+            label: 'عندي',
+            icon: Icons.checkroom_rounded,
+            selected: true,
+            onTap: () {},
+          ),
+        ],
       ),
     );
   }
@@ -174,7 +239,7 @@ class _Body extends ConsumerWidget {
               DsSpacing.md,
               DsSpacing.sm,
               DsSpacing.md,
-              DsSpacing.xxl,
+              _clearsBottomBar,
             ),
             sliver: SliverGrid(
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(

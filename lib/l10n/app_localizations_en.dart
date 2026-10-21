@@ -2487,6 +2487,17 @@ class AppLocalizationsEn extends AppLocalizations {
   String get homeStoriesEyebrow => 'Fresh today';
 
   @override
+  String homeStoriesToday(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count boutiques posted stories today',
+      one: 'One boutique posted a story today',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String get homeTasteBeauty => 'Beauty';
 
   @override
@@ -2836,10 +2847,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get navCart => 'Cart';
 
   @override
+  String get navCloset => 'Closet';
+
+  @override
+  String get navDiscover => 'Discover';
+
+  @override
   String get navHome => 'Home';
 
   @override
-  String get navProfile => 'Profile';
+  String get navProfile => 'Me';
 
   @override
   String get navSearch => 'Search';
@@ -3402,6 +3419,34 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get post => 'Post';
+
+  @override
+  String postClosetCompletes(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'and finishes $count saved looks',
+      one: 'and finishes a saved look',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get postClosetOpen => 'My closet';
+
+  @override
+  String get postClosetOwned => 'You already own one like it';
+
+  @override
+  String postClosetPairs(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Goes with $count pieces in your closet',
+      one: 'Goes with a piece in your closet',
+    );
+    return '$_temp0';
+  }
 
   @override
   String postLikesCount(String count) {

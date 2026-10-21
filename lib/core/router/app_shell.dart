@@ -11,6 +11,7 @@ import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/core/sync/outbox_providers.dart';
 import 'package:reem/features/cart/presentation/providers/cart_providers.dart';
 import 'package:reem/features/experience/presentation/providers/role_experience_provider.dart';
+import 'package:reem/features/social/presentation/widgets/create_sheet.dart';
 
 class AppShell extends ConsumerWidget {
   const AppShell({super.key, required this.navigationShell});
@@ -83,14 +84,13 @@ class AppShell extends ConsumerWidget {
   int? _branchIndexForPath(String path) => switch (path) {
     RoutePaths.home => 0,
     RoutePaths.search => 1,
-    RoutePaths.rooms => 2,
-    RoutePaths.activity => 3,
-    RoutePaths.profile => 4,
-    RoutePaths.sellerDashboard => 5,
-    RoutePaths.myProducts => 6,
-    RoutePaths.sellerOrders => 7,
-    RoutePaths.sellerAnalytics => 8,
-    RoutePaths.sellerStore => 9,
+    RoutePaths.closet => 2,
+    RoutePaths.profile => 3,
+    RoutePaths.sellerDashboard => 4,
+    RoutePaths.myProducts => 5,
+    RoutePaths.sellerOrders => 6,
+    RoutePaths.sellerAnalytics => 7,
+    RoutePaths.sellerStore => 8,
     _ => null,
   };
 }
@@ -195,7 +195,13 @@ class _CustomerNavigationBar extends ConsumerWidget {
             ),
             child: Row(
               children: [
-                for (final entry in destinations.asMap().entries)
+                for (final entry in destinations.asMap().entries) ...[
+                  // Publishing sits in the middle of the bar, between the
+                  // halves of the tabs. It used to be an icon in the home
+                  // header — the one action that makes this a social app,
+                  // reachable from one screen and noticed on none.
+                  if (entry.key == destinations.length ~/ 2)
+                    const _CreateButton(),
                   Expanded(
                     child: _CustomerNavItem(
                       item: entry.value,
@@ -206,6 +212,7 @@ class _CustomerNavigationBar extends ConsumerWidget {
                       onTap: () => onSelected(entry.key),
                     ),
                   ),
+                ],
               ],
             ),
           ),
@@ -304,6 +311,47 @@ class _CustomerNavItem extends StatelessWidget {
                   ),
                 ),
               ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// The rose disc in the middle of the buyer's bar: post, reel or story.
+///
+/// Not a tab — it opens the create sheet over whatever she is looking at and
+/// never changes which tab is selected, so it carries no selected state.
+class _CreateButton extends StatelessWidget {
+  const _CreateButton();
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.dsColors;
+    final label = context.l10n.createTooltip;
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: DsSpacing.xxs),
+      child: Semantics(
+        button: true,
+        label: label,
+        child: ExcludeSemantics(
+          child: Tooltip(
+            message: label,
+            child: InkResponse(
+              radius: 30,
+              onTap: () => showCreateSheet(context),
+              child: Container(
+                width: 52,
+                height: 52,
+                decoration: BoxDecoration(
+                  gradient: context.primaryGradient,
+                  shape: BoxShape.circle,
+                  boxShadow: context.glowShadow(c.primary, blur: 16, alpha: 0.4),
+                ),
+                child: Icon(Icons.add_rounded, color: c.onPrimary, size: 28),
+              ),
             ),
           ),
         ),

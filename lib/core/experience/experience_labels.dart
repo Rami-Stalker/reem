@@ -21,7 +21,8 @@ import 'package:reem/l10n/app_localizations.dart';
 extension RoleNavigationItemLabel on RoleNavigationItem {
   String labelOf(AppLocalizations l10n) => switch (path) {
     RoutePaths.home => l10n.navHome,
-    RoutePaths.search => l10n.navSearch,
+    RoutePaths.search => l10n.navDiscover,
+    RoutePaths.closet => l10n.navCloset,
     RoutePaths.cart => l10n.navCart,
     RoutePaths.activity => l10n.navActivity,
     RoutePaths.profile => l10n.navProfile,
