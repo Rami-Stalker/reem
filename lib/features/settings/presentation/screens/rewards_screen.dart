@@ -32,28 +32,18 @@ class _RewardsScreenState extends ConsumerState<RewardsScreen> {
       final previousError =
           previous?.errorMessage?.resolve(context.l10n) ?? previous?.error;
       if (error != null && error != previousError) {
-        messenger
-          ..hideCurrentSnackBar()
-          ..showSnackBar(
-            SnackBar(
-              behavior: SnackBarBehavior.floating,
-              content: Text(error),
-            ),
-          );
+        DsSnackbar.on(messenger, message: error, type: DsSnackbarType.error);
       }
       final success =
           next.successMessage?.resolve(context.l10n) ?? next.success;
       final previousSuccess =
           previous?.successMessage?.resolve(context.l10n) ?? previous?.success;
       if (success != null && success != previousSuccess) {
-        messenger
-          ..hideCurrentSnackBar()
-          ..showSnackBar(
-            SnackBar(
-              behavior: SnackBarBehavior.floating,
-              content: Text(success),
-            ),
-          );
+        DsSnackbar.on(
+          messenger,
+          message: success,
+          type: DsSnackbarType.success,
+        );
       }
     });
 
@@ -185,14 +175,7 @@ class _RewardsHero extends StatelessWidget {
                   ),
                 ),
                 if (refreshing)
-                  SizedBox(
-                    width: 18,
-                    height: 18,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      color: colors.onPrimary,
-                    ),
-                  ),
+                  DsLoadingIndicator.inline(color: colors.onPrimary),
               ],
             ),
             const SizedBox(height: DsSpacing.lg),
@@ -361,14 +344,11 @@ class _ReferralPanel extends StatelessWidget {
   void _copy(BuildContext context, String code) {
     if (code.isEmpty) return;
     Clipboard.setData(ClipboardData(text: code));
-    ScaffoldMessenger.of(context)
-      ..hideCurrentSnackBar()
-      ..showSnackBar(
-        SnackBar(
-          behavior: SnackBarBehavior.floating,
-          content: Text(context.l10n.rewardsCodeCopied(code)),
-        ),
-      );
+    DsSnackbar.show(
+      context,
+      message: context.l10n.rewardsCodeCopied(code),
+      type: DsSnackbarType.success,
+    );
   }
 }
 

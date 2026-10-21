@@ -336,14 +336,11 @@ class _ConfidenceBar extends StatelessWidget {
         ),
         const SizedBox(width: DsSpacing.sm),
         Expanded(
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(DsRadius.xs),
-            child: LinearProgressIndicator(
-              value: confidence.clamp(0, 1),
-              minHeight: 6,
-              backgroundColor: palette.line,
-              valueColor: AlwaysStoppedAnimation(colour),
-            ),
+          child: DsMeter(
+            value: confidence.clamp(0, 1),
+            weight: DsMeterWeight.regular,
+            color: colour,
+            track: palette.line,
           ),
         ),
         const SizedBox(width: DsSpacing.sm),

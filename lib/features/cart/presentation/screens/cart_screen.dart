@@ -210,14 +210,7 @@ class _QtyStepper extends StatelessWidget {
             width: DsSizes.iconLg,
             child: Center(
               child: busy
-                  ? SizedBox(
-                      width: DsSizes.iconXs,
-                      height: DsSizes.iconXs,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        color: colors.primary,
-                      ),
-                    )
+                  ? DsLoadingIndicator.inline(color: colors.primary)
                   : Text(
                       '$quantity',
                       style: context.dsText.labelStrong.tabular,

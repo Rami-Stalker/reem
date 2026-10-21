@@ -257,7 +257,7 @@ class _ConsentReader extends ConsumerWidget {
 
     return Scaffold(
       backgroundColor: colors.background,
-      appBar: AppBar(title: Text(policy.title)),
+      appBar: ReemAppBar(title: policy.title),
       body: detail.when(
         loading: () => const Center(child: DsLoadingIndicator()),
         error: (error, _) => Padding(

@@ -186,7 +186,7 @@ class _AddressFormSheetState extends ConsumerState<_AddressFormSheet> {
                 governorates.when(
                   loading: () => const Padding(
                     padding: EdgeInsets.symmetric(vertical: DsSpacing.md),
-                    child: LinearProgressIndicator(),
+                    child: DsLoadingIndicator.inline(),
                   ),
                   error: (_, _) => _GovernorateUnavailable(
                     onRetry: () => ref.invalidate(deliveryGovernoratesProvider),

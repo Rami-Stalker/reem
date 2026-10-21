@@ -108,11 +108,7 @@ class SellerReviewCard extends StatelessWidget {
           const SizedBox(height: DsSpacing.md),
           if (isBusy)
             const Center(
-              child: SizedBox(
-                width: 18,
-                height: 18,
-                child: CircularProgressIndicator(strokeWidth: 2),
-              ),
+              child: DsLoadingIndicator.inline(),
             )
           else
             Align(

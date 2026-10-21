@@ -122,12 +122,15 @@ class _OrderDetailScreenState extends ConsumerState<OrderDetailScreen>
         if (state.isLoading && order == null)
           const SliverFillRemaining(
             hasScrollBody: false,
-            child: Center(child: CircularProgressIndicator()),
+            child: DsLoadingIndicator(),
           )
         else if (order == null)
           SliverFillRemaining(
             hasScrollBody: false,
-            child: Center(child: Text(context.l10n.orderNotFound)),
+            child: DsEmptyState(
+              icon: Icons.receipt_long_rounded,
+              title: context.l10n.orderNotFound,
+            ),
           )
         else
           SliverToBoxAdapter(

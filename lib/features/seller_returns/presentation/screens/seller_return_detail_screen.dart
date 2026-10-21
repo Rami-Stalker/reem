@@ -47,7 +47,7 @@ class SellerReturnDetailScreen extends ConsumerWidget {
           _ => const SliverToBoxAdapter(
             child: Padding(
               padding: EdgeInsets.symmetric(vertical: DsSpacing.xxl),
-              child: Center(child: CircularProgressIndicator()),
+              child: DsLoadingIndicator(),
             ),
           ),
         },
@@ -183,7 +183,7 @@ class _Body extends ConsumerWidget {
                 child: _Muted(l10n.returnRefundIsPlatforms),
               ),
             if (acting)
-              const Center(child: CircularProgressIndicator())
+              const DsLoadingIndicator()
             else
               for (final action in request.availableActions)
                 Padding(

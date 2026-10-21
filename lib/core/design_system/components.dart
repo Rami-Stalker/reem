@@ -31,6 +31,7 @@ export 'package:reem/core/design_system/components/dialogs/ds_dialog.dart';
 export 'package:reem/core/design_system/components/inputs/ds_media_field.dart';
 export 'package:reem/core/design_system/components/inputs/input_field.dart';
 export 'package:reem/core/design_system/components/loaders/ds_loading_indicator.dart';
+export 'package:reem/core/design_system/components/loaders/ds_meter.dart';
 export 'package:reem/core/design_system/components/loaders/ds_skeleton.dart';
 export 'package:reem/core/design_system/components/media/ds_video_player.dart';
 // Overlays

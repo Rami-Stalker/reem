@@ -644,13 +644,11 @@ class _AdminSectionScreenState extends ConsumerState<AdminSectionScreen> {
   }
 
   void _showSnack(String message, {bool isError = false}) {
-    final colors = context.dsColors;
     if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: isError ? colors.error : colors.success,
-      ),
+    DsSnackbar.show(
+      context,
+      message: message,
+      type: isError ? DsSnackbarType.error : DsSnackbarType.success,
     );
   }
 }

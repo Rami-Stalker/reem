@@ -60,7 +60,7 @@ class AdminDeliveryScreen extends ConsumerWidget {
                 providers.when(
                   loading: () => const Padding(
                     padding: EdgeInsets.all(DsSpacing.xl),
-                    child: Center(child: CircularProgressIndicator()),
+                    child: DsLoadingIndicator(),
                   ),
                   error: (error, _) => _Panel(
                     child: Text(
@@ -95,7 +95,7 @@ class AdminDeliveryScreen extends ConsumerWidget {
                 stuck.when(
                   loading: () => const SizedBox(
                     height: 48,
-                    child: Center(child: CircularProgressIndicator()),
+                    child: DsLoadingIndicator(),
                   ),
                   error: (error, _) => Text(
                     '$error',
@@ -144,7 +144,7 @@ class AdminDeliveryScreen extends ConsumerWidget {
       // The server refuses to enable a carrier it cannot reach — no base URL,
       // no API key, no signing secret — and that refusal is the useful part of
       // this screen, so it is shown as it was written rather than flattened.
-      messenger.showSnackBar(SnackBar(content: Text('$error')));
+      DsSnackbar.on(messenger, message: '$error', type: DsSnackbarType.error);
     }
   }
 
@@ -158,7 +158,7 @@ class AdminDeliveryScreen extends ConsumerWidget {
       await ref.read(deliveryAdminDataSourceProvider).retry(row.id);
       ref.invalidate(failedDispatchesProvider);
     } catch (error) {
-      messenger.showSnackBar(SnackBar(content: Text('$error')));
+      DsSnackbar.on(messenger, message: '$error', type: DsSnackbarType.error);
     }
   }
 }

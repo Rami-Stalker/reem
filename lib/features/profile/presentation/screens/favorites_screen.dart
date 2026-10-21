@@ -37,8 +37,10 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
       final link = next.shareLink;
       if (link == null || link == previous?.shareLink) return;
       Clipboard.setData(ClipboardData(text: link.shareUrl));
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(context.l10n.wishlistLinkCopied)),
+      DsSnackbar.show(
+        context,
+        message: context.l10n.wishlistLinkCopied,
+        type: DsSnackbarType.success,
       );
     });
 

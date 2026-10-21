@@ -181,7 +181,11 @@ class _PolicyRow extends ConsumerWidget {
     try {
       await ref.read(valueAdminActionsProvider).simulate(policy.id);
     } catch (_) {
-      messenger.showSnackBar(const SnackBar(content: Text('ما نجحت التجربة.')));
+      DsSnackbar.on(
+        messenger,
+        message: 'ما نجحت التجربة.',
+        type: DsSnackbarType.error,
+      );
     }
   }
 
@@ -217,11 +221,17 @@ class _PolicyRow extends ConsumerWidget {
     final messenger = ScaffoldMessenger.of(context);
     try {
       await ref.read(valueAdminActionsProvider).activate(policy.id);
-      messenger.showSnackBar(
-        const SnackBar(content: Text('تم التفعيل، وانعادت الحسبة.')),
+      DsSnackbar.on(
+        messenger,
+        message: 'تم التفعيل، وانعادت الحسبة.',
+        type: DsSnackbarType.success,
       );
     } catch (_) {
-      messenger.showSnackBar(const SnackBar(content: Text('ما نجح التفعيل.')));
+      DsSnackbar.on(
+        messenger,
+        message: 'ما نجح التفعيل.',
+        type: DsSnackbarType.error,
+      );
     }
   }
 }
@@ -431,14 +441,18 @@ class _PolicyEditorDialogState extends ConsumerState<_PolicyEditorDialog> {
             ),
           );
       navigator.pop();
-      messenger.showSnackBar(
-        const SnackBar(
-          content: Text('انحفظت كمسوّدة — جرّبيها قبل ما تفعّليها.'),
-        ),
+      DsSnackbar.on(
+        messenger,
+        message: 'انحفظت كمسوّدة — جرّبيها قبل ما تفعّليها.',
+        type: DsSnackbarType.success,
       );
     } catch (_) {
       if (mounted) setState(() => _saving = false);
-      messenger.showSnackBar(const SnackBar(content: Text('ما نجح الحفظ.')));
+      DsSnackbar.on(
+        messenger,
+        message: 'ما نجح الحفظ.',
+        type: DsSnackbarType.error,
+      );
     }
   }
 }

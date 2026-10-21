@@ -96,7 +96,11 @@ class _ClosetTodayScreenState extends ConsumerState<ClosetTodayScreen> {
       }
     }
     if (!mounted) return;
-    DsSnackbar.show(context, message: 'تم — سجّلناها لليوم.');
+    DsSnackbar.show(
+      context,
+      message: 'تم — سجّلناها لليوم.',
+      type: DsSnackbarType.success,
+    );
   }
 
   /// Turn a composition into a look she owns.

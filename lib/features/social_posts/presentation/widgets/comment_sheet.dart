@@ -464,11 +464,7 @@ class _InputBar extends ConsumerWidget {
               sending
                   ? const Padding(
                       padding: EdgeInsets.all(DsSpacing.sm),
-                      child: SizedBox(
-                        width: 24,
-                        height: 24,
-                        child: CircularProgressIndicator(strokeWidth: 2.4),
-                      ),
+                      child: DsLoadingIndicator.inline(),
                     )
                   : DsIconButton(
                       icon: Icons.send_rounded,

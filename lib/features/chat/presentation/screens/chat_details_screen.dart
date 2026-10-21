@@ -139,10 +139,10 @@ class _ChatDetailsScreenState extends ConsumerState<ChatDetailsScreen>
                 ),
                 if (messagesState.isLoading)
                   const Expanded(
-                    child: Center(child: CircularProgressIndicator()),
+                    child: DsLoadingIndicator(),
                   )
                 else if (messagesState.error != null)
-                  Expanded(child: Center(child: Text(messagesState.error!)))
+                  Expanded(child: DsErrorState(message: messagesState.error))
                 else
                   Expanded(
                     child: ListView(

@@ -16,7 +16,30 @@ abstract final class DsSnackbar {
     Duration duration = const Duration(seconds: 3),
     String? actionLabel,
     VoidCallback? onAction,
+  }) => on(
+    ScaffoldMessenger.of(context),
+    message: message,
+    type: type,
+    duration: duration,
+    actionLabel: actionLabel,
+    onAction: onAction,
+  );
+
+  /// The same snackbar, through a messenger captured before an `await`.
+  ///
+  /// A screen that awaits a request and then reports the outcome cannot use
+  /// its own context afterwards — she may have left the screen. The messenger
+  /// outlives it, and so does the messenger's own context, which is where
+  /// the colours and type are read from here.
+  static void on(
+    ScaffoldMessengerState messenger, {
+    required String message,
+    DsSnackbarType type = DsSnackbarType.info,
+    Duration duration = const Duration(seconds: 3),
+    String? actionLabel,
+    VoidCallback? onAction,
   }) {
+    final context = messenger.context;
     final c = context.dsColors;
 
     final (accent, icon) = switch (type) {
@@ -26,8 +49,9 @@ abstract final class DsSnackbar {
       DsSnackbarType.info => (c.primary, Icons.info_rounded),
     };
 
-    final messenger = ScaffoldMessenger.of(context)..hideCurrentSnackBar();
-    messenger.showSnackBar(
+    messenger
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
       SnackBar(
         content: Row(
           children: [

@@ -69,7 +69,7 @@ class AdminPoliciesScreen extends ConsumerWidget {
                 documents.when(
                   loading: () => const Padding(
                     padding: EdgeInsets.all(DsSpacing.xxl),
-                    child: Center(child: CircularProgressIndicator()),
+                    child: DsLoadingIndicator(),
                   ),
                   error: (error, _) => Text(
                     '$error',

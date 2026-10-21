@@ -194,14 +194,11 @@ class _RoomHeader extends StatelessWidget {
 
           if (readiness != null) ...[
             const SizedBox(height: DsSpacing.sm),
-            ClipRRect(
-              borderRadius: BorderRadius.circular(DsRadius.pill),
-              child: LinearProgressIndicator(
-                value: readiness.progress,
-                minHeight: 6,
-                backgroundColor: colors.surfaceVariant,
-                color: readiness.ready ? colors.success : colors.primary,
-              ),
+            DsMeter(
+              value: readiness.progress,
+              weight: DsMeterWeight.regular,
+              color: readiness.ready ? colors.success : colors.primary,
+              track: colors.surfaceVariant,
             ),
             const SizedBox(height: DsSpacing.xs),
             Text(

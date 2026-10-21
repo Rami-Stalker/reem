@@ -97,14 +97,11 @@ class _StandingHero extends StatelessWidget {
 
           if (standing.nextTier != null) ...[
             const SizedBox(height: DsSpacing.md),
-            ClipRRect(
-              borderRadius: BorderRadius.circular(DsRadius.pill),
-              child: LinearProgressIndicator(
-                value: standing.progressToNext,
-                minHeight: 8,
-                backgroundColor: colors.surfaceVariant,
-                color: colors.primary,
-              ),
+            DsMeter(
+              value: standing.progressToNext,
+              weight: DsMeterWeight.regular,
+              color: colors.primary,
+              track: colors.surfaceVariant,
             ),
             const SizedBox(height: DsSpacing.xs),
             Text(

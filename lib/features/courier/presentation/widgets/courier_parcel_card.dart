@@ -264,11 +264,7 @@ class _Actions extends StatelessWidget {
       return const Center(
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: DsSpacing.xs),
-          child: SizedBox(
-            width: 20,
-            height: 20,
-            child: CircularProgressIndicator(strokeWidth: 2),
-          ),
+          child: DsLoadingIndicator.inline(),
         ),
       );
     }

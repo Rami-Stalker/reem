@@ -41,11 +41,7 @@ class AdminTrendsScreen extends ConsumerWidget {
               tooltip: l10n.trendsRecompute,
               onPressed: state.isRecomputing ? null : notifier.recompute,
               icon: state.isRecomputing
-                  ? const SizedBox(
-                      width: 18,
-                      height: 18,
-                      child: CircularProgressIndicator(strokeWidth: 2),
-                    )
+                  ? const DsLoadingIndicator.inline()
                   : const Icon(Icons.refresh_rounded),
             ),
           ],

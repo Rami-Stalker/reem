@@ -84,7 +84,7 @@ class _AccountSettingsScreenState extends ConsumerState<AccountSettingsScreen> {
               child: Center(child: DsLoadingIndicator()),
             ),
             error: (error, _) => SliverFillRemaining(
-              child: Center(child: Text(messageOf(error))),
+              child: DsErrorState(message: messageOf(error)),
             ),
             data: (data) {
               if (!_seeded) {

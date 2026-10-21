@@ -240,12 +240,10 @@ class _AdminSellerApplicationsScreenState
 
   void _showSnack(String message, {bool isError = false}) {
     if (!mounted) return;
-    final colors = context.dsColors;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: isError ? colors.error : colors.success,
-      ),
+    DsSnackbar.show(
+      context,
+      message: message,
+      type: isError ? DsSnackbarType.error : DsSnackbarType.success,
     );
   }
 }

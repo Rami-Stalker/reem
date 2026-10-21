@@ -270,14 +270,7 @@ class _CouponTicket extends ConsumerWidget {
                     emphasised: true,
                   )
                 else if (isPending)
-                  SizedBox(
-                    width: 20,
-                    height: 20,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      color: colors.onPrimary,
-                    ),
-                  )
+                  DsLoadingIndicator.inline(color: colors.onPrimary)
                 else
                   _TicketAction(
                     icon: Icons.shopping_bag_outlined,

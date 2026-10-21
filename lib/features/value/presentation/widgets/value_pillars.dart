@@ -60,16 +60,13 @@ class _PillarRow extends StatelessWidget {
           ],
         ),
         DsGaps.vXxs,
-        ClipRRect(
-          borderRadius: BorderRadius.circular(DsRadius.pill),
-          child: LinearProgressIndicator(
-            value: (pillar.score / 100).clamp(0.0, 1.0),
-            minHeight: 6,
-            backgroundColor: colors.surfaceVariant,
-            // A pillar with no evidence is drawn muted rather than empty-red:
-            // not knowing is not failing.
-            color: pillar.isKnown ? colors.primary : colors.outline,
-          ),
+        DsMeter(
+          value: (pillar.score / 100).clamp(0.0, 1.0),
+          weight: DsMeterWeight.regular,
+          // A pillar with no evidence is drawn muted rather than empty-red:
+          // not knowing is not failing.
+          color: pillar.isKnown ? colors.primary : colors.outline,
+          track: colors.surfaceVariant,
         ),
         DsGaps.vXxxs,
         Text(

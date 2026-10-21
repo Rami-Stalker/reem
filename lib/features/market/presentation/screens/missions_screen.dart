@@ -94,16 +94,11 @@ class _MissionCard extends ConsumerWidget {
             style: context.dsText.caption.tint(colors.onSurfaceVariant),
           ),
           DsGaps.vMd,
-          ClipRRect(
-            borderRadius: BorderRadius.circular(DsRadius.pill),
-            child: LinearProgressIndicator(
-              value: mission.progress,
-              minHeight: 5,
-              backgroundColor: colors.surfaceVariant,
-              valueColor: AlwaysStoppedAnimation(
-                done ? colors.success : colors.primary,
-              ),
-            ),
+          DsMeter(
+            value: mission.progress,
+            weight: DsMeterWeight.thin,
+            color: done ? colors.success : colors.primary,
+            track: colors.surfaceVariant,
           ),
           DsGaps.vXs,
           Row(

@@ -90,12 +90,18 @@ class _ProposeToRoomSheetState extends ConsumerState<ProposeToRoomSheet> {
             offerVariantId: widget.offerVariantId,
           );
       navigator.pop();
-      messenger.showSnackBar(
-        SnackBar(content: Text('اقترحناها لـ«${decision.title}»')),
+      DsSnackbar.on(
+        messenger,
+        message: 'اقترحناها لـ«${decision.title}»',
+        type: DsSnackbarType.success,
       );
     } catch (_) {
       if (mounted) setState(() => _busy = false);
-      messenger.showSnackBar(const SnackBar(content: Text('ما نجح الاقتراح.')));
+      DsSnackbar.on(
+        messenger,
+        message: 'ما نجح الاقتراح.',
+        type: DsSnackbarType.error,
+      );
     }
   }
 }
@@ -284,8 +290,10 @@ class _NoRooms extends ConsumerWidget {
 
     await actions.propose(room.id, decision.id, offerId: offerId);
     navigator.pop();
-    messenger.showSnackBar(
-      const SnackBar(content: Text('فتحنالك غرفة وحطّينا القطعة فيها')),
+    DsSnackbar.on(
+      messenger,
+      message: 'فتحنالك غرفة وحطّينا القطعة فيها',
+      type: DsSnackbarType.success,
     );
   }
 }

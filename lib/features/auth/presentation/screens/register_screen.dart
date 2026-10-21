@@ -513,14 +513,11 @@ class _PasswordStrengthIndicator extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        ClipRRect(
-          borderRadius: BorderRadius.circular(DsRadius.xs),
-          child: LinearProgressIndicator(
-            minHeight: 6,
-            value: score / 5,
-            color: color,
-            backgroundColor: colors.surfaceVariant,
-          ),
+        DsMeter(
+          value: score / 5,
+          weight: DsMeterWeight.regular,
+          color: color,
+          track: colors.surfaceVariant,
         ),
         const SizedBox(height: DsSpacing.xs),
         Text(

@@ -98,11 +98,7 @@ class ManagedProductCard extends StatelessWidget {
           if (isMutating)
             const Padding(
               padding: EdgeInsets.all(DsSpacing.sm),
-              child: SizedBox(
-                width: 18,
-                height: 18,
-                child: CircularProgressIndicator(strokeWidth: 2),
-              ),
+              child: DsLoadingIndicator.inline(),
             )
           else
             PopupMenuButton<ProductCardAction>(

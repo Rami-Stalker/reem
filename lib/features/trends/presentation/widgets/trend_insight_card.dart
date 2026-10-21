@@ -145,14 +145,7 @@ class _TrendInsightCardState extends State<TrendInsightCard> {
                                 ),
                               const Spacer(),
                               if (widget.isBusy)
-                                SizedBox(
-                                  width: 16,
-                                  height: 16,
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 2,
-                                    color: palette.primary,
-                                  ),
-                                )
+                                DsLoadingIndicator.inline(color: palette.primary)
                               else ...[
                                 if (widget.onDismiss != null)
                                   TrendTextAction(

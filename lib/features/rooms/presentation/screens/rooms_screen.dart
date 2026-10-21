@@ -173,14 +173,11 @@ class RoomCard extends StatelessWidget {
                 const SizedBox(height: DsSpacing.xs),
 
                 if (readiness != null) ...[
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(DsRadius.pill),
-                    child: LinearProgressIndicator(
-                      value: readiness.progress,
-                      minHeight: 5,
-                      backgroundColor: colors.surfaceVariant,
-                      color: readiness.ready ? colors.success : colors.primary,
-                    ),
+                  DsMeter(
+                    value: readiness.progress,
+                    weight: DsMeterWeight.thin,
+                    color: readiness.ready ? colors.success : colors.primary,
+                    track: colors.surfaceVariant,
                   ),
                   DsGaps.vXxs,
                   Text(

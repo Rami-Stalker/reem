@@ -193,14 +193,11 @@ class _Breakdown extends StatelessWidget {
                     ),
                     Expanded(
                       flex: 5,
-                      child: ClipRRect(
-                        borderRadius: DsRadius.borderSm,
-                        child: LinearProgressIndicator(
-                          value: largest == 0 ? 0 : row.count / largest,
-                          minHeight: 8,
-                          backgroundColor: palette.surfaceAlt,
-                          valueColor: AlwaysStoppedAnimation(palette.primary),
-                        ),
+                      child: DsMeter(
+                        value: largest == 0 ? 0 : row.count / largest,
+                        weight: DsMeterWeight.regular,
+                        color: palette.primary,
+                        track: palette.surfaceAlt,
                       ),
                     ),
                     const SizedBox(width: DsSpacing.sm),

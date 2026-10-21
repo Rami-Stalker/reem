@@ -285,14 +285,11 @@ class MeasureBar extends StatelessWidget {
             ],
           ),
           DsGaps.vXxs,
-          ClipRRect(
-            borderRadius: BorderRadius.circular(DsRadius.pill),
-            child: LinearProgressIndicator(
-              value: measured ? (score! / 100).clamp(0, 1) : 0,
-              minHeight: 5,
-              backgroundColor: palette.line,
-              valueColor: AlwaysStoppedAnimation(colour),
-            ),
+          DsMeter(
+            value: measured ? (score! / 100).clamp(0, 1) : 0,
+            weight: DsMeterWeight.thin,
+            color: colour,
+            track: palette.line,
           ),
           if (weight != null && weight! > 0) ...[
             DsGaps.vXxxs,

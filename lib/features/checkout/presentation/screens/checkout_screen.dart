@@ -274,7 +274,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
         if (state.isLoadingOptions)
           const SliverFillRemaining(
             hasScrollBody: false,
-            child: Center(child: CircularProgressIndicator()),
+            child: DsLoadingIndicator(),
           )
         else
           SliverPadding(

@@ -130,14 +130,11 @@ class _CodeBox extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         Clipboard.setData(ClipboardData(text: code));
-        ScaffoldMessenger.of(context)
-          ..hideCurrentSnackBar()
-          ..showSnackBar(
-            SnackBar(
-              behavior: SnackBarBehavior.floating,
-              content: Text(context.l10n.codeCopied),
-            ),
-          );
+        DsSnackbar.show(
+          context,
+          message: context.l10n.codeCopied,
+          type: DsSnackbarType.success,
+        );
       },
       child: Container(
         height: 48,

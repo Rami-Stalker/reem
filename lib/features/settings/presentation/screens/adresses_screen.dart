@@ -69,11 +69,7 @@ class AddressesScreen extends ConsumerWidget {
               if (state.isSaving) ...[
                 const SizedBox(height: DsSpacing.md),
                 const Center(
-                  child: SizedBox(
-                    width: 22,
-                    height: 22,
-                    child: CircularProgressIndicator(strokeWidth: 2),
-                  ),
+                  child: DsLoadingIndicator.inline(),
                 ),
               ],
             ]),

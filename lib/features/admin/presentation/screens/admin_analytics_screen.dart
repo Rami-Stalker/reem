@@ -100,15 +100,10 @@ class AdminAnalyticsScreen extends ConsumerWidget {
       options: Options(responseType: ResponseType.bytes),
     );
     if (!context.mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          context.l10n.adminReportGenerated(
-            format,
-            response.data?.length ?? 0,
-          ),
-        ),
-      ),
+    DsSnackbar.show(
+      context,
+      message: context.l10n.adminReportGenerated( format, response.data?.length ?? 0, ),
+      type: DsSnackbarType.success,
     );
   }
 }
@@ -483,16 +478,11 @@ class _FunnelBars extends StatelessWidget {
                   ),
                 ),
                 Expanded(
-                  child: ClipRRect(
-                    borderRadius: DsRadius.borderFull,
-                    child: LinearProgressIndicator(
-                      minHeight: 10,
-                      value: maxValue == 0 ? 0 : entry.value.value / maxValue,
-                      backgroundColor: palette.surfaceAlt,
-                      valueColor: AlwaysStoppedAnimation(
-                        palette.series[entry.key % palette.series.length],
-                      ),
-                    ),
+                  child: DsMeter(
+                    value: maxValue == 0 ? 0 : entry.value.value / maxValue,
+                    weight: DsMeterWeight.bold,
+                    color: palette.series[entry.key % palette.series.length],
+                    track: palette.surfaceAlt,
                   ),
                 ),
                 const SizedBox(width: DsSpacing.sm),

@@ -50,7 +50,7 @@ class MyProductsScreen extends ConsumerWidget {
         if (state.isLoading && state.products.isEmpty)
           const SliverFillRemaining(
             hasScrollBody: false,
-            child: Center(child: CircularProgressIndicator()),
+            child: DsLoadingIndicator(),
           )
         else if (state.isEmpty)
           const SliverFillRemaining(hasScrollBody: false, child: _EmptyState())

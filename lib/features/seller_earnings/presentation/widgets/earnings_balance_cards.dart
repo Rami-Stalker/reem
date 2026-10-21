@@ -103,14 +103,7 @@ class _AvailableCard extends StatelessWidget {
                 ),
               ),
               if (isRefreshing)
-                const SizedBox(
-                  width: 16,
-                  height: 16,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2,
-                    color: DsColors.onMedia,
-                  ),
-                ),
+                DsLoadingIndicator.inline(color: DsColors.onMedia),
             ],
           ),
           const SizedBox(height: DsSpacing.sm),

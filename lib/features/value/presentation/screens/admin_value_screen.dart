@@ -93,13 +93,17 @@ class AdminValueScreen extends ConsumerWidget {
     final messenger = ScaffoldMessenger.of(context);
     try {
       final counts = await ref.read(valueAdminActionsProvider).sweep();
-      messenger.showSnackBar(
-        SnackBar(
-          content: Text('تم — أعيد احتساب ${counts['recomputed'] ?? 0} ملف.'),
-        ),
+      DsSnackbar.on(
+        messenger,
+        message: 'تم — أعيد احتساب ${counts['recomputed'] ?? 0} ملف.',
+        type: DsSnackbarType.success,
       );
     } catch (_) {
-      messenger.showSnackBar(const SnackBar(content: Text('ما نجح الجمع.')));
+      DsSnackbar.on(
+        messenger,
+        message: 'ما نجح الجمع.',
+        type: DsSnackbarType.error,
+      );
     }
   }
 }
@@ -206,14 +210,11 @@ class _DistributionCard extends StatelessWidget {
                     ),
                   ),
                   Expanded(
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(DsRadius.pill),
-                      child: LinearProgressIndicator(
-                        value: tier.count / busiest,
-                        minHeight: 10,
-                        backgroundColor: console.surfaceAlt,
-                        color: console.primary,
-                      ),
+                    child: DsMeter(
+                      value: tier.count / busiest,
+                      weight: DsMeterWeight.bold,
+                      color: console.primary,
+                      track: console.surfaceAlt,
                     ),
                   ),
                   const SizedBox(width: DsSpacing.sm),
