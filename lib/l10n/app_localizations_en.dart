@@ -1711,6 +1711,61 @@ class AppLocalizationsEn extends AppLocalizations {
   String get discount => 'Discount';
 
   @override
+  String get discoverAskHelper =>
+      'Describe the occasion or the feeling — “a summer wedding, something soft, under 60k”';
+
+  @override
+  String get discoverAskHint => 'What do you need?';
+
+  @override
+  String get discoverAskLabel => 'Ask Reem';
+
+  @override
+  String get discoverAskSend => 'Ask';
+
+  @override
+  String get discoverByName => 'Search by name';
+
+  @override
+  String get discoverEyebrow => 'By what you need, not by aisle';
+
+  @override
+  String get discoverGapCta => 'See options';
+
+  @override
+  String get discoverGapEyebrow => 'A gap in your closet';
+
+  @override
+  String get discoverPhotoSearch => 'Search with a photo';
+
+  @override
+  String get discoverPromptsTitle => 'Try asking';
+
+  @override
+  String get discoverRoomCta => 'Open the room';
+
+  @override
+  String discoverRoomDays(int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: 'In $days days',
+      one: 'Tomorrow',
+      zero: 'Today',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get discoverTrendingTitle => 'People are searching';
+
+  @override
+  String get discoverWaitingSubtitle => 'From your rooms and your closet';
+
+  @override
+  String get discoverWaitingTitle => 'What\'s waiting for you';
+
+  @override
   String get done => 'Done';
 
   @override

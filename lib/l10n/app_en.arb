@@ -2076,6 +2076,71 @@
   "@discount": {
     "description": "Summary row"
   },
+  "discoverAskHelper": "Describe the occasion or the feeling — “a summer wedding, something soft, under 60k”",
+  "@discoverAskHelper": {
+    "description": "Helper line under the Ask Reem field on Discover."
+  },
+  "discoverAskHint": "What do you need?",
+  "@discoverAskHint": {
+    "description": "Placeholder of the Ask Reem field on Discover."
+  },
+  "discoverAskLabel": "Ask Reem",
+  "@discoverAskLabel": {
+    "description": "Label above the Discover question field, which opens the stylist with her question."
+  },
+  "discoverAskSend": "Ask",
+  "@discoverAskSend": {
+    "description": "Tooltip of the send button on the Discover question field."
+  },
+  "discoverByName": "Search by name",
+  "@discoverByName": {
+    "description": "Button on Discover that opens the plain keyword search."
+  },
+  "discoverEyebrow": "By what you need, not by aisle",
+  "@discoverEyebrow": {
+    "description": "Eyebrow above the Discover title."
+  },
+  "discoverGapCta": "See options",
+  "@discoverGapCta": {
+    "description": "Action on a closet-gap card on Discover."
+  },
+  "discoverGapEyebrow": "A gap in your closet",
+  "@discoverGapEyebrow": {
+    "description": "Eyebrow of a closet-gap card on Discover."
+  },
+  "discoverPhotoSearch": "Search with a photo",
+  "@discoverPhotoSearch": {
+    "description": "Button on Discover that opens visual search."
+  },
+  "discoverPromptsTitle": "Try asking",
+  "@discoverPromptsTitle": {
+    "description": "Heading above suggested questions on Discover."
+  },
+  "discoverRoomCta": "Open the room",
+  "@discoverRoomCta": {
+    "description": "Action on an upcoming-room card on Discover."
+  },
+  "discoverRoomDays": "{days, plural, =0{Today} =1{Tomorrow} other{In {days} days}}",
+  "@discoverRoomDays": {
+    "description": "How far off a dated room is, on its Discover card.",
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "discoverTrendingTitle": "People are searching",
+  "@discoverTrendingTitle": {
+    "description": "Heading above trending searches on Discover, shown to guests."
+  },
+  "discoverWaitingSubtitle": "From your rooms and your closet",
+  "@discoverWaitingSubtitle": {
+    "description": "Subtitle of the What's waiting section on Discover."
+  },
+  "discoverWaitingTitle": "What's waiting for you",
+  "@discoverWaitingTitle": {
+    "description": "Heading of the section built from her dated rooms and closet gaps."
+  },
   "done": "Done",
   "@done": {
     "description": "Closes a sheet"

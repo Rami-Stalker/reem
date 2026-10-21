@@ -115,13 +115,27 @@ abstract final class RoutePaths {
   // Commerce
   static const cart = '/cart';
   static const checkout = '/checkout';
+  /// The Discover tab: a hub that starts from what she needs.
   static const search = '/search';
+
+  /// Search by name — the catalogue search the Discover tab used to be. It
+  /// keeps the `q` parameter it always read, so a query typed anywhere still
+  /// lands on its results.
+  static const keywordSearch = '/search/find';
+  static String keywordSearchFor(String? query) =>
+      query == null || query.trim().isEmpty
+      ? keywordSearch
+      : '$keywordSearch?q=${Uri.encodeQueryComponent(query.trim())}';
 
   /// Reem AI Stylist. The bare path opens a new conversation; the `:id` form
   /// resumes one from her history.
   static const stylist = '/stylist';
   static const stylistConversation = '/stylist/c/:id';
   static String stylistConversationOf(String id) => '/stylist/c/$id';
+
+  /// A new conversation that opens already carrying her question.
+  static String stylistAsking(String question) =>
+      '$stylist?q=${Uri.encodeQueryComponent(question.trim())}';
   static const stylistOutfit = '/stylist/outfits/:id';
   static String stylistOutfitOf(String id) => '/stylist/outfits/$id';
   static const stylistPreferences = '/stylist/preferences';

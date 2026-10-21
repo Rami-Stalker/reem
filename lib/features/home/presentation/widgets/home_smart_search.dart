@@ -11,12 +11,8 @@ import 'package:reem/features/home/presentation/providers/home_content_provider.
 class HomeSmartSearch extends ConsumerWidget {
   const HomeSmartSearch({super.key});
 
-  void _search(BuildContext context, [String? query]) {
-    final q = (query == null || query.isEmpty)
-        ? ''
-        : '?q=${Uri.encodeQueryComponent(query)}';
-    context.push('${RoutePaths.search}$q');
-  }
+  void _search(BuildContext context, [String? query]) =>
+      context.push(RoutePaths.keywordSearchFor(query));
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

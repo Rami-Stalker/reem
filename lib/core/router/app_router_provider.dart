@@ -88,6 +88,7 @@ import 'package:reem/features/rooms/presentation/screens/purchase_plan_screen.da
 import 'package:reem/features/rooms/presentation/screens/room_join_screen.dart';
 import 'package:reem/features/rooms/presentation/screens/room_screen.dart';
 import 'package:reem/features/rooms/presentation/screens/rooms_screen.dart';
+import 'package:reem/features/search/presentation/screens/discover_screen.dart';
 import 'package:reem/features/search/presentation/screens/search_screen.dart';
 import 'package:reem/features/seller_analytics/presentation/screens/seller_analytics_screen.dart';
 import 'package:reem/features/seller_dashboard/presentation/screens/seller_home_screen.dart';
@@ -411,7 +412,9 @@ final goRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: RoutePaths.stylist,
         name: RouteNames.stylist,
-        builder: (context, state) => const AiStylistScreen(),
+        builder: (context, state) => AiStylistScreen(
+          initialQuestion: state.uri.queryParameters['q'],
+        ),
       ),
       GoRoute(
         path: RoutePaths.stylistConversation,
@@ -967,6 +970,13 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         name: RouteNames.chats,
         builder: (context, state) => const ChatsScreen(),
       ),
+      // Search by name, pushed from the Discover tab and from anything that
+      // carries a typed query.
+      GoRoute(
+        path: RoutePaths.keywordSearch,
+        name: RouteNames.keywordSearch,
+        builder: (context, state) => const SearchScreen(),
+      ),
       // Rooms and Activity were tabs until the closet and the create button
       // took their places in the bar. Both are pushed now: Rooms from the
       // closet, where a room is the step between wanting a piece and owning
@@ -1002,7 +1012,7 @@ final goRouterProvider = Provider<GoRouter>((ref) {
               GoRoute(
                 path: RoutePaths.search,
                 name: RouteNames.search,
-                builder: (context, state) => const SearchScreen(),
+                builder: (context, state) => const DiscoverScreen(),
               ),
             ],
           ),

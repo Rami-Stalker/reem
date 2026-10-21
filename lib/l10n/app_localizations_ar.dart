@@ -1697,6 +1697,64 @@ class AppLocalizationsAr extends AppLocalizations {
   String get discount => 'الخصم';
 
   @override
+  String get discoverAskHelper =>
+      'صفي المناسبة أو الإحساس — «عرس صيفي، شي ناعم، تحت 60 ألف»';
+
+  @override
+  String get discoverAskHint => 'ماذا تحتاجين؟';
+
+  @override
+  String get discoverAskLabel => 'اسألي ريم';
+
+  @override
+  String get discoverAskSend => 'اسألي';
+
+  @override
+  String get discoverByName => 'ابحثي بالاسم';
+
+  @override
+  String get discoverEyebrow => 'بالحاجة، لا بالقسم';
+
+  @override
+  String get discoverGapCta => 'اعرضي الخيارات';
+
+  @override
+  String get discoverGapEyebrow => 'فجوة في خزانتكِ';
+
+  @override
+  String get discoverPhotoSearch => 'صوّري قطعة';
+
+  @override
+  String get discoverPromptsTitle => 'جرّبي أن تسألي';
+
+  @override
+  String get discoverRoomCta => 'افتحي الغرفة';
+
+  @override
+  String discoverRoomDays(int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: 'بعد $days يوم',
+      many: 'بعد $days يوماً',
+      few: 'بعد $days أيام',
+      two: 'بعد يومين',
+      one: 'غداً',
+      zero: 'اليوم',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get discoverTrendingTitle => 'يبحثن الآن عن';
+
+  @override
+  String get discoverWaitingSubtitle => 'من غرفكِ وخزانتكِ';
+
+  @override
+  String get discoverWaitingTitle => 'ما ينتظركِ';
+
+  @override
   String get done => 'تم';
 
   @override

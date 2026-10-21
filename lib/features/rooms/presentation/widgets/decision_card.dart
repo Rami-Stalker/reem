@@ -129,7 +129,7 @@ class DecisionCard extends ConsumerWidget {
                       label: 'ضيفي خيار',
                       size: DsButtonSize.sm,
                       variant: DsButtonVariant.secondary,
-                      onPressed: () => context.push(RoutePaths.search),
+                      onPressed: () => context.push(RoutePaths.keywordSearch),
                     ),
                   ),
                   // Offered only where there is something to compare: two live
@@ -233,7 +233,7 @@ class _EmptyDecision extends StatelessWidget {
             label: 'دوّري على قطعة',
             size: DsButtonSize.sm,
             isExpanded: false,
-            onPressed: () => context.push(RoutePaths.search),
+            onPressed: () => context.push(RoutePaths.keywordSearch),
           ),
         ],
       ),

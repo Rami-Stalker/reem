@@ -56,6 +56,7 @@ abstract final class RouteNames {
   static const cart = 'cart';
   static const checkout = 'checkout';
   static const search = 'search';
+  static const keywordSearch = 'keyword-search';
   static const stylist = 'stylist';
   static const stylistConversation = 'stylist-conversation';
   static const stylistOutfit = 'stylist-outfit';

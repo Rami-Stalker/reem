@@ -21,6 +21,7 @@ const _publicRoutes = <String>{
   RoutePaths.accountRecovery,
   RoutePaths.home,
   RoutePaths.search,
+  RoutePaths.keywordSearch,
   RoutePaths.cart,
   RoutePaths.activity,
   RoutePaths.profile,

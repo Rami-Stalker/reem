@@ -3314,6 +3314,96 @@ abstract class AppLocalizations {
   /// **'Discount'**
   String get discount;
 
+  /// Helper line under the Ask Reem field on Discover.
+  ///
+  /// In en, this message translates to:
+  /// **'Describe the occasion or the feeling — “a summer wedding, something soft, under 60k”'**
+  String get discoverAskHelper;
+
+  /// Placeholder of the Ask Reem field on Discover.
+  ///
+  /// In en, this message translates to:
+  /// **'What do you need?'**
+  String get discoverAskHint;
+
+  /// Label above the Discover question field, which opens the stylist with her question.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask Reem'**
+  String get discoverAskLabel;
+
+  /// Tooltip of the send button on the Discover question field.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask'**
+  String get discoverAskSend;
+
+  /// Button on Discover that opens the plain keyword search.
+  ///
+  /// In en, this message translates to:
+  /// **'Search by name'**
+  String get discoverByName;
+
+  /// Eyebrow above the Discover title.
+  ///
+  /// In en, this message translates to:
+  /// **'By what you need, not by aisle'**
+  String get discoverEyebrow;
+
+  /// Action on a closet-gap card on Discover.
+  ///
+  /// In en, this message translates to:
+  /// **'See options'**
+  String get discoverGapCta;
+
+  /// Eyebrow of a closet-gap card on Discover.
+  ///
+  /// In en, this message translates to:
+  /// **'A gap in your closet'**
+  String get discoverGapEyebrow;
+
+  /// Button on Discover that opens visual search.
+  ///
+  /// In en, this message translates to:
+  /// **'Search with a photo'**
+  String get discoverPhotoSearch;
+
+  /// Heading above suggested questions on Discover.
+  ///
+  /// In en, this message translates to:
+  /// **'Try asking'**
+  String get discoverPromptsTitle;
+
+  /// Action on an upcoming-room card on Discover.
+  ///
+  /// In en, this message translates to:
+  /// **'Open the room'**
+  String get discoverRoomCta;
+
+  /// How far off a dated room is, on its Discover card.
+  ///
+  /// In en, this message translates to:
+  /// **'{days, plural, =0{Today} =1{Tomorrow} other{In {days} days}}'**
+  String discoverRoomDays(int days);
+
+  /// Heading above trending searches on Discover, shown to guests.
+  ///
+  /// In en, this message translates to:
+  /// **'People are searching'**
+  String get discoverTrendingTitle;
+
+  /// Subtitle of the What's waiting section on Discover.
+  ///
+  /// In en, this message translates to:
+  /// **'From your rooms and your closet'**
+  String get discoverWaitingSubtitle;
+
+  /// Heading of the section built from her dated rooms and closet gaps.
+  ///
+  /// In en, this message translates to:
+  /// **'What\'s waiting for you'**
+  String get discoverWaitingTitle;
+
   /// Closes a sheet
   ///
   /// In en, this message translates to:
