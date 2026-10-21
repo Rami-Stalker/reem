@@ -109,7 +109,7 @@ export function findingsFor(facts: MarketplaceFacts): Finding[] {
         gmv: facts.gmv,
       },
       actionAr:
-        'راجع رسوم التوصيل والقسائم المموّلة من المنصة — النمو في هذه الحالة يوسّع الخسارة لا يغطّيها',
+        'راجعي رسوم التوصيل والقسائم المموّلة من المنصة — النمو في هذه الحالة يوسّع الخسارة لا يغطّيها',
       href: '/admin/economics',
       weight: 100,
     });
@@ -123,7 +123,7 @@ export function findingsFor(facts: MarketplaceFacts): Finding[] {
       severity: 'warning',
       ar: `المنصة تحتفظ بـ${(facts.takeRate * 100).toFixed(1)}% فقط ممّا يمرّ عبرها`,
       evidence: { take_rate: facts.takeRate, gmv: facts.gmv },
-      actionAr: 'راجع قواعد العمولة حسب الفئة — بعضها قد يكون أقلّ من تكلفة خدمتها',
+      actionAr: 'راجعي قواعد العمولة حسب الفئة — بعضها قد يكون أقلّ من تكلفة خدمتها',
       href: '/admin/commissions',
       weight: 70,
     });
@@ -141,7 +141,7 @@ export function findingsFor(facts: MarketplaceFacts): Finding[] {
         projected_value: facts.churningValue,
       },
       actionAr:
-        'شغّل حملة استعادة موجَّهة للأعلى قيمة منهنّ — لا للجميع، فالميزانية الموزّعة بالتساوي تُنفَق على من لا يستحقّها',
+        'شغّلي حملة استعادة موجَّهة للأعلى قيمة منهنّ — لا للجميع، فالميزانية الموزّعة بالتساوي تُنفَق على من لا يستحقّها',
       href: '/admin/lifecycle',
       weight: Math.min(
         95,

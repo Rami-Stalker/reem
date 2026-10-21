@@ -6,6 +6,7 @@ import 'package:reem/features/admin/presentation/widgets/admin_page_header.dart'
 import 'package:reem/features/value/domain/entities/value_admin.dart';
 import 'package:reem/features/value/presentation/providers/value_admin_providers.dart';
 import 'package:reem/features/value/presentation/widgets/value_policy_editor.dart';
+import 'package:reem/l10n/app_localizations.dart';
 
 /// Running Reem Value.
 ///
@@ -161,9 +162,13 @@ class _GuaranteeBanner extends StatelessWidget {
                     ),
                     if (guarantee.highestRungReachableBySpending
                         case final rung?)
-                      context.l10n.valueAdminSpendingRung(rung),
+                      context.l10n.valueAdminSpendingRung(
+                        _rungName(context.l10n, rung),
+                      ),
                     if (guarantee.topRung case final top?)
-                      context.l10n.valueAdminTopRung(top)
+                      context.l10n.valueAdminTopRung(
+                        _rungName(context.l10n, top),
+                      )
                     else
                       '.',
                   ].join(),
@@ -490,3 +495,14 @@ class _Metric extends StatelessWidget {
     );
   }
 }
+
+/// A standing rung in her language. The guarantee line quoted the rung's code
+/// — «known», «circle» — inside an Arabic sentence.
+String _rungName(AppLocalizations l10n, String key) => switch (key) {
+  'new' => l10n.valueRungNew,
+  'known' => l10n.valueRungKnown,
+  'trusted' => l10n.valueRungTrusted,
+  'insider' => l10n.valueRungInsider,
+  'circle' => l10n.valueRungCircle,
+  _ => key,
+};

@@ -579,12 +579,30 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String adminRecordNestedObject(int count) {
-    return '$count حقول';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count حقلاً',
+      few: '$count حقول',
+      two: 'حقلان',
+      one: 'حقل واحد',
+    );
+    return '$_temp0';
   }
 
   @override
   String adminRecordItemCount(int count) {
-    return '$count عناصر';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count عنصر',
+      many: '$count عنصراً',
+      few: '$count عناصر',
+      two: 'عنصران',
+      one: 'عنصر واحد',
+      zero: 'لا عناصر',
+    );
+    return '$_temp0';
   }
 
   @override
@@ -608,7 +626,17 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String adminReportGenerated(String format, int count) {
-    return 'تقرير $format جاهز — $count سطر';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count سطر',
+      many: '$count سطراً',
+      few: '$count أسطر',
+      two: 'سطران',
+      one: 'سطر واحد',
+      zero: 'بلا أسطر',
+    );
+    return 'تقرير $format جاهز — $_temp0';
   }
 
   @override
@@ -5462,6 +5490,9 @@ class AppLocalizationsAr extends AppLocalizations {
       count,
       locale: localeName,
       other: 'قبل $count يوم',
+      many: 'قبل $count يوماً',
+      few: 'قبل $count أيام',
+      two: 'قبل يومين',
       one: 'أمس',
     );
     return '$_temp0';
@@ -5473,6 +5504,8 @@ class AppLocalizationsAr extends AppLocalizations {
       count,
       locale: localeName,
       other: 'قبل $count ساعة',
+      few: 'قبل $count ساعات',
+      two: 'قبل ساعتين',
       one: 'قبل ساعة',
     );
     return '$_temp0';
@@ -5484,6 +5517,8 @@ class AppLocalizationsAr extends AppLocalizations {
       count,
       locale: localeName,
       other: 'قبل $count دقيقة',
+      few: 'قبل $count دقائق',
+      two: 'قبل دقيقتين',
       one: 'قبل دقيقة',
     );
     return '$_temp0';
@@ -7106,16 +7141,34 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
-  String adminPolicyAcceptedAny(String count) {
-    return '$count حساب وقّع هذه السياسة';
+  String adminPolicyAcceptedAny(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'وقّعها $count حساب',
+      many: 'وقّعها $count حساباً',
+      few: 'وقّعها $count حسابات',
+      two: 'وقّعها حسابان',
+      one: 'وقّعها حساب واحد',
+      zero: 'لم يوقّعها أي حساب بعد',
+    );
+    return '$_temp0';
   }
 
   @override
   String get adminPolicyNoDraft => 'لا مسودة مفتوحة. افتحي واحدة لتغيير النص.';
 
   @override
-  String adminPolicyVersionsCount(String count) {
-    return '$count نسخة';
+  String adminPolicyVersionsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count نسخة',
+      few: '$count نسخ',
+      two: 'نسختان',
+      one: 'نسخة واحدة',
+    );
+    return '$_temp0';
   }
 
   @override
@@ -8171,7 +8224,22 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String valueAdminDistributionSubtitle(int total, int unranked) {
-    return '$total ملف — منها $unranked بلا درجة بعد';
+    String _temp0 = intl.Intl.pluralLogic(
+      total,
+      locale: localeName,
+      other: '$total ملف',
+      many: '$total ملفاً',
+      few: '$total ملفات',
+      two: 'ملفان',
+      one: 'ملف واحد',
+    );
+    String _temp1 = intl.Intl.pluralLogic(
+      unranked,
+      locale: localeName,
+      other: 'منها $unranked بلا درجة بعد',
+      zero: 'كلها مُقيَّمة',
+    );
+    return '$_temp0 — $_temp1';
   }
 
   @override
@@ -10468,4 +10536,167 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get studioFormatOther => 'محتوى آخر';
+
+  @override
+  String get adminStatusInfo => 'معلومة';
+
+  @override
+  String get adminStatusWarning => 'تحذير';
+
+  @override
+  String get adminStatusCritical => 'حرج';
+
+  @override
+  String get adminStatusQueued => 'بانتظار الإرسال';
+
+  @override
+  String get adminStatusSent => 'أُرسل';
+
+  @override
+  String get adminStatusFailed => 'فشل';
+
+  @override
+  String get adminStatusSkipped => 'تُخطّي';
+
+  @override
+  String get adminStatusScheduled => 'مجدولة';
+
+  @override
+  String get adminStatusRunning => 'قيد التنفيذ';
+
+  @override
+  String get adminStatusCompleted => 'اكتملت';
+
+  @override
+  String get adminStatusRefunded => 'مُستردّ';
+
+  @override
+  String get adminAuditLogin => 'تسجيل دخول';
+
+  @override
+  String get adminAuditLogout => 'تسجيل خروج';
+
+  @override
+  String get adminAuditLogoutAll => 'خروج من كل الأجهزة';
+
+  @override
+  String get adminAuditRegister => 'إنشاء حساب';
+
+  @override
+  String get adminAuditPhoneChangeStarted => 'بدء تغيير رقم الهاتف';
+
+  @override
+  String get adminAuditPhoneChangeCompleted => 'اكتمل تغيير رقم الهاتف';
+
+  @override
+  String get adminAuditPhoneChanged => 'تغيّر رقم الهاتف';
+
+  @override
+  String get adminAuditRecoveryOpened => 'فُتح طلب استرداد حساب';
+
+  @override
+  String get adminAuditRecoverySubmitted => 'قُدِّم طلب استرداد حساب';
+
+  @override
+  String get adminAuditRecoveryFirstApproval => 'موافقة أولى على استرداد حساب';
+
+  @override
+  String get adminAuditRecoverySecondApproval =>
+      'موافقة ثانية على استرداد حساب';
+
+  @override
+  String get adminAuditRecoveryCoolingOff => 'استرداد حساب في فترة الانتظار';
+
+  @override
+  String get adminAuditRecoveryCompleted => 'اكتمل استرداد حساب';
+
+  @override
+  String get adminAuditRecoveryRejected => 'رُفض طلب استرداد حساب';
+
+  @override
+  String get adminAuditRecoveryCancelled => 'أُلغي طلب استرداد حساب';
+
+  @override
+  String get adminAuditPasswordResetRequested => 'طلب إعادة تعيين كلمة المرور';
+
+  @override
+  String get adminAuditPasswordResetCompleted => 'أُعيد تعيين كلمة المرور';
+
+  @override
+  String get adminAuditPasswordDisabled => 'أُوقفت كلمة المرور';
+
+  @override
+  String get adminAuditTotpConfirmed => 'فُعّل التحقق بخطوتين';
+
+  @override
+  String get adminAuditRecoveryCodesGenerated => 'أُنشئت رموز الاسترداد';
+
+  @override
+  String get adminAuditRecoveryCodeRedeemed => 'استُخدم رمز استرداد';
+
+  @override
+  String get adminAuditOtpCodesRevealed => 'عُرضت رموز الدخول';
+
+  @override
+  String get adminAuditSellerVerificationApproved => 'اعتُمد توثيق بائعة';
+
+  @override
+  String get adminAuditSellerVerificationRejected => 'رُفض توثيق بائعة';
+
+  @override
+  String get adminAuditContentRemoved => 'حُذف محتوى';
+
+  @override
+  String get adminAuditContentReinstated => 'أُعيد محتوى';
+
+  @override
+  String get adminAuditCommentRemoved => 'حُذف تعليق';
+
+  @override
+  String get adminAuditWalletCredited => 'أُضيف رصيد إلى محفظة';
+
+  @override
+  String get adminAuditWalletFrozen => 'جُمّدت محفظة';
+
+  @override
+  String get adminAuditRevokeSessions => 'أُنهيت جلسات حساب';
+
+  @override
+  String get adminAuditCoolOffStarted => 'بدأت فترة التهدئة';
+
+  @override
+  String get adminAuditAreaAuth => 'الدخول والأمان';
+
+  @override
+  String get adminAuditAreaAccount => 'الحساب';
+
+  @override
+  String get adminReportTypeSales => 'المبيعات';
+
+  @override
+  String get adminReportTypeSellers => 'البائعات';
+
+  @override
+  String get adminReportTypeContent => 'المحتوى';
+
+  @override
+  String get adminReportTypeFinance => 'المالية';
+
+  @override
+  String get adminReportTypeUsers => 'المستخدمات';
+
+  @override
+  String get valueRungNew => 'جديدة';
+
+  @override
+  String get valueRungKnown => 'معروفة';
+
+  @override
+  String get valueRungTrusted => 'موثوقة';
+
+  @override
+  String get valueRungInsider => 'من الدائرة';
+
+  @override
+  String get valueRungCircle => 'الدائرة الأولى';
 }

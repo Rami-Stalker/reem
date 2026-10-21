@@ -157,6 +157,10 @@ class AdminRecordModel extends AdminRecord {
       // this list at all — no money whatsoever.
       metrics[key] = money != null
           ? money.approximateValue.sypCompact
+          // A commission rule's rate arrives in basis points; «1000» beside
+          // its name read as a price. Shown as the percentage it is.
+          : key == 'rate_bps' && num.tryParse('$value') != null
+          ? '${_trimZeros(num.parse('$value') / 100)}%'
           : value.toString();
     }
     return AdminRecordModel(
@@ -170,6 +174,10 @@ class AdminRecordModel extends AdminRecord {
     );
   }
 }
+
+String _trimZeros(num value) => value == value.roundToDouble()
+    ? value.round().toString()
+    : value.toStringAsFixed(2).replaceFirst(RegExp(r'0+$'), '');
 
 /// A displayable string for a JSON value, or `null` when there is nothing to
 /// show. Structured values are encoded rather than passed through Dart's

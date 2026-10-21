@@ -1181,13 +1181,13 @@ abstract class AppLocalizations {
   /// Summary of a nested object inside a console record.
   ///
   /// In en, this message translates to:
-  /// **'{count} fields'**
+  /// **'{count, plural, =1{1 field} other{{count} fields}}'**
   String adminRecordNestedObject(int count);
 
   /// Summary of a list inside a console record.
   ///
   /// In en, this message translates to:
-  /// **'{count} items'**
+  /// **'{count, plural, =1{1 item} other{{count} items}}'**
   String adminRecordItemCount(int count);
 
   /// Heading above the JSON dump in the record sheet.
@@ -1229,7 +1229,7 @@ abstract class AppLocalizations {
   /// Confirmation after generating a report [re-authored: original wording lost]
   ///
   /// In en, this message translates to:
-  /// **'{format} report ready — {count} rows'**
+  /// **'{format} report ready — {count, plural, =1{1 row} other{{count} rows}}'**
   String adminReportGenerated(String format, int count);
 
   /// Admin section: generated reports.
@@ -12689,8 +12689,8 @@ abstract class AppLocalizations {
   /// No description provided for @adminPolicyAcceptedAny.
   ///
   /// In en, this message translates to:
-  /// **'{count} accounts have signed this policy'**
-  String adminPolicyAcceptedAny(String count);
+  /// **'{count, plural, =0{No account has signed it yet} =1{1 account has signed this policy} other{{count} accounts have signed this policy}}'**
+  String adminPolicyAcceptedAny(int count);
 
   /// No description provided for @adminPolicyNoDraft.
   ///
@@ -12701,8 +12701,8 @@ abstract class AppLocalizations {
   /// No description provided for @adminPolicyVersionsCount.
   ///
   /// In en, this message translates to:
-  /// **'{count} versions'**
-  String adminPolicyVersionsCount(String count);
+  /// **'{count, plural, =1{1 version} other{{count} versions}}'**
+  String adminPolicyVersionsCount(int count);
 
   /// No description provided for @adminPolicyBodyTooShort.
   ///
@@ -14279,7 +14279,7 @@ abstract class AppLocalizations {
   ///
   ///
   /// In en, this message translates to:
-  /// **'{total} profiles — {unranked} not ranked yet'**
+  /// **'{total, plural, =1{1 profile} other{{total} profiles}} — {unranked, plural, =0{all ranked} other{{unranked} not ranked yet}}'**
   String valueAdminDistributionSubtitle(int total, int unranked);
 
   ///
@@ -17827,6 +17827,330 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Other content'**
   String get studioFormatOther;
+
+  /// Admin console status token INFO.
+  ///
+  /// In en, this message translates to:
+  /// **'Info'**
+  String get adminStatusInfo;
+
+  /// Admin console status token WARNING.
+  ///
+  /// In en, this message translates to:
+  /// **'Warning'**
+  String get adminStatusWarning;
+
+  /// Admin console status token CRITICAL.
+  ///
+  /// In en, this message translates to:
+  /// **'Critical'**
+  String get adminStatusCritical;
+
+  /// Admin console status token QUEUED.
+  ///
+  /// In en, this message translates to:
+  /// **'Queued'**
+  String get adminStatusQueued;
+
+  /// Admin console status token SENT.
+  ///
+  /// In en, this message translates to:
+  /// **'Sent'**
+  String get adminStatusSent;
+
+  /// Admin console status token FAILED.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed'**
+  String get adminStatusFailed;
+
+  /// Admin console status token SKIPPED.
+  ///
+  /// In en, this message translates to:
+  /// **'Skipped'**
+  String get adminStatusSkipped;
+
+  /// Admin console status token SCHEDULED.
+  ///
+  /// In en, this message translates to:
+  /// **'Scheduled'**
+  String get adminStatusScheduled;
+
+  /// Admin console status token RUNNING.
+  ///
+  /// In en, this message translates to:
+  /// **'Running'**
+  String get adminStatusRunning;
+
+  /// Admin console status token COMPLETED.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed'**
+  String get adminStatusCompleted;
+
+  /// Admin console status token REFUNDED.
+  ///
+  /// In en, this message translates to:
+  /// **'Refunded'**
+  String get adminStatusRefunded;
+
+  /// Audit log entry name: Signed in.
+  ///
+  /// In en, this message translates to:
+  /// **'Signed in'**
+  String get adminAuditLogin;
+
+  /// Audit log entry name: Signed out.
+  ///
+  /// In en, this message translates to:
+  /// **'Signed out'**
+  String get adminAuditLogout;
+
+  /// Audit log entry name: Signed out everywhere.
+  ///
+  /// In en, this message translates to:
+  /// **'Signed out everywhere'**
+  String get adminAuditLogoutAll;
+
+  /// Audit log entry name: Account created.
+  ///
+  /// In en, this message translates to:
+  /// **'Account created'**
+  String get adminAuditRegister;
+
+  /// Audit log entry name: Phone change started.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone change started'**
+  String get adminAuditPhoneChangeStarted;
+
+  /// Audit log entry name: Phone change completed.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone change completed'**
+  String get adminAuditPhoneChangeCompleted;
+
+  /// Audit log entry name: Phone changed.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone changed'**
+  String get adminAuditPhoneChanged;
+
+  /// Audit log entry name: Recovery case opened.
+  ///
+  /// In en, this message translates to:
+  /// **'Recovery case opened'**
+  String get adminAuditRecoveryOpened;
+
+  /// Audit log entry name: Recovery case submitted.
+  ///
+  /// In en, this message translates to:
+  /// **'Recovery case submitted'**
+  String get adminAuditRecoverySubmitted;
+
+  /// Audit log entry name: Recovery: first approval.
+  ///
+  /// In en, this message translates to:
+  /// **'Recovery: first approval'**
+  String get adminAuditRecoveryFirstApproval;
+
+  /// Audit log entry name: Recovery: second approval.
+  ///
+  /// In en, this message translates to:
+  /// **'Recovery: second approval'**
+  String get adminAuditRecoverySecondApproval;
+
+  /// Audit log entry name: Recovery cooling off.
+  ///
+  /// In en, this message translates to:
+  /// **'Recovery cooling off'**
+  String get adminAuditRecoveryCoolingOff;
+
+  /// Audit log entry name: Recovery completed.
+  ///
+  /// In en, this message translates to:
+  /// **'Recovery completed'**
+  String get adminAuditRecoveryCompleted;
+
+  /// Audit log entry name: Recovery rejected.
+  ///
+  /// In en, this message translates to:
+  /// **'Recovery rejected'**
+  String get adminAuditRecoveryRejected;
+
+  /// Audit log entry name: Recovery cancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Recovery cancelled'**
+  String get adminAuditRecoveryCancelled;
+
+  /// Audit log entry name: Password reset requested.
+  ///
+  /// In en, this message translates to:
+  /// **'Password reset requested'**
+  String get adminAuditPasswordResetRequested;
+
+  /// Audit log entry name: Password reset.
+  ///
+  /// In en, this message translates to:
+  /// **'Password reset'**
+  String get adminAuditPasswordResetCompleted;
+
+  /// Audit log entry name: Password turned off.
+  ///
+  /// In en, this message translates to:
+  /// **'Password turned off'**
+  String get adminAuditPasswordDisabled;
+
+  /// Audit log entry name: Two-step verification on.
+  ///
+  /// In en, this message translates to:
+  /// **'Two-step verification on'**
+  String get adminAuditTotpConfirmed;
+
+  /// Audit log entry name: Recovery codes created.
+  ///
+  /// In en, this message translates to:
+  /// **'Recovery codes created'**
+  String get adminAuditRecoveryCodesGenerated;
+
+  /// Audit log entry name: Recovery code used.
+  ///
+  /// In en, this message translates to:
+  /// **'Recovery code used'**
+  String get adminAuditRecoveryCodeRedeemed;
+
+  /// Audit log entry name: Sign-in codes revealed.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign-in codes revealed'**
+  String get adminAuditOtpCodesRevealed;
+
+  /// Audit log entry name: Seller verification approved.
+  ///
+  /// In en, this message translates to:
+  /// **'Seller verification approved'**
+  String get adminAuditSellerVerificationApproved;
+
+  /// Audit log entry name: Seller verification rejected.
+  ///
+  /// In en, this message translates to:
+  /// **'Seller verification rejected'**
+  String get adminAuditSellerVerificationRejected;
+
+  /// Audit log entry name: Content removed.
+  ///
+  /// In en, this message translates to:
+  /// **'Content removed'**
+  String get adminAuditContentRemoved;
+
+  /// Audit log entry name: Content reinstated.
+  ///
+  /// In en, this message translates to:
+  /// **'Content reinstated'**
+  String get adminAuditContentReinstated;
+
+  /// Audit log entry name: Comment removed.
+  ///
+  /// In en, this message translates to:
+  /// **'Comment removed'**
+  String get adminAuditCommentRemoved;
+
+  /// Audit log entry name: Wallet credited.
+  ///
+  /// In en, this message translates to:
+  /// **'Wallet credited'**
+  String get adminAuditWalletCredited;
+
+  /// Audit log entry name: Wallet frozen.
+  ///
+  /// In en, this message translates to:
+  /// **'Wallet frozen'**
+  String get adminAuditWalletFrozen;
+
+  /// Audit log entry name: Sessions revoked.
+  ///
+  /// In en, this message translates to:
+  /// **'Sessions revoked'**
+  String get adminAuditRevokeSessions;
+
+  /// Audit log entry name: Cool-off started.
+  ///
+  /// In en, this message translates to:
+  /// **'Cool-off started'**
+  String get adminAuditCoolOffStarted;
+
+  /// Audit log entry name: Sign-in & security.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign-in & security'**
+  String get adminAuditAreaAuth;
+
+  /// Audit log entry name: Account.
+  ///
+  /// In en, this message translates to:
+  /// **'Account'**
+  String get adminAuditAreaAccount;
+
+  /// Admin report type: Sales.
+  ///
+  /// In en, this message translates to:
+  /// **'Sales'**
+  String get adminReportTypeSales;
+
+  /// Admin report type: Sellers.
+  ///
+  /// In en, this message translates to:
+  /// **'Sellers'**
+  String get adminReportTypeSellers;
+
+  /// Admin report type: Content.
+  ///
+  /// In en, this message translates to:
+  /// **'Content'**
+  String get adminReportTypeContent;
+
+  /// Admin report type: Finance.
+  ///
+  /// In en, this message translates to:
+  /// **'Finance'**
+  String get adminReportTypeFinance;
+
+  /// Admin report type: Users.
+  ///
+  /// In en, this message translates to:
+  /// **'Users'**
+  String get adminReportTypeUsers;
+
+  /// Reem Value standing rung: New.
+  ///
+  /// In en, this message translates to:
+  /// **'New'**
+  String get valueRungNew;
+
+  /// Reem Value standing rung: Known.
+  ///
+  /// In en, this message translates to:
+  /// **'Known'**
+  String get valueRungKnown;
+
+  /// Reem Value standing rung: Trusted.
+  ///
+  /// In en, this message translates to:
+  /// **'Trusted'**
+  String get valueRungTrusted;
+
+  /// Reem Value standing rung: Insider.
+  ///
+  /// In en, this message translates to:
+  /// **'Insider'**
+  String get valueRungInsider;
+
+  /// Reem Value standing rung: Circle.
+  ///
+  /// In en, this message translates to:
+  /// **'Circle'**
+  String get valueRungCircle;
 }
 
 class _AppLocalizationsDelegate

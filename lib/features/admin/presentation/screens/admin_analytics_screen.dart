@@ -8,6 +8,7 @@ import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/network/api_endpoints.dart';
 import 'package:reem/core/presentation/providers/core_providers.dart';
 import 'package:reem/core/shared/value_objects/money_format.dart';
+import 'package:reem/core/utils/relative_time.dart';
 import 'package:reem/features/admin/domain/entities/analytics_dashboard_entity.dart';
 import 'package:reem/features/admin/presentation/providers/admin_provider.dart';
 import 'package:reem/features/admin/presentation/widgets/admin_page_header.dart';
@@ -389,7 +390,10 @@ class _TrendChart extends StatelessWidget {
                   }
                   return Padding(
                     padding: const EdgeInsets.only(top: DsSpacing.xs),
-                    child: Text(points[index].label, style: labelStyle),
+                    child: Text(
+                      _axisDate(context, points[index].label),
+                      style: labelStyle,
+                    ),
                   );
                 },
               ),
@@ -562,4 +566,13 @@ class _Metric {
 
   final String label;
   final String value;
+}
+
+/// An axis date as «19 أكتوبر» rather than the `2026-10-19` the server keys
+/// its points by. Anything that is not a date is shown as it came.
+String _axisDate(BuildContext context, String label) {
+  final date = DateTime.tryParse(label);
+  if (date == null) return label;
+  // l10n-ignore: an intl pattern; the locale supplies the words
+  return formatCalendarDate(context.l10n, date, pattern: 'd MMM');
 }

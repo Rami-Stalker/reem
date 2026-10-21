@@ -741,9 +741,9 @@
   },
   "adminRecordNoDetails": "This record carries no further detail.",
   "@adminRecordNoDetails": {"description": "Empty state inside the console record sheet."},
-  "adminRecordNestedObject": "{count} fields",
+  "adminRecordNestedObject": "{count, plural, =1{1 field} other{{count} fields}}",
   "@adminRecordNestedObject": {"description": "Summary of a nested object inside a console record.", "placeholders": {"count": {"type": "int"}}},
-  "adminRecordItemCount": "{count} items",
+  "adminRecordItemCount": "{count, plural, =1{1 item} other{{count} items}}",
   "@adminRecordItemCount": {"description": "Summary of a list inside a console record.", "placeholders": {"count": {"type": "int"}}},
   "adminRawRecord": "Raw record",
   "@adminRawRecord": {
@@ -769,7 +769,7 @@
   "@adminRepeatRate": {
     "description": "Metric: share of customers who order again."
   },
-  "adminReportGenerated": "{format} report ready — {count} rows",
+  "adminReportGenerated": "{format} report ready — {count, plural, =1{1 row} other{{count} rows}}",
   "@adminReportGenerated": {
     "description": "Confirmation after generating a report [re-authored: original wording lost]",
     "placeholders": {
@@ -7757,11 +7757,23 @@
   "adminPolicyConsentSummary": "Acceptances",
   "adminPolicyAcceptedCurrent": "{count} on the current version",
   "@adminPolicyAcceptedCurrent": {"placeholders": {"count": {"type": "String"}}},
-  "adminPolicyAcceptedAny": "{count} accounts have signed this policy",
-  "@adminPolicyAcceptedAny": {"placeholders": {"count": {"type": "String"}}},
+  "adminPolicyAcceptedAny": "{count, plural, =0{No account has signed it yet} =1{1 account has signed this policy} other{{count} accounts have signed this policy}}",
+  "@adminPolicyAcceptedAny": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "adminPolicyNoDraft": "No open draft. Start one to change the text.",
-  "adminPolicyVersionsCount": "{count} versions",
-  "@adminPolicyVersionsCount": {"placeholders": {"count": {"type": "String"}}},
+  "adminPolicyVersionsCount": "{count, plural, =1{1 version} other{{count} versions}}",
+  "@adminPolicyVersionsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "adminPolicyBodyTooShort": "The text is too short to publish",
   "adminPolicyPublishConfirm": "Publish this version? The current one is archived and cannot be restored — a change after this needs a new version.",
 
@@ -8955,7 +8967,7 @@
   "@valueAdminDistributionTitle": {
     "description": ""
   },
-  "valueAdminDistributionSubtitle": "{total} profiles — {unranked} not ranked yet",
+  "valueAdminDistributionSubtitle": "{total, plural, =1{1 profile} other{{total} profiles}} — {unranked, plural, =0{all ranked} other{{unranked} not ranked yet}}",
   "@valueAdminDistributionSubtitle": {
     "description": "",
     "placeholders": {
@@ -11571,5 +11583,221 @@
   "studioFormatOther": "Other content",
   "@studioFormatOther": {
     "description": "Content studio row for a content type the app does not know yet."
+  },
+  "adminStatusInfo": "Info",
+  "@adminStatusInfo": {
+    "description": "Admin console status token INFO."
+  },
+  "adminStatusWarning": "Warning",
+  "@adminStatusWarning": {
+    "description": "Admin console status token WARNING."
+  },
+  "adminStatusCritical": "Critical",
+  "@adminStatusCritical": {
+    "description": "Admin console status token CRITICAL."
+  },
+  "adminStatusQueued": "Queued",
+  "@adminStatusQueued": {
+    "description": "Admin console status token QUEUED."
+  },
+  "adminStatusSent": "Sent",
+  "@adminStatusSent": {
+    "description": "Admin console status token SENT."
+  },
+  "adminStatusFailed": "Failed",
+  "@adminStatusFailed": {
+    "description": "Admin console status token FAILED."
+  },
+  "adminStatusSkipped": "Skipped",
+  "@adminStatusSkipped": {
+    "description": "Admin console status token SKIPPED."
+  },
+  "adminStatusScheduled": "Scheduled",
+  "@adminStatusScheduled": {
+    "description": "Admin console status token SCHEDULED."
+  },
+  "adminStatusRunning": "Running",
+  "@adminStatusRunning": {
+    "description": "Admin console status token RUNNING."
+  },
+  "adminStatusCompleted": "Completed",
+  "@adminStatusCompleted": {
+    "description": "Admin console status token COMPLETED."
+  },
+  "adminStatusRefunded": "Refunded",
+  "@adminStatusRefunded": {
+    "description": "Admin console status token REFUNDED."
+  },
+  "adminAuditLogin": "Signed in",
+  "@adminAuditLogin": {
+    "description": "Audit log entry name: Signed in."
+  },
+  "adminAuditLogout": "Signed out",
+  "@adminAuditLogout": {
+    "description": "Audit log entry name: Signed out."
+  },
+  "adminAuditLogoutAll": "Signed out everywhere",
+  "@adminAuditLogoutAll": {
+    "description": "Audit log entry name: Signed out everywhere."
+  },
+  "adminAuditRegister": "Account created",
+  "@adminAuditRegister": {
+    "description": "Audit log entry name: Account created."
+  },
+  "adminAuditPhoneChangeStarted": "Phone change started",
+  "@adminAuditPhoneChangeStarted": {
+    "description": "Audit log entry name: Phone change started."
+  },
+  "adminAuditPhoneChangeCompleted": "Phone change completed",
+  "@adminAuditPhoneChangeCompleted": {
+    "description": "Audit log entry name: Phone change completed."
+  },
+  "adminAuditPhoneChanged": "Phone changed",
+  "@adminAuditPhoneChanged": {
+    "description": "Audit log entry name: Phone changed."
+  },
+  "adminAuditRecoveryOpened": "Recovery case opened",
+  "@adminAuditRecoveryOpened": {
+    "description": "Audit log entry name: Recovery case opened."
+  },
+  "adminAuditRecoverySubmitted": "Recovery case submitted",
+  "@adminAuditRecoverySubmitted": {
+    "description": "Audit log entry name: Recovery case submitted."
+  },
+  "adminAuditRecoveryFirstApproval": "Recovery: first approval",
+  "@adminAuditRecoveryFirstApproval": {
+    "description": "Audit log entry name: Recovery: first approval."
+  },
+  "adminAuditRecoverySecondApproval": "Recovery: second approval",
+  "@adminAuditRecoverySecondApproval": {
+    "description": "Audit log entry name: Recovery: second approval."
+  },
+  "adminAuditRecoveryCoolingOff": "Recovery cooling off",
+  "@adminAuditRecoveryCoolingOff": {
+    "description": "Audit log entry name: Recovery cooling off."
+  },
+  "adminAuditRecoveryCompleted": "Recovery completed",
+  "@adminAuditRecoveryCompleted": {
+    "description": "Audit log entry name: Recovery completed."
+  },
+  "adminAuditRecoveryRejected": "Recovery rejected",
+  "@adminAuditRecoveryRejected": {
+    "description": "Audit log entry name: Recovery rejected."
+  },
+  "adminAuditRecoveryCancelled": "Recovery cancelled",
+  "@adminAuditRecoveryCancelled": {
+    "description": "Audit log entry name: Recovery cancelled."
+  },
+  "adminAuditPasswordResetRequested": "Password reset requested",
+  "@adminAuditPasswordResetRequested": {
+    "description": "Audit log entry name: Password reset requested."
+  },
+  "adminAuditPasswordResetCompleted": "Password reset",
+  "@adminAuditPasswordResetCompleted": {
+    "description": "Audit log entry name: Password reset."
+  },
+  "adminAuditPasswordDisabled": "Password turned off",
+  "@adminAuditPasswordDisabled": {
+    "description": "Audit log entry name: Password turned off."
+  },
+  "adminAuditTotpConfirmed": "Two-step verification on",
+  "@adminAuditTotpConfirmed": {
+    "description": "Audit log entry name: Two-step verification on."
+  },
+  "adminAuditRecoveryCodesGenerated": "Recovery codes created",
+  "@adminAuditRecoveryCodesGenerated": {
+    "description": "Audit log entry name: Recovery codes created."
+  },
+  "adminAuditRecoveryCodeRedeemed": "Recovery code used",
+  "@adminAuditRecoveryCodeRedeemed": {
+    "description": "Audit log entry name: Recovery code used."
+  },
+  "adminAuditOtpCodesRevealed": "Sign-in codes revealed",
+  "@adminAuditOtpCodesRevealed": {
+    "description": "Audit log entry name: Sign-in codes revealed."
+  },
+  "adminAuditSellerVerificationApproved": "Seller verification approved",
+  "@adminAuditSellerVerificationApproved": {
+    "description": "Audit log entry name: Seller verification approved."
+  },
+  "adminAuditSellerVerificationRejected": "Seller verification rejected",
+  "@adminAuditSellerVerificationRejected": {
+    "description": "Audit log entry name: Seller verification rejected."
+  },
+  "adminAuditContentRemoved": "Content removed",
+  "@adminAuditContentRemoved": {
+    "description": "Audit log entry name: Content removed."
+  },
+  "adminAuditContentReinstated": "Content reinstated",
+  "@adminAuditContentReinstated": {
+    "description": "Audit log entry name: Content reinstated."
+  },
+  "adminAuditCommentRemoved": "Comment removed",
+  "@adminAuditCommentRemoved": {
+    "description": "Audit log entry name: Comment removed."
+  },
+  "adminAuditWalletCredited": "Wallet credited",
+  "@adminAuditWalletCredited": {
+    "description": "Audit log entry name: Wallet credited."
+  },
+  "adminAuditWalletFrozen": "Wallet frozen",
+  "@adminAuditWalletFrozen": {
+    "description": "Audit log entry name: Wallet frozen."
+  },
+  "adminAuditRevokeSessions": "Sessions revoked",
+  "@adminAuditRevokeSessions": {
+    "description": "Audit log entry name: Sessions revoked."
+  },
+  "adminAuditCoolOffStarted": "Cool-off started",
+  "@adminAuditCoolOffStarted": {
+    "description": "Audit log entry name: Cool-off started."
+  },
+  "adminAuditAreaAuth": "Sign-in & security",
+  "@adminAuditAreaAuth": {
+    "description": "Audit log entry name: Sign-in & security."
+  },
+  "adminAuditAreaAccount": "Account",
+  "@adminAuditAreaAccount": {
+    "description": "Audit log entry name: Account."
+  },
+  "adminReportTypeSales": "Sales",
+  "@adminReportTypeSales": {
+    "description": "Admin report type: Sales."
+  },
+  "adminReportTypeSellers": "Sellers",
+  "@adminReportTypeSellers": {
+    "description": "Admin report type: Sellers."
+  },
+  "adminReportTypeContent": "Content",
+  "@adminReportTypeContent": {
+    "description": "Admin report type: Content."
+  },
+  "adminReportTypeFinance": "Finance",
+  "@adminReportTypeFinance": {
+    "description": "Admin report type: Finance."
+  },
+  "adminReportTypeUsers": "Users",
+  "@adminReportTypeUsers": {
+    "description": "Admin report type: Users."
+  },
+  "valueRungNew": "New",
+  "@valueRungNew": {
+    "description": "Reem Value standing rung: New."
+  },
+  "valueRungKnown": "Known",
+  "@valueRungKnown": {
+    "description": "Reem Value standing rung: Known."
+  },
+  "valueRungTrusted": "Trusted",
+  "@valueRungTrusted": {
+    "description": "Reem Value standing rung: Trusted."
+  },
+  "valueRungInsider": "Insider",
+  "@valueRungInsider": {
+    "description": "Reem Value standing rung: Insider."
+  },
+  "valueRungCircle": "Circle",
+  "@valueRungCircle": {
+    "description": "Reem Value standing rung: Circle."
   }
 }

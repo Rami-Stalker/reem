@@ -568,13 +568,103 @@ String adminStatusLabel(AppLocalizations l10n, String token) {
     'SUPPORT' => l10n.adminRoleSupport,
     'SELLER' => l10n.adminRoleSeller,
     'CUSTOMER' => l10n.adminRoleCustomer,
-    _ => token
-        .split(RegExp(r'[_\s]+'))
-        .where((word) => word.isNotEmpty)
-        .map((word) => '${word[0].toUpperCase()}${word.substring(1).toLowerCase()}')
-        .join(' '),
+    // Orders — the queue showed «Confirmed», «Cancelled» from the fallback.
+    'PENDING_PAYMENT' => l10n.orderStatePendingPayment,
+    'CONFIRMED' => l10n.orderStateConfirmed,
+    'PARTIALLY_SHIPPED' => l10n.orderStatePartiallyShipped,
+    'SHIPPED' => l10n.orderStateShipped,
+    'PARTIALLY_DELIVERED' => l10n.orderStatePartiallyDelivered,
+    'DELIVERED' => l10n.orderStateDelivered,
+    'PARTIALLY_CANCELLED' => l10n.orderStatePartiallyCancelled,
+    'CANCELLED' => l10n.orderStateCancelled,
+    'REFUNDED' => l10n.adminStatusRefunded,
+    // Audit severities.
+    'INFO' => l10n.adminStatusInfo,
+    'WARNING' => l10n.adminStatusWarning,
+    'CRITICAL' => l10n.adminStatusCritical,
+    // Notification deliveries and campaigns.
+    'QUEUED' => l10n.adminStatusQueued,
+    'SENT' => l10n.adminStatusSent,
+    'FAILED' => l10n.adminStatusFailed,
+    'SKIPPED' => l10n.adminStatusSkipped,
+    'SCHEDULED' => l10n.adminStatusScheduled,
+    'RUNNING' => l10n.adminStatusRunning,
+    'COMPLETED' => l10n.adminStatusCompleted,
+    _ =>
+      token
+          .split(RegExp(r'[_\s]+'))
+          .where((word) => word.isNotEmpty)
+          .map(
+            (word) =>
+                '${word[0].toUpperCase()}${word.substring(1).toLowerCase()}',
+          )
+          .join(' '),
   };
 }
+
+/// A record's title as the operator should read it.
+///
+/// Most sections title a row with a name the server already wrote for people.
+/// The audit log titles it with the action's code — `login`,
+/// `recovery_case_first_approval` — which is what the log showed until now.
+String adminRecordTitle(
+  AppLocalizations l10n,
+  String section,
+  AdminRecord record,
+) {
+  if (section != 'audit') return record.title;
+  return switch (record.title) {
+    'login' => l10n.adminAuditLogin,
+    'logout' => l10n.adminAuditLogout,
+    'logout_all' => l10n.adminAuditLogoutAll,
+    'register' => l10n.adminAuditRegister,
+    'phone_change_started' => l10n.adminAuditPhoneChangeStarted,
+    'phone_change_completed' => l10n.adminAuditPhoneChangeCompleted,
+    'phone_changed' => l10n.adminAuditPhoneChanged,
+    'recovery_case_opened' => l10n.adminAuditRecoveryOpened,
+    'recovery_case_submitted' => l10n.adminAuditRecoverySubmitted,
+    'recovery_case_first_approval' => l10n.adminAuditRecoveryFirstApproval,
+    'recovery_case_second_approval' => l10n.adminAuditRecoverySecondApproval,
+    'recovery_case_cooling_off' => l10n.adminAuditRecoveryCoolingOff,
+    'recovery_case_completed' => l10n.adminAuditRecoveryCompleted,
+    'recovery_case_rejected' => l10n.adminAuditRecoveryRejected,
+    'recovery_case_cancelled' => l10n.adminAuditRecoveryCancelled,
+    'password_reset_requested' => l10n.adminAuditPasswordResetRequested,
+    'password_reset_completed' => l10n.adminAuditPasswordResetCompleted,
+    'password_disabled' => l10n.adminAuditPasswordDisabled,
+    'totp_confirmed' => l10n.adminAuditTotpConfirmed,
+    'recovery_codes_generated' => l10n.adminAuditRecoveryCodesGenerated,
+    'recovery_code_redeemed' => l10n.adminAuditRecoveryCodeRedeemed,
+    'otp_codes_revealed' => l10n.adminAuditOtpCodesRevealed,
+    'seller_verification.approved' => l10n.adminAuditSellerVerificationApproved,
+    'seller_verification.rejected' => l10n.adminAuditSellerVerificationRejected,
+    'content_removed' => l10n.adminAuditContentRemoved,
+    'content_reinstated' => l10n.adminAuditContentReinstated,
+    'content_comment_removed' => l10n.adminAuditCommentRemoved,
+    'wallet.credited' => l10n.adminAuditWalletCredited,
+    'wallet.frozen' => l10n.adminAuditWalletFrozen,
+    'admin_revoke_sessions' => l10n.adminAuditRevokeSessions,
+    'cool_off_started' => l10n.adminAuditCoolOffStarted,
+    // A new action still shows, as its code, until it is named here.
+    _ => record.title,
+  };
+}
+
+/// The line under a record's title, with the codes it may carry named.
+String adminRecordSubtitle(
+  AppLocalizations l10n,
+  String section,
+  AdminRecord record,
+) => switch ((section, record.subtitle)) {
+  ('audit', 'auth') => l10n.adminAuditAreaAuth,
+  ('audit', 'account') => l10n.adminAuditAreaAccount,
+  ('reports', 'sales') => l10n.adminReportTypeSales,
+  ('reports', 'sellers') => l10n.adminReportTypeSellers,
+  ('reports', 'content') => l10n.adminReportTypeContent,
+  ('reports', 'finance' || 'financial') => l10n.adminReportTypeFinance,
+  ('reports', 'users') => l10n.adminReportTypeUsers,
+  _ => record.subtitle,
+};
 
 /// The localized name of a summary counter.
 ///

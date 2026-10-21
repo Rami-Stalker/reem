@@ -62,7 +62,23 @@ class AdminPoliciesScreen extends ConsumerWidget {
                 consent.maybeWhen(
                   data: (stats) => stats.isEmpty
                       ? const SizedBox.shrink()
-                      : _ConsentStrip(stats: stats),
+                      : _ConsentStrip(
+                          stats: stats,
+                          // The strip used to head each column with the slug
+                          // («customer-terms»); the policy's own title reads
+                          // better, and the slug stays on the row below.
+                          titles: {
+                            for (final document
+                                in documents.value ??
+                                    const <AdminPolicyDocument>[])
+                              document.slug: document.title(
+                                Localizations.localeOf(context).languageCode ==
+                                        'en'
+                                    ? 'en'
+                                    : 'ar',
+                              ),
+                          },
+                        ),
                   orElse: () => const SizedBox.shrink(),
                 ),
                 const SizedBox(height: DsSpacing.lg),
@@ -94,9 +110,10 @@ class AdminPoliciesScreen extends ConsumerWidget {
 
 /// How far the current version of each required policy has landed.
 class _ConsentStrip extends StatelessWidget {
-  const _ConsentStrip({required this.stats});
+  const _ConsentStrip({required this.stats, required this.titles});
 
   final List<AdminPolicyConsentStat> stats;
+  final Map<String, String> titles;
 
   @override
   Widget build(BuildContext context) {
@@ -129,7 +146,7 @@ class _ConsentStrip extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        stat.slug,
+                        titles[stat.slug] ?? stat.slug,
                         style: context.dsText.labelStrong.tint(palette.ink),
                       ),
                       DsGaps.vXxxs,
@@ -144,9 +161,7 @@ class _ConsentStrip extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        l10n.adminPolicyAcceptedAny(
-                          '${stat.acceptedAnyVersion}',
-                        ),
+                        l10n.adminPolicyAcceptedAny(stat.acceptedAnyVersion),
                         style: context.dsText.caption.tint(palette.muted),
                       ),
                     ],
@@ -224,7 +239,7 @@ class _PolicyRow extends ConsumerWidget {
                     ),
                     DsGaps.vXxxs,
                     Text(
-                      '${document.slug} · ${l10n.adminPolicyVersionsCount('${document.versions.length}')}',
+                      '${document.slug} · ${l10n.adminPolicyVersionsCount(document.versions.length)}',
                       style: context.dsText.caption.tint(palette.muted),
                     ),
                   ],

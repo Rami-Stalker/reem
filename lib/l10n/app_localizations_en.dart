@@ -580,12 +580,24 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String adminRecordNestedObject(int count) {
-    return '$count fields';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count fields',
+      one: '1 field',
+    );
+    return '$_temp0';
   }
 
   @override
   String adminRecordItemCount(int count) {
-    return '$count items';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count items',
+      one: '1 item',
+    );
+    return '$_temp0';
   }
 
   @override
@@ -610,7 +622,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String adminReportGenerated(String format, int count) {
-    return '$format report ready — $count rows';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count rows',
+      one: '1 row',
+    );
+    return '$format report ready — $_temp0';
   }
 
   @override
@@ -7055,8 +7073,15 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String adminPolicyAcceptedAny(String count) {
-    return '$count accounts have signed this policy';
+  String adminPolicyAcceptedAny(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count accounts have signed this policy',
+      one: '1 account has signed this policy',
+      zero: 'No account has signed it yet',
+    );
+    return '$_temp0';
   }
 
   @override
@@ -7064,8 +7089,14 @@ class AppLocalizationsEn extends AppLocalizations {
       'No open draft. Start one to change the text.';
 
   @override
-  String adminPolicyVersionsCount(String count) {
-    return '$count versions';
+  String adminPolicyVersionsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count versions',
+      one: '1 version',
+    );
+    return '$_temp0';
   }
 
   @override
@@ -8087,7 +8118,19 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String valueAdminDistributionSubtitle(int total, int unranked) {
-    return '$total profiles — $unranked not ranked yet';
+    String _temp0 = intl.Intl.pluralLogic(
+      total,
+      locale: localeName,
+      other: '$total profiles',
+      one: '1 profile',
+    );
+    String _temp1 = intl.Intl.pluralLogic(
+      unranked,
+      locale: localeName,
+      other: '$unranked not ranked yet',
+      zero: 'all ranked',
+    );
+    return '$_temp0 — $_temp1';
   }
 
   @override
@@ -10333,4 +10376,168 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get studioFormatOther => 'Other content';
+
+  @override
+  String get adminStatusInfo => 'Info';
+
+  @override
+  String get adminStatusWarning => 'Warning';
+
+  @override
+  String get adminStatusCritical => 'Critical';
+
+  @override
+  String get adminStatusQueued => 'Queued';
+
+  @override
+  String get adminStatusSent => 'Sent';
+
+  @override
+  String get adminStatusFailed => 'Failed';
+
+  @override
+  String get adminStatusSkipped => 'Skipped';
+
+  @override
+  String get adminStatusScheduled => 'Scheduled';
+
+  @override
+  String get adminStatusRunning => 'Running';
+
+  @override
+  String get adminStatusCompleted => 'Completed';
+
+  @override
+  String get adminStatusRefunded => 'Refunded';
+
+  @override
+  String get adminAuditLogin => 'Signed in';
+
+  @override
+  String get adminAuditLogout => 'Signed out';
+
+  @override
+  String get adminAuditLogoutAll => 'Signed out everywhere';
+
+  @override
+  String get adminAuditRegister => 'Account created';
+
+  @override
+  String get adminAuditPhoneChangeStarted => 'Phone change started';
+
+  @override
+  String get adminAuditPhoneChangeCompleted => 'Phone change completed';
+
+  @override
+  String get adminAuditPhoneChanged => 'Phone changed';
+
+  @override
+  String get adminAuditRecoveryOpened => 'Recovery case opened';
+
+  @override
+  String get adminAuditRecoverySubmitted => 'Recovery case submitted';
+
+  @override
+  String get adminAuditRecoveryFirstApproval => 'Recovery: first approval';
+
+  @override
+  String get adminAuditRecoverySecondApproval => 'Recovery: second approval';
+
+  @override
+  String get adminAuditRecoveryCoolingOff => 'Recovery cooling off';
+
+  @override
+  String get adminAuditRecoveryCompleted => 'Recovery completed';
+
+  @override
+  String get adminAuditRecoveryRejected => 'Recovery rejected';
+
+  @override
+  String get adminAuditRecoveryCancelled => 'Recovery cancelled';
+
+  @override
+  String get adminAuditPasswordResetRequested => 'Password reset requested';
+
+  @override
+  String get adminAuditPasswordResetCompleted => 'Password reset';
+
+  @override
+  String get adminAuditPasswordDisabled => 'Password turned off';
+
+  @override
+  String get adminAuditTotpConfirmed => 'Two-step verification on';
+
+  @override
+  String get adminAuditRecoveryCodesGenerated => 'Recovery codes created';
+
+  @override
+  String get adminAuditRecoveryCodeRedeemed => 'Recovery code used';
+
+  @override
+  String get adminAuditOtpCodesRevealed => 'Sign-in codes revealed';
+
+  @override
+  String get adminAuditSellerVerificationApproved =>
+      'Seller verification approved';
+
+  @override
+  String get adminAuditSellerVerificationRejected =>
+      'Seller verification rejected';
+
+  @override
+  String get adminAuditContentRemoved => 'Content removed';
+
+  @override
+  String get adminAuditContentReinstated => 'Content reinstated';
+
+  @override
+  String get adminAuditCommentRemoved => 'Comment removed';
+
+  @override
+  String get adminAuditWalletCredited => 'Wallet credited';
+
+  @override
+  String get adminAuditWalletFrozen => 'Wallet frozen';
+
+  @override
+  String get adminAuditRevokeSessions => 'Sessions revoked';
+
+  @override
+  String get adminAuditCoolOffStarted => 'Cool-off started';
+
+  @override
+  String get adminAuditAreaAuth => 'Sign-in & security';
+
+  @override
+  String get adminAuditAreaAccount => 'Account';
+
+  @override
+  String get adminReportTypeSales => 'Sales';
+
+  @override
+  String get adminReportTypeSellers => 'Sellers';
+
+  @override
+  String get adminReportTypeContent => 'Content';
+
+  @override
+  String get adminReportTypeFinance => 'Finance';
+
+  @override
+  String get adminReportTypeUsers => 'Users';
+
+  @override
+  String get valueRungNew => 'New';
+
+  @override
+  String get valueRungKnown => 'Known';
+
+  @override
+  String get valueRungTrusted => 'Trusted';
+
+  @override
+  String get valueRungInsider => 'Insider';
+
+  @override
+  String get valueRungCircle => 'Circle';
 }
