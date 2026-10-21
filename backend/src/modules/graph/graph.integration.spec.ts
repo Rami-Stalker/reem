@@ -171,8 +171,9 @@ dbTest('an edge whose behaviour stopped is removed, not left to rot', async (wor
   const userId = await activeShopper(world.db);
   if (!userId) return;
 
+  // One she has not favourited yet — the seed gives shoppers favourites.
   const product = await world.db.product.findFirstOrThrow({
-    where: { status: 'ACTIVE' },
+    where: { status: 'ACTIVE', favorites: { none: { userId } } },
     select: { id: true },
   });
 
