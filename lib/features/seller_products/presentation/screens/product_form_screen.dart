@@ -14,6 +14,7 @@ import 'package:reem/features/seller_products/domain/entities/product_status.dar
 import 'package:reem/features/seller_products/presentation/providers/seller_products_providers.dart';
 import 'package:reem/features/seller_products/presentation/widgets/category_attribute_fields.dart';
 import 'package:reem/features/seller_products/presentation/widgets/category_picker_field.dart';
+import 'package:reem/features/seller_products/presentation/widgets/product_status_chip.dart';
 import 'package:reem/l10n/app_localizations.dart';
 
 /// Writing a listing.
@@ -569,7 +570,7 @@ class _ProductFormScreenState extends ConsumerState<ProductFormScreen> {
                     children: [
                       for (final s in _selectableStatuses)
                         ChoiceChip(
-                          label: Text(s.label),
+                          label: Text(s.labelOf(context.l10n)),
                           selected: _status == s,
                           selectedColor: context.dsColors.primary.withValues(
                             alpha: 0.16,

@@ -175,7 +175,7 @@ class _RoomHeader extends StatelessWidget {
             children: [
               Expanded(
                 child: Text(
-                  room.occasionLabel ?? room.kind.labelIn(context.l10n),
+                  room.occasionLabel ?? room.kind.labelOf(context.l10n),
                   style: context.dsText.labelStrong.tint(colors.primary),
                 ),
               ),
@@ -268,7 +268,7 @@ class _BuyBar extends ConsumerWidget {
               Padding(
                 padding: const EdgeInsets.only(bottom: DsSpacing.xs),
                 child: Text(
-                  blocker.labelIn(context.l10n),
+                  blocker.labelOf(context.l10n),
                   textAlign: TextAlign.center,
                   style: context.dsText.caption.tint(colors.onSurfaceVariant),
                 ),

@@ -253,7 +253,7 @@ class DsSheetScaffold extends StatelessWidget {
                 if (showClose)
                   DsIconButton(
                     icon: Icons.close_rounded,
-            tooltip: 'إغلاق',
+                    tooltip: context.l10n.close,
                     variant: DsIconButtonVariant.tonal,
                     size: 36,
                     iconSize: 20,

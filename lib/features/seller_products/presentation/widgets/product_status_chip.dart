@@ -1,7 +1,21 @@
 import 'package:flutter/material.dart';
 
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/features/seller_products/domain/entities/product_status.dart';
+import 'package:reem/l10n/app_localizations.dart';
+
+/// A listing's state in the seller's words, from the ARB bundles.
+extension ProductStatusLabel on ProductStatus {
+  String labelOf(AppLocalizations l10n) => switch (this) {
+    ProductStatus.draft => l10n.productStateDraft,
+    ProductStatus.pendingReview => l10n.productStatePendingReview,
+    ProductStatus.active => l10n.productStateActive,
+    ProductStatus.outOfStock => l10n.productStateOutOfStock,
+    ProductStatus.paused => l10n.productStatePaused,
+    ProductStatus.archived => l10n.productStateArchived,
+  };
+}
 
 class ProductStatusChip extends StatelessWidget {
   const ProductStatusChip({super.key, required this.status});
@@ -28,7 +42,7 @@ class ProductStatusChip extends StatelessWidget {
         border: Border.all(color: color.withValues(alpha: 0.4)),
       ),
       child: Text(
-        status.label,
+        status.labelOf(context.l10n),
         style: context.dsText.bodySmall.semibold.tint(color),
       ),
     );

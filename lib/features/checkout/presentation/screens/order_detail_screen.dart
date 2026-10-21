@@ -14,6 +14,7 @@ import 'package:reem/features/chat/domain/entities/chat_start_request.dart';
 import 'package:reem/features/chat/presentation/widgets/message_seller_button.dart';
 import 'package:reem/features/checkout/domain/entities/checkout.dart';
 import 'package:reem/features/checkout/domain/entities/order.dart';
+import 'package:reem/features/checkout/presentation/order_labels.dart';
 import 'package:reem/features/checkout/presentation/providers/checkout_providers.dart';
 import 'package:reem/features/checkout/presentation/providers/order_detail_notifier.dart';
 import 'package:reem/features/checkout/presentation/widgets/cod_confirmation_sheet.dart';
@@ -317,7 +318,7 @@ class _Body extends StatelessWidget {
                 children: [
                   Expanded(
                     child: Text(
-                      payment.methodLabel,
+                      context.l10n.paymentMethodName(payment.method),
                       style: context.dsText.body.semibold.tint(
                         colors.onSurface,
                       ),

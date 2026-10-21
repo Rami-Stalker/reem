@@ -167,7 +167,7 @@ class RoomCard extends StatelessWidget {
                   ],
                 ),
                 Text(
-                  room.occasionLabel ?? room.kind.labelIn(context.l10n),
+                  room.occasionLabel ?? room.kind.labelOf(context.l10n),
                   style: context.dsText.caption,
                 ),
                 const SizedBox(height: DsSpacing.xs),
@@ -282,7 +282,7 @@ class _RoomComposerSheetState extends ConsumerState<RoomComposerSheet> {
             children: [
               for (final kind in RoomKind.values)
                 DsChip(
-                  label: kind.labelIn(context.l10n),
+                  label: kind.labelOf(context.l10n),
                   selected: _kind == kind,
                   onTap: () => setState(() => _kind = kind),
                 ),

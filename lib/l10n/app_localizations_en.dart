@@ -9816,4 +9816,181 @@ class AppLocalizationsEn extends AppLocalizations {
   String checkoutLandmarkValue(String landmark) {
     return 'Landmark: $landmark';
   }
+
+  @override
+  String get orderStateDraft => 'Draft';
+
+  @override
+  String get orderStatePendingPayment => 'Awaiting payment';
+
+  @override
+  String get orderStateConfirmed => 'Confirmed';
+
+  @override
+  String get orderStatePartiallyShipped => 'Partly shipped';
+
+  @override
+  String get orderStateShipped => 'Shipped';
+
+  @override
+  String get orderStatePartiallyDelivered => 'Partly delivered';
+
+  @override
+  String get orderStateDelivered => 'Delivered';
+
+  @override
+  String get orderStatePartiallyCancelled => 'Partly cancelled';
+
+  @override
+  String get orderStateCancelled => 'Cancelled';
+
+  @override
+  String get orderStateClosed => 'Closed';
+
+  @override
+  String get parcelStateNew => 'New order';
+
+  @override
+  String get parcelStateAwaitingSeller => 'Waiting for the seller';
+
+  @override
+  String get parcelStatePreparing => 'Being prepared';
+
+  @override
+  String get parcelStateReadyToShip => 'Ready to ship';
+
+  @override
+  String get parcelStateHandedToCourier => 'With the courier';
+
+  @override
+  String get parcelStateInTransit => 'On the way';
+
+  @override
+  String get parcelStateDelivered => 'Delivered';
+
+  @override
+  String get parcelStateDeliveryFailed => 'Delivery failed';
+
+  @override
+  String get parcelStateCancelledByYou => 'You cancelled';
+
+  @override
+  String get parcelStateCancelledBySeller => 'Cancelled by the seller';
+
+  @override
+  String get parcelStateRejectedOnDelivery => 'Refused on delivery';
+
+  @override
+  String get parcelStateReturnRequested => 'Return requested';
+
+  @override
+  String get parcelStateReturnInTransit => 'Return on the way';
+
+  @override
+  String get parcelStateReturned => 'Returned';
+
+  @override
+  String get parcelStateExchangeInProgress => 'Exchange in progress';
+
+  @override
+  String get parcelStateExchanged => 'Exchanged';
+
+  @override
+  String get parcelStateRefundPending => 'Refund pending';
+
+  @override
+  String get parcelStateRefunded => 'Refunded';
+
+  @override
+  String get parcelStateDisputed => 'In dispute';
+
+  @override
+  String get payMethodCod => 'Cash on delivery';
+
+  @override
+  String get payMethodCourierCollect => 'Pay the courier';
+
+  @override
+  String get payMethodSyriatelCash => 'Syriatel Cash';
+
+  @override
+  String get payMethodMtnCash => 'MTN Cash';
+
+  @override
+  String get payMethodShamCash => 'Sham Cash';
+
+  @override
+  String get payMethodBankCard => 'Bank card';
+
+  @override
+  String get payMethodBankTransfer => 'Bank transfer';
+
+  @override
+  String get payMethodHawala => 'Local transfer';
+
+  @override
+  String get payMethodWallet => 'Reem wallet';
+
+  @override
+  String get rawStatePending => 'Pending';
+
+  @override
+  String get rawStatePaid => 'Paid';
+
+  @override
+  String get rawStateFailed => 'Failed';
+
+  @override
+  String get rawStateRefunded => 'Refunded';
+
+  @override
+  String get rawStateCreated => 'Created';
+
+  @override
+  String get rawStateAssigned => 'Courier assigned';
+
+  @override
+  String get rawStatePickedUp => 'Picked up';
+
+  @override
+  String get rawStateInTransit => 'On the way';
+
+  @override
+  String get rawStateOutForDelivery => 'Out for delivery';
+
+  @override
+  String get rawStateDelivered => 'Delivered';
+
+  @override
+  String get rawStateReturning => 'Returning';
+
+  @override
+  String get rawStateReturned => 'Returned';
+
+  @override
+  String get rawStateCancelled => 'Cancelled';
+
+  @override
+  String get productStateDraft => 'Draft';
+
+  @override
+  String get productStatePendingReview => 'In review';
+
+  @override
+  String get productStateActive => 'Live';
+
+  @override
+  String get productStateOutOfStock => 'Out of stock';
+
+  @override
+  String get productStatePaused => 'Paused';
+
+  @override
+  String get productStateArchived => 'Archived';
+
+  @override
+  String get passwordShow => 'Show password';
+
+  @override
+  String get passwordHide => 'Hide password';
 }

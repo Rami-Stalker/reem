@@ -17221,6 +17221,360 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Landmark: {landmark}'**
   String checkoutLandmarkValue(String landmark);
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'Draft'**
+  String get orderStateDraft;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'Awaiting payment'**
+  String get orderStatePendingPayment;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirmed'**
+  String get orderStateConfirmed;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'Partly shipped'**
+  String get orderStatePartiallyShipped;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'Shipped'**
+  String get orderStateShipped;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'Partly delivered'**
+  String get orderStatePartiallyDelivered;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'Delivered'**
+  String get orderStateDelivered;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'Partly cancelled'**
+  String get orderStatePartiallyCancelled;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancelled'**
+  String get orderStateCancelled;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'Closed'**
+  String get orderStateClosed;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'New order'**
+  String get parcelStateNew;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for the seller'**
+  String get parcelStateAwaitingSeller;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'Being prepared'**
+  String get parcelStatePreparing;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'Ready to ship'**
+  String get parcelStateReadyToShip;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'With the courier'**
+  String get parcelStateHandedToCourier;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'On the way'**
+  String get parcelStateInTransit;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'Delivered'**
+  String get parcelStateDelivered;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'Delivery failed'**
+  String get parcelStateDeliveryFailed;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'You cancelled'**
+  String get parcelStateCancelledByYou;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancelled by the seller'**
+  String get parcelStateCancelledBySeller;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'Refused on delivery'**
+  String get parcelStateRejectedOnDelivery;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'Return requested'**
+  String get parcelStateReturnRequested;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'Return on the way'**
+  String get parcelStateReturnInTransit;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'Returned'**
+  String get parcelStateReturned;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'Exchange in progress'**
+  String get parcelStateExchangeInProgress;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'Exchanged'**
+  String get parcelStateExchanged;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'Refund pending'**
+  String get parcelStateRefundPending;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'Refunded'**
+  String get parcelStateRefunded;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'In dispute'**
+  String get parcelStateDisputed;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'Cash on delivery'**
+  String get payMethodCod;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'Pay the courier'**
+  String get payMethodCourierCollect;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'Syriatel Cash'**
+  String get payMethodSyriatelCash;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'MTN Cash'**
+  String get payMethodMtnCash;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'Sham Cash'**
+  String get payMethodShamCash;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'Bank card'**
+  String get payMethodBankCard;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'Bank transfer'**
+  String get payMethodBankTransfer;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'Local transfer'**
+  String get payMethodHawala;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'Reem wallet'**
+  String get payMethodWallet;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending'**
+  String get rawStatePending;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'Paid'**
+  String get rawStatePaid;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed'**
+  String get rawStateFailed;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'Refunded'**
+  String get rawStateRefunded;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'Created'**
+  String get rawStateCreated;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'Courier assigned'**
+  String get rawStateAssigned;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'Picked up'**
+  String get rawStatePickedUp;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'On the way'**
+  String get rawStateInTransit;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'Out for delivery'**
+  String get rawStateOutForDelivery;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'Delivered'**
+  String get rawStateDelivered;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'Returning'**
+  String get rawStateReturning;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'Returned'**
+  String get rawStateReturned;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancelled'**
+  String get rawStateCancelled;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'Draft'**
+  String get productStateDraft;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'In review'**
+  String get productStatePendingReview;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'Live'**
+  String get productStateActive;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'Out of stock'**
+  String get productStateOutOfStock;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'Paused'**
+  String get productStatePaused;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'Archived'**
+  String get productStateArchived;
+
+  /// Password field visibility toggle.
+  ///
+  /// In en, this message translates to:
+  /// **'Show password'**
+  String get passwordShow;
+
+  /// Password field visibility toggle.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide password'**
+  String get passwordHide;
 }
 
 class _AppLocalizationsDelegate

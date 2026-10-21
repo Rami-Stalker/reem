@@ -3,7 +3,7 @@ import 'package:reem/l10n/app_localizations.dart';
 
 /// Words for room states, kept out of the domain so they follow the locale.
 extension RoomKindLabel on RoomKind {
-  String labelIn(AppLocalizations l10n) => switch (this) {
+  String labelOf(AppLocalizations l10n) => switch (this) {
     RoomKind.solo => l10n.roomsKindSolo,
     RoomKind.group => l10n.roomsKindGroup,
     RoomKind.gift => l10n.roomsKindGift,
@@ -13,7 +13,7 @@ extension RoomKindLabel on RoomKind {
 
 extension RoomBlockerLabel on RoomBlocker {
   /// The sentence shown on the readiness strip.
-  String labelIn(AppLocalizations l10n) {
+  String labelOf(AppLocalizations l10n) {
     final title = decisionTitle ?? l10n.roomsDecisionFallback;
     return switch (code) {
       'NO_DECISIONS' => l10n.roomsBlockerNoDecisions,

@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:reem/core/shared/value_objects/money.dart';
+import 'package:reem/features/checkout/presentation/order_labels.dart';
 import 'package:reem/features/seller_orders/data/models/seller_order_models.dart';
 import 'package:reem/features/seller_orders/domain/entities/seller_order.dart';
 import 'package:reem/features/seller_orders/presentation/seller_order_labels.dart';
@@ -212,7 +213,7 @@ void main() {
       // for the woman who cancelled and wrong for the woman reading her queue.
       expect(
         ar.parcelStatus(SellerOrderStatus.cancelledByCustomer),
-        isNot(SellerOrderStatus.cancelledByCustomer.label),
+        isNot(ar.customerParcelStatus(SellerOrderStatus.cancelledByCustomer)),
       );
       expect(
         ar.parcelStatus(SellerOrderStatus.cancelledByCustomer),

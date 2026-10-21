@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:reem/core/design_system/foundation/theme/extensions/color_extension.dart';
 import 'package:reem/core/design_system/foundation/tokens/ds_spacing.dart';
 import 'package:reem/core/design_system/foundation/tokens/ds_typography.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
 
 /// The Reem text field — a premium, fully theme-driven input with an optional
 /// label above the field, helper/error text, and a built-in password toggle.
@@ -92,7 +93,9 @@ class _DsInputFieldState extends State<DsInputField> {
         // Flips with the state: a screen reader announces the action she is
         // about to take, and "show password" on an already-visible field
         // would send her the wrong way.
-        tooltip: _obscured ? 'إظهار كلمة المرور' : 'إخفاء كلمة المرور',
+        tooltip: _obscured
+            ? context.l10n.passwordShow
+            : context.l10n.passwordHide,
         icon: Icon(
           _obscured
               ? Icons.visibility_off_outlined

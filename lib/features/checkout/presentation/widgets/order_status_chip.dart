@@ -1,29 +1,10 @@
 import 'package:flutter/material.dart';
 
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/features/checkout/domain/entities/order.dart';
-
-/// Fallback for free-form status strings (payment status, shipment status).
-String humanizeStatus(String status) => switch (status) {
-  'pending' => 'قيد الانتظار',
-  'paid' => 'مدفوع',
-  'failed' => 'فشل',
-  'refunded' => 'مُسترد',
-  'created' => 'تم الإنشاء',
-  'assigned' => 'أُسند لمندوب',
-  'picked_up' => 'تم الاستلام',
-  'in_transit' => 'بالطريق',
-  'out_for_delivery' => 'خارج للتسليم',
-  'delivered' => 'تم التسليم',
-  'returning' => 'قيد الإرجاع',
-  'returned' => 'تم الإرجاع',
-  'cancelled' => 'ملغى',
-  _ =>
-    status
-        .split('_')
-        .map((w) => w.isEmpty ? w : '${w[0].toUpperCase()}${w.substring(1)}')
-        .join(' '),
-};
+import 'package:reem/features/checkout/presentation/order_labels.dart';
+import 'package:reem/l10n/app_localizations.dart';
 
 /// Status pill for an order, a parcel or a payment.
 ///
@@ -31,20 +12,30 @@ String humanizeStatus(String status) => switch (status) {
 /// the nineteen sub-order states each read as Arabic a customer understands
 /// instead of "Awaiting Seller Confirmation".
 class OrderStatusChip extends StatelessWidget {
-  const OrderStatusChip._({required this.label, required _Tone tone})
-    : _tone = tone;
+  const OrderStatusChip._({
+    required String Function(AppLocalizations l10n) label,
+    required _Tone tone,
+  }) : _label = label,
+       _tone = tone;
 
   factory OrderStatusChip({Key? key, required OrderStatus status}) =>
-      OrderStatusChip._(label: status.label, tone: _orderTone(status));
+      OrderStatusChip._(
+        label: (l10n) => l10n.orderStatusLabel(status),
+        tone: _orderTone(status),
+      );
 
-  factory OrderStatusChip.parcel(SellerOrderStatus status) =>
-      OrderStatusChip._(label: status.label, tone: _parcelTone(status));
+  factory OrderStatusChip.parcel(SellerOrderStatus status) => OrderStatusChip._(
+    label: (l10n) => l10n.customerParcelStatus(status),
+    tone: _parcelTone(status),
+  );
 
   /// For payment and shipment statuses, which stay free-form strings.
-  factory OrderStatusChip.raw(String status) =>
-      OrderStatusChip._(label: humanizeStatus(status), tone: _rawTone(status));
+  factory OrderStatusChip.raw(String status) => OrderStatusChip._(
+    label: (l10n) => l10n.rawStatus(status),
+    tone: _rawTone(status),
+  );
 
-  final String label;
+  final String Function(AppLocalizations l10n) _label;
   final _Tone _tone;
 
   @override
@@ -69,7 +60,10 @@ class OrderStatusChip extends StatelessWidget {
         borderRadius: BorderRadius.circular(DsRadius.full),
         border: Border.all(color: color.withValues(alpha: 0.4)),
       ),
-      child: Text(label, style: context.dsText.bodySmall.semibold.tint(color)),
+      child: Text(
+        _label(context.l10n),
+        style: context.dsText.bodySmall.semibold.tint(color),
+      ),
     );
   }
 }

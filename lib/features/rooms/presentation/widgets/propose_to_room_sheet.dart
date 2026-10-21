@@ -133,7 +133,7 @@ class _PickRoom extends StatelessWidget {
             ),
             title: Text(room.title),
             subtitle: Text(
-              room.occasionLabel ?? room.kind.labelIn(context.l10n),
+              room.occasionLabel ?? room.kind.labelOf(context.l10n),
             ),
             trailing: const Icon(Icons.chevron_left_rounded),
             onTap: () => onPick(room),

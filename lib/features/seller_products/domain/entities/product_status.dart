@@ -11,22 +11,13 @@ extension ProductStatusX on ProductStatus {
   /// The value used when WRITING (uppercase, matching the Prisma enum).
   /// Responses come back lowercased and are parsed by [fromWire].
   String get wire => switch (this) {
-        ProductStatus.draft => 'DRAFT',
-        ProductStatus.pendingReview => 'PENDING_REVIEW',
-        ProductStatus.active => 'ACTIVE',
-        ProductStatus.outOfStock => 'OUT_OF_STOCK',
-        ProductStatus.paused => 'PAUSED',
-        ProductStatus.archived => 'ARCHIVED',
-      };
-
-  String get label => switch (this) {
-        ProductStatus.draft => 'مسودّة',
-        ProductStatus.pendingReview => 'قيد المراجعة',
-        ProductStatus.active => 'معروض',
-        ProductStatus.outOfStock => 'نفد المخزون',
-        ProductStatus.paused => 'موقوف مؤقتاً',
-        ProductStatus.archived => 'مؤرشف',
-      };
+    ProductStatus.draft => 'DRAFT',
+    ProductStatus.pendingReview => 'PENDING_REVIEW',
+    ProductStatus.active => 'ACTIVE',
+    ProductStatus.outOfStock => 'OUT_OF_STOCK',
+    ProductStatus.paused => 'PAUSED',
+    ProductStatus.archived => 'ARCHIVED',
+  };
 
   bool get isLive => this == ProductStatus.active;
 

@@ -9,6 +9,7 @@ import 'package:reem/features/seller_products/domain/entities/managed_product.da
 import 'package:reem/features/seller_products/domain/entities/product_status.dart';
 import 'package:reem/features/seller_products/presentation/providers/seller_products_providers.dart';
 import 'package:reem/features/seller_products/presentation/widgets/managed_product_card.dart';
+import 'package:reem/features/seller_products/presentation/widgets/product_status_chip.dart';
 
 class MyProductsScreen extends ConsumerWidget {
   const MyProductsScreen({super.key});
@@ -223,7 +224,12 @@ class _FilterBar extends StatelessWidget {
           for (final s in ProductStatus.values)
             Padding(
               padding: const EdgeInsetsDirectional.only(start: DsSpacing.sm),
-              child: _chip(context, s.label, selected == s, () => onSelect(s)),
+              child: _chip(
+                context,
+                s.labelOf(context.l10n),
+                selected == s,
+                () => onSelect(s),
+              ),
             ),
         ],
       ),

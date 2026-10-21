@@ -9847,4 +9847,181 @@ class AppLocalizationsAr extends AppLocalizations {
   String checkoutLandmarkValue(String landmark) {
     return 'علامة مميزة: $landmark';
   }
+
+  @override
+  String get orderStateDraft => 'مسودّة';
+
+  @override
+  String get orderStatePendingPayment => 'بانتظار الدفع';
+
+  @override
+  String get orderStateConfirmed => 'مؤكّد';
+
+  @override
+  String get orderStatePartiallyShipped => 'شُحن جزئياً';
+
+  @override
+  String get orderStateShipped => 'شُحن';
+
+  @override
+  String get orderStatePartiallyDelivered => 'سُلّم جزئياً';
+
+  @override
+  String get orderStateDelivered => 'سُلّم';
+
+  @override
+  String get orderStatePartiallyCancelled => 'أُلغي جزئياً';
+
+  @override
+  String get orderStateCancelled => 'ملغى';
+
+  @override
+  String get orderStateClosed => 'مغلق';
+
+  @override
+  String get parcelStateNew => 'طلب جديد';
+
+  @override
+  String get parcelStateAwaitingSeller => 'بانتظار تأكيد البائعة';
+
+  @override
+  String get parcelStatePreparing => 'قيد التجهيز';
+
+  @override
+  String get parcelStateReadyToShip => 'جاهز للشحن';
+
+  @override
+  String get parcelStateHandedToCourier => 'سُلّم للمندوب';
+
+  @override
+  String get parcelStateInTransit => 'في الطريق';
+
+  @override
+  String get parcelStateDelivered => 'سُلّم';
+
+  @override
+  String get parcelStateDeliveryFailed => 'تعذّر التسليم';
+
+  @override
+  String get parcelStateCancelledByYou => 'ألغيتِ الطلب';
+
+  @override
+  String get parcelStateCancelledBySeller => 'ألغته البائعة';
+
+  @override
+  String get parcelStateRejectedOnDelivery => 'رُفض عند الاستلام';
+
+  @override
+  String get parcelStateReturnRequested => 'طلب إرجاع';
+
+  @override
+  String get parcelStateReturnInTransit => 'قيد الإرجاع';
+
+  @override
+  String get parcelStateReturned => 'أُرجع';
+
+  @override
+  String get parcelStateExchangeInProgress => 'قيد الاستبدال';
+
+  @override
+  String get parcelStateExchanged => 'استُبدل';
+
+  @override
+  String get parcelStateRefundPending => 'قيد الاسترداد المالي';
+
+  @override
+  String get parcelStateRefunded => 'استُرد المبلغ';
+
+  @override
+  String get parcelStateDisputed => 'قيد النزاع';
+
+  @override
+  String get payMethodCod => 'الدفع عند الاستلام';
+
+  @override
+  String get payMethodCourierCollect => 'الدفع لمندوب الشحن';
+
+  @override
+  String get payMethodSyriatelCash => 'سيرياتيل كاش';
+
+  @override
+  String get payMethodMtnCash => 'MTN كاش';
+
+  @override
+  String get payMethodShamCash => 'شام كاش';
+
+  @override
+  String get payMethodBankCard => 'بطاقة بنكية';
+
+  @override
+  String get payMethodBankTransfer => 'تحويل بنكي';
+
+  @override
+  String get payMethodHawala => 'حوالة داخلية';
+
+  @override
+  String get payMethodWallet => 'محفظة ريم';
+
+  @override
+  String get rawStatePending => 'قيد الانتظار';
+
+  @override
+  String get rawStatePaid => 'مدفوع';
+
+  @override
+  String get rawStateFailed => 'لم ينجح';
+
+  @override
+  String get rawStateRefunded => 'مُسترد';
+
+  @override
+  String get rawStateCreated => 'أُنشئ';
+
+  @override
+  String get rawStateAssigned => 'أُسند لمندوب';
+
+  @override
+  String get rawStatePickedUp => 'استُلم';
+
+  @override
+  String get rawStateInTransit => 'في الطريق';
+
+  @override
+  String get rawStateOutForDelivery => 'خرج للتسليم';
+
+  @override
+  String get rawStateDelivered => 'سُلّم';
+
+  @override
+  String get rawStateReturning => 'قيد الإرجاع';
+
+  @override
+  String get rawStateReturned => 'أُرجع';
+
+  @override
+  String get rawStateCancelled => 'ملغى';
+
+  @override
+  String get productStateDraft => 'مسودّة';
+
+  @override
+  String get productStatePendingReview => 'قيد المراجعة';
+
+  @override
+  String get productStateActive => 'معروض';
+
+  @override
+  String get productStateOutOfStock => 'نفد المخزون';
+
+  @override
+  String get productStatePaused => 'موقوف مؤقتاً';
+
+  @override
+  String get productStateArchived => 'مؤرشف';
+
+  @override
+  String get passwordShow => 'إظهار كلمة المرور';
+
+  @override
+  String get passwordHide => 'إخفاء كلمة المرور';
 }
