@@ -67,7 +67,7 @@ class HomeNotificationsSummary extends ConsumerWidget {
                       borderRadius: DsRadius.borderFull,
                     ),
                     child: Text(
-                      '${summary.unreadCount} new',
+                      context.l10n.notificationsNewCount(summary.unreadCount),
                       style: context.dsText.micro.bold.tint(c.onPrimary),
                     ),
                   ),

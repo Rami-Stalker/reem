@@ -28,6 +28,10 @@ class HomeStoriesRail extends ConsumerWidget {
     final state = ref.watch(homeNotifierProvider);
     final stories = state.stories;
     final loading = state.storiesLoading && stories.isEmpty;
+    // One ring per boutique. The feed lists every story on its own, and a
+    // shop with three frames up used to take three places in the row.
+    final shops = HomeStoriesRail.groupStoriesByShop(stories);
+    final playlist = [for (final shop in shops) ...shop];
 
     if (!loading && stories.isEmpty) {
       return const SliverToBoxAdapter(child: SizedBox.shrink());
@@ -57,23 +61,29 @@ class HomeStoriesRail extends ConsumerWidget {
                     padding: const EdgeInsets.symmetric(
                       horizontal: DsSpacing.lg,
                     ),
-                    itemCount: stories.length,
+                    itemCount: shops.length,
                     separatorBuilder: (_, _) =>
                         const SizedBox(width: DsSpacing.sm),
                     itemBuilder: (context, index) {
-                      final story = stories[index];
+                      final shop = shops[index];
+                      final story = shop.first;
+                      // Where this shop's frames start in the playlist, so
+                      // the viewer plays shop by shop.
+                      final start = shops
+                          .take(index)
+                          .fold<int>(0, (sum, s) => sum + s.length);
                       return DsStoryCard(
                         label: _boutiqueName(story),
                         imageUrl: story.user.imageUrl,
-                        seen: story.isViewed,
+                        seen: shop.every((frame) => frame.isViewed),
                         isVerified: story.user.isVerified,
                         size: 68,
                         width: 80,
                         onTap: () => Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (_) => StoryViewerScreen(
-                              stories: stories,
-                              initialIndex: index,
+                              stories: playlist,
+                              initialIndex: start,
                             ),
                           ),
                         ),
@@ -85,6 +95,17 @@ class HomeStoriesRail extends ConsumerWidget {
         const SliverToBoxAdapter(child: SizedBox(height: _trailingGap)),
       ],
     );
+  }
+
+  /// Stories grouped by the shop that posted them, in the order each shop
+  /// first appears in the feed; each shop's frames keep their feed order.
+  @visibleForTesting
+  static List<List<Story>> groupStoriesByShop(List<Story> stories) {
+    final shops = <String, List<Story>>{};
+    for (final story in stories) {
+      shops.putIfAbsent(story.user.id, () => []).add(story);
+    }
+    return shops.values.toList(growable: false);
   }
 
   /// The shop's display name, falling back to the handle for the rare account

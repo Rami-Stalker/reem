@@ -88,7 +88,12 @@ class _LoyaltyBody extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  '${loyalty.tier.label} member',
+                  context.l10n.rewardsTierMember(switch (loyalty.tier) {
+                    LoyaltyTier.rose => context.l10n.loyaltyTierRose,
+                    LoyaltyTier.gold => context.l10n.loyaltyTierGold,
+                    LoyaltyTier.platinum => context.l10n.loyaltyTierPlatinum,
+                    LoyaltyTier.diamond => context.l10n.loyaltyTierDiamond,
+                  }),
                   style: DsTypography.overline(faint),
                 ),
                 Text(
@@ -150,7 +155,9 @@ class _LoyaltyBody extends StatelessWidget {
             Expanded(
               child: _LoyaltyAction(
                 icon: Icons.confirmation_number_outlined,
-                label: '${loyalty.availableCoupons} coupons',
+                label: context.l10n.homeLoyaltyCoupons(
+                  loyalty.availableCoupons,
+                ),
                 onTap: () => context.push(RoutePaths.coupons),
               ),
             ),

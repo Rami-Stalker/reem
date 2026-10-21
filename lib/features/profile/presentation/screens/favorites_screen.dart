@@ -435,7 +435,7 @@ class _CollectionTile extends StatelessWidget {
                   style: context.dsText.body.semibold,
                 ),
                 Text(
-                  '${collection.itemsCount} items',
+                  context.l10n.itemsCount(collection.itemsCount),
                   style: context.dsText.body.tint(colors.onSurfaceVariant),
                 ),
               ],

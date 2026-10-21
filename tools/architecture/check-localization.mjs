@@ -103,7 +103,14 @@ function isProse(value) {
   const literalPart = value.replace(INTERPOLATION, ' ');
   const words = literalPart.match(/[A-Za-z]{2,}/g) ?? [];
   if (words.length >= 2) return true;
-  return words.length === 1 && /^\s*[A-Z]/.test(literalPart);
+  if (words.length === 1 && /^\s*[A-Z]/.test(literalPart)) return true;
+  // A count with an English noun — `'${n} items'` — is copy too: one word,
+  // lower case, standing after a value with a space between them.
+  return (
+    words.length === 1 &&
+    value.includes("$") &&
+    /^\s+[a-z]{3,}\s*$/.test(literalPart.replace(/^\s*/, ' '))
+  );
 }
 
 const files = SEARCH_ROOTS.flatMap((dir) => walk(path.join(root, dir)))

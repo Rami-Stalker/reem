@@ -77,4 +77,35 @@ extension OrderLabels on AppLocalizations {
           .map((w) => w.isEmpty ? w : '${w[0].toUpperCase()}${w.substring(1)}')
           .join(' '),
   };
+
+  /// A timeline entry in her words.
+  ///
+  /// The server writes these rows in English («Order created», «Sent to the
+  /// sellers for preparation») and they are stored that way, so the words are
+  /// chosen here from the status the row moved to. A row the app cannot name
+  /// keeps the server's title.
+  String orderEventTitle(OrderEvent event) {
+    if (event.fromStatus == null &&
+        OrderStatus.fromWire(event.toStatus) == OrderStatus.pendingPayment) {
+      return orderTimelineCreated;
+    }
+    return switch (OrderStatus.fromWire(event.toStatus)) {
+      OrderStatus.confirmed => orderTimelineConfirmed,
+      OrderStatus.cancelled => orderTimelineCancelled,
+      OrderStatus.draft => event.title,
+      final status => orderStatusLabel(status),
+    };
+  }
+
+  /// The line under a timeline entry, when there is one worth saying.
+  String? orderEventDescription(OrderEvent event) {
+    final status = OrderStatus.fromWire(event.toStatus);
+    if (status == OrderStatus.confirmed) return orderTimelineConfirmedBody;
+    if (status == OrderStatus.cancelled &&
+        event.title.toLowerCase().contains('deadline')) {
+      return orderTimelinePaymentExpired;
+    }
+    // The stored sentence is English; it is only said where English is read.
+    return localeName.startsWith('ar') ? null : event.description;
+  }
 }

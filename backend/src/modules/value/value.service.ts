@@ -57,9 +57,7 @@ export class ValueService {
     const profile = await this.scoring.findOrCreate(userId);
     const ladder = await this.policies.tiers();
 
-    const tier = profile.tierKey
-      ? (ladder.find((rung) => rung.key === profile.tierKey) ?? null)
-      : null;
+    const tier = currentRung(ladder, profile);
     const nextTier =
       ladder.find((rung) => rung.rank > (tier?.rank ?? -1)) ?? null;
 
@@ -120,7 +118,7 @@ export class ValueService {
   }> {
     const profile = await this.scoring.findOrCreate(userId);
     const ladder = await this.policies.tiers();
-    const tier = ladder.find((rung) => rung.key === profile.tierKey) ?? null;
+    const tier = currentRung(ladder, profile);
     const next = ladder.find((rung) => rung.rank > (tier?.rank ?? -1)) ?? null;
 
     // snake_case, like every other payload on the wire. This one endpoint used
@@ -129,8 +127,8 @@ export class ValueService {
     // becomes the contract if nobody fixes the side that is wrong.
     return {
       score: profile.score,
-      tier_key: profile.tierKey,
-      tier_name: profile.tierName,
+      tier_key: tier?.key ?? null,
+      tier_name: tier?.nameAr ?? tier?.name ?? null,
       momentum: profile.momentum,
       next_tier_name: next?.nameAr ?? next?.name ?? null,
       to_next_tier: next ? Math.max(0, next.minScore - profile.score) : 0,
@@ -161,4 +159,26 @@ export class ValueService {
       nextCursor: rows.length > limit ? rows[limit - 1].id : null,
     };
   }
+}
+
+/**
+ * Her rung on the ladder.
+ *
+ * The one the scoring service recorded; or, for a profile it has not scored
+ * yet, the highest rung her score already reaches. A new account scores 0 and
+ * the first rung starts at 0, so without this the screen told a woman who had
+ * just joined that «جديدة» was her *next* tier, 100% of the way there.
+ */
+function currentRung<T extends { key: string; rank: number; minScore: number }>(
+  ladder: readonly T[],
+  profile: { tierKey: string | null; score: number },
+): T | null {
+  if (profile.tierKey) {
+    return ladder.find((rung) => rung.key === profile.tierKey) ?? null;
+  }
+  return (
+    [...ladder]
+      .filter((rung) => rung.minScore <= profile.score)
+      .sort((a, b) => b.rank - a.rank)[0] ?? null
+  );
 }

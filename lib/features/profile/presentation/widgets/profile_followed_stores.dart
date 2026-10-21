@@ -32,7 +32,9 @@ class ProfileFollowedStores extends ConsumerWidget {
       children: [
         ProfileSectionHeader(
           title: context.l10n.following,
-          eyebrow: isLoading ? null : '${stores.length} boutiques',
+          eyebrow: isLoading
+              ? null
+              : context.l10n.profileBoutiquesCount(stores.length),
         ),
         SizedBox(
           height: 96,

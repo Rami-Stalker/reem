@@ -3110,5 +3110,19 @@
   "errorRetryLater": "لم يكتمل ذلك. جرّبي مرة أخرى بعد قليل.",
   "experienceTaglineBuyer": "بوتيك ناعم يتشكّل حول ذوقكِ.",
   "experienceTaglineSeller": "المخزون والطلبات والعميلات والنمو في مساحة عمل واحدة سريعة.",
-  "experienceTaglineAdmin": "التحكّم والحوكمة والتحليلات وصحة التشغيل في مكان واحد."
+  "experienceTaglineAdmin": "التحكّم والحوكمة والتحليلات وصحة التشغيل في مكان واحد.",
+  "loyaltyTierRose": "وردية",
+  "loyaltyTierGold": "ذهبية",
+  "loyaltyTierPlatinum": "بلاتينية",
+  "loyaltyTierDiamond": "ماسية",
+  "homeLoyaltyCoupons": "{count, plural, =0{لا كوبونات} =1{كوبون واحد} =2{كوبونان} few{{count} كوبونات} other{{count} كوبوناً}}",
+  "flashClaimed": "{count, plural, =0{لم تُطلب بعد} =1{طُلبت مرة} =2{طُلبت مرتين} few{طُلبت {count} مرات} other{طُلبت {count} مرة}}",
+  "notificationsNewCount": "{count, plural, =1{جديد واحد} =2{جديدان} few{{count} جديدة} other{{count} جديداً}}",
+  "profileBoutiquesCount": "{count, plural, =0{لا بوتيكات} =1{بوتيك واحد} =2{بوتيكان} few{{count} بوتيكات} other{{count} بوتيكاً}}",
+  "sellerStockLeft": "{count, plural, =1{بقيت قطعة} =2{بقيت قطعتان} few{بقيت {count} قطع} other{بقيت {count} قطعة}}",
+  "orderTimelineCreated": "أُنشئ الطلب",
+  "orderTimelineConfirmed": "تأكّد الطلب",
+  "orderTimelineConfirmedBody": "أُرسل إلى البائعات للتجهيز.",
+  "orderTimelineCancelled": "أُلغي الطلب",
+  "orderTimelinePaymentExpired": "انتهت مهلة الدفع."
 }

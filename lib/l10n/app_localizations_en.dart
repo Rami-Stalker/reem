@@ -10065,4 +10065,89 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get experienceTaglineAdmin =>
       'Enterprise control, governance, analytics, and operating health.';
+
+  @override
+  String get loyaltyTierRose => 'Rose';
+
+  @override
+  String get loyaltyTierGold => 'Gold';
+
+  @override
+  String get loyaltyTierPlatinum => 'Platinum';
+
+  @override
+  String get loyaltyTierDiamond => 'Diamond';
+
+  @override
+  String homeLoyaltyCoupons(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count coupons',
+      one: '1 coupon',
+      zero: 'No coupons',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String flashClaimed(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count claimed',
+      one: '1 claimed',
+      zero: 'Not claimed yet',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String notificationsNewCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count new',
+      one: '1 new',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String profileBoutiquesCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count boutiques',
+      one: '1 boutique',
+      zero: 'No boutiques',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String sellerStockLeft(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count left',
+      one: '1 left',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get orderTimelineCreated => 'Order placed';
+
+  @override
+  String get orderTimelineConfirmed => 'Order confirmed';
+
+  @override
+  String get orderTimelineConfirmedBody => 'Sent to the sellers to prepare.';
+
+  @override
+  String get orderTimelineCancelled => 'Order cancelled';
+
+  @override
+  String get orderTimelinePaymentExpired => 'The payment deadline passed.';
 }

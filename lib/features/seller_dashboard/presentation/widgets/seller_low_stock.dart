@@ -166,7 +166,9 @@ class _LowStockCard extends StatelessWidget {
                         borderRadius: DsRadius.borderFull,
                       ),
                       child: Text(
-                        isOut ? context.l10n.sellerOutOfStock : '${item.stock} left',
+                        isOut
+                            ? context.l10n.sellerOutOfStock
+                            : context.l10n.sellerStockLeft(item.stock),
                         style: context.dsText.micro.bold.tint(color),
                       ),
                     ),

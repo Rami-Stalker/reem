@@ -102,7 +102,12 @@ class DeviceManagementScreen extends ConsumerWidget {
                   final device = items[index];
                   return Semantics(
                     button: false,
-                    label: '${device.name}, ${device.trustLevel}',
+                    label: [
+                      device.name,
+                      device.isTrusted
+                          ? context.l10n.deviceTrusted
+                          : context.l10n.deviceNotVerified,
+                    ].join('، '),
                     child: Material(
                       color: colors.surface,
                       borderRadius: BorderRadius.circular(DsRadius.md),

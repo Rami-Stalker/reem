@@ -269,7 +269,14 @@ class _Body extends StatelessWidget {
                 ),
                 DsGaps.vXxs,
                 Text(
-                  '${order.shipping.addressLine}, ${order.shipping.city}, ${order.shipping.governorate}',
+                  // The Arabic list comma, and the governorate only when it
+                  // is not the city again («دمشق، دمشق»).
+                  [
+                    order.shipping.addressLine,
+                    order.shipping.city,
+                    if (order.shipping.governorate != order.shipping.city)
+                      order.shipping.governorate,
+                  ].where((part) => part.trim().isNotEmpty).join('، '),
                   style: context.dsText.body.tint(colors.onSurfaceVariant),
                 ),
                 if (order.shipping.landmark != null)
@@ -581,14 +588,15 @@ class _Timeline extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          events[i].title,
+                          context.l10n.orderEventTitle(events[i]),
                           style: context.dsText.body.semibold.tint(
                             colors.onSurface,
                           ),
                         ),
-                        if (events[i].description != null)
+                        if (context.l10n.orderEventDescription(events[i])
+                            case final description?)
                           Text(
-                            events[i].description!,
+                            description,
                             style: context.dsText.bodySmall.tint(
                               colors.onSurfaceVariant,
                             ),

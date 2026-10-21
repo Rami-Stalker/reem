@@ -10097,4 +10097,99 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get experienceTaglineAdmin =>
       'التحكّم والحوكمة والتحليلات وصحة التشغيل في مكان واحد.';
+
+  @override
+  String get loyaltyTierRose => 'وردية';
+
+  @override
+  String get loyaltyTierGold => 'ذهبية';
+
+  @override
+  String get loyaltyTierPlatinum => 'بلاتينية';
+
+  @override
+  String get loyaltyTierDiamond => 'ماسية';
+
+  @override
+  String homeLoyaltyCoupons(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count كوبوناً',
+      few: '$count كوبونات',
+      two: 'كوبونان',
+      one: 'كوبون واحد',
+      zero: 'لا كوبونات',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String flashClaimed(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'طُلبت $count مرة',
+      few: 'طُلبت $count مرات',
+      two: 'طُلبت مرتين',
+      one: 'طُلبت مرة',
+      zero: 'لم تُطلب بعد',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String notificationsNewCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count جديداً',
+      few: '$count جديدة',
+      two: 'جديدان',
+      one: 'جديد واحد',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String profileBoutiquesCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count بوتيكاً',
+      few: '$count بوتيكات',
+      two: 'بوتيكان',
+      one: 'بوتيك واحد',
+      zero: 'لا بوتيكات',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String sellerStockLeft(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'بقيت $count قطعة',
+      few: 'بقيت $count قطع',
+      two: 'بقيت قطعتان',
+      one: 'بقيت قطعة',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get orderTimelineCreated => 'أُنشئ الطلب';
+
+  @override
+  String get orderTimelineConfirmed => 'تأكّد الطلب';
+
+  @override
+  String get orderTimelineConfirmedBody => 'أُرسل إلى البائعات للتجهيز.';
+
+  @override
+  String get orderTimelineCancelled => 'أُلغي الطلب';
+
+  @override
+  String get orderTimelinePaymentExpired => 'انتهت مهلة الدفع.';
 }

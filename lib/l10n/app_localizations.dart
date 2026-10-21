@@ -17647,6 +17647,90 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Enterprise control, governance, analytics, and operating health.'**
   String get experienceTaglineAdmin;
+
+  /// Count shown on a card.
+  ///
+  /// In en, this message translates to:
+  /// **'Rose'**
+  String get loyaltyTierRose;
+
+  /// Count shown on a card.
+  ///
+  /// In en, this message translates to:
+  /// **'Gold'**
+  String get loyaltyTierGold;
+
+  /// Count shown on a card.
+  ///
+  /// In en, this message translates to:
+  /// **'Platinum'**
+  String get loyaltyTierPlatinum;
+
+  /// Count shown on a card.
+  ///
+  /// In en, this message translates to:
+  /// **'Diamond'**
+  String get loyaltyTierDiamond;
+
+  /// Count shown on a card.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{No coupons} =1{1 coupon} other{{count} coupons}}'**
+  String homeLoyaltyCoupons(int count);
+
+  /// Count shown on a card.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{Not claimed yet} =1{1 claimed} other{{count} claimed}}'**
+  String flashClaimed(int count);
+
+  /// Count shown on a card.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 new} other{{count} new}}'**
+  String notificationsNewCount(int count);
+
+  /// Count shown on a card.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{No boutiques} =1{1 boutique} other{{count} boutiques}}'**
+  String profileBoutiquesCount(int count);
+
+  /// Count shown on a card.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 left} other{{count} left}}'**
+  String sellerStockLeft(int count);
+
+  /// Order timeline entry.
+  ///
+  /// In en, this message translates to:
+  /// **'Order placed'**
+  String get orderTimelineCreated;
+
+  /// Order timeline entry.
+  ///
+  /// In en, this message translates to:
+  /// **'Order confirmed'**
+  String get orderTimelineConfirmed;
+
+  /// Order timeline entry.
+  ///
+  /// In en, this message translates to:
+  /// **'Sent to the sellers to prepare.'**
+  String get orderTimelineConfirmedBody;
+
+  /// Order timeline entry.
+  ///
+  /// In en, this message translates to:
+  /// **'Order cancelled'**
+  String get orderTimelineCancelled;
+
+  /// Order timeline entry.
+  ///
+  /// In en, this message translates to:
+  /// **'The payment deadline passed.'**
+  String get orderTimelinePaymentExpired;
 }
 
 class _AppLocalizationsDelegate

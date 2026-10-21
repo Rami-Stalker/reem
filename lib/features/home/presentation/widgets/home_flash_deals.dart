@@ -259,7 +259,7 @@ class _FlashDealCard extends StatelessWidget {
           Text(
             urgent
                 ? context.l10n.flashAlmostGone(deal.remainingQuantity)
-                : '${deal.soldCount} claimed',
+                : context.l10n.flashClaimed(deal.soldCount),
             style: context.dsText.caption
                 .tint(urgent ? c.discount : c.onSurfaceVariant)
                 .copyWith(
