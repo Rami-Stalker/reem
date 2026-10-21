@@ -1159,6 +1159,12 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get chatLoadOlder => 'Loading earlier messages';
+
+  @override
+  String get chatMessageNotSent => 'Not sent · tap to try again';
+
+  @override
   String get chatNoMessagesYet => 'No messages yet';
 
   @override
@@ -1190,6 +1196,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get chatSeen => 'Seen';
 
   @override
+  String get chatSendFailed => 'The message could not be sent';
+
+  @override
+  String get chatSending => 'Sending…';
+
+  @override
   String get chatSent => 'Sent';
 
   @override
@@ -1219,6 +1231,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get chatWriteMessage => 'Write a message…';
+
+  @override
+  String get chatYesterday => 'Yesterday';
 
   @override
   String get chatsEmptyAction => 'Browse the boutiques';

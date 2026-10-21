@@ -11,13 +11,22 @@ abstract interface class ChatRepository {
 
   Future<Result<ChatThreadEntity>> startConversation(ChatStartRequest request);
 
-  Future<Result<List<ChatMessageEntity>>> getMessages(String chatId);
+  /// The newest page of a conversation, or the page just older than
+  /// [before]. Oldest first. [currentUserId] decides which messages are hers.
+  Future<Result<List<ChatMessageEntity>>> getMessages(
+    String chatId, {
+    DateTime? before,
+    int limit = 50,
+    String? currentUserId,
+  });
 
   Future<Result<ChatMessageEntity>> sendMessage({
     required String chatId,
     required String content,
     String kind = 'TEXT',
     List<Map<String, dynamic>> attachments = const [],
+    String? clientId,
+    String? currentUserId,
   });
 
   Future<Result<void>> markRead(String chatId, {String? messageId});

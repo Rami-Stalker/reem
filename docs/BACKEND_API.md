@@ -52,9 +52,21 @@ Authorization: Bearer <access_token>
 
 | Method | Path | Notes |
 |--------|------|-------|
-| GET | `/chats` | Conversation threads |
-| GET | `/chats/:id/messages` | Messages |
-| POST | `/chats/:id/messages` | `{ content, type? }` |
+| GET | `/chats` | Conversation threads (`?q=` searches names and messages) |
+| POST | `/chats` | Open or reopen a thread: `{ product_id, seller_id? }`, `{ order_id }` or `{ participant_id }` |
+| GET | `/chats/:id` | One thread's header, with its unread count |
+| GET | `/chats/:id/messages` | Newest page, oldest first. `?before=<sent_at>&limit=` pages back |
+| POST | `/chats/:id/messages` | `{ content, kind?, client_id?, attachments? }` — a repeated `client_id` returns the stored message instead of a duplicate |
+| PATCH | `/chats/:id/read` | `{ message_id? }` — read up to that message (or the end); never moves backwards |
+| POST/DELETE | `/chats/blocks/:userId` | Block / unblock |
+| POST | `/chats/:id/reports` | Report the other participant |
+
+The socket at `/ws/chats` (bearer token as the `reem.auth.bearer`
+subprotocol) pushes `message.created` (with `is_mine` answered per
+recipient), `messages.delivered` (`message_ids`), `messages.read`
+(`user_id`, `up_to`), `typing` and `presence.changed`. A message is
+delivered the moment the recipient's open socket receives it. Errors carry
+`source_event` and the `client_id` of the send that failed.
 
 ## Reem AI Stylist (`/ai/stylist`)
 

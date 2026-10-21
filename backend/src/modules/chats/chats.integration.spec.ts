@@ -276,3 +276,170 @@ dbTest('unread counts only the other side, and clears on read', async (world) =>
   await world.chats.markRead(opened.id, buyer.id, {});
   assert.equal((await world.chats.thread(opened.id, buyer.id)).unread_count, 0);
 });
+
+// -- Reading, delivering, retrying ---------------------------------------
+
+dbTest('reading an older message leaves the newer ones unread', async (world) => {
+  const buyer = await makeUser(world.tx, 'q1', UserRole.CUSTOMER);
+  const seller = await makeUser(world.tx, 'q2', UserRole.SELLER);
+  const opened = await world.chats.startConversation(buyer.id, {
+    participant_id: seller.id,
+  });
+  const first = await world.chats.send(opened.id, seller.id, { content: 'أهلاً' });
+  await new Promise((resolve) => setTimeout(resolve, 5));
+  await world.chats.send(opened.id, seller.id, { content: 'متوفر بالأسود' });
+
+  // The cutoff used to be "now", which swallowed the second message too.
+  await world.chats.markRead(opened.id, buyer.id, { message_id: first.id });
+  assert.equal((await world.chats.thread(opened.id, buyer.id)).unread_count, 1);
+});
+
+dbTest('the read marker never moves backwards', async (world) => {
+  const buyer = await makeUser(world.tx, 'r1', UserRole.CUSTOMER);
+  const seller = await makeUser(world.tx, 'r2', UserRole.SELLER);
+  const opened = await world.chats.startConversation(buyer.id, {
+    participant_id: seller.id,
+  });
+  const first = await world.chats.send(opened.id, seller.id, { content: 'one' });
+  await new Promise((resolve) => setTimeout(resolve, 5));
+  await world.chats.send(opened.id, seller.id, { content: 'two' });
+
+  await world.chats.markRead(opened.id, buyer.id, {});
+  // A second handset reports an older position, late.
+  const late = await world.chats.markRead(opened.id, buyer.id, { message_id: first.id });
+
+  assert.equal(late.read, 0);
+  assert.equal((await world.chats.thread(opened.id, buyer.id)).unread_count, 0);
+});
+
+dbTest('reading twice changes nothing the second time', async (world) => {
+  const buyer = await makeUser(world.tx, 's1', UserRole.CUSTOMER);
+  const seller = await makeUser(world.tx, 's2', UserRole.SELLER);
+  const opened = await world.chats.startConversation(buyer.id, {
+    participant_id: seller.id,
+  });
+  await world.chats.send(opened.id, seller.id, { content: 'hello' });
+
+  const events: unknown[] = [];
+  const emitter = (world.chats as unknown as { events: EventEmitter2 }).events;
+  emitter.on('chat.messages.read', (event) => events.push(event));
+
+  assert.equal((await world.chats.markRead(opened.id, buyer.id, {})).read, 1);
+  assert.equal((await world.chats.markRead(opened.id, buyer.id, {})).read, 0);
+  // The other side redraws its ticks once, not on every call.
+  assert.equal(events.length, 1);
+
+  const [message] = await world.chats.messages(opened.id, seller.id);
+  assert.equal(message.status, 'read');
+});
+
+dbTest('a resent message with the same client id is stored once', async (world) => {
+  const buyer = await makeUser(world.tx, 't1', UserRole.CUSTOMER);
+  const seller = await makeUser(world.tx, 't2', UserRole.SELLER);
+  const opened = await world.chats.startConversation(buyer.id, {
+    participant_id: seller.id,
+  });
+
+  const first = await world.chats.send(opened.id, buyer.id, {
+    content: 'هل يتوفر مقاس L؟',
+    client_id: 'device-1:abc',
+  });
+  // The answer was lost on the way back; the phone tries again.
+  const retry = await world.chats.send(opened.id, buyer.id, {
+    content: 'هل يتوفر مقاس L؟',
+    client_id: 'device-1:abc',
+  });
+
+  assert.equal(retry.id, first.id);
+  assert.equal((await world.chats.messages(opened.id, seller.id)).length, 1);
+});
+
+dbTest('loading the conversation delivers it, and tells the sender', async (world) => {
+  const buyer = await makeUser(world.tx, 'u1', UserRole.CUSTOMER);
+  const seller = await makeUser(world.tx, 'u2', UserRole.SELLER);
+  const opened = await world.chats.startConversation(buyer.id, {
+    participant_id: seller.id,
+  });
+  const sent = await world.chats.send(opened.id, buyer.id, { content: 'hi' });
+  assert.equal(sent.status, 'sent');
+
+  const events: Array<{ messageIds: string[] }> = [];
+  const emitter = (world.chats as unknown as { events: EventEmitter2 }).events;
+  emitter.on('chat.messages.delivered', (event) => events.push(event));
+
+  await world.chats.messages(opened.id, seller.id);
+  await world.chats.messages(opened.id, seller.id);
+
+  assert.equal(events.length, 1, 'delivered once, not on every fetch');
+  assert.deepEqual(events[0].messageIds, [sent.id]);
+  const [mine] = await world.chats.messages(opened.id, buyer.id);
+  assert.equal(mine.status, 'delivered');
+});
+
+dbTest('scrolling back with a cursor neither repeats nor skips', async (world) => {
+  const buyer = await makeUser(world.tx, 'v1', UserRole.CUSTOMER);
+  const seller = await makeUser(world.tx, 'v2', UserRole.SELLER);
+  const opened = await world.chats.startConversation(buyer.id, {
+    participant_id: seller.id,
+  });
+  for (let i = 1; i <= 5; i += 1) {
+    await world.chats.send(opened.id, buyer.id, { content: `m${i}` });
+    await new Promise((resolve) => setTimeout(resolve, 3));
+  }
+
+  const latest = await world.chats.messages(opened.id, buyer.id, {
+    page: 1,
+    limit: 3,
+  });
+  assert.deepEqual(latest.map((m) => m.content), ['m3', 'm4', 'm5']);
+
+  // A message arrives while she reads — offset paging would now repeat m3.
+  await world.chats.send(opened.id, seller.id, { content: 'new' });
+
+  const older = await world.chats.messages(opened.id, buyer.id, {
+    page: 1,
+    limit: 3,
+    before: latest[0].sent_at,
+  });
+  assert.deepEqual(older.map((m) => m.content), ['m1', 'm2']);
+});
+
+dbTest('a direct conversation cannot claim to be about a product', async (world) => {
+  const buyer = await makeUser(world.tx, 'w1', UserRole.CUSTOMER);
+  const seller = await makeUser(world.tx, 'w2', UserRole.SELLER);
+  const product = await makeProduct(world.tx, seller.id);
+  const aboutDress = await world.chats.startConversation(buyer.id, {
+    product_id: product.id,
+  });
+
+  // `type: PRODUCT` with no product used to match — and reopen — the dress
+  // conversation above.
+  const direct = await world.chats.startConversation(buyer.id, {
+    participant_id: seller.id,
+    type: ChatContextType.PRODUCT,
+  });
+
+  assert.notEqual(direct.id, aboutDress.id);
+  assert.equal(direct.type, 'direct');
+});
+
+dbTest('a media kind with nothing attached is stored as text', async (world) => {
+  const buyer = await makeUser(world.tx, 'x1', UserRole.CUSTOMER);
+  const seller = await makeUser(world.tx, 'x2', UserRole.SELLER);
+  const opened = await world.chats.startConversation(buyer.id, {
+    participant_id: seller.id,
+  });
+  const sent = await world.chats.send(opened.id, buyer.id, {
+    content: 'صورة',
+    kind: 'IMAGE' as never,
+  });
+  assert.equal(sent.kind, 'text');
+});
+
+dbTest('blocking someone who does not exist is a 404, not a crash', async (world) => {
+  const buyer = await makeUser(world.tx, 'y1', UserRole.CUSTOMER);
+  await assert.rejects(
+    world.chats.blockUser(buyer.id, '00000000-0000-4000-8000-000000000000', {}),
+    /not found/i,
+  );
+});

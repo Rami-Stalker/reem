@@ -2288,6 +2288,18 @@ abstract class AppLocalizations {
   /// **'Last seen {when}'**
   String chatLastSeen(String when);
 
+  /// Shown at the top of a conversation while an older page loads.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading earlier messages'**
+  String get chatLoadOlder;
+
+  /// Under a message of hers that failed to send.
+  ///
+  /// In en, this message translates to:
+  /// **'Not sent · tap to try again'**
+  String get chatMessageNotSent;
+
   /// Thread preview when nothing has been sent
   ///
   /// In en, this message translates to:
@@ -2348,6 +2360,18 @@ abstract class AppLocalizations {
   /// **'Seen'**
   String get chatSeen;
 
+  /// Snackbar when a chat message fails to send.
+  ///
+  /// In en, this message translates to:
+  /// **'The message could not be sent'**
+  String get chatSendFailed;
+
+  /// Under a message of hers that is still on its way.
+  ///
+  /// In en, this message translates to:
+  /// **'Sending…'**
+  String get chatSending;
+
   /// Delivery status of a sent message [re-authored: original wording lost]
   ///
   /// In en, this message translates to:
@@ -2407,6 +2431,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Write a message…'**
   String get chatWriteMessage;
+
+  /// Date divider in a conversation for messages from yesterday.
+  ///
+  /// In en, this message translates to:
+  /// **'Yesterday'**
+  String get chatYesterday;
 
   /// Inbox empty state action
   ///

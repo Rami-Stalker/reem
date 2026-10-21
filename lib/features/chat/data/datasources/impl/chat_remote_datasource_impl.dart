@@ -37,14 +37,26 @@ final class ChatRemoteDataSourceImpl extends BaseRemoteDataSource
   }
 
   @override
-  Future<List<ChatMessageModel>> getMessages(String chatId) async {
-    final list = await getList(ApiEndpoints.chatMessages(chatId));
+  Future<List<ChatMessageModel>> getMessages(
+    String chatId, {
+    DateTime? before,
+    int limit = 50,
+    String? currentUserId,
+  }) async {
+    final list = await getList(
+      ApiEndpoints.chatMessages(chatId),
+      query: {
+        'limit': limit,
+        if (before != null) 'before': before.toUtc().toIso8601String(),
+      },
+    );
     return list
         .whereType<Map>()
         .map(
           (e) => ChatMessageModel.fromJson(
             Map<String, dynamic>.from(e),
             chatId: chatId,
+            currentUserId: currentUserId,
           ),
         )
         .toList();
@@ -56,19 +68,26 @@ final class ChatRemoteDataSourceImpl extends BaseRemoteDataSource
     required String content,
     String kind = 'TEXT',
     List<Map<String, dynamic>> attachments = const [],
+    String? clientId,
+    String? currentUserId,
   }) async {
     final json = await postJson(
       ApiEndpoints.chatMessages(chatId),
       body: {
         'content': content,
         'kind': kind,
+        'client_id': ?clientId,
         if (attachments.isNotEmpty) 'attachments': attachments,
       },
     );
     final messageJson = json['message'] is Map<String, dynamic>
         ? json['message'] as Map<String, dynamic>
         : json;
-    return ChatMessageModel.fromJson(messageJson, chatId: chatId);
+    return ChatMessageModel.fromJson(
+      messageJson,
+      chatId: chatId,
+      currentUserId: currentUserId,
+    );
   }
 
   @override
