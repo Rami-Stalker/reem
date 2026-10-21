@@ -140,16 +140,25 @@ test('Arabic reaches the trigram index at all', async (t) => {
     t.skip('no database reachable');
     return;
   }
-  // The whole reason the key is transliterated. Under this database's C
-  // ctype the raw Arabic produces an empty trigram set, so this assertion is
-  // what would catch someone "simplifying" the key back to plain folding.
-  const [{ keyed, raw }] = await prisma.$queryRawUnsafe<
-    { keyed: string[]; raw: string[] }[]
-  >(`SELECT show_trgm(reem_search_key('عبايه')) AS keyed, show_trgm('عبايه') AS raw`);
-  assert.ok(keyed.length > 0, 'the key is indexable');
-  assert.equal(
-    raw.length,
-    0,
-    'and raw Arabic still is not — if this ever fails, the ctype changed and the transliteration could be revisited',
+  // The whole reason the key is transliterated. Under a plain C ctype the
+  // raw Arabic produces an empty trigram set, so the key is what keeps Arabic
+  // searchable there — and must be indexable under every ctype.
+  const [{ keyed, raw, ctype }] = await prisma.$queryRawUnsafe<
+    { keyed: string[]; raw: string[]; ctype: string }[]
+  >(
+    `SELECT show_trgm(reem_search_key('عبايه')) AS keyed, show_trgm('عبايه') AS raw,
+            (SELECT datctype FROM pg_database WHERE datname = current_database()) AS ctype`,
   );
+  assert.ok(keyed.length > 0, 'the key is indexable');
+
+  // Only a plain C ctype leaves raw Arabic unindexable. `C.UTF-8` and
+  // `en_US.utf8` (CI's image) classify Arabic letters as letters, so there
+  // the raw text is indexable too and this half says nothing.
+  if (ctype === 'C' || ctype === 'POSIX') {
+    assert.equal(
+      raw.length,
+      0,
+      'and raw Arabic still is not — if this ever fails, the ctype changed and the transliteration could be revisited',
+    );
+  }
 });

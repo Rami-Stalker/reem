@@ -113,13 +113,29 @@ jobs:
 
       - run: npx prisma generate
 
-      # `migrate deploy`, never `db push` and never the seed: the seed deletes
-      # every row in every table and is not something CI should be able to do.
+      # `migrate deploy`, never `db push`: the schema CI tests is the one the
+      # migrations produce, which is the one production gets.
       - name: Apply migrations
         run: npx prisma migrate deploy
 
       - name: Migrations match the schema
         run: npx prisma migrate status
+
+      # The integration specs assert on the demo world — a boutique with live
+      # offers, a shopper with orders and favourites. Against the empty schema
+      # above they failed by the hundred («the seeded shop has no live
+      # offer»), which is why this job had been red since it was added.
+      #
+      # The seed deletes every row in every table, so it is confined to this
+      # job's own service container: created empty for the run, discarded
+      # after it. The case below refuses any other address, and the seed
+      # itself refuses NODE_ENV=production.
+      - name: Seed the throwaway test database
+        run: |
+          case "$DATABASE_URL" in
+            postgresql://reem_user:*@localhost:5432/reem_test\?*) npm run db:seed ;;
+            *) echo "Refusing to seed: DATABASE_URL is not this job's service container." >&2; exit 1 ;;
+          esac
 
       - run: npx tsc --noEmit
 
