@@ -460,7 +460,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get adminInvalidJson => 'يجب أن تكون القيمة بصيغة JSON صحيحة.';
 
   @override
-  String get adminInvalidRate => 'أدخلي نسبة بين ٠ و٥٠٠٠ نقطة أساس.';
+  String get adminInvalidRate => 'أدخلي نسبة بين 0 و5000 نقطة أساس.';
 
   @override
   String get adminJsonHint => 'قيمة بصيغة JSON، مثل: true أو 12 أو كائن';
@@ -563,7 +563,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get adminQuickActions => 'إجراءات سريعة';
 
   @override
-  String get adminRateHint => '٢٥٠ تعني ٢٫٥٪';
+  String get adminRateHint => '250 تعني 2.5%';
 
   @override
   String get adminRecordNoDetails => 'لا تفاصيل إضافية لهذا السجل.';
@@ -913,13 +913,13 @@ class AppLocalizationsAr extends AppLocalizations {
   String get analyticsPaidOrders => 'طلبات محقّقة';
 
   @override
-  String get analyticsPeriodMonth => '٣٠ يوماً';
+  String get analyticsPeriodMonth => '30 يوماً';
 
   @override
-  String get analyticsPeriodQuarter => '٣ أشهر';
+  String get analyticsPeriodQuarter => '3 أشهر';
 
   @override
-  String get analyticsPeriodWeek => '٧ أيام';
+  String get analyticsPeriodWeek => '7 أيام';
 
   @override
   String get analyticsPeriodYear => 'سنة';
@@ -1636,7 +1636,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get createStoryBadLink => 'الرابط غير صالح';
 
   @override
-  String get createStoryBody => 'لقطة من اليوم، تختفي بعد ٢٤ ساعة.';
+  String get createStoryBody => 'لقطة من اليوم، تختفي بعد 24 ساعة.';
 
   @override
   String get createStoryOptionalLink => 'رابط (اختياري)';
@@ -1698,7 +1698,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get discoverAskHelper =>
-      'صفي المناسبة أو الإحساس — «عرس صيفي، شي ناعم، تحت 60 ألف»';
+      'صفي المناسبة أو الإحساس — «عرس صيفي، شيء ناعم، تحت 60 ألف»';
 
   @override
   String get discoverAskHint => 'ماذا تحتاجين؟';
@@ -2720,7 +2720,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get loyaltyConvert => 'حوّلي إلى رصيد';
 
   @override
-  String get loyaltyConvertHint => 'كل ١٠ نقاط = ٥٬٠٠٠ ل.س رصيد';
+  String get loyaltyConvertHint => 'كل 10 نقاط = 5,000 ل.س رصيد';
 
   @override
   String loyaltyConverted(int count) {
@@ -3038,7 +3038,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get notifPushBlockedBody =>
-      'جوّالكِ مانع ريم، فما رح يوصلكِ شي من اللي تحت لَحد ما تسمحي فيه من إعدادات النظام.';
+      'هاتفكِ يمنع إشعارات ريم، فلن يصلكِ شيء مما يلي حتى تسمحي بها من إعدادات النظام.';
 
   @override
   String get notifPushBlockedTitle => 'الإشعارات مطفية';
@@ -3054,7 +3054,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get notifRoomsBlurb =>
-      'الاقتراحات والأصوات والقرارات بالغرف اللي إنتِ فيها.';
+      'الاقتراحات والأصوات والقرارات في الغرف التي أنتِ فيها.';
 
   @override
   String get notifSellerPosts => 'منشورات جديدة';
@@ -3079,17 +3079,17 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get notifSocialBlurb =>
-      'لمّا حدا يعجبه منشوركِ أو يعلّق عليه أو يشاركه.';
+      'حين يُعجب أحد بمنشوركِ أو يعلّق عليه أو يشاركه.';
 
   @override
-  String get notificationAllRead => 'ما ضل شي غير مقروء';
+  String get notificationAllRead => 'لا شيء غير مقروء';
 
   @override
   String get notificationInboxEmptyBody =>
-      'تحديثات طلباتك وردود البائعات والعروض رح تطلع هون.';
+      'تحديثات طلباتكِ وردود البائعات والعروض ستظهر هنا.';
 
   @override
-  String get notificationInboxEmptyTitle => 'ما في جديد بعد';
+  String get notificationInboxEmptyTitle => 'لا جديد بعد';
 
   @override
   String get notificationInboxLoadFailed => 'تعذّر تحميل الإشعارات';
@@ -3126,7 +3126,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get notificationsLoadFailed => 'تعذّر تحميل الإعدادات';
 
   @override
-  String get notificationsLoading => 'عم نحمّل الإعدادات';
+  String get notificationsLoading => 'نحمّل الإعدادات';
 
   @override
   String get numberChanged => 'تم تغيير رقم حسابكِ';
@@ -3963,7 +3963,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get returnRejectReason => 'سبب الرفض';
 
   @override
-  String get returnRejectTooShort => 'اكتبي سبباً واضحاً (٥ أحرف على الأقل)';
+  String get returnRejectTooShort => 'اكتبي سبباً واضحاً (5 أحرف على الأقل)';
 
   @override
   String get returnRequestAction => 'إرجاع أو استبدال';
@@ -5691,7 +5691,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String trendUnmetSummary(int searches, int missRate) {
-    return '$searches عملية بحث · $missRate٪ بلا نتيجة مناسبة';
+    return '$searches عملية بحث · $missRate% بلا نتيجة مناسبة';
   }
 
   @override
@@ -5703,13 +5703,13 @@ class AppLocalizationsAr extends AppLocalizations {
   String get trendViews => 'المشاهدات';
 
   @override
-  String get trendWindow14 => '١٤ يومًا';
+  String get trendWindow14 => '14 يومًا';
 
   @override
-  String get trendWindow30 => '٣٠ يومًا';
+  String get trendWindow30 => '30 يومًا';
 
   @override
-  String get trendWindow7 => '٧ أيام';
+  String get trendWindow7 => '7 أيام';
 
   @override
   String get trending => 'الأكثر رواجاً';
@@ -5801,7 +5801,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String trendsForecastMethod(String method, int confidence) {
-    return 'الطريقة: $method · الثقة $confidence٪';
+    return 'الطريقة: $method · الثقة $confidence%';
   }
 
   @override
@@ -5832,7 +5832,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String trendsMissRate(int rate) {
-    return '$rate٪ بلا نتيجة';
+    return '$rate% بلا نتيجة';
   }
 
   @override
@@ -5884,7 +5884,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String trendsSellerQuality(int cancel, int returns) {
-    return 'إلغاء $cancel٪ · إرجاع $returns٪';
+    return 'إلغاء $cancel% · إرجاع $returns%';
   }
 
   @override
@@ -6188,7 +6188,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get composerNeedsCaption => 'اكتبي شيئاً أو أضيفي صورة';
 
   @override
-  String get composerVideoTooLong => 'المقطع أطول من ٣٠ ثانية';
+  String get composerVideoTooLong => 'المقطع أطول من 30 ثانية';
 
   @override
   String contentResharedBy(String name) {
@@ -6233,7 +6233,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get socialFeedFollowing => 'أتابع';
 
   @override
-  String get socialFeedEmptyTitle => 'لسّا ما في منشورات';
+  String get socialFeedEmptyTitle => 'لا منشورات بعد';
 
   @override
   String get socialFeedEmptyBody => 'كوني أول وحدة تشاركي إطلالتك 🌸';
@@ -6243,23 +6243,22 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get socialFeedFollowingEmptyBody =>
-      'هون بتشوفي كل جديد من البوتيكات والصبايا يلي بتتابعيهم.';
+      'هنا ترين كل جديد من البوتيكات والصديقات اللواتي تتابعينهن.';
 
   @override
   String get reelsTitle => 'ريلز';
 
   @override
-  String get reelsEmptyTitle => 'ما في ريلز بعد';
+  String get reelsEmptyTitle => 'لا ريلز بعد';
 
   @override
-  String get reelsEmptyBody => 'أول مقطع ممكن يكون إلك 🎬';
+  String get reelsEmptyBody => 'قد يكون أول مقطع لكِ 🎬';
 
   @override
   String get composerTitle => 'منشور جديد';
 
   @override
-  String get contentAddToMyPageBody =>
-      'رح يظهر على صفحتك، والفضل يبقى للبوتيك.';
+  String get contentAddToMyPageBody => 'سيظهر على صفحتكِ، ويبقى الفضل للبوتيك.';
 
   @override
   String get contentAddToMyPagePreview => 'معاينة المنشور';
@@ -6276,7 +6275,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get contentAddToMyPageNote => 'تعليقك (اختياري)';
 
   @override
-  String get contentAddToMyPageNoteHint => 'شو حابة تقولي عنه؟';
+  String get contentAddToMyPageNoteHint => 'ماذا تحبين أن تقولي عنه؟';
 
   @override
   String get contentAddToMyPageConfirm => 'أضيفيه إلى صفحتي';
@@ -6285,7 +6284,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get composerMediaLabel => 'الصور أو المقطع';
 
   @override
-  String get composerMediaVideoHelp => 'مقطع واحد، حتى ٣٠ ثانية';
+  String get composerMediaVideoHelp => 'مقطع واحد، حتى 30 ثانية';
 
   @override
   String get composerCaptionLabel => 'الوصف';
@@ -6309,23 +6308,22 @@ class AppLocalizationsAr extends AppLocalizations {
   String get composerTagProducts => 'اربطي القطعة';
 
   @override
-  String get composerTagProductsHelp => 'بس القطع يلي وصلتك فعلياً';
+  String get composerTagProductsHelp => 'فقط القطع التي وصلتكِ فعلاً';
 
   @override
-  String get composerTagProductsEmpty =>
-      'لمّا يوصلك أول طلب، رح تلاقي قطعك هون.';
+  String get composerTagProductsEmpty => 'حين يصلكِ أول طلب، ستجدين قطعكِ هنا.';
 
   @override
   String get studioTitle => 'استوديو المحتوى';
 
   @override
-  String get studioSubtitle => 'شو بيشتغل، ووين وصل';
+  String get studioSubtitle => 'ما الذي ينجح، وإلى أين وصل';
 
   @override
   String get studioFormats => 'أداء المحتوى';
 
   @override
-  String get studioFormatsEmpty => 'ما في محتوى منشور بعد';
+  String get studioFormatsEmpty => 'لا محتوى منشوراً بعد';
 
   @override
   String get studioFormatPost => 'منشورات';
@@ -6349,18 +6347,18 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String studioClickThrough(String rate) {
-    return '$rate٪ من المشاهدات فتحت المنتج';
+    return '$rate% من المشاهدات فتحت المنتج';
   }
 
   @override
   String get studioReach => 'الانتشار';
 
   @override
-  String get studioReachEmpty => 'لسّا ما حدا أضاف منشوراتك';
+  String get studioReachEmpty => 'لم تُضِف أي زبونة منشوراتكِ بعد';
 
   @override
   String get studioReachEmptyBody =>
-      'لمّا تضيف زبونة منشورك على صفحتها، رح تشوفيها هون.';
+      'حين تضيف زبونة منشوركِ إلى صفحتها، سترينها هنا.';
 
   @override
   String get studioReshares => 'إضافات لصفحاتهن';
@@ -6376,14 +6374,14 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get studioPromotersHelp =>
-      'الأسماء بتظهر بس للي حسابها عام. الباقيات بينحسبن بدون أسماء.';
+      'تظهر الأسماء فقط لمن حسابها عام، وتُحتسب الباقيات دون أسماء.';
 
   @override
-  String get studioPromotersEmpty => 'ما في أحد بعد';
+  String get studioPromotersEmpty => 'لا أحد بعد';
 
   @override
   String get studioPromotersEmptyBody =>
-      'أول ما تضيف زبونة منشورك على صفحتها، رح تلاقيها هون.';
+      'حين تضيف زبونة منشوركِ إلى صفحتها، ستجدينها هنا.';
 
   @override
   String get studioPromoterAnonymous => 'زبونة (حساب خاص)';
@@ -6405,7 +6403,7 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
-  String get adminContentEmpty => 'ما في شي بانتظار المراجعة';
+  String get adminContentEmpty => 'لا شيء بانتظار المراجعة';
 
   @override
   String get adminContentNoCaption => '(بدون وصف)';
@@ -6444,7 +6442,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get adminContentRemoveBody =>
-      'رح توصل صاحبة المنشور رسالة فيها السبب يلي بتكتبيه هون، فاكتبيه بلغة واضحة ومحترمة.';
+      'ستصل صاحبة المنشور رسالة فيها السبب الذي تكتبينه هنا، فاكتبيه بلغة واضحة ومحترمة.';
 
   @override
   String get adminContentRemoveConfirm => 'حذف';
@@ -6466,13 +6464,13 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get adminContentReasonTooShort =>
-      'اكتبي سبباً واضحاً (١٠ أحرف على الأقل)';
+      'اكتبي سبباً واضحاً (10 أحرف على الأقل)';
 
   @override
-  String get discardChangesTitle => 'بدك تتركي اللي كتبتيه؟';
+  String get discardChangesTitle => 'هل تتركين ما كتبتِه؟';
 
   @override
-  String get discardChangesBody => 'إذا طلعتي هلق، كل شي على هالصفحة بيروح.';
+  String get discardChangesBody => 'إن خرجتِ الآن، سيضيع كل ما في هذه الصفحة.';
 
   @override
   String get discardChangesConfirm => 'اتركيه';
@@ -6485,7 +6483,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get postMenuNotInterestedDone =>
-      'تمام، ما رح يظهر لكِ هالمنشور مرة تانية.';
+      'حسناً، لن يظهر لكِ هذا المنشور مرة أخرى.';
 
   @override
   String postMenuMuteAuthor(String name) {
@@ -6530,10 +6528,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get actionUndo => 'تراجع';
 
   @override
-  String get reportTitle => 'شو سبب البلاغ؟';
+  String get reportTitle => 'ما سبب البلاغ؟';
 
   @override
-  String get reportSubtitle => 'البلاغ سرّي، وما حدا بيعرف مين بعته.';
+  String get reportSubtitle => 'البلاغ سرّي، ولن يعرف أحد من أرسله.';
 
   @override
   String get reportReasonImmodest => 'محتوى غير محتشم';
@@ -6557,13 +6555,13 @@ class AppLocalizationsAr extends AppLocalizations {
   String get reportReasonOther => 'سبب آخر';
 
   @override
-  String get reportSent => 'شكراً إلكِ، فريقنا رح يراجعه.';
+  String get reportSent => 'شكراً لكِ، سيراجعه فريقنا.';
 
   @override
   String get productPickedDone => 'انضافت إلى صفحتكِ';
 
   @override
-  String get productPickedPrivate => 'انضافت — صفحتكِ خاصة، فبس إنتِ بتشوفيها.';
+  String get productPickedPrivate => 'أُضيفت — صفحتكِ خاصة، فلا يراها غيركِ.';
 
   @override
   String get productUnpickedDone => 'انشالت من صفحتكِ';
@@ -6589,7 +6587,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get profileTabStories => 'الستوريات';
 
   @override
-  String get profilePrivateTitle => 'هالصفحة خاصة';
+  String get profilePrivateTitle => 'هذه الصفحة خاصة';
 
   @override
   String profilePrivateBody(String name) {
@@ -6597,16 +6595,16 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
-  String get profileEmptyPosts => 'ما في منشورات لسّا';
+  String get profileEmptyPosts => 'لا منشورات بعد';
 
   @override
-  String get profileEmptyReels => 'ما في ريلز لسّا';
+  String get profileEmptyReels => 'لا ريلز بعد';
 
   @override
-  String get profileEmptyStories => 'ما في ستوريات هلّق';
+  String get profileEmptyStories => 'لا ستوريات الآن';
 
   @override
-  String get profileEmptyPicks => 'ما انضافت قطع لهالصفحة لسّا';
+  String get profileEmptyPicks => 'لم تُضف قطع إلى هذه الصفحة بعد';
 
   @override
   String get profileEmptyPicksMine =>
@@ -6623,7 +6621,7 @@ class AppLocalizationsAr extends AppLocalizations {
       'صفحتكِ عامة — الكل بيقدر يشوف منشوراتكِ وريلزاتكِ واختياراتكِ.';
 
   @override
-  String get myPagePrivateBody => 'صفحتكِ خاصة — بس إنتِ بتشوفيها.';
+  String get myPagePrivateBody => 'صفحتكِ خاصة — لا يراها غيركِ.';
 
   @override
   String get myPagePublicToggle => 'صفحة عامة';
@@ -6635,25 +6633,25 @@ class AppLocalizationsAr extends AppLocalizations {
   String get myPageMadePrivate => 'صارت صفحتكِ خاصة';
 
   @override
-  String get createSheetTitle => 'شو حابة تنشري؟';
+  String get createSheetTitle => 'ماذا تحبين أن تنشري؟';
 
   @override
   String get createPost => 'منشور';
 
   @override
-  String get createPostHint => 'صور، إطلالة، قطعة بتحبيها';
+  String get createPostHint => 'صور، إطلالة، قطعة تحبينها';
 
   @override
   String get createReel => 'ريل';
 
   @override
-  String get createReelHint => 'فيديو قصير لحد ٣٠ ثانية';
+  String get createReelHint => 'فيديو قصير حتى 30 ثانية';
 
   @override
   String get createStory => 'ستوري';
 
   @override
-  String get createStoryHint => 'بتختفي بعد ٢٤ ساعة';
+  String get createStoryHint => 'تختفي بعد 24 ساعة';
 
   @override
   String get createTooltip => 'إنشاء';
@@ -6681,7 +6679,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String searchNoResultsFor(String query) {
-    return 'ما لقينا شي لـ «$query». جرّبي كلمة تانية.';
+    return 'لم نجد شيئاً لـ«$query». جرّبي كلمة أخرى.';
   }
 
   @override
@@ -6693,11 +6691,11 @@ class AppLocalizationsAr extends AppLocalizations {
   String get postMenuDelete => 'حذف المنشور';
 
   @override
-  String get postDeleteTitle => 'بدكِ تحذفي هالمنشور؟';
+  String get postDeleteTitle => 'هل تحذفين هذا المنشور؟';
 
   @override
   String get postDeleteBody =>
-      'رح يختفي من صفحتكِ ومن كل صفحة انضاف إلها، وما في تراجع.';
+      'سيختفي من صفحتكِ ومن كل صفحة أُضيف إليها، ولا يمكن التراجع.';
 
   @override
   String get postDeleted => 'انحذف المنشور';
@@ -6721,7 +6719,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get policiesSectionCustomers => 'للمشتريات';
 
   @override
-  String get policiesEmpty => 'ما في سياسات منشورة بعد';
+  String get policiesEmpty => 'لا سياسات منشورة بعد';
 
   @override
   String policiesVersionLabel(String version) {
@@ -6760,7 +6758,7 @@ class AppLocalizationsAr extends AppLocalizations {
       'كل سياسة وافقتِ عليها، وتاريخ موافقتك';
 
   @override
-  String get policiesReceiptsEmpty => 'ما وافقتِ على أي سياسة لسا';
+  String get policiesReceiptsEmpty => 'لم توافقي على أي سياسة بعد';
 
   @override
   String get policiesSourceRegistration => 'عند التسجيل';
@@ -6965,8 +6963,7 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
-  String get adminPolicyNoDraft =>
-      'ما في مسودة مفتوحة. افتحي واحدة لتغيير النص.';
+  String get adminPolicyNoDraft => 'لا مسودة مفتوحة. افتحي واحدة لتغيير النص.';
 
   @override
   String adminPolicyVersionsCount(String count) {
