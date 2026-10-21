@@ -9,6 +9,7 @@ import 'package:reem/core/media/media_variants.dart';
 import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/core/utils/relative_time.dart';
 import 'package:reem/features/social/domain/entities/content_analytics.dart';
+import 'package:reem/features/social/presentation/content_type_labels.dart';
 import 'package:reem/features/social/presentation/providers/social_providers.dart';
 
 /// What a boutique can see about its own content, and about the women carrying
@@ -125,12 +126,8 @@ class _FormatRow extends StatelessWidget {
 
   final ContentFormatPerformance row;
 
-  String _label(BuildContext context) => switch (row.format) {
-    'reel' => context.l10n.reelsTitle,
-    'story' => context.l10n.studioFormatStory,
-    'product_post' => context.l10n.studioFormatPost,
-    _ => row.format,
-  };
+  String _label(BuildContext context) =>
+      context.l10n.contentTypeRow(row.format);
 
   @override
   Widget build(BuildContext context) {

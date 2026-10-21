@@ -9158,11 +9158,11 @@ abstract class AppLocalizations {
   /// **'Rating'**
   String get sellerRatingStat;
 
-  /// Rating line on the seller stats card; both values are pre-formatted.
+  /// Rating line on the seller stats card. {count} picks the plural; {countLabel} is the same count formatted compactly.
   ///
   /// In en, this message translates to:
-  /// **'{rating} · {count} reviews'**
-  String sellerRatingSummary(String rating, String count);
+  /// **'{count, plural, =1{{rating} · 1 review} other{{rating} · {countLabel} reviews}}'**
+  String sellerRatingSummary(String rating, int count, String countLabel);
 
   /// Title of the reviews section.
   ///
@@ -17767,6 +17767,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'A {amount} discount was paid by Reem and doesn\'t come out of your earnings.'**
   String sellerOrderPlatformDiscountNote(String amount);
+
+  /// Composer chip: a product post.
+  ///
+  /// In en, this message translates to:
+  /// **'Post'**
+  String get contentTypePost;
+
+  /// Composer chip: a short video.
+  ///
+  /// In en, this message translates to:
+  /// **'Reel'**
+  String get contentTypeReel;
+
+  /// Composer chip: a 24-hour story.
+  ///
+  /// In en, this message translates to:
+  /// **'Story'**
+  String get contentTypeStory;
+
+  /// Composer chip: a time-limited offer.
+  ///
+  /// In en, this message translates to:
+  /// **'Flash offer'**
+  String get contentTypeFlashOffer;
+
+  /// Composer chip: a curated collection.
+  ///
+  /// In en, this message translates to:
+  /// **'Collection'**
+  String get contentTypeCollection;
+
+  /// Composer chip: a live stream.
+  ///
+  /// In en, this message translates to:
+  /// **'Live stream'**
+  String get contentTypeLiveStream;
+
+  /// Content studio row: flash offers.
+  ///
+  /// In en, this message translates to:
+  /// **'Flash offers'**
+  String get studioFormatFlashOffers;
+
+  /// Content studio row: collections.
+  ///
+  /// In en, this message translates to:
+  /// **'Collections'**
+  String get studioFormatCollections;
+
+  /// Content studio row: live streams.
+  ///
+  /// In en, this message translates to:
+  /// **'Live streams'**
+  String get studioFormatLiveStreams;
+
+  /// Content studio row for a content type the app does not know yet.
+  ///
+  /// In en, this message translates to:
+  /// **'Other content'**
+  String get studioFormatOther;
 }
 
 class _AppLocalizationsDelegate

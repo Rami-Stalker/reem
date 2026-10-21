@@ -112,3 +112,31 @@ Not testable in this environment: **photo search**. Its index is built by
 downloading product photographs, which this sandbox cannot reach, and the
 indexer is off by default (`VISUAL_SEARCH_INDEXER_ENABLED=false`) — in
 production it must be switched on, or `scripts/index-visual.ts` run once.
+
+## Seller app, verified end to end
+
+The seller app was run the same way, signed in as the demo boutique: the
+dashboard, products and the product form, the order queue and an order page,
+analytics, trends, the radar, product intelligence, store health, reviews,
+returns, the store page, earnings, the market, the content studio and the
+composer. Two waiting orders were accepted and marked ready for the courier,
+a review was answered (the reply is stored and shown under it), and the
+payout card was opened.
+
+What that run found and fixed:
+
+| Area | Problem | Fix |
+| --- | --- | --- |
+| Content studio, composer | Both pages were blank: a sliver gap sat inside a list of boxes. | The box gap is used there; the design-system check now rejects `DsGaps.sliver*` inside `children:`. |
+| Tab bar | A scrolling strip of 92px tiles cut the labels short and hid the fifth tab. | Five fixed tabs, icon over label. |
+| Dates | Reviews, orders, returns and payouts formatted dates with a pinned `'ar'` locale: «٥ أكتوبر» beside Western prices, and Arabic months for English readers. | One `formatCalendarDate(l10n, …)`; the localisation check rejects a `DateFormat` with a pinned locale. |
+| Order money | A platform-paid coupon was listed as a deduction, so the rows added up to less than her net. | The server sends the discount split by who paid it; only hers is deducted, the platform's is a note. |
+| Counts | About thirty strings read «من 3 طلب», «5 يومًا», «5 تقييم», «1 products». | Arabic plural forms and English singulars; two-count lines read «مشاهدات: 12 · طلبات: 3». |
+| Health advice | «ألغيتِ 1 طلب», «2 يوم». | The server says counts in Arabic: «ألغيتِ طلباً واحداً», «يومين», «5 ساعات». |
+| Words from the server | «باقة Premium»; the composer offered «Post · Reel · Story»; the studio listed a row called «flash_offer». | Plan levels and content types are named in her language, with the server's name as a fallback for a type the app does not know yet. |
+| Wording | The revenue card did not say its totals were all-time; the timeline said «أكّدتِ الاستلام» after she pressed «قبول الطلب». | «منذ افتتاح متجركِ»; «قبلتِ الطلب». |
+
+Not an app defect, but worth knowing: the demo seed writes the boutique's two
+paid payouts directly, without the ledger entries a real payout posts, so her
+earnings statement is empty under a lifetime total of 110,200 ل.س. The real
+flow posts those entries.

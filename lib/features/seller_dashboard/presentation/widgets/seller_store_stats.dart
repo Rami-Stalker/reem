@@ -88,6 +88,7 @@ class SellerStoreStats extends ConsumerWidget {
                     child: Text(
                       l10n.sellerRatingSummary(
                         store.rating.toStringAsFixed(1),
+                        store.reviewsCount,
                         formatCount(store.reviewsCount),
                       ),
                       maxLines: 1,

@@ -5017,8 +5017,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get sellerRatingStat => 'Rating';
 
   @override
-  String sellerRatingSummary(String rating, String count) {
-    return '$rating · $count reviews';
+  String sellerRatingSummary(String rating, int count, String countLabel) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$rating · $countLabel reviews',
+      one: '$rating · 1 review',
+    );
+    return '$_temp0';
   }
 
   @override
@@ -10297,4 +10303,34 @@ class AppLocalizationsEn extends AppLocalizations {
   String sellerOrderPlatformDiscountNote(String amount) {
     return 'A $amount discount was paid by Reem and doesn\'t come out of your earnings.';
   }
+
+  @override
+  String get contentTypePost => 'Post';
+
+  @override
+  String get contentTypeReel => 'Reel';
+
+  @override
+  String get contentTypeStory => 'Story';
+
+  @override
+  String get contentTypeFlashOffer => 'Flash offer';
+
+  @override
+  String get contentTypeCollection => 'Collection';
+
+  @override
+  String get contentTypeLiveStream => 'Live stream';
+
+  @override
+  String get studioFormatFlashOffers => 'Flash offers';
+
+  @override
+  String get studioFormatCollections => 'Collections';
+
+  @override
+  String get studioFormatLiveStreams => 'Live streams';
+
+  @override
+  String get studioFormatOther => 'Other content';
 }

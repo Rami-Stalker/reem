@@ -1615,7 +1615,7 @@
   "sellerProfit": "الربح",
   "sellerQuickActions": "إجراءات سريعة",
   "sellerRatingStat": "التقييم",
-  "sellerRatingSummary": "{rating} · {count} تقييم",
+  "sellerRatingSummary": "{count, plural, =1{{rating} · تقييم واحد} =2{{rating} · تقييمان} few{{rating} · {countLabel} تقييمات} many{{rating} · {countLabel} تقييماً} other{{rating} · {countLabel} تقييم}}",
   "sellerRecentReviews": "آخر التقييمات",
   "sellerReplied": "ردّ المتجر",
   "sellerResponsiveness": "سرعة الرد",
@@ -3130,5 +3130,15 @@
   "sellerPlanBasic": "الباقة الأساسية",
   "sellerPlanVerified": "باقة المتاجر الموثّقة",
   "sellerPlanPremium": "الباقة المميّزة",
-  "sellerOrderPlatformDiscountNote": "حسم بقيمة {amount} تحمّلته ريم عنكِ، ولا يُخصم من أرباحكِ."
+  "sellerOrderPlatformDiscountNote": "حسم بقيمة {amount} تحمّلته ريم عنكِ، ولا يُخصم من أرباحكِ.",
+  "contentTypePost": "منشور",
+  "contentTypeReel": "ريل",
+  "contentTypeStory": "قصة",
+  "contentTypeFlashOffer": "عرض سريع",
+  "contentTypeCollection": "مجموعة",
+  "contentTypeLiveStream": "بث مباشر",
+  "studioFormatFlashOffers": "عروض سريعة",
+  "studioFormatCollections": "مجموعات",
+  "studioFormatLiveStreams": "بث مباشر",
+  "studioFormatOther": "محتوى آخر"
 }

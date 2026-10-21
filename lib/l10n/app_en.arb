@@ -5897,14 +5897,17 @@
   "@sellerRatingStat": {
     "description": "Seller stat label [re-authored: original wording lost]"
   },
-  "sellerRatingSummary": "{rating} · {count} reviews",
+  "sellerRatingSummary": "{count, plural, =1{{rating} · 1 review} other{{rating} · {countLabel} reviews}}",
   "@sellerRatingSummary": {
-    "description": "Rating line on the seller stats card; both values are pre-formatted.",
+    "description": "Rating line on the seller stats card. {count} picks the plural; {countLabel} is the same count formatted compactly.",
     "placeholders": {
       "rating": {
         "type": "String"
       },
       "count": {
+        "type": "int"
+      },
+      "countLabel": {
         "type": "String"
       }
     }
@@ -11528,5 +11531,45 @@
         "type": "String"
       }
     }
+  },
+  "contentTypePost": "Post",
+  "@contentTypePost": {
+    "description": "Composer chip: a product post."
+  },
+  "contentTypeReel": "Reel",
+  "@contentTypeReel": {
+    "description": "Composer chip: a short video."
+  },
+  "contentTypeStory": "Story",
+  "@contentTypeStory": {
+    "description": "Composer chip: a 24-hour story."
+  },
+  "contentTypeFlashOffer": "Flash offer",
+  "@contentTypeFlashOffer": {
+    "description": "Composer chip: a time-limited offer."
+  },
+  "contentTypeCollection": "Collection",
+  "@contentTypeCollection": {
+    "description": "Composer chip: a curated collection."
+  },
+  "contentTypeLiveStream": "Live stream",
+  "@contentTypeLiveStream": {
+    "description": "Composer chip: a live stream."
+  },
+  "studioFormatFlashOffers": "Flash offers",
+  "@studioFormatFlashOffers": {
+    "description": "Content studio row: flash offers."
+  },
+  "studioFormatCollections": "Collections",
+  "@studioFormatCollections": {
+    "description": "Content studio row: collections."
+  },
+  "studioFormatLiveStreams": "Live streams",
+  "@studioFormatLiveStreams": {
+    "description": "Content studio row: live streams."
+  },
+  "studioFormatOther": "Other content",
+  "@studioFormatOther": {
+    "description": "Content studio row for a content type the app does not know yet."
   }
 }

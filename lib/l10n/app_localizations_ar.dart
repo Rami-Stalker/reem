@@ -5038,8 +5038,17 @@ class AppLocalizationsAr extends AppLocalizations {
   String get sellerRatingStat => 'التقييم';
 
   @override
-  String sellerRatingSummary(String rating, String count) {
-    return '$rating · $count تقييم';
+  String sellerRatingSummary(String rating, int count, String countLabel) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$rating · $countLabel تقييم',
+      many: '$rating · $countLabel تقييماً',
+      few: '$rating · $countLabel تقييمات',
+      two: '$rating · تقييمان',
+      one: '$rating · تقييم واحد',
+    );
+    return '$_temp0';
   }
 
   @override
@@ -10429,4 +10438,34 @@ class AppLocalizationsAr extends AppLocalizations {
   String sellerOrderPlatformDiscountNote(String amount) {
     return 'حسم بقيمة $amount تحمّلته ريم عنكِ، ولا يُخصم من أرباحكِ.';
   }
+
+  @override
+  String get contentTypePost => 'منشور';
+
+  @override
+  String get contentTypeReel => 'ريل';
+
+  @override
+  String get contentTypeStory => 'قصة';
+
+  @override
+  String get contentTypeFlashOffer => 'عرض سريع';
+
+  @override
+  String get contentTypeCollection => 'مجموعة';
+
+  @override
+  String get contentTypeLiveStream => 'بث مباشر';
+
+  @override
+  String get studioFormatFlashOffers => 'عروض سريعة';
+
+  @override
+  String get studioFormatCollections => 'مجموعات';
+
+  @override
+  String get studioFormatLiveStreams => 'بث مباشر';
+
+  @override
+  String get studioFormatOther => 'محتوى آخر';
 }
