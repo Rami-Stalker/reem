@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/features/visual_search/domain/entities/visual_search_session.dart';
 
 /// One photograph, picked and already shrunk.
@@ -42,9 +43,8 @@ class VisualSourceSheet extends StatelessWidget {
   }) {
     return DsBottomSheet.showTitled<PickedQueryImage>(
       context,
-      title: 'ابحثي بالصورة',
-      subtitle:
-          'صوّري القطعة، أو اختاري سكرين شوت من إنستغرام أو تيك توك أو بنترست.',
+      title: context.l10n.visualSearchByPhoto,
+      subtitle: context.l10n.visualSourceBody,
       child: VisualSourceSheet(maxEdge: maxEdge),
     );
   }
@@ -58,15 +58,15 @@ class VisualSourceSheet extends StatelessWidget {
       children: [
         _Option(
           icon: Icons.photo_camera_rounded,
-          title: 'صوّري القطعة',
-          subtitle: 'خليها بإضاءة منيحة وخلفية بسيطة',
+          title: context.l10n.visualTakePhoto,
+          subtitle: context.l10n.visualTakePhotoHint,
           onTap: () => _pick(context, ImageSource.camera),
         ),
         const SizedBox(height: DsSpacing.xs),
         _Option(
           icon: Icons.photo_library_rounded,
-          title: 'من الاستوديو',
-          subtitle: 'سكرين شوت أو صورة محفوظة',
+          title: context.l10n.visualFromGallery,
+          subtitle: context.l10n.visualFromGalleryHint,
           onTap: () => _pick(context, ImageSource.gallery),
         ),
         const SizedBox(height: DsSpacing.md),
@@ -81,8 +81,7 @@ class VisualSourceSheet extends StatelessWidget {
             const SizedBox(width: DsSpacing.xs),
             Expanded(
               child: Text(
-                'صورتك بتنحفظ بشكل خاص وبتنمسح تلقائيًا بعد انتهاء البحث. '
-                'ما حدا غيرك بيقدر يشوفها.',
+                context.l10n.visualPrivacy,
                 style: context.dsText.caption.copyWith(
                   color: colors.onSurfaceVariant,
                 ),

@@ -104,7 +104,7 @@ class _Inline extends StatelessWidget {
           DsGaps.hXxxs,
           TrendDelta(
             value: delta!,
-            suffix: '٪',
+            suffix: '%',
             fontSize: DsTypography.labelSmall,
           ),
         ],

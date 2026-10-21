@@ -9398,4 +9398,453 @@ class AppLocalizationsAr extends AppLocalizations {
   String siWeightOfHealth(int percent) {
     return 'وزنها $percent% من الصحّة';
   }
+
+  @override
+  String get stylistNewChat => 'محادثة جديدة';
+
+  @override
+  String get stylistMyPreferences => 'تفضيلاتي';
+
+  @override
+  String get stylistPreferencesFailed => 'تعذّر تحميل تفضيلاتكِ.';
+
+  @override
+  String get stylistModesty => 'درجة الاحتشام';
+
+  @override
+  String get stylistModestyHelp => 'تحدّد ما تعرضه عليكِ المنصّة من قطع.';
+
+  @override
+  String get stylistFavouriteColours => 'الألوان المفضّلة';
+
+  @override
+  String get stylistFavouriteColoursHelp =>
+      'نرفع ترتيب القطع بهذه الألوان، ولا نخفي غيرها.';
+
+  @override
+  String get stylistMySizes => 'مقاساتي';
+
+  @override
+  String get stylistMySizesHelp =>
+      'حين نعرفها، نعرض فقط القطع المتوفرة فعلاً بمقاسكِ.';
+
+  @override
+  String get stylistBudget => 'الميزانية';
+
+  @override
+  String get stylistBudgetHelp => 'الرقم الذي ترتاحين إليه عادةً.';
+
+  @override
+  String get stylistInferred => 'ما استنتجناه من تسوّقكِ';
+
+  @override
+  String get stylistInferredHelp => 'هذا ما تقوله اختياراتكِ، لا ما كتبتِه.';
+
+  @override
+  String get stylistModestyUnspecified => 'لا أحدّد';
+
+  @override
+  String get stylistModestyFull => 'تغطية كاملة';
+
+  @override
+  String get stylistModestyModest => 'محتشم';
+
+  @override
+  String get stylistModestyBalanced => 'متوازن';
+
+  @override
+  String get stylistModestyExpressive => 'بلا قيود';
+
+  @override
+  String get stylistClothing => 'الملابس';
+
+  @override
+  String get stylistShoes => 'الأحذية';
+
+  @override
+  String stylistBudgetStated(String amount) {
+    return 'حدّدتِ حتى $amount';
+  }
+
+  @override
+  String stylistBudgetTypical(String min, String max) {
+    return 'وعادةً تشترين بين $min و$max';
+  }
+
+  @override
+  String get stylistNoSignalYet =>
+      'لا إشارات كافية بعد. تصفّحي وشاهدي المنتجات، وسنتعلّم ذوقكِ.';
+
+  @override
+  String get stylistViewed => 'منتجات شاهدتِها';
+
+  @override
+  String get stylistSaved => 'منتجات حفظتِها';
+
+  @override
+  String get stylistPurchased => 'منتجات اشتريتِها';
+
+  @override
+  String get stylistDismissed => 'منتجات لم تعجبكِ';
+
+  @override
+  String get stylistTasteRefreshed => 'حدّثنا قراءتنا لذوقكِ.';
+
+  @override
+  String get stylistTasteRefreshFailed => 'تعذّر التحديث، جرّبي بعد قليل.';
+
+  @override
+  String get stylistRefresh => 'حدّثي';
+
+  @override
+  String get stylistLookFailed => 'تعذّر فتح الإطلالة.';
+
+  @override
+  String get stylistLookPartlyUnavailable =>
+      'قطعة أو أكثر لم تعد متوفرة. يمكنكِ طلب الباقي، أو سؤالي عن بديل.';
+
+  @override
+  String get stylistNoLongerAvailable => 'لم تعد متوفرة';
+
+  @override
+  String get stylistTotal => 'المجموع';
+
+  @override
+  String get stylistLookSaved => 'محفوظة';
+
+  @override
+  String get stylistSaveLook => 'احفظي الإطلالة';
+
+  @override
+  String get stylistLookSavedToCloset => 'حُفظت الإطلالة في خزانتكِ.';
+
+  @override
+  String get stylistLookSaveFailed => 'تعذّر حفظ الإطلالة، جرّبي مرة أخرى.';
+
+  @override
+  String get stylistComposerHint => 'أخبريني عمّا تبحثين…';
+
+  @override
+  String get stylistSend => 'إرسال';
+
+  @override
+  String get stylistMessageFailed => 'لم تصل الرسالة';
+
+  @override
+  String get stylistOpenLook => 'افتحي الإطلالة';
+
+  @override
+  String get stylistLookTotal => 'مجموع الإطلالة';
+
+  @override
+  String get stylistSoldOut => 'نفدت الكمية';
+
+  @override
+  String get stylistLike => 'يعجبني';
+
+  @override
+  String get stylistNotForMe => 'ليس لي';
+
+  @override
+  String get stylistWelcomeTitle => 'مساعدة ريم الشخصية';
+
+  @override
+  String get stylistWelcomeBody =>
+      'أخبريني عن المناسبة، أو القطعة، أو الميزانية — وأرتّب لكِ خيارات متوفرة فعلاً لدى بائعات ريم، وأخبركِ لماذا اخترت كل قطعة.';
+
+  @override
+  String get stylistTryAsking => 'جرّبي أن تسأليني:';
+
+  @override
+  String get stylistCapLookTitle => 'إطلالة كاملة';
+
+  @override
+  String get stylistCapLookBody => 'فستان وحقيبة وحذاء منسّقة معاً';
+
+  @override
+  String get stylistCapGiftsTitle => 'هدايا';
+
+  @override
+  String get stylistCapGiftsBody => 'حسب العمر والذوق والميزانية';
+
+  @override
+  String get stylistCapInStockTitle => 'متوفر فعلاً';
+
+  @override
+  String get stylistCapInStockBody => 'كل القطع من مخزون البائعات الحالي';
+
+  @override
+  String get visualNewSearch => 'بحث جديد';
+
+  @override
+  String get visualPickPhoto => 'اختاري صورة';
+
+  @override
+  String get visualPreparing => 'ما زلنا نجهّز البحث بالصورة';
+
+  @override
+  String get visualPreparingBody =>
+      'نحلّل صور المنتجات لنتمكّن من مقارنتها بصورتكِ. جرّبي بعد قليل.';
+
+  @override
+  String get visualRefresh => 'حدّثي';
+
+  @override
+  String get visualSawSomething => 'رأيتِ شيئاً أعجبكِ؟';
+
+  @override
+  String get visualSawSomethingBody =>
+      'ارفعي صورة القطعة — لقطة شاشة من إنستغرام أو تيك توك أو بنترست، أو صورة من الاستوديو — ونجد لكِ أقرب ما يوجد في ريم.';
+
+  @override
+  String get visualPastSearches => 'بحوثكِ السابقة';
+
+  @override
+  String get visualPhotoSearch => 'بحث بصورة';
+
+  @override
+  String get visualPhotoDeletedResultsKept =>
+      'حُذفت الصورة — لكن النتائج ما زالت موجودة';
+
+  @override
+  String get visualTapToOpen => 'اضغطي لفتحه';
+
+  @override
+  String get visualUploading => 'نرفع الصورة…';
+
+  @override
+  String get visualAnalysing => 'نحلّل الصورة ونبحث…';
+
+  @override
+  String get visualComparing =>
+      'نقارن الصورة بصور المنتجات الموجودة فعلاً في ريم.';
+
+  @override
+  String get visualNothingClose => 'لم أجد شيئاً قريباً';
+
+  @override
+  String get visualNothingCloseBody =>
+      'جرّبي صورة أوضح، أو اكتبي لي ما تريدينه بالضبط.';
+
+  @override
+  String get visualAnotherPhoto => 'صورة أخرى';
+
+  @override
+  String visualClosestCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'أقرب $count قطعة',
+      few: 'أقرب $count قطع',
+      two: 'أقرب قطعتين',
+      one: 'أقرب قطعة',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get visualNoOffer => 'لا عرض متوفر لهذه القطعة حالياً.';
+
+  @override
+  String get visualAddedToBag => 'أُضيفت إلى السلة';
+
+  @override
+  String get visualAddToBagFailed => 'تعذّرت إضافتها إلى السلة.';
+
+  @override
+  String get visualDeleteTitle => 'حذف البحث؟';
+
+  @override
+  String get visualDeleteBody =>
+      'ستُحذف الصورة والنتائج نهائياً، ولا يمكن استعادتها.';
+
+  @override
+  String get visualDelete => 'احذفي';
+
+  @override
+  String get visualBack => 'رجوع';
+
+  @override
+  String get visualDeleted => 'حُذفت الصورة والبحث.';
+
+  @override
+  String get visualWhatISaw => 'ما فهمته من الصورة';
+
+  @override
+  String get visualCouldntDescribe =>
+      'لم أستطع وصف الصورة بالكلمات، لكني أبحث عنها بصرياً.';
+
+  @override
+  String get visualDeletePhotoAndSearch => 'احذفي الصورة والبحث';
+
+  @override
+  String get visualPhotoDeleted => 'حُذفت الصورة';
+
+  @override
+  String get visualInferredFromMatches =>
+      'استنتجته من المنتجات الأقرب، لا من الصورة نفسها';
+
+  @override
+  String visualClosestCategory(String label) {
+    return 'الأقرب: $label';
+  }
+
+  @override
+  String get visualLowConfidence =>
+      'الصورة غير واضحة تماماً — النتائج تقريبية.';
+
+  @override
+  String get visualRefineHint => 'صفي لي ما تريدين تغييره…';
+
+  @override
+  String get visualRefine => 'عدّلي البحث';
+
+  @override
+  String get visualSeveralPieces => 'رأيتُ أكثر من قطعة في الصورة';
+
+  @override
+  String get visualRegionGuessed =>
+      'استنتجتُ هذه القطعة من ترتيب الصورة، ولستُ متأكدة تماماً.';
+
+  @override
+  String visualSimilaritySemantics(int percent) {
+    return 'نسبة التشابه $percent بالمئة';
+  }
+
+  @override
+  String visualSimilarityBadge(int percent) {
+    return '$percent% مشابه';
+  }
+
+  @override
+  String get visualSearchByPhoto => 'ابحثي بالصورة';
+
+  @override
+  String get visualSourceBody =>
+      'صوّري القطعة، أو اختاري لقطة شاشة من إنستغرام أو تيك توك أو بنترست.';
+
+  @override
+  String get visualTakePhoto => 'صوّري القطعة';
+
+  @override
+  String get visualTakePhotoHint => 'بإضاءة جيدة وخلفية بسيطة';
+
+  @override
+  String get visualFromGallery => 'من الاستوديو';
+
+  @override
+  String get visualFromGalleryHint => 'لقطة شاشة أو صورة محفوظة';
+
+  @override
+  String get visualPrivacy =>
+      'تُحفظ صورتكِ بشكل خاص وتُمسح تلقائياً بعد انتهاء البحث، ولا يراها أحد غيركِ.';
+
+  @override
+  String get visualSimilarRail => 'قطع شبيهة بصرياً';
+
+  @override
+  String get visualSearchWithYourPhoto => 'ابحثي بصورتكِ';
+
+  @override
+  String checkoutCouponApplied(String amount) {
+    return 'طُبّق الكوبون — توفير $amount';
+  }
+
+  @override
+  String get checkoutEtaToday => 'يصلكِ اليوم بإذن الله';
+
+  @override
+  String checkoutEtaDays(int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: 'يصلكِ خلال $days يوماً',
+      few: 'يصلكِ خلال $days أيام',
+      two: 'يصلكِ خلال يومين',
+      one: 'يصلكِ خلال يوم',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String checkoutSplitShipments(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count شحنة من $count بائعة',
+      few: '$count شحنات من $count بائعات',
+      two: 'شحنتان من بائعتين',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get checkoutShipments => 'الشحنات';
+
+  @override
+  String checkoutNote(String note) {
+    return 'ملاحظة: $note';
+  }
+
+  @override
+  String get checkoutPayment => 'الدفع';
+
+  @override
+  String get checkoutSummary => 'الملخّص';
+
+  @override
+  String get checkoutDiscount => 'الخصم';
+
+  @override
+  String get checkoutFromWallet => 'من المحفظة';
+
+  @override
+  String get checkoutTotal => 'الإجمالي';
+
+  @override
+  String get checkoutTracking => 'التتبّع';
+
+  @override
+  String get checkoutCancelOrder => 'إلغاء الطلب';
+
+  @override
+  String get chatClearSearch => 'امسحي البحث';
+
+  @override
+  String get chatPause => 'إيقاف مؤقت';
+
+  @override
+  String get chatPlay => 'تشغيل';
+
+  @override
+  String get productAddToRoom => 'أضيفيها إلى غرفة';
+
+  @override
+  String get decreaseQuantity => 'إنقاص الكمية';
+
+  @override
+  String get increaseQuantity => 'زيادة الكمية';
+
+  @override
+  String get profileShare => 'مشاركة';
+
+  @override
+  String get homeAskStylist => 'اسألي مساعِدة ريم';
+
+  @override
+  String get homeAskStylistBody =>
+      'أخبريني عن المناسبة وميزانيتكِ، وأرتّب لكِ خيارات متوفرة';
+
+  @override
+  String createProductPriceStock(String price, int stock) {
+    return '$price · $stock في المخزون';
+  }
+
+  @override
+  String get intelligenceNotesForYou => 'ملاحظات لكِ';
+
+  @override
+  String checkoutLandmarkValue(String landmark) {
+    return 'علامة مميزة: $landmark';
+  }
 }

@@ -203,7 +203,7 @@ class _QtyStepper extends StatelessWidget {
         children: [
           _StepperButton(
             icon: Icons.remove_rounded,
-            tooltip: 'إنقاص الكمية',
+            tooltip: context.l10n.decreaseQuantity,
             onTap: busy ? null : onDecrement,
           ),
           SizedBox(
@@ -219,7 +219,7 @@ class _QtyStepper extends StatelessWidget {
           ),
           _StepperButton(
             icon: Icons.add_rounded,
-            tooltip: 'زيادة الكمية',
+            tooltip: context.l10n.increaseQuantity,
             onTap: busy ? null : onIncrement,
           ),
         ],

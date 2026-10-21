@@ -6,6 +6,7 @@ import 'package:reem/features/ai_stylist/domain/entities/style_brief.dart';
 import 'package:reem/features/ai_stylist/domain/entities/stylist_conversation.dart';
 import 'package:reem/features/ai_stylist/domain/repositories/ai_stylist_repository.dart';
 import 'package:reem/features/ai_stylist/presentation/providers/ai_stylist_providers.dart';
+import 'package:reem/l10n/app_localizations.dart';
 
 /// Her taste, editable.
 ///
@@ -27,7 +28,7 @@ class StylePreferencesScreen extends ConsumerWidget {
       body: bootstrapAsync.when(
         loading: () => const Center(child: DsLoadingIndicator()),
         error: (_, _) => DsErrorState(
-          message: 'ما قدرنا نجيب تفضيلاتك.',
+          message: context.l10n.stylistPreferencesFailed,
           onRetry: () => ref.invalidate(stylistBootstrapProvider),
         ),
         data: (bootstrap) => _PreferencesBody(bootstrap: bootstrap),
@@ -50,8 +51,8 @@ class _PreferencesBody extends ConsumerWidget {
       padding: const EdgeInsets.all(DsSpacing.md),
       children: [
         _Section(
-          title: 'درجة الاحتشام',
-          subtitle: 'بتحدّد شو المنصّة بتعرض عليكِ من قطع.',
+          title: context.l10n.stylistModesty,
+          subtitle: context.l10n.stylistModestyHelp,
           child: _ModestyPicker(
             selected: preferences.modesty,
             onSelected: (value) => actions.updatePreferences(
@@ -60,8 +61,8 @@ class _PreferencesBody extends ConsumerWidget {
           ),
         ),
         _Section(
-          title: 'الألوان المفضّلة',
-          subtitle: 'منرفع ترتيب القطع بهالألوان، وما منخفي غيرها.',
+          title: context.l10n.stylistFavouriteColours,
+          subtitle: context.l10n.stylistFavouriteColoursHelp,
           child: _ColourPicker(
             available: bootstrap.colours,
             selected: preferences.favouriteColours.map((c) => c.key).toSet(),
@@ -71,8 +72,8 @@ class _PreferencesBody extends ConsumerWidget {
           ),
         ),
         _Section(
-          title: 'مقاساتي',
-          subtitle: 'لما نعرفهم، منعرض بس القطع المتوفرة فعليًا بمقاسك.',
+          title: context.l10n.stylistMySizes,
+          subtitle: context.l10n.stylistMySizesHelp,
           child: _SizeRow(
             clothingSize: preferences.clothingSize,
             shoeSize: preferences.shoeSize,
@@ -86,13 +87,13 @@ class _PreferencesBody extends ConsumerWidget {
         ),
         if (preferences.typicalMin != null || preferences.budgetMax != null)
           _Section(
-            title: 'الميزانية',
-            subtitle: 'الرقم اللي بترتاحي فيه عادةً.',
+            title: context.l10n.stylistBudget,
+            subtitle: context.l10n.stylistBudgetHelp,
             child: _BudgetSummary(preferences: preferences),
           ),
         _Section(
-          title: 'شو استنتجناه من تسوّقك',
-          subtitle: 'هاد اللي بتقوله تصرّفاتك، مو اللي كتبتيه.',
+          title: context.l10n.stylistInferred,
+          subtitle: context.l10n.stylistInferredHelp,
           child: _DerivedPanel(
             derived: preferences.derived,
             onRefresh: actions.refreshPreferences,
@@ -148,12 +149,12 @@ class _ModestyPicker extends StatelessWidget {
   final String selected;
   final ValueChanged<String> onSelected;
 
-  static const _options = [
-    ('UNSPECIFIED', 'ما بحدّد'),
-    ('FULL_COVERAGE', 'تغطية كاملة'),
-    ('MODEST', 'محتشم'),
-    ('BALANCED', 'متوازن'),
-    ('EXPRESSIVE', 'بلا قيود'),
+  static List<(String, String)> _options(AppLocalizations l10n) => [
+    ('UNSPECIFIED', l10n.stylistModestyUnspecified),
+    ('FULL_COVERAGE', l10n.stylistModestyFull),
+    ('MODEST', l10n.stylistModestyModest),
+    ('BALANCED', l10n.stylistModestyBalanced),
+    ('EXPRESSIVE', l10n.stylistModestyExpressive),
   ];
 
   @override
@@ -162,7 +163,7 @@ class _ModestyPicker extends StatelessWidget {
       spacing: DsSpacing.xs,
       runSpacing: DsSpacing.xs,
       children: [
-        for (final (key, label) in _options)
+        for (final (key, label) in _options(context.l10n))
           DsChip(
             label: label,
             selected: selected == key,
@@ -239,7 +240,7 @@ class _SizeRow extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'الملابس',
+          context.l10n.stylistClothing,
           style: context.dsText.labelMedium.tint(colors.onSurfaceVariant),
         ),
         const SizedBox(height: DsSpacing.xs),
@@ -256,7 +257,7 @@ class _SizeRow extends StatelessWidget {
         ),
         const SizedBox(height: DsSpacing.md),
         Text(
-          'الأحذية',
+          context.l10n.stylistShoes,
           style: context.dsText.labelMedium.tint(colors.onSurfaceVariant),
         ),
         const SizedBox(height: DsSpacing.xs),
@@ -292,13 +293,18 @@ class _BudgetSummary extends StatelessWidget {
       children: [
         if (stated != null)
           Text(
-            'حدّدتِ حتى ${stated.format()}',
+            context.l10n.stylistBudgetStated(stated.format()),
             style: context.dsText.body.tint(colors.onSurface),
           ),
         if (typical != null && preferences.typicalMin != null)
           Text(
-            'وعادةً بتشتري بين ${preferences.typicalMin!.format()} و${typical.format()}',
-            style: context.dsText.labelMedium.tint(colors.onSurfaceVariant).copyWith(height: 1.6),
+            context.l10n.stylistBudgetTypical(
+              preferences.typicalMin!.format(),
+              typical.format(),
+            ),
+            style: context.dsText.labelMedium
+                .tint(colors.onSurfaceVariant)
+                .copyWith(height: 1.6),
           ),
       ],
     );
@@ -329,14 +335,22 @@ class _DerivedPanel extends StatelessWidget {
         children: [
           if (taste == null || !taste.hasSignal)
             Text(
-              'لسا ما عنا إشارات كافية. تصفّحي وشوفي منتجات، ورح نتعلّم ذوقك.',
-              style: context.dsText.body.tint(colors.onSurfaceVariant).copyWith(height: 1.6),
+              context.l10n.stylistNoSignalYet,
+              style: context.dsText.body
+                  .tint(colors.onSurfaceVariant)
+                  .copyWith(height: 1.6),
             )
           else ...[
-            _Stat(label: 'منتجات شفتيها', value: taste.viewedCount),
-            _Stat(label: 'منتجات حفظتيها', value: taste.savedCount),
-            _Stat(label: 'منتجات اشتريتيها', value: taste.purchasedCount),
-            _Stat(label: 'منتجات ما عجبتك', value: taste.dismissedCount),
+            _Stat(label: context.l10n.stylistViewed, value: taste.viewedCount),
+            _Stat(label: context.l10n.stylistSaved, value: taste.savedCount),
+            _Stat(
+              label: context.l10n.stylistPurchased,
+              value: taste.purchasedCount,
+            ),
+            _Stat(
+              label: context.l10n.stylistDismissed,
+              value: taste.dismissedCount,
+            ),
           ],
           const SizedBox(height: DsSpacing.sm),
           Align(
@@ -348,13 +362,13 @@ class _DerivedPanel extends StatelessWidget {
                 DsSnackbar.show(
                   context,
                   message: ok
-                      ? 'حدّثنا قراءتنا لذوقك.'
-                      : 'ما قدرنا نحدّث، جرّبي بعد شوي.',
+                      ? context.l10n.stylistTasteRefreshed
+                      : context.l10n.stylistTasteRefreshFailed,
                   type: ok ? DsSnackbarType.success : DsSnackbarType.error,
                 );
               },
               icon: const Icon(Icons.refresh_rounded, size: 16),
-              label: const Text('حدّثي'),
+              label: Text(context.l10n.stylistRefresh),
             ),
           ),
         ],

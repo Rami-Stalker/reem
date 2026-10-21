@@ -88,14 +88,14 @@ class _AiStylistScreenState extends ConsumerState<AiStylistScreen> {
         title: context.l10n.aiStylistTitle,
         actions: [
           IconButton(
-            tooltip: 'محادثة جديدة',
+            tooltip: context.l10n.stylistNewChat,
             onPressed: state.isSending
                 ? null
                 : () => notifier.startNewConversation(),
             icon: const Icon(Icons.add_comment_outlined),
           ),
           IconButton(
-            tooltip: 'تفضيلاتي',
+            tooltip: context.l10n.stylistMyPreferences,
             onPressed: () => context.push(RoutePaths.stylistPreferences),
             icon: const Icon(Icons.tune_rounded),
           ),

@@ -345,7 +345,7 @@ class _ConfidenceBar extends StatelessWidget {
         ),
         const SizedBox(width: DsSpacing.sm),
         Text(
-          '${(confidence * 100).round()}٪',
+          '${(confidence * 100).round()}%',
           style: context.dsText.caption.bold.tint(colour),
         ),
       ],

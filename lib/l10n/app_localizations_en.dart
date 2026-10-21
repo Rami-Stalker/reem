@@ -9370,4 +9370,450 @@ class AppLocalizationsEn extends AppLocalizations {
   String siWeightOfHealth(int percent) {
     return '$percent% of health';
   }
+
+  @override
+  String get stylistNewChat => 'New chat';
+
+  @override
+  String get stylistMyPreferences => 'My preferences';
+
+  @override
+  String get stylistPreferencesFailed => 'Your preferences couldn’t load.';
+
+  @override
+  String get stylistModesty => 'Modesty';
+
+  @override
+  String get stylistModestyHelp => 'Decides which pieces the app shows you.';
+
+  @override
+  String get stylistFavouriteColours => 'Favourite colours';
+
+  @override
+  String get stylistFavouriteColoursHelp =>
+      'We rank pieces in these colours higher, without hiding the rest.';
+
+  @override
+  String get stylistMySizes => 'My sizes';
+
+  @override
+  String get stylistMySizesHelp =>
+      'Once we know them, we only show pieces actually available in your size.';
+
+  @override
+  String get stylistBudget => 'Budget';
+
+  @override
+  String get stylistBudgetHelp => 'The figure you’re usually comfortable with.';
+
+  @override
+  String get stylistInferred => 'What we learned from your shopping';
+
+  @override
+  String get stylistInferredHelp =>
+      'This is what your choices say, not what you wrote.';
+
+  @override
+  String get stylistModestyUnspecified => 'No preference';
+
+  @override
+  String get stylistModestyFull => 'Full coverage';
+
+  @override
+  String get stylistModestyModest => 'Modest';
+
+  @override
+  String get stylistModestyBalanced => 'Balanced';
+
+  @override
+  String get stylistModestyExpressive => 'No limits';
+
+  @override
+  String get stylistClothing => 'Clothing';
+
+  @override
+  String get stylistShoes => 'Shoes';
+
+  @override
+  String stylistBudgetStated(String amount) {
+    return 'You set up to $amount';
+  }
+
+  @override
+  String stylistBudgetTypical(String min, String max) {
+    return 'and you usually buy between $min and $max';
+  }
+
+  @override
+  String get stylistNoSignalYet =>
+      'Not enough signals yet. Browse and look at products, and we’ll learn your taste.';
+
+  @override
+  String get stylistViewed => 'Products you viewed';
+
+  @override
+  String get stylistSaved => 'Products you saved';
+
+  @override
+  String get stylistPurchased => 'Products you bought';
+
+  @override
+  String get stylistDismissed => 'Products you passed on';
+
+  @override
+  String get stylistTasteRefreshed => 'We refreshed our read of your taste.';
+
+  @override
+  String get stylistTasteRefreshFailed =>
+      'Couldn’t refresh — try again shortly.';
+
+  @override
+  String get stylistRefresh => 'Refresh';
+
+  @override
+  String get stylistLookFailed => 'The look couldn’t open.';
+
+  @override
+  String get stylistLookPartlyUnavailable =>
+      'One or more pieces are no longer available. You can order the rest, or ask me for an alternative.';
+
+  @override
+  String get stylistNoLongerAvailable => 'No longer available';
+
+  @override
+  String get stylistTotal => 'Total';
+
+  @override
+  String get stylistLookSaved => 'Saved';
+
+  @override
+  String get stylistSaveLook => 'Save the look';
+
+  @override
+  String get stylistLookSavedToCloset => 'The look is saved to your closet.';
+
+  @override
+  String get stylistLookSaveFailed => 'The look couldn’t be saved — try again.';
+
+  @override
+  String get stylistComposerHint => 'Tell me what you’re looking for…';
+
+  @override
+  String get stylistSend => 'Send';
+
+  @override
+  String get stylistMessageFailed => 'The message didn’t send';
+
+  @override
+  String get stylistOpenLook => 'Open the look';
+
+  @override
+  String get stylistLookTotal => 'Look total';
+
+  @override
+  String get stylistSoldOut => 'Sold out';
+
+  @override
+  String get stylistLike => 'I like it';
+
+  @override
+  String get stylistNotForMe => 'Not for me';
+
+  @override
+  String get stylistWelcomeTitle => 'Reem’s personal stylist';
+
+  @override
+  String get stylistWelcomeBody =>
+      'Tell me about the occasion, the piece or the budget — I’ll line up options that Reem’s sellers actually have, and tell you why I picked each one.';
+
+  @override
+  String get stylistTryAsking => 'Try asking me:';
+
+  @override
+  String get stylistCapLookTitle => 'A complete look';
+
+  @override
+  String get stylistCapLookBody => 'A dress, bag and shoes styled together';
+
+  @override
+  String get stylistCapGiftsTitle => 'Gifts';
+
+  @override
+  String get stylistCapGiftsBody => 'By age, taste and budget';
+
+  @override
+  String get stylistCapInStockTitle => 'Actually in stock';
+
+  @override
+  String get stylistCapInStockBody =>
+      'Every piece comes from sellers’ current stock';
+
+  @override
+  String get visualNewSearch => 'New search';
+
+  @override
+  String get visualPickPhoto => 'Choose a photo';
+
+  @override
+  String get visualPreparing => 'Photo search is still getting ready';
+
+  @override
+  String get visualPreparingBody =>
+      'We’re analysing product photos so we can compare them with yours. Try again shortly.';
+
+  @override
+  String get visualRefresh => 'Refresh';
+
+  @override
+  String get visualSawSomething => 'Saw something you liked?';
+
+  @override
+  String get visualSawSomethingBody =>
+      'Upload a photo of the piece — a screenshot from Instagram, TikTok or Pinterest, or one from your gallery — and we’ll find the closest thing in Reem.';
+
+  @override
+  String get visualPastSearches => 'Your past searches';
+
+  @override
+  String get visualPhotoSearch => 'Photo search';
+
+  @override
+  String get visualPhotoDeletedResultsKept =>
+      'The photo was deleted — the results are still here';
+
+  @override
+  String get visualTapToOpen => 'Tap to open';
+
+  @override
+  String get visualUploading => 'Uploading the photo…';
+
+  @override
+  String get visualAnalysing => 'Analysing the photo and searching…';
+
+  @override
+  String get visualComparing =>
+      'Comparing your photo with products actually on Reem.';
+
+  @override
+  String get visualNothingClose => 'I didn’t find anything close';
+
+  @override
+  String get visualNothingCloseBody =>
+      'Try a clearer photo, or write exactly what you want.';
+
+  @override
+  String get visualAnotherPhoto => 'Another photo';
+
+  @override
+  String visualClosestCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'The $count closest pieces',
+      one: 'The closest piece',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get visualNoOffer => 'No offer is available for this piece right now.';
+
+  @override
+  String get visualAddedToBag => 'Added to your bag';
+
+  @override
+  String get visualAddToBagFailed => 'It couldn’t be added to your bag.';
+
+  @override
+  String get visualDeleteTitle => 'Delete this search?';
+
+  @override
+  String get visualDeleteBody =>
+      'The photo and results will be deleted for good and can’t be recovered.';
+
+  @override
+  String get visualDelete => 'Delete';
+
+  @override
+  String get visualBack => 'Back';
+
+  @override
+  String get visualDeleted => 'The photo and search were deleted.';
+
+  @override
+  String get visualWhatISaw => 'What I understood from the photo';
+
+  @override
+  String get visualCouldntDescribe =>
+      'I couldn’t put the photo into words, but I’m searching for it visually.';
+
+  @override
+  String get visualDeletePhotoAndSearch => 'Delete the photo and search';
+
+  @override
+  String get visualPhotoDeleted => 'Photo deleted';
+
+  @override
+  String get visualInferredFromMatches =>
+      'Inferred from the closest products, not from the photo itself';
+
+  @override
+  String visualClosestCategory(String label) {
+    return 'Closest: $label';
+  }
+
+  @override
+  String get visualLowConfidence =>
+      'The photo isn’t very clear — results are approximate.';
+
+  @override
+  String get visualRefineHint => 'Describe what you’d like to change…';
+
+  @override
+  String get visualRefine => 'Refine the search';
+
+  @override
+  String get visualSeveralPieces => 'I saw more than one piece in the photo';
+
+  @override
+  String get visualRegionGuessed =>
+      'I guessed this piece from the photo’s layout — I’m not completely sure.';
+
+  @override
+  String visualSimilaritySemantics(int percent) {
+    return '$percent percent similar';
+  }
+
+  @override
+  String visualSimilarityBadge(int percent) {
+    return '$percent% similar';
+  }
+
+  @override
+  String get visualSearchByPhoto => 'Search by photo';
+
+  @override
+  String get visualSourceBody =>
+      'Take a photo of the piece, or pick a screenshot from Instagram, TikTok or Pinterest.';
+
+  @override
+  String get visualTakePhoto => 'Take a photo';
+
+  @override
+  String get visualTakePhotoHint => 'In good light against a plain background';
+
+  @override
+  String get visualFromGallery => 'From your gallery';
+
+  @override
+  String get visualFromGalleryHint => 'A screenshot or saved photo';
+
+  @override
+  String get visualPrivacy =>
+      'Your photo is stored privately and deleted automatically after the search. No one else can see it.';
+
+  @override
+  String get visualSimilarRail => 'Visually similar pieces';
+
+  @override
+  String get visualSearchWithYourPhoto => 'Search with your photo';
+
+  @override
+  String checkoutCouponApplied(String amount) {
+    return 'Coupon applied — saving $amount';
+  }
+
+  @override
+  String get checkoutEtaToday => 'Arrives today';
+
+  @override
+  String checkoutEtaDays(int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: 'Arrives within $days days',
+      one: 'Arrives within a day',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String checkoutSplitShipments(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count shipments from $count sellers',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get checkoutShipments => 'Shipments';
+
+  @override
+  String checkoutNote(String note) {
+    return 'Note: $note';
+  }
+
+  @override
+  String get checkoutPayment => 'Payment';
+
+  @override
+  String get checkoutSummary => 'Summary';
+
+  @override
+  String get checkoutDiscount => 'Discount';
+
+  @override
+  String get checkoutFromWallet => 'From wallet';
+
+  @override
+  String get checkoutTotal => 'Total';
+
+  @override
+  String get checkoutTracking => 'Tracking';
+
+  @override
+  String get checkoutCancelOrder => 'Cancel order';
+
+  @override
+  String get chatClearSearch => 'Clear search';
+
+  @override
+  String get chatPause => 'Pause';
+
+  @override
+  String get chatPlay => 'Play';
+
+  @override
+  String get productAddToRoom => 'Add to a room';
+
+  @override
+  String get decreaseQuantity => 'Decrease quantity';
+
+  @override
+  String get increaseQuantity => 'Increase quantity';
+
+  @override
+  String get profileShare => 'Share';
+
+  @override
+  String get homeAskStylist => 'Ask Reem’s stylist';
+
+  @override
+  String get homeAskStylistBody =>
+      'Tell me the occasion and your budget, and I’ll line up options in stock';
+
+  @override
+  String createProductPriceStock(String price, int stock) {
+    return '$price · $stock in stock';
+  }
+
+  @override
+  String get intelligenceNotesForYou => 'Notes for you';
+
+  @override
+  String checkoutLandmarkValue(String landmark) {
+    return 'Landmark: $landmark';
+  }
 }

@@ -74,7 +74,7 @@ void main() {
     // products for most shoppers land here, and reserving space on every
     // product page for a section that usually has no content is how a good
     // idea makes a page worse.
-    expect(find.text('ملاحظات إلك'), findsNothing);
+    expect(find.text('ملاحظات لكِ'), findsNothing);
     expect(find.byType(SurfaceCard), findsNothing);
   });
 
@@ -86,7 +86,7 @@ void main() {
     await tester.pumpWidget(_Preview(notes: notes));
     await tester.pump();
 
-    expect(find.text('ملاحظات إلك'), findsOneWidget);
+    expect(find.text('ملاحظات لكِ'), findsOneWidget);
     for (final note in notes) {
       expect(
         find.text(note.ar),

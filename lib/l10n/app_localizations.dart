@@ -16453,6 +16453,774 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{percent}% of health'**
   String siWeightOfHealth(int percent);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'New chat'**
+  String get stylistNewChat;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'My preferences'**
+  String get stylistMyPreferences;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Your preferences couldn’t load.'**
+  String get stylistPreferencesFailed;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Modesty'**
+  String get stylistModesty;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Decides which pieces the app shows you.'**
+  String get stylistModestyHelp;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Favourite colours'**
+  String get stylistFavouriteColours;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'We rank pieces in these colours higher, without hiding the rest.'**
+  String get stylistFavouriteColoursHelp;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'My sizes'**
+  String get stylistMySizes;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Once we know them, we only show pieces actually available in your size.'**
+  String get stylistMySizesHelp;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Budget'**
+  String get stylistBudget;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'The figure you’re usually comfortable with.'**
+  String get stylistBudgetHelp;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'What we learned from your shopping'**
+  String get stylistInferred;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'This is what your choices say, not what you wrote.'**
+  String get stylistInferredHelp;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'No preference'**
+  String get stylistModestyUnspecified;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Full coverage'**
+  String get stylistModestyFull;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Modest'**
+  String get stylistModestyModest;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Balanced'**
+  String get stylistModestyBalanced;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'No limits'**
+  String get stylistModestyExpressive;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Clothing'**
+  String get stylistClothing;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Shoes'**
+  String get stylistShoes;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'You set up to {amount}'**
+  String stylistBudgetStated(String amount);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'and you usually buy between {min} and {max}'**
+  String stylistBudgetTypical(String min, String max);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Not enough signals yet. Browse and look at products, and we’ll learn your taste.'**
+  String get stylistNoSignalYet;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Products you viewed'**
+  String get stylistViewed;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Products you saved'**
+  String get stylistSaved;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Products you bought'**
+  String get stylistPurchased;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Products you passed on'**
+  String get stylistDismissed;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'We refreshed our read of your taste.'**
+  String get stylistTasteRefreshed;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn’t refresh — try again shortly.'**
+  String get stylistTasteRefreshFailed;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh'**
+  String get stylistRefresh;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'The look couldn’t open.'**
+  String get stylistLookFailed;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'One or more pieces are no longer available. You can order the rest, or ask me for an alternative.'**
+  String get stylistLookPartlyUnavailable;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'No longer available'**
+  String get stylistNoLongerAvailable;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Total'**
+  String get stylistTotal;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Saved'**
+  String get stylistLookSaved;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Save the look'**
+  String get stylistSaveLook;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'The look is saved to your closet.'**
+  String get stylistLookSavedToCloset;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'The look couldn’t be saved — try again.'**
+  String get stylistLookSaveFailed;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Tell me what you’re looking for…'**
+  String get stylistComposerHint;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Send'**
+  String get stylistSend;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'The message didn’t send'**
+  String get stylistMessageFailed;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Open the look'**
+  String get stylistOpenLook;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Look total'**
+  String get stylistLookTotal;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Sold out'**
+  String get stylistSoldOut;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'I like it'**
+  String get stylistLike;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Not for me'**
+  String get stylistNotForMe;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Reem’s personal stylist'**
+  String get stylistWelcomeTitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Tell me about the occasion, the piece or the budget — I’ll line up options that Reem’s sellers actually have, and tell you why I picked each one.'**
+  String get stylistWelcomeBody;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Try asking me:'**
+  String get stylistTryAsking;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'A complete look'**
+  String get stylistCapLookTitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'A dress, bag and shoes styled together'**
+  String get stylistCapLookBody;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Gifts'**
+  String get stylistCapGiftsTitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'By age, taste and budget'**
+  String get stylistCapGiftsBody;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Actually in stock'**
+  String get stylistCapInStockTitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Every piece comes from sellers’ current stock'**
+  String get stylistCapInStockBody;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'New search'**
+  String get visualNewSearch;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a photo'**
+  String get visualPickPhoto;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Photo search is still getting ready'**
+  String get visualPreparing;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'We’re analysing product photos so we can compare them with yours. Try again shortly.'**
+  String get visualPreparingBody;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh'**
+  String get visualRefresh;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Saw something you liked?'**
+  String get visualSawSomething;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Upload a photo of the piece — a screenshot from Instagram, TikTok or Pinterest, or one from your gallery — and we’ll find the closest thing in Reem.'**
+  String get visualSawSomethingBody;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Your past searches'**
+  String get visualPastSearches;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Photo search'**
+  String get visualPhotoSearch;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'The photo was deleted — the results are still here'**
+  String get visualPhotoDeletedResultsKept;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to open'**
+  String get visualTapToOpen;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Uploading the photo…'**
+  String get visualUploading;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Analysing the photo and searching…'**
+  String get visualAnalysing;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Comparing your photo with products actually on Reem.'**
+  String get visualComparing;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'I didn’t find anything close'**
+  String get visualNothingClose;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Try a clearer photo, or write exactly what you want.'**
+  String get visualNothingCloseBody;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Another photo'**
+  String get visualAnotherPhoto;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{The closest piece} other{The {count} closest pieces}}'**
+  String visualClosestCount(int count);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'No offer is available for this piece right now.'**
+  String get visualNoOffer;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Added to your bag'**
+  String get visualAddedToBag;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'It couldn’t be added to your bag.'**
+  String get visualAddToBagFailed;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Delete this search?'**
+  String get visualDeleteTitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'The photo and results will be deleted for good and can’t be recovered.'**
+  String get visualDeleteBody;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get visualDelete;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Back'**
+  String get visualBack;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'The photo and search were deleted.'**
+  String get visualDeleted;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'What I understood from the photo'**
+  String get visualWhatISaw;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'I couldn’t put the photo into words, but I’m searching for it visually.'**
+  String get visualCouldntDescribe;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Delete the photo and search'**
+  String get visualDeletePhotoAndSearch;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Photo deleted'**
+  String get visualPhotoDeleted;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Inferred from the closest products, not from the photo itself'**
+  String get visualInferredFromMatches;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Closest: {label}'**
+  String visualClosestCategory(String label);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'The photo isn’t very clear — results are approximate.'**
+  String get visualLowConfidence;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Describe what you’d like to change…'**
+  String get visualRefineHint;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Refine the search'**
+  String get visualRefine;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'I saw more than one piece in the photo'**
+  String get visualSeveralPieces;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'I guessed this piece from the photo’s layout — I’m not completely sure.'**
+  String get visualRegionGuessed;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{percent} percent similar'**
+  String visualSimilaritySemantics(int percent);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{percent}% similar'**
+  String visualSimilarityBadge(int percent);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Search by photo'**
+  String get visualSearchByPhoto;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Take a photo of the piece, or pick a screenshot from Instagram, TikTok or Pinterest.'**
+  String get visualSourceBody;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Take a photo'**
+  String get visualTakePhoto;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'In good light against a plain background'**
+  String get visualTakePhotoHint;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'From your gallery'**
+  String get visualFromGallery;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'A screenshot or saved photo'**
+  String get visualFromGalleryHint;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Your photo is stored privately and deleted automatically after the search. No one else can see it.'**
+  String get visualPrivacy;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Visually similar pieces'**
+  String get visualSimilarRail;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Search with your photo'**
+  String get visualSearchWithYourPhoto;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Coupon applied — saving {amount}'**
+  String checkoutCouponApplied(String amount);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Arrives today'**
+  String get checkoutEtaToday;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{days, plural, =1{Arrives within a day} other{Arrives within {days} days}}'**
+  String checkoutEtaDays(int days);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, other{{count} shipments from {count} sellers}}'**
+  String checkoutSplitShipments(int count);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Shipments'**
+  String get checkoutShipments;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Note: {note}'**
+  String checkoutNote(String note);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Payment'**
+  String get checkoutPayment;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Summary'**
+  String get checkoutSummary;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Discount'**
+  String get checkoutDiscount;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'From wallet'**
+  String get checkoutFromWallet;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Total'**
+  String get checkoutTotal;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Tracking'**
+  String get checkoutTracking;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel order'**
+  String get checkoutCancelOrder;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Clear search'**
+  String get chatClearSearch;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Pause'**
+  String get chatPause;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Play'**
+  String get chatPlay;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Add to a room'**
+  String get productAddToRoom;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Decrease quantity'**
+  String get decreaseQuantity;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Increase quantity'**
+  String get increaseQuantity;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Share'**
+  String get profileShare;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Ask Reem’s stylist'**
+  String get homeAskStylist;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Tell me the occasion and your budget, and I’ll line up options in stock'**
+  String get homeAskStylistBody;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{price} · {stock} in stock'**
+  String createProductPriceStock(String price, int stock);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Notes for you'**
+  String get intelligenceNotesForYou;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Landmark: {landmark}'**
+  String checkoutLandmarkValue(String landmark);
 }
 
 class _AppLocalizationsDelegate

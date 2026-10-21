@@ -206,7 +206,7 @@ class _PlayButton extends StatelessWidget {
               child: DsLoadingIndicator.inline(color: tint),
             )
           : IconButton(
-              tooltip: playing ? 'إيقاف مؤقت' : 'تشغيل',
+              tooltip: playing ? context.l10n.chatPause : context.l10n.chatPlay,
               onPressed: onTap,
               padding: EdgeInsets.zero,
               icon: Icon(

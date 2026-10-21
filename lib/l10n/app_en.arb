@@ -10752,5 +10752,576 @@
         "type": "int"
       }
     }
-  }
+  },
+  "stylistNewChat": "New chat",
+  "@stylistNewChat": {
+    "description": ""
+  },
+  "stylistMyPreferences": "My preferences",
+  "@stylistMyPreferences": {
+    "description": ""
+  },
+  "stylistPreferencesFailed": "Your preferences couldn’t load.",
+  "@stylistPreferencesFailed": {
+    "description": ""
+  },
+  "stylistModesty": "Modesty",
+  "@stylistModesty": {
+    "description": ""
+  },
+  "stylistModestyHelp": "Decides which pieces the app shows you.",
+  "@stylistModestyHelp": {
+    "description": ""
+  },
+  "stylistFavouriteColours": "Favourite colours",
+  "@stylistFavouriteColours": {
+    "description": ""
+  },
+  "stylistFavouriteColoursHelp": "We rank pieces in these colours higher, without hiding the rest.",
+  "@stylistFavouriteColoursHelp": {
+    "description": ""
+  },
+  "stylistMySizes": "My sizes",
+  "@stylistMySizes": {
+    "description": ""
+  },
+  "stylistMySizesHelp": "Once we know them, we only show pieces actually available in your size.",
+  "@stylistMySizesHelp": {
+    "description": ""
+  },
+  "stylistBudget": "Budget",
+  "@stylistBudget": {
+    "description": ""
+  },
+  "stylistBudgetHelp": "The figure you’re usually comfortable with.",
+  "@stylistBudgetHelp": {
+    "description": ""
+  },
+  "stylistInferred": "What we learned from your shopping",
+  "@stylistInferred": {
+    "description": ""
+  },
+  "stylistInferredHelp": "This is what your choices say, not what you wrote.",
+  "@stylistInferredHelp": {
+    "description": ""
+  },
+  "stylistModestyUnspecified": "No preference",
+  "@stylistModestyUnspecified": {
+    "description": ""
+  },
+  "stylistModestyFull": "Full coverage",
+  "@stylistModestyFull": {
+    "description": ""
+  },
+  "stylistModestyModest": "Modest",
+  "@stylistModestyModest": {
+    "description": ""
+  },
+  "stylistModestyBalanced": "Balanced",
+  "@stylistModestyBalanced": {
+    "description": ""
+  },
+  "stylistModestyExpressive": "No limits",
+  "@stylistModestyExpressive": {
+    "description": ""
+  },
+  "stylistClothing": "Clothing",
+  "@stylistClothing": {
+    "description": ""
+  },
+  "stylistShoes": "Shoes",
+  "@stylistShoes": {
+    "description": ""
+  },
+  "stylistBudgetStated": "You set up to {amount}",
+  "@stylistBudgetStated": {
+    "description": "",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "stylistBudgetTypical": "and you usually buy between {min} and {max}",
+  "@stylistBudgetTypical": {
+    "description": "",
+    "placeholders": {
+      "min": {
+        "type": "String"
+      },
+      "max": {
+        "type": "String"
+      }
+    }
+  },
+  "stylistNoSignalYet": "Not enough signals yet. Browse and look at products, and we’ll learn your taste.",
+  "@stylistNoSignalYet": {
+    "description": ""
+  },
+  "stylistViewed": "Products you viewed",
+  "@stylistViewed": {
+    "description": ""
+  },
+  "stylistSaved": "Products you saved",
+  "@stylistSaved": {
+    "description": ""
+  },
+  "stylistPurchased": "Products you bought",
+  "@stylistPurchased": {
+    "description": ""
+  },
+  "stylistDismissed": "Products you passed on",
+  "@stylistDismissed": {
+    "description": ""
+  },
+  "stylistTasteRefreshed": "We refreshed our read of your taste.",
+  "@stylistTasteRefreshed": {
+    "description": ""
+  },
+  "stylistTasteRefreshFailed": "Couldn’t refresh — try again shortly.",
+  "@stylistTasteRefreshFailed": {
+    "description": ""
+  },
+  "stylistRefresh": "Refresh",
+  "@stylistRefresh": {
+    "description": ""
+  },
+  "stylistLookFailed": "The look couldn’t open.",
+  "@stylistLookFailed": {
+    "description": ""
+  },
+  "stylistLookPartlyUnavailable": "One or more pieces are no longer available. You can order the rest, or ask me for an alternative.",
+  "@stylistLookPartlyUnavailable": {
+    "description": ""
+  },
+  "stylistNoLongerAvailable": "No longer available",
+  "@stylistNoLongerAvailable": {
+    "description": ""
+  },
+  "stylistTotal": "Total",
+  "@stylistTotal": {
+    "description": ""
+  },
+  "stylistLookSaved": "Saved",
+  "@stylistLookSaved": {
+    "description": ""
+  },
+  "stylistSaveLook": "Save the look",
+  "@stylistSaveLook": {
+    "description": ""
+  },
+  "stylistLookSavedToCloset": "The look is saved to your closet.",
+  "@stylistLookSavedToCloset": {
+    "description": ""
+  },
+  "stylistLookSaveFailed": "The look couldn’t be saved — try again.",
+  "@stylistLookSaveFailed": {
+    "description": ""
+  },
+  "stylistComposerHint": "Tell me what you’re looking for…",
+  "@stylistComposerHint": {
+    "description": ""
+  },
+  "stylistSend": "Send",
+  "@stylistSend": {
+    "description": ""
+  },
+  "stylistMessageFailed": "The message didn’t send",
+  "@stylistMessageFailed": {
+    "description": ""
+  },
+  "stylistOpenLook": "Open the look",
+  "@stylistOpenLook": {
+    "description": ""
+  },
+  "stylistLookTotal": "Look total",
+  "@stylistLookTotal": {
+    "description": ""
+  },
+  "stylistSoldOut": "Sold out",
+  "@stylistSoldOut": {
+    "description": ""
+  },
+  "stylistLike": "I like it",
+  "@stylistLike": {
+    "description": ""
+  },
+  "stylistNotForMe": "Not for me",
+  "@stylistNotForMe": {
+    "description": ""
+  },
+  "stylistWelcomeTitle": "Reem’s personal stylist",
+  "@stylistWelcomeTitle": {
+    "description": ""
+  },
+  "stylistWelcomeBody": "Tell me about the occasion, the piece or the budget — I’ll line up options that Reem’s sellers actually have, and tell you why I picked each one.",
+  "@stylistWelcomeBody": {
+    "description": ""
+  },
+  "stylistTryAsking": "Try asking me:",
+  "@stylistTryAsking": {
+    "description": ""
+  },
+  "stylistCapLookTitle": "A complete look",
+  "@stylistCapLookTitle": {
+    "description": ""
+  },
+  "stylistCapLookBody": "A dress, bag and shoes styled together",
+  "@stylistCapLookBody": {
+    "description": ""
+  },
+  "stylistCapGiftsTitle": "Gifts",
+  "@stylistCapGiftsTitle": {
+    "description": ""
+  },
+  "stylistCapGiftsBody": "By age, taste and budget",
+  "@stylistCapGiftsBody": {
+    "description": ""
+  },
+  "stylistCapInStockTitle": "Actually in stock",
+  "@stylistCapInStockTitle": {
+    "description": ""
+  },
+  "stylistCapInStockBody": "Every piece comes from sellers’ current stock",
+  "@stylistCapInStockBody": {
+    "description": ""
+  },
+  "visualNewSearch": "New search",
+  "@visualNewSearch": {
+    "description": ""
+  },
+  "visualPickPhoto": "Choose a photo",
+  "@visualPickPhoto": {
+    "description": ""
+  },
+  "visualPreparing": "Photo search is still getting ready",
+  "@visualPreparing": {
+    "description": ""
+  },
+  "visualPreparingBody": "We’re analysing product photos so we can compare them with yours. Try again shortly.",
+  "@visualPreparingBody": {
+    "description": ""
+  },
+  "visualRefresh": "Refresh",
+  "@visualRefresh": {
+    "description": ""
+  },
+  "visualSawSomething": "Saw something you liked?",
+  "@visualSawSomething": {
+    "description": ""
+  },
+  "visualSawSomethingBody": "Upload a photo of the piece — a screenshot from Instagram, TikTok or Pinterest, or one from your gallery — and we’ll find the closest thing in Reem.",
+  "@visualSawSomethingBody": {
+    "description": ""
+  },
+  "visualPastSearches": "Your past searches",
+  "@visualPastSearches": {
+    "description": ""
+  },
+  "visualPhotoSearch": "Photo search",
+  "@visualPhotoSearch": {
+    "description": ""
+  },
+  "visualPhotoDeletedResultsKept": "The photo was deleted — the results are still here",
+  "@visualPhotoDeletedResultsKept": {
+    "description": ""
+  },
+  "visualTapToOpen": "Tap to open",
+  "@visualTapToOpen": {
+    "description": ""
+  },
+  "visualUploading": "Uploading the photo…",
+  "@visualUploading": {
+    "description": ""
+  },
+  "visualAnalysing": "Analysing the photo and searching…",
+  "@visualAnalysing": {
+    "description": ""
+  },
+  "visualComparing": "Comparing your photo with products actually on Reem.",
+  "@visualComparing": {
+    "description": ""
+  },
+  "visualNothingClose": "I didn’t find anything close",
+  "@visualNothingClose": {
+    "description": ""
+  },
+  "visualNothingCloseBody": "Try a clearer photo, or write exactly what you want.",
+  "@visualNothingCloseBody": {
+    "description": ""
+  },
+  "visualAnotherPhoto": "Another photo",
+  "@visualAnotherPhoto": {
+    "description": ""
+  },
+  "visualClosestCount": "{count, plural, =1{The closest piece} other{The {count} closest pieces}}",
+  "@visualClosestCount": {
+    "description": "",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "visualNoOffer": "No offer is available for this piece right now.",
+  "@visualNoOffer": {
+    "description": ""
+  },
+  "visualAddedToBag": "Added to your bag",
+  "@visualAddedToBag": {
+    "description": ""
+  },
+  "visualAddToBagFailed": "It couldn’t be added to your bag.",
+  "@visualAddToBagFailed": {
+    "description": ""
+  },
+  "visualDeleteTitle": "Delete this search?",
+  "@visualDeleteTitle": {
+    "description": ""
+  },
+  "visualDeleteBody": "The photo and results will be deleted for good and can’t be recovered.",
+  "@visualDeleteBody": {
+    "description": ""
+  },
+  "visualDelete": "Delete",
+  "@visualDelete": {
+    "description": ""
+  },
+  "visualBack": "Back",
+  "@visualBack": {
+    "description": ""
+  },
+  "visualDeleted": "The photo and search were deleted.",
+  "@visualDeleted": {
+    "description": ""
+  },
+  "visualWhatISaw": "What I understood from the photo",
+  "@visualWhatISaw": {
+    "description": ""
+  },
+  "visualCouldntDescribe": "I couldn’t put the photo into words, but I’m searching for it visually.",
+  "@visualCouldntDescribe": {
+    "description": ""
+  },
+  "visualDeletePhotoAndSearch": "Delete the photo and search",
+  "@visualDeletePhotoAndSearch": {
+    "description": ""
+  },
+  "visualPhotoDeleted": "Photo deleted",
+  "@visualPhotoDeleted": {
+    "description": ""
+  },
+  "visualInferredFromMatches": "Inferred from the closest products, not from the photo itself",
+  "@visualInferredFromMatches": {
+    "description": ""
+  },
+  "visualClosestCategory": "Closest: {label}",
+  "@visualClosestCategory": {
+    "description": "",
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "visualLowConfidence": "The photo isn’t very clear — results are approximate.",
+  "@visualLowConfidence": {
+    "description": ""
+  },
+  "visualRefineHint": "Describe what you’d like to change…",
+  "@visualRefineHint": {
+    "description": ""
+  },
+  "visualRefine": "Refine the search",
+  "@visualRefine": {
+    "description": ""
+  },
+  "visualSeveralPieces": "I saw more than one piece in the photo",
+  "@visualSeveralPieces": {
+    "description": ""
+  },
+  "visualRegionGuessed": "I guessed this piece from the photo’s layout — I’m not completely sure.",
+  "@visualRegionGuessed": {
+    "description": ""
+  },
+  "visualSimilaritySemantics": "{percent} percent similar",
+  "@visualSimilaritySemantics": {
+    "description": "",
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "visualSimilarityBadge": "{percent}% similar",
+  "@visualSimilarityBadge": {
+    "description": "",
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "visualSearchByPhoto": "Search by photo",
+  "@visualSearchByPhoto": {
+    "description": ""
+  },
+  "visualSourceBody": "Take a photo of the piece, or pick a screenshot from Instagram, TikTok or Pinterest.",
+  "@visualSourceBody": {
+    "description": ""
+  },
+  "visualTakePhoto": "Take a photo",
+  "@visualTakePhoto": {
+    "description": ""
+  },
+  "visualTakePhotoHint": "In good light against a plain background",
+  "@visualTakePhotoHint": {
+    "description": ""
+  },
+  "visualFromGallery": "From your gallery",
+  "@visualFromGallery": {
+    "description": ""
+  },
+  "visualFromGalleryHint": "A screenshot or saved photo",
+  "@visualFromGalleryHint": {
+    "description": ""
+  },
+  "visualPrivacy": "Your photo is stored privately and deleted automatically after the search. No one else can see it.",
+  "@visualPrivacy": {
+    "description": ""
+  },
+  "visualSimilarRail": "Visually similar pieces",
+  "@visualSimilarRail": {
+    "description": ""
+  },
+  "visualSearchWithYourPhoto": "Search with your photo",
+  "@visualSearchWithYourPhoto": {
+    "description": ""
+  },
+  "checkoutCouponApplied": "Coupon applied — saving {amount}",
+  "@checkoutCouponApplied": {
+    "description": "",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "checkoutEtaToday": "Arrives today",
+  "@checkoutEtaToday": {
+    "description": ""
+  },
+  "checkoutEtaDays": "{days, plural, =1{Arrives within a day} other{Arrives within {days} days}}",
+  "@checkoutEtaDays": {
+    "description": "",
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "checkoutSplitShipments": "{count, plural, other{{count} shipments from {count} sellers}}",
+  "@checkoutSplitShipments": {
+    "description": "",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "checkoutShipments": "Shipments",
+  "@checkoutShipments": {
+    "description": ""
+  },
+  "checkoutNote": "Note: {note}",
+  "@checkoutNote": {
+    "description": "",
+    "placeholders": {
+      "note": {
+        "type": "String"
+      }
+    }
+  },
+  "checkoutPayment": "Payment",
+  "@checkoutPayment": {
+    "description": ""
+  },
+  "checkoutSummary": "Summary",
+  "@checkoutSummary": {
+    "description": ""
+  },
+  "checkoutDiscount": "Discount",
+  "@checkoutDiscount": {
+    "description": ""
+  },
+  "checkoutFromWallet": "From wallet",
+  "@checkoutFromWallet": {
+    "description": ""
+  },
+  "checkoutTotal": "Total",
+  "@checkoutTotal": {
+    "description": ""
+  },
+  "checkoutTracking": "Tracking",
+  "@checkoutTracking": {
+    "description": ""
+  },
+  "checkoutCancelOrder": "Cancel order",
+  "@checkoutCancelOrder": {
+    "description": ""
+  },
+  "chatClearSearch": "Clear search",
+  "@chatClearSearch": {
+    "description": ""
+  },
+  "chatPause": "Pause",
+  "@chatPause": {
+    "description": ""
+  },
+  "chatPlay": "Play",
+  "@chatPlay": {
+    "description": ""
+  },
+  "productAddToRoom": "Add to a room",
+  "@productAddToRoom": {
+    "description": ""
+  },
+  "decreaseQuantity": "Decrease quantity",
+  "@decreaseQuantity": {
+    "description": ""
+  },
+  "increaseQuantity": "Increase quantity",
+  "@increaseQuantity": {
+    "description": ""
+  },
+  "profileShare": "Share",
+  "@profileShare": {
+    "description": ""
+  },
+  "homeAskStylist": "Ask Reem’s stylist",
+  "@homeAskStylist": {
+    "description": ""
+  },
+  "homeAskStylistBody": "Tell me the occasion and your budget, and I’ll line up options in stock",
+  "@homeAskStylistBody": {
+    "description": ""
+  },
+  "createProductPriceStock": "{price} · {stock} in stock",
+  "@createProductPriceStock": {
+    "description": "",
+    "placeholders": {
+      "price": {
+        "type": "String"
+      },
+      "stock": {
+        "type": "int"
+      }
+    }
+  },
+  "intelligenceNotesForYou": "Notes for you",
+  "@intelligenceNotesForYou": {
+    "description": ""
+  },
+  "checkoutLandmarkValue": "Landmark: {landmark}",
+  "@checkoutLandmarkValue": {"description": "", "placeholders": {"landmark": {"type": "String"}}}
 }

@@ -237,7 +237,10 @@ class _SelectedProductCard extends StatelessWidget {
                 ),
                 const SizedBox(height: DsSpacing.xxs),
                 Text(
-                  '${product.price.format()} · ${product.stock} في المخزون',
+                  context.l10n.createProductPriceStock(
+                    product.price.format(),
+                    product.stock,
+                  ),
                   style: context.dsText.body.tint(colors.onSurfaceVariant),
                 ),
               ],

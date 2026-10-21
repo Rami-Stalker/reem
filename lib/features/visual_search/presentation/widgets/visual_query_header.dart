@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/media/authorized_media_image.dart';
 import 'package:reem/features/visual_search/domain/entities/visual_search_session.dart';
 import 'package:reem/features/visual_search/domain/entities/visual_understanding.dart';
@@ -57,13 +58,13 @@ class VisualQueryHeader extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'شو فهمت من الصورة',
+                      context.l10n.visualWhatISaw,
                       style: context.dsText.tileTitle,
                     ),
                     const SizedBox(height: DsSpacing.xs),
                     if (understanding.isEmpty)
                       Text(
-                        'ما قدرت أوصف الصورة بالكلمات، بس عم دوّر عليها بصريًا.',
+                        context.l10n.visualCouldntDescribe,
                         style: context.dsText.cardSubtitle.copyWith(
                           color: colors.onSurfaceVariant,
                         ),
@@ -87,7 +88,7 @@ class VisualQueryHeader extends StatelessWidget {
                   TextButton.icon(
                     onPressed: onRetake,
                     icon: const Icon(Icons.image_search_rounded, size: 18),
-                    label: const Text('صورة تانية'),
+                    label: Text(context.l10n.visualAnotherPhoto),
                   ),
                 const Spacer(),
                 if (onForget != null)
@@ -99,7 +100,7 @@ class VisualQueryHeader extends StatelessWidget {
                       color: colors.onSurfaceVariant,
                     ),
                     label: Text(
-                      'احذفي الصورة والبحث',
+                      context.l10n.visualDeletePhotoAndSearch,
                       style: context.dsText.body.tint(colors.onSurfaceVariant),
                     ),
                   ),
@@ -170,7 +171,7 @@ class _Expired extends StatelessWidget {
           ),
           const SizedBox(height: DsSpacing.xxs),
           Text(
-            'انحذفت الصورة',
+            context.l10n.visualPhotoDeleted,
             textAlign: TextAlign.center,
             style: context.dsText.caption.copyWith(
               color: colors.onSurfaceVariant,
@@ -238,15 +239,15 @@ class _ChipWrap extends StatelessWidget {
         // listings matched, not from anything visible in the photograph.
         for (final category in understanding.categories.take(2))
           Tooltip(
-            message: 'استنتجته من المنتجات الأقرب، مو من الصورة نفسها',
+            message: context.l10n.visualInferredFromMatches,
             child: DsChip(
-              label: 'الأقرب: ${category.label}',
+              label: context.l10n.visualClosestCategory(category.label),
               icon: Icons.help_outline_rounded,
             ),
           ),
         if (understanding.confidence < 0.4)
           Text(
-            'الصورة مو واضحة كتير — النتائج تقريبية.',
+            context.l10n.visualLowConfidence,
             style: Theme.of(
               context,
             ).textTheme.labelSmall?.copyWith(color: colors.warning),

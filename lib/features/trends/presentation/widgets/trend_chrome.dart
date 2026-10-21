@@ -145,7 +145,7 @@ class TrendMetricTile extends StatelessWidget {
     required this.label,
     required this.value,
     this.delta,
-    this.deltaSuffix = '٪',
+    this.deltaSuffix = '%',
     this.invertDelta = false,
     this.tone,
     this.hint,

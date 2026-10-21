@@ -227,7 +227,7 @@ class _Body extends StatelessWidget {
               const SizedBox(width: DsSpacing.sm),
               if (order.isSplit)
                 Text(
-                  '${order.sellersCount} شحنات من ${order.sellersCount} بائعات',
+                  context.l10n.checkoutSplitShipments(order.sellersCount),
                   style: context.dsText.bodySmall.tint(colors.onSurfaceVariant),
                 ),
             ],
@@ -249,14 +249,14 @@ class _Body extends StatelessWidget {
           // several parcels, each tracked, cancelled and returned on its own
           // timeline — so the screen shows them as separate things rather than
           // flattening them into one list of items (Q40/Q89).
-          _section(context, 'الشحنات'),
+          _section(context, context.l10n.checkoutShipments),
           for (final parcel in order.sellerOrders) ...[
             _ParcelCard(parcel: parcel),
             const SizedBox(height: DsSpacing.sm),
           ],
           const SizedBox(height: DsSpacing.lg),
 
-          _section(context, 'عنوان التوصيل'),
+          _section(context, context.l10n.checkoutDeliveryAddress),
           SurfaceCard(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -273,7 +273,9 @@ class _Body extends StatelessWidget {
                 ),
                 if (order.shipping.landmark != null)
                   Text(
-                    'علامة مميزة: ${order.shipping.landmark}',
+                    context.l10n.checkoutLandmarkValue(
+                      order.shipping.landmark!,
+                    ),
                     style: context.dsText.body.tint(colors.onSurfaceVariant),
                   ),
                 if (order.privacyMaskEnabled) ...[
@@ -299,7 +301,7 @@ class _Body extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.only(top: DsSpacing.xxs),
                     child: Text(
-                      'ملاحظة: ${order.deliveryInstructions}',
+                      context.l10n.checkoutNote(order.deliveryInstructions!),
                       style: context.dsText.body.tint(colors.onSurfaceVariant),
                     ),
                   ),
@@ -309,7 +311,7 @@ class _Body extends StatelessWidget {
           const SizedBox(height: DsSpacing.lg),
 
           if (payment != null) ...[
-            _section(context, 'الدفع'),
+            _section(context, context.l10n.checkoutPayment),
             SurfaceCard(
               child: Row(
                 children: [
@@ -332,18 +334,39 @@ class _Body extends StatelessWidget {
             const SizedBox(height: DsSpacing.lg),
           ],
 
-          _section(context, 'الملخّص'),
+          _section(context, context.l10n.checkoutSummary),
           SurfaceCard(
             child: Column(
               children: [
-                _money(context, 'المجموع الفرعي', order.itemsSubtotal),
+                _money(
+                  context,
+                  context.l10n.checkoutSubtotal,
+                  order.itemsSubtotal,
+                ),
                 if (!order.discountTotal.isZero)
-                  _money(context, 'الخصم', order.discountTotal),
-                _money(context, 'التوصيل', order.shippingTotal),
+                  _money(
+                    context,
+                    context.l10n.checkoutDiscount,
+                    order.discountTotal,
+                  ),
+                _money(
+                  context,
+                  context.l10n.checkoutDelivery,
+                  order.shippingTotal,
+                ),
                 if (!order.walletApplied.isZero)
-                  _money(context, 'من المحفظة', order.walletApplied),
+                  _money(
+                    context,
+                    context.l10n.checkoutFromWallet,
+                    order.walletApplied,
+                  ),
                 const Divider(height: DsSpacing.lg),
-                _money(context, 'الإجمالي', order.grandTotal, emphasize: true),
+                _money(
+                  context,
+                  context.l10n.checkoutTotal,
+                  order.grandTotal,
+                  emphasize: true,
+                ),
               ],
             ),
           ),
@@ -354,13 +377,13 @@ class _Body extends StatelessWidget {
           _InvoicesAction(orderId: order.id),
           const SizedBox(height: DsSpacing.lg),
 
-          _section(context, 'التتبّع'),
+          _section(context, context.l10n.checkoutTracking),
           _Timeline(events: order.timeline),
 
           if (order.isCancellable) ...[
             const SizedBox(height: DsSpacing.xl),
             SecondaryButton(
-              label: 'إلغاء الطلب',
+              label: context.l10n.checkoutCancelOrder,
               isLoading: state.isActing,
               onPressed: state.isActing
                   ? null

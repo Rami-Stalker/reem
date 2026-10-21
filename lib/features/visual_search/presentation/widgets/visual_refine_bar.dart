@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
 
 /// "أريد نفس هذا الفستان لكن باللون الأسود."
 ///
@@ -17,12 +18,12 @@ class VisualRefineBar extends StatefulWidget {
     required this.enabled,
     required this.onSubmit,
     this.suggestions = const [],
-    this.hint = 'وصفيلي شو بدك تغيّري…',
+    this.hint,
   });
 
   final bool enabled;
   final List<String> suggestions;
-  final String hint;
+  final String? hint;
   final void Function(String text) onSubmit;
 
   @override
@@ -99,7 +100,7 @@ class _VisualRefineBarState extends State<VisualRefineBar> {
                   maxLength: 400,
                   onSubmitted: _submit,
                   decoration: InputDecoration(
-                    hintText: widget.hint,
+                    hintText: widget.hint ?? context.l10n.visualRefineHint,
                     counterText: '',
                     filled: true,
                     fillColor: colors.surfaceVariant,
@@ -118,7 +119,7 @@ class _VisualRefineBarState extends State<VisualRefineBar> {
               DsIconButton(
                 icon: Icons.arrow_upward_rounded,
                 onPressed: widget.enabled ? _submit : null,
-                tooltip: 'عدّلي البحث',
+                tooltip: context.l10n.visualRefine,
               ),
             ],
           ),

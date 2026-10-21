@@ -173,7 +173,7 @@ class _ProductBuyBarState extends ConsumerState<ProductBuyBar> {
               // first forces every considered purchase to pretend to be a
               // decided one.
               IconButton(
-                tooltip: 'ضيفيها لغرفة',
+                tooltip: context.l10n.productAddToRoom,
                 icon: const Icon(Icons.meeting_room_outlined),
                 onPressed: buyable ? _proposeToRoom : null,
               ),

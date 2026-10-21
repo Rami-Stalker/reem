@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
 
 /// The input row, with the follow-up chips sitting above it.
 ///
@@ -13,13 +14,13 @@ class StylistComposer extends StatefulWidget {
     required this.onSend,
     this.suggestions = const [],
     this.enabled = true,
-    this.hintText = 'خبّريني شو بتدوّري عليه…',
+    this.hintText,
   });
 
   final ValueChanged<String> onSend;
   final List<String> suggestions;
   final bool enabled;
-  final String hintText;
+  final String? hintText;
 
   @override
   State<StylistComposer> createState() => _StylistComposerState();
@@ -98,7 +99,8 @@ class _StylistComposerState extends State<StylistComposer> {
                       textInputAction: TextInputAction.send,
                       onSubmitted: (_) => _submit(),
                       decoration: InputDecoration(
-                        hintText: widget.hintText,
+                        hintText:
+                            widget.hintText ?? context.l10n.stylistComposerHint,
                         counterText: '',
                         filled: true,
                         fillColor: colors.surfaceVariant,
@@ -202,7 +204,7 @@ class _SendButton extends StatelessWidget {
       child: IconButton(
         onPressed: enabled ? onTap : null,
         icon: Icon(Icons.send_rounded, color: colors.onPrimary, size: 20),
-        tooltip: 'إرسال',
+        tooltip: context.l10n.stylistSend,
       ),
     );
   }

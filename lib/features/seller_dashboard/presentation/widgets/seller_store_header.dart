@@ -254,13 +254,13 @@ class _CoverActions extends StatelessWidget {
     return Row(
       children: [
         _GlassIconButton(
-          tooltip: 'الإشعارات',
+          tooltip: context.l10n.notifications,
           icon: Icons.notifications_none_rounded,
           onTap: () => context.push(RoutePaths.notifications),
         ),
         const SizedBox(width: DsSpacing.xs),
         _GlassIconButton(
-          tooltip: 'الإعدادات',
+          tooltip: context.l10n.settings,
           icon: Icons.settings_outlined,
           onTap: () => context.push(RoutePaths.settings),
         ),

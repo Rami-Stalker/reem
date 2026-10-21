@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/media/authorized_media_image.dart';
 import 'package:reem/core/media/media_variants.dart';
 import 'package:reem/features/ai_stylist/domain/entities/stylist_outfit.dart';
@@ -104,8 +105,12 @@ class _Header extends StatelessWidget {
           IconButton(
             onPressed: onOpen,
             visualDensity: VisualDensity.compact,
-            icon: Icon(Icons.open_in_full_rounded, size: 16, color: colors.primary),
-            tooltip: 'افتحي الإطلالة',
+            icon: Icon(
+              Icons.open_in_full_rounded,
+              size: 16,
+              color: colors.primary,
+            ),
+            tooltip: context.l10n.stylistOpenLook,
           ),
       ],
     );
@@ -163,7 +168,7 @@ class _PieceTile extends StatelessWidget {
             // the price out of the tile.
             Flexible(
               child: Text(
-                product?.title ?? 'لم تعد متوفرة',
+                product?.title ?? context.l10n.stylistNoLongerAvailable,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 style: context.dsText.caption.tint(colors.onSurface).copyWith(height: 1.3),
@@ -235,7 +240,7 @@ class _Footer extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  'مجموع الإطلالة',
+                  context.l10n.stylistLookTotal,
                   style: context.dsText.caption.tint(colors.onSurfaceVariant),
                 ),
                 Text(
@@ -256,7 +261,11 @@ class _Footer extends StatelessWidget {
                   : Icons.bookmark_border_rounded,
               size: 16,
             ),
-            label: Text(outfit.isSaved ? 'محفوظة' : 'احفظي الإطلالة'),
+            label: Text(
+              outfit.isSaved
+                  ? context.l10n.stylistLookSaved
+                  : context.l10n.stylistSaveLook,
+            ),
           ),
       ],
     );

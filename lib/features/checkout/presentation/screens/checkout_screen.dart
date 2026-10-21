@@ -375,7 +375,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                       Padding(
                         padding: const EdgeInsets.only(top: DsSpacing.xxs),
                         child: Text(
-                          _etaLabel(state.quote!),
+                          _etaLabel(context, state.quote!),
                           style: context.dsText.bodySmall.tint(
                             colors.onSurfaceVariant,
                           ),
@@ -885,7 +885,7 @@ class _AppliedCouponNote extends StatelessWidget {
         Icon(Icons.check_circle_rounded, size: 16, color: colors.success),
         const SizedBox(width: DsSpacing.sm),
         Text(
-          'تم تطبيق الكوبون — توفير ${discount.format()}',
+          context.l10n.checkoutCouponApplied(discount.format()),
           style: context.dsText.caption.semibold.tint(colors.success),
         ),
       ],
@@ -894,10 +894,8 @@ class _AppliedCouponNote extends StatelessWidget {
 }
 
 /// «يصلكِ اليوم بإذن الله» / «خلال يومين».
-String _etaLabel(DeliveryQuote quote) {
-  if (quote.etaHoursMax <= 12) return 'يصلكِ اليوم بإذن الله';
+String _etaLabel(BuildContext context, DeliveryQuote quote) {
+  if (quote.etaHoursMax <= 12) return context.l10n.checkoutEtaToday;
   final days = (quote.etaHoursMax / 24).ceil();
-  if (days <= 1) return 'يصلكِ خلال يوم';
-  if (days == 2) return 'يصلكِ خلال يومين';
-  return 'يصلكِ خلال $days أيام';
+  return context.l10n.checkoutEtaDays(days < 1 ? 1 : days);
 }

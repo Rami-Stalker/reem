@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/features/ai_stylist/domain/entities/stylist_message.dart';
 import 'package:reem/features/ai_stylist/domain/entities/stylist_outfit.dart';
 import 'package:reem/features/ai_stylist/domain/entities/stylist_recommendation.dart';
@@ -138,7 +139,7 @@ class _Bubble extends StatelessWidget {
                   Icon(Icons.error_outline_rounded, size: 13, color: colors.error),
                   const SizedBox(width: DsSpacing.xxs),
                   Text(
-                    'ما وصلت الرسالة',
+                    context.l10n.stylistMessageFailed,
                     style: context.dsText.caption.tint(colors.error),
                   ),
                   if (onRetry != null)
@@ -150,7 +151,7 @@ class _Bubble extends StatelessWidget {
                           horizontal: DsSpacing.xs,
                         ),
                       ),
-                      child: const Text('إعادة المحاولة'),
+                      child: Text(context.l10n.retry),
                     ),
                 ],
               ),

@@ -651,8 +651,8 @@ class _ProductFormScreenState extends ConsumerState<ProductFormScreen> {
                 ),
               ),
               IconButton(
-                tooltip: 'حذف',
-            icon: const Icon(Icons.remove_circle_outline),
+                tooltip: context.l10n.delete,
+                icon: const Icon(Icons.remove_circle_outline),
                 onPressed: _canEditIdentity
                     ? () => setState(() => _variants.removeAt(i).dispose())
                     : null,

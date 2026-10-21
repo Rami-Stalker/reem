@@ -30,7 +30,7 @@ class StylistOutfitScreen extends ConsumerWidget {
       body: outfitAsync.when(
         loading: () => const Center(child: DsLoadingIndicator()),
         error: (_, _) => DsErrorState(
-          message: 'ما قدرنا نفتح الإطلالة.',
+          message: context.l10n.stylistLookFailed,
           onRetry: () => ref.invalidate(stylistOutfitProvider(outfitId)),
         ),
         data: (outfit) => _OutfitBody(outfit: outfit),
@@ -93,9 +93,10 @@ class _OutfitBody extends ConsumerWidget {
                     const SizedBox(width: DsSpacing.xs),
                     Expanded(
                       child: Text(
-                        'في قطعة أو أكتر ما عادت متوفرة. فيكِ تطلبي الباقي، '
-                        'أو تسأليني عن بديل.',
-                        style: context.dsText.labelMedium.tint(colors.onSurfaceVariant).copyWith(height: 1.5),
+                        context.l10n.stylistLookPartlyUnavailable,
+                        style: context.dsText.labelMedium
+                            .tint(colors.onSurfaceVariant)
+                            .copyWith(height: 1.5),
                       ),
                     ),
                   ],
@@ -164,7 +165,7 @@ class _PieceRow extends StatelessWidget {
                       style: context.dsText.caption.semibold.tint(colors.primary),
                     ),
                     Text(
-                      product?.title ?? 'لم تعد متوفرة',
+                      product?.title ?? context.l10n.stylistNoLongerAvailable,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style: context.dsText.body.semibold.tint(colors.onSurface).copyWith(height: 1.35),
@@ -229,8 +230,10 @@ class _Footer extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        'المجموع',
-                        style: context.dsText.caption.tint(colors.onSurfaceVariant),
+                        context.l10n.stylistTotal,
+                        style: context.dsText.caption.tint(
+                          colors.onSurfaceVariant,
+                        ),
                       ),
                       Text(
                         outfit.total!.format(),
@@ -244,7 +247,9 @@ class _Footer extends StatelessWidget {
               const SizedBox(width: DsSpacing.sm),
               PrimaryButton(
                 isExpanded: false,
-                label: outfit.isSaved ? 'محفوظة' : 'احفظي الإطلالة',
+                label: outfit.isSaved
+                    ? context.l10n.stylistLookSaved
+                    : context.l10n.stylistSaveLook,
                 onPressed: outfit.isSaved
                     ? null
                     : () async {
@@ -256,8 +261,8 @@ class _Footer extends StatelessWidget {
                         DsSnackbar.show(
                           context,
                           message: saved
-                              ? 'انحفظت الإطلالة بخزانتك.'
-                              : 'ما قدرنا نحفظ الإطلالة، جرّبي مرة تانية.',
+                              ? context.l10n.stylistLookSavedToCloset
+                              : context.l10n.stylistLookSaveFailed,
                           type: saved
                               ? DsSnackbarType.success
                               : DsSnackbarType.error,

@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/features/trends/presentation/widgets/trend_chrome.dart';
 
 /// The two chart primitives: a sparkline for glancing at, and a share
@@ -152,13 +153,13 @@ class TrendShareBar extends StatelessWidget {
                 ),
               ),
               Text(
-                '${sharePct.toStringAsFixed(1)}٪',
+                '${sharePct.toStringAsFixed(1)}%',
                 style: context.dsText.labelMedium.bold.tint(palette.ink),
               ),
               const SizedBox(width: DsSpacing.xs),
               TrendDelta(
                 value: delta,
-                suffix: 'ن',
+                suffix: context.l10n.trendPointsSuffix,
                 fontSize: DsTypography.labelSmall,
               ),
               if (trailing != null) ...[

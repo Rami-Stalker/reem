@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/features/visual_search/presentation/providers/visual_search_providers.dart';
 import 'package:reem/features/visual_search/presentation/widgets/visual_match_card.dart';
@@ -19,14 +20,10 @@ import 'package:reem/features/visual_search/presentation/widgets/visual_match_ca
 /// is below the fold of a product page and its absence during the first
 /// hundred milliseconds is not something anybody is waiting on.
 class VisuallySimilarRail extends ConsumerWidget {
-  const VisuallySimilarRail({
-    super.key,
-    required this.productId,
-    this.title = 'قطع شبيهة بصريًا',
-  });
+  const VisuallySimilarRail({super.key, required this.productId, this.title});
 
   final String productId;
-  final String title;
+  final String? title;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -52,13 +49,13 @@ class VisuallySimilarRail extends ConsumerWidget {
                 children: [
                   Expanded(
                     child: Text(
-                      title,
+                      title ?? context.l10n.visualSimilarRail,
                       style: context.dsText.cardTitle,
                     ),
                   ),
                   TextButton(
                     onPressed: () => context.push(RoutePaths.visualSearch),
-                    child: const Text('ابحثي بصورتك'),
+                    child: Text(context.l10n.visualSearchWithYourPhoto),
                   ),
                 ],
               ),
