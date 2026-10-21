@@ -3562,6 +3562,16 @@ class AppLocalizationsAr extends AppLocalizations {
   String get productCategoriesHint => 'أزياء، عطور، مشغولات يدوية';
 
   @override
+  String productFitKept(String size, int percent) {
+    return '$size: أبقته $percent% ممّن وصلهنّ بهذا المقاس';
+  }
+
+  @override
+  String productFitOftenReturned(String size, int percent) {
+    return '$size: يُعاد كثيراً بسبب المقاس — أبقته $percent% فقط';
+  }
+
+  @override
   String productChooseOption(Object axis) {
     return 'اختاري $axis';
   }

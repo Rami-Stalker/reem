@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -169,8 +168,8 @@ class _BuyerHomeScreen extends ConsumerWidget {
   /// continue — and set between posts an orphaned gap would show as a hole in
   /// the feed. Now the gap goes when the module goes.
   static Widget _module(Widget child) {
-    return _SectionGap(
-      gap: _gap,
+    return DsCollapsingGap(
+      after: _gap,
       child: child
           .animate()
           .fadeIn(duration: 420.ms, curve: Curves.easeOut)
@@ -181,70 +180,6 @@ class _BuyerHomeScreen extends ConsumerWidget {
             curve: Curves.easeOutCubic,
           ),
     );
-  }
-}
-
-/// Reserves [gap] below [child] — but only when the child drew something.
-///
-/// A `SizedBox` after the section cannot know whether the section rendered, so
-/// it always reserved its height. This measures the child first and simply has
-/// no height of its own when the child has none.
-class _SectionGap extends SingleChildRenderObjectWidget {
-  const _SectionGap({required this.gap, required Widget super.child});
-
-  final double gap;
-
-  @override
-  RenderObject createRenderObject(BuildContext context) =>
-      _RenderSectionGap(gap);
-
-  @override
-  void updateRenderObject(
-    BuildContext context,
-    _RenderSectionGap renderObject,
-  ) {
-    renderObject.gap = gap;
-  }
-}
-
-class _RenderSectionGap extends RenderShiftedBox {
-  _RenderSectionGap(this._gap) : super(null);
-
-  double _gap;
-
-  set gap(double value) {
-    if (_gap == value) return;
-    _gap = value;
-    markNeedsLayout();
-  }
-
-  @override
-  void performLayout() {
-    final child = this.child;
-    if (child == null) {
-      size = constraints.smallest;
-      return;
-    }
-
-    child.layout(constraints, parentUsesSize: true);
-    (child.parentData! as BoxParentData).offset = Offset.zero;
-
-    final height = child.size.height;
-    size = constraints.constrain(
-      Size(child.size.width, height == 0 ? 0 : height + _gap),
-    );
-  }
-
-  @override
-  double computeMinIntrinsicHeight(double width) {
-    final height = child?.getMinIntrinsicHeight(width) ?? 0;
-    return height == 0 ? 0 : height + _gap;
-  }
-
-  @override
-  double computeMaxIntrinsicHeight(double width) {
-    final height = child?.getMaxIntrinsicHeight(width) ?? 0;
-    return height == 0 ? 0 : height + _gap;
   }
 }
 

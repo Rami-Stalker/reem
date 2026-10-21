@@ -1191,6 +1191,8 @@
   "@productCategoriesHint": {
     "description": "Example product categories, comma separated."
   },
+  "productFitKept": "{size}: أبقته {percent}% ممّن وصلهنّ بهذا المقاس",
+  "productFitOftenReturned": "{size}: يُعاد كثيراً بسبب المقاس — أبقته {percent}% فقط",
   "productChooseOption": "اختاري {axis}",
   "productChooseSeller": "اختاري البوتيك",
   "productDetails": "تفاصيل المنتج",

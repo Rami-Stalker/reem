@@ -3,6 +3,7 @@ import { GraphModule } from '../graph/graph.module';
 import { IntelligenceController } from './intelligence.controller';
 import { SellerOpportunityService } from './seller-opportunity.service';
 import { ShopperIntelligenceService } from './shopper-intelligence.service';
+import { SizeFitService } from './size-fit.service';
 
 /**
  * Reem Intelligence.
@@ -24,7 +25,7 @@ import { ShopperIntelligenceService } from './shopper-intelligence.service';
 @Module({
   imports: [GraphModule],
   controllers: [IntelligenceController],
-  providers: [ShopperIntelligenceService, SellerOpportunityService],
+  providers: [ShopperIntelligenceService, SellerOpportunityService, SizeFitService],
   exports: [ShopperIntelligenceService, SellerOpportunityService],
 })
 export class IntelligenceModule {}

@@ -6614,6 +6614,18 @@ abstract class AppLocalizations {
   /// **'Fashion, perfume, handmade'**
   String get productCategoriesHint;
 
+  /// Under the size row: how often the selected size was kept. Percent is a whole number.
+  ///
+  /// In en, this message translates to:
+  /// **'{size}: kept by {percent}% of the women who received this size'**
+  String productFitKept(String size, int percent);
+
+  /// Under the size row, when the selected size is often returned for fit.
+  ///
+  /// In en, this message translates to:
+  /// **'{size}: often sent back for the size — only {percent}% kept it'**
+  String productFitOftenReturned(String size, int percent);
+
   /// No description provided for @productChooseOption.
   ///
   /// In en, this message translates to:

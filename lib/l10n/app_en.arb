@@ -4311,6 +4311,30 @@
   "@productCategoriesHint": {
     "description": "Example product categories, comma separated."
   },
+  "productFitKept": "{size}: kept by {percent}% of the women who received this size",
+  "@productFitKept": {
+    "description": "Under the size row: how often the selected size was kept. Percent is a whole number.",
+    "placeholders": {
+      "size": {
+        "type": "String"
+      },
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "productFitOftenReturned": "{size}: often sent back for the size — only {percent}% kept it",
+  "@productFitOftenReturned": {
+    "description": "Under the size row, when the selected size is often returned for fit.",
+    "placeholders": {
+      "size": {
+        "type": "String"
+      },
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
   "productChooseOption": "Choose {axis}",
   "productChooseSeller": "Choose a boutique",
   "productDetails": "Product details",
