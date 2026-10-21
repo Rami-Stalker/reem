@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:reem/core/design_system/design_system.dart';
 import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/media/media_asset.dart';
+import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/features/closet/domain/entities/closet_item.dart';
 import 'package:reem/features/closet/domain/repositories/closet_repository.dart';
 import 'package:reem/features/closet/presentation/providers/closet_providers.dart';
@@ -143,7 +144,9 @@ class _AddPersonalItemScreenState extends ConsumerState<AddPersonalItemScreen> {
     result.when(
       success: (_) {
         DsSnackbar.show(context, message: context.l10n.closetAdded);
-        context.pop();
+        // Opened from a link there is nothing to pop back to; the closet is
+        // where the new piece is.
+        context.canPop() ? context.pop() : context.go(RoutePaths.closet);
       },
       error: (_) => DsSnackbar.show(
         context,

@@ -17,6 +17,7 @@ extension RoomBlockerLabel on RoomBlocker {
     final title = decisionTitle ?? l10n.roomsDecisionFallback;
     return switch (code) {
       'NO_DECISIONS' => l10n.roomsBlockerNoDecisions,
+      'NOTHING_CHOSEN' => l10n.roomsBlockerNothingChosen,
       'DECISION_EMPTY' => l10n.roomsBlockerEmpty(title),
       'DECISION_UNRESOLVED' => l10n.roomsBlockerUnresolved(title),
       'OVER_PICK_COUNT' => l10n.roomsBlockerOverPick(title),

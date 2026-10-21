@@ -165,7 +165,13 @@ class _PickDecisionState extends ConsumerState<_PickDecision> {
 
   @override
   Widget build(BuildContext context) {
-    final open = widget.room.decisions
+    // The rooms list carries counts, not decisions, so the questions come
+    // from the room itself. Reading them off the list entry left only «سؤال
+    // جديد», and a room opened for an occasion never offered its own
+    // «فستان، حذاء، حقيبة».
+    final roomAsync = ref.watch(roomProvider(widget.room.id));
+    final room = roomAsync.value ?? widget.room;
+    final open = room.decisions
         .where((decision) => !decision.isSkipped)
         .toList(growable: false);
 
@@ -196,7 +202,7 @@ class _PickDecisionState extends ConsumerState<_PickDecision> {
         ),
         const SizedBox(height: DsSpacing.sm),
 
-        if (widget.busy)
+        if (widget.busy || (roomAsync.isLoading && !roomAsync.hasValue))
           const Padding(
             padding: EdgeInsets.all(DsSpacing.lg),
             child: Center(child: DsLoadingIndicator()),

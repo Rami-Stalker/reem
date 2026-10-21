@@ -6264,7 +6264,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get contentAddToMyPagePreview => 'معاينة المنشور';
 
   @override
-  String get contentAddToMyPageCredit => 'المنشور الأصلي منها — بيضل باسمها';
+  String get contentAddToMyPageCredit => 'المنشور الأصلي منها — ويبقى باسمها';
 
   @override
   String contentAddToMyPageProduct(String title) {
@@ -6296,7 +6296,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get composerPublish => 'نشر';
 
   @override
-  String get composerAudience => 'مين بيشوفه';
+  String get composerAudience => 'من يراه';
 
   @override
   String get composerAudiencePublic => 'الكل';
@@ -6367,10 +6367,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get studioPromotersCount => 'زبونة';
 
   @override
-  String get studioTopProducts => 'أكتر قطع انتشرت';
+  String get studioTopProducts => 'أكثر القطع انتشاراً';
 
   @override
-  String get studioPromoters => 'مين نشر منتجاتك';
+  String get studioPromoters => 'من نشر منتجاتكِ';
 
   @override
   String get studioPromotersHelp =>
@@ -6558,13 +6558,13 @@ class AppLocalizationsAr extends AppLocalizations {
   String get reportSent => 'شكراً لكِ، سيراجعه فريقنا.';
 
   @override
-  String get productPickedDone => 'انضافت إلى صفحتكِ';
+  String get productPickedDone => 'أُضيفت إلى صفحتكِ';
 
   @override
   String get productPickedPrivate => 'أُضيفت — صفحتكِ خاصة، فلا يراها غيركِ.';
 
   @override
-  String get productUnpickedDone => 'انشالت من صفحتكِ';
+  String get productUnpickedDone => 'أُزيلت من صفحتكِ';
 
   @override
   String get viewMyPage => 'عرض صفحتي';
@@ -6591,7 +6591,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String profilePrivateBody(String name) {
-    return '$name ما فتحت صفحتها للناس لسّا.';
+    return 'لم تفتح $name صفحتها للجميع بعد.';
   }
 
   @override
@@ -6608,7 +6608,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get profileEmptyPicksMine =>
-      'اضغطي «أضيفي إلى صفحتي» على أي قطعة لتظهر هون.';
+      'اضغطي «أضيفي إلى صفحتي» على أي قطعة لتظهر هنا.';
 
   @override
   String get profileEmptyPostsMine => 'شاركي أول منشور أو ريل أو ستوري إلكِ.';
@@ -6618,7 +6618,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get myPagePublicBody =>
-      'صفحتكِ عامة — الكل بيقدر يشوف منشوراتكِ وريلزاتكِ واختياراتكِ.';
+      'صفحتكِ عامة — يمكن للجميع رؤية منشوراتكِ وريلزاتكِ واختياراتكِ.';
 
   @override
   String get myPagePrivateBody => 'صفحتكِ خاصة — لا يراها غيركِ.';
@@ -6804,7 +6804,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get policiesConsentContinue => 'أوافق ومتابعة';
 
   @override
-  String get policiesConsentFailed => 'ما انسجّلت موافقتك. جرّبي مرة تانية.';
+  String get policiesConsentFailed => 'لم تُسجَّل موافقتكِ. جرّبي مرة أخرى.';
 
   @override
   String get policiesConsentSignOut => 'تسجيل الخروج بدلًا من ذلك';
@@ -6935,16 +6935,16 @@ class AppLocalizationsAr extends AppLocalizations {
   String get adminPolicyLocaleEnglish => 'الإنجليزية (للتيسير)';
 
   @override
-  String get adminPolicySaved => 'انحفظت المسودة';
+  String get adminPolicySaved => 'حُفظت المسودة';
 
   @override
   String get adminPolicyPublished => 'تم النشر';
 
   @override
-  String get adminPolicyDraftCreated => 'انفتحت مسودة';
+  String get adminPolicyDraftCreated => 'فُتحت مسودة';
 
   @override
-  String get adminPolicyDraftDiscarded => 'انحذفت المسودة';
+  String get adminPolicyDraftDiscarded => 'حُذفت المسودة';
 
   @override
   String get adminPolicyPreview => 'معاينة';
@@ -10192,4 +10192,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get orderTimelinePaymentExpired => 'انتهت مهلة الدفع.';
+
+  @override
+  String get roomsBlockerNothingChosen => 'لم تختاري أي قطعة بعد';
 }

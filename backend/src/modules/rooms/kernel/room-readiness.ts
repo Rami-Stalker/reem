@@ -42,6 +42,7 @@ export interface DecisionFacts {
 /** Why a room cannot be turned into a plan yet. */
 export type BlockerCode =
   | 'NO_DECISIONS'
+  | 'NOTHING_CHOSEN'
   | 'DECISION_UNRESOLVED'
   | 'DECISION_EMPTY'
   | 'CHOSEN_UNAVAILABLE'
@@ -155,6 +156,13 @@ export function roomReadiness(decisions: readonly DecisionFacts[]): RoomReadines
   );
 
   const blockers = requiredStates.flatMap((state) => state.blockers);
+  // A room whose decisions are all optional suggestions has nothing required
+  // to block it — and so read as «every decision settled», ready for a plan,
+  // the moment an occasion opened it, before she had chosen a single piece.
+  // Ready means there is something to buy.
+  if (!states.some((state) => state.chosen.length > 0)) {
+    blockers.push({ code: 'NOTHING_CHOSEN', decisionId: null, decisionTitle: null });
+  }
   const settledRequired = requiredStates.filter((state) => state.settled).length;
   const settledAll = states.filter((state) => state.settled).length;
 

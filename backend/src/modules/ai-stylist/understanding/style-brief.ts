@@ -301,19 +301,19 @@ export function briefIsActionable(brief: StyleBrief): boolean {
 /** The one question most worth asking, when the brief is thin. */
 export function missingSlotQuestion(brief: StyleBrief): string | null {
   if (!brief.slots.length && !brief.categorySlugs.length && !brief.occasion) {
-    return 'شو المناسبة، وشو نوع القطعة اللي بتدوّري عليها؟';
+    return 'ما المناسبة، وما نوع القطعة التي تبحثين عنها؟';
   }
   if (brief.budgetMax === null && brief.intent !== 'ADVICE') {
-    return 'شو الميزانية اللي بتريّحك؟';
+    return 'ما الميزانية التي ترتاحين إليها؟';
   }
   if (
     !brief.sizes.clothing &&
     brief.slots.some((slot) => SIZED_GARMENT_SLOTS.includes(slot))
   ) {
-    return 'شو مقاسك بالملابس؟ لأعرض عليكِ المتوفر فعليًا بمقاسك.';
+    return 'ما مقاسكِ في الملابس؟ لأعرض عليكِ المتوفر فعلاً بمقاسكِ.';
   }
   if (!brief.sizes.shoes && brief.slots.includes(OutfitSlot.SHOES)) {
-    return 'شو مقاس حذائك؟';
+    return 'ما مقاس حذائكِ؟';
   }
   return null;
 }

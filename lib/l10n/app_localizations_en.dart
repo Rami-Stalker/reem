@@ -10150,4 +10150,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get orderTimelinePaymentExpired => 'The payment deadline passed.';
+
+  @override
+  String get roomsBlockerNothingChosen => 'You haven’t chosen a piece yet';
 }

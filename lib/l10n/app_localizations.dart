@@ -17731,6 +17731,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The payment deadline passed.'**
   String get orderTimelinePaymentExpired;
+
+  /// Room readiness blocker.
+  ///
+  /// In en, this message translates to:
+  /// **'You haven’t chosen a piece yet'**
+  String get roomsBlockerNothingChosen;
 }
 
 class _AppLocalizationsDelegate

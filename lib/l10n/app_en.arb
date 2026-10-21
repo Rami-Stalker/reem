@@ -11493,5 +11493,7 @@
   "orderTimelineCancelled": "Order cancelled",
   "@orderTimelineCancelled": {"description": "Order timeline entry."},
   "orderTimelinePaymentExpired": "The payment deadline passed.",
-  "@orderTimelinePaymentExpired": {"description": "Order timeline entry."}
+  "@orderTimelinePaymentExpired": {"description": "Order timeline entry."},
+  "roomsBlockerNothingChosen": "You haven’t chosen a piece yet",
+  "@roomsBlockerNothingChosen": {"description": "Room readiness blocker."}
 }

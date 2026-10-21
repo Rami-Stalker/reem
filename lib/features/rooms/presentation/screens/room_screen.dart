@@ -204,12 +204,18 @@ class _RoomHeader extends StatelessWidget {
             ),
             const SizedBox(height: DsSpacing.xs),
             Text(
-              readiness.ready
-                  ? context.l10n.roomsAllSettled
-                  : context.l10n.roomsSettledOf(
-                      readiness.settledRequired,
-                      readiness.totalRequired,
-                    ),
+              switch (readiness) {
+                RoomReadiness(ready: true) => context.l10n.roomsAllSettled,
+                // Nothing required to count — say what is missing instead of
+                // «0 of 0 decisions settled».
+                RoomReadiness(totalRequired: 0, :final blockers)
+                    when blockers.isNotEmpty =>
+                  blockers.first.labelOf(context.l10n),
+                _ => context.l10n.roomsSettledOf(
+                  readiness.settledRequired,
+                  readiness.totalRequired,
+                ),
+              },
               style: context.dsText.caption,
             ),
           ],
