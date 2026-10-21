@@ -408,10 +408,13 @@ class _Money extends StatelessWidget {
             label: l10n.sellerOrderItemsSubtotal,
             value: order.itemsSubtotal,
           ),
-          if (!order.discountTotal.isZero)
+          // Only her own discount is a deduction. A platform coupon is said
+          // underneath: listing it here made the rows add up to less than
+          // her net.
+          if (!order.sellerFundedDiscount.isZero)
             _Row(
               label: l10n.sellerOrderDiscount,
-              value: order.discountTotal,
+              value: order.sellerFundedDiscount,
               isNegative: true,
             ),
           _Row(
@@ -430,6 +433,27 @@ class _Money extends StatelessWidget {
             value: order.summary.net,
             emphasise: true,
           ),
+          if (!order.platformFundedDiscount.isZero) ...[
+            DsGaps.vXs,
+            Row(
+              children: [
+                Icon(
+                  Icons.local_offer_outlined,
+                  size: 14,
+                  color: atelier.positive,
+                ),
+                DsGaps.hXs,
+                Expanded(
+                  child: Text(
+                    l10n.sellerOrderPlatformDiscountNote(
+                      order.platformFundedDiscount.format(),
+                    ),
+                    style: context.dsText.caption.tint(atelier.muted),
+                  ),
+                ),
+              ],
+            ),
+          ],
 
           const SizedBox(height: DsSpacing.sm),
           // Q24 — the seller's money is escrowed until the return window

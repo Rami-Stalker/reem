@@ -601,7 +601,7 @@
   "@adminJsonHint": {
     "description": "Hint under the system setting value box."
   },
-  "adminLastDays": "Last {count} days",
+  "adminLastDays": "{count, plural, =1{Last day} other{Last {count} days}}",
   "@adminLastDays": {
     "description": "Range chip on the admin analytics console.",
     "placeholders": {
@@ -1033,7 +1033,7 @@
   "@adminUserManagement": {
     "description": "Admin section: browse and moderate accounts."
   },
-  "adminUnitsSold": "{units} units",
+  "adminUnitsSold": "{units, plural, =1{1 unit} other{{units} units}}",
   "@adminUnitsSold": {
       "description": "Analytics ranked list: pieces sold by a product or a boutique.",
       "placeholders": {
@@ -1264,7 +1264,12 @@
   },
   "analyticsUnitsSold": "{count} sold",
   "@analyticsUnitsSold": {
-    "description": "Units sold on a product row"
+    "description": "Units sold on a product row",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   },
   "appPreferences": "App preferences",
   "@appPreferences": {
@@ -3350,7 +3355,7 @@
   "@loyaltyConvertHint": {
     "description": "Q43 — explains the conversion rate."
   },
-  "loyaltyConverted": "{count} points added to your balance ✨",
+  "loyaltyConverted": "{count, plural, =1{1 point added to your balance ✨} other{{count} points added to your balance ✨}}",
   "@loyaltyConverted": {
     "description": "Confirmation after a successful points conversion.",
     "placeholders": {
@@ -4088,9 +4093,14 @@
   "@payoutClaimable": {
     "description": "Claimable amount label"
   },
-  "payoutFromOrders": "From {count} orders",
+  "payoutFromOrders": "{count, plural, =1{From 1 order} other{From {count} orders}}",
   "@payoutFromOrders": {
-    "description": "How many sales the request covers"
+    "description": "How many sales the request covers",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   },
   "payoutPendingTitle": "A withdrawal is being reviewed",
   "@payoutPendingTitle": {
@@ -4897,7 +4907,7 @@
   "@returnWindowCloses": {
     "description": "Deadline line"
   },
-  "returnWindowExtraDays": "You have {days} extra days on the window",
+  "returnWindowExtraDays": "{days, plural, =1{You have 1 extra day on the window} other{You have {days} extra days on the window}}",
   "@returnWindowExtraDays": {
     "description": "Extra days granted to this shopper",
     "placeholders": {
@@ -5108,7 +5118,7 @@
   "@rewardsAvailablePoints": {
     "description": "Label over the points balance [re-authored: original wording lost]"
   },
-  "rewardsBalanceSemantics": "{points} points, {tier} tier",
+  "rewardsBalanceSemantics": "{points, plural, =1{1 point, {tier} tier} other{{points} points, {tier} tier}}",
   "@rewardsBalanceSemantics": {
     "description": "Screen-reader summary of the rewards balance [re-authored: original wording lost]",
     "placeholders": {
@@ -5302,7 +5312,7 @@
   "@rewardsPointsBlurb": {
     "description": "Rewards description"
   },
-  "rewardsPointsCost": "{points} points",
+  "rewardsPointsCost": "{points, plural, =1{1 point} other{{points} points}}",
   "@rewardsPointsCost": {
     "description": "What a reward costs in points [re-authored: original wording lost]",
     "placeholders": {
@@ -5760,7 +5770,7 @@
   "sellerOrderCourierAssigned": "Courier assigned",
   "sellerOrderCourierPending": "Awaiting a courier",
   "sellerOrderDelivered": "Delivery recorded",
-  "sellerOrderDiscount": "Discount",
+  "sellerOrderDiscount": "Your discount",
   "sellerOrderEscrowOn": "Earnings become available once the return window closes on {date}.",
   "@sellerOrderEscrowOn": {
     "placeholders": {
@@ -6583,7 +6593,7 @@
   "@trendAlertSoldOut": {
     "description": "Product alert chip"
   },
-  "trendAlertStockOutIn": "Out in {days} days",
+  "trendAlertStockOutIn": "{days, plural, =0{Out today} =1{Out in 1 day} other{Out in {days} days}}",
   "@trendAlertStockOutIn": {
     "description": "Product alert chip",
     "placeholders": {
@@ -6612,7 +6622,7 @@
   "@trendConversion": {
     "description": "Metric label"
   },
-  "trendDaysValue": "{days} days",
+  "trendDaysValue": "{days, plural, =1{1 day} other{{days} days}}",
   "@trendDaysValue": {
     "description": "Day count",
     "placeholders": {
@@ -6629,7 +6639,7 @@
   "@trendFavorites": {
     "description": "Metric label"
   },
-  "trendForecastLine": "{units} units forecast over {days} days",
+  "trendForecastLine": "{units, plural, =1{1 unit forecast} other{{units} units forecast}} {days, plural, =1{over 1 day} other{over {days} days}}",
   "@trendForecastLine": {
     "description": "Forecast line on a product card",
     "placeholders": {
@@ -6674,7 +6684,7 @@
   "@trendRevenue": {
     "description": "Metric label"
   },
-  "trendRisingCount": "{count} products rising",
+  "trendRisingCount": "{count, plural, =1{1 product rising} other{{count} products rising}}",
   "@trendRisingCount": {
     "description": "Metric hint",
     "placeholders": {
@@ -6837,7 +6847,7 @@
   "@trendsCategoriesHint": {
     "description": "Admin categories hint"
   },
-  "trendsCategorySupply": "{inStock} of {total} products in stock",
+  "trendsCategorySupply": "In stock: {inStock} of {total}",
   "@trendsCategorySupply": {
     "description": "Category supply line",
     "placeholders": {
@@ -6925,7 +6935,7 @@
       }
     }
   },
-  "trendsForecastUnitsLabel": "Forecast units over {days} days",
+  "trendsForecastUnitsLabel": "{days, plural, =1{Forecast units over 1 day} other{Forecast units over {days} days}}",
   "@trendsForecastUnitsLabel": {
     "description": "Forecast headline label",
     "placeholders": {
@@ -7052,7 +7062,7 @@
   "@trendsStageDistribution": {
     "description": "Stage distribution panel title"
   },
-  "trendsStageScored": "{scored} active of {total} scored products",
+  "trendsStageScored": "Active: {scored} of {total} scored",
   "@trendsStageScored": {
     "description": "Stage distribution footnote",
     "placeholders": {
@@ -7505,7 +7515,7 @@
   "studioPromotersEmpty": "Nobody yet",
   "studioPromotersEmptyBody": "The first shopper to add your post to her page shows up here.",
   "studioPromoterAnonymous": "A shopper (private page)",
-  "studioPromoterSummary": "{reshares} added · {products} pieces",
+  "studioPromoterSummary": "Added: {reshares} · Pieces: {products}",
   "viewProfile": "View page",
   "@studioPublishedCount": {
     "placeholders": {
@@ -9007,7 +9017,7 @@
   "@valueAdminSuspectsNone": {
     "description": ""
   },
-  "valueAdminConcentration": "{percent}% concentrated over {days} days",
+  "valueAdminConcentration": "{days, plural, =1{{percent}% concentrated over 1 day} other{{percent}% concentrated over {days} days}}",
   "@valueAdminConcentration": {
     "description": "",
     "placeholders": {
@@ -9309,7 +9319,7 @@
   "@valuePolicyCeiling": {
     "description": ""
   },
-  "valuePolicyPoints": "{points} points",
+  "valuePolicyPoints": "{points, plural, =1{1 point} other{{points} points}}",
   "@valuePolicyPoints": {
     "description": "",
     "placeholders": {
@@ -9322,7 +9332,7 @@
   "@valuePolicyHalfLife": {
     "description": ""
   },
-  "valuePolicyDays": "{days} days",
+  "valuePolicyDays": "{days, plural, =1{1 day} other{{days} days}}",
   "@valuePolicyDays": {
     "description": "",
     "placeholders": {
@@ -10469,7 +10479,7 @@
       }
     }
   },
-  "siWindowDays": "Based on the last {days} days",
+  "siWindowDays": "{days, plural, =1{Based on the last day} other{Based on the last {days} days}}",
   "@siWindowDays": {
     "description": "",
     "placeholders": {
@@ -10478,7 +10488,7 @@
       }
     }
   },
-  "siViewsOrders": "{views} views · {orders} orders",
+  "siViewsOrders": "Views: {views} · Orders: {orders}",
   "@siViewsOrders": {
     "description": "",
     "placeholders": {
@@ -10515,7 +10525,7 @@
   "@siTooFewYet": {
     "description": ""
   },
-  "siComparedWith": "Compared with {count} similar products",
+  "siComparedWith": "{count, plural, =1{Compared with 1 similar product} other{Compared with {count} similar products}}",
   "@siComparedWith": {
     "description": "",
     "placeholders": {
@@ -10602,7 +10612,7 @@
   "@siHealthTooFewOrders": {
     "description": ""
   },
-  "siHealthWindow": "Based on your last {days} days of orders.",
+  "siHealthWindow": "{days, plural, =1{Based on your last day of orders.} other{Based on your last {days} days of orders.}}",
   "@siHealthWindow": {
     "description": "",
     "placeholders": {
@@ -10611,7 +10621,7 @@
       }
     }
   },
-  "siMomentum": "{points} points from last month",
+  "siMomentum": "{points, plural, =1{1 point from last month} other{{points} points from last month}}",
   "@siMomentum": {
     "description": "",
     "placeholders": {
@@ -10641,7 +10651,7 @@
       }
     }
   },
-  "siDays": "{count} days",
+  "siDays": "{count, plural, =1{1 day} other{{count} days}}",
   "@siDays": {
     "description": "",
     "placeholders": {
@@ -11509,5 +11519,14 @@
   "sellerPlanPremium": "Premium plan",
   "@sellerPlanPremium": {
     "description": "Seller profile badge for the PREMIUM level."
+  },
+  "sellerOrderPlatformDiscountNote": "A {amount} discount was paid by Reem and doesn't come out of your earnings.",
+  "@sellerOrderPlatformDiscountNote": {
+    "description": "Seller order breakdown: a platform-funded coupon, shown as a note rather than a deduction.",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
   }
 }

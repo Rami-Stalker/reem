@@ -10,6 +10,7 @@ import {
   FulfilmentMode,
   PaymentStatus,
   Prisma,
+  SellerOrder,
   SellerOrderStatus,
   ShipmentStatus,
 } from '@prisma/client';
@@ -552,6 +553,20 @@ export class SellerOrdersService {
     };
   }
 
+  private discountSplit(
+    parcel: Pick<SellerOrder, 'currency' | 'itemsSubtotal' | 'discountTotal' | 'commissionBase'>,
+  ) {
+    const currency = parcel.currency;
+    const zero = Money.zero(currency);
+    const subtotal = Money.of(parcel.itemsSubtotal, currency);
+    const base = Money.of(parcel.commissionBase, currency);
+    const customerPaid = subtotal.minus(Money.of(parcel.discountTotal, currency));
+    return {
+      seller_funded_discount: subtotal.minus(base).clampMin(zero).toJSON(),
+      platform_funded_discount: base.minus(customerPaid).clampMin(zero).toJSON(),
+    };
+  }
+
   private serializeDetail(
     parcel: Prisma.SellerOrderGetPayload<{
       include: ReturnType<SellerOrdersService['listInclude']>;
@@ -566,6 +581,12 @@ export class SellerOrdersService {
       discount_total: Money.of(parcel.discountTotal, currency).toJSON(),
       shipping_cost: Money.of(parcel.shippingCost, currency).toJSON(),
       commission_base: Money.of(parcel.commissionBase, currency).toJSON(),
+      // The discount split by who paid for it (Q49 — «يتحملها من أنشأ
+      // الكوبون»). Her share is what came off the price she is paid on; the
+      // platform's is what it made up on top. Without the split her screen
+      // listed a platform coupon as a deduction from her money, and the
+      // breakdown no longer added up to her net.
+      ...this.discountSplit(parcel),
       confirmed_at: parcel.confirmedAt,
       shipped_at: parcel.shippedAt,
       delivered_at: parcel.deliveredAt,

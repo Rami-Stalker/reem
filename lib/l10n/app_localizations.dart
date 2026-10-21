@@ -983,7 +983,7 @@ abstract class AppLocalizations {
   /// Range chip on the admin analytics console.
   ///
   /// In en, this message translates to:
-  /// **'Last {count} days'**
+  /// **'{count, plural, =1{Last day} other{Last {count} days}}'**
   String adminLastDays(int count);
 
   /// Button that fetches the next page of an admin queue.
@@ -1601,7 +1601,7 @@ abstract class AppLocalizations {
   /// Analytics ranked list: pieces sold by a product or a boutique.
   ///
   /// In en, this message translates to:
-  /// **'{units} units'**
+  /// **'{units, plural, =1{1 unit} other{{units} units}}'**
   String adminUnitsSold(int units);
 
   /// Subtitle of the notification analytics screen.
@@ -1938,7 +1938,7 @@ abstract class AppLocalizations {
   ///
   /// In en, this message translates to:
   /// **'{count} sold'**
-  String analyticsUnitsSold(Object count);
+  String analyticsUnitsSold(int count);
 
   /// Settings section
   ///
@@ -5147,7 +5147,7 @@ abstract class AppLocalizations {
   /// Confirmation after a successful points conversion.
   ///
   /// In en, this message translates to:
-  /// **'{count} points added to your balance ✨'**
+  /// **'{count, plural, =1{1 point added to your balance ✨} other{{count} points added to your balance ✨}}'**
   String loyaltyConverted(int count);
 
   /// Shown when the chosen number of points is not a multiple of ten.
@@ -6335,8 +6335,8 @@ abstract class AppLocalizations {
   /// How many sales the request covers
   ///
   /// In en, this message translates to:
-  /// **'From {count} orders'**
-  String payoutFromOrders(Object count);
+  /// **'{count, plural, =1{From 1 order} other{From {count} orders}}'**
+  String payoutFromOrders(int count);
 
   /// Open request card heading
   ///
@@ -7457,7 +7457,7 @@ abstract class AppLocalizations {
   /// Extra days granted to this shopper
   ///
   /// In en, this message translates to:
-  /// **'You have {days} extra days on the window'**
+  /// **'{days, plural, =1{You have 1 extra day on the window} other{You have {days} extra days on the window}}'**
   String returnWindowExtraDays(int days);
 
   /// When the return window closes
@@ -7769,7 +7769,7 @@ abstract class AppLocalizations {
   /// Screen-reader summary of the rewards balance [re-authored: original wording lost]
   ///
   /// In en, this message translates to:
-  /// **'{points} points, {tier} tier'**
+  /// **'{points, plural, =1{1 point, {tier} tier} other{{points} points, {tier} tier}}'**
   String rewardsBalanceSemantics(int points, String tier);
 
   /// Membership benefit [re-authored: original wording lost]
@@ -8003,7 +8003,7 @@ abstract class AppLocalizations {
   /// What a reward costs in points [re-authored: original wording lost]
   ///
   /// In en, this message translates to:
-  /// **'{points} points'**
+  /// **'{points, plural, =1{1 point} other{{points} points}}'**
   String rewardsPointsCost(int points);
 
   /// Progress toward the next tier [re-authored: original wording lost]
@@ -8771,7 +8771,7 @@ abstract class AppLocalizations {
   /// No description provided for @sellerOrderDiscount.
   ///
   /// In en, this message translates to:
-  /// **'Discount'**
+  /// **'Your discount'**
   String get sellerOrderDiscount;
 
   /// No description provided for @sellerOrderEscrowOn.
@@ -10157,7 +10157,7 @@ abstract class AppLocalizations {
   /// Product alert chip
   ///
   /// In en, this message translates to:
-  /// **'Out in {days} days'**
+  /// **'{days, plural, =0{Out today} =1{Out in 1 day} other{Out in {days} days}}'**
   String trendAlertStockOutIn(int days);
 
   /// Product alert chip
@@ -10193,7 +10193,7 @@ abstract class AppLocalizations {
   /// Day count
   ///
   /// In en, this message translates to:
-  /// **'{days} days'**
+  /// **'{days, plural, =1{1 day} other{{days} days}}'**
   String trendDaysValue(int days);
 
   /// Dismisses an insight or a demand signal
@@ -10211,7 +10211,7 @@ abstract class AppLocalizations {
   /// Forecast line on a product card
   ///
   /// In en, this message translates to:
-  /// **'{units} units forecast over {days} days'**
+  /// **'{units, plural, =1{1 unit forecast} other{{units} units forecast}} {days, plural, =1{over 1 day} other{over {days} days}}'**
   String trendForecastLine(int units, int days);
 
   /// Collapses the metrics behind an insight
@@ -10259,7 +10259,7 @@ abstract class AppLocalizations {
   /// Metric hint
   ///
   /// In en, this message translates to:
-  /// **'{count} products rising'**
+  /// **'{count, plural, =1{1 product rising} other{{count} products rising}}'**
   String trendRisingCount(int count);
 
   /// Metric label
@@ -10469,7 +10469,7 @@ abstract class AppLocalizations {
   /// Category supply line
   ///
   /// In en, this message translates to:
-  /// **'{inStock} of {total} products in stock'**
+  /// **'In stock: {inStock} of {total}'**
   String trendsCategorySupply(int inStock, int total);
 
   /// Admin colours heading
@@ -10577,7 +10577,7 @@ abstract class AppLocalizations {
   /// Forecast headline label
   ///
   /// In en, this message translates to:
-  /// **'Forecast units over {days} days'**
+  /// **'{days, plural, =1{Forecast units over 1 day} other{Forecast units over {days} days}}'**
   String trendsForecastUnitsLabel(int days);
 
   /// Opportunity kind label
@@ -10733,7 +10733,7 @@ abstract class AppLocalizations {
   /// Stage distribution footnote
   ///
   /// In en, this message translates to:
-  /// **'{scored} active of {total} scored products'**
+  /// **'Active: {scored} of {total} scored'**
   String trendsStageScored(int scored, int total);
 
   /// Stock section heading
@@ -11645,7 +11645,7 @@ abstract class AppLocalizations {
   /// No description provided for @studioPromoterSummary.
   ///
   /// In en, this message translates to:
-  /// **'{reshares} added · {products} pieces'**
+  /// **'Added: {reshares} · Pieces: {products}'**
   String studioPromoterSummary(int reshares, int products);
 
   /// No description provided for @viewProfile.
@@ -14357,7 +14357,7 @@ abstract class AppLocalizations {
   ///
   ///
   /// In en, this message translates to:
-  /// **'{percent}% concentrated over {days} days'**
+  /// **'{days, plural, =1{{percent}% concentrated over 1 day} other{{percent}% concentrated over {days} days}}'**
   String valueAdminConcentration(int percent, int days);
 
   ///
@@ -14705,7 +14705,7 @@ abstract class AppLocalizations {
   ///
   ///
   /// In en, this message translates to:
-  /// **'{points} points'**
+  /// **'{points, plural, =1{1 point} other{{points} points}}'**
   String valuePolicyPoints(int points);
 
   ///
@@ -14717,7 +14717,7 @@ abstract class AppLocalizations {
   ///
   ///
   /// In en, this message translates to:
-  /// **'{days} days'**
+  /// **'{days, plural, =1{1 day} other{{days} days}}'**
   String valuePolicyDays(int days);
 
   ///
@@ -16157,13 +16157,13 @@ abstract class AppLocalizations {
   ///
   ///
   /// In en, this message translates to:
-  /// **'Based on the last {days} days'**
+  /// **'{days, plural, =1{Based on the last day} other{Based on the last {days} days}}'**
   String siWindowDays(int days);
 
   ///
   ///
   /// In en, this message translates to:
-  /// **'{views} views · {orders} orders'**
+  /// **'Views: {views} · Orders: {orders}'**
   String siViewsOrders(int views, int orders);
 
   ///
@@ -16199,7 +16199,7 @@ abstract class AppLocalizations {
   ///
   ///
   /// In en, this message translates to:
-  /// **'Compared with {count} similar products'**
+  /// **'{count, plural, =1{Compared with 1 similar product} other{Compared with {count} similar products}}'**
   String siComparedWith(int count);
 
   ///
@@ -16295,13 +16295,13 @@ abstract class AppLocalizations {
   ///
   ///
   /// In en, this message translates to:
-  /// **'Based on your last {days} days of orders.'**
+  /// **'{days, plural, =1{Based on your last day of orders.} other{Based on your last {days} days of orders.}}'**
   String siHealthWindow(int days);
 
   ///
   ///
   /// In en, this message translates to:
-  /// **'{points} points from last month'**
+  /// **'{points, plural, =1{1 point from last month} other{{points} points from last month}}'**
   String siMomentum(int points);
 
   ///
@@ -16319,7 +16319,7 @@ abstract class AppLocalizations {
   ///
   ///
   /// In en, this message translates to:
-  /// **'{count} days'**
+  /// **'{count, plural, =1{1 day} other{{count} days}}'**
   String siDays(int count);
 
   ///
@@ -17761,6 +17761,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Premium plan'**
   String get sellerPlanPremium;
+
+  /// Seller order breakdown: a platform-funded coupon, shown as a note rather than a deduction.
+  ///
+  /// In en, this message translates to:
+  /// **'A {amount} discount was paid by Reem and doesn\'t come out of your earnings.'**
+  String sellerOrderPlatformDiscountNote(String amount);
 }
 
 class _AppLocalizationsDelegate

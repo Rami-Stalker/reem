@@ -467,7 +467,16 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String adminLastDays(int count) {
-    return 'آخر $count يوم';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'آخر $count يوم',
+      many: 'آخر $count يوماً',
+      few: 'آخر $count أيام',
+      two: 'آخر يومين',
+      one: 'آخر يوم',
+    );
+    return '$_temp0';
   }
 
   @override
@@ -793,7 +802,15 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String adminUnitsSold(int units) {
-    return '$units قطعة';
+    String _temp0 = intl.Intl.pluralLogic(
+      units,
+      locale: localeName,
+      other: '$units قطعة',
+      few: '$units قطع',
+      two: 'قطعتان',
+      one: 'قطعة واحدة',
+    );
+    return '$_temp0';
   }
 
   @override
@@ -964,8 +981,16 @@ class AppLocalizationsAr extends AppLocalizations {
   String get analyticsTrendRevenue => 'الإيراد';
 
   @override
-  String analyticsUnitsSold(Object count) {
-    return '$count قطعة';
+  String analyticsUnitsSold(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count قطعة',
+      few: '$count قطع',
+      two: 'قطعتان',
+      one: 'قطعة واحدة',
+    );
+    return '$_temp0';
   }
 
   @override
@@ -2724,7 +2749,15 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String loyaltyConverted(int count) {
-    return 'تم تحويل $count نقطة إلى رصيدكِ ✨';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'تم تحويل $count نقطة إلى رصيدكِ ✨',
+      few: 'تم تحويل $count نقاط إلى رصيدكِ ✨',
+      two: 'تم تحويل نقطتين إلى رصيدكِ ✨',
+      one: 'تم تحويل نقطة واحدة إلى رصيدكِ ✨',
+    );
+    return '$_temp0';
   }
 
   @override
@@ -3380,8 +3413,17 @@ class AppLocalizationsAr extends AppLocalizations {
   String get payoutClaimable => 'قيمة هذا الطلب';
 
   @override
-  String payoutFromOrders(Object count) {
-    return 'من $count طلب';
+  String payoutFromOrders(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'من $count طلب',
+      many: 'من $count طلباً',
+      few: 'من $count طلبات',
+      two: 'من طلبين',
+      one: 'من طلب واحد',
+    );
+    return '$_temp0';
   }
 
   @override
@@ -4027,7 +4069,16 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String returnWindowExtraDays(int days) {
-    return 'لكِ $days يوم إضافي على المهلة';
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: 'لكِ $days يوم إضافي على المهلة',
+      many: 'لكِ $days يوماً إضافياً على المهلة',
+      few: 'لكِ $days أيام إضافية على المهلة',
+      two: 'لكِ يومان إضافيان على المهلة',
+      one: 'لكِ يوم إضافي على المهلة',
+    );
+    return '$_temp0';
   }
 
   @override
@@ -4209,7 +4260,15 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String rewardsBalanceSemantics(int points, String tier) {
-    return '$points نقطة، فئة $tier';
+    String _temp0 = intl.Intl.pluralLogic(
+      points,
+      locale: localeName,
+      other: '$points نقطة، فئة $tier',
+      few: '$points نقاط، فئة $tier',
+      two: 'نقطتان، فئة $tier',
+      one: 'نقطة واحدة، فئة $tier',
+    );
+    return '$_temp0';
   }
 
   @override
@@ -4352,7 +4411,15 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String rewardsPointsCost(int points) {
-    return '$points نقطة';
+    String _temp0 = intl.Intl.pluralLogic(
+      points,
+      locale: localeName,
+      other: '$points نقطة',
+      few: '$points نقاط',
+      two: 'نقطتان',
+      one: 'نقطة واحدة',
+    );
+    return '$_temp0';
   }
 
   @override
@@ -4768,7 +4835,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get sellerOrderDelivered => 'سُجّل التسليم';
 
   @override
-  String get sellerOrderDiscount => 'حسم';
+  String get sellerOrderDiscount => 'حسم من متجركِ';
 
   @override
   String sellerOrderEscrowOn(String date) {
@@ -4798,7 +4865,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get sellerOrderNet => 'صافي أرباحكِ';
 
   @override
-  String get sellerOrderStepConfirmed => 'أكّدتِ الاستلام';
+  String get sellerOrderStepConfirmed => 'قبلتِ الطلب';
 
   @override
   String get sellerOrderStepDelivered => 'تم التسليم';
@@ -5570,7 +5637,17 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String trendAlertStockOutIn(int days) {
-    return 'ينفد خلال $days يومًا';
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: 'ينفد خلال $days يوم',
+      many: 'ينفد خلال $days يوماً',
+      few: 'ينفد خلال $days أيام',
+      two: 'ينفد خلال يومين',
+      one: 'ينفد خلال يوم',
+      zero: 'ينفد اليوم',
+    );
+    return '$_temp0';
   }
 
   @override
@@ -5590,7 +5667,16 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String trendDaysValue(int days) {
-    return '$days يومًا';
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: '$days يوم',
+      many: '$days يوماً',
+      few: '$days أيام',
+      two: 'يومان',
+      one: 'يوم واحد',
+    );
+    return '$_temp0';
   }
 
   @override
@@ -5601,7 +5687,24 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String trendForecastLine(int units, int days) {
-    return 'متوقّع بيع $units قطعة خلال $days يومًا';
+    String _temp0 = intl.Intl.pluralLogic(
+      units,
+      locale: localeName,
+      other: 'متوقّع بيع $units قطعة',
+      few: 'متوقّع بيع $units قطع',
+      two: 'متوقّع بيع قطعتين',
+      one: 'متوقّع بيع قطعة واحدة',
+    );
+    String _temp1 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: 'خلال $days يوم',
+      many: 'خلال $days يوماً',
+      few: 'خلال $days أيام',
+      two: 'خلال يومين',
+      one: 'خلال يوم',
+    );
+    return '$_temp0 $_temp1';
   }
 
   @override
@@ -5629,7 +5732,16 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String trendRisingCount(int count) {
-    return '$count منتجًا في ارتفاع';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count منتج في ارتفاع',
+      many: '$count منتجاً في ارتفاع',
+      few: '$count منتجات في ارتفاع',
+      two: 'منتجان في ارتفاع',
+      one: 'منتج واحد في ارتفاع',
+    );
+    return '$_temp0';
   }
 
   @override
@@ -5744,7 +5856,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String trendsCategorySupply(int inStock, int total) {
-    return '$inStock من $total منتجًا متوفّر';
+    return 'المتوفّر: $inStock من $total';
   }
 
   @override
@@ -5806,7 +5918,16 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String trendsForecastUnitsLabel(int days) {
-    return 'القطع المتوقّعة خلال $days يومًا';
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: 'القطع المتوقّعة خلال $days يوم',
+      many: 'القطع المتوقّعة خلال $days يوماً',
+      few: 'القطع المتوقّعة خلال $days أيام',
+      two: 'القطع المتوقّعة خلال يومين',
+      one: 'القطع المتوقّعة خلال يوم',
+    );
+    return '$_temp0';
   }
 
   @override
@@ -5895,7 +6016,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String trendsStageScored(int scored, int total) {
-    return '$scored منتجًا نشطًا من أصل $total مُقيَّمًا';
+    return 'منتجات نشطة: $scored من أصل $total مُقيَّمة';
   }
 
   @override
@@ -6342,7 +6463,16 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String studioPublishedCount(int count) {
-    return '$count منشور';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count منشور',
+      many: '$count منشوراً',
+      few: '$count منشورات',
+      two: 'منشوران',
+      one: 'منشور واحد',
+    );
+    return '$_temp0';
   }
 
   @override
@@ -6388,7 +6518,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String studioPromoterSummary(int reshares, int products) {
-    return '$reshares إضافة · $products قطعة';
+    return 'إضافات: $reshares · قطع: $products';
   }
 
   @override
@@ -6399,7 +6529,16 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String adminContentReported(int count) {
-    return '$count منشور عليه بلاغ';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count منشور عليها بلاغات',
+      many: '$count منشوراً عليها بلاغات',
+      few: '$count منشورات عليها بلاغات',
+      two: 'منشوران عليهما بلاغ',
+      one: 'منشور واحد عليه بلاغ',
+    );
+    return '$_temp0';
   }
 
   @override
@@ -8075,7 +8214,16 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String valueAdminConcentration(int percent, int days) {
-    return 'تركّز $percent% خلال $days يوم';
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: 'تركّز $percent% خلال $days يوم',
+      many: 'تركّز $percent% خلال $days يوماً',
+      few: 'تركّز $percent% خلال $days أيام',
+      two: 'تركّز $percent% خلال يومين',
+      one: 'تركّز $percent% خلال يوم',
+    );
+    return '$_temp0';
   }
 
   @override
@@ -8276,7 +8424,15 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String valuePolicyPoints(int points) {
-    return '$points نقطة';
+    String _temp0 = intl.Intl.pluralLogic(
+      points,
+      locale: localeName,
+      other: '$points نقطة',
+      few: '$points نقاط',
+      two: 'نقطتان',
+      one: 'نقطة واحدة',
+    );
+    return '$_temp0';
   }
 
   @override
@@ -8284,7 +8440,16 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String valuePolicyDays(int days) {
-    return '$days يوم';
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: '$days يوم',
+      many: '$days يوماً',
+      few: '$days أيام',
+      two: 'يومان',
+      one: 'يوم واحد',
+    );
+    return '$_temp0';
   }
 
   @override
@@ -9207,12 +9372,21 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String siWindowDays(int days) {
-    return 'محسوبة على آخر $days يوم';
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: 'محسوبة على آخر $days يوم',
+      many: 'محسوبة على آخر $days يوماً',
+      few: 'محسوبة على آخر $days أيام',
+      two: 'محسوبة على آخر يومين',
+      one: 'محسوبة على آخر يوم',
+    );
+    return '$_temp0';
   }
 
   @override
   String siViewsOrders(int views, int orders) {
-    return '$views مشاهدة · $orders طلب';
+    return 'مشاهدات: $views · طلبات: $orders';
   }
 
   @override
@@ -9242,7 +9416,16 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String siComparedWith(int count) {
-    return 'مقارنة بـ$count منتج مشابه';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'مقارنة بـ$count منتج مشابه',
+      many: 'مقارنة بـ$count منتجاً مشابهاً',
+      few: 'مقارنة بـ$count منتجات مشابهة',
+      two: 'مقارنة بمنتجين مشابهين',
+      one: 'مقارنة بمنتج واحد مشابه',
+    );
+    return '$_temp0';
   }
 
   @override
@@ -9301,12 +9484,29 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String siHealthWindow(int days) {
-    return 'محسوبة على آخر $days يوم من طلباتكِ.';
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: 'محسوبة على آخر $days يوم من طلباتكِ.',
+      many: 'محسوبة على آخر $days يوماً من طلباتكِ.',
+      few: 'محسوبة على آخر $days أيام من طلباتكِ.',
+      two: 'محسوبة على آخر يومين من طلباتكِ.',
+      one: 'محسوبة على آخر يوم من طلباتكِ.',
+    );
+    return '$_temp0';
   }
 
   @override
   String siMomentum(int points) {
-    return '$points نقطة عن الشهر الماضي';
+    String _temp0 = intl.Intl.pluralLogic(
+      points,
+      locale: localeName,
+      other: '$points نقطة عن الشهر الماضي',
+      few: '$points نقاط عن الشهر الماضي',
+      two: 'نقطتان عن الشهر الماضي',
+      one: 'نقطة واحدة عن الشهر الماضي',
+    );
+    return '$_temp0';
   }
 
   @override
@@ -9321,12 +9521,29 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String siDays(int count) {
-    return '$count يوم';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count يوم',
+      many: '$count يوماً',
+      few: '$count أيام',
+      two: 'يومان',
+      one: 'يوم واحد',
+    );
+    return '$_temp0';
   }
 
   @override
   String siHours(int count) {
-    return '$count ساعة';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count ساعة',
+      few: '$count ساعات',
+      two: 'ساعتان',
+      one: 'ساعة واحدة',
+    );
+    return '$_temp0';
   }
 
   @override
@@ -10207,4 +10424,9 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get sellerPlanPremium => 'الباقة المميّزة';
+
+  @override
+  String sellerOrderPlatformDiscountNote(String amount) {
+    return 'حسم بقيمة $amount تحمّلته ريم عنكِ، ولا يُخصم من أرباحكِ.';
+  }
 }

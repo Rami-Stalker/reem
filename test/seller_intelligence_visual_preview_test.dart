@@ -197,10 +197,10 @@ void main() {
         .widgetList<Text>(find.byType(Text))
         .map((t) => t.data)
         .whereType<String>()
-        .firstWhere((t) => t.contains('مشاهدة'));
+        .firstWhere((t) => t.contains('مشاهدات'));
 
-    expect(line, contains('${first.views} مشاهدة'));
-    expect(line, contains('${first.orders} طلب'));
+    expect(line, contains('مشاهدات: ${first.views}'));
+    expect(line, contains('طلبات: ${first.orders}'));
     expect(
       RegExp(r'[٠-٩]').hasMatch(line),
       isFalse,

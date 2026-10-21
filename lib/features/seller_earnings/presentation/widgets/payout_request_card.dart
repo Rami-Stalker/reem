@@ -74,7 +74,7 @@ class _Ask extends ConsumerWidget {
           ),
           if (availability.ordersIncluded > 0)
             Text(
-              l10n.payoutFromOrders('${availability.ordersIncluded}'),
+              l10n.payoutFromOrders(availability.ordersIncluded),
               style: context.dsText.caption.tint(palette.muted),
             ),
 

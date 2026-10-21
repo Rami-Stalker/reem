@@ -304,6 +304,8 @@ class SellerOrderDetail extends Equatable {
     required this.discountTotal,
     required this.shippingCost,
     required this.commissionBase,
+    required this.sellerFundedDiscount,
+    required this.platformFundedDiscount,
     required this.items,
     required this.escrowReleased,
     this.shipment,
@@ -328,6 +330,14 @@ class SellerOrderDetail extends Equatable {
   /// the platform made up the difference. Her net and the commission always
   /// add back up to *this*, never to what the customer paid.
   final Money commissionBase;
+
+  /// The part of [discountTotal] that came off her price — her own coupon or
+  /// offer. It is the only discount her net is reduced by.
+  final Money sellerFundedDiscount;
+
+  /// The part the platform paid for. She is paid as if she sold at full
+  /// price, so it is shown as a note, never as a deduction.
+  final Money platformFundedDiscount;
   final List<SellerOrderLine> items;
   final SellerParcelShipment? shipment;
 

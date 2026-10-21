@@ -364,7 +364,7 @@ class AnalyticsProductTable extends StatelessWidget {
                             style: context.dsText.body.medium.tint(palette.ink),
                           ),
                           Text(
-                            l10n.analyticsUnitsSold('${rows[i].units}'),
+                            l10n.analyticsUnitsSold(rows[i].units),
                             style: context.dsText.caption.tint(palette.muted),
                           ),
                         ],
