@@ -72,24 +72,20 @@ Future<void> showReviewComposer({
                   }),
                 ),
                 const SizedBox(height: DsSpacing.sm),
-                TextField(
+                DsInputField(
                   controller: title,
                   enabled: !submitting,
-                  decoration: InputDecoration(
-                    labelText: sheetContext.l10n.reviewsFieldTitle,
-                    prefixIcon: const Icon(Icons.short_text_rounded),
-                  ),
+                  label: sheetContext.l10n.reviewsFieldTitle,
+                  prefixIcon: const Icon(Icons.short_text_rounded),
                 ),
                 const SizedBox(height: DsSpacing.sm),
-                TextField(
+                DsInputField(
                   controller: body,
                   minLines: 3,
                   maxLines: 5,
                   enabled: !submitting,
-                  decoration: InputDecoration(
-                    labelText: sheetContext.l10n.reviewsFieldBody,
-                    prefixIcon: const Icon(Icons.rate_review_outlined),
-                  ),
+                  label: sheetContext.l10n.reviewsFieldBody,
+                  prefixIcon: const Icon(Icons.rate_review_outlined),
                 ),
                 const SizedBox(height: DsSpacing.lg),
                 SizedBox(

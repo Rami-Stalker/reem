@@ -232,13 +232,36 @@ export class ChatRealtimeGateway implements OnModuleInit, BeforeApplicationShutd
     }
   }
 
+  /**
+   * A new message, addressed to each participant in their own terms.
+   *
+   * `is_mine` is the whole reason this is not a single broadcast. The message
+   * is serialised once, by `ChatsService.send`, against the *sender's* id — so
+   * the payload it emits says `is_mine: true`. Broadcasting that same object
+   * to everyone told the recipient the message was hers, and the app draws a
+   * message it believes is yours on your own side of the thread: every message
+   * a woman received appeared on the right, in the sender's gradient, as
+   * though she had written it herself. That is the "اتجاه الرسائل" complaint,
+   * and it was one shared object away from being correct.
+   *
+   * So the flag is rewritten per recipient from the sender id the event
+   * already carries. Nothing else in the payload depends on who is reading.
+   */
   @OnEvent('chat.message.created')
   handleCreated(event: ChatMessageCreatedEvent) {
-    this.broadcastToUsers(event.participantIds, {
-      event: 'message.created',
-      chat_id: event.chatId,
-      message: event.message,
-    });
+    for (const userId of new Set(event.participantIds)) {
+      this.sendToUser(userId, {
+        event: 'message.created',
+        chat_id: event.chatId,
+        message: this.forRecipient(event.message, userId, event.senderId),
+      });
+    }
+  }
+
+  /** The message as [userId] must see it. */
+  private forRecipient(message: unknown, userId: string, senderId: string) {
+    if (typeof message !== 'object' || message === null) return message;
+    return { ...(message as Record<string, unknown>), is_mine: userId === senderId };
   }
 
   @OnEvent('chat.messages.read')
@@ -558,14 +581,18 @@ export class ChatRealtimeGateway implements OnModuleInit, BeforeApplicationShutd
   }
 
   private broadcastToUsers(userIds: string[], payload: unknown) {
-    const uniqueIds = [...new Set(userIds)];
-    for (const userId of uniqueIds) {
-      const ids = this.userClients.get(userId);
-      if (!ids) continue;
-      for (const id of ids) {
-        const client = this.clients.get(id);
-        if (client) this.send(client, payload);
-      }
+    for (const userId of new Set(userIds)) {
+      this.sendToUser(userId, payload);
+    }
+  }
+
+  /** Every socket one person has open. */
+  private sendToUser(userId: string, payload: unknown) {
+    const ids = this.userClients.get(userId);
+    if (!ids) return;
+    for (const id of ids) {
+      const client = this.clients.get(id);
+      if (client) this.send(client, payload);
     }
   }
 

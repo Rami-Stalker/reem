@@ -13,7 +13,6 @@ abstract interface class ProfileRemoteDataSource {
 
   Future<List<OrderModel>> getOrders();
 
-  Future<void> toggleFavorite(String productId);
 
   Future<void> saveSeller(String sellerId);
 
@@ -25,4 +24,22 @@ abstract interface class ProfileRemoteDataSource {
   });
 
   Future<WishlistShareLinkModel> shareWishlistCollection(String collectionId);
+
+  /// Files an already-saved thing into one of her collections.
+  ///
+  /// [type] is `product`, `post` or `seller`; the server takes it alongside the
+  /// matching id and is idempotent, so filing the same piece twice updates the
+  /// row rather than creating a second one.
+  Future<void> addToWishlistCollection({
+    required String collectionId,
+    required String type,
+    String? productId,
+    String? postId,
+    String? sellerId,
+  });
+
+  Future<void> removeFromWishlistCollection({
+    required String collectionId,
+    required String itemId,
+  });
 }

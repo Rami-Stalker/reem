@@ -8,6 +8,7 @@ import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/media/authorized_media_image.dart';
 import 'package:reem/core/media/media_variants.dart';
 import 'package:reem/core/router/route_names.dart';
+import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/core/shared/entities/post.dart';
 import 'package:reem/core/shared/entities/product.dart';
 import 'package:reem/core/shared/entities/user.dart';
@@ -37,15 +38,19 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
       final link = next.shareLink;
       if (link == null || link == previous?.shareLink) return;
       Clipboard.setData(ClipboardData(text: link.shareUrl));
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(context.l10n.wishlistLinkCopied)),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(context.l10n.wishlistLinkCopied)));
     });
 
     final state = ref.watch(wishlistNotifierProvider);
     final overview = state.overview;
     final width = MediaQuery.sizeOf(context).width;
-    final columns = width >= 900 ? 4 : width >= 560 ? 3 : 2;
+    final columns = width >= 900
+        ? 4
+        : width >= 560
+        ? 3
+        : 2;
 
     return ReemScrollPage(
       slivers: [
@@ -71,7 +76,8 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
             sliver: SliverToBoxAdapter(
               child: _ErrorBanner(
                 message: state.error!,
-                onRetry: () => ref.read(wishlistNotifierProvider.notifier).load(),
+                onRetry: () =>
+                    ref.read(wishlistNotifierProvider.notifier).load(),
               ),
             ),
           ),
@@ -93,8 +99,9 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
               child: _CollectionsSection(
                 collections: overview.collections,
                 isMutating: state.isMutating,
-                onShare: (id) =>
-                    ref.read(wishlistNotifierProvider.notifier).shareCollection(id),
+                onShare: (id) => ref
+                    .read(wishlistNotifierProvider.notifier)
+                    .shareCollection(id),
               ),
             ),
           if (overview.sellers.isNotEmpty)
@@ -102,9 +109,7 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
               child: _SavedSellersStrip(sellers: overview.sellers),
             ),
           if (overview.posts.isNotEmpty)
-            SliverToBoxAdapter(
-              child: _SavedPostsStrip(posts: overview.posts),
-            ),
+            SliverToBoxAdapter(child: _SavedPostsStrip(posts: overview.posts)),
           if (overview.products.isNotEmpty) ...[
             SliverPadding(
               padding: EdgeInsets.fromLTRB(
@@ -129,9 +134,8 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
               ),
               sliver: SliverGrid(
                 delegate: SliverChildBuilderDelegate(
-                  (context, index) => FavoriteProductCard(
-                    product: overview.products[index],
-                  ),
+                  (context, index) =>
+                      FavoriteProductCard(product: overview.products[index]),
                   childCount: overview.products.length,
                 ),
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -173,8 +177,8 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
               Text(
                 context.l10n.newCollection,
                 style: context.dsText.sectionTitle.copyWith(
-                      fontWeight: DsTypography.bold,
-                    ),
+                  fontWeight: DsTypography.bold,
+                ),
               ),
               const SizedBox(height: DsSpacing.md),
               TextField(
@@ -251,7 +255,9 @@ class _WishlistHeader extends StatelessWidget {
         Expanded(
           child: ReemSectionHeader(
             title: context.l10n.savedItems,
-            subtitle: isLoading ? context.l10n.syncingWishlist : context.l10n.itemsCount(totalSaved),
+            subtitle: isLoading
+                ? context.l10n.syncingWishlist
+                : context.l10n.itemsCount(totalSaved),
           ),
         ),
         FilledButton.icon(
@@ -286,10 +292,7 @@ class _ErrorBanner extends StatelessWidget {
           Icon(Icons.error_outline_rounded, color: colors.error),
           const SizedBox(width: DsSpacing.sm),
           Expanded(
-            child: Text(
-              message,
-              style: context.dsText.body.tint(colors.error),
-            ),
+            child: Text(message, style: context.dsText.body.tint(colors.error)),
           ),
           IconButton(
             tooltip: context.l10n.retry,
@@ -315,17 +318,13 @@ class _EmptyWishlistState extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            Icons.favorite_border_rounded,
-            size: 56,
-            color: colors.primary,
-          ),
+          Icon(Icons.favorite_border_rounded, size: 56, color: colors.primary),
           const SizedBox(height: DsSpacing.md),
           Text(
             context.l10n.noSavedItems,
             style: context.dsText.cardTitle.copyWith(
-                  fontWeight: DsTypography.bold,
-                ),
+              fontWeight: DsTypography.bold,
+            ),
           ),
           const SizedBox(height: DsSpacing.xs),
           Text(
@@ -419,7 +418,10 @@ class _CollectionTile extends StatelessWidget {
               color: colors.primaryContainer,
               borderRadius: DsRadius.borderMd,
             ),
-            child: Icon(Icons.collections_bookmark_outlined, color: colors.primary),
+            child: Icon(
+              Icons.collections_bookmark_outlined,
+              color: colors.primary,
+            ),
           ),
           const SizedBox(width: DsSpacing.md),
           Expanded(
@@ -433,7 +435,7 @@ class _CollectionTile extends StatelessWidget {
                   style: context.dsText.body.semibold,
                 ),
                 Text(
-                  '${collection.itemsCount} items',
+                  context.l10n.itemsCount(collection.itemsCount),
                   style: context.dsText.body.tint(colors.onSurfaceVariant),
                 ),
               ],
@@ -462,7 +464,8 @@ class _SavedSellersStrip extends StatelessWidget {
       subtitle: context.l10n.storesToRevisit,
       height: 116,
       itemCount: sellers.length,
-      itemBuilder: (context, index) => _SellerPill(seller: sellers[index].seller),
+      itemBuilder: (context, index) =>
+          _SellerPill(seller: sellers[index].seller),
     );
   }
 }
@@ -556,8 +559,9 @@ class _SellerPill extends StatelessWidget {
           child: Row(
             children: [
               CircleAvatar(
-                backgroundImage:
-                    seller.imageUrl == null ? null : NetworkImage(seller.imageUrl!),
+                backgroundImage: seller.imageUrl == null
+                    ? null
+                    : NetworkImage(seller.imageUrl!),
                 child: seller.imageUrl == null
                     ? Text(seller.name.isEmpty ? '?' : seller.name[0])
                     : null,
@@ -593,54 +597,81 @@ class _SellerPill extends StatelessWidget {
   }
 }
 
+/// One saved post, as a card that opens something.
+///
+/// It used to open nothing: a shopper saved a post *because of the piece in
+/// it*, came here to find the piece, and tapped a card that was not a button.
+/// A post that tags a product goes straight to that product — which is what
+/// she saved it for — and one that tags nothing opens the post itself.
 class _PostPreview extends StatelessWidget {
   const _PostPreview({required this.post});
 
   final Post post;
 
+  void _open(BuildContext context) {
+    final product = post.product;
+    if (product != null && product.id.isNotEmpty) {
+      context.push(RoutePaths.productDetailsOf(product.id));
+      return;
+    }
+    if (post.id.isNotEmpty) {
+      context.push(RoutePaths.contentDetailOf(post.id));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final colors = context.dsColors;
     final product = post.product;
-    return Container(
-      width: 250,
-      padding: const EdgeInsets.all(DsSpacing.md),
-      decoration: BoxDecoration(
-        color: colors.card,
+    return Semantics(
+      button: true,
+      label: context.l10n.a11yOpen(product?.title ?? post.author.name),
+      child: InkWell(
         borderRadius: DsRadius.borderLg,
-        border: Border.all(color: colors.border.withValues(alpha: 0.6)),
-      ),
-      child: Row(
-        children: [
-          _PostProductImage(product: product),
-          const SizedBox(width: DsSpacing.sm),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  post.caption.isEmpty
-                      ? (product?.title ?? post.author.name)
-                      : post.caption,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: context.dsText.body.semibold,
-                ),
-                // A post that tags nothing has no second line to give.
-                if (product != null) ...[
-                  DsGaps.vXxs,
-                  Text(
-                    product.title,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: context.dsText.body.tint(colors.onSurfaceVariant),
-                  ),
-                ],
-              ],
-            ),
+        onTap: () => _open(context),
+        child: Container(
+          width: 250,
+          padding: const EdgeInsets.all(DsSpacing.md),
+          decoration: BoxDecoration(
+            color: colors.card,
+            borderRadius: DsRadius.borderLg,
+            border: Border.all(color: colors.border.withValues(alpha: 0.6)),
           ),
-        ],
+          child: Row(
+            children: [
+              _PostProductImage(product: product),
+              const SizedBox(width: DsSpacing.sm),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      post.caption.isEmpty
+                          ? (product?.title ?? post.author.name)
+                          : post.caption,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: context.dsText.body.semibold,
+                    ),
+                    // A post that tags nothing has no second line to give.
+                    if (product != null) ...[
+                      DsGaps.vXxs,
+                      Text(
+                        product.title,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: context.dsText.body.tint(
+                          colors.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -663,7 +694,10 @@ class _PostProductImage extends StatelessWidget {
         child: url == null || url.isEmpty
             ? ColoredBox(
                 color: colors.surfaceVariant,
-                child: Icon(Icons.image_outlined, color: colors.onSurfaceVariant),
+                child: Icon(
+                  Icons.image_outlined,
+                  color: colors.onSurfaceVariant,
+                ),
               )
             : AuthorizedMediaImage(
                 url: url,

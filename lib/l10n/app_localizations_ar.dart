@@ -69,6 +69,77 @@ class AppLocalizationsAr extends AppLocalizations {
   String get accountUpdated => 'تم تحديث الحساب.';
 
   @override
+  String get accountVerification => 'توثيق الحساب';
+
+  @override
+  String get accountVerificationApprovedBlurb => 'علامة التوثيق صارت جنب اسمك.';
+
+  @override
+  String get accountVerificationBack => 'الوثيقة — الظهر';
+
+  @override
+  String get accountVerificationBlurb =>
+      'علامة التوثيق جنب اسمك بتقول إنّ ريم تحققت من هويتك. ابعتي وثيقة ومنراجعها.';
+
+  @override
+  String get accountVerificationDocType => 'نوع الوثيقة';
+
+  @override
+  String get accountVerificationDocTypeHint => 'هوية، جواز سفر، سجل تجاري…';
+
+  @override
+  String get accountVerificationFront => 'الوثيقة — الوجه';
+
+  @override
+  String get accountVerificationLegalName => 'الاسم كما في الوثيقة';
+
+  @override
+  String get accountVerificationNeedsPhone => 'وثّقي رقم هاتفك أولاً.';
+
+  @override
+  String get accountVerificationNote => 'ليش عم تطلبي التوثيق';
+
+  @override
+  String get accountVerificationPrivacy =>
+      'وثائقك ما بيقرأها إلا الفريق اللي بيراجعها، وما بتظهر لحدا تاني على ريم.';
+
+  @override
+  String get accountVerificationResubmit => 'إعادة الإرسال';
+
+  @override
+  String get accountVerificationSelfie => 'صورة إلك وأنت ماسكة الوثيقة';
+
+  @override
+  String get accountVerificationSent => 'انبعتت. منخبّرك أول ما تنراجع.';
+
+  @override
+  String get accountVerificationStatusApproved => 'موثّقة';
+
+  @override
+  String get accountVerificationStatusNeedsInfo => 'منحتاج منك شي إضافي';
+
+  @override
+  String get accountVerificationStatusPending => 'بانتظار المراجعة';
+
+  @override
+  String get accountVerificationStatusRejected => 'ما تمت الموافقة';
+
+  @override
+  String get accountVerificationStatusRevoked => 'تم سحب التوثيق';
+
+  @override
+  String get accountVerificationStatusUnderReview => 'قيد المراجعة';
+
+  @override
+  String get accountVerificationSubmit => 'إرسال للمراجعة';
+
+  @override
+  String get accountVerificationWithdraw => 'سحب الطلب';
+
+  @override
+  String get accountVerificationWithdrawn => 'تم سحب الطلب.';
+
+  @override
   String get achievements => 'الإنجازات';
 
   @override
@@ -92,7 +163,16 @@ class AppLocalizationsAr extends AppLocalizations {
   String get actionConversations => 'المحادثات';
 
   @override
+  String get actionAppointments => 'حجوزاتي';
+
+  @override
   String get actionCoupons => 'الكوبونات';
+
+  @override
+  String get actionSalonWorkspace => 'صالوني';
+
+  @override
+  String get actionSalons => 'الصالونات والجمال';
 
   @override
   String get actionDidNotSave =>
@@ -200,10 +280,18 @@ class AppLocalizationsAr extends AppLocalizations {
   String get addedToBag => 'أُضيفت إلى سلّتك';
 
   @override
+  String addedToCollection(String name) {
+    return 'تمت الإضافة إلى $name';
+  }
+
+  @override
   String get additionalDocuments => 'مستندات إضافية';
 
   @override
   String get addresses => 'العناوين';
+
+  @override
+  String get adminAccountVerifications => 'توثيق الحسابات';
 
   @override
   String get adminActionChangeRole => 'تغيير الدور';
@@ -837,6 +925,27 @@ class AppLocalizationsAr extends AppLocalizations {
   String get adminUsers => 'المستخدمات';
 
   @override
+  String get adminVerificationApprove => 'موافقة';
+
+  @override
+  String get adminVerificationDecision => 'اتخاذ قرار';
+
+  @override
+  String get adminVerificationNeedsInfo => 'طلب توضيح';
+
+  @override
+  String get adminVerificationReasonReaches => 'بتشوف تماماً اللي بتكتبيه هون.';
+
+  @override
+  String get adminVerificationReject => 'رفض';
+
+  @override
+  String get adminVerificationRevoke => 'سحب التوثيق';
+
+  @override
+  String get adminVerificationUnderReview => 'أخذها للمراجعة';
+
+  @override
   String get adminVerifiedSellersOnly => 'البائعات الموثّقات فقط';
 
   @override
@@ -1150,6 +1259,9 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
+  String get chatMessageFailed => 'ما انبعتت';
+
+  @override
   String get chatNoMessagesYet => 'لا رسائل بعد';
 
   @override
@@ -1172,6 +1284,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get chatProduct => 'منتج';
 
   @override
+  String get chatRetrySend => 'جرّبي مرة تانية';
+
+  @override
   String get chatSafetyNote => 'أبقي الدفع داخل ريم';
 
   @override
@@ -1180,6 +1295,9 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get chatSeen => 'تمّت القراءة';
+
+  @override
+  String get chatSending => 'عم تنبعت';
 
   @override
   String get chatSent => 'تم الإرسال';
@@ -1446,6 +1564,10 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get collectionsBlurb =>
       'قوائم قابلة للمشاركة للمنتجات والبائعات والمنشورات';
+
+  @override
+  String get collectionsEmptyHint =>
+      'ما عندك مجموعات بعد — أنشئي وحدة وبتطلع هون.';
 
   @override
   String get comingSoon => 'قريباً';
@@ -1904,6 +2026,12 @@ class AppLocalizationsAr extends AppLocalizations {
   String get feed => 'المنشورات';
 
   @override
+  String get fieldRequired => 'هذا الحقل مطلوب';
+
+  @override
+  String get fieldTooShort => 'أقصر من اللازم';
+
+  @override
   String fileSizeMegabytes(String size) {
     return '$size م.ب';
   }
@@ -2353,6 +2481,80 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get helpCenter => 'مركز المساعدة';
+
+  @override
+  String get hidePassword => 'إخفاء كلمة المرور';
+
+  @override
+  String get highlightAddStories => 'أضيفي قصص';
+
+  @override
+  String get highlightArchiveEmpty =>
+      'ما نشرتِ قصة بعد. انشري وحدة وبتلاقيها هون.';
+
+  @override
+  String get highlightCreate => 'إبراز جديد';
+
+  @override
+  String get highlightDelete => 'حذف الإبراز';
+
+  @override
+  String highlightDeleteConfirm(String name) {
+    return 'بدك تحذفي «$name»؟ القصص نفسها بتضل مكانها.';
+  }
+
+  @override
+  String get highlightEmptyOpen => 'لسا ما في شي هون';
+
+  @override
+  String get highlightEmptyOwner =>
+      'خلّي القصة تضل بعد يومها — دليل مقاسات، إطلالة، تسليم.';
+
+  @override
+  String get highlightNameHint => 'مقاسات، إطلالات، تسليمات…';
+
+  @override
+  String get highlightNameLabel => 'الاسم';
+
+  @override
+  String get highlightNew => 'جديد';
+
+  @override
+  String get highlightPickStories => 'اختاري القصص';
+
+  @override
+  String get highlightRename => 'إعادة تسمية';
+
+  @override
+  String highlightSelected(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count مختارة',
+      few: '$count مختارة',
+      two: 'اثنتان مختارتان',
+      one: 'وحدة مختارة',
+      zero: 'ما اخترتِ شي',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String highlightStoriesCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count قصة',
+      few: '$count قصص',
+      two: 'قصتان',
+      one: 'قصة وحدة',
+      zero: 'فاضية',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get highlights => 'الأبرز';
 
   @override
   String get home => 'الرئيسية';
@@ -2863,6 +3065,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get newCollection => 'مجموعة جديدة';
 
   @override
+  String get newCollectionName => 'اسم المجموعة';
+
+  @override
   String get newDeviceCodeSent =>
       'هذا الجهاز جديد. أرسلنا رمزًا إلى رقمك لإكمال تسجيل الدخول.';
 
@@ -2893,6 +3098,12 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get noActiveSessions => 'لا جلسات نشطة.';
+
+  @override
+  String get noCollection => 'بدون مجموعة';
+
+  @override
+  String get noCollectionBlurb => 'بتضل بالمحفوظات.';
 
   @override
   String get noCommentsYet => 'لا تعليقات بعد';
@@ -3664,6 +3875,11 @@ class AppLocalizationsAr extends AppLocalizations {
   String get removePassword => 'إزالة كلمة المرور';
 
   @override
+  String removedFromCollection(String name) {
+    return 'تمت الإزالة من $name';
+  }
+
+  @override
   String get rename => 'إعادة تسمية';
 
   @override
@@ -4308,6 +4524,13 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get saveChanges => 'حفظ التغييرات';
+
+  @override
+  String get saveToCollection => 'احفظيها في مجموعة';
+
+  @override
+  String get saveToCollectionBlurb =>
+      'خلّيها بدون مجموعة، أو رتّبيها بمكان بتلاقيها فيه.';
 
   @override
   String get saveYourProgress => 'احفظي تقدّمكِ';
@@ -5066,6 +5289,9 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get showMore => 'عرض المزيد';
+
+  @override
+  String get showPassword => 'إظهار كلمة المرور';
 
   @override
   String get signBackInLater => 'يمكنكِ العودة وتسجيل الدخول في أي وقت.';
@@ -6040,6 +6266,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get yes => 'نعم';
 
   @override
+  String get yesterdayLabel => 'أمس';
+
+  @override
   String get you => 'أنتِ';
 
   @override
@@ -6102,6 +6331,13 @@ class AppLocalizationsAr extends AppLocalizations {
   String contentShowReplies(int count) {
     return 'عرض $count من الردود';
   }
+
+  @override
+  String get contentUnavailableTitle => 'هذا المنشور لم يعد متاحاً';
+
+  @override
+  String get contentUnavailableBody =>
+      'ربّما حُذف أو أصبح خاصّاً، أو انتهت صلاحية القصة.';
 
   @override
   String get socialFeedTitle => 'المجتمع';

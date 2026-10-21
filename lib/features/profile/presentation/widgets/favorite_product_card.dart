@@ -43,23 +43,24 @@ class FavoriteProductCard extends StatelessWidget {
                   ),
                 ),
               ),
-              Positioned(
+              // The product's own like, not a decoration.
+              //
+              // This corner held a filled rose heart that did nothing: every
+              // piece on this screen is saved by definition, so the icon
+              // restated the screen's own title and was the one control on a
+              // card that could not be pressed. The like is a different fact
+              // from the save, and this is the only surface where the two sit
+              // side by side — the shelf is hers, the applause is public.
+              PositionedDirectional(
                 top: 12,
-                right: 12,
-                child: Container(
-                  width: 40,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    gradient: context.primaryGradient,
-                    shape: BoxShape.circle,
-                    boxShadow: context.softShadow,
-                  ),
-                  child: Icon(
-                    Icons.favorite_rounded,
-                    color: colors.onPrimary,
-                    size: 20,
-                  ),
-                ),
+                end: 12,
+                child:
+                    DsProductActions.of(
+                      context,
+                      product,
+                      DsProductSurface.tile,
+                    ) ??
+                    const SizedBox.shrink(),
               ),
               Positioned(
                 left: 12,

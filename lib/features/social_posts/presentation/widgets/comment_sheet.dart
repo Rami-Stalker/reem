@@ -430,34 +430,11 @@ class _InputBar extends ConsumerWidget {
               DsAvatar(imageUrl: user.imageUrl, name: user.name, size: 36),
               const SizedBox(width: DsSpacing.sm),
               Expanded(
-                child: TextField(
+                child: DsComposerField(
                   controller: controller,
                   focusNode: focusNode,
-                  minLines: 1,
-                  maxLines: 4,
-                  textInputAction: TextInputAction.send,
+                  hint: context.l10n.writeComment,
                   onSubmitted: (_) => onSend(),
-                  decoration: InputDecoration(
-                    hintText: context.l10n.writeComment,
-                    filled: true,
-                    fillColor: c.surfaceVariant,
-                    contentPadding: const EdgeInsets.symmetric(
-                      horizontal: DsSpacing.md,
-                      vertical: DsSpacing.sm,
-                    ),
-                    border: OutlineInputBorder(
-                      borderRadius: DsRadius.borderPill,
-                      borderSide: BorderSide(color: c.border),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: DsRadius.borderPill,
-                      borderSide: BorderSide(color: c.border),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: DsRadius.borderPill,
-                      borderSide: BorderSide(color: c.primary, width: 1.5),
-                    ),
-                  ),
                 ),
               ),
               const SizedBox(width: DsSpacing.xs),

@@ -92,24 +92,69 @@
             </intent-filter>
 
             <!--
-              Room invites. The app has always copied
-              `reem://rooms/join/<slug>` to the clipboard with a message
-              promising that whoever opens it can advise and vote — and no
-              scheme was registered on either platform, so the one link Reem
-              hands out opened nothing anywhere. The route behind it
-              (`/rooms/join/:slug`) and the endpoint it calls both already
-              existed; only this was missing.
+              Deep links are routed by the Flutter engine rather than by
+              MainActivity, which is what lets GoRouter's own redirect decide
+              where an incoming path goes. Without this the engine ignores the
+              VIEW intents below and every link merely launches the app on its
+              home screen.
+            -->
+            <meta-data
+                android:name="flutter_deeplinking_enabled"
+                android:value="true" />
 
-              A custom scheme rather than an https App Link because verifying
-              one needs `assetlinks.json` served from reem.shop carrying this
-              build's signing fingerprint. That is a deployment step, not a
-              code change; until it is done, this is what actually works.
+            <!--
+              The custom scheme. Still here, and still load-bearing: on Android
+              WhatsApp opens links in an embedded browser, and an embedded
+              browser never triggers App Link verification. The landing page's
+              «افتحي في تطبيق ريم» button uses this, and for a large share of
+              real taps it is the only thing that works.
             -->
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
                 <category android:name="android.intent.category.DEFAULT"/>
                 <category android:name="android.intent.category.BROWSABLE"/>
                 <data android:scheme="reem"/>
+            </intent-filter>
+
+            <!--
+              Android App Links — https links that open the app directly, with
+              no disambiguation dialog.
+
+              `autoVerify` makes Android fetch
+              `https://<host>/.well-known/assetlinks.json` at install time and
+              check that it names this package and this build's signing
+              certificate. The API serves that file (see
+              `backend/src/modules/links`), generated from
+              ANDROID_SHA256_CERT_FINGERPRINTS — until that variable is set the
+              file is an empty array, verification simply does not happen, and
+              these links open the web page instead. Nothing breaks either way.
+
+              The host must match `SHARE_BASE_URL` in the Flutter build and
+              `SHARE_PUBLIC_ORIGIN` on the API. Both hosts are listed so that
+              moving to the custom domain is a deploy rather than a release:
+              links already in circulation on the onrender.com host keep
+              opening the app.
+
+              `pathPrefix` is deliberately narrow. `/invite/` is NOT here: an
+              invitation is sent to somebody who does not have Reem, so having
+              the app swallow it would hide the download button from the one
+              person it was written for.
+            -->
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:scheme="https" android:host="reem-api.onrender.com"/>
+                <data android:scheme="https" android:host="reem.shop"/>
+                <data android:scheme="https" android:host="www.reem.shop"/>
+                <data android:pathPrefix="/product/"/>
+                <data android:pathPrefix="/p/"/>
+                <data android:pathPrefix="/u/"/>
+                <data android:pathPrefix="/user/"/>
+                <data android:pathPrefix="/content/"/>
+                <data android:pathPrefix="/collection/"/>
+                <data android:pathPrefix="/salons/"/>
+                <data android:pathPrefix="/rooms/join/"/>
             </intent-filter>
         </activity>
         <!--

@@ -116,10 +116,12 @@ class _ProductDetailsScreenState extends ConsumerState<ProductDetailsScreen> {
                 media: product.media,
                 title: product.title,
                 // «المفضّلة», read from the same store as the bookmark in the
-                // action bar below, so the two can never disagree.
-                isLiked: ProductGestures.watch(ref, product).isSaved,
+                // action bar below, so the two can never disagree — and drawn
+                // as a bookmark rather than a heart, because the heart on every
+                // catalogue tile is now the product's public like.
+                isSaved: ProductGestures.watch(ref, product).isSaved,
                 discountPercent: product.discountPercent,
-                onToggleLike: () => ProductGestures(context, ref, product).save(),
+                onToggleSave: () => ProductGestures(context, ref, product).save(),
                 // Through the gestures, so a share from the header is counted
                 // the same way as one from the action bar.
                 onShare: () => ProductGestures(context, ref, product).share(),

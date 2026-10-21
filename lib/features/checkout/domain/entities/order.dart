@@ -399,7 +399,79 @@ class OrderEvent extends Equatable {
 
   @override
   List<Object?> get props => [id, title, toStatus, createdAt];
+
+  /// What «التتبّع» actually shows for this entry.
+  ///
+  /// The stored [title] is prose the API wrote at the moment the event
+  /// happened, and for most of this app's life that prose was English — "Out
+  /// for delivery", "Order accepted", "Return approved" — rendered verbatim on
+  /// the one screen a woman opens to find out where her parcel is. The API now
+  /// writes Arabic, but the rows already in the database do not change, and a
+  /// customer looking at an order from last month should not be the one who
+  /// pays for that.
+  ///
+  /// So the status the event moved *to* is preferred over the prose: it is a
+  /// machine value, it is the same value the status chip on the same screen
+  /// already renders in Arabic, and it is present on every event that changed
+  /// anything. [title] remains the answer for the entries that change no
+  /// status — a note from support, a partial return — which the API now writes
+  /// in Arabic anyway.
+  String get label => _statusLabel(toStatus) ?? title;
+
+  /// The description, dropped when it is one of the English sentences the API
+  /// used to write. A line of English under an Arabic heading reads worse than
+  /// no line at all, and the heading already says what happened.
+  String? get detail {
+    final value = description?.trim();
+    if (value == null || value.isEmpty) return null;
+    return _legacyEnglishDetails.contains(value) ? null : value;
+  }
 }
+
+/// The Arabic reading of an order-event status, or null when the value belongs
+/// to neither enum — a future status, or a note that changed nothing.
+///
+/// Parcel statuses are tried first because the customer's timeline is mostly
+/// made of them: the workflow writes one event carrying both the parent order
+/// id and the sub-order id, so the two vocabularies share this column and the
+/// narrower one has to win where they overlap.
+String? _statusLabel(String? wire) {
+  final value = (wire ?? '').trim().toLowerCase();
+  if (value.isEmpty) return null;
+  return _sellerOrderStatusLabels[value] ?? _orderStatusLabels[value];
+}
+
+final Map<String, String> _sellerOrderStatusLabels = {
+  for (final status in SellerOrderStatus.values)
+    _wireOf(status.name): status.label,
+};
+
+final Map<String, String> _orderStatusLabels = {
+  for (final status in OrderStatus.values) _wireOf(status.name): status.label,
+};
+
+/// `handedToCourier` → `handed_to_courier`, which is the spelling the API sends
+/// (lower-cased from the Prisma enum).
+String _wireOf(String name) => name
+    .replaceAllMapped(RegExp('[A-Z]'), (match) => '_${match[0]!.toLowerCase()}')
+    .toLowerCase();
+
+/// Sentences the API wrote before the timeline had an Arabic vocabulary.
+///
+/// A closed list rather than a heuristic: these are the exact strings this
+/// repository used to emit, so suppressing them is a fact about our own past
+/// output and cannot swallow something a seller or an operator typed.
+const _legacyEnglishDetails = {
+  'The seller has started preparing this parcel',
+  'On the way to the customer',
+  'The courier has the parcel',
+  'The delivery company has the parcel',
+  'The parcel is with the delivery company',
+  'The parcel is out for delivery today',
+  'The carrier is returning the parcel',
+  'The carrier returned the parcel',
+  'Sent to the sellers for preparation',
+};
 
 class OrderShipping extends Equatable {
   final String recipientName;

@@ -7,6 +7,7 @@ import 'package:reem/core/design_system/design_system.dart';
 import 'package:reem/core/experience/role_experience.dart';
 import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/router/route_paths.dart';
+import 'package:reem/core/router/tab_reselect.dart';
 import 'package:reem/features/discovery/domain/entities/product_collection.dart';
 import 'package:reem/features/experience/presentation/providers/role_experience_provider.dart';
 import 'package:reem/features/experience/presentation/screens/experience_surface_screen.dart';
@@ -32,6 +33,7 @@ import 'package:reem/features/home/presentation/widgets/home_wishlist_highlights
 import 'package:reem/features/market/presentation/screens/drops_screen.dart';
 import 'package:reem/features/market/presentation/widgets/bundles_rail.dart';
 import 'package:reem/features/profile/presentation/providers/profile_provider.dart';
+import 'package:reem/features/salons/presentation/widgets/home_salons_rail.dart';
 import 'package:reem/features/seller_dashboard/presentation/screens/seller_home_screen.dart';
 import 'package:reem/features/value/presentation/widgets/value_standing_card.dart';
 
@@ -71,10 +73,30 @@ class HomeScreen extends ConsumerWidget {
 ///
 /// The running order still honours the client's Q78 pick — *«مختلط: ستوريات
 /// فوق + بانر + شبكة منتجات تحت»*.
-class _BuyerHomeScreen extends ConsumerWidget {
+class _BuyerHomeScreen extends ConsumerStatefulWidget {
   const _BuyerHomeScreen();
 
+  @override
+  ConsumerState<_BuyerHomeScreen> createState() => _BuyerHomeScreenState();
+}
+
+class _BuyerHomeScreenState extends ConsumerState<_BuyerHomeScreen> {
   static const double _gap = DsSpacing.xl;
+
+  /// Held here so tapping Home while already on Home can bring her back to the
+  /// top of the page — the one thing that gesture means everywhere else and
+  /// did nothing here.
+  final _scrollController = ScrollController();
+
+  /// Which shell branch Home is. Mirrored by hand from the router, like the
+  /// rest of the branch order.
+  static const int _homeBranch = 0;
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
 
   Future<void> _refresh(WidgetRef ref) async {
     await Future.wait([
@@ -84,11 +106,27 @@ class _BuyerHomeScreen extends ConsumerWidget {
     ]);
   }
 
+  void _scrollToTop() {
+    if (!_scrollController.hasClients) return;
+    if (_scrollController.offset <= 0) return;
+    _scrollController.animateTo(
+      0,
+      // Long enough to read as "the page came back" rather than a cut, short
+      // enough not to make her wait. A jump from three screens down is
+      // disorienting; this is the same curve the app uses everywhere else.
+      duration: DsMotion.slow,
+      curve: DsMotion.silk,
+    );
+  }
+
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
 
+    ref.listen(tabReselectProvider(_homeBranch), (_, _) => _scrollToTop());
+
     return ReemScrollPage(
+      controller: _scrollController,
       onRefresh: () => _refresh(ref),
       slivers: [
         const HomeTopBar(),
@@ -106,6 +144,12 @@ class _BuyerHomeScreen extends ConsumerWidget {
         _box(const HomeHeroCarousel()),
 
         _box(const HomeCategoriesShowcase()),
+
+        // «الصالونات والجمال», directly under the categories: it is another
+        // way of shopping rather than another shelf of things, and it belongs
+        // with the question "what am I here for" rather than among the deals.
+        // Draws nothing until a salon is published.
+        _box(const HomeSalonsRail()),
 
         // ── Chapter two: the shelves ─────────────────────────────────────
         const _Ornament(),
@@ -176,8 +220,9 @@ class _BuyerHomeScreen extends ConsumerWidget {
         const _Ornament(),
         const HomeShowcaseSection(),
 
-        // Breathing room above the floating bottom bar.
-        const _Gap(120),
+        // Breathing room above the floating bottom bar, whose real height
+        // the shell reports as this page's bottom inset.
+        DsGaps.sliverBottomSafe,
       ],
     );
   }

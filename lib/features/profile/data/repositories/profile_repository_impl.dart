@@ -28,10 +28,6 @@ class ProfileRepositoryImpl with RepositoryHandler implements ProfileRepository 
       guard(() => remote.getOrders());
 
   @override
-  Future<Result<void>> toggleFavorite(String productId) =>
-      guard(() => remote.toggleFavorite(productId));
-
-  @override
   Future<Result<void>> saveSeller(String sellerId) =>
       guard(() => remote.saveSeller(sellerId));
 
@@ -53,4 +49,32 @@ class ProfileRepositoryImpl with RepositoryHandler implements ProfileRepository 
   @override
   Future<Result<WishlistShareLink>> shareWishlistCollection(String collectionId) =>
       guard(() => remote.shareWishlistCollection(collectionId));
+
+  @override
+  Future<Result<void>> addToWishlistCollection({
+    required String collectionId,
+    required String type,
+    String? productId,
+    String? postId,
+    String? sellerId,
+  }) => guard(
+    () => remote.addToWishlistCollection(
+      collectionId: collectionId,
+      type: type,
+      productId: productId,
+      postId: postId,
+      sellerId: sellerId,
+    ),
+  );
+
+  @override
+  Future<Result<void>> removeFromWishlistCollection({
+    required String collectionId,
+    required String itemId,
+  }) => guard(
+    () => remote.removeFromWishlistCollection(
+      collectionId: collectionId,
+      itemId: itemId,
+    ),
+  );
 }

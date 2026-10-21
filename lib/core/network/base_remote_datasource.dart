@@ -135,6 +135,24 @@ abstract base class BaseRemoteDataSource {
     }
   }
 
+  /// A write that *replaces* rather than amends.
+  ///
+  /// Distinct from `patchJson` because the two mean different things and the
+  /// API distinguishes them: a salon's whole week of opening hours is a PUT,
+  /// since a partial timetable update is how a salon ends up open on a day it
+  /// meant to close.
+  Future<Map<String, dynamic>> putJson(
+    String path, {
+    Map<String, dynamic>? body,
+  }) async {
+    try {
+      final response = await dio.put<dynamic>(path, data: body);
+      return _asMap(response.data);
+    } on DioException catch (e) {
+      throw ErrorMapper.fromDio(e);
+    }
+  }
+
   Future<Map<String, dynamic>> patchJson(
     String path, {
     Map<String, dynamic>? body,

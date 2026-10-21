@@ -56,6 +56,7 @@ final class ChatRemoteDataSourceImpl extends BaseRemoteDataSource
     required String content,
     String kind = 'TEXT',
     List<Map<String, dynamic>> attachments = const [],
+    String? clientId,
   }) async {
     final json = await postJson(
       ApiEndpoints.chatMessages(chatId),
@@ -63,6 +64,10 @@ final class ChatRemoteDataSourceImpl extends BaseRemoteDataSource
         'content': content,
         'kind': kind,
         if (attachments.isNotEmpty) 'attachments': attachments,
+        // Comes back on the stored row, so the bubble already on screen is
+        // replaced rather than doubled — by whichever of the reply and the
+        // socket's echo arrives first.
+        'client_id': ?clientId,
       },
     );
     final messageJson = json['message'] is Map<String, dynamic>

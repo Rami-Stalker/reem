@@ -18,6 +18,7 @@ import { AuthUser } from '../../common/decorators/current-user.decorator';
 import { buildMeta, PaginationDto } from '../../common/dto/pagination.dto';
 import { Money, nextStatuses } from '../../common/money';
 import { PrismaService } from '../../prisma/prisma.service';
+import { OrderEventCopy } from '../../common/orders/order-event-copy';
 import { CommissionsService } from '../commissions/commissions.service';
 import { CustomerRefundsService } from '../finance/customer-refunds.service';
 import { DeliveryDispatchService } from '../delivery/dispatch/delivery-dispatch.service';
@@ -159,8 +160,8 @@ export class SellerOrdersService {
         SellerOrderStatus.PREPARING,
         actorOf(user),
         {
-          title: 'Order accepted',
-          description: 'The seller has started preparing this parcel',
+          title: OrderEventCopy.orderAccepted,
+          description: OrderEventCopy.sellerPreparing,
         },
       ),
     );
@@ -179,7 +180,7 @@ export class SellerOrdersService {
         SellerOrderStatus.READY_TO_SHIP,
         actorOf(user),
         {
-          title: 'Ready to ship',
+          title: OrderEventCopy.readyToShip,
           description:
             parcel.fulfilmentMode === FulfilmentMode.SELLER_SHIPS
               ? 'The seller will deliver this parcel herself'
@@ -232,7 +233,7 @@ export class SellerOrdersService {
         SellerOrderStatus.HANDED_TO_COURIER,
         this.asCarrier(user),
         {
-          title: 'On its way',
+          title: OrderEventCopy.onItsWay,
           description: carrier ?? 'Handed over for delivery',
         },
       ),
@@ -283,7 +284,10 @@ export class SellerOrdersService {
           sellerOrderId,
           SellerOrderStatus.IN_TRANSIT,
           this.asCarrier(user),
-          { title: 'Out for delivery', description: 'On the way to the customer' },
+          {
+            title: OrderEventCopy.outForDelivery,
+            description: OrderEventCopy.onTheWayToCustomer,
+          },
         );
       }
 
@@ -293,7 +297,7 @@ export class SellerOrdersService {
         SellerOrderStatus.DELIVERED,
         this.asCarrier(user),
         {
-          title: 'Delivered',
+          title: OrderEventCopy.delivered,
           description: options.note ?? 'Delivered by the seller',
         },
       );
@@ -331,7 +335,7 @@ export class SellerOrdersService {
         SellerOrderStatus.CANCELLED_BY_SELLER,
         actorOf(user),
         {
-          title: 'Cancelled by the seller',
+          title: OrderEventCopy.cancelledBySeller,
           description: reason,
           data: { cancellationReason: reason },
         },

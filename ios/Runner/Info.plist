@@ -109,12 +109,21 @@
 	  silently did nothing on an iPhone while working on Android.
 	-->
 	<!--
-	  Room invites — `reem://rooms/join/<slug>`. See the matching intent-filter
-	  in AndroidManifest.xml: the app has always handed this link out and no
-	  platform was listening for it. A custom scheme rather than a Universal
-	  Link because that needs an `apple-app-site-association` file served from
-	  reem.shop and an Associated Domains entitlement, which is a deployment
-	  step rather than a code change.
+	  Deep links are routed by the Flutter engine, so an incoming Universal Link
+	  or `reem://` URL reaches GoRouter's own redirect and is resolved by
+	  `ShareLinks.routeFor` — the same function the Android side uses. Without
+	  this key iOS hands the URL to the AppDelegate, nothing listens, and the
+	  link merely launches the app on its home screen.
+	-->
+	<key>FlutterDeepLinkingEnabled</key>
+	<true/>
+	<!--
+	  The custom scheme — `reem://product-details?id=…`, `reem://rooms/join/<slug>`.
+	  Kept alongside the Universal Links in Runner.entitlements rather than
+	  replaced by them: it is what the landing page's «افتحي في تطبيق ريم»
+	  button opens, which is the path taken whenever a link arrives somewhere
+	  Universal Links do not fire — a pasted URL, an unverified association, a
+	  redirect chain.
 	-->
 	<key>CFBundleURLTypes</key>
 	<array>

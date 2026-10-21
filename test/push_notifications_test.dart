@@ -209,6 +209,7 @@ void main() {
           'reem_social',
           'reem_rooms',
           'reem_offers',
+          'reem_appointments',
           'reem_system',
         ],
       );

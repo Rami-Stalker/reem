@@ -19,6 +19,7 @@ abstract final class RouteNames {
   static const phoneChange = 'phone-change';
   static const accountRecovery = 'account-recovery';
   static const sellerVerification = 'seller-verification';
+  static const accountVerification = 'account-verification';
 
   static const addPost = 'add-post';
   static const addStory = 'add-story';
@@ -112,6 +113,7 @@ abstract final class RouteNames {
   static const adminUsers = 'admin-users';
   static const adminSellers = 'admin-sellers';
   static const adminSellerApplications = 'admin-seller-applications';
+  static const adminAccountVerifications = 'admin-account-verifications';
   static const adminDelivery = 'admin-delivery';
   static const adminFinancials = 'admin-financials';
   static const adminCommissions = 'admin-commissions';
@@ -131,6 +133,19 @@ abstract final class RouteNames {
   static const policies = 'policies';
   static const policyDetail = 'policy-detail';
   static const adminPolicies = 'admin-policies';
+
+  /// «الصالونات والجمال» — the directory, one salon, booking, her bookings,
+  /// and the owner's workspace behind them.
+  static const salons = 'salons';
+  static const salon = 'salon';
+  static const salonBooking = 'salon-booking';
+  static const appointments = 'appointments';
+  static const appointmentDetail = 'appointment-detail';
+  static const salonWorkspace = 'salon-workspace';
+  static const salonEditor = 'salon-editor';
+  static const salonServicesEditor = 'salon-services-editor';
+  static const salonHoursEditor = 'salon-hours-editor';
+  static const salonQueue = 'salon-queue';
 
   static const chats = 'chats';
   static const chatDetails = 'chat-details';

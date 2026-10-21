@@ -226,8 +226,9 @@ export class PhoneChangeService {
         where: { id: userId },
         data: {
           phone: request.newPhone,
+          // The new number is proved; the badge is a separate decision and is
+          // neither granted nor withdrawn by moving a phone.
           phoneVerifiedAt: now,
-          isVerified: true,
           payoutFrozenUntil,
           payoutFreezeReason: 'phone_change',
         },

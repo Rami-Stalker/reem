@@ -292,6 +292,16 @@ class Content extends Equatable {
     return null;
   }
 
+  /// The still picture a share carries — and the one a messenger draws as the
+  /// link preview.
+  ///
+  /// Falls through to the first tagged piece, because a post *about* a dress
+  /// with no photograph of its own is still, to everyone who receives it, a
+  /// post about that dress. The alternative was a 40-pixel avatar blown up to
+  /// fill a preview card.
+  String? get shareImageUrl =>
+      media.stillImageUrl ?? primaryTag?.product.media.stillImageUrl;
+
   bool get isRemoved => moderationState == ContentModerationState.removed;
   bool get isUnderReview =>
       moderationState == ContentModerationState.underReview;

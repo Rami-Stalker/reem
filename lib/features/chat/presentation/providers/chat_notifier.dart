@@ -139,12 +139,24 @@ class ChatMessagesNotifier extends StateNotifier<ChatMessagesState> {
   ChatMessagesNotifier({
     required GetMessagesUseCase getMessagesUseCase,
     required SendMessageUseCase sendMessageUseCase,
+    String? currentUserId,
   })  : _getMessages = getMessagesUseCase,
         _sendMessage = sendMessageUseCase,
+        _currentUserId = currentUserId,
         super(const ChatMessagesState());
 
   final GetMessagesUseCase _getMessages;
   final SendMessageUseCase _sendMessage;
+
+  /// Who is reading — the one authority on which side a bubble belongs to.
+  ///
+  /// A payload's own `is_mine` is computed by whoever serialised it, and the
+  /// same serialised message is delivered to both people in a conversation.
+  /// Deciding here, from the account holding the screen, is what makes that
+  /// impossible to get wrong however the message arrived.
+  final String? _currentUserId;
+
+  int _clientSeq = 0;
 
   Future<void> load(String chatId) async {
     state = state.copyWith(
@@ -154,6 +166,7 @@ class ChatMessagesNotifier extends StateNotifier<ChatMessagesState> {
       chatId: chatId,
     );
     final result = await _getMessages(chatId);
+    if (!mounted || state.chatId != chatId) return;
     state = switch (result) {
       Success(:final data) =>
         state.copyWith(isLoading: false, messages: data, chatId: chatId),
@@ -169,39 +182,144 @@ class ChatMessagesNotifier extends StateNotifier<ChatMessagesState> {
     );
   }
 
+  /// Sends, showing her own words immediately.
+  ///
+  /// The bubble used to appear only once the server had answered, which on a
+  /// Syrian mobile connection is a composer that clears and a thread that does
+  /// not change for several seconds — indistinguishable, from her side, from
+  /// the message not having been sent at all. It is now on screen at once,
+  /// marked as in flight, and the row the server stores *replaces* it: the two
+  /// are matched on the client id that travelled with the send, so neither the
+  /// reply nor the socket's echo of the same message can leave a second copy.
   Future<bool> send({
     required String content,
     String kind = 'TEXT',
     List<Map<String, dynamic>> attachments = const [],
   }) async {
     final chatId = state.chatId;
+    final trimmed = content.trim();
     if (chatId == null ||
         chatId.isEmpty ||
-        (content.trim().isEmpty && attachments.isEmpty)) {
+        (trimmed.isEmpty && attachments.isEmpty)) {
       return false;
     }
 
-    state = state.copyWith(isSending: true, clearError: true);
+    final clientId = _nextClientId();
+    final pending = ChatMessageEntity(
+      id: clientId,
+      chatId: chatId,
+      senderId: _currentUserId ?? '',
+      content: trimmed,
+      sentAt: DateTime.now(),
+      isMine: true,
+      kind: kind.toLowerCase(),
+      status: 'sending',
+      clientId: clientId,
+      delivery: ChatMessageDelivery.pending,
+      attachments: _localAttachments(attachments),
+    );
+
+    state = state.copyWith(
+      isSending: true,
+      clearError: true,
+      messages: _merge(pending),
+    );
+
     final result = await _sendMessage(
       chatId: chatId,
-      content: content.trim(),
+      content: trimmed,
       kind: kind,
       attachments: attachments,
+      clientId: clientId,
     );
-    return switch (result) {
-      Success(:final data) => () {
-          state = state.copyWith(
-            isSending: false,
-            messages: _merge(data),
-          );
-          return true;
-        }(),
-      Error(:final failure) => () {
-          state = state.copyWith(isSending: false, error: failure.message);
-          return false;
-        }(),
-    };
+    if (!mounted || state.chatId != chatId) return result is Success;
+
+    switch (result) {
+      case Success(:final data):
+        state = state.copyWith(isSending: false, messages: _merge(data));
+        return true;
+      case Error(:final failure):
+        // Her words stay on screen, marked failed. Dropping them is how a bad
+        // connection ends up looking like an app that ate what she typed.
+        state = state.copyWith(
+          isSending: false,
+          error: failure.message,
+          messages: _replace(
+            clientId,
+            pending.copyWith(
+              status: 'failed',
+              delivery: ChatMessageDelivery.failed,
+            ),
+          ),
+        );
+        return false;
+    }
   }
+
+  /// Sends a failed message again, dropping the failed bubble first.
+  Future<bool> retry(ChatMessageEntity message) async {
+    if (!message.isFailed) return false;
+    state = state.copyWith(
+      messages: state.messages
+          .where((item) => item.id != message.id)
+          .toList(growable: false),
+    );
+    return send(
+      content: message.content,
+      kind: message.kind.toUpperCase(),
+      attachments: [
+        for (final attachment in message.attachments)
+          {
+            'kind': attachment.kind.toUpperCase(),
+            'url': attachment.url,
+            'mime_type': ?attachment.mimeType,
+            'file_name': ?attachment.fileName,
+            'size_bytes': ?attachment.sizeBytes,
+            'width': ?attachment.width,
+            'height': ?attachment.height,
+            'duration_ms': ?attachment.durationMs,
+          },
+      ],
+    );
+  }
+
+  String _nextClientId() {
+    _clientSeq += 1;
+    return 'c-' '${DateTime.now().microsecondsSinceEpoch}' '-' '$_clientSeq';
+  }
+
+  /// What a pending bubble can draw before the server has stored anything.
+  ///
+  /// The URL is already real — a photograph is uploaded *before* the message
+  /// is sent — so the picture appears in the thread while its message is still
+  /// in flight, rather than after it lands.
+  List<ChatAttachmentEntity> _localAttachments(
+    List<Map<String, dynamic>> attachments,
+  ) => [
+    for (final attachment in attachments)
+      ChatAttachmentEntity(
+        id: 'pending-${attachment['url']}',
+        kind: (attachment['kind'] as String? ?? 'image').toLowerCase(),
+        url: attachment['url'] as String? ?? '',
+        mimeType: attachment['mime_type'] as String?,
+        fileName: attachment['file_name'] as String?,
+        sizeBytes: attachment['size_bytes'] as int?,
+        width: attachment['width'] as int?,
+        height: attachment['height'] as int?,
+        durationMs: attachment['duration_ms'] as int?,
+      ),
+  ];
+
+  List<ChatMessageEntity> _replace(
+    String clientId,
+    ChatMessageEntity replacement,
+  ) => [
+    for (final message in state.messages)
+      if (message.clientId == clientId || message.id == clientId)
+        replacement
+      else
+        message,
+  ];
 
   /// Fetches the conversation again without clearing it — after the socket
   /// reconnects, for whatever arrived while it was down. A failure keeps what
@@ -221,7 +339,14 @@ class ChatMessagesNotifier extends StateNotifier<ChatMessagesState> {
     if (eventName == 'message.created') {
       final raw = event['message'];
       if (raw is! Map) return;
-      final message = ChatMessageModel.fromJson(Map<String, dynamic>.from(raw));
+      final message = ChatMessageModel.fromJson(
+        Map<String, dynamic>.from(raw),
+        chatId: event['chat_id'] as String?,
+        // Which side it goes on is decided from who is reading, not trusted
+        // from the payload: the same serialised message is delivered to both
+        // people and only one of them wrote it.
+        currentUserId: _currentUserId,
+      );
       if (message.chatId != state.chatId) return;
       state = state.copyWith(messages: _merge(message), isPeerTyping: false);
       return;
@@ -231,34 +356,37 @@ class ChatMessagesNotifier extends StateNotifier<ChatMessagesState> {
       return;
     }
     if (eventName == 'messages.read' && event['chat_id'] == state.chatId) {
+      final readAt = DateTime.tryParse(event['read_at'] as String? ?? '');
       state = state.copyWith(
         messages: state.messages
             .map(
-              (message) => message.isMine
-                  ? ChatMessageModel(
-                      id: message.id,
-                      chatId: message.chatId,
-                      senderId: message.senderId,
-                      content: message.content,
-                      sentAt: message.sentAt,
-                      isMine: message.isMine,
-                      kind: message.kind,
-                      status: 'read',
-                      attachments: message.attachments,
-                      deliveredAt: message.deliveredAt,
-                      readAt: DateTime.tryParse(
-                        event['read_at'] as String? ?? '',
-                      ),
-                    )
+              // Only her own, and only ones that have actually been sent:
+              // a read receipt on a message still in flight is a receipt for
+              // something the other side has not been given yet.
+              (message) =>
+                  message.isMine && !message.isPending && !message.isFailed
+                  ? message.copyWith(status: 'read', readAt: readAt)
                   : message,
             )
-            .toList(),
+            .toList(growable: false),
       );
     }
   }
 
+  /// Inserts [message], replacing any copy of it already on screen.
+  ///
+  /// "Already on screen" means the same server id *or* the same client id. The
+  /// second is what retires the optimistic bubble, and it is why sending no
+  /// longer leaves two of the same message in the thread when the socket echo
+  /// and the HTTP reply both arrive.
   List<ChatMessageEntity> _merge(ChatMessageEntity message) {
-    final existing = state.messages.where((item) => item.id != message.id);
+    final clientId = message.clientId;
+    final existing = state.messages.where(
+      (item) =>
+          item.id != message.id &&
+          !(clientId != null &&
+              (item.clientId == clientId || item.id == clientId)),
+    );
     return [...existing, message]..sort((a, b) => a.sentAt.compareTo(b.sentAt));
   }
 }

@@ -20,6 +20,7 @@ abstract interface class ChatRemoteDataSource {
     required String content,
     String kind = 'TEXT',
     List<Map<String, dynamic>> attachments = const [],
+    String? clientId,
   });
 
   Future<void> markRead(String chatId, {String? messageId});

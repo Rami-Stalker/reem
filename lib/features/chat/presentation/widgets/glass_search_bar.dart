@@ -7,6 +7,12 @@ import 'package:reem/core/design_system/design_system.dart';
 /// Owns its controller so the clear button can empty it, and reports every
 /// keystroke upward — the debounce lives in the notifier, where it can also
 /// discard a stale reply.
+///
+/// It used to be a hand-rolled `TextField` inside a pill: its own padding, its
+/// own borderless decoration, its own Arabic tooltip typed inline. It now
+/// draws the design system's search field, so the inbox, the console and the
+/// catalogue all search in the same object and a change to the focus ring
+/// reaches all three.
 class GlassSearchBar extends StatefulWidget {
   const GlassSearchBar({
     super.key,
@@ -23,7 +29,6 @@ class GlassSearchBar extends StatefulWidget {
 
 class _GlassSearchBarState extends State<GlassSearchBar> {
   final _controller = TextEditingController();
-  bool _hasText = false;
 
   @override
   void dispose() {
@@ -31,55 +36,14 @@ class _GlassSearchBarState extends State<GlassSearchBar> {
     super.dispose();
   }
 
-  void _handle(String value) {
-    final hasText = value.isNotEmpty;
-    if (hasText != _hasText) setState(() => _hasText = hasText);
-    widget.onChanged(value);
-  }
-
-  void _clear() {
-    _controller.clear();
-    _handle('');
-  }
-
   @override
   Widget build(BuildContext context) {
-    final c = context.dsColors;
-    return Container(
-      decoration: BoxDecoration(
-        color: c.surfaceVariant.withValues(alpha: 0.6),
-        borderRadius: DsRadius.borderFull,
-        border: Border.all(color: c.border.withValues(alpha: 0.6)),
-      ),
-      child: TextField(
-        controller: _controller,
-        onChanged: _handle,
-        textInputAction: TextInputAction.search,
-        style: context.dsText.body,
-        decoration: InputDecoration(
-          isDense: true,
-          contentPadding: const EdgeInsets.symmetric(
-            horizontal: DsSpacing.md,
-            vertical: DsSpacing.md,
-          ),
-          prefixIcon: Icon(Icons.search_rounded, color: c.onSurfaceVariant),
-          suffixIcon: _hasText
-              ? IconButton(
-                  tooltip: 'مسح البحث',
-                  icon: Icon(Icons.close_rounded, color: c.onSurfaceVariant),
-                  onPressed: _clear,
-                )
-              : null,
-          hintText: widget.hintText,
-          hintStyle: Theme.of(context)
-              .textTheme
-              .bodyMedium
-              ?.copyWith(color: c.onSurfaceVariant),
-          border: InputBorder.none,
-          enabledBorder: InputBorder.none,
-          focusedBorder: InputBorder.none,
-        ),
-      ),
+    return DsInputField.search(
+      controller: _controller,
+      hint: widget.hintText,
+      onChanged: widget.onChanged,
+      onSubmitted: widget.onChanged,
+      onClear: () => widget.onChanged(''),
     );
   }
 }

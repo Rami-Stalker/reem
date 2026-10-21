@@ -15,16 +15,10 @@ import 'package:reem/core/shared/entities/product.dart';
 ///
 /// The image is 4:5 ([Product] photography is mandated at that ratio, Q132).
 class ProductCardLuxe extends StatelessWidget {
-  const ProductCardLuxe({
-    super.key,
-    required this.product,
-    this.onTap,
-    this.onFavoriteToggle,
-  });
+  const ProductCardLuxe({super.key, required this.product, this.onTap});
 
   final Product product;
   final VoidCallback? onTap;
-  final VoidCallback? onFavoriteToggle;
 
   /// Locked in Q132 — every product photo on the platform is shot 4:5.
   static const double imageAspectRatio = 4 / 5;
@@ -40,10 +34,7 @@ class ProductCardLuxe extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          _Image(
-            product: product,
-            onFavoriteToggle: onFavoriteToggle,
-          ),
+          _Image(product: product),
           const SizedBox(height: DsSpacing.sm),
           // The grid hands every tile the same fixed height, and the 4:5 plate
           // claims most of it. Letting the caption flex means a tall price line
@@ -78,12 +69,12 @@ class ProductCardLuxe extends StatelessWidget {
 }
 
 /// The image plate: rounded artwork, an optional discount flag, and the
-/// favourite toggle floating on glass so it stays legible over any photo.
+/// product's own interaction floating on glass so it stays legible over any
+/// photo.
 class _Image extends StatelessWidget {
-  const _Image({required this.product, this.onFavoriteToggle});
+  const _Image({required this.product});
 
   final Product product;
-  final VoidCallback? onFavoriteToggle;
 
   @override
   Widget build(BuildContext context) {
@@ -110,14 +101,17 @@ class _Image extends StatelessWidget {
                 child: DsDiscountBadge(percentOff: product.discountPercent),
               ),
 
-            if (onFavoriteToggle != null)
+            // Supplied by `DsProductActions`, installed once above the
+            // navigator. The card used to own a favourite toggle that each
+            // screen had to remember to hand it a callback for — so the grid
+            // had one, the mosaic and the rails had none, and the one the grid
+            // had wrote to a different store than the product page did.
+            if (DsProductActions.of(context, product, DsProductSurface.tile)
+                case final action?)
               PositionedDirectional(
                 top: DsSpacing.xs,
                 end: DsSpacing.xs,
-                child: _FavouriteButton(
-                  isFavorite: product.isLiked,
-                  onTap: onFavoriteToggle!,
-                ),
+                child: action,
               ),
           ],
         ),
@@ -141,40 +135,6 @@ class _MissingPhoto extends StatelessWidget {
           Icons.checkroom_rounded,
           size: 28,
           color: colors.onSurfaceVariant.withValues(alpha: 0.35),
-        ),
-      ),
-    );
-  }
-}
-
-class _FavouriteButton extends StatelessWidget {
-  const _FavouriteButton({required this.isFavorite, required this.onTap});
-
-  final bool isFavorite;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = context.dsColors;
-
-    return Semantics(
-      button: true,
-      selected: isFavorite,
-      child: GestureDetector(
-        onTap: onTap,
-        child: Container(
-          width: 32,
-          height: 32,
-          decoration: BoxDecoration(
-            color: colors.glass,
-            shape: BoxShape.circle,
-            border: Border.all(color: colors.glassBorder),
-          ),
-          child: Icon(
-            isFavorite ? Icons.favorite_rounded : Icons.favorite_border_rounded,
-            size: 17,
-            color: isFavorite ? colors.favorite : colors.onSurface,
-          ),
         ),
       ),
     );

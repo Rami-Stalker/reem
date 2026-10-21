@@ -4,12 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
+// `intl` exports a TextDirection of its own; only the formatter is wanted here.
+import 'package:intl/intl.dart' hide TextDirection;
 import 'package:reem/core/design_system/design_system.dart';
 import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/media/media_asset.dart';
 import 'package:reem/core/media/media_limits.dart';
 import 'package:reem/core/media/media_providers.dart';
 import 'package:reem/core/router/route_paths.dart';
+import 'package:reem/core/utils/arabic_numerals.dart';
 import 'package:reem/features/chat/data/services/chat_realtime_service.dart';
 import 'package:reem/features/chat/domain/entities/chat_message_entity.dart';
 import 'package:reem/features/chat/presentation/providers/chat_provider.dart';
@@ -51,6 +54,15 @@ class _ChatDetailsScreenState extends ConsumerState<ChatDetailsScreen>
   /// The composer is replaced by the recorder while this is true.
   bool _recording = false;
 
+  /// The thread's own scroll position.
+  ///
+  /// A conversation that does not move when a message arrives is a
+  /// conversation that looks like it did not receive one: the bubble was
+  /// appended below the fold and nothing said so. This is most of what
+  /// «التأخر في وصول الرسائل» was — the messages were arriving on time and
+  /// landing off screen.
+  final _scrollController = ScrollController();
+
   @override
   void initState() {
     super.initState();
@@ -66,8 +78,32 @@ class _ChatDetailsScreenState extends ConsumerState<ChatDetailsScreen>
     }
   }
 
+  /// Rides to the foot of the thread.
+  ///
+  /// After the frame, because the new bubble has to be laid out before its
+  /// extent is part of `maxScrollExtent`. [jump] for the first paint, where an
+  /// animation from an empty list reads as a glitch.
+  void _scrollToEnd({bool jump = false}) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted || !_scrollController.hasClients) return;
+      final target = _scrollController.position.maxScrollExtent;
+      if (jump) {
+        _scrollController.jumpTo(target);
+        return;
+      }
+      _scrollController.animateTo(
+        target,
+        duration: DsMotion.normal,
+        curve: DsMotion.silk,
+      );
+    });
+  }
+
   Future<void> _bootstrap() async {
     await ref.read(chatMessagesNotifierProvider.notifier).load(widget.chatId);
+    if (!mounted) return;
+    // The newest message is the one she opened the conversation to read.
+    _scrollToEnd(jump: true);
     final realtime = ref.read(chatRealtimeServiceProvider);
     _realtime = realtime;
     await realtime.connect();
@@ -96,6 +132,7 @@ class _ChatDetailsScreenState extends ConsumerState<ChatDetailsScreen>
     // and the leave never happened — the socket kept this conversation joined
     // after she had left it.
     if (widget.chatId.isNotEmpty) _realtime?.leave(widget.chatId);
+    _scrollController.dispose();
     controller.dispose();
     super.dispose();
   }
@@ -105,6 +142,17 @@ class _ChatDetailsScreenState extends ConsumerState<ChatDetailsScreen>
     final messagesState = ref.watch(chatMessagesNotifierProvider);
     final notifier = ref.read(chatMessagesNotifierProvider.notifier);
     final realtime = ref.read(chatRealtimeServiceProvider);
+
+    // Anything new — hers or the other party's — brings the thread to its
+    // foot. Listening on the count rather than the list means an edited status
+    // (a read receipt landing) does not yank the page while she is reading
+    // back through the history.
+    ref.listen(
+      chatMessagesNotifierProvider.select((state) => state.messages.length),
+      (previous, next) {
+        if (previous != null && next > previous) _scrollToEnd();
+      },
+    );
     // Who she is talking to. Loaded on its own so the header is correct even
     // when this screen was opened by deep link and no list ever existed.
     final thread = widget.chatId.isEmpty
@@ -146,21 +194,30 @@ class _ChatDetailsScreenState extends ConsumerState<ChatDetailsScreen>
                 else
                   Expanded(
                     child: ListView(
+                      controller: _scrollController,
                       padding: const EdgeInsets.all(DsSpacing.xl),
                       children: [
-                        ChatDateDivider(title: context.l10n.todayLabel),
-                        DsGaps.vLg,
                         if (messagesState.messages.isEmpty)
                           _EmptyConversation(onImage: _attach)
                         else
-                          ...messagesState.messages.map(
-                            (message) => Padding(
+                          // A rule per day, drawn from the messages' own dates.
+                          // There used to be exactly one, reading «اليوم», at
+                          // the top of every conversation — so a thread going
+                          // back three weeks announced that all of it happened
+                          // today.
+                          ..._dated(messagesState.messages, (message) {
+                            return Padding(
                               padding: const EdgeInsets.only(
                                 bottom: DsSpacing.sm,
                               ),
-                              child: _MessageRow(message: message),
-                            ),
-                          ),
+                              child: _MessageRow(
+                                message: message,
+                                onRetry: message.isFailed
+                                    ? () => notifier.retry(message)
+                                    : null,
+                              ),
+                            );
+                          }),
                         if (messagesState.isPeerTyping) ...[
                           DsGaps.vXs,
                           const TypingIndicator(),
@@ -320,12 +377,47 @@ class _ChatDetailsScreenState extends ConsumerState<ChatDetailsScreen>
 
   void _warn(String message) =>
       DsSnackbar.show(context, message: message, type: DsSnackbarType.warning);
+
+  /// The messages, with a date rule wherever the day changes.
+  List<Widget> _dated(
+    List<ChatMessageEntity> messages,
+    Widget Function(ChatMessageEntity) build,
+  ) {
+    final rows = <Widget>[];
+    DateTime? lastDay;
+    for (final message in messages) {
+      final at = message.sentAt.toLocal();
+      final day = DateTime(at.year, at.month, at.day);
+      if (lastDay == null || day != lastDay) {
+        if (lastDay != null) rows.add(DsGaps.vSm);
+        rows.add(ChatDateDivider(title: _dayLabel(context, day)));
+        rows.add(DsGaps.vLg);
+        lastDay = day;
+      }
+      rows.add(build(message));
+    }
+    return rows;
+  }
+}
+
+/// «اليوم», «أمس», or the date itself.
+String _dayLabel(BuildContext context, DateTime day) {
+  final now = DateTime.now();
+  final today = DateTime(now.year, now.month, now.day);
+  final difference = today.difference(day).inDays;
+  if (difference == 0) return context.l10n.todayLabel;
+  if (difference == 1) return context.l10n.yesterdayLabel;
+  final locale = Localizations.localeOf(context).languageCode;
+  return toWesternDigits(DateFormat.yMMMd(locale).format(day));
 }
 
 class _MessageRow extends StatelessWidget {
-  const _MessageRow({required this.message});
+  const _MessageRow({required this.message, this.onRetry});
 
   final ChatMessageEntity message;
+
+  /// Set only on a message the server refused.
+  final VoidCallback? onRetry;
 
   @override
   Widget build(BuildContext context) {
@@ -357,15 +449,51 @@ class _MessageRow extends StatelessWidget {
     };
 
     if (!message.isMine) return bubble;
+
+    // Her own message carries its state under it, which is the whole answer to
+    // "did that send?" — on a bad connection the composer clearing was all she
+    // used to get.
+    final colors = context.dsColors;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
-        bubble,
+        // A failed bubble is dimmed rather than removed: the words are hers.
+        Opacity(opacity: message.isFailed ? 0.55 : 1, child: bubble),
         DsGaps.vXxs,
-        MessageDeliveryStatus(
-          delivered: message.isDelivered,
-          seen: message.isRead,
-        ),
+        if (message.isPending)
+          Text(
+            context.l10n.chatSending,
+            style: context.dsText.micro.tint(colors.onSurfaceVariant),
+          )
+        else if (message.isFailed)
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                Icons.error_outline_rounded,
+                size: 13,
+                color: colors.error,
+              ),
+              const SizedBox(width: DsSpacing.xxs),
+              Text(
+                context.l10n.chatMessageFailed,
+                style: context.dsText.micro.tint(colors.error),
+              ),
+              const SizedBox(width: DsSpacing.xs),
+              GestureDetector(
+                onTap: onRetry,
+                child: Text(
+                  context.l10n.chatRetrySend,
+                  style: context.dsText.micro.semibold.tint(colors.primary),
+                ),
+              ),
+            ],
+          )
+        else
+          MessageDeliveryStatus(
+            delivered: message.isDelivered,
+            seen: message.isRead,
+          ),
       ],
     );
   }

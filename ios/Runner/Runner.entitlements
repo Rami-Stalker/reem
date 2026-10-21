@@ -27,5 +27,36 @@
 	-->
 	<key>aps-environment</key>
 	<string>development</string>
+
+	<!--
+	  Universal Links — an https link that opens the app instead of Safari.
+
+	  iOS fetches `https://<domain>/.well-known/apple-app-site-association` from
+	  each domain listed here, through Apple's own CDN, and checks that it names
+	  this app's `TEAMID.shop.reem.app`. The API serves that file (see
+	  `backend/src/modules/links`), generated from IOS_APP_IDS — until that
+	  variable is set it is an empty association, no link is claimed, and every
+	  link opens the web page instead. Nothing breaks either way.
+
+	  Two things this needs that a file cannot supply, both one-time:
+
+	   - Associated Domains must be enabled for the App ID in the Apple
+	     Developer portal, and this file attached to the Runner target in Xcode
+	     (Signing & Capabilities). Without both, the entitlement is dropped at
+	     signing and links silently stop opening the app.
+	   - Apple's CDN caches the association file. Get IOS_APP_IDS right before
+	     the first TestFlight build goes out, or expect a wait.
+
+	  Both hosts are listed so that moving to the custom domain is a deploy
+	  rather than a release: links already in circulation on the onrender.com
+	  host keep opening the app. `?mode=developer` is deliberately absent — it
+	  bypasses the CDN and is a debugging aid, not a shipping configuration.
+	-->
+	<key>com.apple.developer.associated-domains</key>
+	<array>
+		<string>applinks:reem-api.onrender.com</string>
+		<string>applinks:reem.shop</string>
+		<string>applinks:www.reem.shop</string>
+	</array>
 </dict>
 </plist>

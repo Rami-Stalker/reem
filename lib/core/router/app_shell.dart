@@ -7,7 +7,9 @@ import 'package:reem/core/design_system/design_system.dart';
 import 'package:reem/core/experience/experience_labels.dart';
 import 'package:reem/core/experience/role_experience.dart';
 import 'package:reem/core/localization/l10n_extension.dart';
+import 'package:reem/core/router/open_route.dart';
 import 'package:reem/core/router/route_paths.dart';
+import 'package:reem/core/router/tab_reselect.dart';
 import 'package:reem/core/sync/outbox_providers.dart';
 import 'package:reem/features/cart/presentation/providers/cart_providers.dart';
 import 'package:reem/features/experience/presentation/providers/role_experience_provider.dart';
@@ -17,16 +19,20 @@ class AppShell extends ConsumerWidget {
 
   final StatefulNavigationShell navigationShell;
 
-  void _go(BuildContext context, RoleNavigationItem item) {
+  void _go(BuildContext context, WidgetRef ref, RoleNavigationItem item) {
     final branchIndex = _branchIndexForPath(item.path);
     if (branchIndex == null) {
       context.go(item.path);
       return;
     }
-    navigationShell.goBranch(
-      branchIndex,
-      initialLocation: branchIndex == navigationShell.currentIndex,
-    );
+    final reselected = branchIndex == navigationShell.currentIndex;
+    navigationShell.goBranch(branchIndex, initialLocation: reselected);
+    // `goBranch` pops the branch to its root, which is the right half of the
+    // answer. The other half — scrolling the page she is on back to the top —
+    // only the page can do, so the tap is announced and Home listens.
+    if (reselected) {
+      ref.read(tabReselectProvider(branchIndex).notifier).state++;
+    }
   }
 
   @override
@@ -49,20 +55,24 @@ class AppShell extends ConsumerWidget {
         destinations: destinations,
         selectedIndex: selectedIndex,
         quickAction: action,
-        onSelected: (index) => _go(context, destinations[index]),
-        onQuickAction: action == null ? null : () => context.go(action.path),
+        onSelected: (index) => _go(context, ref, destinations[index]),
+        // Pushed, not replaced: «منتج جديد» is a place she comes back from,
+        // and `go` left its back arrow with nothing under it.
+        onQuickAction: action == null
+            ? null
+            : () => openRoute(context, action.path),
       ),
       ExperienceRole.admin => _AdminFallbackShell(
         navigationShell: navigationShell,
         destinations: destinations,
         selectedIndex: selectedIndex,
-        onSelected: (index) => _go(context, destinations[index]),
+        onSelected: (index) => _go(context, ref, destinations[index]),
       ),
       ExperienceRole.buyer => _CustomerProductShell(
         navigationShell: navigationShell,
         destinations: destinations,
         selectedIndex: selectedIndex,
-        onSelected: (index) => _go(context, destinations[index]),
+        onSelected: (index) => _go(context, ref, destinations[index]),
       ),
     };
   }
@@ -95,7 +105,7 @@ class AppShell extends ConsumerWidget {
   };
 }
 
-class _CustomerProductShell extends StatelessWidget {
+class _CustomerProductShell extends StatefulWidget {
   const _CustomerProductShell({
     required this.navigationShell,
     required this.destinations,
@@ -109,18 +119,51 @@ class _CustomerProductShell extends StatelessWidget {
   final ValueChanged<int> onSelected;
 
   @override
+  State<_CustomerProductShell> createState() => _CustomerProductShellState();
+}
+
+class _CustomerProductShellState extends State<_CustomerProductShell> {
+  /// The rail's real height, measured. Starts at the token so the first frame
+  /// is already roughly right, and settles on the truth one frame later —
+  /// which matters because the bar grows with the system text size.
+  final _barHeight = ValueNotifier<double>(
+    DsSizes.bottomBarHeight + DsSpacing.sm,
+  );
+
+  @override
+  void dispose() {
+    _barHeight.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       extendBody: true,
       backgroundColor: context.dsColors.background,
-      body: Stack(children: [const CustomerBackdrop(), navigationShell]),
+      body: Stack(
+        children: [
+          const CustomerBackdrop(),
+          // The page is drawn under the glass rail on purpose; this is what
+          // stops its *content* ending up under it. See [BottomBarInset].
+          ValueListenableBuilder<double>(
+            valueListenable: _barHeight,
+            builder: (context, height, child) =>
+                BottomBarInset(height: height, child: child!),
+            child: widget.navigationShell,
+          ),
+        ],
+      ),
       // No docked action: the buyer's only quick action is Search, which is
       // already a tab. A floating button duplicating a tab and half-covering
       // the bar was the single ugliest thing on the screen.
-      bottomNavigationBar: _CustomerNavigationBar(
-        destinations: destinations,
-        selectedIndex: selectedIndex,
-        onSelected: onSelected,
+      bottomNavigationBar: MeasuredHeight(
+        onHeight: (height) => _barHeight.value = height,
+        child: _CustomerNavigationBar(
+          destinations: widget.destinations,
+          selectedIndex: widget.selectedIndex,
+          onSelected: widget.onSelected,
+        ),
       ),
     );
   }
@@ -393,7 +436,15 @@ class _SellerProductShell extends StatelessWidget {
               ],
             )
           else
-            navigationShell,
+            // The seller's bar is opaque and does not extend the body under
+            // itself, so the page already clears it — but the system inset is
+            // spent inside the bar, and a page still adding its own put a
+            // gesture bar's worth of blank under every screen.
+            MediaQuery.removePadding(
+              context: context,
+              removeBottom: true,
+              child: navigationShell,
+            ),
         ],
       ),
       bottomNavigationBar: wide

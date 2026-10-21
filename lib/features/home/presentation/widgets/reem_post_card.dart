@@ -10,6 +10,7 @@ import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/platform/app_haptics.dart';
 import 'package:reem/core/result/result.dart';
 import 'package:reem/core/router/route_paths.dart';
+import 'package:reem/core/shared/entities/media.dart';
 import 'package:reem/core/shared/entities/post.dart';
 import 'package:reem/core/shared/services/share_service.dart';
 import 'package:reem/core/sync/outbox_providers.dart';
@@ -17,6 +18,7 @@ import 'package:reem/features/auth/presentation/providers/auth_provider.dart';
 import 'package:reem/features/auth/presentation/widgets/auth_prompt_sheet.dart';
 import 'package:reem/features/cart/presentation/providers/cart_providers.dart';
 import 'package:reem/features/home/presentation/providers/home_provider.dart';
+import 'package:reem/features/profile/presentation/widgets/save_to_collection_sheet.dart';
 import 'package:reem/features/social/presentation/providers/social_providers.dart';
 import 'package:reem/features/social/presentation/widgets/post_options_sheet.dart';
 import 'package:reem/features/social_posts/data/outbox_handlers.dart';
@@ -174,16 +176,15 @@ class _ReemPostCardState extends ConsumerState<ReemPostCard>
     setState(() => _saved = !_saved);
 
     // Where it went. A silent bookmark left the shopper with no idea the post
-    // had gone anywhere at all — the answer is «المفضّلة», and the snackbar
-    // takes her there rather than only naming it.
+    // had gone anywhere at all — the answer is «المفضّلة».
     final l10n = context.l10n;
-    DsSnackbar.show(
-      context,
-      message: wasSaved ? l10n.postUnsaved : l10n.postSaved,
-      type: DsSnackbarType.success,
-      actionLabel: wasSaved ? null : l10n.viewSaved,
-      onAction: wasSaved ? null : () => context.push(RoutePaths.favorites),
-    );
+    if (wasSaved) {
+      DsSnackbar.show(
+        context,
+        message: l10n.postUnsaved,
+        type: DsSnackbarType.success,
+      );
+    }
 
     final result = await ref.read(toggleSaveUseCaseProvider).call(post.id);
     if (result case Error(:final failure)) {
@@ -193,7 +194,19 @@ class _ReemPostCardState extends ConsumerState<ReemPostCard>
         desired: !wasSaved,
         restore: () => _saved = wasSaved,
       );
+      return;
     }
+    if (wasSaved || !mounted) return;
+
+    // Saved — now where to keep it. Same sheet, same «بدون مجموعة» default as
+    // a saved product, because a post and a product are the same gesture from
+    // her side and were behaving differently only because they were written
+    // months apart.
+    await SaveToCollectionSheet.show(
+      context,
+      kind: SaveTargetKind.post,
+      targetId: post.id,
+    );
   }
 
   /// «أضيفي إلى صفحتي» — a pointer to the boutique's post on her page, never a
@@ -243,6 +256,7 @@ class _ReemPostCardState extends ConsumerState<ReemPostCard>
       postId: post.id,
       caption: post.caption,
       authorName: post.author.name,
+      imageUrl: post.media.stillImageUrl,
     );
     if (!shared || !mounted) return;
 

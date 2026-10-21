@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 
 import 'package:reem/core/presentation/providers/core_providers.dart';
+import 'package:reem/features/auth/presentation/providers/auth_provider.dart';
 import 'package:reem/features/chat/data/datasources/chat_remote_datasource.dart';
 import 'package:reem/features/chat/data/datasources/impl/chat_remote_datasource_impl.dart';
 import 'package:reem/features/chat/data/repositories/chat_repository_impl.dart';
@@ -73,10 +74,16 @@ final chatThreadNotifierProvider = StateNotifierProvider.autoDispose
   )..load(chatId),
 );
 
+/// The open conversation.
+///
+/// Rebuilt when the signed-in account changes, because which side of the
+/// thread a bubble belongs to is a fact about *who is reading* — the previous
+/// account's answer must not survive a switch.
 final chatMessagesNotifierProvider =
     StateNotifierProvider<ChatMessagesNotifier, ChatMessagesState>((ref) {
   return ChatMessagesNotifier(
     getMessagesUseCase: ref.watch(getMessagesUseCaseProvider),
     sendMessageUseCase: ref.watch(sendMessageUseCaseProvider),
+    currentUserId: ref.watch(authNotifierProvider.select((s) => s.user?.id)),
   );
 });

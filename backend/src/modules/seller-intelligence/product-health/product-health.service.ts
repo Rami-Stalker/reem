@@ -254,9 +254,15 @@ export class ProductHealthService {
           coalesce(sum(d.orders), 0) AS orders,
           p.min_price_syp AS price,
           (SELECT count(*) FROM product_media m WHERE m.product_id = p.id) AS images,
+          -- jsonb_typeof(...) = 'object', not IS NOT NULL. A column holding
+          -- the JSON value null is not SQL NULL, so the old guard let it
+          -- through and jsonb_each raised «cannot call jsonb_each on a
+          -- non-object», taking the whole cohort query down — and with it
+          -- four seller-intelligence tests. The schema permits that value,
+          -- and four seeded products carry it.
           coalesce(
             (SELECT count(*) FROM jsonb_each(p.attributes)
-             WHERE p.attributes IS NOT NULL),
+             WHERE jsonb_typeof(p.attributes) = 'object'),
             0
           ) AS attributes
         FROM products p

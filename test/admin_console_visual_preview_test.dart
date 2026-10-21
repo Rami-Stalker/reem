@@ -449,6 +449,12 @@ final class _FakeAdminRepository implements AdminRepository {
     String id,
     Map<String, dynamic> payload,
   ) async => const Success(null);
+
+  @override
+  Future<Result<void>> decideAccountVerification(
+    String id,
+    Map<String, dynamic> payload,
+  ) async => const Success(null);
 }
 
 /// Lets the providers resolve and every entrance animation finish, so a

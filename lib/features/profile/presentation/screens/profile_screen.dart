@@ -9,6 +9,7 @@ import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/features/auth/presentation/providers/auth_provider.dart';
 import 'package:reem/features/experience/presentation/providers/role_experience_provider.dart';
 import 'package:reem/features/experience/presentation/screens/experience_surface_screen.dart';
+import 'package:reem/features/highlights/presentation/widgets/highlights_rail.dart';
 import 'package:reem/features/profile/presentation/providers/profile_overview_provider.dart';
 import 'package:reem/features/profile/presentation/providers/profile_provider.dart';
 import 'package:reem/features/profile/presentation/widgets/profile_achievements.dart';
@@ -117,6 +118,12 @@ class _BuyerProfileScreenState extends ConsumerState<_BuyerProfileScreen> {
         ),
         const _Gap(DsSpacing.md),
 
+        // «الأبرز» — her own rail, with the invitation to start one. Above
+        // «صفحتي» on purpose: what she keeps is the first thing another woman
+        // sees on her page, so it should be the first thing she manages.
+        const SliverToBoxAdapter(child: HighlightsRail()),
+        const _Gap(DsSpacing.md),
+
         // «صفحتي»: her page as others see it, the switch that opens it, and
         // the way to publish. None of the three was reachable from here.
         _box(
@@ -158,7 +165,7 @@ class _BuyerProfileScreenState extends ConsumerState<_BuyerProfileScreen> {
 
         const _Gap(DsSpacing.xl),
         const SliverToBoxAdapter(child: _VersionFooter()),
-        const _Gap(140),
+        DsGaps.sliverBottomSafe,
       ],
     );
   }
@@ -185,7 +192,12 @@ class _GuestProfileExperience extends StatelessWidget {
   Widget build(BuildContext context) {
     final c = context.dsColors;
     return Padding(
-      padding: DsSpacing.screenPadding,
+      // `SliverFillRemaining` fills the viewport, which extends under the
+      // floating rail — so a centred column's last two buttons, which is
+      // exactly «تسجيل الدخول» and «إنشاء حساب», were drawn behind it.
+      padding: DsSpacing.screenPadding.add(
+        EdgeInsets.only(bottom: MediaQuery.paddingOf(context).bottom),
+      ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.stretch,

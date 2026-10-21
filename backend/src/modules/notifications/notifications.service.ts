@@ -1193,6 +1193,34 @@ export class NotificationsService {
    * push that fails must not take the record with it. The push is queued
    * behind it and sent immediately.
    */
+  /**
+   * Tells one account one thing that happened to it.
+   *
+   * The public door onto `safeCreate`, for the modules that have something
+   * transactional to say and no event worth declaring — a verification
+   * decision, a claim returned for more information. Marked TRANSACTIONAL
+   * because it is a consequence of something she did, so it is not held for
+   * quiet hours and not counted against a marketing cap.
+   */
+  async notifyAccount(input: {
+    userId: string;
+    type?: NotificationType;
+    title: string;
+    body: string;
+    data?: Prisma.InputJsonValue;
+  }): Promise<void> {
+    await this.safeCreate(
+      {
+        userId: input.userId,
+        type: input.type ?? NotificationType.system,
+        title: input.title,
+        body: input.body,
+        data: input.data,
+      },
+      { category: NotificationCategory.TRANSACTIONAL },
+    );
+  }
+
   private async safeCreate(
     data: Prisma.NotificationUncheckedCreateInput,
     options: { category?: NotificationCategory; push?: boolean } = {},

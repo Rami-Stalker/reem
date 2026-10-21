@@ -154,8 +154,11 @@ export class AuthService {
       // The ticket is the proof. Marking it here rather than leaving it for a
       // later "verify your number" step is what stops an account existing in
       // an unverified limbo that `assertLoginEligibility` then refuses.
+      //
+      // `isVerified` is deliberately NOT set. It is the public badge, granted
+      // by a reviewed `AccountVerification` and by nothing else; writing it
+      // here is what made «موثّقة» mean "owns a phone".
       phoneVerifiedAt: new Date(),
-      isVerified: true,
       role,
       // Q43/Q138 P1 — recorded as an attestation the account made, with the
       // moment it was made, rather than a column that silently defaulted true.
@@ -460,9 +463,9 @@ export class AuthService {
         lastLoginAt: new Date(),
         // She just proved control of the number, whatever the account thought
         // beforehand. This is also the repair path for a row whose
-        // verification predates the column existing at all.
+        // verification predates the column existing at all. The badge is a
+        // separate question and is not touched here.
         phoneVerifiedAt: user.phoneVerifiedAt ?? new Date(),
-        isVerified: true,
       },
     });
 
@@ -1416,7 +1419,10 @@ export class AuthService {
     identifier: string,
     context: RequestContext,
   ) {
-    if (user.phone && !user.phoneVerifiedAt && !user.isVerified) {
+    // `phoneVerifiedAt` alone. This used to also accept `isVerified`, back
+    // when the OTP exchange set both — so an account could sign in on the
+    // strength of a badge rather than on having proved its number.
+    if (user.phone && !user.phoneVerifiedAt) {
       await this.recordLoginAttempt(
         user.id,
         identifier,

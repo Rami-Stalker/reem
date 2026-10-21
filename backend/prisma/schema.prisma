@@ -309,6 +309,12 @@ enum NotificationType {
   /// Reem Rooms — somebody voted, commented or decided in a room she is in.
   /// Coalesced per room rather than one per gesture; see `RoomNotifier`.
   room
+
+  /// A salon appointment: requested, confirmed, cancelled, or starting soon.
+  /// Transactional by construction — every one of them is something she is
+  /// waiting for, and a reminder that arrives after the appointment is worse
+  /// than no reminder.
+  appointment
   system
 }
 
@@ -949,7 +955,18 @@ model User {
   bio                        String?
   imageUrl                   String?            @map("image_url")
   location                   String?
+  /// **The public badge, and nothing else.**
+  ///
+  /// This used to be set to `true` by the OTP exchange — so every account that
+  /// had ever received a code wore «موثّقة» beside her name, which made the
+  /// badge mean "has a phone" and therefore mean nothing. It is now written in
+  /// exactly one place: an `AccountVerification` a human reviewed and granted.
+  /// «هل أثبتت رقمها» is [phoneVerifiedAt], which is a different question and
+  /// has its own column.
   isVerified                 Boolean            @default(false) @map("is_verified")
+
+  /// When the badge was granted, so it can be revoked and re-read later.
+  verifiedAt                 DateTime?          @map("verified_at")
   phoneVerifiedAt            DateTime?          @map("phone_verified_at")
   emailVerifiedAt            DateTime?          @map("email_verified_at")
   role                       UserRole           @default(CUSTOMER)
@@ -1037,6 +1054,15 @@ model User {
   sellerOffers              SellerOffer[]                     @relation("SellerOffers")
   sellerOrders              SellerOrder[]                     @relation("SellerSubOrders")
   courierProfile            Courier?                          @relation("CourierAccount")
+
+  // ── الصالونات والجمال ─────────────────────────────────────────
+  //
+  // One account, both sides of the counter. A woman who owns a salon books
+  // appointments at other salons with the same row — which is the whole reason
+  // this feature gained no role of its own.
+  salons       Salon[]       @relation("SalonOwner")
+  appointments Appointment[] @relation("CustomerAppointments")
+  salonReviews SalonReview[] @relation("CustomerSalonReviews")
 
   // ── The content platform ──────────────────────────────────────────────
   authoredContents          CommerceContent[]            @relation("AuthoredCommerceContents")
@@ -1175,11 +1201,262 @@ model User {
   // evidence of anything.
   policyAcceptances PolicyAcceptance[] @relation("PolicyAcceptances")
 
+  // «الأبرز» — the stories she chose to keep on her page past their day.
+  highlights ProfileHighlight[] @relation("ProfileHighlights")
+
+  // Her claim on the badge, and the staff decisions behind it.
+  accountVerification        AccountVerification?             @relation("AccountVerificationSubject")
+  accountVerificationReviews AccountVerificationStatusEvent[] @relation("AccountVerificationReviewer")
+
+  // «ملاحظات ونصائح» and «الشكاوى» — what she told the people who run this.
+  feedback         CustomerFeedback[] @relation("CustomerFeedbackAuthor")
+  feedbackHandled  CustomerFeedback[] @relation("CustomerFeedbackHandler")
+
   @@index([role])
   @@index([email])
   @@index([phone])
   @@index([role, sellerRankScore])
   @@map("users")
+}
+
+/// Which of the two channels this came through.
+///
+/// Deliberately two, not one with a dropdown. A woman telling us the search is
+/// slow and a woman telling us her parcel never came are doing different
+/// things: the first is a gift and can wait a week, the second is a failure and
+/// cannot. Folding them into one queue means the gifts bury the failures, which
+/// is how a feedback form ends up being a place complaints go to die.
+enum CustomerFeedbackKind {
+  /// «ملاحظات ونصائح» — an idea, a suggestion, something that could be better.
+  SUGGESTION
+  /// «الشكاوى» — something went wrong and she wants it dealt with.
+  COMPLAINT
+}
+
+enum CustomerFeedbackStatus {
+  NEW
+  REVIEWING
+  /// Somebody did something about it.
+  ACTIONED
+  CLOSED
+}
+
+/// What a customer told the people who run Reem.
+///
+/// Not a support ticket. A ticket is a conversation about *her* problem with
+/// *her* order, and `SupportTicket` already models that — it has messages, a
+/// thread, an assignee and an SLA. This is the other thing: a note to whoever
+/// runs the platform, which may want an answer and often does not, and which
+/// the people reading it sort by theme rather than by customer.
+model CustomerFeedback {
+  id     String  @id @default(uuid()) @db.Uuid
+  /// Null once the account is deleted: what she said about the product is
+  /// still worth reading, and it stops being about her the moment she leaves.
+  userId String? @map("user_id") @db.Uuid
+  user   User?   @relation("CustomerFeedbackAuthor", fields: [userId], references: [id], onDelete: SetNull)
+
+  kind   CustomerFeedbackKind
+  status CustomerFeedbackStatus @default(NEW)
+
+  /// Where in the app she was talking about — free text from a short list the
+  /// client offers, so the console can group without a migration every time
+  /// the app grows a screen.
+  area String?
+
+  subject String?
+  body    String
+
+  /// What she was looking at, when the screen could say. An order number, a
+  /// product id: the difference between «التوصيل تأخر» and a complaint
+  /// somebody can act on.
+  context Json?
+
+  /// Whether she wants to be written back to. A complaint usually does; a
+  /// suggestion usually does not, and promising an answer to every note is a
+  /// promise this platform would break.
+  wantsReply Boolean @default(false) @map("wants_reply")
+
+  /// The operator's note, and who wrote it. Internal — she is answered through
+  /// support or a notification, not by reading this.
+  handledNote String?   @map("handled_note")
+  handledById String?   @map("handled_by_id") @db.Uuid
+  handledBy   User?     @relation("CustomerFeedbackHandler", fields: [handledById], references: [id], onDelete: SetNull)
+  handledAt   DateTime? @map("handled_at")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  /// The console's two queues: one per channel, newest first, filtered by
+  /// status. One index answers both.
+  @@index([kind, status, createdAt(sort: Desc)])
+  @@index([userId, createdAt(sort: Desc)])
+  @@index([handledById])
+  @@map("customer_feedback")
+}
+
+enum AccountVerificationStatus {
+  /// Submitted, nobody has picked it up.
+  PENDING
+  /// An operator has it open.
+  UNDER_REVIEW
+  /// Sent back with a note: the photograph was unreadable, the name did not
+  /// match. Still hers to fix — this is not a refusal.
+  NEEDS_MORE_INFO
+  APPROVED
+  REJECTED
+  /// Granted once, withdrawn since. Distinct from `REJECTED`, which never
+  /// granted anything: a revoked badge is a decision about an account that
+  /// *had* one, and the difference matters when reading a history.
+  REVOKED
+}
+
+/// What kind of account is asking, which decides what evidence is asked for.
+enum AccountVerificationKind {
+  /// A woman proving she is who her page says she is.
+  PERSONAL
+  /// A shop proving the business behind it. Separate from
+  /// `SellerVerification`, which is the *permission to sell* — a boutique can
+  /// be allowed to trade without its public identity being vouched for, and
+  /// the two are reviewed against different evidence.
+  BUSINESS
+}
+
+/// **Real account verification.** One live claim per account.
+///
+/// The badge on a name used to be `users.is_verified`, set to `true` by the
+/// OTP exchange — so it appeared the moment an account existed, said only
+/// "this person received a text message", and appeared identical to the badge
+/// a reviewed boutique wore. That is a verification system in the same sense
+/// that a drawing of a lock is a lock.
+///
+/// This is the claim behind it: documents she submits, a reviewer who decides,
+/// a reason she is told, and a trail. `users.is_verified` is now written in
+/// exactly one place — `AccountVerificationService.decide` — and nowhere else
+/// in the codebase may set it.
+model AccountVerification {
+  id     String @id @default(uuid()) @db.Uuid
+  /// One live claim per account: re-applying reopens this row rather than
+  /// filing a second one, which is what keeps the queue answerable.
+  userId String @unique @map("user_id") @db.Uuid
+  user   User   @relation("AccountVerificationSubject", fields: [userId], references: [id], onDelete: Cascade)
+
+  kind   AccountVerificationKind   @default(PERSONAL)
+  status AccountVerificationStatus @default(PENDING)
+
+  /// The name on the document, which is the thing being checked against the
+  /// name on the page.
+  legalName String @map("legal_name")
+
+  /// What kind of paper it is — a national id, a passport, a commercial
+  /// register. Free text on purpose: Syria's acceptable documents are not a
+  /// closed set and an enum here would refuse a real woman's real paper.
+  documentType String? @map("document_type")
+
+  /// Kept out of every public serializer. These are photographs of a woman's
+  /// identity card; they are readable by her and by a reviewer holding
+  /// `user:verify`, and by nobody else.
+  documentFrontUrl String? @map("document_front_url")
+  documentBackUrl  String? @map("document_back_url")
+  selfieUrl        String? @map("selfie_url")
+
+  /// Anything else she was asked for on a second pass.
+  supportingUrls Json @default("[]") @map("supporting_urls")
+
+  /// Why she is asking, in her words. A public figure, a boutique with a
+  /// counterfeit problem, a salon whose name is being used by somebody else —
+  /// the reason is most of what a reviewer weighs.
+  note String?
+
+  /// What the reviewer said. `reviewNote` is shown to her; it is the whole
+  /// point of `NEEDS_MORE_INFO` being a state rather than a rejection.
+  reviewNote String?   @map("review_note")
+  reviewedBy String?   @map("reviewed_by") @db.Uuid
+  reviewedAt DateTime? @map("reviewed_at")
+
+  submittedAt DateTime @default(now()) @map("submitted_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  history AccountVerificationStatusEvent[]
+
+  /// The queue: oldest first within a status.
+  @@index([status, submittedAt])
+  @@map("account_verifications")
+}
+
+/// Every move a claim made, and who made it. Append-only.
+model AccountVerificationStatusEvent {
+  id             String              @id @default(uuid()) @db.Uuid
+  verificationId String              @map("verification_id") @db.Uuid
+  verification   AccountVerification @relation(fields: [verificationId], references: [id], onDelete: Cascade)
+
+  status AccountVerificationStatus
+  reason String
+
+  /// Null when the account itself moved the claim — submitting, resubmitting.
+  actorId String? @map("actor_id") @db.Uuid
+  actor   User?   @relation("AccountVerificationReviewer", fields: [actorId], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([verificationId, createdAt])
+  @@index([actorId, createdAt])
+  @@map("account_verification_status_events")
+}
+
+/// «الأبرز» — a named, ordered shelf of her own stories, kept past their day.
+///
+/// A story expires after twenty-four hours, which is the whole point of a
+/// story and the whole problem with one: the boutique's size guide, the
+/// customer's «طلبيتي وصلت», the salon's before-and-after are all worth more
+/// than a day and all disappeared. A highlight is the permission to keep one.
+///
+/// It is owner-keyed rather than seller-keyed, so a shopper's page and a
+/// boutique's storefront run the same code — a highlight of «إطلالاتي» and one
+/// of «مقاساتنا» differ in what is in them and in nothing else.
+model ProfileHighlight {
+  id      String @id @default(uuid()) @db.Uuid
+  ownerId String @map("owner_id") @db.Uuid
+  owner   User   @relation("ProfileHighlights", fields: [ownerId], references: [id], onDelete: Cascade)
+
+  title String
+
+  /// Chosen by her, or null to fall back to the first item's still. Stored
+  /// rather than derived because a cover she picked must survive removing the
+  /// story it came from.
+  coverUrl String? @map("cover_url")
+
+  /// Her order on the rail, lowest first. Ties break on `createdAt`.
+  sortOrder Int @default(0) @map("sort_order")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  items ProfileHighlightItem[]
+
+  /// The rail, in one index-only read.
+  @@index([ownerId, sortOrder, createdAt])
+  @@map("profile_highlights")
+}
+
+model ProfileHighlightItem {
+  id          String           @id @default(uuid()) @db.Uuid
+  highlightId String           @map("highlight_id") @db.Uuid
+  highlight   ProfileHighlight @relation(fields: [highlightId], references: [id], onDelete: Cascade)
+
+  /// The story itself, still the one row everything else reads. A highlight
+  /// points at content; it never copies it, so a takedown or an edit reaches
+  /// the highlight too.
+  contentId String          @map("content_id") @db.Uuid
+  content   CommerceContent @relation(fields: [contentId], references: [id], onDelete: Cascade)
+
+  sortOrder Int      @default(0) @map("sort_order")
+  addedAt   DateTime @default(now()) @map("added_at")
+
+  /// The same story cannot sit twice in one highlight.
+  @@unique([highlightId, contentId])
+  @@index([highlightId, sortOrder, addedAt])
+  @@index([contentId])
+  @@map("profile_highlight_items")
 }
 
 // Directed follow edge: follower -> following.
@@ -2680,6 +2957,7 @@ model CommerceContent {
   attributions            CommerceContentAttribution[]
   guestSavedItems         GuestSavedItem[]
   wishlistCollectionItems WishlistCollectionItem[]
+  highlightItems          ProfileHighlightItem[]
   /// Her page timeline, and branch A of the following feed. Keyset-ordered, so
   hiddenBy                ContentHide[]
 
@@ -4558,7 +4836,20 @@ model Chat {
   messages     Message[]
   reports      ChatReport[]
 
-  @@index([buyerId, sellerId])
+  /// One conversation per pair of people — the rule the inbox is built on.
+  ///
+  /// The lookup in `startConversation` used to key on the product and the
+  /// parcel as well, so the same two women accumulated a thread per subject
+  /// and the inbox listed the same name four times. The key is now the pair,
+  /// and this makes that a fact about the table rather than a habit of one
+  /// method: two taps on «راسلي المتجر» arriving together can no longer both
+  /// win, because the second create fails and is answered with the row the
+  /// first one wrote.
+  ///
+  /// Postgres treats NULLs as distinct in a unique index, so rows where either
+  /// side is null — a chat whose participant was deleted — are exempt, which
+  /// is what we want: they are unreachable history, not live conversations.
+  @@unique([buyerId, sellerId])
   @@index([productId])
   @@index([sellerOrderId])
   @@index([type, updatedAt])
@@ -4790,6 +5081,10 @@ model Address {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
+  /// Where a home appointment is performed. `SetNull` on the appointment side:
+  /// deleting an address must not delete a booking she still has.
+  appointments Appointment[]
+
   @@index([userId, isDefault])
   @@map("addresses")
 }
@@ -4803,6 +5098,16 @@ model Coupon {
   discountPercent Decimal    @default(0) @map("discount_percent") @db.Decimal(5, 2)
   amountOff       Decimal?   @map("amount_off") @db.Decimal(18, 4)
   minOrderAmount  Decimal?   @map("min_order_amount") @db.Decimal(18, 4)
+
+  /// The most a percentage code may ever take off one order.
+  ///
+  /// A percentage with no ceiling is a discount nobody approved: 15% is a
+  /// sensible welcome on a dress and an unbudgeted fortune on a gold set, and
+  /// this marketplace sells both. Null means uncapped, which is right for a
+  /// fixed-amount code and for a percentage an operator deliberately left
+  /// open; every referral coupon sets it.
+  maxDiscountAmount Decimal? @map("max_discount_amount") @db.Decimal(18, 4)
+
   maxUses         Int?       @map("max_uses")
   usedCount       Int        @default(0) @map("used_count")
   perUserLimit    Int?       @map("per_user_limit")
@@ -10023,4 +10328,419 @@ model PolicyAcceptance {
   @@index([userId, documentId])
   @@index([versionId])
   @@map("policy_acceptances")
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// الصالونات والجمال — salons, the services they sell, and the appointments
+// women book with them.
+//
+// ## Why this is not a second marketplace
+//
+// A salon is a business on Reem, exactly as a boutique is, and it is owned by
+// the same `User` a boutique is owned by. There is no `SALON` role: the role
+// enum is read by every guard, the permission matrix, the admin console and
+// the client's navigation map, and adding a value to it would touch all four
+// to express something the existing SELLER role already means — *this account
+// trades here*. A salon owner applies through the seller verification that
+// exists, is vetted by the process that exists, and reaches her customers
+// through the chat that exists.
+//
+// What a salon genuinely has that a boutique does not is a **calendar**. That
+// is what these tables are for, and it is all they are for.
+//
+// ## The one invariant
+//
+// A slot cannot be sold twice. `Salon.concurrentCapacity` is how many women
+// the salon can serve at once (chairs, rooms, hands); an appointment is
+// admitted only when the number of live appointments overlapping its window is
+// below it. The count is taken under a `FOR UPDATE` lock on the salon row —
+// the same read-then-write discipline `WalletService` and `CouponsService` use
+// — because counting and inserting without one is precisely how two women end
+// up in the same chair at six o'clock on a Thursday.
+// ─────────────────────────────────────────────────────────────────────────────
+
+enum SalonStatus {
+  /// Being filled in. Invisible to shoppers; its owner is the only account
+  /// that can see it.
+  DRAFT
+
+  /// Open for business.
+  ACTIVE
+
+  /// Taken off the directory by an operator. Existing appointments stand —
+  /// suspending a salon must not silently cancel a woman's Thursday.
+  SUSPENDED
+}
+
+/// Where a service is performed. «دعم الخدمات المنزلية» is a property of the
+/// *service*, not of the salon: a salon may do nails at home and colour only
+/// in the chair.
+enum SalonServiceLocation {
+  IN_SALON
+  AT_HOME
+  BOTH
+}
+
+/// The vocabulary the directory filters on.
+///
+/// A closed enum rather than a free string, for the same reason the catalogue
+/// has categories: «تصفية حسب نوع الخدمة» is only answerable when two salons
+/// spell "manicure" the same way.
+enum SalonServiceCategory {
+  HAIR
+  NAILS
+  SKIN
+  MAKEUP
+  LASHES_BROWS
+  HAIR_REMOVAL
+  MASSAGE_SPA
+  BRIDAL
+  OTHER
+}
+
+enum AppointmentStatus {
+  /// She asked; the salon has not answered yet. Holds the slot.
+  PENDING
+
+  /// The salon said yes.
+  CONFIRMED
+
+  /// She came and was served. The only state a review may be written from.
+  COMPLETED
+
+  /// Called off, by either side or by the platform.
+  CANCELLED
+
+  /// The salon says she did not come. Kept distinct from CANCELLED because
+  /// they mean opposite things about who is answerable.
+  NO_SHOW
+}
+
+enum AppointmentActor {
+  CUSTOMER
+  SALON
+  SYSTEM
+}
+
+model Salon {
+  id      String @id @default(uuid()) @db.Uuid
+  ownerId String @map("owner_id") @db.Uuid
+  owner   User   @relation("SalonOwner", fields: [ownerId], references: [id], onDelete: Cascade)
+
+  name String
+  /// Stable, human-readable, and what a shared link carries.
+  slug String @unique
+
+  tagline String?
+  about   String?
+
+  status SalonStatus @default(DRAFT)
+
+  // ── Where it is ────────────────────────────────────────────────────────
+  //
+  // Free text plus optional coordinates. No address on this platform has ever
+  // carried coordinates (see `NearbyStore`, which says so in its own doc), so
+  // these are the first — and they are nullable, because a salon that has not
+  // dropped a pin is still a salon. The map is opened through `url_launcher`
+  // against whichever of the two is present; there is no map SDK in this app
+  // and adding one would drag in an API key, a billing account and a native
+  // dependency for one screen.
+  governorate String
+  city        String
+  district    String?
+  addressLine String  @map("address_line")
+  landmark    String?
+  latitude    Float?
+  longitude   Float?
+
+  phone    String?
+  whatsapp String?
+
+  logoUrl  String? @map("logo_url")
+  coverUrl String? @map("cover_url")
+
+  // ── The calendar's shape ───────────────────────────────────────────────
+
+  /// The grid a day is cut into. A 30-minute grid with a 45-minute service
+  /// means starts at :00 and :30, each running 45 minutes.
+  slotMinutes Int @default(30) @map("slot_minutes")
+
+  /// How soon from now she may book. Nobody wants a booking that lands while
+  /// the owner is holding a pair of scissors.
+  leadMinutes Int @default(120) @map("lead_minutes")
+
+  /// How far ahead the calendar is open.
+  horizonDays Int @default(30) @map("horizon_days")
+
+  /// How many women can be served at once. The whole of the no-double-booking
+  /// rule is this number and the overlap count taken against it.
+  concurrentCapacity Int @default(1) @map("concurrent_capacity")
+
+  /// Free cancellation up to this many hours before. Past it she can still
+  /// cancel — a woman who cannot come cannot come — and it is recorded as
+  /// late, which is what a salon needs to know.
+  cancellationHours Int @default(4) @map("cancellation_hours")
+
+  /// Whether the salon travels at all. A service may still say IN_SALON.
+  homeService    Boolean  @default(false) @map("home_service")
+  homeServiceFee Decimal? @map("home_service_fee") @db.Decimal(18, 4)
+
+  currency Currency @default(SYP)
+
+  // ── Roll-ups ───────────────────────────────────────────────────────────
+  //
+  // Denormalised for the same reason the catalogue's are: a directory page
+  // ranks twenty salons and cannot average a review table per card.
+  rating            Float @default(0)
+  reviewsCount      Int   @default(0) @map("reviews_count")
+  appointmentsCount Int   @default(0) @map("appointments_count")
+  servicesCount     Int   @default(0) @map("services_count")
+
+  isFeatured Boolean @default(false) @map("is_featured")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  media        SalonMedia[]
+  services     SalonService[]
+  hours        SalonWorkingHours[]
+  closures     SalonClosure[]
+  appointments Appointment[]
+  reviews      SalonReview[]
+
+  /// The directory's own query: live salons in a locality, best first.
+  @@index([status, governorate, city])
+  @@index([status, rating])
+  @@index([ownerId])
+  @@map("salons")
+}
+
+model SalonMedia {
+  id        String    @id @default(uuid()) @db.Uuid
+  salonId   String    @map("salon_id") @db.Uuid
+  salon     Salon     @relation(fields: [salonId], references: [id], onDelete: Cascade)
+  url       String
+  type      MediaType @default(image)
+  blurHash  String?   @map("blur_hash")
+  sortOrder Int       @default(0) @map("sort_order")
+  createdAt DateTime  @default(now()) @map("created_at")
+
+  @@index([salonId, sortOrder])
+  @@map("salon_media")
+}
+
+model SalonService {
+  id      String @id @default(uuid()) @db.Uuid
+  salonId String @map("salon_id") @db.Uuid
+  salon   Salon  @relation(fields: [salonId], references: [id], onDelete: Cascade)
+
+  name        String
+  description String?
+  category    SalonServiceCategory @default(OTHER)
+
+  price    Decimal  @db.Decimal(18, 4)
+  currency Currency @default(SYP)
+
+  /// The struck-through original. Present only when the salon is genuinely
+  /// running an offer on this service — the same shape a discounted product
+  /// carries, so the badge means the same thing in both halves of the app.
+  compareAtPrice Decimal? @map("compare_at_price") @db.Decimal(18, 4)
+
+  /// Normalised to SYP so a mixed-currency directory can be sorted and
+  /// filtered by price. Mirrors `SellerOffer.priceSyp`, and for the same
+  /// reason: ordering by the raw column compares dollars against pounds.
+  priceSyp Decimal? @map("price_syp") @db.Decimal(18, 4)
+
+  durationMinutes Int @map("duration_minutes")
+
+  /// Cleaning down, drying off, the next woman sitting. Held after the
+  /// appointment and counted in the overlap check, so a salon is not booked
+  /// into a chair it has not finished with.
+  bufferMinutes Int @default(0) @map("buffer_minutes")
+
+  location SalonServiceLocation @default(IN_SALON)
+
+  imageUrl String? @map("image_url")
+
+  /// «الباقات» — a service that is several services. The members are listed
+  /// for the customer to read; the booking still occupies one window of
+  /// `durationMinutes`, because that is how a salon actually schedules a
+  /// package.
+  isPackage Boolean @default(false) @map("is_package")
+
+  isActive  Boolean @default(true) @map("is_active")
+  sortOrder Int     @default(0) @map("sort_order")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  packageItems SalonPackageItem[] @relation("PackageParent")
+  memberOf     SalonPackageItem[] @relation("PackageMember")
+  appointments Appointment[]
+
+  @@index([salonId, isActive, sortOrder])
+  @@index([category, isActive])
+  @@index([isActive, priceSyp])
+  @@map("salon_services")
+}
+
+/// What is inside a package.
+model SalonPackageItem {
+  id        String       @id @default(uuid()) @db.Uuid
+  packageId String       @map("package_id") @db.Uuid
+  package   SalonService @relation("PackageParent", fields: [packageId], references: [id], onDelete: Cascade)
+  serviceId String       @map("service_id") @db.Uuid
+  service   SalonService @relation("PackageMember", fields: [serviceId], references: [id], onDelete: Cascade)
+  sortOrder Int          @default(0) @map("sort_order")
+
+  @@unique([packageId, serviceId])
+  @@index([serviceId])
+  @@map("salon_package_items")
+}
+
+/// When the doors are open, one row per weekday.
+///
+/// Times are stored as `HH:mm` strings in the salon's own local reckoning
+/// rather than as instants, because "we open at nine" is a fact about the clock
+/// on the wall and not about UTC. The availability service composes them with a
+/// date to produce real instants.
+model SalonWorkingHours {
+  id      String @id @default(uuid()) @db.Uuid
+  salonId String @map("salon_id") @db.Uuid
+  salon   Salon  @relation(fields: [salonId], references: [id], onDelete: Cascade)
+
+  /// 0 = Sunday … 6 = Saturday, matching `DateTime.weekday % 7` on both sides.
+  weekday Int
+
+  isClosed Boolean @default(false) @map("is_closed")
+  opensAt  String  @map("opens_at") @db.VarChar(5)
+  closesAt String  @map("closes_at") @db.VarChar(5)
+
+  /// The midday break a great many salons here actually take.
+  breakStartsAt String? @map("break_starts_at") @db.VarChar(5)
+  breakEndsAt   String? @map("break_ends_at") @db.VarChar(5)
+
+  @@unique([salonId, weekday])
+  @@map("salon_working_hours")
+}
+
+/// A day the salon is shut: a feast, a holiday, a wedding of its own.
+model SalonClosure {
+  id      String   @id @default(uuid()) @db.Uuid
+  salonId String   @map("salon_id") @db.Uuid
+  salon   Salon    @relation(fields: [salonId], references: [id], onDelete: Cascade)
+  date    DateTime @db.Date
+  reason  String?
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@unique([salonId, date])
+  @@map("salon_closures")
+}
+
+model Appointment {
+  id String @id @default(uuid()) @db.Uuid
+
+  /// What she reads out on the phone. Short, unambiguous, and not a UUID.
+  reference String @unique @db.VarChar(16)
+
+  salonId String @map("salon_id") @db.Uuid
+  salon   Salon  @relation(fields: [salonId], references: [id], onDelete: Cascade)
+
+  customerId String @map("customer_id") @db.Uuid
+  customer   User   @relation("CustomerAppointments", fields: [customerId], references: [id], onDelete: Cascade)
+
+  serviceId String       @map("service_id") @db.Uuid
+  service   SalonService @relation(fields: [serviceId], references: [id], onDelete: Restrict)
+
+  status AppointmentStatus @default(PENDING)
+
+  /// The window this booking occupies, buffer included. Both are instants;
+  /// every overlap question is asked of these two columns and nothing else.
+  startsAt DateTime @map("starts_at")
+  endsAt   DateTime @map("ends_at")
+
+  /// What the customer was told she is buying, frozen at booking. A salon
+  /// raising its prices on Tuesday does not reprice Thursday's appointment.
+  serviceName     String   @map("service_name")
+  durationMinutes Int      @map("duration_minutes")
+  price           Decimal  @db.Decimal(18, 4)
+  currency        Currency @default(SYP)
+
+  /// Charged at the chair, not here. Reem takes no money for an appointment in
+  /// this release — there is no ledger entry, no escrow and no commission, and
+  /// pretending otherwise in the schema would invite a later reader to assume
+  /// money moved.
+  atHome    Boolean  @default(false) @map("at_home")
+  addressId String?  @map("address_id") @db.Uuid
+  address   Address? @relation(fields: [addressId], references: [id], onDelete: SetNull)
+
+  customerNote String? @map("customer_note")
+  salonNote    String? @map("salon_note")
+
+  confirmedAt DateTime? @map("confirmed_at")
+  completedAt DateTime? @map("completed_at")
+  cancelledAt DateTime? @map("cancelled_at")
+
+  cancelledBy        AppointmentActor? @map("cancelled_by")
+  cancellationReason String?           @map("cancellation_reason")
+
+  /// True when she cancelled inside the salon's notice window. Recorded rather
+  /// than refused: a woman who cannot come cannot come, and the salon needs to
+  /// know which it was.
+  cancelledLate Boolean @default(false) @map("cancelled_late")
+
+  /// Stamped by the reminder job, so it is idempotent across the catch-up runs
+  /// a sleeping Free instance performs on waking.
+  reminderSentAt DateTime? @map("reminder_sent_at")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  review SalonReview?
+
+  /// The overlap query: one salon, a window, the live statuses.
+  @@index([salonId, startsAt, endsAt])
+  /// «حجوزاتي», newest first.
+  @@index([customerId, startsAt(sort: Desc)])
+  /// The reminder sweep and the expiry sweep.
+  @@index([status, startsAt])
+  @@index([serviceId])
+  @@index([addressId])
+  @@map("appointments")
+}
+
+/// What she thought, after she was actually served.
+///
+/// One per appointment, and only from a COMPLETED one — which is what makes
+/// every rating on this half of the platform a verified one without needing a
+/// `verifiedPurchase` flag to say so.
+model SalonReview {
+  id String @id @default(uuid()) @db.Uuid
+
+  appointmentId String      @unique @map("appointment_id") @db.Uuid
+  appointment   Appointment @relation(fields: [appointmentId], references: [id], onDelete: Cascade)
+
+  salonId String @map("salon_id") @db.Uuid
+  salon   Salon  @relation(fields: [salonId], references: [id], onDelete: Cascade)
+
+  userId String @map("user_id") @db.Uuid
+  user   User   @relation("CustomerSalonReviews", fields: [userId], references: [id], onDelete: Cascade)
+
+  rating Int
+  body   String?
+
+  status ReviewStatus @default(APPROVED)
+
+  /// The salon's answer, shown under the review. At most one, edited in place
+  /// — the same rule `ProductReview` follows.
+  salonReply     String?   @map("salon_reply")
+  salonRepliedAt DateTime? @map("salon_replied_at")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([salonId, status, createdAt(sort: Desc)])
+  @@index([userId])
+  @@map("salon_reviews")
 }

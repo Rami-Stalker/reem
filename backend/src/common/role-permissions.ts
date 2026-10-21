@@ -6,6 +6,7 @@ const allPermissions = Object.values(AppPermission);
 const rolePermissions: Record<UserRole, string[]> = {
   [UserRole.SUPER_ADMIN]: allPermissions,
   [UserRole.OPERATIONS_ADMIN]: [
+    AppPermission.salonManage,
     AppPermission.policyManage,
     AppPermission.securityForensicsRead,
     AppPermission.accountRecoveryReview,
@@ -56,6 +57,8 @@ const rolePermissions: Record<UserRole, string[]> = {
     AppPermission.auditRead,
   ],
   [UserRole.ADMIN]: [
+    AppPermission.salonManage,
+    AppPermission.appointmentBook,
     AppPermission.securityForensicsRead,
     AppPermission.accountRecoveryReview,
     AppPermission.adminDashboard,
@@ -99,6 +102,11 @@ const rolePermissions: Record<UserRole, string[]> = {
     AppPermission.contentInteract,
     AppPermission.orderRead,
     AppPermission.analyticsRead,
+    // She may run a salon, and she may book at somebody else's. Both, because
+    // a seller is a customer too — the account does not stop shopping when it
+    // starts trading.
+    AppPermission.salonManage,
+    AppPermission.appointmentBook,
   ],
   [UserRole.CUSTOMER]: [
     AppPermission.accountRead,
@@ -113,6 +121,7 @@ const rolePermissions: Record<UserRole, string[]> = {
     // was seller-only by construction rather than by decision.
     AppPermission.contentAuthor,
     AppPermission.contentInteract,
+    AppPermission.appointmentBook,
   ],
 };
 

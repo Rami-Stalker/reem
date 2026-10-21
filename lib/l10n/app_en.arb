@@ -74,6 +74,98 @@
   "@accountUpdated": {
     "description": "Toast"
   },
+  "accountVerification": "Account verification",
+  "@accountVerification": {
+    "description": "Title of the screen where a customer applies for the verified badge"
+  },
+  "accountVerificationApprovedBlurb": "The badge is on your name.",
+  "@accountVerificationApprovedBlurb": {
+    "description": "Shown to a verified account"
+  },
+  "accountVerificationBack": "Document — back",
+  "@accountVerificationBack": {
+    "description": "Label of the back-of-document upload"
+  },
+  "accountVerificationBlurb": "The badge beside your name says Reem has checked who you are. Send a document and we will look at it.",
+  "@accountVerificationBlurb": {
+    "description": "Explains what verification is for"
+  },
+  "accountVerificationDocType": "Document type",
+  "@accountVerificationDocType": {
+    "description": "Label of the document-type field"
+  },
+  "accountVerificationDocTypeHint": "National ID, passport, commercial register…",
+  "@accountVerificationDocTypeHint": {
+    "description": "Hint under the document-type field"
+  },
+  "accountVerificationFront": "Document — front",
+  "@accountVerificationFront": {
+    "description": "Label of the front-of-document upload"
+  },
+  "accountVerificationLegalName": "Name on the document",
+  "@accountVerificationLegalName": {
+    "description": "Label of the legal-name field"
+  },
+  "accountVerificationNeedsPhone": "Verify your phone number first.",
+  "@accountVerificationNeedsPhone": {
+    "description": "Shown when the account has not proved its number yet"
+  },
+  "accountVerificationNote": "Why you are asking",
+  "@accountVerificationNote": {
+    "description": "Label of the free-text reason field"
+  },
+  "accountVerificationPrivacy": "Your documents are read only by the staff who review them, and by nobody else on Reem.",
+  "@accountVerificationPrivacy": {
+    "description": "Privacy note under the document uploads"
+  },
+  "accountVerificationResubmit": "Send again",
+  "@accountVerificationResubmit": {
+    "description": "Resubmits a claim that was returned or refused"
+  },
+  "accountVerificationSelfie": "A photo of you holding it",
+  "@accountVerificationSelfie": {
+    "description": "Label of the selfie upload"
+  },
+  "accountVerificationSent": "Sent. We will tell you as soon as it is reviewed.",
+  "@accountVerificationSent": {
+    "description": "Confirmation after submitting"
+  },
+  "accountVerificationStatusApproved": "Verified",
+  "@accountVerificationStatusApproved": {
+    "description": "Status of an approved claim"
+  },
+  "accountVerificationStatusNeedsInfo": "We need something more",
+  "@accountVerificationStatusNeedsInfo": {
+    "description": "Status of a claim returned for more information"
+  },
+  "accountVerificationStatusPending": "Waiting for review",
+  "@accountVerificationStatusPending": {
+    "description": "Status of a filed verification claim"
+  },
+  "accountVerificationStatusRejected": "Not approved",
+  "@accountVerificationStatusRejected": {
+    "description": "Status of a refused claim"
+  },
+  "accountVerificationStatusRevoked": "Withdrawn by Reem",
+  "@accountVerificationStatusRevoked": {
+    "description": "Status of a badge that was granted and later revoked"
+  },
+  "accountVerificationStatusUnderReview": "Being reviewed",
+  "@accountVerificationStatusUnderReview": {
+    "description": "Status of a claim a reviewer has opened"
+  },
+  "accountVerificationSubmit": "Send for review",
+  "@accountVerificationSubmit": {
+    "description": "Submits the verification claim"
+  },
+  "accountVerificationWithdraw": "Withdraw the request",
+  "@accountVerificationWithdraw": {
+    "description": "Cancels an open verification claim"
+  },
+  "accountVerificationWithdrawn": "Request withdrawn.",
+  "@accountVerificationWithdrawn": {
+    "description": "Confirmation after withdrawing"
+  },
   "achievements": "Achievements",
   "@achievements": {
     "description": "Profile section"
@@ -110,9 +202,21 @@
   "@actionConversations": {
     "description": "Shell action — chats"
   },
+  "actionAppointments": "My appointments",
+  "@actionAppointments": {
+    "description": "Shell action — her salon bookings"
+  },
   "actionCoupons": "Coupons",
   "@actionCoupons": {
     "description": "Shell action — coupons"
+  },
+  "actionSalonWorkspace": "My salon",
+  "@actionSalonWorkspace": {
+    "description": "Shell action — the salon owner's workspace"
+  },
+  "actionSalons": "Salons & beauty",
+  "@actionSalons": {
+    "description": "Shell action — the salons directory"
   },
   "actionDidNotSave": "That didn’t save — check your connection and try again",
   "actionFinance": "Finance",
@@ -247,6 +351,15 @@
   "@addedToBag": {
     "description": "Confirmation after adding a product to the cart from the feed."
   },
+  "addedToCollection": "Added to {name}",
+  "@addedToCollection": {
+    "description": "Confirmation after filing an item into a collection",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "additionalDocuments": "Additional documents",
   "@additionalDocuments": {
     "description": "Field label"
@@ -254,6 +367,10 @@
   "addresses": "Addresses",
   "@addresses": {
     "description": "Menu item"
+  },
+  "adminAccountVerifications": "Account verification",
+  "@adminAccountVerifications": {
+    "description": "Admin console section reviewing verification claims"
   },
   "adminActionChangeRole": "Change role",
   "@adminActionChangeRole": {
@@ -1094,6 +1211,34 @@
   "@adminUsers": {
     "description": "Admin nav item"
   },
+  "adminVerificationApprove": "Approve",
+  "@adminVerificationApprove": {
+    "description": "Verification decision"
+  },
+  "adminVerificationDecision": "Decide",
+  "@adminVerificationDecision": {
+    "description": "The console action that approves or refuses a verification claim"
+  },
+  "adminVerificationNeedsInfo": "Ask for more",
+  "@adminVerificationNeedsInfo": {
+    "description": "Verification decision that returns the claim to her"
+  },
+  "adminVerificationReasonReaches": "She is shown exactly what you write here.",
+  "@adminVerificationReasonReaches": {
+    "description": "Helper text under the reason field on a verification decision"
+  },
+  "adminVerificationReject": "Refuse",
+  "@adminVerificationReject": {
+    "description": "Verification decision"
+  },
+  "adminVerificationRevoke": "Revoke the badge",
+  "@adminVerificationRevoke": {
+    "description": "Verification decision that withdraws a granted badge"
+  },
+  "adminVerificationUnderReview": "Take it",
+  "@adminVerificationUnderReview": {
+    "description": "Marks a verification claim as being reviewed"
+  },
   "adminVerifiedSellersOnly": "Verified sellers only",
   "@adminVerifiedSellersOnly": {
     "description": "Filter on the seller management table."
@@ -1496,6 +1641,10 @@
       }
     }
   },
+  "chatMessageFailed": "Not sent",
+  "@chatMessageFailed": {
+    "description": "Shown under a message the server refused"
+  },
   "chatNoMessagesYet": "No messages yet",
   "@chatNoMessagesYet": {
     "description": "Thread preview when nothing has been sent"
@@ -1524,6 +1673,10 @@
   "@chatProduct": {
     "description": "Attaches a product to a message [re-authored: original wording lost]"
   },
+  "chatRetrySend": "Try again",
+  "@chatRetrySend": {
+    "description": "Resends a message that failed"
+  },
   "chatSafetyNote": "Keep payments inside Reem",
   "@chatSafetyNote": {
     "description": "Marketplace safety note above the conversation list"
@@ -1533,6 +1686,10 @@
     "description": "Body of the marketplace safety note"
   },
   "chatSeen": "Seen",
+  "chatSending": "Sending",
+  "@chatSending": {
+    "description": "Status under a message still in flight"
+  },
   "chatSent": "Sent",
   "@chatSent": {
     "description": "Delivery status of a sent message [re-authored: original wording lost]"
@@ -1764,6 +1921,10 @@
   "collectionsBlurb": "Shareable lists for products, sellers, and posts",
   "@collectionsBlurb": {
     "description": "Section subtitle"
+  },
+  "collectionsEmptyHint": "You have no collections yet — make one and it appears here.",
+  "@collectionsEmptyHint": {
+    "description": "Empty state inside the save-to-collection sheet"
   },
   "comingSoon": "Coming soon",
   "@comingSoon": {
@@ -2325,6 +2486,14 @@
   "feed": "Feed",
   "@feed": {
     "description": "Bottom navigation label"
+  },
+  "fieldRequired": "This field is required",
+  "@fieldRequired": {
+    "description": "Validation message on an empty required field"
+  },
+  "fieldTooShort": "Too short",
+  "@fieldTooShort": {
+    "description": "Validation message when a field is below its minimum length"
   },
   "fileSizeMegabytes": "{size} MB",
   "@fileSizeMegabytes": {
@@ -2891,6 +3060,85 @@
   "helpCenter": "Help centre",
   "@helpCenter": {
     "description": "Menu item"
+  },
+  "hidePassword": "Hide password",
+  "@hidePassword": {
+    "description": "Tooltip on the eye that hides a password again"
+  },
+  "highlightAddStories": "Add stories",
+  "@highlightAddStories": {
+    "description": "Menu entry that opens the archive picker for an existing highlight"
+  },
+  "highlightArchiveEmpty": "You have not published a story yet. Publish one and it will be waiting here.",
+  "@highlightArchiveEmpty": {
+    "description": "Empty state of the story archive picker"
+  },
+  "highlightCreate": "New highlight",
+  "@highlightCreate": {
+    "description": "Title of the sheet that creates a highlight"
+  },
+  "highlightDelete": "Delete highlight",
+  "@highlightDelete": {
+    "description": "Menu entry that removes a highlight"
+  },
+  "highlightDeleteConfirm": "Delete «{name}»? The stories themselves stay where they are.",
+  "@highlightDeleteConfirm": {
+    "description": "Confirmation before deleting a highlight",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "highlightEmptyOpen": "Nothing here yet",
+  "@highlightEmptyOpen": {
+    "description": "Shown when an empty highlight is tapped"
+  },
+  "highlightEmptyOwner": "Keep a story past its day — a size guide, a look, a delivery.",
+  "@highlightEmptyOwner": {
+    "description": "Shown on her own empty highlights rail"
+  },
+  "highlightNameHint": "Sizes, looks, deliveries…",
+  "@highlightNameHint": {
+    "description": "Hint under the highlight name field"
+  },
+  "highlightNameLabel": "Name",
+  "@highlightNameLabel": {
+    "description": "Label of the field naming a highlight"
+  },
+  "highlightNew": "New",
+  "@highlightNew": {
+    "description": "The button that starts a new highlight, on the rail"
+  },
+  "highlightPickStories": "Choose stories",
+  "@highlightPickStories": {
+    "description": "Heading over the archive picker"
+  },
+  "highlightRename": "Rename",
+  "@highlightRename": {
+    "description": "Menu entry on a highlight she owns"
+  },
+  "highlightSelected": "{count, plural, =0{Nothing chosen} =1{1 chosen} other{{count} chosen}}",
+  "@highlightSelected": {
+    "description": "How many stories are selected in the picker",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "highlightStoriesCount": "{count, plural, =0{Empty} =1{1 story} other{{count} stories}}",
+  "@highlightStoriesCount": {
+    "description": "How many stories a highlight holds",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "highlights": "Highlights",
+  "@highlights": {
+    "description": "The rail of saved story collections on a profile"
   },
   "home": "Home",
   "@home": {
@@ -3535,6 +3783,10 @@
   "@newCollection": {
     "description": "Action"
   },
+  "newCollectionName": "Collection name",
+  "@newCollectionName": {
+    "description": "Label of the field naming a new wishlist collection"
+  },
   "newDeviceCodeSent": "This device is new. We sent a code to your number to finish signing in.",
   "@newDeviceCodeSent": {
     "description": "Shown when a correct password lands on an unenrolled handset"
@@ -3580,6 +3832,14 @@
   "noActiveSessions": "No active sessions.",
   "@noActiveSessions": {
     "description": "Empty state"
+  },
+  "noCollection": "No collection",
+  "@noCollection": {
+    "description": "The option that leaves a saved item filed under nothing"
+  },
+  "noCollectionBlurb": "Stays in your saved items.",
+  "@noCollectionBlurb": {
+    "description": "Explains what happens when no collection is chosen"
   },
   "noCommentsYet": "No comments yet",
   "noConnection": "No internet connection",
@@ -4455,6 +4715,15 @@
   "@removePassword": {
     "description": "Action"
   },
+  "removedFromCollection": "Removed from {name}",
+  "@removedFromCollection": {
+    "description": "Confirmation after taking an item out of a collection",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "rename": "Rename",
   "@rename": {
     "description": "Action"
@@ -5278,6 +5547,14 @@
   "@saveChanges": {
     "description": "Button label"
   },
+  "saveToCollection": "Save to a collection",
+  "@saveToCollection": {
+    "description": "Title of the sheet that files a saved product or post into a wishlist collection"
+  },
+  "saveToCollectionBlurb": "Keep it loose, or file it where you will find it again.",
+  "@saveToCollectionBlurb": {
+    "description": "Subtitle of the save-to-collection sheet"
+  },
   "saveYourProgress": "Save your progress",
   "@saveYourProgress": {
     "description": "Guest benefit title"
@@ -6017,6 +6294,10 @@
   "showMore": "Show more",
   "@showMore": {
     "description": "Expands a truncated block [re-authored: original wording lost]"
+  },
+  "showPassword": "Show password",
+  "@showPassword": {
+    "description": "Tooltip on the eye that reveals a password"
   },
   "signBackInLater": "You can always sign back in.",
   "@signBackInLater": {
@@ -7266,6 +7547,10 @@
   "@yes": {
     "description": "Confirmation"
   },
+  "yesterdayLabel": "Yesterday",
+  "@yesterdayLabel": {
+    "description": "Date rule between days in a conversation"
+  },
   "you": "You",
   "@you": {
     "description": "Label marking the signed-in shopper's own comment."
@@ -7315,6 +7600,8 @@
       }
     }
   },
+  "contentUnavailableTitle": "This post is no longer available",
+  "contentUnavailableBody": "It may have been deleted, made private, or the story may have expired.",
   "socialFeedTitle": "Community",
   "socialFeedDiscover": "Discover",
   "socialFeedFollowing": "Following",

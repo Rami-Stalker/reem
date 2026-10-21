@@ -6,6 +6,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:reem/core/design_system/design_system.dart';
 import 'package:reem/core/router/route_paths.dart';
+import 'package:reem/core/shared/services/share_links.dart';
+import 'package:reem/core/shared/services/share_service.dart';
 import 'package:reem/features/rooms/domain/entities/room.dart';
 import 'package:reem/features/rooms/presentation/providers/rooms_providers.dart';
 import 'package:reem/features/rooms/presentation/widgets/decision_card.dart';
@@ -66,8 +68,24 @@ class RoomScreen extends ConsumerWidget {
         room.shareSlug ?? await ref.read(roomActionsProvider).share(room.id);
     if (slug == null || !context.mounted) return;
 
-    await Clipboard.setData(ClipboardData(text: 'reem://rooms/join/$slug'));
+    // The clipboard keeps the https link, not the `reem://` one it used to
+    // hold. A custom scheme pasted into WhatsApp is inert text: it is not
+    // linkified, it previews as nothing, and tapping it does nothing on a
+    // phone without the app — which is most of the people a shopping room is
+    // shared with. The https link opens the app when it is installed and a
+    // real page when it is not.
+    final url = ShareLinks.roomInvite(slug);
+    await Clipboard.setData(ClipboardData(text: url));
     if (!context.mounted) return;
+
+    final shared = await ShareService.roomInvite(
+      context: context,
+      slug: slug,
+      title: room.title,
+    );
+    if (!context.mounted || shared) return;
+
+    // She dismissed the sheet; the link is on the clipboard either way.
     DsSnackbar.show(
       context,
       // Said plainly, because it is the guarantee that makes sharing safe.

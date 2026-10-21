@@ -18,6 +18,7 @@ abstract interface class ChatRepository {
     required String content,
     String kind = 'TEXT',
     List<Map<String, dynamic>> attachments = const [],
+    String? clientId,
   });
 
   Future<Result<void>> markRead(String chatId, {String? messageId});

@@ -231,6 +231,18 @@ class _MosaicTile extends StatelessWidget {
                 child: DsDiscountBadge(percentOff: product.discountPercent),
               ),
 
+            // The same interaction the grid tile carries. A shape switch is a
+            // change of rhythm, not a change of what she may do with a piece —
+            // and before this, switching from «شبكة» to «فسيفساء» silently
+            // took the only affordance off every card on the page.
+            if (DsProductActions.of(context, product, DsProductSurface.tile)
+                case final action?)
+              PositionedDirectional(
+                top: DsSpacing.xs,
+                end: DsSpacing.xs,
+                child: action,
+              ),
+
             PositionedDirectional(
               start: DsSpacing.sm,
               end: DsSpacing.sm,

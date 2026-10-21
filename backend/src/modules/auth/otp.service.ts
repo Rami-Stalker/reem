@@ -253,9 +253,12 @@ export class OtpService {
     await this.dispatcher.shred(request.id, OtpOutboxStatus.DELIVERED);
 
     if (purpose === OtpPurpose.PHONE_VERIFICATION) {
+      // The number, and only the number. This used to set `isVerified` in the
+      // same breath, which is how every account that ever received a code came
+      // to wear the «موثّقة» badge — see `AccountVerificationService`.
       await this.prisma.user.updateMany({
         where: { phone },
-        data: { isVerified: true, phoneVerifiedAt: now },
+        data: { phoneVerifiedAt: now },
       });
     }
 

@@ -315,3 +315,60 @@ test('a non-array attachments field is dropped, not coerced', () => {
   assert.equal(parseAttachments(gateway, { url: 'x' }), undefined);
   assert.equal(parseAttachments(gateway, undefined), undefined);
 });
+
+// ── Whose message is it ────────────────────────────────────────────────────
+
+/**
+ * A message is serialised once, by the sender's request, so `is_mine` in that
+ * payload means "mine, to the sender". Broadcasting the same object to every
+ * participant told the recipient the message was hers, and the app draws a
+ * message it believes is yours on your own side of the thread — so every
+ * message a woman *received* appeared on the right, in the sender's gradient,
+ * as though she had written it. One shared object, every conversation in the
+ * app pointing the wrong way.
+ */
+const forRecipient = (
+  gateway: ChatRealtimeGateway,
+  message: unknown,
+  userId: string,
+  senderId: string,
+) =>
+  (
+    gateway as unknown as {
+      forRecipient(m: unknown, u: string, s: string): unknown;
+    }
+  ).forRecipient(message, userId, senderId);
+
+test('a delivered message is mine only to whoever sent it', () => {
+  const gateway = build(db(live));
+  // As `ChatsService.send` emits it: serialised against the sender.
+  const sent = { id: 'm1', sender_id: 'seller-1', content: 'مرحبا', is_mine: true };
+
+  assert.deepEqual(forRecipient(gateway, sent, 'seller-1', 'seller-1'), {
+    ...sent,
+    is_mine: true,
+  });
+  assert.deepEqual(forRecipient(gateway, sent, 'buyer-1', 'seller-1'), {
+    ...sent,
+    is_mine: false,
+  });
+});
+
+test('rewriting the flag leaves the rest of the message alone', () => {
+  const gateway = build(db(live));
+  const sent = {
+    id: 'm2',
+    sender_id: 'seller-1',
+    content: 'صورة',
+    attachments: [{ id: 'a1' }],
+    is_mine: true,
+  };
+  const seen = forRecipient(gateway, sent, 'buyer-1', 'seller-1') as Record<
+    string,
+    unknown
+  >;
+  assert.equal(seen.content, 'صورة');
+  assert.deepEqual(seen.attachments, [{ id: 'a1' }]);
+  // And the original is untouched — the same object goes to every other socket.
+  assert.equal(sent.is_mine, true);
+});

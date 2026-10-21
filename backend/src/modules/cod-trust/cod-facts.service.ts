@@ -137,7 +137,7 @@ export class CodFactsService {
     ] = await Promise.all([
       this.prisma.user.findUnique({
         where: { id: userId },
-        select: { createdAt: true, isVerified: true },
+        select: { createdAt: true, phoneVerifiedAt: true },
       }),
       this.prisma.deviceKey.count({ where: { userId } }),
       parcelsOf({ status: ShipmentStatus.DELIVERED, failureReason: null }),
@@ -176,7 +176,12 @@ export class CodFactsService {
       accountAgeDays: user
         ? Math.floor((Date.now() - user.createdAt.getTime()) / 86_400_000)
         : null,
-      phoneVerified: user?.isVerified ?? false,
+      // `phoneVerifiedAt`, not the badge. This read `isVerified` back when
+      // the OTP exchange wrote both, so a refusal-risk assessment that means
+      // to ask "has she proved this number" was in fact asking "does she wear
+      // a badge" — which after this change would have been false for almost
+      // everybody and quietly hardened checkout for the whole market.
+      phoneVerified: user?.phoneVerifiedAt != null,
       deviceEnrolled: deviceKeys > 0,
       deliveredParcels: delivered,
       refusedParcels: refused,

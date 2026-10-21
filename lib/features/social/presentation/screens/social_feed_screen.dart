@@ -195,6 +195,7 @@ class _FeedListState extends ConsumerState<_FeedList> {
                 postId: content.id,
                 caption: content.caption,
                 authorName: content.author.name,
+                imageUrl: content.shareImageUrl,
               );
               // A share sheet she dismissed is not a share.
               if (shared) await notifier.recordShare(content.id);

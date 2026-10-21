@@ -51,7 +51,7 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
                 // The header's action slot is content-sized; an expanding
                 // button there asks for infinite width.
                 isExpanded: false,
-                onPressed: () => context.go(RoutePaths.adminReports),
+                onPressed: () => context.push(RoutePaths.adminReports),
               ),
             ],
           ),
@@ -163,38 +163,38 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
                       _QuickActionButton(
                         icon: Icons.storefront_rounded,
                         label: l10n.adminSellerReview,
-                        onPressed: () => context.go(RoutePaths.adminSellers),
+                        onPressed: () => context.push(RoutePaths.adminSellers),
                         index: 0,
                       ),
                       _QuickActionButton(
                         icon: Icons.support_agent_rounded,
                         label: l10n.adminSupportQueue,
-                        onPressed: () => context.go(RoutePaths.adminSupport),
+                        onPressed: () => context.push(RoutePaths.adminSupport),
                         index: 1,
                       ),
                       _QuickActionButton(
                         icon: Icons.campaign_rounded,
                         label: l10n.adminCampaigns,
-                        onPressed: () => context.go(RoutePaths.adminCampaigns),
+                        onPressed: () => context.push(RoutePaths.adminCampaigns),
                         index: 2,
                       ),
                       _QuickActionButton(
                         icon: Icons.account_balance_rounded,
                         label: l10n.adminFinancials,
-                        onPressed: () => context.go(RoutePaths.adminFinancials),
+                        onPressed: () => context.push(RoutePaths.adminFinancials),
                         index: 3,
                       ),
                       _QuickActionButton(
                         icon: Icons.gavel_rounded,
                         label: l10n.adminModeration,
-                        onPressed: () => context.go(RoutePaths.adminModeration),
+                        onPressed: () => context.push(RoutePaths.adminModeration),
                         index: 4,
                       ),
                       _QuickActionButton(
                         icon: Icons.query_stats_rounded,
                         label: l10n.adminNotifyAnalytics,
                         onPressed: () =>
-                            context.go(RoutePaths.adminNotificationAnalytics),
+                            context.push(RoutePaths.adminNotificationAnalytics),
                         index: 5,
                       ),
                     ],

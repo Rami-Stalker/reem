@@ -90,6 +90,22 @@ class ProductEngagementNotifier
     }
   }
 
+  /// Queue ids whose `Product` the caller does not hold.
+  ///
+  /// A bundle's piece, a drop's item and a closet suggestion are projections
+  /// built for their own screen: a title, a price and a product id. They get
+  /// the same interactions as everything else, and the only difference is that
+  /// there is no served fallback to paint before the batch answers.
+  void seedIds(Iterable<String> productIds) {
+    for (final id in productIds) {
+      if (id.isEmpty || _requested.contains(id)) continue;
+      _pending.add(id);
+    }
+    if (_pending.isNotEmpty) {
+      _flush ??= Timer(const Duration(milliseconds: 60), _load);
+    }
+  }
+
   /// Forget her state for [productIds] and read it again — after the page
   /// behind them was refreshed.
   void refresh(Iterable<String> productIds) {

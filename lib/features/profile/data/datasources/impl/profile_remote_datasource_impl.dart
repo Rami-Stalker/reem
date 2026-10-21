@@ -50,11 +50,6 @@ final class ProfileRemoteDataSourceImpl extends BaseRemoteDataSource
   }
 
   @override
-  Future<void> toggleFavorite(String productId) async {
-    await postJson(ApiEndpoints.favoriteByProduct(productId));
-  }
-
-  @override
   Future<void> saveSeller(String sellerId) async {
     await postJson(ApiEndpoints.favoriteSeller(sellerId));
   }
@@ -78,6 +73,33 @@ final class ProfileRemoteDataSourceImpl extends BaseRemoteDataSource
       },
     );
     return WishlistCollectionModel.fromJson(json);
+  }
+
+  @override
+  Future<void> addToWishlistCollection({
+    required String collectionId,
+    required String type,
+    String? productId,
+    String? postId,
+    String? sellerId,
+  }) async {
+    await postJson(
+      ApiEndpoints.wishlistCollectionItems(collectionId),
+      body: {
+        'type': type,
+        'product_id': ?productId,
+        'post_id': ?postId,
+        'seller_id': ?sellerId,
+      },
+    );
+  }
+
+  @override
+  Future<void> removeFromWishlistCollection({
+    required String collectionId,
+    required String itemId,
+  }) async {
+    await deleteJson(ApiEndpoints.wishlistCollectionItem(collectionId, itemId));
   }
 
   @override

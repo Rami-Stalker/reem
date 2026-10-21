@@ -5,6 +5,7 @@ import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/media/authorized_media_image.dart';
 import 'package:reem/core/media/media_lightbox.dart';
 import 'package:reem/core/media/media_variants.dart';
+import 'package:reem/core/router/open_route.dart';
 import 'package:reem/features/chat/presentation/providers/chat_provider.dart';
 
 /// Every photograph shared in one conversation.
@@ -111,7 +112,7 @@ class _Header extends StatelessWidget {
       child: Row(
         children: [
           IconButton(
-            onPressed: () => Navigator.of(context).maybePop(),
+            onPressed: () => popOrHome(context),
             icon: const Icon(Icons.arrow_back_rounded),
             tooltip: MaterialLocalizations.of(context).backButtonTooltip,
           ),

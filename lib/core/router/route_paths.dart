@@ -31,6 +31,10 @@ abstract final class RoutePaths {
   static const accountRecovery = '/account-recovery';
   static const sellerVerification = '/seller-verification';
 
+  /// «توثيق الحساب» — the badge beside her name, and the claim behind it.
+  /// Distinct from [sellerVerification], which is the permission to trade.
+  static const accountVerification = '/account-verification';
+
   static const addPost = '/add-post';
   static const addStory = '/add-story';
 
@@ -43,6 +47,8 @@ abstract final class RoutePaths {
   static const compose = '/compose';
   static const socialFeed = '/community';
   static const reels = '/reels';
+  /// One piece on its own — where a shared `/p/<id>` link lands.
+  static const contentDetail = '/content/:id';
   static String contentDetailOf(String id) => '/content/$id';
   static const contentStudio = '/seller/content-studio';
   static const adminContent = '/admin/content';
@@ -246,6 +252,7 @@ abstract final class RoutePaths {
   static const adminUsers = '/admin/users';
   static const adminSellers = '/admin/sellers';
   static const adminSellerApplications = '/admin/seller-applications';
+  static const adminAccountVerifications = '/admin/account-verifications';
 
   /// Q63 — the delivery companies desk. Carriers, coverage, and the parcels
   /// none of them accepted. No drivers: Reem does not run a fleet.
@@ -283,6 +290,37 @@ abstract final class RoutePaths {
 
   /// The console's policy desk — editing and publishing the eight documents.
   static const adminPolicies = '/admin/policies';
+
+  // ── الصالونات والجمال ────────────────────────────────────
+  //
+  // Reached from home and from search rather than from a tab. The shell's five
+  // buyer tabs are a fixed, tested set (`shell_navigation_test`), and a sixth
+  // would be a sixth thing competing for the bottom bar in an app whose
+  // navigation the client has already signed off.
+  static const salons = '/salons';
+
+  /// One salon. Reachable by id **or slug**, so a shared link reads as a name.
+  static const salon = '/salons/:id';
+  static String salonOf(String idOrSlug) => '/salons/$idOrSlug';
+
+  /// Choosing a day and an hour for one service.
+  static const salonBooking = '/salons/:id/book';
+  static String salonBookingOf(String salonId, String serviceId) =>
+      '/salons/$salonId/book?service=$serviceId';
+
+  /// «حجوزاتي», and one of them. The detail path is what an
+  /// appointment notification's deep link opens.
+  static const appointments = '/appointments';
+  static const appointmentDetail = '/appointments/:id';
+  static String appointmentOf(String id) => '/appointments/$id';
+
+  /// Her salon's workspace — the menu, the hours, the queue. Behind
+  /// `salon:manage`, which a SELLER holds.
+  static const salonWorkspace = '/salon';
+  static const salonEditor = '/salon/edit';
+  static const salonServicesEditor = '/salon/services';
+  static const salonHoursEditor = '/salon/hours';
+  static const salonQueue = '/salon/queue';
 
   static const chats = '/chats';
   static const chatDetails = '/chat-details';

@@ -11,6 +11,7 @@ import 'package:reem/core/design_system/patterns/product_cues.dart';
 import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/presentation/providers/paginated_notifier.dart';
 import 'package:reem/core/presentation/state/paginated_state.dart';
+import 'package:reem/core/router/open_route.dart';
 import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/core/shared/entities/product.dart';
 import 'package:reem/core/shared/entities/user.dart';
@@ -141,7 +142,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                             color: context.dsColors.secondary,
                             size: DsSizes.iconSm,
                           ),
-                          onPressed: () => context.pop(),
+                          onPressed: () => popOrHome(context),
                         ),
                       ),
                       const SizedBox(width: DsSpacing.xs),
@@ -799,6 +800,11 @@ class _ResultCard extends StatelessWidget {
       cues: product.cues.asBadges,
       onTap: () =>
           context.push(RoutePaths.productDetailsOf(product.id)),
+      // A result had no interaction at all: she could search for a dress, find
+      // it, and have no way to say so without opening it. `DsProductCard`
+      // takes primitives rather than a `Product`, so the scope is consulted
+      // here rather than inside the card.
+      action: DsProductActions.of(context, product, DsProductSurface.tile),
     );
   }
 }

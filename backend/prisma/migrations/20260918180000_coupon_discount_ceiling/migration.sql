@@ -1,0 +1,13 @@
+-- A ceiling on what a percentage coupon may take off one order.
+--
+-- `computeDiscount` clamped a percentage only against the eligible subtotal,
+-- so a 15% code was 15% of whatever was in the basket. On a marketplace that
+-- sells a scarf and a gold set through the same checkout, that is the
+-- difference between a welcome discount and an unbudgeted one — and the
+-- referral coupons added in this commit are minted automatically, by a woman
+-- inviting a friend, with nobody approving each one.
+--
+-- Nullable, and null means uncapped: every coupon that exists today keeps
+-- behaving exactly as it does, including the fixed-amount codes, for which a
+-- ceiling would be meaningless.
+ALTER TABLE "coupons" ADD COLUMN "max_discount_amount" DECIMAL(18,4);

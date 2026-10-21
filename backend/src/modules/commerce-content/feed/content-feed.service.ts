@@ -278,6 +278,29 @@ export class ContentFeedService {
    * A reshare sorts by **its own** timestamp, not the original's: adding a
    * year-old look to her page should put it at the top, where she put it.
    */
+  /**
+   * One piece, by id — what a shared link opens.
+   *
+   * The gap this closes is older than it looks. `RoutePaths.contentDetailOf`
+   * and `ApiEndpoints.contentById` have both existed on the Flutter side for
+   * some time, and nothing answered either of them: a post could be shared and
+   * then not read. Every feed here is a *page*, and a page of one is not the
+   * same thing — it cannot be addressed, cached or linked to.
+   *
+   * It runs `visibilityWhere`, the same rule the feeds run, so a
+   * followers-only piece is 404 to a stranger and visible to a follower, and a
+   * woman can always read her own. An expired story is gone for everyone: the
+   * rule’s `expiresAt` clause is what makes "24 hours" mean something.
+   */
+  async byId(id: string, viewerId?: string) {
+    const content = await this.prisma.commerceContent.findFirst({
+      where: { AND: [{ id }, this.visibilityWhere(viewerId)] },
+      include: commerceContentInclude,
+    });
+    if (!content) throw new NotFoundException('Content not found');
+    return content;
+  }
+
   async userTimeline(ownerId: string, page: CursorPageDto, viewerId?: string) {
     const owner = await this.prisma.user.findUnique({
       where: { id: ownerId },

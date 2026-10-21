@@ -171,4 +171,12 @@ final class AdminRemoteDataSourceImpl extends BaseRemoteDataSource
       body: payload,
     );
   }
+
+  @override
+  Future<void> decideAccountVerification(
+    String id,
+    Map<String, dynamic> payload,
+  ) async {
+    await patchJson(ApiEndpoints.adminAccountVerification(id), body: payload);
+  }
 }

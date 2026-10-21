@@ -466,6 +466,31 @@ export class ContentSocialController {
     return this.controls.muted(user.id);
   }
 
+  // ── One piece ───────────────────────────────────────────────
+
+  /**
+   * What a shared link opens: `/p/<id>` on the web, `/content/<id>` in the app.
+   *
+   * `@OptionalAuth`, for the same reason the feeds are — a woman follows a
+   * link from WhatsApp into a look and has to be able to see the dress before
+   * she has an account.
+   *
+   * **Declared last among the GETs, and that is load-bearing.** `:id` matches
+   * one segment, so declaring it any earlier would have shadowed `feed`,
+   * `reels`, `stories`, `saved`, `mine` and `muted` — each of which would then
+   * have been answered by a UUID lookup that could only ever 404.
+   */
+  @Get(':id')
+  @OptionalAuth()
+  async byId(
+    @Param('id', ParseUUIDPipe) id: string,
+    @CurrentUser() user: AuthUser | undefined,
+  ) {
+    const content = await this.feed.byId(id, user?.id);
+    const viewer = await this.viewerStates([content.id], user?.id);
+    return serializeFeedContent(content as never, viewer(content.id));
+  }
+
   // ── Rendering ─────────────────────────────────────────────────────────────
 
   /**

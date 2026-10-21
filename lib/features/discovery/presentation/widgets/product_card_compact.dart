@@ -37,10 +37,14 @@ class ProductCardCompact extends StatelessWidget {
                       : Container(color: colors.surfaceVariant),
                 ),
               ),
+              // Directional, not `left`. The app is RTL, so a badge pinned to
+              // the physical left sits on the *end* side — the corner the
+              // product's like now occupies — and the two drew on top of each
+              // other. The discount belongs opposite it, on the start side.
               if (product.hasDiscount)
-                Positioned(
+                PositionedDirectional(
                   top: 6,
-                  left: 6,
+                  start: 6,
                   child: Container(
                     padding: const EdgeInsets.symmetric(
                       horizontal: DsSpacing.xs,
@@ -58,7 +62,21 @@ class ProductCardCompact extends StatelessWidget {
                     ),
                   ),
                 ),
-              // The strongest honest claim, opposite the discount flag.
+              // The product's own interaction, supplied by `DsProductActions`.
+              // A rail card had none at all: a woman could scroll forty pieces
+              // through «مختارة لكِ» and not be able to say she liked one
+              // of them without opening each in turn.
+              if (DsProductActions.of(context, product, DsProductSurface.rail)
+                  case final action?)
+                PositionedDirectional(
+                  top: 6,
+                  end: 6,
+                  child: action,
+                ),
+
+              // The strongest honest claim, under the interaction rather than
+              // opposite the discount flag — the top-end corner is now spoken
+              // for, and a badge on top of a heart is neither.
               //
               // One, not two: this card is 152pt wide in a rail, and the price
               // row below it has already overflowed once in this file's
@@ -66,9 +84,9 @@ class ProductCardCompact extends StatelessWidget {
               // same reason — there is no vertical room left, and a scarcity
               // badge belongs on the image anyway.
               if (product.cues.strongestBadge case final cue?)
-                Positioned(
-                  top: 6,
-                  right: 6,
+                PositionedDirectional(
+                  bottom: 6,
+                  end: 6,
                   child: DsBadge(label: cue.label, tone: cue.tone),
                 ),
             ],

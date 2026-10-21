@@ -9,6 +9,7 @@ import 'package:reem/core/router/app_shell.dart';
 import 'package:reem/core/router/auth_guard.dart';
 import 'package:reem/core/router/route_names.dart';
 import 'package:reem/core/router/route_paths.dart';
+import 'package:reem/core/shared/services/share_links.dart';
 import 'package:reem/features/admin/presentation/providers/admin_provider.dart';
 import 'package:reem/features/admin/presentation/screens/admin_analytics_screen.dart';
 import 'package:reem/features/admin/presentation/screens/admin_dashboard_screen.dart';
@@ -88,6 +89,16 @@ import 'package:reem/features/rooms/presentation/screens/purchase_plan_screen.da
 import 'package:reem/features/rooms/presentation/screens/room_join_screen.dart';
 import 'package:reem/features/rooms/presentation/screens/room_screen.dart';
 import 'package:reem/features/rooms/presentation/screens/rooms_screen.dart';
+import 'package:reem/features/salons/presentation/screens/appointment_detail_screen.dart';
+import 'package:reem/features/salons/presentation/screens/appointments_screen.dart';
+import 'package:reem/features/salons/presentation/screens/salon_booking_screen.dart';
+import 'package:reem/features/salons/presentation/screens/salon_editor_screen.dart';
+import 'package:reem/features/salons/presentation/screens/salon_hours_screen.dart';
+import 'package:reem/features/salons/presentation/screens/salon_queue_screen.dart';
+import 'package:reem/features/salons/presentation/screens/salon_screen.dart';
+import 'package:reem/features/salons/presentation/screens/salon_services_screen.dart';
+import 'package:reem/features/salons/presentation/screens/salon_workspace_screen.dart';
+import 'package:reem/features/salons/presentation/screens/salons_screen.dart';
 import 'package:reem/features/search/presentation/screens/search_screen.dart';
 import 'package:reem/features/seller_analytics/presentation/screens/seller_analytics_screen.dart';
 import 'package:reem/features/seller_dashboard/presentation/screens/seller_home_screen.dart';
@@ -116,6 +127,7 @@ import 'package:reem/features/settings/presentation/screens/settings_screen.dart
 import 'package:reem/features/shipment_tracking/presentation/screens/shipment_tracking_screen.dart';
 import 'package:reem/features/social/presentation/screens/admin_content_screen.dart';
 import 'package:reem/features/social/presentation/screens/content_composer_screen.dart';
+import 'package:reem/features/social/presentation/screens/content_detail_screen.dart';
 import 'package:reem/features/social/presentation/screens/content_studio_screen.dart';
 import 'package:reem/features/social/presentation/screens/reels_screen.dart';
 import 'package:reem/features/social/presentation/screens/social_feed_screen.dart';
@@ -128,6 +140,7 @@ import 'package:reem/features/user_profile/presentation/screens/follow_list_scre
 import 'package:reem/features/user_profile/presentation/screens/user_profile_screen.dart';
 import 'package:reem/features/value/presentation/screens/admin_value_screen.dart';
 import 'package:reem/features/value/presentation/screens/value_screen.dart';
+import 'package:reem/features/verification/presentation/screens/account_verification_screen.dart';
 import 'package:reem/features/visual_search/presentation/screens/visual_search_screen.dart';
 import 'package:reem/features/wallet/presentation/screens/wallet_screen.dart';
 
@@ -235,6 +248,16 @@ final goRouterProvider = Provider<GoRouter>((ref) {
       if (normalised != null) {
         return normalised;
       }
+      // An https link she tapped in WhatsApp. Android and iOS hand the app the
+      // URL's *path* — `/product/abc` — and the app's own product page has
+      // always been `/product-details?id=abc`, so without this the link she
+      // followed lands on the 404 screen even with Reem installed. Pass-through
+      // shapes like `/user/abc` are already routes; returning them here would
+      // be a redirect to the current location, which is a loop.
+      final shareRoute = ShareLinks.routeFor(state.uri);
+      if (shareRoute != null && shareRoute != state.uri.toString()) {
+        return shareRoute;
+      }
       return authGuard(context, state, ref.read(authNotifierProvider));
     },
     routes: [
@@ -338,6 +361,13 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         name: RouteNames.sellerVerification,
         builder: (context, state) => const SellerVerificationScreen(),
       ),
+      // «توثيق الحساب» — the badge, for any account. Where the push a
+      // verification decision sends lands.
+      GoRoute(
+        path: RoutePaths.accountVerification,
+        name: RouteNames.accountVerification,
+        builder: (context, state) => const AccountVerificationScreen(),
+      ),
       GoRoute(
         path: RoutePaths.checkout,
         name: RouteNames.checkout,
@@ -403,6 +433,75 @@ final goRouterProvider = Provider<GoRouter>((ref) {
           final id = state.uri.queryParameters['id'];
           return ProductDetailsScreen(productId: id);
         },
+      ),
+
+      // «الصالونات والجمال». Full-screen rather than a shell tab, for the same
+      // reason the stylist is: a salon page and a booking are places she goes
+      // into and comes back from, and the section is reached from home and
+      // from her profile rather than from a permanent tab.
+      //
+      // The directory and a salon's page are public — a shared salon link has
+      // to open for a woman who has not signed in, which is the whole point of
+      // sharing it. Booking and «حجوزاتي» are not, because they are about her.
+      GoRoute(
+        path: RoutePaths.salons,
+        name: RouteNames.salons,
+        builder: (context, state) => const SalonsScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.salon,
+        name: RouteNames.salon,
+        builder: (context, state) =>
+            SalonScreen(salonId: state.pathParameters['id'] ?? ''),
+      ),
+      GoRoute(
+        path: RoutePaths.salonBooking,
+        name: RouteNames.salonBooking,
+        builder: (context, state) => SalonBookingScreen(
+          salonId: state.pathParameters['id'] ?? '',
+          serviceId: state.uri.queryParameters['service'] ?? '',
+        ),
+      ),
+      GoRoute(
+        path: RoutePaths.appointments,
+        name: RouteNames.appointments,
+        builder: (context, state) => const AppointmentsScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.appointmentDetail,
+        name: RouteNames.appointmentDetail,
+        builder: (context, state) => AppointmentDetailScreen(
+          appointmentId: state.pathParameters['id'] ?? '',
+        ),
+      ),
+
+      // The owner's side. Declared before `/salon/:id` would ever match it —
+      // it cannot, because the customer's route is `/salons/:id` with an `s`,
+      // and that spelling difference is deliberate.
+      GoRoute(
+        path: RoutePaths.salonWorkspace,
+        name: RouteNames.salonWorkspace,
+        builder: (context, state) => const SalonWorkspaceScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.salonEditor,
+        name: RouteNames.salonEditor,
+        builder: (context, state) => const SalonEditorScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.salonServicesEditor,
+        name: RouteNames.salonServicesEditor,
+        builder: (context, state) => const SalonServicesScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.salonHoursEditor,
+        name: RouteNames.salonHoursEditor,
+        builder: (context, state) => const SalonHoursScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.salonQueue,
+        name: RouteNames.salonQueue,
+        builder: (context, state) => const SalonQueueScreen(),
       ),
 
       // Reem AI Stylist. Full-screen rather than a shell tab: a conversation
@@ -608,6 +707,16 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         name: RouteNames.reels,
         builder: (context, state) => const ReelsScreen(),
       ),
+      // Where a shared `…/p/<id>` link lands. The path and the route name have
+      // both existed since the content platform shipped; the route and the
+      // screen behind them had not, so every post share handed out an address
+      // that opened nothing.
+      GoRoute(
+        path: RoutePaths.contentDetail,
+        name: RouteNames.contentDetail,
+        builder: (context, state) =>
+            ContentDetailScreen(contentId: state.pathParameters['id'] ?? ''),
+      ),
       GoRoute(
         path: RoutePaths.contentStudio,
         name: RouteNames.contentStudio,
@@ -811,6 +920,17 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         name: RouteNames.adminSellerApplications,
         builder: (context, state) =>
             const AdminShell(child: AdminSellerApplicationsScreen()),
+      ),
+      // «توثيق الحسابات» — the generic queue screen, because the claim is a
+      // record with a status and a reason like every other one in the console.
+      GoRoute(
+        path: RoutePaths.adminAccountVerifications,
+        name: RouteNames.adminAccountVerifications,
+        builder: (context, state) => AdminShell(
+          child: AdminSectionScreen(
+            config: adminSectionConfigs['accountVerifications']!,
+          ),
+        ),
       ),
       GoRoute(
         path: RoutePaths.adminDelivery,

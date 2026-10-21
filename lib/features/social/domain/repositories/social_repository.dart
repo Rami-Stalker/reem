@@ -63,6 +63,13 @@ abstract interface class SocialRepository {
     int limit,
   });
 
+  /// One piece, on its own.
+  ///
+  /// What a link she was sent opens. Distinct from every other read here in
+  /// that it is *addressable*: a feed is a page and a page of one cannot be
+  /// linked to, which is why a shared post had nowhere to land until now.
+  Future<Result<Content>> byId(String contentId);
+
   /// «نساء يرتدينها» — what shoppers have posted wearing this piece.
   Future<Result<PaginatedData<Content>>> byProduct(
     String productId, {

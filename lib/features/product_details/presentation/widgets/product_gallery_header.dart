@@ -1,11 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
 import 'package:reem/core/design_system/design_system.dart';
 import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/media/media_decode.dart';
 import 'package:reem/core/media/media_variants.dart';
+import 'package:reem/core/router/open_route.dart';
 import 'package:reem/core/shared/entities/media.dart';
 
 /// The product's own photographs, full-bleed, swipeable.
@@ -27,17 +27,25 @@ class ProductGalleryHeader extends StatefulWidget {
     super.key,
     required this.media,
     required this.title,
-    this.isLiked = false,
+    this.isSaved = false,
     this.discountPercent = 0,
-    this.onToggleLike,
+    this.onToggleSave,
     this.onShare,
   });
 
   final List<MediaItem> media;
   final String title;
-  final bool isLiked;
+
+  /// «المفضّلة» — her private shelf, which is *not* the like.
+  ///
+  /// This control was a heart, and the heart on a catalogue tile is now the
+  /// product's public like. Two hearts, two meanings, one product: she would
+  /// fill one on the grid, open the piece, and find the other one empty. The
+  /// bookmark is what the post action bar below already uses for saving, so
+  /// the page says the same thing twice rather than two different things.
+  final bool isSaved;
   final int discountPercent;
-  final VoidCallback? onToggleLike;
+  final VoidCallback? onToggleSave;
   final VoidCallback? onShare;
 
   /// Height of the thumbnail rail, including its padding.
@@ -109,16 +117,20 @@ class _ProductGalleryHeaderState extends State<ProductGalleryHeader> {
           icon: DsIcons.back,
           variant: DsIconButtonVariant.glass,
           tooltip: MaterialLocalizations.of(context).backButtonTooltip,
-          onPressed: () => context.pop(),
+          // A product page is the most-shared screen in the app, so it is the
+          // one most often opened with nothing underneath it.
+          onPressed: () => popOrHome(context),
         ),
       ),
       actions: [
         DsIconButton(
-          icon: widget.isLiked ? DsIcons.likeFilled : DsIcons.like,
+          icon: widget.isSaved
+              ? Icons.bookmark_rounded
+              : Icons.bookmark_border_rounded,
           variant: DsIconButtonVariant.glass,
-          tooltip: widget.isLiked ? l10n.unfavorite : l10n.favorite,
-          color: widget.isLiked ? colors.favorite : null,
-          onPressed: widget.onToggleLike,
+          tooltip: widget.isSaved ? l10n.unfavorite : l10n.favorite,
+          color: widget.isSaved ? colors.favorite : null,
+          onPressed: widget.onToggleSave,
         ),
         DsGaps.hXs,
         DsIconButton(

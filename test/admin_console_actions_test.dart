@@ -342,4 +342,10 @@ final class _RecordingAdminRepository implements AdminRepository {
     String id,
     Map<String, dynamic> payload,
   ) async => const Success(null);
+
+  @override
+  Future<Result<void>> decideAccountVerification(
+    String id,
+    Map<String, dynamic> payload,
+  ) async => const Success(null);
 }

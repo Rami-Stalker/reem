@@ -7,6 +7,7 @@ import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/features/market/domain/entities/market.dart';
 import 'package:reem/features/market/presentation/providers/market_providers.dart';
 import 'package:reem/features/market/presentation/widgets/market_pieces.dart';
+import 'package:reem/features/product_social/presentation/widgets/product_like_button.dart';
 
 /// One assembled look.
 ///
@@ -166,7 +167,24 @@ class _PieceTile extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          MarketThumb(imageUrl: item.imageUrl, size: 64),
+          Stack(
+            children: [
+              MarketThumb(imageUrl: item.imageUrl, size: 64),
+              // A bundle carries a *projection* of each piece — a title, a
+              // price and a product id — not the product itself, which is why
+              // the like is asked for by id. Being a projection is not a reason
+              // to be the one place a piece cannot be liked.
+              PositionedDirectional(
+                top: 2,
+                end: 2,
+                child: ProductLikeButton.forId(
+                  item.productId,
+                  compact: true,
+                  showCount: false,
+                ),
+              ),
+            ],
+          ),
           DsGaps.hSm,
           Expanded(
             child: Column(

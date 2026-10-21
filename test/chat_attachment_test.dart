@@ -750,8 +750,14 @@ class _FakeChatRepository implements ChatRepository {
     required String content,
     String kind = 'TEXT',
     List<Map<String, dynamic>> attachments = const [],
+    String? clientId,
   }) async {
-    sent = {'content': content, 'kind': kind, 'attachments': attachments};
+    sent = {
+      'content': content,
+      'kind': kind,
+      'attachments': attachments,
+      'client_id': clientId,
+    };
     return Success(
       ChatMessageEntity(
         id: 'm-1',
@@ -761,6 +767,7 @@ class _FakeChatRepository implements ChatRepository {
         sentAt: DateTime.utc(2026, 8, 25),
         isMine: true,
         kind: kind.toLowerCase(),
+        clientId: clientId,
       ),
     );
   }

@@ -58,4 +58,10 @@ abstract interface class AdminRemoteDataSource {
   Future<Map<String, dynamic>> getSellerApplication(String id);
 
   Future<void> reviewSellerApplication(String id, Map<String, dynamic> payload);
+
+  /// «توثيق الحسابات» — approving, refusing or revoking the badge.
+  Future<void> decideAccountVerification(
+    String id,
+    Map<String, dynamic> payload,
+  );
 }

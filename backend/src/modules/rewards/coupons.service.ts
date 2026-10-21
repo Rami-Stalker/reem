@@ -270,9 +270,20 @@ export class CouponsService {
       // Never discount more than the basket is worth.
       return off.currency === subtotal.currency ? off.clampMax(subtotal) : Money.zero(subtotal.currency);
     }
-    return subtotal
+    const percentage = subtotal
       .times(coupon.discountPercent.dividedBy(100))
       .clampMax(subtotal);
+
+    // The code's own ceiling, when it declares one. A percentage with no
+    // ceiling is a discount nobody approved — 15% is a welcome on a dress and
+    // a fortune on a gold set, and this marketplace sells both through one
+    // checkout. A ceiling stated in another currency cannot be compared, so it
+    // is ignored rather than applied wrongly.
+    if (coupon.maxDiscountAmount == null) return percentage;
+    const ceiling = Money.of(coupon.maxDiscountAmount, coupon.currency);
+    return ceiling.currency === percentage.currency
+      ? percentage.clampMax(ceiling)
+      : percentage;
   }
 
   /**

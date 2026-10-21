@@ -554,14 +554,14 @@ class _Timeline extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          events[i].title,
+                          events[i].label,
                           style: context.dsText.body.semibold.tint(
                             colors.onSurface,
                           ),
                         ),
-                        if (events[i].description != null)
+                        if (events[i].detail != null)
                           Text(
-                            events[i].description!,
+                            events[i].detail!,
                             style: context.dsText.bodySmall.tint(
                               colors.onSurfaceVariant,
                             ),

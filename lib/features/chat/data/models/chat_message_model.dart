@@ -55,6 +55,8 @@ class ChatMessageModel extends ChatMessageEntity {
     super.attachments,
     super.deliveredAt,
     super.readAt,
+    super.clientId,
+    super.delivery,
   });
 
   factory ChatMessageModel.fromJson(
@@ -83,8 +85,14 @@ class ChatMessageModel extends ChatMessageEntity {
             json['created_at'] as String? ??
             DateTime.now().toIso8601String(),
       ),
-      isMine: json['is_mine'] as bool? ??
-          (currentUserId != null && senderId == currentUserId),
+      clientId: json['client_id'] as String?,
+      // The server's word when it can be trusted — and it can, now that the
+      // socket rewrites the flag for each recipient. `currentUserId` stays as
+      // the check: a stale server, or a payload that reached the wrong socket,
+      // must not be able to draw somebody else's message on her side.
+      isMine: currentUserId != null
+          ? senderId == currentUserId
+          : json['is_mine'] as bool? ?? false,
     );
   }
 
@@ -103,6 +111,7 @@ class ChatMessageModel extends ChatMessageEntity {
       'sent_at': sentAt.toIso8601String(),
       'delivered_at': deliveredAt?.toIso8601String(),
       'read_at': readAt?.toIso8601String(),
+      'client_id': clientId,
       'is_mine': isMine,
     };
   }

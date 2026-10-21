@@ -89,29 +89,15 @@ class _VisualRefineBarState extends State<VisualRefineBar> {
           Row(
             children: [
               Expanded(
-                child: TextField(
+                child: DsComposerField(
                   controller: _controller,
                   focusNode: _focus,
                   enabled: widget.enabled,
-                  textInputAction: TextInputAction.send,
-                  minLines: 1,
+                  hint: widget.hint,
+                  shape: DsComposerShape.panel,
                   maxLines: 3,
                   maxLength: 400,
                   onSubmitted: _submit,
-                  decoration: InputDecoration(
-                    hintText: widget.hint,
-                    counterText: '',
-                    filled: true,
-                    fillColor: colors.surfaceVariant,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(DsRadius.field),
-                      borderSide: BorderSide.none,
-                    ),
-                    contentPadding: const EdgeInsets.symmetric(
-                      horizontal: DsSpacing.md,
-                      vertical: DsSpacing.sm,
-                    ),
-                  ),
                 ),
               ),
               const SizedBox(width: DsSpacing.xs),

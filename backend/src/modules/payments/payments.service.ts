@@ -20,6 +20,7 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { PrismaService } from '../../prisma/prisma.service';
+import { OrderEventCopy } from '../../common/orders/order-event-copy';
 import { PaymentRail, railOf } from '../../common/payments/payment-rails';
 import { serializePayment } from '../../common/serializers';
 import { AppEvent } from '../../common/events/app-events';
@@ -73,7 +74,7 @@ export class PaymentsService {
       {
         type: JournalEntryType.PAYMENT_CAPTURED,
         reference: `payment-captured:${payment.id}`,
-        description: `Payment cleared — ${payment.method}`,
+        description: OrderEventCopy.paymentCleared(payment.method),
         orderId: payment.orderId,
         lines: [
           {
@@ -267,8 +268,8 @@ export class PaymentsService {
         await tx.orderEvent.create({
           data: {
             orderId: payment.orderId,
-            title: 'Payment received',
-            description: `${provider.displayName} payment confirmed`,
+            title: OrderEventCopy.paymentReceived,
+            description: OrderEventCopy.paymentConfirmed(provider.displayName),
             toStatus: OrderStatus.CONFIRMED,
             actorRole: 'SYSTEM',
           },

@@ -84,6 +84,44 @@ services:
       # RENDER_EXTERNAL_URL, which Render sets to https://<service>.onrender.com.
       # Add it in the Dashboard once a custom domain is attached.
 
+      # ── Shareable links ─────────────────────────────────────────────────
+      #
+      # The origin shared links are written with. Unset here on purpose: it
+      # falls back to MEDIA_PUBLIC_ORIGIN and then to RENDER_EXTERNAL_URL, so a
+      # first deploy produces links that work before anyone has bought a domain.
+      # Set it — together with --dart-define=SHARE_BASE_URL on the Flutter build
+      # and the hosts in AndroidManifest.xml / Runner.entitlements — when a
+      # custom domain is attached.
+      #   SHARE_PUBLIC_ORIGIN=https://reem.shop
+      #
+      # What makes an https link open the APP rather than the web page. Both are
+      # optional and both are empty until the apps are signed: the well-known
+      # files are then served as valid empty documents, verification simply does
+      # not happen, and links open the landing page. Nothing breaks either way.
+      #
+      #   ANDROID_SHA256_CERT_FINGERPRINTS — comma-separated, colon-separated
+      #     hex, exactly as Play Console prints them. BOTH the upload key and
+      #     Play's app-signing key, or store installs fail to verify while the
+      #     locally-built APK works.
+      #   IOS_APP_IDS — `TEAMID.shop.reem.app`. Apple's CDN caches the
+      #     association file, so get this right before the first TestFlight
+      #     build goes out.
+      - key: ANDROID_SHA256_CERT_FINGERPRINTS
+        sync: false
+      - key: IOS_APP_IDS
+        sync: false
+
+      # Where the landing page sends somebody who does not have the app. Each is
+      # optional; with none of them set the page says the app is coming rather
+      # than linking to a store listing that does not exist.
+      - key: ANDROID_STORE_URL
+        sync: false
+      - key: IOS_STORE_URL
+        sync: false
+      # A direct APK, for the handsets sold here with no Play Store at all.
+      - key: APP_APK_URL
+        sync: false
+
       # ── Auth keyring: the EXISTING values from backend/.env — never new ones.
       # Every session, OTP digest and TOTP secret in the database was written
       # under these; new values sign everyone out and break every authenticator.

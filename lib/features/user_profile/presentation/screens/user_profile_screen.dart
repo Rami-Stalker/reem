@@ -8,7 +8,6 @@ import 'package:go_router/go_router.dart';
 import 'package:reem/core/design_system/design_system.dart';
 import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/platform/app_haptics.dart';
-import 'package:reem/core/presentation/providers/product_shape_provider.dart';
 import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/core/shared/entities/product.dart';
 import 'package:reem/core/shared/entities/user.dart';
@@ -17,9 +16,9 @@ import 'package:reem/features/chat/domain/entities/chat_start_request.dart';
 import 'package:reem/features/chat/presentation/widgets/message_seller_button.dart';
 import 'package:reem/features/discovery/presentation/providers/collection_state.dart';
 import 'package:reem/features/discovery/presentation/providers/discovery_providers.dart';
+import 'package:reem/features/highlights/presentation/widgets/highlights_rail.dart';
 import 'package:reem/features/product_social/presentation/providers/product_social_providers.dart';
-import 'package:reem/features/product_social/presentation/widgets/product_post_card.dart';
-import 'package:reem/features/profile/presentation/providers/profile_provider.dart';
+import 'package:reem/features/product_social/presentation/widgets/product_shelf.dart';
 import 'package:reem/features/social/domain/entities/content.dart';
 import 'package:reem/features/social/presentation/open_stories.dart';
 import 'package:reem/features/social/presentation/providers/social_providers.dart';
@@ -165,6 +164,7 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
                   context: context,
                   userId: profile.user.id,
                   name: profile.user.name,
+                  imageUrl: profile.user.imageUrl,
                 ),
               ),
           ],
@@ -208,6 +208,14 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
           if (!profile.isReadable)
             SliverToBoxAdapter(child: _PrivatePage(name: profile.user.name))
           else ...[
+            // «الأبرز», above the tabs: a highlight is part of who this page
+            // *is*, the way a bio is, rather than one more thing filed under a
+            // tab. It draws nothing on a page with none unless it is her own.
+            SliverToBoxAdapter(
+              child: HighlightsRail(
+                ownerId: profile.isMe ? null : profile.user.id,
+              ),
+            ),
             SliverPersistentHeader(
               pinned: true,
               delegate: _TabsHeader(
@@ -596,7 +604,6 @@ class _ProductShelf extends ConsumerWidget {
     final state = ref.watch(provider);
     final products = state.items;
     final loading = state.isLoading;
-    final shape = ref.watch(productShapeProvider);
 
     if (!loading && products.isEmpty) {
       return SliverToBoxAdapter(
@@ -615,42 +622,13 @@ class _ProductShelf extends ConsumerWidget {
 
     return SliverMainAxisGroup(
       slivers: [
-        SliverToBoxAdapter(
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(
-              DsSpacing.lg,
-              DsSpacing.xs,
-              DsSpacing.lg,
-              DsSpacing.lg,
-            ),
-            child: ShapeSwitcher(
-              selected: shape,
-              onSelect: (next) {
-                AppHaptics.selection();
-                ref.read(productShapeProvider.notifier).state = next;
-              },
-            ),
-          ),
+        // The same shelf a department draws. Her shop's pieces are the
+        // catalogue's pieces, and a heart filled here is filled there.
+        SliverProductShelf(
+          products: products,
+          isLoading: loading,
+          onTapProduct: open,
         ),
-        switch (shape) {
-          DsProductShape.posts => SliverProductPostCards(
-            products: products,
-            isLoading: loading,
-          ),
-          DsProductShape.mosaic => SliverProductMosaic(
-            products: products,
-            isLoading: loading,
-            onTapProduct: open,
-          ),
-          DsProductShape.grid => SliverProductGrid(
-            products: products,
-            isLoading: loading,
-            onTapProduct: open,
-            onToggleFavorite: (p) => ref
-                .read(favoritesNotifierProvider.notifier)
-                .toggleFavorite(p.id),
-          ),
-        },
         if (state.isLoadingMore)
           const SliverToBoxAdapter(
             child: Padding(

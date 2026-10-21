@@ -129,13 +129,12 @@ class _AdminActionDialogState extends State<_AdminActionDialog> {
   Widget _fieldInput(AdminActionField field) {
     final l10n = context.l10n;
     return switch (field.kind) {
-      AdminFieldKind.text => TextField(
+      AdminFieldKind.text => DsInputField(
         controller: _text[field.key],
+        label: field.label(l10n),
+        hint: field.hint?.call(l10n),
         maxLines: field.maxLines,
-        decoration: InputDecoration(
-          labelText: field.label(l10n),
-          hintText: field.hint?.call(l10n),
-        ),
+        minLines: field.maxLines > 1 ? field.maxLines : null,
       ),
       AdminFieldKind.choice => DropdownButtonFormField<String>(
         initialValue: _choice[field.key],

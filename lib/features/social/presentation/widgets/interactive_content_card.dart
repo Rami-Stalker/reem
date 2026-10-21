@@ -12,6 +12,7 @@ import 'package:reem/core/shared/entities/user.dart';
 import 'package:reem/core/shared/services/share_service.dart';
 import 'package:reem/features/auth/presentation/providers/auth_provider.dart';
 import 'package:reem/features/auth/presentation/widgets/auth_prompt_sheet.dart';
+import 'package:reem/features/profile/presentation/widgets/save_to_collection_sheet.dart';
 import 'package:reem/features/social/domain/entities/content.dart';
 import 'package:reem/features/social/presentation/providers/social_providers.dart';
 import 'package:reem/features/social/presentation/widgets/content_card.dart';
@@ -95,9 +96,10 @@ class _InteractiveContentCardState
   Future<void> _save() async {
     if (!await _signedIn() || !mounted) return;
     final before = _content;
+    final wasSaved = before.viewer.isSaved;
     setState(
       () => _content = before.copyWith(
-        viewer: before.viewer.copyWith(isSaved: !before.viewer.isSaved),
+        viewer: before.viewer.copyWith(isSaved: !wasSaved),
       ),
     );
     final result = await ref
@@ -110,6 +112,13 @@ class _InteractiveContentCardState
         Error() => before,
       };
     });
+    // Newly saved: ask where to keep it, the same way a product does.
+    if (wasSaved || result is! Success || !mounted) return;
+    await SaveToCollectionSheet.show(
+      context,
+      kind: SaveTargetKind.post,
+      targetId: before.id,
+    );
   }
 
   Future<void> _comment() async {
@@ -131,6 +140,7 @@ class _InteractiveContentCardState
       postId: _content.id,
       caption: _content.caption,
       authorName: _content.author.name,
+      imageUrl: _content.shareImageUrl,
     );
     if (!shared || !mounted) return;
     final result = await ref

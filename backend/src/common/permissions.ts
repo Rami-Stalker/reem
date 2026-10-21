@@ -33,6 +33,20 @@ export const AppPermission = {
   contentTypeManage: 'content_type:manage',
   postManage: 'post:manage',
   storyManage: 'story:manage',
+  /**
+   * الصالونات والجمال.
+   *
+   * `salonManage` is running one: the menu, the hours, the queue. Held by a
+   * SELLER — the same vetted account a boutique belongs to — rather than by a
+   * role of its own, so that a woman who sells lipstick and cuts hair is one
+   * account and not two.
+   *
+   * `appointmentBook` is the other side, and every customer holds it. It is
+   * named rather than left implicit because booking is a promise between two
+   * people and the route that makes one must not be reachable by a guest.
+   */
+  salonManage: 'salon:manage',
+  appointmentBook: 'appointment:book',
   orderManage: 'order:manage',
   orderRead: 'order:read',
   checkoutCreate: 'checkout:create',

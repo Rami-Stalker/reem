@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/router/open_route.dart';
 import 'package:reem/core/shared/entities/user.dart';
 
 /// Branded gradient cover with the user's avatar — the profile's hero.
@@ -34,7 +34,7 @@ class ProfileCover extends StatelessWidget {
                   size: 40,
                   iconSize: 18,
                   color: DsColors.onMedia,
-                  onPressed: () => context.pop(),
+                  onPressed: () => popOrHome(context),
                 ),
               ),
             )
