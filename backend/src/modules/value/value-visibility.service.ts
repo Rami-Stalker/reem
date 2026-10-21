@@ -50,6 +50,28 @@ export class ValueVisibilityService {
   }
 
   /**
+   * Which of these products she may see — for lists that are cached for
+   * everyone, where the clause cannot go into the query.
+   *
+   * A list built once and served to every viewer has to drop what this viewer
+   * cannot open after the fact; otherwise it shows a card whose page answers
+   * «not found», which is worse than not showing it.
+   */
+  async visibleAmong(
+    viewerId: string | undefined,
+    productIds: readonly string[],
+  ): Promise<Set<string>> {
+    if (!productIds.length) return new Set();
+    const filter = await this.catalogFilter(viewerId);
+    if (!Object.keys(filter).length) return new Set(productIds);
+    const rows = await this.prisma.product.findMany({
+      where: { AND: [{ id: { in: [...productIds] } }, filter] },
+      select: { id: true },
+    });
+    return new Set(rows.map((row) => row.id));
+  }
+
+  /**
    * New arrivals inside their embargo.
    *
    * A product is in early access for `config.hours` after it was created.

@@ -6787,7 +6787,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get policiesReadCurrent => 'اقرئي النسخة السارية';
 
   @override
-  String get policiesConsentTitle => 'قبل ما تكملي';
+  String get policiesConsentTitle => 'قبل أن تتابعي';
 
   @override
   String get policiesConsentIntroNew =>
@@ -10083,4 +10083,18 @@ class AppLocalizationsAr extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get errorRetryLater => 'لم يكتمل ذلك. جرّبي مرة أخرى بعد قليل.';
+
+  @override
+  String get experienceTaglineBuyer => 'بوتيك ناعم يتشكّل حول ذوقكِ.';
+
+  @override
+  String get experienceTaglineSeller =>
+      'المخزون والطلبات والعميلات والنمو في مساحة عمل واحدة سريعة.';
+
+  @override
+  String get experienceTaglineAdmin =>
+      'التحكّم والحوكمة والتحليلات وصحة التشغيل في مكان واحد.';
 }

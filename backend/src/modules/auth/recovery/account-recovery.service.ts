@@ -523,7 +523,7 @@ export class AccountRecoveryService {
     await this.notifyOwner(
       recoveryCase.userId,
       'تحذير: طلب استعادة حسابكِ تمت الموافقة عليه',
-      'سيُنقل حسابكِ إلى رقم آخر بعد ٧٢ ساعة. إن لم تكوني أنت من طلب ذلك، ألغي الطلب فورًا من هذا الإشعار.',
+      'سيُنقل حسابكِ إلى رقم آخر بعد 72 ساعة. إن لم تكوني أنت من طلب ذلك، ألغي الطلب فورًا من هذا الإشعار.',
       { action: 'recovery_case_cooling_off', case_id: caseId },
     );
     await this.audit.record({

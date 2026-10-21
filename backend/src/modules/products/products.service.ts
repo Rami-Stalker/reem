@@ -31,26 +31,31 @@ export class ProductsService {
   ) {}
 
   async home(viewerId?: string) {
+    const gate = await this.visibility.catalogFilter(viewerId);
     const [trending, newArrivals, featured, mostLoved, forYou] =
       await Promise.all([
         this.find({
           orderBy: [{ ordersCount: 'desc' }, { viewsCount: 'desc' }],
           take: 12,
+          gate,
         }),
-        this.find({ orderBy: [{ createdAt: 'desc' }], take: 12 }),
+        this.find({ orderBy: [{ createdAt: 'desc' }], take: 12, gate }),
         this.find({
           where: { ...PURCHASABLE_PRODUCT_WHERE, isFeatured: true },
           orderBy: [{ createdAt: 'desc' }],
           take: 12,
+          gate,
         }),
         this.find({
           orderBy: [{ favoritesCount: 'desc' }, { rating: 'desc' }],
           take: 12,
+          gate,
         }),
         this.find({
           where: { ...PURCHASABLE_PRODUCT_WHERE, showInFeed: true },
           orderBy: [{ rating: 'desc' }, { createdAt: 'desc' }],
           take: 12,
+          gate,
         }),
       ]);
 
@@ -236,9 +241,15 @@ export class ProductsService {
     orderBy: OrderBy;
     take?: number;
     skip?: number;
+    /** Reem Value's visibility clause for the viewer — see `paginated`. */
+    gate?: Prisma.ProductWhereInput;
   }) {
+    const where = args.where ?? PURCHASABLE_PRODUCT_WHERE;
     return this.prisma.product.findMany({
-      where: args.where ?? PURCHASABLE_PRODUCT_WHERE,
+      where:
+        args.gate && Object.keys(args.gate).length
+          ? { AND: [where, args.gate] }
+          : where,
       orderBy: args.orderBy,
       skip: args.skip ?? 0,
       take: args.take ?? 20,
@@ -250,7 +261,8 @@ export class ProductsService {
     args: { where?: Prisma.ProductWhereInput; orderBy: OrderBy },
     viewerId?: string,
   ) {
-    const products = await this.find({ ...args, take: 20 });
+    const gate = await this.visibility.catalogFilter(viewerId);
+    const products = await this.find({ ...args, take: 20, gate });
     return this.serializeList(products, viewerId);
   }
 

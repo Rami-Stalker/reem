@@ -2230,7 +2230,7 @@
   "policiesOpenVersion": "اقرئي هذه النسخة",
   "policiesArchivedNotice": "تقرئين النسخة {version}، وهي ليست النسخة السارية حاليًا.",
   "policiesReadCurrent": "اقرئي النسخة السارية",
-  "policiesConsentTitle": "قبل ما تكملي",
+  "policiesConsentTitle": "قبل أن تتابعي",
   "policiesConsentIntroNew": "اقرئي الوثائق التالية ووافقي عليها لمتابعة استخدام ريم.",
   "policiesConsentIntroUpdated": "حدّثنا الوثائق التالية. اقرئيها ووافقي عليها لتكملي.",
   "policiesConsentAgree": "قرأتُ الوثائق أعلاه وأوافق عليها",
@@ -3106,5 +3106,9 @@
   "marketPriceFrom": "ابتداءً من {price}",
   "spanMinutes": "{count, plural, =1{دقيقة} =2{دقيقتين} few{{count} دقائق} other{{count} دقيقة}}",
   "spanHours": "{count, plural, =1{ساعة} =2{ساعتين} few{{count} ساعات} other{{count} ساعة}}",
-  "spanDays": "{count, plural, =1{يوم} =2{يومين} few{{count} أيام} other{{count} يوماً}}"
+  "spanDays": "{count, plural, =1{يوم} =2{يومين} few{{count} أيام} other{{count} يوماً}}",
+  "errorRetryLater": "لم يكتمل ذلك. جرّبي مرة أخرى بعد قليل.",
+  "experienceTaglineBuyer": "بوتيك ناعم يتشكّل حول ذوقكِ.",
+  "experienceTaglineSeller": "المخزون والطلبات والعميلات والنمو في مساحة عمل واحدة سريعة.",
+  "experienceTaglineAdmin": "التحكّم والحوكمة والتحليلات وصحة التشغيل في مكان واحد."
 }

@@ -7,6 +7,7 @@ import { Prisma } from '@prisma/client';
 import { buildMeta } from '../../common/dto/pagination.dto';
 import { CacheService } from '../../common/cache/cache.service';
 import { GraphQueryService } from '../graph/graph-query.service';
+import { ValueVisibilityService } from '../value/value-visibility.service';
 import { serializeProduct } from '../../common/serializers';
 import {
   LIVE_OFFER_WHERE,
@@ -37,6 +38,7 @@ export class DiscoveryService {
     private readonly repo: DiscoveryRepository,
     private readonly cache: CacheService,
     private readonly graph: GraphQueryService,
+    private readonly visibility: ValueVisibilityService,
   ) {}
 
   async collection(key: string, dto: DiscoveryQueryDto, viewerId?: string) {
@@ -178,10 +180,17 @@ export class DiscoveryService {
       }),
     );
 
+    // The lists are cached for everyone; what this viewer may not open yet
+    // (Reem Value's early access and exclusives) leaves after the cache.
+    const visible = await this.visibility.visibleAmong(
+      viewerId,
+      sections.flatMap((section) => section.products.map((p) => p.id)),
+    );
+
     const seen = new Set<string>();
     const trimmed = sections.map(({ key, homeSize, products }) => {
       const unique = products
-        .filter((p) => !seen.has(p.id))
+        .filter((p) => visible.has(p.id) && !seen.has(p.id))
         .slice(0, homeSize);
       unique.forEach((p) => seen.add(p.id));
       return { key, products: unique };
@@ -242,12 +251,21 @@ export class DiscoveryService {
       },
     );
 
+    // Cached for everyone, so the viewer's visibility rule applies after the
+    // cache. The page can come back a card or two short of `limit`; the
+    // alternative was cards whose product page answers «not found».
+    const visible = await this.visibility.visibleAmong(
+      viewerId,
+      products.map((p) => p.id),
+    );
+    const shown = products.filter((p) => visible.has(p.id));
+
     const favSet = viewerId
-      ? await this.repo.favoriteSet(viewerId, products.map((p) => p.id))
+      ? await this.repo.favoriteSet(viewerId, shown.map((p) => p.id))
       : new Set<string>();
 
     return {
-      data: products.map((p) =>
+      data: shown.map((p) =>
         serializeProduct(p, { isLiked: favSet.has(p.id) }),
       ),
       pagination: buildMeta(dto.page, dto.limit, total, products.length),

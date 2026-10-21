@@ -10049,4 +10049,20 @@ class AppLocalizationsEn extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get errorRetryLater =>
+      'That didn’t go through. Please try again in a moment.';
+
+  @override
+  String get experienceTaglineBuyer =>
+      'A soft luxury boutique shaped around your taste.';
+
+  @override
+  String get experienceTaglineSeller =>
+      'Inventory, orders, customers, and growth in one fast workspace.';
+
+  @override
+  String get experienceTaglineAdmin =>
+      'Enterprise control, governance, analytics, and operating health.';
 }

@@ -236,12 +236,12 @@ export const PRICE_BANDS: ReadonlyArray<{
 }> = [
   // New lira, so the boundaries carry two zeros fewer than the ones the trend
   // engine shipped with. The bands themselves are unchanged in real terms.
-  { code: 'B1', labelAr: 'أقل من ٥٠٠', min: 0, max: 500 },
-  { code: 'B2', labelAr: '٥٠٠ – ١٠٠٠', min: 500, max: 1_000 },
-  { code: 'B3', labelAr: '١٠٠٠ – ٢٥٠٠', min: 1_000, max: 2_500 },
-  { code: 'B4', labelAr: '٢٥٠٠ – ٥٠٠٠', min: 2_500, max: 5_000 },
-  { code: 'B5', labelAr: '٥٠٠٠ – ١٠ آلاف', min: 5_000, max: 10_000 },
-  { code: 'B6', labelAr: 'أكثر من ١٠ آلاف', min: 10_000, max: null },
+  { code: 'B1', labelAr: 'أقل من 500', min: 0, max: 500 },
+  { code: 'B2', labelAr: '500 – 1000', min: 500, max: 1_000 },
+  { code: 'B3', labelAr: '1000 – 2500', min: 1_000, max: 2_500 },
+  { code: 'B4', labelAr: '2500 – 5000', min: 2_500, max: 5_000 },
+  { code: 'B5', labelAr: '5000 – 10 آلاف', min: 5_000, max: 10_000 },
+  { code: 'B6', labelAr: 'أكثر من 10 آلاف', min: 10_000, max: null },
 ];
 
 /** The scope key used for a platform-wide slice or forecast. */

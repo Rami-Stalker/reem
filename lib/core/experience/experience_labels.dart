@@ -132,3 +132,16 @@ extension RoleMenuGroupLabel on RoleMenuGroup {
     _ => label,
   };
 }
+
+/// The one-line promise under each app's activity hub, in her language.
+///
+/// The manifest's `tagline` is English and was shown as-is, so an Arabic
+/// shopper opening «النشاط» read "A soft luxury boutique shaped around your
+/// taste." under an Arabic title.
+extension AppRoleExperienceTagline on AppRoleExperience {
+  String taglineOf(AppLocalizations l10n) => switch (role) {
+    ExperienceRole.buyer => l10n.experienceTaglineBuyer,
+    ExperienceRole.seller => l10n.experienceTaglineSeller,
+    ExperienceRole.admin => l10n.experienceTaglineAdmin,
+  };
+}

@@ -22,6 +22,9 @@ const noPromotions = {} as never;
 /** What `trending` offers before anyone has searched. */
 const FALLBACK = ['فستان', 'عطر', 'حقيبة', 'حذاء', 'هدية', 'ورد'];
 
+/** Nothing is embargoed in these cases. */
+const noGate = { catalogFilter: async () => ({}) } as never;
+
 test('trending merges search history with fallback terms without duplicates', async () => {
   const prisma = {
     searchHistory: {
@@ -31,7 +34,7 @@ test('trending merges search history with fallback terms without duplicates', as
       ],
     },
   };
-  const service = new SearchService(prisma as never, noSignals, noMatcher, noPromotions);
+  const service = new SearchService(prisma as never, noSignals, noMatcher, noPromotions, noGate);
 
   assert.deepEqual(await service.trending(), [
     'abaya',
@@ -46,7 +49,7 @@ test('trending falls back when no search history exists', async () => {
       groupBy: async () => [],
     },
   };
-  const service = new SearchService(prisma as never, noSignals, noMatcher, noPromotions);
+  const service = new SearchService(prisma as never, noSignals, noMatcher, noPromotions, noGate);
 
   assert.deepEqual(await service.trending(), FALLBACK);
 });

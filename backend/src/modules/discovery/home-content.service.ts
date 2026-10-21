@@ -14,6 +14,7 @@ import { PRODUCT_CARD_INCLUDE } from '../../common/catalog/product-include';
 import { Money } from '../../common/money';
 import { serializeProduct } from '../../common/serializers';
 import { PrismaService } from '../../prisma/prisma.service';
+import { ValueVisibilityService } from '../value/value-visibility.service';
 
 /**
  * Everything the customer's home page shows, in one call.
@@ -31,7 +32,10 @@ import { PrismaService } from '../../prisma/prisma.service';
  */
 @Injectable()
 export class HomeContentService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly visibility: ValueVisibilityService,
+  ) {}
 
   async content(viewerId?: string) {
     const [
@@ -683,9 +687,14 @@ export class HomeContentService {
     const unique = [...new Set(ids)];
     if (unique.length === 0) return new Map<string, unknown>();
 
+    // Reem Value's visibility rule: a card for a piece she cannot open yet
+    // would lead to a «not found» page.
+    const gate = await this.visibility.catalogFilter(viewerId);
     const [products, liked] = await Promise.all([
       this.prisma.product.findMany({
-        where: { id: { in: unique } },
+        where: Object.keys(gate).length
+          ? { AND: [{ id: { in: unique } }, gate] }
+          : { id: { in: unique } },
         include: PRODUCT_CARD_INCLUDE,
       }),
       viewerId

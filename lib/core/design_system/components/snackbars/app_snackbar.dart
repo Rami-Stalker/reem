@@ -4,6 +4,8 @@ import 'package:reem/core/design_system/foundation/theme/extensions/color_extens
 import 'package:reem/core/design_system/foundation/theme/extensions/typography_extension.dart';
 import 'package:reem/core/design_system/foundation/tokens/ds_radius.dart';
 import 'package:reem/core/design_system/foundation/tokens/ds_spacing.dart';
+import 'package:reem/core/localization/readable_message.dart';
+import 'package:reem/l10n/app_localizations.dart';
 
 enum DsSnackbarType { info, success, warning, error }
 
@@ -18,7 +20,9 @@ abstract final class DsSnackbar {
     VoidCallback? onAction,
   }) => on(
     ScaffoldMessenger.of(context),
-    message: message,
+    message: type == DsSnackbarType.error
+        ? readableMessage(AppLocalizations.of(context), message)
+        : message,
     type: type,
     duration: duration,
     actionLabel: actionLabel,
@@ -41,6 +45,11 @@ abstract final class DsSnackbar {
   }) {
     final context = messenger.context;
     final c = context.dsColors;
+    // The messenger usually sits above the app's Localizations, so this is
+    // null there and `show` has already resolved the message.
+    if (type == DsSnackbarType.error) {
+      message = readableMessage(AppLocalizations.of(context), message);
+    }
 
     final (accent, icon) = switch (type) {
       DsSnackbarType.success => (c.success, Icons.check_circle_rounded),

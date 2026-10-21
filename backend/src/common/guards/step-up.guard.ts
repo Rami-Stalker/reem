@@ -68,7 +68,7 @@ export class StepUpGuard implements CanActivate {
       throw new ForbiddenException({
         code: 'NEW_DEVICE_COOLDOWN',
         message:
-          'هذا الجهاز جديد. هذا الإجراء متاح بعد مرور ٢٤ ساعة على أول تسجيل دخول منه.',
+          'هذا الجهاز جديد. هذا الإجراء متاح بعد مرور 24 ساعة على أول تسجيل دخول منه.',
         scope: requirement.scope,
         available_at: state.cooldownUntil.toISOString(),
       });

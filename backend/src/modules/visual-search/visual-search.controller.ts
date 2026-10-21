@@ -127,7 +127,7 @@ export class VisualSearchController {
       recent: sessions.map((session) => serializeVisualSession(session)),
       prompts: [
         'نفس هالفستان بس بالأسود',
-        'شي مشابه وأقل من ٤٠٠ ألف',
+        'شي مشابه وأقل من 400 ألف',
         'شي أكتر احتشامًا من هيك',
         'نفس الستايل بس بقماش أخف',
       ],

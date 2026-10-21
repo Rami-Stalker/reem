@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { ValueModule } from '../value/value.module';
 import { TrendsModule } from '../trends/trends.module';
 import { PromotionsModule } from '../promotions/promotions.module';
 import { SearchController } from './search.controller';
@@ -9,7 +10,7 @@ import { SynonymsAdminController } from './synonyms.admin.controller';
 import { SynonymsAdminService } from './synonyms.admin.service';
 
 @Module({
-  imports: [TrendsModule, PromotionsModule],
+  imports: [TrendsModule, PromotionsModule, ValueModule],
   controllers: [SearchController, SynonymsAdminController],
   providers: [
     SearchService,

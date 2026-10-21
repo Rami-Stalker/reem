@@ -17623,6 +17623,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{count, plural, =1{1 day} other{{count} days}}'**
   String spanDays(int count);
+
+  /// Shown in place of a server message that is not in the reader's language.
+  ///
+  /// In en, this message translates to:
+  /// **'That didn’t go through. Please try again in a moment.'**
+  String get errorRetryLater;
+
+  /// Activity hub subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'A soft luxury boutique shaped around your taste.'**
+  String get experienceTaglineBuyer;
+
+  /// Activity hub subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Inventory, orders, customers, and growth in one fast workspace.'**
+  String get experienceTaglineSeller;
+
+  /// Activity hub subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Enterprise control, governance, analytics, and operating health.'**
+  String get experienceTaglineAdmin;
 }
 
 class _AppLocalizationsDelegate

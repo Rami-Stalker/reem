@@ -11457,5 +11457,13 @@
   "spanHours": "{count, plural, =1{1 hour} other{{count} hours}}",
   "@spanHours": {"description": "Drop timing.", "placeholders": {"count": {"type": "int"}}},
   "spanDays": "{count, plural, =1{1 day} other{{count} days}}",
-  "@spanDays": {"description": "Drop timing.", "placeholders": {"count": {"type": "int"}}}
+  "@spanDays": {"description": "Drop timing.", "placeholders": {"count": {"type": "int"}}},
+  "errorRetryLater": "That didn’t go through. Please try again in a moment.",
+  "@errorRetryLater": {"description": "Shown in place of a server message that is not in the reader's language."},
+  "experienceTaglineBuyer": "A soft luxury boutique shaped around your taste.",
+  "@experienceTaglineBuyer": {"description": "Activity hub subtitle."},
+  "experienceTaglineSeller": "Inventory, orders, customers, and growth in one fast workspace.",
+  "@experienceTaglineSeller": {"description": "Activity hub subtitle."},
+  "experienceTaglineAdmin": "Enterprise control, governance, analytics, and operating health.",
+  "@experienceTaglineAdmin": {"description": "Activity hub subtitle."}
 }

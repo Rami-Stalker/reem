@@ -58,7 +58,13 @@ class WishlistItemModel extends WishlistItem {
       post: post is Map
           ? PostModel.fromJson(Map<String, dynamic>.from(post))
           : null,
-      priceWhenSaved: (json['price_when_saved'] as num?)?.toDouble(),
+      // A decimal column: the server sends it as a string ("3180"), and the
+      // old `as num?` threw — taking the whole collections tab down with it.
+      priceWhenSaved: switch (json['price_when_saved']) {
+        final num value => value.toDouble(),
+        final String value => double.tryParse(value),
+        _ => null,
+      },
       notifyPriceDrop: json['notify_price_drop'] as bool? ?? true,
       notifyBackInStock: json['notify_back_in_stock'] as bool? ?? true,
       note: json['note'] as String?,
@@ -87,7 +93,7 @@ class WishlistCollectionModel extends WishlistCollection {
       description: json['description'] as String?,
       visibility: json['visibility'] as String? ?? 'private',
       shareSlug: json['share_slug'] as String?,
-      itemsCount: json['items_count'] as int? ?? 0,
+      itemsCount: (json['items_count'] as num?)?.toInt() ?? 0,
       items: (json['items'] as List? ?? [])
           .whereType<Map>()
           .map((item) => WishlistItemModel.fromJson(
