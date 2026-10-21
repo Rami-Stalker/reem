@@ -10021,4 +10021,66 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get passwordHide => 'إخفاء كلمة المرور';
+
+  @override
+  String marketDropOpensIn(String when) {
+    return 'يُفتح بعد $when';
+  }
+
+  @override
+  String marketDropEndsIn(String when) {
+    return 'مفتوح · ينتهي بعد $when';
+  }
+
+  @override
+  String get marketDropOpenNow => 'مفتوح الآن';
+
+  @override
+  String marketDropEarlyBy(String when) {
+    return 'لكِ قبل الجميع بـ$when';
+  }
+
+  @override
+  String marketPriceFrom(String price) {
+    return 'ابتداءً من $price';
+  }
+
+  @override
+  String spanMinutes(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count دقيقة',
+      few: '$count دقائق',
+      two: 'دقيقتين',
+      one: 'دقيقة',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String spanHours(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count ساعة',
+      few: '$count ساعات',
+      two: 'ساعتين',
+      one: 'ساعة',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String spanDays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count يوماً',
+      few: '$count أيام',
+      two: 'يومين',
+      one: 'يوم',
+    );
+    return '$_temp0';
+  }
 }

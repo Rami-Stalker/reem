@@ -329,19 +329,99 @@ class DropCard extends StatelessWidget {
           ],
           DsGaps.vSm,
           SizedBox(
-            height: 64,
+            height: 72,
             child: ListView.separated(
               scrollDirection: Axis.horizontal,
               itemCount: drop.products.length,
               separatorBuilder: (_, _) => DsGaps.hXs,
               itemBuilder: (_, index) => MarketThumb(
                 imageUrl: drop.products[index].imageUrl,
-                size: 64,
+                size: 72,
               ),
             ),
           ),
+          DsGaps.vSm,
+          _DropTiming(drop: drop),
         ],
       ),
     );
   }
+}
+
+/// When the drop opens or closes, said as a span rather than a timestamp.
+///
+/// A date makes her do arithmetic; «يُفتح بعد ساعتين» is the thing she wants
+/// to know, and an early-access invitation says how far ahead she is.
+class _DropTiming extends StatelessWidget {
+  const _DropTiming({required this.drop});
+
+  final Drop drop;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final colors = context.dsColors;
+    final now = DateTime.now();
+    final opensAt = drop.earlyAccessOnly
+        ? (drop.earlyAccessAt ?? drop.startsAt)
+        : drop.startsAt;
+
+    final (String line, Color tint) = switch (drop) {
+      _ when drop.isLive && drop.endsAt != null && drop.endsAt!.isAfter(now) =>
+        (
+          l10n.marketDropEndsIn(
+            timeSpanLabel(l10n, drop.endsAt!.difference(now)),
+          ),
+          colors.success,
+        ),
+      _ when drop.isLive || !opensAt.isAfter(now) => (
+        l10n.marketDropOpenNow,
+        colors.success,
+      ),
+      _ when drop.earlyAccessOnly && drop.earlyAccessAt != null => (
+        l10n.marketDropEarlyBy(
+          timeSpanLabel(l10n, drop.startsAt.difference(drop.earlyAccessAt!)),
+        ),
+        colors.primary,
+      ),
+      _ => (
+        l10n.marketDropOpensIn(timeSpanLabel(l10n, opensAt.difference(now))),
+        colors.primary,
+      ),
+    };
+    final from = drop.totalFromSyp;
+
+    return Row(
+      children: [
+        Container(
+          width: DsSpacing.xs,
+          height: DsSpacing.xs,
+          decoration: BoxDecoration(color: tint, shape: BoxShape.circle),
+        ),
+        DsGaps.hXs,
+        Expanded(
+          child: Text(
+            line,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: context.dsText.caption.semibold.tint(tint),
+          ),
+        ),
+        if (from != null)
+          Text(
+            l10n.marketPriceFrom(sypText(from)),
+            style: context.dsText.caption.tint(colors.price),
+          ),
+      ],
+    );
+  }
+}
+
+/// «ساعتين», «3 أيام» — the coarsest unit that still says something.
+String timeSpanLabel(AppLocalizations l10n, Duration span) {
+  if (span.inMinutes < 60) {
+    return l10n.spanMinutes(span.inMinutes < 1 ? 1 : span.inMinutes);
+  }
+  if (span.inHours < 48) return l10n.spanHours(span.inHours);
+  return l10n.spanDays(span.inDays);
 }

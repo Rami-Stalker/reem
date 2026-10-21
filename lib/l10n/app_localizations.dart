@@ -17575,6 +17575,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Hide password'**
   String get passwordHide;
+
+  /// Drop timing.
+  ///
+  /// In en, this message translates to:
+  /// **'Opens in {when}'**
+  String marketDropOpensIn(String when);
+
+  /// Drop timing.
+  ///
+  /// In en, this message translates to:
+  /// **'Open · ends in {when}'**
+  String marketDropEndsIn(String when);
+
+  /// Drop timing.
+  ///
+  /// In en, this message translates to:
+  /// **'Open now'**
+  String get marketDropOpenNow;
+
+  /// Drop timing.
+  ///
+  /// In en, this message translates to:
+  /// **'Yours {when} before everyone'**
+  String marketDropEarlyBy(String when);
+
+  /// Drop timing.
+  ///
+  /// In en, this message translates to:
+  /// **'From {price}'**
+  String marketPriceFrom(String price);
+
+  /// Drop timing.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 minute} other{{count} minutes}}'**
+  String spanMinutes(int count);
+
+  /// Drop timing.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 hour} other{{count} hours}}'**
+  String spanHours(int count);
+
+  /// Drop timing.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 day} other{{count} days}}'**
+  String spanDays(int count);
 }
 
 class _AppLocalizationsDelegate

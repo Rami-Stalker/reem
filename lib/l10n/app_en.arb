@@ -11441,5 +11441,21 @@
   "passwordShow": "Show password",
   "@passwordShow": {"description": "Password field visibility toggle."},
   "passwordHide": "Hide password",
-  "@passwordHide": {"description": "Password field visibility toggle."}
+  "@passwordHide": {"description": "Password field visibility toggle."},
+  "marketDropOpensIn": "Opens in {when}",
+  "@marketDropOpensIn": {"description": "Drop timing.", "placeholders": {"when": {"type": "String"}}},
+  "marketDropEndsIn": "Open · ends in {when}",
+  "@marketDropEndsIn": {"description": "Drop timing.", "placeholders": {"when": {"type": "String"}}},
+  "marketDropOpenNow": "Open now",
+  "@marketDropOpenNow": {"description": "Drop timing."},
+  "marketDropEarlyBy": "Yours {when} before everyone",
+  "@marketDropEarlyBy": {"description": "Drop timing.", "placeholders": {"when": {"type": "String"}}},
+  "marketPriceFrom": "From {price}",
+  "@marketPriceFrom": {"description": "Drop timing.", "placeholders": {"price": {"type": "String"}}},
+  "spanMinutes": "{count, plural, =1{1 minute} other{{count} minutes}}",
+  "@spanMinutes": {"description": "Drop timing.", "placeholders": {"count": {"type": "int"}}},
+  "spanHours": "{count, plural, =1{1 hour} other{{count} hours}}",
+  "@spanHours": {"description": "Drop timing.", "placeholders": {"count": {"type": "int"}}},
+  "spanDays": "{count, plural, =1{1 day} other{{count} days}}",
+  "@spanDays": {"description": "Drop timing.", "placeholders": {"count": {"type": "int"}}}
 }

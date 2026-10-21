@@ -9993,4 +9993,60 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get passwordHide => 'Hide password';
+
+  @override
+  String marketDropOpensIn(String when) {
+    return 'Opens in $when';
+  }
+
+  @override
+  String marketDropEndsIn(String when) {
+    return 'Open · ends in $when';
+  }
+
+  @override
+  String get marketDropOpenNow => 'Open now';
+
+  @override
+  String marketDropEarlyBy(String when) {
+    return 'Yours $when before everyone';
+  }
+
+  @override
+  String marketPriceFrom(String price) {
+    return 'From $price';
+  }
+
+  @override
+  String spanMinutes(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count minutes',
+      one: '1 minute',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String spanHours(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count hours',
+      one: '1 hour',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String spanDays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count days',
+      one: '1 day',
+    );
+    return '$_temp0';
+  }
 }
