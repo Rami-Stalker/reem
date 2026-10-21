@@ -12,7 +12,9 @@ import 'package:reem/core/router/route_paths.dart';
 /// server's slugs are stable by design — they are what ends up in a support
 /// reply — so naming them here is safe and a rename becomes one edit.
 abstract final class PolicySlugs {
+  // l10n-ignore: policy slugs the server matches on.
   static const customerTerms = 'customer-terms';
+  // l10n-ignore: policy slug.
   static const sellerTerms = 'seller-terms';
   static const privacy = 'privacy';
   static const returns = 'returns';

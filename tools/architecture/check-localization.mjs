@@ -115,6 +115,23 @@ const files = SEARCH_ROOTS.flatMap((dir) => walk(path.join(root, dir)))
 
 const guardedHits = [];
 const otherHits = [];
+const arabicHits = [];
+
+/**
+ * Inline Arabic is copy too. It used to be "a separate debt" and grew to
+ * eleven hundred strings in three dialects; the whole app now reads from the
+ * ARB bundles, so the ceiling for Arabic letters inside a literal is zero.
+ * Punctuation alone (`'، '`) is a separator, not copy, and is not counted.
+ */
+const ARABIC_LETTER = /[\u0621-\u064A]/;
+const ANY_LITERAL = /'((?:[^'\\\n]|\\.)*)'|"((?:[^"\\\n]|\\.)*)"/g;
+
+/** Files whose Arabic is data rather than copy, each with its reason. */
+const ARABIC_EXEMPT = [
+  // Server column names for the operator console — a dictionary that follows
+  // the API, not the product's voice (see the comment above the map).
+  'admin/presentation/widgets/admin_record_details.dart',
+];
 
 for (const file of files) {
   const lines = fs.readFileSync(path.join(root, file), 'utf8').split(/\r?\n/);
@@ -140,6 +157,15 @@ for (const file of files) {
     if (raw.includes('l10n-ignore')) continue;
     if (index > 0 && lines[index - 1].includes('l10n-ignore')) continue;
 
+    if (!ARABIC_EXEMPT.some((part) => file.includes(part))) {
+      for (const match of raw.matchAll(ANY_LITERAL)) {
+        const value = match[1] ?? match[2] ?? '';
+        if (ARABIC_LETTER.test(value)) {
+          arabicHits.push({ file, line: index + 1, value });
+        }
+      }
+    }
+
     for (const match of raw.matchAll(LITERAL)) {
       if (!isProse(match[1])) continue;
       if (guarded) {
@@ -156,6 +182,7 @@ console.log(`Scanned ${files.length} presentation files`);
 console.log(`Guarded areas: ${guardedHits.length} literals (must be 0)`);
 const otherCount = otherHits.length;
 console.log(`Everywhere else: ${otherCount} literals (baseline ${BASELINE})`);
+console.log(`Inline Arabic: ${arabicHits.length} literals (must be 0)`);
 
 // `--list` prints the unguarded backlog, so it can be worked through.
 if (process.argv.includes('--list')) {
@@ -190,7 +217,20 @@ if (otherCount > BASELINE) {
   console.log('Localise what you added, or finish an area and guard it.');
 }
 
-if (guardedHits.length > 0 || otherCount > BASELINE) {
+if (arabicHits.length > 0) {
+  console.log('\nInline Arabic copy:');
+  console.log('  add it to app_ar.arb with an English twin in app_en.arb, in');
+  console.log('  the friendly feminine voice (Q68/Q69), and read it through');
+  console.log('  `context.l10n`. Data that is not copy carries `// l10n-ignore:`.');
+  for (const hit of arabicHits.slice(0, 30)) {
+    console.log(`    ${hit.file}:${hit.line}  ${hit.value}`);
+  }
+  if (arabicHits.length > 30) {
+    console.log(`    ... and ${arabicHits.length - 30} more`);
+  }
+}
+
+if (guardedHits.length > 0 || otherCount > BASELINE || arabicHits.length > 0) {
   process.exitCode = 1;
 }
 

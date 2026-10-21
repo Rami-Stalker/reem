@@ -132,7 +132,7 @@ class _ConsentStrip extends StatelessWidget {
                         stat.slug,
                         style: context.dsText.labelStrong.tint(palette.ink),
                       ),
-                      const SizedBox(height: 2),
+                      DsGaps.vXxxs,
                       Text(
                         l10n.adminPolicyAcceptedCurrent(
                           '${stat.acceptedCurrent}',
@@ -222,7 +222,7 @@ class _PolicyRow extends ConsumerWidget {
                       document.title(locale),
                       style: context.dsText.cardTitle.bold.tint(palette.ink),
                     ),
-                    const SizedBox(height: 2),
+                    DsGaps.vXxxs,
                     Text(
                       '${document.slug} · ${l10n.adminPolicyVersionsCount('${document.versions.length}')}',
                       style: context.dsText.caption.tint(palette.muted),

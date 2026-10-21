@@ -178,7 +178,7 @@ class _ConsentsRow extends StatelessWidget {
                   l10n.policiesMyConsents,
                   style: context.dsText.cardTitle.semibold,
                 ),
-                const SizedBox(height: 2),
+                DsGaps.vXxxs,
                 Text(
                   l10n.policiesMyConsentsSubtitle,
                   style: context.dsText.caption,

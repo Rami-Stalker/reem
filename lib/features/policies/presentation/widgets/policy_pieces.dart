@@ -40,6 +40,7 @@ IconData policyIcon(PolicySummary policy) {
 /// A date, in the reader's language and always in Western digits — the same
 /// rule the rest of the app follows. See `arabic_numerals.dart`.
 String formatPolicyDate(AppLocalizations l10n, DateTime moment) =>
+    // l10n-ignore: an intl date pattern, not copy.
     toWesternDigits(DateFormat('d MMMM yyyy', l10n.localeName).format(moment));
 
 /// One policy, as a row in the policy centre.

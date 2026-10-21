@@ -49,12 +49,11 @@ jobs:
 
       - run: flutter test
 
-      # Four structural checks the analyzer cannot express. Three of them fail
-      # today on pre-existing debt in closet/market/rooms/intelligence, so they
-      # report without failing the build — turn `continue-on-error` off per
-      # check as each one reaches zero, and it can never drift back.
+      # Structural checks the analyzer cannot express. All three reached zero
+      # (layer boundaries, design-system components and spacing, and copy —
+      # English and Arabic — living in the ARB bundles), so they now fail the
+      # build: a regression is caught on the PR that introduces it.
       - name: Structural guards
-        continue-on-error: true
         run: |
           node tools/architecture/check-flutter-boundaries.mjs
           node tools/architecture/check-design-system.mjs
