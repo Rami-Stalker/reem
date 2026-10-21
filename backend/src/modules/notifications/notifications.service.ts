@@ -506,7 +506,7 @@ export class NotificationsService {
     await this.safeCreate({
       userId: payload.userId,
       type: NotificationType.order,
-      title: `Order ${payload.orderNumber}`,
+      title: `طلبكِ ${payload.orderNumber}`,
       body: this.orderBody(payload.status),
       data: { orderId: payload.orderId, status: payload.status },
     });
@@ -741,8 +741,8 @@ export class NotificationsService {
     await this.safeCreate({
       userId: payload.userId,
       type: NotificationType.coupon,
-      title: 'New coupon 🎁',
-      body: `${payload.title} — use code ${payload.couponCode}`,
+      title: 'كوبون جديد لكِ 🎁',
+      body: `${payload.title} — استخدمي الرمز ${payload.couponCode}`,
       data: { code: payload.couponCode },
     });
   }
@@ -1297,24 +1297,30 @@ export class NotificationsService {
     return pref ? pref[key] === false : false;
   }
 
+  /**
+   * The order line in her language — every other notification on the platform
+   * is written in Arabic, and these were the last English ones in her inbox.
+   */
   private orderBody(status: string): string {
     switch (status) {
       case 'pending_payment':
-        return 'Your order is awaiting payment.';
+        return 'طلبكِ بانتظار الدفع.';
+      case 'confirmed':
+        return 'تأكّد طلبكِ، وأُرسل إلى البائعات للتجهيز.';
       case 'paid':
-        return 'Payment received — thank you!';
+        return 'وصلنا الدفع — شكراً لكِ!';
       case 'processing':
-        return 'We are preparing your order.';
+        return 'نجهّز طلبكِ الآن.';
       case 'shipped':
-        return 'Your order is on its way! 🚚';
+        return 'طلبكِ في الطريق إليكِ! 🚚';
       case 'delivered':
-        return 'Your order has been delivered. Enjoy! 💕';
+        return 'وصل طلبكِ. نتمنّى أن يعجبكِ! 💕';
       case 'cancelled':
-        return 'Your order was cancelled.';
+        return 'أُلغي طلبكِ.';
       case 'refunded':
-        return 'Your refund has been issued.';
+        return 'أُعيد المبلغ إليكِ.';
       default:
-        return 'Your order status was updated.';
+        return 'تغيّرت حالة طلبكِ.';
     }
   }
 

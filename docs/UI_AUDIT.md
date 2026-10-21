@@ -80,3 +80,35 @@ Two kinds of server text were left alone on purpose:
   to the parser.
 - **Matching vocabularies.** `stylist-lexicon.ts`, `query-normalizer.ts` and
   `search/arabic.ts` read what women actually type, so they stay colloquial.
+
+## Buyer app, verified end to end
+
+The buyer app was run as a web build against the real API on a seeded
+Postgres, and walked as the demo shopper: sign-in by code and the consent
+gate, home, Discover, search, product page, bag, coupon, checkout and a
+cash-on-delivery order (with and without a coupon), the order page and
+cancelling, favourites and collections, closet (adding a piece with a photo,
+«ماذا ألبس اليوم؟»), rooms (opening one for an occasion, proposing a piece
+into it), the stylist, likes, saves, «أضيفي إلى صفحتي», following a boutique,
+messaging a boutique, notifications, standing, wallet, rewards, addresses,
+settings and policies. Every screen loads without an error state.
+
+What that run found and fixed:
+
+| Area | Problem | Fix |
+| --- | --- | --- |
+| Storefronts | Sellers approved after private pages were introduced kept a closed page, hiding all their posts from shoppers. | Approval opens the page; a migration opens existing verified shops. |
+| Early access | New arrivals inside the members-only window were listed on home and search, but their product page answered «not found». | The visibility rule now applies to those lists too. |
+| Favourites | The Collections tab failed for everyone with a list (a decimal price arrived as a string). | The model accepts both; a test pins the real payload. |
+| Errors | English server messages reached Arabic screens. | Error states and snackbars show a friendly Arabic sentence instead. |
+| Stories | One ring per story, so a shop appeared several times. | One ring per shop, played shop by shop. |
+| Standing | A new shopper was told «جديدة» was her *next* tier, 100% done. | An unscored profile sits on the rung its score reaches. |
+| Rooms | A room of suggestions read «all settled» at 0%; «add to a room» never listed its questions. | Ready needs a chosen piece; the sheet loads the room's questions. |
+| Orders | The timeline and order notifications were English; the address repeated the city with Latin commas. | Timeline named from statuses; Arabic notifications; Arabic list comma. |
+| Reminders | A basket reminder already sent aborted the batch inside a transaction. | The touch is recorded with skip-duplicates. |
+| Copy | Remaining English counts and colloquial lines. | Localised; the guard now catches `'${n} items'`. |
+
+Not testable in this environment: **photo search**. Its index is built by
+downloading product photographs, which this sandbox cannot reach, and the
+indexer is off by default (`VISUAL_SEARCH_INDEXER_ENABLED=false`) — in
+production it must be switched on, or `scripts/index-visual.ts` run once.

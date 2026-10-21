@@ -313,13 +313,13 @@ export class ReengagementService {
     reference: string,
     stage: string,
   ): Promise<boolean> {
-    try {
-      await this.prisma.reengagementTouch.create({
-        data: { userId, kind, reference, stage },
-      });
-      return true;
-    } catch {
-      return false;
-    }
+    // ON CONFLICT DO NOTHING rather than catching the duplicate-key error:
+    // inside a transaction that error aborts everything after it, so one
+    // already-reminded basket used to silence every basket behind it.
+    const { count } = await this.prisma.reengagementTouch.createMany({
+      data: [{ userId, kind, reference, stage }],
+      skipDuplicates: true,
+    });
+    return count === 1;
   }
 }
