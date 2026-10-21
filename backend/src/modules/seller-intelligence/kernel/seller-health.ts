@@ -416,7 +416,7 @@ export function adviseSellerHealth(
       'PREP_SLOW',
       'prepSpeed',
       prep.value > PREP_HOURS.bad ? 'critical' : 'warning',
-      `وسطي تجهيزك ${Math.round(prep.value)} ساعة. لو نزّلتيه تحت ${PREP_HOURS.good} ساعة، بيوصل الطلب أسرع وبترتفع صحّة متجرك.`,
+      `متوسط تجهيزكِ ${Math.round(prep.value)} ساعة. إن خفّضتِه إلى أقل من ${PREP_HOURS.good} ساعة، يصل الطلب أسرع وترتفع صحّة متجركِ.`,
     );
   }
 
@@ -426,7 +426,7 @@ export function adviseSellerHealth(
       'SHIP_SLOW',
       'shipSpeed',
       'warning',
-      `الشحن عندك عم ياخد ${Math.round(ship.value / 24)} يوم بالوسطي. راجعي مع المندوب أو غيّري طريقة التسليم.`,
+      `يستغرق الشحن لديكِ ${Math.round(ship.value / 24)} يوم في المتوسط. راجعي المندوب أو غيّري طريقة التسليم.`,
     );
   }
 
@@ -436,7 +436,7 @@ export function adviseSellerHealth(
       'RESPONSE_SLOW',
       'responsiveness',
       resp.value > RESPONSE_HOURS.bad ? 'critical' : 'warning',
-      `الزبونة بتستنّى ${Math.round(resp.value)} ساعة لتردّي عليها. الردّ بأول ساعتين بيرفع فرصة الشراء كتير.`,
+      `تنتظر الزبونة ${Math.round(resp.value)} ساعة حتى تردّي. الرد خلال أول ساعتين يرفع فرصة الشراء كثيراً.`,
     );
   }
 
@@ -446,7 +446,7 @@ export function adviseSellerHealth(
       'CANCEL_RATE',
       'cancellation',
       cancel.value > RATE_CEILINGS.cancellation * 100 ? 'critical' : 'warning',
-      `ألغيتي ${facts.cancelledBySeller} طلب من أصل ${facts.acceptedOrders + facts.openOrders}. أكتر سبب بيكون المخزون مو محدّث — راجعي الكميات.`,
+      `ألغيتِ ${facts.cancelledBySeller} طلب من أصل ${facts.acceptedOrders + facts.openOrders}. السبب الأكثر شيوعاً مخزون غير محدّث — راجعي الكميات.`,
     );
   }
 
@@ -456,7 +456,7 @@ export function adviseSellerHealth(
       'RETURN_RATE',
       'returns',
       ret.value > RATE_CEILINGS.returns * 100 ? 'critical' : 'warning',
-      `${Math.round(ret.value)}% من طلباتك رجعت. غالبًا القياسات أو الصور مو مطابقة — دقّقي وصف القطع الأكتر رجوعًا.`,
+      `أُرجع ${Math.round(ret.value)}% من طلباتكِ. غالباً القياسات أو الصور غير مطابقة — دقّقي وصف القطع الأكثر إرجاعاً.`,
     );
   }
 
@@ -471,7 +471,7 @@ export function adviseSellerHealth(
       'LISTING_QUALITY',
       'productQuality',
       'opportunity',
-      'صفحات منتجاتك ناقصها صور أو معلومات. افتحي «ذكاء المنتجات» وشوفي القطع الأقل صحّة.',
+      'تنقص صفحات منتجاتكِ صور أو معلومات. افتحي «ذكاء المنتجات» وانظري القطع الأضعف.',
     );
   }
 
@@ -481,7 +481,7 @@ export function adviseSellerHealth(
       'RATING_LOW',
       'satisfaction',
       'warning',
-      `تقييمك ${sat.value.toFixed(1)} من ٥. اقري آخر التقييمات — عادة بيكون في سبب واحد بيتكرر.`,
+      `تقييمكِ ${sat.value.toFixed(1)} من 5. اقرئي آخر التقييمات — عادةً هناك سبب واحد يتكرر.`,
     );
   }
 

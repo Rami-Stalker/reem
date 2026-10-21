@@ -31,11 +31,11 @@ export function composeProductReply(input: {
   if (!results.length) {
     return {
       text: [
-        'ما لقيت شي متوفر فعليًا بكل التفاصيل اللي طلبتيها.',
+        'لم أجد شيئاً متوفراً فعلاً بكل التفاصيل التي طلبتِها.',
         relaxations.length
-          ? 'جرّبت أوسّع البحث وما ضبطت.'
-          : 'خلّينا نوسّع شوي — ',
-        'فيكِ ترفعي الميزانية شوي، أو نغيّر اللون، أو نجرّب قسم قريب؟',
+          ? 'حاولت توسيع البحث ولم ينجح.'
+          : 'لنوسّع قليلاً — ',
+        'هل ترفعين الميزانية قليلاً، أو نغيّر اللون، أو نجرّب قسماً قريباً؟',
       ].join(' '),
       followUps: ['وسّعي الميزانية', 'اقترحي ألوان تانية', 'شوفي أقسام قريبة'],
     };
@@ -69,27 +69,27 @@ export function composeOutfitReply(input: {
   const occasion = occasionEntry(brief.occasion);
   parts.push(
     occasion
-      ? `جهّزتلك إطلالة كاملة لـ${occasion.labelAr}: ${listed}.`
-      : `جهّزتلك إطلالة كاملة: ${listed}.`,
+      ? `جهّزت لكِ إطلالة كاملة لـ${occasion.labelAr}: ${listed}.`
+      : `جهّزت لكِ إطلالة كاملة: ${listed}.`,
   );
 
   if (outfit.palette.length) {
     const palette = outfit.palette.map(colourLabel).join(' و');
-    parts.push(`اللوحة اللونية ${palette}، والقطع منسّقة مع بعضها.`);
+    parts.push(`اللوحة اللونية ${palette}، والقطع متناسقة معاً.`);
   }
 
   if (outfit.totalSyp !== null) {
     const total = formatSyp(outfit.totalSyp);
     parts.push(
       brief.budgetMax !== null && outfit.totalSyp > brief.budgetMax
-        ? `مجموع الإطلالة ${total} — أعلى شوي من ميزانيتك، وفيكِ تستغني عن قطعة.`
+        ? `مجموع الإطلالة ${total} — أعلى قليلاً من ميزانيتكِ، ويمكنكِ الاستغناء عن قطعة.`
         : `مجموع الإطلالة ${total}.`,
     );
   }
 
   if (outfit.missingSlots.length) {
     const missing = outfit.missingSlots.map(slotLabel).join(' و');
-    parts.push(`ما لقيت ${missing} متوفر حاليًا بنفس المواصفات.`);
+    parts.push(`لم أجد ${missing} متوفراً حالياً بالمواصفات نفسها.`);
   }
 
   const relaxed = summariseRelaxations(outfit.relaxations);
@@ -114,7 +114,7 @@ export function composeConversationalReply(input: {
 }): ComposedReply {
   if (input.greeting) {
     return {
-      text: 'أهلين! أنا ريم، مساعدتك الشخصية بالتسوّق. خبّريني عن المناسبة أو القطعة اللي بتدوّري عليها، وميزانيتك، وبرتّبلك خيارات متوفرة فعليًا.',
+      text: 'أهلاً بكِ! أنا ريم، مساعدتكِ الشخصية في التسوّق. أخبريني عن المناسبة أو القطعة التي تبحثين عنها، وميزانيتكِ، وأرتّب لكِ خيارات متوفرة فعلاً.',
       followUps: [
         'عندي مناسبة وبدي فستان',
         'بدي هدية لصديقتي',
@@ -126,8 +126,8 @@ export function composeConversationalReply(input: {
   const question = missingSlotQuestion(input.brief);
   return {
     text: question
-      ? `تمام. ${question}`
-      : 'خبّريني تفاصيل أكتر — نوع القطعة، اللون، والميزانية — وبرجعلك بخيارات متوفرة.',
+      ? `حسناً. ${question}`
+      : 'أخبريني بتفاصيل أكثر — نوع القطعة واللون والميزانية — وأعود إليكِ بخيارات متوفرة.',
     followUps: followUpsFor(input.brief),
   };
 }
@@ -142,16 +142,16 @@ function openingLine(brief: StyleBrief, results: ScoredProduct[]): string {
   if (!brief.forSelf) {
     const age =
       brief.recipientAge !== null ? ` تناسب عمر ${brief.recipientAge}` : '';
-    return `اخترتلك ${count} خيارات هدية${age}، كلها متوفرة حاليًا.`;
+    return `اخترت لكِ ${count} خيارات هدية${age}، كلها متوفرة حالياً.`;
   }
   if (occasion) {
     return noun
-      ? `لقيتلك ${count} خيارات ${noun} بتناسب ${occasion.labelAr}، كلها متوفرة حاليًا.`
-      : `لقيتلك ${count} خيارات بتناسب ${occasion.labelAr}، كلها متوفرة حاليًا.`;
+      ? `وجدت لكِ ${count} خيارات ${noun} تناسب ${occasion.labelAr}، كلها متوفرة حالياً.`
+      : `وجدت لكِ ${count} خيارات تناسب ${occasion.labelAr}، كلها متوفرة حالياً.`;
   }
   return noun
-    ? `لقيتلك ${count} خيارات ${noun} متوفرة حاليًا.`
-    : `لقيتلك ${count} خيارات متوفرة حاليًا.`;
+    ? `وجدت لكِ ${count} خيارات ${noun} متوفرة حالياً.`
+    : `وجدت لكِ ${count} خيارات متوفرة حالياً.`;
 }
 
 /**
@@ -222,7 +222,7 @@ function priceRangeLine(results: ScoredProduct[]): string | null {
   const low = Math.min(...prices);
   const high = Math.max(...prices);
   if (low === high) return `السعر ${formatSyp(low)}.`;
-  return `الأسعار من ${formatSyp(low)} لـ${formatSyp(high)}.`;
+  return `الأسعار من ${formatSyp(low)} إلى ${formatSyp(high)}.`;
 }
 
 function followUpsFor(brief: StyleBrief): string[] {

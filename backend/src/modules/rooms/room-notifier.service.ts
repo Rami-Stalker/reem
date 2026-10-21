@@ -122,7 +122,7 @@ export class RoomNotifier {
       where: { id: notice.actorId },
       select: { name: true },
     });
-    const actorName = actor?.name ?? 'حدا';
+    const actorName = actor?.name ?? 'صديقة';
 
     for (const userId of audience) {
       await this.deliverOne(userId, room.id, room.title, notice, actorName);
@@ -197,7 +197,7 @@ export class RoomNotifier {
     await this.prisma.notification.update({
       where: { id: existing.id },
       data: {
-        body: `${count} تفاعلات جديدة بالغرفة`,
+        body: `${count} تفاعلات جديدة في الغرفة`,
         // Re-stamped so the line rises to the top of her list again: the whole
         // point of folding is that one row stays current, not that it goes
         // stale where it was first written.
@@ -232,31 +232,31 @@ export class RoomNotifier {
       case RoomEventKind.COMMENT_ADDED:
         return subject
           ? `${actorName} علّقت على «${subject}»`
-          : `${actorName} علّقت بالغرفة`;
+          : `${actorName} علّقت في الغرفة`;
       case RoomEventKind.CANDIDATE_ADDED:
         return subject
           ? `${actorName} اقترحت قطعة لـ«${subject}»`
           : `${actorName} اقترحت قطعة`;
       case RoomEventKind.DECISION_ADDED:
-        return `${actorName} ضافت قرار جديد`;
+        return `${actorName} أضافت قراراً جديداً`;
       case RoomEventKind.DECISION_RESOLVED:
         return subject
           ? `${actorName} حسمت «${subject}»`
-          : `${actorName} حسمت قرار`;
+          : `${actorName} حسمت قراراً`;
       case RoomEventKind.DECISION_SKIPPED:
         return subject
-          ? `${actorName} قرّرت تتخطّى «${subject}»`
-          : `${actorName} تخطّت قرار`;
+          ? `${actorName} قرّرت تخطّي «${subject}»`
+          : `${actorName} تخطّت قراراً`;
       case RoomEventKind.MEMBER_JOINED:
         return `${actorName} انضمّت للغرفة`;
       case RoomEventKind.MEMBER_INVITED:
-        return `${actorName} دعتك لغرفة`;
+        return `${actorName} دعتكِ إلى غرفة`;
       case RoomEventKind.PLAN_DRAWN:
-        return `${actorName} جهّزت خطة الشرا`;
+        return `${actorName} جهّزت خطة الشراء`;
       case RoomEventKind.PLAN_ORDERED:
         return `${actorName} اشترت من الغرفة`;
       default:
-        return `في حركة جديدة بالغرفة`;
+        return `هناك جديد في الغرفة`;
     }
   }
 }

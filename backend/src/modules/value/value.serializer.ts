@@ -31,27 +31,27 @@ import { EARNING_RULE_BY_CODE } from './value.constants';
 const PILLAR_LABELS: Record<ValuePillar, { label: string; blurb: string }> = {
   COMMERCE: {
     label: 'شراء',
-    blurb: 'طلبات وصلتك واحتفظتي فيها.',
+    blurb: 'طلبات وصلتكِ واحتفظتِ بها.',
   },
   CRAFT: {
     label: 'رأي',
-    blurb: 'تقييماتك يلي استفادت منها غيرك.',
+    blurb: 'تقييماتكِ التي استفادت منها غيركِ.',
   },
   COMMUNITY: {
     label: 'مجتمع',
-    blurb: 'منشوراتك وتعليقاتك يلي تفاعلوا معها.',
+    blurb: 'منشوراتكِ وتعليقاتكِ التي تفاعلت معها النساء.',
   },
   ADVOCACY: {
     label: 'دعوة',
-    blurb: 'ناس دعوتيهن وصاروا جزء من ريم.',
+    blurb: 'من دعوتِهن فأصبحن جزءاً من ريم.',
   },
   DISCOVERY: {
     label: 'اكتشاف',
-    blurb: 'قطع ومتاجر اكتشفتيهن قبل غيرك.',
+    blurb: 'قطع ومتاجر اكتشفتِها قبل غيركِ.',
   },
   RELIABILITY: {
     label: 'التزام',
-    blurb: 'تعاملك عند الاستلام والمشاكل.',
+    blurb: 'تعاملكِ عند الاستلام وفي المشكلات.',
   },
 };
 

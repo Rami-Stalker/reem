@@ -639,8 +639,8 @@ export class VisualSearchService {
   private async emptyNotice(): Promise<string> {
     const indexed = await this.index.size();
     return indexed === 0
-      ? 'البحث بالصورة لسا عم يفهرس صور المنتجات. جرّبي بعد شوي.'
-      : 'ما لقيت شي قريب كفاية من هالصورة. جرّبي صورة أوضح، أو وصفيلي شو بتدوّري عليه.';
+      ? 'ما زال البحث بالصورة يفهرس صور المنتجات. جرّبي بعد قليل.'
+      : 'لم أجد شيئاً قريباً بما يكفي من هذه الصورة. جرّبي صورة أوضح، أو صفي لي ما تبحثين عنه.';
   }
 
   /** The readiness figure the bootstrap route reports. */

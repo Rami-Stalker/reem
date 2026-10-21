@@ -67,35 +67,35 @@ export const HEALTH_DIMENSION_AR: Record<
 > = {
   reliability: {
     label: 'الالتزام بالطلبات',
-    blurb: 'الطلبات يلي وصلت لصاحبتها من أصل يلي قبلتيها.',
+    blurb: 'الطلبات التي وصلت إلى صاحبتها من بين ما قبلتِه.',
   },
   prepSpeed: {
     label: 'سرعة التجهيز',
-    blurb: 'الوقت من قبولك للطلب لحد ما يطلع من عندك.',
+    blurb: 'الوقت من قبولكِ الطلب حتى يخرج من عندكِ.',
   },
   productQuality: {
     label: 'جودة المنتجات',
-    blurb: 'تقييمات القطع نفسها، ونسبة يلي رجعت.',
+    blurb: 'تقييمات القطع نفسها، ونسبة ما أُرجع منها.',
   },
   satisfaction: {
     label: 'رضا العميلات',
-    blurb: 'شو بيقولوا يلي اشتروا منك.',
+    blurb: 'ما تقوله من اشترين منكِ.',
   },
   shipSpeed: {
     label: 'سرعة الشحن',
-    blurb: 'الوقت من تسليم الطلب للمندوب لحد ما يوصل.',
+    blurb: 'الوقت من تسليم الطلب للمندوب حتى يصل.',
   },
   returns: {
     label: 'المرتجعات',
-    blurb: 'نسبة الطلبات يلي رجعت بعد ما وصلت.',
+    blurb: 'نسبة الطلبات التي أُرجعت بعد وصولها.',
   },
   responsiveness: {
     label: 'سرعة الاستجابة',
-    blurb: 'قدّيش بتاخدي لترّدي على رسالة زبونة.',
+    blurb: 'كم تستغرقين للرد على رسالة زبونة.',
   },
   cancellation: {
     label: 'الإلغاء',
-    blurb: 'الطلبات يلي انلغت من طرفك بعد ما انطلبت.',
+    blurb: 'الطلبات التي ألغيتِها بعد أن طُلبت.',
   },
 };
 
@@ -167,7 +167,7 @@ export const HEALTH_BANDS: ReadonlyArray<{
 ];
 
 export const HEALTH_BAND_AR: Record<SellerHealthBand, string> = {
-  [SellerHealthBand.BUILDING]: 'لسا عم نتعرّف عليكِ',
+  [SellerHealthBand.BUILDING]: 'ما زلنا نتعرّف عليكِ',
   [SellerHealthBand.AT_RISK]: 'بحاجة انتباه',
   [SellerHealthBand.STEADY]: 'مستقرة',
   [SellerHealthBand.STRONG]: 'قوية',

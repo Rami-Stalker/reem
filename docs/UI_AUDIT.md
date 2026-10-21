@@ -62,13 +62,21 @@ fails the PR that introduces it.
 - Android notification channel names (`core/notifications`) are registered at
   startup, before a locale is available.
 
-## What remains
+## Server-written sentences
 
-- **Server-written sentences.** Reasons, care notes, missions, stylist replies
-  and intelligence advice are composed by the backend and shown as-is. About a
-  hundred of them are still colloquial (`value.constants.ts`,
-  `market/kernel/lifecycle.ts`, `market-intelligence.service.ts`,
-  `seller-intelligence/*`, `closet.serializer.ts`, `rooms.serializer.ts`,
-  `reply-composer.ts`). They need the same rewrite on the server, keeping the
-  *matching* vocabularies (`stylist-lexicon.ts`, `query-normalizer.ts`,
-  `search/arabic.ts`) colloquial, because those read what women type.
+Reasons, care notes, missions, stylist replies, intelligence advice, room
+activity and notifications are composed by the backend and shown as-is. About
+170 of them were colloquial (`value.constants.ts`, `market/kernel/lifecycle.ts`,
+`market-intelligence.service.ts`, `seller-intelligence/*`,
+`closet.serializer.ts`, `rooms/*`, `reply-composer.ts`, `stylist-ranker.ts`,
+`visual-search/*`); they now use the same friendly feminine standard Arabic,
+and the stylist's language-model prompt asks for it instead of "a neutral
+dialect".
+
+Two kinds of server text were left alone on purpose:
+
+- **Her words.** Suggestion chips and example prompts («عندي مناسبة وبدي
+  فستان», «بلون تاني») are things she taps or types, and they are sent back
+  to the parser.
+- **Matching vocabularies.** `stylist-lexicon.ts`, `query-normalizer.ts` and
+  `search/arabic.ts` read what women actually type, so they stay colloquial.

@@ -219,7 +219,7 @@ export function stockAlerts(
           coverDays: 0,
           demandGrowth: growth,
           severity: 'critical',
-          ar: `«${row.title}» خلصت وبعدها عم تجيها ${row.recentViews} مشاهدة. كل يوم بدون كمية هو مبيع ضايع.`,
+          ar: `«${row.title}» نفدت وما زالت تصلها ${row.recentViews} مشاهدة. كل يوم بلا كمية بيع ضائع.`,
         });
       }
       continue;
@@ -235,8 +235,8 @@ export function stockAlerts(
         demandGrowth: growth,
         severity: coverDays <= 3 && rising ? 'critical' : 'warning',
         ar: rising
-          ? `«${row.title}» باقي منها ${row.stockUnits} قطعة (تكفّي ${coverDays} يوم) والطلب عليها طالع. جهّزي كمية.`
-          : `«${row.title}» باقي منها ${row.stockUnits} قطعة، تكفّي حوالي ${coverDays} يوم.`,
+          ? `«${row.title}» بقي منها ${row.stockUnits} قطعة (تكفي ${coverDays} يوم) والطلب عليها يرتفع. جهّزي كمية.`
+          : `«${row.title}» بقي منها ${row.stockUnits} قطعة، تكفي نحو ${coverDays} يوم.`,
       });
     }
   }
@@ -299,7 +299,7 @@ export function priceTrends(
           : null;
 
       const direction =
-        changeBps > 300 ? 'طالعة' : changeBps < -300 ? 'نازلة' : 'ثابتة';
+        changeBps > 300 ? 'ترتفع' : changeBps < -300 ? 'تنخفض' : 'ثابتة';
       const positioning =
         sellerPremiumBps === null
           ? ''
@@ -365,8 +365,8 @@ export function opportunities(input: {
       code: 'UNMET_IN_CATEGORY',
       score: round(term.opportunity * (term.inHerCategories ? 0.92 : 0.7)),
       ar: term.inHerCategories
-        ? `${term.searches} بنت دوّرت على «${term.display}» وما لقيت — وهي بفئة إنتِ عم تبيعي فيها.`
-        : `${term.searches} بنت دوّرت على «${term.display}» وما لقيت شي مناسب.`,
+        ? `${term.searches} امرأة بحثت عن «${term.display}» ولم تجد — وهي في فئة تبيعين فيها.`
+        : `${term.searches} امرأة بحثت عن «${term.display}» ولم تجد ما يناسبها.`,
       termKey: term.termKey,
       categoryId: term.suggestedCategoryId ?? undefined,
     });
@@ -378,8 +378,8 @@ export function opportunities(input: {
       score: round(cat.relevance * (cat.presence === 'selling' ? 0.85 : 0.6)),
       ar:
         cat.presence === 'selling'
-          ? `الطلب على «${cat.name}» طالع ${Math.round(cat.growth * 100)}% وإنتِ عم تبيعي فيها — وقت مناسب تزيدي المعروض.`
-          : `«${cat.name}» طالعة ${Math.round(cat.growth * 100)}% وما عندك شي فيها.`,
+          ? `الطلب على «${cat.name}» يرتفع ${Math.round(cat.growth * 100)}% وأنتِ تبيعين فيها — وقت مناسب لزيادة المعروض.`
+          : `«${cat.name}» ترتفع ${Math.round(cat.growth * 100)}% ولا شيء لديكِ فيها.`,
       categoryId: cat.categoryId,
     });
   }

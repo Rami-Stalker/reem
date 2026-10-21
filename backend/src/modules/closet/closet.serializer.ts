@@ -56,7 +56,7 @@ export function seasonLabel(season: ClosetSeason): string {
 export function sourceLabel(source: ClosetItemSource): string {
   switch (source) {
     case ClosetItemSource.PURCHASE:
-      return 'من مشترياتك';
+      return 'من مشترياتكِ';
     case ClosetItemSource.CATALOG:
       return 'من ريم';
     default:
@@ -79,21 +79,21 @@ export function gapHeadline(gap: ClosetGap): string {
 
   switch (gap.kind) {
     case ClosetGapKind.LOOK_SLOT:
-      return `ناقصك ${slot} لتكملي إطلالتك`;
+      return `ينقصكِ ${slot} لتكتمل إطلالتكِ`;
     case ClosetGapKind.OCCASION:
       return occasion
-        ? `ما عندك ${slot} مناسب لـ${occasion}`
-        : `ما عندك ${slot} لهالمناسبة`;
+        ? `ليس لديكِ ${slot} مناسب لـ${occasion}`
+        : `ليس لديكِ ${slot} لهذه المناسبة`;
     case ClosetGapKind.COVERAGE: {
       const unlocked = components['outfits_unlocked'];
       return unlocked
-        ? `${slot} وحدة بتفتحلك ${unlocked} إطلالة جديدة`
-        : `خزانتك ناقصها ${slot}`;
+        ? `${slot} واحد يفتح لكِ ${unlocked} إطلالة جديدة`
+        : `ينقص خزانتكِ ${slot}`;
     }
     case ClosetGapKind.SEASON:
-      return `ما عندك ${slot} للموسم الحالي`;
+      return `ليس لديكِ ${slot} للموسم الحالي`;
     default:
-      return `${slot} عندك محتاجة تبديل`;
+      return `${slot} لديكِ يحتاج إلى تبديل`;
   }
 }
 
@@ -104,52 +104,52 @@ export function gapRationale(gap: ClosetGap): string {
   switch (gap.kind) {
     case ClosetGapKind.LOOK_SLOT:
       return components['nearly_complete']
-        ? 'قطعة وحدة وبتصير الإطلالة جاهزة.'
-        : 'إطلالة محفوظة عندك ناقصها هالقطعة.';
+        ? 'قطعة واحدة وتكتمل الإطلالة.'
+        : 'إطلالة محفوظة لديكِ تنقصها هذه القطعة.';
     case ClosetGapKind.OCCASION:
-      return 'عندك قطع لهالمناسبة بس ما بتكفّي لإطلالة كاملة.';
+      return 'لديكِ قطع لهذه المناسبة لكنها لا تكفي لإطلالة كاملة.';
     case ClosetGapKind.COVERAGE: {
       const now = components['outfits_now'];
       return now === 0
-        ? 'هي القطعة اللي بتخلّي خزانتك تعطي إطلالة كاملة.'
-        : `عندك حاليًا ${now} إطلالة كاملة، وهي القطعة اللي بتزيدهن أكتر.`;
+        ? 'هذه القطعة تجعل خزانتكِ تعطي إطلالة كاملة.'
+        : `لديكِ الآن ${now} إطلالة كاملة، وهذه القطعة تزيدها أكثر من غيرها.`;
     }
     case ClosetGapKind.SEASON: {
       const shelved = components['owned_out_of_season'];
       return shelved
-        ? `عندك ${shelved} قطع بهالخانة بس مو مناسبة للجو هلق.`
-        : 'ما في قطعة بهالخانة مناسبة للموسم.';
+        ? `لديكِ ${shelved} قطع في هذه الخانة لكنها لا تناسب الطقس الآن.`
+        : 'لا قطعة في هذه الخانة تناسب الموسم.';
     }
     default: {
       const wears = components['wear_count'];
       return wears
-        ? `لبستيها ${wears} مرة، وما عندك بديل بهالخانة.`
-        : 'ما عندك بديل بهالخانة.';
+        ? `ارتديتِها ${wears} مرة، وليس لديكِ بديل في هذه الخانة.`
+        : 'ليس لديكِ بديل في هذه الخانة.';
     }
   }
 }
 
 const PAIRING_REASON_LABELS: Record<PairingReason, string> = {
-  PAIRS_WITH_OWNED: 'بتنسّق مع قطع موجودة بخزانتك',
-  COMPLETES_LOOK: 'بتكمّل إطلالة محفوظة عندك',
-  FILLS_EMPTY_SLOT: 'ما عندك ولا قطعة بهالخانة',
-  MATCHES_YOUR_SIZE: 'متوفرة بمقاسك',
+  PAIRS_WITH_OWNED: 'تتناسق مع قطع في خزانتكِ',
+  COMPLETES_LOOK: 'تكمل إطلالة محفوظة لديكِ',
+  FILLS_EMPTY_SLOT: 'لا قطعة لديكِ في هذه الخانة',
+  MATCHES_YOUR_SIZE: 'متوفرة بمقاسكِ',
   IN_SEASON: 'مناسبة للموسم الحالي',
-  MATCHES_YOUR_MODESTY: 'بتناسب أسلوب خزانتك',
-  MATCHES_YOUR_PALETTE: 'من ألوان خزانتك',
-  ALREADY_WELL_STOCKED: 'عندك كتير قطع بهالخانة',
-  DUPLICATE_OF_OWNED: 'قريبة كتير من قطعة عندك',
+  MATCHES_YOUR_MODESTY: 'تناسب أسلوب خزانتكِ',
+  MATCHES_YOUR_PALETTE: 'من ألوان خزانتكِ',
+  ALREADY_WELL_STOCKED: 'لديكِ قطع كثيرة في هذه الخانة',
+  DUPLICATE_OF_OWNED: 'قريبة جداً من قطعة لديكِ',
 };
 
 const OUTFIT_REASON_LABELS: Record<OutfitReason, string> = {
   READY_TO_WEAR: 'جاهزة للبس',
-  NOT_WORN_RECENTLY: 'ما لبستيها من فترة',
-  REDISCOVERED: 'صار زمان ما لبستيها',
-  FAVOURITE: 'من مفضّلاتك',
-  SEASON_FIT: 'مناسبة للجو',
+  NOT_WORN_RECENTLY: 'لم ترتديها منذ فترة',
+  REDISCOVERED: 'لم ترتديها منذ زمن',
+  FAVOURITE: 'من مفضّلاتكِ',
+  SEASON_FIT: 'تناسب الطقس',
   OCCASION_FIT: 'مناسبة للمناسبة',
   COLOURS_HARMONISE: 'ألوانها متناسقة',
-  ONE_PIECE_SHORT: 'ناقصها قطعة وحدة',
+  ONE_PIECE_SHORT: 'تنقصها قطعة واحدة',
 };
 
 // ── Rows ────────────────────────────────────────────────────────────────

@@ -354,8 +354,8 @@ export function adviseProduct(
       gainPoints: gain('imagery'),
       ar:
         facts.imageCount === 0
-          ? 'ما في ولا صورة. القطعة بدون صورة تقريبًا ما بتنشرى.'
-          : `عندك ${facts.imageCount} صور. ضيفي صور إضافية — من قدام، من ورا، وتفصيل قريب — الأفضل ${IMAGE_TARGET}.`,
+          ? 'لا صورة واحدة. القطعة بلا صورة لا تكاد تُشترى.'
+          : `لديكِ ${facts.imageCount} صور. أضيفي صوراً أخرى — من الأمام والخلف وتفصيلاً قريباً — والأفضل ${IMAGE_TARGET}.`,
     });
   }
 
@@ -368,7 +368,7 @@ export function adviseProduct(
           ? 'warning'
           : 'opportunity',
       gainPoints: gain('content'),
-      ar: 'الوصف قصير. اكتبي القماش والقياسات وكيف بتنلبس — هالكلمات هي يلي بتلاقيها البنات بالبحث.',
+      ar: 'الوصف قصير. اكتبي القماش والقياسات وطريقة اللبس — هذه الكلمات هي ما تجده النساء في البحث.',
     });
   }
 
@@ -386,7 +386,7 @@ export function adviseProduct(
       axis: 'conversion',
       severity: 'critical',
       gainPoints: gain('conversion'),
-      ar: `هالمنتج عم ياخد ${facts.views} مشاهدة بس التحويل ضعيف. غالبًا السعر أو الصور أو الوصف — جرّبي تغيّري وحدة وشوفي.`,
+      ar: `يحصل هذا المنتج على ${facts.views} مشاهدة لكن التحويل ضعيف. غالباً السعر أو الصور أو الوصف — غيّري واحداً منها وراقبي النتيجة.`,
     });
   }
 
@@ -398,7 +398,7 @@ export function adviseProduct(
       axis: 'price',
       severity: premium > PRICE_PREMIUM_BPS * 2 ? 'warning' : 'opportunity',
       gainPoints: 0,
-      ar: `سعرك أعلى بـ${Math.round(premium / 100)}% من المنتجات المشابهة بنفس الفئة. إذا في سبب (خامة أحسن مثلًا) اكتبيه بالوصف.`,
+      ar: `سعرك أعلى بـ${Math.round(premium / 100)}% من المنتجات المشابهة في الفئة نفسها. إن كان هناك سبب (خامة أفضل مثلاً) فاذكريه في الوصف.`,
     });
   } else if (premium !== null && premium < -PRICE_PREMIUM_BPS * 2) {
     out.push({
@@ -406,7 +406,7 @@ export function adviseProduct(
       axis: 'price',
       severity: 'opportunity',
       gainPoints: 0,
-      ar: `سعرك أقل بـ${Math.abs(Math.round(premium / 100))}% من المشابه. إذا المبيع ماشي، في مجال ترفعي السعر.`,
+      ar: `سعرك أقل بـ${Math.abs(Math.round(premium / 100))}% من المشابه. إن كان البيع جيداً، فهناك مجال لرفع السعر.`,
     });
   }
 
@@ -416,7 +416,7 @@ export function adviseProduct(
       axis: 'stock',
       severity: facts.views > 0 ? 'critical' : 'warning',
       gainPoints: 0,
-      ar: 'القطعة مو متوفرة، وبتضلّ تظهر بالبحث. رجّعي الكمية أو أخفيها لتوقفي المشاهدات الضايعة.',
+      ar: 'القطعة غير متوفرة وما زالت تظهر في البحث. أعيدي الكمية أو أخفيها لتوقفي المشاهدات الضائعة.',
     });
   }
 
@@ -427,7 +427,7 @@ export function adviseProduct(
       axis: 'attributes',
       severity: 'opportunity',
       gainPoints: gain('attributes'),
-      ar: 'الخصائص ناقصة (اللون، القياس، الخامة). هي يلي بتخلّي القطعة تطلع لما تفلتر البنت.',
+      ar: 'الخصائص ناقصة (اللون، القياس، الخامة). هي ما يُظهر القطعة حين تستخدم المرأة الفلاتر.',
     });
   }
 
@@ -443,7 +443,7 @@ export function adviseProduct(
       axis: 'discoverability',
       severity: 'warning',
       gainPoints: gain('discoverability'),
-      ar: 'القطعة بتطلع بالبحث بس قليل يلي بيفتحوها. غالبًا العنوان أو الصورة الأولى مو جاذبين.',
+      ar: 'تظهر القطعة في البحث لكن قلّة يفتحنها. غالباً العنوان أو الصورة الأولى غير جاذبين.',
     });
   }
 

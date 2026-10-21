@@ -198,7 +198,7 @@ test('price movement is reported with her own position in it', () => {
   const [trend] = priceTrends(rows);
   assert.equal(trend.changeBps, 1000, '+10%');
   assert.ok(trend.sellerPremiumBps && trend.sellerPremiumBps > 2000);
-  assert.match(trend.ar, /طالعة/);
+  assert.match(trend.ar, /ترتفع/);
   assert.match(trend.ar, /أعلى/, 'and where she sits in it');
 });
 
