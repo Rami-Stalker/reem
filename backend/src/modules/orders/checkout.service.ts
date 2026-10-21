@@ -1,3 +1,4 @@
+import { randomInt } from 'crypto';
 import {
   BadRequestException,
   Inject,
@@ -947,9 +948,14 @@ export class CheckoutService {
     return { shipping: dto.shipping, fromAddressBook: false };
   }
 
+  /**
+   * `number` is unique, so a collision fails the whole checkout. The suffix
+   * comes from the OS CSPRNG with ~1.7M values per millisecond (it was 900
+   * from `Math.random()`), which also keeps the next number unguessable.
+   */
   private orderNumber(): string {
     const stamp = Date.now().toString(36).toUpperCase();
-    const noise = Math.floor(Math.random() * 900 + 100);
+    const noise = randomInt(36 ** 3, 36 ** 4).toString(36).toUpperCase();
     return `REEM-${stamp}${noise}`;
   }
 }

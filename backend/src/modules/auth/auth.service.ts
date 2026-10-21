@@ -1,3 +1,4 @@
+import { randomInt } from 'crypto';
 import {
   BadRequestException,
   ConflictException,
@@ -1704,7 +1705,7 @@ export class AuthService {
     let username = base;
     for (let attempt = 0; attempt < 12; attempt++) {
       if (!(await this.users.usernameTaken(username))) return username;
-      username = `${base}_${Math.floor(Math.random() * 9999)}`;
+      username = `${base}_${randomInt(10_000)}`;
     }
     return `${base}_${Date.now()}`;
   }
