@@ -68,6 +68,9 @@ export async function seedPeople(
         declaredFemaleAt: verifiedAt,
         sellerLevel: SellerLevel[seed.level],
         sellerVerifiedAt: seed.level === 'BASIC' ? null : verifiedAt,
+        // A verified shop's page is open, as approval opens it in the app.
+        profileIsPublic: seed.level !== 'BASIC',
+        profilePublicSince: seed.level === 'BASIC' ? null : verifiedAt,
         sellerPremiumUntil:
           seed.level === 'PREMIUM' ? rng.futureDate(300, 90) : null,
         points: rng.int(500, 6000),
