@@ -8764,4 +8764,638 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get marketRotationUnworn => 'لم تُلبس ولا مرة';
+
+  @override
+  String get settingsMyAddresses => 'عناويني';
+
+  @override
+  String get settingsDeliveryAddresses => 'عناوين التوصيل';
+
+  @override
+  String get settingsDeliveryAddressesSubtitle => 'إلى أين نرسل طلباتكِ؟';
+
+  @override
+  String get settingsAddAddress => 'أضيفي عنواناً جديداً';
+
+  @override
+  String get settingsAddressAdded => 'أُضيف العنوان';
+
+  @override
+  String get settingsAddressUpdated => 'حُفظ التعديل';
+
+  @override
+  String get settingsAddressNowDefault => 'أصبح هذا عنوانكِ الافتراضي';
+
+  @override
+  String get settingsDeleteAddressTitle => 'حذف العنوان';
+
+  @override
+  String settingsDeleteAddressBody(String label) {
+    return 'سيُحذف «$label» من عناوينكِ.';
+  }
+
+  @override
+  String get settingsDelete => 'حذف';
+
+  @override
+  String get settingsKeep => 'تراجع';
+
+  @override
+  String get settingsAddressDeleted => 'حُذف العنوان';
+
+  @override
+  String get settingsActionFailed => 'تعذّر تنفيذ العملية الآن';
+
+  @override
+  String get settingsNoAddresses => 'لا عناوين محفوظة بعد';
+
+  @override
+  String get settingsNoAddressesBody =>
+      'احفظي عنواناً الآن ليكون جاهزاً عند أول طلب';
+
+  @override
+  String get settingsCoupons => 'الكوبونات';
+
+  @override
+  String get settingsYourOffers => 'عروضكِ';
+
+  @override
+  String get settingsYourOffersSubtitle =>
+      'طبّقي العرض على سلّتكِ، أو انسخي الرمز';
+
+  @override
+  String settingsCouponPercentOff(String percent) {
+    return 'خصم $percent%';
+  }
+
+  @override
+  String settingsCouponAmountOff(String amount) {
+    return 'خصم $amount';
+  }
+
+  @override
+  String settingsCouponMinimum(String amount) {
+    return 'حد أدنى $amount';
+  }
+
+  @override
+  String get settingsCouponEndsToday => 'ينتهي اليوم';
+
+  @override
+  String settingsCouponDaysLeft(int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: 'تبقّى $days يوماً',
+      few: 'تبقّى $days أيام',
+      two: 'يبقى يومان',
+      one: 'يبقى يوم واحد',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get settingsCouponLastUse => 'استخدام أخير';
+
+  @override
+  String settingsCouponUsesLeft(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'يبقى $count استخداماً',
+      few: 'يبقى $count استخدامات',
+      two: 'يبقى استخدامان',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String settingsCouponApplied(String code, String amount) {
+    return 'طُبّق $code — وفّرتِ $amount';
+  }
+
+  @override
+  String get settingsCouponEmptyBag =>
+      'سلّتكِ فارغة — أضيفي منتجاً ثم طبّقي العرض';
+
+  @override
+  String get settingsCouponTwoCurrencies =>
+      'في سلّتكِ عملتان، طبّقي العرض عند الدفع';
+
+  @override
+  String get settingsCouponApplyFailed => 'تعذّر تطبيق الكوبون';
+
+  @override
+  String get settingsCouponJustForYou => 'خاص بكِ';
+
+  @override
+  String get settingsCouponCopyCode => 'انسخي الرمز';
+
+  @override
+  String settingsCouponCopied(String code) {
+    return 'نُسخ الرمز $code';
+  }
+
+  @override
+  String get settingsCouponAppliedBadge => 'مُطبَّق';
+
+  @override
+  String get settingsCouponApplyToBag => 'طبّقيه على سلّتي';
+
+  @override
+  String settingsCouponAppliedSaving(String code, String discount) {
+    return '$code مُطبَّق — توفير $discount';
+  }
+
+  @override
+  String get settingsRemove => 'إزالة';
+
+  @override
+  String get settingsContinueToCheckout => 'تابعي إلى الدفع';
+
+  @override
+  String settingsBagNow(String subtotal) {
+    return 'سلّتكِ الآن: $subtotal';
+  }
+
+  @override
+  String get settingsNoCoupons => 'لا كوبونات متاحة الآن';
+
+  @override
+  String get settingsNoCouponsBody => 'سنُعلمكِ حين يصلكِ عرض جديد';
+
+  @override
+  String get settingsCouponsFailed => 'تعذّر تحميل الكوبونات';
+
+  @override
+  String get settingsPaymentMethods => 'طرق الدفع';
+
+  @override
+  String get settingsPayAtOrder => 'الدفع عند الطلب';
+
+  @override
+  String get settingsPayAtOrderSubtitle => 'تختارين الطريقة عند إتمام الشراء';
+
+  @override
+  String get settingsAvailableMethods => 'الطرق المتاحة';
+
+  @override
+  String get settingsNoCardsStored =>
+      'لا نحفظ بيانات بطاقات. تُدفع كل عملية عند إتمامها بالطريقة التي تختارينها.';
+
+  @override
+  String get settingsReemWallet => 'محفظة ريم';
+
+  @override
+  String get settingsHintCod => 'تدفعين نقداً للمندوبة عند الاستلام';
+
+  @override
+  String get settingsHintCourierCollect => 'تحصيل عبر شركة التوصيل';
+
+  @override
+  String get settingsHintWallet => 'يُخصم من رصيدكِ فوراً';
+
+  @override
+  String get settingsHintMobileWallet => 'نفتح لكِ صفحة الدفع بعد تأكيد الطلب';
+
+  @override
+  String get settingsHintCard => 'صفحة دفع آمنة — لا نحفظ بيانات بطاقتكِ';
+
+  @override
+  String get settingsHintBankTransfer =>
+      'تحوّلين المبلغ ثم ترسلين رقم الحوالة من صفحة الطلب';
+
+  @override
+  String get settingsHintHawala =>
+      'حوالة داخلية، ثم ترسلين رقم الإشعار من صفحة الطلب';
+
+  @override
+  String get settingsHintConfirmedFirst => 'يُؤكَّد الدفع قبل تجهيز الطلب';
+
+  @override
+  String get settingsNoPaymentMethods => 'لا طرق دفع متاحة حالياً';
+
+  @override
+  String get settingsPaymentMethodsFailed => 'تعذّر تحميل طرق الدفع';
+
+  @override
+  String get settingsAddressDefault => 'الافتراضي';
+
+  @override
+  String settingsAddressNear(String landmark) {
+    return 'قرب $landmark';
+  }
+
+  @override
+  String get settingsMakeDefault => 'اجعليه الافتراضي';
+
+  @override
+  String get settingsEdit => 'تعديل';
+
+  @override
+  String get settingsAddressHome => 'المنزل';
+
+  @override
+  String get settingsEditAddress => 'تعديل العنوان';
+
+  @override
+  String get settingsNewAddress => 'عنوان جديد';
+
+  @override
+  String get settingsAddressName => 'اسم العنوان';
+
+  @override
+  String get settingsAddressNameHint => 'المنزل، العمل، بيت أهلي';
+
+  @override
+  String get settingsRecipientName => 'اسم المستلِمة';
+
+  @override
+  String get settingsRecipientNameHint => 'من تستلم الطلب';
+
+  @override
+  String get settingsPhoneNumber => 'رقم الهاتف';
+
+  @override
+  String get settingsCity => 'المدينة أو البلدة';
+
+  @override
+  String get settingsCityHint => 'المزة، جرمانا، ...';
+
+  @override
+  String get settingsAddressLine => 'العنوان';
+
+  @override
+  String get settingsAddressLineHint => 'الشارع، البناء، الطابق، رقم الشقة';
+
+  @override
+  String get settingsLandmark => 'علامة مميزة (اختياري)';
+
+  @override
+  String get settingsLandmarkHint => 'قرب صيدلية النور';
+
+  @override
+  String get settingsDeliveryNotes => 'تعليمات للتوصيل (اختياري)';
+
+  @override
+  String get settingsDeliveryNotesHint => 'اتصلي قبل الوصول';
+
+  @override
+  String get settingsMakeMyDefault => 'اجعليه عنواني الافتراضي';
+
+  @override
+  String get settingsMakeMyDefaultHint => 'تُفتح عليه صفحة الدفع';
+
+  @override
+  String get settingsSaveChanges => 'احفظي التعديل';
+
+  @override
+  String get settingsSaveAddress => 'احفظي العنوان';
+
+  @override
+  String get settingsGovernorate => 'المحافظة';
+
+  @override
+  String get settingsChooseGovernorate => 'اختاري المحافظة';
+
+  @override
+  String get settingsDistrict => 'المنطقة';
+
+  @override
+  String get settingsChooseDistrict => 'اختاري المنطقة (اختياري)';
+
+  @override
+  String settingsDistrictRural(String name) {
+    return '$name · ريف';
+  }
+
+  @override
+  String get settingsGovernoratesFailed => 'تعذّر تحميل قائمة المحافظات';
+
+  @override
+  String get settingsFieldRequired => 'هذا الحقل مطلوب';
+
+  @override
+  String get settingsFieldTooShort => 'أقصر من اللازم';
+
+  @override
+  String get siDemandRadar => 'رادار الطلب';
+
+  @override
+  String get siRadarFailed => 'تعذّر تحميل بيانات الرادار.';
+
+  @override
+  String get siNoProducts => 'لا منتجات بعد';
+
+  @override
+  String get siNoProductsRadarBody => 'أضيفي أول منتج ونبدأ بقراءة السوق لكِ.';
+
+  @override
+  String get siStillGathering => 'ما زلنا نجمع البيانات';
+
+  @override
+  String get siStillGatheringBody =>
+      'يقرأ الرادار حركة السوق كل ليلة. عودي غداً.';
+
+  @override
+  String get siWhatToDoNow => 'ماذا أفعل الآن';
+
+  @override
+  String get siWhatToDoNowSubtitle => 'مرتّبة حسب الأهم لمتجركِ';
+
+  @override
+  String get siStockBelowDemand => 'المخزون أقل من الطلب';
+
+  @override
+  String get siStockBelowDemandSubtitle => 'قطع تُطلب جيداً وكميتها تنفد';
+
+  @override
+  String get siRisingCategories => 'فئات صاعدة';
+
+  @override
+  String get siRisingCategoriesSubtitle => 'الطلب عليها يزداد';
+
+  @override
+  String get siUnmetDemand => 'طلب بلا جواب';
+
+  @override
+  String get siUnmetDemandSubtitle => 'بحثت نساء ولم يجدن ما يناسبهن';
+
+  @override
+  String get siPriceMovement => 'حركة الأسعار';
+
+  @override
+  String get siOutOfStock => 'لم تبقَ ولا قطعة';
+
+  @override
+  String siUnitsLeft(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'بقيت $count قطعة',
+      few: 'بقيت $count قطع',
+      two: 'بقيت قطعتان',
+      one: 'بقيت قطعة واحدة',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String siCoverDays(int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: 'تكفي $days يوماً',
+      few: 'تكفي $days أيام',
+      two: 'تكفي يومين',
+      one: 'تكفي يوماً واحداً',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get siYouSellHere => 'تبيعين فيها';
+
+  @override
+  String get siYouDontSellHere => 'لا تبيعين فيها';
+
+  @override
+  String siSearchMiss(int searches, int percent) {
+    return '$searches بحث · $percent% لم يجدن شيئاً';
+  }
+
+  @override
+  String get siInYourCategory => 'في فئتكِ';
+
+  @override
+  String get siProductIntelligence => 'ذكاء المنتجات';
+
+  @override
+  String get siProductsFailed => 'تعذّر تقييم منتجاتكِ.';
+
+  @override
+  String get siNoProductsBody => 'أضيفي أول منتج ونخبركِ بما ينقصه.';
+
+  @override
+  String get siAverage => 'المتوسط';
+
+  @override
+  String siProductCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count منتجاً',
+      few: '$count منتجات',
+      two: 'منتجان',
+      one: 'منتج واحد',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get siNothingUrgent => 'لا شيء مستعجل. مرتّبة من الأضعف إلى الأقوى.';
+
+  @override
+  String siUrgentCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count منها تحتاج انتباهاً الآن.',
+      few: '$count منها تحتاج انتباهاً الآن.',
+      two: 'اثنان منها يحتاجان انتباهاً الآن.',
+      one: 'واحد منها يحتاج انتباهاً الآن.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String siWindowDays(int days) {
+    return 'محسوبة على آخر $days يوم';
+  }
+
+  @override
+  String siViewsOrders(int views, int orders) {
+    return '$views مشاهدة · $orders طلب';
+  }
+
+  @override
+  String get siSoldOut => 'نفدت';
+
+  @override
+  String siMoreAdvice(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'و$count اقتراحاً آخر',
+      few: 'و$count اقتراحات أخرى',
+      two: 'واقتراحان آخران',
+      one: 'واقتراح آخر',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get siDetailsFailed => 'تعذّر تحميل التفاصيل.';
+
+  @override
+  String get siNoDataYet => 'لا بيانات بعد';
+
+  @override
+  String get siTooFewYet => 'ما زالت قليلة';
+
+  @override
+  String siComparedWith(int count) {
+    return 'مقارنة بـ$count منتج مشابه';
+  }
+
+  @override
+  String get siPriceNearMarket => 'سعركِ قريب من سعر السوق.';
+
+  @override
+  String siPriceAbove(int percent) {
+    return 'سعركِ أعلى بـ$percent% من المشابه.';
+  }
+
+  @override
+  String siPriceBelow(int percent) {
+    return 'سعركِ أقل بـ$percent% من المشابه.';
+  }
+
+  @override
+  String siConversion(String yours, String median) {
+    return 'تحويلكِ $yours% مقابل $median% في الفئة.';
+  }
+
+  @override
+  String get siShopHealth => 'صحّة المتجر';
+
+  @override
+  String get siHealthFailed => 'تعذّر حساب صحّة المتجر.';
+
+  @override
+  String get siWhatRaisesHealth => 'ما يرفع صحّة متجركِ';
+
+  @override
+  String get siWhatRaisesHealthSubtitle => 'مرتّبة حسب الأثر الأكبر';
+
+  @override
+  String get siMetrics => 'المقاييس';
+
+  @override
+  String get siNotEnoughYet => 'لا يكفي ما لدينا بعد';
+
+  @override
+  String get siNotEnoughYetBody =>
+      'هذه المقاييس لا تؤثّر في صحّة متجركِ حتى تتوفر بيانات كافية';
+
+  @override
+  String get siWhatSlipped => 'ما الذي تراجع';
+
+  @override
+  String get siSlippedFailed => 'تعذّرت قراءة المنتجات المتراجعة الآن.';
+
+  @override
+  String get siWhatSlippedSubtitle =>
+      'كانت تبيع ثم خفّت — مع سبب واحد لكل منها';
+
+  @override
+  String get siHealthTooFewOrders =>
+      'لا طلبات كافية بعد لنحكم. كل طلب تنجزينه يوضّح الصورة.';
+
+  @override
+  String siHealthWindow(int days) {
+    return 'محسوبة على آخر $days يوم من طلباتكِ.';
+  }
+
+  @override
+  String siMomentum(int points) {
+    return '$points نقطة عن الشهر الماضي';
+  }
+
+  @override
+  String siDimensionUnmeasured(String blurb) {
+    return '$blurb — لا شيء نقيسه بعد.';
+  }
+
+  @override
+  String siDimensionTooFew(String blurb, int sample) {
+    return '$blurb — قسناها على $sample، لكنها ما زالت قليلة لتُحتسب.';
+  }
+
+  @override
+  String siDays(int count) {
+    return '$count يوم';
+  }
+
+  @override
+  String siHours(int count) {
+    return '$count ساعة';
+  }
+
+  @override
+  String siOutOfFive(String value) {
+    return '$value من 5';
+  }
+
+  @override
+  String get siFactAccepted => 'طلبات قبلتِها وأنجزتِها';
+
+  @override
+  String get siFactDelivered => 'طلبات وصلت';
+
+  @override
+  String get siFactCancelledBySeller => 'ألغيتِها';
+
+  @override
+  String get siFactCancelledByOthers => 'ألغتها الزبونة';
+
+  @override
+  String get siFactReturned => 'أُرجعت';
+
+  @override
+  String get siFactPrepHours => 'متوسط التجهيز (ساعة)';
+
+  @override
+  String get siFactShipHours => 'متوسط الشحن (ساعة)';
+
+  @override
+  String get siFactResponseHours => 'متوسط الردّ (ساعة)';
+
+  @override
+  String get siFactRating => 'تقييم المتجر';
+
+  @override
+  String get siFactReviewCount => 'عدد التقييمات';
+
+  @override
+  String get siHideNumbers => 'أخفي الأرقام';
+
+  @override
+  String get siShowNumbers => 'اعرضي الأرقام التي احتُسبت';
+
+  @override
+  String get siShopIntelligence => 'ذكاء المتجر';
+
+  @override
+  String get siCalculating => 'نحسب…';
+
+  @override
+  String get siEightMetrics => 'ثمانية مقاييس لمتجركِ';
+
+  @override
+  String get siGettingToKnow => 'ما زلنا نتعرّف على متجركِ';
+
+  @override
+  String get siDemandRadarSubtitle => 'ما الذي يزداد الطلب عليه';
+
+  @override
+  String get siProductIntelligenceSubtitle => 'ما الذي ينقص صفحات منتجاتكِ';
+
+  @override
+  String get siNotMeasuredYet => 'لم نقِسها بعد';
+
+  @override
+  String siWeightOfHealth(int percent) {
+    return 'وزنها $percent% من الصحّة';
+  }
 }

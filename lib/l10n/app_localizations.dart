@@ -15445,6 +15445,1014 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Never worn'**
   String get marketRotationUnworn;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'My addresses'**
+  String get settingsMyAddresses;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Delivery addresses'**
+  String get settingsDeliveryAddresses;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Where should we send your orders?'**
+  String get settingsDeliveryAddressesSubtitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Add a new address'**
+  String get settingsAddAddress;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Address added'**
+  String get settingsAddressAdded;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Changes saved'**
+  String get settingsAddressUpdated;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'This is now your default address'**
+  String get settingsAddressNowDefault;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Delete address'**
+  String get settingsDeleteAddressTitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'“{label}” will be removed from your addresses.'**
+  String settingsDeleteAddressBody(String label);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get settingsDelete;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Keep it'**
+  String get settingsKeep;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Address deleted'**
+  String get settingsAddressDeleted;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'That couldn’t be done right now'**
+  String get settingsActionFailed;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'No saved addresses yet'**
+  String get settingsNoAddresses;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Save an address now so it’s ready for your first order'**
+  String get settingsNoAddressesBody;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Coupons'**
+  String get settingsCoupons;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Your offers'**
+  String get settingsYourOffers;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Apply an offer to your bag, or copy the code'**
+  String get settingsYourOffersSubtitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{percent}% off'**
+  String settingsCouponPercentOff(String percent);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{amount} off'**
+  String settingsCouponAmountOff(String amount);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Minimum {amount}'**
+  String settingsCouponMinimum(String amount);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Ends today'**
+  String get settingsCouponEndsToday;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{days, plural, =1{1 day left} other{{days} days left}}'**
+  String settingsCouponDaysLeft(int days);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Last use'**
+  String get settingsCouponLastUse;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, other{{count} uses left}}'**
+  String settingsCouponUsesLeft(int count);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{code} applied — you saved {amount}'**
+  String settingsCouponApplied(String code, String amount);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Your bag is empty — add something, then apply the offer'**
+  String get settingsCouponEmptyBag;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Your bag has two currencies — apply the offer at checkout'**
+  String get settingsCouponTwoCurrencies;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'The coupon couldn’t be applied'**
+  String get settingsCouponApplyFailed;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Just for you'**
+  String get settingsCouponJustForYou;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Copy code'**
+  String get settingsCouponCopyCode;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Code {code} copied'**
+  String settingsCouponCopied(String code);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Applied'**
+  String get settingsCouponAppliedBadge;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Apply to my bag'**
+  String get settingsCouponApplyToBag;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{code} applied — saving {discount}'**
+  String settingsCouponAppliedSaving(String code, String discount);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Remove'**
+  String get settingsRemove;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Continue to checkout'**
+  String get settingsContinueToCheckout;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Your bag now: {subtotal}'**
+  String settingsBagNow(String subtotal);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'No coupons available right now'**
+  String get settingsNoCoupons;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'We’ll let you know when a new offer arrives'**
+  String get settingsNoCouponsBody;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Coupons couldn’t load'**
+  String get settingsCouponsFailed;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Payment methods'**
+  String get settingsPaymentMethods;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Pay when you order'**
+  String get settingsPayAtOrder;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'You choose the method at checkout'**
+  String get settingsPayAtOrderSubtitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Available methods'**
+  String get settingsAvailableMethods;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'We don’t store card details. Each order is paid when you place it, the way you choose.'**
+  String get settingsNoCardsStored;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Reem wallet'**
+  String get settingsReemWallet;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Pay the courier in cash on delivery'**
+  String get settingsHintCod;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Collected by the delivery company'**
+  String get settingsHintCourierCollect;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Taken from your balance straight away'**
+  String get settingsHintWallet;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'We open the payment page once the order is confirmed'**
+  String get settingsHintMobileWallet;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'A secure payment page — we don’t store your card'**
+  String get settingsHintCard;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Transfer the amount, then send the reference from the order page'**
+  String get settingsHintBankTransfer;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'A local transfer, then send the receipt number from the order page'**
+  String get settingsHintHawala;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Payment is confirmed before the order is prepared'**
+  String get settingsHintConfirmedFirst;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'No payment methods available right now'**
+  String get settingsNoPaymentMethods;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Payment methods couldn’t load'**
+  String get settingsPaymentMethodsFailed;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Default'**
+  String get settingsAddressDefault;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Near {landmark}'**
+  String settingsAddressNear(String landmark);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Make default'**
+  String get settingsMakeDefault;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get settingsEdit;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Home'**
+  String get settingsAddressHome;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Edit address'**
+  String get settingsEditAddress;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'New address'**
+  String get settingsNewAddress;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Address name'**
+  String get settingsAddressName;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Home, work, my parents’'**
+  String get settingsAddressNameHint;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Recipient’s name'**
+  String get settingsRecipientName;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Who receives the order'**
+  String get settingsRecipientNameHint;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Phone number'**
+  String get settingsPhoneNumber;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'City or town'**
+  String get settingsCity;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Mezzeh, Jaramana, ...'**
+  String get settingsCityHint;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Address'**
+  String get settingsAddressLine;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Street, building, floor, flat number'**
+  String get settingsAddressLineHint;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Landmark (optional)'**
+  String get settingsLandmark;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Near Al-Nour pharmacy'**
+  String get settingsLandmarkHint;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Delivery instructions (optional)'**
+  String get settingsDeliveryNotes;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Call before arriving'**
+  String get settingsDeliveryNotesHint;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Make it my default address'**
+  String get settingsMakeMyDefault;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Checkout opens with it'**
+  String get settingsMakeMyDefaultHint;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Save changes'**
+  String get settingsSaveChanges;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Save address'**
+  String get settingsSaveAddress;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Governorate'**
+  String get settingsGovernorate;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a governorate'**
+  String get settingsChooseGovernorate;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Area'**
+  String get settingsDistrict;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Choose an area (optional)'**
+  String get settingsChooseDistrict;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{name} · countryside'**
+  String settingsDistrictRural(String name);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'The governorate list couldn’t load'**
+  String get settingsGovernoratesFailed;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'This field is required'**
+  String get settingsFieldRequired;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Too short'**
+  String get settingsFieldTooShort;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Demand radar'**
+  String get siDemandRadar;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Radar data couldn’t load.'**
+  String get siRadarFailed;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'No products yet'**
+  String get siNoProducts;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Add your first product and we’ll start reading the market for you.'**
+  String get siNoProductsRadarBody;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Still gathering data'**
+  String get siStillGathering;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'The radar reads the market every night. Come back tomorrow.'**
+  String get siStillGatheringBody;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'What to do now'**
+  String get siWhatToDoNow;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Ordered by what matters most to your shop'**
+  String get siWhatToDoNowSubtitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Stock below demand'**
+  String get siStockBelowDemand;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Pieces selling well and running out'**
+  String get siStockBelowDemandSubtitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Rising categories'**
+  String get siRisingCategories;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Demand for them is growing'**
+  String get siRisingCategoriesSubtitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Unmet demand'**
+  String get siUnmetDemand;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Women searched and didn’t find the right thing'**
+  String get siUnmetDemandSubtitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Price movement'**
+  String get siPriceMovement;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'None left'**
+  String get siOutOfStock;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 piece left} other{{count} pieces left}}'**
+  String siUnitsLeft(int count);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{days, plural, =1{Lasts 1 day} other{Lasts {days} days}}'**
+  String siCoverDays(int days);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'You sell here'**
+  String get siYouSellHere;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'You don’t sell here'**
+  String get siYouDontSellHere;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{searches} searches · {percent}% found nothing'**
+  String siSearchMiss(int searches, int percent);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'In your category'**
+  String get siInYourCategory;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Product intelligence'**
+  String get siProductIntelligence;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Your products couldn’t be scored.'**
+  String get siProductsFailed;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Add your first product and we’ll tell you what it’s missing.'**
+  String get siNoProductsBody;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Average'**
+  String get siAverage;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 product} other{{count} products}}'**
+  String siProductCount(int count);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing urgent. Ordered weakest first.'**
+  String get siNothingUrgent;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{One needs attention now.} other{{count} need attention now.}}'**
+  String siUrgentCount(int count);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Based on the last {days} days'**
+  String siWindowDays(int days);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{views} views · {orders} orders'**
+  String siViewsOrders(int views, int orders);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Sold out'**
+  String get siSoldOut;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{and 1 more tip} other{and {count} more tips}}'**
+  String siMoreAdvice(int count);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Details couldn’t load.'**
+  String get siDetailsFailed;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'No data yet'**
+  String get siNoDataYet;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Too few yet'**
+  String get siTooFewYet;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Compared with {count} similar products'**
+  String siComparedWith(int count);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Your price is close to the market.'**
+  String get siPriceNearMarket;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Your price is {percent}% above similar pieces.'**
+  String siPriceAbove(int percent);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Your price is {percent}% below similar pieces.'**
+  String siPriceBelow(int percent);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Your conversion is {yours}% against {median}% in the category.'**
+  String siConversion(String yours, String median);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Shop health'**
+  String get siShopHealth;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Shop health couldn’t be calculated.'**
+  String get siHealthFailed;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'What raises your shop’s health'**
+  String get siWhatRaisesHealth;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Ordered by biggest impact'**
+  String get siWhatRaisesHealthSubtitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Metrics'**
+  String get siMetrics;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Not enough yet'**
+  String get siNotEnoughYet;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'These metrics don’t affect your shop’s health until there’s enough data'**
+  String get siNotEnoughYetBody;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'What slipped'**
+  String get siWhatSlipped;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Slipping products couldn’t be read right now.'**
+  String get siSlippedFailed;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Used to sell, then slowed — with one reason for each'**
+  String get siWhatSlippedSubtitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Not enough orders to judge yet. Every order you complete makes the picture clearer.'**
+  String get siHealthTooFewOrders;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Based on your last {days} days of orders.'**
+  String siHealthWindow(int days);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{points} points from last month'**
+  String siMomentum(int points);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{blurb} — nothing to measure yet.'**
+  String siDimensionUnmeasured(String blurb);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{blurb} — measured on {sample}, but still too few to count.'**
+  String siDimensionTooFew(String blurb, int sample);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{count} days'**
+  String siDays(int count);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{count} h'**
+  String siHours(int count);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{value} of 5'**
+  String siOutOfFive(String value);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Orders you accepted and completed'**
+  String get siFactAccepted;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Orders delivered'**
+  String get siFactDelivered;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'You cancelled'**
+  String get siFactCancelledBySeller;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Cancelled by the customer'**
+  String get siFactCancelledByOthers;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Returned'**
+  String get siFactReturned;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Average prep (hours)'**
+  String get siFactPrepHours;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Average shipping (hours)'**
+  String get siFactShipHours;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Average reply (hours)'**
+  String get siFactResponseHours;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Shop rating'**
+  String get siFactRating;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Number of reviews'**
+  String get siFactReviewCount;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Hide the numbers'**
+  String get siHideNumbers;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Show the numbers we counted'**
+  String get siShowNumbers;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Shop intelligence'**
+  String get siShopIntelligence;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Calculating…'**
+  String get siCalculating;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Eight metrics for your shop'**
+  String get siEightMetrics;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Still getting to know your shop'**
+  String get siGettingToKnow;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'What demand is growing for'**
+  String get siDemandRadarSubtitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'What your product pages are missing'**
+  String get siProductIntelligenceSubtitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Not measured yet'**
+  String get siNotMeasuredYet;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{percent}% of health'**
+  String siWeightOfHealth(int percent);
 }
 
 class _AppLocalizationsDelegate

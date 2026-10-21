@@ -9902,5 +9902,855 @@
   "marketRotationDormant": "Sitting in the closet",
   "@marketRotationDormant": {"description": "Market label."},
   "marketRotationUnworn": "Never worn",
-  "@marketRotationUnworn": {"description": "Market label."}
+  "@marketRotationUnworn": {"description": "Market label."},
+  "settingsMyAddresses": "My addresses",
+  "@settingsMyAddresses": {
+    "description": ""
+  },
+  "settingsDeliveryAddresses": "Delivery addresses",
+  "@settingsDeliveryAddresses": {
+    "description": ""
+  },
+  "settingsDeliveryAddressesSubtitle": "Where should we send your orders?",
+  "@settingsDeliveryAddressesSubtitle": {
+    "description": ""
+  },
+  "settingsAddAddress": "Add a new address",
+  "@settingsAddAddress": {
+    "description": ""
+  },
+  "settingsAddressAdded": "Address added",
+  "@settingsAddressAdded": {
+    "description": ""
+  },
+  "settingsAddressUpdated": "Changes saved",
+  "@settingsAddressUpdated": {
+    "description": ""
+  },
+  "settingsAddressNowDefault": "This is now your default address",
+  "@settingsAddressNowDefault": {
+    "description": ""
+  },
+  "settingsDeleteAddressTitle": "Delete address",
+  "@settingsDeleteAddressTitle": {
+    "description": ""
+  },
+  "settingsDeleteAddressBody": "“{label}” will be removed from your addresses.",
+  "@settingsDeleteAddressBody": {
+    "description": "",
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsDelete": "Delete",
+  "@settingsDelete": {
+    "description": ""
+  },
+  "settingsKeep": "Keep it",
+  "@settingsKeep": {
+    "description": ""
+  },
+  "settingsAddressDeleted": "Address deleted",
+  "@settingsAddressDeleted": {
+    "description": ""
+  },
+  "settingsActionFailed": "That couldn’t be done right now",
+  "@settingsActionFailed": {
+    "description": ""
+  },
+  "settingsNoAddresses": "No saved addresses yet",
+  "@settingsNoAddresses": {
+    "description": ""
+  },
+  "settingsNoAddressesBody": "Save an address now so it’s ready for your first order",
+  "@settingsNoAddressesBody": {
+    "description": ""
+  },
+  "settingsCoupons": "Coupons",
+  "@settingsCoupons": {
+    "description": ""
+  },
+  "settingsYourOffers": "Your offers",
+  "@settingsYourOffers": {
+    "description": ""
+  },
+  "settingsYourOffersSubtitle": "Apply an offer to your bag, or copy the code",
+  "@settingsYourOffersSubtitle": {
+    "description": ""
+  },
+  "settingsCouponPercentOff": "{percent}% off",
+  "@settingsCouponPercentOff": {
+    "description": "",
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsCouponAmountOff": "{amount} off",
+  "@settingsCouponAmountOff": {
+    "description": "",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsCouponMinimum": "Minimum {amount}",
+  "@settingsCouponMinimum": {
+    "description": "",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsCouponEndsToday": "Ends today",
+  "@settingsCouponEndsToday": {
+    "description": ""
+  },
+  "settingsCouponDaysLeft": "{days, plural, =1{1 day left} other{{days} days left}}",
+  "@settingsCouponDaysLeft": {
+    "description": "",
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsCouponLastUse": "Last use",
+  "@settingsCouponLastUse": {
+    "description": ""
+  },
+  "settingsCouponUsesLeft": "{count, plural, other{{count} uses left}}",
+  "@settingsCouponUsesLeft": {
+    "description": "",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsCouponApplied": "{code} applied — you saved {amount}",
+  "@settingsCouponApplied": {
+    "description": "",
+    "placeholders": {
+      "code": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsCouponEmptyBag": "Your bag is empty — add something, then apply the offer",
+  "@settingsCouponEmptyBag": {
+    "description": ""
+  },
+  "settingsCouponTwoCurrencies": "Your bag has two currencies — apply the offer at checkout",
+  "@settingsCouponTwoCurrencies": {
+    "description": ""
+  },
+  "settingsCouponApplyFailed": "The coupon couldn’t be applied",
+  "@settingsCouponApplyFailed": {
+    "description": ""
+  },
+  "settingsCouponJustForYou": "Just for you",
+  "@settingsCouponJustForYou": {
+    "description": ""
+  },
+  "settingsCouponCopyCode": "Copy code",
+  "@settingsCouponCopyCode": {
+    "description": ""
+  },
+  "settingsCouponCopied": "Code {code} copied",
+  "@settingsCouponCopied": {
+    "description": "",
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsCouponAppliedBadge": "Applied",
+  "@settingsCouponAppliedBadge": {
+    "description": ""
+  },
+  "settingsCouponApplyToBag": "Apply to my bag",
+  "@settingsCouponApplyToBag": {
+    "description": ""
+  },
+  "settingsCouponAppliedSaving": "{code} applied — saving {discount}",
+  "@settingsCouponAppliedSaving": {
+    "description": "",
+    "placeholders": {
+      "code": {
+        "type": "String"
+      },
+      "discount": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsRemove": "Remove",
+  "@settingsRemove": {
+    "description": ""
+  },
+  "settingsContinueToCheckout": "Continue to checkout",
+  "@settingsContinueToCheckout": {
+    "description": ""
+  },
+  "settingsBagNow": "Your bag now: {subtotal}",
+  "@settingsBagNow": {
+    "description": "",
+    "placeholders": {
+      "subtotal": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsNoCoupons": "No coupons available right now",
+  "@settingsNoCoupons": {
+    "description": ""
+  },
+  "settingsNoCouponsBody": "We’ll let you know when a new offer arrives",
+  "@settingsNoCouponsBody": {
+    "description": ""
+  },
+  "settingsCouponsFailed": "Coupons couldn’t load",
+  "@settingsCouponsFailed": {
+    "description": ""
+  },
+  "settingsPaymentMethods": "Payment methods",
+  "@settingsPaymentMethods": {
+    "description": ""
+  },
+  "settingsPayAtOrder": "Pay when you order",
+  "@settingsPayAtOrder": {
+    "description": ""
+  },
+  "settingsPayAtOrderSubtitle": "You choose the method at checkout",
+  "@settingsPayAtOrderSubtitle": {
+    "description": ""
+  },
+  "settingsAvailableMethods": "Available methods",
+  "@settingsAvailableMethods": {
+    "description": ""
+  },
+  "settingsNoCardsStored": "We don’t store card details. Each order is paid when you place it, the way you choose.",
+  "@settingsNoCardsStored": {
+    "description": ""
+  },
+  "settingsReemWallet": "Reem wallet",
+  "@settingsReemWallet": {
+    "description": ""
+  },
+  "settingsHintCod": "Pay the courier in cash on delivery",
+  "@settingsHintCod": {
+    "description": ""
+  },
+  "settingsHintCourierCollect": "Collected by the delivery company",
+  "@settingsHintCourierCollect": {
+    "description": ""
+  },
+  "settingsHintWallet": "Taken from your balance straight away",
+  "@settingsHintWallet": {
+    "description": ""
+  },
+  "settingsHintMobileWallet": "We open the payment page once the order is confirmed",
+  "@settingsHintMobileWallet": {
+    "description": ""
+  },
+  "settingsHintCard": "A secure payment page — we don’t store your card",
+  "@settingsHintCard": {
+    "description": ""
+  },
+  "settingsHintBankTransfer": "Transfer the amount, then send the reference from the order page",
+  "@settingsHintBankTransfer": {
+    "description": ""
+  },
+  "settingsHintHawala": "A local transfer, then send the receipt number from the order page",
+  "@settingsHintHawala": {
+    "description": ""
+  },
+  "settingsHintConfirmedFirst": "Payment is confirmed before the order is prepared",
+  "@settingsHintConfirmedFirst": {
+    "description": ""
+  },
+  "settingsNoPaymentMethods": "No payment methods available right now",
+  "@settingsNoPaymentMethods": {
+    "description": ""
+  },
+  "settingsPaymentMethodsFailed": "Payment methods couldn’t load",
+  "@settingsPaymentMethodsFailed": {
+    "description": ""
+  },
+  "settingsAddressDefault": "Default",
+  "@settingsAddressDefault": {
+    "description": ""
+  },
+  "settingsAddressNear": "Near {landmark}",
+  "@settingsAddressNear": {
+    "description": "",
+    "placeholders": {
+      "landmark": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsMakeDefault": "Make default",
+  "@settingsMakeDefault": {
+    "description": ""
+  },
+  "settingsEdit": "Edit",
+  "@settingsEdit": {
+    "description": ""
+  },
+  "settingsAddressHome": "Home",
+  "@settingsAddressHome": {
+    "description": ""
+  },
+  "settingsEditAddress": "Edit address",
+  "@settingsEditAddress": {
+    "description": ""
+  },
+  "settingsNewAddress": "New address",
+  "@settingsNewAddress": {
+    "description": ""
+  },
+  "settingsAddressName": "Address name",
+  "@settingsAddressName": {
+    "description": ""
+  },
+  "settingsAddressNameHint": "Home, work, my parents’",
+  "@settingsAddressNameHint": {
+    "description": ""
+  },
+  "settingsRecipientName": "Recipient’s name",
+  "@settingsRecipientName": {
+    "description": ""
+  },
+  "settingsRecipientNameHint": "Who receives the order",
+  "@settingsRecipientNameHint": {
+    "description": ""
+  },
+  "settingsPhoneNumber": "Phone number",
+  "@settingsPhoneNumber": {
+    "description": ""
+  },
+  "settingsCity": "City or town",
+  "@settingsCity": {
+    "description": ""
+  },
+  "settingsCityHint": "Mezzeh, Jaramana, ...",
+  "@settingsCityHint": {
+    "description": ""
+  },
+  "settingsAddressLine": "Address",
+  "@settingsAddressLine": {
+    "description": ""
+  },
+  "settingsAddressLineHint": "Street, building, floor, flat number",
+  "@settingsAddressLineHint": {
+    "description": ""
+  },
+  "settingsLandmark": "Landmark (optional)",
+  "@settingsLandmark": {
+    "description": ""
+  },
+  "settingsLandmarkHint": "Near Al-Nour pharmacy",
+  "@settingsLandmarkHint": {
+    "description": ""
+  },
+  "settingsDeliveryNotes": "Delivery instructions (optional)",
+  "@settingsDeliveryNotes": {
+    "description": ""
+  },
+  "settingsDeliveryNotesHint": "Call before arriving",
+  "@settingsDeliveryNotesHint": {
+    "description": ""
+  },
+  "settingsMakeMyDefault": "Make it my default address",
+  "@settingsMakeMyDefault": {
+    "description": ""
+  },
+  "settingsMakeMyDefaultHint": "Checkout opens with it",
+  "@settingsMakeMyDefaultHint": {
+    "description": ""
+  },
+  "settingsSaveChanges": "Save changes",
+  "@settingsSaveChanges": {
+    "description": ""
+  },
+  "settingsSaveAddress": "Save address",
+  "@settingsSaveAddress": {
+    "description": ""
+  },
+  "settingsGovernorate": "Governorate",
+  "@settingsGovernorate": {
+    "description": ""
+  },
+  "settingsChooseGovernorate": "Choose a governorate",
+  "@settingsChooseGovernorate": {
+    "description": ""
+  },
+  "settingsDistrict": "Area",
+  "@settingsDistrict": {
+    "description": ""
+  },
+  "settingsChooseDistrict": "Choose an area (optional)",
+  "@settingsChooseDistrict": {
+    "description": ""
+  },
+  "settingsDistrictRural": "{name} · countryside",
+  "@settingsDistrictRural": {
+    "description": "",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsGovernoratesFailed": "The governorate list couldn’t load",
+  "@settingsGovernoratesFailed": {
+    "description": ""
+  },
+  "settingsFieldRequired": "This field is required",
+  "@settingsFieldRequired": {
+    "description": ""
+  },
+  "settingsFieldTooShort": "Too short",
+  "@settingsFieldTooShort": {
+    "description": ""
+  },
+  "siDemandRadar": "Demand radar",
+  "@siDemandRadar": {
+    "description": ""
+  },
+  "siRadarFailed": "Radar data couldn’t load.",
+  "@siRadarFailed": {
+    "description": ""
+  },
+  "siNoProducts": "No products yet",
+  "@siNoProducts": {
+    "description": ""
+  },
+  "siNoProductsRadarBody": "Add your first product and we’ll start reading the market for you.",
+  "@siNoProductsRadarBody": {
+    "description": ""
+  },
+  "siStillGathering": "Still gathering data",
+  "@siStillGathering": {
+    "description": ""
+  },
+  "siStillGatheringBody": "The radar reads the market every night. Come back tomorrow.",
+  "@siStillGatheringBody": {
+    "description": ""
+  },
+  "siWhatToDoNow": "What to do now",
+  "@siWhatToDoNow": {
+    "description": ""
+  },
+  "siWhatToDoNowSubtitle": "Ordered by what matters most to your shop",
+  "@siWhatToDoNowSubtitle": {
+    "description": ""
+  },
+  "siStockBelowDemand": "Stock below demand",
+  "@siStockBelowDemand": {
+    "description": ""
+  },
+  "siStockBelowDemandSubtitle": "Pieces selling well and running out",
+  "@siStockBelowDemandSubtitle": {
+    "description": ""
+  },
+  "siRisingCategories": "Rising categories",
+  "@siRisingCategories": {
+    "description": ""
+  },
+  "siRisingCategoriesSubtitle": "Demand for them is growing",
+  "@siRisingCategoriesSubtitle": {
+    "description": ""
+  },
+  "siUnmetDemand": "Unmet demand",
+  "@siUnmetDemand": {
+    "description": ""
+  },
+  "siUnmetDemandSubtitle": "Women searched and didn’t find the right thing",
+  "@siUnmetDemandSubtitle": {
+    "description": ""
+  },
+  "siPriceMovement": "Price movement",
+  "@siPriceMovement": {
+    "description": ""
+  },
+  "siOutOfStock": "None left",
+  "@siOutOfStock": {
+    "description": ""
+  },
+  "siUnitsLeft": "{count, plural, =1{1 piece left} other{{count} pieces left}}",
+  "@siUnitsLeft": {
+    "description": "",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "siCoverDays": "{days, plural, =1{Lasts 1 day} other{Lasts {days} days}}",
+  "@siCoverDays": {
+    "description": "",
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "siYouSellHere": "You sell here",
+  "@siYouSellHere": {
+    "description": ""
+  },
+  "siYouDontSellHere": "You don’t sell here",
+  "@siYouDontSellHere": {
+    "description": ""
+  },
+  "siSearchMiss": "{searches} searches · {percent}% found nothing",
+  "@siSearchMiss": {
+    "description": "",
+    "placeholders": {
+      "searches": {
+        "type": "int"
+      },
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "siInYourCategory": "In your category",
+  "@siInYourCategory": {
+    "description": ""
+  },
+  "siProductIntelligence": "Product intelligence",
+  "@siProductIntelligence": {
+    "description": ""
+  },
+  "siProductsFailed": "Your products couldn’t be scored.",
+  "@siProductsFailed": {
+    "description": ""
+  },
+  "siNoProductsBody": "Add your first product and we’ll tell you what it’s missing.",
+  "@siNoProductsBody": {
+    "description": ""
+  },
+  "siAverage": "Average",
+  "@siAverage": {
+    "description": ""
+  },
+  "siProductCount": "{count, plural, =1{1 product} other{{count} products}}",
+  "@siProductCount": {
+    "description": "",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "siNothingUrgent": "Nothing urgent. Ordered weakest first.",
+  "@siNothingUrgent": {
+    "description": ""
+  },
+  "siUrgentCount": "{count, plural, =1{One needs attention now.} other{{count} need attention now.}}",
+  "@siUrgentCount": {
+    "description": "",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "siWindowDays": "Based on the last {days} days",
+  "@siWindowDays": {
+    "description": "",
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "siViewsOrders": "{views} views · {orders} orders",
+  "@siViewsOrders": {
+    "description": "",
+    "placeholders": {
+      "views": {
+        "type": "int"
+      },
+      "orders": {
+        "type": "int"
+      }
+    }
+  },
+  "siSoldOut": "Sold out",
+  "@siSoldOut": {
+    "description": ""
+  },
+  "siMoreAdvice": "{count, plural, =1{and 1 more tip} other{and {count} more tips}}",
+  "@siMoreAdvice": {
+    "description": "",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "siDetailsFailed": "Details couldn’t load.",
+  "@siDetailsFailed": {
+    "description": ""
+  },
+  "siNoDataYet": "No data yet",
+  "@siNoDataYet": {
+    "description": ""
+  },
+  "siTooFewYet": "Too few yet",
+  "@siTooFewYet": {
+    "description": ""
+  },
+  "siComparedWith": "Compared with {count} similar products",
+  "@siComparedWith": {
+    "description": "",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "siPriceNearMarket": "Your price is close to the market.",
+  "@siPriceNearMarket": {
+    "description": ""
+  },
+  "siPriceAbove": "Your price is {percent}% above similar pieces.",
+  "@siPriceAbove": {
+    "description": "",
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "siPriceBelow": "Your price is {percent}% below similar pieces.",
+  "@siPriceBelow": {
+    "description": "",
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "siConversion": "Your conversion is {yours}% against {median}% in the category.",
+  "@siConversion": {
+    "description": "",
+    "placeholders": {
+      "yours": {
+        "type": "String"
+      },
+      "median": {
+        "type": "String"
+      }
+    }
+  },
+  "siShopHealth": "Shop health",
+  "@siShopHealth": {
+    "description": ""
+  },
+  "siHealthFailed": "Shop health couldn’t be calculated.",
+  "@siHealthFailed": {
+    "description": ""
+  },
+  "siWhatRaisesHealth": "What raises your shop’s health",
+  "@siWhatRaisesHealth": {
+    "description": ""
+  },
+  "siWhatRaisesHealthSubtitle": "Ordered by biggest impact",
+  "@siWhatRaisesHealthSubtitle": {
+    "description": ""
+  },
+  "siMetrics": "Metrics",
+  "@siMetrics": {
+    "description": ""
+  },
+  "siNotEnoughYet": "Not enough yet",
+  "@siNotEnoughYet": {
+    "description": ""
+  },
+  "siNotEnoughYetBody": "These metrics don’t affect your shop’s health until there’s enough data",
+  "@siNotEnoughYetBody": {
+    "description": ""
+  },
+  "siWhatSlipped": "What slipped",
+  "@siWhatSlipped": {
+    "description": ""
+  },
+  "siSlippedFailed": "Slipping products couldn’t be read right now.",
+  "@siSlippedFailed": {
+    "description": ""
+  },
+  "siWhatSlippedSubtitle": "Used to sell, then slowed — with one reason for each",
+  "@siWhatSlippedSubtitle": {
+    "description": ""
+  },
+  "siHealthTooFewOrders": "Not enough orders to judge yet. Every order you complete makes the picture clearer.",
+  "@siHealthTooFewOrders": {
+    "description": ""
+  },
+  "siHealthWindow": "Based on your last {days} days of orders.",
+  "@siHealthWindow": {
+    "description": "",
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "siMomentum": "{points} points from last month",
+  "@siMomentum": {
+    "description": "",
+    "placeholders": {
+      "points": {
+        "type": "int"
+      }
+    }
+  },
+  "siDimensionUnmeasured": "{blurb} — nothing to measure yet.",
+  "@siDimensionUnmeasured": {
+    "description": "",
+    "placeholders": {
+      "blurb": {
+        "type": "String"
+      }
+    }
+  },
+  "siDimensionTooFew": "{blurb} — measured on {sample}, but still too few to count.",
+  "@siDimensionTooFew": {
+    "description": "",
+    "placeholders": {
+      "blurb": {
+        "type": "String"
+      },
+      "sample": {
+        "type": "int"
+      }
+    }
+  },
+  "siDays": "{count} days",
+  "@siDays": {
+    "description": "",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "siHours": "{count} h",
+  "@siHours": {
+    "description": "",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "siOutOfFive": "{value} of 5",
+  "@siOutOfFive": {
+    "description": "",
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "siFactAccepted": "Orders you accepted and completed",
+  "@siFactAccepted": {
+    "description": ""
+  },
+  "siFactDelivered": "Orders delivered",
+  "@siFactDelivered": {
+    "description": ""
+  },
+  "siFactCancelledBySeller": "You cancelled",
+  "@siFactCancelledBySeller": {
+    "description": ""
+  },
+  "siFactCancelledByOthers": "Cancelled by the customer",
+  "@siFactCancelledByOthers": {
+    "description": ""
+  },
+  "siFactReturned": "Returned",
+  "@siFactReturned": {
+    "description": ""
+  },
+  "siFactPrepHours": "Average prep (hours)",
+  "@siFactPrepHours": {
+    "description": ""
+  },
+  "siFactShipHours": "Average shipping (hours)",
+  "@siFactShipHours": {
+    "description": ""
+  },
+  "siFactResponseHours": "Average reply (hours)",
+  "@siFactResponseHours": {
+    "description": ""
+  },
+  "siFactRating": "Shop rating",
+  "@siFactRating": {
+    "description": ""
+  },
+  "siFactReviewCount": "Number of reviews",
+  "@siFactReviewCount": {
+    "description": ""
+  },
+  "siHideNumbers": "Hide the numbers",
+  "@siHideNumbers": {
+    "description": ""
+  },
+  "siShowNumbers": "Show the numbers we counted",
+  "@siShowNumbers": {
+    "description": ""
+  },
+  "siShopIntelligence": "Shop intelligence",
+  "@siShopIntelligence": {
+    "description": ""
+  },
+  "siCalculating": "Calculating…",
+  "@siCalculating": {
+    "description": ""
+  },
+  "siEightMetrics": "Eight metrics for your shop",
+  "@siEightMetrics": {
+    "description": ""
+  },
+  "siGettingToKnow": "Still getting to know your shop",
+  "@siGettingToKnow": {
+    "description": ""
+  },
+  "siDemandRadarSubtitle": "What demand is growing for",
+  "@siDemandRadarSubtitle": {
+    "description": ""
+  },
+  "siProductIntelligenceSubtitle": "What your product pages are missing",
+  "@siProductIntelligenceSubtitle": {
+    "description": ""
+  },
+  "siNotMeasuredYet": "Not measured yet",
+  "@siNotMeasuredYet": {
+    "description": ""
+  },
+  "siWeightOfHealth": "{percent}% of health",
+  "@siWeightOfHealth": {
+    "description": "",
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  }
 }

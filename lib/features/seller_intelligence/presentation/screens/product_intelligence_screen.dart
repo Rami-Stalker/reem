@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/features/seller_intelligence/domain/entities/intelligence.dart';
 import 'package:reem/features/seller_intelligence/presentation/providers/intelligence_providers.dart';
 import 'package:reem/features/seller_intelligence/presentation/widgets/intelligence_pieces.dart';
@@ -28,7 +29,7 @@ class ProductIntelligenceScreen extends ConsumerWidget {
       background: const SellerAtelierBackground(),
       backgroundColor: palette.background,
       slivers: [
-        const PremiumAppBar(title: 'ذكاء المنتجات'),
+        PremiumAppBar(title: context.l10n.siProductIntelligence),
         ...async.when(
           loading: () => [
             const SliverToBoxAdapter(
@@ -43,7 +44,7 @@ class ProductIntelligenceScreen extends ConsumerWidget {
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: DsSpacing.xxl),
                 child: DsErrorState(
-                  message: 'ما قدرنا نقيّم منتجاتك.',
+                  message: context.l10n.siProductsFailed,
                   onRetry: () => ref.invalidate(productIntelligenceProvider),
                 ),
               ),
@@ -58,14 +59,14 @@ class ProductIntelligenceScreen extends ConsumerWidget {
 
   List<Widget> _body(BuildContext context, ProductHealthList list) {
     if (list.isEmpty) {
-      return const [
+      return [
         SliverToBoxAdapter(
           child: Padding(
             padding: EdgeInsets.all(DsSpacing.lg),
             child: DsEmptyState(
               icon: Icons.inventory_2_outlined,
-              title: 'ما في منتجات',
-              message: 'ضيفي أول منتج ومنقلّك شو ينقصه.',
+              title: context.l10n.siNoProducts,
+              message: context.l10n.siNoProductsBody,
             ),
           ),
         ),
@@ -103,28 +104,32 @@ class _Summary extends StatelessWidget {
         padding: const EdgeInsets.all(DsSpacing.lg),
         child: Row(
           children: [
-            IntelligenceDial(score: list.averageScore, size: 78, label: 'وسطي'),
+            IntelligenceDial(
+              score: list.averageScore,
+              size: 78,
+              label: context.l10n.siAverage,
+            ),
             const SizedBox(width: DsSpacing.lg),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    '${list.rows.length} منتج',
+                    context.l10n.siProductCount(list.rows.length),
                     style: context.dsText.sectionTitle.tint(palette.ink),
                   ),
                   DsGaps.vXxs,
                   Text(
                     urgent == 0
-                        ? 'ما في شي مستعجل. مرتّبين من الأضعف للأقوى.'
-                        : '$urgent منها بدها انتباه هلق.',
+                        ? context.l10n.siNothingUrgent
+                        : context.l10n.siUrgentCount(urgent),
                     style: context.dsText.caption.tint(
                       urgent == 0 ? palette.muted : palette.critical,
                     ),
                   ),
                   DsGaps.vXxxs,
                   Text(
-                    'محسوبة على آخر ${list.windowDays} يوم',
+                    context.l10n.siWindowDays(list.windowDays),
                     style: context.dsText.micro.tint(palette.muted),
                   ),
                 ],
@@ -186,13 +191,16 @@ class _ProductCardState extends ConsumerState<_ProductCard> {
                       Row(
                         children: [
                           Text(
-                            '${product.views} مشاهدة · ${product.orders} طلب',
+                            context.l10n.siViewsOrders(
+                              product.views,
+                              product.orders,
+                            ),
                             style: context.dsText.micro.tint(palette.muted),
                           ),
                           if (!product.inStock) ...[
                             const SizedBox(width: DsSpacing.xs),
                             Text(
-                              'خلصت',
+                              context.l10n.siSoldOut,
                               style: context.dsText.micro.tint(
                                 palette.critical,
                               ),
@@ -222,7 +230,7 @@ class _ProductCardState extends ConsumerState<_ProductCard> {
                     start: DsSpacing.md,
                   ),
                   child: Text(
-                    'و${product.adviceCount - 1} اقتراح كمان',
+                    context.l10n.siMoreAdvice(product.adviceCount - 1),
                     style: context.dsText.micro.tint(palette.primary),
                   ),
                 ),
@@ -258,7 +266,7 @@ class _Detail extends ConsumerWidget {
       error: (_, _) => Padding(
         padding: const EdgeInsets.only(top: DsSpacing.sm),
         child: Text(
-          'ما قدرنا نجيب التفاصيل.',
+          context.l10n.siDetailsFailed,
           style: context.dsText.caption.tint(palette.muted),
         ),
       ),
@@ -279,8 +287,8 @@ class _Detail extends ConsumerWidget {
                 // nothing has been shown yet, versus not enough of it to be
                 // sure, versus measured properly.
                 unmeasuredNote: axis.evidence == 'unmeasurable'
-                    ? 'ما في بيانات بعد'
-                    : 'لسا قليلة',
+                    ? context.l10n.siNoDataYet
+                    : context.l10n.siTooFewYet,
               ),
 
             if (detail.peers != null) ...[
@@ -320,22 +328,24 @@ class _Peers extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'مقارنة مع ${peers.peers} منتج مشابه',
+            context.l10n.siComparedWith(peers.peers),
             style: context.dsText.caption.semibold.tint(palette.ink),
           ),
           DsGaps.vXxs,
           if (premium != null)
             Text(
               premium.abs() < 5
-                  ? 'سعرك قريب من سعر السوق.'
+                  ? context.l10n.siPriceNearMarket
                   : premium > 0
-                  ? 'سعرك أعلى بـ${premium.round()}% من المشابه.'
-                  : 'سعرك أقل بـ${premium.abs().round()}% من المشابه.',
+                  ? context.l10n.siPriceAbove(premium.round())
+                  : context.l10n.siPriceBelow(premium.abs().round()),
               style: context.dsText.caption.tint(palette.muted),
             ),
           Text(
-            'التحويل عندك ${(peers.conversion * 100).toStringAsFixed(1)}% '
-            'مقابل ${(peers.medianConversion * 100).toStringAsFixed(1)}% بالفئة.',
+            context.l10n.siConversion(
+              (peers.conversion * 100).toStringAsFixed(1),
+              (peers.medianConversion * 100).toStringAsFixed(1),
+            ),
             style: context.dsText.caption.tint(palette.muted),
           ),
         ],

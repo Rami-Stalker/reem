@@ -235,13 +235,13 @@ void main() {
     // The section is well below the fold, and a sliver list does not build
     // what it has not scrolled to — so scroll to it the way she would.
     await tester.dragUntilVisible(
-      find.text('لسا ما عندنا كفاية'),
+      find.text('لا يكفي ما لدينا بعد'),
       find.byType(CustomScrollView),
       const Offset(0, -300),
     );
     await _settle(tester);
 
-    expect(find.text('لسا ما عندنا كفاية'), findsOneWidget);
+    expect(find.text('لا يكفي ما لدينا بعد'), findsOneWidget);
 
     // Each unmeasured dimension is still listed, and each says what it is
     // waiting for rather than showing a score.
@@ -253,7 +253,7 @@ void main() {
       );
     }
     expect(
-      find.textContaining('ما صار عندنا شي نقيسه بعد'),
+      find.textContaining('لا شيء نقيسه بعد'),
       findsWidgets,
       reason: 'an unmeasured dimension explains itself instead of showing 0',
     );
@@ -282,7 +282,7 @@ void main() {
 
     if (health.isProvisional) {
       expect(
-        find.textContaining('لسا ما عندنا طلبات كفاية'),
+        find.textContaining('لا طلبات كافية بعد'),
         findsOneWidget,
         reason: 'a BUILDING shop must be told the score is not a verdict yet',
       );

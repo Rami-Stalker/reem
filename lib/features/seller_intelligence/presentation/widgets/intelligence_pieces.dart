@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/features/seller_intelligence/domain/entities/intelligence.dart';
 
 /// The small parts the three intelligence screens share.
@@ -239,7 +240,7 @@ class MeasureBar extends StatelessWidget {
     this.weight,
     this.trailing,
     this.provisional = false,
-    this.unmeasuredNote = 'لسا ما قسناها',
+    this.unmeasuredNote,
   });
 
   final String label;
@@ -247,7 +248,7 @@ class MeasureBar extends StatelessWidget {
   final double? weight;
   final String? trailing;
   final bool provisional;
-  final String unmeasuredNote;
+  final String? unmeasuredNote;
 
   @override
   Widget build(BuildContext context) {
@@ -279,7 +280,7 @@ class MeasureBar extends StatelessWidget {
                 )
               else
                 Text(
-                  unmeasuredNote,
+                  unmeasuredNote ?? context.l10n.siNotMeasuredYet,
                   style: context.dsText.micro.tint(palette.muted),
                 ),
             ],
@@ -294,7 +295,7 @@ class MeasureBar extends StatelessWidget {
           if (weight != null && weight! > 0) ...[
             DsGaps.vXxxs,
             Text(
-              'وزنها ${weight!.round()}% من الصحّة',
+              context.l10n.siWeightOfHealth(weight!.round()),
               style: context.dsText.micro.tint(palette.muted),
             ),
           ],

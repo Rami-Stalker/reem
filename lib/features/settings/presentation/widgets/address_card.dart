@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/features/settings/domain/entities/address_entity.dart';
 
 /// One saved address.
@@ -80,7 +81,10 @@ class AddressCard extends StatelessWidget {
                             ),
                             if (address.isDefault) ...[
                               const SizedBox(width: DsSpacing.sm),
-                              _Pill(label: 'الافتراضي', color: colors.primary),
+                              _Pill(
+                                label: context.l10n.settingsAddressDefault,
+                                color: colors.primary,
+                              ),
                             ],
                           ],
                         ),
@@ -92,7 +96,7 @@ class AddressCard extends StatelessWidget {
                         if (landmark.isNotEmpty) ...[
                           DsGaps.vXxs,
                           Text(
-                            'قرب $landmark',
+                            context.l10n.settingsAddressNear(landmark),
                             style: context.dsText.caption.tint(colors.onSurfaceVariant),
                           ),
                         ],
@@ -121,19 +125,19 @@ class AddressCard extends StatelessWidget {
                       if (onMakeDefault != null && !address.isDefault)
                         _Action(
                           icon: Icons.star_outline_rounded,
-                          label: 'اجعليه الافتراضي',
+                          label: context.l10n.settingsMakeDefault,
                           onTap: onMakeDefault!,
                         ),
                       if (onEdit != null)
                         _Action(
                           icon: Icons.edit_outlined,
-                          label: 'تعديل',
+                          label: context.l10n.settingsEdit,
                           onTap: onEdit!,
                         ),
                       if (onDelete != null)
                         _Action(
                           icon: Icons.delete_outline_rounded,
-                          label: 'حذف',
+                          label: context.l10n.settingsDelete,
                           onTap: onDelete!,
                           danger: true,
                         ),

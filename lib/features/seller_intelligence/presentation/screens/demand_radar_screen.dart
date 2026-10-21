@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/features/seller_intelligence/domain/entities/intelligence.dart';
 import 'package:reem/features/seller_intelligence/presentation/providers/intelligence_providers.dart';
 import 'package:reem/features/seller_intelligence/presentation/widgets/intelligence_pieces.dart';
@@ -31,7 +32,7 @@ class DemandRadarScreen extends ConsumerWidget {
       background: const SellerAtelierBackground(),
       backgroundColor: palette.background,
       slivers: [
-        const PremiumAppBar(title: 'رادار الطلب'),
+        PremiumAppBar(title: context.l10n.siDemandRadar),
         ...async.when(
           loading: () => [
             const SliverToBoxAdapter(
@@ -46,7 +47,7 @@ class DemandRadarScreen extends ConsumerWidget {
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: DsSpacing.xxl),
                 child: DsErrorState(
-                  message: 'ما قدرنا نجيب بيانات الرادار.',
+                  message: context.l10n.siRadarFailed,
                   onRetry: () => ref.invalidate(demandRadarProvider),
                 ),
               ),
@@ -61,17 +62,17 @@ class DemandRadarScreen extends ConsumerWidget {
 
   List<Widget> _body(BuildContext context, DemandRadar radar) {
     if (radar.hasNoListings) {
-      return const [
+      return [
         SliverToBoxAdapter(
           child: Padding(
             padding: EdgeInsets.all(DsSpacing.lg),
             child: DsEmptyState(
               icon: Icons.radar_rounded,
-              title: 'ما في منتجات بعد',
+              title: context.l10n.siNoProducts,
               // The radar reads the market against what she sells. With no
               // listings there is nothing to read it against, and saying that
               // is more useful than an empty chart.
-              message: 'ضيفي أول منتج ومنبلّش نقرالك السوق.',
+              message: context.l10n.siNoProductsRadarBody,
             ),
           ),
         ),
@@ -79,14 +80,14 @@ class DemandRadarScreen extends ConsumerWidget {
     }
 
     if (radar.isEmpty) {
-      return const [
+      return [
         SliverToBoxAdapter(
           child: Padding(
             padding: EdgeInsets.all(DsSpacing.lg),
             child: DsEmptyState(
               icon: Icons.hourglass_empty_rounded,
-              title: 'لسا عم نجمع البيانات',
-              message: 'الرادار بيقرا حركة السوق كل ليلة. ارجعي بكرا.',
+              title: context.l10n.siStillGathering,
+              message: context.l10n.siStillGatheringBody,
             ),
           ),
         ),
@@ -95,9 +96,9 @@ class DemandRadarScreen extends ConsumerWidget {
 
     return [
       if (radar.opportunities.isNotEmpty) ...[
-        const SectionTitle(
-          title: 'شو أعمل هلق',
-          subtitle: 'مرتّبة حسب الأهم لمتجرك',
+        SectionTitle(
+          title: context.l10n.siWhatToDoNow,
+          subtitle: context.l10n.siWhatToDoNowSubtitle,
         ),
         SliverList.builder(
           itemCount: radar.opportunities.length.clamp(0, 6),
@@ -107,9 +108,9 @@ class DemandRadarScreen extends ConsumerWidget {
       ],
 
       if (radar.stockAlerts.isNotEmpty) ...[
-        const SectionTitle(
-          title: 'المخزون تحت الطلب',
-          subtitle: 'قطع الطلب عليها ماشي والكمية عم تخلص',
+        SectionTitle(
+          title: context.l10n.siStockBelowDemand,
+          subtitle: context.l10n.siStockBelowDemandSubtitle,
         ),
         SliverList.builder(
           itemCount: radar.stockAlerts.length,
@@ -118,17 +119,17 @@ class DemandRadarScreen extends ConsumerWidget {
       ],
 
       if (radar.rising.isNotEmpty) ...[
-        const SectionTitle(
-          title: 'فئات صاعدة',
-          subtitle: 'الطلب عليها عم يزيد',
+        SectionTitle(
+          title: context.l10n.siRisingCategories,
+          subtitle: context.l10n.siRisingCategoriesSubtitle,
         ),
         SliverToBoxAdapter(child: _RisingRow(rows: radar.rising)),
       ],
 
       if (radar.unmet.isNotEmpty) ...[
-        const SectionTitle(
-          title: 'طلب ما لقى جوابه',
-          subtitle: 'بنات دوّروا وما لقوا شي مناسب',
+        SectionTitle(
+          title: context.l10n.siUnmetDemand,
+          subtitle: context.l10n.siUnmetDemandSubtitle,
         ),
         SliverList.builder(
           itemCount: radar.unmet.length,
@@ -137,7 +138,7 @@ class DemandRadarScreen extends ConsumerWidget {
       ],
 
       if (radar.priceTrends.isNotEmpty) ...[
-        const SectionTitle(title: 'حركة الأسعار'),
+        SectionTitle(title: context.l10n.siPriceMovement),
         SliverList.builder(
           itemCount: radar.priceTrends.length,
           itemBuilder: (context, i) => _PriceCard(trend: radar.priceTrends[i]),
@@ -220,14 +221,14 @@ class _StockCard extends StatelessWidget {
                 DsGaps.hXxs,
                 Text(
                   alert.stockUnits == 0
-                      ? 'ما ضل ولا قطعة'
-                      : 'باقي ${alert.stockUnits} قطعة',
+                      ? context.l10n.siOutOfStock
+                      : context.l10n.siUnitsLeft(alert.stockUnits),
                   style: context.dsText.caption.tint(colour),
                 ),
                 if (alert.coverDays != null && alert.coverDays! > 0) ...[
                   const SizedBox(width: DsSpacing.sm),
                   Text(
-                    'تكفّي ${alert.coverDays!.round()} يوم',
+                    context.l10n.siCoverDays(alert.coverDays!.round()),
                     style: context.dsText.caption.tint(palette.muted),
                   ),
                 ],
@@ -294,7 +295,9 @@ class _RisingRow extends StatelessWidget {
                     ],
                   ),
                   Text(
-                    row.isSelling ? 'عم تبيعي فيها' : 'ما عندك شي فيها',
+                    row.isSelling
+                        ? context.l10n.siYouSellHere
+                        : context.l10n.siYouDontSellHere,
                     style: context.dsText.micro.tint(
                       row.isSelling ? palette.primary : palette.muted,
                     ),
@@ -336,7 +339,10 @@ class _UnmetCard extends StatelessWidget {
                   ),
                   DsGaps.vXxxs,
                   Text(
-                    '${term.searches} بحث · ${(term.missRate * 100).round()}% ما لقوا شي',
+                    context.l10n.siSearchMiss(
+                      term.searches,
+                      (term.missRate * 100).round(),
+                    ),
                     style: context.dsText.caption.tint(palette.muted),
                   ),
                 ],
@@ -353,7 +359,7 @@ class _UnmetCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(DsRadius.pill),
                 ),
                 child: Text(
-                  'بفئتك',
+                  context.l10n.siInYourCategory,
                   style: context.dsText.micro.tint(palette.gold),
                 ),
               ),

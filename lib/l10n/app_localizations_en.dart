@@ -8738,4 +8738,636 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get marketRotationUnworn => 'Never worn';
+
+  @override
+  String get settingsMyAddresses => 'My addresses';
+
+  @override
+  String get settingsDeliveryAddresses => 'Delivery addresses';
+
+  @override
+  String get settingsDeliveryAddressesSubtitle =>
+      'Where should we send your orders?';
+
+  @override
+  String get settingsAddAddress => 'Add a new address';
+
+  @override
+  String get settingsAddressAdded => 'Address added';
+
+  @override
+  String get settingsAddressUpdated => 'Changes saved';
+
+  @override
+  String get settingsAddressNowDefault => 'This is now your default address';
+
+  @override
+  String get settingsDeleteAddressTitle => 'Delete address';
+
+  @override
+  String settingsDeleteAddressBody(String label) {
+    return '“$label” will be removed from your addresses.';
+  }
+
+  @override
+  String get settingsDelete => 'Delete';
+
+  @override
+  String get settingsKeep => 'Keep it';
+
+  @override
+  String get settingsAddressDeleted => 'Address deleted';
+
+  @override
+  String get settingsActionFailed => 'That couldn’t be done right now';
+
+  @override
+  String get settingsNoAddresses => 'No saved addresses yet';
+
+  @override
+  String get settingsNoAddressesBody =>
+      'Save an address now so it’s ready for your first order';
+
+  @override
+  String get settingsCoupons => 'Coupons';
+
+  @override
+  String get settingsYourOffers => 'Your offers';
+
+  @override
+  String get settingsYourOffersSubtitle =>
+      'Apply an offer to your bag, or copy the code';
+
+  @override
+  String settingsCouponPercentOff(String percent) {
+    return '$percent% off';
+  }
+
+  @override
+  String settingsCouponAmountOff(String amount) {
+    return '$amount off';
+  }
+
+  @override
+  String settingsCouponMinimum(String amount) {
+    return 'Minimum $amount';
+  }
+
+  @override
+  String get settingsCouponEndsToday => 'Ends today';
+
+  @override
+  String settingsCouponDaysLeft(int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: '$days days left',
+      one: '1 day left',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get settingsCouponLastUse => 'Last use';
+
+  @override
+  String settingsCouponUsesLeft(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count uses left',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String settingsCouponApplied(String code, String amount) {
+    return '$code applied — you saved $amount';
+  }
+
+  @override
+  String get settingsCouponEmptyBag =>
+      'Your bag is empty — add something, then apply the offer';
+
+  @override
+  String get settingsCouponTwoCurrencies =>
+      'Your bag has two currencies — apply the offer at checkout';
+
+  @override
+  String get settingsCouponApplyFailed => 'The coupon couldn’t be applied';
+
+  @override
+  String get settingsCouponJustForYou => 'Just for you';
+
+  @override
+  String get settingsCouponCopyCode => 'Copy code';
+
+  @override
+  String settingsCouponCopied(String code) {
+    return 'Code $code copied';
+  }
+
+  @override
+  String get settingsCouponAppliedBadge => 'Applied';
+
+  @override
+  String get settingsCouponApplyToBag => 'Apply to my bag';
+
+  @override
+  String settingsCouponAppliedSaving(String code, String discount) {
+    return '$code applied — saving $discount';
+  }
+
+  @override
+  String get settingsRemove => 'Remove';
+
+  @override
+  String get settingsContinueToCheckout => 'Continue to checkout';
+
+  @override
+  String settingsBagNow(String subtotal) {
+    return 'Your bag now: $subtotal';
+  }
+
+  @override
+  String get settingsNoCoupons => 'No coupons available right now';
+
+  @override
+  String get settingsNoCouponsBody =>
+      'We’ll let you know when a new offer arrives';
+
+  @override
+  String get settingsCouponsFailed => 'Coupons couldn’t load';
+
+  @override
+  String get settingsPaymentMethods => 'Payment methods';
+
+  @override
+  String get settingsPayAtOrder => 'Pay when you order';
+
+  @override
+  String get settingsPayAtOrderSubtitle => 'You choose the method at checkout';
+
+  @override
+  String get settingsAvailableMethods => 'Available methods';
+
+  @override
+  String get settingsNoCardsStored =>
+      'We don’t store card details. Each order is paid when you place it, the way you choose.';
+
+  @override
+  String get settingsReemWallet => 'Reem wallet';
+
+  @override
+  String get settingsHintCod => 'Pay the courier in cash on delivery';
+
+  @override
+  String get settingsHintCourierCollect => 'Collected by the delivery company';
+
+  @override
+  String get settingsHintWallet => 'Taken from your balance straight away';
+
+  @override
+  String get settingsHintMobileWallet =>
+      'We open the payment page once the order is confirmed';
+
+  @override
+  String get settingsHintCard =>
+      'A secure payment page — we don’t store your card';
+
+  @override
+  String get settingsHintBankTransfer =>
+      'Transfer the amount, then send the reference from the order page';
+
+  @override
+  String get settingsHintHawala =>
+      'A local transfer, then send the receipt number from the order page';
+
+  @override
+  String get settingsHintConfirmedFirst =>
+      'Payment is confirmed before the order is prepared';
+
+  @override
+  String get settingsNoPaymentMethods =>
+      'No payment methods available right now';
+
+  @override
+  String get settingsPaymentMethodsFailed => 'Payment methods couldn’t load';
+
+  @override
+  String get settingsAddressDefault => 'Default';
+
+  @override
+  String settingsAddressNear(String landmark) {
+    return 'Near $landmark';
+  }
+
+  @override
+  String get settingsMakeDefault => 'Make default';
+
+  @override
+  String get settingsEdit => 'Edit';
+
+  @override
+  String get settingsAddressHome => 'Home';
+
+  @override
+  String get settingsEditAddress => 'Edit address';
+
+  @override
+  String get settingsNewAddress => 'New address';
+
+  @override
+  String get settingsAddressName => 'Address name';
+
+  @override
+  String get settingsAddressNameHint => 'Home, work, my parents’';
+
+  @override
+  String get settingsRecipientName => 'Recipient’s name';
+
+  @override
+  String get settingsRecipientNameHint => 'Who receives the order';
+
+  @override
+  String get settingsPhoneNumber => 'Phone number';
+
+  @override
+  String get settingsCity => 'City or town';
+
+  @override
+  String get settingsCityHint => 'Mezzeh, Jaramana, ...';
+
+  @override
+  String get settingsAddressLine => 'Address';
+
+  @override
+  String get settingsAddressLineHint => 'Street, building, floor, flat number';
+
+  @override
+  String get settingsLandmark => 'Landmark (optional)';
+
+  @override
+  String get settingsLandmarkHint => 'Near Al-Nour pharmacy';
+
+  @override
+  String get settingsDeliveryNotes => 'Delivery instructions (optional)';
+
+  @override
+  String get settingsDeliveryNotesHint => 'Call before arriving';
+
+  @override
+  String get settingsMakeMyDefault => 'Make it my default address';
+
+  @override
+  String get settingsMakeMyDefaultHint => 'Checkout opens with it';
+
+  @override
+  String get settingsSaveChanges => 'Save changes';
+
+  @override
+  String get settingsSaveAddress => 'Save address';
+
+  @override
+  String get settingsGovernorate => 'Governorate';
+
+  @override
+  String get settingsChooseGovernorate => 'Choose a governorate';
+
+  @override
+  String get settingsDistrict => 'Area';
+
+  @override
+  String get settingsChooseDistrict => 'Choose an area (optional)';
+
+  @override
+  String settingsDistrictRural(String name) {
+    return '$name · countryside';
+  }
+
+  @override
+  String get settingsGovernoratesFailed => 'The governorate list couldn’t load';
+
+  @override
+  String get settingsFieldRequired => 'This field is required';
+
+  @override
+  String get settingsFieldTooShort => 'Too short';
+
+  @override
+  String get siDemandRadar => 'Demand radar';
+
+  @override
+  String get siRadarFailed => 'Radar data couldn’t load.';
+
+  @override
+  String get siNoProducts => 'No products yet';
+
+  @override
+  String get siNoProductsRadarBody =>
+      'Add your first product and we’ll start reading the market for you.';
+
+  @override
+  String get siStillGathering => 'Still gathering data';
+
+  @override
+  String get siStillGatheringBody =>
+      'The radar reads the market every night. Come back tomorrow.';
+
+  @override
+  String get siWhatToDoNow => 'What to do now';
+
+  @override
+  String get siWhatToDoNowSubtitle =>
+      'Ordered by what matters most to your shop';
+
+  @override
+  String get siStockBelowDemand => 'Stock below demand';
+
+  @override
+  String get siStockBelowDemandSubtitle =>
+      'Pieces selling well and running out';
+
+  @override
+  String get siRisingCategories => 'Rising categories';
+
+  @override
+  String get siRisingCategoriesSubtitle => 'Demand for them is growing';
+
+  @override
+  String get siUnmetDemand => 'Unmet demand';
+
+  @override
+  String get siUnmetDemandSubtitle =>
+      'Women searched and didn’t find the right thing';
+
+  @override
+  String get siPriceMovement => 'Price movement';
+
+  @override
+  String get siOutOfStock => 'None left';
+
+  @override
+  String siUnitsLeft(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count pieces left',
+      one: '1 piece left',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String siCoverDays(int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: 'Lasts $days days',
+      one: 'Lasts 1 day',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get siYouSellHere => 'You sell here';
+
+  @override
+  String get siYouDontSellHere => 'You don’t sell here';
+
+  @override
+  String siSearchMiss(int searches, int percent) {
+    return '$searches searches · $percent% found nothing';
+  }
+
+  @override
+  String get siInYourCategory => 'In your category';
+
+  @override
+  String get siProductIntelligence => 'Product intelligence';
+
+  @override
+  String get siProductsFailed => 'Your products couldn’t be scored.';
+
+  @override
+  String get siNoProductsBody =>
+      'Add your first product and we’ll tell you what it’s missing.';
+
+  @override
+  String get siAverage => 'Average';
+
+  @override
+  String siProductCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count products',
+      one: '1 product',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get siNothingUrgent => 'Nothing urgent. Ordered weakest first.';
+
+  @override
+  String siUrgentCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count need attention now.',
+      one: 'One needs attention now.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String siWindowDays(int days) {
+    return 'Based on the last $days days';
+  }
+
+  @override
+  String siViewsOrders(int views, int orders) {
+    return '$views views · $orders orders';
+  }
+
+  @override
+  String get siSoldOut => 'Sold out';
+
+  @override
+  String siMoreAdvice(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'and $count more tips',
+      one: 'and 1 more tip',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get siDetailsFailed => 'Details couldn’t load.';
+
+  @override
+  String get siNoDataYet => 'No data yet';
+
+  @override
+  String get siTooFewYet => 'Too few yet';
+
+  @override
+  String siComparedWith(int count) {
+    return 'Compared with $count similar products';
+  }
+
+  @override
+  String get siPriceNearMarket => 'Your price is close to the market.';
+
+  @override
+  String siPriceAbove(int percent) {
+    return 'Your price is $percent% above similar pieces.';
+  }
+
+  @override
+  String siPriceBelow(int percent) {
+    return 'Your price is $percent% below similar pieces.';
+  }
+
+  @override
+  String siConversion(String yours, String median) {
+    return 'Your conversion is $yours% against $median% in the category.';
+  }
+
+  @override
+  String get siShopHealth => 'Shop health';
+
+  @override
+  String get siHealthFailed => 'Shop health couldn’t be calculated.';
+
+  @override
+  String get siWhatRaisesHealth => 'What raises your shop’s health';
+
+  @override
+  String get siWhatRaisesHealthSubtitle => 'Ordered by biggest impact';
+
+  @override
+  String get siMetrics => 'Metrics';
+
+  @override
+  String get siNotEnoughYet => 'Not enough yet';
+
+  @override
+  String get siNotEnoughYetBody =>
+      'These metrics don’t affect your shop’s health until there’s enough data';
+
+  @override
+  String get siWhatSlipped => 'What slipped';
+
+  @override
+  String get siSlippedFailed => 'Slipping products couldn’t be read right now.';
+
+  @override
+  String get siWhatSlippedSubtitle =>
+      'Used to sell, then slowed — with one reason for each';
+
+  @override
+  String get siHealthTooFewOrders =>
+      'Not enough orders to judge yet. Every order you complete makes the picture clearer.';
+
+  @override
+  String siHealthWindow(int days) {
+    return 'Based on your last $days days of orders.';
+  }
+
+  @override
+  String siMomentum(int points) {
+    return '$points points from last month';
+  }
+
+  @override
+  String siDimensionUnmeasured(String blurb) {
+    return '$blurb — nothing to measure yet.';
+  }
+
+  @override
+  String siDimensionTooFew(String blurb, int sample) {
+    return '$blurb — measured on $sample, but still too few to count.';
+  }
+
+  @override
+  String siDays(int count) {
+    return '$count days';
+  }
+
+  @override
+  String siHours(int count) {
+    return '$count h';
+  }
+
+  @override
+  String siOutOfFive(String value) {
+    return '$value of 5';
+  }
+
+  @override
+  String get siFactAccepted => 'Orders you accepted and completed';
+
+  @override
+  String get siFactDelivered => 'Orders delivered';
+
+  @override
+  String get siFactCancelledBySeller => 'You cancelled';
+
+  @override
+  String get siFactCancelledByOthers => 'Cancelled by the customer';
+
+  @override
+  String get siFactReturned => 'Returned';
+
+  @override
+  String get siFactPrepHours => 'Average prep (hours)';
+
+  @override
+  String get siFactShipHours => 'Average shipping (hours)';
+
+  @override
+  String get siFactResponseHours => 'Average reply (hours)';
+
+  @override
+  String get siFactRating => 'Shop rating';
+
+  @override
+  String get siFactReviewCount => 'Number of reviews';
+
+  @override
+  String get siHideNumbers => 'Hide the numbers';
+
+  @override
+  String get siShowNumbers => 'Show the numbers we counted';
+
+  @override
+  String get siShopIntelligence => 'Shop intelligence';
+
+  @override
+  String get siCalculating => 'Calculating…';
+
+  @override
+  String get siEightMetrics => 'Eight metrics for your shop';
+
+  @override
+  String get siGettingToKnow => 'Still getting to know your shop';
+
+  @override
+  String get siDemandRadarSubtitle => 'What demand is growing for';
+
+  @override
+  String get siProductIntelligenceSubtitle =>
+      'What your product pages are missing';
+
+  @override
+  String get siNotMeasuredYet => 'Not measured yet';
+
+  @override
+  String siWeightOfHealth(int percent) {
+    return '$percent% of health';
+  }
 }
