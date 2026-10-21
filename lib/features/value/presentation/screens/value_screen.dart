@@ -22,7 +22,7 @@ class ValueScreen extends ConsumerWidget {
 
     return Scaffold(
       backgroundColor: colors.background,
-      appBar: const ReemAppBar(title: 'مكانتي بريم'),
+      appBar: const ReemAppBar(title: 'مكانتي بأوهارا'),
       body: standingAsync.when(
         loading: () => const Center(child: DsLoadingIndicator()),
         error: (_, _) => DsErrorState(

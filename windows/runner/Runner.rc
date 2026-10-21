@@ -89,13 +89,13 @@ BEGIN
     BEGIN
         BLOCK "040904e4"
         BEGIN
-            VALUE "CompanyName", "Reem" "\0"
-            VALUE "FileDescription", "reem" "\0"
+            VALUE "CompanyName", "Ohara" "\0"
+            VALUE "FileDescription", "Ohara" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "reem" "\0"
-            VALUE "LegalCopyright", "Copyright (C) 2026 Reem. All rights reserved." "\0"
+            VALUE "InternalName", "Ohara" "\0"
+            VALUE "LegalCopyright", "Copyright (C) 2026 Ohara. All rights reserved." "\0"
             VALUE "OriginalFilename", "reem.exe" "\0"
-            VALUE "ProductName", "reem" "\0"
+            VALUE "ProductName", "Ohara" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

@@ -56,7 +56,7 @@ void main() {
       expect(ar.buyNow, 'اشتري الآن');
       expect(ar.writeComment, 'اكتبي تعليقاً…');
       expect(ar.shareMoment, 'شاركي لحظتكِ');
-      expect(ar.welcomeToReem, 'مرحباً بكِ في ريم'); // was: مرحباً بك
+      expect(ar.welcomeToReem, 'مرحباً بكِ في أوهارا'); // was: مرحباً بك
       expect(ar.contactSupport, 'تواصلي مع الدعم');
       expect(ar.followDeviceLanguage, 'اتّبعي لغة الجهاز'); // was ungrammatical
     });

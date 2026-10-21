@@ -73,7 +73,7 @@ class _ResaleMarketScreenState extends ConsumerState<ResaleMarketScreen> {
                       icon: Icons.storefront_outlined,
                       title: _mine ? 'ما عندك عروض' : 'ما في شي معروض هلق',
                       message: _mine
-                          ? 'لما ريم تلاقي قطعة واقفة بخزانتك، بتقترح عليكِ تعرضيها هون.'
+                          ? 'لما أوهارا تلاقي قطعة واقفة بخزانتك، بتقترح عليكِ تعرضيها هون.'
                           : 'السوق بيتعبّى من خزانات البنات. رجعي بعدين.',
                     )
                   : RefreshIndicator(

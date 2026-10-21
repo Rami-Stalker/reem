@@ -53,7 +53,7 @@ class HomeStylistEntry extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
-                          'اسألي مساعِدة ريم',
+                          'اسألي مساعِدة أوهارا',
                           style: context.dsText.tileTitle.bold.tint(
                             colors.onPrimary,
                           ),

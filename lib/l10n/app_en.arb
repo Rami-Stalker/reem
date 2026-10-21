@@ -53,7 +53,7 @@
   "@a11yShare": {
     "description": "Screen-reader label"
   },
-  "aboutReem": "About Reem",
+  "aboutReem": "About Ohara",
   "@aboutReem": {
     "description": "Menu item"
   },
@@ -1106,7 +1106,7 @@
   "@adminWelcome": {
     "description": "Admin greeting"
   },
-  "aiStylistTitle": "Reem Stylist",
+  "aiStylistTitle": "Ohara Stylist",
   "@aiStylistTitle": {
     "description": "Title of the AI stylist screen [re-authored: original wording lost]"
   },
@@ -1270,7 +1270,7 @@
   "@appPreferences": {
     "description": "Settings section"
   },
-  "appTitle": "Reem",
+  "appTitle": "Ohara",
   "@appTitle": {
     "description": "Application name shown in the task switcher"
   },
@@ -1287,7 +1287,7 @@
   "@appearance": {
     "description": "Menu item"
   },
-  "appearanceDescription": "Choose how Reem looks on your device. Your choice is saved automatically.",
+  "appearanceDescription": "Choose how Ohara looks on your device. Your choice is saved automatically.",
   "@appearanceDescription": {
     "description": "Appearance screen description"
   },
@@ -1524,7 +1524,7 @@
   "@chatProduct": {
     "description": "Attaches a product to a message [re-authored: original wording lost]"
   },
-  "chatSafetyNote": "Keep payments inside Reem",
+  "chatSafetyNote": "Keep payments inside Ohara",
   "@chatSafetyNote": {
     "description": "Marketplace safety note above the conversation list"
   },
@@ -2026,7 +2026,7 @@
   "@currentPassword": {
     "description": "Field label"
   },
-  "declaredFemaleLabel": "I declare that I am a woman and accept the Reem terms",
+  "declaredFemaleLabel": "I declare that I am a woman and accept the Ohara terms",
   "@declaredFemaleLabel": {
     "description": "Mandatory self-declaration on the registration form (Q43/Q138 P1)."
   },
@@ -2297,7 +2297,7 @@
   "faqContactSeller": "How do I reach a boutique?",
   "faqContactSellerAnswer": "Open the product, the store, or your order and tap “Message the boutique”. Your conversations are kept under Messages.",
   "faqPayment": "How do I pay?",
-  "faqPaymentAnswer": "Cash on delivery, or from your Reem wallet. Never pay a boutique outside the app — an order paid outside it is not protected.",
+  "faqPaymentAnswer": "Cash on delivery, or from your Ohara wallet. Never pay a boutique outside the app — an order paid outside it is not protected.",
   "faqPoints": "How do loyalty points work?",
   "@faqPoints": {
     "description": "FAQ question"
@@ -2982,7 +2982,7 @@
   "@homeLoyaltySubtitle": {
     "description": "Subtitle of the loyalty card on home."
   },
-  "homeLoyaltyTitle": "Reem Rewards",
+  "homeLoyaltyTitle": "Ohara Rewards",
   "@homeLoyaltyTitle": {
     "description": "Title of the loyalty card on home."
   },
@@ -3319,7 +3319,7 @@
   "@manageSecurityBlurb": {
     "description": "Section description"
   },
-  "matchCodeHint": "Check that the message shows the same two digits. Reem will never ask you to read a code aloud.",
+  "matchCodeHint": "Check that the message shows the same two digits. Ohara will never ask you to read a code aloud.",
   "@matchCodeHint": {
     "description": "Anti-relay guidance beside the match code"
   },
@@ -3619,8 +3619,8 @@
   "notifOrdersBlurb": "Payment, packing, shipping and delivery.",
   "notifPush": "Push notifications",
   "notifPushBlurb": "Message alerts, order updates and offers.",
-  "notifPushBlocked": "Your phone is blocking Reem's notifications.",
-  "notifPushBlockedBody": "Your phone is blocking Reem, so nothing below will reach you until you allow it in the system settings.",
+  "notifPushBlocked": "Your phone is blocking Ohara's notifications.",
+  "notifPushBlockedBody": "Your phone is blocking Ohara, so nothing below will reach you until you allow it in the system settings.",
   "notifPushBlockedTitle": "Notifications are turned off",
   "notifPushOpenSettings": "Open settings",
   "notifPushUnavailable": "Push notifications are not available in this version.",
@@ -6339,7 +6339,7 @@
   "@totpSecretLabel": {
     "description": "TOTP enrolment: totpSecretLabel"
   },
-  "totpSetupTitle": "Add Reem to your authenticator",
+  "totpSetupTitle": "Add Ohara to your authenticator",
   "@totpSetupTitle": {
     "description": "TOTP enrolment: totpSetupTitle"
   },
@@ -7146,7 +7146,7 @@
   "@voiceMessage": {
     "description": "Message text carried alongside a voice attachment."
   },
-  "voicePermissionDenied": "Reem needs permission to use the microphone.",
+  "voicePermissionDenied": "Ohara needs permission to use the microphone.",
   "@voicePermissionDenied": {
     "description": "Shown when microphone permission is refused."
   },
@@ -7182,7 +7182,7 @@
   "@walletEmptyTitle": {
     "description": "Empty-state title on the wallet screen."
   },
-  "walletNotWithdrawable": "Spendable inside Reem only",
+  "walletNotWithdrawable": "Spendable inside Ohara only",
   "@walletNotWithdrawable": {
     "description": "Q42 — the wallet balance cannot be withdrawn as cash."
   },
@@ -7242,7 +7242,7 @@
   "@welcomeBack": {
     "description": "Returning-user heading"
   },
-  "welcomeToReem": "Welcome to Reem",
+  "welcomeToReem": "Welcome to Ohara",
   "@welcomeToReem": {
     "description": "Auth screen heading"
   },
@@ -7528,7 +7528,7 @@
   "postDeleteBody": "It disappears from your page and from every page it was added to. This can't be undone.",
   "postDeleted": "Post deleted",
   "policiesTitle": "Policies and terms",
-  "policiesSubtitle": "The documents that govern your use of Reem",
+  "policiesSubtitle": "The documents that govern your use of Ohara",
   "policiesSectionForYou": "For you",
   "policiesSectionEveryone": "For everyone",
   "policiesSectionSellers": "For sellers",
@@ -7558,7 +7558,7 @@
   "@policiesArchivedNotice": {"placeholders": {"version": {"type": "String"}}},
   "policiesReadCurrent": "Read the current version",
   "policiesConsentTitle": "Before you carry on",
-  "policiesConsentIntroNew": "Please read and accept the following to keep using Reem.",
+  "policiesConsentIntroNew": "Please read and accept the following to keep using Ohara.",
   "policiesConsentIntroUpdated": "We have updated the following. Please read and accept them to carry on.",
   "policiesConsentAgree": "I have read and accept the documents above",
   "policiesConsentContinue": "Accept and continue",

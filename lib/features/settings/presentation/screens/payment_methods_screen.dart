@@ -132,7 +132,7 @@ class _WalletTile extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'محفظة ريم',
+                    'محفظة أوهارا',
                     style: context.dsText.tileTitle.bold.tint(colors.onPrimary),
                   ),
                   DsGaps.vXxs,

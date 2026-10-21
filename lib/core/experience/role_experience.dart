@@ -293,7 +293,7 @@ class AppRoleExperience {
 
   static const buyer = AppRoleExperience(
     role: ExperienceRole.buyer,
-    title: 'Reem',
+    title: 'Ohara',
     tagline: 'A soft luxury boutique shaped around your taste.',
     defaultPath: RoutePaths.home,
     profilePath: RoutePaths.profile,
@@ -442,7 +442,7 @@ class AppRoleExperience {
 
   static const seller = AppRoleExperience(
     role: ExperienceRole.seller,
-    title: 'Reem Seller',
+    title: 'Ohara Seller',
     tagline: 'Inventory, orders, customers, and growth in one fast workspace.',
     defaultPath: RoutePaths.sellerDashboard,
     profilePath: RoutePaths.sellerStore,
@@ -566,7 +566,7 @@ class AppRoleExperience {
 
   static const admin = AppRoleExperience(
     role: ExperienceRole.admin,
-    title: 'Reem Admin',
+    title: 'Ohara Admin',
     tagline: 'Enterprise control, governance, analytics, and operating health.',
     defaultPath: RoutePaths.admin,
     profilePath: RoutePaths.adminSystemSettings,
@@ -730,7 +730,7 @@ class AppRoleExperience {
       // configured.
       RoleNavigationItem(
         surface: ExperienceSurface.analytics,
-        label: 'Reem Value',
+        label: 'Ohara Value',
         path: RoutePaths.adminValue,
         icon: Icons.workspace_premium_outlined,
         selectedIcon: Icons.workspace_premium_rounded,
@@ -1222,7 +1222,7 @@ const _adminMenuGroups = [
       ),
       RoleAction(
         id: 'value',
-        label: 'Reem Value',
+        label: 'Ohara Value',
         path: RoutePaths.adminValue,
         icon: Icons.workspace_premium_rounded,
       ),

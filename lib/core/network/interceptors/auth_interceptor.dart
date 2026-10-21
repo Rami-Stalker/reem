@@ -213,7 +213,7 @@ class AuthInterceptor extends Interceptor {
     return {
       'X-Reem-Device-Id': deviceId,
       'X-Reem-Device-Fingerprint': deviceId,
-      'X-Reem-Device-Name': 'Reem ${defaultTargetPlatform.name}',
+      'X-Reem-Device-Name': 'Ohara ${defaultTargetPlatform.name}',
       'X-Reem-Platform': defaultTargetPlatform.name,
       if (guestToken != null && guestToken.isNotEmpty)
         'X-Reem-Guest-Token': guestToken,

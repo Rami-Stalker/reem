@@ -42,14 +42,14 @@ class StylistWelcome extends StatelessWidget {
         ),
         const SizedBox(height: DsSpacing.md),
         Text(
-          'مساعدة ريم الشخصية',
+          'مساعدة أوهارا الشخصية',
           textAlign: TextAlign.center,
           style: context.dsText.screenTitle.bold.tint(colors.onSurface),
         ),
         const SizedBox(height: DsSpacing.xs),
         Text(
           'احكيلي عن المناسبة، أو القطعة، أو الميزانية — وأنا برتّبلك خيارات '
-          'متوفرة فعليًا عند بائعات ريم، وبقلّك ليش اخترت كل قطعة.',
+          'متوفرة فعليًا عند بائعات أوهارا، وبقلّك ليش اخترت كل قطعة.',
           textAlign: TextAlign.center,
           style: context.dsText.body.tint(colors.onSurfaceVariant).copyWith(height: 1.7),
         ),

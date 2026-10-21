@@ -81,7 +81,7 @@ class _FullCard extends StatelessWidget {
               Icon(Icons.workspace_premium_rounded, size: 18, color: colors.primary),
               const SizedBox(width: DsSpacing.xs),
               Expanded(
-                child: Text('مكانتك بريم', style: context.dsText.labelStrong),
+                child: Text('مكانتك بأوهارا', style: context.dsText.labelStrong),
               ),
               const Icon(Icons.chevron_left_rounded, size: 18),
             ],

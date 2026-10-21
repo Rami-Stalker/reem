@@ -48,7 +48,7 @@ class SellerMarketScreen extends ConsumerWidget {
           data: (rows) => rows.isEmpty
               ? const _Nothing(
                   text:
-                      'ما في إشارة قوية كفاية هلق. ريم ما بتحكي إلا لما يكون في بيانات تكفي.',
+                      'ما في إشارة قوية كفاية هلق. أوهارا ما بتحكي إلا لما يكون في بيانات تكفي.',
                 )
               : SliverList.separated(
                   itemCount: rows.length,

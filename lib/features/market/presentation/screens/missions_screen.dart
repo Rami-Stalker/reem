@@ -42,7 +42,7 @@ class MissionsScreen extends ConsumerWidget {
                   // Explains the rule rather than apologising: nothing is
                   // offered that she cannot actually finish.
                   message:
-                      'ريم ما بتطلب منك شي إلا لما يكون في شي فعلاً يستاهل وبتقدري تخلّصيه.',
+                      'أوهارا ما بتطلب منك شي إلا لما يكون في شي فعلاً يستاهل وبتقدري تخلّصيه.',
                 )
               : ListView.separated(
                   padding: const EdgeInsets.all(DsSpacing.lg),

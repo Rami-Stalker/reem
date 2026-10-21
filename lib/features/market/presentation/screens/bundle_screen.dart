@@ -62,7 +62,7 @@ class _Body extends ConsumerWidget {
           ReasonLine(
             icon: Icons.storefront_outlined,
             text:
-                'القطع من ${bundle.sellerCount} محلات مختلفة — ريم جمعتها لأنها بتمشي مع بعض.',
+                'القطع من ${bundle.sellerCount} محلات مختلفة — أوهارا جمعتها لأنها بتمشي مع بعض.',
           ),
         ],
         DsGaps.vLg,
@@ -87,7 +87,7 @@ class _Body extends ConsumerWidget {
                     ),
                     DsGaps.vXs,
                     Text(
-                      'نفس الخانة، قطعة تانية ريم بتعتبرها قريبة منها.',
+                      'نفس الخانة، قطعة تانية أوهارا بتعتبرها قريبة منها.',
                       style: context.dsText.caption.tint(
                         colors.onSurfaceVariant,
                       ),

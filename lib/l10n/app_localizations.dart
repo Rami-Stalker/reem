@@ -179,7 +179,7 @@ abstract class AppLocalizations {
   /// Menu item
   ///
   /// In en, this message translates to:
-  /// **'About Reem'**
+  /// **'About Ohara'**
   String get aboutReem;
 
   /// About screen description
@@ -1703,7 +1703,7 @@ abstract class AppLocalizations {
   /// Title of the AI stylist screen [re-authored: original wording lost]
   ///
   /// In en, this message translates to:
-  /// **'Reem Stylist'**
+  /// **'Ohara Stylist'**
   String get aiStylistTitle;
 
   /// Filter chip that clears the category filter.
@@ -1949,7 +1949,7 @@ abstract class AppLocalizations {
   /// Application name shown in the task switcher
   ///
   /// In en, this message translates to:
-  /// **'Reem'**
+  /// **'Ohara'**
   String get appTitle;
 
   /// About screen
@@ -1967,7 +1967,7 @@ abstract class AppLocalizations {
   /// Appearance screen description
   ///
   /// In en, this message translates to:
-  /// **'Choose how Reem looks on your device. Your choice is saved automatically.'**
+  /// **'Choose how Ohara looks on your device. Your choice is saved automatically.'**
   String get appearanceDescription;
 
   /// Applies filters
@@ -2333,7 +2333,7 @@ abstract class AppLocalizations {
   /// Marketplace safety note above the conversation list
   ///
   /// In en, this message translates to:
-  /// **'Keep payments inside Reem'**
+  /// **'Keep payments inside Ohara'**
   String get chatSafetyNote;
 
   /// Body of the marketplace safety note
@@ -3233,7 +3233,7 @@ abstract class AppLocalizations {
   /// Mandatory self-declaration on the registration form (Q43/Q138 P1).
   ///
   /// In en, this message translates to:
-  /// **'I declare that I am a woman and accept the Reem terms'**
+  /// **'I declare that I am a woman and accept the Ohara terms'**
   String get declaredFemaleLabel;
 
   /// Button label
@@ -3647,7 +3647,7 @@ abstract class AppLocalizations {
   /// No description provided for @faqPaymentAnswer.
   ///
   /// In en, this message translates to:
-  /// **'Cash on delivery, or from your Reem wallet. Never pay a boutique outside the app — an order paid outside it is not protected.'**
+  /// **'Cash on delivery, or from your Ohara wallet. Never pay a boutique outside the app — an order paid outside it is not protected.'**
   String get faqPaymentAnswer;
 
   /// FAQ question
@@ -4625,7 +4625,7 @@ abstract class AppLocalizations {
   /// Title of the loyalty card on home.
   ///
   /// In en, this message translates to:
-  /// **'Reem Rewards'**
+  /// **'Ohara Rewards'**
   String get homeLoyaltyTitle;
 
   /// Eyebrow above the nearby boutiques section.
@@ -5093,7 +5093,7 @@ abstract class AppLocalizations {
   /// Anti-relay guidance beside the match code
   ///
   /// In en, this message translates to:
-  /// **'Check that the message shows the same two digits. Reem will never ask you to read a code aloud.'**
+  /// **'Check that the message shows the same two digits. Ohara will never ask you to read a code aloud.'**
   String get matchCodeHint;
 
   /// The two digits she compares against the message
@@ -5603,13 +5603,13 @@ abstract class AppLocalizations {
   /// No description provided for @notifPushBlocked.
   ///
   /// In en, this message translates to:
-  /// **'Your phone is blocking Reem\'s notifications.'**
+  /// **'Your phone is blocking Ohara\'s notifications.'**
   String get notifPushBlocked;
 
   /// No description provided for @notifPushBlockedBody.
   ///
   /// In en, this message translates to:
-  /// **'Your phone is blocking Reem, so nothing below will reach you until you allow it in the system settings.'**
+  /// **'Your phone is blocking Ohara, so nothing below will reach you until you allow it in the system settings.'**
   String get notifPushBlockedBody;
 
   /// No description provided for @notifPushBlockedTitle.
@@ -9827,7 +9827,7 @@ abstract class AppLocalizations {
   /// TOTP enrolment: totpSetupTitle
   ///
   /// In en, this message translates to:
-  /// **'Add Reem to your authenticator'**
+  /// **'Add Ohara to your authenticator'**
   String get totpSetupTitle;
 
   /// TOTP enrolment: totpTitle
@@ -10901,7 +10901,7 @@ abstract class AppLocalizations {
   /// Shown when microphone permission is refused.
   ///
   /// In en, this message translates to:
-  /// **'Reem needs permission to use the microphone.'**
+  /// **'Ohara needs permission to use the microphone.'**
   String get voicePermissionDenied;
 
   /// Tooltip on the microphone button in the composer.
@@ -10955,7 +10955,7 @@ abstract class AppLocalizations {
   /// Q42 — the wallet balance cannot be withdrawn as cash.
   ///
   /// In en, this message translates to:
-  /// **'Spendable inside Reem only'**
+  /// **'Spendable inside Ohara only'**
   String get walletNotWithdrawable;
 
   /// Shown when the wallet cannot load because the device is offline.
@@ -11045,7 +11045,7 @@ abstract class AppLocalizations {
   /// Auth screen heading
   ///
   /// In en, this message translates to:
-  /// **'Welcome to Reem'**
+  /// **'Welcome to Ohara'**
   String get welcomeToReem;
 
   /// Screen title
@@ -12083,7 +12083,7 @@ abstract class AppLocalizations {
   /// No description provided for @policiesSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'The documents that govern your use of Reem'**
+  /// **'The documents that govern your use of Ohara'**
   String get policiesSubtitle;
 
   /// No description provided for @policiesSectionForYou.
@@ -12233,7 +12233,7 @@ abstract class AppLocalizations {
   /// No description provided for @policiesConsentIntroNew.
   ///
   /// In en, this message translates to:
-  /// **'Please read and accept the following to keep using Reem.'**
+  /// **'Please read and accept the following to keep using Ohara.'**
   String get policiesConsentIntroNew;
 
   /// No description provided for @policiesConsentIntroUpdated.

@@ -94,7 +94,7 @@ class _EmptyCloset extends ConsumerWidget {
           icon: Icons.checkroom_rounded,
           title: 'خزانتك لسا فاضية',
           message:
-              'حطّي فيها قطعك — يلي اشتريتيها من ريم ويلي عندك من قبل. '
+              'حطّي فيها قطعك — يلي اشتريتيها من أوهارا ويلي عندك من قبل. '
               'من هون منعرف شو بينقصك وشو بتقدري تلبسي.',
           actionLabel: 'جيبي مشترياتي',
           onAction: () => _backfill(context, ref),

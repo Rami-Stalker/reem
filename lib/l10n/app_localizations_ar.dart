@@ -50,7 +50,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get a11yShare => 'مشاركة';
 
   @override
-  String get aboutReem => 'عن ريم';
+  String get aboutReem => 'عن أوهارا';
 
   @override
   String get aboutReemBlurb =>
@@ -147,7 +147,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get actionStoreProfile => 'صفحة المتجر';
 
   @override
-  String get actionStylist => 'مساعِدة ريم';
+  String get actionStylist => 'مساعِدة أوهارا';
 
   @override
   String get actionTrends => 'محرّك الرائج';
@@ -846,7 +846,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get adminWelcome => 'مرحباً بعودتكِ';
 
   @override
-  String get aiStylistTitle => 'مساعِدة ريم';
+  String get aiStylistTitle => 'مساعِدة أوهارا';
 
   @override
   String get all => 'الكل';
@@ -972,7 +972,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get appPreferences => 'تفضيلات التطبيق';
 
   @override
-  String get appTitle => 'ريم';
+  String get appTitle => 'أوهارا';
 
   @override
   String appVersion(String version) {
@@ -984,7 +984,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get appearanceDescription =>
-      'اختاري كيف يظهر تطبيق ريم على جهازكِ. يُحفظ تفضيلكِ تلقائياً.';
+      'اختاري كيف يظهر تطبيق أوهارا على جهازكِ. يُحفظ تفضيلكِ تلقائياً.';
 
   @override
   String get apply => 'تطبيق';
@@ -1172,7 +1172,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get chatProduct => 'منتج';
 
   @override
-  String get chatSafetyNote => 'أبقي الدفع داخل ريم';
+  String get chatSafetyNote => 'أبقي الدفع داخل أوهارا';
 
   @override
   String get chatSafetyNoteBody =>
@@ -1432,7 +1432,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get collectionDeals => 'كل العروض';
 
   @override
-  String get collectionFeatured => 'مختارات ريم';
+  String get collectionFeatured => 'مختارات أوهارا';
 
   @override
   String get collectionMostLoved => 'الأكثر إعجاباً';
@@ -1655,7 +1655,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get declaredFemaleLabel =>
-      'أُقرّ بأنني أنثى، وأوافق على شروط استخدام ريم';
+      'أُقرّ بأنني أنثى، وأوافق على شروط استخدام أوهارا';
 
   @override
   String get delete => 'حذف';
@@ -1878,7 +1878,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get faqPaymentAnswer =>
-      'الدفع عند الاستلام، أو من محفظتكِ في ريم. لا تدفعي لأي متجر خارج التطبيق — الطلب المدفوع خارجه غير محمي.';
+      'الدفع عند الاستلام، أو من محفظتكِ في أوهارا. لا تدفعي لأي متجر خارج التطبيق — الطلب المدفوع خارجه غير محمي.';
 
   @override
   String get faqPoints => 'كيف تعمل نقاط الولاء؟';
@@ -2422,7 +2422,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get homeLoyaltySubtitle => 'اكسبي نقاطاً مع كل عملية شراء ✨';
 
   @override
-  String get homeLoyaltyTitle => 'مكافآت ريم';
+  String get homeLoyaltyTitle => 'مكافآت أوهارا';
 
   @override
   String get homeNearbyEyebrow => 'قريبة منكِ';
@@ -2689,7 +2689,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get matchCodeHint =>
-      'تأكّدي أن الرسالة تحمل الرقمين نفسهما. لن يطلب منك فريق ريم قراءة الرمز أبدًا.';
+      'تأكّدي أن الرسالة تحمل الرقمين نفسهما. لن يطلب منك فريق أوهارا قراءة الرمز أبدًا.';
 
   @override
   String get matchCodeLabel => 'رمز المطابقة';
@@ -2956,11 +2956,11 @@ class AppLocalizationsAr extends AppLocalizations {
   String get notifPushBlurb => 'تنبيهات الرسائل وتحديثات الطلبات والعروض.';
 
   @override
-  String get notifPushBlocked => 'جوّالكِ مانع إشعارات ريم.';
+  String get notifPushBlocked => 'جوّالكِ مانع إشعارات أوهارا.';
 
   @override
   String get notifPushBlockedBody =>
-      'جوّالكِ مانع ريم، فما رح يوصلكِ شي من اللي تحت لَحد ما تسمحي فيه من إعدادات النظام.';
+      'جوّالكِ مانع أوهارا، فما رح يوصلكِ شي من اللي تحت لَحد ما تسمحي فيه من إعدادات النظام.';
 
   @override
   String get notifPushBlockedTitle => 'الإشعارات مطفية';
@@ -5337,7 +5337,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get totpSecretLabel => 'المفتاح السرّي';
 
   @override
-  String get totpSetupTitle => 'أضيفي ريم إلى تطبيق المصادقة';
+  String get totpSetupTitle => 'أضيفي أوهارا إلى تطبيق المصادقة';
 
   @override
   String get totpTitle => 'تطبيق المصادقة';
@@ -5949,7 +5949,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get voiceMessage => 'ملاحظة صوتية';
 
   @override
-  String get voicePermissionDenied => 'يحتاج ريم إذن استخدام الميكروفون.';
+  String get voicePermissionDenied => 'يحتاج أوهارا إذن استخدام الميكروفون.';
 
   @override
   String get voiceRecord => 'سجّلي ملاحظة صوتية';
@@ -5977,7 +5977,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get walletEmptyTitle => 'محفظتكِ فارغة الآن';
 
   @override
-  String get walletNotWithdrawable => 'يُستخدم داخل ريم فقط';
+  String get walletNotWithdrawable => 'يُستخدم داخل أوهارا فقط';
 
   @override
   String get walletOffline => 'لا يوجد اتصال. سنحدّث رصيدكِ عند عودة الشبكة.';
@@ -6022,7 +6022,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get welcomeBack => 'مرحباً بعودتكِ';
 
   @override
-  String get welcomeToReem => 'مرحباً بكِ في ريم';
+  String get welcomeToReem => 'مرحباً بكِ في أوهارا';
 
   @override
   String get wishlist => 'المفضّلة';
@@ -6586,7 +6586,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get policiesTitle => 'السياسات والشروط';
 
   @override
-  String get policiesSubtitle => 'الوثائق التي تحكم استخدامك لريم';
+  String get policiesSubtitle => 'الوثائق التي تحكم استخدامك لأوهارا';
 
   @override
   String get policiesSectionForYou => 'يخصّك';
@@ -6673,7 +6673,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get policiesConsentIntroNew =>
-      'اقرئي الوثائق التالية ووافقي عليها لمتابعة استخدام ريم.';
+      'اقرئي الوثائق التالية ووافقي عليها لمتابعة استخدام أوهارا.';
 
   @override
   String get policiesConsentIntroUpdated =>

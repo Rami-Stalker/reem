@@ -177,7 +177,7 @@ class _Intro extends StatelessWidget {
         const SizedBox(height: DsSpacing.xs),
         Text(
           'ارفعي صورة القطعة — سكرين شوت من إنستغرام أو تيك توك أو بنترست، '
-          'أو صورة من الاستوديو — ومنجيبلك أقرب شي موجود بريم.',
+          'أو صورة من الاستوديو — ومنجيبلك أقرب شي موجود بأوهارا.',
           textAlign: TextAlign.center,
           style: Theme.of(
             context,
@@ -301,7 +301,7 @@ class _Working extends StatelessWidget {
           ),
           const SizedBox(height: DsSpacing.xxs),
           Text(
-            'منقارن الصورة بصور المنتجات الموجودة فعليًا بريم.',
+            'منقارن الصورة بصور المنتجات الموجودة فعليًا بأوهارا.',
             textAlign: TextAlign.center,
             style: Theme.of(
               context,
