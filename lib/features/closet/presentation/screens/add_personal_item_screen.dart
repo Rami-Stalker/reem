@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/media/media_asset.dart';
 import 'package:reem/features/closet/domain/entities/closet_item.dart';
 import 'package:reem/features/closet/domain/repositories/closet_repository.dart';
@@ -49,11 +50,11 @@ class _AddPersonalItemScreenState extends ConsumerState<AddPersonalItemScreen> {
 
     return Scaffold(
       backgroundColor: colors.background,
-      appBar: const ReemAppBar(title: 'ضيفي قطعة'),
+      appBar: ReemAppBar(title: context.l10n.closetAddPiece),
       body: overviewAsync.when(
         loading: () => const Center(child: DsLoadingIndicator()),
         error: (_, _) => DsErrorState(
-          message: 'ما قدرنا نفتح الصفحة.',
+          message: context.l10n.closetPageLoadFailed,
           onRetry: () => ref.invalidate(closetOverviewProvider),
         ),
         data: (overview) => ListView(
@@ -63,14 +64,14 @@ class _AddPersonalItemScreenState extends ConsumerState<AddPersonalItemScreen> {
             // bedroom; the app owes her the sentence before she does, not in a
             // settings page afterwards.
             Text(
-              'صورة القطعة بتبقى خاصة فيكِ — ما حدا غيرك بيشوفها.',
+              context.l10n.closetPhotoPrivate,
               style: context.dsText.caption.tint(colors.onSurfaceVariant),
             ),
             const SizedBox(height: DsSpacing.sm),
             DsMediaField(
               purpose: MediaPurpose.closet,
               maxItems: 1,
-              label: 'صورة القطعة',
+              label: context.l10n.closetPiecePhoto,
               onChanged: (urls) =>
                   setState(() => _imageUrl = urls.isEmpty ? null : urls.first),
               onUploadingChanged: (value) => setState(() => _uploading = value),
@@ -78,12 +79,15 @@ class _AddPersonalItemScreenState extends ConsumerState<AddPersonalItemScreen> {
             const SizedBox(height: DsSpacing.md),
             DsInputField(
               controller: _title,
-              label: 'شو هي؟',
-              hint: 'مثلاً: جاكيت جلد أسود',
+              label: context.l10n.closetPieceWhat,
+              hint: context.l10n.closetPieceWhatHint,
               onChanged: (_) => setState(() {}),
             ),
             const SizedBox(height: DsSpacing.md),
-            Text('نوع القطعة', style: context.dsText.labelStrong),
+            Text(
+              context.l10n.closetPieceSlot,
+              style: context.dsText.labelStrong,
+            ),
             const SizedBox(height: DsSpacing.xs),
             // The one required answer. A photograph has no category to fall
             // back on, and a piece filed in the wrong slot quietly distorts
@@ -96,10 +100,13 @@ class _AddPersonalItemScreenState extends ConsumerState<AddPersonalItemScreen> {
             const SizedBox(height: DsSpacing.md),
             DsInputField(
               controller: _brand,
-              label: 'الماركة (اختياري)',
+              label: context.l10n.closetPieceBrandOptional,
             ),
             const SizedBox(height: DsSpacing.md),
-            Text('المقاس (اختياري)', style: context.dsText.labelStrong),
+            Text(
+              context.l10n.closetPieceSizeOptional,
+              style: context.dsText.labelStrong,
+            ),
             const SizedBox(height: DsSpacing.xs),
             _SizePicker(
               selected: _size,
@@ -107,7 +114,7 @@ class _AddPersonalItemScreenState extends ConsumerState<AddPersonalItemScreen> {
             ),
             const SizedBox(height: DsSpacing.xl),
             DsButton(
-              label: 'ضيفيها لخزانتي',
+              label: context.l10n.closetAddToMyCloset,
               isLoading: _saving,
               onPressed: _canSave ? _save : null,
             ),
@@ -135,12 +142,12 @@ class _AddPersonalItemScreenState extends ConsumerState<AddPersonalItemScreen> {
 
     result.when(
       success: (_) {
-        DsSnackbar.show(context, message: 'صارت بخزانتك.');
+        DsSnackbar.show(context, message: context.l10n.closetAdded);
         context.pop();
       },
       error: (_) => DsSnackbar.show(
         context,
-        message: 'ما قدرنا نضيف القطعة.',
+        message: context.l10n.closetAddFailed,
         type: DsSnackbarType.error,
       ),
     );

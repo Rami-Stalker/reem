@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/media/authorized_media_image.dart';
 import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/features/closet/domain/entities/closet_item.dart';
@@ -27,13 +28,13 @@ class ClosetItemScreen extends ConsumerWidget {
     return Scaffold(
       backgroundColor: colors.background,
       appBar: ReemAppBar(
-        title: 'قطعة من خزانتي',
+        title: context.l10n.closetPieceTitle,
         actions: [
           itemAsync.maybeWhen(
             data: (item) => IconButton(
               tooltip: item.isFavourite
-                  ? 'إزالة من المفضّلة'
-                  : 'أضيفي إلى المفضّلة',
+                  ? context.l10n.closetRemoveFavourite
+                  : context.l10n.closetAddFavourite,
               icon: Icon(
                 item.isFavourite
                     ? Icons.favorite_rounded
@@ -54,7 +55,7 @@ class ClosetItemScreen extends ConsumerWidget {
       body: itemAsync.when(
         loading: () => const Center(child: DsLoadingIndicator()),
         error: (_, _) => DsErrorState(
-          message: 'ما قدرنا نفتح القطعة.',
+          message: context.l10n.closetPieceLoadFailed,
           onRetry: () => ref.invalidate(closetItemProvider(itemId)),
         ),
         data: (item) => _Body(item: item),
@@ -107,25 +108,34 @@ class _Body extends ConsumerWidget {
               const SizedBox(height: DsSpacing.md),
               Row(
                 children: [
-                  _Stat(value: '${item.wearCount}', label: 'مرة لبستيها'),
+                  _Stat(
+                    value: '${item.wearCount}',
+                    label: context.l10n.closetTimesWorn,
+                  ),
                   _Stat(
                     value: item.costPerWear?.format() ?? '—',
-                    label: 'كلفة اللبسة',
+                    label: context.l10n.closetCostPerWear,
                   ),
-                  _Stat(value: _lastWorn(), label: 'آخر مرة'),
+                  _Stat(
+                    value: _lastWorn(context),
+                    label: context.l10n.closetLastWorn,
+                  ),
                 ],
               ),
 
               const SizedBox(height: DsSpacing.md),
               DsButton(
-                label: 'لبستها اليوم',
+                label: context.l10n.closetWoreToday,
                 icon: Icons.check_rounded,
                 onPressed: () =>
                     ref.read(closetActionsProvider).logWear(item.id),
               ),
 
               const SizedBox(height: DsSpacing.lg),
-              Text('التفاصيل', style: context.dsText.sectionTitle),
+              Text(
+                context.l10n.closetDetails,
+                style: context.dsText.sectionTitle,
+              ),
               const SizedBox(height: DsSpacing.xs),
               Wrap(
                 spacing: DsSpacing.xs,
@@ -137,14 +147,18 @@ class _Body extends ConsumerWidget {
                     DsChip(label: material),
                   for (final season in item.seasons)
                     DsChip(label: season.label),
-                  if (item.size != null) DsChip(label: 'مقاس ${item.size}'),
+                  if (item.size != null)
+                    DsChip(label: context.l10n.closetSizeValue(item.size!)),
                   if (item.brandName != null) DsChip(label: item.brandName!),
                 ],
               ),
 
               if (item.occasions.isNotEmpty) ...[
                 const SizedBox(height: DsSpacing.md),
-                Text('بتناسب', style: context.dsText.labelStrong),
+                Text(
+                  context.l10n.closetSuitsLabel,
+                  style: context.dsText.labelStrong,
+                ),
                 const SizedBox(height: DsSpacing.xs),
                 Wrap(
                   spacing: DsSpacing.xs,
@@ -159,7 +173,7 @@ class _Body extends ConsumerWidget {
               if (item.productId != null) ...[
                 const SizedBox(height: DsSpacing.md),
                 DsButton(
-                  label: 'شوفي القطعة بالمتجر',
+                  label: context.l10n.closetViewInShop,
                   variant: DsButtonVariant.secondary,
                   onPressed: () => context.push(
                     RoutePaths.productDetailsOf(item.productId!),
@@ -178,7 +192,7 @@ class _Body extends ConsumerWidget {
               TextButton(
                 onPressed: () => _delete(context, ref),
                 child: Text(
-                  'احذفيها نهائيًا',
+                  context.l10n.closetDeleteForever,
                   style: context.dsText.button.tint(colors.error),
                 ),
               ),
@@ -189,13 +203,13 @@ class _Body extends ConsumerWidget {
     );
   }
 
-  String _lastWorn() {
-    if (!item.hasBeenWorn) return 'أبدًا';
+  String _lastWorn(BuildContext context) {
+    if (!item.hasBeenWorn) return context.l10n.closetWornNever;
     final days = item.daysSinceWorn ?? 0;
-    if (days == 0) return 'اليوم';
-    if (days == 1) return 'مبارح';
-    if (days < 30) return 'من $days يوم';
-    return 'من ${(days / 30).floor()} شهر';
+    if (days == 0) return context.l10n.closetWornToday;
+    if (days == 1) return context.l10n.closetWornYesterday;
+    if (days < 30) return context.l10n.closetWornDaysAgo(days);
+    return context.l10n.closetWornMonthsAgo((days / 30).floor());
   }
 
   Future<void> _delete(BuildContext context, WidgetRef ref) async {
@@ -219,8 +233,8 @@ class _StatusRow extends ConsumerWidget {
         Expanded(
           child: DsButton(
             label: item.status == ClosetItemStatus.archived
-                ? 'رجّعيها للخزانة'
-                : 'اركنيها للموسم',
+                ? context.l10n.closetReturnToCloset
+                : context.l10n.closetShelveForSeason,
             variant: DsButtonVariant.secondary,
             size: DsButtonSize.sm,
             onPressed: () => actions.setStatus(
@@ -234,7 +248,7 @@ class _StatusRow extends ConsumerWidget {
         const SizedBox(width: DsSpacing.xs),
         Expanded(
           child: DsButton(
-            label: 'ما عادت عندي',
+            label: context.l10n.closetNoLongerOwn,
             variant: DsButtonVariant.secondary,
             size: DsButtonSize.sm,
             onPressed: () =>

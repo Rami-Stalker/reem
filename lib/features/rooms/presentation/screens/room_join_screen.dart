@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/features/rooms/presentation/providers/rooms_providers.dart';
 
@@ -68,14 +69,13 @@ class _RoomJoinScreenState extends ConsumerState<RoomJoinScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: context.dsColors.background,
-      appBar: const ReemAppBar(title: 'الغرفة'),
+      appBar: ReemAppBar(title: context.l10n.roomsRoomTitle),
       body: _error == null
           ? const Center(child: DsLoadingIndicator())
           : DsErrorState(
               // An invite can be revoked, or simply be old. Saying which is
               // not something the client can know, so it says what she can do.
-              message:
-                  'ما قدرنا نفتح الدعوة. يمكن الرابط قديم — اطلبي واحد جديد.',
+              message: context.l10n.roomsInviteFailed,
               onRetry: () {
                 setState(() => _error = null);
                 _join();

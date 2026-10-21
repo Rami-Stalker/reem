@@ -7007,4 +7007,949 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get orderPolicyNotice =>
       'A problem with this order? Start with the seller, then the complaints process.';
+
+  @override
+  String get closetAddPiece => 'Add a piece';
+
+  @override
+  String get closetPageLoadFailed => 'This page couldn’t open.';
+
+  @override
+  String get closetPhotoPrivate =>
+      'The photo is private — no one but you can see it.';
+
+  @override
+  String get closetPiecePhoto => 'Photo of the piece';
+
+  @override
+  String get closetPieceWhat => 'What is it?';
+
+  @override
+  String get closetPieceWhatHint => 'e.g. black leather jacket';
+
+  @override
+  String get closetPieceSlot => 'Type of piece';
+
+  @override
+  String get closetPieceBrandOptional => 'Brand (optional)';
+
+  @override
+  String get closetPieceSizeOptional => 'Size (optional)';
+
+  @override
+  String get closetAddToMyCloset => 'Add to my closet';
+
+  @override
+  String get closetAdded => 'Added to your closet.';
+
+  @override
+  String get closetAddFailed => 'The piece couldn’t be added.';
+
+  @override
+  String get closetGapTitle => 'The missing piece';
+
+  @override
+  String get closetSuggestionsFailed => 'Suggestions couldn’t load.';
+
+  @override
+  String get closetWhySuggestion => 'Why this suggestion?';
+
+  @override
+  String get closetNotInterested => 'Not interested';
+
+  @override
+  String get closetNoMatchNow => 'Nothing fits right now';
+
+  @override
+  String get closetNoMatchNowBody =>
+      'Try again later — boutiques add new pieces every day.';
+
+  @override
+  String get closetPiecesThatFit => 'Pieces that suit your closet';
+
+  @override
+  String get closetGapDismissed => 'Got it — we won’t suggest it again.';
+
+  @override
+  String get closetCompletesLook => 'Completes a look';
+
+  @override
+  String closetPairsWithCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Goes with $count pieces you own',
+      one: 'Goes with a piece you own',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get closetPieceTitle => 'A piece from my closet';
+
+  @override
+  String get closetRemoveFavourite => 'Remove from favourites';
+
+  @override
+  String get closetAddFavourite => 'Add to favourites';
+
+  @override
+  String get closetPieceLoadFailed => 'The piece couldn’t open.';
+
+  @override
+  String get closetTimesWorn => 'Times worn';
+
+  @override
+  String get closetCostPerWear => 'Cost per wear';
+
+  @override
+  String get closetLastWorn => 'Last worn';
+
+  @override
+  String get closetWoreToday => 'Wore it today';
+
+  @override
+  String get closetDetails => 'Details';
+
+  @override
+  String closetSizeValue(String size) {
+    return 'Size $size';
+  }
+
+  @override
+  String get closetSuitsLabel => 'Suits';
+
+  @override
+  String get closetViewInShop => 'View in the boutique';
+
+  @override
+  String get closetDeleteForever => 'Delete for good';
+
+  @override
+  String get closetWornNever => 'Never';
+
+  @override
+  String get closetWornToday => 'Today';
+
+  @override
+  String get closetWornYesterday => 'Yesterday';
+
+  @override
+  String closetWornDaysAgo(int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: '$days days ago',
+      one: 'a day ago',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String closetWornMonthsAgo(int months) {
+    String _temp0 = intl.Intl.pluralLogic(
+      months,
+      locale: localeName,
+      other: '$months months ago',
+      one: 'a month ago',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get closetReturnToCloset => 'Back to the closet';
+
+  @override
+  String get closetShelveForSeason => 'Shelve for the season';
+
+  @override
+  String get closetNoLongerOwn => 'I no longer have it';
+
+  @override
+  String get closetLookTitle => 'The look';
+
+  @override
+  String get closetLookLoadFailed => 'The look couldn’t open.';
+
+  @override
+  String closetLookOneShort(String slot) {
+    return 'One piece ($slot) and it’s ready.';
+  }
+
+  @override
+  String closetLookManyShort(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count pieces short of ready.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String closetLookWornCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Worn $count times.',
+      one: 'Worn once.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get closetDeleteLook => 'Delete the look';
+
+  @override
+  String get closetNotOwnedYet => 'Not yours yet';
+
+  @override
+  String get closetFindThePiece => 'Find the piece';
+
+  @override
+  String get closetRemoveFromLook => 'Remove from the look';
+
+  @override
+  String get closetMyLooks => 'My looks';
+
+  @override
+  String get closetLooksLoadFailed => 'Your looks couldn’t load.';
+
+  @override
+  String get closetNoLooksTitle => 'No looks yet';
+
+  @override
+  String get closetNoLooksBody =>
+      'Put a look together from your pieces — if something’s missing, we’ll help you find it.';
+
+  @override
+  String get closetSeeWhatToWear => 'See what you can wear';
+
+  @override
+  String closetLookReadyWorn(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Ready · worn $count times',
+      one: 'Ready · worn once',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get closetLookReady => 'Ready to wear';
+
+  @override
+  String get closetWoreIt => 'Wore it';
+
+  @override
+  String closetLookShortOne(String slot) {
+    return 'Needs $slot to be ready';
+  }
+
+  @override
+  String closetLookShortMany(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count pieces short',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get closetMissing => 'Missing';
+
+  @override
+  String get closetWhatToWearToday => 'What should I wear today?';
+
+  @override
+  String get closetTodayFailed => 'We couldn’t suggest anything right now.';
+
+  @override
+  String get closetTodayLogged => 'Done — logged for today.';
+
+  @override
+  String get closetSavedToLooks => 'Saved to your looks.';
+
+  @override
+  String get closetSaveLookFailed => 'The look couldn’t be saved.';
+
+  @override
+  String get closetAnyOccasion => 'Any occasion';
+
+  @override
+  String get closetCannotDress => 'No outfit could be made';
+
+  @override
+  String get closetNothingForOccasion => 'Nothing for this occasion';
+
+  @override
+  String get closetCannotDressBody =>
+      'You’re probably missing a whole category — try adding shoes or a bottom to your closet.';
+
+  @override
+  String get closetNothingForOccasionBody =>
+      'Try removing the occasion filter, or add a piece that suits it.';
+
+  @override
+  String get closetLoadFailed => 'Your closet couldn’t open.';
+
+  @override
+  String get closetSpectrumWant => 'Want';
+
+  @override
+  String get closetSpectrumDeciding => 'Deciding';
+
+  @override
+  String get closetSpectrumOwn => 'Own';
+
+  @override
+  String get closetEmptyTitle => 'Your closet is empty';
+
+  @override
+  String get closetEmptyBody =>
+      'Add your pieces — what you bought on Reem and what you already had. That’s how we learn what you’re missing and what you can wear.';
+
+  @override
+  String get closetBringPurchases => 'Bring in my purchases';
+
+  @override
+  String get closetAddWithPhoto => 'Add a piece with a photo';
+
+  @override
+  String closetBackfilled(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Added $count pieces from your orders.',
+      one: 'Added a piece from your orders.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get closetNoDeliveredOrders => 'No delivered orders yet.';
+
+  @override
+  String get closetBackfillFailed =>
+      'Your purchases couldn’t be fetched right now.';
+
+  @override
+  String get closetItemsFailed => 'Your pieces couldn’t be shown.';
+
+  @override
+  String get closetMetricPossibleLooks => 'possible looks';
+
+  @override
+  String get closetMetricPieces => 'pieces';
+
+  @override
+  String get closetMetricSavedLooks => 'saved looks';
+
+  @override
+  String get closetMetricWornThisMonth => 'wears this month';
+
+  @override
+  String get closetCannotDressSeason =>
+      'Your pieces are here, but they don’t make a full outfit for this weather.';
+
+  @override
+  String closetSeasonCapacity(int total, int seasonal, String season) {
+    return 'You have $total looks in all; $seasonal suit $season.';
+  }
+
+  @override
+  String get closetWhatsMissing => 'What your closet is missing';
+
+  @override
+  String get closetAll => 'All';
+
+  @override
+  String get closetReasonBase => 'Base';
+
+  @override
+  String get closetReasonNearlyComplete => 'One piece short';
+
+  @override
+  String get closetReasonFavouriteLook => 'A favourite look';
+
+  @override
+  String get closetReasonCoreSlot => 'Core piece for the occasion';
+
+  @override
+  String get closetReasonAlreadyChosen => 'You chose this piece before';
+
+  @override
+  String get closetReasonSeasonFit => 'Right for the season';
+
+  @override
+  String get closetReasonInterest => 'Your interest in the occasion';
+
+  @override
+  String get closetReasonAnchorSlot => 'The anchor piece';
+
+  @override
+  String get closetReasonOwnsNone => 'You don’t own any';
+
+  @override
+  String get closetReasonOutfitGain => 'New looks unlocked';
+
+  @override
+  String get closetReasonFirstOutfit => 'First complete look';
+
+  @override
+  String get closetReasonOutfitsUnlocked => 'Looks unlocked';
+
+  @override
+  String get closetReasonOutfitsNow => 'Your complete looks now';
+
+  @override
+  String get closetReasonShelved => 'Shelved pieces';
+
+  @override
+  String get closetReasonOutOfSeason => 'Out-of-season pieces';
+
+  @override
+  String get closetReasonWear => 'Heavy wear';
+
+  @override
+  String get closetReasonSoleInSlot => 'No alternative';
+
+  @override
+  String get closetReasonWearCount => 'Times worn';
+
+  @override
+  String get closetWhyWeSuggest => 'Why are we suggesting this?';
+
+  @override
+  String get closetPriority => 'Priority';
+
+  @override
+  String get closetMyPiece => 'My piece';
+
+  @override
+  String closetTileNeverWorn(String slot) {
+    return '$slot · not worn yet';
+  }
+
+  @override
+  String closetTileLongAgo(String slot) {
+    return '$slot · a while ago';
+  }
+
+  @override
+  String closetTileWornCount(String slot, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$slot · worn $count times',
+      one: '$slot · worn once',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get closetFromYourCloset => 'From your closet';
+
+  @override
+  String get closetOwnOneAlready => 'You already have one in your closet.';
+
+  @override
+  String closetPanelPairs(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Goes with $count pieces you own.',
+      one: 'Goes with a piece you own.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String closetPanelCompletes(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'And completes $count saved looks.',
+      one: 'And completes a saved look.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get closetOpenMyCloset => 'Open my closet';
+
+  @override
+  String get closetAddPairFailed => 'It couldn’t be added.';
+
+  @override
+  String get closetSaveAsLook => 'Save as a look';
+
+  @override
+  String get roomsCompareTitle => 'Compare';
+
+  @override
+  String get roomsCompareFailed => 'The comparison couldn’t be prepared.';
+
+  @override
+  String get roomsCompareNothing => 'Nothing to compare';
+
+  @override
+  String get roomsCompareNeedsTwo => 'A comparison needs at least two options.';
+
+  @override
+  String get roomsHideIdentical => 'Hide what’s the same';
+
+  @override
+  String roomsIdenticalCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Alike in $count things',
+      one: 'Alike in one thing',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String roomsVotesSplit(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'The room is split — $count votes.',
+      one: 'The room is split — one vote.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String roomsVotesLeaning(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'The room leans one way — $count votes.',
+      one: 'The room leans one way — one vote.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String roomsCommentCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count comments',
+      one: '1 comment',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get roomsChooseThis => 'Choose this';
+
+  @override
+  String get roomsPlanTitle => 'Purchase plan';
+
+  @override
+  String get roomsPlanFailed => 'The plan couldn’t load.';
+
+  @override
+  String get roomsNoPlanTitle => 'No plan yet';
+
+  @override
+  String get roomsNoPlanBody =>
+      'Settle the room’s decisions and we’ll put the plan together.';
+
+  @override
+  String get roomsPlanNow => 'Now';
+
+  @override
+  String get roomsPlanNothingNow => 'Nothing is ready to buy yet.';
+
+  @override
+  String get roomsPlanLater => 'Later';
+
+  @override
+  String get roomsPlanLaterBody =>
+      'Kept in the plan — buy it when you’re ready.';
+
+  @override
+  String get roomsPlanTotal => 'Total';
+
+  @override
+  String roomsOverBudget(String amount) {
+    return '$amount over your budget';
+  }
+
+  @override
+  String get roomsUnderBudget => 'Under your budget';
+
+  @override
+  String get roomsWithinBudget => 'Within your budget';
+
+  @override
+  String roomsUnpriced(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count pieces couldn’t be priced',
+      one: 'One piece couldn’t be priced',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get roomsNoLongerAvailable => 'No longer available';
+
+  @override
+  String get roomsPostpone => 'Later';
+
+  @override
+  String get roomsRemove => 'Remove';
+
+  @override
+  String get roomsRemoveUnavailableFirst =>
+      'Remove the pieces that are no longer available before you continue.';
+
+  @override
+  String roomsBuyNowCount(int count) {
+    return 'Buy what’s ready now ($count)';
+  }
+
+  @override
+  String roomsBuyCount(int count) {
+    return 'Buy ($count)';
+  }
+
+  @override
+  String get roomsRoomTitle => 'Room';
+
+  @override
+  String get roomsInviteFailed =>
+      'The invitation couldn’t open. The link may have expired — ask for a new one.';
+
+  @override
+  String get roomsShareRoom => 'Share the room';
+
+  @override
+  String get roomsRoomFailed => 'The room couldn’t open.';
+
+  @override
+  String get roomsLinkCopied =>
+      'Link copied — anyone who opens it can advise and vote, but not buy.';
+
+  @override
+  String get roomsNoDecisionsTitle => 'No decisions yet';
+
+  @override
+  String get roomsNoDecisionsBody =>
+      'A decision is a question — “the dress”, “a gift for Mum”. Add one and start gathering options for it.';
+
+  @override
+  String get roomsAddDecision => 'Add a decision';
+
+  @override
+  String get roomsSettled => 'Settled';
+
+  @override
+  String get roomsNewDecision => 'New decision';
+
+  @override
+  String get roomsNewDecisionHelp =>
+      'A decision is a question that needs an answer — not a piece.';
+
+  @override
+  String get roomsNewDecisionHint => 'e.g. The dress';
+
+  @override
+  String get roomsAdd => 'Add';
+
+  @override
+  String get roomsCancel => 'Cancel';
+
+  @override
+  String get roomsSurprise => 'Surprise';
+
+  @override
+  String roomsForRecipient(String name) {
+    return 'For $name';
+  }
+
+  @override
+  String get roomsAllSettled => 'Every decision is settled';
+
+  @override
+  String roomsSettledOf(int settled, int total) {
+    return '$settled of $total decisions settled';
+  }
+
+  @override
+  String roomsBudgetUpTo(String amount) {
+    return 'Budget: up to $amount';
+  }
+
+  @override
+  String get roomsSeePlan => 'See the plan';
+
+  @override
+  String get roomsPreparePlan => 'Prepare the plan';
+
+  @override
+  String get roomsDecisionsStillOpen => 'Some decisions are still open.';
+
+  @override
+  String get roomsMyRooms => 'My rooms';
+
+  @override
+  String get roomsNewRoom => 'New room';
+
+  @override
+  String get roomsLoadFailed => 'Your rooms couldn’t load.';
+
+  @override
+  String get roomsEmptyTitle => 'No rooms yet';
+
+  @override
+  String get roomsEmptyBody =>
+      'A room is a space for a buying decision — a wedding, a gift, a season. Gather options, ask your friends, decide. It isn’t a basket.';
+
+  @override
+  String get roomsOpenFirst => 'Open your first room';
+
+  @override
+  String get roomsPurchased => 'Purchased';
+
+  @override
+  String get roomsReadyToBuy => 'Ready to buy';
+
+  @override
+  String get roomsOneDecisionLeft => 'One decision to go';
+
+  @override
+  String roomsOpenDecisions(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count decisions still open',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String roomsSuggestionCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count suggestions',
+      one: '1 suggestion',
+      zero: 'No suggestions',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get roomsOccasionWedding => 'Wedding';
+
+  @override
+  String get roomsOccasionEngagement => 'Engagement';
+
+  @override
+  String get roomsOccasionEvening => 'Evening';
+
+  @override
+  String get roomsOccasionEid => 'Eid';
+
+  @override
+  String get roomsOccasionGraduation => 'Graduation';
+
+  @override
+  String get roomsOccasionBirthday => 'Birthday';
+
+  @override
+  String get roomsOccasionWork => 'Work';
+
+  @override
+  String get roomsOccasionDaily => 'Everyday';
+
+  @override
+  String get roomsShoppingFor => 'What are you shopping for?';
+
+  @override
+  String get roomsRoomName => 'Room name';
+
+  @override
+  String get roomsRoomNameHint => 'e.g. Rahaf’s wedding look';
+
+  @override
+  String get roomsRoomKind => 'Room type';
+
+  @override
+  String get roomsGiftFor => 'Who is the gift for?';
+
+  @override
+  String get roomsOccasionOptional => 'Occasion (optional)';
+
+  @override
+  String get roomsOccasionHelp =>
+      'Pick an occasion and we’ll open the decisions you’ll need.';
+
+  @override
+  String get roomsOpenRoom => 'Open the room';
+
+  @override
+  String get roomsSuggestion => 'Suggestion';
+
+  @override
+  String get roomsDecidedAgainst => 'You decided against it';
+
+  @override
+  String roomsNeedsPieces(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Needs $count pieces',
+      one: 'Needs one piece',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get roomsOpinionsSplit => 'Opinions are split';
+
+  @override
+  String get roomsMajorityLeans => 'Most lean one way';
+
+  @override
+  String get roomsAddOption => 'Add an option';
+
+  @override
+  String get roomsCompare => 'Compare';
+
+  @override
+  String get roomsWantNothing => 'I don’t want any';
+
+  @override
+  String get roomsStatusSettled => 'Settled';
+
+  @override
+  String get roomsStatusSkipped => 'Skipped';
+
+  @override
+  String get roomsStatusNotChosen => 'Not chosen yet';
+
+  @override
+  String get roomsStatusOpen => 'Open';
+
+  @override
+  String get roomsNoOptions => 'No options for this question';
+
+  @override
+  String get roomsFindPiece => 'Find a piece';
+
+  @override
+  String get roomsDone => 'Done';
+
+  @override
+  String get roomsRestore => 'Restore';
+
+  @override
+  String roomsProposedTo(String title) {
+    return 'Proposed for “$title”';
+  }
+
+  @override
+  String get roomsProposeFailed => 'It couldn’t be proposed.';
+
+  @override
+  String get roomsWhichRoom => 'Which room?';
+
+  @override
+  String get roomsBack => 'Back';
+
+  @override
+  String get roomsAnswerWhichQuestion => 'An answer to which question?';
+
+  @override
+  String get roomsProposeHelp =>
+      'The piece is added as a suggestion — nothing is bought until you choose it.';
+
+  @override
+  String roomsLiveSuggestionCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count suggestions',
+      one: '1 suggestion',
+      zero: 'No suggestions',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get roomsNewQuestion => 'New question';
+
+  @override
+  String get roomsNewQuestionHint => 'e.g. The shoes';
+
+  @override
+  String get roomsNoOpenRooms => 'You have no open rooms';
+
+  @override
+  String get roomsWhatIsRoom =>
+      'A room is a space for a buying decision — gather the options and decide.';
+
+  @override
+  String get roomsOpenAndAdd => 'Open a room and add it';
+
+  @override
+  String get roomsDefaultRoomTitle => 'Shopping';
+
+  @override
+  String get roomsDefaultDecisionTitle => 'Options';
+
+  @override
+  String get roomsCreatedWithPiece =>
+      'We opened a room for you and put the piece in it.';
+
+  @override
+  String get roomsKindSolo => 'Just me';
+
+  @override
+  String get roomsKindGroup => 'With friends';
+
+  @override
+  String get roomsKindGift => 'Gift';
+
+  @override
+  String get roomsKindOccasion => 'Occasion';
+
+  @override
+  String get roomsDecisionFallback => 'this decision';
+
+  @override
+  String get roomsBlockerNoDecisions => 'No decisions in the room yet';
+
+  @override
+  String roomsBlockerEmpty(String title) {
+    return 'No suggestions for $title yet';
+  }
+
+  @override
+  String roomsBlockerUnresolved(String title) {
+    return 'You haven’t chosen for $title yet';
+  }
+
+  @override
+  String roomsBlockerOverPick(String title) {
+    return 'You picked more than needed for $title';
+  }
+
+  @override
+  String roomsBlockerUnavailable(String title) {
+    return 'The piece chosen for $title sold out';
+  }
+
+  @override
+  String get roomsBlockerOther => 'Something is still missing';
 }

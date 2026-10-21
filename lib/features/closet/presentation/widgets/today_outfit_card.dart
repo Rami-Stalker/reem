@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/media/authorized_media_image.dart';
 import 'package:reem/features/closet/domain/entities/closet_item.dart';
 import 'package:reem/features/closet/domain/entities/closet_overview.dart';
@@ -88,7 +89,7 @@ class TodayOutfitCard extends StatelessWidget {
               if (outfit.isWearable && onWear != null)
                 Expanded(
                   child: DsButton(
-                    label: 'لبستها اليوم',
+                    label: context.l10n.closetWoreToday,
                     size: DsButtonSize.sm,
                     onPressed: onWear,
                   ),
@@ -98,7 +99,7 @@ class TodayOutfitCard extends StatelessWidget {
               if (onSaveAsLook != null)
                 Expanded(
                   child: DsButton(
-                    label: 'احفظيها كإطلالة',
+                    label: context.l10n.closetSaveAsLook,
                     size: DsButtonSize.sm,
                     variant: DsButtonVariant.secondary,
                     onPressed: onSaveAsLook,

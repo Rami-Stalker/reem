@@ -7756,5 +7756,1136 @@
   "policiesLinkCustomerTerms": "Customer terms of use",
   "composerPolicyNotice": "Publishing means you accept the content and removal policy.",
   "sellerEarningsPolicyNotice": "How the commission is calculated, and when your earnings are paid.",
-  "orderPolicyNotice": "A problem with this order? Start with the seller, then the complaints process."
+  "orderPolicyNotice": "A problem with this order? Start with the seller, then the complaints process.",
+  "closetAddPiece": "Add a piece",
+  "@closetAddPiece": {
+    "description": ""
+  },
+  "closetPageLoadFailed": "This page couldn’t open.",
+  "@closetPageLoadFailed": {
+    "description": ""
+  },
+  "closetPhotoPrivate": "The photo is private — no one but you can see it.",
+  "@closetPhotoPrivate": {
+    "description": ""
+  },
+  "closetPiecePhoto": "Photo of the piece",
+  "@closetPiecePhoto": {
+    "description": ""
+  },
+  "closetPieceWhat": "What is it?",
+  "@closetPieceWhat": {
+    "description": ""
+  },
+  "closetPieceWhatHint": "e.g. black leather jacket",
+  "@closetPieceWhatHint": {
+    "description": ""
+  },
+  "closetPieceSlot": "Type of piece",
+  "@closetPieceSlot": {
+    "description": ""
+  },
+  "closetPieceBrandOptional": "Brand (optional)",
+  "@closetPieceBrandOptional": {
+    "description": ""
+  },
+  "closetPieceSizeOptional": "Size (optional)",
+  "@closetPieceSizeOptional": {
+    "description": ""
+  },
+  "closetAddToMyCloset": "Add to my closet",
+  "@closetAddToMyCloset": {
+    "description": ""
+  },
+  "closetAdded": "Added to your closet.",
+  "@closetAdded": {
+    "description": ""
+  },
+  "closetAddFailed": "The piece couldn’t be added.",
+  "@closetAddFailed": {
+    "description": ""
+  },
+  "closetGapTitle": "The missing piece",
+  "@closetGapTitle": {
+    "description": ""
+  },
+  "closetSuggestionsFailed": "Suggestions couldn’t load.",
+  "@closetSuggestionsFailed": {
+    "description": ""
+  },
+  "closetWhySuggestion": "Why this suggestion?",
+  "@closetWhySuggestion": {
+    "description": ""
+  },
+  "closetNotInterested": "Not interested",
+  "@closetNotInterested": {
+    "description": ""
+  },
+  "closetNoMatchNow": "Nothing fits right now",
+  "@closetNoMatchNow": {
+    "description": ""
+  },
+  "closetNoMatchNowBody": "Try again later — boutiques add new pieces every day.",
+  "@closetNoMatchNowBody": {
+    "description": ""
+  },
+  "closetPiecesThatFit": "Pieces that suit your closet",
+  "@closetPiecesThatFit": {
+    "description": ""
+  },
+  "closetGapDismissed": "Got it — we won’t suggest it again.",
+  "@closetGapDismissed": {
+    "description": ""
+  },
+  "closetCompletesLook": "Completes a look",
+  "@closetCompletesLook": {
+    "description": ""
+  },
+  "closetPairsWithCount": "{count, plural, =1{Goes with a piece you own} other{Goes with {count} pieces you own}}",
+  "@closetPairsWithCount": {
+    "description": "",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "closetPieceTitle": "A piece from my closet",
+  "@closetPieceTitle": {
+    "description": ""
+  },
+  "closetRemoveFavourite": "Remove from favourites",
+  "@closetRemoveFavourite": {
+    "description": ""
+  },
+  "closetAddFavourite": "Add to favourites",
+  "@closetAddFavourite": {
+    "description": ""
+  },
+  "closetPieceLoadFailed": "The piece couldn’t open.",
+  "@closetPieceLoadFailed": {
+    "description": ""
+  },
+  "closetTimesWorn": "Times worn",
+  "@closetTimesWorn": {
+    "description": ""
+  },
+  "closetCostPerWear": "Cost per wear",
+  "@closetCostPerWear": {
+    "description": ""
+  },
+  "closetLastWorn": "Last worn",
+  "@closetLastWorn": {
+    "description": ""
+  },
+  "closetWoreToday": "Wore it today",
+  "@closetWoreToday": {
+    "description": ""
+  },
+  "closetDetails": "Details",
+  "@closetDetails": {
+    "description": ""
+  },
+  "closetSizeValue": "Size {size}",
+  "@closetSizeValue": {
+    "description": "",
+    "placeholders": {
+      "size": {
+        "type": "String"
+      }
+    }
+  },
+  "closetSuitsLabel": "Suits",
+  "@closetSuitsLabel": {
+    "description": ""
+  },
+  "closetViewInShop": "View in the boutique",
+  "@closetViewInShop": {
+    "description": ""
+  },
+  "closetDeleteForever": "Delete for good",
+  "@closetDeleteForever": {
+    "description": ""
+  },
+  "closetWornNever": "Never",
+  "@closetWornNever": {
+    "description": ""
+  },
+  "closetWornToday": "Today",
+  "@closetWornToday": {
+    "description": ""
+  },
+  "closetWornYesterday": "Yesterday",
+  "@closetWornYesterday": {
+    "description": ""
+  },
+  "closetWornDaysAgo": "{days, plural, =1{a day ago} other{{days} days ago}}",
+  "@closetWornDaysAgo": {
+    "description": "",
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "closetWornMonthsAgo": "{months, plural, =1{a month ago} other{{months} months ago}}",
+  "@closetWornMonthsAgo": {
+    "description": "",
+    "placeholders": {
+      "months": {
+        "type": "int"
+      }
+    }
+  },
+  "closetReturnToCloset": "Back to the closet",
+  "@closetReturnToCloset": {
+    "description": ""
+  },
+  "closetShelveForSeason": "Shelve for the season",
+  "@closetShelveForSeason": {
+    "description": ""
+  },
+  "closetNoLongerOwn": "I no longer have it",
+  "@closetNoLongerOwn": {
+    "description": ""
+  },
+  "closetLookTitle": "The look",
+  "@closetLookTitle": {
+    "description": ""
+  },
+  "closetLookLoadFailed": "The look couldn’t open.",
+  "@closetLookLoadFailed": {
+    "description": ""
+  },
+  "closetLookOneShort": "One piece ({slot}) and it’s ready.",
+  "@closetLookOneShort": {
+    "description": "",
+    "placeholders": {
+      "slot": {
+        "type": "String"
+      }
+    }
+  },
+  "closetLookManyShort": "{count, plural, other{{count} pieces short of ready.}}",
+  "@closetLookManyShort": {
+    "description": "",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "closetLookWornCount": "{count, plural, =1{Worn once.} other{Worn {count} times.}}",
+  "@closetLookWornCount": {
+    "description": "",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "closetDeleteLook": "Delete the look",
+  "@closetDeleteLook": {
+    "description": ""
+  },
+  "closetNotOwnedYet": "Not yours yet",
+  "@closetNotOwnedYet": {
+    "description": ""
+  },
+  "closetFindThePiece": "Find the piece",
+  "@closetFindThePiece": {
+    "description": ""
+  },
+  "closetRemoveFromLook": "Remove from the look",
+  "@closetRemoveFromLook": {
+    "description": ""
+  },
+  "closetMyLooks": "My looks",
+  "@closetMyLooks": {
+    "description": ""
+  },
+  "closetLooksLoadFailed": "Your looks couldn’t load.",
+  "@closetLooksLoadFailed": {
+    "description": ""
+  },
+  "closetNoLooksTitle": "No looks yet",
+  "@closetNoLooksTitle": {
+    "description": ""
+  },
+  "closetNoLooksBody": "Put a look together from your pieces — if something’s missing, we’ll help you find it.",
+  "@closetNoLooksBody": {
+    "description": ""
+  },
+  "closetSeeWhatToWear": "See what you can wear",
+  "@closetSeeWhatToWear": {
+    "description": ""
+  },
+  "closetLookReadyWorn": "{count, plural, =1{Ready · worn once} other{Ready · worn {count} times}}",
+  "@closetLookReadyWorn": {
+    "description": "",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "closetLookReady": "Ready to wear",
+  "@closetLookReady": {
+    "description": ""
+  },
+  "closetWoreIt": "Wore it",
+  "@closetWoreIt": {
+    "description": ""
+  },
+  "closetLookShortOne": "Needs {slot} to be ready",
+  "@closetLookShortOne": {
+    "description": "",
+    "placeholders": {
+      "slot": {
+        "type": "String"
+      }
+    }
+  },
+  "closetLookShortMany": "{count, plural, other{{count} pieces short}}",
+  "@closetLookShortMany": {
+    "description": "",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "closetMissing": "Missing",
+  "@closetMissing": {
+    "description": ""
+  },
+  "closetWhatToWearToday": "What should I wear today?",
+  "@closetWhatToWearToday": {
+    "description": ""
+  },
+  "closetTodayFailed": "We couldn’t suggest anything right now.",
+  "@closetTodayFailed": {
+    "description": ""
+  },
+  "closetTodayLogged": "Done — logged for today.",
+  "@closetTodayLogged": {
+    "description": ""
+  },
+  "closetSavedToLooks": "Saved to your looks.",
+  "@closetSavedToLooks": {
+    "description": ""
+  },
+  "closetSaveLookFailed": "The look couldn’t be saved.",
+  "@closetSaveLookFailed": {
+    "description": ""
+  },
+  "closetAnyOccasion": "Any occasion",
+  "@closetAnyOccasion": {
+    "description": ""
+  },
+  "closetCannotDress": "No outfit could be made",
+  "@closetCannotDress": {
+    "description": ""
+  },
+  "closetNothingForOccasion": "Nothing for this occasion",
+  "@closetNothingForOccasion": {
+    "description": ""
+  },
+  "closetCannotDressBody": "You’re probably missing a whole category — try adding shoes or a bottom to your closet.",
+  "@closetCannotDressBody": {
+    "description": ""
+  },
+  "closetNothingForOccasionBody": "Try removing the occasion filter, or add a piece that suits it.",
+  "@closetNothingForOccasionBody": {
+    "description": ""
+  },
+  "closetLoadFailed": "Your closet couldn’t open.",
+  "@closetLoadFailed": {
+    "description": ""
+  },
+  "closetSpectrumWant": "Want",
+  "@closetSpectrumWant": {
+    "description": ""
+  },
+  "closetSpectrumDeciding": "Deciding",
+  "@closetSpectrumDeciding": {
+    "description": ""
+  },
+  "closetSpectrumOwn": "Own",
+  "@closetSpectrumOwn": {
+    "description": ""
+  },
+  "closetEmptyTitle": "Your closet is empty",
+  "@closetEmptyTitle": {
+    "description": ""
+  },
+  "closetEmptyBody": "Add your pieces — what you bought on Reem and what you already had. That’s how we learn what you’re missing and what you can wear.",
+  "@closetEmptyBody": {
+    "description": ""
+  },
+  "closetBringPurchases": "Bring in my purchases",
+  "@closetBringPurchases": {
+    "description": ""
+  },
+  "closetAddWithPhoto": "Add a piece with a photo",
+  "@closetAddWithPhoto": {
+    "description": ""
+  },
+  "closetBackfilled": "{count, plural, =1{Added a piece from your orders.} other{Added {count} pieces from your orders.}}",
+  "@closetBackfilled": {
+    "description": "",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "closetNoDeliveredOrders": "No delivered orders yet.",
+  "@closetNoDeliveredOrders": {
+    "description": ""
+  },
+  "closetBackfillFailed": "Your purchases couldn’t be fetched right now.",
+  "@closetBackfillFailed": {
+    "description": ""
+  },
+  "closetItemsFailed": "Your pieces couldn’t be shown.",
+  "@closetItemsFailed": {
+    "description": ""
+  },
+  "closetMetricPossibleLooks": "possible looks",
+  "@closetMetricPossibleLooks": {
+    "description": ""
+  },
+  "closetMetricPieces": "pieces",
+  "@closetMetricPieces": {
+    "description": ""
+  },
+  "closetMetricSavedLooks": "saved looks",
+  "@closetMetricSavedLooks": {
+    "description": ""
+  },
+  "closetMetricWornThisMonth": "wears this month",
+  "@closetMetricWornThisMonth": {
+    "description": ""
+  },
+  "closetCannotDressSeason": "Your pieces are here, but they don’t make a full outfit for this weather.",
+  "@closetCannotDressSeason": {
+    "description": ""
+  },
+  "closetSeasonCapacity": "You have {total} looks in all; {seasonal} suit {season}.",
+  "@closetSeasonCapacity": {
+    "description": "",
+    "placeholders": {
+      "total": {
+        "type": "int"
+      },
+      "seasonal": {
+        "type": "int"
+      },
+      "season": {
+        "type": "String"
+      }
+    }
+  },
+  "closetWhatsMissing": "What your closet is missing",
+  "@closetWhatsMissing": {
+    "description": ""
+  },
+  "closetAll": "All",
+  "@closetAll": {
+    "description": ""
+  },
+  "closetReasonBase": "Base",
+  "@closetReasonBase": {
+    "description": ""
+  },
+  "closetReasonNearlyComplete": "One piece short",
+  "@closetReasonNearlyComplete": {
+    "description": ""
+  },
+  "closetReasonFavouriteLook": "A favourite look",
+  "@closetReasonFavouriteLook": {
+    "description": ""
+  },
+  "closetReasonCoreSlot": "Core piece for the occasion",
+  "@closetReasonCoreSlot": {
+    "description": ""
+  },
+  "closetReasonAlreadyChosen": "You chose this piece before",
+  "@closetReasonAlreadyChosen": {
+    "description": ""
+  },
+  "closetReasonSeasonFit": "Right for the season",
+  "@closetReasonSeasonFit": {
+    "description": ""
+  },
+  "closetReasonInterest": "Your interest in the occasion",
+  "@closetReasonInterest": {
+    "description": ""
+  },
+  "closetReasonAnchorSlot": "The anchor piece",
+  "@closetReasonAnchorSlot": {
+    "description": ""
+  },
+  "closetReasonOwnsNone": "You don’t own any",
+  "@closetReasonOwnsNone": {
+    "description": ""
+  },
+  "closetReasonOutfitGain": "New looks unlocked",
+  "@closetReasonOutfitGain": {
+    "description": ""
+  },
+  "closetReasonFirstOutfit": "First complete look",
+  "@closetReasonFirstOutfit": {
+    "description": ""
+  },
+  "closetReasonOutfitsUnlocked": "Looks unlocked",
+  "@closetReasonOutfitsUnlocked": {
+    "description": ""
+  },
+  "closetReasonOutfitsNow": "Your complete looks now",
+  "@closetReasonOutfitsNow": {
+    "description": ""
+  },
+  "closetReasonShelved": "Shelved pieces",
+  "@closetReasonShelved": {
+    "description": ""
+  },
+  "closetReasonOutOfSeason": "Out-of-season pieces",
+  "@closetReasonOutOfSeason": {
+    "description": ""
+  },
+  "closetReasonWear": "Heavy wear",
+  "@closetReasonWear": {
+    "description": ""
+  },
+  "closetReasonSoleInSlot": "No alternative",
+  "@closetReasonSoleInSlot": {
+    "description": ""
+  },
+  "closetReasonWearCount": "Times worn",
+  "@closetReasonWearCount": {
+    "description": ""
+  },
+  "closetWhyWeSuggest": "Why are we suggesting this?",
+  "@closetWhyWeSuggest": {
+    "description": ""
+  },
+  "closetPriority": "Priority",
+  "@closetPriority": {
+    "description": ""
+  },
+  "closetMyPiece": "My piece",
+  "@closetMyPiece": {
+    "description": ""
+  },
+  "closetTileNeverWorn": "{slot} · not worn yet",
+  "@closetTileNeverWorn": {
+    "description": "",
+    "placeholders": {
+      "slot": {
+        "type": "String"
+      }
+    }
+  },
+  "closetTileLongAgo": "{slot} · a while ago",
+  "@closetTileLongAgo": {
+    "description": "",
+    "placeholders": {
+      "slot": {
+        "type": "String"
+      }
+    }
+  },
+  "closetTileWornCount": "{count, plural, =1{{slot} · worn once} other{{slot} · worn {count} times}}",
+  "@closetTileWornCount": {
+    "description": "",
+    "placeholders": {
+      "slot": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "closetFromYourCloset": "From your closet",
+  "@closetFromYourCloset": {
+    "description": ""
+  },
+  "closetOwnOneAlready": "You already have one in your closet.",
+  "@closetOwnOneAlready": {
+    "description": ""
+  },
+  "closetPanelPairs": "{count, plural, =1{Goes with a piece you own.} other{Goes with {count} pieces you own.}}",
+  "@closetPanelPairs": {
+    "description": "",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "closetPanelCompletes": "{count, plural, =1{And completes a saved look.} other{And completes {count} saved looks.}}",
+  "@closetPanelCompletes": {
+    "description": "",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "closetOpenMyCloset": "Open my closet",
+  "@closetOpenMyCloset": {
+    "description": ""
+  },
+  "closetAddPairFailed": "It couldn’t be added.",
+  "@closetAddPairFailed": {
+    "description": ""
+  },
+  "closetSaveAsLook": "Save as a look",
+  "@closetSaveAsLook": {
+    "description": ""
+  },
+  "roomsCompareTitle": "Compare",
+  "@roomsCompareTitle": {
+    "description": ""
+  },
+  "roomsCompareFailed": "The comparison couldn’t be prepared.",
+  "@roomsCompareFailed": {
+    "description": ""
+  },
+  "roomsCompareNothing": "Nothing to compare",
+  "@roomsCompareNothing": {
+    "description": ""
+  },
+  "roomsCompareNeedsTwo": "A comparison needs at least two options.",
+  "@roomsCompareNeedsTwo": {
+    "description": ""
+  },
+  "roomsHideIdentical": "Hide what’s the same",
+  "@roomsHideIdentical": {
+    "description": ""
+  },
+  "roomsIdenticalCount": "{count, plural, =1{Alike in one thing} other{Alike in {count} things}}",
+  "@roomsIdenticalCount": {
+    "description": "",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "roomsVotesSplit": "{count, plural, =1{The room is split — one vote.} other{The room is split — {count} votes.}}",
+  "@roomsVotesSplit": {
+    "description": "",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "roomsVotesLeaning": "{count, plural, =1{The room leans one way — one vote.} other{The room leans one way — {count} votes.}}",
+  "@roomsVotesLeaning": {
+    "description": "",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "roomsCommentCount": "{count, plural, =1{1 comment} other{{count} comments}}",
+  "@roomsCommentCount": {
+    "description": "",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "roomsChooseThis": "Choose this",
+  "@roomsChooseThis": {
+    "description": ""
+  },
+  "roomsPlanTitle": "Purchase plan",
+  "@roomsPlanTitle": {
+    "description": ""
+  },
+  "roomsPlanFailed": "The plan couldn’t load.",
+  "@roomsPlanFailed": {
+    "description": ""
+  },
+  "roomsNoPlanTitle": "No plan yet",
+  "@roomsNoPlanTitle": {
+    "description": ""
+  },
+  "roomsNoPlanBody": "Settle the room’s decisions and we’ll put the plan together.",
+  "@roomsNoPlanBody": {
+    "description": ""
+  },
+  "roomsPlanNow": "Now",
+  "@roomsPlanNow": {
+    "description": ""
+  },
+  "roomsPlanNothingNow": "Nothing is ready to buy yet.",
+  "@roomsPlanNothingNow": {
+    "description": ""
+  },
+  "roomsPlanLater": "Later",
+  "@roomsPlanLater": {
+    "description": ""
+  },
+  "roomsPlanLaterBody": "Kept in the plan — buy it when you’re ready.",
+  "@roomsPlanLaterBody": {
+    "description": ""
+  },
+  "roomsPlanTotal": "Total",
+  "@roomsPlanTotal": {
+    "description": ""
+  },
+  "roomsOverBudget": "{amount} over your budget",
+  "@roomsOverBudget": {
+    "description": "",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "roomsUnderBudget": "Under your budget",
+  "@roomsUnderBudget": {
+    "description": ""
+  },
+  "roomsWithinBudget": "Within your budget",
+  "@roomsWithinBudget": {
+    "description": ""
+  },
+  "roomsUnpriced": "{count, plural, =1{One piece couldn’t be priced} other{{count} pieces couldn’t be priced}}",
+  "@roomsUnpriced": {
+    "description": "",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "roomsNoLongerAvailable": "No longer available",
+  "@roomsNoLongerAvailable": {
+    "description": ""
+  },
+  "roomsPostpone": "Later",
+  "@roomsPostpone": {
+    "description": ""
+  },
+  "roomsRemove": "Remove",
+  "@roomsRemove": {
+    "description": ""
+  },
+  "roomsRemoveUnavailableFirst": "Remove the pieces that are no longer available before you continue.",
+  "@roomsRemoveUnavailableFirst": {
+    "description": ""
+  },
+  "roomsBuyNowCount": "Buy what’s ready now ({count})",
+  "@roomsBuyNowCount": {
+    "description": "",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "roomsBuyCount": "Buy ({count})",
+  "@roomsBuyCount": {
+    "description": "",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "roomsRoomTitle": "Room",
+  "@roomsRoomTitle": {
+    "description": ""
+  },
+  "roomsInviteFailed": "The invitation couldn’t open. The link may have expired — ask for a new one.",
+  "@roomsInviteFailed": {
+    "description": ""
+  },
+  "roomsShareRoom": "Share the room",
+  "@roomsShareRoom": {
+    "description": ""
+  },
+  "roomsRoomFailed": "The room couldn’t open.",
+  "@roomsRoomFailed": {
+    "description": ""
+  },
+  "roomsLinkCopied": "Link copied — anyone who opens it can advise and vote, but not buy.",
+  "@roomsLinkCopied": {
+    "description": ""
+  },
+  "roomsNoDecisionsTitle": "No decisions yet",
+  "@roomsNoDecisionsTitle": {
+    "description": ""
+  },
+  "roomsNoDecisionsBody": "A decision is a question — “the dress”, “a gift for Mum”. Add one and start gathering options for it.",
+  "@roomsNoDecisionsBody": {
+    "description": ""
+  },
+  "roomsAddDecision": "Add a decision",
+  "@roomsAddDecision": {
+    "description": ""
+  },
+  "roomsSettled": "Settled",
+  "@roomsSettled": {
+    "description": ""
+  },
+  "roomsNewDecision": "New decision",
+  "@roomsNewDecision": {
+    "description": ""
+  },
+  "roomsNewDecisionHelp": "A decision is a question that needs an answer — not a piece.",
+  "@roomsNewDecisionHelp": {
+    "description": ""
+  },
+  "roomsNewDecisionHint": "e.g. The dress",
+  "@roomsNewDecisionHint": {
+    "description": ""
+  },
+  "roomsAdd": "Add",
+  "@roomsAdd": {
+    "description": ""
+  },
+  "roomsCancel": "Cancel",
+  "@roomsCancel": {
+    "description": ""
+  },
+  "roomsSurprise": "Surprise",
+  "@roomsSurprise": {
+    "description": ""
+  },
+  "roomsForRecipient": "For {name}",
+  "@roomsForRecipient": {
+    "description": "",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "roomsAllSettled": "Every decision is settled",
+  "@roomsAllSettled": {
+    "description": ""
+  },
+  "roomsSettledOf": "{settled} of {total} decisions settled",
+  "@roomsSettledOf": {
+    "description": "",
+    "placeholders": {
+      "settled": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "roomsBudgetUpTo": "Budget: up to {amount}",
+  "@roomsBudgetUpTo": {
+    "description": "",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "roomsSeePlan": "See the plan",
+  "@roomsSeePlan": {
+    "description": ""
+  },
+  "roomsPreparePlan": "Prepare the plan",
+  "@roomsPreparePlan": {
+    "description": ""
+  },
+  "roomsDecisionsStillOpen": "Some decisions are still open.",
+  "@roomsDecisionsStillOpen": {
+    "description": ""
+  },
+  "roomsMyRooms": "My rooms",
+  "@roomsMyRooms": {
+    "description": ""
+  },
+  "roomsNewRoom": "New room",
+  "@roomsNewRoom": {
+    "description": ""
+  },
+  "roomsLoadFailed": "Your rooms couldn’t load.",
+  "@roomsLoadFailed": {
+    "description": ""
+  },
+  "roomsEmptyTitle": "No rooms yet",
+  "@roomsEmptyTitle": {
+    "description": ""
+  },
+  "roomsEmptyBody": "A room is a space for a buying decision — a wedding, a gift, a season. Gather options, ask your friends, decide. It isn’t a basket.",
+  "@roomsEmptyBody": {
+    "description": ""
+  },
+  "roomsOpenFirst": "Open your first room",
+  "@roomsOpenFirst": {
+    "description": ""
+  },
+  "roomsPurchased": "Purchased",
+  "@roomsPurchased": {
+    "description": ""
+  },
+  "roomsReadyToBuy": "Ready to buy",
+  "@roomsReadyToBuy": {
+    "description": ""
+  },
+  "roomsOneDecisionLeft": "One decision to go",
+  "@roomsOneDecisionLeft": {
+    "description": ""
+  },
+  "roomsOpenDecisions": "{count, plural, other{{count} decisions still open}}",
+  "@roomsOpenDecisions": {
+    "description": "",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "roomsSuggestionCount": "{count, plural, =0{No suggestions} =1{1 suggestion} other{{count} suggestions}}",
+  "@roomsSuggestionCount": {
+    "description": "",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "roomsOccasionWedding": "Wedding",
+  "@roomsOccasionWedding": {
+    "description": ""
+  },
+  "roomsOccasionEngagement": "Engagement",
+  "@roomsOccasionEngagement": {
+    "description": ""
+  },
+  "roomsOccasionEvening": "Evening",
+  "@roomsOccasionEvening": {
+    "description": ""
+  },
+  "roomsOccasionEid": "Eid",
+  "@roomsOccasionEid": {
+    "description": ""
+  },
+  "roomsOccasionGraduation": "Graduation",
+  "@roomsOccasionGraduation": {
+    "description": ""
+  },
+  "roomsOccasionBirthday": "Birthday",
+  "@roomsOccasionBirthday": {
+    "description": ""
+  },
+  "roomsOccasionWork": "Work",
+  "@roomsOccasionWork": {
+    "description": ""
+  },
+  "roomsOccasionDaily": "Everyday",
+  "@roomsOccasionDaily": {
+    "description": ""
+  },
+  "roomsShoppingFor": "What are you shopping for?",
+  "@roomsShoppingFor": {
+    "description": ""
+  },
+  "roomsRoomName": "Room name",
+  "@roomsRoomName": {
+    "description": ""
+  },
+  "roomsRoomNameHint": "e.g. Rahaf’s wedding look",
+  "@roomsRoomNameHint": {
+    "description": ""
+  },
+  "roomsRoomKind": "Room type",
+  "@roomsRoomKind": {
+    "description": ""
+  },
+  "roomsGiftFor": "Who is the gift for?",
+  "@roomsGiftFor": {
+    "description": ""
+  },
+  "roomsOccasionOptional": "Occasion (optional)",
+  "@roomsOccasionOptional": {
+    "description": ""
+  },
+  "roomsOccasionHelp": "Pick an occasion and we’ll open the decisions you’ll need.",
+  "@roomsOccasionHelp": {
+    "description": ""
+  },
+  "roomsOpenRoom": "Open the room",
+  "@roomsOpenRoom": {
+    "description": ""
+  },
+  "roomsSuggestion": "Suggestion",
+  "@roomsSuggestion": {
+    "description": ""
+  },
+  "roomsDecidedAgainst": "You decided against it",
+  "@roomsDecidedAgainst": {
+    "description": ""
+  },
+  "roomsNeedsPieces": "{count, plural, =1{Needs one piece} other{Needs {count} pieces}}",
+  "@roomsNeedsPieces": {
+    "description": "",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "roomsOpinionsSplit": "Opinions are split",
+  "@roomsOpinionsSplit": {
+    "description": ""
+  },
+  "roomsMajorityLeans": "Most lean one way",
+  "@roomsMajorityLeans": {
+    "description": ""
+  },
+  "roomsAddOption": "Add an option",
+  "@roomsAddOption": {
+    "description": ""
+  },
+  "roomsCompare": "Compare",
+  "@roomsCompare": {
+    "description": ""
+  },
+  "roomsWantNothing": "I don’t want any",
+  "@roomsWantNothing": {
+    "description": ""
+  },
+  "roomsStatusSettled": "Settled",
+  "@roomsStatusSettled": {
+    "description": ""
+  },
+  "roomsStatusSkipped": "Skipped",
+  "@roomsStatusSkipped": {
+    "description": ""
+  },
+  "roomsStatusNotChosen": "Not chosen yet",
+  "@roomsStatusNotChosen": {
+    "description": ""
+  },
+  "roomsStatusOpen": "Open",
+  "@roomsStatusOpen": {
+    "description": ""
+  },
+  "roomsNoOptions": "No options for this question",
+  "@roomsNoOptions": {
+    "description": ""
+  },
+  "roomsFindPiece": "Find a piece",
+  "@roomsFindPiece": {
+    "description": ""
+  },
+  "roomsDone": "Done",
+  "@roomsDone": {
+    "description": ""
+  },
+  "roomsRestore": "Restore",
+  "@roomsRestore": {
+    "description": ""
+  },
+  "roomsProposedTo": "Proposed for “{title}”",
+  "@roomsProposedTo": {
+    "description": "",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "roomsProposeFailed": "It couldn’t be proposed.",
+  "@roomsProposeFailed": {
+    "description": ""
+  },
+  "roomsWhichRoom": "Which room?",
+  "@roomsWhichRoom": {
+    "description": ""
+  },
+  "roomsBack": "Back",
+  "@roomsBack": {
+    "description": ""
+  },
+  "roomsAnswerWhichQuestion": "An answer to which question?",
+  "@roomsAnswerWhichQuestion": {
+    "description": ""
+  },
+  "roomsProposeHelp": "The piece is added as a suggestion — nothing is bought until you choose it.",
+  "@roomsProposeHelp": {
+    "description": ""
+  },
+  "roomsLiveSuggestionCount": "{count, plural, =0{No suggestions} =1{1 suggestion} other{{count} suggestions}}",
+  "@roomsLiveSuggestionCount": {
+    "description": "",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "roomsNewQuestion": "New question",
+  "@roomsNewQuestion": {
+    "description": ""
+  },
+  "roomsNewQuestionHint": "e.g. The shoes",
+  "@roomsNewQuestionHint": {
+    "description": ""
+  },
+  "roomsNoOpenRooms": "You have no open rooms",
+  "@roomsNoOpenRooms": {
+    "description": ""
+  },
+  "roomsWhatIsRoom": "A room is a space for a buying decision — gather the options and decide.",
+  "@roomsWhatIsRoom": {
+    "description": ""
+  },
+  "roomsOpenAndAdd": "Open a room and add it",
+  "@roomsOpenAndAdd": {
+    "description": ""
+  },
+  "roomsDefaultRoomTitle": "Shopping",
+  "@roomsDefaultRoomTitle": {
+    "description": ""
+  },
+  "roomsDefaultDecisionTitle": "Options",
+  "@roomsDefaultDecisionTitle": {
+    "description": ""
+  },
+  "roomsCreatedWithPiece": "We opened a room for you and put the piece in it.",
+  "@roomsCreatedWithPiece": {
+    "description": ""
+  },
+  "roomsKindSolo": "Just me",
+  "@roomsKindSolo": {"description": "Rooms label."},
+  "roomsKindGroup": "With friends",
+  "@roomsKindGroup": {"description": "Rooms label."},
+  "roomsKindGift": "Gift",
+  "@roomsKindGift": {"description": "Rooms label."},
+  "roomsKindOccasion": "Occasion",
+  "@roomsKindOccasion": {"description": "Rooms label."},
+  "roomsDecisionFallback": "this decision",
+  "@roomsDecisionFallback": {"description": "Rooms label."},
+  "roomsBlockerNoDecisions": "No decisions in the room yet",
+  "@roomsBlockerNoDecisions": {"description": "Rooms label."},
+  "roomsBlockerEmpty": "No suggestions for {title} yet",
+  "@roomsBlockerEmpty": {"description": "Rooms label.", "placeholders": {"title": {"type": "String"}}},
+  "roomsBlockerUnresolved": "You haven’t chosen for {title} yet",
+  "@roomsBlockerUnresolved": {"description": "Rooms label.", "placeholders": {"title": {"type": "String"}}},
+  "roomsBlockerOverPick": "You picked more than needed for {title}",
+  "@roomsBlockerOverPick": {"description": "Rooms label.", "placeholders": {"title": {"type": "String"}}},
+  "roomsBlockerUnavailable": "The piece chosen for {title} sold out",
+  "@roomsBlockerUnavailable": {"description": "Rooms label.", "placeholders": {"title": {"type": "String"}}},
+  "roomsBlockerOther": "Something is still missing",
+  "@roomsBlockerOther": {"description": "Rooms label."}
 }

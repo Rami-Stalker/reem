@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/media/authorized_media_image.dart';
 import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/features/closet/domain/entities/closet_gap.dart';
@@ -28,13 +29,13 @@ class ClosetLookScreen extends ConsumerWidget {
     return Scaffold(
       backgroundColor: colors.background,
       appBar: ReemAppBar(
-        title: 'الإطلالة',
+        title: context.l10n.closetLookTitle,
         actions: [
           lookAsync.maybeWhen(
             data: (look) => IconButton(
               tooltip: look.isFavourite
-                  ? 'إزالة من المفضّلة'
-                  : 'أضيفي إلى المفضّلة',
+                  ? context.l10n.closetRemoveFavourite
+                  : context.l10n.closetAddFavourite,
               icon: Icon(
                 look.isFavourite
                     ? Icons.favorite_rounded
@@ -55,7 +56,7 @@ class ClosetLookScreen extends ConsumerWidget {
       body: lookAsync.when(
         loading: () => const Center(child: DsLoadingIndicator()),
         error: (_, _) => DsErrorState(
-          message: 'ما قدرنا نفتح الإطلالة.',
+          message: context.l10n.closetLookLoadFailed,
           onRetry: () => ref.invalidate(closetLookProvider(lookId)),
         ),
         data: (look) => _Body(look: look),
@@ -101,7 +102,7 @@ class _Body extends ConsumerWidget {
         const SizedBox(height: DsSpacing.lg),
         if (look.isComplete)
           DsButton(
-            label: 'لبستها اليوم',
+            label: context.l10n.closetWoreToday,
             onPressed: () =>
                 ref.read(closetActionsProvider).logLookWear(look.id),
           )
@@ -114,21 +115,26 @@ class _Body extends ConsumerWidget {
             ),
             child: Text(
               look.isOnePieceShort
-                  ? 'قطعة وحدة (${look.missingSlots.first.label}) وبتصير جاهزة.'
-                  : 'ناقصها ${look.missingSlots.length} قطع لتصير جاهزة.',
+                  ? context.l10n.closetLookOneShort(
+                      look.missingSlots.first.label,
+                    )
+                  : context.l10n.closetLookManyShort(look.missingSlots.length),
               style: context.dsText.body,
             ),
           ),
 
         const SizedBox(height: DsSpacing.md),
         if (look.wearCount > 0)
-          Text('لبستيها ${look.wearCount} مرة.', style: context.dsText.caption),
+          Text(
+            context.l10n.closetLookWornCount(look.wearCount),
+            style: context.dsText.caption,
+          ),
 
         const SizedBox(height: DsSpacing.lg),
         TextButton(
           onPressed: () => _delete(context, ref),
           child: Text(
-            'احذفي الإطلالة',
+            context.l10n.closetDeleteLook,
             style: context.dsText.button.tint(colors.error),
           ),
         ),
@@ -224,14 +230,14 @@ class _PieceRow extends StatelessWidget {
                 if (piece.isWanted) ...[
                   DsGaps.vXxxs,
                   Text(
-                    'لسا مو عندك',
+                    context.l10n.closetNotOwnedYet,
                     style: context.dsText.caption.tint(colors.warning),
                   ),
                 ],
                 if (gap != null) ...[
                   const SizedBox(height: DsSpacing.xs),
                   DsButton(
-                    label: 'لاقي القطعة',
+                    label: context.l10n.closetFindThePiece,
                     size: DsButtonSize.sm,
                     variant: DsButtonVariant.secondary,
                     isExpanded: false,
@@ -244,7 +250,7 @@ class _PieceRow extends StatelessWidget {
           ),
           if (onRemove != null)
             IconButton(
-              tooltip: 'إزالة من الإطلالة',
+              tooltip: context.l10n.closetRemoveFromLook,
               icon: const Icon(Icons.close_rounded, size: 18),
               onPressed: onRemove,
             ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/media/authorized_media_image.dart';
 import 'package:reem/features/rooms/domain/entities/room.dart';
 import 'package:reem/features/rooms/presentation/providers/rooms_providers.dart';
@@ -51,22 +52,22 @@ class _CompareScreenState extends ConsumerState<CompareScreen> {
       appBar: ReemAppBar(
         title: comparisonAsync.maybeWhen(
           data: (comparison) => comparison.decisionTitle,
-          orElse: () => 'المقارنة',
+          orElse: () => context.l10n.roomsCompareTitle,
         ),
       ),
       body: comparisonAsync.when(
         loading: () => const Center(child: DsLoadingIndicator()),
         error: (_, _) => DsErrorState(
-          message: 'ما قدرنا نجهّز المقارنة.',
+          message: context.l10n.roomsCompareFailed,
           onRetry: () => ref.invalidate(roomComparisonProvider(key)),
         ),
         data: (comparison) {
           if (!comparison.hasEnough) {
-            return const DsEmptyState(
+            return DsEmptyState(
               icon: Icons.compare_arrows_rounded,
-              title: 'ما في شي نقارنه',
+              title: context.l10n.roomsCompareNothing,
               // A comparison of one is a product page, and she has one of those.
-              message: 'المقارنة بدها خيارين على الأقل.',
+              message: context.l10n.roomsCompareNeedsTwo,
             );
           }
 
@@ -137,8 +138,10 @@ class _Body extends StatelessWidget {
             // being able to check.
             label: Text(
               showIdentical
-                  ? 'خبّي المتشابه'
-                  : 'متشابهين بـ${comparison.identical.length} أشياء',
+                  ? context.l10n.roomsHideIdentical
+                  : context.l10n.roomsIdenticalCount(
+                      comparison.identical.length,
+                    ),
             ),
             onPressed: onToggleIdentical,
           ),
@@ -203,8 +206,8 @@ class _Verdict extends StatelessWidget {
             const SizedBox(height: DsSpacing.xs),
             Text(
               consensus.contested
-                  ? 'الآراء بالغرفة منقسمة — ${consensus.voters} صوّتوا.'
-                  : 'الغرفة مايلة لوحدة — ${consensus.voters} صوّتوا.',
+                  ? context.l10n.roomsVotesSplit(consensus.voters)
+                  : context.l10n.roomsVotesLeaning(consensus.voters),
               style: context.dsText.caption.tint(
                 consensus.contested ? colors.warning : colors.onSurfaceVariant,
               ),
@@ -266,7 +269,9 @@ class _Heads extends ConsumerWidget {
                   if (comparison.commentCounts[entry.id] != null) ...[
                     DsGaps.vXxxs,
                     Text(
-                      '${comparison.commentCounts[entry.id]} تعليق',
+                      context.l10n.roomsCommentCount(
+                        comparison.commentCounts[entry.id] ?? 0,
+                      ),
                       style: context.dsText.micro.tint(colors.onSurfaceVariant),
                     ),
                   ],
@@ -279,7 +284,7 @@ class _Heads extends ConsumerWidget {
                     )
                   else
                     DsButton(
-                      label: 'هاي',
+                      label: context.l10n.roomsChooseThis,
                       size: DsButtonSize.sm,
                       onPressed: entry.candidate?.available == true
                           ? () => actions.choose(roomId, entry.id)

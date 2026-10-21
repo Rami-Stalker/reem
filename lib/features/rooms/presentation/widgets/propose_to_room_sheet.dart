@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/features/rooms/data/datasources/rooms_remote_datasource.dart';
 import 'package:reem/features/rooms/domain/entities/room.dart';
+import 'package:reem/features/rooms/presentation/l10n/room_labels.dart';
 import 'package:reem/features/rooms/presentation/providers/rooms_providers.dart';
 
 /// "أضيفيها لغرفة" — from a product page.
@@ -45,9 +47,9 @@ class _ProposeToRoomSheetState extends ConsumerState<ProposeToRoomSheet> {
           height: 160,
           child: Center(child: DsLoadingIndicator()),
         ),
-        error: (_, _) => const SizedBox(
+        error: (_, _) => SizedBox(
           height: 160,
-          child: DsErrorState(message: 'ما قدرنا نجيب غرفك.'),
+          child: DsErrorState(message: context.l10n.roomsLoadFailed),
         ),
         data: (rooms) {
           final open = rooms
@@ -79,6 +81,7 @@ class _ProposeToRoomSheetState extends ConsumerState<ProposeToRoomSheet> {
     setState(() => _busy = true);
     final messenger = ScaffoldMessenger.of(context);
     final navigator = Navigator.of(context);
+    final l10n = context.l10n;
 
     try {
       await ref
@@ -92,14 +95,14 @@ class _ProposeToRoomSheetState extends ConsumerState<ProposeToRoomSheet> {
       navigator.pop();
       DsSnackbar.on(
         messenger,
-        message: 'اقترحناها لـ«${decision.title}»',
+        message: l10n.roomsProposedTo(decision.title),
         type: DsSnackbarType.success,
       );
     } catch (_) {
       if (mounted) setState(() => _busy = false);
       DsSnackbar.on(
         messenger,
-        message: 'ما نجح الاقتراح.',
+        message: l10n.roomsProposeFailed,
         type: DsSnackbarType.error,
       );
     }
@@ -118,7 +121,7 @@ class _PickRoom extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('لأي غرفة؟', style: context.dsText.sectionTitle),
+        Text(context.l10n.roomsWhichRoom, style: context.dsText.sectionTitle),
         const SizedBox(height: DsSpacing.sm),
         for (final room in rooms)
           ListTile(
@@ -129,7 +132,9 @@ class _PickRoom extends StatelessWidget {
                   : Icons.meeting_room_rounded,
             ),
             title: Text(room.title),
-            subtitle: Text(room.occasionLabel ?? room.kind.label),
+            subtitle: Text(
+              room.occasionLabel ?? room.kind.labelIn(context.l10n),
+            ),
             trailing: const Icon(Icons.chevron_left_rounded),
             onTap: () => onPick(room),
           ),
@@ -171,19 +176,22 @@ class _PickDecisionState extends ConsumerState<_PickDecision> {
         Row(
           children: [
             IconButton(
-              tooltip: 'رجوع',
+              tooltip: context.l10n.roomsBack,
               icon: const Icon(Icons.arrow_forward_rounded),
               onPressed: widget.onBack,
             ),
             Expanded(
-              child: Text('جواب لأي سؤال؟', style: context.dsText.sectionTitle),
+              child: Text(
+                context.l10n.roomsAnswerWhichQuestion,
+                style: context.dsText.sectionTitle,
+              ),
             ),
           ],
         ),
         Text(
           // Said once, because the distinction is the feature and it is
           // unfamiliar.
-          'القطعة بتنضاف كاقتراح — ما بتنشترى لحدّ ما تختاريها.',
+          context.l10n.roomsProposeHelp,
           style: context.dsText.sectionSubtitle,
         ),
         const SizedBox(height: DsSpacing.sm),
@@ -199,7 +207,11 @@ class _PickDecisionState extends ConsumerState<_PickDecision> {
               contentPadding: EdgeInsets.zero,
               title: Text(decision.title),
               subtitle: Text(
-                decision.settled ? 'محسوم' : '${decision.live.length} اقتراح',
+                decision.settled
+                    ? context.l10n.roomsStatusSettled
+                    : context.l10n.roomsLiveSuggestionCount(
+                        decision.live.length,
+                      ),
               ),
               trailing: const Icon(Icons.add_rounded),
               onTap: () => widget.onPick(decision),
@@ -213,7 +225,7 @@ class _PickDecisionState extends ConsumerState<_PickDecision> {
                 )
               : TextButton.icon(
                   icon: const Icon(Icons.add_rounded),
-                  label: const Text('سؤال جديد'),
+                  label: Text(context.l10n.roomsNewQuestion),
                   onPressed: _createDecision,
                 ),
         ],
@@ -224,10 +236,10 @@ class _PickDecisionState extends ConsumerState<_PickDecision> {
   Future<void> _createDecision() async {
     final title = await DsDialog.prompt(
       context,
-      title: 'سؤال جديد',
-      hintText: 'مثلاً: الحذاء',
-      confirmLabel: 'ضيفي',
-      cancelLabel: 'إلغاء',
+      title: context.l10n.roomsNewQuestion,
+      hintText: context.l10n.roomsNewQuestionHint,
+      confirmLabel: context.l10n.roomsAdd,
+      cancelLabel: context.l10n.roomsCancel,
       maxLength: 80,
     );
 
@@ -258,15 +270,12 @@ class _NoRooms extends ConsumerWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('ما عندك غرف مفتوحة', style: context.dsText.sectionTitle),
+        Text(context.l10n.roomsNoOpenRooms, style: context.dsText.sectionTitle),
         const SizedBox(height: DsSpacing.xs),
-        Text(
-          'الغرفة مساحة لقرار شراء — بتجمّعي فيها الخيارات وبتقرّري.',
-          style: context.dsText.bodyMuted,
-        ),
+        Text(context.l10n.roomsWhatIsRoom, style: context.dsText.bodyMuted),
         const SizedBox(height: DsSpacing.md),
         DsButton(
-          label: 'افتحي غرفة وضيفيها',
+          label: context.l10n.roomsOpenAndAdd,
           onPressed: () => _createAndPropose(context, ref),
         ),
       ],
@@ -277,12 +286,15 @@ class _NoRooms extends ConsumerWidget {
     final actions = ref.read(roomActionsProvider);
     final navigator = Navigator.of(context);
     final messenger = ScaffoldMessenger.of(context);
+    final l10n = context.l10n;
 
     // One room, one question, and the piece proposed into it — the shortest
     // path from a product page to the model, so a first-time user meets the
     // idea rather than a form.
-    final room = await actions.create(const RoomDraft(title: 'تسوّق'));
-    await actions.addDecision(room.id, title: 'الخيارات');
+    final room = await actions.create(
+      RoomDraft(title: l10n.roomsDefaultRoomTitle),
+    );
+    await actions.addDecision(room.id, title: l10n.roomsDefaultDecisionTitle);
 
     final fresh = await ref.read(roomsDataSourceProvider).room(room.id);
     final decision = fresh.decisions.firstOrNull;
@@ -292,7 +304,7 @@ class _NoRooms extends ConsumerWidget {
     navigator.pop();
     DsSnackbar.on(
       messenger,
-      message: 'فتحنالك غرفة وحطّينا القطعة فيها',
+      message: l10n.roomsCreatedWithPiece,
       type: DsSnackbarType.success,
     );
   }

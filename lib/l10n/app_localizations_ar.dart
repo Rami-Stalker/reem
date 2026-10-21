@@ -6997,4 +6997,982 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get orderPolicyNotice =>
       'في مشكلة بهالطلب؟ ابدئي مع البائعة، وبعدها آلية الشكاوى.';
+
+  @override
+  String get closetAddPiece => 'أضيفي قطعة';
+
+  @override
+  String get closetPageLoadFailed => 'تعذّر فتح الصفحة.';
+
+  @override
+  String get closetPhotoPrivate => 'صورة القطعة خاصة بكِ — لا يراها أحد غيركِ.';
+
+  @override
+  String get closetPiecePhoto => 'صورة القطعة';
+
+  @override
+  String get closetPieceWhat => 'ما هي القطعة؟';
+
+  @override
+  String get closetPieceWhatHint => 'مثلاً: جاكيت جلد أسود';
+
+  @override
+  String get closetPieceSlot => 'نوع القطعة';
+
+  @override
+  String get closetPieceBrandOptional => 'الماركة (اختياري)';
+
+  @override
+  String get closetPieceSizeOptional => 'المقاس (اختياري)';
+
+  @override
+  String get closetAddToMyCloset => 'أضيفيها إلى خزانتي';
+
+  @override
+  String get closetAdded => 'أُضيفت إلى خزانتكِ.';
+
+  @override
+  String get closetAddFailed => 'تعذّرت إضافة القطعة.';
+
+  @override
+  String get closetGapTitle => 'القطعة الناقصة';
+
+  @override
+  String get closetSuggestionsFailed => 'تعذّر تحميل الاقتراحات.';
+
+  @override
+  String get closetWhySuggestion => 'لماذا هذا الاقتراح؟';
+
+  @override
+  String get closetNotInterested => 'لا يهمّني';
+
+  @override
+  String get closetNoMatchNow => 'لا توجد قطعة مناسبة الآن';
+
+  @override
+  String get closetNoMatchNowBody =>
+      'جرّبي لاحقاً — البوتيكات تضيف قطعاً جديدة كل يوم.';
+
+  @override
+  String get closetPiecesThatFit => 'قطع تناسب خزانتكِ';
+
+  @override
+  String get closetGapDismissed => 'حسناً، لن نقترحها مجدداً.';
+
+  @override
+  String get closetCompletesLook => 'تُكمل إطلالة';
+
+  @override
+  String closetPairsWithCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'تنسجم مع $count قطعة لديكِ',
+      few: 'تنسجم مع $count قطع لديكِ',
+      two: 'تنسجم مع قطعتين لديكِ',
+      one: 'تنسجم مع قطعة لديكِ',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get closetPieceTitle => 'قطعة من خزانتي';
+
+  @override
+  String get closetRemoveFavourite => 'إزالة من المفضّلة';
+
+  @override
+  String get closetAddFavourite => 'أضيفي إلى المفضّلة';
+
+  @override
+  String get closetPieceLoadFailed => 'تعذّر فتح القطعة.';
+
+  @override
+  String get closetTimesWorn => 'مرّات اللبس';
+
+  @override
+  String get closetCostPerWear => 'كلفة اللبسة';
+
+  @override
+  String get closetLastWorn => 'آخر مرة';
+
+  @override
+  String get closetWoreToday => 'لبستُها اليوم';
+
+  @override
+  String get closetDetails => 'التفاصيل';
+
+  @override
+  String closetSizeValue(String size) {
+    return 'مقاس $size';
+  }
+
+  @override
+  String get closetSuitsLabel => 'تناسب';
+
+  @override
+  String get closetViewInShop => 'اعرضي القطعة في البوتيك';
+
+  @override
+  String get closetDeleteForever => 'احذفيها نهائياً';
+
+  @override
+  String get closetWornNever => 'أبداً';
+
+  @override
+  String get closetWornToday => 'اليوم';
+
+  @override
+  String get closetWornYesterday => 'أمس';
+
+  @override
+  String closetWornDaysAgo(int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: 'منذ $days يوم',
+      many: 'منذ $days يوماً',
+      few: 'منذ $days أيام',
+      two: 'منذ يومين',
+      one: 'منذ يوم',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String closetWornMonthsAgo(int months) {
+    String _temp0 = intl.Intl.pluralLogic(
+      months,
+      locale: localeName,
+      other: 'منذ $months شهر',
+      many: 'منذ $months شهراً',
+      few: 'منذ $months أشهر',
+      two: 'منذ شهرين',
+      one: 'منذ شهر',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get closetReturnToCloset => 'أعيديها إلى الخزانة';
+
+  @override
+  String get closetShelveForSeason => 'أبعديها لهذا الموسم';
+
+  @override
+  String get closetNoLongerOwn => 'لم تعد لديّ';
+
+  @override
+  String get closetLookTitle => 'الإطلالة';
+
+  @override
+  String get closetLookLoadFailed => 'تعذّر فتح الإطلالة.';
+
+  @override
+  String closetLookOneShort(String slot) {
+    return 'قطعة واحدة ($slot) وتصبح جاهزة.';
+  }
+
+  @override
+  String closetLookManyShort(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'تنقصها $count قطعة لتصبح جاهزة.',
+      few: 'تنقصها $count قطع لتصبح جاهزة.',
+      two: 'تنقصها قطعتان لتصبح جاهزة.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String closetLookWornCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'لبستِها $count مرة.',
+      few: 'لبستِها $count مرات.',
+      two: 'لبستِها مرتين.',
+      one: 'لبستِها مرة واحدة.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get closetDeleteLook => 'احذفي الإطلالة';
+
+  @override
+  String get closetNotOwnedYet => 'ليست لديكِ بعد';
+
+  @override
+  String get closetFindThePiece => 'ابحثي عن القطعة';
+
+  @override
+  String get closetRemoveFromLook => 'إزالة من الإطلالة';
+
+  @override
+  String get closetMyLooks => 'إطلالاتي';
+
+  @override
+  String get closetLooksLoadFailed => 'تعذّر تحميل إطلالاتكِ.';
+
+  @override
+  String get closetNoLooksTitle => 'لا إطلالات بعد';
+
+  @override
+  String get closetNoLooksBody =>
+      'ركّبي إطلالة من قطعكِ، وإن نقصها شيء نساعدكِ في إيجاده.';
+
+  @override
+  String get closetSeeWhatToWear => 'اعرفي ما يمكنكِ لبسه';
+
+  @override
+  String closetLookReadyWorn(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'جاهزة · لبستِها $count مرة',
+      few: 'جاهزة · لبستِها $count مرات',
+      two: 'جاهزة · لبستِها مرتين',
+      one: 'جاهزة · لبستِها مرة',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get closetLookReady => 'جاهزة للّبس';
+
+  @override
+  String get closetWoreIt => 'لبستُها';
+
+  @override
+  String closetLookShortOne(String slot) {
+    return 'تنقصها $slot وتصبح جاهزة';
+  }
+
+  @override
+  String closetLookShortMany(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'تنقصها $count قطعة',
+      few: 'تنقصها $count قطع',
+      two: 'تنقصها قطعتان',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get closetMissing => 'ناقصة';
+
+  @override
+  String get closetWhatToWearToday => 'ماذا ألبس اليوم؟';
+
+  @override
+  String get closetTodayFailed => 'تعذّر اقتراح شيء الآن.';
+
+  @override
+  String get closetTodayLogged => 'تمّ — سجّلناها لليوم.';
+
+  @override
+  String get closetSavedToLooks => 'حُفظت في إطلالاتكِ.';
+
+  @override
+  String get closetSaveLookFailed => 'تعذّر حفظ الإطلالة.';
+
+  @override
+  String get closetAnyOccasion => 'أي مناسبة';
+
+  @override
+  String get closetCannotDress => 'تعذّر تركيب إطلالة';
+
+  @override
+  String get closetNothingForOccasion => 'لا شيء لهذه المناسبة';
+
+  @override
+  String get closetCannotDressBody =>
+      'غالباً تنقصكِ فئة كاملة — جرّبي إضافة حذاء أو قطعة سفلية إلى خزانتكِ.';
+
+  @override
+  String get closetNothingForOccasionBody =>
+      'جرّبي إزالة فلتر المناسبة، أو أضيفي قطعة تناسبها.';
+
+  @override
+  String get closetLoadFailed => 'تعذّر فتح خزانتكِ.';
+
+  @override
+  String get closetSpectrumWant => 'أريد';
+
+  @override
+  String get closetSpectrumDeciding => 'أفكّر فيها';
+
+  @override
+  String get closetSpectrumOwn => 'عندي';
+
+  @override
+  String get closetEmptyTitle => 'خزانتكِ فارغة بعد';
+
+  @override
+  String get closetEmptyBody =>
+      'ضعي فيها قطعكِ — ما اشتريتِه من ريم وما لديكِ من قبل. من هنا نعرف ما ينقصكِ وما يمكنكِ لبسه.';
+
+  @override
+  String get closetBringPurchases => 'أضيفي مشترياتي';
+
+  @override
+  String get closetAddWithPhoto => 'أضيفي قطعة بصورة';
+
+  @override
+  String closetBackfilled(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'أضفنا $count قطعة من طلباتكِ.',
+      few: 'أضفنا $count قطع من طلباتكِ.',
+      two: 'أضفنا قطعتين من طلباتكِ.',
+      one: 'أضفنا قطعة من طلباتكِ.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get closetNoDeliveredOrders => 'لا طلبات مُسلَّمة بعد.';
+
+  @override
+  String get closetBackfillFailed => 'تعذّر جلب مشترياتكِ الآن.';
+
+  @override
+  String get closetItemsFailed => 'تعذّر عرض قطعكِ.';
+
+  @override
+  String get closetMetricPossibleLooks => 'إطلالة ممكنة';
+
+  @override
+  String get closetMetricPieces => 'قطعة';
+
+  @override
+  String get closetMetricSavedLooks => 'إطلالة محفوظة';
+
+  @override
+  String get closetMetricWornThisMonth => 'لبسة هذا الشهر';
+
+  @override
+  String get closetCannotDressSeason =>
+      'قطعكِ موجودة لكنها لا تكوّن إطلالة كاملة لهذا الطقس.';
+
+  @override
+  String closetSeasonCapacity(int total, int seasonal, String season) {
+    return 'لديكِ $total إطلالة إجمالاً، $seasonal منها تناسب $season.';
+  }
+
+  @override
+  String get closetWhatsMissing => 'ما ينقص خزانتكِ';
+
+  @override
+  String get closetAll => 'الكل';
+
+  @override
+  String get closetReasonBase => 'الأساس';
+
+  @override
+  String get closetReasonNearlyComplete => 'تنقصها قطعة واحدة';
+
+  @override
+  String get closetReasonFavouriteLook => 'إطلالة مفضّلة';
+
+  @override
+  String get closetReasonCoreSlot => 'قطعة أساسية للمناسبة';
+
+  @override
+  String get closetReasonAlreadyChosen => 'اخترتِ القطعة من قبل';
+
+  @override
+  String get closetReasonSeasonFit => 'مناسبة للموسم';
+
+  @override
+  String get closetReasonInterest => 'اهتمامكِ بالمناسبة';
+
+  @override
+  String get closetReasonAnchorSlot => 'القطعة الأساسية';
+
+  @override
+  String get closetReasonOwnsNone => 'لا تملكين أيّاً منها';
+
+  @override
+  String get closetReasonOutfitGain => 'إطلالات جديدة ممكنة';
+
+  @override
+  String get closetReasonFirstOutfit => 'أول إطلالة كاملة';
+
+  @override
+  String get closetReasonOutfitsUnlocked => 'عدد الإطلالات الجديدة';
+
+  @override
+  String get closetReasonOutfitsNow => 'إطلالاتكِ الكاملة حالياً';
+
+  @override
+  String get closetReasonShelved => 'قطع مُبعَدة';
+
+  @override
+  String get closetReasonOutOfSeason => 'قطع خارج الموسم';
+
+  @override
+  String get closetReasonWear => 'كثرة اللبس';
+
+  @override
+  String get closetReasonSoleInSlot => 'لا بديل لها';
+
+  @override
+  String get closetReasonWearCount => 'عدد مرّات اللبس';
+
+  @override
+  String get closetWhyWeSuggest => 'لماذا نقترح هذا؟';
+
+  @override
+  String get closetPriority => 'الأولوية';
+
+  @override
+  String get closetMyPiece => 'قطعتي';
+
+  @override
+  String closetTileNeverWorn(String slot) {
+    return '$slot · لم تلبسيها بعد';
+  }
+
+  @override
+  String closetTileLongAgo(String slot) {
+    return '$slot · منذ مدة';
+  }
+
+  @override
+  String closetTileWornCount(String slot, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$slot · لبستِها $count مرة',
+      few: '$slot · لبستِها $count مرات',
+      two: '$slot · لبستِها مرتين',
+      one: '$slot · لبستِها مرة',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get closetFromYourCloset => 'من خزانتكِ';
+
+  @override
+  String get closetOwnOneAlready => 'لديكِ واحدة منها في خزانتكِ.';
+
+  @override
+  String closetPanelPairs(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'تنسجم مع $count قطعة لديكِ.',
+      few: 'تنسجم مع $count قطع لديكِ.',
+      two: 'تنسجم مع قطعتين لديكِ.',
+      one: 'تنسجم مع قطعة لديكِ.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String closetPanelCompletes(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'وتُكمل $count إطلالة محفوظة.',
+      few: 'وتُكمل $count إطلالات محفوظة.',
+      two: 'وتُكمل إطلالتين محفوظتين.',
+      one: 'وتُكمل إطلالة محفوظة.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get closetOpenMyCloset => 'افتحي خزانتي';
+
+  @override
+  String get closetAddPairFailed => 'تعذّرت إضافتها.';
+
+  @override
+  String get closetSaveAsLook => 'احفظيها كإطلالة';
+
+  @override
+  String get roomsCompareTitle => 'المقارنة';
+
+  @override
+  String get roomsCompareFailed => 'تعذّر تجهيز المقارنة.';
+
+  @override
+  String get roomsCompareNothing => 'لا شيء للمقارنة';
+
+  @override
+  String get roomsCompareNeedsTwo => 'تحتاج المقارنة خيارين على الأقل.';
+
+  @override
+  String get roomsHideIdentical => 'إخفاء المتشابه';
+
+  @override
+  String roomsIdenticalCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'متشابهان في $count شيئاً',
+      few: 'متشابهان في $count أشياء',
+      two: 'متشابهان في شيئين',
+      one: 'متشابهان في شيء واحد',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String roomsVotesSplit(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'الآراء في الغرفة منقسمة — صوّتت $count.',
+      one: 'الآراء في الغرفة منقسمة — صوّتت واحدة.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String roomsVotesLeaning(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'الغرفة تميل إلى خيار — صوّتت $count.',
+      one: 'الغرفة تميل إلى خيار — صوّتت واحدة.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String roomsCommentCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count تعليقاً',
+      few: '$count تعليقات',
+      two: 'تعليقان',
+      one: 'تعليق واحد',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get roomsChooseThis => 'اختاري هذه';
+
+  @override
+  String get roomsPlanTitle => 'خطة الشراء';
+
+  @override
+  String get roomsPlanFailed => 'تعذّر تحميل الخطة.';
+
+  @override
+  String get roomsNoPlanTitle => 'لا خطة بعد';
+
+  @override
+  String get roomsNoPlanBody => 'احسمي قرارات الغرفة، وبعدها نجهّز لكِ الخطة.';
+
+  @override
+  String get roomsPlanNow => 'الآن';
+
+  @override
+  String get roomsPlanNothingNow => 'لا شيء جاهز للشراء الآن.';
+
+  @override
+  String get roomsPlanLater => 'لاحقاً';
+
+  @override
+  String get roomsPlanLaterBody =>
+      'تبقى محفوظة في الخطة — تشترينها حين تكونين جاهزة.';
+
+  @override
+  String get roomsPlanTotal => 'المجموع';
+
+  @override
+  String roomsOverBudget(String amount) {
+    return 'فوق ميزانيتكِ بـ$amount';
+  }
+
+  @override
+  String get roomsUnderBudget => 'تحت ميزانيتكِ';
+
+  @override
+  String get roomsWithinBudget => 'ضمن ميزانيتكِ';
+
+  @override
+  String roomsUnpriced(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count قطعة تعذّر تسعيرها',
+      few: '$count قطع تعذّر تسعيرها',
+      two: 'قطعتان تعذّر تسعيرهما',
+      one: 'قطعة واحدة تعذّر تسعيرها',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get roomsNoLongerAvailable => 'لم تعد متوفرة';
+
+  @override
+  String get roomsPostpone => 'أجّليها';
+
+  @override
+  String get roomsRemove => 'أزيليها';
+
+  @override
+  String get roomsRemoveUnavailableFirst =>
+      'أزيلي القطع التي لم تعد متوفرة قبل المتابعة.';
+
+  @override
+  String roomsBuyNowCount(int count) {
+    return 'اشتري ما هو جاهز الآن ($count)';
+  }
+
+  @override
+  String roomsBuyCount(int count) {
+    return 'اشتري ($count)';
+  }
+
+  @override
+  String get roomsRoomTitle => 'الغرفة';
+
+  @override
+  String get roomsInviteFailed =>
+      'تعذّر فتح الدعوة. ربما انتهت صلاحية الرابط — اطلبي رابطاً جديداً.';
+
+  @override
+  String get roomsShareRoom => 'شاركي الغرفة';
+
+  @override
+  String get roomsRoomFailed => 'تعذّر فتح الغرفة.';
+
+  @override
+  String get roomsLinkCopied =>
+      'نسخنا الرابط — من يفتحه يمكنه النصح والتصويت، لكن لا يمكنه الشراء.';
+
+  @override
+  String get roomsNoDecisionsTitle => 'لا قرارات بعد';
+
+  @override
+  String get roomsNoDecisionsBody =>
+      'القرار سؤال — «الفستان»، «هدية لأمي». أضيفي واحداً وابدئي بجمع الخيارات له.';
+
+  @override
+  String get roomsAddDecision => 'أضيفي قراراً';
+
+  @override
+  String get roomsSettled => 'محسومة';
+
+  @override
+  String get roomsNewDecision => 'قرار جديد';
+
+  @override
+  String get roomsNewDecisionHelp => 'القرار سؤال يحتاج إلى جواب — لا قطعة.';
+
+  @override
+  String get roomsNewDecisionHint => 'مثلاً: الفستان';
+
+  @override
+  String get roomsAdd => 'أضيفي';
+
+  @override
+  String get roomsCancel => 'إلغاء';
+
+  @override
+  String get roomsSurprise => 'مفاجأة';
+
+  @override
+  String roomsForRecipient(String name) {
+    return 'لـ$name';
+  }
+
+  @override
+  String get roomsAllSettled => 'كل القرارات محسومة';
+
+  @override
+  String roomsSettledOf(int settled, int total) {
+    return '$settled من $total قرارات محسومة';
+  }
+
+  @override
+  String roomsBudgetUpTo(String amount) {
+    return 'الميزانية: حتى $amount';
+  }
+
+  @override
+  String get roomsSeePlan => 'اعرضي الخطة';
+
+  @override
+  String get roomsPreparePlan => 'جهّزي الخطة';
+
+  @override
+  String get roomsDecisionsStillOpen => 'ما زالت هناك قرارات مفتوحة.';
+
+  @override
+  String get roomsMyRooms => 'غرفي';
+
+  @override
+  String get roomsNewRoom => 'غرفة جديدة';
+
+  @override
+  String get roomsLoadFailed => 'تعذّر تحميل غرفكِ.';
+
+  @override
+  String get roomsEmptyTitle => 'لا غرف بعد';
+
+  @override
+  String get roomsEmptyBody =>
+      'الغرفة مساحة لقرار شراء: عرس، هدية، موسم — تجمعين فيها الخيارات، وتسألين صديقاتكِ، وتقرّرين. ليست سلّة.';
+
+  @override
+  String get roomsOpenFirst => 'افتحي أول غرفة';
+
+  @override
+  String get roomsPurchased => 'اشتُريت';
+
+  @override
+  String get roomsReadyToBuy => 'جاهزة للشراء';
+
+  @override
+  String get roomsOneDecisionLeft => 'قرار واحد وتنتهين';
+
+  @override
+  String roomsOpenDecisions(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count قراراً ما زالت مفتوحة',
+      few: '$count قرارات ما زالت مفتوحة',
+      two: 'قراران ما زالا مفتوحين',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String roomsSuggestionCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count اقتراحاً',
+      few: '$count اقتراحات',
+      two: 'اقتراحان',
+      one: 'اقتراح واحد',
+      zero: 'لا اقتراحات',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get roomsOccasionWedding => 'عرس';
+
+  @override
+  String get roomsOccasionEngagement => 'خطوبة';
+
+  @override
+  String get roomsOccasionEvening => 'سهرة';
+
+  @override
+  String get roomsOccasionEid => 'العيد';
+
+  @override
+  String get roomsOccasionGraduation => 'تخرّج';
+
+  @override
+  String get roomsOccasionBirthday => 'عيد ميلاد';
+
+  @override
+  String get roomsOccasionWork => 'العمل';
+
+  @override
+  String get roomsOccasionDaily => 'كل يوم';
+
+  @override
+  String get roomsShoppingFor => 'لأي شيء تتسوّقين؟';
+
+  @override
+  String get roomsRoomName => 'اسم الغرفة';
+
+  @override
+  String get roomsRoomNameHint => 'مثلاً: إطلالة عرس رهف';
+
+  @override
+  String get roomsRoomKind => 'نوع الغرفة';
+
+  @override
+  String get roomsGiftFor => 'لمن الهدية؟';
+
+  @override
+  String get roomsOccasionOptional => 'المناسبة (اختياري)';
+
+  @override
+  String get roomsOccasionHelp =>
+      'حين تختارين مناسبة، نفتح لكِ القرارات التي تحتاجينها.';
+
+  @override
+  String get roomsOpenRoom => 'افتحي الغرفة';
+
+  @override
+  String get roomsSuggestion => 'اقتراح';
+
+  @override
+  String get roomsDecidedAgainst => 'قرّرتِ ألّا تأخذيها';
+
+  @override
+  String roomsNeedsPieces(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'تحتاج $count قطعة',
+      few: 'تحتاج $count قطع',
+      two: 'تحتاج قطعتين',
+      one: 'تحتاج قطعة واحدة',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get roomsOpinionsSplit => 'الآراء منقسمة';
+
+  @override
+  String get roomsMajorityLeans => 'الأغلبية تميل إلى خيار';
+
+  @override
+  String get roomsAddOption => 'أضيفي خياراً';
+
+  @override
+  String get roomsCompare => 'قارني';
+
+  @override
+  String get roomsWantNothing => 'لا أريد شيئاً';
+
+  @override
+  String get roomsStatusSettled => 'محسوم';
+
+  @override
+  String get roomsStatusSkipped => 'متخطّى';
+
+  @override
+  String get roomsStatusNotChosen => 'لم تختاري بعد';
+
+  @override
+  String get roomsStatusOpen => 'مفتوح';
+
+  @override
+  String get roomsNoOptions => 'لا خيارات لهذا السؤال';
+
+  @override
+  String get roomsFindPiece => 'ابحثي عن قطعة';
+
+  @override
+  String get roomsDone => 'تمّ';
+
+  @override
+  String get roomsRestore => 'أعيديها';
+
+  @override
+  String roomsProposedTo(String title) {
+    return 'اقترحناها لـ«$title»';
+  }
+
+  @override
+  String get roomsProposeFailed => 'تعذّر الاقتراح.';
+
+  @override
+  String get roomsWhichRoom => 'لأي غرفة؟';
+
+  @override
+  String get roomsBack => 'رجوع';
+
+  @override
+  String get roomsAnswerWhichQuestion => 'جواب لأي سؤال؟';
+
+  @override
+  String get roomsProposeHelp =>
+      'تُضاف القطعة كاقتراح — ولا تُشترى حتى تختاريها.';
+
+  @override
+  String roomsLiveSuggestionCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count اقتراحاً',
+      few: '$count اقتراحات',
+      two: 'اقتراحان',
+      one: 'اقتراح واحد',
+      zero: 'لا اقتراحات',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get roomsNewQuestion => 'سؤال جديد';
+
+  @override
+  String get roomsNewQuestionHint => 'مثلاً: الحذاء';
+
+  @override
+  String get roomsNoOpenRooms => 'لا غرف مفتوحة لديكِ';
+
+  @override
+  String get roomsWhatIsRoom =>
+      'الغرفة مساحة لقرار شراء — تجمعين فيها الخيارات وتقرّرين.';
+
+  @override
+  String get roomsOpenAndAdd => 'افتحي غرفة وأضيفيها';
+
+  @override
+  String get roomsDefaultRoomTitle => 'تسوّق';
+
+  @override
+  String get roomsDefaultDecisionTitle => 'الخيارات';
+
+  @override
+  String get roomsCreatedWithPiece => 'فتحنا لكِ غرفة ووضعنا القطعة فيها.';
+
+  @override
+  String get roomsKindSolo => 'لي وحدي';
+
+  @override
+  String get roomsKindGroup => 'مع صديقاتي';
+
+  @override
+  String get roomsKindGift => 'هدية';
+
+  @override
+  String get roomsKindOccasion => 'مناسبة';
+
+  @override
+  String get roomsDecisionFallback => 'هذا القرار';
+
+  @override
+  String get roomsBlockerNoDecisions => 'لا قرارات في الغرفة بعد';
+
+  @override
+  String roomsBlockerEmpty(String title) {
+    return 'لا اقتراحات لـ$title بعد';
+  }
+
+  @override
+  String roomsBlockerUnresolved(String title) {
+    return 'لم تختاري لـ$title بعد';
+  }
+
+  @override
+  String roomsBlockerOverPick(String title) {
+    return 'اخترتِ أكثر من اللازم لـ$title';
+  }
+
+  @override
+  String roomsBlockerUnavailable(String title) {
+    return 'القطعة المختارة لـ$title نفدت';
+  }
+
+  @override
+  String get roomsBlockerOther => 'ما زال شيء ناقصاً';
 }

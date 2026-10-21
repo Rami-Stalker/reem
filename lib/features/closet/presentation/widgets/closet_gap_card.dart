@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/features/closet/domain/entities/closet_gap.dart';
+import 'package:reem/l10n/app_localizations.dart';
 
 /// One thing her wardrobe is short of.
 ///
@@ -87,7 +89,9 @@ class ClosetGapCard extends StatelessWidget {
                 for (final colour in gap.suggestedColours.take(3))
                   DsChip(label: colour.label),
                 if (gap.suggestedSize != null)
-                  DsChip(label: 'مقاس ${gap.suggestedSize}'),
+                  DsChip(
+                    label: context.l10n.closetSizeValue(gap.suggestedSize!),
+                  ),
               ],
             ),
           ],
@@ -115,26 +119,30 @@ class GapReasoningSheet extends StatelessWidget {
 
   final ClosetGap gap;
 
-  static const _labels = <String, String>{
-    'base': 'الأساس',
-    'nearly_complete': 'ناقصها قطعة وحدة',
-    'favourite_look': 'إطلالة مفضّلة',
-    'core_slot': 'قطعة أساسية للمناسبة',
-    'already_chosen': 'اخترتِ القطعة من قبل',
-    'season_fit': 'مناسبة للموسم',
-    'interest': 'اهتمامك بالمناسبة',
-    'anchor_slot': 'القطعة الأساسية',
-    'owns_nothing': 'ما عندك ولا وحدة',
-    'outfit_gain': 'إطلالات بتنفتح',
-    'owns_none': 'ما عندك ولا وحدة',
-    'unlocks_first_outfit': 'أول إطلالة كاملة',
-    'outfits_unlocked': 'عدد الإطلالات الجديدة',
-    'outfits_now': 'إطلالاتك الكاملة حاليًا',
-    'shelved': 'قطع مركونة',
-    'owned_out_of_season': 'قطع مو للموسم',
-    'wear': 'كتر اللبس',
-    'sole_in_slot': 'ما في بديل',
-    'wear_count': 'عدد مرات اللبس',
+  /// The server's component keys, in her words. A key the app does not know
+  /// yet is shown as sent rather than hidden: the sheet exists so every
+  /// number can be taken apart, and dropping a row would break that.
+  static String _label(AppLocalizations l10n, String key) => switch (key) {
+    'base' => l10n.closetReasonBase,
+    'nearly_complete' => l10n.closetReasonNearlyComplete,
+    'favourite_look' => l10n.closetReasonFavouriteLook,
+    'core_slot' => l10n.closetReasonCoreSlot,
+    'already_chosen' => l10n.closetReasonAlreadyChosen,
+    'season_fit' => l10n.closetReasonSeasonFit,
+    'interest' => l10n.closetReasonInterest,
+    'anchor_slot' => l10n.closetReasonAnchorSlot,
+    'owns_nothing' => l10n.closetReasonOwnsNone,
+    'outfit_gain' => l10n.closetReasonOutfitGain,
+    'owns_none' => l10n.closetReasonOwnsNone,
+    'unlocks_first_outfit' => l10n.closetReasonFirstOutfit,
+    'outfits_unlocked' => l10n.closetReasonOutfitsUnlocked,
+    'outfits_now' => l10n.closetReasonOutfitsNow,
+    'shelved' => l10n.closetReasonShelved,
+    'owned_out_of_season' => l10n.closetReasonOutOfSeason,
+    'wear' => l10n.closetReasonWear,
+    'sole_in_slot' => l10n.closetReasonSoleInSlot,
+    'wear_count' => l10n.closetReasonWearCount,
+    _ => key,
   };
 
   @override
@@ -149,7 +157,10 @@ class GapReasoningSheet extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text('ليش عم نقترح هالشي؟', style: context.dsText.sectionTitle),
+          Text(
+            context.l10n.closetWhyWeSuggest,
+            style: context.dsText.sectionTitle,
+          ),
           const SizedBox(height: DsSpacing.xs),
           Text(gap.rationale, style: context.dsText.bodyMuted),
           const SizedBox(height: DsSpacing.md),
@@ -160,7 +171,7 @@ class GapReasoningSheet extends StatelessWidget {
                 children: [
                   Expanded(
                     child: Text(
-                      _labels[entry.key] ?? entry.key,
+                      _label(context.l10n, entry.key),
                       style: context.dsText.body,
                     ),
                   ),
@@ -175,7 +186,10 @@ class GapReasoningSheet extends StatelessWidget {
           Row(
             children: [
               Expanded(
-                child: Text('الأولوية', style: context.dsText.labelStrong),
+                child: Text(
+                  context.l10n.closetPriority,
+                  style: context.dsText.labelStrong,
+                ),
               ),
               Text(
                 gap.priority.toStringAsFixed(0),

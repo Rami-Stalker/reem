@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/media/authorized_media_image.dart';
 import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/features/closet/domain/entities/closet_look.dart';
@@ -18,19 +19,19 @@ class ClosetLooksScreen extends ConsumerWidget {
 
     return Scaffold(
       backgroundColor: colors.background,
-      appBar: const ReemAppBar(title: 'إطلالاتي'),
+      appBar: ReemAppBar(title: context.l10n.closetMyLooks),
       body: looksAsync.when(
         loading: () => const Center(child: DsLoadingIndicator()),
         error: (_, _) => DsErrorState(
-          message: 'ما قدرنا نجيب إطلالاتك.',
+          message: context.l10n.closetLooksLoadFailed,
           onRetry: () => ref.invalidate(closetLooksProvider),
         ),
         data: (looks) => looks.isEmpty
             ? DsEmptyState(
                 icon: Icons.auto_awesome_rounded,
-                title: 'ما عندك إطلالات بعد',
-                message: 'ركّبي إطلالة من قطعك، وإذا ناقصها شي منساعدك تلاقيه.',
-                actionLabel: 'شوفي شو بتقدري تلبسي',
+                title: context.l10n.closetNoLooksTitle,
+                message: context.l10n.closetNoLooksBody,
+                actionLabel: context.l10n.closetSeeWhatToWear,
                 onAction: () => context.push(RoutePaths.closetToday),
               )
             : ListView.separated(
@@ -124,13 +125,16 @@ class ClosetLookCard extends StatelessWidget {
                 Expanded(
                   child: Text(
                     look.wearCount > 0
-                        ? 'جاهزة · لبستيها ${look.wearCount} مرة'
-                        : 'جاهزة للبس',
+                        ? context.l10n.closetLookReadyWorn(look.wearCount)
+                        : context.l10n.closetLookReady,
                     style: context.dsText.caption,
                   ),
                 ),
                 if (onWear != null)
-                  TextButton(onPressed: onWear, child: const Text('لبستها')),
+                  TextButton(
+                    onPressed: onWear,
+                    child: Text(context.l10n.closetWoreIt),
+                  ),
               ],
             )
           else
@@ -145,8 +149,12 @@ class ClosetLookCard extends StatelessWidget {
                 Expanded(
                   child: Text(
                     look.isOnePieceShort
-                        ? 'ناقصها ${look.missingSlots.first.label} وبتصير جاهزة'
-                        : 'ناقصها ${look.missingSlots.length} قطع',
+                        ? context.l10n.closetLookShortOne(
+                            look.missingSlots.first.label,
+                          )
+                        : context.l10n.closetLookShortMany(
+                            look.missingSlots.length,
+                          ),
                     style: context.dsText.caption.tint(colors.warning),
                   ),
                 ),
@@ -201,7 +209,7 @@ class _PieceThumb extends StatelessWidget {
                   color: colors.warning.withValues(alpha: 0.9),
                   padding: const EdgeInsets.symmetric(vertical: 1),
                   child: Text(
-                    'ناقصة',
+                    context.l10n.closetMissing,
                     textAlign: TextAlign.center,
                     style: context.dsText.micro.tint(colors.onWarning),
                   ),
