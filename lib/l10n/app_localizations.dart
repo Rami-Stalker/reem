@@ -18151,6 +18151,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Circle'**
   String get valueRungCircle;
+
+  /// Audit log entry name.
+  ///
+  /// In en, this message translates to:
+  /// **'Seller verification reviewed'**
+  String get adminAuditReviewSellerVerification;
+
+  /// Audit log entry recorded from an admin API request; the request line is in the details.
+  ///
+  /// In en, this message translates to:
+  /// **'Admin action'**
+  String get adminAuditAdminRequest;
 }
 
 class _AppLocalizationsDelegate

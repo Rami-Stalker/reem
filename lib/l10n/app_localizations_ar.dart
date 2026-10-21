@@ -10699,4 +10699,10 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get valueRungCircle => 'الدائرة الأولى';
+
+  @override
+  String get adminAuditReviewSellerVerification => 'مراجعة توثيق بائعة';
+
+  @override
+  String get adminAuditAdminRequest => 'إجراء إداري';
 }

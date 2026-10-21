@@ -645,6 +645,12 @@ String adminRecordTitle(
     'wallet.frozen' => l10n.adminAuditWalletFrozen,
     'admin_revoke_sessions' => l10n.adminAuditRevokeSessions,
     'cool_off_started' => l10n.adminAuditCoolOffStarted,
+    'review_seller_verification' => l10n.adminAuditReviewSellerVerification,
+    // Logged from the request itself: «PATCH /admin/…». The line stays in the
+    // record's details, where an operator investigating it will look.
+    // l10n-ignore: a pattern for HTTP methods, not copy
+    final code when RegExp(r'^(GET|POST|PUT|PATCH|DELETE) /').hasMatch(code) =>
+      l10n.adminAuditAdminRequest,
     // A new action still shows, as its code, until it is named here.
     _ => record.title,
   };

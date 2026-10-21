@@ -3194,5 +3194,7 @@
   "valueRungKnown": "معروفة",
   "valueRungTrusted": "موثوقة",
   "valueRungInsider": "من الدائرة",
-  "valueRungCircle": "الدائرة الأولى"
+  "valueRungCircle": "الدائرة الأولى",
+  "adminAuditReviewSellerVerification": "مراجعة توثيق بائعة",
+  "adminAuditAdminRequest": "إجراء إداري"
 }

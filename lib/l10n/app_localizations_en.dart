@@ -10540,4 +10540,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get valueRungCircle => 'Circle';
+
+  @override
+  String get adminAuditReviewSellerVerification =>
+      'Seller verification reviewed';
+
+  @override
+  String get adminAuditAdminRequest => 'Admin action';
 }

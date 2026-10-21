@@ -140,3 +140,30 @@ Not an app defect, but worth knowing: the demo seed writes the boutique's two
 paid payouts directly, without the ledger entries a real payout posts, so her
 earnings statement is empty under a lifetime total of 110,200 ل.س. The real
 flow posts those entries.
+
+## Admin console, verified end to end
+
+The console was run signed in as the super admin: the dashboard and its
+briefing, content, orders, products, users, sellers, seller applications,
+delivery, finance, commissions, analytics, trends, reports, moderation,
+support, audit logs, system settings, Reem Value, notification campaigns and
+analytics, and policies. Every screen loads without an error. A pending
+seller application was approved from the console; the seller is now
+verified and the decision is in the audit log.
+
+What that run found and fixed:
+
+| Area | Problem | Fix |
+| --- | --- | --- |
+| Statuses | Orders, audit severities and notification deliveries showed «Confirmed», «Info», «Sent». | Named in the shared status table. |
+| Audit log | Rows were titled with action codes: `login`, `recovery_case_first_approval`, `PATCH /admin/…`. | Named; an unknown code still shows as itself, and the request line stays in the details. |
+| Reports, policies, Value | `sales`, `customer-terms`, «known», «circle» inside Arabic sentences. | Report types, policy titles and rung names. |
+| Commissions | Rates showed as basis points («1000»). | «10%». |
+| Analytics | The chart's axis dates read `2026-10-19`. | «19 أكتوبر». |
+| Counts | «قبل 3 ساعة», «قبل 2 دقيقة», «1 حساب وقّع», «2 ملف». | Arabic plurals. The relative-time fix also reaches the buyer and seller apps. |
+| Voice | Three dashboard findings addressed her in the masculine («راجع»). | «راجعي», «شغّلي». |
+
+Left as is on purpose: «Reem Value» is the feature's name in both languages;
+system-setting keys (`auth.female_only_declaration`) and commission rule names
+are data the operator types; and a decision on a seller application needs a
+written reason even when it approves, because the server records it.
