@@ -10195,4 +10195,16 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get roomsBlockerNothingChosen => 'لم تختاري أي قطعة بعد';
+
+  @override
+  String get sellerAllTimeTotals => 'منذ افتتاح متجركِ';
+
+  @override
+  String get sellerPlanBasic => 'الباقة الأساسية';
+
+  @override
+  String get sellerPlanVerified => 'باقة المتاجر الموثّقة';
+
+  @override
+  String get sellerPlanPremium => 'الباقة المميّزة';
 }

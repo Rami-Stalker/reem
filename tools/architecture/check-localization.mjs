@@ -121,6 +121,15 @@ const files = SEARCH_ROOTS.flatMap((dir) => walk(path.join(root, dir)))
   .sort();
 
 const guardedHits = [];
+/**
+ * A date formatted in a pinned locale — `DateFormat('d MMMM', 'ar')`. It gave
+ * English readers Arabic month names and, because intl writes Arabic dates in
+ * Arabic-Indic digits, Arabic readers «٥ أكتوبر» beside Western prices. Dates
+ * go through `formatCalendarDate(l10n, …)`, which takes the reader's locale
+ * and converts the digits. `l10n-ignore` does not cover this one.
+ */
+const PINNED_DATE_LOCALE = /DateFormat(?:\.\w+)?\([^;]*?'(?:ar|en)(?:_[A-Z]+)?'\s*\)/;
+const pinnedDateHits = [];
 const otherHits = [];
 const arabicHits = [];
 
@@ -157,6 +166,10 @@ for (const file of files) {
     ) {
       continue;
     }
+    if (PINNED_DATE_LOCALE.test(raw)) {
+      pinnedDateHits.push({ file, line: index + 1, value: raw.trim() });
+    }
+
     // An opt-out for a literal that is genuinely not copy — a dialling mask,
     // an intl pattern, a record id. It covers its own line and the one below,
     // so it can sit above the expression rather than trailing it, where it
@@ -190,6 +203,7 @@ console.log(`Guarded areas: ${guardedHits.length} literals (must be 0)`);
 const otherCount = otherHits.length;
 console.log(`Everywhere else: ${otherCount} literals (baseline ${BASELINE})`);
 console.log(`Inline Arabic: ${arabicHits.length} literals (must be 0)`);
+console.log(`Dates in a pinned locale: ${pinnedDateHits.length} (must be 0)`);
 
 // `--list` prints the unguarded backlog, so it can be worked through.
 if (process.argv.includes('--list')) {
@@ -237,7 +251,21 @@ if (arabicHits.length > 0) {
   }
 }
 
-if (guardedHits.length > 0 || otherCount > BASELINE || arabicHits.length > 0) {
+if (pinnedDateHits.length > 0) {
+  console.log('\nDate formatted in a pinned locale:');
+  console.log('  use `formatCalendarDate(context.l10n, date, pattern: …)` so the');
+  console.log("  reader's language picks the month names and digits stay Western.");
+  for (const hit of pinnedDateHits) {
+    console.log(`    ${hit.file}:${hit.line}  ${hit.value}`);
+  }
+}
+
+if (
+  guardedHits.length > 0 ||
+  otherCount > BASELINE ||
+  arabicHits.length > 0 ||
+  pinnedDateHits.length > 0
+) {
   process.exitCode = 1;
 }
 

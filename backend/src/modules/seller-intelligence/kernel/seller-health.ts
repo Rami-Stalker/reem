@@ -128,6 +128,33 @@ export interface SellerHealthResult {
 // ── Shapes ───────────────────────────────────────────────────────────────
 
 const clamp01 = (n: number): number => Math.min(1, Math.max(0, n));
+
+/** The forms an Arabic noun takes after a number. */
+interface CountedNoun {
+  one: string;
+  two: string;
+  /** 3 to 10: the plural. */
+  few: string;
+  /** 11 and above: the singular again, in the case the sentence needs. */
+  many: string;
+}
+
+/**
+ * A count said the way Arabic says it: «طلباً واحداً», «طلبين», «3 طلبات»,
+ * «12 طلباً». A template that only interpolates the number reads «ألغيتِ 1
+ * طلب» — which is what the health page said.
+ */
+export function arabicCount(n: number, noun: CountedNoun): string {
+  if (n === 1) return noun.one;
+  if (n === 2) return noun.two;
+  const tail = n % 100;
+  return `${n} ${tail >= 3 && tail <= 10 ? noun.few : noun.many}`;
+}
+
+const HOURS: CountedNoun = { one: 'ساعة واحدة', two: 'ساعتين', few: 'ساعات', many: 'ساعة' };
+const HOURS_SUBJECT: CountedNoun = { ...HOURS, two: 'ساعتان' };
+const DAYS: CountedNoun = { one: 'يوماً واحداً', two: 'يومين', few: 'أيام', many: 'يوماً' };
+const ORDERS: CountedNoun = { one: 'طلباً واحداً', two: 'طلبين', few: 'طلبات', many: 'طلباً' };
 const round = (n: number, dp = 2): number => {
   const f = 10 ** dp;
   return Math.round(n * f) / f;
@@ -416,7 +443,7 @@ export function adviseSellerHealth(
       'PREP_SLOW',
       'prepSpeed',
       prep.value > PREP_HOURS.bad ? 'critical' : 'warning',
-      `متوسط تجهيزكِ ${Math.round(prep.value)} ساعة. إن خفّضتِه إلى أقل من ${PREP_HOURS.good} ساعة، يصل الطلب أسرع وترتفع صحّة متجركِ.`,
+      `متوسط تجهيزكِ ${arabicCount(Math.round(prep.value), HOURS_SUBJECT)}. إن خفّضتِه إلى أقل من ${PREP_HOURS.good} ساعة، يصل الطلب أسرع وترتفع صحّة متجركِ.`,
     );
   }
 
@@ -426,7 +453,7 @@ export function adviseSellerHealth(
       'SHIP_SLOW',
       'shipSpeed',
       'warning',
-      `يستغرق الشحن لديكِ ${Math.round(ship.value / 24)} يوم في المتوسط. راجعي المندوب أو غيّري طريقة التسليم.`,
+      `يستغرق الشحن لديكِ ${arabicCount(Math.round(ship.value / 24), DAYS)} في المتوسط. راجعي المندوب أو غيّري طريقة التسليم.`,
     );
   }
 
@@ -436,7 +463,7 @@ export function adviseSellerHealth(
       'RESPONSE_SLOW',
       'responsiveness',
       resp.value > RESPONSE_HOURS.bad ? 'critical' : 'warning',
-      `تنتظر الزبونة ${Math.round(resp.value)} ساعة حتى تردّي. الرد خلال أول ساعتين يرفع فرصة الشراء كثيراً.`,
+      `تنتظر الزبونة ${arabicCount(Math.round(resp.value), HOURS)} حتى تردّي. الرد خلال أول ساعتين يرفع فرصة الشراء كثيراً.`,
     );
   }
 
@@ -446,7 +473,7 @@ export function adviseSellerHealth(
       'CANCEL_RATE',
       'cancellation',
       cancel.value > RATE_CEILINGS.cancellation * 100 ? 'critical' : 'warning',
-      `ألغيتِ ${facts.cancelledBySeller} طلب من أصل ${facts.acceptedOrders + facts.openOrders}. السبب الأكثر شيوعاً مخزون غير محدّث — راجعي الكميات.`,
+      `ألغيتِ ${arabicCount(facts.cancelledBySeller, ORDERS)} من أصل ${facts.acceptedOrders + facts.openOrders}. السبب الأكثر شيوعاً مخزون غير محدّث — راجعي الكميات.`,
     );
   }
 

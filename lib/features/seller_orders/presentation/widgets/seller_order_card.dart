@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart' hide TextDirection;
 
 import 'package:reem/core/design_system/design_system.dart';
 import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/core/utils/arabic_numerals.dart';
+import 'package:reem/core/utils/relative_time.dart';
 import 'package:reem/features/seller_orders/domain/entities/seller_order.dart';
 import 'package:reem/features/seller_orders/presentation/seller_order_labels.dart';
 import 'package:reem/features/seller_orders/presentation/widgets/seller_order_status_chip.dart';
@@ -199,9 +198,11 @@ class SellerOrderCard extends StatelessWidget {
   /// `if (count == 1)`: Arabic has six plural categories, and two of them
   /// cover most of a busy shop's rows.
   String _subtitle(BuildContext context) {
-    final when = toWesternDigits(
+    final when = formatCalendarDate(
+      context.l10n,
+      order.placedAt,
       // l10n-ignore: an intl pattern; the locale supplies the words
-      DateFormat('d MMM • HH:mm', 'ar').format(order.placedAt),
+      pattern: 'd MMM • HH:mm',
     );
     return '${context.l10n.itemsCount(order.itemsCount)} • $when';
   }

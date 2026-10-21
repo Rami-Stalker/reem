@@ -17737,6 +17737,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'You haven’t chosen a piece yet'**
   String get roomsBlockerNothingChosen;
+
+  /// Caption over lifetime profit, margin and orders on the revenue card.
+  ///
+  /// In en, this message translates to:
+  /// **'Since you opened your shop'**
+  String get sellerAllTimeTotals;
+
+  /// Seller profile badge for the BASIC level.
+  ///
+  /// In en, this message translates to:
+  /// **'Basic plan'**
+  String get sellerPlanBasic;
+
+  /// Seller profile badge for the VERIFIED level.
+  ///
+  /// In en, this message translates to:
+  /// **'Verified plan'**
+  String get sellerPlanVerified;
+
+  /// Seller profile badge for the PREMIUM level.
+  ///
+  /// In en, this message translates to:
+  /// **'Premium plan'**
+  String get sellerPlanPremium;
 }
 
 class _AppLocalizationsDelegate

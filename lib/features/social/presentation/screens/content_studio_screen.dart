@@ -111,7 +111,7 @@ class ContentStudioScreen extends ConsumerWidget {
                         ],
                       ),
               ),
-              DsGaps.sliverBottomSafe,
+              DsGaps.bottomSafe,
             ],
           ),
         ),

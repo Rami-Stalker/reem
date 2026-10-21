@@ -5,6 +5,7 @@ import { SellerHealthBand } from '@prisma/client';
 import {
   SellerHealthFacts,
   adviseSellerHealth,
+  arabicCount,
   bandFor,
   evidenceOf,
   rampDown,
@@ -406,6 +407,29 @@ test('advice speaks in her own numbers', () => {
   assert.ok(line, 'a 30-hour reply time should be raised');
   assert.match(line.ar, /30/, 'the sentence quotes the measured figure');
   assert.ok(line.ar.includes(String(RESPONSE_HOURS.good)) || line.ar.includes('ساعتين'));
+});
+
+test('counts in advice read as Arabic, not as a filled-in template', () => {
+  const orders = { one: 'طلباً واحداً', two: 'طلبين', few: 'طلبات', many: 'طلباً' };
+  assert.equal(arabicCount(1, orders), 'طلباً واحداً');
+  assert.equal(arabicCount(2, orders), 'طلبين');
+  assert.equal(arabicCount(7, orders), '7 طلبات');
+  assert.equal(arabicCount(12, orders), '12 طلباً');
+  assert.equal(arabicCount(103, orders), '103 طلبات');
+
+  const facts: SellerHealthFacts = { ...established, cancelledBySeller: 1, acceptedOrders: 11 };
+  const line = adviseSellerHealth(scoreSellerHealth(facts), facts).find(
+    (a) => a.code === 'CANCEL_RATE',
+  );
+  assert.ok(line, 'one cancellation is raised');
+  assert.match(line.ar, /^ألغيتِ طلباً واحداً من أصل/);
+
+  const slowReply: SellerHealthFacts = { ...established, responseHours: 5, responseSample: 40 };
+  const reply = adviseSellerHealth(scoreSellerHealth(slowReply), slowReply).find(
+    (a) => a.code === 'RESPONSE_SLOW',
+  );
+  assert.ok(reply);
+  assert.match(reply.ar, /5 ساعات/);
 });
 
 test('nothing is advised where nothing was measured', () => {

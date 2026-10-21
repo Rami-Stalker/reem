@@ -11495,5 +11495,19 @@
   "orderTimelinePaymentExpired": "The payment deadline passed.",
   "@orderTimelinePaymentExpired": {"description": "Order timeline entry."},
   "roomsBlockerNothingChosen": "You haven’t chosen a piece yet",
-  "@roomsBlockerNothingChosen": {"description": "Room readiness blocker."}
+  "@roomsBlockerNothingChosen": {"description": "Room readiness blocker."},
+  "sellerAllTimeTotals": "Since you opened your shop",
+  "@sellerAllTimeTotals": {"description": "Caption over lifetime profit, margin and orders on the revenue card."},
+  "sellerPlanBasic": "Basic plan",
+  "@sellerPlanBasic": {
+    "description": "Seller profile badge for the BASIC level."
+  },
+  "sellerPlanVerified": "Verified plan",
+  "@sellerPlanVerified": {
+    "description": "Seller profile badge for the VERIFIED level."
+  },
+  "sellerPlanPremium": "Premium plan",
+  "@sellerPlanPremium": {
+    "description": "Seller profile badge for the PREMIUM level."
+  }
 }

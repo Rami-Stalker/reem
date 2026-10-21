@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl/intl.dart' hide TextDirection;
 
 import 'package:reem/core/design_system/design_system.dart';
 import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/shared/value_objects/money.dart';
 import 'package:reem/core/utils/arabic_numerals.dart';
+import 'package:reem/core/utils/relative_time.dart';
 import 'package:reem/features/seller_orders/domain/entities/seller_order.dart';
 import 'package:reem/features/seller_orders/presentation/providers/seller_orders_provider.dart';
 import 'package:reem/features/seller_orders/presentation/seller_order_labels.dart';
@@ -279,8 +279,12 @@ class _Step extends StatelessWidget {
           ),
           const Spacer(),
           Text(
-            // l10n-ignore: an intl pattern; the locale supplies the words
-            toWesternDigits(DateFormat('d MMM • HH:mm', 'ar').format(at)),
+            formatCalendarDate(
+              context.l10n,
+              at,
+              // l10n-ignore: an intl pattern; the locale supplies the words
+              pattern: 'd MMM • HH:mm',
+            ),
             style: context.dsText.caption.tint(atelier.muted),
           ),
         ],
@@ -460,9 +464,7 @@ class _Money extends StatelessWidget {
     // counts starts at the door, not at payment.
     if (at == null) return l10n.sellerOrderEscrowPending;
 
-    return l10n.sellerOrderEscrowOn(
-      toWesternDigits(DateFormat('d MMMM', 'ar').format(at)),
-    );
+    return l10n.sellerOrderEscrowOn(formatCalendarDate(l10n, at));
   }
 }
 

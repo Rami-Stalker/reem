@@ -3125,5 +3125,9 @@
   "orderTimelineConfirmedBody": "أُرسل إلى البائعات للتجهيز.",
   "orderTimelineCancelled": "أُلغي الطلب",
   "orderTimelinePaymentExpired": "انتهت مهلة الدفع.",
-  "roomsBlockerNothingChosen": "لم تختاري أي قطعة بعد"
+  "roomsBlockerNothingChosen": "لم تختاري أي قطعة بعد",
+  "sellerAllTimeTotals": "منذ افتتاح متجركِ",
+  "sellerPlanBasic": "الباقة الأساسية",
+  "sellerPlanVerified": "باقة المتاجر الموثّقة",
+  "sellerPlanPremium": "الباقة المميّزة"
 }

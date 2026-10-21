@@ -671,22 +671,86 @@ class _SellerMobileNavigation extends StatelessWidget {
         border: Border(top: BorderSide(color: palette.line)),
         boxShadow: palette.shadow,
       ),
-      child: ListView.separated(
-        scrollDirection: Axis.horizontal,
-        itemCount: destinations.length,
-        separatorBuilder: (_, _) => DsGaps.hXs,
-        itemBuilder: (context, index) {
-          final item = destinations[index];
-          final selected = index == selectedIndex;
-          return SizedBox(
-            width: 92,
-            child: _SellerNavTile(
-              item: item,
-              selected: selected,
-              onTap: () => onSelected(index),
+      // Every destination on screen at once, each an equal share of the
+      // width, icon over label. The old strip scrolled sideways in fixed
+      // 92-pixel tiles with the label beside the icon: on a phone the labels
+      // were cut to «لو…» / «المن…» and the fifth tab lived off screen.
+      child: Row(
+        children: [
+          for (var index = 0; index < destinations.length; index++)
+            Expanded(
+              child: _SellerMobileNavItem(
+                item: destinations[index],
+                selected: index == selectedIndex,
+                onTap: () => onSelected(index),
+              ),
             ),
-          );
-        },
+        ],
+      ),
+    );
+  }
+}
+
+class _SellerMobileNavItem extends StatelessWidget {
+  const _SellerMobileNavItem({
+    required this.item,
+    required this.selected,
+    required this.onTap,
+  });
+
+  final RoleNavigationItem item;
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final palette = context.atelier;
+    final label = item.labelOf(context.l10n);
+    return Semantics(
+      container: true,
+      selected: selected,
+      button: true,
+      label: label,
+      child: ExcludeSemantics(
+        child: InkResponse(
+          radius: 32,
+          onTap: onTap,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              AnimatedContainer(
+                duration: DsMotion.fast,
+                width: 44,
+                height: 28,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: selected ? palette.primarySoft : Colors.transparent,
+                  borderRadius: DsRadius.borderPill,
+                ),
+                child: Icon(
+                  selected ? item.selectedIcon : item.icon,
+                  size: 20,
+                  color: selected ? palette.primary : palette.muted,
+                ),
+              ),
+              DsGaps.vXxs,
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  label,
+                  maxLines: 1,
+                  style: context.dsText.caption
+                      .tint(selected ? palette.primary : palette.muted)
+                      .copyWith(
+                        fontWeight: selected
+                            ? DsTypography.bold
+                            : DsTypography.medium,
+                      ),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

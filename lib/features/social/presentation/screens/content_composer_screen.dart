@@ -227,7 +227,7 @@ class _ContentComposerScreenState extends ConsumerState<ContentComposerScreen> {
                     ),
                   ],
                 ),
-                DsGaps.sliverBottomSafe,
+                DsGaps.bottomSafe,
               ],
             ),
           ),

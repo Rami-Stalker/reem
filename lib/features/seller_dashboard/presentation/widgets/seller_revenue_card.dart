@@ -147,6 +147,23 @@ class SellerRevenueCard extends ConsumerWidget {
                 DsSpacing.lg,
                 DsSpacing.md,
                 DsSpacing.lg,
+                0,
+              ),
+              // These three are lifetime figures. Under a «today / week /
+              // month / year» switch they read as that period's — a day of 0
+              // in revenue beside 104K in profit — so they say so.
+              child: Text(
+                l10n.sellerAllTimeTotals,
+                style: context.dsText.micro.tint(
+                  DsColors.onMedia.withValues(alpha: 0.6),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(
+                DsSpacing.lg,
+                DsSpacing.xs,
+                DsSpacing.lg,
                 DsSpacing.lg,
               ),
               child: Row(

@@ -10153,4 +10153,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get roomsBlockerNothingChosen => 'You haven’t chosen a piece yet';
+
+  @override
+  String get sellerAllTimeTotals => 'Since you opened your shop';
+
+  @override
+  String get sellerPlanBasic => 'Basic plan';
+
+  @override
+  String get sellerPlanVerified => 'Verified plan';
+
+  @override
+  String get sellerPlanPremium => 'Premium plan';
 }
