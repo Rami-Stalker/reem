@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/features/market/domain/entities/market.dart';
 import 'package:reem/features/market/presentation/providers/market_providers.dart';
 import 'package:reem/features/market/presentation/widgets/market_pieces.dart';
@@ -35,7 +36,7 @@ class _ResaleMarketScreenState extends ConsumerState<ResaleMarketScreen> {
 
     return Scaffold(
       backgroundColor: colors.background,
-      appBar: const ReemAppBar(title: 'سوق المستعمل'),
+      appBar: ReemAppBar(title: context.l10n.marketResaleTitle),
       body: Column(
         children: [
           Padding(
@@ -46,13 +47,13 @@ class _ResaleMarketScreenState extends ConsumerState<ResaleMarketScreen> {
             child: Row(
               children: [
                 DsChip(
-                  label: 'المعروض',
+                  label: context.l10n.marketResaleBrowse,
                   selected: !_mine,
                   onTap: () => setState(() => _mine = false),
                 ),
                 DsGaps.hXs,
                 DsChip(
-                  label: 'عروضي',
+                  label: context.l10n.marketResaleMine,
                   selected: _mine,
                   onTap: () => setState(() => _mine = true),
                 ),
@@ -63,7 +64,7 @@ class _ResaleMarketScreenState extends ConsumerState<ResaleMarketScreen> {
             child: async.when(
               loading: () => const Center(child: DsLoadingIndicator()),
               error: (_, _) => DsErrorState(
-                message: 'ما قدرنا نجيب العروض.',
+                message: context.l10n.marketResaleFailed,
                 onRetry: () => ref
                   ..invalidate(resaleMarketProvider(null))
                   ..invalidate(myListingsProvider),
@@ -71,10 +72,12 @@ class _ResaleMarketScreenState extends ConsumerState<ResaleMarketScreen> {
               data: (listings) => listings.isEmpty
                   ? DsEmptyState(
                       icon: Icons.storefront_outlined,
-                      title: _mine ? 'ما عندك عروض' : 'ما في شي معروض هلق',
+                      title: _mine
+                          ? context.l10n.marketNoOwnListings
+                          : context.l10n.marketNoListings,
                       message: _mine
-                          ? 'لما ريم تلاقي قطعة واقفة بخزانتك، بتقترح عليكِ تعرضيها هون.'
-                          : 'السوق بيتعبّى من خزانات البنات. رجعي بعدين.',
+                          ? context.l10n.marketNoOwnListingsBody
+                          : context.l10n.marketNoListingsBody,
                     )
                   : RefreshIndicator(
                       onRefresh: () async => ref
@@ -162,12 +165,12 @@ class _ListingCard extends ConsumerWidget {
                 DsGaps.vXxs,
                 Text(
                   [
-                    listing.conditionAr,
+                    resaleConditionLabel(context.l10n, listing.condition),
                     if (listing.wearCount != null)
-                      'انلبست ${listing.wearCount} مرات',
+                      context.l10n.marketWornTimes(listing.wearCount!),
                     if (listing.slotLabel != null) listing.slotLabel!,
                     if (!owned && listing.sellerName != null)
-                      'من ${listing.sellerName}',
+                      context.l10n.marketFromSeller(listing.sellerName!),
                   ].join(' · '),
                   style: context.dsText.micro.tint(colors.onSurfaceVariant),
                 ),
@@ -197,15 +200,15 @@ class _OwnerActions extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final next = switch (listing.status) {
-      'DRAFT' => ('انشريها', 'LISTED'),
-      'WITHDRAWN' => ('ارجعي انشريها', 'LISTED'),
-      'LISTED' => ('سحبيها', 'WITHDRAWN'),
-      'RESERVED' => ('انباعت', 'SOLD'),
+      'DRAFT' => (context.l10n.marketListingPublish, 'LISTED'),
+      'WITHDRAWN' => (context.l10n.marketListingRepublish, 'LISTED'),
+      'LISTED' => (context.l10n.marketListingWithdraw, 'WITHDRAWN'),
+      'RESERVED' => (context.l10n.marketListingSold, 'SOLD'),
       _ => null,
     };
     if (next == null) {
       return Text(
-        'انباعت',
+        context.l10n.marketListingSold,
         style: context.dsText.micro.tint(context.dsColors.success),
       );
     }

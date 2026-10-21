@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/features/value/domain/entities/value_standing.dart';
 
 /// The six dimensions, drawn.
@@ -49,12 +50,12 @@ class _PillarRow extends StatelessWidget {
               // which is the honest thing to say, and the thing a shop is least
               // inclined to.
               Text(
-                'وصلتي للحد',
+                context.l10n.valuePillarCapped,
                 style: context.dsText.micro.tint(colors.onSurfaceVariant),
               )
             else if (!pillar.isKnown)
               Text(
-                'لسا ما منعرف',
+                context.l10n.valuePillarUnknown,
                 style: context.dsText.micro.tint(colors.onSurfaceVariant),
               ),
           ],
@@ -72,7 +73,7 @@ class _PillarRow extends StatelessWidget {
         Text(
           pillar.isKnown
               ? pillar.blurb
-              : '${pillar.blurb} — ما في كفاية بعد لنحكم.',
+              : context.l10n.valuePillarNotEnough(pillar.blurb),
           style: context.dsText.micro,
         ),
       ],

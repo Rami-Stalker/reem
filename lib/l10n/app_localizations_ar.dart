@@ -7975,4 +7975,793 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get roomsBlockerOther => 'ما زال شيء ناقصاً';
+
+  @override
+  String get valueAdminSubtitle => 'المكانة وما تفتحه — وضمان أنها لا تُشترى.';
+
+  @override
+  String get valueAdminRefresh => 'تحديث';
+
+  @override
+  String get valueAdminSweepNow => 'اجمعي الأدلة الآن';
+
+  @override
+  String get valueAdminDistributionFailed => 'تعذّر تحميل بيانات المكانة.';
+
+  @override
+  String valueAdminSweepDone(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'تم — أُعيد احتساب $count ملفاً.',
+      few: 'تم — أُعيد احتساب $count ملفات.',
+      two: 'تم — أُعيد احتساب ملفين.',
+      one: 'تم — أُعيد احتساب ملف واحد.',
+      zero: 'تم — لم يتغيّر أي ملف.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get valueAdminSweepFailed => 'تعذّر جمع الأدلة.';
+
+  @override
+  String get valueAdminGuaranteeHolds => 'المكانة لا تُشترى';
+
+  @override
+  String get valueAdminGuaranteeBroken =>
+      'تنبيه: الشراء وحده أصبح يصل إلى أعلى الدرجات';
+
+  @override
+  String valueAdminSpendingReach(int ceiling) {
+    return 'من تشتري فقط ولا تساهم بشيء آخر تصل إلى $ceiling من 1000';
+  }
+
+  @override
+  String get valueAdminGuaranteeFix =>
+      'اخفضي سقف الشراء أو ارفعي عتبة الدرجات العليا — وإلا صار البرنامج سلّم إنفاق باسم آخر.';
+
+  @override
+  String get valueAdminDistributionTitle => 'توزّع الدرجات';
+
+  @override
+  String valueAdminDistributionSubtitle(int total, int unranked) {
+    return '$total ملف — منها $unranked بلا درجة بعد';
+  }
+
+  @override
+  String get valueAdminCostTitle => 'الكلفة والالتزام';
+
+  @override
+  String get valueAdminCostSubtitle => 'ما صُرف فعلاً، وأقصى ما يمكن أن يُصرف.';
+
+  @override
+  String get valueAdminCostFailed => 'تعذّر تحميل تقرير الكلفة.';
+
+  @override
+  String valueAdminUnbounded(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count ميزة تصرف مالاً بلا سقف — حدّدي لها ميزانية.',
+      few: '$count مزايا تصرف مالاً بلا سقف — حدّدي لها ميزانية.',
+      two: 'ميزتان تصرفان مالاً بلا سقف — حدّدي لهما ميزانية.',
+      one: 'ميزة واحدة تصرف مالاً بلا سقف — حدّدي لها ميزانية.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get valueAdminSpent => 'صُرف';
+
+  @override
+  String get valueAdminMaxCommitment => 'أقصى التزام';
+
+  @override
+  String get valueAdminReasonSinglePillar => 'كل المكانة من جهة واحدة';
+
+  @override
+  String get valueAdminReasonBurst => 'مساهمات مكثّفة في أيام قليلة';
+
+  @override
+  String get valueAdminSuspectsTitle => 'ملفات تستحق نظرة';
+
+  @override
+  String get valueAdminSuspectsSubtitle =>
+      'ليست اتهاماً — أنماط غير معتادة، والقرار لإنسان.';
+
+  @override
+  String get valueAdminSuspectsFailed => 'تعذّر تحميل القائمة.';
+
+  @override
+  String get valueAdminSuspectsNone => 'لا شيء لافت الآن.';
+
+  @override
+  String valueAdminConcentration(int percent, int days) {
+    return 'تركّز $percent% خلال $days يوم';
+  }
+
+  @override
+  String get valueAdminFreezeAction => 'جمّديها مؤقتاً';
+
+  @override
+  String get valueAdminFreezeTitle => 'تجميد مؤقت';
+
+  @override
+  String get valueAdminFreezeBody =>
+      'تتوقف المكانة عن الحركة وتتوقف المزايا — ولا يضيع شيء. تعود حين ترفعين التجميد.';
+
+  @override
+  String get valueAdminFreezeReason => 'السبب';
+
+  @override
+  String get valueAdminFreezeConfirm => 'جمّدي';
+
+  @override
+  String get valueCancel => 'إلغاء';
+
+  @override
+  String get valueTitle => 'مكانتي في ريم';
+
+  @override
+  String get valueLoadFailed => 'تعذّر تحميل مكانتكِ.';
+
+  @override
+  String get valueSourcesTitle => 'من أين جاءت مكانتكِ';
+
+  @override
+  String get valueSourcesSubtitle =>
+      'مكانتكِ مبنية على ستة جوانب، لا على الإنفاق وحده.';
+
+  @override
+  String valueCloserTo(String tier) {
+    return 'ما يقرّبكِ من $tier';
+  }
+
+  @override
+  String get valueUnlocksTitle => 'ما تفتحه لكِ مكانتكِ';
+
+  @override
+  String get valueRecentTitle => 'آخر ما احتسبناه';
+
+  @override
+  String get valueJustStarting => 'في البداية';
+
+  @override
+  String valueNextTier(String tier) {
+    return 'الدرجة التالية: $tier';
+  }
+
+  @override
+  String get valuePeakKept => 'أعلى مكانة وصلتِ إليها محفوظة لدينا.';
+
+  @override
+  String get valueTierHeld => 'درجتكِ محفوظة لكِ حتى لو هدأ نشاطكِ قليلاً.';
+
+  @override
+  String get valueFrozen =>
+      'مكانتكِ موقوفة مؤقتاً للمراجعة — ولم يضِع منها شيء.';
+
+  @override
+  String get valueBenefitClaimed => 'أصبحت لكِ.';
+
+  @override
+  String get valueBenefitHigherTier => 'تُفتح مع درجة أعلى';
+
+  @override
+  String get valueBenefitTakenThisPeriod => 'أخذتِها هذه الفترة';
+
+  @override
+  String get valueBenefitSoldOut => 'نفدت هذه الفترة';
+
+  @override
+  String get valueBenefitClaim => 'خذيها';
+
+  @override
+  String get valueBenefitActive => 'مفعّلة';
+
+  @override
+  String get valueHowBuiltTooltip => 'كيف تُبنى المكانة؟';
+
+  @override
+  String get valueRulesFailed => 'تعذّر تحميل القواعد.';
+
+  @override
+  String get valueHowBuiltTitle => 'كيف تُبنى مكانتكِ';
+
+  @override
+  String get valueHowBuiltBody =>
+      'مكانتكِ لا تُشترى. الشراء جانب واحد من ستة، وله سقف — فمن تشتري فقط لا تصل إلى أعلى الدرجات.';
+
+  @override
+  String get valuePillarCapped => 'وصلتِ إلى الحد';
+
+  @override
+  String get valuePillarUnknown => 'لا نعرف بعد';
+
+  @override
+  String valuePillarNotEnough(String blurb) {
+    return '$blurb — لا يكفي ما لدينا بعد لنحكم.';
+  }
+
+  @override
+  String get valuePolicyTitle => 'السياسة';
+
+  @override
+  String get valuePolicySubtitle =>
+      'كل تعديل يصبح نسخة جديدة — تُجرَّب على الناس قبل أن تُفعَّل.';
+
+  @override
+  String get valuePolicyNewVersion => 'نسخة جديدة';
+
+  @override
+  String get valuePolicyLoadFailed => 'تعذّر تحميل السياسات.';
+
+  @override
+  String valuePolicyRowSummary(int ceiling, int days) {
+    return 'سقف الشراء $ceiling · نصف العمر $daysي';
+  }
+
+  @override
+  String get valuePolicySimulate => 'جرّبي';
+
+  @override
+  String get valuePolicyActivate => 'فعّلي';
+
+  @override
+  String get valuePolicySimulateFailed => 'تعذّرت التجربة.';
+
+  @override
+  String valuePolicyImpactDisruptive(int down, int sampled) {
+    return '$down من $sampled سينزلن درجة. هذا تغيير محسوس — تأكّدي أنكِ تقصدينه.';
+  }
+
+  @override
+  String valuePolicyImpact(int up, int down, int sampled) {
+    return '$up سيصعدن و$down سينزلن من أصل $sampled.';
+  }
+
+  @override
+  String get valuePolicyActivateTitle => 'تفعيل السياسة';
+
+  @override
+  String valuePolicyActivateBody(String impact) {
+    return 'سيُعاد احتساب كل الملفات وفق القواعد الجديدة.\n\n$impact';
+  }
+
+  @override
+  String get valuePolicyActivated => 'فُعّلت السياسة وأُعيد الاحتساب.';
+
+  @override
+  String get valuePolicyActivateFailed => 'تعذّر التفعيل.';
+
+  @override
+  String valuePolicySimSample(int sampled) {
+    return 'على عيّنة $sampled: ';
+  }
+
+  @override
+  String valuePolicySimAverage(String delta) {
+    return 'متوسط الفرق $delta';
+  }
+
+  @override
+  String get valuePillarCommerce => 'الشراء';
+
+  @override
+  String get valuePillarCraft => 'الرأي';
+
+  @override
+  String get valuePillarCommunity => 'المجتمع';
+
+  @override
+  String get valuePillarAdvocacy => 'الدعوة';
+
+  @override
+  String get valuePillarDiscovery => 'الاكتشاف';
+
+  @override
+  String get valuePillarReliability => 'الالتزام';
+
+  @override
+  String valuePolicyNewFrom(int version) {
+    return 'نسخة جديدة من v$version';
+  }
+
+  @override
+  String get valuePolicyWeights => 'أوزان الجوانب';
+
+  @override
+  String get valuePolicyWeightsHelp => 'نسبية — ليس على مجموعها أن يكون 100.';
+
+  @override
+  String get valuePolicyCeiling => 'سقف الشراء';
+
+  @override
+  String valuePolicyPoints(int points) {
+    return '$points نقطة';
+  }
+
+  @override
+  String get valuePolicyHalfLife => 'نصف العمر';
+
+  @override
+  String valuePolicyDays(int days) {
+    return '$days يوم';
+  }
+
+  @override
+  String get valuePolicyMinEvidence => 'أقل عدد من الأدلة لكل جانب';
+
+  @override
+  String get valuePolicyWhy => 'لماذا هذا التغيير؟';
+
+  @override
+  String get valuePolicyWhyHint => 'ستقرؤه بعد سنة زميلةٌ أخرى';
+
+  @override
+  String get valuePolicySaveDraft => 'احفظيها مسوّدة';
+
+  @override
+  String get valuePolicySavedDraft => 'حُفظت مسوّدة — جرّبيها قبل تفعيلها.';
+
+  @override
+  String get valuePolicySaveFailed => 'تعذّر الحفظ.';
+
+  @override
+  String valuePolicyRisky(int ceiling) {
+    return 'بهذه الأوزان، من تشتري فقط تصل إلى $ceiling — أي إلى الدرجات العليا.';
+  }
+
+  @override
+  String valuePolicySafe(int ceiling) {
+    return 'من تشتري فقط تصل إلى $ceiling من 1000 — وتبقى المكانة غير قابلة للشراء.';
+  }
+
+  @override
+  String get valueCardTitle => 'مكانتكِ في ريم';
+
+  @override
+  String valueCardCloseTo(String tier) {
+    return 'قريبة من $tier';
+  }
+
+  @override
+  String get valueCardRising => 'في صعود';
+
+  @override
+  String get valueCardSteady => 'هادئة';
+
+  @override
+  String valueAdminSpendingRung(String rung) {
+    return ' — أي درجة «$rung»';
+  }
+
+  @override
+  String valueAdminTopRung(String rung) {
+    return '، وأعلى درجة هي «$rung».';
+  }
+
+  @override
+  String get marketLookTitle => 'الإطلالة';
+
+  @override
+  String get marketLookFailed => 'تعذّر فتح الإطلالة.';
+
+  @override
+  String marketLookFromShops(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'القطع من $count محلاً — جمعتها ريم لأنها تليق ببعضها.',
+      few: 'القطع من $count محلات — جمعتها ريم لأنها تليق ببعضها.',
+      two: 'القطع من محلّين — جمعتها ريم لأنها تليق ببعضها.',
+      one: 'القطع من محل واحد — جمعتها ريم لأنها تليق ببعضها.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get marketCheaperOptions => 'هناك بدائل أوفر';
+
+  @override
+  String get marketCheaperOptionsBody =>
+      'الخانة نفسها، بقطعة أخرى تراها ريم قريبة منها.';
+
+  @override
+  String get marketLookTotal => 'مجموع الإطلالة';
+
+  @override
+  String get marketSeePieces => 'شاهدي القطع';
+
+  @override
+  String marketFromSeller(String name) {
+    return 'من $name';
+  }
+
+  @override
+  String marketSave(String amount) {
+    return 'وفّري $amount';
+  }
+
+  @override
+  String marketInsteadOf(String title, String newPrice, String oldPrice) {
+    return 'بدلاً من $title — $newPrice بدلاً من $oldPrice';
+  }
+
+  @override
+  String get marketOccasionWedding => 'عرس';
+
+  @override
+  String get marketOccasionEvening => 'سهرة';
+
+  @override
+  String get marketOccasionEid => 'عيد';
+
+  @override
+  String get marketOccasionGraduation => 'تخرّج';
+
+  @override
+  String get marketOccasionWork => 'عمل';
+
+  @override
+  String get marketOccasionDaily => 'كل يوم';
+
+  @override
+  String get marketReadyLooks => 'إطلالات جاهزة';
+
+  @override
+  String get marketAll => 'الكل';
+
+  @override
+  String get marketLooksFailed => 'تعذّر تحميل الإطلالات.';
+
+  @override
+  String get marketNoLooks => 'لا إطلالات جاهزة الآن';
+
+  @override
+  String get marketNoLooksBody =>
+      'تُركَّب الإطلالات من قطع متوفرة تليق ببعضها. جرّبي مناسبة أخرى أو عودي لاحقاً.';
+
+  @override
+  String get marketDrops => 'الإطلاقات';
+
+  @override
+  String get marketDropsFailed => 'تعذّر تحميل الإطلاقات.';
+
+  @override
+  String get marketNoDrops => 'لا إطلاق الآن';
+
+  @override
+  String get marketNoDropsBody =>
+      'حين يُطلق شيء يناسب ما ينقصكِ أو ذوقكِ، ترينه هنا قبل أن يُفتح للجميع.';
+
+  @override
+  String get marketLiveNow => 'أُطلق الآن';
+
+  @override
+  String get marketMissionsTitle => 'أشياء تستحق';
+
+  @override
+  String get marketMissionsFailed => 'تعذّر تحميل المهام.';
+
+  @override
+  String get marketNoMissions => 'لا شيء مطلوب منكِ الآن';
+
+  @override
+  String get marketNoMissionsBody =>
+      'لا تطلب منكِ ريم شيئاً إلا حين يكون مستحقاً وفي متناولكِ.';
+
+  @override
+  String get marketMissionDone => 'أنجزتِها';
+
+  @override
+  String marketMissionProgress(int done, int target) {
+    return '$done من $target';
+  }
+
+  @override
+  String get marketNotNow => 'ليس الآن';
+
+  @override
+  String get marketResaleTitle => 'سوق المستعمل';
+
+  @override
+  String get marketResaleBrowse => 'المعروض';
+
+  @override
+  String get marketResaleMine => 'عروضي';
+
+  @override
+  String get marketResaleFailed => 'تعذّر تحميل العروض.';
+
+  @override
+  String get marketNoOwnListings => 'لا عروض لديكِ';
+
+  @override
+  String get marketNoListings => 'لا شيء معروض الآن';
+
+  @override
+  String get marketNoOwnListingsBody =>
+      'حين تجد ريم قطعة لا تُلبس في خزانتكِ، تقترح عليكِ عرضها هنا.';
+
+  @override
+  String get marketNoListingsBody =>
+      'يمتلئ السوق من خزائن البنات. عودي لاحقاً.';
+
+  @override
+  String marketWornTimes(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'لُبست $count مرة',
+      few: 'لُبست $count مرات',
+      two: 'لُبست مرتين',
+      one: 'لُبست مرة',
+      zero: 'لم تُلبس',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get marketListingPublish => 'انشريها';
+
+  @override
+  String get marketListingRepublish => 'أعيدي نشرها';
+
+  @override
+  String get marketListingWithdraw => 'اسحبيها';
+
+  @override
+  String get marketListingSold => 'بِيعت';
+
+  @override
+  String get marketSellerTitle => 'السوق';
+
+  @override
+  String get marketOpportunities => 'فرص';
+
+  @override
+  String get marketOpportunitiesBody =>
+      'العرض مقابل الطلب في الأقسام التي تبيعين فيها.';
+
+  @override
+  String get marketReadFailed => 'تعذّرت قراءة السوق.';
+
+  @override
+  String get marketNoSignal =>
+      'لا إشارة قوية بما يكفي الآن. لا تتكلّم ريم إلا حين تكفي البيانات.';
+
+  @override
+  String get marketWorthADrop => 'تستحق إطلاقاً';
+
+  @override
+  String get marketWorthADropBody =>
+      'منتجات لديكِ يزيد الطلب عليها عن المعتاد.';
+
+  @override
+  String get marketProductsFailed => 'تعذّرت قراءة المنتجات.';
+
+  @override
+  String get marketNoDropCandidates =>
+      'لا منتج لديكِ يستحق إطلاقاً خاصاً الآن.';
+
+  @override
+  String get marketYourDrops => 'إطلاقاتكِ';
+
+  @override
+  String get marketYourDropsFailed => 'تعذّر تحميل إطلاقاتكِ.';
+
+  @override
+  String get marketNoOwnDrops => 'لم تُطلقي شيئاً بعد.';
+
+  @override
+  String get marketConfidenceHigh => 'مؤكّد';
+
+  @override
+  String get marketConfidenceLow => 'مبدئي';
+
+  @override
+  String marketCandidateStats(int demand, int stock) {
+    return 'الطلب $demand · المخزون $stock';
+  }
+
+  @override
+  String get marketDropAction => 'إطلاق';
+
+  @override
+  String get marketDropDraft => 'مسوّدة';
+
+  @override
+  String get marketDropScheduled => 'مجدول';
+
+  @override
+  String get marketDropLive => 'جارٍ';
+
+  @override
+  String get marketDropEnded => 'انتهى';
+
+  @override
+  String get marketDropCancelled => 'ملغى';
+
+  @override
+  String marketDropSummary(int count, String status) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count قطعة · $status',
+      few: '$count قطع · $status',
+      two: 'قطعتان · $status',
+      one: 'قطعة واحدة · $status',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get marketCareTitle => 'خزانتكِ بعد الشراء';
+
+  @override
+  String get marketCareFailed => 'تعذّرت قراءة خزانتكِ.';
+
+  @override
+  String get marketCareAllGood => 'كل شيء في مكانه';
+
+  @override
+  String get marketCareAllGoodBody =>
+      'لا قطعة تحتاج انتباهاً الآن. سنخبركِ حين تبقى قطعة دون لبس.';
+
+  @override
+  String get marketCareNeedsAttention => 'قطع تحتاج انتباهاً';
+
+  @override
+  String get marketCarePieces => 'قطعة';
+
+  @override
+  String get marketCareInRotation => 'قيد الاستعمال';
+
+  @override
+  String get marketCareCostPerWear => 'كلفة اللبسة (ل.س)';
+
+  @override
+  String marketCostPerWear(String amount) {
+    return 'كلفة اللبسة $amount';
+  }
+
+  @override
+  String marketGoesWith(String titles) {
+    return 'تليق مع: $titles';
+  }
+
+  @override
+  String marketSuggestedPrice(String amount) {
+    return 'سعر مقترح $amount';
+  }
+
+  @override
+  String get marketListForSale => 'اعرضيها للبيع';
+
+  @override
+  String get marketEditListing => 'عدّلي العرض';
+
+  @override
+  String marketListTitle(String title) {
+    return 'اعرضي «$title»';
+  }
+
+  @override
+  String get marketListDraftNote =>
+      'تُحفظ مسوّدة، ولا يراها أحد حتى تنشريها أنتِ.';
+
+  @override
+  String get marketCondition => 'حالتها';
+
+  @override
+  String get marketConditionNew => 'جديدة بالبطاقة';
+
+  @override
+  String get marketConditionExcellent => 'ممتازة';
+
+  @override
+  String get marketConditionGood => 'جيدة';
+
+  @override
+  String get marketConditionFair => 'مستعملة';
+
+  @override
+  String get marketSaveDraft => 'احفظيها مسوّدة';
+
+  @override
+  String get marketSavedDraft => 'حُفظت مسوّدة. يمكنكِ نشرها من عروضكِ.';
+
+  @override
+  String get marketReadyLooksBody =>
+      'قطع من محلات مختلفة، جُمعت لأنها تليق ببعضها.';
+
+  @override
+  String get marketReading => 'نقرأ السوق…';
+
+  @override
+  String get marketNoSignalShort => 'لا إشارة قوية بما يكفي الآن.';
+
+  @override
+  String marketOpportunityCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count فرصة في أقسامكِ، والعرض مقابل الطلب فيها.',
+      few: '$count فرص في أقسامكِ، والعرض مقابل الطلب فيها.',
+      two: 'فرصتان في أقسامكِ، والعرض مقابل الطلب فيهما.',
+      one: 'فرصة واحدة في أقسامكِ، والعرض مقابل الطلب فيها.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String marketCareSummary(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count قطعة تحتاج انتباهاً — عناية، تنسيق، أو بيع.',
+      few: '$count قطع تحتاج انتباهاً — عناية، تنسيق، أو بيع.',
+      two: 'قطعتان تحتاجان انتباهاً — عناية، تنسيق، أو بيع.',
+      one: 'قطعة واحدة تحتاج انتباهاً — عناية، تنسيق، أو بيع.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String marketLookFromShopsShort(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'من $count محلاً — إطلالة كاملة',
+      few: 'من $count محلات — إطلالة كاملة',
+      two: 'من محلّين — إطلالة كاملة',
+      one: 'من محل واحد — إطلالة كاملة',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String marketPieceCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count قطعة',
+      few: '$count قطع',
+      two: 'قطعتان',
+      one: 'قطعة واحدة',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get marketEarlyAccess => 'وصول مبكر';
+
+  @override
+  String get marketReasonOpenNeed => 'لأن ينقصكِ شيء من هذا النوع';
+
+  @override
+  String get marketReasonSearchedFor => 'لأنكِ كنتِ تبحثين عن شيء مثله';
+
+  @override
+  String get marketReasonOccasion => 'لأنه يناسب المناسبة التي تستعدّين لها';
+
+  @override
+  String get marketReasonTaste => 'لأنه قريب من ذوقكِ';
+
+  @override
+  String get marketReasonSellerCustomer => 'من محل تشترين منه';
+
+  @override
+  String get marketRotationActive => 'قيد الاستعمال';
+
+  @override
+  String get marketRotationSlowing => 'قلّ لبسها';
+
+  @override
+  String get marketRotationDormant => 'بقيت في الخزانة';
+
+  @override
+  String get marketRotationUnworn => 'لم تُلبس ولا مرة';
 }

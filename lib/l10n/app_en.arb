@@ -8887,5 +8887,1020 @@
   "roomsBlockerUnavailable": "The piece chosen for {title} sold out",
   "@roomsBlockerUnavailable": {"description": "Rooms label.", "placeholders": {"title": {"type": "String"}}},
   "roomsBlockerOther": "Something is still missing",
-  "@roomsBlockerOther": {"description": "Rooms label."}
+  "@roomsBlockerOther": {"description": "Rooms label."},
+  "valueAdminSubtitle": "Standing and what it unlocks — and the guarantee it can’t be bought.",
+  "@valueAdminSubtitle": {
+    "description": ""
+  },
+  "valueAdminRefresh": "Refresh",
+  "@valueAdminRefresh": {
+    "description": ""
+  },
+  "valueAdminSweepNow": "Gather evidence now",
+  "@valueAdminSweepNow": {
+    "description": ""
+  },
+  "valueAdminDistributionFailed": "Standing data couldn’t load.",
+  "@valueAdminDistributionFailed": {
+    "description": ""
+  },
+  "valueAdminSweepDone": "{count, plural, =0{Done — no profiles changed.} =1{Done — one profile recalculated.} other{Done — {count} profiles recalculated.}}",
+  "@valueAdminSweepDone": {
+    "description": "",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "valueAdminSweepFailed": "Gathering evidence failed.",
+  "@valueAdminSweepFailed": {
+    "description": ""
+  },
+  "valueAdminGuaranteeHolds": "Standing can’t be bought",
+  "@valueAdminGuaranteeHolds": {
+    "description": ""
+  },
+  "valueAdminGuaranteeBroken": "Warning: spending alone now reaches the top tiers",
+  "@valueAdminGuaranteeBroken": {
+    "description": ""
+  },
+  "valueAdminSpendingReach": "Someone who only buys and contributes nothing else reaches {ceiling} of 1000",
+  "@valueAdminSpendingReach": {
+    "description": "",
+    "placeholders": {
+      "ceiling": {
+        "type": "int"
+      }
+    }
+  },
+  "valueAdminGuaranteeFix": "Lower the spending ceiling or raise the top-tier thresholds — otherwise the programme becomes a spending ladder by another name.",
+  "@valueAdminGuaranteeFix": {
+    "description": ""
+  },
+  "valueAdminDistributionTitle": "Tier distribution",
+  "@valueAdminDistributionTitle": {
+    "description": ""
+  },
+  "valueAdminDistributionSubtitle": "{total} profiles — {unranked} not ranked yet",
+  "@valueAdminDistributionSubtitle": {
+    "description": "",
+    "placeholders": {
+      "total": {
+        "type": "int"
+      },
+      "unranked": {
+        "type": "int"
+      }
+    }
+  },
+  "valueAdminCostTitle": "Cost and commitment",
+  "@valueAdminCostTitle": {
+    "description": ""
+  },
+  "valueAdminCostSubtitle": "What was actually spent, and the most that could be.",
+  "@valueAdminCostSubtitle": {
+    "description": ""
+  },
+  "valueAdminCostFailed": "The cost report couldn’t load.",
+  "@valueAdminCostFailed": {
+    "description": ""
+  },
+  "valueAdminUnbounded": "{count, plural, =1{One benefit spends money with no ceiling — give it a budget.} other{{count} benefits spend money with no ceiling — give them a budget.}}",
+  "@valueAdminUnbounded": {
+    "description": "",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "valueAdminSpent": "Spent",
+  "@valueAdminSpent": {
+    "description": ""
+  },
+  "valueAdminMaxCommitment": "Maximum commitment",
+  "@valueAdminMaxCommitment": {
+    "description": ""
+  },
+  "valueAdminReasonSinglePillar": "All standing from a single source",
+  "@valueAdminReasonSinglePillar": {
+    "description": ""
+  },
+  "valueAdminReasonBurst": "Heavy contributions over a few days",
+  "@valueAdminReasonBurst": {
+    "description": ""
+  },
+  "valueAdminSuspectsTitle": "Profiles worth a look",
+  "@valueAdminSuspectsTitle": {
+    "description": ""
+  },
+  "valueAdminSuspectsSubtitle": "Not an accusation — unusual patterns, and a person decides.",
+  "@valueAdminSuspectsSubtitle": {
+    "description": ""
+  },
+  "valueAdminSuspectsFailed": "The list couldn’t load.",
+  "@valueAdminSuspectsFailed": {
+    "description": ""
+  },
+  "valueAdminSuspectsNone": "Nothing stands out right now.",
+  "@valueAdminSuspectsNone": {
+    "description": ""
+  },
+  "valueAdminConcentration": "{percent}% concentrated over {days} days",
+  "@valueAdminConcentration": {
+    "description": "",
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      },
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "valueAdminFreezeAction": "Freeze for now",
+  "@valueAdminFreezeAction": {
+    "description": ""
+  },
+  "valueAdminFreezeTitle": "Temporary freeze",
+  "@valueAdminFreezeTitle": {
+    "description": ""
+  },
+  "valueAdminFreezeBody": "Standing stops moving and benefits pause — nothing is lost. It all returns when you lift the freeze.",
+  "@valueAdminFreezeBody": {
+    "description": ""
+  },
+  "valueAdminFreezeReason": "Reason",
+  "@valueAdminFreezeReason": {
+    "description": ""
+  },
+  "valueAdminFreezeConfirm": "Freeze",
+  "@valueAdminFreezeConfirm": {
+    "description": ""
+  },
+  "valueCancel": "Cancel",
+  "@valueCancel": {
+    "description": ""
+  },
+  "valueTitle": "My standing in Reem",
+  "@valueTitle": {
+    "description": ""
+  },
+  "valueLoadFailed": "Your standing couldn’t load.",
+  "@valueLoadFailed": {
+    "description": ""
+  },
+  "valueSourcesTitle": "Where your standing comes from",
+  "@valueSourcesTitle": {
+    "description": ""
+  },
+  "valueSourcesSubtitle": "Your standing rests on six sides, not on spending alone.",
+  "@valueSourcesSubtitle": {
+    "description": ""
+  },
+  "valueCloserTo": "What brings you closer to {tier}",
+  "@valueCloserTo": {
+    "description": "",
+    "placeholders": {
+      "tier": {
+        "type": "String"
+      }
+    }
+  },
+  "valueUnlocksTitle": "What your standing unlocks",
+  "@valueUnlocksTitle": {
+    "description": ""
+  },
+  "valueRecentTitle": "Latest we counted",
+  "@valueRecentTitle": {
+    "description": ""
+  },
+  "valueJustStarting": "Just starting",
+  "@valueJustStarting": {
+    "description": ""
+  },
+  "valueNextTier": "Next tier: {tier}",
+  "@valueNextTier": {
+    "description": "",
+    "placeholders": {
+      "tier": {
+        "type": "String"
+      }
+    }
+  },
+  "valuePeakKept": "The highest standing you reached is kept on record.",
+  "@valuePeakKept": {
+    "description": ""
+  },
+  "valueTierHeld": "Your tier is held for you even if things go quiet for a while.",
+  "@valueTierHeld": {
+    "description": ""
+  },
+  "valueFrozen": "Your standing is paused for review — nothing has been lost.",
+  "@valueFrozen": {
+    "description": ""
+  },
+  "valueBenefitClaimed": "It’s yours.",
+  "@valueBenefitClaimed": {
+    "description": ""
+  },
+  "valueBenefitHigherTier": "Unlocks at a higher tier",
+  "@valueBenefitHigherTier": {
+    "description": ""
+  },
+  "valueBenefitTakenThisPeriod": "Taken this period",
+  "@valueBenefitTakenThisPeriod": {
+    "description": ""
+  },
+  "valueBenefitSoldOut": "Gone for this period",
+  "@valueBenefitSoldOut": {
+    "description": ""
+  },
+  "valueBenefitClaim": "Claim",
+  "@valueBenefitClaim": {
+    "description": ""
+  },
+  "valueBenefitActive": "Active",
+  "@valueBenefitActive": {
+    "description": ""
+  },
+  "valueHowBuiltTooltip": "How is standing built?",
+  "@valueHowBuiltTooltip": {
+    "description": ""
+  },
+  "valueRulesFailed": "The rules couldn’t load.",
+  "@valueRulesFailed": {
+    "description": ""
+  },
+  "valueHowBuiltTitle": "How your standing is built",
+  "@valueHowBuiltTitle": {
+    "description": ""
+  },
+  "valueHowBuiltBody": "Your standing can’t be bought. Buying is one side of six, and it’s capped — someone who only buys never reaches the top tiers.",
+  "@valueHowBuiltBody": {
+    "description": ""
+  },
+  "valuePillarCapped": "At the cap",
+  "@valuePillarCapped": {
+    "description": ""
+  },
+  "valuePillarUnknown": "Not known yet",
+  "@valuePillarUnknown": {
+    "description": ""
+  },
+  "valuePillarNotEnough": "{blurb} — not enough yet to judge.",
+  "@valuePillarNotEnough": {
+    "description": "",
+    "placeholders": {
+      "blurb": {
+        "type": "String"
+      }
+    }
+  },
+  "valuePolicyTitle": "Policy",
+  "@valuePolicyTitle": {
+    "description": ""
+  },
+  "valuePolicySubtitle": "Every change becomes a new version — simulated on real profiles before it goes live.",
+  "@valuePolicySubtitle": {
+    "description": ""
+  },
+  "valuePolicyNewVersion": "New version",
+  "@valuePolicyNewVersion": {
+    "description": ""
+  },
+  "valuePolicyLoadFailed": "Policies couldn’t load.",
+  "@valuePolicyLoadFailed": {
+    "description": ""
+  },
+  "valuePolicyRowSummary": "Spending cap {ceiling} · half-life {days}d",
+  "@valuePolicyRowSummary": {
+    "description": "",
+    "placeholders": {
+      "ceiling": {
+        "type": "int"
+      },
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "valuePolicySimulate": "Simulate",
+  "@valuePolicySimulate": {
+    "description": ""
+  },
+  "valuePolicyActivate": "Activate",
+  "@valuePolicyActivate": {
+    "description": ""
+  },
+  "valuePolicySimulateFailed": "The simulation failed.",
+  "@valuePolicySimulateFailed": {
+    "description": ""
+  },
+  "valuePolicyImpactDisruptive": "{down} of {sampled} will drop a tier. That’s a change people will feel — make sure you mean it.",
+  "@valuePolicyImpactDisruptive": {
+    "description": "",
+    "placeholders": {
+      "down": {
+        "type": "int"
+      },
+      "sampled": {
+        "type": "int"
+      }
+    }
+  },
+  "valuePolicyImpact": "{up} will rise and {down} will drop, out of {sampled}.",
+  "@valuePolicyImpact": {
+    "description": "",
+    "placeholders": {
+      "up": {
+        "type": "int"
+      },
+      "down": {
+        "type": "int"
+      },
+      "sampled": {
+        "type": "int"
+      }
+    }
+  },
+  "valuePolicyActivateTitle": "Activate policy",
+  "@valuePolicyActivateTitle": {
+    "description": ""
+  },
+  "valuePolicyActivateBody": "Every profile will be recalculated under the new rules.\n\n{impact}",
+  "@valuePolicyActivateBody": {
+    "description": "",
+    "placeholders": {
+      "impact": {
+        "type": "String"
+      }
+    }
+  },
+  "valuePolicyActivated": "Policy activated and everything recalculated.",
+  "@valuePolicyActivated": {
+    "description": ""
+  },
+  "valuePolicyActivateFailed": "Activation failed.",
+  "@valuePolicyActivateFailed": {
+    "description": ""
+  },
+  "valuePolicySimSample": "Sample of {sampled}: ",
+  "@valuePolicySimSample": {
+    "description": "",
+    "placeholders": {
+      "sampled": {
+        "type": "int"
+      }
+    }
+  },
+  "valuePolicySimAverage": "Average change {delta}",
+  "@valuePolicySimAverage": {
+    "description": "",
+    "placeholders": {
+      "delta": {
+        "type": "String"
+      }
+    }
+  },
+  "valuePillarCommerce": "Buying",
+  "@valuePillarCommerce": {
+    "description": ""
+  },
+  "valuePillarCraft": "Opinion",
+  "@valuePillarCraft": {
+    "description": ""
+  },
+  "valuePillarCommunity": "Community",
+  "@valuePillarCommunity": {
+    "description": ""
+  },
+  "valuePillarAdvocacy": "Invites",
+  "@valuePillarAdvocacy": {
+    "description": ""
+  },
+  "valuePillarDiscovery": "Discovery",
+  "@valuePillarDiscovery": {
+    "description": ""
+  },
+  "valuePillarReliability": "Reliability",
+  "@valuePillarReliability": {
+    "description": ""
+  },
+  "valuePolicyNewFrom": "New version from v{version}",
+  "@valuePolicyNewFrom": {
+    "description": "",
+    "placeholders": {
+      "version": {
+        "type": "int"
+      }
+    }
+  },
+  "valuePolicyWeights": "Side weights",
+  "@valuePolicyWeights": {
+    "description": ""
+  },
+  "valuePolicyWeightsHelp": "Relative — they don’t need to add up to 100.",
+  "@valuePolicyWeightsHelp": {
+    "description": ""
+  },
+  "valuePolicyCeiling": "Spending cap",
+  "@valuePolicyCeiling": {
+    "description": ""
+  },
+  "valuePolicyPoints": "{points} points",
+  "@valuePolicyPoints": {
+    "description": "",
+    "placeholders": {
+      "points": {
+        "type": "int"
+      }
+    }
+  },
+  "valuePolicyHalfLife": "Half-life",
+  "@valuePolicyHalfLife": {
+    "description": ""
+  },
+  "valuePolicyDays": "{days} days",
+  "@valuePolicyDays": {
+    "description": "",
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "valuePolicyMinEvidence": "Minimum evidence per side",
+  "@valuePolicyMinEvidence": {
+    "description": ""
+  },
+  "valuePolicyWhy": "Why this change?",
+  "@valuePolicyWhy": {
+    "description": ""
+  },
+  "valuePolicyWhyHint": "Someone else will read this a year from now",
+  "@valuePolicyWhyHint": {
+    "description": ""
+  },
+  "valuePolicySaveDraft": "Save as draft",
+  "@valuePolicySaveDraft": {
+    "description": ""
+  },
+  "valuePolicySavedDraft": "Saved as a draft — simulate it before activating.",
+  "@valuePolicySavedDraft": {
+    "description": ""
+  },
+  "valuePolicySaveFailed": "Saving failed.",
+  "@valuePolicySaveFailed": {
+    "description": ""
+  },
+  "valuePolicyRisky": "With these weights, someone who only buys reaches {ceiling} — into the top tiers.",
+  "@valuePolicyRisky": {
+    "description": "",
+    "placeholders": {
+      "ceiling": {
+        "type": "int"
+      }
+    }
+  },
+  "valuePolicySafe": "Someone who only buys reaches {ceiling} of 1000 — standing still can’t be bought.",
+  "@valuePolicySafe": {
+    "description": "",
+    "placeholders": {
+      "ceiling": {
+        "type": "int"
+      }
+    }
+  },
+  "valueCardTitle": "Your standing in Reem",
+  "@valueCardTitle": {
+    "description": ""
+  },
+  "valueCardCloseTo": "Close to {tier}",
+  "@valueCardCloseTo": {
+    "description": "",
+    "placeholders": {
+      "tier": {
+        "type": "String"
+      }
+    }
+  },
+  "valueCardRising": "Rising",
+  "@valueCardRising": {
+    "description": ""
+  },
+  "valueCardSteady": "Steady",
+  "@valueCardSteady": {
+    "description": ""
+  },
+  "valueAdminSpendingRung": " — tier “{rung}”",
+  "@valueAdminSpendingRung": {"description": "Reem Value console.", "placeholders": {"rung": {"type": "String"}}},
+  "valueAdminTopRung": "; the top tier is “{rung}”.",
+  "@valueAdminTopRung": {"description": "Reem Value console.", "placeholders": {"rung": {"type": "String"}}},
+  "marketLookTitle": "The look",
+  "@marketLookTitle": {
+    "description": ""
+  },
+  "marketLookFailed": "The look couldn’t open.",
+  "@marketLookFailed": {
+    "description": ""
+  },
+  "marketLookFromShops": "{count, plural, =1{From one shop — Reem put them together because they go well.} other{From {count} shops — Reem put them together because they go well.}}",
+  "@marketLookFromShops": {
+    "description": "",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "marketCheaperOptions": "There are cheaper options",
+  "@marketCheaperOptions": {
+    "description": ""
+  },
+  "marketCheaperOptionsBody": "Same slot, another piece Reem sees as close to it.",
+  "@marketCheaperOptionsBody": {
+    "description": ""
+  },
+  "marketLookTotal": "Look total",
+  "@marketLookTotal": {
+    "description": ""
+  },
+  "marketSeePieces": "See the pieces",
+  "@marketSeePieces": {
+    "description": ""
+  },
+  "marketFromSeller": "From {name}",
+  "@marketFromSeller": {
+    "description": "",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "marketSave": "Save {amount}",
+  "@marketSave": {
+    "description": "",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "marketInsteadOf": "Instead of {title} — {newPrice} instead of {oldPrice}",
+  "@marketInsteadOf": {
+    "description": "",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "newPrice": {
+        "type": "String"
+      },
+      "oldPrice": {
+        "type": "String"
+      }
+    }
+  },
+  "marketOccasionWedding": "Wedding",
+  "@marketOccasionWedding": {
+    "description": ""
+  },
+  "marketOccasionEvening": "Evening",
+  "@marketOccasionEvening": {
+    "description": ""
+  },
+  "marketOccasionEid": "Eid",
+  "@marketOccasionEid": {
+    "description": ""
+  },
+  "marketOccasionGraduation": "Graduation",
+  "@marketOccasionGraduation": {
+    "description": ""
+  },
+  "marketOccasionWork": "Work",
+  "@marketOccasionWork": {
+    "description": ""
+  },
+  "marketOccasionDaily": "Everyday",
+  "@marketOccasionDaily": {
+    "description": ""
+  },
+  "marketReadyLooks": "Ready looks",
+  "@marketReadyLooks": {
+    "description": ""
+  },
+  "marketAll": "All",
+  "@marketAll": {
+    "description": ""
+  },
+  "marketLooksFailed": "Looks couldn’t load.",
+  "@marketLooksFailed": {
+    "description": ""
+  },
+  "marketNoLooks": "No ready looks right now",
+  "@marketNoLooks": {
+    "description": ""
+  },
+  "marketNoLooksBody": "Looks are built from available pieces that go together. Try another occasion or come back later.",
+  "@marketNoLooksBody": {
+    "description": ""
+  },
+  "marketDrops": "Drops",
+  "@marketDrops": {
+    "description": ""
+  },
+  "marketDropsFailed": "Drops couldn’t load.",
+  "@marketDropsFailed": {
+    "description": ""
+  },
+  "marketNoDrops": "No drop right now",
+  "@marketNoDrops": {
+    "description": ""
+  },
+  "marketNoDropsBody": "When something lands that fits what you’re missing or your taste, you’ll see it here before everyone else.",
+  "@marketNoDropsBody": {
+    "description": ""
+  },
+  "marketLiveNow": "Live now",
+  "@marketLiveNow": {
+    "description": ""
+  },
+  "marketMissionsTitle": "Worth doing",
+  "@marketMissionsTitle": {
+    "description": ""
+  },
+  "marketMissionsFailed": "Missions couldn’t load.",
+  "@marketMissionsFailed": {
+    "description": ""
+  },
+  "marketNoMissions": "Nothing to do right now",
+  "@marketNoMissions": {
+    "description": ""
+  },
+  "marketNoMissionsBody": "Reem only asks for something when it’s worth it and within reach.",
+  "@marketNoMissionsBody": {
+    "description": ""
+  },
+  "marketMissionDone": "Done",
+  "@marketMissionDone": {
+    "description": ""
+  },
+  "marketMissionProgress": "{done} of {target}",
+  "@marketMissionProgress": {
+    "description": "",
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "target": {
+        "type": "int"
+      }
+    }
+  },
+  "marketNotNow": "Not now",
+  "@marketNotNow": {
+    "description": ""
+  },
+  "marketResaleTitle": "Pre-loved market",
+  "@marketResaleTitle": {
+    "description": ""
+  },
+  "marketResaleBrowse": "For sale",
+  "@marketResaleBrowse": {
+    "description": ""
+  },
+  "marketResaleMine": "My listings",
+  "@marketResaleMine": {
+    "description": ""
+  },
+  "marketResaleFailed": "Listings couldn’t load.",
+  "@marketResaleFailed": {
+    "description": ""
+  },
+  "marketNoOwnListings": "You have no listings",
+  "@marketNoOwnListings": {
+    "description": ""
+  },
+  "marketNoListings": "Nothing for sale right now",
+  "@marketNoListings": {
+    "description": ""
+  },
+  "marketNoOwnListingsBody": "When Reem finds a piece in your closet that isn’t being worn, she’ll suggest listing it here.",
+  "@marketNoOwnListingsBody": {
+    "description": ""
+  },
+  "marketNoListingsBody": "The market fills up from other women’s closets. Come back later.",
+  "@marketNoListingsBody": {
+    "description": ""
+  },
+  "marketWornTimes": "{count, plural, =0{Never worn} =1{Worn once} other{Worn {count} times}}",
+  "@marketWornTimes": {
+    "description": "",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "marketListingPublish": "Publish",
+  "@marketListingPublish": {
+    "description": ""
+  },
+  "marketListingRepublish": "Publish again",
+  "@marketListingRepublish": {
+    "description": ""
+  },
+  "marketListingWithdraw": "Withdraw",
+  "@marketListingWithdraw": {
+    "description": ""
+  },
+  "marketListingSold": "Sold",
+  "@marketListingSold": {
+    "description": ""
+  },
+  "marketSellerTitle": "Market",
+  "@marketSellerTitle": {
+    "description": ""
+  },
+  "marketOpportunities": "Opportunities",
+  "@marketOpportunities": {
+    "description": ""
+  },
+  "marketOpportunitiesBody": "Supply against demand in the categories you sell in.",
+  "@marketOpportunitiesBody": {
+    "description": ""
+  },
+  "marketReadFailed": "The market couldn’t be read.",
+  "@marketReadFailed": {
+    "description": ""
+  },
+  "marketNoSignal": "No signal strong enough right now. Reem only speaks when the data is enough.",
+  "@marketNoSignal": {
+    "description": ""
+  },
+  "marketWorthADrop": "Worth a drop",
+  "@marketWorthADrop": {
+    "description": ""
+  },
+  "marketWorthADropBody": "Your products with higher demand than usual.",
+  "@marketWorthADropBody": {
+    "description": ""
+  },
+  "marketProductsFailed": "Products couldn’t be read.",
+  "@marketProductsFailed": {
+    "description": ""
+  },
+  "marketNoDropCandidates": "None of your products needs a special drop right now.",
+  "@marketNoDropCandidates": {
+    "description": ""
+  },
+  "marketYourDrops": "Your drops",
+  "@marketYourDrops": {
+    "description": ""
+  },
+  "marketYourDropsFailed": "Your drops couldn’t load.",
+  "@marketYourDropsFailed": {
+    "description": ""
+  },
+  "marketNoOwnDrops": "You haven’t launched a drop yet.",
+  "@marketNoOwnDrops": {
+    "description": ""
+  },
+  "marketConfidenceHigh": "Confirmed",
+  "@marketConfidenceHigh": {
+    "description": ""
+  },
+  "marketConfidenceLow": "Early",
+  "@marketConfidenceLow": {
+    "description": ""
+  },
+  "marketCandidateStats": "Demand {demand} · stock {stock}",
+  "@marketCandidateStats": {
+    "description": "",
+    "placeholders": {
+      "demand": {
+        "type": "int"
+      },
+      "stock": {
+        "type": "int"
+      }
+    }
+  },
+  "marketDropAction": "Drop",
+  "@marketDropAction": {
+    "description": ""
+  },
+  "marketDropDraft": "Draft",
+  "@marketDropDraft": {
+    "description": ""
+  },
+  "marketDropScheduled": "Scheduled",
+  "@marketDropScheduled": {
+    "description": ""
+  },
+  "marketDropLive": "Live",
+  "@marketDropLive": {
+    "description": ""
+  },
+  "marketDropEnded": "Ended",
+  "@marketDropEnded": {
+    "description": ""
+  },
+  "marketDropCancelled": "Cancelled",
+  "@marketDropCancelled": {
+    "description": ""
+  },
+  "marketDropSummary": "{count, plural, =1{1 piece · {status}} other{{count} pieces · {status}}}",
+  "@marketDropSummary": {
+    "description": "",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "marketCareTitle": "Your closet after buying",
+  "@marketCareTitle": {
+    "description": ""
+  },
+  "marketCareFailed": "Your closet couldn’t be read.",
+  "@marketCareFailed": {
+    "description": ""
+  },
+  "marketCareAllGood": "Everything’s in its place",
+  "@marketCareAllGood": {
+    "description": ""
+  },
+  "marketCareAllGoodBody": "Nothing needs attention right now. We’ll tell you when a piece goes unworn.",
+  "@marketCareAllGoodBody": {
+    "description": ""
+  },
+  "marketCareNeedsAttention": "Pieces that need attention",
+  "@marketCareNeedsAttention": {
+    "description": ""
+  },
+  "marketCarePieces": "Pieces",
+  "@marketCarePieces": {
+    "description": ""
+  },
+  "marketCareInRotation": "In rotation",
+  "@marketCareInRotation": {
+    "description": ""
+  },
+  "marketCareCostPerWear": "Cost per wear (SYP)",
+  "@marketCareCostPerWear": {
+    "description": ""
+  },
+  "marketCostPerWear": "Cost per wear {amount}",
+  "@marketCostPerWear": {
+    "description": "",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "marketGoesWith": "Goes with: {titles}",
+  "@marketGoesWith": {
+    "description": "",
+    "placeholders": {
+      "titles": {
+        "type": "String"
+      }
+    }
+  },
+  "marketSuggestedPrice": "Suggested price {amount}",
+  "@marketSuggestedPrice": {
+    "description": "",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "marketListForSale": "List it for sale",
+  "@marketListForSale": {
+    "description": ""
+  },
+  "marketEditListing": "Edit listing",
+  "@marketEditListing": {
+    "description": ""
+  },
+  "marketListTitle": "List “{title}”",
+  "@marketListTitle": {
+    "description": "",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "marketListDraftNote": "Saved as a draft — no one sees it until you publish it.",
+  "@marketListDraftNote": {
+    "description": ""
+  },
+  "marketCondition": "Condition",
+  "@marketCondition": {
+    "description": ""
+  },
+  "marketConditionNew": "New with tags",
+  "@marketConditionNew": {
+    "description": ""
+  },
+  "marketConditionExcellent": "Excellent",
+  "@marketConditionExcellent": {
+    "description": ""
+  },
+  "marketConditionGood": "Good",
+  "@marketConditionGood": {
+    "description": ""
+  },
+  "marketConditionFair": "Fair",
+  "@marketConditionFair": {
+    "description": ""
+  },
+  "marketSaveDraft": "Save as draft",
+  "@marketSaveDraft": {
+    "description": ""
+  },
+  "marketSavedDraft": "Saved as a draft. You can publish it from your listings.",
+  "@marketSavedDraft": {
+    "description": ""
+  },
+  "marketReadyLooksBody": "Pieces from different shops, put together because they go well.",
+  "@marketReadyLooksBody": {
+    "description": ""
+  },
+  "marketReading": "Reading the market…",
+  "@marketReading": {
+    "description": ""
+  },
+  "marketNoSignalShort": "No signal strong enough right now.",
+  "@marketNoSignalShort": {
+    "description": ""
+  },
+  "marketOpportunityCount": "{count, plural, =1{One opportunity in your categories, with supply against demand.} other{{count} opportunities in your categories, with supply against demand.}}",
+  "@marketOpportunityCount": {
+    "description": "",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "marketCareSummary": "{count, plural, =1{One piece needs attention — care, styling or selling.} other{{count} pieces need attention — care, styling or selling.}}",
+  "@marketCareSummary": {
+    "description": "",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "marketLookFromShopsShort": "{count, plural, =1{From one shop — a complete look} other{From {count} shops — a complete look}}",
+  "@marketLookFromShopsShort": {
+    "description": "",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "marketPieceCount": "{count, plural, =1{1 piece} other{{count} pieces}}",
+  "@marketPieceCount": {
+    "description": "",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "marketEarlyAccess": "Early access",
+  "@marketEarlyAccess": {
+    "description": ""
+  },
+  "marketReasonOpenNeed": "Because you’re missing something like this",
+  "@marketReasonOpenNeed": {"description": "Market label."},
+  "marketReasonSearchedFor": "Because you were looking for something like it",
+  "@marketReasonSearchedFor": {"description": "Market label."},
+  "marketReasonOccasion": "Because it suits the occasion you’re getting ready for",
+  "@marketReasonOccasion": {"description": "Market label."},
+  "marketReasonTaste": "Because it’s close to your taste",
+  "@marketReasonTaste": {"description": "Market label."},
+  "marketReasonSellerCustomer": "From a shop you buy from",
+  "@marketReasonSellerCustomer": {"description": "Market label."},
+  "marketRotationActive": "In rotation",
+  "@marketRotationActive": {"description": "Market label."},
+  "marketRotationSlowing": "Worn less lately",
+  "@marketRotationSlowing": {"description": "Market label."},
+  "marketRotationDormant": "Sitting in the closet",
+  "@marketRotationDormant": {"description": "Market label."},
+  "marketRotationUnworn": "Never worn",
+  "@marketRotationUnworn": {"description": "Market label."}
 }

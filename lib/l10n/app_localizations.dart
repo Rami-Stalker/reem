@@ -14209,6 +14209,1242 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Something is still missing'**
   String get roomsBlockerOther;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Standing and what it unlocks — and the guarantee it can’t be bought.'**
+  String get valueAdminSubtitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh'**
+  String get valueAdminRefresh;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Gather evidence now'**
+  String get valueAdminSweepNow;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Standing data couldn’t load.'**
+  String get valueAdminDistributionFailed;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{Done — no profiles changed.} =1{Done — one profile recalculated.} other{Done — {count} profiles recalculated.}}'**
+  String valueAdminSweepDone(int count);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Gathering evidence failed.'**
+  String get valueAdminSweepFailed;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Standing can’t be bought'**
+  String get valueAdminGuaranteeHolds;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Warning: spending alone now reaches the top tiers'**
+  String get valueAdminGuaranteeBroken;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Someone who only buys and contributes nothing else reaches {ceiling} of 1000'**
+  String valueAdminSpendingReach(int ceiling);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Lower the spending ceiling or raise the top-tier thresholds — otherwise the programme becomes a spending ladder by another name.'**
+  String get valueAdminGuaranteeFix;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Tier distribution'**
+  String get valueAdminDistributionTitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{total} profiles — {unranked} not ranked yet'**
+  String valueAdminDistributionSubtitle(int total, int unranked);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Cost and commitment'**
+  String get valueAdminCostTitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'What was actually spent, and the most that could be.'**
+  String get valueAdminCostSubtitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'The cost report couldn’t load.'**
+  String get valueAdminCostFailed;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{One benefit spends money with no ceiling — give it a budget.} other{{count} benefits spend money with no ceiling — give them a budget.}}'**
+  String valueAdminUnbounded(int count);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Spent'**
+  String get valueAdminSpent;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Maximum commitment'**
+  String get valueAdminMaxCommitment;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'All standing from a single source'**
+  String get valueAdminReasonSinglePillar;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Heavy contributions over a few days'**
+  String get valueAdminReasonBurst;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Profiles worth a look'**
+  String get valueAdminSuspectsTitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Not an accusation — unusual patterns, and a person decides.'**
+  String get valueAdminSuspectsSubtitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'The list couldn’t load.'**
+  String get valueAdminSuspectsFailed;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing stands out right now.'**
+  String get valueAdminSuspectsNone;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{percent}% concentrated over {days} days'**
+  String valueAdminConcentration(int percent, int days);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Freeze for now'**
+  String get valueAdminFreezeAction;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Temporary freeze'**
+  String get valueAdminFreezeTitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Standing stops moving and benefits pause — nothing is lost. It all returns when you lift the freeze.'**
+  String get valueAdminFreezeBody;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Reason'**
+  String get valueAdminFreezeReason;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Freeze'**
+  String get valueAdminFreezeConfirm;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get valueCancel;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'My standing in Reem'**
+  String get valueTitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Your standing couldn’t load.'**
+  String get valueLoadFailed;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Where your standing comes from'**
+  String get valueSourcesTitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Your standing rests on six sides, not on spending alone.'**
+  String get valueSourcesSubtitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'What brings you closer to {tier}'**
+  String valueCloserTo(String tier);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'What your standing unlocks'**
+  String get valueUnlocksTitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Latest we counted'**
+  String get valueRecentTitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Just starting'**
+  String get valueJustStarting;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Next tier: {tier}'**
+  String valueNextTier(String tier);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'The highest standing you reached is kept on record.'**
+  String get valuePeakKept;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Your tier is held for you even if things go quiet for a while.'**
+  String get valueTierHeld;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Your standing is paused for review — nothing has been lost.'**
+  String get valueFrozen;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'It’s yours.'**
+  String get valueBenefitClaimed;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Unlocks at a higher tier'**
+  String get valueBenefitHigherTier;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Taken this period'**
+  String get valueBenefitTakenThisPeriod;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Gone for this period'**
+  String get valueBenefitSoldOut;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Claim'**
+  String get valueBenefitClaim;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Active'**
+  String get valueBenefitActive;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'How is standing built?'**
+  String get valueHowBuiltTooltip;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'The rules couldn’t load.'**
+  String get valueRulesFailed;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'How your standing is built'**
+  String get valueHowBuiltTitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Your standing can’t be bought. Buying is one side of six, and it’s capped — someone who only buys never reaches the top tiers.'**
+  String get valueHowBuiltBody;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'At the cap'**
+  String get valuePillarCapped;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Not known yet'**
+  String get valuePillarUnknown;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{blurb} — not enough yet to judge.'**
+  String valuePillarNotEnough(String blurb);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Policy'**
+  String get valuePolicyTitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Every change becomes a new version — simulated on real profiles before it goes live.'**
+  String get valuePolicySubtitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'New version'**
+  String get valuePolicyNewVersion;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Policies couldn’t load.'**
+  String get valuePolicyLoadFailed;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Spending cap {ceiling} · half-life {days}d'**
+  String valuePolicyRowSummary(int ceiling, int days);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Simulate'**
+  String get valuePolicySimulate;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Activate'**
+  String get valuePolicyActivate;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'The simulation failed.'**
+  String get valuePolicySimulateFailed;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{down} of {sampled} will drop a tier. That’s a change people will feel — make sure you mean it.'**
+  String valuePolicyImpactDisruptive(int down, int sampled);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{up} will rise and {down} will drop, out of {sampled}.'**
+  String valuePolicyImpact(int up, int down, int sampled);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Activate policy'**
+  String get valuePolicyActivateTitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Every profile will be recalculated under the new rules.\n\n{impact}'**
+  String valuePolicyActivateBody(String impact);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Policy activated and everything recalculated.'**
+  String get valuePolicyActivated;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Activation failed.'**
+  String get valuePolicyActivateFailed;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Sample of {sampled}: '**
+  String valuePolicySimSample(int sampled);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Average change {delta}'**
+  String valuePolicySimAverage(String delta);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Buying'**
+  String get valuePillarCommerce;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Opinion'**
+  String get valuePillarCraft;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Community'**
+  String get valuePillarCommunity;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Invites'**
+  String get valuePillarAdvocacy;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Discovery'**
+  String get valuePillarDiscovery;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Reliability'**
+  String get valuePillarReliability;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'New version from v{version}'**
+  String valuePolicyNewFrom(int version);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Side weights'**
+  String get valuePolicyWeights;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Relative — they don’t need to add up to 100.'**
+  String get valuePolicyWeightsHelp;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Spending cap'**
+  String get valuePolicyCeiling;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{points} points'**
+  String valuePolicyPoints(int points);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Half-life'**
+  String get valuePolicyHalfLife;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{days} days'**
+  String valuePolicyDays(int days);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Minimum evidence per side'**
+  String get valuePolicyMinEvidence;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Why this change?'**
+  String get valuePolicyWhy;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Someone else will read this a year from now'**
+  String get valuePolicyWhyHint;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Save as draft'**
+  String get valuePolicySaveDraft;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Saved as a draft — simulate it before activating.'**
+  String get valuePolicySavedDraft;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Saving failed.'**
+  String get valuePolicySaveFailed;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'With these weights, someone who only buys reaches {ceiling} — into the top tiers.'**
+  String valuePolicyRisky(int ceiling);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Someone who only buys reaches {ceiling} of 1000 — standing still can’t be bought.'**
+  String valuePolicySafe(int ceiling);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Your standing in Reem'**
+  String get valueCardTitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Close to {tier}'**
+  String valueCardCloseTo(String tier);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Rising'**
+  String get valueCardRising;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Steady'**
+  String get valueCardSteady;
+
+  /// Reem Value console.
+  ///
+  /// In en, this message translates to:
+  /// **' — tier “{rung}”'**
+  String valueAdminSpendingRung(String rung);
+
+  /// Reem Value console.
+  ///
+  /// In en, this message translates to:
+  /// **'; the top tier is “{rung}”.'**
+  String valueAdminTopRung(String rung);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'The look'**
+  String get marketLookTitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'The look couldn’t open.'**
+  String get marketLookFailed;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{From one shop — Reem put them together because they go well.} other{From {count} shops — Reem put them together because they go well.}}'**
+  String marketLookFromShops(int count);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'There are cheaper options'**
+  String get marketCheaperOptions;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Same slot, another piece Reem sees as close to it.'**
+  String get marketCheaperOptionsBody;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Look total'**
+  String get marketLookTotal;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'See the pieces'**
+  String get marketSeePieces;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'From {name}'**
+  String marketFromSeller(String name);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Save {amount}'**
+  String marketSave(String amount);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Instead of {title} — {newPrice} instead of {oldPrice}'**
+  String marketInsteadOf(String title, String newPrice, String oldPrice);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Wedding'**
+  String get marketOccasionWedding;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Evening'**
+  String get marketOccasionEvening;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Eid'**
+  String get marketOccasionEid;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Graduation'**
+  String get marketOccasionGraduation;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Work'**
+  String get marketOccasionWork;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Everyday'**
+  String get marketOccasionDaily;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Ready looks'**
+  String get marketReadyLooks;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get marketAll;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Looks couldn’t load.'**
+  String get marketLooksFailed;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'No ready looks right now'**
+  String get marketNoLooks;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Looks are built from available pieces that go together. Try another occasion or come back later.'**
+  String get marketNoLooksBody;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Drops'**
+  String get marketDrops;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Drops couldn’t load.'**
+  String get marketDropsFailed;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'No drop right now'**
+  String get marketNoDrops;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'When something lands that fits what you’re missing or your taste, you’ll see it here before everyone else.'**
+  String get marketNoDropsBody;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Live now'**
+  String get marketLiveNow;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Worth doing'**
+  String get marketMissionsTitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Missions couldn’t load.'**
+  String get marketMissionsFailed;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing to do right now'**
+  String get marketNoMissions;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Reem only asks for something when it’s worth it and within reach.'**
+  String get marketNoMissionsBody;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get marketMissionDone;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{done} of {target}'**
+  String marketMissionProgress(int done, int target);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Not now'**
+  String get marketNotNow;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Pre-loved market'**
+  String get marketResaleTitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'For sale'**
+  String get marketResaleBrowse;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'My listings'**
+  String get marketResaleMine;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Listings couldn’t load.'**
+  String get marketResaleFailed;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'You have no listings'**
+  String get marketNoOwnListings;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing for sale right now'**
+  String get marketNoListings;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'When Reem finds a piece in your closet that isn’t being worn, she’ll suggest listing it here.'**
+  String get marketNoOwnListingsBody;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'The market fills up from other women’s closets. Come back later.'**
+  String get marketNoListingsBody;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{Never worn} =1{Worn once} other{Worn {count} times}}'**
+  String marketWornTimes(int count);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Publish'**
+  String get marketListingPublish;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Publish again'**
+  String get marketListingRepublish;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Withdraw'**
+  String get marketListingWithdraw;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Sold'**
+  String get marketListingSold;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Market'**
+  String get marketSellerTitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Opportunities'**
+  String get marketOpportunities;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Supply against demand in the categories you sell in.'**
+  String get marketOpportunitiesBody;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'The market couldn’t be read.'**
+  String get marketReadFailed;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'No signal strong enough right now. Reem only speaks when the data is enough.'**
+  String get marketNoSignal;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Worth a drop'**
+  String get marketWorthADrop;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Your products with higher demand than usual.'**
+  String get marketWorthADropBody;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Products couldn’t be read.'**
+  String get marketProductsFailed;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'None of your products needs a special drop right now.'**
+  String get marketNoDropCandidates;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Your drops'**
+  String get marketYourDrops;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Your drops couldn’t load.'**
+  String get marketYourDropsFailed;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'You haven’t launched a drop yet.'**
+  String get marketNoOwnDrops;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Confirmed'**
+  String get marketConfidenceHigh;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Early'**
+  String get marketConfidenceLow;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Demand {demand} · stock {stock}'**
+  String marketCandidateStats(int demand, int stock);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Drop'**
+  String get marketDropAction;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Draft'**
+  String get marketDropDraft;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Scheduled'**
+  String get marketDropScheduled;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Live'**
+  String get marketDropLive;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Ended'**
+  String get marketDropEnded;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Cancelled'**
+  String get marketDropCancelled;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 piece · {status}} other{{count} pieces · {status}}}'**
+  String marketDropSummary(int count, String status);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Your closet after buying'**
+  String get marketCareTitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Your closet couldn’t be read.'**
+  String get marketCareFailed;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Everything’s in its place'**
+  String get marketCareAllGood;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing needs attention right now. We’ll tell you when a piece goes unworn.'**
+  String get marketCareAllGoodBody;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Pieces that need attention'**
+  String get marketCareNeedsAttention;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Pieces'**
+  String get marketCarePieces;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'In rotation'**
+  String get marketCareInRotation;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Cost per wear (SYP)'**
+  String get marketCareCostPerWear;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Cost per wear {amount}'**
+  String marketCostPerWear(String amount);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Goes with: {titles}'**
+  String marketGoesWith(String titles);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Suggested price {amount}'**
+  String marketSuggestedPrice(String amount);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'List it for sale'**
+  String get marketListForSale;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Edit listing'**
+  String get marketEditListing;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'List “{title}”'**
+  String marketListTitle(String title);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Saved as a draft — no one sees it until you publish it.'**
+  String get marketListDraftNote;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Condition'**
+  String get marketCondition;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'New with tags'**
+  String get marketConditionNew;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Excellent'**
+  String get marketConditionExcellent;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Good'**
+  String get marketConditionGood;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Fair'**
+  String get marketConditionFair;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Save as draft'**
+  String get marketSaveDraft;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Saved as a draft. You can publish it from your listings.'**
+  String get marketSavedDraft;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Pieces from different shops, put together because they go well.'**
+  String get marketReadyLooksBody;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Reading the market…'**
+  String get marketReading;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'No signal strong enough right now.'**
+  String get marketNoSignalShort;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{One opportunity in your categories, with supply against demand.} other{{count} opportunities in your categories, with supply against demand.}}'**
+  String marketOpportunityCount(int count);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{One piece needs attention — care, styling or selling.} other{{count} pieces need attention — care, styling or selling.}}'**
+  String marketCareSummary(int count);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{From one shop — a complete look} other{From {count} shops — a complete look}}'**
+  String marketLookFromShopsShort(int count);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 piece} other{{count} pieces}}'**
+  String marketPieceCount(int count);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Early access'**
+  String get marketEarlyAccess;
+
+  /// Market label.
+  ///
+  /// In en, this message translates to:
+  /// **'Because you’re missing something like this'**
+  String get marketReasonOpenNeed;
+
+  /// Market label.
+  ///
+  /// In en, this message translates to:
+  /// **'Because you were looking for something like it'**
+  String get marketReasonSearchedFor;
+
+  /// Market label.
+  ///
+  /// In en, this message translates to:
+  /// **'Because it suits the occasion you’re getting ready for'**
+  String get marketReasonOccasion;
+
+  /// Market label.
+  ///
+  /// In en, this message translates to:
+  /// **'Because it’s close to your taste'**
+  String get marketReasonTaste;
+
+  /// Market label.
+  ///
+  /// In en, this message translates to:
+  /// **'From a shop you buy from'**
+  String get marketReasonSellerCustomer;
+
+  /// Market label.
+  ///
+  /// In en, this message translates to:
+  /// **'In rotation'**
+  String get marketRotationActive;
+
+  /// Market label.
+  ///
+  /// In en, this message translates to:
+  /// **'Worn less lately'**
+  String get marketRotationSlowing;
+
+  /// Market label.
+  ///
+  /// In en, this message translates to:
+  /// **'Sitting in the closet'**
+  String get marketRotationDormant;
+
+  /// Market label.
+  ///
+  /// In en, this message translates to:
+  /// **'Never worn'**
+  String get marketRotationUnworn;
 }
 
 class _AppLocalizationsDelegate

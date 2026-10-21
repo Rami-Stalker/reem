@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/features/market/domain/entities/market.dart';
 import 'package:reem/features/market/presentation/providers/market_providers.dart';
 
@@ -26,23 +27,22 @@ class MissionsScreen extends ConsumerWidget {
 
     return Scaffold(
       backgroundColor: colors.background,
-      appBar: const ReemAppBar(title: 'أشياء تستاهل'),
+      appBar: ReemAppBar(title: context.l10n.marketMissionsTitle),
       body: RefreshIndicator(
         onRefresh: () async => ref.invalidate(missionsProvider),
         child: async.when(
           loading: () => const Center(child: DsLoadingIndicator()),
           error: (_, _) => DsErrorState(
-            message: 'ما قدرنا نجيب المهام.',
+            message: context.l10n.marketMissionsFailed,
             onRetry: () => ref.invalidate(missionsProvider),
           ),
           data: (missions) => missions.isEmpty
-              ? const DsEmptyState(
+              ? DsEmptyState(
                   icon: Icons.done_all_rounded,
-                  title: 'ما في شي مطلوب منك هلق',
+                  title: context.l10n.marketNoMissions,
                   // Explains the rule rather than apologising: nothing is
                   // offered that she cannot actually finish.
-                  message:
-                      'ريم ما بتطلب منك شي إلا لما يكون في شي فعلاً يستاهل وبتقدري تخلّصيه.',
+                  message: context.l10n.marketNoMissionsBody,
                 )
               : ListView.separated(
                   padding: const EdgeInsets.all(DsSpacing.lg),
@@ -106,11 +106,14 @@ class _MissionCard extends ConsumerWidget {
               Expanded(
                 child: Text(
                   done
-                      ? 'خلصانة'
+                      ? context.l10n.marketMissionDone
                       // The counts behind the bar, so it can be checked rather
                       // than believed — and `done` is what she has done since
                       // being asked, not her lifetime total.
-                      : '${mission.done} من ${mission.target}',
+                      : context.l10n.marketMissionProgress(
+                          mission.done,
+                          mission.target,
+                        ),
                   style: context.dsText.micro.tint(colors.onSurfaceVariant),
                 ),
               ),
@@ -118,7 +121,7 @@ class _MissionCard extends ConsumerWidget {
                 TextButton(
                   onPressed: () => _decline(context, ref, mission),
                   child: Text(
-                    'مو هلق',
+                    context.l10n.marketNotNow,
                     style: context.dsText.micro.tint(colors.onSurfaceVariant),
                   ),
                 ),

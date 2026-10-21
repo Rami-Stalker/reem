@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/media/authorized_media_image.dart';
 import 'package:reem/core/shared/value_objects/money.dart';
 import 'package:reem/features/market/domain/entities/market.dart';
+import 'package:reem/l10n/app_localizations.dart';
 
 /// The small parts the market screens share.
 ///
@@ -29,6 +31,52 @@ String sypNumber(double? value) => value == null
         raw: value.toString(),
         currency: Currency.syp,
       ).format(includeSymbol: false);
+
+/// Her reason for an early invitation, in her language.
+///
+/// Rendered from the code rather than sent as prose because the codes are the
+/// contract and a sentence is a presentation choice — the same code reads
+/// differently on a card and in a notification.
+String dropReasonLabel(AppLocalizations l10n, List<String> reasons) =>
+    switch (reasons.isEmpty ? '' : reasons.first) {
+      'OPEN_NEED' => l10n.marketReasonOpenNeed,
+      'SEARCHED_FOR' => l10n.marketReasonSearchedFor,
+      'OCCASION_MATCH' => l10n.marketReasonOccasion,
+      'TASTE_MATCH' => l10n.marketReasonTaste,
+      'SELLER_CUSTOMER' => l10n.marketReasonSellerCustomer,
+      _ => '',
+    };
+
+String rotationLabel(AppLocalizations l10n, Rotation rotation) =>
+    switch (rotation) {
+      Rotation.active => l10n.marketRotationActive,
+      Rotation.slowing => l10n.marketRotationSlowing,
+      Rotation.dormant => l10n.marketRotationDormant,
+      Rotation.unworn => l10n.marketRotationUnworn,
+    };
+
+/// Resale condition codes, best first.
+const resaleConditions = ['NEW_WITH_TAGS', 'EXCELLENT', 'GOOD', 'FAIR'];
+
+String resaleConditionLabel(AppLocalizations l10n, String code) =>
+    switch (code) {
+      'NEW_WITH_TAGS' => l10n.marketConditionNew,
+      'EXCELLENT' => l10n.marketConditionExcellent,
+      'GOOD' => l10n.marketConditionGood,
+      'FAIR' => l10n.marketConditionFair,
+      _ => code,
+    };
+
+String marketOccasionLabel(AppLocalizations l10n, String code) =>
+    switch (code) {
+      'wedding' => l10n.marketOccasionWedding,
+      'evening' => l10n.marketOccasionEvening,
+      'eid' => l10n.marketOccasionEid,
+      'graduation' => l10n.marketOccasionGraduation,
+      'work' => l10n.marketOccasionWork,
+      'daily' => l10n.marketOccasionDaily,
+      _ => code,
+    };
 
 /// The one place a disposition becomes a colour.
 ///
@@ -200,7 +248,9 @@ class BundleCard extends StatelessWidget {
                     ),
                     if (bundle.crossesShops)
                       Text(
-                        'من ${bundle.sellerCount} محلات — إطلالة كاملة',
+                        context.l10n.marketLookFromShopsShort(
+                          bundle.sellerCount,
+                        ),
                         style: context.dsText.micro.tint(
                           colors.onSurfaceVariant,
                         ),
@@ -209,7 +259,7 @@ class BundleCard extends StatelessWidget {
                 ),
               ),
               Text(
-                '${bundle.items.length} قطع',
+                context.l10n.marketPieceCount(bundle.items.length),
                 style: context.dsText.micro.tint(colors.onSurfaceVariant),
               ),
             ],
@@ -235,7 +285,10 @@ class DropCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.dsColors;
-    final reason = drop.invitation?.headline ?? '';
+    final reason = switch (drop.invitation) {
+      final invitation? => dropReasonLabel(context.l10n, invitation.reasons),
+      null => '',
+    };
 
     return DsGlassCard(
       onTap: onTap,
@@ -255,7 +308,10 @@ class DropCard extends StatelessWidget {
               ),
               if (drop.earlyAccessOnly) ...[
                 DsGaps.hXs,
-                DsBadge(label: 'وصول مبكر', tone: DsBadgeTone.primary),
+                DsBadge(
+                  label: context.l10n.marketEarlyAccess,
+                  tone: DsBadgeTone.primary,
+                ),
               ],
             ],
           ),

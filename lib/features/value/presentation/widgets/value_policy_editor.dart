@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/features/value/domain/entities/value_admin.dart';
 import 'package:reem/features/value/presentation/providers/value_admin_providers.dart';
 
@@ -45,9 +46,12 @@ class ValuePolicySection extends ConsumerWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('السياسة', style: context.dsText.sectionTitle),
                     Text(
-                      'كل تعديل بيصير نسخة جديدة — بتتجرّب على الناس قبل ما تنفّذ.',
+                      context.l10n.valuePolicyTitle,
+                      style: context.dsText.sectionTitle,
+                    ),
+                    Text(
+                      context.l10n.valuePolicySubtitle,
                       style: context.dsText.sectionSubtitle,
                     ),
                   ],
@@ -56,7 +60,7 @@ class ValuePolicySection extends ConsumerWidget {
               policiesAsync.maybeWhen(
                 data: (policies) => FilledButton.icon(
                   icon: const Icon(Icons.tune_rounded, size: 18),
-                  label: const Text('نسخة جديدة'),
+                  label: Text(context.l10n.valuePolicyNewVersion),
                   onPressed: policies.isEmpty
                       ? null
                       : () => _openEditor(
@@ -78,7 +82,7 @@ class ValuePolicySection extends ConsumerWidget {
               padding: EdgeInsets.all(DsSpacing.lg),
               child: Center(child: DsLoadingIndicator()),
             ),
-            error: (_, _) => const Text('ما قدرنا نجيب السياسات.'),
+            error: (_, _) => Text(context.l10n.valuePolicyLoadFailed),
             data: (policies) => Column(
               children: [
                 for (final policy in policies.take(8))
@@ -146,8 +150,10 @@ class _PolicyRow extends ConsumerWidget {
               SizedBox(
                 width: 150,
                 child: Text(
-                  'سقف الشرا ${policy.commerceCeilingPoints} · '
-                  'نصف العمر ${policy.halfLifeDays}ي',
+                  context.l10n.valuePolicyRowSummary(
+                    policy.commerceCeilingPoints,
+                    policy.halfLifeDays,
+                  ),
                   textAlign: TextAlign.end,
                   style: context.dsText.micro.tint(console.muted),
                 ),
@@ -156,7 +162,7 @@ class _PolicyRow extends ConsumerWidget {
                 const SizedBox(width: DsSpacing.sm),
                 TextButton(
                   onPressed: () => _simulate(context, ref),
-                  child: const Text('جرّبي'),
+                  child: Text(context.l10n.valuePolicySimulate),
                 ),
                 // Disabled until this exact version has been simulated. The
                 // sequence is the safeguard, so the button enforces it rather
@@ -165,7 +171,7 @@ class _PolicyRow extends ConsumerWidget {
                   onPressed: simulation == null
                       ? null
                       : () => _activate(context, ref, simulation),
-                  child: const Text('فعّلي'),
+                  child: Text(context.l10n.valuePolicyActivate),
                 ),
               ],
             ],
@@ -178,12 +184,13 @@ class _PolicyRow extends ConsumerWidget {
 
   Future<void> _simulate(BuildContext context, WidgetRef ref) async {
     final messenger = ScaffoldMessenger.of(context);
+    final l10n = context.l10n;
     try {
       await ref.read(valueAdminActionsProvider).simulate(policy.id);
     } catch (_) {
       DsSnackbar.on(
         messenger,
-        message: 'ما نجحت التجربة.',
+        message: l10n.valuePolicySimulateFailed,
         type: DsSnackbarType.error,
       );
     }
@@ -200,17 +207,22 @@ class _PolicyRow extends ConsumerWidget {
     // say it, which is what a screen reader — and a colour-blind operator —
     // actually receives.
     final impact = simulation.isDisruptive
-        ? '${simulation.movedDown} من ${simulation.sampled} رح ينزلوا درجة. '
-              'هيدا تغيير محسوس — تأكّدي إنك ناوية ياه.'
-        : '${simulation.movedUp} رح يطلعوا و${simulation.movedDown} رح ينزلوا '
-              'من أصل ${simulation.sampled}.';
+        ? context.l10n.valuePolicyImpactDisruptive(
+            simulation.movedDown,
+            simulation.sampled,
+          )
+        : context.l10n.valuePolicyImpact(
+            simulation.movedUp,
+            simulation.movedDown,
+            simulation.sampled,
+          );
 
     final confirmed = await DsDialog.confirm(
       context,
-      title: 'تفعيل السياسة',
-      message: 'رح تنعاد حسبة كل الملفات على القواعد الجديدة.\n\n$impact',
-      confirmLabel: 'فعّلي',
-      cancelLabel: 'إلغاء',
+      title: context.l10n.valuePolicyActivateTitle,
+      message: context.l10n.valuePolicyActivateBody(impact),
+      confirmLabel: context.l10n.valuePolicyActivate,
+      cancelLabel: context.l10n.valueCancel,
       destructive: simulation.isDisruptive,
     );
 
@@ -219,17 +231,18 @@ class _PolicyRow extends ConsumerWidget {
     }
 
     final messenger = ScaffoldMessenger.of(context);
+    final l10n = context.l10n;
     try {
       await ref.read(valueAdminActionsProvider).activate(policy.id);
       DsSnackbar.on(
         messenger,
-        message: 'تم التفعيل، وانعادت الحسبة.',
+        message: l10n.valuePolicyActivated,
         type: DsSnackbarType.success,
       );
     } catch (_) {
       DsSnackbar.on(
         messenger,
-        message: 'ما نجح التفعيل.',
+        message: l10n.valuePolicyActivateFailed,
         type: DsSnackbarType.error,
       );
     }
@@ -259,10 +272,10 @@ class _SimulationSummary extends StatelessWidget {
           const SizedBox(width: DsSpacing.xs),
           Expanded(
             child: Text(
-              'على ${simulation.sampled} ملف: '
+              '${context.l10n.valuePolicySimSample(simulation.sampled)}'
               '↑${simulation.movedUp} · ↓${simulation.movedDown} · '
               '=${simulation.unchanged} · '
-              'متوسط الفرق ${simulation.averageScoreDelta.toStringAsFixed(1)}',
+              '${context.l10n.valuePolicySimAverage(simulation.averageScoreDelta.toStringAsFixed(1))}',
               style: context.dsText.caption,
             ),
           ),
@@ -292,16 +305,26 @@ class _PolicyEditorDialog extends ConsumerStatefulWidget {
 
 class _PolicyEditorDialogState extends ConsumerState<_PolicyEditorDialog> {
   static const _pillars = [
-    ('COMMERCE', 'شراء'),
-    ('CRAFT', 'رأي'),
-    ('COMMUNITY', 'مجتمع'),
-    ('ADVOCACY', 'دعوة'),
-    ('DISCOVERY', 'اكتشاف'),
-    ('RELIABILITY', 'التزام'),
+    'COMMERCE',
+    'CRAFT',
+    'COMMUNITY',
+    'ADVOCACY',
+    'DISCOVERY',
+    'RELIABILITY',
   ];
 
+  static String _pillarLabel(BuildContext context, String key) => switch (key) {
+    'COMMERCE' => context.l10n.valuePillarCommerce,
+    'CRAFT' => context.l10n.valuePillarCraft,
+    'COMMUNITY' => context.l10n.valuePillarCommunity,
+    'ADVOCACY' => context.l10n.valuePillarAdvocacy,
+    'DISCOVERY' => context.l10n.valuePillarDiscovery,
+    'RELIABILITY' => context.l10n.valuePillarReliability,
+    _ => key,
+  };
+
   late final Map<String, int> _weights = {
-    for (final (key, _) in _pillars)
+    for (final key in _pillars)
       key: (widget.base.pillarWeights[key] as num?)?.toInt() ?? 0,
   };
 
@@ -342,7 +365,7 @@ class _PolicyEditorDialogState extends ConsumerState<_PolicyEditorDialog> {
     final console = context.console;
 
     return AlertDialog(
-      title: Text('نسخة جديدة من v${widget.base.version}'),
+      title: Text(context.l10n.valuePolicyNewFrom(widget.base.version)),
       content: SizedBox(
         width: 520,
         child: SingleChildScrollView(
@@ -350,15 +373,18 @@ class _PolicyEditorDialogState extends ConsumerState<_PolicyEditorDialog> {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text('أوزان الجهات', style: context.dsText.labelStrong),
               Text(
-                'نسبية — المجموع ما لازم يكون ١٠٠.',
+                context.l10n.valuePolicyWeights,
+                style: context.dsText.labelStrong,
+              ),
+              Text(
+                context.l10n.valuePolicyWeightsHelp,
                 style: context.dsText.micro.tint(console.muted),
               ),
               const SizedBox(height: DsSpacing.xs),
-              for (final (key, label) in _pillars)
+              for (final key in _pillars)
                 _SliderRow(
-                  label: label,
+                  label: _pillarLabel(context, key),
                   value: _weights[key]!.toDouble(),
                   min: 0,
                   max: 50,
@@ -370,25 +396,27 @@ class _PolicyEditorDialogState extends ConsumerState<_PolicyEditorDialog> {
               const Divider(height: DsSpacing.lg),
 
               _SliderRow(
-                label: 'سقف الشرا',
+                label: context.l10n.valuePolicyCeiling,
                 value: _ceilingBps.toDouble(),
                 min: 0,
                 max: 6000,
                 divisions: 60,
-                suffix: '${(_ceilingBps / 10).round()} نقطة',
+                suffix: context.l10n.valuePolicyPoints(
+                  (_ceilingBps / 10).round(),
+                ),
                 onChanged: (v) => setState(() => _ceilingBps = v.round()),
               ),
               _SliderRow(
-                label: 'نصف العمر',
+                label: context.l10n.valuePolicyHalfLife,
                 value: _halfLife.toDouble(),
                 min: 30,
                 max: 1460,
                 divisions: 143,
-                suffix: '$_halfLife يوم',
+                suffix: context.l10n.valuePolicyDays(_halfLife),
                 onChanged: (v) => setState(() => _halfLife = v.round()),
               ),
               _SliderRow(
-                label: 'أقل عدد أدلة للجهة',
+                label: context.l10n.valuePolicyMinEvidence,
                 value: _minEvidence.toDouble(),
                 min: 1,
                 max: 20,
@@ -403,8 +431,8 @@ class _PolicyEditorDialogState extends ConsumerState<_PolicyEditorDialog> {
               const SizedBox(height: DsSpacing.md),
               DsInputField(
                 controller: _note,
-                label: 'ليش هالتغيير؟',
-                hint: 'بتنقرأ بعد سنة من حدا تاني',
+                label: context.l10n.valuePolicyWhy,
+                hint: context.l10n.valuePolicyWhyHint,
               ),
             ],
           ),
@@ -413,11 +441,11 @@ class _PolicyEditorDialogState extends ConsumerState<_PolicyEditorDialog> {
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
-          child: const Text('إلغاء'),
+          child: Text(context.l10n.valueCancel),
         ),
         FilledButton(
           onPressed: _saving || _totalWeight == 0 ? null : _save,
-          child: Text(_saving ? '...' : 'احفظي كمسوّدة'),
+          child: Text(_saving ? '...' : context.l10n.valuePolicySaveDraft),
         ),
       ],
     );
@@ -426,6 +454,7 @@ class _PolicyEditorDialogState extends ConsumerState<_PolicyEditorDialog> {
   Future<void> _save() async {
     setState(() => _saving = true);
     final messenger = ScaffoldMessenger.of(context);
+    final l10n = context.l10n;
     final navigator = Navigator.of(context);
 
     try {
@@ -443,14 +472,14 @@ class _PolicyEditorDialogState extends ConsumerState<_PolicyEditorDialog> {
       navigator.pop();
       DsSnackbar.on(
         messenger,
-        message: 'انحفظت كمسوّدة — جرّبيها قبل ما تفعّليها.',
+        message: l10n.valuePolicySavedDraft,
         type: DsSnackbarType.success,
       );
     } catch (_) {
       if (mounted) setState(() => _saving = false);
       DsSnackbar.on(
         messenger,
-        message: 'ما نجح الحفظ.',
+        message: l10n.valuePolicySaveFailed,
         type: DsSnackbarType.error,
       );
     }
@@ -488,8 +517,8 @@ class _GuaranteePreview extends StatelessWidget {
           Expanded(
             child: Text(
               risky
-                  ? 'بهالأوزان، يلي بس بتشتري بتوصل $ceiling — عم توصل للدرجات العليا.'
-                  : 'يلي بس بتشتري بتوصل $ceiling من ١٠٠٠ — المكانة بتضل ما بتنشرى.',
+                  ? context.l10n.valuePolicyRisky(ceiling)
+                  : context.l10n.valuePolicySafe(ceiling),
               style: context.dsText.caption.tint(accent),
             ),
           ),

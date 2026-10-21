@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/features/market/presentation/providers/market_providers.dart';
 
@@ -42,16 +43,16 @@ class SellerMarketEntryCard extends ConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'السوق',
+                      context.l10n.marketSellerTitle,
                       style: context.dsText.cardTitle.tint(palette.ink),
                     ),
                     DsGaps.vXxxs,
                     Text(
                       opportunities.isLoading
-                          ? 'عم نقرا السوق…'
+                          ? context.l10n.marketReading
                           : count == 0
-                          ? 'ما في إشارة قوية كفاية هلق.'
-                          : '$count فرص بأقسامك، والعرض مقابل الطلب فيها.',
+                          ? context.l10n.marketNoSignalShort
+                          : context.l10n.marketOpportunityCount(count),
                       style: context.dsText.caption.tint(palette.muted),
                     ),
                   ],
@@ -101,12 +102,12 @@ class WardrobeCareEntryCard extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'خزانتك بعد الشرا',
+                    context.l10n.marketCareTitle,
                     style: context.dsText.cardTitle.tint(colors.onSurface),
                   ),
                   DsGaps.vXxxs,
                   Text(
-                    '${summary.needsAttention} قطع بدها انتباه — عناية، تنسيق، أو تنباع.',
+                    context.l10n.marketCareSummary(summary.needsAttention),
                     style: context.dsText.caption.tint(
                       colors.onSurfaceVariant,
                     ),

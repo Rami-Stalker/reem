@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/features/value/domain/entities/value_standing.dart';
 import 'package:reem/features/value/presentation/providers/value_providers.dart';
 import 'package:reem/features/value/presentation/widgets/value_pillars.dart';
@@ -22,11 +23,11 @@ class ValueScreen extends ConsumerWidget {
 
     return Scaffold(
       backgroundColor: colors.background,
-      appBar: const ReemAppBar(title: 'مكانتي بريم'),
+      appBar: ReemAppBar(title: context.l10n.valueTitle),
       body: standingAsync.when(
         loading: () => const Center(child: DsLoadingIndicator()),
         error: (_, _) => DsErrorState(
-          message: 'ما قدرنا نجيب مكانتك.',
+          message: context.l10n.valueLoadFailed,
           onRetry: () => ref.invalidate(valueStandingProvider),
         ),
         data: (standing) => RefreshIndicator(
@@ -38,26 +39,25 @@ class ValueScreen extends ConsumerWidget {
               const SizedBox(height: DsSpacing.lg),
 
               _Section(
-                title: 'من وين إجت مكانتك',
-                subtitle:
-                    'مكانتك مبنية على ست جهات، مو على المصروف لحاله.',
+                title: context.l10n.valueSourcesTitle,
+                subtitle: context.l10n.valueSourcesSubtitle,
                 child: ValuePillarBars(pillars: standing.pillars),
               ),
 
               if (standing.advice.isNotEmpty && standing.nextTier != null)
                 _Section(
-                  title: 'شو بيقرّبك من ${standing.nextTier!.name}',
+                  title: context.l10n.valueCloserTo(standing.nextTier!.name),
                   child: ValueAdviceList(advice: standing.advice),
                 ),
 
               _Section(
-                title: 'شو بتفتحلك مكانتك',
+                title: context.l10n.valueUnlocksTitle,
                 child: _Benefits(standing: standing),
               ),
 
               if (standing.recent.isNotEmpty)
                 _Section(
-                  title: 'آخر الأشياء يلي حسبناها',
+                  title: context.l10n.valueRecentTitle,
                   child: _RecentEvents(events: standing.recent),
                 ),
 
@@ -86,7 +86,10 @@ class _StandingHero extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(tier?.name ?? 'لسا بالبداية', style: context.dsText.hero),
+          Text(
+            tier?.name ?? context.l10n.valueJustStarting,
+            style: context.dsText.hero,
+          ),
           if (tier?.blurb != null) ...[
             DsGaps.vXxxs,
             Text(tier!.blurb!, style: context.dsText.bodyMuted),
@@ -105,7 +108,7 @@ class _StandingHero extends StatelessWidget {
             ),
             const SizedBox(height: DsSpacing.xs),
             Text(
-              'الدرجة الجاي: ${standing.nextTier!.name}',
+              context.l10n.valueNextTier(standing.nextTier!.name),
               style: context.dsText.caption,
             ),
           ],
@@ -116,7 +119,7 @@ class _StandingHero extends StatelessWidget {
             // that is the moment it means something: a quiet season is not a
             // record wiped.
             Text(
-              'أعلى مكانة وصلتيها لهلق محفوظة عنا.',
+              context.l10n.valuePeakKept,
               style: context.dsText.caption.tint(colors.onSurfaceVariant),
             ),
           ],
@@ -126,7 +129,7 @@ class _StandingHero extends StatelessWidget {
             const SizedBox(height: DsSpacing.sm),
             // Told, rather than silently protected and later surprised.
             Text(
-              'درجتك محفوظة إلك حتى لو هدأ نشاطك شوي.',
+              context.l10n.valueTierHeld,
               style: context.dsText.caption.tint(colors.success),
             ),
           ],
@@ -134,7 +137,7 @@ class _StandingHero extends StatelessWidget {
           if (standing.frozen) ...[
             const SizedBox(height: DsSpacing.sm),
             Text(
-              'مكانتك موقوفة مؤقتًا للمراجعة — ما ضاع منها شي.',
+              context.l10n.valueFrozen,
               style: context.dsText.caption.tint(colors.warning),
             ),
           ],
@@ -172,9 +175,13 @@ class _Benefits extends ConsumerWidget {
     final result = await ref.read(valueActionsProvider).claim(benefit.key);
     if (!context.mounted) return;
     result.when(
-      success: (_) => DsSnackbar.show(context, message: 'صارت إلك.'),
-      error: (failure) =>
-          DsSnackbar.show(context, message: failure.message, type: DsSnackbarType.error),
+      success: (_) =>
+          DsSnackbar.show(context, message: context.l10n.valueBenefitClaimed),
+      error: (failure) => DsSnackbar.show(
+        context,
+        message: failure.message,
+        type: DsSnackbarType.error,
+      ),
     );
   }
 }
@@ -218,24 +225,30 @@ class _BenefitTile extends StatelessWidget {
                   if (!benefit.unlocked && benefit.requiresTier != null) ...[
                     DsGaps.vXxs,
                     Text(
-                      'بتنفتح مع درجة أعلى',
+                      context.l10n.valueBenefitHigherTier,
                       style: context.dsText.micro.tint(colors.primary),
                     ),
                   ],
                   if (benefit.blockedBy == 'quota') ...[
                     DsGaps.vXxs,
-                    Text('أخدتيها هالفترة', style: context.dsText.micro),
+                    Text(
+                      context.l10n.valueBenefitTakenThisPeriod,
+                      style: context.dsText.micro,
+                    ),
                   ],
                   if (benefit.blockedBy == 'budget') ...[
                     DsGaps.vXxs,
-                    Text('خلصت هالفترة', style: context.dsText.micro),
+                    Text(
+                      context.l10n.valueBenefitSoldOut,
+                      style: context.dsText.micro,
+                    ),
                   ],
                 ],
               ),
             ),
             if (benefit.isClaimable && onClaim != null)
               DsButton(
-                label: 'خديها',
+                label: context.l10n.valueBenefitClaim,
                 size: DsButtonSize.sm,
                 isExpanded: false,
                 onPressed: onClaim,
@@ -244,7 +257,10 @@ class _BenefitTile extends StatelessWidget {
               // Standing benefits are not claimed. Saying "مفعّلة" rather than
               // offering a button is the difference between a status and a
               // voucher.
-              Text('مفعّلة', style: context.dsText.micro.tint(colors.success)),
+              Text(
+                context.l10n.valueBenefitActive,
+                style: context.dsText.micro.tint(colors.success),
+              ),
           ],
         ),
       ),
@@ -320,7 +336,7 @@ class _RulesLink extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return TextButton.icon(
       icon: const Icon(Icons.help_outline_rounded, size: 18),
-      label: const Text('كيف بتنبنى المكانة؟'),
+      label: Text(context.l10n.valueHowBuiltTooltip),
       onPressed: () => showModalBottomSheet<void>(
         context: context,
         showDragHandle: true,
@@ -343,16 +359,18 @@ class _RulesSheet extends ConsumerWidget {
       initialChildSize: 0.7,
       builder: (context, controller) => rulesAsync.when(
         loading: () => const Center(child: DsLoadingIndicator()),
-        error: (_, _) => const DsErrorState(message: 'ما قدرنا نجيب القواعد.'),
+        error: (_, _) => DsErrorState(message: context.l10n.valueRulesFailed),
         data: (rules) => ListView(
           controller: controller,
           padding: const EdgeInsets.all(DsSpacing.lg),
           children: [
-            Text('كيف بتنبنى مكانتك', style: context.dsText.sectionTitle),
+            Text(
+              context.l10n.valueHowBuiltTitle,
+              style: context.dsText.sectionTitle,
+            ),
             const SizedBox(height: DsSpacing.xs),
             Text(
-              'مكانتك ما بتنشرى. الشرا جهة وحدة من ست، وإلها سقف — '
-              'يعني حدا بس بيشتري ما بيوصل لأعلى الدرجات.',
+              context.l10n.valueHowBuiltBody,
               style: context.dsText.bodyMuted,
             ),
             const SizedBox(height: DsSpacing.md),

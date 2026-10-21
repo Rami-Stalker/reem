@@ -7952,4 +7952,790 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get roomsBlockerOther => 'Something is still missing';
+
+  @override
+  String get valueAdminSubtitle =>
+      'Standing and what it unlocks — and the guarantee it can’t be bought.';
+
+  @override
+  String get valueAdminRefresh => 'Refresh';
+
+  @override
+  String get valueAdminSweepNow => 'Gather evidence now';
+
+  @override
+  String get valueAdminDistributionFailed => 'Standing data couldn’t load.';
+
+  @override
+  String valueAdminSweepDone(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Done — $count profiles recalculated.',
+      one: 'Done — one profile recalculated.',
+      zero: 'Done — no profiles changed.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get valueAdminSweepFailed => 'Gathering evidence failed.';
+
+  @override
+  String get valueAdminGuaranteeHolds => 'Standing can’t be bought';
+
+  @override
+  String get valueAdminGuaranteeBroken =>
+      'Warning: spending alone now reaches the top tiers';
+
+  @override
+  String valueAdminSpendingReach(int ceiling) {
+    return 'Someone who only buys and contributes nothing else reaches $ceiling of 1000';
+  }
+
+  @override
+  String get valueAdminGuaranteeFix =>
+      'Lower the spending ceiling or raise the top-tier thresholds — otherwise the programme becomes a spending ladder by another name.';
+
+  @override
+  String get valueAdminDistributionTitle => 'Tier distribution';
+
+  @override
+  String valueAdminDistributionSubtitle(int total, int unranked) {
+    return '$total profiles — $unranked not ranked yet';
+  }
+
+  @override
+  String get valueAdminCostTitle => 'Cost and commitment';
+
+  @override
+  String get valueAdminCostSubtitle =>
+      'What was actually spent, and the most that could be.';
+
+  @override
+  String get valueAdminCostFailed => 'The cost report couldn’t load.';
+
+  @override
+  String valueAdminUnbounded(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          '$count benefits spend money with no ceiling — give them a budget.',
+      one: 'One benefit spends money with no ceiling — give it a budget.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get valueAdminSpent => 'Spent';
+
+  @override
+  String get valueAdminMaxCommitment => 'Maximum commitment';
+
+  @override
+  String get valueAdminReasonSinglePillar =>
+      'All standing from a single source';
+
+  @override
+  String get valueAdminReasonBurst => 'Heavy contributions over a few days';
+
+  @override
+  String get valueAdminSuspectsTitle => 'Profiles worth a look';
+
+  @override
+  String get valueAdminSuspectsSubtitle =>
+      'Not an accusation — unusual patterns, and a person decides.';
+
+  @override
+  String get valueAdminSuspectsFailed => 'The list couldn’t load.';
+
+  @override
+  String get valueAdminSuspectsNone => 'Nothing stands out right now.';
+
+  @override
+  String valueAdminConcentration(int percent, int days) {
+    return '$percent% concentrated over $days days';
+  }
+
+  @override
+  String get valueAdminFreezeAction => 'Freeze for now';
+
+  @override
+  String get valueAdminFreezeTitle => 'Temporary freeze';
+
+  @override
+  String get valueAdminFreezeBody =>
+      'Standing stops moving and benefits pause — nothing is lost. It all returns when you lift the freeze.';
+
+  @override
+  String get valueAdminFreezeReason => 'Reason';
+
+  @override
+  String get valueAdminFreezeConfirm => 'Freeze';
+
+  @override
+  String get valueCancel => 'Cancel';
+
+  @override
+  String get valueTitle => 'My standing in Reem';
+
+  @override
+  String get valueLoadFailed => 'Your standing couldn’t load.';
+
+  @override
+  String get valueSourcesTitle => 'Where your standing comes from';
+
+  @override
+  String get valueSourcesSubtitle =>
+      'Your standing rests on six sides, not on spending alone.';
+
+  @override
+  String valueCloserTo(String tier) {
+    return 'What brings you closer to $tier';
+  }
+
+  @override
+  String get valueUnlocksTitle => 'What your standing unlocks';
+
+  @override
+  String get valueRecentTitle => 'Latest we counted';
+
+  @override
+  String get valueJustStarting => 'Just starting';
+
+  @override
+  String valueNextTier(String tier) {
+    return 'Next tier: $tier';
+  }
+
+  @override
+  String get valuePeakKept =>
+      'The highest standing you reached is kept on record.';
+
+  @override
+  String get valueTierHeld =>
+      'Your tier is held for you even if things go quiet for a while.';
+
+  @override
+  String get valueFrozen =>
+      'Your standing is paused for review — nothing has been lost.';
+
+  @override
+  String get valueBenefitClaimed => 'It’s yours.';
+
+  @override
+  String get valueBenefitHigherTier => 'Unlocks at a higher tier';
+
+  @override
+  String get valueBenefitTakenThisPeriod => 'Taken this period';
+
+  @override
+  String get valueBenefitSoldOut => 'Gone for this period';
+
+  @override
+  String get valueBenefitClaim => 'Claim';
+
+  @override
+  String get valueBenefitActive => 'Active';
+
+  @override
+  String get valueHowBuiltTooltip => 'How is standing built?';
+
+  @override
+  String get valueRulesFailed => 'The rules couldn’t load.';
+
+  @override
+  String get valueHowBuiltTitle => 'How your standing is built';
+
+  @override
+  String get valueHowBuiltBody =>
+      'Your standing can’t be bought. Buying is one side of six, and it’s capped — someone who only buys never reaches the top tiers.';
+
+  @override
+  String get valuePillarCapped => 'At the cap';
+
+  @override
+  String get valuePillarUnknown => 'Not known yet';
+
+  @override
+  String valuePillarNotEnough(String blurb) {
+    return '$blurb — not enough yet to judge.';
+  }
+
+  @override
+  String get valuePolicyTitle => 'Policy';
+
+  @override
+  String get valuePolicySubtitle =>
+      'Every change becomes a new version — simulated on real profiles before it goes live.';
+
+  @override
+  String get valuePolicyNewVersion => 'New version';
+
+  @override
+  String get valuePolicyLoadFailed => 'Policies couldn’t load.';
+
+  @override
+  String valuePolicyRowSummary(int ceiling, int days) {
+    return 'Spending cap $ceiling · half-life ${days}d';
+  }
+
+  @override
+  String get valuePolicySimulate => 'Simulate';
+
+  @override
+  String get valuePolicyActivate => 'Activate';
+
+  @override
+  String get valuePolicySimulateFailed => 'The simulation failed.';
+
+  @override
+  String valuePolicyImpactDisruptive(int down, int sampled) {
+    return '$down of $sampled will drop a tier. That’s a change people will feel — make sure you mean it.';
+  }
+
+  @override
+  String valuePolicyImpact(int up, int down, int sampled) {
+    return '$up will rise and $down will drop, out of $sampled.';
+  }
+
+  @override
+  String get valuePolicyActivateTitle => 'Activate policy';
+
+  @override
+  String valuePolicyActivateBody(String impact) {
+    return 'Every profile will be recalculated under the new rules.\n\n$impact';
+  }
+
+  @override
+  String get valuePolicyActivated =>
+      'Policy activated and everything recalculated.';
+
+  @override
+  String get valuePolicyActivateFailed => 'Activation failed.';
+
+  @override
+  String valuePolicySimSample(int sampled) {
+    return 'Sample of $sampled: ';
+  }
+
+  @override
+  String valuePolicySimAverage(String delta) {
+    return 'Average change $delta';
+  }
+
+  @override
+  String get valuePillarCommerce => 'Buying';
+
+  @override
+  String get valuePillarCraft => 'Opinion';
+
+  @override
+  String get valuePillarCommunity => 'Community';
+
+  @override
+  String get valuePillarAdvocacy => 'Invites';
+
+  @override
+  String get valuePillarDiscovery => 'Discovery';
+
+  @override
+  String get valuePillarReliability => 'Reliability';
+
+  @override
+  String valuePolicyNewFrom(int version) {
+    return 'New version from v$version';
+  }
+
+  @override
+  String get valuePolicyWeights => 'Side weights';
+
+  @override
+  String get valuePolicyWeightsHelp =>
+      'Relative — they don’t need to add up to 100.';
+
+  @override
+  String get valuePolicyCeiling => 'Spending cap';
+
+  @override
+  String valuePolicyPoints(int points) {
+    return '$points points';
+  }
+
+  @override
+  String get valuePolicyHalfLife => 'Half-life';
+
+  @override
+  String valuePolicyDays(int days) {
+    return '$days days';
+  }
+
+  @override
+  String get valuePolicyMinEvidence => 'Minimum evidence per side';
+
+  @override
+  String get valuePolicyWhy => 'Why this change?';
+
+  @override
+  String get valuePolicyWhyHint =>
+      'Someone else will read this a year from now';
+
+  @override
+  String get valuePolicySaveDraft => 'Save as draft';
+
+  @override
+  String get valuePolicySavedDraft =>
+      'Saved as a draft — simulate it before activating.';
+
+  @override
+  String get valuePolicySaveFailed => 'Saving failed.';
+
+  @override
+  String valuePolicyRisky(int ceiling) {
+    return 'With these weights, someone who only buys reaches $ceiling — into the top tiers.';
+  }
+
+  @override
+  String valuePolicySafe(int ceiling) {
+    return 'Someone who only buys reaches $ceiling of 1000 — standing still can’t be bought.';
+  }
+
+  @override
+  String get valueCardTitle => 'Your standing in Reem';
+
+  @override
+  String valueCardCloseTo(String tier) {
+    return 'Close to $tier';
+  }
+
+  @override
+  String get valueCardRising => 'Rising';
+
+  @override
+  String get valueCardSteady => 'Steady';
+
+  @override
+  String valueAdminSpendingRung(String rung) {
+    return ' — tier “$rung”';
+  }
+
+  @override
+  String valueAdminTopRung(String rung) {
+    return '; the top tier is “$rung”.';
+  }
+
+  @override
+  String get marketLookTitle => 'The look';
+
+  @override
+  String get marketLookFailed => 'The look couldn’t open.';
+
+  @override
+  String marketLookFromShops(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'From $count shops — Reem put them together because they go well.',
+      one: 'From one shop — Reem put them together because they go well.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get marketCheaperOptions => 'There are cheaper options';
+
+  @override
+  String get marketCheaperOptionsBody =>
+      'Same slot, another piece Reem sees as close to it.';
+
+  @override
+  String get marketLookTotal => 'Look total';
+
+  @override
+  String get marketSeePieces => 'See the pieces';
+
+  @override
+  String marketFromSeller(String name) {
+    return 'From $name';
+  }
+
+  @override
+  String marketSave(String amount) {
+    return 'Save $amount';
+  }
+
+  @override
+  String marketInsteadOf(String title, String newPrice, String oldPrice) {
+    return 'Instead of $title — $newPrice instead of $oldPrice';
+  }
+
+  @override
+  String get marketOccasionWedding => 'Wedding';
+
+  @override
+  String get marketOccasionEvening => 'Evening';
+
+  @override
+  String get marketOccasionEid => 'Eid';
+
+  @override
+  String get marketOccasionGraduation => 'Graduation';
+
+  @override
+  String get marketOccasionWork => 'Work';
+
+  @override
+  String get marketOccasionDaily => 'Everyday';
+
+  @override
+  String get marketReadyLooks => 'Ready looks';
+
+  @override
+  String get marketAll => 'All';
+
+  @override
+  String get marketLooksFailed => 'Looks couldn’t load.';
+
+  @override
+  String get marketNoLooks => 'No ready looks right now';
+
+  @override
+  String get marketNoLooksBody =>
+      'Looks are built from available pieces that go together. Try another occasion or come back later.';
+
+  @override
+  String get marketDrops => 'Drops';
+
+  @override
+  String get marketDropsFailed => 'Drops couldn’t load.';
+
+  @override
+  String get marketNoDrops => 'No drop right now';
+
+  @override
+  String get marketNoDropsBody =>
+      'When something lands that fits what you’re missing or your taste, you’ll see it here before everyone else.';
+
+  @override
+  String get marketLiveNow => 'Live now';
+
+  @override
+  String get marketMissionsTitle => 'Worth doing';
+
+  @override
+  String get marketMissionsFailed => 'Missions couldn’t load.';
+
+  @override
+  String get marketNoMissions => 'Nothing to do right now';
+
+  @override
+  String get marketNoMissionsBody =>
+      'Reem only asks for something when it’s worth it and within reach.';
+
+  @override
+  String get marketMissionDone => 'Done';
+
+  @override
+  String marketMissionProgress(int done, int target) {
+    return '$done of $target';
+  }
+
+  @override
+  String get marketNotNow => 'Not now';
+
+  @override
+  String get marketResaleTitle => 'Pre-loved market';
+
+  @override
+  String get marketResaleBrowse => 'For sale';
+
+  @override
+  String get marketResaleMine => 'My listings';
+
+  @override
+  String get marketResaleFailed => 'Listings couldn’t load.';
+
+  @override
+  String get marketNoOwnListings => 'You have no listings';
+
+  @override
+  String get marketNoListings => 'Nothing for sale right now';
+
+  @override
+  String get marketNoOwnListingsBody =>
+      'When Reem finds a piece in your closet that isn’t being worn, she’ll suggest listing it here.';
+
+  @override
+  String get marketNoListingsBody =>
+      'The market fills up from other women’s closets. Come back later.';
+
+  @override
+  String marketWornTimes(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Worn $count times',
+      one: 'Worn once',
+      zero: 'Never worn',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get marketListingPublish => 'Publish';
+
+  @override
+  String get marketListingRepublish => 'Publish again';
+
+  @override
+  String get marketListingWithdraw => 'Withdraw';
+
+  @override
+  String get marketListingSold => 'Sold';
+
+  @override
+  String get marketSellerTitle => 'Market';
+
+  @override
+  String get marketOpportunities => 'Opportunities';
+
+  @override
+  String get marketOpportunitiesBody =>
+      'Supply against demand in the categories you sell in.';
+
+  @override
+  String get marketReadFailed => 'The market couldn’t be read.';
+
+  @override
+  String get marketNoSignal =>
+      'No signal strong enough right now. Reem only speaks when the data is enough.';
+
+  @override
+  String get marketWorthADrop => 'Worth a drop';
+
+  @override
+  String get marketWorthADropBody =>
+      'Your products with higher demand than usual.';
+
+  @override
+  String get marketProductsFailed => 'Products couldn’t be read.';
+
+  @override
+  String get marketNoDropCandidates =>
+      'None of your products needs a special drop right now.';
+
+  @override
+  String get marketYourDrops => 'Your drops';
+
+  @override
+  String get marketYourDropsFailed => 'Your drops couldn’t load.';
+
+  @override
+  String get marketNoOwnDrops => 'You haven’t launched a drop yet.';
+
+  @override
+  String get marketConfidenceHigh => 'Confirmed';
+
+  @override
+  String get marketConfidenceLow => 'Early';
+
+  @override
+  String marketCandidateStats(int demand, int stock) {
+    return 'Demand $demand · stock $stock';
+  }
+
+  @override
+  String get marketDropAction => 'Drop';
+
+  @override
+  String get marketDropDraft => 'Draft';
+
+  @override
+  String get marketDropScheduled => 'Scheduled';
+
+  @override
+  String get marketDropLive => 'Live';
+
+  @override
+  String get marketDropEnded => 'Ended';
+
+  @override
+  String get marketDropCancelled => 'Cancelled';
+
+  @override
+  String marketDropSummary(int count, String status) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count pieces · $status',
+      one: '1 piece · $status',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get marketCareTitle => 'Your closet after buying';
+
+  @override
+  String get marketCareFailed => 'Your closet couldn’t be read.';
+
+  @override
+  String get marketCareAllGood => 'Everything’s in its place';
+
+  @override
+  String get marketCareAllGoodBody =>
+      'Nothing needs attention right now. We’ll tell you when a piece goes unworn.';
+
+  @override
+  String get marketCareNeedsAttention => 'Pieces that need attention';
+
+  @override
+  String get marketCarePieces => 'Pieces';
+
+  @override
+  String get marketCareInRotation => 'In rotation';
+
+  @override
+  String get marketCareCostPerWear => 'Cost per wear (SYP)';
+
+  @override
+  String marketCostPerWear(String amount) {
+    return 'Cost per wear $amount';
+  }
+
+  @override
+  String marketGoesWith(String titles) {
+    return 'Goes with: $titles';
+  }
+
+  @override
+  String marketSuggestedPrice(String amount) {
+    return 'Suggested price $amount';
+  }
+
+  @override
+  String get marketListForSale => 'List it for sale';
+
+  @override
+  String get marketEditListing => 'Edit listing';
+
+  @override
+  String marketListTitle(String title) {
+    return 'List “$title”';
+  }
+
+  @override
+  String get marketListDraftNote =>
+      'Saved as a draft — no one sees it until you publish it.';
+
+  @override
+  String get marketCondition => 'Condition';
+
+  @override
+  String get marketConditionNew => 'New with tags';
+
+  @override
+  String get marketConditionExcellent => 'Excellent';
+
+  @override
+  String get marketConditionGood => 'Good';
+
+  @override
+  String get marketConditionFair => 'Fair';
+
+  @override
+  String get marketSaveDraft => 'Save as draft';
+
+  @override
+  String get marketSavedDraft =>
+      'Saved as a draft. You can publish it from your listings.';
+
+  @override
+  String get marketReadyLooksBody =>
+      'Pieces from different shops, put together because they go well.';
+
+  @override
+  String get marketReading => 'Reading the market…';
+
+  @override
+  String get marketNoSignalShort => 'No signal strong enough right now.';
+
+  @override
+  String marketOpportunityCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          '$count opportunities in your categories, with supply against demand.',
+      one: 'One opportunity in your categories, with supply against demand.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String marketCareSummary(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count pieces need attention — care, styling or selling.',
+      one: 'One piece needs attention — care, styling or selling.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String marketLookFromShopsShort(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'From $count shops — a complete look',
+      one: 'From one shop — a complete look',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String marketPieceCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count pieces',
+      one: '1 piece',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get marketEarlyAccess => 'Early access';
+
+  @override
+  String get marketReasonOpenNeed =>
+      'Because you’re missing something like this';
+
+  @override
+  String get marketReasonSearchedFor =>
+      'Because you were looking for something like it';
+
+  @override
+  String get marketReasonOccasion =>
+      'Because it suits the occasion you’re getting ready for';
+
+  @override
+  String get marketReasonTaste => 'Because it’s close to your taste';
+
+  @override
+  String get marketReasonSellerCustomer => 'From a shop you buy from';
+
+  @override
+  String get marketRotationActive => 'In rotation';
+
+  @override
+  String get marketRotationSlowing => 'Worn less lately';
+
+  @override
+  String get marketRotationDormant => 'Sitting in the closet';
+
+  @override
+  String get marketRotationUnworn => 'Never worn';
 }

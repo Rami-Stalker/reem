@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/features/admin/presentation/widgets/admin_page_header.dart';
 import 'package:reem/features/value/domain/entities/value_admin.dart';
 import 'package:reem/features/value/presentation/providers/value_admin_providers.dart';
@@ -34,10 +35,10 @@ class AdminValueScreen extends ConsumerWidget {
             // Arabic console says «ريم فاليو» aloud and writes it this way.
             // l10n-ignore: a product name, not copy.
             title: 'Reem Value',
-            subtitle: 'المكانة، وشو بتفتح — والضمان إنها ما بتنشرى.',
+            subtitle: context.l10n.valueAdminSubtitle,
             actions: [
               IconButton(
-                tooltip: 'تحديث',
+                tooltip: context.l10n.valueAdminRefresh,
                 onPressed: () {
                   ref.invalidate(valueDistributionProvider);
                   ref.invalidate(valueCostProvider);
@@ -46,7 +47,7 @@ class AdminValueScreen extends ConsumerWidget {
                 icon: const Icon(Icons.refresh_rounded),
               ),
               IconButton(
-                tooltip: 'شغّل جمع الأدلة الآن',
+                tooltip: context.l10n.valueAdminSweepNow,
                 onPressed: () => _sweep(context, ref),
                 icon: const Icon(Icons.cyclone_rounded),
               ),
@@ -65,7 +66,7 @@ class AdminValueScreen extends ConsumerWidget {
                 child: Center(child: DsLoadingIndicator()),
               ),
               error: (_, _) => DsErrorState(
-                message: 'ما قدرنا نجيب بيانات المكانة.',
+                message: context.l10n.valueAdminDistributionFailed,
                 onRetry: () => ref.invalidate(valueDistributionProvider),
               ),
               data: (data) => Column(
@@ -91,17 +92,20 @@ class AdminValueScreen extends ConsumerWidget {
 
   Future<void> _sweep(BuildContext context, WidgetRef ref) async {
     final messenger = ScaffoldMessenger.of(context);
+    final l10n = context.l10n;
     try {
       final counts = await ref.read(valueAdminActionsProvider).sweep();
       DsSnackbar.on(
         messenger,
-        message: 'تم — أعيد احتساب ${counts['recomputed'] ?? 0} ملف.',
+        message: l10n.valueAdminSweepDone(
+          (counts['recomputed'] as num? ?? 0).toInt(),
+        ),
         type: DsSnackbarType.success,
       );
     } catch (_) {
       DsSnackbar.on(
         messenger,
-        message: 'ما نجح الجمع.',
+        message: l10n.valueAdminSweepFailed,
         type: DsSnackbarType.error,
       );
     }
@@ -145,23 +149,30 @@ class _GuaranteeBanner extends StatelessWidget {
               children: [
                 Text(
                   holds
-                      ? 'المكانة ما بتنشرى'
-                      : 'تحذير: الشرا لحاله صار يوصل لأعلى الدرجات',
+                      ? context.l10n.valueAdminGuaranteeHolds
+                      : context.l10n.valueAdminGuaranteeBroken,
                   style: context.dsText.cardTitle.tint(accent),
                 ),
                 DsGaps.vXxs,
                 Text(
-                  'حدا بس بيشتري وما بيساهم بشي تاني بيوصل لـ'
-                  '${guarantee.spendingCeiling} من ١٠٠٠'
-                  '${guarantee.highestRungReachableBySpending != null ? ' — أي درجة «${guarantee.highestRungReachableBySpending}»' : ''}'
-                  '${guarantee.topRung != null ? '، وأعلى درجة هي «${guarantee.topRung}».' : '.'}',
+                  [
+                    context.l10n.valueAdminSpendingReach(
+                      guarantee.spendingCeiling,
+                    ),
+                    if (guarantee.highestRungReachableBySpending
+                        case final rung?)
+                      context.l10n.valueAdminSpendingRung(rung),
+                    if (guarantee.topRung case final top?)
+                      context.l10n.valueAdminTopRung(top)
+                    else
+                      '.',
+                  ].join(),
                   style: context.dsText.body,
                 ),
                 if (!holds) ...[
                   const SizedBox(height: DsSpacing.xs),
                   Text(
-                    'نزّلي سقف الشرا (commerce ceiling) أو ارفعي عتبة الدرجات '
-                    'العليا — وإلا صار البرنامج سلّم إنفاق باسم تاني.',
+                    context.l10n.valueAdminGuaranteeFix,
                     style: context.dsText.caption.tint(accent),
                   ),
                 ],
@@ -188,9 +199,11 @@ class _DistributionCard extends StatelessWidget {
     );
 
     return _Panel(
-      title: 'توزّع الدرجات',
-      subtitle:
-          '${distribution.total} ملف — و${distribution.unranked} لسا بلا درجة',
+      title: context.l10n.valueAdminDistributionTitle,
+      subtitle: context.l10n.valueAdminDistributionSubtitle(
+        distribution.total,
+        distribution.unranked,
+      ),
       child: Column(
         children: [
           for (final tier in distribution.tiers)
@@ -244,14 +257,14 @@ class _CostCard extends ConsumerWidget {
     final costAsync = ref.watch(valueCostProvider);
 
     return _Panel(
-      title: 'الكلفة والالتزام',
-      subtitle: 'شو انصرف فعلًا، وشو أقصى ما ممكن ينصرف.',
+      title: context.l10n.valueAdminCostTitle,
+      subtitle: context.l10n.valueAdminCostSubtitle,
       child: costAsync.when(
         loading: () => const Padding(
           padding: EdgeInsets.all(DsSpacing.lg),
           child: Center(child: DsLoadingIndicator()),
         ),
-        error: (_, _) => const Text('ما قدرنا نجيب تقرير الكلفة.'),
+        error: (_, _) => Text(context.l10n.valueAdminCostFailed),
         data: (cost) => Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -266,19 +279,18 @@ class _CostCard extends ConsumerWidget {
                 child: Text(
                   // The one state this report exists to surface: a benefit that
                   // spends money with no ceiling on how much.
-                  '${cost.unboundedCount} ميزة بتصرف مصاري بلا سقف — حطّي '
-                  'ميزانية إلها.',
+                  context.l10n.valueAdminUnbounded(cost.unboundedCount),
                   style: context.dsText.caption.tint(console.caution),
                 ),
               ),
             Row(
               children: [
                 _Metric(
-                  label: 'انصرف',
+                  label: context.l10n.valueAdminSpent,
                   value: cost.issuedTotal?.format() ?? '—',
                 ),
                 _Metric(
-                  label: 'أقصى التزام',
+                  label: context.l10n.valueAdminMaxCommitment,
                   value: cost.ceilingTotal?.format() ?? '—',
                 ),
               ],
@@ -323,30 +335,25 @@ class _CostCard extends ConsumerWidget {
 class _SuspectsCard extends ConsumerWidget {
   const _SuspectsCard();
 
-  static const _reasonLabels = {
-    'single_pillar': 'كل المكانة من جهة وحدة',
-    'burst': 'مساهمات مكثّفة بأيام قليلة',
-  };
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final console = context.console;
     final suspectsAsync = ref.watch(valueSuspectsProvider);
 
     return _Panel(
-      title: 'ملفات بتستاهل نظرة',
+      title: context.l10n.valueAdminSuspectsTitle,
       // Said plainly, because the word matters: these are shapes, not verdicts,
       // and every one of them has an innocent explanation.
-      subtitle: 'مو اتهام — أشكال غير معتادة، والقرار لإنسان.',
+      subtitle: context.l10n.valueAdminSuspectsSubtitle,
       child: suspectsAsync.when(
         loading: () => const Padding(
           padding: EdgeInsets.all(DsSpacing.lg),
           child: Center(child: DsLoadingIndicator()),
         ),
-        error: (_, _) => const Text('ما قدرنا نجيب القائمة.'),
+        error: (_, _) => Text(context.l10n.valueAdminSuspectsFailed),
         data: (suspects) => suspects.isEmpty
             ? Text(
-                'ما في شي لافت هلق.',
+                context.l10n.valueAdminSuspectsNone,
                 style: context.dsText.body.tint(console.muted),
               )
             : Column(
@@ -368,13 +375,15 @@ class _SuspectsCard extends ConsumerWidget {
                                 ),
                                 Text(
                                   suspect.reasons
-                                      .map((r) => _reasonLabels[r] ?? r)
+                                      .map((r) => _reasonLabel(context, r))
                                       .join(' · '),
                                   style: context.dsText.caption,
                                 ),
                                 Text(
-                                  'تركّز ${(suspect.concentration * 100).round()}% '
-                                  'على ${suspect.distinctDays} يوم',
+                                  context.l10n.valueAdminConcentration(
+                                    (suspect.concentration * 100).round(),
+                                    suspect.distinctDays,
+                                  ),
                                   style: context.dsText.micro.tint(
                                     console.muted,
                                   ),
@@ -384,7 +393,7 @@ class _SuspectsCard extends ConsumerWidget {
                           ),
                           TextButton(
                             onPressed: () => _freeze(context, ref, suspect),
-                            child: const Text('جمّدي مؤقتًا'),
+                            child: Text(context.l10n.valueAdminFreezeAction),
                           ),
                         ],
                       ),
@@ -395,6 +404,13 @@ class _SuspectsCard extends ConsumerWidget {
     );
   }
 
+  static String _reasonLabel(BuildContext context, String reason) =>
+      switch (reason) {
+        'single_pillar' => context.l10n.valueAdminReasonSinglePillar,
+        'burst' => context.l10n.valueAdminReasonBurst,
+        _ => reason,
+      };
+
   Future<void> _freeze(
     BuildContext context,
     WidgetRef ref,
@@ -402,13 +418,11 @@ class _SuspectsCard extends ConsumerWidget {
   ) async {
     final reason = await DsDialog.prompt(
       context,
-      title: 'تجميد مؤقت',
-      message:
-          'المكانة بتوقف عن الحركة والمزايا بتوقف — وما بيضيع ولا شي. '
-          'بترجع لما تشيلي التجميد.',
-      hintText: 'السبب',
-      confirmLabel: 'جمّدي',
-      cancelLabel: 'إلغاء',
+      title: context.l10n.valueAdminFreezeTitle,
+      message: context.l10n.valueAdminFreezeBody,
+      hintText: context.l10n.valueAdminFreezeReason,
+      confirmLabel: context.l10n.valueAdminFreezeConfirm,
+      cancelLabel: context.l10n.valueCancel,
       maxLines: 3,
       maxLength: 200,
     );
