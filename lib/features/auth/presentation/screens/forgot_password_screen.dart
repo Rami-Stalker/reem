@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -7,6 +8,7 @@ import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/features/auth/domain/entities/auth_account.dart';
 import 'package:reem/features/auth/presentation/utils/auth_form_validators.dart';
+import 'package:reem/features/auth/presentation/widgets/auth_motion.dart';
 
 class ForgotPasswordScreen extends ConsumerStatefulWidget {
   const ForgotPasswordScreen({super.key});
@@ -39,47 +41,59 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
     final l10n = context.l10n;
     final colors = context.dsColors;
 
-    return ReemScrollPage(
-      slivers: [
-        PremiumAppBar(title: l10n.resetPassword, showBack: true),
-        SliverFillRemaining(
-          hasScrollBody: false,
-          child: Padding(
-            padding: DsSpacing.screenPadding,
-            child: Form(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  const Spacer(),
-                  Text(
-                    l10n.forgetPassword,
-                    textAlign: TextAlign.center,
-                    style: context.dsText.cardTitle.copyWith(
-                      color: colors.onSurfaceVariant,
-                      height: 1.5,
-                    ),
+    return AuthStage(
+      showBack: true,
+      children: [
+        const Spacer(),
+        const AuthEmblem(icon: Icons.key_rounded)
+            .animate()
+            .fadeIn(duration: 500.ms)
+            .scale(
+              begin: const Offset(0.85, 0.85),
+              duration: 800.ms,
+              curve: DsMotion.softSpring,
+            ),
+        AuthHeading(
+          eyebrow: l10n.resetPassword,
+          title: l10n.forgetPassword,
+          subtitle: l10n.authForgotSubtitle,
+        ).authEnter(1),
+        DsGaps.vXl,
+        AuthPanel(
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                DsInputField(
+                  controller: _phoneController,
+                  label: l10n.phone,
+                  // l10n-ignore: a dialling mask, not language
+                  hint: '09XX XXX XXX',
+                  keyboardType: TextInputType.phone,
+                  autofillHints: const [AutofillHints.telephoneNumber],
+                  prefixIcon: Icon(
+                    Icons.phone_iphone_rounded,
+                    color: colors.primary,
                   ),
-                  const SizedBox(height: DsSpacing.xxxl),
-                  DsInputField(
-                    controller: _phoneController,
-                    label: context.l10n.phone,
-                    keyboardType: TextInputType.phone,
-                    prefixIcon: Icon(
-                      Icons.phone_outlined,
-                      color: colors.primary,
-                    ),
-                    validator: (value) =>
-                        AuthFormValidators.requiredPhone(context.l10n, value),
-                  ),
-                  const SizedBox(height: DsSpacing.lg),
-                  PrimaryButton(label: l10n.send, onPressed: _submit),
-                  const Spacer(flex: 2),
-                ],
-              ),
+                  validator: (value) =>
+                      AuthFormValidators.requiredPhone(l10n, value),
+                  onSubmitted: (_) => _submit(),
+                ),
+                DsGaps.vLg,
+                PrimaryButton(
+                  label: l10n.send,
+                  icon: Icons.send_rounded,
+                  onPressed: _submit,
+                ),
+              ],
             ),
           ),
-        ),
+        ).authEnter(2),
+        const Spacer(flex: 2),
+        DsGaps.vXl,
+        AuthTrustNote(text: l10n.authTrustNote).authEnter(3),
+        DsGaps.vLg,
       ],
     );
   }

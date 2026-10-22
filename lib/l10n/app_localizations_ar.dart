@@ -11252,4 +11252,59 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get reverseSmsCouldNotOpen =>
       'لم نتمكّن من فتح تطبيق الرسائل. أرسلي الرسالة أعلاه يدويًا.';
+
+  @override
+  String get authEyebrow => 'مساحة خاصة بالنساء';
+
+  @override
+  String get authOr => 'أو';
+
+  @override
+  String get authTrustNote => 'رقمكِ محميّ، ولن نشاركه مع أحد.';
+
+  @override
+  String get authGuestCaption => 'تصفّحي المتاجر دون حساب';
+
+  @override
+  String get authPasswordCaption => 'على جهاز استخدمتِه من قبل';
+
+  @override
+  String get authCodeHint => 'أدخلي الرمز المكوّن من ٦ أرقام';
+
+  @override
+  String get authLostSimCaption => 'استعيدي حسابكِ برقم آخر';
+
+  @override
+  String get authSectionJoinAs => 'كيف ستنضمّين إلى ريم؟';
+
+  @override
+  String get authRoleBuyerHint => 'تسوّقي وتابعي وشاركي';
+
+  @override
+  String get authRoleSellerHint => 'افتحي متجركِ وابدئي البيع';
+
+  @override
+  String get authSectionAboutYou => 'عنكِ';
+
+  @override
+  String get authSectionWhere => 'أين تقيمين؟';
+
+  @override
+  String get authSectionSecurity => 'الأمان';
+
+  @override
+  String get authSectionPromise => 'تعهّدكِ';
+
+  @override
+  String get authBenefitCheckout => 'أتمّي طلباتكِ بسهولة وأمان';
+
+  @override
+  String get authBenefitChat => 'راسلي البائعات مباشرة';
+
+  @override
+  String get authBenefitSaved => 'احفظي كل ما تحبّينه';
+
+  @override
+  String get authForgotSubtitle =>
+      'أدخلي رقمكِ وسنرسل لكِ رمزًا لتعيين كلمة مرور جديدة.';
 }

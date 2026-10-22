@@ -12938,5 +12938,77 @@
   "reverseSmsCouldNotOpen": "Could not open your messaging app. Send the message above manually.",
   "@reverseSmsCouldNotOpen": {
     "description": "Shown when the SMS composer cannot be launched"
+  },
+  "authEyebrow": "A space made for women",
+  "@authEyebrow": {
+    "description": "Small eyebrow above the sign-in title"
+  },
+  "authOr": "or",
+  "@authOr": {
+    "description": "Word between two sign-in options"
+  },
+  "authTrustNote": "Your number is protected and never shared.",
+  "@authTrustNote": {
+    "description": "Reassurance at the foot of the sign-in screens"
+  },
+  "authGuestCaption": "Browse the boutiques without an account",
+  "@authGuestCaption": {
+    "description": "Caption under continue as guest"
+  },
+  "authPasswordCaption": "On a phone you have used before",
+  "@authPasswordCaption": {
+    "description": "Caption under the password sign-in option"
+  },
+  "authCodeHint": "Enter the 6-digit code",
+  "@authCodeHint": {
+    "description": "Hint above the six code cells"
+  },
+  "authLostSimCaption": "Recover your account with another number",
+  "@authLostSimCaption": {
+    "description": "Caption under lost your SIM"
+  },
+  "authSectionJoinAs": "How will you join Reem?",
+  "@authSectionJoinAs": {
+    "description": "Heading over the buyer / seller choice"
+  },
+  "authRoleBuyerHint": "Shop, follow and share",
+  "@authRoleBuyerHint": {
+    "description": "Caption on the buyer role card"
+  },
+  "authRoleSellerHint": "Open your boutique and sell",
+  "@authRoleSellerHint": {
+    "description": "Caption on the seller role card"
+  },
+  "authSectionAboutYou": "About you",
+  "@authSectionAboutYou": {
+    "description": "Heading over the name fields"
+  },
+  "authSectionWhere": "Where are you?",
+  "@authSectionWhere": {
+    "description": "Heading over country and city"
+  },
+  "authSectionSecurity": "Security",
+  "@authSectionSecurity": {
+    "description": "Heading over the optional password"
+  },
+  "authSectionPromise": "Your pledge",
+  "@authSectionPromise": {
+    "description": "Heading over the declaration and terms"
+  },
+  "authBenefitCheckout": "Check out easily and safely",
+  "@authBenefitCheckout": {
+    "description": "Benefit of having an account"
+  },
+  "authBenefitChat": "Message sellers directly",
+  "@authBenefitChat": {
+    "description": "Benefit of having an account"
+  },
+  "authBenefitSaved": "Save everything you love",
+  "@authBenefitSaved": {
+    "description": "Benefit of having an account"
+  },
+  "authForgotSubtitle": "Enter your number and we will send you a code to set a new password.",
+  "@authForgotSubtitle": {
+    "description": "Subtitle on the forgot password screen"
   }
 }

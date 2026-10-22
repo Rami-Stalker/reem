@@ -9,6 +9,7 @@ import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/core/shared/entities/user.dart';
 import 'package:reem/features/auth/presentation/providers/auth_provider.dart';
 import 'package:reem/features/auth/presentation/utils/auth_form_validators.dart';
+import 'package:reem/features/auth/presentation/widgets/auth_motion.dart';
 import 'package:reem/features/policies/presentation/widgets/policy_consent_field.dart';
 
 /// The signup form, reached only after the number has been verified.
@@ -120,232 +121,293 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     final auth = ref.watch(authNotifierProvider);
     final colors = context.dsColors;
 
-    return ReemScrollPage(
-      slivers: [
-        SliverFillRemaining(
-          hasScrollBody: false,
-          child: Padding(
-            padding: DsSpacing.screenPadding,
-            child: Form(
-              key: _formKey,
-              autovalidateMode: AutovalidateMode.onUserInteraction,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  const SizedBox(height: DsSpacing.xxxl),
-                  Icon(
-                    Icons.spa_rounded,
-                    size: 48,
-                    color: colors.primary,
-                  ).animate().scale(duration: 600.ms),
-                  const SizedBox(height: DsSpacing.xl),
-                  DsGradientText(
-                    l10n.finishSignUp,
-                    style: context.dsText.pageTitle.bold,
-                  ),
-                  const SizedBox(height: DsSpacing.sm),
-                  Text(
-                    l10n.loginSubtitle,
-                    textAlign: TextAlign.center,
-                    style: context.dsText.body.copyWith(
-                      color: colors.onSurfaceVariant,
+    return AuthStage(
+      step: 2,
+      children: [
+        const AuthEmblem(icon: Icons.spa_rounded, size: 84)
+            .animate()
+            .fadeIn(duration: 500.ms)
+            .scale(
+              begin: const Offset(0.85, 0.85),
+              duration: 800.ms,
+              curve: DsMotion.softSpring,
+            ),
+        AuthHeading(
+          title: l10n.finishSignUp,
+          subtitle: l10n.loginSubtitle,
+        ).authEnter(1),
+        DsGaps.vXl,
+        _VerifiedNumber(phone: widget.phone).authEnter(2),
+        DsGaps.vXl,
+        Form(
+          key: _formKey,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              AuthSectionLabel(l10n.authSectionJoinAs),
+              DsGaps.vSm,
+              _RoleSelector(
+                value: _role,
+                onChanged: auth.isLoading
+                    ? (_) {}
+                    : (r) => setState(() {
+                        _role = r;
+                        _acceptedPolicies = true;
+                        _policyVersionIds = const [];
+                      }),
+              ).authEnter(3),
+              DsGaps.vXl,
+              AuthPanel(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    AuthSectionLabel(
+                      l10n.authSectionAboutYou,
+                      icon: Icons.face_retouching_natural_rounded,
                     ),
-                  ),
-                  const SizedBox(height: DsSpacing.xxxl),
-                  _RoleSelector(
-                    value: _role,
-                    onChanged: auth.isLoading
-                        ? (_) {}
-                        : (r) => setState(() {
-                            _role = r;
-                            _acceptedPolicies = true;
-                            _policyVersionIds = const [];
-                          }),
-                  ),
-                  const SizedBox(height: DsSpacing.md),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: DsInputField(
-                          controller: _firstNameController,
-                          label: context.l10n.firstName,
-                          prefixIcon: Icon(
-                            Icons.person_outline,
-                            color: colors.primary,
+                    DsGaps.vMd,
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: DsInputField(
+                            controller: _firstNameController,
+                            label: l10n.firstName,
+                            textInputAction: TextInputAction.next,
+                            autofillHints: const [AutofillHints.givenName],
+                            textCapitalization: TextCapitalization.words,
+                            validator: (v) => AuthFormValidators.requiredField(
+                              l10n,
+                              l10n.firstName,
+                              v,
+                            ),
                           ),
-                          validator: (v) =>
-                              AuthFormValidators.requiredField(
-                                context.l10n,
-                                context.l10n.firstName,
-                                v,
-                              ),
                         ),
-                      ),
-                      const SizedBox(width: DsSpacing.sm),
-                      Expanded(
-                        child: DsInputField(
-                          controller: _lastNameController,
-                          label: context.l10n.lastName,
-                          prefixIcon: Icon(
-                            Icons.person_outline,
-                            color: colors.primary,
+                        DsGaps.hSm,
+                        Expanded(
+                          child: DsInputField(
+                            controller: _lastNameController,
+                            label: l10n.lastName,
+                            textInputAction: TextInputAction.next,
+                            autofillHints: const [AutofillHints.familyName],
+                            textCapitalization: TextCapitalization.words,
+                            validator: (v) => AuthFormValidators.requiredField(
+                              l10n,
+                              l10n.lastName,
+                              v,
+                            ),
                           ),
-                          validator: (v) =>
-                              AuthFormValidators.requiredField(
-                                context.l10n,
-                                context.l10n.lastName,
-                                v,
-                              ),
                         ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: DsSpacing.md),
-                  _VerifiedNumber(phone: widget.phone),
-                  const SizedBox(height: DsSpacing.md),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: DsInputField(
-                          controller: _countryController,
-                          label: context.l10n.country,
-                          prefixIcon: Icon(
-                            Icons.public_outlined,
-                            color: colors.primary,
+                      ],
+                    ),
+                    DsGaps.vXl,
+                    AuthSectionLabel(
+                      l10n.authSectionWhere,
+                      icon: Icons.place_rounded,
+                    ),
+                    DsGaps.vMd,
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: DsInputField(
+                            controller: _countryController,
+                            label: l10n.country,
+                            textInputAction: TextInputAction.next,
+                            autofillHints: const [AutofillHints.countryName],
+                            prefixIcon: Icon(
+                              Icons.public_rounded,
+                              color: colors.primary,
+                            ),
+                            validator: (v) => AuthFormValidators.requiredField(
+                              l10n,
+                              l10n.country,
+                              v,
+                            ),
                           ),
-                          validator: (v) =>
-                              AuthFormValidators.requiredField(
-                                context.l10n,
-                                context.l10n.country,
-                                v,
-                              ),
                         ),
-                      ),
-                      const SizedBox(width: DsSpacing.sm),
-                      Expanded(
-                        child: DsInputField(
-                          controller: _cityController,
-                          label: context.l10n.city,
-                          prefixIcon: Icon(
-                            Icons.location_city_outlined,
-                            color: colors.primary,
+                        DsGaps.hSm,
+                        Expanded(
+                          child: DsInputField(
+                            controller: _cityController,
+                            label: l10n.city,
+                            textInputAction: TextInputAction.done,
+                            autofillHints: const [AutofillHints.addressCity],
+                            prefixIcon: Icon(
+                              Icons.location_city_rounded,
+                              color: colors.primary,
+                            ),
+                            validator: (v) => AuthFormValidators.requiredField(
+                              l10n,
+                              l10n.city,
+                              v,
+                            ),
                           ),
-                          validator: (v) =>
-                              AuthFormValidators.requiredField(
-                                context.l10n,
-                                context.l10n.city,
-                                v,
-                              ),
                         ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: DsSpacing.md),
-                  SwitchListTile(
-                    value: _wantsPassword,
-                    onChanged: auth.isLoading
-                        ? null
-                        : (value) => setState(() => _wantsPassword = value),
-                    contentPadding: EdgeInsets.zero,
-                    activeThumbColor: colors.primary,
-                    title: Text(
-                      l10n.passwordOptional,
-                      style: context.dsText.body,
-                    ),
-                    subtitle: Text(
-                      l10n.passwordOptionalHint,
-                      style: context.dsText.cardSubtitle.copyWith(
-                        color: colors.onSurfaceVariant,
-                      ),
-                    ),
-                  ),
-                  if (_wantsPassword) ...[
-                    const SizedBox(height: DsSpacing.md),
-                    DsInputField(
-                      controller: _passwordController,
-                      label: l10n.password,
-                      obscureText: true,
-                      autofillHints: const [AutofillHints.newPassword],
-                      prefixIcon: Icon(
-                        Icons.lock_outline,
-                        color: colors.primary,
-                      ),
-                      onChanged: (_) => setState(() {}),
-                      validator: (value) => _wantsPassword
-                          ? AuthFormValidators.strongPassword(l10n, value)
-                          : null,
-                    ),
-                    const SizedBox(height: DsSpacing.sm),
-                    _PasswordStrengthIndicator(
-                      password: _passwordController.text,
-                    ),
-                    const SizedBox(height: DsSpacing.md),
-                    DsInputField(
-                      controller: _confirmPasswordController,
-                      label: l10n.confirmPassword,
-                      obscureText: true,
-                      prefixIcon: Icon(
-                        Icons.lock_outline,
-                        color: colors.primary,
-                      ),
-                      validator: (v) {
-                        if (!_wantsPassword) return null;
-                        if (v != _passwordController.text) {
-                          return l10n.confirmPasswordMismatch;
-                        }
-                        return null;
-                      },
+                      ],
                     ),
                   ],
-                  const SizedBox(height: DsSpacing.lg),
-                  // Q43/Q138 P1 — Reem is a women-only platform, and the only
-                  // enforcement is this declaration. The server refuses a
-                  // registration without it, so it is a real gate rather than
-                  // a notice: the button stays disabled until she makes it.
-                  CheckboxListTile(
-                    value: _declaredFemale,
-                    onChanged: auth.isLoading
-                        ? null
-                        : (value) =>
-                              setState(() => _declaredFemale = value ?? false),
-                    controlAffinity: ListTileControlAffinity.leading,
-                    contentPadding: EdgeInsets.zero,
-                    activeColor: colors.primary,
-                    title: Text(
-                      l10n.declaredFemaleLabel,
-                      style: context.dsText.body,
+                ),
+              ).authEnter(4),
+              DsGaps.vLg,
+              AuthPanel(
+                padding: const EdgeInsets.fromLTRB(
+                  DsSpacing.xl,
+                  DsSpacing.lg,
+                  DsSpacing.xl,
+                  DsSpacing.lg,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    AuthSectionLabel(
+                      l10n.authSectionSecurity,
+                      icon: Icons.shield_moon_rounded,
                     ),
-                  ),
-                  const SizedBox(height: DsSpacing.md),
-                  // The terms, named and linked, above one statement. The
-                  // server refuses a registration whose accepted ids do not
-                  // cover every required document, so this is a real gate
-                  // rather than a notice — the same shape as the declaration
-                  // above it.
-                  PolicyConsentField(
-                    role: _role == UserRole.seller ? 'seller' : 'buyer',
-                    accepted: _acceptedPolicies,
-                    enabled: !auth.isLoading,
-                    introText: l10n.registerConsentIntro,
-                    agreeText: l10n.registerConsentAgree,
-                    onChanged: (accepted, ids) => setState(() {
-                      _acceptedPolicies = accepted;
-                      _policyVersionIds = accepted ? ids : const [];
-                    }),
-                  ),
-                  const SizedBox(height: DsSpacing.md),
-                  PrimaryButton(
-                    label: l10n.signup,
-                    onPressed:
-                        auth.isLoading || !_declaredFemale || !_acceptedPolicies
-                        ? null
-                        : _submit,
-                    isLoading: auth.isLoading,
-                  ),
-                  const SizedBox(height: DsSpacing.xxxl),
-                ],
-              ),
-            ),
+                    SwitchListTile(
+                      value: _wantsPassword,
+                      onChanged: auth.isLoading
+                          ? null
+                          : (value) => setState(() => _wantsPassword = value),
+                      contentPadding: EdgeInsets.zero,
+                      activeThumbColor: colors.primary,
+                      title: Text(
+                        l10n.passwordOptional,
+                        style: context.dsText.bodyStrong,
+                      ),
+                      subtitle: Text(
+                        l10n.passwordOptionalHint,
+                        style: context.dsText.caption,
+                      ),
+                    ),
+                    AnimatedSize(
+                      duration: DsMotion.moderate,
+                      curve: DsMotion.gentle,
+                      alignment: Alignment.topCenter,
+                      child: !_wantsPassword
+                          ? const SizedBox(width: double.infinity)
+                          : Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                DsGaps.vSm,
+                                DsInputField(
+                                  controller: _passwordController,
+                                  label: l10n.password,
+                                  obscureText: true,
+                                  autofillHints: const [
+                                    AutofillHints.newPassword,
+                                  ],
+                                  prefixIcon: Icon(
+                                    Icons.lock_outline_rounded,
+                                    color: colors.primary,
+                                  ),
+                                  onChanged: (_) => setState(() {}),
+                                  validator: (value) => _wantsPassword
+                                      ? AuthFormValidators.strongPassword(
+                                          l10n,
+                                          value,
+                                        )
+                                      : null,
+                                ),
+                                DsGaps.vSm,
+                                _PasswordStrengthIndicator(
+                                  password: _passwordController.text,
+                                ),
+                                DsGaps.vMd,
+                                DsInputField(
+                                  controller: _confirmPasswordController,
+                                  label: l10n.confirmPassword,
+                                  obscureText: true,
+                                  prefixIcon: Icon(
+                                    Icons.lock_outline_rounded,
+                                    color: colors.primary,
+                                  ),
+                                  validator: (v) {
+                                    if (!_wantsPassword) return null;
+                                    if (v != _passwordController.text) {
+                                      return l10n.confirmPasswordMismatch;
+                                    }
+                                    return null;
+                                  },
+                                ),
+                                DsGaps.vXs,
+                              ],
+                            ),
+                    ),
+                  ],
+                ),
+              ).authEnter(5),
+              DsGaps.vLg,
+              AuthPanel(
+                padding: const EdgeInsets.fromLTRB(
+                  DsSpacing.xl,
+                  DsSpacing.lg,
+                  DsSpacing.xl,
+                  DsSpacing.lg,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    AuthSectionLabel(
+                      l10n.authSectionPromise,
+                      icon: Icons.favorite_rounded,
+                    ),
+                    DsGaps.vXs,
+                    // Q43/Q138 P1 — Reem is a women-only platform, and the
+                    // only enforcement is this declaration. The server refuses
+                    // a registration without it, so it is a real gate rather
+                    // than a notice: the button stays disabled until she
+                    // makes it.
+                    CheckboxListTile(
+                      value: _declaredFemale,
+                      onChanged: auth.isLoading
+                          ? null
+                          : (value) => setState(
+                              () => _declaredFemale = value ?? false,
+                            ),
+                      controlAffinity: ListTileControlAffinity.leading,
+                      contentPadding: EdgeInsets.zero,
+                      activeColor: colors.primary,
+                      title: Text(
+                        l10n.declaredFemaleLabel,
+                        style: context.dsText.body,
+                      ),
+                    ),
+                    DsGaps.vXs,
+                    // The terms, named and linked, above one statement. The
+                    // server refuses a registration whose accepted ids do not
+                    // cover every required document, so this is a real gate
+                    // rather than a notice — the same shape as the declaration
+                    // above it.
+                    PolicyConsentField(
+                      role: _role == UserRole.seller ? 'seller' : 'buyer',
+                      accepted: _acceptedPolicies,
+                      enabled: !auth.isLoading,
+                      introText: l10n.registerConsentIntro,
+                      agreeText: l10n.registerConsentAgree,
+                      onChanged: (accepted, ids) => setState(() {
+                        _acceptedPolicies = accepted;
+                        _policyVersionIds = accepted ? ids : const [];
+                      }),
+                    ),
+                  ],
+                ),
+              ).authEnter(6),
+              DsGaps.vXl,
+              PrimaryButton(
+                label: l10n.signup,
+                icon: Icons.auto_awesome_rounded,
+                onPressed:
+                    auth.isLoading || !_declaredFemale || !_acceptedPolicies
+                    ? null
+                    : _submit,
+                isLoading: auth.isLoading,
+              ).authEnter(7),
+              DsGaps.vXl,
+              AuthTrustNote(text: l10n.authTrustNote),
+              DsGaps.vXxl,
+            ],
           ),
         ),
       ],
@@ -365,35 +427,58 @@ class _VerifiedNumber extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.dsColors;
-    return Container(
-      padding: const EdgeInsets.all(DsSpacing.md),
-      decoration: BoxDecoration(
-        color: colors.successContainer,
-        borderRadius: BorderRadius.circular(DsRadius.md),
-      ),
-      child: Row(
-        children: [
-          Icon(Icons.verified_rounded, color: colors.success),
-          const SizedBox(width: DsSpacing.sm),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  context.l10n.numberVerified,
-                  style: context.dsText.label.copyWith(
-                    color: colors.onSurfaceVariant,
-                  ),
-                ),
-                Text(
-                  phone,
-                  textDirection: TextDirection.ltr,
-                  style: context.dsText.cardTitle,
-                ),
-              ],
+    return Center(
+      child: Container(
+        padding: const EdgeInsetsDirectional.fromSTEB(
+          DsSpacing.xs,
+          DsSpacing.xs,
+          DsSpacing.lg,
+          DsSpacing.xs,
+        ),
+        decoration: BoxDecoration(
+          borderRadius: DsRadius.borderPill,
+          color: colors.surface.withValues(alpha: 0.8),
+          border: Border.all(color: colors.success.withValues(alpha: 0.35)),
+          boxShadow: context.shadowXs,
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: DsSizes.avatarSm,
+              height: DsSizes.avatarSm,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: colors.successContainer,
+              ),
+              child: Icon(
+                Icons.verified_rounded,
+                color: colors.success,
+                size: DsSizes.iconSm,
+              ),
             ),
-          ),
-        ],
+            DsGaps.hSm,
+            Flexible(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    context.l10n.numberVerified,
+                    style: context.dsText.caption.copyWith(
+                      color: colors.success,
+                    ),
+                  ),
+                  Text(
+                    phone,
+                    textDirection: TextDirection.ltr,
+                    style: context.dsText.bodyStrong.tabular,
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -409,39 +494,48 @@ class _RoleSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          child: _RoleChip(
-            label: context.l10n.roleBuyer,
-            icon: Icons.shopping_bag_outlined,
-            selected: value == UserRole.customer,
-            onTap: () => onChanged(UserRole.customer),
+    return IntrinsicHeight(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Expanded(
+            child: _RoleCard(
+              label: context.l10n.roleBuyer,
+              hint: context.l10n.authRoleBuyerHint,
+              icon: Icons.shopping_bag_rounded,
+              selected: value == UserRole.customer,
+              onTap: () => onChanged(UserRole.customer),
+            ),
           ),
-        ),
-        const SizedBox(width: DsSpacing.sm),
-        Expanded(
-          child: _RoleChip(
-            label: context.l10n.roleSeller,
-            icon: Icons.storefront_outlined,
-            selected: value == UserRole.seller,
-            onTap: () => onChanged(UserRole.seller),
+          DsGaps.hSm,
+          Expanded(
+            child: _RoleCard(
+              label: context.l10n.roleSeller,
+              hint: context.l10n.authRoleSellerHint,
+              icon: Icons.storefront_rounded,
+              selected: value == UserRole.seller,
+              onTap: () => onChanged(UserRole.seller),
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
 
-class _RoleChip extends StatelessWidget {
-  const _RoleChip({
+/// One way to join, as a card: lit with the rose blend when chosen, frosted
+/// when not, with a check that pops in at the corner.
+class _RoleCard extends StatelessWidget {
+  const _RoleCard({
     required this.label,
+    required this.hint,
     required this.icon,
     required this.selected,
     required this.onTap,
   });
 
   final String label;
+  final String hint;
   final IconData icon;
   final bool selected;
   final VoidCallback onTap;
@@ -449,41 +543,82 @@ class _RoleChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.dsColors;
-    return InkWell(
-      borderRadius: BorderRadius.circular(DsRadius.lg),
-      onTap: onTap,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.symmetric(
-          vertical: DsSpacing.md,
-          horizontal: DsSpacing.sm,
-        ),
-        decoration: BoxDecoration(
-          color: selected
-              ? colors.primary.withValues(alpha: 0.12)
-              : colors.surfaceVariant,
-          borderRadius: BorderRadius.circular(DsRadius.lg),
-          border: Border.all(
-            color: selected ? colors.primary : colors.border,
-            width: selected ? 1.6 : 1,
-          ),
-        ),
-        child: Column(
-          children: [
-            Icon(
-              icon,
-              color: selected ? colors.primary : colors.onSurfaceVariant,
-            ),
-            const SizedBox(height: DsSpacing.xs),
-            Text(
-              label,
-              textAlign: TextAlign.center,
-              style: context.dsText.label.copyWith(
-                color: selected ? colors.primary : colors.onSurfaceVariant,
-                fontWeight: selected ? DsTypography.bold : DsTypography.regular,
+    final ink = selected ? DsColors.onMedia : colors.onSurface;
+    final muted = selected ? DsColors.onMediaMuted : colors.onSurfaceVariant;
+
+    return Semantics(
+      selected: selected,
+      button: true,
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: DsRadius.borderXxl,
+          child: AnimatedContainer(
+            duration: DsMotion.moderate,
+            curve: DsMotion.gentle,
+            padding: const EdgeInsets.all(DsSpacing.md),
+            decoration: BoxDecoration(
+              borderRadius: DsRadius.borderXxl,
+              gradient: selected ? context.primaryGradient : null,
+              color: selected ? null : colors.surface.withValues(alpha: 0.7),
+              border: Border.all(
+                color: selected
+                    ? DsColors.onMediaFaint
+                    : colors.border.withValues(alpha: 0.8),
               ),
+              boxShadow: selected ? context.primaryGlow : context.shadowXs,
             ),
-          ],
+            child: Stack(
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    AnimatedContainer(
+                      duration: DsMotion.moderate,
+                      width: DsSizes.avatarMd,
+                      height: DsSizes.avatarMd,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: selected
+                            ? DsColors.mediaPlate
+                            : colors.primaryContainer,
+                      ),
+                      child: Icon(
+                        icon,
+                        color: selected ? DsColors.onMedia : colors.primary,
+                        size: DsSizes.iconSm,
+                      ),
+                    ),
+                    DsGaps.vSm,
+                    Text(
+                      label,
+                      style: context.dsText.cardTitle.bold.copyWith(color: ink),
+                    ),
+                    DsGaps.vXxs,
+                    Text(
+                      hint,
+                      style: context.dsText.caption.copyWith(color: muted),
+                    ),
+                  ],
+                ),
+                PositionedDirectional(
+                  top: 0,
+                  end: 0,
+                  child: AnimatedScale(
+                    scale: selected ? 1 : 0,
+                    duration: DsMotion.moderate,
+                    curve: DsMotion.softSpring,
+                    child: const Icon(
+                      Icons.check_circle_rounded,
+                      color: DsColors.onMedia,
+                      size: DsSizes.iconSm,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );
@@ -502,13 +637,13 @@ class _PasswordStrengthIndicator extends StatelessWidget {
     final label = score <= 1
         ? context.l10n.passwordWeak
         : score <= 3
-            ? context.l10n.passwordGood
-            : context.l10n.passwordStrong;
+        ? context.l10n.passwordGood
+        : context.l10n.passwordStrong;
     final color = score <= 1
         ? colors.error
         : score <= 3
-            ? colors.warning
-            : colors.success;
+        ? colors.warning
+        : colors.success;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

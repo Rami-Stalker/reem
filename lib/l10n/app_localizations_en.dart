@@ -11081,4 +11081,59 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get reverseSmsCouldNotOpen =>
       'Could not open your messaging app. Send the message above manually.';
+
+  @override
+  String get authEyebrow => 'A space made for women';
+
+  @override
+  String get authOr => 'or';
+
+  @override
+  String get authTrustNote => 'Your number is protected and never shared.';
+
+  @override
+  String get authGuestCaption => 'Browse the boutiques without an account';
+
+  @override
+  String get authPasswordCaption => 'On a phone you have used before';
+
+  @override
+  String get authCodeHint => 'Enter the 6-digit code';
+
+  @override
+  String get authLostSimCaption => 'Recover your account with another number';
+
+  @override
+  String get authSectionJoinAs => 'How will you join Reem?';
+
+  @override
+  String get authRoleBuyerHint => 'Shop, follow and share';
+
+  @override
+  String get authRoleSellerHint => 'Open your boutique and sell';
+
+  @override
+  String get authSectionAboutYou => 'About you';
+
+  @override
+  String get authSectionWhere => 'Where are you?';
+
+  @override
+  String get authSectionSecurity => 'Security';
+
+  @override
+  String get authSectionPromise => 'Your pledge';
+
+  @override
+  String get authBenefitCheckout => 'Check out easily and safely';
+
+  @override
+  String get authBenefitChat => 'Message sellers directly';
+
+  @override
+  String get authBenefitSaved => 'Save everything you love';
+
+  @override
+  String get authForgotSubtitle =>
+      'Enter your number and we will send you a code to set a new password.';
 }

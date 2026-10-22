@@ -19027,6 +19027,114 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Could not open your messaging app. Send the message above manually.'**
   String get reverseSmsCouldNotOpen;
+
+  /// Small eyebrow above the sign-in title
+  ///
+  /// In en, this message translates to:
+  /// **'A space made for women'**
+  String get authEyebrow;
+
+  /// Word between two sign-in options
+  ///
+  /// In en, this message translates to:
+  /// **'or'**
+  String get authOr;
+
+  /// Reassurance at the foot of the sign-in screens
+  ///
+  /// In en, this message translates to:
+  /// **'Your number is protected and never shared.'**
+  String get authTrustNote;
+
+  /// Caption under continue as guest
+  ///
+  /// In en, this message translates to:
+  /// **'Browse the boutiques without an account'**
+  String get authGuestCaption;
+
+  /// Caption under the password sign-in option
+  ///
+  /// In en, this message translates to:
+  /// **'On a phone you have used before'**
+  String get authPasswordCaption;
+
+  /// Hint above the six code cells
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the 6-digit code'**
+  String get authCodeHint;
+
+  /// Caption under lost your SIM
+  ///
+  /// In en, this message translates to:
+  /// **'Recover your account with another number'**
+  String get authLostSimCaption;
+
+  /// Heading over the buyer / seller choice
+  ///
+  /// In en, this message translates to:
+  /// **'How will you join Reem?'**
+  String get authSectionJoinAs;
+
+  /// Caption on the buyer role card
+  ///
+  /// In en, this message translates to:
+  /// **'Shop, follow and share'**
+  String get authRoleBuyerHint;
+
+  /// Caption on the seller role card
+  ///
+  /// In en, this message translates to:
+  /// **'Open your boutique and sell'**
+  String get authRoleSellerHint;
+
+  /// Heading over the name fields
+  ///
+  /// In en, this message translates to:
+  /// **'About you'**
+  String get authSectionAboutYou;
+
+  /// Heading over country and city
+  ///
+  /// In en, this message translates to:
+  /// **'Where are you?'**
+  String get authSectionWhere;
+
+  /// Heading over the optional password
+  ///
+  /// In en, this message translates to:
+  /// **'Security'**
+  String get authSectionSecurity;
+
+  /// Heading over the declaration and terms
+  ///
+  /// In en, this message translates to:
+  /// **'Your pledge'**
+  String get authSectionPromise;
+
+  /// Benefit of having an account
+  ///
+  /// In en, this message translates to:
+  /// **'Check out easily and safely'**
+  String get authBenefitCheckout;
+
+  /// Benefit of having an account
+  ///
+  /// In en, this message translates to:
+  /// **'Message sellers directly'**
+  String get authBenefitChat;
+
+  /// Benefit of having an account
+  ///
+  /// In en, this message translates to:
+  /// **'Save everything you love'**
+  String get authBenefitSaved;
+
+  /// Subtitle on the forgot password screen
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your number and we will send you a code to set a new password.'**
+  String get authForgotSubtitle;
 }
 
 class _AppLocalizationsDelegate
