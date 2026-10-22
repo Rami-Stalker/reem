@@ -297,6 +297,77 @@ export default () => ({
     limit: parseInt(process.env.RATE_LIMIT_MAX ?? '120', 10),
   },
   /**
+   * Shareable links — the addresses that leave the phone.
+   *
+   * A share is the one artefact of this platform that outlives the session it
+   * was made in: it is pasted into WhatsApp, forwarded, and opened weeks later
+   * by somebody who does not have the app. So the origin it points at has to
+   * be one that answers.
+   *
+   * `SHARE_PUBLIC_ORIGIN` is that origin, and it deliberately falls back to
+   * the API's own — `MEDIA_PUBLIC_ORIGIN`, then Render's `RENDER_EXTERNAL_URL`
+   * — rather than to a pretty domain nobody has bought yet. The previous
+   * arrangement hard-coded `https://reem.shop`, which has never resolved: every
+   * link this app has ever shared pointed at NXDOMAIN, so WhatsApp drew no
+   * preview and the tap ended on the browser's error page. A default that is
+   * merely ugly beats a default that is dead.
+   *
+   * When a custom domain is attached, set this once here and once in the
+   * Flutter build (`--dart-define=SHARE_BASE_URL=…`) and every link shape
+   * follows; nothing else knows the host.
+   */
+  links: {
+    publicOrigin: (
+      process.env.SHARE_PUBLIC_ORIGIN ||
+      process.env.MEDIA_PUBLIC_ORIGIN ||
+      process.env.RENDER_EXTERNAL_URL ||
+      ''
+    ).replace(/\/+$/, ''),
+    /**
+     * The custom scheme the landing page falls back to.
+     *
+     * Not decoration: on Android, WhatsApp opens links in its own embedded
+     * browser, and an embedded browser never triggers App Link verification —
+     * so for a large share of real taps the https link lands on the web page
+     * even with the app installed. The page's «افتح في التطبيق» button uses
+     * this, which is the only thing that works in that window.
+     */
+    scheme: process.env.APP_LINK_SCHEME ?? 'reem',
+    android: {
+      packageName: process.env.ANDROID_PACKAGE_NAME ?? 'shop.reem.app',
+      /**
+       * SHA-256 signing-certificate fingerprints, comma-separated, colon-
+       * separated hex — exactly as `keytool`/Play Console prints them. Both the
+       * upload key and Play's app-signing key belong here once the app is on
+       * Play, or verification fails for store installs.
+       *
+       * Empty until a keystore exists. `/.well-known/assetlinks.json` then
+       * serves an empty array, which is valid JSON and simply means "nothing is
+       * verified yet" — the links still open the web page, and the in-page
+       * button still opens the app.
+       */
+      fingerprints: (process.env.ANDROID_SHA256_CERT_FINGERPRINTS ?? '')
+        .split(',')
+        .map((value) => value.trim().toUpperCase())
+        .filter(Boolean),
+      storeUrl: process.env.ANDROID_STORE_URL ?? '',
+    },
+    ios: {
+      /**
+       * Fully-qualified `TEAMID.bundle.id` entries, comma-separated. Apple
+       * fetches the association file itself and caches it, so this has to be
+       * right before the first TestFlight build goes out.
+       */
+      appIds: (process.env.IOS_APP_IDS ?? '')
+        .split(',')
+        .map((value) => value.trim())
+        .filter(Boolean),
+      storeUrl: process.env.IOS_STORE_URL ?? '',
+    },
+    /** A direct APK, for the handsets here that have no Play Store at all. */
+    apkUrl: process.env.APP_APK_URL ?? '',
+  },
+  /**
    * Q50/Q47 P1 — «تلقائياً من مصدر منحدده» / «موقع الليرة اليوم».
    *
    * Off by default. A rate feed reprices the entire catalogue, so it is not
@@ -612,6 +683,44 @@ export default () => ({
       .split(',')
       .map((route) => route.trim())
       .filter(Boolean),
+  },
+
+  /**
+   * الصالونات والجمال.
+   */
+  salons: {
+    /**
+     * The offset a salon's wall clock runs at, in minutes from UTC.
+     *
+     * Syria is UTC+03:00 and has not observed daylight saving since 2022, so
+     * +180 is correct today — and this is the single place it is written down.
+     * Configurable rather than constant so that the first salon in another
+     * offset is a deployment change, not a code change.
+     */
+    utcOffsetMinutes: parseInt(
+      process.env.SALON_UTC_OFFSET_MINUTES ?? '180',
+      10,
+    ),
+    /**
+     * How long before an appointment the reminder goes out. She needs enough
+     * warning to rearrange her day and not so much that she forgets again.
+     */
+    reminderLeadMinutes: parseInt(
+      process.env.SALON_REMINDER_LEAD_MINUTES ?? '720',
+      10,
+    ),
+    /**
+     * How long after its end a CONFIRMED appointment is taken as served.
+     *
+     * Only a completed appointment can be reviewed, and a salon that forgets
+     * to tick "done" would otherwise silence every customer it ever had. The
+     * salon can still mark a no-show inside this window, which is why it is a
+     * day rather than an hour.
+     */
+    autoCompleteAfterHours: parseInt(
+      process.env.SALON_AUTO_COMPLETE_AFTER_HOURS ?? '24',
+      10,
+    ),
   },
 
   payments: {

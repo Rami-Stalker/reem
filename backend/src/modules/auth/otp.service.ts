@@ -608,7 +608,9 @@ export class OtpService {
     if (purpose !== OtpPurpose.PHONE_VERIFICATION) return;
     await this.prisma.user.updateMany({
       where: { phone },
-      data: { isVerified: true, phoneVerifiedAt: at },
+      // The number only: `isVerified` is the public badge, granted by
+      // `AccountVerificationService`, never by receiving a code.
+      data: { phoneVerifiedAt: at },
     });
   }
 

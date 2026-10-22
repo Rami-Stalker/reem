@@ -144,6 +144,7 @@ seller she is waiting on and the news that her parcel is downstairs.
 | `reem_social` | التفاعلات | default |
 | `reem_rooms` | غرف التسوّق | default |
 | `reem_offers` | العروض والكوبونات | default |
+| `reem_appointments` | مواعيد الصالونات | max — heads-up banner |
 | `reem_system` | تنبيهات التطبيق | high |
 
 **These ids are a contract.** Android **silently discards** a notification

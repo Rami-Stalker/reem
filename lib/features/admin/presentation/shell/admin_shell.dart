@@ -55,7 +55,7 @@ class AdminShell extends ConsumerWidget {
           actions: [
             IconButton(
               tooltip: l10n.adminSettings,
-              onPressed: () => context.go(RoutePaths.adminSystemSettings),
+              onPressed: () => context.push(RoutePaths.adminSystemSettings),
               icon: const Icon(Icons.admin_panel_settings_rounded),
             ),
           ],
@@ -156,7 +156,7 @@ class _AdminNavigation extends StatelessWidget {
                 ),
                 selected: false,
                 extended: extended,
-                onTap: () => context.go(RoutePaths.securitySettings),
+                onTap: () => context.push(RoutePaths.securitySettings),
               ),
             ),
           ],

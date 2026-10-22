@@ -157,6 +157,12 @@ service to trip over the stale socket.
   `products.seller_id` and `orders.total` and re-parents `order_items` onto
   `seller_orders`. It is written for a pre-launch database — reset and reseed
   rather than applying it over rows that matter.
+- **Appointments** (`20260917120000_salons_and_appointments`) add eight tables
+  for «الصالونات والجمال». They are additive — nothing existing is dropped or
+  altered — so the migration is safe to apply over live rows. No unique index
+  protects a booked slot, and cannot: durations vary and a salon may have
+  several chairs, so the rule is a `FOR UPDATE` overlap count in
+  `appointments.service.ts`. Read [SALONS.md](SALONS.md) before touching it.
 - **Seeding** is wired through `prisma.config.ts`, so `prisma migrate reset`
   reseeds automatically. That config file also has to `import 'dotenv/config'`
   explicitly, because the presence of a Prisma config file disables the CLI's

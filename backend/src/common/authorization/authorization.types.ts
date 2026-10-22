@@ -20,6 +20,12 @@ export type AuthorizationResource =
   | 'post'
   | 'product'
   | 'review'
+  /// الصالونات والجمال — a salon and its menu, hours and queue.
+  | 'salon'
+  /// One booking. Its own resource rather than a verb on `salon`, because the
+  /// two have different owners: a salon belongs to the woman who runs it, an
+  /// appointment belongs equally to her and to the customer who made it.
+  | 'appointment'
   | 'seller'
   | 'session'
   | 'story'

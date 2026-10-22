@@ -32,6 +32,25 @@ Authorization: Bearer <access_token>
 | POST | `/posts` | Create post |
 | POST | `/posts/:id/like` | Toggle like |
 | GET | `/stories` | Active stories |
+| GET | `/content/:id` | One piece — post, reel or story. `@OptionalAuth`; what a shared link opens. Declared last among the GETs on that controller, since `:id` would otherwise shadow `feed`, `reels`, `stories`, `saved` and `muted`. |
+
+## Shareable links
+
+HTML rather than JSON, and unauthenticated. Full account in
+[SHARE_LINKS.md](SHARE_LINKS.md).
+
+| Method | Path | Notes |
+|--------|------|-------|
+| GET | `/product/:id` | Product landing page, with Open Graph tags |
+| GET | `/p/:id` | Post, reel or story |
+| GET | `/user/:id`, `/u/:id` | Profile |
+| GET | `/user/:id/products` | Storefront |
+| GET | `/collection/:key` | A shelf of the catalogue |
+| GET | `/rooms/join/:slug` | Room invite. Distinct from `POST /rooms/join/:slug`, which admits her |
+| GET | `/invite/:code` | Referral. Web only — the app deliberately does not claim it |
+| GET | `/` | The bare origin, which used to answer a JSON 404 |
+| GET | `/.well-known/assetlinks.json` | Android App Links association |
+| GET | `/.well-known/apple-app-site-association` | iOS Universal Links association |
 
 ## Products
 
@@ -67,6 +86,46 @@ recipient), `messages.delivered` (`message_ids`), `messages.read`
 (`user_id`, `up_to`), `typing` and `presence.changed`. A message is
 delivered the moment the recipient's open socket receives it. Errors carry
 `source_event` and the `client_id` of the send that failed.
+
+## Salons and appointments (`/salons`, `/appointments`)
+
+«الصالونات والجمال». The directory and a salon's page are public — a shared
+salon link has to open for somebody who has not signed in. Everything else is
+authenticated, and the owner's routes demand `salon:manage`.
+
+Availability is **never** computed by a client: `/salons/:id/availability`
+returns the free start times and a booking sends one of those instants back
+untouched. See [SALONS.md](SALONS.md) for the booking invariant.
+
+| Method | Path | Notes |
+|--------|------|-------|
+| GET | `/salons` | Directory. `q`, `governorate`, `city`, `category`, `min_price`, `max_price`, `min_rating`, `home_service`, `sort` |
+| GET | `/salons/categories` | Service categories with live counts |
+| GET | `/salons/areas` | Localities that actually have salons |
+| GET | `/salons/mine` | The caller's own salon, or `null` |
+| GET | `/salons/:id` | By id **or slug** |
+| GET | `/salons/:id/reviews` | Paginated |
+| GET | `/salons/:id/availability` | `service_id`, `date` (`YYYY-MM-DD`) → free slots |
+| GET | `/salons/:id/open-days` | `service_id`, `days` → slot counts per day |
+| POST | `/salons/:id/appointments` | `{ service_id, starts_at, at_home?, address_id?, note? }` |
+| PUT | `/salons` | Upsert the caller's salon. `status` moves between `DRAFT` and `ACTIVE` only |
+| POST | `/salons/services` | Add a service |
+| PATCH | `/salons/services/:serviceId` | Edit one |
+| DELETE | `/salons/services/:serviceId` | Soft-close it — never deleted, because appointments reference it |
+| PUT | `/salons/hours` | Replaces the whole week at once |
+| POST/DELETE | `/salons/closures[/:date]` | Single closed dates |
+| GET | `/salons/:id/queue` | The owner's queue. `filter` = `pending` / `upcoming` / `past` |
+| POST | `/salons/reviews/:reviewId/reply` | The salon's answer to a review |
+| GET | `/appointments` | Hers. `filter` = `upcoming` / `past` |
+| GET | `/appointments/:id` | Either side; the salon's copy carries the customer block |
+| POST | `/appointments/:id/cancel` | `{ reason? }`. Late cancellation is recorded, not refused |
+| POST | `/appointments/:id/review` | `{ rating, body? }`, once, after `COMPLETED` |
+| POST | `/appointments/:id/confirm` | Salon only |
+| POST | `/appointments/:id/complete` | Salon only |
+| POST | `/appointments/:id/no-show` | Salon only |
+
+Every appointment payload carries `can_cancel` and `can_review`, decided by the
+server, so a client can never offer a button the API would refuse.
 
 ## Reem AI Stylist (`/ai/stylist`)
 

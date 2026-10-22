@@ -14,7 +14,6 @@ abstract interface class ProfileRepository {
 
   Future<Result<List<OrderEntity>>> getOrders();
 
-  Future<Result<void>> toggleFavorite(String productId);
 
   Future<Result<void>> saveSeller(String sellerId);
 
@@ -26,4 +25,17 @@ abstract interface class ProfileRepository {
   });
 
   Future<Result<WishlistShareLink>> shareWishlistCollection(String collectionId);
+
+  Future<Result<void>> addToWishlistCollection({
+    required String collectionId,
+    required String type,
+    String? productId,
+    String? postId,
+    String? sellerId,
+  });
+
+  Future<Result<void>> removeFromWishlistCollection({
+    required String collectionId,
+    required String itemId,
+  });
 }

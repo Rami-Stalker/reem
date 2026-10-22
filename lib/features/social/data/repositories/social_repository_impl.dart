@@ -38,6 +38,10 @@ class SocialRepositoryImpl with RepositoryHandler implements SocialRepository {
       guard(() => remote.reels(cursor: cursor, limit: limit));
 
   @override
+  Future<Result<Content>> byId(String contentId) =>
+      guard(() => remote.byId(contentId));
+
+  @override
   Future<Result<PaginatedData<Content>>> following({
     String? cursor,
     int limit = 20,

@@ -46,6 +46,14 @@ const _publicRoutes = <String>{
   // and the server answers these routes unauthenticated for the same reason.
   RoutePaths.policies,
   RoutePaths.policyDetail,
+  // «الصالونات والجمال», the browsing half. A shared salon link has to open
+  // for a woman who has not signed in — that is what makes it worth sharing —
+  // and the server answers both of these unauthenticated. Booking, «حجوزاتي»
+  // and the owner's workspace are deliberately absent: each is about one
+  // account, so the guard sends her to `authRequired` with a `from` and she
+  // lands back on the salon she was looking at.
+  RoutePaths.salons,
+  RoutePaths.salon,
   RoutePaths.likeSheet,
   RoutePaths.commentSheet,
   // A guest may browse the community and the reels feed, and that is the whole
@@ -55,6 +63,13 @@ const _publicRoutes = <String>{
   // with a `from` so she lands back where she was.
   RoutePaths.socialFeed,
   RoutePaths.reels,
+  // One piece on its own, and one boutique's whole shelf — the two
+  // destinations a shared link most often points at. Both read endpoints the
+  // API already answers unauthenticated, and gating them would mean a link
+  // forwarded on WhatsApp opens a sign-in wall for the one person it was sent
+  // to. Reacting still needs a session; the guard catches that at the gesture.
+  RoutePaths.contentDetail,
+  RoutePaths.sellerProducts,
   // Q64 — the tracking code *is* the credential, and Q46 P1 lets guests buy.
   // Requiring a login to follow a parcel would strand the very customers the
   // guest checkout exists for, and matches the backend, which marks the same
@@ -105,7 +120,23 @@ String? authGuard(BuildContext context, GoRouterState state, AuthState auth) {
   if (!auth.isInitialized) return null;
 
   final location = state.matchedLocation;
-  final isPublic = _publicRoutes.contains(location);
+
+  // The *pattern*, not the location. `_publicRoutes` is written in route
+  // spellings — `/user/:id`, `/track/:code`, `/category/:category` — and
+  // `matchedLocation` is the concrete path, so `contains('/user/abc')` was
+  // false for every one of them. Ten routes deliberately listed as public,
+  // each with a comment explaining why it had to be, were in fact gated: a
+  // guest could not open a profile, a department, a policy document or the
+  // parcel tracker whose code is the only credential it has. It showed up
+  // here because a shared link is precisely a stranger arriving at
+  // `/user/<id>`.
+  //
+  // `fullPath` is empty when nothing matched; the location is then the honest
+  // fallback, and an unmatched route is not public either way.
+  final pattern = state.fullPath?.isNotEmpty == true
+      ? state.fullPath!
+      : location;
+  final isPublic = _publicRoutes.contains(pattern);
   final isAuthenticated = auth.isAuthenticated;
 
   if (!isAuthenticated && !isPublic) {

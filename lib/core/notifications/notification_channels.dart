@@ -14,13 +14,13 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 /// So the channels are created at startup, before any push can arrive, and
 /// their ids are named constants on both sides rather than string literals.
 ///
-/// ## Why six and not one
+/// ## Why seven and not one
 ///
 /// Because a channel is the unit Android gives *her* to control. One channel
 /// means the only choice available is all or nothing, and the woman who is
 /// tired of "a shop you follow posted something" turns off the one switch
 /// there is — which also silences the message from a seller she is waiting on
-/// and the news that her parcel is downstairs. Six channels mean she can mute
+/// and the news that her parcel is downstairs. Seven channels mean she can mute
 /// the noise and keep the rest, which is the difference between an app she
 /// tunes and an app she mutes.
 ///
@@ -71,6 +71,19 @@ enum PushChannel {
     importance: Importance.defaultImportance,
   ),
 
+  /// Her salon appointments: requested, confirmed, cancelled, starting soon.
+  ///
+  /// Its own drawer rather than folded into [orders], because these are the
+  /// one kind of notice that is useless a minute late — a woman who mutes
+  /// order updates while she waits for a parcel must not thereby mute the
+  /// reminder that she is due at the salon at six.
+  appointments(
+    id: 'reem_appointments',
+    name: 'مواعيد الصالونات',
+    description: 'تأكيد حجوزاتك وإلغاؤها وتذكيرك قبل موعدك.',
+    importance: Importance.max,
+  ),
+
   /// Moderation outcomes, security notices, everything the platform must say.
   system(
     id: 'reem_system',
@@ -92,8 +105,9 @@ enum PushChannel {
   final String description;
 
   /// `max` is what produces a heads-up banner over whatever she is doing.
-  /// Spent only on the two kinds she is actually waiting for: everything else
-  /// appears in the shade without interrupting her.
+  /// Spent only on the three kinds she is actually waiting for — her orders,
+  /// her messages and her appointments — everything else appears in the shade
+  /// without interrupting her.
   final Importance importance;
 
   /// The channel named by an incoming push, or [system] for one that names

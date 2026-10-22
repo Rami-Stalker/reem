@@ -277,7 +277,7 @@ export class ChatRealtimeGateway implements OnModuleInit, BeforeApplicationShutd
       const sent = this.sendToUser(userId, {
         event: 'message.created',
         chat_id: event.chatId,
-        message: { ...message, is_mine: userId === event.senderId },
+        message: this.forRecipient(message, userId, event.senderId),
       });
       if (sent && userId !== event.senderId) reached.push(userId);
     }
@@ -290,6 +290,12 @@ export class ChatRealtimeGateway implements OnModuleInit, BeforeApplicationShutd
           this.logger.warn(`Delivery receipt failed: ${String(error)}`),
         );
     }
+  }
+
+  /** The message as [userId] must see it. */
+  private forRecipient(message: unknown, userId: string, senderId: string) {
+    if (typeof message !== 'object' || message === null) return message;
+    return { ...(message as Record<string, unknown>), is_mine: userId === senderId };
   }
 
   @OnEvent('chat.messages.read')

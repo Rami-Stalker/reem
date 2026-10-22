@@ -171,19 +171,15 @@ class _ChatInputState extends State<ChatInput>
                         borderRadius: DsRadius.borderField,
                         border: Border.all(color: colors.border),
                       ),
-                      child: TextField(
+                      child: DsComposerField(
                         controller: textController,
-                        minLines: 1,
-                        maxLines: 4,
-                        textInputAction: TextInputAction.send,
+                        hint: context.l10n.chatWriteMessage,
+                        // The pill around it is drawn by the bar itself, so
+                        // the field inside carries no chrome of its own.
+                        shape: DsComposerShape.bare,
+                        maxLength: 5000,
                         onChanged: handleTyping,
                         onSubmitted: (_) => send(),
-                        decoration: InputDecoration(
-                          hintText: context.l10n.chatWriteMessage,
-                          border: InputBorder.none,
-                          hintStyle: context.dsText.body
-                              .tint(context.dsColors.onSurfaceVariant),
-                        ),
                       ),
                     ),
                   ),

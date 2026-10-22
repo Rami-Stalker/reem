@@ -9,6 +9,7 @@ import 'package:reem/features/policies/domain/entities/policy_document.dart';
 import 'package:reem/features/policies/presentation/providers/policies_provider.dart';
 import 'package:reem/features/policies/presentation/providers/policy_consent_provider.dart';
 import 'package:reem/features/policies/presentation/screens/policy_consent_screen.dart';
+import 'package:reem/features/product_social/presentation/widgets/product_actions_scope.dart';
 
 /// The frame every route is drawn inside — one banner, one text scale, one
 /// answer for the system bars, and the consent gate.
@@ -101,11 +102,17 @@ class AppChrome extends ConsumerWidget {
       data: scaled,
       child: AnnotatedRegion<SystemUiOverlayStyle>(
         value: AppSystemChrome.overlayStyleFor(Theme.of(context).brightness),
-        child: Column(
-          children: [
-            const OfflineBanner(),
-            Expanded(child: body),
-          ],
+        // One install, every route. A product's interactions are a fact about
+        // the product, not about the screen it happens to be on, so the
+        // affordance is supplied here and every catalogue surface asks for it
+        // — including the ones written after this line was.
+        child: ProductActionsScope(
+          child: Column(
+            children: [
+              const OfflineBanner(),
+              Expanded(child: body),
+            ],
+          ),
         ),
       ),
     );

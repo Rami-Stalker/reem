@@ -103,15 +103,14 @@ class _AddStoryScreenState extends ConsumerState<AddStoryScreen> {
               SurfaceCard(
                 child: Column(
                   children: [
-                    TextField(
+                    DsInputField(
                       controller: _linkController,
                       enabled: !state.isLoading,
                       keyboardType: TextInputType.url,
-                      decoration: InputDecoration(
-                        labelText: context.l10n.createStoryOptionalLink,
-                        hintText: 'https://example.com/product',
-                        prefixIcon: Icon(Icons.open_in_new_rounded),
-                      ),
+                      label: context.l10n.createStoryOptionalLink,
+                      // l10n-ignore: an address shape, not language
+                      hint: 'https://example.com/product',
+                      prefixIcon: const Icon(Icons.open_in_new_rounded),
                     ),
                   ],
                 ),

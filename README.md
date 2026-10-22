@@ -137,6 +137,49 @@ With no Firebase project configured the whole thing degrades to nothing on
 purpose: the build succeeds, the app runs, and the API records each push as
 skipped rather than claiming it was sent.
 
+## Product interactions
+
+Every product supports Like, Share, Save, Repost and Comments — as a post, the
+five sit on the card; as a grid tile, a rail card or a search result, the like
+sits on the tile and the rest are on the product page. They belong to the
+*product*, so a piece liked on the home grid is liked on its own page and on a
+boutique's shelf.
+
+The affordance is installed once, above the navigator, and every product
+surface asks for it — so a grid written next year gets it by construction
+rather than by review: [docs/PRODUCT_INTERACTIONS.md](docs/PRODUCT_INTERACTIONS.md).
+
+## Shareable links
+
+A product link pasted into WhatsApp shows the photograph, the name and the
+price, and opens the product — inside the app on a phone that has it, on a
+real page on one that does not. The same shape covers posts, reels, stories,
+profiles, boutiques, collections and room invites.
+
+Links used to point at `https://reem.shop`, a host that has never resolved, so
+every share ended on the browser's error page. They point at the API's own
+origin now, which serves a landing page with Open Graph tags for each of them
+— overridable with one variable when a custom domain is attached. Making them
+open the app instead needs a signing fingerprint and an Apple team id, and
+until those exist the links still work as web pages:
+[docs/SHARE_LINKS.md](docs/SHARE_LINKS.md).
+
+## Salons and beauty
+
+«الصالونات والجمال»: a woman finds a salon near her, picks a service, a day and
+an hour, and books. The salon confirms, serves her, and she rates it. Home
+service, packages and offers are part of the model rather than a later bolt-on.
+
+It is not a second application. A salon is owned by a `User`, the button that
+messages it opens the chat that already exists, its notices ride the
+notification service, a home appointment uses the address book she keeps for
+parcels, and its link shares like a product's.
+
+The one invariant is that no two women hold the same chair at the same hour,
+and because durations vary and a salon may have four chairs, that is a `FOR
+UPDATE` overlap count rather than a unique index. An appointment carries no
+money — she pays at the chair: [docs/SALONS.md](docs/SALONS.md).
+
 ## Resilience
 
 Crash handling, PII-safe error reporting with breadcrumbs, and the offline
@@ -207,6 +250,9 @@ flutter test tools/icons/generate_app_icons.dart
 | [DATABASE.md](docs/DATABASE.md) | Schema and data model |
 | [BACKEND_API.md](docs/BACKEND_API.md) | Endpoint surface |
 | [identity-authorization-architecture.md](docs/identity-authorization-architecture.md) | Identity, OTP, devices, roles |
+| [PRODUCT_INTERACTIONS.md](docs/PRODUCT_INTERACTIONS.md) | Like/Share/Save/Repost/Comments on every product surface, and the one store behind them |
+| [SHARE_LINKS.md](docs/SHARE_LINKS.md) | Share links, App Links / Universal Links, the landing pages, and the two well-known files |
+| [SALONS.md](docs/SALONS.md) | «الصالونات والجمال»: the booking invariant, availability, statuses, the two jobs, and why an appointment carries no money |
 | [DEPLOYMENT.md](docs/DEPLOYMENT.md) | **Run one API process.** The single-instance constraint, the nightly job order, production env guards |
 | [production-gap-analysis.md](docs/production-gap-analysis.md) | Pre-launch audit: what is complete, what is thin, what is missing, in priority order |
 | [production-launch-report.md](docs/production-launch-report.md) | **Read before deploying.** Launch readiness: what was tested and fixed, remaining risks, external dependencies, and the three blockers |

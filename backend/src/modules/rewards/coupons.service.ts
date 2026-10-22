@@ -274,15 +274,23 @@ export class CouponsService {
         ? off.clampMax(subtotal).clampMin(zero).quantize()
         : zero;
     }
-    // Quantized here, where the figure is born: a percentage of an odd
-    // subtotal runs past the four places a column keeps, and the order's
-    // discount and its per-seller shares would then round apart on disk.
-    return subtotal
+    const percentage = subtotal
       .times(coupon.discountPercent.dividedBy(100))
       .clampMax(subtotal)
       .clampMin(zero)
       .quantize()
       .clampMax(subtotal);
+
+    // The code's own ceiling, when it declares one. A percentage with no
+    // ceiling is a discount nobody approved — 15% is a welcome on a dress and
+    // a fortune on a gold set, and this marketplace sells both through one
+    // checkout. A ceiling stated in another currency cannot be compared, so it
+    // is ignored rather than applied wrongly.
+    if (coupon.maxDiscountAmount == null) return percentage;
+    const ceiling = Money.of(coupon.maxDiscountAmount, coupon.currency);
+    return ceiling.currency === percentage.currency
+      ? percentage.clampMax(ceiling)
+      : percentage;
   }
 
   /**

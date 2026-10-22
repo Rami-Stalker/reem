@@ -212,6 +212,144 @@ abstract class AppLocalizations {
   /// **'Account updated.'**
   String get accountUpdated;
 
+  /// Title of the screen where a customer applies for the verified badge
+  ///
+  /// In en, this message translates to:
+  /// **'Account verification'**
+  String get accountVerification;
+
+  /// Shown to a verified account
+  ///
+  /// In en, this message translates to:
+  /// **'The badge is on your name.'**
+  String get accountVerificationApprovedBlurb;
+
+  /// Label of the back-of-document upload
+  ///
+  /// In en, this message translates to:
+  /// **'Document — back'**
+  String get accountVerificationBack;
+
+  /// Explains what verification is for
+  ///
+  /// In en, this message translates to:
+  /// **'The badge beside your name says Reem has checked who you are. Send a document and we will look at it.'**
+  String get accountVerificationBlurb;
+
+  /// Label of the document-type field
+  ///
+  /// In en, this message translates to:
+  /// **'Document type'**
+  String get accountVerificationDocType;
+
+  /// Hint under the document-type field
+  ///
+  /// In en, this message translates to:
+  /// **'National ID, passport, commercial register…'**
+  String get accountVerificationDocTypeHint;
+
+  /// Label of the front-of-document upload
+  ///
+  /// In en, this message translates to:
+  /// **'Document — front'**
+  String get accountVerificationFront;
+
+  /// Label of the legal-name field
+  ///
+  /// In en, this message translates to:
+  /// **'Name on the document'**
+  String get accountVerificationLegalName;
+
+  /// Shown when the account has not proved its number yet
+  ///
+  /// In en, this message translates to:
+  /// **'Verify your phone number first.'**
+  String get accountVerificationNeedsPhone;
+
+  /// Label of the free-text reason field
+  ///
+  /// In en, this message translates to:
+  /// **'Why you are asking'**
+  String get accountVerificationNote;
+
+  /// Privacy note under the document uploads
+  ///
+  /// In en, this message translates to:
+  /// **'Your documents are read only by the staff who review them, and by nobody else on Reem.'**
+  String get accountVerificationPrivacy;
+
+  /// Resubmits a claim that was returned or refused
+  ///
+  /// In en, this message translates to:
+  /// **'Send again'**
+  String get accountVerificationResubmit;
+
+  /// Label of the selfie upload
+  ///
+  /// In en, this message translates to:
+  /// **'A photo of you holding it'**
+  String get accountVerificationSelfie;
+
+  /// Confirmation after submitting
+  ///
+  /// In en, this message translates to:
+  /// **'Sent. We will tell you as soon as it is reviewed.'**
+  String get accountVerificationSent;
+
+  /// Status of an approved claim
+  ///
+  /// In en, this message translates to:
+  /// **'Verified'**
+  String get accountVerificationStatusApproved;
+
+  /// Status of a claim returned for more information
+  ///
+  /// In en, this message translates to:
+  /// **'We need something more'**
+  String get accountVerificationStatusNeedsInfo;
+
+  /// Status of a filed verification claim
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for review'**
+  String get accountVerificationStatusPending;
+
+  /// Status of a refused claim
+  ///
+  /// In en, this message translates to:
+  /// **'Not approved'**
+  String get accountVerificationStatusRejected;
+
+  /// Status of a badge that was granted and later revoked
+  ///
+  /// In en, this message translates to:
+  /// **'Withdrawn by Reem'**
+  String get accountVerificationStatusRevoked;
+
+  /// Status of a claim a reviewer has opened
+  ///
+  /// In en, this message translates to:
+  /// **'Being reviewed'**
+  String get accountVerificationStatusUnderReview;
+
+  /// Submits the verification claim
+  ///
+  /// In en, this message translates to:
+  /// **'Send for review'**
+  String get accountVerificationSubmit;
+
+  /// Cancels an open verification claim
+  ///
+  /// In en, this message translates to:
+  /// **'Withdraw the request'**
+  String get accountVerificationWithdraw;
+
+  /// Confirmation after withdrawing
+  ///
+  /// In en, this message translates to:
+  /// **'Request withdrawn.'**
+  String get accountVerificationWithdrawn;
+
   /// Profile section
   ///
   /// In en, this message translates to:
@@ -254,11 +392,29 @@ abstract class AppLocalizations {
   /// **'Conversations'**
   String get actionConversations;
 
+  /// Shell action — her salon bookings
+  ///
+  /// In en, this message translates to:
+  /// **'My appointments'**
+  String get actionAppointments;
+
   /// Shell action — coupons
   ///
   /// In en, this message translates to:
   /// **'Coupons'**
   String get actionCoupons;
+
+  /// Shell action — the salon owner's workspace
+  ///
+  /// In en, this message translates to:
+  /// **'My salon'**
+  String get actionSalonWorkspace;
+
+  /// Shell action — the salons directory
+  ///
+  /// In en, this message translates to:
+  /// **'Salons & beauty'**
+  String get actionSalons;
 
   /// No description provided for @actionDidNotSave.
   ///
@@ -464,6 +620,12 @@ abstract class AppLocalizations {
   /// **'Added to your bag'**
   String get addedToBag;
 
+  /// Confirmation after filing an item into a collection
+  ///
+  /// In en, this message translates to:
+  /// **'Added to {name}'**
+  String addedToCollection(String name);
+
   /// Field label
   ///
   /// In en, this message translates to:
@@ -475,6 +637,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Addresses'**
   String get addresses;
+
+  /// Admin console section reviewing verification claims
+  ///
+  /// In en, this message translates to:
+  /// **'Account verification'**
+  String get adminAccountVerifications;
 
   /// Governance action offered on a record in the admin console.
   ///
@@ -1682,6 +1850,48 @@ abstract class AppLocalizations {
   /// **'Users'**
   String get adminUsers;
 
+  /// Verification decision
+  ///
+  /// In en, this message translates to:
+  /// **'Approve'**
+  String get adminVerificationApprove;
+
+  /// The console action that approves or refuses a verification claim
+  ///
+  /// In en, this message translates to:
+  /// **'Decide'**
+  String get adminVerificationDecision;
+
+  /// Verification decision that returns the claim to her
+  ///
+  /// In en, this message translates to:
+  /// **'Ask for more'**
+  String get adminVerificationNeedsInfo;
+
+  /// Helper text under the reason field on a verification decision
+  ///
+  /// In en, this message translates to:
+  /// **'She is shown exactly what you write here.'**
+  String get adminVerificationReasonReaches;
+
+  /// Verification decision
+  ///
+  /// In en, this message translates to:
+  /// **'Refuse'**
+  String get adminVerificationReject;
+
+  /// Verification decision that withdraws a granted badge
+  ///
+  /// In en, this message translates to:
+  /// **'Revoke the badge'**
+  String get adminVerificationRevoke;
+
+  /// Marks a verification claim as being reviewed
+  ///
+  /// In en, this message translates to:
+  /// **'Take it'**
+  String get adminVerificationUnderReview;
+
   /// Filter on the seller management table.
   ///
   /// In en, this message translates to:
@@ -2300,6 +2510,12 @@ abstract class AppLocalizations {
   /// **'Not sent · tap to try again'**
   String get chatMessageNotSent;
 
+  /// Shown under a message the server refused
+  ///
+  /// In en, this message translates to:
+  /// **'Not sent'**
+  String get chatMessageFailed;
+
   /// Thread preview when nothing has been sent
   ///
   /// In en, this message translates to:
@@ -2341,6 +2557,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Product'**
   String get chatProduct;
+
+  /// Resends a message that failed
+  ///
+  /// In en, this message translates to:
+  /// **'Try again'**
+  String get chatRetrySend;
 
   /// Marketplace safety note above the conversation list
   ///
@@ -2875,6 +3097,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Shareable lists for products, sellers, and posts'**
   String get collectionsBlurb;
+
+  /// Empty state inside the save-to-collection sheet
+  ///
+  /// In en, this message translates to:
+  /// **'You have no collections yet — make one and it appears here.'**
+  String get collectionsEmptyHint;
 
   /// Placeholder title
   ///
@@ -3812,6 +4040,18 @@ abstract class AppLocalizations {
   /// **'Feed'**
   String get feed;
 
+  /// Validation message on an empty required field
+  ///
+  /// In en, this message translates to:
+  /// **'This field is required'**
+  String get fieldRequired;
+
+  /// Validation message when a field is below its minimum length
+  ///
+  /// In en, this message translates to:
+  /// **'Too short'**
+  String get fieldTooShort;
+
   /// File size on an attachment [re-authored: original wording lost]
   ///
   /// In en, this message translates to:
@@ -4615,6 +4855,102 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Help centre'**
   String get helpCenter;
+
+  /// Tooltip on the eye that hides a password again
+  ///
+  /// In en, this message translates to:
+  /// **'Hide password'**
+  String get hidePassword;
+
+  /// Menu entry that opens the archive picker for an existing highlight
+  ///
+  /// In en, this message translates to:
+  /// **'Add stories'**
+  String get highlightAddStories;
+
+  /// Empty state of the story archive picker
+  ///
+  /// In en, this message translates to:
+  /// **'You have not published a story yet. Publish one and it will be waiting here.'**
+  String get highlightArchiveEmpty;
+
+  /// Title of the sheet that creates a highlight
+  ///
+  /// In en, this message translates to:
+  /// **'New highlight'**
+  String get highlightCreate;
+
+  /// Menu entry that removes a highlight
+  ///
+  /// In en, this message translates to:
+  /// **'Delete highlight'**
+  String get highlightDelete;
+
+  /// Confirmation before deleting a highlight
+  ///
+  /// In en, this message translates to:
+  /// **'Delete «{name}»? The stories themselves stay where they are.'**
+  String highlightDeleteConfirm(String name);
+
+  /// Shown when an empty highlight is tapped
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing here yet'**
+  String get highlightEmptyOpen;
+
+  /// Shown on her own empty highlights rail
+  ///
+  /// In en, this message translates to:
+  /// **'Keep a story past its day — a size guide, a look, a delivery.'**
+  String get highlightEmptyOwner;
+
+  /// Hint under the highlight name field
+  ///
+  /// In en, this message translates to:
+  /// **'Sizes, looks, deliveries…'**
+  String get highlightNameHint;
+
+  /// Label of the field naming a highlight
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get highlightNameLabel;
+
+  /// The button that starts a new highlight, on the rail
+  ///
+  /// In en, this message translates to:
+  /// **'New'**
+  String get highlightNew;
+
+  /// Heading over the archive picker
+  ///
+  /// In en, this message translates to:
+  /// **'Choose stories'**
+  String get highlightPickStories;
+
+  /// Menu entry on a highlight she owns
+  ///
+  /// In en, this message translates to:
+  /// **'Rename'**
+  String get highlightRename;
+
+  /// How many stories are selected in the picker
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{Nothing chosen} =1{1 chosen} other{{count} chosen}}'**
+  String highlightSelected(int count);
+
+  /// How many stories a highlight holds
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{Empty} =1{1 story} other{{count} stories}}'**
+  String highlightStoriesCount(int count);
+
+  /// The rail of saved story collections on a profile
+  ///
+  /// In en, this message translates to:
+  /// **'Highlights'**
+  String get highlights;
 
   /// Bottom navigation label
   ///
@@ -5564,6 +5900,12 @@ abstract class AppLocalizations {
   /// **'New collection'**
   String get newCollection;
 
+  /// Label of the field naming a new wishlist collection
+  ///
+  /// In en, this message translates to:
+  /// **'Collection name'**
+  String get newCollectionName;
+
   /// Shown when a correct password lands on an unenrolled handset
   ///
   /// In en, this message translates to:
@@ -5617,6 +5959,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No active sessions.'**
   String get noActiveSessions;
+
+  /// The option that leaves a saved item filed under nothing
+  ///
+  /// In en, this message translates to:
+  /// **'No collection'**
+  String get noCollection;
+
+  /// Explains what happens when no collection is chosen
+  ///
+  /// In en, this message translates to:
+  /// **'Stays in your saved items.'**
+  String get noCollectionBlurb;
 
   /// No description provided for @noCommentsYet.
   ///
@@ -7034,6 +7388,12 @@ abstract class AppLocalizations {
   /// **'Remove password'**
   String get removePassword;
 
+  /// Confirmation after taking an item out of a collection
+  ///
+  /// In en, this message translates to:
+  /// **'Removed from {name}'**
+  String removedFromCollection(String name);
+
   /// Action
   ///
   /// In en, this message translates to:
@@ -8149,6 +8509,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Save changes'**
   String get saveChanges;
+
+  /// Title of the sheet that files a saved product or post into a wishlist collection
+  ///
+  /// In en, this message translates to:
+  /// **'Save to a collection'**
+  String get saveToCollection;
+
+  /// Subtitle of the save-to-collection sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Keep it loose, or file it where you will find it again.'**
+  String get saveToCollectionBlurb;
 
   /// Guest benefit title
   ///
@@ -9523,6 +9895,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Show more'**
   String get showMore;
+
+  /// Tooltip on the eye that reveals a password
+  ///
+  /// In en, this message translates to:
+  /// **'Show password'**
+  String get showPassword;
 
   /// Confirm dialog body
   ///
@@ -11252,6 +11630,12 @@ abstract class AppLocalizations {
   /// **'Yes'**
   String get yes;
 
+  /// Date rule between days in a conversation
+  ///
+  /// In en, this message translates to:
+  /// **'Yesterday'**
+  String get yesterdayLabel;
+
   /// Label marking the signed-in shopper's own comment.
   ///
   /// In en, this message translates to:
@@ -11365,6 +11749,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Show {count} replies'**
   String contentShowReplies(int count);
+
+  /// No description provided for @contentUnavailableTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'This post is no longer available'**
+  String get contentUnavailableTitle;
+
+  /// No description provided for @contentUnavailableBody.
+  ///
+  /// In en, this message translates to:
+  /// **'It may have been deleted, made private, or the story may have expired.'**
+  String get contentUnavailableBody;
 
   /// No description provided for @socialFeedTitle.
   ///

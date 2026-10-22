@@ -104,6 +104,24 @@ abstract final class ApiEndpoints {
 
   // Stories (customer)
   static const stories = '/stories';
+
+  // «توثيق الحساب» — the badge, and the claim behind it.
+  static const accountVerification = '/account-verification';
+  static const adminAccountVerifications = '/admin/account-verifications';
+  static String adminAccountVerification(String id) =>
+      '/admin/account-verifications/$id';
+
+  // «الأبرز» — the stories kept on a page past their day.
+  static const highlightsMine = '/highlights/me';
+  static const highlightsArchive = '/highlights/me/archive';
+  static const highlights = '/highlights';
+  static const highlightsOrder = '/highlights/order';
+  static String highlightsOf(String userId) => '/highlights/$userId';
+  static String highlightDetail(String id) => '/highlights/detail/$id';
+  static String highlightById(String id) => '/highlights/$id';
+  static String highlightItems(String id) => '/highlights/$id/items';
+  static String highlightItem(String id, String contentId) =>
+      '/highlights/$id/items/$contentId';
   static String storyView(String id) => '/stories/$id/view';
   static String storyReact(String id) => '/stories/$id/react';
 
@@ -851,4 +869,44 @@ abstract final class ApiEndpoints {
       '/admin/policies/versions/$versionId';
   static String adminPolicyVersionPublish(String versionId) =>
       '/admin/policies/versions/$versionId/publish';
+
+  // ── الصالونات والجمال ───────────────────────────────────
+  //
+  // A directory, a calendar, and the bookings made against it. Reading is open
+  // to a guest exactly as the catalogue is — a woman compares salons before she
+  // has any reason to make an account.
+  static const salons = '/salons';
+  static const salonCategories = '/salons/categories';
+  static const salonAreas = '/salons/areas';
+
+  /// Reachable by id **or by slug**, which is what a shared link carries.
+  static String salon(String idOrSlug) => '/salons/$idOrSlug';
+  static String salonReviews(String id) => '/salons/$id/reviews';
+
+  /// Free start times for one service on one day.
+  static String salonAvailability(String id) => '/salons/$id/availability';
+
+  /// Which of the next few days have anything free at all.
+  static String salonOpenDays(String id) => '/salons/$id/open-days';
+  static String salonBook(String id) => '/salons/$id/appointments';
+
+  /// «حجوزاتي», and one of them.
+  static const appointments = '/appointments';
+  static String appointment(String id) => '/appointments/$id';
+  static String appointmentCancel(String id) => '/appointments/$id/cancel';
+  static String appointmentReview(String id) => '/appointments/$id/review';
+
+  // The salon's own side. Behind `salon:manage`.
+  static const salonMine = '/salons/mine';
+  static const salonServices = '/salons/services';
+  static String salonService(String id) => '/salons/services/$id';
+  static const salonHours = '/salons/hours';
+  static const salonClosures = '/salons/closures';
+  static String salonClosure(String date) => '/salons/closures/$date';
+  static String salonQueue(String id) => '/salons/$id/queue';
+  static String salonReviewReply(String reviewId) =>
+      '/salons/reviews/$reviewId/reply';
+  static String appointmentConfirm(String id) => '/appointments/$id/confirm';
+  static String appointmentComplete(String id) => '/appointments/$id/complete';
+  static String appointmentNoShow(String id) => '/appointments/$id/no-show';
 }

@@ -69,6 +69,79 @@ class AppLocalizationsEn extends AppLocalizations {
   String get accountUpdated => 'Account updated.';
 
   @override
+  String get accountVerification => 'Account verification';
+
+  @override
+  String get accountVerificationApprovedBlurb => 'The badge is on your name.';
+
+  @override
+  String get accountVerificationBack => 'Document — back';
+
+  @override
+  String get accountVerificationBlurb =>
+      'The badge beside your name says Reem has checked who you are. Send a document and we will look at it.';
+
+  @override
+  String get accountVerificationDocType => 'Document type';
+
+  @override
+  String get accountVerificationDocTypeHint =>
+      'National ID, passport, commercial register…';
+
+  @override
+  String get accountVerificationFront => 'Document — front';
+
+  @override
+  String get accountVerificationLegalName => 'Name on the document';
+
+  @override
+  String get accountVerificationNeedsPhone => 'Verify your phone number first.';
+
+  @override
+  String get accountVerificationNote => 'Why you are asking';
+
+  @override
+  String get accountVerificationPrivacy =>
+      'Your documents are read only by the staff who review them, and by nobody else on Reem.';
+
+  @override
+  String get accountVerificationResubmit => 'Send again';
+
+  @override
+  String get accountVerificationSelfie => 'A photo of you holding it';
+
+  @override
+  String get accountVerificationSent =>
+      'Sent. We will tell you as soon as it is reviewed.';
+
+  @override
+  String get accountVerificationStatusApproved => 'Verified';
+
+  @override
+  String get accountVerificationStatusNeedsInfo => 'We need something more';
+
+  @override
+  String get accountVerificationStatusPending => 'Waiting for review';
+
+  @override
+  String get accountVerificationStatusRejected => 'Not approved';
+
+  @override
+  String get accountVerificationStatusRevoked => 'Withdrawn by Reem';
+
+  @override
+  String get accountVerificationStatusUnderReview => 'Being reviewed';
+
+  @override
+  String get accountVerificationSubmit => 'Send for review';
+
+  @override
+  String get accountVerificationWithdraw => 'Withdraw the request';
+
+  @override
+  String get accountVerificationWithdrawn => 'Request withdrawn.';
+
+  @override
   String get achievements => 'Achievements';
 
   @override
@@ -92,7 +165,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get actionConversations => 'Conversations';
 
   @override
+  String get actionAppointments => 'My appointments';
+
+  @override
   String get actionCoupons => 'Coupons';
+
+  @override
+  String get actionSalonWorkspace => 'My salon';
+
+  @override
+  String get actionSalons => 'Salons & beauty';
 
   @override
   String get actionDidNotSave =>
@@ -201,10 +283,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get addedToBag => 'Added to your bag';
 
   @override
+  String addedToCollection(String name) {
+    return 'Added to $name';
+  }
+
+  @override
   String get additionalDocuments => 'Additional documents';
 
   @override
   String get addresses => 'Addresses';
+
+  @override
+  String get adminAccountVerifications => 'Account verification';
 
   @override
   String get adminActionChangeRole => 'Change role';
@@ -872,6 +962,28 @@ class AppLocalizationsEn extends AppLocalizations {
   String get adminUsers => 'Users';
 
   @override
+  String get adminVerificationApprove => 'Approve';
+
+  @override
+  String get adminVerificationDecision => 'Decide';
+
+  @override
+  String get adminVerificationNeedsInfo => 'Ask for more';
+
+  @override
+  String get adminVerificationReasonReaches =>
+      'She is shown exactly what you write here.';
+
+  @override
+  String get adminVerificationReject => 'Refuse';
+
+  @override
+  String get adminVerificationRevoke => 'Revoke the badge';
+
+  @override
+  String get adminVerificationUnderReview => 'Take it';
+
+  @override
   String get adminVerifiedSellersOnly => 'Verified sellers only';
 
   @override
@@ -1195,6 +1307,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get chatMessageNotSent => 'Not sent · tap to try again';
 
   @override
+  String get chatMessageFailed => 'Not sent';
+
+  @override
   String get chatNoMessagesYet => 'No messages yet';
 
   @override
@@ -1214,6 +1329,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get chatProduct => 'Product';
+
+  @override
+  String get chatRetrySend => 'Try again';
 
   @override
   String get chatSafetyNote => 'Keep payments inside Reem';
@@ -1505,6 +1623,10 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get collectionsBlurb =>
       'Shareable lists for products, sellers, and posts';
+
+  @override
+  String get collectionsEmptyHint =>
+      'You have no collections yet — make one and it appears here.';
 
   @override
   String get comingSoon => 'Coming soon';
@@ -2016,6 +2138,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get feed => 'Feed';
 
   @override
+  String get fieldRequired => 'This field is required';
+
+  @override
+  String get fieldTooShort => 'Too short';
+
+  @override
   String fileSizeMegabytes(String size) {
     return '$size MB';
   }
@@ -2459,6 +2587,76 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get helpCenter => 'Help centre';
+
+  @override
+  String get hidePassword => 'Hide password';
+
+  @override
+  String get highlightAddStories => 'Add stories';
+
+  @override
+  String get highlightArchiveEmpty =>
+      'You have not published a story yet. Publish one and it will be waiting here.';
+
+  @override
+  String get highlightCreate => 'New highlight';
+
+  @override
+  String get highlightDelete => 'Delete highlight';
+
+  @override
+  String highlightDeleteConfirm(String name) {
+    return 'Delete «$name»? The stories themselves stay where they are.';
+  }
+
+  @override
+  String get highlightEmptyOpen => 'Nothing here yet';
+
+  @override
+  String get highlightEmptyOwner =>
+      'Keep a story past its day — a size guide, a look, a delivery.';
+
+  @override
+  String get highlightNameHint => 'Sizes, looks, deliveries…';
+
+  @override
+  String get highlightNameLabel => 'Name';
+
+  @override
+  String get highlightNew => 'New';
+
+  @override
+  String get highlightPickStories => 'Choose stories';
+
+  @override
+  String get highlightRename => 'Rename';
+
+  @override
+  String highlightSelected(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count chosen',
+      one: '1 chosen',
+      zero: 'Nothing chosen',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String highlightStoriesCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count stories',
+      one: '1 story',
+      zero: 'Empty',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get highlights => 'Highlights';
 
   @override
   String get home => 'Home';
@@ -2989,6 +3187,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get newCollection => 'New collection';
 
   @override
+  String get newCollectionName => 'Collection name';
+
+  @override
   String get newDeviceCodeSent =>
       'This device is new. We sent a code to your number to finish signing in.';
 
@@ -3019,6 +3220,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get noActiveSessions => 'No active sessions.';
+
+  @override
+  String get noCollection => 'No collection';
+
+  @override
+  String get noCollectionBlurb => 'Stays in your saved items.';
 
   @override
   String get noCommentsYet => 'No comments yet';
@@ -3840,6 +4047,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get removePassword => 'Remove password';
 
   @override
+  String removedFromCollection(String name) {
+    return 'Removed from $name';
+  }
+
+  @override
   String get rename => 'Rename';
 
   @override
@@ -4498,6 +4710,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get saveChanges => 'Save changes';
+
+  @override
+  String get saveToCollection => 'Save to a collection';
+
+  @override
+  String get saveToCollectionBlurb =>
+      'Keep it loose, or file it where you will find it again.';
 
   @override
   String get saveYourProgress => 'Save your progress';
@@ -5260,6 +5479,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get showMore => 'Show more';
+
+  @override
+  String get showPassword => 'Show password';
 
   @override
   String get signBackInLater => 'You can always sign back in.';
@@ -6278,6 +6500,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get yes => 'Yes';
 
   @override
+  String get yesterdayLabel => 'Yesterday';
+
+  @override
   String get you => 'You';
 
   @override
@@ -6340,6 +6565,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String contentShowReplies(int count) {
     return 'Show $count replies';
   }
+
+  @override
+  String get contentUnavailableTitle => 'This post is no longer available';
+
+  @override
+  String get contentUnavailableBody =>
+      'It may have been deleted, made private, or the story may have expired.';
 
   @override
   String get socialFeedTitle => 'Community';

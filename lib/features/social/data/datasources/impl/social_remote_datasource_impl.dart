@@ -69,6 +69,15 @@ final class SocialRemoteDataSourceImpl extends BaseRemoteDataSource
       _contentPage(ApiEndpoints.contentSaved, cursor: cursor, limit: limit);
 
   @override
+  Future<Content> byId(String contentId) async {
+    // Bare object, not a `data` envelope: every single-object endpoint on this
+    // API answers that way, and `getJson` hands the map straight through.
+    return ContentModel.fromJson(
+      await getJson(ApiEndpoints.contentById(contentId)),
+    );
+  }
+
+  @override
   Future<PaginatedData<Content>> byProduct(
     String productId, {
     String? cursor,

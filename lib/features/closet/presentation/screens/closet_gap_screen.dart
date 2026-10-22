@@ -121,18 +121,26 @@ class _SuggestionCard extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(DsRadius.sm),
-            child: SizedBox(
-              width: 84,
-              height: 100,
-              child: product.coverUrl == null
-                  ? Container(color: colors.surfaceVariant)
-                  : AuthorizedMediaImage(
-                      url: product.coverUrl!,
-                      fallback: Container(color: colors.surfaceVariant),
-                    ),
-            ),
+          Stack(
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(DsRadius.sm),
+                child: SizedBox(
+                  width: 84,
+                  height: 100,
+                  child: product.coverUrl == null
+                      ? Container(color: colors.surfaceVariant)
+                      : AuthorizedMediaImage(
+                          url: product.coverUrl!,
+                          fallback: Container(color: colors.surfaceVariant),
+                        ),
+                ),
+              ),
+              // A suggestion is a product like any other.
+              if (DsProductActions.of(context, product, DsProductSurface.rail)
+                  case final action?)
+                PositionedDirectional(top: 4, end: 4, child: action),
+            ],
           ),
           const SizedBox(width: DsSpacing.sm),
           Expanded(

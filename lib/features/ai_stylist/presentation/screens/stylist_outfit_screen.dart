@@ -120,6 +120,11 @@ class _PieceRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.dsColors;
     final product = piece.product;
+    // Null for a piece whose product has been withdrawn — the row still draws,
+    // saying «لم تعد متوفرة», and there is nothing to like.
+    final action = product == null
+        ? null
+        : DsProductActions.of(context, product, DsProductSurface.rail);
 
     return Material(
       color: colors.card,
@@ -193,6 +198,14 @@ class _PieceRow extends StatelessWidget {
                   piece.price!.format(),
                   style: context.dsText.labelLarge.bold.tint(colors.primary),
                 ),
+              ],
+              // «التنسيقات» were named by the client as a surface that must
+              // carry the interactions, and this row had none: an outfit was
+              // the one place she could be shown six pieces and not be able to
+              // say she liked one of them.
+              if (action != null) ...[
+                const SizedBox(width: DsSpacing.xs),
+                action,
               ],
             ],
           ),

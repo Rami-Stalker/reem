@@ -200,7 +200,59 @@ const sellerReviewDecisions = [
 // The action catalogue, by section key.
 // ---------------------------------------------------------------------------
 
+/// What a reviewer may do with a claim on the badge.
+///
+/// Every one of them carries a required reason, approvals included. The badge
+/// is a public claim Reem makes about a real woman, and a grant nobody can
+/// later explain is exactly the state this whole feature replaced.
+const _verificationDecisions = [
+  AdminChoice('APPROVED', _lVerificationApprove),
+  AdminChoice('NEEDS_MORE_INFO', _lVerificationNeedsInfo),
+  AdminChoice('UNDER_REVIEW', _lVerificationUnderReview),
+  AdminChoice('REJECTED', _lVerificationReject),
+  AdminChoice('REVOKED', _lVerificationRevoke),
+];
+
+String _lVerificationApprove(AppLocalizations l10n) =>
+    l10n.adminVerificationApprove;
+String _lVerificationNeedsInfo(AppLocalizations l10n) =>
+    l10n.adminVerificationNeedsInfo;
+String _lVerificationUnderReview(AppLocalizations l10n) =>
+    l10n.adminVerificationUnderReview;
+String _lVerificationReject(AppLocalizations l10n) =>
+    l10n.adminVerificationReject;
+String _lVerificationRevoke(AppLocalizations l10n) =>
+    l10n.adminVerificationRevoke;
+String _lVerificationDecision(AppLocalizations l10n) =>
+    l10n.adminVerificationDecision;
+String _lVerificationReasonHint(AppLocalizations l10n) =>
+    l10n.adminVerificationReasonReaches;
+
 const adminSectionActions = <String, List<AdminRecordAction>>{
+  'accountVerifications': [
+    AdminRecordAction(
+      id: 'decide',
+      label: _lVerificationDecision,
+      icon: Icons.verified_user_outlined,
+      permission: AppPermissions.userManage,
+      fields: [
+        AdminActionField.choice(
+          key: 'status',
+          label: _lFieldStatus,
+          choices: _verificationDecisions,
+          seedFrom: 'status',
+        ),
+        AdminActionField.text(
+          key: 'reason',
+          label: _lFieldReason,
+          isRequired: true,
+          maxLines: 3,
+          // She reads this, verbatim. The server refuses a decision without it.
+          hint: _lVerificationReasonHint,
+        ),
+      ],
+    ),
+  ],
   'users': [
     AdminRecordAction(
       id: 'role',

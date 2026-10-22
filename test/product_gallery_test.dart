@@ -91,7 +91,7 @@ void main() {
     expect(find.text('3/3'), findsOneWidget);
   });
 
-  testWidgets('the heart reports taps to whoever owns the like', (
+  testWidgets('the bookmark reports taps to whoever owns the shelf', (
     tester,
   ) async {
     var taps = 0;
@@ -112,7 +112,7 @@ void main() {
               ProductGalleryHeader(
                 media: photographs(2),
                 title: 'فستان سهرة',
-                onToggleLike: () => taps += 1,
+                onToggleSave: () => taps += 1,
               ),
             ],
           ),
@@ -121,7 +121,11 @@ void main() {
     );
     await tester.pump();
 
-    await tester.tap(find.byIcon(DsIcons.like));
+    // A bookmark, not a heart. The heart on every catalogue tile is the
+    // product's public like now, and this control is «المفضّلة» — her private
+    // shelf. Drawing both as hearts meant filling one and finding the other
+    // empty on the same product.
+    await tester.tap(find.byIcon(Icons.bookmark_border_rounded));
     await tester.pump();
 
     expect(taps, 1, reason: 'the screen never passed a handler before');

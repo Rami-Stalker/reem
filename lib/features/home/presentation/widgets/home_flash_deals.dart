@@ -151,6 +151,10 @@ class _FlashDealCard extends StatelessWidget {
                       ),
                     ),
                   ),
+                // The product's own like, like every other card.
+                if (DsProductActions.of(context, product, DsProductSurface.tile)
+                    case final action?)
+                  PositionedDirectional(top: 8, end: 8, child: action),
                 // Live countdown on a glass pill.
                 Positioned(
                   left: 8,

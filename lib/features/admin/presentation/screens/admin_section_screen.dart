@@ -145,28 +145,14 @@ class _AdminSectionScreenState extends ConsumerState<AdminSectionScreen> {
                   ),
                   const SizedBox(height: DsSpacing.lg),
                 ],
-                TextField(
+                DsInputField.search(
                   controller: _searchController,
+                  hint: l10n.search,
                   onChanged: _onSearchChanged,
                   onSubmitted: (value) =>
                       unawaited(ref.read(_notifier.notifier).search(value)),
-                  textInputAction: TextInputAction.search,
-                  decoration: InputDecoration(
-                    prefixIcon: const Icon(Icons.search_rounded),
-                    suffixIcon: _searchController.text.isEmpty
-                        ? null
-                        : IconButton(
-                            tooltip: l10n.adminClearSearch,
-                            onPressed: () {
-                              _searchController.clear();
-                              unawaited(
-                                ref.read(_notifier.notifier).search(''),
-                              );
-                            },
-                            icon: const Icon(Icons.close_rounded),
-                          ),
-                    hintText: l10n.search,
-                  ),
+                  onClear: () =>
+                      unawaited(ref.read(_notifier.notifier).search('')),
                 ),
                 if (config.statusFilters.isNotEmpty) ...[
                   const SizedBox(height: DsSpacing.md),
@@ -987,10 +973,12 @@ class _AdminTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
+    return DsInputField(
       controller: controller,
+      label: label,
+      hint: hint,
       maxLines: maxLines,
-      decoration: InputDecoration(labelText: label, hintText: hint),
+      minLines: maxLines > 1 ? maxLines : null,
     );
   }
 }

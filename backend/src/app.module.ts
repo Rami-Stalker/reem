@@ -27,7 +27,9 @@ import { ProductsModule } from './modules/products/products.module';
 import { ProductSocialModule } from './modules/product-social/product-social.module';
 import { CommerceContentModule } from './modules/commerce-content/commerce-content.module';
 import { PostsModule } from './modules/posts/posts.module';
+import { HighlightsModule } from './modules/highlights/highlights.module';
 import { StoriesModule } from './modules/stories/stories.module';
+import { VerificationModule } from './modules/verification/verification.module';
 import { DiscoveryModule } from './modules/discovery/discovery.module';
 import { SearchModule } from './modules/search/search.module';
 import { CartModule } from './modules/cart/cart.module';
@@ -67,9 +69,11 @@ import { FinanceModule } from './modules/finance/finance.module';
 import { ReturnsModule } from './modules/returns/returns.module';
 import { SupportModule } from './modules/support/support.module';
 import { PoliciesModule } from './modules/policies/policies.module';
+import { SalonsModule } from './modules/salons/salons.module';
 import { SellerCommerceModule } from './modules/seller-commerce/seller-commerce.module';
 import { ExperienceModule } from './modules/experience/experience.module';
 import { HealthModule } from './modules/health/health.module';
+import { LinksModule } from './modules/links/links.module';
 
 @Module({
   imports: [
@@ -105,6 +109,8 @@ import { HealthModule } from './modules/health/health.module';
     CommerceContentModule,
     PostsModule,
     StoriesModule,
+    HighlightsModule,
+    VerificationModule,
     DiscoveryModule,
     SearchModule,
     TrustModule,
@@ -162,9 +168,17 @@ import { HealthModule } from './modules/health/health.module';
     // dependency the other way — registration imports this to write a consent
     // in the same transaction that creates the account.
     PoliciesModule,
+    // الصالونات والجمال — a second thing to buy on this platform, and the
+    // first with a calendar. Registered after NotificationsModule and
+    // PricingModule, which it imports; nothing above it knows it exists.
+    SalonsModule,
     SellerCommerceModule,
     ExperienceModule,
     HealthModule,
+    // Last on purpose. Its routes carry no controller prefix — `/product/:id`,
+    // `/p/:id`, `/user/:id`, `/` — so every JSON endpoint above is matched
+    // first and a landing page can never shadow one.
+    LinksModule,
   ],
   providers: [
     // Order matters: throttle → authenticate → authorize.

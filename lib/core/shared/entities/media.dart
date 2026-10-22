@@ -47,3 +47,22 @@ class MediaItem extends Equatable {
   @override
   List<Object?> get props => [url, type, sortOrder, thumbnailUrl, blurHash];
 }
+
+extension MediaListX on List<MediaItem> {
+  /// The first thing in this gallery that is genuinely a still picture.
+  ///
+  /// Not `first.displayUrl`: a reel or a video-first product leads with an MP4,
+  /// and `displayUrl` falls back to that URL when no poster was derived. That
+  /// is right for a player and wrong everywhere a *picture* is required — a
+  /// share sheet attaching a file, an `og:image` a messenger will try to draw.
+  /// Both would hand out a video and render nothing.
+  String? get stillImageUrl {
+    for (final item in this) {
+      if (item.isImage) return item.url;
+      if (item.thumbnailUrl != null && item.thumbnailUrl!.isNotEmpty) {
+        return item.thumbnailUrl;
+      }
+    }
+    return null;
+  }
+}

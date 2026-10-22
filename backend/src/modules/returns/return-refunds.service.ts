@@ -13,6 +13,7 @@ import {
 
 import { Money } from '../../common/money';
 import { PrismaService } from '../../prisma/prisma.service';
+import { OrderEventCopy } from '../../common/orders/order-event-copy';
 import { LedgerService, PostingLine } from '../ledger/ledger.service';
 import { WalletService } from '../ledger/wallet.service';
 import { CommissionsService } from '../commissions/commissions.service';
@@ -183,7 +184,10 @@ export class ReturnRefundsService {
       {
         type: JournalEntryType.RETURN_SETTLED,
         reference: `return-refund:${returnId}`,
-        description: `Return ${request.number} refunded — ${sellerOrder.number}`,
+        description: OrderEventCopy.returnRefunded(
+          request.number,
+          sellerOrder.number,
+        ),
         orderId: sellerOrder.orderId,
         sellerOrderId: sellerOrder.id,
         createdById: actorId,

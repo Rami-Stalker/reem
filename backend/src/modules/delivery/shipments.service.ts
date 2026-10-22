@@ -22,6 +22,7 @@ import { randomBytes } from 'node:crypto';
 
 import { Money } from '../../common/money';
 import { PrismaService } from '../../prisma/prisma.service';
+import { OrderEventCopy } from '../../common/orders/order-event-copy';
 import { CommissionsService } from '../commissions/commissions.service';
 import { CustomerRefundsService } from '../finance/customer-refunds.service';
 import { CodTrustService } from '../cod-trust/cod-trust.service';
@@ -200,7 +201,7 @@ export class ShipmentsService {
     return this.transition(shipmentId, ShipmentStatus.ASSIGNED, {
       actorId,
       data: { courier: { connect: { id: courierId } } },
-      note: `Assigned to ${courier.displayName}`,
+      note: OrderEventCopy.assignedToCourier(courier.displayName),
     });
   }
   /**
@@ -253,8 +254,8 @@ export class ShipmentsService {
           data: { pickedUpAt: input.at ?? new Date() },
           parcel: {
             to: SellerOrderStatus.HANDED_TO_COURIER,
-            title: 'Collected by the carrier',
-            description: note ?? 'The delivery company has the parcel',
+            title: OrderEventCopy.collectedByCarrier,
+            description: note ?? OrderEventCopy.carrierHasParcel,
             require: [SellerOrderStatus.READY_TO_SHIP],
             requireMessage:
               'The carrier reported a pick-up for a parcel the seller has not marked ready',
@@ -267,8 +268,8 @@ export class ShipmentsService {
           actor: this.carrierActor(),
           parcel: {
             to: SellerOrderStatus.IN_TRANSIT,
-            title: 'On its way',
-            description: note ?? 'The parcel is with the delivery company',
+            title: OrderEventCopy.onItsWay,
+            description: note ?? OrderEventCopy.carrierHasParcel,
           },
         });
 
@@ -278,8 +279,8 @@ export class ShipmentsService {
           actor: this.carrierActor(),
           parcel: {
             to: SellerOrderStatus.IN_TRANSIT,
-            title: 'Out for delivery',
-            description: note ?? 'The parcel is out for delivery today',
+            title: OrderEventCopy.outForDelivery,
+            description: note ?? OrderEventCopy.outForDeliveryToday,
           },
         });
 
@@ -289,8 +290,8 @@ export class ShipmentsService {
           actor: this.carrierActor(),
           parcel: {
             to: SellerOrderStatus.RETURN_IN_TRANSIT,
-            title: 'Coming back',
-            description: note ?? 'The carrier is returning the parcel',
+            title: OrderEventCopy.comingBack,
+            description: note ?? OrderEventCopy.carrierReturning,
           },
         });
 
@@ -300,8 +301,8 @@ export class ShipmentsService {
           actor: this.carrierActor(),
           parcel: {
             to: SellerOrderStatus.RETURNED,
-            title: 'Back with the seller',
-            description: note ?? 'The carrier returned the parcel',
+            title: OrderEventCopy.backWithSeller,
+            description: note ?? OrderEventCopy.carrierReturned,
           },
         });
 
@@ -459,8 +460,8 @@ export class ShipmentsService {
         data: { pickedUpAt: new Date() },
         parcel: {
           to: SellerOrderStatus.HANDED_TO_COURIER,
-          title: 'Collected by the courier',
-          description: 'The courier has the parcel',
+          title: OrderEventCopy.collectedByCourier,
+          description: OrderEventCopy.courierHasParcel,
           require: [SellerOrderStatus.READY_TO_SHIP],
           requireMessage:
             'This parcel is not ready yet — the seller has to mark it ready before it can be collected',
@@ -482,8 +483,8 @@ export class ShipmentsService {
         position,
         parcel: {
           to: SellerOrderStatus.IN_TRANSIT,
-          title: 'Out for delivery',
-          description: 'On the way to the customer',
+          title: OrderEventCopy.outForDelivery,
+          description: OrderEventCopy.onTheWayToCustomer,
         },
       },
     );
@@ -584,7 +585,7 @@ export class ShipmentsService {
       });
       await this.syncParcel(tx, parcel.sellerOrderId, this.carrierActor(input.courierUserId), {
         to: SellerOrderStatus.DELIVERED,
-        title: 'Delivered',
+        title: OrderEventCopy.delivered,
         description: input.recipientNote ?? 'Handed to the customer',
       });
 
@@ -687,7 +688,9 @@ export class ShipmentsService {
           to: refused
             ? SellerOrderStatus.REJECTED_ON_DELIVERY
             : SellerOrderStatus.DELIVERY_FAILED,
-          title: refused ? 'Refused at the door' : 'Delivery attempt failed',
+          title: refused
+            ? OrderEventCopy.refusedAtDoor
+            : OrderEventCopy.deliveryFailed,
           description: note ?? reason,
         },
       );

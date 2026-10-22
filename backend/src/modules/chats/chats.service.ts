@@ -155,39 +155,78 @@ export class ChatsService {
     return serializeChatThread(chat as ChatWithRelations, userId, unread);
   }
 
+  /**
+   * The one conversation between these two people.
+   *
+   * **One thread per pair, not one per subject.** This used to look a chat up
+   * by `(type, buyerId, sellerId, productId, sellerOrderId)`, which means a
+   * shopper who asked a boutique about a dress, then about a scarf, then about
+   * the parcel carrying both, ended up with three separate conversations with
+   * the same woman — and the inbox showed her name three times, each row
+   * holding a third of the history. Asking about a second dress made a fourth.
+   * That is the «تكرار المحادثات» complaint, and it was the lookup key.
+   *
+   * The pair is now the key. The product or parcel that occasioned the message
+   * is still recorded on the chat, as *the latest thing this conversation is
+   * about* — it drives the header and the subject line of a notification — but
+   * it no longer partitions the history.
+   *
+   * **And exactly one, under concurrency.** Two taps on «راسلي المتجر» before
+   * the first answered used to pass the same `findFirst` miss and create two
+   * rows. The unique index on `(buyer_id, seller_id)` makes the second create
+   * fail rather than succeed, and the retry below finds the row the first one
+   * won with.
+   */
   async startConversation(userId: string, dto: StartConversationDto) {
     const resolved = await this.resolveConversation(userId, dto);
     await this.assertNotBlocked(userId, resolved.participantIds);
 
-    let chat = await this.prisma.chat.findFirst({
-      where: {
-        type: resolved.type,
-        buyerId: resolved.buyerId,
-        sellerId: resolved.sellerId,
-        productId: resolved.productId,
-        sellerOrderId: resolved.sellerOrderId,
-      },
-      include: chatInclude,
-    });
+    let chat = await this.findPairChat(resolved.buyerId, resolved.sellerId);
 
-    if (!chat) {
-      chat = await this.prisma.chat.create({
+    if (chat) {
+      // Keep the context current. What she is asking about now is what the
+      // header should say, and the row it points at is the one a notification
+      // should deep-link to.
+      chat = await this.prisma.chat.update({
+        where: { id: chat.id },
         data: {
           type: resolved.type,
-          buyerId: resolved.buyerId,
-          sellerId: resolved.sellerId,
-          productId: resolved.productId,
-          sellerOrderId: resolved.sellerOrderId,
-          title: resolved.title,
-          participants: {
-            create: resolved.participants.map((participant) => ({
-              userId: participant.userId,
-              role: participant.role,
-            })),
-          },
+          productId: resolved.productId ?? chat.productId,
+          sellerOrderId: resolved.sellerOrderId ?? chat.sellerOrderId,
+          title: resolved.title ?? chat.title,
         },
         include: chatInclude,
       });
+    } else {
+      try {
+        chat = await this.prisma.chat.create({
+          data: {
+            type: resolved.type,
+            buyerId: resolved.buyerId,
+            sellerId: resolved.sellerId,
+            productId: resolved.productId,
+            sellerOrderId: resolved.sellerOrderId,
+            title: resolved.title,
+            participants: {
+              create: resolved.participants.map((participant) => ({
+                userId: participant.userId,
+                role: participant.role,
+              })),
+            },
+          },
+          include: chatInclude,
+        });
+      } catch (error) {
+        // The index caught a concurrent create. Whoever won holds the thread.
+        if (
+          !(error instanceof Prisma.PrismaClientKnownRequestError) ||
+          error.code !== 'P2002'
+        ) {
+          throw error;
+        }
+        chat = await this.findPairChat(resolved.buyerId, resolved.sellerId);
+        if (!chat) throw error;
+      }
     }
 
     if (dto.message?.trim()) {
@@ -202,6 +241,18 @@ export class ChatsService {
     // details screen and the inbox both take this row as the truth.
     const unread = await this.unreadCount(chat.id, userId);
     return serializeChatThread(chat as ChatWithRelations, userId, unread);
+  }
+
+  /** Their conversation, whatever it was last about. */
+  private findPairChat(buyerId: string, sellerId: string) {
+    return this.prisma.chat.findFirst({
+      where: { buyerId, sellerId },
+      include: chatInclude,
+      // Deterministic while duplicates from before the unique index may still
+      // exist in a database that has not been migrated: always the oldest, so
+      // two callers never disagree about which one is "the" thread.
+      orderBy: { createdAt: 'asc' },
+    });
   }
 
   /**

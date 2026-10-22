@@ -111,6 +111,8 @@ environment switch is on (all such switches default off).
 | `IntelligenceScheduler.nightly` | 03:10 | `INTELLIGENCE_SCHEDULER_ENABLED` | Rankings, customer and trust sweeps. |
 | `IntelligenceScheduler.reminders` | 06:30 | + `REENGAGEMENT_SCHEDULER_ENABLED` | Outbound re-engagement pushes. Leave off until the copy is approved. |
 | `ProductIndexerService.scheduled` | hourly | `VISUAL_SEARCH_INDEXER_ENABLED` | Embeds catalogue photographs. CPU-heavy — see §Growth. |
+| `SalonsScheduler.remindUpcoming` | every 10 min | — | Reminds a woman of her appointment `SALONS_REMINDER_LEAD_MINUTES` (12h) ahead. Claims its work by setting `reminder_sent_at` first, so two overlapping passes cannot both send. |
+| `SalonsScheduler.closeStale` | every 30 min | — | Auto-completes confirmed appointments 24h past their end and cancels pending ones nobody confirmed. Auto-completion is what eventually makes `can_review` true — without it a review would depend on the owner pressing a button. |
 
 **Merge considered:** the five analytics nightlies form one pipeline ordered by
 time offsets (trends → graph → seller intelligence → market → intelligence).

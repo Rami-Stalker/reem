@@ -44,7 +44,19 @@ class RoomsScreen extends ConsumerWidget {
             : RefreshIndicator(
                 onRefresh: () async => ref.invalidate(roomsProvider),
                 child: ListView.separated(
-                  padding: const EdgeInsets.all(DsSpacing.md),
+                  // The floating rail's height reaches here as the page's
+                  // bottom inset; an explicit `padding` opts out of the
+                  // automatic version, so it is added back by hand — and an
+                  // extended FAB's worth on top, so the last room is not
+                  // sitting under «غرفة جديدة».
+                  padding: EdgeInsets.fromLTRB(
+                    DsSpacing.md,
+                    DsSpacing.md,
+                    DsSpacing.md,
+                    DsSpacing.md +
+                        DsSpacing.massive +
+                        MediaQuery.paddingOf(context).bottom,
+                  ),
                   itemCount: rooms.length,
                   separatorBuilder: (_, _) =>
                       const SizedBox(height: DsSpacing.sm),

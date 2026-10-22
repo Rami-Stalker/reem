@@ -96,6 +96,18 @@ class SettingsScreen extends ConsumerWidget {
                       l10n.signInToInteract,
                     ),
                   ),
+                  // «توثيق الحساب» — the badge beside her name. Above the
+                  // seller application on purpose: it is the one every account
+                  // can ask for, and the two are different questions.
+                  SettingsItemData(
+                    icon: Icons.verified_user_outlined,
+                    title: l10n.accountVerification,
+                    onTap: () => protectedPushNamed(
+                      RouteNames.accountVerification,
+                      RoutePaths.accountVerification,
+                      l10n.signInToInteract,
+                    ),
+                  ),
                   SettingsItemData(
                     icon: Icons.storefront_outlined,
                     title: l10n.sellerVerification,
@@ -117,7 +129,7 @@ class SettingsScreen extends ConsumerWidget {
                   SettingsItemData(
                     icon: Icons.favorite_border,
                     title: l10n.wishlist,
-                    onTap: () => context.go(RoutePaths.favorites),
+                    onTap: () => context.push(RoutePaths.favorites),
                   ),
                   SettingsItemData(
                     icon: Icons.shopping_bag_outlined,

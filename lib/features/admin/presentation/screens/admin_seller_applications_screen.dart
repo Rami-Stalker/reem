@@ -90,14 +90,11 @@ class _AdminSellerApplicationsScreenState
                     color: palette.caution,
                   ),
                 const SizedBox(height: DsSpacing.md),
-                TextField(
+                DsInputField.search(
                   controller: _searchController,
+                  hint: l10n.adminSearchApplications,
                   onChanged: _onSearchChanged,
-                  textInputAction: TextInputAction.search,
-                  decoration: InputDecoration(
-                    prefixIcon: const Icon(Icons.search_rounded),
-                    hintText: l10n.adminSearchApplications,
-                  ),
+                  onClear: () => _onSearchChanged(''),
                 ),
                 const SizedBox(height: DsSpacing.md),
                 Wrap(
@@ -419,15 +416,14 @@ class _ApplicationSheetState extends State<_ApplicationSheet> {
                           setState(() => _decision = value ?? _decision),
               ),
               const SizedBox(height: DsSpacing.sm),
-              TextField(
+              DsInputField(
                 controller: _reason,
+                label: l10n.adminFieldReason,
                 maxLines: 3,
-                decoration: InputDecoration(
-                  labelText: l10n.adminFieldReason,
-                  // The API refuses a decision with no reason, and rightly:
-                  // the applicant is told what it said.
-                  helperText: l10n.adminReasonReachesApplicant,
-                ),
+                minLines: 3,
+                // The API refuses a decision with no reason, and rightly:
+                // the applicant is told what it said.
+                helperText: l10n.adminReasonReachesApplicant,
               ),
               if (_error != null) ...[
                 const SizedBox(height: DsSpacing.sm),

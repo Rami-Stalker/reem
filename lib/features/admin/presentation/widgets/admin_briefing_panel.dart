@@ -183,7 +183,7 @@ class _FindingRow extends StatelessWidget {
 
     return InkWell(
       borderRadius: DsRadius.borderSm,
-      onTap: () => context.go(destination),
+      onTap: () => context.push(destination),
       child: row,
     );
   }

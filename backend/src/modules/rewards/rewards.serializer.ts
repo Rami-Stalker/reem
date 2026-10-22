@@ -18,6 +18,9 @@ export function serializeCoupon(c: Coupon) {
     discount_percent: c.discountPercent,
     amount_off: c.amountOff,
     min_order_amount: c.minOrderAmount,
+    // The ceiling on a percentage code, so «خصم 15%» can be shown with the
+    // «حتى» that makes it honest.
+    max_discount_amount: c.maxDiscountAmount,
     max_uses: c.maxUses,
     used_count: c.usedCount,
     per_user_limit: c.perUserLimit,

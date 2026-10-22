@@ -9,7 +9,12 @@ import 'package:reem/features/profile/domain/entities/profile_overview.dart';
 import 'package:reem/features/profile/presentation/providers/profile_overview_provider.dart';
 
 /// Profile completion — a progress ring, the next nudge and a checklist of
-/// steps. Collapses into a celebratory state at 100%.
+/// steps.
+///
+/// It draws nothing at all once there is nothing left to complete. It used to
+/// turn into a congratulation — «كل شيء مكتمل / ملفك يبدو رائعًا» — which then
+/// sat at the top of the profile for ever, in front of the orders, the wallet
+/// and the wishlist, telling her something she had already done.
 class ProfileCompletionCard extends ConsumerWidget {
   const ProfileCompletionCard({super.key});
 
@@ -33,8 +38,13 @@ class ProfileCompletionCard extends ConsumerWidget {
       return const SizedBox.shrink();
     }
 
+    // Nothing left to ask for, so nothing to say. A card whose entire content
+    // is «كل شيء مكتمل» is a congratulation she has already read, sitting
+    // permanently at the top of her profile above the things she came for.
+    // The completion card exists to prompt; with no prompt left it goes.
+    if (overview.completionPercent >= 100) return const SizedBox.shrink();
+
     final c = context.dsColors;
-    final complete = overview.completionPercent >= 100;
     final next = overview.nextStep;
 
     return Padding(
@@ -52,23 +62,21 @@ class ProfileCompletionCard extends ConsumerWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        complete ? context.l10n.allSet : context.l10n.completeProfile,
+                        context.l10n.completeProfile,
                         style: context.dsText.cardTitle
                             .copyWith(fontWeight: DsTypography.bold),
                       ),
                       DsGaps.vXxxs,
                       Text(
-                        complete
-                            ? context.l10n.profileLooksBeautiful
-                            : next != null
-                                ? context.l10n.nextStep(next.label)
-                                : context.l10n.quickSteps,
+                        next != null
+                            ? context.l10n.nextStep(next.label)
+                            : context.l10n.quickSteps,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style: context.dsText.cardSubtitle
                             .copyWith(color: c.onSurfaceVariant),
                       ),
-                      if (!complete && next != null) ...[
+                      if (next != null) ...[
                         const SizedBox(height: DsSpacing.sm),
                         DsButton(
                           label: context.l10n.completeProfile,

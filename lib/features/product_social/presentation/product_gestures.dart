@@ -9,6 +9,7 @@ import 'package:reem/core/design_system/design_system.dart';
 import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/platform/app_haptics.dart';
 import 'package:reem/core/router/route_paths.dart';
+import 'package:reem/core/shared/entities/media.dart';
 import 'package:reem/core/shared/entities/product.dart';
 import 'package:reem/core/shared/services/share_service.dart';
 import 'package:reem/features/auth/presentation/providers/auth_provider.dart';
@@ -16,6 +17,7 @@ import 'package:reem/features/auth/presentation/widgets/auth_prompt_sheet.dart';
 import 'package:reem/features/product_social/domain/entities/product_engagement.dart';
 import 'package:reem/features/product_social/presentation/providers/product_social_providers.dart';
 import 'package:reem/features/profile/presentation/providers/profile_provider.dart';
+import 'package:reem/features/profile/presentation/widgets/save_to_collection_sheet.dart';
 import 'package:reem/features/social/presentation/widgets/report_sheet.dart';
 import 'package:reem/features/social_posts/domain/entities/comment_thread.dart';
 import 'package:reem/features/social_posts/presentation/widgets/comment_sheet.dart';
@@ -45,27 +47,65 @@ final class ProductGestures {
       ref.watch(productEngagementOfProvider(product.id)) ??
       ProductEngagement.fromProduct(product);
 
+  /// The same, for a surface that holds a product's *id* and not the product.
+  ///
+  /// A bundle's piece, a drop's item and a closet suggestion are all
+  /// projections built for their own screen; they carry a title, a price and a
+  /// product id. Without this they would be the exception to "every product,
+  /// everywhere", and the exception is precisely what the client asked not to
+  /// assume. There is no served fallback to fall back to, so the tallies are
+  /// blank until the batch read answers — which it will, because
+  /// [ProductEngagementNotifier.seedIds] queued them.
+  static ProductEngagement watchId(WidgetRef ref, String productId) =>
+      ref.watch(productEngagementOfProvider(productId)) ??
+      const ProductEngagement();
+
   ProductEngagement get _current =>
       ref.read(productEngagementOfProvider(product.id)) ??
       ProductEngagement.fromProduct(product);
 
   /// Every write is account-bound. Without the gate a guest would see the
   /// heart fill and then quietly un-fill on a 401.
-  Future<bool> _signedIn() => requireAuthenticatedUser(
+  Future<bool> _signedIn() => _requireAccount(context, ref, product.id);
+
+  static Future<bool> _requireAccount(
+    BuildContext context,
+    WidgetRef ref,
+    String productId,
+  ) => requireAuthenticatedUser(
     context,
     ref,
     title: context.l10n.signInToInteract,
     message: context.l10n.signInToInteractBody,
-    from: RoutePaths.productDetailsOf(product.id),
+    from: RoutePaths.productDetailsOf(productId),
   );
 
-  Future<void> like({bool fromDoubleTap = false}) async {
-    if (!fromDoubleTap) AppHaptics.selection();
-    final willLike = fromDoubleTap ? true : !_current.isLiked;
-    if (willLike == _current.isLiked) return;
-    if (!await _signedIn() || !context.mounted) return;
+  Future<void> like({bool fromDoubleTap = false}) =>
+      likeById(context, ref, product.id, fromDoubleTap: fromDoubleTap);
 
-    final outcome = await _store.setLiked(product.id, willLike);
+  /// The like, keyed on the id — the one implementation.
+  ///
+  /// [like] delegates here rather than repeating it, so the haptic, the
+  /// sign-in gate, the optimistic write and the message on a refusal are the
+  /// same whether the caller holds a `Product` or only its id.
+  static Future<void> likeById(
+    BuildContext context,
+    WidgetRef ref,
+    String productId, {
+    bool fromDoubleTap = false,
+  }) async {
+    if (!fromDoubleTap) AppHaptics.selection();
+    final store = ref.read(productEngagementProvider.notifier);
+    final current =
+        ref.read(productEngagementOfProvider(productId)) ??
+        const ProductEngagement();
+    final willLike = fromDoubleTap ? true : !current.isLiked;
+    if (willLike == current.isLiked) return;
+    if (!await _requireAccount(context, ref, productId) || !context.mounted) {
+      return;
+    }
+
+    final outcome = await store.setLiked(productId, willLike);
     if (outcome == EngagementOutcome.failed && context.mounted) {
       DsSnackbar.error(context, context.l10n.actionDidNotSave);
     }
@@ -84,14 +124,25 @@ final class ProductGestures {
       DsSnackbar.error(context, l10n.actionDidNotSave);
       return;
     }
-    DsSnackbar.show(
-      context,
-      message: wasSaved ? l10n.postUnsaved : l10n.postSaved,
-      type: DsSnackbarType.success,
-      actionLabel: wasSaved ? null : l10n.viewSaved,
-      onAction: wasSaved ? null : () => context.push(RoutePaths.favorites),
-    );
     unawaited(ref.read(favoritesNotifierProvider.notifier).load());
+
+    if (wasSaved) {
+      DsSnackbar.show(
+        context,
+        message: l10n.postUnsaved,
+        type: DsSnackbarType.success,
+      );
+      return;
+    }
+
+    // Saved, and now the second half of the gesture: where to keep it. The
+    // sheet offers «بدون مجموعة» first and is dismissible, so the fast path is
+    // unchanged — the piece is already on the shelf either way.
+    await SaveToCollectionSheet.show(
+      context,
+      kind: SaveTargetKind.product,
+      targetId: product.id,
+    );
   }
 
   /// «أضيفي إلى صفحتي».
@@ -145,6 +196,12 @@ final class ProductGestures {
       context: context,
       productId: product.id,
       title: product.title,
+      // The five things the message carries. Each is nullable and each is
+      // dropped rather than faked: a product with no live offer travels
+      // without a price instead of with a wrong one.
+      price: product.price,
+      sellerName: product.displaySeller?.name,
+      imageUrl: product.media.stillImageUrl,
     );
     if (!shared) return;
     await _store.recordShare(product.id);

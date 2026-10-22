@@ -236,3 +236,17 @@ final contentAnalyticsProvider = FutureProvider.autoDispose
         Error(:final failure) => throw FailureException(failure),
       };
     });
+
+/// One piece, on its own — what a shared link opens.
+///
+/// `autoDispose` like every other read here: a post she arrived at from a
+/// message and then left should not be held, and coming back to it should show
+/// its current counts rather than the ones it had when the link was sent.
+final contentByIdProvider = FutureProvider.autoDispose
+    .family<Content, String>((ref, contentId) async {
+      final result = await ref.watch(socialRepositoryProvider).byId(contentId);
+      return switch (result) {
+        Success(:final data) => data,
+        Error(:final failure) => throw FailureException(failure),
+      };
+    });

@@ -662,7 +662,6 @@ export class AccountRecoveryService {
         data: {
           phone: recoveryCase.newPhone,
           phoneVerifiedAt: now,
-          isVerified: true,
           // Everything the previous holder could authenticate with is gone.
           // The premise of the case is that she cannot use any of it, so
           // leaving it in place only preserves the attacker's access in the

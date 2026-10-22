@@ -15,14 +15,12 @@ class SliverProductGrid extends StatelessWidget {
     this.products = const [],
     this.isLoading = false,
     this.onTapProduct,
-    this.onToggleFavorite,
     this.skeletonCount = 6,
   });
 
   final List<Product> products;
   final bool isLoading;
   final void Function(Product product)? onTapProduct;
-  final void Function(Product product)? onToggleFavorite;
   final int skeletonCount;
 
   /// Two columns, with room under the image for the name and price line.
@@ -54,12 +52,12 @@ class SliverProductGrid extends StatelessWidget {
           : SliverChildBuilderDelegate(
               (context, index) {
                 final product = products[index];
+                // No favourite callback to pass: the tile asks
+                // `DsProductActions` for the product's interaction, so a grid
+                // is never a grid without one.
                 return ProductCardLuxe(
                   product: product,
                   onTap: () => onTapProduct?.call(product),
-                  onFavoriteToggle: onToggleFavorite == null
-                      ? null
-                      : () => onToggleFavorite!(product),
                 );
               },
               childCount: products.length,

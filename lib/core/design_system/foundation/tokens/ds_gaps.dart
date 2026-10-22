@@ -50,12 +50,37 @@ abstract final class DsGaps {
   static const Widget sliverSection = SliverToBoxAdapter(child: section);
 
   /// Bottom breathing room so content clears a floating bar or FAB.
-  static const Widget sliverBottomSafe = SliverToBoxAdapter(child: bottomSafe);
+  static const Widget sliverBottomSafe = DsSliverBottomSafe();
 
-  /// The same room as a box, for the end of a `SliverList.list` or `Column`.
-  ///
-  /// A sliver in a list of boxes does not lay out — it takes the whole page
-  /// down with it. That is what blanked the content studio and the composer.
-  static const Widget bottomSafe =
-      SizedBox(height: DsSpacing.massive + DsSpacing.xl);
+  /// The box-layout twin, for a `Column` at the foot of a page.
+  static const Widget bottomSafe = DsBottomSafe();
+}
+
+/// The gap at the foot of a scrolling page.
+///
+/// It used to be a flat 88 points, which was a guess at the height of the
+/// floating bar — too much on a screen with no bar at all, and too little at
+/// 160% text, where the bar's captions push it past a hundred. The shell now
+/// reports the bar's real height as the page's bottom inset, so this reads it
+/// rather than guessing, and adds a hand's width of air on top.
+class DsSliverBottomSafe extends StatelessWidget {
+  const DsSliverBottomSafe({super.key, this.extra = DsSpacing.lg});
+
+  final double extra;
+
+  @override
+  Widget build(BuildContext context) => SliverToBoxAdapter(
+    child: SizedBox(height: MediaQuery.paddingOf(context).bottom + extra),
+  );
+}
+
+/// [DsSliverBottomSafe] for a box layout.
+class DsBottomSafe extends StatelessWidget {
+  const DsBottomSafe({super.key, this.extra = DsSpacing.lg});
+
+  final double extra;
+
+  @override
+  Widget build(BuildContext context) =>
+      SizedBox(height: MediaQuery.paddingOf(context).bottom + extra);
 }

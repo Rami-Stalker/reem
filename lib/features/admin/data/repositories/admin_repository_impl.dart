@@ -92,6 +92,15 @@ class AdminRepositoryImpl with RepositoryHandler implements AdminRepository {
       guard(() => remote.updateReport(id, payload), operation: 'update report');
 
   @override
+  Future<Result<void>> decideAccountVerification(
+    String id,
+    Map<String, dynamic> payload,
+  ) => guard(
+    () => remote.decideAccountVerification(id, payload),
+    operation: 'decide account verification',
+  );
+
+  @override
   Future<Result<void>> createCommissionRule(Map<String, dynamic> payload) =>
       guard(
         () => remote.createCommissionRule(payload),

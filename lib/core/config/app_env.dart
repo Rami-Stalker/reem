@@ -90,17 +90,42 @@ abstract final class AppEnv {
 
   /// Where a shared link points.
   ///
-  /// Separate from [baseUrl]: that one is the API, which is often a LAN address
-  /// or a private host, and a link she sends to a friend has to survive leaving
-  /// the phone. Defaults to the app's own domain — the same one its bundle id
-  /// (`shop.reem.app`) is derived from — and is overridable per build with
-  /// `--dart-define=SHARE_BASE_URL=…`.
+  /// Separate from [baseUrl] in meaning — that one is the API and this is the
+  /// address that leaves the phone — but no longer separate by *default*, and
+  /// that is the fix.
+  ///
+  /// This used to fall back to `https://reem.shop`. That host has never
+  /// existed: it is NXDOMAIN, so every link the app has ever shared resolved to
+  /// nothing. WhatsApp drew no preview because there was no server to ask, and
+  /// the tap ended on the browser's «تعذّر الوصول إلى الموقع» page. A pretty
+  /// domain nobody has bought is not a default; it is a guarantee of breakage.
+  ///
+  /// So the fallback is the API's own origin, which by definition answers —
+  /// and which now serves a real landing page for every share path (see
+  /// `backend/src/modules/links`). Set `--dart-define=SHARE_BASE_URL=…` to
+  /// point links at a custom domain once one is attached, and set
+  /// `SHARE_PUBLIC_ORIGIN` on the API to the same value so the canonical URLs
+  /// it writes agree with the links the app hands out.
   static String get shareBaseUrl {
     final configured = _configuredShareBaseUrl.trim();
-    final resolved = configured.isNotEmpty ? configured : 'https://reem.shop';
+    final resolved = configured.isNotEmpty ? configured : _originOf(baseUrl);
     return resolved.endsWith('/')
         ? resolved.substring(0, resolved.length - 1)
         : resolved;
+  }
+
+  /// Scheme, host and port — no path.
+  ///
+  /// `API_BASE_URL` may carry a prefix (`https://api.example.com/v2`) and share
+  /// links live at the root, so the path is dropped rather than inherited.
+  static String _originOf(String url) {
+    final uri = Uri.tryParse(url);
+    if (uri == null || !uri.hasScheme || uri.host.isEmpty) return url;
+    return Uri(
+      scheme: uri.scheme,
+      host: uri.host,
+      port: uri.hasPort ? uri.port : null,
+    ).toString();
   }
 
   /// Where support reaches a human, as an address and a number.

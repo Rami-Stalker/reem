@@ -83,6 +83,7 @@ class ProfileIdentity extends StatelessWidget {
                   context: context,
                   userId: user.id,
                   name: user.name,
+                  imageUrl: user.imageUrl,
                 ),
               ),
               const SizedBox(width: DsSpacing.xs),

@@ -10,6 +10,7 @@ export 'package:reem/core/design_system/patterns/immersive_post.dart';
 export 'package:reem/core/design_system/patterns/post_card.dart';
 export 'package:reem/core/design_system/patterns/premium_app_bar.dart';
 // Product surfaces -- composite layouts over the card components.
+export 'package:reem/core/design_system/patterns/product_actions.dart';
 export 'package:reem/core/design_system/patterns/product_grid.dart';
 export 'package:reem/core/design_system/patterns/product_mosaic.dart';
 export 'package:reem/core/design_system/patterns/product_rail.dart';

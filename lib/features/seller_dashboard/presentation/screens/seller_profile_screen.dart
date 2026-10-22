@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:reem/core/design_system/design_system.dart';
 import 'package:reem/core/localization/l10n_extension.dart';
+import 'package:reem/features/highlights/presentation/widgets/highlights_rail.dart';
 import 'package:reem/features/seller_dashboard/presentation/providers/seller_dashboard_provider.dart';
 import 'package:reem/features/seller_dashboard/presentation/widgets/seller_ai_insights_widget.dart';
 import 'package:reem/features/seller_dashboard/presentation/widgets/seller_financial_widget.dart';
@@ -35,6 +36,11 @@ class SellerProfileScreen extends ConsumerWidget {
       slivers: [
         // Cover + logo + store info header.
         const SellerStoreHeader(),
+
+        // «الأبرز» — the stories she chose to keep. Directly under the
+        // header, because it is part of what the storefront *is*: the size
+        // guide, the fabric close-ups, the deliveries that went well.
+        const SliverToBoxAdapter(child: HighlightsRail()),
 
         // Store stats (revenue, orders, products, followers).
         _box(const SellerStoreStats()),

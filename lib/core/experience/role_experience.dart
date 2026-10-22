@@ -366,6 +366,16 @@ class AppRoleExperience {
         icon: Icons.checkroom_rounded,
         feature: ExperienceFeature.personalizedDiscovery,
       ),
+      // The salons directory earns a quick action for the same reason the
+      // closet does: booking a colour is an errand she starts from the home
+      // screen, not something she goes looking for under a menu.
+      RoleAction(
+        id: 'salons',
+        label: 'Salons & beauty',
+        path: RoutePaths.salons,
+        icon: Icons.content_cut_rounded,
+        feature: ExperienceFeature.personalizedDiscovery,
+      ),
       RoleAction(
         id: 'scan-search',
         label: 'Search',
@@ -549,6 +559,9 @@ class AppRoleExperience {
       'content:interact',
       'order:manage',
       'analytics:read',
+      // Mirrors `role-permissions.ts`: a SELLER may run a salon. Presentation
+      // only, as with the rest of this list.
+      'salon:manage',
     },
     analyticsContext: {
       'experience': 'seller',
@@ -591,6 +604,18 @@ class AppRoleExperience {
         path: RoutePaths.adminUsers,
         icon: Icons.people_outline_rounded,
         selectedIcon: Icons.people_rounded,
+        permission: 'user:manage',
+        feature: ExperienceFeature.adminGovernance,
+      ),
+      // «توثيق الحسابات» — any account's claim on the badge, beside the
+      // seller applications rather than inside them: the two are reviewed
+      // against different evidence and answer different questions.
+      RoleNavigationItem(
+        surface: ExperienceSurface.users,
+        label: 'Account verification',
+        path: RoutePaths.adminAccountVerifications,
+        icon: Icons.verified_user_outlined,
+        selectedIcon: Icons.verified_user_rounded,
         permission: 'user:manage',
         feature: ExperienceFeature.adminGovernance,
       ),
@@ -869,6 +894,23 @@ const _buyerMenuGroups = [
         path: RoutePaths.marketWardrobe,
         icon: Icons.spa_rounded,
       ),
+      // «الصالونات والجمال». It sits in Shopping rather than in a group of
+      // its own because that is what it is to her — another thing she buys on
+      // Reem — and a section with one entry reads like an afterthought.
+      RoleAction(
+        id: 'salons',
+        label: 'Salons & beauty',
+        path: RoutePaths.salons,
+        icon: Icons.content_cut_rounded,
+      ),
+      // Directly under it, because a booking is found by looking for the
+      // thing that made it.
+      RoleAction(
+        id: 'appointments',
+        label: 'My appointments',
+        path: RoutePaths.appointments,
+        icon: Icons.event_available_rounded,
+      ),
       RoleAction(
         id: 'orders',
         label: 'Orders',
@@ -1089,6 +1131,18 @@ const _sellerMenuGroups = [
         label: 'Store profile',
         path: RoutePaths.sellerStore,
         icon: Icons.storefront_rounded,
+      ),
+
+      // «صالوني». Under Store rather than Operations because it is a second
+      // storefront, not a second inbox — and it carries `salon:manage`, which
+      // a seller holds, so an account that has never opened a salon still
+      // sees it and lands on the invitation to open one.
+      RoleAction(
+        id: 'salon-workspace',
+        label: 'My salon',
+        path: RoutePaths.salonWorkspace,
+        icon: Icons.content_cut_rounded,
+        permission: 'salon:manage',
       ),
       RoleAction(
         id: 'verification',

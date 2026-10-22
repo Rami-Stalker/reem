@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 
 import 'package:reem/core/design_system/design_system.dart';
 import 'package:reem/core/experience/experience_labels.dart';
 import 'package:reem/core/experience/role_experience.dart';
 import 'package:reem/core/localization/l10n_extension.dart';
+import 'package:reem/core/router/open_route.dart';
 import 'package:reem/features/chat/presentation/providers/chat_provider.dart';
 import 'package:reem/features/experience/presentation/providers/role_experience_provider.dart';
 import 'package:reem/features/settings/presentation/providers/settings_provider.dart';
@@ -87,7 +87,7 @@ class ExperienceSurfaceScreen extends ConsumerWidget {
                         : null,
                     onTap: section.path == null
                         ? null
-                        : () => context.go(section.path!),
+                        : () => openRoute(context, section.path!),
                   );
                 },
               );
@@ -238,7 +238,7 @@ class _RoleMenuGroupCard extends StatelessWidget {
             children: [
               for (final action in group.actions)
                 OutlinedButton.icon(
-                  onPressed: () => context.go(action.path),
+                  onPressed: () => openRoute(context, action.path),
                   icon: Icon(action.icon, size: 17, color: identity.primary),
                   label: Text(
                     action.labelOf(context.l10n),

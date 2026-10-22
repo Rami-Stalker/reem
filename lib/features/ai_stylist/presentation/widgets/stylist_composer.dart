@@ -89,34 +89,14 @@ class _StylistComposerState extends State<StylistComposer> {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Expanded(
-                    child: TextField(
+                    child: DsComposerField(
                       controller: _controller,
                       focusNode: _focusNode,
                       enabled: widget.enabled,
-                      minLines: 1,
-                      maxLines: 4,
+                      hint: widget.hintText ?? context.l10n.stylistComposerHint,
+                      shape: DsComposerShape.panel,
                       maxLength: 1000,
-                      textInputAction: TextInputAction.send,
                       onSubmitted: (_) => _submit(),
-                      decoration: InputDecoration(
-                        hintText:
-                            widget.hintText ?? context.l10n.stylistComposerHint,
-                        counterText: '',
-                        filled: true,
-                        fillColor: colors.surfaceVariant,
-                        contentPadding: const EdgeInsets.symmetric(
-                          horizontal: DsSpacing.sm,
-                          vertical: DsSpacing.sm,
-                        ),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(DsRadius.field),
-                          borderSide: BorderSide.none,
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(DsRadius.field),
-                          borderSide: BorderSide.none,
-                        ),
-                      ),
                     ),
                   ),
                   const SizedBox(width: DsSpacing.xs),

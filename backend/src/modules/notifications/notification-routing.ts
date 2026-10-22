@@ -32,6 +32,15 @@ export const PushChannel = {
   Rooms: 'reem_rooms',
   /** Coupons, drops, campaigns. The one she is most likely to turn off. */
   Offers: 'reem_offers',
+  /**
+   * Her salon appointments: requested, confirmed, cancelled, starting soon.
+   *
+   * Its own drawer rather than folded into Orders, because these are the one
+   * kind of notice that is useless a minute late — a woman who mutes order
+   * updates while she waits for a parcel must not thereby mute the reminder
+   * that she is due at the salon at six.
+   */
+  Appointments: 'reem_appointments',
   /** Moderation outcomes, security, everything else the platform must say. */
   System: 'reem_system',
 } as const;
@@ -57,6 +66,8 @@ export function channelFor(type: NotificationType): PushChannelId {
       return PushChannel.Social;
     case 'room':
       return PushChannel.Rooms;
+    case 'appointment':
+      return PushChannel.Appointments;
     case 'promo':
     case 'coupon':
       return PushChannel.Offers;
@@ -85,6 +96,11 @@ export function ttlFor(type: NotificationType): number {
     case 'promo':
     case 'coupon':
       // Six hours. A flash sale that ended is worse than silence.
+      return 6 * 60 * 60;
+    case 'appointment':
+      // Six hours. A reminder for an appointment that has already happened is
+      // not a late notification, it is a wrong one — and a confirmation she
+      // reads the next day has already been overtaken by the visit itself.
       return 6 * 60 * 60;
     default:
       return 12 * 60 * 60;
@@ -154,6 +170,12 @@ export function deepLinkFor(
       const roomId = str(data, 'roomId', 'room_id');
       return roomId ? `${SCHEME}rooms/${roomId}` : `${SCHEME}rooms`;
     }
+    case 'appointment': {
+      const appointmentId = str(data, 'appointmentId', 'appointment_id');
+      return appointmentId
+        ? `${SCHEME}appointments/${appointmentId}`
+        : `${SCHEME}appointments`;
+    }
     case 'coupon':
       return `${SCHEME}coupons`;
     case 'promo': {
@@ -165,8 +187,15 @@ export function deepLinkFor(
     }
     case 'story':
       return `${SCHEME}home`;
-    default:
+    default: {
+      // A system notice may name its own destination — a verification
+      // decision opens the screen that shows the reviewer's note, which is
+      // the whole point of sending it. Guarded the same way a campaign's is,
+      // so a bad value lands in the inbox rather than on a 404.
+      const link = str(data, 'deepLink', 'deep_link');
+      if (link && link.startsWith(SCHEME)) return link;
       return inbox;
+    }
   }
 }
 

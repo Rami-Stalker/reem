@@ -316,15 +316,16 @@ class _ReferralPanel extends StatelessWidget {
             ),
           ],
           const SizedBox(height: DsSpacing.lg),
-          TextField(
+          DsInputField(
             controller: controller,
             textInputAction: TextInputAction.done,
             textCapitalization: TextCapitalization.characters,
-            decoration: InputDecoration(
-              labelText: l10n.rewardsHaveCode,
-              hintText: l10n.rewardsEnterCode,
-              prefixIcon: Icon(Icons.confirmation_number_outlined,
-                  color: colors.primary),
+            autocorrect: false,
+            label: l10n.rewardsHaveCode,
+            hint: l10n.rewardsEnterCode,
+            prefixIcon: Icon(
+              Icons.confirmation_number_outlined,
+              color: colors.primary,
             ),
             onSubmitted: (_) => onApply(),
           ),

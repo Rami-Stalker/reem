@@ -32,13 +32,12 @@ class DsProductCard extends StatelessWidget {
     this.sellerName,
     this.rating,
     this.ratingCount,
-    this.isFavorite = false,
     this.isNew = false,
     this.soldOut = false,
     this.badgeLabel,
     this.cues = const [],
     this.onTap,
-    this.onFavoriteToggle,
+    this.action,
     this.onAddToCart,
     this.imageAspectRatio = 3 / 4,
   });
@@ -56,7 +55,6 @@ class DsProductCard extends StatelessWidget {
   final String? sellerName;
   final double? rating;
   final int? ratingCount;
-  final bool isFavorite;
   final bool isNew;
   final bool soldOut;
   final String? badgeLabel;
@@ -71,7 +69,18 @@ class DsProductCard extends StatelessWidget {
   final List<DsProductCue> cues;
 
   final VoidCallback? onTap;
-  final VoidCallback? onFavoriteToggle;
+
+  /// The product's own interaction, floated over the top-end corner of the
+  /// photograph.
+  ///
+  /// A widget rather than the `isFavorite` + `onFavoriteToggle` pair this card
+  /// used to take. That pair asked every caller to decide what a heart on a
+  /// product means and to wire it to a store of its choosing — and exactly one
+  /// caller ever passed it, so search results and visual-search matches had no
+  /// interaction at all. Feature code passes
+  /// `DsProductActions.of(context, product, DsProductSurface.tile)`, which is
+  /// the one answer the whole app shares.
+  final Widget? action;
   final VoidCallback? onAddToCart;
   final double imageAspectRatio;
 
@@ -95,12 +104,11 @@ class DsProductCard extends StatelessWidget {
             imageUrl: imageUrl,
             blurHash: blurHash,
             aspectRatio: imageAspectRatio,
-            isFavorite: isFavorite,
             soldOut: soldOut,
             discountPercent: discountPercent,
             isNew: isNew,
             badgeLabel: badgeLabel,
-            onFavoriteToggle: onFavoriteToggle,
+            action: action,
           ),
           Padding(
             padding: const EdgeInsets.all(DsSpacing.sm),
@@ -198,23 +206,23 @@ class _Media extends StatelessWidget {
     required this.imageUrl,
     required this.blurHash,
     required this.aspectRatio,
-    required this.isFavorite,
+
     required this.soldOut,
     required this.discountPercent,
     required this.isNew,
     required this.badgeLabel,
-    required this.onFavoriteToggle,
+    required this.action,
   });
 
   final String? imageUrl;
   final String? blurHash;
   final double aspectRatio;
-  final bool isFavorite;
+
   final bool soldOut;
   final int? discountPercent;
   final bool isNew;
   final String? badgeLabel;
-  final VoidCallback? onFavoriteToggle;
+  final Widget? action;
 
   /// The hash when there is one, a flat swatch when there is not. Decoded at
   /// 32×32 — all the detail a blur hash carries — so it costs nothing to draw.
@@ -284,27 +292,12 @@ class _Media extends StatelessWidget {
               ],
             ),
           ),
-          // Favorite (top-end)
-          if (onFavoriteToggle != null)
-            Positioned(
+          // The product's interaction (top-end).
+          if (action case final action?)
+            PositionedDirectional(
               top: DsSpacing.xxs,
-              right: DsSpacing.xxs,
-              child: DsIconButton(
-                icon: isFavorite
-                    ? Icons.favorite_rounded
-                    : Icons.favorite_border_rounded,
-                // The label states what the tap *does*, not what the heart
-                // currently is — a screen reader reads it before the action,
-                // and "favourite" on a filled heart would be a lie.
-                tooltip: isFavorite
-                    ? context.l10n.closetRemoveFavourite
-                    : context.l10n.closetAddFavourite,
-                variant: DsIconButtonVariant.glass,
-                size: 36,
-                iconSize: DsConstraints.iconSm,
-                color: isFavorite ? c.favorite : c.onSurface,
-                onPressed: onFavoriteToggle,
-              ),
+              end: DsSpacing.xxs,
+              child: action,
             ),
         ],
       ),

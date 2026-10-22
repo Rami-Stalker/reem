@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/router/open_route.dart';
 
 /// Which of Reem's three registers a piece of chrome belongs to.
 ///
@@ -24,16 +25,6 @@ ReemSurfaceRole reemRoleOf(BuildContext context) {
   if (path.startsWith('/seller')) return ReemSurfaceRole.seller;
   if (path.startsWith('/admin')) return ReemSurfaceRole.admin;
   return ReemSurfaceRole.customer;
-}
-
-/// Pops the current route, tolerating the absence of a router the same way.
-void _popOr(BuildContext context) {
-  final router = GoRouter.maybeOf(context);
-  if (router != null && router.canPop()) {
-    router.pop();
-  } else {
-    Navigator.of(context).maybePop();
-  }
 }
 
 /// The colours a piece of role chrome needs, resolved from the active theme.
@@ -174,7 +165,7 @@ class PremiumAppBar extends StatelessWidget {
                 size: DsSizes.iconSm,
               ),
               tooltip: MaterialLocalizations.of(context).backButtonTooltip,
-              onPressed: onBack ?? () => _popOr(context),
+              onPressed: onBack ?? () => popOrHome(context),
             )
           : null,
       actions: actions,
@@ -289,7 +280,7 @@ class ReemAppBar extends StatelessWidget implements PreferredSizeWidget {
           ? IconButton(
               icon: Icon(DsIcons.back, color: foreground, size: DsSizes.iconSm),
               tooltip: MaterialLocalizations.of(context).backButtonTooltip,
-              onPressed: onBack ?? () => _popOr(context),
+              onPressed: onBack ?? () => popOrHome(context),
             )
           : null,
       actions: actions,

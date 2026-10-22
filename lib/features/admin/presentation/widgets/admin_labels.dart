@@ -13,6 +13,7 @@ extension AdminSectionTitle on AdminSectionConfig {
     'users' => l10n.adminUserManagement,
     'sellers' => l10n.adminSellerManagement,
     'sellerApplications' => l10n.adminSellerApplications,
+    'accountVerifications' => l10n.adminAccountVerifications,
     'products' => l10n.adminProductManagement,
     'orders' => l10n.adminOrderManagement,
     'financials' => l10n.adminFinancialManagement,

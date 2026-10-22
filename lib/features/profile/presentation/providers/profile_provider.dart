@@ -6,6 +6,7 @@ import 'package:reem/features/profile/data/datasources/impl/profile_remote_datas
 import 'package:reem/features/profile/data/datasources/profile_remote_datasource.dart';
 import 'package:reem/features/profile/data/repositories/profile_repository_impl.dart';
 import 'package:reem/features/profile/domain/repositories/profile_repository.dart';
+import 'package:reem/features/profile/domain/usecases/collection_items_usecase.dart';
 import 'package:reem/features/profile/domain/usecases/create_wishlist_collection_usecase.dart';
 import 'package:reem/features/profile/domain/usecases/get_favorites_usecase.dart';
 import 'package:reem/features/profile/domain/usecases/get_orders_usecase.dart';
@@ -14,7 +15,6 @@ import 'package:reem/features/profile/domain/usecases/get_wishlist_overview_usec
 import 'package:reem/features/profile/domain/usecases/save_post_usecase.dart';
 import 'package:reem/features/profile/domain/usecases/save_seller_usecase.dart';
 import 'package:reem/features/profile/domain/usecases/share_wishlist_collection_usecase.dart';
-import 'package:reem/features/profile/domain/usecases/toggle_favorite_usecase.dart';
 import 'package:reem/features/profile/presentation/providers/profile_notifier.dart';
 import 'package:reem/features/profile/presentation/providers/profile_state.dart';
 
@@ -40,9 +40,6 @@ final getOrdersUseCaseProvider = Provider(
   (ref) => GetOrdersUseCase(ref.watch(profileRepositoryProvider)),
 );
 
-final toggleFavoriteUseCaseProvider = Provider(
-  (ref) => ToggleFavoriteUseCase(ref.watch(profileRepositoryProvider)),
-);
 
 final getWishlistOverviewUseCaseProvider = Provider(
   (ref) => GetWishlistOverviewUseCase(ref.watch(profileRepositoryProvider)),
@@ -60,6 +57,15 @@ final savePostUseCaseProvider = Provider(
   (ref) => SavePostUseCase(ref.watch(profileRepositoryProvider)),
 );
 
+final addToWishlistCollectionUseCaseProvider = Provider(
+  (ref) => AddToWishlistCollectionUseCase(ref.watch(profileRepositoryProvider)),
+);
+
+final removeFromWishlistCollectionUseCaseProvider = Provider(
+  (ref) =>
+      RemoveFromWishlistCollectionUseCase(ref.watch(profileRepositoryProvider)),
+);
+
 final shareWishlistCollectionUseCaseProvider = Provider(
   (ref) => ShareWishlistCollectionUseCase(ref.watch(profileRepositoryProvider)),
 );
@@ -75,7 +81,6 @@ final favoritesNotifierProvider =
     StateNotifierProvider<FavoritesNotifier, FavoritesState>((ref) {
   return FavoritesNotifier(
     getFavoritesUseCase: ref.watch(getFavoritesUseCaseProvider),
-    toggleFavoriteUseCase: ref.watch(toggleFavoriteUseCaseProvider),
   );
 });
 
@@ -89,6 +94,10 @@ final wishlistNotifierProvider =
     savePostUseCase: ref.watch(savePostUseCaseProvider),
     shareWishlistCollectionUseCase:
         ref.watch(shareWishlistCollectionUseCaseProvider),
+    addToWishlistCollectionUseCase:
+        ref.watch(addToWishlistCollectionUseCaseProvider),
+    removeFromWishlistCollectionUseCase:
+        ref.watch(removeFromWishlistCollectionUseCaseProvider),
   );
 });
 

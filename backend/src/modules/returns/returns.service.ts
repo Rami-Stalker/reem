@@ -18,6 +18,7 @@ import {
 import { AuthUser } from '../../common/decorators/current-user.decorator';
 import { Money, StatusActor, actorForRole } from '../../common/money';
 import { PrismaService } from '../../prisma/prisma.service';
+import { OrderEventCopy } from '../../common/orders/order-event-copy';
 import { ValueBenefitService } from '../value/value-benefit.service';
 import { DisputesService } from '../finance/disputes.service';
 import {
@@ -291,7 +292,7 @@ export class ReturnsService {
           sellerOrder,
           SellerOrderStatus.RETURN_REQUESTED,
           user,
-          'Return requested',
+          OrderEventCopy.returnRequested,
           request.number,
         );
       } else {
@@ -301,7 +302,7 @@ export class ReturnsService {
           tx,
           sellerOrder,
           user,
-          'Return requested',
+          OrderEventCopy.returnRequested,
           `${request.number} — ${input.items.length} item(s)`,
         );
       }
@@ -351,7 +352,7 @@ export class ReturnsService {
         tx,
         request.sellerOrder,
         user,
-        'Return approved',
+        OrderEventCopy.returnApproved,
         options.note ?? `${request.number} accepted`,
       );
     });
@@ -394,7 +395,7 @@ export class ReturnsService {
           reason,
         );
       } else {
-        await this.note(tx, request.sellerOrder, user, 'Return refused', reason);
+        await this.note(tx, request.sellerOrder, user, OrderEventCopy.returnRefused, reason);
       }
     });
 
@@ -418,7 +419,7 @@ export class ReturnsService {
           request.sellerOrder,
           SellerOrderStatus.DELIVERED,
           user,
-          'Return withdrawn',
+          OrderEventCopy.returnWithdrawn,
           request.number,
         );
       } else {
@@ -426,7 +427,7 @@ export class ReturnsService {
           tx,
           request.sellerOrder,
           user,
-          'Return withdrawn',
+          OrderEventCopy.returnWithdrawn,
           request.number,
         );
       }
@@ -454,7 +455,7 @@ export class ReturnsService {
           request.sellerOrder,
           SellerOrderStatus.RETURN_IN_TRANSIT,
           user,
-          'Return on its way back',
+          OrderEventCopy.returnOnItsWayBack,
           request.number,
         );
       } else {
@@ -462,7 +463,7 @@ export class ReturnsService {
           tx,
           request.sellerOrder,
           user,
-          'Return on its way back',
+          OrderEventCopy.returnOnItsWayBack,
           request.number,
         );
       }
@@ -505,7 +506,7 @@ export class ReturnsService {
           request.sellerOrder,
           SellerOrderStatus.RETURNED,
           user,
-          'Return received',
+          OrderEventCopy.returnReceived,
           options.note ?? request.number,
         );
       } else {
@@ -513,7 +514,7 @@ export class ReturnsService {
           tx,
           request.sellerOrder,
           user,
-          'Return received',
+          OrderEventCopy.returnReceived,
           options.note ?? request.number,
         );
       }
@@ -550,7 +551,7 @@ export class ReturnsService {
           request.sellerOrder,
           SellerOrderStatus.EXCHANGE_IN_PROGRESS,
           user,
-          'Exchange in progress',
+          OrderEventCopy.exchangeInProgress,
           request.number,
         );
       } else {
@@ -558,7 +559,7 @@ export class ReturnsService {
           tx,
           request.sellerOrder,
           user,
-          'Exchange in progress',
+          OrderEventCopy.exchangeInProgress,
           request.number,
         );
       }
@@ -625,7 +626,7 @@ export class ReturnsService {
           tx,
           request.sellerOrder,
           user,
-          'Partial refund issued',
+          OrderEventCopy.partialRefundIssued,
           `${request.number} — ${settled.customerRefund.toString()}`,
         );
       }
@@ -754,7 +755,7 @@ export class ReturnsService {
           request.sellerOrder,
           SellerOrderStatus.DISPUTED,
           user,
-          'Dispute opened',
+          OrderEventCopy.disputeOpened,
           opened.number,
         );
       } else {
@@ -762,7 +763,7 @@ export class ReturnsService {
           tx,
           request.sellerOrder,
           user,
-          'Dispute opened',
+          OrderEventCopy.disputeOpened,
           opened.number,
         );
       }

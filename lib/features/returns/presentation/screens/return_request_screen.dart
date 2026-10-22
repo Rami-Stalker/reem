@@ -182,15 +182,13 @@ class _ReturnFormState extends ConsumerState<_ReturnForm> {
         ],
 
         const SizedBox(height: DsSpacing.lg),
-        TextField(
+        DsInputField(
           controller: _noteController,
           maxLines: 3,
+          minLines: 3,
           maxLength: 500,
           enabled: !_submitting,
-          decoration: InputDecoration(
-            labelText: l10n.returnNoteOptional,
-            border: const OutlineInputBorder(),
-          ),
+          label: l10n.returnNoteOptional,
         ),
 
         const SizedBox(height: DsSpacing.lg),

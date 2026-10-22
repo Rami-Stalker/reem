@@ -166,6 +166,42 @@ dbTest('asking twice reopens the thread, it does not fork it', async (world) => 
   assert.equal(mine.length, 1);
 });
 
+dbTest(
+  'two subjects with one boutique are one conversation, not two',
+  async (world) => {
+    const buyer = await makeUser(world.tx, 'c2', UserRole.CUSTOMER);
+    const seller = await makeUser(world.tx, 'd2', UserRole.SELLER);
+    const dress = await makeProduct(world.tx, seller.id);
+    const scarf = await makeProduct(world.tx, seller.id);
+
+    const aboutDress = await world.chats.startConversation(buyer.id, {
+      product_id: dress.id,
+      message: 'is size M in stock?',
+    });
+    const aboutScarf = await world.chats.startConversation(buyer.id, {
+      product_id: scarf.id,
+      message: 'and this one in navy?',
+    });
+    // Asking a woman about a second piece is the same conversation with the
+    // same woman. It used to be a second thread, so her inbox listed the same
+    // boutique twice and each row held half the history.
+    assert.equal(aboutScarf.id, aboutDress.id);
+
+    const mine = await world.chats.threads(buyer.id);
+    assert.equal(mine.length, 1);
+
+    // Both questions are in it, in order.
+    const messages = await world.chats.messages(aboutDress.id, buyer.id);
+    assert.deepEqual(
+      messages.map((message) => message.content),
+      ['is size M in stock?', 'and this one in navy?'],
+    );
+
+    // And the header follows what she is asking about now.
+    assert.equal(aboutScarf.product_id, scarf.id);
+  },
+);
+
 dbTest('a shopper can open a conversation with a boutique directly', async (world) => {
   const buyer = await makeUser(world.tx, 'e', UserRole.CUSTOMER);
   const seller = await makeUser(world.tx, 'f', UserRole.SELLER);

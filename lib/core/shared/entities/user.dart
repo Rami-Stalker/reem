@@ -63,7 +63,21 @@ class User extends Equatable {
   final String? imageUrl;
   final String? location;
   final UserRole role;
+  /// The public badge: Reem has checked who this is.
+  ///
+  /// Granted by a reviewed `AccountVerification` and by nothing else. It used
+  /// to be set the moment an account received a sign-in code, which is why it
+  /// appeared beside every name in the app and meant nothing — see
+  /// «توثيق الحساب». [phoneVerifiedAt] is the other question.
   final bool isVerified;
+
+  /// When she proved the number she signs in with.
+  ///
+  /// Only ever populated for the signed-in user: the public shape of another
+  /// woman's profile deliberately carries neither her number nor the fact
+  /// that she proved it.
+  final DateTime? phoneVerifiedAt;
+
   final bool mfaEnabled;
   final bool deviceVerificationRequired;
   final int followersCount;
@@ -99,6 +113,7 @@ class User extends Equatable {
     this.location,
     this.role = UserRole.customer,
     this.isVerified = false,
+    this.phoneVerifiedAt,
     this.mfaEnabled = false,
     this.deviceVerificationRequired = true,
     this.followersCount = 0,
@@ -144,6 +159,7 @@ class User extends Equatable {
         location,
         role,
         isVerified,
+        phoneVerifiedAt,
         mfaEnabled,
         deviceVerificationRequired,
         followersCount,

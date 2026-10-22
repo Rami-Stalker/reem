@@ -14,7 +14,6 @@ import 'package:reem/features/home/presentation/feed_interleave.dart';
 import 'package:reem/features/home/presentation/providers/home_provider.dart';
 import 'package:reem/features/home/presentation/widgets/home_section_header.dart';
 import 'package:reem/features/home/presentation/widgets/reem_post_card.dart';
-import 'package:reem/features/profile/presentation/providers/profile_provider.dart';
 
 /// The heart of the home page: **one set of pieces, three ways to look at it.**
 ///
@@ -105,9 +104,6 @@ class HomeShowcaseSection extends ConsumerWidget {
               products: products,
               isLoading: productsLoading,
               onTapProduct: (p) => _openProduct(context, p),
-              onToggleFavorite: (p) => ref
-                  .read(favoritesNotifierProvider.notifier)
-                  .toggleFavorite(p.id),
             ),
             ..._trailingModules(),
           ],

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:reem/core/design_system/design_system.dart';
 import 'package:reem/features/ai_stylist/domain/entities/stylist_recommendation.dart';
+import 'package:reem/features/product_social/presentation/widgets/product_like_button.dart';
 import 'package:reem/features/visual_search/domain/entities/visual_match.dart';
 import 'package:reem/features/visual_search/presentation/widgets/visual_similarity_badge.dart';
 
@@ -63,9 +64,6 @@ class VisualMatchCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.dsColors;
     final product = match.product;
-    final liked =
-        match.feedback == StylistFeedback.liked ||
-        match.feedback == StylistFeedback.saved;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -90,14 +88,22 @@ class VisualMatchCard extends StatelessWidget {
                   ? product.reviewsCount
                   : null,
               soldOut: !product.inStock,
-              isFavorite: liked,
               onTap: onTap,
               onAddToCart: product.inStock ? onAddToCart : null,
-              onFavoriteToggle: onFeedback == null
-                  ? null
-                  : () => onFeedback!(
-                      liked ? StylistFeedback.none : StylistFeedback.liked,
-                    ),
+              // The product's own like, like every other card on the platform
+              // — and here it is *also* the signal that teaches the visual
+              // ranker, which is what her liking a match means. One heart, one
+              // meaning; a second one beside it for "feedback" was a
+              // distinction only this screen understood.
+              action: ProductLikeButton(
+                key: ValueKey('like-${product.id}'),
+                product: product,
+                onChanged: onFeedback == null
+                    ? null
+                    : (liked) => onFeedback!(
+                        liked ? StylistFeedback.liked : StylistFeedback.none,
+                      ),
+              ),
             ),
             // Directional rather than `Positioned`: the app is RTL, and a
             // badge pinned to the physical left would sit under the discount

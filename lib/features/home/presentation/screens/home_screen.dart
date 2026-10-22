@@ -6,6 +6,7 @@ import 'package:reem/core/design_system/design_system.dart';
 import 'package:reem/core/experience/role_experience.dart';
 import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/router/route_paths.dart';
+import 'package:reem/core/router/tab_reselect.dart';
 import 'package:reem/features/discovery/domain/entities/product_collection.dart';
 import 'package:reem/features/experience/presentation/providers/role_experience_provider.dart';
 import 'package:reem/features/experience/presentation/screens/experience_surface_screen.dart';
@@ -31,6 +32,7 @@ import 'package:reem/features/home/presentation/widgets/living/home_style_deck.d
 import 'package:reem/features/market/presentation/screens/drops_screen.dart';
 import 'package:reem/features/market/presentation/widgets/bundles_rail.dart';
 import 'package:reem/features/profile/presentation/providers/profile_provider.dart';
+import 'package:reem/features/salons/presentation/widgets/home_salons_rail.dart';
 import 'package:reem/features/seller_dashboard/presentation/screens/seller_home_screen.dart';
 import 'package:reem/features/value/presentation/widgets/value_standing_card.dart';
 
@@ -79,6 +81,29 @@ class _BuyerHomeScreenState extends ConsumerState<_BuyerHomeScreen> {
 
   static const double _gap = DsSpacing.xl;
 
+  /// Held here so tapping Home while already on Home brings her back to the
+  /// top of the page.
+  final _scrollController = ScrollController();
+
+  /// Which shell branch Home is. Mirrored by hand from the router.
+  static const int _homeBranch = 0;
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _scrollToTop() {
+    if (!_scrollController.hasClients) return;
+    if (_scrollController.offset <= 0) return;
+    _scrollController.animateTo(
+      0,
+      duration: DsMotion.slow,
+      curve: DsMotion.silk,
+    );
+  }
+
   void _showStories() {
     final target = _storiesAnchor.currentContext;
     if (target == null) return;
@@ -102,7 +127,10 @@ class _BuyerHomeScreenState extends ConsumerState<_BuyerHomeScreen> {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
 
+    ref.listen(tabReselectProvider(_homeBranch), (_, _) => _scrollToTop());
+
     return ReemScrollPage(
+      controller: _scrollController,
       onRefresh: () => _refresh(ref),
       slivers: [
         HomeAura(onStoriesTap: _showStories),
@@ -121,6 +149,10 @@ class _BuyerHomeScreenState extends ConsumerState<_BuyerHomeScreen> {
         const _Gap(DsSpacing.xxl),
         _reveal(const HomeBento()),
         const _Gap(DsSpacing.xxl),
+
+        // «الصالونات والجمال»: another way of shopping rather than another
+        // shelf. Draws nothing until a salon is published.
+        const SliverToBoxAdapter(child: HomeSalonsRail()),
 
         // ── The feed, with the shop set into it ──────────────────────────
         //

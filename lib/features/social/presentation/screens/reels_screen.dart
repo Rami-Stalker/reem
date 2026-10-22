@@ -94,6 +94,7 @@ class _ReelsScreenState extends ConsumerState<ReelsScreen> {
                   postId: reel.id,
                   caption: reel.caption,
                   authorName: reel.author.name,
+                  imageUrl: reel.shareImageUrl,
                 );
                 if (shared) await notifier.recordShare(reel.id);
               },

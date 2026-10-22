@@ -5,6 +5,8 @@ import {
 } from '@nestjs/common';
 import {
   CashbackStatus,
+  Coupon,
+  CouponType,
   PointsTransactionType,
   Prisma,
   ReferralParticipantType,
@@ -30,19 +32,44 @@ const HIGH_RISK_THRESHOLD = 0.8;
  * What each side of an invite is paid. Exported because the profile centre
  * quotes it to the shopper — a promise the screen makes has to be the same
  * number the ledger later honours.
+ *
+ * **The discount is the part that was missing.** Points and cashback are what
+ * this paid before, and neither is what «كود الدعوة» means to the woman
+ * holding it: she expects money off, on the purchase she is about to make.
+ * `referredPercent` is her welcome discount, applied at her first checkout;
+ * `referrerPercent` is what her friend gets once that purchase completes. Both
+ * are issued as ordinary single-use coupons bound to one account, so they run
+ * through the same race-safe redemption rail every other code does rather than
+ * through a second, weaker one written for referrals.
  */
 export const REWARD_MATRIX = {
   [ReferralParticipantType.CUSTOMER]: {
     referrerPoints: 500,
     referredPoints: 250,
     referrerCashback: 2.5,
+    referredPercent: 15,
+    referrerPercent: 10,
   },
   [ReferralParticipantType.SELLER]: {
     referrerPoints: 1200,
     referredPoints: 500,
     referrerCashback: 10,
+    referredPercent: 15,
+    referrerPercent: 10,
   },
 } as const;
+
+/** How long a referral coupon stands before it lapses. */
+const REFERRAL_COUPON_TTL_DAYS = 60;
+
+/**
+ * Nothing a referral coupon may take off is unbounded.
+ *
+ * A percentage with no ceiling on a marketplace where a single order can be a
+ * gold set is a discount nobody approved. The cap is in the platform's own
+ * currency because that is the only one these coupons are ever minted in.
+ */
+const REFERRAL_COUPON_MAX_OFF_SYP = 150_000;
 
 @Injectable()
 export class ReferralsService {
@@ -193,9 +220,28 @@ export class ReferralsService {
       where: { referredUserId: userId },
     });
     if (existing) {
+      // She applied a code before. Hand back the welcome coupon that went with
+      // it rather than nothing: typing the code again at checkout is the same
+      // woman asking for the same discount, and it is still hers to spend
+      // until it is spent or lapses. `issueCoupon` is idempotent, so this
+      // returns the existing row and never mints a second.
+      const welcome =
+        existing.status === ReferralStatus.REJECTED
+          ? null
+          : await this.issueCoupon({
+              referralId: existing.id,
+              userId,
+              side: 'welcome',
+              percent: REWARD_MATRIX[existing.participantType].referredPercent,
+              title: 'خصم الترحيب من دعوة صديقة',
+            });
       return {
         already_applied: true,
+        accepted: existing.status !== ReferralStatus.REJECTED,
         referral: serializeReferral(existing),
+        code: serializeReferralCode(code),
+        welcome_coupon: this.serializeWelcome(welcome),
+        risk: null,
       };
     }
 
@@ -231,12 +277,139 @@ export class ReferralsService {
       return created;
     });
 
+    // Her welcome discount, ready for the first checkout. This is what the
+    // whole gesture means to her — «استخدمي الكود واحصلي على خصم» — and it did
+    // not exist: applying a code recorded a relationship and paid points at
+    // some later date, so the woman who typed it in got nothing she could see.
+    const welcome =
+      status === ReferralStatus.REJECTED
+        ? null
+        : await this.issueCoupon({
+            referralId: referral.id,
+            userId,
+            side: 'welcome',
+            percent: REWARD_MATRIX[participantType].referredPercent,
+            title: 'خصم الترحيب من دعوة صديقة',
+          });
+
     return {
+      already_applied: false,
       accepted: status !== ReferralStatus.REJECTED,
       referral: serializeReferral(referral),
       code: serializeReferralCode(code),
+      welcome_coupon: this.serializeWelcome(welcome),
       risk,
     };
+  }
+
+  /** The discount she can spend, as the client needs it. */
+  private serializeWelcome(coupon: Coupon | null) {
+    if (!coupon) return null;
+    return {
+      code: coupon.code,
+      discount_percent: Number(coupon.discountPercent),
+      expires_at: coupon.expiresAt.toISOString(),
+    };
+  }
+
+  /**
+   * Whether [code] names a live invite, and whose.
+   *
+   * Checkout asks this when the code a woman typed is not a coupon: «كود
+   * الدعوة» and «الكوبون» are one field on her screen and she should not have
+   * to know which kind she is holding.
+   */
+  async findLiveCode(rawCode: string) {
+    const normalized = this.normalize(rawCode);
+    if (!normalized) return null;
+    const code = await this.prisma.referralCode.findUnique({
+      where: { code: normalized },
+    });
+    if (!code || !code.isActive) return null;
+    if (code.expiresAt && code.expiresAt < new Date()) return null;
+    if (code.maxUses != null && code.usedCount >= code.maxUses) return null;
+    return code;
+  }
+
+  /**
+   * Issues one side's coupon, once.
+   *
+   * Idempotent by construction: the code is derived from the referral id and
+   * which side it is for, so a retry — a double tap, a replayed request, a
+   * qualification that runs twice — collides with the unique index on
+   * `coupons.code` and is answered with the row that already exists. That is
+   * the whole of «منع التكرار في الاستفادة», and it is enforced by the
+   * database rather than by a check that could be raced.
+   */
+  private async issueCoupon(input: {
+    referralId: string;
+    userId: string;
+    side: 'welcome' | 'thanks';
+    percent: number;
+    title: string;
+  }) {
+    const code = this.couponCodeFor(input.referralId, input.side);
+    const existing = await this.prisma.coupon.findUnique({ where: { code } });
+    if (existing) return existing;
+
+    const expiresAt = new Date(
+      Date.now() + REFERRAL_COUPON_TTL_DAYS * 24 * 60 * 60 * 1000,
+    );
+
+    try {
+      const coupon = await this.prisma.coupon.create({
+        data: {
+          code,
+          title: input.title,
+          type: CouponType.PERCENTAGE,
+          discountPercent: input.percent,
+          // Never more than this off one order, however large the basket.
+          maxDiscountAmount: REFERRAL_COUPON_MAX_OFF_SYP,
+          // Bound to one account, spendable once. Both matter: `userId` is
+          // what stops the code being passed on, and the two limits together
+          // are what the redemption rail locks the row against.
+          userId: input.userId,
+          maxUses: 1,
+          perUserLimit: 1,
+          expiresAt,
+          // Reem funds an invite, not the boutique she happens to buy from.
+          fundedBySeller: false,
+        },
+      });
+
+      await this.prisma.referralReward.create({
+        data: {
+          referralId: input.referralId,
+          userId: input.userId,
+          type: ReferralRewardType.COUPON,
+          couponId: coupon.id,
+          status: 'issued',
+          issuedAt: new Date(),
+        },
+      });
+      return coupon;
+    } catch (error) {
+      // Somebody else won the race; their row is the answer.
+      if (
+        error instanceof Prisma.PrismaClientKnownRequestError &&
+        error.code === 'P2002'
+      ) {
+        return this.prisma.coupon.findUnique({ where: { code } });
+      }
+      throw error;
+    }
+  }
+
+  /**
+   * `REEM-<referral>-W` / `-T`.
+   *
+   * Derived rather than random on purpose: the derivation *is* the idempotency
+   * key. Uppercase and stripped of punctuation so it survives `normalize` and
+   * reads the same way she will type it.
+   */
+  private couponCodeFor(referralId: string, side: 'welcome' | 'thanks') {
+    const stem = referralId.replace(/-/g, '').slice(0, 12).toUpperCase();
+    return `REEM${stem}${side === 'welcome' ? 'W' : 'T'}`;
   }
 
   /**
@@ -267,10 +440,18 @@ export class ReferralsService {
       return null;
     }
 
-    const existingRewards = await this.prisma.referralReward.count({
-      where: { referralId: referral.id },
+    // Has *the referrer* already been paid for this invite?
+    //
+    // Scoped to her deliberately. The invitee holds a reward row of her own
+    // from the moment she applied the code — her welcome coupon — so a check
+    // that counted every row on this referral would see it, conclude the
+    // invite had already paid out, and silently skip the referrer's half. The
+    // question this guard exists to ask is about one side, so it names that
+    // side.
+    const alreadyPaid = await this.prisma.referralReward.count({
+      where: { referralId: referral.id, userId: referral.referrerId },
     });
-    if (existingRewards > 0) {
+    if (alreadyPaid > 0) {
       return this.prisma.referral.update({
         where: { id: referral.id },
         data: { status: ReferralStatus.REWARDED, rewardedAt: new Date() },
@@ -280,7 +461,7 @@ export class ReferralsService {
     const reward = REWARD_MATRIX[referral.participantType];
     const issuedAt = new Date();
 
-    return this.prisma.$transaction(async (tx) => {
+    const rewarded = await this.prisma.$transaction(async (tx) => {
       await tx.referral.update({
         where: { id: referral.id },
         data: {
@@ -349,6 +530,21 @@ export class ReferralsService {
         data: { status: ReferralStatus.REWARDED, rewardedAt: issuedAt },
       });
     });
+
+    // The other side of the promise: her friend's own discount, now that the
+    // invite has actually produced a purchase. Issued after the transaction
+    // rather than inside it — a coupon that failed to mint must not undo a
+    // completed order, and `issueCoupon` is idempotent, so the next
+    // qualification attempt or the profile screen's read mints it instead.
+    await this.issueCoupon({
+      referralId: referral.id,
+      userId: referral.referrerId,
+      side: 'thanks',
+      percent: reward.referrerPercent,
+      title: 'خصم دعوة صديقة',
+    });
+
+    return rewarded;
   }
 
   async analytics() {

@@ -32,6 +32,8 @@ import { ShipmentsService } from '../delivery/shipments.service';
 import { PaymentsService } from '../payments/payments.service';
 import { CouponsService } from '../rewards/coupons.service';
 import { ScopedLine, eligibleBySeller } from '../rewards/coupon-scope';
+import { ReferralsService } from '../rewards/referrals.service';
+import { OrderEventCopy } from '../../common/orders/order-event-copy';
 import { CommissionQuoteService } from '../commissions/commission-quote.service';
 import {
   ExchangeRateService,
@@ -84,6 +86,7 @@ export class CheckoutService {
     private readonly delivery: DeliveryService,
     private readonly shipments: ShipmentsService,
     private readonly coupons: CouponsService,
+    private readonly referrals: ReferralsService,
     private readonly commissions: CommissionQuoteService,
     private readonly rates: ExchangeRateService,
     private readonly events: EventEmitter2,
@@ -175,10 +178,23 @@ export class CheckoutService {
       })),
     );
 
+    // One field, two kinds of code.
+    //
+    // «كود الدعوة» and «الكوبون» are the same box on her screen, and she has
+    // no way of knowing which one she is holding — a friend sends her a code
+    // and she types it where codes go. So an unrecognised code is checked
+    // against the live invite codes before it is refused: if it is one, the
+    // referral is recorded and the welcome discount it mints is what this
+    // checkout then applies. Applying a code and getting the discount it
+    // promised become one action, which is what she expected all along.
+    const couponCode = dto.coupon_code && userId
+      ? await this.resolveCouponCode(dto.coupon_code, userId)
+      : null;
+
     const coupon =
-      dto.coupon_code && userId
+      couponCode && userId
         ? await this.coupons.evaluate(
-            dto.coupon_code,
+            couponCode,
             userId,
             itemsSubtotal,
             scopedLines,
@@ -305,8 +321,8 @@ export class CheckoutService {
           events: {
             create: [
               {
-                title: 'Order created',
-                description: `Order ${number} placed`,
+                title: OrderEventCopy.orderCreated,
+                description: OrderEventCopy.orderPlaced(number),
                 toStatus: OrderStatus.PENDING_PAYMENT,
                 // Null for a guest: the timeline records that a customer
                 // placed it, and there is no account to name.
@@ -372,8 +388,8 @@ export class CheckoutService {
             events: {
               create: [
                 {
-                  title: 'Sub-order created',
-                  description: `Awaiting confirmation from ${group.sellerName}`,
+                  title: OrderEventCopy.subOrderCreated,
+                  description: OrderEventCopy.awaitingSeller(group.sellerName),
                   toStatus: SellerOrderStatus.NEW,
                   actorRole: 'SYSTEM',
                 },
@@ -653,8 +669,8 @@ export class CheckoutService {
       await tx.orderEvent.create({
         data: {
           orderId,
-          title: 'Order confirmed',
-          description: 'Sent to the sellers for preparation',
+          title: OrderEventCopy.orderConfirmed,
+          description: OrderEventCopy.sentToSellers,
           fromStatus: OrderStatus.PENDING_PAYMENT,
           toStatus: OrderStatus.CONFIRMED,
           actorId: actorId ?? null,
@@ -1060,6 +1076,48 @@ export class CheckoutService {
     }
 
     return { shipping: dto.shipping, fromAddressBook: false };
+  }
+
+  /**
+   * The code she typed, turned into a coupon code the rail can evaluate.
+   *
+   * Returns the code unchanged when it already names a coupon. When it does
+   * not, it is looked up as an invite: a live one is applied — which records
+   * the referral and mints her welcome coupon — and that coupon's code is
+   * returned instead. Anything else comes back unchanged, so the coupon rail
+   * raises the refusal and she is told the code is invalid exactly once, in
+   * the usual words.
+   *
+   * Applying the invite here rather than making her do it on another screen is
+   * the point: «استخدمت الكود بأول عملية شراء» is one action from her side and
+   * used to be two, one of which was invisible and paid nothing she could see.
+   */
+  private async resolveCouponCode(
+    typed: string,
+    userId: string,
+  ): Promise<string> {
+    const code = typed.trim();
+    const asCoupon = await this.prisma.coupon.findUnique({
+      where: { code: code.toUpperCase() },
+      select: { id: true },
+    });
+    if (asCoupon) return code;
+
+    const invite = await this.referrals.findLiveCode(code);
+    if (!invite) return code;
+
+    try {
+      const applied = await this.referrals.applyCode(userId, { code });
+      const welcome = applied.welcome_coupon?.code;
+      if (welcome) return welcome;
+    } catch (error) {
+      // A refused invite — her own code, an account that already used one,
+      // a fraud score over the line — is not a reason to fail the checkout.
+      // She is told her *code* did not apply, by the coupon rail, a line
+      // below.
+      this.logger.warn(`Referral code not applied at checkout: ${String(error)}`);
+    }
+    return code;
   }
 
   /**

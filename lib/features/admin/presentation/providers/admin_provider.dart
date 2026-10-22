@@ -159,6 +159,25 @@ const adminSectionConfigs = {
     ],
     defaultStatus: 'PENDING',
   ),
+  // «توثيق الحسابات» — the queue behind the badge. Its own section rather
+  // than a filter on Users, because granting it is a public claim Reem makes
+  // about a real woman and the decision needs its own record.
+  'accountVerifications': AdminSectionConfig(
+    key: 'accountVerifications',
+    title: 'Account verification',
+    endpoint: ApiEndpoints.adminAccountVerifications,
+    permission: AppPermissions.userManage,
+    writePermission: AppPermissions.userManage,
+    statusFilters: [
+      'PENDING',
+      'UNDER_REVIEW',
+      'NEEDS_MORE_INFO',
+      'APPROVED',
+      'REJECTED',
+      'REVOKED',
+    ],
+    defaultStatus: 'PENDING',
+  ),
   'products': AdminSectionConfig(
     key: 'products',
     title: 'Product management',
@@ -401,6 +420,10 @@ class AdminMutations {
       'commissions' => _repository.updateCommissionLedger(recordId, payload),
       'settings' => _repository.upsertSystemSetting(payload),
       'sellerApplications' => _repository.reviewSellerApplication(
+        recordId,
+        payload,
+      ),
+      'accountVerifications' => _repository.decideAccountVerification(
         recordId,
         payload,
       ),

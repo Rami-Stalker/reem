@@ -57,4 +57,9 @@ abstract interface class AdminRepository {
     String id,
     Map<String, dynamic> payload,
   );
+
+  Future<Result<void>> decideAccountVerification(
+    String id,
+    Map<String, dynamic> payload,
+  );
 }

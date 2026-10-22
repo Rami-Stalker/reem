@@ -22,20 +22,16 @@ class PostCaptionField extends StatelessWidget {
         borderRadius: BorderRadius.circular(DsRadius.xl),
         boxShadow: DsShadows.medium(DsColors.primary600),
       ),
-      child: TextField(
+      child: DsComposerField(
         controller: controller,
         enabled: enabled,
+        hint: context.l10n.createCaptionHint,
+        shape: DsComposerShape.bare,
         textInputAction: TextInputAction.newline,
+        minLines: 5,
         maxLines: 7,
         maxLength: 2000,
-        decoration: InputDecoration(
-          hintText: context.l10n.createCaptionHint,
-          hintStyle: context.dsText.body
-              .tint(context.dsColors.onSurfaceVariant),
-          border: InputBorder.none,
-          counterText: '',
-        ),
-        style: context.dsText.bodyLarge.copyWith(height: 1.8),
+        textStyle: context.dsText.bodyLarge.copyWith(height: 1.8),
       ),
     );
   }

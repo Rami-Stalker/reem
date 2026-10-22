@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:reem/core/design_system/design_system.dart';
 import 'package:reem/core/localization/l10n_extension.dart';
+import 'package:reem/core/router/open_route.dart';
 import 'package:reem/core/utils/relative_time.dart';
 import 'package:reem/features/chat/domain/entities/chat_thread_entity.dart';
 
@@ -56,7 +57,10 @@ class ChatAppBar extends StatelessWidget {
             icon: Directionality.of(context) == TextDirection.rtl
                 ? Icons.arrow_forward_ios_rounded
                 : Icons.arrow_back_ios_new_rounded,
-            onPressed: () => Navigator.of(context).maybePop(),
+            // A conversation is opened from the inbox, from a product, and
+            // from a notification tap — and only the first of those leaves a
+            // route to pop, so the arrow needs the shared fallback.
+            onPressed: () => popOrHome(context),
           ),
           const SizedBox(width: DsSpacing.sm),
           DsAvatar(

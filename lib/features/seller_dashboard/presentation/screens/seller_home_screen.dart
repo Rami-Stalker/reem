@@ -154,7 +154,7 @@ class SellerHomeScreen extends ConsumerWidget {
         _box(const SellerGoalsWidget()),
 
         // Breathing room above the floating bottom bar.
-        const _Gap(140),
+        DsGaps.sliverBottomSafe,
       ],
     );
   }

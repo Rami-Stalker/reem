@@ -455,15 +455,17 @@ class _Field extends StatelessWidget {
             style: context.dsText.caption.semibold.tint(colors.onSurfaceVariant),
           ),
           const SizedBox(height: DsSpacing.sm),
-          TextFormField(
+          DsInputField(
             controller: controller,
             keyboardType: keyboardType,
             inputFormatters: inputFormatters,
             maxLines: maxLines,
+            minLines: maxLines > 1 ? maxLines : null,
             // The server's own ceiling, enforced here so a long line is
             // stopped by the keyboard rather than by a 400 after she taps save.
             maxLength: maxLength,
-            decoration: InputDecoration(hintText: hint, counterText: ''),
+            hint: hint,
+            labelAbove: false,
             validator: (value) {
               final text = value?.trim() ?? '';
               if (required && text.isEmpty) {
