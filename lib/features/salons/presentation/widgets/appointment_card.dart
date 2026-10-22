@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/features/salons/domain/entities/appointment.dart';
 import 'package:reem/features/salons/presentation/widgets/salon_labels.dart';
 
@@ -56,7 +56,8 @@ class AppointmentCard extends StatelessWidget {
             DsGaps.vXxxs,
             Text(
               showCustomer
-                  ? appointment.customer?.name ?? 'عميلة'
+                  ? appointment.customer?.name ??
+                        context.l10n.salonCustomerFallback
                   : appointment.salon?.name ?? '',
               style: context.dsText.cardSubtitle.tint(c.onSurfaceVariant),
             ),
@@ -66,16 +67,20 @@ class AppointmentCard extends StatelessWidget {
                 Icon(
                   Icons.event_rounded,
                   size: 15,
-                  color: appointment.status.isLive ? c.primary : c.onSurfaceVariant,
+                  color: appointment.status.isLive
+                      ? c.primary
+                      : c.onSurfaceVariant,
                 ),
                 const SizedBox(width: DsSpacing.xxs),
                 Expanded(
                   child: Text(
                     // «غداً · ٦:٣٠ م» for anything close, a full date beyond
                     // that. She does not need the word "Thursday" for tomorrow.
-                    '${SalonLabels.relativeDay(when)} · ${SalonLabels.time(when)}',
+                    '${SalonLabels.relativeDay(context.l10n, when)} · ${SalonLabels.time(context.l10n, when)}',
                     style: context.dsText.body.semibold.tint(
-                      appointment.status.isLive ? c.onSurface : c.onSurfaceVariant,
+                      appointment.status.isLive
+                          ? c.onSurface
+                          : c.onSurfaceVariant,
                     ),
                   ),
                 ),
@@ -95,7 +100,7 @@ class AppointmentCard extends StatelessWidget {
                   Icon(Icons.home_outlined, size: 14, color: c.primary),
                   const SizedBox(width: DsSpacing.xxs),
                   Text(
-                    'خدمة منزلية',
+                    context.l10n.salonHomeService,
                     style: context.dsText.caption.tint(c.primary),
                   ),
                 ],
@@ -120,7 +125,7 @@ class AppointmentStatusBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DsBadge(
-      label: SalonLabels.status(status),
+      label: SalonLabels.status(context.l10n, status),
       tone: switch (status) {
         AppointmentStatus.pending => DsBadgeTone.warning,
         AppointmentStatus.confirmed => DsBadgeTone.success,

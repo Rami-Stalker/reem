@@ -11,6 +11,7 @@
 //   2. the filter query, whose keys are the server's parameter names;
 //   3. the appointment deep link, because `reem://appointments/x` folds its
 //      authority into the path and a wrong fold lands her on the 404 page.
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:reem/core/router/app_router_provider.dart';
@@ -20,6 +21,10 @@ import 'package:reem/features/salons/data/models/salon_models.dart';
 import 'package:reem/features/salons/domain/entities/appointment.dart';
 import 'package:reem/features/salons/domain/entities/salon.dart';
 import 'package:reem/features/salons/presentation/widgets/salon_labels.dart';
+import 'package:reem/l10n/app_localizations.dart';
+
+/// The salon labels are Arabic-first; the tests read them in Arabic.
+final _ar = lookupAppLocalizations(const Locale('ar'));
 
 void main() {
   group('decoding a salon', () {
@@ -144,8 +149,10 @@ void main() {
     });
 
     test('an unknown status reads as pending, never as confirmed', () {
-      expect(AppointmentStatus.fromWire('RESCHEDULED'),
-          AppointmentStatus.pending);
+      expect(
+        AppointmentStatus.fromWire('RESCHEDULED'),
+        AppointmentStatus.pending,
+      );
     });
   });
 
@@ -246,53 +253,53 @@ void main() {
 
   group('the Arabic labels', () {
     test('a duration reads as a woman would say it', () {
-      expect(SalonLabels.duration(45), '45 دقيقة');
-      expect(SalonLabels.duration(60), 'ساعة');
-      expect(SalonLabels.duration(90), 'ساعة ونصف');
-      expect(SalonLabels.duration(120), 'ساعتان');
-      expect(SalonLabels.duration(135), 'ساعتان و15 دقيقة');
+      expect(SalonLabels.duration(_ar, 45), '45 دقيقة');
+      expect(SalonLabels.duration(_ar, 60), 'ساعة');
+      expect(SalonLabels.duration(_ar, 90), 'ساعة ونصف');
+      expect(SalonLabels.duration(_ar, 120), 'ساعتان');
+      expect(SalonLabels.duration(_ar, 135), 'ساعتان و15 دقيقة');
     });
 
     test('weekday 0 is Sunday, matching the server column', () {
       // The whole hours editor and every `SalonHours` row depend on this
       // agreeing with `SalonWorkingHours.weekday` in Prisma.
-      expect(SalonLabels.weekday(0), 'الأحد');
-      expect(SalonLabels.weekday(5), 'الجمعة');
-      expect(SalonLabels.weekday(6), 'السبت');
+      expect(SalonLabels.weekday(_ar, 0), 'الأحد');
+      expect(SalonLabels.weekday(_ar, 5), 'الجمعة');
+      expect(SalonLabels.weekday(_ar, 6), 'السبت');
     });
 
     test('the clock is twelve-hour, because an appointment is spoken', () {
-      expect(SalonLabels.time(DateTime(2026, 9, 20, 18, 30)), '6:30 م');
-      expect(SalonLabels.time(DateTime(2026, 9, 20, 9, 5)), '9:05 ص');
-      expect(SalonLabels.time(DateTime(2026, 9, 20)), '12:00 ص');
-      expect(SalonLabels.time(DateTime(2026, 9, 20, 12)), '12:00 م');
+      expect(SalonLabels.time(_ar, DateTime(2026, 9, 20, 18, 30)), '6:30 م');
+      expect(SalonLabels.time(_ar, DateTime(2026, 9, 20, 9, 5)), '9:05 ص');
+      expect(SalonLabels.time(_ar, DateTime(2026, 9, 20)), '12:00 ص');
+      expect(SalonLabels.time(_ar, DateTime(2026, 9, 20, 12)), '12:00 م');
     });
 
     test('a near day is named rather than dated', () {
       final today = DateTime.now();
-      expect(SalonLabels.relativeDay(today), 'اليوم');
+      expect(SalonLabels.relativeDay(_ar, today), 'اليوم');
       expect(
-        SalonLabels.relativeDay(today.add(const Duration(days: 1))),
+        SalonLabels.relativeDay(_ar, today.add(const Duration(days: 1))),
         'غداً',
       );
       // Far enough away and it becomes a date, because "after 40 days" is not
       // something anybody reads off a card.
       expect(
-        SalonLabels.relativeDay(today.add(const Duration(days: 40))),
+        SalonLabels.relativeDay(_ar, today.add(const Duration(days: 40))),
         contains(' '),
       );
     });
 
     test('every status and every canceller has a sentence', () {
       for (final status in AppointmentStatus.values) {
-        expect(SalonLabels.status(status), isNotEmpty);
-        expect(SalonLabels.statusHint(status), isNotEmpty);
+        expect(SalonLabels.status(_ar, status), isNotEmpty);
+        expect(SalonLabels.statusHint(_ar, status), isNotEmpty);
       }
       for (final actor in AppointmentActor.values) {
-        expect(SalonLabels.cancelledBy(actor), isNotEmpty);
+        expect(SalonLabels.cancelledBy(_ar, actor), isNotEmpty);
       }
       // Including the one the server may simply not say.
-      expect(SalonLabels.cancelledBy(null), isNotEmpty);
+      expect(SalonLabels.cancelledBy(_ar, null), isNotEmpty);
     });
   });
 

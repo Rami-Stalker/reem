@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/platform/app_haptics.dart';
 import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/features/salons/domain/entities/appointment.dart';
@@ -42,28 +42,28 @@ class _SalonQueueScreenState extends ConsumerState<SalonQueueScreen>
     return Scaffold(
       backgroundColor: c.background,
       appBar: ReemAppBar(
-        title: 'المواعيد',
+        title: context.l10n.salonAppointments,
         bottom: TabBar(
           controller: _tabs,
-          tabs: const [
-            Tab(text: 'بانتظار التأكيد'),
-            Tab(text: 'القادمة'),
-            Tab(text: 'السابقة'),
+          tabs: [
+            Tab(text: context.l10n.salonAwaitingConfirmation),
+            Tab(text: context.l10n.salonUpcoming),
+            Tab(text: context.l10n.salonPast),
           ],
         ),
       ),
       body: async.when(
         loading: () => const Center(child: DsLoadingIndicator()),
         error: (_, _) => DsErrorState(
-          message: 'ما قدرنا نفتح مواعيدك.',
+          message: context.l10n.salonQueueOpenError,
           onRetry: () => ref.invalidate(mySalonProvider),
         ),
         data: (salon) {
           if (salon == null) {
-            return const DsEmptyState(
+            return DsEmptyState(
               icon: Icons.storefront_outlined,
-              title: 'ما في صالون بعد',
-              message: 'افتحي صالونك أول شي، وبتبلّش تجيك الحجوزات.',
+              title: context.l10n.salonNoSalonYet,
+              message: context.l10n.salonOpenFirstBookings,
             );
           }
           return TabBarView(
@@ -96,7 +96,7 @@ class _Queue extends ConsumerWidget {
       child: async.when(
         loading: () => const Center(child: DsLoadingIndicator()),
         error: (_, _) => DsErrorState(
-          message: 'ما قدرنا نجيب المواعيد.',
+          message: context.l10n.salonQueueLoadError,
           onRetry: () => ref.invalidate(salonQueueProvider(key)),
         ),
         data: (page) => page.items.isEmpty
@@ -111,14 +111,14 @@ class _Queue extends ConsumerWidget {
                       _ => Icons.history_rounded,
                     },
                     title: switch (filter) {
-                      'pending' => 'ما في شي بانتظارك',
-                      'upcoming' => 'ما في مواعيد قادمة',
-                      _ => 'ما في مواعيد سابقة',
+                      'pending' => context.l10n.salonNothingPending,
+                      'upcoming' => context.l10n.salonNoUpcoming,
+                      _ => context.l10n.salonNoPastAppointments,
                     },
                     message: switch (filter) {
-                      'pending' => 'كل الحجوزات مأكّدة.',
-                      'upcoming' => 'أول ما تحجز زبونة بتشوفيها هون.',
-                      _ => 'هون بتلاقي المواعيد يلي خلصت.',
+                      'pending' => context.l10n.salonAllConfirmed,
+                      'upcoming' => context.l10n.salonFirstBookingHere,
+                      _ => context.l10n.salonPastHere,
                     },
                   ),
                 ],
@@ -173,7 +173,7 @@ class _QuickConfirmState extends ConsumerState<_QuickConfirm> {
     return Padding(
       padding: const EdgeInsets.only(top: DsSpacing.xs),
       child: DsButton(
-        label: 'أكّدي الحجز',
+        label: context.l10n.salonConfirmBooking,
         size: DsButtonSize.sm,
         isLoading: _busy,
         onPressed: () => unawaited(_confirm()),
@@ -185,15 +185,13 @@ class _QuickConfirmState extends ConsumerState<_QuickConfirm> {
     if (_busy) return;
     setState(() => _busy = true);
     try {
-      await ref
-          .read(appointmentActionsProvider)
-          .confirm(widget.appointmentId);
+      await ref.read(appointmentActionsProvider).confirm(widget.appointmentId);
       if (!mounted) return;
       AppHaptics.confirm();
-      DsSnackbar.success(context, 'تم تأكيد الموعد');
+      DsSnackbar.success(context, context.l10n.salonAppointmentConfirmed);
     } catch (_) {
       if (!mounted) return;
-      DsSnackbar.error(context, 'ما قدرنا نأكّد. جرّبي مرة تانية.');
+      DsSnackbar.error(context, context.l10n.salonConfirmFailed);
     } finally {
       if (mounted) setState(() => _busy = false);
     }

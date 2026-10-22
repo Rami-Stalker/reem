@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/features/salons/domain/entities/salon.dart';
 import 'package:reem/features/salons/presentation/providers/salons_providers.dart';
 import 'package:reem/features/salons/presentation/widgets/salon_labels.dart';
@@ -55,19 +55,19 @@ class _SalonHoursScreenState extends ConsumerState<SalonHoursScreen> {
 
     return Scaffold(
       backgroundColor: c.background,
-      appBar: const ReemAppBar(title: 'أوقات الدوام'),
+      appBar: ReemAppBar(title: context.l10n.salonWorkingHours),
       body: async.when(
         loading: () => const Center(child: DsLoadingIndicator()),
         error: (_, _) => DsErrorState(
-          message: 'ما قدرنا نفتح دوامك.',
+          message: context.l10n.salonHoursLoadError,
           onRetry: () => ref.invalidate(mySalonProvider),
         ),
         data: (salon) {
           if (salon == null) {
-            return const DsEmptyState(
+            return DsEmptyState(
               icon: Icons.storefront_outlined,
-              title: 'ما في صالون بعد',
-              message: 'افتحي صالونك أول شي، بعدين حدّدي دوامك.',
+              title: context.l10n.salonNoSalonYet,
+              message: context.l10n.salonOpenFirstHours,
             );
           }
           if (_week == null) _seed(salon);
@@ -96,27 +96,25 @@ class _SalonHoursScreenState extends ConsumerState<SalonHoursScreen> {
 
         DsGaps.vMd,
         DsButton(
-          label: 'احفظي الدوام',
+          label: context.l10n.salonSaveHours,
           isLoading: _saving,
           onPressed: () => unawaited(_save(week)),
         ),
 
         DsGaps.vXl,
         Text(
-          'أيام الإغلاق',
+          context.l10n.salonClosedDays,
           style: context.dsText.sectionTitle.tint(context.dsColors.onSurface),
         ),
         DsGaps.vXxxs,
         Text(
-          'أعياد أو إجازات — بينسكّر الحجز بهالتواريخ بغضّ النظر عن الدوام.',
-          style: context.dsText.caption.tint(
-            context.dsColors.onSurfaceVariant,
-          ),
+          context.l10n.salonClosedDaysHelp,
+          style: context.dsText.caption.tint(context.dsColors.onSurfaceVariant),
         ),
         DsGaps.vSm,
         if (salon.closures.isEmpty)
           Text(
-            'ما في أيام إغلاق.',
+            context.l10n.salonNoClosedDays,
             style: context.dsText.body.tint(context.dsColors.onSurfaceVariant),
           )
         else
@@ -127,7 +125,7 @@ class _SalonHoursScreenState extends ConsumerState<SalonHoursScreen> {
             ),
         DsGaps.vSm,
         DsButton(
-          label: 'أضيفي يوم إغلاق',
+          label: context.l10n.salonAddClosedDay,
           icon: Icons.event_busy_outlined,
           variant: DsButtonVariant.tonal,
           onPressed: () => unawaited(_addClosure(salon)),
@@ -183,7 +181,9 @@ class _SalonHoursScreenState extends ConsumerState<SalonHoursScreen> {
       if (_minutes(day.closesAt) <= _minutes(day.opensAt)) {
         DsSnackbar.error(
           context,
-          'دوام ${SalonLabels.weekday(day.weekday)}: وقت الإغلاق لازم يكون بعد الافتتاح.',
+          context.l10n.salonHoursCloseAfterOpen(
+            SalonLabels.weekday(context.l10n, day.weekday),
+          ),
         );
         return;
       }
@@ -192,7 +192,9 @@ class _SalonHoursScreenState extends ConsumerState<SalonHoursScreen> {
           _minutes(day.breakEndsAt!) <= _minutes(day.breakStartsAt!)) {
         DsSnackbar.error(
           context,
-          'استراحة ${SalonLabels.weekday(day.weekday)}: وقت النهاية لازم يكون بعد البداية.',
+          context.l10n.salonBreakEndAfterStart(
+            SalonLabels.weekday(context.l10n, day.weekday),
+          ),
         );
         return;
       }
@@ -204,10 +206,10 @@ class _SalonHoursScreenState extends ConsumerState<SalonHoursScreen> {
           .read(salonOwnerActionsProvider)
           .setHours(week.map((day) => day.toEntity()).toList(growable: false));
       if (!mounted) return;
-      DsSnackbar.success(context, 'انحفظ الدوام');
+      DsSnackbar.success(context, context.l10n.salonHoursSaved);
     } catch (_) {
       if (!mounted) return;
-      DsSnackbar.error(context, 'ما قدرنا نحفظ الدوام.');
+      DsSnackbar.error(context, context.l10n.salonHoursSaveFailed);
     } finally {
       if (mounted) setState(() => _saving = false);
     }
@@ -230,10 +232,10 @@ class _SalonHoursScreenState extends ConsumerState<SalonHoursScreen> {
     try {
       await ref.read(salonOwnerActionsProvider).addClosure(iso);
       if (!mounted) return;
-      DsSnackbar.success(context, 'انضاف يوم الإغلاق');
+      DsSnackbar.success(context, context.l10n.salonClosedDayAdded);
     } catch (_) {
       if (!mounted) return;
-      DsSnackbar.error(context, 'ما قدرنا نضيف اليوم.');
+      DsSnackbar.error(context, context.l10n.salonClosedDayAddFailed);
     }
   }
 
@@ -241,10 +243,10 @@ class _SalonHoursScreenState extends ConsumerState<SalonHoursScreen> {
     try {
       await ref.read(salonOwnerActionsProvider).removeClosure(date);
       if (!mounted) return;
-      DsSnackbar.success(context, 'انشال يوم الإغلاق');
+      DsSnackbar.success(context, context.l10n.salonClosedDayRemoved);
     } catch (_) {
       if (!mounted) return;
-      DsSnackbar.error(context, 'ما قدرنا نشيل اليوم.');
+      DsSnackbar.error(context, context.l10n.salonClosedDayRemoveFailed);
     }
   }
 
@@ -320,12 +322,14 @@ class _DayCard extends StatelessWidget {
             children: [
               Expanded(
                 child: Text(
-                  SalonLabels.weekday(day.weekday),
+                  SalonLabels.weekday(context.l10n, day.weekday),
                   style: context.dsText.tileTitle.semibold.tint(c.onSurface),
                 ),
               ),
               Text(
-                day.isClosed ? 'مسكّر' : 'فاتح',
+                day.isClosed
+                    ? context.l10n.salonDayClosed
+                    : context.l10n.salonDayOpen,
                 style: context.dsText.caption.tint(
                   day.isClosed ? c.onSurfaceVariant : c.success,
                 ),
@@ -339,7 +343,7 @@ class _DayCard extends StatelessWidget {
               children: [
                 Expanded(
                   child: _TimeButton(
-                    label: 'من',
+                    label: context.l10n.salonFrom,
                     value: day.opensAt,
                     onTap: () => onPick(_Which.opens),
                   ),
@@ -347,7 +351,7 @@ class _DayCard extends StatelessWidget {
                 const SizedBox(width: DsSpacing.sm),
                 Expanded(
                   child: _TimeButton(
-                    label: 'إلى',
+                    label: context.l10n.salonTo,
                     value: day.closesAt,
                     onTap: () => onPick(_Which.closes),
                   ),
@@ -361,7 +365,7 @@ class _DayCard extends StatelessWidget {
                 child: TextButton.icon(
                   onPressed: () => onPick(_Which.breakStart),
                   icon: const Icon(Icons.free_breakfast_outlined, size: 16),
-                  label: const Text('أضيفي استراحة'),
+                  label: Text(context.l10n.salonAddBreak),
                 ),
               )
             else
@@ -369,7 +373,7 @@ class _DayCard extends StatelessWidget {
                 children: [
                   Expanded(
                     child: _TimeButton(
-                      label: 'استراحة من',
+                      label: context.l10n.salonBreakFrom,
                       value: day.breakStartsAt ?? '—',
                       onTap: () => onPick(_Which.breakStart),
                     ),
@@ -377,14 +381,14 @@ class _DayCard extends StatelessWidget {
                   const SizedBox(width: DsSpacing.sm),
                   Expanded(
                     child: _TimeButton(
-                      label: 'إلى',
+                      label: context.l10n.salonTo,
                       value: day.breakEndsAt ?? '—',
                       onTap: () => onPick(_Which.breakEnd),
                     ),
                   ),
                   IconButton(
                     onPressed: onClearBreak,
-                    tooltip: 'شيلي الاستراحة',
+                    tooltip: context.l10n.salonRemoveBreak,
                     icon: Icon(Icons.close_rounded, color: c.onSurfaceVariant),
                   ),
                 ],
@@ -427,10 +431,7 @@ class _TimeButton extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(label, style: context.dsText.micro.tint(c.onSurfaceVariant)),
-            Text(
-              value,
-              style: context.dsText.body.semibold.tint(c.onSurface),
-            ),
+            Text(value, style: context.dsText.body.semibold.tint(c.onSurface)),
           ],
         ),
       ),
@@ -456,7 +457,9 @@ class _ClosureRow extends StatelessWidget {
           const SizedBox(width: DsSpacing.xs),
           Expanded(
             child: Text(
-              parsed == null ? closure.date : SalonLabels.date(parsed),
+              parsed == null
+                  ? closure.date
+                  : SalonLabels.date(context.l10n, parsed),
               style: context.dsText.body.tint(c.onSurface),
             ),
           ),
@@ -467,7 +470,7 @@ class _ClosureRow extends StatelessWidget {
             ),
           IconButton(
             onPressed: onRemove,
-            tooltip: 'شيلي',
+            tooltip: context.l10n.salonRemove,
             icon: Icon(Icons.close_rounded, color: c.onSurfaceVariant),
           ),
         ],

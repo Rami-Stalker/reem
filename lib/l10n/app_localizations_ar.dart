@@ -11307,4 +11307,947 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get authForgotSubtitle =>
       'أدخلي رقمكِ وسنرسل لكِ رمزًا لتعيين كلمة مرور جديدة.';
+
+  @override
+  String get salonCategoryHair => 'الشعر';
+
+  @override
+  String get salonCategoryNails => 'الأظافر';
+
+  @override
+  String get salonCategorySkin => 'العناية بالبشرة';
+
+  @override
+  String get salonCategoryMakeup => 'المكياج';
+
+  @override
+  String get salonCategoryLashesBrows => 'الرموش والحواجب';
+
+  @override
+  String get salonCategoryHairRemoval => 'إزالة الشعر';
+
+  @override
+  String get salonCategoryMassageSpa => 'المساج والسبا';
+
+  @override
+  String get salonCategoryBridal => 'خدمات العرائس';
+
+  @override
+  String get salonCategoryOther => 'خدمات أخرى';
+
+  @override
+  String get salonStatusPending => 'قيد الانتظار';
+
+  @override
+  String get salonStatusConfirmed => 'مؤكّد';
+
+  @override
+  String get salonStatusCompleted => 'مكتمل';
+
+  @override
+  String get salonStatusCancelled => 'ملغى';
+
+  @override
+  String get salonStatusNoShow => 'لم تحضري';
+
+  @override
+  String get salonStatusHintPending => 'بانتظار تأكيد الصالون';
+
+  @override
+  String get salonStatusHintConfirmed => 'موعدكِ محجوز';
+
+  @override
+  String get salonStatusHintCompleted => 'تمّت الزيارة';
+
+  @override
+  String get salonStatusHintCancelled => 'أُلغي هذا الموعد';
+
+  @override
+  String get salonStatusHintNoShow => 'سجّل الصالون عدم الحضور';
+
+  @override
+  String get salonLocationInSalon => 'في الصالون';
+
+  @override
+  String get salonLocationAtHome => 'في المنزل';
+
+  @override
+  String get salonLocationBoth => 'في الصالون أو المنزل';
+
+  @override
+  String get salonCancelledByCustomer => 'ألغيتِ هذا الموعد';
+
+  @override
+  String get salonCancelledBySalon => 'ألغى الصالون هذا الموعد';
+
+  @override
+  String get salonCancelledBySystem => 'أُلغي تلقائياً لعدم تأكيده قبل موعده';
+
+  @override
+  String salonDurationMinutes(int minutes) {
+    return '$minutes دقيقة';
+  }
+
+  @override
+  String get salonDurationOneHour => 'ساعة';
+
+  @override
+  String get salonDurationTwoHours => 'ساعتان';
+
+  @override
+  String salonDurationHours(int hours) {
+    return '$hours ساعات';
+  }
+
+  @override
+  String salonDurationAndHalf(String hours) {
+    return '$hours ونصف';
+  }
+
+  @override
+  String salonDurationAndMinutes(String hours, int minutes) {
+    return '$hours و$minutes دقيقة';
+  }
+
+  @override
+  String get salonWeekdaySun => 'الأحد';
+
+  @override
+  String get salonWeekdayMon => 'الإثنين';
+
+  @override
+  String get salonWeekdayTue => 'الثلاثاء';
+
+  @override
+  String get salonWeekdayWed => 'الأربعاء';
+
+  @override
+  String get salonWeekdayThu => 'الخميس';
+
+  @override
+  String get salonWeekdayFri => 'الجمعة';
+
+  @override
+  String get salonWeekdaySat => 'السبت';
+
+  @override
+  String get salonMonth1 => 'كانون الثاني';
+
+  @override
+  String get salonMonth2 => 'شباط';
+
+  @override
+  String get salonMonth3 => 'آذار';
+
+  @override
+  String get salonMonth4 => 'نيسان';
+
+  @override
+  String get salonMonth5 => 'أيار';
+
+  @override
+  String get salonMonth6 => 'حزيران';
+
+  @override
+  String get salonMonth7 => 'تموز';
+
+  @override
+  String get salonMonth8 => 'آب';
+
+  @override
+  String get salonMonth9 => 'أيلول';
+
+  @override
+  String get salonMonth10 => 'تشرين الأول';
+
+  @override
+  String get salonMonth11 => 'تشرين الثاني';
+
+  @override
+  String get salonMonth12 => 'كانون الأول';
+
+  @override
+  String get salonTimeAm => 'ص';
+
+  @override
+  String get salonTimePm => 'م';
+
+  @override
+  String get salonToday => 'اليوم';
+
+  @override
+  String get salonTomorrow => 'غداً';
+
+  @override
+  String get salonDayAfterTomorrow => 'بعد غد';
+
+  @override
+  String salonInDays(int days) {
+    return 'بعد $days أيام';
+  }
+
+  @override
+  String get salonEditorTitle => 'بيانات الصالون';
+
+  @override
+  String get salonEditorLoadError => 'ما قدرنا نفتح بياناتك.';
+
+  @override
+  String get salonEditorSectionProfile => 'التعريف';
+
+  @override
+  String get salonEditorName => 'اسم الصالون';
+
+  @override
+  String get salonEditorTagline => 'سطر تعريفي';
+
+  @override
+  String get salonEditorTaglineHint => 'مثلاً: قصّات وصبغات وعناية بالشعر';
+
+  @override
+  String get salonEditorAbout => 'نبذة';
+
+  @override
+  String get salonEditorSectionLocation => 'الموقع';
+
+  @override
+  String get salonEditorGovernorate => 'المحافظة';
+
+  @override
+  String get salonEditorCity => 'المدينة';
+
+  @override
+  String get salonEditorArea => 'المنطقة';
+
+  @override
+  String get salonEditorAddress => 'العنوان';
+
+  @override
+  String get salonEditorLandmark => 'علامة مميزة';
+
+  @override
+  String get salonEditorLandmarkHint => 'مثلاً: جانب صيدلية النور';
+
+  @override
+  String get salonEditorLatitude => 'خط العرض';
+
+  @override
+  String get salonEditorLongitude => 'خط الطول';
+
+  @override
+  String get salonEditorCoordsHelp =>
+      'الإحداثيات اختيارية، بس بوجودها بيقدر الزبون يفتح موقعك على الخريطة مباشرة.';
+
+  @override
+  String get salonEditorSectionContact => 'التواصل';
+
+  @override
+  String get salonEditorPhone => 'رقم الهاتف';
+
+  @override
+  String get salonEditorWhatsapp => 'واتساب';
+
+  @override
+  String get salonEditorSectionBooking => 'إعدادات الحجز';
+
+  @override
+  String get salonEditorSlotLength => 'طول الفترة';
+
+  @override
+  String get salonUnitMinute => 'دقيقة';
+
+  @override
+  String get salonEditorSlotLengthHelp =>
+      'كل قدّيه تبلّش فترة جديدة — مثلاً كل نص ساعة.';
+
+  @override
+  String get salonEditorLeadTime => 'أقرب حجز';
+
+  @override
+  String get salonEditorLeadTimeHelp =>
+      'أقل وقت بين الحجز والموعد، حتى ما تتفاجئي بموعد بعد خمس دقايق.';
+
+  @override
+  String get salonEditorHorizon => 'الحجز حتى';
+
+  @override
+  String get salonUnitDay => 'يوم';
+
+  @override
+  String get salonEditorHorizonHelp => 'لَوين قدّام فيها الزبونة تحجز.';
+
+  @override
+  String get salonEditorCapacity => 'عدد الزبونات بنفس الوقت';
+
+  @override
+  String get salonEditorCapacityHelp =>
+      'عدد الكراسي يلي بتقدري تشتغلي عليها بنفس الساعة.';
+
+  @override
+  String get salonEditorLateCancel => 'الإلغاء المتأخر';
+
+  @override
+  String get salonUnitHour => 'ساعة';
+
+  @override
+  String get salonEditorLateCancelHelp =>
+      'الإلغاء قبل الموعد بأقل من هيك بينسجل كإلغاء متأخر.';
+
+  @override
+  String get salonEditorSectionHome => 'الخدمة المنزلية';
+
+  @override
+  String get salonEditorHomeVisits => 'بتطلعي لبيت الزبونة';
+
+  @override
+  String get salonEditorTravelFee => 'أجرة المشوار';
+
+  @override
+  String get salonEditorCreate => 'افتحي الصالون';
+
+  @override
+  String get salonSave => 'احفظي';
+
+  @override
+  String get salonEditorSavePublish => 'احفظي وانشري';
+
+  @override
+  String get salonEditorHide => 'أخفي من الدليل';
+
+  @override
+  String get salonFieldRequired => 'لازم تعبّي هالحقل';
+
+  @override
+  String get salonInvalidNumber => 'رقم غير صحيح';
+
+  @override
+  String get salonEditorSaved => 'انحفظت البيانات';
+
+  @override
+  String get salonSaveFailed => 'ما قدرنا نحفظ. جرّبي مرة تانية.';
+
+  @override
+  String get salonAppointmentDetails => 'تفاصيل الموعد';
+
+  @override
+  String get salonAppointmentLoadError => 'ما قدرنا نفتح هالموعد.';
+
+  @override
+  String get salonService => 'الخدمة';
+
+  @override
+  String get salonAppointment => 'الموعد';
+
+  @override
+  String get salonDuration => 'المدة';
+
+  @override
+  String get salonPrice => 'السعر';
+
+  @override
+  String get salonBookingNumber => 'رقم الحجز';
+
+  @override
+  String get salonCustomer => 'العميلة';
+
+  @override
+  String get salonHomeService => 'خدمة منزلية';
+
+  @override
+  String get salonCustomerNote => 'ملاحظة العميلة';
+
+  @override
+  String get salonSalonNote => 'ملاحظة الصالون';
+
+  @override
+  String get salonMessageSalon => 'راسلي الصالون';
+
+  @override
+  String get salonPage => 'صفحة الصالون';
+
+  @override
+  String get salonMessageCustomer => 'راسلي العميلة';
+
+  @override
+  String get salonConfirmBooking => 'أكّدي الحجز';
+
+  @override
+  String get salonAppointmentConfirmed => 'تم تأكيد الموعد';
+
+  @override
+  String get salonVisitRecorded => 'تم تسجيل الزيارة';
+
+  @override
+  String get salonMarkNoShow => 'لم تحضر';
+
+  @override
+  String get salonRecorded => 'تم التسجيل';
+
+  @override
+  String get salonCancelAppointmentAction => 'ألغي الموعد';
+
+  @override
+  String get salonRateSalon => 'قيّمي الصالون';
+
+  @override
+  String get salonCancelAppointmentTitle => 'إلغاء الموعد';
+
+  @override
+  String get salonCancelConfirm => 'متأكدة إنك بدك تلغي هالموعد؟';
+
+  @override
+  String get salonAppointmentCancelled => 'تم إلغاء الموعد';
+
+  @override
+  String get salonThanksForReview => 'شكراً لتقييمك';
+
+  @override
+  String get salonActionFailed => 'ما قدرنا نكمّل. جرّبي مرة تانية.';
+
+  @override
+  String get salonHowWasVisit => 'كيف كانت زيارتك؟';
+
+  @override
+  String get salonLater => 'لاحقاً';
+
+  @override
+  String get salonSend => 'أرسلي';
+
+  @override
+  String get salonMyBookings => 'حجوزاتي';
+
+  @override
+  String get salonUpcoming => 'القادمة';
+
+  @override
+  String get salonPast => 'السابقة';
+
+  @override
+  String get salonBookingsLoadError => 'ما قدرنا نجيب حجوزاتك.';
+
+  @override
+  String get salonNoAppointmentsYou => 'ما عندك مواعيد';
+
+  @override
+  String get salonNoPastAppointments => 'ما في مواعيد سابقة';
+
+  @override
+  String get salonFindAndBook => 'دوّري على صالون واحجزي موعدك بضغطة.';
+
+  @override
+  String get salonPastHere => 'هون بتلاقي المواعيد يلي خلصت.';
+
+  @override
+  String get salonBrowseSalons => 'تصفّحي الصالونات';
+
+  @override
+  String get salonBookYourAppointment => 'احجزي موعدك';
+
+  @override
+  String get salonCalendarLoadError => 'ما قدرنا نفتح التقويم.';
+
+  @override
+  String get salonServiceUnavailable => 'ما عادت هالخدمة متاحة';
+
+  @override
+  String get salonPickAnotherService => 'اختاري خدمة تانية من صفحة الصالون.';
+
+  @override
+  String get salonSignInToBook => 'سجّلي الدخول لتحجزي';
+
+  @override
+  String get salonSignInToBookBody =>
+      'الحجز بيحتاج حساب لنقدر نأكّدلك الموعد ونذكّرك فيه.';
+
+  @override
+  String get salonPickAddress => 'اختاري العنوان يلي بدك الخدمة فيه.';
+
+  @override
+  String get salonBookingFailed =>
+      'ما قدرنا نثبّت الموعد. يمكن حدا حجزه قبل شوي — جرّبي وقت تاني.';
+
+  @override
+  String get salonPickDay => 'اختاري اليوم';
+
+  @override
+  String get salonDaysLoadError => 'ما قدرنا نجيب الأيام المتاحة.';
+
+  @override
+  String get salonPickTime => 'اختاري الساعة';
+
+  @override
+  String get salonNoteForSalon => 'ملاحظة للصالون (اختياري)';
+
+  @override
+  String get salonNoteForSalonHint =>
+      'مثلاً: شعري طويل، أو بفضّل مزيّنة معيّنة';
+
+  @override
+  String get salonNoSlotsWeek =>
+      'ما في أوقات فاضية بهالأسبوع. جرّبي تراسلي الصالون.';
+
+  @override
+  String get salonClosed => 'مغلق';
+
+  @override
+  String get salonSlotsLoadError => 'ما قدرنا نجيب الأوقات.';
+
+  @override
+  String get salonNoSlotsDay => 'ما في أوقات فاضية بهاليوم.';
+
+  @override
+  String get salonWantHomeService => 'بدي الخدمة عالبيت';
+
+  @override
+  String get salonAddAddress => 'أضيفي عنواناً';
+
+  @override
+  String get salonPickATime => 'اختاري وقتاً';
+
+  @override
+  String get salonWorkingHours => 'أوقات الدوام';
+
+  @override
+  String get salonHoursLoadError => 'ما قدرنا نفتح دوامك.';
+
+  @override
+  String get salonNoSalonYet => 'ما في صالون بعد';
+
+  @override
+  String get salonOpenFirstHours => 'افتحي صالونك أول شي، بعدين حدّدي دوامك.';
+
+  @override
+  String get salonSaveHours => 'احفظي الدوام';
+
+  @override
+  String get salonClosedDays => 'أيام الإغلاق';
+
+  @override
+  String get salonClosedDaysHelp =>
+      'أعياد أو إجازات — بينسكّر الحجز بهالتواريخ بغضّ النظر عن الدوام.';
+
+  @override
+  String get salonNoClosedDays => 'ما في أيام إغلاق.';
+
+  @override
+  String get salonAddClosedDay => 'أضيفي يوم إغلاق';
+
+  @override
+  String get salonHoursSaved => 'انحفظ الدوام';
+
+  @override
+  String get salonHoursSaveFailed => 'ما قدرنا نحفظ الدوام.';
+
+  @override
+  String get salonClosedDayAdded => 'انضاف يوم الإغلاق';
+
+  @override
+  String get salonClosedDayAddFailed => 'ما قدرنا نضيف اليوم.';
+
+  @override
+  String get salonClosedDayRemoved => 'انشال يوم الإغلاق';
+
+  @override
+  String get salonClosedDayRemoveFailed => 'ما قدرنا نشيل اليوم.';
+
+  @override
+  String get salonDayClosed => 'مسكّر';
+
+  @override
+  String get salonDayOpen => 'فاتح';
+
+  @override
+  String get salonFrom => 'من';
+
+  @override
+  String get salonTo => 'إلى';
+
+  @override
+  String get salonAddBreak => 'أضيفي استراحة';
+
+  @override
+  String get salonBreakFrom => 'استراحة من';
+
+  @override
+  String get salonRemoveBreak => 'شيلي الاستراحة';
+
+  @override
+  String get salonRemove => 'شيلي';
+
+  @override
+  String get salonAppointments => 'المواعيد';
+
+  @override
+  String get salonAwaitingConfirmation => 'بانتظار التأكيد';
+
+  @override
+  String get salonQueueOpenError => 'ما قدرنا نفتح مواعيدك.';
+
+  @override
+  String get salonOpenFirstBookings =>
+      'افتحي صالونك أول شي، وبتبلّش تجيك الحجوزات.';
+
+  @override
+  String get salonQueueLoadError => 'ما قدرنا نجيب المواعيد.';
+
+  @override
+  String get salonNothingPending => 'ما في شي بانتظارك';
+
+  @override
+  String get salonNoUpcoming => 'ما في مواعيد قادمة';
+
+  @override
+  String get salonAllConfirmed => 'كل الحجوزات مأكّدة.';
+
+  @override
+  String get salonFirstBookingHere => 'أول ما تحجز زبونة بتشوفيها هون.';
+
+  @override
+  String get salonConfirmFailed => 'ما قدرنا نأكّد. جرّبي مرة تانية.';
+
+  @override
+  String get salonNotFound => 'ما لقينا هالصالون';
+
+  @override
+  String get salonNotFoundBody => 'يمكن يكون أُغلق أو ما عاد متاح.';
+
+  @override
+  String get salonServices => 'الخدمات';
+
+  @override
+  String get salonNoServicesYet => 'لسّا ما أضاف الصالون خدماته';
+
+  @override
+  String get salonMessageToAsk => 'راسليه لتعرفي شو بيقدّم.';
+
+  @override
+  String get salonOpeningHours => 'أوقات العمل';
+
+  @override
+  String get salonReviews => 'التقييمات';
+
+  @override
+  String get salonNoReviews =>
+      'لسّا ما في تقييمات. كوني أول وحدة تجرّبي وتقيّمي.';
+
+  @override
+  String get salonCall => 'اتصلي';
+
+  @override
+  String get salonShare => 'مشاركة';
+
+  @override
+  String get salonOpenMap => 'افتحي على الخريطة';
+
+  @override
+  String get salonNoHoursYet => 'ما حدّد الصالون أوقات عمله بعد.';
+
+  @override
+  String get salonCustomerFallback => 'عميلة';
+
+  @override
+  String get salonVerifiedVisit => 'زيارة مؤكّدة';
+
+  @override
+  String get salonReply => 'ردّ الصالون';
+
+  @override
+  String get salonServicesAndPrices => 'الخدمات والأسعار';
+
+  @override
+  String get salonServicesLoadError => 'ما قدرنا نفتح خدماتك.';
+
+  @override
+  String get salonOpenFirstServices =>
+      'افتحي صالونك أول شي، بعدين ضيفي خدماتك.';
+
+  @override
+  String get salonNoServices => 'ما في خدمات';
+
+  @override
+  String get salonAddFirstService =>
+      'ضيفي أول خدمة بسعرها ومدّتها، وبيصير الحجز شغّال.';
+
+  @override
+  String get salonAddService => 'أضيفي خدمة';
+
+  @override
+  String get salonServiceSaved => 'انحفظت الخدمة';
+
+  @override
+  String get salonServiceSaveFailed => 'ما قدرنا نحفظ الخدمة.';
+
+  @override
+  String get salonServicePaused => 'وقّفنا الخدمة';
+
+  @override
+  String get salonServiceResumed => 'رجّعنا الخدمة';
+
+  @override
+  String get salonServiceToggleFailed => 'ما قدرنا نغيّر حالة الخدمة.';
+
+  @override
+  String get salonPausedBadge => 'موقوفة';
+
+  @override
+  String get salonPackage => 'باقة';
+
+  @override
+  String get salonPause => 'وقّفي';
+
+  @override
+  String get salonResume => 'رجّعي';
+
+  @override
+  String get salonNewService => 'خدمة جديدة';
+
+  @override
+  String get salonEditService => 'تعديل الخدمة';
+
+  @override
+  String get salonServiceName => 'اسم الخدمة';
+
+  @override
+  String get salonDescription => 'الوصف';
+
+  @override
+  String get salonType => 'النوع';
+
+  @override
+  String get salonInvalidPrice => 'سعر غير صحيح';
+
+  @override
+  String get salonBeforeDiscount => 'قبل الخصم';
+
+  @override
+  String get salonBufferAfter => 'وقت التحضير بعدها';
+
+  @override
+  String get salonWhereDone => 'وين بتنعمل';
+
+  @override
+  String get salonIsPackage => 'هاي باقة (كذا خدمة سوا)';
+
+  @override
+  String get salonNone => 'بدون';
+
+  @override
+  String get salonMySalon => 'صالوني';
+
+  @override
+  String get salonWorkspaceLoadError => 'ما قدرنا نفتح صالونك.';
+
+  @override
+  String get salonOpenOnReem => 'افتحي صالونك على ريم';
+
+  @override
+  String get salonOpenOnReemBody =>
+      'عرّفي عن صالونك وخدماتك وأوقات عملك، وخلّي الزبونات يحجزن مواعيدهن مباشرة من التطبيق.';
+
+  @override
+  String get salonStart => 'ابدئي';
+
+  @override
+  String get salonPublished => 'منشور';
+
+  @override
+  String get salonDraft => 'مسودة';
+
+  @override
+  String get salonSuspended => 'موقوف';
+
+  @override
+  String get salonRating => 'التقييم';
+
+  @override
+  String get salonStatServices => 'خدمة';
+
+  @override
+  String get salonStatBookings => 'حجز';
+
+  @override
+  String get salonStatReviews => 'تقييم';
+
+  @override
+  String get salonAppointmentsSubtitle => 'أكّدي الحجوزات وسجّلي الزيارات';
+
+  @override
+  String get salonHoursSubtitle => 'الدوام الأسبوعي وأيام الإغلاق';
+
+  @override
+  String get salonDetailsSubtitle => 'الاسم والعنوان والتواصل وإعدادات الحجز';
+
+  @override
+  String get salonPreviewAsCustomer => 'شوفي صفحتك كما تراها الزبونة';
+
+  @override
+  String get salonNoActiveServices =>
+      'ما في خدمات فعّالة — ما حدا فيه يحجز لَحتى تضيفي وحدة.';
+
+  @override
+  String get salonNoHoursSet => 'ما حدّدتي أوقات دوام — الأيام كلها مسكّرة.';
+
+  @override
+  String get salonSetHours => 'حدّدي الدوام';
+
+  @override
+  String get salonNotPublished =>
+      'صالونك لسا مو منشور — انشريه لَيظهر بالدليل.';
+
+  @override
+  String get salonPublish => 'انشري الصالون';
+
+  @override
+  String get salonPublishedDone => 'صار صالونك منشور';
+
+  @override
+  String get salonPublishFailed => 'ما قدرنا ننشر الصالون.';
+
+  @override
+  String get salonsTitle => 'الصالونات والجمال';
+
+  @override
+  String get salonFilter => 'تصفية';
+
+  @override
+  String get salonsLoadError => 'ما قدرنا نجيب الصالونات.';
+
+  @override
+  String get salonsNoneYet => 'لسّا ما في صالونات';
+
+  @override
+  String get salonsNoMatch => 'ما في صالون بهالمواصفات';
+
+  @override
+  String get salonsComingSoon =>
+      'قريباً بتلاقي هون صالونات ومزيّنات تقدري تحجزي عندهن مباشرة.';
+
+  @override
+  String get salonsWidenFilters => 'جرّبي توسّعي التصفية أو تغيّري المنطقة.';
+
+  @override
+  String get salonsSearchHint => 'ابحثي عن صالون أو خدمة';
+
+  @override
+  String get salonAll => 'الكل';
+
+  @override
+  String get salonByPrice => 'حسب السعر';
+
+  @override
+  String get salonsRailSubtitle =>
+      'قصّ وصبغة وعناية — احجزي من التطبيق واختاري ساعتك.';
+
+  @override
+  String get salonNew => 'جديد';
+
+  @override
+  String get salonFeatured => 'مختار';
+
+  @override
+  String get salonsFilterTitle => 'تصفية الصالونات';
+
+  @override
+  String get salonAllAreas => 'كل المناطق';
+
+  @override
+  String get salonAnyRating => 'أي تقييم';
+
+  @override
+  String get salonClearAll => 'مسح الكل';
+
+  @override
+  String get salonShowResults => 'اعرضي النتائج';
+
+  @override
+  String get salonHomeOnly => 'الخدمات المنزلية فقط';
+
+  @override
+  String get salonHomeOnlyHint => 'صالونات بتجي لعندكِ عالبيت';
+
+  @override
+  String get salonBook => 'احجزي';
+
+  @override
+  String salonPricePaidAtSalon(String price) {
+    return '$price — تُدفع بالصالون';
+  }
+
+  @override
+  String salonYourRating(String rating) {
+    return 'تقييمك: $rating ★';
+  }
+
+  @override
+  String salonLateCancelConfirm(int hours) {
+    return 'باقي أقل من $hours ساعات على الموعد، فالإلغاء متأخر وبينسجل للصالون. متأكدة؟';
+  }
+
+  @override
+  String salonSlotsCount(int count) {
+    return '$count وقت';
+  }
+
+  @override
+  String salonTravelFeeValue(String fee) {
+    return 'أجرة التنقّل $fee';
+  }
+
+  @override
+  String salonPayAtSalonFreeCancel(int hours) {
+    return 'بتدفعي بالصالون. إلغاء مجاني قبل $hours ساعات من الموعد.';
+  }
+
+  @override
+  String salonHoursCloseAfterOpen(String day) {
+    return 'دوام $day: وقت الإغلاق لازم يكون بعد الافتتاح.';
+  }
+
+  @override
+  String salonBreakEndAfterStart(String day) {
+    return 'استراحة $day: وقت النهاية لازم يكون بعد البداية.';
+  }
+
+  @override
+  String salonReviewsCount(int count) {
+    return 'التقييمات ($count)';
+  }
+
+  @override
+  String salonServicesCount(int count) {
+    return '$count خدمة';
+  }
+
+  @override
+  String salonActiveServicesCount(int count) {
+    return '$count خدمة فعّالة';
+  }
+
+  @override
+  String salonRatingAtLeast(String rating) {
+    return '$rating ★ فأعلى';
+  }
+
+  @override
+  String salonPriceFrom(String price) {
+    return 'من $price';
+  }
+
+  @override
+  String get salonAnyPrice => 'أي سعر';
+
+  @override
+  String salonPriceUpTo(String amount) {
+    return 'حتى $amount';
+  }
+
+  @override
+  String salonPriceOver(String amount) {
+    return 'أكثر من $amount';
+  }
+
+  @override
+  String salonPriceRange(String min, String max) {
+    return '$min – $max';
+  }
 }

@@ -39,8 +39,8 @@ class SalonScreen extends ConsumerWidget {
       body: async.when(
         loading: () => const Center(child: DsLoadingIndicator()),
         error: (_, _) => DsErrorState(
-          title: 'ما لقينا هالصالون',
-          message: 'يمكن يكون أُغلق أو ما عاد متاح.',
+          title: context.l10n.salonNotFound,
+          message: context.l10n.salonNotFoundBody,
           onRetry: () => ref.invalidate(salonProvider(salonId)),
         ),
         data: (salon) => _Body(salon: salon),
@@ -86,12 +86,12 @@ class _Body extends ConsumerWidget {
                 DsGaps.vLg,
               ],
 
-              _SectionTitle('الخدمات'),
+              _SectionTitle(context.l10n.salonServices),
               if (salon.services.isEmpty)
                 DsEmptyState(
                   icon: Icons.spa_outlined,
-                  title: 'لسّا ما أضاف الصالون خدماته',
-                  message: 'راسليه لتعرفي شو بيقدّم.',
+                  title: context.l10n.salonNoServicesYet,
+                  message: context.l10n.salonMessageToAsk,
                 )
               else
                 // Grouped by category, because a menu of thirty services with
@@ -100,7 +100,7 @@ class _Body extends ConsumerWidget {
                   (category) => [
                     DsGaps.vSm,
                     Text(
-                      SalonLabels.category(category),
+                      SalonLabels.category(context.l10n, category),
                       style: context.dsText.labelLarge.semibold.tint(c.primary),
                     ),
                     DsGaps.vXs,
@@ -114,10 +114,7 @@ class _Body extends ConsumerWidget {
                             child: SalonServiceTile(
                               service: service,
                               onBook: () => context.push(
-                                RoutePaths.salonBookingOf(
-                                  salon.id,
-                                  service.id,
-                                ),
+                                RoutePaths.salonBookingOf(salon.id, service.id),
                               ),
                             ),
                           ),
@@ -126,25 +123,25 @@ class _Body extends ConsumerWidget {
                 ),
 
               DsGaps.vLg,
-              _SectionTitle('أوقات العمل'),
+              _SectionTitle(context.l10n.salonOpeningHours),
               _Hours(salon: salon),
 
               DsGaps.vLg,
-              _SectionTitle('الموقع'),
+              _SectionTitle(context.l10n.salonEditorSectionLocation),
               _Location(salon: salon),
 
               DsGaps.vLg,
               _SectionTitle(
                 salon.hasBeenReviewed
-                    ? 'التقييمات (${salon.reviewsCount})'
-                    : 'التقييمات',
+                    ? context.l10n.salonReviewsCount(salon.reviewsCount)
+                    : context.l10n.salonReviews,
               ),
               reviews.when(
                 loading: () => const DsLoadingIndicator(),
                 error: (_, _) => const SizedBox.shrink(),
                 data: (page) => page.items.isEmpty
                     ? Text(
-                        'لسّا ما في تقييمات. كوني أول وحدة تجرّبي وتقيّمي.',
+                        context.l10n.salonNoReviews,
                         style: context.dsText.cardSubtitle.tint(
                           c.onSurfaceVariant,
                         ),
@@ -231,9 +228,8 @@ class _GlassBack extends StatelessWidget {
       icon: Icons.arrow_back_rounded,
       tooltip: context.l10n.a11yBack,
       variant: DsIconButtonVariant.glass,
-      onPressed: () => context.canPop()
-          ? context.pop()
-          : context.go(RoutePaths.salons),
+      onPressed: () =>
+          context.canPop() ? context.pop() : context.go(RoutePaths.salons),
     ),
   );
 }
@@ -283,13 +279,13 @@ class _Identity extends StatelessWidget {
             DsChip(label: salon.area, icon: Icons.place_outlined),
             if (salon.homeService)
               DsChip(
-                label: 'خدمة منزلية',
+                label: context.l10n.salonHomeService,
                 icon: Icons.home_outlined,
                 selected: true,
               ),
             if (salon.servicesCount > 0)
               DsChip(
-                label: '${salon.servicesCount} خدمة',
+                label: context.l10n.salonServicesCount(salon.servicesCount),
                 icon: Icons.spa_outlined,
               ),
           ],
@@ -315,7 +311,7 @@ class _Actions extends StatelessWidget {
         if (salon.owner != null)
           Expanded(
             child: MessageSellerButton(
-              label: 'راسلي الصالون',
+              label: context.l10n.salonMessageSalon,
               variant: DsButtonVariant.tonal,
               request: ChatStartRequest.peer(peerId: salon.owner!.id),
             ),
@@ -324,7 +320,7 @@ class _Actions extends StatelessWidget {
           const SizedBox(width: DsSpacing.sm),
           DsIconButton(
             icon: Icons.call_outlined,
-            tooltip: 'اتصلي',
+            tooltip: context.l10n.salonCall,
             variant: DsIconButtonVariant.surface,
             onPressed: () => _launch('tel:${salon.phone}'),
           ),
@@ -332,7 +328,7 @@ class _Actions extends StatelessWidget {
         const SizedBox(width: DsSpacing.sm),
         DsIconButton(
           icon: Icons.ios_share_rounded,
-          tooltip: 'مشاركة',
+          tooltip: context.l10n.salonShare,
           variant: DsIconButtonVariant.surface,
           // Through the same registry every other share uses, so a salon link
           // previews in WhatsApp and opens the app exactly as a product link
@@ -386,7 +382,7 @@ class _Location extends StatelessWidget {
           ),
           DsGaps.vSm,
           DsButton(
-            label: 'افتحي على الخريطة',
+            label: context.l10n.salonOpenMap,
             icon: Icons.map_outlined,
             variant: DsButtonVariant.tonal,
             size: DsButtonSize.md,
@@ -416,7 +412,7 @@ class _Hours extends StatelessWidget {
     final c = context.dsColors;
     if (salon.hours.isEmpty) {
       return Text(
-        'ما حدّد الصالون أوقات عمله بعد.',
+        context.l10n.salonNoHoursYet,
         style: context.dsText.cardSubtitle.tint(c.onSurfaceVariant),
       );
     }
@@ -437,7 +433,7 @@ class _Hours extends StatelessWidget {
                 children: [
                   Expanded(
                     child: Text(
-                      SalonLabels.weekday(day.weekday),
+                      SalonLabels.weekday(context.l10n, day.weekday),
                       style: day.weekday == today
                           ? context.dsText.body.semibold.tint(c.primary)
                           : context.dsText.body.tint(c.onSurface),
@@ -445,7 +441,7 @@ class _Hours extends StatelessWidget {
                   ),
                   Text(
                     day.isClosed
-                        ? 'مغلق'
+                        ? context.l10n.salonClosed
                         : day.hasBreak
                         ? '${day.opensAt}–${day.breakStartsAt} · '
                               '${day.breakEndsAt}–${day.closesAt}'
@@ -481,7 +477,7 @@ class _ReviewCard extends StatelessWidget {
             children: [
               Expanded(
                 child: Text(
-                  review.user?.name ?? 'عميلة',
+                  review.user?.name ?? context.l10n.salonCustomerFallback,
                   style: context.dsText.tileTitle.semibold.tint(c.onSurface),
                 ),
               ),
@@ -499,7 +495,7 @@ class _ReviewCard extends StatelessWidget {
           // appointment can produce one — so it is stated rather than implied.
           DsGaps.vXxxs,
           Text(
-            'زيارة مؤكّدة',
+            context.l10n.salonVerifiedVisit,
             style: context.dsText.micro.tint(c.success),
           ),
           if (review.body != null && review.body!.isNotEmpty) ...[
@@ -522,7 +518,7 @@ class _ReviewCard extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    'ردّ الصالون',
+                    context.l10n.salonReply,
                     style: context.dsText.micro.semibold.tint(c.primary),
                   ),
                   DsGaps.vXxxs,

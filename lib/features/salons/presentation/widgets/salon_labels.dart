@@ -1,127 +1,134 @@
 import 'package:reem/features/salons/domain/entities/appointment.dart';
 import 'package:reem/features/salons/domain/entities/salon.dart';
+import 'package:reem/l10n/app_localizations.dart';
 
-/// The Arabic words this feature uses, in one place.
+/// The words this feature uses for its enums, in one place.
 ///
-/// Not in `app_ar.arb` on purpose, and it is worth saying why: these are a
-/// *closed vocabulary that mirrors a database enum*, and the two have to stay
-/// in step. A translator editing an `.arb` cannot add a salon category, and a
-/// developer adding one to the Prisma enum would have to remember to add it to
-/// two `.arb` files and regenerate — which is exactly the kind of two-place
-/// edit that drifts. Everything a translator can usefully change is in the arb
-/// files; this is the enum's own face.
+/// The text lives in the ARB bundles like every other string in the app; this
+/// is only the switch from a database enum to its key. Adding a value to one
+/// of these enums is a compile error here until it has a label, which keeps
+/// the enum and its words in step.
 abstract final class SalonLabels {
-  static String category(SalonCategory value) => switch (value) {
-    SalonCategory.hair => 'الشعر',
-    SalonCategory.nails => 'الأظافر',
-    SalonCategory.skin => 'العناية بالبشرة',
-    SalonCategory.makeup => 'المكياج',
-    SalonCategory.lashesBrows => 'الرموش والحواجب',
-    SalonCategory.hairRemoval => 'إزالة الشعر',
-    SalonCategory.massageSpa => 'المساج والسبا',
-    SalonCategory.bridal => 'خدمات العرائس',
-    SalonCategory.other => 'خدمات أخرى',
-  };
+  static String category(AppLocalizations l10n, SalonCategory value) =>
+      switch (value) {
+        SalonCategory.hair => l10n.salonCategoryHair,
+        SalonCategory.nails => l10n.salonCategoryNails,
+        SalonCategory.skin => l10n.salonCategorySkin,
+        SalonCategory.makeup => l10n.salonCategoryMakeup,
+        SalonCategory.lashesBrows => l10n.salonCategoryLashesBrows,
+        SalonCategory.hairRemoval => l10n.salonCategoryHairRemoval,
+        SalonCategory.massageSpa => l10n.salonCategoryMassageSpa,
+        SalonCategory.bridal => l10n.salonCategoryBridal,
+        SalonCategory.other => l10n.salonCategoryOther,
+      };
 
-  static String status(AppointmentStatus value) => switch (value) {
-    AppointmentStatus.pending => 'قيد الانتظار',
-    AppointmentStatus.confirmed => 'مؤكّد',
-    AppointmentStatus.completed => 'مكتمل',
-    AppointmentStatus.cancelled => 'ملغى',
-    AppointmentStatus.noShow => 'لم تحضري',
-  };
+  static String status(AppLocalizations l10n, AppointmentStatus value) =>
+      switch (value) {
+        AppointmentStatus.pending => l10n.salonStatusPending,
+        AppointmentStatus.confirmed => l10n.salonStatusConfirmed,
+        AppointmentStatus.completed => l10n.salonStatusCompleted,
+        AppointmentStatus.cancelled => l10n.salonStatusCancelled,
+        AppointmentStatus.noShow => l10n.salonStatusNoShow,
+      };
 
   /// What the status means, for the line under the badge. A woman looking at
   /// «قيد الانتظار» wants to know whether she has an appointment or not.
-  static String statusHint(AppointmentStatus value) => switch (value) {
-    AppointmentStatus.pending => 'بانتظار تأكيد الصالون',
-    AppointmentStatus.confirmed => 'موعدكِ محجوز',
-    AppointmentStatus.completed => 'تمّت الزيارة',
-    AppointmentStatus.cancelled => 'أُلغي هذا الموعد',
-    AppointmentStatus.noShow => 'سجّل الصالون عدم الحضور',
-  };
+  static String statusHint(AppLocalizations l10n, AppointmentStatus value) =>
+      switch (value) {
+        AppointmentStatus.pending => l10n.salonStatusHintPending,
+        AppointmentStatus.confirmed => l10n.salonStatusHintConfirmed,
+        AppointmentStatus.completed => l10n.salonStatusHintCompleted,
+        AppointmentStatus.cancelled => l10n.salonStatusHintCancelled,
+        AppointmentStatus.noShow => l10n.salonStatusHintNoShow,
+      };
 
-  static String location(ServiceLocation value) => switch (value) {
-    ServiceLocation.inSalon => 'في الصالون',
-    ServiceLocation.atHome => 'في المنزل',
-    ServiceLocation.both => 'في الصالون أو المنزل',
-  };
+  static String location(AppLocalizations l10n, ServiceLocation value) =>
+      switch (value) {
+        ServiceLocation.inSalon => l10n.salonLocationInSalon,
+        ServiceLocation.atHome => l10n.salonLocationAtHome,
+        ServiceLocation.both => l10n.salonLocationBoth,
+      };
 
-  static String cancelledBy(AppointmentActor? actor) => switch (actor) {
-    AppointmentActor.customer => 'ألغيتِ هذا الموعد',
-    AppointmentActor.salon => 'ألغى الصالون هذا الموعد',
-    AppointmentActor.system => 'أُلغي تلقائياً لعدم تأكيده قبل موعده',
-    null => 'أُلغي هذا الموعد',
-  };
+  static String cancelledBy(AppLocalizations l10n, AppointmentActor? actor) =>
+      switch (actor) {
+        AppointmentActor.customer => l10n.salonCancelledByCustomer,
+        AppointmentActor.salon => l10n.salonCancelledBySalon,
+        AppointmentActor.system => l10n.salonCancelledBySystem,
+        null => l10n.salonStatusHintCancelled,
+      };
 
   /// `٤٥ دقيقة` / `ساعة ونصف` — a duration a woman reads rather than parses.
-  static String duration(int minutes) {
-    if (minutes < 60) return '$minutes دقيقة';
+  static String duration(AppLocalizations l10n, int minutes) {
+    if (minutes < 60) return l10n.salonDurationMinutes(minutes);
     final hours = minutes ~/ 60;
     final rest = minutes % 60;
     final hoursLabel = switch (hours) {
-      1 => 'ساعة',
-      2 => 'ساعتان',
-      _ => '$hours ساعات',
+      1 => l10n.salonDurationOneHour,
+      2 => l10n.salonDurationTwoHours,
+      _ => l10n.salonDurationHours(hours),
     };
     if (rest == 0) return hoursLabel;
-    if (rest == 30) return '$hoursLabel ونصف';
-    return '$hoursLabel و$rest دقيقة';
+    if (rest == 30) return l10n.salonDurationAndHalf(hoursLabel);
+    return l10n.salonDurationAndMinutes(hoursLabel, rest);
   }
 
   /// 0 = Sunday, matching `SalonHours.weekday` and the server's column.
-  static String weekday(int weekday) => switch (weekday % 7) {
-    0 => 'الأحد',
-    1 => 'الإثنين',
-    2 => 'الثلاثاء',
-    3 => 'الأربعاء',
-    4 => 'الخميس',
-    5 => 'الجمعة',
-    _ => 'السبت',
-  };
+  static String weekday(AppLocalizations l10n, int weekday) =>
+      switch (weekday % 7) {
+        0 => l10n.salonWeekdaySun,
+        1 => l10n.salonWeekdayMon,
+        2 => l10n.salonWeekdayTue,
+        3 => l10n.salonWeekdayWed,
+        4 => l10n.salonWeekdayThu,
+        5 => l10n.salonWeekdayFri,
+        _ => l10n.salonWeekdaySat,
+      };
 
   /// «الخميس ١٨ أيلول» — a date she recognises. Arabic month names as used in
   /// the Levant rather than the transliterated Gregorian ones.
-  static String date(DateTime when) {
-    const months = [
-      'كانون الثاني',
-      'شباط',
-      'آذار',
-      'نيسان',
-      'أيار',
-      'حزيران',
-      'تموز',
-      'آب',
-      'أيلول',
-      'تشرين الأول',
-      'تشرين الثاني',
-      'كانون الأول',
+  static String date(AppLocalizations l10n, DateTime when) {
+    final months = [
+      l10n.salonMonth1,
+      l10n.salonMonth2,
+      l10n.salonMonth3,
+      l10n.salonMonth4,
+      l10n.salonMonth5,
+      l10n.salonMonth6,
+      l10n.salonMonth7,
+      l10n.salonMonth8,
+      l10n.salonMonth9,
+      l10n.salonMonth10,
+      l10n.salonMonth11,
+      l10n.salonMonth12,
     ];
-    return '${weekday(when.weekday % 7)} ${when.day} ${months[when.month - 1]}';
+    return '${weekday(l10n, when.weekday % 7)} ${when.day} '
+        '${months[when.month - 1]}';
   }
 
   /// `٦:٣٠ م` — a twelve-hour clock, which is how an appointment is spoken of.
-  static String time(DateTime when) {
+  static String time(AppLocalizations l10n, DateTime when) {
     final hour = when.hour % 12 == 0 ? 12 : when.hour % 12;
     final minute = when.minute.toString().padLeft(2, '0');
-    return '$hour:$minute ${when.hour < 12 ? 'ص' : 'م'}';
+    final period = when.hour < 12 ? l10n.salonTimeAm : l10n.salonTimePm;
+    return '$hour:$minute $period';
   }
 
   /// «الخميس ١٨ أيلول · ٦:٣٠ م».
-  static String dateTime(DateTime when) => '${date(when)} · ${time(when)}';
+  static String dateTime(AppLocalizations l10n, DateTime when) =>
+      '${date(l10n, when)} · ${time(l10n, when)}';
 
   /// How far away it is, for a card that has already said the date.
-  static String relativeDay(DateTime when) {
+  static String relativeDay(AppLocalizations l10n, DateTime when) {
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
     final that = DateTime(when.year, when.month, when.day);
     final days = that.difference(today).inDays;
     return switch (days) {
-      0 => 'اليوم',
-      1 => 'غداً',
-      2 => 'بعد غد',
-      _ when days > 2 && days <= 7 => 'بعد $days أيام',
-      _ => date(when),
+      0 => l10n.salonToday,
+      1 => l10n.salonTomorrow,
+      2 => l10n.salonDayAfterTomorrow,
+      _ when days > 2 && days <= 7 => l10n.salonInDays(days),
+      _ => date(l10n, when),
     };
   }
 }

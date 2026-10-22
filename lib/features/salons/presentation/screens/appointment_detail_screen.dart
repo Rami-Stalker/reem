@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/platform/app_haptics.dart';
 import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/features/auth/presentation/providers/auth_provider.dart';
@@ -33,7 +34,7 @@ class AppointmentDetailScreen extends ConsumerWidget {
     return Scaffold(
       backgroundColor: c.background,
       appBar: ReemAppBar(
-        title: 'تفاصيل الموعد',
+        title: context.l10n.salonAppointmentDetails,
         onBack: () => context.canPop()
             ? context.pop()
             : context.go(RoutePaths.appointments),
@@ -41,7 +42,7 @@ class AppointmentDetailScreen extends ConsumerWidget {
       body: async.when(
         loading: () => const Center(child: DsLoadingIndicator()),
         error: (_, _) => DsErrorState(
-          message: 'ما قدرنا نفتح هالموعد.',
+          message: context.l10n.salonAppointmentLoadError,
           onRetry: () => ref.invalidate(appointmentProvider(appointmentId)),
         ),
         data: (appointment) => _Body(appointment: appointment),
@@ -62,7 +63,8 @@ class _Body extends ConsumerWidget {
     // The salon's own copy carries the customer block; hers does not. That is
     // how this screen knows which side is looking at it, without the client
     // deciding anything about permission.
-    final isSalonView = appointment.customer != null && appointment.customer!.id != me;
+    final isSalonView =
+        appointment.customer != null && appointment.customer!.id != me;
     final when = appointment.startsAt.toLocal();
 
     return ListView(
@@ -72,7 +74,7 @@ class _Body extends ConsumerWidget {
         DsGaps.vXs,
         Center(
           child: Text(
-            SalonLabels.statusHint(appointment.status),
+            SalonLabels.statusHint(context.l10n, appointment.status),
             style: context.dsText.cardSubtitle.tint(c.onSurfaceVariant),
           ),
         ),
@@ -86,39 +88,44 @@ class _Body extends ConsumerWidget {
             children: [
               _Row(
                 icon: Icons.spa_outlined,
-                label: 'الخدمة',
+                label: context.l10n.salonService,
                 value: appointment.serviceName,
               ),
               _Row(
                 icon: Icons.event_rounded,
-                label: 'الموعد',
-                value: SalonLabels.dateTime(when),
+                label: context.l10n.salonAppointment,
+                value: SalonLabels.dateTime(context.l10n, when),
               ),
               _Row(
                 icon: Icons.schedule_rounded,
-                label: 'المدة',
-                value: SalonLabels.duration(appointment.durationMinutes),
+                label: context.l10n.salonDuration,
+                value: SalonLabels.duration(
+                  context.l10n,
+                  appointment.durationMinutes,
+                ),
               ),
               _Row(
                 icon: Icons.payments_outlined,
-                label: 'السعر',
-                value: '${appointment.price.format()} — تُدفع بالصالون',
+                label: context.l10n.salonPrice,
+                value: context.l10n.salonPricePaidAtSalon(
+                  appointment.price.format(),
+                ),
               ),
               _Row(
                 icon: Icons.confirmation_number_outlined,
-                label: 'رقم الحجز',
+                label: context.l10n.salonBookingNumber,
                 value: appointment.reference,
               ),
               if (isSalonView && appointment.customer != null)
                 _Row(
                   icon: Icons.person_outline_rounded,
-                  label: 'العميلة',
+                  label: context.l10n.salonCustomer,
                   value: appointment.customer!.name,
                 ),
               if (appointment.atHome && appointment.address != null)
                 _Row(
                   icon: Icons.home_outlined,
-                  label: 'خدمة منزلية',
+                  label: context.l10n.salonHomeService,
                   value: appointment.address!.oneLine,
                 ),
             ],
@@ -128,18 +135,27 @@ class _Body extends ConsumerWidget {
         if (appointment.customerNote != null &&
             appointment.customerNote!.isNotEmpty) ...[
           DsGaps.vMd,
-          _Note(title: 'ملاحظة العميلة', body: appointment.customerNote!),
+          _Note(
+            title: context.l10n.salonCustomerNote,
+            body: appointment.customerNote!,
+          ),
         ],
         if (appointment.salonNote != null &&
             appointment.salonNote!.isNotEmpty) ...[
           DsGaps.vMd,
-          _Note(title: 'ملاحظة الصالون', body: appointment.salonNote!),
+          _Note(
+            title: context.l10n.salonSalonNote,
+            body: appointment.salonNote!,
+          ),
         ],
 
         if (appointment.status == AppointmentStatus.cancelled) ...[
           DsGaps.vMd,
           _Note(
-            title: SalonLabels.cancelledBy(appointment.cancelledBy),
+            title: SalonLabels.cancelledBy(
+              context.l10n,
+              appointment.cancelledBy,
+            ),
             body: appointment.cancellationReason ?? '',
             tone: c.error,
           ),
@@ -150,7 +166,7 @@ class _Body extends ConsumerWidget {
         // The salon owns its side of the conversation, and she owns hers.
         if (!isSalonView && appointment.salon?.owner != null)
           MessageSellerButton(
-            label: 'راسلي الصالون',
+            label: context.l10n.salonMessageSalon,
             variant: DsButtonVariant.tonal,
             request: ChatStartRequest.peer(
               peerId: appointment.salon!.owner!.id,
@@ -160,7 +176,7 @@ class _Body extends ConsumerWidget {
         if (!isSalonView && appointment.salon != null) ...[
           DsGaps.vSm,
           DsButton(
-            label: 'صفحة الصالون',
+            label: context.l10n.salonPage,
             icon: Icons.storefront_outlined,
             variant: DsButtonVariant.ghost,
             onPressed: () => unawaited(
@@ -174,7 +190,7 @@ class _Body extends ConsumerWidget {
         // a booking is not a reason to hand a salon a woman's mobile.
         if (isSalonView && appointment.customer != null)
           MessageSellerButton(
-            label: 'راسلي العميلة',
+            label: context.l10n.salonMessageCustomer,
             variant: DsButtonVariant.tonal,
             request: ChatStartRequest.peer(peerId: appointment.customer!.id),
           ),
@@ -209,13 +225,12 @@ class _ActionsState extends ConsumerState<_Actions> {
       if (appointment.status == AppointmentStatus.pending) {
         actions.add(
           DsButton(
-            label: 'أكّدي الحجز',
+            label: context.l10n.salonConfirmBooking,
             isLoading: _busy,
             onPressed: () => _run(
-              () => ref
-                  .read(appointmentActionsProvider)
-                  .confirm(appointment.id),
-              'تم تأكيد الموعد',
+              () =>
+                  ref.read(appointmentActionsProvider).confirm(appointment.id),
+              context.l10n.salonAppointmentConfirmed,
             ),
           ),
         );
@@ -224,25 +239,23 @@ class _ActionsState extends ConsumerState<_Actions> {
         actions.addAll([
           DsGaps.vSm,
           DsButton(
-            label: 'تمّت الزيارة',
+            label: context.l10n.salonStatusHintCompleted,
             variant: DsButtonVariant.tonal,
             isLoading: _busy,
             onPressed: () => _run(
-              () => ref
-                  .read(appointmentActionsProvider)
-                  .complete(appointment.id),
-              'تم تسجيل الزيارة',
+              () =>
+                  ref.read(appointmentActionsProvider).complete(appointment.id),
+              context.l10n.salonVisitRecorded,
             ),
           ),
           DsGaps.vSm,
           DsButton(
-            label: 'لم تحضر',
+            label: context.l10n.salonMarkNoShow,
             variant: DsButtonVariant.ghost,
             isLoading: _busy,
             onPressed: () => _run(
-              () =>
-                  ref.read(appointmentActionsProvider).noShow(appointment.id),
-              'تم التسجيل',
+              () => ref.read(appointmentActionsProvider).noShow(appointment.id),
+              context.l10n.salonRecorded,
             ),
           ),
         ]);
@@ -254,7 +267,7 @@ class _ActionsState extends ConsumerState<_Actions> {
       if (actions.isNotEmpty) actions.add(DsGaps.vSm);
       actions.add(
         DsButton(
-          label: 'ألغي الموعد',
+          label: context.l10n.salonCancelAppointmentAction,
           variant: DsButtonVariant.ghost,
           isLoading: _busy,
           onPressed: _confirmCancel,
@@ -266,7 +279,7 @@ class _ActionsState extends ConsumerState<_Actions> {
       if (actions.isNotEmpty) actions.add(DsGaps.vSm);
       actions.add(
         DsButton(
-          label: 'قيّمي الصالون',
+          label: context.l10n.salonRateSalon,
           icon: Icons.star_rounded,
           isLoading: _busy,
           onPressed: _review,
@@ -278,7 +291,9 @@ class _ActionsState extends ConsumerState<_Actions> {
       actions.addAll([
         DsGaps.vSm,
         _Note(
-          title: 'تقييمك: ${appointment.review!.rating} ★',
+          title: context.l10n.salonYourRating(
+            appointment.review!.rating.toString(),
+          ),
           body: appointment.review!.body ?? '',
         ),
       ]);
@@ -295,20 +310,20 @@ class _ActionsState extends ConsumerState<_Actions> {
 
     final confirmed = await DsDialog.confirm(
       context,
-      title: 'إلغاء الموعد',
+      title: context.l10n.salonCancelAppointmentTitle,
       // Late is said rather than hidden, and it is still allowed: a woman who
       // cannot come cannot come, and the salon needs to know which it was.
       message: late
-          ? 'باقي أقل من $hours ساعات على الموعد، فالإلغاء متأخر وبينسجل للصالون. متأكدة؟'
-          : 'متأكدة إنك بدك تلغي هالموعد؟',
-      confirmLabel: 'ألغي الموعد',
+          ? context.l10n.salonLateCancelConfirm(hours)
+          : context.l10n.salonCancelConfirm,
+      confirmLabel: context.l10n.salonCancelAppointmentAction,
       destructive: true,
     );
     if (!confirmed || !mounted) return;
 
     await _run(
       () => ref.read(appointmentActionsProvider).cancel(appointment.id),
-      'تم إلغاء الموعد',
+      context.l10n.salonAppointmentCancelled,
     );
   }
 
@@ -323,7 +338,7 @@ class _ActionsState extends ConsumerState<_Actions> {
       () => ref
           .read(appointmentActionsProvider)
           .review(appointment.id, rating: rating),
-      'شكراً لتقييمك',
+      context.l10n.salonThanksForReview,
     );
   }
 
@@ -337,7 +352,7 @@ class _ActionsState extends ConsumerState<_Actions> {
       DsSnackbar.success(context, success);
     } catch (_) {
       if (!mounted) return;
-      DsSnackbar.error(context, 'ما قدرنا نكمّل. جرّبي مرة تانية.');
+      DsSnackbar.error(context, context.l10n.salonActionFailed);
     } finally {
       if (mounted) setState(() => _busy = false);
     }
@@ -364,7 +379,7 @@ class _RatingDialogState extends State<_RatingDialog> {
     return AlertDialog(
       backgroundColor: c.surface,
       title: Text(
-        'كيف كانت زيارتك؟',
+        context.l10n.salonHowWasVisit,
         style: context.dsText.cardTitle.tint(c.onSurface),
       ),
       content: Row(
@@ -387,11 +402,11 @@ class _RatingDialogState extends State<_RatingDialog> {
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
-          child: const Text('لاحقاً'),
+          child: Text(context.l10n.salonLater),
         ),
         TextButton(
           onPressed: () => Navigator.of(context).pop(_rating),
-          child: const Text('أرسلي'),
+          child: Text(context.l10n.salonSend),
         ),
       ],
     );
@@ -415,10 +430,7 @@ class _Row extends StatelessWidget {
         children: [
           Icon(icon, size: 16, color: c.onSurfaceVariant),
           const SizedBox(width: DsSpacing.sm),
-          Text(
-            label,
-            style: context.dsText.caption.tint(c.onSurfaceVariant),
-          ),
+          Text(label, style: context.dsText.caption.tint(c.onSurfaceVariant)),
           const SizedBox(width: DsSpacing.sm),
           Expanded(
             child: Text(

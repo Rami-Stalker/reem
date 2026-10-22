@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/platform/app_haptics.dart';
 import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/features/salons/domain/entities/salon.dart';
@@ -73,11 +73,11 @@ class _SalonsScreenState extends ConsumerState<SalonsScreen> {
     return Scaffold(
       backgroundColor: c.background,
       appBar: ReemAppBar(
-        title: 'الصالونات والجمال',
+        title: context.l10n.salonsTitle,
         actions: [
           DsIconButton(
             icon: Icons.tune_rounded,
-            tooltip: 'تصفية',
+            tooltip: context.l10n.salonFilter,
             variant: DsIconButtonVariant.ghost,
             badgeCount: state.filters.activeCount,
             onPressed: _openFilters,
@@ -103,7 +103,7 @@ class _SalonsScreenState extends ConsumerState<SalonsScreen> {
               SliverFillRemaining(
                 hasScrollBody: false,
                 child: DsErrorState(
-                  message: 'ما قدرنا نجيب الصالونات.',
+                  message: context.l10n.salonsLoadError,
                   onRetry: () =>
                       ref.read(salonDirectoryProvider.notifier).load(),
                 ),
@@ -114,11 +114,11 @@ class _SalonsScreenState extends ConsumerState<SalonsScreen> {
                 child: DsEmptyState(
                   icon: Icons.content_cut_rounded,
                   title: state.filters.isEmpty
-                      ? 'لسّا ما في صالونات'
-                      : 'ما في صالون بهالمواصفات',
+                      ? context.l10n.salonsNoneYet
+                      : context.l10n.salonsNoMatch,
                   message: state.filters.isEmpty
-                      ? 'قريباً بتلاقي هون صالونات ومزيّنات تقدري تحجزي عندهن مباشرة.'
-                      : 'جرّبي توسّعي التصفية أو تغيّري المنطقة.',
+                      ? context.l10n.salonsComingSoon
+                      : context.l10n.salonsWidenFilters,
                 ),
               )
             else
@@ -130,7 +130,8 @@ class _SalonsScreenState extends ConsumerState<SalonsScreen> {
                   DsSpacing.xxxl,
                 ),
                 sliver: SliverList.separated(
-                  itemCount: state.salons.length + (state.isLoadingMore ? 1 : 0),
+                  itemCount:
+                      state.salons.length + (state.isLoadingMore ? 1 : 0),
                   separatorBuilder: (_, _) =>
                       const SizedBox(height: DsSpacing.md),
                   itemBuilder: (context, index) {
@@ -143,8 +144,7 @@ class _SalonsScreenState extends ConsumerState<SalonsScreen> {
                     final salon = state.salons[index];
                     return SalonCard(
                       salon: salon,
-                      onTap: () =>
-                          context.push(RoutePaths.salonOf(salon.id)),
+                      onTap: () => context.push(RoutePaths.salonOf(salon.id)),
                     );
                   },
                 ),
@@ -165,7 +165,7 @@ class _SalonsScreenState extends ConsumerState<SalonsScreen> {
       ),
       child: DsInputField(
         controller: _search,
-        hint: 'ابحثي عن صالون أو خدمة',
+        hint: context.l10n.salonsSearchHint,
         prefixIcon: const Icon(Icons.search_rounded),
         textInputAction: TextInputAction.search,
         onChanged: _onSearchChanged,
@@ -191,14 +191,14 @@ class _SalonsScreenState extends ConsumerState<SalonsScreen> {
             itemBuilder: (context, index) {
               if (index == 0) {
                 return DsChip(
-                  label: 'الكل',
+                  label: context.l10n.salonAll,
                   selected: filters.category == null,
                   onTap: () => _setCategory(null),
                 );
               }
               final entry = offered[index - 1];
               return DsChip(
-                label: SalonLabels.category(entry.category),
+                label: SalonLabels.category(context.l10n, entry.category),
                 selected: filters.category == entry.category,
                 onTap: () => _setCategory(entry.category),
               );
@@ -217,15 +217,20 @@ class _SalonsScreenState extends ConsumerState<SalonsScreen> {
           _apply(filters.copyWith(clearArea: true));
         }),
       if (filters.minRating != null)
-        _removable('${filters.minRating!.toStringAsFixed(1)} ★ فأعلى', () {
-          _apply(filters.copyWith(clearRating: true));
-        }),
+        _removable(
+          context.l10n.salonRatingAtLeast(
+            filters.minRating!.toStringAsFixed(1),
+          ),
+          () {
+            _apply(filters.copyWith(clearRating: true));
+          },
+        ),
       if (filters.homeServiceOnly)
-        _removable('خدمة منزلية', () {
+        _removable(context.l10n.salonHomeService, () {
           _apply(filters.copyWith(homeServiceOnly: false));
         }),
       if (filters.minPrice != null || filters.maxPrice != null)
-        _removable('حسب السعر', () {
+        _removable(context.l10n.salonByPrice, () {
           _apply(filters.copyWith(clearPrice: true));
         }),
     ];
@@ -238,7 +243,11 @@ class _SalonsScreenState extends ConsumerState<SalonsScreen> {
         DsSpacing.lg,
         DsSpacing.xs,
       ),
-      child: Wrap(spacing: DsSpacing.xs, runSpacing: DsSpacing.xxs, children: chips),
+      child: Wrap(
+        spacing: DsSpacing.xs,
+        runSpacing: DsSpacing.xxs,
+        children: chips,
+      ),
     );
   }
 

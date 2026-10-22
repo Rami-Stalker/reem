@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/features/salons/data/datasources/salons_remote_datasource.dart';
 import 'package:reem/features/salons/domain/entities/salon.dart';
 import 'package:reem/features/salons/presentation/providers/salons_providers.dart';
@@ -103,11 +103,11 @@ class _SalonEditorScreenState extends ConsumerState<SalonEditorScreen> {
 
     return Scaffold(
       backgroundColor: c.background,
-      appBar: const ReemAppBar(title: 'بيانات الصالون'),
+      appBar: ReemAppBar(title: context.l10n.salonEditorTitle),
       body: async.when(
         loading: () => const Center(child: DsLoadingIndicator()),
         error: (_, _) => DsErrorState(
-          message: 'ما قدرنا نفتح بياناتك.',
+          message: context.l10n.salonEditorLoadError,
           onRetry: () => ref.invalidate(mySalonProvider),
         ),
         data: (salon) {
@@ -124,25 +124,25 @@ class _SalonEditorScreenState extends ConsumerState<SalonEditorScreen> {
       child: ListView(
         padding: const EdgeInsets.all(DsSpacing.lg),
         children: [
-          _Section(title: 'التعريف'),
+          _Section(title: context.l10n.salonEditorSectionProfile),
           DsInputField(
             controller: _name,
-            label: 'اسم الصالون',
+            label: context.l10n.salonEditorName,
             labelAbove: true,
             validator: _required,
           ),
           DsGaps.vSm,
           DsInputField(
             controller: _tagline,
-            label: 'سطر تعريفي',
-            hint: 'مثلاً: قصّات وصبغات وعناية بالشعر',
+            label: context.l10n.salonEditorTagline,
+            hint: context.l10n.salonEditorTaglineHint,
             labelAbove: true,
             maxLength: 120,
           ),
           DsGaps.vSm,
           DsInputField(
             controller: _about,
-            label: 'نبذة',
+            label: context.l10n.salonEditorAbout,
             labelAbove: true,
             maxLines: 5,
             minLines: 3,
@@ -150,38 +150,38 @@ class _SalonEditorScreenState extends ConsumerState<SalonEditorScreen> {
           ),
 
           DsGaps.vLg,
-          _Section(title: 'الموقع'),
+          _Section(title: context.l10n.salonEditorSectionLocation),
           DsInputField(
             controller: _governorate,
-            label: 'المحافظة',
+            label: context.l10n.salonEditorGovernorate,
             labelAbove: true,
             validator: _required,
           ),
           DsGaps.vSm,
           DsInputField(
             controller: _city,
-            label: 'المدينة',
+            label: context.l10n.salonEditorCity,
             labelAbove: true,
             validator: _required,
           ),
           DsGaps.vSm,
           DsInputField(
             controller: _district,
-            label: 'المنطقة',
+            label: context.l10n.salonEditorArea,
             labelAbove: true,
           ),
           DsGaps.vSm,
           DsInputField(
             controller: _address,
-            label: 'العنوان',
+            label: context.l10n.salonEditorAddress,
             labelAbove: true,
             validator: _required,
           ),
           DsGaps.vSm,
           DsInputField(
             controller: _landmark,
-            label: 'علامة مميزة',
-            hint: 'مثلاً: جانب صيدلية النور',
+            label: context.l10n.salonEditorLandmark,
+            hint: context.l10n.salonEditorLandmarkHint,
             labelAbove: true,
           ),
           DsGaps.vSm,
@@ -190,7 +190,7 @@ class _SalonEditorScreenState extends ConsumerState<SalonEditorScreen> {
               Expanded(
                 child: DsInputField(
                   controller: _latitude,
-                  label: 'خط العرض',
+                  label: context.l10n.salonEditorLatitude,
                   labelAbove: true,
                   keyboardType: const TextInputType.numberWithOptions(
                     decimal: true,
@@ -203,7 +203,7 @@ class _SalonEditorScreenState extends ConsumerState<SalonEditorScreen> {
               Expanded(
                 child: DsInputField(
                   controller: _longitude,
-                  label: 'خط الطول',
+                  label: context.l10n.salonEditorLongitude,
                   labelAbove: true,
                   keyboardType: const TextInputType.numberWithOptions(
                     decimal: true,
@@ -217,81 +217,83 @@ class _SalonEditorScreenState extends ConsumerState<SalonEditorScreen> {
           DsGaps.vXs,
           Text(
             // A pin is what turns «دمشق · المزة» into a map she can drive to.
-            'الإحداثيات اختيارية، بس بوجودها بيقدر الزبون يفتح موقعك على الخريطة مباشرة.',
-            style: context.dsText.caption.tint(context.dsColors.onSurfaceVariant),
+            context.l10n.salonEditorCoordsHelp,
+            style: context.dsText.caption.tint(
+              context.dsColors.onSurfaceVariant,
+            ),
           ),
 
           DsGaps.vLg,
-          _Section(title: 'التواصل'),
+          _Section(title: context.l10n.salonEditorSectionContact),
           DsInputField(
             controller: _phone,
-            label: 'رقم الهاتف',
+            label: context.l10n.salonEditorPhone,
             labelAbove: true,
             keyboardType: TextInputType.phone,
           ),
           DsGaps.vSm,
           DsInputField(
             controller: _whatsapp,
-            label: 'واتساب',
+            label: context.l10n.salonEditorWhatsapp,
             labelAbove: true,
             keyboardType: TextInputType.phone,
           ),
 
           DsGaps.vLg,
-          _Section(title: 'إعدادات الحجز'),
+          _Section(title: context.l10n.salonEditorSectionBooking),
           _Stepper(
-            label: 'طول الفترة',
+            label: context.l10n.salonEditorSlotLength,
             value: _slotMinutes,
-            suffix: 'دقيقة',
+            suffix: context.l10n.salonUnitMinute,
             step: 15,
             min: 15,
             max: 120,
-            help: 'كل قدّيه تبلّش فترة جديدة — مثلاً كل نص ساعة.',
+            help: context.l10n.salonEditorSlotLengthHelp,
             onChanged: (value) => setState(() => _slotMinutes = value),
           ),
           _Stepper(
-            label: 'أقرب حجز',
+            label: context.l10n.salonEditorLeadTime,
             value: _leadMinutes,
-            suffix: 'دقيقة',
+            suffix: context.l10n.salonUnitMinute,
             step: 30,
             min: 0,
             max: 1440,
-            help: 'أقل وقت بين الحجز والموعد، حتى ما تتفاجئي بموعد بعد خمس دقايق.',
+            help: context.l10n.salonEditorLeadTimeHelp,
             onChanged: (value) => setState(() => _leadMinutes = value),
           ),
           _Stepper(
-            label: 'الحجز حتى',
+            label: context.l10n.salonEditorHorizon,
             value: _horizonDays,
-            suffix: 'يوم',
+            suffix: context.l10n.salonUnitDay,
             step: 5,
             min: 1,
             max: 120,
-            help: 'لَوين قدّام فيها الزبونة تحجز.',
+            help: context.l10n.salonEditorHorizonHelp,
             onChanged: (value) => setState(() => _horizonDays = value),
           ),
           _Stepper(
-            label: 'عدد الزبونات بنفس الوقت',
+            label: context.l10n.salonEditorCapacity,
             value: _capacity,
             suffix: '',
             step: 1,
             min: 1,
             max: 20,
-            help: 'عدد الكراسي يلي بتقدري تشتغلي عليها بنفس الساعة.',
+            help: context.l10n.salonEditorCapacityHelp,
             onChanged: (value) => setState(() => _capacity = value),
           ),
           _Stepper(
-            label: 'الإلغاء المتأخر',
+            label: context.l10n.salonEditorLateCancel,
             value: _cancellationHours,
-            suffix: 'ساعة',
+            suffix: context.l10n.salonUnitHour,
             step: 1,
             min: 0,
             max: 48,
-            help: 'الإلغاء قبل الموعد بأقل من هيك بينسجل كإلغاء متأخر.',
+            help: context.l10n.salonEditorLateCancelHelp,
             onChanged: (value) => setState(() => _cancellationHours = value),
           ),
 
           DsGaps.vLg,
-          _Section(title: 'الخدمة المنزلية'),
+          _Section(title: context.l10n.salonEditorSectionHome),
           SurfaceCard(
             padding: const EdgeInsets.symmetric(
               horizontal: DsSpacing.md,
@@ -301,7 +303,7 @@ class _SalonEditorScreenState extends ConsumerState<SalonEditorScreen> {
               children: [
                 Expanded(
                   child: Text(
-                    'بتطلعي لبيت الزبونة',
+                    context.l10n.salonEditorHomeVisits,
                     style: context.dsText.body.tint(context.dsColors.onSurface),
                   ),
                 ),
@@ -316,7 +318,7 @@ class _SalonEditorScreenState extends ConsumerState<SalonEditorScreen> {
             DsGaps.vSm,
             DsInputField(
               controller: _homeFee,
-              label: 'أجرة المشوار',
+              label: context.l10n.salonEditorTravelFee,
               labelAbove: true,
               keyboardType: const TextInputType.numberWithOptions(
                 decimal: true,
@@ -327,14 +329,16 @@ class _SalonEditorScreenState extends ConsumerState<SalonEditorScreen> {
 
           DsGaps.vXl,
           DsButton(
-            label: salon == null ? 'افتحي الصالون' : 'احفظي',
+            label: salon == null
+                ? context.l10n.salonEditorCreate
+                : context.l10n.salonSave,
             isLoading: _saving,
             onPressed: () => unawaited(_save(publish: null)),
           ),
           if (salon != null && !salon.status.isLive) ...[
             DsGaps.vSm,
             DsButton(
-              label: 'احفظي وانشري',
+              label: context.l10n.salonEditorSavePublish,
               variant: DsButtonVariant.tonal,
               isLoading: _saving,
               onPressed: () => unawaited(_save(publish: true)),
@@ -343,7 +347,7 @@ class _SalonEditorScreenState extends ConsumerState<SalonEditorScreen> {
           if (salon != null && salon.status.isLive) ...[
             DsGaps.vSm,
             DsButton(
-              label: 'أخفي من الدليل',
+              label: context.l10n.salonEditorHide,
               variant: DsButtonVariant.ghost,
               isLoading: _saving,
               onPressed: () => unawaited(_save(publish: false)),
@@ -355,12 +359,15 @@ class _SalonEditorScreenState extends ConsumerState<SalonEditorScreen> {
     );
   }
 
-  String? _required(String? value) =>
-      value == null || value.trim().isEmpty ? 'لازم تعبّي هالحقل' : null;
+  String? _required(String? value) => value == null || value.trim().isEmpty
+      ? context.l10n.salonFieldRequired
+      : null;
 
   String? _optionalNumber(String? value) {
     if (value == null || value.trim().isEmpty) return null;
-    return double.tryParse(value.trim()) == null ? 'رقم غير صحيح' : null;
+    return double.tryParse(value.trim()) == null
+        ? context.l10n.salonInvalidNumber
+        : null;
   }
 
   String? _text(TextEditingController controller) {
@@ -405,11 +412,11 @@ class _SalonEditorScreenState extends ConsumerState<SalonEditorScreen> {
             ),
           );
       if (!mounted) return;
-      DsSnackbar.success(context, 'انحفظت البيانات');
+      DsSnackbar.success(context, context.l10n.salonEditorSaved);
       if (context.canPop()) context.pop();
     } catch (_) {
       if (!mounted) return;
-      DsSnackbar.error(context, 'ما قدرنا نحفظ. جرّبي مرة تانية.');
+      DsSnackbar.error(context, context.l10n.salonSaveFailed);
     } finally {
       if (mounted) setState(() => _saving = false);
     }

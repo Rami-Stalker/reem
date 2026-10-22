@@ -13010,5 +13010,1292 @@
   "authForgotSubtitle": "Enter your number and we will send you a code to set a new password.",
   "@authForgotSubtitle": {
     "description": "Subtitle on the forgot password screen"
+  },
+  "salonCategoryHair": "Hair",
+  "@salonCategoryHair": {
+    "description": "Salons"
+  },
+  "salonCategoryNails": "Nails",
+  "@salonCategoryNails": {
+    "description": "Salons"
+  },
+  "salonCategorySkin": "Skin care",
+  "@salonCategorySkin": {
+    "description": "Salons"
+  },
+  "salonCategoryMakeup": "Makeup",
+  "@salonCategoryMakeup": {
+    "description": "Salons"
+  },
+  "salonCategoryLashesBrows": "Lashes & brows",
+  "@salonCategoryLashesBrows": {
+    "description": "Salons"
+  },
+  "salonCategoryHairRemoval": "Hair removal",
+  "@salonCategoryHairRemoval": {
+    "description": "Salons"
+  },
+  "salonCategoryMassageSpa": "Massage & spa",
+  "@salonCategoryMassageSpa": {
+    "description": "Salons"
+  },
+  "salonCategoryBridal": "Bridal",
+  "@salonCategoryBridal": {
+    "description": "Salons"
+  },
+  "salonCategoryOther": "Other services",
+  "@salonCategoryOther": {
+    "description": "Salons"
+  },
+  "salonStatusPending": "Pending",
+  "@salonStatusPending": {
+    "description": "Salons"
+  },
+  "salonStatusConfirmed": "Confirmed",
+  "@salonStatusConfirmed": {
+    "description": "Salons"
+  },
+  "salonStatusCompleted": "Completed",
+  "@salonStatusCompleted": {
+    "description": "Salons"
+  },
+  "salonStatusCancelled": "Cancelled",
+  "@salonStatusCancelled": {
+    "description": "Salons"
+  },
+  "salonStatusNoShow": "No-show",
+  "@salonStatusNoShow": {
+    "description": "Salons"
+  },
+  "salonStatusHintPending": "Waiting for the salon to confirm",
+  "@salonStatusHintPending": {
+    "description": "Salons"
+  },
+  "salonStatusHintConfirmed": "Your appointment is booked",
+  "@salonStatusHintConfirmed": {
+    "description": "Salons"
+  },
+  "salonStatusHintCompleted": "Visit completed",
+  "@salonStatusHintCompleted": {
+    "description": "Salons"
+  },
+  "salonStatusHintCancelled": "This appointment was cancelled",
+  "@salonStatusHintCancelled": {
+    "description": "Salons"
+  },
+  "salonStatusHintNoShow": "The salon recorded a no-show",
+  "@salonStatusHintNoShow": {
+    "description": "Salons"
+  },
+  "salonLocationInSalon": "At the salon",
+  "@salonLocationInSalon": {
+    "description": "Salons"
+  },
+  "salonLocationAtHome": "At home",
+  "@salonLocationAtHome": {
+    "description": "Salons"
+  },
+  "salonLocationBoth": "At the salon or at home",
+  "@salonLocationBoth": {
+    "description": "Salons"
+  },
+  "salonCancelledByCustomer": "You cancelled this appointment",
+  "@salonCancelledByCustomer": {
+    "description": "Salons"
+  },
+  "salonCancelledBySalon": "The salon cancelled this appointment",
+  "@salonCancelledBySalon": {
+    "description": "Salons"
+  },
+  "salonCancelledBySystem": "Cancelled automatically: it was not confirmed in time",
+  "@salonCancelledBySystem": {
+    "description": "Salons"
+  },
+  "salonDurationMinutes": "{minutes} min",
+  "@salonDurationMinutes": {
+    "description": "Salons",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "salonDurationOneHour": "1 hour",
+  "@salonDurationOneHour": {
+    "description": "Salons"
+  },
+  "salonDurationTwoHours": "2 hours",
+  "@salonDurationTwoHours": {
+    "description": "Salons"
+  },
+  "salonDurationHours": "{hours} hours",
+  "@salonDurationHours": {
+    "description": "Salons",
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+  "salonDurationAndHalf": "{hours} and a half",
+  "@salonDurationAndHalf": {
+    "description": "Salons",
+    "placeholders": {
+      "hours": {
+        "type": "String"
+      }
+    }
+  },
+  "salonDurationAndMinutes": "{hours} {minutes} min",
+  "@salonDurationAndMinutes": {
+    "description": "Salons",
+    "placeholders": {
+      "hours": {
+        "type": "String"
+      },
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "salonWeekdaySun": "Sunday",
+  "@salonWeekdaySun": {
+    "description": "Salons"
+  },
+  "salonWeekdayMon": "Monday",
+  "@salonWeekdayMon": {
+    "description": "Salons"
+  },
+  "salonWeekdayTue": "Tuesday",
+  "@salonWeekdayTue": {
+    "description": "Salons"
+  },
+  "salonWeekdayWed": "Wednesday",
+  "@salonWeekdayWed": {
+    "description": "Salons"
+  },
+  "salonWeekdayThu": "Thursday",
+  "@salonWeekdayThu": {
+    "description": "Salons"
+  },
+  "salonWeekdayFri": "Friday",
+  "@salonWeekdayFri": {
+    "description": "Salons"
+  },
+  "salonWeekdaySat": "Saturday",
+  "@salonWeekdaySat": {
+    "description": "Salons"
+  },
+  "salonMonth1": "January",
+  "@salonMonth1": {
+    "description": "Salons"
+  },
+  "salonMonth2": "February",
+  "@salonMonth2": {
+    "description": "Salons"
+  },
+  "salonMonth3": "March",
+  "@salonMonth3": {
+    "description": "Salons"
+  },
+  "salonMonth4": "April",
+  "@salonMonth4": {
+    "description": "Salons"
+  },
+  "salonMonth5": "May",
+  "@salonMonth5": {
+    "description": "Salons"
+  },
+  "salonMonth6": "June",
+  "@salonMonth6": {
+    "description": "Salons"
+  },
+  "salonMonth7": "July",
+  "@salonMonth7": {
+    "description": "Salons"
+  },
+  "salonMonth8": "August",
+  "@salonMonth8": {
+    "description": "Salons"
+  },
+  "salonMonth9": "September",
+  "@salonMonth9": {
+    "description": "Salons"
+  },
+  "salonMonth10": "October",
+  "@salonMonth10": {
+    "description": "Salons"
+  },
+  "salonMonth11": "November",
+  "@salonMonth11": {
+    "description": "Salons"
+  },
+  "salonMonth12": "December",
+  "@salonMonth12": {
+    "description": "Salons"
+  },
+  "salonTimeAm": "AM",
+  "@salonTimeAm": {
+    "description": "Salons"
+  },
+  "salonTimePm": "PM",
+  "@salonTimePm": {
+    "description": "Salons"
+  },
+  "salonToday": "Today",
+  "@salonToday": {
+    "description": "Salons"
+  },
+  "salonTomorrow": "Tomorrow",
+  "@salonTomorrow": {
+    "description": "Salons"
+  },
+  "salonDayAfterTomorrow": "The day after tomorrow",
+  "@salonDayAfterTomorrow": {
+    "description": "Salons"
+  },
+  "salonInDays": "In {days} days",
+  "@salonInDays": {
+    "description": "Salons",
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "salonEditorTitle": "Salon details",
+  "@salonEditorTitle": {
+    "description": "Salons"
+  },
+  "salonEditorLoadError": "We couldn't open your details.",
+  "@salonEditorLoadError": {
+    "description": "Salons"
+  },
+  "salonEditorSectionProfile": "Profile",
+  "@salonEditorSectionProfile": {
+    "description": "Salons"
+  },
+  "salonEditorName": "Salon name",
+  "@salonEditorName": {
+    "description": "Salons"
+  },
+  "salonEditorTagline": "Tagline",
+  "@salonEditorTagline": {
+    "description": "Salons"
+  },
+  "salonEditorTaglineHint": "e.g. Cuts, colour and hair care",
+  "@salonEditorTaglineHint": {
+    "description": "Salons"
+  },
+  "salonEditorAbout": "About",
+  "@salonEditorAbout": {
+    "description": "Salons"
+  },
+  "salonEditorSectionLocation": "Location",
+  "@salonEditorSectionLocation": {
+    "description": "Salons"
+  },
+  "salonEditorGovernorate": "Governorate",
+  "@salonEditorGovernorate": {
+    "description": "Salons"
+  },
+  "salonEditorCity": "City",
+  "@salonEditorCity": {
+    "description": "Salons"
+  },
+  "salonEditorArea": "Area",
+  "@salonEditorArea": {
+    "description": "Salons"
+  },
+  "salonEditorAddress": "Address",
+  "@salonEditorAddress": {
+    "description": "Salons"
+  },
+  "salonEditorLandmark": "Landmark",
+  "@salonEditorLandmark": {
+    "description": "Salons"
+  },
+  "salonEditorLandmarkHint": "e.g. Next to Al-Nour pharmacy",
+  "@salonEditorLandmarkHint": {
+    "description": "Salons"
+  },
+  "salonEditorLatitude": "Latitude",
+  "@salonEditorLatitude": {
+    "description": "Salons"
+  },
+  "salonEditorLongitude": "Longitude",
+  "@salonEditorLongitude": {
+    "description": "Salons"
+  },
+  "salonEditorCoordsHelp": "Coordinates are optional, but with them customers can open your location on the map directly.",
+  "@salonEditorCoordsHelp": {
+    "description": "Salons"
+  },
+  "salonEditorSectionContact": "Contact",
+  "@salonEditorSectionContact": {
+    "description": "Salons"
+  },
+  "salonEditorPhone": "Phone number",
+  "@salonEditorPhone": {
+    "description": "Salons"
+  },
+  "salonEditorWhatsapp": "WhatsApp",
+  "@salonEditorWhatsapp": {
+    "description": "Salons"
+  },
+  "salonEditorSectionBooking": "Booking settings",
+  "@salonEditorSectionBooking": {
+    "description": "Salons"
+  },
+  "salonEditorSlotLength": "Slot length",
+  "@salonEditorSlotLength": {
+    "description": "Salons"
+  },
+  "salonUnitMinute": "min",
+  "@salonUnitMinute": {
+    "description": "Salons"
+  },
+  "salonEditorSlotLengthHelp": "How often a new slot starts — for example every half hour.",
+  "@salonEditorSlotLengthHelp": {
+    "description": "Salons"
+  },
+  "salonEditorLeadTime": "Earliest booking",
+  "@salonEditorLeadTime": {
+    "description": "Salons"
+  },
+  "salonEditorLeadTimeHelp": "The shortest time between booking and appointment, so you're not surprised by one five minutes away.",
+  "@salonEditorLeadTimeHelp": {
+    "description": "Salons"
+  },
+  "salonEditorHorizon": "Book up to",
+  "@salonEditorHorizon": {
+    "description": "Salons"
+  },
+  "salonUnitDay": "days",
+  "@salonUnitDay": {
+    "description": "Salons"
+  },
+  "salonEditorHorizonHelp": "How far ahead a customer can book.",
+  "@salonEditorHorizonHelp": {
+    "description": "Salons"
+  },
+  "salonEditorCapacity": "Customers at the same time",
+  "@salonEditorCapacity": {
+    "description": "Salons"
+  },
+  "salonEditorCapacityHelp": "How many chairs you can work at in the same hour.",
+  "@salonEditorCapacityHelp": {
+    "description": "Salons"
+  },
+  "salonEditorLateCancel": "Late cancellation",
+  "@salonEditorLateCancel": {
+    "description": "Salons"
+  },
+  "salonUnitHour": "hours",
+  "@salonUnitHour": {
+    "description": "Salons"
+  },
+  "salonEditorLateCancelHelp": "Cancelling closer to the appointment than this counts as a late cancellation.",
+  "@salonEditorLateCancelHelp": {
+    "description": "Salons"
+  },
+  "salonEditorSectionHome": "Home service",
+  "@salonEditorSectionHome": {
+    "description": "Salons"
+  },
+  "salonEditorHomeVisits": "You go to the customer's home",
+  "@salonEditorHomeVisits": {
+    "description": "Salons"
+  },
+  "salonEditorTravelFee": "Travel fee",
+  "@salonEditorTravelFee": {
+    "description": "Salons"
+  },
+  "salonEditorCreate": "Open the salon",
+  "@salonEditorCreate": {
+    "description": "Salons"
+  },
+  "salonSave": "Save",
+  "@salonSave": {
+    "description": "Salons"
+  },
+  "salonEditorSavePublish": "Save and publish",
+  "@salonEditorSavePublish": {
+    "description": "Salons"
+  },
+  "salonEditorHide": "Hide from the directory",
+  "@salonEditorHide": {
+    "description": "Salons"
+  },
+  "salonFieldRequired": "This field is required",
+  "@salonFieldRequired": {
+    "description": "Salons"
+  },
+  "salonInvalidNumber": "Invalid number",
+  "@salonInvalidNumber": {
+    "description": "Salons"
+  },
+  "salonEditorSaved": "Details saved",
+  "@salonEditorSaved": {
+    "description": "Salons"
+  },
+  "salonSaveFailed": "We couldn't save. Please try again.",
+  "@salonSaveFailed": {
+    "description": "Salons"
+  },
+  "salonAppointmentDetails": "Appointment details",
+  "@salonAppointmentDetails": {
+    "description": "Salons"
+  },
+  "salonAppointmentLoadError": "We couldn't open this appointment.",
+  "@salonAppointmentLoadError": {
+    "description": "Salons"
+  },
+  "salonService": "Service",
+  "@salonService": {
+    "description": "Salons"
+  },
+  "salonAppointment": "Appointment",
+  "@salonAppointment": {
+    "description": "Salons"
+  },
+  "salonDuration": "Duration",
+  "@salonDuration": {
+    "description": "Salons"
+  },
+  "salonPrice": "Price",
+  "@salonPrice": {
+    "description": "Salons"
+  },
+  "salonBookingNumber": "Booking number",
+  "@salonBookingNumber": {
+    "description": "Salons"
+  },
+  "salonCustomer": "Customer",
+  "@salonCustomer": {
+    "description": "Salons"
+  },
+  "salonHomeService": "Home service",
+  "@salonHomeService": {
+    "description": "Salons"
+  },
+  "salonCustomerNote": "Customer's note",
+  "@salonCustomerNote": {
+    "description": "Salons"
+  },
+  "salonSalonNote": "Salon's note",
+  "@salonSalonNote": {
+    "description": "Salons"
+  },
+  "salonMessageSalon": "Message the salon",
+  "@salonMessageSalon": {
+    "description": "Salons"
+  },
+  "salonPage": "Salon page",
+  "@salonPage": {
+    "description": "Salons"
+  },
+  "salonMessageCustomer": "Message the customer",
+  "@salonMessageCustomer": {
+    "description": "Salons"
+  },
+  "salonConfirmBooking": "Confirm booking",
+  "@salonConfirmBooking": {
+    "description": "Salons"
+  },
+  "salonAppointmentConfirmed": "Appointment confirmed",
+  "@salonAppointmentConfirmed": {
+    "description": "Salons"
+  },
+  "salonVisitRecorded": "Visit recorded",
+  "@salonVisitRecorded": {
+    "description": "Salons"
+  },
+  "salonMarkNoShow": "Didn't show up",
+  "@salonMarkNoShow": {
+    "description": "Salons"
+  },
+  "salonRecorded": "Recorded",
+  "@salonRecorded": {
+    "description": "Salons"
+  },
+  "salonCancelAppointmentAction": "Cancel appointment",
+  "@salonCancelAppointmentAction": {
+    "description": "Salons"
+  },
+  "salonRateSalon": "Rate the salon",
+  "@salonRateSalon": {
+    "description": "Salons"
+  },
+  "salonCancelAppointmentTitle": "Cancel the appointment",
+  "@salonCancelAppointmentTitle": {
+    "description": "Salons"
+  },
+  "salonCancelConfirm": "Are you sure you want to cancel this appointment?",
+  "@salonCancelConfirm": {
+    "description": "Salons"
+  },
+  "salonAppointmentCancelled": "Appointment cancelled",
+  "@salonAppointmentCancelled": {
+    "description": "Salons"
+  },
+  "salonThanksForReview": "Thanks for your review",
+  "@salonThanksForReview": {
+    "description": "Salons"
+  },
+  "salonActionFailed": "We couldn't finish that. Please try again.",
+  "@salonActionFailed": {
+    "description": "Salons"
+  },
+  "salonHowWasVisit": "How was your visit?",
+  "@salonHowWasVisit": {
+    "description": "Salons"
+  },
+  "salonLater": "Later",
+  "@salonLater": {
+    "description": "Salons"
+  },
+  "salonSend": "Send",
+  "@salonSend": {
+    "description": "Salons"
+  },
+  "salonMyBookings": "My bookings",
+  "@salonMyBookings": {
+    "description": "Salons"
+  },
+  "salonUpcoming": "Upcoming",
+  "@salonUpcoming": {
+    "description": "Salons"
+  },
+  "salonPast": "Past",
+  "@salonPast": {
+    "description": "Salons"
+  },
+  "salonBookingsLoadError": "We couldn't load your bookings.",
+  "@salonBookingsLoadError": {
+    "description": "Salons"
+  },
+  "salonNoAppointmentsYou": "You have no appointments",
+  "@salonNoAppointmentsYou": {
+    "description": "Salons"
+  },
+  "salonNoPastAppointments": "No past appointments",
+  "@salonNoPastAppointments": {
+    "description": "Salons"
+  },
+  "salonFindAndBook": "Find a salon and book your appointment in one tap.",
+  "@salonFindAndBook": {
+    "description": "Salons"
+  },
+  "salonPastHere": "Finished appointments will appear here.",
+  "@salonPastHere": {
+    "description": "Salons"
+  },
+  "salonBrowseSalons": "Browse salons",
+  "@salonBrowseSalons": {
+    "description": "Salons"
+  },
+  "salonBookYourAppointment": "Book your appointment",
+  "@salonBookYourAppointment": {
+    "description": "Salons"
+  },
+  "salonCalendarLoadError": "We couldn't open the calendar.",
+  "@salonCalendarLoadError": {
+    "description": "Salons"
+  },
+  "salonServiceUnavailable": "This service is no longer available",
+  "@salonServiceUnavailable": {
+    "description": "Salons"
+  },
+  "salonPickAnotherService": "Choose another service from the salon page.",
+  "@salonPickAnotherService": {
+    "description": "Salons"
+  },
+  "salonSignInToBook": "Sign in to book",
+  "@salonSignInToBook": {
+    "description": "Salons"
+  },
+  "salonSignInToBookBody": "Booking needs an account so we can confirm your appointment and remind you of it.",
+  "@salonSignInToBookBody": {
+    "description": "Salons"
+  },
+  "salonPickAddress": "Choose the address where you want the service.",
+  "@salonPickAddress": {
+    "description": "Salons"
+  },
+  "salonBookingFailed": "We couldn't secure that time. Someone may have just booked it — try another time.",
+  "@salonBookingFailed": {
+    "description": "Salons"
+  },
+  "salonPickDay": "Choose the day",
+  "@salonPickDay": {
+    "description": "Salons"
+  },
+  "salonDaysLoadError": "We couldn't load the available days.",
+  "@salonDaysLoadError": {
+    "description": "Salons"
+  },
+  "salonPickTime": "Choose the time",
+  "@salonPickTime": {
+    "description": "Salons"
+  },
+  "salonNoteForSalon": "Note for the salon (optional)",
+  "@salonNoteForSalon": {
+    "description": "Salons"
+  },
+  "salonNoteForSalonHint": "e.g. My hair is long, or I prefer a particular stylist",
+  "@salonNoteForSalonHint": {
+    "description": "Salons"
+  },
+  "salonNoSlotsWeek": "No free times this week. Try messaging the salon.",
+  "@salonNoSlotsWeek": {
+    "description": "Salons"
+  },
+  "salonClosed": "Closed",
+  "@salonClosed": {
+    "description": "Salons"
+  },
+  "salonSlotsLoadError": "We couldn't load the times.",
+  "@salonSlotsLoadError": {
+    "description": "Salons"
+  },
+  "salonNoSlotsDay": "No free times on this day.",
+  "@salonNoSlotsDay": {
+    "description": "Salons"
+  },
+  "salonWantHomeService": "I want the service at home",
+  "@salonWantHomeService": {
+    "description": "Salons"
+  },
+  "salonAddAddress": "Add an address",
+  "@salonAddAddress": {
+    "description": "Salons"
+  },
+  "salonPickATime": "Pick a time",
+  "@salonPickATime": {
+    "description": "Salons"
+  },
+  "salonWorkingHours": "Working hours",
+  "@salonWorkingHours": {
+    "description": "Salons"
+  },
+  "salonHoursLoadError": "We couldn't open your hours.",
+  "@salonHoursLoadError": {
+    "description": "Salons"
+  },
+  "salonNoSalonYet": "No salon yet",
+  "@salonNoSalonYet": {
+    "description": "Salons"
+  },
+  "salonOpenFirstHours": "Open your salon first, then set your hours.",
+  "@salonOpenFirstHours": {
+    "description": "Salons"
+  },
+  "salonSaveHours": "Save hours",
+  "@salonSaveHours": {
+    "description": "Salons"
+  },
+  "salonClosedDays": "Closed days",
+  "@salonClosedDays": {
+    "description": "Salons"
+  },
+  "salonClosedDaysHelp": "Holidays or time off — booking is closed on these dates whatever the hours say.",
+  "@salonClosedDaysHelp": {
+    "description": "Salons"
+  },
+  "salonNoClosedDays": "No closed days.",
+  "@salonNoClosedDays": {
+    "description": "Salons"
+  },
+  "salonAddClosedDay": "Add a closed day",
+  "@salonAddClosedDay": {
+    "description": "Salons"
+  },
+  "salonHoursSaved": "Hours saved",
+  "@salonHoursSaved": {
+    "description": "Salons"
+  },
+  "salonHoursSaveFailed": "We couldn't save the hours.",
+  "@salonHoursSaveFailed": {
+    "description": "Salons"
+  },
+  "salonClosedDayAdded": "Closed day added",
+  "@salonClosedDayAdded": {
+    "description": "Salons"
+  },
+  "salonClosedDayAddFailed": "We couldn't add the day.",
+  "@salonClosedDayAddFailed": {
+    "description": "Salons"
+  },
+  "salonClosedDayRemoved": "Closed day removed",
+  "@salonClosedDayRemoved": {
+    "description": "Salons"
+  },
+  "salonClosedDayRemoveFailed": "We couldn't remove the day.",
+  "@salonClosedDayRemoveFailed": {
+    "description": "Salons"
+  },
+  "salonDayClosed": "Closed",
+  "@salonDayClosed": {
+    "description": "Salons"
+  },
+  "salonDayOpen": "Open",
+  "@salonDayOpen": {
+    "description": "Salons"
+  },
+  "salonFrom": "From",
+  "@salonFrom": {
+    "description": "Salons"
+  },
+  "salonTo": "To",
+  "@salonTo": {
+    "description": "Salons"
+  },
+  "salonAddBreak": "Add a break",
+  "@salonAddBreak": {
+    "description": "Salons"
+  },
+  "salonBreakFrom": "Break from",
+  "@salonBreakFrom": {
+    "description": "Salons"
+  },
+  "salonRemoveBreak": "Remove break",
+  "@salonRemoveBreak": {
+    "description": "Salons"
+  },
+  "salonRemove": "Remove",
+  "@salonRemove": {
+    "description": "Salons"
+  },
+  "salonAppointments": "Appointments",
+  "@salonAppointments": {
+    "description": "Salons"
+  },
+  "salonAwaitingConfirmation": "Awaiting confirmation",
+  "@salonAwaitingConfirmation": {
+    "description": "Salons"
+  },
+  "salonQueueOpenError": "We couldn't open your appointments.",
+  "@salonQueueOpenError": {
+    "description": "Salons"
+  },
+  "salonOpenFirstBookings": "Open your salon first, and bookings will start coming in.",
+  "@salonOpenFirstBookings": {
+    "description": "Salons"
+  },
+  "salonQueueLoadError": "We couldn't load the appointments.",
+  "@salonQueueLoadError": {
+    "description": "Salons"
+  },
+  "salonNothingPending": "Nothing waiting for you",
+  "@salonNothingPending": {
+    "description": "Salons"
+  },
+  "salonNoUpcoming": "No upcoming appointments",
+  "@salonNoUpcoming": {
+    "description": "Salons"
+  },
+  "salonAllConfirmed": "All bookings are confirmed.",
+  "@salonAllConfirmed": {
+    "description": "Salons"
+  },
+  "salonFirstBookingHere": "As soon as a customer books, you'll see it here.",
+  "@salonFirstBookingHere": {
+    "description": "Salons"
+  },
+  "salonConfirmFailed": "We couldn't confirm. Please try again.",
+  "@salonConfirmFailed": {
+    "description": "Salons"
+  },
+  "salonNotFound": "We couldn't find this salon",
+  "@salonNotFound": {
+    "description": "Salons"
+  },
+  "salonNotFoundBody": "It may have closed or is no longer available.",
+  "@salonNotFoundBody": {
+    "description": "Salons"
+  },
+  "salonServices": "Services",
+  "@salonServices": {
+    "description": "Salons"
+  },
+  "salonNoServicesYet": "The salon hasn't added its services yet",
+  "@salonNoServicesYet": {
+    "description": "Salons"
+  },
+  "salonMessageToAsk": "Message them to find out what they offer.",
+  "@salonMessageToAsk": {
+    "description": "Salons"
+  },
+  "salonOpeningHours": "Opening hours",
+  "@salonOpeningHours": {
+    "description": "Salons"
+  },
+  "salonReviews": "Reviews",
+  "@salonReviews": {
+    "description": "Salons"
+  },
+  "salonNoReviews": "No reviews yet. Be the first to try it and leave one.",
+  "@salonNoReviews": {
+    "description": "Salons"
+  },
+  "salonCall": "Call",
+  "@salonCall": {
+    "description": "Salons"
+  },
+  "salonShare": "Share",
+  "@salonShare": {
+    "description": "Salons"
+  },
+  "salonOpenMap": "Open in maps",
+  "@salonOpenMap": {
+    "description": "Salons"
+  },
+  "salonNoHoursYet": "The salon hasn't set its hours yet.",
+  "@salonNoHoursYet": {
+    "description": "Salons"
+  },
+  "salonCustomerFallback": "Customer",
+  "@salonCustomerFallback": {
+    "description": "Salons"
+  },
+  "salonVerifiedVisit": "Verified visit",
+  "@salonVerifiedVisit": {
+    "description": "Salons"
+  },
+  "salonReply": "Salon's reply",
+  "@salonReply": {
+    "description": "Salons"
+  },
+  "salonServicesAndPrices": "Services & prices",
+  "@salonServicesAndPrices": {
+    "description": "Salons"
+  },
+  "salonServicesLoadError": "We couldn't open your services.",
+  "@salonServicesLoadError": {
+    "description": "Salons"
+  },
+  "salonOpenFirstServices": "Open your salon first, then add your services.",
+  "@salonOpenFirstServices": {
+    "description": "Salons"
+  },
+  "salonNoServices": "No services",
+  "@salonNoServices": {
+    "description": "Salons"
+  },
+  "salonAddFirstService": "Add your first service with its price and duration, and booking goes live.",
+  "@salonAddFirstService": {
+    "description": "Salons"
+  },
+  "salonAddService": "Add a service",
+  "@salonAddService": {
+    "description": "Salons"
+  },
+  "salonServiceSaved": "Service saved",
+  "@salonServiceSaved": {
+    "description": "Salons"
+  },
+  "salonServiceSaveFailed": "We couldn't save the service.",
+  "@salonServiceSaveFailed": {
+    "description": "Salons"
+  },
+  "salonServicePaused": "Service paused",
+  "@salonServicePaused": {
+    "description": "Salons"
+  },
+  "salonServiceResumed": "Service resumed",
+  "@salonServiceResumed": {
+    "description": "Salons"
+  },
+  "salonServiceToggleFailed": "We couldn't change the service's status.",
+  "@salonServiceToggleFailed": {
+    "description": "Salons"
+  },
+  "salonPausedBadge": "Paused",
+  "@salonPausedBadge": {
+    "description": "Salons"
+  },
+  "salonPackage": "Package",
+  "@salonPackage": {
+    "description": "Salons"
+  },
+  "salonPause": "Pause",
+  "@salonPause": {
+    "description": "Salons"
+  },
+  "salonResume": "Resume",
+  "@salonResume": {
+    "description": "Salons"
+  },
+  "salonNewService": "New service",
+  "@salonNewService": {
+    "description": "Salons"
+  },
+  "salonEditService": "Edit service",
+  "@salonEditService": {
+    "description": "Salons"
+  },
+  "salonServiceName": "Service name",
+  "@salonServiceName": {
+    "description": "Salons"
+  },
+  "salonDescription": "Description",
+  "@salonDescription": {
+    "description": "Salons"
+  },
+  "salonType": "Type",
+  "@salonType": {
+    "description": "Salons"
+  },
+  "salonInvalidPrice": "Invalid price",
+  "@salonInvalidPrice": {
+    "description": "Salons"
+  },
+  "salonBeforeDiscount": "Before discount",
+  "@salonBeforeDiscount": {
+    "description": "Salons"
+  },
+  "salonBufferAfter": "Preparation time after",
+  "@salonBufferAfter": {
+    "description": "Salons"
+  },
+  "salonWhereDone": "Where it's done",
+  "@salonWhereDone": {
+    "description": "Salons"
+  },
+  "salonIsPackage": "This is a package (several services together)",
+  "@salonIsPackage": {
+    "description": "Salons"
+  },
+  "salonNone": "None",
+  "@salonNone": {
+    "description": "Salons"
+  },
+  "salonMySalon": "My salon",
+  "@salonMySalon": {
+    "description": "Salons"
+  },
+  "salonWorkspaceLoadError": "We couldn't open your salon.",
+  "@salonWorkspaceLoadError": {
+    "description": "Salons"
+  },
+  "salonOpenOnReem": "Open your salon on Reem",
+  "@salonOpenOnReem": {
+    "description": "Salons"
+  },
+  "salonOpenOnReemBody": "Introduce your salon, services and hours, and let customers book their appointments straight from the app.",
+  "@salonOpenOnReemBody": {
+    "description": "Salons"
+  },
+  "salonStart": "Start",
+  "@salonStart": {
+    "description": "Salons"
+  },
+  "salonPublished": "Published",
+  "@salonPublished": {
+    "description": "Salons"
+  },
+  "salonDraft": "Draft",
+  "@salonDraft": {
+    "description": "Salons"
+  },
+  "salonSuspended": "Suspended",
+  "@salonSuspended": {
+    "description": "Salons"
+  },
+  "salonRating": "Rating",
+  "@salonRating": {
+    "description": "Salons"
+  },
+  "salonStatServices": "services",
+  "@salonStatServices": {
+    "description": "Salons"
+  },
+  "salonStatBookings": "bookings",
+  "@salonStatBookings": {
+    "description": "Salons"
+  },
+  "salonStatReviews": "reviews",
+  "@salonStatReviews": {
+    "description": "Salons"
+  },
+  "salonAppointmentsSubtitle": "Confirm bookings and record visits",
+  "@salonAppointmentsSubtitle": {
+    "description": "Salons"
+  },
+  "salonHoursSubtitle": "Weekly hours and closed days",
+  "@salonHoursSubtitle": {
+    "description": "Salons"
+  },
+  "salonDetailsSubtitle": "Name, address, contact and booking settings",
+  "@salonDetailsSubtitle": {
+    "description": "Salons"
+  },
+  "salonPreviewAsCustomer": "See your page as a customer sees it",
+  "@salonPreviewAsCustomer": {
+    "description": "Salons"
+  },
+  "salonNoActiveServices": "No active services — nobody can book until you add one.",
+  "@salonNoActiveServices": {
+    "description": "Salons"
+  },
+  "salonNoHoursSet": "You haven't set any hours — every day is closed.",
+  "@salonNoHoursSet": {
+    "description": "Salons"
+  },
+  "salonSetHours": "Set hours",
+  "@salonSetHours": {
+    "description": "Salons"
+  },
+  "salonNotPublished": "Your salon isn't published yet — publish it to appear in the directory.",
+  "@salonNotPublished": {
+    "description": "Salons"
+  },
+  "salonPublish": "Publish the salon",
+  "@salonPublish": {
+    "description": "Salons"
+  },
+  "salonPublishedDone": "Your salon is now published",
+  "@salonPublishedDone": {
+    "description": "Salons"
+  },
+  "salonPublishFailed": "We couldn't publish the salon.",
+  "@salonPublishFailed": {
+    "description": "Salons"
+  },
+  "salonsTitle": "Salons & beauty",
+  "@salonsTitle": {
+    "description": "Salons"
+  },
+  "salonFilter": "Filter",
+  "@salonFilter": {
+    "description": "Salons"
+  },
+  "salonsLoadError": "We couldn't load the salons.",
+  "@salonsLoadError": {
+    "description": "Salons"
+  },
+  "salonsNoneYet": "No salons yet",
+  "@salonsNoneYet": {
+    "description": "Salons"
+  },
+  "salonsNoMatch": "No salon matches these filters",
+  "@salonsNoMatch": {
+    "description": "Salons"
+  },
+  "salonsComingSoon": "Soon you'll find salons and stylists here that you can book directly.",
+  "@salonsComingSoon": {
+    "description": "Salons"
+  },
+  "salonsWidenFilters": "Try widening the filters or changing the area.",
+  "@salonsWidenFilters": {
+    "description": "Salons"
+  },
+  "salonsSearchHint": "Search for a salon or service",
+  "@salonsSearchHint": {
+    "description": "Salons"
+  },
+  "salonAll": "All",
+  "@salonAll": {
+    "description": "Salons"
+  },
+  "salonByPrice": "By price",
+  "@salonByPrice": {
+    "description": "Salons"
+  },
+  "salonsRailSubtitle": "Cuts, colour and care — book in the app and choose your time.",
+  "@salonsRailSubtitle": {
+    "description": "Salons"
+  },
+  "salonNew": "New",
+  "@salonNew": {
+    "description": "Salons"
+  },
+  "salonFeatured": "Featured",
+  "@salonFeatured": {
+    "description": "Salons"
+  },
+  "salonsFilterTitle": "Filter salons",
+  "@salonsFilterTitle": {
+    "description": "Salons"
+  },
+  "salonAllAreas": "All areas",
+  "@salonAllAreas": {
+    "description": "Salons"
+  },
+  "salonAnyRating": "Any rating",
+  "@salonAnyRating": {
+    "description": "Salons"
+  },
+  "salonClearAll": "Clear all",
+  "@salonClearAll": {
+    "description": "Salons"
+  },
+  "salonShowResults": "Show results",
+  "@salonShowResults": {
+    "description": "Salons"
+  },
+  "salonHomeOnly": "Home services only",
+  "@salonHomeOnly": {
+    "description": "Salons"
+  },
+  "salonHomeOnlyHint": "Salons that come to your home",
+  "@salonHomeOnlyHint": {
+    "description": "Salons"
+  },
+  "salonBook": "Book",
+  "@salonBook": {
+    "description": "Salons"
+  },
+  "salonPricePaidAtSalon": "{price} — paid at the salon",
+  "@salonPricePaidAtSalon": {
+    "description": "Salons",
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "salonYourRating": "Your rating: {rating} ★",
+  "@salonYourRating": {
+    "description": "Salons",
+    "placeholders": {
+      "rating": {
+        "type": "String"
+      }
+    }
+  },
+  "salonLateCancelConfirm": "Less than {hours} hours to go, so this is a late cancellation and the salon will see it. Are you sure?",
+  "@salonLateCancelConfirm": {
+    "description": "Salons",
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+  "salonSlotsCount": "{count} times",
+  "@salonSlotsCount": {
+    "description": "Salons",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "salonTravelFeeValue": "Travel fee {fee}",
+  "@salonTravelFeeValue": {
+    "description": "Salons",
+    "placeholders": {
+      "fee": {
+        "type": "String"
+      }
+    }
+  },
+  "salonPayAtSalonFreeCancel": "You pay at the salon. Free cancellation up to {hours} hours before.",
+  "@salonPayAtSalonFreeCancel": {
+    "description": "Salons",
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+  "salonHoursCloseAfterOpen": "{day}: closing time must be after opening.",
+  "@salonHoursCloseAfterOpen": {
+    "description": "Salons",
+    "placeholders": {
+      "day": {
+        "type": "String"
+      }
+    }
+  },
+  "salonBreakEndAfterStart": "{day} break: the end must be after the start.",
+  "@salonBreakEndAfterStart": {
+    "description": "Salons",
+    "placeholders": {
+      "day": {
+        "type": "String"
+      }
+    }
+  },
+  "salonReviewsCount": "Reviews ({count})",
+  "@salonReviewsCount": {
+    "description": "Salons",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "salonServicesCount": "{count} services",
+  "@salonServicesCount": {
+    "description": "Salons",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "salonActiveServicesCount": "{count} active services",
+  "@salonActiveServicesCount": {
+    "description": "Salons",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "salonRatingAtLeast": "{rating} ★ and up",
+  "@salonRatingAtLeast": {
+    "description": "Salons",
+    "placeholders": {
+      "rating": {
+        "type": "String"
+      }
+    }
+  },
+  "salonPriceFrom": "From {price}",
+  "@salonPriceFrom": {
+    "description": "Salons",
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "salonAnyPrice": "Any price",
+  "@salonAnyPrice": {
+    "description": "Salons"
+  },
+  "salonPriceUpTo": "Up to {amount}",
+  "@salonPriceUpTo": {
+    "description": "Salons",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "salonPriceOver": "Over {amount}",
+  "@salonPriceOver": {
+    "description": "Salons",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "salonPriceRange": "{min} – {max}",
+  "@salonPriceRange": {
+    "description": "Salons",
+    "placeholders": {
+      "min": {
+        "type": "String"
+      },
+      "max": {
+        "type": "String"
+      }
+    }
   }
 }

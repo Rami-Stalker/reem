@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/media/authorized_media_image.dart';
 import 'package:reem/core/media/media_variants.dart';
 import 'package:reem/features/salons/domain/entities/salon.dart';
@@ -59,7 +59,10 @@ class SalonServiceTile extends StatelessWidget {
                     // like a single service otherwise looks like a mistake.
                     if (service.isPackage) ...[
                       const SizedBox(width: DsSpacing.xs),
-                      DsBadge(label: 'باقة', tone: DsBadgeTone.accent),
+                      DsBadge(
+                        label: context.l10n.salonPackage,
+                        tone: DsBadgeTone.accent,
+                      ),
                     ],
                   ],
                 ),
@@ -81,12 +84,18 @@ class SalonServiceTile extends StatelessWidget {
                   children: [
                     _Fact(
                       icon: Icons.schedule_rounded,
-                      label: SalonLabels.duration(service.durationMinutes),
+                      label: SalonLabels.duration(
+                        context.l10n,
+                        service.durationMinutes,
+                      ),
                     ),
                     if (service.location.travels)
                       _Fact(
                         icon: Icons.home_outlined,
-                        label: SalonLabels.location(service.location),
+                        label: SalonLabels.location(
+                          context.l10n,
+                          service.location,
+                        ),
                       ),
                   ],
                 ),
@@ -113,7 +122,7 @@ class SalonServiceTile extends StatelessWidget {
                     const Spacer(),
                     if (onBook != null)
                       DsButton(
-                        label: 'احجزي',
+                        label: context.l10n.salonBook,
                         size: DsButtonSize.sm,
                         isExpanded: false,
                         onPressed: onBook,
