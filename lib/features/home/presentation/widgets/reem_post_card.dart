@@ -25,15 +25,12 @@ import 'package:reem/features/social_posts/domain/entities/comment_thread.dart';
 import 'package:reem/features/social_posts/presentation/providers/social_posts_providers.dart';
 import 'package:reem/features/social_posts/presentation/widgets/comment_sheet.dart';
 
-/// The centrepiece of Reem's home: a product told as a **post**.
+/// A boutique's post on the home feed.
 ///
-/// The brief was Instagram, only lovelier: a swipeable gallery, a
-/// rose-to-champagne thread around the card, a frosted "shop this" plate over
-/// the foot of the image, and a double-tap that scatters petals. The shape
-/// itself lives in the design system (`DsPostFrame`, `DsPostHeader`,
-/// `DsPostGallery`, `DsPostActionBar`, `DsPostCaption`) so a product on a
-/// department page is drawn by exactly the same pieces; this widget is what
-/// makes them a *post* — its likes, its thread, its menu.
+/// The shape lives in the design system ([DsImmersivePost]) so a product on a
+/// department page and a post in the community feed are the same card; this
+/// widget is what makes it a *post* — its likes, its thread, its menu, the
+/// closet strip under it.
 class ReemPostCard extends ConsumerStatefulWidget {
   const ReemPostCard({super.key, required this.post, this.featured = false});
 
@@ -55,9 +52,7 @@ class _ReemPostCardState extends ConsumerState<ReemPostCard>
   late int _likes = widget.post.likesCount;
   late int _shares = widget.post.sharesCount;
   late int _comments = widget.post.commentsCount;
-  bool _captionExpanded = false;
   bool _addingToBag = false;
-  int _mediaIndex = 0;
 
   late final AnimationController _burst = AnimationController(
     vsync: this,
@@ -361,78 +356,37 @@ class _ReemPostCardState extends ConsumerState<ReemPostCard>
     final me = ref.watch(authNotifierProvider.select((s) => s.user?.id));
     final isMine = me != null && me == post.author.id;
 
-    return DsPostFrame(
+    return DsImmersivePost(
       featured: widget.featured,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          DsPostHeader(
-            name: post.author.name,
-            imageUrl: post.author.imageUrl,
-            isVerified: post.author.isVerified,
-            subtitle: _subtitle(context),
-            onAuthor: _openAuthor,
-            onMore: _openMenu,
-          ),
-          // A post with nothing to show and nothing to shop is a note, not a
-          // gallery: give it a painted canvas rather than an empty frame.
-          if (media.isEmpty && !post.hasProduct)
-            DsPostQuote(
-              caption: post.caption,
-              onDoubleTap: () => _toggleLike(fromDoubleTap: true),
-              burst: _burst,
-            )
-          else
-            DsPostGallery(
-              media: media,
-              product: post.product,
-              index: _mediaIndex,
-              burst: _burst,
-              isFresh: _isFresh,
-              onIndex: (i) => setState(() => _mediaIndex = i),
-              onTap: _openProduct,
-              onDoubleTap: () => _toggleLike(fromDoubleTap: true),
-              onAddToBag: _addableOfferId == null ? null : _addToBag,
-            ),
-          if (media.length > 1)
-            Padding(
-              padding: const EdgeInsets.only(top: DsSpacing.sm),
-              child: Center(
-                child: DsPostDots(count: media.length, index: _mediaIndex),
-              ),
-            ),
-          DsPostActionBar(
-            liked: _liked,
-            saved: _saved,
-            picked: _reshared,
-            commentsCount: _comments,
-            sharesCount: _shares,
-            onLike: _toggleLike,
-            onComment: _openComments,
-            onSave: _toggleSave,
-            onShare: _share,
-            // Her own post is already on her page.
-            onPick: isMine ? null : _toggleReshare,
-          ),
-          DsPostCaption(
-            authorName: post.author.name,
-            caption: post.caption,
-            likes: _likes,
-            comments: _comments,
-            // The quote canvas already set the caption in serif; repeating it
-            // underneath would read as a stutter.
-            showCaption: media.isNotEmpty || post.hasProduct,
-            expanded: _captionExpanded,
-            onExpand: () => setState(() => _captionExpanded = true),
-            onComments: _openComments,
-          ),
-          // A guest has no closet, and asking for one would only collect a
-          // 401 per post.
-          if (post.product case final product? when me != null)
-            PostClosetStrip(productId: product.id),
-        ],
-      ),
+      authorName: post.author.name,
+      authorImageUrl: post.author.imageUrl,
+      authorVerified: post.author.isVerified,
+      subtitle: _subtitle(context),
+      onAuthor: _openAuthor,
+      onMore: _openMenu,
+      media: media,
+      product: post.product,
+      onOpenProduct: post.product == null ? null : _openProduct,
+      onAddToBag: _addableOfferId == null ? null : _addToBag,
+      caption: post.caption,
+      isFresh: _isFresh,
+      liked: _liked,
+      saved: _saved,
+      picked: _reshared,
+      likes: _likes,
+      comments: _comments,
+      shares: _shares,
+      burst: _burst,
+      onLike: _toggleLike,
+      onDoubleTap: () => _toggleLike(fromDoubleTap: true),
+      onComment: _openComments,
+      onShare: _share,
+      onSave: _toggleSave,
+      onPick: isMine ? null : _toggleReshare,
+      footer: switch (post.product) {
+        final product? when me != null => PostClosetStrip(productId: product.id),
+        _ => null,
+      },
     );
   }
 }

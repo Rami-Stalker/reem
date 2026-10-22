@@ -11,23 +11,23 @@ import 'package:reem/features/experience/presentation/providers/role_experience_
 import 'package:reem/features/experience/presentation/screens/experience_surface_screen.dart';
 import 'package:reem/features/home/presentation/providers/home_content_provider.dart';
 import 'package:reem/features/home/presentation/providers/home_provider.dart';
-import 'package:reem/features/home/presentation/widgets/home_categories_showcase.dart';
 import 'package:reem/features/home/presentation/widgets/home_continue_shopping.dart';
 import 'package:reem/features/home/presentation/widgets/home_dynamic_blocks.dart';
 import 'package:reem/features/home/presentation/widgets/home_featured_stores.dart';
 import 'package:reem/features/home/presentation/widgets/home_flash_deals.dart';
-import 'package:reem/features/home/presentation/widgets/home_greeting.dart';
 import 'package:reem/features/home/presentation/widgets/home_hero_carousel.dart';
 import 'package:reem/features/home/presentation/widgets/home_loyalty_card.dart';
 import 'package:reem/features/home/presentation/widgets/home_nearby_stores.dart';
 import 'package:reem/features/home/presentation/widgets/home_notifications_summary.dart';
 import 'package:reem/features/home/presentation/widgets/home_recently_viewed.dart';
 import 'package:reem/features/home/presentation/widgets/home_showcase_section.dart';
-import 'package:reem/features/home/presentation/widgets/home_smart_search.dart';
 import 'package:reem/features/home/presentation/widgets/home_stories_rail.dart';
-import 'package:reem/features/home/presentation/widgets/home_stylist_entry.dart';
-import 'package:reem/features/home/presentation/widgets/home_top_bar.dart';
 import 'package:reem/features/home/presentation/widgets/home_wishlist_highlights.dart';
+import 'package:reem/features/home/presentation/widgets/living/home_aura.dart';
+import 'package:reem/features/home/presentation/widgets/living/home_bento.dart';
+import 'package:reem/features/home/presentation/widgets/living/home_mood_dial.dart';
+import 'package:reem/features/home/presentation/widgets/living/home_pulse.dart';
+import 'package:reem/features/home/presentation/widgets/living/home_style_deck.dart';
 import 'package:reem/features/market/presentation/screens/drops_screen.dart';
 import 'package:reem/features/market/presentation/widgets/bundles_rail.dart';
 import 'package:reem/features/profile/presentation/providers/profile_provider.dart';
@@ -55,25 +55,40 @@ class HomeScreen extends ConsumerWidget {
   }
 }
 
-/// Buyer home: a feed with the shop set into it, not a shop with a feed at
-/// the bottom.
+/// Buyer home: a living page rather than a stack of shelves.
 ///
-/// It used to read as a magazine in three chapters — a welcome, then some
-/// twenty shelves, then «وصل حديثاً» as the finale. That made the posts, the
-/// part that makes Reem a place with people in it, the last thing on the
-/// page: six to eight screens of rails before the first boutique spoke. Now
-/// the welcome is short, the stories follow it, and the feed starts straight
-/// after. Every shelf is still here — handed to [HomeShowcaseSection] as a
-/// module and set between the posts — so the merchandising lost nothing but
-/// its place in front of the queue.
-///
-/// The running order still honours the client's Q78 pick — *«مختلط: ستوريات
-/// فوق + بانر + شبكة منتجات تحت»*: stories on top, the banner as the first
-/// module, products below.
-class _BuyerHomeScreen extends ConsumerWidget {
+/// The client asked for nothing traditional. So the page opens on a sky
+/// that follows the Damascus hour and speaks to her by name ([HomeAura]),
+/// with what changed since she last looked and a field that asks rather
+/// than searches. A single live line follows ([HomePulse]); then the
+/// stories, which the client's Q78 pick keeps on top; then three things she
+/// *does* rather than scrolls — pick a mood and the stylist builds the look
+/// ([HomeMoodDial]), decide on today's picks with a swipe ([HomeStyleDeck]),
+/// wander the departments laid out as a bento ([HomeBento]). The feed starts
+/// after that, with the remaining shelves set into it as before.
+class _BuyerHomeScreen extends ConsumerStatefulWidget {
   const _BuyerHomeScreen();
 
+  @override
+  ConsumerState<_BuyerHomeScreen> createState() => _BuyerHomeScreenState();
+}
+
+class _BuyerHomeScreenState extends ConsumerState<_BuyerHomeScreen> {
+  /// Sits just above the stories, so «posted today» can scroll to them.
+  final _storiesAnchor = GlobalKey();
+
   static const double _gap = DsSpacing.xl;
+
+  void _showStories() {
+    final target = _storiesAnchor.currentContext;
+    if (target == null) return;
+    Scrollable.ensureVisible(
+      target,
+      duration: DsMotion.slow,
+      curve: DsMotion.emphasized,
+      alignmentPolicy: ScrollPositionAlignmentPolicy.keepVisibleAtEnd,
+    );
+  }
 
   Future<void> _refresh(WidgetRef ref) async {
     await Future.wait([
@@ -84,24 +99,28 @@ class _BuyerHomeScreen extends ConsumerWidget {
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
 
     return ReemScrollPage(
       onRefresh: () => _refresh(ref),
       slivers: [
-        const HomeTopBar(),
+        HomeAura(onStoriesTap: _showStories),
 
-        // ── The welcome: short, so the feed starts on the first screen ──
-        const SliverToBoxAdapter(child: HomeGreeting()),
-        const SliverToBoxAdapter(child: HomeSmartSearch()),
-        // Beside the search bar on purpose: search answers "I know what I
-        // want", the stylist answers "I know the occasion, not the piece".
-        const SliverToBoxAdapter(child: HomeStylistEntry()),
+        const SliverToBoxAdapter(child: HomePulse()),
         const _Gap(DsSpacing.lg),
 
+        SliverToBoxAdapter(child: SizedBox(key: _storiesAnchor)),
         const HomeStoriesRail(),
-        const _Gap(DsSpacing.lg),
+        const _Gap(DsSpacing.xl),
+
+        // ── Three things she does rather than scrolls ─────────────────────
+        _reveal(const HomeMoodDial()),
+        const _Gap(DsSpacing.xxl),
+        _reveal(const HomeStyleDeck()),
+        const _Gap(DsSpacing.xxl),
+        _reveal(const HomeBento()),
+        const _Gap(DsSpacing.xxl),
 
         // ── The feed, with the shop set into it ──────────────────────────
         //
@@ -118,7 +137,6 @@ class _BuyerHomeScreen extends ConsumerWidget {
             // addressed to everybody. Both draw nothing in a quiet week.
             _module(const DropsRail()),
             _module(const HomeFlashDeals()),
-            _module(const HomeCategoriesShowcase()),
             _module(
               _CollectionRail(
                 collection: ProductCollection.recommended,
@@ -157,6 +175,19 @@ class _BuyerHomeScreen extends ConsumerWidget {
       ],
     );
   }
+
+  /// A block above the feed, risen into place as the page settles.
+  static Widget _reveal(Widget child) => SliverToBoxAdapter(
+    child: child
+        .animate()
+        .fadeIn(duration: 520.ms, curve: Curves.easeOut)
+        .slideY(
+          begin: 0.06,
+          end: 0,
+          duration: 520.ms,
+          curve: Curves.easeOutCubic,
+        ),
+  );
 
   /// Wraps a shop module in a gentle entrance reveal and the breathing room
   /// that belongs *to that module* rather than sitting between two of them.

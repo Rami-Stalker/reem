@@ -66,72 +66,87 @@ class ContentCard extends StatefulWidget {
   State<ContentCard> createState() => _ContentCardState();
 }
 
-class _ContentCardState extends State<ContentCard> {
-  int _mediaIndex = 0;
+class _ContentCardState extends State<ContentCard>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _burst = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 900),
+  );
+
+  @override
+  void dispose() {
+    _burst.dispose();
+    super.dispose();
+  }
+
+  /// Double-tap only ever loves; it never takes a like back.
+  void _doubleTap() {
+    _burst.forward(from: 0);
+    if (!widget.content.viewer.isLiked) widget.onLike();
+  }
 
   @override
   Widget build(BuildContext context) {
     final content = widget.content;
-    final c = context.dsColors;
+    final l10n = context.l10n;
+    final tag = content.primaryTag;
+    final video = content.video;
+    final author = content.author;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: DsSpacing.gutter),
-      child: DsGradientBorder(
-        radius: DsRadius.card,
-        width: widget.featured ? 2 : 1,
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(DsRadius.card),
-          child: ColoredBox(
-            color: c.surface,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (widget.resharedBy != null)
-                  _ReshareBanner(
-                    resharer: widget.resharedBy!,
-                    note: widget.reshareNote,
-                    onTap: () => widget.onOpenAuthor(widget.resharedBy!.id),
-                  ),
-                _Header(
-                  content: content,
-                  onTap: () => widget.onOpenAuthor(content.author.id),
-                  onMore: widget.onMore,
-                ),
-                if (content.hasMedia)
-                  _Media(
-                    content: content,
-                    index: _mediaIndex,
-                    onIndexChanged: (index) =>
-                        setState(() => _mediaIndex = index),
-                    onOpenProduct: widget.onOpenProduct,
-                  ),
-                if (content.caption.isNotEmpty)
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(
-                      DsSpacing.md,
-                      DsSpacing.sm,
-                      DsSpacing.md,
-                      0,
-                    ),
-                    child: Text(
-                      content.caption,
-                      maxLines: 4,
-                      overflow: TextOverflow.ellipsis,
-                      style: context.dsText.body,
-                    ),
-                  ),
-                _Actions(
-                  content: content,
-                  onLike: widget.onLike,
-                  onSave: widget.onSave,
-                  onComment: widget.onComment,
-                  onShare: widget.onShare,
-                  onReshare: widget.onReshare,
-                ),
-              ],
-            ),
-          ),
-        ),
+      child: DsImmersivePost(
+        featured: widget.featured,
+        banner: widget.resharedBy == null
+            ? null
+            : _ReshareBanner(
+                resharer: widget.resharedBy!,
+                note: widget.reshareNote,
+                onTap: () => widget.onOpenAuthor(widget.resharedBy!.id),
+              ),
+        authorName: author.name,
+        authorImageUrl: author.imageUrl,
+        authorVerified: author.isVerified,
+        // A shopper's look and a boutique's marketing are different things,
+        // and the difference is what makes the first trustworthy. It is
+        // stated, not left to be inferred from the photograph.
+        subtitle:
+            '${content.authorKind.isCustomer ? l10n.contentFromShopper : l10n.contentFromBoutique}'
+            ' · ${dsShortTimeAgo(context, content.publishedAt ?? content.createdAt)}',
+        onAuthor: () => widget.onOpenAuthor(author.id),
+        onMore: widget.onMore,
+        badges: [
+          if (content.isUnderReview)
+            DsBadge(label: l10n.contentUnderReview, tone: DsBadgeTone.warning),
+        ],
+        // A reel plays in the feed, muted, and only while it is on screen.
+        mediaOverride: video == null
+            ? null
+            : DsVideoPlayer(
+                url: video.url,
+                thumbnailUrl: video.thumbnailUrl,
+                blurHash: video.blurHash,
+                showControls: false,
+              ),
+        media: content.media,
+        product: tag?.product,
+        onOpenProduct: tag == null
+            ? null
+            : () => widget.onOpenProduct(tag.product.id),
+        caption: content.caption,
+        liked: content.viewer.isLiked,
+        saved: content.viewer.isSaved,
+        picked: content.viewer.isReshared,
+        likes: content.counts.likes,
+        comments: content.counts.comments,
+        shares: content.counts.shares,
+        burst: _burst,
+        onLike: widget.onLike,
+        onDoubleTap: _doubleTap,
+        onComment: widget.onComment,
+        onShare: widget.onShare,
+        onSave: widget.onSave,
+        onPick: widget.onReshare,
       ),
     );
   }
@@ -194,270 +209,6 @@ class _ReshareBanner extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-}
-
-class _Header extends StatelessWidget {
-  const _Header({required this.content, required this.onTap, this.onMore});
-
-  final Content content;
-  final VoidCallback onTap;
-  final VoidCallback? onMore;
-
-  @override
-  Widget build(BuildContext context) {
-    final c = context.dsColors;
-    final author = content.author;
-
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(
-        DsSpacing.md,
-        DsSpacing.md,
-        DsSpacing.sm,
-        DsSpacing.sm,
-      ),
-      child: Row(
-        children: [
-          GestureDetector(
-            onTap: onTap,
-            child: DsAvatar(
-              imageUrl: author.imageUrl,
-              name: author.name,
-              size: DsSizes.avatarSm,
-            ),
-          ),
-          DsGaps.hSm,
-          Expanded(
-            child: GestureDetector(
-              onTap: onTap,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Flexible(
-                        child: Text(
-                          author.name,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: context.dsText.cardTitle,
-                        ),
-                      ),
-                      if (author.isVerified) ...[
-                        DsGaps.hXxs,
-                        Icon(
-                          Icons.verified_rounded,
-                          size: DsSizes.iconXs,
-                          color: c.primary,
-                        ),
-                      ],
-                    ],
-                  ),
-                  // A shopper's look and a boutique's marketing are different
-                  // things, and the difference is what makes the first
-                  // trustworthy. It is stated, not left to be inferred from
-                  // the photograph.
-                  Text(
-                    content.authorKind.isCustomer
-                        ? context.l10n.contentFromShopper
-                        : context.l10n.contentFromBoutique,
-                    style: context.dsText.micro.tint(c.onSurfaceVariant),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          if (content.isUnderReview)
-            DsBadge(
-              label: context.l10n.contentUnderReview,
-              tone: DsBadgeTone.warning,
-            ),
-          if (onMore != null)
-            DsIconButton(
-              icon: Icons.more_horiz_rounded,
-              tooltip: context.l10n.postMore,
-              onPressed: onMore,
-            ),
-        ],
-      ),
-    );
-  }
-}
-
-class _Media extends StatelessWidget {
-  const _Media({
-    required this.content,
-    required this.index,
-    required this.onIndexChanged,
-    required this.onOpenProduct,
-  });
-
-  final Content content;
-  final int index;
-  final ValueChanged<int> onIndexChanged;
-  final void Function(String productId) onOpenProduct;
-
-  @override
-  Widget build(BuildContext context) {
-    final media = content.media;
-    final tag = content.primaryTag;
-    final video = content.video;
-
-    return AspectRatio(
-      // 4:5, the portrait ratio the shooting guide asks boutiques for.
-      aspectRatio: DsSizes.aspectPortrait,
-      child: Stack(
-        fit: StackFit.expand,
-        children: [
-          if (video != null)
-            // A reel plays in the feed, muted, and only while it is on screen.
-            DsVideoPlayer(
-              url: video.url,
-              thumbnailUrl: video.thumbnailUrl,
-              blurHash: video.blurHash,
-              showControls: false,
-            )
-          else
-            PageView.builder(
-              itemCount: media.length,
-              onPageChanged: onIndexChanged,
-              itemBuilder: (_, i) => DsMediaFrame(item: media[i]),
-            ),
-          if (media.length > 1)
-            Positioned(
-              top: DsSpacing.sm,
-              right: DsSpacing.sm,
-              child: DsCounterPill(index: index, count: media.length),
-            ),
-          if (tag != null)
-            Positioned(
-              left: DsSpacing.md,
-              right: DsSpacing.md,
-              bottom: DsSpacing.md,
-              child: DsShopPlate(
-                product: tag.product,
-                onTap: () => onOpenProduct(tag.product.id),
-              ),
-            ),
-        ],
-      ),
-    );
-  }
-}
-
-class _Actions extends StatelessWidget {
-  const _Actions({
-    required this.content,
-    required this.onLike,
-    required this.onSave,
-    required this.onComment,
-    required this.onShare,
-    this.onReshare,
-  });
-
-  final Content content;
-  final VoidCallback onLike;
-  final VoidCallback onSave;
-  final VoidCallback onComment;
-  final VoidCallback onShare;
-  final VoidCallback? onReshare;
-
-  @override
-  Widget build(BuildContext context) {
-    final c = context.dsColors;
-    final viewer = content.viewer;
-    final counts = content.counts;
-
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(
-        DsSpacing.sm,
-        DsSpacing.xs,
-        DsSpacing.sm,
-        DsSpacing.sm,
-      ),
-      child: Row(
-        children: [
-          _Action(
-            icon: viewer.isLiked
-                ? Icons.favorite_rounded
-                : Icons.favorite_border_rounded,
-            color: viewer.isLiked ? c.favorite : null,
-            label: counts.likes,
-            tooltip: context.l10n.a11yLike,
-            onTap: onLike,
-          ),
-          _Action(
-            icon: Icons.mode_comment_outlined,
-            label: counts.comments,
-            tooltip: context.l10n.comments,
-            onTap: onComment,
-          ),
-          _Action(
-            icon: Icons.ios_share_rounded,
-            label: counts.shares,
-            tooltip: context.l10n.contentShare,
-            onTap: onShare,
-          ),
-          if (onReshare != null)
-            _Action(
-              // The gesture the whole feature turns on, so it is a labelled
-              // control rather than a glyph in an overflow menu.
-              icon: viewer.isReshared
-                  ? Icons.bookmark_added_rounded
-                  : Icons.add_to_photos_outlined,
-              color: viewer.isReshared ? c.primary : null,
-              tooltip: context.l10n.contentAddToMyPage,
-              onTap: onReshare!,
-            ),
-          const Spacer(),
-          DsIconButton(
-            icon: viewer.isSaved
-                ? Icons.bookmark_rounded
-                : Icons.bookmark_border_rounded,
-            color: viewer.isSaved ? c.primary : null,
-            tooltip: context.l10n.a11ySave,
-            onPressed: onSave,
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _Action extends StatelessWidget {
-  const _Action({
-    required this.icon,
-    required this.tooltip,
-    required this.onTap,
-    this.label,
-    this.color,
-  });
-
-  final IconData icon;
-  final String tooltip;
-  final VoidCallback onTap;
-  final int? label;
-  final Color? color;
-
-  @override
-  Widget build(BuildContext context) {
-    final count = label;
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        DsIconButton(
-          icon: icon,
-          tooltip: tooltip,
-          color: color,
-          onPressed: onTap,
-        ),
-        if (count != null && count > 0)
-          Padding(
-            padding: const EdgeInsetsDirectional.only(start: DsSpacing.xs),
-            child: Text('$count', style: context.dsText.caption),
-          ),
-      ],
     );
   }
 }

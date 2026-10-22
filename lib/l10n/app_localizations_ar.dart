@@ -10722,27 +10722,217 @@ class AppLocalizationsAr extends AppLocalizations {
   String get adminAuditAdminRequest => 'إجراء إداري';
 
   @override
-  String get reverseSmsTitle => 'تحقّقي برسالة واحدة';
-  @override
-  String get reverseSmsExplainer => 'أرسلي الرسالة التالية من هذا الرقم. لن يصلك أي رمز، فلا يمكن لأحد أن يطلب منكِ قراءته.';
-  @override
-  String reverseSmsSendTo(String number) {
-    return 'إلى: $number';
+  String homeAuraAddress(String name) {
+    return '$name،';
   }
+
   @override
-  String get reverseSmsBodyLabel => 'نص الرسالة';
+  String get homeAuraGuest => 'أهلاً بكِ،';
+
   @override
-  String get reverseSmsOpenMessages => 'فتح تطبيق الرسائل';
+  String get homeAuraQuestionMorning => 'ما إطلالة اليوم؟';
+
   @override
-  String get reverseSmsIveSent => 'أرسلتُ الرسالة';
+  String get homeAuraQuestionMidday => 'قطعة تُبهج نهاركِ؟';
+
   @override
-  String get reverseSmsWaiting => 'في انتظار رسالتك…';
+  String get homeAuraQuestionEvening => 'ماذا تلبسين الليلة؟';
+
   @override
-  String get reverseSmsCost => 'تُحتسب الرسالة بحسب تسعيرة مشغّلك العادية.';
+  String get homeAuraQuestionNight => 'لحظة هادئة لكِ وحدكِ';
+
   @override
-  String get reverseSmsNotYet => 'لم تصل رسالتك بعد. انتظري لحظة ثم أعيدي المحاولة.';
+  String get homeAskReem => 'اسألي ريم';
+
   @override
-  String get reverseSmsCouldNotOpen => 'لم نتمكّن من فتح تطبيق الرسائل. أرسلي الرسالة أعلاه يدويًا.';
+  String get homeAskExample1 => 'فستان سهرة كحلي تحت 50 ألف';
+
+  @override
+  String get homeAskExample2 => 'إطلالة دوام مريحة وأنيقة';
+
+  @override
+  String get homeAskExample3 => 'هدية لأختي في عيد ميلادها';
+
+  @override
+  String get homeAskExample4 => 'ماذا ألبس مع حذاء بيج؟';
+
+  @override
+  String get homeAskPhoto => 'ابحثي بصورة';
+
+  @override
+  String homeBriefStories(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count بوتيك نشرت اليوم',
+      many: '$count بوتيكاً نشرت اليوم',
+      few: '$count بوتيكات نشرت اليوم',
+      two: 'بوتيكان نشرا اليوم',
+      one: 'بوتيك نشر اليوم',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String homeBriefDealEnds(String time) {
+    return 'عرض ينتهي خلال $time';
+  }
+
+  @override
+  String homeBriefUnread(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count إشعار جديد',
+      many: '$count إشعاراً جديداً',
+      few: '$count إشعارات جديدة',
+      two: 'إشعاران جديدان',
+      one: 'إشعار جديد',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String homeBriefBag(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count قطعة في حقيبتكِ',
+      few: '$count قطع في حقيبتكِ',
+      two: 'قطعتان في حقيبتكِ',
+      one: 'قطعة في حقيبتكِ',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get homePulseLive => 'الآن';
+
+  @override
+  String homePulseDeal(String title, String time) {
+    return '$title — ينتهي خلال $time';
+  }
+
+  @override
+  String homePulseTrending(String title) {
+    return 'الأكثر طلباً الآن: $title';
+  }
+
+  @override
+  String homePulseNew(String title) {
+    return 'وصل للتو: $title';
+  }
+
+  @override
+  String get homeMoodTitle => 'على أي مزاج اليوم؟';
+
+  @override
+  String get homeMoodSubtitle => 'اختاري، وريم تقترح الإطلالة كاملة';
+
+  @override
+  String get homeMoodEvening => 'سهرة';
+
+  @override
+  String get homeMoodWedding => 'عرس';
+
+  @override
+  String get homeMoodWork => 'دوام';
+
+  @override
+  String get homeMoodCasual => 'كاجوال';
+
+  @override
+  String get homeMoodGift => 'هدية';
+
+  @override
+  String get homeMoodTravel => 'سفر';
+
+  @override
+  String get homeMoodPromptEvening => 'أريد إطلالة سهرة أنيقة';
+
+  @override
+  String get homeMoodPromptWedding => 'أبحث عن إطلالة لحضور عرس';
+
+  @override
+  String get homeMoodPromptWork => 'إطلالة دوام مريحة وأنيقة';
+
+  @override
+  String get homeMoodPromptCasual => 'إطلالة كاجوال لنهاية الأسبوع';
+
+  @override
+  String get homeMoodPromptGift => 'أبحث عن هدية مميزة';
+
+  @override
+  String get homeMoodPromptTravel => 'ملابس مريحة وأنيقة للسفر';
+
+  @override
+  String get homeDeckEyebrow => 'اختارتها ريم لكِ';
+
+  @override
+  String get homeDeckTitle => 'ذوقكِ، قطعة قطعة';
+
+  @override
+  String get homeDeckHint => 'مرّري يميناً لما يعجبكِ، ويساراً للتخطي';
+
+  @override
+  String get homeDeckLike => 'أعجبني';
+
+  @override
+  String get homeDeckPass => 'تخطٍّ';
+
+  @override
+  String get homeDeckOpen => 'عرض القطعة';
+
+  @override
+  String homeDeckProgress(int current, int total) {
+    return '$current من $total';
+  }
+
+  @override
+  String get homeDeckDoneTitle => 'أكملتِ مختارات اليوم';
+
+  @override
+  String homeDeckDoneBody(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'أعجبتكِ $count قطعة، وحفظناها في إعجاباتكِ.',
+      few: 'أعجبتكِ $count قطع، وحفظناها في إعجاباتكِ.',
+      two: 'أعجبتكِ قطعتان، وحفظناهما في إعجاباتكِ.',
+      one: 'أعجبتكِ قطعة واحدة، وحفظناها في إعجاباتكِ.',
+      zero: 'لم يعجبكِ شيء اليوم؟ ستتعلّم ريم من ذلك.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get homeDeckSeeAll => 'كل المختارات';
+
+  @override
+  String get homeDeckRestart => 'من جديد';
+
+  @override
+  String get homeBentoEyebrow => 'عالم ريم';
+
+  @override
+  String get homeBentoTitle => 'تجوّلي بين الأقسام';
+
+  @override
+  String homeBentoCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count قطعة',
+      few: '$count قطع',
+      two: 'قطعتان',
+      one: 'قطعة واحدة',
+      zero: 'قريباً',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get postOpenPiece => 'عرض القطعة';
 
   @override
   String paymentReferenceRejected(String reason) {
@@ -10794,4 +10984,39 @@ class AppLocalizationsAr extends AppLocalizations {
   String financeTransferExpires(String date) {
     return 'المخزون محجوز حتى $date';
   }
+
+  @override
+  String get reverseSmsTitle => 'تحقّقي برسالة واحدة';
+
+  @override
+  String get reverseSmsExplainer =>
+      'أرسلي الرسالة التالية من هذا الرقم. لن يصلك أي رمز، فلا يمكن لأحد أن يطلب منكِ قراءته.';
+
+  @override
+  String reverseSmsSendTo(String number) {
+    return 'إلى: $number';
+  }
+
+  @override
+  String get reverseSmsBodyLabel => 'نص الرسالة';
+
+  @override
+  String get reverseSmsOpenMessages => 'فتح تطبيق الرسائل';
+
+  @override
+  String get reverseSmsIveSent => 'أرسلتُ الرسالة';
+
+  @override
+  String get reverseSmsWaiting => 'في انتظار رسالتك…';
+
+  @override
+  String get reverseSmsCost => 'تُحتسب الرسالة بحسب تسعيرة مشغّلك العادية.';
+
+  @override
+  String get reverseSmsNotYet =>
+      'لم تصل رسالتك بعد. انتظري لحظة ثم أعيدي المحاولة.';
+
+  @override
+  String get reverseSmsCouldNotOpen =>
+      'لم نتمكّن من فتح تطبيق الرسائل. أرسلي الرسالة أعلاه يدويًا.';
 }

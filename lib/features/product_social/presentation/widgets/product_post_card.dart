@@ -39,8 +39,6 @@ class _ProductPostCardState extends ConsumerState<ProductPostCard>
     vsync: this,
     duration: const Duration(milliseconds: 900),
   );
-  int _mediaIndex = 0;
-  bool _captionExpanded = false;
   bool _addingToBag = false;
 
   Product get product => widget.product;
@@ -119,61 +117,35 @@ class _ProductPostCardState extends ConsumerState<ProductPostCard>
         ? product.title
         : product.description.trim();
 
-    return DsPostFrame(
+    return DsImmersivePost(
       featured: widget.featured,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          DsPostHeader(
-            name: seller?.name ?? product.title,
-            imageUrl: seller?.imageUrl,
-            isVerified: seller?.isVerified ?? false,
-            subtitle: _subtitle(context),
-            onAuthor: seller == null ? null : gestures.openSeller,
-            onMore: gestures.options,
-          ),
-          DsPostGallery(
-            media: media,
-            product: product,
-            burst: _burst,
-            index: _mediaIndex,
-            isFresh: isFresh,
-            onIndex: (i) => setState(() => _mediaIndex = i),
-            onTap: gestures.openProduct,
-            onDoubleTap: _doubleTapLike,
-            onAddToBag: product.bestOffer?.isBuyable ?? false ? _addToBag : null,
-          ),
-          if (media.length > 1)
-            Padding(
-              padding: const EdgeInsets.only(top: DsSpacing.sm),
-              child: Center(
-                child: DsPostDots(count: media.length, index: _mediaIndex),
-              ),
-            ),
-          DsPostActionBar(
-            liked: engagement.isLiked,
-            saved: engagement.isSaved,
-            picked: engagement.isPicked,
-            commentsCount: engagement.comments,
-            sharesCount: engagement.shares,
-            onLike: gestures.like,
-            onComment: gestures.comment,
-            onShare: gestures.share,
-            onSave: gestures.save,
-            onPick: gestures.pick,
-          ),
-          DsPostCaption(
-            authorName: product.title,
-            caption: caption == product.title ? '' : caption,
-            likes: engagement.likes,
-            comments: engagement.comments,
-            expanded: _captionExpanded,
-            onExpand: () => setState(() => _captionExpanded = true),
-            onComments: gestures.comment,
-          ),
-        ],
-      ),
+      authorName: seller?.name ?? product.title,
+      authorImageUrl: seller?.imageUrl,
+      authorVerified: seller?.isVerified ?? false,
+      subtitle: _subtitle(context),
+      onAuthor: seller == null ? null : gestures.openSeller,
+      onMore: gestures.options,
+      media: media,
+      product: product,
+      onOpenProduct: gestures.openProduct,
+      onAddToBag: product.bestOffer?.isBuyable ?? false ? _addToBag : null,
+      // The ticket already names the piece; the caption carries only what
+      // the boutique wrote about it.
+      caption: caption == product.title ? '' : caption,
+      isFresh: isFresh,
+      liked: engagement.isLiked,
+      saved: engagement.isSaved,
+      picked: engagement.isPicked,
+      likes: engagement.likes,
+      comments: engagement.comments,
+      shares: engagement.shares,
+      burst: _burst,
+      onLike: gestures.like,
+      onDoubleTap: _doubleTapLike,
+      onComment: gestures.comment,
+      onShare: gestures.share,
+      onSave: gestures.save,
+      onPick: gestures.pick,
     );
   }
 }

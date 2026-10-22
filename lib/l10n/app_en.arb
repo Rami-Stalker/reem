@@ -740,11 +740,27 @@
     "description": "Hint under the commission rate box."
   },
   "adminRecordNoDetails": "This record carries no further detail.",
-  "@adminRecordNoDetails": {"description": "Empty state inside the console record sheet."},
+  "@adminRecordNoDetails": {
+    "description": "Empty state inside the console record sheet."
+  },
   "adminRecordNestedObject": "{count, plural, =1{1 field} other{{count} fields}}",
-  "@adminRecordNestedObject": {"description": "Summary of a nested object inside a console record.", "placeholders": {"count": {"type": "int"}}},
+  "@adminRecordNestedObject": {
+    "description": "Summary of a nested object inside a console record.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "adminRecordItemCount": "{count, plural, =1{1 item} other{{count} items}}",
-  "@adminRecordItemCount": {"description": "Summary of a list inside a console record.", "placeholders": {"count": {"type": "int"}}},
+  "@adminRecordItemCount": {
+    "description": "Summary of a list inside a console record.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "adminRawRecord": "Raw record",
   "@adminRawRecord": {
     "description": "Heading above the JSON dump in the record sheet."
@@ -1035,12 +1051,12 @@
   },
   "adminUnitsSold": "{units, plural, =1{1 unit} other{{units} units}}",
   "@adminUnitsSold": {
-      "description": "Analytics ranked list: pieces sold by a product or a boutique.",
-      "placeholders": {
-          "units": {
-              "type": "int"
-          }
+    "description": "Analytics ranked list: pieces sold by a product or a boutique.",
+    "placeholders": {
+      "units": {
+        "type": "int"
       }
+    }
   },
   "adminNotificationAnalyticsSubtitle": "What went out, down which channel, and how much of it landed.",
   "@adminNotificationAnalyticsSubtitle": {
@@ -6554,27 +6570,59 @@
     "description": "Title of the shipment tracking screen (Q64)."
   },
   "adminDelivery": "Delivery companies",
-  "@adminDelivery": {"description": "Title of the carrier administration screen."},
+  "@adminDelivery": {
+    "description": "Title of the carrier administration screen."
+  },
   "adminDeliverySubtitle": "The companies that carry parcels, where each delivers, and what is stuck.",
-  "@adminDeliverySubtitle": {"description": "Subtitle of the carrier administration screen."},
+  "@adminDeliverySubtitle": {
+    "description": "Subtitle of the carrier administration screen."
+  },
   "adminDeliveryNoProviders": "No delivery company is registered yet.",
-  "@adminDeliveryNoProviders": {"description": "Empty state for the carrier list."},
+  "@adminDeliveryNoProviders": {
+    "description": "Empty state for the carrier list."
+  },
   "adminDeliveryStuck": "Parcels no carrier accepted",
-  "@adminDeliveryStuck": {"description": "Heading for the failed dispatch queue."},
+  "@adminDeliveryStuck": {
+    "description": "Heading for the failed dispatch queue."
+  },
   "adminDeliveryNothingStuck": "Nothing is stuck — every parcel is with a carrier.",
-  "@adminDeliveryNothingStuck": {"description": "Empty state for the failed dispatch queue."},
+  "@adminDeliveryNothingStuck": {
+    "description": "Empty state for the failed dispatch queue."
+  },
   "adminDeliveryRetry": "Retry",
-  "@adminDeliveryRetry": {"description": "Button that re-offers a parcel to its carrier."},
+  "@adminDeliveryRetry": {
+    "description": "Button that re-offers a parcel to its carrier."
+  },
   "adminDeliveryEverywhere": "Everywhere",
-  "@adminDeliveryEverywhere": {"description": "Coverage tag for a carrier with no governorate list."},
+  "@adminDeliveryEverywhere": {
+    "description": "Coverage tag for a carrier with no governorate list."
+  },
   "adminDeliveryDefault": "Default",
-  "@adminDeliveryDefault": {"description": "Tag for the default carrier."},
+  "@adminDeliveryDefault": {
+    "description": "Tag for the default carrier."
+  },
   "adminDeliveryPriority": "Priority {value}",
-  "@adminDeliveryPriority": {"description": "Carrier priority tag.", "placeholders": {"value": {"type": "int"}}},
+  "@adminDeliveryPriority": {
+    "description": "Carrier priority tag.",
+    "placeholders": {
+      "value": {
+        "type": "int"
+      }
+    }
+  },
   "adminDeliveryInternalFleet": "In-house delivery team",
-  "@adminDeliveryInternalFleet": {"description": "Subtitle for the internal courier provider."},
+  "@adminDeliveryInternalFleet": {
+    "description": "Subtitle for the internal courier provider."
+  },
   "adminDeliveryAdapterMissing": "This build has no adapter called {adapter}",
-  "@adminDeliveryAdapterMissing": {"description": "Shown when a carrier row names an adapter the build does not ship.", "placeholders": {"adapter": {"type": "String"}}},
+  "@adminDeliveryAdapterMissing": {
+    "description": "Shown when a carrier row names an adapter the build does not ship.",
+    "placeholders": {
+      "adapter": {
+        "type": "String"
+      }
+    }
+  },
   "deliveryCarrier": "Delivery company",
   "sellerOrderCarrierPendingRetry": "The delivery company has not accepted it yet — we keep trying.",
   "@sellerOrderCarrierPendingRetry": {
@@ -7617,18 +7665,39 @@
     "description": "Cancel action of the discard-changes confirmation"
   },
   "postMenuNotInterested": "Not interested",
-  "@postMenuNotInterested": {"description": "Post menu: hide this one post from her feeds."},
+  "@postMenuNotInterested": {
+    "description": "Post menu: hide this one post from her feeds."
+  },
   "postMenuNotInterestedDone": "You won't see this post again.",
   "postMenuMuteAuthor": "Hide posts from {name}",
-  "@postMenuMuteAuthor": {"description": "Post menu: mute the author quietly.", "placeholders": {"name": {"type": "String"}}},
+  "@postMenuMuteAuthor": {
+    "description": "Post menu: mute the author quietly.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "postMenuMuteAuthorDone": "Posts from {name} are hidden.",
-  "@postMenuMuteAuthorDone": {"placeholders": {"name": {"type": "String"}}},
+  "@postMenuMuteAuthorDone": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "postMenuReport": "Report post",
   "productMenuReport": "Report this piece",
   "postMenuCopyLink": "Copy link",
   "linkCopied": "Link copied",
   "postMenuViewAuthor": "Visit {name}'s page",
-  "@postMenuViewAuthor": {"placeholders": {"name": {"type": "String"}}},
+  "@postMenuViewAuthor": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "postMenuViewProduct": "View the piece",
   "postMenuRemoveFromMyPage": "Remove from my page",
   "postMenuSave": "Save to favourites",
@@ -7649,14 +7718,26 @@
   "productUnpickedDone": "Removed from your page",
   "viewMyPage": "View my page",
   "productPicksCount": "{count} added it to their page",
-  "@productPicksCount": {"placeholders": {"count": {"type": "String"}}},
+  "@productPicksCount": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
   "profileTabReels": "Reels",
   "profileTabPicks": "Picks",
   "profileTabMyPicks": "My picks",
   "profileTabStories": "Stories",
   "profilePrivateTitle": "This page is private",
   "profilePrivateBody": "{name} hasn't opened her page to others yet.",
-  "@profilePrivateBody": {"placeholders": {"name": {"type": "String"}}},
+  "@profilePrivateBody": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "profileEmptyPosts": "No posts yet",
   "profileEmptyReels": "No reels yet",
   "profileEmptyStories": "No live stories right now",
@@ -7685,9 +7766,21 @@
   "searchTabShoppers": "Shoppers",
   "searchTabPosts": "Posts",
   "searchNoResultsFor": "Nothing found for \"{query}\". Try another word.",
-  "@searchNoResultsFor": {"placeholders": {"query": {"type": "String"}}},
+  "@searchNoResultsFor": {
+    "placeholders": {
+      "query": {
+        "type": "String"
+      }
+    }
+  },
   "searchFollowersCount": "{count} followers",
-  "@searchFollowersCount": {"placeholders": {"count": {"type": "String"}}},
+  "@searchFollowersCount": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
   "postMenuDelete": "Delete post",
   "postDeleteTitle": "Delete this post?",
   "postDeleteBody": "It disappears from your page and from every page it was added to. This can't be undone.",
@@ -7700,13 +7793,40 @@
   "policiesSectionCustomers": "For shoppers",
   "policiesEmpty": "No policies have been published yet",
   "policiesVersionLabel": "Version {version}",
-  "@policiesVersionLabel": {"placeholders": {"version": {"type": "String"}}},
+  "@policiesVersionLabel": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
   "policiesEffectiveFrom": "In force since {date}",
-  "@policiesEffectiveFrom": {"placeholders": {"date": {"type": "String"}}},
+  "@policiesEffectiveFrom": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
   "policiesAcceptedOn": "You accepted this on {date}",
-  "@policiesAcceptedOn": {"placeholders": {"date": {"type": "String"}}},
+  "@policiesAcceptedOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
   "policiesAcceptedOlderVersion": "You accepted version {version} on {date}",
-  "@policiesAcceptedOlderVersion": {"placeholders": {"version": {"type": "String"}, "date": {"type": "String"}}},
+  "@policiesAcceptedOlderVersion": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
   "policiesNotAccepted": "Not accepted yet",
   "policiesRequiredBadge": "Signature required",
   "policiesUpdatedBadge": "Updated",
@@ -7720,7 +7840,13 @@
   "policiesHistoryCurrent": "Current",
   "policiesOpenVersion": "Read this version",
   "policiesArchivedNotice": "You are reading version {version}, which is no longer the current one.",
-  "@policiesArchivedNotice": {"placeholders": {"version": {"type": "String"}}},
+  "@policiesArchivedNotice": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
   "policiesReadCurrent": "Read the current version",
   "policiesConsentTitle": "Before you carry on",
   "policiesConsentIntroNew": "Please read and accept the following to keep using Reem.",
@@ -7758,7 +7884,13 @@
   "adminPolicyDiscardConfirm": "Discard this draft? Its text is not kept.",
   "adminPolicyPublish": "Publish",
   "adminPolicyPublishTitle": "Publish version {version}",
-  "@adminPolicyPublishTitle": {"placeholders": {"version": {"type": "String"}}},
+  "@adminPolicyPublishTitle": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
   "adminPolicyRequiresReacceptance": "Ask everyone to accept again",
   "adminPolicyRequiresReacceptanceHint": "Turn this on only for a material change. Everyone it applies to is asked to sign again before they can carry on using the app.",
   "adminPolicyChangeNote": "What changed",
@@ -7776,7 +7908,13 @@
   "adminPolicyPreview": "Preview",
   "adminPolicyConsentSummary": "Acceptances",
   "adminPolicyAcceptedCurrent": "{count} on the current version",
-  "@adminPolicyAcceptedCurrent": {"placeholders": {"count": {"type": "String"}}},
+  "@adminPolicyAcceptedCurrent": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
   "adminPolicyAcceptedAny": "{count, plural, =0{No account has signed it yet} =1{1 account has signed this policy} other{{count} accounts have signed this policy}}",
   "@adminPolicyAcceptedAny": {
     "placeholders": {
@@ -7796,7 +7934,6 @@
   },
   "adminPolicyBodyTooShort": "The text is too short to publish",
   "adminPolicyPublishConfirm": "Publish this version? The current one is archived and cannot be restored — a change after this needs a new version.",
-
   "policiesLinkCommissions": "Commissions policy",
   "policiesLinkCustomerTerms": "Customer terms of use",
   "composerPolicyNotice": "Publishing means you accept the content and removal policy.",
@@ -8912,27 +9049,69 @@
     "description": ""
   },
   "roomsKindSolo": "Just me",
-  "@roomsKindSolo": {"description": "Rooms label."},
+  "@roomsKindSolo": {
+    "description": "Rooms label."
+  },
   "roomsKindGroup": "With friends",
-  "@roomsKindGroup": {"description": "Rooms label."},
+  "@roomsKindGroup": {
+    "description": "Rooms label."
+  },
   "roomsKindGift": "Gift",
-  "@roomsKindGift": {"description": "Rooms label."},
+  "@roomsKindGift": {
+    "description": "Rooms label."
+  },
   "roomsKindOccasion": "Occasion",
-  "@roomsKindOccasion": {"description": "Rooms label."},
+  "@roomsKindOccasion": {
+    "description": "Rooms label."
+  },
   "roomsDecisionFallback": "this decision",
-  "@roomsDecisionFallback": {"description": "Rooms label."},
+  "@roomsDecisionFallback": {
+    "description": "Rooms label."
+  },
   "roomsBlockerNoDecisions": "No decisions in the room yet",
-  "@roomsBlockerNoDecisions": {"description": "Rooms label."},
+  "@roomsBlockerNoDecisions": {
+    "description": "Rooms label."
+  },
   "roomsBlockerEmpty": "No suggestions for {title} yet",
-  "@roomsBlockerEmpty": {"description": "Rooms label.", "placeholders": {"title": {"type": "String"}}},
+  "@roomsBlockerEmpty": {
+    "description": "Rooms label.",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
   "roomsBlockerUnresolved": "You haven’t chosen for {title} yet",
-  "@roomsBlockerUnresolved": {"description": "Rooms label.", "placeholders": {"title": {"type": "String"}}},
+  "@roomsBlockerUnresolved": {
+    "description": "Rooms label.",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
   "roomsBlockerOverPick": "You picked more than needed for {title}",
-  "@roomsBlockerOverPick": {"description": "Rooms label.", "placeholders": {"title": {"type": "String"}}},
+  "@roomsBlockerOverPick": {
+    "description": "Rooms label.",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
   "roomsBlockerUnavailable": "The piece chosen for {title} sold out",
-  "@roomsBlockerUnavailable": {"description": "Rooms label.", "placeholders": {"title": {"type": "String"}}},
+  "@roomsBlockerUnavailable": {
+    "description": "Rooms label.",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
   "roomsBlockerOther": "Something is still missing",
-  "@roomsBlockerOther": {"description": "Rooms label."},
+  "@roomsBlockerOther": {
+    "description": "Rooms label."
+  },
   "valueAdminSubtitle": "Standing and what it unlocks — and the guarantee it can’t be bought.",
   "@valueAdminSubtitle": {
     "description": ""
@@ -9440,9 +9619,23 @@
     "description": ""
   },
   "valueAdminSpendingRung": " — tier “{rung}”",
-  "@valueAdminSpendingRung": {"description": "Reem Value console.", "placeholders": {"rung": {"type": "String"}}},
+  "@valueAdminSpendingRung": {
+    "description": "Reem Value console.",
+    "placeholders": {
+      "rung": {
+        "type": "String"
+      }
+    }
+  },
   "valueAdminTopRung": "; the top tier is “{rung}”.",
-  "@valueAdminTopRung": {"description": "Reem Value console.", "placeholders": {"rung": {"type": "String"}}},
+  "@valueAdminTopRung": {
+    "description": "Reem Value console.",
+    "placeholders": {
+      "rung": {
+        "type": "String"
+      }
+    }
+  },
   "marketLookTitle": "The look",
   "@marketLookTitle": {
     "description": ""
@@ -9931,23 +10124,41 @@
     "description": ""
   },
   "marketReasonOpenNeed": "Because you’re missing something like this",
-  "@marketReasonOpenNeed": {"description": "Market label."},
+  "@marketReasonOpenNeed": {
+    "description": "Market label."
+  },
   "marketReasonSearchedFor": "Because you were looking for something like it",
-  "@marketReasonSearchedFor": {"description": "Market label."},
+  "@marketReasonSearchedFor": {
+    "description": "Market label."
+  },
   "marketReasonOccasion": "Because it suits the occasion you’re getting ready for",
-  "@marketReasonOccasion": {"description": "Market label."},
+  "@marketReasonOccasion": {
+    "description": "Market label."
+  },
   "marketReasonTaste": "Because it’s close to your taste",
-  "@marketReasonTaste": {"description": "Market label."},
+  "@marketReasonTaste": {
+    "description": "Market label."
+  },
   "marketReasonSellerCustomer": "From a shop you buy from",
-  "@marketReasonSellerCustomer": {"description": "Market label."},
+  "@marketReasonSellerCustomer": {
+    "description": "Market label."
+  },
   "marketRotationActive": "In rotation",
-  "@marketRotationActive": {"description": "Market label."},
+  "@marketRotationActive": {
+    "description": "Market label."
+  },
   "marketRotationSlowing": "Worn less lately",
-  "@marketRotationSlowing": {"description": "Market label."},
+  "@marketRotationSlowing": {
+    "description": "Market label."
+  },
   "marketRotationDormant": "Sitting in the closet",
-  "@marketRotationDormant": {"description": "Market label."},
+  "@marketRotationDormant": {
+    "description": "Market label."
+  },
   "marketRotationUnworn": "Never worn",
-  "@marketRotationUnworn": {"description": "Market label."},
+  "@marketRotationUnworn": {
+    "description": "Market label."
+  },
   "settingsMyAddresses": "My addresses",
   "@settingsMyAddresses": {
     "description": ""
@@ -11368,181 +11579,422 @@
     "description": ""
   },
   "checkoutLandmarkValue": "Landmark: {landmark}",
-  "@checkoutLandmarkValue": {"description": "", "placeholders": {"landmark": {"type": "String"}}},
+  "@checkoutLandmarkValue": {
+    "description": "",
+    "placeholders": {
+      "landmark": {
+        "type": "String"
+      }
+    }
+  },
   "orderStateDraft": "Draft",
-  "@orderStateDraft": {"description": "Order and listing status wording."},
+  "@orderStateDraft": {
+    "description": "Order and listing status wording."
+  },
   "orderStatePendingPayment": "Awaiting payment",
-  "@orderStatePendingPayment": {"description": "Order and listing status wording."},
+  "@orderStatePendingPayment": {
+    "description": "Order and listing status wording."
+  },
   "orderStateConfirmed": "Confirmed",
-  "@orderStateConfirmed": {"description": "Order and listing status wording."},
+  "@orderStateConfirmed": {
+    "description": "Order and listing status wording."
+  },
   "orderStatePartiallyShipped": "Partly shipped",
-  "@orderStatePartiallyShipped": {"description": "Order and listing status wording."},
+  "@orderStatePartiallyShipped": {
+    "description": "Order and listing status wording."
+  },
   "orderStateShipped": "Shipped",
-  "@orderStateShipped": {"description": "Order and listing status wording."},
+  "@orderStateShipped": {
+    "description": "Order and listing status wording."
+  },
   "orderStatePartiallyDelivered": "Partly delivered",
-  "@orderStatePartiallyDelivered": {"description": "Order and listing status wording."},
+  "@orderStatePartiallyDelivered": {
+    "description": "Order and listing status wording."
+  },
   "orderStateDelivered": "Delivered",
-  "@orderStateDelivered": {"description": "Order and listing status wording."},
+  "@orderStateDelivered": {
+    "description": "Order and listing status wording."
+  },
   "orderStatePartiallyCancelled": "Partly cancelled",
-  "@orderStatePartiallyCancelled": {"description": "Order and listing status wording."},
+  "@orderStatePartiallyCancelled": {
+    "description": "Order and listing status wording."
+  },
   "orderStateCancelled": "Cancelled",
-  "@orderStateCancelled": {"description": "Order and listing status wording."},
+  "@orderStateCancelled": {
+    "description": "Order and listing status wording."
+  },
   "orderStateClosed": "Closed",
-  "@orderStateClosed": {"description": "Order and listing status wording."},
+  "@orderStateClosed": {
+    "description": "Order and listing status wording."
+  },
   "parcelStateNew": "New order",
-  "@parcelStateNew": {"description": "Order and listing status wording."},
+  "@parcelStateNew": {
+    "description": "Order and listing status wording."
+  },
   "parcelStateAwaitingSeller": "Waiting for the seller",
-  "@parcelStateAwaitingSeller": {"description": "Order and listing status wording."},
+  "@parcelStateAwaitingSeller": {
+    "description": "Order and listing status wording."
+  },
   "parcelStatePreparing": "Being prepared",
-  "@parcelStatePreparing": {"description": "Order and listing status wording."},
+  "@parcelStatePreparing": {
+    "description": "Order and listing status wording."
+  },
   "parcelStateReadyToShip": "Ready to ship",
-  "@parcelStateReadyToShip": {"description": "Order and listing status wording."},
+  "@parcelStateReadyToShip": {
+    "description": "Order and listing status wording."
+  },
   "parcelStateHandedToCourier": "With the courier",
-  "@parcelStateHandedToCourier": {"description": "Order and listing status wording."},
+  "@parcelStateHandedToCourier": {
+    "description": "Order and listing status wording."
+  },
   "parcelStateInTransit": "On the way",
-  "@parcelStateInTransit": {"description": "Order and listing status wording."},
+  "@parcelStateInTransit": {
+    "description": "Order and listing status wording."
+  },
   "parcelStateDelivered": "Delivered",
-  "@parcelStateDelivered": {"description": "Order and listing status wording."},
+  "@parcelStateDelivered": {
+    "description": "Order and listing status wording."
+  },
   "parcelStateDeliveryFailed": "Delivery failed",
-  "@parcelStateDeliveryFailed": {"description": "Order and listing status wording."},
+  "@parcelStateDeliveryFailed": {
+    "description": "Order and listing status wording."
+  },
   "parcelStateCancelledByYou": "You cancelled",
-  "@parcelStateCancelledByYou": {"description": "Order and listing status wording."},
+  "@parcelStateCancelledByYou": {
+    "description": "Order and listing status wording."
+  },
   "parcelStateCancelledBySeller": "Cancelled by the seller",
-  "@parcelStateCancelledBySeller": {"description": "Order and listing status wording."},
+  "@parcelStateCancelledBySeller": {
+    "description": "Order and listing status wording."
+  },
   "parcelStateRejectedOnDelivery": "Refused on delivery",
-  "@parcelStateRejectedOnDelivery": {"description": "Order and listing status wording."},
+  "@parcelStateRejectedOnDelivery": {
+    "description": "Order and listing status wording."
+  },
   "parcelStateReturnRequested": "Return requested",
-  "@parcelStateReturnRequested": {"description": "Order and listing status wording."},
+  "@parcelStateReturnRequested": {
+    "description": "Order and listing status wording."
+  },
   "parcelStateReturnInTransit": "Return on the way",
-  "@parcelStateReturnInTransit": {"description": "Order and listing status wording."},
+  "@parcelStateReturnInTransit": {
+    "description": "Order and listing status wording."
+  },
   "parcelStateReturned": "Returned",
-  "@parcelStateReturned": {"description": "Order and listing status wording."},
+  "@parcelStateReturned": {
+    "description": "Order and listing status wording."
+  },
   "parcelStateExchangeInProgress": "Exchange in progress",
-  "@parcelStateExchangeInProgress": {"description": "Order and listing status wording."},
+  "@parcelStateExchangeInProgress": {
+    "description": "Order and listing status wording."
+  },
   "parcelStateExchanged": "Exchanged",
-  "@parcelStateExchanged": {"description": "Order and listing status wording."},
+  "@parcelStateExchanged": {
+    "description": "Order and listing status wording."
+  },
   "parcelStateRefundPending": "Refund pending",
-  "@parcelStateRefundPending": {"description": "Order and listing status wording."},
+  "@parcelStateRefundPending": {
+    "description": "Order and listing status wording."
+  },
   "parcelStateRefunded": "Refunded",
-  "@parcelStateRefunded": {"description": "Order and listing status wording."},
+  "@parcelStateRefunded": {
+    "description": "Order and listing status wording."
+  },
   "parcelStateDisputed": "In dispute",
-  "@parcelStateDisputed": {"description": "Order and listing status wording."},
+  "@parcelStateDisputed": {
+    "description": "Order and listing status wording."
+  },
   "payMethodCod": "Cash on delivery",
-  "@payMethodCod": {"description": "Order and listing status wording."},
+  "@payMethodCod": {
+    "description": "Order and listing status wording."
+  },
   "payMethodCourierCollect": "Pay the courier",
-  "@payMethodCourierCollect": {"description": "Order and listing status wording."},
+  "@payMethodCourierCollect": {
+    "description": "Order and listing status wording."
+  },
   "payMethodSyriatelCash": "Syriatel Cash",
-  "@payMethodSyriatelCash": {"description": "Order and listing status wording."},
+  "@payMethodSyriatelCash": {
+    "description": "Order and listing status wording."
+  },
   "payMethodMtnCash": "MTN Cash",
-  "@payMethodMtnCash": {"description": "Order and listing status wording."},
+  "@payMethodMtnCash": {
+    "description": "Order and listing status wording."
+  },
   "payMethodShamCash": "Sham Cash",
-  "@payMethodShamCash": {"description": "Order and listing status wording."},
+  "@payMethodShamCash": {
+    "description": "Order and listing status wording."
+  },
   "payMethodBankCard": "Bank card",
-  "@payMethodBankCard": {"description": "Order and listing status wording."},
+  "@payMethodBankCard": {
+    "description": "Order and listing status wording."
+  },
   "payMethodBankTransfer": "Bank transfer",
-  "@payMethodBankTransfer": {"description": "Order and listing status wording."},
+  "@payMethodBankTransfer": {
+    "description": "Order and listing status wording."
+  },
   "payMethodHawala": "Local transfer",
-  "@payMethodHawala": {"description": "Order and listing status wording."},
+  "@payMethodHawala": {
+    "description": "Order and listing status wording."
+  },
   "payMethodWallet": "Reem wallet",
-  "@payMethodWallet": {"description": "Order and listing status wording."},
+  "@payMethodWallet": {
+    "description": "Order and listing status wording."
+  },
   "rawStatePending": "Pending",
-  "@rawStatePending": {"description": "Order and listing status wording."},
+  "@rawStatePending": {
+    "description": "Order and listing status wording."
+  },
   "rawStatePaid": "Paid",
-  "@rawStatePaid": {"description": "Order and listing status wording."},
+  "@rawStatePaid": {
+    "description": "Order and listing status wording."
+  },
   "rawStateFailed": "Failed",
-  "@rawStateFailed": {"description": "Order and listing status wording."},
+  "@rawStateFailed": {
+    "description": "Order and listing status wording."
+  },
   "rawStateRefunded": "Refunded",
-  "@rawStateRefunded": {"description": "Order and listing status wording."},
+  "@rawStateRefunded": {
+    "description": "Order and listing status wording."
+  },
   "rawStateCreated": "Created",
-  "@rawStateCreated": {"description": "Order and listing status wording."},
+  "@rawStateCreated": {
+    "description": "Order and listing status wording."
+  },
   "rawStateAssigned": "Courier assigned",
-  "@rawStateAssigned": {"description": "Order and listing status wording."},
+  "@rawStateAssigned": {
+    "description": "Order and listing status wording."
+  },
   "rawStatePickedUp": "Picked up",
-  "@rawStatePickedUp": {"description": "Order and listing status wording."},
+  "@rawStatePickedUp": {
+    "description": "Order and listing status wording."
+  },
   "rawStateInTransit": "On the way",
-  "@rawStateInTransit": {"description": "Order and listing status wording."},
+  "@rawStateInTransit": {
+    "description": "Order and listing status wording."
+  },
   "rawStateOutForDelivery": "Out for delivery",
-  "@rawStateOutForDelivery": {"description": "Order and listing status wording."},
+  "@rawStateOutForDelivery": {
+    "description": "Order and listing status wording."
+  },
   "rawStateDelivered": "Delivered",
-  "@rawStateDelivered": {"description": "Order and listing status wording."},
+  "@rawStateDelivered": {
+    "description": "Order and listing status wording."
+  },
   "rawStateReturning": "Returning",
-  "@rawStateReturning": {"description": "Order and listing status wording."},
+  "@rawStateReturning": {
+    "description": "Order and listing status wording."
+  },
   "rawStateReturned": "Returned",
-  "@rawStateReturned": {"description": "Order and listing status wording."},
+  "@rawStateReturned": {
+    "description": "Order and listing status wording."
+  },
   "rawStateCancelled": "Cancelled",
-  "@rawStateCancelled": {"description": "Order and listing status wording."},
+  "@rawStateCancelled": {
+    "description": "Order and listing status wording."
+  },
   "productStateDraft": "Draft",
-  "@productStateDraft": {"description": "Order and listing status wording."},
+  "@productStateDraft": {
+    "description": "Order and listing status wording."
+  },
   "productStatePendingReview": "In review",
-  "@productStatePendingReview": {"description": "Order and listing status wording."},
+  "@productStatePendingReview": {
+    "description": "Order and listing status wording."
+  },
   "productStateActive": "Live",
-  "@productStateActive": {"description": "Order and listing status wording."},
+  "@productStateActive": {
+    "description": "Order and listing status wording."
+  },
   "productStateOutOfStock": "Out of stock",
-  "@productStateOutOfStock": {"description": "Order and listing status wording."},
+  "@productStateOutOfStock": {
+    "description": "Order and listing status wording."
+  },
   "productStatePaused": "Paused",
-  "@productStatePaused": {"description": "Order and listing status wording."},
+  "@productStatePaused": {
+    "description": "Order and listing status wording."
+  },
   "productStateArchived": "Archived",
-  "@productStateArchived": {"description": "Order and listing status wording."},
+  "@productStateArchived": {
+    "description": "Order and listing status wording."
+  },
   "passwordShow": "Show password",
-  "@passwordShow": {"description": "Password field visibility toggle."},
+  "@passwordShow": {
+    "description": "Password field visibility toggle."
+  },
   "passwordHide": "Hide password",
-  "@passwordHide": {"description": "Password field visibility toggle."},
+  "@passwordHide": {
+    "description": "Password field visibility toggle."
+  },
   "marketDropOpensIn": "Opens in {when}",
-  "@marketDropOpensIn": {"description": "Drop timing.", "placeholders": {"when": {"type": "String"}}},
+  "@marketDropOpensIn": {
+    "description": "Drop timing.",
+    "placeholders": {
+      "when": {
+        "type": "String"
+      }
+    }
+  },
   "marketDropEndsIn": "Open · ends in {when}",
-  "@marketDropEndsIn": {"description": "Drop timing.", "placeholders": {"when": {"type": "String"}}},
+  "@marketDropEndsIn": {
+    "description": "Drop timing.",
+    "placeholders": {
+      "when": {
+        "type": "String"
+      }
+    }
+  },
   "marketDropOpenNow": "Open now",
-  "@marketDropOpenNow": {"description": "Drop timing."},
+  "@marketDropOpenNow": {
+    "description": "Drop timing."
+  },
   "marketDropEarlyBy": "Yours {when} before everyone",
-  "@marketDropEarlyBy": {"description": "Drop timing.", "placeholders": {"when": {"type": "String"}}},
+  "@marketDropEarlyBy": {
+    "description": "Drop timing.",
+    "placeholders": {
+      "when": {
+        "type": "String"
+      }
+    }
+  },
   "marketPriceFrom": "From {price}",
-  "@marketPriceFrom": {"description": "Drop timing.", "placeholders": {"price": {"type": "String"}}},
+  "@marketPriceFrom": {
+    "description": "Drop timing.",
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
   "spanMinutes": "{count, plural, =1{1 minute} other{{count} minutes}}",
-  "@spanMinutes": {"description": "Drop timing.", "placeholders": {"count": {"type": "int"}}},
+  "@spanMinutes": {
+    "description": "Drop timing.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "spanHours": "{count, plural, =1{1 hour} other{{count} hours}}",
-  "@spanHours": {"description": "Drop timing.", "placeholders": {"count": {"type": "int"}}},
+  "@spanHours": {
+    "description": "Drop timing.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "spanDays": "{count, plural, =1{1 day} other{{count} days}}",
-  "@spanDays": {"description": "Drop timing.", "placeholders": {"count": {"type": "int"}}},
+  "@spanDays": {
+    "description": "Drop timing.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "errorRetryLater": "That didn’t go through. Please try again in a moment.",
-  "@errorRetryLater": {"description": "Shown in place of a server message that is not in the reader's language."},
+  "@errorRetryLater": {
+    "description": "Shown in place of a server message that is not in the reader's language."
+  },
   "experienceTaglineBuyer": "A soft luxury boutique shaped around your taste.",
-  "@experienceTaglineBuyer": {"description": "Activity hub subtitle."},
+  "@experienceTaglineBuyer": {
+    "description": "Activity hub subtitle."
+  },
   "experienceTaglineSeller": "Inventory, orders, customers, and growth in one fast workspace.",
-  "@experienceTaglineSeller": {"description": "Activity hub subtitle."},
+  "@experienceTaglineSeller": {
+    "description": "Activity hub subtitle."
+  },
   "experienceTaglineAdmin": "Enterprise control, governance, analytics, and operating health.",
-  "@experienceTaglineAdmin": {"description": "Activity hub subtitle."},
+  "@experienceTaglineAdmin": {
+    "description": "Activity hub subtitle."
+  },
   "loyaltyTierRose": "Rose",
-  "@loyaltyTierRose": {"description": "Count shown on a card."},
+  "@loyaltyTierRose": {
+    "description": "Count shown on a card."
+  },
   "loyaltyTierGold": "Gold",
-  "@loyaltyTierGold": {"description": "Count shown on a card."},
+  "@loyaltyTierGold": {
+    "description": "Count shown on a card."
+  },
   "loyaltyTierPlatinum": "Platinum",
-  "@loyaltyTierPlatinum": {"description": "Count shown on a card."},
+  "@loyaltyTierPlatinum": {
+    "description": "Count shown on a card."
+  },
   "loyaltyTierDiamond": "Diamond",
-  "@loyaltyTierDiamond": {"description": "Count shown on a card."},
+  "@loyaltyTierDiamond": {
+    "description": "Count shown on a card."
+  },
   "homeLoyaltyCoupons": "{count, plural, =0{No coupons} =1{1 coupon} other{{count} coupons}}",
-  "@homeLoyaltyCoupons": {"description": "Count shown on a card.", "placeholders": {"count": {"type": "int"}}},
+  "@homeLoyaltyCoupons": {
+    "description": "Count shown on a card.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "flashClaimed": "{count, plural, =0{Not claimed yet} =1{1 claimed} other{{count} claimed}}",
-  "@flashClaimed": {"description": "Count shown on a card.", "placeholders": {"count": {"type": "int"}}},
+  "@flashClaimed": {
+    "description": "Count shown on a card.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "notificationsNewCount": "{count, plural, =1{1 new} other{{count} new}}",
-  "@notificationsNewCount": {"description": "Count shown on a card.", "placeholders": {"count": {"type": "int"}}},
+  "@notificationsNewCount": {
+    "description": "Count shown on a card.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "profileBoutiquesCount": "{count, plural, =0{No boutiques} =1{1 boutique} other{{count} boutiques}}",
-  "@profileBoutiquesCount": {"description": "Count shown on a card.", "placeholders": {"count": {"type": "int"}}},
+  "@profileBoutiquesCount": {
+    "description": "Count shown on a card.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "sellerStockLeft": "{count, plural, =1{1 left} other{{count} left}}",
-  "@sellerStockLeft": {"description": "Count shown on a card.", "placeholders": {"count": {"type": "int"}}},
+  "@sellerStockLeft": {
+    "description": "Count shown on a card.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "orderTimelineCreated": "Order placed",
-  "@orderTimelineCreated": {"description": "Order timeline entry."},
+  "@orderTimelineCreated": {
+    "description": "Order timeline entry."
+  },
   "orderTimelineConfirmed": "Order confirmed",
-  "@orderTimelineConfirmed": {"description": "Order timeline entry."},
+  "@orderTimelineConfirmed": {
+    "description": "Order timeline entry."
+  },
   "orderTimelineConfirmedBody": "Sent to the sellers to prepare.",
-  "@orderTimelineConfirmedBody": {"description": "Order timeline entry."},
+  "@orderTimelineConfirmedBody": {
+    "description": "Order timeline entry."
+  },
   "orderTimelineCancelled": "Order cancelled",
-  "@orderTimelineCancelled": {"description": "Order timeline entry."},
+  "@orderTimelineCancelled": {
+    "description": "Order timeline entry."
+  },
   "orderTimelinePaymentExpired": "The payment deadline passed.",
-  "@orderTimelinePaymentExpired": {"description": "Order timeline entry."},
+  "@orderTimelinePaymentExpired": {
+    "description": "Order timeline entry."
+  },
   "roomsBlockerNothingChosen": "You haven’t chosen a piece yet",
-  "@roomsBlockerNothingChosen": {"description": "Room readiness blocker."},
+  "@roomsBlockerNothingChosen": {
+    "description": "Room readiness blocker."
+  },
   "sellerAllTimeTotals": "Since you opened your shop",
-  "@sellerAllTimeTotals": {"description": "Caption over lifetime profit, margin and orders on the revenue card."},
+  "@sellerAllTimeTotals": {
+    "description": "Caption over lifetime profit, margin and orders on the revenue card."
+  },
   "sellerPlanBasic": "Basic plan",
   "@sellerPlanBasic": {
     "description": "Seller profile badge for the BASIC level."
@@ -11828,50 +12280,262 @@
   "@adminAuditAdminRequest": {
     "description": "Audit log entry recorded from an admin API request; the request line is in the details."
   },
-  "reverseSmsTitle": "Verify with one message",
-  "@reverseSmsTitle": {
-      "description": "Title of the reverse-SMS step, where she sends the code instead of receiving one"
-  },
-  "reverseSmsExplainer": "Send the message below from this number. Nothing is sent to you, so nobody can ask you to read a code out.",
-  "@reverseSmsExplainer": {
-      "description": "Why the reverse rail is safer, shown under the title"
-  },
-  "reverseSmsSendTo": "To: {number}",
-  "@reverseSmsSendTo": {
-      "description": "The receiver number the verification message is addressed to",
-      "placeholders": {
-          "number": {
-              "type": "String"
-          }
+  "homeAuraAddress": "{name},",
+  "@homeAuraAddress": {
+    "description": "Her first name on its own line in the home hero, before the question.",
+    "placeholders": {
+      "name": {
+        "type": "String"
       }
+    }
   },
-  "reverseSmsBodyLabel": "Message",
-  "@reverseSmsBodyLabel": {
-      "description": "Label above the exact SMS body she must send"
+  "homeAuraGuest": "Welcome,",
+  "@homeAuraGuest": {
+    "description": "Home hero first line when we have no name."
   },
-  "reverseSmsOpenMessages": "Open Messages",
-  "@reverseSmsOpenMessages": {
-      "description": "Button that opens the SMS composer prefilled with the verification message"
+  "homeAuraQuestionMorning": "What are we wearing today?",
+  "@homeAuraQuestionMorning": {
+    "description": "Home hero question, morning."
   },
-  "reverseSmsIveSent": "I have sent it",
-  "@reverseSmsIveSent": {
-      "description": "Button she taps after sending the verification message"
+  "homeAuraQuestionMidday": "Something to brighten your day?",
+  "@homeAuraQuestionMidday": {
+    "description": "Home hero question, midday."
   },
-  "reverseSmsWaiting": "Waiting for your message…",
-  "@reverseSmsWaiting": {
-      "description": "Shown while the app polls for the inbound verification message"
+  "homeAuraQuestionEvening": "What are you wearing tonight?",
+  "@homeAuraQuestionEvening": {
+    "description": "Home hero question, evening."
   },
-  "reverseSmsCost": "Charged at your operator's normal SMS rate.",
-  "@reverseSmsCost": {
-      "description": "Tells her the outgoing verification SMS is billed to her"
+  "homeAuraQuestionNight": "A quiet moment, just for you",
+  "@homeAuraQuestionNight": {
+    "description": "Home hero question, late night."
   },
-  "reverseSmsNotYet": "Your message has not arrived yet. Give it a moment, then try again.",
-  "@reverseSmsNotYet": {
-      "description": "Shown when she taps continue before the inbound message has been matched"
+  "homeAskReem": "Ask Reem",
+  "@homeAskReem": {
+    "description": "Label on the home hero's ask-the-stylist field."
   },
-  "reverseSmsCouldNotOpen": "Could not open your messaging app. Send the message above manually.",
-  "@reverseSmsCouldNotOpen": {
-      "description": "Shown when the SMS composer cannot be launched"
+  "homeAskExample1": "A navy evening dress under 50K",
+  "@homeAskExample1": {
+    "description": "Rotating example inside the ask-Reem field."
+  },
+  "homeAskExample2": "A comfortable, polished work look",
+  "@homeAskExample2": {
+    "description": "Rotating example inside the ask-Reem field."
+  },
+  "homeAskExample3": "A birthday gift for my sister",
+  "@homeAskExample3": {
+    "description": "Rotating example inside the ask-Reem field."
+  },
+  "homeAskExample4": "What goes with beige shoes?",
+  "@homeAskExample4": {
+    "description": "Rotating example inside the ask-Reem field."
+  },
+  "homeAskPhoto": "Search by photo",
+  "@homeAskPhoto": {
+    "description": "Camera button on the ask-Reem field."
+  },
+  "homeBriefStories": "{count, plural, =1{1 boutique posted today} other{{count} boutiques posted today}}",
+  "@homeBriefStories": {
+    "description": "Live chip on the home hero.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "homeBriefDealEnds": "A deal ends in {time}",
+  "@homeBriefDealEnds": {
+    "description": "Live chip on the home hero with a running countdown.",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "homeBriefUnread": "{count, plural, =1{1 new notification} other{{count} new notifications}}",
+  "@homeBriefUnread": {
+    "description": "Live chip on the home hero.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "homeBriefBag": "{count, plural, =1{1 piece in your bag} other{{count} pieces in your bag}}",
+  "@homeBriefBag": {
+    "description": "Live chip on the home hero.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "homePulseLive": "Live",
+  "@homePulseLive": {
+    "description": "Badge on the home's live strip."
+  },
+  "homePulseDeal": "{title} — ends in {time}",
+  "@homePulseDeal": {
+    "description": "Live strip line for a flash deal.",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "homePulseTrending": "Most wanted right now: {title}",
+  "@homePulseTrending": {
+    "description": "Live strip line for a trending piece.",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "homePulseNew": "Just in: {title}",
+  "@homePulseNew": {
+    "description": "Live strip line for a new arrival.",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "homeMoodTitle": "What's the mood today?",
+  "@homeMoodTitle": {
+    "description": "Home section title over the mood tiles."
+  },
+  "homeMoodSubtitle": "Pick one and Reem styles the whole look",
+  "@homeMoodSubtitle": {
+    "description": "Home section subtitle over the mood tiles."
+  },
+  "homeMoodEvening": "Evening",
+  "@homeMoodEvening": {
+    "description": "Mood tile."
+  },
+  "homeMoodWedding": "Wedding",
+  "@homeMoodWedding": {
+    "description": "Mood tile."
+  },
+  "homeMoodWork": "Work",
+  "@homeMoodWork": {
+    "description": "Mood tile."
+  },
+  "homeMoodCasual": "Casual",
+  "@homeMoodCasual": {
+    "description": "Mood tile."
+  },
+  "homeMoodGift": "Gift",
+  "@homeMoodGift": {
+    "description": "Mood tile."
+  },
+  "homeMoodTravel": "Travel",
+  "@homeMoodTravel": {
+    "description": "Mood tile."
+  },
+  "homeMoodPromptEvening": "I want an elegant evening look",
+  "@homeMoodPromptEvening": {
+    "description": "Question the evening mood tile asks the stylist."
+  },
+  "homeMoodPromptWedding": "I need a look for a wedding",
+  "@homeMoodPromptWedding": {
+    "description": "Question the wedding mood tile asks the stylist."
+  },
+  "homeMoodPromptWork": "A comfortable, polished work look",
+  "@homeMoodPromptWork": {
+    "description": "Question the work mood tile asks the stylist."
+  },
+  "homeMoodPromptCasual": "A casual weekend look",
+  "@homeMoodPromptCasual": {
+    "description": "Question the casual mood tile asks the stylist."
+  },
+  "homeMoodPromptGift": "I'm looking for a special gift",
+  "@homeMoodPromptGift": {
+    "description": "Question the gift mood tile asks the stylist."
+  },
+  "homeMoodPromptTravel": "Comfortable, stylish travel clothes",
+  "@homeMoodPromptTravel": {
+    "description": "Question the travel mood tile asks the stylist."
+  },
+  "homeDeckEyebrow": "Picked for you by Reem",
+  "@homeDeckEyebrow": {
+    "description": "Eyebrow over the swipe deck."
+  },
+  "homeDeckTitle": "Your taste, piece by piece",
+  "@homeDeckTitle": {
+    "description": "Title over the swipe deck."
+  },
+  "homeDeckHint": "Swipe right for what you love, left to skip",
+  "@homeDeckHint": {
+    "description": "Hint under the swipe deck."
+  },
+  "homeDeckLike": "Love it",
+  "@homeDeckLike": {
+    "description": "Swipe deck like button and stamp."
+  },
+  "homeDeckPass": "Skip",
+  "@homeDeckPass": {
+    "description": "Swipe deck skip button and stamp."
+  },
+  "homeDeckOpen": "View piece",
+  "@homeDeckOpen": {
+    "description": "Swipe deck open button."
+  },
+  "homeDeckProgress": "{current} of {total}",
+  "@homeDeckProgress": {
+    "description": "Swipe deck position.",
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "homeDeckDoneTitle": "That's today's picks",
+  "@homeDeckDoneTitle": {
+    "description": "Swipe deck end card title."
+  },
+  "homeDeckDoneBody": "{count, plural, =0{Nothing today? Reem will learn from that.} =1{You loved 1 piece; it's in your likes.} other{You loved {count} pieces; they're in your likes.}}",
+  "@homeDeckDoneBody": {
+    "description": "Swipe deck end card body.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "homeDeckSeeAll": "All picks",
+  "@homeDeckSeeAll": {
+    "description": "Swipe deck end card button."
+  },
+  "homeDeckRestart": "Start over",
+  "@homeDeckRestart": {
+    "description": "Swipe deck end card button."
+  },
+  "homeBentoEyebrow": "Reem's world",
+  "@homeBentoEyebrow": {
+    "description": "Eyebrow over the category bento."
+  },
+  "homeBentoTitle": "Wander the departments",
+  "@homeBentoTitle": {
+    "description": "Title over the category bento."
+  },
+  "homeBentoCount": "{count, plural, =0{Coming soon} =1{1 piece} other{{count} pieces}}",
+  "@homeBentoCount": {
+    "description": "Piece count on a category bento tile.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "postOpenPiece": "View the piece",
+  "@postOpenPiece": {
+    "description": "Button on a post ticket when nothing is in stock to add."
   },
   "paymentReferenceRejected": "Finance could not match your reference: {reason}. Check it and send it again.",
   "@paymentReferenceRejected": {
@@ -11946,5 +12610,50 @@
         "type": "String"
       }
     }
+  },
+  "reverseSmsTitle": "Verify with one message",
+  "@reverseSmsTitle": {
+    "description": "Title of the reverse-SMS step, where she sends the code instead of receiving one"
+  },
+  "reverseSmsExplainer": "Send the message below from this number. Nothing is sent to you, so nobody can ask you to read a code out.",
+  "@reverseSmsExplainer": {
+    "description": "Why the reverse rail is safer, shown under the title"
+  },
+  "reverseSmsSendTo": "To: {number}",
+  "@reverseSmsSendTo": {
+    "description": "The receiver number the verification message is addressed to",
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "reverseSmsBodyLabel": "Message",
+  "@reverseSmsBodyLabel": {
+    "description": "Label above the exact SMS body she must send"
+  },
+  "reverseSmsOpenMessages": "Open Messages",
+  "@reverseSmsOpenMessages": {
+    "description": "Button that opens the SMS composer prefilled with the verification message"
+  },
+  "reverseSmsIveSent": "I have sent it",
+  "@reverseSmsIveSent": {
+    "description": "Button she taps after sending the verification message"
+  },
+  "reverseSmsWaiting": "Waiting for your message…",
+  "@reverseSmsWaiting": {
+    "description": "Shown while the app polls for the inbound verification message"
+  },
+  "reverseSmsCost": "Charged at your operator's normal SMS rate.",
+  "@reverseSmsCost": {
+    "description": "Tells her the outgoing verification SMS is billed to her"
+  },
+  "reverseSmsNotYet": "Your message has not arrived yet. Give it a moment, then try again.",
+  "@reverseSmsNotYet": {
+    "description": "Shown when she taps continue before the inbound message has been matched"
+  },
+  "reverseSmsCouldNotOpen": "Could not open your messaging app. Send the message above manually.",
+  "@reverseSmsCouldNotOpen": {
+    "description": "Shown when the SMS composer cannot be launched"
   }
 }

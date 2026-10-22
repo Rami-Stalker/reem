@@ -64,19 +64,19 @@ void main() {
     await tester.pump(const Duration(milliseconds: 300));
 
     expect(find.byType(ProductPostCard), findsWidgets);
-    // The boutique heads its own piece, and the plate carries the price.
+    // The boutique heads its own piece, and the ticket carries the price.
     expect(find.text('بوتيك ريم'), findsWidgets);
-    expect(find.byType(DsShopPlate), findsWidgets);
+    expect(find.byType(DsImmersivePost), findsWidgets);
     expect(find.text(_products.first.title), findsWidgets);
     // What the client asked for: a department's posts carry the same gestures
     // as «وصل حديثاً» — heart, thread, share, «أضيفي إلى صفحتي», bookmark — and
     // a «…» that opens something.
-    final bar = tester.widget<DsPostActionBar>(
-      find.byType(DsPostActionBar).first,
+    final post = tester.widget<DsImmersivePost>(
+      find.byType(DsImmersivePost).first,
     );
-    expect(bar.onPick, isNotNull);
-    final header = tester.widget<DsPostHeader>(find.byType(DsPostHeader).first);
-    expect(header.onMore, isNotNull);
+    expect(post.onPick, isNotNull);
+    expect(post.onMore, isNotNull);
+    expect(post.onAddToBag, isNotNull, reason: 'in stock, so it can be bought');
   });
 
   testWidgets('a bag only appears on a piece that can actually be bought', (
@@ -89,8 +89,8 @@ void main() {
     );
     await tester.pump(const Duration(milliseconds: 300));
 
-    final plate = tester.widget<DsShopPlate>(find.byType(DsShopPlate));
-    expect(plate.onAddToBag, isNull, reason: 'nothing in stock to add');
+    final post = tester.widget<DsImmersivePost>(find.byType(DsImmersivePost));
+    expect(post.onAddToBag, isNull, reason: 'nothing in stock to add');
   });
 
   testWidgets('the switcher moves the shared catalogue shape', (tester) async {

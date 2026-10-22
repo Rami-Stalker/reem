@@ -167,3 +167,61 @@ Left as is on purpose: «Reem Value» is the feature's name in both languages;
 system-setting keys (`auth.female_only_declaration`) and commission rule names
 are data the operator types; and a decision on a seller application needs a
 written reason even when it approves, because the server records it.
+
+## The home, redesigned as a living page
+
+The buyer home had become a long column of shelves set between posts: a
+small greeting, a search box, a stylist banner, a row of stories, then post
+after post. Nothing on it changed with her day or asked anything of her.
+
+It now opens on a **sky** (`HomeAura`) whose colours follow the Damascus hour —
+champagne in the morning, rose in the afternoon, a warm dusk after five, a
+deep plum after ten, and the night sky all day in dark mode — painted from
+slow drifting orbs that stand still for anyone who asked for less motion.
+On it: her name and a question sized like a magazine cover («ماذا تلبسين
+الليلة؟»), three of the newest pieces pinned like polaroids, live chips that
+only appear when they are true (a deal counting down, boutiques that posted,
+her bag, unread notifications), and «اسألي ريم» — a field that opens the
+stylist, with an example sentence that changes every few seconds. Scrolling
+folds the sky into a frosted bar that keeps the bag and the bell.
+
+Under it:
+
+- **A live line** (`HomePulse`) — one thing happening now at a time: a deal
+  with its countdown, the most-wanted piece, something that just landed.
+- **The stories**, still near the top as the client chose (Q78).
+- **«على أي مزاج اليوم؟»** (`HomeMoodDial`) — six moods as gradient tiles;
+  each opens the stylist already asked for that look.
+- **«ذوقكِ، قطعة قطعة»** (`HomeStyleDeck`) — today's recommendations as a deck:
+  swipe right to love a piece (a real like, so it lands in her likes and
+  teaches the recommender), left to skip; buttons for both, laid out by the
+  hand rather than the reading direction; an end card counts what she kept.
+- **The departments as a bento** (`HomeBento`) instead of a row of circles.
+
+Then the feed, with the remaining shelves set into it as before. The top bar,
+search box and stylist banner it replaced were removed.
+
+## The post, redesigned
+
+Posts were drawn by three different cards — the home feed's, a product told
+as a post (departments, «وصل حديثاً», search, a woman's page) and the
+community's — all in the shape of every social app of the last decade: a
+white frame, a header row, an inset picture, a row of glyphs and the words
+underneath. They are now one card, `DsImmersivePost`, where **the photograph
+is the card**:
+
+- a frosted **capsule** at the top — the author in the brand ring, the
+  verified mark, «قبل 4 أيام»;
+- **segments** across the top for a gallery, the way stories count;
+- a vertical **rail** on the image — love, comments, share, «أضيفي إلى
+  صفحتي», save — each with its count, the active ones lit;
+- the **caption** on the shade at the foot, hashtags in champagne, tap to
+  open it;
+- the piece as a frosted **ticket** — name, price, the old price struck, and
+  the bag, so seeing and buying stay one gesture;
+- a post of words alone becomes a painted **note** in the display serif;
+- under the card, a line of hearts with the likes and the way into comments.
+
+The first card of a run carries the brand ring and a warmer glow. Double-tap
+is love everywhere. Verified in the browser: the rail's heart stored a like
+and the ticket's bag added the piece to the bag.
