@@ -52,14 +52,14 @@ class _ChatsScreenState extends ConsumerState<ChatsScreen> {
     await realtime.connect();
     if (!mounted) return;
     _realtimeSub = realtime.events.listen((event) {
-      const refreshing = {
-        'message.created',
-        'messages.read',
-        'presence.changed',
-        // Back after a drop: the inbox may have moved while it was away.
-        'connection.restored',
-      };
-      if (!refreshing.contains(event['event'])) return;
+      if (!mounted) return;
+      // Applied in place where it can be — a new message moves its row to
+      // the top at once, presence and typing land on their row — and
+      // refetched only when it cannot: a conversation not on screen yet, or
+      // the socket coming back after a drop.
+      final needsRefresh =
+          ref.read(chatNotifierProvider.notifier).applyRealtime(event);
+      if (!needsRefresh) return;
       _refreshDebounce?.cancel();
       _refreshDebounce = Timer(const Duration(milliseconds: 400), () {
         if (mounted) unawaited(ref.read(chatNotifierProvider.notifier).refresh());
@@ -221,6 +221,7 @@ class _ChatsScreenState extends ConsumerState<ChatsScreen> {
             final thread = state.threads[index];
             return ChatTile(
               thread: thread,
+              isTyping: state.typingChatIds.contains(thread.id),
               onTap: () => _open(thread.id),
             );
           },

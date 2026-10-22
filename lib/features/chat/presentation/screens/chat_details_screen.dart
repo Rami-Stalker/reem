@@ -10,9 +10,12 @@ import 'package:reem/core/media/media_asset.dart';
 import 'package:reem/core/media/media_limits.dart';
 import 'package:reem/core/media/media_providers.dart';
 import 'package:reem/core/router/route_paths.dart';
+import 'package:reem/core/utils/relative_time.dart';
 import 'package:reem/features/chat/data/services/chat_realtime_service.dart';
 import 'package:reem/features/chat/domain/entities/chat_message_entity.dart';
+import 'package:reem/features/chat/presentation/providers/chat_notifier.dart';
 import 'package:reem/features/chat/presentation/providers/chat_provider.dart';
+import 'package:reem/features/chat/presentation/providers/chat_state.dart';
 import 'package:reem/features/chat/presentation/widgets/attachment_sheet.dart';
 import 'package:reem/features/chat/presentation/widgets/chat_app_bar.dart';
 import 'package:reem/features/chat/presentation/widgets/chat_date_divider.dart';
@@ -40,6 +43,12 @@ class _ChatDetailsScreenState extends ConsumerState<ChatDetailsScreen>
   late AnimationController controller;
   StreamSubscription<Map<String, dynamic>>? realtimeSub;
 
+  /// The list is drawn bottom-up (`reverse`), so offset 0 is the newest
+  /// message. It used to be drawn top-down from the oldest: a conversation
+  /// opened at its first message, and a reply arrived below the fold where
+  /// nobody saw it.
+  final ScrollController _scroll = ScrollController();
+
   /// The photograph is on its way. Held here rather than in the notifier
   /// because the message does not exist yet — there is nothing for the message
   /// list to show a spinner on.
@@ -48,8 +57,14 @@ class _ChatDetailsScreenState extends ConsumerState<ChatDetailsScreen>
   /// Kept so `dispose` can leave the room without touching `ref`.
   ChatRealtimeService? _realtime;
 
+  /// Marks the conversation read when she comes back to the app with it open.
+  AppLifecycleListener? _lifecycle;
+
   /// The composer is replaced by the recorder while this is true.
   bool _recording = false;
+
+  ChatMessagesNotifier get _messages =>
+      ref.read(chatMessagesNotifierProvider(widget.chatId).notifier);
 
   @override
   void initState() {
@@ -58,52 +73,116 @@ class _ChatDetailsScreenState extends ConsumerState<ChatDetailsScreen>
       vsync: this,
       duration: const Duration(milliseconds: 900),
     )..forward();
+    _scroll.addListener(_maybeLoadOlder);
 
     if (widget.chatId.isNotEmpty) {
+      _lifecycle = AppLifecycleListener(onResume: _markReadIfVisible);
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        _bootstrap();
+        if (mounted) unawaited(_bootstrap());
       });
     }
   }
 
   Future<void> _bootstrap() async {
-    await ref.read(chatMessagesNotifierProvider.notifier).load(widget.chatId);
     final realtime = ref.read(chatRealtimeServiceProvider);
     _realtime = realtime;
-    await realtime.connect();
+    // Listening first, loading second: a message that arrives while the page
+    // is in flight is merged in rather than lost between the two.
+    realtimeSub = realtime.events.listen(_onRealtime);
+    // Remembered by the service and replayed whenever the socket is (re)made,
+    // so it does not matter that the socket may not be open yet.
     realtime.join(widget.chatId);
-    realtime.markRead(widget.chatId);
-    realtimeSub = realtime.events.listen((event) {
-      if (event['event'] == 'connection.restored') {
+    unawaited(realtime.connect());
+
+    await _messages.load();
+    if (!mounted) return;
+    _markReadIfVisible();
+  }
+
+  void _onRealtime(Map<String, dynamic> event) {
+    if (!mounted) return;
+    switch (event['event']) {
+      case 'connection.restored':
         // Anything sent while the socket was down never reached it.
-        unawaited(ref.read(chatMessagesNotifierProvider.notifier).resync());
-        realtime.markRead(widget.chatId);
-        return;
-      }
-      ref.read(chatMessagesNotifierProvider.notifier).applyRealtime(event);
-      if (event['event'] == 'message.created' &&
-          event['chat_id'] == widget.chatId) {
-        realtime.markRead(widget.chatId);
-      }
-    });
+        unawaited(
+          _messages.resync().then((_) {
+            if (mounted) _markReadIfVisible();
+          }),
+        );
+      case 'presence.changed':
+        ref
+            .read(chatThreadNotifierProvider(widget.chatId).notifier)
+            .applyPresence(event);
+      default:
+        _messages.applyRealtime(event);
+        if (event['event'] == 'message.created' &&
+            event['chat_id'] == widget.chatId) {
+          _markReadIfVisible();
+        }
+    }
+  }
+
+  /// Reports the conversation read — only while she can actually see it. A
+  /// message arriving while the phone sits locked with this screen underneath
+  /// used to be marked read, and the sender saw "read" for a message nobody
+  /// had looked at.
+  void _markReadIfVisible() {
+    if (!mounted) return;
+    final lifecycle = WidgetsBinding.instance.lifecycleState;
+    if (lifecycle != null && lifecycle != AppLifecycleState.resumed) return;
+    unawaited(_messages.markRead());
+  }
+
+  /// Near the top of what is loaded: fetch the page before it.
+  void _maybeLoadOlder() {
+    if (!_scroll.hasClients || widget.chatId.isEmpty) return;
+    final position = _scroll.position;
+    if (position.pixels >= position.maxScrollExtent - 320) {
+      unawaited(_messages.loadOlder());
+    }
+  }
+
+  void _jumpToNewest() {
+    if (!_scroll.hasClients) return;
+    unawaited(
+      _scroll.animateTo(0, duration: DsMotion.normal, curve: Curves.easeOut),
+    );
+  }
+
+  Future<void> _sendText(String text) async {
+    _jumpToNewest();
+    final sent = await _messages.sendMessage(text);
+    if (!sent && mounted) _warn(context.l10n.chatSendFailed);
+  }
+
+  Future<void> _retry(ChatMessageEntity message) async {
+    final sent = await _messages.retry(message);
+    if (!sent && mounted) _warn(context.l10n.chatSendFailed);
   }
 
   @override
   void dispose() {
     realtimeSub?.cancel();
-    // Read during `initState`, not here: `ref` leans on `BuildContext`, which
+    _lifecycle?.dispose();
+    _scroll.dispose();
+    // Read during `_bootstrap`, not here: `ref` leans on `BuildContext`, which
     // is already unsafe by the time `dispose` runs. Riverpod says so out loud
     // and the leave never happened — the socket kept this conversation joined
     // after she had left it.
-    if (widget.chatId.isNotEmpty) _realtime?.leave(widget.chatId);
+    if (widget.chatId.isNotEmpty) {
+      // Leaving mid-sentence must not leave "typing…" on the other screen.
+      _realtime?.typing(widget.chatId, false);
+      _realtime?.leave(widget.chatId);
+    }
     controller.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final messagesState = ref.watch(chatMessagesNotifierProvider);
-    final notifier = ref.read(chatMessagesNotifierProvider.notifier);
+    final messagesState = widget.chatId.isEmpty
+        ? const ChatMessagesState()
+        : ref.watch(chatMessagesNotifierProvider(widget.chatId));
     final realtime = ref.read(chatRealtimeServiceProvider);
     // Who she is talking to. Loaded on its own so the header is correct even
     // when this screen was opened by deep link and no list ever existed.
@@ -137,38 +216,7 @@ class _ChatDetailsScreenState extends ConsumerState<ChatDetailsScreen>
                           ),
                   ),
                 ),
-                if (messagesState.isLoading)
-                  const Expanded(
-                    child: DsLoadingIndicator(),
-                  )
-                else if (messagesState.error != null)
-                  Expanded(child: DsErrorState(message: messagesState.error))
-                else
-                  Expanded(
-                    child: ListView(
-                      padding: const EdgeInsets.all(DsSpacing.xl),
-                      children: [
-                        ChatDateDivider(title: context.l10n.todayLabel),
-                        DsGaps.vLg,
-                        if (messagesState.messages.isEmpty)
-                          _EmptyConversation(onImage: _attach)
-                        else
-                          ...messagesState.messages.map(
-                            (message) => Padding(
-                              padding: const EdgeInsets.only(
-                                bottom: DsSpacing.sm,
-                              ),
-                              child: _MessageRow(message: message),
-                            ),
-                          ),
-                        if (messagesState.isPeerTyping) ...[
-                          DsGaps.vXs,
-                          const TypingIndicator(),
-                        ],
-                        DsGaps.vXxl,
-                      ],
-                    ),
-                  ),
+                Expanded(child: _body(context, messagesState)),
                 if (_recording)
                   VoiceRecorderBar(
                     onCompleted: _sendVoiceNote,
@@ -176,12 +224,15 @@ class _ChatDetailsScreenState extends ConsumerState<ChatDetailsScreen>
                   )
                 else
                   ChatInput(
-                    isSending: messagesState.isSending || _attaching,
+                    // Only an upload in flight holds the composer: a text
+                    // message is on screen the moment it is sent, so she can
+                    // write the next one straight away.
+                    isSending: _attaching,
                     onTyping: (typing) =>
                         realtime.typing(widget.chatId, typing),
                     onImage: _attach,
                     onVoice: () => setState(() => _recording = true),
-                    onSend: (text) => notifier.sendMessage(text),
+                    onSend: (text) => unawaited(_sendText(text)),
                   ),
               ],
             ),
@@ -190,6 +241,102 @@ class _ChatDetailsScreenState extends ConsumerState<ChatDetailsScreen>
       ),
     );
   }
+
+  Widget _body(BuildContext context, ChatMessagesState state) {
+    if (state.isLoading && state.messages.isEmpty) {
+      return const DsLoadingIndicator();
+    }
+    // A conversation that could not be loaded at all. One that could, and
+    // then failed to refresh, keeps what it has on screen.
+    if (state.error != null && state.messages.isEmpty) {
+      return DsErrorState(
+        title: context.l10n.chatsLoadFailed,
+        message: state.error,
+        retryLabel: context.l10n.retry,
+        onRetry: () => unawaited(_messages.load()),
+      );
+    }
+    if (state.messages.isEmpty) {
+      return ListView(
+        padding: const EdgeInsets.all(DsSpacing.xl),
+        children: [
+          _EmptyConversation(onImage: _attach),
+          if (state.isPeerTyping) ...[DsGaps.vMd, const TypingIndicator()],
+        ],
+      );
+    }
+
+    final entries = _entries(context, state);
+    return ListView.builder(
+      controller: _scroll,
+      reverse: true,
+      padding: const EdgeInsets.fromLTRB(
+        DsSpacing.xl,
+        DsSpacing.lg,
+        DsSpacing.xl,
+        DsSpacing.lg,
+      ),
+      itemCount: entries.length,
+      itemBuilder: (context, index) => entries[index],
+    );
+  }
+
+  /// Newest first, because the list is drawn bottom-up: the typing dots, then
+  /// the messages with a day divider wherever the calendar day changes, then
+  /// — at the very top — the spinner for an older page.
+  List<Widget> _entries(BuildContext context, ChatMessagesState state) {
+    final l10n = context.l10n;
+    final entries = <Widget>[
+      if (state.isPeerTyping)
+        const Padding(
+          padding: EdgeInsets.only(top: DsSpacing.xs),
+          child: TypingIndicator(),
+        ),
+    ];
+    final messages = state.messages;
+    for (var i = messages.length - 1; i >= 0; i--) {
+      final message = messages[i];
+      entries.add(
+        Padding(
+          key: ValueKey(message.clientId ?? message.id),
+          padding: const EdgeInsets.only(bottom: DsSpacing.sm),
+          child: _MessageRow(
+            message: message,
+            onRetry: message.isFailed ? () => unawaited(_retry(message)) : null,
+          ),
+        ),
+      );
+      final older = i > 0 ? messages[i - 1] : null;
+      if (older == null || !_sameDay(older.sentAt, message.sentAt)) {
+        entries.add(
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: DsSpacing.md),
+            child: ChatDateDivider(title: formatChatDay(l10n, message.sentAt)),
+          ),
+        );
+      }
+    }
+    if (state.isLoadingOlder) {
+      entries.add(
+        Padding(
+          padding: const EdgeInsets.all(DsSpacing.md),
+          child: Center(
+            child: Semantics(
+              label: l10n.chatLoadOlder,
+              child: const SizedBox.square(
+                dimension: DsSizes.iconMd,
+                child: CircularProgressIndicator(strokeWidth: 2),
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+    return entries;
+  }
+
+  static bool _sameDay(DateTime a, DateTime b) =>
+      a.year == b.year && a.month == b.month && a.day == b.day;
 
   /// Capture or choose a photograph, upload it, then send the message.
   ///
@@ -244,33 +391,31 @@ class _ChatDetailsScreenState extends ConsumerState<ChatDetailsScreen>
         bytes: bytes,
       );
       if (!mounted) return;
-
-      if (!mounted) return;
       // The server sniffed the bytes; its answer decides the message kind, not
       // the extension the file happened to carry.
       final kind = asset.isDocument ? 'FILE' : 'IMAGE';
 
-      await ref
-          .read(chatMessagesNotifierProvider.notifier)
-          .send(
-            // The bubble draws the photograph or names the document; the content
-            // is what a notification and a thread preview can say in one word.
-            content: asset.isDocument
-                ? context.l10n.chatFileMessage
-                : context.l10n.chatPhotoMessage,
-            kind: kind,
-            attachments: [
-              {
-                'kind': kind,
-                'url': asset.url,
-                'mime_type': asset.mimeType,
-                'size_bytes': asset.byteSize,
-                if (asset.isDocument) 'file_name': file.name,
-                if (asset.width != null) 'width': asset.width,
-                if (asset.height != null) 'height': asset.height,
-              },
-            ],
-          );
+      _jumpToNewest();
+      final sent = await _messages.send(
+        // The bubble draws the photograph or names the document; the content
+        // is what a notification and a thread preview can say in one word.
+        content: asset.isDocument
+            ? context.l10n.chatFileMessage
+            : context.l10n.chatPhotoMessage,
+        kind: kind,
+        attachments: [
+          {
+            'kind': kind,
+            'url': asset.url,
+            'mime_type': asset.mimeType,
+            'size_bytes': asset.byteSize,
+            if (asset.isDocument) 'file_name': file.name,
+            if (asset.width != null) 'width': asset.width,
+            if (asset.height != null) 'height': asset.height,
+          },
+        ],
+      );
+      if (!sent && mounted) _warn(context.l10n.chatSendFailed);
     } catch (_) {
       if (mounted) _warn(context.l10n.chatAttachmentFailed);
     } finally {
@@ -294,23 +439,23 @@ class _ChatDetailsScreenState extends ConsumerState<ChatDetailsScreen>
           .upload(XFile(path), purpose: MediaPurpose.chat);
       if (!mounted) return;
 
-      await ref
-          .read(chatMessagesNotifierProvider.notifier)
-          .send(
-            content: context.l10n.voiceMessage,
-            kind: 'VOICE',
-            attachments: [
-              {
-                'kind': 'VOICE',
-                'url': asset.url,
-                'mime_type': asset.mimeType,
-                'size_bytes': asset.byteSize,
-                // Measured by the recorder, not read back from the container: it
-                // is the one place the exact figure is already known.
-                'duration_ms': duration.inMilliseconds,
-              },
-            ],
-          );
+      _jumpToNewest();
+      final sent = await _messages.send(
+        content: context.l10n.voiceMessage,
+        kind: 'VOICE',
+        attachments: [
+          {
+            'kind': 'VOICE',
+            'url': asset.url,
+            'mime_type': asset.mimeType,
+            'size_bytes': asset.byteSize,
+            // Measured by the recorder, not read back from the container: it
+            // is the one place the exact figure is already known.
+            'duration_ms': duration.inMilliseconds,
+          },
+        ],
+      );
+      if (!sent && mounted) _warn(context.l10n.chatSendFailed);
     } catch (_) {
       if (mounted) _warn(context.l10n.chatAttachmentFailed);
     } finally {
@@ -323,9 +468,12 @@ class _ChatDetailsScreenState extends ConsumerState<ChatDetailsScreen>
 }
 
 class _MessageRow extends StatelessWidget {
-  const _MessageRow({required this.message});
+  const _MessageRow({required this.message, this.onRetry});
 
   final ChatMessageEntity message;
+
+  /// Set only for a message of hers that failed to send.
+  final VoidCallback? onRetry;
 
   @override
   Widget build(BuildContext context) {
@@ -356,17 +504,51 @@ class _MessageRow extends StatelessWidget {
       _ => MessageBubble(isMe: message.isMine, message: message.content),
     };
 
-    if (!message.isMine) return bubble;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.end,
+    final l10n = context.l10n;
+    final colors = context.dsColors;
+    final meta = Row(
+      mainAxisSize: MainAxisSize.min,
       children: [
-        bubble,
-        DsGaps.vXxs,
-        MessageDeliveryStatus(
-          delivered: message.isDelivered,
-          seen: message.isRead,
+        Text(
+          message.isFailed
+              ? l10n.chatMessageNotSent
+              : message.isPending
+                  ? l10n.chatSending
+                  : formatMessageTime(l10n, message.sentAt),
+          style: context.dsText.caption.tint(
+            message.isFailed ? colors.error : colors.onSurfaceVariant,
+          ),
         ),
+        if (message.isMine) ...[
+          DsGaps.hXxs,
+          MessageDeliveryStatus(
+            delivered: message.isDelivered,
+            seen: message.isRead,
+            pending: message.isPending,
+            failed: message.isFailed,
+          ),
+        ],
       ],
+    );
+
+    final row = Column(
+      crossAxisAlignment:
+          message.isMine ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+      children: [
+        Opacity(opacity: message.isPending ? 0.7 : 1, child: bubble),
+        DsGaps.vXxs,
+        meta,
+      ],
+    );
+    if (onRetry == null) return row;
+    return Semantics(
+      button: true,
+      label: l10n.chatMessageNotSent,
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: onRetry,
+        child: row,
+      ),
     );
   }
 }

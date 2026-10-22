@@ -135,6 +135,38 @@ void main() {
     });
   });
 
+  group('sending a text message', () {
+    testWidgets('a refused send keeps the conversation and offers a retry', (
+      tester,
+    ) async {
+      final chat = _FakeChatRepository()..failSends = true;
+      await tester.pumpWidget(
+        _chatHarness(uploads: _FakeUploadService(), chat: chat),
+      );
+      await _settle(tester);
+
+      await tester.enterText(find.byType(TextField), 'هل يتوفر مقاس L؟');
+      await tester.tap(find.byIcon(Icons.send_rounded));
+      await _settle(tester);
+
+      // The message is still there, marked — not replaced by an error page,
+      // and her text is not lost.
+      expect(find.text('هل يتوفر مقاس L؟'), findsOneWidget);
+      expect(find.text(_ar.chatMessageNotSent), findsOneWidget);
+      expect(find.byType(ChatInput), findsOneWidget);
+
+      chat.failSends = false;
+      await tester.tap(find.text(_ar.chatMessageNotSent));
+      await _settle(tester);
+
+      expect(find.text(_ar.chatMessageNotSent), findsNothing);
+      expect(find.text('هل يتوفر مقاس L؟'), findsOneWidget);
+      // One message, sent twice under one client id — stored once.
+      expect(chat.clientIds, hasLength(2));
+      expect(chat.clientIds.toSet(), hasLength(1));
+    });
+  });
+
   group('sending a photograph', () {
     testWidgets('picks, uploads as chat media, and sends what was stored', (
       tester,
@@ -739,9 +771,16 @@ class _FakeRecorder extends VoiceRecorderService {
 
 class _FakeChatRepository implements ChatRepository {
   Map<String, dynamic>? sent;
+  bool failSends = false;
+  final clientIds = <String?>[];
 
   @override
-  Future<Result<List<ChatMessageEntity>>> getMessages(String chatId) async =>
+  Future<Result<List<ChatMessageEntity>>> getMessages(
+    String chatId, {
+    DateTime? before,
+    int limit = 50,
+    String? currentUserId,
+  }) async =>
       const Success([]);
 
   @override
@@ -750,7 +789,11 @@ class _FakeChatRepository implements ChatRepository {
     required String content,
     String kind = 'TEXT',
     List<Map<String, dynamic>> attachments = const [],
+    String? clientId,
+    String? currentUserId,
   }) async {
+    clientIds.add(clientId);
+    if (failSends) return const Error(NetworkFailure('لا يوجد اتصال'));
     sent = {'content': content, 'kind': kind, 'attachments': attachments};
     return Success(
       ChatMessageEntity(

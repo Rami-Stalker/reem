@@ -60,3 +60,27 @@ String formatCalendarDate(
 }) => toWesternDigits(
   DateFormat(pattern, l10n.localeName).format(moment.toLocal()),
 );
+
+/// The divider between days in a conversation: «اليوم», «أمس», a weekday for
+/// this week, a date beyond it.
+///
+/// Days are compared as calendar dates in UTC, so a daylight-saving night —
+/// a 23-hour day — cannot make yesterday read as two days ago.
+String formatChatDay(AppLocalizations l10n, DateTime moment) {
+  final now = DateTime.now();
+  final today = DateTime.utc(now.year, now.month, now.day);
+  final day = DateTime.utc(moment.year, moment.month, moment.day);
+  final daysApart = today.difference(day).inDays;
+  if (daysApart <= 0) return l10n.todayLabel;
+  if (daysApart == 1) return l10n.chatYesterday;
+  final pattern = switch (daysApart) {
+    < 7 => 'EEEE',
+    _ when moment.year == now.year => 'd MMMM',
+    _ => 'd MMMM yyyy',
+  };
+  return toWesternDigits(DateFormat(pattern, l10n.localeName).format(moment));
+}
+
+/// The clock time under a message.
+String formatMessageTime(AppLocalizations l10n, DateTime moment) =>
+    toWesternDigits(DateFormat('h:mm a', l10n.localeName).format(moment));

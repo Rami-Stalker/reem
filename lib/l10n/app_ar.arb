@@ -382,6 +382,8 @@
     "description": "Attachment sheet: pick a document from storage."
   },
   "chatLastSeen": "آخر ظهور {when}",
+  "chatLoadOlder": "تحميل الرسائل السابقة",
+  "chatMessageNotSent": "لم تُرسل · اضغطي لإعادة المحاولة",
   "chatNoMessagesYet": "لا رسائل بعد",
   "chatNoSharedMedia": "لم تُشارَك أي صورة هنا بعد.",
   "@chatNoSharedMedia": {
@@ -401,6 +403,8 @@
   "chatSafetyNote": "أبقي الدفع داخل ريم",
   "chatSafetyNoteBody": "لن يطلب منكِ أي متجر الدفع خارج التطبيق. أبلغي عن أي محاولة لذلك.",
   "chatSeen": "تمّت القراءة",
+  "chatSendFailed": "تعذّر إرسال الرسالة",
+  "chatSending": "جارٍ الإرسال…",
   "chatSent": "تم الإرسال",
   "chatShareImage": "أرسلي صورة",
   "@chatShareImage": {
@@ -423,6 +427,7 @@
   "chatUntitled": "محادثة",
   "chatVoice": "ملاحظة صوتية",
   "chatWriteMessage": "اكتبي رسالة…",
+  "chatYesterday": "أمس",
   "chatsEmptyAction": "تصفّحي المتاجر",
   "chatsEmptyMessage": "اسألي المتجر عن قطعة أو مقاس أو طلب، وستظهر المحادثة هنا.",
   "chatsEmptyMessageSeller": "حين تسأل زبونة عن قطعة أو طلب، تصلكِ رسالتها هنا.",

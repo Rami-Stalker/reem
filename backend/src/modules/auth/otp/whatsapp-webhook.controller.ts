@@ -11,7 +11,7 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { OtpDeliveryStatus, OtpOutboxStatus } from '@prisma/client';
 import { Request } from 'express';
-import { createHmac, timingSafeEqual } from 'crypto';
+import { createHash, createHmac, timingSafeEqual } from 'crypto';
 import { Throttle } from '@nestjs/throttler';
 import { Public } from '../../../common/decorators/public.decorator';
 import { PrismaService } from '../../../prisma/prisma.service';
@@ -64,7 +64,8 @@ export class WhatsAppWebhookController {
     if (
       mode === 'subscribe' &&
       this.verifyToken &&
-      token === this.verifyToken
+      typeof token === 'string' &&
+      sameToken(token, this.verifyToken)
     ) {
       return challenge;
     }
@@ -173,4 +174,14 @@ export class WhatsAppWebhookController {
       throw new BadRequestException('Invalid webhook signature');
     }
   }
+}
+
+/**
+ * Constant-time and length-independent: both sides are hashed first, so the
+ * response time leaks neither how much of the token matched nor its length.
+ */
+function sameToken(given: string, expected: string): boolean {
+  const a = createHash('sha256').update(given).digest();
+  const b = createHash('sha256').update(expected).digest();
+  return timingSafeEqual(a, b);
 }

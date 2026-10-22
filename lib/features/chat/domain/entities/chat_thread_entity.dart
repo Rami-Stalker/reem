@@ -46,6 +46,30 @@ class ChatThreadEntity extends Equatable {
 
   bool get hasUnread => unreadCount > 0;
 
+  ChatThreadEntity copyWith({
+    String? lastMessage,
+    int? unreadCount,
+    DateTime? updatedAt,
+    DateTime? lastSeenAt,
+    bool? isOnline,
+  }) {
+    return ChatThreadEntity(
+      id: id,
+      title: title,
+      avatarUrl: avatarUrl,
+      lastMessage: lastMessage ?? this.lastMessage,
+      unreadCount: unreadCount ?? this.unreadCount,
+      updatedAt: updatedAt ?? this.updatedAt,
+      context: context,
+      peerId: peerId,
+      peerName: peerName,
+      productId: productId,
+      sellerOrderId: sellerOrderId,
+      lastSeenAt: lastSeenAt ?? this.lastSeenAt,
+      isOnline: isOnline ?? this.isOnline,
+    );
+  }
+
   @override
   List<Object?> get props => [
         id,

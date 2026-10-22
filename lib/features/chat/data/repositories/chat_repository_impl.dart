@@ -26,8 +26,20 @@ class ChatRepositoryImpl with RepositoryHandler implements ChatRepository {
       guard(() => remote.startConversation(request));
 
   @override
-  Future<Result<List<ChatMessageEntity>>> getMessages(String chatId) =>
-      guard(() => remote.getMessages(chatId));
+  Future<Result<List<ChatMessageEntity>>> getMessages(
+    String chatId, {
+    DateTime? before,
+    int limit = 50,
+    String? currentUserId,
+  }) =>
+      guard(
+        () => remote.getMessages(
+          chatId,
+          before: before,
+          limit: limit,
+          currentUserId: currentUserId,
+        ),
+      );
 
   @override
   Future<Result<ChatMessageEntity>> sendMessage({
@@ -35,6 +47,8 @@ class ChatRepositoryImpl with RepositoryHandler implements ChatRepository {
     required String content,
     String kind = 'TEXT',
     List<Map<String, dynamic>> attachments = const [],
+    String? clientId,
+    String? currentUserId,
   }) =>
       guard(
         () => remote.sendMessage(
@@ -42,6 +56,8 @@ class ChatRepositoryImpl with RepositoryHandler implements ChatRepository {
           content: content,
           kind: kind,
           attachments: attachments,
+          clientId: clientId,
+          currentUserId: currentUserId,
         ),
       );
 

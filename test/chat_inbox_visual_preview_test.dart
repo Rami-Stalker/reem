@@ -278,7 +278,12 @@ class _FakeChats implements ChatRepository {
       Success(threads.first);
 
   @override
-  Future<Result<List<ChatMessageEntity>>> getMessages(String chatId) async =>
+  Future<Result<List<ChatMessageEntity>>> getMessages(
+    String chatId, {
+    DateTime? before,
+    int limit = 50,
+    String? currentUserId,
+  }) async =>
       const Success([]);
 
   @override

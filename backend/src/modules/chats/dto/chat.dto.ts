@@ -3,6 +3,7 @@ import {
   IsArray,
   IsEnum,
   IsInt,
+  IsISO8601,
   IsOptional,
   IsString,
   IsUUID,
@@ -142,6 +143,14 @@ export class MessageQueryDto {
   @IsString()
   @MaxLength(120)
   q?: string;
+
+  /**
+   * Messages strictly older than this instant — the `sent_at` of the oldest
+   * message the client already holds. Takes precedence over `page`.
+   */
+  @IsOptional()
+  @IsISO8601()
+  before?: string;
 }
 
 export class MarkReadDto {

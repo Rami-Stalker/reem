@@ -62,6 +62,23 @@ const chatInclude = {
  */
 const MAX_INBOX_THREADS = 300;
 
+/** Receipts one read call writes; anything older is caught by the next. */
+const MAX_RECEIPTS_PER_READ = 1000;
+
+/** What the push says, in Arabic, for each kind of message. */
+function notificationBody(message: MessageWithRelations): string {
+  switch (message.kind) {
+    case MessageKind.IMAGE:
+      return '📷 صورة';
+    case MessageKind.VOICE:
+      return '🎤 رسالة صوتية';
+    case MessageKind.FILE:
+      return `📎 ${message.attachments?.[0]?.fileName ?? 'ملف'}`;
+    default:
+      return message.content.slice(0, 160);
+  }
+}
+
 @Injectable()
 export class ChatsService {
   constructor(
@@ -84,6 +101,7 @@ export class ChatsService {
                   {
                     messages: {
                       some: {
+                        deletedAt: null,
                         content: { contains: query.q, mode: 'insensitive' },
                       },
                     },
@@ -180,21 +198,35 @@ export class ChatsService {
       });
     }
 
-    return serializeChatThread(chat as ChatWithRelations, userId);
+    // Reopening a thread she already has must not draw it as fully read: the
+    // details screen and the inbox both take this row as the truth.
+    const unread = await this.unreadCount(chat.id, userId);
+    return serializeChatThread(chat as ChatWithRelations, userId, unread);
   }
 
+  /**
+   * One page of a conversation, oldest first.
+   *
+   * `before` is the way to scroll back. Offset paging (`page`) shifts under a
+   * live conversation — every message that arrives while she reads pushes the
+   * next page down by one, so "load older" fetched a message she already had
+   * and skipped one she had not. A cursor on the oldest message she holds
+   * cannot drift. `page` still works for older builds of the app.
+   */
   async messages(chatId: string, userId: string, query: MessageQueryDto = new MessageQueryDto()) {
     await this.assertMember(chatId, userId);
+    const before = query.before ? new Date(query.before) : undefined;
     const messages = await this.prisma.message.findMany({
       where: {
         chatId,
         deletedAt: null,
+        ...(before ? { createdAt: { lt: before } } : {}),
         ...(query.q
           ? { content: { contains: query.q, mode: 'insensitive' } }
           : {}),
       },
-      orderBy: { createdAt: 'desc' },
-      skip: (query.page - 1) * query.limit,
+      orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
+      skip: before ? 0 : (query.page - 1) * query.limit,
       take: query.limit,
       include: messageInclude,
     });
@@ -204,11 +236,32 @@ export class ChatsService {
 
   async send(chatId: string, userId: string, dto: SendMessageDto) {
     const chat = await this.assertMember(chatId, userId);
+    if (chat.closedAt) {
+      throw new ForbiddenException('This conversation is closed');
+    }
     const content = dto.content?.trim() ?? '';
     const attachments = dto.attachments ?? [];
-    const kind = dto.kind ?? (attachments[0]?.kind ?? MessageKind.TEXT);
     if (!content && attachments.length === 0) {
       throw new BadRequestException('Message content or attachment is required');
+    }
+    // A media kind with nothing attached is a text message that claims to be
+    // a photograph — the client draws an empty frame for it. The kind follows
+    // what was actually sent.
+    const kind =
+      attachments.length === 0
+        ? MessageKind.TEXT
+        : (dto.kind ?? attachments[0].kind);
+
+    // A retry, not a second message. The phone resends with the same
+    // `client_id` when the first attempt's answer was lost on the way back
+    // (a lift, a tunnel) — and the server had already stored it. Without this
+    // the seller received every such message twice.
+    if (dto.client_id) {
+      const existing = await this.prisma.message.findFirst({
+        where: { chatId, senderId: userId, clientId: dto.client_id },
+        include: messageInclude,
+      });
+      if (existing) return serializeMessage(existing, userId);
     }
 
     const recipientIds = chat.participants
@@ -277,81 +330,172 @@ export class ChatsService {
       attachments.map((attachment) => attachment.url),
     );
 
-    await this.notifyRecipients(chat, userId, message);
-
     const serialized = serializeMessage(message, userId);
+    // The open conversation first, the push after. The push used to go first,
+    // so a reply sat behind a round trip to the notification provider before
+    // the person looking at the screen saw it.
     this.events.emit('chat.message.created', {
       chatId,
       participantIds: chat.participants.map((participant) => participant.userId),
       senderId: userId,
       message: serialized,
     });
+
+    await this.notifyRecipients(chat, userId, message);
     return serialized;
   }
 
+  /**
+   * She has read the conversation up to [dto.message_id] — or to its end.
+   *
+   * Three things this used to get wrong:
+   *
+   *  - **The marker moved backwards.** Marking an older message read set the
+   *    cutoff to *now*, so every newer message — ones she had not seen — was
+   *    counted read too; and a late `message_id` from a second handset pulled
+   *    the marker back past messages she had already read. The cutoff is now
+   *    the read message's own timestamp, and it only ever advances.
+   *  - **It rewrote every receipt on every call.** The app marks read each
+   *    time a message arrives while the conversation is open, and each call
+   *    upserted up to 500 receipts one query at a time — including the ones
+   *    already read — in no particular order. Only messages not yet read by
+   *    her are touched now, in two set-based writes.
+   *  - **It broadcast even when nothing changed**, so the other side redrew
+   *    its ticks for nothing. The event now fires only on a change.
+   */
   async markRead(chatId: string, userId: string, dto: MarkReadDto = {}) {
     await this.assertMember(chatId, userId);
-    const lastMessage = dto.message_id
+    const target = dto.message_id
       ? await this.prisma.message.findFirst({
           where: { id: dto.message_id, chatId },
           select: { id: true, createdAt: true },
         })
       : await this.prisma.message.findFirst({
-          where: { chatId },
-          orderBy: { createdAt: 'desc' },
+          where: { chatId, deletedAt: null },
+          orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
           select: { id: true, createdAt: true },
         });
-    if (!lastMessage) return { read: 0 };
+    if (!target) return { read: 0 };
 
-    const messages = await this.prisma.message.findMany({
+    const participant = await this.prisma.chatParticipant.findUnique({
+      where: { chatId_userId: { chatId, userId } },
+      select: { lastReadAt: true, lastReadMessageId: true },
+    });
+    const advances =
+      !participant?.lastReadAt || participant.lastReadAt < target.createdAt;
+
+    const unread = await this.prisma.message.findMany({
       where: {
         chatId,
         senderId: { not: userId },
-        createdAt: { lte: lastMessage.createdAt },
+        createdAt: { lte: target.createdAt },
+        receipts: { none: { userId, readAt: { not: null } } },
       },
       select: { id: true },
-      take: 500,
+      orderBy: { createdAt: 'desc' },
+      take: MAX_RECEIPTS_PER_READ,
     });
+
+    const cutoffId = advances
+      ? target.id
+      : (participant?.lastReadMessageId ?? target.id);
+    if (unread.length === 0 && !advances) {
+      return { read: 0, message_id: cutoffId };
+    }
+
     const now = new Date();
-    await Promise.all(
-      messages.map((message) =>
-        this.prisma.messageReadReceipt.upsert({
-          where: { messageId_userId: { messageId: message.id, userId } },
-          create: {
-            messageId: message.id,
-            userId,
-            deliveredAt: now,
-            readAt: now,
-          },
-          update: { deliveredAt: now, readAt: now },
-        }),
-      ),
-    );
-    await Promise.all([
-      this.prisma.message.updateMany({
-        where: {
-          id: { in: messages.map((message) => message.id) },
-          readAt: null,
-        },
-        data: {
-          status: MessageDeliveryStatus.READ,
+    const ids = unread.map((message) => message.id);
+    if (ids.length > 0) {
+      await this.prisma.messageReadReceipt.createMany({
+        data: ids.map((messageId) => ({
+          messageId,
+          userId,
           deliveredAt: now,
           readAt: now,
-        },
-      }),
-      this.prisma.chatParticipant.update({
-        where: { chatId_userId: { chatId, userId } },
-        data: { lastReadMessageId: lastMessage.id, lastReadAt: now },
-      }),
-    ]);
+        })),
+        skipDuplicates: true,
+      });
+      await Promise.all([
+        // Rows that existed already, as "delivered" from an earlier fetch.
+        this.prisma.messageReadReceipt.updateMany({
+          where: { userId, messageId: { in: ids }, readAt: null },
+          data: { readAt: now },
+        }),
+        this.prisma.message.updateMany({
+          where: { id: { in: ids }, deliveredAt: null },
+          data: { deliveredAt: now },
+        }),
+      ]);
+      await this.prisma.message.updateMany({
+        where: { id: { in: ids }, readAt: null },
+        data: { status: MessageDeliveryStatus.READ, readAt: now },
+      });
+    }
 
+    if (advances) {
+      await this.prisma.chatParticipant.update({
+        where: { chatId_userId: { chatId, userId } },
+        data: { lastReadMessageId: target.id, lastReadAt: target.createdAt },
+      });
+    }
+
+    const upTo = advances
+      ? target.createdAt
+      : (participant?.lastReadAt ?? target.createdAt);
     this.events.emit('chat.messages.read', {
       chatId,
       userId,
-      messageId: lastMessage.id,
+      messageId: cutoffId,
       readAt: now.toISOString(),
+      upTo: upTo.toISOString(),
     });
-    return { read: messages.length, message_id: lastMessage.id };
+    return { read: ids.length, message_id: cutoffId };
+  }
+
+  /**
+   * The recipient's device has these messages — the second tick.
+   *
+   * Called by the socket the moment it hands a new message to a connected
+   * recipient, and by the message fetch for everything she loads. Until now
+   * the only path was the fetch, and nothing told the sender: her ticks stayed
+   * at one until she reopened the conversation herself.
+   */
+  async acknowledgeDelivery(chatId: string, userId: string, messageIds: string[]) {
+    if (messageIds.length === 0) return;
+    const pending = await this.prisma.message.findMany({
+      where: {
+        chatId,
+        id: { in: messageIds },
+        senderId: { not: userId },
+        receipts: { none: { userId, deliveredAt: { not: null } } },
+      },
+      select: { id: true },
+    });
+    if (pending.length === 0) return;
+
+    const now = new Date();
+    const ids = pending.map((message) => message.id);
+    await this.prisma.messageReadReceipt.createMany({
+      data: ids.map((messageId) => ({ messageId, userId, deliveredAt: now })),
+      skipDuplicates: true,
+    });
+    await Promise.all([
+      this.prisma.messageReadReceipt.updateMany({
+        where: { userId, messageId: { in: ids }, deliveredAt: null },
+        data: { deliveredAt: now },
+      }),
+      this.prisma.message.updateMany({
+        where: { id: { in: ids }, status: MessageDeliveryStatus.SENT },
+        data: { status: MessageDeliveryStatus.DELIVERED, deliveredAt: now },
+      }),
+    ]);
+
+    this.events.emit('chat.messages.delivered', {
+      chatId,
+      userId,
+      messageIds: ids,
+      deliveredAt: now.toISOString(),
+    });
   }
 
   async search(userId: string, query: MessageQueryDto) {
@@ -374,6 +518,13 @@ export class ChatsService {
     if (userId === blockedId) {
       throw new BadRequestException('You cannot block yourself');
     }
+    // An unknown id used to reach the insert and fail the foreign key — a 500
+    // for what is a plain "no such person".
+    const target = await this.prisma.user.findUnique({
+      where: { id: blockedId },
+      select: { id: true },
+    });
+    if (!target) throw new NotFoundException('User not found');
     await this.prisma.chatBlock.upsert({
       where: { blockerId_blockedId: { blockerId: userId, blockedId } },
       create: { blockerId: userId, blockedId, reason: dto.reason },
@@ -557,8 +708,12 @@ export class ChatsService {
     ]);
     if (!me || !peer) throw new NotFoundException('Participant not found');
     const { buyerId, sellerId } = this.resolveBuyerSellerPair(me, peer);
+    // Always DIRECT. A `type` of PRODUCT or ORDER with no product or parcel
+    // behind it was taken at its word, and the lookup that reuses threads —
+    // which skips an `undefined` column — then matched *any* product chat
+    // between the two and opened that one instead.
     return this.conversationShape({
-      type: dto.type ?? ChatContextType.DIRECT,
+      type: ChatContextType.DIRECT,
       buyerId,
       sellerId,
     });
@@ -680,30 +835,31 @@ export class ChatsService {
     });
   }
 
+  /**
+   * Everything she just loaded from the other side is now on her phone.
+   *
+   * Only messages she has no delivery receipt for are touched: the old version
+   * re-upserted a receipt for every one of the fifty messages on each fetch,
+   * one query apiece, and overwrote the original delivery time while it was
+   * at it.
+   */
   private async markDelivered(
     chatId: string,
     userId: string,
     messages: MessageWithRelations[],
   ) {
-    const now = new Date();
-    const deliverable = messages.filter((message) => message.senderId !== userId);
-    await Promise.all(
-      deliverable.map((message) =>
-        this.prisma.messageReadReceipt.upsert({
-          where: { messageId_userId: { messageId: message.id, userId } },
-          create: { messageId: message.id, userId, deliveredAt: now },
-          update: { deliveredAt: now },
-        }),
-      ),
+    const pending = messages.filter(
+      (message) =>
+        message.senderId !== userId &&
+        !(message.receipts ?? []).some(
+          (receipt) => receipt.userId === userId && receipt.deliveredAt,
+        ),
     );
-    await this.prisma.message.updateMany({
-      where: {
-        chatId,
-        id: { in: deliverable.map((message) => message.id) },
-        status: MessageDeliveryStatus.SENT,
-      },
-      data: { status: MessageDeliveryStatus.DELIVERED, deliveredAt: now },
-    });
+    await this.acknowledgeDelivery(
+      chatId,
+      userId,
+      pending.map((message) => message.id),
+    );
   }
 
   private async assertNotBlocked(senderId: string, recipientIds: string[]) {
@@ -726,22 +882,27 @@ export class ChatsService {
     senderId: string,
     message: MessageWithRelations,
   ) {
+    const now = new Date();
     const recipients = chat.participants
+      // Someone who muted the conversation still receives the message; she
+      // is just not woken for it.
+      .filter((participant) => !(participant.mutedUntil && participant.mutedUntil > now))
       .map((participant) => participant.userId)
       .filter((id) => id !== senderId);
     if (recipients.length === 0) return;
     try {
+      const sender = await this.prisma.user.findUnique({
+        where: { id: senderId },
+        select: { name: true },
+      });
       await this.notifications.dispatch(senderId, {
         user_ids: recipients,
         channels: [NotificationChannel.IN_APP, NotificationChannel.PUSH],
         type: NotificationType.message,
-        title: 'New message',
-        body:
-          message.kind === MessageKind.TEXT
-            ? message.content.slice(0, 160)
-            : message.kind === MessageKind.IMAGE
-              ? 'Image shared'
-              : 'Voice message shared',
+        // Who wrote, in the title — the way every messenger on her phone
+        // does it. It used to read "New message", in English, for everyone.
+        title: sender?.name?.trim() || 'رسالة جديدة',
+        body: notificationBody(message),
         payload: { chat_id: chat.id, message_id: message.id },
         // Somebody wrote to her. Transactional, so it is never held for quiet
         // hours and never counted against a marketing cap — a message she is

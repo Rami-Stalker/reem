@@ -63,17 +63,33 @@ class _ChatInputState extends State<ChatInput>
     widget.onSend(text);
   }
 
+  /// When "typing" was last said to the other side.
+  DateTime? typingSentAt;
+
   void handleTyping(String value) {
-    if (value.trim().isNotEmpty) setTyping(true);
     typingTimer?.cancel();
-    typingTimer = Timer(const Duration(milliseconds: 900), () {
+    if (value.trim().isEmpty) {
       setTyping(false);
-    });
+      return;
+    }
+    setTyping(true);
+    // Said again every few seconds while she keeps typing: the other side
+    // drops "typing…" after a few seconds of silence, so a phone that went
+    // offline mid-sentence cannot leave it up for ever.
+    final last = typingSentAt;
+    if (last != null && DateTime.now().difference(last) > _typingRenewal) {
+      typingSentAt = DateTime.now();
+      widget.onTyping?.call(true);
+    }
+    typingTimer = Timer(const Duration(seconds: 2), () => setTyping(false));
   }
+
+  static const _typingRenewal = Duration(seconds: 3);
 
   void setTyping(bool value) {
     if (typing == value) return;
     typing = value;
+    typingSentAt = value ? DateTime.now() : null;
     widget.onTyping?.call(value);
   }
 
