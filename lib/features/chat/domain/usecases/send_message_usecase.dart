@@ -12,11 +12,15 @@ class SendMessageUseCase {
     required String content,
     String kind = 'TEXT',
     List<Map<String, dynamic>> attachments = const [],
+    String? clientId,
+    String? currentUserId,
   }) =>
       _repository.sendMessage(
         chatId: chatId,
         content: content,
         kind: kind,
         attachments: attachments,
+        clientId: clientId,
+        currentUserId: currentUserId,
       );
 }

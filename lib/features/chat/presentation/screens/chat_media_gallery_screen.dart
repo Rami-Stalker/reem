@@ -6,6 +6,7 @@ import 'package:reem/core/media/authorized_media_image.dart';
 import 'package:reem/core/media/media_lightbox.dart';
 import 'package:reem/core/media/media_variants.dart';
 import 'package:reem/features/chat/presentation/providers/chat_provider.dart';
+import 'package:reem/features/chat/presentation/providers/chat_state.dart';
 
 /// Every photograph shared in one conversation.
 ///
@@ -31,9 +32,10 @@ class _ChatMediaGalleryScreenState
     // messages the notifier already holds. The load is for arriving cold —
     // a deep link, or a restart on this route.
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final state = ref.read(chatMessagesNotifierProvider);
-      if (widget.chatId.isNotEmpty && state.chatId != widget.chatId) {
-        ref.read(chatMessagesNotifierProvider.notifier).load(widget.chatId);
+      if (!mounted || widget.chatId.isEmpty) return;
+      final state = ref.read(chatMessagesNotifierProvider(widget.chatId));
+      if (state.messages.isEmpty && !state.isLoading) {
+        ref.read(chatMessagesNotifierProvider(widget.chatId).notifier).load();
       }
     });
   }
@@ -41,13 +43,16 @@ class _ChatMediaGalleryScreenState
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final state = ref.watch(chatMessagesNotifierProvider);
+    final state = widget.chatId.isEmpty
+        ? const ChatMessagesState()
+        : ref.watch(chatMessagesNotifierProvider(widget.chatId));
 
     // Newest first: what she is looking for is nearly always the last thing
     // sent, and the conversation itself is ordered the other way.
     final photos = [
       for (final message in state.messages.reversed)
-        for (final attachment in message.attachments)
+        if (!message.isLocal)
+          for (final attachment in message.attachments)
           if (attachment.kind == 'image') attachment.url,
     ];
 

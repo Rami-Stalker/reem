@@ -33,7 +33,7 @@ export function serializeChatThread(
   const title =
     chat.title ??
     otherUser?.name ??
-    (chat.type === 'ORDER' ? 'Order conversation' : 'Chat');
+    (chat.type === 'ORDER' ? 'محادثة طلب' : 'محادثة');
 
   return {
     id: chat.id,
@@ -99,9 +99,17 @@ export function serializeMessage(
   };
 }
 
+/**
+ * The inbox line under a name. Arabic, like the rest of what she reads, and a
+ * document now says it is one — a FILE message used to preview as its content,
+ * which for a file sent without a caption was nothing at all.
+ */
 function messagePreview(message: MessageWithRelations) {
-  if (message.deletedAt) return 'Message deleted';
-  if (message.kind === 'IMAGE') return message.content || 'Image';
-  if (message.kind === 'VOICE') return message.content || 'Voice message';
+  if (message.deletedAt) return 'رسالة محذوفة';
+  if (message.kind === 'IMAGE') return message.content || 'صورة';
+  if (message.kind === 'VOICE') return message.content || 'رسالة صوتية';
+  if (message.kind === 'FILE') {
+    return message.content || message.attachments?.[0]?.fileName || 'ملف';
+  }
   return message.content;
 }

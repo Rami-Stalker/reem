@@ -1203,6 +1203,12 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
+  String get chatLoadOlder => 'تحميل الرسائل السابقة';
+
+  @override
+  String get chatMessageNotSent => 'لم تُرسل · اضغطي لإعادة المحاولة';
+
+  @override
   String get chatNoMessagesYet => 'لا رسائل بعد';
 
   @override
@@ -1235,6 +1241,12 @@ class AppLocalizationsAr extends AppLocalizations {
   String get chatSeen => 'تمّت القراءة';
 
   @override
+  String get chatSendFailed => 'تعذّر إرسال الرسالة';
+
+  @override
+  String get chatSending => 'جارٍ الإرسال…';
+
+  @override
   String get chatSent => 'تم الإرسال';
 
   @override
@@ -1264,6 +1276,9 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get chatWriteMessage => 'اكتبي رسالة…';
+
+  @override
+  String get chatYesterday => 'أمس';
 
   @override
   String get chatsEmptyAction => 'تصفّحي المتاجر';

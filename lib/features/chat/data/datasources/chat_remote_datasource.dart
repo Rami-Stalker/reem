@@ -13,13 +13,24 @@ abstract interface class ChatRemoteDataSource {
   /// Opens — or reopens — the conversation [request] describes and returns it.
   Future<ChatThreadModel> startConversation(ChatStartRequest request);
 
-  Future<List<ChatMessageModel>> getMessages(String chatId);
+  /// The newest [limit] messages, or — with [before] — the [limit] just older
+  /// than it. Oldest first either way.
+  Future<List<ChatMessageModel>> getMessages(
+    String chatId, {
+    DateTime? before,
+    int limit = 50,
+    String? currentUserId,
+  });
 
+  /// [clientId] makes a resend idempotent: the server returns the message it
+  /// already stored under that id instead of storing a second copy.
   Future<ChatMessageModel> sendMessage({
     required String chatId,
     required String content,
     String kind = 'TEXT',
     List<Map<String, dynamic>> attachments = const [],
+    String? clientId,
+    String? currentUserId,
   });
 
   Future<void> markRead(String chatId, {String? messageId});

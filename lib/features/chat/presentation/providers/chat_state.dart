@@ -8,6 +8,7 @@ class ChatState {
     this.hasLoadedOnce = false,
     this.query = '',
     this.error,
+    this.typingChatIds = const {},
   });
 
   final List<ChatThreadEntity> threads;
@@ -21,6 +22,10 @@ class ChatState {
   /// arriving after she has cleared the box can be recognised and dropped.
   final String query;
   final String? error;
+
+  /// Conversations whose other side is typing right now. Live from the
+  /// socket; it never survives a reload and is never sent by the server.
+  final Set<String> typingChatIds;
 
   bool get isSearching => query.trim().isNotEmpty;
   bool get isEmpty => threads.isEmpty;
@@ -36,6 +41,7 @@ class ChatState {
     String? query,
     String? error,
     bool clearError = false,
+    Set<String>? typingChatIds,
   }) {
     return ChatState(
       threads: threads ?? this.threads,
@@ -43,6 +49,7 @@ class ChatState {
       hasLoadedOnce: hasLoadedOnce ?? this.hasLoadedOnce,
       query: query ?? this.query,
       error: clearError ? null : (error ?? this.error),
+      typingChatIds: typingChatIds ?? this.typingChatIds,
     );
   }
 }
@@ -51,23 +58,35 @@ class ChatMessagesState {
   const ChatMessagesState({
     this.messages = const [],
     this.isLoading = false,
-    this.isSending = false,
+    this.isLoadingOlder = false,
+    this.hasMore = false,
     this.isPeerTyping = false,
     this.error,
     this.chatId,
   });
 
+  /// Oldest first, her unsent messages included.
   final List<ChatMessageEntity> messages;
   final bool isLoading;
-  final bool isSending;
+
+  /// An older page is on its way, drawn as a small spinner at the top.
+  final bool isLoadingOlder;
+
+  /// The server may hold messages older than the oldest one here.
+  final bool hasMore;
   final bool isPeerTyping;
+
+  /// Why the conversation could not be *loaded*. A message that fails to send
+  /// is not this: it stays in the list, marked, with a way to try again — a
+  /// refused send used to replace the whole conversation with an error text.
   final String? error;
   final String? chatId;
 
   ChatMessagesState copyWith({
     List<ChatMessageEntity>? messages,
     bool? isLoading,
-    bool? isSending,
+    bool? isLoadingOlder,
+    bool? hasMore,
     bool? isPeerTyping,
     String? error,
     String? chatId,
@@ -77,7 +96,8 @@ class ChatMessagesState {
     return ChatMessagesState(
       messages: clearMessages ? const [] : (messages ?? this.messages),
       isLoading: isLoading ?? this.isLoading,
-      isSending: isSending ?? this.isSending,
+      isLoadingOlder: isLoadingOlder ?? this.isLoadingOlder,
+      hasMore: hasMore ?? this.hasMore,
       isPeerTyping: isPeerTyping ?? this.isPeerTyping,
       error: clearError ? null : (error ?? this.error),
       chatId: chatId ?? this.chatId,

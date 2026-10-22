@@ -1501,6 +1501,14 @@
       }
     }
   },
+  "chatLoadOlder": "Loading earlier messages",
+  "@chatLoadOlder": {
+    "description": "Shown at the top of a conversation while an older page loads."
+  },
+  "chatMessageNotSent": "Not sent · tap to try again",
+  "@chatMessageNotSent": {
+    "description": "Under a message of hers that failed to send."
+  },
   "chatNoMessagesYet": "No messages yet",
   "@chatNoMessagesYet": {
     "description": "Thread preview when nothing has been sent"
@@ -1538,6 +1546,14 @@
     "description": "Body of the marketplace safety note"
   },
   "chatSeen": "Seen",
+  "chatSendFailed": "The message could not be sent",
+  "@chatSendFailed": {
+    "description": "Snackbar when a chat message fails to send."
+  },
+  "chatSending": "Sending…",
+  "@chatSending": {
+    "description": "Under a message of hers that is still on its way."
+  },
   "chatSent": "Sent",
   "@chatSent": {
     "description": "Delivery status of a sent message [re-authored: original wording lost]"
@@ -1577,6 +1593,10 @@
   "chatWriteMessage": "Write a message…",
   "@chatWriteMessage": {
     "description": "Placeholder of the chat composer [re-authored: original wording lost]"
+  },
+  "chatYesterday": "Yesterday",
+  "@chatYesterday": {
+    "description": "Date divider in a conversation for messages from yesterday."
   },
   "chatsEmptyAction": "Browse the boutiques",
   "@chatsEmptyAction": {

@@ -5,33 +5,55 @@ import 'package:reem/core/localization/l10n_extension.dart';
 
 /// The tick beside a sent message.
 ///
-/// One tick sent, two delivered, two in the brand rose once she has read it —
-/// the read state was a fixed sky blue borrowed from another messenger, which
-/// was the only blue anywhere in Reem.
+/// A clock while it is on its way, one tick sent, two delivered, two in the
+/// brand rose once she has read it, and a warning when it did not go — the
+/// read state was a fixed sky blue borrowed from another messenger, which was
+/// the only blue anywhere in Reem.
 class MessageDeliveryStatus extends StatelessWidget {
   const MessageDeliveryStatus({
     super.key,
     this.sent = true,
     this.delivered = false,
     this.seen = false,
+    this.pending = false,
+    this.failed = false,
   });
 
   final bool sent;
   final bool delivered;
   final bool seen;
+  final bool pending;
+  final bool failed;
 
   @override
   Widget build(BuildContext context) {
     final colors = context.dsColors;
+    final l10n = context.l10n;
+    if (failed) {
+      return Icon(
+        Icons.error_outline_rounded,
+        size: DsSizes.iconXs,
+        color: colors.error,
+        semanticLabel: l10n.chatSendFailed,
+      );
+    }
+    if (pending) {
+      return Icon(
+        Icons.schedule_rounded,
+        size: DsSizes.iconXs,
+        color: colors.onSurfaceVariant,
+        semanticLabel: l10n.chatSending,
+      );
+    }
     return Icon(
       delivered || seen ? Icons.done_all_rounded : Icons.check_rounded,
       size: DsSizes.iconXs,
       color: seen ? colors.primary : colors.onSurfaceVariant,
       semanticLabel: seen
-          ? context.l10n.chatSeen
+          ? l10n.chatSeen
           : delivered
-              ? context.l10n.chatDelivered
-              : context.l10n.chatSent,
+              ? l10n.chatDelivered
+              : l10n.chatSent,
     );
   }
 }

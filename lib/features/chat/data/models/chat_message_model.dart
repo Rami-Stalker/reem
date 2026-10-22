@@ -55,8 +55,13 @@ class ChatMessageModel extends ChatMessageEntity {
     super.attachments,
     super.deliveredAt,
     super.readAt,
+    super.clientId,
   });
 
+  /// [currentUserId], when known, decides [isMine] by comparing it with the
+  /// sender — the one answer that cannot be wrong. The payload's `is_mine` is
+  /// only the fallback: a message relayed over the socket carried the
+  /// *sender's* `is_mine` to everyone, and the recipient drew it as her own.
   factory ChatMessageModel.fromJson(
     Map<String, dynamic> json, {
     String? chatId,
@@ -78,13 +83,15 @@ class ChatMessageModel extends ChatMessageEntity {
       attachments: attachments,
       deliveredAt: _date(json['delivered_at']),
       readAt: _date(json['read_at']),
-      sentAt: DateTime.parse(
-        json['sent_at'] as String? ??
-            json['created_at'] as String? ??
-            DateTime.now().toIso8601String(),
-      ),
-      isMine: json['is_mine'] as bool? ??
-          (currentUserId != null && senderId == currentUserId),
+      // The server speaks UTC. Parsed as-is, every clock time and every "today"
+      // divider was drawn in UTC — three hours off in Damascus.
+      sentAt: _date(json['sent_at']) ??
+          _date(json['created_at']) ??
+          DateTime.now(),
+      isMine: currentUserId != null && currentUserId.isNotEmpty
+          ? senderId == currentUserId
+          : json['is_mine'] as bool? ?? false,
+      clientId: json['client_id'] as String?,
     );
   }
 
@@ -104,11 +111,12 @@ class ChatMessageModel extends ChatMessageEntity {
       'delivered_at': deliveredAt?.toIso8601String(),
       'read_at': readAt?.toIso8601String(),
       'is_mine': isMine,
+      'client_id': ?clientId,
     };
   }
 }
 
 DateTime? _date(dynamic value) {
   if (value is! String || value.isEmpty) return null;
-  return DateTime.tryParse(value);
+  return DateTime.tryParse(value)?.toLocal();
 }

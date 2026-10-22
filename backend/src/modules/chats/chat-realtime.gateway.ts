@@ -1,5 +1,6 @@
 import {
   BeforeApplicationShutdown,
+  HttpException,
   Injectable,
   Logger,
   OnModuleInit,
@@ -119,7 +120,28 @@ interface ChatReadEvent {
   userId: string;
   messageId: string;
   readAt: string;
+  /** Everything sent at or before this instant is now read by `userId`. */
+  upTo?: string;
 }
+
+interface ChatDeliveredEvent {
+  chatId: string;
+  userId: string;
+  messageIds: string[];
+  deliveredAt: string;
+}
+
+const UUID_PATTERN =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+/** Client events that act on one conversation, and so must name it. */
+const CONVERSATION_EVENTS = new Set([
+  'conversation.join',
+  'conversation.leave',
+  'message.send',
+  'typing',
+  'message.read',
+]);
 
 interface PresenceEvent {
   userId: string;
@@ -232,13 +254,42 @@ export class ChatRealtimeGateway implements OnModuleInit, BeforeApplicationShutd
     }
   }
 
+  /**
+   * A new message, addressed to each participant in their own terms.
+   *
+   * The payload is serialised once, for the *sender* — so `is_mine` was true
+   * in the copy every recipient received too, and the app drew the other
+   * side's message as her own, on her side of the screen, with her ticks
+   * under it. Each recipient now gets `is_mine` answered for them.
+   *
+   * A recipient with a live socket has the message the moment this frame is
+   * written, so that is when it is delivered — the second tick appears for
+   * the sender while the recipient's phone is still in her hand, not the next
+   * time she happens to open the conversation.
+   */
   @OnEvent('chat.message.created')
   handleCreated(event: ChatMessageCreatedEvent) {
-    this.broadcastToUsers(event.participantIds, {
-      event: 'message.created',
-      chat_id: event.chatId,
-      message: event.message,
-    });
+    const message = (event.message ?? {}) as Record<string, unknown>;
+    const messageId = typeof message.id === 'string' ? message.id : undefined;
+    const reached: string[] = [];
+
+    for (const userId of new Set(event.participantIds)) {
+      const sent = this.sendToUser(userId, {
+        event: 'message.created',
+        chat_id: event.chatId,
+        message: { ...message, is_mine: userId === event.senderId },
+      });
+      if (sent && userId !== event.senderId) reached.push(userId);
+    }
+
+    if (!messageId) return;
+    for (const userId of reached) {
+      void this.chats
+        .acknowledgeDelivery(event.chatId, userId, [messageId])
+        .catch((error: unknown) =>
+          this.logger.warn(`Delivery receipt failed: ${String(error)}`),
+        );
+    }
   }
 
   @OnEvent('chat.messages.read')
@@ -250,7 +301,24 @@ export class ChatRealtimeGateway implements OnModuleInit, BeforeApplicationShutd
         user_id: event.userId,
         message_id: event.messageId,
         read_at: event.readAt,
+        up_to: event.upTo ?? event.readAt,
       });
+    });
+  }
+
+  @OnEvent('chat.messages.delivered')
+  handleDelivered(event: ChatDeliveredEvent) {
+    void this.chats.participantIds(event.chatId).then((participantIds) => {
+      this.broadcastToUsers(
+        participantIds.filter((id) => id !== event.userId),
+        {
+          event: 'messages.delivered',
+          chat_id: event.chatId,
+          user_id: event.userId,
+          message_ids: event.messageIds,
+          delivered_at: event.deliveredAt,
+        },
+      );
     });
   }
 
@@ -469,7 +537,20 @@ export class ChatRealtimeGateway implements OnModuleInit, BeforeApplicationShutd
     }
 
     const event = payload.event;
+    const clientId =
+      typeof payload.client_id === 'string' ? payload.client_id.slice(0, 120) : undefined;
     try {
+      // Every conversation event names one. A malformed id used to reach
+      // Prisma, whose error — table and column names included — was relayed to
+      // the client word for word.
+      if (
+        typeof event === 'string' &&
+        CONVERSATION_EVENTS.has(event) &&
+        !UUID_PATTERN.test(String(payload.chat_id ?? ''))
+      ) {
+        throw new HttpException('A valid chat_id is required', 400);
+      }
+
       if (event === 'conversation.join') {
         const chatId = String(payload.chat_id ?? '');
         await this.chats.assertMember(chatId, client.userId);
@@ -490,7 +571,7 @@ export class ChatRealtimeGateway implements OnModuleInit, BeforeApplicationShutd
         await this.chats.send(chatId, client.userId, {
           content: this.parseText(payload.content, MAX_CONTENT_CHARS),
           kind: this.parseKind(payload.kind),
-          client_id: this.parseText(payload.client_id, 120) || undefined,
+          client_id: clientId || undefined,
           attachments: this.parseAttachments(payload.attachments),
           metadata: payload.metadata,
         });
@@ -539,9 +620,18 @@ export class ChatRealtimeGateway implements OnModuleInit, BeforeApplicationShutd
 
       this.send(client, { event: 'error', message: 'Unknown event' });
     } catch (error) {
+      // What the HTTP route would have said, and nothing more: an unexpected
+      // error's message is an implementation detail. The event and its
+      // `client_id` come back with it so the app knows *which* send failed.
+      if (!(error instanceof HttpException)) {
+        this.logger.warn(`Realtime ${String(event)} failed: ${String(error)}`);
+      }
       this.send(client, {
         event: 'error',
-        message: error instanceof Error ? error.message : 'Realtime error',
+        message: error instanceof HttpException ? error.message : 'Realtime error',
+        source_event: typeof event === 'string' ? event : undefined,
+        chat_id: typeof payload.chat_id === 'string' ? payload.chat_id : undefined,
+        client_id: clientId,
       });
     }
   }
@@ -558,15 +648,25 @@ export class ChatRealtimeGateway implements OnModuleInit, BeforeApplicationShutd
   }
 
   private broadcastToUsers(userIds: string[], payload: unknown) {
-    const uniqueIds = [...new Set(userIds)];
-    for (const userId of uniqueIds) {
-      const ids = this.userClients.get(userId);
-      if (!ids) continue;
-      for (const id of ids) {
-        const client = this.clients.get(id);
-        if (client) this.send(client, payload);
+    for (const userId of new Set(userIds)) this.sendToUser(userId, payload);
+  }
+
+  /** Writes to every socket the user has open; true when at least one took it. */
+  private sendToUser(userId: string, payload: unknown): boolean {
+    const ids = this.userClients.get(userId);
+    if (!ids) return false;
+    let reached = false;
+    for (const id of ids) {
+      const client = this.clients.get(id);
+      if (!client || client.socket.destroyed) continue;
+      try {
+        this.send(client, payload);
+        reached = true;
+      } catch {
+        void this.unregister(client);
       }
     }
+    return reached;
   }
 
   /**
