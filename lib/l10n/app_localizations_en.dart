@@ -10586,4 +10586,55 @@ class AppLocalizationsEn extends AppLocalizations {
   String get reverseSmsNotYet => 'Your message has not arrived yet. Give it a moment, then try again.';
   @override
   String get reverseSmsCouldNotOpen => 'Could not open your messaging app. Send the message above manually.';
+
+  @override
+  String paymentReferenceRejected(String reason) {
+    return 'Finance could not match your reference: $reason. Check it and send it again.';
+  }
+
+  @override
+  String get financePendingTransfers => 'Transfers awaiting confirmation';
+
+  @override
+  String get financePendingTransfersEmpty =>
+      'No transfers are waiting to be matched.';
+
+  @override
+  String get financePendingTransfersError =>
+      'Could not load the transfers. Refresh to try again.';
+
+  @override
+  String get financeTransferConfirm => 'Confirm received';
+
+  @override
+  String get financeTransferReject => 'Not matched';
+
+  @override
+  String get financeTransferConfirmTitle => 'Confirm this transfer?';
+
+  @override
+  String financeTransferConfirmBody(String amount, String order) {
+    return 'You are confirming that $amount for order $order has arrived. The order goes to its sellers straight away.';
+  }
+
+  @override
+  String get financeTransferConfirmed =>
+      'Payment confirmed — the order is with its sellers';
+
+  @override
+  String get financeTransferRejected => 'Reference sent back to the customer';
+
+  @override
+  String get financeTransferRejectTitle => 'Why could it not be matched?';
+
+  @override
+  String get financeTransferRejectReason => 'Reason (shown to the customer)';
+
+  @override
+  String get financeTransferNoReference => 'No reference sent yet';
+
+  @override
+  String financeTransferExpires(String date) {
+    return 'Stock held until $date';
+  }
 }

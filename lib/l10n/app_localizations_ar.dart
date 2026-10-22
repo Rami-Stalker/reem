@@ -10743,4 +10743,55 @@ class AppLocalizationsAr extends AppLocalizations {
   String get reverseSmsNotYet => 'لم تصل رسالتك بعد. انتظري لحظة ثم أعيدي المحاولة.';
   @override
   String get reverseSmsCouldNotOpen => 'لم نتمكّن من فتح تطبيق الرسائل. أرسلي الرسالة أعلاه يدويًا.';
+
+  @override
+  String paymentReferenceRejected(String reason) {
+    return 'لم يتمكّن فريق المالية من مطابقة الرقم: $reason. تأكّدي منه وأرسليه مجدداً.';
+  }
+
+  @override
+  String get financePendingTransfers => 'تحويلات بانتظار التأكيد';
+
+  @override
+  String get financePendingTransfersEmpty =>
+      'لا توجد تحويلات بانتظار المطابقة.';
+
+  @override
+  String get financePendingTransfersError =>
+      'تعذّر تحميل التحويلات. حدّثي الصفحة للمحاولة مجدداً.';
+
+  @override
+  String get financeTransferConfirm => 'تأكيد الاستلام';
+
+  @override
+  String get financeTransferReject => 'غير مطابق';
+
+  @override
+  String get financeTransferConfirmTitle => 'تأكيد هذا التحويل؟';
+
+  @override
+  String financeTransferConfirmBody(String amount, String order) {
+    return 'أنتِ تؤكّدين وصول $amount للطلب $order. سيُرسَل الطلب إلى البائعات فوراً.';
+  }
+
+  @override
+  String get financeTransferConfirmed =>
+      'تم تأكيد الدفع — الطلب الآن لدى البائعات';
+
+  @override
+  String get financeTransferRejected => 'أُعيد الرقم إلى الزبونة';
+
+  @override
+  String get financeTransferRejectTitle => 'لماذا لم تتم المطابقة؟';
+
+  @override
+  String get financeTransferRejectReason => 'السبب (يظهر للزبونة)';
+
+  @override
+  String get financeTransferNoReference => 'لم يُرسَل رقم بعد';
+
+  @override
+  String financeTransferExpires(String date) {
+    return 'المخزون محجوز حتى $date';
+  }
 }

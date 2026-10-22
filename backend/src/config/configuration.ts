@@ -631,5 +631,18 @@ export default () => ({
      * running server.
      */
     sandboxConfirmation: process.env.PAYMENTS_SANDBOX_CONFIRMATION === 'true',
+
+    /**
+     * Where a customer sends a bank transfer or a hawala: the account, the
+     * recipient's name, the office — whatever finance will match against.
+     *
+     * A manual rail is only offered when its instructions are set. Without
+     * them the app could only say «حوّلي المبلغ» and never say to whom, so the
+     * order sat unpaid until it expired.
+     */
+    manualInstructions: {
+      BANK_TRANSFER: process.env.PAYMENT_BANK_TRANSFER_INSTRUCTIONS?.trim() || null,
+      HAWALA: process.env.PAYMENT_HAWALA_INSTRUCTIONS?.trim() || null,
+    },
   },
 });

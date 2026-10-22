@@ -8,9 +8,15 @@ import {
   ParseUUIDPipe,
   Post,
 } from '@nestjs/common';
+import { UserRole } from '@prisma/client';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
+import { Roles } from '../../common/decorators/roles.decorator';
 import { SelfScoped } from '../../common/decorators/self-scoped.decorator';
 import { SubmitPaymentReferenceDto } from './dto/submit-payment-reference.dto';
+import {
+  ConfirmTransferDto,
+  RejectTransferDto,
+} from './dto/transfer-decision.dto';
 import { PaymentsService } from './payments.service';
 
 @SelfScoped(
@@ -23,6 +29,37 @@ export class PaymentsController {
   @Get('methods')
   methods() {
     return this.payments.methods();
+  }
+
+  // ── Finance: bank transfers and hawala (Q51) ──────────────────────────
+  // Declared before `:id` so the literal path is not read as a payment id.
+
+  @Get('admin/transfers')
+  @Roles(UserRole.SUPER_ADMIN, UserRole.FINANCE_ADMIN)
+  pendingTransfers() {
+    return this.payments.pendingTransfers();
+  }
+
+  @Post('admin/transfers/:id/confirm')
+  @HttpCode(HttpStatus.OK)
+  @Roles(UserRole.SUPER_ADMIN, UserRole.FINANCE_ADMIN)
+  confirmTransfer(
+    @CurrentUser('id') actorId: string,
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() dto: ConfirmTransferDto,
+  ) {
+    return this.payments.confirmTransfer(actorId, id, dto.note);
+  }
+
+  @Post('admin/transfers/:id/reject')
+  @HttpCode(HttpStatus.OK)
+  @Roles(UserRole.SUPER_ADMIN, UserRole.FINANCE_ADMIN)
+  rejectTransfer(
+    @CurrentUser('id') actorId: string,
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() dto: RejectTransferDto,
+  ) {
+    return this.payments.rejectTransfer(actorId, id, dto.reason);
   }
 
   @Get()

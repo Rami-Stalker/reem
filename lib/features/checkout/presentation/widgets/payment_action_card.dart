@@ -140,6 +140,14 @@ class _PaymentActionCardState extends ConsumerState<PaymentActionCard> {
     final l10n = context.l10n;
     final colors = context.dsColors;
     final isManual = payment.rail == PaymentRail.manual;
+    final instructions = isManual
+        ? ref
+              .watch(paymentMethodsCatalogProvider)
+              .value
+              ?.where((option) => option.method == payment.method)
+              .firstOrNull
+              ?.instructions
+        : null;
 
     return SurfaceCard(
       child: Column(
@@ -175,6 +183,22 @@ class _PaymentActionCardState extends ConsumerState<PaymentActionCard> {
                   ),
             style: context.dsText.bodySmall.tint(colors.onSurfaceVariant),
           ),
+          if ((instructions ?? '').isNotEmpty) ...[
+            const SizedBox(height: DsSpacing.sm),
+            SelectableText(
+              instructions!,
+              style: context.dsText.body.tint(colors.onSurface),
+            ),
+          ],
+          // Finance could not match what she sent; say why, so she can send
+          // the right one rather than wait for a payment that will not land.
+          if (isManual && (payment.failureReason ?? '').isNotEmpty) ...[
+            const SizedBox(height: DsSpacing.sm),
+            Text(
+              l10n.paymentReferenceRejected(payment.failureReason!),
+              style: context.dsText.bodySmall.tint(colors.error),
+            ),
+          ],
           const SizedBox(height: DsSpacing.md),
 
           if (isManual) ...[

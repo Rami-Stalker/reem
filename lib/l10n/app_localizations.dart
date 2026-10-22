@@ -18244,6 +18244,89 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Could not open your messaging app. Send the message above manually.'**
   String get reverseSmsCouldNotOpen;
+  /// Order payment - reference sent back by finance
+  ///
+  /// In en, this message translates to:
+  /// **'Finance could not match your reference: {reason}. Check it and send it again.'**
+  String paymentReferenceRejected(String reason);
+
+  /// Finance console - pending bank transfers and hawala
+  ///
+  /// In en, this message translates to:
+  /// **'Transfers awaiting confirmation'**
+  String get financePendingTransfers;
+
+  /// Finance console - no pending transfers
+  ///
+  /// In en, this message translates to:
+  /// **'No transfers are waiting to be matched.'**
+  String get financePendingTransfersEmpty;
+
+  /// Finance console - transfers failed to load
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load the transfers. Refresh to try again.'**
+  String get financePendingTransfersError;
+
+  /// Finance console - confirm a transfer
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm received'**
+  String get financeTransferConfirm;
+
+  /// Finance console - reject a transfer reference
+  ///
+  /// In en, this message translates to:
+  /// **'Not matched'**
+  String get financeTransferReject;
+
+  /// Finance console - confirm dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm this transfer?'**
+  String get financeTransferConfirmTitle;
+
+  /// Finance console - confirm dialog body
+  ///
+  /// In en, this message translates to:
+  /// **'You are confirming that {amount} for order {order} has arrived. The order goes to its sellers straight away.'**
+  String financeTransferConfirmBody(String amount, String order);
+
+  /// Finance console - transfer confirmed
+  ///
+  /// In en, this message translates to:
+  /// **'Payment confirmed — the order is with its sellers'**
+  String get financeTransferConfirmed;
+
+  /// Finance console - transfer rejected
+  ///
+  /// In en, this message translates to:
+  /// **'Reference sent back to the customer'**
+  String get financeTransferRejected;
+
+  /// Finance console - reject dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Why could it not be matched?'**
+  String get financeTransferRejectTitle;
+
+  /// Finance console - reject reason field
+  ///
+  /// In en, this message translates to:
+  /// **'Reason (shown to the customer)'**
+  String get financeTransferRejectReason;
+
+  /// Finance console - transfer without reference
+  ///
+  /// In en, this message translates to:
+  /// **'No reference sent yet'**
+  String get financeTransferNoReference;
+
+  /// Finance console - transfer deadline
+  ///
+  /// In en, this message translates to:
+  /// **'Stock held until {date}'**
+  String financeTransferExpires(String date);
 }
 
 class _AppLocalizationsDelegate

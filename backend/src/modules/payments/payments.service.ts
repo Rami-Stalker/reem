@@ -4,6 +4,7 @@ import {
   Inject,
   Injectable,
   NotFoundException,
+  Optional,
   forwardRef,
 } from '@nestjs/common';
 import {
@@ -28,6 +29,25 @@ import { CheckoutService } from '../orders/checkout.service';
 import { LedgerService } from '../ledger/ledger.service';
 import { WalletService } from '../ledger/wallet.service';
 import { PaymentProviderRegistry } from './providers/payment-provider.registry';
+import {
+  FinancialAction,
+  FinancialAuditService,
+} from '../finance/financial-audit.service';
+
+/**
+ * How long finance has to match a transfer once she has sent its reference.
+ *
+ * The order's own 72-hour deadline (`order-expiry.ts`) is for a woman who has
+ * not paid yet. Once she says she has, the money may already be on its way
+ * and cancelling her order — putting the dress back on sale — because finance
+ * had not got to the queue would be the platform's fault, not hers. So the
+ * deadline restarts from her submission.
+ */
+export const TRANSFER_REVIEW_HOURS = 72;
+
+const MANUAL_METHODS: readonly PaymentMethodType[] = Object.values(
+  PaymentMethodType,
+).filter((method) => railOf(method) === PaymentRail.MANUAL);
 
 @Injectable()
 export class PaymentsService {
@@ -40,6 +60,8 @@ export class PaymentsService {
     private readonly ledger: LedgerService,
     private readonly wallets: WalletService,
     private readonly config: ConfigService,
+    @Optional()
+    private readonly financialAudit?: FinancialAuditService,
   ) {}
 
   /** See `configuration.ts` — off everywhere but a developer's machine. */
@@ -136,8 +158,65 @@ export class PaymentsService {
     );
   }
 
+  /**
+   * The rails a customer can actually finish paying on, today.
+   *
+   * Every provider is listed in the registry, and the registry used to be
+   * what checkout offered. But a rail is only a rail if the money can arrive:
+   *
+   * - an online gateway needs a provider that can attest the payment (none
+   *   can yet — no merchant account exists), or the developer sandbox;
+   * - a bank transfer or hawala needs instructions saying who to pay.
+   *
+   * Offered without those, she picked it, was sent to a page that did not
+   * exist or told to transfer to nobody, and her order expired an hour or
+   * three days later. Cash and the wallet always work.
+   */
   methods() {
-    return this.registry.list();
+    return Object.values(PaymentMethodType)
+      .filter((method) => this.isAvailable(method))
+      .map((method) => {
+        const provider = this.registry.get(method);
+        return {
+          method: method.toLowerCase(),
+          label: provider.displayName,
+          requires_online_confirmation: provider.requiresOnlineConfirmation,
+          rail: railOf(method),
+          instructions: this.instructionsFor(method),
+        };
+      });
+  }
+
+  /** Whether an order may be placed on this rail right now. */
+  isAvailable(method: PaymentMethodType): boolean {
+    switch (railOf(method)) {
+      case PaymentRail.MANUAL:
+        return this.instructionsFor(method) !== null;
+      case PaymentRail.ONLINE:
+        return (
+          this.registry.get(method).attestsSettlement || this.sandboxConfirmation
+        );
+      default:
+        return true;
+    }
+  }
+
+  /** Refuses a rail the customer could not finish paying on. */
+  assertAvailable(method: PaymentMethodType): void {
+    if (!this.isAvailable(method)) {
+      throw new BadRequestException({
+        code: 'PAYMENT_METHOD_UNAVAILABLE',
+        message: 'طريقة الدفع هذه غير متاحة حالياً — اختاري طريقة أخرى',
+      });
+    }
+  }
+
+  /** Who to pay, for a manual rail; null when finance has not set it. */
+  instructionsFor(method: PaymentMethodType): string | null {
+    const all = this.config.get<Partial<Record<PaymentMethodType, string | null>>>(
+      'payments.manualInstructions',
+    );
+    return all?.[method] ?? null;
   }
 
   /** Creates the payment for a freshly-placed order and starts the provider flow. */
@@ -228,6 +307,11 @@ export class PaymentsService {
     if (payment.status === PaymentStatus.PAID) {
       return serializePayment(payment);
     }
+    // A transfer is confirmed by finance, never by asking. «تحقّقي مجدداً»
+    // on one used to answer 403; the honest answer is where it stands.
+    if (railOf(payment.method) === PaymentRail.MANUAL) {
+      return serializePayment(payment);
+    }
 
     const provider = this.registry.get(payment.method);
     if (!provider.attestsSettlement && !this.sandboxConfirmation) {
@@ -292,6 +376,11 @@ export class PaymentsService {
             actorRole: 'SYSTEM',
           },
         });
+        // In the same transaction as the payment. Confirmed separately, a
+        // failure between the two left an order marked paid and still
+        // pending — which the expiry sweep then cancelled, stock and all,
+        // with her money taken.
+        await this.checkout.confirm(payment.orderId, userId, tx);
       }
       return p;
     });
@@ -302,9 +391,6 @@ export class PaymentsService {
     }
 
     if (result.status === PaymentStatus.PAID) {
-      // Confirming the parent fans the sub-orders out to their sellers and
-      // starts each one's escrow clock.
-      await this.checkout.confirm(payment.orderId);
       const order = await this.prisma.order.findUnique({
         where: { id: payment.orderId },
         select: { userId: true, number: true },
@@ -404,13 +490,38 @@ export class PaymentsService {
     if (payment.status !== PaymentStatus.PENDING) {
       throw new BadRequestException('This payment is already settled');
     }
+    await this.assertOrderAwaitsPayment(payment.orderId);
 
     const trimmed = reference.trim();
+    if (!trimmed) {
+      throw new BadRequestException('Enter the transfer reference');
+    }
     const updated = await this.prisma.$transaction(async (tx) => {
+      // She says she has paid: give finance its full window from now, for the
+      // order and for the stock it is holding — see TRANSFER_REVIEW_HOURS.
+      const deadline = new Date(
+        Date.now() + TRANSFER_REVIEW_HOURS * 60 * 60 * 1000,
+      );
+      await tx.order.updateMany({
+        where: {
+          id: payment.orderId,
+          OR: [{ expiresAt: null }, { expiresAt: { lt: deadline } }],
+        },
+        data: { expiresAt: deadline },
+      });
+      await tx.inventoryReservation.updateMany({
+        where: {
+          orderId: payment.orderId,
+          expiresAt: { not: null, lt: deadline },
+        },
+        data: { expiresAt: deadline },
+      });
+
       const row = await tx.payment.update({
         where: { id: paymentId },
         data: {
           providerRef: trimmed,
+          failureReason: null,
           transactions: {
             create: [
               {
@@ -438,6 +549,224 @@ export class PaymentsService {
     });
 
     return serializePayment(updated);
+  }
+
+  // ── Finance: matching transfers ───────────────────────────────────────
+
+  /**
+   * Q51 — the transfers waiting for someone in finance to match them.
+   *
+   * The other half of `submitReference`, which until now had none: a woman
+   * could tell us her hawala number and nobody on the platform had a screen
+   * to see it, a button to accept it, or a way to say it did not match.
+   * Oldest deadline first, because that is the order they expire in.
+   */
+  async pendingTransfers() {
+    const payments = await this.prisma.payment.findMany({
+      where: {
+        method: { in: [...MANUAL_METHODS] },
+        status: PaymentStatus.PENDING,
+        order: { status: OrderStatus.PENDING_PAYMENT },
+      },
+      include: {
+        order: {
+          select: {
+            id: true,
+            number: true,
+            expiresAt: true,
+            recipientName: true,
+            recipientPhone: true,
+          },
+        },
+        transactions: {
+          where: { event: 'reference_submitted' },
+          orderBy: { createdAt: 'desc' },
+          take: 1,
+          select: { createdAt: true },
+        },
+      },
+      orderBy: { createdAt: 'asc' },
+      take: 200,
+    });
+
+    return payments
+      .map((payment) => ({
+        ...serializePayment(payment),
+        order_number: payment.order.number,
+        customer_name: payment.order.recipientName,
+        customer_phone: payment.order.recipientPhone,
+        expires_at: payment.order.expiresAt?.toISOString() ?? null,
+        reference_submitted_at:
+          payment.transactions[0]?.createdAt.toISOString() ?? null,
+      }))
+      .sort((a, b) =>
+        (a.expires_at ?? '').localeCompare(b.expires_at ?? ''),
+      );
+  }
+
+  /**
+   * Finance found the transfer: the payment is settled and the order goes to
+   * its sellers, in one transaction.
+   *
+   * Only for the manual rails — a gateway confirms itself, and cash is
+   * settled by the courier who collected it. The order must still be waiting:
+   * one that expired has already released its stock, and the transfer that
+   * arrived for it is a refund to arrange by hand.
+   */
+  async confirmTransfer(actorId: string, paymentId: string, note?: string) {
+    const payment = await this.requireTransfer(paymentId);
+    if (payment.status === PaymentStatus.PAID) {
+      return serializePayment(payment);
+    }
+    if (payment.status !== PaymentStatus.PENDING) {
+      throw new BadRequestException('This payment is no longer pending');
+    }
+    await this.assertOrderAwaitsPayment(payment.orderId);
+    const provider = this.registry.get(payment.method);
+
+    const updated = await this.prisma.$transaction(async (tx) => {
+      const claimed = await tx.payment.updateMany({
+        where: { id: paymentId, status: PaymentStatus.PENDING },
+        data: {
+          status: PaymentStatus.PAID,
+          paidAt: new Date(),
+          capturedAmount: payment.amount,
+          failureReason: null,
+        },
+      });
+      if (claimed.count === 0) return null;
+
+      await tx.paymentTransaction.create({
+        data: {
+          paymentId,
+          event: 'confirmed_by_finance',
+          status: PaymentStatus.PAID,
+          currency: payment.currency,
+          amount: payment.amount,
+          message:
+            note?.trim() ||
+            `Transfer matched${payment.providerRef ? `: ${payment.providerRef}` : ''}`,
+        },
+      });
+      await this.postCapture(tx, payment);
+      await tx.orderEvent.create({
+        data: {
+          orderId: payment.orderId,
+          title: 'Payment received',
+          description: `${provider.displayName} — confirmed by finance`,
+          toStatus: OrderStatus.CONFIRMED,
+          actorId,
+          actorRole: 'ADMIN',
+        },
+      });
+      await this.checkout.confirm(payment.orderId, actorId, tx);
+      return tx.payment.findUniqueOrThrow({ where: { id: paymentId } });
+    });
+
+    if (!updated) {
+      return serializePayment(
+        await this.prisma.payment.findUniqueOrThrow({ where: { id: paymentId } }),
+      );
+    }
+
+    const order = await this.prisma.order.findUnique({
+      where: { id: payment.orderId },
+      select: { userId: true, number: true },
+    });
+    if (order) {
+      this.events.emit(AppEvent.OrderStatusChanged, {
+        userId: order.userId,
+        orderId: payment.orderId,
+        orderNumber: order.number,
+        status: OrderStatus.CONFIRMED,
+      });
+    }
+
+    await this.financialAudit?.record({
+      action: FinancialAction.TransferConfirmed,
+      actorId,
+      subjectId: paymentId,
+      subjectType: 'payment',
+      before: PaymentStatus.PENDING,
+      after: Money.of(payment.amount, payment.currency),
+      reason: note ?? null,
+      extra: {
+        order_id: payment.orderId,
+        method: payment.method,
+        reference: payment.providerRef,
+      },
+    });
+
+    return serializePayment(updated);
+  }
+
+  /**
+   * Finance could not match the reference. The payment stays open and the
+   * reference is cleared, so she can send the right one; the reason goes on
+   * her timeline so she knows why.
+   */
+  async rejectTransfer(actorId: string, paymentId: string, reason: string) {
+    const payment = await this.requireTransfer(paymentId);
+    if (payment.status !== PaymentStatus.PENDING) {
+      throw new BadRequestException('This payment is no longer pending');
+    }
+    const trimmed = reason.trim();
+    if (!trimmed) throw new BadRequestException('Give the customer a reason');
+
+    const updated = await this.prisma.$transaction(async (tx) => {
+      const row = await tx.payment.update({
+        where: { id: paymentId },
+        data: {
+          providerRef: null,
+          failureReason: trimmed,
+          transactions: {
+            create: [
+              {
+                event: 'reference_rejected',
+                status: PaymentStatus.PENDING,
+                currency: payment.currency,
+                amount: payment.amount,
+                message: `${payment.providerRef ?? '—'}: ${trimmed}`,
+              },
+            ],
+          },
+        },
+      });
+      await tx.orderEvent.create({
+        data: {
+          orderId: payment.orderId,
+          title: 'لم نتمكّن من مطابقة الحوالة',
+          description: trimmed,
+          actorId,
+          actorRole: 'ADMIN',
+        },
+      });
+      return row;
+    });
+
+    await this.financialAudit?.record({
+      action: FinancialAction.TransferRejected,
+      actorId,
+      subjectId: paymentId,
+      subjectType: 'payment',
+      reason: trimmed,
+      extra: { order_id: payment.orderId, reference: payment.providerRef },
+    });
+
+    return serializePayment(updated);
+  }
+
+  private async requireTransfer(paymentId: string): Promise<Payment> {
+    const payment = await this.prisma.payment.findUnique({
+      where: { id: paymentId },
+    });
+    if (!payment) throw new NotFoundException('Payment not found');
+    if (railOf(payment.method) !== PaymentRail.MANUAL) {
+      throw new BadRequestException(
+        'Only bank transfers and hawala are confirmed by finance',
+      );
+    }
+    return payment;
   }
 
   async history(userId: string) {
