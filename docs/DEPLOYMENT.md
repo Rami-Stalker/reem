@@ -91,7 +91,8 @@ Must **not** be set in production (the API refuses to boot):
    then `/health/jobs`, and `/health/version` (shows the deployed commit).
 6. Stop the API on the laptop (two schedulers are safe, two chat servers are not).
 7. Build the app against it:
-   `flutter build apk --release --dart-define=APP_ENV=production --dart-define=API_BASE_URL=https://<service>.onrender.com`
+   `flutter build apk --release --split-per-abi --obfuscate --split-debug-info=build/symbols --dart-define=APP_ENV=production --dart-define=API_BASE_URL=https://<service>.onrender.com`
+   — install `app-arm64-v8a-release.apk`; see “App size” in the README for why.
 
 If the deploy fails, the log names the reason: the environment validation lists
 every missing or refused variable at once.
