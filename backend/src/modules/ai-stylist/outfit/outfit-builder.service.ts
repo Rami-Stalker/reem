@@ -269,7 +269,7 @@ export class OutfitBuilderService {
     const occasion = occasionEntry(brief.occasion);
     if (occasion) return `إطلالة ${occasion.labelAr}`;
     if (brief.colours.length) return `إطلالة ${colourLabel(brief.colours[0])}`;
-    return 'إطلالة مختارة لك';
+    return 'إطلالة مختارة لكِ';
   }
 
   private note(
@@ -289,8 +289,8 @@ export class OutfitBuilderService {
       brief.budgetMax !== null && totalSyp !== null && totalSyp > brief.budgetMax;
 
     return overBudget
-      ? `الإطلالة بتضم ${listed}، وطلعت شوي فوق الميزانية — فيكِ تشيلي قطعة وتضلّي ضمن الرقم.`
-      : `الإطلالة بتضم ${listed}، والقطع منسّقة مع بعضها بالألوان.`;
+      ? `تضم الإطلالة ${listed}، وجاءت أعلى قليلاً من الميزانية — يمكنكِ حذف قطعة لتبقي ضمن الرقم.`
+      : `تضم الإطلالة ${listed}، والقطع متناسقة الألوان.`;
   }
 
   /** Top-down: the garment, then what goes under it, then the extras. */

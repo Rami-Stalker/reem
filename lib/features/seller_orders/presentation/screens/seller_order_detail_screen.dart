@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl/intl.dart' hide TextDirection;
 
 import 'package:reem/core/design_system/design_system.dart';
 import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/shared/value_objects/money.dart';
 import 'package:reem/core/utils/arabic_numerals.dart';
+import 'package:reem/core/utils/relative_time.dart';
 import 'package:reem/features/seller_orders/domain/entities/seller_order.dart';
 import 'package:reem/features/seller_orders/presentation/providers/seller_orders_provider.dart';
 import 'package:reem/features/seller_orders/presentation/seller_order_labels.dart';
@@ -279,8 +279,12 @@ class _Step extends StatelessWidget {
           ),
           const Spacer(),
           Text(
-            // l10n-ignore: an intl pattern; the locale supplies the words
-            toWesternDigits(DateFormat('d MMM • HH:mm', 'ar').format(at)),
+            formatCalendarDate(
+              context.l10n,
+              at,
+              // l10n-ignore: an intl pattern; the locale supplies the words
+              pattern: 'd MMM • HH:mm',
+            ),
             style: context.dsText.caption.tint(atelier.muted),
           ),
         ],
@@ -404,10 +408,13 @@ class _Money extends StatelessWidget {
             label: l10n.sellerOrderItemsSubtotal,
             value: order.itemsSubtotal,
           ),
-          if (!order.discountTotal.isZero)
+          // Only her own discount is a deduction. A platform coupon is said
+          // underneath: listing it here made the rows add up to less than
+          // her net.
+          if (!order.sellerFundedDiscount.isZero)
             _Row(
               label: l10n.sellerOrderDiscount,
-              value: order.discountTotal,
+              value: order.sellerFundedDiscount,
               isNegative: true,
             ),
           _Row(
@@ -426,6 +433,27 @@ class _Money extends StatelessWidget {
             value: order.summary.net,
             emphasise: true,
           ),
+          if (!order.platformFundedDiscount.isZero) ...[
+            DsGaps.vXs,
+            Row(
+              children: [
+                Icon(
+                  Icons.local_offer_outlined,
+                  size: 14,
+                  color: atelier.positive,
+                ),
+                DsGaps.hXs,
+                Expanded(
+                  child: Text(
+                    l10n.sellerOrderPlatformDiscountNote(
+                      order.platformFundedDiscount.format(),
+                    ),
+                    style: context.dsText.caption.tint(atelier.muted),
+                  ),
+                ),
+              ],
+            ),
+          ],
 
           const SizedBox(height: DsSpacing.sm),
           // Q24 — the seller's money is escrowed until the return window
@@ -460,9 +488,7 @@ class _Money extends StatelessWidget {
     // counts starts at the door, not at payment.
     if (at == null) return l10n.sellerOrderEscrowPending;
 
-    return l10n.sellerOrderEscrowOn(
-      toWesternDigits(DateFormat('d MMMM', 'ar').format(at)),
-    );
+    return l10n.sellerOrderEscrowOn(formatCalendarDate(l10n, at));
   }
 }
 

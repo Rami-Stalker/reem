@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/features/seller_intelligence/presentation/providers/intelligence_providers.dart';
 import 'package:reem/features/seller_intelligence/presentation/widgets/intelligence_pieces.dart';
@@ -40,7 +41,7 @@ class IntelligenceEntryCard extends ConsumerWidget {
                 Icon(Icons.insights_rounded, size: 18, color: palette.primary),
                 const SizedBox(width: DsSpacing.xs),
                 Text(
-                  'ذكاء المتجر',
+                  context.l10n.siShopIntelligence,
                   style: context.dsText.cardTitle.tint(palette.ink),
                 ),
               ],
@@ -49,23 +50,23 @@ class IntelligenceEntryCard extends ConsumerWidget {
 
             // The shop's own state, live.
             health.when(
-              loading: () => const _Door(
+              loading: () => _Door(
                 icon: Icons.favorite_rounded,
-                title: 'صحّة المتجر',
-                subtitle: 'عم نحسب…',
+                title: context.l10n.siShopHealth,
+                subtitle: context.l10n.siCalculating,
                 path: RoutePaths.sellerHealth,
               ),
-              error: (_, _) => const _Door(
+              error: (_, _) => _Door(
                 icon: Icons.favorite_rounded,
-                title: 'صحّة المتجر',
-                subtitle: 'ثمانية مقاييس لمتجرك',
+                title: context.l10n.siShopHealth,
+                subtitle: context.l10n.siEightMetrics,
                 path: RoutePaths.sellerHealth,
               ),
               data: (data) => _Door(
                 icon: Icons.favorite_rounded,
-                title: 'صحّة المتجر',
+                title: context.l10n.siShopHealth,
                 subtitle: data.isProvisional
-                    ? 'لسا عم نتعرّف على متجرك'
+                    ? context.l10n.siGettingToKnow
                     : '${data.score.round()} · ${data.bandLabel}',
                 path: RoutePaths.sellerHealth,
                 trailing: data.isProvisional
@@ -79,17 +80,17 @@ class IntelligenceEntryCard extends ConsumerWidget {
             ),
 
             Divider(color: palette.line, height: DsSpacing.lg),
-            const _Door(
+            _Door(
               icon: Icons.radar_rounded,
-              title: 'رادار الطلب',
-              subtitle: 'شو عم يزيد الطلب عليه',
+              title: context.l10n.siDemandRadar,
+              subtitle: context.l10n.siDemandRadarSubtitle,
               path: RoutePaths.sellerRadar,
             ),
             Divider(color: palette.line, height: DsSpacing.lg),
-            const _Door(
+            _Door(
               icon: Icons.inventory_2_rounded,
-              title: 'ذكاء المنتجات',
-              subtitle: 'شو ينقص صفحات منتجاتك',
+              title: context.l10n.siProductIntelligence,
+              subtitle: context.l10n.siProductIntelligenceSubtitle,
               path: RoutePaths.sellerProductIntelligence,
             ),
           ],

@@ -50,6 +50,12 @@ abstract final class DsGaps {
   static const Widget sliverSection = SliverToBoxAdapter(child: section);
 
   /// Bottom breathing room so content clears a floating bar or FAB.
-  static const Widget sliverBottomSafe =
-      SliverToBoxAdapter(child: SizedBox(height: DsSpacing.massive + DsSpacing.xl));
+  static const Widget sliverBottomSafe = SliverToBoxAdapter(child: bottomSafe);
+
+  /// The same room as a box, for the end of a `SliverList.list` or `Column`.
+  ///
+  /// A sliver in a list of boxes does not lay out — it takes the whole page
+  /// down with it. That is what blanked the content studio and the composer.
+  static const Widget bottomSafe =
+      SizedBox(height: DsSpacing.massive + DsSpacing.xl);
 }

@@ -12,6 +12,7 @@ import 'package:reem/features/closet/presentation/widgets/closet_pairing_panel.d
 import 'package:reem/features/intelligence/presentation/widgets/product_intelligence_notes.dart';
 import 'package:reem/features/product_details/presentation/widgets/product_buy_bar.dart';
 import 'package:reem/features/product_details/presentation/widgets/product_detail_body.dart';
+import 'package:reem/features/product_details/presentation/widgets/product_fit_line.dart';
 import 'package:reem/features/product_details/presentation/widgets/product_gallery_header.dart';
 import 'package:reem/features/product_details/presentation/widgets/product_headline.dart';
 import 'package:reem/features/product_details/presentation/widgets/product_option_pickers.dart';
@@ -159,6 +160,32 @@ class _ProductDetailsScreenState extends ConsumerState<ProductDetailsScreen> {
                         }),
                       ),
                     ],
+                    // ── The fitting room ─────────────────────────────────
+                    //
+                    // Everything that answers "is this right for *me*" sits
+                    // together, straight under the size she is choosing and
+                    // above the long description: whether her size is kept,
+                    // what Reem knows about the piece for her, and how it goes
+                    // with what she owns. Each renders nothing when it has
+                    // nothing to say, so a piece nobody has bought, for a
+                    // shopper with no closet, reads exactly as it did.
+                    //
+                    // The gaps collapse with their sections, so a page with
+                    // nothing to say here gains no blank band under the sizes.
+                    ProductFitLine(productId: product.id, variant: variant),
+                    // Reem Intelligence. Above the closet panel because it is
+                    // the broader statement — it can say "you already own one
+                    // of these", which she should read before anything that
+                    // encourages the purchase.
+                    DsCollapsingGap(
+                      before: DsSpacing.sectionGap,
+                      child: ProductIntelligenceNotes(productId: product.id),
+                    ),
+                    // Reem Closet — "بتنسّق مع شي عندي؟".
+                    DsCollapsingGap(
+                      before: DsSpacing.sectionGap,
+                      child: ClosetPairingPanel(productId: product.id),
+                    ),
                     DsGaps.vLg,
                     ProductQuantityPicker(
                       quantity: _quantity.clamp(1, maxQuantity),
@@ -168,20 +195,6 @@ class _ProductDetailsScreenState extends ConsumerState<ProductDetailsScreen> {
                     ),
                     DsGaps.section,
                     ProductDetailBody(product: product),
-                    DsGaps.section,
-                    // Reem Intelligence. Above the closet panel because it is
-                    // the broader statement — it can say "you already own one
-                    // of these", which she should read before anything that
-                    // encourages the purchase. Renders nothing at all when
-                    // there is nothing to say, which is most products.
-                    ProductIntelligenceNotes(productId: product.id),
-                    DsGaps.section,
-                    // Reem Closet. Placed above the seller card because it
-                    // answers the question she is actually weighing — "بتنسّق
-                    // مع شي عندي؟" — and it renders nothing when her closet is
-                    // empty, so the page is unchanged for someone who has not
-                    // built one.
-                    ClosetPairingPanel(productId: product.id),
                     DsGaps.section,
                     // The boutique she is actually buying from — the offer
                     // picked above, not whichever one the catalogue lists

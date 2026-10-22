@@ -551,14 +551,14 @@ class _AdminSectionScreenState extends ConsumerState<AdminSectionScreen> {
               ),
               children: [
                 Text(
-                  record.title,
+                  adminRecordTitle(l10n, config.key, record),
                   style: context.dsText.sectionTitle.bold.tint(
                     colors.onSurface,
                   ),
                 ),
                 const SizedBox(height: DsSpacing.xs),
                 Text(
-                  record.subtitle,
+                  adminRecordSubtitle(l10n, config.key, record),
                   style: context.dsText.body.tint(colors.onSurfaceVariant),
                 ),
                 const SizedBox(height: DsSpacing.md),
@@ -644,13 +644,11 @@ class _AdminSectionScreenState extends ConsumerState<AdminSectionScreen> {
   }
 
   void _showSnack(String message, {bool isError = false}) {
-    final colors = context.dsColors;
     if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: isError ? colors.error : colors.success,
-      ),
+    DsSnackbar.show(
+      context,
+      message: message,
+      type: isError ? DsSnackbarType.error : DsSnackbarType.success,
     );
   }
 }
@@ -795,14 +793,18 @@ class _RecordTile extends StatelessWidget {
 
     return Semantics(
       button: true,
-      label: record.title,
+      label: adminRecordTitle(context.l10n, keyName, record),
       child: ListTile(
         onTap: onOpen,
         leading: CircleAvatar(
           backgroundColor: palette.primary.withValues(alpha: 0.1),
           child: Icon(_iconFor(keyName), color: palette.primary, size: 20),
         ),
-        title: Text(record.title, maxLines: 1, overflow: TextOverflow.ellipsis),
+        title: Text(
+          adminRecordTitle(context.l10n, keyName, record),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -810,7 +812,7 @@ class _RecordTile extends StatelessWidget {
             // rather than repeating the name of the screen.
             if (record.subtitle.isNotEmpty)
               Text(
-                record.subtitle,
+                adminRecordSubtitle(context.l10n, keyName, record),
                 maxLines: compact ? 2 : 1,
                 overflow: TextOverflow.ellipsis,
               ),

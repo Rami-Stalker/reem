@@ -77,7 +77,7 @@ class AdminTrendCategoryList extends StatelessWidget {
                     const SizedBox(width: DsSpacing.xs),
                     TrendDelta(
                       value: categories[i].viewsGrowthPct,
-                      suffix: '٪',
+                      suffix: '%',
                       fontSize: DsTypography.labelSmall,
                     ),
                   ],
@@ -256,7 +256,7 @@ class AdminTrendSellerList extends StatelessWidget {
                         ),
                         TrendDelta(
                           value: sellers[i].revenueGrowthPct,
-                          suffix: '٪',
+                          suffix: '%',
                           fontSize: DsTypography.labelSmall,
                         ),
                       ],

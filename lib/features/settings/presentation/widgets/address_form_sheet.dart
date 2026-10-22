@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/features/checkout/domain/entities/checkout.dart';
 import 'package:reem/features/settings/domain/entities/address_draft.dart';
 import 'package:reem/features/settings/domain/entities/address_entity.dart';
@@ -57,7 +58,7 @@ class _AddressFormSheetState extends ConsumerState<_AddressFormSheet> {
   void initState() {
     super.initState();
     final existing = widget.existing;
-    _label = TextEditingController(text: existing?.label ?? 'المنزل');
+    _label = TextEditingController(text: existing?.label);
     _recipientName = TextEditingController(text: existing?.recipientName ?? '');
     _recipientPhone = TextEditingController(
       text: existing?.recipientPhone ?? '',
@@ -74,6 +75,19 @@ class _AddressFormSheetState extends ConsumerState<_AddressFormSheet> {
     // Her first address becomes the default on the server whether she asks or
     // not, so pre-ticking it here would be a checkbox that does nothing.
     _isDefault = existing?.isDefault ?? false;
+  }
+
+  bool _labelSeeded = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // A new address starts as «home»; the locale is only readable from here,
+    // and only once, so a label she cleared stays cleared.
+    if (!_labelSeeded && widget.existing == null) {
+      _label.text = context.l10n.settingsAddressHome;
+    }
+    _labelSeeded = true;
   }
 
   @override
@@ -149,29 +163,33 @@ class _AddressFormSheetState extends ConsumerState<_AddressFormSheet> {
                 ),
                 const SizedBox(height: DsSpacing.lg),
                 Text(
-                  isEditing ? 'تعديل العنوان' : 'عنوان جديد',
-                  style: context.dsText.sectionTitle.bold.tint(colors.onSurface),
+                  isEditing
+                      ? context.l10n.settingsEditAddress
+                      : context.l10n.settingsNewAddress,
+                  style: context.dsText.sectionTitle.bold.tint(
+                    colors.onSurface,
+                  ),
                 ),
                 const SizedBox(height: DsSpacing.xl),
 
                 _Field(
                   controller: _label,
-                  label: 'اسم العنوان',
-                  hint: 'المنزل، العمل، بيت أهلي',
+                  label: context.l10n.settingsAddressName,
+                  hint: context.l10n.settingsAddressNameHint,
                   maxLength: 40,
                   required: true,
                 ),
                 _Field(
                   controller: _recipientName,
-                  label: 'اسم المستلِمة',
-                  hint: 'من يستلم الطلب',
+                  label: context.l10n.settingsRecipientName,
+                  hint: context.l10n.settingsRecipientNameHint,
                   maxLength: 120,
                   required: true,
                   minLength: 2,
                 ),
                 _Field(
                   controller: _recipientPhone,
-                  label: 'رقم الهاتف',
+                  label: context.l10n.settingsPhoneNumber,
                   // l10n-ignore: a dialling mask, not language
                   hint: '09XX XXX XXX',
                   keyboardType: TextInputType.phone,
@@ -186,7 +204,7 @@ class _AddressFormSheetState extends ConsumerState<_AddressFormSheet> {
                 governorates.when(
                   loading: () => const Padding(
                     padding: EdgeInsets.symmetric(vertical: DsSpacing.md),
-                    child: LinearProgressIndicator(),
+                    child: DsLoadingIndicator.inline(),
                   ),
                   error: (_, _) => _GovernorateUnavailable(
                     onRetry: () => ref.invalidate(deliveryGovernoratesProvider),
@@ -212,16 +230,16 @@ class _AddressFormSheetState extends ConsumerState<_AddressFormSheet> {
 
                 _Field(
                   controller: _city,
-                  label: 'المدينة أو البلدة',
-                  hint: 'المزة، جرمانا، ...',
+                  label: context.l10n.settingsCity,
+                  hint: context.l10n.settingsCityHint,
                   maxLength: 60,
                   required: true,
                   minLength: 2,
                 ),
                 _Field(
                   controller: _addressLine,
-                  label: 'العنوان',
-                  hint: 'الشارع، البناء، الطابق، رقم الشقة',
+                  label: context.l10n.settingsAddressLine,
+                  hint: context.l10n.settingsAddressLineHint,
                   maxLength: 280,
                   required: true,
                   minLength: 3,
@@ -229,14 +247,14 @@ class _AddressFormSheetState extends ConsumerState<_AddressFormSheet> {
                 ),
                 _Field(
                   controller: _landmark,
-                  label: 'علامة مميزة (اختياري)',
-                  hint: 'قرب صيدلية النور',
+                  label: context.l10n.settingsLandmark,
+                  hint: context.l10n.settingsLandmarkHint,
                   maxLength: 140,
                 ),
                 _Field(
                   controller: _instructions,
-                  label: 'تعليمات للتوصيل (اختياري)',
-                  hint: 'اتصلي قبل الوصول',
+                  label: context.l10n.settingsDeliveryNotes,
+                  hint: context.l10n.settingsDeliveryNotesHint,
                   maxLength: 280,
                   maxLines: 2,
                 ),
@@ -246,18 +264,20 @@ class _AddressFormSheetState extends ConsumerState<_AddressFormSheet> {
                   value: _isDefault,
                   onChanged: (value) => setState(() => _isDefault = value),
                   title: Text(
-                    'اجعليه عنواني الافتراضي',
+                    context.l10n.settingsMakeMyDefault,
                     style: context.dsText.body.tint(colors.onSurface),
                   ),
                   subtitle: Text(
-                    'هو الذي يفتح عليه الدفع',
+                    context.l10n.settingsMakeMyDefaultHint,
                     style: context.dsText.caption.tint(colors.onSurfaceVariant),
                   ),
                 ),
 
                 const SizedBox(height: DsSpacing.lg),
                 PrimaryButton(
-                  label: isEditing ? 'حفظ التعديل' : 'حفظ العنوان',
+                  label: isEditing
+                      ? context.l10n.settingsSaveChanges
+                      : context.l10n.settingsSaveAddress,
                   onPressed: _governorate == null ? null : _submit,
                 ),
                 const SizedBox(height: DsSpacing.sm),
@@ -302,14 +322,16 @@ class _GovernoratePicker extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'المحافظة',
+            context.l10n.settingsGovernorate,
             style: context.dsText.caption.semibold.tint(colors.onSurfaceVariant),
           ),
           const SizedBox(height: DsSpacing.sm),
           DropdownButtonFormField<String>(
             initialValue: governorate,
             isExpanded: true,
-            decoration: const InputDecoration(hintText: 'اختاري المحافظة'),
+            decoration: InputDecoration(
+              hintText: context.l10n.settingsChooseGovernorate,
+            ),
             items: [
               for (final g in governorates)
                 DropdownMenuItem(
@@ -323,27 +345,32 @@ class _GovernoratePicker extends StatelessWidget {
               // would price a Damascus suburb against an Aleppo delivery.
               onChanged(value, null, false);
             },
-            validator: (value) =>
-                value == null || value.isEmpty ? 'اختاري المحافظة' : null,
+            validator: (value) => value == null || value.isEmpty
+                ? context.l10n.settingsChooseGovernorate
+                : null,
           ),
           if (districts.isNotEmpty) ...[
             const SizedBox(height: DsSpacing.md),
             Text(
-              'المنطقة',
+              context.l10n.settingsDistrict,
               style: context.dsText.caption.semibold.tint(colors.onSurfaceVariant),
             ),
             const SizedBox(height: DsSpacing.sm),
             DropdownButtonFormField<String>(
               initialValue: district,
               isExpanded: true,
-              decoration: const InputDecoration(
-                hintText: 'اختاري المنطقة (اختياري)',
+              decoration: InputDecoration(
+                hintText: context.l10n.settingsChooseDistrict,
               ),
               items: [
                 for (final d in districts)
                   DropdownMenuItem(
                     value: d.name,
-                    child: Text(d.isRural ? '${d.name} · ريف' : d.name),
+                    child: Text(
+                      d.isRural
+                          ? context.l10n.settingsDistrictRural(d.name)
+                          : d.name,
+                    ),
                   ),
               ],
               onChanged: (value) {
@@ -380,11 +407,11 @@ class _GovernorateUnavailable extends StatelessWidget {
           const SizedBox(width: DsSpacing.sm),
           Expanded(
             child: Text(
-              'تعذّر تحميل قائمة المحافظات',
+              context.l10n.settingsGovernoratesFailed,
               style: context.dsText.body.tint(colors.onSurfaceVariant),
             ),
           ),
-          TextButton(onPressed: onRetry, child: const Text('إعادة المحاولة')),
+          TextButton(onPressed: onRetry, child: Text(context.l10n.retry)),
         ],
       ),
     );
@@ -439,11 +466,13 @@ class _Field extends StatelessWidget {
             decoration: InputDecoration(hintText: hint, counterText: ''),
             validator: (value) {
               final text = value?.trim() ?? '';
-              if (required && text.isEmpty) return 'هذا الحقل مطلوب';
+              if (required && text.isEmpty) {
+                return context.l10n.settingsFieldRequired;
+              }
               if (text.isNotEmpty &&
                   minLength != null &&
                   text.length < minLength!) {
-                return 'أقصر من اللازم';
+                return context.l10n.settingsFieldTooShort;
               }
               return null;
             },

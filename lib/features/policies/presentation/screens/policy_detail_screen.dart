@@ -273,7 +273,7 @@ class _History extends StatelessWidget {
                           ],
                         ),
                         if (entry.effectiveAt != null) ...[
-                          const SizedBox(height: 2),
+                          DsGaps.vXxxs,
                           Text(
                             formatPolicyDate(l10n, entry.effectiveAt!),
                             style: context.dsText.caption,

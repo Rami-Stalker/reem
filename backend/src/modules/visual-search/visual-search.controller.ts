@@ -121,13 +121,13 @@ export class VisualSearchController {
       privacy: {
         image_retention_hours:
           this.config.get<number>('visualSearch.imageRetentionHours') ?? 24,
-        note: 'صورتك بتنحفظ بشكل خاص وبتنمسح تلقائيًا بعد انتهاء البحث. النتائج بتضل بدون الصورة.',
+        note: 'تُحفظ صورتكِ بشكل خاص وتُمسح تلقائياً بعد انتهاء البحث، وتبقى النتائج دون الصورة.',
       },
       try_on: serializeTryOnCapability(this.tryOn.capability()),
       recent: sessions.map((session) => serializeVisualSession(session)),
       prompts: [
         'نفس هالفستان بس بالأسود',
-        'شي مشابه وأقل من ٤٠٠ ألف',
+        'شي مشابه وأقل من 400 ألف',
         'شي أكتر احتشامًا من هيك',
         'نفس الستايل بس بقماش أخف',
       ],

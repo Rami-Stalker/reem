@@ -8,6 +8,7 @@ import 'package:reem/core/shared/entities/media.dart';
 import 'package:reem/features/policies/presentation/widgets/policy_link.dart';
 import 'package:reem/features/social/domain/entities/content.dart';
 import 'package:reem/features/social/domain/entities/content_draft.dart';
+import 'package:reem/features/social/presentation/content_type_labels.dart';
 import 'package:reem/features/social/presentation/providers/composer_notifier.dart';
 import 'package:reem/features/social/presentation/providers/social_providers.dart';
 import 'package:reem/features/social/presentation/widgets/product_tag_picker.dart';
@@ -227,7 +228,7 @@ class _ContentComposerScreenState extends ConsumerState<ContentComposerScreen> {
                     ),
                   ],
                 ),
-                DsGaps.sliverBottomSafe,
+                DsGaps.bottomSafe,
               ],
             ),
           ),
@@ -265,7 +266,7 @@ class _FormatPicker extends StatelessWidget {
       children: [
         for (final type in types)
           DsChip(
-            label: type.name,
+            label: context.l10n.contentTypeName(type.key, fallback: type.name),
             icon: _icon(type.format),
             selected: type.key == selected,
             onTap: () => onSelect(type.key),

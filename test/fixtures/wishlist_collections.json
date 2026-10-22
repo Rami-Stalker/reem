@@ -1,0 +1,264 @@
+[
+ {
+  "id": "f8800c15-7477-46fc-9f17-19459defe6ac",
+  "name": "قائمتي المفضلة",
+  "description": "قائمة جمعتها لنفسي 💕",
+  "visibility": "private",
+  "share_slug": null,
+  "items_count": 2,
+  "items": [
+   {
+    "id": "158e9db7-4d75-4795-96d1-c8fb2e988083",
+    "type": "product",
+    "product": {
+     "id": "e4442674-d8db-4234-b8a9-15295b147042",
+     "slug": "ramadan-123",
+     "title": "صندوق رمضان بإضاءة خافتة",
+     "cues": [],
+     "description": "صندوق رمضان بإضاءة خافتة. متوفّر بكميات محدودة قبل المناسبة.",
+     "category": {
+      "id": "49fb0f37-c0a3-4cf6-9d74-ab318a25e08c",
+      "slug": "ramadan-gifts",
+      "name_ar": "هدايا رمضان والأعياد",
+      "name_en": "Ramadan and eid gifts",
+      "level": 2,
+      "parent_id": "3f884c7e-dbbe-4c38-a21d-4420e2d3eed6",
+      "icon_url": null,
+      "image_url": null,
+      "is_sensitive": false,
+      "returns_allowed": true
+     },
+     "brand": {
+      "id": "91a63618-a58f-4fcd-8c94-d5a7126ab0d8",
+      "slug": "damas-couture",
+      "name_ar": "دمشق كوتور",
+      "name_en": "Damas Couture",
+      "logo_url": null,
+      "is_verified": true
+     },
+     "attributes": {},
+     "gtin": null,
+     "status": "active",
+     "media": [
+      {
+       "url": "https://loremflickr.com/900/1125/ramadan%20gift%2Clantern/all?lock=54617",
+       "type": "image",
+       "blur_hash": null
+      },
+      {
+       "url": "https://loremflickr.com/900/1125/ramadan%20gift%2Clantern/all?lock=76998",
+       "type": "image",
+       "blur_hash": null
+      },
+      {
+       "url": "https://loremflickr.com/900/1125/ramadan%20gift%2Clantern/all?lock=99379",
+       "type": "image",
+       "blur_hash": null
+      }
+     ],
+     "variants": [],
+     "offers_count": 3,
+     "best_offer": {
+      "id": "541482c3-4526-41e5-bd7b-d03516367efa",
+      "seller": {
+       "id": "d6f11992-f0c7-4c31-b3fa-8f1f5c4aa559",
+       "name": "دانا العطّار",
+       "username": "dana_parfum",
+       "bio": "عطور شرقية وفرنسية بتركيز عالٍ وثبات طويل 🌸",
+       "image_url": "https://loremflickr.com/400/400/boutique%2Celegant/all?lock=38462",
+       "location": "دمشق، سوريا",
+       "role": "seller",
+       "seller_level": "verified",
+       "seller_verified_at": "2026-04-27T08:36:20.887Z",
+       "seller_premium_until": null,
+       "is_verified": true,
+       "followers_count": 12,
+       "following_count": 5,
+       "created_at": "2026-01-01T23:50:39.522Z"
+      },
+      "currency": "SYP",
+      "price": {
+       "amount": "3180.0000",
+       "currency": "SYP"
+      },
+      "compare_at_price": null,
+      "wholesale_price": null,
+      "wholesale_min_qty": null,
+      "stock": 4,
+      "min_order_qty": 1,
+      "max_order_qty": 6,
+      "sku": "RAMADAN-123-2",
+      "handling_days": 1,
+      "is_made_to_order": false,
+      "requires_deposit": false,
+      "accepts_returns": true,
+      "status": "active",
+      "variants": []
+     },
+     "price_from": {
+      "amount": "3180.0000",
+      "currency": "SYP"
+     },
+     "price_to": {
+      "amount": "3720.0000",
+      "currency": "SYP"
+     },
+     "stock": 4,
+     "is_available": true,
+     "rating": 4,
+     "reviews_count": 2,
+     "views_count": 17,
+     "orders_count": 1,
+     "favorites_count": 1,
+     "likes_count": 0,
+     "comments_count": 0,
+     "shares_count": 0,
+     "picks_count": 0,
+     "created_at": "2026-09-30T18:40:42.631Z",
+     "is_liked": true
+    },
+    "seller": null,
+    "post": null,
+    "price_when_saved": "3180",
+    "notify_price_drop": true,
+    "notify_back_in_stock": true,
+    "note": null,
+    "created_at": "2026-08-18T13:05:08.954Z"
+   },
+   {
+    "id": "27212a61-4a61-4015-aa79-31cf067121c3",
+    "type": "product",
+    "product": {
+     "id": "fb18c856-b649-4f39-a066-50f76b10422e",
+     "slug": "babyess-159",
+     "title": "بطانية قطنية بلون هادئ",
+     "cues": [
+      {
+       "kind": "anchor",
+       "value": 27,
+       "ar": "أقلّ بنسبة 27% من سعرها السابق"
+      },
+      {
+       "kind": "quality",
+       "value": 4.6,
+       "ar": "4.6 من 5 مراجعة"
+      }
+     ],
+     "description": "بطانية قطنية بلون هادئ. قابل للغسل في الغسالة.",
+     "category": {
+      "id": "8eb2be57-5ebe-460d-a482-f482127a3ead",
+      "slug": "baby-essentials",
+      "name_ar": "مستلزمات يومية",
+      "name_en": "Daily essentials",
+      "level": 2,
+      "parent_id": "ee5d6c2d-73f1-4d5c-8083-3f5dc838d7ae",
+      "icon_url": null,
+      "image_url": null,
+      "is_sensitive": false,
+      "returns_allowed": true
+     },
+     "brand": {
+      "id": "ebf3c96c-b897-44ad-80b4-11e853e4fc26",
+      "slug": "sham-couture",
+      "name_ar": "شام كوتور",
+      "name_en": "Sham Couture",
+      "logo_url": "https://loremflickr.com/900/1125/logo%2Cboutique/all?lock=16538",
+      "is_verified": true
+     },
+     "attributes": {},
+     "gtin": null,
+     "status": "active",
+     "media": [
+      {
+       "url": "https://loremflickr.com/900/1125/baby%20essentials%2Cnursery/all?lock=18555",
+       "type": "image",
+       "blur_hash": null
+      },
+      {
+       "url": "https://loremflickr.com/900/1125/baby%20essentials%2Cnursery/all?lock=40936",
+       "type": "image",
+       "blur_hash": null
+      },
+      {
+       "url": "https://loremflickr.com/900/1125/baby%20essentials%2Cnursery/all?lock=73793",
+       "type": "image",
+       "blur_hash": null
+      }
+     ],
+     "variants": [],
+     "offers_count": 2,
+     "best_offer": {
+      "id": "0885104f-9126-48e4-9fdf-e0e234b0fe48",
+      "seller": {
+       "id": "345844a2-a0bc-40c9-8078-f3ac70f216af",
+       "name": "آية الأم والطفل",
+       "username": "aya_baby",
+       "bio": "كل ما تحتاجه الأم الجديدة — أطقم مواليد ومستلزمات يومية 🍼",
+       "image_url": "https://loremflickr.com/400/400/boutique%2Celegant/all?lock=19570",
+       "location": "السويداء، سوريا",
+       "role": "seller",
+       "seller_level": "verified",
+       "seller_verified_at": "2026-01-25T02:41:19.064Z",
+       "seller_premium_until": null,
+       "is_verified": true,
+       "followers_count": 13,
+       "following_count": 5,
+       "created_at": "2025-07-14T22:42:53.472Z"
+      },
+      "currency": "SYP",
+      "price": {
+       "amount": "2070.0000",
+       "currency": "SYP"
+      },
+      "compare_at_price": {
+       "amount": "2830.0000",
+       "currency": "SYP"
+      },
+      "wholesale_price": null,
+      "wholesale_min_qty": null,
+      "stock": 19,
+      "min_order_qty": 1,
+      "max_order_qty": 4,
+      "sku": "BABYESS-159-0",
+      "handling_days": 2,
+      "is_made_to_order": false,
+      "requires_deposit": false,
+      "accepts_returns": true,
+      "status": "active",
+      "variants": []
+     },
+     "price_from": {
+      "amount": "2070.0000",
+      "currency": "SYP"
+     },
+     "price_to": {
+      "amount": "2300.0000",
+      "currency": "SYP"
+     },
+     "stock": 19,
+     "is_available": true,
+     "rating": 4.6,
+     "reviews_count": 5,
+     "views_count": 216,
+     "orders_count": 5,
+     "favorites_count": 2,
+     "likes_count": 0,
+     "comments_count": 0,
+     "shares_count": 0,
+     "picks_count": 0,
+     "created_at": "2026-08-06T07:30:57.203Z",
+     "is_liked": true
+    },
+    "seller": null,
+    "post": null,
+    "price_when_saved": "2070",
+    "notify_price_drop": true,
+    "notify_back_in_stock": true,
+    "note": null,
+    "created_at": "2026-08-14T11:45:31.862Z"
+   }
+  ],
+  "created_at": "2026-10-16T10:10:47.932Z",
+  "updated_at": "2026-10-21T11:34:12.048Z"
+ }
+]

@@ -83,12 +83,15 @@ class DeviceManagementScreen extends ConsumerWidget {
               child: Center(child: DsLoadingIndicator()),
             ),
             error: (error, _) => SliverFillRemaining(
-              child: Center(child: Text(messageOf(error))),
+              child: DsErrorState(message: messageOf(error)),
             ),
             data: (items) {
               if (items.isEmpty) {
                 return SliverFillRemaining(
-                  child: Center(child: Text(context.l10n.noDevicesYet)),
+                  child: DsEmptyState(
+                icon: Icons.devices_other_rounded,
+                title: context.l10n.noDevicesYet,
+              ),
                 );
               }
               return SliverList.separated(
@@ -99,7 +102,12 @@ class DeviceManagementScreen extends ConsumerWidget {
                   final device = items[index];
                   return Semantics(
                     button: false,
-                    label: '${device.name}, ${device.trustLevel}',
+                    label: [
+                      device.name,
+                      device.isTrusted
+                          ? context.l10n.deviceTrusted
+                          : context.l10n.deviceNotVerified,
+                    ].join('، '),
                     child: Material(
                       color: colors.surface,
                       borderRadius: BorderRadius.circular(DsRadius.md),

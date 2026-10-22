@@ -4,6 +4,8 @@ import 'package:reem/core/design_system/foundation/theme/extensions/color_extens
 import 'package:reem/core/design_system/foundation/theme/extensions/typography_extension.dart';
 import 'package:reem/core/design_system/foundation/tokens/ds_radius.dart';
 import 'package:reem/core/design_system/foundation/tokens/ds_spacing.dart';
+import 'package:reem/core/localization/readable_message.dart';
+import 'package:reem/l10n/app_localizations.dart';
 
 enum DsSnackbarType { info, success, warning, error }
 
@@ -16,8 +18,38 @@ abstract final class DsSnackbar {
     Duration duration = const Duration(seconds: 3),
     String? actionLabel,
     VoidCallback? onAction,
+  }) => on(
+    ScaffoldMessenger.of(context),
+    message: type == DsSnackbarType.error
+        ? readableMessage(AppLocalizations.of(context), message)
+        : message,
+    type: type,
+    duration: duration,
+    actionLabel: actionLabel,
+    onAction: onAction,
+  );
+
+  /// The same snackbar, through a messenger captured before an `await`.
+  ///
+  /// A screen that awaits a request and then reports the outcome cannot use
+  /// its own context afterwards — she may have left the screen. The messenger
+  /// outlives it, and so does the messenger's own context, which is where
+  /// the colours and type are read from here.
+  static void on(
+    ScaffoldMessengerState messenger, {
+    required String message,
+    DsSnackbarType type = DsSnackbarType.info,
+    Duration duration = const Duration(seconds: 3),
+    String? actionLabel,
+    VoidCallback? onAction,
   }) {
+    final context = messenger.context;
     final c = context.dsColors;
+    // The messenger usually sits above the app's Localizations, so this is
+    // null there and `show` has already resolved the message.
+    if (type == DsSnackbarType.error) {
+      message = readableMessage(AppLocalizations.of(context), message);
+    }
 
     final (accent, icon) = switch (type) {
       DsSnackbarType.success => (c.success, Icons.check_circle_rounded),
@@ -26,8 +58,9 @@ abstract final class DsSnackbar {
       DsSnackbarType.info => (c.primary, Icons.info_rounded),
     };
 
-    final messenger = ScaffoldMessenger.of(context)..hideCurrentSnackBar();
-    messenger.showSnackBar(
+    messenger
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
       SnackBar(
         content: Row(
           children: [

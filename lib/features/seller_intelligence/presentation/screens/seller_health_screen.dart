@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/features/seller_intelligence/domain/entities/intelligence.dart';
 import 'package:reem/features/seller_intelligence/presentation/providers/intelligence_providers.dart';
 import 'package:reem/features/seller_intelligence/presentation/widgets/intelligence_pieces.dart';
+import 'package:reem/l10n/app_localizations.dart';
 
 /// صحّة المتجر — the eight things a buyer actually feels.
 ///
@@ -37,7 +39,7 @@ class SellerHealthScreen extends ConsumerWidget {
       background: const SellerAtelierBackground(),
       backgroundColor: palette.background,
       slivers: [
-        const PremiumAppBar(title: 'صحّة المتجر'),
+        PremiumAppBar(title: context.l10n.siShopHealth),
         ...async.when(
           loading: () => [
             const SliverToBoxAdapter(
@@ -52,7 +54,7 @@ class SellerHealthScreen extends ConsumerWidget {
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: DsSpacing.xxl),
                 child: DsErrorState(
-                  message: 'ما قدرنا نحسب صحّة المتجر.',
+                  message: context.l10n.siHealthFailed,
                   onRetry: () => ref.invalidate(sellerHealthProvider),
                 ),
               ),
@@ -73,9 +75,9 @@ class SellerHealthScreen extends ConsumerWidget {
       SliverToBoxAdapter(child: _Header(health: health)),
 
       if (health.advice.isNotEmpty) ...[
-        const SectionTitle(
-          title: 'شو بيرفع صحّتك',
-          subtitle: 'مرتّبة حسب أكبر أثر',
+        SectionTitle(
+          title: context.l10n.siWhatRaisesHealth,
+          subtitle: context.l10n.siWhatRaisesHealthSubtitle,
         ),
         SliverToBoxAdapter(
           child: Padding(
@@ -95,7 +97,7 @@ class SellerHealthScreen extends ConsumerWidget {
       ..._declining(context, ref),
 
       if (measured.isNotEmpty) ...[
-        const SectionTitle(title: 'المقاييس'),
+        SectionTitle(title: context.l10n.siMetrics),
         SliverToBoxAdapter(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: DsSpacing.lg),
@@ -112,10 +114,10 @@ class SellerHealthScreen extends ConsumerWidget {
       ],
 
       if (waiting.isNotEmpty) ...[
-        const SectionTitle(
-          title: 'لسا ما عندنا كفاية',
+        SectionTitle(
+          title: context.l10n.siNotEnoughYet,
           // The sentence that makes the whole evidence rule legible.
-          subtitle: 'هي المقاييس ما بتأثر على صحّتك لحد ما يصير عندنا بيانات كافية',
+          subtitle: context.l10n.siNotEnoughYetBody,
         ),
         SliverToBoxAdapter(
           child: Padding(
@@ -154,13 +156,13 @@ class SellerHealthScreen extends ConsumerWidget {
       // adjunct section makes the whole screen feel slower than it is.
       loading: () => const <Widget>[],
       error: (_, _) => [
-        const SectionTitle(title: 'شو تراجع'),
+        SectionTitle(title: context.l10n.siWhatSlipped),
         SliverToBoxAdapter(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: DsSpacing.lg),
             child: SellerPanel(
               child: Text(
-                'ما قدرنا نقرأ المنتجات المتراجعة هلق.',
+                context.l10n.siSlippedFailed,
                 style: context.dsText.caption.tint(context.atelier.muted),
               ),
             ),
@@ -170,9 +172,9 @@ class SellerHealthScreen extends ConsumerWidget {
       data: (rows) => rows.isEmpty
           ? const <Widget>[]
           : [
-              const SectionTitle(
-                title: 'شو تراجع',
-                subtitle: 'كانت تبيع وخفّت — وسبب واحد لكل وحدة',
+              SectionTitle(
+                title: context.l10n.siWhatSlipped,
+                subtitle: context.l10n.siWhatSlippedSubtitle,
               ),
               SliverToBoxAdapter(
                 child: Padding(
@@ -306,8 +308,8 @@ class _Header extends StatelessWidget {
                             // Said plainly. A provisional score that looked
                             // like a verdict would be the cruellest possible
                             // first impression for a new shop.
-                            ? 'لسا ما عندنا طلبات كفاية لنحكم. كل طلب بتخلّصيه بيوضّح الصورة.'
-                            : 'محسوبة على آخر ${health.windowDays} يوم من طلباتك.',
+                            ? context.l10n.siHealthTooFewOrders
+                            : context.l10n.siHealthWindow(health.windowDays),
                         style: context.dsText.caption.tint(palette.muted),
                       ),
                       if (!health.isProvisional && health.momentum != 0) ...[
@@ -325,7 +327,9 @@ class _Header extends StatelessWidget {
                             ),
                             DsGaps.hXxxs,
                             Text(
-                              '${health.momentum.abs().round()} نقطة عن الشهر الماضي',
+                              context.l10n.siMomentum(
+                                health.momentum.abs().round(),
+                              ),
                               style: context.dsText.caption.tint(
                                 health.momentum > 0
                                     ? palette.positive
@@ -366,7 +370,7 @@ class _DimensionRow extends StatelessWidget {
             score: dimension.score,
             weight: dimension.counted ? dimension.weight : null,
             provisional: !dimension.counted,
-            trailing: _trailing(dimension),
+            trailing: _trailing(context, dimension),
           ),
           Padding(
             padding: const EdgeInsets.only(top: 2),
@@ -374,10 +378,13 @@ class _DimensionRow extends StatelessWidget {
               dimension.counted
                   ? dimension.blurb
                   : dimension.score == null
-                  ? '${dimension.blurb} — ما صار عندنا شي نقيسه بعد.'
+                  ? context.l10n.siDimensionUnmeasured(dimension.blurb)
                   // The honest middle case: we did measure it, there just is
                   // not enough of it to hold her to.
-                  : '${dimension.blurb} — قسناها على ${dimension.sample} بس لسا قليلة لتتحسب.',
+                  : context.l10n.siDimensionTooFew(
+                      dimension.blurb,
+                      dimension.sample,
+                    ),
               style: context.dsText.micro.tint(palette.muted),
             ),
           ),
@@ -388,13 +395,15 @@ class _DimensionRow extends StatelessWidget {
 
   /// The measured figure in its own units, because "16.5" means nothing
   /// without knowing it is hours.
-  String? _trailing(HealthDimension d) {
+  String? _trailing(BuildContext context, HealthDimension d) {
     final value = d.value;
     if (value == null) return null;
     return switch (d.key) {
       'prepSpeed' || 'shipSpeed' || 'responsiveness' =>
-        value >= 48 ? '${(value / 24).round()} يوم' : '${value.round()} ساعة',
-      'satisfaction' => '${value.toStringAsFixed(1)} من ٥',
+        value >= 48
+            ? context.l10n.siDays((value / 24).round())
+            : context.l10n.siHours(value.round()),
+      'satisfaction' => context.l10n.siOutOfFive(value.toStringAsFixed(1)),
       'reliability' || 'returns' || 'cancellation' => '${value.round()}%',
       _ => null,
     };
@@ -418,17 +427,17 @@ class _Facts extends StatefulWidget {
 class _FactsState extends State<_Facts> {
   bool _open = false;
 
-  static const _labels = <String, String>{
-    'accepted_orders': 'طلبات قبلتيها وخلصت',
-    'delivered_orders': 'طلبات وصلت',
-    'cancelled_by_seller': 'ألغيتيها',
-    'cancelled_by_others': 'انلغت من الزبونة',
-    'returned_orders': 'رجعت',
-    'prep_hours': 'وسطي التجهيز (ساعة)',
-    'ship_hours': 'وسطي الشحن (ساعة)',
-    'response_hours': 'وسطي الردّ (ساعة)',
-    'average_rating': 'تقييم المتجر',
-    'review_count': 'عدد التقييمات',
+  static Map<String, String> _labels(AppLocalizations l10n) => {
+    'accepted_orders': l10n.siFactAccepted,
+    'delivered_orders': l10n.siFactDelivered,
+    'cancelled_by_seller': l10n.siFactCancelledBySeller,
+    'cancelled_by_others': l10n.siFactCancelledByOthers,
+    'returned_orders': l10n.siFactReturned,
+    'prep_hours': l10n.siFactPrepHours,
+    'ship_hours': l10n.siFactShipHours,
+    'response_hours': l10n.siFactResponseHours,
+    'average_rating': l10n.siFactRating,
+    'review_count': l10n.siFactReviewCount,
   };
 
   @override
@@ -454,13 +463,15 @@ class _FactsState extends State<_Facts> {
                   : Icons.keyboard_arrow_down_rounded,
               size: 18,
             ),
-            label: Text(_open ? 'خبّي الأرقام' : 'شوفي الأرقام يلي انحسبت'),
+            label: Text(
+              _open ? context.l10n.siHideNumbers : context.l10n.siShowNumbers,
+            ),
           ),
           if (_open)
             SellerPanel(
               child: Column(
                 children: [
-                  for (final entry in _labels.entries)
+                  for (final entry in _labels(context.l10n).entries)
                     if (facts.containsKey(entry.key))
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 3),

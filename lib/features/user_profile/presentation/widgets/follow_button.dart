@@ -38,11 +38,7 @@ class FollowButton extends StatelessWidget {
         ),
         child: Center(
           child: isLoading
-              ? SizedBox(
-                  width: 18,
-                  height: 18,
-                  child: CircularProgressIndicator(strokeWidth: 2.2, color: fg),
-                )
+              ? DsLoadingIndicator.inline(color: fg)
               : Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [

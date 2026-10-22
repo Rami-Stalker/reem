@@ -8,6 +8,7 @@ import 'package:reem/core/shared/value_objects/money.dart';
 import 'package:reem/features/auth/presentation/providers/auth_provider.dart';
 import 'package:reem/features/cart/presentation/providers/cart_providers.dart';
 import 'package:reem/features/checkout/domain/entities/checkout.dart';
+import 'package:reem/features/checkout/presentation/order_labels.dart';
 import 'package:reem/features/checkout/presentation/providers/applied_coupon_provider.dart';
 import 'package:reem/features/checkout/presentation/providers/checkout_controller.dart';
 import 'package:reem/features/checkout/presentation/providers/checkout_providers.dart';
@@ -274,7 +275,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
         if (state.isLoadingOptions)
           const SliverFillRemaining(
             hasScrollBody: false,
-            child: Center(child: CircularProgressIndicator()),
+            child: DsLoadingIndicator(),
           )
         else
           SliverPadding(
@@ -375,7 +376,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                       Padding(
                         padding: const EdgeInsets.only(top: DsSpacing.xxs),
                         child: Text(
-                          _etaLabel(state.quote!),
+                          _etaLabel(context, state.quote!),
                           style: context.dsText.bodySmall.tint(
                             colors.onSurfaceVariant,
                           ),
@@ -737,7 +738,13 @@ class _PaymentTile extends StatelessWidget {
                 const SizedBox(width: DsSpacing.sm),
                 Expanded(
                   child: Text(
-                    option.label,
+                    // The app's own name for a known method, so checkout
+                    // and the order page agree («محفظة ريم»); the server's
+                    // label for one the app does not know yet.
+                    switch (context.l10n.paymentMethodName(option.method)) {
+                      final name when name != option.method => name,
+                      _ => option.label,
+                    },
                     style: context.dsText.body.tint(colors.onSurface),
                   ),
                 ),
@@ -885,7 +892,7 @@ class _AppliedCouponNote extends StatelessWidget {
         Icon(Icons.check_circle_rounded, size: 16, color: colors.success),
         const SizedBox(width: DsSpacing.sm),
         Text(
-          'تم تطبيق الكوبون — توفير ${discount.format()}',
+          context.l10n.checkoutCouponApplied(discount.format()),
           style: context.dsText.caption.semibold.tint(colors.success),
         ),
       ],
@@ -894,10 +901,8 @@ class _AppliedCouponNote extends StatelessWidget {
 }
 
 /// «يصلكِ اليوم بإذن الله» / «خلال يومين».
-String _etaLabel(DeliveryQuote quote) {
-  if (quote.etaHoursMax <= 12) return 'يصلكِ اليوم بإذن الله';
+String _etaLabel(BuildContext context, DeliveryQuote quote) {
+  if (quote.etaHoursMax <= 12) return context.l10n.checkoutEtaToday;
   final days = (quote.etaHoursMax / 24).ceil();
-  if (days <= 1) return 'يصلكِ خلال يوم';
-  if (days == 2) return 'يصلكِ خلال يومين';
-  return 'يصلكِ خلال $days أيام';
+  return context.l10n.checkoutEtaDays(days < 1 ? 1 : days);
 }

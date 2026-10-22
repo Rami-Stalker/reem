@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/media/authorized_media_image.dart';
 import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/features/rooms/domain/entities/room.dart';
@@ -48,7 +49,7 @@ class DecisionCard extends ConsumerWidget {
                       // The room proposed this, she did not. Marked quietly so
                       // it reads as an offer rather than an obligation.
                       Text(
-                        'اقتراح',
+                        context.l10n.roomsSuggestion,
                         style: context.dsText.micro.tint(
                           colors.onSurfaceVariant,
                         ),
@@ -64,14 +65,14 @@ class DecisionCard extends ConsumerWidget {
           if (decision.isSkipped) ...[
             const SizedBox(height: DsSpacing.xs),
             Text(
-              'قرّرتي ما تاخديها',
+              context.l10n.roomsDecidedAgainst,
               style: context.dsText.caption.tint(colors.onSurfaceVariant),
             ),
           ] else ...[
             if (decision.pickCount > 1) ...[
               DsGaps.vXxxs,
               Text(
-                'بدها ${decision.pickCount} قطع',
+                context.l10n.roomsNeedsPieces(decision.pickCount),
                 style: context.dsText.caption,
               ),
             ],
@@ -81,8 +82,8 @@ class DecisionCard extends ConsumerWidget {
               const SizedBox(height: DsSpacing.xs),
               Text(
                 decision.consensus.contested
-                    ? 'الآراء منقسمة'
-                    : 'الأغلبية مايلة لوحدة',
+                    ? context.l10n.roomsOpinionsSplit
+                    : context.l10n.roomsMajorityLeans,
                 style: context.dsText.caption.tint(
                   decision.consensus.contested
                       ? colors.warning
@@ -126,10 +127,10 @@ class DecisionCard extends ConsumerWidget {
                 children: [
                   Expanded(
                     child: DsButton(
-                      label: 'ضيفي خيار',
+                      label: context.l10n.roomsAddOption,
                       size: DsButtonSize.sm,
                       variant: DsButtonVariant.secondary,
-                      onPressed: () => context.push(RoutePaths.search),
+                      onPressed: () => context.push(RoutePaths.keywordSearch),
                     ),
                   ),
                   // Offered only where there is something to compare: two live
@@ -140,7 +141,7 @@ class DecisionCard extends ConsumerWidget {
                     const SizedBox(width: DsSpacing.xs),
                     Expanded(
                       child: DsButton(
-                        label: 'قارني',
+                        label: context.l10n.roomsCompare,
                         size: DsButtonSize.sm,
                         variant: DsButtonVariant.secondary,
                         onPressed: () => context.push(
@@ -158,7 +159,7 @@ class DecisionCard extends ConsumerWidget {
                       // without the deciding role. Hiding it here would need the
                       // viewer's own id, which this widget does not have and
                       // should not start carrying just to grey out a button.
-                      label: 'ما بدي شي',
+                      label: context.l10n.roomsWantNothing,
                       size: DsButtonSize.sm,
                       variant: DsButtonVariant.secondary,
                       onPressed: () => ref
@@ -186,12 +187,18 @@ class _StatusPill extends StatelessWidget {
     final colors = context.dsColors;
 
     final (label, color) = switch (decision.status) {
-      DecisionStatus.resolved => ('محسوم', colors.success),
-      DecisionStatus.skipped => ('متخطّى', colors.onSurfaceVariant),
+      DecisionStatus.resolved => (
+        context.l10n.roomsStatusSettled,
+        colors.success,
+      ),
+      DecisionStatus.skipped => (
+        context.l10n.roomsStatusSkipped,
+        colors.onSurfaceVariant,
+      ),
       DecisionStatus.open =>
         decision.remaining > 0 && decision.candidates.isNotEmpty
-            ? ('لسا ما اخترتي', colors.warning)
-            : ('مفتوح', colors.onSurfaceVariant),
+            ? (context.l10n.roomsStatusNotChosen, colors.warning)
+            : (context.l10n.roomsStatusOpen, colors.onSurfaceVariant),
     };
 
     return Container(
@@ -227,13 +234,13 @@ class _EmptyDecision extends StatelessWidget {
       ),
       child: Column(
         children: [
-          Text('ما في خيارات لهالسؤال', style: context.dsText.caption),
+          Text(context.l10n.roomsNoOptions, style: context.dsText.caption),
           const SizedBox(height: DsSpacing.xs),
           DsButton(
-            label: 'دوّري على قطعة',
+            label: context.l10n.roomsFindPiece,
             size: DsButtonSize.sm,
             isExpanded: false,
-            onPressed: () => context.push(RoutePaths.search),
+            onPressed: () => context.push(RoutePaths.keywordSearch),
           ),
         ],
       ),
@@ -317,7 +324,7 @@ class CandidateTile extends ConsumerWidget {
                         color: colors.error.withValues(alpha: 0.9),
                         padding: const EdgeInsets.symmetric(vertical: 2),
                         child: Text(
-                          'خلصت',
+                          context.l10n.roomsDone,
                           textAlign: TextAlign.center,
                           style: context.dsText.micro.tint(colors.onError),
                         ),
@@ -356,7 +363,7 @@ class CandidateTile extends ConsumerWidget {
               DsGaps.vXxs,
               if (candidate.isChosen)
                 DsButton(
-                  label: 'رجّعي',
+                  label: context.l10n.roomsRestore,
                   size: DsButtonSize.sm,
                   variant: DsButtonVariant.secondary,
                   onPressed: () => actions.unchoose(room.id, candidate.id),
@@ -365,7 +372,7 @@ class CandidateTile extends ConsumerWidget {
                 DsButton(
                   // The moment an intention becomes a purchase — a separate,
                   // named act, never a side effect of adding.
-                  label: 'هاي',
+                  label: context.l10n.roomsChooseThis,
                   size: DsButtonSize.sm,
                   onPressed: candidate.available
                       ? () => actions.choose(room.id, candidate.id)

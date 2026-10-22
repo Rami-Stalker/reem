@@ -20,12 +20,19 @@ class StylistChatNotifier extends StateNotifier<StylistChatState> {
 
   final AiStylistRepository _repository;
 
+  /// Which load is current. A load that finishes after a newer one started —
+  /// the constructor's bootstrap outrun by [ask]'s — must not overwrite it,
+  /// least of all after her question has been answered, when a stale seed
+  /// brief would replace the chips of the answer she is reading.
+  int _generation = 0;
+
   Future<void> _load(String? conversationId) async {
+    final generation = ++_generation;
     if (conversationId == null) {
       // A fresh screen: fetch the opening prompts, but do not create a
       // conversation row until she actually says something.
       final result = await _repository.bootstrap();
-      if (!mounted) return;
+      if (!mounted || generation != _generation) return;
       state = switch (result) {
         Success(:final data) => state.copyWith(
             isLoading: false,
@@ -40,7 +47,7 @@ class StylistChatNotifier extends StateNotifier<StylistChatState> {
     }
 
     final result = await _repository.conversation(conversationId);
-    if (!mounted) return;
+    if (!mounted || generation != _generation) return;
     state = switch (result) {
       Success(:final data) => state.copyWith(
           isLoading: false,
@@ -176,5 +183,18 @@ class StylistChatNotifier extends StateNotifier<StylistChatState> {
   Future<void> startNewConversation() async {
     state = StylistChatState.initial;
     await _load(null);
+  }
+
+  /// A fresh conversation that opens with [question] — the way in from
+  /// Discover, where she asked before she arrived.
+  ///
+  /// Starts clean even if this notifier is still holding a conversation from
+  /// earlier (it is kept alive for a few minutes), because a new question
+  /// asked from somewhere else is not a follow-up to that one.
+  Future<void> ask(String question) async {
+    if (question.trim().isEmpty) return;
+    await startNewConversation();
+    if (!mounted) return;
+    await send(question);
   }
 }

@@ -32,14 +32,13 @@ void main() {
     const branchIndexForPath = <String, int>{
       RoutePaths.home: 0,
       RoutePaths.search: 1,
-      RoutePaths.rooms: 2,
-      RoutePaths.activity: 3,
-      RoutePaths.profile: 4,
-      RoutePaths.sellerDashboard: 5,
-      RoutePaths.myProducts: 6,
-      RoutePaths.sellerOrders: 7,
-      RoutePaths.sellerAnalytics: 8,
-      RoutePaths.sellerStore: 9,
+      RoutePaths.closet: 2,
+      RoutePaths.profile: 3,
+      RoutePaths.sellerDashboard: 4,
+      RoutePaths.myProducts: 5,
+      RoutePaths.sellerOrders: 6,
+      RoutePaths.sellerAnalytics: 7,
+      RoutePaths.sellerStore: 8,
     };
 
     test('every buyer tab is a shell branch, so tapping one keeps the bar', () {
@@ -79,7 +78,7 @@ void main() {
           reason: 'two tabs both claim branch $index',
         );
       }
-      // Ten branches, ten tabs. A branch nothing points at is a screen the
+      // Nine branches, nine tabs. A branch nothing points at is a screen the
       // user cannot reach — which is what happened to the cart.
       expect(claimed.length, branchIndexForPath.length);
     });
@@ -115,6 +114,8 @@ void main() {
         'RoutePaths.favorites',
         'RoutePaths.notifications',
         'RoutePaths.addresses',
+        // Rooms gave its tab to the closet, so the closet has to lead there.
+        'RoutePaths.rooms',
       ];
 
       // Everything under lib/, minus the places that only *declare* routes.

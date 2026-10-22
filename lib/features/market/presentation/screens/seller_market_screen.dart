@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/features/market/domain/entities/market.dart';
 import 'package:reem/features/market/presentation/providers/market_providers.dart';
 import 'package:reem/features/seller_intelligence/presentation/widgets/intelligence_pieces.dart';
@@ -36,20 +37,17 @@ class SellerMarketScreen extends ConsumerWidget {
       background: const SellerAtelierBackground(),
       backgroundColor: palette.background,
       slivers: [
-        const PremiumAppBar(title: 'السوق'),
+        PremiumAppBar(title: context.l10n.marketSellerTitle),
 
-        const SectionTitle(
-          title: 'فرص',
-          subtitle: 'العرض مقابل الطلب بالأقسام اللي عم تبيعي فيها.',
+        SectionTitle(
+          title: context.l10n.marketOpportunities,
+          subtitle: context.l10n.marketOpportunitiesBody,
         ),
         opportunities.when(
           loading: () => const _Loading(),
-          error: (_, _) => const _Nothing(text: 'ما قدرنا نقرا السوق.'),
+          error: (_, _) => _Nothing(text: context.l10n.marketReadFailed),
           data: (rows) => rows.isEmpty
-              ? const _Nothing(
-                  text:
-                      'ما في إشارة قوية كفاية هلق. ريم ما بتحكي إلا لما يكون في بيانات تكفي.',
-                )
+              ? _Nothing(text: context.l10n.marketNoSignal)
               : SliverList.separated(
                   itemCount: rows.length,
                   separatorBuilder: (_, _) => const SizedBox(height: DsSpacing.sm),
@@ -58,17 +56,15 @@ class SellerMarketScreen extends ConsumerWidget {
                 ),
         ),
 
-        const SectionTitle(
-          title: 'يستاهل نزول',
-          subtitle: 'منتجات عندك الطلب عليها أعلى من العادة.',
+        SectionTitle(
+          title: context.l10n.marketWorthADrop,
+          subtitle: context.l10n.marketWorthADropBody,
         ),
         candidates.when(
           loading: () => const _Loading(),
-          error: (_, _) => const _Nothing(text: 'ما قدرنا نقرا المنتجات.'),
+          error: (_, _) => _Nothing(text: context.l10n.marketProductsFailed),
           data: (rows) => rows.isEmpty
-              ? const _Nothing(
-                  text: 'ما في منتج عندك بوضع يستاهل نزول خاص هلق.',
-                )
+              ? _Nothing(text: context.l10n.marketNoDropCandidates)
               : SliverList.separated(
                   itemCount: rows.length,
                   separatorBuilder: (_, _) => const SizedBox(height: DsSpacing.sm),
@@ -77,12 +73,12 @@ class SellerMarketScreen extends ConsumerWidget {
                 ),
         ),
 
-        const SectionTitle(title: 'نزولاتك'),
+        SectionTitle(title: context.l10n.marketYourDrops),
         drops.when(
           loading: () => const _Loading(),
-          error: (_, _) => const _Nothing(text: 'ما قدرنا نجيب نزولاتك.'),
+          error: (_, _) => _Nothing(text: context.l10n.marketYourDropsFailed),
           data: (rows) => rows.isEmpty
-              ? const _Nothing(text: 'لسا ما عملتي نزول.')
+              ? _Nothing(text: context.l10n.marketNoOwnDrops)
               : SliverList.separated(
                   itemCount: rows.length,
                   separatorBuilder: (_, _) => const SizedBox(height: DsSpacing.sm),
@@ -179,7 +175,9 @@ class _OpportunityTile extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  opportunity.confidence >= 0.6 ? 'مؤكّد' : 'مبدئي',
+                  opportunity.confidence >= 0.6
+                      ? context.l10n.marketConfidenceHigh
+                      : context.l10n.marketConfidenceLow,
                   style: context.dsText.micro.tint(palette.muted),
                 ),
               ],
@@ -228,7 +226,10 @@ class _CandidateTile extends StatelessWidget {
                   ),
                   DsGaps.vXxs,
                   Text(
-                    'الطلب ${candidate.demandScore.round()} · المخزون ${candidate.stockUnits}',
+                    context.l10n.marketCandidateStats(
+                      candidate.demandScore.round(),
+                      candidate.stockUnits,
+                    ),
                     style: context.dsText.micro.tint(palette.muted),
                   ),
                 ],
@@ -238,7 +239,7 @@ class _CandidateTile extends StatelessWidget {
             IntelligenceDial(
               score: candidate.potential.toDouble(),
               size: 48,
-              label: 'نزول',
+              label: context.l10n.marketDropAction,
             ),
           ],
         ),
@@ -256,11 +257,11 @@ class _DropTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final palette = context.atelier;
     final statusAr = switch (drop.status) {
-      'DRAFT' => 'مسوّدة',
-      'SCHEDULED' => 'مجدول',
-      'LIVE' => 'شغّال',
-      'ENDED' => 'خلص',
-      'CANCELLED' => 'ملغي',
+      'DRAFT' => context.l10n.marketDropDraft,
+      'SCHEDULED' => context.l10n.marketDropScheduled,
+      'LIVE' => context.l10n.marketDropLive,
+      'ENDED' => context.l10n.marketDropEnded,
+      'CANCELLED' => context.l10n.marketDropCancelled,
       _ => drop.status,
     };
 
@@ -282,7 +283,10 @@ class _DropTile extends StatelessWidget {
                   ),
                   DsGaps.vXxs,
                   Text(
-                    '${drop.products.length} قطع · $statusAr',
+                    context.l10n.marketDropSummary(
+                      drop.products.length,
+                      statusAr,
+                    ),
                     style: context.dsText.micro.tint(palette.muted),
                   ),
                 ],

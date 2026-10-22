@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/media/authorized_media_image.dart';
 import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/features/rooms/domain/entities/room.dart';
@@ -28,20 +29,20 @@ class PurchasePlanScreen extends ConsumerWidget {
 
     return Scaffold(
       backgroundColor: colors.background,
-      appBar: const ReemAppBar(title: 'خطة الشرا'),
+      appBar: ReemAppBar(title: context.l10n.roomsPlanTitle),
       body: roomAsync.when(
         loading: () => const Center(child: DsLoadingIndicator()),
         error: (_, _) => DsErrorState(
-          message: 'ما قدرنا نجيب الخطة.',
+          message: context.l10n.roomsPlanFailed,
           onRetry: () => ref.invalidate(roomProvider(roomId)),
         ),
         data: (room) {
           final plan = room.plan;
           if (plan == null) {
-            return const DsEmptyState(
+            return DsEmptyState(
               icon: Icons.checklist_rounded,
-              title: 'ما في خطة بعد',
-              message: 'احسمي قرارات الغرفة، وبعدها منجهّزلك الخطة.',
+              title: context.l10n.roomsNoPlanTitle,
+              message: context.l10n.roomsNoPlanBody,
             );
           }
           return _Body(room: room, plan: plan);
@@ -71,10 +72,13 @@ class _Body extends ConsumerWidget {
         _BudgetCard(room: room, plan: plan),
         const SizedBox(height: DsSpacing.md),
 
-        Text('هلق', style: context.dsText.sectionTitle),
+        Text(context.l10n.roomsPlanNow, style: context.dsText.sectionTitle),
         const SizedBox(height: DsSpacing.xs),
         if (plan.now.isEmpty)
-          Text('ما في شي مجهّز للشرا هلق.', style: context.dsText.bodyMuted)
+          Text(
+            context.l10n.roomsPlanNothingNow,
+            style: context.dsText.bodyMuted,
+          )
         else
           for (final item in plan.now)
             _PlanLine(
@@ -86,10 +90,10 @@ class _Body extends ConsumerWidget {
 
         if (plan.later.isNotEmpty) ...[
           const SizedBox(height: DsSpacing.lg),
-          Text('بعدين', style: context.dsText.sectionTitle),
+          Text(context.l10n.roomsPlanLater, style: context.dsText.sectionTitle),
           Text(
             // The plan's own idea, said once so it is understood.
-            'بتضل محفوظة بالخطة — بتشتريها لما تجهزي.',
+            context.l10n.roomsPlanLaterBody,
             style: context.dsText.sectionSubtitle,
           ),
           const SizedBox(height: DsSpacing.xs),
@@ -127,7 +131,10 @@ class _BudgetCard extends StatelessWidget {
           Row(
             children: [
               Expanded(
-                child: Text('المجموع', style: context.dsText.labelStrong),
+                child: Text(
+                  context.l10n.roomsPlanTotal,
+                  style: context.dsText.labelStrong,
+                ),
               ),
               Text(
                 plan.total?.format() ?? '—',
@@ -139,9 +146,11 @@ class _BudgetCard extends StatelessWidget {
             const SizedBox(height: DsSpacing.xs),
             Text(
               switch (budget.verdict) {
-                'over' => 'فوق ميزانيتك بـ${budget.overBy?.format() ?? ''}',
-                'under' => 'تحت ميزانيتك',
-                _ => 'ضمن ميزانيتك',
+                'over' => context.l10n.roomsOverBudget(
+                  budget.overBy?.format() ?? '',
+                ),
+                'under' => context.l10n.roomsUnderBudget,
+                _ => context.l10n.roomsWithinBudget,
               },
               style: context.dsText.caption.tint(
                 budget.isOver ? colors.warning : colors.success,
@@ -152,7 +161,7 @@ class _BudgetCard extends StatelessWidget {
             DsGaps.vXxxs,
             Text(
               // An unknown price is not a free one, and the total says so.
-              '${budget.unpricedCount} قطعة ما قدرنا نسعّرها',
+              context.l10n.roomsUnpriced(budget.unpricedCount),
               style: context.dsText.micro.tint(colors.onSurfaceVariant),
             ),
           ],
@@ -227,7 +236,7 @@ class _PlanLine extends ConsumerWidget {
                   if (unavailable) ...[
                     DsGaps.vXxxs,
                     Text(
-                      'ما عادت متوفرة',
+                      context.l10n.roomsNoLongerAvailable,
                       style: context.dsText.micro.tint(colors.error),
                     ),
                   ],
@@ -237,7 +246,9 @@ class _PlanLine extends ConsumerWidget {
             Column(
               children: [
                 IconButton(
-                  tooltip: item.stage == PurchaseStage.now ? 'أجّليها' : 'هلق',
+                  tooltip: item.stage == PurchaseStage.now
+                      ? context.l10n.roomsPostpone
+                      : context.l10n.roomsPlanNow,
                   icon: Icon(
                     item.stage == PurchaseStage.now
                         ? Icons.schedule_rounded
@@ -254,7 +265,7 @@ class _PlanLine extends ConsumerWidget {
                   ),
                 ),
                 IconButton(
-                  tooltip: 'شيليها',
+                  tooltip: context.l10n.roomsRemove,
                   icon: const Icon(Icons.close_rounded, size: 18),
                   onPressed: () =>
                       actions.removePlanItem(room.id, plan.id, item.id),
@@ -288,14 +299,14 @@ class _CheckoutBar extends ConsumerWidget {
               Padding(
                 padding: const EdgeInsets.only(bottom: DsSpacing.xs),
                 child: Text(
-                  'شيلي القطع يلي ما عادت متوفرة قبل ما تكملي.',
+                  context.l10n.roomsRemoveUnavailableFirst,
                   style: context.dsText.caption.tint(colors.error),
                 ),
               ),
             DsButton(
               label: plan.hasLater
-                  ? 'اشتري يلي لهلق (${plan.now.length})'
-                  : 'اشتري (${plan.now.length})',
+                  ? context.l10n.roomsBuyNowCount(plan.now.length)
+                  : context.l10n.roomsBuyCount(plan.now.length),
               onPressed: plan.canBuy
                   ? () => context.push(
                       RoutePaths.checkout,

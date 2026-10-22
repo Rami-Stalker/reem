@@ -288,7 +288,7 @@ export function reasonSentence(
     if (phrases.length === 2) break;
   }
 
-  if (!phrases.length) return 'قريب بصريًا من الصورة اللي رفعتيها.';
+  if (!phrases.length) return 'قريب بصرياً من الصورة التي رفعتِها.';
   return `${phrases.join('، و')}.`;
 }
 
@@ -300,27 +300,27 @@ function phraseFor(
     case 'NEAR_IDENTICAL':
       return 'شبه مطابق للصورة';
     case 'SHAPE_MATCH':
-      return 'نفس القصّة تقريبًا';
+      return 'القصّة نفسها تقريباً';
     case 'LAYOUT_MATCH':
-      return 'نفس توزيع الألوان';
+      return 'توزيع الألوان نفسه';
     case 'PATTERN_MATCH':
-      return `نفس الملمس (${PATTERN_LABELS[context.pattern as keyof typeof PATTERN_LABELS] ?? context.pattern})`;
+      return `الملمس نفسه (${PATTERN_LABELS[context.pattern as keyof typeof PATTERN_LABELS] ?? context.pattern})`;
     case 'COLOUR_MATCH':
-      return context.colour ? `باللون ${colourLabel(context.colour)}` : 'بنفس اللون';
+      return context.colour ? `باللون ${colourLabel(context.colour)}` : 'باللون نفسه';
     case 'COLOUR_HARMONY':
-      return 'بلون بينسّق مع الصورة';
+      return 'بلون يتناسق مع الصورة';
     case 'CATEGORY_MATCH':
-      return 'من نفس القسم';
+      return 'من القسم نفسه';
     case 'BUDGET_FIT':
-      return 'ضمن ميزانيتك';
+      return 'ضمن ميزانيتكِ';
     case 'MODESTY_MATCH':
-      return 'بيناسب درجة الاحتشام اللي طلبتيها';
+      return 'يناسب درجة الاحتشام التي طلبتِها';
     case 'SIZE_AVAILABLE':
-      return 'متوفر بمقاسك';
+      return 'متوفر بمقاسكِ';
     case 'TOP_RATED':
-      return 'تقييمه عالي';
+      return 'تقييمه عالٍ';
     case 'POPULAR':
-      return 'مطلوب كتير';
+      return 'مطلوب كثيراً';
   }
 }
 

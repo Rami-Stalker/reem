@@ -7,6 +7,8 @@ import 'package:reem/features/cart/data/models/cart_model.dart';
 import 'package:reem/features/checkout/data/models/checkout_models.dart';
 import 'package:reem/features/checkout/data/models/order_models.dart';
 import 'package:reem/features/checkout/domain/entities/order.dart';
+import 'package:reem/features/checkout/presentation/order_labels.dart';
+import 'package:reem/l10n/app_localizations_ar.dart';
 
 /// Contract tests for the commerce flow, run against responses captured from a
 /// real multi-seller checkout — a basket from two sellers, paid cash on
@@ -16,6 +18,7 @@ Map<String, dynamic> _fixture(String name) =>
         as Map<String, dynamic>;
 
 void main() {
+  final ar = AppLocalizationsAr();
   group('cart', () {
     late CartModel cart;
 
@@ -88,7 +91,7 @@ void main() {
       for (final parcel in order.sellerOrders) {
         expect(parcel.number, startsWith(order.number));
         expect(parcel.status, isNot(SellerOrderStatus.newOrder));
-        expect(parcel.status.label, isNotEmpty);
+        expect(ar.customerParcelStatus(parcel.status), isNotEmpty);
       }
     });
 
@@ -127,7 +130,7 @@ void main() {
 
     test('payment carries its method label in Arabic', () {
       expect(order.payment, isNotNull);
-      expect(order.payment!.methodLabel, 'الدفع عند الاستلام');
+      expect(ar.paymentMethodName(order.payment!.method), 'الدفع عند الاستلام');
       expect(order.payment!.amount.currency, Currency.syp);
     });
 
@@ -137,10 +140,10 @@ void main() {
     });
 
     test('every status renders an Arabic label', () {
-      expect(order.status.label, isNotEmpty);
+      expect(ar.orderStatusLabel(order.status), isNotEmpty);
       for (final parcel in order.sellerOrders) {
-        expect(parcel.status.label, isNotEmpty);
-        expect(parcel.status.label, isNot(contains('_')));
+        expect(ar.customerParcelStatus(parcel.status), isNotEmpty);
+        expect(ar.customerParcelStatus(parcel.status), isNot(contains('_')));
       }
     });
 

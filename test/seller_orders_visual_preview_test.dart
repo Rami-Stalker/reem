@@ -310,6 +310,8 @@ final class _FakeSellerOrders implements SellerOrdersRepository {
     discountTotal: _syp('0'),
     shippingCost: _syp('25000'),
     commissionBase: _syp('400000'),
+    sellerFundedDiscount: _syp('0'),
+    platformFundedDiscount: _syp('0'),
     escrowReleased: false,
     escrowReleaseAt: DateTime(2026, 9, 2, 14, 30),
     confirmedAt: DateTime(2026, 8, 26, 9, 40),

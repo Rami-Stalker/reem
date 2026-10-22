@@ -195,7 +195,7 @@ export class BundlesService {
         sellerId: anchor.offers[0].sellerId,
         priceSyp: Number(anchor.offers[0].priceSyp ?? 0),
         slot: anchorSlots[0] ?? null,
-        reason: 'القطعة الأساسية بالإطلالة.',
+        reason: 'القطعة الأساسية في الإطلالة.',
         score: 100,
       },
     ];
@@ -238,8 +238,8 @@ export class BundlesService {
         slot,
         // The reason is the difference between a bundle and a gift basket.
         reason: observed
-          ? `بنات كتير اشترتها مع «${anchor.title}».`
-          : `بتكمّل «${anchor.title}» بنفس المناسبة.`,
+          ? `اشترتها نساء كثيرات مع «${anchor.title}».`
+          : `تكمل «${anchor.title}» في المناسبة نفسها.`,
         score: complement.score,
       });
       filled.add(slot);

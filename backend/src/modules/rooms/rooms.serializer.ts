@@ -42,29 +42,29 @@ import { RoomRecord } from './rooms.service';
 
 const ROLE_LABELS: Record<RoomMemberRole, string> = {
   OWNER: 'صاحبة الغرفة',
-  CO_SHOPPER: 'بتشتري معك',
-  ADVISOR: 'بتنصحك',
-  VIEWER: 'بتتفرّج',
+  CO_SHOPPER: 'تتسوّق معكِ',
+  ADVISOR: 'تنصحكِ',
+  VIEWER: 'تتابع',
 };
 
 const EVENT_LABELS: Record<RoomEventKind, string> = {
   ROOM_CREATED: 'فتحت الغرفة',
   MEMBER_JOINED: 'انضمّت للغرفة',
-  MEMBER_INVITED: 'دعت حدا',
-  DECISION_ADDED: 'ضافت قرار',
+  MEMBER_INVITED: 'دعت صديقة',
+  DECISION_ADDED: 'أضافت قراراً',
   CANDIDATE_ADDED: 'اقترحت قطعة',
-  CANDIDATE_REMOVED: 'شالت اقتراح',
+  CANDIDATE_REMOVED: 'أزالت اقتراحاً',
   VOTE_CAST: 'صوّتت',
   COMMENT_ADDED: 'علّقت',
-  DECISION_RESOLVED: 'حسمت قرار',
-  DECISION_SKIPPED: 'قرّرت تتخطّى',
+  DECISION_RESOLVED: 'حسمت قراراً',
+  DECISION_SKIPPED: 'قرّرت التخطّي',
   PLAN_DRAWN: 'جهّزت الخطة',
   PLAN_ORDERED: 'اشترت',
 };
 
 const CANDIDATE_LABELS: Record<RoomCandidateStatus, string> = {
   CANDIDATE: 'مقترحة',
-  SHORTLISTED: 'بالقائمة القصيرة',
+  SHORTLISTED: 'في القائمة القصيرة',
   CHOSEN: 'المختارة',
   REJECTED: 'مستبعدة',
 };
@@ -408,10 +408,10 @@ export function serializeRoomForShare(room: Room) {
  * legible and hers is to choose.
  */
 const VERDICT_LABELS: Record<CompareVerdict, string> = {
-  IDENTICAL: 'الخياران متطابقين بكل شي — القرار ذوق.',
-  ONE_CHEAPEST_AND_BEST: 'وحدة منهن أحسن بكل شي منقدر نقيسه.',
-  CHEAPEST_DIFFERS: 'في فروقات — الأرخص مو بالضرورة الأنسب.',
-  TRADE_OFF: 'كل وحدة أحسن بشي — القرار إلك.',
+  IDENTICAL: 'الخياران متطابقان في كل شيء — القرار للذوق.',
+  ONE_CHEAPEST_AND_BEST: 'إحداهما أفضل في كل ما يمكننا قياسه.',
+  CHEAPEST_DIFFERS: 'هناك فروق — الأرخص ليس بالضرورة الأنسب.',
+  TRADE_OFF: 'كلٌّ منهما أفضل في شيء — القرار لكِ.',
 };
 
 export function serializeComparison(comparison: Comparison) {

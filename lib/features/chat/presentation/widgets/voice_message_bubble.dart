@@ -148,14 +148,11 @@ class _VoiceMessageBubbleState extends ConsumerState<VoiceMessageBubble> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(DsRadius.full),
-                          child: LinearProgressIndicator(
-                            value: _progress(total),
-                            minHeight: 4,
-                            color: onBubble,
-                            backgroundColor: onBubble.withValues(alpha: 0.25),
-                          ),
+                        DsMeter(
+                          value: _progress(total),
+                          weight: DsMeterWeight.thin,
+                          color: onBubble,
+                          track: onBubble.withValues(alpha: 0.25),
                         ),
                         const SizedBox(height: DsSpacing.xs),
                         Text(
@@ -206,10 +203,10 @@ class _PlayButton extends StatelessWidget {
       child: loading
           ? Padding(
               padding: const EdgeInsets.all(DsSpacing.xs),
-              child: CircularProgressIndicator(strokeWidth: 2, color: tint),
+              child: DsLoadingIndicator.inline(color: tint),
             )
           : IconButton(
-              tooltip: playing ? 'إيقاف مؤقت' : 'تشغيل',
+              tooltip: playing ? context.l10n.chatPause : context.l10n.chatPlay,
               onPressed: onTap,
               padding: EdgeInsets.zero,
               icon: Icon(

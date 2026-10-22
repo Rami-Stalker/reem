@@ -289,7 +289,7 @@ test('«a shop you come back to» is not said about every shop', () => {
   };
   const note = run({ shopper }).find((n) => n.code === 'TRUSTED_SELLER');
   assert.ok(note, 'a repeat seller is still worth saying');
-  assert.match(note.ar, /بترجعي تشتري/, 'and the wording says returning, not once');
+  assert.match(note.ar, /تعودين للشراء/, 'and the wording says returning, not once');
 
   // A seller she has no relationship with says nothing.
   const elsewhere: ShopperFacts = { ...stranger, boughtFromSellerIds: ['s9'] };

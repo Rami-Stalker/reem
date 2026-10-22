@@ -19,6 +19,7 @@ import 'package:reem/core/design_system/design_system.dart';
 import 'package:reem/core/localization/app_localizations.dart';
 import 'package:reem/core/result/result.dart';
 import 'package:reem/features/intelligence/domain/entities/intelligence_note.dart';
+import 'package:reem/features/intelligence/domain/entities/size_fit.dart';
 import 'package:reem/features/intelligence/domain/repositories/intelligence_repository.dart';
 import 'package:reem/features/intelligence/presentation/providers/intelligence_providers.dart';
 import 'package:reem/features/intelligence/presentation/widgets/product_intelligence_notes.dart';
@@ -73,7 +74,7 @@ void main() {
     // products for most shoppers land here, and reserving space on every
     // product page for a section that usually has no content is how a good
     // idea makes a page worse.
-    expect(find.text('ملاحظات إلك'), findsNothing);
+    expect(find.text('ملاحظات لكِ'), findsNothing);
     expect(find.byType(SurfaceCard), findsNothing);
   });
 
@@ -85,7 +86,7 @@ void main() {
     await tester.pumpWidget(_Preview(notes: notes));
     await tester.pump();
 
-    expect(find.text('ملاحظات إلك'), findsOneWidget);
+    expect(find.text('ملاحظات لكِ'), findsOneWidget);
     for (final note in notes) {
       expect(
         find.text(note.ar),
@@ -218,4 +219,7 @@ class _FixtureRepository implements IntelligenceRepository {
     if (fail) throw Exception('the server is having a bad day');
     return Success(rows);
   }
+  @override
+  Future<Result<List<SizeFit>>> sizeFit(String productId) async =>
+      const Success([]);
 }

@@ -124,6 +124,9 @@ async function aSellerPost(db: PrismaService) {
       authorKind: CommerceAuthorKind.SELLER,
       contentType: 'product_post',
       status: CommerceContentStatus.PUBLISHED,
+      // An open storefront's post. An unverified seller's page stays closed
+      // until approval opens it, so her posts reach nobody yet.
+      authorIsPublic: true,
     },
     select: { id: true, authorId: true },
   });
@@ -260,7 +263,20 @@ dbTest('a like is one row and one increment, and toggles back', async ({
   interactions,
 }) => {
   const post = await aSellerPost(db);
-  const shopper = await aShopper(db, post.authorId);
+  // A shopper who has not liked it yet — the seed has likes, and liking twice
+  // is the toggle this test checks second, not first.
+  const likedBy = await db.commerceContentReaction.findMany({
+    where: { contentId: post.id },
+    select: { userId: true },
+  });
+  const shopper = await db.user.findFirst({
+    where: {
+      role: UserRole.CUSTOMER,
+      id: { notIn: [post.authorId, ...likedBy.map((like) => like.userId)] },
+    },
+    select: { id: true },
+  });
+  assert.ok(shopper, 'every seeded shopper already likes this post');
   const actor = asUser(shopper.id, UserRole.CUSTOMER);
 
   const before = await db.commerceContent.findUnique({

@@ -62,7 +62,7 @@ class _VisualSearchScreenState extends ConsumerState<VisualSearchScreen> {
         actions: [
           if (state.hasSession)
             IconButton(
-              tooltip: 'بحث جديد',
+              tooltip: context.l10n.visualNewSearch,
               onPressed: state.isBusy ? null : notifier.reset,
               icon: const Icon(Icons.add_photo_alternate_outlined),
             ),
@@ -87,7 +87,7 @@ class _VisualSearchScreenState extends ConsumerState<VisualSearchScreen> {
           : FloatingActionButton.extended(
               onPressed: state.isBusy ? null : () => _pick(notifier, state),
               icon: const Icon(Icons.image_search_rounded),
-              label: const Text('اختاري صورة'),
+              label: Text(context.l10n.visualPickPhoto),
             ),
     );
   }
@@ -149,10 +149,9 @@ class _Intro extends StatelessWidget {
     if (state.isIndexEmpty) {
       return DsEmptyState(
         icon: Icons.hourglass_top_rounded,
-        title: 'لسا عم نجهّز البحث بالصورة',
-        message:
-            'عم نحلّل صور المنتجات لحتى نقدر نقارنها بصورتك. جرّبي بعد شوي.',
-        actionLabel: 'حدّثي',
+        title: context.l10n.visualPreparing,
+        message: context.l10n.visualPreparingBody,
+        actionLabel: context.l10n.visualRefresh,
         onAction: notifier.refreshBootstrap,
       );
     }
@@ -170,14 +169,13 @@ class _Intro extends StatelessWidget {
         ),
         const SizedBox(height: DsSpacing.md),
         Text(
-          'شفتي شي وعجبك؟',
+          context.l10n.visualSawSomething,
           textAlign: TextAlign.center,
           style: context.dsText.screenTitle,
         ),
         const SizedBox(height: DsSpacing.xs),
         Text(
-          'ارفعي صورة القطعة — سكرين شوت من إنستغرام أو تيك توك أو بنترست، '
-          'أو صورة من الاستوديو — ومنجيبلك أقرب شي موجود بريم.',
+          context.l10n.visualSawSomethingBody,
           textAlign: TextAlign.center,
           style: Theme.of(
             context,
@@ -188,7 +186,10 @@ class _Intro extends StatelessWidget {
           _PrivacyNote(note: state.bootstrap.privacyNote),
         if (state.bootstrap.recent.isNotEmpty) ...[
           const SizedBox(height: DsSpacing.xl),
-          Text('بحوثك السابقة', style: context.dsText.tileTitle),
+          Text(
+            context.l10n.visualPastSearches,
+            style: context.dsText.tileTitle,
+          ),
           const SizedBox(height: DsSpacing.xs),
           for (final session in state.bootstrap.recent)
             _RecentTile(session: session, notifier: notifier),
@@ -250,14 +251,14 @@ class _RecentTile extends StatelessWidget {
       contentPadding: EdgeInsets.zero,
       leading: Icon(Icons.history_rounded, color: colors.onSurfaceVariant),
       title: Text(
-        chips.isEmpty ? 'بحث بصورة' : chips,
+        chips.isEmpty ? context.l10n.visualPhotoSearch : chips,
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
       ),
       subtitle: Text(
         session.queryImageUrl == null
-            ? 'الصورة انحذفت — بس النتائج لسا موجودة'
-            : 'اضغطي لتفتحيه',
+            ? context.l10n.visualPhotoDeletedResultsKept
+            : context.l10n.visualTapToOpen,
         style: Theme.of(
           context,
         ).textTheme.labelSmall?.copyWith(color: colors.onSurfaceVariant),
@@ -296,12 +297,14 @@ class _Working extends StatelessWidget {
           ),
           const SizedBox(height: DsSpacing.md),
           Text(
-            uploading ? 'عم نرفع الصورة…' : 'عم نحلّل الصورة وندوّر…',
+            uploading
+                ? context.l10n.visualUploading
+                : context.l10n.visualAnalysing,
             style: context.dsText.tileTitle,
           ),
           const SizedBox(height: DsSpacing.xxs),
           Text(
-            'منقارن الصورة بصور المنتجات الموجودة فعليًا بريم.',
+            context.l10n.visualComparing,
             textAlign: TextAlign.center,
             style: Theme.of(
               context,
@@ -352,11 +355,10 @@ class _Results extends ConsumerWidget {
                 hasScrollBody: false,
                 child: DsEmptyState(
                   icon: Icons.search_off_rounded,
-                  title: 'ما لقيت شي قريب',
+                  title: context.l10n.visualNothingClose,
                   message:
-                      session.notice ??
-                      'جرّبي صورة أوضح، أو اكتبيلي شو بدك بالضبط.',
-                  actionLabel: 'صورة تانية',
+                      session.notice ?? context.l10n.visualNothingCloseBody,
+                  actionLabel: context.l10n.visualAnotherPhoto,
                   onAction: notifier.reset,
                 ),
               )
@@ -370,7 +372,7 @@ class _Results extends ConsumerWidget {
                 ),
                 sliver: SliverToBoxAdapter(
                   child: Text(
-                    'أقرب ${matches.length} قطعة',
+                    context.l10n.visualClosestCount(matches.length),
                     style: context.dsText.tileTitle,
                   ),
                 ),
@@ -431,7 +433,7 @@ class _Results extends ConsumerWidget {
   ) async {
     final offerId = match.offerId ?? match.product.bestOffer?.id;
     if (offerId == null) {
-      DsSnackbar.error(context, 'ما في عرض متوفر لهالقطعة حاليًا.');
+      DsSnackbar.error(context, context.l10n.visualNoOffer);
       return;
     }
 
@@ -441,26 +443,26 @@ class _Results extends ConsumerWidget {
     if (!context.mounted) return;
 
     if (added) {
-      DsSnackbar.success(context, 'انضافت للسلة');
+      DsSnackbar.success(context, context.l10n.visualAddedToBag);
     } else {
-      DsSnackbar.error(context, 'ما قدرت أضيفها للسلة.');
+      DsSnackbar.error(context, context.l10n.visualAddToBagFailed);
     }
   }
 
   Future<void> _confirmForget(BuildContext context) async {
     final confirmed = await DsDialog.confirm(
       context,
-      title: 'حذف البحث؟',
-      message: 'رح تنحذف الصورة والنتائج نهائيًا. ما فينا نرجّعهم بعدين.',
-      confirmLabel: 'احذفي',
-      cancelLabel: 'رجوع',
+      title: context.l10n.visualDeleteTitle,
+      message: context.l10n.visualDeleteBody,
+      confirmLabel: context.l10n.visualDelete,
+      cancelLabel: context.l10n.visualBack,
       destructive: true,
     );
     if (!confirmed) return;
 
     final done = await notifier.forgetCurrent();
     if (context.mounted && done) {
-      DsSnackbar.success(context, 'انحذفت الصورة والبحث.');
+      DsSnackbar.success(context, context.l10n.visualDeleted);
     }
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/media/authorized_media_image.dart';
 import 'package:reem/core/media/media_variants.dart';
 import 'package:reem/features/ai_stylist/domain/entities/stylist_recommendation.dart';
@@ -164,7 +165,7 @@ class _Cover extends StatelessWidget {
             bottom: DsSpacing.xs,
             right: DsSpacing.xs,
             child: _Pill(
-              label: 'نفدت الكمية',
+              label: context.l10n.stylistSoldOut,
               background: colors.error,
               foreground: colors.onError,
             ),
@@ -263,7 +264,7 @@ class _FeedbackRow extends StatelessWidget {
             icon: recommendation.isLiked
                 ? Icons.favorite_rounded
                 : Icons.favorite_border_rounded,
-            label: 'يعجبني',
+            label: context.l10n.stylistLike,
             active: recommendation.isLiked,
             activeColor: colors.primary,
             onTap: onLike!,
@@ -275,7 +276,7 @@ class _FeedbackRow extends StatelessWidget {
             icon: recommendation.isDismissed
                 ? Icons.thumb_down_rounded
                 : Icons.thumb_down_off_alt_rounded,
-            label: 'مو مناسب',
+            label: context.l10n.stylistNotForMe,
             active: recommendation.isDismissed,
             activeColor: colors.onSurfaceVariant,
             onTap: onDismiss!,

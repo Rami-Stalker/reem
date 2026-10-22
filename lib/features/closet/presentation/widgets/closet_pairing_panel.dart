@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/features/closet/domain/entities/closet_gap.dart';
 import 'package:reem/features/closet/presentation/providers/closet_providers.dart';
@@ -62,7 +63,10 @@ class _Panel extends ConsumerWidget {
             children: [
               Icon(Icons.checkroom_rounded, size: 18, color: colors.primary),
               const SizedBox(width: DsSpacing.xs),
-              Text('من خزانتك', style: context.dsText.labelStrong),
+              Text(
+                context.l10n.closetFromYourCloset,
+                style: context.dsText.labelStrong,
+              ),
             ],
           ),
           const SizedBox(height: DsSpacing.sm),
@@ -80,7 +84,7 @@ class _Panel extends ConsumerWidget {
                 const SizedBox(width: DsSpacing.xs),
                 Expanded(
                   child: Text(
-                    'عندك وحدة منها بخزانتك.',
+                    context.l10n.closetOwnOneAlready,
                     style: context.dsText.body.tint(colors.warning),
                   ),
                 ),
@@ -88,13 +92,15 @@ class _Panel extends ConsumerWidget {
             )
           else ...[
             Text(
-              'بتنسّق مع ${pairing.pairsWithItemIds.length} قطعة عندك.',
+              context.l10n.closetPanelPairs(pairing.pairsWithItemIds.length),
               style: context.dsText.body,
             ),
             if (pairing.completesLookIds.isNotEmpty) ...[
               DsGaps.vXxxs,
               Text(
-                'وبتكمّل ${pairing.completesLookIds.length} إطلالة محفوظة.',
+                context.l10n.closetPanelCompletes(
+                  pairing.completesLookIds.length,
+                ),
                 style: context.dsText.body.tint(colors.primary),
               ),
             ],
@@ -106,7 +112,7 @@ class _Panel extends ConsumerWidget {
               if (!pairing.isOwned)
                 Expanded(
                   child: DsButton(
-                    label: 'أضيفيها لخزانتي',
+                    label: context.l10n.closetAddToMyCloset,
                     size: DsButtonSize.sm,
                     variant: DsButtonVariant.secondary,
                     onPressed: () => _add(context, ref),
@@ -115,7 +121,7 @@ class _Panel extends ConsumerWidget {
               if (!pairing.isOwned) const SizedBox(width: DsSpacing.xs),
               Expanded(
                 child: DsButton(
-                  label: 'افتحي خزانتي',
+                  label: context.l10n.closetOpenMyCloset,
                   size: DsButtonSize.sm,
                   variant: DsButtonVariant.secondary,
                   onPressed: () => context.push(RoutePaths.closet),
@@ -137,10 +143,11 @@ class _Panel extends ConsumerWidget {
     if (!context.mounted) return;
 
     result.when(
-      success: (_) => DsSnackbar.show(context, message: 'صارت بخزانتك.'),
+      success: (_) =>
+          DsSnackbar.show(context, message: context.l10n.closetAdded),
       error: (_) => DsSnackbar.show(
         context,
-        message: 'ما قدرنا نضيفها.',
+        message: context.l10n.closetAddPairFailed,
         type: DsSnackbarType.error,
       ),
     );

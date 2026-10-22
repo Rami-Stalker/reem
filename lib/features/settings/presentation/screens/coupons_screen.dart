@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/core/shared/value_objects/money_format.dart';
 import 'package:reem/features/cart/presentation/providers/cart_providers.dart';
@@ -47,14 +48,14 @@ class CouponsScreen extends ConsumerWidget {
 
     return ReemScrollPage(
       slivers: [
-        const PremiumAppBar(title: 'الكوبونات', showBack: true),
+        PremiumAppBar(title: context.l10n.settingsCoupons, showBack: true),
         SliverPadding(
           padding: const EdgeInsets.all(DsSpacing.lg),
           sliver: SliverList(
             delegate: SliverChildListDelegate([
-              const ReemSectionHeader(
-                title: 'عروضكِ',
-                subtitle: 'طبّقي العرض على سلّتكِ، أو انسخي الرمز',
+              ReemSectionHeader(
+                title: context.l10n.settingsYourOffers,
+                subtitle: context.l10n.settingsYourOffersSubtitle,
               ),
               const SizedBox(height: DsSpacing.lg),
 
@@ -111,34 +112,40 @@ class _CouponTicket extends ConsumerWidget {
   final int index;
 
   /// «خصم ٢٠٪» or «خصم ٥٬٠٠٠ ل.س», from what the coupon actually is.
-  String get _headline => switch (coupon.kind) {
-    CouponKind.percent => 'خصم ${coupon.discountPercent.toStringAsFixed(0)}٪',
-    CouponKind.fixed => 'خصم ${(coupon.amountOff ?? 0).sypFull}',
+  String _headline(BuildContext context) => switch (coupon.kind) {
+    CouponKind.percent => context.l10n.settingsCouponPercentOff(
+      coupon.discountPercent.toStringAsFixed(0),
+    ),
+    CouponKind.fixed => context.l10n.settingsCouponAmountOff(
+      (coupon.amountOff ?? 0).sypFull,
+    ),
     CouponKind.unknown => coupon.title,
   };
 
   /// The conditions, in the order they matter to her: the floor she has to
   /// reach, how long she has, and whether it is nearly spent.
-  List<String> _conditions() {
+  List<String> _conditions(BuildContext context) {
     final parts = <String>[];
 
     final minimum = coupon.minOrderAmount;
     if (minimum != null && minimum > 0) {
-      parts.add('حد أدنى ${minimum.sypFull}');
+      parts.add(context.l10n.settingsCouponMinimum(minimum.sypFull));
     }
 
     final days = coupon.expiresAt.difference(DateTime.now()).inDays;
-    parts.add(switch (days) {
-      <= 0 => 'ينتهي اليوم',
-      1 => 'يبقى يوم واحد',
-      2 => 'يبقى يومان',
-      < 11 => 'تبقّى $days أيام',
-      _ => 'تبقّى $days يوماً',
-    });
+    parts.add(
+      days <= 0
+          ? context.l10n.settingsCouponEndsToday
+          : context.l10n.settingsCouponDaysLeft(days),
+    );
 
     final remaining = coupon.remainingUses;
     if (remaining != null && remaining <= 3) {
-      parts.add(remaining == 1 ? 'استخدام أخير' : 'يبقى $remaining استخدامات');
+      parts.add(
+        remaining == 1
+            ? context.l10n.settingsCouponLastUse
+            : context.l10n.settingsCouponUsesLeft(remaining),
+      );
     }
 
     return parts;
@@ -153,18 +160,20 @@ class _CouponTicket extends ConsumerWidget {
     if (result.didApply) {
       DsSnackbar.show(
         context,
-        message: 'تم تطبيق ${coupon.code} — وفّرتِ ${result.discount!.format()}',
+        message: context.l10n.settingsCouponApplied(
+          coupon.code,
+          result.discount!.format(),
+        ),
         type: DsSnackbarType.success,
       );
       return;
     }
 
     final message = switch (result.issue) {
-      CouponApplyIssue.emptyBasket =>
-        'سلّتكِ فارغة — أضيفي منتجاً ثم طبّقي العرض',
+      CouponApplyIssue.emptyBasket => context.l10n.settingsCouponEmptyBag,
       CouponApplyIssue.unknownSubtotal =>
-        'سلّتكِ بعملتين، طبّقي العرض عند الدفع',
-      null => result.serverMessage ?? 'تعذّر تطبيق الكوبون',
+        context.l10n.settingsCouponTwoCurrencies,
+      null => result.serverMessage ?? context.l10n.settingsCouponApplyFailed,
     };
     DsSnackbar.show(context, message: message, type: DsSnackbarType.error);
   }
@@ -219,18 +228,18 @@ class _CouponTicket extends ConsumerWidget {
                         style: context.dsText.sectionTitle.bold.tint(colors.onPrimary).copyWith(letterSpacing: 2),
                       ),
                       Text(
-                        _headline,
+                        _headline(context),
                         style: context.dsText.body.semibold.tint(colors.onPrimary.withValues(alpha: 0.92)),
                       ),
                       DsGaps.vXxxs,
                       Text(
-                        _conditions().join(' · '),
+                        _conditions(context).join(' · '),
                         style: context.dsText.caption.tint(colors.onPrimary.withValues(alpha: 0.75)),
                       ),
                       if (coupon.isUserSpecific) ...[
                         DsGaps.vXs,
                         _Chip(
-                          label: 'خاص بكِ',
+                          label: context.l10n.settingsCouponJustForYou,
                           color: colors.onPrimary,
                         ),
                       ],
@@ -249,13 +258,13 @@ class _CouponTicket extends ConsumerWidget {
               children: [
                 _TicketAction(
                   icon: Icons.copy_rounded,
-                  label: 'نسخ الرمز',
+                  label: context.l10n.settingsCouponCopyCode,
                   onTap: () async {
                     await Clipboard.setData(ClipboardData(text: coupon.code));
                     if (!context.mounted) return;
                     DsSnackbar.show(
                       context,
-                      message: 'تم نسخ الرمز ${coupon.code}',
+                      message: context.l10n.settingsCouponCopied(coupon.code),
                       type: DsSnackbarType.success,
                     );
                   },
@@ -264,24 +273,17 @@ class _CouponTicket extends ConsumerWidget {
                 if (isApplied)
                   _TicketAction(
                     icon: Icons.check_circle_rounded,
-                    label: 'مُطبَّق',
+                    label: context.l10n.settingsCouponAppliedBadge,
                     onTap: () =>
                         ref.read(appliedCouponProvider.notifier).clear(),
                     emphasised: true,
                   )
                 else if (isPending)
-                  SizedBox(
-                    width: 20,
-                    height: 20,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      color: colors.onPrimary,
-                    ),
-                  )
+                  DsLoadingIndicator.inline(color: colors.onPrimary)
                 else
                   _TicketAction(
                     icon: Icons.shopping_bag_outlined,
-                    label: 'تطبيق على سلّتي',
+                    label: context.l10n.settingsCouponApplyToBag,
                     onTap: isBusy ? null : () => _apply(context, ref),
                     emphasised: true,
                   ),
@@ -328,19 +330,22 @@ class _AppliedBanner extends StatelessWidget {
               const SizedBox(width: DsSpacing.sm),
               Expanded(
                 child: Text(
-                  '$code مُطبَّق — توفير $discount',
+                  context.l10n.settingsCouponAppliedSaving(code, discount),
                   style: context.dsText.body.semibold.tint(colors.onSurface),
                 ),
               ),
               IconButton(
                 onPressed: onRemove,
                 icon: Icon(Icons.close_rounded, color: colors.onSurfaceVariant),
-                tooltip: 'إزالة',
+                tooltip: context.l10n.settingsRemove,
               ),
             ],
           ),
           const SizedBox(height: DsSpacing.sm),
-          PrimaryButton(label: 'متابعة الدفع', onPressed: onCheckout),
+          PrimaryButton(
+            label: context.l10n.settingsContinueToCheckout,
+            onPressed: onCheckout,
+          ),
         ],
       ),
     );
@@ -370,7 +375,7 @@ class _BasketHint extends StatelessWidget {
         ),
         const SizedBox(width: DsSpacing.sm),
         Text(
-          'سلّتكِ الآن: $subtotal',
+          context.l10n.settingsBagNow(subtotal!),
           style: context.dsText.caption.tint(colors.onSurfaceVariant),
         ),
       ],
@@ -462,12 +467,12 @@ class _NoCoupons extends StatelessWidget {
           ),
           const SizedBox(height: DsSpacing.md),
           Text(
-            'لا كوبونات متاحة الآن',
+            context.l10n.settingsNoCoupons,
             style: context.dsText.tileTitle.semibold.tint(colors.onSurface),
           ),
           const SizedBox(height: DsSpacing.sm),
           Text(
-            'سنُعلمكِ حين يصلكِ عرض جديد',
+            context.l10n.settingsNoCouponsBody,
             textAlign: TextAlign.center,
             style: context.dsText.body.tint(colors.onSurfaceVariant),
           ),
@@ -496,11 +501,11 @@ class _CouponsFailed extends StatelessWidget {
           ),
           const SizedBox(height: DsSpacing.md),
           Text(
-            'تعذّر تحميل الكوبونات',
+            context.l10n.settingsCouponsFailed,
             style: context.dsText.body.tint(colors.onSurfaceVariant),
           ),
           const SizedBox(height: DsSpacing.md),
-          SecondaryButton(label: 'إعادة المحاولة', onPressed: onRetry),
+          SecondaryButton(label: context.l10n.retry, onPressed: onRetry),
         ],
       ),
     );

@@ -13,6 +13,7 @@ import 'package:reem/core/media/media_variants.dart';
 import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/features/seller_dashboard/domain/entities/seller_store_info.dart';
 import 'package:reem/features/seller_dashboard/presentation/providers/seller_dashboard_provider.dart';
+import 'package:reem/l10n/app_localizations.dart';
 
 /// Cover image + logo + store name + verification + description + edit CTA.
 class SellerStoreHeader extends ConsumerWidget {
@@ -212,7 +213,7 @@ class _StoreHeaderBody extends StatelessWidget {
                   borderRadius: DsRadius.borderFull,
                 ),
                 child: Text(
-                  l10n.sellerPlanBadge(store.subscriptionPlan),
+                  _planLabel(l10n, store.subscriptionPlan),
                   // Deep gold ink on the champagne wash, fixed in both
                   // themes because the badge's ground is a brand gradient.
                   style: context.dsText.badge.tint(DsColors.onChampagne),
@@ -254,13 +255,13 @@ class _CoverActions extends StatelessWidget {
     return Row(
       children: [
         _GlassIconButton(
-          tooltip: 'الإشعارات',
+          tooltip: context.l10n.notifications,
           icon: Icons.notifications_none_rounded,
           onTap: () => context.push(RoutePaths.notifications),
         ),
         const SizedBox(width: DsSpacing.xs),
         _GlassIconButton(
-          tooltip: 'الإعدادات',
+          tooltip: context.l10n.settings,
           icon: Icons.settings_outlined,
           onTap: () => context.push(RoutePaths.settings),
         ),
@@ -314,3 +315,13 @@ class _GlassIconButton extends StatelessWidget {
     );
   }
 }
+
+/// The plan in her language. The server sends the level's name in English
+/// («Premium»); shown through the template it read «باقة Premium».
+String _planLabel(AppLocalizations l10n, String plan) =>
+    switch (plan.toUpperCase()) {
+      'BASIC' => l10n.sellerPlanBasic,
+      'VERIFIED' => l10n.sellerPlanVerified,
+      'PREMIUM' => l10n.sellerPlanPremium,
+      _ => l10n.sellerPlanBadge(plan),
+    };

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/media/authorized_media_image.dart';
 import 'package:reem/features/closet/domain/entities/closet_item.dart';
 
@@ -57,7 +58,7 @@ class ClosetItemTile extends StatelessWidget {
                     bottom: DsSpacing.xs,
                     left: DsSpacing.xs,
                     child: _Badge(
-                      label: 'قطعتي',
+                      label: context.l10n.closetMyPiece,
                       color: colors.secondaryContainer,
                     ),
                   ),
@@ -78,7 +79,7 @@ class ClosetItemTile extends StatelessWidget {
             style: context.dsText.tileTitle,
           ),
           Text(
-            _subtitle(),
+            _subtitle(context),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: context.dsText.caption,
@@ -92,11 +93,12 @@ class ClosetItemTile extends StatelessWidget {
   ///
   /// Never-worn wins over worn-long-ago, and both win over a wear count,
   /// because the point of a wardrobe log is the things she is not reaching for.
-  String _subtitle() {
-    if (!item.hasBeenWorn) return '${item.slotLabel} · ما لبستيها بعد';
+  String _subtitle(BuildContext context) {
+    final l10n = context.l10n;
+    if (!item.hasBeenWorn) return l10n.closetTileNeverWorn(item.slotLabel);
     final days = item.daysSinceWorn;
-    if (days != null && days >= 90) return '${item.slotLabel} · من زمان';
-    return '${item.slotLabel} · لبستيها ${item.wearCount} مرة';
+    if (days != null && days >= 90) return l10n.closetTileLongAgo(item.slotLabel);
+    return l10n.closetTileWornCount(item.slotLabel, item.wearCount);
   }
 }
 

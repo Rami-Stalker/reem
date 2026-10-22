@@ -963,7 +963,7 @@ export function render(finding: InsightFinding): RenderedInsight {
       return {
         titleAr: `تقييم منخفض: ${subject}`,
         bodyAr:
-          `متوسط تقييم «${subject}» هو ${decimal(n('average_rating'))} من ٥ ` +
+          `متوسط تقييم «${subject}» هو ${decimal(n('average_rating'))} من 5 ` +
           `عبر ${count(n('reviews'))} تقييمًا.`,
         actionAr: 'اقرئي التقييمات الأخيرة وردّي عليها؛ الرد المنشور يرفع الثقة.',
       };
@@ -1073,11 +1073,11 @@ export function render(finding: InsightFinding): RenderedInsight {
 
 function pct(value: number): string {
   const rounded = Math.round(value);
-  return `${rounded > 0 ? '+' : ''}${rounded}٪`;
+  return `${rounded > 0 ? '+' : ''}${rounded}%`;
 }
 
 function pctRate(rate: number): string {
-  return `${round(rate * 100, 1)}٪`;
+  return `${round(rate * 100, 1)}%`;
 }
 
 function count(value: number): string {

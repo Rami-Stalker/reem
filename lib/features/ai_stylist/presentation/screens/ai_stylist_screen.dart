@@ -22,10 +22,15 @@ import 'package:reem/features/ai_stylist/presentation/widgets/stylist_welcome.da
 /// row: the screen renders what the server chose and never composes a result
 /// of its own.
 class AiStylistScreen extends ConsumerStatefulWidget {
-  const AiStylistScreen({super.key, this.conversationId});
+  const AiStylistScreen({super.key, this.conversationId, this.initialQuestion});
 
   /// Null for a new thread; set when resuming one from the history.
   final String? conversationId;
+
+  /// Asked as the screen opens, in a fresh thread. Set when she asked from
+  /// Discover, so the answer is what she arrives at rather than a welcome
+  /// screen asking her to say it again.
+  final String? initialQuestion;
 
   @override
   ConsumerState<AiStylistScreen> createState() => _AiStylistScreenState();
@@ -33,6 +38,19 @@ class AiStylistScreen extends ConsumerStatefulWidget {
 
 class _AiStylistScreenState extends ConsumerState<AiStylistScreen> {
   final _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    final question = widget.initialQuestion?.trim() ?? '';
+    if (widget.conversationId == null && question.isNotEmpty) {
+      // After the first frame: the notifier is created by that frame's watch.
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        ref.read(stylistChatProvider(null).notifier).ask(question);
+      });
+    }
+  }
 
   @override
   void dispose() {
@@ -70,14 +88,14 @@ class _AiStylistScreenState extends ConsumerState<AiStylistScreen> {
         title: context.l10n.aiStylistTitle,
         actions: [
           IconButton(
-            tooltip: 'محادثة جديدة',
+            tooltip: context.l10n.stylistNewChat,
             onPressed: state.isSending
                 ? null
                 : () => notifier.startNewConversation(),
             icon: const Icon(Icons.add_comment_outlined),
           ),
           IconButton(
-            tooltip: 'تفضيلاتي',
+            tooltip: context.l10n.stylistMyPreferences,
             onPressed: () => context.push(RoutePaths.stylistPreferences),
             icon: const Icon(Icons.tune_rounded),
           ),

@@ -321,7 +321,7 @@ export class StepUpService {
       throw new ForbiddenException({
         code: 'NEW_DEVICE_COOLDOWN',
         message:
-          'هذا الجهاز جديد. هذا الإجراء متاح بعد مرور ٢٤ ساعة على أول تسجيل دخول منه.',
+          'هذا الجهاز جديد. هذا الإجراء متاح بعد مرور 24 ساعة على أول تسجيل دخول منه.',
         scope,
         available_at: until.toISOString(),
       });

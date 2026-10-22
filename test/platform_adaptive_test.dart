@@ -352,7 +352,7 @@ void main() {
           await tester.tap(find.text('back'));
           await tester.pumpAndSettle();
 
-          expect(find.text('بدك تتركي اللي كتبتيه؟'), findsOneWidget);
+          expect(find.text('هل تتركين ما كتبتِه؟'), findsOneWidget);
           await tester.tap(find.text('كمّلي'));
           await tester.pumpAndSettle();
           expect(find.text('back'), findsOneWidget);

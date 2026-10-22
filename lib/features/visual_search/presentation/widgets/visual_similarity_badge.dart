@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
 
 /// "٩٤٪ مشابه".
 ///
@@ -44,7 +45,7 @@ class VisualSimilarityBadge extends StatelessWidget {
     };
 
     return Semantics(
-      label: 'نسبة التشابه $percent بالمئة',
+      label: context.l10n.visualSimilaritySemantics(percent),
       child: Container(
         padding: EdgeInsets.symmetric(
           horizontal: compact ? DsSpacing.xs : DsSpacing.sm,
@@ -66,10 +67,8 @@ class VisualSimilarityBadge extends StatelessWidget {
             ),
             const SizedBox(width: DsSpacing.xxs),
             Text(
-              '$percent٪ مشابه',
-              style: (compact
-                      ? context.dsText.caption
-                      : context.dsText.label)
+              context.l10n.visualSimilarityBadge(percent),
+              style: (compact ? context.dsText.caption : context.dsText.label)
                   .copyWith(color: foreground, fontWeight: FontWeight.w700),
             ),
           ],

@@ -46,3 +46,17 @@ String formatThreadStamp(AppLocalizations l10n, DateTime moment) {
     DateFormat(pattern, l10n.localeName).format(moment),
   );
 }
+
+/// A calendar date — «5 أكتوبر», "5 October" — in the reader's language,
+/// with Western digits like every other number in the app.
+///
+/// Seller screens once formatted dates with a hard-coded `'ar'` locale, which
+/// gave English readers Arabic month names and Arabic readers Arabic-Indic
+/// digits. Going through here makes both impossible.
+String formatCalendarDate(
+  AppLocalizations l10n,
+  DateTime moment, {
+  String pattern = 'd MMMM',
+}) => toWesternDigits(
+  DateFormat(pattern, l10n.localeName).format(moment.toLocal()),
+);

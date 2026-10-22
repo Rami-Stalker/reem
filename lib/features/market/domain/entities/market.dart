@@ -25,19 +25,6 @@ class DropInvitation {
   final List<String> reasons;
   final bool seen;
 
-  /// Her reason, in her language.
-  ///
-  /// Rendered from the code rather than sent as prose because the codes are
-  /// the contract and a sentence is a presentation choice — the same code
-  /// reads differently on a card and in a notification.
-  String get headline => switch (reasons.isEmpty ? '' : reasons.first) {
-    'OPEN_NEED' => 'لأنو ناقصك شي من هالنوع',
-    'SEARCHED_FOR' => 'لأنك كنتي عم تدوّري على شي متلو',
-    'OCCASION_MATCH' => 'لأنو بيناسب المناسبة اللي عم تحضّري إلها',
-    'TASTE_MATCH' => 'لأنو قريب من ذوقك',
-    'SELLER_CUSTOMER' => 'من محل بتشتري منّو',
-    _ => '',
-  };
 }
 
 @immutable
@@ -196,12 +183,6 @@ enum Rotation {
     _ => Rotation.active,
   };
 
-  String get ar => switch (this) {
-    Rotation.active => 'قيد الاستعمال',
-    Rotation.slowing => 'قلّ لبسها',
-    Rotation.dormant => 'واقفة بالخزانة',
-    Rotation.unworn => 'ما انلبست ولا مرة',
-  };
 }
 
 enum Disposition {
@@ -217,12 +198,6 @@ enum Disposition {
     _ => Disposition.keep,
   };
 
-  String get ar => switch (this) {
-    Disposition.keep => '',
-    Disposition.restyle => 'جرّبيها بشكل تاني',
-    Disposition.resell => 'تنباع',
-    Disposition.donate => 'تنعطى',
-  };
 }
 
 @immutable
@@ -362,13 +337,6 @@ class ResaleListing {
 
   int? get savingPercent => savingBps == null ? null : (savingBps! / 100).round();
 
-  String get conditionAr => switch (condition) {
-    'NEW_WITH_TAGS' => 'جديدة بالتيكيت',
-    'EXCELLENT' => 'ممتازة',
-    'GOOD' => 'منيحة',
-    'FAIR' => 'مستعملة',
-    _ => condition,
-  };
 }
 
 // ── Missions ────────────────────────────────────────────────────────────

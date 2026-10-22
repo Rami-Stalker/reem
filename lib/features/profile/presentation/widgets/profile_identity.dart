@@ -77,7 +77,7 @@ class ProfileIdentity extends StatelessWidget {
               const SizedBox(width: DsSpacing.sm),
               DsIconButton(
                 icon: Icons.ios_share_rounded,
-            tooltip: 'مشاركة',
+                tooltip: context.l10n.profileShare,
                 variant: DsIconButtonVariant.surface,
                 onPressed: () => ShareService.profile(
                   context: context,
@@ -88,7 +88,7 @@ class ProfileIdentity extends StatelessWidget {
               const SizedBox(width: DsSpacing.xs),
               DsIconButton(
                 icon: Icons.settings_outlined,
-            tooltip: 'الإعدادات',
+                tooltip: context.l10n.settings,
                 variant: DsIconButtonVariant.surface,
                 onPressed: () => context.push(RoutePaths.settings),
               ),

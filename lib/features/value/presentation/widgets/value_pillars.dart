@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/features/value/domain/entities/value_standing.dart';
 
 /// The six dimensions, drawn.
@@ -49,33 +50,30 @@ class _PillarRow extends StatelessWidget {
               // which is the honest thing to say, and the thing a shop is least
               // inclined to.
               Text(
-                'وصلتي للحد',
+                context.l10n.valuePillarCapped,
                 style: context.dsText.micro.tint(colors.onSurfaceVariant),
               )
             else if (!pillar.isKnown)
               Text(
-                'لسا ما منعرف',
+                context.l10n.valuePillarUnknown,
                 style: context.dsText.micro.tint(colors.onSurfaceVariant),
               ),
           ],
         ),
         DsGaps.vXxs,
-        ClipRRect(
-          borderRadius: BorderRadius.circular(DsRadius.pill),
-          child: LinearProgressIndicator(
-            value: (pillar.score / 100).clamp(0.0, 1.0),
-            minHeight: 6,
-            backgroundColor: colors.surfaceVariant,
-            // A pillar with no evidence is drawn muted rather than empty-red:
-            // not knowing is not failing.
-            color: pillar.isKnown ? colors.primary : colors.outline,
-          ),
+        DsMeter(
+          value: (pillar.score / 100).clamp(0.0, 1.0),
+          weight: DsMeterWeight.regular,
+          // A pillar with no evidence is drawn muted rather than empty-red:
+          // not knowing is not failing.
+          color: pillar.isKnown ? colors.primary : colors.outline,
+          track: colors.surfaceVariant,
         ),
         DsGaps.vXxxs,
         Text(
           pillar.isKnown
               ? pillar.blurb
-              : '${pillar.blurb} — ما في كفاية بعد لنحكم.',
+              : context.l10n.valuePillarNotEnough(pillar.blurb),
           style: context.dsText.micro,
         ),
       ],

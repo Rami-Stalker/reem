@@ -485,42 +485,42 @@ export function renderReason(
   if (has('CATEGORY_MATCH') || context.slot) {
     // Opening clause names the thing, so the sentence stands alone under a
     // card that may be scrolled past its own image.
-    clauses.push(`قريب من النمط اللي طلبتيه`);
+    clauses.push(`قريب من النمط الذي طلبتِه`);
   }
   if (has('COLOUR_MATCH')) {
     const colour = brief.colours[0] ?? entry.dominantColour;
-    if (colour) clauses.push(`وباللون ${colourLabel(colour)} اللي حبّيتيه`);
+    if (colour) clauses.push(`وباللون ${colourLabel(colour)} الذي أحببتِه`);
   } else if (has('COLOUR_HARMONY') && entry.dominantColour) {
-    clauses.push(`ولونه ${colourLabel(entry.dominantColour)} بينسّق مع باقي الإطلالة`);
+    clauses.push(`ولونه ${colourLabel(entry.dominantColour)} يتناسق مع بقية الإطلالة`);
   }
   if (has('BUDGET_FIT')) {
     const price = product.minPriceSyp ? Number(product.minPriceSyp) : null;
-    clauses.push(price !== null ? `وضمن ميزانيتك (${formatSyp(price)})` : 'وضمن ميزانيتك');
+    clauses.push(price !== null ? `وضمن ميزانيتكِ (${formatSyp(price)})` : 'وضمن ميزانيتكِ');
   }
-  if (has('MODESTY_MATCH')) clauses.push('ومحتشم متل ما بتحبّي');
+  if (has('MODESTY_MATCH')) clauses.push('ومحتشم كما تحبين');
   if (has('SIZE_AVAILABLE')) {
     const size = brief.sizes.clothing ?? brief.sizes.shoes;
-    clauses.push(size ? `ومتوفر بمقاس ${size}` : 'ومتوفر بمقاسك');
+    clauses.push(size ? `ومتوفر بمقاس ${size}` : 'ومتوفر بمقاسكِ');
   }
-  if (has('MATERIAL_MATCH')) clauses.push('وبالخامة اللي سألتِ عنها');
+  if (has('MATERIAL_MATCH')) clauses.push('وبالخامة التي سألتِ عنها');
   if (has('FAVOURITE_CATEGORY') && clauses.length < 3) {
-    clauses.push('ومن قسم بتتابعيه');
+    clauses.push('ومن قسم تتابعينه');
   }
   if (has('FAVOURITE_SELLER') && clauses.length < 3) {
-    clauses.push('ومن بائعة سبق واشتريتِ منها');
+    clauses.push('ومن بائعة سبق أن اشتريتِ منها');
   }
-  if (has('FAST_DELIVERY') && clauses.length < 3) clauses.push('وبيوصل بالوقت');
+  if (has('FAST_DELIVERY') && clauses.length < 3) clauses.push('ويصل في الوقت');
   if (has('GIFT_READY') && clauses.length < 3) clauses.push('ومناسب كهدية جاهزة');
 
   if (clauses.length < 2) {
-    if (has('TOP_RATED')) clauses.push(`وتقييمه ${product.rating.toFixed(1)} من ٥`);
-    else if (has('POPULAR')) clauses.push('وطلبيّاته كتيرة على المنصّة');
+    if (has('TOP_RATED')) clauses.push(`وتقييمه ${product.rating.toFixed(1)} من 5`);
+    else if (has('POPULAR')) clauses.push('ومطلوب كثيراً على المنصّة');
   }
 
-  if (!clauses.length) return 'اختيار قريب من طلبك ومتوفر حاليًا.';
+  if (!clauses.length) return 'اختيار قريب من طلبكِ ومتوفر حالياً.';
 
   const body = clauses.slice(0, 3).join(' ');
-  return `اخترتلك هالقطعة لأنها ${stripLeadingWaw(body)}.`;
+  return `اخترت لكِ هذه القطعة لأنها ${stripLeadingWaw(body)}.`;
 }
 
 /** The clause list is built with "و" prefixes; the first one must lose it. */

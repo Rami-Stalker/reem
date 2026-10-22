@@ -725,6 +725,8 @@ abstract final class ApiEndpoints {
   /// gets catalogue facts, a signed-in shopper gets what applies to her.
   static String intelligenceNotes(String productId) =>
       '/intelligence/products/$productId/notes';
+  static String intelligenceFit(String productId) =>
+      '/intelligence/products/$productId/fit';
   static String intelligenceRelated(String productId) =>
       '/intelligence/products/$productId/related';
 

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/features/market/domain/entities/market.dart';
 import 'package:reem/features/market/presentation/providers/market_providers.dart';
@@ -27,10 +28,10 @@ class WardrobeCareScreen extends ConsumerWidget {
     return Scaffold(
       backgroundColor: colors.background,
       appBar: ReemAppBar(
-        title: 'خزانتك بعد الشرا',
+        title: context.l10n.marketCareTitle,
         actions: [
           IconButton(
-            tooltip: 'سوق المستعمل',
+            tooltip: context.l10n.marketResaleTitle,
             icon: const Icon(Icons.storefront_outlined),
             onPressed: () => context.push(RoutePaths.marketResale),
           ),
@@ -58,21 +59,20 @@ class WardrobeCareScreen extends ConsumerWidget {
                 child: Center(child: DsLoadingIndicator()),
               ),
               error: (_, _) => DsErrorState(
-                message: 'ما قدرنا نقرا خزانتك.',
+                message: context.l10n.marketCareFailed,
                 onRetry: () => ref.invalidate(wardrobeAttentionProvider),
               ),
               data: (pieces) => pieces.isEmpty
-                  ? const DsEmptyState(
+                  ? DsEmptyState(
                       icon: Icons.check_circle_outline_rounded,
-                      title: 'كل شي بمحلّه',
-                      message:
-                          'ما في قطعة بدها انتباه هلق. منخبّرك لما يصير في شي واقف بالخزانة.',
+                      title: context.l10n.marketCareAllGood,
+                      message: context.l10n.marketCareAllGoodBody,
                     )
                   : Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'قطع بدها انتباه',
+                          context.l10n.marketCareNeedsAttention,
                           style: context.dsText.cardTitle.tint(
                             colors.onSurface,
                           ),
@@ -111,10 +111,16 @@ class _Summary extends StatelessWidget {
       padding: const EdgeInsets.all(DsSpacing.md),
       child: Row(
         children: [
-          _Stat(label: 'قطعة', value: '${summary.items}'),
-          _Stat(label: 'قيد الاستعمال', value: '${summary.inRotation}'),
           _Stat(
-            label: 'كلفة اللبسة (ل.س)',
+            label: context.l10n.marketCarePieces,
+            value: '${summary.items}',
+          ),
+          _Stat(
+            label: context.l10n.marketCareInRotation,
+            value: '${summary.inRotation}',
+          ),
+          _Stat(
+            label: context.l10n.marketCareCostPerWear,
             value: sypNumber(summary.medianCostPerWearSyp),
             tint: colors.price,
           ),
@@ -199,13 +205,15 @@ class _PieceCard extends ConsumerWidget {
                         ),
                         DsGaps.hXxs,
                         Text(
-                          reading.rotation.ar,
+                          rotationLabel(context.l10n, reading.rotation),
                           style: context.dsText.micro.tint(colour),
                         ),
                         if (reading.costPerWearSyp != null) ...[
                           DsGaps.hXs,
                           Text(
-                            'كلفة اللبسة ${sypText(reading.costPerWearSyp)}',
+                            context.l10n.marketCostPerWear(
+                              sypText(reading.costPerWearSyp),
+                            ),
                             style: context.dsText.micro.tint(
                               colors.onSurfaceVariant,
                             ),
@@ -230,8 +238,9 @@ class _PieceCard extends ConsumerWidget {
             DsGaps.vXs,
             ReasonLine(
               icon: Icons.checkroom_rounded,
-              text:
-                  'بتمشي مع: ${piece.styleWith.map((p) => p.title).join('، ')}',
+              text: context.l10n.marketGoesWith(
+                piece.styleWith.map((p) => p.title).join('، '),
+              ),
             ),
           ],
           if (reading.disposition == Disposition.resell) ...[
@@ -241,14 +250,18 @@ class _PieceCard extends ConsumerWidget {
                 if (piece.suggestedPriceSyp != null)
                   Expanded(
                     child: Text(
-                      'سعر مقترح ${sypText(piece.suggestedPriceSyp)}',
+                      context.l10n.marketSuggestedPrice(
+                        sypText(piece.suggestedPriceSyp),
+                      ),
                       style: context.dsText.caption.semibold.tint(colors.price),
                     ),
                   )
                 else
                   const Spacer(),
                 DsButton(
-                  label: piece.listingId == null ? 'اعرضيها للبيع' : 'عدّلي العرض',
+                  label: piece.listingId == null
+                      ? context.l10n.marketListForSale
+                      : context.l10n.marketEditListing,
                   size: DsButtonSize.sm,
                   isExpanded: false,
                   variant: DsButtonVariant.secondary,
@@ -294,41 +307,36 @@ Future<void> _openResaleSheet(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'اعرضي «${piece.title}»',
+                context.l10n.marketListTitle(piece.title),
                 style: innerContext.dsText.cardTitle.tint(colors.onSurface),
               ),
               DsGaps.vXs,
               Text(
-                'بتنحفظ كمسوّدة. ما بتنعرض على حدا لحتى تنشريها إنتِ.',
+                context.l10n.marketListDraftNote,
                 style: innerContext.dsText.caption.tint(
                   colors.onSurfaceVariant,
                 ),
               ),
               DsGaps.vMd,
               Text(
-                'حالتها',
+                context.l10n.marketCondition,
                 style: innerContext.dsText.caption.tint(colors.onSurface),
               ),
               DsGaps.vXs,
               Wrap(
                 spacing: DsSpacing.xs,
                 children: [
-                  for (final option in const [
-                    ('NEW_WITH_TAGS', 'جديدة بالتيكيت'),
-                    ('EXCELLENT', 'ممتازة'),
-                    ('GOOD', 'منيحة'),
-                    ('FAIR', 'مستعملة'),
-                  ])
+                  for (final option in resaleConditions)
                     DsChip(
-                      label: option.$2,
-                      selected: condition == option.$1,
-                      onTap: () => setSheetState(() => condition = option.$1),
+                      label: resaleConditionLabel(innerContext.l10n, option),
+                      selected: condition == option,
+                      onTap: () => setSheetState(() => condition = option),
                     ),
                 ],
               ),
               DsGaps.vLg,
               DsButton(
-                label: 'احفظي كمسوّدة',
+                label: context.l10n.marketSaveDraft,
                 isExpanded: true,
                 onPressed: () => Navigator.of(sheetContext).pop(true),
               ),
@@ -348,13 +356,10 @@ Future<void> _openResaleSheet(
 
   if (!context.mounted) return;
 
-  result.fold(
-    (failure) => DsSnackbar.error(context, failure.message),
-    (_) {
-      DsSnackbar.success(context, 'انحفظت كمسوّدة. تقدري تنشريها من عروضك.');
-      ref
-        ..invalidate(wardrobeAttentionProvider)
-        ..invalidate(myListingsProvider);
-    },
-  );
+  result.fold((failure) => DsSnackbar.error(context, failure.message), (_) {
+    DsSnackbar.success(context, context.l10n.marketSavedDraft);
+    ref
+      ..invalidate(wardrobeAttentionProvider)
+      ..invalidate(myListingsProvider);
+  });
 }

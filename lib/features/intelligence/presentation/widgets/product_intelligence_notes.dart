@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/features/intelligence/domain/entities/intelligence_note.dart';
 import 'package:reem/features/intelligence/presentation/providers/intelligence_providers.dart';
@@ -69,7 +70,10 @@ class _Strip extends StatelessWidget {
                 color: colors.primary,
               ),
               const SizedBox(width: DsSpacing.xs),
-              Text('ملاحظات إلك', style: context.dsText.cardTitle),
+              Text(
+                context.l10n.intelligenceNotesForYou,
+                style: context.dsText.cardTitle,
+              ),
             ],
           ),
           const SizedBox(height: DsSpacing.sm),

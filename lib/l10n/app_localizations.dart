@@ -983,7 +983,7 @@ abstract class AppLocalizations {
   /// Range chip on the admin analytics console.
   ///
   /// In en, this message translates to:
-  /// **'Last {count} days'**
+  /// **'{count, plural, =1{Last day} other{Last {count} days}}'**
   String adminLastDays(int count);
 
   /// Button that fetches the next page of an admin queue.
@@ -1181,13 +1181,13 @@ abstract class AppLocalizations {
   /// Summary of a nested object inside a console record.
   ///
   /// In en, this message translates to:
-  /// **'{count} fields'**
+  /// **'{count, plural, =1{1 field} other{{count} fields}}'**
   String adminRecordNestedObject(int count);
 
   /// Summary of a list inside a console record.
   ///
   /// In en, this message translates to:
-  /// **'{count} items'**
+  /// **'{count, plural, =1{1 item} other{{count} items}}'**
   String adminRecordItemCount(int count);
 
   /// Heading above the JSON dump in the record sheet.
@@ -1229,7 +1229,7 @@ abstract class AppLocalizations {
   /// Confirmation after generating a report [re-authored: original wording lost]
   ///
   /// In en, this message translates to:
-  /// **'{format} report ready — {count} rows'**
+  /// **'{format} report ready — {count, plural, =1{1 row} other{{count} rows}}'**
   String adminReportGenerated(String format, int count);
 
   /// Admin section: generated reports.
@@ -1601,7 +1601,7 @@ abstract class AppLocalizations {
   /// Analytics ranked list: pieces sold by a product or a boutique.
   ///
   /// In en, this message translates to:
-  /// **'{units} units'**
+  /// **'{units, plural, =1{1 unit} other{{units} units}}'**
   String adminUnitsSold(int units);
 
   /// Subtitle of the notification analytics screen.
@@ -1938,7 +1938,7 @@ abstract class AppLocalizations {
   ///
   /// In en, this message translates to:
   /// **'{count} sold'**
-  String analyticsUnitsSold(Object count);
+  String analyticsUnitsSold(int count);
 
   /// Settings section
   ///
@@ -3313,6 +3313,96 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Discount'**
   String get discount;
+
+  /// Helper line under the Ask Reem field on Discover.
+  ///
+  /// In en, this message translates to:
+  /// **'Describe the occasion or the feeling — “a summer wedding, something soft, under 60k”'**
+  String get discoverAskHelper;
+
+  /// Placeholder of the Ask Reem field on Discover.
+  ///
+  /// In en, this message translates to:
+  /// **'What do you need?'**
+  String get discoverAskHint;
+
+  /// Label above the Discover question field, which opens the stylist with her question.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask Reem'**
+  String get discoverAskLabel;
+
+  /// Tooltip of the send button on the Discover question field.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask'**
+  String get discoverAskSend;
+
+  /// Button on Discover that opens the plain keyword search.
+  ///
+  /// In en, this message translates to:
+  /// **'Search by name'**
+  String get discoverByName;
+
+  /// Eyebrow above the Discover title.
+  ///
+  /// In en, this message translates to:
+  /// **'By what you need, not by aisle'**
+  String get discoverEyebrow;
+
+  /// Action on a closet-gap card on Discover.
+  ///
+  /// In en, this message translates to:
+  /// **'See options'**
+  String get discoverGapCta;
+
+  /// Eyebrow of a closet-gap card on Discover.
+  ///
+  /// In en, this message translates to:
+  /// **'A gap in your closet'**
+  String get discoverGapEyebrow;
+
+  /// Button on Discover that opens visual search.
+  ///
+  /// In en, this message translates to:
+  /// **'Search with a photo'**
+  String get discoverPhotoSearch;
+
+  /// Heading above suggested questions on Discover.
+  ///
+  /// In en, this message translates to:
+  /// **'Try asking'**
+  String get discoverPromptsTitle;
+
+  /// Action on an upcoming-room card on Discover.
+  ///
+  /// In en, this message translates to:
+  /// **'Open the room'**
+  String get discoverRoomCta;
+
+  /// How far off a dated room is, on its Discover card.
+  ///
+  /// In en, this message translates to:
+  /// **'{days, plural, =0{Today} =1{Tomorrow} other{In {days} days}}'**
+  String discoverRoomDays(int days);
+
+  /// Heading above trending searches on Discover, shown to guests.
+  ///
+  /// In en, this message translates to:
+  /// **'People are searching'**
+  String get discoverTrendingTitle;
+
+  /// Subtitle of the What's waiting section on Discover.
+  ///
+  /// In en, this message translates to:
+  /// **'From your rooms and your closet'**
+  String get discoverWaitingSubtitle;
+
+  /// Heading of the section built from her dated rooms and closet gaps.
+  ///
+  /// In en, this message translates to:
+  /// **'What\'s waiting for you'**
+  String get discoverWaitingTitle;
 
   /// Closes a sheet
   ///
@@ -4736,6 +4826,12 @@ abstract class AppLocalizations {
   /// **'Fresh today'**
   String get homeStoriesEyebrow;
 
+  /// The news half of the one-line home greeting: how many boutiques have a live story.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{One boutique posted a story today} other{{count} boutiques posted stories today}}'**
+  String homeStoriesToday(int count);
+
   /// Interest chip on the home greeting.
   ///
   /// In en, this message translates to:
@@ -5051,7 +5147,7 @@ abstract class AppLocalizations {
   /// Confirmation after a successful points conversion.
   ///
   /// In en, this message translates to:
-  /// **'{count} points added to your balance ✨'**
+  /// **'{count, plural, =1{1 point added to your balance ✨} other{{count} points added to your balance ✨}}'**
   String loyaltyConverted(int count);
 
   /// Shown when the chosen number of points is not a multiple of ten.
@@ -5366,16 +5462,28 @@ abstract class AppLocalizations {
   /// **'Cart'**
   String get navCart;
 
+  /// Bottom navigation — the buyer's closet tab (what she owns, is deciding on, and wants)
+  ///
+  /// In en, this message translates to:
+  /// **'Closet'**
+  String get navCloset;
+
+  /// Bottom navigation — the buyer's discovery tab, opening on search
+  ///
+  /// In en, this message translates to:
+  /// **'Discover'**
+  String get navDiscover;
+
   /// Bottom navigation — buyer home tab
   ///
   /// In en, this message translates to:
   /// **'Home'**
   String get navHome;
 
-  /// Bottom navigation — profile tab
+  /// Bottom navigation — the buyer's own profile tab
   ///
   /// In en, this message translates to:
-  /// **'Profile'**
+  /// **'Me'**
   String get navProfile;
 
   /// Bottom navigation — search tab
@@ -6227,8 +6335,8 @@ abstract class AppLocalizations {
   /// How many sales the request covers
   ///
   /// In en, this message translates to:
-  /// **'From {count} orders'**
-  String payoutFromOrders(Object count);
+  /// **'{count, plural, =1{From 1 order} other{From {count} orders}}'**
+  String payoutFromOrders(int count);
 
   /// Open request card heading
   ///
@@ -6386,6 +6494,30 @@ abstract class AppLocalizations {
   /// **'Post'**
   String get post;
 
+  /// Second line of the closet strip under a feed post: saved looks the tagged piece would complete.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{and finishes a saved look} other{and finishes {count} saved looks}}'**
+  String postClosetCompletes(int count);
+
+  /// Button on the closet strip under a feed post that opens her closet.
+  ///
+  /// In en, this message translates to:
+  /// **'My closet'**
+  String get postClosetOpen;
+
+  /// Closet strip under a feed post when the tagged piece duplicates something she owns.
+  ///
+  /// In en, this message translates to:
+  /// **'You already own one like it'**
+  String get postClosetOwned;
+
+  /// Closet strip under a feed post: how many of her own pieces the tagged product pairs with.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Goes with a piece in your closet} other{Goes with {count} pieces in your closet}}'**
+  String postClosetPairs(int count);
+
   /// Like tally under a post. {count} is already formatted, e.g. 1.2K.
   ///
   /// In en, this message translates to:
@@ -6481,6 +6613,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Fashion, perfume, handmade'**
   String get productCategoriesHint;
+
+  /// Under the size row: how often the selected size was kept. Percent is a whole number.
+  ///
+  /// In en, this message translates to:
+  /// **'{size}: kept by {percent}% of the women who received this size'**
+  String productFitKept(String size, int percent);
+
+  /// Under the size row, when the selected size is often returned for fit.
+  ///
+  /// In en, this message translates to:
+  /// **'{size}: often sent back for the size — only {percent}% kept it'**
+  String productFitOftenReturned(String size, int percent);
 
   /// No description provided for @productChooseOption.
   ///
@@ -7313,7 +7457,7 @@ abstract class AppLocalizations {
   /// Extra days granted to this shopper
   ///
   /// In en, this message translates to:
-  /// **'You have {days} extra days on the window'**
+  /// **'{days, plural, =1{You have 1 extra day on the window} other{You have {days} extra days on the window}}'**
   String returnWindowExtraDays(int days);
 
   /// When the return window closes
@@ -7625,7 +7769,7 @@ abstract class AppLocalizations {
   /// Screen-reader summary of the rewards balance [re-authored: original wording lost]
   ///
   /// In en, this message translates to:
-  /// **'{points} points, {tier} tier'**
+  /// **'{points, plural, =1{1 point, {tier} tier} other{{points} points, {tier} tier}}'**
   String rewardsBalanceSemantics(int points, String tier);
 
   /// Membership benefit [re-authored: original wording lost]
@@ -7859,7 +8003,7 @@ abstract class AppLocalizations {
   /// What a reward costs in points [re-authored: original wording lost]
   ///
   /// In en, this message translates to:
-  /// **'{points} points'**
+  /// **'{points, plural, =1{1 point} other{{points} points}}'**
   String rewardsPointsCost(int points);
 
   /// Progress toward the next tier [re-authored: original wording lost]
@@ -8627,7 +8771,7 @@ abstract class AppLocalizations {
   /// No description provided for @sellerOrderDiscount.
   ///
   /// In en, this message translates to:
-  /// **'Discount'**
+  /// **'Your discount'**
   String get sellerOrderDiscount;
 
   /// No description provided for @sellerOrderEscrowOn.
@@ -9014,11 +9158,11 @@ abstract class AppLocalizations {
   /// **'Rating'**
   String get sellerRatingStat;
 
-  /// Rating line on the seller stats card; both values are pre-formatted.
+  /// Rating line on the seller stats card. {count} picks the plural; {countLabel} is the same count formatted compactly.
   ///
   /// In en, this message translates to:
-  /// **'{rating} · {count} reviews'**
-  String sellerRatingSummary(String rating, String count);
+  /// **'{count, plural, =1{{rating} · 1 review} other{{rating} · {countLabel} reviews}}'**
+  String sellerRatingSummary(String rating, int count, String countLabel);
 
   /// Title of the reviews section.
   ///
@@ -10013,7 +10157,7 @@ abstract class AppLocalizations {
   /// Product alert chip
   ///
   /// In en, this message translates to:
-  /// **'Out in {days} days'**
+  /// **'{days, plural, =0{Out today} =1{Out in 1 day} other{Out in {days} days}}'**
   String trendAlertStockOutIn(int days);
 
   /// Product alert chip
@@ -10049,7 +10193,7 @@ abstract class AppLocalizations {
   /// Day count
   ///
   /// In en, this message translates to:
-  /// **'{days} days'**
+  /// **'{days, plural, =1{1 day} other{{days} days}}'**
   String trendDaysValue(int days);
 
   /// Dismisses an insight or a demand signal
@@ -10067,7 +10211,7 @@ abstract class AppLocalizations {
   /// Forecast line on a product card
   ///
   /// In en, this message translates to:
-  /// **'{units} units forecast over {days} days'**
+  /// **'{units, plural, =1{1 unit forecast} other{{units} units forecast}} {days, plural, =1{over 1 day} other{over {days} days}}'**
   String trendForecastLine(int units, int days);
 
   /// Collapses the metrics behind an insight
@@ -10115,7 +10259,7 @@ abstract class AppLocalizations {
   /// Metric hint
   ///
   /// In en, this message translates to:
-  /// **'{count} products rising'**
+  /// **'{count, plural, =1{1 product rising} other{{count} products rising}}'**
   String trendRisingCount(int count);
 
   /// Metric label
@@ -10325,7 +10469,7 @@ abstract class AppLocalizations {
   /// Category supply line
   ///
   /// In en, this message translates to:
-  /// **'{inStock} of {total} products in stock'**
+  /// **'In stock: {inStock} of {total}'**
   String trendsCategorySupply(int inStock, int total);
 
   /// Admin colours heading
@@ -10433,7 +10577,7 @@ abstract class AppLocalizations {
   /// Forecast headline label
   ///
   /// In en, this message translates to:
-  /// **'Forecast units over {days} days'**
+  /// **'{days, plural, =1{Forecast units over 1 day} other{Forecast units over {days} days}}'**
   String trendsForecastUnitsLabel(int days);
 
   /// Opportunity kind label
@@ -10589,7 +10733,7 @@ abstract class AppLocalizations {
   /// Stage distribution footnote
   ///
   /// In en, this message translates to:
-  /// **'{scored} active of {total} scored products'**
+  /// **'Active: {scored} of {total} scored'**
   String trendsStageScored(int scored, int total);
 
   /// Stock section heading
@@ -11501,7 +11645,7 @@ abstract class AppLocalizations {
   /// No description provided for @studioPromoterSummary.
   ///
   /// In en, this message translates to:
-  /// **'{reshares} added · {products} pieces'**
+  /// **'Added: {reshares} · Pieces: {products}'**
   String studioPromoterSummary(int reshares, int products);
 
   /// No description provided for @viewProfile.
@@ -12545,8 +12689,8 @@ abstract class AppLocalizations {
   /// No description provided for @adminPolicyAcceptedAny.
   ///
   /// In en, this message translates to:
-  /// **'{count} accounts have signed this policy'**
-  String adminPolicyAcceptedAny(String count);
+  /// **'{count, plural, =0{No account has signed it yet} =1{1 account has signed this policy} other{{count} accounts have signed this policy}}'**
+  String adminPolicyAcceptedAny(int count);
 
   /// No description provided for @adminPolicyNoDraft.
   ///
@@ -12557,8 +12701,8 @@ abstract class AppLocalizations {
   /// No description provided for @adminPolicyVersionsCount.
   ///
   /// In en, this message translates to:
-  /// **'{count} versions'**
-  String adminPolicyVersionsCount(String count);
+  /// **'{count, plural, =1{1 version} other{{count} versions}}'**
+  String adminPolicyVersionsCount(int count);
 
   /// No description provided for @adminPolicyBodyTooShort.
   ///
@@ -12601,6 +12745,5424 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'A problem with this order? Start with the seller, then the complaints process.'**
   String get orderPolicyNotice;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Add a piece'**
+  String get closetAddPiece;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'This page couldn’t open.'**
+  String get closetPageLoadFailed;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'The photo is private — no one but you can see it.'**
+  String get closetPhotoPrivate;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Photo of the piece'**
+  String get closetPiecePhoto;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'What is it?'**
+  String get closetPieceWhat;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. black leather jacket'**
+  String get closetPieceWhatHint;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Type of piece'**
+  String get closetPieceSlot;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Brand (optional)'**
+  String get closetPieceBrandOptional;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Size (optional)'**
+  String get closetPieceSizeOptional;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Add to my closet'**
+  String get closetAddToMyCloset;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Added to your closet.'**
+  String get closetAdded;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'The piece couldn’t be added.'**
+  String get closetAddFailed;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'The missing piece'**
+  String get closetGapTitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Suggestions couldn’t load.'**
+  String get closetSuggestionsFailed;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Why this suggestion?'**
+  String get closetWhySuggestion;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Not interested'**
+  String get closetNotInterested;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing fits right now'**
+  String get closetNoMatchNow;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Try again later — boutiques add new pieces every day.'**
+  String get closetNoMatchNowBody;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Pieces that suit your closet'**
+  String get closetPiecesThatFit;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Got it — we won’t suggest it again.'**
+  String get closetGapDismissed;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Completes a look'**
+  String get closetCompletesLook;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Goes with a piece you own} other{Goes with {count} pieces you own}}'**
+  String closetPairsWithCount(int count);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'A piece from my closet'**
+  String get closetPieceTitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Remove from favourites'**
+  String get closetRemoveFavourite;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Add to favourites'**
+  String get closetAddFavourite;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'The piece couldn’t open.'**
+  String get closetPieceLoadFailed;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Times worn'**
+  String get closetTimesWorn;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Cost per wear'**
+  String get closetCostPerWear;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Last worn'**
+  String get closetLastWorn;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Wore it today'**
+  String get closetWoreToday;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Details'**
+  String get closetDetails;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Size {size}'**
+  String closetSizeValue(String size);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Suits'**
+  String get closetSuitsLabel;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'View in the boutique'**
+  String get closetViewInShop;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Delete for good'**
+  String get closetDeleteForever;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Never'**
+  String get closetWornNever;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get closetWornToday;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Yesterday'**
+  String get closetWornYesterday;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{days, plural, =1{a day ago} other{{days} days ago}}'**
+  String closetWornDaysAgo(int days);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{months, plural, =1{a month ago} other{{months} months ago}}'**
+  String closetWornMonthsAgo(int months);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Back to the closet'**
+  String get closetReturnToCloset;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Shelve for the season'**
+  String get closetShelveForSeason;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'I no longer have it'**
+  String get closetNoLongerOwn;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'The look'**
+  String get closetLookTitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'The look couldn’t open.'**
+  String get closetLookLoadFailed;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'One piece ({slot}) and it’s ready.'**
+  String closetLookOneShort(String slot);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, other{{count} pieces short of ready.}}'**
+  String closetLookManyShort(int count);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Worn once.} other{Worn {count} times.}}'**
+  String closetLookWornCount(int count);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Delete the look'**
+  String get closetDeleteLook;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Not yours yet'**
+  String get closetNotOwnedYet;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Find the piece'**
+  String get closetFindThePiece;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Remove from the look'**
+  String get closetRemoveFromLook;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'My looks'**
+  String get closetMyLooks;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Your looks couldn’t load.'**
+  String get closetLooksLoadFailed;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'No looks yet'**
+  String get closetNoLooksTitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Put a look together from your pieces — if something’s missing, we’ll help you find it.'**
+  String get closetNoLooksBody;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'See what you can wear'**
+  String get closetSeeWhatToWear;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Ready · worn once} other{Ready · worn {count} times}}'**
+  String closetLookReadyWorn(int count);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Ready to wear'**
+  String get closetLookReady;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Wore it'**
+  String get closetWoreIt;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Needs {slot} to be ready'**
+  String closetLookShortOne(String slot);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, other{{count} pieces short}}'**
+  String closetLookShortMany(int count);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Missing'**
+  String get closetMissing;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'What should I wear today?'**
+  String get closetWhatToWearToday;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'We couldn’t suggest anything right now.'**
+  String get closetTodayFailed;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Done — logged for today.'**
+  String get closetTodayLogged;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Saved to your looks.'**
+  String get closetSavedToLooks;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'The look couldn’t be saved.'**
+  String get closetSaveLookFailed;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Any occasion'**
+  String get closetAnyOccasion;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'No outfit could be made'**
+  String get closetCannotDress;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing for this occasion'**
+  String get closetNothingForOccasion;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'You’re probably missing a whole category — try adding shoes or a bottom to your closet.'**
+  String get closetCannotDressBody;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Try removing the occasion filter, or add a piece that suits it.'**
+  String get closetNothingForOccasionBody;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Your closet couldn’t open.'**
+  String get closetLoadFailed;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Want'**
+  String get closetSpectrumWant;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Deciding'**
+  String get closetSpectrumDeciding;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Own'**
+  String get closetSpectrumOwn;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Your closet is empty'**
+  String get closetEmptyTitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Add your pieces — what you bought on Reem and what you already had. That’s how we learn what you’re missing and what you can wear.'**
+  String get closetEmptyBody;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Bring in my purchases'**
+  String get closetBringPurchases;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Add a piece with a photo'**
+  String get closetAddWithPhoto;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Added a piece from your orders.} other{Added {count} pieces from your orders.}}'**
+  String closetBackfilled(int count);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'No delivered orders yet.'**
+  String get closetNoDeliveredOrders;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Your purchases couldn’t be fetched right now.'**
+  String get closetBackfillFailed;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Your pieces couldn’t be shown.'**
+  String get closetItemsFailed;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'possible looks'**
+  String get closetMetricPossibleLooks;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'pieces'**
+  String get closetMetricPieces;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'saved looks'**
+  String get closetMetricSavedLooks;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'wears this month'**
+  String get closetMetricWornThisMonth;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Your pieces are here, but they don’t make a full outfit for this weather.'**
+  String get closetCannotDressSeason;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'You have {total} looks in all; {seasonal} suit {season}.'**
+  String closetSeasonCapacity(int total, int seasonal, String season);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'What your closet is missing'**
+  String get closetWhatsMissing;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get closetAll;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Base'**
+  String get closetReasonBase;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'One piece short'**
+  String get closetReasonNearlyComplete;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'A favourite look'**
+  String get closetReasonFavouriteLook;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Core piece for the occasion'**
+  String get closetReasonCoreSlot;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'You chose this piece before'**
+  String get closetReasonAlreadyChosen;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Right for the season'**
+  String get closetReasonSeasonFit;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Your interest in the occasion'**
+  String get closetReasonInterest;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'The anchor piece'**
+  String get closetReasonAnchorSlot;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'You don’t own any'**
+  String get closetReasonOwnsNone;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'New looks unlocked'**
+  String get closetReasonOutfitGain;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'First complete look'**
+  String get closetReasonFirstOutfit;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Looks unlocked'**
+  String get closetReasonOutfitsUnlocked;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Your complete looks now'**
+  String get closetReasonOutfitsNow;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Shelved pieces'**
+  String get closetReasonShelved;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Out-of-season pieces'**
+  String get closetReasonOutOfSeason;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Heavy wear'**
+  String get closetReasonWear;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'No alternative'**
+  String get closetReasonSoleInSlot;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Times worn'**
+  String get closetReasonWearCount;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Why are we suggesting this?'**
+  String get closetWhyWeSuggest;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Priority'**
+  String get closetPriority;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'My piece'**
+  String get closetMyPiece;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{slot} · not worn yet'**
+  String closetTileNeverWorn(String slot);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{slot} · a while ago'**
+  String closetTileLongAgo(String slot);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{{slot} · worn once} other{{slot} · worn {count} times}}'**
+  String closetTileWornCount(String slot, int count);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'From your closet'**
+  String get closetFromYourCloset;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'You already have one in your closet.'**
+  String get closetOwnOneAlready;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Goes with a piece you own.} other{Goes with {count} pieces you own.}}'**
+  String closetPanelPairs(int count);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{And completes a saved look.} other{And completes {count} saved looks.}}'**
+  String closetPanelCompletes(int count);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Open my closet'**
+  String get closetOpenMyCloset;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'It couldn’t be added.'**
+  String get closetAddPairFailed;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Save as a look'**
+  String get closetSaveAsLook;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Compare'**
+  String get roomsCompareTitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'The comparison couldn’t be prepared.'**
+  String get roomsCompareFailed;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing to compare'**
+  String get roomsCompareNothing;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'A comparison needs at least two options.'**
+  String get roomsCompareNeedsTwo;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Hide what’s the same'**
+  String get roomsHideIdentical;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Alike in one thing} other{Alike in {count} things}}'**
+  String roomsIdenticalCount(int count);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{The room is split — one vote.} other{The room is split — {count} votes.}}'**
+  String roomsVotesSplit(int count);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{The room leans one way — one vote.} other{The room leans one way — {count} votes.}}'**
+  String roomsVotesLeaning(int count);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 comment} other{{count} comments}}'**
+  String roomsCommentCount(int count);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Choose this'**
+  String get roomsChooseThis;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Purchase plan'**
+  String get roomsPlanTitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'The plan couldn’t load.'**
+  String get roomsPlanFailed;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'No plan yet'**
+  String get roomsNoPlanTitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Settle the room’s decisions and we’ll put the plan together.'**
+  String get roomsNoPlanBody;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Now'**
+  String get roomsPlanNow;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing is ready to buy yet.'**
+  String get roomsPlanNothingNow;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Later'**
+  String get roomsPlanLater;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Kept in the plan — buy it when you’re ready.'**
+  String get roomsPlanLaterBody;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Total'**
+  String get roomsPlanTotal;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{amount} over your budget'**
+  String roomsOverBudget(String amount);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Under your budget'**
+  String get roomsUnderBudget;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Within your budget'**
+  String get roomsWithinBudget;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{One piece couldn’t be priced} other{{count} pieces couldn’t be priced}}'**
+  String roomsUnpriced(int count);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'No longer available'**
+  String get roomsNoLongerAvailable;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Later'**
+  String get roomsPostpone;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Remove'**
+  String get roomsRemove;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Remove the pieces that are no longer available before you continue.'**
+  String get roomsRemoveUnavailableFirst;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Buy what’s ready now ({count})'**
+  String roomsBuyNowCount(int count);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Buy ({count})'**
+  String roomsBuyCount(int count);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Room'**
+  String get roomsRoomTitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'The invitation couldn’t open. The link may have expired — ask for a new one.'**
+  String get roomsInviteFailed;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Share the room'**
+  String get roomsShareRoom;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'The room couldn’t open.'**
+  String get roomsRoomFailed;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Link copied — anyone who opens it can advise and vote, but not buy.'**
+  String get roomsLinkCopied;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'No decisions yet'**
+  String get roomsNoDecisionsTitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'A decision is a question — “the dress”, “a gift for Mum”. Add one and start gathering options for it.'**
+  String get roomsNoDecisionsBody;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Add a decision'**
+  String get roomsAddDecision;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Settled'**
+  String get roomsSettled;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'New decision'**
+  String get roomsNewDecision;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'A decision is a question that needs an answer — not a piece.'**
+  String get roomsNewDecisionHelp;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. The dress'**
+  String get roomsNewDecisionHint;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Add'**
+  String get roomsAdd;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get roomsCancel;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Surprise'**
+  String get roomsSurprise;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'For {name}'**
+  String roomsForRecipient(String name);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Every decision is settled'**
+  String get roomsAllSettled;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{settled} of {total} decisions settled'**
+  String roomsSettledOf(int settled, int total);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Budget: up to {amount}'**
+  String roomsBudgetUpTo(String amount);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'See the plan'**
+  String get roomsSeePlan;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Prepare the plan'**
+  String get roomsPreparePlan;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Some decisions are still open.'**
+  String get roomsDecisionsStillOpen;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'My rooms'**
+  String get roomsMyRooms;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'New room'**
+  String get roomsNewRoom;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Your rooms couldn’t load.'**
+  String get roomsLoadFailed;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'No rooms yet'**
+  String get roomsEmptyTitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'A room is a space for a buying decision — a wedding, a gift, a season. Gather options, ask your friends, decide. It isn’t a basket.'**
+  String get roomsEmptyBody;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Open your first room'**
+  String get roomsOpenFirst;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Purchased'**
+  String get roomsPurchased;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Ready to buy'**
+  String get roomsReadyToBuy;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'One decision to go'**
+  String get roomsOneDecisionLeft;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, other{{count} decisions still open}}'**
+  String roomsOpenDecisions(int count);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{No suggestions} =1{1 suggestion} other{{count} suggestions}}'**
+  String roomsSuggestionCount(int count);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Wedding'**
+  String get roomsOccasionWedding;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Engagement'**
+  String get roomsOccasionEngagement;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Evening'**
+  String get roomsOccasionEvening;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Eid'**
+  String get roomsOccasionEid;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Graduation'**
+  String get roomsOccasionGraduation;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Birthday'**
+  String get roomsOccasionBirthday;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Work'**
+  String get roomsOccasionWork;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Everyday'**
+  String get roomsOccasionDaily;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'What are you shopping for?'**
+  String get roomsShoppingFor;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Room name'**
+  String get roomsRoomName;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. Rahaf’s wedding look'**
+  String get roomsRoomNameHint;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Room type'**
+  String get roomsRoomKind;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Who is the gift for?'**
+  String get roomsGiftFor;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Occasion (optional)'**
+  String get roomsOccasionOptional;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Pick an occasion and we’ll open the decisions you’ll need.'**
+  String get roomsOccasionHelp;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Open the room'**
+  String get roomsOpenRoom;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Suggestion'**
+  String get roomsSuggestion;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'You decided against it'**
+  String get roomsDecidedAgainst;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Needs one piece} other{Needs {count} pieces}}'**
+  String roomsNeedsPieces(int count);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Opinions are split'**
+  String get roomsOpinionsSplit;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Most lean one way'**
+  String get roomsMajorityLeans;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Add an option'**
+  String get roomsAddOption;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Compare'**
+  String get roomsCompare;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'I don’t want any'**
+  String get roomsWantNothing;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Settled'**
+  String get roomsStatusSettled;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Skipped'**
+  String get roomsStatusSkipped;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Not chosen yet'**
+  String get roomsStatusNotChosen;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Open'**
+  String get roomsStatusOpen;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'No options for this question'**
+  String get roomsNoOptions;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Find a piece'**
+  String get roomsFindPiece;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get roomsDone;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Restore'**
+  String get roomsRestore;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Proposed for “{title}”'**
+  String roomsProposedTo(String title);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'It couldn’t be proposed.'**
+  String get roomsProposeFailed;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Which room?'**
+  String get roomsWhichRoom;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Back'**
+  String get roomsBack;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'An answer to which question?'**
+  String get roomsAnswerWhichQuestion;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'The piece is added as a suggestion — nothing is bought until you choose it.'**
+  String get roomsProposeHelp;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{No suggestions} =1{1 suggestion} other{{count} suggestions}}'**
+  String roomsLiveSuggestionCount(int count);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'New question'**
+  String get roomsNewQuestion;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. The shoes'**
+  String get roomsNewQuestionHint;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'You have no open rooms'**
+  String get roomsNoOpenRooms;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'A room is a space for a buying decision — gather the options and decide.'**
+  String get roomsWhatIsRoom;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Open a room and add it'**
+  String get roomsOpenAndAdd;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Shopping'**
+  String get roomsDefaultRoomTitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Options'**
+  String get roomsDefaultDecisionTitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'We opened a room for you and put the piece in it.'**
+  String get roomsCreatedWithPiece;
+
+  /// Rooms label.
+  ///
+  /// In en, this message translates to:
+  /// **'Just me'**
+  String get roomsKindSolo;
+
+  /// Rooms label.
+  ///
+  /// In en, this message translates to:
+  /// **'With friends'**
+  String get roomsKindGroup;
+
+  /// Rooms label.
+  ///
+  /// In en, this message translates to:
+  /// **'Gift'**
+  String get roomsKindGift;
+
+  /// Rooms label.
+  ///
+  /// In en, this message translates to:
+  /// **'Occasion'**
+  String get roomsKindOccasion;
+
+  /// Rooms label.
+  ///
+  /// In en, this message translates to:
+  /// **'this decision'**
+  String get roomsDecisionFallback;
+
+  /// Rooms label.
+  ///
+  /// In en, this message translates to:
+  /// **'No decisions in the room yet'**
+  String get roomsBlockerNoDecisions;
+
+  /// Rooms label.
+  ///
+  /// In en, this message translates to:
+  /// **'No suggestions for {title} yet'**
+  String roomsBlockerEmpty(String title);
+
+  /// Rooms label.
+  ///
+  /// In en, this message translates to:
+  /// **'You haven’t chosen for {title} yet'**
+  String roomsBlockerUnresolved(String title);
+
+  /// Rooms label.
+  ///
+  /// In en, this message translates to:
+  /// **'You picked more than needed for {title}'**
+  String roomsBlockerOverPick(String title);
+
+  /// Rooms label.
+  ///
+  /// In en, this message translates to:
+  /// **'The piece chosen for {title} sold out'**
+  String roomsBlockerUnavailable(String title);
+
+  /// Rooms label.
+  ///
+  /// In en, this message translates to:
+  /// **'Something is still missing'**
+  String get roomsBlockerOther;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Standing and what it unlocks — and the guarantee it can’t be bought.'**
+  String get valueAdminSubtitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh'**
+  String get valueAdminRefresh;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Gather evidence now'**
+  String get valueAdminSweepNow;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Standing data couldn’t load.'**
+  String get valueAdminDistributionFailed;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{Done — no profiles changed.} =1{Done — one profile recalculated.} other{Done — {count} profiles recalculated.}}'**
+  String valueAdminSweepDone(int count);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Gathering evidence failed.'**
+  String get valueAdminSweepFailed;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Standing can’t be bought'**
+  String get valueAdminGuaranteeHolds;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Warning: spending alone now reaches the top tiers'**
+  String get valueAdminGuaranteeBroken;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Someone who only buys and contributes nothing else reaches {ceiling} of 1000'**
+  String valueAdminSpendingReach(int ceiling);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Lower the spending ceiling or raise the top-tier thresholds — otherwise the programme becomes a spending ladder by another name.'**
+  String get valueAdminGuaranteeFix;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Tier distribution'**
+  String get valueAdminDistributionTitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{total, plural, =1{1 profile} other{{total} profiles}} — {unranked, plural, =0{all ranked} other{{unranked} not ranked yet}}'**
+  String valueAdminDistributionSubtitle(int total, int unranked);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Cost and commitment'**
+  String get valueAdminCostTitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'What was actually spent, and the most that could be.'**
+  String get valueAdminCostSubtitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'The cost report couldn’t load.'**
+  String get valueAdminCostFailed;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{One benefit spends money with no ceiling — give it a budget.} other{{count} benefits spend money with no ceiling — give them a budget.}}'**
+  String valueAdminUnbounded(int count);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Spent'**
+  String get valueAdminSpent;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Maximum commitment'**
+  String get valueAdminMaxCommitment;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'All standing from a single source'**
+  String get valueAdminReasonSinglePillar;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Heavy contributions over a few days'**
+  String get valueAdminReasonBurst;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Profiles worth a look'**
+  String get valueAdminSuspectsTitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Not an accusation — unusual patterns, and a person decides.'**
+  String get valueAdminSuspectsSubtitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'The list couldn’t load.'**
+  String get valueAdminSuspectsFailed;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing stands out right now.'**
+  String get valueAdminSuspectsNone;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{days, plural, =1{{percent}% concentrated over 1 day} other{{percent}% concentrated over {days} days}}'**
+  String valueAdminConcentration(int percent, int days);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Freeze for now'**
+  String get valueAdminFreezeAction;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Temporary freeze'**
+  String get valueAdminFreezeTitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Standing stops moving and benefits pause — nothing is lost. It all returns when you lift the freeze.'**
+  String get valueAdminFreezeBody;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Reason'**
+  String get valueAdminFreezeReason;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Freeze'**
+  String get valueAdminFreezeConfirm;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get valueCancel;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'My standing in Reem'**
+  String get valueTitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Your standing couldn’t load.'**
+  String get valueLoadFailed;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Where your standing comes from'**
+  String get valueSourcesTitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Your standing rests on six sides, not on spending alone.'**
+  String get valueSourcesSubtitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'What brings you closer to {tier}'**
+  String valueCloserTo(String tier);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'What your standing unlocks'**
+  String get valueUnlocksTitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Latest we counted'**
+  String get valueRecentTitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Just starting'**
+  String get valueJustStarting;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Next tier: {tier}'**
+  String valueNextTier(String tier);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'The highest standing you reached is kept on record.'**
+  String get valuePeakKept;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Your tier is held for you even if things go quiet for a while.'**
+  String get valueTierHeld;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Your standing is paused for review — nothing has been lost.'**
+  String get valueFrozen;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'It’s yours.'**
+  String get valueBenefitClaimed;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Unlocks at a higher tier'**
+  String get valueBenefitHigherTier;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Taken this period'**
+  String get valueBenefitTakenThisPeriod;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Gone for this period'**
+  String get valueBenefitSoldOut;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Claim'**
+  String get valueBenefitClaim;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Active'**
+  String get valueBenefitActive;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'How is standing built?'**
+  String get valueHowBuiltTooltip;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'The rules couldn’t load.'**
+  String get valueRulesFailed;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'How your standing is built'**
+  String get valueHowBuiltTitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Your standing can’t be bought. Buying is one side of six, and it’s capped — someone who only buys never reaches the top tiers.'**
+  String get valueHowBuiltBody;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'At the cap'**
+  String get valuePillarCapped;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Not known yet'**
+  String get valuePillarUnknown;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{blurb} — not enough yet to judge.'**
+  String valuePillarNotEnough(String blurb);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Policy'**
+  String get valuePolicyTitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Every change becomes a new version — simulated on real profiles before it goes live.'**
+  String get valuePolicySubtitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'New version'**
+  String get valuePolicyNewVersion;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Policies couldn’t load.'**
+  String get valuePolicyLoadFailed;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Spending cap {ceiling} · half-life {days}d'**
+  String valuePolicyRowSummary(int ceiling, int days);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Simulate'**
+  String get valuePolicySimulate;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Activate'**
+  String get valuePolicyActivate;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'The simulation failed.'**
+  String get valuePolicySimulateFailed;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{down} of {sampled} will drop a tier. That’s a change people will feel — make sure you mean it.'**
+  String valuePolicyImpactDisruptive(int down, int sampled);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{up} will rise and {down} will drop, out of {sampled}.'**
+  String valuePolicyImpact(int up, int down, int sampled);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Activate policy'**
+  String get valuePolicyActivateTitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Every profile will be recalculated under the new rules.\n\n{impact}'**
+  String valuePolicyActivateBody(String impact);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Policy activated and everything recalculated.'**
+  String get valuePolicyActivated;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Activation failed.'**
+  String get valuePolicyActivateFailed;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Sample of {sampled}: '**
+  String valuePolicySimSample(int sampled);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Average change {delta}'**
+  String valuePolicySimAverage(String delta);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Buying'**
+  String get valuePillarCommerce;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Opinion'**
+  String get valuePillarCraft;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Community'**
+  String get valuePillarCommunity;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Invites'**
+  String get valuePillarAdvocacy;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Discovery'**
+  String get valuePillarDiscovery;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Reliability'**
+  String get valuePillarReliability;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'New version from v{version}'**
+  String valuePolicyNewFrom(int version);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Side weights'**
+  String get valuePolicyWeights;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Relative — they don’t need to add up to 100.'**
+  String get valuePolicyWeightsHelp;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Spending cap'**
+  String get valuePolicyCeiling;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{points, plural, =1{1 point} other{{points} points}}'**
+  String valuePolicyPoints(int points);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Half-life'**
+  String get valuePolicyHalfLife;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{days, plural, =1{1 day} other{{days} days}}'**
+  String valuePolicyDays(int days);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Minimum evidence per side'**
+  String get valuePolicyMinEvidence;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Why this change?'**
+  String get valuePolicyWhy;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Someone else will read this a year from now'**
+  String get valuePolicyWhyHint;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Save as draft'**
+  String get valuePolicySaveDraft;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Saved as a draft — simulate it before activating.'**
+  String get valuePolicySavedDraft;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Saving failed.'**
+  String get valuePolicySaveFailed;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'With these weights, someone who only buys reaches {ceiling} — into the top tiers.'**
+  String valuePolicyRisky(int ceiling);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Someone who only buys reaches {ceiling} of 1000 — standing still can’t be bought.'**
+  String valuePolicySafe(int ceiling);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Your standing in Reem'**
+  String get valueCardTitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Close to {tier}'**
+  String valueCardCloseTo(String tier);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Rising'**
+  String get valueCardRising;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Steady'**
+  String get valueCardSteady;
+
+  /// Reem Value console.
+  ///
+  /// In en, this message translates to:
+  /// **' — tier “{rung}”'**
+  String valueAdminSpendingRung(String rung);
+
+  /// Reem Value console.
+  ///
+  /// In en, this message translates to:
+  /// **'; the top tier is “{rung}”.'**
+  String valueAdminTopRung(String rung);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'The look'**
+  String get marketLookTitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'The look couldn’t open.'**
+  String get marketLookFailed;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{From one shop — Reem put them together because they go well.} other{From {count} shops — Reem put them together because they go well.}}'**
+  String marketLookFromShops(int count);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'There are cheaper options'**
+  String get marketCheaperOptions;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Same slot, another piece Reem sees as close to it.'**
+  String get marketCheaperOptionsBody;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Look total'**
+  String get marketLookTotal;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'See the pieces'**
+  String get marketSeePieces;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'From {name}'**
+  String marketFromSeller(String name);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Save {amount}'**
+  String marketSave(String amount);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Instead of {title} — {newPrice} instead of {oldPrice}'**
+  String marketInsteadOf(String title, String newPrice, String oldPrice);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Wedding'**
+  String get marketOccasionWedding;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Evening'**
+  String get marketOccasionEvening;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Eid'**
+  String get marketOccasionEid;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Graduation'**
+  String get marketOccasionGraduation;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Work'**
+  String get marketOccasionWork;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Everyday'**
+  String get marketOccasionDaily;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Ready looks'**
+  String get marketReadyLooks;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get marketAll;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Looks couldn’t load.'**
+  String get marketLooksFailed;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'No ready looks right now'**
+  String get marketNoLooks;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Looks are built from available pieces that go together. Try another occasion or come back later.'**
+  String get marketNoLooksBody;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Drops'**
+  String get marketDrops;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Drops couldn’t load.'**
+  String get marketDropsFailed;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'No drop right now'**
+  String get marketNoDrops;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'When something lands that fits what you’re missing or your taste, you’ll see it here before everyone else.'**
+  String get marketNoDropsBody;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Live now'**
+  String get marketLiveNow;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Worth doing'**
+  String get marketMissionsTitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Missions couldn’t load.'**
+  String get marketMissionsFailed;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing to do right now'**
+  String get marketNoMissions;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Reem only asks for something when it’s worth it and within reach.'**
+  String get marketNoMissionsBody;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get marketMissionDone;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{done} of {target}'**
+  String marketMissionProgress(int done, int target);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Not now'**
+  String get marketNotNow;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Pre-loved market'**
+  String get marketResaleTitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'For sale'**
+  String get marketResaleBrowse;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'My listings'**
+  String get marketResaleMine;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Listings couldn’t load.'**
+  String get marketResaleFailed;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'You have no listings'**
+  String get marketNoOwnListings;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing for sale right now'**
+  String get marketNoListings;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'When Reem finds a piece in your closet that isn’t being worn, she’ll suggest listing it here.'**
+  String get marketNoOwnListingsBody;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'The market fills up from other women’s closets. Come back later.'**
+  String get marketNoListingsBody;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{Never worn} =1{Worn once} other{Worn {count} times}}'**
+  String marketWornTimes(int count);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Publish'**
+  String get marketListingPublish;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Publish again'**
+  String get marketListingRepublish;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Withdraw'**
+  String get marketListingWithdraw;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Sold'**
+  String get marketListingSold;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Market'**
+  String get marketSellerTitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Opportunities'**
+  String get marketOpportunities;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Supply against demand in the categories you sell in.'**
+  String get marketOpportunitiesBody;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'The market couldn’t be read.'**
+  String get marketReadFailed;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'No signal strong enough right now. Reem only speaks when the data is enough.'**
+  String get marketNoSignal;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Worth a drop'**
+  String get marketWorthADrop;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Your products with higher demand than usual.'**
+  String get marketWorthADropBody;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Products couldn’t be read.'**
+  String get marketProductsFailed;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'None of your products needs a special drop right now.'**
+  String get marketNoDropCandidates;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Your drops'**
+  String get marketYourDrops;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Your drops couldn’t load.'**
+  String get marketYourDropsFailed;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'You haven’t launched a drop yet.'**
+  String get marketNoOwnDrops;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Confirmed'**
+  String get marketConfidenceHigh;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Early'**
+  String get marketConfidenceLow;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Demand {demand} · stock {stock}'**
+  String marketCandidateStats(int demand, int stock);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Drop'**
+  String get marketDropAction;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Draft'**
+  String get marketDropDraft;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Scheduled'**
+  String get marketDropScheduled;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Live'**
+  String get marketDropLive;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Ended'**
+  String get marketDropEnded;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Cancelled'**
+  String get marketDropCancelled;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 piece · {status}} other{{count} pieces · {status}}}'**
+  String marketDropSummary(int count, String status);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Your closet after buying'**
+  String get marketCareTitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Your closet couldn’t be read.'**
+  String get marketCareFailed;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Everything’s in its place'**
+  String get marketCareAllGood;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing needs attention right now. We’ll tell you when a piece goes unworn.'**
+  String get marketCareAllGoodBody;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Pieces that need attention'**
+  String get marketCareNeedsAttention;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Pieces'**
+  String get marketCarePieces;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'In rotation'**
+  String get marketCareInRotation;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Cost per wear (SYP)'**
+  String get marketCareCostPerWear;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Cost per wear {amount}'**
+  String marketCostPerWear(String amount);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Goes with: {titles}'**
+  String marketGoesWith(String titles);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Suggested price {amount}'**
+  String marketSuggestedPrice(String amount);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'List it for sale'**
+  String get marketListForSale;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Edit listing'**
+  String get marketEditListing;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'List “{title}”'**
+  String marketListTitle(String title);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Saved as a draft — no one sees it until you publish it.'**
+  String get marketListDraftNote;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Condition'**
+  String get marketCondition;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'New with tags'**
+  String get marketConditionNew;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Excellent'**
+  String get marketConditionExcellent;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Good'**
+  String get marketConditionGood;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Fair'**
+  String get marketConditionFair;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Save as draft'**
+  String get marketSaveDraft;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Saved as a draft. You can publish it from your listings.'**
+  String get marketSavedDraft;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Pieces from different shops, put together because they go well.'**
+  String get marketReadyLooksBody;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Reading the market…'**
+  String get marketReading;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'No signal strong enough right now.'**
+  String get marketNoSignalShort;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{One opportunity in your categories, with supply against demand.} other{{count} opportunities in your categories, with supply against demand.}}'**
+  String marketOpportunityCount(int count);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{One piece needs attention — care, styling or selling.} other{{count} pieces need attention — care, styling or selling.}}'**
+  String marketCareSummary(int count);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{From one shop — a complete look} other{From {count} shops — a complete look}}'**
+  String marketLookFromShopsShort(int count);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 piece} other{{count} pieces}}'**
+  String marketPieceCount(int count);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Early access'**
+  String get marketEarlyAccess;
+
+  /// Market label.
+  ///
+  /// In en, this message translates to:
+  /// **'Because you’re missing something like this'**
+  String get marketReasonOpenNeed;
+
+  /// Market label.
+  ///
+  /// In en, this message translates to:
+  /// **'Because you were looking for something like it'**
+  String get marketReasonSearchedFor;
+
+  /// Market label.
+  ///
+  /// In en, this message translates to:
+  /// **'Because it suits the occasion you’re getting ready for'**
+  String get marketReasonOccasion;
+
+  /// Market label.
+  ///
+  /// In en, this message translates to:
+  /// **'Because it’s close to your taste'**
+  String get marketReasonTaste;
+
+  /// Market label.
+  ///
+  /// In en, this message translates to:
+  /// **'From a shop you buy from'**
+  String get marketReasonSellerCustomer;
+
+  /// Market label.
+  ///
+  /// In en, this message translates to:
+  /// **'In rotation'**
+  String get marketRotationActive;
+
+  /// Market label.
+  ///
+  /// In en, this message translates to:
+  /// **'Worn less lately'**
+  String get marketRotationSlowing;
+
+  /// Market label.
+  ///
+  /// In en, this message translates to:
+  /// **'Sitting in the closet'**
+  String get marketRotationDormant;
+
+  /// Market label.
+  ///
+  /// In en, this message translates to:
+  /// **'Never worn'**
+  String get marketRotationUnworn;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'My addresses'**
+  String get settingsMyAddresses;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Delivery addresses'**
+  String get settingsDeliveryAddresses;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Where should we send your orders?'**
+  String get settingsDeliveryAddressesSubtitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Add a new address'**
+  String get settingsAddAddress;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Address added'**
+  String get settingsAddressAdded;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Changes saved'**
+  String get settingsAddressUpdated;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'This is now your default address'**
+  String get settingsAddressNowDefault;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Delete address'**
+  String get settingsDeleteAddressTitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'“{label}” will be removed from your addresses.'**
+  String settingsDeleteAddressBody(String label);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get settingsDelete;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Keep it'**
+  String get settingsKeep;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Address deleted'**
+  String get settingsAddressDeleted;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'That couldn’t be done right now'**
+  String get settingsActionFailed;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'No saved addresses yet'**
+  String get settingsNoAddresses;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Save an address now so it’s ready for your first order'**
+  String get settingsNoAddressesBody;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Coupons'**
+  String get settingsCoupons;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Your offers'**
+  String get settingsYourOffers;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Apply an offer to your bag, or copy the code'**
+  String get settingsYourOffersSubtitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{percent}% off'**
+  String settingsCouponPercentOff(String percent);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{amount} off'**
+  String settingsCouponAmountOff(String amount);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Minimum {amount}'**
+  String settingsCouponMinimum(String amount);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Ends today'**
+  String get settingsCouponEndsToday;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{days, plural, =1{1 day left} other{{days} days left}}'**
+  String settingsCouponDaysLeft(int days);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Last use'**
+  String get settingsCouponLastUse;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, other{{count} uses left}}'**
+  String settingsCouponUsesLeft(int count);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{code} applied — you saved {amount}'**
+  String settingsCouponApplied(String code, String amount);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Your bag is empty — add something, then apply the offer'**
+  String get settingsCouponEmptyBag;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Your bag has two currencies — apply the offer at checkout'**
+  String get settingsCouponTwoCurrencies;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'The coupon couldn’t be applied'**
+  String get settingsCouponApplyFailed;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Just for you'**
+  String get settingsCouponJustForYou;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Copy code'**
+  String get settingsCouponCopyCode;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Code {code} copied'**
+  String settingsCouponCopied(String code);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Applied'**
+  String get settingsCouponAppliedBadge;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Apply to my bag'**
+  String get settingsCouponApplyToBag;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{code} applied — saving {discount}'**
+  String settingsCouponAppliedSaving(String code, String discount);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Remove'**
+  String get settingsRemove;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Continue to checkout'**
+  String get settingsContinueToCheckout;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Your bag now: {subtotal}'**
+  String settingsBagNow(String subtotal);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'No coupons available right now'**
+  String get settingsNoCoupons;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'We’ll let you know when a new offer arrives'**
+  String get settingsNoCouponsBody;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Coupons couldn’t load'**
+  String get settingsCouponsFailed;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Payment methods'**
+  String get settingsPaymentMethods;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Pay when you order'**
+  String get settingsPayAtOrder;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'You choose the method at checkout'**
+  String get settingsPayAtOrderSubtitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Available methods'**
+  String get settingsAvailableMethods;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'We don’t store card details. Each order is paid when you place it, the way you choose.'**
+  String get settingsNoCardsStored;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Reem wallet'**
+  String get settingsReemWallet;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Pay the courier in cash on delivery'**
+  String get settingsHintCod;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Collected by the delivery company'**
+  String get settingsHintCourierCollect;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Taken from your balance straight away'**
+  String get settingsHintWallet;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'We open the payment page once the order is confirmed'**
+  String get settingsHintMobileWallet;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'A secure payment page — we don’t store your card'**
+  String get settingsHintCard;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Transfer the amount, then send the reference from the order page'**
+  String get settingsHintBankTransfer;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'A local transfer, then send the receipt number from the order page'**
+  String get settingsHintHawala;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Payment is confirmed before the order is prepared'**
+  String get settingsHintConfirmedFirst;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'No payment methods available right now'**
+  String get settingsNoPaymentMethods;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Payment methods couldn’t load'**
+  String get settingsPaymentMethodsFailed;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Default'**
+  String get settingsAddressDefault;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Near {landmark}'**
+  String settingsAddressNear(String landmark);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Make default'**
+  String get settingsMakeDefault;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get settingsEdit;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Home'**
+  String get settingsAddressHome;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Edit address'**
+  String get settingsEditAddress;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'New address'**
+  String get settingsNewAddress;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Address name'**
+  String get settingsAddressName;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Home, work, my parents’'**
+  String get settingsAddressNameHint;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Recipient’s name'**
+  String get settingsRecipientName;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Who receives the order'**
+  String get settingsRecipientNameHint;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Phone number'**
+  String get settingsPhoneNumber;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'City or town'**
+  String get settingsCity;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Mezzeh, Jaramana, ...'**
+  String get settingsCityHint;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Address'**
+  String get settingsAddressLine;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Street, building, floor, flat number'**
+  String get settingsAddressLineHint;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Landmark (optional)'**
+  String get settingsLandmark;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Near Al-Nour pharmacy'**
+  String get settingsLandmarkHint;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Delivery instructions (optional)'**
+  String get settingsDeliveryNotes;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Call before arriving'**
+  String get settingsDeliveryNotesHint;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Make it my default address'**
+  String get settingsMakeMyDefault;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Checkout opens with it'**
+  String get settingsMakeMyDefaultHint;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Save changes'**
+  String get settingsSaveChanges;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Save address'**
+  String get settingsSaveAddress;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Governorate'**
+  String get settingsGovernorate;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a governorate'**
+  String get settingsChooseGovernorate;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Area'**
+  String get settingsDistrict;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Choose an area (optional)'**
+  String get settingsChooseDistrict;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{name} · countryside'**
+  String settingsDistrictRural(String name);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'The governorate list couldn’t load'**
+  String get settingsGovernoratesFailed;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'This field is required'**
+  String get settingsFieldRequired;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Too short'**
+  String get settingsFieldTooShort;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Demand radar'**
+  String get siDemandRadar;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Radar data couldn’t load.'**
+  String get siRadarFailed;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'No products yet'**
+  String get siNoProducts;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Add your first product and we’ll start reading the market for you.'**
+  String get siNoProductsRadarBody;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Still gathering data'**
+  String get siStillGathering;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'The radar reads the market every night. Come back tomorrow.'**
+  String get siStillGatheringBody;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'What to do now'**
+  String get siWhatToDoNow;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Ordered by what matters most to your shop'**
+  String get siWhatToDoNowSubtitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Stock below demand'**
+  String get siStockBelowDemand;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Pieces selling well and running out'**
+  String get siStockBelowDemandSubtitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Rising categories'**
+  String get siRisingCategories;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Demand for them is growing'**
+  String get siRisingCategoriesSubtitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Unmet demand'**
+  String get siUnmetDemand;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Women searched and didn’t find the right thing'**
+  String get siUnmetDemandSubtitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Price movement'**
+  String get siPriceMovement;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'None left'**
+  String get siOutOfStock;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 piece left} other{{count} pieces left}}'**
+  String siUnitsLeft(int count);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{days, plural, =1{Lasts 1 day} other{Lasts {days} days}}'**
+  String siCoverDays(int days);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'You sell here'**
+  String get siYouSellHere;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'You don’t sell here'**
+  String get siYouDontSellHere;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{searches} searches · {percent}% found nothing'**
+  String siSearchMiss(int searches, int percent);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'In your category'**
+  String get siInYourCategory;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Product intelligence'**
+  String get siProductIntelligence;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Your products couldn’t be scored.'**
+  String get siProductsFailed;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Add your first product and we’ll tell you what it’s missing.'**
+  String get siNoProductsBody;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Average'**
+  String get siAverage;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 product} other{{count} products}}'**
+  String siProductCount(int count);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing urgent. Ordered weakest first.'**
+  String get siNothingUrgent;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{One needs attention now.} other{{count} need attention now.}}'**
+  String siUrgentCount(int count);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{days, plural, =1{Based on the last day} other{Based on the last {days} days}}'**
+  String siWindowDays(int days);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Views: {views} · Orders: {orders}'**
+  String siViewsOrders(int views, int orders);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Sold out'**
+  String get siSoldOut;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{and 1 more tip} other{and {count} more tips}}'**
+  String siMoreAdvice(int count);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Details couldn’t load.'**
+  String get siDetailsFailed;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'No data yet'**
+  String get siNoDataYet;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Too few yet'**
+  String get siTooFewYet;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Compared with 1 similar product} other{Compared with {count} similar products}}'**
+  String siComparedWith(int count);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Your price is close to the market.'**
+  String get siPriceNearMarket;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Your price is {percent}% above similar pieces.'**
+  String siPriceAbove(int percent);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Your price is {percent}% below similar pieces.'**
+  String siPriceBelow(int percent);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Your conversion is {yours}% against {median}% in the category.'**
+  String siConversion(String yours, String median);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Shop health'**
+  String get siShopHealth;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Shop health couldn’t be calculated.'**
+  String get siHealthFailed;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'What raises your shop’s health'**
+  String get siWhatRaisesHealth;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Ordered by biggest impact'**
+  String get siWhatRaisesHealthSubtitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Metrics'**
+  String get siMetrics;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Not enough yet'**
+  String get siNotEnoughYet;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'These metrics don’t affect your shop’s health until there’s enough data'**
+  String get siNotEnoughYetBody;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'What slipped'**
+  String get siWhatSlipped;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Slipping products couldn’t be read right now.'**
+  String get siSlippedFailed;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Used to sell, then slowed — with one reason for each'**
+  String get siWhatSlippedSubtitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Not enough orders to judge yet. Every order you complete makes the picture clearer.'**
+  String get siHealthTooFewOrders;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{days, plural, =1{Based on your last day of orders.} other{Based on your last {days} days of orders.}}'**
+  String siHealthWindow(int days);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{points, plural, =1{1 point from last month} other{{points} points from last month}}'**
+  String siMomentum(int points);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{blurb} — nothing to measure yet.'**
+  String siDimensionUnmeasured(String blurb);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{blurb} — measured on {sample}, but still too few to count.'**
+  String siDimensionTooFew(String blurb, int sample);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 day} other{{count} days}}'**
+  String siDays(int count);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{count} h'**
+  String siHours(int count);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{value} of 5'**
+  String siOutOfFive(String value);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Orders you accepted and completed'**
+  String get siFactAccepted;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Orders delivered'**
+  String get siFactDelivered;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'You cancelled'**
+  String get siFactCancelledBySeller;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Cancelled by the customer'**
+  String get siFactCancelledByOthers;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Returned'**
+  String get siFactReturned;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Average prep (hours)'**
+  String get siFactPrepHours;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Average shipping (hours)'**
+  String get siFactShipHours;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Average reply (hours)'**
+  String get siFactResponseHours;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Shop rating'**
+  String get siFactRating;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Number of reviews'**
+  String get siFactReviewCount;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Hide the numbers'**
+  String get siHideNumbers;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Show the numbers we counted'**
+  String get siShowNumbers;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Shop intelligence'**
+  String get siShopIntelligence;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Calculating…'**
+  String get siCalculating;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Eight metrics for your shop'**
+  String get siEightMetrics;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Still getting to know your shop'**
+  String get siGettingToKnow;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'What demand is growing for'**
+  String get siDemandRadarSubtitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'What your product pages are missing'**
+  String get siProductIntelligenceSubtitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Not measured yet'**
+  String get siNotMeasuredYet;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{percent}% of health'**
+  String siWeightOfHealth(int percent);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'New chat'**
+  String get stylistNewChat;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'My preferences'**
+  String get stylistMyPreferences;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Your preferences couldn’t load.'**
+  String get stylistPreferencesFailed;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Modesty'**
+  String get stylistModesty;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Decides which pieces the app shows you.'**
+  String get stylistModestyHelp;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Favourite colours'**
+  String get stylistFavouriteColours;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'We rank pieces in these colours higher, without hiding the rest.'**
+  String get stylistFavouriteColoursHelp;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'My sizes'**
+  String get stylistMySizes;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Once we know them, we only show pieces actually available in your size.'**
+  String get stylistMySizesHelp;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Budget'**
+  String get stylistBudget;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'The figure you’re usually comfortable with.'**
+  String get stylistBudgetHelp;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'What we learned from your shopping'**
+  String get stylistInferred;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'This is what your choices say, not what you wrote.'**
+  String get stylistInferredHelp;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'No preference'**
+  String get stylistModestyUnspecified;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Full coverage'**
+  String get stylistModestyFull;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Modest'**
+  String get stylistModestyModest;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Balanced'**
+  String get stylistModestyBalanced;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'No limits'**
+  String get stylistModestyExpressive;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Clothing'**
+  String get stylistClothing;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Shoes'**
+  String get stylistShoes;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'You set up to {amount}'**
+  String stylistBudgetStated(String amount);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'and you usually buy between {min} and {max}'**
+  String stylistBudgetTypical(String min, String max);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Not enough signals yet. Browse and look at products, and we’ll learn your taste.'**
+  String get stylistNoSignalYet;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Products you viewed'**
+  String get stylistViewed;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Products you saved'**
+  String get stylistSaved;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Products you bought'**
+  String get stylistPurchased;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Products you passed on'**
+  String get stylistDismissed;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'We refreshed our read of your taste.'**
+  String get stylistTasteRefreshed;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn’t refresh — try again shortly.'**
+  String get stylistTasteRefreshFailed;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh'**
+  String get stylistRefresh;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'The look couldn’t open.'**
+  String get stylistLookFailed;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'One or more pieces are no longer available. You can order the rest, or ask me for an alternative.'**
+  String get stylistLookPartlyUnavailable;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'No longer available'**
+  String get stylistNoLongerAvailable;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Total'**
+  String get stylistTotal;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Saved'**
+  String get stylistLookSaved;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Save the look'**
+  String get stylistSaveLook;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'The look is saved to your closet.'**
+  String get stylistLookSavedToCloset;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'The look couldn’t be saved — try again.'**
+  String get stylistLookSaveFailed;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Tell me what you’re looking for…'**
+  String get stylistComposerHint;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Send'**
+  String get stylistSend;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'The message didn’t send'**
+  String get stylistMessageFailed;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Open the look'**
+  String get stylistOpenLook;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Look total'**
+  String get stylistLookTotal;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Sold out'**
+  String get stylistSoldOut;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'I like it'**
+  String get stylistLike;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Not for me'**
+  String get stylistNotForMe;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Reem’s personal stylist'**
+  String get stylistWelcomeTitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Tell me about the occasion, the piece or the budget — I’ll line up options that Reem’s sellers actually have, and tell you why I picked each one.'**
+  String get stylistWelcomeBody;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Try asking me:'**
+  String get stylistTryAsking;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'A complete look'**
+  String get stylistCapLookTitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'A dress, bag and shoes styled together'**
+  String get stylistCapLookBody;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Gifts'**
+  String get stylistCapGiftsTitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'By age, taste and budget'**
+  String get stylistCapGiftsBody;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Actually in stock'**
+  String get stylistCapInStockTitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Every piece comes from sellers’ current stock'**
+  String get stylistCapInStockBody;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'New search'**
+  String get visualNewSearch;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a photo'**
+  String get visualPickPhoto;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Photo search is still getting ready'**
+  String get visualPreparing;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'We’re analysing product photos so we can compare them with yours. Try again shortly.'**
+  String get visualPreparingBody;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh'**
+  String get visualRefresh;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Saw something you liked?'**
+  String get visualSawSomething;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Upload a photo of the piece — a screenshot from Instagram, TikTok or Pinterest, or one from your gallery — and we’ll find the closest thing in Reem.'**
+  String get visualSawSomethingBody;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Your past searches'**
+  String get visualPastSearches;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Photo search'**
+  String get visualPhotoSearch;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'The photo was deleted — the results are still here'**
+  String get visualPhotoDeletedResultsKept;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to open'**
+  String get visualTapToOpen;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Uploading the photo…'**
+  String get visualUploading;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Analysing the photo and searching…'**
+  String get visualAnalysing;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Comparing your photo with products actually on Reem.'**
+  String get visualComparing;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'I didn’t find anything close'**
+  String get visualNothingClose;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Try a clearer photo, or write exactly what you want.'**
+  String get visualNothingCloseBody;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Another photo'**
+  String get visualAnotherPhoto;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{The closest piece} other{The {count} closest pieces}}'**
+  String visualClosestCount(int count);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'No offer is available for this piece right now.'**
+  String get visualNoOffer;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Added to your bag'**
+  String get visualAddedToBag;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'It couldn’t be added to your bag.'**
+  String get visualAddToBagFailed;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Delete this search?'**
+  String get visualDeleteTitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'The photo and results will be deleted for good and can’t be recovered.'**
+  String get visualDeleteBody;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get visualDelete;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Back'**
+  String get visualBack;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'The photo and search were deleted.'**
+  String get visualDeleted;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'What I understood from the photo'**
+  String get visualWhatISaw;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'I couldn’t put the photo into words, but I’m searching for it visually.'**
+  String get visualCouldntDescribe;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Delete the photo and search'**
+  String get visualDeletePhotoAndSearch;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Photo deleted'**
+  String get visualPhotoDeleted;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Inferred from the closest products, not from the photo itself'**
+  String get visualInferredFromMatches;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Closest: {label}'**
+  String visualClosestCategory(String label);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'The photo isn’t very clear — results are approximate.'**
+  String get visualLowConfidence;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Describe what you’d like to change…'**
+  String get visualRefineHint;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Refine the search'**
+  String get visualRefine;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'I saw more than one piece in the photo'**
+  String get visualSeveralPieces;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'I guessed this piece from the photo’s layout — I’m not completely sure.'**
+  String get visualRegionGuessed;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{percent} percent similar'**
+  String visualSimilaritySemantics(int percent);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{percent}% similar'**
+  String visualSimilarityBadge(int percent);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Search by photo'**
+  String get visualSearchByPhoto;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Take a photo of the piece, or pick a screenshot from Instagram, TikTok or Pinterest.'**
+  String get visualSourceBody;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Take a photo'**
+  String get visualTakePhoto;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'In good light against a plain background'**
+  String get visualTakePhotoHint;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'From your gallery'**
+  String get visualFromGallery;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'A screenshot or saved photo'**
+  String get visualFromGalleryHint;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Your photo is stored privately and deleted automatically after the search. No one else can see it.'**
+  String get visualPrivacy;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Visually similar pieces'**
+  String get visualSimilarRail;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Search with your photo'**
+  String get visualSearchWithYourPhoto;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Coupon applied — saving {amount}'**
+  String checkoutCouponApplied(String amount);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Arrives today'**
+  String get checkoutEtaToday;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{days, plural, =1{Arrives within a day} other{Arrives within {days} days}}'**
+  String checkoutEtaDays(int days);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, other{{count} shipments from {count} sellers}}'**
+  String checkoutSplitShipments(int count);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Shipments'**
+  String get checkoutShipments;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Note: {note}'**
+  String checkoutNote(String note);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Payment'**
+  String get checkoutPayment;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Summary'**
+  String get checkoutSummary;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Discount'**
+  String get checkoutDiscount;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'From wallet'**
+  String get checkoutFromWallet;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Total'**
+  String get checkoutTotal;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Tracking'**
+  String get checkoutTracking;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel order'**
+  String get checkoutCancelOrder;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Clear search'**
+  String get chatClearSearch;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Pause'**
+  String get chatPause;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Play'**
+  String get chatPlay;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Add to a room'**
+  String get productAddToRoom;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Decrease quantity'**
+  String get decreaseQuantity;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Increase quantity'**
+  String get increaseQuantity;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Share'**
+  String get profileShare;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Ask Reem’s stylist'**
+  String get homeAskStylist;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Tell me the occasion and your budget, and I’ll line up options in stock'**
+  String get homeAskStylistBody;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{price} · {stock} in stock'**
+  String createProductPriceStock(String price, int stock);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Notes for you'**
+  String get intelligenceNotesForYou;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Landmark: {landmark}'**
+  String checkoutLandmarkValue(String landmark);
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'Draft'**
+  String get orderStateDraft;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'Awaiting payment'**
+  String get orderStatePendingPayment;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirmed'**
+  String get orderStateConfirmed;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'Partly shipped'**
+  String get orderStatePartiallyShipped;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'Shipped'**
+  String get orderStateShipped;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'Partly delivered'**
+  String get orderStatePartiallyDelivered;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'Delivered'**
+  String get orderStateDelivered;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'Partly cancelled'**
+  String get orderStatePartiallyCancelled;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancelled'**
+  String get orderStateCancelled;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'Closed'**
+  String get orderStateClosed;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'New order'**
+  String get parcelStateNew;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for the seller'**
+  String get parcelStateAwaitingSeller;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'Being prepared'**
+  String get parcelStatePreparing;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'Ready to ship'**
+  String get parcelStateReadyToShip;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'With the courier'**
+  String get parcelStateHandedToCourier;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'On the way'**
+  String get parcelStateInTransit;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'Delivered'**
+  String get parcelStateDelivered;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'Delivery failed'**
+  String get parcelStateDeliveryFailed;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'You cancelled'**
+  String get parcelStateCancelledByYou;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancelled by the seller'**
+  String get parcelStateCancelledBySeller;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'Refused on delivery'**
+  String get parcelStateRejectedOnDelivery;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'Return requested'**
+  String get parcelStateReturnRequested;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'Return on the way'**
+  String get parcelStateReturnInTransit;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'Returned'**
+  String get parcelStateReturned;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'Exchange in progress'**
+  String get parcelStateExchangeInProgress;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'Exchanged'**
+  String get parcelStateExchanged;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'Refund pending'**
+  String get parcelStateRefundPending;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'Refunded'**
+  String get parcelStateRefunded;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'In dispute'**
+  String get parcelStateDisputed;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'Cash on delivery'**
+  String get payMethodCod;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'Pay the courier'**
+  String get payMethodCourierCollect;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'Syriatel Cash'**
+  String get payMethodSyriatelCash;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'MTN Cash'**
+  String get payMethodMtnCash;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'Sham Cash'**
+  String get payMethodShamCash;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'Bank card'**
+  String get payMethodBankCard;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'Bank transfer'**
+  String get payMethodBankTransfer;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'Local transfer'**
+  String get payMethodHawala;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'Reem wallet'**
+  String get payMethodWallet;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending'**
+  String get rawStatePending;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'Paid'**
+  String get rawStatePaid;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed'**
+  String get rawStateFailed;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'Refunded'**
+  String get rawStateRefunded;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'Created'**
+  String get rawStateCreated;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'Courier assigned'**
+  String get rawStateAssigned;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'Picked up'**
+  String get rawStatePickedUp;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'On the way'**
+  String get rawStateInTransit;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'Out for delivery'**
+  String get rawStateOutForDelivery;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'Delivered'**
+  String get rawStateDelivered;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'Returning'**
+  String get rawStateReturning;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'Returned'**
+  String get rawStateReturned;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancelled'**
+  String get rawStateCancelled;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'Draft'**
+  String get productStateDraft;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'In review'**
+  String get productStatePendingReview;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'Live'**
+  String get productStateActive;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'Out of stock'**
+  String get productStateOutOfStock;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'Paused'**
+  String get productStatePaused;
+
+  /// Order and listing status wording.
+  ///
+  /// In en, this message translates to:
+  /// **'Archived'**
+  String get productStateArchived;
+
+  /// Password field visibility toggle.
+  ///
+  /// In en, this message translates to:
+  /// **'Show password'**
+  String get passwordShow;
+
+  /// Password field visibility toggle.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide password'**
+  String get passwordHide;
+
+  /// Drop timing.
+  ///
+  /// In en, this message translates to:
+  /// **'Opens in {when}'**
+  String marketDropOpensIn(String when);
+
+  /// Drop timing.
+  ///
+  /// In en, this message translates to:
+  /// **'Open · ends in {when}'**
+  String marketDropEndsIn(String when);
+
+  /// Drop timing.
+  ///
+  /// In en, this message translates to:
+  /// **'Open now'**
+  String get marketDropOpenNow;
+
+  /// Drop timing.
+  ///
+  /// In en, this message translates to:
+  /// **'Yours {when} before everyone'**
+  String marketDropEarlyBy(String when);
+
+  /// Drop timing.
+  ///
+  /// In en, this message translates to:
+  /// **'From {price}'**
+  String marketPriceFrom(String price);
+
+  /// Drop timing.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 minute} other{{count} minutes}}'**
+  String spanMinutes(int count);
+
+  /// Drop timing.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 hour} other{{count} hours}}'**
+  String spanHours(int count);
+
+  /// Drop timing.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 day} other{{count} days}}'**
+  String spanDays(int count);
+
+  /// Shown in place of a server message that is not in the reader's language.
+  ///
+  /// In en, this message translates to:
+  /// **'That didn’t go through. Please try again in a moment.'**
+  String get errorRetryLater;
+
+  /// Activity hub subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'A soft luxury boutique shaped around your taste.'**
+  String get experienceTaglineBuyer;
+
+  /// Activity hub subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Inventory, orders, customers, and growth in one fast workspace.'**
+  String get experienceTaglineSeller;
+
+  /// Activity hub subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Enterprise control, governance, analytics, and operating health.'**
+  String get experienceTaglineAdmin;
+
+  /// Count shown on a card.
+  ///
+  /// In en, this message translates to:
+  /// **'Rose'**
+  String get loyaltyTierRose;
+
+  /// Count shown on a card.
+  ///
+  /// In en, this message translates to:
+  /// **'Gold'**
+  String get loyaltyTierGold;
+
+  /// Count shown on a card.
+  ///
+  /// In en, this message translates to:
+  /// **'Platinum'**
+  String get loyaltyTierPlatinum;
+
+  /// Count shown on a card.
+  ///
+  /// In en, this message translates to:
+  /// **'Diamond'**
+  String get loyaltyTierDiamond;
+
+  /// Count shown on a card.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{No coupons} =1{1 coupon} other{{count} coupons}}'**
+  String homeLoyaltyCoupons(int count);
+
+  /// Count shown on a card.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{Not claimed yet} =1{1 claimed} other{{count} claimed}}'**
+  String flashClaimed(int count);
+
+  /// Count shown on a card.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 new} other{{count} new}}'**
+  String notificationsNewCount(int count);
+
+  /// Count shown on a card.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{No boutiques} =1{1 boutique} other{{count} boutiques}}'**
+  String profileBoutiquesCount(int count);
+
+  /// Count shown on a card.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 left} other{{count} left}}'**
+  String sellerStockLeft(int count);
+
+  /// Order timeline entry.
+  ///
+  /// In en, this message translates to:
+  /// **'Order placed'**
+  String get orderTimelineCreated;
+
+  /// Order timeline entry.
+  ///
+  /// In en, this message translates to:
+  /// **'Order confirmed'**
+  String get orderTimelineConfirmed;
+
+  /// Order timeline entry.
+  ///
+  /// In en, this message translates to:
+  /// **'Sent to the sellers to prepare.'**
+  String get orderTimelineConfirmedBody;
+
+  /// Order timeline entry.
+  ///
+  /// In en, this message translates to:
+  /// **'Order cancelled'**
+  String get orderTimelineCancelled;
+
+  /// Order timeline entry.
+  ///
+  /// In en, this message translates to:
+  /// **'The payment deadline passed.'**
+  String get orderTimelinePaymentExpired;
+
+  /// Room readiness blocker.
+  ///
+  /// In en, this message translates to:
+  /// **'You haven’t chosen a piece yet'**
+  String get roomsBlockerNothingChosen;
+
+  /// Caption over lifetime profit, margin and orders on the revenue card.
+  ///
+  /// In en, this message translates to:
+  /// **'Since you opened your shop'**
+  String get sellerAllTimeTotals;
+
+  /// Seller profile badge for the BASIC level.
+  ///
+  /// In en, this message translates to:
+  /// **'Basic plan'**
+  String get sellerPlanBasic;
+
+  /// Seller profile badge for the VERIFIED level.
+  ///
+  /// In en, this message translates to:
+  /// **'Verified plan'**
+  String get sellerPlanVerified;
+
+  /// Seller profile badge for the PREMIUM level.
+  ///
+  /// In en, this message translates to:
+  /// **'Premium plan'**
+  String get sellerPlanPremium;
+
+  /// Seller order breakdown: a platform-funded coupon, shown as a note rather than a deduction.
+  ///
+  /// In en, this message translates to:
+  /// **'A {amount} discount was paid by Reem and doesn\'t come out of your earnings.'**
+  String sellerOrderPlatformDiscountNote(String amount);
+
+  /// Composer chip: a product post.
+  ///
+  /// In en, this message translates to:
+  /// **'Post'**
+  String get contentTypePost;
+
+  /// Composer chip: a short video.
+  ///
+  /// In en, this message translates to:
+  /// **'Reel'**
+  String get contentTypeReel;
+
+  /// Composer chip: a 24-hour story.
+  ///
+  /// In en, this message translates to:
+  /// **'Story'**
+  String get contentTypeStory;
+
+  /// Composer chip: a time-limited offer.
+  ///
+  /// In en, this message translates to:
+  /// **'Flash offer'**
+  String get contentTypeFlashOffer;
+
+  /// Composer chip: a curated collection.
+  ///
+  /// In en, this message translates to:
+  /// **'Collection'**
+  String get contentTypeCollection;
+
+  /// Composer chip: a live stream.
+  ///
+  /// In en, this message translates to:
+  /// **'Live stream'**
+  String get contentTypeLiveStream;
+
+  /// Content studio row: flash offers.
+  ///
+  /// In en, this message translates to:
+  /// **'Flash offers'**
+  String get studioFormatFlashOffers;
+
+  /// Content studio row: collections.
+  ///
+  /// In en, this message translates to:
+  /// **'Collections'**
+  String get studioFormatCollections;
+
+  /// Content studio row: live streams.
+  ///
+  /// In en, this message translates to:
+  /// **'Live streams'**
+  String get studioFormatLiveStreams;
+
+  /// Content studio row for a content type the app does not know yet.
+  ///
+  /// In en, this message translates to:
+  /// **'Other content'**
+  String get studioFormatOther;
+
+  /// Admin console status token INFO.
+  ///
+  /// In en, this message translates to:
+  /// **'Info'**
+  String get adminStatusInfo;
+
+  /// Admin console status token WARNING.
+  ///
+  /// In en, this message translates to:
+  /// **'Warning'**
+  String get adminStatusWarning;
+
+  /// Admin console status token CRITICAL.
+  ///
+  /// In en, this message translates to:
+  /// **'Critical'**
+  String get adminStatusCritical;
+
+  /// Admin console status token QUEUED.
+  ///
+  /// In en, this message translates to:
+  /// **'Queued'**
+  String get adminStatusQueued;
+
+  /// Admin console status token SENT.
+  ///
+  /// In en, this message translates to:
+  /// **'Sent'**
+  String get adminStatusSent;
+
+  /// Admin console status token FAILED.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed'**
+  String get adminStatusFailed;
+
+  /// Admin console status token SKIPPED.
+  ///
+  /// In en, this message translates to:
+  /// **'Skipped'**
+  String get adminStatusSkipped;
+
+  /// Admin console status token SCHEDULED.
+  ///
+  /// In en, this message translates to:
+  /// **'Scheduled'**
+  String get adminStatusScheduled;
+
+  /// Admin console status token RUNNING.
+  ///
+  /// In en, this message translates to:
+  /// **'Running'**
+  String get adminStatusRunning;
+
+  /// Admin console status token COMPLETED.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed'**
+  String get adminStatusCompleted;
+
+  /// Admin console status token REFUNDED.
+  ///
+  /// In en, this message translates to:
+  /// **'Refunded'**
+  String get adminStatusRefunded;
+
+  /// Audit log entry name: Signed in.
+  ///
+  /// In en, this message translates to:
+  /// **'Signed in'**
+  String get adminAuditLogin;
+
+  /// Audit log entry name: Signed out.
+  ///
+  /// In en, this message translates to:
+  /// **'Signed out'**
+  String get adminAuditLogout;
+
+  /// Audit log entry name: Signed out everywhere.
+  ///
+  /// In en, this message translates to:
+  /// **'Signed out everywhere'**
+  String get adminAuditLogoutAll;
+
+  /// Audit log entry name: Account created.
+  ///
+  /// In en, this message translates to:
+  /// **'Account created'**
+  String get adminAuditRegister;
+
+  /// Audit log entry name: Phone change started.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone change started'**
+  String get adminAuditPhoneChangeStarted;
+
+  /// Audit log entry name: Phone change completed.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone change completed'**
+  String get adminAuditPhoneChangeCompleted;
+
+  /// Audit log entry name: Phone changed.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone changed'**
+  String get adminAuditPhoneChanged;
+
+  /// Audit log entry name: Recovery case opened.
+  ///
+  /// In en, this message translates to:
+  /// **'Recovery case opened'**
+  String get adminAuditRecoveryOpened;
+
+  /// Audit log entry name: Recovery case submitted.
+  ///
+  /// In en, this message translates to:
+  /// **'Recovery case submitted'**
+  String get adminAuditRecoverySubmitted;
+
+  /// Audit log entry name: Recovery: first approval.
+  ///
+  /// In en, this message translates to:
+  /// **'Recovery: first approval'**
+  String get adminAuditRecoveryFirstApproval;
+
+  /// Audit log entry name: Recovery: second approval.
+  ///
+  /// In en, this message translates to:
+  /// **'Recovery: second approval'**
+  String get adminAuditRecoverySecondApproval;
+
+  /// Audit log entry name: Recovery cooling off.
+  ///
+  /// In en, this message translates to:
+  /// **'Recovery cooling off'**
+  String get adminAuditRecoveryCoolingOff;
+
+  /// Audit log entry name: Recovery completed.
+  ///
+  /// In en, this message translates to:
+  /// **'Recovery completed'**
+  String get adminAuditRecoveryCompleted;
+
+  /// Audit log entry name: Recovery rejected.
+  ///
+  /// In en, this message translates to:
+  /// **'Recovery rejected'**
+  String get adminAuditRecoveryRejected;
+
+  /// Audit log entry name: Recovery cancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Recovery cancelled'**
+  String get adminAuditRecoveryCancelled;
+
+  /// Audit log entry name: Password reset requested.
+  ///
+  /// In en, this message translates to:
+  /// **'Password reset requested'**
+  String get adminAuditPasswordResetRequested;
+
+  /// Audit log entry name: Password reset.
+  ///
+  /// In en, this message translates to:
+  /// **'Password reset'**
+  String get adminAuditPasswordResetCompleted;
+
+  /// Audit log entry name: Password turned off.
+  ///
+  /// In en, this message translates to:
+  /// **'Password turned off'**
+  String get adminAuditPasswordDisabled;
+
+  /// Audit log entry name: Two-step verification on.
+  ///
+  /// In en, this message translates to:
+  /// **'Two-step verification on'**
+  String get adminAuditTotpConfirmed;
+
+  /// Audit log entry name: Recovery codes created.
+  ///
+  /// In en, this message translates to:
+  /// **'Recovery codes created'**
+  String get adminAuditRecoveryCodesGenerated;
+
+  /// Audit log entry name: Recovery code used.
+  ///
+  /// In en, this message translates to:
+  /// **'Recovery code used'**
+  String get adminAuditRecoveryCodeRedeemed;
+
+  /// Audit log entry name: Sign-in codes revealed.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign-in codes revealed'**
+  String get adminAuditOtpCodesRevealed;
+
+  /// Audit log entry name: Seller verification approved.
+  ///
+  /// In en, this message translates to:
+  /// **'Seller verification approved'**
+  String get adminAuditSellerVerificationApproved;
+
+  /// Audit log entry name: Seller verification rejected.
+  ///
+  /// In en, this message translates to:
+  /// **'Seller verification rejected'**
+  String get adminAuditSellerVerificationRejected;
+
+  /// Audit log entry name: Content removed.
+  ///
+  /// In en, this message translates to:
+  /// **'Content removed'**
+  String get adminAuditContentRemoved;
+
+  /// Audit log entry name: Content reinstated.
+  ///
+  /// In en, this message translates to:
+  /// **'Content reinstated'**
+  String get adminAuditContentReinstated;
+
+  /// Audit log entry name: Comment removed.
+  ///
+  /// In en, this message translates to:
+  /// **'Comment removed'**
+  String get adminAuditCommentRemoved;
+
+  /// Audit log entry name: Wallet credited.
+  ///
+  /// In en, this message translates to:
+  /// **'Wallet credited'**
+  String get adminAuditWalletCredited;
+
+  /// Audit log entry name: Wallet frozen.
+  ///
+  /// In en, this message translates to:
+  /// **'Wallet frozen'**
+  String get adminAuditWalletFrozen;
+
+  /// Audit log entry name: Sessions revoked.
+  ///
+  /// In en, this message translates to:
+  /// **'Sessions revoked'**
+  String get adminAuditRevokeSessions;
+
+  /// Audit log entry name: Cool-off started.
+  ///
+  /// In en, this message translates to:
+  /// **'Cool-off started'**
+  String get adminAuditCoolOffStarted;
+
+  /// Audit log entry name: Sign-in & security.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign-in & security'**
+  String get adminAuditAreaAuth;
+
+  /// Audit log entry name: Account.
+  ///
+  /// In en, this message translates to:
+  /// **'Account'**
+  String get adminAuditAreaAccount;
+
+  /// Admin report type: Sales.
+  ///
+  /// In en, this message translates to:
+  /// **'Sales'**
+  String get adminReportTypeSales;
+
+  /// Admin report type: Sellers.
+  ///
+  /// In en, this message translates to:
+  /// **'Sellers'**
+  String get adminReportTypeSellers;
+
+  /// Admin report type: Content.
+  ///
+  /// In en, this message translates to:
+  /// **'Content'**
+  String get adminReportTypeContent;
+
+  /// Admin report type: Finance.
+  ///
+  /// In en, this message translates to:
+  /// **'Finance'**
+  String get adminReportTypeFinance;
+
+  /// Admin report type: Users.
+  ///
+  /// In en, this message translates to:
+  /// **'Users'**
+  String get adminReportTypeUsers;
+
+  /// Reem Value standing rung: New.
+  ///
+  /// In en, this message translates to:
+  /// **'New'**
+  String get valueRungNew;
+
+  /// Reem Value standing rung: Known.
+  ///
+  /// In en, this message translates to:
+  /// **'Known'**
+  String get valueRungKnown;
+
+  /// Reem Value standing rung: Trusted.
+  ///
+  /// In en, this message translates to:
+  /// **'Trusted'**
+  String get valueRungTrusted;
+
+  /// Reem Value standing rung: Insider.
+  ///
+  /// In en, this message translates to:
+  /// **'Insider'**
+  String get valueRungInsider;
+
+  /// Reem Value standing rung: Circle.
+  ///
+  /// In en, this message translates to:
+  /// **'Circle'**
+  String get valueRungCircle;
+
+  /// Audit log entry name.
+  ///
+  /// In en, this message translates to:
+  /// **'Seller verification reviewed'**
+  String get adminAuditReviewSellerVerification;
+
+  /// Audit log entry recorded from an admin API request; the request line is in the details.
+  ///
+  /// In en, this message translates to:
+  /// **'Admin action'**
+  String get adminAuditAdminRequest;
 }
 
 class _AppLocalizationsDelegate

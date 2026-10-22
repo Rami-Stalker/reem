@@ -4,10 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/media/authorized_media_image.dart';
 import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/features/rooms/data/datasources/rooms_remote_datasource.dart';
 import 'package:reem/features/rooms/domain/entities/room.dart';
+import 'package:reem/features/rooms/presentation/l10n/room_labels.dart';
 import 'package:reem/features/rooms/presentation/providers/rooms_providers.dart';
 
 /// غرفي — the intents she is shopping inside.
@@ -25,16 +27,16 @@ class RoomsScreen extends ConsumerWidget {
 
     return Scaffold(
       backgroundColor: colors.background,
-      appBar: const ReemAppBar(title: 'غرفي'),
+      appBar: ReemAppBar(title: context.l10n.roomsMyRooms),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => _openComposer(context, ref),
         icon: const Icon(Icons.add_rounded),
-        label: const Text('غرفة جديدة'),
+        label: Text(context.l10n.roomsNewRoom),
       ),
       body: roomsAsync.when(
         loading: () => const Center(child: DsLoadingIndicator()),
         error: (_, _) => DsErrorState(
-          message: 'ما قدرنا نجيب غرفك.',
+          message: context.l10n.roomsLoadFailed,
           onRetry: () => ref.invalidate(roomsProvider),
         ),
         data: (rooms) => rooms.isEmpty
@@ -81,13 +83,11 @@ class _Empty extends StatelessWidget {
   Widget build(BuildContext context) {
     return DsEmptyState(
       icon: Icons.meeting_room_outlined,
-      title: 'ما في غرف بعد',
+      title: context.l10n.roomsEmptyTitle,
       // Says what a room is *for* rather than what it contains, because the
       // idea is unfamiliar and "0 items" would teach her it is a cart.
-      message:
-          'الغرفة مساحة لقرار شراء: عرس، هدية، موسم — بتجمّعي فيها الخيارات، '
-          'بتسألي صحابك، وبتقرّري. مو سلّة.',
-      actionLabel: 'افتحي أول غرفة',
+      message: context.l10n.roomsEmptyBody,
+      actionLabel: context.l10n.roomsOpenFirst,
       onAction: onCreate,
     );
   }
@@ -167,24 +167,21 @@ class RoomCard extends StatelessWidget {
                   ],
                 ),
                 Text(
-                  room.occasionLabel ?? room.kind.label,
+                  room.occasionLabel ?? room.kind.labelOf(context.l10n),
                   style: context.dsText.caption,
                 ),
                 const SizedBox(height: DsSpacing.xs),
 
                 if (readiness != null) ...[
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(DsRadius.pill),
-                    child: LinearProgressIndicator(
-                      value: readiness.progress,
-                      minHeight: 5,
-                      backgroundColor: colors.surfaceVariant,
-                      color: readiness.ready ? colors.success : colors.primary,
-                    ),
+                  DsMeter(
+                    value: readiness.progress,
+                    weight: DsMeterWeight.thin,
+                    color: readiness.ready ? colors.success : colors.primary,
+                    track: colors.surfaceVariant,
                   ),
                   DsGaps.vXxs,
                   Text(
-                    _readinessLine(readiness, room),
+                    _readinessLine(context, readiness, room),
                     style: context.dsText.micro.tint(
                       readiness.ready
                           ? colors.success
@@ -201,14 +198,18 @@ class RoomCard extends StatelessWidget {
   }
 
   /// The sentence a basket count cannot produce.
-  String _readinessLine(RoomReadiness readiness, Room room) {
-    if (room.status == RoomStatus.purchased) return 'انشترت';
-    if (readiness.ready) return 'جاهزة للشرا';
+  String _readinessLine(
+    BuildContext context,
+    RoomReadiness readiness,
+    Room room,
+  ) {
+    if (room.status == RoomStatus.purchased) return context.l10n.roomsPurchased;
+    if (readiness.ready) return context.l10n.roomsReadyToBuy;
 
     final open = readiness.totalRequired - readiness.settledRequired;
-    if (open == 1) return 'قرار واحد وبتخلص';
-    if (open > 1) return '$open قرارات لسا مفتوحة';
-    return '${room.candidatesCount} اقتراح';
+    if (open == 1) return context.l10n.roomsOneDecisionLeft;
+    if (open > 1) return context.l10n.roomsOpenDecisions(open);
+    return context.l10n.roomsSuggestionCount(room.candidatesCount);
   }
 
   IconData _iconFor(RoomKind kind) => switch (kind) {
@@ -237,17 +238,6 @@ class _RoomComposerSheetState extends ConsumerState<RoomComposerSheet> {
   RoomKind _kind = RoomKind.solo;
   String? _occasion;
 
-  static const _occasions = [
-    ('wedding', 'عرس'),
-    ('engagement', 'خطوبة'),
-    ('evening', 'سهرة'),
-    ('eid', 'العيد'),
-    ('graduation', 'تخرّج'),
-    ('birthday', 'عيد ميلاد'),
-    ('work', 'العمل'),
-    ('daily', 'اليومي'),
-  ];
-
   @override
   void dispose() {
     _title.dispose();
@@ -270,26 +260,29 @@ class _RoomComposerSheetState extends ConsumerState<RoomComposerSheet> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('غرفة جديدة', style: context.dsText.sectionTitle),
-          Text('لشو عم تتسوّقي؟', style: context.dsText.sectionSubtitle),
+          Text(context.l10n.roomsNewRoom, style: context.dsText.sectionTitle),
+          Text(
+            context.l10n.roomsShoppingFor,
+            style: context.dsText.sectionSubtitle,
+          ),
           const SizedBox(height: DsSpacing.md),
 
           DsInputField(
             controller: _title,
-            label: 'اسم الغرفة',
-            hint: 'مثلاً: إطلالة عرس رهف',
+            label: context.l10n.roomsRoomName,
+            hint: context.l10n.roomsRoomNameHint,
             onChanged: (_) => setState(() {}),
           ),
           const SizedBox(height: DsSpacing.md),
 
-          Text('نوع الغرفة', style: context.dsText.labelStrong),
+          Text(context.l10n.roomsRoomKind, style: context.dsText.labelStrong),
           const SizedBox(height: DsSpacing.xs),
           Wrap(
             spacing: DsSpacing.xs,
             children: [
               for (final kind in RoomKind.values)
                 DsChip(
-                  label: kind.label,
+                  label: kind.labelOf(context.l10n),
                   selected: _kind == kind,
                   onTap: () => setState(() => _kind = kind),
                 ),
@@ -298,15 +291,21 @@ class _RoomComposerSheetState extends ConsumerState<RoomComposerSheet> {
 
           if (_kind == RoomKind.gift) ...[
             const SizedBox(height: DsSpacing.md),
-            DsInputField(controller: _recipient, label: 'لمين الهدية؟'),
+            DsInputField(
+              controller: _recipient,
+              label: context.l10n.roomsGiftFor,
+            ),
           ],
 
           const SizedBox(height: DsSpacing.md),
-          Text('المناسبة (اختياري)', style: context.dsText.labelStrong),
+          Text(
+            context.l10n.roomsOccasionOptional,
+            style: context.dsText.labelStrong,
+          ),
           Text(
             // The payoff worth advertising: naming an occasion means the room
             // opens already knowing what that occasion needs.
-            'لما تختاري مناسبة، منفتحلك القرارات يلي بتحتاجها.',
+            context.l10n.roomsOccasionHelp,
             style: context.dsText.micro,
           ),
           const SizedBox(height: DsSpacing.xs),
@@ -314,9 +313,9 @@ class _RoomComposerSheetState extends ConsumerState<RoomComposerSheet> {
             spacing: DsSpacing.xs,
             runSpacing: DsSpacing.xs,
             children: [
-              for (final (key, label) in _occasions)
+              for (final key in roomOccasionCodes)
                 DsChip(
-                  label: label,
+                  label: roomOccasionLabel(context.l10n, key),
                   selected: _occasion == key,
                   onTap: () =>
                       setState(() => _occasion = _occasion == key ? null : key),
@@ -326,7 +325,7 @@ class _RoomComposerSheetState extends ConsumerState<RoomComposerSheet> {
 
           const SizedBox(height: DsSpacing.lg),
           DsButton(
-            label: 'افتحي الغرفة',
+            label: context.l10n.roomsOpenRoom,
             onPressed: canSave
                 ? () => Navigator.of(context).pop(
                     RoomDraft(

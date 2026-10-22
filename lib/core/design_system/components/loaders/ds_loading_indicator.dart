@@ -11,17 +11,38 @@ import 'package:reem/core/design_system/foundation/tokens/ds_motion.dart';
 import 'package:reem/core/design_system/foundation/tokens/ds_sizes.dart';
 
 /// A soft, gradient-swept circular loader — the Reem signature spinner.
+///
+/// One spinner for the whole app: a page loading, a section loading and a
+/// button busy with a request all turn the same way. [color] sweeps the
+/// same shape in a single tint, for the places the brand gradient would
+/// vanish into — a rose button, a plum card, a photograph.
 class DsLoadingIndicator extends StatefulWidget {
   const DsLoadingIndicator({
     super.key,
     this.size = DsSizes.iconLg,
     this.strokeWidth = 3.5,
     this.label,
-  });
+    this.color,
+  }) : _inline = false;
+
+  /// The size that sits inside a button or beside a line of text.
+  const DsLoadingIndicator.inline({super.key, this.color})
+    : size = DsSizes.iconXs,
+      strokeWidth = 2,
+      label = null,
+      _inline = true;
 
   final double size;
   final double strokeWidth;
   final String? label;
+
+  /// A single tint instead of the brand gradient.
+  final Color? color;
+
+  /// An inline spinner keeps its own size. A page spinner centres itself in
+  /// the space it is given — which inside a button would stretch the button
+  /// to the full width of its row.
+  final bool _inline;
 
   @override
   State<DsLoadingIndicator> createState() => _DsLoadingIndicatorState();
@@ -45,11 +66,14 @@ class _DsLoadingIndicatorState extends State<DsLoadingIndicator>
       turns: _controller,
       child: ShaderMask(
         shaderCallback: (rect) => SweepGradient(
-          colors: [
-            gradient.colors.last.withValues(alpha: 0.0),
-            gradient.colors.first,
-            gradient.colors.last,
-          ],
+          colors: switch (widget.color) {
+            final tint? => [tint.withValues(alpha: 0.0), tint, tint],
+            null => [
+              gradient.colors.last.withValues(alpha: 0.0),
+              gradient.colors.first,
+              gradient.colors.last,
+            ],
+          },
           stops: const [0.0, 0.7, 1.0],
           transform: const GradientRotation(-math.pi / 2),
         ).createShader(rect),
@@ -65,7 +89,9 @@ class _DsLoadingIndicatorState extends State<DsLoadingIndicator>
       ),
     );
 
-    if (widget.label == null) return Center(child: indicator);
+    if (widget.label == null) {
+      return widget._inline ? indicator : Center(child: indicator);
+    }
 
     return Column(
       mainAxisSize: MainAxisSize.min,

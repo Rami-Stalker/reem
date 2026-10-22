@@ -89,7 +89,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
         if (state.isLoading && state.user == null)
           const SliverFillRemaining(
             hasScrollBody: false,
-            child: Center(child: CircularProgressIndicator()),
+            child: DsLoadingIndicator(),
           )
         else
           SliverPadding(

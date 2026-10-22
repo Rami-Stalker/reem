@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:reem/core/design_system/design_system.dart';
 import 'package:reem/core/errors/failure.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/result/result.dart';
 import 'package:reem/features/auth/presentation/widgets/step_up_sheet.dart';
 import 'package:reem/features/settings/domain/entities/address_entity.dart';
@@ -30,14 +31,14 @@ class AddressesScreen extends ConsumerWidget {
 
     return ReemScrollPage(
       slivers: [
-        const PremiumAppBar(title: 'عناويني', showBack: true),
+        PremiumAppBar(title: context.l10n.settingsMyAddresses, showBack: true),
         SliverPadding(
           padding: const EdgeInsets.all(DsSpacing.lg),
           sliver: SliverList(
             delegate: SliverChildListDelegate([
-              const ReemSectionHeader(
-                title: 'عناوين التوصيل',
-                subtitle: 'إلى أين نرسل طلباتكِ؟',
+              ReemSectionHeader(
+                title: context.l10n.settingsDeliveryAddresses,
+                subtitle: context.l10n.settingsDeliveryAddressesSubtitle,
               ),
               const SizedBox(height: DsSpacing.lg),
 
@@ -63,17 +64,13 @@ class AddressesScreen extends ConsumerWidget {
 
               const SizedBox(height: DsSpacing.md),
               SecondaryButton(
-                label: 'إضافة عنوان جديد',
+                label: context.l10n.settingsAddAddress,
                 onPressed: state.isSaving ? null : () => _add(context, ref),
               ),
               if (state.isSaving) ...[
                 const SizedBox(height: DsSpacing.md),
                 const Center(
-                  child: SizedBox(
-                    width: 22,
-                    height: 22,
-                    child: CircularProgressIndicator(strokeWidth: 2),
-                  ),
+                  child: DsLoadingIndicator.inline(),
                 ),
               ],
             ]),
@@ -90,7 +87,7 @@ class AddressesScreen extends ConsumerWidget {
       context,
       ref,
       action: () => ref.read(addressBookProvider.notifier).create(draft),
-      success: 'تمت إضافة العنوان',
+      success: context.l10n.settingsAddressAdded,
     );
   }
 
@@ -106,7 +103,7 @@ class AddressesScreen extends ConsumerWidget {
       ref,
       action: () =>
           ref.read(addressBookProvider.notifier).update(address.id, draft),
-      success: 'تم حفظ التعديل',
+      success: context.l10n.settingsAddressUpdated,
     );
   }
 
@@ -120,7 +117,7 @@ class AddressesScreen extends ConsumerWidget {
       ref,
       action: () =>
           ref.read(addressBookProvider.notifier).makeDefault(address.id),
-      success: 'صار هذا عنوانكِ الافتراضي',
+      success: context.l10n.settingsAddressNowDefault,
     );
   }
 
@@ -131,10 +128,10 @@ class AddressesScreen extends ConsumerWidget {
   ) async {
     final confirmed = await DsDialog.confirm(
       context,
-      title: 'حذف العنوان',
-      message: 'سيُحذف «${address.label}» من عناوينكِ.',
-      confirmLabel: 'حذف',
-      cancelLabel: 'تراجع',
+      title: context.l10n.settingsDeleteAddressTitle,
+      message: context.l10n.settingsDeleteAddressBody(address.label),
+      confirmLabel: context.l10n.settingsDelete,
+      cancelLabel: context.l10n.settingsKeep,
       destructive: true,
     );
     if (!confirmed || !context.mounted) {
@@ -145,7 +142,7 @@ class AddressesScreen extends ConsumerWidget {
       context,
       ref,
       action: () => ref.read(addressBookProvider.notifier).remove(address.id),
-      success: 'تم حذف العنوان',
+      success: context.l10n.settingsAddressDeleted,
     );
   }
 
@@ -192,7 +189,7 @@ class AddressesScreen extends ConsumerWidget {
       case StepUpOutcome.blocked:
         DsSnackbar.show(
           context,
-          message: outcome.message ?? 'تعذّر تنفيذ العملية الآن',
+          message: outcome.message ?? context.l10n.settingsActionFailed,
           type: DsSnackbarType.error,
         );
     }
@@ -216,12 +213,12 @@ class _EmptyBook extends StatelessWidget {
           ),
           const SizedBox(height: DsSpacing.md),
           Text(
-            'لا عناوين محفوظة بعد',
+            context.l10n.settingsNoAddresses,
             style: context.dsText.tileTitle.semibold.tint(colors.onSurface),
           ),
           const SizedBox(height: DsSpacing.sm),
           Text(
-            'احفظي عنواناً الآن ليكون جاهزاً عند أول طلب',
+            context.l10n.settingsNoAddressesBody,
             textAlign: TextAlign.center,
             style: context.dsText.body.tint(colors.onSurfaceVariant),
           ),
@@ -256,7 +253,7 @@ class _LoadFailed extends StatelessWidget {
             style: context.dsText.body.tint(colors.onSurfaceVariant),
           ),
           const SizedBox(height: DsSpacing.md),
-          SecondaryButton(label: 'إعادة المحاولة', onPressed: onRetry),
+          SecondaryButton(label: context.l10n.retry, onPressed: onRetry),
         ],
       ),
     );

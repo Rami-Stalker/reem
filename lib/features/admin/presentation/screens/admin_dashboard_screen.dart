@@ -7,6 +7,7 @@ import 'package:reem/core/design_system/design_system.dart';
 import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/core/shared/value_objects/money_format.dart';
+import 'package:reem/core/utils/relative_time.dart';
 import 'package:reem/features/admin/presentation/providers/admin_provider.dart';
 import 'package:reem/features/admin/presentation/widgets/admin_briefing_panel.dart';
 import 'package:reem/features/admin/presentation/widgets/admin_page_header.dart';
@@ -59,7 +60,7 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
           if (state.isLoading)
             const Padding(
               padding: EdgeInsets.all(DsSpacing.xl),
-              child: Center(child: CircularProgressIndicator()),
+              child: DsLoadingIndicator(),
             )
           else if (state.error != null)
             Padding(
@@ -244,9 +245,15 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
                           _RecentActivityCard(
                             title: entry.value.title,
                             subtitle: entry.value.subtitle,
-                            time:
-                                entry.value.metrics['created_at'] ??
-                                entry.value.status,
+                            // When it happened, as «قبل ساعة». This read
+                            // `metrics['created_at']` after the timestamp had
+                            // moved to `createdAt`, so it always fell back to
+                            // the record's raw status: «APPROVED», in English,
+                            // beside every line of the activity feed.
+                            time: switch (entry.value.createdAt) {
+                              final at? => formatRelativeTime(l10n, at),
+                              null => '',
+                            },
                             icon: Icons.manage_search_rounded,
                             index: entry.key,
                           ),

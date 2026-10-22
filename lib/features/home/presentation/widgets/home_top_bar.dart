@@ -9,10 +9,9 @@ import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/features/auth/presentation/providers/auth_provider.dart';
 import 'package:reem/features/cart/presentation/providers/cart_providers.dart';
-import 'package:reem/features/social/presentation/widgets/create_sheet.dart';
 
-/// Pinned, glassy home app bar: the Reem wordmark, notifications and the
-/// current user's avatar.
+/// Pinned, glassy home app bar: the Reem wordmark, the bag, notifications
+/// and the current user's avatar.
 ///
 /// The wordmark comes from `appTitle`, so it reads «ريم» in Arabic and "Reem"
 /// in English — the two-script logo the client asked for in Q74.
@@ -62,18 +61,10 @@ class HomeTopBar extends ConsumerWidget {
         ),
       ),
       actions: [
-        // The bag lives here because it lives nowhere else. Rooms took the
-        // cart's tab — deliberately, a set of decisions is not a basket — but
-        // nothing replaced the way in, so she could add to her bag and then
-        // had no route to open it. This is where a shopper looks for it.
-        // Publishing: a shopper could post, reel and story from the day the
-        // content platform shipped, and nothing on her screens led there.
-        _RoundAction(
-          icon: Icons.add_box_outlined,
-          tooltip: context.l10n.createTooltip,
-          onTap: () => showCreateSheet(context),
-        ),
-        const SizedBox(width: DsSpacing.xs),
+        // The bag lives here because it lives nowhere else: no tab is the
+        // cart, so this is where a shopper looks for it. Publishing used to
+        // sit beside it and moved to the middle of the bottom bar, where it
+        // is one tap away from every tab rather than from this one.
         const _CartButton(),
         const SizedBox(width: DsSpacing.xs),
         _NotificationsBell(onTap: () => context.push(RoutePaths.notifications)),
@@ -88,38 +79,6 @@ class HomeTopBar extends ConsumerWidget {
           ),
         ),
       ],
-    );
-  }
-}
-
-/// A glass circle holding one action — the shape the bell and the bag share.
-class _RoundAction extends StatelessWidget {
-  const _RoundAction({
-    required this.icon,
-    required this.tooltip,
-    required this.onTap,
-  });
-
-  final IconData icon;
-  final String tooltip;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = context.dsColors;
-    return Container(
-      width: 42,
-      height: 42,
-      decoration: BoxDecoration(
-        color: colors.surfaceElevated.withValues(alpha: 0.76),
-        shape: BoxShape.circle,
-        border: Border.all(color: colors.border),
-      ),
-      child: IconButton(
-        tooltip: tooltip,
-        icon: Icon(icon, color: colors.onSurface, size: 21),
-        onPressed: onTap,
-      ),
     );
   }
 }

@@ -197,8 +197,8 @@ export function verdictsFor(input: {
       confidence: 90,
       ar:
         duplicates.length === 1
-          ? `عندك «${duplicates[0].title}» وهي قريبة كتير من هاي.`
-          : `عندك ${duplicates.length} قطع قريبة من هاي بخزانتك.`,
+          ? `لديكِ «${duplicates[0].title}» وهي قريبة جداً من هذه.`
+          : `لديكِ ${duplicates.length} قطع قريبة من هذه في خزانتكِ.`,
       evidence: {
         itemIds: duplicates.map((d) => d.itemId),
         titles: duplicates.map((d) => d.title),
@@ -245,8 +245,8 @@ export function verdictsFor(input: {
       confidence: 80,
       ar:
         pairsWith.length === 1
-          ? `بتنسّق مع «${pairsWith[0].title}» يلي عندك.`
-          : `بتنسّق مع ${pairsWith.length} قطع من خزانتك.`,
+          ? `تتناسق مع «${pairsWith[0].title}» التي لديكِ.`
+          : `تتناسق مع ${pairsWith.length} قطع من خزانتكِ.`,
       evidence: { itemIds: pairsWith.map((p) => p.itemId) },
     });
   }
@@ -257,7 +257,7 @@ export function verdictsFor(input: {
       code: 'BETTER_VALUE',
       tone: 'inform',
       confidence: 70,
-      ar: `في قطعة قريبة منها أرخص بـ${Math.round(alternative.savingBps / 100)}%.`,
+      ar: `هناك قطعة قريبة منها أرخص بـ${Math.round(alternative.savingBps / 100)}%.`,
       evidence: {
         productId: alternative.productId,
         title: alternative.title,
@@ -275,7 +275,7 @@ export function verdictsFor(input: {
       code: 'MATCHES_INTENT',
       tone: 'encourage',
       confidence: 75,
-      ar: `قريبة من «${matchedTerm.display}» يلي كنتي عم تدوّري عليه.`,
+      ar: `قريبة من «${matchedTerm.display}» الذي كنتِ تبحثين عنه.`,
       evidence: { term: matchedTerm.key },
     });
   }
@@ -289,7 +289,7 @@ export function verdictsFor(input: {
       code: 'FITS_OCCASION',
       tone: 'inform',
       confidence: 60,
-      ar: 'مناسبة للمناسبة يلي عم تجهّزي إلها.',
+      ar: 'تناسب المناسبة التي تستعدّين لها.',
       evidence: { occasion },
     });
   }
@@ -300,7 +300,7 @@ export function verdictsFor(input: {
       code: 'TRUSTED_SELLER',
       tone: 'inform',
       confidence: 55,
-      ar: 'من متجر بترجعي تشتري منه.',
+      ar: 'من متجر تعودين للشراء منه.',
       evidence: {},
     });
   }
@@ -315,7 +315,7 @@ export function verdictsFor(input: {
       code: 'RISING_DEMAND',
       tone: 'inform',
       confidence: 50,
-      ar: `الطلب عليها عم يزيد — ${product.recentViews} بنت شافوها هالفترة.`,
+      ar: `الطلب عليها يزداد — شاهدتها ${product.recentViews} امرأة هذه الفترة.`,
       evidence: { recentViews: product.recentViews, growth: round(growth, 2) },
     });
   }
@@ -329,7 +329,7 @@ export function verdictsFor(input: {
       code: 'LAST_FEW',
       tone: 'inform',
       confidence: 45,
-      ar: `باقي ${product.stockUnits} قطع بس.`,
+      ar: `بقيت ${product.stockUnits} قطع فقط.`,
       evidence: { stockUnits: product.stockUnits },
     });
   }

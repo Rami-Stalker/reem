@@ -132,6 +132,23 @@ for (const file of files) {
       }
     }
   }
+
+  // A sliver gap in a list of boxes. `DsGaps.sliver*` belongs in `slivers:`;
+  // inside `children:` it does not lay out and takes the whole page down —
+  // the content studio and the composer were blank for exactly this. Judged
+  // by whichever list the gap sits in most recently opened.
+  for (const match of text.matchAll(/DsGaps\.sliver\w+/g)) {
+    const before = text.slice(0, match.index);
+    if (before.lastIndexOf('children: [') > before.lastIndexOf('slivers: [')) {
+      violations.push({
+        rule: 'sliver-in-box-list',
+        file,
+        line: before.split('\n').length,
+        detail: match[0],
+        hint: 'a sliver gap belongs in `slivers:`; use the box gap (`DsGaps.vLg`, `DsGaps.bottomSafe`) inside `children:`',
+      });
+    }
+  }
 }
 
 report();

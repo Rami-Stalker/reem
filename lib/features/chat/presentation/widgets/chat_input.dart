@@ -184,10 +184,8 @@ class _ChatInputState extends State<ChatInput>
                           gradient: context.primaryGradient,
                         ),
                         child: widget.isSending
-                            ? const Padding(
-                                padding: EdgeInsets.all(DsSpacing.md),
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2,
+                            ? const Center(
+                                child: DsLoadingIndicator.inline(
                                   color: DsColors.onMedia,
                                 ),
                               )

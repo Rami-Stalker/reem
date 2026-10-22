@@ -7,6 +7,7 @@ import 'package:reem/core/design_system/foundation/theme/component_themes/card_t
 import 'package:reem/core/design_system/foundation/theme/component_themes/chip_theme.dart';
 import 'package:reem/core/design_system/foundation/theme/component_themes/dialog_theme.dart';
 import 'package:reem/core/design_system/foundation/theme/component_themes/input_theme.dart';
+import 'package:reem/core/design_system/foundation/theme/component_themes/list_tile_theme.dart';
 import 'package:reem/core/design_system/foundation/theme/component_themes/navigation_theme.dart';
 import 'package:reem/core/design_system/foundation/theme/component_themes/progress_indicator_theme.dart';
 import 'package:reem/core/design_system/foundation/theme/component_themes/snack_bar_theme.dart';
@@ -43,6 +44,8 @@ abstract final class DsThemeFactory {
       elevatedButtonTheme: dsElevatedButtonTheme(ds),
       outlinedButtonTheme: dsOutlinedButtonTheme(ds),
       textButtonTheme: dsTextButtonTheme(ds),
+      filledButtonTheme: dsFilledButtonTheme(ds),
+      listTileTheme: dsListTileTheme(ds),
       floatingActionButtonTheme: dsFabTheme(ds),
       inputDecorationTheme: dsInputDecorationTheme(ds),
       cardTheme: dsCardTheme(ds),

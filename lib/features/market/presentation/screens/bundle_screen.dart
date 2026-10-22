@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/features/market/domain/entities/market.dart';
 import 'package:reem/features/market/presentation/providers/market_providers.dart';
@@ -27,11 +28,11 @@ class BundleScreen extends ConsumerWidget {
 
     return Scaffold(
       backgroundColor: colors.background,
-      appBar: const ReemAppBar(title: 'الإطلالة'),
+      appBar: ReemAppBar(title: context.l10n.marketLookTitle),
       body: async.when(
         loading: () => const Center(child: DsLoadingIndicator()),
         error: (_, _) => DsErrorState(
-          message: 'ما قدرنا نفتح الإطلالة.',
+          message: context.l10n.marketLookFailed,
           onRetry: () => ref.invalidate(bundleProvider(bundleId)),
         ),
         data: (bundle) => _Body(bundle: bundle),
@@ -61,8 +62,7 @@ class _Body extends ConsumerWidget {
           DsGaps.vXs,
           ReasonLine(
             icon: Icons.storefront_outlined,
-            text:
-                'القطع من ${bundle.sellerCount} محلات مختلفة — ريم جمعتها لأنها بتمشي مع بعض.',
+            text: context.l10n.marketLookFromShops(bundle.sellerCount),
           ),
         ],
         DsGaps.vLg,
@@ -82,12 +82,12 @@ class _Body extends ConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'في بدائل أوفر',
+                      context.l10n.marketCheaperOptions,
                       style: context.dsText.cardTitle.tint(colors.onSurface),
                     ),
                     DsGaps.vXs,
                     Text(
-                      'نفس الخانة، قطعة تانية ريم بتعتبرها قريبة منها.',
+                      context.l10n.marketCheaperOptionsBody,
                       style: context.dsText.caption.tint(
                         colors.onSurfaceVariant,
                       ),
@@ -111,7 +111,7 @@ class _Body extends ConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'مجموع الإطلالة',
+                      context.l10n.marketLookTotal,
                       style: context.dsText.caption.tint(
                         colors.onSurfaceVariant,
                       ),
@@ -127,7 +127,7 @@ class _Body extends ConsumerWidget {
                 ),
               ),
               DsButton(
-                label: 'شوفي القطع',
+                label: context.l10n.marketSeePieces,
                 // `DsButton` expands to fill by default, which inside a Row is
                 // an infinite width and a layout assertion at render time —
                 // clean under `flutter analyze`, fatal on screen.
@@ -199,7 +199,7 @@ class _PieceTile extends StatelessWidget {
                 ),
                 if (item.sellerName != null)
                   Text(
-                    'من ${item.sellerName}',
+                    context.l10n.marketFromSeller(item.sellerName!),
                     style: context.dsText.micro.tint(colors.onSurfaceVariant),
                   ),
                 if (item.reason != null && item.reason!.isNotEmpty) ...[
@@ -241,7 +241,7 @@ class _AlternativeTile extends StatelessWidget {
               ],
               Expanded(
                 child: Text(
-                  'وفّري ${sypText(alternative.savingSyp)}',
+                  context.l10n.marketSave(sypText(alternative.savingSyp)),
                   textAlign: TextAlign.end,
                   style: context.dsText.caption.semibold.tint(colors.success),
                 ),
@@ -256,7 +256,11 @@ class _AlternativeTile extends StatelessWidget {
             style: context.dsText.body.tint(colors.onSurface),
           ),
           Text(
-            'بدل ${alternative.currentTitle} — ${sypText(alternative.alternativePriceSyp)} بدل ${sypText(alternative.currentPriceSyp)}',
+            context.l10n.marketInsteadOf(
+              alternative.currentTitle,
+              sypText(alternative.alternativePriceSyp),
+              sypText(alternative.currentPriceSyp),
+            ),
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
             style: context.dsText.micro.tint(colors.onSurfaceVariant),

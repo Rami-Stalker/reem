@@ -92,11 +92,7 @@ class ReturnRequestCard extends StatelessWidget {
             const SizedBox(height: DsSpacing.md),
             if (isActing)
               const Center(
-                child: SizedBox(
-                  width: 18,
-                  height: 18,
-                  child: CircularProgressIndicator(strokeWidth: 2),
-                ),
+                child: DsLoadingIndicator.inline(),
               )
             else
               DsButton(

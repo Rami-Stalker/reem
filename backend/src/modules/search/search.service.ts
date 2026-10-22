@@ -11,6 +11,7 @@ import {
 import { ProductSearchDto, SearchSort } from './dto/search-query.dto';
 import { ProductMatch, ProductMatcher } from './product-matcher.service';
 import { MAX_SLOTS, PromotionsService } from '../promotions/promotions.service';
+import { ValueVisibilityService } from '../value/value-visibility.service';
 import {
   PRODUCT_CARD_INCLUDE,
   LIVE_OFFER_WHERE,
@@ -47,6 +48,7 @@ export class SearchService {
     private readonly signals: TrendSignalService,
     private readonly matcher: ProductMatcher,
     private readonly promotions: PromotionsService,
+    private readonly visibility: ValueVisibilityService,
   ) {}
 
   // ── Products ─────────────────────────────────────────────────────────────
@@ -56,7 +58,14 @@ export class SearchService {
     // still Prisma's, applied to that set. See `ProductMatcher` for why the
     // two are split.
     const matches = await this.matcher.match(dto.q);
-    const where = this.buildProductWhere(dto, matches?.map((m) => m.id));
+    // Reem Value's visibility rule, in the query so the count and the pages
+    // agree. Without it, search listed new arrivals inside their early-access
+    // window to women who could not open them — a tap answered «not found».
+    const gate = await this.visibility.catalogFilter(viewerId);
+    const filtered = this.buildProductWhere(dto, matches?.map((m) => m.id));
+    const where: Prisma.ProductWhereInput = Object.keys(gate).length
+      ? { AND: [filtered, gate] }
+      : filtered;
 
     const relevance = matches !== null && (dto.sort ?? 'relevance') === 'relevance';
     const [products, total] = relevance
@@ -246,12 +255,16 @@ export class SearchService {
         this.matcher.matchCustomerIds(q),
       ]);
 
+    const gate = await this.visibility.catalogFilter(viewerId);
+    const productWhere = this.buildProductWhere(
+      { q } as ProductSearchDto,
+      productMatches?.map((m) => m.id),
+    );
     const [products, sellers, posts, customers] = await Promise.all([
       this.prisma.product.findMany({
-        where: this.buildProductWhere(
-          { q } as ProductSearchDto,
-          productMatches?.map((m) => m.id),
-        ),
+        where: Object.keys(gate).length
+          ? { AND: [productWhere, gate] }
+          : productWhere,
         orderBy: [{ ordersCount: 'desc' }, { createdAt: 'desc' }],
         take: 8,
         include: PRODUCT_CARD_INCLUDE,

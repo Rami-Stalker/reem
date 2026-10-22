@@ -21,13 +21,6 @@ enum RoomKind {
         RoomKind.gift => 'GIFT',
         RoomKind.occasion => 'OCCASION',
       };
-
-  String get label => switch (this) {
-        RoomKind.solo => 'لحالي',
-        RoomKind.group => 'مع صحابي',
-        RoomKind.gift => 'هدية',
-        RoomKind.occasion => 'مناسبة',
-      };
 }
 
 enum RoomStatus {
@@ -315,16 +308,6 @@ class RoomBlocker extends Equatable {
   final String? decisionTitle;
 
   const RoomBlocker({required this.code, this.decisionId, this.decisionTitle});
-
-  /// The sentence shown on the readiness strip.
-  String get label => switch (code) {
-        'NO_DECISIONS' => 'ما في قرارات بالغرفة بعد',
-        'DECISION_EMPTY' => 'ما في اقتراحات لـ${decisionTitle ?? 'قرار'}',
-        'DECISION_UNRESOLVED' => 'لسا ما اخترتي لـ${decisionTitle ?? 'قرار'}',
-        'OVER_PICK_COUNT' => 'اخترتي أكتر من اللازم لـ${decisionTitle ?? 'قرار'}',
-        'CHOSEN_UNAVAILABLE' => 'القطعة المختارة لـ${decisionTitle ?? 'قرار'} خلصت',
-        _ => 'في شي ناقص',
-      };
 
   @override
   List<Object?> get props => [code, decisionId];

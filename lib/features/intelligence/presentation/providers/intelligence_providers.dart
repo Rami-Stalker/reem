@@ -5,6 +5,7 @@ import 'package:reem/features/intelligence/data/datasources/impl/intelligence_re
 import 'package:reem/features/intelligence/data/datasources/intelligence_remote_datasource.dart';
 import 'package:reem/features/intelligence/data/repositories/intelligence_repository_impl.dart';
 import 'package:reem/features/intelligence/domain/entities/intelligence_note.dart';
+import 'package:reem/features/intelligence/domain/entities/size_fit.dart';
 import 'package:reem/features/intelligence/domain/repositories/intelligence_repository.dart';
 
 /// Wiring for the intelligence notes.
@@ -30,4 +31,14 @@ final productNotesProvider = FutureProvider.autoDispose
           .watch(intelligenceRepositoryProvider)
           .notes(productId);
       return result.fold((_) => const <IntelligenceNote>[], (notes) => notes);
+    });
+
+/// How often each size of a product was kept. Empty on failure, for the same
+/// reason as the notes: the size row works without it.
+final productSizeFitProvider = FutureProvider.autoDispose
+    .family<List<SizeFit>, String>((ref, productId) async {
+      final result = await ref
+          .watch(intelligenceRepositoryProvider)
+          .sizeFit(productId);
+      return result.fold((_) => const <SizeFit>[], (fits) => fits);
     });

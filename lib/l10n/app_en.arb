@@ -601,7 +601,7 @@
   "@adminJsonHint": {
     "description": "Hint under the system setting value box."
   },
-  "adminLastDays": "Last {count} days",
+  "adminLastDays": "{count, plural, =1{Last day} other{Last {count} days}}",
   "@adminLastDays": {
     "description": "Range chip on the admin analytics console.",
     "placeholders": {
@@ -741,9 +741,9 @@
   },
   "adminRecordNoDetails": "This record carries no further detail.",
   "@adminRecordNoDetails": {"description": "Empty state inside the console record sheet."},
-  "adminRecordNestedObject": "{count} fields",
+  "adminRecordNestedObject": "{count, plural, =1{1 field} other{{count} fields}}",
   "@adminRecordNestedObject": {"description": "Summary of a nested object inside a console record.", "placeholders": {"count": {"type": "int"}}},
-  "adminRecordItemCount": "{count} items",
+  "adminRecordItemCount": "{count, plural, =1{1 item} other{{count} items}}",
   "@adminRecordItemCount": {"description": "Summary of a list inside a console record.", "placeholders": {"count": {"type": "int"}}},
   "adminRawRecord": "Raw record",
   "@adminRawRecord": {
@@ -769,7 +769,7 @@
   "@adminRepeatRate": {
     "description": "Metric: share of customers who order again."
   },
-  "adminReportGenerated": "{format} report ready — {count} rows",
+  "adminReportGenerated": "{format} report ready — {count, plural, =1{1 row} other{{count} rows}}",
   "@adminReportGenerated": {
     "description": "Confirmation after generating a report [re-authored: original wording lost]",
     "placeholders": {
@@ -1033,7 +1033,7 @@
   "@adminUserManagement": {
     "description": "Admin section: browse and moderate accounts."
   },
-  "adminUnitsSold": "{units} units",
+  "adminUnitsSold": "{units, plural, =1{1 unit} other{{units} units}}",
   "@adminUnitsSold": {
       "description": "Analytics ranked list: pieces sold by a product or a boutique.",
       "placeholders": {
@@ -1264,7 +1264,12 @@
   },
   "analyticsUnitsSold": "{count} sold",
   "@analyticsUnitsSold": {
-    "description": "Units sold on a product row"
+    "description": "Units sold on a product row",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   },
   "appPreferences": "App preferences",
   "@appPreferences": {
@@ -2075,6 +2080,71 @@
   "discount": "Discount",
   "@discount": {
     "description": "Summary row"
+  },
+  "discoverAskHelper": "Describe the occasion or the feeling — “a summer wedding, something soft, under 60k”",
+  "@discoverAskHelper": {
+    "description": "Helper line under the Ask Reem field on Discover."
+  },
+  "discoverAskHint": "What do you need?",
+  "@discoverAskHint": {
+    "description": "Placeholder of the Ask Reem field on Discover."
+  },
+  "discoverAskLabel": "Ask Reem",
+  "@discoverAskLabel": {
+    "description": "Label above the Discover question field, which opens the stylist with her question."
+  },
+  "discoverAskSend": "Ask",
+  "@discoverAskSend": {
+    "description": "Tooltip of the send button on the Discover question field."
+  },
+  "discoverByName": "Search by name",
+  "@discoverByName": {
+    "description": "Button on Discover that opens the plain keyword search."
+  },
+  "discoverEyebrow": "By what you need, not by aisle",
+  "@discoverEyebrow": {
+    "description": "Eyebrow above the Discover title."
+  },
+  "discoverGapCta": "See options",
+  "@discoverGapCta": {
+    "description": "Action on a closet-gap card on Discover."
+  },
+  "discoverGapEyebrow": "A gap in your closet",
+  "@discoverGapEyebrow": {
+    "description": "Eyebrow of a closet-gap card on Discover."
+  },
+  "discoverPhotoSearch": "Search with a photo",
+  "@discoverPhotoSearch": {
+    "description": "Button on Discover that opens visual search."
+  },
+  "discoverPromptsTitle": "Try asking",
+  "@discoverPromptsTitle": {
+    "description": "Heading above suggested questions on Discover."
+  },
+  "discoverRoomCta": "Open the room",
+  "@discoverRoomCta": {
+    "description": "Action on an upcoming-room card on Discover."
+  },
+  "discoverRoomDays": "{days, plural, =0{Today} =1{Tomorrow} other{In {days} days}}",
+  "@discoverRoomDays": {
+    "description": "How far off a dated room is, on its Discover card.",
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "discoverTrendingTitle": "People are searching",
+  "@discoverTrendingTitle": {
+    "description": "Heading above trending searches on Discover, shown to guests."
+  },
+  "discoverWaitingSubtitle": "From your rooms and your closet",
+  "@discoverWaitingSubtitle": {
+    "description": "Subtitle of the What's waiting section on Discover."
+  },
+  "discoverWaitingTitle": "What's waiting for you",
+  "@discoverWaitingTitle": {
+    "description": "Heading of the section built from her dated rooms and closet gaps."
   },
   "done": "Done",
   "@done": {
@@ -3058,6 +3128,15 @@
   "@homeStoriesEyebrow": {
     "description": "Eyebrow above the stories rail."
   },
+  "homeStoriesToday": "{count, plural, =1{One boutique posted a story today} other{{count} boutiques posted stories today}}",
+  "@homeStoriesToday": {
+    "description": "The news half of the one-line home greeting: how many boutiques have a live story.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "homeTasteBeauty": "Beauty",
   "@homeTasteBeauty": {
     "description": "Interest chip on the home greeting."
@@ -3276,7 +3355,7 @@
   "@loyaltyConvertHint": {
     "description": "Q43 — explains the conversion rate."
   },
-  "loyaltyConverted": "{count} points added to your balance ✨",
+  "loyaltyConverted": "{count, plural, =1{1 point added to your balance ✨} other{{count} points added to your balance ✨}}",
   "@loyaltyConverted": {
     "description": "Confirmation after a successful points conversion.",
     "placeholders": {
@@ -3495,13 +3574,21 @@
   "@navCart": {
     "description": "Bottom navigation — cart tab"
   },
+  "navCloset": "Closet",
+  "@navCloset": {
+    "description": "Bottom navigation — the buyer's closet tab (what she owns, is deciding on, and wants)"
+  },
+  "navDiscover": "Discover",
+  "@navDiscover": {
+    "description": "Bottom navigation — the buyer's discovery tab, opening on search"
+  },
   "navHome": "Home",
   "@navHome": {
     "description": "Bottom navigation — buyer home tab"
   },
-  "navProfile": "Profile",
+  "navProfile": "Me",
   "@navProfile": {
-    "description": "Bottom navigation — profile tab"
+    "description": "Bottom navigation — the buyer's own profile tab"
   },
   "navSearch": "Search",
   "@navSearch": {
@@ -4006,9 +4093,14 @@
   "@payoutClaimable": {
     "description": "Claimable amount label"
   },
-  "payoutFromOrders": "From {count} orders",
+  "payoutFromOrders": "{count, plural, =1{From 1 order} other{From {count} orders}}",
   "@payoutFromOrders": {
-    "description": "How many sales the request covers"
+    "description": "How many sales the request covers",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   },
   "payoutPendingTitle": "A withdrawal is being reviewed",
   "@payoutPendingTitle": {
@@ -4124,6 +4216,32 @@
   "@post": {
     "description": "Publish button"
   },
+  "postClosetCompletes": "{count, plural, =1{and finishes a saved look} other{and finishes {count} saved looks}}",
+  "@postClosetCompletes": {
+    "description": "Second line of the closet strip under a feed post: saved looks the tagged piece would complete.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "postClosetOpen": "My closet",
+  "@postClosetOpen": {
+    "description": "Button on the closet strip under a feed post that opens her closet."
+  },
+  "postClosetOwned": "You already own one like it",
+  "@postClosetOwned": {
+    "description": "Closet strip under a feed post when the tagged piece duplicates something she owns."
+  },
+  "postClosetPairs": "{count, plural, =1{Goes with a piece in your closet} other{Goes with {count} pieces in your closet}}",
+  "@postClosetPairs": {
+    "description": "Closet strip under a feed post: how many of her own pieces the tagged product pairs with.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "postLikesCount": "{count} loves",
   "@postLikesCount": {
     "description": "Like tally under a post. {count} is already formatted, e.g. 1.2K.",
@@ -4202,6 +4320,30 @@
   "productCategoriesHint": "Fashion, perfume, handmade",
   "@productCategoriesHint": {
     "description": "Example product categories, comma separated."
+  },
+  "productFitKept": "{size}: kept by {percent}% of the women who received this size",
+  "@productFitKept": {
+    "description": "Under the size row: how often the selected size was kept. Percent is a whole number.",
+    "placeholders": {
+      "size": {
+        "type": "String"
+      },
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "productFitOftenReturned": "{size}: often sent back for the size — only {percent}% kept it",
+  "@productFitOftenReturned": {
+    "description": "Under the size row, when the selected size is often returned for fit.",
+    "placeholders": {
+      "size": {
+        "type": "String"
+      },
+      "percent": {
+        "type": "int"
+      }
+    }
   },
   "productChooseOption": "Choose {axis}",
   "productChooseSeller": "Choose a boutique",
@@ -4765,7 +4907,7 @@
   "@returnWindowCloses": {
     "description": "Deadline line"
   },
-  "returnWindowExtraDays": "You have {days} extra days on the window",
+  "returnWindowExtraDays": "{days, plural, =1{You have 1 extra day on the window} other{You have {days} extra days on the window}}",
   "@returnWindowExtraDays": {
     "description": "Extra days granted to this shopper",
     "placeholders": {
@@ -4976,7 +5118,7 @@
   "@rewardsAvailablePoints": {
     "description": "Label over the points balance [re-authored: original wording lost]"
   },
-  "rewardsBalanceSemantics": "{points} points, {tier} tier",
+  "rewardsBalanceSemantics": "{points, plural, =1{1 point, {tier} tier} other{{points} points, {tier} tier}}",
   "@rewardsBalanceSemantics": {
     "description": "Screen-reader summary of the rewards balance [re-authored: original wording lost]",
     "placeholders": {
@@ -5170,7 +5312,7 @@
   "@rewardsPointsBlurb": {
     "description": "Rewards description"
   },
-  "rewardsPointsCost": "{points} points",
+  "rewardsPointsCost": "{points, plural, =1{1 point} other{{points} points}}",
   "@rewardsPointsCost": {
     "description": "What a reward costs in points [re-authored: original wording lost]",
     "placeholders": {
@@ -5628,7 +5770,7 @@
   "sellerOrderCourierAssigned": "Courier assigned",
   "sellerOrderCourierPending": "Awaiting a courier",
   "sellerOrderDelivered": "Delivery recorded",
-  "sellerOrderDiscount": "Discount",
+  "sellerOrderDiscount": "Your discount",
   "sellerOrderEscrowOn": "Earnings become available once the return window closes on {date}.",
   "@sellerOrderEscrowOn": {
     "placeholders": {
@@ -5755,14 +5897,17 @@
   "@sellerRatingStat": {
     "description": "Seller stat label [re-authored: original wording lost]"
   },
-  "sellerRatingSummary": "{rating} · {count} reviews",
+  "sellerRatingSummary": "{count, plural, =1{{rating} · 1 review} other{{rating} · {countLabel} reviews}}",
   "@sellerRatingSummary": {
-    "description": "Rating line on the seller stats card; both values are pre-formatted.",
+    "description": "Rating line on the seller stats card. {count} picks the plural; {countLabel} is the same count formatted compactly.",
     "placeholders": {
       "rating": {
         "type": "String"
       },
       "count": {
+        "type": "int"
+      },
+      "countLabel": {
         "type": "String"
       }
     }
@@ -6451,7 +6596,7 @@
   "@trendAlertSoldOut": {
     "description": "Product alert chip"
   },
-  "trendAlertStockOutIn": "Out in {days} days",
+  "trendAlertStockOutIn": "{days, plural, =0{Out today} =1{Out in 1 day} other{Out in {days} days}}",
   "@trendAlertStockOutIn": {
     "description": "Product alert chip",
     "placeholders": {
@@ -6480,7 +6625,7 @@
   "@trendConversion": {
     "description": "Metric label"
   },
-  "trendDaysValue": "{days} days",
+  "trendDaysValue": "{days, plural, =1{1 day} other{{days} days}}",
   "@trendDaysValue": {
     "description": "Day count",
     "placeholders": {
@@ -6497,7 +6642,7 @@
   "@trendFavorites": {
     "description": "Metric label"
   },
-  "trendForecastLine": "{units} units forecast over {days} days",
+  "trendForecastLine": "{units, plural, =1{1 unit forecast} other{{units} units forecast}} {days, plural, =1{over 1 day} other{over {days} days}}",
   "@trendForecastLine": {
     "description": "Forecast line on a product card",
     "placeholders": {
@@ -6542,7 +6687,7 @@
   "@trendRevenue": {
     "description": "Metric label"
   },
-  "trendRisingCount": "{count} products rising",
+  "trendRisingCount": "{count, plural, =1{1 product rising} other{{count} products rising}}",
   "@trendRisingCount": {
     "description": "Metric hint",
     "placeholders": {
@@ -6705,7 +6850,7 @@
   "@trendsCategoriesHint": {
     "description": "Admin categories hint"
   },
-  "trendsCategorySupply": "{inStock} of {total} products in stock",
+  "trendsCategorySupply": "In stock: {inStock} of {total}",
   "@trendsCategorySupply": {
     "description": "Category supply line",
     "placeholders": {
@@ -6793,7 +6938,7 @@
       }
     }
   },
-  "trendsForecastUnitsLabel": "Forecast units over {days} days",
+  "trendsForecastUnitsLabel": "{days, plural, =1{Forecast units over 1 day} other{Forecast units over {days} days}}",
   "@trendsForecastUnitsLabel": {
     "description": "Forecast headline label",
     "placeholders": {
@@ -6920,7 +7065,7 @@
   "@trendsStageDistribution": {
     "description": "Stage distribution panel title"
   },
-  "trendsStageScored": "{scored} active of {total} scored products",
+  "trendsStageScored": "Active: {scored} of {total} scored",
   "@trendsStageScored": {
     "description": "Stage distribution footnote",
     "placeholders": {
@@ -7373,7 +7518,7 @@
   "studioPromotersEmpty": "Nobody yet",
   "studioPromotersEmptyBody": "The first shopper to add your post to her page shows up here.",
   "studioPromoterAnonymous": "A shopper (private page)",
-  "studioPromoterSummary": "{reshares} added · {products} pieces",
+  "studioPromoterSummary": "Added: {reshares} · Pieces: {products}",
   "viewProfile": "View page",
   "@studioPublishedCount": {
     "placeholders": {
@@ -7612,11 +7757,23 @@
   "adminPolicyConsentSummary": "Acceptances",
   "adminPolicyAcceptedCurrent": "{count} on the current version",
   "@adminPolicyAcceptedCurrent": {"placeholders": {"count": {"type": "String"}}},
-  "adminPolicyAcceptedAny": "{count} accounts have signed this policy",
-  "@adminPolicyAcceptedAny": {"placeholders": {"count": {"type": "String"}}},
+  "adminPolicyAcceptedAny": "{count, plural, =0{No account has signed it yet} =1{1 account has signed this policy} other{{count} accounts have signed this policy}}",
+  "@adminPolicyAcceptedAny": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "adminPolicyNoDraft": "No open draft. Start one to change the text.",
-  "adminPolicyVersionsCount": "{count} versions",
-  "@adminPolicyVersionsCount": {"placeholders": {"count": {"type": "String"}}},
+  "adminPolicyVersionsCount": "{count, plural, =1{1 version} other{{count} versions}}",
+  "@adminPolicyVersionsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "adminPolicyBodyTooShort": "The text is too short to publish",
   "adminPolicyPublishConfirm": "Publish this version? The current one is archived and cannot be restored — a change after this needs a new version.",
 
@@ -7624,5 +7781,4031 @@
   "policiesLinkCustomerTerms": "Customer terms of use",
   "composerPolicyNotice": "Publishing means you accept the content and removal policy.",
   "sellerEarningsPolicyNotice": "How the commission is calculated, and when your earnings are paid.",
-  "orderPolicyNotice": "A problem with this order? Start with the seller, then the complaints process."
+  "orderPolicyNotice": "A problem with this order? Start with the seller, then the complaints process.",
+  "closetAddPiece": "Add a piece",
+  "@closetAddPiece": {
+    "description": ""
+  },
+  "closetPageLoadFailed": "This page couldn’t open.",
+  "@closetPageLoadFailed": {
+    "description": ""
+  },
+  "closetPhotoPrivate": "The photo is private — no one but you can see it.",
+  "@closetPhotoPrivate": {
+    "description": ""
+  },
+  "closetPiecePhoto": "Photo of the piece",
+  "@closetPiecePhoto": {
+    "description": ""
+  },
+  "closetPieceWhat": "What is it?",
+  "@closetPieceWhat": {
+    "description": ""
+  },
+  "closetPieceWhatHint": "e.g. black leather jacket",
+  "@closetPieceWhatHint": {
+    "description": ""
+  },
+  "closetPieceSlot": "Type of piece",
+  "@closetPieceSlot": {
+    "description": ""
+  },
+  "closetPieceBrandOptional": "Brand (optional)",
+  "@closetPieceBrandOptional": {
+    "description": ""
+  },
+  "closetPieceSizeOptional": "Size (optional)",
+  "@closetPieceSizeOptional": {
+    "description": ""
+  },
+  "closetAddToMyCloset": "Add to my closet",
+  "@closetAddToMyCloset": {
+    "description": ""
+  },
+  "closetAdded": "Added to your closet.",
+  "@closetAdded": {
+    "description": ""
+  },
+  "closetAddFailed": "The piece couldn’t be added.",
+  "@closetAddFailed": {
+    "description": ""
+  },
+  "closetGapTitle": "The missing piece",
+  "@closetGapTitle": {
+    "description": ""
+  },
+  "closetSuggestionsFailed": "Suggestions couldn’t load.",
+  "@closetSuggestionsFailed": {
+    "description": ""
+  },
+  "closetWhySuggestion": "Why this suggestion?",
+  "@closetWhySuggestion": {
+    "description": ""
+  },
+  "closetNotInterested": "Not interested",
+  "@closetNotInterested": {
+    "description": ""
+  },
+  "closetNoMatchNow": "Nothing fits right now",
+  "@closetNoMatchNow": {
+    "description": ""
+  },
+  "closetNoMatchNowBody": "Try again later — boutiques add new pieces every day.",
+  "@closetNoMatchNowBody": {
+    "description": ""
+  },
+  "closetPiecesThatFit": "Pieces that suit your closet",
+  "@closetPiecesThatFit": {
+    "description": ""
+  },
+  "closetGapDismissed": "Got it — we won’t suggest it again.",
+  "@closetGapDismissed": {
+    "description": ""
+  },
+  "closetCompletesLook": "Completes a look",
+  "@closetCompletesLook": {
+    "description": ""
+  },
+  "closetPairsWithCount": "{count, plural, =1{Goes with a piece you own} other{Goes with {count} pieces you own}}",
+  "@closetPairsWithCount": {
+    "description": "",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "closetPieceTitle": "A piece from my closet",
+  "@closetPieceTitle": {
+    "description": ""
+  },
+  "closetRemoveFavourite": "Remove from favourites",
+  "@closetRemoveFavourite": {
+    "description": ""
+  },
+  "closetAddFavourite": "Add to favourites",
+  "@closetAddFavourite": {
+    "description": ""
+  },
+  "closetPieceLoadFailed": "The piece couldn’t open.",
+  "@closetPieceLoadFailed": {
+    "description": ""
+  },
+  "closetTimesWorn": "Times worn",
+  "@closetTimesWorn": {
+    "description": ""
+  },
+  "closetCostPerWear": "Cost per wear",
+  "@closetCostPerWear": {
+    "description": ""
+  },
+  "closetLastWorn": "Last worn",
+  "@closetLastWorn": {
+    "description": ""
+  },
+  "closetWoreToday": "Wore it today",
+  "@closetWoreToday": {
+    "description": ""
+  },
+  "closetDetails": "Details",
+  "@closetDetails": {
+    "description": ""
+  },
+  "closetSizeValue": "Size {size}",
+  "@closetSizeValue": {
+    "description": "",
+    "placeholders": {
+      "size": {
+        "type": "String"
+      }
+    }
+  },
+  "closetSuitsLabel": "Suits",
+  "@closetSuitsLabel": {
+    "description": ""
+  },
+  "closetViewInShop": "View in the boutique",
+  "@closetViewInShop": {
+    "description": ""
+  },
+  "closetDeleteForever": "Delete for good",
+  "@closetDeleteForever": {
+    "description": ""
+  },
+  "closetWornNever": "Never",
+  "@closetWornNever": {
+    "description": ""
+  },
+  "closetWornToday": "Today",
+  "@closetWornToday": {
+    "description": ""
+  },
+  "closetWornYesterday": "Yesterday",
+  "@closetWornYesterday": {
+    "description": ""
+  },
+  "closetWornDaysAgo": "{days, plural, =1{a day ago} other{{days} days ago}}",
+  "@closetWornDaysAgo": {
+    "description": "",
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "closetWornMonthsAgo": "{months, plural, =1{a month ago} other{{months} months ago}}",
+  "@closetWornMonthsAgo": {
+    "description": "",
+    "placeholders": {
+      "months": {
+        "type": "int"
+      }
+    }
+  },
+  "closetReturnToCloset": "Back to the closet",
+  "@closetReturnToCloset": {
+    "description": ""
+  },
+  "closetShelveForSeason": "Shelve for the season",
+  "@closetShelveForSeason": {
+    "description": ""
+  },
+  "closetNoLongerOwn": "I no longer have it",
+  "@closetNoLongerOwn": {
+    "description": ""
+  },
+  "closetLookTitle": "The look",
+  "@closetLookTitle": {
+    "description": ""
+  },
+  "closetLookLoadFailed": "The look couldn’t open.",
+  "@closetLookLoadFailed": {
+    "description": ""
+  },
+  "closetLookOneShort": "One piece ({slot}) and it’s ready.",
+  "@closetLookOneShort": {
+    "description": "",
+    "placeholders": {
+      "slot": {
+        "type": "String"
+      }
+    }
+  },
+  "closetLookManyShort": "{count, plural, other{{count} pieces short of ready.}}",
+  "@closetLookManyShort": {
+    "description": "",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "closetLookWornCount": "{count, plural, =1{Worn once.} other{Worn {count} times.}}",
+  "@closetLookWornCount": {
+    "description": "",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "closetDeleteLook": "Delete the look",
+  "@closetDeleteLook": {
+    "description": ""
+  },
+  "closetNotOwnedYet": "Not yours yet",
+  "@closetNotOwnedYet": {
+    "description": ""
+  },
+  "closetFindThePiece": "Find the piece",
+  "@closetFindThePiece": {
+    "description": ""
+  },
+  "closetRemoveFromLook": "Remove from the look",
+  "@closetRemoveFromLook": {
+    "description": ""
+  },
+  "closetMyLooks": "My looks",
+  "@closetMyLooks": {
+    "description": ""
+  },
+  "closetLooksLoadFailed": "Your looks couldn’t load.",
+  "@closetLooksLoadFailed": {
+    "description": ""
+  },
+  "closetNoLooksTitle": "No looks yet",
+  "@closetNoLooksTitle": {
+    "description": ""
+  },
+  "closetNoLooksBody": "Put a look together from your pieces — if something’s missing, we’ll help you find it.",
+  "@closetNoLooksBody": {
+    "description": ""
+  },
+  "closetSeeWhatToWear": "See what you can wear",
+  "@closetSeeWhatToWear": {
+    "description": ""
+  },
+  "closetLookReadyWorn": "{count, plural, =1{Ready · worn once} other{Ready · worn {count} times}}",
+  "@closetLookReadyWorn": {
+    "description": "",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "closetLookReady": "Ready to wear",
+  "@closetLookReady": {
+    "description": ""
+  },
+  "closetWoreIt": "Wore it",
+  "@closetWoreIt": {
+    "description": ""
+  },
+  "closetLookShortOne": "Needs {slot} to be ready",
+  "@closetLookShortOne": {
+    "description": "",
+    "placeholders": {
+      "slot": {
+        "type": "String"
+      }
+    }
+  },
+  "closetLookShortMany": "{count, plural, other{{count} pieces short}}",
+  "@closetLookShortMany": {
+    "description": "",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "closetMissing": "Missing",
+  "@closetMissing": {
+    "description": ""
+  },
+  "closetWhatToWearToday": "What should I wear today?",
+  "@closetWhatToWearToday": {
+    "description": ""
+  },
+  "closetTodayFailed": "We couldn’t suggest anything right now.",
+  "@closetTodayFailed": {
+    "description": ""
+  },
+  "closetTodayLogged": "Done — logged for today.",
+  "@closetTodayLogged": {
+    "description": ""
+  },
+  "closetSavedToLooks": "Saved to your looks.",
+  "@closetSavedToLooks": {
+    "description": ""
+  },
+  "closetSaveLookFailed": "The look couldn’t be saved.",
+  "@closetSaveLookFailed": {
+    "description": ""
+  },
+  "closetAnyOccasion": "Any occasion",
+  "@closetAnyOccasion": {
+    "description": ""
+  },
+  "closetCannotDress": "No outfit could be made",
+  "@closetCannotDress": {
+    "description": ""
+  },
+  "closetNothingForOccasion": "Nothing for this occasion",
+  "@closetNothingForOccasion": {
+    "description": ""
+  },
+  "closetCannotDressBody": "You’re probably missing a whole category — try adding shoes or a bottom to your closet.",
+  "@closetCannotDressBody": {
+    "description": ""
+  },
+  "closetNothingForOccasionBody": "Try removing the occasion filter, or add a piece that suits it.",
+  "@closetNothingForOccasionBody": {
+    "description": ""
+  },
+  "closetLoadFailed": "Your closet couldn’t open.",
+  "@closetLoadFailed": {
+    "description": ""
+  },
+  "closetSpectrumWant": "Want",
+  "@closetSpectrumWant": {
+    "description": ""
+  },
+  "closetSpectrumDeciding": "Deciding",
+  "@closetSpectrumDeciding": {
+    "description": ""
+  },
+  "closetSpectrumOwn": "Own",
+  "@closetSpectrumOwn": {
+    "description": ""
+  },
+  "closetEmptyTitle": "Your closet is empty",
+  "@closetEmptyTitle": {
+    "description": ""
+  },
+  "closetEmptyBody": "Add your pieces — what you bought on Reem and what you already had. That’s how we learn what you’re missing and what you can wear.",
+  "@closetEmptyBody": {
+    "description": ""
+  },
+  "closetBringPurchases": "Bring in my purchases",
+  "@closetBringPurchases": {
+    "description": ""
+  },
+  "closetAddWithPhoto": "Add a piece with a photo",
+  "@closetAddWithPhoto": {
+    "description": ""
+  },
+  "closetBackfilled": "{count, plural, =1{Added a piece from your orders.} other{Added {count} pieces from your orders.}}",
+  "@closetBackfilled": {
+    "description": "",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "closetNoDeliveredOrders": "No delivered orders yet.",
+  "@closetNoDeliveredOrders": {
+    "description": ""
+  },
+  "closetBackfillFailed": "Your purchases couldn’t be fetched right now.",
+  "@closetBackfillFailed": {
+    "description": ""
+  },
+  "closetItemsFailed": "Your pieces couldn’t be shown.",
+  "@closetItemsFailed": {
+    "description": ""
+  },
+  "closetMetricPossibleLooks": "possible looks",
+  "@closetMetricPossibleLooks": {
+    "description": ""
+  },
+  "closetMetricPieces": "pieces",
+  "@closetMetricPieces": {
+    "description": ""
+  },
+  "closetMetricSavedLooks": "saved looks",
+  "@closetMetricSavedLooks": {
+    "description": ""
+  },
+  "closetMetricWornThisMonth": "wears this month",
+  "@closetMetricWornThisMonth": {
+    "description": ""
+  },
+  "closetCannotDressSeason": "Your pieces are here, but they don’t make a full outfit for this weather.",
+  "@closetCannotDressSeason": {
+    "description": ""
+  },
+  "closetSeasonCapacity": "You have {total} looks in all; {seasonal} suit {season}.",
+  "@closetSeasonCapacity": {
+    "description": "",
+    "placeholders": {
+      "total": {
+        "type": "int"
+      },
+      "seasonal": {
+        "type": "int"
+      },
+      "season": {
+        "type": "String"
+      }
+    }
+  },
+  "closetWhatsMissing": "What your closet is missing",
+  "@closetWhatsMissing": {
+    "description": ""
+  },
+  "closetAll": "All",
+  "@closetAll": {
+    "description": ""
+  },
+  "closetReasonBase": "Base",
+  "@closetReasonBase": {
+    "description": ""
+  },
+  "closetReasonNearlyComplete": "One piece short",
+  "@closetReasonNearlyComplete": {
+    "description": ""
+  },
+  "closetReasonFavouriteLook": "A favourite look",
+  "@closetReasonFavouriteLook": {
+    "description": ""
+  },
+  "closetReasonCoreSlot": "Core piece for the occasion",
+  "@closetReasonCoreSlot": {
+    "description": ""
+  },
+  "closetReasonAlreadyChosen": "You chose this piece before",
+  "@closetReasonAlreadyChosen": {
+    "description": ""
+  },
+  "closetReasonSeasonFit": "Right for the season",
+  "@closetReasonSeasonFit": {
+    "description": ""
+  },
+  "closetReasonInterest": "Your interest in the occasion",
+  "@closetReasonInterest": {
+    "description": ""
+  },
+  "closetReasonAnchorSlot": "The anchor piece",
+  "@closetReasonAnchorSlot": {
+    "description": ""
+  },
+  "closetReasonOwnsNone": "You don’t own any",
+  "@closetReasonOwnsNone": {
+    "description": ""
+  },
+  "closetReasonOutfitGain": "New looks unlocked",
+  "@closetReasonOutfitGain": {
+    "description": ""
+  },
+  "closetReasonFirstOutfit": "First complete look",
+  "@closetReasonFirstOutfit": {
+    "description": ""
+  },
+  "closetReasonOutfitsUnlocked": "Looks unlocked",
+  "@closetReasonOutfitsUnlocked": {
+    "description": ""
+  },
+  "closetReasonOutfitsNow": "Your complete looks now",
+  "@closetReasonOutfitsNow": {
+    "description": ""
+  },
+  "closetReasonShelved": "Shelved pieces",
+  "@closetReasonShelved": {
+    "description": ""
+  },
+  "closetReasonOutOfSeason": "Out-of-season pieces",
+  "@closetReasonOutOfSeason": {
+    "description": ""
+  },
+  "closetReasonWear": "Heavy wear",
+  "@closetReasonWear": {
+    "description": ""
+  },
+  "closetReasonSoleInSlot": "No alternative",
+  "@closetReasonSoleInSlot": {
+    "description": ""
+  },
+  "closetReasonWearCount": "Times worn",
+  "@closetReasonWearCount": {
+    "description": ""
+  },
+  "closetWhyWeSuggest": "Why are we suggesting this?",
+  "@closetWhyWeSuggest": {
+    "description": ""
+  },
+  "closetPriority": "Priority",
+  "@closetPriority": {
+    "description": ""
+  },
+  "closetMyPiece": "My piece",
+  "@closetMyPiece": {
+    "description": ""
+  },
+  "closetTileNeverWorn": "{slot} · not worn yet",
+  "@closetTileNeverWorn": {
+    "description": "",
+    "placeholders": {
+      "slot": {
+        "type": "String"
+      }
+    }
+  },
+  "closetTileLongAgo": "{slot} · a while ago",
+  "@closetTileLongAgo": {
+    "description": "",
+    "placeholders": {
+      "slot": {
+        "type": "String"
+      }
+    }
+  },
+  "closetTileWornCount": "{count, plural, =1{{slot} · worn once} other{{slot} · worn {count} times}}",
+  "@closetTileWornCount": {
+    "description": "",
+    "placeholders": {
+      "slot": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "closetFromYourCloset": "From your closet",
+  "@closetFromYourCloset": {
+    "description": ""
+  },
+  "closetOwnOneAlready": "You already have one in your closet.",
+  "@closetOwnOneAlready": {
+    "description": ""
+  },
+  "closetPanelPairs": "{count, plural, =1{Goes with a piece you own.} other{Goes with {count} pieces you own.}}",
+  "@closetPanelPairs": {
+    "description": "",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "closetPanelCompletes": "{count, plural, =1{And completes a saved look.} other{And completes {count} saved looks.}}",
+  "@closetPanelCompletes": {
+    "description": "",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "closetOpenMyCloset": "Open my closet",
+  "@closetOpenMyCloset": {
+    "description": ""
+  },
+  "closetAddPairFailed": "It couldn’t be added.",
+  "@closetAddPairFailed": {
+    "description": ""
+  },
+  "closetSaveAsLook": "Save as a look",
+  "@closetSaveAsLook": {
+    "description": ""
+  },
+  "roomsCompareTitle": "Compare",
+  "@roomsCompareTitle": {
+    "description": ""
+  },
+  "roomsCompareFailed": "The comparison couldn’t be prepared.",
+  "@roomsCompareFailed": {
+    "description": ""
+  },
+  "roomsCompareNothing": "Nothing to compare",
+  "@roomsCompareNothing": {
+    "description": ""
+  },
+  "roomsCompareNeedsTwo": "A comparison needs at least two options.",
+  "@roomsCompareNeedsTwo": {
+    "description": ""
+  },
+  "roomsHideIdentical": "Hide what’s the same",
+  "@roomsHideIdentical": {
+    "description": ""
+  },
+  "roomsIdenticalCount": "{count, plural, =1{Alike in one thing} other{Alike in {count} things}}",
+  "@roomsIdenticalCount": {
+    "description": "",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "roomsVotesSplit": "{count, plural, =1{The room is split — one vote.} other{The room is split — {count} votes.}}",
+  "@roomsVotesSplit": {
+    "description": "",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "roomsVotesLeaning": "{count, plural, =1{The room leans one way — one vote.} other{The room leans one way — {count} votes.}}",
+  "@roomsVotesLeaning": {
+    "description": "",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "roomsCommentCount": "{count, plural, =1{1 comment} other{{count} comments}}",
+  "@roomsCommentCount": {
+    "description": "",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "roomsChooseThis": "Choose this",
+  "@roomsChooseThis": {
+    "description": ""
+  },
+  "roomsPlanTitle": "Purchase plan",
+  "@roomsPlanTitle": {
+    "description": ""
+  },
+  "roomsPlanFailed": "The plan couldn’t load.",
+  "@roomsPlanFailed": {
+    "description": ""
+  },
+  "roomsNoPlanTitle": "No plan yet",
+  "@roomsNoPlanTitle": {
+    "description": ""
+  },
+  "roomsNoPlanBody": "Settle the room’s decisions and we’ll put the plan together.",
+  "@roomsNoPlanBody": {
+    "description": ""
+  },
+  "roomsPlanNow": "Now",
+  "@roomsPlanNow": {
+    "description": ""
+  },
+  "roomsPlanNothingNow": "Nothing is ready to buy yet.",
+  "@roomsPlanNothingNow": {
+    "description": ""
+  },
+  "roomsPlanLater": "Later",
+  "@roomsPlanLater": {
+    "description": ""
+  },
+  "roomsPlanLaterBody": "Kept in the plan — buy it when you’re ready.",
+  "@roomsPlanLaterBody": {
+    "description": ""
+  },
+  "roomsPlanTotal": "Total",
+  "@roomsPlanTotal": {
+    "description": ""
+  },
+  "roomsOverBudget": "{amount} over your budget",
+  "@roomsOverBudget": {
+    "description": "",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "roomsUnderBudget": "Under your budget",
+  "@roomsUnderBudget": {
+    "description": ""
+  },
+  "roomsWithinBudget": "Within your budget",
+  "@roomsWithinBudget": {
+    "description": ""
+  },
+  "roomsUnpriced": "{count, plural, =1{One piece couldn’t be priced} other{{count} pieces couldn’t be priced}}",
+  "@roomsUnpriced": {
+    "description": "",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "roomsNoLongerAvailable": "No longer available",
+  "@roomsNoLongerAvailable": {
+    "description": ""
+  },
+  "roomsPostpone": "Later",
+  "@roomsPostpone": {
+    "description": ""
+  },
+  "roomsRemove": "Remove",
+  "@roomsRemove": {
+    "description": ""
+  },
+  "roomsRemoveUnavailableFirst": "Remove the pieces that are no longer available before you continue.",
+  "@roomsRemoveUnavailableFirst": {
+    "description": ""
+  },
+  "roomsBuyNowCount": "Buy what’s ready now ({count})",
+  "@roomsBuyNowCount": {
+    "description": "",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "roomsBuyCount": "Buy ({count})",
+  "@roomsBuyCount": {
+    "description": "",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "roomsRoomTitle": "Room",
+  "@roomsRoomTitle": {
+    "description": ""
+  },
+  "roomsInviteFailed": "The invitation couldn’t open. The link may have expired — ask for a new one.",
+  "@roomsInviteFailed": {
+    "description": ""
+  },
+  "roomsShareRoom": "Share the room",
+  "@roomsShareRoom": {
+    "description": ""
+  },
+  "roomsRoomFailed": "The room couldn’t open.",
+  "@roomsRoomFailed": {
+    "description": ""
+  },
+  "roomsLinkCopied": "Link copied — anyone who opens it can advise and vote, but not buy.",
+  "@roomsLinkCopied": {
+    "description": ""
+  },
+  "roomsNoDecisionsTitle": "No decisions yet",
+  "@roomsNoDecisionsTitle": {
+    "description": ""
+  },
+  "roomsNoDecisionsBody": "A decision is a question — “the dress”, “a gift for Mum”. Add one and start gathering options for it.",
+  "@roomsNoDecisionsBody": {
+    "description": ""
+  },
+  "roomsAddDecision": "Add a decision",
+  "@roomsAddDecision": {
+    "description": ""
+  },
+  "roomsSettled": "Settled",
+  "@roomsSettled": {
+    "description": ""
+  },
+  "roomsNewDecision": "New decision",
+  "@roomsNewDecision": {
+    "description": ""
+  },
+  "roomsNewDecisionHelp": "A decision is a question that needs an answer — not a piece.",
+  "@roomsNewDecisionHelp": {
+    "description": ""
+  },
+  "roomsNewDecisionHint": "e.g. The dress",
+  "@roomsNewDecisionHint": {
+    "description": ""
+  },
+  "roomsAdd": "Add",
+  "@roomsAdd": {
+    "description": ""
+  },
+  "roomsCancel": "Cancel",
+  "@roomsCancel": {
+    "description": ""
+  },
+  "roomsSurprise": "Surprise",
+  "@roomsSurprise": {
+    "description": ""
+  },
+  "roomsForRecipient": "For {name}",
+  "@roomsForRecipient": {
+    "description": "",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "roomsAllSettled": "Every decision is settled",
+  "@roomsAllSettled": {
+    "description": ""
+  },
+  "roomsSettledOf": "{settled} of {total} decisions settled",
+  "@roomsSettledOf": {
+    "description": "",
+    "placeholders": {
+      "settled": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "roomsBudgetUpTo": "Budget: up to {amount}",
+  "@roomsBudgetUpTo": {
+    "description": "",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "roomsSeePlan": "See the plan",
+  "@roomsSeePlan": {
+    "description": ""
+  },
+  "roomsPreparePlan": "Prepare the plan",
+  "@roomsPreparePlan": {
+    "description": ""
+  },
+  "roomsDecisionsStillOpen": "Some decisions are still open.",
+  "@roomsDecisionsStillOpen": {
+    "description": ""
+  },
+  "roomsMyRooms": "My rooms",
+  "@roomsMyRooms": {
+    "description": ""
+  },
+  "roomsNewRoom": "New room",
+  "@roomsNewRoom": {
+    "description": ""
+  },
+  "roomsLoadFailed": "Your rooms couldn’t load.",
+  "@roomsLoadFailed": {
+    "description": ""
+  },
+  "roomsEmptyTitle": "No rooms yet",
+  "@roomsEmptyTitle": {
+    "description": ""
+  },
+  "roomsEmptyBody": "A room is a space for a buying decision — a wedding, a gift, a season. Gather options, ask your friends, decide. It isn’t a basket.",
+  "@roomsEmptyBody": {
+    "description": ""
+  },
+  "roomsOpenFirst": "Open your first room",
+  "@roomsOpenFirst": {
+    "description": ""
+  },
+  "roomsPurchased": "Purchased",
+  "@roomsPurchased": {
+    "description": ""
+  },
+  "roomsReadyToBuy": "Ready to buy",
+  "@roomsReadyToBuy": {
+    "description": ""
+  },
+  "roomsOneDecisionLeft": "One decision to go",
+  "@roomsOneDecisionLeft": {
+    "description": ""
+  },
+  "roomsOpenDecisions": "{count, plural, other{{count} decisions still open}}",
+  "@roomsOpenDecisions": {
+    "description": "",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "roomsSuggestionCount": "{count, plural, =0{No suggestions} =1{1 suggestion} other{{count} suggestions}}",
+  "@roomsSuggestionCount": {
+    "description": "",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "roomsOccasionWedding": "Wedding",
+  "@roomsOccasionWedding": {
+    "description": ""
+  },
+  "roomsOccasionEngagement": "Engagement",
+  "@roomsOccasionEngagement": {
+    "description": ""
+  },
+  "roomsOccasionEvening": "Evening",
+  "@roomsOccasionEvening": {
+    "description": ""
+  },
+  "roomsOccasionEid": "Eid",
+  "@roomsOccasionEid": {
+    "description": ""
+  },
+  "roomsOccasionGraduation": "Graduation",
+  "@roomsOccasionGraduation": {
+    "description": ""
+  },
+  "roomsOccasionBirthday": "Birthday",
+  "@roomsOccasionBirthday": {
+    "description": ""
+  },
+  "roomsOccasionWork": "Work",
+  "@roomsOccasionWork": {
+    "description": ""
+  },
+  "roomsOccasionDaily": "Everyday",
+  "@roomsOccasionDaily": {
+    "description": ""
+  },
+  "roomsShoppingFor": "What are you shopping for?",
+  "@roomsShoppingFor": {
+    "description": ""
+  },
+  "roomsRoomName": "Room name",
+  "@roomsRoomName": {
+    "description": ""
+  },
+  "roomsRoomNameHint": "e.g. Rahaf’s wedding look",
+  "@roomsRoomNameHint": {
+    "description": ""
+  },
+  "roomsRoomKind": "Room type",
+  "@roomsRoomKind": {
+    "description": ""
+  },
+  "roomsGiftFor": "Who is the gift for?",
+  "@roomsGiftFor": {
+    "description": ""
+  },
+  "roomsOccasionOptional": "Occasion (optional)",
+  "@roomsOccasionOptional": {
+    "description": ""
+  },
+  "roomsOccasionHelp": "Pick an occasion and we’ll open the decisions you’ll need.",
+  "@roomsOccasionHelp": {
+    "description": ""
+  },
+  "roomsOpenRoom": "Open the room",
+  "@roomsOpenRoom": {
+    "description": ""
+  },
+  "roomsSuggestion": "Suggestion",
+  "@roomsSuggestion": {
+    "description": ""
+  },
+  "roomsDecidedAgainst": "You decided against it",
+  "@roomsDecidedAgainst": {
+    "description": ""
+  },
+  "roomsNeedsPieces": "{count, plural, =1{Needs one piece} other{Needs {count} pieces}}",
+  "@roomsNeedsPieces": {
+    "description": "",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "roomsOpinionsSplit": "Opinions are split",
+  "@roomsOpinionsSplit": {
+    "description": ""
+  },
+  "roomsMajorityLeans": "Most lean one way",
+  "@roomsMajorityLeans": {
+    "description": ""
+  },
+  "roomsAddOption": "Add an option",
+  "@roomsAddOption": {
+    "description": ""
+  },
+  "roomsCompare": "Compare",
+  "@roomsCompare": {
+    "description": ""
+  },
+  "roomsWantNothing": "I don’t want any",
+  "@roomsWantNothing": {
+    "description": ""
+  },
+  "roomsStatusSettled": "Settled",
+  "@roomsStatusSettled": {
+    "description": ""
+  },
+  "roomsStatusSkipped": "Skipped",
+  "@roomsStatusSkipped": {
+    "description": ""
+  },
+  "roomsStatusNotChosen": "Not chosen yet",
+  "@roomsStatusNotChosen": {
+    "description": ""
+  },
+  "roomsStatusOpen": "Open",
+  "@roomsStatusOpen": {
+    "description": ""
+  },
+  "roomsNoOptions": "No options for this question",
+  "@roomsNoOptions": {
+    "description": ""
+  },
+  "roomsFindPiece": "Find a piece",
+  "@roomsFindPiece": {
+    "description": ""
+  },
+  "roomsDone": "Done",
+  "@roomsDone": {
+    "description": ""
+  },
+  "roomsRestore": "Restore",
+  "@roomsRestore": {
+    "description": ""
+  },
+  "roomsProposedTo": "Proposed for “{title}”",
+  "@roomsProposedTo": {
+    "description": "",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "roomsProposeFailed": "It couldn’t be proposed.",
+  "@roomsProposeFailed": {
+    "description": ""
+  },
+  "roomsWhichRoom": "Which room?",
+  "@roomsWhichRoom": {
+    "description": ""
+  },
+  "roomsBack": "Back",
+  "@roomsBack": {
+    "description": ""
+  },
+  "roomsAnswerWhichQuestion": "An answer to which question?",
+  "@roomsAnswerWhichQuestion": {
+    "description": ""
+  },
+  "roomsProposeHelp": "The piece is added as a suggestion — nothing is bought until you choose it.",
+  "@roomsProposeHelp": {
+    "description": ""
+  },
+  "roomsLiveSuggestionCount": "{count, plural, =0{No suggestions} =1{1 suggestion} other{{count} suggestions}}",
+  "@roomsLiveSuggestionCount": {
+    "description": "",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "roomsNewQuestion": "New question",
+  "@roomsNewQuestion": {
+    "description": ""
+  },
+  "roomsNewQuestionHint": "e.g. The shoes",
+  "@roomsNewQuestionHint": {
+    "description": ""
+  },
+  "roomsNoOpenRooms": "You have no open rooms",
+  "@roomsNoOpenRooms": {
+    "description": ""
+  },
+  "roomsWhatIsRoom": "A room is a space for a buying decision — gather the options and decide.",
+  "@roomsWhatIsRoom": {
+    "description": ""
+  },
+  "roomsOpenAndAdd": "Open a room and add it",
+  "@roomsOpenAndAdd": {
+    "description": ""
+  },
+  "roomsDefaultRoomTitle": "Shopping",
+  "@roomsDefaultRoomTitle": {
+    "description": ""
+  },
+  "roomsDefaultDecisionTitle": "Options",
+  "@roomsDefaultDecisionTitle": {
+    "description": ""
+  },
+  "roomsCreatedWithPiece": "We opened a room for you and put the piece in it.",
+  "@roomsCreatedWithPiece": {
+    "description": ""
+  },
+  "roomsKindSolo": "Just me",
+  "@roomsKindSolo": {"description": "Rooms label."},
+  "roomsKindGroup": "With friends",
+  "@roomsKindGroup": {"description": "Rooms label."},
+  "roomsKindGift": "Gift",
+  "@roomsKindGift": {"description": "Rooms label."},
+  "roomsKindOccasion": "Occasion",
+  "@roomsKindOccasion": {"description": "Rooms label."},
+  "roomsDecisionFallback": "this decision",
+  "@roomsDecisionFallback": {"description": "Rooms label."},
+  "roomsBlockerNoDecisions": "No decisions in the room yet",
+  "@roomsBlockerNoDecisions": {"description": "Rooms label."},
+  "roomsBlockerEmpty": "No suggestions for {title} yet",
+  "@roomsBlockerEmpty": {"description": "Rooms label.", "placeholders": {"title": {"type": "String"}}},
+  "roomsBlockerUnresolved": "You haven’t chosen for {title} yet",
+  "@roomsBlockerUnresolved": {"description": "Rooms label.", "placeholders": {"title": {"type": "String"}}},
+  "roomsBlockerOverPick": "You picked more than needed for {title}",
+  "@roomsBlockerOverPick": {"description": "Rooms label.", "placeholders": {"title": {"type": "String"}}},
+  "roomsBlockerUnavailable": "The piece chosen for {title} sold out",
+  "@roomsBlockerUnavailable": {"description": "Rooms label.", "placeholders": {"title": {"type": "String"}}},
+  "roomsBlockerOther": "Something is still missing",
+  "@roomsBlockerOther": {"description": "Rooms label."},
+  "valueAdminSubtitle": "Standing and what it unlocks — and the guarantee it can’t be bought.",
+  "@valueAdminSubtitle": {
+    "description": ""
+  },
+  "valueAdminRefresh": "Refresh",
+  "@valueAdminRefresh": {
+    "description": ""
+  },
+  "valueAdminSweepNow": "Gather evidence now",
+  "@valueAdminSweepNow": {
+    "description": ""
+  },
+  "valueAdminDistributionFailed": "Standing data couldn’t load.",
+  "@valueAdminDistributionFailed": {
+    "description": ""
+  },
+  "valueAdminSweepDone": "{count, plural, =0{Done — no profiles changed.} =1{Done — one profile recalculated.} other{Done — {count} profiles recalculated.}}",
+  "@valueAdminSweepDone": {
+    "description": "",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "valueAdminSweepFailed": "Gathering evidence failed.",
+  "@valueAdminSweepFailed": {
+    "description": ""
+  },
+  "valueAdminGuaranteeHolds": "Standing can’t be bought",
+  "@valueAdminGuaranteeHolds": {
+    "description": ""
+  },
+  "valueAdminGuaranteeBroken": "Warning: spending alone now reaches the top tiers",
+  "@valueAdminGuaranteeBroken": {
+    "description": ""
+  },
+  "valueAdminSpendingReach": "Someone who only buys and contributes nothing else reaches {ceiling} of 1000",
+  "@valueAdminSpendingReach": {
+    "description": "",
+    "placeholders": {
+      "ceiling": {
+        "type": "int"
+      }
+    }
+  },
+  "valueAdminGuaranteeFix": "Lower the spending ceiling or raise the top-tier thresholds — otherwise the programme becomes a spending ladder by another name.",
+  "@valueAdminGuaranteeFix": {
+    "description": ""
+  },
+  "valueAdminDistributionTitle": "Tier distribution",
+  "@valueAdminDistributionTitle": {
+    "description": ""
+  },
+  "valueAdminDistributionSubtitle": "{total, plural, =1{1 profile} other{{total} profiles}} — {unranked, plural, =0{all ranked} other{{unranked} not ranked yet}}",
+  "@valueAdminDistributionSubtitle": {
+    "description": "",
+    "placeholders": {
+      "total": {
+        "type": "int"
+      },
+      "unranked": {
+        "type": "int"
+      }
+    }
+  },
+  "valueAdminCostTitle": "Cost and commitment",
+  "@valueAdminCostTitle": {
+    "description": ""
+  },
+  "valueAdminCostSubtitle": "What was actually spent, and the most that could be.",
+  "@valueAdminCostSubtitle": {
+    "description": ""
+  },
+  "valueAdminCostFailed": "The cost report couldn’t load.",
+  "@valueAdminCostFailed": {
+    "description": ""
+  },
+  "valueAdminUnbounded": "{count, plural, =1{One benefit spends money with no ceiling — give it a budget.} other{{count} benefits spend money with no ceiling — give them a budget.}}",
+  "@valueAdminUnbounded": {
+    "description": "",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "valueAdminSpent": "Spent",
+  "@valueAdminSpent": {
+    "description": ""
+  },
+  "valueAdminMaxCommitment": "Maximum commitment",
+  "@valueAdminMaxCommitment": {
+    "description": ""
+  },
+  "valueAdminReasonSinglePillar": "All standing from a single source",
+  "@valueAdminReasonSinglePillar": {
+    "description": ""
+  },
+  "valueAdminReasonBurst": "Heavy contributions over a few days",
+  "@valueAdminReasonBurst": {
+    "description": ""
+  },
+  "valueAdminSuspectsTitle": "Profiles worth a look",
+  "@valueAdminSuspectsTitle": {
+    "description": ""
+  },
+  "valueAdminSuspectsSubtitle": "Not an accusation — unusual patterns, and a person decides.",
+  "@valueAdminSuspectsSubtitle": {
+    "description": ""
+  },
+  "valueAdminSuspectsFailed": "The list couldn’t load.",
+  "@valueAdminSuspectsFailed": {
+    "description": ""
+  },
+  "valueAdminSuspectsNone": "Nothing stands out right now.",
+  "@valueAdminSuspectsNone": {
+    "description": ""
+  },
+  "valueAdminConcentration": "{days, plural, =1{{percent}% concentrated over 1 day} other{{percent}% concentrated over {days} days}}",
+  "@valueAdminConcentration": {
+    "description": "",
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      },
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "valueAdminFreezeAction": "Freeze for now",
+  "@valueAdminFreezeAction": {
+    "description": ""
+  },
+  "valueAdminFreezeTitle": "Temporary freeze",
+  "@valueAdminFreezeTitle": {
+    "description": ""
+  },
+  "valueAdminFreezeBody": "Standing stops moving and benefits pause — nothing is lost. It all returns when you lift the freeze.",
+  "@valueAdminFreezeBody": {
+    "description": ""
+  },
+  "valueAdminFreezeReason": "Reason",
+  "@valueAdminFreezeReason": {
+    "description": ""
+  },
+  "valueAdminFreezeConfirm": "Freeze",
+  "@valueAdminFreezeConfirm": {
+    "description": ""
+  },
+  "valueCancel": "Cancel",
+  "@valueCancel": {
+    "description": ""
+  },
+  "valueTitle": "My standing in Reem",
+  "@valueTitle": {
+    "description": ""
+  },
+  "valueLoadFailed": "Your standing couldn’t load.",
+  "@valueLoadFailed": {
+    "description": ""
+  },
+  "valueSourcesTitle": "Where your standing comes from",
+  "@valueSourcesTitle": {
+    "description": ""
+  },
+  "valueSourcesSubtitle": "Your standing rests on six sides, not on spending alone.",
+  "@valueSourcesSubtitle": {
+    "description": ""
+  },
+  "valueCloserTo": "What brings you closer to {tier}",
+  "@valueCloserTo": {
+    "description": "",
+    "placeholders": {
+      "tier": {
+        "type": "String"
+      }
+    }
+  },
+  "valueUnlocksTitle": "What your standing unlocks",
+  "@valueUnlocksTitle": {
+    "description": ""
+  },
+  "valueRecentTitle": "Latest we counted",
+  "@valueRecentTitle": {
+    "description": ""
+  },
+  "valueJustStarting": "Just starting",
+  "@valueJustStarting": {
+    "description": ""
+  },
+  "valueNextTier": "Next tier: {tier}",
+  "@valueNextTier": {
+    "description": "",
+    "placeholders": {
+      "tier": {
+        "type": "String"
+      }
+    }
+  },
+  "valuePeakKept": "The highest standing you reached is kept on record.",
+  "@valuePeakKept": {
+    "description": ""
+  },
+  "valueTierHeld": "Your tier is held for you even if things go quiet for a while.",
+  "@valueTierHeld": {
+    "description": ""
+  },
+  "valueFrozen": "Your standing is paused for review — nothing has been lost.",
+  "@valueFrozen": {
+    "description": ""
+  },
+  "valueBenefitClaimed": "It’s yours.",
+  "@valueBenefitClaimed": {
+    "description": ""
+  },
+  "valueBenefitHigherTier": "Unlocks at a higher tier",
+  "@valueBenefitHigherTier": {
+    "description": ""
+  },
+  "valueBenefitTakenThisPeriod": "Taken this period",
+  "@valueBenefitTakenThisPeriod": {
+    "description": ""
+  },
+  "valueBenefitSoldOut": "Gone for this period",
+  "@valueBenefitSoldOut": {
+    "description": ""
+  },
+  "valueBenefitClaim": "Claim",
+  "@valueBenefitClaim": {
+    "description": ""
+  },
+  "valueBenefitActive": "Active",
+  "@valueBenefitActive": {
+    "description": ""
+  },
+  "valueHowBuiltTooltip": "How is standing built?",
+  "@valueHowBuiltTooltip": {
+    "description": ""
+  },
+  "valueRulesFailed": "The rules couldn’t load.",
+  "@valueRulesFailed": {
+    "description": ""
+  },
+  "valueHowBuiltTitle": "How your standing is built",
+  "@valueHowBuiltTitle": {
+    "description": ""
+  },
+  "valueHowBuiltBody": "Your standing can’t be bought. Buying is one side of six, and it’s capped — someone who only buys never reaches the top tiers.",
+  "@valueHowBuiltBody": {
+    "description": ""
+  },
+  "valuePillarCapped": "At the cap",
+  "@valuePillarCapped": {
+    "description": ""
+  },
+  "valuePillarUnknown": "Not known yet",
+  "@valuePillarUnknown": {
+    "description": ""
+  },
+  "valuePillarNotEnough": "{blurb} — not enough yet to judge.",
+  "@valuePillarNotEnough": {
+    "description": "",
+    "placeholders": {
+      "blurb": {
+        "type": "String"
+      }
+    }
+  },
+  "valuePolicyTitle": "Policy",
+  "@valuePolicyTitle": {
+    "description": ""
+  },
+  "valuePolicySubtitle": "Every change becomes a new version — simulated on real profiles before it goes live.",
+  "@valuePolicySubtitle": {
+    "description": ""
+  },
+  "valuePolicyNewVersion": "New version",
+  "@valuePolicyNewVersion": {
+    "description": ""
+  },
+  "valuePolicyLoadFailed": "Policies couldn’t load.",
+  "@valuePolicyLoadFailed": {
+    "description": ""
+  },
+  "valuePolicyRowSummary": "Spending cap {ceiling} · half-life {days}d",
+  "@valuePolicyRowSummary": {
+    "description": "",
+    "placeholders": {
+      "ceiling": {
+        "type": "int"
+      },
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "valuePolicySimulate": "Simulate",
+  "@valuePolicySimulate": {
+    "description": ""
+  },
+  "valuePolicyActivate": "Activate",
+  "@valuePolicyActivate": {
+    "description": ""
+  },
+  "valuePolicySimulateFailed": "The simulation failed.",
+  "@valuePolicySimulateFailed": {
+    "description": ""
+  },
+  "valuePolicyImpactDisruptive": "{down} of {sampled} will drop a tier. That’s a change people will feel — make sure you mean it.",
+  "@valuePolicyImpactDisruptive": {
+    "description": "",
+    "placeholders": {
+      "down": {
+        "type": "int"
+      },
+      "sampled": {
+        "type": "int"
+      }
+    }
+  },
+  "valuePolicyImpact": "{up} will rise and {down} will drop, out of {sampled}.",
+  "@valuePolicyImpact": {
+    "description": "",
+    "placeholders": {
+      "up": {
+        "type": "int"
+      },
+      "down": {
+        "type": "int"
+      },
+      "sampled": {
+        "type": "int"
+      }
+    }
+  },
+  "valuePolicyActivateTitle": "Activate policy",
+  "@valuePolicyActivateTitle": {
+    "description": ""
+  },
+  "valuePolicyActivateBody": "Every profile will be recalculated under the new rules.\n\n{impact}",
+  "@valuePolicyActivateBody": {
+    "description": "",
+    "placeholders": {
+      "impact": {
+        "type": "String"
+      }
+    }
+  },
+  "valuePolicyActivated": "Policy activated and everything recalculated.",
+  "@valuePolicyActivated": {
+    "description": ""
+  },
+  "valuePolicyActivateFailed": "Activation failed.",
+  "@valuePolicyActivateFailed": {
+    "description": ""
+  },
+  "valuePolicySimSample": "Sample of {sampled}: ",
+  "@valuePolicySimSample": {
+    "description": "",
+    "placeholders": {
+      "sampled": {
+        "type": "int"
+      }
+    }
+  },
+  "valuePolicySimAverage": "Average change {delta}",
+  "@valuePolicySimAverage": {
+    "description": "",
+    "placeholders": {
+      "delta": {
+        "type": "String"
+      }
+    }
+  },
+  "valuePillarCommerce": "Buying",
+  "@valuePillarCommerce": {
+    "description": ""
+  },
+  "valuePillarCraft": "Opinion",
+  "@valuePillarCraft": {
+    "description": ""
+  },
+  "valuePillarCommunity": "Community",
+  "@valuePillarCommunity": {
+    "description": ""
+  },
+  "valuePillarAdvocacy": "Invites",
+  "@valuePillarAdvocacy": {
+    "description": ""
+  },
+  "valuePillarDiscovery": "Discovery",
+  "@valuePillarDiscovery": {
+    "description": ""
+  },
+  "valuePillarReliability": "Reliability",
+  "@valuePillarReliability": {
+    "description": ""
+  },
+  "valuePolicyNewFrom": "New version from v{version}",
+  "@valuePolicyNewFrom": {
+    "description": "",
+    "placeholders": {
+      "version": {
+        "type": "int"
+      }
+    }
+  },
+  "valuePolicyWeights": "Side weights",
+  "@valuePolicyWeights": {
+    "description": ""
+  },
+  "valuePolicyWeightsHelp": "Relative — they don’t need to add up to 100.",
+  "@valuePolicyWeightsHelp": {
+    "description": ""
+  },
+  "valuePolicyCeiling": "Spending cap",
+  "@valuePolicyCeiling": {
+    "description": ""
+  },
+  "valuePolicyPoints": "{points, plural, =1{1 point} other{{points} points}}",
+  "@valuePolicyPoints": {
+    "description": "",
+    "placeholders": {
+      "points": {
+        "type": "int"
+      }
+    }
+  },
+  "valuePolicyHalfLife": "Half-life",
+  "@valuePolicyHalfLife": {
+    "description": ""
+  },
+  "valuePolicyDays": "{days, plural, =1{1 day} other{{days} days}}",
+  "@valuePolicyDays": {
+    "description": "",
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "valuePolicyMinEvidence": "Minimum evidence per side",
+  "@valuePolicyMinEvidence": {
+    "description": ""
+  },
+  "valuePolicyWhy": "Why this change?",
+  "@valuePolicyWhy": {
+    "description": ""
+  },
+  "valuePolicyWhyHint": "Someone else will read this a year from now",
+  "@valuePolicyWhyHint": {
+    "description": ""
+  },
+  "valuePolicySaveDraft": "Save as draft",
+  "@valuePolicySaveDraft": {
+    "description": ""
+  },
+  "valuePolicySavedDraft": "Saved as a draft — simulate it before activating.",
+  "@valuePolicySavedDraft": {
+    "description": ""
+  },
+  "valuePolicySaveFailed": "Saving failed.",
+  "@valuePolicySaveFailed": {
+    "description": ""
+  },
+  "valuePolicyRisky": "With these weights, someone who only buys reaches {ceiling} — into the top tiers.",
+  "@valuePolicyRisky": {
+    "description": "",
+    "placeholders": {
+      "ceiling": {
+        "type": "int"
+      }
+    }
+  },
+  "valuePolicySafe": "Someone who only buys reaches {ceiling} of 1000 — standing still can’t be bought.",
+  "@valuePolicySafe": {
+    "description": "",
+    "placeholders": {
+      "ceiling": {
+        "type": "int"
+      }
+    }
+  },
+  "valueCardTitle": "Your standing in Reem",
+  "@valueCardTitle": {
+    "description": ""
+  },
+  "valueCardCloseTo": "Close to {tier}",
+  "@valueCardCloseTo": {
+    "description": "",
+    "placeholders": {
+      "tier": {
+        "type": "String"
+      }
+    }
+  },
+  "valueCardRising": "Rising",
+  "@valueCardRising": {
+    "description": ""
+  },
+  "valueCardSteady": "Steady",
+  "@valueCardSteady": {
+    "description": ""
+  },
+  "valueAdminSpendingRung": " — tier “{rung}”",
+  "@valueAdminSpendingRung": {"description": "Reem Value console.", "placeholders": {"rung": {"type": "String"}}},
+  "valueAdminTopRung": "; the top tier is “{rung}”.",
+  "@valueAdminTopRung": {"description": "Reem Value console.", "placeholders": {"rung": {"type": "String"}}},
+  "marketLookTitle": "The look",
+  "@marketLookTitle": {
+    "description": ""
+  },
+  "marketLookFailed": "The look couldn’t open.",
+  "@marketLookFailed": {
+    "description": ""
+  },
+  "marketLookFromShops": "{count, plural, =1{From one shop — Reem put them together because they go well.} other{From {count} shops — Reem put them together because they go well.}}",
+  "@marketLookFromShops": {
+    "description": "",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "marketCheaperOptions": "There are cheaper options",
+  "@marketCheaperOptions": {
+    "description": ""
+  },
+  "marketCheaperOptionsBody": "Same slot, another piece Reem sees as close to it.",
+  "@marketCheaperOptionsBody": {
+    "description": ""
+  },
+  "marketLookTotal": "Look total",
+  "@marketLookTotal": {
+    "description": ""
+  },
+  "marketSeePieces": "See the pieces",
+  "@marketSeePieces": {
+    "description": ""
+  },
+  "marketFromSeller": "From {name}",
+  "@marketFromSeller": {
+    "description": "",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "marketSave": "Save {amount}",
+  "@marketSave": {
+    "description": "",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "marketInsteadOf": "Instead of {title} — {newPrice} instead of {oldPrice}",
+  "@marketInsteadOf": {
+    "description": "",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "newPrice": {
+        "type": "String"
+      },
+      "oldPrice": {
+        "type": "String"
+      }
+    }
+  },
+  "marketOccasionWedding": "Wedding",
+  "@marketOccasionWedding": {
+    "description": ""
+  },
+  "marketOccasionEvening": "Evening",
+  "@marketOccasionEvening": {
+    "description": ""
+  },
+  "marketOccasionEid": "Eid",
+  "@marketOccasionEid": {
+    "description": ""
+  },
+  "marketOccasionGraduation": "Graduation",
+  "@marketOccasionGraduation": {
+    "description": ""
+  },
+  "marketOccasionWork": "Work",
+  "@marketOccasionWork": {
+    "description": ""
+  },
+  "marketOccasionDaily": "Everyday",
+  "@marketOccasionDaily": {
+    "description": ""
+  },
+  "marketReadyLooks": "Ready looks",
+  "@marketReadyLooks": {
+    "description": ""
+  },
+  "marketAll": "All",
+  "@marketAll": {
+    "description": ""
+  },
+  "marketLooksFailed": "Looks couldn’t load.",
+  "@marketLooksFailed": {
+    "description": ""
+  },
+  "marketNoLooks": "No ready looks right now",
+  "@marketNoLooks": {
+    "description": ""
+  },
+  "marketNoLooksBody": "Looks are built from available pieces that go together. Try another occasion or come back later.",
+  "@marketNoLooksBody": {
+    "description": ""
+  },
+  "marketDrops": "Drops",
+  "@marketDrops": {
+    "description": ""
+  },
+  "marketDropsFailed": "Drops couldn’t load.",
+  "@marketDropsFailed": {
+    "description": ""
+  },
+  "marketNoDrops": "No drop right now",
+  "@marketNoDrops": {
+    "description": ""
+  },
+  "marketNoDropsBody": "When something lands that fits what you’re missing or your taste, you’ll see it here before everyone else.",
+  "@marketNoDropsBody": {
+    "description": ""
+  },
+  "marketLiveNow": "Live now",
+  "@marketLiveNow": {
+    "description": ""
+  },
+  "marketMissionsTitle": "Worth doing",
+  "@marketMissionsTitle": {
+    "description": ""
+  },
+  "marketMissionsFailed": "Missions couldn’t load.",
+  "@marketMissionsFailed": {
+    "description": ""
+  },
+  "marketNoMissions": "Nothing to do right now",
+  "@marketNoMissions": {
+    "description": ""
+  },
+  "marketNoMissionsBody": "Reem only asks for something when it’s worth it and within reach.",
+  "@marketNoMissionsBody": {
+    "description": ""
+  },
+  "marketMissionDone": "Done",
+  "@marketMissionDone": {
+    "description": ""
+  },
+  "marketMissionProgress": "{done} of {target}",
+  "@marketMissionProgress": {
+    "description": "",
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "target": {
+        "type": "int"
+      }
+    }
+  },
+  "marketNotNow": "Not now",
+  "@marketNotNow": {
+    "description": ""
+  },
+  "marketResaleTitle": "Pre-loved market",
+  "@marketResaleTitle": {
+    "description": ""
+  },
+  "marketResaleBrowse": "For sale",
+  "@marketResaleBrowse": {
+    "description": ""
+  },
+  "marketResaleMine": "My listings",
+  "@marketResaleMine": {
+    "description": ""
+  },
+  "marketResaleFailed": "Listings couldn’t load.",
+  "@marketResaleFailed": {
+    "description": ""
+  },
+  "marketNoOwnListings": "You have no listings",
+  "@marketNoOwnListings": {
+    "description": ""
+  },
+  "marketNoListings": "Nothing for sale right now",
+  "@marketNoListings": {
+    "description": ""
+  },
+  "marketNoOwnListingsBody": "When Reem finds a piece in your closet that isn’t being worn, she’ll suggest listing it here.",
+  "@marketNoOwnListingsBody": {
+    "description": ""
+  },
+  "marketNoListingsBody": "The market fills up from other women’s closets. Come back later.",
+  "@marketNoListingsBody": {
+    "description": ""
+  },
+  "marketWornTimes": "{count, plural, =0{Never worn} =1{Worn once} other{Worn {count} times}}",
+  "@marketWornTimes": {
+    "description": "",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "marketListingPublish": "Publish",
+  "@marketListingPublish": {
+    "description": ""
+  },
+  "marketListingRepublish": "Publish again",
+  "@marketListingRepublish": {
+    "description": ""
+  },
+  "marketListingWithdraw": "Withdraw",
+  "@marketListingWithdraw": {
+    "description": ""
+  },
+  "marketListingSold": "Sold",
+  "@marketListingSold": {
+    "description": ""
+  },
+  "marketSellerTitle": "Market",
+  "@marketSellerTitle": {
+    "description": ""
+  },
+  "marketOpportunities": "Opportunities",
+  "@marketOpportunities": {
+    "description": ""
+  },
+  "marketOpportunitiesBody": "Supply against demand in the categories you sell in.",
+  "@marketOpportunitiesBody": {
+    "description": ""
+  },
+  "marketReadFailed": "The market couldn’t be read.",
+  "@marketReadFailed": {
+    "description": ""
+  },
+  "marketNoSignal": "No signal strong enough right now. Reem only speaks when the data is enough.",
+  "@marketNoSignal": {
+    "description": ""
+  },
+  "marketWorthADrop": "Worth a drop",
+  "@marketWorthADrop": {
+    "description": ""
+  },
+  "marketWorthADropBody": "Your products with higher demand than usual.",
+  "@marketWorthADropBody": {
+    "description": ""
+  },
+  "marketProductsFailed": "Products couldn’t be read.",
+  "@marketProductsFailed": {
+    "description": ""
+  },
+  "marketNoDropCandidates": "None of your products needs a special drop right now.",
+  "@marketNoDropCandidates": {
+    "description": ""
+  },
+  "marketYourDrops": "Your drops",
+  "@marketYourDrops": {
+    "description": ""
+  },
+  "marketYourDropsFailed": "Your drops couldn’t load.",
+  "@marketYourDropsFailed": {
+    "description": ""
+  },
+  "marketNoOwnDrops": "You haven’t launched a drop yet.",
+  "@marketNoOwnDrops": {
+    "description": ""
+  },
+  "marketConfidenceHigh": "Confirmed",
+  "@marketConfidenceHigh": {
+    "description": ""
+  },
+  "marketConfidenceLow": "Early",
+  "@marketConfidenceLow": {
+    "description": ""
+  },
+  "marketCandidateStats": "Demand {demand} · stock {stock}",
+  "@marketCandidateStats": {
+    "description": "",
+    "placeholders": {
+      "demand": {
+        "type": "int"
+      },
+      "stock": {
+        "type": "int"
+      }
+    }
+  },
+  "marketDropAction": "Drop",
+  "@marketDropAction": {
+    "description": ""
+  },
+  "marketDropDraft": "Draft",
+  "@marketDropDraft": {
+    "description": ""
+  },
+  "marketDropScheduled": "Scheduled",
+  "@marketDropScheduled": {
+    "description": ""
+  },
+  "marketDropLive": "Live",
+  "@marketDropLive": {
+    "description": ""
+  },
+  "marketDropEnded": "Ended",
+  "@marketDropEnded": {
+    "description": ""
+  },
+  "marketDropCancelled": "Cancelled",
+  "@marketDropCancelled": {
+    "description": ""
+  },
+  "marketDropSummary": "{count, plural, =1{1 piece · {status}} other{{count} pieces · {status}}}",
+  "@marketDropSummary": {
+    "description": "",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "marketCareTitle": "Your closet after buying",
+  "@marketCareTitle": {
+    "description": ""
+  },
+  "marketCareFailed": "Your closet couldn’t be read.",
+  "@marketCareFailed": {
+    "description": ""
+  },
+  "marketCareAllGood": "Everything’s in its place",
+  "@marketCareAllGood": {
+    "description": ""
+  },
+  "marketCareAllGoodBody": "Nothing needs attention right now. We’ll tell you when a piece goes unworn.",
+  "@marketCareAllGoodBody": {
+    "description": ""
+  },
+  "marketCareNeedsAttention": "Pieces that need attention",
+  "@marketCareNeedsAttention": {
+    "description": ""
+  },
+  "marketCarePieces": "Pieces",
+  "@marketCarePieces": {
+    "description": ""
+  },
+  "marketCareInRotation": "In rotation",
+  "@marketCareInRotation": {
+    "description": ""
+  },
+  "marketCareCostPerWear": "Cost per wear (SYP)",
+  "@marketCareCostPerWear": {
+    "description": ""
+  },
+  "marketCostPerWear": "Cost per wear {amount}",
+  "@marketCostPerWear": {
+    "description": "",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "marketGoesWith": "Goes with: {titles}",
+  "@marketGoesWith": {
+    "description": "",
+    "placeholders": {
+      "titles": {
+        "type": "String"
+      }
+    }
+  },
+  "marketSuggestedPrice": "Suggested price {amount}",
+  "@marketSuggestedPrice": {
+    "description": "",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "marketListForSale": "List it for sale",
+  "@marketListForSale": {
+    "description": ""
+  },
+  "marketEditListing": "Edit listing",
+  "@marketEditListing": {
+    "description": ""
+  },
+  "marketListTitle": "List “{title}”",
+  "@marketListTitle": {
+    "description": "",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "marketListDraftNote": "Saved as a draft — no one sees it until you publish it.",
+  "@marketListDraftNote": {
+    "description": ""
+  },
+  "marketCondition": "Condition",
+  "@marketCondition": {
+    "description": ""
+  },
+  "marketConditionNew": "New with tags",
+  "@marketConditionNew": {
+    "description": ""
+  },
+  "marketConditionExcellent": "Excellent",
+  "@marketConditionExcellent": {
+    "description": ""
+  },
+  "marketConditionGood": "Good",
+  "@marketConditionGood": {
+    "description": ""
+  },
+  "marketConditionFair": "Fair",
+  "@marketConditionFair": {
+    "description": ""
+  },
+  "marketSaveDraft": "Save as draft",
+  "@marketSaveDraft": {
+    "description": ""
+  },
+  "marketSavedDraft": "Saved as a draft. You can publish it from your listings.",
+  "@marketSavedDraft": {
+    "description": ""
+  },
+  "marketReadyLooksBody": "Pieces from different shops, put together because they go well.",
+  "@marketReadyLooksBody": {
+    "description": ""
+  },
+  "marketReading": "Reading the market…",
+  "@marketReading": {
+    "description": ""
+  },
+  "marketNoSignalShort": "No signal strong enough right now.",
+  "@marketNoSignalShort": {
+    "description": ""
+  },
+  "marketOpportunityCount": "{count, plural, =1{One opportunity in your categories, with supply against demand.} other{{count} opportunities in your categories, with supply against demand.}}",
+  "@marketOpportunityCount": {
+    "description": "",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "marketCareSummary": "{count, plural, =1{One piece needs attention — care, styling or selling.} other{{count} pieces need attention — care, styling or selling.}}",
+  "@marketCareSummary": {
+    "description": "",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "marketLookFromShopsShort": "{count, plural, =1{From one shop — a complete look} other{From {count} shops — a complete look}}",
+  "@marketLookFromShopsShort": {
+    "description": "",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "marketPieceCount": "{count, plural, =1{1 piece} other{{count} pieces}}",
+  "@marketPieceCount": {
+    "description": "",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "marketEarlyAccess": "Early access",
+  "@marketEarlyAccess": {
+    "description": ""
+  },
+  "marketReasonOpenNeed": "Because you’re missing something like this",
+  "@marketReasonOpenNeed": {"description": "Market label."},
+  "marketReasonSearchedFor": "Because you were looking for something like it",
+  "@marketReasonSearchedFor": {"description": "Market label."},
+  "marketReasonOccasion": "Because it suits the occasion you’re getting ready for",
+  "@marketReasonOccasion": {"description": "Market label."},
+  "marketReasonTaste": "Because it’s close to your taste",
+  "@marketReasonTaste": {"description": "Market label."},
+  "marketReasonSellerCustomer": "From a shop you buy from",
+  "@marketReasonSellerCustomer": {"description": "Market label."},
+  "marketRotationActive": "In rotation",
+  "@marketRotationActive": {"description": "Market label."},
+  "marketRotationSlowing": "Worn less lately",
+  "@marketRotationSlowing": {"description": "Market label."},
+  "marketRotationDormant": "Sitting in the closet",
+  "@marketRotationDormant": {"description": "Market label."},
+  "marketRotationUnworn": "Never worn",
+  "@marketRotationUnworn": {"description": "Market label."},
+  "settingsMyAddresses": "My addresses",
+  "@settingsMyAddresses": {
+    "description": ""
+  },
+  "settingsDeliveryAddresses": "Delivery addresses",
+  "@settingsDeliveryAddresses": {
+    "description": ""
+  },
+  "settingsDeliveryAddressesSubtitle": "Where should we send your orders?",
+  "@settingsDeliveryAddressesSubtitle": {
+    "description": ""
+  },
+  "settingsAddAddress": "Add a new address",
+  "@settingsAddAddress": {
+    "description": ""
+  },
+  "settingsAddressAdded": "Address added",
+  "@settingsAddressAdded": {
+    "description": ""
+  },
+  "settingsAddressUpdated": "Changes saved",
+  "@settingsAddressUpdated": {
+    "description": ""
+  },
+  "settingsAddressNowDefault": "This is now your default address",
+  "@settingsAddressNowDefault": {
+    "description": ""
+  },
+  "settingsDeleteAddressTitle": "Delete address",
+  "@settingsDeleteAddressTitle": {
+    "description": ""
+  },
+  "settingsDeleteAddressBody": "“{label}” will be removed from your addresses.",
+  "@settingsDeleteAddressBody": {
+    "description": "",
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsDelete": "Delete",
+  "@settingsDelete": {
+    "description": ""
+  },
+  "settingsKeep": "Keep it",
+  "@settingsKeep": {
+    "description": ""
+  },
+  "settingsAddressDeleted": "Address deleted",
+  "@settingsAddressDeleted": {
+    "description": ""
+  },
+  "settingsActionFailed": "That couldn’t be done right now",
+  "@settingsActionFailed": {
+    "description": ""
+  },
+  "settingsNoAddresses": "No saved addresses yet",
+  "@settingsNoAddresses": {
+    "description": ""
+  },
+  "settingsNoAddressesBody": "Save an address now so it’s ready for your first order",
+  "@settingsNoAddressesBody": {
+    "description": ""
+  },
+  "settingsCoupons": "Coupons",
+  "@settingsCoupons": {
+    "description": ""
+  },
+  "settingsYourOffers": "Your offers",
+  "@settingsYourOffers": {
+    "description": ""
+  },
+  "settingsYourOffersSubtitle": "Apply an offer to your bag, or copy the code",
+  "@settingsYourOffersSubtitle": {
+    "description": ""
+  },
+  "settingsCouponPercentOff": "{percent}% off",
+  "@settingsCouponPercentOff": {
+    "description": "",
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsCouponAmountOff": "{amount} off",
+  "@settingsCouponAmountOff": {
+    "description": "",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsCouponMinimum": "Minimum {amount}",
+  "@settingsCouponMinimum": {
+    "description": "",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsCouponEndsToday": "Ends today",
+  "@settingsCouponEndsToday": {
+    "description": ""
+  },
+  "settingsCouponDaysLeft": "{days, plural, =1{1 day left} other{{days} days left}}",
+  "@settingsCouponDaysLeft": {
+    "description": "",
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsCouponLastUse": "Last use",
+  "@settingsCouponLastUse": {
+    "description": ""
+  },
+  "settingsCouponUsesLeft": "{count, plural, other{{count} uses left}}",
+  "@settingsCouponUsesLeft": {
+    "description": "",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsCouponApplied": "{code} applied — you saved {amount}",
+  "@settingsCouponApplied": {
+    "description": "",
+    "placeholders": {
+      "code": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsCouponEmptyBag": "Your bag is empty — add something, then apply the offer",
+  "@settingsCouponEmptyBag": {
+    "description": ""
+  },
+  "settingsCouponTwoCurrencies": "Your bag has two currencies — apply the offer at checkout",
+  "@settingsCouponTwoCurrencies": {
+    "description": ""
+  },
+  "settingsCouponApplyFailed": "The coupon couldn’t be applied",
+  "@settingsCouponApplyFailed": {
+    "description": ""
+  },
+  "settingsCouponJustForYou": "Just for you",
+  "@settingsCouponJustForYou": {
+    "description": ""
+  },
+  "settingsCouponCopyCode": "Copy code",
+  "@settingsCouponCopyCode": {
+    "description": ""
+  },
+  "settingsCouponCopied": "Code {code} copied",
+  "@settingsCouponCopied": {
+    "description": "",
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsCouponAppliedBadge": "Applied",
+  "@settingsCouponAppliedBadge": {
+    "description": ""
+  },
+  "settingsCouponApplyToBag": "Apply to my bag",
+  "@settingsCouponApplyToBag": {
+    "description": ""
+  },
+  "settingsCouponAppliedSaving": "{code} applied — saving {discount}",
+  "@settingsCouponAppliedSaving": {
+    "description": "",
+    "placeholders": {
+      "code": {
+        "type": "String"
+      },
+      "discount": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsRemove": "Remove",
+  "@settingsRemove": {
+    "description": ""
+  },
+  "settingsContinueToCheckout": "Continue to checkout",
+  "@settingsContinueToCheckout": {
+    "description": ""
+  },
+  "settingsBagNow": "Your bag now: {subtotal}",
+  "@settingsBagNow": {
+    "description": "",
+    "placeholders": {
+      "subtotal": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsNoCoupons": "No coupons available right now",
+  "@settingsNoCoupons": {
+    "description": ""
+  },
+  "settingsNoCouponsBody": "We’ll let you know when a new offer arrives",
+  "@settingsNoCouponsBody": {
+    "description": ""
+  },
+  "settingsCouponsFailed": "Coupons couldn’t load",
+  "@settingsCouponsFailed": {
+    "description": ""
+  },
+  "settingsPaymentMethods": "Payment methods",
+  "@settingsPaymentMethods": {
+    "description": ""
+  },
+  "settingsPayAtOrder": "Pay when you order",
+  "@settingsPayAtOrder": {
+    "description": ""
+  },
+  "settingsPayAtOrderSubtitle": "You choose the method at checkout",
+  "@settingsPayAtOrderSubtitle": {
+    "description": ""
+  },
+  "settingsAvailableMethods": "Available methods",
+  "@settingsAvailableMethods": {
+    "description": ""
+  },
+  "settingsNoCardsStored": "We don’t store card details. Each order is paid when you place it, the way you choose.",
+  "@settingsNoCardsStored": {
+    "description": ""
+  },
+  "settingsReemWallet": "Reem wallet",
+  "@settingsReemWallet": {
+    "description": ""
+  },
+  "settingsHintCod": "Pay the courier in cash on delivery",
+  "@settingsHintCod": {
+    "description": ""
+  },
+  "settingsHintCourierCollect": "Collected by the delivery company",
+  "@settingsHintCourierCollect": {
+    "description": ""
+  },
+  "settingsHintWallet": "Taken from your balance straight away",
+  "@settingsHintWallet": {
+    "description": ""
+  },
+  "settingsHintMobileWallet": "We open the payment page once the order is confirmed",
+  "@settingsHintMobileWallet": {
+    "description": ""
+  },
+  "settingsHintCard": "A secure payment page — we don’t store your card",
+  "@settingsHintCard": {
+    "description": ""
+  },
+  "settingsHintBankTransfer": "Transfer the amount, then send the reference from the order page",
+  "@settingsHintBankTransfer": {
+    "description": ""
+  },
+  "settingsHintHawala": "A local transfer, then send the receipt number from the order page",
+  "@settingsHintHawala": {
+    "description": ""
+  },
+  "settingsHintConfirmedFirst": "Payment is confirmed before the order is prepared",
+  "@settingsHintConfirmedFirst": {
+    "description": ""
+  },
+  "settingsNoPaymentMethods": "No payment methods available right now",
+  "@settingsNoPaymentMethods": {
+    "description": ""
+  },
+  "settingsPaymentMethodsFailed": "Payment methods couldn’t load",
+  "@settingsPaymentMethodsFailed": {
+    "description": ""
+  },
+  "settingsAddressDefault": "Default",
+  "@settingsAddressDefault": {
+    "description": ""
+  },
+  "settingsAddressNear": "Near {landmark}",
+  "@settingsAddressNear": {
+    "description": "",
+    "placeholders": {
+      "landmark": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsMakeDefault": "Make default",
+  "@settingsMakeDefault": {
+    "description": ""
+  },
+  "settingsEdit": "Edit",
+  "@settingsEdit": {
+    "description": ""
+  },
+  "settingsAddressHome": "Home",
+  "@settingsAddressHome": {
+    "description": ""
+  },
+  "settingsEditAddress": "Edit address",
+  "@settingsEditAddress": {
+    "description": ""
+  },
+  "settingsNewAddress": "New address",
+  "@settingsNewAddress": {
+    "description": ""
+  },
+  "settingsAddressName": "Address name",
+  "@settingsAddressName": {
+    "description": ""
+  },
+  "settingsAddressNameHint": "Home, work, my parents’",
+  "@settingsAddressNameHint": {
+    "description": ""
+  },
+  "settingsRecipientName": "Recipient’s name",
+  "@settingsRecipientName": {
+    "description": ""
+  },
+  "settingsRecipientNameHint": "Who receives the order",
+  "@settingsRecipientNameHint": {
+    "description": ""
+  },
+  "settingsPhoneNumber": "Phone number",
+  "@settingsPhoneNumber": {
+    "description": ""
+  },
+  "settingsCity": "City or town",
+  "@settingsCity": {
+    "description": ""
+  },
+  "settingsCityHint": "Mezzeh, Jaramana, ...",
+  "@settingsCityHint": {
+    "description": ""
+  },
+  "settingsAddressLine": "Address",
+  "@settingsAddressLine": {
+    "description": ""
+  },
+  "settingsAddressLineHint": "Street, building, floor, flat number",
+  "@settingsAddressLineHint": {
+    "description": ""
+  },
+  "settingsLandmark": "Landmark (optional)",
+  "@settingsLandmark": {
+    "description": ""
+  },
+  "settingsLandmarkHint": "Near Al-Nour pharmacy",
+  "@settingsLandmarkHint": {
+    "description": ""
+  },
+  "settingsDeliveryNotes": "Delivery instructions (optional)",
+  "@settingsDeliveryNotes": {
+    "description": ""
+  },
+  "settingsDeliveryNotesHint": "Call before arriving",
+  "@settingsDeliveryNotesHint": {
+    "description": ""
+  },
+  "settingsMakeMyDefault": "Make it my default address",
+  "@settingsMakeMyDefault": {
+    "description": ""
+  },
+  "settingsMakeMyDefaultHint": "Checkout opens with it",
+  "@settingsMakeMyDefaultHint": {
+    "description": ""
+  },
+  "settingsSaveChanges": "Save changes",
+  "@settingsSaveChanges": {
+    "description": ""
+  },
+  "settingsSaveAddress": "Save address",
+  "@settingsSaveAddress": {
+    "description": ""
+  },
+  "settingsGovernorate": "Governorate",
+  "@settingsGovernorate": {
+    "description": ""
+  },
+  "settingsChooseGovernorate": "Choose a governorate",
+  "@settingsChooseGovernorate": {
+    "description": ""
+  },
+  "settingsDistrict": "Area",
+  "@settingsDistrict": {
+    "description": ""
+  },
+  "settingsChooseDistrict": "Choose an area (optional)",
+  "@settingsChooseDistrict": {
+    "description": ""
+  },
+  "settingsDistrictRural": "{name} · countryside",
+  "@settingsDistrictRural": {
+    "description": "",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsGovernoratesFailed": "The governorate list couldn’t load",
+  "@settingsGovernoratesFailed": {
+    "description": ""
+  },
+  "settingsFieldRequired": "This field is required",
+  "@settingsFieldRequired": {
+    "description": ""
+  },
+  "settingsFieldTooShort": "Too short",
+  "@settingsFieldTooShort": {
+    "description": ""
+  },
+  "siDemandRadar": "Demand radar",
+  "@siDemandRadar": {
+    "description": ""
+  },
+  "siRadarFailed": "Radar data couldn’t load.",
+  "@siRadarFailed": {
+    "description": ""
+  },
+  "siNoProducts": "No products yet",
+  "@siNoProducts": {
+    "description": ""
+  },
+  "siNoProductsRadarBody": "Add your first product and we’ll start reading the market for you.",
+  "@siNoProductsRadarBody": {
+    "description": ""
+  },
+  "siStillGathering": "Still gathering data",
+  "@siStillGathering": {
+    "description": ""
+  },
+  "siStillGatheringBody": "The radar reads the market every night. Come back tomorrow.",
+  "@siStillGatheringBody": {
+    "description": ""
+  },
+  "siWhatToDoNow": "What to do now",
+  "@siWhatToDoNow": {
+    "description": ""
+  },
+  "siWhatToDoNowSubtitle": "Ordered by what matters most to your shop",
+  "@siWhatToDoNowSubtitle": {
+    "description": ""
+  },
+  "siStockBelowDemand": "Stock below demand",
+  "@siStockBelowDemand": {
+    "description": ""
+  },
+  "siStockBelowDemandSubtitle": "Pieces selling well and running out",
+  "@siStockBelowDemandSubtitle": {
+    "description": ""
+  },
+  "siRisingCategories": "Rising categories",
+  "@siRisingCategories": {
+    "description": ""
+  },
+  "siRisingCategoriesSubtitle": "Demand for them is growing",
+  "@siRisingCategoriesSubtitle": {
+    "description": ""
+  },
+  "siUnmetDemand": "Unmet demand",
+  "@siUnmetDemand": {
+    "description": ""
+  },
+  "siUnmetDemandSubtitle": "Women searched and didn’t find the right thing",
+  "@siUnmetDemandSubtitle": {
+    "description": ""
+  },
+  "siPriceMovement": "Price movement",
+  "@siPriceMovement": {
+    "description": ""
+  },
+  "siOutOfStock": "None left",
+  "@siOutOfStock": {
+    "description": ""
+  },
+  "siUnitsLeft": "{count, plural, =1{1 piece left} other{{count} pieces left}}",
+  "@siUnitsLeft": {
+    "description": "",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "siCoverDays": "{days, plural, =1{Lasts 1 day} other{Lasts {days} days}}",
+  "@siCoverDays": {
+    "description": "",
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "siYouSellHere": "You sell here",
+  "@siYouSellHere": {
+    "description": ""
+  },
+  "siYouDontSellHere": "You don’t sell here",
+  "@siYouDontSellHere": {
+    "description": ""
+  },
+  "siSearchMiss": "{searches} searches · {percent}% found nothing",
+  "@siSearchMiss": {
+    "description": "",
+    "placeholders": {
+      "searches": {
+        "type": "int"
+      },
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "siInYourCategory": "In your category",
+  "@siInYourCategory": {
+    "description": ""
+  },
+  "siProductIntelligence": "Product intelligence",
+  "@siProductIntelligence": {
+    "description": ""
+  },
+  "siProductsFailed": "Your products couldn’t be scored.",
+  "@siProductsFailed": {
+    "description": ""
+  },
+  "siNoProductsBody": "Add your first product and we’ll tell you what it’s missing.",
+  "@siNoProductsBody": {
+    "description": ""
+  },
+  "siAverage": "Average",
+  "@siAverage": {
+    "description": ""
+  },
+  "siProductCount": "{count, plural, =1{1 product} other{{count} products}}",
+  "@siProductCount": {
+    "description": "",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "siNothingUrgent": "Nothing urgent. Ordered weakest first.",
+  "@siNothingUrgent": {
+    "description": ""
+  },
+  "siUrgentCount": "{count, plural, =1{One needs attention now.} other{{count} need attention now.}}",
+  "@siUrgentCount": {
+    "description": "",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "siWindowDays": "{days, plural, =1{Based on the last day} other{Based on the last {days} days}}",
+  "@siWindowDays": {
+    "description": "",
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "siViewsOrders": "Views: {views} · Orders: {orders}",
+  "@siViewsOrders": {
+    "description": "",
+    "placeholders": {
+      "views": {
+        "type": "int"
+      },
+      "orders": {
+        "type": "int"
+      }
+    }
+  },
+  "siSoldOut": "Sold out",
+  "@siSoldOut": {
+    "description": ""
+  },
+  "siMoreAdvice": "{count, plural, =1{and 1 more tip} other{and {count} more tips}}",
+  "@siMoreAdvice": {
+    "description": "",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "siDetailsFailed": "Details couldn’t load.",
+  "@siDetailsFailed": {
+    "description": ""
+  },
+  "siNoDataYet": "No data yet",
+  "@siNoDataYet": {
+    "description": ""
+  },
+  "siTooFewYet": "Too few yet",
+  "@siTooFewYet": {
+    "description": ""
+  },
+  "siComparedWith": "{count, plural, =1{Compared with 1 similar product} other{Compared with {count} similar products}}",
+  "@siComparedWith": {
+    "description": "",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "siPriceNearMarket": "Your price is close to the market.",
+  "@siPriceNearMarket": {
+    "description": ""
+  },
+  "siPriceAbove": "Your price is {percent}% above similar pieces.",
+  "@siPriceAbove": {
+    "description": "",
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "siPriceBelow": "Your price is {percent}% below similar pieces.",
+  "@siPriceBelow": {
+    "description": "",
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "siConversion": "Your conversion is {yours}% against {median}% in the category.",
+  "@siConversion": {
+    "description": "",
+    "placeholders": {
+      "yours": {
+        "type": "String"
+      },
+      "median": {
+        "type": "String"
+      }
+    }
+  },
+  "siShopHealth": "Shop health",
+  "@siShopHealth": {
+    "description": ""
+  },
+  "siHealthFailed": "Shop health couldn’t be calculated.",
+  "@siHealthFailed": {
+    "description": ""
+  },
+  "siWhatRaisesHealth": "What raises your shop’s health",
+  "@siWhatRaisesHealth": {
+    "description": ""
+  },
+  "siWhatRaisesHealthSubtitle": "Ordered by biggest impact",
+  "@siWhatRaisesHealthSubtitle": {
+    "description": ""
+  },
+  "siMetrics": "Metrics",
+  "@siMetrics": {
+    "description": ""
+  },
+  "siNotEnoughYet": "Not enough yet",
+  "@siNotEnoughYet": {
+    "description": ""
+  },
+  "siNotEnoughYetBody": "These metrics don’t affect your shop’s health until there’s enough data",
+  "@siNotEnoughYetBody": {
+    "description": ""
+  },
+  "siWhatSlipped": "What slipped",
+  "@siWhatSlipped": {
+    "description": ""
+  },
+  "siSlippedFailed": "Slipping products couldn’t be read right now.",
+  "@siSlippedFailed": {
+    "description": ""
+  },
+  "siWhatSlippedSubtitle": "Used to sell, then slowed — with one reason for each",
+  "@siWhatSlippedSubtitle": {
+    "description": ""
+  },
+  "siHealthTooFewOrders": "Not enough orders to judge yet. Every order you complete makes the picture clearer.",
+  "@siHealthTooFewOrders": {
+    "description": ""
+  },
+  "siHealthWindow": "{days, plural, =1{Based on your last day of orders.} other{Based on your last {days} days of orders.}}",
+  "@siHealthWindow": {
+    "description": "",
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "siMomentum": "{points, plural, =1{1 point from last month} other{{points} points from last month}}",
+  "@siMomentum": {
+    "description": "",
+    "placeholders": {
+      "points": {
+        "type": "int"
+      }
+    }
+  },
+  "siDimensionUnmeasured": "{blurb} — nothing to measure yet.",
+  "@siDimensionUnmeasured": {
+    "description": "",
+    "placeholders": {
+      "blurb": {
+        "type": "String"
+      }
+    }
+  },
+  "siDimensionTooFew": "{blurb} — measured on {sample}, but still too few to count.",
+  "@siDimensionTooFew": {
+    "description": "",
+    "placeholders": {
+      "blurb": {
+        "type": "String"
+      },
+      "sample": {
+        "type": "int"
+      }
+    }
+  },
+  "siDays": "{count, plural, =1{1 day} other{{count} days}}",
+  "@siDays": {
+    "description": "",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "siHours": "{count} h",
+  "@siHours": {
+    "description": "",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "siOutOfFive": "{value} of 5",
+  "@siOutOfFive": {
+    "description": "",
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "siFactAccepted": "Orders you accepted and completed",
+  "@siFactAccepted": {
+    "description": ""
+  },
+  "siFactDelivered": "Orders delivered",
+  "@siFactDelivered": {
+    "description": ""
+  },
+  "siFactCancelledBySeller": "You cancelled",
+  "@siFactCancelledBySeller": {
+    "description": ""
+  },
+  "siFactCancelledByOthers": "Cancelled by the customer",
+  "@siFactCancelledByOthers": {
+    "description": ""
+  },
+  "siFactReturned": "Returned",
+  "@siFactReturned": {
+    "description": ""
+  },
+  "siFactPrepHours": "Average prep (hours)",
+  "@siFactPrepHours": {
+    "description": ""
+  },
+  "siFactShipHours": "Average shipping (hours)",
+  "@siFactShipHours": {
+    "description": ""
+  },
+  "siFactResponseHours": "Average reply (hours)",
+  "@siFactResponseHours": {
+    "description": ""
+  },
+  "siFactRating": "Shop rating",
+  "@siFactRating": {
+    "description": ""
+  },
+  "siFactReviewCount": "Number of reviews",
+  "@siFactReviewCount": {
+    "description": ""
+  },
+  "siHideNumbers": "Hide the numbers",
+  "@siHideNumbers": {
+    "description": ""
+  },
+  "siShowNumbers": "Show the numbers we counted",
+  "@siShowNumbers": {
+    "description": ""
+  },
+  "siShopIntelligence": "Shop intelligence",
+  "@siShopIntelligence": {
+    "description": ""
+  },
+  "siCalculating": "Calculating…",
+  "@siCalculating": {
+    "description": ""
+  },
+  "siEightMetrics": "Eight metrics for your shop",
+  "@siEightMetrics": {
+    "description": ""
+  },
+  "siGettingToKnow": "Still getting to know your shop",
+  "@siGettingToKnow": {
+    "description": ""
+  },
+  "siDemandRadarSubtitle": "What demand is growing for",
+  "@siDemandRadarSubtitle": {
+    "description": ""
+  },
+  "siProductIntelligenceSubtitle": "What your product pages are missing",
+  "@siProductIntelligenceSubtitle": {
+    "description": ""
+  },
+  "siNotMeasuredYet": "Not measured yet",
+  "@siNotMeasuredYet": {
+    "description": ""
+  },
+  "siWeightOfHealth": "{percent}% of health",
+  "@siWeightOfHealth": {
+    "description": "",
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "stylistNewChat": "New chat",
+  "@stylistNewChat": {
+    "description": ""
+  },
+  "stylistMyPreferences": "My preferences",
+  "@stylistMyPreferences": {
+    "description": ""
+  },
+  "stylistPreferencesFailed": "Your preferences couldn’t load.",
+  "@stylistPreferencesFailed": {
+    "description": ""
+  },
+  "stylistModesty": "Modesty",
+  "@stylistModesty": {
+    "description": ""
+  },
+  "stylistModestyHelp": "Decides which pieces the app shows you.",
+  "@stylistModestyHelp": {
+    "description": ""
+  },
+  "stylistFavouriteColours": "Favourite colours",
+  "@stylistFavouriteColours": {
+    "description": ""
+  },
+  "stylistFavouriteColoursHelp": "We rank pieces in these colours higher, without hiding the rest.",
+  "@stylistFavouriteColoursHelp": {
+    "description": ""
+  },
+  "stylistMySizes": "My sizes",
+  "@stylistMySizes": {
+    "description": ""
+  },
+  "stylistMySizesHelp": "Once we know them, we only show pieces actually available in your size.",
+  "@stylistMySizesHelp": {
+    "description": ""
+  },
+  "stylistBudget": "Budget",
+  "@stylistBudget": {
+    "description": ""
+  },
+  "stylistBudgetHelp": "The figure you’re usually comfortable with.",
+  "@stylistBudgetHelp": {
+    "description": ""
+  },
+  "stylistInferred": "What we learned from your shopping",
+  "@stylistInferred": {
+    "description": ""
+  },
+  "stylistInferredHelp": "This is what your choices say, not what you wrote.",
+  "@stylistInferredHelp": {
+    "description": ""
+  },
+  "stylistModestyUnspecified": "No preference",
+  "@stylistModestyUnspecified": {
+    "description": ""
+  },
+  "stylistModestyFull": "Full coverage",
+  "@stylistModestyFull": {
+    "description": ""
+  },
+  "stylistModestyModest": "Modest",
+  "@stylistModestyModest": {
+    "description": ""
+  },
+  "stylistModestyBalanced": "Balanced",
+  "@stylistModestyBalanced": {
+    "description": ""
+  },
+  "stylistModestyExpressive": "No limits",
+  "@stylistModestyExpressive": {
+    "description": ""
+  },
+  "stylistClothing": "Clothing",
+  "@stylistClothing": {
+    "description": ""
+  },
+  "stylistShoes": "Shoes",
+  "@stylistShoes": {
+    "description": ""
+  },
+  "stylistBudgetStated": "You set up to {amount}",
+  "@stylistBudgetStated": {
+    "description": "",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "stylistBudgetTypical": "and you usually buy between {min} and {max}",
+  "@stylistBudgetTypical": {
+    "description": "",
+    "placeholders": {
+      "min": {
+        "type": "String"
+      },
+      "max": {
+        "type": "String"
+      }
+    }
+  },
+  "stylistNoSignalYet": "Not enough signals yet. Browse and look at products, and we’ll learn your taste.",
+  "@stylistNoSignalYet": {
+    "description": ""
+  },
+  "stylistViewed": "Products you viewed",
+  "@stylistViewed": {
+    "description": ""
+  },
+  "stylistSaved": "Products you saved",
+  "@stylistSaved": {
+    "description": ""
+  },
+  "stylistPurchased": "Products you bought",
+  "@stylistPurchased": {
+    "description": ""
+  },
+  "stylistDismissed": "Products you passed on",
+  "@stylistDismissed": {
+    "description": ""
+  },
+  "stylistTasteRefreshed": "We refreshed our read of your taste.",
+  "@stylistTasteRefreshed": {
+    "description": ""
+  },
+  "stylistTasteRefreshFailed": "Couldn’t refresh — try again shortly.",
+  "@stylistTasteRefreshFailed": {
+    "description": ""
+  },
+  "stylistRefresh": "Refresh",
+  "@stylistRefresh": {
+    "description": ""
+  },
+  "stylistLookFailed": "The look couldn’t open.",
+  "@stylistLookFailed": {
+    "description": ""
+  },
+  "stylistLookPartlyUnavailable": "One or more pieces are no longer available. You can order the rest, or ask me for an alternative.",
+  "@stylistLookPartlyUnavailable": {
+    "description": ""
+  },
+  "stylistNoLongerAvailable": "No longer available",
+  "@stylistNoLongerAvailable": {
+    "description": ""
+  },
+  "stylistTotal": "Total",
+  "@stylistTotal": {
+    "description": ""
+  },
+  "stylistLookSaved": "Saved",
+  "@stylistLookSaved": {
+    "description": ""
+  },
+  "stylistSaveLook": "Save the look",
+  "@stylistSaveLook": {
+    "description": ""
+  },
+  "stylistLookSavedToCloset": "The look is saved to your closet.",
+  "@stylistLookSavedToCloset": {
+    "description": ""
+  },
+  "stylistLookSaveFailed": "The look couldn’t be saved — try again.",
+  "@stylistLookSaveFailed": {
+    "description": ""
+  },
+  "stylistComposerHint": "Tell me what you’re looking for…",
+  "@stylistComposerHint": {
+    "description": ""
+  },
+  "stylistSend": "Send",
+  "@stylistSend": {
+    "description": ""
+  },
+  "stylistMessageFailed": "The message didn’t send",
+  "@stylistMessageFailed": {
+    "description": ""
+  },
+  "stylistOpenLook": "Open the look",
+  "@stylistOpenLook": {
+    "description": ""
+  },
+  "stylistLookTotal": "Look total",
+  "@stylistLookTotal": {
+    "description": ""
+  },
+  "stylistSoldOut": "Sold out",
+  "@stylistSoldOut": {
+    "description": ""
+  },
+  "stylistLike": "I like it",
+  "@stylistLike": {
+    "description": ""
+  },
+  "stylistNotForMe": "Not for me",
+  "@stylistNotForMe": {
+    "description": ""
+  },
+  "stylistWelcomeTitle": "Reem’s personal stylist",
+  "@stylistWelcomeTitle": {
+    "description": ""
+  },
+  "stylistWelcomeBody": "Tell me about the occasion, the piece or the budget — I’ll line up options that Reem’s sellers actually have, and tell you why I picked each one.",
+  "@stylistWelcomeBody": {
+    "description": ""
+  },
+  "stylistTryAsking": "Try asking me:",
+  "@stylistTryAsking": {
+    "description": ""
+  },
+  "stylistCapLookTitle": "A complete look",
+  "@stylistCapLookTitle": {
+    "description": ""
+  },
+  "stylistCapLookBody": "A dress, bag and shoes styled together",
+  "@stylistCapLookBody": {
+    "description": ""
+  },
+  "stylistCapGiftsTitle": "Gifts",
+  "@stylistCapGiftsTitle": {
+    "description": ""
+  },
+  "stylistCapGiftsBody": "By age, taste and budget",
+  "@stylistCapGiftsBody": {
+    "description": ""
+  },
+  "stylistCapInStockTitle": "Actually in stock",
+  "@stylistCapInStockTitle": {
+    "description": ""
+  },
+  "stylistCapInStockBody": "Every piece comes from sellers’ current stock",
+  "@stylistCapInStockBody": {
+    "description": ""
+  },
+  "visualNewSearch": "New search",
+  "@visualNewSearch": {
+    "description": ""
+  },
+  "visualPickPhoto": "Choose a photo",
+  "@visualPickPhoto": {
+    "description": ""
+  },
+  "visualPreparing": "Photo search is still getting ready",
+  "@visualPreparing": {
+    "description": ""
+  },
+  "visualPreparingBody": "We’re analysing product photos so we can compare them with yours. Try again shortly.",
+  "@visualPreparingBody": {
+    "description": ""
+  },
+  "visualRefresh": "Refresh",
+  "@visualRefresh": {
+    "description": ""
+  },
+  "visualSawSomething": "Saw something you liked?",
+  "@visualSawSomething": {
+    "description": ""
+  },
+  "visualSawSomethingBody": "Upload a photo of the piece — a screenshot from Instagram, TikTok or Pinterest, or one from your gallery — and we’ll find the closest thing in Reem.",
+  "@visualSawSomethingBody": {
+    "description": ""
+  },
+  "visualPastSearches": "Your past searches",
+  "@visualPastSearches": {
+    "description": ""
+  },
+  "visualPhotoSearch": "Photo search",
+  "@visualPhotoSearch": {
+    "description": ""
+  },
+  "visualPhotoDeletedResultsKept": "The photo was deleted — the results are still here",
+  "@visualPhotoDeletedResultsKept": {
+    "description": ""
+  },
+  "visualTapToOpen": "Tap to open",
+  "@visualTapToOpen": {
+    "description": ""
+  },
+  "visualUploading": "Uploading the photo…",
+  "@visualUploading": {
+    "description": ""
+  },
+  "visualAnalysing": "Analysing the photo and searching…",
+  "@visualAnalysing": {
+    "description": ""
+  },
+  "visualComparing": "Comparing your photo with products actually on Reem.",
+  "@visualComparing": {
+    "description": ""
+  },
+  "visualNothingClose": "I didn’t find anything close",
+  "@visualNothingClose": {
+    "description": ""
+  },
+  "visualNothingCloseBody": "Try a clearer photo, or write exactly what you want.",
+  "@visualNothingCloseBody": {
+    "description": ""
+  },
+  "visualAnotherPhoto": "Another photo",
+  "@visualAnotherPhoto": {
+    "description": ""
+  },
+  "visualClosestCount": "{count, plural, =1{The closest piece} other{The {count} closest pieces}}",
+  "@visualClosestCount": {
+    "description": "",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "visualNoOffer": "No offer is available for this piece right now.",
+  "@visualNoOffer": {
+    "description": ""
+  },
+  "visualAddedToBag": "Added to your bag",
+  "@visualAddedToBag": {
+    "description": ""
+  },
+  "visualAddToBagFailed": "It couldn’t be added to your bag.",
+  "@visualAddToBagFailed": {
+    "description": ""
+  },
+  "visualDeleteTitle": "Delete this search?",
+  "@visualDeleteTitle": {
+    "description": ""
+  },
+  "visualDeleteBody": "The photo and results will be deleted for good and can’t be recovered.",
+  "@visualDeleteBody": {
+    "description": ""
+  },
+  "visualDelete": "Delete",
+  "@visualDelete": {
+    "description": ""
+  },
+  "visualBack": "Back",
+  "@visualBack": {
+    "description": ""
+  },
+  "visualDeleted": "The photo and search were deleted.",
+  "@visualDeleted": {
+    "description": ""
+  },
+  "visualWhatISaw": "What I understood from the photo",
+  "@visualWhatISaw": {
+    "description": ""
+  },
+  "visualCouldntDescribe": "I couldn’t put the photo into words, but I’m searching for it visually.",
+  "@visualCouldntDescribe": {
+    "description": ""
+  },
+  "visualDeletePhotoAndSearch": "Delete the photo and search",
+  "@visualDeletePhotoAndSearch": {
+    "description": ""
+  },
+  "visualPhotoDeleted": "Photo deleted",
+  "@visualPhotoDeleted": {
+    "description": ""
+  },
+  "visualInferredFromMatches": "Inferred from the closest products, not from the photo itself",
+  "@visualInferredFromMatches": {
+    "description": ""
+  },
+  "visualClosestCategory": "Closest: {label}",
+  "@visualClosestCategory": {
+    "description": "",
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "visualLowConfidence": "The photo isn’t very clear — results are approximate.",
+  "@visualLowConfidence": {
+    "description": ""
+  },
+  "visualRefineHint": "Describe what you’d like to change…",
+  "@visualRefineHint": {
+    "description": ""
+  },
+  "visualRefine": "Refine the search",
+  "@visualRefine": {
+    "description": ""
+  },
+  "visualSeveralPieces": "I saw more than one piece in the photo",
+  "@visualSeveralPieces": {
+    "description": ""
+  },
+  "visualRegionGuessed": "I guessed this piece from the photo’s layout — I’m not completely sure.",
+  "@visualRegionGuessed": {
+    "description": ""
+  },
+  "visualSimilaritySemantics": "{percent} percent similar",
+  "@visualSimilaritySemantics": {
+    "description": "",
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "visualSimilarityBadge": "{percent}% similar",
+  "@visualSimilarityBadge": {
+    "description": "",
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "visualSearchByPhoto": "Search by photo",
+  "@visualSearchByPhoto": {
+    "description": ""
+  },
+  "visualSourceBody": "Take a photo of the piece, or pick a screenshot from Instagram, TikTok or Pinterest.",
+  "@visualSourceBody": {
+    "description": ""
+  },
+  "visualTakePhoto": "Take a photo",
+  "@visualTakePhoto": {
+    "description": ""
+  },
+  "visualTakePhotoHint": "In good light against a plain background",
+  "@visualTakePhotoHint": {
+    "description": ""
+  },
+  "visualFromGallery": "From your gallery",
+  "@visualFromGallery": {
+    "description": ""
+  },
+  "visualFromGalleryHint": "A screenshot or saved photo",
+  "@visualFromGalleryHint": {
+    "description": ""
+  },
+  "visualPrivacy": "Your photo is stored privately and deleted automatically after the search. No one else can see it.",
+  "@visualPrivacy": {
+    "description": ""
+  },
+  "visualSimilarRail": "Visually similar pieces",
+  "@visualSimilarRail": {
+    "description": ""
+  },
+  "visualSearchWithYourPhoto": "Search with your photo",
+  "@visualSearchWithYourPhoto": {
+    "description": ""
+  },
+  "checkoutCouponApplied": "Coupon applied — saving {amount}",
+  "@checkoutCouponApplied": {
+    "description": "",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "checkoutEtaToday": "Arrives today",
+  "@checkoutEtaToday": {
+    "description": ""
+  },
+  "checkoutEtaDays": "{days, plural, =1{Arrives within a day} other{Arrives within {days} days}}",
+  "@checkoutEtaDays": {
+    "description": "",
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "checkoutSplitShipments": "{count, plural, other{{count} shipments from {count} sellers}}",
+  "@checkoutSplitShipments": {
+    "description": "",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "checkoutShipments": "Shipments",
+  "@checkoutShipments": {
+    "description": ""
+  },
+  "checkoutNote": "Note: {note}",
+  "@checkoutNote": {
+    "description": "",
+    "placeholders": {
+      "note": {
+        "type": "String"
+      }
+    }
+  },
+  "checkoutPayment": "Payment",
+  "@checkoutPayment": {
+    "description": ""
+  },
+  "checkoutSummary": "Summary",
+  "@checkoutSummary": {
+    "description": ""
+  },
+  "checkoutDiscount": "Discount",
+  "@checkoutDiscount": {
+    "description": ""
+  },
+  "checkoutFromWallet": "From wallet",
+  "@checkoutFromWallet": {
+    "description": ""
+  },
+  "checkoutTotal": "Total",
+  "@checkoutTotal": {
+    "description": ""
+  },
+  "checkoutTracking": "Tracking",
+  "@checkoutTracking": {
+    "description": ""
+  },
+  "checkoutCancelOrder": "Cancel order",
+  "@checkoutCancelOrder": {
+    "description": ""
+  },
+  "chatClearSearch": "Clear search",
+  "@chatClearSearch": {
+    "description": ""
+  },
+  "chatPause": "Pause",
+  "@chatPause": {
+    "description": ""
+  },
+  "chatPlay": "Play",
+  "@chatPlay": {
+    "description": ""
+  },
+  "productAddToRoom": "Add to a room",
+  "@productAddToRoom": {
+    "description": ""
+  },
+  "decreaseQuantity": "Decrease quantity",
+  "@decreaseQuantity": {
+    "description": ""
+  },
+  "increaseQuantity": "Increase quantity",
+  "@increaseQuantity": {
+    "description": ""
+  },
+  "profileShare": "Share",
+  "@profileShare": {
+    "description": ""
+  },
+  "homeAskStylist": "Ask Reem’s stylist",
+  "@homeAskStylist": {
+    "description": ""
+  },
+  "homeAskStylistBody": "Tell me the occasion and your budget, and I’ll line up options in stock",
+  "@homeAskStylistBody": {
+    "description": ""
+  },
+  "createProductPriceStock": "{price} · {stock} in stock",
+  "@createProductPriceStock": {
+    "description": "",
+    "placeholders": {
+      "price": {
+        "type": "String"
+      },
+      "stock": {
+        "type": "int"
+      }
+    }
+  },
+  "intelligenceNotesForYou": "Notes for you",
+  "@intelligenceNotesForYou": {
+    "description": ""
+  },
+  "checkoutLandmarkValue": "Landmark: {landmark}",
+  "@checkoutLandmarkValue": {"description": "", "placeholders": {"landmark": {"type": "String"}}},
+  "orderStateDraft": "Draft",
+  "@orderStateDraft": {"description": "Order and listing status wording."},
+  "orderStatePendingPayment": "Awaiting payment",
+  "@orderStatePendingPayment": {"description": "Order and listing status wording."},
+  "orderStateConfirmed": "Confirmed",
+  "@orderStateConfirmed": {"description": "Order and listing status wording."},
+  "orderStatePartiallyShipped": "Partly shipped",
+  "@orderStatePartiallyShipped": {"description": "Order and listing status wording."},
+  "orderStateShipped": "Shipped",
+  "@orderStateShipped": {"description": "Order and listing status wording."},
+  "orderStatePartiallyDelivered": "Partly delivered",
+  "@orderStatePartiallyDelivered": {"description": "Order and listing status wording."},
+  "orderStateDelivered": "Delivered",
+  "@orderStateDelivered": {"description": "Order and listing status wording."},
+  "orderStatePartiallyCancelled": "Partly cancelled",
+  "@orderStatePartiallyCancelled": {"description": "Order and listing status wording."},
+  "orderStateCancelled": "Cancelled",
+  "@orderStateCancelled": {"description": "Order and listing status wording."},
+  "orderStateClosed": "Closed",
+  "@orderStateClosed": {"description": "Order and listing status wording."},
+  "parcelStateNew": "New order",
+  "@parcelStateNew": {"description": "Order and listing status wording."},
+  "parcelStateAwaitingSeller": "Waiting for the seller",
+  "@parcelStateAwaitingSeller": {"description": "Order and listing status wording."},
+  "parcelStatePreparing": "Being prepared",
+  "@parcelStatePreparing": {"description": "Order and listing status wording."},
+  "parcelStateReadyToShip": "Ready to ship",
+  "@parcelStateReadyToShip": {"description": "Order and listing status wording."},
+  "parcelStateHandedToCourier": "With the courier",
+  "@parcelStateHandedToCourier": {"description": "Order and listing status wording."},
+  "parcelStateInTransit": "On the way",
+  "@parcelStateInTransit": {"description": "Order and listing status wording."},
+  "parcelStateDelivered": "Delivered",
+  "@parcelStateDelivered": {"description": "Order and listing status wording."},
+  "parcelStateDeliveryFailed": "Delivery failed",
+  "@parcelStateDeliveryFailed": {"description": "Order and listing status wording."},
+  "parcelStateCancelledByYou": "You cancelled",
+  "@parcelStateCancelledByYou": {"description": "Order and listing status wording."},
+  "parcelStateCancelledBySeller": "Cancelled by the seller",
+  "@parcelStateCancelledBySeller": {"description": "Order and listing status wording."},
+  "parcelStateRejectedOnDelivery": "Refused on delivery",
+  "@parcelStateRejectedOnDelivery": {"description": "Order and listing status wording."},
+  "parcelStateReturnRequested": "Return requested",
+  "@parcelStateReturnRequested": {"description": "Order and listing status wording."},
+  "parcelStateReturnInTransit": "Return on the way",
+  "@parcelStateReturnInTransit": {"description": "Order and listing status wording."},
+  "parcelStateReturned": "Returned",
+  "@parcelStateReturned": {"description": "Order and listing status wording."},
+  "parcelStateExchangeInProgress": "Exchange in progress",
+  "@parcelStateExchangeInProgress": {"description": "Order and listing status wording."},
+  "parcelStateExchanged": "Exchanged",
+  "@parcelStateExchanged": {"description": "Order and listing status wording."},
+  "parcelStateRefundPending": "Refund pending",
+  "@parcelStateRefundPending": {"description": "Order and listing status wording."},
+  "parcelStateRefunded": "Refunded",
+  "@parcelStateRefunded": {"description": "Order and listing status wording."},
+  "parcelStateDisputed": "In dispute",
+  "@parcelStateDisputed": {"description": "Order and listing status wording."},
+  "payMethodCod": "Cash on delivery",
+  "@payMethodCod": {"description": "Order and listing status wording."},
+  "payMethodCourierCollect": "Pay the courier",
+  "@payMethodCourierCollect": {"description": "Order and listing status wording."},
+  "payMethodSyriatelCash": "Syriatel Cash",
+  "@payMethodSyriatelCash": {"description": "Order and listing status wording."},
+  "payMethodMtnCash": "MTN Cash",
+  "@payMethodMtnCash": {"description": "Order and listing status wording."},
+  "payMethodShamCash": "Sham Cash",
+  "@payMethodShamCash": {"description": "Order and listing status wording."},
+  "payMethodBankCard": "Bank card",
+  "@payMethodBankCard": {"description": "Order and listing status wording."},
+  "payMethodBankTransfer": "Bank transfer",
+  "@payMethodBankTransfer": {"description": "Order and listing status wording."},
+  "payMethodHawala": "Local transfer",
+  "@payMethodHawala": {"description": "Order and listing status wording."},
+  "payMethodWallet": "Reem wallet",
+  "@payMethodWallet": {"description": "Order and listing status wording."},
+  "rawStatePending": "Pending",
+  "@rawStatePending": {"description": "Order and listing status wording."},
+  "rawStatePaid": "Paid",
+  "@rawStatePaid": {"description": "Order and listing status wording."},
+  "rawStateFailed": "Failed",
+  "@rawStateFailed": {"description": "Order and listing status wording."},
+  "rawStateRefunded": "Refunded",
+  "@rawStateRefunded": {"description": "Order and listing status wording."},
+  "rawStateCreated": "Created",
+  "@rawStateCreated": {"description": "Order and listing status wording."},
+  "rawStateAssigned": "Courier assigned",
+  "@rawStateAssigned": {"description": "Order and listing status wording."},
+  "rawStatePickedUp": "Picked up",
+  "@rawStatePickedUp": {"description": "Order and listing status wording."},
+  "rawStateInTransit": "On the way",
+  "@rawStateInTransit": {"description": "Order and listing status wording."},
+  "rawStateOutForDelivery": "Out for delivery",
+  "@rawStateOutForDelivery": {"description": "Order and listing status wording."},
+  "rawStateDelivered": "Delivered",
+  "@rawStateDelivered": {"description": "Order and listing status wording."},
+  "rawStateReturning": "Returning",
+  "@rawStateReturning": {"description": "Order and listing status wording."},
+  "rawStateReturned": "Returned",
+  "@rawStateReturned": {"description": "Order and listing status wording."},
+  "rawStateCancelled": "Cancelled",
+  "@rawStateCancelled": {"description": "Order and listing status wording."},
+  "productStateDraft": "Draft",
+  "@productStateDraft": {"description": "Order and listing status wording."},
+  "productStatePendingReview": "In review",
+  "@productStatePendingReview": {"description": "Order and listing status wording."},
+  "productStateActive": "Live",
+  "@productStateActive": {"description": "Order and listing status wording."},
+  "productStateOutOfStock": "Out of stock",
+  "@productStateOutOfStock": {"description": "Order and listing status wording."},
+  "productStatePaused": "Paused",
+  "@productStatePaused": {"description": "Order and listing status wording."},
+  "productStateArchived": "Archived",
+  "@productStateArchived": {"description": "Order and listing status wording."},
+  "passwordShow": "Show password",
+  "@passwordShow": {"description": "Password field visibility toggle."},
+  "passwordHide": "Hide password",
+  "@passwordHide": {"description": "Password field visibility toggle."},
+  "marketDropOpensIn": "Opens in {when}",
+  "@marketDropOpensIn": {"description": "Drop timing.", "placeholders": {"when": {"type": "String"}}},
+  "marketDropEndsIn": "Open · ends in {when}",
+  "@marketDropEndsIn": {"description": "Drop timing.", "placeholders": {"when": {"type": "String"}}},
+  "marketDropOpenNow": "Open now",
+  "@marketDropOpenNow": {"description": "Drop timing."},
+  "marketDropEarlyBy": "Yours {when} before everyone",
+  "@marketDropEarlyBy": {"description": "Drop timing.", "placeholders": {"when": {"type": "String"}}},
+  "marketPriceFrom": "From {price}",
+  "@marketPriceFrom": {"description": "Drop timing.", "placeholders": {"price": {"type": "String"}}},
+  "spanMinutes": "{count, plural, =1{1 minute} other{{count} minutes}}",
+  "@spanMinutes": {"description": "Drop timing.", "placeholders": {"count": {"type": "int"}}},
+  "spanHours": "{count, plural, =1{1 hour} other{{count} hours}}",
+  "@spanHours": {"description": "Drop timing.", "placeholders": {"count": {"type": "int"}}},
+  "spanDays": "{count, plural, =1{1 day} other{{count} days}}",
+  "@spanDays": {"description": "Drop timing.", "placeholders": {"count": {"type": "int"}}},
+  "errorRetryLater": "That didn’t go through. Please try again in a moment.",
+  "@errorRetryLater": {"description": "Shown in place of a server message that is not in the reader's language."},
+  "experienceTaglineBuyer": "A soft luxury boutique shaped around your taste.",
+  "@experienceTaglineBuyer": {"description": "Activity hub subtitle."},
+  "experienceTaglineSeller": "Inventory, orders, customers, and growth in one fast workspace.",
+  "@experienceTaglineSeller": {"description": "Activity hub subtitle."},
+  "experienceTaglineAdmin": "Enterprise control, governance, analytics, and operating health.",
+  "@experienceTaglineAdmin": {"description": "Activity hub subtitle."},
+  "loyaltyTierRose": "Rose",
+  "@loyaltyTierRose": {"description": "Count shown on a card."},
+  "loyaltyTierGold": "Gold",
+  "@loyaltyTierGold": {"description": "Count shown on a card."},
+  "loyaltyTierPlatinum": "Platinum",
+  "@loyaltyTierPlatinum": {"description": "Count shown on a card."},
+  "loyaltyTierDiamond": "Diamond",
+  "@loyaltyTierDiamond": {"description": "Count shown on a card."},
+  "homeLoyaltyCoupons": "{count, plural, =0{No coupons} =1{1 coupon} other{{count} coupons}}",
+  "@homeLoyaltyCoupons": {"description": "Count shown on a card.", "placeholders": {"count": {"type": "int"}}},
+  "flashClaimed": "{count, plural, =0{Not claimed yet} =1{1 claimed} other{{count} claimed}}",
+  "@flashClaimed": {"description": "Count shown on a card.", "placeholders": {"count": {"type": "int"}}},
+  "notificationsNewCount": "{count, plural, =1{1 new} other{{count} new}}",
+  "@notificationsNewCount": {"description": "Count shown on a card.", "placeholders": {"count": {"type": "int"}}},
+  "profileBoutiquesCount": "{count, plural, =0{No boutiques} =1{1 boutique} other{{count} boutiques}}",
+  "@profileBoutiquesCount": {"description": "Count shown on a card.", "placeholders": {"count": {"type": "int"}}},
+  "sellerStockLeft": "{count, plural, =1{1 left} other{{count} left}}",
+  "@sellerStockLeft": {"description": "Count shown on a card.", "placeholders": {"count": {"type": "int"}}},
+  "orderTimelineCreated": "Order placed",
+  "@orderTimelineCreated": {"description": "Order timeline entry."},
+  "orderTimelineConfirmed": "Order confirmed",
+  "@orderTimelineConfirmed": {"description": "Order timeline entry."},
+  "orderTimelineConfirmedBody": "Sent to the sellers to prepare.",
+  "@orderTimelineConfirmedBody": {"description": "Order timeline entry."},
+  "orderTimelineCancelled": "Order cancelled",
+  "@orderTimelineCancelled": {"description": "Order timeline entry."},
+  "orderTimelinePaymentExpired": "The payment deadline passed.",
+  "@orderTimelinePaymentExpired": {"description": "Order timeline entry."},
+  "roomsBlockerNothingChosen": "You haven’t chosen a piece yet",
+  "@roomsBlockerNothingChosen": {"description": "Room readiness blocker."},
+  "sellerAllTimeTotals": "Since you opened your shop",
+  "@sellerAllTimeTotals": {"description": "Caption over lifetime profit, margin and orders on the revenue card."},
+  "sellerPlanBasic": "Basic plan",
+  "@sellerPlanBasic": {
+    "description": "Seller profile badge for the BASIC level."
+  },
+  "sellerPlanVerified": "Verified plan",
+  "@sellerPlanVerified": {
+    "description": "Seller profile badge for the VERIFIED level."
+  },
+  "sellerPlanPremium": "Premium plan",
+  "@sellerPlanPremium": {
+    "description": "Seller profile badge for the PREMIUM level."
+  },
+  "sellerOrderPlatformDiscountNote": "A {amount} discount was paid by Reem and doesn't come out of your earnings.",
+  "@sellerOrderPlatformDiscountNote": {
+    "description": "Seller order breakdown: a platform-funded coupon, shown as a note rather than a deduction.",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "contentTypePost": "Post",
+  "@contentTypePost": {
+    "description": "Composer chip: a product post."
+  },
+  "contentTypeReel": "Reel",
+  "@contentTypeReel": {
+    "description": "Composer chip: a short video."
+  },
+  "contentTypeStory": "Story",
+  "@contentTypeStory": {
+    "description": "Composer chip: a 24-hour story."
+  },
+  "contentTypeFlashOffer": "Flash offer",
+  "@contentTypeFlashOffer": {
+    "description": "Composer chip: a time-limited offer."
+  },
+  "contentTypeCollection": "Collection",
+  "@contentTypeCollection": {
+    "description": "Composer chip: a curated collection."
+  },
+  "contentTypeLiveStream": "Live stream",
+  "@contentTypeLiveStream": {
+    "description": "Composer chip: a live stream."
+  },
+  "studioFormatFlashOffers": "Flash offers",
+  "@studioFormatFlashOffers": {
+    "description": "Content studio row: flash offers."
+  },
+  "studioFormatCollections": "Collections",
+  "@studioFormatCollections": {
+    "description": "Content studio row: collections."
+  },
+  "studioFormatLiveStreams": "Live streams",
+  "@studioFormatLiveStreams": {
+    "description": "Content studio row: live streams."
+  },
+  "studioFormatOther": "Other content",
+  "@studioFormatOther": {
+    "description": "Content studio row for a content type the app does not know yet."
+  },
+  "adminStatusInfo": "Info",
+  "@adminStatusInfo": {
+    "description": "Admin console status token INFO."
+  },
+  "adminStatusWarning": "Warning",
+  "@adminStatusWarning": {
+    "description": "Admin console status token WARNING."
+  },
+  "adminStatusCritical": "Critical",
+  "@adminStatusCritical": {
+    "description": "Admin console status token CRITICAL."
+  },
+  "adminStatusQueued": "Queued",
+  "@adminStatusQueued": {
+    "description": "Admin console status token QUEUED."
+  },
+  "adminStatusSent": "Sent",
+  "@adminStatusSent": {
+    "description": "Admin console status token SENT."
+  },
+  "adminStatusFailed": "Failed",
+  "@adminStatusFailed": {
+    "description": "Admin console status token FAILED."
+  },
+  "adminStatusSkipped": "Skipped",
+  "@adminStatusSkipped": {
+    "description": "Admin console status token SKIPPED."
+  },
+  "adminStatusScheduled": "Scheduled",
+  "@adminStatusScheduled": {
+    "description": "Admin console status token SCHEDULED."
+  },
+  "adminStatusRunning": "Running",
+  "@adminStatusRunning": {
+    "description": "Admin console status token RUNNING."
+  },
+  "adminStatusCompleted": "Completed",
+  "@adminStatusCompleted": {
+    "description": "Admin console status token COMPLETED."
+  },
+  "adminStatusRefunded": "Refunded",
+  "@adminStatusRefunded": {
+    "description": "Admin console status token REFUNDED."
+  },
+  "adminAuditLogin": "Signed in",
+  "@adminAuditLogin": {
+    "description": "Audit log entry name: Signed in."
+  },
+  "adminAuditLogout": "Signed out",
+  "@adminAuditLogout": {
+    "description": "Audit log entry name: Signed out."
+  },
+  "adminAuditLogoutAll": "Signed out everywhere",
+  "@adminAuditLogoutAll": {
+    "description": "Audit log entry name: Signed out everywhere."
+  },
+  "adminAuditRegister": "Account created",
+  "@adminAuditRegister": {
+    "description": "Audit log entry name: Account created."
+  },
+  "adminAuditPhoneChangeStarted": "Phone change started",
+  "@adminAuditPhoneChangeStarted": {
+    "description": "Audit log entry name: Phone change started."
+  },
+  "adminAuditPhoneChangeCompleted": "Phone change completed",
+  "@adminAuditPhoneChangeCompleted": {
+    "description": "Audit log entry name: Phone change completed."
+  },
+  "adminAuditPhoneChanged": "Phone changed",
+  "@adminAuditPhoneChanged": {
+    "description": "Audit log entry name: Phone changed."
+  },
+  "adminAuditRecoveryOpened": "Recovery case opened",
+  "@adminAuditRecoveryOpened": {
+    "description": "Audit log entry name: Recovery case opened."
+  },
+  "adminAuditRecoverySubmitted": "Recovery case submitted",
+  "@adminAuditRecoverySubmitted": {
+    "description": "Audit log entry name: Recovery case submitted."
+  },
+  "adminAuditRecoveryFirstApproval": "Recovery: first approval",
+  "@adminAuditRecoveryFirstApproval": {
+    "description": "Audit log entry name: Recovery: first approval."
+  },
+  "adminAuditRecoverySecondApproval": "Recovery: second approval",
+  "@adminAuditRecoverySecondApproval": {
+    "description": "Audit log entry name: Recovery: second approval."
+  },
+  "adminAuditRecoveryCoolingOff": "Recovery cooling off",
+  "@adminAuditRecoveryCoolingOff": {
+    "description": "Audit log entry name: Recovery cooling off."
+  },
+  "adminAuditRecoveryCompleted": "Recovery completed",
+  "@adminAuditRecoveryCompleted": {
+    "description": "Audit log entry name: Recovery completed."
+  },
+  "adminAuditRecoveryRejected": "Recovery rejected",
+  "@adminAuditRecoveryRejected": {
+    "description": "Audit log entry name: Recovery rejected."
+  },
+  "adminAuditRecoveryCancelled": "Recovery cancelled",
+  "@adminAuditRecoveryCancelled": {
+    "description": "Audit log entry name: Recovery cancelled."
+  },
+  "adminAuditPasswordResetRequested": "Password reset requested",
+  "@adminAuditPasswordResetRequested": {
+    "description": "Audit log entry name: Password reset requested."
+  },
+  "adminAuditPasswordResetCompleted": "Password reset",
+  "@adminAuditPasswordResetCompleted": {
+    "description": "Audit log entry name: Password reset."
+  },
+  "adminAuditPasswordDisabled": "Password turned off",
+  "@adminAuditPasswordDisabled": {
+    "description": "Audit log entry name: Password turned off."
+  },
+  "adminAuditTotpConfirmed": "Two-step verification on",
+  "@adminAuditTotpConfirmed": {
+    "description": "Audit log entry name: Two-step verification on."
+  },
+  "adminAuditRecoveryCodesGenerated": "Recovery codes created",
+  "@adminAuditRecoveryCodesGenerated": {
+    "description": "Audit log entry name: Recovery codes created."
+  },
+  "adminAuditRecoveryCodeRedeemed": "Recovery code used",
+  "@adminAuditRecoveryCodeRedeemed": {
+    "description": "Audit log entry name: Recovery code used."
+  },
+  "adminAuditOtpCodesRevealed": "Sign-in codes revealed",
+  "@adminAuditOtpCodesRevealed": {
+    "description": "Audit log entry name: Sign-in codes revealed."
+  },
+  "adminAuditSellerVerificationApproved": "Seller verification approved",
+  "@adminAuditSellerVerificationApproved": {
+    "description": "Audit log entry name: Seller verification approved."
+  },
+  "adminAuditSellerVerificationRejected": "Seller verification rejected",
+  "@adminAuditSellerVerificationRejected": {
+    "description": "Audit log entry name: Seller verification rejected."
+  },
+  "adminAuditContentRemoved": "Content removed",
+  "@adminAuditContentRemoved": {
+    "description": "Audit log entry name: Content removed."
+  },
+  "adminAuditContentReinstated": "Content reinstated",
+  "@adminAuditContentReinstated": {
+    "description": "Audit log entry name: Content reinstated."
+  },
+  "adminAuditCommentRemoved": "Comment removed",
+  "@adminAuditCommentRemoved": {
+    "description": "Audit log entry name: Comment removed."
+  },
+  "adminAuditWalletCredited": "Wallet credited",
+  "@adminAuditWalletCredited": {
+    "description": "Audit log entry name: Wallet credited."
+  },
+  "adminAuditWalletFrozen": "Wallet frozen",
+  "@adminAuditWalletFrozen": {
+    "description": "Audit log entry name: Wallet frozen."
+  },
+  "adminAuditRevokeSessions": "Sessions revoked",
+  "@adminAuditRevokeSessions": {
+    "description": "Audit log entry name: Sessions revoked."
+  },
+  "adminAuditCoolOffStarted": "Cool-off started",
+  "@adminAuditCoolOffStarted": {
+    "description": "Audit log entry name: Cool-off started."
+  },
+  "adminAuditAreaAuth": "Sign-in & security",
+  "@adminAuditAreaAuth": {
+    "description": "Audit log entry name: Sign-in & security."
+  },
+  "adminAuditAreaAccount": "Account",
+  "@adminAuditAreaAccount": {
+    "description": "Audit log entry name: Account."
+  },
+  "adminReportTypeSales": "Sales",
+  "@adminReportTypeSales": {
+    "description": "Admin report type: Sales."
+  },
+  "adminReportTypeSellers": "Sellers",
+  "@adminReportTypeSellers": {
+    "description": "Admin report type: Sellers."
+  },
+  "adminReportTypeContent": "Content",
+  "@adminReportTypeContent": {
+    "description": "Admin report type: Content."
+  },
+  "adminReportTypeFinance": "Finance",
+  "@adminReportTypeFinance": {
+    "description": "Admin report type: Finance."
+  },
+  "adminReportTypeUsers": "Users",
+  "@adminReportTypeUsers": {
+    "description": "Admin report type: Users."
+  },
+  "valueRungNew": "New",
+  "@valueRungNew": {
+    "description": "Reem Value standing rung: New."
+  },
+  "valueRungKnown": "Known",
+  "@valueRungKnown": {
+    "description": "Reem Value standing rung: Known."
+  },
+  "valueRungTrusted": "Trusted",
+  "@valueRungTrusted": {
+    "description": "Reem Value standing rung: Trusted."
+  },
+  "valueRungInsider": "Insider",
+  "@valueRungInsider": {
+    "description": "Reem Value standing rung: Insider."
+  },
+  "valueRungCircle": "Circle",
+  "@valueRungCircle": {
+    "description": "Reem Value standing rung: Circle."
+  },
+  "adminAuditReviewSellerVerification": "Seller verification reviewed",
+  "@adminAuditReviewSellerVerification": {
+    "description": "Audit log entry name."
+  },
+  "adminAuditAdminRequest": "Admin action",
+  "@adminAuditAdminRequest": {
+    "description": "Audit log entry recorded from an admin API request; the request line is in the details."
+  }
 }

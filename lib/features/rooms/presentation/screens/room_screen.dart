@@ -5,8 +5,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/features/rooms/domain/entities/room.dart';
+import 'package:reem/features/rooms/presentation/l10n/room_labels.dart';
 import 'package:reem/features/rooms/presentation/providers/rooms_providers.dart';
 import 'package:reem/features/rooms/presentation/widgets/decision_card.dart';
 
@@ -33,12 +35,12 @@ class RoomScreen extends ConsumerWidget {
       appBar: ReemAppBar(
         title: roomAsync.maybeWhen(
           data: (room) => room.title,
-          orElse: () => 'الغرفة',
+          orElse: () => context.l10n.roomsRoomTitle,
         ),
         actions: [
           roomAsync.maybeWhen(
             data: (room) => IconButton(
-              tooltip: 'شاركي الغرفة',
+              tooltip: context.l10n.roomsShareRoom,
               icon: const Icon(Icons.ios_share_rounded),
               onPressed: () => _share(context, ref, room),
             ),
@@ -49,7 +51,7 @@ class RoomScreen extends ConsumerWidget {
       body: roomAsync.when(
         loading: () => const Center(child: DsLoadingIndicator()),
         error: (_, _) => DsErrorState(
-          message: 'ما قدرنا نفتح الغرفة.',
+          message: context.l10n.roomsRoomFailed,
           onRetry: () => ref.invalidate(roomProvider(roomId)),
         ),
         data: (room) => _Body(room: room),
@@ -71,8 +73,7 @@ class RoomScreen extends ConsumerWidget {
     DsSnackbar.show(
       context,
       // Said plainly, because it is the guarantee that makes sharing safe.
-      message:
-          'نسخنا الرابط — يلي بيفتحه بيقدر ينصح ويصوّت، بس ما بيقدر يشتري.',
+      message: context.l10n.roomsLinkCopied,
     );
   }
 }
@@ -96,11 +97,9 @@ class _Body extends ConsumerWidget {
         if (room.decisions.isEmpty)
           DsEmptyState(
             icon: Icons.help_outline_rounded,
-            title: 'ما في قرارات بعد',
-            message:
-                'القرار سؤال — «الفستان»، «هدية لماما». ضيفي واحد وابدأي تجمّعي '
-                'الخيارات إلو.',
-            actionLabel: 'ضيفي قرار',
+            title: context.l10n.roomsNoDecisionsTitle,
+            message: context.l10n.roomsNoDecisionsBody,
+            actionLabel: context.l10n.roomsAddDecision,
             onAction: () => _addDecision(context, ref),
           )
         else ...[
@@ -112,7 +111,7 @@ class _Body extends ConsumerWidget {
 
           if (settled.isNotEmpty) ...[
             const SizedBox(height: DsSpacing.md),
-            Text('محسومة', style: context.dsText.sectionTitle),
+            Text(context.l10n.roomsSettled, style: context.dsText.sectionTitle),
             const SizedBox(height: DsSpacing.xs),
             for (final decision in settled)
               Padding(
@@ -127,7 +126,7 @@ class _Body extends ConsumerWidget {
 
           const SizedBox(height: DsSpacing.md),
           DsButton(
-            label: 'ضيفي قرار',
+            label: context.l10n.roomsAddDecision,
             variant: DsButtonVariant.secondary,
             icon: Icons.add_rounded,
             onPressed: () => _addDecision(context, ref),
@@ -142,11 +141,11 @@ class _Body extends ConsumerWidget {
   Future<void> _addDecision(BuildContext context, WidgetRef ref) async {
     final title = await DsDialog.prompt(
       context,
-      title: 'قرار جديد',
-      message: 'القرار سؤال بدها جواب — مو قطعة.',
-      hintText: 'مثلاً: الفستان',
-      confirmLabel: 'ضيفي',
-      cancelLabel: 'إلغاء',
+      title: context.l10n.roomsNewDecision,
+      message: context.l10n.roomsNewDecisionHelp,
+      hintText: context.l10n.roomsNewDecisionHint,
+      confirmLabel: context.l10n.roomsAdd,
+      cancelLabel: context.l10n.roomsCancel,
       maxLength: 80,
     );
 
@@ -176,38 +175,47 @@ class _RoomHeader extends StatelessWidget {
             children: [
               Expanded(
                 child: Text(
-                  room.occasionLabel ?? room.kind.label,
+                  room.occasionLabel ?? room.kind.labelOf(context.l10n),
                   style: context.dsText.labelStrong.tint(colors.primary),
                 ),
               ),
               if (room.isSurprise)
                 Text(
-                  'مفاجأة',
+                  context.l10n.roomsSurprise,
                   style: context.dsText.micro.tint(colors.onSurfaceVariant),
                 ),
             ],
           ),
           if (room.recipientName != null) ...[
             DsGaps.vXxxs,
-            Text('لـ${room.recipientName}', style: context.dsText.caption),
+            Text(
+              context.l10n.roomsForRecipient(room.recipientName!),
+              style: context.dsText.caption,
+            ),
           ],
 
           if (readiness != null) ...[
             const SizedBox(height: DsSpacing.sm),
-            ClipRRect(
-              borderRadius: BorderRadius.circular(DsRadius.pill),
-              child: LinearProgressIndicator(
-                value: readiness.progress,
-                minHeight: 6,
-                backgroundColor: colors.surfaceVariant,
-                color: readiness.ready ? colors.success : colors.primary,
-              ),
+            DsMeter(
+              value: readiness.progress,
+              weight: DsMeterWeight.regular,
+              color: readiness.ready ? colors.success : colors.primary,
+              track: colors.surfaceVariant,
             ),
             const SizedBox(height: DsSpacing.xs),
             Text(
-              readiness.ready
-                  ? 'كل القرارات محسومة'
-                  : '${readiness.settledRequired} من ${readiness.totalRequired} قرارات محسومة',
+              switch (readiness) {
+                RoomReadiness(ready: true) => context.l10n.roomsAllSettled,
+                // Nothing required to count — say what is missing instead of
+                // «0 of 0 decisions settled».
+                RoomReadiness(totalRequired: 0, :final blockers)
+                    when blockers.isNotEmpty =>
+                  blockers.first.labelOf(context.l10n),
+                _ => context.l10n.roomsSettledOf(
+                  readiness.settledRequired,
+                  readiness.totalRequired,
+                ),
+              },
               style: context.dsText.caption,
             ),
           ],
@@ -215,7 +223,7 @@ class _RoomHeader extends StatelessWidget {
           if (room.budgetMax != null) ...[
             const SizedBox(height: DsSpacing.xs),
             Text(
-              'الميزانية: حتى ${room.budgetMax!.format()}',
+              context.l10n.roomsBudgetUpTo(room.budgetMax!.format()),
               style: context.dsText.caption,
             ),
           ],
@@ -266,13 +274,15 @@ class _BuyBar extends ConsumerWidget {
               Padding(
                 padding: const EdgeInsets.only(bottom: DsSpacing.xs),
                 child: Text(
-                  blocker.label,
+                  blocker.labelOf(context.l10n),
                   textAlign: TextAlign.center,
                   style: context.dsText.caption.tint(colors.onSurfaceVariant),
                 ),
               ),
             DsButton(
-              label: plan != null ? 'شوفي الخطة' : 'جهّزي الخطة',
+              label: plan != null
+                  ? context.l10n.roomsSeePlan
+                  : context.l10n.roomsPreparePlan,
               icon: Icons.checklist_rounded,
               onPressed: readiness?.ready == true
                   ? () => _openPlan(context, ref)
@@ -293,7 +303,7 @@ class _BuyBar extends ConsumerWidget {
       unawaited(context.push(RoutePaths.roomPlanOf(room.id)));
     } catch (_) {
       if (!context.mounted) return;
-      DsSnackbar.show(context, message: 'لسا في قرارات مفتوحة.');
+      DsSnackbar.show(context, message: context.l10n.roomsDecisionsStillOpen);
     }
   }
 }

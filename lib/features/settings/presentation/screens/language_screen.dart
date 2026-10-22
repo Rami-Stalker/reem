@@ -48,6 +48,7 @@ class LanguageScreen extends StatelessWidget {
                   const SizedBox(height: DsSpacing.md),
                   _LanguageOption(
                     title: l10n.ar,
+                    // l10n-ignore: a language is named in its own script.
                     subtitle: 'العربية',
                     icon: Icons.menu_book_rounded,
                     selected: locale.isArabic,

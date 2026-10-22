@@ -47,6 +47,14 @@
     "amount": "400000.0000",
     "currency": "SYP"
   },
+  "seller_funded_discount": {
+    "amount": "0.0000",
+    "currency": "SYP"
+  },
+  "platform_funded_discount": {
+    "amount": "0.0000",
+    "currency": "SYP"
+  },
   "confirmed_at": "2026-08-26T07:40:00.000Z",
   "shipped_at": "2026-08-26T10:05:00.000Z",
   "delivered_at": "2026-08-26T14:30:00.000Z",

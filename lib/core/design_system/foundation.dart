@@ -1,6 +1,7 @@
 /// Design system foundation — tokens, theme, motion, layout.
 library;
 
+export 'package:reem/core/design_system/foundation/layout/collapsing_gap.dart';
 export 'package:reem/core/design_system/foundation/layout/responsive/responsive_extensions.dart';
 export 'package:reem/core/design_system/foundation/motion/animations/fade_animations.dart';
 export 'package:reem/core/design_system/foundation/motion/animations/scale_animations.dart';

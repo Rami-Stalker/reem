@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 import 'package:reem/core/design_system/design_system.dart';
 import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/media/authorized_media_image.dart';
 import 'package:reem/core/media/media_variants.dart';
+import 'package:reem/core/utils/relative_time.dart';
 import 'package:reem/features/seller_reviews/domain/entities/seller_review.dart';
 
 /// One review, with her answer under it if she has written one.
@@ -49,7 +49,7 @@ class SellerReviewCard extends StatelessWidget {
                       style: context.dsText.body.semibold.tint(palette.ink),
                     ),
                     Text(
-                      _formatDate(review.createdAt),
+                      formatCalendarDate(context.l10n, review.createdAt),
                       style: context.dsText.caption.tint(palette.muted),
                     ),
                   ],
@@ -108,11 +108,7 @@ class SellerReviewCard extends StatelessWidget {
           const SizedBox(height: DsSpacing.md),
           if (isBusy)
             const Center(
-              child: SizedBox(
-                width: 18,
-                height: 18,
-                child: CircularProgressIndicator(strokeWidth: 2),
-              ),
+              child: DsLoadingIndicator.inline(),
             )
           else
             Align(
@@ -234,6 +230,3 @@ class _Avatar extends StatelessWidget {
     );
   }
 }
-
-String _formatDate(DateTime date) =>
-    DateFormat('d MMMM', 'ar').format(date.toLocal());

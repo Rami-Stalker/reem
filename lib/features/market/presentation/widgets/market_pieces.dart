@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/media/authorized_media_image.dart';
 import 'package:reem/core/shared/value_objects/money.dart';
 import 'package:reem/features/market/domain/entities/market.dart';
+import 'package:reem/l10n/app_localizations.dart';
 
 /// The small parts the market screens share.
 ///
@@ -29,6 +31,52 @@ String sypNumber(double? value) => value == null
         raw: value.toString(),
         currency: Currency.syp,
       ).format(includeSymbol: false);
+
+/// Her reason for an early invitation, in her language.
+///
+/// Rendered from the code rather than sent as prose because the codes are the
+/// contract and a sentence is a presentation choice — the same code reads
+/// differently on a card and in a notification.
+String dropReasonLabel(AppLocalizations l10n, List<String> reasons) =>
+    switch (reasons.isEmpty ? '' : reasons.first) {
+      'OPEN_NEED' => l10n.marketReasonOpenNeed,
+      'SEARCHED_FOR' => l10n.marketReasonSearchedFor,
+      'OCCASION_MATCH' => l10n.marketReasonOccasion,
+      'TASTE_MATCH' => l10n.marketReasonTaste,
+      'SELLER_CUSTOMER' => l10n.marketReasonSellerCustomer,
+      _ => '',
+    };
+
+String rotationLabel(AppLocalizations l10n, Rotation rotation) =>
+    switch (rotation) {
+      Rotation.active => l10n.marketRotationActive,
+      Rotation.slowing => l10n.marketRotationSlowing,
+      Rotation.dormant => l10n.marketRotationDormant,
+      Rotation.unworn => l10n.marketRotationUnworn,
+    };
+
+/// Resale condition codes, best first.
+const resaleConditions = ['NEW_WITH_TAGS', 'EXCELLENT', 'GOOD', 'FAIR'];
+
+String resaleConditionLabel(AppLocalizations l10n, String code) =>
+    switch (code) {
+      'NEW_WITH_TAGS' => l10n.marketConditionNew,
+      'EXCELLENT' => l10n.marketConditionExcellent,
+      'GOOD' => l10n.marketConditionGood,
+      'FAIR' => l10n.marketConditionFair,
+      _ => code,
+    };
+
+String marketOccasionLabel(AppLocalizations l10n, String code) =>
+    switch (code) {
+      'wedding' => l10n.marketOccasionWedding,
+      'evening' => l10n.marketOccasionEvening,
+      'eid' => l10n.marketOccasionEid,
+      'graduation' => l10n.marketOccasionGraduation,
+      'work' => l10n.marketOccasionWork,
+      'daily' => l10n.marketOccasionDaily,
+      _ => code,
+    };
 
 /// The one place a disposition becomes a colour.
 ///
@@ -200,7 +248,9 @@ class BundleCard extends StatelessWidget {
                     ),
                     if (bundle.crossesShops)
                       Text(
-                        'من ${bundle.sellerCount} محلات — إطلالة كاملة',
+                        context.l10n.marketLookFromShopsShort(
+                          bundle.sellerCount,
+                        ),
                         style: context.dsText.micro.tint(
                           colors.onSurfaceVariant,
                         ),
@@ -209,7 +259,7 @@ class BundleCard extends StatelessWidget {
                 ),
               ),
               Text(
-                '${bundle.items.length} قطع',
+                context.l10n.marketPieceCount(bundle.items.length),
                 style: context.dsText.micro.tint(colors.onSurfaceVariant),
               ),
             ],
@@ -235,7 +285,10 @@ class DropCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.dsColors;
-    final reason = drop.invitation?.headline ?? '';
+    final reason = switch (drop.invitation) {
+      final invitation? => dropReasonLabel(context.l10n, invitation.reasons),
+      null => '',
+    };
 
     return DsGlassCard(
       onTap: onTap,
@@ -255,7 +308,10 @@ class DropCard extends StatelessWidget {
               ),
               if (drop.earlyAccessOnly) ...[
                 DsGaps.hXs,
-                DsBadge(label: 'وصول مبكر', tone: DsBadgeTone.primary),
+                DsBadge(
+                  label: context.l10n.marketEarlyAccess,
+                  tone: DsBadgeTone.primary,
+                ),
               ],
             ],
           ),
@@ -273,19 +329,99 @@ class DropCard extends StatelessWidget {
           ],
           DsGaps.vSm,
           SizedBox(
-            height: 64,
+            height: 72,
             child: ListView.separated(
               scrollDirection: Axis.horizontal,
               itemCount: drop.products.length,
               separatorBuilder: (_, _) => DsGaps.hXs,
               itemBuilder: (_, index) => MarketThumb(
                 imageUrl: drop.products[index].imageUrl,
-                size: 64,
+                size: 72,
               ),
             ),
           ),
+          DsGaps.vSm,
+          _DropTiming(drop: drop),
         ],
       ),
     );
   }
+}
+
+/// When the drop opens or closes, said as a span rather than a timestamp.
+///
+/// A date makes her do arithmetic; «يُفتح بعد ساعتين» is the thing she wants
+/// to know, and an early-access invitation says how far ahead she is.
+class _DropTiming extends StatelessWidget {
+  const _DropTiming({required this.drop});
+
+  final Drop drop;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final colors = context.dsColors;
+    final now = DateTime.now();
+    final opensAt = drop.earlyAccessOnly
+        ? (drop.earlyAccessAt ?? drop.startsAt)
+        : drop.startsAt;
+
+    final (String line, Color tint) = switch (drop) {
+      _ when drop.isLive && drop.endsAt != null && drop.endsAt!.isAfter(now) =>
+        (
+          l10n.marketDropEndsIn(
+            timeSpanLabel(l10n, drop.endsAt!.difference(now)),
+          ),
+          colors.success,
+        ),
+      _ when drop.isLive || !opensAt.isAfter(now) => (
+        l10n.marketDropOpenNow,
+        colors.success,
+      ),
+      _ when drop.earlyAccessOnly && drop.earlyAccessAt != null => (
+        l10n.marketDropEarlyBy(
+          timeSpanLabel(l10n, drop.startsAt.difference(drop.earlyAccessAt!)),
+        ),
+        colors.primary,
+      ),
+      _ => (
+        l10n.marketDropOpensIn(timeSpanLabel(l10n, opensAt.difference(now))),
+        colors.primary,
+      ),
+    };
+    final from = drop.totalFromSyp;
+
+    return Row(
+      children: [
+        Container(
+          width: DsSpacing.xs,
+          height: DsSpacing.xs,
+          decoration: BoxDecoration(color: tint, shape: BoxShape.circle),
+        ),
+        DsGaps.hXs,
+        Expanded(
+          child: Text(
+            line,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: context.dsText.caption.semibold.tint(tint),
+          ),
+        ),
+        if (from != null)
+          Text(
+            l10n.marketPriceFrom(sypText(from)),
+            style: context.dsText.caption.tint(colors.price),
+          ),
+      ],
+    );
+  }
+}
+
+/// «ساعتين», «3 أيام» — the coarsest unit that still says something.
+String timeSpanLabel(AppLocalizations l10n, Duration span) {
+  if (span.inMinutes < 60) {
+    return l10n.spanMinutes(span.inMinutes < 1 ? 1 : span.inMinutes);
+  }
+  if (span.inHours < 48) return l10n.spanHours(span.inHours);
+  return l10n.spanDays(span.inDays);
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/features/closet/domain/entities/closet_item.dart';
 import 'package:reem/features/closet/domain/entities/closet_look.dart';
@@ -34,7 +35,7 @@ class _ClosetTodayScreenState extends ConsumerState<ClosetTodayScreen> {
 
     return Scaffold(
       backgroundColor: colors.background,
-      appBar: const ReemAppBar(title: 'شو ألبس اليوم؟'),
+      appBar: ReemAppBar(title: context.l10n.closetWhatToWearToday),
       body: Column(
         children: [
           overviewAsync.maybeWhen(
@@ -49,7 +50,7 @@ class _ClosetTodayScreenState extends ConsumerState<ClosetTodayScreen> {
             child: todayAsync.when(
               loading: () => const Center(child: DsLoadingIndicator()),
               error: (_, _) => DsErrorState(
-                message: 'ما قدرنا نقترح عليكِ شي هلق.',
+                message: context.l10n.closetTodayFailed,
                 onRetry: () => ref.invalidate(todayOutfitsProvider),
               ),
               data: (today) => today.outfits.isEmpty
@@ -96,7 +97,11 @@ class _ClosetTodayScreenState extends ConsumerState<ClosetTodayScreen> {
       }
     }
     if (!mounted) return;
-    DsSnackbar.show(context, message: 'تم — سجّلناها لليوم.');
+    DsSnackbar.show(
+      context,
+      message: context.l10n.closetTodayLogged,
+      type: DsSnackbarType.success,
+    );
   }
 
   /// Turn a composition into a look she owns.
@@ -117,9 +122,10 @@ class _ClosetTodayScreenState extends ConsumerState<ClosetTodayScreen> {
     if (!mounted) return;
 
     result.when(
-      success: (_) => DsSnackbar.show(context, message: 'حفظناها بإطلالاتك.'),
+      success: (_) =>
+          DsSnackbar.show(context, message: context.l10n.closetSavedToLooks),
       error: (_) =>
-          DsSnackbar.show(context, message: 'ما قدرنا نحفظ الإطلالة.'),
+          DsSnackbar.show(context, message: context.l10n.closetSaveLookFailed),
     );
   }
 }
@@ -148,7 +154,7 @@ class _OccasionFilter extends StatelessWidget {
           // discarded and what remained was a zero-width box painting nothing
           // — the rail's height is the `SizedBox(height: 52)` above.
           DsChip(
-            label: 'أي شي',
+            label: context.l10n.closetAnyOccasion,
             selected: selected == null,
             onTap: () => onSelected(null),
           ),
@@ -175,13 +181,15 @@ class _NothingToWear extends StatelessWidget {
   Widget build(BuildContext context) {
     return DsEmptyState(
       icon: Icons.checkroom_rounded,
-      title: occasion == null ? 'ما قدرنا نركّب إطلالة' : 'ما في شي لهالمناسبة',
+      title: occasion == null
+          ? context.l10n.closetCannotDress
+          : context.l10n.closetNothingForOccasion,
       // Says which shortage caused it rather than "no results": the picker only
       // fails when a whole slot is empty, and naming it is the difference
       // between advice and a shrug.
       message: occasion == null
-          ? 'غالبًا ناقصك خانة كاملة — جرّبي تضيفي حذاء أو قطعة سفلية لخزانتك.'
-          : 'جرّبي تشيلي فلتر المناسبة، أو ضيفي قطعة مناسبة إلها.',
+          ? context.l10n.closetCannotDressBody
+          : context.l10n.closetNothingForOccasionBody,
     );
   }
 }

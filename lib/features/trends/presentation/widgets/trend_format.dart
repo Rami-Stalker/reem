@@ -31,7 +31,7 @@ String formatUnits(double? units) {
 }
 
 String formatRate(double? rate) =>
-    rate == null ? '—' : '${(rate * 100).toStringAsFixed(1)}٪';
+    rate == null ? '—' : '${(rate * 100).toStringAsFixed(1)}%';
 
 String formatMoney(Money? money) => money?.format() ?? '—';
 

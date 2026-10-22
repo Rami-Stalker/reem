@@ -1267,6 +1267,34 @@ export class AuthService {
     };
   }
 
+  /**
+   * An approved seller's page opens to everyone.
+   *
+   * A storefront nobody may look at is not a storefront — the migration that
+   * introduced private pages opened every seller that existed then, but a
+   * seller approved afterwards kept the customer default, and every post she
+   * published was hidden from shoppers' feeds and from the pages it was added
+   * to. Her content and reshares carry denormalised copies of the flag, so
+   * they move in the same transaction (see `UsersService.setProfileVisibility`).
+   * A seller who had already opened her page keeps the date she did it.
+   */
+  private async openStorefront(userId: string) {
+    await this.prisma.$transaction([
+      this.prisma.user.updateMany({
+        where: { id: userId, profileIsPublic: false },
+        data: { profileIsPublic: true, profilePublicSince: new Date() },
+      }),
+      this.prisma.commerceContent.updateMany({
+        where: { authorId: userId, authorIsPublic: false },
+        data: { authorIsPublic: true },
+      }),
+      this.prisma.commerceContentReshare.updateMany({
+        where: { resharerId: userId, resharerIsPublic: false },
+        data: { resharerIsPublic: true },
+      }),
+    ]);
+  }
+
   async reviewSellerVerification(
     reviewerId: string,
     verificationId: string,
@@ -1310,6 +1338,9 @@ export class AuthService {
         }),
       },
     });
+    if (status === SellerVerificationStatus.APPROVED) {
+      await this.openStorefront(verification.userId);
+    }
     await this.prisma.sellerVerificationStatusHistory.create({
       data: {
         verificationId: verification.id,

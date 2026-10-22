@@ -12,6 +12,7 @@ import { Roles } from '../../common/decorators/roles.decorator';
 import { GraphQueryService } from '../graph/graph-query.service';
 import { SellerOpportunityService } from './seller-opportunity.service';
 import { ShopperIntelligenceService } from './shopper-intelligence.service';
+import { SizeFitService } from './size-fit.service';
 
 /**
  * The intelligence a screen can ask for.
@@ -30,6 +31,7 @@ export class IntelligenceController {
     private readonly shopper: ShopperIntelligenceService,
     private readonly seller: SellerOpportunityService,
     private readonly graph: GraphQueryService,
+    private readonly fit: SizeFitService,
   ) {}
 
   /**
@@ -56,6 +58,23 @@ export class IntelligenceController {
         ar: verdict.ar,
         evidence: verdict.evidence,
       })),
+    };
+  }
+
+  /**
+   * How often each size of this product was kept.
+   *
+   * The same for everyone, so it needs no token — but `@OptionalAuth` like
+   * its neighbours, so a signed-in caller is not treated differently by
+   * accident if this ever becomes personal ("in your size"). Only rates leave
+   * here, never unit counts, and a size with too few sales reports `null`.
+   */
+  @OptionalAuth()
+  @Get('products/:productId/fit')
+  async sizeFit(@Param('productId', ParseUUIDPipe) productId: string) {
+    const sizes = await this.fit.forProduct(productId);
+    return {
+      sizes: sizes.map((fit) => ({ size: fit.size, kept_rate: fit.keptRate })),
     };
   }
 

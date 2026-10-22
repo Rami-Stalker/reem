@@ -217,7 +217,7 @@ class _ConsentDocument extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(policy.title, style: context.dsText.cardTitle.semibold),
-                  const SizedBox(height: 2),
+                  DsGaps.vXxxs,
                   Text(
                     l10n.policiesConsentTapToRead,
                     style: context.dsText.caption.tint(colors.primary),
@@ -257,7 +257,7 @@ class _ConsentReader extends ConsumerWidget {
 
     return Scaffold(
       backgroundColor: colors.background,
-      appBar: AppBar(title: Text(policy.title)),
+      appBar: ReemAppBar(title: policy.title),
       body: detail.when(
         loading: () => const Center(child: DsLoadingIndicator()),
         error: (error, _) => Padding(

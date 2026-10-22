@@ -92,12 +92,15 @@ class _CollectionScreenState extends ConsumerState<CollectionScreen> {
             if (state.isLoading && state.items.isEmpty)
               const SliverFillRemaining(
                 hasScrollBody: false,
-                child: Center(child: CircularProgressIndicator()),
+                child: DsLoadingIndicator(),
               )
             else if (state.isEmpty)
               SliverFillRemaining(
                 hasScrollBody: false,
-                child: Center(child: Text(context.l10n.noProductsFound)),
+                child: DsEmptyState(
+                icon: Icons.checkroom_rounded,
+                title: context.l10n.noProductsFound,
+              ),
               )
             else ...[
               SliverToBoxAdapter(
@@ -138,7 +141,7 @@ class _CollectionScreenState extends ConsumerState<CollectionScreen> {
                 const SliverToBoxAdapter(
                   child: Padding(
                     padding: EdgeInsets.all(DsSpacing.lg),
-                    child: Center(child: CircularProgressIndicator()),
+                    child: DsLoadingIndicator(),
                   ),
                 ),
               // Room under the last card for the floating bottom bar.

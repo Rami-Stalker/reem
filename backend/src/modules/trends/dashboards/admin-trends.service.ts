@@ -678,7 +678,7 @@ export class AdminTrendsService {
         kind: 'CATEGORY_GAP',
         titleAr: category.nameAr,
         detailAr:
-          `الطلب يرتفع (${category.viewsGrowthPct}٪ مشاهدات) ومتوفر فعليًا ` +
+          `الطلب يرتفع (${category.viewsGrowthPct}% مشاهدات) ومتوفر فعليًا ` +
           `${category.inStockProducts} من ${category.liveProducts} منتجًا فقط.`,
         score: round(category.score * (1 - inStockRate), 2),
         subjectId: category.categoryId,
@@ -712,8 +712,8 @@ export class AdminTrendsService {
         kind: 'PRICE_BAND_GAP',
         titleAr: band.labelAr,
         detailAr:
-          `حصّة هذا النطاق من الطلب ارتفعت من ${band.previousSharePct}٪ ` +
-          `إلى ${band.sharePct}٪ عبر ${band.products} منتجًا فقط.`,
+          `حصّة هذا النطاق من الطلب ارتفعت من ${band.previousSharePct}% ` +
+          `إلى ${band.sharePct}% عبر ${band.products} منتجًا فقط.`,
         score: round(band.shareDeltaPct * 4, 2),
         subjectId: null,
         metrics: {

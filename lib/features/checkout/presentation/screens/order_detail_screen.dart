@@ -14,6 +14,7 @@ import 'package:reem/features/chat/domain/entities/chat_start_request.dart';
 import 'package:reem/features/chat/presentation/widgets/message_seller_button.dart';
 import 'package:reem/features/checkout/domain/entities/checkout.dart';
 import 'package:reem/features/checkout/domain/entities/order.dart';
+import 'package:reem/features/checkout/presentation/order_labels.dart';
 import 'package:reem/features/checkout/presentation/providers/checkout_providers.dart';
 import 'package:reem/features/checkout/presentation/providers/order_detail_notifier.dart';
 import 'package:reem/features/checkout/presentation/widgets/cod_confirmation_sheet.dart';
@@ -122,12 +123,15 @@ class _OrderDetailScreenState extends ConsumerState<OrderDetailScreen>
         if (state.isLoading && order == null)
           const SliverFillRemaining(
             hasScrollBody: false,
-            child: Center(child: CircularProgressIndicator()),
+            child: DsLoadingIndicator(),
           )
         else if (order == null)
           SliverFillRemaining(
             hasScrollBody: false,
-            child: Center(child: Text(context.l10n.orderNotFound)),
+            child: DsEmptyState(
+              icon: Icons.receipt_long_rounded,
+              title: context.l10n.orderNotFound,
+            ),
           )
         else
           SliverToBoxAdapter(
@@ -224,7 +228,7 @@ class _Body extends StatelessWidget {
               const SizedBox(width: DsSpacing.sm),
               if (order.isSplit)
                 Text(
-                  '${order.sellersCount} شحنات من ${order.sellersCount} بائعات',
+                  context.l10n.checkoutSplitShipments(order.sellersCount),
                   style: context.dsText.bodySmall.tint(colors.onSurfaceVariant),
                 ),
             ],
@@ -246,14 +250,14 @@ class _Body extends StatelessWidget {
           // several parcels, each tracked, cancelled and returned on its own
           // timeline — so the screen shows them as separate things rather than
           // flattening them into one list of items (Q40/Q89).
-          _section(context, 'الشحنات'),
+          _section(context, context.l10n.checkoutShipments),
           for (final parcel in order.sellerOrders) ...[
             _ParcelCard(parcel: parcel),
             const SizedBox(height: DsSpacing.sm),
           ],
           const SizedBox(height: DsSpacing.lg),
 
-          _section(context, 'عنوان التوصيل'),
+          _section(context, context.l10n.checkoutDeliveryAddress),
           SurfaceCard(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -265,12 +269,21 @@ class _Body extends StatelessWidget {
                 ),
                 DsGaps.vXxs,
                 Text(
-                  '${order.shipping.addressLine}, ${order.shipping.city}, ${order.shipping.governorate}',
+                  // The Arabic list comma, and the governorate only when it
+                  // is not the city again («دمشق، دمشق»).
+                  [
+                    order.shipping.addressLine,
+                    order.shipping.city,
+                    if (order.shipping.governorate != order.shipping.city)
+                      order.shipping.governorate,
+                  ].where((part) => part.trim().isNotEmpty).join('، '),
                   style: context.dsText.body.tint(colors.onSurfaceVariant),
                 ),
                 if (order.shipping.landmark != null)
                   Text(
-                    'علامة مميزة: ${order.shipping.landmark}',
+                    context.l10n.checkoutLandmarkValue(
+                      order.shipping.landmark!,
+                    ),
                     style: context.dsText.body.tint(colors.onSurfaceVariant),
                   ),
                 if (order.privacyMaskEnabled) ...[
@@ -296,7 +309,7 @@ class _Body extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.only(top: DsSpacing.xxs),
                     child: Text(
-                      'ملاحظة: ${order.deliveryInstructions}',
+                      context.l10n.checkoutNote(order.deliveryInstructions!),
                       style: context.dsText.body.tint(colors.onSurfaceVariant),
                     ),
                   ),
@@ -306,13 +319,13 @@ class _Body extends StatelessWidget {
           const SizedBox(height: DsSpacing.lg),
 
           if (payment != null) ...[
-            _section(context, 'الدفع'),
+            _section(context, context.l10n.checkoutPayment),
             SurfaceCard(
               child: Row(
                 children: [
                   Expanded(
                     child: Text(
-                      payment.methodLabel,
+                      context.l10n.paymentMethodName(payment.method),
                       style: context.dsText.body.semibold.tint(
                         colors.onSurface,
                       ),
@@ -329,18 +342,39 @@ class _Body extends StatelessWidget {
             const SizedBox(height: DsSpacing.lg),
           ],
 
-          _section(context, 'الملخّص'),
+          _section(context, context.l10n.checkoutSummary),
           SurfaceCard(
             child: Column(
               children: [
-                _money(context, 'المجموع الفرعي', order.itemsSubtotal),
+                _money(
+                  context,
+                  context.l10n.checkoutSubtotal,
+                  order.itemsSubtotal,
+                ),
                 if (!order.discountTotal.isZero)
-                  _money(context, 'الخصم', order.discountTotal),
-                _money(context, 'التوصيل', order.shippingTotal),
+                  _money(
+                    context,
+                    context.l10n.checkoutDiscount,
+                    order.discountTotal,
+                  ),
+                _money(
+                  context,
+                  context.l10n.checkoutDelivery,
+                  order.shippingTotal,
+                ),
                 if (!order.walletApplied.isZero)
-                  _money(context, 'من المحفظة', order.walletApplied),
+                  _money(
+                    context,
+                    context.l10n.checkoutFromWallet,
+                    order.walletApplied,
+                  ),
                 const Divider(height: DsSpacing.lg),
-                _money(context, 'الإجمالي', order.grandTotal, emphasize: true),
+                _money(
+                  context,
+                  context.l10n.checkoutTotal,
+                  order.grandTotal,
+                  emphasize: true,
+                ),
               ],
             ),
           ),
@@ -351,13 +385,13 @@ class _Body extends StatelessWidget {
           _InvoicesAction(orderId: order.id),
           const SizedBox(height: DsSpacing.lg),
 
-          _section(context, 'التتبّع'),
+          _section(context, context.l10n.checkoutTracking),
           _Timeline(events: order.timeline),
 
           if (order.isCancellable) ...[
             const SizedBox(height: DsSpacing.xl),
             SecondaryButton(
-              label: 'إلغاء الطلب',
+              label: context.l10n.checkoutCancelOrder,
               isLoading: state.isActing,
               onPressed: state.isActing
                   ? null
@@ -554,14 +588,15 @@ class _Timeline extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          events[i].title,
+                          context.l10n.orderEventTitle(events[i]),
                           style: context.dsText.body.semibold.tint(
                             colors.onSurface,
                           ),
                         ),
-                        if (events[i].description != null)
+                        if (context.l10n.orderEventDescription(events[i])
+                            case final description?)
                           Text(
-                            events[i].description!,
+                            description,
                             style: context.dsText.bodySmall.tint(
                               colors.onSurfaceVariant,
                             ),

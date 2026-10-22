@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/features/checkout/domain/entities/checkout.dart';
 import 'package:reem/features/settings/presentation/providers/payment_options_provider.dart';
@@ -31,14 +32,17 @@ class PaymentMethodsScreen extends ConsumerWidget {
 
     return ReemScrollPage(
       slivers: [
-        const PremiumAppBar(title: 'طرق الدفع', showBack: true),
+        PremiumAppBar(
+          title: context.l10n.settingsPaymentMethods,
+          showBack: true,
+        ),
         SliverPadding(
           padding: const EdgeInsets.all(DsSpacing.lg),
           sliver: SliverList(
             delegate: SliverChildListDelegate([
-              const ReemSectionHeader(
-                title: 'الدفع عند الطلب',
-                subtitle: 'تختارين الطريقة عند إتمام الشراء',
+              ReemSectionHeader(
+                title: context.l10n.settingsPayAtOrder,
+                subtitle: context.l10n.settingsPayAtOrderSubtitle,
               ),
               const SizedBox(height: DsSpacing.lg),
 
@@ -52,7 +56,7 @@ class PaymentMethodsScreen extends ConsumerWidget {
               const SizedBox(height: DsSpacing.lg),
 
               Text(
-                'الطرق المتاحة',
+                context.l10n.settingsAvailableMethods,
                 style: context.dsText.tileTitle.bold.tint(colors.onSurface),
               ),
               const SizedBox(height: DsSpacing.md),
@@ -77,10 +81,7 @@ class PaymentMethodsScreen extends ConsumerWidget {
               ),
 
               const SizedBox(height: DsSpacing.sm),
-              _Note(
-                text:
-                    'لا نحفظ بيانات بطاقات. تُدفع كل عملية عند إتمامها بالطريقة التي تختارينها.',
-              ),
+              _Note(text: context.l10n.settingsNoCardsStored),
             ]),
           ),
         ),
@@ -132,7 +133,7 @@ class _WalletTile extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'محفظة ريم',
+                    context.l10n.settingsReemWallet,
                     style: context.dsText.tileTitle.bold.tint(colors.onPrimary),
                   ),
                   DsGaps.vXxs,
@@ -186,26 +187,26 @@ class _MethodTile extends StatelessWidget {
   /// «يُؤكَّد الدفع قبل تجهيز الطلب» was the same sentence for a card, a bank
   /// transfer and a hawala — three rails that ask three different things of
   /// her. Each one now says what it will ask.
-  String? get _hint => switch (option.method) {
-    'cod' => 'تدفعين نقداً للمندوبة عند الاستلام',
-    'courier_collect' => 'تحصيل عبر شركة التوصيل',
-    'platform_wallet' => 'يُخصم من رصيدكِ فوراً',
+  String? _hint(BuildContext context) => switch (option.method) {
+    'cod' => context.l10n.settingsHintCod,
+    'courier_collect' => context.l10n.settingsHintCourierCollect,
+    'platform_wallet' => context.l10n.settingsHintWallet,
     'syriatel_cash' ||
     'mtn_cash' ||
-    'sham_cash' => 'نفتح لكِ صفحة الدفع بعد تأكيد الطلب',
-    'bank_card' => 'صفحة دفع آمنة — لا نحفظ بيانات بطاقتك',
-    'bank_transfer' => 'تحوّلين المبلغ ثم ترسلين رقم الحوالة من صفحة الطلب',
-    'hawala' => 'حوالة داخلية، ثم ترسلين رقم الإشعار من صفحة الطلب',
+    'sham_cash' => context.l10n.settingsHintMobileWallet,
+    'bank_card' => context.l10n.settingsHintCard,
+    'bank_transfer' => context.l10n.settingsHintBankTransfer,
+    'hawala' => context.l10n.settingsHintHawala,
     _ =>
       option.requiresOnlineConfirmation
-          ? 'يُؤكَّد الدفع قبل تجهيز الطلب'
+          ? context.l10n.settingsHintConfirmedFirst
           : null,
   };
 
   @override
   Widget build(BuildContext context) {
     final colors = context.dsColors;
-    final hint = _hint;
+    final hint = _hint(context);
 
     return Container(
       padding: const EdgeInsets.all(DsSpacing.lg),
@@ -288,7 +289,7 @@ class _NoOptions extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: DsSpacing.xl),
       child: Text(
-        'لا طرق دفع متاحة حالياً',
+        context.l10n.settingsNoPaymentMethods,
         textAlign: TextAlign.center,
         style: context.dsText.body.tint(colors.onSurfaceVariant),
       ),
@@ -309,11 +310,11 @@ class _OptionsFailed extends StatelessWidget {
       child: Column(
         children: [
           Text(
-            'تعذّر تحميل طرق الدفع',
+            context.l10n.settingsPaymentMethodsFailed,
             style: context.dsText.body.tint(colors.onSurfaceVariant),
           ),
           const SizedBox(height: DsSpacing.md),
-          SecondaryButton(label: 'إعادة المحاولة', onPressed: onRetry),
+          SecondaryButton(label: context.l10n.retry, onPressed: onRetry),
         ],
       ),
     );

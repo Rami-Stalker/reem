@@ -48,7 +48,7 @@ class ExperienceSurfaceScreen extends ConsumerWidget {
             ),
             child: _SurfaceHero(
               title: surfaceTitle,
-              subtitle: experience.tagline,
+              subtitle: experience.taglineOf(context.l10n),
               identity: identity,
               role: role,
             ),

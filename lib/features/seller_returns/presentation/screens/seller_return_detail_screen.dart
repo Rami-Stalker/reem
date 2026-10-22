@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
 
 import 'package:reem/core/design_system/design_system.dart';
 import 'package:reem/core/errors/failure_exception.dart';
@@ -9,6 +8,7 @@ import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/media/authorized_media_image.dart';
 import 'package:reem/core/media/media_variants.dart';
 import 'package:reem/core/router/route_paths.dart';
+import 'package:reem/core/utils/relative_time.dart';
 import 'package:reem/features/seller_returns/domain/entities/return_request.dart';
 import 'package:reem/features/seller_returns/presentation/providers/seller_returns_provider.dart';
 import 'package:reem/features/seller_returns/presentation/return_labels.dart';
@@ -47,7 +47,7 @@ class SellerReturnDetailScreen extends ConsumerWidget {
           _ => const SliverToBoxAdapter(
             child: Padding(
               padding: EdgeInsets.symmetric(vertical: DsSpacing.xxl),
-              child: Center(child: CircularProgressIndicator()),
+              child: DsLoadingIndicator(),
             ),
           ),
         },
@@ -121,7 +121,9 @@ class _Body extends ConsumerWidget {
                 ),
                 if (request.windowClosesAt case final DateTime closes) ...[
                   const SizedBox(height: DsSpacing.xs),
-                  _Muted(l10n.returnWindowCloses(_formatDate(closes))),
+                  _Muted(
+                    l10n.returnWindowCloses(formatCalendarDate(l10n, closes)),
+                  ),
                 ],
               ],
             ),
@@ -183,7 +185,7 @@ class _Body extends ConsumerWidget {
                 child: _Muted(l10n.returnRefundIsPlatforms),
               ),
             if (acting)
-              const Center(child: CircularProgressIndicator())
+              const DsLoadingIndicator()
             else
               for (final action in request.availableActions)
                 Padding(
@@ -203,9 +205,6 @@ class _Body extends ConsumerWidget {
       ),
     );
   }
-
-  String _formatDate(DateTime date) =>
-      DateFormat('d MMMM', 'ar').format(date.toLocal());
 }
 
 class _RefundPanel extends StatelessWidget {

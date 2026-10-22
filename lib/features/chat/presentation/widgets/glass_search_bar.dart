@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
 
 /// The inbox search field.
 ///
@@ -65,7 +66,7 @@ class _GlassSearchBarState extends State<GlassSearchBar> {
           prefixIcon: Icon(Icons.search_rounded, color: c.onSurfaceVariant),
           suffixIcon: _hasText
               ? IconButton(
-                  tooltip: 'مسح البحث',
+                  tooltip: context.l10n.chatClearSearch,
                   icon: Icon(Icons.close_rounded, color: c.onSurfaceVariant),
                   onPressed: _clear,
                 )

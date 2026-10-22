@@ -21,7 +21,8 @@ import 'package:reem/l10n/app_localizations.dart';
 extension RoleNavigationItemLabel on RoleNavigationItem {
   String labelOf(AppLocalizations l10n) => switch (path) {
     RoutePaths.home => l10n.navHome,
-    RoutePaths.search => l10n.navSearch,
+    RoutePaths.search => l10n.navDiscover,
+    RoutePaths.closet => l10n.navCloset,
     RoutePaths.cart => l10n.navCart,
     RoutePaths.activity => l10n.navActivity,
     RoutePaths.profile => l10n.navProfile,
@@ -129,5 +130,18 @@ extension RoleMenuGroupLabel on RoleMenuGroup {
     'risk' => l10n.menuGroupRisk,
     'control' => l10n.menuGroupControl,
     _ => label,
+  };
+}
+
+/// The one-line promise under each app's activity hub, in her language.
+///
+/// The manifest's `tagline` is English and was shown as-is, so an Arabic
+/// shopper opening «النشاط» read "A soft luxury boutique shaped around your
+/// taste." under an Arabic title.
+extension AppRoleExperienceTagline on AppRoleExperience {
+  String taglineOf(AppLocalizations l10n) => switch (role) {
+    ExperienceRole.buyer => l10n.experienceTaglineBuyer,
+    ExperienceRole.seller => l10n.experienceTaglineSeller,
+    ExperienceRole.admin => l10n.experienceTaglineAdmin,
   };
 }

@@ -74,7 +74,7 @@ export class VisualTryOnService {
       provider: this.provider.name,
       message: this.provider.enabled
         ? null
-        : 'التجربة الافتراضية لسا مو متوفرة. لما تتوفر، رح نطلب إذنك قبل ما نستخدم صورتك.',
+        : 'التجربة الافتراضية غير متوفرة بعد. حين تتوفر، سنطلب إذنكِ قبل استخدام صورتكِ.',
       retentionHours: this.retentionHours,
     };
   }

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
+import 'package:reem/l10n/app_localizations.dart';
 
 /// The empty state, which is really the onboarding.
 ///
@@ -42,22 +44,23 @@ class StylistWelcome extends StatelessWidget {
         ),
         const SizedBox(height: DsSpacing.md),
         Text(
-          'مساعدة ريم الشخصية',
+          context.l10n.stylistWelcomeTitle,
           textAlign: TextAlign.center,
           style: context.dsText.screenTitle.bold.tint(colors.onSurface),
         ),
         const SizedBox(height: DsSpacing.xs),
         Text(
-          'احكيلي عن المناسبة، أو القطعة، أو الميزانية — وأنا برتّبلك خيارات '
-          'متوفرة فعليًا عند بائعات ريم، وبقلّك ليش اخترت كل قطعة.',
+          context.l10n.stylistWelcomeBody,
           textAlign: TextAlign.center,
           style: context.dsText.body.tint(colors.onSurfaceVariant).copyWith(height: 1.7),
         ),
         const SizedBox(height: DsSpacing.xl),
         if (prompts.isNotEmpty) ...[
           Text(
-            'جرّبي تسأليني:',
-            style: context.dsText.labelMedium.semibold.tint(colors.onSurfaceVariant),
+            context.l10n.stylistTryAsking,
+            style: context.dsText.labelMedium.semibold.tint(
+              colors.onSurfaceVariant,
+            ),
           ),
           const SizedBox(height: DsSpacing.xs),
           for (final prompt in prompts) ...[
@@ -122,10 +125,22 @@ class _PromptCard extends StatelessWidget {
 class _Capabilities extends StatelessWidget {
   const _Capabilities();
 
-  static const _items = [
-    (Icons.checkroom_rounded, 'إطلالة كاملة', 'فستان وحقيبة وحذاء منسّقين مع بعض'),
-    (Icons.card_giftcard_rounded, 'هدايا', 'حسب العمر والذوق والميزانية'),
-    (Icons.verified_outlined, 'متوفر فعليًا', 'كل القطع من مخزون البائعات الحالي'),
+  static List<(IconData, String, String)> _items(AppLocalizations l10n) => [
+    (
+      Icons.checkroom_rounded,
+      l10n.stylistCapLookTitle,
+      l10n.stylistCapLookBody,
+    ),
+    (
+      Icons.card_giftcard_rounded,
+      l10n.stylistCapGiftsTitle,
+      l10n.stylistCapGiftsBody,
+    ),
+    (
+      Icons.verified_outlined,
+      l10n.stylistCapInStockTitle,
+      l10n.stylistCapInStockBody,
+    ),
   ];
 
   @override
@@ -134,7 +149,7 @@ class _Capabilities extends StatelessWidget {
 
     return Column(
       children: [
-        for (final (icon, title, subtitle) in _items)
+        for (final (icon, title, subtitle) in _items(context.l10n))
           Padding(
             padding: const EdgeInsets.only(bottom: DsSpacing.sm),
             child: Row(

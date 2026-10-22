@@ -54,11 +54,7 @@ class _AdminFinanceScreenState extends ConsumerState<AdminFinanceScreen> {
                 onPressed: () =>
                     ref.read(adminFinanceNotifierProvider.notifier).refresh(),
                 icon: state.isRefreshing
-                    ? const SizedBox(
-                        width: 18,
-                        height: 18,
-                        child: CircularProgressIndicator(strokeWidth: 2),
-                      )
+                    ? const DsLoadingIndicator.inline()
                     : const Icon(Icons.refresh_rounded),
               ),
             ],
@@ -67,7 +63,7 @@ class _AdminFinanceScreenState extends ConsumerState<AdminFinanceScreen> {
           if (state.isLoading)
             const Padding(
               padding: EdgeInsets.all(DsSpacing.xxl),
-              child: Center(child: CircularProgressIndicator()),
+              child: DsLoadingIndicator(),
             )
           else if (overview == null)
             Padding(
@@ -254,11 +250,7 @@ class _FxSection extends StatelessWidget {
             TextButton.icon(
               onPressed: isSyncing ? null : onSync,
               icon: isSyncing
-                  ? const SizedBox(
-                      width: 14,
-                      height: 14,
-                      child: CircularProgressIndicator(strokeWidth: 2),
-                    )
+                  ? const DsLoadingIndicator.inline()
                   : const Icon(Icons.sync_rounded, size: 16),
               label: Text(l10n.financeFxSync),
             ),

@@ -459,6 +459,8 @@ async function main() {
       declaredFemale: true,
       declaredFemaleAt: new Date(),
       tier: 'Platinum',
+      profileIsPublic: true,
+      profilePublicSince: new Date(),
     },
   });
 
@@ -475,6 +477,9 @@ async function main() {
       imageUrl: avatarImage('sara_reem'),
       isVerified: true,
       sellerLevel: SellerLevel.VERIFIED,
+      sellerVerifiedAt: new Date(),
+      profileIsPublic: true,
+      profilePublicSince: new Date(),
       points: 2840,
       lifetimePoints: 5200,
       tier: 'Gold',
@@ -494,6 +499,9 @@ async function main() {
       imageUrl: avatarImage('layla_style'),
       isVerified: true,
       sellerLevel: SellerLevel.VERIFIED,
+      sellerVerifiedAt: new Date(),
+      profileIsPublic: true,
+      profilePublicSince: new Date(),
       points: 1200,
       lifetimePoints: 2100,
       tier: 'Silver',

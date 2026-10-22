@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/shared/entities/user.dart';
 
 /// Branded gradient cover with the user's avatar — the profile's hero.
@@ -28,7 +29,7 @@ class ProfileCover extends StatelessWidget {
               padding: const EdgeInsetsDirectional.only(start: DsSpacing.sm),
               child: Center(
                 child: DsIconButton(
-                  tooltip: 'رجوع',
+                  tooltip: context.l10n.back,
                   icon: Icons.arrow_back_ios_new_rounded,
                   variant: DsIconButtonVariant.glass,
                   size: 40,

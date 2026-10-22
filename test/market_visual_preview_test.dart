@@ -44,6 +44,7 @@ import 'package:reem/features/market/presentation/screens/missions_screen.dart';
 import 'package:reem/features/market/presentation/screens/resale_market_screen.dart';
 import 'package:reem/features/market/presentation/screens/seller_market_screen.dart';
 import 'package:reem/features/market/presentation/screens/wardrobe_care_screen.dart';
+import 'package:reem/features/market/presentation/widgets/market_pieces.dart';
 import 'package:reem/l10n/app_localizations.dart' as gen;
 
 final _captureKey = GlobalKey();
@@ -234,6 +235,9 @@ void main() {
     );
     await _settle(tester);
 
+    final l10n = gen.AppLocalizations.of(
+      tester.element(find.byType(DropsScreen)),
+    );
     for (final drop in invited) {
       expect(
         drop.invitation!.reasons,
@@ -241,7 +245,7 @@ void main() {
         reason: 'an invitation with no reason is a blast',
       );
       expect(
-        find.text(drop.invitation!.headline),
+        find.text(dropReasonLabel(l10n!, drop.invitation!.reasons)),
         findsWidgets,
         reason: 'the reason the graph picked her must reach the card',
       );

@@ -36,6 +36,7 @@ enum ExperienceSurface {
   search,
   cart,
   rooms,
+  closet,
   activity,
   profile,
   dashboard,
@@ -317,37 +318,28 @@ class AppRoleExperience {
       ),
       RoleNavigationItem(
         surface: ExperienceSurface.search,
-        label: 'Search',
+        label: 'Discover',
         path: RoutePaths.search,
-        icon: Icons.search_rounded,
-        selectedIcon: Icons.saved_search_rounded,
+        icon: Icons.explore_outlined,
+        selectedIcon: Icons.explore_rounded,
         feature: ExperienceFeature.personalizedDiscovery,
       ),
-      // Reem Rooms takes the tab the cart used to hold. What she is in the
-      // middle of is a set of decisions, not a basket — and the tab that greets
-      // her should say so. `/cart` still exists for the one-tap purchase that
-      // needs no deliberation; it simply is not a destination any more.
+      // The closet holds the third tab, and Rooms and Activity left the bar
+      // to make room for it and for the create button the shell draws in the
+      // middle. The closet is the one place that answers the question every
+      // other screen now asks — does this go with what she owns — and it is
+      // where Rooms is reached from: a room is a piece she is still deciding
+      // on, one step before it is hers. Activity's links all live on Me.
       RoleNavigationItem(
-        // Its own surface, not the cart's. Sharing the cart's identifier is
-        // what put a live basket count on a tab that opens a room.
-        surface: ExperienceSurface.rooms,
-        label: 'Rooms',
-        path: RoutePaths.rooms,
-        icon: Icons.meeting_room_outlined,
-        selectedIcon: Icons.meeting_room_rounded,
-        feature: ExperienceFeature.cartCheckout,
-      ),
-      RoleNavigationItem(
-        surface: ExperienceSurface.activity,
-        label: 'Activity',
-        path: RoutePaths.activity,
-        icon: Icons.notifications_none_rounded,
-        selectedIcon: Icons.notifications_rounded,
-        feature: ExperienceFeature.socialCommerce,
+        surface: ExperienceSurface.closet,
+        label: 'Closet',
+        path: RoutePaths.closet,
+        icon: Icons.checkroom_outlined,
+        selectedIcon: Icons.checkroom_rounded,
       ),
       RoleNavigationItem(
         surface: ExperienceSurface.profile,
-        label: 'Profile',
+        label: 'Me',
         path: RoutePaths.profile,
         icon: Icons.person_outline_rounded,
         selectedIcon: Icons.person_rounded,

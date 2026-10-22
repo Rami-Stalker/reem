@@ -8,6 +8,7 @@ import 'package:reem/core/design_system/foundation/tokens/ds_radius.dart';
 import 'package:reem/core/design_system/foundation/tokens/ds_spacing.dart';
 import 'package:reem/core/design_system/foundation/tokens/ds_typography.dart';
 import 'package:reem/core/localization/l10n_extension.dart';
+import 'package:reem/core/localization/readable_message.dart';
 
 /// A reassuring error state with a retry affordance.
 ///
@@ -77,7 +78,7 @@ class DsErrorState extends StatelessWidget {
               if (message != null) ...[
                 const SizedBox(height: DsSpacing.xs),
                 Text(
-                  message!,
+                  readableMessage(l10n, message!),
                   textAlign: TextAlign.center,
                   style: theme.textTheme.bodyMedium
                       ?.copyWith(color: c.onSurfaceVariant),

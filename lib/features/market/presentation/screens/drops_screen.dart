@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/features/market/domain/entities/market.dart';
 import 'package:reem/features/market/presentation/providers/market_providers.dart';
@@ -40,23 +41,22 @@ class DropsScreen extends ConsumerWidget {
 
     return Scaffold(
       backgroundColor: colors.background,
-      appBar: const ReemAppBar(title: 'نزولات'),
+      appBar: ReemAppBar(title: context.l10n.marketDrops),
       body: RefreshIndicator(
         onRefresh: () async => ref.invalidate(openDropsProvider),
         child: async.when(
           loading: () => const Center(child: DsLoadingIndicator()),
           error: (_, _) => DsErrorState(
-            message: 'ما قدرنا نجيب النزولات.',
+            message: context.l10n.marketDropsFailed,
             onRetry: () => ref.invalidate(openDropsProvider),
           ),
           data: (drops) => drops.isEmpty
-              ? const DsEmptyState(
+              ? DsEmptyState(
                   icon: Icons.local_fire_department_outlined,
-                  title: 'ما في نزول هلق',
+                  title: context.l10n.marketNoDrops,
                   // Says what a drop is *for*, because a woman seeing this
                   // screen empty has no other way to learn it.
-                  message:
-                      'لما ينزل شي بيناسب اللي ناقصك أو ذوقك، بتشوفيه هون قبل ما ينفتح للكل.',
+                  message: context.l10n.marketNoDropsBody,
                 )
               : ListView.separated(
                   padding: const EdgeInsets.all(DsSpacing.lg),
@@ -100,13 +100,13 @@ class DropsRail extends ConsumerWidget {
             children: [
               Expanded(
                 child: Text(
-                  'نزل هلق',
+                  context.l10n.marketLiveNow,
                   style: context.dsText.cardTitle.tint(colors.onSurface),
                 ),
               ),
               TextButton(
                 onPressed: () => context.push(RoutePaths.marketDrops),
-                child: const Text('الكل'),
+                child: Text(context.l10n.marketAll),
               ),
             ],
           ),

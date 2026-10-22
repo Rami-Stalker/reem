@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/media/authorized_media_image.dart';
 import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/features/closet/domain/entities/closet_gap.dart';
@@ -26,11 +27,11 @@ class ClosetGapScreen extends ConsumerWidget {
 
     return Scaffold(
       backgroundColor: colors.background,
-      appBar: const ReemAppBar(title: 'القطعة الناقصة'),
+      appBar: ReemAppBar(title: context.l10n.closetGapTitle),
       body: suggestionsAsync.when(
         loading: () => const Center(child: DsLoadingIndicator()),
         error: (_, _) => DsErrorState(
-          message: 'ما قدرنا نجيب الاقتراحات.',
+          message: context.l10n.closetSuggestionsFailed,
           onRetry: () => ref.invalidate(gapSuggestionsProvider(gapId)),
         ),
         data: (data) => ListView(
@@ -45,7 +46,7 @@ class ClosetGapScreen extends ConsumerWidget {
               children: [
                 Expanded(
                   child: DsButton(
-                    label: 'ليش هالاقتراح؟',
+                    label: context.l10n.closetWhySuggestion,
                     variant: DsButtonVariant.secondary,
                     size: DsButtonSize.sm,
                     onPressed: () => _explain(context, data.gap),
@@ -54,7 +55,7 @@ class ClosetGapScreen extends ConsumerWidget {
                 const SizedBox(width: DsSpacing.xs),
                 Expanded(
                   child: DsButton(
-                    label: 'مو مهتمة',
+                    label: context.l10n.closetNotInterested,
                     variant: DsButtonVariant.secondary,
                     size: DsButtonSize.sm,
                     onPressed: () => _dismiss(context, ref),
@@ -64,13 +65,16 @@ class ClosetGapScreen extends ConsumerWidget {
             ),
             const SizedBox(height: DsSpacing.lg),
             if (data.suggestions.isEmpty)
-              const DsEmptyState(
+              DsEmptyState(
                 icon: Icons.search_off_rounded,
-                title: 'ما لقينا قطعة مناسبة هلق',
-                message: 'جرّبي بعدين — المتاجر بتضيف قطع جديدة كل يوم.',
+                title: context.l10n.closetNoMatchNow,
+                message: context.l10n.closetNoMatchNowBody,
               )
             else ...[
-              Text('قطع بتناسب خزانتك', style: context.dsText.sectionTitle),
+              Text(
+                context.l10n.closetPiecesThatFit,
+                style: context.dsText.sectionTitle,
+              ),
               const SizedBox(height: DsSpacing.sm),
               for (final suggestion in data.suggestions) ...[
                 _SuggestionCard(suggestion: suggestion),
@@ -96,7 +100,7 @@ class ClosetGapScreen extends ConsumerWidget {
     if (!context.mounted) return;
     // Dismissal is durable — the fingerprint keeps it suppressed across every
     // future recompute — so saying so is honest rather than reassuring.
-    DsSnackbar.show(context, message: 'تمام، ما رح نرجع نقترحها.');
+    DsSnackbar.show(context, message: context.l10n.closetGapDismissed);
     context.pop();
   }
 }
@@ -156,7 +160,7 @@ class _SuggestionCard extends StatelessWidget {
                   children: [
                     if (suggestion.completesALook)
                       DsChip(
-                        label: 'بتكمّل إطلالة',
+                        label: context.l10n.closetCompletesLook,
                         icon: Icons.auto_awesome_rounded,
                       ),
                     for (final reason in suggestion.pairingReasons.take(2))
@@ -166,7 +170,9 @@ class _SuggestionCard extends StatelessWidget {
                 if (suggestion.pairsWithItemIds.isNotEmpty) ...[
                   DsGaps.vXxs,
                   Text(
-                    'بتنسّق مع ${suggestion.pairsWithItemIds.length} قطعة عندك',
+                    context.l10n.closetPairsWithCount(
+                      suggestion.pairsWithItemIds.length,
+                    ),
                     style: context.dsText.caption.tint(colors.primary),
                   ),
                 ],

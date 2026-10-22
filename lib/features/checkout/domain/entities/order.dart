@@ -52,28 +52,6 @@ enum SellerOrderStatus {
         _ => SellerOrderStatus.newOrder,
       };
 
-  String get label => switch (this) {
-        SellerOrderStatus.newOrder => 'طلب جديد',
-        SellerOrderStatus.awaitingSellerConfirmation => 'بانتظار تأكيد البائعة',
-        SellerOrderStatus.preparing => 'قيد التجهيز',
-        SellerOrderStatus.readyToShip => 'جاهز للشحن',
-        SellerOrderStatus.handedToCourier => 'تم التسليم للمندوب',
-        SellerOrderStatus.inTransit => 'بالطريق',
-        SellerOrderStatus.delivered => 'تم التسليم',
-        SellerOrderStatus.deliveryFailed => 'فشل التسليم',
-        SellerOrderStatus.cancelledByCustomer => 'ألغيتِ الطلب',
-        SellerOrderStatus.cancelledBySeller => 'ألغته البائعة',
-        SellerOrderStatus.rejectedOnDelivery => 'مرفوض عند الاستلام',
-        SellerOrderStatus.returnRequested => 'طلب إرجاع',
-        SellerOrderStatus.returnInTransit => 'قيد الإرجاع',
-        SellerOrderStatus.returned => 'تم الإرجاع',
-        SellerOrderStatus.exchangeInProgress => 'قيد الاستبدال',
-        SellerOrderStatus.exchanged => 'تم الاستبدال',
-        SellerOrderStatus.refundPending => 'قيد الاسترداد المالي',
-        SellerOrderStatus.refunded => 'تم الاسترداد',
-        SellerOrderStatus.disputed => 'قيد النزاع',
-      };
-
   /// Q38 — the customer may cancel until the parcel is handed over.
   bool get isCancellableByCustomer => const {
         SellerOrderStatus.newOrder,
@@ -128,19 +106,6 @@ enum OrderStatus {
     OrderStatus.shipped,
     OrderStatus.partiallyDelivered,
   }.contains(this);
-
-  String get label => switch (this) {
-        OrderStatus.draft => 'مسودّة',
-        OrderStatus.pendingPayment => 'بانتظار الدفع',
-        OrderStatus.confirmed => 'مؤكّد',
-        OrderStatus.partiallyShipped => 'شُحن جزئياً',
-        OrderStatus.shipped => 'تم الشحن',
-        OrderStatus.partiallyDelivered => 'سُلّم جزئياً',
-        OrderStatus.delivered => 'تم التسليم',
-        OrderStatus.partiallyCancelled => 'أُلغي جزئياً',
-        OrderStatus.cancelled => 'ملغى',
-        OrderStatus.closed => 'مغلق',
-      };
 }
 
 class OrderItemLine extends Equatable {
@@ -348,19 +313,6 @@ class OrderPayment extends Equatable {
   bool get isPaid => status == 'paid';
   bool get isPending => status == 'pending';
   bool get isFailed => status == 'failed';
-
-  String get methodLabel => switch (method) {
-        'cod' => 'الدفع عند الاستلام',
-        'courier_collect' => 'الدفع لمندوب الشحن',
-        'syriatel_cash' => 'سيرياتيل كاش',
-        'mtn_cash' => 'MTN كاش',
-        'sham_cash' => 'شام كاش',
-        'bank_card' => 'بطاقة بنكية',
-        'bank_transfer' => 'تحويل بنكي',
-        'hawala' => 'حوالة داخلية',
-        'platform_wallet' => 'محفظة المنصة',
-        _ => method,
-      };
 
   @override
   List<Object?> get props => [id, method, status, amount, paidAt];

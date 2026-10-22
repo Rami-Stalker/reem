@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:reem/core/shared/value_objects/money.dart';
+import 'package:reem/features/checkout/presentation/order_labels.dart';
 import 'package:reem/features/seller_orders/data/models/seller_order_models.dart';
 import 'package:reem/features/seller_orders/domain/entities/seller_order.dart';
 import 'package:reem/features/seller_orders/presentation/seller_order_labels.dart';
@@ -150,6 +151,38 @@ void main() {
       expect(split, closeTo(order.commissionBase.approximateValue, 0.0001));
     });
 
+    test('the rows she reads add up to her net, whoever paid the coupon', () {
+      // A platform coupon: the customer paid 40,000 less, the platform made it
+      // up, and she is paid on the full price. Listing that 40,000 as a
+      // deduction made her breakdown come to less than her net.
+      final json = _fixture('seller_order_detail.json')
+        ..['discount_total'] = {'amount': '40000.0000', 'currency': 'SYP'}
+        ..['seller_funded_discount'] = {'amount': '0.0000', 'currency': 'SYP'}
+        ..['platform_funded_discount'] = {
+          'amount': '40000.0000',
+          'currency': 'SYP',
+        };
+      final coupon = SellerOrderMapper.detailFromJson(json);
+
+      expect(coupon.platformFundedDiscount.approximateValue, 40000);
+      expect(
+        coupon.itemsSubtotal.approximateValue -
+            coupon.sellerFundedDiscount.approximateValue -
+            coupon.summary.commission.approximateValue,
+        closeTo(coupon.summary.net.approximateValue, 0.0001),
+      );
+    });
+
+    test('an older server without the split counts the discount as hers', () {
+      final json = _fixture('seller_order_detail.json')
+        ..['discount_total'] = {'amount': '40000.0000', 'currency': 'SYP'}
+        ..remove('seller_funded_discount')
+        ..remove('platform_funded_discount');
+      final old = SellerOrderMapper.detailFromJson(json);
+      expect(old.sellerFundedDiscount.approximateValue, 40000);
+      expect(old.platformFundedDiscount.isZero, isTrue);
+    });
+
     test('the escrow clock is read from delivery, not from payment', () {
       expect(order.deliveredAt, isNotNull);
       expect(order.escrowReleaseAt, isNotNull);
@@ -212,7 +245,7 @@ void main() {
       // for the woman who cancelled and wrong for the woman reading her queue.
       expect(
         ar.parcelStatus(SellerOrderStatus.cancelledByCustomer),
-        isNot(SellerOrderStatus.cancelledByCustomer.label),
+        isNot(ar.customerParcelStatus(SellerOrderStatus.cancelledByCustomer)),
       );
       expect(
         ar.parcelStatus(SellerOrderStatus.cancelledByCustomer),

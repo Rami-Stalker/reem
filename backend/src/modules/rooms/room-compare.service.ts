@@ -199,7 +199,7 @@ export class RoomCompareService {
             const stock = candidate.offerVariant?.stock ?? candidate.offer.stock;
             return [
               candidate.id,
-              { raw: stock, display: stock > 0 ? `${stock}` : 'خلص' },
+              { raw: stock, display: stock > 0 ? `${stock}` : 'نفد' },
             ];
           }),
         ),
@@ -225,7 +225,7 @@ export class RoomCompareService {
             candidate.id,
             {
               raw: candidate.offer.acceptsReturns ? 'yes' : 'no',
-              display: candidate.offer.acceptsReturns ? 'بترجع' : 'ما بترجع',
+              display: candidate.offer.acceptsReturns ? 'قابلة للإرجاع' : 'غير قابلة للإرجاع',
             },
           ]),
         ),
@@ -240,7 +240,7 @@ export class RoomCompareService {
             {
               raw: candidate.voteScore,
               display: candidate.votesUp + candidate.votesDown === 0
-                ? 'ما صوّت حدا'
+                ? 'لا أصوات بعد'
                 : `${candidate.votesUp}↑ ${candidate.votesDown}↓`,
             },
           ]),

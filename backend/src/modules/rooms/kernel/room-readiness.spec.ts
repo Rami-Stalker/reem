@@ -158,6 +158,21 @@ test('a decision the room suggested and she ignored never blocks either', () => 
   assert.equal(readiness.ready, true);
 });
 
+test('a room of untouched suggestions is not ready — there is nothing to buy', () => {
+  // An occasion opens a room with suggested decisions only. Nothing required,
+  // so nothing used to block: the room read «every decision settled» at 0%.
+  const readiness = roomReadiness([
+    decision({ title: 'فستان', isSuggested: true, candidates: [] }),
+    decision({ title: 'حذاء', isSuggested: true, candidates: [candidate()] }),
+  ]);
+
+  assert.equal(readiness.ready, false);
+  assert.deepEqual(
+    readiness.blockers.map((b) => b.code),
+    ['NOTHING_CHOSEN'],
+  );
+});
+
 test('progress counts every decision, so an almost-done room reads as one', () => {
   const readiness = roomReadiness([
     decision({

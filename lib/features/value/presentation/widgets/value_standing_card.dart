@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/features/value/presentation/providers/value_providers.dart';
 
@@ -81,7 +82,10 @@ class _FullCard extends StatelessWidget {
               Icon(Icons.workspace_premium_rounded, size: 18, color: colors.primary),
               const SizedBox(width: DsSpacing.xs),
               Expanded(
-                child: Text('مكانتك بريم', style: context.dsText.labelStrong),
+                child: Text(
+                  context.l10n.valueCardTitle,
+                  style: context.dsText.labelStrong,
+                ),
               ),
               const Icon(Icons.chevron_left_rounded, size: 18),
             ],
@@ -100,7 +104,7 @@ class _FullCard extends StatelessWidget {
             Text(
               // Deliberately not "٦٠ نقطة". The standing screen turns the gap
               // into things she could do; the card only says there is one.
-              'قريبة من $nextTierName',
+              context.l10n.valueCardCloseTo(nextTierName!),
               style: context.dsText.caption,
             ),
           ],
@@ -182,7 +186,9 @@ class _MomentumChip extends StatelessWidget {
           ),
           DsGaps.hXxxs,
           Text(
-            rising ? 'عم تصعدي' : 'هدوء',
+            rising
+                ? context.l10n.valueCardRising
+                : context.l10n.valueCardSteady,
             style: context.dsText.micro.tint(
               rising ? colors.success : colors.onSurfaceVariant,
             ),

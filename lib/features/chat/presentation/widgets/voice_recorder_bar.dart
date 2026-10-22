@@ -206,14 +206,11 @@ class _Level extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(DsRadius.full),
-      child: LinearProgressIndicator(
-        value: value.clamp(0.05, 1.0),
-        minHeight: 6,
-        color: color,
-        backgroundColor: color.withValues(alpha: 0.15),
-      ),
+    return DsMeter(
+      value: value.clamp(0.05, 1.0),
+      weight: DsMeterWeight.regular,
+      color: color,
+      track: color.withValues(alpha: 0.15),
     );
   }
 }

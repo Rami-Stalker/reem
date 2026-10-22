@@ -164,7 +164,7 @@ class _CategorySheetState extends ConsumerState<_CategorySheet> {
         AsyncData(:final value) => _body(context, value),
         _ => const Padding(
           padding: EdgeInsets.symmetric(vertical: DsSpacing.xxl),
-          child: Center(child: CircularProgressIndicator()),
+          child: DsLoadingIndicator(),
         ),
       },
     );

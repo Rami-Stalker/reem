@@ -103,8 +103,8 @@ export class SellerOpportunityService {
           score: pair.score,
           coOccurrences: pair.coOccurrences,
           ar: pair.coOccurrences > 0
-            ? `«${left.title}» و«${right.title}» انشروا مع بعض ${pair.coOccurrences} مرات — جرّبي تعرضيهن سوا.`
-            : `«${left.title}» و«${right.title}» بيكملوا بعض — ممكن تعرضيهن سوا.`,
+            ? `«${left.title}» و«${right.title}» اشتُريا معاً ${pair.coOccurrences} مرات — جرّبي عرضهما معاً.`
+            : `«${left.title}» و«${right.title}» يكمل أحدهما الآخر — يمكنكِ عرضهما معاً.`,
         };
       })
       .filter((row): row is NonNullable<typeof row> => row !== null);
@@ -158,7 +158,7 @@ export class SellerOpportunityService {
       slot: row.slot,
       shoppers: Number(row.shoppers),
       herListings: Number(row.hers),
-      ar: `${Number(row.shoppers)} بنت ناقصهن «${slotLabel(row.slot)}» لإكمال إطلالة.`,
+      ar: `${Number(row.shoppers)} امرأة ينقصهن «${slotLabel(row.slot)}» لإكمال إطلالة.`,
     }));
   }
 }
@@ -172,9 +172,9 @@ export class SellerOpportunityService {
 function sentenceFor(interested: number, considering: number): string | null {
   if (interested < 3) return null;
   if (considering >= 3) {
-    return `${interested} بنت مهتمّات فيه، و${considering} منهن حاطّينه بغرفة أو محفوظاتهن.`;
+    return `${interested} امرأة مهتمّات به، و${considering} منهن وضعنه في غرفة أو في محفوظاتهن.`;
   }
-  return `${interested} بنت مهتمّات فيه.`;
+  return `${interested} امرأة مهتمّات به.`;
 }
 
 /** The wardrobe slots, in the words the rest of the app uses. */

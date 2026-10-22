@@ -79,6 +79,14 @@ final class SellerOrderMapper {
       discountTotal: _money(json['discount_total'], currency),
       shippingCost: _money(json['shipping_cost'], currency),
       commissionBase: _money(json['commission_base'], currency),
+      // An older server sends no split; every discount was hers then.
+      sellerFundedDiscount: json.containsKey('seller_funded_discount')
+          ? _money(json['seller_funded_discount'], currency)
+          : _money(json['discount_total'], currency),
+      platformFundedDiscount: _money(
+        json['platform_funded_discount'],
+        currency,
+      ),
       items: (json['items'] as List<dynamic>? ?? const [])
           .whereType<Map<String, dynamic>>()
           .map((item) => lineFromJson(item, currency))
