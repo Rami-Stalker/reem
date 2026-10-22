@@ -63,14 +63,24 @@ class PaymentMethodOption extends Equatable {
   final String label;
   final bool requiresOnlineConfirmation;
 
+  /// For a bank transfer or hawala: who to pay, as finance wrote it. The
+  /// server only offers a transfer rail once this is set.
+  final String? instructions;
+
   const PaymentMethodOption({
     required this.method,
     required this.label,
     required this.requiresOnlineConfirmation,
+    this.instructions,
   });
 
   @override
-  List<Object?> get props => [method, label, requiresOnlineConfirmation];
+  List<Object?> get props => [
+    method,
+    label,
+    requiresOnlineConfirmation,
+    instructions,
+  ];
 }
 
 class DeliveryQuote extends Equatable {

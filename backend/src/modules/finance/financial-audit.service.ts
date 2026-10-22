@@ -24,6 +24,10 @@ export const FinancialAction = {
   ReturnRefunded: 'return.refunded',
   /** Recording what a courier actually handed over (Q56). */
   CourierCashSettled: 'courier.cash_settled',
+  /** Finance matched a bank transfer or hawala and marked it paid (Q51). */
+  TransferConfirmed: 'payment.transfer_confirmed',
+  /** Finance could not match the reference she gave. */
+  TransferRejected: 'payment.transfer_rejected',
   /** Anything posted to the ledger by hand. */
   ManualLedgerEntry: 'ledger.manual_entry',
   /** «تعديل العمولات أو الباقات» */

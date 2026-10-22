@@ -590,6 +590,11 @@ abstract final class ApiEndpoints {
       '/finance/seller/payouts/$id/cancel';
   static const adminFinanceOverview = '/finance/admin/overview';
   static const adminFxSync = '/finance/admin/fx/sync';
+  static const adminPendingTransfers = '/payments/admin/transfers';
+  static String adminConfirmTransfer(String id) =>
+      '/payments/admin/transfers/$id/confirm';
+  static String adminRejectTransfer(String id) =>
+      '/payments/admin/transfers/$id/reject';
 
   // Invoices (Q51 — one per order, one per seller)
   static String invoicesForOrder(String orderId) => '/invoices/order/$orderId';

@@ -100,6 +100,13 @@ services:
       - key: TOTP_ENC_KEY
         sync: false
 
+      # ── Transfer rails: bank transfer and hawala are offered at checkout
+      # only once their instructions (who to pay) are set in the Dashboard.
+      - key: PAYMENT_BANK_TRANSFER_INSTRUCTIONS
+        sync: false
+      - key: PAYMENT_HAWALA_INSTRUCTIONS
+        sync: false
+
       # ── OTP delivery: production refuses to boot until one provider is
       # complete (SMS URL+key, or WhatsApp id+token, or voice URL+key). Leave
       # empty until a provider is contracted; add the others in the Dashboard

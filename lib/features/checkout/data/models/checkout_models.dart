@@ -50,6 +50,7 @@ class PaymentMethodOptionModel extends PaymentMethodOption {
     required super.method,
     required super.label,
     required super.requiresOnlineConfirmation,
+    super.instructions,
   });
 
   factory PaymentMethodOptionModel.fromJson(Map<String, dynamic> json) {
@@ -58,6 +59,7 @@ class PaymentMethodOptionModel extends PaymentMethodOption {
       label: json['label'] as String? ?? json['method'] as String,
       requiresOnlineConfirmation:
           json['requires_online_confirmation'] as bool? ?? false,
+      instructions: json['instructions'] as String?,
     );
   }
 }

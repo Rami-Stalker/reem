@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
+import 'package:reem/core/errors/failure_exception.dart';
 import 'package:reem/core/presentation/providers/core_providers.dart';
 import 'package:reem/core/result/result.dart';
 
@@ -7,6 +8,7 @@ import 'package:reem/features/admin_finance/data/datasources/admin_finance_remot
 import 'package:reem/features/admin_finance/data/datasources/impl/admin_finance_remote_datasource_impl.dart';
 import 'package:reem/features/admin_finance/data/repositories/admin_finance_repository_impl.dart';
 import 'package:reem/features/admin_finance/domain/entities/finance_overview.dart';
+import 'package:reem/features/admin_finance/domain/entities/pending_transfer.dart';
 import 'package:reem/features/admin_finance/domain/repositories/admin_finance_repository.dart';
 
 final adminFinanceRemoteDataSourceProvider =
@@ -18,6 +20,18 @@ final adminFinanceRepositoryProvider = Provider<AdminFinanceRepository>(
   (ref) =>
       AdminFinanceRepositoryImpl(ref.watch(adminFinanceRemoteDataSourceProvider)),
 );
+
+/// Q51 — transfers waiting for finance, oldest deadline first.
+final pendingTransfersProvider =
+    FutureProvider.autoDispose<List<PendingTransfer>>((ref) async {
+      final result = await ref
+          .watch(adminFinanceRepositoryProvider)
+          .loadPendingTransfers();
+      return switch (result) {
+        Success(:final data) => data,
+        Error(:final failure) => throw FailureException(failure),
+      };
+    });
 
 final adminFinanceNotifierProvider =
     StateNotifierProvider<AdminFinanceNotifier, AdminFinanceState>(

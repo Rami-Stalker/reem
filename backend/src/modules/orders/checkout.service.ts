@@ -126,6 +126,9 @@ export class CheckoutService {
     if (items.length === 0) {
       throw new BadRequestException('There is nothing to buy');
     }
+    // Before anything is priced or held: a rail she could not finish paying
+    // on would only produce an order that expires.
+    this.payments.assertAvailable(dto.payment_method);
 
     // Null for a guest, and threaded rather than branched on at every call:
     // most of what follows either takes a nullable id already or is skipped
@@ -614,12 +617,32 @@ export class CheckoutService {
    * delivered at all it would have paid them for nothing. It is set instead by
    * `SellerOrderWorkflowService` at the moment a parcel is marked delivered.
    */
-  async confirm(orderId: string, actorId?: string | null): Promise<void> {
-    await this.prisma.$transaction(async (tx) => {
-      await tx.order.update({
-        where: { id: orderId },
+  async confirm(
+    orderId: string,
+    actorId?: string | null,
+    tx?: Prisma.TransactionClient,
+  ): Promise<void> {
+    const run = async (tx: Prisma.TransactionClient) => {
+      // Only an order still waiting for its payment moves. One that expired
+      // or was cancelled has already put its stock back, and confirming it
+      // would send sellers to pack goods that are on sale to someone else.
+      // One already confirmed is left as it is, so a repeated confirmation
+      // (a retried request, a second proof of the same payment) is harmless.
+      const claimed = await tx.order.updateMany({
+        where: { id: orderId, status: OrderStatus.PENDING_PAYMENT },
         data: { status: OrderStatus.CONFIRMED },
       });
+      if (claimed.count === 0) {
+        const current = await tx.order.findUnique({
+          where: { id: orderId },
+          select: { status: true },
+        });
+        if (current && current.status !== OrderStatus.CANCELLED) return;
+        throw new BadRequestException({
+          code: 'ORDER_NOT_AWAITING_PAYMENT',
+          message: 'This order is no longer waiting for payment',
+        });
+      }
       await tx.sellerOrder.updateMany({
         where: { orderId, status: SellerOrderStatus.NEW },
         data: {
@@ -646,7 +669,10 @@ export class CheckoutService {
       await this.reservations.commit(tx, orderId);
 
       await this.openShipments(tx, orderId);
-    });
+    };
+
+    if (tx) return run(tx);
+    await this.prisma.$transaction(run);
   }
 
   /**

@@ -3201,5 +3201,19 @@
   "valueRungInsider": "من الدائرة",
   "valueRungCircle": "الدائرة الأولى",
   "adminAuditReviewSellerVerification": "مراجعة توثيق بائعة",
-  "adminAuditAdminRequest": "إجراء إداري"
+  "adminAuditAdminRequest": "إجراء إداري",
+  "paymentReferenceRejected": "لم يتمكّن فريق المالية من مطابقة الرقم: {reason}. تأكّدي منه وأرسليه مجدداً.",
+  "financePendingTransfers": "تحويلات بانتظار التأكيد",
+  "financePendingTransfersEmpty": "لا توجد تحويلات بانتظار المطابقة.",
+  "financePendingTransfersError": "تعذّر تحميل التحويلات. حدّثي الصفحة للمحاولة مجدداً.",
+  "financeTransferConfirm": "تأكيد الاستلام",
+  "financeTransferReject": "غير مطابق",
+  "financeTransferConfirmTitle": "تأكيد هذا التحويل؟",
+  "financeTransferConfirmBody": "أنتِ تؤكّدين وصول {amount} للطلب {order}. سيُرسَل الطلب إلى البائعات فوراً.",
+  "financeTransferConfirmed": "تم تأكيد الدفع — الطلب الآن لدى البائعات",
+  "financeTransferRejected": "أُعيد الرقم إلى الزبونة",
+  "financeTransferRejectTitle": "لماذا لم تتم المطابقة؟",
+  "financeTransferRejectReason": "السبب (يظهر للزبونة)",
+  "financeTransferNoReference": "لم يُرسَل رقم بعد",
+  "financeTransferExpires": "المخزون محجوز حتى {date}"
 }

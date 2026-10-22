@@ -16,6 +16,7 @@ import {
 } from './providers/payment.providers';
 import { OrdersModule } from '../orders/orders.module';
 import { LedgerModule } from '../ledger/ledger.module';
+import { FinanceModule } from '../finance/finance.module';
 
 const PROVIDERS = [
   CodProvider,
@@ -30,7 +31,11 @@ const PROVIDERS = [
 ] as const;
 
 @Module({
-  imports: [LedgerModule, forwardRef(() => OrdersModule)],
+  imports: [
+    LedgerModule,
+    forwardRef(() => OrdersModule),
+    forwardRef(() => FinanceModule),
+  ],
   controllers: [PaymentsController],
   providers: [
     PaymentsService,
