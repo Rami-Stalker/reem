@@ -7,6 +7,7 @@ import compression from 'compression';
 import helmet from 'helmet';
 import { AppModule } from './app.module';
 import { AllExceptionsFilter } from './common/filters/all-exceptions.filter';
+import { SingleQueryValuePipe } from './common/pipes/single-query-value.pipe';
 import type { NextFunction, Request, Response } from 'express';
 import { LocalDiskDriver } from './modules/media/storage/local-disk.driver';
 import { RequestContextMiddleware } from './common/observability/request-context.middleware';
@@ -159,8 +160,10 @@ async function bootstrap() {
     Logger.log(`Serving public media from ${mediaRoot}`, 'Bootstrap');
   }
 
-  // Validation: strip unknown props, reject extras, coerce types.
+  // Validation: refuse repeated single-value query keys, strip unknown props,
+  // reject extras, coerce types.
   app.useGlobalPipes(
+    new SingleQueryValuePipe(),
     new ValidationPipe({
       whitelist: true,
       forbidNonWhitelisted: true,

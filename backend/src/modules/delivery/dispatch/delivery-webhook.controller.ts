@@ -44,7 +44,8 @@ export class DeliveryWebhookController {
     return this.webhooks.receive(provider, {
       rawBody: req.rawBody,
       headers: req.headers as Record<string, string | string[] | undefined>,
-      body: req.body,
+      // Express 5 leaves `body` undefined for an empty request; keep `{}`.
+      body: req.body ?? {},
     });
   }
 }

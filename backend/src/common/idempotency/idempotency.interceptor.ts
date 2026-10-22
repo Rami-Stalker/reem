@@ -129,7 +129,9 @@ export class IdempotencyInterceptor implements NestInterceptor {
     }
 
     const scope = this.scopeOf(request);
-    const requestHash = this.hashOf(request.body);
+    // Express 5 leaves `body` undefined when none was sent; Express 4 gave `{}`.
+    // Hash the old shape so keys stored before the upgrade still match.
+    const requestHash = this.hashOf(request.body ?? {});
 
     return from(this.claim({ key, scope, endpoint, requestHash })).pipe(
       switchMap((existing) => {

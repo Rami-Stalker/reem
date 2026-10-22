@@ -119,7 +119,9 @@ export class TokenService {
 
     const access_token = await this.jwt.signAsync(payload, {
       secret: this.accessSecret,
-      expiresIn: this.accessExpiresIn,
+      // Seconds, from the same parse the server uses for its own expiry
+      // checks, so the token and the server never disagree on its lifetime.
+      expiresIn: Math.floor(this.accessExpiresMs / 1000),
     });
 
     const refresh_token = randomBytes(64).toString('base64url');

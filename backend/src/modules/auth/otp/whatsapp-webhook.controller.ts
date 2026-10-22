@@ -78,7 +78,8 @@ export class WhatsAppWebhookController {
   async receive(@Req() req: Request): Promise<{ received: true }> {
     this.assertSignature(req);
 
-    const body = req.body as {
+    // Express 5 leaves `body` undefined for an empty or non-JSON request.
+    const body = (req.body ?? {}) as {
       entry?: {
         changes?: { value?: { statuses?: WhatsAppStatusEntry[] } }[];
       }[];
