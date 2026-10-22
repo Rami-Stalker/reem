@@ -10,6 +10,10 @@ class OtpChallengeModel extends OtpChallenge {
     super.matchCode,
     super.maskedDestination,
     super.resendAfter,
+    super.deliveryMode,
+    super.ceremony,
+    super.sendTo,
+    super.smsBody,
   });
 
   factory OtpChallengeModel.fromJson(Map<String, dynamic> json) {
@@ -24,6 +28,12 @@ class OtpChallengeModel extends OtpChallenge {
       matchCode: json['match_code'] as String?,
       maskedDestination: json['masked_destination'] as String?,
       resendAfter: resend is String ? DateTime.parse(resend) : null,
+      // Absent from an older server's reply, which reads as the code rail —
+      // the right default, because that is what such a server is running.
+      deliveryMode: json['delivery_mode'] as String?,
+      ceremony: json['ceremony'] as String?,
+      sendTo: json['send_to'] as String?,
+      smsBody: json['sms_body'] as String?,
     );
   }
 }

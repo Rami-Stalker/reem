@@ -37,6 +37,27 @@ abstract interface class AuthRemoteDataSource {
     String? appVersion,
   });
 
+  /// Step two on the reverse rail: she has sent the message, we ask the server.
+  ///
+  /// No code, because there is none — the proof is an inbound SMS whose sender
+  /// the provider matched against the number she claimed.
+  Future<OtpLoginResponse> completeReverseOtpLogin({
+    required String phone,
+    String? clientNonce,
+    String? deviceName,
+    String? platform,
+    String? appVersion,
+  });
+
+  /// `pending`, `verified` or `expired` for an outstanding reverse ceremony.
+  ///
+  /// Safe to poll: it spends no attempt, so a slow network cannot use up the
+  /// budget that protects the challenge.
+  Future<String> reverseOtpStatus({
+    required String phone,
+    String? clientNonce,
+  });
+
   /// The optional password path. Refused with `DEVICE_VERIFICATION_REQUIRED`
   /// on a handset the account has never signed in from — by design, that is
   /// what keeps an optional password from being an account takeover.

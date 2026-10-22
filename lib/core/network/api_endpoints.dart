@@ -17,6 +17,12 @@ abstract final class ApiEndpoints {
   /// either signs her in or hands back a ticket to create the account.
   static const authOtpLoginStart = '/auth/otp/login/start';
   static const authOtpLoginVerify = '/auth/otp/login/verify';
+
+  /// Step two on the reverse rail. Takes no code — she sent one instead.
+  static const authOtpLoginReverse = '/auth/otp/login/reverse';
+
+  /// Polled while she is away in her messaging app. Spends no attempt.
+  static const authOtpReverseStatus = '/auth/otp/reverse/status';
   static const authResetPassword = '/auth/reset-password';
   static const authAccount = '/auth/account';
   static const authAccountPassword = '/auth/account/password';

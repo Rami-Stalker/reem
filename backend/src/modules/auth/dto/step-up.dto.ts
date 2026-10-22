@@ -54,6 +54,12 @@ export class VerifyStepUpDto {
   @IsEnum(StepUpMethod)
   method?: StepUpMethod;
 
+  /**
+   * Optional only so the SMS factor can be settled on the reverse rail, where
+   * she sent a message instead of typing digits. `consumeFactor` refuses an
+   * absent code for every other factor.
+   */
+  @IsOptional()
   @Transform(({ value }) =>
     typeof value === 'string' ? foldDigits(value).trim() : value,
   )
@@ -61,5 +67,5 @@ export class VerifyStepUpDto {
   @MinLength(4)
   // A recovery code is longer than an OTP.
   @MaxLength(16)
-  code!: string;
+  code?: string;
 }

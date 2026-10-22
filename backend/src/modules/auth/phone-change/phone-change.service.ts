@@ -151,7 +151,7 @@ export class PhoneChangeService {
   async verifyCurrent(
     userId: string,
     requestId: string,
-    code: string,
+    code: string | undefined,
     context: RequestContext,
   ) {
     const request = await this.requireLive(
@@ -160,9 +160,14 @@ export class PhoneChangeService {
       PhoneChangeStatus.AWAITING_CURRENT,
     );
 
-    // `consume`, not `verify`: proving control of the number she is *leaving*
-    // must not stamp it verified all over again.
-    await this.otp.consume(request.currentPhone, OtpPurpose.PHONE_CHANGE, code);
+    // `consumeAny`, not `verify`: proving control of the number she is
+    // *leaving* must not stamp it verified all over again, and the challenge
+    // on it may have been opened on either rail.
+    await this.otp.consumeAny(
+      request.currentPhone,
+      OtpPurpose.PHONE_CHANGE,
+      code,
+    );
 
     // Re-checked here as well as at start: half an hour is plenty of time for
     // somebody else to have registered the number in between.
@@ -199,7 +204,7 @@ export class PhoneChangeService {
   async confirm(
     userId: string,
     requestId: string,
-    code: string,
+    code: string | undefined,
     context: RequestContext,
     keepSessionId?: string,
   ) {
@@ -209,7 +214,7 @@ export class PhoneChangeService {
       PhoneChangeStatus.AWAITING_NEW,
     );
 
-    await this.otp.consume(
+    await this.otp.consumeAny(
       request.newPhone,
       OtpPurpose.PHONE_VERIFICATION,
       code,
@@ -428,9 +433,13 @@ export class PhoneChangeService {
       expiresAt: Date;
     },
     challenge?: {
-      match_code: string;
+      /** Null on the reverse rail, where no code is sent to her at all. */
+      match_code: string | null;
       channel: string;
       expires_at: string;
+      /** Present only on the reverse rail, and then both are present. */
+      send_to?: string;
+      sms_body?: string;
     },
   ) {
     return {
@@ -447,6 +456,12 @@ export class PhoneChangeService {
           match_code: challenge.match_code,
           channel: challenge.channel,
           expires_at: challenge.expires_at,
+          // The reverse rail asks her to send a message rather than read one,
+          // so the client needs the address and the exact body. Absent on the
+          // classic rail, where there is nothing for her to send.
+          ...(challenge.send_to && challenge.sms_body
+            ? { send_to: challenge.send_to, sms_body: challenge.sms_body }
+            : {}),
           sent_to:
             request.status === PhoneChangeStatus.AWAITING_CURRENT
               ? 'current'

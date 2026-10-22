@@ -41,6 +41,12 @@ export class VerifyOtpDto {
   @IsEnum(OtpPurpose)
   purpose!: OtpPurpose;
 
+  /**
+   * Absent on the reverse rail, where she sent the code rather than received
+   * it. `OtpService.verifyAny` refuses an absent code when no reverse ceremony
+   * is outstanding, so this stays a required field in every flow that has one.
+   */
+  @IsOptional()
   // Codes are typed on an Arabic keyboard as often as a Latin one.
   @Transform(({ value }) =>
     typeof value === 'string' ? foldDigits(value).trim() : value,
@@ -48,7 +54,7 @@ export class VerifyOtpDto {
   @IsString()
   @MinLength(4)
   @MaxLength(8)
-  code!: string;
+  code?: string;
 }
 
 /**
@@ -64,13 +70,15 @@ export class ResetPasswordDto {
   @PhoneField()
   phone!: string;
 
+  /** Absent on the reverse rail — see `VerifyOtpDto.code`. */
+  @IsOptional()
   @Transform(({ value }) =>
     typeof value === 'string' ? foldDigits(value).trim() : value,
   )
   @IsString()
   @MinLength(4)
   @MaxLength(8)
-  code!: string;
+  code?: string;
 
   @IsString()
   @MinLength(8)

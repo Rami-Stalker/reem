@@ -4,6 +4,7 @@ import { OtpTransportKind } from '@prisma/client';
 import { DeliveryOrchestrator } from './delivery.orchestrator';
 import { parseOtpTestAccounts, testAccountsActive } from './otp-test-accounts';
 import { OTP_TRANSPORTS, OtpTransport } from './otp-transport';
+import { ReverseSmsService } from './syrotp/reverse-sms.service';
 
 /**
  * Checks at start-up that a one-time code can actually reach somebody.
@@ -26,11 +27,26 @@ export class OtpDeliveryReadiness implements OnApplicationBootstrap {
   constructor(
     private readonly orchestrator: DeliveryOrchestrator,
     @Inject(OTP_TRANSPORTS) private readonly transports: OtpTransport[],
+    private readonly reverse: ReverseSmsService,
     private readonly config: ConfigService,
   ) {}
 
   async onApplicationBootstrap(): Promise<void> {
     if (this.config.get<string>('nodeEnv') === 'test') return;
+
+    // A configured reverse rail is a way in on its own: she proves the number
+    // by messaging a receiver this deployment owns, so a deployment that has
+    // one needs no outbound transport at all. Said first because this is the
+    // intended shape now, and a boot log that only ever lists transports would
+    // read as "no OTP delivery" on exactly the deployments that work best.
+    if (this.reverse.isUsable()) {
+      this.logger.log(
+        `OTP delivery: reverse SMS (SYROTP)${
+          this.reverse.isPrimary() ? ' — primary' : ' — fallback only'
+        }`,
+      );
+      if (this.reverse.isPrimary()) return;
+    }
 
     const chain = await this.orchestrator.chain();
     const usable = chain

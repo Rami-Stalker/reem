@@ -540,7 +540,7 @@ export class CheckoutService {
    * with a bill. That is all it proves, and all it is asked to prove — it
    * grants no session and verifies no account.
    */
-  async confirmCod(buyer: Buyer, orderId: string, code: string) {
+  async confirmCod(buyer: Buyer, orderId: string, code?: string) {
     const userId = userIdOf(buyer);
     const order = await this.prisma.order.findFirst({
       // Scoped to whoever owns the order — her account, or the guest session

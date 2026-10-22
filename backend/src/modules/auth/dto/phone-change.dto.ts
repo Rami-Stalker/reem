@@ -1,5 +1,5 @@
 import { Transform } from 'class-transformer';
-import { IsString, MaxLength, MinLength } from 'class-validator';
+import { IsOptional, IsString, MaxLength, MinLength } from 'class-validator';
 import { foldDigits, PhoneField } from '../../../common/phone/phone';
 
 /** Step one: name the number she is moving to. */
@@ -17,11 +17,18 @@ export class StartPhoneChangeDto {
  * spent on the first one.
  */
 export class PhoneChangeCodeDto {
+  /**
+   * Optional, because on the reverse rail there is no code: she proved the
+   * number by sending a message and the step is settled by the provider's
+   * answer. Still validated when present, and a missing code with no reverse
+   * ceremony outstanding is refused as an invalid one.
+   */
+  @IsOptional()
   @Transform(({ value }) =>
     typeof value === 'string' ? foldDigits(value).trim() : value,
   )
   @IsString()
   @MinLength(4)
   @MaxLength(8)
-  code!: string;
+  code?: string;
 }

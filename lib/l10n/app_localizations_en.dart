@@ -10562,4 +10562,28 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get adminAuditAdminRequest => 'Admin action';
+
+  @override
+  String get reverseSmsTitle => 'Verify with one message';
+  @override
+  String get reverseSmsExplainer => 'Send the message below from this number. Nothing is sent to you, so nobody can ask you to read a code out.';
+  @override
+  String reverseSmsSendTo(String number) {
+    return 'To: $number';
+  }
+  @override
+  String get reverseSmsBodyLabel => 'Message';
+  @override
+  String get reverseSmsOpenMessages => 'Open Messages';
+  @override
+  String get reverseSmsIveSent => 'I have sent it';
+  @override
+  String get reverseSmsWaiting => 'Waiting for your message…';
+  @override
+  String get reverseSmsCost =>
+      "Charged at your operator's normal SMS rate.";
+  @override
+  String get reverseSmsNotYet => 'Your message has not arrived yet. Give it a moment, then try again.';
+  @override
+  String get reverseSmsCouldNotOpen => 'Could not open your messaging app. Send the message above manually.';
 }

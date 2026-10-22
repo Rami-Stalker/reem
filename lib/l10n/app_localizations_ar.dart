@@ -10720,4 +10720,27 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get adminAuditAdminRequest => 'إجراء إداري';
+
+  @override
+  String get reverseSmsTitle => 'تحقّقي برسالة واحدة';
+  @override
+  String get reverseSmsExplainer => 'أرسلي الرسالة التالية من هذا الرقم. لن يصلك أي رمز، فلا يمكن لأحد أن يطلب منكِ قراءته.';
+  @override
+  String reverseSmsSendTo(String number) {
+    return 'إلى: $number';
+  }
+  @override
+  String get reverseSmsBodyLabel => 'نص الرسالة';
+  @override
+  String get reverseSmsOpenMessages => 'فتح تطبيق الرسائل';
+  @override
+  String get reverseSmsIveSent => 'أرسلتُ الرسالة';
+  @override
+  String get reverseSmsWaiting => 'في انتظار رسالتك…';
+  @override
+  String get reverseSmsCost => 'تُحتسب الرسالة بحسب تسعيرة مشغّلك العادية.';
+  @override
+  String get reverseSmsNotYet => 'لم تصل رسالتك بعد. انتظري لحظة ثم أعيدي المحاولة.';
+  @override
+  String get reverseSmsCouldNotOpen => 'لم نتمكّن من فتح تطبيق الرسائل. أرسلي الرسالة أعلاه يدويًا.';
 }

@@ -63,6 +63,7 @@ exactly; do **not** generate new ones.
 | `OTP_DELIVERY_KEY` | yes | existing |
 | `TOTP_ENC_KEY` | yes | existing |
 | `CORS_ORIGINS` | yes | the web origins allowed to call the API, comma-separated (not `*`). The mobile app sends no Origin; with no web build yet, the service's own URL, e.g. `https://reem-api.onrender.com`. |
+| `SYROTP_ENABLED` + `SYROTP_BASE_URL` + `SYROTP_SECRET_KEY` + `SYROTP_RECEIVER_ID` (+ `SYROTP_PRIMARY`, `SYROTP_TIMEOUT_MS`) | satisfies the provider requirement on its own | reverse SMS through a self-hosted SYROTP instance — the primary rail when set, with the transport chain below as the fallback. All four are required together and a half-set group is refused at boot; `SYROTP_BASE_URL` must be `https://` in production, because it carries a bearer token and single-use bind messages. `SYROTP_PRIMARY=false` demotes it behind the chain without a code change. See [REVERSE_SMS_OTP.md](REVERSE_SMS_OTP.md). |
 | `SMS_GATEWAY_URL` + `SMS_GATEWAY_KEY` (+ `SMS_SENDER_ID`, `SMS_BODY_TEMPLATE`) | one provider is required | from the SMS provider — or instead `WHATSAPP_PHONE_NUMBER_ID` + `WHATSAPP_ACCESS_TOKEN` (+ `WHATSAPP_TEMPLATE_NAME`, `WHATSAPP_TEMPLATE_LOCALE`, `WHATSAPP_APP_SECRET`, `WHATSAPP_VERIFY_TOKEN`), or `VOICE_OTP_URL` + `VOICE_OTP_KEY` |
 | `OTP_TEST_ACCOUNTS` + `OTP_TEST_ACCOUNTS_UNTIL` | temporary, instead of a provider | fixed login codes for the existing test accounts only, as `+phone:code,+phone:code`, and an ISO deadline at most 30 days out. Nothing is sent to those numbers; every other number still needs a real provider. When the deadline passes the codes stop working and a production boot again requires a provider. Remove both once SMS/WhatsApp is live. |
 | `MEDIA_PUBLIC_ORIGIN` | no | leave unset on `onrender.com` (Render's `RENDER_EXTERNAL_URL` is used); set to `https://<custom domain>` once one is attached |
@@ -229,7 +230,7 @@ The scheduled jobs are sequenced, and the order is load-bearing:
 - `OTP_DEV_INBOX_ENABLED=true` — serves plaintext codes to anyone who can reach the port
 - `PAYMENTS_SANDBOX_CONFIRMATION=true` — lets a customer mark her own order paid
 - `MEDIA_PUBLIC_ORIGIN` unset — every stored image URL points at localhost
-- **no OTP provider** (`SMS_GATEWAY_URL`+`SMS_GATEWAY_KEY`, `WHATSAPP_PHONE_NUMBER_ID`+`WHATSAPP_ACCESS_TOKEN`, or `VOICE_OTP_URL`+`VOICE_OTP_KEY`) — nobody could sign in. At start-up `OtpDeliveryReadiness` also refuses when no *enabled* route in `otp_transport_routes` has a configured provider.
+- **no OTP provider** (a complete `SYROTP_*` group, `SMS_GATEWAY_URL`+`SMS_GATEWAY_KEY`, `WHATSAPP_PHONE_NUMBER_ID`+`WHATSAPP_ACCESS_TOKEN`, or `VOICE_OTP_URL`+`VOICE_OTP_KEY`) — nobody could sign in. At start-up `OtpDeliveryReadiness` also refuses when no *enabled* route in `otp_transport_routes` has a configured provider.
 - `MEDIA_DRIVER=local` — uploads on a container disk vanish on the next deploy (`MEDIA_LOCAL_PERSISTENT=true` only with a mounted volume)
 - a Supabase `DATABASE_URL` without `sslmode=require`, or on the transaction pooler without `pgbouncer=true`
 - `MEDIA_DRIVER=supabase` without `SUPABASE_URL` / `SUPABASE_SECRET_KEY`, or with the publishable key in its place

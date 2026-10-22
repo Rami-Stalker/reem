@@ -11827,5 +11827,50 @@
   "adminAuditAdminRequest": "Admin action",
   "@adminAuditAdminRequest": {
     "description": "Audit log entry recorded from an admin API request; the request line is in the details."
+  },
+  "reverseSmsTitle": "Verify with one message",
+  "@reverseSmsTitle": {
+      "description": "Title of the reverse-SMS step, where she sends the code instead of receiving one"
+  },
+  "reverseSmsExplainer": "Send the message below from this number. Nothing is sent to you, so nobody can ask you to read a code out.",
+  "@reverseSmsExplainer": {
+      "description": "Why the reverse rail is safer, shown under the title"
+  },
+  "reverseSmsSendTo": "To: {number}",
+  "@reverseSmsSendTo": {
+      "description": "The receiver number the verification message is addressed to",
+      "placeholders": {
+          "number": {
+              "type": "String"
+          }
+      }
+  },
+  "reverseSmsBodyLabel": "Message",
+  "@reverseSmsBodyLabel": {
+      "description": "Label above the exact SMS body she must send"
+  },
+  "reverseSmsOpenMessages": "Open Messages",
+  "@reverseSmsOpenMessages": {
+      "description": "Button that opens the SMS composer prefilled with the verification message"
+  },
+  "reverseSmsIveSent": "I have sent it",
+  "@reverseSmsIveSent": {
+      "description": "Button she taps after sending the verification message"
+  },
+  "reverseSmsWaiting": "Waiting for your message…",
+  "@reverseSmsWaiting": {
+      "description": "Shown while the app polls for the inbound verification message"
+  },
+  "reverseSmsCost": "Charged at your operator's normal SMS rate.",
+  "@reverseSmsCost": {
+      "description": "Tells her the outgoing verification SMS is billed to her"
+  },
+  "reverseSmsNotYet": "Your message has not arrived yet. Give it a moment, then try again.",
+  "@reverseSmsNotYet": {
+      "description": "Shown when she taps continue before the inbound message has been matched"
+  },
+  "reverseSmsCouldNotOpen": "Could not open your messaging app. Send the message above manually.",
+  "@reverseSmsCouldNotOpen": {
+      "description": "Shown when the SMS composer cannot be launched"
   }
 }

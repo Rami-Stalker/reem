@@ -16,6 +16,16 @@ abstract interface class AuthRepository {
     required String code,
   });
 
+  /// Step two on the reverse rail, where she sent the code rather than typing
+  /// it. Same two outcomes as `completeOtpLogin`.
+  Future<Result<OtpLoginResult>> completeReverseOtpLogin({
+    required String phone,
+  });
+
+  /// Where her outstanding reverse ceremony stands: `pending`, `verified` or
+  /// `expired`.
+  Future<Result<String>> reverseOtpStatus({required String phone});
+
   /// Turns a password on, or replaces one. Needs a fresh second factor.
   Future<Result<bool>> setPassword({
     String? currentPassword,
