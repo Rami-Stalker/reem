@@ -33,6 +33,10 @@ class OtpChallenge {
     this.matchCode,
     this.maskedDestination,
     this.resendAfter,
+    this.deliveryMode,
+    this.ceremony,
+    this.sendTo,
+    this.smsBody,
   });
 
   final String id;
@@ -56,6 +60,37 @@ class OtpChallenge {
 
   /// When the resend button should come back.
   final DateTime? resendAfter;
+
+  /// `code_to_handset` or `reverse_sms` — which direction the code travels.
+  ///
+  /// On the reverse rail nothing is sent to her: she messages a number the
+  /// platform owns and the inbound sender check is the proof. The two screens
+  /// are different enough that the app has to know before it draws anything,
+  /// which is why the server states this rather than leaving the client to
+  /// infer it from a missing field.
+  final String? deliveryMode;
+
+  /// `binding` the first time this number is seen by the provider,
+  /// `verification` every time after. She is told the same thing either way;
+  /// it is here because support cannot otherwise tell the two apart.
+  final String? ceremony;
+
+  /// The receiver number her message must be addressed to.
+  final String? sendTo;
+
+  /// The exact body she must send, e.g. `VERIFY 763PM5`.
+  final String? smsBody;
+
+  /// Whether she proves the number by sending rather than by typing.
+  ///
+  /// Both parts are demanded, not just the mode: a reverse challenge with no
+  /// address or no body is an instruction she cannot follow, and falling back
+  /// to the code field — which the server will refuse — is better than drawing
+  /// a screen that asks her to send nothing to nobody.
+  bool get isReverse =>
+      deliveryMode == 'reverse_sms' &&
+      (sendTo?.isNotEmpty ?? false) &&
+      (smsBody?.isNotEmpty ?? false);
 }
 
 /// What came back from `POST /auth/otp/login/verify`.

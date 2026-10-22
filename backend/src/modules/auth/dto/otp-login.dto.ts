@@ -6,7 +6,7 @@ import {
   MaxLength,
   MinLength,
 } from 'class-validator';
-import { OtpChannel } from '@prisma/client';
+import { OtpChannel, OtpPurpose } from '@prisma/client';
 import { foldDigits, PhoneField } from '../../../common/phone/phone';
 
 /**
@@ -77,6 +77,47 @@ export class CompleteOtpLoginDto extends DeviceDescriptorDto {
   @MinLength(4)
   @MaxLength(8)
   code!: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(128)
+  client_nonce?: string;
+}
+
+/**
+ * Step two on the reverse rail. Deliberately has no `code` field.
+ *
+ * There is nothing for her to type: she sent `VERIFY …` from her own handset
+ * and the provider matched the sender against the number she claimed. Giving
+ * this route a code field would invite a client to send one and a reader to
+ * believe it mattered.
+ */
+export class CompleteReverseOtpLoginDto extends DeviceDescriptorDto {
+  @PhoneField()
+  phone!: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(128)
+  client_nonce?: string;
+}
+
+/**
+ * The client's poll while she is away in her messaging app.
+ *
+ * Read-only and cheap by design — it reports where the ceremony stands and
+ * spends nothing, so a client may call it on a timer without eating the
+ * attempt budget that protects a code.
+ */
+export class ReverseOtpStatusDto {
+  @PhoneField()
+  phone!: string;
+
+  @Transform(({ value }) =>
+    typeof value === 'string' ? value.toUpperCase() : value,
+  )
+  @IsEnum(OtpPurpose)
+  purpose!: OtpPurpose;
 
   @IsOptional()
   @IsString()

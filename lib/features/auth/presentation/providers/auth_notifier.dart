@@ -250,6 +250,50 @@ class AuthNotifier extends StateNotifier<AuthState> {
     };
   }
 
+  /// Settles a reverse challenge: she has sent the message, we ask the server.
+  ///
+  /// Shares the outcome handling with `verifyOtpLogin` because from her side it
+  /// is the same moment — she is in, or she is asked for her name.
+  Future<OtpLoginResult?> verifyReverseOtpLogin({required String phone}) async {
+    state = state.copyWith(
+      isLoading: true,
+      clearError: true,
+      clearSuccess: true,
+    );
+    final result = await _repository.completeReverseOtpLogin(phone: phone);
+    return switch (result) {
+      Success(:final data) => () {
+        switch (data) {
+          case OtpLoginAuthenticated(:final user):
+            state = state.copyWith(
+              isLoading: false,
+              user: user,
+              isGuest: false,
+            );
+          case OtpLoginRegistrationRequired():
+            state = state.copyWith(isLoading: false);
+        }
+        return data;
+      }(),
+      Error(:final failure) => () {
+        state = state.copyWith(isLoading: false, error: failure.message);
+        return null;
+      }(),
+    };
+  }
+
+  /// Polls a reverse ceremony. Deliberately does not touch `isLoading` or
+  /// `error`: it runs on a timer behind a screen she is looking at, and a poll
+  /// that flashed a spinner or an error banner every few seconds would make
+  /// the screen unusable. A failed poll simply reads as `pending`.
+  Future<String> reverseOtpStatus({required String phone}) async {
+    final result = await _repository.reverseOtpStatus(phone: phone);
+    return switch (result) {
+      Success(:final data) => data,
+      Error() => 'pending',
+    };
+  }
+
   Future<bool> continueAsGuest() async {
     state = state.copyWith(
       isLoading: true,

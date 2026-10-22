@@ -100,6 +100,39 @@ class AuthRepositoryImpl with RepositoryHandler implements AuthRepository {
   });
 
   @override
+  Future<Result<OtpLoginResult>> completeReverseOtpLogin({
+    required String phone,
+  }) => guard(() async {
+    await _ensureConnected();
+    final response = await remote.completeReverseOtpLogin(
+      phone: phone,
+      clientNonce: _pendingNonce,
+      platform: defaultTargetPlatform.name,
+    );
+    _pendingNonce = null;
+
+    final tokens = response.tokens;
+    if (tokens != null) {
+      await _persistTokens(tokens);
+      await local.clearGuestSession();
+      await local.saveGuestMode(false);
+    }
+    return response.result;
+  });
+
+  @override
+  Future<Result<String>> reverseOtpStatus({required String phone}) =>
+      guard(() async {
+        // No `_ensureConnected` and no nonce clearing: this is a poll that may
+        // run many times for one challenge, and it must leave the challenge
+        // exactly as it found it.
+        return remote.reverseOtpStatus(
+          phone: phone,
+          clientNonce: _pendingNonce,
+        );
+      });
+
+  @override
   Future<Result<bool>> setPassword({
     String? currentPassword,
     required String newPassword,

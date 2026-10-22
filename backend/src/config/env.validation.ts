@@ -240,10 +240,50 @@ export function validateEnv(config: Record<string, unknown>) {
       [
         'Invalid environment configuration:',
         '  - no OTP delivery provider is configured, so nobody could sign in.',
-        '    Set one of: SMS_GATEWAY_URL + SMS_GATEWAY_KEY, WHATSAPP_PHONE_NUMBER_ID +',
-        '    WHATSAPP_ACCESS_TOKEN, or VOICE_OTP_URL + VOICE_OTP_KEY.',
+        '    Set one of: SYROTP_ENABLED=true + SYROTP_BASE_URL + SYROTP_SECRET_KEY +',
+        '    SYROTP_RECEIVER_ID (reverse SMS), SMS_GATEWAY_URL + SMS_GATEWAY_KEY,',
+        '    WHATSAPP_PHONE_NUMBER_ID + WHATSAPP_ACCESS_TOKEN, or VOICE_OTP_URL +',
+        '    VOICE_OTP_KEY.',
       ].join('\n'),
     );
+  }
+
+  /**
+   * Reverse SMS, half-configured.
+   *
+   * `SYROTP_ENABLED=true` with a missing key or receiver is the state where
+   * every sign-in silently takes the fallback rail — or, if nothing else is
+   * configured, no rail at all. The symptom is indistinguishable from a
+   * provider outage, so it is refused here where the cause is still visible.
+   */
+  if (String(config.SYROTP_ENABLED ?? '') === 'true') {
+    const missing = (
+      ['SYROTP_BASE_URL', 'SYROTP_SECRET_KEY', 'SYROTP_RECEIVER_ID'] as const
+    ).filter((key) => String(config[key] ?? '').trim().length === 0);
+    if (missing.length > 0) {
+      throw new Error(
+        [
+          'Invalid environment configuration:',
+          `  - SYROTP_ENABLED is true but ${missing.join(', ')} ${
+            missing.length === 1 ? 'is' : 'are'
+          } unset.`,
+        ].join('\n'),
+      );
+    }
+    // The secret key is a bearer token and a bind message is a single-use
+    // credential; both would cross the wire in the clear.
+    if (
+      config.NODE_ENV === 'production' &&
+      !String(config.SYROTP_BASE_URL).startsWith('https://')
+    ) {
+      throw new Error(
+        [
+          'Invalid environment configuration:',
+          '  - SYROTP_BASE_URL must be https:// in production; it carries a bearer',
+          '    token and single-use bind messages.',
+        ].join('\n'),
+      );
+    }
   }
 
   /**
@@ -454,8 +494,28 @@ function supabaseDatabaseUrlProblems(databaseUrl: string): string[] {
 function hasRealOtpTransport(config: Record<string, unknown>): boolean {
   const set = (key: string) => String(config[key] ?? '').trim().length > 0;
   return (
+    hasReverseSms(config) ||
     (set('SMS_GATEWAY_URL') && set('SMS_GATEWAY_KEY')) ||
     (set('WHATSAPP_PHONE_NUMBER_ID') && set('WHATSAPP_ACCESS_TOKEN')) ||
     (set('VOICE_OTP_URL') && set('VOICE_OTP_KEY'))
+  );
+}
+
+/**
+ * A reverse-SMS rail that can actually run a ceremony.
+ *
+ * It counts as a way in even though it sends nothing: she proves the number by
+ * messaging a receiver the deployment owns, so a start that answers an address
+ * and a body is a sign-in she can complete. All three values are required
+ * together — an address with no secret key cannot open a ceremony, and a
+ * deployment that sets two of the three has configured nothing.
+ */
+function hasReverseSms(config: Record<string, unknown>): boolean {
+  const set = (key: string) => String(config[key] ?? '').trim().length > 0;
+  return (
+    String(config.SYROTP_ENABLED ?? '') === 'true' &&
+    set('SYROTP_BASE_URL') &&
+    set('SYROTP_SECRET_KEY') &&
+    set('SYROTP_RECEIVER_ID')
   );
 }

@@ -611,6 +611,40 @@ enum OtpChannel {
 /// Syrian aggregator is the fallback that reaches a handset with mobile data
 /// switched off, voice is the last automated resort, and the ops console is a
 /// closed-beta stopgap that a human reads out loud.
+/// Which direction a one-time code travels.
+///
+/// `CODE_TO_HANDSET` is the classic rail: the platform mints six digits and a
+/// transport carries them out to her. `REVERSE_SMS` turns the arrow round —
+/// SYROTP mints the code, she sends it from her own handset to a receiver
+/// number the platform owns, and the match between the inbound sender and the
+/// number she claimed is the proof. Nothing is sent outbound, so the dominant
+/// Syrian failure mode an aggregator produces — accepted, never delivered —
+/// cannot occur on this mode at all.
+///
+/// It also closes the attack `matchCode` only ever mitigated: a code that
+/// travels *from* her phone cannot be recited to her by somebody pretending to
+/// be support, because the attacker would have to send the message from her
+/// SIM.
+enum OtpDeliveryMode {
+  CODE_TO_HANDSET
+  REVERSE_SMS
+}
+
+/// Which SYROTP ceremony a reverse challenge is waiting on.
+///
+/// The provider requires a `verified` phone-binding row for `(app, phone)`
+/// before it will start a verification at all, and refuses with
+/// `phone_not_bound` otherwise — there is no soft mode. So the first reverse
+/// challenge a number ever sees is a `BINDING`, every later one is a
+/// `VERIFICATION`, and both are settled by one inbound message whose sender is
+/// checked. They prove the same thing, which is why a binding is allowed to
+/// satisfy the challenge that opened it rather than asking her to send a
+/// second message for no extra assurance.
+enum ReverseCeremony {
+  BINDING
+  VERIFICATION
+}
+
 enum OtpTransportKind {
   WHATSAPP_CLOUD
   SMS_GATEWAY
@@ -1652,6 +1686,20 @@ model OtpRequest {
   matchCode       String?    @map("match_code")
   /// Binds the challenge to the app instance that asked for it.
   clientNonceHash String?    @map("client_nonce_hash")
+
+  /// Which direction this challenge's code travels. A `REVERSE_SMS` row has no
+  /// usable `codeHash`: the digest is taken over a 256-bit value that is never
+  /// revealed to anyone, so the code-entry path cannot satisfy it and the only
+  /// way to settle it is the provider's own answer.
+  deliveryMode    OtpDeliveryMode  @default(CODE_TO_HANDSET) @map("delivery_mode")
+  /// The ceremony a reverse challenge is waiting on; null on a classic one.
+  reverseCeremony ReverseCeremony? @map("reverse_ceremony")
+  /// The provider's `vrf_…` / `pbn_…` id. Unique so one provider ceremony can
+  /// never settle two challenges.
+  reverseRef      String?          @unique @map("reverse_ref")
+  /// The receiver number she was told to message, kept so a resend shows the
+  /// same instruction and so support can answer "where did I send it?".
+  reverseSendTo   String?          @map("reverse_send_to")
 
   expiresAt  DateTime  @map("expires_at")
   verifiedAt DateTime? @map("verified_at")

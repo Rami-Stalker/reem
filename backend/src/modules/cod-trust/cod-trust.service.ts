@@ -178,7 +178,8 @@ export class CodTrustService {
   async satisfyConfirmation(input: {
     orderId: string;
     recipientPhone: string;
-    code: string;
+    /** Absent on the reverse rail, where the recipient sent the message. */
+    code?: string;
     actorId: string | null;
   }): Promise<boolean> {
     const assessment = await this.prisma.codRiskAssessment.findUnique({
@@ -202,10 +203,11 @@ export class CodTrustService {
       });
     }
 
-    // `consume` rather than `verify`: proving control of the delivery number
-    // must not mark the *account's* number verified, and on an order shipping
-    // to somebody else's phone it would be marking the wrong number.
-    await this.otp.consume(
+    // `consumeAny` rather than `verifyAny`: proving control of the delivery
+    // number must not mark the *account's* number verified, and on an order
+    // shipping to somebody else's phone it would be marking the wrong number.
+    // `Any` because the challenge may have been opened on either rail.
+    await this.otp.consumeAny(
       input.recipientPhone,
       OtpPurpose.ORDER_CONFIRMATION,
       input.code,

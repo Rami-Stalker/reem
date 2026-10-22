@@ -138,6 +138,41 @@ export default () => ({
       apiKey: process.env.VOICE_OTP_KEY,
       costMicros: parseInt(process.env.VOICE_COST_MICROS ?? '120000', 10),
     },
+    /**
+     * SYROTP — reverse SMS, and the primary rail when it is configured.
+     *
+     * Self-hosted, so these are an address and keys for an instance this
+     * deployment runs rather than a vendor's: no contract to be withdrawn, and
+     * no outbound message to be accepted and then lost. `primary: false`
+     * demotes it behind the transport chain without a code change, which is
+     * what an operator reaches for if the ceremony turns out to cost more
+     * completed sign-ins than it saves.
+     */
+    reverse: {
+      enabled: process.env.SYROTP_ENABLED === 'true',
+      primary: process.env.SYROTP_PRIMARY !== 'false',
+      /**
+       * Whether this rail is the *only* way a number gets proved.
+       *
+       * The default once the rail is on, and a deliberate choice rather than a
+       * convenience: a silent fallback means an aggregator still has to be
+       * contracted, still has to be paid, and still gets to lose a message —
+       * so the delivery failure this rail exists to remove would come back
+       * whenever the provider blinked, and nobody would see it happen.
+       *
+       * The cost is stated plainly: while the provider is unreachable, nobody
+       * can sign in. A request answers 503 and says so, instead of quietly
+       * minting a code on a rail the deployment has decided not to rely on.
+       * `SYROTP_EXCLUSIVE=false` restores the fallback.
+       */
+      exclusive: process.env.SYROTP_EXCLUSIVE !== 'false',
+      baseUrl: process.env.SYROTP_BASE_URL,
+      /** `sk_live_…`. The publishable key is for browsers and unused here. */
+      secretKey: process.env.SYROTP_SECRET_KEY,
+      /** `rcv_…` — the receiver a binding ceremony is opened against. */
+      receiverId: process.env.SYROTP_RECEIVER_ID,
+      timeoutMs: parseInt(process.env.SYROTP_TIMEOUT_MS ?? '8000', 10),
+    },
     /** Closed-beta stopgap; refused in production by env validation. */
     opsConsoleEnabled: process.env.AUTH_OPS_TRANSPORT_ENABLED === 'true',
     /**

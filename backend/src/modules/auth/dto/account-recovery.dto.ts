@@ -39,13 +39,14 @@ export class SubmitRecoveryCaseDto {
    * A code just delivered to `contact_phone`. Verified before the case is
    * written, so the review queue only ever holds cases from someone reachable.
    */
+  @IsOptional()
   @Transform(({ value }) =>
     typeof value === 'string' ? foldDigits(value).trim() : value,
   )
   @IsString()
   @MinLength(4)
   @MaxLength(8)
-  contact_code!: string;
+  contact_code?: string;
 
   /** `YYYY-MM` — roughly when she joined. */
   @IsOptional()
