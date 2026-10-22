@@ -17,6 +17,7 @@ import { PrismaService } from '../../prisma/prisma.service';
 import { FinancialAuditService } from '../finance/financial-audit.service';
 import { LoyaltyService } from '../finance/loyalty.service';
 import { LedgerService } from '../ledger/ledger.service';
+import { DisputesService } from '../finance/disputes.service';
 import { WalletService } from '../ledger/wallet.service';
 import { CommissionsService } from './commissions.service';
 
@@ -444,6 +445,67 @@ dbTest('escrow whose window has closed becomes payable', async (world) => {
     syp('340000').toString(),
   );
 });
+
+dbTest(
+  'a parcel whose dispute was decided is released, less what the dispute took',
+  async (world) => {
+    // It used to stay in escrow for ever: the sweep required `dispute: null`,
+    // so a seller who won her dispute got the frozen part back and never the
+    // rest, and the sale never became payable.
+    const { sellerOrder, seller, customer } = await makeParcel(world.tx, {
+      subtotal: '400000',
+      commissionBase: '400000',
+      sellerNet: '340000',
+    });
+    await world.commissions.settleSellerOrder(sellerOrder.id);
+
+    const db = asPrisma(world.tx);
+    const disputes = new DisputesService(
+      db,
+      world.ledger,
+      new WalletService(db, world.ledger),
+      audit,
+    );
+    const dispute = await disputes.open(
+      {
+        sellerOrderId: sellerOrder.id,
+        openedById: customer.id,
+        subject: 'قطعة ناقصة',
+        amount: '100000',
+      },
+      world.tx,
+    );
+    await disputes.decide(dispute.id, { outcome: 'CUSTOMER' }, customer.id, world.tx);
+    await makeDue(world, sellerOrder.id, 1);
+
+    const payableBefore = await balance(
+      world,
+      LedgerAccountCode.SELLER_PAYABLE,
+      seller.id,
+    );
+    const result = await world.commissions.releaseDueEscrow();
+    assert.equal(result.failed, 0);
+
+    const after = await world.tx.sellerOrder.findUniqueOrThrow({
+      where: { id: sellerOrder.id },
+      select: { escrowReleased: true },
+    });
+    assert.equal(after.escrowReleased, true, 'the decided dispute no longer holds it');
+
+    const payableAfter = await balance(
+      world,
+      LedgerAccountCode.SELLER_PAYABLE,
+      seller.id,
+    );
+    // 340,000 net, of which 100,000 went to the customer by the ruling.
+    assert.equal(
+      payableAfter.minus(payableBefore).toString(),
+      syp('240000').toString(),
+    );
+    const escrow = await balance(world, LedgerAccountCode.SELLER_ESCROW, seller.id);
+    assert.equal(escrow.isZero(), true, 'nothing is stranded in escrow');
+  },
+);
 
 dbTest('escrow still inside its window is left alone', async (world) => {
   const { sellerOrder } = await makeParcel(world.tx, {

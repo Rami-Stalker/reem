@@ -1,13 +1,14 @@
 import { Module } from '@nestjs/common';
 import { LedgerModule } from '../ledger/ledger.module';
 import { FinanceModule } from '../finance/finance.module';
+import { RewardsModule } from '../rewards/rewards.module';
 import { CommissionsController } from './commissions.controller';
 import { CommissionsScheduler } from './commissions.scheduler';
 import { CommissionsService } from './commissions.service';
 import { CommissionQuoteService } from './commission-quote.service';
 
 @Module({
-  imports: [LedgerModule, FinanceModule],
+  imports: [LedgerModule, FinanceModule, RewardsModule],
   controllers: [CommissionsController],
   // `CommissionsScheduler` is what makes seller money payable at all — see the
   // file for what its absence cost. It lives here rather than in a shared

@@ -14,6 +14,7 @@ import {
   FulfilmentMode,
   OfferStatus,
   OrderStatus,
+  PaymentMethodType,
   Prisma,
   RoundingPolicy,
   SellerOrderStatus,
@@ -29,14 +30,13 @@ import { DropsService } from '../market/drops/drops.service';
 import { DeliveryService } from '../delivery/delivery.service';
 import { ShipmentsService } from '../delivery/shipments.service';
 import { PaymentsService } from '../payments/payments.service';
-import { pointsForSpend } from '../finance/loyalty.service';
 import { CouponsService } from '../rewards/coupons.service';
 import { ScopedLine, eligibleBySeller } from '../rewards/coupon-scope';
-import { MembershipService } from '../rewards/membership.service';
-import { PointsService } from '../rewards/points.service';
-import { ReferralsService } from '../rewards/referrals.service';
 import { CommissionQuoteService } from '../commissions/commission-quote.service';
-import { ExchangeRateService } from '../pricing/exchange-rate.service';
+import {
+  ExchangeRateService,
+  FrozenRate,
+} from '../pricing/exchange-rate.service';
 import {
   CodAssessment,
   CodTrustService,
@@ -84,9 +84,6 @@ export class CheckoutService {
     private readonly delivery: DeliveryService,
     private readonly shipments: ShipmentsService,
     private readonly coupons: CouponsService,
-    private readonly points: PointsService,
-    private readonly membership: MembershipService,
-    private readonly referrals: ReferralsService,
     private readonly commissions: CommissionQuoteService,
     private readonly rates: ExchangeRateService,
     private readonly events: EventEmitter2,
@@ -143,7 +140,7 @@ export class CheckoutService {
     const frozen = await this.rates.current(Currency.USD, orderCurrency);
 
     // 2. Validate each line and convert it into the order currency.
-    const groups = await this.groupBySeller(items, orderCurrency);
+    const groups = await this.groupBySeller(items, orderCurrency, frozen);
     const itemsSubtotal = Money.sum(
       groups.map((group) => group.itemsSubtotal),
       orderCurrency,
@@ -195,19 +192,32 @@ export class CheckoutService {
       isExpress: dto.is_express ?? false,
       subtotal: itemsSubtotal,
     });
-    const shippingTotal = this.rates.convert(
-      shippingQuote.fee,
-      orderCurrency,
-      await this.rates.current(shippingQuote.fee.currency, orderCurrency),
-    );
+    const quotedShipping = this.rates
+      .convert(
+        shippingQuote.fee,
+        orderCurrency,
+        await this.rates.current(shippingQuote.fee.currency, orderCurrency),
+      )
+      .quantize();
 
     const roundingPolicy =
       orderCurrency === Currency.SYP ? SYP_ROUNDING : RoundingPolicy.NONE;
 
-    const grandTotal = itemsSubtotal
-      .minus(discountTotal)
-      .plus(shippingTotal)
-      .round(roundingPolicy);
+    const { grandTotal, shippingTotal } = this.roundTotal(
+      itemsSubtotal,
+      discountTotal,
+      quotedShipping,
+      roundingPolicy,
+    );
+
+    // Wallet credit is spent after the order is written, because the debit
+    // and the payment row belong together. Checked here first so a basket
+    // she cannot afford is refused before it takes stock off the shelf, burns
+    // her coupon and empties her cart — the debit itself still re-checks
+    // under the wallet's row lock, so this is a courtesy, not the guard.
+    if (dto.payment_method === PaymentMethodType.PLATFORM_WALLET) {
+      await this.assertWalletCovers(userId, grandTotal);
+    }
 
     // 5. Cash going out on the road is assessed before anything is written.
     //    A decision taken after the sellers have been told to prepare a parcel
@@ -477,19 +487,16 @@ export class CheckoutService {
     // people, and a drop's audience is a list of invited accounts. Skipped
     // rather than faked — Q46 P1 lets her buy without an account, and the
     // reward for opening one is precisely this.
-    if (userId) {
-      // Q43's rate — 10,000 ل.س to the point — not the order total taken as a
-      // point count. The raw figure minted six-digit balances against rewards
-      // priced in the hundreds.
-      await this.points.earn(
-        userId,
-        pointsForSpend(grandTotal),
-        'Order purchase',
-        order.id,
-      );
-      await this.membership.recordPurchase(userId, order.id, grandTotal);
-      await this.referrals.qualifyReferralForOrder(userId, order.id);
-    }
+    //
+    // Points, the tier's bonus and cashback, and a referral's reward are *not*
+    // given here any more. They used to be — on an order nobody had paid for
+    // yet, which could be cancelled a minute later or left to expire, and
+    // nothing ever took them back. Points convert into wallet credit, so that
+    // was spendable money for a purchase that never happened; and the points
+    // given here were given a second time, with the liability actually booked,
+    // when the return window closed. Q43 says when they count: «بعد انتهاء
+    // مدة الاسترجاع». `PurchaseRewardsService` grants all of it then, once,
+    // on what she actually kept.
 
     // A drop's conversion is a purchase, by somebody it invited, of something
     // it carries. Recorded here rather than inferred later, because the only
@@ -794,6 +801,75 @@ export class CheckoutService {
     }
   }
 
+  /**
+   * The amount she is charged, and the delivery line that makes it add up.
+   *
+   * The total is rounded (Q48), and the parts it is rounded from used to be
+   * stored unrounded beside it. So the order's own lines did not sum to its
+   * total, and neither did its sub-orders: a few pounds a basket were charged
+   * at checkout, settled nowhere, and refunded to nobody — the books carried
+   * them as an unexplained remainder on the gateway receivable or a courier's
+   * float, and a full cancellation refunded her a different figure from the
+   * one she paid.
+   *
+   * The difference now lives on the delivery charge, the one order-wide line
+   * the platform itself sets, so goods − discount + delivery is the total to
+   * the last unit, and every sub-order, settlement and refund inherits that.
+   * Rounding down is only taken when the delivery charge can absorb it;
+   * otherwise the total rounds up, so no line is ever negative.
+   */
+  private roundTotal(
+    itemsSubtotal: Money,
+    discountTotal: Money,
+    quotedShipping: Money,
+    policy: RoundingPolicy,
+  ): { grandTotal: Money; shippingTotal: Money } {
+    const raw = itemsSubtotal.minus(discountTotal).plus(quotedShipping);
+    if (raw.isNegative()) {
+      // Coupons are clamped to the basket, so this is a bug upstream rather
+      // than a basket — and charging a negative amount would pay her to shop.
+      throw new BadRequestException('This order would total less than nothing');
+    }
+
+    let grandTotal = raw.round(policy);
+    if (quotedShipping.plus(grandTotal.minus(raw)).isNegative()) {
+      grandTotal = raw.roundUp(policy);
+    }
+    return {
+      grandTotal,
+      shippingTotal: quotedShipping.plus(grandTotal.minus(raw)),
+    };
+  }
+
+  /** Refuses a wallet checkout the balance cannot cover. */
+  private async assertWalletCovers(
+    userId: string | null,
+    grandTotal: Money,
+  ): Promise<void> {
+    if (!userId) {
+      throw new BadRequestException(
+        'Paying from the wallet requires a signed-in account',
+      );
+    }
+    const wallet = await this.prisma.wallet.findUnique({
+      where: { userId_currency: { userId, currency: grandTotal.currency } },
+      select: { balance: true, frozen: true },
+    });
+    if (wallet?.frozen) {
+      throw new BadRequestException({
+        code: 'WALLET_FROZEN',
+        message: 'This wallet is frozen',
+      });
+    }
+    const balance = Money.of(wallet?.balance ?? 0, grandTotal.currency);
+    if (grandTotal.greaterThan(balance)) {
+      throw new BadRequestException({
+        code: 'INSUFFICIENT_WALLET_BALANCE',
+        message: `Insufficient wallet balance: have ${balance.toString()}, need ${grandTotal.toString()}`,
+      });
+    }
+  }
+
   /** A guest has no stored preference, so the platform's own currency. */
   private async preferredCurrency(buyer: Buyer): Promise<Currency> {
     if (buyer.kind === 'guest') return Currency.SYP;
@@ -807,15 +883,27 @@ export class CheckoutService {
   private async groupBySeller(
     items: PurchasableLine[],
     orderCurrency: Currency,
+    frozen: FrozenRate,
   ): Promise<SellerGroup[]> {
     const bySeller = new Map<string, SellerGroup>();
+    // One rate per currency for the whole basket, starting from the one the
+    // order freezes. Looked up per line, a rate published mid-checkout would
+    // price half the basket at one rate and record the other as frozen.
+    const rates = new Map<Currency, FrozenRate>([[frozen.base, frozen]]);
 
     for (const item of items) {
       this.assertPurchasable(item);
 
       const listed = unitPriceOf(item);
-      const rate = await this.rates.current(listed.currency, orderCurrency);
-      const unitPrice = this.rates.convert(listed, orderCurrency, rate);
+      const rate =
+        rates.get(listed.currency) ??
+        (await this.rates.current(listed.currency, orderCurrency));
+      rates.set(listed.currency, rate);
+      // Quantized to what the column keeps, so the line total, the seller's
+      // subtotal and the order's subtotal are computed from the same figure
+      // that is stored — a converted price otherwise runs to twenty places
+      // and each total rounds on its own.
+      const unitPrice = this.rates.convert(listed, orderCurrency, rate).quantize();
 
       const sellerId = item.offer.sellerId;
       const group = bySeller.get(sellerId) ?? {

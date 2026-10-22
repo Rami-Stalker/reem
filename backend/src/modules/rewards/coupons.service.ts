@@ -265,13 +265,23 @@ export class CouponsService {
   }
 
   private computeDiscount(coupon: Coupon, subtotal: Money): Money {
+    const zero = Money.zero(subtotal.currency);
     if (coupon.type === CouponType.FIXED) {
       const off = Money.of(coupon.amountOff ?? 0, coupon.currency);
-      // Never discount more than the basket is worth.
-      return off.currency === subtotal.currency ? off.clampMax(subtotal) : Money.zero(subtotal.currency);
+      // Never discount more than the basket is worth, and never less than
+      // nothing: a negative amount on a mistyped coupon would be a surcharge.
+      return off.currency === subtotal.currency
+        ? off.clampMax(subtotal).clampMin(zero).quantize()
+        : zero;
     }
+    // Quantized here, where the figure is born: a percentage of an odd
+    // subtotal runs past the four places a column keeps, and the order's
+    // discount and its per-seller shares would then round apart on disk.
     return subtotal
       .times(coupon.discountPercent.dividedBy(100))
+      .clampMax(subtotal)
+      .clampMin(zero)
+      .quantize()
       .clampMax(subtotal);
   }
 

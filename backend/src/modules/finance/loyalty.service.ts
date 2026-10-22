@@ -48,6 +48,49 @@ export function pointsForSpend(spend: Money): number {
 }
 
 /**
+ * What the customer actually kept of a parcel, in the parcel's currency.
+ *
+ * The goods she paid for — list price less her share of the coupon — less
+ * whatever came back to her wallet through a return of this parcel. This is
+ * the spend Q43 rewards («من قيمة المشتريات المكتملة»): the list price would
+ * reward a discount as if she had paid it, and ignoring returns would reward
+ * goods that went back on the seller's shelf.
+ *
+ * Read from the ledger for the refunds, because a return's own row can say
+ * one thing while the money did another.
+ */
+export async function keptGoodsOf(
+  db: Tx | PrismaService,
+  sellerOrder: {
+    id: string;
+    currency: Currency;
+    itemsSubtotal: Prisma.Decimal;
+    discountTotal: Prisma.Decimal;
+  },
+): Promise<Money> {
+  const currency = sellerOrder.currency;
+  const paid = Money.of(sellerOrder.itemsSubtotal, currency).minus(
+    Money.of(sellerOrder.discountTotal, currency),
+  );
+  const refunded = await db.journalLine.aggregate({
+    _sum: { amount: true },
+    where: {
+      currency,
+      direction: LedgerDirection.CREDIT,
+      account: { code: LedgerAccountCode.CUSTOMER_WALLET },
+      entry: {
+        sellerOrderId: sellerOrder.id,
+        type: JournalEntryType.RETURN_SETTLED,
+        reversedBy: null,
+      },
+    },
+  });
+  return paid
+    .minus(Money.of(refunded._sum.amount ?? 0, currency))
+    .clampMin(Money.zero(currency));
+}
+
+/**
  * Loyalty points, and the money behind them.
  *
  * Points look like a marketing feature and are in fact a liability: once
@@ -112,6 +155,7 @@ export class LoyaltyService {
         orderId: true,
         currency: true,
         itemsSubtotal: true,
+        discountTotal: true,
         order: { select: { userId: true } },
       },
     });
@@ -121,7 +165,9 @@ export class LoyaltyService {
     // A guest checkout (Q46 P1) has no account to hold points.
     if (!customerId) return 0;
 
-    const spend = Money.of(sellerOrder.itemsSubtotal, sellerOrder.currency);
+    // What she kept, not the list price: a coupon she used and goods she sent
+    // back are not spend the programme rewards.
+    const spend = await keptGoodsOf(db, sellerOrder);
     const points = this.pointsFor(spend);
     if (points <= 0) return 0;
 

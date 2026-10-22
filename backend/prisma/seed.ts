@@ -122,8 +122,15 @@ async function main() {
   // lines) frees the accounts, and the cascades further down then work.
   //
   // Wallets are left to cascade from `User`, which they already do.
-  await prisma.journalEntry.deleteMany();
-  await prisma.ledgerAccount.deleteMany();
+  //
+  // The ledger is append-only in the database itself (migration
+  // 20261022090000), so emptying it is a declared maintenance act: the flag is
+  // local to this one transaction and lapses when it commits.
+  await prisma.$transaction([
+    prisma.$executeRaw`SELECT set_config('reem.ledger_maintenance', 'on', true)`,
+    prisma.journalEntry.deleteMany(),
+    prisma.ledgerAccount.deleteMany(),
+  ]);
 
   await prisma.shipmentEvent.deleteMany();
   await prisma.shipment.deleteMany();

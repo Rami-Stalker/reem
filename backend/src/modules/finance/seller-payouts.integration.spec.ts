@@ -3,6 +3,9 @@ import test from 'node:test';
 import {
   CommissionStatus,
   Currency,
+  JournalEntryType,
+  LedgerAccountCode,
+  LedgerDirection,
   OrderStatus,
   PayoutStatus,
   PrismaClient,
@@ -12,6 +15,7 @@ import {
 
 import { Money } from '../../common/money';
 import { PrismaService } from '../../prisma/prisma.service';
+import { LedgerService } from '../ledger/ledger.service';
 import { FinancialAuditService } from './financial-audit.service';
 import { SellerPayoutsService } from './seller-payouts.service';
 
@@ -171,7 +175,7 @@ async function makeSale(
     },
   });
 
-  return tx.commissionLedger.create({
+  const ledger = await tx.commissionLedger.create({
     data: {
       sellerOrderId: sellerOrder.id,
       sellerId,
@@ -182,6 +186,38 @@ async function makeSale(
       status: options.status ?? CommissionStatus.EARNED,
     },
   });
+
+  // What the escrow release books for a sale that is released and unpaid: her
+  // net, owed on `SELLER_PAYABLE`. A payout is capped at that balance, so a
+  // fixture without it would describe a seller the books owe nothing.
+  if (
+    (options.escrowReleased ?? true) &&
+    (options.status ?? CommissionStatus.EARNED) === CommissionStatus.EARNED
+  ) {
+    await new LedgerService(asPrisma(tx)).post(
+      {
+        type: JournalEntryType.ESCROW_RELEASED,
+        reference: `escrow-release:${sellerOrder.id}`,
+        description: 'Fixture release',
+        sellerOrderId: sellerOrder.id,
+        lines: [
+          {
+            account: { code: LedgerAccountCode.SELLER_ESCROW, ownerId: sellerId },
+            direction: LedgerDirection.DEBIT,
+            amount: syp(options.net),
+          },
+          {
+            account: { code: LedgerAccountCode.SELLER_PAYABLE, ownerId: sellerId },
+            direction: LedgerDirection.CREDIT,
+            amount: syp(options.net),
+          },
+        ],
+      },
+      tx,
+    );
+  }
+
+  return ledger;
 }
 
 // ── What she may ask for ────────────────────────────────────────────────────

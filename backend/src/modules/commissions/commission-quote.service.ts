@@ -69,8 +69,15 @@ export class CommissionQuoteService {
       }
     }
 
-    // Never charge more than the sale itself.
-    return commission.clampMax(base).clampMin(Money.zero(currency));
+    // Never charge more than the sale itself — and to the precision it is
+    // stored at. A basis-point rate on an odd base runs to seven or eight
+    // places; stored as-is, commission and net would each be rounded by the
+    // database on their own and could stop adding back up to the base.
+    return commission
+      .clampMax(base)
+      .clampMin(Money.zero(currency))
+      .quantize()
+      .clampMax(base);
   }
 
   /**
