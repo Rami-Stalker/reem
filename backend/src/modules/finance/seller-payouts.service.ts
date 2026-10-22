@@ -19,6 +19,11 @@ import {
   FinancialAction,
   FinancialAuditService,
 } from './financial-audit.service';
+import {
+  cappedPayout,
+  lockSellerPayouts,
+  payableHeadroom,
+} from './payout-headroom';
 
 /** A payout nobody has released yet — still the seller's to withdraw. */
 const OPEN_STATUSES = [PayoutStatus.PENDING, PayoutStatus.APPROVED] as const;
@@ -54,24 +59,28 @@ export class SellerPayoutsService {
   async availability(sellerId: string, currency: Currency = Currency.SYP) {
     await this.assertSeller(sellerId);
 
-    const [open, ledgers, freeze] = await Promise.all([
+    const [open, ledgers, freeze, headroom] = await Promise.all([
       this.prisma.sellerPayout.findFirst({
         where: { sellerId, currency, status: { in: [...OPEN_STATUSES] } },
         orderBy: { createdAt: 'desc' },
       }),
       this.claimableLedgers(sellerId, currency),
       this.freezeFor(sellerId),
+      payableHeadroom(this.prisma, sellerId, currency),
     ]);
 
-    const net = this.sumNet(ledgers, currency);
+    // The same cap `request` applies, so the figure on the button is the
+    // figure the request would carry.
+    const { net } = cappedPayout(this.sumNet(ledgers, currency), headroom);
+    const offset = ledgers.length > 0 && (net.isZero() || net.isNegative());
 
     return {
       currency,
       /// What a request made this second would be worth.
-      claimable: net.toJSON(),
+      claimable: (offset ? Money.zero(currency) : net).toJSON(),
       orders_included: ledgers.length,
       can_request:
-        freeze === null && open === null && ledgers.length > 0,
+        freeze === null && open === null && ledgers.length > 0 && !offset,
       /// Exactly one reason, in the order they actually block her.
       blocked_by: freeze !== null
         ? 'payout_frozen'
@@ -79,7 +88,9 @@ export class SellerPayoutsService {
           ? 'request_open'
           : ledgers.length === 0
             ? 'nothing_released'
-            : null,
+            : offset
+              ? 'offset_by_refunds'
+              : null,
       frozen_until: freeze?.until.toISOString() ?? null,
       freeze_reason: freeze?.reason ?? null,
       open_request: open ? this.serialize(open) : null,
@@ -115,49 +126,73 @@ export class SellerPayoutsService {
       );
     }
 
-    const open = await this.prisma.sellerPayout.findFirst({
-      where: { sellerId, currency, status: { in: [...OPEN_STATUSES] } },
-    });
-    if (open) {
-      throw new BadRequestException(
-        'You already have a withdrawal request waiting — it covers everything released so far.',
-      );
-    }
+    // Everything from here to the insert runs under the seller's payout lock,
+    // so a second request in the same instant waits, then finds this one open.
+    const { payout, net, ledgerCount } = await this.prisma.$transaction(
+      async (tx) => {
+        await lockSellerPayouts(tx, sellerId);
 
-    const ledgers = await this.claimableLedgers(sellerId, currency);
-    if (ledgers.length === 0) {
-      throw new BadRequestException(
-        'Nothing is available to withdraw yet. Earnings become available once a parcel is delivered and its return window closes.',
-      );
-    }
+        const open = await tx.sellerPayout.findFirst({
+          where: { sellerId, currency, status: { in: [...OPEN_STATUSES] } },
+        });
+        if (open) {
+          throw new BadRequestException(
+            'You already have a withdrawal request waiting — it covers everything released so far.',
+          );
+        }
 
-    const gross = this.sum(ledgers, 'gross', currency);
-    const commission = this.sum(ledgers, 'commission', currency);
-    const platformFees = this.sum(ledgers, 'platformFee', currency);
-    const net = this.sumNet(ledgers, currency);
+        const ledgers = await this.claimableLedgers(sellerId, currency, tx);
+        if (ledgers.length === 0) {
+          throw new BadRequestException(
+            'Nothing is available to withdraw yet. Earnings become available once a parcel is delivered and its return window closes.',
+          );
+        }
 
-    // The period is what the money actually spans, not a range she picked: the
-    // earliest sale still unpaid, through now.
-    const periodStart = ledgers.reduce(
-      (earliest, ledger) =>
-        ledger.createdAt < earliest ? ledger.createdAt : earliest,
-      ledgers[0].createdAt,
-    );
+        const gross = this.sum(ledgers, 'gross', currency);
+        const commission = this.sum(ledgers, 'commission', currency);
+        const platformFees = this.sum(ledgers, 'platformFee', currency);
+        const ledgerNet = this.sumNet(ledgers, currency);
 
-    const payout = await this.prisma.sellerPayout.create({
-      data: {
-        sellerId,
-        periodStart,
-        periodEnd: new Date(),
-        currency,
-        gross: gross.toPrisma(),
-        commission: commission.toPrisma(),
-        platformFees: platformFees.toPrisma(),
-        adjustments: Money.of(0, currency).toPrisma(),
-        net: net.toPrisma(),
-        ledgers: { create: ledgers.map((ledger) => ({ ledgerId: ledger.id })) },
+        // Never more than the books say is owed — see `payableHeadroom`.
+        const capped = cappedPayout(
+          ledgerNet,
+          await payableHeadroom(tx, sellerId, currency),
+        );
+        if (capped.net.isZero() || capped.net.isNegative()) {
+          throw new BadRequestException({
+            code: 'NOTHING_PAYABLE',
+            message:
+              'Your released earnings are currently offset by refunds or disputes on your account, so there is nothing to withdraw yet.',
+          });
+        }
+
+        // The period is what the money actually spans, not a range she picked:
+        // the earliest sale still unpaid, through now.
+        const periodStart = ledgers.reduce(
+          (earliest, ledger) =>
+            ledger.createdAt < earliest ? ledger.createdAt : earliest,
+          ledgers[0].createdAt,
+        );
+
+        const created = await tx.sellerPayout.create({
+          data: {
+            sellerId,
+            periodStart,
+            periodEnd: new Date(),
+            currency,
+            gross: gross.toPrisma(),
+            commission: commission.toPrisma(),
+            platformFees: platformFees.toPrisma(),
+            adjustments: capped.adjustment.toPrisma(),
+            net: capped.net.toPrisma(),
+            ledgers: {
+              create: ledgers.map((ledger) => ({ ledgerId: ledger.id })),
+            },
+          },
+        });
+        return { payout: created, net: capped.net, ledgerCount: ledgers.length };
       },
-    });
+    );
 
     await this.audit.record({
       action: FinancialAction.PayoutStatusChanged,
@@ -170,7 +205,7 @@ export class SellerPayoutsService {
       extra: {
         seller_id: sellerId,
         net: net.toJSON(),
-        ledger_count: ledgers.length,
+        ledger_count: ledgerCount,
       },
     });
 
@@ -197,6 +232,17 @@ export class SellerPayoutsService {
     }
 
     const updated = await this.prisma.$transaction(async (tx) => {
+      // Only if it is still pending *now*: the general manager may have
+      // approved it since it was read above.
+      const claimed = await tx.sellerPayout.updateMany({
+        where: { id: payoutId, status: PayoutStatus.PENDING },
+        data: { status: PayoutStatus.CANCELLED },
+      });
+      if (claimed.count === 0) {
+        throw new BadRequestException(
+          'This request has already been approved — ask support to stop it.',
+        );
+      }
       // Releasing the claim is the point of cancelling. A payout that will
       // never pay must not keep holding its ledgers: they are selected by
       // `payoutItems: { none: {} }`, so leaving the links behind would strand
@@ -244,8 +290,12 @@ export class SellerPayoutsService {
    * and `payoutItems: { none: {} }` means no other payout has claimed it —
    * which is what stops the same sale being paid twice.
    */
-  private claimableLedgers(sellerId: string, currency: Currency) {
-    return this.prisma.commissionLedger.findMany({
+  private claimableLedgers(
+    sellerId: string,
+    currency: Currency,
+    db: Prisma.TransactionClient | PrismaService = this.prisma,
+  ) {
+    return db.commissionLedger.findMany({
       where: {
         sellerId,
         currency,

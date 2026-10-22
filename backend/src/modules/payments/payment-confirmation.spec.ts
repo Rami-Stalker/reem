@@ -1,9 +1,10 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { ConfigService } from '@nestjs/config';
-import { ForbiddenException } from '@nestjs/common';
+import { BadRequestException, ForbiddenException } from '@nestjs/common';
 import {
   Currency,
+  OrderStatus,
   Payment,
   PaymentMethodType,
   PaymentStatus,
@@ -63,9 +64,18 @@ const PENDING_COD = {
 } as unknown as Payment;
 
 /** Enough of the service's collaborators to reach the guard and no further. */
-function serviceWith(sandbox: boolean): PaymentsService {
+function serviceWith(
+  sandbox: boolean,
+  options: { orderStatus?: OrderStatus; payment?: Payment } = {},
+): PaymentsService {
   const prisma = {
-    payment: { findFirst: async () => PENDING_COD },
+    payment: { findFirst: async () => options.payment ?? PENDING_COD },
+    order: {
+      findUnique: async () => ({
+        status: options.orderStatus ?? OrderStatus.PENDING_PAYMENT,
+        number: 'REEM-1',
+      }),
+    },
     $transaction: async () => {
       throw new Error('settlement must not be reached');
     },
@@ -121,4 +131,40 @@ test('no provider claims it can attest settlement', () => {
   );
   // And the registry really does cover every rail the catalogue offers.
   assert.equal(registry.list().length, allProviders().length);
+});
+
+test('a payment cannot be settled against an order that is no longer waiting for it', async () => {
+  // Expired unpaid: its stock is back on the shelf. Confirming it now would
+  // charge her for goods that are no longer held for her.
+  await assert.rejects(
+    () =>
+      serviceWith(true, { orderStatus: OrderStatus.CANCELLED }).verify(
+        'user-1',
+        'pay-1',
+      ),
+    (error: unknown) => {
+      assert.ok(error instanceof BadRequestException);
+      return true;
+    },
+  );
+  await assert.rejects(
+    () =>
+      serviceWith(true, { orderStatus: OrderStatus.CANCELLED }).retry(
+        'user-1',
+        'pay-1',
+      ),
+    (error: unknown) => error instanceof BadRequestException,
+  );
+});
+
+test('a wallet payment is never re-initiated, because its provider answers PAID', async () => {
+  const wallet = {
+    ...PENDING_COD,
+    method: PaymentMethodType.PLATFORM_WALLET,
+    status: PaymentStatus.FAILED,
+  } as unknown as Payment;
+  await assert.rejects(
+    () => serviceWith(true, { payment: wallet }).retry('user-1', 'pay-1'),
+    /wallet payment cannot be retried/,
+  );
 });

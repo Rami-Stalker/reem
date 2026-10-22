@@ -3178,6 +3178,13 @@ model Order {
   /// afterwards rather than cleared, so the row still records the deadline the
   /// order beat.
   expiresAt DateTime? @map("expires_at")
+
+  /// When this order's purchase rewards (tier spend, bonus points, cashback,
+  /// a referral's reward) were granted. They are granted once, when every
+  /// parcel has reached its end — never at checkout, where an order can still
+  /// be cancelled or left unpaid. Claimed by a conditional update, so the
+  /// sweep and the escrow release cannot both grant them.
+  rewardsGrantedAt DateTime? @map("rewards_granted_at")
   createdAt DateTime  @default(now()) @map("created_at")
   updatedAt DateTime  @updatedAt @map("updated_at")
 

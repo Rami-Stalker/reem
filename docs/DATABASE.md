@@ -214,3 +214,26 @@ Demo accounts created by the seed:
 
 The community accounts (`reem_001` …) have no password by design: they exist to
 give engagement counters something real to count, not to be logged into.
+
+## Guards on the money tables
+
+`LedgerService` enforces the ledger's rules on every write it makes. Since
+migration `20261022090000_financial_integrity_guards` the database enforces
+them too, so a hand-run fix or a script that bypasses the service fails where
+it is made instead of surfacing in the nightly reconciliation:
+
+- **Every journal entry balances**, per currency. A deferred constraint
+  trigger checks each entry when its transaction commits.
+- **Journal line amounts are positive** (`CHECK amount > 0`).
+- **The ledger is append-only.** `journal_lines` cannot be updated or
+  deleted, and a `journal_entries` row cannot be deleted or have its type,
+  reference or date changed. Corrections are reversals.
+- **A sale belongs to at most one payout.** A trigger on
+  `seller_payout_ledgers` refuses a second link to the same commission row.
+
+Deliberate maintenance — a redenomination, or the seed emptying its tables —
+opts out for one transaction only:
+
+```sql
+SELECT set_config('reem.ledger_maintenance', 'on', true);
+```

@@ -1,4 +1,9 @@
-import { BadRequestException, Injectable, Logger } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+  Logger,
+} from '@nestjs/common';
 import {
   Currency,
   JournalEntry,
@@ -153,6 +158,7 @@ export class LedgerService {
       include: { lines: { include: { account: true } } },
     });
     if (existing) {
+      this.assertSameEvent(existing as JournalEntryWithLines, input);
       this.logger.debug(
         `Journal entry ${input.reference} already posted — returning original`,
       );
@@ -545,6 +551,61 @@ export class LedgerService {
   // ── Internals ─────────────────────────────────────────────────────────
 
   /**
+   * A replayed reference must describe the event it replays.
+   *
+   * Idempotency on `reference` is what makes retries safe, and it is also a
+   * place a bug can hide: a caller that builds the same reference for two
+   * different events gets the first entry back and moves no money for the
+   * second, with nothing to say so. A different entry *type* under one
+   * reference can only be that bug, so it is refused. Different amounts can
+   * also be an honest retry whose inputs moved underneath it (a sibling parcel
+   * closed between two attempts at a refund), so those are logged loudly
+   * instead — the original entry still stands as the record.
+   */
+  private assertSameEvent(
+    existing: JournalEntryWithLines,
+    input: PostJournalInput,
+  ): void {
+    if (existing.type !== input.type) {
+      throw new ConflictException(
+        `Journal reference "${input.reference}" already belongs to a ` +
+          `${existing.type} entry and cannot be reused for ${input.type}`,
+      );
+    }
+
+    const stored = existing.lines
+      .map((line) =>
+        [
+          line.account.code,
+          line.account.ownerId ?? line.account.courierId ?? '-',
+          line.currency,
+          line.direction,
+          new Decimal(line.amount).toFixed(4),
+        ].join(':'),
+      )
+      .sort();
+    const replayed = input.lines
+      .map((line) =>
+        [
+          line.account.code,
+          line.account.ownerId ?? '-',
+          line.amount.currency,
+          line.direction,
+          line.amount.amount.toFixed(4),
+        ].join(':'),
+      )
+      .sort();
+
+    if (stored.join('|') !== replayed.join('|')) {
+      this.logger.error(
+        `Journal reference "${input.reference}" was replayed with different ` +
+          `lines; the original entry stands. original=[${stored.join(', ')}] ` +
+          `replayed=[${replayed.join(', ')}]`,
+      );
+    }
+  }
+
+  /**
    * Rejects a posting that does not balance, before anything is written.
    *
    * Balance is checked *per currency*: a single entry may touch both SYP and
@@ -569,6 +630,17 @@ export class LedgerService {
       }
       if (line.amount.isZero()) {
         throw new BadRequestException('A journal line cannot be for zero');
+      }
+      // The column keeps four places and Postgres rounds anything finer on
+      // the way in, one line at a time. Lines that balance here could then
+      // stop balancing on disk — the one place they must. Callers quantize
+      // their figures; this refuses the ones that did not.
+      if (!line.amount.isQuantized()) {
+        throw new BadRequestException(
+          `Journal entry "${input.reference}" has a line of ` +
+            `${line.amount.amount.toString()} ${line.amount.currency}, finer ` +
+            'than the ledger stores — quantize it before posting',
+        );
       }
 
       const currency = line.amount.currency;

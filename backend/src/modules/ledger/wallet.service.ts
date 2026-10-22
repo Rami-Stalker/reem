@@ -281,6 +281,17 @@ export class WalletService {
     // the read-modify-write below still has to serialise against other
     // movements on the same wallet.
     await tx.$queryRaw`SELECT id FROM wallets WHERE id = ${wallet.id}::uuid FOR UPDATE`;
+
+    // Asked again under the lock. The check above ran before it, so two
+    // deliveries of the same credit could both pass it, and the second would
+    // only be stopped by the unique index — as an error, after the balance had
+    // already been moved in memory. Whoever holds the lock now sees the other's
+    // committed row and returns it, which is what idempotent means.
+    const replay = await tx.walletTransaction.findUnique({
+      where: { reference: input.reference },
+    });
+    if (replay) return replay;
+
     const current = await tx.wallet.findUniqueOrThrow({
       where: { id: wallet.id },
     });
@@ -389,6 +400,16 @@ export class WalletService {
       // checkouts could each read the same balance and both pass the funds
       // check below.
       await inner.$queryRaw`SELECT id FROM wallets WHERE id = ${wallet.id}::uuid FOR UPDATE`;
+
+      // And again under the lock: a concurrent delivery of the same movement
+      // may have committed while this one waited for it. See
+      // `recordPostedCredit` for what happened without this.
+      if (input.reference) {
+        const replay = await inner.walletTransaction.findUnique({
+          where: { reference: input.reference },
+        });
+        if (replay) return replay;
+      }
 
       const current = await inner.wallet.findUniqueOrThrow({
         where: { id: wallet.id },

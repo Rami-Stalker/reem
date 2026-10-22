@@ -239,12 +239,22 @@ export class ReferralsService {
     };
   }
 
-  async qualifyReferralForOrder(userId: string, orderId: string) {
+  /**
+   * [placedAt] is when she placed the qualifying order. The reward is granted
+   * once that order's sale is final — after its return window — and a
+   * referral that was live when she bought must not lapse in the week the
+   * platform spent making sure the sale would stand.
+   */
+  async qualifyReferralForOrder(
+    userId: string,
+    orderId: string,
+    placedAt: Date = new Date(),
+  ) {
     const referral = await this.prisma.referral.findFirst({
       where: {
         referredUserId: userId,
         status: ReferralStatus.PENDING,
-        OR: [{ expiresAt: null }, { expiresAt: { gt: new Date() } }],
+        OR: [{ expiresAt: null }, { expiresAt: { gt: placedAt } }],
       },
     });
     if (!referral) return null;

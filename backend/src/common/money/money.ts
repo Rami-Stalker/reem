@@ -31,7 +31,19 @@ export class Money {
     if (value === null || value === undefined) {
       return new Money(new Decimal(0), currency);
     }
-    return new Money(new Decimal(value as Prisma.Decimal.Value), currency);
+    let amount: Decimal;
+    try {
+      amount = new Decimal(value as Prisma.Decimal.Value);
+    } catch {
+      throw new BadRequestException(`Not a valid amount: ${String(value)}`);
+    }
+    // NaN and Infinity are valid Decimals and invalid money. Either one would
+    // pass every comparison it met (NaN is neither less nor greater than
+    // anything) and then poison whatever total it was added to.
+    if (!amount.isFinite()) {
+      throw new BadRequestException(`Not a finite amount: ${String(value)}`);
+    }
+    return new Money(amount, currency);
   }
 
   static zero(currency: Currency): Money {
@@ -60,10 +72,11 @@ export class Money {
 
   /** Scaling by a dimensionless quantity (a count, a rate, a percentage). */
   times(factor: Decimal | string | number): Money {
-    return new Money(
-      this.amount.times(new Decimal(factor as Prisma.Decimal.Value)),
-      this.currency,
-    );
+    const f = new Decimal(factor as Prisma.Decimal.Value);
+    if (!f.isFinite()) {
+      throw new BadRequestException('A money factor must be a finite number');
+    }
+    return new Money(this.amount.times(f), this.currency);
   }
 
   dividedBy(divisor: Decimal | string | number): Money {
@@ -143,6 +156,25 @@ export class Money {
     );
   }
 
+  /**
+   * Like [round], but never downwards. Used where rounding down would need
+   * somewhere to take the difference from and there is nowhere honest to.
+   */
+  roundUp(policy: RoundingPolicy): Money {
+    const step = ROUNDING_STEP[policy];
+    if (step === null) {
+      return new Money(
+        this.amount.toDecimalPlaces(MONEY_SCALE, Decimal.ROUND_CEIL),
+        this.currency,
+      );
+    }
+    const s = new Decimal(step);
+    return new Money(
+      this.amount.dividedBy(s).toDecimalPlaces(0, Decimal.ROUND_CEIL).times(s),
+      this.currency,
+    );
+  }
+
   /** Rounding appropriate to the currency when no order policy applies. */
   roundForCurrency(): Money {
     return this.round(
@@ -150,6 +182,29 @@ export class Money {
         ? SYP_ROUNDING
         : RoundingPolicy.NONE,
     );
+  }
+
+  /**
+   * Rounds to the precision every money column stores (four places).
+   *
+   * Postgres rounds a value with more places on the way in, and it rounds each
+   * column on its own. So two figures computed to agree in memory — a
+   * commission and the net beside it, a discount and its per-seller shares —
+   * can each round up by half a unit and stop adding up once written. Any
+   * figure that comes out of a percentage, a division or a conversion is
+   * quantized here before it is stored or posted, so what is saved is exactly
+   * what was checked.
+   */
+  quantize(): Money {
+    return new Money(
+      this.amount.toDecimalPlaces(MONEY_SCALE, Decimal.ROUND_HALF_UP),
+      this.currency,
+    );
+  }
+
+  /** True when the amount fits the stored precision without rounding. */
+  isQuantized(): boolean {
+    return this.amount.decimalPlaces() <= MONEY_SCALE;
   }
 
   // ── Allocation ────────────────────────────────────────────────────────
@@ -164,6 +219,11 @@ export class Money {
     if (weights.length === 0) return [];
 
     const decimalWeights = weights.map((w) => new Decimal(w as Prisma.Decimal.Value));
+    if (decimalWeights.some((w) => !w.isFinite() || w.isNegative())) {
+      // A negative weight would hand one slot more than the whole and another
+      // a negative share. No caller means that, so it is refused.
+      throw new BadRequestException('Allocation weights must be zero or positive');
+    }
     const totalWeight = decimalWeights.reduce(
       (sum, w) => sum.plus(w),
       new Decimal(0),
@@ -177,28 +237,45 @@ export class Money {
       );
     }
 
+    // Worked on the magnitude and signed at the end. Flooring a negative
+    // amount towards zero leaves a negative remainder, which the loop below
+    // never handed out — a negative amount used to come back short.
+    const negative = this.amount.isNegative();
+    const magnitude = this.amount.abs();
+
     const shares = decimalWeights.map((w) =>
-      this.amount.times(w).dividedBy(totalWeight),
+      magnitude.times(w).dividedBy(totalWeight),
     );
-    const floored = shares.map((s) => s.toDecimalPlaces(4, Decimal.ROUND_DOWN));
+    const floored = shares.map((s) =>
+      s.toDecimalPlaces(MONEY_SCALE, Decimal.ROUND_DOWN),
+    );
     let remainder = floored.reduce(
       (rest, part) => rest.minus(part),
-      this.amount,
+      magnitude,
     );
 
     // Hand the leftover units to the largest fractional parts, one at a time.
+    // Ties go to the earlier slot, so the result never depends on how the
+    // engine's sort happens to break them.
     const order = shares
       .map((share, index) => ({ index, fraction: share.minus(floored[index]) }))
-      .sort((a, b) => b.fraction.comparedTo(a.fraction));
+      .sort((a, b) => b.fraction.comparedTo(a.fraction) || a.index - b.index);
 
-    const unit = new Decimal('0.0001');
+    const unit = new Decimal(1).dividedBy(new Decimal(10).pow(MONEY_SCALE));
     for (const { index } of order) {
-      if (remainder.lessThanOrEqualTo(0)) break;
+      if (remainder.lessThan(unit)) break;
       floored[index] = floored[index].plus(unit);
       remainder = remainder.minus(unit);
     }
+    // An amount finer than the stored precision leaves less than one unit
+    // over. It still belongs to someone, or the parts would not add up.
+    if (!remainder.isZero()) {
+      floored[order[0].index] = floored[order[0].index].plus(remainder);
+    }
 
-    return floored.map((part) => new Money(part, this.currency));
+    return floored.map(
+      (part) => new Money(negative ? part.negated() : part, this.currency),
+    );
   }
 
   // ── Conversion ────────────────────────────────────────────────────────
@@ -211,7 +288,7 @@ export class Money {
   convertTo(target: Currency, rate: Decimal | string | number): Money {
     if (target === this.currency) return this;
     const r = new Decimal(rate as Prisma.Decimal.Value);
-    if (r.lessThanOrEqualTo(0)) {
+    if (!r.isFinite() || r.lessThanOrEqualTo(0)) {
       throw new BadRequestException('Exchange rate must be positive');
     }
     return new Money(this.amount.times(r), target);
@@ -252,6 +329,9 @@ export class Money {
     }
   }
 }
+
+/** Decimal places every money column in the schema stores. */
+export const MONEY_SCALE = 4;
 
 const ROUNDING_STEP: Record<RoundingPolicy, number | null> = {
   [RoundingPolicy.NONE]: null,

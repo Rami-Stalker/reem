@@ -20,6 +20,7 @@ import {
   UserRole,
 } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
+import { assertCommissionLedgerChange } from '../finance/payout-headroom';
 import { Money, REVENUE_STATUSES } from '../../common/money';
 import {
   serializeOrder,
@@ -822,6 +823,7 @@ export class AdminService {
       select: { status: true, sellerId: true, commission: true },
     });
     if (!before) throw new NotFoundException('Commission entry not found');
+    await assertCommissionLedgerChange(this.prisma, id, before.status, dto.status);
 
     const entry = await this.prisma.commissionLedger.update({
       where: { id },

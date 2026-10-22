@@ -53,6 +53,20 @@ export class CommissionsScheduler {
             `the next sweep. Their money is not lost — it is unreleased.`,
         );
       }
+      // Rewards whose order became final without a release to trigger them —
+      // its last parcel was cancelled or returned. Never allowed to fail the
+      // escrow run: the money has already moved, the rewards can wait a day.
+      const rewards = await this.commissions
+        .grantDuePurchaseRewards()
+        .catch((error: Error) => {
+          this.logger.error(`Purchase rewards sweep failed: ${error.message}`);
+          return { granted: 0, failed: 0 };
+        });
+      if (rewards.granted || rewards.failed) {
+        this.logger.log(
+          `Purchase rewards granted: ${rewards.granted}, failed: ${rewards.failed}`,
+        );
+      }
     } catch (error) {
       // The money stays exactly where it is and the next run tries again.
       // Rethrown so the run is recorded as FAILED — `/health/jobs` alerts on a

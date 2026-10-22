@@ -19,7 +19,9 @@ export interface ReconciliationFinding {
     | 'TRIAL_BALANCE_OFF'
     | 'CACHED_BALANCE_DRIFT'
     | 'SUSPENSE_NOT_EMPTY'
-    | 'NEGATIVE_LIABILITY';
+    | 'NEGATIVE_LIABILITY'
+    | 'UNBALANCED_ENTRY'
+    | 'WALLET_DRIFT';
   readonly detail: string;
   readonly accountId?: string;
 }
@@ -69,7 +71,16 @@ export class ReconciliationService {
   @ScheduledJob({ cron: CronExpression.EVERY_DAY_AT_3AM, staleAfterMinutes: 1560, catchUp: true })
   async nightly(): Promise<void> {
     for (const currency of [Currency.SYP, Currency.USD]) {
-      const report = await this.run(currency);
+      const ledgerReport = await this.run(currency);
+      // The customer-facing balance against the books. Written for exactly
+      // this job and never called by it, so a wallet whose shown balance had
+      // drifted from the ledger would have gone unnoticed indefinitely.
+      const walletFindings = await this.verifyWallets(currency);
+      const report: ReconciliationReport = {
+        ...ledgerReport,
+        findings: [...ledgerReport.findings, ...walletFindings],
+        healthy: ledgerReport.healthy && walletFindings.length === 0,
+      };
       if (report.healthy) {
         this.logger.log(
           `Ledger reconciliation ${currency}: clean (${report.accountsChecked} accounts)`,
@@ -99,6 +110,18 @@ export class ReconciliationService {
           `debits ${trialBalance.totalDebit.toString()} vs credits ` +
           `${trialBalance.totalCredit.toString()} — the difference is ` +
           trialBalance.totalDebit.minus(trialBalance.totalCredit).toString(),
+      });
+    }
+
+    // The trial balance is a sum over everything, so two entries that are
+    // wrong by equal and opposite amounts cancel out in it. Each entry is
+    // checked on its own as well.
+    for (const entry of await this.unbalancedEntries(currency, tx)) {
+      findings.push({
+        kind: 'UNBALANCED_ENTRY',
+        detail:
+          `entry ${entry.reference} (${entry.entry_id}) is off by ` +
+          `${Money.of(entry.difference, currency).toString()}`,
       });
     }
 
@@ -147,6 +170,25 @@ export class ReconciliationService {
     };
   }
 
+  /** Entries whose debits and credits disagree within one currency. */
+  private async unbalancedEntries(
+    currency: Currency,
+    tx?: Tx,
+  ): Promise<
+    { entry_id: string; reference: string; difference: Prisma.Decimal }[]
+  > {
+    return (tx ?? this.prisma).$queryRaw`
+      SELECT e.id AS entry_id,
+             e.reference,
+             SUM(CASE WHEN l.direction = 'DEBIT' THEN l.amount ELSE -l.amount END) AS difference
+        FROM journal_lines l
+        JOIN journal_entries e ON e.id = l.entry_id
+       WHERE l.currency = ${currency}::"Currency"
+       GROUP BY e.id, e.reference
+      HAVING SUM(CASE WHEN l.direction = 'DEBIT' THEN l.amount ELSE -l.amount END) <> 0
+       LIMIT 100`;
+  }
+
   /**
    * Cross-checks the wallet cache against the ledger.
    *
@@ -174,7 +216,7 @@ export class ReconciliationService {
       const cached = Money.of(wallet.balance, currency);
       if (!cached.equals(ledgerBalance)) {
         findings.push({
-          kind: 'CACHED_BALANCE_DRIFT',
+          kind: 'WALLET_DRIFT',
           detail:
             `wallet ${wallet.id}: shows ${cached.toString()} to the customer ` +
             `but the ledger says ${ledgerBalance.toString()}`,

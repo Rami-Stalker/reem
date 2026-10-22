@@ -81,3 +81,43 @@ test('the wire shape always carries its currency', () => {
     currency: Currency.SYP,
   });
 });
+
+test('a non-finite or unparseable amount is refused, not carried', () => {
+  assert.throws(() => Money.of(Number.NaN, Currency.SYP), /finite/);
+  assert.throws(() => Money.of(Number.POSITIVE_INFINITY, Currency.SYP), /finite/);
+  assert.throws(() => Money.of('12abc', Currency.SYP), /valid amount/);
+  assert.throws(() => Money.of('1', Currency.SYP).times(Number.NaN), /finite/);
+  assert.throws(
+    () => Money.of('1', Currency.USD).convertTo(Currency.SYP, Number.NaN),
+    /rate must be positive/,
+  );
+});
+
+test('allocating a negative amount still adds back up exactly', () => {
+  const credit = Money.of('-100', Currency.SYP);
+  const parts = credit.allocate([1, 1, 1]);
+
+  assert.equal(Money.sum(parts, Currency.SYP).equals(credit), true);
+  assert.ok(parts.every((part) => part.isNegative()));
+});
+
+test('an amount finer than the stored precision is not lost in allocation', () => {
+  const odd = Money.of('10.00005', Currency.USD);
+  const parts = odd.allocate([1, 1]);
+
+  assert.equal(Money.sum(parts, Currency.USD).equals(odd), true);
+});
+
+test('negative allocation weights are refused', () => {
+  assert.throws(
+    () => Money.of('10', Currency.USD).allocate([2, -1]),
+    /zero or positive/,
+  );
+});
+
+test('quantize rounds half up to the four places a column stores', () => {
+  assert.equal(Money.of('1.23455', Currency.USD).quantize().toJSON().amount, '1.2346');
+  assert.equal(Money.of('1.23454', Currency.USD).quantize().toJSON().amount, '1.2345');
+  assert.equal(Money.of('1.2345', Currency.USD).isQuantized(), true);
+  assert.equal(Money.of('1.23451', Currency.USD).isQuantized(), false);
+});

@@ -1,15 +1,18 @@
 import {
   BadRequestException,
+  ConflictException,
   ForbiddenException,
   Injectable,
   Logger,
   NotFoundException,
+  Optional,
 } from '@nestjs/common';
 import {
   CommissionLedger,
   CommissionRule,
   CommissionStatus,
   Currency,
+  DisputeStatus,
   FinancialLedgerType,
   JournalEntryType,
   LedgerAccountCode,
@@ -24,6 +27,13 @@ import { PrismaService } from '../../prisma/prisma.service';
 import { Money, REVENUE_STATUSES } from '../../common/money';
 import { LedgerService, PostingLine } from '../ledger/ledger.service';
 import { LoyaltyService } from '../finance/loyalty.service';
+import { PurchaseRewardsService } from '../rewards/purchase-rewards.service';
+import {
+  assertCommissionLedgerChange,
+  assertPayoutTransition,
+  lockSellerPayouts,
+  payableHeadroom,
+} from '../finance/payout-headroom';
 import { LIVE_RETURN_STATUSES } from '../returns/return-policy';
 import {
   FinancialAction,
@@ -50,6 +60,14 @@ const Decimal = Prisma.Decimal;
  */
 const ESCROW_RELEASE_BATCH = 500;
 
+/** Rulings after which a dispute no longer holds a parcel's escrow. */
+const DECIDED_DISPUTE_STATUSES: readonly DisputeStatus[] = [
+  DisputeStatus.RESOLVED_FOR_CUSTOMER,
+  DisputeStatus.RESOLVED_FOR_SELLER,
+  DisputeStatus.RESOLVED_SPLIT,
+  DisputeStatus.CLOSED,
+];
+
 /**
  * Commission settlement and seller payouts.
  *
@@ -69,6 +87,8 @@ export class CommissionsService {
     private readonly ledger: LedgerService,
     private readonly loyalty: LoyaltyService,
     private readonly financialAudit: FinancialAuditService,
+    @Optional()
+    private readonly purchaseRewards?: PurchaseRewardsService,
   ) {}
 
   // ── Rules ───────────────────────────────────────────────────────────────
@@ -418,7 +438,16 @@ export class CommissionsService {
         escrowReleased: false,
         escrowReleaseAt: { lte: now },
         status: { in: [...REVENUE_STATUSES] },
-        dispute: null,
+        // No dispute, or one that has been ruled on. A decided dispute has
+        // already moved the money it froze, and the parcel is back in a
+        // revenue state; requiring `dispute: null` here left every parcel that
+        // was ever disputed in escrow for ever — the unfrozen rest of the
+        // seller's net never released, and the sale never payable, even when
+        // she won.
+        OR: [
+          { dispute: null },
+          { dispute: { status: { in: [...DECIDED_DISPUTE_STATUSES] } } },
+        ],
         // Only a return still in flight holds the money. A refused or
         // withdrawn one never claimed anything, and a settled one has already
         // taken its share out of escrow below — leaving either of them in the
@@ -426,7 +455,7 @@ export class CommissionsService {
         // escrow for ever.
         returns: { none: { status: { in: [...LIVE_RETURN_STATUSES] } } },
       },
-      select: { id: true },
+      select: { id: true, orderId: true },
       // Oldest first: a seller who has been waiting longest is paid first.
       orderBy: { escrowReleaseAt: 'asc' },
       take: options.batchSize ?? ESCROW_RELEASE_BATCH,
@@ -446,6 +475,7 @@ export class CommissionsService {
         // at exactly this moment, which is when the client said points count.
         await this.loyalty.accrueForSellerOrder(sellerOrder.id);
         released += 1;
+        await this.grantPurchaseRewards(sellerOrder.orderId);
       } catch (error) {
         failed += 1;
         // Put the flag back. Leaving it set on a parcel whose postings did not
@@ -464,6 +494,31 @@ export class CommissionsService {
       }
     }
     return { released, failed };
+  }
+
+  /**
+   * The order's purchase rewards, if this release was its last open parcel.
+   *
+   * After the release has landed and outside its error handling on purpose: a
+   * reward that fails to grant must not put a seller's money back in escrow.
+   * The rewards sweep picks up anything that fails here.
+   */
+  private async grantPurchaseRewards(orderId: string): Promise<void> {
+    if (!this.purchaseRewards) return;
+    try {
+      await this.purchaseRewards.grantIfFinal(orderId);
+    } catch (error) {
+      this.logger.error(
+        `Purchase rewards for order ${orderId} not granted; the sweep will ` +
+          `retry: ${(error as Error).message}`,
+      );
+    }
+  }
+
+  /** The rewards sweep, run beside the escrow release. */
+  async grantDuePurchaseRewards(): Promise<{ granted: number; failed: number }> {
+    if (!this.purchaseRewards) return { granted: 0, failed: 0 };
+    return this.purchaseRewards.sweep();
   }
 
   /**
@@ -631,7 +686,9 @@ export class CommissionsService {
       currency: ledger.currency,
       direction: LedgerDirection.DEBIT,
       sellerOrderId,
-      types: [JournalEntryType.RETURN_SETTLED],
+      // A dispute freeze takes its amount out of escrow just as a return does,
+      // and the ruling sends it on from the held account — never back here.
+      types: [JournalEntryType.RETURN_SETTLED, JournalEntryType.DISPUTE_HELD],
     });
 
     const net = Money.of(ledger.net, ledger.currency)
@@ -797,56 +854,79 @@ export class CommissionsService {
     if (end <= start) throw new BadRequestException('Invalid payout date range');
 
     const currency = dto.currency ?? Currency.SYP;
-    const ledgers = await this.prisma.commissionLedger.findMany({
-      where: {
-        sellerId: dto.seller_id,
-        currency,
-        status: CommissionStatus.EARNED,
-        createdAt: { gte: start, lte: end },
-        payoutItems: { none: {} },
-        // Q24 P1 — nothing is paid out before its escrow has been released.
-        sellerOrder: { escrowReleased: true },
-      },
-    });
-    if (ledgers.length === 0) {
-      throw new BadRequestException(
-        'No released commission ledgers available for this period',
-      );
-    }
+    // Under the seller's payout lock, so this and a request she makes in the
+    // same instant cannot both claim the same sales — see
+    // `lockSellerPayouts`.
+    const payout = await this.prisma.$transaction(async (tx) => {
+      await lockSellerPayouts(tx, dto.seller_id);
 
-    const gross = Money.sum(
-      ledgers.map((ledger) => Money.of(ledger.gross, currency)),
-      currency,
-    );
-    const commission = Money.sum(
-      ledgers.map((ledger) => Money.of(ledger.commission, currency)),
-      currency,
-    );
-    const platformFees = Money.sum(
-      ledgers.map((ledger) => Money.of(ledger.platformFee, currency)),
-      currency,
-    );
-    const adjustments = Money.of(dto.adjustments ?? 0, currency);
-    const net = Money.sum(
-      ledgers.map((ledger) => Money.of(ledger.net, currency)),
-      currency,
-    ).plus(adjustments);
-
-    const payout = await this.prisma.sellerPayout.create({
-      data: {
-        sellerId: dto.seller_id,
-        periodStart: start,
-        periodEnd: end,
-        currency,
-        gross: gross.toPrisma(),
-        commission: commission.toPrisma(),
-        platformFees: platformFees.toPrisma(),
-        adjustments: adjustments.toPrisma(),
-        net: net.toPrisma(),
-        ledgers: {
-          create: ledgers.map((ledger) => ({ ledgerId: ledger.id })),
+      const ledgers = await tx.commissionLedger.findMany({
+        where: {
+          sellerId: dto.seller_id,
+          currency,
+          status: CommissionStatus.EARNED,
+          createdAt: { gte: start, lte: end },
+          payoutItems: { none: {} },
+          // Q24 P1 — nothing is paid out before its escrow has been released.
+          sellerOrder: { escrowReleased: true },
         },
-      },
+      });
+      if (ledgers.length === 0) {
+        throw new BadRequestException(
+          'No released commission ledgers available for this period',
+        );
+      }
+
+      const gross = Money.sum(
+        ledgers.map((ledger) => Money.of(ledger.gross, currency)),
+        currency,
+      );
+      const commission = Money.sum(
+        ledgers.map((ledger) => Money.of(ledger.commission, currency)),
+        currency,
+      );
+      const platformFees = Money.sum(
+        ledgers.map((ledger) => Money.of(ledger.platformFee, currency)),
+        currency,
+      );
+      const ledgerNet = Money.sum(
+        ledgers.map((ledger) => Money.of(ledger.net, currency)),
+        currency,
+      );
+      const requested = ledgerNet.plus(
+        Money.of(dto.adjustments ?? 0, currency).quantize(),
+      );
+
+      // Never more than the books say is owed. A positive adjustment cannot
+      // lift a payout past it either: money with no entry behind it is a bonus
+      // the ledger has not heard of, and it belongs in the ledger first.
+      const headroom = await payableHeadroom(tx, dto.seller_id, currency);
+      const net = requested.greaterThan(headroom) ? headroom : requested;
+      if (net.isZero() || net.isNegative()) {
+        throw new BadRequestException({
+          code: 'NOTHING_PAYABLE',
+          message:
+            `Nothing is payable: the seller's payable balance after open ` +
+            `payouts is ${headroom.toString()}`,
+        });
+      }
+
+      return tx.sellerPayout.create({
+        data: {
+          sellerId: dto.seller_id,
+          periodStart: start,
+          periodEnd: end,
+          currency,
+          gross: gross.toPrisma(),
+          commission: commission.toPrisma(),
+          platformFees: platformFees.toPrisma(),
+          adjustments: net.minus(ledgerNet).toPrisma(),
+          net: net.toPrisma(),
+          ledgers: {
+            create: ledgers.map((ledger) => ({ ledgerId: ledger.id })),
+          },
+        },
+      });
     });
     return this.serializePayout(payout);
   }
@@ -888,12 +968,37 @@ export class CommissionsService {
     });
     if (!payout) throw new NotFoundException('Payout not found');
 
+    // Re-sending the status a payout already has is answered, not refused —
+    // a retried request must not turn into an error after the money moved.
+    if (payout.status === dto.status) {
+      return this.serializePayout(payout);
+    }
+    assertPayoutTransition(payout.status, dto.status);
+
     if (releasing) {
       await this.assertNotPayoutFrozen(payout.sellerId, dto.status);
     }
 
     const now = new Date();
     const updated = await this.prisma.$transaction(async (tx) => {
+      await lockSellerPayouts(tx, payout.sellerId);
+
+      // Claimed on the status it was read with: two operators acting on one
+      // payout at once must not both get through.
+      const claimed = await tx.sellerPayout.updateMany({
+        where: { id, status: payout.status },
+        data: { status: dto.status },
+      });
+      if (claimed.count === 0) {
+        throw new ConflictException(
+          'This payout was changed by someone else — reload it and try again',
+        );
+      }
+
+      if (dto.status === PayoutStatus.PAID) {
+        await this.assertPayable(tx, payout);
+      }
+
       const record = await tx.sellerPayout.update({
         where: { id },
         data: {
@@ -984,6 +1089,13 @@ export class CommissionsService {
   }
 
   async updateLedgerStatus(id: string, dto: CommissionLedgerStatusDto) {
+    const current = await this.prisma.commissionLedger.findUnique({
+      where: { id },
+      select: { status: true },
+    });
+    if (!current) throw new NotFoundException('Commission entry not found');
+    await assertCommissionLedgerChange(this.prisma, id, current.status, dto.status);
+
     const ledger = await this.prisma.commissionLedger.update({
       where: { id },
       data: {
@@ -1003,6 +1115,53 @@ export class CommissionsService {
     });
     if (!seller || seller.role !== UserRole.SELLER) {
       throw new NotFoundException('Seller not found');
+    }
+  }
+
+  /**
+   * The last check before cash leaves: what this payout carries must still be
+   * owed, and every sale it covers must still be unpaid.
+   *
+   * The payout was sized when it was created. Between then and now a refund
+   * may have reached her payable, or a sale may have been settled some other
+   * way — and the cash goes out on the figure frozen on the payout, not on
+   * whatever is true today. So the ledger is asked again here.
+   */
+  private async assertPayable(
+    tx: Prisma.TransactionClient,
+    payout: SellerPayout & { ledgers: { ledgerId: string }[] },
+  ): Promise<void> {
+    const net = Money.of(payout.net, payout.currency);
+    if (net.isZero() || net.isNegative()) {
+      throw new BadRequestException('This payout carries nothing to pay');
+    }
+
+    const settled = await tx.commissionLedger.count({
+      where: {
+        id: { in: payout.ledgers.map((item) => item.ledgerId) },
+        status: { not: CommissionStatus.EARNED },
+      },
+    });
+    if (settled > 0) {
+      throw new ConflictException({
+        code: 'PAYOUT_SALES_ALREADY_SETTLED',
+        message: `${settled} sale(s) in this payout were already paid or reversed`,
+      });
+    }
+
+    const headroom = await payableHeadroom(
+      tx,
+      payout.sellerId,
+      payout.currency,
+      payout.id,
+    );
+    if (net.greaterThan(headroom)) {
+      throw new ConflictException({
+        code: 'PAYOUT_EXCEEDS_PAYABLE',
+        message:
+          `This payout is for ${net.toString()} but the seller is owed ` +
+          `${headroom.toString()} — recalculate it before paying`,
+      });
     }
   }
 

@@ -233,9 +233,28 @@ export class PaymentsService {
     if (!provider.attestsSettlement && !this.sandboxConfirmation) {
       throw new ForbiddenException('PAYMENT_CONFIRMATION_UNAVAILABLE');
     }
+    if (payment.status === PaymentStatus.REFUNDED) {
+      throw new BadRequestException('This payment has already been refunded');
+    }
+    await this.assertOrderAwaitsPayment(payment.orderId);
     const result = await provider.verify(payment.transactionRef ?? '');
 
     const updated = await this.prisma.$transaction(async (tx) => {
+      // The status read above is a snapshot, and two confirmations of one
+      // payment (a double tap, a retried request) both passed it. Claiming
+      // the row on its *current* status lets exactly one of them through; the
+      // other finds the payment already settled and reports it as it stands.
+      const claimed = await tx.payment.updateMany({
+        where: {
+          id: paymentId,
+          status: { in: [PaymentStatus.PENDING, PaymentStatus.FAILED] },
+        },
+        data: { updatedAt: new Date() },
+      });
+      if (claimed.count === 0) {
+        return null;
+      }
+
       const p = await tx.payment.update({
         where: { id: paymentId },
         data: {
@@ -277,6 +296,11 @@ export class PaymentsService {
       return p;
     });
 
+    if (!updated) {
+      // Someone else settled it first; what they settled is the answer.
+      return serializePayment(await this.requireOwned(userId, paymentId));
+    }
+
     if (result.status === PaymentStatus.PAID) {
       // Confirming the parent fans the sub-orders out to their sellers and
       // starts each one's escrow clock.
@@ -307,6 +331,16 @@ export class PaymentsService {
     ) {
       throw new BadRequestException('This payment can no longer be retried');
     }
+
+    // A wallet payment is settled the instant it is made, by the debit in
+    // `initiateForOrder`. Its provider answers PAID to any initiation, so
+    // re-initiating one would mark it paid without touching the balance.
+    if (payment.method === PaymentMethodType.PLATFORM_WALLET) {
+      throw new BadRequestException(
+        'A wallet payment cannot be retried — place the order again',
+      );
+    }
+    await this.assertOrderAwaitsPayment(payment.orderId);
 
     const provider = this.registry.get(payment.method);
     const order = await this.prisma.order.findUnique({
@@ -416,6 +450,27 @@ export class PaymentsService {
 
   async detail(userId: string, paymentId: string) {
     return serializePayment(await this.requireOwned(userId, paymentId));
+  }
+
+  /**
+   * Money may only be taken for an order that is still waiting for it.
+   *
+   * An order that expired unpaid has already put its stock back on the shelf
+   * and released its hold; one a customer cancelled is owed nothing. Settling
+   * a payment against either would charge her for goods that are no longer
+   * hers, and confirm an order whose parcels have been called off.
+   */
+  private async assertOrderAwaitsPayment(orderId: string): Promise<void> {
+    const order = await this.prisma.order.findUnique({
+      where: { id: orderId },
+      select: { status: true },
+    });
+    if (!order || order.status !== OrderStatus.PENDING_PAYMENT) {
+      throw new BadRequestException({
+        code: 'ORDER_NOT_AWAITING_PAYMENT',
+        message: 'This order is no longer waiting for payment',
+      });
+    }
   }
 
   private async requireOwned(userId: string, paymentId: string): Promise<Payment> {
