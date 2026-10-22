@@ -161,6 +161,36 @@ localhost, which is right for development and useless in a release:
 flutter build appbundle --release --dart-define=APP_ENV=production --dart-define=API_BASE_URL=https://api.reem.shop
 ```
 
+### App size
+
+Build for the Play Store with `appbundle` (above): Play then delivers to each
+phone only the native code for its own processor. A plain
+`flutter build apk --release` is a *universal* APK — it carries the Flutter
+engine and the compiled Dart code three times over (`arm64-v8a`,
+`armeabi-v7a`, `x86_64`), stored uncompressed, which is why it lands around
+70 MB while a phone only ever uses one third of it.
+
+To hand an APK around directly (WhatsApp, a website), build one per processor
+and send the `arm64-v8a` one — every phone from the last several years:
+
+```bash
+flutter build apk --release --split-per-abi \
+  --obfuscate --split-debug-info=build/symbols \
+  --dart-define=APP_ENV=production --dart-define=API_BASE_URL=https://api.reem.shop
+# → build/app/outputs/flutter-apk/app-arm64-v8a-release.apk
+```
+
+`--obfuscate --split-debug-info` moves Dart symbol tables out of the binary
+(a few MB smaller); keep `build/symbols/` for each release, it is what turns a
+crash stack trace back into readable names (`flutter symbolize`).
+
+Debug builds (`flutter run`) are always far larger than release ones — never
+judge the size from them. To see what takes the space in a release:
+
+```bash
+flutter build apk --release --target-platform android-arm64 --analyze-size
+```
+
 Launcher icons are painted from the design-system tokens rather than exported
 from a checked-in artwork file. Regenerating rewrites every Android density,
 every iOS slot, the web icons, and the store artwork under `docs/brand/`:

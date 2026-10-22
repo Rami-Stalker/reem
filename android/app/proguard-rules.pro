@@ -10,13 +10,16 @@
 -keep class io.flutter.plugins.** { *; }
 -dontwarn io.flutter.embedding.**
 
-# ExoPlayer / media3, behind video_player and just_audio. Both instantiate
-# renderers and extractors reflectively from a class name, so a shrunk build
-# fails at the moment a reel is opened rather than at build time.
--keep class androidx.media3.** { *; }
+# ExoPlayer / media3, behind video_player and just_audio. A blanket
+# `-keep class androidx.media3.** { *; }` used to sit here; it exempted the
+# whole of media3 — several megabytes of dex, most of it codecs and formats
+# this app never plays — from shrinking. Media3 ships its own consumer rules
+# for exactly the classes it loads reflectively by name (extension renderers,
+# extractors, data sources), so those survive R8 without help.
+#
+# Verify after changing this: a release build must open a reel and play a
+# voice note.
 -dontwarn androidx.media3.**
--keep class com.google.android.exoplayer2.** { *; }
--dontwarn com.google.android.exoplayer2.**
 
 # flutter_secure_storage keeps the session token in a keystore-backed
 # preference file; its cipher provider is looked up by name.

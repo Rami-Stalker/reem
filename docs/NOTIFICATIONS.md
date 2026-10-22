@@ -211,7 +211,7 @@ case when a push arrives at a terminated app.
 iOS can use either. Per-build configuration, when you want it:
 
 ```
-flutter build apk --release \
+flutter build apk --release --split-per-abi \
   --dart-define=APP_ENV=production \
   --dart-define=API_BASE_URL=https://reem-api.onrender.com \
   --dart-define=FIREBASE_PROJECT_ID=reem-prod \
