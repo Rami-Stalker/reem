@@ -42,7 +42,11 @@ export class OtpDeliveryReadiness implements OnApplicationBootstrap {
     if (this.reverse.isUsable()) {
       this.logger.log(
         `OTP delivery: reverse SMS (SYROTP)${
-          this.reverse.isPrimary() ? ' — primary' : ' — fallback only'
+          this.reverse.isPrimary()
+            ? this.reverse.isExclusive()
+              ? ' — the only rail; an outage stops sign-in'
+              : ' — primary, with the transport chain behind it'
+            : ' — fallback only'
         }`,
       );
       if (this.reverse.isPrimary()) return;

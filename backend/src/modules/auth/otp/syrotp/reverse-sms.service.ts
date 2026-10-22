@@ -36,16 +36,21 @@ export type ReverseStatus = 'pending' | 'verified' | 'unusable';
  *
  * What it costs is honest to state: she pays for one local SMS, she leaves the
  * app to send it, and the first number the deployment ever sees needs a
- * binding ceremony before the provider will start a verification for it. The
- * classic chain therefore stays wired and stays the fallback — this service
- * answers `null` rather than throwing whenever the provider cannot be reached,
- * and the caller carries on down the old rail.
+ * binding ceremony before the provider will start a verification for it.
+ *
+ * This service answers `null` rather than throwing whenever the provider
+ * cannot be reached, which leaves the decision with the caller. Whether that
+ * becomes a fallback to the transport chain or a refused request is
+ * `isExclusive()`, and exclusive is the default: a deployment that has adopted
+ * this rail should find out when its provider is down, not have the outage
+ * papered over by an aggregator it no longer wants to depend on.
  */
 @Injectable()
 export class ReverseSmsService {
   private readonly logger = new Logger(ReverseSmsService.name);
   private readonly enabled: boolean;
   private readonly primary: boolean;
+  private readonly exclusive: boolean;
 
   constructor(
     private readonly client: SyrotpClient,
@@ -56,6 +61,21 @@ export class ReverseSmsService {
     // who finds that fewer women finish a reverse ceremony than an SMS can put
     // the old rail back in front by setting one variable.
     this.primary = config.get<boolean>('otpDelivery.reverse.primary') !== false;
+    this.exclusive =
+      config.get<boolean>('otpDelivery.reverse.exclusive') !== false;
+  }
+
+  /**
+   * Whether a provider outage should fail the request rather than fall back.
+   *
+   * True by default, because a fallback that nobody sees is a fallback nobody
+   * fixes: the deployment would keep paying an aggregator to lose messages
+   * occasionally, which is the thing this rail was adopted to stop. Only
+   * meaningful while the rail is primary — a demoted rail has the chain in
+   * front of it by definition.
+   */
+  isExclusive(): boolean {
+    return this.isPrimary() && this.exclusive;
   }
 
   /** True when this rail should be tried before the transport chain. */
@@ -200,10 +220,17 @@ export class ReverseSmsService {
    */
   private refusal(code: string, status: number): HttpException {
     const tooMany = status === 429 || code === 'too_many_pending';
+    // Arabic on the unavailable branch, as `cod-trust` does for the refusals a
+    // customer reads: the client replaces a message with no Arabic in it by a
+    // generic "try later", which would throw away the only sentence that tells
+    // her this is the service's fault and not her number's.
     return new HttpException(
       tooMany
         ? { code: 'TOO_MANY_ATTEMPTS', message: 'Too many attempts' }
-        : { code: 'OTP_UNAVAILABLE', message: 'Verification is unavailable' },
+        : {
+            code: 'OTP_UNAVAILABLE',
+            message: 'خدمة التحقق غير متاحة حالياً. حاولي بعد قليل.',
+          },
       tooMany ? HttpStatus.TOO_MANY_REQUESTS : HttpStatus.SERVICE_UNAVAILABLE,
     );
   }

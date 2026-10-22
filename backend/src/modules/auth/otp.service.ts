@@ -140,6 +140,25 @@ export class OtpService {
       if (challenge) {
         return this.openReverseChallenge(input, user?.id, challenge);
       }
+
+      // The provider could not be reached. Where this rail is the only one,
+      // that is an outage to surface, not a cue to mint a code on a rail the
+      // deployment has decided not to rely on: a sign-in that quietly takes
+      // the old path is an outage nobody sees and nobody fixes.
+      if (this.reverse.isExclusive()) {
+        this.logger.error(
+          'Reverse SMS is unavailable and is the only configured rail; ' +
+            'refusing the challenge rather than falling back',
+        );
+        throw new HttpException(
+          {
+            code: 'OTP_UNAVAILABLE',
+            message: 'خدمة التحقق غير متاحة حالياً. حاولي بعد قليل.',
+          },
+          HttpStatus.SERVICE_UNAVAILABLE,
+        );
+      }
+
       this.logger.warn(
         'Reverse SMS unavailable; falling back to the transport chain',
       );

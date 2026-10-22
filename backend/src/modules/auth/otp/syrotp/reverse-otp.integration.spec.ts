@@ -63,12 +63,16 @@ class StubReverse {
   constructor(
     private readonly opens: ReverseChallenge | null,
     private answer: ReverseStatus = 'pending',
+    private readonly exclusive = true,
   ) {}
   isPrimary() {
     return true;
   }
   isUsable() {
     return true;
+  }
+  isExclusive() {
+    return this.exclusive;
   }
   async start(input: { phone: string; purpose: OtpPurpose }) {
     this.started.push(input);
@@ -308,10 +312,29 @@ test('a binding ceremony proves the number as well as a verification does', asyn
   assert.ok(refreshed?.phoneVerifiedAt);
 });
 
-test('a provider that cannot open a ceremony falls back to the old rail', async (t) => {
+test('an outage on the only rail is refused, not papered over', async (t) => {
+  if (!reachable) return t.skip('no database reachable');
+  const number = phone('exclusive-outage');
+  const otp = service(new StubReverse(null));
+
+  await assert.rejects(
+    otp.request({ phone: number, purpose: OtpPurpose.LOGIN }),
+    (error: { response?: { code?: string }; status?: number }) => {
+      assert.equal(error.response?.code, 'OTP_UNAVAILABLE');
+      assert.equal(error.status, 503);
+      return true;
+    },
+  );
+
+  // Nothing was written. A row for a challenge she was never given a way to
+  // complete would sit there holding her rate-limit budget.
+  assert.equal(await row(number), null);
+});
+
+test('with the fallback turned back on, an outage takes the old rail', async (t) => {
   if (!reachable) return t.skip('no database reachable');
   const number = phone('fallback');
-  const stub = new StubReverse(null);
+  const stub = new StubReverse(null, 'pending', false);
   const otp = service(stub);
 
   const response = await otp.request({ phone: number, purpose: OtpPurpose.LOGIN });

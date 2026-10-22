@@ -261,6 +261,16 @@ test('an unconfigured or demoted rail is not primary', () => {
   assert.equal(service({ receiverId: undefined }).isUsable(), false);
 });
 
+test('a configured rail is the only rail unless that is turned off', () => {
+  // The default, and the point of adopting it: no second rail to quietly
+  // absorb an outage and leave the deployment still depending on one.
+  assert.equal(service().isExclusive(), true);
+  assert.equal(service({ exclusive: false }).isExclusive(), false);
+  // A demoted rail cannot be exclusive — the chain is in front of it.
+  assert.equal(service({ primary: false }).isExclusive(), false);
+  assert.equal(service({ enabled: false }).isExclusive(), false);
+});
+
 test('operator hints follow the Syrian mobile prefixes', () => {
   assert.equal(operatorHint('+963933000000'), 'syriatel');
   assert.equal(operatorHint('0988000000'), 'syriatel');

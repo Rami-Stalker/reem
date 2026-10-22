@@ -151,6 +151,21 @@ export default () => ({
     reverse: {
       enabled: process.env.SYROTP_ENABLED === 'true',
       primary: process.env.SYROTP_PRIMARY !== 'false',
+      /**
+       * Whether this rail is the *only* way a number gets proved.
+       *
+       * The default once the rail is on, and a deliberate choice rather than a
+       * convenience: a silent fallback means an aggregator still has to be
+       * contracted, still has to be paid, and still gets to lose a message —
+       * so the delivery failure this rail exists to remove would come back
+       * whenever the provider blinked, and nobody would see it happen.
+       *
+       * The cost is stated plainly: while the provider is unreachable, nobody
+       * can sign in. A request answers 503 and says so, instead of quietly
+       * minting a code on a rail the deployment has decided not to rely on.
+       * `SYROTP_EXCLUSIVE=false` restores the fallback.
+       */
+      exclusive: process.env.SYROTP_EXCLUSIVE !== 'false',
       baseUrl: process.env.SYROTP_BASE_URL,
       /** `sk_live_…`. The publishable key is for browsers and unused here. */
       secretKey: process.env.SYROTP_SECRET_KEY,

@@ -66,14 +66,37 @@ message for no extra assurance.
 - **A provider outage never tears a ceremony down.** An unreachable provider
   reads as `pending`, not as expired.
 
-## Where it is not first
+## It is the only rail
+
+`SYROTP_EXCLUSIVE` defaults to on, which means a provider the platform cannot
+reach **refuses the challenge** — 503 `OTP_UNAVAILABLE`, with a message she can
+read — rather than minting a code on the transport chain.
+
+That is a deliberate trade, and the cost is blunt: **while the provider is
+unreachable, nobody can sign in.** It is taken because the alternative is
+worse in a way that is hard to see. A silent fallback means the aggregator
+still has to be contracted, still has to be paid, and still gets to lose a
+message — so the delivery failure this rail exists to remove comes back every
+time the provider blinks, and nothing in the product says it happened. An
+outage that stops sign-in gets fixed; an outage that degrades quietly does not.
+
+What this demands of the deployment, and these are not optional:
+
+- **More than one receiver.** One phone with one SIM is now the whole front
+  door. Run at least two, ideally on different networks, and alert on the
+  heartbeat rather than on complaints.
+- **Watch the provider.** `GET /v1/health` is liveness only — it says nothing
+  about whether a receiver is alive. The boot log states which arrangement is
+  in force.
+- **Keep a way back.** `SYROTP_EXCLUSIVE=false` restores the chain behind this
+  rail, and `SYROTP_PRIMARY=false` puts the chain in front. Both are one
+  environment variable; neither needs a deploy of new code.
+
+What is still not this rail:
 
 - **Named test accounts** keep their fixed codes: the point of those is to sign
-  in with no provider in the loop.
-- **A provider that cannot be reached at request time** falls through to the
-  transport chain, so an outage is a slower sign-in rather than a refused one.
-  `SYROTP_PRIMARY=false` makes that the standing arrangement without a code
-  change.
+  in with no provider in the loop, and they are the escape hatch if the
+  provider is down while someone has to get in. They remain dated and bounded.
 - **TOTP and recovery codes** are unchanged. Those are secrets she holds, and
   `consumeFactor` still refuses an absent code for both.
 
@@ -128,4 +151,5 @@ fallback — is indistinguishable from a provider outage.
 - `backend/src/modules/auth/otp/syrotp/reverse-otp.integration.spec.ts` — the
   real `OtpService` against real Postgres with a stubbed provider: a reverse
   row is not settleable by a code, is settled only by `verified`, is settled
-  once, and a provider that cannot open a ceremony becomes the old rail.
+  once, an outage on the only rail is refused rather than papered over, and
+  with the fallback turned back on the same outage takes the old rail.
