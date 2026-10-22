@@ -200,3 +200,28 @@ Under it:
 
 Then the feed, with the remaining shelves set into it as before. The top bar,
 search box and stylist banner it replaced were removed.
+
+## The post, redesigned
+
+Posts were drawn by three different cards — the home feed's, a product told
+as a post (departments, «وصل حديثاً», search, a woman's page) and the
+community's — all in the shape of every social app of the last decade: a
+white frame, a header row, an inset picture, a row of glyphs and the words
+underneath. They are now one card, `DsImmersivePost`, where **the photograph
+is the card**:
+
+- a frosted **capsule** at the top — the author in the brand ring, the
+  verified mark, «قبل 4 أيام»;
+- **segments** across the top for a gallery, the way stories count;
+- a vertical **rail** on the image — love, comments, share, «أضيفي إلى
+  صفحتي», save — each with its count, the active ones lit;
+- the **caption** on the shade at the foot, hashtags in champagne, tap to
+  open it;
+- the piece as a frosted **ticket** — name, price, the old price struck, and
+  the bag, so seeing and buying stay one gesture;
+- a post of words alone becomes a painted **note** in the display serif;
+- under the card, a line of hearts with the likes and the way into comments.
+
+The first card of a run carries the brand ring and a warmer glow. Double-tap
+is love everywhere. Verified in the browser: the rail's heart stored a like
+and the ticket's bag added the piece to the bag.

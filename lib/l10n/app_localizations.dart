@@ -18481,6 +18481,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{count, plural, =0{Coming soon} =1{1 piece} other{{count} pieces}}'**
   String homeBentoCount(int count);
+
+  /// Button on a post ticket when nothing is in stock to add.
+  ///
+  /// In en, this message translates to:
+  /// **'View the piece'**
+  String get postOpenPiece;
 }
 
 class _AppLocalizationsDelegate

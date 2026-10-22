@@ -3,6 +3,9 @@ export 'package:reem/core/design_system/patterns/admin_console.dart';
 export 'package:reem/core/design_system/patterns/customer_boutique.dart';
 export 'package:reem/core/design_system/patterns/editorial_media.dart';
 export 'package:reem/core/design_system/patterns/experience_design.dart';
+// The post: the photograph is the card. Every surface that tells something
+// as a post renders through it.
+export 'package:reem/core/design_system/patterns/immersive_post.dart';
 // The post shape — shared by the home feed, department pages and her page.
 export 'package:reem/core/design_system/patterns/post_card.dart';
 export 'package:reem/core/design_system/patterns/premium_app_bar.dart';

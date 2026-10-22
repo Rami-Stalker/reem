@@ -12080,5 +12080,9 @@
         "type": "int"
       }
     }
+  },
+  "postOpenPiece": "View the piece",
+  "@postOpenPiece": {
+    "description": "Button on a post ticket when nothing is in stock to add."
   }
 }

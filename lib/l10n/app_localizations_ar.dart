@@ -10930,4 +10930,7 @@ class AppLocalizationsAr extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get postOpenPiece => 'عرض القطعة';
 }
