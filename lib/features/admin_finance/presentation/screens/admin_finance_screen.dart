@@ -10,6 +10,7 @@ import 'package:reem/features/admin_finance/domain/entities/finance_overview.dar
 import 'package:reem/features/admin_finance/presentation/providers/admin_finance_provider.dart';
 import 'package:reem/features/admin_finance/presentation/widgets/finance_position_grid.dart';
 import 'package:reem/features/admin_finance/presentation/widgets/ledger_health_banner.dart';
+import 'package:reem/features/admin_finance/presentation/widgets/pending_transfers_section.dart';
 
 /// The finance console.
 ///
@@ -89,6 +90,12 @@ class _AdminFinanceScreenState extends ConsumerState<AdminFinanceScreen> {
 
                   _Section(title: l10n.financePositions),
                   FinancePositionGrid(positions: overview.positions),
+                  const SizedBox(height: DsSpacing.xl),
+
+                  // Money a customer says she has sent and nobody has
+                  // matched yet — first, because each one is an order whose
+                  // stock lapses on a clock.
+                  const PendingTransfersSection(),
                   const SizedBox(height: DsSpacing.xl),
 
                   _CourierCashSection(overview: overview),

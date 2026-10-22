@@ -2,6 +2,7 @@ import 'package:reem/core/network/api_endpoints.dart';
 import 'package:reem/core/network/base_remote_datasource.dart';
 import 'package:reem/features/admin_finance/data/datasources/admin_finance_remote_datasource.dart';
 import 'package:reem/features/admin_finance/data/models/finance_overview_model.dart';
+import 'package:reem/features/admin_finance/data/models/pending_transfer_model.dart';
 
 final class AdminFinanceRemoteDataSourceImpl extends BaseRemoteDataSource
     implements AdminFinanceRemoteDataSource {
@@ -24,5 +25,27 @@ final class AdminFinanceRemoteDataSourceImpl extends BaseRemoteDataSource
     return (json['detail'] as String?) ??
         (json['reason'] as String?) ??
         'unchanged';
+  }
+
+  @override
+  Future<List<PendingTransferModel>> loadPendingTransfers() async {
+    final rows = await getList(ApiEndpoints.adminPendingTransfers);
+    return rows
+        .whereType<Map<String, dynamic>>()
+        .map(PendingTransferModel.fromJson)
+        .toList();
+  }
+
+  @override
+  Future<void> confirmTransfer(String paymentId) async {
+    await postJson(ApiEndpoints.adminConfirmTransfer(paymentId));
+  }
+
+  @override
+  Future<void> rejectTransfer(String paymentId, String reason) async {
+    await postJson(
+      ApiEndpoints.adminRejectTransfer(paymentId),
+      body: {'reason': reason},
+    );
   }
 }

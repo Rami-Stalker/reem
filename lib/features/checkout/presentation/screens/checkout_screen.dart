@@ -737,15 +737,32 @@ class _PaymentTile extends StatelessWidget {
                 ),
                 const SizedBox(width: DsSpacing.sm),
                 Expanded(
-                  child: Text(
-                    // The app's own name for a known method, so checkout
-                    // and the order page agree («محفظة ريم»); the server's
-                    // label for one the app does not know yet.
-                    switch (context.l10n.paymentMethodName(option.method)) {
-                      final name when name != option.method => name,
-                      _ => option.label,
-                    },
-                    style: context.dsText.body.tint(colors.onSurface),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        // The app's own name for a known method, so checkout
+                        // and the order page agree («محفظة ريم»); the
+                        // server's label for one the app does not know yet.
+                        switch (context.l10n.paymentMethodName(option.method)) {
+                          final name when name != option.method => name,
+                          _ => option.label,
+                        },
+                        style: context.dsText.body.tint(colors.onSurface),
+                      ),
+                      // Who to pay, before she commits to the order — not
+                      // after, when she is already standing at the office.
+                      if (selected && (option.instructions ?? '').isNotEmpty)
+                        Padding(
+                          padding: const EdgeInsets.only(top: DsSpacing.xs),
+                          child: Text(
+                            option.instructions!,
+                            style: context.dsText.bodySmall.tint(
+                              colors.onSurfaceVariant,
+                            ),
+                          ),
+                        ),
+                    ],
                   ),
                 ),
               ],

@@ -11827,5 +11827,79 @@
   "adminAuditAdminRequest": "Admin action",
   "@adminAuditAdminRequest": {
     "description": "Audit log entry recorded from an admin API request; the request line is in the details."
+  },
+  "paymentReferenceRejected": "Finance could not match your reference: {reason}. Check it and send it again.",
+  "@paymentReferenceRejected": {
+    "description": "Order payment - reference sent back by finance",
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "financePendingTransfers": "Transfers awaiting confirmation",
+  "@financePendingTransfers": {
+    "description": "Finance console - pending bank transfers and hawala"
+  },
+  "financePendingTransfersEmpty": "No transfers are waiting to be matched.",
+  "@financePendingTransfersEmpty": {
+    "description": "Finance console - no pending transfers"
+  },
+  "financePendingTransfersError": "Could not load the transfers. Refresh to try again.",
+  "@financePendingTransfersError": {
+    "description": "Finance console - transfers failed to load"
+  },
+  "financeTransferConfirm": "Confirm received",
+  "@financeTransferConfirm": {
+    "description": "Finance console - confirm a transfer"
+  },
+  "financeTransferReject": "Not matched",
+  "@financeTransferReject": {
+    "description": "Finance console - reject a transfer reference"
+  },
+  "financeTransferConfirmTitle": "Confirm this transfer?",
+  "@financeTransferConfirmTitle": {
+    "description": "Finance console - confirm dialog title"
+  },
+  "financeTransferConfirmBody": "You are confirming that {amount} for order {order} has arrived. The order goes to its sellers straight away.",
+  "@financeTransferConfirmBody": {
+    "description": "Finance console - confirm dialog body",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "order": {
+        "type": "String"
+      }
+    }
+  },
+  "financeTransferConfirmed": "Payment confirmed — the order is with its sellers",
+  "@financeTransferConfirmed": {
+    "description": "Finance console - transfer confirmed"
+  },
+  "financeTransferRejected": "Reference sent back to the customer",
+  "@financeTransferRejected": {
+    "description": "Finance console - transfer rejected"
+  },
+  "financeTransferRejectTitle": "Why could it not be matched?",
+  "@financeTransferRejectTitle": {
+    "description": "Finance console - reject dialog title"
+  },
+  "financeTransferRejectReason": "Reason (shown to the customer)",
+  "@financeTransferRejectReason": {
+    "description": "Finance console - reject reason field"
+  },
+  "financeTransferNoReference": "No reference sent yet",
+  "@financeTransferNoReference": {
+    "description": "Finance console - transfer without reference"
+  },
+  "financeTransferExpires": "Stock held until {date}",
+  "@financeTransferExpires": {
+    "description": "Finance console - transfer deadline",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
   }
 }

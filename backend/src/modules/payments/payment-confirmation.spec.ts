@@ -61,6 +61,10 @@ const PENDING_COD = {
   capturedAmount: new Prisma.Decimal(0),
   transactionRef: 'COD-ABC',
   providerRef: null,
+  refundedAmount: new Prisma.Decimal(0),
+  failureReason: null,
+  paidAt: null,
+  createdAt: new Date(),
 } as unknown as Payment;
 
 /** Enough of the service's collaborators to reach the guard and no further. */
@@ -167,4 +171,72 @@ test('a wallet payment is never re-initiated, because its provider answers PAID'
     () => serviceWith(true, { payment: wallet }).retry('user-1', 'pay-1'),
     /wallet payment cannot be retried/,
   );
+});
+
+// ── Which rails are offered ──────────────────────────────────────────────
+
+function catalogueWith(payments: Record<string, unknown>): PaymentsService {
+  return new PaymentsService(
+    {} as PrismaService,
+    new PaymentProviderRegistry(allProviders()),
+    { emit: () => true } as never,
+    {} as never,
+    {} as never,
+    {} as never,
+    new ConfigService({ payments }),
+  );
+}
+
+test('only rails a customer can finish paying on are offered', () => {
+  // Production as it stands: no gateway can attest, no transfer details set.
+  const offered = catalogueWith({ sandboxConfirmation: false })
+    .methods()
+    .map((method) => method.method);
+  assert.deepEqual(offered, ['cod', 'courier_collect', 'platform_wallet']);
+});
+
+test('a transfer rail is offered once finance says who to pay, with those words', () => {
+  const methods = catalogueWith({
+    sandboxConfirmation: false,
+    manualInstructions: { HAWALA: 'مكتب الهرم — باسم ريم للتجارة' },
+  }).methods();
+  const hawala = methods.find((method) => method.method === 'hawala');
+  assert.ok(hawala, 'hawala is offered');
+  assert.equal(hawala.instructions, 'مكتب الهرم — باسم ريم للتجارة');
+  assert.equal(hawala.rail, 'manual');
+  assert.equal(
+    methods.some((method) => method.method === 'bank_transfer'),
+    false,
+    'a rail with no instructions stays off',
+  );
+});
+
+test('checkout refuses a rail that is switched off', () => {
+  assert.throws(
+    () =>
+      catalogueWith({ sandboxConfirmation: false }).assertAvailable(
+        PaymentMethodType.SYRIATEL_CASH,
+      ),
+    (error: unknown) => {
+      assert.ok(error instanceof BadRequestException);
+      assert.match(JSON.stringify(error.getResponse()), /PAYMENT_METHOD_UNAVAILABLE/);
+      return true;
+    },
+  );
+  // The developer sandbox is what lets the online rails be walked locally.
+  catalogueWith({ sandboxConfirmation: true }).assertAvailable(
+    PaymentMethodType.SYRIATEL_CASH,
+  );
+});
+
+test('checking a transfer answers where it stands instead of refusing', async () => {
+  const transfer = {
+    ...PENDING_COD,
+    method: PaymentMethodType.HAWALA,
+  } as unknown as Payment;
+  const result = await serviceWith(false, { payment: transfer }).verify(
+    'user-1',
+    'pay-1',
+  );
+  assert.equal(result.status, 'pending');
 });

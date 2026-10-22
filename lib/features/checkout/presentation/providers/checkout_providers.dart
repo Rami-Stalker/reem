@@ -1,10 +1,13 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 
+import 'package:reem/core/errors/failure_exception.dart';
 import 'package:reem/core/presentation/providers/core_providers.dart';
+import 'package:reem/core/result/result.dart';
 import 'package:reem/features/checkout/data/datasources/checkout_remote_datasource.dart';
 import 'package:reem/features/checkout/data/datasources/impl/checkout_remote_datasource_impl.dart';
 import 'package:reem/features/checkout/data/repositories/checkout_repository_impl.dart';
+import 'package:reem/features/checkout/domain/entities/checkout.dart';
 import 'package:reem/features/checkout/domain/repositories/checkout_repository.dart';
 import 'package:reem/features/checkout/domain/usecases/checkout_usecases.dart';
 import 'package:reem/features/checkout/presentation/providers/checkout_controller.dart';
@@ -25,6 +28,18 @@ final getDeliveryQuoteUseCaseProvider =
     Provider((ref) => GetDeliveryQuoteUseCase(ref.watch(checkoutRepositoryProvider)));
 final getPaymentMethodsUseCaseProvider =
     Provider((ref) => GetPaymentMethodsUseCase(ref.watch(checkoutRepositoryProvider)));
+/// The rails on offer, with the transfer instructions finance set — read by
+/// the payment card on an order so she sees who to pay after placing it too.
+final paymentMethodsCatalogProvider =
+    FutureProvider.autoDispose<List<PaymentMethodOption>>((ref) async {
+      final result = await ref
+          .watch(checkoutRepositoryProvider)
+          .getPaymentMethods();
+      return switch (result) {
+        Success(:final data) => data,
+        Error(:final failure) => throw FailureException(failure),
+      };
+    });
 final placeOrderUseCaseProvider =
     Provider((ref) => PlaceOrderUseCase(ref.watch(checkoutRepositoryProvider)));
 final confirmCodOrderUseCaseProvider =
