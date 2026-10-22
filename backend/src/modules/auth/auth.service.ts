@@ -52,6 +52,8 @@ import {
 import { SubmitRecoveryCaseDto } from './dto/account-recovery.dto';
 import {
   CompleteOtpLoginDto,
+  CompleteReverseOtpLoginDto,
+  ReverseOtpStatusDto,
   StartOtpLoginDto,
 } from './dto/otp-login.dto';
 import { SetPasswordDto } from './dto/password-credential.dto';
@@ -387,7 +389,13 @@ export class AuthService {
       context,
     });
 
-    return { ...challenge, next: 'verify_code' };
+    // The next step is not the same step on both rails, and the client needs
+    // to know which screen to open before it can render anything useful.
+    return {
+      ...challenge,
+      next:
+        challenge.delivery_mode === 'reverse_sms' ? 'send_sms' : 'verify_code',
+    };
   }
 
   /**
@@ -412,6 +420,47 @@ export class AuthService {
       dto.client_nonce,
     );
 
+    return this.finishOtpLogin(dto, context, provenDeviceKeyId);
+  }
+
+  /**
+   * Step two on the reverse rail: she has sent the message, we ask the
+   * provider.
+   *
+   * Everything after the proof is identical to the code path, which is the
+   * point — only how possession of the SIM was established differs, and that
+   * difference stops at this line. A number proved by an inbound message whose
+   * sender the provider checked is proved at least as well as one proved by a
+   * code we sent out and hoped arrived.
+   */
+  async completeReverseOtpLogin(
+    dto: CompleteReverseOtpLoginDto,
+    context: RequestContext,
+    provenDeviceKeyId?: string,
+  ) {
+    await this.otp.consumeReverse(
+      dto.phone,
+      OtpPurpose.LOGIN,
+      dto.client_nonce,
+    );
+
+    return this.finishOtpLogin(dto, context, provenDeviceKeyId);
+  }
+
+  /** Where a pending reverse ceremony stands, for the client's poll. */
+  reverseOtpStatus(dto: ReverseOtpStatusDto) {
+    return this.otp.reverseStatus(dto.phone, dto.purpose, dto.client_nonce);
+  }
+
+  /**
+   * The outcome of a completed sign-in challenge: a session, or a ticket to
+   * create the account the number does not yet have.
+   */
+  private async finishOtpLogin(
+    dto: CompleteOtpLoginDto | CompleteReverseOtpLoginDto,
+    context: RequestContext,
+    provenDeviceKeyId?: string,
+  ) {
     const user = await this.users.findByPhone(dto.phone);
 
     if (!user) {
@@ -711,7 +760,7 @@ export class AuthService {
   verifyCurrentPhone(
     userId: string,
     requestId: string,
-    code: string,
+    code: string | undefined,
     context: RequestContext,
   ) {
     return this.phoneChanges.verifyCurrent(userId, requestId, code, context);
@@ -720,7 +769,7 @@ export class AuthService {
   confirmPhoneChange(
     userId: string,
     requestId: string,
-    code: string,
+    code: string | undefined,
     context: RequestContext,
     keepSessionId?: string,
   ) {
@@ -772,7 +821,7 @@ export class AuthService {
     userId: string,
     sessionId: string | undefined,
     scope: string,
-    code: string,
+    code: string | undefined,
     context: RequestContext,
     method?: StepUpMethod,
   ) {
@@ -896,18 +945,18 @@ export class AuthService {
     return this.otp.request({ phone, purpose, context, clientNonce });
   }
 
-  verifyOtp(phone: string, purpose: OtpPurpose, code: string) {
-    return this.otp.verify(phone, purpose, code);
+  verifyOtp(phone: string, purpose: OtpPurpose, code?: string) {
+    return this.otp.verifyAny(phone, purpose, code);
   }
 
   async resetPassword(
     phone: string,
-    code: string,
+    code: string | undefined,
     newPassword: string,
     context?: RequestContext,
   ) {
     this.assertStrongPassword(newPassword);
-    await this.otp.verify(phone, OtpPurpose.PASSWORD_RESET, code);
+    await this.otp.verifyAny(phone, OtpPurpose.PASSWORD_RESET, code);
     const user = await this.users.findByPhone(phone);
     if (user) {
       await this.prisma.user.update({

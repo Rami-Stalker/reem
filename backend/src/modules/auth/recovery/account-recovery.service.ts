@@ -128,7 +128,7 @@ export class AccountRecoveryService {
   async submit(dto: SubmitRecoveryCaseDto, context: RequestContext) {
     // The contact number is verified first, so the queue only ever contains
     // cases from someone who is at least reachable.
-    await this.otp.consume(
+    await this.otp.consumeAny(
       dto.contact_phone,
       OtpPurpose.ACCOUNT_RECOVERY,
       dto.contact_code,

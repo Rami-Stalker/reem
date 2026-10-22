@@ -18571,6 +18571,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Stock held until {date}'**
   String financeTransferExpires(String date);
+
+  /// Title of the reverse-SMS step, where she sends the code instead of receiving one
+  ///
+  /// In en, this message translates to:
+  /// **'Verify with one message'**
+  String get reverseSmsTitle;
+
+  /// Why the reverse rail is safer, shown under the title
+  ///
+  /// In en, this message translates to:
+  /// **'Send the message below from this number. Nothing is sent to you, so nobody can ask you to read a code out.'**
+  String get reverseSmsExplainer;
+
+  /// The receiver number the verification message is addressed to
+  ///
+  /// In en, this message translates to:
+  /// **'To: {number}'**
+  String reverseSmsSendTo(String number);
+
+  /// Label above the exact SMS body she must send
+  ///
+  /// In en, this message translates to:
+  /// **'Message'**
+  String get reverseSmsBodyLabel;
+
+  /// Button that opens the SMS composer prefilled with the verification message
+  ///
+  /// In en, this message translates to:
+  /// **'Open Messages'**
+  String get reverseSmsOpenMessages;
+
+  /// Button she taps after sending the verification message
+  ///
+  /// In en, this message translates to:
+  /// **'I have sent it'**
+  String get reverseSmsIveSent;
+
+  /// Shown while the app polls for the inbound verification message
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for your message…'**
+  String get reverseSmsWaiting;
+
+  /// Tells her the outgoing verification SMS is billed to her
+  ///
+  /// In en, this message translates to:
+  /// **'Charged at your operator\'s normal SMS rate.'**
+  String get reverseSmsCost;
+
+  /// Shown when she taps continue before the inbound message has been matched
+  ///
+  /// In en, this message translates to:
+  /// **'Your message has not arrived yet. Give it a moment, then try again.'**
+  String get reverseSmsNotYet;
+
+  /// Shown when the SMS composer cannot be launched
+  ///
+  /// In en, this message translates to:
+  /// **'Could not open your messaging app. Send the message above manually.'**
+  String get reverseSmsCouldNotOpen;
 }
 
 class _AppLocalizationsDelegate

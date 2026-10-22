@@ -12,6 +12,8 @@ import { OpsConsoleTransport } from './transports/ops-console.transport';
 import { SmsGatewayTransport } from './transports/sms-gateway.transport';
 import { VoiceTransport } from './transports/voice.transport';
 import { WhatsAppCloudTransport } from './transports/whatsapp-cloud.transport';
+import { ReverseSmsService } from './syrotp/reverse-sms.service';
+import { SyrotpClient } from './syrotp/syrotp.client';
 
 /**
  * The OTP delivery subsystem.
@@ -34,6 +36,11 @@ import { WhatsAppCloudTransport } from './transports/whatsapp-cloud.transport';
     OtpCipherService,
     OtpDispatcherService,
     DeliveryOrchestrator,
+    // Reverse SMS is not a transport: it carries nothing outbound, so it is
+    // not a link in the chain below and does not belong in OTP_TRANSPORTS. It
+    // sits beside the chain and is tried first — see `syrotp/`.
+    SyrotpClient,
+    ReverseSmsService,
     OtpOutboxCron,
     OtpDeliveryReadiness,
     WhatsAppCloudTransport,
@@ -51,6 +58,11 @@ import { WhatsAppCloudTransport } from './transports/whatsapp-cloud.transport';
       useFactory: (...transports: OtpTransport[]) => transports,
     },
   ],
-  exports: [OtpCipherService, OtpDispatcherService, DeliveryOrchestrator],
+  exports: [
+    OtpCipherService,
+    OtpDispatcherService,
+    DeliveryOrchestrator,
+    ReverseSmsService,
+  ],
 })
 export class OtpDeliveryModule {}

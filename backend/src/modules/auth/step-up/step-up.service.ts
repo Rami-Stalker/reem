@@ -133,7 +133,7 @@ export class StepUpService {
     userId: string,
     sessionId: string | undefined,
     scope: string,
-    code: string,
+    code: string | undefined,
     context: RequestContext,
     method: StepUpMethod = StepUpMethod.OTP,
   ) {
@@ -279,19 +279,30 @@ export class StepUpService {
   private async consumeFactor(
     userId: string,
     method: StepUpMethod,
-    code: string,
+    code: string | undefined,
   ): Promise<void> {
-    if (method === StepUpMethod.TOTP) {
-      if (!(await this.totp.verify(userId, code))) {
+    // Only the OTP factor can arrive without a code, and only on the reverse
+    // rail, where the proof is an inbound message rather than something she
+    // typed. An authenticator or recovery code is a secret she holds; absent,
+    // there is nothing to check and nothing to be lenient about.
+    if (method === StepUpMethod.TOTP || method === StepUpMethod.RECOVERY_CODE) {
+      if (!code) {
         throw new BadRequestException({
-          code: 'INVALID_TOTP',
+          code: 'CODE_REQUIRED',
           message: 'That code is not right',
         });
       }
-      return;
-    }
 
-    if (method === StepUpMethod.RECOVERY_CODE) {
+      if (method === StepUpMethod.TOTP) {
+        if (!(await this.totp.verify(userId, code))) {
+          throw new BadRequestException({
+            code: 'INVALID_TOTP',
+            message: 'That code is not right',
+          });
+        }
+        return;
+      }
+
       if (!(await this.recovery.redeem(userId, code))) {
         throw new BadRequestException({
           code: 'INVALID_RECOVERY_CODE',
@@ -302,9 +313,14 @@ export class StepUpService {
     }
 
     const user = await this.prisma.user.findUnique({ where: { id: userId } });
-    // `consume` rather than `verify`: elevating a session must not have the
-    // side effect of marking a phone number verified.
-    await this.otp.consume(user!.phone!, OtpPurpose.DEVICE_VERIFICATION, code);
+    // `consumeAny` rather than `verifyAny`: elevating a session must not have
+    // the side effect of marking a phone number verified. `Any` because the
+    // challenge may have been opened on either rail.
+    await this.otp.consumeAny(
+      user!.phone!,
+      OtpPurpose.DEVICE_VERIFICATION,
+      code,
+    );
   }
 
   private async assertNotInCooldown(

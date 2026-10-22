@@ -91,6 +91,45 @@ final class AuthRemoteDataSourceImpl extends BaseRemoteDataSource
   }
 
   @override
+  Future<OtpLoginResponse> completeReverseOtpLogin({
+    required String phone,
+    String? clientNonce,
+    String? deviceName,
+    String? platform,
+    String? appVersion,
+  }) async {
+    final json = await postJson(
+      ApiEndpoints.authOtpLoginReverse,
+      body: {
+        'phone': phone,
+        'client_nonce': ?clientNonce,
+        'device_name': ?deviceName,
+        'platform': ?platform,
+        'app_version': ?appVersion,
+      },
+    );
+    return OtpLoginResponse.fromJson(json);
+  }
+
+  @override
+  Future<String> reverseOtpStatus({
+    required String phone,
+    String? clientNonce,
+  }) async {
+    final json = await postJson(
+      ApiEndpoints.authOtpReverseStatus,
+      body: {
+        'phone': phone,
+        'purpose': 'LOGIN',
+        'client_nonce': ?clientNonce,
+      },
+    );
+    // An unreadable answer is treated as "not yet", never as "verified": the
+    // one thing this must not do is wave her through on a malformed reply.
+    return json['status'] as String? ?? 'pending';
+  }
+
+  @override
   Future<bool> setPassword({
     String? currentPassword,
     required String newPassword,

@@ -3263,5 +3263,15 @@
   "financeTransferRejectTitle": "لماذا لم تتم المطابقة؟",
   "financeTransferRejectReason": "السبب (يظهر للزبونة)",
   "financeTransferNoReference": "لم يُرسَل رقم بعد",
-  "financeTransferExpires": "المخزون محجوز حتى {date}"
+  "financeTransferExpires": "المخزون محجوز حتى {date}",
+  "reverseSmsTitle": "تحقّقي برسالة واحدة",
+  "reverseSmsExplainer": "أرسلي الرسالة التالية من هذا الرقم. لن يصلك أي رمز، فلا يمكن لأحد أن يطلب منكِ قراءته.",
+  "reverseSmsSendTo": "إلى: {number}",
+  "reverseSmsBodyLabel": "نص الرسالة",
+  "reverseSmsOpenMessages": "فتح تطبيق الرسائل",
+  "reverseSmsIveSent": "أرسلتُ الرسالة",
+  "reverseSmsWaiting": "في انتظار رسالتك…",
+  "reverseSmsCost": "تُحتسب الرسالة بحسب تسعيرة مشغّلك العادية.",
+  "reverseSmsNotYet": "لم تصل رسالتك بعد. انتظري لحظة ثم أعيدي المحاولة.",
+  "reverseSmsCouldNotOpen": "لم نتمكّن من فتح تطبيق الرسائل. أرسلي الرسالة أعلاه يدويًا."
 }

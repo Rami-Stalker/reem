@@ -52,6 +52,8 @@ import {
 } from './dto/account.dto';
 import {
   CompleteOtpLoginDto,
+  CompleteReverseOtpLoginDto,
+  ReverseOtpStatusDto,
   StartOtpLoginDto,
 } from './dto/otp-login.dto';
 import { SetPasswordDto } from './dto/password-credential.dto';
@@ -232,6 +234,46 @@ export class AuthController {
       (req as Request & { provenDevice?: { deviceKeyId: string } }).provenDevice
         ?.deviceKeyId,
     );
+  }
+
+  /**
+   * The reverse rail's step two: she has sent the message.
+   *
+   * Takes no code, because there is none to take — the proof is an inbound SMS
+   * whose sender the provider checked. Throttled like the code route and
+   * device-proof-aware for the same reasons.
+   */
+  @Public()
+  @Throttle({ default: { limit: 10, ttl: 60_000 } })
+  @DeviceProof()
+  @Post('otp/login/reverse')
+  @HttpCode(HttpStatus.OK)
+  completeReverseOtpLogin(
+    @Body() dto: CompleteReverseOtpLoginDto,
+    @Req() req: Request,
+  ) {
+    return this.auth.completeReverseOtpLogin(
+      dto,
+      requestContextFrom(req),
+      (req as Request & { provenDevice?: { deviceKeyId: string } }).provenDevice
+        ?.deviceKeyId,
+    );
+  }
+
+  /**
+   * "Has my message arrived yet?" — polled while she is in her SMS app.
+   *
+   * A higher throttle than the routes that decide something, because this one
+   * decides nothing: it reads a ceremony's state, spends no attempt, and
+   * reveals only `pending` / `verified` / `expired` about a challenge the
+   * caller already had to know the number and nonce of.
+   */
+  @Public()
+  @Throttle({ default: { limit: 30, ttl: 60_000 } })
+  @Post('otp/reverse/status')
+  @HttpCode(HttpStatus.OK)
+  reverseOtpStatus(@Body() dto: ReverseOtpStatusDto) {
+    return this.auth.reverseOtpStatus(dto);
   }
 
   // ───────────────────── The optional password credential ──────────────────
