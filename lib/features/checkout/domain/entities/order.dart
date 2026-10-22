@@ -289,6 +289,10 @@ class OrderPayment extends Equatable {
   final String? providerRef;
   final DateTime? paidAt;
 
+  /// Why finance sent her reference back, when it did — shown so she knows
+  /// what to correct.
+  final String? failureReason;
+
   /// Which kind of rail this is, from the server rather than guessed from the
   /// method name.
   final PaymentRail rail;
@@ -306,6 +310,7 @@ class OrderPayment extends Equatable {
     this.transactionRef,
     this.providerRef,
     this.paidAt,
+    this.failureReason,
     this.rail = PaymentRail.cash,
     this.needsCustomerAction = false,
   });
@@ -315,7 +320,15 @@ class OrderPayment extends Equatable {
   bool get isFailed => status == 'failed';
 
   @override
-  List<Object?> get props => [id, method, status, amount, paidAt];
+  List<Object?> get props => [
+    id,
+    method,
+    status,
+    amount,
+    paidAt,
+    providerRef,
+    failureReason,
+  ];
 }
 
 /// One attempt at settling a payment: the payment as it now stands, and the

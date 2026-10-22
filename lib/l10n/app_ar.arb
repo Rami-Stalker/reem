@@ -2293,7 +2293,6 @@
   "adminPolicyVersionsCount": "{count, plural, =1{نسخة واحدة} =2{نسختان} few{{count} نسخ} other{{count} نسخة}}",
   "adminPolicyBodyTooShort": "النص أقصر من أن يُنشر",
   "adminPolicyPublishConfirm": "تنشرين هذه النسخة؟ النسخة الحالية تُؤرشف ولا تُستعاد — أي تغيير بعدها يحتاج نسخة جديدة.",
-
   "policiesLinkCommissions": "سياسة العمولات",
   "policiesLinkCustomerTerms": "شروط استخدام العميل",
   "composerPolicyNotice": "بالنشر أنتِ توافقين على سياسة المحتوى والحذف.",
@@ -3250,5 +3249,19 @@
   "homeBentoEyebrow": "عالم ريم",
   "homeBentoTitle": "تجوّلي بين الأقسام",
   "homeBentoCount": "{count, plural, =0{قريباً} =1{قطعة واحدة} =2{قطعتان} few{{count} قطع} other{{count} قطعة}}",
-  "postOpenPiece": "عرض القطعة"
+  "postOpenPiece": "عرض القطعة",
+  "paymentReferenceRejected": "لم يتمكّن فريق المالية من مطابقة الرقم: {reason}. تأكّدي منه وأرسليه مجدداً.",
+  "financePendingTransfers": "تحويلات بانتظار التأكيد",
+  "financePendingTransfersEmpty": "لا توجد تحويلات بانتظار المطابقة.",
+  "financePendingTransfersError": "تعذّر تحميل التحويلات. حدّثي الصفحة للمحاولة مجدداً.",
+  "financeTransferConfirm": "تأكيد الاستلام",
+  "financeTransferReject": "غير مطابق",
+  "financeTransferConfirmTitle": "تأكيد هذا التحويل؟",
+  "financeTransferConfirmBody": "أنتِ تؤكّدين وصول {amount} للطلب {order}. سيُرسَل الطلب إلى البائعات فوراً.",
+  "financeTransferConfirmed": "تم تأكيد الدفع — الطلب الآن لدى البائعات",
+  "financeTransferRejected": "أُعيد الرقم إلى الزبونة",
+  "financeTransferRejectTitle": "لماذا لم تتم المطابقة؟",
+  "financeTransferRejectReason": "السبب (يظهر للزبونة)",
+  "financeTransferNoReference": "لم يُرسَل رقم بعد",
+  "financeTransferExpires": "المخزون محجوز حتى {date}"
 }

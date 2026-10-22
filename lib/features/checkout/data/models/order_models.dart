@@ -150,6 +150,7 @@ class OrderPaymentModel extends OrderPayment {
     super.transactionRef,
     super.providerRef,
     super.paidAt,
+    super.failureReason,
     super.rail,
     super.needsCustomerAction,
   });
@@ -166,6 +167,7 @@ class OrderPaymentModel extends OrderPayment {
       transactionRef: json['transaction_ref'] as String?,
       providerRef: json['provider_ref'] as String?,
       paidAt: _dt(json['paid_at']),
+      failureReason: json['failure_reason'] as String?,
       rail: PaymentRail.fromWire(json['rail'] as String?),
       needsCustomerAction: json['needs_customer_action'] as bool? ?? false,
     );

@@ -258,11 +258,22 @@ export class OrdersService {
       select: {
         id: true,
         status: true,
+        payment: { select: { status: true } },
         sellerOrders: { select: { id: true, status: true } },
       },
     });
     if (!order) return false;
     if (order.status !== OrderStatus.PENDING_PAYMENT) return false;
+    // Money has arrived for it. An order left pending beside a paid payment
+    // is a confirmation that failed half-way; cancelling it would keep her
+    // money and put her goods back on sale. It is support's to finish.
+    if (order.payment?.status === PaymentStatus.PAID) {
+      this.logger.error(
+        `Order ${orderId} is paid but still pending past its deadline; ` +
+          'not expiring it — confirm it by hand.',
+      );
+      return false;
+    }
 
     // An order with no parcels cannot be cancelled by cancelling its parcels,
     // and reporting success would have the sweep pick it up again on every run
