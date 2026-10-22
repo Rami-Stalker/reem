@@ -10562,4 +10562,202 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get adminAuditAdminRequest => 'Admin action';
+
+  @override
+  String homeAuraAddress(String name) {
+    return '$name,';
+  }
+
+  @override
+  String get homeAuraGuest => 'Welcome,';
+
+  @override
+  String get homeAuraQuestionMorning => 'What are we wearing today?';
+
+  @override
+  String get homeAuraQuestionMidday => 'Something to brighten your day?';
+
+  @override
+  String get homeAuraQuestionEvening => 'What are you wearing tonight?';
+
+  @override
+  String get homeAuraQuestionNight => 'A quiet moment, just for you';
+
+  @override
+  String get homeAskReem => 'Ask Reem';
+
+  @override
+  String get homeAskExample1 => 'A navy evening dress under 50K';
+
+  @override
+  String get homeAskExample2 => 'A comfortable, polished work look';
+
+  @override
+  String get homeAskExample3 => 'A birthday gift for my sister';
+
+  @override
+  String get homeAskExample4 => 'What goes with beige shoes?';
+
+  @override
+  String get homeAskPhoto => 'Search by photo';
+
+  @override
+  String homeBriefStories(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count boutiques posted today',
+      one: '1 boutique posted today',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String homeBriefDealEnds(String time) {
+    return 'A deal ends in $time';
+  }
+
+  @override
+  String homeBriefUnread(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count new notifications',
+      one: '1 new notification',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String homeBriefBag(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count pieces in your bag',
+      one: '1 piece in your bag',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get homePulseLive => 'Live';
+
+  @override
+  String homePulseDeal(String title, String time) {
+    return '$title — ends in $time';
+  }
+
+  @override
+  String homePulseTrending(String title) {
+    return 'Most wanted right now: $title';
+  }
+
+  @override
+  String homePulseNew(String title) {
+    return 'Just in: $title';
+  }
+
+  @override
+  String get homeMoodTitle => 'What\'s the mood today?';
+
+  @override
+  String get homeMoodSubtitle => 'Pick one and Reem styles the whole look';
+
+  @override
+  String get homeMoodEvening => 'Evening';
+
+  @override
+  String get homeMoodWedding => 'Wedding';
+
+  @override
+  String get homeMoodWork => 'Work';
+
+  @override
+  String get homeMoodCasual => 'Casual';
+
+  @override
+  String get homeMoodGift => 'Gift';
+
+  @override
+  String get homeMoodTravel => 'Travel';
+
+  @override
+  String get homeMoodPromptEvening => 'I want an elegant evening look';
+
+  @override
+  String get homeMoodPromptWedding => 'I need a look for a wedding';
+
+  @override
+  String get homeMoodPromptWork => 'A comfortable, polished work look';
+
+  @override
+  String get homeMoodPromptCasual => 'A casual weekend look';
+
+  @override
+  String get homeMoodPromptGift => 'I\'m looking for a special gift';
+
+  @override
+  String get homeMoodPromptTravel => 'Comfortable, stylish travel clothes';
+
+  @override
+  String get homeDeckEyebrow => 'Picked for you by Reem';
+
+  @override
+  String get homeDeckTitle => 'Your taste, piece by piece';
+
+  @override
+  String get homeDeckHint => 'Swipe right for what you love, left to skip';
+
+  @override
+  String get homeDeckLike => 'Love it';
+
+  @override
+  String get homeDeckPass => 'Skip';
+
+  @override
+  String get homeDeckOpen => 'View piece';
+
+  @override
+  String homeDeckProgress(int current, int total) {
+    return '$current of $total';
+  }
+
+  @override
+  String get homeDeckDoneTitle => 'That\'s today\'s picks';
+
+  @override
+  String homeDeckDoneBody(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'You loved $count pieces; they\'re in your likes.',
+      one: 'You loved 1 piece; it\'s in your likes.',
+      zero: 'Nothing today? Reem will learn from that.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get homeDeckSeeAll => 'All picks';
+
+  @override
+  String get homeDeckRestart => 'Start over';
+
+  @override
+  String get homeBentoEyebrow => 'Reem\'s world';
+
+  @override
+  String get homeBentoTitle => 'Wander the departments';
+
+  @override
+  String homeBentoCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count pieces',
+      one: '1 piece',
+      zero: 'Coming soon',
+    );
+    return '$_temp0';
+  }
 }

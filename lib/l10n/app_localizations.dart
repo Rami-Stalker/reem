@@ -18193,6 +18193,294 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Admin action'**
   String get adminAuditAdminRequest;
+
+  /// Her first name on its own line in the home hero, before the question.
+  ///
+  /// In en, this message translates to:
+  /// **'{name},'**
+  String homeAuraAddress(String name);
+
+  /// Home hero first line when we have no name.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome,'**
+  String get homeAuraGuest;
+
+  /// Home hero question, morning.
+  ///
+  /// In en, this message translates to:
+  /// **'What are we wearing today?'**
+  String get homeAuraQuestionMorning;
+
+  /// Home hero question, midday.
+  ///
+  /// In en, this message translates to:
+  /// **'Something to brighten your day?'**
+  String get homeAuraQuestionMidday;
+
+  /// Home hero question, evening.
+  ///
+  /// In en, this message translates to:
+  /// **'What are you wearing tonight?'**
+  String get homeAuraQuestionEvening;
+
+  /// Home hero question, late night.
+  ///
+  /// In en, this message translates to:
+  /// **'A quiet moment, just for you'**
+  String get homeAuraQuestionNight;
+
+  /// Label on the home hero's ask-the-stylist field.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask Reem'**
+  String get homeAskReem;
+
+  /// Rotating example inside the ask-Reem field.
+  ///
+  /// In en, this message translates to:
+  /// **'A navy evening dress under 50K'**
+  String get homeAskExample1;
+
+  /// Rotating example inside the ask-Reem field.
+  ///
+  /// In en, this message translates to:
+  /// **'A comfortable, polished work look'**
+  String get homeAskExample2;
+
+  /// Rotating example inside the ask-Reem field.
+  ///
+  /// In en, this message translates to:
+  /// **'A birthday gift for my sister'**
+  String get homeAskExample3;
+
+  /// Rotating example inside the ask-Reem field.
+  ///
+  /// In en, this message translates to:
+  /// **'What goes with beige shoes?'**
+  String get homeAskExample4;
+
+  /// Camera button on the ask-Reem field.
+  ///
+  /// In en, this message translates to:
+  /// **'Search by photo'**
+  String get homeAskPhoto;
+
+  /// Live chip on the home hero.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 boutique posted today} other{{count} boutiques posted today}}'**
+  String homeBriefStories(int count);
+
+  /// Live chip on the home hero with a running countdown.
+  ///
+  /// In en, this message translates to:
+  /// **'A deal ends in {time}'**
+  String homeBriefDealEnds(String time);
+
+  /// Live chip on the home hero.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 new notification} other{{count} new notifications}}'**
+  String homeBriefUnread(int count);
+
+  /// Live chip on the home hero.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 piece in your bag} other{{count} pieces in your bag}}'**
+  String homeBriefBag(int count);
+
+  /// Badge on the home's live strip.
+  ///
+  /// In en, this message translates to:
+  /// **'Live'**
+  String get homePulseLive;
+
+  /// Live strip line for a flash deal.
+  ///
+  /// In en, this message translates to:
+  /// **'{title} — ends in {time}'**
+  String homePulseDeal(String title, String time);
+
+  /// Live strip line for a trending piece.
+  ///
+  /// In en, this message translates to:
+  /// **'Most wanted right now: {title}'**
+  String homePulseTrending(String title);
+
+  /// Live strip line for a new arrival.
+  ///
+  /// In en, this message translates to:
+  /// **'Just in: {title}'**
+  String homePulseNew(String title);
+
+  /// Home section title over the mood tiles.
+  ///
+  /// In en, this message translates to:
+  /// **'What\'s the mood today?'**
+  String get homeMoodTitle;
+
+  /// Home section subtitle over the mood tiles.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick one and Reem styles the whole look'**
+  String get homeMoodSubtitle;
+
+  /// Mood tile.
+  ///
+  /// In en, this message translates to:
+  /// **'Evening'**
+  String get homeMoodEvening;
+
+  /// Mood tile.
+  ///
+  /// In en, this message translates to:
+  /// **'Wedding'**
+  String get homeMoodWedding;
+
+  /// Mood tile.
+  ///
+  /// In en, this message translates to:
+  /// **'Work'**
+  String get homeMoodWork;
+
+  /// Mood tile.
+  ///
+  /// In en, this message translates to:
+  /// **'Casual'**
+  String get homeMoodCasual;
+
+  /// Mood tile.
+  ///
+  /// In en, this message translates to:
+  /// **'Gift'**
+  String get homeMoodGift;
+
+  /// Mood tile.
+  ///
+  /// In en, this message translates to:
+  /// **'Travel'**
+  String get homeMoodTravel;
+
+  /// Question the evening mood tile asks the stylist.
+  ///
+  /// In en, this message translates to:
+  /// **'I want an elegant evening look'**
+  String get homeMoodPromptEvening;
+
+  /// Question the wedding mood tile asks the stylist.
+  ///
+  /// In en, this message translates to:
+  /// **'I need a look for a wedding'**
+  String get homeMoodPromptWedding;
+
+  /// Question the work mood tile asks the stylist.
+  ///
+  /// In en, this message translates to:
+  /// **'A comfortable, polished work look'**
+  String get homeMoodPromptWork;
+
+  /// Question the casual mood tile asks the stylist.
+  ///
+  /// In en, this message translates to:
+  /// **'A casual weekend look'**
+  String get homeMoodPromptCasual;
+
+  /// Question the gift mood tile asks the stylist.
+  ///
+  /// In en, this message translates to:
+  /// **'I\'m looking for a special gift'**
+  String get homeMoodPromptGift;
+
+  /// Question the travel mood tile asks the stylist.
+  ///
+  /// In en, this message translates to:
+  /// **'Comfortable, stylish travel clothes'**
+  String get homeMoodPromptTravel;
+
+  /// Eyebrow over the swipe deck.
+  ///
+  /// In en, this message translates to:
+  /// **'Picked for you by Reem'**
+  String get homeDeckEyebrow;
+
+  /// Title over the swipe deck.
+  ///
+  /// In en, this message translates to:
+  /// **'Your taste, piece by piece'**
+  String get homeDeckTitle;
+
+  /// Hint under the swipe deck.
+  ///
+  /// In en, this message translates to:
+  /// **'Swipe right for what you love, left to skip'**
+  String get homeDeckHint;
+
+  /// Swipe deck like button and stamp.
+  ///
+  /// In en, this message translates to:
+  /// **'Love it'**
+  String get homeDeckLike;
+
+  /// Swipe deck skip button and stamp.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip'**
+  String get homeDeckPass;
+
+  /// Swipe deck open button.
+  ///
+  /// In en, this message translates to:
+  /// **'View piece'**
+  String get homeDeckOpen;
+
+  /// Swipe deck position.
+  ///
+  /// In en, this message translates to:
+  /// **'{current} of {total}'**
+  String homeDeckProgress(int current, int total);
+
+  /// Swipe deck end card title.
+  ///
+  /// In en, this message translates to:
+  /// **'That\'s today\'s picks'**
+  String get homeDeckDoneTitle;
+
+  /// Swipe deck end card body.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{Nothing today? Reem will learn from that.} =1{You loved 1 piece; it\'s in your likes.} other{You loved {count} pieces; they\'re in your likes.}}'**
+  String homeDeckDoneBody(int count);
+
+  /// Swipe deck end card button.
+  ///
+  /// In en, this message translates to:
+  /// **'All picks'**
+  String get homeDeckSeeAll;
+
+  /// Swipe deck end card button.
+  ///
+  /// In en, this message translates to:
+  /// **'Start over'**
+  String get homeDeckRestart;
+
+  /// Eyebrow over the category bento.
+  ///
+  /// In en, this message translates to:
+  /// **'Reem\'s world'**
+  String get homeBentoEyebrow;
+
+  /// Title over the category bento.
+  ///
+  /// In en, this message translates to:
+  /// **'Wander the departments'**
+  String get homeBentoTitle;
+
+  /// Piece count on a category bento tile.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{Coming soon} =1{1 piece} other{{count} pieces}}'**
+  String homeBentoCount(int count);
 }
 
 class _AppLocalizationsDelegate

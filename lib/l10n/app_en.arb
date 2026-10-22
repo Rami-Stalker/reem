@@ -11827,5 +11827,258 @@
   "adminAuditAdminRequest": "Admin action",
   "@adminAuditAdminRequest": {
     "description": "Audit log entry recorded from an admin API request; the request line is in the details."
+  },
+  "homeAuraAddress": "{name},",
+  "@homeAuraAddress": {
+    "description": "Her first name on its own line in the home hero, before the question.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "homeAuraGuest": "Welcome,",
+  "@homeAuraGuest": {
+    "description": "Home hero first line when we have no name."
+  },
+  "homeAuraQuestionMorning": "What are we wearing today?",
+  "@homeAuraQuestionMorning": {
+    "description": "Home hero question, morning."
+  },
+  "homeAuraQuestionMidday": "Something to brighten your day?",
+  "@homeAuraQuestionMidday": {
+    "description": "Home hero question, midday."
+  },
+  "homeAuraQuestionEvening": "What are you wearing tonight?",
+  "@homeAuraQuestionEvening": {
+    "description": "Home hero question, evening."
+  },
+  "homeAuraQuestionNight": "A quiet moment, just for you",
+  "@homeAuraQuestionNight": {
+    "description": "Home hero question, late night."
+  },
+  "homeAskReem": "Ask Reem",
+  "@homeAskReem": {
+    "description": "Label on the home hero's ask-the-stylist field."
+  },
+  "homeAskExample1": "A navy evening dress under 50K",
+  "@homeAskExample1": {
+    "description": "Rotating example inside the ask-Reem field."
+  },
+  "homeAskExample2": "A comfortable, polished work look",
+  "@homeAskExample2": {
+    "description": "Rotating example inside the ask-Reem field."
+  },
+  "homeAskExample3": "A birthday gift for my sister",
+  "@homeAskExample3": {
+    "description": "Rotating example inside the ask-Reem field."
+  },
+  "homeAskExample4": "What goes with beige shoes?",
+  "@homeAskExample4": {
+    "description": "Rotating example inside the ask-Reem field."
+  },
+  "homeAskPhoto": "Search by photo",
+  "@homeAskPhoto": {
+    "description": "Camera button on the ask-Reem field."
+  },
+  "homeBriefStories": "{count, plural, =1{1 boutique posted today} other{{count} boutiques posted today}}",
+  "@homeBriefStories": {
+    "description": "Live chip on the home hero.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "homeBriefDealEnds": "A deal ends in {time}",
+  "@homeBriefDealEnds": {
+    "description": "Live chip on the home hero with a running countdown.",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "homeBriefUnread": "{count, plural, =1{1 new notification} other{{count} new notifications}}",
+  "@homeBriefUnread": {
+    "description": "Live chip on the home hero.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "homeBriefBag": "{count, plural, =1{1 piece in your bag} other{{count} pieces in your bag}}",
+  "@homeBriefBag": {
+    "description": "Live chip on the home hero.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "homePulseLive": "Live",
+  "@homePulseLive": {
+    "description": "Badge on the home's live strip."
+  },
+  "homePulseDeal": "{title} — ends in {time}",
+  "@homePulseDeal": {
+    "description": "Live strip line for a flash deal.",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "homePulseTrending": "Most wanted right now: {title}",
+  "@homePulseTrending": {
+    "description": "Live strip line for a trending piece.",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "homePulseNew": "Just in: {title}",
+  "@homePulseNew": {
+    "description": "Live strip line for a new arrival.",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "homeMoodTitle": "What's the mood today?",
+  "@homeMoodTitle": {
+    "description": "Home section title over the mood tiles."
+  },
+  "homeMoodSubtitle": "Pick one and Reem styles the whole look",
+  "@homeMoodSubtitle": {
+    "description": "Home section subtitle over the mood tiles."
+  },
+  "homeMoodEvening": "Evening",
+  "@homeMoodEvening": {
+    "description": "Mood tile."
+  },
+  "homeMoodWedding": "Wedding",
+  "@homeMoodWedding": {
+    "description": "Mood tile."
+  },
+  "homeMoodWork": "Work",
+  "@homeMoodWork": {
+    "description": "Mood tile."
+  },
+  "homeMoodCasual": "Casual",
+  "@homeMoodCasual": {
+    "description": "Mood tile."
+  },
+  "homeMoodGift": "Gift",
+  "@homeMoodGift": {
+    "description": "Mood tile."
+  },
+  "homeMoodTravel": "Travel",
+  "@homeMoodTravel": {
+    "description": "Mood tile."
+  },
+  "homeMoodPromptEvening": "I want an elegant evening look",
+  "@homeMoodPromptEvening": {
+    "description": "Question the evening mood tile asks the stylist."
+  },
+  "homeMoodPromptWedding": "I need a look for a wedding",
+  "@homeMoodPromptWedding": {
+    "description": "Question the wedding mood tile asks the stylist."
+  },
+  "homeMoodPromptWork": "A comfortable, polished work look",
+  "@homeMoodPromptWork": {
+    "description": "Question the work mood tile asks the stylist."
+  },
+  "homeMoodPromptCasual": "A casual weekend look",
+  "@homeMoodPromptCasual": {
+    "description": "Question the casual mood tile asks the stylist."
+  },
+  "homeMoodPromptGift": "I'm looking for a special gift",
+  "@homeMoodPromptGift": {
+    "description": "Question the gift mood tile asks the stylist."
+  },
+  "homeMoodPromptTravel": "Comfortable, stylish travel clothes",
+  "@homeMoodPromptTravel": {
+    "description": "Question the travel mood tile asks the stylist."
+  },
+  "homeDeckEyebrow": "Picked for you by Reem",
+  "@homeDeckEyebrow": {
+    "description": "Eyebrow over the swipe deck."
+  },
+  "homeDeckTitle": "Your taste, piece by piece",
+  "@homeDeckTitle": {
+    "description": "Title over the swipe deck."
+  },
+  "homeDeckHint": "Swipe right for what you love, left to skip",
+  "@homeDeckHint": {
+    "description": "Hint under the swipe deck."
+  },
+  "homeDeckLike": "Love it",
+  "@homeDeckLike": {
+    "description": "Swipe deck like button and stamp."
+  },
+  "homeDeckPass": "Skip",
+  "@homeDeckPass": {
+    "description": "Swipe deck skip button and stamp."
+  },
+  "homeDeckOpen": "View piece",
+  "@homeDeckOpen": {
+    "description": "Swipe deck open button."
+  },
+  "homeDeckProgress": "{current} of {total}",
+  "@homeDeckProgress": {
+    "description": "Swipe deck position.",
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "homeDeckDoneTitle": "That's today's picks",
+  "@homeDeckDoneTitle": {
+    "description": "Swipe deck end card title."
+  },
+  "homeDeckDoneBody": "{count, plural, =0{Nothing today? Reem will learn from that.} =1{You loved 1 piece; it's in your likes.} other{You loved {count} pieces; they're in your likes.}}",
+  "@homeDeckDoneBody": {
+    "description": "Swipe deck end card body.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "homeDeckSeeAll": "All picks",
+  "@homeDeckSeeAll": {
+    "description": "Swipe deck end card button."
+  },
+  "homeDeckRestart": "Start over",
+  "@homeDeckRestart": {
+    "description": "Swipe deck end card button."
+  },
+  "homeBentoEyebrow": "Reem's world",
+  "@homeBentoEyebrow": {
+    "description": "Eyebrow over the category bento."
+  },
+  "homeBentoTitle": "Wander the departments",
+  "@homeBentoTitle": {
+    "description": "Title over the category bento."
+  },
+  "homeBentoCount": "{count, plural, =0{Coming soon} =1{1 piece} other{{count} pieces}}",
+  "@homeBentoCount": {
+    "description": "Piece count on a category bento tile.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   }
 }
