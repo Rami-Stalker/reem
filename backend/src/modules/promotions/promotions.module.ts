@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { LedgerModule } from '../ledger/ledger.module';
 import { PromotionsController } from './promotions.controller';
 import { PromotionsService } from './promotions.service';
+import { SponsoredController } from './sponsored.controller';
 
 /**
  * Sponsored placements.
@@ -13,7 +14,7 @@ import { PromotionsService } from './promotions.service';
  */
 @Module({
   imports: [LedgerModule],
-  controllers: [PromotionsController],
+  controllers: [PromotionsController, SponsoredController],
   providers: [PromotionsService],
   exports: [PromotionsService],
 })

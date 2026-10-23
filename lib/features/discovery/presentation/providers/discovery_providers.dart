@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 
 import 'package:reem/core/presentation/providers/core_providers.dart';
+import 'package:reem/core/result/result.dart';
 import 'package:reem/features/discovery/data/datasources/discovery_remote_datasource.dart';
 import 'package:reem/features/discovery/data/datasources/impl/discovery_remote_datasource_impl.dart';
 import 'package:reem/features/discovery/data/repositories/discovery_repository_impl.dart';
@@ -10,6 +11,7 @@ import 'package:reem/features/discovery/domain/repositories/discovery_repository
 import 'package:reem/features/discovery/domain/usecases/discovery_usecases.dart';
 import 'package:reem/features/discovery/presentation/providers/collection_notifier.dart';
 import 'package:reem/features/discovery/presentation/providers/collection_state.dart';
+import 'package:reem/features/discovery/presentation/providers/sponsored_providers.dart';
 
 // ── Infrastructure / use cases ──────────────────────────────────────────────
 
@@ -58,10 +60,25 @@ final collectionProductsProvider = StateNotifierProvider.autoDispose
 
 final categoryProductsProvider = StateNotifierProvider.autoDispose
     .family<CollectionNotifier, CollectionState, String>((ref, category) {
-      return CollectionNotifier(
-        (page) =>
-            ref.read(getCategoryProductsUseCaseProvider)(category, page: page),
-      )..load();
+      return CollectionNotifier((page) async {
+        final result = await ref.read(getCategoryProductsUseCaseProvider)(
+          category,
+          page: page,
+        );
+        if (page == 1 && ref.mounted) {
+          if (result case Success(:final data)) {
+            ref
+                    .read(
+                      sponsoredSlotsProvider(
+                        categorySponsoredKey(category),
+                      ).notifier,
+                    )
+                    .state =
+                data.sponsored;
+          }
+        }
+        return result;
+      })..load();
     });
 
 final sellerProductsProvider = StateNotifierProvider.autoDispose

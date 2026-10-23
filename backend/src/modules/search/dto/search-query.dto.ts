@@ -6,6 +6,7 @@ import {
   IsString,
   IsUUID,
   Max,
+  MaxLength,
   Min,
 } from 'class-validator';
 import { PaginationDto } from '../../../common/dto/pagination.dto';
@@ -65,4 +66,14 @@ export class ProductSearchDto extends PaginationDto {
   @IsOptional()
   @IsIn(SEARCH_SORTS)
   sort?: SearchSort;
+}
+
+/** A tap on a search result: which phrase, which product. */
+export class SearchClickDto {
+  @IsString()
+  @MaxLength(200)
+  q!: string;
+
+  @IsUUID()
+  product_id!: string;
 }

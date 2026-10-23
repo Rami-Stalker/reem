@@ -8588,6 +8588,12 @@ abstract class AppLocalizations {
   /// **'Browse categories'**
   String get searchBrowseCategories;
 
+  /// Label on a paid placement shown above search or category results.
+  ///
+  /// In en, this message translates to:
+  /// **'Sponsored'**
+  String get searchSponsored;
+
   /// Clears the search field [re-authored: original wording lost]
   ///
   /// In en, this message translates to:

@@ -10,6 +10,7 @@ import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/core/shared/entities/product.dart';
 import 'package:reem/features/discovery/presentation/providers/collection_notifier.dart';
 import 'package:reem/features/discovery/presentation/providers/collection_state.dart';
+import 'package:reem/features/discovery/presentation/widgets/sponsored_strip.dart';
 import 'package:reem/features/product_social/presentation/providers/product_social_providers.dart';
 import 'package:reem/features/product_social/presentation/widgets/product_shelf.dart';
 
@@ -27,10 +28,15 @@ class CollectionScreen extends ConsumerStatefulWidget {
     super.key,
     required this.provider,
     required this.title,
+    this.sponsoredKey,
   });
 
   final StateNotifierProvider<CollectionNotifier, CollectionState> provider;
   final String title;
+
+  /// Where this listing's paid slots are published, when it sells any —
+  /// see `sponsoredSlotsProvider`. Null for listings with no placements.
+  final String? sponsoredKey;
 
   @override
   ConsumerState<CollectionScreen> createState() => _CollectionScreenState();
@@ -97,6 +103,13 @@ class _CollectionScreenState extends ConsumerState<CollectionScreen> {
               ),
               )
             else ...[
+              if (widget.sponsoredKey case final key?)
+                SliverPadding(
+                  padding: const EdgeInsets.only(top: DsSpacing.sm),
+                  sliver: SliverToBoxAdapter(
+                    child: SponsoredStrip(slotsKey: key),
+                  ),
+                ),
               // One shelf, one switcher, one set of interactions — shared with
               // the home showcase and a boutique's page, which each carried
               // their own copy of this block and had drifted apart.

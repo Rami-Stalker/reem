@@ -9,6 +9,8 @@
  */
 export const AppEvent = {
   OrderStatusChanged: 'order.status_changed',
+  /** Fired once per order, when checkout commits it — never on a retry. */
+  OrderPlaced: 'order.placed',
   CommerceContentPublished: 'commerce_content.published',
   CommerceContentSubmitted: 'commerce_content.submitted',
   ContentLiked: 'content.liked',
@@ -27,6 +29,12 @@ export interface OrderStatusChangedPayload {
   orderId: string;
   orderNumber: string;
   status: string;
+}
+
+export interface OrderPlacedPayload {
+  /** Null for a guest checkout. */
+  userId: string | null;
+  orderId: string;
 }
 
 export interface PostPublishedPayload {

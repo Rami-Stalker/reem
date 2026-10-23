@@ -34,6 +34,9 @@ export const MAX_SLOTS = 3;
 /** The longest window a single placement may be bought for. */
 const MAX_WINDOW_DAYS = 30;
 
+/** System setting holding the minimum price of one day of placement, in SYP. */
+export const MIN_DAILY_FEE_SETTING = 'promotions.min_daily_fee_syp';
+
 @Injectable()
 export class PromotionsService {
   private readonly logger = new Logger(PromotionsService.name);
@@ -57,14 +60,48 @@ export class PromotionsService {
    */
   async slotsFor(
     placement: PromotionPlacement,
-    options: { categoryId?: string; limit?: number } = {},
+    options: {
+      categoryId?: string;
+      /**
+       * The page's whole category subtree. A department page shows products
+       * that hang off its leaves, so a slot bought on a dress must be able to
+       * appear on «ملابس» as well as on «فساتين».
+       */
+      categoryIds?: readonly string[];
+      limit?: number;
+    } = {},
   ): Promise<string[]> {
     const limit = Math.min(options.limit ?? MAX_SLOTS, MAX_SLOTS);
+    const rows = await this.candidatesFor(placement, { ...options, limit });
+    return rows.map((row) => row.offerId);
+  }
+
+  /**
+   * Every live paid slot for a page, in serving order, with the product each
+   * one advertises — up to `limit` (50 by default).
+   *
+   * For callers that must still decide which slots *fit* the page, such as
+   * search, where a slot is only shown when its product is one the search
+   * itself would have returned. The caller takes at most [MAX_SLOTS].
+   */
+  async candidatesFor(
+    placement: PromotionPlacement,
+    options: {
+      categoryId?: string;
+      categoryIds?: readonly string[];
+      limit?: number;
+    } = {},
+  ): Promise<{ offerId: string; productId: string }[]> {
+    // An empty subtree means "nothing qualifies", not "no filter".
+    if (options.categoryIds?.length === 0) return [];
+    const limit = Math.max(1, Math.min(options.limit ?? 50, 50));
     const now = new Date();
 
-    const rows = await this.prisma.$queryRawUnsafe<{ offer_id: string }[]>(
+    const rows = await this.prisma.$queryRawUnsafe<
+      { offer_id: string; product_id: string }[]
+    >(
       `
-      SELECT p.offer_id
+      SELECT p.offer_id, pr.id AS product_id
       FROM product_promotions p
       JOIN seller_offers o ON o.id = p.offer_id
       JOIN products pr ON pr.id = o.product_id
@@ -77,6 +114,7 @@ export class PromotionsService {
         AND o.stock > 0
         AND pr.status = $5::"ProductStatus"
         AND ($6::uuid IS NULL OR pr.category_id = $6::uuid)
+        AND ($8::uuid[] IS NULL OR pr.category_id = ANY($8::uuid[]))
       -- Oldest purchase first. Not a ranking of who paid most: with a flat
       -- fee there is nothing to outbid, and rotating by recency would let a
       -- seller re-buy her way back to the top all day.
@@ -90,9 +128,19 @@ export class PromotionsService {
       ProductStatus.ACTIVE,
       options.categoryId ?? null,
       limit,
+      options.categoryIds ? [...options.categoryIds] : null,
     );
 
-    return rows.map((row) => row.offer_id);
+    // One slot per product: two sellers' offers on the same dress would
+    // otherwise fill two of three slots with one picture.
+    const seen = new Set<string>();
+    const out: { offerId: string; productId: string }[] = [];
+    for (const row of rows) {
+      if (seen.has(row.product_id)) continue;
+      seen.add(row.product_id);
+      out.push({ offerId: row.offer_id, productId: row.product_id });
+    }
+    return out;
   }
 
   /**
@@ -101,19 +149,45 @@ export class PromotionsService {
    * Reporting only — nothing about the money reads these counters. That is
    * what makes it safe for them to be incremented from a client.
    */
-  async recordImpressions(offerIds: string[]): Promise<void> {
+  async recordImpressions(
+    offerIds: string[],
+    placement?: PromotionPlacement,
+  ): Promise<void> {
     if (offerIds.length === 0) return;
     await this.prisma.productPromotion.updateMany({
-      where: { offerId: { in: offerIds }, status: PromotionStatus.ACTIVE },
+      where: this.liveWhere({ offerId: { in: offerIds } }, placement),
       data: { impressions: { increment: 1 } },
     });
   }
 
-  async recordClick(offerId: string): Promise<void> {
+  async recordClick(
+    offerId: string,
+    placement?: PromotionPlacement,
+  ): Promise<void> {
     await this.prisma.productPromotion.updateMany({
-      where: { offerId, status: PromotionStatus.ACTIVE },
+      where: this.liveWhere({ offerId }, placement),
       data: { clicks: { increment: 1 } },
     });
+  }
+
+  /**
+   * The placements a counter may touch: live now, and on the page that
+   * actually showed the slot. Without the window and the placement, one
+   * search impression also ticked a seller's paused category slot and last
+   * month's expired one, and the click-through rate she paid for was fiction.
+   */
+  private liveWhere(
+    where: { offerId: string | { in: string[] } },
+    placement?: PromotionPlacement,
+  ) {
+    const now = new Date();
+    return {
+      ...where,
+      status: PromotionStatus.ACTIVE,
+      startsAt: { lte: now },
+      endsAt: { gt: now },
+      ...(placement ? { placement } : {}),
+    };
   }
 
   // ── Buying ───────────────────────────────────────────────────────────────
@@ -139,6 +213,19 @@ export class PromotionsService {
     }
     if (input.fee.isZero()) {
       throw new BadRequestException('A placement with no fee is not a placement');
+    }
+    if (input.endsAt.getTime() <= Date.now()) {
+      throw new BadRequestException('That window has already ended');
+    }
+    if (input.actorRole === UserRole.SELLER) {
+      // The seller names her fee, so the platform names the floor. Without
+      // one, a slot meant to cost a week of revenue sold for one lira.
+      const floor = await this.minimumFee(days);
+      if (floor !== null && input.fee.toUnsafeNumber() < floor) {
+        throw new BadRequestException(
+          `A placement of ${Math.ceil(days)} day(s) costs at least ${floor} SYP`,
+        );
+      }
     }
 
     const offer = await this.prisma.sellerOffer.findUnique({
@@ -178,6 +265,11 @@ export class PromotionsService {
 
     if (promotion.status === PromotionStatus.ACTIVE) {
       return this.serialize(promotion);
+    }
+    // Charging for a window that has closed sells nothing, and resuming one
+    // shows nothing. Either way the honest answer is no.
+    if (promotion.endsAt.getTime() <= Date.now()) {
+      throw new BadRequestException('That placement window has already ended');
     }
     if (promotion.chargedAt) {
       // Already paid for — this is a restart after a pause, not a second sale.
@@ -291,6 +383,32 @@ export class PromotionsService {
   }
 
   // ── internals ────────────────────────────────────────────────────────────
+
+  /**
+   * The least a seller may pay for a window of `days`, in SYP, or null when
+   * staff have not set a rate.
+   *
+   * Read from the `promotions.min_daily_fee_syp` system setting so the price
+   * of advertising is an operator's decision, changed from the console, and
+   * not a constant someone has to ship a build to move.
+   */
+  private async minimumFee(days: number): Promise<number | null> {
+    const setting = await this.prisma.systemSetting.findUnique({
+      where: { key: MIN_DAILY_FEE_SETTING },
+      select: { value: true },
+    });
+    const raw = setting?.value;
+    const daily =
+      typeof raw === 'number'
+        ? raw
+        : typeof raw === 'string'
+          ? Number(raw)
+          : raw && typeof raw === 'object' && 'amount' in raw
+            ? Number((raw as { amount: unknown }).amount)
+            : NaN;
+    if (!Number.isFinite(daily) || daily <= 0) return null;
+    return Math.ceil(daily * Math.max(1, Math.ceil(days)));
+  }
 
   private async requireOwned(
     promotionId: string,

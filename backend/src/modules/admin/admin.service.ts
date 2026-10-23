@@ -46,6 +46,7 @@ import {
   PRODUCT_CARD_INCLUDE,
   PURCHASABLE_PRODUCT_WHERE,
 } from '../../common/catalog/product-include';
+import { dayLabel, daysIn } from '../analytics/platform-day';
 
 /** Revenue lives on the sub-order — see CommissionsService for why. */
 const revenueStatuses = [...REVENUE_STATUSES];
@@ -563,50 +564,53 @@ export class AdminService {
     return serializeProduct(product);
   }
 
+  /**
+   * The last thirty days at a glance.
+   *
+   * Revenue is item value on realised sub-orders — the same definition the
+   * headline figure in `stats` uses. It used to be the grand total of every
+   * order placed, cancelled and unpaid ones included, so the two numbers on
+   * the same console disagreed and the larger one was wrong. The series has a
+   * point for every day, in order, by the Damascus calendar.
+   */
   async analytics() {
-    const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60_000);
-    const [orders, users, products] = await Promise.all([
-      this.prisma.order.findMany({
-        where: { createdAt: { gte: thirtyDaysAgo } },
-        select: {
-          grandTotal: true,
-          currency: true,
-          createdAt: true,
-          status: true,
-        },
+    const now = new Date();
+    const since = new Date(now.getTime() - 30 * 24 * 60 * 60_000);
+    const [orders, subOrders, users, products] = await Promise.all([
+      this.prisma.order.count({ where: { createdAt: { gte: since } } }),
+      this.prisma.sellerOrder.findMany({
+        where: { createdAt: { gte: since }, status: { in: revenueStatuses } },
+        select: { itemsSubtotal: true, currency: true, createdAt: true },
       }),
-      this.prisma.user.count({ where: { createdAt: { gte: thirtyDaysAgo } } }),
-      this.prisma.product.count({ where: { createdAt: { gte: thirtyDaysAgo } } }),
+      this.prisma.user.count({ where: { createdAt: { gte: since } } }),
+      this.prisma.product.count({ where: { createdAt: { gte: since } } }),
     ]);
 
-    const buckets = new Map<string, Map<Currency, Money>>();
-    for (const order of orders) {
-      const label = order.createdAt.toISOString().slice(0, 10);
-      const day = buckets.get(label) ?? new Map<Currency, Money>();
-      const amount = Money.of(order.grandTotal, order.currency);
-      const running = day.get(order.currency);
-      day.set(order.currency, running ? running.plus(amount) : amount);
-      buckets.set(label, day);
-    }
-
+    const buckets = new Map<string, Map<Currency, Money>>(
+      daysIn({ start: since, end: now }).map((day) => [day, new Map()]),
+    );
     const revenue = new Map<Currency, Money>();
-    for (const day of buckets.values()) {
-      for (const [currency, amount] of day) {
-        const running = revenue.get(currency);
-        revenue.set(currency, running ? running.plus(amount) : amount);
-      }
+    for (const sub of subOrders) {
+      const label = dayLabel(sub.createdAt);
+      const day = buckets.get(label) ?? new Map<Currency, Money>();
+      const amount = Money.of(sub.itemsSubtotal, sub.currency);
+      day.set(sub.currency, (day.get(sub.currency) ?? Money.zero(sub.currency)).plus(amount));
+      buckets.set(label, day);
+      revenue.set(sub.currency, (revenue.get(sub.currency) ?? Money.zero(sub.currency)).plus(amount));
     }
 
     return {
       period: '30d',
       new_users: users,
       new_products: products,
-      orders_count: orders.length,
+      orders_count: orders,
       revenue: [...revenue.values()].map((amount) => amount.toJSON()),
-      series: [...buckets.entries()].map(([label, value]) => ({
-        label,
-        value: [...value.values()].map((amount) => amount.toJSON()),
-      })),
+      series: [...buckets.entries()]
+        .sort(([a], [b]) => a.localeCompare(b))
+        .map(([label, value]) => ({
+          label,
+          value: [...value.values()].map((amount) => amount.toJSON()),
+        })),
     };
   }
 
