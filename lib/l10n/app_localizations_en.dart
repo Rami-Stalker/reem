@@ -12167,4 +12167,25 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get composerAudienceFollowersHint => 'Only your followers';
+
+  @override
+  String get chatsOnlineRail => 'Online now';
+
+  @override
+  String get chatsSectionNew => 'New';
+
+  @override
+  String get chatsSectionEarlier => 'Earlier';
+
+  @override
+  String get chatSuggestTitle => 'Ask in one tap';
+
+  @override
+  String get chatSuggestAvailable => 'Is this piece available?';
+
+  @override
+  String get chatSuggestSizes => 'Which sizes are available?';
+
+  @override
+  String get chatSuggestDelivery => 'How long does delivery take?';
 }

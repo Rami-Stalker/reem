@@ -3670,5 +3670,12 @@
   "cartBoutiquesCount": "{count, plural, =1{بوتيك واحد} =2{بوتيكان} few{{count} بوتيكات} many{{count} بوتيكاً} other{{count} بوتيك}}",
   "checkoutStepPrivacy": "خصوصيتكِ",
   "composerAudiencePublicHint": "يراه الجميع",
-  "composerAudienceFollowersHint": "متابِعاتكِ فقط"
+  "composerAudienceFollowersHint": "متابِعاتكِ فقط",
+  "chatsOnlineRail": "متّصلات الآن",
+  "chatsSectionNew": "جديدة",
+  "chatsSectionEarlier": "سابقة",
+  "chatSuggestTitle": "اسألي بلمسة",
+  "chatSuggestAvailable": "هل القطعة متوفرة؟",
+  "chatSuggestSizes": "ما المقاسات المتاحة؟",
+  "chatSuggestDelivery": "كم يستغرق التوصيل؟"
 }

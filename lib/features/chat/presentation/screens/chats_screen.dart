@@ -8,6 +8,7 @@ import 'package:reem/core/design_system/design_system.dart';
 import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/features/auth/presentation/providers/auth_provider.dart';
+import 'package:reem/features/chat/domain/entities/chat_thread_entity.dart';
 import 'package:reem/features/chat/presentation/providers/chat_notifier.dart';
 import 'package:reem/features/chat/presentation/providers/chat_provider.dart';
 import 'package:reem/features/chat/presentation/providers/chat_state.dart';
@@ -57,12 +58,15 @@ class _ChatsScreenState extends ConsumerState<ChatsScreen> {
       // the top at once, presence and typing land on their row — and
       // refetched only when it cannot: a conversation not on screen yet, or
       // the socket coming back after a drop.
-      final needsRefresh =
-          ref.read(chatNotifierProvider.notifier).applyRealtime(event);
+      final needsRefresh = ref
+          .read(chatNotifierProvider.notifier)
+          .applyRealtime(event);
       if (!needsRefresh) return;
       _refreshDebounce?.cancel();
       _refreshDebounce = Timer(const Duration(milliseconds: 400), () {
-        if (mounted) unawaited(ref.read(chatNotifierProvider.notifier).refresh());
+        if (mounted) {
+          unawaited(ref.read(chatNotifierProvider.notifier).refresh());
+        }
       });
     });
   }
@@ -110,9 +114,9 @@ class _ChatsScreenState extends ConsumerState<ChatsScreen> {
               Text(
                 isSeller ? l10n.chatsSubtitleSeller : l10n.chatsSubtitle,
                 style: context.dsText.body.copyWith(
-                      color: context.dsColors.onSurfaceVariant,
-                      height: 1.5,
-                    ),
+                  color: context.dsColors.onSurfaceVariant,
+                  height: 1.5,
+                ),
               ),
               const SizedBox(height: DsSpacing.lg),
               GlassSearchBar(
@@ -174,21 +178,61 @@ class _ChatsScreenState extends ConsumerState<ChatsScreen> {
               // A seller has nowhere to be sent: she cannot start the
               // conversation, she can only be written to.
               : isSeller
-                  ? DsEmptyState(
-                      icon: Icons.forum_outlined,
-                      title: l10n.chatsEmptyTitle,
-                      message: l10n.chatsEmptyMessageSeller,
-                    )
-                  : DsEmptyState(
-                      icon: Icons.forum_outlined,
-                      title: l10n.chatsEmptyTitle,
-                      message: l10n.chatsEmptyMessage,
-                      actionLabel: l10n.chatsEmptyAction,
-                      onAction: () => context.go(RoutePaths.home),
-                    ),
+              ? DsEmptyState(
+                  icon: Icons.forum_outlined,
+                  title: l10n.chatsEmptyTitle,
+                  message: l10n.chatsEmptyMessageSeller,
+                )
+              : DsEmptyState(
+                  icon: Icons.forum_outlined,
+                  title: l10n.chatsEmptyTitle,
+                  message: l10n.chatsEmptyMessage,
+                  actionLabel: l10n.chatsEmptyAction,
+                  onAction: () => context.go(RoutePaths.home),
+                ),
         ),
       ];
     }
+
+    // Unread letters first, then the rest, each in the server's order.
+    final fresh = [
+      for (final t in state.threads)
+        if (t.hasUnread) t,
+    ];
+    final earlier = [
+      for (final t in state.threads)
+        if (!t.hasUnread) t,
+    ];
+    final online = [
+      for (final t in state.threads)
+        if (t.isOnline) t,
+    ];
+
+    Widget tile(ChatThreadEntity thread) => ChatTile(
+      thread: thread,
+      isTyping: state.typingChatIds.contains(thread.id),
+      onTap: () => _open(thread.id),
+    );
+
+    List<Widget> section(String title, List<ChatThreadEntity> threads) => [
+      SliverPadding(
+        padding: const EdgeInsets.fromLTRB(
+          DsSpacing.lg,
+          DsSpacing.sm,
+          DsSpacing.lg,
+          DsSpacing.sm,
+        ),
+        sliver: SliverToBoxAdapter(child: _SectionLabel(title)),
+      ),
+      SliverPadding(
+        padding: const EdgeInsets.symmetric(horizontal: DsSpacing.lg),
+        sliver: SliverList.separated(
+          itemCount: threads.length,
+          separatorBuilder: (_, _) => DsGaps.vSm,
+          itemBuilder: (context, index) => tile(threads[index]),
+        ),
+      ),
+    ];
 
     return [
       // A failure while rows are already on screen is a banner, not a takeover.
@@ -201,32 +245,120 @@ class _ChatsScreenState extends ConsumerState<ChatsScreen> {
             DsSpacing.md,
           ),
           sliver: SliverToBoxAdapter(
-            child: DsInlineError(
-              message: state.error!,
-              onRetry: notifier.load,
-            ),
+            child: DsInlineError(message: state.error!, onRetry: notifier.load),
           ),
         ),
-      SliverPadding(
-        padding: const EdgeInsets.fromLTRB(
-          DsSpacing.lg,
-          DsSpacing.xxxs,
-          DsSpacing.lg,
-          140,
+      // Who is here right now: the quickest way back into a conversation
+      // while the other side can still answer it.
+      if (online.isNotEmpty && !state.isSearching)
+        SliverToBoxAdapter(
+          child: _OnlineRail(threads: online, onOpen: _open),
         ),
-        sliver: SliverList.separated(
-          itemCount: state.threads.length,
-          separatorBuilder: (_, _) => const SizedBox(height: DsSpacing.md),
-          itemBuilder: (context, index) {
-            final thread = state.threads[index];
-            return ChatTile(
-              thread: thread,
-              isTyping: state.typingChatIds.contains(thread.id),
-              onTap: () => _open(thread.id),
-            );
-          },
+      if (fresh.isNotEmpty) ...section(l10n.chatsSectionNew, fresh),
+      if (earlier.isNotEmpty)
+        ...section(
+          // A single list needs no heading; "earlier" only means something
+          // under a "new".
+          fresh.isEmpty ? '' : l10n.chatsSectionEarlier,
+          earlier,
         ),
-      ),
+      // Room under the last letter for the floating tab bar.
+      const SliverToBoxAdapter(child: SizedBox(height: DsSizes.bottomSafeGap)),
     ];
+  }
+}
+
+class _SectionLabel extends StatelessWidget {
+  const _SectionLabel(this.title);
+
+  final String title;
+
+  @override
+  Widget build(BuildContext context) {
+    if (title.isEmpty) return const SizedBox.shrink();
+    final colors = context.dsColors;
+    return Row(
+      children: [
+        DsSparkle(size: 9, color: colors.accent),
+        DsGaps.hXs,
+        Text(
+          title,
+          style: context.dsText.overline.copyWith(
+            color: colors.primary,
+            letterSpacing: 1.4,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+/// The people here right now, as a row of arch portraits.
+class _OnlineRail extends StatelessWidget {
+  const _OnlineRail({required this.threads, required this.onOpen});
+
+  final List<ChatThreadEntity> threads;
+  final ValueChanged<String> onOpen;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(
+            DsSpacing.lg,
+            DsSpacing.xs,
+            DsSpacing.lg,
+            DsSpacing.sm,
+          ),
+          child: _SectionLabel(l10n.chatsOnlineRail),
+        ),
+        SizedBox(
+          height: 112,
+          child: ListView.separated(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.symmetric(horizontal: DsSpacing.lg),
+            itemCount: threads.length,
+            separatorBuilder: (_, _) => DsGaps.hMd,
+            itemBuilder: (context, index) {
+              final thread = threads[index];
+              final name = thread.peerName?.trim().isNotEmpty == true
+                  ? thread.peerName!
+                  : (thread.title.isNotEmpty
+                        ? thread.title
+                        : l10n.chatUntitled);
+              return SizedBox(
+                width: 64,
+                child: Column(
+                  children: [
+                    ArchAvatar(
+                      name: name,
+                      imageUrl: thread.avatarUrl.isEmpty
+                          ? null
+                          : thread.avatarUrl,
+                      width: 56,
+                      isOnline: true,
+                      lit: thread.hasUnread,
+                      onTap: () => onOpen(thread.id),
+                    ),
+                    DsGaps.vXxs,
+                    Text(
+                      name,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.center,
+                      style: context.dsText.caption,
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        ),
+        DsGaps.vXs,
+      ],
+    );
   }
 }

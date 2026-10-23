@@ -12328,4 +12328,25 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get composerAudienceFollowersHint => 'متابِعاتكِ فقط';
+
+  @override
+  String get chatsOnlineRail => 'متّصلات الآن';
+
+  @override
+  String get chatsSectionNew => 'جديدة';
+
+  @override
+  String get chatsSectionEarlier => 'سابقة';
+
+  @override
+  String get chatSuggestTitle => 'اسألي بلمسة';
+
+  @override
+  String get chatSuggestAvailable => 'هل القطعة متوفرة؟';
+
+  @override
+  String get chatSuggestSizes => 'ما المقاسات المتاحة؟';
+
+  @override
+  String get chatSuggestDelivery => 'كم يستغرق التوصيل؟';
 }

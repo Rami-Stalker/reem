@@ -21013,6 +21013,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Only your followers'**
   String get composerAudienceFollowersHint;
+
+  /// Heading over the row of people online in the inbox
+  ///
+  /// In en, this message translates to:
+  /// **'Online now'**
+  String get chatsOnlineRail;
+
+  /// Inbox section: conversations with unread messages
+  ///
+  /// In en, this message translates to:
+  /// **'New'**
+  String get chatsSectionNew;
+
+  /// Inbox section: conversations read already
+  ///
+  /// In en, this message translates to:
+  /// **'Earlier'**
+  String get chatsSectionEarlier;
+
+  /// Over the suggested first questions in an empty conversation
+  ///
+  /// In en, this message translates to:
+  /// **'Ask in one tap'**
+  String get chatSuggestTitle;
+
+  /// Suggested first question
+  ///
+  /// In en, this message translates to:
+  /// **'Is this piece available?'**
+  String get chatSuggestAvailable;
+
+  /// Suggested first question
+  ///
+  /// In en, this message translates to:
+  /// **'Which sizes are available?'**
+  String get chatSuggestSizes;
+
+  /// Suggested first question
+  ///
+  /// In en, this message translates to:
+  /// **'How long does delivery take?'**
+  String get chatSuggestDelivery;
 }
 
 class _AppLocalizationsDelegate

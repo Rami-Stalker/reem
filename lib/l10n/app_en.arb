@@ -14398,5 +14398,33 @@
   "composerAudienceFollowersHint": "Only your followers",
   "@composerAudienceFollowersHint": {
     "description": "Under the followers-only audience option"
+  },
+  "chatsOnlineRail": "Online now",
+  "@chatsOnlineRail": {
+    "description": "Heading over the row of people online in the inbox"
+  },
+  "chatsSectionNew": "New",
+  "@chatsSectionNew": {
+    "description": "Inbox section: conversations with unread messages"
+  },
+  "chatsSectionEarlier": "Earlier",
+  "@chatsSectionEarlier": {
+    "description": "Inbox section: conversations read already"
+  },
+  "chatSuggestTitle": "Ask in one tap",
+  "@chatSuggestTitle": {
+    "description": "Over the suggested first questions in an empty conversation"
+  },
+  "chatSuggestAvailable": "Is this piece available?",
+  "@chatSuggestAvailable": {
+    "description": "Suggested first question"
+  },
+  "chatSuggestSizes": "Which sizes are available?",
+  "@chatSuggestSizes": {
+    "description": "Suggested first question"
+  },
+  "chatSuggestDelivery": "How long does delivery take?",
+  "@chatSuggestDelivery": {
+    "description": "Suggested first question"
   }
 }

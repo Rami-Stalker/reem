@@ -146,6 +146,9 @@ void main() {
       await _settle(tester);
 
       await tester.enterText(find.byType(TextField), 'هل يتوفر مقاس L؟');
+      // The button is a microphone while the field is empty and turns into
+      // send once there are words — one frame after she types them.
+      await tester.pump();
       await tester.tap(find.byIcon(Icons.send_rounded));
       await _settle(tester);
 
@@ -607,10 +610,9 @@ Future<void> _attachFromGallery(WidgetTester tester) async {
 }
 
 Future<void> _startRecording(WidgetTester tester) async {
-  // The voice action lives in the composer's collapsed panel, behind the `+`.
-  await tester.tap(find.byTooltip(_ar.chatAttachments));
-  await _settle(tester);
-  await tester.tap(find.byIcon(Icons.mic_rounded));
+  // With the field empty, the composer's own button records — the one tap a
+  // voice note costs. (The attachment tray still offers it too.)
+  await tester.tap(find.byTooltip(_ar.chatVoice));
   // Zero-duration frames: they flush the microtasks that start the recorder
   // without advancing the clock, so a test that means to record for 400 ms
   // is not handed a second of setup time first.
@@ -780,8 +782,7 @@ class _FakeChatRepository implements ChatRepository {
     DateTime? before,
     int limit = 50,
     String? currentUserId,
-  }) async =>
-      const Success([]);
+  }) async => const Success([]);
 
   @override
   Future<Result<ChatMessageEntity>> sendMessage({
