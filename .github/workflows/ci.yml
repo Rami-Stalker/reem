@@ -117,8 +117,19 @@ jobs:
       - name: Apply migrations
         run: npx prisma migrate deploy
 
+      # `migrate status` only says every migration was applied. It cannot see
+      # a model added to schema.prisma with no migration behind it — which is
+      # how `customer_feedback` was missing from every database the migrations
+      # built. The diff compares the database the migrations built with the
+      # schema the code is compiled against, and fails on any difference.
       - name: Migrations match the schema
-        run: npx prisma migrate status
+        run: |
+          npx prisma migrate status
+          npx prisma migrate diff \
+            --from-url "$DATABASE_URL" \
+            --to-schema-datamodel prisma/schema.prisma \
+            --exit-code \
+            || (echo "::error::schema.prisma and the migrations disagree — add a migration (npx prisma migrate dev)" && exit 1)
 
       # The integration specs assert on the demo world — a boutique with live
       # offers, a shopper with orders and favourites. Against the empty schema

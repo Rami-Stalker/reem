@@ -14,13 +14,13 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 /// So the channels are created at startup, before any push can arrive, and
 /// their ids are named constants on both sides rather than string literals.
 ///
-/// ## Why seven and not one
+/// ## Why eight and not one
 ///
 /// Because a channel is the unit Android gives *her* to control. One channel
 /// means the only choice available is all or nothing, and the woman who is
 /// tired of "a shop you follow posted something" turns off the one switch
 /// there is — which also silences the message from a seller she is waiting on
-/// and the news that her parcel is downstairs. Seven channels mean she can mute
+/// and the news that her parcel is downstairs. Eight channels mean she can mute
 /// the noise and keep the rest, which is the difference between an app she
 /// tunes and an app she mutes.
 ///
@@ -82,6 +82,19 @@ enum PushChannel {
     name: 'مواعيد الصالونات',
     description: 'تأكيد حجوزاتك وإلغاؤها وتذكيرك قبل موعدك.',
     importance: Importance.max,
+  ),
+
+  /// «مناسباتي» — the countdown to a day she wrote down: a week to go, three
+  /// days, tomorrow.
+  ///
+  /// Its own drawer, and not a heads-up one: none of these is urgent to the
+  /// minute, and she must be able to quieten the countdown without silencing
+  /// the salon that confirms the booking she made for it.
+  occasions(
+    id: 'reem_occasions',
+    name: 'مناسباتي',
+    description: 'العدّ التنازلي لمناسباتك وتذكيرك بالتحضيرات قبلها.',
+    importance: Importance.high,
   ),
 
   /// Moderation outcomes, security notices, everything the platform must say.

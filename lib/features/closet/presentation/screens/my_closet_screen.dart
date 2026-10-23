@@ -58,6 +58,12 @@ class _MyClosetScreenState extends ConsumerState<MyClosetScreen> {
             icon: const Icon(Icons.wb_twilight_rounded),
             onPressed: () => context.push(RoutePaths.closetToday),
           ),
+          // The days the closet is getting her ready for.
+          IconButton(
+            tooltip: context.l10n.actionOccasions,
+            icon: const Icon(Icons.celebration_rounded),
+            onPressed: () => context.push(RoutePaths.occasions),
+          ),
         ],
       ),
       body: Column(

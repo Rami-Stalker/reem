@@ -21253,6 +21253,552 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'How long does delivery take?'**
   String get chatSuggestDelivery;
+
+  /// Shell action — her calendar of occasions
+  ///
+  /// In en, this message translates to:
+  /// **'My occasions'**
+  String get actionOccasions;
+
+  /// Occasions: page title
+  ///
+  /// In en, this message translates to:
+  /// **'My occasions'**
+  String get occasionsTitle;
+
+  /// Occasions: upcoming tab
+  ///
+  /// In en, this message translates to:
+  /// **'Coming up'**
+  String get occasionsUpcoming;
+
+  /// Occasions: past tab
+  ///
+  /// In en, this message translates to:
+  /// **'Past'**
+  String get occasionsPast;
+
+  /// Occasions: list failed to load
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t load your occasions'**
+  String get occasionsLoadError;
+
+  /// Occasions: empty upcoming list title
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing on the calendar yet'**
+  String get occasionsEmptyTitle;
+
+  /// Occasions: empty upcoming list body
+  ///
+  /// In en, this message translates to:
+  /// **'Add a wedding, Eid or birthday and we\'ll help you get ready: your look, the salon, the gift — and a reminder before the day.'**
+  String get occasionsEmptyBody;
+
+  /// Occasions: empty past list title
+  ///
+  /// In en, this message translates to:
+  /// **'No past occasions'**
+  String get occasionsPastEmptyTitle;
+
+  /// Occasions: empty past list body
+  ///
+  /// In en, this message translates to:
+  /// **'Write down what you wore to past occasions, and we\'ll tell you before the same people see it twice.'**
+  String get occasionsPastEmptyBody;
+
+  /// Occasions: add action
+  ///
+  /// In en, this message translates to:
+  /// **'Add an occasion'**
+  String get occasionAdd;
+
+  /// Occasions: editor title when creating
+  ///
+  /// In en, this message translates to:
+  /// **'New occasion'**
+  String get occasionNew;
+
+  /// Occasions: editor title when editing
+  ///
+  /// In en, this message translates to:
+  /// **'Edit occasion'**
+  String get occasionEdit;
+
+  /// Occasions: detail failed to load
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t load this occasion'**
+  String get occasionLoadError;
+
+  /// Occasions: kind picker label
+  ///
+  /// In en, this message translates to:
+  /// **'What kind of day is it?'**
+  String get occasionKindQuestion;
+
+  /// Occasion kind
+  ///
+  /// In en, this message translates to:
+  /// **'Wedding'**
+  String get occasionKindWedding;
+
+  /// Occasion kind
+  ///
+  /// In en, this message translates to:
+  /// **'Engagement'**
+  String get occasionKindEngagement;
+
+  /// Occasion kind
+  ///
+  /// In en, this message translates to:
+  /// **'Henna night'**
+  String get occasionKindHenna;
+
+  /// Occasion kind
+  ///
+  /// In en, this message translates to:
+  /// **'Eid'**
+  String get occasionKindEid;
+
+  /// Occasion kind
+  ///
+  /// In en, this message translates to:
+  /// **'Birthday'**
+  String get occasionKindBirthday;
+
+  /// Occasion kind
+  ///
+  /// In en, this message translates to:
+  /// **'Graduation'**
+  String get occasionKindGraduation;
+
+  /// Occasion kind
+  ///
+  /// In en, this message translates to:
+  /// **'Evening out'**
+  String get occasionKindEvening;
+
+  /// Occasion kind
+  ///
+  /// In en, this message translates to:
+  /// **'Family visit'**
+  String get occasionKindFamilyVisit;
+
+  /// Occasion kind
+  ///
+  /// In en, this message translates to:
+  /// **'Work event'**
+  String get occasionKindWork;
+
+  /// Occasion kind
+  ///
+  /// In en, this message translates to:
+  /// **'Trip'**
+  String get occasionKindTravel;
+
+  /// Occasion kind
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get occasionKindOther;
+
+  /// Occasions: title field label
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get occasionTitleLabel;
+
+  /// Occasions: title field hint
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. Sara\'s wedding'**
+  String get occasionTitleHint;
+
+  /// Occasions: date row label
+  ///
+  /// In en, this message translates to:
+  /// **'Date'**
+  String get occasionDateLabel;
+
+  /// Occasions: date row placeholder
+  ///
+  /// In en, this message translates to:
+  /// **'Choose the day'**
+  String get occasionDatePick;
+
+  /// Occasions: time row label
+  ///
+  /// In en, this message translates to:
+  /// **'Time'**
+  String get occasionTimeLabel;
+
+  /// Occasions: optional field placeholder
+  ///
+  /// In en, this message translates to:
+  /// **'Optional'**
+  String get occasionOptional;
+
+  /// Occasions: clear a picked value
+  ///
+  /// In en, this message translates to:
+  /// **'Clear'**
+  String get occasionClear;
+
+  /// Occasions: circle field label
+  ///
+  /// In en, this message translates to:
+  /// **'Who\'ll be there?'**
+  String get occasionCircleLabel;
+
+  /// Occasions: circle field hint
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. my husband\'s family'**
+  String get occasionCircleHint;
+
+  /// Occasions: why the circle is asked
+  ///
+  /// In en, this message translates to:
+  /// **'So we can tell you if they\'ve already seen your outfit'**
+  String get occasionCircleHelper;
+
+  /// Occasions: location field label
+  ///
+  /// In en, this message translates to:
+  /// **'Place (optional)'**
+  String get occasionLocationLabel;
+
+  /// Occasions: note field label and section
+  ///
+  /// In en, this message translates to:
+  /// **'Notes'**
+  String get occasionNoteLabel;
+
+  /// Occasions: reminders switch
+  ///
+  /// In en, this message translates to:
+  /// **'Countdown reminders'**
+  String get occasionReminders;
+
+  /// Occasions: reminders switch explanation
+  ///
+  /// In en, this message translates to:
+  /// **'A week before, three days before, and the day before — in the daytime only'**
+  String get occasionRemindersHint;
+
+  /// Occasions: create button
+  ///
+  /// In en, this message translates to:
+  /// **'Add occasion'**
+  String get occasionCreate;
+
+  /// Occasions: save button
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get occasionSave;
+
+  /// Occasions: saved snackbar
+  ///
+  /// In en, this message translates to:
+  /// **'Saved'**
+  String get occasionSaved;
+
+  /// Occasions: write failed
+  ///
+  /// In en, this message translates to:
+  /// **'That didn\'t save — check your connection and try again'**
+  String get occasionSaveFailed;
+
+  /// Occasions: delete action
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get occasionDelete;
+
+  /// Occasions: delete confirm title
+  ///
+  /// In en, this message translates to:
+  /// **'Delete this occasion?'**
+  String get occasionDeleteTitle;
+
+  /// Occasions: delete confirm body
+  ///
+  /// In en, this message translates to:
+  /// **'Your look and your salon booking stay as they are.'**
+  String get occasionDeleteBody;
+
+  /// Occasions: countdown for a past day
+  ///
+  /// In en, this message translates to:
+  /// **'Passed'**
+  String get occasionPassed;
+
+  /// Occasions: countdown for today
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get occasionToday;
+
+  /// Occasions: countdown for tomorrow
+  ///
+  /// In en, this message translates to:
+  /// **'Tomorrow'**
+  String get occasionTomorrow;
+
+  /// Occasions: countdown
+  ///
+  /// In en, this message translates to:
+  /// **'{days, plural, =1{In 1 day} other{In {days} days}}'**
+  String occasionInDays(int days);
+
+  /// Occasions: progress under the bar
+  ///
+  /// In en, this message translates to:
+  /// **'{done} of {total} ready'**
+  String occasionProgress(int done, int total);
+
+  /// Occasions: every step done
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re all set ✨'**
+  String get occasionAllReady;
+
+  /// Occasions: next step
+  ///
+  /// In en, this message translates to:
+  /// **'Next: choose your look'**
+  String get occasionNextLook;
+
+  /// Occasions: next step
+  ///
+  /// In en, this message translates to:
+  /// **'Next: order the missing pieces'**
+  String get occasionNextPieces;
+
+  /// Occasions: next step
+  ///
+  /// In en, this message translates to:
+  /// **'Next: book the salon'**
+  String get occasionNextSalon;
+
+  /// Occasions: next step
+  ///
+  /// In en, this message translates to:
+  /// **'Next: the gift'**
+  String get occasionNextGift;
+
+  /// Occasions: nothing to do but wait
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for the salon to confirm'**
+  String get occasionNextWaiting;
+
+  /// Occasions: past card look line
+  ///
+  /// In en, this message translates to:
+  /// **'You wore: {look}'**
+  String occasionWore(String look);
+
+  /// Occasions: checklist heading
+  ///
+  /// In en, this message translates to:
+  /// **'Getting ready'**
+  String get occasionPlanTitle;
+
+  /// Occasions: look step
+  ///
+  /// In en, this message translates to:
+  /// **'Choose your look'**
+  String get occasionStepLook;
+
+  /// Occasions: look step done
+  ///
+  /// In en, this message translates to:
+  /// **'Your look'**
+  String get occasionStepLookDone;
+
+  /// Occasions: look step hint
+  ///
+  /// In en, this message translates to:
+  /// **'From the looks in your closet'**
+  String get occasionStepLookHint;
+
+  /// Occasions: missing pieces step
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Your look is one piece short} other{Your look is {count} pieces short}}'**
+  String occasionStepPieces(int count);
+
+  /// Occasions: missing pieces hint
+  ///
+  /// In en, this message translates to:
+  /// **'Order early so it arrives in time'**
+  String get occasionStepPiecesHint;
+
+  /// Occasions: missing pieces urgent hint
+  ///
+  /// In en, this message translates to:
+  /// **'Delivery takes days — order today'**
+  String get occasionStepPiecesUrgent;
+
+  /// Occasions: salon step
+  ///
+  /// In en, this message translates to:
+  /// **'Book the salon'**
+  String get occasionStepSalon;
+
+  /// Occasions: salon step done
+  ///
+  /// In en, this message translates to:
+  /// **'Salon booked'**
+  String get occasionStepSalonDone;
+
+  /// Occasions: salon step pending
+  ///
+  /// In en, this message translates to:
+  /// **'Salon requested'**
+  String get occasionStepSalonWaiting;
+
+  /// Occasions: salon step hint
+  ///
+  /// In en, this message translates to:
+  /// **'Good hours go fast before big days'**
+  String get occasionStepSalonHint;
+
+  /// Occasions: salon step urgent hint
+  ///
+  /// In en, this message translates to:
+  /// **'Only a few days left — book now'**
+  String get occasionStepSalonUrgent;
+
+  /// Occasions: salon pending hint
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for the salon to confirm'**
+  String get occasionStepSalonWaitingHint;
+
+  /// Occasions: gift step
+  ///
+  /// In en, this message translates to:
+  /// **'The gift'**
+  String get occasionStepGift;
+
+  /// Occasions: gift step done
+  ///
+  /// In en, this message translates to:
+  /// **'Gift ready'**
+  String get occasionStepGiftDone;
+
+  /// Occasions: choose look action and sheet title
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a look'**
+  String get occasionChooseLook;
+
+  /// Occasions: change the chosen look
+  ///
+  /// In en, this message translates to:
+  /// **'Change'**
+  String get occasionChangeLook;
+
+  /// Occasions: unlink the look
+  ///
+  /// In en, this message translates to:
+  /// **'Remove'**
+  String get occasionRemoveLook;
+
+  /// Occasions: go to the look to fill its gaps
+  ///
+  /// In en, this message translates to:
+  /// **'Complete the look'**
+  String get occasionCompleteLook;
+
+  /// Occasions: look picker empty
+  ///
+  /// In en, this message translates to:
+  /// **'Put a look together in your closet, then come back and choose it.'**
+  String get occasionNoLooksBody;
+
+  /// Occasions: go to the salon directory
+  ///
+  /// In en, this message translates to:
+  /// **'Find a salon'**
+  String get occasionFindSalon;
+
+  /// Occasions: attach an existing appointment
+  ///
+  /// In en, this message translates to:
+  /// **'Link a booking'**
+  String get occasionLinkBooking;
+
+  /// Occasions: detach the appointment
+  ///
+  /// In en, this message translates to:
+  /// **'Unlink booking'**
+  String get occasionUnlinkBooking;
+
+  /// Occasions: linked appointment no longer live
+  ///
+  /// In en, this message translates to:
+  /// **'Your booking at {salon} was cancelled'**
+  String occasionSalonCancelled(String salon);
+
+  /// Occasions: repeat warning heading
+  ///
+  /// In en, this message translates to:
+  /// **'{circle} have seen this before'**
+  String occasionRepeatTitle(String circle);
+
+  /// Occasions: repeat warning — an occasion that passed
+  ///
+  /// In en, this message translates to:
+  /// **'At {occasion}'**
+  String occasionRepeatWorn(String occasion);
+
+  /// Occasions: repeat warning — an occasion still to come
+  ///
+  /// In en, this message translates to:
+  /// **'Also planned for {occasion}'**
+  String occasionRepeatPlanned(String occasion);
+
+  /// Occasions: repeat warning — same look
+  ///
+  /// In en, this message translates to:
+  /// **'The very same look'**
+  String get occasionRepeatSameLook;
+
+  /// Occasions: repeat warning — shared pieces
+  ///
+  /// In en, this message translates to:
+  /// **'Same pieces: {pieces}'**
+  String occasionRepeatSamePieces(String pieces);
+
+  /// Occasions: repeat warning footer
+  ///
+  /// In en, this message translates to:
+  /// **'Want to change a piece, or is it fine?'**
+  String get occasionRepeatHint;
+
+  /// Occasions: list separator between piece names
+  ///
+  /// In en, this message translates to:
+  /// **', '**
+  String get occasionListSeparator;
+
+  /// Occasions: past occasion look heading
+  ///
+  /// In en, this message translates to:
+  /// **'What you wore'**
+  String get occasionPastLookTitle;
+
+  /// Occasions: past occasion without a look
+  ///
+  /// In en, this message translates to:
+  /// **'You didn\'t record a look for this day. Add one so we can warn you before a repeat.'**
+  String get occasionPastNoLook;
 }
 
 class _AppLocalizationsDelegate

@@ -12474,4 +12474,318 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get chatSuggestDelivery => 'كم يستغرق التوصيل؟';
+
+  @override
+  String get actionOccasions => 'مناسباتي';
+
+  @override
+  String get occasionsTitle => 'مناسباتي';
+
+  @override
+  String get occasionsUpcoming => 'القادمة';
+
+  @override
+  String get occasionsPast => 'اللي مضت';
+
+  @override
+  String get occasionsLoadError => 'ما قدرنا نحمّل مناسباتكِ';
+
+  @override
+  String get occasionsEmptyTitle => 'ما في مناسبات بعد';
+
+  @override
+  String get occasionsEmptyBody =>
+      'ضيفي عرس أو عيد أو عيد ميلاد، ومنساعدكِ تتجهّزي: الإطلالة، الصالون، الهدية — وتذكير قبل اليوم.';
+
+  @override
+  String get occasionsPastEmptyTitle => 'ما في مناسبات مضت';
+
+  @override
+  String get occasionsPastEmptyBody =>
+      'سجّلي شو لبستِ بالمناسبات اللي مضت، ومنقلّكِ قبل ما يشوفوه نفس الناس مرتين.';
+
+  @override
+  String get occasionAdd => 'أضيفي مناسبة';
+
+  @override
+  String get occasionNew => 'مناسبة جديدة';
+
+  @override
+  String get occasionEdit => 'تعديل المناسبة';
+
+  @override
+  String get occasionLoadError => 'ما قدرنا نحمّل المناسبة';
+
+  @override
+  String get occasionKindQuestion => 'شو نوع المناسبة؟';
+
+  @override
+  String get occasionKindWedding => 'عرس';
+
+  @override
+  String get occasionKindEngagement => 'خطوبة';
+
+  @override
+  String get occasionKindHenna => 'سهرة حنّة';
+
+  @override
+  String get occasionKindEid => 'العيد';
+
+  @override
+  String get occasionKindBirthday => 'عيد ميلاد';
+
+  @override
+  String get occasionKindGraduation => 'تخرّج';
+
+  @override
+  String get occasionKindEvening => 'سهرة';
+
+  @override
+  String get occasionKindFamilyVisit => 'زيارة عائلية';
+
+  @override
+  String get occasionKindWork => 'مناسبة عمل';
+
+  @override
+  String get occasionKindTravel => 'سفر';
+
+  @override
+  String get occasionKindOther => 'غير ذلك';
+
+  @override
+  String get occasionTitleLabel => 'اسم المناسبة';
+
+  @override
+  String get occasionTitleHint => 'مثلاً: عرس سارة';
+
+  @override
+  String get occasionDateLabel => 'التاريخ';
+
+  @override
+  String get occasionDatePick => 'اختاري اليوم';
+
+  @override
+  String get occasionTimeLabel => 'الوقت';
+
+  @override
+  String get occasionOptional => 'اختياري';
+
+  @override
+  String get occasionClear => 'مسح';
+
+  @override
+  String get occasionCircleLabel => 'مين رح يكون موجود؟';
+
+  @override
+  String get occasionCircleHint => 'مثلاً: أهل زوجي، بنات الجامعة';
+
+  @override
+  String get occasionCircleHelper => 'حتى نقلّكِ إذا شافوا إطلالتكِ من قبل';
+
+  @override
+  String get occasionLocationLabel => 'المكان (اختياري)';
+
+  @override
+  String get occasionNoteLabel => 'ملاحظات';
+
+  @override
+  String get occasionReminders => 'تذكيرات العدّ التنازلي';
+
+  @override
+  String get occasionRemindersHint =>
+      'قبل أسبوع، وقبل ٣ أيام، وقبل يوم — بالنهار بس';
+
+  @override
+  String get occasionCreate => 'أضيفي المناسبة';
+
+  @override
+  String get occasionSave => 'حفظ';
+
+  @override
+  String get occasionSaved => 'انحفظت';
+
+  @override
+  String get occasionSaveFailed =>
+      'ما انحفظت — تأكّدي من الاتصال وجرّبي مرة تانية';
+
+  @override
+  String get occasionDelete => 'حذف';
+
+  @override
+  String get occasionDeleteTitle => 'حذف المناسبة؟';
+
+  @override
+  String get occasionDeleteBody => 'إطلالتكِ وحجز الصالون بيضلّوا متل ما هنّي.';
+
+  @override
+  String get occasionPassed => 'مضت';
+
+  @override
+  String get occasionToday => 'اليوم';
+
+  @override
+  String get occasionTomorrow => 'بكرا';
+
+  @override
+  String occasionInDays(int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: 'بعد $days يوم',
+      many: 'بعد $days يوماً',
+      few: 'بعد $days أيام',
+      two: 'بعد يومين',
+      one: 'بعد يوم',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String occasionProgress(int done, int total) {
+    return '$done من $total جاهز';
+  }
+
+  @override
+  String get occasionAllReady => 'كل شي جاهز ✨';
+
+  @override
+  String get occasionNextLook => 'الخطوة الجاية: اختاري إطلالتكِ';
+
+  @override
+  String get occasionNextPieces => 'الخطوة الجاية: اطلبي القطع الناقصة';
+
+  @override
+  String get occasionNextSalon => 'الخطوة الجاية: احجزي الصالون';
+
+  @override
+  String get occasionNextGift => 'الخطوة الجاية: الهدية';
+
+  @override
+  String get occasionNextWaiting => 'بانتظار تأكيد الصالون';
+
+  @override
+  String occasionWore(String look) {
+    return 'لبستِ: $look';
+  }
+
+  @override
+  String get occasionPlanTitle => 'التحضيرات';
+
+  @override
+  String get occasionStepLook => 'اختاري إطلالتكِ';
+
+  @override
+  String get occasionStepLookDone => 'إطلالتكِ';
+
+  @override
+  String get occasionStepLookHint => 'من الإطلالات اللي بخزانتكِ';
+
+  @override
+  String occasionStepPieces(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'إطلالتكِ ناقصها $count قطعة',
+      few: 'إطلالتكِ ناقصها $count قطع',
+      two: 'إطلالتكِ ناقصها قطعتين',
+      one: 'إطلالتكِ ناقصها قطعة',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get occasionStepPiecesHint => 'اطلبيها بكير حتى توصل بالوقت';
+
+  @override
+  String get occasionStepPiecesUrgent => 'التوصيل بياخد أيام — اطلبيها اليوم';
+
+  @override
+  String get occasionStepSalon => 'احجزي الصالون';
+
+  @override
+  String get occasionStepSalonDone => 'الصالون محجوز';
+
+  @override
+  String get occasionStepSalonWaiting => 'طلبتِ موعد بالصالون';
+
+  @override
+  String get occasionStepSalonHint =>
+      'المواعيد الحلوة بتخلص بسرعة قبل المناسبات';
+
+  @override
+  String get occasionStepSalonUrgent => 'باقي كم يوم بس — احجزي هلّق';
+
+  @override
+  String get occasionStepSalonWaitingHint => 'بانتظار تأكيد الصالون';
+
+  @override
+  String get occasionStepGift => 'الهدية';
+
+  @override
+  String get occasionStepGiftDone => 'الهدية جاهزة';
+
+  @override
+  String get occasionChooseLook => 'اختاري إطلالة';
+
+  @override
+  String get occasionChangeLook => 'تغيير';
+
+  @override
+  String get occasionRemoveLook => 'إزالة';
+
+  @override
+  String get occasionCompleteLook => 'كمّلي الإطلالة';
+
+  @override
+  String get occasionNoLooksBody => 'ركّبي إطلالة بخزانتكِ، وارجعي اختاريها.';
+
+  @override
+  String get occasionFindSalon => 'دوّري على صالون';
+
+  @override
+  String get occasionLinkBooking => 'اربطي حجز';
+
+  @override
+  String get occasionUnlinkBooking => 'فكّ ربط الحجز';
+
+  @override
+  String occasionSalonCancelled(String salon) {
+    return 'انلغى حجزكِ عند $salon';
+  }
+
+  @override
+  String occasionRepeatTitle(String circle) {
+    return '$circle شافوا هالإطلالة من قبل';
+  }
+
+  @override
+  String occasionRepeatWorn(String occasion) {
+    return 'بـ«$occasion»';
+  }
+
+  @override
+  String occasionRepeatPlanned(String occasion) {
+    return 'ومخطّطة كمان لـ«$occasion»';
+  }
+
+  @override
+  String get occasionRepeatSameLook => 'نفس الإطلالة بالضبط';
+
+  @override
+  String occasionRepeatSamePieces(String pieces) {
+    return 'نفس القطع: $pieces';
+  }
+
+  @override
+  String get occasionRepeatHint => 'بدّكِ تغيّري قطعة، ولا ما في مشكلة؟';
+
+  @override
+  String get occasionListSeparator => '، ';
+
+  @override
+  String get occasionPastLookTitle => 'شو لبستِ';
+
+  @override
+  String get occasionPastNoLook =>
+      'ما سجّلتِ إطلالة لهاليوم. ضيفيها حتى ننبّهكِ قبل ما تتكرّر.';
 }

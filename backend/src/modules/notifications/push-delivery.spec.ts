@@ -233,6 +233,7 @@ test('every notification type opens a route the client actually has', () => {
     ['comment', { content_id: 'x-1' }, 'reem://content/x-1'],
     ['follow', { followerId: 'u-1' }, 'reem://user/u-1'],
     ['room', { room_id: 'r-1' }, 'reem://rooms/r-1'],
+    ['occasion', { occasion_id: 'oc-1' }, 'reem://occasions/oc-1'],
     ['coupon', {}, 'reem://coupons'],
     ['system', {}, 'reem://notifications'],
   ];
@@ -267,6 +268,7 @@ test('notifications land in the drawer their kind belongs to', () => {
   assert.equal(channelFor(NotificationType.like), PushChannel.Social);
   assert.equal(channelFor(NotificationType.room), PushChannel.Rooms);
   assert.equal(channelFor(NotificationType.promo), PushChannel.Offers);
+  assert.equal(channelFor(NotificationType.occasion), PushChannel.Occasions);
   assert.equal(channelFor(NotificationType.system), PushChannel.System);
 });
 

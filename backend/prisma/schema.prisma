@@ -315,6 +315,11 @@ enum NotificationType {
   /// waiting for, and a reminder that arrives after the appointment is worse
   /// than no reminder.
   appointment
+
+  /// «مناسباتي» — the countdown to an occasion she wrote down herself: a week
+  /// to go, three days, tomorrow. Only ever about her own calendar, never a
+  /// campaign wearing one.
+  occasion
   system
 }
 
@@ -1102,6 +1107,9 @@ model User {
   salons       Salon[]       @relation("SalonOwner")
   appointments Appointment[] @relation("CustomerAppointments")
   salonReviews SalonReview[] @relation("CustomerSalonReviews")
+
+  // «مناسباتي» — the weddings, Eids and birthdays she is getting ready for.
+  occasions Occasion[]
 
   // ── The content platform ──────────────────────────────────────────────
   authoredContents          CommerceContent[]            @relation("AuthoredCommerceContents")
@@ -7933,6 +7941,9 @@ model ClosetLook {
   wears ClosetLookWear[]
   gaps  ClosetGap[]
 
+  /// The occasions this look is planned for, or was worn to.
+  occasions Occasion[]
+
   @@index([closetId, isArchived, updatedAt])
   @@index([closetId, occasion, isComplete])
   @@index([userId, lastWornAt])
@@ -10773,6 +10784,9 @@ model Appointment {
 
   review SalonReview?
 
+  /// The occasions she booked this for — «الصالون قبل العرس».
+  occasions Occasion[]
+
   /// The overlap query: one salon, a window, the live statuses.
   @@index([salonId, startsAt, endsAt])
   /// «حجوزاتي», newest first.
@@ -10817,4 +10831,97 @@ model SalonReview {
   @@index([salonId, status, createdAt(sort: Desc)])
   @@index([userId])
   @@map("salon_reviews")
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// «مناسباتي» — her calendar of occasions
+// ─────────────────────────────────────────────────────────────────────────────
+
+/// What kind of day it is.
+///
+/// Closed, because the plan for a day depends on it: a wedding wants a look, a
+/// salon and a gift; a family visit wants a look and nothing else. Free text
+/// would make every one of those rules a guess.
+enum OccasionKind {
+  WEDDING
+  ENGAGEMENT
+  HENNA
+  EID
+  BIRTHDAY
+  GRADUATION
+  EVENING
+  FAMILY_VISIT
+  WORK
+  TRAVEL
+  OTHER
+}
+
+/// One day she is getting ready for.
+///
+/// Deliberately a thin row. The look is a `ClosetLook` she already builds in
+/// her closet, the salon is an `Appointment` she already books, and the
+/// checklist is derived from those two links rather than stored — so the plan
+/// can never say "salon booked" about an appointment the salon cancelled.
+/// See `occasion-plan.ts`.
+model Occasion {
+  id     String @id @default(uuid()) @db.Uuid
+  userId String @map("user_id") @db.Uuid
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  title String       @db.VarChar(80)
+  kind  OccasionKind @default(OTHER)
+
+  /// The calendar day, in Damascus reckoning. A date and not an instant: "the
+  /// wedding is on the 14th" is true wherever the server happens to run.
+  date DateTime @db.Date
+
+  /// `HH:mm`, local, when she knows it. Shown, never computed with.
+  startsAtTime String? @map("starts_at_time") @db.VarChar(5)
+
+  location String? @db.VarChar(120)
+
+  /// Who will be there — «بنات الجامعة», «أهل زوجي». Free text as she wrote it.
+  circle String? @db.VarChar(80)
+
+  /// `circle`, normalised (hamza, taa marbuta, diacritics, case). The repeat
+  /// warning matches on this, so «اهل زوجي» and «أهل زوجي» are one group of
+  /// people rather than two.
+  circleKey String? @map("circle_key") @db.VarChar(80)
+
+  note String? @db.VarChar(500)
+
+  /// The look she is going to wear. A `ClosetLook`, so its missing pieces are
+  /// already closet gaps and its owned pieces are already in her wardrobe.
+  lookId String?     @map("look_id") @db.Uuid
+  look   ClosetLook? @relation(fields: [lookId], references: [id], onDelete: SetNull)
+
+  /// The salon appointment she booked for it. Its status is read live, so a
+  /// cancelled booking turns the checklist step back to "to do" by itself.
+  appointmentId String?      @map("appointment_id") @db.Uuid
+  appointment   Appointment? @relation(fields: [appointmentId], references: [id], onDelete: SetNull)
+
+  /// Steps she ticks by hand — only those the server cannot observe, such as
+  /// the gift. Keys from `MANUAL_STEPS`; anything else is refused.
+  doneSteps String[] @map("done_steps")
+
+  remindersEnabled Boolean @default(true) @map("reminders_enabled")
+
+  /// The smallest countdown stage (days before) already behind her. Set to the
+  /// current stage on create and on a date change, so writing down a wedding
+  /// that is five days away does not ring her phone a minute later about the
+  /// one-week mark she has already passed.
+  lastReminderStage Int? @map("last_reminder_stage")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  /// Her calendar, both directions: upcoming ascending, past descending.
+  @@index([userId, date])
+  /// The countdown sweep: a date window over the occasions that want it.
+  @@index([remindersEnabled, date])
+  /// The repeat warning: the same people, the same woman.
+  @@index([userId, circleKey])
+  @@index([lookId])
+  @@index([appointmentId])
+  @@map("occasions")
 }

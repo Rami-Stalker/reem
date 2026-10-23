@@ -14576,5 +14576,417 @@
   "chatSuggestDelivery": "How long does delivery take?",
   "@chatSuggestDelivery": {
     "description": "Suggested first question"
+  },
+  "actionOccasions": "My occasions",
+  "@actionOccasions": {
+    "description": "Shell action — her calendar of occasions"
+  },
+  "occasionsTitle": "My occasions",
+  "@occasionsTitle": {
+    "description": "Occasions: page title"
+  },
+  "occasionsUpcoming": "Coming up",
+  "@occasionsUpcoming": {
+    "description": "Occasions: upcoming tab"
+  },
+  "occasionsPast": "Past",
+  "@occasionsPast": {
+    "description": "Occasions: past tab"
+  },
+  "occasionsLoadError": "Couldn't load your occasions",
+  "@occasionsLoadError": {
+    "description": "Occasions: list failed to load"
+  },
+  "occasionsEmptyTitle": "Nothing on the calendar yet",
+  "@occasionsEmptyTitle": {
+    "description": "Occasions: empty upcoming list title"
+  },
+  "occasionsEmptyBody": "Add a wedding, Eid or birthday and we'll help you get ready: your look, the salon, the gift — and a reminder before the day.",
+  "@occasionsEmptyBody": {
+    "description": "Occasions: empty upcoming list body"
+  },
+  "occasionsPastEmptyTitle": "No past occasions",
+  "@occasionsPastEmptyTitle": {
+    "description": "Occasions: empty past list title"
+  },
+  "occasionsPastEmptyBody": "Write down what you wore to past occasions, and we'll tell you before the same people see it twice.",
+  "@occasionsPastEmptyBody": {
+    "description": "Occasions: empty past list body"
+  },
+  "occasionAdd": "Add an occasion",
+  "@occasionAdd": {
+    "description": "Occasions: add action"
+  },
+  "occasionNew": "New occasion",
+  "@occasionNew": {
+    "description": "Occasions: editor title when creating"
+  },
+  "occasionEdit": "Edit occasion",
+  "@occasionEdit": {
+    "description": "Occasions: editor title when editing"
+  },
+  "occasionLoadError": "Couldn't load this occasion",
+  "@occasionLoadError": {
+    "description": "Occasions: detail failed to load"
+  },
+  "occasionKindQuestion": "What kind of day is it?",
+  "@occasionKindQuestion": {
+    "description": "Occasions: kind picker label"
+  },
+  "occasionKindWedding": "Wedding",
+  "@occasionKindWedding": {
+    "description": "Occasion kind"
+  },
+  "occasionKindEngagement": "Engagement",
+  "@occasionKindEngagement": {
+    "description": "Occasion kind"
+  },
+  "occasionKindHenna": "Henna night",
+  "@occasionKindHenna": {
+    "description": "Occasion kind"
+  },
+  "occasionKindEid": "Eid",
+  "@occasionKindEid": {
+    "description": "Occasion kind"
+  },
+  "occasionKindBirthday": "Birthday",
+  "@occasionKindBirthday": {
+    "description": "Occasion kind"
+  },
+  "occasionKindGraduation": "Graduation",
+  "@occasionKindGraduation": {
+    "description": "Occasion kind"
+  },
+  "occasionKindEvening": "Evening out",
+  "@occasionKindEvening": {
+    "description": "Occasion kind"
+  },
+  "occasionKindFamilyVisit": "Family visit",
+  "@occasionKindFamilyVisit": {
+    "description": "Occasion kind"
+  },
+  "occasionKindWork": "Work event",
+  "@occasionKindWork": {
+    "description": "Occasion kind"
+  },
+  "occasionKindTravel": "Trip",
+  "@occasionKindTravel": {
+    "description": "Occasion kind"
+  },
+  "occasionKindOther": "Other",
+  "@occasionKindOther": {
+    "description": "Occasion kind"
+  },
+  "occasionTitleLabel": "Name",
+  "@occasionTitleLabel": {
+    "description": "Occasions: title field label"
+  },
+  "occasionTitleHint": "e.g. Sara's wedding",
+  "@occasionTitleHint": {
+    "description": "Occasions: title field hint"
+  },
+  "occasionDateLabel": "Date",
+  "@occasionDateLabel": {
+    "description": "Occasions: date row label"
+  },
+  "occasionDatePick": "Choose the day",
+  "@occasionDatePick": {
+    "description": "Occasions: date row placeholder"
+  },
+  "occasionTimeLabel": "Time",
+  "@occasionTimeLabel": {
+    "description": "Occasions: time row label"
+  },
+  "occasionOptional": "Optional",
+  "@occasionOptional": {
+    "description": "Occasions: optional field placeholder"
+  },
+  "occasionClear": "Clear",
+  "@occasionClear": {
+    "description": "Occasions: clear a picked value"
+  },
+  "occasionCircleLabel": "Who'll be there?",
+  "@occasionCircleLabel": {
+    "description": "Occasions: circle field label"
+  },
+  "occasionCircleHint": "e.g. my husband's family",
+  "@occasionCircleHint": {
+    "description": "Occasions: circle field hint"
+  },
+  "occasionCircleHelper": "So we can tell you if they've already seen your outfit",
+  "@occasionCircleHelper": {
+    "description": "Occasions: why the circle is asked"
+  },
+  "occasionLocationLabel": "Place (optional)",
+  "@occasionLocationLabel": {
+    "description": "Occasions: location field label"
+  },
+  "occasionNoteLabel": "Notes",
+  "@occasionNoteLabel": {
+    "description": "Occasions: note field label and section"
+  },
+  "occasionReminders": "Countdown reminders",
+  "@occasionReminders": {
+    "description": "Occasions: reminders switch"
+  },
+  "occasionRemindersHint": "A week before, three days before, and the day before — in the daytime only",
+  "@occasionRemindersHint": {
+    "description": "Occasions: reminders switch explanation"
+  },
+  "occasionCreate": "Add occasion",
+  "@occasionCreate": {
+    "description": "Occasions: create button"
+  },
+  "occasionSave": "Save",
+  "@occasionSave": {
+    "description": "Occasions: save button"
+  },
+  "occasionSaved": "Saved",
+  "@occasionSaved": {
+    "description": "Occasions: saved snackbar"
+  },
+  "occasionSaveFailed": "That didn't save — check your connection and try again",
+  "@occasionSaveFailed": {
+    "description": "Occasions: write failed"
+  },
+  "occasionDelete": "Delete",
+  "@occasionDelete": {
+    "description": "Occasions: delete action"
+  },
+  "occasionDeleteTitle": "Delete this occasion?",
+  "@occasionDeleteTitle": {
+    "description": "Occasions: delete confirm title"
+  },
+  "occasionDeleteBody": "Your look and your salon booking stay as they are.",
+  "@occasionDeleteBody": {
+    "description": "Occasions: delete confirm body"
+  },
+  "occasionPassed": "Passed",
+  "@occasionPassed": {
+    "description": "Occasions: countdown for a past day"
+  },
+  "occasionToday": "Today",
+  "@occasionToday": {
+    "description": "Occasions: countdown for today"
+  },
+  "occasionTomorrow": "Tomorrow",
+  "@occasionTomorrow": {
+    "description": "Occasions: countdown for tomorrow"
+  },
+  "occasionInDays": "{days, plural, =1{In 1 day} other{In {days} days}}",
+  "@occasionInDays": {
+    "description": "Occasions: countdown",
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "occasionProgress": "{done} of {total} ready",
+  "@occasionProgress": {
+    "description": "Occasions: progress under the bar",
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "occasionAllReady": "You're all set ✨",
+  "@occasionAllReady": {
+    "description": "Occasions: every step done"
+  },
+  "occasionNextLook": "Next: choose your look",
+  "@occasionNextLook": {
+    "description": "Occasions: next step"
+  },
+  "occasionNextPieces": "Next: order the missing pieces",
+  "@occasionNextPieces": {
+    "description": "Occasions: next step"
+  },
+  "occasionNextSalon": "Next: book the salon",
+  "@occasionNextSalon": {
+    "description": "Occasions: next step"
+  },
+  "occasionNextGift": "Next: the gift",
+  "@occasionNextGift": {
+    "description": "Occasions: next step"
+  },
+  "occasionNextWaiting": "Waiting for the salon to confirm",
+  "@occasionNextWaiting": {
+    "description": "Occasions: nothing to do but wait"
+  },
+  "occasionWore": "You wore: {look}",
+  "@occasionWore": {
+    "description": "Occasions: past card look line",
+    "placeholders": {
+      "look": {
+        "type": "String"
+      }
+    }
+  },
+  "occasionPlanTitle": "Getting ready",
+  "@occasionPlanTitle": {
+    "description": "Occasions: checklist heading"
+  },
+  "occasionStepLook": "Choose your look",
+  "@occasionStepLook": {
+    "description": "Occasions: look step"
+  },
+  "occasionStepLookDone": "Your look",
+  "@occasionStepLookDone": {
+    "description": "Occasions: look step done"
+  },
+  "occasionStepLookHint": "From the looks in your closet",
+  "@occasionStepLookHint": {
+    "description": "Occasions: look step hint"
+  },
+  "occasionStepPieces": "{count, plural, =1{Your look is one piece short} other{Your look is {count} pieces short}}",
+  "@occasionStepPieces": {
+    "description": "Occasions: missing pieces step",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "occasionStepPiecesHint": "Order early so it arrives in time",
+  "@occasionStepPiecesHint": {
+    "description": "Occasions: missing pieces hint"
+  },
+  "occasionStepPiecesUrgent": "Delivery takes days — order today",
+  "@occasionStepPiecesUrgent": {
+    "description": "Occasions: missing pieces urgent hint"
+  },
+  "occasionStepSalon": "Book the salon",
+  "@occasionStepSalon": {
+    "description": "Occasions: salon step"
+  },
+  "occasionStepSalonDone": "Salon booked",
+  "@occasionStepSalonDone": {
+    "description": "Occasions: salon step done"
+  },
+  "occasionStepSalonWaiting": "Salon requested",
+  "@occasionStepSalonWaiting": {
+    "description": "Occasions: salon step pending"
+  },
+  "occasionStepSalonHint": "Good hours go fast before big days",
+  "@occasionStepSalonHint": {
+    "description": "Occasions: salon step hint"
+  },
+  "occasionStepSalonUrgent": "Only a few days left — book now",
+  "@occasionStepSalonUrgent": {
+    "description": "Occasions: salon step urgent hint"
+  },
+  "occasionStepSalonWaitingHint": "Waiting for the salon to confirm",
+  "@occasionStepSalonWaitingHint": {
+    "description": "Occasions: salon pending hint"
+  },
+  "occasionStepGift": "The gift",
+  "@occasionStepGift": {
+    "description": "Occasions: gift step"
+  },
+  "occasionStepGiftDone": "Gift ready",
+  "@occasionStepGiftDone": {
+    "description": "Occasions: gift step done"
+  },
+  "occasionChooseLook": "Choose a look",
+  "@occasionChooseLook": {
+    "description": "Occasions: choose look action and sheet title"
+  },
+  "occasionChangeLook": "Change",
+  "@occasionChangeLook": {
+    "description": "Occasions: change the chosen look"
+  },
+  "occasionRemoveLook": "Remove",
+  "@occasionRemoveLook": {
+    "description": "Occasions: unlink the look"
+  },
+  "occasionCompleteLook": "Complete the look",
+  "@occasionCompleteLook": {
+    "description": "Occasions: go to the look to fill its gaps"
+  },
+  "occasionNoLooksBody": "Put a look together in your closet, then come back and choose it.",
+  "@occasionNoLooksBody": {
+    "description": "Occasions: look picker empty"
+  },
+  "occasionFindSalon": "Find a salon",
+  "@occasionFindSalon": {
+    "description": "Occasions: go to the salon directory"
+  },
+  "occasionLinkBooking": "Link a booking",
+  "@occasionLinkBooking": {
+    "description": "Occasions: attach an existing appointment"
+  },
+  "occasionUnlinkBooking": "Unlink booking",
+  "@occasionUnlinkBooking": {
+    "description": "Occasions: detach the appointment"
+  },
+  "occasionSalonCancelled": "Your booking at {salon} was cancelled",
+  "@occasionSalonCancelled": {
+    "description": "Occasions: linked appointment no longer live",
+    "placeholders": {
+      "salon": {
+        "type": "String"
+      }
+    }
+  },
+  "occasionRepeatTitle": "{circle} have seen this before",
+  "@occasionRepeatTitle": {
+    "description": "Occasions: repeat warning heading",
+    "placeholders": {
+      "circle": {
+        "type": "String"
+      }
+    }
+  },
+  "occasionRepeatWorn": "At {occasion}",
+  "@occasionRepeatWorn": {
+    "description": "Occasions: repeat warning — an occasion that passed",
+    "placeholders": {
+      "occasion": {
+        "type": "String"
+      }
+    }
+  },
+  "occasionRepeatPlanned": "Also planned for {occasion}",
+  "@occasionRepeatPlanned": {
+    "description": "Occasions: repeat warning — an occasion still to come",
+    "placeholders": {
+      "occasion": {
+        "type": "String"
+      }
+    }
+  },
+  "occasionRepeatSameLook": "The very same look",
+  "@occasionRepeatSameLook": {
+    "description": "Occasions: repeat warning — same look"
+  },
+  "occasionRepeatSamePieces": "Same pieces: {pieces}",
+  "@occasionRepeatSamePieces": {
+    "description": "Occasions: repeat warning — shared pieces",
+    "placeholders": {
+      "pieces": {
+        "type": "String"
+      }
+    }
+  },
+  "occasionRepeatHint": "Want to change a piece, or is it fine?",
+  "@occasionRepeatHint": {
+    "description": "Occasions: repeat warning footer"
+  },
+  "occasionListSeparator": ", ",
+  "@occasionListSeparator": {
+    "description": "Occasions: list separator between piece names"
+  },
+  "occasionPastLookTitle": "What you wore",
+  "@occasionPastLookTitle": {
+    "description": "Occasions: past occasion look heading"
+  },
+  "occasionPastNoLook": "You didn't record a look for this day. Add one so we can warn you before a repeat.",
+  "@occasionPastNoLook": {
+    "description": "Occasions: past occasion without a look"
   }
 }

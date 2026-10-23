@@ -77,6 +77,7 @@ extension RoleActionLabel on RoleAction {
     'coupons' => l10n.actionCoupons,
     'salons' => l10n.actionSalons,
     'appointments' => l10n.actionAppointments,
+    'occasions' => l10n.actionOccasions,
     'salon-workspace' => l10n.actionSalonWorkspace,
     'addresses' => l10n.actionAddresses,
     'payments' => l10n.actionPayments,

@@ -911,6 +911,14 @@ const _buyerMenuGroups = [
         path: RoutePaths.appointments,
         icon: Icons.event_available_rounded,
       ),
+      // «مناسباتي» beside her bookings: the salon is most often booked for
+      // one of these days, and the two are planned together.
+      RoleAction(
+        id: 'occasions',
+        label: 'My occasions',
+        path: RoutePaths.occasions,
+        icon: Icons.celebration_rounded,
+      ),
       RoleAction(
         id: 'orders',
         label: 'Orders',

@@ -12309,4 +12309,315 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get chatSuggestDelivery => 'How long does delivery take?';
+
+  @override
+  String get actionOccasions => 'My occasions';
+
+  @override
+  String get occasionsTitle => 'My occasions';
+
+  @override
+  String get occasionsUpcoming => 'Coming up';
+
+  @override
+  String get occasionsPast => 'Past';
+
+  @override
+  String get occasionsLoadError => 'Couldn\'t load your occasions';
+
+  @override
+  String get occasionsEmptyTitle => 'Nothing on the calendar yet';
+
+  @override
+  String get occasionsEmptyBody =>
+      'Add a wedding, Eid or birthday and we\'ll help you get ready: your look, the salon, the gift — and a reminder before the day.';
+
+  @override
+  String get occasionsPastEmptyTitle => 'No past occasions';
+
+  @override
+  String get occasionsPastEmptyBody =>
+      'Write down what you wore to past occasions, and we\'ll tell you before the same people see it twice.';
+
+  @override
+  String get occasionAdd => 'Add an occasion';
+
+  @override
+  String get occasionNew => 'New occasion';
+
+  @override
+  String get occasionEdit => 'Edit occasion';
+
+  @override
+  String get occasionLoadError => 'Couldn\'t load this occasion';
+
+  @override
+  String get occasionKindQuestion => 'What kind of day is it?';
+
+  @override
+  String get occasionKindWedding => 'Wedding';
+
+  @override
+  String get occasionKindEngagement => 'Engagement';
+
+  @override
+  String get occasionKindHenna => 'Henna night';
+
+  @override
+  String get occasionKindEid => 'Eid';
+
+  @override
+  String get occasionKindBirthday => 'Birthday';
+
+  @override
+  String get occasionKindGraduation => 'Graduation';
+
+  @override
+  String get occasionKindEvening => 'Evening out';
+
+  @override
+  String get occasionKindFamilyVisit => 'Family visit';
+
+  @override
+  String get occasionKindWork => 'Work event';
+
+  @override
+  String get occasionKindTravel => 'Trip';
+
+  @override
+  String get occasionKindOther => 'Other';
+
+  @override
+  String get occasionTitleLabel => 'Name';
+
+  @override
+  String get occasionTitleHint => 'e.g. Sara\'s wedding';
+
+  @override
+  String get occasionDateLabel => 'Date';
+
+  @override
+  String get occasionDatePick => 'Choose the day';
+
+  @override
+  String get occasionTimeLabel => 'Time';
+
+  @override
+  String get occasionOptional => 'Optional';
+
+  @override
+  String get occasionClear => 'Clear';
+
+  @override
+  String get occasionCircleLabel => 'Who\'ll be there?';
+
+  @override
+  String get occasionCircleHint => 'e.g. my husband\'s family';
+
+  @override
+  String get occasionCircleHelper =>
+      'So we can tell you if they\'ve already seen your outfit';
+
+  @override
+  String get occasionLocationLabel => 'Place (optional)';
+
+  @override
+  String get occasionNoteLabel => 'Notes';
+
+  @override
+  String get occasionReminders => 'Countdown reminders';
+
+  @override
+  String get occasionRemindersHint =>
+      'A week before, three days before, and the day before — in the daytime only';
+
+  @override
+  String get occasionCreate => 'Add occasion';
+
+  @override
+  String get occasionSave => 'Save';
+
+  @override
+  String get occasionSaved => 'Saved';
+
+  @override
+  String get occasionSaveFailed =>
+      'That didn\'t save — check your connection and try again';
+
+  @override
+  String get occasionDelete => 'Delete';
+
+  @override
+  String get occasionDeleteTitle => 'Delete this occasion?';
+
+  @override
+  String get occasionDeleteBody =>
+      'Your look and your salon booking stay as they are.';
+
+  @override
+  String get occasionPassed => 'Passed';
+
+  @override
+  String get occasionToday => 'Today';
+
+  @override
+  String get occasionTomorrow => 'Tomorrow';
+
+  @override
+  String occasionInDays(int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: 'In $days days',
+      one: 'In 1 day',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String occasionProgress(int done, int total) {
+    return '$done of $total ready';
+  }
+
+  @override
+  String get occasionAllReady => 'You\'re all set ✨';
+
+  @override
+  String get occasionNextLook => 'Next: choose your look';
+
+  @override
+  String get occasionNextPieces => 'Next: order the missing pieces';
+
+  @override
+  String get occasionNextSalon => 'Next: book the salon';
+
+  @override
+  String get occasionNextGift => 'Next: the gift';
+
+  @override
+  String get occasionNextWaiting => 'Waiting for the salon to confirm';
+
+  @override
+  String occasionWore(String look) {
+    return 'You wore: $look';
+  }
+
+  @override
+  String get occasionPlanTitle => 'Getting ready';
+
+  @override
+  String get occasionStepLook => 'Choose your look';
+
+  @override
+  String get occasionStepLookDone => 'Your look';
+
+  @override
+  String get occasionStepLookHint => 'From the looks in your closet';
+
+  @override
+  String occasionStepPieces(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Your look is $count pieces short',
+      one: 'Your look is one piece short',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get occasionStepPiecesHint => 'Order early so it arrives in time';
+
+  @override
+  String get occasionStepPiecesUrgent => 'Delivery takes days — order today';
+
+  @override
+  String get occasionStepSalon => 'Book the salon';
+
+  @override
+  String get occasionStepSalonDone => 'Salon booked';
+
+  @override
+  String get occasionStepSalonWaiting => 'Salon requested';
+
+  @override
+  String get occasionStepSalonHint => 'Good hours go fast before big days';
+
+  @override
+  String get occasionStepSalonUrgent => 'Only a few days left — book now';
+
+  @override
+  String get occasionStepSalonWaitingHint => 'Waiting for the salon to confirm';
+
+  @override
+  String get occasionStepGift => 'The gift';
+
+  @override
+  String get occasionStepGiftDone => 'Gift ready';
+
+  @override
+  String get occasionChooseLook => 'Choose a look';
+
+  @override
+  String get occasionChangeLook => 'Change';
+
+  @override
+  String get occasionRemoveLook => 'Remove';
+
+  @override
+  String get occasionCompleteLook => 'Complete the look';
+
+  @override
+  String get occasionNoLooksBody =>
+      'Put a look together in your closet, then come back and choose it.';
+
+  @override
+  String get occasionFindSalon => 'Find a salon';
+
+  @override
+  String get occasionLinkBooking => 'Link a booking';
+
+  @override
+  String get occasionUnlinkBooking => 'Unlink booking';
+
+  @override
+  String occasionSalonCancelled(String salon) {
+    return 'Your booking at $salon was cancelled';
+  }
+
+  @override
+  String occasionRepeatTitle(String circle) {
+    return '$circle have seen this before';
+  }
+
+  @override
+  String occasionRepeatWorn(String occasion) {
+    return 'At $occasion';
+  }
+
+  @override
+  String occasionRepeatPlanned(String occasion) {
+    return 'Also planned for $occasion';
+  }
+
+  @override
+  String get occasionRepeatSameLook => 'The very same look';
+
+  @override
+  String occasionRepeatSamePieces(String pieces) {
+    return 'Same pieces: $pieces';
+  }
+
+  @override
+  String get occasionRepeatHint => 'Want to change a piece, or is it fine?';
+
+  @override
+  String get occasionListSeparator => ', ';
+
+  @override
+  String get occasionPastLookTitle => 'What you wore';
+
+  @override
+  String get occasionPastNoLook =>
+      'You didn\'t record a look for this day. Add one so we can warn you before a repeat.';
 }

@@ -47,6 +47,7 @@ abstract final class RoutePaths {
   static const compose = '/compose';
   static const socialFeed = '/community';
   static const reels = '/reels';
+
   /// One piece on its own — where a shared `/p/<id>` link lands.
   static const contentDetail = '/content/:id';
   static String contentDetailOf(String id) => '/content/$id';
@@ -121,6 +122,7 @@ abstract final class RoutePaths {
   // Commerce
   static const cart = '/cart';
   static const checkout = '/checkout';
+
   /// The Discover tab: a hub that starts from what she needs.
   static const search = '/search';
 
@@ -292,6 +294,7 @@ abstract final class RoutePaths {
   // account, and a link to the returns policy sent over WhatsApp has to open
   // in the app rather than bounce off a sign-in wall.
   static const policies = '/policies';
+
   /// The literal `doc` segment is not decoration: without it a greedy `:slug`
   /// would swallow every sibling under `/policies/`.
   static const policyDetail = '/policies/doc/:slug';
@@ -335,6 +338,20 @@ abstract final class RoutePaths {
   static const salonServicesEditor = '/salon/services';
   static const salonHoursEditor = '/salon/hours';
   static const salonQueue = '/salon/queue';
+
+  // ── مناسباتي ─────────────────────────────────────────────
+  //
+  // Reached from the closet and from the profile menu, like the salons. The
+  // detail path is what an occasion countdown's deep link opens.
+  static const occasions = '/occasions';
+
+  /// Declared before `/occasions/:id` in the router — `:id` is greedy and
+  /// would otherwise try to open an occasion whose id is the word "new".
+  static const occasionNew = '/occasions/new';
+  static const occasionDetail = '/occasions/:id';
+  static String occasionOf(String id) => '/occasions/$id';
+  static const occasionEdit = '/occasions/:id/edit';
+  static String occasionEditOf(String id) => '/occasions/$id/edit';
 
   static const chats = '/chats';
   static const chatDetails = '/chat-details';
