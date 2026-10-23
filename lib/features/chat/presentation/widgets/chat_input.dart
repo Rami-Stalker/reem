@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:reem/core/design_system/design_system.dart';
@@ -33,6 +32,10 @@ class _ChatInputState extends State<ChatInput>
   bool expanded = false;
   bool typing = false;
 
+  /// Whether the field holds anything to send. Tracked so the button can be
+  /// a microphone while it is empty and a send arrow once it is not.
+  bool _hasText = false;
+
   @override
   void initState() {
     super.initState();
@@ -40,6 +43,10 @@ class _ChatInputState extends State<ChatInput>
       vsync: this,
       duration: const Duration(milliseconds: 450),
     );
+    textController.addListener(() {
+      final hasText = textController.text.trim().isNotEmpty;
+      if (hasText != _hasText) setState(() => _hasText = hasText);
+    });
   }
 
   @override
@@ -96,122 +103,171 @@ class _ChatInputState extends State<ChatInput>
   @override
   Widget build(BuildContext context) {
     final colors = context.dsColors;
-    return ClipRRect(
-      borderRadius: DsRadius.borderSheet,
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: DsBlur.heavy, sigmaY: DsBlur.heavy),
-        child: Container(
-          padding: const EdgeInsets.fromLTRB(
-            DsSpacing.md,
-            DsSpacing.sm,
-            DsSpacing.md,
-            DsSpacing.xl,
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    // With nothing typed the button records a voice note — the one tap a
+    // question asked aloud should cost; once there are words it sends them.
+    final voiceMode = !_hasText && widget.onVoice != null && !widget.isSending;
+
+    return Padding(
+      padding: EdgeInsets.fromLTRB(
+        DsSpacing.md,
+        DsSpacing.xs,
+        DsSpacing.md,
+        DsSpacing.sm + MediaQuery.paddingOf(context).bottom,
+      ),
+      child: Container(
+        padding: const EdgeInsets.all(DsSpacing.xs),
+        decoration: BoxDecoration(
+          // A floating capsule, solid enough to read on: no blur behind it,
+          // which over a moving ground would be a full repaint every frame.
+          color: (isDark ? colors.surfaceElevated : colors.surface).withValues(
+            alpha: 0.95,
           ),
-          decoration: BoxDecoration(
-            // Reads from the theme: a fixed white plate left the composer
-            // glowing at the foot of an otherwise aubergine thread.
-            color: colors.surfaceElevated.withValues(alpha: 0.9),
-            border: Border(top: BorderSide(color: colors.border)),
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              SizeTransition(
-                sizeFactor: controller,
-                child: Padding(
-                  padding: const EdgeInsets.only(bottom: DsSpacing.md),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      // Product and Order still have no implementation behind
-                      // them, and `_action` draws that rather than offering a
-                      // button that swallows the tap.
-                      _action(context, Icons.photo_rounded, context.l10n.mediaImage, widget.onImage),
-                      _action(context, Icons.mic_rounded, context.l10n.chatVoice, widget.onVoice),
-                      _action(context, Icons.shopping_bag_rounded, context.l10n.chatProduct, null),
-                      _action(context, Icons.receipt_long_rounded, context.l10n.chatOrder, null),
-                    ],
-                  ),
+          borderRadius: DsRadius.borderXxxl,
+          border: Border.all(color: colors.border.withValues(alpha: 0.7)),
+          boxShadow: context.shadowSoft,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SizeTransition(
+              sizeFactor: CurvedAnimation(
+                parent: controller,
+                curve: DsMotion.gentle,
+              ),
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(
+                  DsSpacing.xs,
+                  DsSpacing.sm,
+                  DsSpacing.xs,
+                  DsSpacing.md,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    // Product and Order still have no implementation behind
+                    // them, and `_action` draws that rather than offering a
+                    // button that swallows the tap.
+                    _action(
+                      context,
+                      Icons.photo_rounded,
+                      context.l10n.mediaImage,
+                      widget.onImage,
+                    ),
+                    _action(
+                      context,
+                      Icons.mic_rounded,
+                      context.l10n.chatVoice,
+                      widget.onVoice,
+                    ),
+                    _action(
+                      context,
+                      Icons.shopping_bag_rounded,
+                      context.l10n.chatProduct,
+                      null,
+                    ),
+                    _action(
+                      context,
+                      Icons.receipt_long_rounded,
+                      context.l10n.chatOrder,
+                      null,
+                    ),
+                  ],
                 ),
               ),
-              Row(
-                children: [
-                  Tooltip(
-                    message: context.l10n.chatAttachments,
-                    child: GestureDetector(
-                      onTap: toggle,
-                      child: AnimatedContainer(
-                        duration: DsMotion.moderate,
-                        width: DsSizes.controlLg,
-                        height: DsSizes.controlLg,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          gradient: context.primaryGradient,
-                        ),
-                        child: AnimatedRotation(
-                          turns: expanded ? .125 : 0,
-                          duration: DsMotion.normal,
-                          child: const Icon(
-                            Icons.add_rounded,
-                            color: DsColors.onMedia,
-                            size: DsSizes.iconMd,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  DsGaps.hSm,
-                  Expanded(
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: DsSpacing.md,
-                      ),
+            ),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Tooltip(
+                  message: context.l10n.chatAttachments,
+                  child: GestureDetector(
+                    onTap: toggle,
+                    child: AnimatedContainer(
+                      duration: DsMotion.moderate,
+                      width: DsSizes.controlLg,
+                      height: DsSizes.controlLg,
                       decoration: BoxDecoration(
-                        color: colors.surfaceVariant,
-                        borderRadius: DsRadius.borderField,
-                        border: Border.all(color: colors.border),
+                        shape: BoxShape.circle,
+                        color: expanded
+                            ? colors.primaryContainer
+                            : colors.surfaceVariant,
                       ),
-                      child: DsComposerField(
-                        controller: textController,
-                        hint: context.l10n.chatWriteMessage,
-                        // The pill around it is drawn by the bar itself, so
-                        // the field inside carries no chrome of its own.
-                        shape: DsComposerShape.bare,
-                        maxLength: 5000,
-                        onChanged: handleTyping,
-                        onSubmitted: (_) => send(),
+                      child: AnimatedRotation(
+                        turns: expanded ? .125 : 0,
+                        duration: DsMotion.normal,
+                        child: Icon(
+                          Icons.add_rounded,
+                          color: colors.primary,
+                          size: DsSizes.iconMd,
+                        ),
                       ),
                     ),
                   ),
-                  DsGaps.hSm,
-                  Tooltip(
-                    message: context.l10n.send,
-                    child: GestureDetector(
-                      onTap: send,
-                      child: Container(
-                        width: DsSizes.controlLg,
-                        height: DsSizes.controlLg,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          gradient: context.primaryGradient,
+                ),
+                DsGaps.hXs,
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: DsSpacing.xs,
+                    ),
+                    child: DsComposerField(
+                      controller: textController,
+                      hint: context.l10n.chatWriteMessage,
+                      // The capsule around it is the field's chrome.
+                      shape: DsComposerShape.bare,
+                      maxLength: 5000,
+                      onChanged: handleTyping,
+                      onSubmitted: (_) => send(),
+                    ),
+                  ),
+                ),
+                DsGaps.hXs,
+                Tooltip(
+                  message: voiceMode
+                      ? context.l10n.chatVoice
+                      : context.l10n.send,
+                  child: GestureDetector(
+                    onTap: voiceMode ? widget.onVoice : send,
+                    child: Container(
+                      width: DsSizes.controlLg,
+                      height: DsSizes.controlLg,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        gradient: context.primaryGradient,
+                        boxShadow: context.glowShadow(
+                          colors.primary,
+                          blur: 12,
+                          alpha: 0.3,
                         ),
-                        child: widget.isSending
-                            ? const Center(
-                                child: DsLoadingIndicator.inline(
-                                  color: DsColors.onMedia,
-                                ),
-                              )
-                            : const Icon(
-                                Icons.send_rounded,
+                      ),
+                      child: widget.isSending
+                          ? const Center(
+                              child: DsLoadingIndicator.inline(
                                 color: DsColors.onMedia,
                               ),
-                      ),
+                            )
+                          : AnimatedSwitcher(
+                              duration: DsMotion.normal,
+                              transitionBuilder: (child, animation) =>
+                                  ScaleTransition(
+                                    scale: animation,
+                                    child: child,
+                                  ),
+                              child: Icon(
+                                voiceMode
+                                    ? Icons.mic_rounded
+                                    : Icons.send_rounded,
+                                key: ValueKey(voiceMode),
+                                color: DsColors.onMedia,
+                              ),
+                            ),
                     ),
                   ),
-                ],
-              ),
-            ],
-          ),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );
@@ -242,8 +298,14 @@ class _ChatInputState extends State<ChatInput>
                 height: DsSizes.fabSize,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: context.dsColors.surfaceElevated,
-                  border: Border.all(color: context.dsColors.border),
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      context.dsColors.primaryContainer,
+                      context.dsColors.secondaryContainer,
+                    ],
+                  ),
                   boxShadow: context.shadowXs,
                 ),
                 child: Icon(icon, color: context.dsColors.primary),

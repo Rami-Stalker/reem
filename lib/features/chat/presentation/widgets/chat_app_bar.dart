@@ -36,83 +36,114 @@ class ChatAppBar extends StatelessWidget {
     final c = context.dsColors;
     final l10n = context.l10n;
     final title = _title(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final live = isPeerTyping || (thread?.isOnline ?? false);
 
-    return Container(
+    // A capsule floating over the conversation rather than a bar across it:
+    // the thread runs up behind the header instead of stopping at a ruled
+    // line, and the person she is writing to sits in the arch like everyone
+    // else on Reem.
+    return Padding(
       padding: const EdgeInsets.fromLTRB(
         DsSpacing.md,
-        DsSpacing.sm,
+        DsSpacing.xs,
         DsSpacing.md,
-        DsSpacing.md,
+        DsSpacing.xs,
       ),
-      decoration: BoxDecoration(
-        color: c.surface.withValues(alpha: 0.92),
-        border: Border(
-          bottom: BorderSide(color: c.divider.withValues(alpha: 0.6)),
+      child: Container(
+        padding: const EdgeInsetsDirectional.fromSTEB(
+          DsSpacing.xxs,
+          DsSpacing.xs,
+          DsSpacing.sm,
+          DsSpacing.xs,
         ),
-      ),
-      child: Row(
-        children: [
-          DsIconButton(
-            tooltip: context.l10n.back,
-            icon: Directionality.of(context) == TextDirection.rtl
-                ? Icons.arrow_forward_ios_rounded
-                : Icons.arrow_back_ios_new_rounded,
-            // A conversation is opened from the inbox, from a product, and
-            // from a notification tap — and only the first of those leaves a
-            // route to pop, so the arrow needs the shared fallback.
-            onPressed: () => popOrHome(context),
+        decoration: BoxDecoration(
+          borderRadius: DsRadius.borderXxl,
+          color: (isDark ? c.surfaceElevated : c.surface).withValues(
+            alpha: 0.9,
           ),
-          const SizedBox(width: DsSpacing.sm),
-          DsAvatar(
-            imageUrl: (thread?.avatarUrl.isEmpty ?? true)
-                ? null
-                : thread!.avatarUrl,
-            name: title,
-            size: 46,
-            isOnline: thread?.isOnline ?? false,
-            onTap: onOpenProfile,
-          ),
-          const SizedBox(width: DsSpacing.sm),
-          Expanded(
-            child: GestureDetector(
+          border: Border.all(color: c.border.withValues(alpha: 0.7)),
+          boxShadow: context.shadowSoft,
+        ),
+        child: Row(
+          children: [
+            IconButton(
+              tooltip: l10n.back,
+              icon: Icon(
+                DsIcons.back,
+                size: DsSizes.iconSm,
+                color: c.onSurface,
+              ),
+              // A conversation is opened from the inbox, from a product, and
+              // from a notification tap — and only the first of those leaves a
+              // route to pop, so the arrow needs the shared fallback.
+              onPressed: () => popOrHome(context),
+            ),
+            ArchAvatar(
+              name: title,
+              imageUrl: (thread?.avatarUrl.isEmpty ?? true)
+                  ? null
+                  : thread!.avatarUrl,
+              width: 38,
+              isOnline: thread?.isOnline ?? false,
               onTap: onOpenProfile,
-              behavior: HitTestBehavior.opaque,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    title,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: context.dsText.tileTitle
-                        .copyWith(fontWeight: DsTypography.bold),
-                  ),
-                  DsGaps.vXxxs,
-                  Text(
-                    _presence(context),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: context.dsText.caption.copyWith(
-                      color: isPeerTyping || (thread?.isOnline ?? false)
-                          ? c.success
-                          : c.onSurfaceVariant,
-                      fontWeight: isPeerTyping
-                          ? DsTypography.semiBold
-                          : DsTypography.regular,
+            ),
+            DsGaps.hSm,
+            Expanded(
+              child: GestureDetector(
+                onTap: onOpenProfile,
+                behavior: HitTestBehavior.opaque,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      title,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: context.dsText.tileTitle.copyWith(
+                        fontWeight: DsTypography.bold,
+                      ),
                     ),
-                  ),
-                ],
+                    if (_presence(context) case final presence
+                        when presence.isNotEmpty)
+                      Row(
+                        children: [
+                          if (isPeerTyping) ...[
+                            WaveDots(size: 4, color: c.success),
+                            DsGaps.hXxs,
+                          ],
+                          Flexible(
+                            child: Text(
+                              presence,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: context.dsText.caption.copyWith(
+                                color: live ? c.success : c.onSurfaceVariant,
+                                fontWeight: isPeerTyping
+                                    ? DsTypography.semiBold
+                                    : DsTypography.regular,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                  ],
+                ),
               ),
             ),
-          ),
-          if (onOpenSharedMedia != null)
-            DsIconButton(
-              icon: Icons.photo_library_outlined,
-              tooltip: l10n.chatSharedMedia,
-              onPressed: onOpenSharedMedia,
-            ),
-        ],
+            if (onOpenSharedMedia != null)
+              IconButton(
+                icon: Icon(
+                  Icons.photo_library_rounded,
+                  size: DsSizes.iconSm,
+                  color: c.primary,
+                ),
+                tooltip: l10n.chatSharedMedia,
+                onPressed: onOpenSharedMedia,
+              ),
+          ],
+        ),
       ),
     );
   }

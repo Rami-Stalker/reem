@@ -11,6 +11,8 @@ export 'package:reem/core/design_system/patterns/experience_design.dart';
 // as a post renders through it.
 export 'package:reem/core/design_system/patterns/immersive_post.dart';
 // The post shape — shared by the home feed, department pages and her page.
+// Messaging: letters, seals and silk bubbles.
+export 'package:reem/core/design_system/patterns/messaging_stage.dart';
 export 'package:reem/core/design_system/patterns/post_card.dart';
 export 'package:reem/core/design_system/patterns/premium_app_bar.dart';
 // Product surfaces -- composite layouts over the card components.
