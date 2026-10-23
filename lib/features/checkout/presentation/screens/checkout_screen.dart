@@ -248,7 +248,6 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.dsColors;
     final l10n = context.l10n;
     final state = ref.watch(checkoutControllerProvider);
     final cart = ref.watch(cartNotifierProvider).cart;
@@ -281,6 +280,10 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
     final deliveryFee = state.quote?.deliveryFee;
     final subtotal = cart.summary.subtotal;
 
+    // A saved address is complete as it stands; a new one once the place that
+    // prices the delivery has been chosen.
+    final addressDone = _selectedAddressId != null || _governorate != null;
+
     // The charged total is NOT computed here. It needs the coupon, the shipping
     // quote and a frozen exchange rate, all of which the server applies when the
     // order is placed — adding two figures in the client would only produce a
@@ -305,9 +308,10 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
           SliverPadding(
             padding: const EdgeInsets.fromLTRB(
               DsSpacing.lg,
-              DsSpacing.md,
               DsSpacing.lg,
-              140,
+              DsSpacing.lg,
+              // Clears the ticket floating over the foot of the page.
+              DsSizes.bottomSafeGap + DsSpacing.massive,
             ),
             sliver: SliverToBoxAdapter(
               child: Form(
@@ -315,104 +319,161 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    _label(context, l10n.checkoutDeliveryAddress),
-
-                    if (addresses.isNotEmpty) ...[
-                      for (final address in addresses)
-                        _AddressOption(
-                          address: address,
-                          selected: _selectedAddressId == address.id,
-                          onTap: () => _useSaved(address),
-                        ),
-                      _NewAddressOption(
-                        selected: _selectedAddressId == null,
-                        onTap: _useNewAddress,
+                    JourneyStep(
+                      number: 1,
+                      title: l10n.checkoutDeliveryAddress,
+                      complete: addressDone,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          if (addresses.isNotEmpty) ...[
+                            for (final address in addresses)
+                              _AddressOption(
+                                address: address,
+                                selected: _selectedAddressId == address.id,
+                                onTap: () => _useSaved(address),
+                              ),
+                            _NewAddressOption(
+                              selected: _selectedAddressId == null,
+                              onTap: _useNewAddress,
+                            ),
+                            if (_selectedAddressId == null) DsGaps.vMd,
+                          ],
+                          if (_selectedAddressId == null)
+                            ..._addressForm(context, state),
+                        ],
                       ),
-                      const SizedBox(height: DsSpacing.sm),
-                    ],
-
-                    if (_selectedAddressId == null)
-                      ..._addressForm(context, state),
-
-                    const SizedBox(height: DsSpacing.sm),
-                    _label(context, l10n.checkoutCoupon),
-                    DsInputField(
-                      controller: _coupon,
-                      label: l10n.checkoutCouponOptional,
                     ),
-                    if (_appliedDiscount != null) ...[
-                      const SizedBox(height: DsSpacing.xs),
-                      _AppliedCouponNote(discount: _appliedDiscount!),
-                    ],
 
-                    const SizedBox(height: DsSpacing.sm),
-                    _label(context, l10n.checkoutPaymentMethod),
-                    for (final method in state.paymentMethods)
-                      _PaymentTile(
-                        option: method,
-                        selected: _paymentMethod == method.method,
-                        onTap: () =>
-                            setState(() => _paymentMethod = method.method),
+                    JourneyStep(
+                      number: 2,
+                      title: l10n.checkoutCoupon,
+                      complete: _appliedDiscount != null,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          PerforatedTicket(
+                            active: _appliedDiscount != null,
+                            child: DsInputField(
+                              controller: _coupon,
+                              hint: l10n.checkoutCouponOptional,
+                              variant: DsFieldVariant.bare,
+                              textCapitalization: TextCapitalization.characters,
+                              autocorrect: false,
+                            ),
+                          ),
+                          if (_appliedDiscount != null) ...[
+                            DsGaps.vXs,
+                            _AppliedCouponNote(discount: _appliedDiscount!),
+                          ],
+                        ],
                       ),
+                    ),
+
+                    JourneyStep(
+                      number: 3,
+                      title: l10n.checkoutPaymentMethod,
+                      complete: _paymentMethod != null,
+                      child: Column(
+                        children: [
+                          for (final method in state.paymentMethods)
+                            _PaymentTile(
+                              option: method,
+                              selected: _paymentMethod == method.method,
+                              onTap: () => setState(
+                                () => _paymentMethod = method.method,
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
 
                     // Q44 — «إخفاء هوية الزبونة عن البائعة». The server has
                     // honoured `privacy_mask` since checkout was written and
                     // nothing ever sent it, so a promise the client asked for
                     // could not be made from the phone.
-                    const SizedBox(height: DsSpacing.sm),
-                    SwitchListTile(
-                      value: _privacyMask,
-                      onChanged: (value) =>
-                          setState(() => _privacyMask = value),
-                      contentPadding: EdgeInsets.zero,
-                      activeThumbColor: colors.primary,
-                      title: Text(
-                        l10n.checkoutPrivacyMask,
-                        style: context.dsText.body.semibold.tint(
-                          colors.onSurface,
-                        ),
-                      ),
-                      subtitle: Text(
-                        l10n.checkoutPrivacyMaskHint,
-                        style: context.dsText.caption.tint(
-                          colors.onSurfaceVariant,
-                        ),
+                    JourneyStep(
+                      number: 4,
+                      title: l10n.checkoutStepPrivacy,
+                      // A choice either way; it is behind her once she has
+                      // chosen how to pay.
+                      complete: _paymentMethod != null,
+                      child: _PrivacyCard(
+                        value: _privacyMask,
+                        onChanged: (value) =>
+                            setState(() => _privacyMask = value),
                       ),
                     ),
 
-                    const SizedBox(height: DsSpacing.lg),
-                    _label(context, l10n.checkoutOrderSummary),
-                    _summaryRow(context, l10n.checkoutSubtotal, subtotal),
-                    _summaryRow(context, l10n.checkoutDelivery, deliveryFee),
-                    if (cart.willSplit)
-                      Padding(
-                        padding: const EdgeInsets.only(top: DsSpacing.xs),
-                        child: Text(
-                          l10n.checkoutSplitNotice(
-                            '${cart.sellerGroups.length}',
+                    JourneyStep(
+                      number: 5,
+                      title: l10n.checkoutOrderSummary,
+                      complete: addressDone && _paymentMethod != null,
+                      isLast: true,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          ReceiptCard(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                _summaryRow(
+                                  context,
+                                  l10n.checkoutSubtotal,
+                                  subtotal,
+                                ),
+                                _summaryRow(
+                                  context,
+                                  l10n.checkoutDelivery,
+                                  deliveryFee,
+                                ),
+                                if (_appliedDiscount != null)
+                                  _summaryRow(
+                                    context,
+                                    l10n.checkoutCoupon,
+                                    _appliedDiscount,
+                                    minus: true,
+                                  ),
+                                DsGaps.vSm,
+                                const DashedRule(),
+                                DsGaps.vSm,
+                                // The total is the server's to compute, when
+                                // the order is placed — said rather than
+                                // guessed (see the note above `return`).
+                                Text(
+                                  l10n.checkoutTotalPending,
+                                  style: context.dsText.caption,
+                                ),
+                                if (cart.willSplit) ...[
+                                  DsGaps.vXs,
+                                  _ReceiptNote(
+                                    icon: Icons.call_split_rounded,
+                                    text: l10n.checkoutSplitNotice(
+                                      '${cart.sellerGroups.length}',
+                                    ),
+                                  ),
+                                ],
+                                if (state.quote != null) ...[
+                                  DsGaps.vXs,
+                                  _ReceiptNote(
+                                    icon: Icons.local_shipping_rounded,
+                                    text: _etaLabel(context, state.quote!),
+                                  ),
+                                ],
+                              ],
+                            ),
                           ),
-                          style: context.dsText.bodySmall.tint(
-                            colors.onSurfaceVariant,
-                          ),
-                        ),
-                      ),
-                    if (state.quote != null)
-                      Padding(
-                        padding: const EdgeInsets.only(top: DsSpacing.xxs),
-                        child: Text(
-                          _etaLabel(context, state.quote!),
-                          style: context.dsText.bodySmall.tint(
-                            colors.onSurfaceVariant,
-                          ),
-                        ),
-                      ),
 
-                    // What confirming this order commits her to, said where
-                    // she is about to confirm it. The returns policy in
-                    // particular belongs here rather than in a settings menu:
-                    // «كم يوم عندي أرجّع؟» is a question asked at the till.
-                    const SizedBox(height: DsSpacing.lg),
-                    _CheckoutPolicyNotice(),
+                          // What confirming this order commits her to, said
+                          // where she is about to confirm it. The returns
+                          // policy in particular belongs here rather than in a
+                          // settings menu: «كم يوم عندي أرجّع؟» is a question
+                          // asked at the till.
+                          DsGaps.vLg,
+                          const _CheckoutPolicyNotice(),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -547,30 +608,141 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
       ? context.l10n.checkoutRequired
       : null;
 
-  Widget _label(BuildContext context, String text) => Padding(
-    padding: const EdgeInsets.only(top: DsSpacing.sm, bottom: DsSpacing.xs),
-    child: Text(
-      text,
-      style: context.dsText.tileTitle.semibold.tint(context.dsColors.onSurface),
-    ),
-  );
-
-  Widget _summaryRow(BuildContext context, String label, Money? value) {
+  Widget _summaryRow(
+    BuildContext context,
+    String label,
+    Money? value, {
+    bool minus = false,
+  }) {
     final colors = context.dsColors;
+    final figure = value?.format() ?? '—';
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: DsSpacing.xxs),
       child: Row(
         children: [
-          Text(
-            label,
-            style: context.dsText.bodySmall.tint(colors.onSurfaceVariant),
-          ),
+          Text(label, style: context.dsText.body.tint(colors.onSurfaceVariant)),
           const Spacer(),
           Text(
-            value?.format() ?? '—',
-            style: context.dsText.body.semibold.tint(colors.onSurface),
+            minus && value != null ? '− $figure' : figure,
+            style: context.dsText.body.semibold.tabular.tint(
+              minus ? colors.success : colors.onSurface,
+            ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+/// A choice on the journey: a medallion, the words, and a ring that fills —
+/// lit with a gradient rim and a soft glow once chosen.
+class _ChoiceCard extends StatelessWidget {
+  const _ChoiceCard({
+    required this.icon,
+    required this.selected,
+    required this.onTap,
+    required this.child,
+  });
+
+  final IconData icon;
+  final bool selected;
+  final VoidCallback onTap;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.dsColors;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    return Padding(
+      padding: const EdgeInsets.only(bottom: DsSpacing.sm),
+      child: Semantics(
+        selected: selected,
+        button: true,
+        child: GestureDetector(
+          onTap: onTap,
+          behavior: HitTestBehavior.opaque,
+          child: AnimatedContainer(
+            duration: DsMotion.moderate,
+            curve: DsMotion.gentle,
+            padding: const EdgeInsets.all(DsSpacing.md),
+            decoration: BoxDecoration(
+              borderRadius: DsRadius.borderXl,
+              color: selected
+                  ? Color.alphaBlend(
+                      colors.primary.withValues(alpha: 0.07),
+                      isDark ? colors.surfaceElevated : colors.surface,
+                    )
+                  : (isDark ? colors.surfaceElevated : colors.surface)
+                        .withValues(alpha: 0.85),
+              border: Border.all(
+                color: selected ? colors.primary : colors.border,
+                width: selected ? 1.6 : 1,
+              ),
+              boxShadow: selected
+                  ? context.glowShadow(colors.primary, blur: 18, alpha: 0.18)
+                  : null,
+            ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                AnimatedContainer(
+                  duration: DsMotion.moderate,
+                  width: DsSizes.avatarMd,
+                  height: DsSizes.avatarMd,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    gradient: selected ? context.primaryGradient : null,
+                    color: selected ? null : colors.primaryContainer,
+                  ),
+                  child: Icon(
+                    icon,
+                    size: DsSizes.iconSm,
+                    color: selected ? DsColors.onMedia : colors.primary,
+                  ),
+                ),
+                DsGaps.hSm,
+                Expanded(child: child),
+                DsGaps.hXs,
+                _Ring(on: selected),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _Ring extends StatelessWidget {
+  const _Ring({required this.on});
+
+  final bool on;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.dsColors;
+    return AnimatedContainer(
+      duration: DsMotion.moderate,
+      width: DsSizes.iconMd,
+      height: DsSizes.iconMd,
+      padding: const EdgeInsets.all(DsSpacing.xxs),
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        border: Border.all(
+          color: on ? colors.primary : colors.outline,
+          width: 1.6,
+        ),
+      ),
+      child: AnimatedScale(
+        scale: on ? 1 : 0,
+        duration: DsMotion.moderate,
+        curve: DsMotion.softSpring,
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            gradient: context.primaryGradient,
+          ),
+        ),
       ),
     );
   }
@@ -591,74 +763,41 @@ class _AddressOption extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.dsColors;
-
-    return Padding(
-      padding: const EdgeInsets.only(bottom: DsSpacing.xs),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: onTap,
-          borderRadius: BorderRadius.circular(DsRadius.lg),
-          child: Ink(
-            padding: const EdgeInsets.all(DsSpacing.md),
-            decoration: BoxDecoration(
-              color: selected ? colors.primaryContainer : colors.card,
-              borderRadius: BorderRadius.circular(DsRadius.lg),
-              border: Border.all(
-                color: selected ? colors.primary : colors.border,
-                width: selected ? 1.5 : 1,
-              ),
-            ),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Icon(
-                  selected
-                      ? Icons.radio_button_checked
-                      : Icons.radio_button_unchecked,
-                  size: 20,
-                  color: selected ? colors.primary : colors.onSurfaceVariant,
+    return _ChoiceCard(
+      icon: address.isDefault ? Icons.home_rounded : Icons.place_rounded,
+      selected: selected,
+      onTap: onTap,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(
+            children: [
+              Flexible(
+                child: Text(
+                  address.label,
+                  style: context.dsText.body.semibold.tint(colors.onSurface),
                 ),
-                const SizedBox(width: DsSpacing.sm),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Row(
-                        children: [
-                          Text(
-                            address.label,
-                            style: context.dsText.body.semibold.tint(
-                              colors.onSurface,
-                            ),
-                          ),
-                          if (address.isDefault) ...[
-                            const SizedBox(width: DsSpacing.xs),
-                            Icon(Icons.star, size: 13, color: colors.primary),
-                          ],
-                        ],
-                      ),
-                      DsGaps.vXxxs,
-                      Text(
-                        address.summary,
-                        style: context.dsText.bodySmall
-                            .tint(colors.onSurfaceVariant)
-                            .copyWith(height: 1.5),
-                      ),
-                      Text(
-                        address.recipientName,
-                        style: context.dsText.caption.tint(
-                          colors.onSurfaceVariant,
-                        ),
-                      ),
-                    ],
-                  ),
+              ),
+              if (address.isDefault) ...[
+                DsGaps.hXs,
+                Icon(
+                  Icons.star_rounded,
+                  size: DsSizes.iconXs,
+                  color: colors.rating,
                 ),
               ],
-            ),
+            ],
           ),
-        ),
+          DsGaps.vXxxs,
+          Text(
+            address.summary,
+            style: context.dsText.bodySmall
+                .tint(colors.onSurfaceVariant)
+                .copyWith(height: 1.5),
+          ),
+          Text(address.recipientName, style: context.dsText.caption),
+        ],
       ),
     );
   }
@@ -672,44 +811,15 @@ class _NewAddressOption extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.dsColors;
-
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(DsRadius.lg),
-        child: Ink(
-          padding: const EdgeInsets.all(DsSpacing.md),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(DsRadius.lg),
-            border: Border.all(
-              color: selected ? colors.primary : colors.border,
-              width: selected ? 1.5 : 1,
-            ),
-          ),
-          child: Row(
-            children: [
-              Icon(
-                selected
-                    ? Icons.radio_button_checked
-                    : Icons.radio_button_unchecked,
-                size: 20,
-                color: selected ? colors.primary : colors.onSurfaceVariant,
-              ),
-              const SizedBox(width: DsSpacing.sm),
-              Icon(
-                Icons.add_location_alt_outlined,
-                size: 18,
-                color: colors.primary,
-              ),
-              const SizedBox(width: DsSpacing.xs),
-              Text(
-                context.l10n.checkoutNewAddress,
-                style: context.dsText.body.medium.tint(colors.onSurface),
-              ),
-            ],
-          ),
+    return _ChoiceCard(
+      icon: Icons.add_location_alt_rounded,
+      selected: selected,
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.only(top: DsSpacing.sm),
+        child: Text(
+          context.l10n.checkoutNewAddress,
+          style: context.dsText.body.semibold.tint(context.dsColors.onSurface),
         ),
       ),
     );
@@ -729,76 +839,148 @@ class _PaymentTile extends StatelessWidget {
   final bool selected;
   final VoidCallback onTap;
 
+  static IconData _iconOf(String method) => switch (method) {
+    'cod' || 'courier_collect' => Icons.payments_rounded,
+    'syriatel_cash' || 'mtn_cash' || 'sham_cash' => Icons.phone_iphone_rounded,
+    'bank_card' => Icons.credit_card_rounded,
+    'bank_transfer' => Icons.account_balance_rounded,
+    'hawala' => Icons.currency_exchange_rounded,
+    'platform_wallet' => Icons.account_balance_wallet_rounded,
+    _ => Icons.payments_outlined,
+  };
+
   @override
   Widget build(BuildContext context) {
     final colors = context.dsColors;
-
-    return Padding(
-      padding: const EdgeInsets.only(bottom: DsSpacing.xs),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: onTap,
-          borderRadius: BorderRadius.circular(DsRadius.lg),
-          child: Ink(
-            padding: const EdgeInsets.all(DsSpacing.md),
-            decoration: BoxDecoration(
-              color: selected ? colors.primaryContainer : colors.card,
-              borderRadius: BorderRadius.circular(DsRadius.lg),
-              border: Border.all(
-                color: selected ? colors.primary : colors.border,
-                width: selected ? 1.5 : 1,
-              ),
-            ),
-            child: Row(
-              children: [
-                Icon(
-                  selected
-                      ? Icons.radio_button_checked
-                      : Icons.radio_button_unchecked,
-                  size: 20,
-                  color: selected ? colors.primary : colors.onSurfaceVariant,
-                ),
-                const SizedBox(width: DsSpacing.sm),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        // The app's own name for a known method, so checkout
-                        // and the order page agree («محفظة ريم»); the
-                        // server's label for one the app does not know yet.
-                        switch (context.l10n.paymentMethodName(option.method)) {
-                          final name when name != option.method => name,
-                          _ => option.label,
-                        },
-                        style: context.dsText.body.tint(colors.onSurface),
-                      ),
-                      // Who to pay, before she commits to the order — not
-                      // after, when she is already standing at the office.
-                      if (selected && (option.instructions ?? '').isNotEmpty)
-                        Padding(
-                          padding: const EdgeInsets.only(top: DsSpacing.xs),
-                          child: Text(
-                            option.instructions!,
-                            style: context.dsText.bodySmall.tint(
-                              colors.onSurfaceVariant,
-                            ),
-                          ),
-                        ),
-                    ],
-                  ),
-                ),
-              ],
+    return _ChoiceCard(
+      icon: _iconOf(option.method),
+      selected: selected,
+      onTap: onTap,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(top: DsSpacing.sm),
+            child: Text(
+              // The app's own name for a known method, so checkout and the
+              // order page agree («محفظة ريم»); the server's label for one the
+              // app does not know yet.
+              switch (context.l10n.paymentMethodName(option.method)) {
+                final name when name != option.method => name,
+                _ => option.label,
+              },
+              style: context.dsText.body.semibold.tint(colors.onSurface),
             ),
           ),
-        ),
+          // Who to pay, before she commits to the order — not after, when she
+          // is already standing at the office.
+          AnimatedSize(
+            duration: DsMotion.moderate,
+            curve: DsMotion.gentle,
+            alignment: AlignmentDirectional.topStart,
+            child: selected && (option.instructions ?? '').isNotEmpty
+                ? Padding(
+                    padding: const EdgeInsets.only(top: DsSpacing.xs),
+                    child: Text(
+                      option.instructions!,
+                      style: context.dsText.bodySmall.tint(
+                        colors.onSurfaceVariant,
+                      ),
+                    ),
+                  )
+                : const SizedBox(width: double.infinity),
+          ),
+        ],
       ),
     );
   }
 }
 
-/// The pinned footer.
+/// Q44, as a card: a veil over her name, and the switch that draws it.
+class _PrivacyCard extends StatelessWidget {
+  const _PrivacyCard({required this.value, required this.onChanged});
+
+  final bool value;
+  final ValueChanged<bool> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.dsColors;
+    final l10n = context.l10n;
+    return AnimatedContainer(
+      duration: DsMotion.moderate,
+      padding: const EdgeInsets.all(DsSpacing.md),
+      decoration: BoxDecoration(
+        borderRadius: DsRadius.borderXl,
+        color: value
+            ? colors.secondaryContainer.withValues(alpha: 0.6)
+            : colors.surface.withValues(alpha: 0.85),
+        border: Border.all(color: value ? colors.secondary : colors.border),
+      ),
+      child: Row(
+        children: [
+          AnimatedSwitcher(
+            duration: DsMotion.moderate,
+            child: Icon(
+              value ? Icons.visibility_off_rounded : Icons.visibility_rounded,
+              key: ValueKey(value),
+              color: value ? colors.secondary : colors.onSurfaceVariant,
+            ),
+          ),
+          DsGaps.hSm,
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  l10n.checkoutPrivacyMask,
+                  style: context.dsText.body.semibold.tint(colors.onSurface),
+                ),
+                Text(
+                  l10n.checkoutPrivacyMaskHint,
+                  style: context.dsText.caption,
+                ),
+              ],
+            ),
+          ),
+          Switch(
+            value: value,
+            onChanged: onChanged,
+            activeThumbColor: colors.secondary,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// A small line on the receipt with its own mark.
+class _ReceiptNote extends StatelessWidget {
+  const _ReceiptNote({required this.icon, required this.text});
+
+  final IconData icon;
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.dsColors;
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Icon(icon, size: DsSizes.iconXs, color: colors.primary),
+        DsGaps.hXs,
+        Expanded(
+          child: Text(
+            text,
+            style: context.dsText.bodySmall.tint(colors.onSurfaceVariant),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+/// The pinned footer, on the floating ticket.
 ///
 /// It shows the two figures the server has actually quoted and says plainly
 /// that the total is computed when the order is placed. Adding them here would
@@ -822,17 +1004,7 @@ class _BottomBar extends StatelessWidget {
     final colors = context.dsColors;
     final l10n = context.l10n;
 
-    return Container(
-      padding: EdgeInsets.fromLTRB(
-        DsSpacing.lg,
-        DsSpacing.md,
-        DsSpacing.lg,
-        DsSpacing.md + MediaQuery.of(context).padding.bottom,
-      ),
-      decoration: BoxDecoration(
-        color: colors.surface,
-        border: Border(top: BorderSide(color: colors.border)),
-      ),
+    return TicketBar(
       child: Row(
         children: [
           Expanded(
@@ -840,51 +1012,38 @@ class _BottomBar extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                // Both figures give way before the bar does. A basket total
-                // beside a delivery fee, next to a fixed-width button, ran off
-                // the edge on a narrow phone — the price is what must survive,
-                // so it is the wider of the two flexes.
-                Row(
-                  children: [
-                    Flexible(
-                      flex: 3,
-                      child: Text(
-                        subtotal?.format() ?? '—',
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: context.dsText.tileTitle.bold.tint(
-                          colors.onSurface,
-                        ),
-                      ),
+                // The price must survive a narrow phone whole, so it shrinks
+                // to fit rather than losing digits to an ellipsis; the delivery
+                // fee takes the line under it.
+                FittedBox(
+                  fit: BoxFit.scaleDown,
+                  alignment: AlignmentDirectional.centerStart,
+                  child: Text(
+                    subtotal?.format() ?? '—',
+                    style: context.dsText.tileTitle.bold.tabular.tint(
+                      colors.onSurface,
                     ),
-                    if (deliveryFee != null) ...[
-                      const SizedBox(width: DsSpacing.xs),
-                      Flexible(
-                        flex: 2,
-                        child: Text(
-                          '+ ${deliveryFee!.format()}',
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: context.dsText.bodySmall.tint(
-                            colors.onSurfaceVariant,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ],
+                  ),
                 ),
-                Text(
-                  l10n.checkoutTotalPending,
-                  style: context.dsText.caption.tint(colors.onSurfaceVariant),
-                ),
+                if (deliveryFee != null)
+                  Text(
+                    '+ ${deliveryFee!.format()} ${l10n.checkoutDelivery}',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: context.dsText.bodySmall.tint(
+                      colors.onSurfaceVariant,
+                    ),
+                  ),
+                Text(l10n.checkoutTotalPending, style: context.dsText.caption),
               ],
             ),
           ),
-          const SizedBox(width: DsSpacing.sm),
-          SizedBox(
-            width: 160,
+          DsGaps.hSm,
+          Expanded(
             child: PrimaryButton(
               label: l10n.checkoutPlaceOrder,
+              icon: Icons.lock_rounded,
+              size: DsButtonSize.md,
               isLoading: isPlacing,
               onPressed: isPlacing ? null : onPlace,
             ),

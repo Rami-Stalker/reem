@@ -114,9 +114,13 @@ class _ContentComposerScreenState extends ConsumerState<ContentComposerScreen> {
     ContentDraft? draft,
     ContentTypeOption? type,
   ) {
+    final l10n = context.l10n;
     return ReemScrollPage(
+      // The studio stands in the same slow light as the way in: making
+      // something should feel like an occasion, not a form.
+      background: const AuthAurora(),
       slivers: [
-        PremiumAppBar(title: context.l10n.composerTitle, showBack: true),
+        PremiumAppBar(title: l10n.composerTitle, showBack: true),
         if (state.isLoading)
           const SliverFillRemaining(
             hasScrollBody: false,
@@ -132,11 +136,23 @@ class _ContentComposerScreenState extends ConsumerState<ContentComposerScreen> {
             padding: const EdgeInsets.all(DsSpacing.gutter),
             sliver: SliverList.list(
               children: [
-                _FormatPicker(
-                  types: state.types,
-                  selected: draft.contentType,
-                  onSelect: (key) {
-                    notifier.selectType(key);
+                StudioModeSwitch(
+                  modes: [
+                    for (final option in state.types)
+                      StudioMode(
+                        icon: _iconOf(option.format),
+                        label: l10n.contentTypeName(
+                          option.key,
+                          fallback: option.name,
+                        ),
+                        gradient: _lightOf(context, option.format),
+                      ),
+                  ],
+                  selected: state.types
+                      .indexWhere((option) => option.key == draft.contentType)
+                      .clamp(0, state.types.length - 1),
+                  onSelect: (index) {
+                    notifier.selectType(state.types[index].key);
                     // The picker resets media, so the field must be rebuilt
                     // from scratch rather than keeping tiles for a format that
                     // no longer accepts them.
@@ -144,58 +160,94 @@ class _ContentComposerScreenState extends ConsumerState<ContentComposerScreen> {
                   },
                 ),
                 DsGaps.vLg,
-                DsMediaField(
-                  // Keyed by format so switching post → reel rebuilds the
-                  // field from scratch: `DsMediaField` takes its tiles at
-                  // construction, and carrying photographs into a reel would
-                  // leave her looking at media the server will refuse.
-                  // l10n-ignore: a widget identity, not copy.
-                  key: ValueKey('composer-media-${draft.contentType}'),
-                  label: context.l10n.composerMediaLabel,
-                  helperText: type?.videoRequired == true
-                      ? context.l10n.composerMediaVideoHelp
-                      : null,
-                  purpose: MediaPurpose.post,
-                  video: type?.videoRequired ?? false,
-                  maxItems: type?.maxMedia ?? 5,
-                  enabled: !state.isSubmitting,
-                  onChanged: (urls) => notifier.setMedia([
-                    for (final url in urls)
-                      MediaItem(
-                        url: url,
-                        type: type?.videoRequired == true
-                            ? MediaType.video
-                            : MediaType.image,
-                      ),
-                  ]),
-                  onUploadingChanged: (busy) =>
-                      setState(() => _uploading = busy),
+                ViewfinderFrame(
+                  label: type == null
+                      ? l10n.composerMediaLabel
+                      : l10n.contentTypeName(type.key, fallback: type.name),
+                  shape: switch (type?.format) {
+                    ContentFormat.post => '4:5',
+                    ContentFormat.reel || ContentFormat.story => '9:16',
+                    _ => null,
+                  },
+                  gradient: _lightOf(context, type?.format),
+                  child: DsMediaField(
+                    // Keyed by format so switching post → reel rebuilds the
+                    // field from scratch: `DsMediaField` takes its tiles at
+                    // construction, and carrying photographs into a reel would
+                    // leave her looking at media the server will refuse.
+                    // l10n-ignore: a widget identity, not copy.
+                    key: ValueKey('composer-media-${draft.contentType}'),
+                    label: l10n.composerMediaLabel,
+                    helperText: type?.videoRequired == true
+                        ? l10n.composerMediaVideoHelp
+                        : null,
+                    purpose: MediaPurpose.post,
+                    video: type?.videoRequired ?? false,
+                    maxItems: type?.maxMedia ?? 5,
+                    enabled: !state.isSubmitting,
+                    onChanged: (urls) => notifier.setMedia([
+                      for (final url in urls)
+                        MediaItem(
+                          url: url,
+                          type: type?.videoRequired == true
+                              ? MediaType.video
+                              : MediaType.image,
+                        ),
+                    ]),
+                    onUploadingChanged: (busy) =>
+                        setState(() => _uploading = busy),
+                  ),
                 ),
                 DsGaps.vLg,
-                DsInputField(
-                  controller: _caption,
-                  label: context.l10n.composerCaptionLabel,
-                  hint: context.l10n.composerCaptionHint,
-                  maxLines: 4,
-                  enabled: !state.isSubmitting,
-                  onChanged: notifier.setCaption,
+                _Sheet(
+                  child: DsInputField(
+                    controller: _caption,
+                    label: l10n.composerCaptionLabel,
+                    hint: l10n.composerCaptionHint,
+                    maxLines: 4,
+                    enabled: !state.isSubmitting,
+                    onChanged: notifier.setCaption,
+                  ),
                 ),
                 if (type?.supportsProductTags ?? false) ...[
                   DsGaps.vLg,
-                  ProductTagPicker(
-                    products: state.taggable,
-                    selected: draft.productTags,
-                    onToggle: notifier.toggleProduct,
+                  _Sheet(
+                    child: ProductTagPicker(
+                      products: state.taggable,
+                      selected: draft.productTags,
+                      onToggle: notifier.toggleProduct,
+                    ),
                   ),
                 ],
                 DsGaps.vLg,
-                _AudiencePicker(
-                  selected: draft.visibility,
-                  onSelect: notifier.setVisibility,
+                Text(l10n.composerAudience, style: context.dsText.labelLarge),
+                DsGaps.vSm,
+                StudioSegment(
+                  options: [
+                    StudioSegmentOption(
+                      icon: Icons.public_rounded,
+                      label: l10n.composerAudiencePublic,
+                      hint: l10n.composerAudiencePublicHint,
+                    ),
+                    StudioSegmentOption(
+                      icon: Icons.people_rounded,
+                      label: l10n.composerAudienceFollowers,
+                      hint: l10n.composerAudienceFollowersHint,
+                    ),
+                  ],
+                  selected: draft.visibility == ContentVisibility.followers
+                      ? 1
+                      : 0,
+                  onSelect: (index) => notifier.setVisibility(
+                    index == 1
+                        ? ContentVisibility.followers
+                        : ContentVisibility.public,
+                  ),
                 ),
                 DsGaps.vXl,
                 PrimaryButton(
-                  label: context.l10n.composerPublish,
+                  label: l10n.composerPublish,
+                  icon: Icons.auto_awesome_rounded,
                   isLoading: state.isSubmitting,
                   // A submit while a photograph is still uploading would post
                   // a look with a missing picture.
@@ -206,7 +258,7 @@ class _ContentComposerScreenState extends ConsumerState<ContentComposerScreen> {
                 if (_uploading) ...[
                   DsGaps.vSm,
                   Text(
-                    context.l10n.mediaWaitForUploads,
+                    l10n.mediaWaitForUploads,
                     textAlign: TextAlign.center,
                     style: context.dsText.caption,
                   ),
@@ -220,10 +272,10 @@ class _ContentComposerScreenState extends ConsumerState<ContentComposerScreen> {
                 DsGaps.vLg,
                 PolicyNotice(
                   alignment: CrossAxisAlignment.center,
-                  message: context.l10n.composerPolicyNotice,
+                  message: l10n.composerPolicyNotice,
                   links: [
                     PolicyLink(
-                      label: context.l10n.policiesLinkContent,
+                      label: l10n.policiesLinkContent,
                       slug: PolicySlugs.content,
                     ),
                   ],
@@ -235,77 +287,48 @@ class _ContentComposerScreenState extends ConsumerState<ContentComposerScreen> {
       ],
     );
   }
-}
 
-/// Post / reel / story — whichever the registry says she may publish.
-class _FormatPicker extends StatelessWidget {
-  const _FormatPicker({
-    required this.types,
-    required this.selected,
-    required this.onSelect,
-  });
-
-  final List<ContentTypeOption> types;
-  final String selected;
-  final ValueChanged<String> onSelect;
-
-  IconData _icon(ContentFormat format) => switch (format) {
-    ContentFormat.reel => Icons.movie_creation_outlined,
-    ContentFormat.story => Icons.amp_stories_outlined,
-    ContentFormat.offer => Icons.local_offer_outlined,
-    ContentFormat.collection => Icons.collections_bookmark_outlined,
+  static IconData _iconOf(ContentFormat format) => switch (format) {
+    ContentFormat.reel => Icons.movie_creation_rounded,
+    ContentFormat.story => Icons.auto_stories_rounded,
+    ContentFormat.offer => Icons.local_offer_rounded,
+    ContentFormat.collection => Icons.collections_bookmark_rounded,
     ContentFormat.live => Icons.podcasts_rounded,
-    ContentFormat.post => Icons.photo_outlined,
+    ContentFormat.post => Icons.photo_camera_rounded,
   };
 
-  @override
-  Widget build(BuildContext context) {
-    return Wrap(
-      spacing: DsSpacing.sm,
-      runSpacing: DsSpacing.sm,
-      children: [
-        for (final type in types)
-          DsChip(
-            label: context.l10n.contentTypeName(type.key, fallback: type.name),
-            icon: _icon(type.format),
-            selected: type.key == selected,
-            onTap: () => onSelect(type.key),
-          ),
-      ],
-    );
-  }
+  /// Each format's own light: rose for a post, rose into orchid for a reel,
+  /// champagne for a story — the same three the create sheet draws.
+  static Gradient _lightOf(BuildContext context, ContentFormat? format) =>
+      switch (format) {
+        ContentFormat.reel => DsGradients.rewards,
+        ContentFormat.story => DsGradients.gold,
+        ContentFormat.post || null => context.primaryGradient,
+        _ => DsGradients.mauve,
+      };
 }
 
-/// Who gets to see it.
-class _AudiencePicker extends StatelessWidget {
-  const _AudiencePicker({required this.selected, required this.onSelect});
+/// A sheet of frosted paper for the words.
+class _Sheet extends StatelessWidget {
+  const _Sheet({required this.child});
 
-  final ContentVisibility selected;
-  final ValueChanged<ContentVisibility> onSelect;
+  final Widget child;
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(context.l10n.composerAudience, style: context.dsText.labelLarge),
-        DsGaps.vSm,
-        Wrap(
-          spacing: DsSpacing.sm,
-          children: [
-            DsChip(
-              label: context.l10n.composerAudiencePublic,
-              selected: selected == ContentVisibility.public,
-              onTap: () => onSelect(ContentVisibility.public),
-            ),
-            DsChip(
-              label: context.l10n.composerAudienceFollowers,
-              selected: selected == ContentVisibility.followers,
-              onTap: () => onSelect(ContentVisibility.followers),
-            ),
-          ],
+    final colors = context.dsColors;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    return Container(
+      padding: const EdgeInsets.all(DsSpacing.md),
+      decoration: BoxDecoration(
+        borderRadius: DsRadius.borderXxl,
+        color: (isDark ? colors.surfaceElevated : colors.surface).withValues(
+          alpha: 0.88,
         ),
-      ],
+        border: Border.all(color: colors.border.withValues(alpha: 0.6)),
+        boxShadow: context.shadowSoft,
+      ),
+      child: child,
     );
   }
 }

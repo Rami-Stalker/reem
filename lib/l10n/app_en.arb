@@ -14377,5 +14377,26 @@
   "accountDeleted": "Your account has been deleted.",
   "@accountDeleted": {
     "description": "Account deletion"
+  },
+  "cartBoutiquesCount": "{count, plural, =1{1 boutique} other{{count} boutiques}}",
+  "@cartBoutiquesCount": {
+    "description": "How many boutiques the basket's pieces come from",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "checkoutStepPrivacy": "Your privacy",
+  "@checkoutStepPrivacy": {
+    "description": "Checkout station: whether the boutique sees her full name"
+  },
+  "composerAudiencePublicHint": "Everyone can see it",
+  "@composerAudiencePublicHint": {
+    "description": "Under the public audience option"
+  },
+  "composerAudienceFollowersHint": "Only your followers",
+  "@composerAudienceFollowersHint": {
+    "description": "Under the followers-only audience option"
   }
 }

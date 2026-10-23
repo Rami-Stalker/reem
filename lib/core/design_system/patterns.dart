@@ -2,6 +2,8 @@
 export 'package:reem/core/design_system/patterns/admin_console.dart';
 // The sign-in journey's stage: aurora ground, arch emblem, frosted panel.
 export 'package:reem/core/design_system/patterns/auth_stage.dart';
+// Buying: the boutique bag, the ticket, the receipt.
+export 'package:reem/core/design_system/patterns/commerce_stage.dart';
 export 'package:reem/core/design_system/patterns/customer_boutique.dart';
 export 'package:reem/core/design_system/patterns/editorial_media.dart';
 export 'package:reem/core/design_system/patterns/experience_design.dart';
@@ -22,3 +24,5 @@ export 'package:reem/core/design_system/patterns/profile_stage.dart';
 export 'package:reem/core/design_system/patterns/reem_page_scaffold.dart';
 export 'package:reem/core/design_system/patterns/reem_section_header.dart';
 export 'package:reem/core/design_system/patterns/seller_atelier.dart';
+// Publishing: the studio's mode dial and viewfinder.
+export 'package:reem/core/design_system/patterns/studio_stage.dart';
