@@ -10,10 +10,6 @@ import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/platform/app_haptics.dart';
 import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/core/shared/entities/product.dart';
-import 'package:reem/core/shared/entities/user.dart';
-import 'package:reem/core/shared/services/share_service.dart';
-import 'package:reem/features/chat/domain/entities/chat_start_request.dart';
-import 'package:reem/features/chat/presentation/widgets/message_seller_button.dart';
 import 'package:reem/features/discovery/presentation/providers/collection_state.dart';
 import 'package:reem/features/discovery/presentation/providers/discovery_providers.dart';
 import 'package:reem/features/highlights/presentation/widgets/highlights_rail.dart';
@@ -25,11 +21,9 @@ import 'package:reem/features/social/presentation/providers/social_providers.dar
 import 'package:reem/features/social/presentation/widgets/interactive_content_card.dart';
 import 'package:reem/features/user_profile/domain/entities/user_profile.dart';
 import 'package:reem/features/user_profile/presentation/providers/user_profile_providers.dart';
-import 'package:reem/features/user_profile/presentation/widgets/follow_button.dart';
 import 'package:reem/features/user_profile/presentation/widgets/my_page_card.dart';
-import 'package:reem/features/user_profile/presentation/widgets/profile_stat_tile.dart';
+import 'package:reem/features/user_profile/presentation/widgets/profile_page_header.dart';
 import 'package:reem/features/user_profile/presentation/widgets/seller_reviews_section.dart';
-import 'package:reem/features/user_profile/presentation/widgets/seller_stats_card.dart';
 
 /// What a page can show.
 enum ProfileTab { products, posts, reels, picks, stories, reviews }
@@ -98,7 +92,9 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
     final position = _scroll.position;
     if (position.maxScrollExtent - position.pixels > 700) return;
 
-    final profile = ref.read(userProfileNotifierProvider(widget.userId)).profile;
+    final profile = ref
+        .read(userProfileNotifierProvider(widget.userId))
+        .profile;
     if (profile == null || !profile.isReadable) return;
     final id = profile.user.id;
     switch (_selected(profile)) {
@@ -120,7 +116,9 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
       userProfileNotifierProvider(widget.userId).notifier,
     );
     await notifier.refresh();
-    final profile = ref.read(userProfileNotifierProvider(widget.userId)).profile;
+    final profile = ref
+        .read(userProfileNotifierProvider(widget.userId))
+        .profile;
     if (profile == null) return;
     final id = profile.user.id;
     ref
@@ -149,26 +147,9 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
       controller: _scroll,
       onRefresh: _refresh,
       slivers: [
-        PremiumAppBar(
-          title: profile != null
-              ? '@${profile.user.username}'
-              : l10n.profileTitle,
-          showBack: true,
-          actions: [
-            if (profile != null)
-              DsIconButton(
-                icon: Icons.ios_share_rounded,
-                tooltip: l10n.contentShare,
-                variant: DsIconButtonVariant.ghost,
-                onPressed: () => ShareService.profile(
-                  context: context,
-                  userId: profile.user.id,
-                  name: profile.user.name,
-                  imageUrl: profile.user.imageUrl,
-                ),
-              ),
-          ],
-        ),
+        // Until there is somebody to frame, a plain bar with a way back.
+        if (profile == null)
+          PremiumAppBar(title: l10n.profileTitle, showBack: true),
         if (state.isLoading && profile == null)
           const SliverFillRemaining(
             hasScrollBody: false,
@@ -184,7 +165,7 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
           )
         else ...[
           SliverToBoxAdapter(
-            child: _ProfileHeader(
+            child: ProfilePageHeader(
               profile: profile,
               isFollowLoading: state.isFollowLoading,
               onToggleFollow: notifier.toggleFollow,
@@ -223,6 +204,9 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
                 selected: _selected(profile),
                 onSelect: _select,
                 labelOf: (tab) => _label(context, tab, profile),
+                tone: profile.isSeller
+                    ? ProfileTone.boutique
+                    : ProfileTone.shopper,
               ),
             ),
             ..._tabSlivers(profile, _selected(profile)),
@@ -240,7 +224,8 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
       ProfileTab.products => l10n.products,
       ProfileTab.posts => l10n.profilePosts,
       ProfileTab.reels => l10n.profileTabReels,
-      ProfileTab.picks => p.isMe ? l10n.profileTabMyPicks : l10n.profileTabPicks,
+      ProfileTab.picks =>
+        p.isMe ? l10n.profileTabMyPicks : l10n.profileTabPicks,
       ProfileTab.stories => l10n.profileTabStories,
       ProfileTab.reviews => l10n.reviewsAndRatings,
     };
@@ -278,235 +263,6 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
   }
 }
 
-// ── Header ──────────────────────────────────────────────────────────────────
-
-class _ProfileHeader extends ConsumerWidget {
-  const _ProfileHeader({
-    required this.profile,
-    required this.isFollowLoading,
-    required this.onToggleFollow,
-  });
-
-  final UserProfile profile;
-  final bool isFollowLoading;
-  final VoidCallback onToggleFollow;
-
-  Future<void> _openStories(BuildContext context, WidgetRef ref) async {
-    final groups = await ref.read(userStoriesProvider(profile.user.id).future);
-    if (!context.mounted || groups.isEmpty) return;
-    openStoryGroups(context, groups);
-  }
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final colors = context.dsColors;
-    final user = profile.user;
-    // The ring means "there is a story to watch", and only while there is.
-    final hasStory = profile.hasStory && profile.isReadable;
-
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(
-        DsSpacing.lg,
-        DsSpacing.md,
-        DsSpacing.lg,
-        DsSpacing.lg,
-      ),
-      child: Column(
-        children: [
-          DsAvatar(
-            imageUrl: user.imageUrl,
-            name: user.name,
-            size: 104,
-            hasRing: hasStory,
-            onTap: hasStory ? () => _openStories(context, ref) : null,
-          ),
-          const SizedBox(height: DsSpacing.md),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Flexible(
-                child: Text(
-                  user.name,
-                  textAlign: TextAlign.center,
-                  style: context.dsText.screenTitle.bold.tint(colors.onSurface),
-                ),
-              ),
-              if (user.isVerified) ...[
-                const SizedBox(width: DsSpacing.xs),
-                Icon(Icons.verified_rounded, color: colors.primary, size: 20),
-              ],
-            ],
-          ),
-          const SizedBox(height: DsSpacing.xs),
-          _RoleBadge(role: user.role),
-          if (user.bio != null && user.bio!.isNotEmpty) ...[
-            const SizedBox(height: DsSpacing.md),
-            Text(
-              user.bio!,
-              textAlign: TextAlign.center,
-              style: context.dsText.body
-                  .tint(colors.onSurfaceVariant)
-                  .copyWith(height: 1.4),
-            ),
-          ],
-          if (user.location != null && user.location!.isNotEmpty) ...[
-            const SizedBox(height: DsSpacing.sm),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.place_outlined,
-                  size: 16,
-                  color: colors.onSurfaceVariant,
-                ),
-                DsGaps.hXxs,
-                Text(
-                  user.location!,
-                  style: context.dsText.bodySmall.tint(colors.onSurfaceVariant),
-                ),
-              ],
-            ),
-          ],
-          const SizedBox(height: DsSpacing.lg),
-          _StatsRow(profile: profile),
-          const SizedBox(height: DsSpacing.lg),
-          if (profile.isMe) ...[
-            SecondaryButton(
-              label: context.l10n.profileEdit,
-              onPressed: () => context.push(RoutePaths.editProfile),
-            ),
-            if (user.isSeller) ...[
-              const SizedBox(height: DsSpacing.sm),
-              PrimaryButton(
-                label: context.l10n.profileManageStore,
-                icon: Icons.storefront_outlined,
-                onPressed: () => context.push(RoutePaths.myProducts),
-              ),
-            ],
-          ] else ...[
-            // A closed page cannot be followed — the server refuses it — so
-            // the button is not offered rather than offered and refused.
-            if (profile.isReadable)
-              FollowButton(
-                isFollowing: profile.isFollowing,
-                isLoading: isFollowLoading,
-                onPressed: onToggleFollow,
-              ),
-            // Only a boutique can be written to: the server refuses any
-            // pairing that is not buyer↔seller.
-            if (profile.isSeller) ...[
-              const SizedBox(height: DsSpacing.sm),
-              MessageSellerButton(
-                label: context.l10n.messageSeller,
-                request: ChatStartRequest.peer(peerId: user.id),
-              ),
-            ],
-          ],
-          if (profile.isSeller && profile.sellerStats != null) ...[
-            const SizedBox(height: DsSpacing.xl),
-            SellerStatsCard(stats: profile.sellerStats!),
-          ],
-        ],
-      ),
-    );
-  }
-}
-
-class _StatsRow extends StatelessWidget {
-  const _StatsRow({required this.profile});
-
-  final UserProfile profile;
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = context.dsColors;
-    Widget divider() => Container(width: 1, height: 28, color: colors.border);
-
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        ProfileStatTile(
-          value: _compact(profile.postsCount),
-          label: context.l10n.profilePosts,
-        ),
-        divider(),
-        ProfileStatTile(
-          value: _compact(profile.user.followersCount),
-          label: context.l10n.profileFollowers,
-          onTap: () => context.push(RoutePaths.followersOf(profile.user.id)),
-        ),
-        divider(),
-        ProfileStatTile(
-          value: _compact(profile.user.followingCount),
-          label: context.l10n.profileFollowing,
-          onTap: () => context.push(RoutePaths.followingOf(profile.user.id)),
-        ),
-      ],
-    );
-  }
-
-  String _compact(int n) {
-    if (n >= 1000000) return '${(n / 1000000).toStringAsFixed(1)}M';
-    if (n >= 1000) return '${(n / 1000).toStringAsFixed(1)}k';
-    return '$n';
-  }
-}
-
-class _RoleBadge extends StatelessWidget {
-  const _RoleBadge({required this.role});
-
-  final UserRole role;
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = context.dsColors;
-    final isSeller = role == UserRole.seller;
-    final isAdmin = role == UserRole.admin;
-    final color = isAdmin
-        ? colors.error
-        : isSeller
-        ? colors.primary
-        : colors.onSurfaceVariant;
-
-    return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: DsSpacing.sm,
-        vertical: DsSpacing.xxs,
-      ),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.12),
-        borderRadius: BorderRadius.circular(DsRadius.full),
-        border: Border.all(color: color.withValues(alpha: 0.4)),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(
-            isAdmin
-                ? Icons.shield_outlined
-                : isSeller
-                ? Icons.storefront_outlined
-                : Icons.person_outline,
-            size: 13,
-            color: color,
-          ),
-          DsGaps.hXxs,
-          Text(
-            // `role.label` is the English wire identifier; the badge used to
-            // print "Customer" on an Arabic page.
-            isAdmin
-                ? context.l10n.adminRoleAdmin
-                : isSeller
-                ? context.l10n.roleSeller
-                : context.l10n.roleBuyer,
-            style: context.dsText.bodySmall.semibold.tint(color),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
 /// A shopper's page she has not opened. Said plainly, so a visitor does not
 /// read an empty page as a woman who never posted.
 class _PrivatePage extends StatelessWidget {
@@ -535,14 +291,16 @@ class _TabsHeader extends SliverPersistentHeaderDelegate {
     required this.selected,
     required this.onSelect,
     required this.labelOf,
+    required this.tone,
   });
 
   final List<ProfileTab> tabs;
   final ProfileTab selected;
   final ValueChanged<ProfileTab> onSelect;
   final String Function(ProfileTab tab) labelOf;
+  final ProfileTone tone;
 
-  static const double _height = 60;
+  static const double _height = 68;
 
   @override
   double get minExtent => _height;
@@ -554,40 +312,37 @@ class _TabsHeader extends SliverPersistentHeaderDelegate {
   Widget build(BuildContext context, double shrinkOffset, bool overlaps) {
     final c = context.dsColors;
     return ColoredBox(
-      color: c.background.withValues(alpha: overlaps ? 0.96 : 0),
-      child: ListView.separated(
-        scrollDirection: Axis.horizontal,
+      color: c.background.withValues(alpha: overlaps ? 0.94 : 0),
+      child: Padding(
         padding: const EdgeInsets.symmetric(
           horizontal: DsSpacing.lg,
-          vertical: DsSpacing.sm,
+          vertical: DsSpacing.xxs,
         ),
-        itemCount: tabs.length,
-        separatorBuilder: (_, _) => DsGaps.hXs,
-        itemBuilder: (context, index) {
-          final tab = tabs[index];
-          return DsChip(
-            label: labelOf(tab),
-            icon: _iconOf(tab),
-            selected: tab == selected,
-            onTap: () => onSelect(tab),
-          );
-        },
+        child: ProfileTabBar(
+          tone: tone,
+          items: [
+            for (final tab in tabs)
+              ProfileTabItem(icon: _iconOf(tab), label: labelOf(tab)),
+          ],
+          selected: tabs.indexOf(selected),
+          onSelect: (index) => onSelect(tabs[index]),
+        ),
       ),
     );
   }
 
   static IconData _iconOf(ProfileTab tab) => switch (tab) {
-    ProfileTab.products => Icons.shopping_bag_outlined,
-    ProfileTab.posts => Icons.grid_on_rounded,
-    ProfileTab.reels => Icons.movie_creation_outlined,
-    ProfileTab.picks => Icons.add_to_photos_outlined,
-    ProfileTab.stories => Icons.amp_stories_outlined,
-    ProfileTab.reviews => Icons.star_outline_rounded,
+    ProfileTab.products => Icons.shopping_bag_rounded,
+    ProfileTab.posts => Icons.grid_view_rounded,
+    ProfileTab.reels => Icons.play_circle_rounded,
+    ProfileTab.picks => Icons.bookmark_added_rounded,
+    ProfileTab.stories => Icons.auto_stories_rounded,
+    ProfileTab.reviews => Icons.star_rounded,
   };
 
   @override
   bool shouldRebuild(_TabsHeader old) =>
-      old.selected != selected || old.tabs != tabs;
+      old.selected != selected || old.tabs != tabs || old.tone != tone;
 }
 
 /// A boutique's products or a shopper's picks, in whichever of the three

@@ -5,7 +5,8 @@ import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/shared/value_objects/money.dart';
 import 'package:reem/features/user_profile/domain/entities/seller_stats.dart';
 
-/// Premium seller dashboard summary: products, sales, orders, rating.
+/// A boutique's figures under its awning: the rating given the most room —
+/// it is the one a shopper reads first — then pieces, sales and orders.
 class SellerStatsCard extends StatelessWidget {
   const SellerStatsCard({super.key, required this.stats});
 
@@ -14,48 +15,74 @@ class SellerStatsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.dsColors;
+    final l10n = context.l10n;
     // Her revenue, in the currency she actually earned it in. The tile used to
     // hard-code a dollar sign in front of the figure and abbreviate it "k",
     // which on a Damascus boutique's SYP takings was wrong twice over.
     final sales = stats.totalSales.primary;
     final money = sales == null ? '—' : sales.formatCompact();
+    final rating = stats.averageRating.clamp(0, 5).toDouble();
 
-    return DsGlassCard(
+    return ProfileAwning(
+      title: l10n.sellerInsights,
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              Icon(Icons.storefront_rounded, size: 18, color: colors.primary),
-              const SizedBox(width: DsSpacing.xs),
-              Text(
-                context.l10n.sellerInsights,
-                style: context.dsText.tileTitle.bold.tint(colors.onSurface),
-              ),
-            ],
+          Semantics(
+            label: '${l10n.sellerRatingStat} ${rating.toStringAsFixed(1)}',
+            excludeSemantics: true,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  rating.toStringAsFixed(1),
+                  style: context.dsText.metric.displayFamily.bold.copyWith(
+                    color: DsColors.gold600,
+                    height: 1,
+                  ),
+                ),
+                DsGaps.hSm,
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        for (var i = 1; i <= 5; i++)
+                          Icon(
+                            rating >= i
+                                ? Icons.star_rounded
+                                : rating >= i - 0.5
+                                ? Icons.star_half_rounded
+                                : Icons.star_outline_rounded,
+                            size: DsSizes.iconXs,
+                            color: colors.rating,
+                          ),
+                      ],
+                    ),
+                    Text(l10n.sellerRatingStat, style: context.dsText.caption),
+                  ],
+                ),
+              ],
+            ),
           ),
-          const SizedBox(height: DsSpacing.md),
+          DsGaps.vMd,
+          Divider(height: 1, color: DsColors.gold300.withValues(alpha: 0.4)),
+          DsGaps.vMd,
           Row(
             children: [
               _Metric(
-                icon: Icons.inventory_2_outlined,
+                icon: Icons.inventory_2_rounded,
                 value: '${stats.productsCount}',
-                label: context.l10n.sellerProductsStat,
+                label: l10n.sellerProductsStat,
               ),
               _Metric(
-                icon: Icons.payments_outlined,
+                icon: Icons.payments_rounded,
                 value: money,
-                label: context.l10n.sellerSalesStat,
+                label: l10n.sellerSalesStat,
               ),
               _Metric(
-                icon: Icons.receipt_long_outlined,
+                icon: Icons.receipt_long_rounded,
                 value: '${stats.ordersCount}',
-                label: context.l10n.sellerOrdersStat,
-              ),
-              _Metric(
-                icon: Icons.star_rounded,
-                value: stats.averageRating.toStringAsFixed(1),
-                label: context.l10n.sellerRatingStat,
+                label: l10n.sellerOrdersStat,
               ),
             ],
           ),
@@ -78,13 +105,27 @@ class _Metric extends StatelessWidget {
     return Expanded(
       child: Column(
         children: [
-          Icon(icon, color: colors.primary, size: 20),
-          const SizedBox(height: DsSpacing.xs),
-          Text(value, style: context.dsText.body.bold.tint(colors.onSurface)),
-          DsGaps.vXxxs,
+          Container(
+            width: DsSizes.avatarSm,
+            height: DsSizes.avatarSm,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: colors.accentContainer,
+            ),
+            child: Icon(icon, size: DsSizes.iconXs, color: DsColors.gold600),
+          ),
+          DsGaps.vXs,
+          FittedBox(
+            child: Text(
+              value,
+              style: context.dsText.bodyStrong.tint(colors.onSurface),
+            ),
+          ),
           Text(
             label,
-            style: context.dsText.bodySmall.tint(colors.onSurfaceVariant),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: context.dsText.caption,
           ),
         ],
       ),

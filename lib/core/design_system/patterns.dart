@@ -17,6 +17,8 @@ export 'package:reem/core/design_system/patterns/product_grid.dart';
 export 'package:reem/core/design_system/patterns/product_mosaic.dart';
 export 'package:reem/core/design_system/patterns/product_rail.dart';
 export 'package:reem/core/design_system/patterns/product_shape.dart';
+// Every profile, a shopper's or a boutique's: the portrait in an arch.
+export 'package:reem/core/design_system/patterns/profile_stage.dart';
 export 'package:reem/core/design_system/patterns/reem_page_scaffold.dart';
 export 'package:reem/core/design_system/patterns/reem_section_header.dart';
 export 'package:reem/core/design_system/patterns/seller_atelier.dart';

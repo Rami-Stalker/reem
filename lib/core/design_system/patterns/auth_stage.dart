@@ -229,8 +229,14 @@ class AuthJourney extends StatelessWidget {
 /// undulate across the page; sparkles twinkle in the upper half where the
 /// emblem sits. Everything is painted in one layer from one controller, so the
 /// cost is a single repaint per frame with no blur filters.
+/// Which light the aurora is made of: the boutique's rose, or the warmer
+/// champagne a seller's page stands in.
+enum AuroraTone { rose, champagne }
+
 class AuthAurora extends StatefulWidget {
-  const AuthAurora({super.key});
+  const AuthAurora({super.key, this.tone = AuroraTone.rose});
+
+  final AuroraTone tone;
 
   @override
   State<AuthAurora> createState() => _AuthAuroraState();
@@ -270,7 +276,12 @@ class _AuthAuroraState extends State<AuthAurora>
         size: Size.infinite,
         painter: _AuroraPainter(
           animation: _controller,
-          palette: isDark ? _AuroraPalette.dark : _AuroraPalette.light,
+          palette: switch ((widget.tone, isDark)) {
+            (AuroraTone.rose, false) => _AuroraPalette.light,
+            (AuroraTone.rose, true) => _AuroraPalette.dark,
+            (AuroraTone.champagne, false) => _AuroraPalette.champagneLight,
+            (AuroraTone.champagne, true) => _AuroraPalette.champagneDark,
+          },
         ),
       ),
     );
@@ -305,6 +316,26 @@ class _AuroraPalette {
     ribbonRose: Color(0x2EE85A8A),
     ribbonGold: Color(0x4DE6C277),
     sparkle: DsColors.gold400,
+  );
+
+  static const champagneLight = _AuroraPalette(
+    ground: [Color(0xFFFFFBF4), Color(0xFFFBF1E4), Color(0xFFF9EFF4)],
+    rose: Color(0x59F7AAC5),
+    orchid: Color(0x59E6C277),
+    champagne: Color(0x99F0D9A0),
+    ribbonRose: Color(0x24E85A8A),
+    ribbonGold: Color(0x66E6C277),
+    sparkle: DsColors.gold500,
+  );
+
+  static const champagneDark = _AuroraPalette(
+    ground: [Color(0xFF1D1612), Color(0xFF17111A), Color(0xFF100B12)],
+    rose: Color(0x30FF87B0),
+    orchid: Color(0x38E6C277),
+    champagne: Color(0x40E6C277),
+    ribbonRose: Color(0x1FFF87B0),
+    ribbonGold: Color(0x2EE6C277),
+    sparkle: DsColors.gold300,
   );
 
   static const dark = _AuroraPalette(
@@ -378,6 +409,10 @@ class _AuroraPainter extends CustomPainter {
     final t = animation.value;
     final rect = Offset.zero & size;
     const tau = math.pi * 2;
+
+    // The blooms are larger than the box; outside it they would tint whatever
+    // is drawn next — on a profile, the page under the hero.
+    canvas.clipRect(rect);
 
     // Ground.
     canvas.drawRect(
@@ -650,38 +685,6 @@ class _AuthEmblemState extends State<AuthEmblem>
   }
 }
 
-/// A pointed arch inside [r]: straight jambs, two curves meeting at the
-/// crown, softly rounded feet.
-Path _archPath(Rect r) {
-  final w = r.width;
-  final spring = r.top + w * 0.6;
-  final foot = math.min(w * 0.16, r.height * 0.12);
-  return Path()
-    ..moveTo(r.left, r.bottom - foot)
-    ..lineTo(r.left, spring)
-    ..cubicTo(
-      r.left,
-      r.top + w * 0.26,
-      r.left + w * 0.30,
-      r.top + w * 0.07,
-      r.center.dx,
-      r.top,
-    )
-    ..cubicTo(
-      r.right - w * 0.30,
-      r.top + w * 0.07,
-      r.right,
-      r.top + w * 0.26,
-      r.right,
-      spring,
-    )
-    ..lineTo(r.right, r.bottom - foot)
-    ..quadraticBezierTo(r.right, r.bottom, r.right - foot, r.bottom)
-    ..lineTo(r.left + foot, r.bottom)
-    ..quadraticBezierTo(r.left, r.bottom, r.left, r.bottom - foot)
-    ..close();
-}
-
 class _EmblemPainter extends CustomPainter {
   _EmblemPainter({
     required this.animation,
@@ -710,14 +713,14 @@ class _EmblemPainter extends CustomPainter {
 
     // Halo.
     canvas.drawPath(
-      _archPath(arch.inflate(4)),
+      dsArchPath(arch.inflate(4)),
       Paint()
         ..color = glow
         ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 26),
     );
 
     // Turning thread.
-    final outer = _archPath(arch);
+    final outer = dsArchPath(arch);
     canvas.drawPath(
       outer,
       Paint()
@@ -728,7 +731,7 @@ class _EmblemPainter extends CustomPainter {
     );
 
     // The window itself.
-    final inner = _archPath(arch.deflate(3.5));
+    final inner = dsArchPath(arch.deflate(3.5));
     canvas.drawPath(
       inner,
       Paint()
@@ -775,7 +778,7 @@ class _EmblemPainter extends CustomPainter {
 
     // Inner pearl hairline.
     canvas.drawPath(
-      _archPath(arch.deflate(9)),
+      dsArchPath(arch.deflate(9)),
       Paint()
         ..style = PaintingStyle.stroke
         ..strokeWidth = 1
