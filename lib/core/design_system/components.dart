@@ -25,6 +25,7 @@ export 'package:reem/core/design_system/components/cards/surface_card.dart';
 // Chips & filters
 export 'package:reem/core/design_system/components/chips/ds_chip.dart';
 // Decorations & ornaments
+export 'package:reem/core/design_system/components/decorations/ds_arch.dart';
 export 'package:reem/core/design_system/components/decorations/ds_ornaments.dart';
 export 'package:reem/core/design_system/components/dialogs/ds_dialog.dart';
 // Inputs & search

@@ -14,15 +14,13 @@ import 'package:reem/features/profile/presentation/providers/profile_overview_pr
 import 'package:reem/features/profile/presentation/providers/profile_provider.dart';
 import 'package:reem/features/profile/presentation/widgets/profile_achievements.dart';
 import 'package:reem/features/profile/presentation/widgets/profile_completion_card.dart';
-import 'package:reem/features/profile/presentation/widgets/profile_cover.dart';
 import 'package:reem/features/profile/presentation/widgets/profile_followed_stores.dart';
-import 'package:reem/features/profile/presentation/widgets/profile_identity.dart';
+import 'package:reem/features/profile/presentation/widgets/profile_header.dart';
 import 'package:reem/features/profile/presentation/widgets/profile_loyalty_dashboard.dart';
 import 'package:reem/features/profile/presentation/widgets/profile_menu.dart';
 import 'package:reem/features/profile/presentation/widgets/profile_orders_overview.dart';
 import 'package:reem/features/profile/presentation/widgets/profile_recently_viewed.dart';
 import 'package:reem/features/profile/presentation/widgets/profile_referral_card.dart';
-import 'package:reem/features/profile/presentation/widgets/profile_stats.dart';
 import 'package:reem/features/profile/presentation/widgets/profile_wishlist_preview.dart';
 import 'package:reem/features/seller_dashboard/presentation/screens/seller_profile_screen.dart';
 import 'package:reem/features/user_profile/presentation/providers/user_profile_providers.dart';
@@ -86,17 +84,7 @@ class _BuyerProfileScreenState extends ConsumerState<_BuyerProfileScreen> {
   Widget build(BuildContext context) {
     final user = ref.watch(authNotifierProvider.select((s) => s.user));
 
-    if (user == null) {
-      return ReemScrollPage(
-        slivers: [
-          PremiumAppBar(title: context.l10n.profile),
-          const SliverFillRemaining(
-            hasScrollBody: false,
-            child: _GuestProfileExperience(),
-          ),
-        ],
-      );
-    }
+    if (user == null) return const _GuestProfileExperience();
 
     final savedCount = ref.watch(
       favoritesNotifierProvider.select((s) => s.favorites.length),
@@ -105,18 +93,13 @@ class _BuyerProfileScreenState extends ConsumerState<_BuyerProfileScreen> {
     return ReemScrollPage(
       onRefresh: _refresh,
       slivers: [
-        ProfileCover(user: user),
-
-        SliverToBoxAdapter(child: ProfileIdentity(user: user)),
-        const _Gap(DsSpacing.lg),
+        SliverToBoxAdapter(
+          child: ProfileHeader(user: user, savedCount: savedCount),
+        ),
+        const _Gap(DsSpacing.xl),
 
         _box(const ProfileCompletionCard()),
-        const _Gap(DsSpacing.md),
-
-        SliverToBoxAdapter(
-          child: ProfileStats(user: user, savedCount: savedCount),
-        ),
-        const _Gap(DsSpacing.md),
+        const _Gap(DsSpacing.lg),
 
         // «الأبرز» — her own rail, with the invitation to start one. Above
         // «صفحتي» on purpose: what she keeps is the first thing another woman
@@ -185,81 +168,65 @@ class _BuyerProfileScreenState extends ConsumerState<_BuyerProfileScreen> {
   }
 }
 
+/// Her profile before she has one: the same stage as the way in, saying what
+/// an account keeps for her and offering the two doors.
 class _GuestProfileExperience extends StatelessWidget {
   const _GuestProfileExperience();
 
   @override
   Widget build(BuildContext context) {
-    final c = context.dsColors;
-    return Padding(
-      // `SliverFillRemaining` fills the viewport, which extends under the
-      // floating rail — so a centred column's last two buttons, which is
-      // exactly «تسجيل الدخول» and «إنشاء حساب», were drawn behind it.
-      padding: DsSpacing.screenPadding.add(
-        EdgeInsets.only(bottom: MediaQuery.paddingOf(context).bottom),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Icon(Icons.person_outline_rounded, size: 58, color: c.primary),
-          const SizedBox(height: DsSpacing.xl),
-          Text(
-            context.l10n.guestProfile,
-            textAlign: TextAlign.center,
-            style: Theme.of(
-              context,
-            ).textTheme.headlineSmall?.copyWith(fontWeight: DsTypography.bold),
+    final l10n = context.l10n;
+    return AuthStage(
+      children: [
+        const Spacer(),
+        const AuthEmblem(icon: Icons.person_rounded),
+        AuthHeading(title: l10n.guestProfile, subtitle: l10n.guestBrowseBlurb),
+        DsGaps.vXl,
+        AuthPanel(
+          padding: const EdgeInsets.symmetric(
+            horizontal: DsSpacing.xl,
+            vertical: DsSpacing.lg,
           ),
-          const SizedBox(height: DsSpacing.sm),
-          Text(
-            context.l10n.guestBrowseBlurb,
-            textAlign: TextAlign.center,
-            style: Theme.of(
-              context,
-            ).textTheme.bodyMedium?.copyWith(color: c.onSurfaceVariant),
+          child: Column(
+            children: [
+              _GuestBenefit(
+                icon: Icons.favorite_rounded,
+                title: l10n.saveYourProgress,
+                message: l10n.savedProgressBlurb,
+              ),
+              DsGaps.vMd,
+              _GuestBenefit(
+                icon: Icons.auto_awesome_rounded,
+                title: l10n.personalRecommendations,
+                message: l10n.personalRecommendationsBlurb,
+              ),
+              DsGaps.vMd,
+              _GuestBenefit(
+                icon: Icons.verified_user_rounded,
+                title: l10n.secureAccountControls,
+                message: l10n.manageSecurityBlurb,
+              ),
+            ],
           ),
-          const SizedBox(height: DsSpacing.xl),
-          SurfaceCard(
-            child: Column(
-              children: [
-                _GuestBenefit(
-                  icon: Icons.favorite_border_rounded,
-                  title: context.l10n.saveYourProgress,
-                  message:
-                      context.l10n.savedProgressBlurb,
-                ),
-                SizedBox(height: DsSpacing.md),
-                _GuestBenefit(
-                  icon: Icons.auto_awesome_rounded,
-                  title: context.l10n.personalRecommendations,
-                  message:
-                      context.l10n.personalRecommendationsBlurb,
-                ),
-                SizedBox(height: DsSpacing.md),
-                _GuestBenefit(
-                  icon: Icons.verified_user_outlined,
-                  title: context.l10n.secureAccountControls,
-                  message:
-                      context.l10n.manageSecurityBlurb,
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: DsSpacing.xl),
-          PrimaryButton(
-            label: context.l10n.signIn,
-            icon: Icons.login_rounded,
-            onPressed: () => context.push(RoutePaths.login),
-          ),
-          const SizedBox(height: DsSpacing.sm),
-          SecondaryButton(
-            label: context.l10n.createAccount,
-            icon: Icons.person_add_alt_rounded,
-            onPressed: () => context.push(RoutePaths.register),
-          ),
-        ],
-      ),
+        ),
+        DsGaps.vXl,
+        PrimaryButton(
+          label: l10n.signIn,
+          icon: Icons.login_rounded,
+          onPressed: () => context.push(RoutePaths.login),
+        ),
+        DsGaps.vSm,
+        SecondaryButton(
+          label: l10n.createAccount,
+          icon: Icons.person_add_alt_rounded,
+          onPressed: () => context.push(RoutePaths.register),
+        ),
+        const Spacer(flex: 2),
+        // Room for the floating tab bar, which sits over the foot of a tab.
+        SizedBox(
+          height: MediaQuery.paddingOf(context).bottom + DsSpacing.massive,
+        ),
+      ],
     );
   }
 }
@@ -281,25 +248,27 @@ class _GuestBenefit extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Icon(icon, color: c.primary, size: 22),
-        const SizedBox(width: DsSpacing.md),
+        Container(
+          width: DsSizes.avatarSm,
+          height: DsSizes.avatarSm,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [c.primaryContainer, c.secondaryContainer],
+            ),
+          ),
+          child: Icon(icon, size: DsSizes.iconXs, color: c.primary),
+        ),
+        DsGaps.hSm,
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                title,
-                style: context.dsText.tileTitle.copyWith(
-                  fontWeight: DsTypography.semiBold,
-                ),
-              ),
+              Text(title, style: context.dsText.bodyStrong),
               DsGaps.vXxxs,
-              Text(
-                message,
-                style: Theme.of(
-                  context,
-                ).textTheme.bodySmall?.copyWith(color: c.onSurfaceVariant),
-              ),
+              Text(message, style: context.dsText.caption),
             ],
           ),
         ),
@@ -319,7 +288,9 @@ class _VersionFooter extends StatelessWidget {
         children: [
           Text(
             'REEM',
-            style: context.dsText.tileTitle.displayFamily.bold.tint(c.onSurfaceVariant).copyWith(letterSpacing: 2),
+            style: context.dsText.tileTitle.displayFamily.bold
+                .tint(c.onSurfaceVariant)
+                .copyWith(letterSpacing: 2),
           ),
           DsGaps.vXxxs,
           Text(
