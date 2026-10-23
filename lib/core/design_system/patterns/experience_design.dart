@@ -8,6 +8,7 @@ import 'package:reem/core/design_system/foundation/tokens/ds_radius.dart';
 import 'package:reem/core/design_system/foundation/tokens/ds_sizes.dart';
 import 'package:reem/core/design_system/foundation/tokens/ds_spacing.dart';
 import 'package:reem/core/design_system/patterns/admin_console.dart';
+import 'package:reem/core/design_system/patterns/console_court.dart';
 import 'package:reem/core/design_system/patterns/customer_boutique.dart';
 import 'package:reem/core/design_system/patterns/seller_atelier.dart';
 
@@ -325,17 +326,9 @@ class AdminPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final palette = context.console;
-    return Container(
-      padding: padding,
-      decoration: BoxDecoration(
-        color: palette.surface,
-        borderRadius: DsRadius.borderSm,
-        border: Border.all(color: palette.line),
-        boxShadow: palette.shadow,
-      ),
-      child: child,
-    );
+    // The court's room: the same corners and edge as [CourtPanel], so a page
+    // still on this widget sits beside the redesigned ones without a seam.
+    return CourtPanel(padding: padding, child: child);
   }
 }
 
@@ -359,7 +352,7 @@ class AdminMetricPill extends StatelessWidget {
       padding: DsSpacing.pillPadding,
       decoration: BoxDecoration(
         color: tint.withValues(alpha: .08),
-        borderRadius: DsRadius.borderSm,
+        borderRadius: DsRadius.borderPill,
         border: Border.all(color: tint.withValues(alpha: .18)),
       ),
       child: Text(label, style: context.dsText.badge.tint(tint)),

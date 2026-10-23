@@ -502,6 +502,27 @@ class AppLocalizationsAr extends AppLocalizations {
   String get adminCourtDoorsTitle => 'الأبواب';
 
   @override
+  String get adminCourtGroupPeople => 'الناس';
+
+  @override
+  String get adminCourtGroupMarket => 'السوق';
+
+  @override
+  String get adminCourtGroupTrust => 'الثقة والدعم';
+
+  @override
+  String get adminCourtGroupMoney => 'المال';
+
+  @override
+  String get adminCourtGroupInsight => 'الفهم والقياس';
+
+  @override
+  String get adminCourtGroupHouse => 'إدارة البيت';
+
+  @override
+  String get adminCourtJumpShort => 'إلى أين؟';
+
+  @override
   String get adminCourtDoorsCaption => 'الباب المضاء خلفه من ينتظركِ.';
 
   @override

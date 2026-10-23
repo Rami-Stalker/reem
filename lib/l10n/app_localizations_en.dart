@@ -501,6 +501,27 @@ class AppLocalizationsEn extends AppLocalizations {
   String get adminCourtDoorsTitle => 'The doors';
 
   @override
+  String get adminCourtGroupPeople => 'People';
+
+  @override
+  String get adminCourtGroupMarket => 'The market';
+
+  @override
+  String get adminCourtGroupTrust => 'Trust and support';
+
+  @override
+  String get adminCourtGroupMoney => 'Money';
+
+  @override
+  String get adminCourtGroupInsight => 'Insight';
+
+  @override
+  String get adminCourtGroupHouse => 'The house';
+
+  @override
+  String get adminCourtJumpShort => 'Where to?';
+
+  @override
   String get adminCourtDoorsCaption =>
       'A lit door has someone waiting behind it.';
 

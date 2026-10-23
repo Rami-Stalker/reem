@@ -36,6 +36,7 @@ class AdminValueScreen extends ConsumerWidget {
             // Arabic console says «ريم فاليو» aloud and writes it this way.
             // l10n-ignore: a product name, not copy.
             title: 'Reem Value',
+            icon: Icons.workspace_premium_rounded,
             subtitle: context.l10n.valueAdminSubtitle,
             actions: [
               IconButton(
@@ -55,10 +56,10 @@ class AdminValueScreen extends ConsumerWidget {
             ],
           ),
           Padding(
-            padding: const EdgeInsets.fromLTRB(
-              DsSpacing.xl,
+            padding: EdgeInsets.fromLTRB(
+              courtGutter(context),
               0,
-              DsSpacing.xl,
+              courtGutter(context),
               DsSpacing.xxl,
             ),
             child: distribution.when(
@@ -449,31 +450,8 @@ class _Panel extends StatelessWidget {
   final Widget child;
 
   @override
-  Widget build(BuildContext context) {
-    final console = context.console;
-
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(DsSpacing.lg),
-      decoration: BoxDecoration(
-        color: console.surface,
-        borderRadius: BorderRadius.circular(DsRadius.card),
-        border: Border.all(color: console.line),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(title, style: context.dsText.sectionTitle),
-          if (subtitle != null) ...[
-            DsGaps.vXxxs,
-            Text(subtitle!, style: context.dsText.sectionSubtitle),
-          ],
-          const SizedBox(height: DsSpacing.md),
-          child,
-        ],
-      ),
-    );
-  }
+  Widget build(BuildContext context) =>
+      CourtPanel(title: title, caption: subtitle, child: child);
 }
 
 class _Metric extends StatelessWidget {

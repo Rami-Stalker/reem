@@ -6,6 +6,7 @@ import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/media/media_decode.dart';
 import 'package:reem/core/media/media_variants.dart';
 import 'package:reem/core/utils/relative_time.dart';
+import 'package:reem/features/admin/presentation/widgets/admin_page_header.dart';
 import 'package:reem/features/social/domain/entities/content.dart';
 import 'package:reem/features/social/presentation/providers/admin_content_notifier.dart';
 
@@ -33,15 +34,26 @@ class AdminContentScreen extends ConsumerWidget {
       background: const AdminConsoleBackground(),
       onRefresh: notifier.load,
       slivers: [
-        PremiumAppBar(
-          title: context.l10n.adminContentTitle,
-          subtitle: state.pending > 0
-              ? context.l10n.adminContentReported(state.pending)
-              : null,
-          showBack: true,
+        // The console's own sky rather than the shop's app bar: this page
+        // lives under the rail like every other room of the console.
+        SliverToBoxAdapter(
+          child: AdminPageHeader(
+            title: context.l10n.adminContentTitle,
+            icon: Icons.photo_library_rounded,
+            subtitle: state.pending > 0
+                ? context.l10n.adminContentReported(state.pending)
+                : null,
+            actions: [
+              IconButton(
+                tooltip: context.l10n.refresh,
+                onPressed: notifier.load,
+                icon: const Icon(Icons.refresh_rounded),
+              ),
+            ],
+          ),
         ),
         SliverPadding(
-          padding: const EdgeInsets.symmetric(horizontal: DsSpacing.gutter),
+          padding: EdgeInsets.symmetric(horizontal: courtGutter(context)),
           sliver: SliverToBoxAdapter(
             child: _Filters(
               selected: state.filter,
@@ -69,7 +81,7 @@ class AdminContentScreen extends ConsumerWidget {
           )
         else
           SliverPadding(
-            padding: const EdgeInsets.all(DsSpacing.gutter),
+            padding: EdgeInsets.all(courtGutter(context)),
             sliver: SliverList.separated(
               itemCount: state.items.length,
               separatorBuilder: (_, _) => DsGaps.vSm,
@@ -141,22 +153,15 @@ class _Filters extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: DsSizes.chipHeight + DsSpacing.md,
-      child: ListView(
-        scrollDirection: Axis.horizontal,
-        children: [
-          for (final filter in AdminContentFilter.values)
-            Padding(
-              padding: const EdgeInsetsDirectional.only(end: DsSpacing.xs),
-              child: DsChip(
-                label: _label(context, filter),
-                selected: filter == selected,
-                onTap: () => onSelect(filter),
-              ),
-            ),
-        ],
-      ),
+    return CourtFilterBeads<AdminContentFilter>(
+      selected: selected,
+      onSelected: (filter) {
+        if (filter != null) onSelect(filter);
+      },
+      options: [
+        for (final filter in AdminContentFilter.values)
+          CourtFilterOption(value: filter, label: _label(context, filter)),
+      ],
     );
   }
 }

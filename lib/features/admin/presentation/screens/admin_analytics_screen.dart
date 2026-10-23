@@ -33,6 +33,23 @@ class AdminAnalyticsScreen extends ConsumerWidget {
           AdminPageHeader(
             title: l10n.adminBusinessIntelligence,
             subtitle: l10n.adminAnalyticsSubtitle,
+            icon: Icons.insights_rounded,
+            highlights: [
+              if (dashboard.value case final data?) ...[
+                CourtHighlight(
+                  value: data.grossRevenue.sypCompact,
+                  label: l10n.adminGrossRevenue,
+                ),
+                CourtHighlight(
+                  value: formatCount(data.totalOrders),
+                  label: l10n.orders,
+                ),
+                CourtHighlight(
+                  value: formatCount(data.onlineUsers),
+                  label: l10n.adminOnlineNow,
+                ),
+              ],
+            ],
             actions: [
               IconButton(
                 tooltip: l10n.refresh,
@@ -52,15 +69,20 @@ class AdminAnalyticsScreen extends ConsumerWidget {
             ],
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: DsSpacing.xl),
+            padding: EdgeInsets.symmetric(
+              horizontal: MediaQuery.sizeOf(context).width < 600
+                  ? DsSpacing.md
+                  : DsSpacing.xl,
+            ),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 _RangeSelector(
                   onSelected: (days) {
                     final end = DateTime.now();
-                    ref.read(analyticsDateRangeProvider.notifier).state =
-                        AnalyticsDateRange(
+                    ref
+                        .read(analyticsDateRangeProvider.notifier)
+                        .state = AnalyticsDateRange(
                       start: end.subtract(Duration(days: days)),
                       end: end,
                     );
@@ -74,9 +96,17 @@ class AdminAnalyticsScreen extends ConsumerWidget {
                   ),
                   // The operator used to read `Exception: ` in front of the
                   // server's Arabic, with nothing to press afterwards.
-                  error: (error, _) => DsErrorState(
+                  error: (error, _) => CourtQuietNote(
+                    icon: Icons.cloud_off_rounded,
+                    color: context.console.critical,
                     message: messageOf(error),
-                    onRetry: () => ref.invalidate(analyticsDashboardProvider),
+                    action: SecondaryButton(
+                      label: l10n.retry,
+                      icon: Icons.refresh_rounded,
+                      isExpanded: false,
+                      onPressed: () =>
+                          ref.invalidate(analyticsDashboardProvider),
+                    ),
                   ),
                   data: (data) => _Dashboard(data: data),
                 ),
@@ -145,7 +175,9 @@ class AdminAnalyticsScreen extends ConsumerWidget {
   /// The server's filename when it sent one, stamped with today's date so a
   /// second export does not overwrite the first in her downloads.
   static String _fileName(String? disposition, String format) {
-    final match = RegExp(r'filename="?([^";]+)"?').firstMatch(disposition ?? '');
+    final match = RegExp(
+      r'filename="?([^";]+)"?',
+    ).firstMatch(disposition ?? '');
     final base =
         match?.group(1) ??
         switch (format) {
@@ -257,69 +289,58 @@ class _MetricGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
+    final series = context.console.series;
     final items = [
-      _Metric(l10n.adminGrossRevenue, data.grossRevenue.sypCompact),
-      _Metric(l10n.adminNetRevenue, data.netRevenue.sypCompact),
-      _Metric(l10n.orders, formatCount(data.totalOrders)),
-      _Metric(l10n.adminAov, data.averageOrderValue.sypCompact),
-      _Metric(l10n.adminCustomers, formatCount(data.activeCustomers)),
-      _Metric(l10n.adminRepeatRate, '${data.repeatRate.toStringAsFixed(1)}%'),
-      _Metric(l10n.adminConversion, '${data.conversionRate.toStringAsFixed(1)}%'),
-      _Metric(l10n.adminOnlineNow, formatCount(data.onlineUsers)),
+      (
+        l10n.adminGrossRevenue,
+        data.grossRevenue.sypCompact,
+        Icons.payments_outlined,
+      ),
+      (
+        l10n.adminNetRevenue,
+        data.netRevenue.sypCompact,
+        Icons.account_balance_wallet_outlined,
+      ),
+      (l10n.orders, formatCount(data.totalOrders), Icons.shopping_bag_outlined),
+      (
+        l10n.adminAov,
+        data.averageOrderValue.sypCompact,
+        Icons.receipt_outlined,
+      ),
+      (
+        l10n.adminCustomers,
+        formatCount(data.activeCustomers),
+        Icons.people_alt_outlined,
+      ),
+      (
+        l10n.adminRepeatRate,
+        '${data.repeatRate.toStringAsFixed(1)}%',
+        Icons.replay_rounded,
+      ),
+      (
+        l10n.adminConversion,
+        '${data.conversionRate.toStringAsFixed(1)}%',
+        Icons.show_chart_rounded,
+      ),
+      (
+        l10n.adminOnlineNow,
+        formatCount(data.onlineUsers),
+        Icons.wifi_tethering_rounded,
+      ),
     ];
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final count = constraints.maxWidth > 1100
-            ? 4
-            : constraints.maxWidth > 720
-                ? 2
-                : 1;
-        return GridView.count(
-          crossAxisCount: count,
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          mainAxisSpacing: DsSpacing.md,
-          crossAxisSpacing: DsSpacing.md,
-          childAspectRatio: 2.3,
-          children: items.map((item) => _MetricCard(item: item)).toList(),
-        );
-      },
-    );
-  }
-}
-
-class _MetricCard extends StatelessWidget {
-  const _MetricCard({required this.item});
-
-  final _Metric item;
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = context.dsColors;
-    return Container(
-      padding: const EdgeInsets.all(DsSpacing.lg),
-      decoration: BoxDecoration(
-        color: colors.surface,
-        borderRadius: DsRadius.borderLg,
-        border: Border.all(color: colors.border),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            item.label,
-            style: context.dsText.body.tint(colors.onSurfaceVariant),
+    // Measured tiles rather than a grid with a fixed aspect ratio: a figure
+    // like «4.82 مليار ل.س» is wider than «284», and a fixed ratio is how a
+    // tile ends up with its label pushed out of the bottom.
+    return CourtFigureRow(
+      children: [
+        for (var i = 0; i < items.length; i++)
+          CourtFigure(
+            label: items[i].$1,
+            value: items[i].$2,
+            icon: items[i].$3,
+            accent: series[(i ~/ 2) % series.length],
           ),
-          const SizedBox(height: DsSpacing.xs),
-          Text(
-            item.value,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: context.dsText.screenTitle.bold.tint(colors.onSurface),
-          ),
-        ],
-      ),
+      ],
     );
   }
 }
@@ -331,28 +352,7 @@ class _Panel extends StatelessWidget {
   final Widget child;
 
   @override
-  Widget build(BuildContext context) {
-    final colors = context.dsColors;
-    return Container(
-      padding: const EdgeInsets.all(DsSpacing.lg),
-      decoration: BoxDecoration(
-        color: colors.surface,
-        borderRadius: DsRadius.borderLg,
-        border: Border.all(color: colors.border),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            title,
-            style: context.dsText.cardTitle.bold.tint(colors.onSurface),
-          ),
-          const SizedBox(height: DsSpacing.md),
-          child,
-        ],
-      ),
-    );
-  }
+  Widget build(BuildContext context) => CourtPanel(title: title, child: child);
 }
 
 /// Revenue over the selected range, as an area line.
@@ -576,51 +576,103 @@ class _RankedList extends StatelessWidget {
         style: context.dsText.body.tint(palette.muted),
       );
     }
+    final ranked = items.take(8).toList(growable: false);
+    final top = ranked
+        .map((item) => item.value)
+        .fold<double>(0, (a, b) => b > a ? b : a);
     return Column(
       children: [
-        for (final entry in items.take(8).toList().asMap().entries)
-          ListTile(
-            dense: true,
-            contentPadding: EdgeInsets.zero,
-            leading: CircleAvatar(
-              child: Text('${entry.key + 1}'),
+        for (var i = 0; i < ranked.length; i++)
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: DsSpacing.xs),
+            child: Row(
+              children: [
+                SizedBox(
+                  width: DsSizes.controlSm,
+                  child: Text(
+                    '${i + 1}',
+                    style: context.dsText.metricSmall.displayFamily.tint(
+                      i == 0 ? DsColors.gold500 : palette.muted,
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              ranked[i].title,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: context.dsText.bodyStrong.tint(
+                                palette.ink,
+                              ),
+                            ),
+                          ),
+                          DsGaps.hSm,
+                          Text(
+                            ranked[i].value.sypCompact,
+                            style: context.dsText.labelStrong.tint(palette.ink),
+                          ),
+                        ],
+                      ),
+                      DsGaps.vXxs,
+                      // Its share of the leader, as a silk thread.
+                      ClipRRect(
+                        borderRadius: DsRadius.borderPill,
+                        child: LinearProgressIndicator(
+                          value: top <= 0 ? 0 : ranked[i].value / top,
+                          minHeight: DsSpacing.xxs,
+                          backgroundColor: palette.surfaceAlt,
+                          valueColor: AlwaysStoppedAnimation(
+                            i == 0 ? DsColors.gold400 : palette.primary,
+                          ),
+                        ),
+                      ),
+                      DsGaps.vXxs,
+                      Text(
+                        l10n.adminUnitsSold(ranked[i].units),
+                        style: context.dsText.caption.tint(palette.muted),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
-            title: Text(entry.value.title),
-            subtitle: Text(l10n.adminUnitsSold(entry.value.units)),
-            trailing: Text(entry.value.value.sypCompact),
           ),
       ],
     );
   }
 }
 
-class _RangeSelector extends StatelessWidget {
+class _RangeSelector extends ConsumerWidget {
   const _RangeSelector({required this.onSelected});
 
   final ValueChanged<int> onSelected;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
-    return Wrap(
-      spacing: DsSpacing.sm,
-      children: [
-        for (final days in [7, 30, 90, 180])
-          ChoiceChip(
-            label: Text(l10n.adminLastDays(days)),
-            selected: false,
-            onSelected: (_) => onSelected(days),
-          ),
+    final range = ref.watch(analyticsDateRangeProvider);
+    // The chosen range is drawn as chosen: it never was, so every chip looked
+    // equally unselected whichever window the figures were for.
+    final days = range.start == null || range.end == null
+        ? null
+        : range.end!.difference(range.start!).inDays;
+    return CourtFilterBeads<int>(
+      selected: days,
+      onSelected: (value) {
+        if (value != null) onSelected(value);
+      },
+      options: [
+        for (final d in const [7, 30, 90, 180])
+          CourtFilterOption(value: d, label: l10n.adminLastDays(d)),
       ],
     );
   }
-}
-
-class _Metric {
-  const _Metric(this.label, this.value);
-
-  final String label;
-  final String value;
 }
 
 /// An axis date as «19 أكتوبر» rather than the `2026-10-19` the server keys

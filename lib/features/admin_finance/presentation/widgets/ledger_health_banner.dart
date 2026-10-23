@@ -53,15 +53,18 @@ class LedgerHealthBanner extends StatelessWidget {
         children: [
           Row(
             children: [
-              Icon(toned.icon, size: 22, color: toned.accent),
-              const SizedBox(width: DsSpacing.sm),
+              // The verdict, in the court's arch: the ledger is a room of the
+              // house like any other, lit in the colour of its state.
+              CourtArchMedallion(icon: toned.icon, color: toned.accent),
+              DsGaps.hMd,
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       title,
-                      style: context.dsText.cardTitle.bold.tint(toned.accent),
+                      style: context.dsText.screenTitle.displayFamily.bold
+                          .tint(toned.accent),
                     ),
                     DsGaps.vXxxs,
                     Text(

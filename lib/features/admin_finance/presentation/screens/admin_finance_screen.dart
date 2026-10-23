@@ -49,6 +49,7 @@ class _AdminFinanceScreenState extends ConsumerState<AdminFinanceScreen> {
           AdminPageHeader(
             title: l10n.adminFinance,
             subtitle: l10n.adminFinanceSubtitle,
+            icon: Icons.account_balance_rounded,
             actions: [
               IconButton(
                 tooltip: l10n.refresh,
@@ -76,10 +77,14 @@ class _AdminFinanceScreenState extends ConsumerState<AdminFinanceScreen> {
             )
           else
             Padding(
-              padding: const EdgeInsets.fromLTRB(
-                DsSpacing.xl,
+              padding: EdgeInsets.fromLTRB(
+                MediaQuery.sizeOf(context).width < 600
+                    ? DsSpacing.md
+                    : DsSpacing.xl,
                 DsSpacing.xxxs,
-                DsSpacing.xl,
+                MediaQuery.sizeOf(context).width < 600
+                    ? DsSpacing.md
+                    : DsSpacing.xl,
                 DsSpacing.xxl,
               ),
               child: Column(
@@ -150,13 +155,9 @@ class _Section extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final palette = context.console;
     return Padding(
       padding: const EdgeInsets.only(bottom: DsSpacing.md),
-      child: Text(
-        title,
-        style: context.dsText.cardTitle.bold.tint(palette.ink),
-      ),
+      child: CourtPanelHeading(title: title),
     );
   }
 }

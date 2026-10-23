@@ -40,6 +40,7 @@ class AdminDeliveryScreen extends ConsumerWidget {
         children: [
           AdminPageHeader(
             title: l10n.adminDelivery,
+            icon: Icons.local_shipping_rounded,
             subtitle: l10n.adminDeliverySubtitle,
             actions: [
               IconButton(
@@ -53,7 +54,7 @@ class AdminDeliveryScreen extends ConsumerWidget {
             ],
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: DsSpacing.xl),
+            padding: EdgeInsets.symmetric(horizontal: courtGutter(context)),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -325,17 +326,9 @@ class _Panel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final palette = context.console;
-    return Container(
-      width: double.infinity,
-      margin: const EdgeInsets.only(bottom: DsSpacing.sm),
-      padding: const EdgeInsets.all(DsSpacing.md),
-      decoration: BoxDecoration(
-        color: palette.surface,
-        borderRadius: DsRadius.borderCard,
-        border: Border.all(color: palette.line),
-      ),
-      child: child,
+    return Padding(
+      padding: const EdgeInsets.only(bottom: DsSpacing.sm),
+      child: CourtPanel(padding: DsSpacing.paddingLg, child: child),
     );
   }
 }

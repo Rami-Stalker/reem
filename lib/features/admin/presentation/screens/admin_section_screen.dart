@@ -92,6 +92,18 @@ class _AdminSectionScreenState extends ConsumerState<AdminSectionScreen> {
           AdminPageHeader(
             title: config.titleOf(l10n),
             subtitle: l10n.adminSectionSubtitle,
+            icon: _iconFor(config.key),
+            // The queue's own figures — «١١ مفتوحة» — lit on the sky, where
+            // they are read first, rather than in a pill under the title.
+            highlights: [
+              for (final entry
+                  in state.section?.summary.entries ??
+                      const <MapEntry<String, String>>[])
+                CourtHighlight(
+                  value: entry.value,
+                  label: adminSummaryLabel(l10n, entry.key),
+                ),
+            ],
             actions: [
               IconButton(
                 tooltip: l10n.refresh,
@@ -126,45 +138,45 @@ class _AdminSectionScreenState extends ConsumerState<AdminSectionScreen> {
             ],
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: DsSpacing.xl),
+            padding: EdgeInsets.symmetric(
+              horizontal: MediaQuery.sizeOf(context).width < 600
+                  ? DsSpacing.md
+                  : DsSpacing.xl,
+            ),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                if (state.section?.summary.isNotEmpty ?? false) ...[
-                  Wrap(
-                    spacing: DsSpacing.sm,
-                    runSpacing: DsSpacing.sm,
+                // The threshold: what to look for, and which part of the
+                // queue to look at, on one plate above the list.
+                CourtPanel(
+                  padding: DsSpacing.paddingMd,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      for (final entry in state.section!.summary.entries)
-                        AdminMetricPill(
-                          label:
-                              '${adminSummaryLabel(l10n, entry.key)}: '
-                              '${entry.value}',
+                      DsInputField.search(
+                        controller: _searchController,
+                        hint: l10n.search,
+                        onChanged: _onSearchChanged,
+                        onSubmitted: (value) => unawaited(
+                          ref.read(_notifier.notifier).search(value),
                         ),
+                        onClear: () =>
+                            unawaited(ref.read(_notifier.notifier).search('')),
+                      ),
+                      if (config.statusFilters.isNotEmpty) ...[
+                        DsGaps.vMd,
+                        _StatusFilters(
+                          filters: config.statusFilters,
+                          selected: state.status,
+                          onSelected: (status) => unawaited(
+                            ref.read(_notifier.notifier).filterByStatus(status),
+                          ),
+                        ),
+                      ],
                     ],
                   ),
-                  const SizedBox(height: DsSpacing.lg),
-                ],
-                DsInputField.search(
-                  controller: _searchController,
-                  hint: l10n.search,
-                  onChanged: _onSearchChanged,
-                  onSubmitted: (value) =>
-                      unawaited(ref.read(_notifier.notifier).search(value)),
-                  onClear: () =>
-                      unawaited(ref.read(_notifier.notifier).search('')),
                 ),
-                if (config.statusFilters.isNotEmpty) ...[
-                  const SizedBox(height: DsSpacing.md),
-                  _StatusFilters(
-                    filters: config.statusFilters,
-                    selected: state.status,
-                    onSelected: (status) => unawaited(
-                      ref.read(_notifier.notifier).filterByStatus(status),
-                    ),
-                  ),
-                ],
-                const SizedBox(height: DsSpacing.md),
+                DsGaps.vLg,
                 if (state.error != null)
                   _SectionError(
                     message: state.error!,
@@ -653,20 +665,15 @@ class _StatusFilters extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    return Wrap(
-      spacing: DsSpacing.xs,
-      runSpacing: DsSpacing.xs,
-      children: [
-        ChoiceChip(
-          label: Text(l10n.adminFilterAll),
-          selected: selected == null,
-          onSelected: (_) => onSelected(null),
-        ),
+    return CourtFilterBeads<String>(
+      selected: selected,
+      onSelected: onSelected,
+      options: [
+        CourtFilterOption(value: null, label: l10n.adminFilterAll),
         for (final filter in filters)
-          ChoiceChip(
-            label: Text(adminStatusLabel(l10n, filter)),
-            selected: selected == filter,
-            onSelected: (isSelected) => onSelected(isSelected ? filter : null),
+          CourtFilterOption(
+            value: filter,
+            label: adminStatusLabel(l10n, filter),
           ),
       ],
     );
@@ -681,10 +688,12 @@ class _CountLine extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.dsColors;
-    return Text(
-      context.l10n.adminShowingCount(shown, total),
-      style: context.dsText.labelMedium.tint(colors.onSurfaceVariant),
+    return Padding(
+      padding: const EdgeInsetsDirectional.only(start: DsSpacing.xs),
+      child: Text(
+        context.l10n.adminShowingCount(shown, total),
+        style: context.dsText.overline.tint(context.console.muted),
+      ),
     );
   }
 }
@@ -710,19 +719,14 @@ class _RecordsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final palette = context.console;
     final compact = MediaQuery.sizeOf(context).width < 780;
 
-    return Container(
-      decoration: BoxDecoration(
-        color: palette.surface,
-        borderRadius: DsRadius.borderSm,
-        border: Border.all(color: palette.line),
-      ),
-      child: Column(
+    return Column(
         children: [
           for (final entry in records.asMap().entries) ...[
-            _RecordTile(
+            DsStaggerAnimations.item(
+              index: entry.key,
+              child: _RecordTile(
               keyName: keyName,
               record: entry.value,
               compact: compact,
@@ -738,12 +742,11 @@ class _RecordsList extends StatelessWidget {
               onRunCampaign: onRunCampaign == null
                   ? null
                   : () => onRunCampaign!(entry.value.id),
+              ),
             ),
-            if (entry.key < records.length - 1)
-              Divider(height: 1, color: palette.line),
+            if (entry.key < records.length - 1) DsGaps.vSm,
           ],
         ],
-      ),
     );
   }
 }
@@ -770,42 +773,74 @@ class _RecordTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final palette = context.console;
+    final l10n = context.l10n;
+    final tone = context.toneColor(adminStatusTone(record.status));
     final badges = _RecordBadges(
       record: record,
       actions: actions,
       onAction: onAction,
       onRunCampaign: onRunCampaign,
     );
+    final title = adminRecordTitle(l10n, keyName, record);
 
+    // Each record is its own small room: an arch in the colour of its
+    // status, the name, what it is, and what can be done with it.
     return Semantics(
       button: true,
-      label: adminRecordTitle(context.l10n, keyName, record),
-      child: ListTile(
-        onTap: onOpen,
-        leading: CircleAvatar(
-          backgroundColor: palette.primary.withValues(alpha: 0.1),
-          child: Icon(_iconFor(keyName), color: palette.primary, size: 20),
+      label: title,
+      child: Material(
+        color: palette.surface,
+        borderRadius: DsRadius.borderXl,
+        child: InkWell(
+          borderRadius: DsRadius.borderXl,
+          onTap: onOpen,
+          child: Container(
+            padding: const EdgeInsets.symmetric(
+              horizontal: DsSpacing.md,
+              vertical: DsSpacing.sm,
+            ),
+            decoration: BoxDecoration(
+              borderRadius: DsRadius.borderXl,
+              border: Border.all(color: palette.line),
+            ),
+            child: Row(
+              children: [
+                CourtArchMedallion(
+                  icon: _iconFor(keyName),
+                  color: tone,
+                  size: DsSizes.controlSm,
+                ),
+                DsGaps.hMd,
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        title,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: context.dsText.bodyStrong.tint(palette.ink),
+                      ),
+                      // A row with nothing to say underneath its title says
+                      // nothing, rather than repeating the name of the screen.
+                      if (record.subtitle.isNotEmpty) ...[
+                        DsGaps.vXxxs,
+                        Text(
+                          adminRecordSubtitle(l10n, keyName, record),
+                          maxLines: compact ? 2 : 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: context.dsText.caption.tint(palette.muted),
+                        ),
+                      ],
+                      if (compact) ...[DsGaps.vXs, badges],
+                    ],
+                  ),
+                ),
+                if (!compact) ...[DsGaps.hMd, badges],
+              ],
+            ),
+          ),
         ),
-        title: Text(
-          adminRecordTitle(context.l10n, keyName, record),
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-        ),
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // A row with nothing to say underneath its title says nothing,
-            // rather than repeating the name of the screen.
-            if (record.subtitle.isNotEmpty)
-              Text(
-                adminRecordSubtitle(context.l10n, keyName, record),
-                maxLines: compact ? 2 : 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-            if (compact) ...[const SizedBox(height: DsSpacing.xs), badges],
-          ],
-        ),
-        trailing: compact ? null : badges,
       ),
     );
   }
@@ -841,15 +876,15 @@ class _RecordBadges extends StatelessWidget {
         // every row in the console used to carry.
         if (record.createdAt != null)
           AdminMetricPill(label: formatRelativeTime(l10n, record.createdAt!)),
-        AdminMetricPill(
+        CourtStatusPill(
           label: adminStatusLabel(l10n, record.status),
-          color: palette.positive,
+          color: context.toneColor(adminStatusTone(record.status)),
         ),
         // A suspended account reads as "customer" like any other unless the
         // suspension is said out loud, which is the one fact an operator
         // scanning this list most needs.
         if (isDisabled)
-          AdminMetricPill(
+          CourtStatusPill(
             label: l10n.adminStatusSuspended,
             color: palette.critical,
           ),
@@ -897,34 +932,37 @@ class _SectionError extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.dsColors;
+    final palette = context.console;
     final l10n = context.l10n;
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(DsSpacing.xl),
-      decoration: BoxDecoration(
-        color: colors.surface,
-        borderRadius: DsRadius.borderLg,
-        border: Border.all(color: colors.error.withValues(alpha: 0.3)),
-      ),
-      child: Column(
+    return CourtPanel(
+      accent: palette.critical,
+      child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            l10n.adminSectionUnavailable,
-            style: context.dsText.body.semibold.tint(colors.error),
+          CourtArchMedallion(
+            icon: Icons.cloud_off_rounded,
+            color: palette.critical,
           ),
-          const SizedBox(height: DsSpacing.xs),
-          Text(
-            message,
-            style: context.dsText.body.tint(colors.onSurfaceVariant),
-          ),
-          const SizedBox(height: DsSpacing.md),
-          SecondaryButton(
-            label: l10n.retry,
-            icon: Icons.refresh_rounded,
-            isExpanded: false,
-            onPressed: onRetry,
+          DsGaps.hMd,
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  l10n.adminSectionUnavailable,
+                  style: context.dsText.bodyStrong.tint(palette.critical),
+                ),
+                DsGaps.vXs,
+                Text(message, style: context.dsText.body.tint(palette.muted)),
+                DsGaps.vMd,
+                SecondaryButton(
+                  label: l10n.retry,
+                  icon: Icons.refresh_rounded,
+                  isExpanded: false,
+                  onPressed: onRetry,
+                ),
+              ],
+            ),
           ),
         ],
       ),
@@ -940,20 +978,13 @@ class _EmptyRecords extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.dsColors;
     final l10n = context.l10n;
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(DsSpacing.xl),
-      decoration: BoxDecoration(
-        color: colors.surface,
-        borderRadius: DsRadius.borderLg,
-        border: Border.all(color: colors.border),
-      ),
-      child: Text(
-        searched ? l10n.adminNoMatchingRecords : l10n.adminNoRecordsYet(title),
-        style: context.dsText.body.tint(colors.onSurfaceVariant),
-      ),
+    return CourtQuietNote(
+      icon: searched ? Icons.search_off_rounded : Icons.spa_outlined,
+      color: searched ? context.console.muted : null,
+      message: searched
+          ? l10n.adminNoMatchingRecords
+          : l10n.adminNoRecordsYet(title),
     );
   }
 }

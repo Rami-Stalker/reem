@@ -12,10 +12,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:go_router/go_router.dart';
 import 'package:reem/core/auth/app_permissions.dart';
 import 'package:reem/core/design_system/design_system.dart';
 import 'package:reem/core/localization/app_localizations.dart';
 import 'package:reem/core/result/result.dart';
+import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/features/admin/data/models/admin_briefing_model.dart';
 import 'package:reem/features/admin/domain/entities/admin_console_entity.dart';
 import 'package:reem/features/admin/domain/entities/admin_stats_entity.dart';
@@ -26,6 +28,7 @@ import 'package:reem/features/admin/presentation/screens/admin_analytics_screen.
 import 'package:reem/features/admin/presentation/screens/admin_dashboard_screen.dart';
 import 'package:reem/features/admin/presentation/screens/admin_section_screen.dart';
 import 'package:reem/features/admin/presentation/screens/admin_seller_applications_screen.dart';
+import 'package:reem/features/admin/presentation/shell/admin_shell.dart';
 import 'package:reem/features/experience/presentation/providers/role_experience_provider.dart';
 import 'package:reem/l10n/app_localizations.dart' as gen;
 
@@ -217,6 +220,29 @@ void main() {
     await _capture(tester, 'admin_moderation');
   });
 
+  for (final (name, size) in const [
+    ('admin_shell_wide', Size(2800, 2000)),
+    ('admin_shell_narrow', Size(1800, 2000)),
+  ]) {
+    testWidgets('renders the console shell: $name', (tester) async {
+      tester.view.physicalSize = size;
+      tester.view.devicePixelRatio = 2.0;
+      addTearDown(tester.view.reset);
+
+      await tester.pumpWidget(
+        _Preview(
+          themeMode: ThemeMode.light,
+          shellPath: RoutePaths.adminModeration,
+          screen: AdminSectionScreen(
+            config: adminSectionConfigs['moderation']!,
+          ),
+        ),
+      );
+      await _settle(tester);
+      await _capture(tester, name);
+    });
+  }
+
   testWidgets('renders the admin analytics console', (tester) async {
     tester.view.physicalSize = const Size(2560, 2400);
     tester.view.devicePixelRatio = 2.0;
@@ -234,10 +260,18 @@ void main() {
 }
 
 class _Preview extends StatelessWidget {
-  const _Preview({required this.themeMode, required this.screen});
+  const _Preview({
+    required this.themeMode,
+    required this.screen,
+    this.shellPath,
+  });
 
   final ThemeMode themeMode;
   final Widget screen;
+
+  /// When set, the screen is drawn inside the real console shell at this
+  /// route, so the rail can be judged too.
+  final String? shellPath;
 
   @override
   Widget build(BuildContext context) {
@@ -264,31 +298,58 @@ class _Preview extends StatelessWidget {
           AppPermissions.authorizationManage,
         }),
       ],
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        themeMode: themeMode,
-        theme: AppTheme.light,
-        darkTheme: AppTheme.dark,
-        locale: const Locale('ar'),
-        supportedLocales: L10nSetup.supportedLocales,
-        localizationsDelegates: const [
-          gen.AppLocalizations.delegate,
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-        ],
-        home: RepaintBoundary(
-          key: _captureKey,
-          child: Scaffold(
-            body: Stack(
-              children: [
-                const Positioned.fill(child: AdminConsoleBackground()),
-                screen,
+      child: shellPath != null
+          ? MaterialApp.router(
+              debugShowCheckedModeBanner: false,
+              themeMode: themeMode,
+              theme: AppTheme.light,
+              darkTheme: AppTheme.dark,
+              locale: const Locale('ar'),
+              supportedLocales: L10nSetup.supportedLocales,
+              localizationsDelegates: const [
+                gen.AppLocalizations.delegate,
+                GlobalMaterialLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate,
+                GlobalCupertinoLocalizations.delegate,
               ],
+              routerConfig: GoRouter(
+                initialLocation: shellPath,
+                routes: [
+                  GoRoute(
+                    path: shellPath!,
+                    builder: (_, _) => RepaintBoundary(
+                      key: _captureKey,
+                      child: AdminShell(child: screen),
+                    ),
+                  ),
+                ],
+              ),
+            )
+          : MaterialApp(
+              debugShowCheckedModeBanner: false,
+              themeMode: themeMode,
+              theme: AppTheme.light,
+              darkTheme: AppTheme.dark,
+              locale: const Locale('ar'),
+              supportedLocales: L10nSetup.supportedLocales,
+              localizationsDelegates: const [
+                gen.AppLocalizations.delegate,
+                GlobalMaterialLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate,
+                GlobalCupertinoLocalizations.delegate,
+              ],
+              home: RepaintBoundary(
+                key: _captureKey,
+                child: Scaffold(
+                  body: Stack(
+                    children: [
+                      const Positioned.fill(child: AdminConsoleBackground()),
+                      screen,
+                    ],
+                  ),
+                ),
+              ),
             ),
-          ),
-        ),
-      ),
     );
   }
 }
@@ -321,106 +382,104 @@ final class _FakeAdminRepository implements AdminRepository {
     int limit = 25,
     String? query,
     String? status,
-  }) async => Success(
-    switch (key) {
-      'sellerApplications' => AdminConsoleSection(
-        key: key,
-        title: title,
-        total: 14,
-        hasMore: true,
-        summary: const {'pending': '9'},
-        records: [
-          for (final application in _applications)
-            AdminRecord(
-              id: application['id']! as String,
-              title: application['business_name']! as String,
-              subtitle: application['legal_name']! as String,
-              status: application['status']! as String,
-              metrics: const {},
-              raw: application,
-            ),
-        ],
-      ),
-      'accountVerifications' => AdminConsoleSection(
-        key: key,
-        title: title,
-        total: 3,
-        summary: const {'pending': '3'},
-        records: const [],
-      ),
-      'support' => AdminConsoleSection(
-        key: key,
-        title: title,
-        total: 5,
-        summary: const {'open': '5'},
-        records: const [],
-      ),
-      'reports' => AdminConsoleSection(
-        key: key,
-        title: title,
-        total: 0,
-        summary: const {'open': '0'},
-        records: const [],
-      ),
-      'moderation' => AdminConsoleSection(
-        key: key,
-        title: title,
-        total: 23,
-        hasMore: true,
-        summary: const {'open': '11'},
-        records: [
-          for (var i = 1; i <= 6; i++)
-            AdminRecord(
-              id: 'case-$i',
-              title: 'صورة تخالف سياسة الاحتشام',
-              subtitle: 'منشور · أتيليه الورد',
-              status: i.isEven ? 'OPEN' : 'ESCALATED',
-              metrics: {'created_at': '2026-08-2$i'},
-              raw: {'id': 'case-$i', 'status': 'OPEN'},
-            ),
-        ],
-      ),
-      'audit' => AdminConsoleSection(
-        key: key,
-        title: title,
-        total: 5,
-        records: [
-          for (final (i, (t, sub)) in const [
-            ('وثّقت سلمى بائعة جديدة', 'أتيليه الورد · دمشق'),
-            ('أُغلقت تذكرة دعم', 'طلب استرجاع · #4821'),
-            ('أُخفي منشور بعد بلاغ', 'بتلات المخمل'),
-            ('عُدّلت نسبة عمولة', 'قسم العطور · من ٨٪ إلى ١٠٪'),
-            ('تسجيل دخول من جهاز جديد', 'دمشق · Chrome'),
-          ].indexed)
-            AdminRecord(
-              id: 'audit-$i',
-              title: t,
-              subtitle: sub,
-              status: 'APPROVED',
-              metrics: const {},
-              raw: const {},
-              createdAt: DateTime.now().subtract(Duration(minutes: 7 + i * 41)),
-            ),
-        ],
-      ),
-      _ => AdminConsoleSection(
-        key: key,
-        title: title,
-        total: 6,
-        records: [
-          for (var i = 1; i <= 6; i++)
-            AdminRecord(
-              id: '$key-$i',
-              title: 'وثّقت المشرِفة بائعة جديدة',
-              subtitle: 'أتيليه الورد · دمشق',
-              status: 'APPROVED',
-              metrics: const {},
-              raw: const {},
-            ),
-        ],
-      ),
-    },
-  );
+  }) async => Success(switch (key) {
+    'sellerApplications' => AdminConsoleSection(
+      key: key,
+      title: title,
+      total: 14,
+      hasMore: true,
+      summary: const {'pending': '9'},
+      records: [
+        for (final application in _applications)
+          AdminRecord(
+            id: application['id']! as String,
+            title: application['business_name']! as String,
+            subtitle: application['legal_name']! as String,
+            status: application['status']! as String,
+            metrics: const {},
+            raw: application,
+          ),
+      ],
+    ),
+    'accountVerifications' => AdminConsoleSection(
+      key: key,
+      title: title,
+      total: 3,
+      summary: const {'pending': '3'},
+      records: const [],
+    ),
+    'support' => AdminConsoleSection(
+      key: key,
+      title: title,
+      total: 5,
+      summary: const {'open': '5'},
+      records: const [],
+    ),
+    'reports' => AdminConsoleSection(
+      key: key,
+      title: title,
+      total: 0,
+      summary: const {'open': '0'},
+      records: const [],
+    ),
+    'moderation' => AdminConsoleSection(
+      key: key,
+      title: title,
+      total: 23,
+      hasMore: true,
+      summary: const {'open': '11'},
+      records: [
+        for (var i = 1; i <= 6; i++)
+          AdminRecord(
+            id: 'case-$i',
+            title: 'صورة تخالف سياسة الاحتشام',
+            subtitle: 'منشور · أتيليه الورد',
+            status: i.isEven ? 'OPEN' : 'ESCALATED',
+            metrics: {'created_at': '2026-08-2$i'},
+            raw: {'id': 'case-$i', 'status': 'OPEN'},
+          ),
+      ],
+    ),
+    'audit' => AdminConsoleSection(
+      key: key,
+      title: title,
+      total: 5,
+      records: [
+        for (final (i, (t, sub)) in const [
+          ('وثّقت سلمى بائعة جديدة', 'أتيليه الورد · دمشق'),
+          ('أُغلقت تذكرة دعم', 'طلب استرجاع · #4821'),
+          ('أُخفي منشور بعد بلاغ', 'بتلات المخمل'),
+          ('عُدّلت نسبة عمولة', 'قسم العطور · من ٨٪ إلى ١٠٪'),
+          ('تسجيل دخول من جهاز جديد', 'دمشق · Chrome'),
+        ].indexed)
+          AdminRecord(
+            id: 'audit-$i',
+            title: t,
+            subtitle: sub,
+            status: 'APPROVED',
+            metrics: const {},
+            raw: const {},
+            createdAt: DateTime.now().subtract(Duration(minutes: 7 + i * 41)),
+          ),
+      ],
+    ),
+    _ => AdminConsoleSection(
+      key: key,
+      title: title,
+      total: 6,
+      records: [
+        for (var i = 1; i <= 6; i++)
+          AdminRecord(
+            id: '$key-$i',
+            title: 'وثّقت المشرِفة بائعة جديدة',
+            subtitle: 'أتيليه الورد · دمشق',
+            status: 'APPROVED',
+            metrics: const {},
+            raw: const {},
+          ),
+      ],
+    ),
+  });
 
   @override
   Future<Result<AnalyticsDashboardEntity>> getAnalyticsDashboard({
@@ -475,16 +534,8 @@ final class _FakeAdminRepository implements AdminRepository {
           value: 184300000,
           units: 612,
         ),
-        AnalyticsRankedItem(
-          title: 'دار النور',
-          value: 132400000,
-          units: 448,
-        ),
-        AnalyticsRankedItem(
-          title: 'بتلات المخمل',
-          value: 97600000,
-          units: 331,
-        ),
+        AnalyticsRankedItem(title: 'دار النور', value: 132400000, units: 448),
+        AnalyticsRankedItem(title: 'بتلات المخمل', value: 97600000, units: 331),
       ],
       refreshedAt: DateTime(2026, 8, 24, 9),
     ),
@@ -503,8 +554,10 @@ final class _FakeAdminRepository implements AdminRepository {
   // `admin_console_actions_test.dart`; this fake exists to paint pixels, so
   // every write is a no-op that simply must not throw.
   @override
-  Future<Result<void>> updateUser(String id, Map<String, dynamic> payload) async =>
-      const Success(null);
+  Future<Result<void>> updateUser(
+    String id,
+    Map<String, dynamic> payload,
+  ) async => const Success(null);
 
   @override
   Future<Result<void>> updateProduct(
@@ -575,7 +628,8 @@ Future<void> _settle(WidgetTester tester) async {
 Future<void> _capture(WidgetTester tester, String name) async {
   await tester.runAsync(() async {
     final boundary =
-        _captureKey.currentContext!.findRenderObject()! as RenderRepaintBoundary;
+        _captureKey.currentContext!.findRenderObject()!
+            as RenderRepaintBoundary;
     final image = await boundary.toImage(pixelRatio: 1.0);
     final data = await image.toByteData(format: ImageByteFormat.png);
     final dir = Directory('build/visual')..createSync(recursive: true);

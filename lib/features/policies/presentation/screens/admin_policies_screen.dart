@@ -37,6 +37,7 @@ class AdminPoliciesScreen extends ConsumerWidget {
         children: [
           AdminPageHeader(
             title: l10n.adminPolicies,
+            icon: Icons.policy_rounded,
             subtitle: l10n.adminPoliciesSubtitle,
             actions: [
               IconButton(
@@ -50,10 +51,10 @@ class AdminPoliciesScreen extends ConsumerWidget {
             ],
           ),
           Padding(
-            padding: const EdgeInsets.fromLTRB(
-              DsSpacing.xl,
+            padding: EdgeInsets.fromLTRB(
+              courtGutter(context),
               0,
-              DsSpacing.xl,
+              courtGutter(context),
               DsSpacing.xxxl,
             ),
             child: Column(

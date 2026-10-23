@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:reem/core/design_system/design_system.dart';
 import 'package:reem/core/localization/l10n_extension.dart';
+import 'package:reem/features/admin/presentation/widgets/admin_page_header.dart';
 import 'package:reem/features/trends/domain/entities/trend_entities.dart';
 import 'package:reem/features/trends/presentation/providers/trends_providers.dart';
 import 'package:reem/features/trends/presentation/widgets/admin_trend_panels.dart';
@@ -31,20 +32,25 @@ class AdminTrendsScreen extends ConsumerWidget {
 
     return ReemScrollPage(
       onRefresh: notifier.refresh,
-      background: const SellerAtelierBackground(),
-      backgroundColor: context.atelier.background,
+      background: const AdminConsoleBackground(),
+      backgroundColor: context.console.background,
       slivers: [
-        PremiumAppBar(
-          title: l10n.trendsAdminTitle,
-          actions: [
-            IconButton(
-              tooltip: l10n.trendsRecompute,
-              onPressed: state.isRecomputing ? null : notifier.recompute,
-              icon: state.isRecomputing
-                  ? const DsLoadingIndicator.inline()
-                  : const Icon(Icons.refresh_rounded),
-            ),
-          ],
+        // The console's sky, as on every page under the rail. The trend cards
+        // below are the seller's own, shared with her trends page.
+        SliverToBoxAdapter(
+          child: AdminPageHeader(
+            title: l10n.trendsAdminTitle,
+            icon: Icons.auto_graph_rounded,
+            actions: [
+              IconButton(
+                tooltip: l10n.trendsRecompute,
+                onPressed: state.isRecomputing ? null : notifier.recompute,
+                icon: state.isRecomputing
+                    ? const DsLoadingIndicator.inline()
+                    : const Icon(Icons.refresh_rounded),
+              ),
+            ],
+          ),
         ),
         SliverToBoxAdapter(
           child: TrendWindowBar(

@@ -26,19 +26,9 @@ class FinancePositionGrid extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Container(
-          padding: const EdgeInsets.all(DsSpacing.lg),
-          decoration: BoxDecoration(
-            color: undercovered
-                ? context.toneContainer(DsTone.critical)
-                : palette.surface,
-            borderRadius: DsRadius.borderCard,
-            border: Border.all(
-              color: undercovered
-                  ? context.toneColor(DsTone.critical).withValues(alpha: 0.4)
-                  : palette.line,
-            ),
-          ),
+        CourtPanel(
+          padding: DsSpacing.paddingLg,
+          accent: undercovered ? palette.critical : null,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -83,7 +73,9 @@ class FinancePositionGrid extends StatelessWidget {
                     Expanded(
                       child: Text(
                         l10n.financeCoverageShort,
-                        style: context.dsText.caption.semibold.tint(palette.critical),
+                        style: context.dsText.caption.semibold.tint(
+                          palette.critical,
+                        ),
                       ),
                     ),
                   ],
@@ -94,69 +86,53 @@ class FinancePositionGrid extends StatelessWidget {
         ),
         const SizedBox(height: DsSpacing.md),
 
-        LayoutBuilder(
-          builder: (context, constraints) {
-            // Two columns on anything narrower than a laptop, four above it.
-            final columns = constraints.maxWidth > 900 ? 4 : 2;
-            // A tile holds a label and one number, so its height is fixed by
-            // the type — the ratio has to follow the column width rather than
-            // be a single figure that leaves half the box empty at one size.
-            final tileWidth =
-                (constraints.maxWidth - DsSpacing.sm * (columns - 1)) / columns;
-            return GridView.count(
-              crossAxisCount: columns,
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              crossAxisSpacing: DsSpacing.sm,
-              mainAxisSpacing: DsSpacing.sm,
-              childAspectRatio: tileWidth / 88,
-              children: [
-                _Tile(
-                  label: l10n.financePlatformCash,
-                  amount: positions.platformCash,
-                  icon: Icons.savings_outlined,
-                ),
-                _Tile(
-                  label: l10n.financeCourierInTransit,
-                  amount: positions.courierInTransit,
-                  icon: Icons.local_shipping_outlined,
-                ),
-                _Tile(
-                  label: l10n.financeGatewayReceivable,
-                  amount: positions.gatewayReceivable,
-                  icon: Icons.credit_card_outlined,
-                ),
-                _Tile(
-                  label: l10n.financeCommissionRevenue,
-                  amount: positions.commissionRevenue,
-                  icon: Icons.trending_up_rounded,
-                ),
-                _Tile(
-                  label: l10n.financeSellerPayable,
-                  amount: positions.sellerPayable,
-                  icon: Icons.account_balance_wallet_outlined,
-                ),
-                _Tile(
-                  label: l10n.financeSellerEscrow,
-                  amount: positions.sellerEscrow,
-                  icon: Icons.hourglass_bottom_rounded,
-                ),
-                _Tile(
-                  label: l10n.financeCustomerWallets,
-                  amount: positions.customerWallets,
-                  icon: Icons.wallet_outlined,
-                ),
-                _Tile(
-                  label: l10n.financeDisputeHeld,
-                  amount: positions.disputeHeld,
-                  icon: Icons.gavel_rounded,
-                  // Frozen money is the tile worth noticing, and only when
-                  // there is any.
-                  isAlert: !positions.disputeHeld.isZero,
-                ),
-              ],
-            );
-          },
+        CourtFigureRow(
+          minTileWidth: 200,
+          children: [
+            _Tile(
+              label: l10n.financePlatformCash,
+              amount: positions.platformCash,
+              icon: Icons.savings_outlined,
+            ),
+            _Tile(
+              label: l10n.financeCourierInTransit,
+              amount: positions.courierInTransit,
+              icon: Icons.local_shipping_outlined,
+            ),
+            _Tile(
+              label: l10n.financeGatewayReceivable,
+              amount: positions.gatewayReceivable,
+              icon: Icons.credit_card_outlined,
+            ),
+            _Tile(
+              label: l10n.financeCommissionRevenue,
+              amount: positions.commissionRevenue,
+              icon: Icons.trending_up_rounded,
+            ),
+            _Tile(
+              label: l10n.financeSellerPayable,
+              amount: positions.sellerPayable,
+              icon: Icons.account_balance_wallet_outlined,
+            ),
+            _Tile(
+              label: l10n.financeSellerEscrow,
+              amount: positions.sellerEscrow,
+              icon: Icons.hourglass_bottom_rounded,
+            ),
+            _Tile(
+              label: l10n.financeCustomerWallets,
+              amount: positions.customerWallets,
+              icon: Icons.wallet_outlined,
+            ),
+            _Tile(
+              label: l10n.financeDisputeHeld,
+              amount: positions.disputeHeld,
+              icon: Icons.gavel_rounded,
+              // Frozen money is the tile worth noticing, and only when
+              // there is any.
+              isAlert: !positions.disputeHeld.isZero,
+            ),
+          ],
         ),
       ],
     );
@@ -183,10 +159,7 @@ class _Figure extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        Text(
-          label,
-          style: context.dsText.caption.tint(palette.muted),
-        ),
+        Text(label, style: context.dsText.caption.tint(palette.muted)),
         DsGaps.vXxxs,
         FittedBox(
           fit: BoxFit.scaleDown,
@@ -194,11 +167,10 @@ class _Figure extends StatelessWidget {
           child: Text(
             amount.format(),
             maxLines: 1,
-            style: (emphasise
-                    ? context.dsText.cardTitle
-                    : context.dsText.bodyLarge)
-                .bold
-                .tint(accent),
+            style:
+                (emphasise ? context.dsText.metric : context.dsText.metricSmall)
+                    .displayFamily
+                    .tint(accent),
           ),
         ),
       ],
@@ -222,47 +194,11 @@ class _Tile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final palette = context.console;
-    final accent = isAlert ? palette.caution : palette.muted;
-
-    return Container(
-      padding: const EdgeInsets.all(DsSpacing.md),
-      decoration: BoxDecoration(
-        color: isAlert ? context.toneContainer(DsTone.caution) : palette.surface,
-        borderRadius: BorderRadius.circular(DsRadius.lg),
-        border: Border.all(
-          color: isAlert ? context.toneColor(DsTone.caution).withValues(alpha: 0.4) : palette.line,
-        ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Row(
-            children: [
-              Icon(icon, size: 14, color: accent),
-              const SizedBox(width: DsSpacing.xxs),
-              Expanded(
-                child: Text(
-                  label,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: context.dsText.caption.semibold.tint(accent),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: DsSpacing.xs),
-          FittedBox(
-            fit: BoxFit.scaleDown,
-            alignment: AlignmentDirectional.centerStart,
-            child: Text(
-              amount.format(),
-              maxLines: 1,
-              style: context.dsText.bodyLarge.bold.tint(palette.ink),
-            ),
-          ),
-        ],
-      ),
+    return CourtFigure(
+      label: label,
+      value: amount.format(),
+      icon: icon,
+      accent: isAlert ? palette.caution : palette.primary,
     );
   }
 }
