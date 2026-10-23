@@ -11,6 +11,7 @@ import 'package:reem/core/media/media_limits.dart';
 import 'package:reem/core/media/media_providers.dart';
 import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/core/utils/relative_time.dart';
+import 'package:reem/features/auth/presentation/providers/auth_provider.dart';
 import 'package:reem/features/chat/data/services/chat_realtime_service.dart';
 import 'package:reem/features/chat/domain/entities/chat_message_entity.dart';
 import 'package:reem/features/chat/presentation/providers/chat_notifier.dart';
@@ -19,7 +20,6 @@ import 'package:reem/features/chat/presentation/providers/chat_state.dart';
 import 'package:reem/features/chat/presentation/widgets/attachment_sheet.dart';
 import 'package:reem/features/chat/presentation/widgets/chat_app_bar.dart';
 import 'package:reem/features/chat/presentation/widgets/chat_date_divider.dart';
-import 'package:reem/features/chat/presentation/widgets/chat_gradient_orb.dart';
 import 'package:reem/features/chat/presentation/widgets/chat_input.dart';
 import 'package:reem/features/chat/presentation/widgets/file_message_bubble.dart';
 import 'package:reem/features/chat/presentation/widgets/image_message_bubble.dart';
@@ -190,59 +190,70 @@ class _ChatDetailsScreenState extends ConsumerState<ChatDetailsScreen>
         ? null
         : ref.watch(chatThreadNotifierProvider(widget.chatId)).thread;
 
+    // Sellers are written to; the suggested first questions are a shopper's.
+    final isSeller = ref.watch(
+      authNotifierProvider.select((s) => s.user?.isSeller ?? false),
+    );
+
     return Scaffold(
       resizeToAvoidBottomInset: true,
-      body: LuxuryBlurredBackground(
-        child: Stack(
-          children: [
-            const Positioned(top: -100, right: -100, child: ChatGradientOrb()),
-            const Positioned(bottom: -120, left: -80, child: ChatGradientOrb()),
-            Column(
-              children: [
-                SafeArea(
-                  bottom: false,
-                  child: ChatAppBar(
-                    thread: thread,
-                    isPeerTyping: messagesState.isPeerTyping,
-                    onOpenSharedMedia: widget.chatId.isEmpty
-                        ? null
-                        : () => context.push(
-                            '${RoutePaths.chatMediaGallery}?id=${widget.chatId}',
-                          ),
-                    onOpenProfile: thread?.peerId == null
-                        ? null
-                        : () => context.push(
-                            RoutePaths.userProfileOf(thread!.peerId!),
-                          ),
-                  ),
+      backgroundColor: context.dsColors.background,
+      // The same slow light as the rest of Reem's stage. It replaces a live
+      // full-screen blur under two drifting orbs, which repainted the whole
+      // conversation behind every frame of their animation.
+      body: Stack(
+        children: [
+          const Positioned.fill(child: AuthAurora()),
+          Column(
+            children: [
+              SafeArea(
+                bottom: false,
+                child: ChatAppBar(
+                  thread: thread,
+                  isPeerTyping: messagesState.isPeerTyping,
+                  onOpenSharedMedia: widget.chatId.isEmpty
+                      ? null
+                      : () => context.push(
+                          '${RoutePaths.chatMediaGallery}?id=${widget.chatId}',
+                        ),
+                  onOpenProfile: thread?.peerId == null
+                      ? null
+                      : () => context.push(
+                          RoutePaths.userProfileOf(thread!.peerId!),
+                        ),
                 ),
-                Expanded(child: _body(context, messagesState)),
-                if (_recording)
-                  VoiceRecorderBar(
-                    onCompleted: _sendVoiceNote,
-                    onCancelled: () => setState(() => _recording = false),
-                  )
-                else
-                  ChatInput(
-                    // Only an upload in flight holds the composer: a text
-                    // message is on screen the moment it is sent, so she can
-                    // write the next one straight away.
-                    isSending: _attaching,
-                    onTyping: (typing) =>
-                        realtime.typing(widget.chatId, typing),
-                    onImage: _attach,
-                    onVoice: () => setState(() => _recording = true),
-                    onSend: (text) => unawaited(_sendText(text)),
-                  ),
-              ],
-            ),
-          ],
-        ),
+              ),
+              Expanded(
+                child: _body(context, messagesState, isSeller: isSeller),
+              ),
+              if (_recording)
+                VoiceRecorderBar(
+                  onCompleted: _sendVoiceNote,
+                  onCancelled: () => setState(() => _recording = false),
+                )
+              else
+                ChatInput(
+                  // Only an upload in flight holds the composer: a text
+                  // message is on screen the moment it is sent, so she can
+                  // write the next one straight away.
+                  isSending: _attaching,
+                  onTyping: (typing) => realtime.typing(widget.chatId, typing),
+                  onImage: _attach,
+                  onVoice: () => setState(() => _recording = true),
+                  onSend: (text) => unawaited(_sendText(text)),
+                ),
+            ],
+          ),
+        ],
       ),
     );
   }
 
-  Widget _body(BuildContext context, ChatMessagesState state) {
+  Widget _body(
+    BuildContext context,
+    ChatMessagesState state, {
+    required bool isSeller,
+  }) {
     if (state.isLoading && state.messages.isEmpty) {
       return const DsLoadingIndicator();
     }
@@ -260,7 +271,12 @@ class _ChatDetailsScreenState extends ConsumerState<ChatDetailsScreen>
       return ListView(
         padding: const EdgeInsets.all(DsSpacing.xl),
         children: [
-          _EmptyConversation(onImage: _attach),
+          _EmptyConversation(
+            onImage: _attach,
+            // A boutique is written to rather than writing first, so the
+            // shopper's opening questions would be the wrong way round.
+            onSuggest: isSeller ? null : (text) => unawaited(_sendText(text)),
+          ),
           if (state.isPeerTyping) ...[DsGaps.vMd, const TypingIndicator()],
         ],
       );
@@ -271,9 +287,9 @@ class _ChatDetailsScreenState extends ConsumerState<ChatDetailsScreen>
       controller: _scroll,
       reverse: true,
       padding: const EdgeInsets.fromLTRB(
-        DsSpacing.xl,
         DsSpacing.lg,
-        DsSpacing.xl,
+        DsSpacing.lg,
+        DsSpacing.lg,
         DsSpacing.lg,
       ),
       itemCount: entries.length,
@@ -296,12 +312,25 @@ class _ChatDetailsScreenState extends ConsumerState<ChatDetailsScreen>
     final messages = state.messages;
     for (var i = messages.length - 1; i >= 0; i--) {
       final message = messages[i];
+      // The end of a run: the newer message is from the other side, or from
+      // another day, or a few minutes later. Only there does the bubble take a
+      // tail and the time show — a run reads as one voice, and a column of
+      // identical timestamps says nothing a single one does not.
+      final newer = i < messages.length - 1 ? messages[i + 1] : null;
+      final endsRun =
+          newer == null ||
+          newer.isMine != message.isMine ||
+          !_sameDay(newer.sentAt, message.sentAt) ||
+          newer.sentAt.difference(message.sentAt).abs() > _runGap;
       entries.add(
         Padding(
           key: ValueKey(message.clientId ?? message.id),
-          padding: const EdgeInsets.only(bottom: DsSpacing.sm),
+          padding: EdgeInsets.only(
+            bottom: endsRun ? DsSpacing.md : DsSpacing.xxs,
+          ),
           child: _MessageRow(
             message: message,
+            endsRun: endsRun,
             onRetry: message.isFailed ? () => unawaited(_retry(message)) : null,
           ),
         ),
@@ -334,6 +363,9 @@ class _ChatDetailsScreenState extends ConsumerState<ChatDetailsScreen>
     }
     return entries;
   }
+
+  /// How far apart two messages can be and still read as one run.
+  static const _runGap = Duration(minutes: 3);
 
   static bool _sameDay(DateTime a, DateTime b) =>
       a.year == b.year && a.month == b.month && a.day == b.day;
@@ -468,9 +500,12 @@ class _ChatDetailsScreenState extends ConsumerState<ChatDetailsScreen>
 }
 
 class _MessageRow extends StatelessWidget {
-  const _MessageRow({required this.message, this.onRetry});
+  const _MessageRow({required this.message, this.endsRun = true, this.onRetry});
 
   final ChatMessageEntity message;
+
+  /// The last of a run from one side: it carries the tail and the time.
+  final bool endsRun;
 
   /// Set only for a message of hers that failed to send.
   final VoidCallback? onRetry;
@@ -501,7 +536,11 @@ class _MessageRow extends StatelessWidget {
       // Anything else, including a media message whose attachment never
       // arrived: its text is all there is, and drawing a broken frame or a
       // player with nothing behind it would say less.
-      _ => MessageBubble(isMe: message.isMine, message: message.content),
+      _ => MessageBubble(
+        isMe: message.isMine,
+        message: message.content,
+        tail: endsRun,
+      ),
     };
 
     final l10n = context.l10n;
@@ -513,8 +552,8 @@ class _MessageRow extends StatelessWidget {
           message.isFailed
               ? l10n.chatMessageNotSent
               : message.isPending
-                  ? l10n.chatSending
-                  : formatMessageTime(l10n, message.sentAt),
+              ? l10n.chatSending
+              : formatMessageTime(l10n, message.sentAt),
           style: context.dsText.caption.tint(
             message.isFailed ? colors.error : colors.onSurfaceVariant,
           ),
@@ -531,13 +570,22 @@ class _MessageRow extends StatelessWidget {
       ],
     );
 
+    // A message still on its way, or one that failed, always says so — even
+    // inside a run, where the time would otherwise wait for the last bubble.
+    final showMeta = endsRun || message.isPending || message.isFailed;
     final row = Column(
-      crossAxisAlignment:
-          message.isMine ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+      crossAxisAlignment: message.isMine
+          ? CrossAxisAlignment.end
+          : CrossAxisAlignment.start,
       children: [
         Opacity(opacity: message.isPending ? 0.7 : 1, child: bubble),
-        DsGaps.vXxs,
-        meta,
+        if (showMeta) ...[
+          DsGaps.vXxs,
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: DsSpacing.xs),
+            child: meta,
+          ),
+        ],
       ],
     );
     if (onRetry == null) return row;
@@ -553,47 +601,111 @@ class _MessageRow extends StatelessWidget {
   }
 }
 
+/// A conversation with nothing in it yet: the arch, a line of welcome, and —
+/// for a shopper — three questions she can send with one tap, because the
+/// hardest message to write is the first.
 class _EmptyConversation extends StatelessWidget {
-  const _EmptyConversation({required this.onImage});
+  const _EmptyConversation({required this.onImage, this.onSuggest});
 
   final VoidCallback onImage;
 
+  /// Sends a suggested question. Null hides the suggestions.
+  final ValueChanged<String>? onSuggest;
+
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final colors = context.dsColors;
-    return Container(
-      padding: DsSpacing.paddingLg,
-      decoration: BoxDecoration(
-        color: colors.surfaceElevated.withValues(alpha: 0.85),
-        borderRadius: DsRadius.borderCard,
-        border: Border.all(color: colors.border),
-      ),
-      child: Column(
-        children: [
-          Icon(
-            Icons.forum_rounded,
-            size: DsSizes.iconXl,
-            color: colors.primary,
+    final suggestions = [
+      l10n.chatSuggestAvailable,
+      l10n.chatSuggestSizes,
+      l10n.chatSuggestDelivery,
+    ];
+
+    return Column(
+      children: [
+        const AuthEmblem(icon: Icons.forum_rounded, size: 84),
+        Text(
+          l10n.chatStartConversation,
+          textAlign: TextAlign.center,
+          style: context.dsText.sectionTitle.bold,
+        ),
+        DsGaps.vXs,
+        Text(
+          l10n.chatStartConversationHint,
+          textAlign: TextAlign.center,
+          style: context.dsText.bodyMuted.copyWith(height: 1.6),
+        ),
+        DsGaps.vSm,
+        TextButton.icon(
+          onPressed: onImage,
+          icon: const Icon(Icons.photo_rounded),
+          label: Text(l10n.chatShareImage),
+        ),
+        if (onSuggest != null) ...[
+          DsGaps.vXl,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              DsSparkle(size: 9, color: colors.accent),
+              DsGaps.hXs,
+              Text(
+                l10n.chatSuggestTitle,
+                style: context.dsText.overline.copyWith(color: colors.primary),
+              ),
+            ],
           ),
           DsGaps.vSm,
-          Text(
-            context.l10n.chatStartConversation,
-            style: context.dsText.cardTitle.bold,
-          ),
-          DsGaps.vXs,
-          Text(
-            context.l10n.chatStartConversationHint,
-            textAlign: TextAlign.center,
-            style: context.dsText.bodyMuted,
-          ),
-          DsGaps.vMd,
-          TextButton.icon(
-            onPressed: onImage,
-            icon: const Icon(Icons.photo_rounded),
-            label: Text(context.l10n.chatShareImage),
-          ),
+          // Drawn as her own bubbles-to-be, so a tap reads as "say this".
+          for (final text in suggestions)
+            Padding(
+              padding: const EdgeInsets.only(bottom: DsSpacing.sm),
+              child: Align(
+                alignment: AlignmentDirectional.centerEnd,
+                child: Material(
+                  color: Colors.transparent,
+                  shape: SilkBubbleBorder(
+                    mine: true,
+                    side: BorderSide(
+                      color: colors.primary.withValues(alpha: 0.5),
+                    ),
+                  ),
+                  child: InkWell(
+                    onTap: () => onSuggest!(text),
+                    customBorder: const SilkBubbleBorder(mine: true),
+                    child: Padding(
+                      padding: const EdgeInsetsDirectional.fromSTEB(
+                        DsSpacing.md,
+                        DsSpacing.sm,
+                        DsSpacing.md + SilkBubbleBorder.tailWidth,
+                        DsSpacing.sm,
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Flexible(
+                            child: Text(
+                              text,
+                              style: context.dsText.body.semibold.tint(
+                                colors.primary,
+                              ),
+                            ),
+                          ),
+                          DsGaps.hXs,
+                          Icon(
+                            Icons.near_me_rounded,
+                            size: DsSizes.iconXs,
+                            color: colors.primary,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
         ],
-      ),
+      ],
     );
   }
 }

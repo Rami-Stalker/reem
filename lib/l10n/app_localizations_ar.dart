@@ -419,6 +419,110 @@ class AppLocalizationsAr extends AppLocalizations {
   String get adminConversion => 'معدّل التحويل';
 
   @override
+  String get adminCourtGreetingMorning => 'صباح الخير';
+
+  @override
+  String get adminCourtGreetingEvening => 'مساء الخير';
+
+  @override
+  String adminCourtGreetingNamed(String greeting, String name) {
+    return '$greeting، $name';
+  }
+
+  @override
+  String get adminCourtStateCalm => 'البيت هادئ — لا شيء ينتظركِ اليوم.';
+
+  @override
+  String adminCourtStateWaiting(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count أمر ينتظركِ اليوم',
+      many: '$count أمراً ينتظركِ اليوم',
+      few: '$count أمور تنتظركِ اليوم',
+      two: 'أمران ينتظرانكِ اليوم',
+      one: 'أمر واحد ينتظركِ اليوم',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String adminCourtStateUrgent(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count منها عاجلة',
+      many: '$count منها عاجلة',
+      few: '$count منها عاجلة',
+      two: 'اثنان منها عاجلان',
+      one: 'واحد منها عاجل',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get adminCourtStateUnknown =>
+      'تعذّرت قراءة ملخّص اليوم — الأبواب أدناه ما زالت تُظهر من ينتظركِ.';
+
+  @override
+  String get adminCourtJumpHint => 'إلى أين؟ اكتبي اسم أي قسم…';
+
+  @override
+  String get adminCourtJumpEmpty => 'لا يوجد قسم بهذا الاسم.';
+
+  @override
+  String get adminCourtNowTitle => 'ابدئي من هنا';
+
+  @override
+  String get adminCourtNowOpen => 'اذهبي إليه';
+
+  @override
+  String get adminCourtThenTitle => 'بعد ذلك';
+
+  @override
+  String get adminCourtSeverityCritical => 'عاجل';
+
+  @override
+  String get adminCourtSeverityWarning => 'يستحق المتابعة';
+
+  @override
+  String get adminCourtSeverityOpportunity => 'فرصة';
+
+  @override
+  String get adminCourtPulseTitle => 'نبض السوق';
+
+  @override
+  String get adminCourtPulseCaption =>
+      'كل بتلة تطول بقدر نموّ مؤشّرها هذا الشهر، والبتلة الحمراء تعني تراجعاً.';
+
+  @override
+  String get adminCourtPulseSemantics => 'وردة اتجاهات هذا الشهر';
+
+  @override
+  String get adminCourtDoorsTitle => 'الأبواب';
+
+  @override
+  String get adminCourtDoorsCaption => 'الباب المضاء خلفه من ينتظركِ.';
+
+  @override
+  String get adminCourtDoorWaiting => 'بانتظاركِ';
+
+  @override
+  String get adminCourtDoorClear => 'لا أحد ينتظر';
+
+  @override
+  String get adminCourtDoorUnknown => 'تعذّر العدّ';
+
+  @override
+  String get adminCourtDoorEnter => 'ادخلي';
+
+  @override
+  String get adminCourtThreadTitle => 'خيط اليوم';
+
+  @override
+  String get adminCourtThreadAll => 'السجلّ كاملاً';
+
+  @override
   String get adminConversionFunnel => 'قمع التحويل';
 
   @override
@@ -12328,6 +12432,27 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get composerAudienceFollowersHint => 'متابِعاتكِ فقط';
+
+  @override
+  String get chatsOnlineRail => 'متّصلات الآن';
+
+  @override
+  String get chatsSectionNew => 'جديدة';
+
+  @override
+  String get chatsSectionEarlier => 'سابقة';
+
+  @override
+  String get chatSuggestTitle => 'اسألي بلمسة';
+
+  @override
+  String get chatSuggestAvailable => 'هل القطعة متوفرة؟';
+
+  @override
+  String get chatSuggestSizes => 'ما المقاسات المتاحة؟';
+
+  @override
+  String get chatSuggestDelivery => 'كم يستغرق التوصيل؟';
 
   @override
   String get actionOccasions => 'مناسباتي';

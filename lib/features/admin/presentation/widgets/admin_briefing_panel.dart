@@ -7,21 +7,22 @@ import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/features/admin/data/models/admin_briefing_model.dart';
 import 'package:reem/features/admin/presentation/providers/admin_provider.dart';
+import 'package:reem/l10n/app_localizations.dart';
 
-/// What the marketplace thinks somebody should look at today.
+/// What the marketplace thinks somebody should look at today — as an agenda.
 ///
-/// The console already carries a wall of counters. This is the opposite of a
-/// counter: a short, ordered list of things that are *wrong or worth doing*,
-/// each with the numbers that make the claim checkable and a sentence naming
-/// what a person could do about it. Everything in it comes from the server —
-/// the ordering, the wording, the severity — because a phone re-ranking the
-/// list would eventually disagree with the system that computed it.
+/// Not a list of equals. The server has already ranked the findings, so the
+/// first one is drawn as the thing to do now: large, with its severity named
+/// and one button that goes there. The rest follow under «بعد ذلك», numbered,
+/// in the server's order. An operator with five minutes does the first; one
+/// with an hour works down the list.
 ///
-/// It renders nothing at all rather than something reassuring when the read
-/// fails, and says "nothing needs you today" out loud when the week was quiet.
-/// Both matter: an operator who learns that this panel invents work stops
-/// reading it, and one who cannot tell a quiet week from a broken screen
-/// stops trusting it.
+/// Everything in it comes from the server — the ordering, the wording, the
+/// severity — because a phone re-ranking the list would eventually disagree
+/// with the system that computed it. It says "nothing needs you today" out
+/// loud when the week was quiet, and stays muted rather than alarming when the
+/// read fails: the briefing is advisory, and a console that shouts because an
+/// advisory endpoint timed out teaches its operator to ignore the shouting.
 class AdminBriefingPanel extends ConsumerWidget {
   const AdminBriefingPanel({super.key});
 
@@ -32,39 +33,33 @@ class AdminBriefingPanel extends ConsumerWidget {
     final briefing = ref.watch(adminBriefingProvider);
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Text(
           l10n.adminBriefing,
-          style: context.dsText.cardTitle.bold.tint(palette.ink),
+          style: context.dsText.sectionTitle.bold.tint(palette.ink),
         ),
-        const SizedBox(height: DsSpacing.md),
+        DsGaps.vMd,
         briefing.when(
-          loading: () => const Padding(
-            padding: EdgeInsets.all(DsSpacing.lg),
+          loading: () => const _Shell(
             child: Center(child: DsLoadingIndicator()),
           ),
-          // Not an empty state and not an alarm. The briefing is advisory; a
-          // console that shouts because an advisory endpoint timed out teaches
-          // its operator to ignore the shouting.
           error: (_, _) => _Shell(
-            palette: palette,
             child: Text(
               l10n.adminBriefingUnavailable,
               style: context.dsText.body.tint(palette.muted),
             ),
           ),
-          data: (data) => data.quiet
+          data: (data) => data.quiet || data.findings.isEmpty
               ? _Shell(
-                  palette: palette,
                   child: Row(
                     children: [
                       Icon(
-                        Icons.check_circle_outline_rounded,
-                        size: 20,
+                        Icons.spa_outlined,
+                        size: DsSizes.iconLg,
                         color: palette.positive,
                       ),
-                      const SizedBox(width: DsSpacing.sm),
+                      DsGaps.hMd,
                       Expanded(
                         child: Text(
                           l10n.adminBriefingQuiet,
@@ -75,12 +70,25 @@ class AdminBriefingPanel extends ConsumerWidget {
                   ),
                 )
               : Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    for (final finding in data.findings)
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: DsSpacing.sm),
-                        child: _FindingRow(finding: finding, palette: palette),
+                    _NowCard(finding: data.findings.first),
+                    if (data.findings.length > 1) ...[
+                      DsGaps.vLg,
+                      Text(
+                        l10n.adminCourtThenTitle,
+                        style: context.dsText.overline.tint(palette.muted),
                       ),
+                      DsGaps.vXs,
+                      for (var i = 1; i < data.findings.length; i++)
+                        DsStaggerAnimations.item(
+                          index: i,
+                          child: _ThenRow(
+                            position: i + 1,
+                            finding: data.findings[i],
+                          ),
+                        ),
+                    ],
                   ],
                 ),
         ),
@@ -89,21 +97,22 @@ class AdminBriefingPanel extends ConsumerWidget {
   }
 }
 
-/// The panel's plain container, shared by the quiet and unavailable states.
+/// The panel's plain container, shared by the loading, quiet and unavailable
+/// states.
 class _Shell extends StatelessWidget {
-  const _Shell({required this.palette, required this.child});
+  const _Shell({required this.child});
 
-  final AdminConsolePalette palette;
   final Widget child;
 
   @override
   Widget build(BuildContext context) {
+    final palette = context.console;
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(DsSpacing.lg),
+      padding: DsSpacing.paddingXl,
       decoration: BoxDecoration(
         color: palette.surface,
-        borderRadius: DsRadius.borderSm,
+        borderRadius: DsRadius.borderXxl,
         border: Border.all(color: palette.line),
       ),
       child: child,
@@ -111,46 +120,173 @@ class _Shell extends StatelessWidget {
   }
 }
 
-class _FindingRow extends StatelessWidget {
-  const _FindingRow({required this.finding, required this.palette});
-
-  final AdminFinding finding;
-  final AdminConsolePalette palette;
-
-  @override
-  Widget build(BuildContext context) {
-    final accent = switch (finding.severity) {
+Color _severityColor(AdminConsolePalette palette, FindingSeverity severity) =>
+    switch (severity) {
       FindingSeverity.critical => palette.critical,
       FindingSeverity.warning => palette.caution,
       FindingSeverity.opportunity => palette.info,
     };
-    final destination = _routeFor(finding.href);
-    final rtl = Directionality.of(context) == TextDirection.rtl;
 
-    final row = Container(
-      padding: const EdgeInsets.all(DsSpacing.lg),
+String _severityLabel(AppLocalizations l10n, FindingSeverity severity) =>
+    switch (severity) {
+      FindingSeverity.critical => l10n.adminCourtSeverityCritical,
+      FindingSeverity.warning => l10n.adminCourtSeverityWarning,
+      FindingSeverity.opportunity => l10n.adminCourtSeverityOpportunity,
+    };
+
+/// The one thing to do now.
+class _NowCard extends StatelessWidget {
+  const _NowCard({required this.finding});
+
+  final AdminFinding finding;
+
+  @override
+  Widget build(BuildContext context) {
+    final palette = context.console;
+    final l10n = context.l10n;
+    final accent = _severityColor(palette, finding.severity);
+    final destination = adminRouteForFinding(finding.href);
+
+    return Container(
       decoration: BoxDecoration(
         color: palette.surface,
-        borderRadius: DsRadius.borderSm,
-        border: Border.all(color: palette.line),
+        borderRadius: DsRadius.borderXxl,
+        border: Border.all(color: accent.withValues(alpha: 0.35)),
+        boxShadow: context.glowShadow(accent, blur: 28, alpha: 0.14),
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: Stack(
+        children: [
+          // A wash of the severity's colour from the reading corner — the
+          // card is lit by what it is about, not painted in it.
+          Positioned.fill(
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                gradient: RadialGradient(
+                  center: AlignmentDirectional.topStart.resolve(
+                    Directionality.of(context),
+                  ),
+                  radius: 1.4,
+                  colors: [
+                    accent.withValues(alpha: 0.12),
+                    accent.withValues(alpha: 0),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          Padding(
+            padding: DsSpacing.paddingXl,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    _SeverityTag(
+                      color: accent,
+                      label: _severityLabel(l10n, finding.severity),
+                    ),
+                    const Spacer(),
+                    Text(
+                      l10n.adminCourtNowTitle,
+                      style: context.dsText.overline.tint(palette.muted),
+                    ),
+                  ],
+                ),
+                DsGaps.vMd,
+                Text(
+                  finding.title,
+                  style: context.dsText.screenTitle.bold.tint(palette.ink),
+                ),
+                DsGaps.vXs,
+                Text(
+                  finding.action,
+                  style: context.dsText.bodyLarge.tint(palette.muted),
+                ),
+                if (destination != null) ...[
+                  DsGaps.vLg,
+                  // The button's frame fills whatever width it is offered,
+                  // so it is offered only its own.
+                  IntrinsicWidth(
+                    child: PrimaryButton(
+                      label: l10n.adminCourtNowOpen,
+                      icon: Directionality.of(context) == TextDirection.rtl
+                          ? Icons.north_west_rounded
+                          : Icons.north_east_rounded,
+                      isExpanded: false,
+                      onPressed: () => context.push(destination),
+                    ),
+                  ),
+                ],
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _SeverityTag extends StatelessWidget {
+  const _SeverityTag({required this.color, required this.label});
+
+  final Color color;
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: DsSpacing.pillPadding,
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.12),
+        borderRadius: DsRadius.borderPill,
+        border: Border.all(color: color.withValues(alpha: 0.3)),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: DsSpacing.xs,
+            height: DsSpacing.xs,
+            decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+          ),
+          DsGaps.hXs,
+          Text(label, style: context.dsText.captionStrong.tint(color)),
+        ],
+      ),
+    );
+  }
+}
+
+/// One of the findings after the first, numbered in the server's order.
+class _ThenRow extends StatelessWidget {
+  const _ThenRow({required this.position, required this.finding});
+
+  final int position;
+  final AdminFinding finding;
+
+  @override
+  Widget build(BuildContext context) {
+    final palette = context.console;
+    final accent = _severityColor(palette, finding.severity);
+    final destination = adminRouteForFinding(finding.href);
+    final rtl = Directionality.of(context) == TextDirection.rtl;
+
+    final row = Padding(
+      padding: const EdgeInsets.symmetric(
+        vertical: DsSpacing.sm,
+        horizontal: DsSpacing.xs,
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // A severity bar rather than a coloured card: the console is
-          // graphite on purpose, and four red panels in a row would make the
-          // fifth finding invisible.
-          Container(
-            width: 4,
-            height: 36,
-            decoration: BoxDecoration(
-              color: accent,
-              // Half the bar's own width, which is what `pill` resolves to
-              // on a 4px-wide rule: a stadium with semicircular caps.
-              borderRadius: BorderRadius.circular(DsRadius.pill),
+          SizedBox(
+            width: DsSizes.controlSm,
+            child: Text(
+              '$position',
+              style: context.dsText.metricSmall.displayFamily.tint(accent),
             ),
           ),
-          const SizedBox(width: DsSpacing.md),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -159,19 +295,21 @@ class _FindingRow extends StatelessWidget {
                   finding.title,
                   style: context.dsText.bodyStrong.tint(palette.ink),
                 ),
-                const SizedBox(height: DsSpacing.xs),
+                DsGaps.vXxs,
                 Text(
                   finding.action,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
                   style: context.dsText.cardSubtitle.tint(palette.muted),
                 ),
               ],
             ),
           ),
           if (destination != null) ...[
-            const SizedBox(width: DsSpacing.sm),
+            DsGaps.hSm,
             Icon(
               rtl ? Icons.chevron_left_rounded : Icons.chevron_right_rounded,
-              size: 20,
+              size: DsSizes.iconSm,
               color: palette.muted,
             ),
           ],
@@ -179,12 +317,17 @@ class _FindingRow extends StatelessWidget {
       ),
     );
 
-    if (destination == null) return row;
-
-    return InkWell(
-      borderRadius: DsRadius.borderSm,
-      onTap: () => context.push(destination),
-      child: row,
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        border: Border(bottom: BorderSide(color: palette.line)),
+      ),
+      child: destination == null
+          ? row
+          : InkWell(
+              borderRadius: DsRadius.borderMd,
+              onTap: () => context.push(destination),
+              child: row,
+            ),
     );
   }
 }
@@ -199,7 +342,7 @@ class _FindingRow extends StatelessWidget {
 ///
 /// Only exact and unambiguous matches are listed. When a screen for one of the
 /// unmapped subjects is built, it is added here.
-String? _routeFor(String? href) => switch (href) {
+String? adminRouteForFinding(String? href) => switch (href) {
   '/admin/economics' => RoutePaths.adminAnalytics,
   '/admin/commissions' => RoutePaths.adminCommissions,
   '/admin/trust' => RoutePaths.adminModeration,

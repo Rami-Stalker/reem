@@ -4,27 +4,26 @@ import 'package:reem/core/design_system/design_system.dart';
 
 /// One message in a conversation.
 ///
-/// Her own messages ride the brand gradient; the other party's sit on a theme
-/// surface. Both used a bespoke pink (`0xffFF5C8A`) and a fixed white ground,
-/// which meant the thread stayed bright — and off-brand — in dark mode.
+/// Hers ride the rose blend with a soft glow under them; the other side's are
+/// frosted pearl with a hairline rim. The last bubble of a run curls into a
+/// small tail on the sender's side — [tail] — so a run of messages reads as one
+/// voice rather than a stack of separate cards.
 class MessageBubble extends StatelessWidget {
   const MessageBubble({
     super.key,
     required this.isMe,
     required this.message,
+    this.tail = true,
   });
 
   final bool isMe;
   final String message;
-
-  /// The tail corner is tightened on the sender's side, so the bubble points
-  /// at whoever said it.
-  static const Radius _tail = Radius.circular(DsRadius.sm);
-  static const Radius _round = Radius.circular(DsRadius.xxl);
+  final bool tail;
 
   @override
   Widget build(BuildContext context) {
     final colors = context.dsColors;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Align(
       // Directional, not absolute: the sender's own bubble sits on the
@@ -33,28 +32,49 @@ class MessageBubble extends StatelessWidget {
       alignment: isMe
           ? AlignmentDirectional.centerEnd
           : AlignmentDirectional.centerStart,
-      child: Container(
+      child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: DsSizes.maxFormWidth * 0.7),
-        padding: const EdgeInsets.symmetric(
-          horizontal: DsSpacing.md,
-          vertical: DsSpacing.sm,
-        ),
-        decoration: BoxDecoration(
-          gradient: isMe ? context.primaryGradient : null,
-          color: isMe ? null : colors.surfaceElevated,
-          border: isMe ? null : Border.all(color: colors.border),
-          borderRadius: BorderRadiusDirectional.only(
-            topStart: _round,
-            topEnd: _round,
-            bottomStart: isMe ? _round : _tail,
-            bottomEnd: isMe ? _tail : _round,
+        child: DecoratedBox(
+          decoration: ShapeDecoration(
+            // In dark mode the theme's rose is lighter, and white words on it
+            // fade; her bubble keeps the deeper blend so they stay legible.
+            gradient: isMe
+                ? (isDark ? DsGradients.primarySoft : context.primaryGradient)
+                : null,
+            color: isMe
+                ? null
+                : (isDark ? colors.surfaceElevated : colors.surface).withValues(
+                    alpha: 0.92,
+                  ),
+            shape: SilkBubbleBorder(
+              mine: isMe,
+              tail: tail,
+              side: isMe
+                  ? BorderSide.none
+                  : BorderSide(color: colors.border.withValues(alpha: 0.8)),
+            ),
+            shadows: isMe
+                ? context.glowShadow(colors.primary, blur: 16, alpha: 0.22)
+                : context.shadowXs,
           ),
-        ),
-        child: Text(
-          message,
-          style: context.dsText.body
-              .tint(isMe ? DsColors.onMedia : colors.onSurface)
-              .copyWith(height: 1.6),
+          child: Padding(
+            padding: EdgeInsetsDirectional.only(
+              start:
+                  DsSpacing.md +
+                  (!isMe && tail ? SilkBubbleBorder.tailWidth : 0),
+              end:
+                  DsSpacing.md +
+                  (isMe && tail ? SilkBubbleBorder.tailWidth : 0),
+              top: DsSpacing.sm,
+              bottom: DsSpacing.sm,
+            ),
+            child: Text(
+              message,
+              style: context.dsText.body
+                  .tint(isMe ? DsColors.onMedia : colors.onSurface)
+                  .copyWith(height: 1.6),
+            ),
+          ),
         ),
       ),
     );

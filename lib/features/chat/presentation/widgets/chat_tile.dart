@@ -7,12 +7,13 @@ import 'package:reem/features/chat/domain/entities/chat_thread_entity.dart';
 import 'package:reem/features/chat/presentation/widgets/unread_badge.dart';
 import 'package:reem/l10n/app_localizations.dart';
 
-/// One conversation in the inbox.
+/// One conversation in the inbox, as a letter.
 ///
-/// Unread is carried by weight and a single badge rather than a coloured row:
-/// a list where four of five rows are tinted has stopped distinguishing
-/// anything. The context caption ("بخصوص طلب") is what tells her which of two
-/// conversations with the same boutique she is about to open.
+/// An unread letter is lit three ways at once and nowhere else: a rose ribbon
+/// down its leading edge, a thread round the arch portrait, and its count in a
+/// wax seal. A list where every row is tinted stops distinguishing anything,
+/// so a read letter is quiet paper. The context caption («بخصوص طلب») is what
+/// tells her which of two conversations with the same boutique she is opening.
 class ChatTile extends StatelessWidget {
   const ChatTile({
     super.key,
@@ -33,73 +34,136 @@ class ChatTile extends StatelessWidget {
     final c = context.dsColors;
     final l10n = context.l10n;
     final unread = thread.hasUnread;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     // The person first. `title` is the *subject* the thread was opened about —
     // for an order chat the server sends "Order #REEM-…" — so preferring it
     // turned the seller's inbox into a column of order numbers with no name on
-    // any of them, and English ones at that. The subject is already carried by
-    // the caption below.
+    // any of them. The subject is already carried by the caption below.
     final title = thread.peerName?.trim().isNotEmpty == true
         ? thread.peerName!
         : (thread.title.isNotEmpty ? thread.title : l10n.chatUntitled);
+    final paper = isDark ? c.surfaceElevated : c.surface;
 
-    return SurfaceCard(
-      onTap: onTap,
-      padding: const EdgeInsets.all(DsSpacing.md),
-      elevation: unread ? DsCardElevation.medium : DsCardElevation.low,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          DsAvatar(
-            imageUrl: thread.avatarUrl.isEmpty ? null : thread.avatarUrl,
-            name: title,
-            size: 56,
-            isOnline: thread.isOnline,
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: DsRadius.borderXxl,
+        child: Ink(
+          decoration: BoxDecoration(
+            borderRadius: DsRadius.borderXxl,
+            color: unread
+                ? Color.alphaBlend(c.primary.withValues(alpha: 0.05), paper)
+                : paper.withValues(alpha: 0.86),
+            border: Border.all(
+              color: unread
+                  ? c.primary.withValues(alpha: 0.35)
+                  : c.border.withValues(alpha: 0.6),
+            ),
+            boxShadow: unread ? context.shadowSoft : context.shadowXs,
           ),
-          const SizedBox(width: DsSpacing.md),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        title,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: context.dsText.tileTitle.copyWith(
-                          fontWeight: unread
-                              ? DsTypography.bold
-                              : DsTypography.semiBold,
-                        ),
+          child: ClipRRect(
+            borderRadius: DsRadius.borderXxl,
+            child: IntrinsicHeight(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  // The ribbon.
+                  AnimatedContainer(
+                    duration: DsMotion.moderate,
+                    width: unread ? 4 : 0,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [c.primary, DsColors.gold300],
                       ),
                     ),
-                    const SizedBox(width: DsSpacing.sm),
-                    Text(
-                      formatThreadStamp(l10n, thread.updatedAt),
-                      style: context.dsText.caption.copyWith(
-                        color: unread ? c.primary : c.onSurfaceVariant,
-                        fontWeight:
-                            unread ? DsTypography.semiBold : DsTypography.regular,
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.all(DsSpacing.md),
+                      child: Row(
+                        children: [
+                          ArchAvatar(
+                            name: title,
+                            imageUrl: thread.avatarUrl.isEmpty
+                                ? null
+                                : thread.avatarUrl,
+                            width: 50,
+                            isOnline: thread.isOnline,
+                            lit: unread,
+                          ),
+                          DsGaps.hMd,
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: Text(
+                                        title,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: context.dsText.tileTitle
+                                            .copyWith(
+                                              fontWeight: unread
+                                                  ? DsTypography.bold
+                                                  : DsTypography.semiBold,
+                                            ),
+                                      ),
+                                    ),
+                                    DsGaps.hSm,
+                                    Text(
+                                      formatThreadStamp(l10n, thread.updatedAt),
+                                      style: context.dsText.caption.copyWith(
+                                        color: unread
+                                            ? c.primary
+                                            : c.onSurfaceVariant,
+                                        fontWeight: unread
+                                            ? DsTypography.semiBold
+                                            : DsTypography.regular,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                DsGaps.vXxs,
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: _Preview(
+                                        thread: thread,
+                                        isTyping: isTyping,
+                                        unread: unread,
+                                      ),
+                                    ),
+                                    if (unread) ...[
+                                      DsGaps.hSm,
+                                      UnreadBadge(count: thread.unreadCount),
+                                    ],
+                                  ],
+                                ),
+                                if (_contextLabel(l10n) case final label?) ...[
+                                  DsGaps.vXs,
+                                  _ContextChip(
+                                    label: label,
+                                    icon: _contextIcon(thread.context),
+                                  ),
+                                ],
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  ],
-                ),
-                DsGaps.vXs,
-                _Preview(thread: thread, isTyping: isTyping, unread: unread),
-                if (_contextLabel(l10n) case final label?) ...[
-                  DsGaps.vXs,
-                  _ContextChip(label: label),
+                  ),
                 ],
-              ],
+              ),
             ),
           ),
-          if (unread) ...[
-            const SizedBox(width: DsSpacing.sm),
-            UnreadBadge(count: thread.unreadCount),
-          ],
-        ],
+        ),
       ),
     );
   }
@@ -107,11 +171,18 @@ class ChatTile extends StatelessWidget {
   /// A direct conversation gets no caption — the name above it already says
   /// everything, and a chip on every row would be wallpaper.
   String? _contextLabel(AppLocalizations l10n) => switch (thread.context) {
-        ChatContext.product => l10n.chatContextProduct,
-        ChatContext.order => l10n.chatContextOrder,
-        ChatContext.support => l10n.chatContextSupport,
-        ChatContext.direct => null,
-      };
+    ChatContext.product => l10n.chatContextProduct,
+    ChatContext.order => l10n.chatContextOrder,
+    ChatContext.support => l10n.chatContextSupport,
+    ChatContext.direct => null,
+  };
+
+  static IconData _contextIcon(ChatContext context) => switch (context) {
+    ChatContext.product => Icons.shopping_bag_rounded,
+    ChatContext.order => Icons.local_shipping_rounded,
+    ChatContext.support => Icons.support_agent_rounded,
+    ChatContext.direct => Icons.chat_bubble_rounded,
+  };
 }
 
 class _Preview extends StatelessWidget {
@@ -130,12 +201,20 @@ class _Preview extends StatelessWidget {
     final c = context.dsColors;
 
     if (isTyping) {
-      return Text(
-        context.l10n.chatTyping,
-        style: context.dsText.cardSubtitle.copyWith(
-          color: c.primary,
-          fontWeight: DsTypography.semiBold,
-        ),
+      return Row(
+        children: [
+          WaveDots(size: 5, color: c.primary),
+          DsGaps.hXs,
+          Flexible(
+            child: Text(
+              context.l10n.chatTyping,
+              style: context.dsText.cardSubtitle.copyWith(
+                color: c.primary,
+                fontWeight: DsTypography.semiBold,
+              ),
+            ),
+          ),
+        ],
       );
     }
 
@@ -157,25 +236,36 @@ class _Preview extends StatelessWidget {
 }
 
 class _ContextChip extends StatelessWidget {
-  const _ContextChip({required this.label});
+  const _ContextChip({required this.label, required this.icon});
 
   final String label;
+  final IconData icon;
 
   @override
   Widget build(BuildContext context) {
     final c = context.dsColors;
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: DsSpacing.xs, vertical: DsSpacing.xxs),
-      decoration: BoxDecoration(
-        color: c.secondaryContainer.withValues(alpha: 0.5),
-        borderRadius: DsRadius.borderSm,
+      padding: const EdgeInsets.symmetric(
+        horizontal: DsSpacing.xs,
+        vertical: DsSpacing.xxxs,
       ),
-      child: Text(
-        label,
-        style: context.dsText.caption.copyWith(
+      decoration: BoxDecoration(
+        color: c.secondaryContainer.withValues(alpha: 0.55),
+        borderRadius: DsRadius.borderPill,
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: DsSizes.iconXxs, color: c.onSecondaryContainer),
+          DsGaps.hXxs,
+          Text(
+            label,
+            style: context.dsText.caption.copyWith(
               color: c.onSecondaryContainer,
               fontWeight: DsTypography.semiBold,
             ),
+          ),
+        ],
       ),
     );
   }

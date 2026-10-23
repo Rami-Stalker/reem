@@ -4,6 +4,8 @@ export 'package:reem/core/design_system/patterns/admin_console.dart';
 export 'package:reem/core/design_system/patterns/auth_stage.dart';
 // Buying: the boutique bag, the ticket, the receipt.
 export 'package:reem/core/design_system/patterns/commerce_stage.dart';
+// The operator's home: the courtyard — sky, rose, lit doors and the thread.
+export 'package:reem/core/design_system/patterns/console_court.dart';
 export 'package:reem/core/design_system/patterns/customer_boutique.dart';
 export 'package:reem/core/design_system/patterns/editorial_media.dart';
 export 'package:reem/core/design_system/patterns/experience_design.dart';
@@ -11,6 +13,8 @@ export 'package:reem/core/design_system/patterns/experience_design.dart';
 // as a post renders through it.
 export 'package:reem/core/design_system/patterns/immersive_post.dart';
 // The post shape — shared by the home feed, department pages and her page.
+// Messaging: letters, seals and silk bubbles.
+export 'package:reem/core/design_system/patterns/messaging_stage.dart';
 export 'package:reem/core/design_system/patterns/post_card.dart';
 export 'package:reem/core/design_system/patterns/premium_app_bar.dart';
 // Product surfaces -- composite layouts over the card components.

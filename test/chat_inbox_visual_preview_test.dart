@@ -27,6 +27,7 @@ import 'package:reem/features/chat/domain/entities/chat_start_request.dart';
 import 'package:reem/features/chat/domain/entities/chat_thread_entity.dart';
 import 'package:reem/features/chat/domain/repositories/chat_repository.dart';
 import 'package:reem/features/chat/presentation/providers/chat_provider.dart';
+import 'package:reem/features/chat/presentation/screens/chat_details_screen.dart';
 import 'package:reem/features/chat/presentation/screens/chats_screen.dart';
 import 'package:reem/l10n/app_localizations.dart' as gen;
 
@@ -97,6 +98,65 @@ Future<void> _loadFonts() async {
   }
 }
 
+ChatMessageEntity _msg(
+  String id,
+  String text, {
+  required bool mine,
+  required DateTime at,
+  bool read = false,
+}) => ChatMessageEntity(
+  id: id,
+  chatId: 't1',
+  senderId: mine ? 'me' : 's1',
+  content: text,
+  sentAt: at,
+  isMine: mine,
+  deliveredAt: mine ? at : null,
+  readAt: mine && read ? at : null,
+);
+
+final _conversation = <ChatMessageEntity>[
+  _msg(
+    'm1',
+    'مرحباً، هل الفستان المطرّز متوفر بالمقاس M؟',
+    mine: true,
+    at: _now.subtract(const Duration(days: 1, hours: 2)),
+    read: true,
+  ),
+  _msg(
+    'm2',
+    'أهلاً بكِ! نعم متوفر، وعندنا منه لونان: خمري وكحلي.',
+    mine: false,
+    at: _now.subtract(const Duration(days: 1, hours: 1, minutes: 50)),
+  ),
+  _msg(
+    'm3',
+    'رائع، سآخذ الخمري',
+    mine: true,
+    at: _now.subtract(const Duration(minutes: 40)),
+    read: true,
+  ),
+  _msg(
+    'm4',
+    'وهل يمكن تقصيره قليلاً؟',
+    mine: true,
+    at: _now.subtract(const Duration(minutes: 39)),
+    read: true,
+  ),
+  _msg(
+    'm5',
+    'طبعاً، التقصير مجاني.',
+    mine: false,
+    at: _now.subtract(const Duration(minutes: 12)),
+  ),
+  _msg(
+    'm6',
+    'طلبكِ جاهز للشحن غداً صباحاً 🌸',
+    mine: false,
+    at: _now.subtract(const Duration(minutes: 8)),
+  ),
+];
+
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
@@ -127,7 +187,10 @@ void main() {
       // column of English order numbers with nobody's name on any of them.
       // `ChatTile` was fixed to show the person; this assertion was left
       // behind asserting the fault, and has been failing ever since.
-      expect(find.text('أتيليه لجين'), findsOneWidget);
+      //
+      // «أتيليه لجين» is online, so her name is also under her portrait on
+      // the «متّصلات الآن» rail: once on the rail, once on her row.
+      expect(find.text('أتيليه لجين'), findsNWidgets(2));
       expect(find.text('بوتيك الوردة'), findsOneWidget);
       expect(find.text('نعم، المقاس M متوفر بلونين'), findsOneWidget);
 
@@ -145,6 +208,48 @@ void main() {
       await _capture(tester, 'chat_inbox_${mode.name}');
     });
   }
+
+  for (final mode in [ThemeMode.light, ThemeMode.dark]) {
+    testWidgets('renders a conversation in ${mode.name}', (tester) async {
+      tester.view.physicalSize = const Size(1125, 2436);
+      tester.view.devicePixelRatio = 3.0;
+      addTearDown(tester.view.reset);
+
+      await tester.pumpWidget(
+        _Preview(
+          themeMode: mode,
+          repository: _FakeChats(_threads, messages: _conversation),
+          screen: const ChatDetailsScreen(chatId: 't1'),
+        ),
+      );
+      await _settle(tester);
+
+      // Every message is on screen, in its own words.
+      expect(find.text('رائع، سآخذ الخمري'), findsOneWidget);
+      expect(find.text('طبعاً، التقصير مجاني.'), findsOneWidget);
+
+      await _capture(tester, 'chat_conversation_${mode.name}');
+    });
+  }
+
+  testWidgets('an empty conversation offers a first question', (tester) async {
+    tester.view.physicalSize = const Size(1125, 2436);
+    tester.view.devicePixelRatio = 3.0;
+    addTearDown(tester.view.reset);
+
+    await tester.pumpWidget(
+      _Preview(
+        themeMode: ThemeMode.light,
+        repository: _FakeChats(_threads),
+        screen: const ChatDetailsScreen(chatId: 't1'),
+      ),
+    );
+    await _settle(tester);
+
+    expect(find.text('هل القطعة متوفرة؟'), findsOneWidget);
+
+    await _capture(tester, 'chat_conversation_empty');
+  });
 
   testWidgets('an inbox with no conversations offers a way to start one', (
     tester,
@@ -198,7 +303,8 @@ Future<void> _settle(WidgetTester tester) async {
 Future<void> _capture(WidgetTester tester, String name) async {
   await tester.runAsync(() async {
     final boundary =
-        _captureKey.currentContext!.findRenderObject()! as RenderRepaintBoundary;
+        _captureKey.currentContext!.findRenderObject()!
+            as RenderRepaintBoundary;
     final image = await boundary.toImage(pixelRatio: 2);
     final data = await image.toByteData(format: ImageByteFormat.png);
     final dir = Directory('build/visual')..createSync(recursive: true);
@@ -210,20 +316,22 @@ Future<void> _capture(WidgetTester tester, String name) async {
 }
 
 class _Preview extends StatelessWidget {
-  _Preview({required this.themeMode, required this.repository});
+  _Preview({
+    required this.themeMode,
+    required this.repository,
+    this.screen = const ChatsScreen(),
+  });
 
   final ThemeMode themeMode;
   final ChatRepository repository;
+  final Widget screen;
 
   late final GoRouter _router = GoRouter(
     initialLocation: '/chats',
     routes: [
       GoRoute(
         path: '/chats',
-        builder: (_, _) => RepaintBoundary(
-          key: _captureKey,
-          child: const ChatsScreen(),
-        ),
+        builder: (_, _) => RepaintBoundary(key: _captureKey, child: screen),
       ),
     ],
   );
@@ -252,19 +360,22 @@ class _Preview extends StatelessWidget {
 }
 
 class _FakeChats implements ChatRepository {
-  const _FakeChats(this.threads, {this.fails = false});
+  const _FakeChats(
+    this.threads, {
+    this.fails = false,
+    this.messages = const [],
+  });
 
   final List<ChatThreadEntity> threads;
   final bool fails;
+  final List<ChatMessageEntity> messages;
 
   @override
   Future<Result<List<ChatThreadEntity>>> getThreads({String? query}) async {
     if (fails) return const Error(NetworkFailure('لا يوجد اتصال'));
     final term = query?.trim() ?? '';
     if (term.isEmpty) return Success(threads);
-    return Success(
-      threads.where((t) => t.title.contains(term)).toList(),
-    );
+    return Success(threads.where((t) => t.title.contains(term)).toList());
   }
 
   @override
@@ -274,8 +385,7 @@ class _FakeChats implements ChatRepository {
   @override
   Future<Result<ChatThreadEntity>> startConversation(
     ChatStartRequest request,
-  ) async =>
-      Success(threads.first);
+  ) async => Success(threads.first);
 
   @override
   Future<Result<List<ChatMessageEntity>>> getMessages(
@@ -283,8 +393,7 @@ class _FakeChats implements ChatRepository {
     DateTime? before,
     int limit = 50,
     String? currentUserId,
-  }) async =>
-      const Success([]);
+  }) async => Success(messages);
 
   @override
   dynamic noSuchMethod(Invocation invocation) =>

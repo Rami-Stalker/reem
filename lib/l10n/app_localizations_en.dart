@@ -423,6 +423,106 @@ class AppLocalizationsEn extends AppLocalizations {
   String get adminConversion => 'Conversion rate';
 
   @override
+  String get adminCourtGreetingMorning => 'Good morning';
+
+  @override
+  String get adminCourtGreetingEvening => 'Good evening';
+
+  @override
+  String adminCourtGreetingNamed(String greeting, String name) {
+    return '$greeting, $name';
+  }
+
+  @override
+  String get adminCourtStateCalm =>
+      'The house is calm — nothing is waiting for you today.';
+
+  @override
+  String adminCourtStateWaiting(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count things are waiting for you today',
+      one: 'One thing is waiting for you today',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String adminCourtStateUrgent(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count of them urgent',
+      one: 'one of them urgent',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get adminCourtStateUnknown =>
+      'Today\'s briefing could not be read — the doors below still show who is waiting.';
+
+  @override
+  String get adminCourtJumpHint => 'Where to? Type the name of any section…';
+
+  @override
+  String get adminCourtJumpEmpty => 'No section by that name.';
+
+  @override
+  String get adminCourtNowTitle => 'Start here';
+
+  @override
+  String get adminCourtNowOpen => 'Go there';
+
+  @override
+  String get adminCourtThenTitle => 'After that';
+
+  @override
+  String get adminCourtSeverityCritical => 'Urgent';
+
+  @override
+  String get adminCourtSeverityWarning => 'Worth a look';
+
+  @override
+  String get adminCourtSeverityOpportunity => 'Opportunity';
+
+  @override
+  String get adminCourtPulseTitle => 'The market\'s pulse';
+
+  @override
+  String get adminCourtPulseCaption =>
+      'Each petal grows with its metric\'s trend this month; a red petal is falling.';
+
+  @override
+  String get adminCourtPulseSemantics => 'A rose of this month\'s trends';
+
+  @override
+  String get adminCourtDoorsTitle => 'The doors';
+
+  @override
+  String get adminCourtDoorsCaption =>
+      'A lit door has someone waiting behind it.';
+
+  @override
+  String get adminCourtDoorWaiting => 'waiting for you';
+
+  @override
+  String get adminCourtDoorClear => 'Nobody waiting';
+
+  @override
+  String get adminCourtDoorUnknown => 'Count unavailable';
+
+  @override
+  String get adminCourtDoorEnter => 'Step in';
+
+  @override
+  String get adminCourtThreadTitle => 'The day\'s thread';
+
+  @override
+  String get adminCourtThreadAll => 'Full log';
+
+  @override
   String get adminConversionFunnel => 'Conversion funnel';
 
   @override
@@ -12167,6 +12267,27 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get composerAudienceFollowersHint => 'Only your followers';
+
+  @override
+  String get chatsOnlineRail => 'Online now';
+
+  @override
+  String get chatsSectionNew => 'New';
+
+  @override
+  String get chatsSectionEarlier => 'Earlier';
+
+  @override
+  String get chatSuggestTitle => 'Ask in one tap';
+
+  @override
+  String get chatSuggestAvailable => 'Is this piece available?';
+
+  @override
+  String get chatSuggestSizes => 'Which sizes are available?';
+
+  @override
+  String get chatSuggestDelivery => 'How long does delivery take?';
 
   @override
   String get actionOccasions => 'My occasions';

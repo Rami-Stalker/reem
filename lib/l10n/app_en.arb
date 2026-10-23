@@ -537,6 +537,128 @@
   "@adminConversion": {
     "description": "Admin metric"
   },
+  "adminCourtGreetingMorning": "Good morning",
+  "@adminCourtGreetingMorning": {
+    "description": "Greeting on the admin home before noon"
+  },
+  "adminCourtGreetingEvening": "Good evening",
+  "@adminCourtGreetingEvening": {
+    "description": "Greeting on the admin home after noon"
+  },
+  "adminCourtGreetingNamed": "{greeting}, {name}",
+  "@adminCourtGreetingNamed": {
+    "description": "Greeting with the operator's first name",
+    "placeholders": {
+      "greeting": {
+        "type": "String"
+      },
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "adminCourtStateCalm": "The house is calm — nothing is waiting for you today.",
+  "@adminCourtStateCalm": {
+    "description": "Admin home state sentence when the briefing is quiet"
+  },
+  "adminCourtStateWaiting": "{count, plural, =1{One thing is waiting for you today} other{{count} things are waiting for you today}}",
+  "@adminCourtStateWaiting": {
+    "description": "Admin home state sentence: how many findings the briefing holds",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "adminCourtStateUrgent": "{count, plural, =1{one of them urgent} other{{count} of them urgent}}",
+  "@adminCourtStateUrgent": {
+    "description": "How many of today's findings are critical",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "adminCourtStateUnknown": "Today's briefing could not be read — the doors below still show who is waiting.",
+  "@adminCourtStateUnknown": {
+    "description": "Admin home state sentence when the briefing failed"
+  },
+  "adminCourtJumpHint": "Where to? Type the name of any section…",
+  "@adminCourtJumpHint": {
+    "description": "Placeholder of the admin home's jump-to-section field"
+  },
+  "adminCourtJumpEmpty": "No section by that name.",
+  "@adminCourtJumpEmpty": {
+    "description": "Jump palette: nothing matches the query"
+  },
+  "adminCourtNowTitle": "Start here",
+  "@adminCourtNowTitle": {
+    "description": "The most important finding of the day"
+  },
+  "adminCourtNowOpen": "Go there",
+  "@adminCourtNowOpen": {
+    "description": "Opens the screen a finding points to"
+  },
+  "adminCourtThenTitle": "After that",
+  "@adminCourtThenTitle": {
+    "description": "The rest of today's findings"
+  },
+  "adminCourtSeverityCritical": "Urgent",
+  "@adminCourtSeverityCritical": {
+    "description": "Finding severity"
+  },
+  "adminCourtSeverityWarning": "Worth a look",
+  "@adminCourtSeverityWarning": {
+    "description": "Finding severity"
+  },
+  "adminCourtSeverityOpportunity": "Opportunity",
+  "@adminCourtSeverityOpportunity": {
+    "description": "Finding severity"
+  },
+  "adminCourtPulseTitle": "The market's pulse",
+  "@adminCourtPulseTitle": {
+    "description": "Admin home: the month's four metrics drawn as a rose"
+  },
+  "adminCourtPulseCaption": "Each petal grows with its metric's trend this month; a red petal is falling.",
+  "@adminCourtPulseCaption": {
+    "description": "Explains how to read the rose"
+  },
+  "adminCourtPulseSemantics": "A rose of this month's trends",
+  "@adminCourtPulseSemantics": {
+    "description": "Screen-reader label of the rose"
+  },
+  "adminCourtDoorsTitle": "The doors",
+  "@adminCourtDoorsTitle": {
+    "description": "Admin home: the queues and rooms of the console"
+  },
+  "adminCourtDoorsCaption": "A lit door has someone waiting behind it.",
+  "@adminCourtDoorsCaption": {
+    "description": "Explains the lit doors"
+  },
+  "adminCourtDoorWaiting": "waiting for you",
+  "@adminCourtDoorWaiting": {
+    "description": "Under the count on a lit door"
+  },
+  "adminCourtDoorClear": "Nobody waiting",
+  "@adminCourtDoorClear": {
+    "description": "A queue door with an empty queue"
+  },
+  "adminCourtDoorUnknown": "Count unavailable",
+  "@adminCourtDoorUnknown": {
+    "description": "A queue door whose backlog could not be read"
+  },
+  "adminCourtDoorEnter": "Step in",
+  "@adminCourtDoorEnter": {
+    "description": "A door to a room that keeps no queue"
+  },
+  "adminCourtThreadTitle": "The day's thread",
+  "@adminCourtThreadTitle": {
+    "description": "Admin home: recent audit events as a timeline"
+  },
+  "adminCourtThreadAll": "Full log",
+  "@adminCourtThreadAll": {
+    "description": "Opens the audit log"
+  },
   "adminConversionFunnel": "Conversion funnel",
   "@adminConversionFunnel": {
     "description": "Chart title: the steps from view to purchase."
@@ -14398,6 +14520,34 @@
   "composerAudienceFollowersHint": "Only your followers",
   "@composerAudienceFollowersHint": {
     "description": "Under the followers-only audience option"
+  },
+  "chatsOnlineRail": "Online now",
+  "@chatsOnlineRail": {
+    "description": "Heading over the row of people online in the inbox"
+  },
+  "chatsSectionNew": "New",
+  "@chatsSectionNew": {
+    "description": "Inbox section: conversations with unread messages"
+  },
+  "chatsSectionEarlier": "Earlier",
+  "@chatsSectionEarlier": {
+    "description": "Inbox section: conversations read already"
+  },
+  "chatSuggestTitle": "Ask in one tap",
+  "@chatSuggestTitle": {
+    "description": "Over the suggested first questions in an empty conversation"
+  },
+  "chatSuggestAvailable": "Is this piece available?",
+  "@chatSuggestAvailable": {
+    "description": "Suggested first question"
+  },
+  "chatSuggestSizes": "Which sizes are available?",
+  "@chatSuggestSizes": {
+    "description": "Suggested first question"
+  },
+  "chatSuggestDelivery": "How long does delivery take?",
+  "@chatSuggestDelivery": {
+    "description": "Suggested first question"
   },
   "actionOccasions": "My occasions",
   "@actionOccasions": {
