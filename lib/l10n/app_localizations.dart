@@ -19027,6 +19027,1878 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Could not open your messaging app. Send the message above manually.'**
   String get reverseSmsCouldNotOpen;
+
+  /// Small eyebrow above the sign-in title
+  ///
+  /// In en, this message translates to:
+  /// **'A space made for women'**
+  String get authEyebrow;
+
+  /// Word between two sign-in options
+  ///
+  /// In en, this message translates to:
+  /// **'or'**
+  String get authOr;
+
+  /// Reassurance at the foot of the sign-in screens
+  ///
+  /// In en, this message translates to:
+  /// **'Your number is protected and never shared.'**
+  String get authTrustNote;
+
+  /// Caption under continue as guest
+  ///
+  /// In en, this message translates to:
+  /// **'Browse the boutiques without an account'**
+  String get authGuestCaption;
+
+  /// Caption under the password sign-in option
+  ///
+  /// In en, this message translates to:
+  /// **'On a phone you have used before'**
+  String get authPasswordCaption;
+
+  /// Hint above the six code cells
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the 6-digit code'**
+  String get authCodeHint;
+
+  /// Caption under lost your SIM
+  ///
+  /// In en, this message translates to:
+  /// **'Recover your account with another number'**
+  String get authLostSimCaption;
+
+  /// Heading over the buyer / seller choice
+  ///
+  /// In en, this message translates to:
+  /// **'How will you join Reem?'**
+  String get authSectionJoinAs;
+
+  /// Caption on the buyer role card
+  ///
+  /// In en, this message translates to:
+  /// **'Shop, follow and share'**
+  String get authRoleBuyerHint;
+
+  /// Caption on the seller role card
+  ///
+  /// In en, this message translates to:
+  /// **'Open your boutique and sell'**
+  String get authRoleSellerHint;
+
+  /// Heading over the name fields
+  ///
+  /// In en, this message translates to:
+  /// **'About you'**
+  String get authSectionAboutYou;
+
+  /// Heading over country and city
+  ///
+  /// In en, this message translates to:
+  /// **'Where are you?'**
+  String get authSectionWhere;
+
+  /// Heading over the optional password
+  ///
+  /// In en, this message translates to:
+  /// **'Security'**
+  String get authSectionSecurity;
+
+  /// Heading over the declaration and terms
+  ///
+  /// In en, this message translates to:
+  /// **'Your pledge'**
+  String get authSectionPromise;
+
+  /// Benefit of having an account
+  ///
+  /// In en, this message translates to:
+  /// **'Check out easily and safely'**
+  String get authBenefitCheckout;
+
+  /// Benefit of having an account
+  ///
+  /// In en, this message translates to:
+  /// **'Message sellers directly'**
+  String get authBenefitChat;
+
+  /// Benefit of having an account
+  ///
+  /// In en, this message translates to:
+  /// **'Save everything you love'**
+  String get authBenefitSaved;
+
+  /// Subtitle on the forgot password screen
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your number and we will send you a code to set a new password.'**
+  String get authForgotSubtitle;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Hair'**
+  String get salonCategoryHair;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Nails'**
+  String get salonCategoryNails;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Skin care'**
+  String get salonCategorySkin;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Makeup'**
+  String get salonCategoryMakeup;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Lashes & brows'**
+  String get salonCategoryLashesBrows;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Hair removal'**
+  String get salonCategoryHairRemoval;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Massage & spa'**
+  String get salonCategoryMassageSpa;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Bridal'**
+  String get salonCategoryBridal;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Other services'**
+  String get salonCategoryOther;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Pending'**
+  String get salonStatusPending;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Confirmed'**
+  String get salonStatusConfirmed;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Completed'**
+  String get salonStatusCompleted;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Cancelled'**
+  String get salonStatusCancelled;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'No-show'**
+  String get salonStatusNoShow;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for the salon to confirm'**
+  String get salonStatusHintPending;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Your appointment is booked'**
+  String get salonStatusHintConfirmed;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Visit completed'**
+  String get salonStatusHintCompleted;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'This appointment was cancelled'**
+  String get salonStatusHintCancelled;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'The salon recorded a no-show'**
+  String get salonStatusHintNoShow;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'At the salon'**
+  String get salonLocationInSalon;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'At home'**
+  String get salonLocationAtHome;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'At the salon or at home'**
+  String get salonLocationBoth;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'You cancelled this appointment'**
+  String get salonCancelledByCustomer;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'The salon cancelled this appointment'**
+  String get salonCancelledBySalon;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Cancelled automatically: it was not confirmed in time'**
+  String get salonCancelledBySystem;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes} min'**
+  String salonDurationMinutes(int minutes);
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'1 hour'**
+  String get salonDurationOneHour;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'2 hours'**
+  String get salonDurationTwoHours;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'{hours} hours'**
+  String salonDurationHours(int hours);
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'{hours} and a half'**
+  String salonDurationAndHalf(String hours);
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'{hours} {minutes} min'**
+  String salonDurationAndMinutes(String hours, int minutes);
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Sunday'**
+  String get salonWeekdaySun;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Monday'**
+  String get salonWeekdayMon;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Tuesday'**
+  String get salonWeekdayTue;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Wednesday'**
+  String get salonWeekdayWed;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Thursday'**
+  String get salonWeekdayThu;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Friday'**
+  String get salonWeekdayFri;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Saturday'**
+  String get salonWeekdaySat;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'January'**
+  String get salonMonth1;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'February'**
+  String get salonMonth2;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'March'**
+  String get salonMonth3;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'April'**
+  String get salonMonth4;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'May'**
+  String get salonMonth5;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'June'**
+  String get salonMonth6;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'July'**
+  String get salonMonth7;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'August'**
+  String get salonMonth8;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'September'**
+  String get salonMonth9;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'October'**
+  String get salonMonth10;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'November'**
+  String get salonMonth11;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'December'**
+  String get salonMonth12;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'AM'**
+  String get salonTimeAm;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'PM'**
+  String get salonTimePm;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get salonToday;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Tomorrow'**
+  String get salonTomorrow;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'The day after tomorrow'**
+  String get salonDayAfterTomorrow;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'In {days} days'**
+  String salonInDays(int days);
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Salon details'**
+  String get salonEditorTitle;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'We couldn\'t open your details.'**
+  String get salonEditorLoadError;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Profile'**
+  String get salonEditorSectionProfile;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Salon name'**
+  String get salonEditorName;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Tagline'**
+  String get salonEditorTagline;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. Cuts, colour and hair care'**
+  String get salonEditorTaglineHint;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'About'**
+  String get salonEditorAbout;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Location'**
+  String get salonEditorSectionLocation;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Governorate'**
+  String get salonEditorGovernorate;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'City'**
+  String get salonEditorCity;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Area'**
+  String get salonEditorArea;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Address'**
+  String get salonEditorAddress;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Landmark'**
+  String get salonEditorLandmark;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. Next to Al-Nour pharmacy'**
+  String get salonEditorLandmarkHint;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Latitude'**
+  String get salonEditorLatitude;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Longitude'**
+  String get salonEditorLongitude;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Coordinates are optional, but with them customers can open your location on the map directly.'**
+  String get salonEditorCoordsHelp;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Contact'**
+  String get salonEditorSectionContact;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Phone number'**
+  String get salonEditorPhone;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'WhatsApp'**
+  String get salonEditorWhatsapp;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Booking settings'**
+  String get salonEditorSectionBooking;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Slot length'**
+  String get salonEditorSlotLength;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'min'**
+  String get salonUnitMinute;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'How often a new slot starts — for example every half hour.'**
+  String get salonEditorSlotLengthHelp;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Earliest booking'**
+  String get salonEditorLeadTime;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'The shortest time between booking and appointment, so you\'re not surprised by one five minutes away.'**
+  String get salonEditorLeadTimeHelp;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Book up to'**
+  String get salonEditorHorizon;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'days'**
+  String get salonUnitDay;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'How far ahead a customer can book.'**
+  String get salonEditorHorizonHelp;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Customers at the same time'**
+  String get salonEditorCapacity;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'How many chairs you can work at in the same hour.'**
+  String get salonEditorCapacityHelp;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Late cancellation'**
+  String get salonEditorLateCancel;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'hours'**
+  String get salonUnitHour;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Cancelling closer to the appointment than this counts as a late cancellation.'**
+  String get salonEditorLateCancelHelp;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Home service'**
+  String get salonEditorSectionHome;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'You go to the customer\'s home'**
+  String get salonEditorHomeVisits;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Travel fee'**
+  String get salonEditorTravelFee;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Open the salon'**
+  String get salonEditorCreate;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get salonSave;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Save and publish'**
+  String get salonEditorSavePublish;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Hide from the directory'**
+  String get salonEditorHide;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'This field is required'**
+  String get salonFieldRequired;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid number'**
+  String get salonInvalidNumber;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Details saved'**
+  String get salonEditorSaved;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'We couldn\'t save. Please try again.'**
+  String get salonSaveFailed;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Appointment details'**
+  String get salonAppointmentDetails;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'We couldn\'t open this appointment.'**
+  String get salonAppointmentLoadError;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Service'**
+  String get salonService;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Appointment'**
+  String get salonAppointment;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Duration'**
+  String get salonDuration;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Price'**
+  String get salonPrice;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Booking number'**
+  String get salonBookingNumber;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Customer'**
+  String get salonCustomer;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Home service'**
+  String get salonHomeService;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Customer\'s note'**
+  String get salonCustomerNote;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Salon\'s note'**
+  String get salonSalonNote;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Message the salon'**
+  String get salonMessageSalon;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Salon page'**
+  String get salonPage;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Message the customer'**
+  String get salonMessageCustomer;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm booking'**
+  String get salonConfirmBooking;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Appointment confirmed'**
+  String get salonAppointmentConfirmed;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Visit recorded'**
+  String get salonVisitRecorded;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Didn\'t show up'**
+  String get salonMarkNoShow;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Recorded'**
+  String get salonRecorded;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel appointment'**
+  String get salonCancelAppointmentAction;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Rate the salon'**
+  String get salonRateSalon;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel the appointment'**
+  String get salonCancelAppointmentTitle;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to cancel this appointment?'**
+  String get salonCancelConfirm;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Appointment cancelled'**
+  String get salonAppointmentCancelled;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Thanks for your review'**
+  String get salonThanksForReview;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'We couldn\'t finish that. Please try again.'**
+  String get salonActionFailed;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'How was your visit?'**
+  String get salonHowWasVisit;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Later'**
+  String get salonLater;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Send'**
+  String get salonSend;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'My bookings'**
+  String get salonMyBookings;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Upcoming'**
+  String get salonUpcoming;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Past'**
+  String get salonPast;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'We couldn\'t load your bookings.'**
+  String get salonBookingsLoadError;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'You have no appointments'**
+  String get salonNoAppointmentsYou;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'No past appointments'**
+  String get salonNoPastAppointments;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Find a salon and book your appointment in one tap.'**
+  String get salonFindAndBook;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Finished appointments will appear here.'**
+  String get salonPastHere;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Browse salons'**
+  String get salonBrowseSalons;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Book your appointment'**
+  String get salonBookYourAppointment;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'We couldn\'t open the calendar.'**
+  String get salonCalendarLoadError;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'This service is no longer available'**
+  String get salonServiceUnavailable;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Choose another service from the salon page.'**
+  String get salonPickAnotherService;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in to book'**
+  String get salonSignInToBook;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Booking needs an account so we can confirm your appointment and remind you of it.'**
+  String get salonSignInToBookBody;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Choose the address where you want the service.'**
+  String get salonPickAddress;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'We couldn\'t secure that time. Someone may have just booked it — try another time.'**
+  String get salonBookingFailed;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Choose the day'**
+  String get salonPickDay;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'We couldn\'t load the available days.'**
+  String get salonDaysLoadError;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Choose the time'**
+  String get salonPickTime;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Note for the salon (optional)'**
+  String get salonNoteForSalon;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. My hair is long, or I prefer a particular stylist'**
+  String get salonNoteForSalonHint;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'No free times this week. Try messaging the salon.'**
+  String get salonNoSlotsWeek;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Closed'**
+  String get salonClosed;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'We couldn\'t load the times.'**
+  String get salonSlotsLoadError;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'No free times on this day.'**
+  String get salonNoSlotsDay;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'I want the service at home'**
+  String get salonWantHomeService;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Add an address'**
+  String get salonAddAddress;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Pick a time'**
+  String get salonPickATime;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Working hours'**
+  String get salonWorkingHours;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'We couldn\'t open your hours.'**
+  String get salonHoursLoadError;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'No salon yet'**
+  String get salonNoSalonYet;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Open your salon first, then set your hours.'**
+  String get salonOpenFirstHours;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Save hours'**
+  String get salonSaveHours;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Closed days'**
+  String get salonClosedDays;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Holidays or time off — booking is closed on these dates whatever the hours say.'**
+  String get salonClosedDaysHelp;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'No closed days.'**
+  String get salonNoClosedDays;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Add a closed day'**
+  String get salonAddClosedDay;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Hours saved'**
+  String get salonHoursSaved;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'We couldn\'t save the hours.'**
+  String get salonHoursSaveFailed;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Closed day added'**
+  String get salonClosedDayAdded;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'We couldn\'t add the day.'**
+  String get salonClosedDayAddFailed;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Closed day removed'**
+  String get salonClosedDayRemoved;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'We couldn\'t remove the day.'**
+  String get salonClosedDayRemoveFailed;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Closed'**
+  String get salonDayClosed;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Open'**
+  String get salonDayOpen;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'From'**
+  String get salonFrom;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'To'**
+  String get salonTo;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Add a break'**
+  String get salonAddBreak;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Break from'**
+  String get salonBreakFrom;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Remove break'**
+  String get salonRemoveBreak;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Remove'**
+  String get salonRemove;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Appointments'**
+  String get salonAppointments;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Awaiting confirmation'**
+  String get salonAwaitingConfirmation;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'We couldn\'t open your appointments.'**
+  String get salonQueueOpenError;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Open your salon first, and bookings will start coming in.'**
+  String get salonOpenFirstBookings;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'We couldn\'t load the appointments.'**
+  String get salonQueueLoadError;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing waiting for you'**
+  String get salonNothingPending;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'No upcoming appointments'**
+  String get salonNoUpcoming;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'All bookings are confirmed.'**
+  String get salonAllConfirmed;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'As soon as a customer books, you\'ll see it here.'**
+  String get salonFirstBookingHere;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'We couldn\'t confirm. Please try again.'**
+  String get salonConfirmFailed;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'We couldn\'t find this salon'**
+  String get salonNotFound;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'It may have closed or is no longer available.'**
+  String get salonNotFoundBody;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Services'**
+  String get salonServices;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'The salon hasn\'t added its services yet'**
+  String get salonNoServicesYet;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Message them to find out what they offer.'**
+  String get salonMessageToAsk;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Opening hours'**
+  String get salonOpeningHours;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Reviews'**
+  String get salonReviews;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'No reviews yet. Be the first to try it and leave one.'**
+  String get salonNoReviews;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Call'**
+  String get salonCall;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Share'**
+  String get salonShare;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Open in maps'**
+  String get salonOpenMap;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'The salon hasn\'t set its hours yet.'**
+  String get salonNoHoursYet;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Customer'**
+  String get salonCustomerFallback;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Verified visit'**
+  String get salonVerifiedVisit;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Salon\'s reply'**
+  String get salonReply;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Services & prices'**
+  String get salonServicesAndPrices;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'We couldn\'t open your services.'**
+  String get salonServicesLoadError;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Open your salon first, then add your services.'**
+  String get salonOpenFirstServices;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'No services'**
+  String get salonNoServices;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Add your first service with its price and duration, and booking goes live.'**
+  String get salonAddFirstService;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Add a service'**
+  String get salonAddService;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Service saved'**
+  String get salonServiceSaved;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'We couldn\'t save the service.'**
+  String get salonServiceSaveFailed;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Service paused'**
+  String get salonServicePaused;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Service resumed'**
+  String get salonServiceResumed;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'We couldn\'t change the service\'s status.'**
+  String get salonServiceToggleFailed;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Paused'**
+  String get salonPausedBadge;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Package'**
+  String get salonPackage;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Pause'**
+  String get salonPause;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Resume'**
+  String get salonResume;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'New service'**
+  String get salonNewService;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Edit service'**
+  String get salonEditService;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Service name'**
+  String get salonServiceName;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Description'**
+  String get salonDescription;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Type'**
+  String get salonType;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid price'**
+  String get salonInvalidPrice;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Before discount'**
+  String get salonBeforeDiscount;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Preparation time after'**
+  String get salonBufferAfter;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Where it\'s done'**
+  String get salonWhereDone;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'This is a package (several services together)'**
+  String get salonIsPackage;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'None'**
+  String get salonNone;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'My salon'**
+  String get salonMySalon;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'We couldn\'t open your salon.'**
+  String get salonWorkspaceLoadError;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Open your salon on Reem'**
+  String get salonOpenOnReem;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Introduce your salon, services and hours, and let customers book their appointments straight from the app.'**
+  String get salonOpenOnReemBody;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Start'**
+  String get salonStart;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Published'**
+  String get salonPublished;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Draft'**
+  String get salonDraft;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Suspended'**
+  String get salonSuspended;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Rating'**
+  String get salonRating;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'services'**
+  String get salonStatServices;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'bookings'**
+  String get salonStatBookings;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'reviews'**
+  String get salonStatReviews;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm bookings and record visits'**
+  String get salonAppointmentsSubtitle;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly hours and closed days'**
+  String get salonHoursSubtitle;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Name, address, contact and booking settings'**
+  String get salonDetailsSubtitle;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'See your page as a customer sees it'**
+  String get salonPreviewAsCustomer;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'No active services — nobody can book until you add one.'**
+  String get salonNoActiveServices;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'You haven\'t set any hours — every day is closed.'**
+  String get salonNoHoursSet;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Set hours'**
+  String get salonSetHours;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Your salon isn\'t published yet — publish it to appear in the directory.'**
+  String get salonNotPublished;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Publish the salon'**
+  String get salonPublish;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Your salon is now published'**
+  String get salonPublishedDone;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'We couldn\'t publish the salon.'**
+  String get salonPublishFailed;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Salons & beauty'**
+  String get salonsTitle;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Filter'**
+  String get salonFilter;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'We couldn\'t load the salons.'**
+  String get salonsLoadError;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'No salons yet'**
+  String get salonsNoneYet;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'No salon matches these filters'**
+  String get salonsNoMatch;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Soon you\'ll find salons and stylists here that you can book directly.'**
+  String get salonsComingSoon;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Try widening the filters or changing the area.'**
+  String get salonsWidenFilters;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Search for a salon or service'**
+  String get salonsSearchHint;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get salonAll;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'By price'**
+  String get salonByPrice;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Cuts, colour and care — book in the app and choose your time.'**
+  String get salonsRailSubtitle;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'New'**
+  String get salonNew;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Featured'**
+  String get salonFeatured;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Filter salons'**
+  String get salonsFilterTitle;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'All areas'**
+  String get salonAllAreas;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Any rating'**
+  String get salonAnyRating;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Clear all'**
+  String get salonClearAll;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Show results'**
+  String get salonShowResults;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Home services only'**
+  String get salonHomeOnly;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Salons that come to your home'**
+  String get salonHomeOnlyHint;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Book'**
+  String get salonBook;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'{price} — paid at the salon'**
+  String salonPricePaidAtSalon(String price);
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Your rating: {rating} ★'**
+  String salonYourRating(String rating);
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Less than {hours} hours to go, so this is a late cancellation and the salon will see it. Are you sure?'**
+  String salonLateCancelConfirm(int hours);
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'{count} times'**
+  String salonSlotsCount(int count);
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Travel fee {fee}'**
+  String salonTravelFeeValue(String fee);
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'You pay at the salon. Free cancellation up to {hours} hours before.'**
+  String salonPayAtSalonFreeCancel(int hours);
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'{day}: closing time must be after opening.'**
+  String salonHoursCloseAfterOpen(String day);
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'{day} break: the end must be after the start.'**
+  String salonBreakEndAfterStart(String day);
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Reviews ({count})'**
+  String salonReviewsCount(int count);
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'{count} services'**
+  String salonServicesCount(int count);
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'{count} active services'**
+  String salonActiveServicesCount(int count);
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'{rating} ★ and up'**
+  String salonRatingAtLeast(String rating);
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'From {price}'**
+  String salonPriceFrom(String price);
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Any price'**
+  String get salonAnyPrice;
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Up to {amount}'**
+  String salonPriceUpTo(String amount);
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'Over {amount}'**
+  String salonPriceOver(String amount);
+
+  /// Salons
+  ///
+  /// In en, this message translates to:
+  /// **'{min} – {max}'**
+  String salonPriceRange(String min, String max);
 }
 
 class _AppLocalizationsDelegate

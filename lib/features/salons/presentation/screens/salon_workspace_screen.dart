@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/features/salons/data/datasources/salons_remote_datasource.dart';
 import 'package:reem/features/salons/domain/entities/salon.dart';
@@ -29,11 +29,11 @@ class SalonWorkspaceScreen extends ConsumerWidget {
 
     return Scaffold(
       backgroundColor: c.background,
-      appBar: const ReemAppBar(title: 'صالوني'),
+      appBar: ReemAppBar(title: context.l10n.salonMySalon),
       body: async.when(
         loading: () => const Center(child: DsLoadingIndicator()),
         error: (_, _) => DsErrorState(
-          message: 'ما قدرنا نفتح صالونك.',
+          message: context.l10n.salonWorkspaceLoadError,
           onRetry: () => ref.invalidate(mySalonProvider),
         ),
         // Null is the ordinary answer for an account that has not opened one,
@@ -60,10 +60,9 @@ class _NoSalonYet extends StatelessWidget {
         const SizedBox(height: DsSpacing.xxxl),
         DsEmptyState(
           icon: Icons.storefront_outlined,
-          title: 'افتحي صالونك على ريم',
-          message:
-              'عرّفي عن صالونك وخدماتك وأوقات عملك، وخلّي الزبونات يحجزن مواعيدهن مباشرة من التطبيق.',
-          actionLabel: 'ابدئي',
+          title: context.l10n.salonOpenOnReem,
+          message: context.l10n.salonOpenOnReemBody,
+          actionLabel: context.l10n.salonStart,
           onAction: () => unawaited(context.push(RoutePaths.salonEditor)),
         ),
       ],
@@ -100,9 +99,9 @@ class _Hub extends ConsumerWidget {
                   ),
                   DsBadge(
                     label: switch (salon.status) {
-                      SalonStatus.active => 'منشور',
-                      SalonStatus.draft => 'مسودة',
-                      SalonStatus.suspended => 'موقوف',
+                      SalonStatus.active => context.l10n.salonPublished,
+                      SalonStatus.draft => context.l10n.salonDraft,
+                      SalonStatus.suspended => context.l10n.salonSuspended,
                     },
                     tone: switch (salon.status) {
                       SalonStatus.active => DsBadgeTone.success,
@@ -124,11 +123,17 @@ class _Hub extends ConsumerWidget {
                     value: salon.rating > 0
                         ? salon.rating.toStringAsFixed(1)
                         : '—',
-                    label: 'التقييم',
+                    label: context.l10n.salonRating,
                   ),
-                  _Stat(value: '$live', label: 'خدمة'),
-                  _Stat(value: '${salon.appointmentsCount}', label: 'حجز'),
-                  _Stat(value: '${salon.reviewsCount}', label: 'تقييم'),
+                  _Stat(value: '$live', label: context.l10n.salonStatServices),
+                  _Stat(
+                    value: '${salon.appointmentsCount}',
+                    label: context.l10n.salonStatBookings,
+                  ),
+                  _Stat(
+                    value: '${salon.reviewsCount}',
+                    label: context.l10n.salonStatReviews,
+                  ),
                 ],
               ),
             ],
@@ -143,35 +148,35 @@ class _Hub extends ConsumerWidget {
         DsGaps.vLg,
         _Door(
           icon: Icons.event_note_rounded,
-          title: 'المواعيد',
-          subtitle: 'أكّدي الحجوزات وسجّلي الزيارات',
+          title: context.l10n.salonAppointments,
+          subtitle: context.l10n.salonAppointmentsSubtitle,
           onTap: () => unawaited(context.push(RoutePaths.salonQueue)),
         ),
         DsGaps.vSm,
         _Door(
           icon: Icons.spa_outlined,
-          title: 'الخدمات والأسعار',
-          subtitle: '$live خدمة فعّالة',
+          title: context.l10n.salonServicesAndPrices,
+          subtitle: context.l10n.salonActiveServicesCount(live),
           onTap: () => unawaited(context.push(RoutePaths.salonServicesEditor)),
         ),
         DsGaps.vSm,
         _Door(
           icon: Icons.schedule_rounded,
-          title: 'أوقات الدوام',
-          subtitle: 'الدوام الأسبوعي وأيام الإغلاق',
+          title: context.l10n.salonWorkingHours,
+          subtitle: context.l10n.salonHoursSubtitle,
           onTap: () => unawaited(context.push(RoutePaths.salonHoursEditor)),
         ),
         DsGaps.vSm,
         _Door(
           icon: Icons.storefront_outlined,
-          title: 'بيانات الصالون',
-          subtitle: 'الاسم والعنوان والتواصل وإعدادات الحجز',
+          title: context.l10n.salonEditorTitle,
+          subtitle: context.l10n.salonDetailsSubtitle,
           onTap: () => unawaited(context.push(RoutePaths.salonEditor)),
         ),
 
         DsGaps.vLg,
         DsButton(
-          label: 'شوفي صفحتك كما تراها الزبونة',
+          label: context.l10n.salonPreviewAsCustomer,
           icon: Icons.visibility_outlined,
           variant: DsButtonVariant.ghost,
           onPressed: () =>
@@ -187,8 +192,8 @@ class _Hub extends ConsumerWidget {
     if (live == 0) {
       return [
         _Warning(
-          message: 'ما في خدمات فعّالة — ما حدا فيه يحجز لَحتى تضيفي وحدة.',
-          actionLabel: 'أضيفي خدمة',
+          message: context.l10n.salonNoActiveServices,
+          actionLabel: context.l10n.salonAddService,
           onAction: () =>
               unawaited(context.push(RoutePaths.salonServicesEditor)),
         ),
@@ -197,8 +202,8 @@ class _Hub extends ConsumerWidget {
     if (salon.hours.isEmpty || salon.hours.every((day) => day.isClosed)) {
       return [
         _Warning(
-          message: 'ما حدّدتي أوقات دوام — الأيام كلها مسكّرة.',
-          actionLabel: 'حدّدي الدوام',
+          message: context.l10n.salonNoHoursSet,
+          actionLabel: context.l10n.salonSetHours,
           onAction: () => unawaited(context.push(RoutePaths.salonHoursEditor)),
         ),
       ];
@@ -206,8 +211,8 @@ class _Hub extends ConsumerWidget {
     if (!salon.status.isLive) {
       return [
         _Warning(
-          message: 'صالونك لسا مو منشور — انشريه لَيظهر بالدليل.',
-          actionLabel: 'انشري الصالون',
+          message: context.l10n.salonNotPublished,
+          actionLabel: context.l10n.salonPublish,
           onAction: () => unawaited(_publish(context, ref)),
         ),
       ];
@@ -231,10 +236,10 @@ class _Hub extends ConsumerWidget {
             ),
           );
       if (!context.mounted) return;
-      DsSnackbar.success(context, 'صار صالونك منشور');
+      DsSnackbar.success(context, context.l10n.salonPublishedDone);
     } catch (_) {
       if (!context.mounted) return;
-      DsSnackbar.error(context, 'ما قدرنا ننشر الصالون.');
+      DsSnackbar.error(context, context.l10n.salonPublishFailed);
     }
   }
 }

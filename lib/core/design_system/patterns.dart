@@ -1,5 +1,7 @@
 // Reem screen patterns — page scaffolds, app chrome, product surfaces.
 export 'package:reem/core/design_system/patterns/admin_console.dart';
+// The sign-in journey's stage: aurora ground, arch emblem, frosted panel.
+export 'package:reem/core/design_system/patterns/auth_stage.dart';
 export 'package:reem/core/design_system/patterns/customer_boutique.dart';
 export 'package:reem/core/design_system/patterns/editorial_media.dart';
 export 'package:reem/core/design_system/patterns/experience_design.dart';

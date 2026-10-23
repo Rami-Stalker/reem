@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/features/home/presentation/widgets/home_section_header.dart';
 import 'package:reem/features/salons/domain/entities/salon.dart';
@@ -44,9 +44,9 @@ class HomeSalonsRail extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         HomeSectionHeader(
-          eyebrow: 'احجزي موعدك',
-          title: 'الصالونات والجمال',
-          subtitle: 'قصّ وصبغة وعناية — احجزي من التطبيق واختاري ساعتك.',
+          eyebrow: context.l10n.salonBookYourAppointment,
+          title: context.l10n.salonsTitle,
+          subtitle: context.l10n.salonsRailSubtitle,
           onSeeAll: () => unawaited(context.push(RoutePaths.salons)),
         ),
         SizedBox(

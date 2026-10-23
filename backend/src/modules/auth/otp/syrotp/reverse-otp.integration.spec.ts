@@ -308,8 +308,10 @@ test('a binding ceremony proves the number as well as a verification does', asyn
   // it does on the other one.
   await otp.verifyAny(number, OtpPurpose.PHONE_VERIFICATION);
   const refreshed = await prisma.user.findUnique({ where: { id: user.id } });
-  assert.equal(refreshed?.isVerified, true);
   assert.ok(refreshed?.phoneVerifiedAt);
+  // The number is proved; the public badge is not. `isVerified` is granted by
+  // `AccountVerificationService`, never by receiving or sending a code.
+  assert.equal(refreshed?.isVerified, false);
 });
 
 test('an outage on the only rail is refused, not papered over', async (t) => {

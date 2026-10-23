@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/media/authorized_media_image.dart';
 import 'package:reem/core/media/media_variants.dart';
 import 'package:reem/features/salons/domain/entities/salon.dart';
@@ -62,7 +62,9 @@ class SalonCard extends StatelessWidget {
                           salon.area,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: context.dsText.caption.tint(c.onSurfaceVariant),
+                          style: context.dsText.caption.tint(
+                            c.onSurfaceVariant,
+                          ),
                         ),
                       ),
                     ],
@@ -72,7 +74,9 @@ class SalonCard extends StatelessWidget {
                     children: [
                       if (salon.priceFrom != null) ...[
                         Text(
-                          'من ${salon.priceFrom!.format()}',
+                          context.l10n.salonPriceFrom(
+                            salon.priceFrom!.format(),
+                          ),
                           style: DsTypography.price(
                             c.price,
                             size: DsTypography.bodySmall,
@@ -87,8 +91,10 @@ class SalonCard extends StatelessWidget {
                         _Rating(salon: salon)
                       else
                         Text(
-                          'جديد',
-                          style: context.dsText.caption.semibold.tint(c.primary),
+                          context.l10n.salonNew,
+                          style: context.dsText.caption.semibold.tint(
+                            c.primary,
+                          ),
                         ),
                     ],
                   ),
@@ -169,7 +175,7 @@ class _Cover extends StatelessWidget {
               top: DsSpacing.xs,
               start: DsSpacing.xs,
               child: DsBadge(
-                label: 'خدمة منزلية',
+                label: context.l10n.salonHomeService,
                 tone: DsBadgeTone.primary,
               ),
             ),
@@ -177,7 +183,10 @@ class _Cover extends StatelessWidget {
             PositionedDirectional(
               top: DsSpacing.xs,
               end: DsSpacing.xs,
-              child: DsBadge(label: 'مختار', tone: DsBadgeTone.accent),
+              child: DsBadge(
+                label: context.l10n.salonFeatured,
+                tone: DsBadgeTone.accent,
+              ),
             ),
         ],
       ),

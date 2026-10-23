@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
+import 'package:intl/intl.dart';
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/features/salons/domain/entities/salon.dart';
 import 'package:reem/features/salons/presentation/providers/salons_providers.dart';
 import 'package:reem/features/salons/presentation/widgets/salon_labels.dart';
@@ -36,13 +37,25 @@ class _SalonFiltersSheetState extends ConsumerState<_SalonFiltersSheet> {
   /// The price bands, in SYP. Fixed bands rather than a slider: a slider needs
   /// a known maximum, and a young directory's most expensive service is not a
   /// number anybody should be shown as "the top of the market".
-  static const _bands = <({String label, double? min, double? max})>[
-    (label: 'أي سعر', min: null, max: null),
-    (label: 'حتى ٥٠٬٠٠٠', min: null, max: 50000),
-    (label: '٥٠٬٠٠٠ – ١٥٠٬٠٠٠', min: 50000, max: 150000),
-    (label: '١٥٠٬٠٠٠ – ٣٠٠٬٠٠٠', min: 150000, max: 300000),
-    (label: 'أكثر من ٣٠٠٬٠٠٠', min: 300000, max: null),
+  static const _bands = <({double? min, double? max})>[
+    (min: null, max: null),
+    (min: null, max: 50000),
+    (min: 50000, max: 150000),
+    (min: 150000, max: 300000),
+    (min: 300000, max: null),
   ];
+
+  /// A band's chip text, from its bounds, in the reader's language.
+  String _bandLabel(({double? min, double? max}) band) {
+    final l10n = context.l10n;
+    final amount = NumberFormat.decimalPattern('en');
+    final min = band.min;
+    final max = band.max;
+    if (min == null && max == null) return l10n.salonAnyPrice;
+    if (min == null) return l10n.salonPriceUpTo(amount.format(max));
+    if (max == null) return l10n.salonPriceOver(amount.format(min));
+    return l10n.salonPriceRange(amount.format(min), amount.format(max));
+  }
 
   static const _ratings = <double?>[null, 3, 4, 4.5];
 
@@ -52,22 +65,22 @@ class _SalonFiltersSheetState extends ConsumerState<_SalonFiltersSheet> {
     final categories = ref.watch(salonCategoriesProvider);
 
     return DsSheetScaffold(
-      title: 'تصفية الصالونات',
+      title: context.l10n.salonsFilterTitle,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisSize: MainAxisSize.min,
         children: [
-          _section('الخدمة'),
+          _section(context.l10n.salonService),
           categories.maybeWhen(
             data: (counts) => _wrap([
-              _chip('الكل', _draft.category == null, () {
+              _chip(context.l10n.salonAll, _draft.category == null, () {
                 setState(() => _draft = _draft.copyWith(clearCategory: true));
               }),
               // Only what the directory can actually answer. Offering a filter
               // that returns nothing is offering a dead end.
               for (final entry in counts.where((c) => c.servicesCount > 0))
                 _chip(
-                  SalonLabels.category(entry.category),
+                  SalonLabels.category(context.l10n, entry.category),
                   _draft.category == entry.category,
                   () => setState(
                     () => _draft = _draft.copyWith(category: entry.category),
@@ -78,10 +91,10 @@ class _SalonFiltersSheetState extends ConsumerState<_SalonFiltersSheet> {
             orElse: () => const _Loading(),
           ),
 
-          _section('المنطقة'),
+          _section(context.l10n.salonEditorArea),
           areas.maybeWhen(
             data: (list) => _wrap([
-              _chip('كل المناطق', _draft.city == null, () {
+              _chip(context.l10n.salonAllAreas, _draft.city == null, () {
                 setState(() => _draft = _draft.copyWith(clearArea: true));
               }),
               for (final area in list)
@@ -100,11 +113,11 @@ class _SalonFiltersSheetState extends ConsumerState<_SalonFiltersSheet> {
             orElse: () => const _Loading(),
           ),
 
-          _section('السعر'),
+          _section(context.l10n.salonPrice),
           _wrap([
             for (final band in _bands)
               _chip(
-                band.label,
+                _bandLabel(band),
                 _draft.minPrice == band.min && _draft.maxPrice == band.max,
                 () => setState(
                   () => _draft = band.min == null && band.max == null
@@ -114,11 +127,15 @@ class _SalonFiltersSheetState extends ConsumerState<_SalonFiltersSheet> {
               ),
           ]),
 
-          _section('التقييم'),
+          _section(context.l10n.salonRating),
           _wrap([
             for (final rating in _ratings)
               _chip(
-                rating == null ? 'أي تقييم' : '${rating.toStringAsFixed(1)} ★ فأعلى',
+                rating == null
+                    ? context.l10n.salonAnyRating
+                    : context.l10n.salonRatingAtLeast(
+                        rating.toStringAsFixed(1),
+                      ),
                 _draft.minRating == rating,
                 () => setState(
                   () => _draft = rating == null
@@ -141,7 +158,7 @@ class _SalonFiltersSheetState extends ConsumerState<_SalonFiltersSheet> {
             children: [
               Expanded(
                 child: DsButton(
-                  label: 'مسح الكل',
+                  label: context.l10n.salonClearAll,
                   variant: DsButtonVariant.tonal,
                   onPressed: () =>
                       Navigator.of(context).pop(const SalonFilters()),
@@ -151,7 +168,7 @@ class _SalonFiltersSheetState extends ConsumerState<_SalonFiltersSheet> {
               Expanded(
                 flex: 2,
                 child: DsButton(
-                  label: 'اعرضي النتائج',
+                  label: context.l10n.salonShowResults,
                   onPressed: () => Navigator.of(context).pop(_draft),
                 ),
               ),
@@ -166,7 +183,9 @@ class _SalonFiltersSheetState extends ConsumerState<_SalonFiltersSheet> {
     padding: const EdgeInsets.only(top: DsSpacing.md, bottom: DsSpacing.xs),
     child: Text(
       title,
-      style: context.dsText.labelLarge.semibold.tint(context.dsColors.onSurface),
+      style: context.dsText.labelLarge.semibold.tint(
+        context.dsColors.onSurface,
+      ),
     ),
   );
 
@@ -209,12 +228,12 @@ class _HomeServiceToggle extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                'الخدمات المنزلية فقط',
+                context.l10n.salonHomeOnly,
                 style: context.dsText.tileTitle.semibold.tint(c.onSurface),
               ),
               const SizedBox(height: DsSpacing.xxs),
               Text(
-                'صالونات بتجي لعندكِ عالبيت',
+                context.l10n.salonHomeOnlyHint,
                 style: context.dsText.cardSubtitle.tint(c.onSurfaceVariant),
               ),
             ],

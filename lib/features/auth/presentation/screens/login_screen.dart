@@ -10,6 +10,7 @@ import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/features/auth/presentation/providers/auth_provider.dart';
 import 'package:reem/features/auth/presentation/utils/auth_form_validators.dart';
+import 'package:reem/features/auth/presentation/widgets/auth_motion.dart';
 
 /// The front door.
 ///
@@ -90,53 +91,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     final password = await showModalBottomSheet<String>(
       context: context,
       isScrollControlled: true,
-      builder: (sheetContext) => Padding(
-        padding: EdgeInsets.only(
-          left: DsSpacing.lg,
-          right: DsSpacing.lg,
-          top: DsSpacing.lg,
-          bottom: MediaQuery.of(sheetContext).viewInsets.bottom + DsSpacing.lg,
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Text(
-              sheetContext.l10n.password,
-              style: Theme.of(sheetContext).textTheme.titleLarge,
-            ),
-            const SizedBox(height: DsSpacing.xs),
-            Text(
-              sheetContext.l10n.passwordOnlyOnKnownDevice,
-              style: Theme.of(sheetContext).textTheme.bodySmall?.copyWith(
-                color: sheetContext.dsColors.onSurfaceVariant,
-              ),
-            ),
-            const SizedBox(height: DsSpacing.lg),
-            DsInputField(
-              controller: controller,
-              label: sheetContext.l10n.password,
-              obscureText: true,
-              autofocus: true,
-              autofillHints: const [AutofillHints.password],
-              onSubmitted: (value) => Navigator.pop(sheetContext, value.trim()),
-            ),
-            const SizedBox(height: DsSpacing.lg),
-            PrimaryButton(
-              label: sheetContext.l10n.signIn,
-              onPressed: () =>
-                  Navigator.pop(sheetContext, controller.text.trim()),
-            ),
-            GhostButton(
-              label: sheetContext.l10n.forgetPassword,
-              onPressed: () {
-                Navigator.pop(sheetContext);
-                context.push(RoutePaths.forgotPassword);
-              },
-            ),
-            const SizedBox(height: DsSpacing.sm),
-          ],
-        ),
+      builder: (sheetContext) => _PasswordSheet(
+        controller: controller,
+        onForgot: () {
+          Navigator.pop(sheetContext);
+          context.push(RoutePaths.forgotPassword);
+        },
       ),
     );
     controller.dispose();
@@ -190,77 +150,160 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     final l10n = context.l10n;
     final auth = ref.watch(authNotifierProvider);
     final colors = context.dsColors;
+    final busy = auth.isLoading;
 
-    return ReemScrollPage(
-      slivers: [
-        SliverFillRemaining(
-          hasScrollBody: false,
-          child: Padding(
-            padding: DsSpacing.screenPadding,
-            child: Form(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  const Spacer(),
-                  Icon(
-                    Icons.favorite_rounded,
-                    size: 48,
+    return AuthStage(
+      step: 0,
+      children: [
+        const Spacer(),
+        const AuthEmblem(
+              // l10n-ignore: the brand monogram, not copy
+              monogram: 'R',
+            )
+            .animate()
+            .fadeIn(duration: 600.ms)
+            .scale(
+              begin: const Offset(0.8, 0.8),
+              duration: 900.ms,
+              curve: DsMotion.softSpring,
+            ),
+        DsGaps.vXs,
+        AuthHeading(
+          eyebrow: l10n.authEyebrow,
+          title: l10n.welcomeToReem,
+          subtitle: l10n.signInSubtitle,
+        ).authEnter(1),
+        DsGaps.vXl,
+        AuthPanel(
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                // Identity is the phone number, and only the phone number.
+                DsInputField(
+                  controller: _phoneController,
+                  label: l10n.phone,
+                  // l10n-ignore: a dialling mask, not language
+                  hint: '09XX XXX XXX',
+                  keyboardType: TextInputType.phone,
+                  textInputAction: TextInputAction.go,
+                  autofillHints: const [AutofillHints.telephoneNumber],
+                  prefixIcon: Icon(
+                    Icons.phone_iphone_rounded,
                     color: colors.primary,
-                  ).animate().scale(duration: 600.ms),
-                  const SizedBox(height: DsSpacing.xl),
-                  DsGradientText(
-                    l10n.welcomeToReem,
-                    style: context.dsText.pageTitle.bold,
                   ),
-                  const SizedBox(height: DsSpacing.sm),
-                  Text(
-                    l10n.signInSubtitle,
-                    textAlign: TextAlign.center,
-                    style: context.dsText.body.copyWith(
-                      color: colors.onSurfaceVariant,
-                    ),
-                  ),
-                  const SizedBox(height: DsSpacing.xxxl),
-                  // Identity is the phone number, and only the phone number.
-                  DsInputField(
-                    controller: _phoneController,
-                    label: l10n.phone,
-                    // l10n-ignore: a dialling mask, not language
-                    hint: '09XX XXX XXX',
-                    keyboardType: TextInputType.phone,
-                    autofillHints: const [AutofillHints.telephoneNumber],
-                    prefixIcon: Icon(
-                      Icons.phone_iphone_rounded,
-                      color: colors.primary,
-                    ),
-                    validator: (value) =>
-                        AuthFormValidators.requiredPhone(l10n, value),
-                    onSubmitted: (_) => auth.isLoading ? null : _sendCode(),
-                  ),
-                  const SizedBox(height: DsSpacing.lg),
-                  PrimaryButton(
-                    label: l10n.signInWithCode,
-                    onPressed: auth.isLoading ? null : _sendCode,
-                    isLoading: auth.isLoading,
-                  ),
-                  const SizedBox(height: DsSpacing.sm),
-                  GhostButton(
-                    label: l10n.usePasswordInstead,
-                    onPressed: auth.isLoading ? null : _passwordSheet,
-                  ),
-                  const SizedBox(height: DsSpacing.sm),
-                  GhostButton(
-                    label: l10n.continueAsGuest,
-                    onPressed: auth.isLoading ? null : _guest,
-                  ),
-                  const Spacer(flex: 2),
-                ],
+                  validator: (value) =>
+                      AuthFormValidators.requiredPhone(l10n, value),
+                  onSubmitted: (_) => busy ? null : _sendCode(),
+                ),
+                DsGaps.vLg,
+                PrimaryButton(
+                  label: l10n.signInWithCode,
+                  icon: Icons.auto_awesome_rounded,
+                  onPressed: busy ? null : _sendCode,
+                  isLoading: busy,
+                ),
+              ],
+            ),
+          ),
+        ).authEnter(2),
+        DsGaps.vXl,
+        AuthDivider(label: l10n.authOr).authEnter(3),
+        DsGaps.vLg,
+        AuthOptionTile(
+          icon: Icons.lock_outline_rounded,
+          label: l10n.usePasswordInstead,
+          caption: l10n.authPasswordCaption,
+          onTap: busy ? null : _passwordSheet,
+        ).authEnter(4),
+        DsGaps.vSm,
+        AuthOptionTile(
+          icon: Icons.local_mall_outlined,
+          label: l10n.continueAsGuest,
+          caption: l10n.authGuestCaption,
+          onTap: busy ? null : _guest,
+        ).authEnter(5),
+        const Spacer(flex: 2),
+        DsGaps.vXl,
+        AuthTrustNote(text: l10n.authTrustNote).authEnter(6),
+        DsGaps.vLg,
+      ],
+    );
+  }
+}
+
+/// The password, asked in a sheet that carries the same marks as the stage:
+/// a medallion, a title, and the reminder that a password only works on a
+/// phone the account already knows.
+class _PasswordSheet extends StatelessWidget {
+  const _PasswordSheet({required this.controller, required this.onForgot});
+
+  final TextEditingController controller;
+  final VoidCallback onForgot;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final colors = context.dsColors;
+    return Padding(
+      padding: EdgeInsets.only(
+        left: DsSpacing.xl,
+        right: DsSpacing.xl,
+        top: DsSpacing.xl,
+        bottom: MediaQuery.of(context).viewInsets.bottom + DsSpacing.lg,
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Center(
+            child: Container(
+              width: DsSizes.avatarLg,
+              height: DsSizes.avatarLg,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: context.primaryGradient,
+                boxShadow: context.primaryGlow,
+              ),
+              child: Icon(
+                Icons.lock_rounded,
+                color: colors.onPrimary,
+                size: DsSizes.iconMd,
               ),
             ),
           ),
-        ),
-      ],
+          DsGaps.vMd,
+          Text(
+            l10n.password,
+            textAlign: TextAlign.center,
+            style: context.dsText.screenTitle.bold,
+          ),
+          DsGaps.vXxs,
+          Text(
+            l10n.passwordOnlyOnKnownDevice,
+            textAlign: TextAlign.center,
+            style: context.dsText.cardSubtitle,
+          ),
+          DsGaps.vLg,
+          DsInputField(
+            controller: controller,
+            label: l10n.password,
+            obscureText: true,
+            autofocus: true,
+            autofillHints: const [AutofillHints.password],
+            prefixIcon: Icon(Icons.key_rounded, color: colors.primary),
+            onSubmitted: (value) => Navigator.pop(context, value.trim()),
+          ),
+          DsGaps.vLg,
+          PrimaryButton(
+            label: l10n.signIn,
+            onPressed: () => Navigator.pop(context, controller.text.trim()),
+          ),
+          DsGaps.vXs,
+          GhostButton(label: l10n.forgetPassword, onPressed: onForgot),
+        ],
+      ),
     );
   }
 }

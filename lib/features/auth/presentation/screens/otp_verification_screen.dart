@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:reem/core/design_system/design_system.dart';
@@ -7,6 +8,7 @@ import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/features/auth/domain/entities/auth_account.dart';
 import 'package:reem/features/auth/presentation/providers/auth_provider.dart';
 import 'package:reem/features/auth/presentation/utils/auth_form_validators.dart';
+import 'package:reem/features/auth/presentation/widgets/auth_motion.dart';
 
 class OtpVerificationScreen extends ConsumerStatefulWidget {
   const OtpVerificationScreen({
@@ -72,7 +74,8 @@ class _OtpVerificationScreenState extends ConsumerState<OtpVerificationScreen> {
       return;
     }
     if (_isPasswordReset) {
-      final passwordError = AuthFormValidators.strongPassword(context.l10n, 
+      final passwordError = AuthFormValidators.strongPassword(
+        context.l10n,
         _passwordController.text,
       );
       if (passwordError != null) {
@@ -133,76 +136,86 @@ class _OtpVerificationScreenState extends ConsumerState<OtpVerificationScreen> {
   Widget build(BuildContext context) {
     final auth = ref.watch(authNotifierProvider);
     final colors = context.dsColors;
+    final l10n = context.l10n;
 
-    return ReemScrollPage(
-      slivers: [
-        PremiumAppBar(title: context.l10n.verifyCode, showBack: true),
-        SliverFillRemaining(
-          hasScrollBody: false,
-          child: Padding(
-            padding: DsSpacing.screenPadding,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                const Spacer(),
-                Icon(
-                  Icons.verified_user_outlined,
-                  size: 48,
-                  color: colors.primary,
-                ),
-                const SizedBox(height: DsSpacing.lg),
-                Text(
-                  _isPasswordReset
-                      ? context.l10n.resetYourPassword
-                      : context.l10n.verifyYourPhone,
-                  textAlign: TextAlign.center,
-                  style: context.dsText.screenTitle.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: DsSpacing.sm),
-                Text(
-                  _requested
-                      ? context.l10n.codeSentTo(widget.phone)
-                      : context.l10n.requestingCode,
-                  textAlign: TextAlign.center,
-                  style: context.dsText.body.tint(colors.onSurfaceVariant),
-                ),
-                const SizedBox(height: DsSpacing.xl),
+    return AuthStage(
+      showBack: true,
+      children: [
+        const Spacer(),
+        AuthEmblem(
+              icon: _isPasswordReset
+                  ? Icons.lock_reset_rounded
+                  : Icons.verified_user_rounded,
+              size: 92,
+            )
+            .animate()
+            .fadeIn(duration: 500.ms)
+            .scale(
+              begin: const Offset(0.85, 0.85),
+              duration: 800.ms,
+              curve: DsMotion.softSpring,
+            ),
+        AuthHeading(
+          title: _isPasswordReset
+              ? l10n.resetYourPassword
+              : l10n.verifyYourPhone,
+          subtitle: _requested
+              ? l10n.codeSentTo(widget.phone)
+              : l10n.requestingCode,
+        ).authEnter(1),
+        DsGaps.vXl,
+        AuthPanel(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(
+                l10n.authCodeHint,
+                textAlign: TextAlign.center,
+                style: context.dsText.label,
+              ),
+              DsGaps.vMd,
+              AuthCodeField(
+                controller: _codeController,
+                enabled: !auth.isLoading,
+                semanticsLabel: l10n.verificationCode,
+                // A reset still needs the new password, so only a plain
+                // verification can go as soon as the last digit lands.
+                onCompleted: _isPasswordReset || auth.isLoading
+                    ? null
+                    : (_) => _submit(),
+              ),
+              if (_isPasswordReset) ...[
+                DsGaps.vLg,
                 DsInputField(
-                  controller: _codeController,
-                  label: context.l10n.verificationCode,
-                  keyboardType: TextInputType.number,
+                  controller: _passwordController,
+                  label: l10n.newPassword,
+                  obscureText: true,
+                  autofillHints: const [AutofillHints.newPassword],
                   prefixIcon: Icon(
-                    Icons.password_outlined,
+                    Icons.lock_outline_rounded,
                     color: colors.primary,
                   ),
                 ),
-                if (_isPasswordReset) ...[
-                  const SizedBox(height: DsSpacing.md),
-                  DsInputField(
-                    controller: _passwordController,
-                    label: context.l10n.newPassword,
-                    obscureText: true,
-                    prefixIcon: Icon(Icons.lock_outline, color: colors.primary),
-                  ),
-                ],
-                const SizedBox(height: DsSpacing.lg),
-                PrimaryButton(
-                  label: _isPasswordReset ? context.l10n.resetPassword : context.l10n.verify,
-                  onPressed: auth.isLoading ? null : _submit,
-                  isLoading: auth.isLoading,
-                ),
-                const SizedBox(height: DsSpacing.sm),
-                SecondaryButton(
-                  label: context.l10n.resendCode,
-                  onPressed: auth.isLoading ? null : _requestCode,
-                ),
-                const Spacer(flex: 2),
               ],
-            ),
+              DsGaps.vLg,
+              PrimaryButton(
+                label: _isPasswordReset ? l10n.resetPassword : l10n.verify,
+                onPressed: auth.isLoading ? null : _submit,
+                isLoading: auth.isLoading,
+              ),
+            ],
           ),
-        ),
+        ).authEnter(2),
+        DsGaps.vMd,
+        Center(
+          child: GhostButton(
+            label: l10n.resendCode,
+            icon: Icons.refresh_rounded,
+            onPressed: auth.isLoading ? null : _requestCode,
+          ),
+        ).authEnter(3),
+        const Spacer(flex: 2),
+        DsGaps.vLg,
       ],
     );
   }

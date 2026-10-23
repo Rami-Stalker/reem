@@ -11081,4 +11081,1014 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get reverseSmsCouldNotOpen =>
       'Could not open your messaging app. Send the message above manually.';
+
+  @override
+  String get authEyebrow => 'A space made for women';
+
+  @override
+  String get authOr => 'or';
+
+  @override
+  String get authTrustNote => 'Your number is protected and never shared.';
+
+  @override
+  String get authGuestCaption => 'Browse the boutiques without an account';
+
+  @override
+  String get authPasswordCaption => 'On a phone you have used before';
+
+  @override
+  String get authCodeHint => 'Enter the 6-digit code';
+
+  @override
+  String get authLostSimCaption => 'Recover your account with another number';
+
+  @override
+  String get authSectionJoinAs => 'How will you join Reem?';
+
+  @override
+  String get authRoleBuyerHint => 'Shop, follow and share';
+
+  @override
+  String get authRoleSellerHint => 'Open your boutique and sell';
+
+  @override
+  String get authSectionAboutYou => 'About you';
+
+  @override
+  String get authSectionWhere => 'Where are you?';
+
+  @override
+  String get authSectionSecurity => 'Security';
+
+  @override
+  String get authSectionPromise => 'Your pledge';
+
+  @override
+  String get authBenefitCheckout => 'Check out easily and safely';
+
+  @override
+  String get authBenefitChat => 'Message sellers directly';
+
+  @override
+  String get authBenefitSaved => 'Save everything you love';
+
+  @override
+  String get authForgotSubtitle =>
+      'Enter your number and we will send you a code to set a new password.';
+
+  @override
+  String get salonCategoryHair => 'Hair';
+
+  @override
+  String get salonCategoryNails => 'Nails';
+
+  @override
+  String get salonCategorySkin => 'Skin care';
+
+  @override
+  String get salonCategoryMakeup => 'Makeup';
+
+  @override
+  String get salonCategoryLashesBrows => 'Lashes & brows';
+
+  @override
+  String get salonCategoryHairRemoval => 'Hair removal';
+
+  @override
+  String get salonCategoryMassageSpa => 'Massage & spa';
+
+  @override
+  String get salonCategoryBridal => 'Bridal';
+
+  @override
+  String get salonCategoryOther => 'Other services';
+
+  @override
+  String get salonStatusPending => 'Pending';
+
+  @override
+  String get salonStatusConfirmed => 'Confirmed';
+
+  @override
+  String get salonStatusCompleted => 'Completed';
+
+  @override
+  String get salonStatusCancelled => 'Cancelled';
+
+  @override
+  String get salonStatusNoShow => 'No-show';
+
+  @override
+  String get salonStatusHintPending => 'Waiting for the salon to confirm';
+
+  @override
+  String get salonStatusHintConfirmed => 'Your appointment is booked';
+
+  @override
+  String get salonStatusHintCompleted => 'Visit completed';
+
+  @override
+  String get salonStatusHintCancelled => 'This appointment was cancelled';
+
+  @override
+  String get salonStatusHintNoShow => 'The salon recorded a no-show';
+
+  @override
+  String get salonLocationInSalon => 'At the salon';
+
+  @override
+  String get salonLocationAtHome => 'At home';
+
+  @override
+  String get salonLocationBoth => 'At the salon or at home';
+
+  @override
+  String get salonCancelledByCustomer => 'You cancelled this appointment';
+
+  @override
+  String get salonCancelledBySalon => 'The salon cancelled this appointment';
+
+  @override
+  String get salonCancelledBySystem =>
+      'Cancelled automatically: it was not confirmed in time';
+
+  @override
+  String salonDurationMinutes(int minutes) {
+    return '$minutes min';
+  }
+
+  @override
+  String get salonDurationOneHour => '1 hour';
+
+  @override
+  String get salonDurationTwoHours => '2 hours';
+
+  @override
+  String salonDurationHours(int hours) {
+    return '$hours hours';
+  }
+
+  @override
+  String salonDurationAndHalf(String hours) {
+    return '$hours and a half';
+  }
+
+  @override
+  String salonDurationAndMinutes(String hours, int minutes) {
+    return '$hours $minutes min';
+  }
+
+  @override
+  String get salonWeekdaySun => 'Sunday';
+
+  @override
+  String get salonWeekdayMon => 'Monday';
+
+  @override
+  String get salonWeekdayTue => 'Tuesday';
+
+  @override
+  String get salonWeekdayWed => 'Wednesday';
+
+  @override
+  String get salonWeekdayThu => 'Thursday';
+
+  @override
+  String get salonWeekdayFri => 'Friday';
+
+  @override
+  String get salonWeekdaySat => 'Saturday';
+
+  @override
+  String get salonMonth1 => 'January';
+
+  @override
+  String get salonMonth2 => 'February';
+
+  @override
+  String get salonMonth3 => 'March';
+
+  @override
+  String get salonMonth4 => 'April';
+
+  @override
+  String get salonMonth5 => 'May';
+
+  @override
+  String get salonMonth6 => 'June';
+
+  @override
+  String get salonMonth7 => 'July';
+
+  @override
+  String get salonMonth8 => 'August';
+
+  @override
+  String get salonMonth9 => 'September';
+
+  @override
+  String get salonMonth10 => 'October';
+
+  @override
+  String get salonMonth11 => 'November';
+
+  @override
+  String get salonMonth12 => 'December';
+
+  @override
+  String get salonTimeAm => 'AM';
+
+  @override
+  String get salonTimePm => 'PM';
+
+  @override
+  String get salonToday => 'Today';
+
+  @override
+  String get salonTomorrow => 'Tomorrow';
+
+  @override
+  String get salonDayAfterTomorrow => 'The day after tomorrow';
+
+  @override
+  String salonInDays(int days) {
+    return 'In $days days';
+  }
+
+  @override
+  String get salonEditorTitle => 'Salon details';
+
+  @override
+  String get salonEditorLoadError => 'We couldn\'t open your details.';
+
+  @override
+  String get salonEditorSectionProfile => 'Profile';
+
+  @override
+  String get salonEditorName => 'Salon name';
+
+  @override
+  String get salonEditorTagline => 'Tagline';
+
+  @override
+  String get salonEditorTaglineHint => 'e.g. Cuts, colour and hair care';
+
+  @override
+  String get salonEditorAbout => 'About';
+
+  @override
+  String get salonEditorSectionLocation => 'Location';
+
+  @override
+  String get salonEditorGovernorate => 'Governorate';
+
+  @override
+  String get salonEditorCity => 'City';
+
+  @override
+  String get salonEditorArea => 'Area';
+
+  @override
+  String get salonEditorAddress => 'Address';
+
+  @override
+  String get salonEditorLandmark => 'Landmark';
+
+  @override
+  String get salonEditorLandmarkHint => 'e.g. Next to Al-Nour pharmacy';
+
+  @override
+  String get salonEditorLatitude => 'Latitude';
+
+  @override
+  String get salonEditorLongitude => 'Longitude';
+
+  @override
+  String get salonEditorCoordsHelp =>
+      'Coordinates are optional, but with them customers can open your location on the map directly.';
+
+  @override
+  String get salonEditorSectionContact => 'Contact';
+
+  @override
+  String get salonEditorPhone => 'Phone number';
+
+  @override
+  String get salonEditorWhatsapp => 'WhatsApp';
+
+  @override
+  String get salonEditorSectionBooking => 'Booking settings';
+
+  @override
+  String get salonEditorSlotLength => 'Slot length';
+
+  @override
+  String get salonUnitMinute => 'min';
+
+  @override
+  String get salonEditorSlotLengthHelp =>
+      'How often a new slot starts — for example every half hour.';
+
+  @override
+  String get salonEditorLeadTime => 'Earliest booking';
+
+  @override
+  String get salonEditorLeadTimeHelp =>
+      'The shortest time between booking and appointment, so you\'re not surprised by one five minutes away.';
+
+  @override
+  String get salonEditorHorizon => 'Book up to';
+
+  @override
+  String get salonUnitDay => 'days';
+
+  @override
+  String get salonEditorHorizonHelp => 'How far ahead a customer can book.';
+
+  @override
+  String get salonEditorCapacity => 'Customers at the same time';
+
+  @override
+  String get salonEditorCapacityHelp =>
+      'How many chairs you can work at in the same hour.';
+
+  @override
+  String get salonEditorLateCancel => 'Late cancellation';
+
+  @override
+  String get salonUnitHour => 'hours';
+
+  @override
+  String get salonEditorLateCancelHelp =>
+      'Cancelling closer to the appointment than this counts as a late cancellation.';
+
+  @override
+  String get salonEditorSectionHome => 'Home service';
+
+  @override
+  String get salonEditorHomeVisits => 'You go to the customer\'s home';
+
+  @override
+  String get salonEditorTravelFee => 'Travel fee';
+
+  @override
+  String get salonEditorCreate => 'Open the salon';
+
+  @override
+  String get salonSave => 'Save';
+
+  @override
+  String get salonEditorSavePublish => 'Save and publish';
+
+  @override
+  String get salonEditorHide => 'Hide from the directory';
+
+  @override
+  String get salonFieldRequired => 'This field is required';
+
+  @override
+  String get salonInvalidNumber => 'Invalid number';
+
+  @override
+  String get salonEditorSaved => 'Details saved';
+
+  @override
+  String get salonSaveFailed => 'We couldn\'t save. Please try again.';
+
+  @override
+  String get salonAppointmentDetails => 'Appointment details';
+
+  @override
+  String get salonAppointmentLoadError => 'We couldn\'t open this appointment.';
+
+  @override
+  String get salonService => 'Service';
+
+  @override
+  String get salonAppointment => 'Appointment';
+
+  @override
+  String get salonDuration => 'Duration';
+
+  @override
+  String get salonPrice => 'Price';
+
+  @override
+  String get salonBookingNumber => 'Booking number';
+
+  @override
+  String get salonCustomer => 'Customer';
+
+  @override
+  String get salonHomeService => 'Home service';
+
+  @override
+  String get salonCustomerNote => 'Customer\'s note';
+
+  @override
+  String get salonSalonNote => 'Salon\'s note';
+
+  @override
+  String get salonMessageSalon => 'Message the salon';
+
+  @override
+  String get salonPage => 'Salon page';
+
+  @override
+  String get salonMessageCustomer => 'Message the customer';
+
+  @override
+  String get salonConfirmBooking => 'Confirm booking';
+
+  @override
+  String get salonAppointmentConfirmed => 'Appointment confirmed';
+
+  @override
+  String get salonVisitRecorded => 'Visit recorded';
+
+  @override
+  String get salonMarkNoShow => 'Didn\'t show up';
+
+  @override
+  String get salonRecorded => 'Recorded';
+
+  @override
+  String get salonCancelAppointmentAction => 'Cancel appointment';
+
+  @override
+  String get salonRateSalon => 'Rate the salon';
+
+  @override
+  String get salonCancelAppointmentTitle => 'Cancel the appointment';
+
+  @override
+  String get salonCancelConfirm =>
+      'Are you sure you want to cancel this appointment?';
+
+  @override
+  String get salonAppointmentCancelled => 'Appointment cancelled';
+
+  @override
+  String get salonThanksForReview => 'Thanks for your review';
+
+  @override
+  String get salonActionFailed => 'We couldn\'t finish that. Please try again.';
+
+  @override
+  String get salonHowWasVisit => 'How was your visit?';
+
+  @override
+  String get salonLater => 'Later';
+
+  @override
+  String get salonSend => 'Send';
+
+  @override
+  String get salonMyBookings => 'My bookings';
+
+  @override
+  String get salonUpcoming => 'Upcoming';
+
+  @override
+  String get salonPast => 'Past';
+
+  @override
+  String get salonBookingsLoadError => 'We couldn\'t load your bookings.';
+
+  @override
+  String get salonNoAppointmentsYou => 'You have no appointments';
+
+  @override
+  String get salonNoPastAppointments => 'No past appointments';
+
+  @override
+  String get salonFindAndBook =>
+      'Find a salon and book your appointment in one tap.';
+
+  @override
+  String get salonPastHere => 'Finished appointments will appear here.';
+
+  @override
+  String get salonBrowseSalons => 'Browse salons';
+
+  @override
+  String get salonBookYourAppointment => 'Book your appointment';
+
+  @override
+  String get salonCalendarLoadError => 'We couldn\'t open the calendar.';
+
+  @override
+  String get salonServiceUnavailable => 'This service is no longer available';
+
+  @override
+  String get salonPickAnotherService =>
+      'Choose another service from the salon page.';
+
+  @override
+  String get salonSignInToBook => 'Sign in to book';
+
+  @override
+  String get salonSignInToBookBody =>
+      'Booking needs an account so we can confirm your appointment and remind you of it.';
+
+  @override
+  String get salonPickAddress =>
+      'Choose the address where you want the service.';
+
+  @override
+  String get salonBookingFailed =>
+      'We couldn\'t secure that time. Someone may have just booked it — try another time.';
+
+  @override
+  String get salonPickDay => 'Choose the day';
+
+  @override
+  String get salonDaysLoadError => 'We couldn\'t load the available days.';
+
+  @override
+  String get salonPickTime => 'Choose the time';
+
+  @override
+  String get salonNoteForSalon => 'Note for the salon (optional)';
+
+  @override
+  String get salonNoteForSalonHint =>
+      'e.g. My hair is long, or I prefer a particular stylist';
+
+  @override
+  String get salonNoSlotsWeek =>
+      'No free times this week. Try messaging the salon.';
+
+  @override
+  String get salonClosed => 'Closed';
+
+  @override
+  String get salonSlotsLoadError => 'We couldn\'t load the times.';
+
+  @override
+  String get salonNoSlotsDay => 'No free times on this day.';
+
+  @override
+  String get salonWantHomeService => 'I want the service at home';
+
+  @override
+  String get salonAddAddress => 'Add an address';
+
+  @override
+  String get salonPickATime => 'Pick a time';
+
+  @override
+  String get salonWorkingHours => 'Working hours';
+
+  @override
+  String get salonHoursLoadError => 'We couldn\'t open your hours.';
+
+  @override
+  String get salonNoSalonYet => 'No salon yet';
+
+  @override
+  String get salonOpenFirstHours =>
+      'Open your salon first, then set your hours.';
+
+  @override
+  String get salonSaveHours => 'Save hours';
+
+  @override
+  String get salonClosedDays => 'Closed days';
+
+  @override
+  String get salonClosedDaysHelp =>
+      'Holidays or time off — booking is closed on these dates whatever the hours say.';
+
+  @override
+  String get salonNoClosedDays => 'No closed days.';
+
+  @override
+  String get salonAddClosedDay => 'Add a closed day';
+
+  @override
+  String get salonHoursSaved => 'Hours saved';
+
+  @override
+  String get salonHoursSaveFailed => 'We couldn\'t save the hours.';
+
+  @override
+  String get salonClosedDayAdded => 'Closed day added';
+
+  @override
+  String get salonClosedDayAddFailed => 'We couldn\'t add the day.';
+
+  @override
+  String get salonClosedDayRemoved => 'Closed day removed';
+
+  @override
+  String get salonClosedDayRemoveFailed => 'We couldn\'t remove the day.';
+
+  @override
+  String get salonDayClosed => 'Closed';
+
+  @override
+  String get salonDayOpen => 'Open';
+
+  @override
+  String get salonFrom => 'From';
+
+  @override
+  String get salonTo => 'To';
+
+  @override
+  String get salonAddBreak => 'Add a break';
+
+  @override
+  String get salonBreakFrom => 'Break from';
+
+  @override
+  String get salonRemoveBreak => 'Remove break';
+
+  @override
+  String get salonRemove => 'Remove';
+
+  @override
+  String get salonAppointments => 'Appointments';
+
+  @override
+  String get salonAwaitingConfirmation => 'Awaiting confirmation';
+
+  @override
+  String get salonQueueOpenError => 'We couldn\'t open your appointments.';
+
+  @override
+  String get salonOpenFirstBookings =>
+      'Open your salon first, and bookings will start coming in.';
+
+  @override
+  String get salonQueueLoadError => 'We couldn\'t load the appointments.';
+
+  @override
+  String get salonNothingPending => 'Nothing waiting for you';
+
+  @override
+  String get salonNoUpcoming => 'No upcoming appointments';
+
+  @override
+  String get salonAllConfirmed => 'All bookings are confirmed.';
+
+  @override
+  String get salonFirstBookingHere =>
+      'As soon as a customer books, you\'ll see it here.';
+
+  @override
+  String get salonConfirmFailed => 'We couldn\'t confirm. Please try again.';
+
+  @override
+  String get salonNotFound => 'We couldn\'t find this salon';
+
+  @override
+  String get salonNotFoundBody =>
+      'It may have closed or is no longer available.';
+
+  @override
+  String get salonServices => 'Services';
+
+  @override
+  String get salonNoServicesYet => 'The salon hasn\'t added its services yet';
+
+  @override
+  String get salonMessageToAsk => 'Message them to find out what they offer.';
+
+  @override
+  String get salonOpeningHours => 'Opening hours';
+
+  @override
+  String get salonReviews => 'Reviews';
+
+  @override
+  String get salonNoReviews =>
+      'No reviews yet. Be the first to try it and leave one.';
+
+  @override
+  String get salonCall => 'Call';
+
+  @override
+  String get salonShare => 'Share';
+
+  @override
+  String get salonOpenMap => 'Open in maps';
+
+  @override
+  String get salonNoHoursYet => 'The salon hasn\'t set its hours yet.';
+
+  @override
+  String get salonCustomerFallback => 'Customer';
+
+  @override
+  String get salonVerifiedVisit => 'Verified visit';
+
+  @override
+  String get salonReply => 'Salon\'s reply';
+
+  @override
+  String get salonServicesAndPrices => 'Services & prices';
+
+  @override
+  String get salonServicesLoadError => 'We couldn\'t open your services.';
+
+  @override
+  String get salonOpenFirstServices =>
+      'Open your salon first, then add your services.';
+
+  @override
+  String get salonNoServices => 'No services';
+
+  @override
+  String get salonAddFirstService =>
+      'Add your first service with its price and duration, and booking goes live.';
+
+  @override
+  String get salonAddService => 'Add a service';
+
+  @override
+  String get salonServiceSaved => 'Service saved';
+
+  @override
+  String get salonServiceSaveFailed => 'We couldn\'t save the service.';
+
+  @override
+  String get salonServicePaused => 'Service paused';
+
+  @override
+  String get salonServiceResumed => 'Service resumed';
+
+  @override
+  String get salonServiceToggleFailed =>
+      'We couldn\'t change the service\'s status.';
+
+  @override
+  String get salonPausedBadge => 'Paused';
+
+  @override
+  String get salonPackage => 'Package';
+
+  @override
+  String get salonPause => 'Pause';
+
+  @override
+  String get salonResume => 'Resume';
+
+  @override
+  String get salonNewService => 'New service';
+
+  @override
+  String get salonEditService => 'Edit service';
+
+  @override
+  String get salonServiceName => 'Service name';
+
+  @override
+  String get salonDescription => 'Description';
+
+  @override
+  String get salonType => 'Type';
+
+  @override
+  String get salonInvalidPrice => 'Invalid price';
+
+  @override
+  String get salonBeforeDiscount => 'Before discount';
+
+  @override
+  String get salonBufferAfter => 'Preparation time after';
+
+  @override
+  String get salonWhereDone => 'Where it\'s done';
+
+  @override
+  String get salonIsPackage => 'This is a package (several services together)';
+
+  @override
+  String get salonNone => 'None';
+
+  @override
+  String get salonMySalon => 'My salon';
+
+  @override
+  String get salonWorkspaceLoadError => 'We couldn\'t open your salon.';
+
+  @override
+  String get salonOpenOnReem => 'Open your salon on Reem';
+
+  @override
+  String get salonOpenOnReemBody =>
+      'Introduce your salon, services and hours, and let customers book their appointments straight from the app.';
+
+  @override
+  String get salonStart => 'Start';
+
+  @override
+  String get salonPublished => 'Published';
+
+  @override
+  String get salonDraft => 'Draft';
+
+  @override
+  String get salonSuspended => 'Suspended';
+
+  @override
+  String get salonRating => 'Rating';
+
+  @override
+  String get salonStatServices => 'services';
+
+  @override
+  String get salonStatBookings => 'bookings';
+
+  @override
+  String get salonStatReviews => 'reviews';
+
+  @override
+  String get salonAppointmentsSubtitle => 'Confirm bookings and record visits';
+
+  @override
+  String get salonHoursSubtitle => 'Weekly hours and closed days';
+
+  @override
+  String get salonDetailsSubtitle =>
+      'Name, address, contact and booking settings';
+
+  @override
+  String get salonPreviewAsCustomer => 'See your page as a customer sees it';
+
+  @override
+  String get salonNoActiveServices =>
+      'No active services — nobody can book until you add one.';
+
+  @override
+  String get salonNoHoursSet =>
+      'You haven\'t set any hours — every day is closed.';
+
+  @override
+  String get salonSetHours => 'Set hours';
+
+  @override
+  String get salonNotPublished =>
+      'Your salon isn\'t published yet — publish it to appear in the directory.';
+
+  @override
+  String get salonPublish => 'Publish the salon';
+
+  @override
+  String get salonPublishedDone => 'Your salon is now published';
+
+  @override
+  String get salonPublishFailed => 'We couldn\'t publish the salon.';
+
+  @override
+  String get salonsTitle => 'Salons & beauty';
+
+  @override
+  String get salonFilter => 'Filter';
+
+  @override
+  String get salonsLoadError => 'We couldn\'t load the salons.';
+
+  @override
+  String get salonsNoneYet => 'No salons yet';
+
+  @override
+  String get salonsNoMatch => 'No salon matches these filters';
+
+  @override
+  String get salonsComingSoon =>
+      'Soon you\'ll find salons and stylists here that you can book directly.';
+
+  @override
+  String get salonsWidenFilters =>
+      'Try widening the filters or changing the area.';
+
+  @override
+  String get salonsSearchHint => 'Search for a salon or service';
+
+  @override
+  String get salonAll => 'All';
+
+  @override
+  String get salonByPrice => 'By price';
+
+  @override
+  String get salonsRailSubtitle =>
+      'Cuts, colour and care — book in the app and choose your time.';
+
+  @override
+  String get salonNew => 'New';
+
+  @override
+  String get salonFeatured => 'Featured';
+
+  @override
+  String get salonsFilterTitle => 'Filter salons';
+
+  @override
+  String get salonAllAreas => 'All areas';
+
+  @override
+  String get salonAnyRating => 'Any rating';
+
+  @override
+  String get salonClearAll => 'Clear all';
+
+  @override
+  String get salonShowResults => 'Show results';
+
+  @override
+  String get salonHomeOnly => 'Home services only';
+
+  @override
+  String get salonHomeOnlyHint => 'Salons that come to your home';
+
+  @override
+  String get salonBook => 'Book';
+
+  @override
+  String salonPricePaidAtSalon(String price) {
+    return '$price — paid at the salon';
+  }
+
+  @override
+  String salonYourRating(String rating) {
+    return 'Your rating: $rating ★';
+  }
+
+  @override
+  String salonLateCancelConfirm(int hours) {
+    return 'Less than $hours hours to go, so this is a late cancellation and the salon will see it. Are you sure?';
+  }
+
+  @override
+  String salonSlotsCount(int count) {
+    return '$count times';
+  }
+
+  @override
+  String salonTravelFeeValue(String fee) {
+    return 'Travel fee $fee';
+  }
+
+  @override
+  String salonPayAtSalonFreeCancel(int hours) {
+    return 'You pay at the salon. Free cancellation up to $hours hours before.';
+  }
+
+  @override
+  String salonHoursCloseAfterOpen(String day) {
+    return '$day: closing time must be after opening.';
+  }
+
+  @override
+  String salonBreakEndAfterStart(String day) {
+    return '$day break: the end must be after the start.';
+  }
+
+  @override
+  String salonReviewsCount(int count) {
+    return 'Reviews ($count)';
+  }
+
+  @override
+  String salonServicesCount(int count) {
+    return '$count services';
+  }
+
+  @override
+  String salonActiveServicesCount(int count) {
+    return '$count active services';
+  }
+
+  @override
+  String salonRatingAtLeast(String rating) {
+    return '$rating ★ and up';
+  }
+
+  @override
+  String salonPriceFrom(String price) {
+    return 'From $price';
+  }
+
+  @override
+  String get salonAnyPrice => 'Any price';
+
+  @override
+  String salonPriceUpTo(String amount) {
+    return 'Up to $amount';
+  }
+
+  @override
+  String salonPriceOver(String amount) {
+    return 'Over $amount';
+  }
+
+  @override
+  String salonPriceRange(String min, String max) {
+    return '$min – $max';
+  }
 }

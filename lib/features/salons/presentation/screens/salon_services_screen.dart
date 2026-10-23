@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/features/salons/data/datasources/salons_remote_datasource.dart';
 import 'package:reem/features/salons/domain/entities/salon.dart';
 import 'package:reem/features/salons/presentation/providers/salons_providers.dart';
@@ -24,19 +24,19 @@ class SalonServicesScreen extends ConsumerWidget {
 
     return Scaffold(
       backgroundColor: c.background,
-      appBar: const ReemAppBar(title: 'الخدمات والأسعار'),
+      appBar: ReemAppBar(title: context.l10n.salonServicesAndPrices),
       body: async.when(
         loading: () => const Center(child: DsLoadingIndicator()),
         error: (_, _) => DsErrorState(
-          message: 'ما قدرنا نفتح خدماتك.',
+          message: context.l10n.salonServicesLoadError,
           onRetry: () => ref.invalidate(mySalonProvider),
         ),
         data: (salon) {
           if (salon == null) {
-            return const DsEmptyState(
+            return DsEmptyState(
               icon: Icons.storefront_outlined,
-              title: 'ما في صالون بعد',
-              message: 'افتحي صالونك أول شي، بعدين ضيفي خدماتك.',
+              title: context.l10n.salonNoSalonYet,
+              message: context.l10n.salonOpenFirstServices,
             );
           }
           final services = [...salon.services]
@@ -54,10 +54,9 @@ class SalonServicesScreen extends ConsumerWidget {
                       const SizedBox(height: DsSpacing.xxxl),
                       DsEmptyState(
                         icon: Icons.spa_outlined,
-                        title: 'ما في خدمات',
-                        message:
-                            'ضيفي أول خدمة بسعرها ومدّتها، وبيصير الحجز شغّال.',
-                        actionLabel: 'أضيفي خدمة',
+                        title: context.l10n.salonNoServices,
+                        message: context.l10n.salonAddFirstService,
+                        actionLabel: context.l10n.salonAddService,
                         onAction: () => unawaited(_edit(context, ref, null)),
                       ),
                     ],
@@ -105,14 +104,12 @@ class SalonServicesScreen extends ConsumerWidget {
     if (draft == null || !context.mounted) return;
 
     try {
-      await ref
-          .read(salonOwnerActionsProvider)
-          .saveService(service?.id, draft);
+      await ref.read(salonOwnerActionsProvider).saveService(service?.id, draft);
       if (!context.mounted) return;
-      DsSnackbar.success(context, 'انحفظت الخدمة');
+      DsSnackbar.success(context, context.l10n.salonServiceSaved);
     } catch (_) {
       if (!context.mounted) return;
-      DsSnackbar.error(context, 'ما قدرنا نحفظ الخدمة.');
+      DsSnackbar.error(context, context.l10n.salonServiceSaveFailed);
     }
   }
 
@@ -142,11 +139,13 @@ class SalonServicesScreen extends ConsumerWidget {
       if (!context.mounted) return;
       DsSnackbar.success(
         context,
-        service.isActive ? 'وقّفنا الخدمة' : 'رجّعنا الخدمة',
+        service.isActive
+            ? context.l10n.salonServicePaused
+            : context.l10n.salonServiceResumed,
       );
     } catch (_) {
       if (!context.mounted) return;
-      DsSnackbar.error(context, 'ما قدرنا نغيّر حالة الخدمة.');
+      DsSnackbar.error(context, context.l10n.salonServiceToggleFailed);
     }
   }
 }
@@ -187,18 +186,24 @@ class _ServiceRow extends StatelessWidget {
                       ),
                     ),
                     if (!service.isActive)
-                      DsBadge(label: 'موقوفة', tone: DsBadgeTone.neutral),
+                      DsBadge(
+                        label: context.l10n.salonPausedBadge,
+                        tone: DsBadgeTone.neutral,
+                      ),
                     if (service.isPackage) ...[
                       const SizedBox(width: DsSpacing.xxs),
-                      DsBadge(label: 'باقة', tone: DsBadgeTone.accent),
+                      DsBadge(
+                        label: context.l10n.salonPackage,
+                        tone: DsBadgeTone.accent,
+                      ),
                     ],
                   ],
                 ),
                 DsGaps.vXxxs,
                 Text(
-                  '${SalonLabels.category(service.category)} · '
-                  '${SalonLabels.duration(service.durationMinutes)} · '
-                  '${SalonLabels.location(service.location)}',
+                  '${SalonLabels.category(context.l10n, service.category)} · '
+                  '${SalonLabels.duration(context.l10n, service.durationMinutes)} · '
+                  '${SalonLabels.location(context.l10n, service.location)}',
                   style: context.dsText.caption.tint(c.onSurfaceVariant),
                 ),
                 DsGaps.vXs,
@@ -214,7 +219,9 @@ class _ServiceRow extends StatelessWidget {
           ),
           IconButton(
             onPressed: onToggle,
-            tooltip: service.isActive ? 'وقّفي' : 'رجّعي',
+            tooltip: service.isActive
+                ? context.l10n.salonPause
+                : context.l10n.salonResume,
             icon: Icon(
               service.isActive
                   ? Icons.pause_circle_outline_rounded
@@ -254,8 +261,7 @@ class _ServiceSheetState extends State<_ServiceSheet> {
     text: widget.service?.compareAtPrice?.raw ?? '',
   );
 
-  late SalonCategory _category =
-      widget.service?.category ?? SalonCategory.hair;
+  late SalonCategory _category = widget.service?.category ?? SalonCategory.hair;
   late ServiceLocation _location =
       widget.service?.location ?? ServiceLocation.inSalon;
   late int _duration = widget.service?.durationMinutes ?? 30;
@@ -275,7 +281,9 @@ class _ServiceSheetState extends State<_ServiceSheet> {
   Widget build(BuildContext context) {
     final c = context.dsColors;
     return DsSheetScaffold(
-      title: widget.service == null ? 'خدمة جديدة' : 'تعديل الخدمة',
+      title: widget.service == null
+          ? context.l10n.salonNewService
+          : context.l10n.salonEditService,
       child: Form(
         key: _form,
         child: Column(
@@ -284,16 +292,16 @@ class _ServiceSheetState extends State<_ServiceSheet> {
           children: [
             DsInputField(
               controller: _name,
-              label: 'اسم الخدمة',
+              label: context.l10n.salonServiceName,
               labelAbove: true,
               validator: (value) => value == null || value.trim().isEmpty
-                  ? 'لازم تعبّي هالحقل'
+                  ? context.l10n.salonFieldRequired
                   : null,
             ),
             DsGaps.vSm,
             DsInputField(
               controller: _description,
-              label: 'الوصف',
+              label: context.l10n.salonDescription,
               labelAbove: true,
               maxLines: 3,
               minLines: 2,
@@ -302,7 +310,7 @@ class _ServiceSheetState extends State<_ServiceSheet> {
 
             DsGaps.vMd,
             Text(
-              'النوع',
+              context.l10n.salonType,
               style: context.dsText.labelMedium.semibold.tint(c.onSurface),
             ),
             DsGaps.vXs,
@@ -312,7 +320,7 @@ class _ServiceSheetState extends State<_ServiceSheet> {
               children: [
                 for (final category in SalonCategory.values)
                   DsChip(
-                    label: SalonLabels.category(category),
+                    label: SalonLabels.category(context.l10n, category),
                     selected: _category == category,
                     onTap: () => setState(() => _category = category),
                   ),
@@ -325,14 +333,16 @@ class _ServiceSheetState extends State<_ServiceSheet> {
                 Expanded(
                   child: DsInputField(
                     controller: _price,
-                    label: 'السعر',
+                    label: context.l10n.salonPrice,
                     labelAbove: true,
                     keyboardType: const TextInputType.numberWithOptions(
                       decimal: true,
                     ),
                     validator: (value) {
                       final parsed = double.tryParse(value?.trim() ?? '');
-                      if (parsed == null || parsed <= 0) return 'سعر غير صحيح';
+                      if (parsed == null || parsed <= 0) {
+                        return context.l10n.salonInvalidPrice;
+                      }
                       return null;
                     },
                   ),
@@ -341,7 +351,7 @@ class _ServiceSheetState extends State<_ServiceSheet> {
                 Expanded(
                   child: DsInputField(
                     controller: _compareAt,
-                    label: 'قبل الخصم',
+                    label: context.l10n.salonBeforeDiscount,
                     labelAbove: true,
                     keyboardType: const TextInputType.numberWithOptions(
                       decimal: true,
@@ -353,7 +363,7 @@ class _ServiceSheetState extends State<_ServiceSheet> {
 
             DsGaps.vMd,
             _Minutes(
-              label: 'المدة',
+              label: context.l10n.salonDuration,
               value: _duration,
               min: 5,
               max: 480,
@@ -362,7 +372,7 @@ class _ServiceSheetState extends State<_ServiceSheet> {
             ),
             DsGaps.vXs,
             _Minutes(
-              label: 'وقت التحضير بعدها',
+              label: context.l10n.salonBufferAfter,
               value: _buffer,
               min: 0,
               max: 120,
@@ -372,7 +382,7 @@ class _ServiceSheetState extends State<_ServiceSheet> {
 
             DsGaps.vMd,
             Text(
-              'وين بتنعمل',
+              context.l10n.salonWhereDone,
               style: context.dsText.labelMedium.semibold.tint(c.onSurface),
             ),
             DsGaps.vXs,
@@ -381,7 +391,7 @@ class _ServiceSheetState extends State<_ServiceSheet> {
               children: [
                 for (final location in ServiceLocation.values)
                   DsChip(
-                    label: SalonLabels.location(location),
+                    label: SalonLabels.location(context.l10n, location),
                     selected: _location == location,
                     onTap: () => setState(() => _location = location),
                   ),
@@ -393,7 +403,7 @@ class _ServiceSheetState extends State<_ServiceSheet> {
               children: [
                 Expanded(
                   child: Text(
-                    'هاي باقة (كذا خدمة سوا)',
+                    context.l10n.salonIsPackage,
                     style: context.dsText.body.tint(c.onSurface),
                   ),
                 ),
@@ -405,7 +415,7 @@ class _ServiceSheetState extends State<_ServiceSheet> {
             ),
 
             DsGaps.vLg,
-            DsButton(label: 'احفظي', onPressed: _submit),
+            DsButton(label: context.l10n.salonSave, onPressed: _submit),
             DsGaps.vSm,
           ],
         ),
@@ -460,10 +470,7 @@ class _Minutes extends StatelessWidget {
     return Row(
       children: [
         Expanded(
-          child: Text(
-            label,
-            style: context.dsText.body.tint(c.onSurface),
-          ),
+          child: Text(label, style: context.dsText.body.tint(c.onSurface)),
         ),
         IconButton(
           onPressed: value <= min
@@ -475,7 +482,9 @@ class _Minutes extends StatelessWidget {
         SizedBox(
           width: 88,
           child: Text(
-            value == 0 ? 'بدون' : SalonLabels.duration(value),
+            value == 0
+                ? context.l10n.salonNone
+                : SalonLabels.duration(context.l10n, value),
             textAlign: TextAlign.center,
             style: context.dsText.body.semibold.tint(c.onSurface),
           ),

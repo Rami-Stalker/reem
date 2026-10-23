@@ -448,14 +448,16 @@ dbTest('a direct conversation cannot claim to be about a product', async (world)
     product_id: product.id,
   });
 
-  // `type: PRODUCT` with no product used to match — and reopen — the dress
-  // conversation above.
+  // A buyer and a seller share one thread (`@@unique([buyerId, sellerId])`),
+  // so this reopens the dress conversation — but a `type: PRODUCT` with no
+  // product behind it must not be taken at its word: the thread is now about
+  // nothing in particular.
   const direct = await world.chats.startConversation(buyer.id, {
     participant_id: seller.id,
     type: ChatContextType.PRODUCT,
   });
 
-  assert.notEqual(direct.id, aboutDress.id);
+  assert.equal(direct.id, aboutDress.id);
   assert.equal(direct.type, 'direct');
 });
 

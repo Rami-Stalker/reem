@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:reem/core/design_system/design_system.dart';
@@ -10,6 +11,7 @@ import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/features/auth/domain/entities/auth_account.dart';
 import 'package:reem/features/auth/presentation/providers/auth_provider.dart';
+import 'package:reem/features/auth/presentation/widgets/auth_motion.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 /// The proof step of the main sign-in journey.
@@ -56,6 +58,9 @@ class _SignInCodeScreenState extends ConsumerState<SignInCodeScreen> {
   Timer? _poller;
   int _resendIn = 0;
   bool _settling = false;
+
+  /// Bumped on every refused code: replays the shake and tints the cells.
+  int _rejections = 0;
 
   @override
   void initState() {
@@ -149,6 +154,11 @@ class _SignInCodeScreenState extends ConsumerState<SignInCodeScreen> {
         .read(authNotifierProvider.notifier)
         .verifyOtpLogin(phone: widget.phone, code: code);
     if (!mounted) return;
+    if (result == null) {
+      // Clear the cells so the next attempt starts from the first one.
+      setState(() => _rejections++);
+      _codeController.clear();
+    }
     _handleResult(result);
   }
 
@@ -199,8 +209,10 @@ class _SignInCodeScreenState extends ConsumerState<SignInCodeScreen> {
       'sms:${challenge.sendTo}'
       '${separator}body=${Uri.encodeComponent(challenge.smsBody!)}',
     );
-    final opened = await launchUrl(uri, mode: LaunchMode.externalApplication)
-        .catchError((_) => false);
+    final opened = await launchUrl(
+      uri,
+      mode: LaunchMode.externalApplication,
+    ).catchError((_) => false);
     if (!mounted || opened) return;
     DsSnackbar.show(
       context,
@@ -262,46 +274,33 @@ class _SignInCodeScreenState extends ConsumerState<SignInCodeScreen> {
   /// place the message exists.
   List<Widget> _reverseBody(OtpChallenge challenge) {
     final l10n = context.l10n;
-    final colors = context.dsColors;
     final auth = ref.watch(authNotifierProvider);
 
     return [
-      const SizedBox(height: DsSpacing.sm),
-      Text(
-        l10n.reverseSmsExplainer,
-        textAlign: TextAlign.center,
-        style: context.dsText.cardSubtitle.copyWith(
-          color: colors.onSurfaceVariant,
-        ),
-      ),
-      const SizedBox(height: DsSpacing.lg),
       _SmsInstructionCard(
         sendTo: challenge.sendTo!,
         body: challenge.smsBody!,
-      ),
-      const SizedBox(height: DsSpacing.lg),
+      ).authEnter(2),
+      DsGaps.vLg,
       PrimaryButton(
         label: l10n.reverseSmsOpenMessages,
+        icon: Icons.send_rounded,
         onPressed: auth.isLoading ? null : _openMessages,
-      ),
-      const SizedBox(height: DsSpacing.sm),
+      ).authEnter(3),
+      DsGaps.vSm,
       SecondaryButton(
         label: l10n.reverseSmsIveSent,
         onPressed: auth.isLoading ? null : _submitReverse,
         isLoading: auth.isLoading,
-      ),
-      const SizedBox(height: DsSpacing.sm),
-      Text(
-        l10n.reverseSmsWaiting,
-        textAlign: TextAlign.center,
-        style: context.dsText.label.copyWith(color: colors.onSurfaceVariant),
-      ),
-      const SizedBox(height: DsSpacing.xs),
+      ).authEnter(3),
+      DsGaps.vMd,
+      const _WaitingPulse().authEnter(4),
+      DsGaps.vXs,
       Text(
         l10n.reverseSmsCost,
         textAlign: TextAlign.center,
-        style: context.dsText.label.copyWith(color: colors.onSurfaceVariant),
-      ),
+        style: context.dsText.caption,
+      ).authEnter(4),
     ];
   }
 
@@ -309,152 +308,244 @@ class _SignInCodeScreenState extends ConsumerState<SignInCodeScreen> {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final auth = ref.watch(authNotifierProvider);
-    final colors = context.dsColors;
     final destination = _challenge?.maskedDestination ?? widget.phone;
     final challenge = _challenge;
     final reverse = challenge?.isReverse ?? false;
 
-    return ReemScrollPage(
-      slivers: [
-        PremiumAppBar(title: l10n.verifyCode, showBack: true),
-        SliverFillRemaining(
-          hasScrollBody: false,
-          child: Padding(
-            padding: DsSpacing.screenPadding,
+    return AuthStage(
+      showBack: true,
+      step: 1,
+      children: [
+        const Spacer(),
+        AuthEmblem(
+              icon: reverse
+                  ? Icons.outgoing_mail
+                  : Icons.mark_chat_unread_rounded,
+              size: 92,
+            )
+            .animate()
+            .fadeIn(duration: 500.ms)
+            .scale(
+              begin: const Offset(0.85, 0.85),
+              duration: 800.ms,
+              curve: DsMotion.softSpring,
+            ),
+        AuthHeading(
+          title: reverse ? l10n.reverseSmsTitle : l10n.verifyCode,
+          subtitle: reverse
+              ? l10n.reverseSmsExplainer
+              : l10n.codeSentToMasked(destination),
+        ).authEnter(1),
+        DsGaps.vXl,
+        if (reverse)
+          ..._reverseBody(challenge!)
+        else ...[
+          if (challenge?.matchCode != null) ...[
+            _MatchCodeCard(code: challenge!.matchCode!).authEnter(2),
+            DsGaps.vLg,
+          ],
+          AuthPanel(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const Spacer(),
-                Icon(
-                  reverse ? Icons.outgoing_mail : Icons.sms_outlined,
-                  size: 48,
-                  color: colors.primary,
-                ),
-                const SizedBox(height: DsSpacing.lg),
                 Text(
-                  reverse ? l10n.reverseSmsTitle : l10n.codeSentToMasked(destination),
+                  l10n.authCodeHint,
                   textAlign: TextAlign.center,
-                  style: context.dsText.cardTitle,
+                  style: context.dsText.label,
                 ),
-                if (reverse)
-                  ..._reverseBody(challenge!)
-                else ...[
-                  if (challenge?.matchCode != null) ...[
-                    const SizedBox(height: DsSpacing.lg),
-                    _MatchCodeCard(code: challenge!.matchCode!),
-                  ],
-                  const SizedBox(height: DsSpacing.xl),
-                  DsInputField(
-                    controller: _codeController,
-                    label: l10n.verificationCode,
-                    keyboardType: TextInputType.number,
-                    // `oneTimeCode` is what lets iOS and Android offer the code
-                    // straight from the notification, which matters more here
-                    // than anywhere else: this is now the primary credential.
-                    autofillHints: const [AutofillHints.oneTimeCode],
-                    prefixIcon: Icon(
-                      Icons.password_outlined,
-                      color: colors.primary,
-                    ),
-                    onSubmitted: (_) => auth.isLoading ? null : _submit(),
-                  ),
-                  const SizedBox(height: DsSpacing.lg),
-                  PrimaryButton(
-                    label: l10n.continueLabel,
-                    onPressed: auth.isLoading ? null : _submit,
-                    isLoading: auth.isLoading,
-                  ),
-                ],
-                const SizedBox(height: DsSpacing.sm),
-                GhostButton(
-                  label: _resendIn > 0
-                      ? l10n.resendInSeconds(_resendIn)
-                      : l10n.resendCode,
-                  onPressed: auth.isLoading || _resendIn > 0 ? null : _resend,
+                DsGaps.vMd,
+                AuthCodeField(
+                      controller: _codeController,
+                      enabled: !auth.isLoading,
+                      hasError: _rejections > 0 && _codeController.text.isEmpty,
+                      semanticsLabel: l10n.verificationCode,
+                      onCompleted: (_) => auth.isLoading ? null : _submit(),
+                    )
+                    .animate(
+                      key: ValueKey(_rejections),
+                      autoPlay: _rejections > 0,
+                    )
+                    .shake(hz: 6, offset: const Offset(8, 0)),
+                DsGaps.vLg,
+                PrimaryButton(
+                  label: l10n.continueLabel,
+                  onPressed: auth.isLoading ? null : _submit,
+                  isLoading: auth.isLoading,
                 ),
-                const SizedBox(height: DsSpacing.md),
-                GhostButton(
-                  label: l10n.lostYourSim,
-                  onPressed: () => context.push(RoutePaths.accountRecovery),
-                ),
-                const Spacer(flex: 2),
               ],
             ),
+          ).authEnter(3),
+        ],
+        DsGaps.vMd,
+        Center(
+          child: GhostButton(
+            label: _resendIn > 0
+                ? l10n.resendInSeconds(_resendIn)
+                : l10n.resendCode,
+            icon: _resendIn > 0
+                ? Icons.schedule_rounded
+                : Icons.refresh_rounded,
+            onPressed: auth.isLoading || _resendIn > 0 ? null : _resend,
           ),
-        ),
+        ).authEnter(5),
+        DsGaps.vSm,
+        AuthOptionTile(
+          icon: Icons.sim_card_alert_outlined,
+          label: l10n.lostYourSim,
+          caption: l10n.authLostSimCaption,
+          onTap: () => context.push(RoutePaths.accountRecovery),
+        ).authEnter(6),
+        const Spacer(flex: 2),
+        DsGaps.vLg,
       ],
     );
   }
 }
 
-/// The message, the address, and a way to copy either.
+/// The message to send, drawn as the message itself: an outgoing chat bubble
+/// addressed to the platform's number, with a way to copy either.
 ///
 /// Matching is whitespace-trimmed and case-insensitive on the provider's side,
 /// but she should not have to rely on that: the body is shown exactly as it
-/// must be sent, in a monospaced-feeling block, with copy buttons so she never
-/// has to retype it.
+/// must be sent, with copy buttons so she never has to retype it.
 class _SmsInstructionCard extends StatelessWidget {
   const _SmsInstructionCard({required this.sendTo, required this.body});
 
   final String sendTo;
   final String body;
 
+  Future<void> _copy(BuildContext context, String value) async {
+    await Clipboard.setData(ClipboardData(text: value));
+    if (!context.mounted) return;
+    DsSnackbar.show(context, message: context.l10n.copy);
+  }
+
   @override
   Widget build(BuildContext context) {
     final colors = context.dsColors;
     final l10n = context.l10n;
-    return Container(
+    return AuthPanel(
       padding: const EdgeInsets.all(DsSpacing.lg),
-      decoration: BoxDecoration(
-        color: colors.surfaceVariant,
-        borderRadius: BorderRadius.circular(DsRadius.md),
-        border: Border.all(color: colors.primary.withValues(alpha: 0.3)),
-      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text(
-            l10n.reverseSmsSendTo(sendTo),
-            textAlign: TextAlign.center,
-            style: context.dsText.cardTitle,
-            // The number is data, not prose: in an RTL layout a bare `+963…`
-            // would otherwise be reordered on screen and read back wrong.
-            textDirection: TextDirection.ltr,
-          ),
-          const SizedBox(height: DsSpacing.md),
-          Text(
-            l10n.reverseSmsBodyLabel,
-            style: context.dsText.label.copyWith(
-              color: colors.onSurfaceVariant,
-            ),
-          ),
-          const SizedBox(height: DsSpacing.xs),
+          // The "to" line of a message composer.
           Row(
             children: [
+              Container(
+                width: DsSizes.avatarSm,
+                height: DsSizes.avatarSm,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: colors.primaryContainer,
+                ),
+                child: Icon(
+                  Icons.storefront_rounded,
+                  size: DsSizes.iconXs,
+                  color: colors.primary,
+                ),
+              ),
+              DsGaps.hSm,
               Expanded(
                 child: Text(
-                  body,
-                  style: context.dsText.cardTitle.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: colors.primary,
-                    letterSpacing: 2,
-                  ),
+                  l10n.reverseSmsSendTo(sendTo),
+                  style: context.dsText.bodyStrong,
+                  // The number is data, not prose: in an RTL layout a bare
+                  // `+963…` would otherwise be reordered on screen and read
+                  // back wrong.
                   textDirection: TextDirection.ltr,
                 ),
               ),
               IconButton(
-                icon: const Icon(Icons.copy_outlined),
+                icon: const Icon(Icons.copy_rounded, size: DsSizes.iconXs),
+                color: colors.onSurfaceVariant,
                 tooltip: l10n.copy,
-                onPressed: () async {
-                  await Clipboard.setData(ClipboardData(text: body));
-                  if (!context.mounted) return;
-                  DsSnackbar.show(context, message: l10n.copy);
-                },
+                onPressed: () => _copy(context, sendTo),
               ),
             ],
           ),
+          Divider(color: colors.divider, height: DsSpacing.lg),
+          Text(l10n.reverseSmsBodyLabel, style: context.dsText.caption),
+          DsGaps.vXs,
+          // The outgoing bubble, its tail on the sending side.
+          Align(
+            alignment: AlignmentDirectional.centerEnd,
+            child: Container(
+              padding: const EdgeInsetsDirectional.fromSTEB(
+                DsSpacing.lg,
+                DsSpacing.xs,
+                DsSpacing.xxs,
+                DsSpacing.xs,
+              ),
+              decoration: BoxDecoration(
+                gradient: context.primaryGradient,
+                borderRadius: const BorderRadiusDirectional.only(
+                  topStart: DsRadius.circularXl,
+                  topEnd: DsRadius.circularXl,
+                  bottomStart: DsRadius.circularXl,
+                  bottomEnd: DsRadius.circularXs,
+                ),
+                boxShadow: context.primaryGlow,
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Flexible(
+                    child: SelectableText(
+                      body,
+                      style: context.dsText.cardTitle.bold.copyWith(
+                        color: DsColors.onMedia,
+                        letterSpacing: 2,
+                      ),
+                      textDirection: TextDirection.ltr,
+                    ),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.copy_rounded, size: DsSizes.iconXs),
+                    color: DsColors.onMediaMuted,
+                    tooltip: l10n.copy,
+                    onPressed: () => _copy(context, body),
+                  ),
+                ],
+              ),
+            ),
+          ),
         ],
       ),
+    );
+  }
+}
+
+/// "Waiting for your message…", with three dots breathing in turn.
+class _WaitingPulse extends StatelessWidget {
+  const _WaitingPulse();
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.dsColors;
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        for (var i = 0; i < 3; i++)
+          Container(
+                width: 6,
+                height: 6,
+                margin: const EdgeInsets.symmetric(horizontal: DsSpacing.xxxs),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: colors.primary,
+                ),
+              )
+              .animate(onPlay: (c) => c.repeat(reverse: true))
+              .fade(begin: 0.25, end: 1, delay: (160 * i).ms, duration: 600.ms),
+        DsGaps.hXs,
+        Flexible(
+          child: Text(
+            context.l10n.reverseSmsWaiting,
+            style: context.dsText.label,
+          ),
+        ),
+      ],
     );
   }
 }
@@ -477,39 +568,72 @@ class _MatchCodeCard extends StatelessWidget {
     final colors = context.dsColors;
     return Semantics(
       label: '${context.l10n.matchCodeLabel} $code',
-      child: Container(
-        padding: const EdgeInsets.all(DsSpacing.lg),
-        decoration: BoxDecoration(
-          color: colors.surfaceVariant,
-          borderRadius: BorderRadius.circular(DsRadius.md),
-          border: Border.all(color: colors.primary.withValues(alpha: 0.3)),
-        ),
-        child: Column(
-          children: [
-            Text(
-              context.l10n.matchCodeLabel,
-              style: context.dsText.label.copyWith(
-                color: colors.onSurfaceVariant,
+      child: ExcludeSemantics(
+        child: AuthPanel(
+          padding: const EdgeInsets.all(DsSpacing.lg),
+          child: Row(
+            children: [
+              // Each digit on its own tile, like a boarding pass.
+              Directionality(
+                textDirection: TextDirection.ltr,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    for (final digit in code.characters)
+                      Container(
+                        width: DsSizes.avatarMd,
+                        height: DsSizes.avatarLg,
+                        margin: const EdgeInsets.symmetric(
+                          horizontal: DsSpacing.xxxs,
+                        ),
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          gradient: context.primaryGradient,
+                          borderRadius: DsRadius.borderMd,
+                          boxShadow: context.primaryGlow,
+                        ),
+                        child: Text(
+                          digit,
+                          style: context.dsText.screenTitle.uiFamily.bold
+                              .copyWith(color: DsColors.onMedia, height: 1),
+                        ),
+                      ),
+                  ],
+                ),
               ),
-            ),
-            const SizedBox(height: DsSpacing.xs),
-            Text(
-              code,
-              style: context.dsText.hero.copyWith(
-                fontWeight: FontWeight.bold,
-                color: colors.primary,
-                letterSpacing: 8,
+              DsGaps.hMd,
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.shield_rounded,
+                          size: DsSizes.iconXs,
+                          color: colors.primary,
+                        ),
+                        DsGaps.hXxs,
+                        Flexible(
+                          child: Text(
+                            context.l10n.matchCodeLabel,
+                            style: context.dsText.labelStrong.copyWith(
+                              color: colors.primary,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    DsGaps.vXxs,
+                    Text(
+                      context.l10n.matchCodeHint,
+                      style: context.dsText.caption,
+                    ),
+                  ],
+                ),
               ),
-            ),
-            const SizedBox(height: DsSpacing.sm),
-            Text(
-              context.l10n.matchCodeHint,
-              textAlign: TextAlign.center,
-              style: context.dsText.cardSubtitle.copyWith(
-                color: colors.onSurfaceVariant,
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

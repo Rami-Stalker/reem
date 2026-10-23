@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/features/salons/presentation/providers/salons_providers.dart';
 import 'package:reem/features/salons/presentation/widgets/appointment_card.dart';
@@ -35,10 +35,13 @@ class _AppointmentsScreenState extends ConsumerState<AppointmentsScreen>
     return Scaffold(
       backgroundColor: c.background,
       appBar: ReemAppBar(
-        title: 'حجوزاتي',
+        title: context.l10n.salonMyBookings,
         bottom: TabBar(
           controller: _tabs,
-          tabs: const [Tab(text: 'القادمة'), Tab(text: 'السابقة')],
+          tabs: [
+            Tab(text: context.l10n.salonUpcoming),
+            Tab(text: context.l10n.salonPast),
+          ],
         ),
       ),
       body: TabBarView(
@@ -66,7 +69,7 @@ class _AppointmentList extends ConsumerWidget {
       child: async.when(
         loading: () => const Center(child: DsLoadingIndicator()),
         error: (_, _) => DsErrorState(
-          message: 'ما قدرنا نجيب حجوزاتك.',
+          message: context.l10n.salonBookingsLoadError,
           onRetry: () => ref.invalidate(myAppointmentsProvider(filter)),
         ),
         data: (page) => page.items.isEmpty
@@ -74,14 +77,14 @@ class _AppointmentList extends ConsumerWidget {
             : ListView.separated(
                 padding: const EdgeInsets.all(DsSpacing.lg),
                 itemCount: page.items.length,
-                separatorBuilder: (_, _) => const SizedBox(height: DsSpacing.md),
+                separatorBuilder: (_, _) =>
+                    const SizedBox(height: DsSpacing.md),
                 itemBuilder: (context, index) {
                   final appointment = page.items[index];
                   return AppointmentCard(
                     appointment: appointment,
-                    onTap: () => context.push(
-                      RoutePaths.appointmentOf(appointment.id),
-                    ),
+                    onTap: () =>
+                        context.push(RoutePaths.appointmentOf(appointment.id)),
                   );
                 },
               ),
@@ -106,11 +109,15 @@ class _Empty extends StatelessWidget {
           icon: filter == 'upcoming'
               ? Icons.event_available_outlined
               : Icons.history_rounded,
-          title: filter == 'upcoming' ? 'ما عندك مواعيد' : 'ما في مواعيد سابقة',
+          title: filter == 'upcoming'
+              ? context.l10n.salonNoAppointmentsYou
+              : context.l10n.salonNoPastAppointments,
           message: filter == 'upcoming'
-              ? 'دوّري على صالون واحجزي موعدك بضغطة.'
-              : 'هون بتلاقي المواعيد يلي خلصت.',
-          actionLabel: filter == 'upcoming' ? 'تصفّحي الصالونات' : null,
+              ? context.l10n.salonFindAndBook
+              : context.l10n.salonPastHere,
+          actionLabel: filter == 'upcoming'
+              ? context.l10n.salonBrowseSalons
+              : null,
           onAction: filter == 'upcoming'
               ? () => context.push(RoutePaths.salons)
               : null,

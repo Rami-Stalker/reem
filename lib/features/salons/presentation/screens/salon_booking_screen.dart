@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/platform/app_haptics.dart';
 import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/features/auth/presentation/widgets/auth_prompt_sheet.dart';
@@ -39,8 +39,7 @@ class SalonBookingScreen extends ConsumerStatefulWidget {
   final String serviceId;
 
   @override
-  ConsumerState<SalonBookingScreen> createState() =>
-      _SalonBookingScreenState();
+  ConsumerState<SalonBookingScreen> createState() => _SalonBookingScreenState();
 }
 
 class _SalonBookingScreenState extends ConsumerState<SalonBookingScreen> {
@@ -82,11 +81,11 @@ class _SalonBookingScreenState extends ConsumerState<SalonBookingScreen> {
 
     return Scaffold(
       backgroundColor: c.background,
-      appBar: const ReemAppBar(title: 'احجزي موعدك'),
+      appBar: ReemAppBar(title: context.l10n.salonBookYourAppointment),
       body: salonAsync.when(
         loading: () => const Center(child: DsLoadingIndicator()),
         error: (_, _) => DsErrorState(
-          message: 'ما قدرنا نفتح التقويم.',
+          message: context.l10n.salonCalendarLoadError,
           onRetry: () => ref.invalidate(salonProvider(widget.salonId)),
         ),
         data: (salon) {
@@ -96,8 +95,8 @@ class _SalonBookingScreenState extends ConsumerState<SalonBookingScreen> {
           if (service == null) {
             return DsEmptyState(
               icon: Icons.event_busy_outlined,
-              title: 'ما عادت هالخدمة متاحة',
-              message: 'اختاري خدمة تانية من صفحة الصالون.',
+              title: context.l10n.salonServiceUnavailable,
+              message: context.l10n.salonPickAnotherService,
             );
           }
           return _Form(
@@ -130,14 +129,14 @@ class _SalonBookingScreenState extends ConsumerState<SalonBookingScreen> {
     final signedIn = await requireAuthenticatedUser(
       context,
       ref,
-      title: 'سجّلي الدخول لتحجزي',
-      message: 'الحجز بيحتاج حساب لنقدر نأكّدلك الموعد ونذكّرك فيه.',
+      title: context.l10n.salonSignInToBook,
+      message: context.l10n.salonSignInToBookBody,
       from: RoutePaths.salonBookingOf(salon.id, service.id),
     );
     if (!signedIn || !mounted) return;
 
     if (_atHome && _addressId == null) {
-      DsSnackbar.error(context, 'اختاري العنوان يلي بدك الخدمة فيه.');
+      DsSnackbar.error(context, context.l10n.salonPickAddress);
       return;
     }
 
@@ -166,10 +165,7 @@ class _SalonBookingScreenState extends ConsumerState<SalonBookingScreen> {
       setState(() => _submitting = false);
       // Somebody took it between the day view and her tap. A busy salon, not a
       // broken app — so the day is reloaded and she picks again.
-      DsSnackbar.error(
-        context,
-        'ما قدرنا نثبّت الموعد. يمكن حدا حجزه قبل شوي — جرّبي وقت تاني.',
-      );
+      DsSnackbar.error(context, context.l10n.salonBookingFailed);
       setState(() => _slot = null);
       if (_date != null) {
         ref.invalidate(
@@ -241,7 +237,7 @@ class _Form extends ConsumerWidget {
               DsGaps.vLg,
 
               Text(
-                'اختاري اليوم',
+                context.l10n.salonPickDay,
                 style: context.dsText.sectionTitle.tint(c.onSurface),
               ),
               DsGaps.vXs,
@@ -251,13 +247,10 @@ class _Form extends ConsumerWidget {
                   child: Center(child: DsLoadingIndicator()),
                 ),
                 error: (_, _) => DsErrorState(
-                  message: 'ما قدرنا نجيب الأيام المتاحة.',
+                  message: context.l10n.salonDaysLoadError,
                   onRetry: () => ref.invalidate(
                     salonOpenDaysProvider(
-                      OpenDaysQuery(
-                        salonId: salon.id,
-                        serviceId: service.id,
-                      ),
+                      OpenDaysQuery(salonId: salon.id, serviceId: service.id),
                     ),
                   ),
                 ),
@@ -271,7 +264,7 @@ class _Form extends ConsumerWidget {
               if (date != null) ...[
                 DsGaps.vLg,
                 Text(
-                  'اختاري الساعة',
+                  context.l10n.salonPickTime,
                   style: context.dsText.sectionTitle.tint(c.onSurface),
                 ),
                 DsGaps.vXs,
@@ -301,8 +294,8 @@ class _Form extends ConsumerWidget {
               DsGaps.vLg,
               DsInputField(
                 controller: note,
-                label: 'ملاحظة للصالون (اختياري)',
-                hint: 'مثلاً: شعري طويل، أو بفضّل مزيّنة معيّنة',
+                label: context.l10n.salonNoteForSalon,
+                hint: context.l10n.salonNoteForSalonHint,
                 maxLines: 3,
                 minLines: 2,
               ),
@@ -350,13 +343,16 @@ class _Summary extends StatelessWidget {
               Icon(Icons.schedule_rounded, size: 15, color: c.onSurfaceVariant),
               DsGaps.hXxs,
               Text(
-                SalonLabels.duration(service.durationMinutes),
+                SalonLabels.duration(context.l10n, service.durationMinutes),
                 style: context.dsText.caption.tint(c.onSurfaceVariant),
               ),
               const Spacer(),
               Text(
                 service.price.format(),
-                style: DsTypography.price(c.price, size: DsTypography.bodyMedium),
+                style: DsTypography.price(
+                  c.price,
+                  size: DsTypography.bodyMedium,
+                ),
               ),
             ],
           ),
@@ -382,7 +378,7 @@ class _DayStrip extends StatelessWidget {
     final c = context.dsColors;
     if (days.every((day) => !day.isOpen)) {
       return Text(
-        'ما في أوقات فاضية بهالأسبوع. جرّبي تراسلي الصالون.',
+        context.l10n.salonNoSlotsWeek,
         style: context.dsText.cardSubtitle.tint(c.onSurfaceVariant),
       );
     }
@@ -414,15 +410,13 @@ class _DayStrip extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: isSelected ? c.primary : c.card,
                   borderRadius: DsRadius.borderLg,
-                  border: Border.all(
-                    color: isSelected ? c.primary : c.border,
-                  ),
+                  border: Border.all(color: isSelected ? c.primary : c.border),
                 ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      SalonLabels.weekday(date.weekday % 7),
+                      SalonLabels.weekday(context.l10n, date.weekday % 7),
                       style: context.dsText.caption.tint(
                         isSelected ? c.onPrimary : c.onSurfaceVariant,
                       ),
@@ -436,7 +430,9 @@ class _DayStrip extends StatelessWidget {
                     ),
                     DsGaps.vXxxs,
                     Text(
-                      day.isOpen ? '${day.slots} وقت' : 'مغلق',
+                      day.isOpen
+                          ? context.l10n.salonSlotsCount(day.slots)
+                          : context.l10n.salonClosed,
                       style: context.dsText.micro.tint(
                         isSelected ? c.onPrimary : c.onSurfaceVariant,
                       ),
@@ -483,12 +479,12 @@ class _Slots extends ConsumerWidget {
         child: DsLoadingIndicator(),
       ),
       error: (_, _) => DsErrorState(
-        message: 'ما قدرنا نجيب الأوقات.',
+        message: context.l10n.salonSlotsLoadError,
         onRetry: () => ref.invalidate(salonAvailabilityProvider(query)),
       ),
       data: (list) => list.isEmpty
           ? Text(
-              'ما في أوقات فاضية بهاليوم.',
+              context.l10n.salonNoSlotsDay,
               style: context.dsText.cardSubtitle.tint(c.onSurfaceVariant),
             )
           : Wrap(
@@ -497,7 +493,10 @@ class _Slots extends ConsumerWidget {
               children: [
                 for (final slot in list)
                   DsChip(
-                    label: SalonLabels.time(slot.startsAt.toLocal()),
+                    label: SalonLabels.time(
+                      context.l10n,
+                      slot.startsAt.toLocal(),
+                    ),
                     selected: selected?.startsAt == slot.startsAt,
                     onTap: () {
                       AppHaptics.selection();
@@ -543,13 +542,15 @@ class _HomeServiceSection extends ConsumerWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    'بدي الخدمة عالبيت',
+                    context.l10n.salonWantHomeService,
                     style: context.dsText.tileTitle.semibold.tint(c.onSurface),
                   ),
                   if (salon.homeServiceFee != null) ...[
                     DsGaps.vXxxs,
                     Text(
-                      'أجرة التنقّل ${salon.homeServiceFee!.format()}',
+                      context.l10n.salonTravelFeeValue(
+                        salon.homeServiceFee!.format(),
+                      ),
                       style: context.dsText.cardSubtitle.tint(
                         c.onSurfaceVariant,
                       ),
@@ -577,7 +578,7 @@ class _HomeServiceSection extends ConsumerWidget {
             const DsLoadingIndicator()
           else if (addresses.addresses.isEmpty)
             DsButton(
-              label: 'أضيفي عنواناً',
+              label: context.l10n.salonAddAddress,
               icon: Icons.add_location_alt_outlined,
               variant: DsButtonVariant.tonal,
               onPressed: () => unawaited(context.push(RoutePaths.addresses)),
@@ -634,13 +635,15 @@ class _BookBar extends StatelessWidget {
         children: [
           if (chosen != null) ...[
             Text(
-              SalonLabels.dateTime(chosen.startsAt.toLocal()),
+              SalonLabels.dateTime(context.l10n, chosen.startsAt.toLocal()),
               style: context.dsText.body.semibold.tint(c.onSurface),
             ),
             DsGaps.vXs,
           ],
           DsButton(
-            label: chosen == null ? 'اختاري وقتاً' : 'أكّدي الحجز',
+            label: chosen == null
+                ? context.l10n.salonPickATime
+                : context.l10n.salonConfirmBooking,
             isLoading: submitting,
             // Disabled until she has picked, rather than enabled and then
             // complaining: a button that does nothing is a button that lies.
@@ -648,7 +651,7 @@ class _BookBar extends StatelessWidget {
           ),
           DsGaps.vXxs,
           Text(
-            'بتدفعي بالصالون. إلغاء مجاني قبل ${salon.cancellationHours} ساعات من الموعد.',
+            context.l10n.salonPayAtSalonFreeCancel(salon.cancellationHours),
             textAlign: TextAlign.center,
             style: context.dsText.micro.tint(c.onSurfaceVariant),
           ),
@@ -657,7 +660,6 @@ class _BookBar extends StatelessWidget {
     );
   }
 }
-
 
 /// One of her saved addresses, as a choice.
 ///
