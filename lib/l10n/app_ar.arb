@@ -3651,5 +3651,5 @@
   "salonAnyPrice": "أي سعر",
   "salonPriceUpTo": "حتى {amount}",
   "salonPriceOver": "أكثر من {amount}",
-  "salonPriceRange": "{min} – {max}"
+  "salonPriceRange": "من {min} إلى {max}"
 }

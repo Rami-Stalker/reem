@@ -12248,6 +12248,6 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String salonPriceRange(String min, String max) {
-    return '$min – $max';
+    return 'من $min إلى $max';
   }
 }
