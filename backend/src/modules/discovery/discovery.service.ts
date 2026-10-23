@@ -1,9 +1,14 @@
 import {
   BadRequestException,
   Injectable,
+  Logger,
   NotFoundException,
 } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
+import { Prisma, PromotionPlacement } from '@prisma/client';
+import {
+  MAX_SLOTS,
+  PromotionsService,
+} from '../promotions/promotions.service';
 import { buildMeta } from '../../common/dto/pagination.dto';
 import { CacheService } from '../../common/cache/cache.service';
 import { GraphQueryService } from '../graph/graph-query.service';
@@ -34,11 +39,14 @@ interface CachedPage {
 
 @Injectable()
 export class DiscoveryService {
+  private readonly logger = new Logger(DiscoveryService.name);
+
   constructor(
     private readonly repo: DiscoveryRepository,
     private readonly cache: CacheService,
     private readonly graph: GraphQueryService,
     private readonly visibility: ValueVisibilityService,
+    private readonly promotions: PromotionsService,
   ) {}
 
   async collection(key: string, dto: DiscoveryQueryDto, viewerId?: string) {
@@ -76,7 +84,7 @@ export class DiscoveryService {
       categoryId: { in: categoryIds },
       ...this.buildFilters(dto),
     };
-    return this.paginated(
+    const page = await this.paginated(
       `${PREFIX}cat:${cat}:${dto.filterSignature()}`,
       where,
       this.resolveOrderBy(dto.sort, [{ createdAt: 'desc' }]),
@@ -84,6 +92,86 @@ export class DiscoveryService {
       viewerId,
       60_000,
     );
+    return {
+      ...page,
+      sponsored:
+        dto.page > 1
+          ? []
+          : await this.sponsoredForCategory(categoryIds, where, viewerId),
+    };
+  }
+
+  /**
+   * The paid CATEGORY slots for this shelf, beside the products and never
+   * inside them — the same rule search keeps, for the same reason.
+   *
+   * A slot qualifies when its product sits anywhere in the page's subtree and
+   * passes the page's own filters; the viewer's visibility rule applies after,
+   * as it does to the shelf. Never cached: the impression counter is what the
+   * seller paid to see move. A failure here returns no slots, never an error.
+   */
+  private async sponsoredForCategory(
+    categoryIds: string[],
+    where: Prisma.ProductWhereInput,
+    viewerId?: string,
+  ) {
+    try {
+      const candidates = await this.promotions.candidatesFor(
+        PromotionPlacement.CATEGORY,
+        { categoryIds },
+      );
+      if (candidates.length === 0) return [];
+
+      const products = await this.repo.findMany(
+        {
+          AND: [
+            where,
+            { id: { in: candidates.map((candidate) => candidate.productId) } },
+          ],
+        },
+        [{ createdAt: 'desc' }],
+        0,
+        candidates.length,
+      );
+      const visible = await this.visibility.visibleAmong(
+        viewerId,
+        products.map((product) => product.id),
+      );
+      const byId = new Map(
+        products
+          .filter((product) => visible.has(product.id))
+          .map((product) => [product.id, product]),
+      );
+      const cards = candidates
+        .filter((candidate) => byId.has(candidate.productId))
+        .slice(0, MAX_SLOTS);
+      if (cards.length === 0) return [];
+
+      void this.promotions
+        .recordImpressions(
+          cards.map((card) => card.offerId),
+          PromotionPlacement.CATEGORY,
+        )
+        .catch(() => undefined);
+
+      const favSet = viewerId
+        ? await this.repo.favoriteSet(
+            viewerId,
+            cards.map((card) => card.productId),
+          )
+        : new Set<string>();
+      return cards.map((card) => ({
+        ...serializeProduct(byId.get(card.productId)!, {
+          isLiked: favSet.has(card.productId),
+        }),
+        is_sponsored: true,
+        sponsored_offer_id: card.offerId,
+        sponsored_placement: 'category',
+      }));
+    } catch (error) {
+      this.logger.warn(`Sponsored category slots not served: ${String(error)}`);
+      return [];
+    }
   }
 
   async seller(sellerId: string, dto: DiscoveryQueryDto, viewerId?: string) {

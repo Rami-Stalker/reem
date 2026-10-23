@@ -5778,6 +5778,10 @@
   "@searchBrowseCategories": {
     "description": "Heading over the department chips [re-authored: original wording lost]"
   },
+  "searchSponsored": "Sponsored",
+  "@searchSponsored": {
+    "description": "Label on a paid placement shown above search or category results."
+  },
   "searchClear": "Clear",
   "@searchClear": {
     "description": "Clears the search field [re-authored: original wording lost]"

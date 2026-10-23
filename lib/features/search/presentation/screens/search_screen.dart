@@ -18,6 +18,8 @@ import 'package:reem/core/shared/entities/user.dart';
 import 'package:reem/core/shared/value_objects/money_format.dart';
 import 'package:reem/features/catalog/domain/entities/category_node.dart';
 import 'package:reem/features/catalog/presentation/providers/categories_provider.dart';
+import 'package:reem/features/discovery/presentation/providers/sponsored_providers.dart';
+import 'package:reem/features/discovery/presentation/widgets/sponsored_strip.dart';
 import 'package:reem/features/home/presentation/widgets/reem_post_card.dart';
 import 'package:reem/features/search/domain/entities/search_suggestions.dart';
 import 'package:reem/features/search/presentation/providers/search_providers.dart';
@@ -510,7 +512,7 @@ class _AllResults extends ConsumerWidget {
                 crossAxisSpacing: DsSpacing.md,
                 itemCount: hits.products.length.clamp(0, 6),
                 itemBuilder: (context, index) =>
-                    _ResultCard(product: hits.products[index]),
+                    _ResultCard(product: hits.products[index], query: query),
               ),
               const SizedBox(height: DsSpacing.sectionGap),
             ],
@@ -576,19 +578,32 @@ class _ProductResults extends ConsumerWidget {
         }
         return false;
       },
-      child: MasonryGridView.count(
-        padding: const EdgeInsets.fromLTRB(
-          DsSpacing.lg,
-          DsSpacing.xs,
-          DsSpacing.lg,
-          DsSpacing.huge,
-        ),
-        crossAxisCount: 2,
-        mainAxisSpacing: DsSpacing.md,
-        crossAxisSpacing: DsSpacing.md,
-        itemCount: state.items.length,
-        itemBuilder: (context, index) =>
-            _ResultCard(product: state.items[index]),
+      child: CustomScrollView(
+        slivers: [
+          // Paid slots ride above the results, labelled, never inside them.
+          SliverPadding(
+            padding: const EdgeInsets.only(top: DsSpacing.xs),
+            sliver: SliverToBoxAdapter(
+              child: SponsoredStrip(slotsKey: searchSponsoredKey(query)),
+            ),
+          ),
+          SliverPadding(
+            padding: const EdgeInsets.fromLTRB(
+              DsSpacing.lg,
+              DsSpacing.xs,
+              DsSpacing.lg,
+              DsSpacing.huge,
+            ),
+            sliver: SliverMasonryGrid.count(
+              crossAxisCount: 2,
+              mainAxisSpacing: DsSpacing.md,
+              crossAxisSpacing: DsSpacing.md,
+              childCount: state.items.length,
+              itemBuilder: (context, index) =>
+                  _ResultCard(product: state.items[index], query: query),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -778,13 +793,17 @@ class _SuggestionRail extends StatelessWidget {
   }
 }
 
-class _ResultCard extends StatelessWidget {
-  const _ResultCard({required this.product});
+class _ResultCard extends ConsumerWidget {
+  const _ResultCard({required this.product, required this.query});
 
   final Product product;
 
+  /// The phrase that produced this result — reported with the tap so Search
+  /// Intelligence can tell "shown" from "chosen".
+  final String query;
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return DsProductCard(
       title: product.title,
       price: product.price?.format() ?? '',
@@ -798,8 +817,12 @@ class _ResultCard extends StatelessWidget {
       ratingCount: product.reviewsCount > 0 ? product.reviewsCount : null,
       soldOut: !product.inStock,
       cues: product.cues.asBadges,
-      onTap: () =>
-          context.push(RoutePaths.productDetailsOf(product.id)),
+      onTap: () {
+        ref
+            .read(discoverySignalsProvider)
+            .searchResultTapped(query: query, productId: product.id);
+        context.push(RoutePaths.productDetailsOf(product.id));
+      },
       // A result had no interaction at all: she could search for a dress, find
       // it, and have no way to say so without opening it. `DsProductCard`
       // takes primitives rather than a `Product`, so the scope is consulted

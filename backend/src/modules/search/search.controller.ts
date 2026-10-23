@@ -1,4 +1,5 @@
 import {
+  Body,
   Controller,
   Delete,
   Get,
@@ -6,14 +7,20 @@ import {
   HttpStatus,
   Param,
   ParseUUIDPipe,
+  Post,
   Query,
 } from '@nestjs/common';
+import { Throttle } from '@nestjs/throttler';
 import { OptionalAuth } from '../../common/decorators/optional-auth.decorator';
 import { Public } from '../../common/decorators/public.decorator';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import { SelfScoped } from '../../common/decorators/self-scoped.decorator';
 import { SearchService } from './search.service';
-import { ProductSearchDto, SearchQueryDto } from './dto/search-query.dto';
+import {
+  ProductSearchDto,
+  SearchClickDto,
+  SearchQueryDto,
+} from './dto/search-query.dto';
 
 @SelfScoped(
   "search is public; history is read and cleared for the caller's own id",
@@ -72,6 +79,25 @@ export class SearchController {
   @Get('trending')
   trending() {
     return this.search.trending();
+  }
+
+  /**
+   * She opened a product from a result list. Feeds Search Intelligence only;
+   * nothing is returned and nothing about ranking or money reads it directly.
+   */
+  @OptionalAuth()
+  @Throttle({ default: { limit: 120, ttl: 60_000 } })
+  @Post('clicks')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  click(
+    @Body() dto: SearchClickDto,
+    @CurrentUser('id') viewerId?: string,
+  ): void {
+    this.search.recordResultClick({
+      query: dto.q,
+      productId: dto.product_id,
+      userId: viewerId ?? null,
+    });
   }
 
   // ── Authenticated history ──────────────────────────────────────────────

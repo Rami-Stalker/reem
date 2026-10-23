@@ -533,6 +533,14 @@ export class CheckoutService {
       }
     }
 
+    // The analytics funnel's last step. Emitted here, at the one place an
+    // order is born, rather than accepted from a phone: a conversion rate a
+    // client can post to is a number a competitor can write.
+    this.events.emit(AppEvent.OrderPlaced, {
+      userId: userId ?? null,
+      orderId: order.id,
+    });
+
     this.events.emit(AppEvent.OrderStatusChanged, {
       userId,
       orderId: order.id,

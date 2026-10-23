@@ -4796,6 +4796,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get searchBrowseCategories => 'تصفّحي الأقسام';
 
   @override
+  String get searchSponsored => 'مُموَّل';
+
+  @override
   String get searchClear => 'مسح';
 
   @override

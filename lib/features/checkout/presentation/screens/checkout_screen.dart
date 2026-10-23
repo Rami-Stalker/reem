@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:reem/core/analytics/analytics_tracker.dart';
 import 'package:reem/core/design_system/design_system.dart';
 import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/router/route_paths.dart';
@@ -76,6 +77,29 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
     _seededFromAppliedCoupon = true;
     _coupon.text = applied.code;
     _appliedDiscount = applied.discount;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _reportCheckoutStart());
+  }
+
+  /// The funnel's third step, once per visit: one event per boutique in the
+  /// basket, the same unit the server counts placed orders in, so a seller's
+  /// own funnel adds up. Guests are skipped — the event belongs to an account.
+  void _reportCheckoutStart() {
+    if (!mounted) return;
+    if (ref.read(authNotifierProvider).user == null) return;
+    final tracker = ref.read(analyticsTrackerProvider);
+    final groups = ref.read(cartNotifierProvider).cart.sellerGroups;
+    for (final group in groups) {
+      tracker.track(
+        'CHECKOUT_START',
+        sellerId: group.sellerId,
+        source: 'checkout',
+      );
+    }
   }
 
   @override

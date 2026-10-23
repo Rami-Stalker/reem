@@ -5,6 +5,7 @@ import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/features/catalog/domain/entities/category_node.dart';
 import 'package:reem/features/catalog/presentation/providers/categories_provider.dart';
 import 'package:reem/features/discovery/presentation/providers/discovery_providers.dart';
+import 'package:reem/features/discovery/presentation/providers/sponsored_providers.dart';
 import 'package:reem/features/discovery/presentation/screens/collection_screen.dart';
 
 /// A category page is just a discovery collection scoped to one category —
@@ -22,6 +23,7 @@ class CategoryScreen extends ConsumerWidget {
     return CollectionScreen(
       provider: categoryProductsProvider(slug),
       title: _title(context, ref, slug),
+      sponsoredKey: categorySponsoredKey(slug),
     );
   }
 

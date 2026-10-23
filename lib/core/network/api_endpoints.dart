@@ -311,6 +311,12 @@ abstract final class ApiEndpoints {
   static const searchRecent = '/search/recent';
   static String searchRecentById(String id) => '/search/recent/$id';
 
+  /// A tap on a search result — the click-through half of Search Intelligence.
+  static const searchClicks = '/search/clicks';
+
+  /// A tap on a paid slot, credited to the offer that paid for it.
+  static const sponsoredClicks = '/sponsored/clicks';
+
   // Cart
   static const cart = '/cart';
   static const cartItems = '/cart/items';

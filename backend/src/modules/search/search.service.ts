@@ -17,6 +17,7 @@ import {
   LIVE_OFFER_WHERE,
   PURCHASABLE_PRODUCT_WHERE,
 } from '../../common/catalog/product-include';
+import { categorySubtreeIds } from '../../common/catalog/category-subtree';
 
 /** Matches no user — keeps personalised includes static for anonymous viewers. */
 const NIL_UUID = '00000000-0000-0000-0000-000000000000';
@@ -62,7 +63,16 @@ export class SearchService {
     // agree. Without it, search listed new arrivals inside their early-access
     // window to women who could not open them — a tap answered «not found».
     const gate = await this.visibility.catalogFilter(viewerId);
-    const filtered = this.buildProductWhere(dto, matches?.map((m) => m.id));
+    // A department filter means its whole subtree: products hang off leaves,
+    // so matching the one slug answered «ملابس» with an empty page.
+    const categoryIds = dto.category
+      ? await categorySubtreeIds(this.prisma, dto.category.toLowerCase())
+      : undefined;
+    const filtered = this.buildProductWhere(
+      dto,
+      matches?.map((m) => m.id),
+      categoryIds,
+    );
     const where: Prisma.ProductWhereInput = Object.keys(gate).length
       ? { AND: [filtered, gate] }
       : filtered;
@@ -103,7 +113,7 @@ export class SearchService {
       // the search actually judged relevant — which is the whole objection to
       // advertising in a marketplace, and it is avoided by keeping the two
       // lists apart rather than by remembering to add a flag.
-      sponsored: await this.sponsored(dto, viewerId),
+      sponsored: await this.sponsored(dto, where, viewerId),
       pagination: buildMeta(dto.page, dto.limit, total, products.length),
     };
   }
@@ -115,43 +125,84 @@ export class SearchService {
    * placement, it is an obstruction. Failure is swallowed — a broken ad
    * system must never take the search results down with it.
    */
-  private async sponsored(dto: ProductSearchDto, viewerId?: string) {
+  private async sponsored(
+    dto: ProductSearchDto,
+    where: Prisma.ProductWhereInput,
+    viewerId?: string,
+  ) {
     if (dto.page > 1) return [];
 
     try {
-      const offerIds = await this.promotions.slotsFor(
+      // A slot is only shown when its product would have been a result of
+      // this very search — same phrase, same filters, same visibility rule.
+      // Paying buys the top of the page, not a place on pages it does not
+      // answer.
+      const candidates = await this.promotions.candidatesFor(
         PromotionPlacement.SEARCH,
-        { limit: MAX_SLOTS },
       );
-      if (offerIds.length === 0) return [];
+      if (candidates.length === 0) return [];
 
-      const offers = await this.prisma.sellerOffer.findMany({
-        where: { id: { in: offerIds } },
-        select: { id: true, productId: true },
-      });
       const products = await this.prisma.product.findMany({
         where: {
-          id: { in: offers.map((offer) => offer.productId) },
-          ...PURCHASABLE_PRODUCT_WHERE,
+          AND: [
+            where,
+            { id: { in: candidates.map((candidate) => candidate.productId) } },
+          ],
         },
         include: PRODUCT_CARD_INCLUDE,
       });
+      const byId = new Map(products.map((product) => [product.id, product]));
+      const cards = candidates
+        .filter((candidate) => byId.has(candidate.productId))
+        .slice(0, MAX_SLOTS)
+        .map((candidate) => ({
+          offerId: candidate.offerId,
+          product: byId.get(candidate.productId)!,
+        }));
+      if (cards.length === 0) return [];
 
       const favSet = await this.favoriteSet(
         viewerId,
-        products.map((product) => product.id),
+        cards.map((card) => card.product.id),
       );
 
-      void this.promotions.recordImpressions(offerIds);
+      void this.promotions
+        .recordImpressions(
+          cards.map((card) => card.offerId),
+          PromotionPlacement.SEARCH,
+        )
+        .catch(() => undefined);
 
-      return products.map((product) => ({
+      // Each card carries the offer that paid for it, so a tap is credited
+      // to that offer and not to whichever seller happens to list it too.
+      return cards.map(({ offerId, product }) => ({
         ...serializeProduct(product, { isLiked: favSet.has(product.id) }),
         is_sponsored: true,
+        sponsored_offer_id: offerId,
+        sponsored_placement: 'search',
       }));
     } catch (error) {
       this.logger.warn(`Sponsored slots not served: ${String(error)}`);
       return [];
     }
+  }
+
+  /**
+   * She tapped a result. The other half of Search Intelligence: without it
+   * the trend engine can see what was shown but never what was chosen, and
+   * "searched a lot, clicked nothing" — the finding a seller can act on —
+   * cannot be told apart from "searched a lot, bought everything".
+   */
+  recordResultClick(input: {
+    query: string;
+    productId: string;
+    userId?: string | null;
+  }): void {
+    this.signals.recordSearchClick({
+      query: input.query,
+      productId: input.productId,
+      userId: input.userId ?? null,
+    });
   }
 
   // ── Sellers ──────────────────────────────────────────────────────────────
@@ -432,13 +483,16 @@ export class SearchService {
   private buildProductWhere(
     dto: ProductSearchDto,
     matchedIds?: string[],
+    categoryIds?: string[],
   ): Prisma.ProductWhereInput {
     return {
       ...PURCHASABLE_PRODUCT_WHERE,
       ...(matchedIds ? { id: { in: matchedIds } } : {}),
-      ...(dto.category
-        ? { category: { slug: dto.category.toLowerCase() } }
-        : {}),
+      ...(categoryIds
+        ? { categoryId: { in: categoryIds } }
+        : dto.category
+          ? { category: { slug: dto.category.toLowerCase() } }
+          : {}),
       // "Products this seller sells" is an offer filter now.
       ...(dto.seller_id
         ? { offers: { some: { ...LIVE_OFFER_WHERE, sellerId: dto.seller_id } } }

@@ -4755,6 +4755,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get searchBrowseCategories => 'Browse categories';
 
   @override
+  String get searchSponsored => 'Sponsored';
+
+  @override
   String get searchClear => 'Clear';
 
   @override
