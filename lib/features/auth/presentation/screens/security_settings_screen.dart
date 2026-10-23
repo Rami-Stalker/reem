@@ -84,7 +84,10 @@ class _SecuritySettingsScreenState
   /// Without this the whole assurance ladder was unreachable from the app: the
   /// server refused with `STEP_UP_REQUIRED`, the screen showed the sentence,
   /// and there was nowhere to actually confirm.
-  Future<void> _elevated(Future<Result<Object?>> Function() action) async {
+  Future<void> _elevated(
+    Future<Result<Object?>> Function() action, {
+    Future<void> Function()? onSuccess,
+  }) async {
     setState(() => _busy = true);
     final outcome = await runWithStepUp(context, ref, action: action);
     if (!mounted) return;
@@ -95,6 +98,7 @@ class _SecuritySettingsScreenState
       setState(() => _busy = false);
       switch (retried) {
         case Success():
+          if (onSuccess != null) return onSuccess();
           ref.invalidate(authAccountProvider);
           ref.invalidate(accountSessionsProvider);
         case Error(:final failure):
@@ -104,6 +108,9 @@ class _SecuritySettingsScreenState
     }
 
     setState(() => _busy = false);
+    if (outcome.outcome == StepUpOutcome.succeeded && onSuccess != null) {
+      return onSuccess();
+    }
     ref.invalidate(authAccountProvider);
     if (outcome.outcome == StepUpOutcome.blocked && outcome.message != null) {
       _error(outcome.message!);
@@ -280,6 +287,83 @@ class _SecuritySettingsScreenState
       case Error(:final failure):
         _error(failure.message);
     }
+  }
+
+  /// Deleting the account.
+  ///
+  /// Asks the server first whether anything is in the way — an order on its
+  /// way, money still owed to her — so she is never sent through a second
+  /// factor only to be refused at the end. Then the plain-language account of
+  /// what goes and what stays, then the step-up, then she is signed out here.
+  Future<void> _deleteAccount() async {
+    final repository = ref.read(authRepositoryProvider);
+    setState(() => _busy = true);
+    final status = await repository.accountDeletionStatus();
+    if (!mounted) return;
+    setState(() => _busy = false);
+
+    switch (status) {
+      case Error(:final failure):
+        _error(failure.message);
+        return;
+      case Success(:final data) when !data.canDelete:
+        await DsDialog.alert(
+          context,
+          title: context.l10n.deleteAccountBlockedTitle,
+          message: [
+            for (final blocker in data.blockers) '• ${_blockerText(blocker)}',
+            context.l10n.deleteAccountBlockedHint,
+          ].join('\n'),
+          icon: Icons.info_outline,
+          tone: DsDialogTone.warning,
+        );
+        return;
+      case Success():
+        break;
+    }
+    if (!mounted) return;
+
+    final confirmed = await DsDialog.confirm(
+      context,
+      title: context.l10n.deleteAccountConfirmTitle,
+      message: context.l10n.deleteAccountConfirmBody,
+      confirmLabel: context.l10n.deleteAccountConfirmButton,
+      icon: Icons.delete_forever_outlined,
+      destructive: true,
+    );
+    if (!confirmed || !mounted) return;
+
+    await _elevated(
+      () => ref.read(authRepositoryProvider).deleteAccount(),
+      onSuccess: _afterDeletion,
+    );
+  }
+
+  /// The server has already ended every session; this forgets the local one
+  /// and leaves the screens that only exist for a signed-in account.
+  Future<void> _afterDeletion() async {
+    DsSnackbar.show(
+      context,
+      message: context.l10n.accountDeleted,
+      type: DsSnackbarType.success,
+    );
+    final auth = ref.read(authNotifierProvider.notifier);
+    context.go(RoutePaths.home);
+    await auth.logout();
+  }
+
+  String _blockerText(AccountDeletionBlocker blocker) {
+    final l10n = context.l10n;
+    return switch (blocker.code) {
+      'STAFF_ACCOUNT' => l10n.deletionBlockerStaff,
+      'OPEN_ORDERS' => l10n.deletionBlockerOpenOrders(blocker.count),
+      'OPEN_SALES' => l10n.deletionBlockerOpenSales(blocker.count),
+      'WALLET_BALANCE' => l10n.deletionBlockerWallet,
+      'PENDING_PAYOUTS' => l10n.deletionBlockerPayouts(blocker.count),
+      'UPCOMING_APPOINTMENTS' =>
+        l10n.deletionBlockerAppointments(blocker.count),
+      _ => l10n.deleteAccountBlockedHint,
+    };
   }
 
   /// Cutting every other session is AAL3: it is the intruder's best move as
@@ -575,6 +659,28 @@ class _SecuritySettingsScreenState
               GhostButton(
                 label: l10n.lostYourSim,
                 onPressed: () => context.push(RoutePaths.accountRecovery),
+              ),
+
+              // ── Leaving ───────────────────────────────────────────────
+              // Last, and on its own: the one control on the screen that
+              // cannot be undone.
+              const SizedBox(height: DsSpacing.xxl),
+              const Divider(),
+              ListTile(
+                contentPadding: EdgeInsets.zero,
+                leading: Icon(
+                  Icons.delete_forever_outlined,
+                  color: context.dsColors.error,
+                ),
+                title: Text(
+                  l10n.deleteAccount,
+                  style: context.dsText.tileTitle.copyWith(
+                    color: context.dsColors.error,
+                  ),
+                ),
+                subtitle: Text(l10n.deleteAccountSubtitle),
+                enabled: !_busy,
+                onTap: _deleteAccount,
               ),
             ]),
           ),

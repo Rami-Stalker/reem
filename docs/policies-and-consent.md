@@ -292,3 +292,31 @@ Nothing this one can draw fetches anything or goes anywhere.
 The Arabic is the binding text and the English is a courtesy translation; the
 documents say so themselves, because a marketplace whose customers and sellers
 are Syrian is not entering an English contract with them.
+
+## Deleting an account
+
+What the content policy promises ("When your account is deleted…") is
+implemented by `AccountDeletionService` behind `POST /auth/account/delete`.
+It takes the enrolled device's signature, an AAL3 step-up (scope
+`account_deletion`, so the 24-hour new-device cooldown applies) and
+`confirm: true` in the body. The app reaches it from the bottom of the
+security centre.
+
+`GET /auth/account/deletion` is asked first, so she is never sent through a
+second factor only to be refused. It is refused while deleting would strand
+somebody: a parcel still moving to or from her, a wallet balance, a pending
+payout, an upcoming appointment. Staff accounts are closed by an admin.
+
+The `users` row is kept, because orders, invoices, the ledger and payouts
+point at it, and emptied: name «حساب محذوف», no phone (free to register
+again), email, photo, bio or password, `disabled_at` and `deleted_at` set. An
+admin cannot re-enable or re-role it. Every session, device, credential and
+push token goes. Addresses, saved payment methods, basket, favourites,
+wishlists, search history, follows, notifications and the stylist profile are
+deleted. Her posts are marked `DELETED` and comments `REMOVED`. Reviews she
+wrote stay under the anonymous name. Chat messages she sent stay in the other
+person's conversation. Audit and security logs are kept, under their own
+retention.
+
+Not yet covered: the files she uploaded (photos and videos behind her posts)
+are no longer shown anywhere, but are not yet erased from storage.

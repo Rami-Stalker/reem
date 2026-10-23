@@ -83,6 +83,32 @@ Without this the table only grows: every uninstall leaves behind an address
 that is politely refused for ever, so reaching one woman's one phone gradually
 costs four requests, three of them guaranteed to fail.
 
+### Only signed-in handsets ring
+
+Each push token is tied to the session that registered it (`push_tokens.session_id`),
+and a push only goes to a token whose session is still `ACTIVE` on an account
+that is not disabled (`liveTokenWhere`). So signing out, "sign out other
+devices", removing a lost phone, an admin cutting sessions, and a session
+expiring all stop that phone showing her messages, without each of those paths
+having to remember the push table. Deleting the session deletes the token.
+Tokens registered before this have no session and keep working until the app
+re-registers them on its next launch.
+
+### Each delivery is sent once
+
+The minute cron and the inline send after a dispatch both read `QUEUED` rows.
+Each row is claimed with a short lease on `next_attempt_at` before it is sent,
+so two workers cannot push the same message twice, and a worker that dies
+mid-send leaves the row to be retried when the lease runs out. A campaign runs
+once: only `DRAFT` or `SCHEDULED` can become `RUNNING`, and the status route
+cannot set `RUNNING` or `COMPLETED` by hand.
+
+### Who may broadcast
+
+Dispatch and campaigns (create, schedule, run) are `SUPER_ADMIN` and `ADMIN`
+only. Support staff can read the analytics. A campaign's `deep_link` must be a
+`reem://` link.
+
 ### Transactional or marketing
 
 `NotificationCategory` is the whole basis of frequency capping, and it is not

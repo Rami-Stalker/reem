@@ -21,6 +21,7 @@ import { OtpDeliveryModule } from './otp/otp-delivery.module';
 import { RegistrationTicketService } from './login/registration-ticket.service';
 import { PhoneChangeService } from './phone-change/phone-change.service';
 import { AccountRecoveryService } from './recovery/account-recovery.service';
+import { AccountDeletionService } from './deletion/account-deletion.service';
 import { AuthRetentionCron } from './retention/auth-retention.cron';
 import { SecurityAdminController } from './admin/security-admin.controller';
 import { SecurityForensicsService } from './admin/security-forensics.service';
@@ -59,6 +60,7 @@ import { PoliciesModule } from '../policies/policies.module';
     AccountRecoveryService,
     SecurityForensicsService,
     AuthRetentionCron,
+    AccountDeletionService,
     PrivilegedMfaInvariant,
     JwtStrategy,
   ],

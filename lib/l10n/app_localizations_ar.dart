@@ -12253,4 +12253,56 @@ class AppLocalizationsAr extends AppLocalizations {
   String salonPriceRange(String min, String max) {
     return 'من $min إلى $max';
   }
+
+  @override
+  String get deleteAccount => 'حذف الحساب';
+
+  @override
+  String get deleteAccountSubtitle => 'إزالة حسابكِ وبياناتكِ الشخصية نهائياً';
+
+  @override
+  String get deleteAccountConfirmTitle => 'حذف حسابكِ نهائياً؟';
+
+  @override
+  String get deleteAccountConfirmBody =>
+      'سيُمحى اسمكِ ورقمكِ وصورتكِ وعناوينكِ وبطاقاتكِ المحفوظة وسلّتكِ وقوائم أمنياتكِ ومتابعاتكِ وإشعاراتكِ، وتُزال منشوراتكِ وتعليقاتكِ. تبقى الطلبات والفواتير وسجلات الدفع دون اسمكِ لأن القانون يُلزمنا بها، وتبقى التقييمات التي كتبتِها باسم «حساب محذوف». لا يمكن التراجع عن ذلك.';
+
+  @override
+  String get deleteAccountConfirmButton => 'احذفي الحساب نهائياً';
+
+  @override
+  String get deleteAccountBlockedTitle => 'لا يمكن حذف حسابكِ الآن';
+
+  @override
+  String get deleteAccountBlockedHint =>
+      'أنهي هذه الأمور أولاً ثم حاولي مجدداً.';
+
+  @override
+  String get deletionBlockerStaff => 'حسابات فريق العمل يغلقها المسؤول.';
+
+  @override
+  String deletionBlockerOpenOrders(int count) {
+    return 'لديكِ $count من الطلبات ما زالت قيد التنفيذ.';
+  }
+
+  @override
+  String deletionBlockerOpenSales(int count) {
+    return 'لدى متجركِ $count من الطلبات ما زالت قيد التنفيذ.';
+  }
+
+  @override
+  String get deletionBlockerWallet => 'ما زال في محفظتكِ رصيد.';
+
+  @override
+  String deletionBlockerPayouts(int count) {
+    return 'لديكِ $count من الدفعات المستحقة لم تُصرف بعد.';
+  }
+
+  @override
+  String deletionBlockerAppointments(int count) {
+    return 'لديكِ $count من المواعيد القادمة.';
+  }
+
+  @override
+  String get accountDeleted => 'حُذف حسابكِ.';
 }

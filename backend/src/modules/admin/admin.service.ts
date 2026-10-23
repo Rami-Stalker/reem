@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ConflictException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -483,9 +484,17 @@ export class AdminService {
 
     const before = await this.prisma.user.findUnique({
       where: { id },
-      select: { role: true, disabledAt: true },
+      select: { role: true, disabledAt: true, deletedAt: true },
     });
     if (!before) throw new NotFoundException('User not found');
+    // She deleted it. Re-enabling would hand an emptied shell a working
+    // account, and granting it a role would do the same with staff powers.
+    if (before.deletedAt) {
+      throw new ConflictException({
+        code: 'ACCOUNT_DELETED',
+        message: 'This account was deleted by its owner and cannot be changed',
+      });
+    }
 
     const user = await this.prisma.user.update({
       where: { id },
