@@ -148,6 +148,12 @@ abstract final class RouteNames {
   static const salonHoursEditor = 'salon-hours-editor';
   static const salonQueue = 'salon-queue';
 
+  /// «مناسباتي» — her calendar, a new one, one of them, editing one.
+  static const occasions = 'occasions';
+  static const occasionNew = 'occasion-new';
+  static const occasionDetail = 'occasion-detail';
+  static const occasionEdit = 'occasion-edit';
+
   static const chats = 'chats';
   static const chatDetails = 'chat-details';
   static const calls = 'calls';

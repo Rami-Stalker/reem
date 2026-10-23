@@ -156,7 +156,7 @@ that is usually half-built:
    is why the server always sends a `notification` block and never relies on a
    data-only message.
 
-### The six channels
+### The eight channels
 
 A channel is the unit Android gives *her* to control. One channel means the
 only choice is all or nothing, so the woman tired of "a shop you follow posted
@@ -171,6 +171,7 @@ seller she is waiting on and the news that her parcel is downstairs.
 | `reem_rooms` | غرف التسوّق | default |
 | `reem_offers` | العروض والكوبونات | default |
 | `reem_appointments` | مواعيد الصالونات | max — heads-up banner |
+| `reem_occasions` | مناسباتي | high |
 | `reem_system` | تنبيهات التطبيق | high |
 
 **These ids are a contract.** Android **silently discards** a notification

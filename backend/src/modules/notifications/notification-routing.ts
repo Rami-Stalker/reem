@@ -41,6 +41,15 @@ export const PushChannel = {
    * that she is due at the salon at six.
    */
   Appointments: 'reem_appointments',
+  /**
+   * «مناسباتي» — the countdown to a day she wrote down: a week to go, three
+   * days, tomorrow.
+   *
+   * Its own drawer because it is the one she is likeliest to want quieter
+   * without silencing anything else: a woman who finds the countdown too much
+   * must be able to turn it off and still hear that her salon confirmed.
+   */
+  Occasions: 'reem_occasions',
   /** Moderation outcomes, security, everything else the platform must say. */
   System: 'reem_system',
 } as const;
@@ -68,6 +77,8 @@ export function channelFor(type: NotificationType): PushChannelId {
       return PushChannel.Rooms;
     case 'appointment':
       return PushChannel.Appointments;
+    case 'occasion':
+      return PushChannel.Occasions;
     case 'promo':
     case 'coupon':
       return PushChannel.Offers;
@@ -102,6 +113,10 @@ export function ttlFor(type: NotificationType): number {
       // not a late notification, it is a wrong one — and a confirmation she
       // reads the next day has already been overtaken by the visit itself.
       return 6 * 60 * 60;
+    case 'occasion':
+      // Twelve hours. A "three days to go" read the next morning says two days
+      // and is wrong; after half a day the next mark is closer than this one.
+      return 12 * 60 * 60;
     default:
       return 12 * 60 * 60;
   }
@@ -176,6 +191,12 @@ export function deepLinkFor(
         ? `${SCHEME}appointments/${appointmentId}`
         : `${SCHEME}appointments`;
     }
+    case 'occasion': {
+      const occasionId = str(data, 'occasionId', 'occasion_id');
+      return occasionId
+        ? `${SCHEME}occasions/${occasionId}`
+        : `${SCHEME}occasions`;
+    }
     case 'coupon':
       return `${SCHEME}coupons`;
     case 'promo': {
@@ -234,6 +255,12 @@ export function collapseKeyFor(
     case 'room': {
       const roomId = str(data, 'roomId', 'room_id');
       return roomId ? `room-${roomId}` : undefined;
+    }
+    case 'occasion': {
+      // "Three days to go" replaces "a week to go": only the nearest mark is
+      // still true.
+      const occasionId = str(data, 'occasionId', 'occasion_id');
+      return occasionId ? `occasion-${occasionId}` : undefined;
     }
     default:
       return undefined;

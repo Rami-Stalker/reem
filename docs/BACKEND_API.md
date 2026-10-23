@@ -127,6 +127,22 @@ untouched. See [SALONS.md](SALONS.md) for the booking invariant.
 Every appointment payload carries `can_cancel` and `can_review`, decided by the
 server, so a client can never offer a button the API would refuse.
 
+## Occasions (`/occasions`)
+
+«مناسباتي». Every route is authenticated and scoped to the caller.
+
+| Method | Path | Notes |
+|--------|------|-------|
+| GET | `/occasions` | `scope` = `upcoming` (default) / `past` |
+| GET | `/occasions/:id` | Includes `repeats` — where the same people saw this outfit |
+| POST | `/occasions` | `{ title, kind, date, starts_at_time?, location?, circle?, note?, look_id?, appointment_id?, reminders_enabled? }` |
+| PATCH | `/occasions/:id` | Any of the above; `null` clears or unlinks |
+| PUT | `/occasions/:id/steps/:key` | `{ done }` — only `gift` can be ticked by hand |
+| DELETE | `/occasions/:id` | |
+
+`steps`, `progress`, `next_step` and `days_left` are the server's. See
+[OCCASIONS.md](OCCASIONS.md).
+
 ## Reem AI Stylist (`/ai/stylist`)
 
 The conversational shopping assistant. Every route is authenticated: a stylist

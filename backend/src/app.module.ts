@@ -70,6 +70,7 @@ import { ReturnsModule } from './modules/returns/returns.module';
 import { SupportModule } from './modules/support/support.module';
 import { PoliciesModule } from './modules/policies/policies.module';
 import { SalonsModule } from './modules/salons/salons.module';
+import { OccasionsModule } from './modules/occasions/occasions.module';
 import { SellerCommerceModule } from './modules/seller-commerce/seller-commerce.module';
 import { ExperienceModule } from './modules/experience/experience.module';
 import { HealthModule } from './modules/health/health.module';
@@ -172,6 +173,7 @@ import { LinksModule } from './modules/links/links.module';
     // first with a calendar. Registered after NotificationsModule and
     // PricingModule, which it imports; nothing above it knows it exists.
     SalonsModule,
+    OccasionsModule,
     SellerCommerceModule,
     ExperienceModule,
     HealthModule,

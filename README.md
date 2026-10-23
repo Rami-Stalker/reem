@@ -180,6 +180,17 @@ and because durations vary and a salon may have four chairs, that is a `FOR
 UPDATE` overlap count rather than a unique index. An appointment carries no
 money — she pays at the chair: [docs/SALONS.md](docs/SALONS.md).
 
+## My occasions
+
+«مناسباتي»: she writes down a wedding, Eid or birthday, and Reem helps her get
+ready — a countdown, a look from her closet, what that look is missing, the
+salon, the gift, and a reminder a week, three days and one day before. It also
+warns her when the people she named for the day have already seen the outfit.
+
+The look is a closet look and the salon is an appointment; the occasion only
+points at them, and its checklist is read from their state on every request:
+[docs/OCCASIONS.md](docs/OCCASIONS.md).
+
 ## Resilience
 
 Crash handling, PII-safe error reporting with breadcrumbs, and the offline
@@ -253,6 +264,7 @@ flutter test tools/icons/generate_app_icons.dart
 | [PRODUCT_INTERACTIONS.md](docs/PRODUCT_INTERACTIONS.md) | Like/Share/Save/Repost/Comments on every product surface, and the one store behind them |
 | [SHARE_LINKS.md](docs/SHARE_LINKS.md) | Share links, App Links / Universal Links, the landing pages, and the two well-known files |
 | [SALONS.md](docs/SALONS.md) | «الصالونات والجمال»: the booking invariant, availability, statuses, the two jobs, and why an appointment carries no money |
+| [OCCASIONS.md](docs/OCCASIONS.md) | «مناسباتي»: the derived checklist, the countdown and why it rings once per mark, and the repeat warning |
 | [DEPLOYMENT.md](docs/DEPLOYMENT.md) | **Run one API process.** The single-instance constraint, the nightly job order, production env guards |
 | [production-gap-analysis.md](docs/production-gap-analysis.md) | Pre-launch audit: what is complete, what is thin, what is missing, in priority order |
 | [production-launch-report.md](docs/production-launch-report.md) | **Read before deploying.** Launch readiness: what was tested and fixed, remaining risks, external dependencies, and the three blockers |

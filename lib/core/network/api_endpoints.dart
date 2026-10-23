@@ -917,4 +917,10 @@ abstract final class ApiEndpoints {
   static String appointmentConfirm(String id) => '/appointments/$id/confirm';
   static String appointmentComplete(String id) => '/appointments/$id/complete';
   static String appointmentNoShow(String id) => '/appointments/$id/no-show';
+
+  // «مناسباتي». Every route is hers alone.
+  static const occasions = '/occasions';
+  static String occasion(String id) => '/occasions/$id';
+  static String occasionStep(String id, String key) =>
+      '/occasions/$id/steps/$key';
 }

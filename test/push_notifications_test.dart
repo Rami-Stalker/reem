@@ -210,6 +210,7 @@ void main() {
           'reem_rooms',
           'reem_offers',
           'reem_appointments',
+          'reem_occasions',
           'reem_system',
         ],
       );

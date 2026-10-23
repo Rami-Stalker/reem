@@ -75,6 +75,9 @@ import 'package:reem/features/market/presentation/screens/missions_screen.dart';
 import 'package:reem/features/market/presentation/screens/resale_market_screen.dart';
 import 'package:reem/features/market/presentation/screens/seller_market_screen.dart';
 import 'package:reem/features/market/presentation/screens/wardrobe_care_screen.dart';
+import 'package:reem/features/occasions/presentation/screens/occasion_detail_screen.dart';
+import 'package:reem/features/occasions/presentation/screens/occasion_editor_screen.dart';
+import 'package:reem/features/occasions/presentation/screens/occasions_screen.dart';
 import 'package:reem/features/onboarding/presentation/screens/onboarding_screen.dart';
 import 'package:reem/features/policies/presentation/screens/admin_policies_screen.dart';
 import 'package:reem/features/policies/presentation/screens/policy_centre_screen.dart';
@@ -473,6 +476,33 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         name: RouteNames.appointmentDetail,
         builder: (context, state) => AppointmentDetailScreen(
           appointmentId: state.pathParameters['id'] ?? '',
+        ),
+      ),
+
+      // «مناسباتي». All of it is hers alone, so none of it is public.
+      // `new` before `:id`, which would otherwise swallow it.
+      GoRoute(
+        path: RoutePaths.occasions,
+        name: RouteNames.occasions,
+        builder: (context, state) => const OccasionsScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.occasionNew,
+        name: RouteNames.occasionNew,
+        builder: (context, state) => const OccasionEditorScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.occasionDetail,
+        name: RouteNames.occasionDetail,
+        builder: (context, state) => OccasionDetailScreen(
+          occasionId: state.pathParameters['id'] ?? '',
+        ),
+      ),
+      GoRoute(
+        path: RoutePaths.occasionEdit,
+        name: RouteNames.occasionEdit,
+        builder: (context, state) => OccasionEditorScreen(
+          occasionId: state.pathParameters['id'] ?? '',
         ),
       ),
 

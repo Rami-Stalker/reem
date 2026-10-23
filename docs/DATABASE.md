@@ -163,6 +163,10 @@ service to trip over the stale socket.
   protects a booked slot, and cannot: durations vary and a salon may have
   several chairs, so the rule is a `FOR UPDATE` overlap count in
   `appointments.service.ts`. Read [SALONS.md](SALONS.md) before touching it.
+- **Occasions** (`20261023120000_occasions`) add one table for «مناسباتي». It
+  is additive and safe over live rows. An occasion links a `closet_looks` row
+  and an `appointments` row with `ON DELETE SET NULL`, and its checklist is
+  derived from those links rather than stored. See [OCCASIONS.md](OCCASIONS.md).
 - **Seeding** is wired through `prisma.config.ts`, so `prisma migrate reset`
   reseeds automatically. That config file also has to `import 'dotenv/config'`
   explicitly, because the presence of a Prisma config file disables the CLI's
