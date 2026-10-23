@@ -12147,4 +12147,24 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get accountDeleted => 'Your account has been deleted.';
+
+  @override
+  String cartBoutiquesCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count boutiques',
+      one: '1 boutique',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get checkoutStepPrivacy => 'Your privacy';
+
+  @override
+  String get composerAudiencePublicHint => 'Everyone can see it';
+
+  @override
+  String get composerAudienceFollowersHint => 'Only your followers';
 }

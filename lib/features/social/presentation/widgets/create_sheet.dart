@@ -58,9 +58,8 @@ Future<void> showCreateSheet(BuildContext context) {
                   Expanded(
                     child: CreateFormatTile(
                       format: format,
-                      onTap: () => go(
-                        '${RoutePaths.compose}?format=${format.wire}',
-                      ),
+                      onTap: () =>
+                          go('${RoutePaths.compose}?format=${format.wire}'),
                     ),
                   ),
                 ],
@@ -114,78 +113,131 @@ class CreateFormatTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final c = context.dsColors;
     final l10n = context.l10n;
-    final (icon, label, hint) = switch (format) {
+    // Each shape in its own light — the same three the composer's mode dial
+    // and viewfinder are lit in, so the choice carries through.
+    final (icon, label, hint, light, ink) = switch (format) {
       CreateFormat.post => (
-        Icons.add_photo_alternate_outlined,
+        Icons.photo_camera_rounded,
         l10n.createPost,
         l10n.createPostHint,
+        context.primaryGradient,
+        DsColors.onMedia,
       ),
       CreateFormat.reel => (
-        Icons.movie_creation_outlined,
+        Icons.movie_creation_rounded,
         l10n.createReel,
         l10n.createReelHint,
+        DsGradients.rewards as Gradient,
+        DsColors.onMedia,
       ),
       CreateFormat.story => (
-        Icons.amp_stories_outlined,
+        Icons.auto_stories_rounded,
         l10n.createStory,
         l10n.createStoryHint,
+        DsGradients.gold as Gradient,
+        DsColors.onGold,
       ),
     };
 
     return Semantics(
       button: true,
       label: label,
-      child: Material(
-        color: c.primaryContainer.withValues(alpha: 0.55),
-        borderRadius: DsRadius.borderLg,
-        child: InkWell(
-          onTap: onTap,
-          borderRadius: DsRadius.borderLg,
-          child: Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: DsSpacing.xs,
-              vertical: compact ? DsSpacing.sm : DsSpacing.md,
+      excludeSemantics: true,
+      child: GestureDetector(
+        onTap: onTap,
+        behavior: HitTestBehavior.opaque,
+        // Grows with its words rather than a fixed ratio: a larger text size,
+        // or a narrow phone, would otherwise push the hint out of the arch.
+        child: ConstrainedBox(
+          constraints: BoxConstraints(minHeight: compact ? 96 : 150),
+          child: CustomPaint(
+            painter: _ArchTilePainter(
+              gradient: light,
+              glow: context.dsColors.shadow,
             ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  width: compact ? 40 : 48,
-                  height: compact ? 40 : 48,
-                  decoration: BoxDecoration(
-                    gradient: context.primaryGradient,
-                    shape: BoxShape.circle,
+            child: Padding(
+              padding: EdgeInsets.fromLTRB(
+                DsSpacing.xs,
+                compact ? DsSpacing.lg : DsSpacing.xxl,
+                DsSpacing.xs,
+                DsSpacing.sm,
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    width: compact ? 36 : 44,
+                    height: compact ? 36 : 44,
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: DsColors.mediaPlate,
+                    ),
+                    child: Icon(
+                      icon,
+                      color: ink,
+                      size: compact ? DsSizes.iconSm : DsSizes.iconMd,
+                    ),
                   ),
-                  child: Icon(
-                    icon,
-                    color: c.onPrimary,
-                    size: compact ? DsSizes.iconSm : DsSizes.iconMd,
-                  ),
-                ),
-                DsGaps.vXs,
-                Text(
-                  label,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: context.dsText.tileTitle.bold.tint(c.onSurface),
-                ),
-                if (!compact) ...[
-                  DsGaps.vXxxs,
+                  DsGaps.vXs,
                   Text(
-                    hint,
-                    textAlign: TextAlign.center,
-                    maxLines: 2,
+                    label,
+                    maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: context.dsText.caption.tint(c.onSurfaceVariant),
+                    style: context.dsText.tileTitle.bold.tint(ink),
                   ),
+                  if (!compact) ...[
+                    DsGaps.vXxxs,
+                    Text(
+                      hint,
+                      textAlign: TextAlign.center,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: context.dsText.caption.tint(
+                        ink.withValues(alpha: 0.82),
+                      ),
+                    ),
+                  ],
                 ],
-              ],
+              ),
             ),
           ),
         ),
       ),
     );
   }
+}
+
+/// The tile's arch, filled with its light, with a pearl line inside and a
+/// soft shadow under.
+class _ArchTilePainter extends CustomPainter {
+  const _ArchTilePainter({required this.gradient, required this.glow});
+
+  final Gradient gradient;
+  final Color glow;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final rect = (Offset.zero & size).deflate(1);
+    final path = dsArchPath(rect);
+    canvas.drawPath(
+      path.shift(const Offset(0, 6)),
+      Paint()
+        ..color = glow
+        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 12),
+    );
+    canvas.drawPath(path, Paint()..shader = gradient.createShader(rect));
+    canvas.drawPath(
+      dsArchPath(rect.deflate(5)),
+      Paint()
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 1
+        ..color = DsColors.onMediaFaint,
+    );
+  }
+
+  @override
+  bool shouldRepaint(_ArchTilePainter old) =>
+      old.gradient != gradient || old.glow != glow;
 }

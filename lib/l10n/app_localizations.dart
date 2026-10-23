@@ -20989,6 +20989,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Your account has been deleted.'**
   String get accountDeleted;
+
+  /// How many boutiques the basket's pieces come from
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 boutique} other{{count} boutiques}}'**
+  String cartBoutiquesCount(int count);
+
+  /// Checkout station: whether the boutique sees her full name
+  ///
+  /// In en, this message translates to:
+  /// **'Your privacy'**
+  String get checkoutStepPrivacy;
+
+  /// Under the public audience option
+  ///
+  /// In en, this message translates to:
+  /// **'Everyone can see it'**
+  String get composerAudiencePublicHint;
+
+  /// Under the followers-only audience option
+  ///
+  /// In en, this message translates to:
+  /// **'Only your followers'**
+  String get composerAudienceFollowersHint;
 }
 
 class _AppLocalizationsDelegate

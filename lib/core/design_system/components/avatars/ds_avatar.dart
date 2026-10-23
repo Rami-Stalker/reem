@@ -161,7 +161,10 @@ class DsAvatar extends StatelessWidget {
     if (name == null) return '';
     final parts = name.trim().split(RegExp(r'\s+')).where((p) => p.isNotEmpty);
     if (parts.isEmpty) return '';
-    if (parts.length == 1) {
+    // One letter for a single word — and for an Arabic name, whose two
+    // initials side by side join into a word: «لمى الحسن» would read «لا».
+    if (parts.length == 1 ||
+        RegExp(r'[؀-ۿ]').hasMatch(parts.first.characters.first)) {
       return parts.first.characters.take(1).toString().toUpperCase();
     }
     return (parts.first.characters.take(1).toString() +

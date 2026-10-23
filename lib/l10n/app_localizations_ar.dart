@@ -12305,4 +12305,27 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get accountDeleted => 'حُذف حسابكِ.';
+
+  @override
+  String cartBoutiquesCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count بوتيك',
+      many: '$count بوتيكاً',
+      few: '$count بوتيكات',
+      two: 'بوتيكان',
+      one: 'بوتيك واحد',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get checkoutStepPrivacy => 'خصوصيتكِ';
+
+  @override
+  String get composerAudiencePublicHint => 'يراه الجميع';
+
+  @override
+  String get composerAudienceFollowersHint => 'متابِعاتكِ فقط';
 }
