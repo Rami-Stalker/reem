@@ -3652,7 +3652,7 @@
   "salonAnyPrice": "أي سعر",
   "salonPriceUpTo": "حتى {amount}",
   "salonPriceOver": "أكثر من {amount}",
-  "salonPriceRange": "{min} – {max}",
+  "salonPriceRange": "من {min} إلى {max}",
   "deleteAccount": "حذف الحساب",
   "deleteAccountSubtitle": "إزالة حسابكِ وبياناتكِ الشخصية نهائياً",
   "deleteAccountConfirmTitle": "حذف حسابكِ نهائياً؟",
