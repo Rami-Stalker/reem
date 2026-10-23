@@ -9,7 +9,12 @@ import {
   UserRole,
 } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
-import { Money, REVENUE_STATUSES } from '../../common/money';
+import {
+  CANCELLED_STATUSES,
+  Money,
+  REVENUE_STATUSES,
+} from '../../common/money';
+import { dayLabel, daysIn, startOfPlatformDay } from './platform-day';
 import {
   AnalyticsExportQueryDto,
   AnalyticsQueryDto,
@@ -33,6 +38,56 @@ interface DateRange {
  */
 const revenueStatuses = [...REVENUE_STATUSES];
 
+/**
+ * Sub-orders whose goods came back, or whose money is going back.
+ *
+ * Booked as sales when they were made and subtracted as refunds now, so gross
+ * stays a record of what was sold and net says what was kept.
+ */
+const refundStatuses: SellerOrderStatus[] = [
+  SellerOrderStatus.RETURNED,
+  SellerOrderStatus.REFUND_PENDING,
+  SellerOrderStatus.REFUNDED,
+];
+
+/**
+ * Everything that was a real sale at some point: realised, or realised and
+ * then disputed or sent back. Excludes what never got past the seller
+ * (new, awaiting confirmation), failed at the door, or was cancelled.
+ */
+const bookedStatuses: SellerOrderStatus[] = [
+  ...REVENUE_STATUSES,
+  SellerOrderStatus.RETURN_REQUESTED,
+  SellerOrderStatus.RETURN_IN_TRANSIT,
+  SellerOrderStatus.DISPUTED,
+  ...refundStatuses,
+];
+
+/**
+ * The events a phone may report about itself.
+ *
+ * Everything else is written by the server at the moment it happens — a
+ * product page opening, a cart line, a search, an order. Accepting those from
+ * a client too would count them twice, and accepting `ORDER_PLACED` would let
+ * anyone with an account write a competitor's conversion rate.
+ */
+export const CLIENT_TRACKABLE_EVENTS: ReadonlySet<AnalyticsEventType> = new Set([
+  AnalyticsEventType.APP_OPEN,
+  AnalyticsEventType.CHECKOUT_START,
+  AnalyticsEventType.SELLER_VIEW,
+  AnalyticsEventType.CAMPAIGN_OPEN,
+  AnalyticsEventType.CAMPAIGN_CLICK,
+  AnalyticsEventType.PRODUCT_IMPRESSION,
+  AnalyticsEventType.PRODUCT_SHARE,
+  AnalyticsEventType.CUSTOM,
+]);
+
+/** The widest window one report may span. A year of rows is read in memory. */
+const MAX_RANGE_DAYS = 366;
+
+/** The most JSON a client event may carry. */
+const MAX_METADATA_BYTES = 2_048;
+
 /** Money is aggregated within a currency, never across. */
 type CurrencyTotals = Map<Currency, Money>;
 
@@ -45,11 +100,55 @@ function serializeTotals(totals: CurrencyTotals) {
   return [...totals.values()].map((total) => total.toJSON());
 }
 
+/** `588,860 SYP + 120 USD` — a money list as a person reads it. */
+function formatTotals(totals: { amount: string; currency: Currency }[]): string {
+  if (totals.length === 0) return '0';
+  return totals
+    .map(
+      (total) =>
+        `${Number(total.amount).toLocaleString('en-US', {
+          maximumFractionDigits: 2,
+        })} ${total.currency}`,
+    )
+    .join(' + ');
+}
+
+/**
+ * A spreadsheet cell. A cell that opens with `=`, `+`, `-` or `@` is a formula
+ * to Excel, and product titles are typed by sellers — so those are prefixed
+ * with an apostrophe rather than executed on an operator's machine.
+ */
+function safeCell(value: string): string {
+  return /^[=+\-@\t\r]/.test(value) ? `'${value}` : value;
+}
+
+function csvCell(value: string): string {
+  const safe = safeCell(value);
+  return /[",\r\n]/.test(safe) ? `"${safe.replace(/"/g, '""')}"` : safe;
+}
+
+function tsvCell(value: string): string {
+  return safeCell(value).replace(/[\t\r\n]+/g, ' ');
+}
+
 @Injectable()
 export class AnalyticsService {
   constructor(private readonly prisma: PrismaService) {}
 
   async track(userId: string, dto: TrackAnalyticsEventDto) {
+    if (!CLIENT_TRACKABLE_EVENTS.has(dto.type)) {
+      throw new BadRequestException(
+        `${dto.type} is recorded by the server and cannot be reported`,
+      );
+    }
+    let metadata: Prisma.InputJsonValue | undefined;
+    if (dto.metadata !== undefined && dto.metadata !== null) {
+      const json = JSON.stringify(dto.metadata) ?? '';
+      if (Buffer.byteLength(json) > MAX_METADATA_BYTES) {
+        throw new BadRequestException('Event metadata is too large');
+      }
+      metadata = dto.metadata as Prisma.InputJsonValue;
+    }
     const event = await this.prisma.analyticsEvent.create({
       data: {
         type: dto.type,
@@ -59,10 +158,32 @@ export class AnalyticsService {
         sellerId: dto.seller_id,
         orderId: dto.order_id,
         source: dto.source,
-        metadata: dto.metadata as Prisma.InputJsonValue,
+        metadata,
       },
     });
     return { id: event.id, tracked_at: event.createdAt.toISOString() };
+  }
+
+  /**
+   * One `ORDER_PLACED` per seller in the order — the funnel is counted in
+   * seller checkouts, the same unit the client reports `CHECKOUT_START` in,
+   * so a seller's own funnel and the platform's add up.
+   */
+  async recordOrderPlaced(orderId: string, userId: string | null) {
+    const subOrders = await this.prisma.sellerOrder.findMany({
+      where: { orderId },
+      select: { sellerId: true },
+    });
+    if (subOrders.length === 0) return;
+    await this.prisma.analyticsEvent.createMany({
+      data: subOrders.map((sub) => ({
+        type: AnalyticsEventType.ORDER_PLACED,
+        userId,
+        sellerId: sub.sellerId,
+        orderId,
+        source: 'checkout',
+      })),
+    });
   }
 
   async dashboard(query: AnalyticsQueryDto, user: AnalyticsUser) {
@@ -111,92 +232,134 @@ export class AnalyticsService {
     };
   }
 
+  /**
+   * Orders and revenue over the window.
+   *
+   * Read from sub-orders, never from the parent order: an order holds several
+   * sellers' parcels, and summing `order.grand_total` handed a seller every
+   * other boutique's sales and the shipping on top. Revenue is item value on
+   * realised sub-orders; an order counts once however many parcels it has.
+   */
   async sales(query: AnalyticsQueryDto, user: AnalyticsUser) {
     const range = this.range(query);
-    const where = this.orderWhere(query, user, range);
-    const orders = await this.prisma.order.findMany({
-      where,
+    const subOrders = await this.prisma.sellerOrder.findMany({
+      where: this.subOrderWhere(query, user, range),
       select: {
-        id: true,
+        orderId: true,
+        status: true,
         currency: true,
-        grandTotal: true,
+        itemsSubtotal: true,
         createdAt: true,
-        sellerOrders: { select: { status: true, itemsSubtotal: true, currency: true } },
       },
       orderBy: { createdAt: 'asc' },
     });
 
-    const byDay = new Map<string, { orders: number; revenue: CurrencyTotals }>();
+    const byDay = new Map<string, { orders: Set<string>; revenue: CurrencyTotals }>(
+      daysIn(range).map((day) => [day, { orders: new Set(), revenue: new Map() }]),
+    );
     const byStatus = new Map<string, number>();
-    const orderValues: CurrencyTotals = new Map();
-    let revenueBearing = 0;
+    const orders = new Set<string>();
+    const paidOrders = new Map<Currency, Set<string>>();
+    const revenue: CurrencyTotals = new Map();
 
-    for (const order of orders) {
-      const day = order.createdAt.toISOString().slice(0, 10);
-      const current = byDay.get(day) ?? { orders: 0, revenue: new Map() };
-      current.orders += 1;
-
-      let counted = false;
-      for (const sub of order.sellerOrders) {
-        byStatus.set(sub.status, (byStatus.get(sub.status) ?? 0) + 1);
-        if (!revenueStatuses.includes(sub.status)) continue;
-        addTo(current.revenue, Money.of(sub.itemsSubtotal, sub.currency));
-        counted = true;
+    for (const sub of subOrders) {
+      orders.add(sub.orderId);
+      byStatus.set(sub.status, (byStatus.get(sub.status) ?? 0) + 1);
+      const label = dayLabel(sub.createdAt);
+      const day = byDay.get(label) ?? {
+        orders: new Set<string>(),
+        revenue: new Map<Currency, Money>(),
+      };
+      day.orders.add(sub.orderId);
+      if (revenueStatuses.includes(sub.status)) {
+        const amount = Money.of(sub.itemsSubtotal, sub.currency);
+        addTo(day.revenue, amount);
+        addTo(revenue, amount);
+        const set = paidOrders.get(sub.currency) ?? new Set<string>();
+        set.add(sub.orderId);
+        paidOrders.set(sub.currency, set);
       }
-      if (counted) revenueBearing += 1;
-
-      byDay.set(day, current);
-      addTo(orderValues, Money.of(order.grandTotal, order.currency));
+      byDay.set(label, day);
     }
 
+    const paid = new Set<string>();
+    for (const set of paidOrders.values()) set.forEach((id) => paid.add(id));
+
     return {
-      total_orders: orders.length,
-      paid_orders: revenueBearing,
-      average_order_value: [...orderValues.entries()].map(([, total]) =>
-        total.dividedBy(Math.max(orders.length, 1)).roundForCurrency().toJSON(),
+      total_orders: orders.size,
+      paid_orders: paid.size,
+      // Per currency, over the orders that actually earned in it.
+      average_order_value: [...revenue.entries()].map(([currency, total]) =>
+        total
+          .dividedBy(Math.max(paidOrders.get(currency)?.size ?? 0, 1))
+          .roundForCurrency()
+          .toJSON(),
       ),
       by_status: [...byStatus.entries()].map(([status, count]) => ({
         status: status.toLowerCase(),
         count,
       })),
-      series: [...byDay.entries()].map(([date, value]) => ({
-        date,
-        orders: value.orders,
-        revenue: serializeTotals(value.revenue),
-      })),
+      series: [...byDay.entries()]
+        .sort(([a], [b]) => a.localeCompare(b))
+        .map(([date, value]) => ({
+          date,
+          orders: value.orders.size,
+          revenue: serializeTotals(value.revenue),
+        })),
     };
   }
 
+  /**
+   * Gross is everything sold — realised, or realised and since sent back.
+   * Refunds are the part that came back. Net is what was kept. Cancelled is
+   * reported beside them, because a rising cancellation line is a finding in
+   * itself, and "refunds" used to mean the value of cancelled orders.
+   */
   async revenue(query: AnalyticsQueryDto, user: AnalyticsUser) {
     const range = this.range(query);
-    const where = this.orderWhere(query, user, range);
+    const where = this.subOrderWhere(query, user, range);
 
-    const [gross, refunded, paid] = await Promise.all([
-      this.prisma.order.groupBy({
+    const [booked, refunded, cancelled, paid] = await Promise.all([
+      this.prisma.sellerOrder.groupBy({
         by: ['currency'],
-        where,
-        _sum: { grandTotal: true },
+        where: { ...where, status: { in: bookedStatuses } },
+        _sum: { itemsSubtotal: true },
       }),
-      this.prisma.order.groupBy({
+      this.prisma.sellerOrder.groupBy({
         by: ['currency'],
-        where: { ...where, status: OrderStatus.CANCELLED },
-        _sum: { grandTotal: true },
+        where: { ...where, status: { in: refundStatuses } },
+        _sum: { itemsSubtotal: true },
       }),
-      this.prisma.payment.groupBy({
+      this.prisma.sellerOrder.groupBy({
         by: ['currency'],
-        where: { order: { is: where }, status: 'PAID' },
-        _sum: { capturedAmount: true },
+        where: { ...where, status: { in: [...CANCELLED_STATUSES] } },
+        _sum: { itemsSubtotal: true },
+      }),
+      // Paid = booked sales on orders whose payment has been captured. A
+      // payment belongs to the whole order, so it is attributed through the
+      // sub-order rather than summed off the payment row.
+      this.prisma.sellerOrder.groupBy({
+        by: ['currency'],
+        where: {
+          ...where,
+          status: { in: bookedStatuses },
+          order: { payment: { is: { status: 'PAID' } } },
+        },
+        _sum: { itemsSubtotal: true },
       }),
     ]);
 
-    const grossTotals: CurrencyTotals = new Map();
-    for (const row of gross) {
-      addTo(grossTotals, Money.of(row._sum.grandTotal ?? 0, row.currency));
-    }
-    const refundTotals: CurrencyTotals = new Map();
-    for (const row of refunded) {
-      addTo(refundTotals, Money.of(row._sum.grandTotal ?? 0, row.currency));
-    }
+    const totals = (
+      rows: { currency: Currency; _sum: { itemsSubtotal: Prisma.Decimal | null } }[],
+    ) => {
+      const map: CurrencyTotals = new Map();
+      for (const row of rows) {
+        addTo(map, Money.of(row._sum.itemsSubtotal ?? 0, row.currency));
+      }
+      return map;
+    };
+    const grossTotals = totals(booked);
+    const refundTotals = totals(refunded);
 
     const net: CurrencyTotals = new Map();
     for (const [currency, amount] of grossTotals) {
@@ -208,10 +371,9 @@ export class AnalyticsService {
 
     return {
       gross_revenue: serializeTotals(grossTotals),
-      paid_revenue: paid.map((row) =>
-        Money.of(row._sum.capturedAmount ?? 0, row.currency).toJSON(),
-      ),
+      paid_revenue: serializeTotals(totals(paid)),
       refunds: serializeTotals(refundTotals),
+      cancelled: serializeTotals(totals(cancelled)),
       net_revenue: serializeTotals(net),
     };
   }
@@ -222,8 +384,10 @@ export class AnalyticsService {
     const items = await this.prisma.orderItem.findMany({
       where: {
         ...(query.product_id ? { productId: query.product_id } : {}),
+        // Realised sales only. A cancelled basket is not a best seller.
         sellerOrder: {
           createdAt: { gte: range.start, lte: range.end },
+          status: { in: revenueStatuses },
           ...(sellerId ? { sellerId } : {}),
         },
       },
@@ -272,6 +436,7 @@ export class AnalyticsService {
     const subOrders = await this.prisma.sellerOrder.findMany({
       where: {
         createdAt: { gte: range.start, lte: range.end },
+        status: { in: revenueStatuses },
         ...(sellerId ? { sellerId } : {}),
       },
       select: {
@@ -309,48 +474,75 @@ export class AnalyticsService {
 
   async customerAnalytics(query: AnalyticsQueryDto, user: AnalyticsUser) {
     const range = this.range(query);
-    const where = this.orderWhere(query, user, range);
-    const [newCustomers, orders] = await Promise.all([
-      this.prisma.user.count({
-        where: {
-          role: UserRole.CUSTOMER,
-          createdAt: { gte: range.start, lte: range.end },
+    const sellerId = this.sellerScope(query, user);
+    const [newCustomers, subOrders] = await Promise.all([
+      // For a seller, "new" means new to *her*: a first order from her inside
+      // the window. The platform's sign-up count was a number about every
+      // other boutique's marketing.
+      sellerId
+        ? this.prisma.user.count({
+            where: {
+              orders: {
+                some: {
+                  createdAt: { gte: range.start, lte: range.end },
+                  sellerOrders: { some: { sellerId } },
+                },
+                none: {
+                  createdAt: { lt: range.start },
+                  sellerOrders: { some: { sellerId } },
+                },
+              },
+            },
+          })
+        : this.prisma.user.count({
+            where: {
+              role: UserRole.CUSTOMER,
+              createdAt: { gte: range.start, lte: range.end },
+            },
+          }),
+      this.prisma.sellerOrder.findMany({
+        where: this.subOrderWhere(query, user, range),
+        select: {
+          orderId: true,
+          status: true,
+          itemsSubtotal: true,
+          currency: true,
+          order: { select: { userId: true } },
         },
       }),
-      this.prisma.order.findMany({
-        where,
-        select: { userId: true, grandTotal: true, currency: true },
-      }),
     ]);
-    const byCustomer = new Map<string, { orders: number; spend: CurrencyTotals }>();
-    for (const order of orders) {
+    const byCustomer = new Map<string, { orders: Set<string>; spend: CurrencyTotals }>();
+    for (const sub of subOrders) {
       // Guest checkouts have no user id and are excluded from per-customer
       // metrics rather than being bucketed under a fake key.
-      if (!order.userId) continue;
-      const row = byCustomer.get(order.userId) ?? {
-        orders: 0,
+      const userId = sub.order.userId;
+      if (!userId) continue;
+      const row = byCustomer.get(userId) ?? {
+        orders: new Set<string>(),
         spend: new Map<Currency, Money>(),
       };
-      row.orders += 1;
-      addTo(row.spend, Money.of(order.grandTotal, order.currency));
-      byCustomer.set(order.userId, row);
+      row.orders.add(sub.orderId);
+      if (revenueStatuses.includes(sub.status)) {
+        addTo(row.spend, Money.of(sub.itemsSubtotal, sub.currency));
+      }
+      byCustomer.set(userId, row);
     }
-    const repeat = [...byCustomer.values()].filter((row) => row.orders > 1);
+    const repeat = [...byCustomer.values()].filter((row) => row.orders.size > 1);
+    const totals: CurrencyTotals = new Map();
+    for (const row of byCustomer.values()) {
+      for (const amount of row.spend.values()) addTo(totals, amount);
+    }
     return {
       active_customers: byCustomer.size,
       new_customers: newCustomers,
       repeat_customers: repeat.length,
       repeat_rate:
-        byCustomer.size === 0 ? 0 : this.round((repeat.length / byCustomer.size) * 100),
-      average_customer_value: (() => {
-        const totals: CurrencyTotals = new Map();
-        for (const row of byCustomer.values()) {
-          for (const amount of row.spend.values()) addTo(totals, amount);
-        }
-        return [...totals.values()].map((total) =>
-          total.dividedBy(Math.max(byCustomer.size, 1)).roundForCurrency().toJSON(),
-        );
-      })(),
+        byCustomer.size === 0
+          ? 0
+          : this.round((repeat.length / byCustomer.size) * 100),
+      average_customer_value: [...totals.values()].map((total) =>
+        total.dividedBy(Math.max(byCustomer.size, 1)).roundForCurrency().toJSON(),
+      ),
     };
   }
 
@@ -417,11 +609,16 @@ export class AnalyticsService {
   async cohorts(query: AnalyticsQueryDto, user: AnalyticsUser) {
     const range = this.range(query);
     const where = this.orderWhere(query, user, range);
+    const sellerId = this.sellerScope(query, user);
     const [users, orders] = await Promise.all([
       this.prisma.user.findMany({
         where: {
           role: UserRole.CUSTOMER,
           createdAt: { gte: range.start, lte: range.end },
+          // A seller's cohorts are her own customers, not every sign-up.
+          ...(sellerId
+            ? { orders: { some: { sellerOrders: { some: { sellerId } } } } }
+            : {}),
         },
         select: { id: true, createdAt: true },
       }),
@@ -431,7 +628,7 @@ export class AnalyticsService {
       }),
     ]);
     const userCohort = new Map(
-      users.map((user) => [user.id, user.createdAt.toISOString().slice(0, 7)]),
+      users.map((user) => [user.id, dayLabel(user.createdAt).slice(0, 7)]),
     );
     const cohorts = new Map<string, { users: number; orders: number }>();
     for (const cohort of userCohort.values()) {
@@ -446,7 +643,9 @@ export class AnalyticsService {
       row.orders += 1;
       cohorts.set(cohort, row);
     }
-    return [...cohorts.entries()].map(([cohort, value]) => ({
+    return [...cohorts.entries()]
+      .sort(([a], [b]) => a.localeCompare(b))
+      .map(([cohort, value]) => ({
       cohort,
       customers: value.users,
       orders: value.orders,
@@ -455,27 +654,34 @@ export class AnalyticsService {
   }
 
   async realtime(user: AnalyticsUser) {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    const sellerFilter: Prisma.OrderWhereInput =
-      user.role === UserRole.SELLER
-        ? { sellerOrders: { some: { sellerId: user.id } } }
-        : {};
+    // "Today" is the day a woman in Damascus is living, not the server's.
+    const today = startOfPlatformDay();
+    const isSeller = user.role === UserRole.SELLER;
     const [orders, revenue, onlineUsers, activeCarts] = await Promise.all([
       this.prisma.order.count({
-        where: { createdAt: { gte: today }, ...sellerFilter },
+        where: {
+          createdAt: { gte: today },
+          ...(isSeller ? { sellerOrders: { some: { sellerId: user.id } } } : {}),
+        },
       }),
       this.prisma.sellerOrder.groupBy({
         by: ['currency'],
         where: {
           createdAt: { gte: today },
           status: { in: revenueStatuses },
-          ...(user.role === UserRole.SELLER ? { sellerId: user.id } : {}),
+          ...(isSeller ? { sellerId: user.id } : {}),
         },
         _sum: { itemsSubtotal: true },
       }),
       this.prisma.userPresence.count({ where: { status: 'ONLINE' } }),
-      this.prisma.cartItem.count({ where: { updatedAt: { gte: today } } }),
+      // Baskets holding *her* listings, for a seller — the platform's total
+      // was every boutique's demand reported as hers.
+      this.prisma.cartItem.count({
+        where: {
+          updatedAt: { gte: today },
+          ...(isSeller ? { offer: { sellerId: user.id } } : {}),
+        },
+      }),
     ]);
     return {
       today_orders: orders,
@@ -510,22 +716,24 @@ export class AnalyticsService {
       query.format === AnalyticsExportFormat.EXCEL ||
       query.format === AnalyticsExportFormat.CSV
     ) {
-      const tsv = this.dashboardTsv(dashboard);
+      const csv = query.format === AnalyticsExportFormat.CSV;
+      const rows = this.dashboardRows(dashboard);
+      const text = rows
+        .map((row) =>
+          row.map((cell) => (csv ? csvCell(cell) : tsvCell(cell))).join(csv ? ',' : '\t'),
+        )
+        .join('\r\n');
       return {
-        filename:
-          query.format === AnalyticsExportFormat.CSV
-            ? 'reem-analytics.csv'
-            : 'reem-analytics.xls',
-        contentType:
-          query.format === AnalyticsExportFormat.CSV
-            ? 'text/csv'
-            : 'application/vnd.ms-excel',
-        buffer: Buffer.from(
-          query.format === AnalyticsExportFormat.CSV
-            ? tsv.replace(/\t/g, ',')
-            : tsv,
-          'utf8',
-        ),
+        filename: csv ? 'reem-analytics.csv' : 'reem-analytics.xls',
+        contentType: csv
+          ? 'text/csv; charset=utf-8'
+          : 'application/vnd.ms-excel; charset=utf-8',
+        // The byte-order mark is what makes Excel read the file as UTF-8.
+        // Without it every Arabic product title opened as mojibake.
+        buffer: Buffer.concat([
+          Buffer.from([0xef, 0xbb, 0xbf]),
+          Buffer.from(text, 'utf8'),
+        ]),
       };
     }
     return {
@@ -555,6 +763,22 @@ export class AnalyticsService {
     };
   }
 
+  /** The sub-orders a report reads: the window, her parcels, the product. */
+  private subOrderWhere(
+    query: AnalyticsQueryDto,
+    user: AnalyticsUser,
+    range: DateRange,
+  ): Prisma.SellerOrderWhereInput {
+    const sellerId = this.sellerScope(query, user);
+    return {
+      createdAt: { gte: range.start, lte: range.end },
+      ...(sellerId ? { sellerId } : {}),
+      ...(query.product_id
+        ? { items: { some: { productId: query.product_id } } }
+        : {}),
+    };
+  }
+
   private sellerScope(query: AnalyticsQueryDto, user: AnalyticsUser) {
     if (user.role === UserRole.SELLER) return user.id;
     return query.seller_id;
@@ -571,6 +795,11 @@ export class AnalyticsService {
     if (start > end) {
       throw new BadRequestException('start_date must be before end_date');
     }
+    if (end.getTime() - start.getTime() > MAX_RANGE_DAYS * 86400_000) {
+      throw new BadRequestException(
+        `A report covers at most ${MAX_RANGE_DAYS} days`,
+      );
+    }
     return { start, end };
   }
 
@@ -583,8 +812,19 @@ export class AnalyticsService {
       by: ['type'],
       where: {
         occurredAt: { gte: range.start, lte: range.end },
-        ...(sellerId ? { sellerId } : {}),
         ...(productId ? { productId } : {}),
+        // A product view is a fact about a product, not about one seller —
+        // several boutiques can list the same dress — so it is written with
+        // no seller and attributed here, to every seller with an offer on it.
+        // Filtering on `seller_id` alone showed every seller zero views.
+        ...(sellerId
+          ? {
+              OR: [
+                { sellerId },
+                { sellerId: null, product: { offers: { some: { sellerId } } } },
+              ],
+            }
+          : {}),
       },
       _count: { _all: true },
     });
@@ -603,13 +843,22 @@ export class AnalyticsService {
     return Math.round(value * 100) / 100;
   }
 
+  /**
+   * The PDF's lines. The PDF uses a standard font, which has no Arabic glyphs,
+   * so a title it cannot draw is named by its id instead of being printed as
+   * question marks — the spreadsheet exports carry the real titles.
+   */
   private dashboardLines(dashboard: Awaited<ReturnType<AnalyticsService['dashboard']>>) {
+    const latin = (text: string, fallback: string) =>
+      /^[\x20-\x7e\xa0-\xff]*$/.test(text) ? text : fallback;
     return [
       'Reem Analytics Report',
-      `Range: ${dashboard.range.start} - ${dashboard.range.end}`,
-      `Orders: ${dashboard.sales.total_orders}`,
-      `Gross revenue: ${dashboard.revenue.gross_revenue}`,
-      `Net revenue: ${dashboard.revenue.net_revenue}`,
+      `Range: ${dashboard.range.start.slice(0, 10)} to ${dashboard.range.end.slice(0, 10)}`,
+      `Orders: ${dashboard.sales.total_orders} (paid ${dashboard.sales.paid_orders})`,
+      `Gross revenue: ${formatTotals(dashboard.revenue.gross_revenue)}`,
+      `Refunds: ${formatTotals(dashboard.revenue.refunds)}`,
+      `Net revenue: ${formatTotals(dashboard.revenue.net_revenue)}`,
+      `Average order value: ${formatTotals(dashboard.sales.average_order_value)}`,
       `Active customers: ${dashboard.customers.active_customers}`,
       `Repeat rate: ${dashboard.customers.repeat_rate}%`,
       `Overall conversion: ${dashboard.conversion.overall_conversion_rate}%`,
@@ -618,32 +867,58 @@ export class AnalyticsService {
       '',
       'Top products',
       ...dashboard.product_performance
-        .slice(0, 8)
-        .map((row) => `${row.title}: ${row.units} units / ${row.revenue}`),
+        .slice(0, 20)
+        .map(
+          (row) =>
+            `${latin(row.title, `Product ${row.product_id.slice(0, 8)}`)}: ${row.units} units / ${formatTotals(row.revenue)}`,
+        ),
     ];
   }
 
-  private dashboardTsv(
+  private dashboardRows(
     dashboard: Awaited<ReturnType<AnalyticsService['dashboard']>>,
-  ) {
-    const lines = [
+  ): string[][] {
+    return [
       ['Metric', 'Value'],
+      ['From', dashboard.range.start],
+      ['To', dashboard.range.end],
       ['Orders', String(dashboard.sales.total_orders)],
-      ['Gross revenue', String(dashboard.revenue.gross_revenue)],
-      ['Net revenue', String(dashboard.revenue.net_revenue)],
+      ['Paid orders', String(dashboard.sales.paid_orders)],
+      ['Gross revenue', formatTotals(dashboard.revenue.gross_revenue)],
+      ['Refunds', formatTotals(dashboard.revenue.refunds)],
+      ['Cancelled', formatTotals(dashboard.revenue.cancelled)],
+      ['Net revenue', formatTotals(dashboard.revenue.net_revenue)],
+      ['Average order value', formatTotals(dashboard.sales.average_order_value)],
       ['Active customers', String(dashboard.customers.active_customers)],
+      ['New customers', String(dashboard.customers.new_customers)],
       ['Repeat rate', `${dashboard.customers.repeat_rate}%`],
       ['Conversion', `${dashboard.conversion.overall_conversion_rate}%`],
       ['7d retention', `${dashboard.retention.retention_7d_rate}%`],
+      [],
+      ['Date', 'Orders', 'Revenue'],
+      ...dashboard.sales.series.map((row) => [
+        row.date,
+        String(row.orders),
+        formatTotals(row.revenue),
+      ]),
+      [],
+      ['Funnel step', 'Count'],
+      ...dashboard.funnel.map((row) => [row.step, String(row.count)]),
       [],
       ['Product', 'Units', 'Revenue'],
       ...dashboard.product_performance.map((row) => [
         row.title,
         String(row.units),
-        String(row.revenue),
+        formatTotals(row.revenue),
+      ]),
+      [],
+      ['Seller', 'Units', 'Revenue'],
+      ...dashboard.seller_performance.map((row) => [
+        row.seller,
+        String(row.units),
+        formatTotals(row.revenue),
       ]),
     ];
-    return lines.map((line) => line.join('\t')).join('\n');
   }
 
   private simplePdf(lines: string[]) {

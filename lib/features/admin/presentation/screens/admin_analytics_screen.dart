@@ -1,7 +1,11 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:path/path.dart' as p;
+import 'package:path_provider/path_provider.dart';
 import 'package:reem/core/design_system/design_system.dart';
 import 'package:reem/core/errors/failure_exception.dart';
 import 'package:reem/core/localization/l10n_extension.dart';
@@ -12,6 +16,7 @@ import 'package:reem/core/utils/relative_time.dart';
 import 'package:reem/features/admin/domain/entities/analytics_dashboard_entity.dart';
 import 'package:reem/features/admin/presentation/providers/admin_provider.dart';
 import 'package:reem/features/admin/presentation/widgets/admin_page_header.dart';
+import 'package:share_plus/share_plus.dart';
 
 class AdminAnalyticsScreen extends ConsumerWidget {
   const AdminAnalyticsScreen({super.key});
@@ -84,6 +89,12 @@ class AdminAnalyticsScreen extends ConsumerWidget {
     );
   }
 
+  /// Fetches the report and hands the file to the system share sheet, so it
+  /// can be saved, mailed or opened in a spreadsheet.
+  ///
+  /// It used to download the bytes and then announce "report ready" with the
+  /// byte count presented as a row count — and keep the file nowhere. The
+  /// operator had nothing to open.
   Future<void> _export(
     BuildContext context,
     WidgetRef ref,
@@ -91,21 +102,65 @@ class AdminAnalyticsScreen extends ConsumerWidget {
   ) async {
     final range = ref.read(analyticsDateRangeProvider);
     final dio = ref.read(dioProvider);
-    final response = await dio.get<List<int>>(
-      ApiEndpoints.analyticsExport,
-      queryParameters: {
-        'format': format,
-        if (range.start != null) 'start_date': range.start!.toIso8601String(),
-        if (range.end != null) 'end_date': range.end!.toIso8601String(),
-      },
-      options: Options(responseType: ResponseType.bytes),
-    );
-    if (!context.mounted) return;
-    DsSnackbar.show(
-      context,
-      message: context.l10n.adminReportGenerated( format, response.data?.length ?? 0, ),
-      type: DsSnackbarType.success,
-    );
+    final box = context.findRenderObject() as RenderBox?;
+    final origin = box != null && box.hasSize
+        ? box.localToGlobal(Offset.zero) & box.size
+        : null;
+    try {
+      final response = await dio.get<List<int>>(
+        ApiEndpoints.analyticsExport,
+        queryParameters: {
+          'format': format,
+          if (range.start != null) 'start_date': range.start!.toIso8601String(),
+          if (range.end != null) 'end_date': range.end!.toIso8601String(),
+        },
+        options: Options(responseType: ResponseType.bytes),
+      );
+      final bytes = response.data ?? const <int>[];
+      final name = _fileName(
+        // l10n-ignore: an HTTP header name
+        response.headers.value('content-disposition'),
+        format,
+      );
+      final directory = await getTemporaryDirectory();
+      final file = File(p.join(directory.path, name));
+      await file.writeAsBytes(bytes, flush: true);
+      if (!context.mounted) return;
+      await SharePlus.instance.share(
+        ShareParams(
+          files: [XFile(file.path, name: name)],
+          sharePositionOrigin: origin,
+        ),
+      );
+    } catch (error) {
+      if (!context.mounted) return;
+      DsSnackbar.show(
+        context,
+        message: messageOf(error),
+        type: DsSnackbarType.error,
+      );
+    }
+  }
+
+  /// The server's filename when it sent one, stamped with today's date so a
+  /// second export does not overwrite the first in her downloads.
+  static String _fileName(String? disposition, String format) {
+    final match = RegExp(r'filename="?([^";]+)"?').firstMatch(disposition ?? '');
+    final base =
+        match?.group(1) ??
+        switch (format) {
+          // l10n-ignore: file names, not copy
+          'EXCEL' => 'reem-analytics.xls',
+          // l10n-ignore: file names, not copy
+          'CSV' => 'reem-analytics.csv',
+          // l10n-ignore: file names, not copy
+          _ => 'reem-analytics.pdf',
+        };
+    final stamp = DateTime.now().toIso8601String().substring(0, 10);
+    final dot = base.lastIndexOf('.');
+    return dot > 0
+        ? '${base.substring(0, dot)}-$stamp${base.substring(dot)}'
+        : '$base-$stamp';
   }
 }
 
