@@ -1,4 +1,10 @@
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+  Logger,
+  NotFoundException,
+} from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
 import {
   NotificationCampaignStatus,
@@ -7,6 +13,7 @@ import {
   NotificationPreference,
   NotificationType,
   Prisma,
+  SessionStatus,
   UserRole,
   NotificationCategory,
 } from '@prisma/client';
@@ -60,6 +67,28 @@ import {
 import { ScheduledJob } from '../../common/scheduling/scheduled-job.decorator';
 import { ConfigService } from '@nestjs/config';
 
+
+/**
+ * How long a worker owns a delivery it has claimed. Longer than one send can
+ * take, short enough that a crashed worker's rows go out a few minutes late
+ * rather than never.
+ */
+const CLAIM_LEASE_MS = 5 * 60_000;
+
+/**
+ * The states an operator may move a campaign into, and where from. RUNNING
+ * and COMPLETED are absent on purpose: only a run writes them.
+ */
+const CAMPAIGN_TRANSITIONS: Partial<
+  Record<NotificationCampaignStatus, NotificationCampaignStatus[]>
+> = {
+  [NotificationCampaignStatus.DRAFT]: [NotificationCampaignStatus.SCHEDULED],
+  [NotificationCampaignStatus.SCHEDULED]: [NotificationCampaignStatus.DRAFT],
+  [NotificationCampaignStatus.CANCELLED]: [
+    NotificationCampaignStatus.DRAFT,
+    NotificationCampaignStatus.SCHEDULED,
+  ],
+};
 
 @Injectable()
 export class NotificationsService {
@@ -157,7 +186,11 @@ export class NotificationsService {
    *  - **A previously disabled token row is revived.** The handset may have
    *    been signed out of, or had one push refused against it.
    */
-  async registerPushToken(userId: string, dto: RegisterPushTokenDto) {
+  async registerPushToken(
+    userId: string,
+    dto: RegisterPushTokenDto,
+    sessionId?: string,
+  ) {
     const tokenHash = createHash('sha256').update(dto.token).digest('hex');
 
     await this.prisma.$transaction(async (tx) => {
@@ -189,9 +222,13 @@ export class NotificationsService {
           deviceId: dto.device_id,
           appVersion: dto.app_version,
           locale: dto.locale,
+          sessionId: sessionId ?? null,
         },
         update: {
           userId,
+          // Re-bound on every registration: the app registers at each launch
+          // and each sign-in, so the row always follows the live session.
+          sessionId: sessionId ?? null,
           token: dto.token,
           provider: dto.provider,
           platform: dto.platform,
@@ -360,12 +397,35 @@ export class NotificationsService {
     );
   }
 
+  /**
+   * An operator moves a campaign between the states she controls.
+   *
+   * Only the editable states are reachable from here. RUNNING and COMPLETED
+   * belong to `runCampaign`; letting this route write them is what made a
+   * finished campaign re-runnable (set it back to SCHEDULED and the cron sent
+   * it again) and a running one silently abandonable.
+   */
   async updateCampaignStatus(id: string, dto: UpdateCampaignStatusDto) {
-    const campaign = await this.prisma.notificationCampaign.update({
-      where: { id },
+    const allowedFrom = CAMPAIGN_TRANSITIONS[dto.status];
+    if (!allowedFrom) {
+      throw new BadRequestException(
+        `A campaign cannot be set to ${dto.status.toLowerCase()} by hand`,
+      );
+    }
+    const moved = await this.prisma.notificationCampaign.updateMany({
+      where: { id, status: { in: allowedFrom } },
       data: { status: dto.status },
+    });
+    const campaign = await this.prisma.notificationCampaign.findUnique({
+      where: { id },
       include: { _count: { select: { deliveries: true } } },
     });
+    if (!campaign) throw new NotFoundException('Campaign not found');
+    if (moved.count === 0) {
+      throw new ConflictException(
+        `Campaign is ${campaign.status.toLowerCase()} and cannot become ${dto.status.toLowerCase()}`,
+      );
+    }
     return this.serializeCampaign(campaign, campaign._count.deliveries);
   }
 
@@ -373,15 +433,33 @@ export class NotificationsService {
     const campaign = await this.prisma.notificationCampaign.findUnique({
       where: { id },
     });
-    if (!campaign) return { queued: 0, recipients: 0 };
+    if (!campaign) throw new NotFoundException('Campaign not found');
 
-    await this.prisma.notificationCampaign.update({
-      where: { id },
+    // One run per campaign, decided by the database. The minute cron and an
+    // operator pressing "run" could both pass a read-then-write check and
+    // send the whole campaign twice; and a COMPLETED or CANCELLED campaign
+    // used to be re-runnable by id, sending every recipient the same
+    // promotion again.
+    const started = await this.prisma.notificationCampaign.updateMany({
+      where: {
+        id,
+        status: {
+          in: [
+            NotificationCampaignStatus.DRAFT,
+            NotificationCampaignStatus.SCHEDULED,
+          ],
+        },
+      },
       data: {
         status: NotificationCampaignStatus.RUNNING,
         startedAt: new Date(),
       },
     });
+    if (started.count === 0) {
+      throw new ConflictException(
+        `Campaign is ${campaign.status.toLowerCase()} and cannot be run again`,
+      );
+    }
 
     const segment = campaign.segment as Record<string, unknown>;
     const recipients = Array.isArray(segment.user_ids)
@@ -493,7 +571,15 @@ export class NotificationsService {
       take: 20,
     });
     for (const campaign of dueCampaigns) {
-      await this.runCampaign(campaign.id);
+      try {
+        await this.runCampaign(campaign.id);
+      } catch (error) {
+        // Another worker or an operator started it first, or it failed part
+        // way. Either way the remaining campaigns still go out.
+        this.logger.warn(
+          `Scheduled campaign ${campaign.id} not run: ${(error as Error).message}`,
+        );
+      }
     }
     await this.processDueDeliveries(500);
   }
@@ -814,11 +900,7 @@ export class NotificationsService {
 
     const reachable = await this.prisma.pushToken.groupBy({
       by: ['userId'],
-      where: {
-        userId: { in: input.recipients },
-        enabled: true,
-        token: { not: '' },
-      },
+      where: liveTokenWhere({ in: input.recipients }),
     });
     if (reachable.length === 0) return 0;
 
@@ -1000,6 +1082,22 @@ export class NotificationsService {
     });
 
     for (const delivery of deliveries) {
+      // Claim the row before touching it. The minute cron and the inline call
+      // after a dispatch both read QUEUED rows, and without a claim the same
+      // chat message could be pushed to her twice. The claim is a short lease
+      // on `nextAttemptAt`: whoever moves it forward first owns the row, and a
+      // worker that dies mid-send leaves it to be picked up when the lease
+      // runs out instead of losing it.
+      const claimed = await this.prisma.notificationDelivery.updateMany({
+        where: {
+          id: delivery.id,
+          status: NotificationDeliveryStatus.QUEUED,
+          OR: [{ nextAttemptAt: null }, { nextAttemptAt: { lte: now } }],
+        },
+        data: { nextAttemptAt: new Date(Date.now() + CLAIM_LEASE_MS) },
+      });
+      if (claimed.count === 0) continue;
+
       try {
         let notificationId: string | undefined;
         if (delivery.channel === NotificationChannel.IN_APP) {
@@ -1281,9 +1379,7 @@ export class NotificationsService {
 
     const [pref, devices] = await Promise.all([
       this.repo.getPreference(input.userId),
-      this.prisma.pushToken.count({
-        where: { userId: input.userId, enabled: true, token: { not: '' } },
-      }),
+      this.prisma.pushToken.count({ where: liveTokenWhere(input.userId) }),
     ]);
     if (devices === 0) return;
     if (pref && !pref.push) return;
@@ -1381,8 +1477,10 @@ export class NotificationsService {
       };
     }
 
+    // Checked again at send time, not only at enqueue: a retry may go out
+    // minutes later, after she has signed that phone out.
     const rows = await this.prisma.pushToken.findMany({
-      where: { userId: delivery.userId, enabled: true, token: { not: '' } },
+      where: liveTokenWhere(delivery.userId),
       select: { id: true, token: true, platform: true },
     });
     if (rows.length === 0) {
@@ -1536,4 +1634,28 @@ export class NotificationsService {
       sms: pref?.sms ?? false,
     };
   }
+}
+
+/**
+ * The push addresses that may be written to: enabled, sendable, on an account
+ * that has not been disabled, and registered by a session that is still
+ * signed in.
+ *
+ * The session clause is the privacy guarantee. Revoking a session — signing
+ * out, "sign out other devices", removing a lost phone, an admin cutting her
+ * sessions, or the session simply expiring — must stop that handset showing
+ * her messages on its lock screen, and every one of those paths ends with the
+ * session no longer ACTIVE. Rows from before sessions were recorded carry no
+ * session and are allowed until the app re-registers them.
+ */
+export function liveTokenWhere(
+  userId: string | Prisma.StringFilter<'PushToken'>,
+): Prisma.PushTokenWhereInput {
+  return {
+    userId,
+    enabled: true,
+    token: { not: '' },
+    user: { disabledAt: null },
+    OR: [{ sessionId: null }, { session: { status: SessionStatus.ACTIVE } }],
+  };
 }

@@ -84,7 +84,7 @@ export class ReengagementService {
           type: NotificationType.system,
           title: 'سلّتك بانتظارك',
           body,
-          payload: { deep_link: '/cart', kind: 'abandoned_cart' },
+          payload: { deep_link: 'reem://cart', kind: 'abandoned_cart' },
           // Explicit rather than relying on the default: this is the platform
           // wanting something, so it queues behind her frequency cap and her
           // quiet hours like every other promotion.
@@ -153,7 +153,7 @@ export class ReengagementService {
           type: NotificationType.promo,
           title: copy.title,
           body: copy.body,
-          payload: { deep_link: '/', kind: 'win_back', stage },
+          payload: { deep_link: 'reem://home', kind: 'win_back', stage },
           category: NotificationCategory.MARKETING,
         });
         reached += 1;

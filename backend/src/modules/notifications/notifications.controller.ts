@@ -11,7 +11,10 @@ import {
   Query,
 } from '@nestjs/common';
 import { UserRole } from '@prisma/client';
-import { CurrentUser } from '../../common/decorators/current-user.decorator';
+import {
+  AuthUser,
+  CurrentUser,
+} from '../../common/decorators/current-user.decorator';
 import { Roles } from '../../common/decorators/roles.decorator';
 import { SelfScoped } from '../../common/decorators/self-scoped.decorator';
 import { NotificationsService } from './notifications.service';
@@ -37,6 +40,13 @@ import {
  * app header, the unread badge, marking a notification read, registering a
  * push token. Each answered 403 to the account they belonged to.
  */
+/**
+ * Who may push to the user base. Support staff can read the analytics but not
+ * send: a dispatch or a campaign reaches up to every account on the platform,
+ * and that is not a power a support seat should carry.
+ */
+const BROADCAST_ROLES = [UserRole.SUPER_ADMIN, UserRole.ADMIN] as const;
+
 @SelfScoped(
   'the inbox, the unread count, the preferences and every read receipt are '
   + "filtered on the caller's own user id",
@@ -74,10 +84,11 @@ export class NotificationsController {
   @Post('push-tokens')
   @HttpCode(HttpStatus.OK)
   registerPushToken(
-    @CurrentUser('id') userId: string,
+    @CurrentUser() user: AuthUser,
     @Body() dto: RegisterPushTokenDto,
   ) {
-    return this.notifications.registerPushToken(userId, dto);
+    // Tied to this sign-in, so revoking the session silences the handset.
+    return this.notifications.registerPushToken(user.id, dto, user.sessionId);
   }
 
   /**
@@ -135,7 +146,7 @@ export class NotificationsController {
     return this.notifications.analytics();
   }
 
-  @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.SUPPORT)
+  @Roles(...BROADCAST_ROLES)
   @Post('admin/dispatch')
   @HttpCode(HttpStatus.OK)
   dispatch(
@@ -151,7 +162,7 @@ export class NotificationsController {
     return this.notifications.listCampaigns();
   }
 
-  @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.SUPPORT)
+  @Roles(...BROADCAST_ROLES)
   @Post('admin/campaigns')
   @HttpCode(HttpStatus.CREATED)
   createCampaign(
@@ -161,7 +172,7 @@ export class NotificationsController {
     return this.notifications.createCampaign(actorId, dto);
   }
 
-  @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.SUPPORT)
+  @Roles(...BROADCAST_ROLES)
   @Patch('admin/campaigns/:id/status')
   updateCampaignStatus(
     @Param('id', ParseUUIDPipe) id: string,
@@ -170,7 +181,7 @@ export class NotificationsController {
     return this.notifications.updateCampaignStatus(id, dto);
   }
 
-  @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.SUPPORT)
+  @Roles(...BROADCAST_ROLES)
   @Post('admin/campaigns/:id/run')
   @HttpCode(HttpStatus.OK)
   runCampaign(@Param('id', ParseUUIDPipe) id: string) {

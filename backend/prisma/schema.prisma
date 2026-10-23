@@ -1026,6 +1026,11 @@ model User {
   lockedUntil                DateTime?          @map("locked_until")
   lastLoginAt                DateTime?          @map("last_login_at")
   disabledAt                 DateTime?          @map("disabled_at")
+  /// When she deleted her own account. Set together with `disabledAt`, and
+  /// unlike a suspension it is never lifted: the row survives only because
+  /// orders, invoices and the ledger point at it, and everything that said
+  /// who she was has been wiped.
+  deletedAt                  DateTime?          @map("deleted_at")
   /// Money does not move for seven days after a takeover-shaped event — a
   /// completed support recovery, a phone change. The window is not there to
   /// catch the attacker; it is there so the owner, who will notice within
@@ -1625,6 +1630,7 @@ model Session {
 
   refreshTokens RefreshToken[]
   stepUpGrants  StepUpGrant[]
+  pushTokens    PushToken[]
 
   @@index([userId, status])
   @@index([deviceId])
@@ -5531,8 +5537,21 @@ model PushToken {
   /// answers to a support question.
   disabledAt        DateTime? @map("disabled_at")
 
+  /// The sign-in that registered this address.
+  ///
+  /// A push is a message to a signed-in person, so it only goes to a handset
+  /// whose session is still live. Signing out, "sign out other devices",
+  /// removing a device and an admin cutting her sessions all revoke sessions;
+  /// none of them used to touch this table, so a phone she had removed kept
+  /// showing her messages on its lock screen. Deleted with the session.
+  /// Null on rows registered before this existed; the app re-registers on
+  /// every launch, which fills it in.
+  sessionId String?  @map("session_id") @db.Uuid
+  session   Session? @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
   @@index([userId, enabled])
   @@index([deviceId])
+  @@index([sessionId])
   @@map("push_tokens")
 }
 

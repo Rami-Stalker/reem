@@ -421,3 +421,24 @@ class TotpEnrolment {
   final int digits;
   final int periodSeconds;
 }
+
+/// What stands between her and deleting the account.
+///
+/// The server's own codes, so the screen can say each one in her language:
+/// `STAFF_ACCOUNT`, `OPEN_ORDERS`, `OPEN_SALES`, `WALLET_BALANCE`,
+/// `PENDING_PAYOUTS`, `UPCOMING_APPOINTMENTS`.
+class AccountDeletionBlocker {
+  const AccountDeletionBlocker({required this.code, required this.count});
+
+  final String code;
+  final int count;
+}
+
+/// Whether the account can be deleted right now.
+class AccountDeletionStatus {
+  const AccountDeletionStatus({required this.blockers});
+
+  final List<AccountDeletionBlocker> blockers;
+
+  bool get canDelete => blockers.isEmpty;
+}

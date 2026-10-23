@@ -26,6 +26,8 @@ abstract final class ApiEndpoints {
   static const authResetPassword = '/auth/reset-password';
   static const authAccount = '/auth/account';
   static const authAccountPassword = '/auth/account/password';
+  static const authAccountDeletion = '/auth/account/deletion';
+  static const authAccountDelete = '/auth/account/delete';
   static const authSecurity = '/auth/security';
 
   /// Moving the account to another number. Three steps, because the number

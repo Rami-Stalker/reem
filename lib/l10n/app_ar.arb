@@ -3652,5 +3652,19 @@
   "salonAnyPrice": "أي سعر",
   "salonPriceUpTo": "حتى {amount}",
   "salonPriceOver": "أكثر من {amount}",
-  "salonPriceRange": "{min} – {max}"
+  "salonPriceRange": "{min} – {max}",
+  "deleteAccount": "حذف الحساب",
+  "deleteAccountSubtitle": "إزالة حسابكِ وبياناتكِ الشخصية نهائياً",
+  "deleteAccountConfirmTitle": "حذف حسابكِ نهائياً؟",
+  "deleteAccountConfirmBody": "سيُمحى اسمكِ ورقمكِ وصورتكِ وعناوينكِ وبطاقاتكِ المحفوظة وسلّتكِ وقوائم أمنياتكِ ومتابعاتكِ وإشعاراتكِ، وتُزال منشوراتكِ وتعليقاتكِ. تبقى الطلبات والفواتير وسجلات الدفع دون اسمكِ لأن القانون يُلزمنا بها، وتبقى التقييمات التي كتبتِها باسم «حساب محذوف». لا يمكن التراجع عن ذلك.",
+  "deleteAccountConfirmButton": "احذفي الحساب نهائياً",
+  "deleteAccountBlockedTitle": "لا يمكن حذف حسابكِ الآن",
+  "deleteAccountBlockedHint": "أنهي هذه الأمور أولاً ثم حاولي مجدداً.",
+  "deletionBlockerStaff": "حسابات فريق العمل يغلقها المسؤول.",
+  "deletionBlockerOpenOrders": "لديكِ {count} من الطلبات ما زالت قيد التنفيذ.",
+  "deletionBlockerOpenSales": "لدى متجركِ {count} من الطلبات ما زالت قيد التنفيذ.",
+  "deletionBlockerWallet": "ما زال في محفظتكِ رصيد.",
+  "deletionBlockerPayouts": "لديكِ {count} من الدفعات المستحقة لم تُصرف بعد.",
+  "deletionBlockerAppointments": "لديكِ {count} من المواعيد القادمة.",
+  "accountDeleted": "حُذف حسابكِ."
 }

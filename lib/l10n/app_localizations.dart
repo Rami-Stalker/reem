@@ -20905,6 +20905,90 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{min} – {max}'**
   String salonPriceRange(String min, String max);
+
+  /// Delete account
+  ///
+  /// In en, this message translates to:
+  /// **'Delete account'**
+  String get deleteAccount;
+
+  /// Account deletion
+  ///
+  /// In en, this message translates to:
+  /// **'Permanently remove your account and personal data'**
+  String get deleteAccountSubtitle;
+
+  /// Account deletion
+  ///
+  /// In en, this message translates to:
+  /// **'Delete your account permanently?'**
+  String get deleteAccountConfirmTitle;
+
+  /// Account deletion
+  ///
+  /// In en, this message translates to:
+  /// **'Your name, number, photo, addresses, saved cards, basket, wishlists, follows and notifications will be erased, and your posts and comments removed. Orders, invoices and payment records are kept anonymously because the law requires it, and reviews you wrote stay under \"Deleted account\". This cannot be undone.'**
+  String get deleteAccountConfirmBody;
+
+  /// Account deletion
+  ///
+  /// In en, this message translates to:
+  /// **'Delete permanently'**
+  String get deleteAccountConfirmButton;
+
+  /// Account deletion
+  ///
+  /// In en, this message translates to:
+  /// **'Your account can\'t be deleted yet'**
+  String get deleteAccountBlockedTitle;
+
+  /// Account deletion
+  ///
+  /// In en, this message translates to:
+  /// **'Settle these first, then try again.'**
+  String get deleteAccountBlockedHint;
+
+  /// Account deletion blocker
+  ///
+  /// In en, this message translates to:
+  /// **'Staff accounts are closed by an administrator.'**
+  String get deletionBlockerStaff;
+
+  /// Account deletion blocker
+  ///
+  /// In en, this message translates to:
+  /// **'{count} of your orders are still in progress.'**
+  String deletionBlockerOpenOrders(int count);
+
+  /// Account deletion blocker
+  ///
+  /// In en, this message translates to:
+  /// **'{count} orders from your shop are still in progress.'**
+  String deletionBlockerOpenSales(int count);
+
+  /// Account deletion blocker
+  ///
+  /// In en, this message translates to:
+  /// **'Your wallet still holds a balance.'**
+  String get deletionBlockerWallet;
+
+  /// Account deletion blocker
+  ///
+  /// In en, this message translates to:
+  /// **'{count} payouts to you are still pending.'**
+  String deletionBlockerPayouts(int count);
+
+  /// Account deletion blocker
+  ///
+  /// In en, this message translates to:
+  /// **'{count} appointments are still upcoming.'**
+  String deletionBlockerAppointments(int count);
+
+  /// Account deletion
+  ///
+  /// In en, this message translates to:
+  /// **'Your account has been deleted.'**
+  String get accountDeleted;
 }
 
 class _AppLocalizationsDelegate

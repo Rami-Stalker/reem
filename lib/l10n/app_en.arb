@@ -14301,5 +14301,81 @@
         "type": "String"
       }
     }
+  },
+  "deleteAccount": "Delete account",
+  "@deleteAccount": {
+    "description": "Delete account"
+  },
+  "deleteAccountSubtitle": "Permanently remove your account and personal data",
+  "@deleteAccountSubtitle": {
+    "description": "Account deletion"
+  },
+  "deleteAccountConfirmTitle": "Delete your account permanently?",
+  "@deleteAccountConfirmTitle": {
+    "description": "Account deletion"
+  },
+  "deleteAccountConfirmBody": "Your name, number, photo, addresses, saved cards, basket, wishlists, follows and notifications will be erased, and your posts and comments removed. Orders, invoices and payment records are kept anonymously because the law requires it, and reviews you wrote stay under \"Deleted account\". This cannot be undone.",
+  "@deleteAccountConfirmBody": {
+    "description": "Account deletion"
+  },
+  "deleteAccountConfirmButton": "Delete permanently",
+  "@deleteAccountConfirmButton": {
+    "description": "Account deletion"
+  },
+  "deleteAccountBlockedTitle": "Your account can't be deleted yet",
+  "@deleteAccountBlockedTitle": {
+    "description": "Account deletion"
+  },
+  "deleteAccountBlockedHint": "Settle these first, then try again.",
+  "@deleteAccountBlockedHint": {
+    "description": "Account deletion"
+  },
+  "deletionBlockerStaff": "Staff accounts are closed by an administrator.",
+  "@deletionBlockerStaff": {
+    "description": "Account deletion blocker"
+  },
+  "deletionBlockerOpenOrders": "{count} of your orders are still in progress.",
+  "@deletionBlockerOpenOrders": {
+    "description": "Account deletion blocker",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "deletionBlockerOpenSales": "{count} orders from your shop are still in progress.",
+  "@deletionBlockerOpenSales": {
+    "description": "Account deletion blocker",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "deletionBlockerWallet": "Your wallet still holds a balance.",
+  "@deletionBlockerWallet": {
+    "description": "Account deletion blocker"
+  },
+  "deletionBlockerPayouts": "{count} payouts to you are still pending.",
+  "@deletionBlockerPayouts": {
+    "description": "Account deletion blocker",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "deletionBlockerAppointments": "{count} appointments are still upcoming.",
+  "@deletionBlockerAppointments": {
+    "description": "Account deletion blocker",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "accountDeleted": "Your account has been deleted.",
+  "@accountDeleted": {
+    "description": "Account deletion"
   }
 }

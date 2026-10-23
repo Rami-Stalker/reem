@@ -197,6 +197,10 @@ abstract interface class AuthRemoteDataSource {
 
   Future<void> logoutAll();
 
+  Future<Map<String, dynamic>> accountDeletionStatus();
+
+  Future<void> deleteAccount({String? reason});
+
   Future<SellerVerificationModel> submitSellerVerification({
     required String businessName,
     required String legalName,

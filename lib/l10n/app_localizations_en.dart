@@ -12094,4 +12094,57 @@ class AppLocalizationsEn extends AppLocalizations {
   String salonPriceRange(String min, String max) {
     return '$min – $max';
   }
+
+  @override
+  String get deleteAccount => 'Delete account';
+
+  @override
+  String get deleteAccountSubtitle =>
+      'Permanently remove your account and personal data';
+
+  @override
+  String get deleteAccountConfirmTitle => 'Delete your account permanently?';
+
+  @override
+  String get deleteAccountConfirmBody =>
+      'Your name, number, photo, addresses, saved cards, basket, wishlists, follows and notifications will be erased, and your posts and comments removed. Orders, invoices and payment records are kept anonymously because the law requires it, and reviews you wrote stay under \"Deleted account\". This cannot be undone.';
+
+  @override
+  String get deleteAccountConfirmButton => 'Delete permanently';
+
+  @override
+  String get deleteAccountBlockedTitle => 'Your account can\'t be deleted yet';
+
+  @override
+  String get deleteAccountBlockedHint => 'Settle these first, then try again.';
+
+  @override
+  String get deletionBlockerStaff =>
+      'Staff accounts are closed by an administrator.';
+
+  @override
+  String deletionBlockerOpenOrders(int count) {
+    return '$count of your orders are still in progress.';
+  }
+
+  @override
+  String deletionBlockerOpenSales(int count) {
+    return '$count orders from your shop are still in progress.';
+  }
+
+  @override
+  String get deletionBlockerWallet => 'Your wallet still holds a balance.';
+
+  @override
+  String deletionBlockerPayouts(int count) {
+    return '$count payouts to you are still pending.';
+  }
+
+  @override
+  String deletionBlockerAppointments(int count) {
+    return '$count appointments are still upcoming.';
+  }
+
+  @override
+  String get accountDeleted => 'Your account has been deleted.';
 }

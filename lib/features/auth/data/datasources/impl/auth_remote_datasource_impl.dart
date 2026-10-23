@@ -481,6 +481,22 @@ final class AuthRemoteDataSourceImpl extends BaseRemoteDataSource
   }
 
   @override
+  Future<Map<String, dynamic>> accountDeletionStatus() {
+    return getJson(ApiEndpoints.authAccountDeletion);
+  }
+
+  @override
+  Future<void> deleteAccount({String? reason}) async {
+    await postJson(
+      ApiEndpoints.authAccountDelete,
+      body: {
+        'confirm': true,
+        if (reason != null && reason.trim().isNotEmpty) 'reason': reason.trim(),
+      },
+    );
+  }
+
+  @override
   Future<SellerVerificationModel> submitSellerVerification({
     required String businessName,
     required String legalName,

@@ -185,6 +185,12 @@ abstract interface class AuthRepository {
 
   Future<Result<void>> logoutAll();
 
+  /// Whether the account can be deleted now, and what is in the way if not.
+  Future<Result<AccountDeletionStatus>> accountDeletionStatus();
+
+  /// Deletes the account and clears this handset's session. Irreversible.
+  Future<Result<void>> deleteAccount({String? reason});
+
   Future<Result<SellerVerification>> submitSellerVerification({
     required String businessName,
     required String legalName,

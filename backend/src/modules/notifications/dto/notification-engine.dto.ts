@@ -1,16 +1,30 @@
-import { Transform } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 import {
+  ArrayMaxSize,
+  ArrayNotEmpty,
+  ArrayUnique,
   IsArray,
+  IsBoolean,
   IsEnum,
+  IsIn,
+  IsInt,
+  IsISO8601,
+  IsObject,
   IsOptional,
   IsString,
+  IsUUID,
+  Matches,
+  Max,
   MaxLength,
+  Min,
+  ValidateNested,
 } from 'class-validator';
 import {
   NotificationCampaignStatus,
   NotificationChannel,
   NotificationType,
   NotificationCategory,
+  UserRole,
 } from '@prisma/client';
 
 export class RegisterPushTokenDto {
@@ -19,7 +33,7 @@ export class RegisterPushTokenDto {
   token!: string;
 
   @IsString()
-  @MaxLength(40)
+  @IsIn(['fcm', 'apns', 'webhook'])
   provider!: string;
 
   @IsOptional()
@@ -59,20 +73,43 @@ export class UnregisterPushTokenDto {
   token!: string;
 }
 
+/**
+ * Who a broadcast reaches. Every field is checked, because each one becomes a
+ * clause in a query over the whole user table: an unvalidated role string or
+ * a negative day count used to reach Prisma as-is.
+ */
 export class NotificationSegmentDto {
   @IsOptional()
   @IsArray()
-  roles?: string[];
+  @ArrayMaxSize(10)
+  @Transform(({ value }) =>
+    Array.isArray(value)
+      ? value.map((entry) =>
+          typeof entry === 'string' ? entry.toUpperCase() : entry,
+        )
+      : value,
+  )
+  @IsEnum(UserRole, { each: true })
+  roles?: UserRole[];
 
   @IsOptional()
+  @IsBoolean()
   verified_sellers?: boolean;
 
   @IsOptional()
+  @IsInt()
+  @Min(0)
   min_points?: number;
 
   @IsOptional()
+  @IsInt()
+  @Min(1)
+  @Max(3650)
   inactive_days?: number;
 }
+
+/** The most accounts one dispatch may name. A larger audience is a segment. */
+export const MAX_DIRECT_RECIPIENTS = 10_000;
 
 export class DispatchNotificationDto {
   /**
@@ -87,12 +124,19 @@ export class DispatchNotificationDto {
 
   @IsOptional()
   @IsArray()
+  @ArrayMaxSize(MAX_DIRECT_RECIPIENTS)
+  @ArrayUnique()
+  @IsUUID('all', { each: true })
   user_ids?: string[];
 
   @IsOptional()
+  @ValidateNested()
+  @Type(() => NotificationSegmentDto)
   segment?: NotificationSegmentDto;
 
   @IsArray()
+  @ArrayNotEmpty()
+  @ArrayUnique()
   @Transform(({ value }) =>
     Array.isArray(value)
       ? value.map((entry) =>
@@ -119,7 +163,8 @@ export class DispatchNotificationDto {
   body!: string;
 
   @IsOptional()
-  payload?: unknown;
+  @IsObject()
+  payload?: Record<string, unknown>;
 }
 
 export class CreateCampaignDto extends DispatchNotificationDto {
@@ -133,11 +178,20 @@ export class CreateCampaignDto extends DispatchNotificationDto {
   description?: string;
 
   @IsOptional()
-  @IsString()
+  @IsISO8601({ strict: true })
   scheduled_at?: string;
 
+  /**
+   * Only the app's own scheme. A campaign link is opened by the router on
+   * every recipient's phone, so an `https://` link here would be a phishing
+   * page delivered by Reem to its whole audience.
+   */
   @IsOptional()
   @IsString()
+  @MaxLength(500)
+  @Matches(/^reem:\/\/[A-Za-z0-9\-._~\/?#&=%]*$/, {
+    message: 'deep_link must be an in-app reem:// link',
+  })
   deep_link?: string;
 }
 
@@ -150,10 +204,12 @@ export class UpdateCampaignStatusDto {
 }
 
 export class TrackNotificationEventDto {
-  @IsString()
-  @MaxLength(40)
+  // A free string here went straight into the event table and onto the
+  // analytics screen, so any account could invent event names there.
+  @IsIn(['opened', 'clicked', 'delivered', 'failed'])
   event!: 'opened' | 'clicked' | 'delivered' | 'failed';
 
   @IsOptional()
-  metadata?: unknown;
+  @IsObject()
+  metadata?: Record<string, unknown>;
 }

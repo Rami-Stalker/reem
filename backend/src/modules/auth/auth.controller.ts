@@ -22,6 +22,8 @@ import {
 import { Roles } from '../../common/decorators/roles.decorator';
 import { Authorize } from '../../common/decorators/authorize.decorator';
 import { AppPermission } from '../../common/permissions';
+import { AccountDeletionService } from './deletion/account-deletion.service';
+import { DeleteAccountDto } from './dto/account-deletion.dto';
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
@@ -88,7 +90,10 @@ import { requestContextFrom } from './interfaces/request-context.interface';
 )
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly auth: AuthService) {}
+  constructor(
+    private readonly auth: AuthService,
+    private readonly deletion: AccountDeletionService,
+  ) {}
 
   @Public()
   @Throttle({ default: { limit: 30, ttl: 60_000 } })
@@ -158,7 +163,10 @@ export class AuthController {
   @Post('logout-all')
   @HttpCode(HttpStatus.OK)
   logoutAll(@CurrentUser() user: AuthUser) {
-    return this.auth.logoutAll(user.id);
+    // Every *other* session. The one making the request just passed AAL3 —
+    // it is the owner reacting to a compromise, and cutting her own session
+    // too signed her out mid-flow behind a "done" message.
+    return this.auth.logoutAll(user.id, user.sessionId);
   }
 
   @Public()
@@ -469,6 +477,39 @@ export class AuthController {
   @Get('account')
   account(@CurrentUser() user: AuthUser) {
     return this.auth.account(user.id, user.sessionId);
+  }
+
+  /**
+   * Whether she can delete the account right now, and what is in the way if
+   * not. Asked before the step-up, so she is never made to enter a code only
+   * to be told an order is still on its way.
+   */
+  @Get('account/deletion')
+  accountDeletionStatus(@CurrentUser('id') userId: string) {
+    return this.deletion.preflight(userId);
+  }
+
+  /**
+   * Deletes her account. Irreversible, so it takes everything the platform
+   * has: the request signed by her enrolled handset, a fresh second factor,
+   * the new-device cooldown, and an explicit `confirm: true` in the body.
+   * A POST rather than a DELETE because it carries a body.
+   */
+  @DeviceProof()
+  @RequireStepUp(AssuranceLevel.AAL3, 'account_deletion')
+  @Throttle({ default: { limit: 3, ttl: 60_000 } })
+  @Post('account/delete')
+  @HttpCode(HttpStatus.OK)
+  deleteAccount(
+    @CurrentUser('id') userId: string,
+    @Body() dto: DeleteAccountDto,
+    @Req() req: Request,
+  ) {
+    return this.deletion.deleteAccount(
+      userId,
+      dto.reason,
+      requestContextFrom(req),
+    );
   }
 
   // The phone number IS the account, so moving it is the most consequential

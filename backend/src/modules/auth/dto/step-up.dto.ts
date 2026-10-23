@@ -34,6 +34,8 @@ export const STEP_UP_SCOPES = [
   'admin_session_revocation',
   // Opting into — or out of — a password.
   'password_credential',
+  // Deleting the account. Irreversible, so it sits at AAL3 with the money.
+  'account_deletion',
 ] as const;
 
 export class RequestStepUpDto {

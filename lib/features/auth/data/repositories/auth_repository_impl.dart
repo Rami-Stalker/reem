@@ -504,7 +504,35 @@ class AuthRepositoryImpl with RepositoryHandler implements AuthRepository {
   @override
   Future<Result<void>> logoutAll() => guard(() async {
     await _ensureConnected();
+    // Ends every *other* session; this one stays signed in. Clearing the local
+    // tokens here left the app showing her as signed in with nothing behind
+    // it, until the next request bounced her to the sign-in screen.
     await remote.logoutAll();
+  });
+
+  @override
+  Future<Result<AccountDeletionStatus>> accountDeletionStatus() =>
+      guard(() async {
+        await _ensureConnected();
+        final json = await remote.accountDeletionStatus();
+        final blockers = (json['blockers'] as List<dynamic>? ?? const [])
+            .whereType<Map<String, dynamic>>()
+            .map(
+              (blocker) => AccountDeletionBlocker(
+                code: blocker['code'] as String? ?? '',
+                count: (blocker['count'] as num?)?.toInt() ?? 0,
+              ),
+            )
+            .toList();
+        return AccountDeletionStatus(blockers: blockers);
+      });
+
+  @override
+  Future<Result<void>> deleteAccount({String? reason}) => guard(() async {
+    await _ensureConnected();
+    await remote.deleteAccount(reason: reason);
+    // Every session on the server is already gone, this one included, so
+    // there is nothing to sign out of — only the local copy to forget.
     await local.clear();
   });
 
