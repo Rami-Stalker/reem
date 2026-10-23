@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
@@ -79,6 +81,12 @@ final adminQueueDepthProvider = FutureProvider.autoDispose
       final config = adminSectionConfigs[sectionKey];
       final summaryKey = adminQueueSummaryKeys[sectionKey];
       if (config == null || summaryKey == null) return null;
+      // The rail and the home both read these, and the rail is rebuilt on
+      // every navigation. Held for a minute, a count is asked for once per
+      // minute of browsing rather than once per page.
+      final link = ref.keepAlive();
+      final timer = Timer(const Duration(minutes: 1), link.close);
+      ref.onDispose(timer.cancel);
       final result = await ref
           .watch(adminRepositoryProvider)
           .getSection(

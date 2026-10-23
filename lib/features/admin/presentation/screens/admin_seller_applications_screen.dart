@@ -57,7 +57,6 @@ class _AdminSellerApplicationsScreenState
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final palette = context.console;
     final state = ref.watch(adminSectionNotifierProvider(_config));
     final notifier = ref.read(adminSectionNotifierProvider(_config).notifier);
     final permissions = ref.watch(currentPermissionsProvider);
@@ -70,6 +69,14 @@ class _AdminSellerApplicationsScreenState
         children: [
           AdminPageHeader(
             title: l10n.adminSellerApplications,
+            icon: Icons.assignment_ind_rounded,
+            highlights: [
+              if (pending != null)
+                CourtHighlight(
+                  value: pending,
+                  label: adminStatusLabel(l10n, 'PENDING'),
+                ),
+            ],
             subtitle: l10n.adminSellerApplicationsSubtitle,
             actions: [
               IconButton(
@@ -80,42 +87,40 @@ class _AdminSellerApplicationsScreenState
             ],
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: DsSpacing.xl),
+            padding: EdgeInsets.symmetric(horizontal: courtGutter(context)),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                if (pending != null)
-                  AdminMetricPill(
-                    label: l10n.adminAwaitingReview(pending),
-                    color: palette.caution,
-                  ),
-                const SizedBox(height: DsSpacing.md),
-                DsInputField.search(
-                  controller: _searchController,
-                  hint: l10n.adminSearchApplications,
-                  onChanged: _onSearchChanged,
-                  onClear: () => _onSearchChanged(''),
-                ),
-                const SizedBox(height: DsSpacing.md),
-                Wrap(
-                  spacing: DsSpacing.xs,
-                  runSpacing: DsSpacing.xs,
-                  children: [
-                    ChoiceChip(
-                      label: Text(l10n.adminFilterAll),
-                      selected: state.status == null,
-                      onSelected: (_) =>
-                          unawaited(notifier.filterByStatus(null)),
-                    ),
-                    for (final status in _config.statusFilters)
-                      ChoiceChip(
-                        label: Text(adminStatusLabel(l10n, status)),
-                        selected: state.status == status,
-                        onSelected: (selected) => unawaited(
-                          notifier.filterByStatus(selected ? status : null),
-                        ),
+                CourtPanel(
+                  padding: DsSpacing.paddingMd,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      DsInputField.search(
+                        controller: _searchController,
+                        hint: l10n.adminSearchApplications,
+                        onChanged: _onSearchChanged,
+                        onClear: () => _onSearchChanged(''),
                       ),
-                  ],
+                      DsGaps.vMd,
+                      CourtFilterBeads<String>(
+                        selected: state.status,
+                        onSelected: (status) =>
+                            unawaited(notifier.filterByStatus(status)),
+                        options: [
+                          CourtFilterOption(
+                            value: null,
+                            label: l10n.adminFilterAll,
+                          ),
+                          for (final status in _config.statusFilters)
+                            CourtFilterOption(
+                              value: status,
+                              label: adminStatusLabel(l10n, status),
+                            ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
                 const SizedBox(height: DsSpacing.lg),
                 if (state.error != null)
@@ -143,33 +148,23 @@ class _AdminSellerApplicationsScreenState
                     child: Center(child: DsLoadingIndicator()),
                   )
                 else if (state.records.isEmpty)
-                  _Panel(
-                    child: Text(
-                      l10n.adminNoApplications,
-                      style: context.dsText.body.tint(context.dsColors.onSurfaceVariant),
-                    ),
-                  )
+                  CourtQuietNote(message: l10n.adminNoApplications)
                 else
-                  Container(
-                    decoration: BoxDecoration(
-                      color: palette.surface,
-                      borderRadius: DsRadius.borderSm,
-                      border: Border.all(color: palette.line),
-                    ),
-                    child: Column(
-                      children: [
-                        for (final entry in state.records.asMap().entries) ...[
-                          _ApplicationTile(
+                  Column(
+                    children: [
+                      for (final entry in state.records.asMap().entries) ...[
+                        DsStaggerAnimations.item(
+                          index: entry.key,
+                          child: _ApplicationTile(
                             record: entry.value,
                             onOpen: () => unawaited(
                               _openApplication(entry.value, canReview),
                             ),
                           ),
-                          if (entry.key < state.records.length - 1)
-                            Divider(height: 1, color: palette.line),
-                        ],
+                        ),
+                        if (entry.key < state.records.length - 1) DsGaps.vSm,
                       ],
-                    ),
+                    ],
                   ),
                 if (state.hasMore) ...[
                   const SizedBox(height: DsSpacing.md),
@@ -257,37 +252,65 @@ class _ApplicationTile extends StatelessWidget {
     final palette = context.console;
     final status = record.status.toUpperCase();
 
-    return ListTile(
-      onTap: onOpen,
-      leading: CircleAvatar(
-        backgroundColor: palette.primary.withValues(alpha: 0.1),
-        child: Icon(
-          Icons.assignment_ind_outlined,
-          color: palette.primary,
-          size: 20,
+    final tone = context.toneColor(adminStatusTone(status));
+    final subtitle = [
+      record.field('legal_name'),
+      record.field('contact_phone') ?? record.field('contact_email'),
+    ].whereType<String>().join(' · ');
+
+    return Material(
+      color: palette.surface,
+      borderRadius: DsRadius.borderXl,
+      child: InkWell(
+        borderRadius: DsRadius.borderXl,
+        onTap: onOpen,
+        child: Container(
+          padding: const EdgeInsets.symmetric(
+            horizontal: DsSpacing.md,
+            vertical: DsSpacing.sm,
+          ),
+          decoration: BoxDecoration(
+            borderRadius: DsRadius.borderXl,
+            border: Border.all(color: palette.line),
+          ),
+          child: Row(
+            children: [
+              CourtArchMedallion(
+                icon: Icons.storefront_rounded,
+                color: tone,
+                size: DsSizes.controlSm,
+              ),
+              DsGaps.hMd,
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      record.field('business_name') ?? record.title,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: context.dsText.bodyStrong.tint(palette.ink),
+                    ),
+                    if (subtitle.isNotEmpty) ...[
+                      DsGaps.vXxxs,
+                      Text(
+                        subtitle,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: context.dsText.caption.tint(palette.muted),
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+              DsGaps.hSm,
+              CourtStatusPill(
+                label: adminStatusLabel(l10n, status),
+                color: tone,
+              ),
+            ],
+          ),
         ),
-      ),
-      title: Text(
-        record.field('business_name') ?? record.title,
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
-      ),
-      subtitle: Text(
-        [
-          record.field('legal_name'),
-          record.field('contact_phone') ?? record.field('contact_email'),
-        ].whereType<String>().join(' · '),
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
-      ),
-      trailing: AdminMetricPill(
-        label: adminStatusLabel(l10n, status),
-        color: switch (status) {
-          'APPROVED' => palette.positive,
-          'REJECTED' || 'SUSPENDED' => palette.critical,
-          'PENDING' => palette.caution,
-          _ => palette.primary,
-        },
       ),
     );
   }
@@ -631,17 +654,5 @@ class _Panel extends StatelessWidget {
   final Widget child;
 
   @override
-  Widget build(BuildContext context) {
-    final colors = context.dsColors;
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(DsSpacing.xl),
-      decoration: BoxDecoration(
-        color: colors.surface,
-        borderRadius: DsRadius.borderLg,
-        border: Border.all(color: colors.border),
-      ),
-      child: child,
-    );
-  }
+  Widget build(BuildContext context) => CourtPanel(child: child);
 }

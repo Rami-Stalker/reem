@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:reem/core/design_system/design_system.dart';
 import 'package:reem/core/localization/l10n_extension.dart';
+import 'package:reem/core/shared/value_objects/money_format.dart';
 import 'package:reem/features/admin/data/models/notification_analytics_model.dart';
 import 'package:reem/features/admin/presentation/providers/admin_actions.dart';
 import 'package:reem/features/admin/presentation/providers/admin_provider.dart';
@@ -33,6 +34,7 @@ class AdminNotificationAnalyticsScreen extends ConsumerWidget {
         children: [
           AdminPageHeader(
             title: l10n.adminNotificationAnalytics,
+            icon: Icons.query_stats_rounded,
             subtitle: l10n.adminNotificationAnalyticsSubtitle,
             actions: [
               IconButton(
@@ -44,7 +46,7 @@ class AdminNotificationAnalyticsScreen extends ConsumerWidget {
             ],
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: DsSpacing.xl),
+            padding: EdgeInsets.symmetric(horizontal: courtGutter(context)),
             child: switch (snapshot) {
               AsyncData(:final value) => _Content(report: value),
               AsyncError(:final error) => _Failed(
@@ -77,22 +79,26 @@ class _Content extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Wrap(
-          spacing: DsSpacing.sm,
-          runSpacing: DsSpacing.sm,
+        CourtFigureRow(
+          minTileWidth: 200,
           children: [
-            AdminMetricPill(
-              label: '${l10n.adminUnreadInApp}: ${report.unreadInApp}',
+            CourtFigure(
+              label: l10n.adminUnreadInApp,
+              value: formatCount(report.unreadInApp),
+              icon: Icons.mark_email_unread_outlined,
             ),
-            AdminMetricPill(
-              label: '${l10n.adminNotificationsSent}: ${report.sent}',
-              color: palette.positive,
+            CourtFigure(
+              label: l10n.adminNotificationsSent,
+              value: formatCount(report.sent),
+              icon: Icons.send_rounded,
+              accent: palette.positive,
             ),
-            if (report.failed > 0)
-              AdminMetricPill(
-                label: '${l10n.adminNotificationsFailed}: ${report.failed}',
-                color: palette.critical,
-              ),
+            CourtFigure(
+              label: l10n.adminNotificationsFailed,
+              value: formatCount(report.failed),
+              icon: Icons.error_outline_rounded,
+              accent: report.failed > 0 ? palette.critical : palette.muted,
+            ),
           ],
         ),
         const SizedBox(height: DsSpacing.lg),
@@ -156,19 +162,11 @@ class _Breakdown extends StatelessWidget {
     final palette = context.console;
     final largest = rows.fold<int>(0, (top, row) => row.count > top ? row.count : top);
 
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(DsSpacing.lg),
-      decoration: BoxDecoration(
-        color: palette.surface,
-        borderRadius: DsRadius.borderLg,
-        border: Border.all(color: palette.line),
-      ),
+    return CourtPanel(
+      title: title,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(title, style: context.dsText.tileTitle.semibold.tint(palette.ink)),
-          const SizedBox(height: DsSpacing.md),
           if (rows.isEmpty)
             Text(
               l10n.adminNoRankedData,
@@ -224,31 +222,15 @@ class _Failed extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final colors = context.dsColors;
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(DsSpacing.xl),
-      decoration: BoxDecoration(
-        color: colors.surface,
-        borderRadius: DsRadius.borderLg,
-        border: Border.all(color: colors.error.withValues(alpha: 0.3)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            l10n.adminSectionUnavailable,
-            style: context.dsText.body.semibold.tint(colors.error),
-          ),
-          const SizedBox(height: DsSpacing.xs),
-          Text(message, style: context.dsText.body.tint(colors.onSurfaceVariant)),
-          const SizedBox(height: DsSpacing.md),
-          SecondaryButton(
-            label: l10n.retry,
-            isExpanded: false,
-            onPressed: onRetry,
-          ),
-        ],
+    return CourtQuietNote(
+      icon: Icons.cloud_off_rounded,
+      color: context.console.critical,
+      message: '${l10n.adminSectionUnavailable}\n$message',
+      action: SecondaryButton(
+        label: l10n.retry,
+        icon: Icons.refresh_rounded,
+        isExpanded: false,
+        onPressed: onRetry,
       ),
     );
   }

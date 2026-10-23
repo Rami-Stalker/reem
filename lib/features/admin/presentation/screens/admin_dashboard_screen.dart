@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -55,7 +54,9 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
     unawaited(
       ref
           .read(
-            adminSectionNotifierProvider(adminSectionConfigs['audit']!).notifier,
+            adminSectionNotifierProvider(
+              adminSectionConfigs['audit']!,
+            ).notifier,
           )
           .load(),
     );
@@ -72,83 +73,66 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return CallbackShortcuts(
-      bindings: {
-        const SingleActivator(LogicalKeyboardKey.keyK, control: true):
-            _openJump,
-        const SingleActivator(LogicalKeyboardKey.keyK, meta: true): _openJump,
-      },
-      child: Focus(
-        autofocus: true,
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            final width = constraints.maxWidth;
-            final wide = width >= 1000;
-            final gutter = width < 600 ? DsSpacing.md : DsSpacing.xl;
+    // Ctrl/⌘ K is the shell's, so it works on every page, not only here.
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final width = constraints.maxWidth;
+        final wide = width >= 1000;
+        final gutter = width < 600 ? DsSpacing.md : DsSpacing.xl;
 
-            final work = [
-              const AdminBriefingPanel(),
-              DsGaps.vXxl,
-              const _Doors(),
-            ];
-            final reading = [
-              const _Pulse(),
-              DsGaps.vXxl,
-              const _Thread(),
-            ];
+        final work = [const AdminBriefingPanel(), DsGaps.vXxl, const _Doors()];
+        final reading = [const _Pulse(), DsGaps.vXxl, const _Thread()];
 
-            return RefreshIndicator(
-              onRefresh: _refresh,
-              child: SingleChildScrollView(
-                physics: const AlwaysScrollableScrollPhysics(),
-                padding: EdgeInsets.fromLTRB(
-                  gutter,
-                  gutter,
-                  gutter,
-                  DsSpacing.massive,
+        return RefreshIndicator(
+          onRefresh: _refresh,
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: EdgeInsets.fromLTRB(
+              gutter,
+              gutter,
+              gutter,
+              DsSpacing.massive,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                _Sky(
+                  compact: width < 600,
+                  onJump: _openJump,
+                  onRefresh: _refresh,
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    _Sky(
-                      compact: width < 600,
-                      onJump: _openJump,
-                      onRefresh: _refresh,
-                    ),
-                    DsGaps.vXxl,
-                    if (wide)
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Expanded(
-                            flex: 7,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: work,
-                            ),
-                          ),
-                          DsGaps.hXxl,
-                          Expanded(
-                            flex: 5,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: reading,
-                            ),
-                          ),
-                        ],
-                      )
-                    else ...[
-                      ...work,
-                      DsGaps.vXxl,
-                      ...reading,
+                DsGaps.vXxl,
+                if (wide)
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        flex: 7,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: work,
+                        ),
+                      ),
+                      DsGaps.hXxl,
+                      Expanded(
+                        flex: 5,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: reading,
+                        ),
+                      ),
                     ],
-                  ],
-                ),
-              ),
-            );
-          },
-        ),
-      ),
+                  )
+                else ...[
+                  ...work,
+                  DsGaps.vXxl,
+                  ...reading,
+                ],
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }
@@ -176,8 +160,9 @@ class _Sky extends ConsumerWidget {
     final briefing = ref.watch(adminBriefingProvider);
     final now = DateTime.now();
 
-    final greeting =
-        now.hour < 12 ? l10n.adminCourtGreetingMorning : l10n.adminCourtGreetingEvening;
+    final greeting = now.hour < 12
+        ? l10n.adminCourtGreetingMorning
+        : l10n.adminCourtGreetingEvening;
     final heading = name == null
         ? greeting
         : l10n.adminCourtGreetingNamed(greeting, name);
@@ -189,9 +174,7 @@ class _Sky extends ConsumerWidget {
       data: (data) => data.quiet || data.findings.isEmpty
           ? (palette.positive, l10n.adminCourtStateCalm, 0)
           : (
-              data.findings.any(
-                    (f) => f.severity == FindingSeverity.critical,
-                  )
+              data.findings.any((f) => f.severity == FindingSeverity.critical)
                   ? palette.critical
                   : palette.caution,
               l10n.adminCourtStateWaiting(data.findings.length),
@@ -527,9 +510,7 @@ class _Doors extends ConsumerWidget {
     final l10n = context.l10n;
     final permissions = ref.watch(currentPermissionsProvider);
     final doors = _doors
-        .where(
-          (d) => permissions.isEmpty || permissions.contains(d.permission),
-        )
+        .where((d) => permissions.isEmpty || permissions.contains(d.permission))
         .toList(growable: false);
     if (doors.isEmpty) return const SizedBox.shrink();
 
@@ -579,7 +560,9 @@ class _Door extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
     final queue = spec.queue;
-    final depth = queue == null ? null : ref.watch(adminQueueDepthProvider(queue));
+    final depth = queue == null
+        ? null
+        : ref.watch(adminQueueDepthProvider(queue));
 
     final (bool lit, String? count, String status) = switch (depth) {
       null => (false, null, l10n.adminCourtDoorEnter),
@@ -718,7 +701,8 @@ class _PulseBody extends StatelessWidget {
       builder: (context, constraints) {
         const gap = DsSpacing.md;
         final columns = constraints.maxWidth >= 300 ? 2 : 1;
-        final tileWidth = (constraints.maxWidth - gap * (columns - 1)) / columns;
+        final tileWidth =
+            (constraints.maxWidth - gap * (columns - 1)) / columns;
         return Wrap(
           spacing: gap,
           runSpacing: gap,
@@ -818,9 +802,7 @@ class _PulseReading extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Icon(
-                  falling
-                      ? Icons.south_east_rounded
-                      : Icons.north_east_rounded,
+                  falling ? Icons.south_east_rounded : Icons.north_east_rounded,
                   size: DsSizes.iconXs,
                   color: trendColor,
                 ),

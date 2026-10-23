@@ -631,6 +631,34 @@
   "@adminCourtDoorsTitle": {
     "description": "Admin home: the queues and rooms of the console"
   },
+  "adminCourtGroupPeople": "People",
+  "@adminCourtGroupPeople": {
+    "description": "Admin rail group: users, verification, sellers"
+  },
+  "adminCourtGroupMarket": "The market",
+  "@adminCourtGroupMarket": {
+    "description": "Admin rail group: products, orders, delivery"
+  },
+  "adminCourtGroupTrust": "Trust and support",
+  "@adminCourtGroupTrust": {
+    "description": "Admin rail group: support, moderation, content, reports"
+  },
+  "adminCourtGroupMoney": "Money",
+  "@adminCourtGroupMoney": {
+    "description": "Admin rail group: finance, commissions"
+  },
+  "adminCourtGroupInsight": "Insight",
+  "@adminCourtGroupInsight": {
+    "description": "Admin rail group: analytics, trends, value"
+  },
+  "adminCourtGroupHouse": "The house",
+  "@adminCourtGroupHouse": {
+    "description": "Admin rail group: audit, policies, settings"
+  },
+  "adminCourtJumpShort": "Where to?",
+  "@adminCourtJumpShort": {
+    "description": "Short label of the jump button in the admin rail and bar"
+  },
   "adminCourtDoorsCaption": "A lit door has someone waiting behind it.",
   "@adminCourtDoorsCaption": {
     "description": "Explains the lit doors"

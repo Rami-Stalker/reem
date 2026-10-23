@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:reem/core/auth/app_permissions.dart';
+import 'package:reem/core/design_system/design_system.dart';
 import 'package:reem/features/admin/domain/entities/admin_console_entity.dart';
 import 'package:reem/l10n/app_localizations.dart';
 
@@ -651,6 +652,52 @@ String adminStatusLabel(AppLocalizations l10n, String token) {
                 '${word[0].toUpperCase()}${word.substring(1).toLowerCase()}',
           )
           .join(' '),
+  };
+}
+
+/// What a status token *means*, for the colour it is drawn in.
+///
+/// Every status in the console used to be drawn in the positive green, so
+/// «مرفوض» and «مُصعَّد» looked as settled as «مقبول». Waiting work reads in
+/// caution, trouble in critical, done in positive, and the archive stays quiet.
+DsTone adminStatusTone(String token) {
+  return switch (token.toUpperCase()) {
+    'OPEN' ||
+    'PENDING' ||
+    'PENDING_PAYMENT' ||
+    'REVIEWING' ||
+    'UNDER_REVIEW' ||
+    'NEEDS_MORE_DOCUMENTS' ||
+    'NEEDS_MORE_INFO' ||
+    'QUEUED' ||
+    'SCHEDULED' ||
+    'WARNING' ||
+    'HIGH' => DsTone.caution,
+    'REJECTED' ||
+    'ESCALATED' ||
+    'REVERSED' ||
+    'SUSPENDED' ||
+    'REVOKED' ||
+    'FAILED' ||
+    'CRITICAL' ||
+    'URGENT' ||
+    'CANCELLED' ||
+    'PARTIALLY_CANCELLED' => DsTone.critical,
+    'ACTIVE' ||
+    'APPROVED' ||
+    'RESOLVED' ||
+    'EARNED' ||
+    'PAID' ||
+    'DELIVERED' ||
+    'SENT' ||
+    'COMPLETED' => DsTone.positive,
+    'CONFIRMED' ||
+    'SHIPPED' ||
+    'PARTIALLY_SHIPPED' ||
+    'PARTIALLY_DELIVERED' ||
+    'RUNNING' ||
+    'INFO' => DsTone.info,
+    _ => DsTone.neutral,
   };
 }
 

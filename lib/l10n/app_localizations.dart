@@ -998,6 +998,48 @@ abstract class AppLocalizations {
   /// **'The doors'**
   String get adminCourtDoorsTitle;
 
+  /// Admin rail group: users, verification, sellers
+  ///
+  /// In en, this message translates to:
+  /// **'People'**
+  String get adminCourtGroupPeople;
+
+  /// Admin rail group: products, orders, delivery
+  ///
+  /// In en, this message translates to:
+  /// **'The market'**
+  String get adminCourtGroupMarket;
+
+  /// Admin rail group: support, moderation, content, reports
+  ///
+  /// In en, this message translates to:
+  /// **'Trust and support'**
+  String get adminCourtGroupTrust;
+
+  /// Admin rail group: finance, commissions
+  ///
+  /// In en, this message translates to:
+  /// **'Money'**
+  String get adminCourtGroupMoney;
+
+  /// Admin rail group: analytics, trends, value
+  ///
+  /// In en, this message translates to:
+  /// **'Insight'**
+  String get adminCourtGroupInsight;
+
+  /// Admin rail group: audit, policies, settings
+  ///
+  /// In en, this message translates to:
+  /// **'The house'**
+  String get adminCourtGroupHouse;
+
+  /// Short label of the jump button in the admin rail and bar
+  ///
+  /// In en, this message translates to:
+  /// **'Where to?'**
+  String get adminCourtJumpShort;
+
   /// Explains the lit doors
   ///
   /// In en, this message translates to:
