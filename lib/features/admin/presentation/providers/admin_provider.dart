@@ -19,6 +19,7 @@ import 'package:reem/features/admin/domain/usecases/get_admin_stats_usecase.dart
 import 'package:reem/features/admin/presentation/providers/admin_actions.dart';
 import 'package:reem/features/admin/presentation/providers/admin_dashboard_notifier.dart';
 import 'package:reem/features/admin/presentation/providers/admin_state.dart';
+import 'package:reem/features/auth/presentation/providers/auth_provider.dart';
 
 final adminRemoteDataSourceProvider = Provider<AdminRemoteDataSource>(
   (ref) => AdminRemoteDataSourceImpl(ref.watch(dioProvider)),
@@ -63,6 +64,53 @@ final analyticsDateRangeProvider = StateProvider<AnalyticsDateRange>((ref) {
 /// two files and no meaning.
 final adminBriefingProvider = FutureProvider<AdminBriefing>((ref) async {
   return ref.watch(adminRemoteDataSourceProvider).getBriefing(windowDays: 30);
+});
+
+/// How many are waiting behind one of the console's doors.
+///
+/// Each review queue already reports its own backlog beside the page it
+/// returns — `pending` for the two application queues, `open` for support,
+/// moderation and reports — so this asks for a single row and reads that
+/// figure. Null when the queue could not be read, which the home renders as a
+/// door with no count rather than as «0»: a quiet queue and an unreadable one
+/// must not look alike.
+final adminQueueDepthProvider = FutureProvider.autoDispose
+    .family<int?, String>((ref, sectionKey) async {
+      final config = adminSectionConfigs[sectionKey];
+      final summaryKey = adminQueueSummaryKeys[sectionKey];
+      if (config == null || summaryKey == null) return null;
+      final result = await ref
+          .watch(adminRepositoryProvider)
+          .getSection(
+            key: config.key,
+            title: config.title,
+            endpoint: config.endpoint,
+            limit: 1,
+          );
+      return switch (result) {
+        Success(:final data) => int.tryParse(data.summary[summaryKey] ?? ''),
+        Error() => null,
+      };
+    });
+
+/// The field each queue names its backlog by, as the API sends it.
+const adminQueueSummaryKeys = {
+  'sellerApplications': 'pending',
+  'accountVerifications': 'pending',
+  'moderation': 'open',
+  'support': 'open',
+  'reports': 'open',
+};
+
+/// The signed-in operator's name, for the greeting on the console's home.
+final adminOperatorNameProvider = Provider<String?>((ref) {
+  final name = ref.watch(
+    authNotifierProvider.select((state) => state.user?.name),
+  );
+  final trimmed = name?.trim();
+  if (trimmed == null || trimmed.isEmpty) return null;
+  // The first name only: «مساء الخير، سلمى», not her full legal name.
+  return trimmed.split(RegExp(r'\s+')).first;
 });
 
 final analyticsDashboardProvider = FutureProvider<AnalyticsDashboardEntity>((
