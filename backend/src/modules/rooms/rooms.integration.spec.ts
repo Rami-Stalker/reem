@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { randomInt, randomUUID } from 'node:crypto';
 import test from 'node:test';
 import {
   PrismaClient,
@@ -144,12 +145,27 @@ function build(tx: Tx): World {
   return { db, rooms, access, decisions, collab, plans, compare, captured };
 }
 
-async function someCustomer(db: PrismaService, skip: string[] = []) {
-  const user = await db.user.findFirst({
-    where: { role: 'CUSTOMER', disabledAt: null, id: { notIn: skip } },
+/**
+ * A customer of this test's own, created inside its transaction and rolled
+ * back with it.
+ *
+ * It used to borrow any existing customer. The suites run in parallel, and
+ * others create and delete short-lived customers, so a borrowed one could
+ * vanish mid-test — surfacing as "No such account" or a room-member foreign
+ * key failure in whichever case happened to pick it. `skip` is kept so the
+ * call sites still read as "somebody other than her".
+ */
+async function someCustomer(db: PrismaService, _skip: string[] = []) {
+  const tag = randomUUID().replace(/-/g, '').slice(0, 12);
+  const user = await db.user.create({
+    data: {
+      name: 'Rooms Spec',
+      phone: `+9639${String(randomInt(10_000_000, 100_000_000))}`,
+      username: `rooms_spec_${tag}`,
+      role: 'CUSTOMER',
+    },
     select: { id: true },
   });
-  assert.ok(user, 'the seeded shop has no customer');
   return user.id;
 }
 
