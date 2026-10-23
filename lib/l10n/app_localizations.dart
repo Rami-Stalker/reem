@@ -884,6 +884,162 @@ abstract class AppLocalizations {
   /// **'Conversion rate'**
   String get adminConversion;
 
+  /// Greeting on the admin home before noon
+  ///
+  /// In en, this message translates to:
+  /// **'Good morning'**
+  String get adminCourtGreetingMorning;
+
+  /// Greeting on the admin home after noon
+  ///
+  /// In en, this message translates to:
+  /// **'Good evening'**
+  String get adminCourtGreetingEvening;
+
+  /// Greeting with the operator's first name
+  ///
+  /// In en, this message translates to:
+  /// **'{greeting}, {name}'**
+  String adminCourtGreetingNamed(String greeting, String name);
+
+  /// Admin home state sentence when the briefing is quiet
+  ///
+  /// In en, this message translates to:
+  /// **'The house is calm — nothing is waiting for you today.'**
+  String get adminCourtStateCalm;
+
+  /// Admin home state sentence: how many findings the briefing holds
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{One thing is waiting for you today} other{{count} things are waiting for you today}}'**
+  String adminCourtStateWaiting(int count);
+
+  /// How many of today's findings are critical
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{one of them urgent} other{{count} of them urgent}}'**
+  String adminCourtStateUrgent(int count);
+
+  /// Admin home state sentence when the briefing failed
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s briefing could not be read — the doors below still show who is waiting.'**
+  String get adminCourtStateUnknown;
+
+  /// Placeholder of the admin home's jump-to-section field
+  ///
+  /// In en, this message translates to:
+  /// **'Where to? Type the name of any section…'**
+  String get adminCourtJumpHint;
+
+  /// Jump palette: nothing matches the query
+  ///
+  /// In en, this message translates to:
+  /// **'No section by that name.'**
+  String get adminCourtJumpEmpty;
+
+  /// The most important finding of the day
+  ///
+  /// In en, this message translates to:
+  /// **'Start here'**
+  String get adminCourtNowTitle;
+
+  /// Opens the screen a finding points to
+  ///
+  /// In en, this message translates to:
+  /// **'Go there'**
+  String get adminCourtNowOpen;
+
+  /// The rest of today's findings
+  ///
+  /// In en, this message translates to:
+  /// **'After that'**
+  String get adminCourtThenTitle;
+
+  /// Finding severity
+  ///
+  /// In en, this message translates to:
+  /// **'Urgent'**
+  String get adminCourtSeverityCritical;
+
+  /// Finding severity
+  ///
+  /// In en, this message translates to:
+  /// **'Worth a look'**
+  String get adminCourtSeverityWarning;
+
+  /// Finding severity
+  ///
+  /// In en, this message translates to:
+  /// **'Opportunity'**
+  String get adminCourtSeverityOpportunity;
+
+  /// Admin home: the month's four metrics drawn as a rose
+  ///
+  /// In en, this message translates to:
+  /// **'The market\'s pulse'**
+  String get adminCourtPulseTitle;
+
+  /// Explains how to read the rose
+  ///
+  /// In en, this message translates to:
+  /// **'Each petal grows with its metric\'s trend this month; a red petal is falling.'**
+  String get adminCourtPulseCaption;
+
+  /// Screen-reader label of the rose
+  ///
+  /// In en, this message translates to:
+  /// **'A rose of this month\'s trends'**
+  String get adminCourtPulseSemantics;
+
+  /// Admin home: the queues and rooms of the console
+  ///
+  /// In en, this message translates to:
+  /// **'The doors'**
+  String get adminCourtDoorsTitle;
+
+  /// Explains the lit doors
+  ///
+  /// In en, this message translates to:
+  /// **'A lit door has someone waiting behind it.'**
+  String get adminCourtDoorsCaption;
+
+  /// Under the count on a lit door
+  ///
+  /// In en, this message translates to:
+  /// **'waiting for you'**
+  String get adminCourtDoorWaiting;
+
+  /// A queue door with an empty queue
+  ///
+  /// In en, this message translates to:
+  /// **'Nobody waiting'**
+  String get adminCourtDoorClear;
+
+  /// A queue door whose backlog could not be read
+  ///
+  /// In en, this message translates to:
+  /// **'Count unavailable'**
+  String get adminCourtDoorUnknown;
+
+  /// A door to a room that keeps no queue
+  ///
+  /// In en, this message translates to:
+  /// **'Step in'**
+  String get adminCourtDoorEnter;
+
+  /// Admin home: recent audit events as a timeline
+  ///
+  /// In en, this message translates to:
+  /// **'The day\'s thread'**
+  String get adminCourtThreadTitle;
+
+  /// Opens the audit log
+  ///
+  /// In en, this message translates to:
+  /// **'Full log'**
+  String get adminCourtThreadAll;
+
   /// Chart title: the steps from view to purchase.
   ///
   /// In en, this message translates to:

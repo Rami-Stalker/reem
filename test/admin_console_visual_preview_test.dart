@@ -16,6 +16,7 @@ import 'package:reem/core/auth/app_permissions.dart';
 import 'package:reem/core/design_system/design_system.dart';
 import 'package:reem/core/localization/app_localizations.dart';
 import 'package:reem/core/result/result.dart';
+import 'package:reem/features/admin/data/models/admin_briefing_model.dart';
 import 'package:reem/features/admin/domain/entities/admin_console_entity.dart';
 import 'package:reem/features/admin/domain/entities/admin_stats_entity.dart';
 import 'package:reem/features/admin/domain/entities/analytics_dashboard_entity.dart';
@@ -29,6 +30,39 @@ import 'package:reem/features/experience/presentation/providers/role_experience_
 import 'package:reem/l10n/app_localizations.dart' as gen;
 
 final _captureKey = GlobalKey();
+
+/// A morning with work in it: one urgent finding first, then the rest.
+final _briefing = AdminBriefing(
+  windowDays: 30,
+  generatedAt: DateTime(2026, 8, 24, 8),
+  quiet: false,
+  findings: const [
+    AdminFinding(
+      code: 'trust.disputes',
+      severity: FindingSeverity.critical,
+      title: 'تضاعفت النزاعات على بائعة واحدة هذا الأسبوع',
+      action: 'راجعي حالات «أتيليه الورد» المفتوحة قبل تحويل أي مستحقات.',
+      weight: 90,
+      href: '/admin/trust',
+    ),
+    AdminFinding(
+      code: 'catalog.duplicates',
+      severity: FindingSeverity.warning,
+      title: '٣٤ منتجاً مكرّراً في قسم الفساتين',
+      action: 'ادمجي النسخ أو أخفيها كي لا تتشتّت المشاهدات.',
+      weight: 60,
+      href: '/admin/catalog/duplicates',
+    ),
+    AdminFinding(
+      code: 'economics.commission',
+      severity: FindingSeverity.opportunity,
+      title: 'العمولة على العطور أدنى من بقية الأقسام',
+      action: 'قد يستحق القسم مراجعة لنسبة العمولة.',
+      weight: 30,
+      href: '/admin/commissions',
+    ),
+  ],
+);
 
 /// A review queue that reads like real work rather than six identical rows.
 const _applications = <Map<String, dynamic>>[
@@ -90,6 +124,17 @@ Future<void> _loadFonts() async {
       );
     await loader.load();
   }
+  // Material's icon font ships with the SDK, not the app, so a widget test
+  // draws every icon as a box unless it is loaded by hand.
+  final root = Platform.environment['FLUTTER_ROOT'];
+  final icons = File(
+    '$root/bin/cache/artifacts/material_fonts/MaterialIcons-Regular.otf',
+  );
+  if (root != null && icons.existsSync()) {
+    final loader = FontLoader('MaterialIcons')
+      ..addFont(icons.readAsBytes().then((b) => ByteData.view(b.buffer)));
+    await loader.load();
+  }
 }
 
 /// The console reaches for secure storage through the auth interceptor. There
@@ -113,7 +158,7 @@ void main() {
 
   for (final mode in [ThemeMode.light, ThemeMode.dark]) {
     testWidgets('renders the admin dashboard in ${mode.name}', (tester) async {
-      tester.view.physicalSize = const Size(2560, 2400);
+      tester.view.physicalSize = const Size(2560, 3000);
       tester.view.devicePixelRatio = 2.0;
       addTearDown(tester.view.reset);
 
@@ -124,6 +169,21 @@ void main() {
       await _capture(tester, 'admin_dashboard_${mode.name}');
     });
   }
+
+  testWidgets('renders the admin dashboard on a phone', (tester) async {
+    tester.view.physicalSize = const Size(1170, 7400);
+    tester.view.devicePixelRatio = 3.0;
+    addTearDown(tester.view.reset);
+
+    await tester.pumpWidget(
+      const _Preview(
+        themeMode: ThemeMode.light,
+        screen: AdminDashboardScreen(),
+      ),
+    );
+    await _settle(tester);
+    await _capture(tester, 'admin_dashboard_phone');
+  });
 
   testWidgets('renders the seller review queue', (tester) async {
     tester.view.physicalSize = const Size(2000, 2200);
@@ -184,6 +244,8 @@ class _Preview extends StatelessWidget {
     return ProviderScope(
       overrides: [
         adminRepositoryProvider.overrideWithValue(const _FakeAdminRepository()),
+        adminBriefingProvider.overrideWith((ref) async => _briefing),
+        adminOperatorNameProvider.overrideWithValue('سلمى'),
         // A super administrator, so a capture shows every action the console
         // is capable of offering rather than a role's subset of them.
         currentPermissionsProvider.overrideWithValue(const {
@@ -279,6 +341,27 @@ final class _FakeAdminRepository implements AdminRepository {
             ),
         ],
       ),
+      'accountVerifications' => AdminConsoleSection(
+        key: key,
+        title: title,
+        total: 3,
+        summary: const {'pending': '3'},
+        records: const [],
+      ),
+      'support' => AdminConsoleSection(
+        key: key,
+        title: title,
+        total: 5,
+        summary: const {'open': '5'},
+        records: const [],
+      ),
+      'reports' => AdminConsoleSection(
+        key: key,
+        title: title,
+        total: 0,
+        summary: const {'open': '0'},
+        records: const [],
+      ),
       'moderation' => AdminConsoleSection(
         key: key,
         title: title,
@@ -294,6 +377,29 @@ final class _FakeAdminRepository implements AdminRepository {
               status: i.isEven ? 'OPEN' : 'ESCALATED',
               metrics: {'created_at': '2026-08-2$i'},
               raw: {'id': 'case-$i', 'status': 'OPEN'},
+            ),
+        ],
+      ),
+      'audit' => AdminConsoleSection(
+        key: key,
+        title: title,
+        total: 5,
+        records: [
+          for (final (i, (t, sub)) in const [
+            ('وثّقت سلمى بائعة جديدة', 'أتيليه الورد · دمشق'),
+            ('أُغلقت تذكرة دعم', 'طلب استرجاع · #4821'),
+            ('أُخفي منشور بعد بلاغ', 'بتلات المخمل'),
+            ('عُدّلت نسبة عمولة', 'قسم العطور · من ٨٪ إلى ١٠٪'),
+            ('تسجيل دخول من جهاز جديد', 'دمشق · Chrome'),
+          ].indexed)
+            AdminRecord(
+              id: 'audit-$i',
+              title: t,
+              subtitle: sub,
+              status: 'APPROVED',
+              metrics: const {},
+              raw: const {},
+              createdAt: DateTime.now().subtract(Duration(minutes: 7 + i * 41)),
             ),
         ],
       ),
