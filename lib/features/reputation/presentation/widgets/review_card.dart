@@ -3,8 +3,12 @@ import 'package:go_router/go_router.dart';
 
 import 'package:reem/core/design_system/design_system.dart';
 import 'package:reem/core/localization/l10n_extension.dart';
+import 'package:reem/core/media/authorized_media_image.dart';
+import 'package:reem/core/media/media_lightbox.dart';
 import 'package:reem/core/router/route_paths.dart';
+import 'package:reem/features/reputation/domain/entities/fit_entities.dart';
 import 'package:reem/features/reputation/domain/entities/reputation_entities.dart';
+import 'package:reem/features/reputation/presentation/widgets/fit_labels.dart';
 
 /// One review, wherever a review is shown.
 ///
@@ -113,17 +117,21 @@ class ReviewCard extends StatelessWidget {
           ),
           if (review.title?.isNotEmpty == true) ...[
             const SizedBox(height: DsSpacing.md),
-            Text(
-              review.title!,
-              style: context.dsText.body.bold,
-            ),
+            Text(review.title!, style: context.dsText.body.bold),
           ],
           if (review.body?.isNotEmpty == true) ...[
             const SizedBox(height: DsSpacing.xs),
             Text(
               review.body!,
-              style: context.dsText.body.tint(colors.onSurfaceVariant).copyWith(height: 1.5),
+              style: context.dsText.body
+                  .tint(colors.onSurfaceVariant)
+                  .copyWith(height: 1.5),
             ),
+          ],
+          if (review.hasFitFacts) ...[DsGaps.vSm, _FitFacts(review: review)],
+          if (review.photos.isNotEmpty) ...[
+            DsGaps.vSm,
+            _PhotoStrip(photos: review.photos),
           ],
           if (review.status == 'pending') ...[
             const SizedBox(height: DsSpacing.sm),
@@ -145,6 +153,80 @@ class ReviewCard extends StatelessWidget {
             ),
           ],
         ],
+      ),
+    );
+  }
+}
+
+/// «مقاسه مضبوط · اشترت M».
+///
+/// How it fit and the size that shipped — facts about the *piece*. Nothing
+/// about the reviewer's body is drawn here, because the server never sends
+/// it.
+class _FitFacts extends StatelessWidget {
+  const _FitFacts({required this.review});
+
+  final ReviewEntity review;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final fit = review.fit;
+    return Wrap(
+      spacing: DsSpacing.xs,
+      runSpacing: DsSpacing.xs,
+      children: [
+        if (fit != null)
+          DsBadge(
+            label: FitLabels.fit(l10n, fit),
+            icon: FitLabels.icon(fit),
+            tone: fit == ReviewFit.trueToSize
+                ? DsBadgeTone.success
+                : DsBadgeTone.warning,
+          ),
+        if (review.sizeBought != null)
+          DsBadge(
+            label: l10n.fitBoughtSize(review.sizeBought!),
+            tone: DsBadgeTone.neutral,
+          ),
+      ],
+    );
+  }
+}
+
+/// The photographs of the piece, as a row of thumbnails that open full screen.
+class _PhotoStrip extends StatelessWidget {
+  const _PhotoStrip({required this.photos});
+
+  final List<String> photos;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.dsColors;
+    return SizedBox(
+      height: DsSizes.thumbLg,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        itemCount: photos.length,
+        separatorBuilder: (_, _) => DsGaps.hXs,
+        itemBuilder: (context, index) => Semantics(
+          button: true,
+          label: context.l10n.fitPhotoOpen(index + 1),
+          child: GestureDetector(
+            onTap: () => MediaLightbox.open(context, url: photos[index]),
+            child: ClipRRect(
+              borderRadius: DsRadius.borderMd,
+              child: SizedBox(
+                width: DsSizes.thumbLg,
+                height: DsSizes.thumbLg,
+                child: AuthorizedMediaImage(
+                  url: photos[index],
+                  fallback: Container(color: colors.surfaceVariant),
+                ),
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }

@@ -1,6 +1,7 @@
 import 'package:reem/core/base/repository_handler.dart';
 import 'package:reem/core/result/result.dart';
 import 'package:reem/features/reputation/data/datasources/reputation_remote_datasource.dart';
+import 'package:reem/features/reputation/domain/entities/fit_entities.dart';
 import 'package:reem/features/reputation/domain/entities/reputation_entities.dart';
 import 'package:reem/features/reputation/domain/repositories/reputation_repository.dart';
 
@@ -12,8 +13,10 @@ class ReputationRepositoryImpl
   final ReputationRemoteDataSource remote;
 
   @override
-  Future<Result<List<ReviewEntity>>> getProductReviews(String productId) =>
-      guard(() => remote.getProductReviews(productId));
+  Future<Result<List<ReviewEntity>>> getProductReviews(
+    String productId, {
+    ReviewFilter filter = ReviewFilter.all,
+  }) => guard(() => remote.getProductReviews(productId, filter: filter));
 
   @override
   Future<Result<ReviewEntity>> submitProductReview({
@@ -22,6 +25,7 @@ class ReputationRepositoryImpl
     String? title,
     String? body,
     String? orderId,
+    ReviewFitInput? fit,
   }) {
     return guard(
       () => remote.submitProductReview(
@@ -30,9 +34,40 @@ class ReputationRepositoryImpl
         title: title,
         body: body,
         orderId: orderId,
+        fit: fit == null
+            ? null
+            : ReviewFitDraft(
+                fit: fit.fit,
+                photoUrls: fit.photoUrls,
+                shareFit: fit.shareFit,
+              ),
       ),
     );
   }
+
+  @override
+  Future<Result<ProductFit>> getProductFit(String productId) =>
+      guard(() => remote.getProductFit(productId), operation: 'product fit');
+
+  @override
+  Future<Result<FitProfile>> getFitProfile() =>
+      guard(remote.getFitProfile, operation: 'fit profile');
+
+  @override
+  Future<Result<FitProfile>> saveFitProfile({
+    int? heightCm,
+    String? usualSize,
+    bool shareOnReviews = true,
+  }) => guard(
+    () => remote.saveFitProfile(
+      FitProfileDraft(
+        heightCm: heightCm,
+        usualSize: usualSize,
+        shareOnReviews: shareOnReviews,
+      ),
+    ),
+    operation: 'save fit profile',
+  );
 
   @override
   Future<Result<MyReviews>> getMyReviews() => guard(remote.getMyReviews);
@@ -61,8 +96,9 @@ class ReputationRepositoryImpl
   }
 
   @override
-  Future<Result<SellerReputationSummary>> getSellerReputation(String sellerId) =>
-      guard(() => remote.getSellerReputation(sellerId));
+  Future<Result<SellerReputationSummary>> getSellerReputation(
+    String sellerId,
+  ) => guard(() => remote.getSellerReputation(sellerId));
 
   @override
   Future<Result<void>> requestTrustedSellerVerification({Object? evidence}) =>

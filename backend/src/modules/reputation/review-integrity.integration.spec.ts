@@ -10,6 +10,8 @@ import {
 } from '@prisma/client';
 
 import { PrismaService } from '../../prisma/prisma.service';
+import { MediaService } from '../media/media.service';
+import { FitProfileService } from './fit/fit-profile.service';
 import { ReputationService } from './reputation.service';
 
 /**
@@ -85,8 +87,22 @@ interface World {
   reputation: ReputationService;
 }
 
+/**
+ * These cases attach no photographs, so the media service is never asked
+ * anything. A review with photographs is covered in
+ * `fit-reviews.integration.spec.ts`.
+ */
+const noMedia = {
+  resolveAssetId: async () => null,
+  markAttached: async () => 0,
+} as unknown as MediaService;
+
 function build(tx: Tx): World {
-  return { tx, reputation: new ReputationService(asPrisma(tx)) };
+  const db = asPrisma(tx);
+  return {
+    tx,
+    reputation: new ReputationService(db, new FitProfileService(db), noMedia),
+  };
 }
 
 let seq = 0;

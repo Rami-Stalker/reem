@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ReturnReason, ReturnStatus, SellerOrderStatus } from '@prisma/client';
 
 import { PrismaService } from '../../prisma/prisma.service';
-import { SizeFit, SizeSales, sizeFit } from './kernel/size-fit';
+import { SizeFit, SizeSales, sizeAttribute, sizeFit } from './kernel/size-fit';
 
 /**
  * Seller-order statuses at which the pieces had reached her. Everything a
@@ -85,13 +85,4 @@ export class SizeFitService {
     }
     return sizeFit(sales);
   }
-}
-
-/** The `size` option of a variant's attributes, if it has one. */
-function sizeAttribute(attributes: unknown): string | null {
-  if (attributes === null || typeof attributes !== 'object') return null;
-  const size = (attributes as Record<string, unknown>).size;
-  return typeof size === 'string' || typeof size === 'number'
-    ? String(size)
-    : null;
 }

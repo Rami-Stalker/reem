@@ -2,14 +2,21 @@ import 'package:reem/core/network/api_endpoints.dart';
 import 'package:reem/core/network/base_remote_datasource.dart';
 import 'package:reem/features/reputation/data/datasources/reputation_remote_datasource.dart';
 import 'package:reem/features/reputation/data/models/reputation_models.dart';
+import 'package:reem/features/reputation/domain/entities/fit_entities.dart';
 
 final class ReputationRemoteDataSourceImpl extends BaseRemoteDataSource
     implements ReputationRemoteDataSource {
   const ReputationRemoteDataSourceImpl(super.dio);
 
   @override
-  Future<List<ReviewModel>> getProductReviews(String productId) async {
-    final list = await getList(ApiEndpoints.productReviews(productId));
+  Future<List<ReviewModel>> getProductReviews(
+    String productId, {
+    ReviewFilter filter = ReviewFilter.all,
+  }) async {
+    final list = await getList(
+      ApiEndpoints.productReviews(productId),
+      query: {'filter': ?filter.wire},
+    );
     return list
         .whereType<Map>()
         .map((item) => ReviewModel.fromJson(Map<String, dynamic>.from(item)))
@@ -27,18 +34,36 @@ final class ReputationRemoteDataSourceImpl extends BaseRemoteDataSource
     String? title,
     String? body,
     String? orderId,
+    ReviewFitDraft? fit,
   }) async {
     final json = await postJson(
       ApiEndpoints.productReviews(productId),
-      body: _reviewBody(
+      body: {
+        ..._reviewBody(
         rating: rating,
         title: title,
         body: body,
         orderId: orderId,
       ),
+        ...?fit?.toJson(),
+      },
     );
     return ReviewModel.fromJson(json);
   }
+
+  @override
+  Future<ProductFit> getProductFit(String productId) async =>
+      productFitFromJson(await getJson(ApiEndpoints.productFit(productId)));
+
+  @override
+  Future<FitProfile> getFitProfile() async =>
+      fitProfileFromJson(await getJson(ApiEndpoints.fitProfile));
+
+  @override
+  Future<FitProfile> saveFitProfile(FitProfileDraft draft) async =>
+      fitProfileFromJson(
+        await putJson(ApiEndpoints.fitProfile, body: draft.toJson()),
+      );
 
   @override
   Future<List<ReviewModel>> getSellerReviews(String sellerId) async {

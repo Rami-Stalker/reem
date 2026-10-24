@@ -43,18 +43,13 @@ class SellerReviewsSection extends ConsumerWidget {
               : _WriteReviewButton(
                   onPressed: () => showReviewComposer(
                     context: context,
-                    onSubmit:
-                        ({
-                          required rating,
-                          required title,
-                          required body,
-                        }) => ref
+                    onSubmit: (draft) => ref
                             .read(reputationActionsProvider)
                             .submitSellerReview(
                               sellerId: sellerId,
-                              rating: rating,
-                              title: title,
-                              body: body,
+                          rating: draft.rating,
+                          title: draft.title,
+                          body: draft.body,
                             ),
                     onSubmitted: () {
                       ref.invalidate(sellerReviewsProvider(sellerId));

@@ -20,6 +20,7 @@ import {
   AwardSellerBadgeDto,
   CreateReviewDto,
   ModerateReviewDto,
+  ProductReviewQueryDto,
   ReplyToReviewDto,
   RequestTrustedSellerVerificationDto,
   ReviewTrustedSellerVerificationDto,
@@ -48,9 +49,24 @@ export class ReputationController {
   @Get('products/:productId/reviews')
   productReviews(
     @Param('productId', ParseUUIDPipe) productId: string,
+    @Query() query: ProductReviewQueryDto,
     @CurrentUser('id') viewerId?: string,
   ) {
-    return this.reputation.productReviews(productId, viewerId);
+    return this.reputation.productReviews(productId, viewerId, query.filter);
+  }
+
+  /**
+   * «تقييمات من بمقاسي» — how the piece fits, overall and for women like her.
+   * Catalogue like the reviews themselves; the "like her" half appears only
+   * when she is signed in and has said her size.
+   */
+  @OptionalAuth()
+  @Get('products/:productId/fit')
+  productFit(
+    @Param('productId', ParseUUIDPipe) productId: string,
+    @CurrentUser('id') viewerId?: string,
+  ) {
+    return this.reputation.productFit(productId, viewerId);
   }
 
   @Post('products/:productId/reviews')

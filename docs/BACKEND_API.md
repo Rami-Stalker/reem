@@ -127,6 +127,20 @@ untouched. See [SALONS.md](SALONS.md) for the booking invariant.
 Every appointment payload carries `can_cancel` and `can_review`, decided by the
 server, so a client can never offer a button the API would refuse.
 
+## Fit reviews (`/fit-profile`, `/reputation/products/:id/…`)
+
+«تقييمات من بمقاسي».
+
+| Method | Path | Notes |
+|--------|------|-------|
+| GET | `/fit-profile` | Hers alone, with the sizes the picker offers |
+| PUT | `/fit-profile` | `{ height_cm?, usual_size?, share_on_reviews? }`; `null` clears |
+| GET | `/reputation/products/:id/reviews` | `filter` = `near_me` / `photos` (optional) |
+| GET | `/reputation/products/:id/fit` | Fit tally overall and for women her size, suggested size, photo count |
+
+`POST /reputation/products/:id/reviews` also takes `fit`, `photo_urls` (≤ 4,
+her own `review` uploads) and `share_fit`. See [FIT_REVIEWS.md](FIT_REVIEWS.md).
+
 ## Occasions (`/occasions`)
 
 «مناسباتي». Every route is authenticated and scoped to the caller.

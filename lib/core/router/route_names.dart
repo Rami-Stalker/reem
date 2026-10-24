@@ -101,6 +101,7 @@ abstract final class RouteNames {
   static const language = 'language';
   static const coupons = 'coupons';
   static const myReviews = 'my-reviews';
+  static const fitProfile = 'fit-profile';
   static const rewards = 'rewards';
   static const wallet = 'wallet';
   static const sellerEarnings = 'seller-earnings';

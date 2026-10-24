@@ -167,6 +167,11 @@ service to trip over the stale socket.
   is additive and safe over live rows. An occasion links a `closet_looks` row
   and an `appointments` row with `ON DELETE SET NULL`, and its checklist is
   derived from those links rather than stored. See [OCCASIONS.md](OCCASIONS.md).
+- **Fit reviews** (`20261024090000_fit_reviews`) add `fit_profiles` and five
+  nullable columns on `product_reviews` (fit, size bought, height band, usual
+  size, photos) for «تقييمات من بمقاسي». Height band and usual size are
+  stored for matching only and are never served. Additive; old reviews simply have
+  none of them. See [FIT_REVIEWS.md](FIT_REVIEWS.md).
 - **Customer feedback** (`20261023130000_customer_feedback`) creates the
   `customer_feedback` table. The model had been in `schema.prisma` without a
   migration, so no deployed database had it. The same migration renames one

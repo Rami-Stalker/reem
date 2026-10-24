@@ -21799,6 +21799,258 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'You didn\'t record a look for this day. Add one so we can warn you before a repeat.'**
   String get occasionPastNoLook;
+
+  /// Fit: runs small
+  ///
+  /// In en, this message translates to:
+  /// **'Runs small'**
+  String get fitRunsSmall;
+
+  /// Fit: true to size
+  ///
+  /// In en, this message translates to:
+  /// **'True to size'**
+  String get fitTrueToSize;
+
+  /// Fit: runs large
+  ///
+  /// In en, this message translates to:
+  /// **'Runs large'**
+  String get fitRunsLarge;
+
+  /// Fit summary verdict
+  ///
+  /// In en, this message translates to:
+  /// **'Most say it runs small — consider a size up'**
+  String get fitVerdictSmall;
+
+  /// Fit summary verdict
+  ///
+  /// In en, this message translates to:
+  /// **'Most say it is true to size'**
+  String get fitVerdictTrue;
+
+  /// Fit summary verdict
+  ///
+  /// In en, this message translates to:
+  /// **'Most say it runs large — consider a size down'**
+  String get fitVerdictLarge;
+
+  /// Fit summary: no majority
+  ///
+  /// In en, this message translates to:
+  /// **'Opinions differ on the fit'**
+  String get fitOpinionsDiffer;
+
+  /// Fit panel title
+  ///
+  /// In en, this message translates to:
+  /// **'How it fits, from women who wore it'**
+  String get fitPanelTitle;
+
+  /// Fit panel: overall heading
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 woman said} other{{count} women said}}'**
+  String fitEveryone(int count);
+
+  /// Fit panel: near-me heading
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 woman your size} other{{count} women your size}}'**
+  String fitLikeYou(int count);
+
+  /// Fit panel: no near-me voices
+  ///
+  /// In en, this message translates to:
+  /// **'No women your size have said yet'**
+  String get fitLikeYouNone;
+
+  /// Fit panel: suggested size
+  ///
+  /// In en, this message translates to:
+  /// **'Women your size kept a {size} and said it fits'**
+  String fitSuggestedSize(String size);
+
+  /// Fit panel: prompt to set profile
+  ///
+  /// In en, this message translates to:
+  /// **'See what women your size said'**
+  String get fitSeeLikeYou;
+
+  /// Review card: size that shipped
+  ///
+  /// In en, this message translates to:
+  /// **'Bought: {size}'**
+  String fitBoughtSize(String size);
+
+  /// Review card: photo semantics
+  ///
+  /// In en, this message translates to:
+  /// **'Open photo {index}'**
+  String fitPhotoOpen(int index);
+
+  /// Composer: fit question
+  ///
+  /// In en, this message translates to:
+  /// **'How did it fit?'**
+  String get fitQuestion;
+
+  /// Composer: photos field
+  ///
+  /// In en, this message translates to:
+  /// **'Photos of the piece (optional)'**
+  String get fitPhotosLabel;
+
+  /// Composer: photos privacy helper
+  ///
+  /// In en, this message translates to:
+  /// **'Photograph the piece itself — there\'s no need to appear in it. Photos are shown to everyone once your review is approved.'**
+  String get fitPhotosHelper;
+
+  /// Composer: share fit switch
+  ///
+  /// In en, this message translates to:
+  /// **'Use my height and size to match this review'**
+  String get fitShareOnReview;
+
+  /// Composer: share fit hint
+  ///
+  /// In en, this message translates to:
+  /// **'They are never shown — they only help women your size find your review'**
+  String get fitShareOnReviewHint;
+
+  /// Composer: prompt to set profile
+  ///
+  /// In en, this message translates to:
+  /// **'Add your height and size (never shown) to help women like you'**
+  String get fitAddProfilePrompt;
+
+  /// Reviews: set profile action
+  ///
+  /// In en, this message translates to:
+  /// **'Add my size'**
+  String get fitAddProfileShort;
+
+  /// Fit profile: title and menu row
+  ///
+  /// In en, this message translates to:
+  /// **'My size'**
+  String get fitProfileTitle;
+
+  /// Fit profile: load failed
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t load your size'**
+  String get fitProfileLoadError;
+
+  /// Fit profile: privacy note
+  ///
+  /// In en, this message translates to:
+  /// **'Only you see this. Your height and size never appear on your reviews or anywhere else — we use them only to show you reviews from women like you, and to count the fit summary without names.'**
+  String get fitProfilePrivacy;
+
+  /// Fit profile: height field
+  ///
+  /// In en, this message translates to:
+  /// **'Height'**
+  String get fitHeightLabel;
+
+  /// Fit profile: height hint
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. 162'**
+  String get fitHeightHint;
+
+  /// Fit profile: unit
+  ///
+  /// In en, this message translates to:
+  /// **'cm'**
+  String get fitCentimetres;
+
+  /// Fit profile: height out of range
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a height between {min} and {max} cm'**
+  String fitHeightInvalid(int min, int max);
+
+  /// Fit profile: size picker
+  ///
+  /// In en, this message translates to:
+  /// **'The size you usually wear'**
+  String get fitUsualSizeLabel;
+
+  /// Fit profile: share default
+  ///
+  /// In en, this message translates to:
+  /// **'Use them for my reviews'**
+  String get fitShareDefault;
+
+  /// Fit profile: share default hint
+  ///
+  /// In en, this message translates to:
+  /// **'So women your size can find your reviews. Nothing is shown. You can turn it off on any one review.'**
+  String get fitShareDefaultHint;
+
+  /// Fit profile: save
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get fitProfileSave;
+
+  /// Fit profile: saved
+  ///
+  /// In en, this message translates to:
+  /// **'Saved'**
+  String get fitProfileSaved;
+
+  /// Product reviews filter
+  ///
+  /// In en, this message translates to:
+  /// **'Women my size'**
+  String get reviewsFilterNearMe;
+
+  /// Product reviews filter
+  ///
+  /// In en, this message translates to:
+  /// **'With photos'**
+  String get reviewsFilterPhotos;
+
+  /// Near-me filter without a profile
+  ///
+  /// In en, this message translates to:
+  /// **'Tell us your size first'**
+  String get reviewsNearMeNeedsProfileTitle;
+
+  /// Near-me filter without a profile
+  ///
+  /// In en, this message translates to:
+  /// **'Add your height and size and we\'ll show reviews from women like you.'**
+  String get reviewsNearMeNeedsProfileBody;
+
+  /// Near-me filter empty
+  ///
+  /// In en, this message translates to:
+  /// **'No reviews from women your size yet'**
+  String get reviewsNearMeNoneTitle;
+
+  /// Near-me filter empty
+  ///
+  /// In en, this message translates to:
+  /// **'Be the first: your review will help the next woman your size.'**
+  String get reviewsNearMeNoneBody;
+
+  /// Photos filter empty
+  ///
+  /// In en, this message translates to:
+  /// **'No photos yet'**
+  String get reviewsPhotosNoneTitle;
+
+  /// Photos filter empty
+  ///
+  /// In en, this message translates to:
+  /// **'Reviews with photos of the piece on will appear here.'**
+  String get reviewsPhotosNoneBody;
 }
 
 class _AppLocalizationsDelegate

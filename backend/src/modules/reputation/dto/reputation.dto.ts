@@ -1,5 +1,8 @@
 import { Transform } from 'class-transformer';
 import {
+  ArrayMaxSize,
+  IsArray,
+  IsBoolean,
   IsEnum,
   IsISO8601,
   IsIn,
@@ -12,6 +15,7 @@ import {
   Min,
 } from 'class-validator';
 import {
+  ReviewFit,
   ReviewStatus,
   ReviewTargetType,
   SellerBadgeType,
@@ -37,6 +41,36 @@ export class CreateReviewDto {
   @IsString()
   @MaxLength(4000)
   body?: string;
+
+  // ── «تقييمات من بمقاسي». Product reviews only; a shop review ignores them.
+
+  /** How it fit: small, true, large. */
+  @IsOptional()
+  @IsEnum(ReviewFit)
+  fit?: ReviewFit;
+
+  /** Her own uploads of purpose `review`. Checked to be hers in the service. */
+  @IsOptional()
+  @IsArray()
+  @ArrayMaxSize(4)
+  @IsString({ each: true })
+  @MaxLength(500, { each: true })
+  photo_urls?: string[];
+
+  /**
+   * Whether this review shows her height band and usual size. Absent, her
+   * profile's standing choice decides; `false` keeps them off this one.
+   */
+  @IsOptional()
+  @IsBoolean()
+  share_fit?: boolean;
+}
+
+/** «من بمقاسي» and «مع صور» on a product's reviews. */
+export class ProductReviewQueryDto {
+  @IsOptional()
+  @IsIn(['near_me', 'photos'])
+  filter?: 'near_me' | 'photos';
 }
 
 /**

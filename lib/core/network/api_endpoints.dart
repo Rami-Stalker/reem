@@ -378,6 +378,13 @@ abstract final class ApiEndpoints {
   /// Her review desk: everything said about her goods and her shop, merged,
   /// and the public answer she may write under each one.
   static const myReviews = '/reputation/me/reviews';
+
+  /// «تقييمات من بمقاسي» — how a piece fits, overall and for women like her.
+  static String productFit(String productId) =>
+      '/reputation/products/$productId/fit';
+
+  /// «مقاساتي» — her height and usual size. Hers alone.
+  static const fitProfile = '/fit-profile';
   static const sellerReviewDesk = '/reputation/seller/reviews';
   static String sellerReviewReply(String id) =>
       '/reputation/seller/reviews/$id/reply';
