@@ -375,6 +375,12 @@ class OrderShipping extends Equatable {
   final String addressLine;
   final String? landmark;
 
+  /// The map pin she dropped at checkout, when she used the map.
+  final double? latitude;
+  final double? longitude;
+
+  bool get hasPin => latitude != null && longitude != null;
+
   const OrderShipping({
     required this.recipientName,
     required this.recipientPhone,
@@ -383,6 +389,8 @@ class OrderShipping extends Equatable {
     required this.addressLine,
     this.district,
     this.landmark,
+    this.latitude,
+    this.longitude,
   });
 
   @override

@@ -173,6 +173,8 @@ export function serializeSellerOrderForSeller(
           city: order.city,
           address_line: order.addressLine,
           landmark: order.landmark,
+          latitude: order.latitude,
+          longitude: order.longitude,
         }
       : {
           recipient_name: null,
@@ -182,6 +184,9 @@ export function serializeSellerOrderForSeller(
           city: null,
           address_line: null,
           landmark: null,
+          // A pin is the address, to the metre: masked with the rest of it.
+          latitude: null,
+          longitude: null,
         },
   };
 }
@@ -277,6 +282,8 @@ export function serializeOrderDetail(order: OrderDetailRecord) {
       city: order.city,
       address_line: order.addressLine,
       landmark: order.landmark,
+      latitude: order.latitude,
+      longitude: order.longitude,
     },
     seller_orders: order.sellerOrders.map(serializeSellerOrder),
     payment: order.payment ? serializePayment(order.payment) : null,

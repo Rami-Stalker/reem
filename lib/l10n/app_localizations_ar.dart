@@ -13023,4 +13023,132 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get reviewsPhotosNoneBody =>
       'التقييمات اللي فيها صور للقطعة ملبوسة بتظهر هون.';
+
+  @override
+  String get mapPickerTitle => 'حدّدي موقعكِ';
+
+  @override
+  String get mapPickerSearchHint => 'ابحثي عن حي، شارع أو معلم…';
+
+  @override
+  String get mapPickerMoveHint => 'حرّكي الخريطة ليصير الدبوس عند بابكِ';
+
+  @override
+  String get mapPickerLocating => 'عم نحدّد موقعكِ…';
+
+  @override
+  String get mapPickerReading => 'عم نقرأ العنوان…';
+
+  @override
+  String get mapPickerDeliveryHere => 'موقع التوصيل';
+
+  @override
+  String get mapPickerConfirm => 'تأكيد هذا الموقع';
+
+  @override
+  String get mapPickerUnknownPlace => 'مكان بلا اسم على الخريطة';
+
+  @override
+  String get mapPickerUnknownPlaceHint =>
+      'ولا يهمّكِ — الدبوس بيكفي، وبتقدري تكتبي التفاصيل بعدين';
+
+  @override
+  String get mapPickerOutsideSyria =>
+      'هالموقع برّا سوريا، والتوصيل حالياً جوّا سوريا بس';
+
+  @override
+  String get mapPickerNoResults => 'ما لقينا هالمكان، جرّبي اسم قريب منه';
+
+  @override
+  String get mapPickerMyLocation => 'موقعي الحالي';
+
+  @override
+  String get mapPickerStreets => 'شوارع';
+
+  @override
+  String get mapPickerSatellite => 'قمر صناعي';
+
+  @override
+  String get mapPickerResetNorth => 'توجيه للشمال';
+
+  @override
+  String get mapPickerZoomIn => 'تكبير';
+
+  @override
+  String get mapPickerZoomOut => 'تصغير';
+
+  @override
+  String get mapPickerRural => 'منطقة ريفية';
+
+  @override
+  String get mapPickerLocationOff => 'خدمة الموقع مطفية بالموبايل';
+
+  @override
+  String get mapPickerLocationDenied => 'ما في إذن للتطبيق يشوف موقعكِ';
+
+  @override
+  String get mapPickerLocationUnavailable =>
+      'ما قدرنا نلقط موقعكِ، حرّكي الخريطة بإيدكِ';
+
+  @override
+  String get mapPickerOpenSettings => 'الإعدادات';
+
+  @override
+  String mapPickerAccuracy(int meters) {
+    return '±$meters م';
+  }
+
+  @override
+  String get mapPickerJumpTo => 'انتقلي لمحافظة';
+
+  @override
+  String get locationFieldTitle => 'حدّدي موقعكِ على الخريطة';
+
+  @override
+  String get locationFieldSubtitle => 'أسرع من الكتابة — منعبّي العنوان عنكِ';
+
+  @override
+  String get locationFieldOr => 'أو اكتبي العنوان بنفسكِ';
+
+  @override
+  String get locationFieldChange => 'تغيير';
+
+  @override
+  String get locationFieldRemove => 'إزالة الموقع';
+
+  @override
+  String get locationFieldPinned => 'محدّد على الخريطة';
+
+  @override
+  String get locationFieldFilled =>
+      'عبّينا العنوان من الخريطة، اطّلعي عليه بسرعة';
+
+  @override
+  String get locationFieldEditDetails => 'تعديل تفاصيل العنوان';
+
+  @override
+  String get locationFieldHideDetails => 'إخفاء التفاصيل';
+
+  @override
+  String get locationFieldGovernorateUnmatched =>
+      'ما قدرنا نعرف المحافظة من الخريطة، اختاريها من تحت';
+
+  @override
+  String get locationFieldOpenInMaps => 'فتح بالخرائط';
+
+  @override
+  String get shopLocationTitle => 'حدّدي مكانكِ على الخريطة';
+
+  @override
+  String get shopLocationSubtitle =>
+      'منعبّي العنوان، والزبونات بيشوفوا مكانكِ بالضبط';
+
+  @override
+  String get businessLocationSubtitle => 'منكتب عنوان النشاط من الخريطة';
+
+  @override
+  String get mapPickerShopHere => 'موقع محلّكِ';
+
+  @override
+  String get mapPickerZoomCloser => 'قرّبي لتحددي الباب بالضبط';
 }

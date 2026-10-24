@@ -114,6 +114,10 @@ class ShippingInput {
   final bool isRural;
   final String? landmark;
 
+  /// The map pin, when she dropped one instead of only typing.
+  final double? latitude;
+  final double? longitude;
+
   const ShippingInput({
     required this.recipientName,
     required this.recipientPhone,
@@ -123,6 +127,8 @@ class ShippingInput {
     this.district,
     this.isRural = false,
     this.landmark,
+    this.latitude,
+    this.longitude,
   });
 }
 

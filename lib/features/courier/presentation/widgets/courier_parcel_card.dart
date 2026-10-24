@@ -289,7 +289,7 @@ class _Actions extends StatelessWidget {
                 label: l10n.courierNavigate,
                 onTap: () => _launch(
                   'https://www.google.com/maps/search/?api=1&query='
-                  '${Uri.encodeComponent(assignment.address.oneLine)}',
+                  '${Uri.encodeComponent(assignment.address.mapQuery)}',
                 ),
               ),
             ),

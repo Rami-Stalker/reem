@@ -22189,6 +22189,246 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Reviews with photos of the piece on will appear here.'**
   String get reviewsPhotosNoneBody;
+
+  /// No description provided for @mapPickerTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Pin your location'**
+  String get mapPickerTitle;
+
+  /// No description provided for @mapPickerSearchHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search a neighbourhood, street or landmark…'**
+  String get mapPickerSearchHint;
+
+  /// No description provided for @mapPickerMoveHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Move the map to put the pin at your door'**
+  String get mapPickerMoveHint;
+
+  /// No description provided for @mapPickerLocating.
+  ///
+  /// In en, this message translates to:
+  /// **'Finding you…'**
+  String get mapPickerLocating;
+
+  /// No description provided for @mapPickerReading.
+  ///
+  /// In en, this message translates to:
+  /// **'Reading the address…'**
+  String get mapPickerReading;
+
+  /// No description provided for @mapPickerDeliveryHere.
+  ///
+  /// In en, this message translates to:
+  /// **'Delivery spot'**
+  String get mapPickerDeliveryHere;
+
+  /// No description provided for @mapPickerConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm this location'**
+  String get mapPickerConfirm;
+
+  /// No description provided for @mapPickerUnknownPlace.
+  ///
+  /// In en, this message translates to:
+  /// **'An unnamed spot on the map'**
+  String get mapPickerUnknownPlace;
+
+  /// No description provided for @mapPickerUnknownPlaceHint.
+  ///
+  /// In en, this message translates to:
+  /// **'That\'s fine — the pin is enough, and you can add the details next'**
+  String get mapPickerUnknownPlaceHint;
+
+  /// No description provided for @mapPickerOutsideSyria.
+  ///
+  /// In en, this message translates to:
+  /// **'This spot is outside Syria — we only deliver inside Syria for now'**
+  String get mapPickerOutsideSyria;
+
+  /// No description provided for @mapPickerNoResults.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing found — try a nearby name'**
+  String get mapPickerNoResults;
+
+  /// No description provided for @mapPickerMyLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'My location'**
+  String get mapPickerMyLocation;
+
+  /// No description provided for @mapPickerStreets.
+  ///
+  /// In en, this message translates to:
+  /// **'Streets'**
+  String get mapPickerStreets;
+
+  /// No description provided for @mapPickerSatellite.
+  ///
+  /// In en, this message translates to:
+  /// **'Satellite'**
+  String get mapPickerSatellite;
+
+  /// No description provided for @mapPickerResetNorth.
+  ///
+  /// In en, this message translates to:
+  /// **'Point north'**
+  String get mapPickerResetNorth;
+
+  /// No description provided for @mapPickerZoomIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Zoom in'**
+  String get mapPickerZoomIn;
+
+  /// No description provided for @mapPickerZoomOut.
+  ///
+  /// In en, this message translates to:
+  /// **'Zoom out'**
+  String get mapPickerZoomOut;
+
+  /// No description provided for @mapPickerRural.
+  ///
+  /// In en, this message translates to:
+  /// **'Rural area'**
+  String get mapPickerRural;
+
+  /// No description provided for @mapPickerLocationOff.
+  ///
+  /// In en, this message translates to:
+  /// **'Location is switched off on this phone'**
+  String get mapPickerLocationOff;
+
+  /// No description provided for @mapPickerLocationDenied.
+  ///
+  /// In en, this message translates to:
+  /// **'The app wasn\'t allowed to see your location'**
+  String get mapPickerLocationDenied;
+
+  /// No description provided for @mapPickerLocationUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t get a fix — move the map by hand'**
+  String get mapPickerLocationUnavailable;
+
+  /// No description provided for @mapPickerOpenSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get mapPickerOpenSettings;
+
+  /// Location accuracy radius
+  ///
+  /// In en, this message translates to:
+  /// **'±{meters} m'**
+  String mapPickerAccuracy(int meters);
+
+  /// No description provided for @mapPickerJumpTo.
+  ///
+  /// In en, this message translates to:
+  /// **'Jump to a governorate'**
+  String get mapPickerJumpTo;
+
+  /// No description provided for @locationFieldTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Pin your location on the map'**
+  String get locationFieldTitle;
+
+  /// No description provided for @locationFieldSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Faster than typing — we\'ll fill the address for you'**
+  String get locationFieldSubtitle;
+
+  /// No description provided for @locationFieldOr.
+  ///
+  /// In en, this message translates to:
+  /// **'or type the address yourself'**
+  String get locationFieldOr;
+
+  /// No description provided for @locationFieldChange.
+  ///
+  /// In en, this message translates to:
+  /// **'Change'**
+  String get locationFieldChange;
+
+  /// No description provided for @locationFieldRemove.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove the pin'**
+  String get locationFieldRemove;
+
+  /// No description provided for @locationFieldPinned.
+  ///
+  /// In en, this message translates to:
+  /// **'Pinned on the map'**
+  String get locationFieldPinned;
+
+  /// No description provided for @locationFieldFilled.
+  ///
+  /// In en, this message translates to:
+  /// **'We filled the address from the map — give it a quick look'**
+  String get locationFieldFilled;
+
+  /// No description provided for @locationFieldEditDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit the address details'**
+  String get locationFieldEditDetails;
+
+  /// No description provided for @locationFieldHideDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide the details'**
+  String get locationFieldHideDetails;
+
+  /// No description provided for @locationFieldGovernorateUnmatched.
+  ///
+  /// In en, this message translates to:
+  /// **'We couldn\'t tell the governorate from the map — please pick it below'**
+  String get locationFieldGovernorateUnmatched;
+
+  /// No description provided for @locationFieldOpenInMaps.
+  ///
+  /// In en, this message translates to:
+  /// **'Open in maps'**
+  String get locationFieldOpenInMaps;
+
+  /// No description provided for @shopLocationTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Pin your place on the map'**
+  String get shopLocationTitle;
+
+  /// No description provided for @shopLocationSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'We\'ll fill the address, and clients will see exactly where you are'**
+  String get shopLocationSubtitle;
+
+  /// No description provided for @businessLocationSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'We\'ll write the business address from the map'**
+  String get businessLocationSubtitle;
+
+  /// No description provided for @mapPickerShopHere.
+  ///
+  /// In en, this message translates to:
+  /// **'Your place'**
+  String get mapPickerShopHere;
+
+  /// No description provided for @mapPickerZoomCloser.
+  ///
+  /// In en, this message translates to:
+  /// **'Zoom in to pin the exact door'**
+  String get mapPickerZoomCloser;
 }
 
 class _AppLocalizationsDelegate

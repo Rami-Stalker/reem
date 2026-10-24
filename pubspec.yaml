@@ -180,6 +180,9 @@ dependencies:
   # that silently does nothing from then on is worse than no switch, so the
   # toggle sends her to the only place the decision can still be changed.
   app_settings: ^9.0.0
+  flutter_map: ^8.3.2
+  latlong2: ^0.10.1
+  geolocator: ^14.1.2
 
 dev_dependencies:
   flutter_test:

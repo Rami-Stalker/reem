@@ -2,6 +2,8 @@ import { Type } from 'class-transformer';
 import {
   IsBoolean,
   IsEnum,
+  IsLatitude,
+  IsLongitude,
   IsNotEmpty,
   IsOptional,
   IsString,
@@ -51,6 +53,17 @@ export class ShippingDetailsDto {
   @IsString()
   @MaxLength(200)
   landmark?: string;
+
+  /** The map pin, when she dropped one. Sent as a pair; half a pin is ignored. */
+  @IsOptional()
+  @Type(() => Number)
+  @IsLatitude()
+  latitude?: number | null;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsLongitude()
+  longitude?: number | null;
 }
 
 export class CreateOrderDto {

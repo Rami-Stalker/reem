@@ -82,6 +82,15 @@ class SellerCustomerPanel extends StatelessWidget {
                   onPressed: () => _call(customer.phone!),
                   tooltip: context.l10n.sellerOrderCallCustomer,
                 ),
+              // She dropped a pin at checkout: one tap opens it in the
+              // phone's map app, straight to the door.
+              if (customer.hasPin)
+                DsIconButton(
+                  icon: Icons.directions_rounded,
+                  onPressed: () =>
+                      _openPin(customer.latitude!, customer.longitude!),
+                  tooltip: context.l10n.locationFieldOpenInMaps,
+                ),
             ],
           ),
 
@@ -142,6 +151,13 @@ class SellerCustomerPanel extends StatelessWidget {
   Future<void> _call(String phone) async {
     final uri = Uri(scheme: 'tel', path: phone);
     if (await canLaunchUrl(uri)) await launchUrl(uri);
+  }
+
+  Future<void> _openPin(double latitude, double longitude) async {
+    final uri = Uri.parse(
+      'https://www.google.com/maps/search/?api=1&query=$latitude,$longitude',
+    );
+    await launchUrl(uri, mode: LaunchMode.externalApplication);
   }
 
   void _copy(BuildContext context, String value) {

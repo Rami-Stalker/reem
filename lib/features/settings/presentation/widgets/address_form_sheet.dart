@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:latlong2/latlong.dart' hide Path;
 
 import 'package:ohara/core/design_system/design_system.dart';
 import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/core/location/picked_place.dart';
+import 'package:ohara/core/location/presentation/map_location_field.dart';
+import 'package:ohara/core/location/syria_governorates.dart';
 import 'package:ohara/features/checkout/domain/entities/checkout.dart';
 import 'package:ohara/features/settings/domain/entities/address_draft.dart';
 import 'package:ohara/features/settings/domain/entities/address_entity.dart';
@@ -54,6 +58,9 @@ class _AddressFormSheetState extends ConsumerState<_AddressFormSheet> {
   late bool _isRural;
   late bool _isDefault;
 
+  /// The map pin, when she dropped one.
+  PickedPlace? _pin;
+
   @override
   void initState() {
     super.initState();
@@ -72,6 +79,15 @@ class _AddressFormSheetState extends ConsumerState<_AddressFormSheet> {
     _governorate = existing?.governorate;
     _district = existing?.district;
     _isRural = existing?.isRural ?? false;
+    if (existing != null && existing.hasPin) {
+      _pin = PickedPlace(
+        point: LatLng(existing.latitude!, existing.longitude!),
+        governorate: existing.governorate,
+        city: existing.city,
+        district: existing.district,
+        road: existing.addressLine,
+      );
+    }
     // Her first address becomes the default on the server whether she asks or
     // not, so pre-ticking it here would be a checkbox that does nothing.
     _isDefault = existing?.isDefault ?? false;
@@ -116,11 +132,43 @@ class _AddressFormSheetState extends ConsumerState<_AddressFormSheet> {
         city: _city.text,
         addressLine: _addressLine.text,
         landmark: _landmark.text,
+        latitude: _pin?.latitude,
+        longitude: _pin?.longitude,
         isRural: _isRural,
         deliveryInstructions: _instructions.text,
         isDefault: _isDefault,
       ),
     );
+  }
+
+  /// Fills the governorate, district, city and street from the pin. Every
+  /// field stays editable: the map is a first draft, not the last word.
+  void _applyPin(PickedPlace? place, List<Governorate> options) {
+    setState(() {
+      _pin = place;
+      if (place == null) return;
+      final name = matchPlaceName(
+        options.map((g) => g.name),
+        [place.governorate, place.city],
+      );
+      final governorate = options.where((g) => g.name == name).firstOrNull;
+      if (governorate != null) {
+        final districtName = matchPlaceName(
+          governorate.districts.map((d) => d.name),
+          [place.district, place.neighbourhood, place.city],
+        );
+        final district = governorate.districts
+            .where((d) => d.name == districtName)
+            .firstOrNull;
+        _governorate = governorate.name;
+        _district = district?.name;
+        _isRural = district?.isRural ?? place.isRural;
+      }
+      final city = place.city ?? place.district ?? name;
+      if (city != null && city.isNotEmpty) _city.text = city;
+      final line = place.addressLine;
+      if (line != null && line.isNotEmpty) _addressLine.text = line;
+    });
   }
 
   @override
@@ -200,6 +248,18 @@ class _AddressFormSheetState extends ConsumerState<_AddressFormSheet> {
                   required: true,
                   minLength: 6,
                 ),
+
+                // The quick way: the map fills the place fields below.
+                MapLocationField(
+                  value: _pin,
+                  initialGovernorate: _governorate,
+                  onChanged: (place) => _applyPin(
+                    place,
+                    governorates.asData?.value ?? const <Governorate>[],
+                  ),
+                ),
+                if (_pin == null) const MapOrTypeDivider(),
+                const SizedBox(height: DsSpacing.md),
 
                 governorates.when(
                   loading: () => const Padding(
@@ -327,6 +387,7 @@ class _GovernoratePicker extends StatelessWidget {
           ),
           const SizedBox(height: DsSpacing.sm),
           DropdownButtonFormField<String>(
+            key: ValueKey('governorate-$governorate'),
             initialValue: governorate,
             isExpanded: true,
             decoration: InputDecoration(
@@ -357,6 +418,7 @@ class _GovernoratePicker extends StatelessWidget {
             ),
             const SizedBox(height: DsSpacing.sm),
             DropdownButtonFormField<String>(
+              key: ValueKey('district-$governorate-$district'),
               initialValue: district,
               isExpanded: true,
               decoration: InputDecoration(

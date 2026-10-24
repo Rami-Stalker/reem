@@ -58,6 +58,16 @@
     <uses-permission android:name="android.permission.RECORD_AUDIO"/>
     <uses-feature android:name="android.hardware.microphone" android:required="false"/>
 
+    <!--
+      The location picker's «موقعي الحالي» button. Asked for only when she taps
+      it, while the app is open — never in the background. Coarse is declared
+      too because Android 12+ lets her grant only an approximate position, and
+      the picker still works with one (she nudges the pin the last few metres).
+    -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-feature android:name="android.hardware.location.gps" android:required="false"/>
+
     <application
         android:label="@string/app_name"
         android:name="${applicationName}"

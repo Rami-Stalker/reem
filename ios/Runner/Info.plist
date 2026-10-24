@@ -61,6 +61,8 @@
 	</dict>
 	<key>NSCameraUsageDescription</key>
 	<string>لالتقاط صور لمنتجاتكِ وقصصكِ مباشرةً من التطبيق.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>لتحديد موقعكِ على الخريطة وتعبئة عنوان التوصيل بضغطة.</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>لتسجيل ملاحظة صوتية وإرسالها في المحادثة.</string>
 	<key>NSPhotoLibraryUsageDescription</key>

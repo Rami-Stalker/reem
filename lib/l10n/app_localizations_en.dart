@@ -12852,4 +12852,136 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get reviewsPhotosNoneBody =>
       'Reviews with photos of the piece on will appear here.';
+
+  @override
+  String get mapPickerTitle => 'Pin your location';
+
+  @override
+  String get mapPickerSearchHint =>
+      'Search a neighbourhood, street or landmark…';
+
+  @override
+  String get mapPickerMoveHint => 'Move the map to put the pin at your door';
+
+  @override
+  String get mapPickerLocating => 'Finding you…';
+
+  @override
+  String get mapPickerReading => 'Reading the address…';
+
+  @override
+  String get mapPickerDeliveryHere => 'Delivery spot';
+
+  @override
+  String get mapPickerConfirm => 'Confirm this location';
+
+  @override
+  String get mapPickerUnknownPlace => 'An unnamed spot on the map';
+
+  @override
+  String get mapPickerUnknownPlaceHint =>
+      'That\'s fine — the pin is enough, and you can add the details next';
+
+  @override
+  String get mapPickerOutsideSyria =>
+      'This spot is outside Syria — we only deliver inside Syria for now';
+
+  @override
+  String get mapPickerNoResults => 'Nothing found — try a nearby name';
+
+  @override
+  String get mapPickerMyLocation => 'My location';
+
+  @override
+  String get mapPickerStreets => 'Streets';
+
+  @override
+  String get mapPickerSatellite => 'Satellite';
+
+  @override
+  String get mapPickerResetNorth => 'Point north';
+
+  @override
+  String get mapPickerZoomIn => 'Zoom in';
+
+  @override
+  String get mapPickerZoomOut => 'Zoom out';
+
+  @override
+  String get mapPickerRural => 'Rural area';
+
+  @override
+  String get mapPickerLocationOff => 'Location is switched off on this phone';
+
+  @override
+  String get mapPickerLocationDenied =>
+      'The app wasn\'t allowed to see your location';
+
+  @override
+  String get mapPickerLocationUnavailable =>
+      'Couldn\'t get a fix — move the map by hand';
+
+  @override
+  String get mapPickerOpenSettings => 'Settings';
+
+  @override
+  String mapPickerAccuracy(int meters) {
+    return '±$meters m';
+  }
+
+  @override
+  String get mapPickerJumpTo => 'Jump to a governorate';
+
+  @override
+  String get locationFieldTitle => 'Pin your location on the map';
+
+  @override
+  String get locationFieldSubtitle =>
+      'Faster than typing — we\'ll fill the address for you';
+
+  @override
+  String get locationFieldOr => 'or type the address yourself';
+
+  @override
+  String get locationFieldChange => 'Change';
+
+  @override
+  String get locationFieldRemove => 'Remove the pin';
+
+  @override
+  String get locationFieldPinned => 'Pinned on the map';
+
+  @override
+  String get locationFieldFilled =>
+      'We filled the address from the map — give it a quick look';
+
+  @override
+  String get locationFieldEditDetails => 'Edit the address details';
+
+  @override
+  String get locationFieldHideDetails => 'Hide the details';
+
+  @override
+  String get locationFieldGovernorateUnmatched =>
+      'We couldn\'t tell the governorate from the map — please pick it below';
+
+  @override
+  String get locationFieldOpenInMaps => 'Open in maps';
+
+  @override
+  String get shopLocationTitle => 'Pin your place on the map';
+
+  @override
+  String get shopLocationSubtitle =>
+      'We\'ll fill the address, and clients will see exactly where you are';
+
+  @override
+  String get businessLocationSubtitle =>
+      'We\'ll write the business address from the map';
+
+  @override
+  String get mapPickerShopHere => 'Your place';
+
+  @override
+  String get mapPickerZoomCloser => 'Zoom in to pin the exact door';
 }

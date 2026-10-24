@@ -18,6 +18,8 @@ class AddressDraft extends Equatable {
     required this.addressLine,
     this.district,
     this.landmark,
+    this.latitude,
+    this.longitude,
     this.isRural = false,
     this.deliveryInstructions,
     this.isDefault = false,
@@ -33,6 +35,8 @@ class AddressDraft extends Equatable {
     addressLine: address.addressLine,
     district: address.district,
     landmark: address.landmark,
+    latitude: address.latitude,
+    longitude: address.longitude,
     isRural: address.isRural,
     deliveryInstructions: address.deliveryInstructions,
     isDefault: address.isDefault,
@@ -46,6 +50,10 @@ class AddressDraft extends Equatable {
   final String city;
   final String addressLine;
   final String? landmark;
+
+  /// The map pin. Both or neither; null clears a pin she removed.
+  final double? latitude;
+  final double? longitude;
   final bool isRural;
   final String? deliveryInstructions;
   final bool isDefault;
@@ -72,6 +80,8 @@ class AddressDraft extends Equatable {
       city: city ?? this.city,
       addressLine: addressLine ?? this.addressLine,
       landmark: landmark ?? this.landmark,
+      latitude: latitude,
+      longitude: longitude,
       isRural: isRural ?? this.isRural,
       deliveryInstructions: deliveryInstructions ?? this.deliveryInstructions,
       isDefault: isDefault ?? this.isDefault,
@@ -88,6 +98,8 @@ class AddressDraft extends Equatable {
     city,
     addressLine,
     landmark,
+    latitude,
+    longitude,
     isRural,
     deliveryInstructions,
     isDefault,

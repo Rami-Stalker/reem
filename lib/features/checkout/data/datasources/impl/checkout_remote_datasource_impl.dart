@@ -84,6 +84,10 @@ final class CheckoutRemoteDataSourceImpl extends BaseRemoteDataSource
             'address_line': shipping.addressLine,
             if (shipping.landmark != null && shipping.landmark!.isNotEmpty)
               'landmark': shipping.landmark,
+            if (shipping.latitude != null && shipping.longitude != null) ...{
+              'latitude': shipping.latitude,
+              'longitude': shipping.longitude,
+            },
           },
         // Backend expects the uppercase enum value.
         'payment_method': paymentMethod.toUpperCase(),

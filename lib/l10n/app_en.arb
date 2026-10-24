@@ -15281,5 +15281,53 @@
   "reviewsPhotosNoneBody": "Reviews with photos of the piece on will appear here.",
   "@reviewsPhotosNoneBody": {
     "description": "Photos filter empty"
-  }
+  },
+  "mapPickerTitle": "Pin your location",
+  "mapPickerSearchHint": "Search a neighbourhood, street or landmark…",
+  "mapPickerMoveHint": "Move the map to put the pin at your door",
+  "mapPickerLocating": "Finding you…",
+  "mapPickerReading": "Reading the address…",
+  "mapPickerDeliveryHere": "Delivery spot",
+  "mapPickerConfirm": "Confirm this location",
+  "mapPickerUnknownPlace": "An unnamed spot on the map",
+  "mapPickerUnknownPlaceHint": "That's fine — the pin is enough, and you can add the details next",
+  "mapPickerOutsideSyria": "This spot is outside Syria — we only deliver inside Syria for now",
+  "mapPickerNoResults": "Nothing found — try a nearby name",
+  "mapPickerMyLocation": "My location",
+  "mapPickerStreets": "Streets",
+  "mapPickerSatellite": "Satellite",
+  "mapPickerResetNorth": "Point north",
+  "mapPickerZoomIn": "Zoom in",
+  "mapPickerZoomOut": "Zoom out",
+  "mapPickerRural": "Rural area",
+  "mapPickerLocationOff": "Location is switched off on this phone",
+  "mapPickerLocationDenied": "The app wasn't allowed to see your location",
+  "mapPickerLocationUnavailable": "Couldn't get a fix — move the map by hand",
+  "mapPickerOpenSettings": "Settings",
+  "mapPickerAccuracy": "±{meters} m",
+  "@mapPickerAccuracy": {
+    "description": "Location accuracy radius",
+    "placeholders": {
+      "meters": {
+        "type": "int"
+      }
+    }
+  },
+  "mapPickerJumpTo": "Jump to a governorate",
+  "locationFieldTitle": "Pin your location on the map",
+  "locationFieldSubtitle": "Faster than typing — we'll fill the address for you",
+  "locationFieldOr": "or type the address yourself",
+  "locationFieldChange": "Change",
+  "locationFieldRemove": "Remove the pin",
+  "locationFieldPinned": "Pinned on the map",
+  "locationFieldFilled": "We filled the address from the map — give it a quick look",
+  "locationFieldEditDetails": "Edit the address details",
+  "locationFieldHideDetails": "Hide the details",
+  "locationFieldGovernorateUnmatched": "We couldn't tell the governorate from the map — please pick it below",
+  "locationFieldOpenInMaps": "Open in maps",
+  "shopLocationTitle": "Pin your place on the map",
+  "shopLocationSubtitle": "We'll fill the address, and clients will see exactly where you are",
+  "businessLocationSubtitle": "We'll write the business address from the map",
+  "mapPickerShopHere": "Your place",
+  "mapPickerZoomCloser": "Zoom in to pin the exact door"
 }

@@ -3497,6 +3497,9 @@ model Order {
   city           String
   addressLine    String  @map("address_line")
   landmark       String?
+  /// The map pin, copied like the rest of the address. Null when she typed.
+  latitude       Float?
+  longitude      Float?
 
   /// Q44 P1 — hide the customer's identity from the seller; enforced per
   /// sub-order according to its fulfilment mode (Q57 P2).
@@ -5166,6 +5169,12 @@ model Address {
   city        String
   addressLine String  @map("address_line")
   landmark    String?
+
+  /// Where she dropped the pin on the map, when she used it. Optional: the
+  /// typed fields are still the address, and the pin is what takes a courier
+  /// the last fifty metres an address line here rarely covers.
+  latitude  Float?
+  longitude Float?
 
   /// Q53 P2 — city centre and rural are priced separately.
   isRural Boolean @default(false) @map("is_rural")

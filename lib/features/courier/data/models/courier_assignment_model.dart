@@ -37,6 +37,8 @@ class CourierAssignmentModel extends CourierAssignment {
         city: address['city'] as String? ?? '',
         addressLine: address['address_line'] as String? ?? '',
         landmark: address['landmark'] as String?,
+        latitude: (address['latitude'] as num?)?.toDouble(),
+        longitude: (address['longitude'] as num?)?.toDouble(),
       ),
       // Absent means prepaid — deliberately not coerced to zero, because a
       // zero amount and "nothing to collect" read differently to a courier.
