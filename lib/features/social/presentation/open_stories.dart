@@ -15,17 +15,19 @@ import 'package:ohara/features/stories/presentation/screens/story_viewer_screen.
 /// `Story`; a story is a `Content` with the story format and the same id, so
 /// the conversion is a projection, and every legacy call the viewer makes
 /// (view, react) addresses the right row.
-void openStoryGroups(
+///
+/// Completes when the viewer closes, so a tray can redraw its rings as seen.
+Future<void> openStoryGroups(
   BuildContext context,
   List<StoryGroup> groups, {
   int startGroup = 0,
-}) {
+}) async {
   final stories = [
     for (final group in groups.skip(startGroup))
       for (final story in group.stories) storyFromContent(story, group.allSeen),
   ];
   if (stories.isEmpty) return;
-  context.push(
+  await context.push<void>(
     RoutePaths.storyViewer,
     extra: StoryViewerArgs(stories: stories),
   );

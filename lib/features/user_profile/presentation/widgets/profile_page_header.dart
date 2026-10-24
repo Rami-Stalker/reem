@@ -34,7 +34,7 @@ class ProfilePageHeader extends ConsumerWidget {
   Future<void> _openStories(BuildContext context, WidgetRef ref) async {
     final groups = await ref.read(userStoriesProvider(profile.user.id).future);
     if (!context.mounted || groups.isEmpty) return;
-    openStoryGroups(context, groups);
+    await openStoryGroups(context, groups);
   }
 
   @override

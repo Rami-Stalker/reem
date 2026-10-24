@@ -153,6 +153,10 @@ class _ContentCardState extends State<ContentCard>
 }
 
 /// «أضافتها إلى صفحتها» — who put this here, above whose post it is.
+///
+/// Her face and her name on a soft rose capsule, and what she said about it
+/// as a quote beneath — set apart from the card so it can never be read as
+/// the boutique's own words.
 class _ReshareBanner extends StatelessWidget {
   const _ReshareBanner({
     required this.resharer,
@@ -166,25 +170,36 @@ class _ReshareBanner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final c = context.dsColors;
-    return GestureDetector(
+    final p = context.boutique;
+    final text = context.dsText;
+    final note = this.note?.trim();
+
+    return DsScaleAnimations.tapScale(
       onTap: onTap,
-      child: Container(
-        width: double.infinity,
-        color: c.primaryContainer,
-        padding: const EdgeInsets.symmetric(
-          horizontal: DsSpacing.md,
-          vertical: DsSpacing.sm,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
+      pressedScale: 0.98,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            padding: const EdgeInsetsDirectional.fromSTEB(
+              DsSpacing.xxs,
+              DsSpacing.xxs,
+              DsSpacing.sm,
+              DsSpacing.xxs,
+            ),
+            decoration: BoxDecoration(
+              color: p.primarySoft.withValues(alpha: 0.7),
+              borderRadius: DsRadius.borderPill,
+              border: Border.all(color: p.primary.withValues(alpha: 0.18)),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(
-                  Icons.autorenew_rounded,
-                  size: DsSizes.iconXs,
-                  color: c.onPrimaryContainer,
+                DsAvatar(
+                  imageUrl: resharer.imageUrl,
+                  name: resharer.name,
+                  size: DsSizes.avatarXs,
                 ),
                 DsGaps.hXs,
                 Flexible(
@@ -192,48 +207,44 @@ class _ReshareBanner extends StatelessWidget {
                     context.l10n.contentResharedBy(resharer.name),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: context.dsText.caption.tint(c.onPrimaryContainer),
+                    style: text.captionStrong.tint(p.ink),
                   ),
+                ),
+                DsGaps.hXs,
+                Icon(
+                  Icons.autorenew_rounded,
+                  size: DsSizes.iconXs,
+                  color: p.primary,
                 ),
               ],
             ),
-            if (note != null && note!.isNotEmpty) ...[
-              DsGaps.vXxs,
-              Text(
-                note!,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: context.dsText.body.tint(c.onPrimaryContainer),
+          ),
+          if (note != null && note.isNotEmpty)
+            Padding(
+              padding: const EdgeInsetsDirectional.only(
+                start: DsSpacing.md,
+                top: DsSpacing.xs,
               ),
-            ],
-          ],
-        ),
+              child: Container(
+                padding: const EdgeInsetsDirectional.only(start: DsSpacing.sm),
+                decoration: BoxDecoration(
+                  border: BorderDirectional(
+                    start: BorderSide(
+                      color: p.gold,
+                      width: DsSpacing.xxxs,
+                    ),
+                  ),
+                ),
+                child: Text(
+                  '«$note»',
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: text.body.displayFamily.tint(p.ink),
+                ),
+              ),
+            ),
+        ],
       ),
-    );
-  }
-}
-
-/// A story bubble in the tray.
-class StoryBubble extends StatelessWidget {
-  const StoryBubble({
-    super.key,
-    required this.author,
-    required this.allSeen,
-    required this.onTap,
-  });
-
-  final User author;
-  final bool allSeen;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return DsStoryCard(
-      label: author.name,
-      imageUrl: author.imageUrl,
-      seen: allSeen,
-      isVerified: author.isVerified,
-      onTap: onTap,
     );
   }
 }

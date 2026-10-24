@@ -46,7 +46,13 @@ abstract interface class SocialRepository {
   });
 
   /// What the women she follows have published or added to their pages.
-  Future<Result<PaginatedData<Content>>> following({String? cursor, int limit});
+  ///
+  /// Entries, not bare content: a piece one of them added to her page arrives
+  /// with who added it, so the card can say so and still credit the boutique.
+  Future<Result<PaginatedData<TimelineEntry>>> following({
+    String? cursor,
+    int limit,
+  });
 
   /// Live stories, grouped by author.
   Future<Result<List<StoryGroup>>> storiesTray();

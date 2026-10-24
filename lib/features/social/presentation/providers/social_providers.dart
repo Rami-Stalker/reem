@@ -43,26 +43,26 @@ final publishesAsSellerProvider = Provider<bool>((ref) {
 // ── Feeds ───────────────────────────────────────────────────────────────────
 
 /// Which feed a screen is showing.
-enum SocialFeedKind { discover, following, reels, saved }
+enum SocialFeedKind { discover, reels, saved }
 
-/// The three feeds and the saved shelf, one notifier family.
+/// The discover feed, the reels feed and the saved shelf, one notifier family.
 ///
 /// `autoDispose` deliberately: a feed she has left should not keep a page of
 /// decoded images alive, and coming back to it should show what is there now
 /// rather than what was there an hour ago.
+///
+/// It watches who is signed in, so signing in from a gesture's prompt reloads
+/// the feed with her own hearts and saves instead of a guest's blank ones.
 final contentFeedProvider = StateNotifierProvider.autoDispose
     .family<ContentFeedNotifier, PaginatedState<Content>, SocialFeedKind>((
       ref,
       kind,
     ) {
+      ref.watch(authNotifierProvider.select((state) => state.user?.id));
       final repository = ref.watch(socialRepositoryProvider);
       Future<Result<PaginatedData<Content>>> fetch(PageRequest request) {
         return switch (kind) {
           SocialFeedKind.discover => repository.feed(
-            cursor: request.cursor,
-            limit: request.limit,
-          ),
-          SocialFeedKind.following => repository.following(
             cursor: request.cursor,
             limit: request.limit,
           ),
@@ -85,6 +85,63 @@ final contentFeedProvider = StateNotifierProvider.autoDispose
         pageSize: kind == SocialFeedKind.reels ? 10 : 20,
       )..load();
     });
+
+/// The two halves of the community: «اكتشفي» and «أتابع».
+enum CommunityFeed { discover, following }
+
+/// The community's two tabs, as timeline entries.
+///
+/// One row type for both, because «أتابع» carries posts the women she follows
+/// added to their pages — and those have to say who added them while the
+/// boutique keeps the credit. Discover rows are always her own posts.
+///
+/// A guest has no «أتابع»: the endpoint needs a session, so the list stays
+/// empty and the screen invites her to sign in rather than showing an error.
+final communityFeedProvider = StateNotifierProvider.autoDispose
+    .family<TimelineFeedNotifier, PaginatedState<TimelineEntry>, CommunityFeed>(
+      (ref, feed) {
+        final userId = ref.watch(
+          authNotifierProvider.select((state) => state.user?.id),
+        );
+        final repository = ref.watch(socialRepositoryProvider);
+
+        Future<Result<PaginatedData<TimelineEntry>>> fetch(
+          PageRequest request,
+        ) async {
+          switch (feed) {
+            case CommunityFeed.discover:
+              final result = await repository.feed(
+                cursor: request.cursor,
+                limit: request.limit,
+              );
+              return switch (result) {
+                Success(:final data) => Success(
+                  PaginatedData<TimelineEntry>(
+                    items: [
+                      for (final content in data.items)
+                        OwnContentEntry(content),
+                    ],
+                    pageInfo: data.pageInfo,
+                  ),
+                ),
+                Error(:final failure) => Error(failure),
+              };
+            case CommunityFeed.following:
+              if (userId == null) {
+                return Success(PaginatedData.empty<TimelineEntry>());
+              }
+              return repository.following(
+                cursor: request.cursor,
+                limit: request.limit,
+              );
+          }
+        }
+
+        final notifier = TimelineFeedNotifier(repository, fetch);
+        if (feed == CommunityFeed.following && userId == null) return notifier;
+        return notifier..load();
+      },
+    );
 
 /// «نساء يرتدينها» on a product page.
 final productContentProvider = StateNotifierProvider.autoDispose

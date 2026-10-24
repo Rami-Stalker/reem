@@ -60,9 +60,21 @@ final class SocialRemoteDataSourceImpl extends BaseRemoteDataSource
   Future<PaginatedData<Content>> reels({String? cursor, int limit = 10}) =>
       _contentPage(ApiEndpoints.contentReels, cursor: cursor, limit: limit);
 
+  /// The server answers this one as a timeline — `{kind: own, content}` or a
+  /// reshare with its resharer — the same shape as a woman's page. Reading it
+  /// as bare content threw on the first entry (no top-level `id`) and turned
+  /// the whole «أتابع» tab into an error.
   @override
-  Future<PaginatedData<Content>> following({String? cursor, int limit = 20}) =>
-      _contentPage(ApiEndpoints.contentFollowing, cursor: cursor, limit: limit);
+  Future<PaginatedData<TimelineEntry>> following({
+    String? cursor,
+    int limit = 20,
+  }) {
+    return getPaginated<TimelineEntry>(
+      ApiEndpoints.contentFollowing,
+      query: _cursorQuery(cursor, limit),
+      itemFromJson: timelineEntryFromJson,
+    );
+  }
 
   @override
   Future<PaginatedData<Content>> saved({String? cursor, int limit = 20}) =>
