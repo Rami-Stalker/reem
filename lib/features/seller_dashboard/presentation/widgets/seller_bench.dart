@@ -403,7 +403,6 @@ class _ThenRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final palette = context.atelier;
     final tone = context.toneColor(stitch.tone);
-    final rtl = Directionality.of(context) == TextDirection.rtl;
     final row = Padding(
       padding: const EdgeInsets.symmetric(vertical: DsSpacing.sm),
       child: Row(
@@ -438,7 +437,7 @@ class _ThenRow extends StatelessWidget {
           ),
           if (stitch.route != null)
             Icon(
-              rtl ? Icons.chevron_left_rounded : Icons.chevron_right_rounded,
+              Icons.chevron_right_rounded,
               color: palette.muted,
             ),
         ],

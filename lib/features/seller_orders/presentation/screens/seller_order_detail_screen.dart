@@ -50,16 +50,24 @@ class SellerOrderDetailScreen extends ConsumerWidget {
               onAction: (action) => _run(context, ref, order, action),
             ),
       slivers: [
-        SliverAppBar(
-          pinned: true,
-          elevation: 0,
-          backgroundColor: Colors.transparent,
-          surfaceTintColor: Colors.transparent,
-          title: Directionality(
-            textDirection: TextDirection.ltr,
-            child: Text(order?.summary.number ?? ''),
-          ),
+        AtelierAppBar(
+          icon: Icons.receipt_long_rounded,
+          showBack: true,
+          // Isolated left-to-right: an order number with Arabic around it
+          // reorders its own segments and becomes unreadable aloud.
+          title: order == null ? '' : '\u2066${order.summary.number}\u2069',
+          subtitle: order == null
+              ? null
+              : context.l10n.parcelStatus(order.status),
+          highlights: [
+            if (order != null)
+              AtelierHighlight(
+                value: order.summary.net.format(),
+                label: context.l10n.sellerOrderNet,
+              ),
+          ],
         ),
+        DsGaps.sliverMd,
 
         if (state.isLoading)
           const SliverToBoxAdapter(child: _DetailSkeleton())
@@ -75,30 +83,30 @@ class SellerOrderDetailScreen extends ConsumerWidget {
           )
         else
           SliverPadding(
-            padding: const EdgeInsets.fromLTRB(
-              DsSpacing.md,
+            padding: EdgeInsets.fromLTRB(
+              atelierGutter(context),
               DsSpacing.xxxs,
-              DsSpacing.md,
+              atelierGutter(context),
               DsSpacing.xxl,
             ),
             sliver: SliverList.list(
               children: [
                 _Header(order: order),
-                const SizedBox(height: DsSpacing.md),
+                DsGaps.vLg,
 
                 SellerCustomerPanel(
                   customer: order.summary.customer,
                   mode: order.summary.fulfilmentMode,
                 ),
-                const SizedBox(height: DsSpacing.md),
+                DsGaps.vLg,
 
                 _Items(order: order),
-                const SizedBox(height: DsSpacing.md),
+                DsGaps.vLg,
 
                 _Money(order: order),
 
                 if (order.cancellationReason != null) ...[
-                  const SizedBox(height: DsSpacing.md),
+                  DsGaps.vLg,
                   _Note(
                     icon: Icons.cancel_outlined,
                     tone: atelier.critical,
@@ -150,12 +158,18 @@ class _Header extends StatelessWidget {
   Widget build(BuildContext context) {
     final atelier = context.atelier;
     final l10n = context.l10n;
+    final steps = [
+      (l10n.sellerOrderStepPlaced, order.summary.placedAt),
+      if (order.confirmedAt case final at?) (l10n.sellerOrderStepConfirmed, at),
+      if (order.shippedAt case final at?) (l10n.sellerOrderStepShipped, at),
+      if (order.deliveredAt case final at?) (l10n.sellerOrderStepDelivered, at),
+    ];
 
     return Container(
-      padding: const EdgeInsets.all(DsSpacing.md),
+      padding: DsSpacing.paddingLg,
       decoration: BoxDecoration(
         color: atelier.surface,
-        borderRadius: BorderRadius.circular(DsRadius.lg),
+        borderRadius: DsRadius.borderXxl,
         border: Border.all(color: atelier.line),
       ),
       child: Column(
@@ -177,16 +191,12 @@ class _Header extends StatelessWidget {
           // The journey so far. Only the steps that happened are listed —
           // drawing the ones that have not is how a screen ends up promising a
           // delivery that never comes.
-          _Step(label: l10n.sellerOrderStepPlaced, at: order.summary.placedAt),
-          if (order.confirmedAt != null)
-            _Step(label: l10n.sellerOrderStepConfirmed, at: order.confirmedAt!),
-          if (order.shippedAt != null)
-            _Step(label: l10n.sellerOrderStepShipped, at: order.shippedAt!),
-          if (order.deliveredAt != null)
+          for (final (i, step) in steps.indexed)
             _Step(
-              label: l10n.sellerOrderStepDelivered,
-              at: order.deliveredAt!,
-              isLast: true,
+              label: step.$1,
+              at: step.$2,
+              isFirst: i == 0,
+              isLast: i == steps.length - 1,
             ),
 
           if (order.shipment != null) ...[
@@ -211,9 +221,11 @@ class _Header extends StatelessWidget {
                   order.shipment!.isAssigned
                       ? l10n.sellerOrderCourierAssigned
                       : l10n.sellerOrderCourierPending,
-                  style: context.dsText.caption.tint(order.shipment!.isAssigned
+                  style: context.dsText.caption.tint(
+                    order.shipment!.isAssigned
                         ? atelier.positive
-                        : atelier.caution),
+                        : atelier.caution,
+                  ),
                 ),
               ],
             ),
@@ -254,38 +266,56 @@ class _Header extends StatelessWidget {
 }
 
 class _Step extends StatelessWidget {
-  const _Step({required this.label, required this.at, this.isLast = false});
+  const _Step({
+    required this.label,
+    required this.at,
+    this.isFirst = false,
+    this.isLast = false,
+  });
 
   final String label;
   final DateTime at;
+  final bool isFirst;
   final bool isLast;
 
   @override
   Widget build(BuildContext context) {
     final atelier = context.atelier;
-    return Padding(
-      padding: const EdgeInsets.only(top: DsSpacing.xs),
+    // A bead on the order's thread; the latest step is lit.
+    return IntrinsicHeight(
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Icon(
-            isLast ? Icons.check_circle : Icons.circle,
-            size: isLast ? 14 : 8,
-            color: isLast ? atelier.positive : atelier.line,
-          ),
-          const SizedBox(width: DsSpacing.xs),
-          Text(
-            label,
-            style: context.dsText.bodySmall.tint(atelier.ink),
-          ),
-          const Spacer(),
-          Text(
-            formatCalendarDate(
-              context.l10n,
-              at,
-              // l10n-ignore: an intl pattern; the locale supplies the words
-              pattern: 'd MMM • HH:mm',
+          AtelierThreadBead(first: isFirst, last: isLast, done: isLast),
+          DsGaps.hSm,
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: DsSpacing.md),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: Text(
+                      label,
+                      style:
+                          (isLast
+                                  ? context.dsText.bodyStrong
+                                  : context.dsText.bodySmall)
+                              .tint(atelier.ink),
+                    ),
+                  ),
+                  Text(
+                    formatCalendarDate(
+                      context.l10n,
+                      at,
+                      // l10n-ignore: an intl pattern; the locale supplies the words
+                      pattern: 'd MMM • HH:mm',
+                    ),
+                    style: context.dsText.caption.tint(atelier.muted),
+                  ),
+                ],
+              ),
             ),
-            style: context.dsText.caption.tint(atelier.muted),
           ),
         ],
       ),
@@ -306,7 +336,7 @@ class _Items extends StatelessWidget {
       padding: const EdgeInsets.all(DsSpacing.md),
       decoration: BoxDecoration(
         color: atelier.surface,
-        borderRadius: BorderRadius.circular(DsRadius.lg),
+        borderRadius: DsRadius.borderXxl,
         border: Border.all(color: atelier.line),
       ),
       child: Column(
@@ -399,7 +429,7 @@ class _Money extends StatelessWidget {
       padding: const EdgeInsets.all(DsSpacing.md),
       decoration: BoxDecoration(
         color: atelier.raised,
-        borderRadius: BorderRadius.circular(DsRadius.lg),
+        borderRadius: DsRadius.borderXxl,
         border: Border.all(color: atelier.line),
       ),
       child: Column(
@@ -469,7 +499,9 @@ class _Money extends StatelessWidget {
               Expanded(
                 child: Text(
                   _escrowNote(context, order),
-                  style: context.dsText.caption.tint(atelier.muted).copyWith(height: 1.5),
+                  style: context.dsText.caption
+                      .tint(atelier.muted)
+                      .copyWith(height: 1.5),
                 ),
               ),
             ],
@@ -516,8 +548,8 @@ class _Row extends StatelessWidget {
           Text(
             label,
             style: emphasise
-                  ? context.dsText.bodyStrong.tint(atelier.ink)
-                  : context.dsText.bodySmall.tint(atelier.muted),
+                ? context.dsText.bodyStrong.tint(atelier.ink)
+                : context.dsText.bodySmall.tint(atelier.muted),
           ),
           const Spacer(),
           // Money keeps the page's own direction, the way it does on the card
@@ -525,10 +557,11 @@ class _Row extends StatelessWidget {
           // — the order number, the tracking code — are pinned LTR.
           Text(
             '${isNegative ? '−' : ''}${value.format()}',
-            style: (emphasise
-                    ? context.dsText.tileTitle.bold.tint(atelier.gold)
-                    : context.dsText.bodySmall.tint(atelier.ink))
-                .tabular,
+            style:
+                (emphasise
+                        ? context.dsText.tileTitle.bold.tint(atelier.gold)
+                        : context.dsText.bodySmall.tint(atelier.ink))
+                    .tabular,
           ),
         ],
       ),
@@ -617,7 +650,8 @@ class _ActionBar extends StatelessWidget {
                   onPressed: isBusy ? null : () => onAction(primary),
                 ),
               ),
-            if (primary != null && canCancel) const SizedBox(width: DsSpacing.sm),
+            if (primary != null && canCancel)
+              const SizedBox(width: DsSpacing.sm),
             if (canCancel)
               TextButton(
                 onPressed: isBusy

@@ -29,7 +29,12 @@ class ProductIntelligenceScreen extends ConsumerWidget {
       background: const SellerAtelierBackground(),
       backgroundColor: palette.background,
       slivers: [
-        PremiumAppBar(title: context.l10n.siProductIntelligence),
+        AtelierAppBar(
+          icon: Icons.auto_awesome_rounded,
+          title: context.l10n.siProductIntelligence,
+        ),
+        // Air between the banner and the page.
+        DsGaps.sliverMd,
         ...async.when(
           loading: () => [
             const SliverToBoxAdapter(

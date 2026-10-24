@@ -39,7 +39,13 @@ class SellerReturnsScreen extends ConsumerWidget {
       background: const SellerAtelierBackground(),
       backgroundColor: context.atelier.background,
       slivers: [
-        PremiumAppBar(title: l10n.sellerReturnsTitle, showBack: true),
+        AtelierAppBar(
+          icon: Icons.assignment_return_rounded,
+          title: l10n.sellerReturnsTitle,
+          showBack: true,
+        ),
+        // Air between the banner and the page.
+        DsGaps.sliverMd,
         SliverToBoxAdapter(
           child: _TabBar(
             selected: state.tab,
@@ -64,11 +70,11 @@ class SellerReturnsScreen extends ConsumerWidget {
           SliverToBoxAdapter(child: _Empty(tab: state.tab))
         else
           SliverPadding(
-            padding: const EdgeInsets.fromLTRB(
+            padding: EdgeInsets.fromLTRB(
+              atelierGutter(context),
               DsSpacing.lg,
-              DsSpacing.sm,
-              DsSpacing.lg,
-              140,
+              atelierGutter(context),
+              DsSizes.bottomSafeGap + DsSpacing.huge,
             ),
             sliver: SliverList.separated(
               itemCount: rows.length,
@@ -138,39 +144,18 @@ class _TabBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final palette = context.atelier;
-
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      padding: const EdgeInsets.symmetric(
-        horizontal: DsSpacing.lg,
-        vertical: DsSpacing.sm,
-      ),
-      child: Row(
-        children: [
-          for (final tab in ReturnQueueTab.values)
-            Padding(
-              padding: const EdgeInsetsDirectional.only(end: DsSpacing.sm),
-              child: ChoiceChip(
-                label: Text(
-                  countFor(tab) == 0
-                      ? context.returnTabLabel(tab)
-                      : '${context.returnTabLabel(tab)} · ${countFor(tab)}',
-                ),
-                selected: selected == tab,
-                onSelected: (_) => onSelect(tab),
-                selectedColor: palette.primarySoft,
-                backgroundColor: palette.surface,
-                side: BorderSide(
-                  color: selected == tab ? palette.primary : palette.line,
-                ),
-                labelStyle: selected == tab
-                ? context.dsText.tab.bold.tint(palette.primary)
-                : context.dsText.tab.medium.tint(palette.ink),
-              ),
-            ),
-        ],
-      ),
+    return AtelierBeads<ReturnQueueTab>(
+      padding: EdgeInsets.symmetric(horizontal: atelierGutter(context)),
+      selected: selected,
+      onSelected: onSelect,
+      options: [
+        for (final tab in ReturnQueueTab.values)
+          (
+            value: tab,
+            label: context.returnTabLabel(tab),
+            count: countFor(tab) == 0 ? null : countFor(tab),
+          ),
+      ],
     );
   }
 }

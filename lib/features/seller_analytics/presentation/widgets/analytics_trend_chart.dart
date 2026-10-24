@@ -42,19 +42,14 @@ class _AnalyticsTrendChartState extends State<AnalyticsTrendChart> {
     final peak = values.reduce((a, b) => a > b ? a : b);
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: DsSpacing.lg),
+      padding: EdgeInsets.symmetric(horizontal: atelierGutter(context)),
       child: SellerPanel(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               children: [
-                Expanded(
-                  child: Text(
-                    l10n.analyticsTrend,
-                    style: context.dsText.tileTitle.bold.tint(palette.ink),
-                  ),
-                ),
+                Expanded(child: AtelierHeading(title: l10n.analyticsTrend)),
                 _Toggle(
                   selected: _metric,
                   onSelect: (metric) => setState(() => _metric = metric),
@@ -72,8 +67,12 @@ class _AnalyticsTrendChartState extends State<AnalyticsTrendChart> {
                   gridData: FlGridData(
                     show: true,
                     drawVerticalLine: false,
-                    getDrawingHorizontalLine: (_) =>
-                        FlLine(color: palette.line, strokeWidth: 1),
+                    // Pattern paper: dotted rules rather than solid ones.
+                    getDrawingHorizontalLine: (_) => FlLine(
+                      color: palette.line,
+                      strokeWidth: 1,
+                      dashArray: const [2, 5],
+                    ),
                   ),
                   borderData: FlBorderData(show: false),
                   titlesData: FlTitlesData(
@@ -119,26 +118,61 @@ class _AnalyticsTrendChartState extends State<AnalyticsTrendChart> {
                   lineTouchData: LineTouchData(
                     touchTooltipData: LineTouchTooltipData(
                       getTooltipColor: (_) => palette.raised,
+                      // One tooltip per point, not one per thread.
                       getTooltipItems: (spots) => [
                         for (final spot in spots)
-                          LineTooltipItem(
-                            _tooltipFor(series[spot.x.round()]),
-                            context.dsText.caption.tint(palette.ink),
-                          ),
+                          spot.barIndex == 0
+                              ? LineTooltipItem(
+                                  _tooltipFor(series[spot.x.round()]),
+                                  context.dsText.caption.tint(palette.ink),
+                                )
+                              : null,
                       ],
                     ),
                   ),
+                  // The takings sewn as thread: a plum line with a champagne
+                  // running stitch over it, and a gold knot on the latest
+                  // point.
                   lineBarsData: [
                     LineChartBarData(
                       isCurved: true,
                       curveSmoothness: 0.28,
-                      barWidth: 2.5,
+                      barWidth: 3,
                       color: palette.primary,
-                      dotData: const FlDotData(show: false),
+                      dotData: FlDotData(
+                        checkToShowDot: (spot, _) =>
+                            spot.x.round() == values.length - 1,
+                        getDotPainter: (spot, percent, bar, index) =>
+                            FlDotCirclePainter(
+                              radius: 6,
+                              color: palette.surface,
+                              strokeWidth: 2.5,
+                              strokeColor: palette.gold,
+                            ),
+                      ),
                       belowBarData: BarAreaData(
                         show: true,
-                        color: palette.primary.withValues(alpha: 0.10),
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [
+                            palette.primary.withValues(alpha: 0.2),
+                            palette.primary.withValues(alpha: 0),
+                          ],
+                        ),
                       ),
+                      spots: [
+                        for (var i = 0; i < values.length; i++)
+                          FlSpot(i.toDouble(), values[i]),
+                      ],
+                    ),
+                    LineChartBarData(
+                      isCurved: true,
+                      curveSmoothness: 0.28,
+                      barWidth: 1.4,
+                      color: DsColors.gold100,
+                      dashArray: const [5, 5],
+                      dotData: const FlDotData(show: false),
                       spots: [
                         for (var i = 0; i < values.length; i++)
                           FlSpot(i.toDouble(), values[i]),
@@ -209,7 +243,9 @@ class _Toggle extends StatelessWidget {
                   metric == TrendMetric.revenue
                       ? l10n.analyticsTrendRevenue
                       : l10n.analyticsTrendOrders,
-                  style: context.dsText.caption.semibold.tint(selected == metric ? DsColors.onMedia : palette.muted),
+                  style: context.dsText.caption.semibold.tint(
+                    selected == metric ? DsColors.onMedia : palette.muted,
+                  ),
                 ),
               ),
             ),

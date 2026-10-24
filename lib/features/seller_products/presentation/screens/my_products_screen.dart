@@ -41,7 +41,13 @@ class MyProductsScreen extends ConsumerWidget {
         label: Text(l10n.sellerNewProduct),
       ),
       slivers: [
-        PremiumAppBar(title: l10n.myProducts, showBack: true),
+        AtelierAppBar(
+          icon: Icons.checkroom_rounded,
+          title: l10n.myProducts,
+          showBack: true,
+        ),
+        // Air between the banner and the page.
+        DsGaps.sliverMd,
         SliverToBoxAdapter(
           child: _FilterBar(
             selected: state.statusFilter,
@@ -57,11 +63,11 @@ class MyProductsScreen extends ConsumerWidget {
           const SliverFillRemaining(hasScrollBody: false, child: _EmptyState())
         else
           SliverPadding(
-            padding: const EdgeInsets.fromLTRB(
+            padding: EdgeInsets.fromLTRB(
+              atelierGutter(context),
               DsSpacing.lg,
-              DsSpacing.sm,
-              DsSpacing.lg,
-              120,
+              atelierGutter(context),
+              DsSizes.bottomSafeGap + DsSpacing.xxl,
             ),
             sliver: SliverList.separated(
               itemCount: state.products.length,
@@ -181,9 +187,11 @@ class MyProductsScreen extends ConsumerWidget {
                 const SizedBox(height: DsSpacing.sm),
                 Text(
                   l10n.sellerStock('${product.stock + typed}'),
-                  style: context.dsText.bodySmall.tint(product.stock + typed < 0
+                  style: context.dsText.bodySmall.tint(
+                    product.stock + typed < 0
                         ? context.atelier.critical
-                        : context.atelier.muted),
+                        : context.atelier.muted,
+                  ),
                 ),
                 const SizedBox(height: DsSpacing.md),
                 DsButton(
@@ -212,47 +220,15 @@ class _FilterBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      padding: const EdgeInsets.symmetric(
-        horizontal: DsSpacing.lg,
-        vertical: DsSpacing.sm,
-      ),
-      child: Row(
-        children: [
-          _chip(context, context.l10n.all, selected == null, () => onSelect(null)),
-          for (final s in ProductStatus.values)
-            Padding(
-              padding: const EdgeInsetsDirectional.only(start: DsSpacing.sm),
-              child: _chip(
-                context,
-                s.labelOf(context.l10n),
-                selected == s,
-                () => onSelect(s),
-              ),
-            ),
-        ],
-      ),
-    );
-  }
-
-  Widget _chip(
-    BuildContext context,
-    String label,
-    bool active,
-    VoidCallback onTap,
-  ) {
-    final palette = context.atelier;
-    return ChoiceChip(
-      label: Text(label),
-      selected: active,
-      onSelected: (_) => onTap(),
-      selectedColor: palette.primarySoft,
-      backgroundColor: palette.surface,
-      side: BorderSide(color: active ? palette.primary : palette.line),
-      labelStyle: active
-                ? context.dsText.tab.bold.tint(palette.primary)
-                : context.dsText.tab.medium.tint(palette.ink),
+    return AtelierBeads<ProductStatus?>(
+      padding: EdgeInsets.symmetric(horizontal: atelierGutter(context)),
+      selected: selected,
+      onSelected: onSelect,
+      options: [
+        (value: null, label: context.l10n.all, count: null),
+        for (final status in ProductStatus.values)
+          (value: status, label: status.labelOf(context.l10n), count: null),
+      ],
     );
   }
 }

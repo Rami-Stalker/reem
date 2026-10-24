@@ -4,6 +4,7 @@ import 'dart:ui' show PathMetric;
 import 'package:flutter/material.dart';
 
 import 'package:reem/core/design_system/design_system.dart';
+import 'package:reem/core/router/open_route.dart';
 
 /// The seller's home register: **the workbench of an atelier**.
 ///
@@ -1204,4 +1205,951 @@ class _NeedleMarkPainter extends CustomPainter {
   @override
   bool shouldRepaint(_NeedleMarkPainter old) =>
       old.needle != needle || old.thread != thread || old.rtl != rtl;
+}
+
+// ---------------------------------------------------------------------------
+// The banner
+// ---------------------------------------------------------------------------
+
+/// A figure stitched onto the [AtelierAppBar]'s banner.
+@immutable
+class AtelierHighlight {
+  const AtelierHighlight({required this.value, required this.label});
+
+  final String value;
+  final String label;
+}
+
+/// The top of every seller page: a banner of the atelier's plum cloth.
+///
+/// Open, it is a length of cloth hung across the top of the page — the
+/// room's medallion, its name in the display serif, a line on what it is
+/// for, and its figures stitched on in champagne. As she scrolls it folds up
+/// into a slim plum bar carrying the name alone, with the stitched hem still
+/// along its bottom edge, so every seller page wears the same cloth.
+///
+/// The same arguments as [PremiumAppBar] for the common case, so a page
+/// moves across by changing one name.
+class AtelierAppBar extends StatelessWidget {
+  const AtelierAppBar({
+    super.key,
+    required this.title,
+    this.subtitle,
+    this.icon,
+    this.showBack = false,
+    this.onBack,
+    this.actions,
+    this.highlights = const [],
+  });
+
+  final String title;
+  final String? subtitle;
+  final IconData? icon;
+  final bool showBack;
+  final VoidCallback? onBack;
+  final List<Widget>? actions;
+  final List<AtelierHighlight> highlights;
+
+  @override
+  Widget build(BuildContext context) {
+    final body =
+        DsSpacing.md +
+        (subtitle == null ? 44 : 68) +
+        (highlights.isEmpty ? 0 : 48) +
+        DsSpacing.xl;
+    return SliverAppBar(
+      pinned: true,
+      elevation: 0,
+      scrolledUnderElevation: 0,
+      expandedHeight: DsSizes.appBarHeight + body,
+      backgroundColor: Colors.transparent,
+      surfaceTintColor: Colors.transparent,
+      foregroundColor: DsColors.onMedia,
+      iconTheme: const IconThemeData(color: DsColors.onMedia),
+      actionsIconTheme: const IconThemeData(color: DsColors.onMedia),
+      automaticallyImplyLeading: false,
+      leading: showBack
+          ? IconButton(
+              icon: const Icon(
+                DsIcons.back,
+                color: DsColors.onMedia,
+                size: DsSizes.iconSm,
+              ),
+              tooltip: MaterialLocalizations.of(context).backButtonTooltip,
+              onPressed: onBack ?? () => popOrHome(context),
+            )
+          : null,
+      actions: actions,
+      flexibleSpace: LayoutBuilder(
+        builder: (context, constraints) {
+          final top = MediaQuery.paddingOf(context).top;
+          final collapsed = DsSizes.appBarHeight + top;
+          final expanded = DsSizes.appBarHeight + body + top;
+          final t =
+              ((constraints.maxHeight - collapsed) / (expanded - collapsed))
+                  .clamp(0.0, 1.0);
+          return _Banner(
+            openness: t,
+            title: title,
+            subtitle: subtitle,
+            icon: icon,
+            highlights: highlights,
+            topInset: top,
+          );
+        },
+      ),
+    );
+  }
+}
+
+class _Banner extends StatelessWidget {
+  const _Banner({
+    required this.openness,
+    required this.title,
+    required this.subtitle,
+    required this.icon,
+    required this.highlights,
+    required this.topInset,
+  });
+
+  final double openness;
+  final String title;
+  final String? subtitle;
+  final IconData? icon;
+  final List<AtelierHighlight> highlights;
+  final double topInset;
+
+  @override
+  Widget build(BuildContext context) {
+    final palette = context.atelier;
+    final rtl = Directionality.of(context) == TextDirection.rtl;
+    final radius = Radius.circular(DsRadius.xxl * (0.4 + 0.6 * openness));
+    final gutter = MediaQuery.sizeOf(context).width < 600
+        ? DsSpacing.md
+        : DsSpacing.xl;
+    final barOpacity = (1 - openness * 2.2).clamp(0.0, 1.0);
+    final openOpacity = ((openness - 0.35) / 0.65).clamp(0.0, 1.0);
+
+    return Stack(
+      fit: StackFit.expand,
+      children: [
+        // The cloth, hemmed at the bottom.
+        DecoratedBox(
+          decoration: BoxDecoration(
+            gradient: palette.headerGradient,
+            borderRadius: BorderRadius.vertical(bottom: radius),
+            boxShadow: context.glowShadow(
+              DsColors.mauve700,
+              blur: 20,
+              alpha: 0.22,
+            ),
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.vertical(bottom: radius),
+            child: CustomPaint(
+              painter: _ClothPainter(rtl: rtl),
+              foregroundPainter: _HemPainter(
+                color: DsColors.gold200.withValues(alpha: 0.6),
+                radius: radius.x,
+              ),
+            ),
+          ),
+        ),
+        // The slim bar's title, as the banner folds away. Built only while it
+        // shows, so the page has one title and not two.
+        if (barOpacity > 0)
+          Positioned(
+            top: topInset,
+            left: DsSizes.appBarHeight + DsSpacing.xs,
+            right: DsSizes.appBarHeight + DsSpacing.xs,
+            height: DsSizes.appBarHeight,
+            child: Opacity(
+              opacity: barOpacity,
+              child: Center(
+                child: Text(
+                  title,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: context.dsText.sectionTitle.displayFamily.bold.tint(
+                    DsColors.onMedia,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        // The open banner's content, rising and fading as it folds.
+        if (openOpacity > 0)
+          Positioned(
+            left: gutter,
+            right: gutter,
+            bottom: DsSpacing.xl,
+            child: IgnorePointer(
+              ignoring: openness < 0.5,
+              child: Opacity(
+                opacity: openOpacity,
+                child: Transform.translate(
+                  offset: Offset(0, (1 - openness) * DsSpacing.lg),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Row(
+                        children: [
+                          if (icon != null) ...[
+                            _SpoolTop(icon: icon!),
+                            DsGaps.hMd,
+                          ],
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  title,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: context
+                                      .dsText
+                                      .pageTitle
+                                      .displayFamily
+                                      .bold
+                                      .tint(DsColors.onMedia),
+                                ),
+                                if (subtitle != null) ...[
+                                  DsGaps.vXxs,
+                                  Text(
+                                    subtitle!,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: context.dsText.body.tint(
+                                      DsColors.onMediaMuted,
+                                    ),
+                                  ),
+                                ],
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      if (highlights.isNotEmpty) ...[
+                        DsGaps.vMd,
+                        SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            children: [
+                              for (final (i, h) in highlights.indexed) ...[
+                                if (i > 0)
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: DsSpacing.md,
+                                    ),
+                                    child: Text(
+                                      '·',
+                                      style: context.dsText.bodyLarge.tint(
+                                        DsColors.onMediaFaint,
+                                      ),
+                                    ),
+                                  ),
+                                Text(
+                                  h.value,
+                                  style: context.dsText.metric.displayFamily
+                                      .tint(DsColors.gold200),
+                                ),
+                                DsGaps.hXs,
+                                Text(
+                                  h.label,
+                                  style: context.dsText.labelMedium.tint(
+                                    DsColors.onMediaMuted,
+                                  ),
+                                ),
+                              ],
+                            ],
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+      ],
+    );
+  }
+}
+
+/// The hem: a running stitch just above the banner's bottom edge.
+class _HemPainter extends CustomPainter {
+  const _HemPainter({required this.color, required this.radius});
+
+  final Color color;
+  final double radius;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final y = size.height - DsSpacing.xs;
+    final inset = math.max(radius * 0.7, DsSpacing.md);
+    final path = Path()
+      ..moveTo(inset, y)
+      ..lineTo(size.width - inset, y);
+    _stitch(
+      canvas,
+      path,
+      Paint()
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 1.4
+        ..strokeCap = StrokeCap.round
+        ..color = color,
+    );
+  }
+
+  @override
+  bool shouldRepaint(_HemPainter old) =>
+      old.color != color || old.radius != radius;
+}
+
+/// A room's medallion on the banner: the top of a spool — a champagne ring
+/// round a plum face — with the room's icon in it.
+class _SpoolTop extends StatelessWidget {
+  const _SpoolTop({required this.icon});
+
+  final IconData icon;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: DsSizes.controlLg,
+      height: DsSizes.controlLg,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        gradient: const RadialGradient(
+          colors: [DsColors.mauve600, DsColors.mauve800],
+        ),
+        border: Border.all(color: DsColors.gold300, width: 2.5),
+      ),
+      child: Icon(icon, color: DsColors.gold100, size: DsSizes.iconMd),
+    );
+  }
+}
+
+/// The side margin of a seller page: the full gutter on a tablet, a phone's
+/// narrower one below 600dp.
+double atelierGutter(BuildContext context) =>
+    MediaQuery.sizeOf(context).width < 600 ? DsSpacing.md : DsSpacing.xl;
+
+// ---------------------------------------------------------------------------
+// The ticket
+// ---------------------------------------------------------------------------
+
+/// A tailor's ticket: a card with a tear-off stub on its far side.
+///
+/// The body says what the job is and what to do next; the stub — divided
+/// off by a perforation with a notch punched top and bottom — carries the
+/// figure and the state, tinted in [stubColor], so a column of tickets reads
+/// as a column of states before a word of it is read.
+class TailorTicket extends StatelessWidget {
+  const TailorTicket({
+    super.key,
+    required this.body,
+    required this.stub,
+    required this.stubColor,
+    this.onTap,
+    this.stubWidth = 108,
+  });
+
+  final Widget body;
+  final Widget stub;
+  final Color stubColor;
+  final VoidCallback? onTap;
+  final double stubWidth;
+
+  static const double _notch = 9;
+
+  @override
+  Widget build(BuildContext context) {
+    final palette = context.atelier;
+    final rtl = Directionality.of(context) == TextDirection.rtl;
+    final clipper = _TicketClipper(stubWidth: stubWidth, rtl: rtl);
+
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        borderRadius: DsRadius.borderXl,
+        boxShadow: [
+          for (final shadow in palette.shadow)
+            BoxShadow(
+              color: shadow.color.withValues(alpha: shadow.color.a * 0.6),
+              blurRadius: shadow.blurRadius,
+              offset: shadow.offset * 0.5,
+            ),
+        ],
+      ),
+      child: ClipPath(
+        clipper: clipper,
+        child: Material(
+          color: palette.surface,
+          child: InkWell(
+            onTap: onTap,
+            child: CustomPaint(
+              painter: _TicketPainter(
+                stubWidth: stubWidth,
+                rtl: rtl,
+                stub: stubColor,
+                line: palette.line,
+              ),
+              child: IntrinsicHeight(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Expanded(
+                      child: Padding(padding: DsSpacing.paddingMd, child: body),
+                    ),
+                    SizedBox(
+                      width: stubWidth,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: DsSpacing.sm,
+                          vertical: DsSpacing.md,
+                        ),
+                        child: stub,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+Path _ticketPath(Size size, double stubWidth, bool rtl) {
+  final x = rtl ? stubWidth : size.width - stubWidth;
+  const n = TailorTicket._notch;
+  final outline = Path()
+    ..addRRect(
+      RRect.fromRectAndRadius(
+        Offset.zero & size,
+        const Radius.circular(DsRadius.xl),
+      ),
+    );
+  final notches = Path()
+    ..addOval(Rect.fromCircle(center: Offset(x, 0), radius: n))
+    ..addOval(Rect.fromCircle(center: Offset(x, size.height), radius: n));
+  return Path.combine(PathOperation.difference, outline, notches);
+}
+
+class _TicketClipper extends CustomClipper<Path> {
+  const _TicketClipper({required this.stubWidth, required this.rtl});
+
+  final double stubWidth;
+  final bool rtl;
+
+  @override
+  Path getClip(Size size) => _ticketPath(size, stubWidth, rtl);
+
+  @override
+  bool shouldReclip(_TicketClipper old) =>
+      old.stubWidth != stubWidth || old.rtl != rtl;
+}
+
+class _TicketPainter extends CustomPainter {
+  const _TicketPainter({
+    required this.stubWidth,
+    required this.rtl,
+    required this.stub,
+    required this.line,
+  });
+
+  final double stubWidth;
+  final bool rtl;
+  final Color stub;
+  final Color line;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final x = rtl ? stubWidth : size.width - stubWidth;
+    final stubRect = rtl
+        ? Rect.fromLTRB(0, 0, x, size.height)
+        : Rect.fromLTRB(x, 0, size.width, size.height);
+    canvas.drawRect(
+      stubRect,
+      Paint()
+        ..shader = LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [stub.withValues(alpha: 0.14), stub.withValues(alpha: 0.06)],
+        ).createShader(stubRect),
+    );
+    // The perforation.
+    _stitch(
+      canvas,
+      Path()
+        ..moveTo(x, TailorTicket._notch + 3)
+        ..lineTo(x, size.height - TailorTicket._notch - 3),
+      Paint()
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 1.4
+        ..strokeCap = StrokeCap.round
+        ..color = stub.withValues(alpha: 0.5),
+      dash: 4,
+      gap: 4,
+    );
+    // The outline, notches and all.
+    canvas.drawPath(
+      _ticketPath(size, stubWidth, rtl),
+      Paint()
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 1
+        ..color = line,
+    );
+  }
+
+  @override
+  bool shouldRepaint(_TicketPainter old) =>
+      old.stubWidth != stubWidth ||
+      old.rtl != rtl ||
+      old.stub != stub ||
+      old.line != line;
+}
+
+/// Filters as beads on a thread, in the atelier's colours: the chosen bead
+/// plum with a champagne edge, the rest quiet, each with its count.
+class AtelierBeads<T> extends StatelessWidget {
+  const AtelierBeads({
+    super.key,
+    required this.options,
+    required this.selected,
+    required this.onSelected,
+    this.padding,
+  });
+
+  final List<({T value, String label, int? count})> options;
+  final T selected;
+  final ValueChanged<T> onSelected;
+  final EdgeInsetsGeometry? padding;
+
+  @override
+  Widget build(BuildContext context) {
+    final palette = context.atelier;
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      padding: padding,
+      child: Row(
+        children: [
+          for (final option in options)
+            Padding(
+              padding: const EdgeInsetsDirectional.only(end: DsSpacing.xs),
+              child: _AtelierBead(
+                label: option.label,
+                count: option.count,
+                selected: option.value == selected,
+                palette: palette,
+                onTap: () => onSelected(option.value),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+class _AtelierBead extends StatelessWidget {
+  const _AtelierBead({
+    required this.label,
+    required this.count,
+    required this.selected,
+    required this.palette,
+    required this.onTap,
+  });
+
+  final String label;
+  final int? count;
+  final bool selected;
+  final SellerAtelierPalette palette;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final ink = selected ? DsColors.onMedia : palette.ink;
+    return Semantics(
+      button: true,
+      selected: selected,
+      label: count == null ? label : '$label، $count',
+      excludeSemantics: true,
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: DsRadius.borderPill,
+          onTap: onTap,
+          child: AnimatedContainer(
+            duration: DsReducedMotion.duration(DsMotion.normal),
+            curve: DsMotion.gentle,
+            padding: const EdgeInsets.symmetric(
+              horizontal: DsSpacing.md,
+              vertical: DsSpacing.xs,
+            ),
+            decoration: BoxDecoration(
+              borderRadius: DsRadius.borderPill,
+              gradient: selected ? palette.headerGradient : null,
+              color: selected ? null : palette.surface,
+              border: Border.all(
+                color: selected
+                    ? DsColors.gold300.withValues(alpha: 0.7)
+                    : palette.line,
+              ),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  label,
+                  style: context.dsText.labelLarge
+                      .copyWith(
+                        fontWeight: selected
+                            ? DsTypography.semiBold
+                            : DsTypography.medium,
+                      )
+                      .tint(ink),
+                ),
+                if (count != null) ...[
+                  DsGaps.hXs,
+                  Container(
+                    constraints: const BoxConstraints(minWidth: DsSpacing.lg),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: DsSpacing.xxs + DsSpacing.xxxs,
+                    ),
+                    decoration: BoxDecoration(
+                      color: selected ? DsColors.gold200 : palette.goldSoft,
+                      borderRadius: DsRadius.borderPill,
+                    ),
+                    child: Text(
+                      '$count',
+                      textAlign: TextAlign.center,
+                      style: context.dsText.badge.tint(
+                        selected ? DsColors.onGold : palette.gold,
+                      ),
+                    ),
+                  ),
+                ],
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// One bead on a silk thread, for a journey drawn down the page: an order's
+/// steps, a return's history. Painted the full height of its row so a list of
+/// them reads as one thread; [done] lights the bead champagne.
+class AtelierThreadBead extends StatelessWidget {
+  const AtelierThreadBead({
+    super.key,
+    required this.first,
+    required this.last,
+    this.done = false,
+  });
+
+  final bool first;
+  final bool last;
+  final bool done;
+
+  @override
+  Widget build(BuildContext context) {
+    final palette = context.atelier;
+    return SizedBox(
+      width: DsSizes.iconMd,
+      child: CustomPaint(
+        painter: _AtelierBeadPainter(
+          first: first,
+          last: last,
+          done: done,
+          silk: palette.primary,
+          gold: palette.gold,
+          ground: palette.surface,
+        ),
+      ),
+    );
+  }
+}
+
+class _AtelierBeadPainter extends CustomPainter {
+  const _AtelierBeadPainter({
+    required this.first,
+    required this.last,
+    required this.done,
+    required this.silk,
+    required this.gold,
+    required this.ground,
+  });
+
+  final bool first;
+  final bool last;
+  final bool done;
+  final Color silk;
+  final Color gold;
+  final Color ground;
+
+  static const double _beadY = DsSpacing.sm;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final x = size.width / 2;
+    _stitch(
+      canvas,
+      Path()
+        ..moveTo(x, first ? _beadY : 0)
+        ..lineTo(x, last ? _beadY : size.height),
+      Paint()
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 1.8
+        ..strokeCap = StrokeCap.round
+        ..color = silk.withValues(alpha: 0.5),
+      dash: 5,
+      gap: 4,
+    );
+    final bead = Offset(x, _beadY);
+    canvas.drawCircle(bead, 6.5, Paint()..color = ground);
+    canvas.drawCircle(
+      bead,
+      6.5,
+      Paint()
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 2
+        ..color = done ? gold : silk.withValues(alpha: 0.6),
+    );
+    canvas.drawCircle(bead, 3, Paint()..color = done ? gold : silk);
+  }
+
+  @override
+  bool shouldRepaint(_AtelierBeadPainter old) =>
+      old.first != first ||
+      old.last != last ||
+      old.done != done ||
+      old.silk != silk ||
+      old.gold != gold ||
+      old.ground != ground;
+}
+
+// ---------------------------------------------------------------------------
+// The swatch
+// ---------------------------------------------------------------------------
+
+/// A product as a fabric swatch: a card whose leading edge is cut with
+/// pinking shears, the way a sample is cut from the bolt.
+class SwatchCard extends StatelessWidget {
+  const SwatchCard({
+    super.key,
+    required this.child,
+    this.onTap,
+    this.padding = DsSpacing.paddingMd,
+  });
+
+  final Widget child;
+  final VoidCallback? onTap;
+  final EdgeInsetsGeometry padding;
+
+  @override
+  Widget build(BuildContext context) {
+    final palette = context.atelier;
+    final rtl = Directionality.of(context) == TextDirection.rtl;
+    final clipper = _SwatchClipper(rtl: rtl);
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        borderRadius: DsRadius.borderXl,
+        boxShadow: [
+          for (final shadow in palette.shadow)
+            BoxShadow(
+              color: shadow.color.withValues(alpha: shadow.color.a * 0.6),
+              blurRadius: shadow.blurRadius,
+              offset: shadow.offset * 0.5,
+            ),
+        ],
+      ),
+      child: ClipPath(
+        clipper: clipper,
+        child: Material(
+          color: palette.surface,
+          child: InkWell(
+            onTap: onTap,
+            child: CustomPaint(
+              foregroundPainter: _SwatchEdgePainter(
+                rtl: rtl,
+                line: palette.line,
+              ),
+              child: Padding(
+                padding: padding.add(
+                  EdgeInsetsDirectional.only(start: _SwatchClipper.tooth),
+                ),
+                child: child,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+Path _swatchPath(Size size, bool rtl) {
+  const t = _SwatchClipper.tooth;
+  const r = DsRadius.xl;
+  final path = Path();
+  // Built left-to-right with the pinked edge on the left, then mirrored for
+  // a right-to-left page so the cut is always on the leading side.
+  path.moveTo(t, 0);
+  path.lineTo(size.width - r, 0);
+  path.quadraticBezierTo(size.width, 0, size.width, r);
+  path.lineTo(size.width, size.height - r);
+  path.quadraticBezierTo(size.width, size.height, size.width - r, size.height);
+  path.lineTo(t, size.height);
+  // The zigzag, bottom to top.
+  var y = size.height;
+  var out = true;
+  while (y > 0) {
+    y = math.max(0, y - t);
+    path.lineTo(out ? 0 : t, y);
+    out = !out;
+  }
+  path.lineTo(t, 0);
+  path.close();
+  if (!rtl) return path;
+  return path.transform(
+    (Matrix4.identity()
+          ..translateByDouble(size.width, 0, 0, 1)
+          ..scaleByDouble(-1, 1, 1, 1))
+        .storage,
+  );
+}
+
+class _SwatchClipper extends CustomClipper<Path> {
+  const _SwatchClipper({required this.rtl});
+
+  final bool rtl;
+
+  static const double tooth = 6;
+
+  @override
+  Path getClip(Size size) => _swatchPath(size, rtl);
+
+  @override
+  bool shouldReclip(_SwatchClipper old) => old.rtl != rtl;
+}
+
+class _SwatchEdgePainter extends CustomPainter {
+  const _SwatchEdgePainter({required this.rtl, required this.line});
+
+  final bool rtl;
+  final Color line;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    canvas.drawPath(
+      _swatchPath(size, rtl),
+      Paint()
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 1
+        ..color = line,
+    );
+  }
+
+  @override
+  bool shouldRepaint(_SwatchEdgePainter old) =>
+      old.rtl != rtl || old.line != line;
+}
+
+/// Stock as a length of tape measure: a cream tape with a tick every unit
+/// band, filled up to [value] of [max] in [color].
+class TapeMeasure extends StatelessWidget {
+  const TapeMeasure({
+    super.key,
+    required this.value,
+    required this.max,
+    required this.color,
+    this.height = DsSpacing.sm,
+  });
+
+  final double value;
+  final double max;
+  final Color color;
+  final double height;
+
+  @override
+  Widget build(BuildContext context) {
+    final palette = context.atelier;
+    return TweenAnimationBuilder<double>(
+      tween: Tween(begin: 0, end: max <= 0 ? 0 : (value / max).clamp(0.0, 1.0)),
+      duration: DsReducedMotion.duration(DsMotion.slow),
+      curve: DsMotion.gentle,
+      builder: (context, fraction, _) => CustomPaint(
+        size: Size(double.infinity, height),
+        painter: _TapePainter(
+          fraction: fraction,
+          color: color,
+          tape: palette.goldSoft,
+          tick: palette.gold,
+          rtl: Directionality.of(context) == TextDirection.rtl,
+        ),
+      ),
+    );
+  }
+}
+
+class _TapePainter extends CustomPainter {
+  const _TapePainter({
+    required this.fraction,
+    required this.color,
+    required this.tape,
+    required this.tick,
+    required this.rtl,
+  });
+
+  final double fraction;
+  final Color color;
+  final Color tape;
+  final Color tick;
+  final bool rtl;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final r = Radius.circular(size.height / 3);
+    canvas.drawRRect(
+      RRect.fromRectAndRadius(Offset.zero & size, r),
+      Paint()..color = tape,
+    );
+    final w = size.width * fraction;
+    final filled = rtl
+        ? Rect.fromLTWH(size.width - w, 0, w, size.height)
+        : Rect.fromLTWH(0, 0, w, size.height);
+    canvas.drawRRect(
+      RRect.fromRectAndRadius(filled, r),
+      Paint()..color = color.withValues(alpha: 0.85),
+    );
+    // The ticks: a long one every fifth.
+    final paint = Paint()
+      ..strokeWidth = 1
+      ..color = tick.withValues(alpha: 0.55);
+    const step = 6.0;
+    var i = 0;
+    for (double x = step; x < size.width; x += step) {
+      final long = i % 5 == 4;
+      canvas.drawLine(
+        Offset(x, 0),
+        Offset(x, size.height * (long ? 0.7 : 0.4)),
+        paint,
+      );
+      i++;
+    }
+  }
+
+  @override
+  bool shouldRepaint(_TapePainter old) =>
+      old.fraction != fraction ||
+      old.color != color ||
+      old.tape != tape ||
+      old.tick != tick ||
+      old.rtl != rtl;
 }

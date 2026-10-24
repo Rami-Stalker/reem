@@ -35,82 +35,97 @@ class ReturnRequestCard extends StatelessWidget {
     final l10n = context.l10n;
     final primary = request.availableActions.firstOrNull;
 
-    return SellerPanel(
-      onTap: onOpen,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
+    final tone = context.returnStatusColor(request.status);
+
+    // A return is a ticket like an order: the job on the body, the refund
+    // and the state on the stub.
+    final body = Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          context.returnReasonLabel(request.reason),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: context.dsText.tileTitle.bold.tint(palette.ink),
+        ),
+        DsGaps.vXxxs,
+        Text(
+          '${request.number} · '
+          '${l10n.returnParcelLabel(request.parcel.sellerOrderNumber)}',
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: context.dsText.caption.tint(palette.muted),
+        ),
+        DsGaps.vSm,
+        _ItemStrip(items: request.items),
+        if (primary != null && onPrimaryAction != null) ...[
+          DsGaps.vMd,
+          if (isActing)
+            const Center(child: DsLoadingIndicator.inline())
+          else
+            DsButton(
+              label: context.returnActionLabel(primary),
+              icon: context.returnActionIcon(primary),
+              variant: DsButtonVariant.secondary,
+              size: DsButtonSize.sm,
+              onPressed: () => onPrimaryAction!(primary),
+            ),
+        ],
+      ],
+    );
+
+    final refund = request.refund;
+    final stub = Column(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          context.returnStatusLabel(request.status),
+          textAlign: TextAlign.center,
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+          style: context.dsText.captionStrong.tint(tone),
+        ),
+        if (refund != null)
+          Column(
             children: [
-              Expanded(
-                child: Text(
-                  context.returnReasonLabel(request.reason),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: context.dsText.tileTitle.bold.tint(palette.ink),
-                ),
+              Text(
+                refund.settled
+                    ? l10n.returnRefundSettled
+                    : l10n.returnRefundQuote,
+                textAlign: TextAlign.center,
+                style: context.dsText.micro.tint(palette.muted),
               ),
-              SellerStatusPill(
-                label: context.returnStatusLabel(request.status),
-                icon: Icons.circle,
-                color: context.returnStatusColor(request.status),
+              DsGaps.vXxxs,
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  refund.amount.format(),
+                  style: context.dsText.tileTitle.displayFamily.bold.tint(
+                    refund.settled ? palette.ink : palette.gold,
+                  ),
+                ),
               ),
             ],
           ),
-          DsGaps.vXxxs,
-          Text(
-            '${request.number} · '
-            '${l10n.returnParcelLabel(request.parcel.sellerOrderNumber)}',
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: context.dsText.caption.tint(palette.muted),
-          ),
+        Icon(Icons.chevron_right_rounded, size: DsSizes.iconSm, color: tone),
+      ],
+    );
 
-          const SizedBox(height: DsSpacing.sm),
-          _ItemStrip(items: request.items),
-
-          if (request.refund case final RefundQuote refund) ...[
-            const SizedBox(height: DsSpacing.sm),
-            Row(
-              children: [
-                Text(
-                  refund.settled
-                      ? l10n.returnRefundSettled
-                      : l10n.returnRefundQuote,
-                  style: context.dsText.caption.tint(palette.muted),
-                ),
-                const SizedBox(width: DsSpacing.xs),
-                Text(
-                  refund.amount.format(),
-                  style: context.dsText.labelMedium.bold.tint(refund.settled ? palette.ink : palette.muted),
-                ),
-              ],
-            ),
-          ],
-
-          if (primary != null && onPrimaryAction != null) ...[
-            const SizedBox(height: DsSpacing.md),
-            if (isActing)
-              const Center(
-                child: DsLoadingIndicator.inline(),
-              )
-            else
-              DsButton(
-                label: context.returnActionLabel(primary),
-                icon: context.returnActionIcon(primary),
-                variant: DsButtonVariant.secondary,
-                onPressed: () => onPrimaryAction!(primary),
-              ),
-          ],
-        ],
+    return Semantics(
+      button: true,
+      label:
+          '${context.returnReasonLabel(request.reason)}، '
+          '${context.returnStatusLabel(request.status)}',
+      child: TailorTicket(
+        onTap: onOpen,
+        stubColor: tone,
+        body: body,
+        stub: stub,
       ),
     );
   }
 }
 
-/// The goods coming back, as thumbnails with a quantity badge. A return of
-/// three of one thing and one of another is a different parcel to pack than a
-/// single item, and the strip says so at a glance.
 class _ItemStrip extends StatelessWidget {
   const _ItemStrip({required this.items});
 

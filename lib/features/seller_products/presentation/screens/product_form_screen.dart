@@ -365,10 +365,13 @@ class _ProductFormScreenState extends ConsumerState<ProductFormScreen> {
       background: const SellerAtelierBackground(),
       backgroundColor: context.atelier.background,
       slivers: [
-        PremiumAppBar(
+        AtelierAppBar(
+          icon: _isEditing ? Icons.edit_rounded : Icons.add_box_rounded,
           title: _isEditing ? l10n.formEditProduct : l10n.formNewProduct,
           showBack: true,
         ),
+        // Air between the banner and the page.
+        DsGaps.sliverMd,
         SliverPadding(
           padding: const EdgeInsets.fromLTRB(
             DsSpacing.lg,

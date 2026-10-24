@@ -32,7 +32,12 @@ class DemandRadarScreen extends ConsumerWidget {
       background: const SellerAtelierBackground(),
       backgroundColor: palette.background,
       slivers: [
-        PremiumAppBar(title: context.l10n.siDemandRadar),
+        AtelierAppBar(
+          icon: Icons.radar_rounded,
+          title: context.l10n.siDemandRadar,
+        ),
+        // Air between the banner and the page.
+        DsGaps.sliverMd,
         ...async.when(
           loading: () => [
             const SliverToBoxAdapter(

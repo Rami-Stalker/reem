@@ -40,15 +40,25 @@ class ManagedProductCard extends StatelessWidget {
     final palette = context.atelier;
     final l10n = context.l10n;
 
-    return SellerPanel(
+    // Stock read as a tape: amber from ten down, red from three — the same
+    // thresholds the home's rail uses for «باقي».
+    final stockColor = product.stock <= 3
+        ? palette.critical
+        : product.stock <= 10
+        ? palette.caution
+        : palette.positive;
+
+    return SwatchCard(
+      onTap: () => onAction(ProductCardAction.edit),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(DsRadius.md),
+          // The piece, cut to Reem's arch.
+          ClipPath(
+            clipper: const DsArchClipper(),
             child: SizedBox(
-              width: 74,
-              height: 74,
+              width: 72,
+              height: 90,
               child: product.coverImage != null
                   ? AuthorizedMediaImage(
                       url: product.coverImage!,
@@ -57,25 +67,42 @@ class ManagedProductCard extends StatelessWidget {
                   : _Placeholder(palette: palette),
             ),
           ),
-          const SizedBox(width: DsSpacing.md),
+          DsGaps.hMd,
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   product.title,
-                  maxLines: 1,
+                  maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                  style: context.dsText.body.bold.tint(palette.ink),
+                  style: context.dsText.bodyStrong.tint(palette.ink),
                 ),
-                DsGaps.vXxxs,
+                DsGaps.vXxs,
                 Text(
-                  _priceAndStock(context),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: context.dsText.bodySmall.tint(palette.muted),
+                  product.price.format(),
+                  style: context.dsText.tileTitle.displayFamily.bold.tint(
+                    palette.gold,
+                  ),
                 ),
-                const SizedBox(height: DsSpacing.xs),
+                DsGaps.vXs,
+                Row(
+                  children: [
+                    Expanded(
+                      child: TapeMeasure(
+                        value: product.stock.toDouble(),
+                        max: 30,
+                        color: stockColor,
+                      ),
+                    ),
+                    DsGaps.hSm,
+                    Text(
+                      l10n.sellerStock('${product.stock}'),
+                      style: context.dsText.captionStrong.tint(stockColor),
+                    ),
+                  ],
+                ),
+                DsGaps.vSm,
                 Wrap(
                   spacing: DsSpacing.sm,
                   runSpacing: DsSpacing.xs,
@@ -139,11 +166,6 @@ class ManagedProductCard extends StatelessWidget {
       ),
     );
   }
-
-  /// "12,000 ل.س · 8 in stock" — [ManagedProduct.price] is a non-null [Money],
-  /// so it formats itself; only the stock half needs translating.
-  String _priceAndStock(BuildContext context) =>
-      '${product.price.format()} · ${context.l10n.sellerStock('${product.stock}')}';
 }
 
 class _Placeholder extends StatelessWidget {
@@ -152,8 +174,14 @@ class _Placeholder extends StatelessWidget {
   final SellerAtelierPalette palette;
 
   @override
-  Widget build(BuildContext context) => ColoredBox(
-    color: palette.background,
-    child: Icon(Icons.image_outlined, color: palette.muted),
+  Widget build(BuildContext context) => DecoratedBox(
+    decoration: BoxDecoration(
+      gradient: LinearGradient(
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
+        colors: [palette.primarySoft, palette.goldSoft],
+      ),
+    ),
+    child: Icon(Icons.checkroom_rounded, color: palette.primary),
   );
 }

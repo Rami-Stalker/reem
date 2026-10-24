@@ -39,7 +39,13 @@ class SellerReviewsScreen extends ConsumerWidget {
       background: const SellerAtelierBackground(),
       backgroundColor: context.atelier.background,
       slivers: [
-        PremiumAppBar(title: l10n.sellerReviewsTitle, showBack: true),
+        AtelierAppBar(
+          icon: Icons.reviews_rounded,
+          title: l10n.sellerReviewsTitle,
+          showBack: true,
+        ),
+        // Air between the banner and the page.
+        DsGaps.sliverMd,
         SliverToBoxAdapter(
           child: _FilterBar(
             unansweredOnly: state.unansweredOnly,
@@ -190,39 +196,19 @@ class _FilterBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final palette = context.atelier;
     final l10n = context.l10n;
-
-    Widget chip(String label, bool selected, VoidCallback onTap) => ChoiceChip(
-      label: Text(label),
-      selected: selected,
-      onSelected: (_) => onTap(),
-      selectedColor: palette.primarySoft,
-      backgroundColor: palette.surface,
-      side: BorderSide(color: selected ? palette.primary : palette.line),
-      labelStyle: selected
-                ? context.dsText.tab.bold.tint(palette.primary)
-                : context.dsText.tab.medium.tint(palette.ink),
-    );
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: DsSpacing.lg,
-        vertical: DsSpacing.sm,
-      ),
-      child: Row(
-        children: [
-          chip(l10n.reviewsFilterAll, !unansweredOnly, () => onSelect(false)),
-          const SizedBox(width: DsSpacing.sm),
-          chip(
-            unanswered == 0
-                ? l10n.reviewsFilterUnanswered
-                : '${l10n.reviewsFilterUnanswered} · $unanswered',
-            unansweredOnly,
-            () => onSelect(true),
-          ),
-        ],
-      ),
+    return AtelierBeads<bool>(
+      padding: EdgeInsets.symmetric(horizontal: atelierGutter(context)),
+      selected: unansweredOnly,
+      onSelected: onSelect,
+      options: [
+        (value: false, label: l10n.reviewsFilterAll, count: null),
+        (
+          value: true,
+          label: l10n.reviewsFilterUnanswered,
+          count: unanswered == 0 ? null : unanswered,
+        ),
+      ],
     );
   }
 }

@@ -35,7 +35,12 @@ class SellerTrendsScreen extends ConsumerWidget {
       background: const SellerAtelierBackground(),
       backgroundColor: context.atelier.background,
       slivers: [
-        PremiumAppBar(title: l10n.trendsSellerTitle),
+        AtelierAppBar(
+          icon: Icons.auto_graph_rounded,
+          title: l10n.trendsSellerTitle,
+        ),
+        // Air between the banner and the page.
+        DsGaps.sliverMd,
         SliverToBoxAdapter(
           child: TrendWindowBar(
             selected: state.window,
