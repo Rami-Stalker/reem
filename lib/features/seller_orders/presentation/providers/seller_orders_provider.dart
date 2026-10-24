@@ -1,14 +1,14 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
-import 'package:reem/core/network/network_info.dart';
-import 'package:reem/core/presentation/providers/core_providers.dart';
-import 'package:reem/core/result/result.dart';
+import 'package:ohara/core/network/network_info.dart';
+import 'package:ohara/core/presentation/providers/core_providers.dart';
+import 'package:ohara/core/result/result.dart';
 
-import 'package:reem/features/seller_orders/data/datasources/impl/seller_orders_remote_datasource_impl.dart';
-import 'package:reem/features/seller_orders/data/datasources/seller_orders_remote_datasource.dart';
-import 'package:reem/features/seller_orders/data/repositories/seller_orders_repository_impl.dart';
-import 'package:reem/features/seller_orders/domain/entities/seller_order.dart';
-import 'package:reem/features/seller_orders/domain/repositories/seller_orders_repository.dart';
+import 'package:ohara/features/seller_orders/data/datasources/impl/seller_orders_remote_datasource_impl.dart';
+import 'package:ohara/features/seller_orders/data/datasources/seller_orders_remote_datasource.dart';
+import 'package:ohara/features/seller_orders/data/repositories/seller_orders_repository_impl.dart';
+import 'package:ohara/features/seller_orders/domain/entities/seller_order.dart';
+import 'package:ohara/features/seller_orders/domain/repositories/seller_orders_repository.dart';
 
 final sellerOrdersRemoteDataSourceProvider =
     Provider<SellerOrdersRemoteDataSource>(

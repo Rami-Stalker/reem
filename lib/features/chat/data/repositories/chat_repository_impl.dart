@@ -1,10 +1,10 @@
-import 'package:reem/core/base/repository_handler.dart';
-import 'package:reem/core/result/result.dart';
-import 'package:reem/features/chat/data/datasources/chat_remote_datasource.dart';
-import 'package:reem/features/chat/domain/entities/chat_message_entity.dart';
-import 'package:reem/features/chat/domain/entities/chat_start_request.dart';
-import 'package:reem/features/chat/domain/entities/chat_thread_entity.dart';
-import 'package:reem/features/chat/domain/repositories/chat_repository.dart';
+import 'package:ohara/core/base/repository_handler.dart';
+import 'package:ohara/core/result/result.dart';
+import 'package:ohara/features/chat/data/datasources/chat_remote_datasource.dart';
+import 'package:ohara/features/chat/domain/entities/chat_message_entity.dart';
+import 'package:ohara/features/chat/domain/entities/chat_start_request.dart';
+import 'package:ohara/features/chat/domain/entities/chat_thread_entity.dart';
+import 'package:ohara/features/chat/domain/repositories/chat_repository.dart';
 
 class ChatRepositoryImpl with RepositoryHandler implements ChatRepository {
   const ChatRepositoryImpl({required this.remote});

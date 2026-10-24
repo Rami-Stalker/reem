@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/core/router/route_paths.dart';
-import 'package:reem/features/home/domain/entities/continue_shopping_item.dart';
-import 'package:reem/features/home/presentation/providers/home_content_provider.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/core/router/route_paths.dart';
+import 'package:ohara/features/home/domain/entities/continue_shopping_item.dart';
+import 'package:ohara/features/home/presentation/providers/home_content_provider.dart';
 
 /// "Pick up where you left off" — products from the bag / recent intent, each
 /// tagged with a contextual note ("In your bag", "Only 3 left").

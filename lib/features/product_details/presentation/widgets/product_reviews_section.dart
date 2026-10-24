@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/errors/failure_exception.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/core/router/route_paths.dart';
-import 'package:reem/features/reputation/domain/entities/fit_entities.dart';
-import 'package:reem/features/reputation/presentation/providers/reputation_provider.dart';
-import 'package:reem/features/reputation/presentation/widgets/product_fit_panel.dart';
-import 'package:reem/features/reputation/presentation/widgets/review_card.dart';
-import 'package:reem/features/reputation/presentation/widgets/review_composer.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/errors/failure_exception.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/core/router/route_paths.dart';
+import 'package:ohara/features/reputation/domain/entities/fit_entities.dart';
+import 'package:ohara/features/reputation/presentation/providers/reputation_provider.dart';
+import 'package:ohara/features/reputation/presentation/widgets/product_fit_panel.dart';
+import 'package:ohara/features/reputation/presentation/widgets/review_card.dart';
+import 'package:ohara/features/reputation/presentation/widgets/review_composer.dart';
 
 /// A product's reviews, with «تقييمات من بمقاسي» on top: how it fits, and the
 /// two narrowings that matter before buying clothes — women her size, and

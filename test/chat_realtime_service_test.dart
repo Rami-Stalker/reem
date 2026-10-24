@@ -8,8 +8,8 @@ import 'dart:math';
 
 import 'package:fake_async/fake_async.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:reem/core/storage/secure_storage_service.dart';
-import 'package:reem/features/chat/data/services/chat_realtime_service.dart';
+import 'package:ohara/core/storage/secure_storage_service.dart';
+import 'package:ohara/features/chat/data/services/chat_realtime_service.dart';
 import 'package:stream_channel/stream_channel.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 

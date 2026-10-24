@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/core/router/route_paths.dart';
-import 'package:reem/features/closet/domain/entities/closet_item.dart';
-import 'package:reem/features/closet/domain/entities/closet_look.dart';
-import 'package:reem/features/closet/domain/entities/closet_overview.dart';
-import 'package:reem/features/closet/domain/repositories/closet_repository.dart';
-import 'package:reem/features/closet/presentation/providers/closet_providers.dart';
-import 'package:reem/features/closet/presentation/widgets/today_outfit_card.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/core/router/route_paths.dart';
+import 'package:ohara/features/closet/domain/entities/closet_item.dart';
+import 'package:ohara/features/closet/domain/entities/closet_look.dart';
+import 'package:ohara/features/closet/domain/entities/closet_overview.dart';
+import 'package:ohara/features/closet/domain/repositories/closet_repository.dart';
+import 'package:ohara/features/closet/presentation/providers/closet_providers.dart';
+import 'package:ohara/features/closet/presentation/widgets/today_outfit_card.dart';
 
 /// شو بقدر ألبس اليوم؟
 ///
@@ -35,7 +35,7 @@ class _ClosetTodayScreenState extends ConsumerState<ClosetTodayScreen> {
 
     return Scaffold(
       backgroundColor: colors.background,
-      appBar: ReemAppBar(title: context.l10n.closetWhatToWearToday),
+      appBar: OharaAppBar(title: context.l10n.closetWhatToWearToday),
       body: Column(
         children: [
           overviewAsync.maybeWhen(

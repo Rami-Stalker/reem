@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
-import 'package:reem/core/shared/value_objects/money.dart';
-import 'package:reem/features/ai_stylist/domain/entities/style_brief.dart';
-import 'package:reem/features/ai_stylist/domain/entities/stylist_message.dart';
+import 'package:ohara/core/shared/value_objects/money.dart';
+import 'package:ohara/features/ai_stylist/domain/entities/style_brief.dart';
+import 'package:ohara/features/ai_stylist/domain/entities/stylist_message.dart';
 
 class StylistConversation extends Equatable {
   final String id;

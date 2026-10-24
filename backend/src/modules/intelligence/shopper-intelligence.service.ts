@@ -21,7 +21,7 @@ import {
 } from './kernel/product-verdict';
 
 /**
- * What Reem knows about one woman looking at one product.
+ * What Ohara knows about one woman looking at one product.
  *
  * The seam between the commerce graph and the verdict kernel. Its job is to
  * assemble `ShopperFacts` and `ProductFacts` honestly and hand them over; every

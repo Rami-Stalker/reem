@@ -1,8 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:reem/core/result/result.dart';
-import 'package:reem/features/discovery/domain/usecases/discovery_usecases.dart';
-import 'package:reem/features/discovery/presentation/providers/discovery_providers.dart';
+import 'package:ohara/core/result/result.dart';
+import 'package:ohara/features/discovery/domain/usecases/discovery_usecases.dart';
+import 'package:ohara/features/discovery/presentation/providers/discovery_providers.dart';
 
 final dismissRecommendationUseCaseProvider = Provider(
   (ref) => DismissRecommendationUseCase(ref.watch(discoveryRepositoryProvider)),

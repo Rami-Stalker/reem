@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// Raw color palette for Reem — a premium, feminine social-commerce brand.
+/// Raw color palette for Ohara — a premium, feminine social-commerce brand.
 ///
 /// The mood: blush-rose elegance, mauve depth, champagne-gold luxury and warm,
 /// soft, rose-tinted neutrals. These are *raw* swatches; UI code should never

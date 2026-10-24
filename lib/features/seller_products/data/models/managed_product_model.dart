@@ -1,10 +1,10 @@
-import 'package:reem/core/shared/models/category_model.dart';
-import 'package:reem/core/shared/models/media_model.dart';
-import 'package:reem/core/shared/models/product_variant_model.dart';
-import 'package:reem/core/shared/value_objects/money.dart';
+import 'package:ohara/core/shared/models/category_model.dart';
+import 'package:ohara/core/shared/models/media_model.dart';
+import 'package:ohara/core/shared/models/product_variant_model.dart';
+import 'package:ohara/core/shared/value_objects/money.dart';
 
-import 'package:reem/features/seller_products/domain/entities/managed_product.dart';
-import 'package:reem/features/seller_products/domain/entities/product_status.dart';
+import 'package:ohara/features/seller_products/domain/entities/managed_product.dart';
+import 'package:ohara/features/seller_products/domain/entities/product_status.dart';
 
 class ManagedProductModel extends ManagedProduct {
   const ManagedProductModel({

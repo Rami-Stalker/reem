@@ -51,6 +51,7 @@ import { Buyer, guestSessionIdOf, ownedByBuyer, userIdOf } from './buyer';
 import { expiryFor } from './order-expiry';
 import { InventoryReservationService } from './workflow/inventory-reservation.service';
 import { claimFlashSaleUnits } from './workflow/stock-claim';
+import { pinOf } from '../../common/geo/pin';
 
 interface SellerGroup {
   sellerId: string;
@@ -99,7 +100,7 @@ export class CheckoutService {
   /**
    * The cart's door into checkout.
    *
-   * Kept exactly as it was, and now one of two: Reem Rooms buys through
+   * Kept exactly as it was, and now one of two: Ohara Rooms buys through
    * [checkoutLines] with a plan's own lines, never by filling the cart first.
    * Two doors, one till — see the section comment in `schema.prisma`.
    */
@@ -310,6 +311,7 @@ export class CheckoutService {
           city: shipping.city,
           addressLine: shipping.address_line,
           landmark: shipping.landmark ?? null,
+          ...pinOf(shipping),
           privacyMaskEnabled: dto.privacy_mask ?? false,
           deliveryInstructions: dto.delivery_instructions ?? null,
           notes: dto.notes ?? null,
@@ -1038,6 +1040,8 @@ export class CheckoutService {
           city: saved.city,
           address_line: saved.addressLine,
           landmark: saved.landmark ?? undefined,
+          latitude: saved.latitude,
+          longitude: saved.longitude,
           is_rural: saved.isRural,
         },
         // An address she has used before is a address a courier has found
@@ -1071,6 +1075,7 @@ export class CheckoutService {
             city: dto.shipping.city,
             addressLine: dto.shipping.address_line,
             landmark: dto.shipping.landmark ?? null,
+            ...pinOf(dto.shipping),
             isRural: dto.shipping.is_rural ?? false,
             deliveryInstructions: dto.delivery_instructions ?? null,
             isDefault: isFirst,

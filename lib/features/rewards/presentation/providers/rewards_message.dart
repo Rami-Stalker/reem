@@ -1,4 +1,4 @@
-import 'package:reem/l10n/app_localizations.dart';
+import 'package:ohara/l10n/app_localizations.dart';
 
 /// An outcome of the rewards hub, named rather than spelled out.
 ///

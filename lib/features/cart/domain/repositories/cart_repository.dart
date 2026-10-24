@@ -1,6 +1,6 @@
-import 'package:reem/core/result/result.dart';
+import 'package:ohara/core/result/result.dart';
 
-import 'package:reem/features/cart/domain/entities/cart.dart';
+import 'package:ohara/features/cart/domain/entities/cart.dart';
 
 abstract interface class CartRepository {
   Future<Result<Cart>> getCart();

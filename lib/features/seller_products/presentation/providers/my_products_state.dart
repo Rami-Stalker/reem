@@ -1,5 +1,5 @@
-import 'package:reem/features/seller_products/domain/entities/managed_product.dart';
-import 'package:reem/features/seller_products/domain/entities/product_status.dart';
+import 'package:ohara/features/seller_products/domain/entities/managed_product.dart';
+import 'package:ohara/features/seller_products/domain/entities/product_status.dart';
 
 class MyProductsState {
   const MyProductsState({

@@ -1,5 +1,5 @@
-import 'package:reem/features/seller_products/data/models/managed_product_model.dart';
-import 'package:reem/features/seller_products/domain/entities/managed_product.dart';
+import 'package:ohara/features/seller_products/data/models/managed_product_model.dart';
+import 'package:ohara/features/seller_products/domain/entities/managed_product.dart';
 
 class ManagedProductPageModel extends ManagedProductPage {
   const ManagedProductPageModel({

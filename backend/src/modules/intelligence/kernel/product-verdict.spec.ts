@@ -79,7 +79,7 @@ const run = (
 
 // ── Silence ──────────────────────────────────────────────────────────────
 
-test('a shopper Reem knows nothing about is told nothing', () => {
+test('a shopper Ohara knows nothing about is told nothing', () => {
   assert.deepEqual(run(), [], 'no history, no opinions');
 });
 
@@ -361,8 +361,8 @@ test('the occasion note stands down when the intent note already fired', () => {
   );
 });
 
-test('Reem says at most three things, and drops the weakest', () => {
-  // A shopper Reem knows well can trip five rules at once. Saying all five
+test('Ohara says at most three things, and drops the weakest', () => {
+  // A shopper Ohara knows well can trip five rules at once. Saying all five
   // is not five times as useful — it is a wall the eye slides off, and the
   // line that mattered gets lost in it.
   const shopper: ShopperFacts = {

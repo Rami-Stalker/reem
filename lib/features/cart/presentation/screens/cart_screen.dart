@@ -5,15 +5,15 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/core/media/authorized_media_image.dart';
-import 'package:reem/core/media/media_variants.dart';
-import 'package:reem/core/router/route_paths.dart';
-import 'package:reem/core/shared/value_objects/money.dart';
-import 'package:reem/features/auth/presentation/widgets/auth_prompt_sheet.dart';
-import 'package:reem/features/cart/domain/entities/cart.dart';
-import 'package:reem/features/cart/presentation/providers/cart_providers.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/core/media/authorized_media_image.dart';
+import 'package:ohara/core/media/media_variants.dart';
+import 'package:ohara/core/router/route_paths.dart';
+import 'package:ohara/core/shared/value_objects/money.dart';
+import 'package:ohara/features/auth/presentation/widgets/auth_prompt_sheet.dart';
+import 'package:ohara/features/cart/domain/entities/cart.dart';
+import 'package:ohara/features/cart/presentation/providers/cart_providers.dart';
 
 /// Her basket, as the bags she is carrying.
 ///
@@ -51,7 +51,7 @@ class CartScreen extends ConsumerWidget {
 
     final bags = _bagsOf(cart);
 
-    return ReemScrollPage(
+    return OharaScrollPage(
       bottom: cart.isEmpty
           ? null
           : _TotalTicket(
@@ -98,7 +98,7 @@ class CartScreen extends ConsumerWidget {
               DsSpacing.md,
               DsSpacing.lg,
               // The ticket floating over the foot of the page is cleared by
-              // `ReemScrollPage` itself, measured rather than guessed.
+              // `OharaScrollPage` itself, measured rather than guessed.
               DsSpacing.lg,
             ),
             sliver: SliverList.separated(

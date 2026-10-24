@@ -1,8 +1,8 @@
-import 'package:reem/features/closet/domain/entities/closet_gap.dart';
-import 'package:reem/features/closet/domain/entities/closet_item.dart';
-import 'package:reem/features/closet/domain/entities/closet_look.dart';
-import 'package:reem/features/closet/domain/entities/closet_overview.dart';
-import 'package:reem/features/closet/domain/repositories/closet_repository.dart';
+import 'package:ohara/features/closet/domain/entities/closet_gap.dart';
+import 'package:ohara/features/closet/domain/entities/closet_item.dart';
+import 'package:ohara/features/closet/domain/entities/closet_look.dart';
+import 'package:ohara/features/closet/domain/entities/closet_overview.dart';
+import 'package:ohara/features/closet/domain/repositories/closet_repository.dart';
 
 abstract interface class ClosetRemoteDataSource {
   Future<ClosetOverview> overview();

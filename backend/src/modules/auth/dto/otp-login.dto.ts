@@ -36,12 +36,12 @@ export class DeviceDescriptorDto {
 }
 
 /**
- * Step one of the only sign-in journey most Reem accounts will ever use: she
+ * Step one of the only sign-in journey most Ohara accounts will ever use: she
  * types her number.
  *
  * The response is identical whether or not that number has an account, which
  * is not a nicety on a women-only platform — a route that answers "yes, she is
- * on Reem" to anybody who asks is a route that answers it to her family.
+ * on Ohara" to anybody who asks is a route that answers it to her family.
  */
 export class StartOtpLoginDto extends DeviceDescriptorDto {
   @PhoneField()

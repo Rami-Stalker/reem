@@ -1,5 +1,5 @@
-import 'package:reem/core/errors/app_exception.dart';
-import 'package:reem/core/errors/failure.dart';
+import 'package:ohara/core/errors/app_exception.dart';
+import 'package:ohara/core/errors/failure.dart';
 
 /// A [Failure] thrown out of a `FutureProvider`, carrying its own words.
 ///

@@ -466,7 +466,7 @@ dbTest('a shopper with no history is told nothing personal', async (world) => {
   // are facts about the *catalogue* — that a near-identical piece costs less,
   // that stock is nearly gone — and a stranger benefits from those while they
   // reveal nothing about her. What she must never see is a note that implies
-  // Reem knows her, because it does not.
+  // Ohara knows her, because it does not.
   const stranger = await world.db.user.findFirst({
     where: { orders: { none: {} }, favorites: { none: {} }, closet: { is: null } },
     select: { id: true },

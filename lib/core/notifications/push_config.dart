@@ -10,7 +10,7 @@ import 'package:flutter/foundation.dart';
 /// `GoogleService-Info.plist` checked into the repository beside it. That is
 /// fine for one project and wrong here for two reasons:
 ///
-///  - Reem has local, staging and production builds, and the config file
+///  - Ohara has local, staging and production builds, and the config file
 ///    approach ties a build to whichever project's file is on disk at compile
 ///    time. A `--dart-define` picks it per build, the same way every other
 ///    environment fact in this app is picked (see `AppEnv`).
@@ -66,7 +66,7 @@ abstract final class PushConfig {
   static const String _iosBundleId =
       String.fromEnvironment('FIREBASE_IOS_BUNDLE_ID', defaultValue: '');
 
-  /// The storage bucket. Not used — Reem's media lives in Supabase Storage —
+  /// The storage bucket. Not used — Ohara's media lives in Supabase Storage —
   /// but some Firebase SDK paths read it, so it is derivable rather than
   /// another define nobody will remember to pass.
   static String get _bucket =>

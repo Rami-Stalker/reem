@@ -1,14 +1,14 @@
 import 'package:dio/dio.dart';
-import 'package:reem/core/config/app_env.dart';
-import 'package:reem/core/network/http_cache/http_cache_store.dart';
-import 'package:reem/core/network/interceptors/auth_interceptor.dart';
-import 'package:reem/core/network/interceptors/cache_interceptor.dart';
-import 'package:reem/core/network/interceptors/device_proof_interceptor.dart';
-import 'package:reem/core/network/interceptors/retry_interceptor.dart';
-import 'package:reem/core/network/interceptors/telemetry_interceptor.dart';
-import 'package:reem/core/security/device_identity_service.dart';
-import 'package:reem/core/security/device_proof_signer.dart';
-import 'package:reem/core/storage/secure_storage_service.dart';
+import 'package:ohara/core/config/app_env.dart';
+import 'package:ohara/core/network/http_cache/http_cache_store.dart';
+import 'package:ohara/core/network/interceptors/auth_interceptor.dart';
+import 'package:ohara/core/network/interceptors/cache_interceptor.dart';
+import 'package:ohara/core/network/interceptors/device_proof_interceptor.dart';
+import 'package:ohara/core/network/interceptors/retry_interceptor.dart';
+import 'package:ohara/core/network/interceptors/telemetry_interceptor.dart';
+import 'package:ohara/core/security/device_identity_service.dart';
+import 'package:ohara/core/security/device_proof_signer.dart';
+import 'package:ohara/core/storage/secure_storage_service.dart';
 
 class ApiClient {
   ApiClient._();

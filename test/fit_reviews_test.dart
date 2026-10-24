@@ -13,19 +13,19 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/errors/failure.dart';
-import 'package:reem/core/localization/app_localizations.dart';
-import 'package:reem/core/result/result.dart';
-import 'package:reem/features/reputation/data/datasources/reputation_remote_datasource.dart';
-import 'package:reem/features/reputation/data/models/reputation_models.dart';
-import 'package:reem/features/reputation/domain/entities/fit_entities.dart';
-import 'package:reem/features/reputation/domain/repositories/reputation_repository.dart';
-import 'package:reem/features/reputation/presentation/providers/reputation_provider.dart';
-import 'package:reem/features/reputation/presentation/widgets/fit_labels.dart';
-import 'package:reem/features/reputation/presentation/widgets/product_fit_panel.dart';
-import 'package:reem/features/reputation/presentation/widgets/review_card.dart';
-import 'package:reem/l10n/app_localizations.dart' as gen;
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/errors/failure.dart';
+import 'package:ohara/core/localization/app_localizations.dart';
+import 'package:ohara/core/result/result.dart';
+import 'package:ohara/features/reputation/data/datasources/reputation_remote_datasource.dart';
+import 'package:ohara/features/reputation/data/models/reputation_models.dart';
+import 'package:ohara/features/reputation/domain/entities/fit_entities.dart';
+import 'package:ohara/features/reputation/domain/repositories/reputation_repository.dart';
+import 'package:ohara/features/reputation/presentation/providers/reputation_provider.dart';
+import 'package:ohara/features/reputation/presentation/widgets/fit_labels.dart';
+import 'package:ohara/features/reputation/presentation/widgets/product_fit_panel.dart';
+import 'package:ohara/features/reputation/presentation/widgets/review_card.dart';
+import 'package:ohara/l10n/app_localizations.dart' as gen;
 
 final _ar = gen.lookupAppLocalizations(const Locale('ar'));
 

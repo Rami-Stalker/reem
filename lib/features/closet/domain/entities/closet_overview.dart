@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
-import 'package:reem/features/closet/domain/entities/closet_gap.dart';
-import 'package:reem/features/closet/domain/entities/closet_item.dart';
+import 'package:ohara/features/closet/domain/entities/closet_gap.dart';
+import 'package:ohara/features/closet/domain/entities/closet_item.dart';
 
 /// The closed vocabulary, served by the backend.
 ///

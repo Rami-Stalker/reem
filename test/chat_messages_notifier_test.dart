@@ -13,18 +13,18 @@
 import 'dart:async';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:reem/core/errors/failure.dart';
-import 'package:reem/core/result/result.dart';
-import 'package:reem/features/chat/data/models/chat_message_model.dart';
-import 'package:reem/features/chat/domain/entities/chat_message_entity.dart';
-import 'package:reem/features/chat/domain/entities/chat_thread_entity.dart';
-import 'package:reem/features/chat/domain/repositories/chat_repository.dart';
-import 'package:reem/features/chat/domain/usecases/get_messages_usecase.dart';
-import 'package:reem/features/chat/domain/usecases/get_threads_usecase.dart';
-import 'package:reem/features/chat/domain/usecases/mark_chat_read_usecase.dart';
-import 'package:reem/features/chat/domain/usecases/send_message_usecase.dart';
-import 'package:reem/features/chat/domain/usecases/start_conversation_usecase.dart';
-import 'package:reem/features/chat/presentation/providers/chat_notifier.dart';
+import 'package:ohara/core/errors/failure.dart';
+import 'package:ohara/core/result/result.dart';
+import 'package:ohara/features/chat/data/models/chat_message_model.dart';
+import 'package:ohara/features/chat/domain/entities/chat_message_entity.dart';
+import 'package:ohara/features/chat/domain/entities/chat_thread_entity.dart';
+import 'package:ohara/features/chat/domain/repositories/chat_repository.dart';
+import 'package:ohara/features/chat/domain/usecases/get_messages_usecase.dart';
+import 'package:ohara/features/chat/domain/usecases/get_threads_usecase.dart';
+import 'package:ohara/features/chat/domain/usecases/mark_chat_read_usecase.dart';
+import 'package:ohara/features/chat/domain/usecases/send_message_usecase.dart';
+import 'package:ohara/features/chat/domain/usecases/start_conversation_usecase.dart';
+import 'package:ohara/features/chat/presentation/providers/chat_notifier.dart';
 
 const _chat = 'chat-1';
 const _me = 'buyer-1';

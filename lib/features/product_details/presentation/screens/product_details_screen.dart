@@ -2,27 +2,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/core/shared/entities/product.dart';
-import 'package:reem/core/shared/entities/product_variant.dart';
-import 'package:reem/core/shared/entities/seller_offer.dart';
-import 'package:reem/features/catalog/presentation/providers/catalog_provider.dart';
-import 'package:reem/features/closet/presentation/widgets/closet_pairing_panel.dart';
-import 'package:reem/features/intelligence/presentation/widgets/product_intelligence_notes.dart';
-import 'package:reem/features/product_details/presentation/widgets/product_buy_bar.dart';
-import 'package:reem/features/product_details/presentation/widgets/product_detail_body.dart';
-import 'package:reem/features/product_details/presentation/widgets/product_fit_line.dart';
-import 'package:reem/features/product_details/presentation/widgets/product_gallery_header.dart';
-import 'package:reem/features/product_details/presentation/widgets/product_headline.dart';
-import 'package:reem/features/product_details/presentation/widgets/product_option_pickers.dart';
-import 'package:reem/features/product_details/presentation/widgets/product_price_block.dart';
-import 'package:reem/features/product_details/presentation/widgets/product_reviews_section.dart';
-import 'package:reem/features/product_details/presentation/widgets/product_seller_card.dart';
-import 'package:reem/features/product_details/presentation/widgets/related_products_rail.dart';
-import 'package:reem/features/product_social/presentation/product_gestures.dart';
-import 'package:reem/features/product_social/presentation/widgets/product_social_bar.dart';
-import 'package:reem/features/visual_search/presentation/widgets/visually_similar_rail.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/core/shared/entities/product.dart';
+import 'package:ohara/core/shared/entities/product_variant.dart';
+import 'package:ohara/core/shared/entities/seller_offer.dart';
+import 'package:ohara/features/catalog/presentation/providers/catalog_provider.dart';
+import 'package:ohara/features/closet/presentation/widgets/closet_pairing_panel.dart';
+import 'package:ohara/features/intelligence/presentation/widgets/product_intelligence_notes.dart';
+import 'package:ohara/features/product_details/presentation/widgets/product_buy_bar.dart';
+import 'package:ohara/features/product_details/presentation/widgets/product_detail_body.dart';
+import 'package:ohara/features/product_details/presentation/widgets/product_fit_line.dart';
+import 'package:ohara/features/product_details/presentation/widgets/product_gallery_header.dart';
+import 'package:ohara/features/product_details/presentation/widgets/product_headline.dart';
+import 'package:ohara/features/product_details/presentation/widgets/product_option_pickers.dart';
+import 'package:ohara/features/product_details/presentation/widgets/product_price_block.dart';
+import 'package:ohara/features/product_details/presentation/widgets/product_reviews_section.dart';
+import 'package:ohara/features/product_details/presentation/widgets/product_seller_card.dart';
+import 'package:ohara/features/product_details/presentation/widgets/related_products_rail.dart';
+import 'package:ohara/features/product_social/presentation/product_gestures.dart';
+import 'package:ohara/features/product_social/presentation/widgets/product_social_bar.dart';
+import 'package:ohara/features/visual_search/presentation/widgets/visually_similar_rail.dart';
 
 /// The product page.
 ///
@@ -85,7 +85,7 @@ class _ProductDetailsScreenState extends ConsumerState<ProductDetailsScreen> {
 
     if (product == null) {
       return Scaffold(
-        appBar: ReemAppBar(title: context.l10n.error),
+        appBar: OharaAppBar(title: context.l10n.error),
         body: DsErrorState(
           message: state?.error,
           onRetry: hasId
@@ -168,7 +168,7 @@ class _ProductDetailsScreenState extends ConsumerState<ProductDetailsScreen> {
                     // Everything that answers "is this right for *me*" sits
                     // together, straight under the size she is choosing and
                     // above the long description: whether her size is kept,
-                    // what Reem knows about the piece for her, and how it goes
+                    // what Ohara knows about the piece for her, and how it goes
                     // with what she owns. Each renders nothing when it has
                     // nothing to say, so a piece nobody has bought, for a
                     // shopper with no closet, reads exactly as it did.
@@ -176,7 +176,7 @@ class _ProductDetailsScreenState extends ConsumerState<ProductDetailsScreen> {
                     // The gaps collapse with their sections, so a page with
                     // nothing to say here gains no blank band under the sizes.
                     ProductFitLine(productId: product.id, variant: variant),
-                    // Reem Intelligence. Above the closet panel because it is
+                    // Ohara Intelligence. Above the closet panel because it is
                     // the broader statement — it can say "you already own one
                     // of these", which she should read before anything that
                     // encourages the purchase.
@@ -184,7 +184,7 @@ class _ProductDetailsScreenState extends ConsumerState<ProductDetailsScreen> {
                       before: DsSpacing.sectionGap,
                       child: ProductIntelligenceNotes(productId: product.id),
                     ),
-                    // Reem Closet — "بتنسّق مع شي عندي؟".
+                    // Ohara Closet — "بتنسّق مع شي عندي؟".
                     DsCollapsingGap(
                       before: DsSpacing.sectionGap,
                       child: ClosetPairingPanel(productId: product.id),

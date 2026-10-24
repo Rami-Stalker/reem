@@ -2,13 +2,13 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:reem/core/shared/value_objects/money.dart';
-import 'package:reem/features/checkout/presentation/providers/applied_coupon_provider.dart';
-import 'package:reem/features/settings/data/models/address_model.dart';
-import 'package:reem/features/settings/data/models/coupon_model.dart';
-import 'package:reem/features/settings/domain/entities/address_draft.dart';
-import 'package:reem/features/settings/domain/entities/coupon_entity.dart';
-import 'package:reem/features/settings/domain/entities/coupon_validation.dart';
+import 'package:ohara/core/shared/value_objects/money.dart';
+import 'package:ohara/features/checkout/presentation/providers/applied_coupon_provider.dart';
+import 'package:ohara/features/settings/data/models/address_model.dart';
+import 'package:ohara/features/settings/data/models/coupon_model.dart';
+import 'package:ohara/features/settings/domain/entities/address_draft.dart';
+import 'package:ohara/features/settings/domain/entities/coupon_entity.dart';
+import 'package:ohara/features/settings/domain/entities/coupon_validation.dart';
 
 /// Contract tests for the settings surface, against the shapes
 /// `serializeAddress` and the rewards `serializeCoupon` actually emit.

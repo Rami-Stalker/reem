@@ -1,9 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
-import 'package:reem/core/network/api_endpoints.dart';
-import 'package:reem/core/presentation/providers/core_providers.dart';
-import 'package:reem/features/social/data/models/content_model.dart';
-import 'package:reem/features/social/domain/entities/content.dart';
+import 'package:ohara/core/network/api_endpoints.dart';
+import 'package:ohara/core/presentation/providers/core_providers.dart';
+import 'package:ohara/features/social/data/models/content_model.dart';
+import 'package:ohara/features/social/domain/entities/content.dart';
 
 /// What a moderator is looking at.
 ///

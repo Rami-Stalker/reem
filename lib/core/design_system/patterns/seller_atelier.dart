@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-import 'package:reem/core/design_system/foundation/theme/extensions/color_extension.dart';
-import 'package:reem/core/design_system/foundation/tokens/ds_colors.dart';
+import 'package:ohara/core/design_system/foundation/theme/extensions/color_extension.dart';
+import 'package:ohara/core/design_system/foundation/tokens/ds_colors.dart';
 
 /// The seller's visual identity: **the atelier**, the workroom behind the shop.
 ///
 /// The seller surfaces used to be painted in a fixed slate-and-blue SaaS
 /// palette. Two problems with that. It belonged to a different product — a
-/// boutique owner opening Reem went from blush and champagne to a stock
+/// boutique owner opening Ohara went from blush and champagne to a stock
 /// analytics dashboard — and every value was a `const Color`, so dark mode
 /// painted white cards on an aubergine ground.
 ///

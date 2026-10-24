@@ -4,7 +4,7 @@ import { DeliveryFailureReason, ShipmentStatus } from '@prisma/client';
  * One vocabulary for where a parcel is.
  *
  * Every carrier has its own words — `ASSIGNED_TO_RIDER`, `en_route`, `3`,
- * `تم التسليم` — and the rest of Reem must never learn any of them. A carrier's
+ * `تم التسليم` — and the rest of Ohara must never learn any of them. A carrier's
  * word is mapped here, once, into the `ShipmentStatus` the platform already
  * speaks; the raw word is kept beside it on the dispatch row so support can
  * still answer "what did they actually say".
@@ -119,7 +119,7 @@ export function foldStatusWord(value: string): string {
 }
 
 /**
- * A carrier's word for a status, in Reem's vocabulary.
+ * A carrier's word for a status, in Ohara's vocabulary.
  *
  * Returns null rather than guessing when nothing matches — an unknown status
  * is recorded on the dispatch and left for a human, because moving a parcel on

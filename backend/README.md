@@ -1,6 +1,6 @@
-# Reem API — NestJS
+# Ohara API — NestJS
 
-Production-grade REST API for the **Reem** women-focused social-commerce platform.
+Production-grade REST API for the **Ohara** women-focused social-commerce platform.
 
 ## Stack
 
@@ -104,7 +104,7 @@ POST /auth/otp/login/verify  { phone, code, client_nonce? }
 `start` answers **byte-identically** for a number with an account and one
 without — same shape, same masked destination. It has to: the route is
 unauthenticated by necessity, and any difference in the answer is a public
-lookup for "is this woman on Reem", which on this platform is a question with
+lookup for "is this woman on Ohara", which on this platform is a question with
 consequences well past the account. The first moment the platform says anything
 about whether the number is known is *after* the code is spent.
 
@@ -117,11 +117,11 @@ signing up under their own.
 
 `client_nonce` is the second half of the anti-relay defence that `match_code`
 starts. The challenge stores its hash and demands it back at verification, so a
-code recited over the phone to "Reem support" cannot be spent from their handset.
+code recited over the phone to "Ohara support" cannot be spent from their handset.
 
 ### The password is optional, and it cannot admit a new device
 
-Owner decision 1. `User.passwordHash` is null on a normal Reem account;
+Owner decision 1. `User.passwordHash` is null on a normal Ohara account;
 `passwordSetAt` records when she opted in, so "never had one" and "had one,
 removed it" stay distinguishable in a takeover timeline. Managed at
 `POST` / `DELETE /auth/account/password`, both at AAL3.
@@ -382,7 +382,7 @@ over; that is why the outbox seals the plaintext under `OTP_DELIVERY_KEY` and
 shreds it the moment the challenge is used, delivered or expired.
 
 Every response carries a two-digit `match_code` also printed in the message.
-It is the defence against "this is Reem support, read me your code": a code
+It is the defence against "this is Ohara support, read me your code": a code
 recited to her over the phone will not match the digits on her screen.
 
 Per-transport `daily_budget_micros` trips a circuit breaker that falls through

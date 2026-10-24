@@ -1,13 +1,13 @@
 import 'package:flutter_riverpod/legacy.dart';
-import 'package:reem/core/result/result.dart';
-import 'package:reem/core/shared/entities/comment.dart';
-import 'package:reem/core/shared/entities/user.dart';
-import 'package:reem/features/social_posts/domain/entities/comment_thread.dart';
+import 'package:ohara/core/result/result.dart';
+import 'package:ohara/core/shared/entities/comment.dart';
+import 'package:ohara/core/shared/entities/user.dart';
+import 'package:ohara/features/social_posts/domain/entities/comment_thread.dart';
 
-import 'package:reem/features/social_posts/domain/usecases/add_comment_usecase.dart';
-import 'package:reem/features/social_posts/domain/usecases/delete_comment_usecase.dart';
-import 'package:reem/features/social_posts/domain/usecases/get_comments_usecase.dart';
-import 'package:reem/features/social_posts/presentation/providers/comments_state.dart';
+import 'package:ohara/features/social_posts/domain/usecases/add_comment_usecase.dart';
+import 'package:ohara/features/social_posts/domain/usecases/delete_comment_usecase.dart';
+import 'package:ohara/features/social_posts/domain/usecases/get_comments_usecase.dart';
+import 'package:ohara/features/social_posts/presentation/providers/comments_state.dart';
 
 class CommentsNotifier extends StateNotifier<CommentsState> {
   CommentsNotifier({

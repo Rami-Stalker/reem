@@ -1,13 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:reem/core/design_system/components/buttons/ds_icon_button.dart';
-import 'package:reem/core/design_system/foundation/theme/extensions/color_extension.dart';
-import 'package:reem/core/design_system/foundation/tokens/ds_constraints.dart';
-import 'package:reem/core/design_system/foundation/tokens/ds_sizes.dart';
-import 'package:reem/core/design_system/foundation/tokens/ds_spacing.dart';
-import 'package:reem/core/design_system/foundation/tokens/ds_typography.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/core/platform/app_platform.dart';
+import 'package:ohara/core/design_system/components/buttons/ds_icon_button.dart';
+import 'package:ohara/core/design_system/foundation/theme/extensions/color_extension.dart';
+import 'package:ohara/core/design_system/foundation/tokens/ds_constraints.dart';
+import 'package:ohara/core/design_system/foundation/tokens/ds_sizes.dart';
+import 'package:ohara/core/design_system/foundation/tokens/ds_spacing.dart';
+import 'package:ohara/core/design_system/foundation/tokens/ds_typography.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/core/platform/app_platform.dart';
 
 /// One entry in a [DsBottomSheet.choose] menu.
 class DsSheetChoice<T> {
@@ -24,7 +24,7 @@ class DsSheetChoice<T> {
   final bool destructive;
 }
 
-/// Helpers for presenting Reem-styled modal bottom sheets.
+/// Helpers for presenting Ohara-styled modal bottom sheets.
 ///
 /// Visuals (shape, drag handle, barrier, elevation) come from the global
 /// bottom-sheet theme; these helpers add safe sizing and ergonomics.

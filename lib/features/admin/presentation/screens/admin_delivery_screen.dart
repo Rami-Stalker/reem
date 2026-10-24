@@ -3,18 +3,18 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/features/admin/domain/entities/delivery_provider.dart';
-import 'package:reem/features/admin/presentation/providers/delivery_admin_provider.dart';
-import 'package:reem/features/admin/presentation/widgets/admin_page_header.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/features/admin/domain/entities/delivery_provider.dart';
+import 'package:ohara/features/admin/presentation/providers/delivery_admin_provider.dart';
+import 'package:ohara/features/admin/presentation/widgets/admin_page_header.dart';
 
 /// The delivery companies desk.
 ///
-/// Reem manages the order; a delivery company manages the journey. So this
+/// Ohara manages the order; a delivery company manages the journey. So this
 /// screen has no drivers on it, no routes and no fleet — those belong to the
 /// carrier's own system, and building them here would be building the business
-/// Reem decided not to be in.
+/// Ohara decided not to be in.
 ///
 /// What it does have is the four decisions an operator actually makes: which
 /// companies are on, where each one delivers, which one wins when two cover the

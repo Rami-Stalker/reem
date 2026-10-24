@@ -1,11 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:reem/core/design_system/foundation/motion/animations/scale_animations.dart';
-import 'package:reem/core/design_system/foundation/theme/extensions/color_extension.dart';
-import 'package:reem/core/design_system/foundation/theme/extensions/gradient_extension.dart';
-import 'package:reem/core/design_system/foundation/tokens/ds_typography.dart';
-import 'package:reem/core/media/media_decode.dart';
-import 'package:reem/core/media/media_variants.dart';
+import 'package:ohara/core/design_system/foundation/motion/animations/scale_animations.dart';
+import 'package:ohara/core/design_system/foundation/theme/extensions/color_extension.dart';
+import 'package:ohara/core/design_system/foundation/theme/extensions/gradient_extension.dart';
+import 'package:ohara/core/design_system/foundation/tokens/ds_typography.dart';
+import 'package:ohara/core/media/media_decode.dart';
+import 'package:ohara/core/media/media_variants.dart';
 
 /// A circular avatar with image, initials fallback, optional story-style
 /// gradient ring and online indicator. Fully theme-driven.

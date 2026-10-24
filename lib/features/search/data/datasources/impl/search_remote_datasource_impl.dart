@@ -1,15 +1,15 @@
-import 'package:reem/core/domain/pagination/paginated_data.dart';
-import 'package:reem/core/network/api_endpoints.dart';
-import 'package:reem/core/network/base_remote_datasource.dart';
-import 'package:reem/core/shared/entities/post.dart';
-import 'package:reem/core/shared/entities/user.dart';
-import 'package:reem/core/shared/models/post_model.dart';
-import 'package:reem/core/shared/models/product_model.dart';
-import 'package:reem/core/shared/models/user_model.dart';
-import 'package:reem/features/discovery/data/models/product_page_model.dart';
-import 'package:reem/features/search/data/datasources/search_remote_datasource.dart';
-import 'package:reem/features/search/domain/entities/search_suggestions.dart';
-import 'package:reem/features/search/domain/entities/unified_search.dart';
+import 'package:ohara/core/domain/pagination/paginated_data.dart';
+import 'package:ohara/core/network/api_endpoints.dart';
+import 'package:ohara/core/network/base_remote_datasource.dart';
+import 'package:ohara/core/shared/entities/post.dart';
+import 'package:ohara/core/shared/entities/user.dart';
+import 'package:ohara/core/shared/models/post_model.dart';
+import 'package:ohara/core/shared/models/product_model.dart';
+import 'package:ohara/core/shared/models/user_model.dart';
+import 'package:ohara/features/discovery/data/models/product_page_model.dart';
+import 'package:ohara/features/search/data/datasources/search_remote_datasource.dart';
+import 'package:ohara/features/search/domain/entities/search_suggestions.dart';
+import 'package:ohara/features/search/domain/entities/unified_search.dart';
 
 final class SearchRemoteDataSourceImpl extends BaseRemoteDataSource
     implements SearchRemoteDataSource {

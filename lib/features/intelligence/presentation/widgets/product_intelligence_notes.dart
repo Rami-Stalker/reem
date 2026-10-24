@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/core/router/route_paths.dart';
-import 'package:reem/features/intelligence/domain/entities/intelligence_note.dart';
-import 'package:reem/features/intelligence/presentation/providers/intelligence_providers.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/core/router/route_paths.dart';
+import 'package:ohara/features/intelligence/domain/entities/intelligence_note.dart';
+import 'package:ohara/features/intelligence/presentation/providers/intelligence_providers.dart';
 
-/// What Reem has to say about this product, on the product page.
+/// What Ohara has to say about this product, on the product page.
 ///
 /// The whole of phase three's user-facing surface is this strip. That is
 /// deliberate: the brief asked for intelligence *inside* the experience rather
@@ -19,9 +19,9 @@ import 'package:reem/features/intelligence/presentation/providers/intelligence_p
 ///
 /// It renders **nothing** when there is nothing to say, which is most of the
 /// time. No header, no empty state, no skeleton — the page is simply unchanged
-/// for a shopper Reem knows nothing about.
+/// for a shopper Ohara knows nothing about.
 ///
-/// A **caution comes first and looks different**. If Reem is about to tell her
+/// A **caution comes first and looks different**. If Ohara is about to tell her
 /// she already owns something close, that sentence is not buried under the
 /// reasons to buy.
 ///

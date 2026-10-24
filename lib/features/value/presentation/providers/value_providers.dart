@@ -1,11 +1,11 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:reem/core/presentation/providers/core_providers.dart';
-import 'package:reem/core/result/result.dart';
-import 'package:reem/features/value/data/datasources/impl/value_remote_datasource_impl.dart';
-import 'package:reem/features/value/data/datasources/value_remote_datasource.dart';
-import 'package:reem/features/value/data/repositories/value_repository_impl.dart';
-import 'package:reem/features/value/domain/entities/value_standing.dart';
-import 'package:reem/features/value/domain/repositories/value_repository.dart';
+import 'package:ohara/core/presentation/providers/core_providers.dart';
+import 'package:ohara/core/result/result.dart';
+import 'package:ohara/features/value/data/datasources/impl/value_remote_datasource_impl.dart';
+import 'package:ohara/features/value/data/datasources/value_remote_datasource.dart';
+import 'package:ohara/features/value/data/repositories/value_repository_impl.dart';
+import 'package:ohara/features/value/domain/entities/value_standing.dart';
+import 'package:ohara/features/value/domain/repositories/value_repository.dart';
 
 // ── Infrastructure ──────────────────────────────────────────────────────
 

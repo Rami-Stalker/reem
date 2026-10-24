@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:reem/app/bootstrap.dart';
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/l10n/app_localizations.dart';
+import 'package:ohara/app/bootstrap.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/l10n/app_localizations.dart';
 
 class AppearanceScreen extends StatelessWidget {
   const AppearanceScreen({super.key});
@@ -14,7 +14,7 @@ class AppearanceScreen extends StatelessWidget {
     return ListenableBuilder(
       listenable: theme,
       builder: (context, _) {
-        return ReemScrollPage(
+        return OharaScrollPage(
           slivers: [
             PremiumAppBar(title: l10n.appearance, showBack: true),
             SliverPadding(

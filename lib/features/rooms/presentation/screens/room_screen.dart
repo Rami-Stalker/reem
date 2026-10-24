@@ -4,15 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/core/router/route_paths.dart';
-import 'package:reem/core/shared/services/share_links.dart';
-import 'package:reem/core/shared/services/share_service.dart';
-import 'package:reem/features/rooms/domain/entities/room.dart';
-import 'package:reem/features/rooms/presentation/l10n/room_labels.dart';
-import 'package:reem/features/rooms/presentation/providers/rooms_providers.dart';
-import 'package:reem/features/rooms/presentation/widgets/decision_card.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/core/router/route_paths.dart';
+import 'package:ohara/core/shared/services/share_links.dart';
+import 'package:ohara/core/shared/services/share_service.dart';
+import 'package:ohara/features/rooms/domain/entities/room.dart';
+import 'package:ohara/features/rooms/presentation/l10n/room_labels.dart';
+import 'package:ohara/features/rooms/presentation/providers/rooms_providers.dart';
+import 'package:ohara/features/rooms/presentation/widgets/decision_card.dart';
 
 /// One room: the decisions, and how close they are to being answered.
 ///
@@ -34,7 +34,7 @@ class RoomScreen extends ConsumerWidget {
 
     return Scaffold(
       backgroundColor: colors.background,
-      appBar: ReemAppBar(
+      appBar: OharaAppBar(
         title: roomAsync.maybeWhen(
           data: (room) => room.title,
           orElse: () => context.l10n.roomsRoomTitle,

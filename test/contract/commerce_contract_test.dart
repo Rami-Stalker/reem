@@ -2,13 +2,13 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:reem/core/shared/value_objects/money.dart';
-import 'package:reem/features/cart/data/models/cart_model.dart';
-import 'package:reem/features/checkout/data/models/checkout_models.dart';
-import 'package:reem/features/checkout/data/models/order_models.dart';
-import 'package:reem/features/checkout/domain/entities/order.dart';
-import 'package:reem/features/checkout/presentation/order_labels.dart';
-import 'package:reem/l10n/app_localizations_ar.dart';
+import 'package:ohara/core/shared/value_objects/money.dart';
+import 'package:ohara/features/cart/data/models/cart_model.dart';
+import 'package:ohara/features/checkout/data/models/checkout_models.dart';
+import 'package:ohara/features/checkout/data/models/order_models.dart';
+import 'package:ohara/features/checkout/domain/entities/order.dart';
+import 'package:ohara/features/checkout/presentation/order_labels.dart';
+import 'package:ohara/l10n/app_localizations_ar.dart';
 
 /// Contract tests for the commerce flow, run against responses captured from a
 /// real multi-seller checkout — a basket from two sellers, paid cash on

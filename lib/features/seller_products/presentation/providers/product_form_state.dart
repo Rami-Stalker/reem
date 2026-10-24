@@ -1,4 +1,4 @@
-import 'package:reem/features/seller_products/domain/entities/managed_product.dart';
+import 'package:ohara/features/seller_products/domain/entities/managed_product.dart';
 
 class ProductFormState {
   const ProductFormState({

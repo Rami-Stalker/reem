@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/media/authorized_media_image.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/media/authorized_media_image.dart';
 
 /// Full-screen photo viewer.
 ///
@@ -39,7 +39,7 @@ class MediaLightbox extends StatelessWidget {
       // uses, so full-bleed media reads as one place in the app.
       backgroundColor: DsColors.mediaGround,
       extendBodyBehindAppBar: true,
-      appBar: ReemAppBar(title: title ?? '', transparent: true),
+      appBar: OharaAppBar(title: title ?? '', transparent: true),
       body: Center(
         child: InteractiveViewer(
           maxScale: 4,

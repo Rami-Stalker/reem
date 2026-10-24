@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'package:reem/core/design_system/foundation/tokens/ds_colors.dart';
+import 'package:ohara/core/design_system/foundation/tokens/ds_colors.dart';
 
-/// Feminine gradient presets for Reem — blush rose, mauve and champagne gold.
+/// Feminine gradient presets for Ohara — blush rose, mauve and champagne gold.
 ///
 /// Prefer the theme-resolved accessors on `context` (`context.primaryGradient`
 /// etc.) so dark variants are picked automatically.

@@ -50,7 +50,7 @@ interface UploadedFileLike {
 }
 
 /**
- * `/visual-search` — Reem Visual Shopping.
+ * `/visual-search` — Ohara Visual Shopping.
  *
  * Every route is authenticated. A visual search is a photograph from her
  * camera roll and, in the try-on case, a photograph of her body; neither is a

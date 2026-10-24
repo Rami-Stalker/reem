@@ -18,17 +18,17 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/app_localizations.dart';
-import 'package:reem/core/router/app_router_provider.dart';
-import 'package:reem/core/router/route_paths.dart';
-import 'package:reem/features/occasions/data/datasources/occasions_remote_datasource.dart';
-import 'package:reem/features/occasions/data/models/occasion_models.dart';
-import 'package:reem/features/occasions/domain/entities/occasion.dart';
-import 'package:reem/features/occasions/presentation/providers/occasions_providers.dart';
-import 'package:reem/features/occasions/presentation/screens/occasion_detail_screen.dart';
-import 'package:reem/features/occasions/presentation/widgets/occasion_labels.dart';
-import 'package:reem/l10n/app_localizations.dart' as gen;
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/app_localizations.dart';
+import 'package:ohara/core/router/app_router_provider.dart';
+import 'package:ohara/core/router/route_paths.dart';
+import 'package:ohara/features/occasions/data/datasources/occasions_remote_datasource.dart';
+import 'package:ohara/features/occasions/data/models/occasion_models.dart';
+import 'package:ohara/features/occasions/domain/entities/occasion.dart';
+import 'package:ohara/features/occasions/presentation/providers/occasions_providers.dart';
+import 'package:ohara/features/occasions/presentation/screens/occasion_detail_screen.dart';
+import 'package:ohara/features/occasions/presentation/widgets/occasion_labels.dart';
+import 'package:ohara/l10n/app_localizations.dart' as gen;
 
 final _ar = gen.lookupAppLocalizations(const Locale('ar'));
 

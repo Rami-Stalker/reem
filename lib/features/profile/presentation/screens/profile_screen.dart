@@ -2,30 +2,30 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/experience/role_experience.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/core/router/route_paths.dart';
-import 'package:reem/features/auth/presentation/providers/auth_provider.dart';
-import 'package:reem/features/experience/presentation/providers/role_experience_provider.dart';
-import 'package:reem/features/experience/presentation/screens/experience_surface_screen.dart';
-import 'package:reem/features/highlights/presentation/widgets/highlights_rail.dart';
-import 'package:reem/features/profile/presentation/providers/profile_overview_provider.dart';
-import 'package:reem/features/profile/presentation/providers/profile_provider.dart';
-import 'package:reem/features/profile/presentation/widgets/profile_achievements.dart';
-import 'package:reem/features/profile/presentation/widgets/profile_completion_card.dart';
-import 'package:reem/features/profile/presentation/widgets/profile_followed_stores.dart';
-import 'package:reem/features/profile/presentation/widgets/profile_header.dart';
-import 'package:reem/features/profile/presentation/widgets/profile_loyalty_dashboard.dart';
-import 'package:reem/features/profile/presentation/widgets/profile_menu.dart';
-import 'package:reem/features/profile/presentation/widgets/profile_orders_overview.dart';
-import 'package:reem/features/profile/presentation/widgets/profile_recently_viewed.dart';
-import 'package:reem/features/profile/presentation/widgets/profile_referral_card.dart';
-import 'package:reem/features/profile/presentation/widgets/profile_wishlist_preview.dart';
-import 'package:reem/features/seller_dashboard/presentation/screens/seller_profile_screen.dart';
-import 'package:reem/features/user_profile/presentation/providers/user_profile_providers.dart';
-import 'package:reem/features/user_profile/presentation/widgets/my_page_card.dart';
-import 'package:reem/features/value/presentation/widgets/value_standing_card.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/experience/role_experience.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/core/router/route_paths.dart';
+import 'package:ohara/features/auth/presentation/providers/auth_provider.dart';
+import 'package:ohara/features/experience/presentation/providers/role_experience_provider.dart';
+import 'package:ohara/features/experience/presentation/screens/experience_surface_screen.dart';
+import 'package:ohara/features/highlights/presentation/widgets/highlights_rail.dart';
+import 'package:ohara/features/profile/presentation/providers/profile_overview_provider.dart';
+import 'package:ohara/features/profile/presentation/providers/profile_provider.dart';
+import 'package:ohara/features/profile/presentation/widgets/profile_achievements.dart';
+import 'package:ohara/features/profile/presentation/widgets/profile_completion_card.dart';
+import 'package:ohara/features/profile/presentation/widgets/profile_followed_stores.dart';
+import 'package:ohara/features/profile/presentation/widgets/profile_header.dart';
+import 'package:ohara/features/profile/presentation/widgets/profile_loyalty_dashboard.dart';
+import 'package:ohara/features/profile/presentation/widgets/profile_menu.dart';
+import 'package:ohara/features/profile/presentation/widgets/profile_orders_overview.dart';
+import 'package:ohara/features/profile/presentation/widgets/profile_recently_viewed.dart';
+import 'package:ohara/features/profile/presentation/widgets/profile_referral_card.dart';
+import 'package:ohara/features/profile/presentation/widgets/profile_wishlist_preview.dart';
+import 'package:ohara/features/seller_dashboard/presentation/screens/seller_profile_screen.dart';
+import 'package:ohara/features/user_profile/presentation/providers/user_profile_providers.dart';
+import 'package:ohara/features/user_profile/presentation/widgets/my_page_card.dart';
+import 'package:ohara/features/value/presentation/widgets/value_standing_card.dart';
 
 /// Role-aware profile dispatcher — renders [SellerProfileScreen] for sellers
 /// and the buyer profile hub for customers.
@@ -90,7 +90,7 @@ class _BuyerProfileScreenState extends ConsumerState<_BuyerProfileScreen> {
       favoritesNotifierProvider.select((s) => s.favorites.length),
     );
 
-    return ReemScrollPage(
+    return OharaScrollPage(
       onRefresh: _refresh,
       slivers: [
         SliverToBoxAdapter(
@@ -117,7 +117,7 @@ class _BuyerProfileScreenState extends ConsumerState<_BuyerProfileScreen> {
         ),
         const _Gap(_gap),
 
-        // Reem Value sits above the loyalty dashboard, because standing is what
+        // Ohara Value sits above the loyalty dashboard, because standing is what
         // she is on this platform and the points card below is what she is owed
         // by it. The order is the argument.
         _box(const ValueStandingCard()),

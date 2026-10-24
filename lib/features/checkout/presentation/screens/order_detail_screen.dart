@@ -4,23 +4,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/core/media/authorized_media_image.dart';
-import 'package:reem/core/media/media_variants.dart';
-import 'package:reem/core/router/route_paths.dart';
-import 'package:reem/core/shared/value_objects/money.dart';
-import 'package:reem/features/chat/domain/entities/chat_start_request.dart';
-import 'package:reem/features/chat/presentation/widgets/message_seller_button.dart';
-import 'package:reem/features/checkout/domain/entities/checkout.dart';
-import 'package:reem/features/checkout/domain/entities/order.dart';
-import 'package:reem/features/checkout/presentation/order_labels.dart';
-import 'package:reem/features/checkout/presentation/providers/checkout_providers.dart';
-import 'package:reem/features/checkout/presentation/providers/order_detail_notifier.dart';
-import 'package:reem/features/checkout/presentation/widgets/cod_confirmation_sheet.dart';
-import 'package:reem/features/checkout/presentation/widgets/order_status_chip.dart';
-import 'package:reem/features/checkout/presentation/widgets/payment_action_card.dart';
-import 'package:reem/features/policies/presentation/widgets/policy_link.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/core/media/authorized_media_image.dart';
+import 'package:ohara/core/media/media_variants.dart';
+import 'package:ohara/core/router/route_paths.dart';
+import 'package:ohara/core/shared/value_objects/money.dart';
+import 'package:ohara/features/chat/domain/entities/chat_start_request.dart';
+import 'package:ohara/features/chat/presentation/widgets/message_seller_button.dart';
+import 'package:ohara/features/checkout/domain/entities/checkout.dart';
+import 'package:ohara/features/checkout/domain/entities/order.dart';
+import 'package:ohara/features/checkout/presentation/order_labels.dart';
+import 'package:ohara/features/checkout/presentation/providers/checkout_providers.dart';
+import 'package:ohara/features/checkout/presentation/providers/order_detail_notifier.dart';
+import 'package:ohara/features/checkout/presentation/widgets/cod_confirmation_sheet.dart';
+import 'package:ohara/features/checkout/presentation/widgets/order_status_chip.dart';
+import 'package:ohara/features/checkout/presentation/widgets/payment_action_card.dart';
+import 'package:ohara/features/policies/presentation/widgets/policy_link.dart';
 
 /// One order, and what is happening to it.
 ///
@@ -113,7 +113,7 @@ class _OrderDetailScreenState extends ConsumerState<OrderDetailScreen>
       }
     });
 
-    return ReemScrollPage(
+    return OharaScrollPage(
       onRefresh: notifier.load,
       slivers: [
         PremiumAppBar(
@@ -683,7 +683,7 @@ class _ParcelCard extends StatelessWidget {
                 ),
               ),
             ),
-            // Who is actually carrying it. Reem hands a packed parcel to a
+            // Who is actually carrying it. Ohara hands a packed parcel to a
             // delivery company, and once it has left the boutique the two
             // things she needs are that company's name and its own number for
             // her box — the number she quotes if she rings them.

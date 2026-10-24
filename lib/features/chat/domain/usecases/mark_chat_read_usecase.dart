@@ -1,6 +1,6 @@
-import 'package:reem/core/result/result.dart';
+import 'package:ohara/core/result/result.dart';
 
-import 'package:reem/features/chat/domain/repositories/chat_repository.dart';
+import 'package:ohara/features/chat/domain/repositories/chat_repository.dart';
 
 /// She has read the conversation up to [messageId], or to its end.
 ///

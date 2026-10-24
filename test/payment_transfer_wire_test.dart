@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:reem/features/admin_finance/data/models/pending_transfer_model.dart';
-import 'package:reem/features/checkout/data/models/checkout_models.dart';
-import 'package:reem/features/checkout/data/models/order_models.dart';
+import 'package:ohara/features/admin_finance/data/models/pending_transfer_model.dart';
+import 'package:ohara/features/checkout/data/models/checkout_models.dart';
+import 'package:ohara/features/checkout/data/models/order_models.dart';
 
 /// The wire shapes behind Q51's transfer flow, as the API sends them.
 void main() {
@@ -11,9 +11,9 @@ void main() {
       'label': 'حوالة داخلية',
       'requires_online_confirmation': true,
       'rail': 'manual',
-      'instructions': 'مكتب الهرم — باسم ريم للتجارة',
+      'instructions': 'مكتب الهرم — باسم أوهارا للتجارة',
     });
-    expect(option.instructions, 'مكتب الهرم — باسم ريم للتجارة');
+    expect(option.instructions, 'مكتب الهرم — باسم أوهارا للتجارة');
 
     final cash = PaymentMethodOptionModel.fromJson({
       'method': 'cod',

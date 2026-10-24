@@ -514,7 +514,7 @@ export class SalonsService {
     ];
     if (!allowed.includes(user.role)) {
       throw new ForbiddenException(
-        'Apply to sell on Reem before opening a salon',
+        'Apply to sell on Ohara before opening a salon',
       );
     }
   }

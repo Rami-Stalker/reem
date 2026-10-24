@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/features/courier/domain/entities/courier_assignment.dart';
-import 'package:reem/features/shipment_tracking/presentation/widgets/shipment_journey.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/features/courier/domain/entities/courier_assignment.dart';
+import 'package:ohara/features/shipment_tracking/presentation/widgets/shipment_journey.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 /// One parcel on the round.
@@ -289,7 +289,7 @@ class _Actions extends StatelessWidget {
                 label: l10n.courierNavigate,
                 onTap: () => _launch(
                   'https://www.google.com/maps/search/?api=1&query='
-                  '${Uri.encodeComponent(assignment.address.oneLine)}',
+                  '${Uri.encodeComponent(assignment.address.mapQuery)}',
                 ),
               ),
             ),

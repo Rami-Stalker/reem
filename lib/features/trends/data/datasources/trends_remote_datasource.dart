@@ -1,4 +1,4 @@
-import 'package:reem/features/trends/domain/entities/trend_entities.dart';
+import 'package:ohara/features/trends/domain/entities/trend_entities.dart';
 
 /// The HTTP surface of the Trend Engine.
 ///

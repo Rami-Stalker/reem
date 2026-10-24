@@ -1,11 +1,11 @@
-import 'package:reem/core/network/api_endpoints.dart';
-import 'package:reem/core/network/base_remote_datasource.dart';
-import 'package:reem/core/shared/entities/loyalty.dart';
-import 'package:reem/features/profile/data/datasources/profile_overview_datasource.dart';
-import 'package:reem/features/profile/domain/entities/followed_store.dart';
-import 'package:reem/features/profile/domain/entities/orders_overview.dart';
-import 'package:reem/features/profile/domain/entities/profile_overview.dart';
-import 'package:reem/features/profile/domain/entities/referral.dart';
+import 'package:ohara/core/network/api_endpoints.dart';
+import 'package:ohara/core/network/base_remote_datasource.dart';
+import 'package:ohara/core/shared/entities/loyalty.dart';
+import 'package:ohara/features/profile/data/datasources/profile_overview_datasource.dart';
+import 'package:ohara/features/profile/domain/entities/followed_store.dart';
+import 'package:ohara/features/profile/domain/entities/orders_overview.dart';
+import 'package:ohara/features/profile/domain/entities/profile_overview.dart';
+import 'package:ohara/features/profile/domain/entities/referral.dart';
 
 /// Her profile centre, read from her own rows.
 ///

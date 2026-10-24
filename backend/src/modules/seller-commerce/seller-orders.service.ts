@@ -426,6 +426,8 @@ export class SellerOrdersService {
           city: true,
           addressLine: true,
           landmark: true,
+          latitude: true,
+          longitude: true,
           deliveryInstructions: true,
           payment: { select: { method: true, status: true } },
           codRiskAssessment: {
@@ -655,6 +657,8 @@ export class SellerOrdersService {
       city: string;
       addressLine: string;
       landmark: string | null;
+      latitude: number | null;
+      longitude: number | null;
       deliveryInstructions: string | null;
     };
   }) {
@@ -670,6 +674,8 @@ export class SellerOrdersService {
         district: null,
         address_line: null,
         landmark: null,
+        latitude: null,
+        longitude: null,
         delivery_instructions: order.deliveryInstructions,
         is_masked: true,
         masked_because:
@@ -687,6 +693,9 @@ export class SellerOrdersService {
       district: order.district,
       address_line: order.addressLine,
       landmark: order.landmark,
+      // She ships it herself, so she needs the door — the pin is the door.
+      latitude: order.latitude,
+      longitude: order.longitude,
       delivery_instructions: order.deliveryInstructions,
       is_masked: order.privacyMaskEnabled,
       masked_because: null,

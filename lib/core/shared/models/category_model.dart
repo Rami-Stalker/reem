@@ -1,6 +1,6 @@
 // shared/models/category_model.dart
 
-import 'package:reem/core/shared/entities/category.dart';
+import 'package:ohara/core/shared/entities/category.dart';
 
 class CategoryModel extends Category {
   const CategoryModel({

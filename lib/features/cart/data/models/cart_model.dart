@@ -1,5 +1,5 @@
-import 'package:reem/core/shared/value_objects/money.dart';
-import 'package:reem/features/cart/domain/entities/cart.dart';
+import 'package:ohara/core/shared/value_objects/money.dart';
+import 'package:ohara/features/cart/domain/entities/cart.dart';
 
 class CartLineModel extends CartLine {
   const CartLineModel({

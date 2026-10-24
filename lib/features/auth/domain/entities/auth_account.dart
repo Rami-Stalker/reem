@@ -1,10 +1,10 @@
-import 'package:reem/core/shared/entities/user.dart';
+import 'package:ohara/core/shared/entities/user.dart';
 
 enum OtpPurpose {
   phoneVerification,
   passwordReset,
   deviceVerification,
-  /// The main door. A code on her SIM is the credential Reem signs in with;
+  /// The main door. A code on her SIM is the credential Ohara signs in with;
   /// a password, if she has one, only shortens this on a device we know.
   login,
   /// The challenge on the number she is *leaving*, which is the half a SIM
@@ -50,7 +50,7 @@ class OtpChallenge {
   /// Two digits shown on screen and repeated inside the message.
   ///
   /// She is meant to compare them. It is the only defence the product has
-  /// against "this is Reem support, read me the code you just received" — the
+  /// against "this is Ohara support, read me the code you just received" — the
   /// dominant attack wherever OTPs arrive over WhatsApp — because a code
   /// somebody else requested carries somebody else's two digits.
   final String? matchCode;
@@ -98,7 +98,7 @@ class OtpChallenge {
 /// Two outcomes, and this is the first moment the platform reveals which one
 /// applies: until the code is verified, a number with an account and a number
 /// without are answered identically, so the route cannot be used to ask
-/// whether a particular woman is on Reem.
+/// whether a particular woman is on Ohara.
 sealed class OtpLoginResult {
   const OtpLoginResult();
 }

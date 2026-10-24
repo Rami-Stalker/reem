@@ -27,9 +27,9 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:reem/core/design_system/foundation/tokens/ds_colors.dart';
+import 'package:ohara/core/design_system/foundation/tokens/ds_colors.dart';
 
-/// The wordmark is "Reem"; a launcher icon has room for one letter of it.
+/// The wordmark is "Ohara"; a launcher icon has room for one letter of it.
 /// Playfair's high-contrast serif is the display face of the design system,
 /// and its `R` stays legible down to the 48px mdpi slot where a script or an
 /// isolated Arabic glyph would silt up.

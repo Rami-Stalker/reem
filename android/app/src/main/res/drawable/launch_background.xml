@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   The window behind the app before the Flutter engine has a frame to show. It
-  used to be `@android:color/white`, which is not a colour in Reem's palette:
+  used to be `@android:color/white`, which is not a colour in Ohara's palette:
   the app opened on a flash of pure white and then settled into the blush cream
   its own theme paints. It is now the design system's `backgroundLight` — see
   values/colors.xml — so the transition is invisible.

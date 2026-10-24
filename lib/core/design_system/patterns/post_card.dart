@@ -2,10 +2,10 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/core/shared/value_objects/money_format.dart';
-import 'package:reem/core/utils/relative_time.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/core/shared/value_objects/money_format.dart';
+import 'package:ohara/core/utils/relative_time.dart';
 
 /// Pieces shared by the post card ([DsImmersivePost]) and the product page:
 /// the double-tap burst, the horizontal action bar the product page keeps

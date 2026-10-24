@@ -1,8 +1,8 @@
-import 'package:reem/core/result/result.dart';
+import 'package:ohara/core/result/result.dart';
 
-import 'package:reem/core/shared/value_objects/money.dart';
-import 'package:reem/features/checkout/domain/entities/checkout.dart';
-import 'package:reem/features/checkout/domain/entities/order.dart';
+import 'package:ohara/core/shared/value_objects/money.dart';
+import 'package:ohara/features/checkout/domain/entities/checkout.dart';
+import 'package:ohara/features/checkout/domain/entities/order.dart';
 
 abstract interface class CheckoutRepository {
   // Checkout options

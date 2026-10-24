@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import 'package:reem/core/shared/value_objects/money.dart';
+import 'package:ohara/core/shared/value_objects/money.dart';
 
 /// Which of the seller's accounts a movement touched.
 enum EarningsAccount {

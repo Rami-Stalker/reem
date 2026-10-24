@@ -1,13 +1,13 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:reem/core/errors/failure_exception.dart';
-import 'package:reem/core/presentation/providers/core_providers.dart';
-import 'package:reem/features/returns/data/datasources/impl/returns_remote_datasource_impl.dart';
-import 'package:reem/features/returns/data/datasources/returns_remote_datasource.dart';
-import 'package:reem/features/returns/data/repositories/returns_repository_impl.dart';
-import 'package:reem/features/returns/domain/entities/return_eligibility.dart';
-import 'package:reem/features/returns/domain/repositories/returns_repository.dart';
-import 'package:reem/features/seller_returns/domain/entities/return_request.dart';
+import 'package:ohara/core/errors/failure_exception.dart';
+import 'package:ohara/core/presentation/providers/core_providers.dart';
+import 'package:ohara/features/returns/data/datasources/impl/returns_remote_datasource_impl.dart';
+import 'package:ohara/features/returns/data/datasources/returns_remote_datasource.dart';
+import 'package:ohara/features/returns/data/repositories/returns_repository_impl.dart';
+import 'package:ohara/features/returns/domain/entities/return_eligibility.dart';
+import 'package:ohara/features/returns/domain/repositories/returns_repository.dart';
+import 'package:ohara/features/seller_returns/domain/entities/return_request.dart';
 
 final returnsRemoteDataSourceProvider = Provider<ReturnsRemoteDataSource>(
   (ref) => ReturnsRemoteDataSourceImpl(ref.watch(dioProvider)),

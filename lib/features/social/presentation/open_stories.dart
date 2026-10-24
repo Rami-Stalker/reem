@@ -1,11 +1,11 @@
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:reem/core/router/route_paths.dart';
-import 'package:reem/core/shared/entities/story.dart';
-import 'package:reem/features/social/domain/entities/content.dart';
-import 'package:reem/features/social/domain/repositories/social_repository.dart';
-import 'package:reem/features/stories/presentation/screens/story_viewer_screen.dart';
+import 'package:ohara/core/router/route_paths.dart';
+import 'package:ohara/core/shared/entities/story.dart';
+import 'package:ohara/features/social/domain/entities/content.dart';
+import 'package:ohara/features/social/domain/repositories/social_repository.dart';
+import 'package:ohara/features/stories/presentation/screens/story_viewer_screen.dart';
 
 /// Opens the one story viewer on stories that came from the content platform.
 ///

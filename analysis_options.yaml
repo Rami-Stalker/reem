@@ -1,4 +1,4 @@
-# Static analysis for the Reem Flutter client.
+# Static analysis for the Ohara Flutter client.
 #
 # `flutter_lints` supplies the baseline. The additions below are the rules that
 # keep the file layout honest: import hygiene, one obvious home per symbol, and

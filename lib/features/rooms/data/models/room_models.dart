@@ -1,7 +1,7 @@
-import 'package:reem/core/shared/value_objects/money.dart';
-import 'package:reem/features/rooms/domain/entities/room.dart';
+import 'package:ohara/core/shared/value_objects/money.dart';
+import 'package:ohara/features/rooms/domain/entities/room.dart';
 
-/// Wire decoding for Reem Rooms.
+/// Wire decoding for Ohara Rooms.
 ///
 /// Free functions rather than model subclasses, matching the rest of the app.
 /// Every decoder is total — a missing field yields the empty value rather than

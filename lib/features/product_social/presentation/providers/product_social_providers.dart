@@ -3,16 +3,16 @@ import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 
-import 'package:reem/core/presentation/providers/core_providers.dart';
-import 'package:reem/core/result/result.dart';
-import 'package:reem/core/shared/entities/product.dart';
-import 'package:reem/features/auth/presentation/providers/auth_provider.dart';
-import 'package:reem/features/discovery/presentation/providers/collection_notifier.dart';
-import 'package:reem/features/discovery/presentation/providers/collection_state.dart';
-import 'package:reem/features/product_social/data/datasources/product_social_remote_datasource.dart';
-import 'package:reem/features/product_social/data/repositories/product_social_repository_impl.dart';
-import 'package:reem/features/product_social/domain/entities/product_engagement.dart';
-import 'package:reem/features/product_social/domain/repositories/product_social_repository.dart';
+import 'package:ohara/core/presentation/providers/core_providers.dart';
+import 'package:ohara/core/result/result.dart';
+import 'package:ohara/core/shared/entities/product.dart';
+import 'package:ohara/features/auth/presentation/providers/auth_provider.dart';
+import 'package:ohara/features/discovery/presentation/providers/collection_notifier.dart';
+import 'package:ohara/features/discovery/presentation/providers/collection_state.dart';
+import 'package:ohara/features/product_social/data/datasources/product_social_remote_datasource.dart';
+import 'package:ohara/features/product_social/data/repositories/product_social_repository_impl.dart';
+import 'package:ohara/features/product_social/domain/entities/product_engagement.dart';
+import 'package:ohara/features/product_social/domain/repositories/product_social_repository.dart';
 
 // ── Wiring ──────────────────────────────────────────────────────────────────
 

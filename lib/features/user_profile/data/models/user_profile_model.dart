@@ -1,6 +1,6 @@
-import 'package:reem/core/shared/models/user_model.dart';
-import 'package:reem/features/user_profile/data/models/seller_stats_model.dart';
-import 'package:reem/features/user_profile/domain/entities/user_profile.dart';
+import 'package:ohara/core/shared/models/user_model.dart';
+import 'package:ohara/features/user_profile/data/models/seller_stats_model.dart';
+import 'package:ohara/features/user_profile/domain/entities/user_profile.dart';
 
 class UserProfileModel extends UserProfile {
   const UserProfileModel({

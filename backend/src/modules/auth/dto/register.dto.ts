@@ -51,7 +51,7 @@ export class RegisterDto {
   /**
    * Optional, and the default is not to have one (owner decision 1).
    *
-   * A Reem account signs in with a code on her SIM. A password is an
+   * A Ohara account signs in with a code on her SIM. A password is an
    * accelerator she may add later, and by design it can never admit a device
    * the account has not already used — so leaving this out costs her nothing
    * and removes the credential most likely to be reused from a breached site.
@@ -82,7 +82,7 @@ export class RegisterDto {
    */
   @IsBoolean()
   @Equals(true, {
-    message: 'declared_female must be accepted to register on Reem',
+    message: 'declared_female must be accepted to register on Ohara',
   })
   declared_female!: boolean;
 

@@ -13,7 +13,7 @@ import { DeliveryProviderAccount } from '@prisma/client';
  *
  * The Flutter app is never in this path at all. It has no carrier credential,
  * no carrier base URL and no way to call one: it reads status and a tracking
- * number off Reem's own API.
+ * number off Ohara's own API.
  */
 export interface ProviderCredentials {
   apiKey?: string;

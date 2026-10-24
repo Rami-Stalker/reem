@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:reem/core/shared/entities/user.dart';
+import 'package:ohara/core/shared/entities/user.dart';
 
 /// One woman who watched her story or reel, and how she answered it.
 class ContentViewer extends Equatable {

@@ -322,7 +322,7 @@ test('the band ladder needs both points and evidence', () => {
 
 test('a shop that meets every target reaches the top band', () => {
   // 96% of accepted orders delivered, prep and shipping inside target, 4.6
-  // stars, replies within two hours. If this is not the band Reem would put
+  // stars, replies within two hours. If this is not the band Ohara would put
   // in front of a first-time buyer, the band means nothing.
   const result = scoreSellerHealth(established);
   assert.ok(result.score > 88, `got ${result.score}`);

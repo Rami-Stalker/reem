@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:reem/core/network/api_endpoints.dart';
-import 'package:reem/core/presentation/providers/core_providers.dart';
+import 'package:ohara/core/network/api_endpoints.dart';
+import 'package:ohara/core/presentation/providers/core_providers.dart';
 
 final aiHomeFeedProvider = FutureProvider<Map<String, dynamic>>((ref) async {
   final dio = ref.watch(dioProvider);

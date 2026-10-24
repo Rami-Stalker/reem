@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/core/result/result.dart';
-import 'package:reem/features/checkout/domain/entities/order.dart';
-import 'package:reem/features/checkout/presentation/order_labels.dart';
-import 'package:reem/features/checkout/presentation/providers/checkout_providers.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/core/result/result.dart';
+import 'package:ohara/features/checkout/domain/entities/order.dart';
+import 'package:ohara/features/checkout/presentation/order_labels.dart';
+import 'package:ohara/features/checkout/presentation/providers/checkout_providers.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 /// The step that actually takes her money, for the rails that need one.

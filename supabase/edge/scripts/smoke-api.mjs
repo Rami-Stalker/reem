@@ -1,4 +1,4 @@
-// End-to-end smoke test of the Reem API as deployed on Supabase (or run locally).
+// End-to-end smoke test of the Ohara API as deployed on Supabase (or run locally).
 //
 //   node scripts/smoke-api.mjs --api https://<ref>.supabase.co/functions/v1/api \
 //        --login supabase --supabase-url https://<ref>.supabase.co --publishable-key <key> \

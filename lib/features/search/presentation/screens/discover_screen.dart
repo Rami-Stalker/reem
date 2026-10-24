@@ -2,18 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/core/router/route_paths.dart';
-import 'package:reem/features/ai_stylist/presentation/providers/ai_stylist_providers.dart';
-import 'package:reem/features/auth/presentation/providers/auth_provider.dart';
-import 'package:reem/features/closet/domain/entities/closet_gap.dart';
-import 'package:reem/features/closet/presentation/providers/closet_providers.dart';
-import 'package:reem/features/home/presentation/widgets/home_categories_showcase.dart';
-import 'package:reem/features/home/presentation/widgets/home_section_header.dart';
-import 'package:reem/features/rooms/presentation/providers/rooms_providers.dart';
-import 'package:reem/features/search/presentation/discover_waiting.dart';
-import 'package:reem/features/search/presentation/providers/search_providers.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/core/router/route_paths.dart';
+import 'package:ohara/features/ai_stylist/presentation/providers/ai_stylist_providers.dart';
+import 'package:ohara/features/auth/presentation/providers/auth_provider.dart';
+import 'package:ohara/features/closet/domain/entities/closet_gap.dart';
+import 'package:ohara/features/closet/presentation/providers/closet_providers.dart';
+import 'package:ohara/features/home/presentation/widgets/home_categories_showcase.dart';
+import 'package:ohara/features/home/presentation/widgets/home_section_header.dart';
+import 'package:ohara/features/rooms/presentation/providers/rooms_providers.dart';
+import 'package:ohara/features/search/presentation/discover_waiting.dart';
+import 'package:ohara/features/search/presentation/providers/search_providers.dart';
 
 /// The Discover tab: it starts from what she needs, not from the catalogue.
 ///
@@ -37,7 +37,7 @@ class DiscoverScreen extends ConsumerWidget {
       authNotifierProvider.select((s) => s.isAuthenticated),
     );
 
-    return ReemScrollPage(
+    return OharaScrollPage(
       onRefresh: () async {
         if (signedIn) {
           ref
@@ -110,7 +110,7 @@ class _Header extends StatelessWidget {
   }
 }
 
-/// «اسألي ريم» — one field, and the answer is a set of looks.
+/// «اسألي أوهارا» — one field, and the answer is a set of looks.
 class _AskCard extends ConsumerStatefulWidget {
   const _AskCard();
 

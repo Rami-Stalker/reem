@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/core/router/route_paths.dart';
-import 'package:reem/features/ai_stylist/domain/entities/stylist_outfit.dart';
-import 'package:reem/features/ai_stylist/domain/entities/stylist_recommendation.dart';
-import 'package:reem/features/ai_stylist/presentation/providers/ai_stylist_providers.dart';
-import 'package:reem/features/ai_stylist/presentation/providers/stylist_chat_notifier.dart';
-import 'package:reem/features/ai_stylist/presentation/providers/stylist_chat_state.dart';
-import 'package:reem/features/ai_stylist/presentation/widgets/stylist_brief_bar.dart';
-import 'package:reem/features/ai_stylist/presentation/widgets/stylist_composer.dart';
-import 'package:reem/features/ai_stylist/presentation/widgets/stylist_message_bubble.dart';
-import 'package:reem/features/ai_stylist/presentation/widgets/stylist_welcome.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/core/router/route_paths.dart';
+import 'package:ohara/features/ai_stylist/domain/entities/stylist_outfit.dart';
+import 'package:ohara/features/ai_stylist/domain/entities/stylist_recommendation.dart';
+import 'package:ohara/features/ai_stylist/presentation/providers/ai_stylist_providers.dart';
+import 'package:ohara/features/ai_stylist/presentation/providers/stylist_chat_notifier.dart';
+import 'package:ohara/features/ai_stylist/presentation/providers/stylist_chat_state.dart';
+import 'package:ohara/features/ai_stylist/presentation/widgets/stylist_brief_bar.dart';
+import 'package:ohara/features/ai_stylist/presentation/widgets/stylist_composer.dart';
+import 'package:ohara/features/ai_stylist/presentation/widgets/stylist_message_bubble.dart';
+import 'package:ohara/features/ai_stylist/presentation/widgets/stylist_welcome.dart';
 
-/// Reem AI Stylist — the conversation.
+/// Ohara AI Stylist — the conversation.
 ///
 /// A chat surface rather than a search screen, because the thing she is doing
 /// is describing a situation ("عندي مناسبة بعد أسبوع") rather than naming a
@@ -84,7 +84,7 @@ class _AiStylistScreenState extends ConsumerState<AiStylistScreen> {
 
     return Scaffold(
       backgroundColor: colors.background,
-      appBar: ReemAppBar(
+      appBar: OharaAppBar(
         title: context.l10n.aiStylistTitle,
         actions: [
           IconButton(

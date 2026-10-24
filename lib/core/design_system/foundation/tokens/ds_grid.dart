@@ -1,4 +1,4 @@
-import 'package:reem/core/design_system/foundation/tokens/ds_spacing.dart';
+import 'package:ohara/core/design_system/foundation/tokens/ds_spacing.dart';
 
 /// Grid system constants (12-column layout). Gutters and margins are spacing
 /// tokens, not independent numbers.

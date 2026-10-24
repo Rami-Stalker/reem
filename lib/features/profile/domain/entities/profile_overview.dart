@@ -1,11 +1,11 @@
 import 'package:equatable/equatable.dart';
 
-import 'package:reem/core/shared/entities/loyalty.dart';
-import 'package:reem/core/shared/entities/product.dart';
-import 'package:reem/features/profile/domain/entities/achievement.dart';
-import 'package:reem/features/profile/domain/entities/followed_store.dart';
-import 'package:reem/features/profile/domain/entities/orders_overview.dart';
-import 'package:reem/features/profile/domain/entities/referral.dart';
+import 'package:ohara/core/shared/entities/loyalty.dart';
+import 'package:ohara/core/shared/entities/product.dart';
+import 'package:ohara/features/profile/domain/entities/achievement.dart';
+import 'package:ohara/features/profile/domain/entities/followed_store.dart';
+import 'package:ohara/features/profile/domain/entities/orders_overview.dart';
+import 'package:ohara/features/profile/domain/entities/referral.dart';
 
 /// One step in the profile-completion checklist.
 class ProfileCompletionStep extends Equatable {

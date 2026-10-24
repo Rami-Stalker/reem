@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:reem/core/design_system/foundation/tokens/ds_colors.dart';
+import 'package:ohara/core/design_system/foundation/tokens/ds_colors.dart';
 
 /// Layered box-shadow presets for soft, premium depth.
 ///

@@ -1,7 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
-/// How a Reem list behaves under a finger.
+/// How a Ohara list behaves under a finger.
 ///
 /// Two things this fixes.
 ///

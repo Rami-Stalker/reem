@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:reem/core/network/api_endpoints.dart';
-import 'package:reem/core/network/base_remote_datasource.dart';
-import 'package:reem/features/seller_dashboard/data/datasources/seller_dashboard_datasource.dart';
-import 'package:reem/features/seller_dashboard/domain/entities/seller_analytics.dart';
-import 'package:reem/features/seller_dashboard/domain/entities/seller_chart_data.dart';
-import 'package:reem/features/seller_dashboard/domain/entities/seller_dashboard_data.dart';
-import 'package:reem/features/seller_dashboard/domain/entities/seller_low_stock_item.dart';
-import 'package:reem/features/seller_dashboard/domain/entities/seller_misc.dart';
-import 'package:reem/features/seller_dashboard/domain/entities/seller_orders_summary.dart';
-import 'package:reem/features/seller_dashboard/domain/entities/seller_store_info.dart';
-import 'package:reem/features/seller_dashboard/domain/entities/seller_top_product.dart';
+import 'package:ohara/core/network/api_endpoints.dart';
+import 'package:ohara/core/network/base_remote_datasource.dart';
+import 'package:ohara/features/seller_dashboard/data/datasources/seller_dashboard_datasource.dart';
+import 'package:ohara/features/seller_dashboard/domain/entities/seller_analytics.dart';
+import 'package:ohara/features/seller_dashboard/domain/entities/seller_chart_data.dart';
+import 'package:ohara/features/seller_dashboard/domain/entities/seller_dashboard_data.dart';
+import 'package:ohara/features/seller_dashboard/domain/entities/seller_low_stock_item.dart';
+import 'package:ohara/features/seller_dashboard/domain/entities/seller_misc.dart';
+import 'package:ohara/features/seller_dashboard/domain/entities/seller_orders_summary.dart';
+import 'package:ohara/features/seller_dashboard/domain/entities/seller_store_info.dart';
+import 'package:ohara/features/seller_dashboard/domain/entities/seller_top_product.dart';
 
 final class SellerDashboardRemoteDataSource extends BaseRemoteDataSource
     implements SellerDashboardDataSource {

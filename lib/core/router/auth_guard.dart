@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:reem/core/experience/role_experience.dart';
-import 'package:reem/core/router/route_paths.dart';
-import 'package:reem/core/shared/entities/user.dart';
-import 'package:reem/features/auth/presentation/providers/auth_state.dart';
+import 'package:ohara/core/experience/role_experience.dart';
+import 'package:ohara/core/router/route_paths.dart';
+import 'package:ohara/core/shared/entities/user.dart';
+import 'package:ohara/features/auth/presentation/providers/auth_state.dart';
 
 /// Routes reachable without authentication (public browsing + auth flow).
 const _publicRoutes = <String>{

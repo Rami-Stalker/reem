@@ -40,7 +40,7 @@ import { launchPotential } from '../kernel/economics';
  * Discount anything. A drop is an *event*, not a promotion: the products are
  * sold at their own prices through the offers that already exist, and the only
  * thing the drop changes is who sees them and when. Building price mechanics
- * in here would turn the feature into a coupon engine, which Reem has already
+ * in here would turn the feature into a coupon engine, which Ohara has already
  * decided twice it does not want.
  */
 @Injectable()

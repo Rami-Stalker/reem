@@ -11,20 +11,20 @@ import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/app_localizations.dart';
-import 'package:reem/core/shared/entities/brand.dart';
-import 'package:reem/core/shared/entities/category.dart';
-import 'package:reem/core/shared/entities/product.dart';
-import 'package:reem/core/shared/entities/product_variant.dart';
-import 'package:reem/core/shared/entities/seller_offer.dart';
-import 'package:reem/core/shared/entities/user.dart';
-import 'package:reem/core/shared/value_objects/money.dart';
-import 'package:reem/features/product_details/presentation/widgets/product_detail_body.dart';
-import 'package:reem/features/product_details/presentation/widgets/product_headline.dart';
-import 'package:reem/features/product_details/presentation/widgets/product_option_pickers.dart';
-import 'package:reem/features/product_details/presentation/widgets/product_price_block.dart';
-import 'package:reem/l10n/app_localizations.dart' as gen;
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/app_localizations.dart';
+import 'package:ohara/core/shared/entities/brand.dart';
+import 'package:ohara/core/shared/entities/category.dart';
+import 'package:ohara/core/shared/entities/product.dart';
+import 'package:ohara/core/shared/entities/product_variant.dart';
+import 'package:ohara/core/shared/entities/seller_offer.dart';
+import 'package:ohara/core/shared/entities/user.dart';
+import 'package:ohara/core/shared/value_objects/money.dart';
+import 'package:ohara/features/product_details/presentation/widgets/product_detail_body.dart';
+import 'package:ohara/features/product_details/presentation/widgets/product_headline.dart';
+import 'package:ohara/features/product_details/presentation/widgets/product_option_pickers.dart';
+import 'package:ohara/features/product_details/presentation/widgets/product_price_block.dart';
+import 'package:ohara/l10n/app_localizations.dart' as gen;
 
 final _captureKey = GlobalKey();
 
@@ -215,7 +215,7 @@ final _product = Product(
     nameAr: 'فساتين',
     nameEn: 'Dresses',
   ),
-  brand: const Brand(id: 'b1', slug: 'reem', nameAr: 'ريم', nameEn: 'Reem'),
+  brand: const Brand(id: 'b1', slug: 'reem', nameAr: 'أوهارا', nameEn: 'Ohara'),
   attributes: const {
     'الخامة': 'حرير طبيعي ١٠٠٪',
     'طول الكم': 'كم طويل منفوخ',

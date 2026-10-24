@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/features/seller_orders/domain/entities/seller_order.dart';
-import 'package:reem/features/seller_orders/presentation/seller_order_labels.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/features/seller_orders/domain/entities/seller_order.dart';
+import 'package:ohara/features/seller_orders/presentation/seller_order_labels.dart';
 
 /// What an action needs from her before it can run.
 class SellerActionInput {

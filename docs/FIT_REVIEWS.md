@@ -13,7 +13,7 @@ So a product review can now say:
 The product page then shows a fit summary, and two filters: «من بمقاسي»
 (women her size) and «مع صور» (with photos).
 
-**Her own height and size are never shown, to anyone.** Reem's shoppers are
+**Her own height and size are never shown, to anyone.** Ohara's shoppers are
 women in Syria, a conservative society, and a named woman's body printed
 under her review is not something she should have to opt out of. They are
 stored on the review only so the server can match it to women her size and

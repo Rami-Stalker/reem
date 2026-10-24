@@ -1,8 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:reem/core/presentation/providers/core_providers.dart';
-import 'package:reem/features/admin/data/datasources/impl/delivery_admin_remote_datasource_impl.dart';
-import 'package:reem/features/admin/domain/entities/delivery_provider.dart';
+import 'package:ohara/core/presentation/providers/core_providers.dart';
+import 'package:ohara/features/admin/data/datasources/impl/delivery_admin_remote_datasource_impl.dart';
+import 'package:ohara/features/admin/domain/entities/delivery_provider.dart';
 
 final deliveryAdminDataSourceProvider = Provider<DeliveryAdminRemoteDataSource>(
   (ref) => DeliveryAdminRemoteDataSource(ref.watch(dioProvider)),

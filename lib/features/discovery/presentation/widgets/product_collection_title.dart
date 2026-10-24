@@ -1,5 +1,5 @@
-import 'package:reem/features/discovery/domain/entities/product_collection.dart';
-import 'package:reem/l10n/app_localizations.dart';
+import 'package:ohara/features/discovery/domain/entities/product_collection.dart';
+import 'package:ohara/l10n/app_localizations.dart';
 
 /// The Arabic heading over a collection page.
 ///

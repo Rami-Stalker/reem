@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:reem/core/shared/entities/story.dart';
-import 'package:reem/core/shared/entities/user.dart';
-import 'package:reem/features/home/presentation/widgets/home_stories_rail.dart';
+import 'package:ohara/core/shared/entities/story.dart';
+import 'package:ohara/core/shared/entities/user.dart';
+import 'package:ohara/features/home/presentation/widgets/home_stories_rail.dart';
 
 /// The stories row draws one ring per boutique.
 ///

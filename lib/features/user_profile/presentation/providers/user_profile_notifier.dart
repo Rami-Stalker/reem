@@ -1,14 +1,14 @@
 import 'package:flutter_riverpod/legacy.dart';
-import 'package:reem/core/result/result.dart';
-import 'package:reem/core/shared/models/user_model.dart';
+import 'package:ohara/core/result/result.dart';
+import 'package:ohara/core/shared/models/user_model.dart';
 
-import 'package:reem/features/user_profile/domain/entities/follow_result.dart';
-import 'package:reem/features/user_profile/domain/entities/user_profile.dart';
-import 'package:reem/features/user_profile/domain/usecases/follow_seller_usecase.dart';
-import 'package:reem/features/user_profile/domain/usecases/get_my_profile_usecase.dart';
-import 'package:reem/features/user_profile/domain/usecases/get_user_profile_usecase.dart';
-import 'package:reem/features/user_profile/domain/usecases/unfollow_seller_usecase.dart';
-import 'package:reem/features/user_profile/presentation/providers/user_profile_state.dart';
+import 'package:ohara/features/user_profile/domain/entities/follow_result.dart';
+import 'package:ohara/features/user_profile/domain/entities/user_profile.dart';
+import 'package:ohara/features/user_profile/domain/usecases/follow_seller_usecase.dart';
+import 'package:ohara/features/user_profile/domain/usecases/get_my_profile_usecase.dart';
+import 'package:ohara/features/user_profile/domain/usecases/get_user_profile_usecase.dart';
+import 'package:ohara/features/user_profile/domain/usecases/unfollow_seller_usecase.dart';
+import 'package:ohara/features/user_profile/presentation/providers/user_profile_state.dart';
 
 class UserProfileNotifier extends StateNotifier<UserProfileState> {
   UserProfileNotifier({

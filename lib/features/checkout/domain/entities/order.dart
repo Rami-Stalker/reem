@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import 'package:reem/core/shared/value_objects/money.dart';
+import 'package:ohara/core/shared/value_objects/money.dart';
 
 /// The lifecycle of one seller's parcel.
 ///
@@ -155,7 +155,7 @@ class OrderShipment extends Equatable {
 
   /// The delivery company carrying this parcel, when one is.
   ///
-  /// Reem does not run drivers: past the seller's door a parcel belongs to a
+  /// Ohara does not run drivers: past the seller's door a parcel belongs to a
   /// carrier, and the two things a woman needs then are its name and its own
   /// number for her box.
   final OrderCarrier? carrier;
@@ -375,6 +375,12 @@ class OrderShipping extends Equatable {
   final String addressLine;
   final String? landmark;
 
+  /// The map pin she dropped at checkout, when she used the map.
+  final double? latitude;
+  final double? longitude;
+
+  bool get hasPin => latitude != null && longitude != null;
+
   const OrderShipping({
     required this.recipientName,
     required this.recipientPhone,
@@ -383,6 +389,8 @@ class OrderShipping extends Equatable {
     required this.addressLine,
     this.district,
     this.landmark,
+    this.latitude,
+    this.longitude,
   });
 
   @override

@@ -1,11 +1,11 @@
 import 'dart:typed_data';
 
 import 'package:flutter_riverpod/legacy.dart';
-import 'package:reem/core/result/result.dart';
-import 'package:reem/features/ai_stylist/domain/entities/stylist_recommendation.dart';
-import 'package:reem/features/visual_search/domain/entities/visual_search_session.dart';
-import 'package:reem/features/visual_search/domain/repositories/visual_search_repository.dart';
-import 'package:reem/features/visual_search/presentation/providers/visual_search_state.dart';
+import 'package:ohara/core/result/result.dart';
+import 'package:ohara/features/ai_stylist/domain/entities/stylist_recommendation.dart';
+import 'package:ohara/features/visual_search/domain/entities/visual_search_session.dart';
+import 'package:ohara/features/visual_search/domain/repositories/visual_search_repository.dart';
+import 'package:ohara/features/visual_search/presentation/providers/visual_search_state.dart';
 
 /// Drives one search-by-image.
 ///

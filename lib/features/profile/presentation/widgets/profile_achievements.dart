@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/features/profile/domain/entities/achievement.dart';
-import 'package:reem/features/profile/presentation/providers/profile_overview_provider.dart';
-import 'package:reem/features/profile/presentation/widgets/profile_section_header.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/features/profile/domain/entities/achievement.dart';
+import 'package:ohara/features/profile/presentation/providers/profile_overview_provider.dart';
+import 'package:ohara/features/profile/presentation/widgets/profile_section_header.dart';
 
 /// Gamified badges — a rail of achievement medallions. Earned badges glow in
 /// champagne gold; locked ones are muted with a lock. Tapping opens detail.

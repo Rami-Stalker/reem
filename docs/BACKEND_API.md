@@ -157,7 +157,7 @@ her own `review` uploads) and `share_fit`. See [FIT_REVIEWS.md](FIT_REVIEWS.md).
 `steps`, `progress`, `next_step` and `days_left` are the server's. See
 [OCCASIONS.md](OCCASIONS.md).
 
-## Reem AI Stylist (`/ai/stylist`)
+## Ohara AI Stylist (`/ai/stylist`)
 
 The conversational shopping assistant. Every route is authenticated: a stylist
 thread records what someone told an assistant about her body, her budget and
@@ -239,7 +239,7 @@ order (keywords, colour, size, budget headroom, budget entirely, then
 neighbouring categories) and **every drop is reported in the reply**. Being
 shown things over budget is acceptable; being shown them silently is not.
 
-## Reem Trend Engine (`/trends`)
+## Ohara Trend Engine (`/trends`)
 
 Market analysis, trend scoring, demand forecasting and Arabic insights, built
 on the tables the platform already writes. There is no separate analytics

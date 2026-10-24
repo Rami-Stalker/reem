@@ -1,13 +1,13 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:reem/core/presentation/providers/core_providers.dart';
-import 'package:reem/features/market/data/datasources/impl/market_remote_datasource_impl.dart';
-import 'package:reem/features/market/data/datasources/market_remote_datasource.dart';
-import 'package:reem/features/market/data/repositories/market_repository_impl.dart';
-import 'package:reem/features/market/domain/entities/market.dart';
-import 'package:reem/features/market/domain/repositories/market_repository.dart';
+import 'package:ohara/core/presentation/providers/core_providers.dart';
+import 'package:ohara/features/market/data/datasources/impl/market_remote_datasource_impl.dart';
+import 'package:ohara/features/market/data/datasources/market_remote_datasource.dart';
+import 'package:ohara/features/market/data/repositories/market_repository_impl.dart';
+import 'package:ohara/features/market/domain/entities/market.dart';
+import 'package:ohara/features/market/domain/repositories/market_repository.dart';
 
-/// Wiring for Reem Market Evolution.
+/// Wiring for Ohara Market Evolution.
 ///
 /// Read providers throughout, no notifiers. Everything on these screens is
 /// derived on the server from a nightly sweep or from her own rows, so there

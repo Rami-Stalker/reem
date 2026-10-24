@@ -1,4 +1,4 @@
-import 'package:reem/l10n/app_localizations.dart';
+import 'package:ohara/l10n/app_localizations.dart';
 
 /// Minimum password length. Kept here so the rule and the message that
 /// explains it cannot drift apart.

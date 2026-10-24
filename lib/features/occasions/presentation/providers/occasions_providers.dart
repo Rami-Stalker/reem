@@ -1,9 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:reem/core/presentation/providers/core_providers.dart';
-import 'package:reem/features/auth/presentation/providers/auth_provider.dart';
-import 'package:reem/features/occasions/data/datasources/occasions_remote_datasource.dart';
-import 'package:reem/features/occasions/domain/entities/occasion.dart';
+import 'package:ohara/core/presentation/providers/core_providers.dart';
+import 'package:ohara/features/auth/presentation/providers/auth_provider.dart';
+import 'package:ohara/features/occasions/data/datasources/occasions_remote_datasource.dart';
+import 'package:ohara/features/occasions/domain/entities/occasion.dart';
 
 /// «مناسباتي», wired.
 ///

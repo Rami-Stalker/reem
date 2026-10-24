@@ -3,15 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/core/media/media_decode.dart';
-import 'package:reem/core/media/media_variants.dart';
-import 'package:reem/core/router/route_paths.dart';
-import 'package:reem/features/discovery/domain/entities/product_collection.dart';
-import 'package:reem/features/home/domain/entities/flash_deal.dart';
-import 'package:reem/features/home/presentation/providers/home_content_provider.dart';
-import 'package:reem/features/home/presentation/widgets/home_section_header.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/core/media/media_decode.dart';
+import 'package:ohara/core/media/media_variants.dart';
+import 'package:ohara/core/router/route_paths.dart';
+import 'package:ohara/features/discovery/domain/entities/product_collection.dart';
+import 'package:ohara/features/home/domain/entities/flash_deal.dart';
+import 'package:ohara/features/home/presentation/providers/home_content_provider.dart';
+import 'package:ohara/features/home/presentation/widgets/home_section_header.dart';
 
 /// Flash deals — a horizontal rail of time-boxed, limited-quantity offers, each
 /// with a live countdown and a "claimed" stock meter that turns urgent as it

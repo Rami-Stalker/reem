@@ -198,11 +198,11 @@ test('only rails a customer can finish paying on are offered', () => {
 test('a transfer rail is offered once finance says who to pay, with those words', () => {
   const methods = catalogueWith({
     sandboxConfirmation: false,
-    manualInstructions: { HAWALA: 'مكتب الهرم — باسم ريم للتجارة' },
+    manualInstructions: { HAWALA: 'مكتب الهرم — باسم أوهارا للتجارة' },
   }).methods();
   const hawala = methods.find((method) => method.method === 'hawala');
   assert.ok(hawala, 'hawala is offered');
-  assert.equal(hawala.instructions, 'مكتب الهرم — باسم ريم للتجارة');
+  assert.equal(hawala.instructions, 'مكتب الهرم — باسم أوهارا للتجارة');
   assert.equal(hawala.rail, 'manual');
   assert.equal(
     methods.some((method) => method.method === 'bank_transfer'),

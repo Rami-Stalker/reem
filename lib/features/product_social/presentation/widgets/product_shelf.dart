@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/platform/app_haptics.dart';
-import 'package:reem/core/presentation/providers/product_shape_provider.dart';
-import 'package:reem/core/shared/entities/product.dart';
-import 'package:reem/features/product_social/presentation/widgets/product_post_card.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/platform/app_haptics.dart';
+import 'package:ohara/core/presentation/providers/product_shape_provider.dart';
+import 'package:ohara/core/shared/entities/product.dart';
+import 'package:ohara/features/product_social/presentation/widgets/product_post_card.dart';
 
 /// A shelf of products in whichever shape she has chosen — and the switcher
 /// that chooses it.

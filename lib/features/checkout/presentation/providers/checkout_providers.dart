@@ -1,18 +1,18 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 
-import 'package:reem/core/errors/failure_exception.dart';
-import 'package:reem/core/presentation/providers/core_providers.dart';
-import 'package:reem/core/result/result.dart';
-import 'package:reem/features/checkout/data/datasources/checkout_remote_datasource.dart';
-import 'package:reem/features/checkout/data/datasources/impl/checkout_remote_datasource_impl.dart';
-import 'package:reem/features/checkout/data/repositories/checkout_repository_impl.dart';
-import 'package:reem/features/checkout/domain/entities/checkout.dart';
-import 'package:reem/features/checkout/domain/repositories/checkout_repository.dart';
-import 'package:reem/features/checkout/domain/usecases/checkout_usecases.dart';
-import 'package:reem/features/checkout/presentation/providers/checkout_controller.dart';
-import 'package:reem/features/checkout/presentation/providers/order_detail_notifier.dart';
-import 'package:reem/features/checkout/presentation/providers/orders_notifier.dart';
+import 'package:ohara/core/errors/failure_exception.dart';
+import 'package:ohara/core/presentation/providers/core_providers.dart';
+import 'package:ohara/core/result/result.dart';
+import 'package:ohara/features/checkout/data/datasources/checkout_remote_datasource.dart';
+import 'package:ohara/features/checkout/data/datasources/impl/checkout_remote_datasource_impl.dart';
+import 'package:ohara/features/checkout/data/repositories/checkout_repository_impl.dart';
+import 'package:ohara/features/checkout/domain/entities/checkout.dart';
+import 'package:ohara/features/checkout/domain/repositories/checkout_repository.dart';
+import 'package:ohara/features/checkout/domain/usecases/checkout_usecases.dart';
+import 'package:ohara/features/checkout/presentation/providers/checkout_controller.dart';
+import 'package:ohara/features/checkout/presentation/providers/order_detail_notifier.dart';
+import 'package:ohara/features/checkout/presentation/providers/orders_notifier.dart';
 
 final checkoutRemoteDataSourceProvider = Provider<CheckoutRemoteDataSource>(
   (ref) => CheckoutRemoteDataSourceImpl(ref.watch(dioProvider)),

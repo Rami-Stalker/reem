@@ -4,13 +4,13 @@ import 'package:flutter_riverpod/legacy.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:reem/core/router/app_router_provider.dart';
-import 'package:reem/core/router/auth_guard.dart';
-import 'package:reem/core/router/route_paths.dart';
-import 'package:reem/core/shared/services/share_links.dart';
-import 'package:reem/features/auth/presentation/providers/auth_notifier.dart';
-import 'package:reem/features/auth/presentation/providers/auth_provider.dart';
-import 'package:reem/features/auth/presentation/providers/auth_state.dart';
+import 'package:ohara/core/router/app_router_provider.dart';
+import 'package:ohara/core/router/auth_guard.dart';
+import 'package:ohara/core/router/route_paths.dart';
+import 'package:ohara/core/shared/services/share_links.dart';
+import 'package:ohara/features/auth/presentation/providers/auth_notifier.dart';
+import 'package:ohara/features/auth/presentation/providers/auth_provider.dart';
+import 'package:ohara/features/auth/presentation/providers/auth_state.dart';
 
 /// A shared link, followed all the way to a screen — against the real route
 /// table, not a stand-in.

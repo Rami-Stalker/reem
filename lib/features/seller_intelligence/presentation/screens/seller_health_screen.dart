@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/features/seller_intelligence/domain/entities/intelligence.dart';
-import 'package:reem/features/seller_intelligence/presentation/providers/intelligence_providers.dart';
-import 'package:reem/features/seller_intelligence/presentation/widgets/intelligence_pieces.dart';
-import 'package:reem/l10n/app_localizations.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/features/seller_intelligence/domain/entities/intelligence.dart';
+import 'package:ohara/features/seller_intelligence/presentation/providers/intelligence_providers.dart';
+import 'package:ohara/features/seller_intelligence/presentation/widgets/intelligence_pieces.dart';
+import 'package:ohara/l10n/app_localizations.dart';
 
 /// صحّة المتجر — the eight things a buyer actually feels.
 ///
@@ -29,7 +29,7 @@ class SellerHealthScreen extends ConsumerWidget {
     final palette = context.atelier;
     final async = ref.watch(sellerHealthProvider);
 
-    return ReemScrollPage(
+    return OharaScrollPage(
       onRefresh: () async {
         ref
           ..invalidate(sellerHealthProvider)

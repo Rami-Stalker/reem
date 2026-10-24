@@ -18,7 +18,7 @@ import { edgeWeight } from '../kernel/graph-math';
  *
  * ── Why a projector and not event hooks ──────────────────────────────────
  *
- * The same choice Reem Value made, for the same reason. Hooks mean every
+ * The same choice Ohara Value made, for the same reason. Hooks mean every
  * feature that touches a favourite has to remember to tell the graph, and the
  * day somebody forgets, the graph is quietly wrong in a way nothing detects.
  * A projector that reads the source tables cannot drift: if the favourite is
@@ -70,7 +70,7 @@ export class GraphProjectorService {
   /**
    * Her closet. The strongest edges in the graph.
    *
-   * Both the product (when the piece came from Reem) and the slot, because
+   * Both the product (when the piece came from Ohara) and the slot, because
    * "she owns four dresses" is a fact about slots that no product edge
    * expresses.
    */

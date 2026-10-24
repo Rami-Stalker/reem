@@ -3,13 +3,13 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 
-import 'package:reem/core/base/repository_handler.dart';
-import 'package:reem/core/presentation/providers/core_providers.dart';
-import 'package:reem/core/result/result.dart';
-import 'package:reem/core/shared/entities/story.dart';
-import 'package:reem/features/auth/presentation/providers/auth_provider.dart';
-import 'package:reem/features/highlights/data/datasources/highlights_remote_datasource.dart';
-import 'package:reem/features/highlights/domain/entities/highlight.dart';
+import 'package:ohara/core/base/repository_handler.dart';
+import 'package:ohara/core/presentation/providers/core_providers.dart';
+import 'package:ohara/core/result/result.dart';
+import 'package:ohara/core/shared/entities/story.dart';
+import 'package:ohara/features/auth/presentation/providers/auth_provider.dart';
+import 'package:ohara/features/highlights/data/datasources/highlights_remote_datasource.dart';
+import 'package:ohara/features/highlights/domain/entities/highlight.dart';
 
 final highlightsDataSourceProvider = Provider<HighlightsRemoteDataSource>(
   (ref) => HighlightsRemoteDataSource(ref.watch(dioProvider)),

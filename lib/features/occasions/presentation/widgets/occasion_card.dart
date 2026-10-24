@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/features/occasions/domain/entities/occasion.dart';
-import 'package:reem/features/occasions/presentation/widgets/occasion_labels.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/features/occasions/domain/entities/occasion.dart';
+import 'package:ohara/features/occasions/presentation/widgets/occasion_labels.dart';
 
 /// One occasion, on her calendar.
 ///

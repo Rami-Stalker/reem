@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:reem/core/design_system/components/states/offline_banner.dart';
-import 'package:reem/core/network/connection_status.dart';
-import 'package:reem/core/platform/system_chrome_controller.dart';
-import 'package:reem/features/policies/domain/entities/policy_document.dart';
-import 'package:reem/features/policies/presentation/providers/policies_provider.dart';
-import 'package:reem/features/policies/presentation/providers/policy_consent_provider.dart';
-import 'package:reem/features/policies/presentation/screens/policy_consent_screen.dart';
-import 'package:reem/features/product_social/presentation/widgets/product_actions_scope.dart';
+import 'package:ohara/core/design_system/components/states/offline_banner.dart';
+import 'package:ohara/core/network/connection_status.dart';
+import 'package:ohara/core/platform/system_chrome_controller.dart';
+import 'package:ohara/features/policies/domain/entities/policy_document.dart';
+import 'package:ohara/features/policies/presentation/providers/policies_provider.dart';
+import 'package:ohara/features/policies/presentation/providers/policy_consent_provider.dart';
+import 'package:ohara/features/policies/presentation/screens/policy_consent_screen.dart';
+import 'package:ohara/features/product_social/presentation/widgets/product_actions_scope.dart';
 
 /// The frame every route is drawn inside — one banner, one text scale, one
 /// answer for the system bars, and the consent gate.
@@ -23,7 +23,7 @@ class AppChrome extends ConsumerWidget {
 
   /// The band of text sizes the layouts are drawn to survive.
   ///
-  /// Reem's buyers include women running their phones at 150–200%, and the
+  /// Ohara's buyers include women running their phones at 150–200%, and the
   /// design system's controls are tested at 2×. Past that the app stops being
   /// a marketplace — a product card with a four-line price does not sell
   /// anything — so the scale is clamped rather than obeyed without limit. The

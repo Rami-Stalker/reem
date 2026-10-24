@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:reem/core/design_system/foundation/theme/extensions/color_extension.dart';
-import 'package:reem/core/design_system/patterns/experience_design.dart';
-import 'package:reem/core/design_system/utilities/extensions/context_extensions.dart';
+import 'package:ohara/core/design_system/foundation/theme/extensions/color_extension.dart';
+import 'package:ohara/core/design_system/patterns/experience_design.dart';
+import 'package:ohara/core/design_system/utilities/extensions/context_extensions.dart';
 
 /// Standard scroll page with feminine mesh background.
 ///
 /// Pass [onRefresh] to enable pull-to-refresh — the sliver content is wrapped
 /// in a brand-tinted [RefreshIndicator] anchored below the status bar.
-class ReemScrollPage extends StatelessWidget {
-  const ReemScrollPage({
+class OharaScrollPage extends StatelessWidget {
+  const OharaScrollPage({
     super.key,
     required this.slivers,
     this.bottom,
@@ -81,7 +81,7 @@ class ReemScrollPage extends StatelessWidget {
   }
 }
 
-/// Room at the foot of a [ReemScrollPage] for its floating bottom bar.
+/// Room at the foot of a [OharaScrollPage] for its floating bottom bar.
 ///
 /// Read inside the scaffold's body, where `MediaQuery.padding.bottom` is the
 /// larger of the system inset and the bar's laid-out height.

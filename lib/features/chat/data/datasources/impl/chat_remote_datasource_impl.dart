@@ -1,9 +1,9 @@
-import 'package:reem/core/network/api_endpoints.dart';
-import 'package:reem/core/network/base_remote_datasource.dart';
-import 'package:reem/features/chat/data/datasources/chat_remote_datasource.dart';
-import 'package:reem/features/chat/data/models/chat_message_model.dart';
-import 'package:reem/features/chat/data/models/chat_thread_model.dart';
-import 'package:reem/features/chat/domain/entities/chat_start_request.dart';
+import 'package:ohara/core/network/api_endpoints.dart';
+import 'package:ohara/core/network/base_remote_datasource.dart';
+import 'package:ohara/features/chat/data/datasources/chat_remote_datasource.dart';
+import 'package:ohara/features/chat/data/models/chat_message_model.dart';
+import 'package:ohara/features/chat/data/models/chat_thread_model.dart';
+import 'package:ohara/features/chat/domain/entities/chat_start_request.dart';
 
 final class ChatRemoteDataSourceImpl extends BaseRemoteDataSource
     implements ChatRemoteDataSource {

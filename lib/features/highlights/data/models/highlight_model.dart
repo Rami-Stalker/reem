@@ -1,5 +1,5 @@
-import 'package:reem/core/shared/models/story_model.dart';
-import 'package:reem/features/highlights/domain/entities/highlight.dart';
+import 'package:ohara/core/shared/models/story_model.dart';
+import 'package:ohara/features/highlights/domain/entities/highlight.dart';
 
 class HighlightModel extends Highlight {
   const HighlightModel({

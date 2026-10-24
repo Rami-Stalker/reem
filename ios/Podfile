@@ -1,4 +1,4 @@
-# Reem — CocoaPods configuration.
+# Ohara — CocoaPods configuration.
 #
 # This file was missing from the repository. Flutter writes a default one on
 # the first `pod install`, which meant the minimum iOS version and the build

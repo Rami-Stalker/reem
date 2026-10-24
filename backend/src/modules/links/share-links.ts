@@ -1,5 +1,5 @@
 /**
- * The shapes a Reem link can take, in one place.
+ * The shapes a Ohara link can take, in one place.
  *
  * Every shareable thing on this platform has exactly three addresses, and they
  * are all derived from one path:
@@ -69,7 +69,7 @@ export const SHARE_ALIASES: Record<string, ShareLinkKind> = {
  * Which kinds the app is allowed to intercept from the browser.
  *
  * Not all of them, and the omission is deliberate. A referral link is sent
- * *to somebody who does not have Reem* — that is what an invitation is — so
+ * *to somebody who does not have Ohara* — that is what an invitation is — so
  * having the app swallow it would mean the one person it was written for is
  * the one person who never sees the download button. It stays on the web.
  */

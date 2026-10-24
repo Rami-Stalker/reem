@@ -2,8 +2,8 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/features/home/presentation/widgets/home_greeting.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/features/home/presentation/widgets/home_greeting.dart';
 
 /// The colours of the home's sky at one moment of a Damascus day.
 ///

@@ -1,21 +1,21 @@
 import 'dart:async';
 
 import 'package:flutter_riverpod/legacy.dart';
-import 'package:reem/core/network/http_cache/session_cache.dart';
-import 'package:reem/core/result/result.dart';
-import 'package:reem/core/shared/entities/user.dart' show User, UserRole;
-import 'package:reem/features/auth/domain/entities/auth_account.dart';
-import 'package:reem/features/auth/domain/repositories/auth_repository.dart';
+import 'package:ohara/core/network/http_cache/session_cache.dart';
+import 'package:ohara/core/result/result.dart';
+import 'package:ohara/core/shared/entities/user.dart' show User, UserRole;
+import 'package:ohara/features/auth/domain/entities/auth_account.dart';
+import 'package:ohara/features/auth/domain/repositories/auth_repository.dart';
 
-import 'package:reem/features/auth/domain/usecases/continue_as_guest_usecase.dart';
-import 'package:reem/features/auth/domain/usecases/forgot_password_usecase.dart';
-import 'package:reem/features/auth/domain/usecases/get_current_user_usecase.dart';
-import 'package:reem/features/auth/domain/usecases/login_usecase.dart';
-import 'package:reem/features/auth/domain/usecases/logout_usecase.dart';
-import 'package:reem/features/auth/domain/usecases/otp_usecases.dart';
-import 'package:reem/features/auth/domain/usecases/register_usecase.dart';
-import 'package:reem/features/auth/presentation/providers/auth_message.dart';
-import 'package:reem/features/auth/presentation/providers/auth_state.dart';
+import 'package:ohara/features/auth/domain/usecases/continue_as_guest_usecase.dart';
+import 'package:ohara/features/auth/domain/usecases/forgot_password_usecase.dart';
+import 'package:ohara/features/auth/domain/usecases/get_current_user_usecase.dart';
+import 'package:ohara/features/auth/domain/usecases/login_usecase.dart';
+import 'package:ohara/features/auth/domain/usecases/logout_usecase.dart';
+import 'package:ohara/features/auth/domain/usecases/otp_usecases.dart';
+import 'package:ohara/features/auth/domain/usecases/register_usecase.dart';
+import 'package:ohara/features/auth/presentation/providers/auth_message.dart';
+import 'package:ohara/features/auth/presentation/providers/auth_state.dart';
 
 class AuthNotifier extends StateNotifier<AuthState> {
   AuthNotifier({

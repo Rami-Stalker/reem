@@ -12,7 +12,7 @@ import { MarketScheduler } from './market.scheduler';
 import { MarketSellerController } from './market.seller.controller';
 
 /**
- * Reem Market Evolution.
+ * Ohara Market Evolution.
  *
  * Six systems over one reading. `MarketEconomicsService` computes supply
  * against demand for every category and live product; everything else consumes

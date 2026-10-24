@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
 
 /// A marketplace safety note above the conversation list.
 ///
 /// This replaced a banner that read "End-to-end encrypted". That was not true:
 /// message bodies are stored in plain text and the server searches them, so
-/// the claim promised a protection Reem does not provide. What she actually
+/// the claim promised a protection Ohara does not provide. What she actually
 /// needs warning about is the scam this surface enables — a "boutique" moving
 /// the payment off-platform, where none of the escrow applies.
 class EncryptedChatBanner extends StatelessWidget {

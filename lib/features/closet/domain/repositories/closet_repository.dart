@@ -1,8 +1,8 @@
-import 'package:reem/core/result/result.dart';
-import 'package:reem/features/closet/domain/entities/closet_gap.dart';
-import 'package:reem/features/closet/domain/entities/closet_item.dart';
-import 'package:reem/features/closet/domain/entities/closet_look.dart';
-import 'package:reem/features/closet/domain/entities/closet_overview.dart';
+import 'package:ohara/core/result/result.dart';
+import 'package:ohara/features/closet/domain/entities/closet_gap.dart';
+import 'package:ohara/features/closet/domain/entities/closet_item.dart';
+import 'package:ohara/features/closet/domain/entities/closet_look.dart';
+import 'package:ohara/features/closet/domain/entities/closet_overview.dart';
 
 /// Filters for the item grid. All optional; an absent field is no constraint.
 class ClosetItemQuery {

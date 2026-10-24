@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/core/media/media_asset.dart';
-import 'package:reem/core/shared/entities/media.dart';
-import 'package:reem/features/create/presentation/providers/create_provider.dart';
-import 'package:reem/features/create/presentation/providers/create_state.dart';
-import 'package:reem/features/create/presentation/widgets/create_header.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/core/media/media_asset.dart';
+import 'package:ohara/core/shared/entities/media.dart';
+import 'package:ohara/features/create/presentation/providers/create_provider.dart';
+import 'package:ohara/features/create/presentation/providers/create_state.dart';
+import 'package:ohara/features/create/presentation/widgets/create_header.dart';
 
 class AddStoryScreen extends ConsumerStatefulWidget {
   const AddStoryScreen({super.key});
@@ -60,7 +60,7 @@ class _AddStoryScreenState extends ConsumerState<AddStoryScreen> {
     });
 
     final state = ref.watch(createNotifierProvider);
-    return ReemScrollPage(
+    return OharaScrollPage(
       slivers: [
         PremiumAppBar(title: context.l10n.createStoryTitle, showBack: true),
         SliverPadding(

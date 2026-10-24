@@ -1,6 +1,6 @@
 import 'package:meta/meta.dart';
 
-/// One thing Reem has to say about a product, to this shopper.
+/// One thing Ohara has to say about a product, to this shopper.
 ///
 /// The client's whole model of phase three. Deliberately small: a code, a
 /// tone, a sentence and the rows behind it. The sentence is written on the

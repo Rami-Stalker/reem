@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 
-import 'package:reem/features/closet/domain/entities/closet_look.dart';
-import 'package:reem/features/salons/domain/entities/appointment.dart';
+import 'package:ohara/features/closet/domain/entities/closet_look.dart';
+import 'package:ohara/features/salons/domain/entities/appointment.dart';
 
 /// What kind of day it is. Mirrors the server's `OccasionKind` exactly.
 enum OccasionKind {

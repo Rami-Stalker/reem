@@ -1,5 +1,5 @@
-import 'package:reem/features/admin_finance/data/models/finance_overview_model.dart';
-import 'package:reem/features/admin_finance/data/models/pending_transfer_model.dart';
+import 'package:ohara/features/admin_finance/data/models/finance_overview_model.dart';
+import 'package:ohara/features/admin_finance/data/models/pending_transfer_model.dart';
 
 abstract interface class AdminFinanceRemoteDataSource {
   Future<FinanceOverviewModel> loadOverview();

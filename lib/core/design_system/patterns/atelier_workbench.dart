@@ -3,8 +3,8 @@ import 'dart:ui' show PathMetric;
 
 import 'package:flutter/material.dart';
 
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/router/open_route.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/router/open_route.dart';
 
 /// The seller's home register: **her boutique, behind the counter**.
 ///
@@ -12,11 +12,11 @@ import 'package:reem/core/router/open_route.dart';
 /// dressmaker. She may sell perfume, flowers, jewellery, make-up or clothes,
 /// so nothing here is drawn from one trade. It is drawn from what every
 /// women's shop shares: the counter, the display shelf, the gift tag, the
-/// ribbon a purchase leaves in, and Reem's own arch.
+/// ribbon a purchase leaves in, and Ohara's own arch.
 ///
 /// * [AtelierHero] — a length of satin with a champagne edge: the greeting,
 ///   the day's takings, and the month's goal.
-/// * [ArchGauge] — progress toward a goal, as Reem's arch filling with gold.
+/// * [ArchGauge] — progress toward a goal, as Ohara's arch filling with gold.
 /// * [AtelierFocusCard] — the one thing to do now, edged in the colour of its
 ///   urgency.
 /// * [OrderPath] — the order pipeline as a dotted path: every stage a stop,
@@ -199,7 +199,7 @@ class _SatinPainter extends CustomPainter {
 // The goal
 // ---------------------------------------------------------------------------
 
-/// Progress toward a goal, as Reem's arch filling with gold.
+/// Progress toward a goal, as Ohara's arch filling with gold.
 ///
 /// The arch is the brand's window; here it fills from the floor with
 /// champagne light as the month gets closer to its goal, the surface of the
@@ -732,7 +732,7 @@ class DisplayShelf extends StatelessWidget {
   }
 }
 
-/// A piece on the shelf: the photograph cut to Reem's arch, standing on the
+/// A piece on the shelf: the photograph cut to Ohara's arch, standing on the
 /// board, a gift tag tied at its side, and its name under the shelf.
 class ShelfPiece extends StatelessWidget {
   const ShelfPiece({

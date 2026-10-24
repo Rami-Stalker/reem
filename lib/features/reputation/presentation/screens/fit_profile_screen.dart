@@ -3,11 +3,11 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/core/result/result.dart';
-import 'package:reem/features/reputation/domain/entities/fit_entities.dart';
-import 'package:reem/features/reputation/presentation/providers/reputation_provider.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/core/result/result.dart';
+import 'package:ohara/features/reputation/domain/entities/fit_entities.dart';
+import 'package:ohara/features/reputation/presentation/providers/reputation_provider.dart';
 
 /// «مقاساتي» — her height and usual size.
 ///
@@ -24,7 +24,7 @@ class FitProfileScreen extends ConsumerWidget {
     final async = ref.watch(fitProfileProvider);
     return Scaffold(
       backgroundColor: context.dsColors.background,
-      appBar: ReemAppBar(title: context.l10n.fitProfileTitle),
+      appBar: OharaAppBar(title: context.l10n.fitProfileTitle),
       body: async.when(
         loading: () => const Center(child: DsLoadingIndicator()),
         error: (_, _) => DsErrorState(

@@ -1,15 +1,15 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 
-import 'package:reem/core/presentation/providers/core_providers.dart';
-import 'package:reem/features/auth/presentation/providers/auth_provider.dart';
-import 'package:reem/features/cart/data/datasources/cart_remote_datasource.dart';
-import 'package:reem/features/cart/data/datasources/impl/cart_remote_datasource_impl.dart';
-import 'package:reem/features/cart/data/repositories/cart_repository_impl.dart';
-import 'package:reem/features/cart/domain/repositories/cart_repository.dart';
-import 'package:reem/features/cart/domain/usecases/cart_usecases.dart';
-import 'package:reem/features/cart/presentation/providers/cart_notifier.dart';
-import 'package:reem/features/cart/presentation/providers/cart_state.dart';
+import 'package:ohara/core/presentation/providers/core_providers.dart';
+import 'package:ohara/features/auth/presentation/providers/auth_provider.dart';
+import 'package:ohara/features/cart/data/datasources/cart_remote_datasource.dart';
+import 'package:ohara/features/cart/data/datasources/impl/cart_remote_datasource_impl.dart';
+import 'package:ohara/features/cart/data/repositories/cart_repository_impl.dart';
+import 'package:ohara/features/cart/domain/repositories/cart_repository.dart';
+import 'package:ohara/features/cart/domain/usecases/cart_usecases.dart';
+import 'package:ohara/features/cart/presentation/providers/cart_notifier.dart';
+import 'package:ohara/features/cart/presentation/providers/cart_state.dart';
 
 final cartRemoteDataSourceProvider = Provider<CartRemoteDataSource>(
   (ref) => CartRemoteDataSourceImpl(ref.watch(dioProvider)),

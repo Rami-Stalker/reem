@@ -1,10 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:reem/core/presentation/providers/core_providers.dart';
-import 'package:reem/features/catalog/data/datasources/categories_remote_datasource.dart';
-import 'package:reem/features/catalog/data/datasources/impl/categories_remote_datasource_impl.dart';
-import 'package:reem/features/catalog/domain/entities/category_attributes.dart';
-import 'package:reem/features/catalog/domain/entities/category_node.dart';
+import 'package:ohara/core/presentation/providers/core_providers.dart';
+import 'package:ohara/features/catalog/data/datasources/categories_remote_datasource.dart';
+import 'package:ohara/features/catalog/data/datasources/impl/categories_remote_datasource_impl.dart';
+import 'package:ohara/features/catalog/domain/entities/category_attributes.dart';
+import 'package:ohara/features/catalog/domain/entities/category_node.dart';
 
 final categoriesRemoteDataSourceProvider = Provider<CategoriesRemoteDataSource>(
   (ref) => CategoriesRemoteDataSourceImpl(ref.watch(dioProvider)),

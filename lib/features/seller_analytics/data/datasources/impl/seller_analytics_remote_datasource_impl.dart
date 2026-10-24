@@ -1,8 +1,8 @@
-import 'package:reem/core/network/api_endpoints.dart';
-import 'package:reem/core/network/base_remote_datasource.dart';
-import 'package:reem/features/seller_analytics/data/datasources/seller_analytics_remote_datasource.dart';
-import 'package:reem/features/seller_analytics/data/models/seller_analytics_report_model.dart';
-import 'package:reem/features/seller_analytics/domain/entities/seller_analytics_report.dart';
+import 'package:ohara/core/network/api_endpoints.dart';
+import 'package:ohara/core/network/base_remote_datasource.dart';
+import 'package:ohara/features/seller_analytics/data/datasources/seller_analytics_remote_datasource.dart';
+import 'package:ohara/features/seller_analytics/data/models/seller_analytics_report_model.dart';
+import 'package:ohara/features/seller_analytics/domain/entities/seller_analytics_report.dart';
 
 /// `/analytics/*` accepts the SELLER role and scopes every query to the caller
 /// on the server, so no seller id is sent — and none would be honoured. The

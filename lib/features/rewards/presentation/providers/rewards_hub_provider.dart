@@ -1,15 +1,15 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
-import 'package:reem/core/network/network_info.dart';
-import 'package:reem/core/presentation/providers/core_providers.dart';
-import 'package:reem/core/result/result.dart';
-import 'package:reem/features/rewards/data/datasources/impl/rewards_remote_datasource_impl.dart';
-import 'package:reem/features/rewards/data/datasources/rewards_remote_datasource.dart';
-import 'package:reem/features/rewards/data/repositories/rewards_repository_impl.dart';
-import 'package:reem/features/rewards/domain/entities/rewards_hub.dart';
-import 'package:reem/features/rewards/domain/repositories/rewards_repository.dart';
-import 'package:reem/features/rewards/domain/usecases/rewards_usecases.dart';
-import 'package:reem/features/rewards/presentation/providers/rewards_message.dart';
+import 'package:ohara/core/network/network_info.dart';
+import 'package:ohara/core/presentation/providers/core_providers.dart';
+import 'package:ohara/core/result/result.dart';
+import 'package:ohara/features/rewards/data/datasources/impl/rewards_remote_datasource_impl.dart';
+import 'package:ohara/features/rewards/data/datasources/rewards_remote_datasource.dart';
+import 'package:ohara/features/rewards/data/repositories/rewards_repository_impl.dart';
+import 'package:ohara/features/rewards/domain/entities/rewards_hub.dart';
+import 'package:ohara/features/rewards/domain/repositories/rewards_repository.dart';
+import 'package:ohara/features/rewards/domain/usecases/rewards_usecases.dart';
+import 'package:ohara/features/rewards/presentation/providers/rewards_message.dart';
 
 final rewardsRemoteDataSourceProvider = Provider<RewardsRemoteDataSource>(
   (ref) => RewardsRemoteDataSourceImpl(ref.watch(dioProvider)),

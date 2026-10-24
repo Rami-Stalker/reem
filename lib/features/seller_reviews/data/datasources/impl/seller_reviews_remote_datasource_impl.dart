@@ -1,8 +1,8 @@
-import 'package:reem/core/network/api_endpoints.dart';
-import 'package:reem/core/network/base_remote_datasource.dart';
-import 'package:reem/features/seller_reviews/data/datasources/seller_reviews_remote_datasource.dart';
-import 'package:reem/features/seller_reviews/data/models/seller_review_model.dart';
-import 'package:reem/features/seller_reviews/domain/entities/seller_review.dart';
+import 'package:ohara/core/network/api_endpoints.dart';
+import 'package:ohara/core/network/base_remote_datasource.dart';
+import 'package:ohara/features/seller_reviews/data/datasources/seller_reviews_remote_datasource.dart';
+import 'package:ohara/features/seller_reviews/data/models/seller_review_model.dart';
+import 'package:ohara/features/seller_reviews/domain/entities/seller_review.dart';
 
 final class SellerReviewsRemoteDataSourceImpl extends BaseRemoteDataSource
     implements SellerReviewsRemoteDataSource {

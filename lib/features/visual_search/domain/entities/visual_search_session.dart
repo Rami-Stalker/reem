@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
-import 'package:reem/features/ai_stylist/domain/entities/style_brief.dart';
-import 'package:reem/features/visual_search/domain/entities/visual_match.dart';
-import 'package:reem/features/visual_search/domain/entities/visual_understanding.dart';
+import 'package:ohara/features/ai_stylist/domain/entities/style_brief.dart';
+import 'package:ohara/features/visual_search/domain/entities/visual_match.dart';
+import 'package:ohara/features/visual_search/domain/entities/visual_understanding.dart';
 
 /// Where the photograph came from. Recorded for analytics; the pipeline treats
 /// every source identically.

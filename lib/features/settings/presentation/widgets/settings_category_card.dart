@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'package:reem/core/design_system/foundation/theme/extensions/typography_extension.dart';
-import 'package:reem/core/design_system/foundation/tokens/ds_spacing.dart';
-import 'package:reem/features/settings/presentation/widgets/settings_tile.dart';
+import 'package:ohara/core/design_system/foundation/theme/extensions/typography_extension.dart';
+import 'package:ohara/core/design_system/foundation/tokens/ds_spacing.dart';
+import 'package:ohara/features/settings/presentation/widgets/settings_tile.dart';
 
 class SettingsItemData {
   const SettingsItemData({

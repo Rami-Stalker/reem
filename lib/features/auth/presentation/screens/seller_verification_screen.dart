@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/errors/failure.dart';
-import 'package:reem/core/errors/failure_exception.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/core/media/media_asset.dart';
-import 'package:reem/core/result/result.dart';
-import 'package:reem/features/auth/domain/entities/auth_account.dart';
-import 'package:reem/features/auth/presentation/providers/auth_account_provider.dart';
-import 'package:reem/features/auth/presentation/providers/auth_provider.dart';
-import 'package:reem/features/auth/presentation/widgets/step_up_sheet.dart';
-import 'package:reem/features/policies/presentation/widgets/policy_consent_field.dart';
-import 'package:reem/l10n/app_localizations.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/errors/failure.dart';
+import 'package:ohara/core/errors/failure_exception.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/core/location/picked_place.dart';
+import 'package:ohara/core/location/presentation/map_location_field.dart';
+import 'package:ohara/core/media/media_asset.dart';
+import 'package:ohara/core/result/result.dart';
+import 'package:ohara/features/auth/domain/entities/auth_account.dart';
+import 'package:ohara/features/auth/presentation/providers/auth_account_provider.dart';
+import 'package:ohara/features/auth/presentation/providers/auth_provider.dart';
+import 'package:ohara/features/auth/presentation/widgets/step_up_sheet.dart';
+import 'package:ohara/features/policies/presentation/widgets/policy_consent_field.dart';
+import 'package:ohara/l10n/app_localizations.dart';
 
 /// The seller's application to be verified.
 ///
@@ -27,7 +29,7 @@ class SellerVerificationScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final verification = ref.watch(sellerVerificationProvider);
 
-    return ReemScrollPage(
+    return OharaScrollPage(
       slivers: [
         PremiumAppBar(title: context.l10n.sellerVerification, showBack: true),
         SliverPadding(
@@ -109,6 +111,11 @@ class _ApplicationFormState extends ConsumerState<_ApplicationForm> {
   final _uploading = <String, bool>{};
 
   bool _submitting = false;
+
+  /// Where she put the pin for her business. Only a way to write the address:
+  /// the application stores the address as text, so the pin itself is not
+  /// sent, and reopening the form shows the text she kept.
+  PickedPlace? _businessPin;
 
   /// The seller terms and the commissions policy, as she accepted them here.
   ///
@@ -355,6 +362,20 @@ class _ApplicationFormState extends ConsumerState<_ApplicationForm> {
               Icons.mail_outline,
               keyboardType: TextInputType.emailAddress,
             ),
+            if (enabled) ...[
+              MapLocationField(
+                value: _businessPin,
+                title: l10n.shopLocationTitle,
+                subtitle: l10n.businessLocationSubtitle,
+                placeLabel: l10n.mapPickerShopHere,
+                onChanged: (place) => setState(() {
+                  _businessPin = place;
+                  final address = place?.fullAddress;
+                  if (address != null) _businessAddress.text = address;
+                }),
+              ),
+              const SizedBox(height: DsSpacing.md),
+            ],
             _input(
               _businessAddress,
               l10n.businessAddress,

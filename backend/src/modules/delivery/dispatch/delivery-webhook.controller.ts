@@ -13,7 +13,7 @@ import { Public } from '../../../common/decorators/public.decorator';
 import { DeliveryWebhookService } from './delivery-webhook.service';
 
 /**
- * Where delivery companies tell Reem what happened.
+ * Where delivery companies tell Ohara what happened.
  *
  * Public, because a carrier has no session — so the signature is the only
  * thing between the internet and the ability to mark parcels delivered. It is

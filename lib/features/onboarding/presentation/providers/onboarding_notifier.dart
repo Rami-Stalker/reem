@@ -1,8 +1,8 @@
 import 'package:flutter_riverpod/legacy.dart';
 
-import 'package:reem/features/onboarding/domain/usecases/complete_onboarding_usecase.dart';
-import 'package:reem/features/onboarding/domain/usecases/is_onboarding_complete_usecase.dart';
-import 'package:reem/features/onboarding/presentation/providers/onboarding_state.dart';
+import 'package:ohara/features/onboarding/domain/usecases/complete_onboarding_usecase.dart';
+import 'package:ohara/features/onboarding/domain/usecases/is_onboarding_complete_usecase.dart';
+import 'package:ohara/features/onboarding/presentation/providers/onboarding_state.dart';
 
 class OnboardingNotifier extends StateNotifier<OnboardingState> {
   OnboardingNotifier({

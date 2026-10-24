@@ -152,10 +152,10 @@ import { LinksModule } from './modules/links/links.module';
     // After AiStylistModule too: a wardrobe gap is answered by the stylist's
     // retrieval and ranker rather than by a second search of its own.
     ClosetModule,
-    // Reem Value — standing, computed from evidence the other modules already
+    // Ohara Value — standing, computed from evidence the other modules already
     // hold. It reads them; none of them knows it exists.
     ValueModule,
-    // Reem Rooms — deliberation before purchase. After OrdersModule, whose
+    // Ohara Rooms — deliberation before purchase. After OrdersModule, whose
     // checkout it calls with its own lines rather than through a cart.
     RoomsModule,
     CommissionsModule,

@@ -1,5 +1,5 @@
-import 'package:reem/features/rooms/domain/entities/room.dart';
-import 'package:reem/l10n/app_localizations.dart';
+import 'package:ohara/features/rooms/domain/entities/room.dart';
+import 'package:ohara/l10n/app_localizations.dart';
 
 /// Words for room states, kept out of the domain so they follow the locale.
 extension RoomKindLabel on RoomKind {

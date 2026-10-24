@@ -1,9 +1,9 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:reem/core/presentation/providers/core_providers.dart';
-import 'package:reem/features/policies/data/datasources/policies_remote_datasource.dart';
-import 'package:reem/features/policies/domain/entities/policy_document.dart';
+import 'package:ohara/core/presentation/providers/core_providers.dart';
+import 'package:ohara/features/policies/data/datasources/policies_remote_datasource.dart';
+import 'package:ohara/features/policies/domain/entities/policy_document.dart';
 
 final policiesDataSourceProvider = Provider<PoliciesRemoteDataSource>(
   (ref) => PoliciesRemoteDataSource(ref.watch(dioProvider)),

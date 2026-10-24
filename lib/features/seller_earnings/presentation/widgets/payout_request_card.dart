@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/core/utils/relative_time.dart';
-import 'package:reem/features/seller_earnings/domain/entities/seller_earnings.dart';
-import 'package:reem/features/seller_earnings/presentation/providers/seller_earnings_provider.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/core/utils/relative_time.dart';
+import 'package:ohara/features/seller_earnings/domain/entities/seller_earnings.dart';
+import 'package:ohara/features/seller_earnings/presentation/providers/seller_earnings_provider.dart';
 
 /// Asking to be paid — Q69 P1's «طلب سحب الأرباح».
 ///

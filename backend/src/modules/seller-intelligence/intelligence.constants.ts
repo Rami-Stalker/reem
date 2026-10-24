@@ -105,7 +105,7 @@ export const HEALTH_DIMENSION_AR: Record<
  * Below this the dimension is *reported but discounted*, and the seller is
  * told the sample is thin rather than being handed a number that swings on
  * one bad week. The same idea as the trend engine's exposure confidence and
- * Reem Value's evidence gate — a marketplace that grades a new seller on four
+ * Ohara Value's evidence gate — a marketplace that grades a new seller on four
  * orders teaches her that the score is noise.
  */
 export const HEALTH_FULL_SAMPLE: Record<HealthDimensionKey, number> = {

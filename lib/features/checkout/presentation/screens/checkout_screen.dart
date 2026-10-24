@@ -1,22 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:reem/core/analytics/analytics_tracker.dart';
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/core/router/route_paths.dart';
-import 'package:reem/core/shared/value_objects/money.dart';
-import 'package:reem/features/auth/presentation/providers/auth_provider.dart';
-import 'package:reem/features/cart/presentation/providers/cart_providers.dart';
-import 'package:reem/features/checkout/domain/entities/checkout.dart';
-import 'package:reem/features/checkout/presentation/order_labels.dart';
-import 'package:reem/features/checkout/presentation/providers/applied_coupon_provider.dart';
-import 'package:reem/features/checkout/presentation/providers/checkout_controller.dart';
-import 'package:reem/features/checkout/presentation/providers/checkout_providers.dart';
-import 'package:reem/features/checkout/presentation/providers/saved_addresses_provider.dart';
-import 'package:reem/features/checkout/presentation/widgets/cod_confirmation_sheet.dart';
-import 'package:reem/features/policies/presentation/widgets/policy_link.dart';
-import 'package:reem/features/settings/domain/entities/address_entity.dart';
+import 'package:ohara/core/analytics/analytics_tracker.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/core/location/picked_place.dart';
+import 'package:ohara/core/location/presentation/map_location_field.dart';
+import 'package:ohara/core/location/syria_governorates.dart';
+import 'package:ohara/core/router/route_paths.dart';
+import 'package:ohara/core/shared/value_objects/money.dart';
+import 'package:ohara/features/auth/presentation/providers/auth_provider.dart';
+import 'package:ohara/features/cart/presentation/providers/cart_providers.dart';
+import 'package:ohara/features/checkout/domain/entities/checkout.dart';
+import 'package:ohara/features/checkout/presentation/order_labels.dart';
+import 'package:ohara/features/checkout/presentation/providers/applied_coupon_provider.dart';
+import 'package:ohara/features/checkout/presentation/providers/checkout_controller.dart';
+import 'package:ohara/features/checkout/presentation/providers/checkout_providers.dart';
+import 'package:ohara/features/checkout/presentation/providers/saved_addresses_provider.dart';
+import 'package:ohara/features/checkout/presentation/widgets/cod_confirmation_sheet.dart';
+import 'package:ohara/features/policies/presentation/widgets/policy_link.dart';
+import 'package:ohara/features/settings/domain/entities/address_entity.dart';
 
 /// The last screen before she pays.
 ///
@@ -53,6 +56,17 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
 
   /// Null means "a new address" — the form. Anything else is a saved one.
   String? _selectedAddressId;
+
+  /// The pin she dropped on the map, when she chose the map over typing.
+  PickedPlace? _pin;
+
+  /// Whether the fields the pin filled are open for her to correct. Closed
+  /// once the map has filled them all — that is the point of the map — and
+  /// forced open when it could not, so a required field is never hidden.
+  bool _detailsOpen = true;
+
+  /// The map's governorate is not one the platform delivers to by that name.
+  bool _governorateUnmatched = false;
   bool _seededFromUser = false;
   bool _seededFromBook = false;
 
@@ -152,6 +166,62 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
       _district = null;
       _isRural = false;
     });
+    // A pin she dropped before looking at a saved address still stands.
+    if (_pin != null) _applyPin(_pin);
+  }
+
+  /// Fills the form from the map, the way she would have typed it.
+  ///
+  /// Every field it fills stays editable: OpenStreetMap knows Damascus street
+  /// by street and a village by little more than its name, so the map is a
+  /// fast first draft, not the last word.
+  void _applyPin(PickedPlace? place) {
+    if (place == null) {
+      setState(() {
+        _pin = null;
+        _detailsOpen = true;
+        _governorateUnmatched = false;
+      });
+      return;
+    }
+
+    final options = ref.read(checkoutControllerProvider).governorates;
+    final governorateName = matchPlaceName(
+      options.map((option) => option.name),
+      [place.governorate, place.city],
+    );
+    final governorate = options
+        .where((option) => option.name == governorateName)
+        .firstOrNull;
+    final districtName = governorate == null
+        ? null
+        : matchPlaceName(
+            governorate.districts.map((district) => district.name),
+            [place.district, place.neighbourhood, place.city],
+          );
+    final district = governorate?.districts
+        .where((option) => option.name == districtName)
+        .firstOrNull;
+
+    final city = place.city ?? place.district ?? governorateName;
+    final line = place.addressLine;
+
+    setState(() {
+      _pin = place;
+      _governorateUnmatched = governorateName == null;
+      if (governorateName != null) {
+        _governorate = governorateName;
+        _district = district?.name;
+        _isRural = district?.isRural ?? place.isRural;
+      }
+      if (city != null && city.trim().isNotEmpty) _city.text = city;
+      if (line != null && line.trim().isNotEmpty) _address.text = line;
+      _detailsOpen =
+          governorateName == null ||
+          _city.text.trim().isEmpty ||
+          _address.text.trim().isEmpty;
+    });
+    _requote();
   }
 
   Future<void> _place() async {
@@ -195,6 +265,8 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                   landmark: _landmark.text.trim().isEmpty
                       ? null
                       : _landmark.text.trim(),
+                  latitude: _pin?.latitude,
+                  longitude: _pin?.longitude,
                 ),
           saveAddress: _selectedAddressId == null && _saveAddress,
           paymentMethod: _paymentMethod!,
@@ -290,7 +362,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
     // number that can disagree with the invoice. What is shown before placing
     // is the subtotal and the quoted delivery, each on its own line.
 
-    return ReemScrollPage(
+    return OharaScrollPage(
       bottom: _BottomBar(
         subtotal: subtotal,
         deliveryFee: deliveryFee,
@@ -311,7 +383,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
               DsSpacing.lg,
               DsSpacing.lg,
               // The ticket floating over the foot of the page is cleared by
-              // `ReemScrollPage` itself, measured rather than guessed.
+              // `OharaScrollPage` itself, measured rather than guessed.
               DsSpacing.lg,
             ),
             sliver: SliverToBoxAdapter(
@@ -490,8 +562,26 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
         .where((option) => option.name == _governorate)
         .firstOrNull;
     final districts = governorate?.districts ?? const <GovernorateDistrict>[];
+    final pinned = _pin != null;
+    final showPlaceFields = !pinned || _detailsOpen;
 
     return [
+      // The quick way: one pin instead of four fields.
+      MapLocationField(
+        value: _pin,
+        onChanged: _applyPin,
+        initialGovernorate: _governorate,
+        placeLabel: l10n.mapPickerDeliveryHere,
+      ),
+      if (pinned)
+        _PinFilledNote(
+          unmatched: _governorateUnmatched,
+          open: _detailsOpen,
+          onToggle: () => setState(() => _detailsOpen = !_detailsOpen),
+        )
+      else
+        const MapOrTypeDivider(),
+
       DsInputField(
         controller: _name,
         label: l10n.checkoutRecipientName,
@@ -509,35 +599,42 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
           return null;
         },
       ),
-      DropdownButtonFormField<String>(
-        initialValue: _governorate,
-        isExpanded: true,
-        decoration: InputDecoration(labelText: l10n.checkoutGovernorate),
-        items: [
-          for (final option in state.governorates)
-            DropdownMenuItem(
-              value: option.name,
-              child: Text('${option.name} · ${option.fee.format()}'),
-            ),
-        ],
-        onChanged: (value) {
-          setState(() {
-            _governorate = value;
-            // A district from the previous governorate would quote a zone that
-            // does not exist, so the choice below starts again.
-            _district = null;
-            _isRural = false;
-          });
-          _requote();
-        },
-      ),
-      const SizedBox(height: DsSpacing.md),
+      // Folded away once the map has filled it; never while it is empty.
+      if (showPlaceFields) ...[
+        DropdownButtonFormField<String>(
+          // Keyed by the value so a governorate the map chose replaces the
+          // one on screen: a form field reads its initial value only once.
+          key: ValueKey('governorate-$_governorate'),
+          initialValue: _governorate,
+          isExpanded: true,
+          decoration: InputDecoration(labelText: l10n.checkoutGovernorate),
+          items: [
+            for (final option in state.governorates)
+              DropdownMenuItem(
+                value: option.name,
+                child: Text('${option.name} · ${option.fee.format()}'),
+              ),
+          ],
+          onChanged: (value) {
+            setState(() {
+              _governorate = value;
+              // A district from the previous governorate would quote a zone
+              // that does not exist, so the choice below starts again.
+              _district = null;
+              _isRural = false;
+            });
+            _requote();
+          },
+        ),
+        const SizedBox(height: DsSpacing.md),
+      ],
 
       // Q53's two tiers, picked by choosing a district rather than by asking
       // her to know which tier she lives in. Districts come from the shipping
       // zones themselves, each carrying its own rural flag and fee.
       if (districts.isNotEmpty)
         DropdownButtonFormField<String>(
+          key: ValueKey('district-$_governorate-$_district'),
           initialValue: _district,
           isExpanded: true,
           decoration: InputDecoration(labelText: l10n.checkoutDistrict),
@@ -573,18 +670,20 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
         ),
       const SizedBox(height: DsSpacing.md),
 
-      DsInputField(
-        controller: _city,
-        label: l10n.checkoutCity,
-        validator: _required,
-      ),
-      DsInputField(
-        controller: _address,
-        label: l10n.checkoutAddressLine,
-        hint: l10n.checkoutAddressLineHint,
-        maxLines: 2,
-        validator: _required,
-      ),
+      if (showPlaceFields) ...[
+        DsInputField(
+          controller: _city,
+          label: l10n.checkoutCity,
+          validator: _required,
+        ),
+        DsInputField(
+          controller: _address,
+          label: l10n.checkoutAddressLine,
+          hint: l10n.checkoutAddressLineHint,
+          maxLines: 2,
+          validator: _required,
+        ),
+      ],
       DsInputField(
         controller: _landmark,
         label: l10n.checkoutLandmark,
@@ -629,6 +728,60 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
               minus ? colors.success : colors.onSurface,
             ),
           ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Under the map preview: what the pin filled in, and the way to check it.
+class _PinFilledNote extends StatelessWidget {
+  const _PinFilledNote({
+    required this.unmatched,
+    required this.open,
+    required this.onToggle,
+  });
+
+  final bool unmatched;
+  final bool open;
+  final VoidCallback onToggle;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.dsColors;
+    final l10n = context.l10n;
+    final tone = unmatched ? colors.warning : colors.success;
+    return Padding(
+      padding: const EdgeInsets.only(top: DsSpacing.sm, bottom: DsSpacing.md),
+      child: Row(
+        children: [
+          Icon(
+            unmatched
+                ? Icons.error_outline_rounded
+                : Icons.auto_awesome_rounded,
+            size: DsSizes.iconXs,
+            color: tone,
+          ),
+          DsGaps.hXs,
+          Expanded(
+            child: Text(
+              unmatched
+                  ? l10n.locationFieldGovernorateUnmatched
+                  : l10n.locationFieldFilled,
+              style: context.dsText.caption.tint(
+                unmatched ? tone : colors.onSurfaceVariant,
+              ),
+            ),
+          ),
+          if (!unmatched)
+            TextButton(
+              onPressed: onToggle,
+              child: Text(
+                open
+                    ? l10n.locationFieldHideDetails
+                    : l10n.locationFieldEditDetails,
+              ),
+            ),
         ],
       ),
     );
@@ -788,6 +941,15 @@ class _AddressOption extends StatelessWidget {
                   color: colors.rating,
                 ),
               ],
+              // Pinned on the map: the courier is taken to the door.
+              if (address.hasPin) ...[
+                DsGaps.hXs,
+                Icon(
+                  Icons.location_on_rounded,
+                  size: DsSizes.iconXs,
+                  color: colors.primary,
+                ),
+              ],
             ],
           ),
           DsGaps.vXxxs,
@@ -864,7 +1026,7 @@ class _PaymentTile extends StatelessWidget {
             padding: const EdgeInsets.only(top: DsSpacing.sm),
             child: Text(
               // The app's own name for a known method, so checkout and the
-              // order page agree («محفظة ريم»); the server's label for one the
+              // order page agree («محفظة أوهارا»); the server's label for one the
               // app does not know yet.
               switch (context.l10n.paymentMethodName(option.method)) {
                 final name when name != option.method => name,

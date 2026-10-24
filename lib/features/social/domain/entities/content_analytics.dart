@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
-import 'package:reem/core/shared/entities/user.dart';
-import 'package:reem/core/shared/value_objects/money.dart';
+import 'package:ohara/core/shared/entities/user.dart';
+import 'package:ohara/core/shared/value_objects/money.dart';
 
 /// How one format is doing, against the others.
 class ContentFormatPerformance extends Equatable {

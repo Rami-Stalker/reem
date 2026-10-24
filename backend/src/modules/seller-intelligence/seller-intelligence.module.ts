@@ -7,7 +7,7 @@ import { SellerAdvisorService } from './advisor/seller-advisor.service';
 import { SellerIntelligenceScheduler } from './seller-intelligence.scheduler';
 
 /**
- * Reem Seller Intelligence — phase two of the commerce OS.
+ * Ohara Seller Intelligence — phase two of the commerce OS.
  *
  * Three systems that turn the seller console from a set of tables into
  * something that tells her what to do next:

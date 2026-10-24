@@ -1,19 +1,19 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:reem/core/design_system/components/buttons/button_styles.dart';
-import 'package:reem/core/design_system/components/buttons/ds_button.dart';
-import 'package:reem/core/design_system/foundation/theme/extensions/color_extension.dart';
-import 'package:reem/core/design_system/foundation/tokens/ds_constraints.dart';
-import 'package:reem/core/design_system/foundation/tokens/ds_radius.dart';
-import 'package:reem/core/design_system/foundation/tokens/ds_spacing.dart';
-import 'package:reem/core/design_system/foundation/tokens/ds_typography.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/core/platform/app_platform.dart';
+import 'package:ohara/core/design_system/components/buttons/button_styles.dart';
+import 'package:ohara/core/design_system/components/buttons/ds_button.dart';
+import 'package:ohara/core/design_system/foundation/theme/extensions/color_extension.dart';
+import 'package:ohara/core/design_system/foundation/tokens/ds_constraints.dart';
+import 'package:ohara/core/design_system/foundation/tokens/ds_radius.dart';
+import 'package:ohara/core/design_system/foundation/tokens/ds_spacing.dart';
+import 'package:ohara/core/design_system/foundation/tokens/ds_typography.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/core/platform/app_platform.dart';
 
 /// Tone for a [DsDialog] icon header.
 enum DsDialogTone { primary, success, warning, danger, info }
 
-/// Helpers for Reem-styled dialogs (confirm / alert / prompt / custom).
+/// Helpers for Ohara-styled dialogs (confirm / alert / prompt / custom).
 ///
 /// **Adaptive by construction.** A modal is the most platform-specific piece
 /// of furniture in a phone app: iOS expects a narrow centred alert with
@@ -178,7 +178,7 @@ abstract final class DsDialog {
     return showDialog<String>(context: context, builder: build);
   }
 
-  /// Present arbitrary content inside a Reem-styled dialog frame.
+  /// Present arbitrary content inside a Ohara-styled dialog frame.
   ///
   /// Material on both platforms on purpose: this one holds bespoke content —
   /// a form, a chart, a picker — which Cupertino's alert frame cannot carry.

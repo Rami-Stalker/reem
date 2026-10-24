@@ -1,6 +1,6 @@
-import 'package:reem/core/result/result.dart';
-import 'package:reem/features/discovery/domain/entities/product_page.dart';
-import 'package:reem/features/product_social/domain/entities/product_engagement.dart';
+import 'package:ohara/core/result/result.dart';
+import 'package:ohara/features/discovery/domain/entities/product_page.dart';
+import 'package:ohara/features/product_social/domain/entities/product_engagement.dart';
 
 /// Likes, bookmarks, picks, shares and reports on a product.
 ///

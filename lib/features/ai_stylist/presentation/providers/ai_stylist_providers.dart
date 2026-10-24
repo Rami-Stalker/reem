@@ -2,16 +2,16 @@ import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
-import 'package:reem/core/presentation/providers/core_providers.dart';
-import 'package:reem/core/result/result.dart';
-import 'package:reem/features/ai_stylist/data/datasources/ai_stylist_remote_datasource.dart';
-import 'package:reem/features/ai_stylist/data/datasources/impl/ai_stylist_remote_datasource_impl.dart';
-import 'package:reem/features/ai_stylist/data/repositories/ai_stylist_repository_impl.dart';
-import 'package:reem/features/ai_stylist/domain/entities/stylist_conversation.dart';
-import 'package:reem/features/ai_stylist/domain/entities/stylist_outfit.dart';
-import 'package:reem/features/ai_stylist/domain/repositories/ai_stylist_repository.dart';
-import 'package:reem/features/ai_stylist/presentation/providers/stylist_chat_notifier.dart';
-import 'package:reem/features/ai_stylist/presentation/providers/stylist_chat_state.dart';
+import 'package:ohara/core/presentation/providers/core_providers.dart';
+import 'package:ohara/core/result/result.dart';
+import 'package:ohara/features/ai_stylist/data/datasources/ai_stylist_remote_datasource.dart';
+import 'package:ohara/features/ai_stylist/data/datasources/impl/ai_stylist_remote_datasource_impl.dart';
+import 'package:ohara/features/ai_stylist/data/repositories/ai_stylist_repository_impl.dart';
+import 'package:ohara/features/ai_stylist/domain/entities/stylist_conversation.dart';
+import 'package:ohara/features/ai_stylist/domain/entities/stylist_outfit.dart';
+import 'package:ohara/features/ai_stylist/domain/repositories/ai_stylist_repository.dart';
+import 'package:ohara/features/ai_stylist/presentation/providers/stylist_chat_notifier.dart';
+import 'package:ohara/features/ai_stylist/presentation/providers/stylist_chat_state.dart';
 
 // ── Infrastructure ──────────────────────────────────────────────────────
 

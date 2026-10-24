@@ -1,6 +1,6 @@
 # Database — local setup
 
-The Reem backend runs on PostgreSQL 18 with Prisma. This document covers how the
+The Ohara backend runs on PostgreSQL 18 with Prisma. This document covers how the
 database is provisioned, how DBeaver connects to it, and the two things about
 this particular machine that are worth knowing.
 
@@ -89,7 +89,7 @@ That applies migrations, regenerates the Prisma client and seeds demo data.
 
 ## Connecting DBeaver
 
-A connection named **Reem — local** is already defined in the DBeaver
+A connection named **Ohara — local** is already defined in the DBeaver
 workspace and points at `localhost:5432/reem_db` as `reem_user`; it prompts for
 the password on first connect. To create one by hand —
 `Database → New Database Connection → PostgreSQL`:

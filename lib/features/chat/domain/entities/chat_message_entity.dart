@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
-import 'package:reem/core/shared/entities/product.dart';
-import 'package:reem/core/shared/entities/seller_offer.dart';
-import 'package:reem/core/shared/value_objects/money.dart';
+import 'package:ohara/core/shared/entities/product.dart';
+import 'package:ohara/core/shared/entities/seller_offer.dart';
+import 'package:ohara/core/shared/value_objects/money.dart';
 
 /// The piece a message is about — «اسألي عن هذه القطعة».
 ///

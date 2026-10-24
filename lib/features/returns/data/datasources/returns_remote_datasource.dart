@@ -1,5 +1,5 @@
-import 'package:reem/features/returns/domain/entities/return_eligibility.dart';
-import 'package:reem/features/seller_returns/domain/entities/return_request.dart';
+import 'package:ohara/features/returns/domain/entities/return_eligibility.dart';
+import 'package:ohara/features/seller_returns/domain/entities/return_request.dart';
 
 /// The customer's half of `/returns`.
 ///

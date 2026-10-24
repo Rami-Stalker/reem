@@ -1,8 +1,8 @@
-import 'package:reem/core/base/repository_handler.dart';
-import 'package:reem/core/result/result.dart';
-import 'package:reem/features/seller_returns/data/datasources/seller_returns_remote_datasource.dart';
-import 'package:reem/features/seller_returns/domain/entities/return_request.dart';
-import 'package:reem/features/seller_returns/domain/repositories/seller_returns_repository.dart';
+import 'package:ohara/core/base/repository_handler.dart';
+import 'package:ohara/core/result/result.dart';
+import 'package:ohara/features/seller_returns/data/datasources/seller_returns_remote_datasource.dart';
+import 'package:ohara/features/seller_returns/domain/entities/return_request.dart';
+import 'package:ohara/features/seller_returns/domain/repositories/seller_returns_repository.dart';
 
 class SellerReturnsRepositoryImpl
     with RepositoryHandler

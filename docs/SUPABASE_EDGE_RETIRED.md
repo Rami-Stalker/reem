@@ -1,15 +1,15 @@
-# Reem on Supabase — the retired Edge Function deployment
+# Ohara on Supabase — the retired Edge Function deployment
 
 > **Retired 2026-09-15.** This describes how the API *used to* run as a
 > Supabase Edge Function, with the app calling Supabase Auth and Realtime
-> directly. It is no longer how Reem runs: the NestJS API is the backend and
+> directly. It is no longer how Ohara runs: the NestJS API is the backend and
 > Supabase hosts only its PostgreSQL database and upload bytes — see
 > [SUPABASE.md](SUPABASE.md). The `api` function is still deployed but unused,
 > and its 31 pg_cron triggers are paused. Kept as the record of that
 > deployment and as a rollback path; the Flutter half of it
 > (`BACKEND=supabase`, `supabase_flutter`) was removed from the app.
 
-The Reem API runs on Supabase today, with no machine of our own. The backend in
+The Ohara API runs on Supabase today, with no machine of our own. The backend in
 `backend/` is **not** rewritten, forked or modified: the same NestJS
 application is compiled into a Supabase Edge Function, and Supabase supplies
 what a server used to — the database, sign-in codes, file storage, realtime
@@ -40,7 +40,7 @@ Deployed and verified on 2026-09-14, against the real project, not a copy:
 | API (all ~670 routes, guards, policies, money logic) | `node dist/main.js` | Edge Function **`api`** — the same code, bundled by `supabase/edge` |
 | Database | PostgreSQL 18, `prisma migrate deploy` | Supabase Postgres 17, **identical schema** (`supabase/migrations`, generated from the Prisma migrations) |
 | Sign-in code (OTP) | `POST /auth/otp/login/*`, delivered by the backend | **Supabase Auth** phone OTP; delivered by the same backend transports through the **Send SMS hook** |
-| Session | Reem JWT + device-bound refresh tokens | Unchanged — Supabase session is **exchanged** for the Reem session at `POST /auth/supabase/exchange` |
+| Session | Ohara JWT + device-bound refresh tokens | Unchanged — Supabase session is **exchanged** for the Ohara session at `POST /auth/supabase/exchange` |
 | Media files | `backend/storage/media` on disk | **Supabase Storage** buckets `reem-media-public` / `reem-media-private` |
 | Chat live updates | WebSocket held by the API process | **Supabase Realtime** private channels (broadcast), authorised by RLS |
 | 30 scheduled jobs | `@nestjs/schedule` timers | **pg_cron** → `POST /internal/cron/:job` (pg_net, shared secret in Vault) |
@@ -153,7 +153,7 @@ supabase/
     `chat_participants`, `messages`, `message_attachments`, `follows`;
     sellers see their own sub-orders and offers in any state; staff read orders
     and products platform-wide (not other people's notifications).
-  - The Supabase user maps to a Reem user only through
+  - The Supabase user maps to a Ohara user only through
     `reem_supabase.identity_links`, and only while the auth user's phone still
     equals the account's phone — a number that changes hands carries nothing.
   - Tables added by future Prisma migrations are locked down automatically

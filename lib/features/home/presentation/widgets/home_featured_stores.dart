@@ -3,16 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/core/media/media_decode.dart';
-import 'package:reem/core/media/media_variants.dart';
-import 'package:reem/core/result/result.dart';
-import 'package:reem/core/router/route_paths.dart';
-import 'package:reem/features/home/domain/entities/featured_store.dart';
-import 'package:reem/features/home/presentation/providers/home_content_provider.dart';
-import 'package:reem/features/home/presentation/widgets/home_section_header.dart';
-import 'package:reem/features/user_profile/presentation/providers/user_profile_providers.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/core/media/media_decode.dart';
+import 'package:ohara/core/media/media_variants.dart';
+import 'package:ohara/core/result/result.dart';
+import 'package:ohara/core/router/route_paths.dart';
+import 'package:ohara/features/home/domain/entities/featured_store.dart';
+import 'package:ohara/features/home/presentation/providers/home_content_provider.dart';
+import 'package:ohara/features/home/presentation/widgets/home_section_header.dart';
+import 'package:ohara/features/user_profile/presentation/providers/user_profile_providers.dart';
 
 /// "Featured boutiques" — rich store cards with cover, logo, trust signals and
 /// a teaser strip of their pieces, plus an optimistic follow toggle.

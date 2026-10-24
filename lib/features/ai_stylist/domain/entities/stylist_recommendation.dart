@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
-import 'package:reem/core/shared/entities/product.dart';
-import 'package:reem/core/shared/value_objects/money.dart';
+import 'package:ohara/core/shared/entities/product.dart';
+import 'package:ohara/core/shared/value_objects/money.dart';
 
 /// What she did with a card. Mirrors the server enum exactly, because these
 /// values travel back as-is.

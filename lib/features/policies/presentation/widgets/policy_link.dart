@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/router/route_paths.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/router/route_paths.dart';
 
 /// The slugs the app links to by name.
 ///

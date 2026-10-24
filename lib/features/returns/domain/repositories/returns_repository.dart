@@ -1,6 +1,6 @@
-import 'package:reem/core/result/result.dart';
-import 'package:reem/features/returns/domain/entities/return_eligibility.dart';
-import 'package:reem/features/seller_returns/domain/entities/return_request.dart';
+import 'package:ohara/core/result/result.dart';
+import 'package:ohara/features/returns/domain/entities/return_eligibility.dart';
+import 'package:ohara/features/seller_returns/domain/entities/return_request.dart';
 
 abstract interface class ReturnsRepository {
   Future<Result<ReturnEligibility>> eligibility(String sellerOrderId);

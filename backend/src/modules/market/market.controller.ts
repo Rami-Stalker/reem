@@ -32,9 +32,9 @@ import {
 } from './market.serializer';
 
 /**
- * What a shopper can reach of Reem Market Evolution.
+ * What a shopper can reach of Ohara Market Evolution.
  *
- * Four surfaces that share one rule: none of them is a feed of things Reem
+ * Four surfaces that share one rule: none of them is a feed of things Ohara
  * would like her to buy. A drop is addressed to her and says why; a bundle is
  * a solution with a reason per piece; her wardrobe reading is about what she
  * already owns; a mission asks for something worth doing. Nothing here ranks

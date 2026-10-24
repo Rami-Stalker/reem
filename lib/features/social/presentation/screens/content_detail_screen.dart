@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/core/router/route_paths.dart';
-import 'package:reem/features/social/presentation/providers/social_providers.dart';
-import 'package:reem/features/social/presentation/widgets/interactive_content_card.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/core/router/route_paths.dart';
+import 'package:ohara/features/social/presentation/providers/social_providers.dart';
+import 'package:ohara/features/social/presentation/widgets/interactive_content_card.dart';
 
 /// One piece, on its own — where a shared link lands.
 ///
@@ -40,7 +40,7 @@ class ContentDetailScreen extends ConsumerWidget {
             showBack: true,
             // Arriving from a link means there is nothing beneath this on the
             // stack, and a back arrow that closes the app is a dead end for
-            // somebody who has just met Reem. Home is the honest destination.
+            // somebody who has just met Ohara. Home is the honest destination.
             onBack: () =>
                 context.canPop() ? context.pop() : context.go(RoutePaths.home),
           ),

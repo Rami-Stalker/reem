@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/errors/failure_exception.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/core/router/route_paths.dart';
-import 'package:reem/features/catalog/domain/entities/category_node.dart';
-import 'package:reem/features/catalog/presentation/providers/categories_provider.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/errors/failure_exception.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/core/router/route_paths.dart';
+import 'package:ohara/features/catalog/domain/entities/category_node.dart';
+import 'package:ohara/features/catalog/presentation/providers/categories_provider.dart';
 
 /// The shop's departments, from the catalogue's own tree.
 ///
@@ -33,7 +33,7 @@ class CategoriesScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final tree = ref.watch(categoryTreeProvider);
 
-    return ReemScrollPage(
+    return OharaScrollPage(
       slivers: [
         PremiumAppBar(title: context.l10n.categories, showBack: true),
         switch (tree) {

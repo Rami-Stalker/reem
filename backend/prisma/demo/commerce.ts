@@ -225,7 +225,7 @@ async function seedCouriers(ctx: DemoContext) {
   const definitions = [
     {
       kind: CourierKind.PLATFORM_STAFF,
-      displayName: 'فريق ريم للتوصيل',
+      displayName: 'فريق أوهارا للتوصيل',
       phone: '+963940000001',
       governorates: ['دمشق', 'ريف دمشق'],
     },

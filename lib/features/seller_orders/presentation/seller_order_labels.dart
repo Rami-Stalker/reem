@@ -1,5 +1,5 @@
-import 'package:reem/features/seller_orders/domain/entities/seller_order.dart';
-import 'package:reem/l10n/app_localizations.dart';
+import 'package:ohara/features/seller_orders/domain/entities/seller_order.dart';
+import 'package:ohara/l10n/app_localizations.dart';
 
 /// Wording for the seller's queue.
 ///

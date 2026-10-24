@@ -14,24 +14,24 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/app_localizations.dart';
-import 'package:reem/core/result/result.dart';
-import 'package:reem/core/shared/entities/brand.dart';
-import 'package:reem/core/shared/entities/category.dart';
-import 'package:reem/core/shared/entities/product.dart';
-import 'package:reem/core/shared/entities/seller_offer.dart';
-import 'package:reem/core/shared/entities/user.dart';
-import 'package:reem/core/shared/value_objects/money.dart';
-import 'package:reem/features/auth/presentation/providers/auth_notifier.dart';
-import 'package:reem/features/auth/presentation/providers/auth_provider.dart';
-import 'package:reem/features/auth/presentation/providers/auth_state.dart';
-import 'package:reem/features/product_social/domain/entities/product_engagement.dart';
-import 'package:reem/features/product_social/domain/repositories/product_social_repository.dart';
-import 'package:reem/features/product_social/presentation/providers/product_social_providers.dart';
-import 'package:reem/features/product_social/presentation/widgets/product_actions_scope.dart';
-import 'package:reem/features/product_social/presentation/widgets/product_post_card.dart';
-import 'package:reem/l10n/app_localizations.dart' as gen;
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/app_localizations.dart';
+import 'package:ohara/core/result/result.dart';
+import 'package:ohara/core/shared/entities/brand.dart';
+import 'package:ohara/core/shared/entities/category.dart';
+import 'package:ohara/core/shared/entities/product.dart';
+import 'package:ohara/core/shared/entities/seller_offer.dart';
+import 'package:ohara/core/shared/entities/user.dart';
+import 'package:ohara/core/shared/value_objects/money.dart';
+import 'package:ohara/features/auth/presentation/providers/auth_notifier.dart';
+import 'package:ohara/features/auth/presentation/providers/auth_provider.dart';
+import 'package:ohara/features/auth/presentation/providers/auth_state.dart';
+import 'package:ohara/features/product_social/domain/entities/product_engagement.dart';
+import 'package:ohara/features/product_social/domain/repositories/product_social_repository.dart';
+import 'package:ohara/features/product_social/presentation/providers/product_social_providers.dart';
+import 'package:ohara/features/product_social/presentation/widgets/product_actions_scope.dart';
+import 'package:ohara/features/product_social/presentation/widgets/product_post_card.dart';
+import 'package:ohara/l10n/app_localizations.dart' as gen;
 
 final _captureKey = GlobalKey();
 
@@ -161,7 +161,7 @@ Future<void> _capture(WidgetTester tester, String name) async {
 
 final _seller = User(
   id: 's1',
-  name: 'بوتيك ريم',
+  name: 'بوتيك أوهارا',
   username: 'reem_boutique',
   phone: '+963000000000',
   createdAt: DateTime(2026, 1, 1),
@@ -182,7 +182,7 @@ Product _product(String id, String title, int price, {int? was}) => Product(
   title: title,
   description: 'قطعة من تشكيلة الموسم، بقَصّة تحتفي بالتفصيل.',
   category: _category,
-  brand: const Brand(id: 'b1', slug: 'reem', nameAr: 'ريم', nameEn: 'Reem'),
+  brand: const Brand(id: 'b1', slug: 'reem', nameAr: 'أوهارا', nameEn: 'Ohara'),
   createdAt: DateTime(2026, 8, 1),
   rating: 4.6,
   reviewsCount: 18,

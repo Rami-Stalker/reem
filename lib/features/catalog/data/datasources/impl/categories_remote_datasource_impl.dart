@@ -1,9 +1,9 @@
-import 'package:reem/core/network/api_endpoints.dart';
-import 'package:reem/core/network/base_remote_datasource.dart';
-import 'package:reem/features/catalog/data/datasources/categories_remote_datasource.dart';
-import 'package:reem/features/catalog/data/models/category_node_model.dart';
-import 'package:reem/features/catalog/domain/entities/category_attributes.dart';
-import 'package:reem/features/catalog/domain/entities/category_node.dart';
+import 'package:ohara/core/network/api_endpoints.dart';
+import 'package:ohara/core/network/base_remote_datasource.dart';
+import 'package:ohara/features/catalog/data/datasources/categories_remote_datasource.dart';
+import 'package:ohara/features/catalog/data/models/category_node_model.dart';
+import 'package:ohara/features/catalog/domain/entities/category_attributes.dart';
+import 'package:ohara/features/catalog/domain/entities/category_node.dart';
 
 final class CategoriesRemoteDataSourceImpl extends BaseRemoteDataSource
     implements CategoriesRemoteDataSource {

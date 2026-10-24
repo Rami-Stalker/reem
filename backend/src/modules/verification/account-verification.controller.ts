@@ -61,7 +61,7 @@ export class AccountVerificationController {
  * The review queue.
  *
  * `user:manage` rather than a permission of its own: granting the badge is a
- * public claim Reem makes about a real woman, and the staff who may make it
+ * public claim Ohara makes about a real woman, and the staff who may make it
  * are the staff who may already change what an account is.
  */
 @Controller('admin/account-verifications')

@@ -3,12 +3,12 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/features/admin/presentation/widgets/admin_page_header.dart';
-import 'package:reem/features/policies/domain/entities/admin_policy.dart';
-import 'package:reem/features/policies/presentation/providers/admin_policies_provider.dart';
-import 'package:reem/features/policies/presentation/widgets/policy_editor_sheet.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/features/admin/presentation/widgets/admin_page_header.dart';
+import 'package:ohara/features/policies/domain/entities/admin_policy.dart';
+import 'package:ohara/features/policies/presentation/providers/admin_policies_provider.dart';
+import 'package:ohara/features/policies/presentation/widgets/policy_editor_sheet.dart';
 
 /// The policy desk — the point of the whole subsystem.
 ///

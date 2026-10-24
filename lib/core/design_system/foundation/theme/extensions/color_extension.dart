@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:reem/core/design_system/foundation/theme/ds_theme_extension.dart';
-import 'package:reem/core/design_system/foundation/tokens/ds_colors.dart';
+import 'package:ohara/core/design_system/foundation/theme/ds_theme_extension.dart';
+import 'package:ohara/core/design_system/foundation/tokens/ds_colors.dart';
 
-export 'package:reem/core/design_system/foundation/tokens/ds_colors.dart' show DsColorScheme;
+export 'package:ohara/core/design_system/foundation/tokens/ds_colors.dart' show DsColorScheme;
 
 /// Semantic color accessors on [BuildContext].
 ///

@@ -1,12 +1,12 @@
 import 'package:flutter_riverpod/legacy.dart';
-import 'package:reem/core/result/result.dart';
-import 'package:reem/core/shared/entities/post.dart';
+import 'package:ohara/core/result/result.dart';
+import 'package:ohara/core/shared/entities/post.dart';
 
-import 'package:reem/features/discovery/domain/entities/product_collection.dart';
-import 'package:reem/features/discovery/domain/usecases/discovery_usecases.dart';
-import 'package:reem/features/home/domain/usecases/get_feed_usecase.dart';
-import 'package:reem/features/home/domain/usecases/get_stories_usecase.dart';
-import 'package:reem/features/home/presentation/providers/home_state.dart';
+import 'package:ohara/features/discovery/domain/entities/product_collection.dart';
+import 'package:ohara/features/discovery/domain/usecases/discovery_usecases.dart';
+import 'package:ohara/features/home/domain/usecases/get_feed_usecase.dart';
+import 'package:ohara/features/home/domain/usecases/get_stories_usecase.dart';
+import 'package:ohara/features/home/presentation/providers/home_state.dart';
 
 /// Orchestrates the home feed: fetches every product collection (each tracked
 /// independently) plus stories + the social feed, in parallel.

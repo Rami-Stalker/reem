@@ -1,5 +1,5 @@
 # ---------------------------------------------------------------------------
-# Reem — repository ignore rules
+# Ohara — repository ignore rules
 #
 # Layout: a Flutter client at the repository root and a NestJS API in
 # `backend/`. Rules are grouped by the tool that produces the artifact, and

@@ -3,8 +3,8 @@ import 'dart:isolate';
 
 import 'package:flutter/foundation.dart';
 
-import 'package:reem/core/observability/error_report.dart';
-import 'package:reem/core/observability/error_reporter.dart';
+import 'package:ohara/core/observability/error_report.dart';
+import 'package:ohara/core/observability/error_reporter.dart';
 
 /// Catches everything Flutter can throw at you, in the four places it throws.
 ///

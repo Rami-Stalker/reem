@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/features/seller_analytics/domain/entities/seller_analytics_report.dart';
-import 'package:reem/features/seller_analytics/presentation/providers/seller_analytics_provider.dart';
-import 'package:reem/features/seller_analytics/presentation/widgets/analytics_pieces.dart';
-import 'package:reem/features/seller_analytics/presentation/widgets/analytics_trend_chart.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/features/seller_analytics/domain/entities/seller_analytics_report.dart';
+import 'package:ohara/features/seller_analytics/presentation/providers/seller_analytics_provider.dart';
+import 'package:ohara/features/seller_analytics/presentation/widgets/analytics_pieces.dart';
+import 'package:ohara/features/seller_analytics/presentation/widgets/analytics_trend_chart.dart';
 
 /// The seller's analytics.
 ///
@@ -28,7 +28,7 @@ class SellerAnalyticsScreen extends ConsumerWidget {
     final l10n = context.l10n;
     final report = state.report;
 
-    return ReemScrollPage(
+    return OharaScrollPage(
       onRefresh: notifier.refresh,
       background: const SellerAtelierBackground(),
       backgroundColor: context.atelier.background,

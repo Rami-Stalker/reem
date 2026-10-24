@@ -1,11 +1,11 @@
-import 'package:reem/core/network/api_endpoints.dart';
-import 'package:reem/core/network/base_remote_datasource.dart';
-import 'package:reem/features/seller_products/data/datasources/seller_products_remote_datasource.dart';
-import 'package:reem/features/seller_products/data/models/managed_product_model.dart';
-import 'package:reem/features/seller_products/data/models/managed_product_page_model.dart';
-import 'package:reem/features/seller_products/data/models/product_draft_request.dart';
-import 'package:reem/features/seller_products/domain/entities/product_draft.dart';
-import 'package:reem/features/seller_products/domain/entities/product_status.dart';
+import 'package:ohara/core/network/api_endpoints.dart';
+import 'package:ohara/core/network/base_remote_datasource.dart';
+import 'package:ohara/features/seller_products/data/datasources/seller_products_remote_datasource.dart';
+import 'package:ohara/features/seller_products/data/models/managed_product_model.dart';
+import 'package:ohara/features/seller_products/data/models/managed_product_page_model.dart';
+import 'package:ohara/features/seller_products/data/models/product_draft_request.dart';
+import 'package:ohara/features/seller_products/domain/entities/product_draft.dart';
+import 'package:ohara/features/seller_products/domain/entities/product_status.dart';
 
 /// The seller's catalogue, spoken in the contract the server actually serves.
 ///

@@ -1,8 +1,8 @@
-import 'package:reem/core/network/api_endpoints.dart';
-import 'package:reem/core/network/base_remote_datasource.dart';
-import 'package:reem/features/trends/data/datasources/trends_remote_datasource.dart';
-import 'package:reem/features/trends/data/models/trend_mappers.dart';
-import 'package:reem/features/trends/domain/entities/trend_entities.dart';
+import 'package:ohara/core/network/api_endpoints.dart';
+import 'package:ohara/core/network/base_remote_datasource.dart';
+import 'package:ohara/features/trends/data/datasources/trends_remote_datasource.dart';
+import 'package:ohara/features/trends/data/models/trend_mappers.dart';
+import 'package:ohara/features/trends/domain/entities/trend_entities.dart';
 
 /// `/trends/*`.
 ///

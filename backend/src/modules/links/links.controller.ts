@@ -14,7 +14,7 @@ import { SharePreviewService } from './share-preview.service';
 import { SHARE_PATHS, ShareLinkKind, schemeUrl } from './share-links';
 
 /**
- * Where a shared Reem link lands.
+ * Where a shared Ohara link lands.
  *
  * Every one of these URLs used to end on the browser's own error page. Not
  * because a route was missing — because the host they pointed at,
@@ -26,7 +26,7 @@ import { SHARE_PATHS, ShareLinkKind, schemeUrl } from './share-links';
  * ## Three audiences, one URL
  *
  * A messenger's crawler wants `<head>`. A browser wants a page. A phone with
- * Reem installed wants never to get here at all — App Links and Universal
+ * Ohara installed wants never to get here at all — App Links and Universal
  * Links hand the URL straight to the app, and the well-known files that make
  * that work are served from here too.
  *
@@ -171,10 +171,10 @@ export class LinksController {
     res.send(
       renderMessagePage({
         canonicalUrl: `${origin}/`,
-        headline: 'ريم',
+        headline: 'أوهارا',
         detail:
           'سوق نسائي للأزياء والجمال. افتحي رابط منتج أو منشور لمشاهدته، أو حمّلي التطبيق.',
-        cta: store ? { label: 'حمّلي تطبيق ريم', url: store } : null,
+        cta: store ? { label: 'حمّلي تطبيق أوهارا', url: store } : null,
         noindex: false,
       }),
     );
@@ -219,7 +219,7 @@ export class LinksController {
           detail: failed
             ? 'حدث خلل مؤقّت عندنا. حاولي مرّة أخرى بعد قليل.'
             : NOT_FOUND_DETAIL[kind],
-          cta: { label: 'تصفّحي ريم', url: `${origin}/` },
+          cta: { label: 'تصفّحي أوهارا', url: `${origin}/` },
         }),
       );
       return;

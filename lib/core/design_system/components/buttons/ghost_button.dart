@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'package:reem/core/design_system/components/buttons/button_sizes.dart';
-import 'package:reem/core/design_system/components/buttons/button_styles.dart';
-import 'package:reem/core/design_system/components/buttons/ds_button.dart';
+import 'package:ohara/core/design_system/components/buttons/button_sizes.dart';
+import 'package:ohara/core/design_system/components/buttons/button_styles.dart';
+import 'package:ohara/core/design_system/components/buttons/ds_button.dart';
 
 /// Transparent tertiary action. Thin wrapper over [DsButton].
 class GhostButton extends StatelessWidget {

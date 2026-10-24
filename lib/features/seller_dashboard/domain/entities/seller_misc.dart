@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
-import 'package:reem/core/design_system/foundation/tokens/ds_tone.dart';
+import 'package:ohara/core/design_system/foundation/tokens/ds_tone.dart';
 
 // ── Store Performance Score ───────────────────────────────────────────────────
 

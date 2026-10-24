@@ -1,6 +1,8 @@
-import { Transform } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 import {
   IsBoolean,
+  IsLatitude,
+  IsLongitude,
   IsOptional,
   IsString,
   MaxLength,
@@ -55,6 +57,17 @@ export class AddressDto {
   @IsString()
   @MaxLength(140)
   landmark?: string;
+
+  /** The map pin, when she dropped one. Sent as a pair; half a pin is ignored. */
+  @IsOptional()
+  @Type(() => Number)
+  @IsLatitude()
+  latitude?: number | null;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsLongitude()
+  longitude?: number | null;
 
   /** Q53 P2 — the rural tier costs more and takes longer. */
   @IsOptional()
@@ -114,6 +127,17 @@ export class UpdateAddressDto {
   @IsString()
   @MaxLength(140)
   landmark?: string;
+
+  /** The map pin, when she dropped one. Sent as a pair; half a pin is ignored. */
+  @IsOptional()
+  @Type(() => Number)
+  @IsLatitude()
+  latitude?: number | null;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsLongitude()
+  longitude?: number | null;
 
   @IsOptional()
   @Transform(({ value }) => value === true || value === 'true')

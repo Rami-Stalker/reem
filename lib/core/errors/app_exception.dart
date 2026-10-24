@@ -1,4 +1,4 @@
-import 'package:reem/core/errors/failure.dart';
+import 'package:ohara/core/errors/failure.dart';
 
 sealed class AppException implements Exception {
   const AppException(

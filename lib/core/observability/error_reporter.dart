@@ -2,7 +2,7 @@ import 'dart:collection';
 
 import 'package:flutter/foundation.dart';
 
-import 'package:reem/core/observability/error_report.dart';
+import 'package:ohara/core/observability/error_report.dart';
 
 /// Where reports go.
 ///

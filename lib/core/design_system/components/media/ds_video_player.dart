@@ -2,11 +2,11 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_blurhash/flutter_blurhash.dart';
-import 'package:reem/core/design_system/foundation/tokens/ds_colors.dart';
-import 'package:reem/core/design_system/foundation/tokens/ds_sizes.dart';
-import 'package:reem/core/design_system/foundation/tokens/ds_spacing.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/core/media/authorized_media_image.dart';
+import 'package:ohara/core/design_system/foundation/tokens/ds_colors.dart';
+import 'package:ohara/core/design_system/foundation/tokens/ds_sizes.dart';
+import 'package:ohara/core/design_system/foundation/tokens/ds_spacing.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/core/media/authorized_media_image.dart';
 import 'package:video_player/video_player.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 

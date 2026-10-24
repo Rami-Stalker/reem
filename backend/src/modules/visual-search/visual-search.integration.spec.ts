@@ -17,7 +17,7 @@ import { emptyBrief } from '../ai-stylist/understanding/style-brief';
 import { PURCHASABLE_PRODUCT_WHERE, PRODUCT_CARD_INCLUDE } from '../../common/catalog/product-include';
 
 /**
- * Reem Visual Shopping against the real database.
+ * Ohara Visual Shopping against the real database.
  *
  * The unit tests prove the arithmetic on synthetic bitmaps. This proves the
  * claim the feature is actually sold on: that a photograph handed to the

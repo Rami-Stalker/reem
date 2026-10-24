@@ -1,6 +1,6 @@
-import 'package:reem/features/chat/data/models/chat_message_model.dart';
-import 'package:reem/features/chat/data/models/chat_thread_model.dart';
-import 'package:reem/features/chat/domain/entities/chat_start_request.dart';
+import 'package:ohara/features/chat/data/models/chat_message_model.dart';
+import 'package:ohara/features/chat/data/models/chat_thread_model.dart';
+import 'package:ohara/features/chat/domain/entities/chat_start_request.dart';
 
 abstract interface class ChatRemoteDataSource {
   /// [query] is matched by the server against titles, participant names and

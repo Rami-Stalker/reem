@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 
-import 'package:reem/core/shared/entities/product.dart';
+import 'package:ohara/core/shared/entities/product.dart';
 
 /// One line a listing adds to a product's «…» menu — the action that only
 /// makes sense where she is reading it.

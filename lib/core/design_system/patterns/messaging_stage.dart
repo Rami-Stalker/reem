@@ -3,13 +3,13 @@ import 'dart:math' as math;
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/media/media_decode.dart';
-import 'package:reem/core/media/media_variants.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/media/media_decode.dart';
+import 'package:ohara/core/media/media_variants.dart';
 
 /// The messaging register: **letters between a woman and her boutiques**.
 ///
-/// * [ArchAvatar] — a face or a shop mark cut to Reem's arch, with a living
+/// * [ArchAvatar] — a face or a shop mark cut to Ohara's arch, with a living
 ///   dot when they are here.
 /// * [WaxSeal] — an unread count pressed into a scalloped seal.
 /// * [SilkBubbleBorder] — a message bubble whose last line curls into a tail

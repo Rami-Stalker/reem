@@ -1,11 +1,11 @@
 # Delivery integration
 
-Reem manages orders. A delivery company manages the journey.
+Ohara manages orders. A delivery company manages the journey.
 
 That sentence is the whole design. The platform does not employ drivers, plan
 routes, or run a fleet management system — a carrier already has one, and
 building a second one inside a marketplace is building a business the client
-decided not to be in. What Reem owns is the order: the money, the customer's
+decided not to be in. What Ohara owns is the order: the money, the customer's
 expectations, the return window, the seller's escrow. What a carrier owns is
 the box, from the moment it is collected until it is delivered, refused or
 returned.
@@ -24,7 +24,7 @@ backend/src/modules/delivery/
 │   │                                    getDeliveryStatus, getTracking,
 │   │                                    calculateDeliveryFee, handleWebhook
 │   ├── delivery-provider.registry.ts    resolves an adapter by name
-│   ├── delivery-status.map.ts           carrier words → Reem's lifecycle
+│   ├── delivery-status.map.ts           carrier words → Ohara's lifecycle
 │   ├── http-delivery.provider.ts        the generic HTTP adapter
 │   ├── internal-courier.provider.ts     the in-house fleet, same interface
 │   └── provider-credentials.service.ts  secrets, read from the environment
@@ -35,7 +35,7 @@ backend/src/modules/delivery/
 │   ├── delivery-admin.controller.ts     the operations desk
 │   ├── delivery-admin.service.ts        carrier CRUD, without credentials
 │   └── delivery-provider.bootstrap.ts   never be unable to move a parcel
-├── shipments.service.ts             Reem's own record of the parcel
+├── shipments.service.ts             Ohara's own record of the parcel
 └── dto/delivery-provider.dto.ts     validation for the admin surface
 ```
 
@@ -50,7 +50,7 @@ Three tables, deliberately separate from `shipments`:
 
 | Table | Holds | Why separate |
 | --- | --- | --- |
-| `shipments` (existing) | Reem's record of the box: tracking code, cash due, proof, attempts, lifecycle | Everything downstream — returns, escrow, reviews, loyalty — already reads this. It must not change shape because a carrier did. |
+| `shipments` (existing) | Ohara's record of the box: tracking code, cash due, proof, attempts, lifecycle | Everything downstream — returns, escrow, reviews, loyalty — already reads this. It must not change shape because a carrier did. |
 | `delivery_provider_accounts` | A carrier: code, adapter, coverage, priority, capabilities, webhook scheme, non-secret config, **names** of credential variables | Changing carrier becomes a row, not a deploy |
 | `delivery_dispatches` | One parcel with one carrier: their id, their tracking number, their fee, their timestamps, their failure, our idempotency key | Order data stays order data; a carrier's data can be dropped with the carrier |
 | `delivery_webhook_events` | Every callback, verified or not, with its payload | Idempotency, and the answer when a carrier says "we told you" |

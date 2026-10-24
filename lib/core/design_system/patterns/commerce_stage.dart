@@ -2,16 +2,16 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
-import 'package:reem/core/design_system/design_system.dart';
+import 'package:ohara/core/design_system/design_system.dart';
 
 /// The buying register: **a boutique's paper bag, a ticket, a receipt**.
 ///
-/// Buying on Reem is shopping in a street of boutiques, and these are the
+/// Buying on Ohara is shopping in a street of boutiques, and these are the
 /// things that street hands you:
 ///
 /// * [BoutiqueBag] — one bag per boutique, rope handles and all, with its name
 ///   on a hanging gift tag. The cart is the bags she is carrying.
-/// * [ArchFrame] — a piece's photograph cut to Reem's arch.
+/// * [ArchFrame] — a piece's photograph cut to Ohara's arch.
 /// * [TicketBar] — the floating ticket the total and the next step ride on,
 ///   notched at both ends like a stub.
 /// * [JourneyStep] — checkout as stations on one silk thread, each marked by

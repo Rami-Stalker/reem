@@ -1,8 +1,8 @@
-import 'package:reem/core/base/repository_handler.dart';
-import 'package:reem/core/result/result.dart';
-import 'package:reem/features/seller_reviews/data/datasources/seller_reviews_remote_datasource.dart';
-import 'package:reem/features/seller_reviews/domain/entities/seller_review.dart';
-import 'package:reem/features/seller_reviews/domain/repositories/seller_reviews_repository.dart';
+import 'package:ohara/core/base/repository_handler.dart';
+import 'package:ohara/core/result/result.dart';
+import 'package:ohara/features/seller_reviews/data/datasources/seller_reviews_remote_datasource.dart';
+import 'package:ohara/features/seller_reviews/domain/entities/seller_review.dart';
+import 'package:ohara/features/seller_reviews/domain/repositories/seller_reviews_repository.dart';
 
 class SellerReviewsRepositoryImpl
     with RepositoryHandler

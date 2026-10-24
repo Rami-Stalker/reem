@@ -2,9 +2,9 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:reem/features/auth/data/models/account_models.dart';
-import 'package:reem/features/auth/data/models/identity_models.dart';
-import 'package:reem/features/auth/domain/entities/auth_account.dart';
+import 'package:ohara/features/auth/data/models/account_models.dart';
+import 'package:ohara/features/auth/data/models/identity_models.dart';
+import 'package:ohara/features/auth/domain/entities/auth_account.dart';
 
 /// Contract tests for Identity v2, against **real captured responses**.
 ///
@@ -26,7 +26,7 @@ void main() {
         _map('otp_login_start.json'),
       );
 
-      // The match code is the only defence against "this is Reem support, read
+      // The match code is the only defence against "this is Ohara support, read
       // me the code" — and it is worth nothing if the client drops it, which is
       // exactly what happened before: the server had always sent it and no
       // screen ever read it.

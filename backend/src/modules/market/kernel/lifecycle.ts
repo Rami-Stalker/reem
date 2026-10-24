@@ -1,7 +1,7 @@
 /**
  * What happens to a garment after it is bought.
  *
- * Every other part of Reem stops at the delivery. This is the part that keeps
+ * Every other part of Ohara stops at the delivery. This is the part that keeps
  * going: how a piece is cared for, whether it is actually being worn, and what
  * to do with it when it is not. The commercial argument for building it is
  * plain — a woman who wears what she owns trusts the next recommendation, and

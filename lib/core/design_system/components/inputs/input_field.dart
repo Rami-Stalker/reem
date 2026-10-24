@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'package:reem/core/design_system/foundation/theme/extensions/color_extension.dart';
-import 'package:reem/core/design_system/foundation/theme/extensions/shadow_extension.dart';
-import 'package:reem/core/design_system/foundation/tokens/ds_motion.dart';
-import 'package:reem/core/design_system/foundation/tokens/ds_radius.dart';
-import 'package:reem/core/design_system/foundation/tokens/ds_sizes.dart';
-import 'package:reem/core/design_system/foundation/tokens/ds_spacing.dart';
-import 'package:reem/core/design_system/foundation/tokens/ds_typography.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
+import 'package:ohara/core/design_system/foundation/theme/extensions/color_extension.dart';
+import 'package:ohara/core/design_system/foundation/theme/extensions/shadow_extension.dart';
+import 'package:ohara/core/design_system/foundation/tokens/ds_motion.dart';
+import 'package:ohara/core/design_system/foundation/tokens/ds_radius.dart';
+import 'package:ohara/core/design_system/foundation/tokens/ds_sizes.dart';
+import 'package:ohara/core/design_system/foundation/tokens/ds_spacing.dart';
+import 'package:ohara/core/design_system/foundation/tokens/ds_typography.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
 
 /// How a field is drawn.
 enum DsFieldVariant {
@@ -23,7 +23,7 @@ enum DsFieldVariant {
   bare,
 }
 
-/// The Reem text field.
+/// The Ohara text field.
 ///
 /// One input for the whole app, so a form in the seller's atelier, the address
 /// sheet and the sign-in screen are the same object rather than three
@@ -147,7 +147,7 @@ class DsInputField extends StatefulWidget {
 
   /// Lets the platform fill the field — most importantly
   /// `AutofillHints.oneTimeCode`, which puts the code from the notification
-  /// one tap away. On Reem that code *is* the credential, so the difference
+  /// one tap away. On Ohara that code *is* the credential, so the difference
   /// between one tap and retyping six digits from another app is the
   /// difference between a sign-in that works on a bad connection and one that
   /// times out halfway through.

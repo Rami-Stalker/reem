@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import 'package:reem/core/design_system/foundation/theme/extensions/color_extension.dart';
-import 'package:reem/core/design_system/foundation/tokens/ds_typography.dart';
+import 'package:ohara/core/design_system/foundation/theme/extensions/color_extension.dart';
+import 'package:ohara/core/design_system/foundation/tokens/ds_typography.dart';
 
-/// Semantic text roles for Reem.
+/// Semantic text roles for Ohara.
 ///
 /// The design system carried a *size* scale (`DsTypography.titleSmall` and
 /// friends) but no *role* scale, so every screen assembled its own
@@ -180,7 +180,7 @@ class DsTextStyles {
 
   /// The price on a product page.
   ///
-  /// Figures in Reem are set in the display serif — it is what makes the
+  /// Figures in Ohara are set in the display serif — it is what makes the
   /// wallet balance, the seller's revenue and this price read as the same
   /// editorial voice. Labels stay in the UI family; only the number is
   /// dressed up.

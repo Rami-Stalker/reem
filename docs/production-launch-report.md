@@ -16,7 +16,7 @@
 
 | المجال | كيف فُحص | النتيجة |
 | --- | --- | --- |
-| Authentication | قراءة `otp.service.ts`، `token.service.ts`، `jwt.strategy.ts` | سليم. الرمز من CSPRNG، مقارنة بزمن ثابت، pepper مستقل، `match_code` ضد هجوم «أنا من دعم ريم» |
+| Authentication | قراءة `otp.service.ts`، `token.service.ts`، `jwt.strategy.ts` | سليم. الرمز من CSPRNG، مقارنة بزمن ثابت، pepper مستقل، `match_code` ضد هجوم «أنا من دعم أوهارا» |
 | Authorization / RBAC | `authorization.guard.ts` + `authorization.service.ts` + 76 controller | fail-closed. كل route يحمل `@Public` أو `@Roles`/`@Authorize`/`@RequirePermissions` أو `@SelfScoped`، و`route-classification.spec.ts` يُفشل البناء إن لم يحمل شيئاً |
 | IDOR | **اختبار جديد**: 8 محاولات تجاوز بين عميلتين على كل سطح شخصي | كلها مرفوضة. لم يُوجد أي IDOR |
 | API security | `main.ts`: helmet، CORS، ValidationPipe (`whitelist` + `forbidNonWhitelisted`)، `rawBody` للـwebhook | سليم |

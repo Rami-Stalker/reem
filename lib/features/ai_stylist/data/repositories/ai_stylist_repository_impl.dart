@@ -1,10 +1,10 @@
-import 'package:reem/core/base/repository_handler.dart';
-import 'package:reem/core/result/result.dart';
-import 'package:reem/features/ai_stylist/data/datasources/ai_stylist_remote_datasource.dart';
-import 'package:reem/features/ai_stylist/domain/entities/stylist_conversation.dart';
-import 'package:reem/features/ai_stylist/domain/entities/stylist_outfit.dart';
-import 'package:reem/features/ai_stylist/domain/entities/stylist_recommendation.dart';
-import 'package:reem/features/ai_stylist/domain/repositories/ai_stylist_repository.dart';
+import 'package:ohara/core/base/repository_handler.dart';
+import 'package:ohara/core/result/result.dart';
+import 'package:ohara/features/ai_stylist/data/datasources/ai_stylist_remote_datasource.dart';
+import 'package:ohara/features/ai_stylist/domain/entities/stylist_conversation.dart';
+import 'package:ohara/features/ai_stylist/domain/entities/stylist_outfit.dart';
+import 'package:ohara/features/ai_stylist/domain/entities/stylist_recommendation.dart';
+import 'package:ohara/features/ai_stylist/domain/repositories/ai_stylist_repository.dart';
 
 class AiStylistRepositoryImpl with RepositoryHandler implements AiStylistRepository {
   const AiStylistRepositoryImpl(this.remote);

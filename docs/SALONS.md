@@ -1,10 +1,10 @@
 # «الصالونات والجمال»
 
-Salons and beauty providers, their menus, and appointments booked inside Reem.
+Salons and beauty providers, their menus, and appointments booked inside Ohara.
 
 A woman finds a salon near her, reads what it does and what it charges, picks a
 service, a day and an hour, and books. The salon confirms, serves her, and she
-rates it. Nothing about that is paid for through Reem — see
+rates it. Nothing about that is paid for through Ohara — see
 [What an appointment is not](#what-an-appointment-is-not).
 
 The whole point of the design is that this is **not a second application
@@ -185,7 +185,7 @@ would depend on the owner's diligence.
 
 ---
 
-## How it joins the rest of Reem
+## How it joins the rest of Ohara
 
 | It uses | Rather than |
 | --- | --- |
@@ -197,7 +197,7 @@ would depend on the owner's diligence.
 | The share-link machinery, kind `salon` | A salon link format |
 | `url_launcher` for the map | A map SDK, an API key and a billing account |
 
-A `SELLER` holds `salon:manage`, so an account that already sells on Reem can
+A `SELLER` holds `salon:manage`, so an account that already sells on Ohara can
 open a salon without an application, a review or a second sign-up. `CUSTOMER`
 holds `appointment:book`. `OPERATIONS_ADMIN` holds `salon:manage` so staff can
 fix a salon's details; `SUSPENDED` remains an operator's word that a salon
@@ -211,7 +211,7 @@ cannot say about itself.
 row. `price` is the figure she was quoted, frozen at booking so a salon raising
 its prices on Tuesday does not reprice Thursday, and she pays at the chair.
 
-This is a decision, not an omission. Reem's financial kernel is double-entry
+This is a decision, not an omission. Ohara's financial kernel is double-entry
 and every rule in it — escrow released on delivery, commission on a sub-order,
 refunds against a payment — is about goods that ship. An appointment has no
 shipment, no delivery event and no return. Putting it through the ledger would

@@ -17,6 +17,8 @@ class AddressEntity extends Equatable {
     required this.addressLine,
     this.district,
     this.landmark,
+    this.latitude,
+    this.longitude,
     this.isRural = false,
     this.deliveryInstructions,
     this.isDefault = false,
@@ -34,6 +36,12 @@ class AddressEntity extends Equatable {
   final String city;
   final String addressLine;
   final String? landmark;
+
+  /// The map pin, when she dropped one. Both or neither.
+  final double? latitude;
+  final double? longitude;
+
+  bool get hasPin => latitude != null && longitude != null;
 
   /// Q53 P2 — the rural tier costs more and takes longer.
   final bool isRural;
@@ -64,6 +72,8 @@ class AddressEntity extends Equatable {
     city,
     addressLine,
     landmark,
+    latitude,
+    longitude,
     isRural,
     deliveryInstructions,
     isDefault,

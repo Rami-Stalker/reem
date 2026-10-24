@@ -1,9 +1,9 @@
 import 'package:equatable/equatable.dart';
-import 'package:reem/core/shared/entities/post.dart';
-import 'package:reem/core/shared/entities/product.dart';
-import 'package:reem/core/shared/entities/story.dart';
+import 'package:ohara/core/shared/entities/post.dart';
+import 'package:ohara/core/shared/entities/product.dart';
+import 'package:ohara/core/shared/entities/story.dart';
 
-import 'package:reem/features/discovery/domain/entities/product_collection.dart';
+import 'package:ohara/features/discovery/domain/entities/product_collection.dart';
 
 /// Independent state for one product-collection rail (own loading + error).
 class HomeSection extends Equatable {

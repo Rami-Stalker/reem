@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import 'package:reem/core/design_system/foundation/theme/dark_theme.dart';
-import 'package:reem/core/design_system/foundation/theme/light_theme.dart';
-import 'package:reem/core/design_system/foundation/theme/theme_mode.dart';
-import 'package:reem/core/design_system/foundation/theme/theme_storage.dart';
+import 'package:ohara/core/design_system/foundation/theme/dark_theme.dart';
+import 'package:ohara/core/design_system/foundation/theme/light_theme.dart';
+import 'package:ohara/core/design_system/foundation/theme/theme_mode.dart';
+import 'package:ohara/core/design_system/foundation/theme/theme_storage.dart';
 
 /// Manages theme mode with persistence and [MaterialApp] integration.
 class DsThemeController extends ChangeNotifier {

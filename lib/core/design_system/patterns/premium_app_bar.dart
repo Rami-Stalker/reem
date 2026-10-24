@@ -3,34 +3,34 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/router/open_route.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/router/open_route.dart';
 
-/// Which of Reem's three registers a piece of chrome belongs to.
+/// Which of Ohara's three registers a piece of chrome belongs to.
 ///
 /// The app bar used to sniff the current route (`path.startsWith('/seller')`)
 /// to decide how to paint itself, which meant a seller widget shown inside a
 /// buyer route silently changed identity. The role is now an argument with a
 /// route-derived default, so callers can be explicit where it matters.
-enum ReemSurfaceRole { customer, seller, admin }
+enum OharaSurfaceRole { customer, seller, admin }
 
 /// Resolves the role from the current route, matching the historical behaviour.
 ///
 /// Falls back to the buyer when there is no router overhead — widget tests and
 /// the visual previews render these screens outside a `GoRoute`, and a header
 /// that throws there is a header nobody can review.
-ReemSurfaceRole reemRoleOf(BuildContext context) {
+OharaSurfaceRole oharaRoleOf(BuildContext context) {
   final path = GoRouter.maybeOf(context)?.state.uri.path;
-  if (path == null) return ReemSurfaceRole.customer;
-  if (path.startsWith('/seller')) return ReemSurfaceRole.seller;
-  if (path.startsWith('/admin')) return ReemSurfaceRole.admin;
-  return ReemSurfaceRole.customer;
+  if (path == null) return OharaSurfaceRole.customer;
+  if (path.startsWith('/seller')) return OharaSurfaceRole.seller;
+  if (path.startsWith('/admin')) return OharaSurfaceRole.admin;
+  return OharaSurfaceRole.customer;
 }
 
 /// The colours a piece of role chrome needs, resolved from the active theme.
 @immutable
-class ReemChrome {
-  const ReemChrome({
+class OharaChrome {
+  const OharaChrome({
     required this.role,
     required this.foreground,
     required this.muted,
@@ -38,30 +38,30 @@ class ReemChrome {
     required this.titleGradient,
   });
 
-  factory ReemChrome.of(BuildContext context, [ReemSurfaceRole? role]) {
-    final resolved = role ?? reemRoleOf(context);
+  factory OharaChrome.of(BuildContext context, [OharaSurfaceRole? role]) {
+    final resolved = role ?? oharaRoleOf(context);
     switch (resolved) {
-      case ReemSurfaceRole.seller:
+      case OharaSurfaceRole.seller:
         final p = context.atelier;
-        return ReemChrome(
+        return OharaChrome(
           role: resolved,
           foreground: p.ink,
           muted: p.muted,
           ground: p.background,
           titleGradient: LinearGradient(colors: [p.primary, p.gold]),
         );
-      case ReemSurfaceRole.admin:
+      case OharaSurfaceRole.admin:
         final p = context.console;
-        return ReemChrome(
+        return OharaChrome(
           role: resolved,
           foreground: p.ink,
           muted: p.muted,
           ground: p.background,
           titleGradient: LinearGradient(colors: [p.primary, p.info]),
         );
-      case ReemSurfaceRole.customer:
+      case OharaSurfaceRole.customer:
         final p = context.boutique;
-        return ReemChrome(
+        return OharaChrome(
           role: resolved,
           foreground: p.ink,
           muted: p.muted,
@@ -74,7 +74,7 @@ class ReemChrome {
     }
   }
 
-  final ReemSurfaceRole role;
+  final OharaSurfaceRole role;
 
   /// Icons and plain text in the bar.
   final Color foreground;
@@ -86,7 +86,7 @@ class ReemChrome {
   final Color ground;
 
   /// Shader for the title. Every role gets a gradient title so the top of a
-  /// page always reads as Reem.
+  /// page always reads as Ohara.
   final LinearGradient titleGradient;
 }
 
@@ -132,7 +132,7 @@ class PremiumAppBar extends StatelessWidget {
   final double? expandedHeight;
 
   /// Defaults to the role of the current route.
-  final ReemSurfaceRole? role;
+  final OharaSurfaceRole? role;
 
   /// Defaults to `context.pop()`.
   final VoidCallback? onBack;
@@ -141,7 +141,7 @@ class PremiumAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final chrome = ReemChrome.of(context, role);
+    final chrome = OharaChrome.of(context, role);
     final text = context.dsText;
     final height = expandedHeight ??
         (flexibleContent != null
@@ -235,8 +235,8 @@ class PremiumAppBar extends StatelessWidget {
 ///
 /// It exists so those screens stop reaching for a bare Material [AppBar], which
 /// is where the stray default-blue titles and un-frosted grounds came from.
-class ReemAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const ReemAppBar({
+class OharaAppBar extends StatelessWidget implements PreferredSizeWidget {
+  const OharaAppBar({
     super.key,
     required this.title,
     this.showBack = true,
@@ -251,7 +251,7 @@ class ReemAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool showBack;
   final List<Widget>? actions;
   final PreferredSizeWidget? bottom;
-  final ReemSurfaceRole? role;
+  final OharaSurfaceRole? role;
   final VoidCallback? onBack;
 
   /// True for bars floating over media, where the ground must not be painted.
@@ -264,7 +264,7 @@ class ReemAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    final chrome = ReemChrome.of(context, role);
+    final chrome = OharaChrome.of(context, role);
     final foreground = transparent ? DsColors.onMedia : chrome.foreground;
 
     return AppBar(

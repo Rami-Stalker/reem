@@ -1,13 +1,13 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 
-import 'package:reem/core/presentation/providers/core_providers.dart';
-import 'package:reem/core/result/result.dart';
-import 'package:reem/features/trends/data/datasources/impl/trends_remote_datasource_impl.dart';
-import 'package:reem/features/trends/data/datasources/trends_remote_datasource.dart';
-import 'package:reem/features/trends/data/repositories/trends_repository_impl.dart';
-import 'package:reem/features/trends/domain/entities/trend_entities.dart';
-import 'package:reem/features/trends/domain/repositories/trends_repository.dart';
+import 'package:ohara/core/presentation/providers/core_providers.dart';
+import 'package:ohara/core/result/result.dart';
+import 'package:ohara/features/trends/data/datasources/impl/trends_remote_datasource_impl.dart';
+import 'package:ohara/features/trends/data/datasources/trends_remote_datasource.dart';
+import 'package:ohara/features/trends/data/repositories/trends_repository_impl.dart';
+import 'package:ohara/features/trends/domain/entities/trend_entities.dart';
+import 'package:ohara/features/trends/domain/repositories/trends_repository.dart';
 
 final trendsRemoteDataSourceProvider = Provider<TrendsRemoteDataSource>(
   (ref) => TrendsRemoteDataSourceImpl(ref.watch(dioProvider)),

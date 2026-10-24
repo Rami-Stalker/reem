@@ -1,7 +1,7 @@
 // shared/models/product_variant_model.dart
 
-import 'package:reem/core/shared/entities/product_variant.dart';
-import 'package:reem/core/shared/value_objects/money.dart';
+import 'package:ohara/core/shared/entities/product_variant.dart';
+import 'package:ohara/core/shared/value_objects/money.dart';
 
 class ProductVariantModel extends ProductVariant {
   const ProductVariantModel({

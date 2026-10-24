@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/core/shared/value_objects/money.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/core/shared/value_objects/money.dart';
 
 // ── Formatting ───────────────────────────────────────────────────────────
 

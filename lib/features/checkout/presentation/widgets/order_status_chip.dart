@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/features/checkout/domain/entities/order.dart';
-import 'package:reem/features/checkout/presentation/order_labels.dart';
-import 'package:reem/l10n/app_localizations.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/features/checkout/domain/entities/order.dart';
+import 'package:ohara/features/checkout/presentation/order_labels.dart';
+import 'package:ohara/l10n/app_localizations.dart';
 
 /// Status pill for an order, a parcel or a payment.
 ///

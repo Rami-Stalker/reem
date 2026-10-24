@@ -3,7 +3,7 @@
 ## Production architecture
 
 ```
- Flutter app ──HTTPS / WSS──▶ Reem API (NestJS, one always-on container, Frankfurt)
+ Flutter app ──HTTPS / WSS──▶ Ohara API (NestJS, one always-on container, Frankfurt)
                                   │   REST · chat WebSocket · 30 lease-locked scheduled jobs
                                   │
                                   ├──TLS, transaction pooler :6543──▶ PostgreSQL  (Supabase `reem`, Frankfurt)

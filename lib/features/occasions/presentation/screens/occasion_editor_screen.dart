@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/core/router/route_paths.dart';
-import 'package:reem/features/occasions/data/datasources/occasions_remote_datasource.dart';
-import 'package:reem/features/occasions/domain/entities/occasion.dart';
-import 'package:reem/features/occasions/presentation/providers/occasions_providers.dart';
-import 'package:reem/features/occasions/presentation/widgets/occasion_labels.dart';
-import 'package:reem/features/salons/presentation/widgets/salon_labels.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/core/router/route_paths.dart';
+import 'package:ohara/features/occasions/data/datasources/occasions_remote_datasource.dart';
+import 'package:ohara/features/occasions/domain/entities/occasion.dart';
+import 'package:ohara/features/occasions/presentation/providers/occasions_providers.dart';
+import 'package:ohara/features/occasions/presentation/widgets/occasion_labels.dart';
+import 'package:ohara/features/salons/presentation/widgets/salon_labels.dart';
 
 /// Writing a day down, or correcting one.
 ///
@@ -30,11 +30,11 @@ class OccasionEditorScreen extends ConsumerWidget {
     final async = ref.watch(occasionProvider(id));
     return async.when(
       loading: () => Scaffold(
-        appBar: ReemAppBar(title: context.l10n.occasionEdit),
+        appBar: OharaAppBar(title: context.l10n.occasionEdit),
         body: const Center(child: DsLoadingIndicator()),
       ),
       error: (_, _) => Scaffold(
-        appBar: ReemAppBar(title: context.l10n.occasionEdit),
+        appBar: OharaAppBar(title: context.l10n.occasionEdit),
         body: DsErrorState(
           message: context.l10n.occasionLoadError,
           onRetry: () => ref.invalidate(occasionProvider(id)),
@@ -90,7 +90,7 @@ class _EditorFormState extends ConsumerState<_EditorForm> {
 
     return Scaffold(
       backgroundColor: c.background,
-      appBar: ReemAppBar(title: _isEdit ? l10n.occasionEdit : l10n.occasionNew),
+      appBar: OharaAppBar(title: _isEdit ? l10n.occasionEdit : l10n.occasionNew),
       body: ListView(
         padding: const EdgeInsets.all(DsSpacing.md),
         children: [

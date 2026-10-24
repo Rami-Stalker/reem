@@ -3,11 +3,14 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/features/salons/data/datasources/salons_remote_datasource.dart';
-import 'package:reem/features/salons/domain/entities/salon.dart';
-import 'package:reem/features/salons/presentation/providers/salons_providers.dart';
+import 'package:latlong2/latlong.dart' hide Path;
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/core/location/picked_place.dart';
+import 'package:ohara/core/location/presentation/map_location_field.dart';
+import 'package:ohara/features/salons/data/datasources/salons_remote_datasource.dart';
+import 'package:ohara/features/salons/domain/entities/salon.dart';
+import 'package:ohara/features/salons/presentation/providers/salons_providers.dart';
 
 /// «بيانات الصالون» — the same form whether she is opening a salon or fixing
 /// a typo in its address.
@@ -33,8 +36,6 @@ class _SalonEditorScreenState extends ConsumerState<SalonEditorScreen> {
   final _district = TextEditingController();
   final _address = TextEditingController();
   final _landmark = TextEditingController();
-  final _latitude = TextEditingController();
-  final _longitude = TextEditingController();
   final _phone = TextEditingController();
   final _whatsapp = TextEditingController();
   final _homeFee = TextEditingController();
@@ -45,6 +46,10 @@ class _SalonEditorScreenState extends ConsumerState<SalonEditorScreen> {
   int _capacity = 1;
   int _cancellationHours = 4;
   bool _homeService = false;
+
+  /// The salon's pin. Replaces the two coordinate boxes she was asked to
+  /// type — nobody knows their own latitude, but everybody knows their door.
+  PickedPlace? _pin;
 
   /// Filled once from the loaded salon. Without the latch, every rebuild of a
   /// `FutureProvider` would overwrite what she is in the middle of typing.
@@ -62,8 +67,6 @@ class _SalonEditorScreenState extends ConsumerState<SalonEditorScreen> {
       _district,
       _address,
       _landmark,
-      _latitude,
-      _longitude,
       _phone,
       _whatsapp,
       _homeFee,
@@ -83,8 +86,15 @@ class _SalonEditorScreenState extends ConsumerState<SalonEditorScreen> {
     _district.text = salon.district ?? '';
     _address.text = salon.addressLine ?? '';
     _landmark.text = salon.landmark ?? '';
-    _latitude.text = salon.latitude?.toString() ?? '';
-    _longitude.text = salon.longitude?.toString() ?? '';
+    if (salon.hasCoordinates) {
+      _pin = PickedPlace(
+        point: LatLng(salon.latitude!, salon.longitude!),
+        governorate: salon.governorate,
+        city: salon.city,
+        district: salon.district,
+        road: salon.addressLine,
+      );
+    }
     _phone.text = salon.phone ?? '';
     _whatsapp.text = salon.whatsapp ?? '';
     _homeFee.text = salon.homeServiceFee?.raw ?? '';
@@ -103,7 +113,7 @@ class _SalonEditorScreenState extends ConsumerState<SalonEditorScreen> {
 
     return Scaffold(
       backgroundColor: c.background,
-      appBar: ReemAppBar(title: context.l10n.salonEditorTitle),
+      appBar: OharaAppBar(title: context.l10n.salonEditorTitle),
       body: async.when(
         loading: () => const Center(child: DsLoadingIndicator()),
         error: (_, _) => DsErrorState(
@@ -151,6 +161,16 @@ class _SalonEditorScreenState extends ConsumerState<SalonEditorScreen> {
 
           DsGaps.vLg,
           _Section(title: context.l10n.salonEditorSectionLocation),
+          // The quick way: drop a pin and the fields below fill themselves.
+          MapLocationField(
+            value: _pin,
+            onChanged: _applyPin,
+            title: context.l10n.shopLocationTitle,
+            subtitle: context.l10n.shopLocationSubtitle,
+            placeLabel: context.l10n.mapPickerShopHere,
+            initialGovernorate: _text(_governorate),
+          ),
+          if (_pin == null) const MapOrTypeDivider() else DsGaps.vMd,
           DsInputField(
             controller: _governorate,
             label: context.l10n.salonEditorGovernorate,
@@ -183,44 +203,6 @@ class _SalonEditorScreenState extends ConsumerState<SalonEditorScreen> {
             label: context.l10n.salonEditorLandmark,
             hint: context.l10n.salonEditorLandmarkHint,
             labelAbove: true,
-          ),
-          DsGaps.vSm,
-          Row(
-            children: [
-              Expanded(
-                child: DsInputField(
-                  controller: _latitude,
-                  label: context.l10n.salonEditorLatitude,
-                  labelAbove: true,
-                  keyboardType: const TextInputType.numberWithOptions(
-                    decimal: true,
-                    signed: true,
-                  ),
-                  validator: _optionalNumber,
-                ),
-              ),
-              const SizedBox(width: DsSpacing.sm),
-              Expanded(
-                child: DsInputField(
-                  controller: _longitude,
-                  label: context.l10n.salonEditorLongitude,
-                  labelAbove: true,
-                  keyboardType: const TextInputType.numberWithOptions(
-                    decimal: true,
-                    signed: true,
-                  ),
-                  validator: _optionalNumber,
-                ),
-              ),
-            ],
-          ),
-          DsGaps.vXs,
-          Text(
-            // A pin is what turns «دمشق · المزة» into a map she can drive to.
-            context.l10n.salonEditorCoordsHelp,
-            style: context.dsText.caption.tint(
-              context.dsColors.onSurfaceVariant,
-            ),
           ),
 
           DsGaps.vLg,
@@ -370,6 +352,30 @@ class _SalonEditorScreenState extends ConsumerState<SalonEditorScreen> {
         : null;
   }
 
+  /// Fills the address fields from the pin, keeping whatever she typed where
+  /// the map has nothing better to say.
+  void _applyPin(PickedPlace? place) {
+    setState(() {
+      _pin = place;
+      if (place == null) return;
+      void fill(TextEditingController controller, String? value) {
+        if (value != null && value.trim().isNotEmpty) controller.text = value;
+      }
+
+      fill(_governorate, place.governorate);
+      fill(_city, place.city ?? place.governorate);
+      fill(_district, place.district ?? place.neighbourhood);
+      // The area has its own field here, so the street stands alone.
+      final road = place.road;
+      fill(
+        _address,
+        road == null
+            ? place.addressLine
+            : (place.houseNumber == null ? road : '$road ${place.houseNumber}'),
+      );
+    });
+  }
+
   String? _text(TextEditingController controller) {
     final value = controller.text.trim();
     return value.isEmpty ? null : value;
@@ -393,8 +399,8 @@ class _SalonEditorScreenState extends ConsumerState<SalonEditorScreen> {
               about: _text(_about),
               district: _text(_district),
               landmark: _text(_landmark),
-              latitude: double.tryParse(_latitude.text.trim()),
-              longitude: double.tryParse(_longitude.text.trim()),
+              latitude: _pin?.latitude,
+              longitude: _pin?.longitude,
               phone: _text(_phone),
               whatsapp: _text(_whatsapp),
               slotMinutes: _slotMinutes,

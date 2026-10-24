@@ -18,9 +18,9 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:reem/core/shared/value_objects/money.dart';
-import 'package:reem/features/trends/data/models/trend_mappers.dart';
-import 'package:reem/features/trends/domain/entities/trend_entities.dart';
+import 'package:ohara/core/shared/value_objects/money.dart';
+import 'package:ohara/features/trends/data/models/trend_mappers.dart';
+import 'package:ohara/features/trends/domain/entities/trend_entities.dart';
 
 void main() {
   late Map<String, dynamic> sellerPayload;

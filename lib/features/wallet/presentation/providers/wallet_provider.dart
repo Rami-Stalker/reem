@@ -1,14 +1,14 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
-import 'package:reem/core/network/network_info.dart';
-import 'package:reem/core/presentation/providers/core_providers.dart';
-import 'package:reem/core/result/result.dart';
+import 'package:ohara/core/network/network_info.dart';
+import 'package:ohara/core/presentation/providers/core_providers.dart';
+import 'package:ohara/core/result/result.dart';
 
-import 'package:reem/features/wallet/data/datasources/impl/wallet_remote_datasource_impl.dart';
-import 'package:reem/features/wallet/data/datasources/wallet_remote_datasource.dart';
-import 'package:reem/features/wallet/data/repositories/wallet_repository_impl.dart';
-import 'package:reem/features/wallet/domain/entities/wallet_transaction.dart';
-import 'package:reem/features/wallet/domain/repositories/wallet_repository.dart';
+import 'package:ohara/features/wallet/data/datasources/impl/wallet_remote_datasource_impl.dart';
+import 'package:ohara/features/wallet/data/datasources/wallet_remote_datasource.dart';
+import 'package:ohara/features/wallet/data/repositories/wallet_repository_impl.dart';
+import 'package:ohara/features/wallet/domain/entities/wallet_transaction.dart';
+import 'package:ohara/features/wallet/domain/repositories/wallet_repository.dart';
 
 final walletRemoteDataSourceProvider = Provider<WalletRemoteDataSource>(
   (ref) => WalletRemoteDataSourceImpl(ref.watch(dioProvider)),

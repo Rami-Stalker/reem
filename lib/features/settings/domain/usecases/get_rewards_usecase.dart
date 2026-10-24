@@ -1,7 +1,7 @@
-import 'package:reem/core/result/result.dart';
+import 'package:ohara/core/result/result.dart';
 
-import 'package:reem/features/settings/domain/entities/rewards_entity.dart';
-import 'package:reem/features/settings/domain/repositories/settings_repository.dart';
+import 'package:ohara/features/settings/domain/entities/rewards_entity.dart';
+import 'package:ohara/features/settings/domain/repositories/settings_repository.dart';
 
 class GetRewardsUseCase {
   const GetRewardsUseCase(this._repository);

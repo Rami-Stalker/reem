@@ -1,5 +1,5 @@
-import 'package:reem/features/settings/domain/entities/address_draft.dart';
-import 'package:reem/features/settings/domain/entities/address_entity.dart';
+import 'package:ohara/features/settings/domain/entities/address_draft.dart';
+import 'package:ohara/features/settings/domain/entities/address_entity.dart';
 
 class AddressModel extends AddressEntity {
   const AddressModel({
@@ -12,6 +12,8 @@ class AddressModel extends AddressEntity {
     required super.addressLine,
     super.district,
     super.landmark,
+    super.latitude,
+    super.longitude,
     super.isRural,
     super.deliveryInstructions,
     super.isDefault,
@@ -28,6 +30,8 @@ class AddressModel extends AddressEntity {
       city: json['city'] as String? ?? '',
       addressLine: json['address_line'] as String? ?? '',
       landmark: json['landmark'] as String?,
+      latitude: (json['latitude'] as num?)?.toDouble(),
+      longitude: (json['longitude'] as num?)?.toDouble(),
       isRural: json['is_rural'] as bool? ?? false,
       deliveryInstructions: json['delivery_instructions'] as String?,
       isDefault: json['is_default'] as bool? ?? false,
@@ -54,6 +58,9 @@ class AddressModel extends AddressEntity {
       'city': draft.city.trim(),
       'address_line': draft.addressLine.trim(),
       'landmark': trimmed(draft.landmark),
+      // Sent as explicit nulls too, so taking the pin away clears it.
+      'latitude': draft.latitude,
+      'longitude': draft.longitude,
       'is_rural': draft.isRural,
       'delivery_instructions': trimmed(draft.deliveryInstructions),
       'is_default': draft.isDefault,
@@ -73,6 +80,7 @@ class AddressModel extends AddressEntity {
       'city': city,
       'address_line': addressLine,
       if (landmark != null) 'landmark': landmark,
+      if (hasPin) ...{'latitude': latitude, 'longitude': longitude},
       'is_rural': isRural,
       if (deliveryInstructions != null)
         'delivery_instructions': deliveryInstructions,

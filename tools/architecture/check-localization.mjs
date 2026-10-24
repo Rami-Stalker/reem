@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Localisation fitness check.
 //
-// Reem is Arabic-first. An English literal in a widget is not a style
+// Ohara is Arabic-first. An English literal in a widget is not a style
 // preference, it is a screen a Syrian woman cannot read — and the app had 383
 // of them, including an entire rewards hub. The customer-facing surfaces are
 // clean now; this keeps them clean and holds the rest to a ceiling that only

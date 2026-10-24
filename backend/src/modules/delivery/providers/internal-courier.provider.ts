@@ -20,7 +20,7 @@ import {
 /**
  * The platform's own fleet, wearing the same interface as a delivery company.
  *
- * Reem is not going to run drivers — that is the whole point of this
+ * Ohara is not going to run drivers — that is the whole point of this
  * subsystem — but it does have an in-house courier today, and a closed beta
  * that has to keep working while a carrier contract is signed. Modelling that
  * fleet as one more provider is what stops the dispatch path from having a
@@ -35,7 +35,7 @@ import {
 @Injectable()
 export class InternalCourierProvider implements DeliveryProvider {
   readonly code = 'internal';
-  readonly displayName = 'فريق ريم للتوصيل';
+  readonly displayName = 'فريق أوهارا للتوصيل';
 
   private readonly logger = new Logger(InternalCourierProvider.name);
 

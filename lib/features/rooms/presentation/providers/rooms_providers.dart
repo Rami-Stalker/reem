@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:reem/core/presentation/providers/core_providers.dart';
-import 'package:reem/features/rooms/data/datasources/rooms_remote_datasource.dart';
-import 'package:reem/features/rooms/domain/entities/room.dart';
+import 'package:ohara/core/presentation/providers/core_providers.dart';
+import 'package:ohara/features/rooms/data/datasources/rooms_remote_datasource.dart';
+import 'package:ohara/features/rooms/domain/entities/room.dart';
 
 final roomsDataSourceProvider = Provider<RoomsRemoteDataSource>(
   (ref) => RoomsRemoteDataSourceImpl(ref.watch(dioProvider)),

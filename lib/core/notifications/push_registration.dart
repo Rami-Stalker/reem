@@ -4,15 +4,15 @@ import 'dart:io' show Platform;
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 
-import 'package:reem/core/network/api_endpoints.dart';
-import 'package:reem/core/notifications/push_notification_service.dart';
-import 'package:reem/core/storage/secure_storage_service.dart';
+import 'package:ohara/core/network/api_endpoints.dart';
+import 'package:ohara/core/notifications/push_notification_service.dart';
+import 'package:ohara/core/storage/secure_storage_service.dart';
 
 /// Tells the server where this handset can be reached, and when to stop.
 ///
 /// Small on purpose, and separate from [PushNotificationService], because the
 /// two answer different questions. The service knows how to talk to the phone;
-/// this knows how to talk to Reem. Keeping them apart is what lets the service
+/// this knows how to talk to Ohara. Keeping them apart is what lets the service
 /// be tested without a network and this be tested without a phone.
 ///
 /// ## The three moments a token has to be registered

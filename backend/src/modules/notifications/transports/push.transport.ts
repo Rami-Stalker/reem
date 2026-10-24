@@ -20,7 +20,7 @@ export {
  * nobody goes looking.
  *
  * This is the seam that answer sits behind. Two backends live under it — FCM
- * for the phones Reem's customers actually carry, and a generic JSON-over-HTTP
+ * for the phones Ohara's customers actually carry, and a generic JSON-over-HTTP
  * one for a provider contracted later — and `isConfigured()` tells the truth
  * about whether either of them can reach anything. With neither, a push is
  * recorded as skipped, never as sent.

@@ -1,6 +1,6 @@
-import 'package:reem/features/market/domain/entities/market.dart';
+import 'package:ohara/features/market/domain/entities/market.dart';
 
-/// Everything Reem Market Evolution exposes to the client.
+/// Everything Ohara Market Evolution exposes to the client.
 ///
 /// One interface for six systems, because from the client's side they are one
 /// surface: things to look at, things she owns, and things worth doing. The

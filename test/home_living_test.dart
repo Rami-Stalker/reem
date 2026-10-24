@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/features/home/presentation/widgets/home_greeting.dart';
-import 'package:reem/features/home/presentation/widgets/living/aura_palette.dart';
-import 'package:reem/features/home/presentation/widgets/living/live_countdown.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/features/home/presentation/widgets/home_greeting.dart';
+import 'package:ohara/features/home/presentation/widgets/living/aura_palette.dart';
+import 'package:ohara/features/home/presentation/widgets/living/live_countdown.dart';
 
 void main() {
   group('the home sky follows the Damascus hour', () {

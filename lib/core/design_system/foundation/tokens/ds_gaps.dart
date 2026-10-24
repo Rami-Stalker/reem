@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 
-import 'package:reem/core/design_system/foundation/tokens/ds_spacing.dart';
+import 'package:ohara/core/design_system/foundation/tokens/ds_spacing.dart';
 
 /// Const spacer widgets on the 4px grid.
 ///

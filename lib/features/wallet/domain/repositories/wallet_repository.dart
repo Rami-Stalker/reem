@@ -1,10 +1,10 @@
-import 'package:reem/core/result/result.dart';
-import 'package:reem/features/wallet/domain/entities/wallet_transaction.dart';
+import 'package:ohara/core/result/result.dart';
+import 'package:ohara/features/wallet/domain/entities/wallet_transaction.dart';
 
 /// Her store credit.
 ///
 /// There is no `withdraw` here, and there must never be one: Q42 settles that
-/// the balance is spendable inside Reem and not payable out as cash. The
+/// the balance is spendable inside Ohara and not payable out as cash. The
 /// restriction is expressed the same way it is on the server — by the absence
 /// of a method rather than a flag someone can pass.
 abstract interface class WalletRepository {

@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
 
 /// The tick beside a sent message.
 ///
 /// A clock while it is on its way, one tick sent, two delivered, two in the
 /// brand rose once she has read it, and a warning when it did not go — the
 /// read state was a fixed sky blue borrowed from another messenger, which was
-/// the only blue anywhere in Reem.
+/// the only blue anywhere in Ohara.
 class MessageDeliveryStatus extends StatelessWidget {
   const MessageDeliveryStatus({
     super.key,

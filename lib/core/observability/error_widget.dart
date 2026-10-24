@@ -1,10 +1,10 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import 'package:reem/core/design_system/foundation/tokens/ds_colors.dart';
-import 'package:reem/core/design_system/foundation/tokens/ds_sizes.dart';
-import 'package:reem/core/design_system/foundation/tokens/ds_spacing.dart';
-import 'package:reem/core/design_system/foundation/tokens/ds_typography.dart';
+import 'package:ohara/core/design_system/foundation/tokens/ds_colors.dart';
+import 'package:ohara/core/design_system/foundation/tokens/ds_sizes.dart';
+import 'package:ohara/core/design_system/foundation/tokens/ds_spacing.dart';
+import 'package:ohara/core/design_system/foundation/tokens/ds_typography.dart';
 
 /// What a release build draws where a widget failed to build.
 ///
@@ -17,8 +17,8 @@ import 'package:reem/core/design_system/foundation/tokens/ds_typography.dart';
 /// So this replaces the rectangle, and nothing more. The failure itself is
 /// already reported through `FlutterError.onError`, which fires before this is
 /// ever built; reporting again here would double-count every one.
-class ReemErrorWidget extends StatelessWidget {
-  const ReemErrorWidget({super.key, required this.details});
+class OharaErrorWidget extends StatelessWidget {
+  const OharaErrorWidget({super.key, required this.details});
 
   final FlutterErrorDetails details;
 
@@ -31,7 +31,7 @@ class ReemErrorWidget extends StatelessWidget {
   /// developer than anything friendly.
   static void install() {
     if (kDebugMode) return;
-    ErrorWidget.builder = (details) => ReemErrorWidget(details: details);
+    ErrorWidget.builder = (details) => OharaErrorWidget(details: details);
   }
 
   @override

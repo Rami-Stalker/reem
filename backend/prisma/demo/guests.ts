@@ -44,7 +44,7 @@ export async function seedGuestJourneys(
         appVersion: '1.4.0',
         fingerprintHash: `guest-fp-${index}`,
         ipAddress: `31.9.${rng.int(1, 254)}.${rng.int(1, 254)}`,
-        userAgent: `Reem/1.4.0 (${device.platform})`,
+        userAgent: `Ohara/1.4.0 (${device.platform})`,
         migratedToUserId: migrated ? ctx.customers[0].id : null,
         migratedAt: migrated ? rng.pastDate(3) : null,
         expiresAt: rng.futureDate(30, 5),

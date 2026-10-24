@@ -28,7 +28,7 @@ import {
 } from '../providers/delivery-status.map';
 
 /**
- * Reem's side of a delivery company.
+ * Ohara's side of a delivery company.
  *
  * The platform keeps the order; the carrier keeps the journey. This service is
  * the only place the two meet, and it holds the rules that make that meeting

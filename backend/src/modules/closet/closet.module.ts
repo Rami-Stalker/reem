@@ -10,7 +10,7 @@ import { ClosetSuggestionService } from './suggestions/closet-suggestion.service
 import { ClosetTodayService } from './today/today.service';
 
 /**
- * Reem Closet.
+ * Ohara Closet.
  *
  * The wardrobe layer: what she owns, what she puts together with it, what it is
  * short of, and what to wear today. Sits above the catalog rather than beside

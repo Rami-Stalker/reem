@@ -2,12 +2,12 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/core/media/authorized_media_image.dart';
-import 'package:reem/core/media/media_variants.dart';
-import 'package:reem/core/router/route_names.dart';
-import 'package:reem/core/shared/entities/product.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/core/media/authorized_media_image.dart';
+import 'package:ohara/core/media/media_variants.dart';
+import 'package:ohara/core/router/route_names.dart';
+import 'package:ohara/core/shared/entities/product.dart';
 
 class FavoriteProductCard extends StatelessWidget {
   const FavoriteProductCard({super.key, required this.product});

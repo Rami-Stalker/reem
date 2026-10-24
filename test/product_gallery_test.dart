@@ -8,12 +8,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/app_localizations.dart';
-import 'package:reem/core/shared/entities/media.dart';
-import 'package:reem/features/product_details/presentation/widgets/product_gallery_header.dart';
-import 'package:reem/l10n/app_localizations.dart' as gen;
-import 'package:reem/l10n/app_localizations_ar.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/app_localizations.dart';
+import 'package:ohara/core/shared/entities/media.dart';
+import 'package:ohara/features/product_details/presentation/widgets/product_gallery_header.dart';
+import 'package:ohara/l10n/app_localizations.dart' as gen;
+import 'package:ohara/l10n/app_localizations_ar.dart';
 
 void main() {
   // The header is a portrait plate plus its rail: on a phone-sized surface the

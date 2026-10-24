@@ -9,8 +9,8 @@
 import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:reem/features/social/data/models/content_model.dart';
-import 'package:reem/features/social/domain/entities/content.dart';
+import 'package:ohara/features/social/data/models/content_model.dart';
+import 'package:ohara/features/social/domain/entities/content.dart';
 
 Map<String, dynamic> _author({bool verified = true}) => {
   'id': 'a1b2c3d4-0000-4000-8000-000000000001',

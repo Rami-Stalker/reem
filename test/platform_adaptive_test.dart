@@ -10,15 +10,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:reem/app/app_chrome.dart';
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/app_localizations.dart';
-import 'package:reem/core/network/connection_status.dart';
-import 'package:reem/core/platform/app_platform.dart';
-import 'package:reem/core/platform/app_scroll_behavior.dart';
-import 'package:reem/core/platform/system_chrome_controller.dart';
-import 'package:reem/core/platform/unsaved_changes_guard.dart';
-import 'package:reem/core/router/app_router_provider.dart';
+import 'package:ohara/app/app_chrome.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/app_localizations.dart';
+import 'package:ohara/core/network/connection_status.dart';
+import 'package:ohara/core/platform/app_platform.dart';
+import 'package:ohara/core/platform/app_scroll_behavior.dart';
+import 'package:ohara/core/platform/system_chrome_controller.dart';
+import 'package:ohara/core/platform/unsaved_changes_guard.dart';
+import 'package:ohara/core/router/app_router_provider.dart';
 
 Widget _host(
   Widget child, {

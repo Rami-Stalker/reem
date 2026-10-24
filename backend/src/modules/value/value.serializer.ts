@@ -13,7 +13,7 @@ import { ValueStanding } from './value.service';
 import { EARNING_RULE_BY_CODE } from './value.constants';
 
 /**
- * The wire shape of Reem Value.
+ * The wire shape of Ohara Value.
  *
  * One rule governs this file: **a number never travels without its reason.** A
  * pillar goes out with its evidence count and the label of what it measures; an
@@ -43,7 +43,7 @@ const PILLAR_LABELS: Record<ValuePillar, { label: string; blurb: string }> = {
   },
   ADVOCACY: {
     label: 'دعوة',
-    blurb: 'من دعوتِهن فأصبحن جزءاً من ريم.',
+    blurb: 'من دعوتِهن فأصبحن جزءاً من أوهارا.',
   },
   DISCOVERY: {
     label: 'اكتشاف',

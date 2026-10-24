@@ -8,7 +8,7 @@
  *
  * ── Why every choice carries a reason ────────────────────────────────────
  *
- * A shopper is entitled to know why she is being shown something, and Reem is
+ * A shopper is entitled to know why she is being shown something, and Ohara is
  * entitled to know whether its targeting works. Both need the same thing: the
  * reason the graph picked her, stored beside the invitation. A drop with a
  * thousand invitations and four opens is a targeting failure, and without
@@ -153,7 +153,7 @@ export function selectAudience(
  * How a drop actually did.
  *
  * Reach, opens and conversions are the obvious three. `precision` is the one
- * worth having: of the women Reem chose, what share cared enough to look. A
+ * worth having: of the women Ohara chose, what share cared enough to look. A
  * drop that sold well to a thousand invitations may still have been badly
  * targeted, and only this number says so.
  */

@@ -5,13 +5,13 @@ import 'package:go_router/go_router.dart';
 // framework's, used to pin document numbers left-to-right.
 import 'package:intl/intl.dart' hide TextDirection;
 
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/errors/failure.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/core/router/route_paths.dart';
-import 'package:reem/core/utils/arabic_numerals.dart';
-import 'package:reem/features/invoices/domain/entities/invoice.dart';
-import 'package:reem/features/invoices/presentation/providers/invoices_provider.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/errors/failure.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/core/router/route_paths.dart';
+import 'package:ohara/core/utils/arabic_numerals.dart';
+import 'package:ohara/features/invoices/domain/entities/invoice.dart';
+import 'package:ohara/features/invoices/presentation/providers/invoices_provider.dart';
 
 /// Q51 — every document raised against one order: hers, and each seller's.
 ///
@@ -29,7 +29,7 @@ class OrderInvoicesScreen extends ConsumerWidget {
     final l10n = context.l10n;
     final async = ref.watch(orderInvoicesProvider(orderId));
 
-    return ReemScrollPage(
+    return OharaScrollPage(
       onRefresh: () async => ref.invalidate(orderInvoicesProvider(orderId)),
       slivers: [
         PremiumAppBar(title: l10n.invoices, showBack: true),

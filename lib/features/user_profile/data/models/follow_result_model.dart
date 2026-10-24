@@ -1,4 +1,4 @@
-import 'package:reem/features/user_profile/domain/entities/follow_result.dart';
+import 'package:ohara/features/user_profile/domain/entities/follow_result.dart';
 
 class FollowResultModel extends FollowResult {
   const FollowResultModel({

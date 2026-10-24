@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/core/router/route_paths.dart';
-import 'package:reem/features/checkout/domain/entities/checkout.dart';
-import 'package:reem/features/settings/presentation/providers/payment_options_provider.dart';
-import 'package:reem/features/wallet/presentation/providers/wallet_provider.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/core/router/route_paths.dart';
+import 'package:ohara/features/checkout/domain/entities/checkout.dart';
+import 'package:ohara/features/settings/presentation/providers/payment_options_provider.dart';
+import 'package:ohara/features/wallet/presentation/providers/wallet_provider.dart';
 
 /// How she can pay.
 ///
@@ -30,7 +30,7 @@ class PaymentMethodsScreen extends ConsumerWidget {
     final wallet = ref.watch(walletNotifierProvider);
     final colors = context.dsColors;
 
-    return ReemScrollPage(
+    return OharaScrollPage(
       slivers: [
         PremiumAppBar(
           title: context.l10n.settingsPaymentMethods,
@@ -40,7 +40,7 @@ class PaymentMethodsScreen extends ConsumerWidget {
           padding: const EdgeInsets.all(DsSpacing.lg),
           sliver: SliverList(
             delegate: SliverChildListDelegate([
-              ReemSectionHeader(
+              OharaSectionHeader(
                 title: context.l10n.settingsPayAtOrder,
                 subtitle: context.l10n.settingsPayAtOrderSubtitle,
               ),
@@ -133,7 +133,7 @@ class _WalletTile extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    context.l10n.settingsReemWallet,
+                    context.l10n.settingsOharaWallet,
                     style: context.dsText.tileTitle.bold.tint(colors.onPrimary),
                   ),
                   DsGaps.vXxs,

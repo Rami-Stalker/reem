@@ -1,7 +1,7 @@
-import 'package:reem/core/result/result.dart';
-import 'package:reem/core/shared/entities/post.dart';
+import 'package:ohara/core/result/result.dart';
+import 'package:ohara/core/shared/entities/post.dart';
 
-import 'package:reem/features/create/domain/repositories/create_repository.dart';
+import 'package:ohara/features/create/domain/repositories/create_repository.dart';
 
 class CreatePostUseCase {
   const CreatePostUseCase(this._repository);

@@ -20,7 +20,7 @@ import {
  * SMS aggregator transport next door, for the same reason.
  *
  * FCM wins when both are configured: it is the one that can actually reach a
- * closed app on the devices most of Reem's customers carry.
+ * closed app on the devices most of Ohara's customers carry.
  */
 @Injectable()
 export class WebhookPushTransport implements PushBackend {

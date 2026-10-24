@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/features/policies/domain/entities/admin_policy.dart';
-import 'package:reem/features/policies/presentation/providers/admin_policies_provider.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/features/policies/domain/entities/admin_policy.dart';
+import 'package:ohara/features/policies/presentation/providers/admin_policies_provider.dart';
 
 /// Editing the open draft — both languages, side by side in two tabs.
 ///

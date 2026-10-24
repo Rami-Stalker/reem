@@ -3,10 +3,10 @@
 Her calendar of days worth getting ready for — a cousin's wedding, Eid, a
 graduation — and the help to get ready for each one.
 
-She writes a day down. Reem then shows her how long is left, a checklist
+She writes a day down. Ohara then shows her how long is left, a checklist
 (the look, what the look is missing, the salon, the gift), and a reminder at a
 week, three days and one day before. If the people she named for that day
-have already seen the outfit, Reem says so: «ما لبستيه قدّامهم».
+have already seen the outfit, Ohara says so: «ما لبستيه قدّامهم».
 
 The design rule is the same as the salons': **this is not a second
 application.** The look is a `ClosetLook` from her closet, the salon is an

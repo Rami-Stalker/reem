@@ -11,23 +11,23 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/app_localizations.dart';
-import 'package:reem/core/presentation/providers/product_shape_provider.dart';
-import 'package:reem/core/result/result.dart';
-import 'package:reem/core/shared/entities/brand.dart';
-import 'package:reem/core/shared/entities/category.dart';
-import 'package:reem/core/shared/entities/product.dart';
-import 'package:reem/core/shared/entities/seller_offer.dart';
-import 'package:reem/core/shared/entities/user.dart';
-import 'package:reem/core/shared/value_objects/money.dart';
-import 'package:reem/features/discovery/domain/entities/product_page.dart';
-import 'package:reem/features/product_social/domain/entities/product_engagement.dart';
-import 'package:reem/features/product_social/domain/repositories/product_social_repository.dart';
-import 'package:reem/features/product_social/presentation/providers/product_social_providers.dart';
-import 'package:reem/features/product_social/presentation/widgets/product_post_card.dart';
-import 'package:reem/l10n/app_localizations.dart' as gen;
-import 'package:reem/l10n/app_localizations_ar.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/app_localizations.dart';
+import 'package:ohara/core/presentation/providers/product_shape_provider.dart';
+import 'package:ohara/core/result/result.dart';
+import 'package:ohara/core/shared/entities/brand.dart';
+import 'package:ohara/core/shared/entities/category.dart';
+import 'package:ohara/core/shared/entities/product.dart';
+import 'package:ohara/core/shared/entities/seller_offer.dart';
+import 'package:ohara/core/shared/entities/user.dart';
+import 'package:ohara/core/shared/value_objects/money.dart';
+import 'package:ohara/features/discovery/domain/entities/product_page.dart';
+import 'package:ohara/features/product_social/domain/entities/product_engagement.dart';
+import 'package:ohara/features/product_social/domain/repositories/product_social_repository.dart';
+import 'package:ohara/features/product_social/presentation/providers/product_social_providers.dart';
+import 'package:ohara/features/product_social/presentation/widgets/product_post_card.dart';
+import 'package:ohara/l10n/app_localizations.dart' as gen;
+import 'package:ohara/l10n/app_localizations_ar.dart';
 
 void main() {
   Widget harness(Widget child) {
@@ -65,7 +65,7 @@ void main() {
 
     expect(find.byType(ProductPostCard), findsWidgets);
     // The boutique heads its own piece, and the ticket carries the price.
-    expect(find.text('بوتيك ريم'), findsWidgets);
+    expect(find.text('بوتيك أوهارا'), findsWidgets);
     expect(find.byType(DsImmersivePost), findsWidgets);
     expect(find.text(_products.first.title), findsWidgets);
     // What the client asked for: a department's posts carry the same gestures
@@ -125,7 +125,7 @@ void main() {
 
 final _seller = User(
   id: 's1',
-  name: 'بوتيك ريم',
+  name: 'بوتيك أوهارا',
   username: 'reem_boutique',
   phone: '+963000000000',
   createdAt: DateTime(2026, 1, 1),
@@ -152,7 +152,7 @@ Product _product(
     title: title,
     description: 'قطعة من تشكيلة الموسم.',
     category: _category,
-    brand: const Brand(id: 'b1', slug: 'reem', nameAr: 'ريم', nameEn: 'Reem'),
+    brand: const Brand(id: 'b1', slug: 'reem', nameAr: 'أوهارا', nameEn: 'Ohara'),
     createdAt: DateTime(2026, 8, 1),
     rating: 4.6,
     reviewsCount: 18,

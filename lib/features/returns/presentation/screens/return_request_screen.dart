@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/errors/failure_exception.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/core/media/media_asset.dart';
-import 'package:reem/core/router/route_paths.dart';
-import 'package:reem/features/returns/domain/entities/return_eligibility.dart';
-import 'package:reem/features/returns/presentation/providers/returns_providers.dart';
-import 'package:reem/features/seller_returns/domain/entities/return_request.dart';
-import 'package:reem/features/seller_returns/presentation/return_labels.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/errors/failure_exception.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/core/media/media_asset.dart';
+import 'package:ohara/core/router/route_paths.dart';
+import 'package:ohara/features/returns/domain/entities/return_eligibility.dart';
+import 'package:ohara/features/returns/presentation/providers/returns_providers.dart';
+import 'package:ohara/features/seller_returns/domain/entities/return_request.dart';
+import 'package:ohara/features/seller_returns/presentation/return_labels.dart';
 
 /// The customer's way to send a parcel back.
 ///
@@ -29,7 +29,7 @@ class ReturnRequestScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final eligibility = ref.watch(returnEligibilityProvider(sellerOrderId));
 
-    return ReemScrollPage(
+    return OharaScrollPage(
       slivers: [
         PremiumAppBar(
           title: context.l10n.returnRequestTitle,

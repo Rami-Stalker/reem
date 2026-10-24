@@ -3,7 +3,7 @@
 //
 // A file is reachable when some other file names it in an `import`, `export`,
 // or `part` directive. Roots are lib/main.dart and everything under test/.
-// Both `package:reem/...` and relative URIs are resolved to real paths, and the
+// Both `package:ohara/...` and relative URIs are resolved to real paths, and the
 // sweep iterates to a fixed point so a file kept alive only by another dead
 // file is reported too.
 //
@@ -16,7 +16,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 const root = process.cwd();
-const PACKAGE = 'package:reem/';
+const PACKAGE = 'package:ohara/';
 const ROOTS = new Set(['lib/main.dart']);
 const listOnly = process.argv.includes('--list');
 

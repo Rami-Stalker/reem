@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'package:reem/core/router/route_paths.dart';
-import 'package:reem/core/shared/entities/user.dart';
+import 'package:ohara/core/router/route_paths.dart';
+import 'package:ohara/core/shared/entities/user.dart';
 
 enum ExperienceRole { buyer, seller, admin }
 
@@ -294,7 +294,7 @@ class AppRoleExperience {
 
   static const buyer = AppRoleExperience(
     role: ExperienceRole.buyer,
-    title: 'Reem',
+    title: 'Ohara',
     tagline: 'A soft luxury boutique shaped around your taste.',
     defaultPath: RoutePaths.home,
     profilePath: RoutePaths.profile,
@@ -444,7 +444,7 @@ class AppRoleExperience {
 
   static const seller = AppRoleExperience(
     role: ExperienceRole.seller,
-    title: 'Reem Seller',
+    title: 'Ohara Seller',
     tagline: 'Inventory, orders, customers, and growth in one fast workspace.',
     defaultPath: RoutePaths.sellerDashboard,
     profilePath: RoutePaths.sellerStore,
@@ -571,7 +571,7 @@ class AppRoleExperience {
 
   static const admin = AppRoleExperience(
     role: ExperienceRole.admin,
-    title: 'Reem Admin',
+    title: 'Ohara Admin',
     tagline: 'Enterprise control, governance, analytics, and operating health.',
     defaultPath: RoutePaths.admin,
     profilePath: RoutePaths.adminSystemSettings,
@@ -742,12 +742,12 @@ class AppRoleExperience {
         permission: 'analytics:read',
         feature: ExperienceFeature.adminGovernance,
       ),
-      // Reem Value beside it, for the same reason: both are scored engines
+      // Ohara Value beside it, for the same reason: both are scored engines
       // with a policy behind them, and both are operated rather than
       // configured.
       RoleNavigationItem(
         surface: ExperienceSurface.analytics,
-        label: 'Reem Value',
+        label: 'Ohara Value',
         path: RoutePaths.adminValue,
         icon: Icons.workspace_premium_outlined,
         selectedIcon: Icons.workspace_premium_rounded,
@@ -896,7 +896,7 @@ const _buyerMenuGroups = [
       ),
       // «الصالونات والجمال». It sits in Shopping rather than in a group of
       // its own because that is what it is to her — another thing she buys on
-      // Reem — and a section with one entry reads like an afterthought.
+      // Ohara — and a section with one entry reads like an afterthought.
       RoleAction(
         id: 'salons',
         label: 'Salons & beauty',
@@ -948,7 +948,7 @@ const _buyerMenuGroups = [
     label: 'Standing',
     feature: ExperienceFeature.loyaltyRewards,
     actions: [
-      // Reem Value leads. It is the thing that describes her; the two below are
+      // Ohara Value leads. It is the thing that describes her; the two below are
       // instruments — credit she has accrued and codes she has been given.
       RoleAction(
         id: 'value',
@@ -1276,7 +1276,7 @@ const _adminMenuGroups = [
       ),
       RoleAction(
         id: 'value',
-        label: 'Reem Value',
+        label: 'Ohara Value',
         path: RoutePaths.adminValue,
         icon: Icons.workspace_premium_rounded,
       ),

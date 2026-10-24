@@ -1,8 +1,8 @@
-import 'package:reem/core/base/repository_handler.dart';
-import 'package:reem/core/result/result.dart';
-import 'package:reem/features/invoices/data/datasources/invoices_remote_datasource.dart';
-import 'package:reem/features/invoices/domain/entities/invoice.dart';
-import 'package:reem/features/invoices/domain/repositories/invoices_repository.dart';
+import 'package:ohara/core/base/repository_handler.dart';
+import 'package:ohara/core/result/result.dart';
+import 'package:ohara/features/invoices/data/datasources/invoices_remote_datasource.dart';
+import 'package:ohara/features/invoices/domain/entities/invoice.dart';
+import 'package:ohara/features/invoices/domain/repositories/invoices_repository.dart';
 
 class InvoicesRepositoryImpl with RepositoryHandler implements InvoicesRepository {
   const InvoicesRepositoryImpl(this.remote);

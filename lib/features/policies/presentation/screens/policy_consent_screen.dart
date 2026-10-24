@@ -2,13 +2,13 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/features/auth/presentation/providers/auth_provider.dart';
-import 'package:reem/features/policies/domain/entities/policy_document.dart';
-import 'package:reem/features/policies/presentation/providers/policies_provider.dart';
-import 'package:reem/features/policies/presentation/providers/policy_consent_provider.dart';
-import 'package:reem/features/policies/presentation/widgets/policy_pieces.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/features/auth/presentation/providers/auth_provider.dart';
+import 'package:ohara/features/policies/domain/entities/policy_document.dart';
+import 'package:ohara/features/policies/presentation/providers/policies_provider.dart';
+import 'package:ohara/features/policies/presentation/providers/policy_consent_provider.dart';
+import 'package:ohara/features/policies/presentation/widgets/policy_pieces.dart';
 
 /// The gate: she cannot go further until she has signed what is outstanding.
 ///
@@ -257,7 +257,7 @@ class _ConsentReader extends ConsumerWidget {
 
     return Scaffold(
       backgroundColor: colors.background,
-      appBar: ReemAppBar(title: policy.title),
+      appBar: OharaAppBar(title: policy.title),
       body: detail.when(
         loading: () => const Center(child: DsLoadingIndicator()),
         error: (error, _) => Padding(

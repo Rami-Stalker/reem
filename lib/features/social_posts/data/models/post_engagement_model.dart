@@ -1,4 +1,4 @@
-import 'package:reem/features/social_posts/domain/entities/post_engagement.dart';
+import 'package:ohara/features/social_posts/domain/entities/post_engagement.dart';
 
 class PostEngagementModel extends PostEngagement {
   const PostEngagementModel({

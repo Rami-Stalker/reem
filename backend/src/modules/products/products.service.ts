@@ -393,7 +393,7 @@ export class ProductsService {
     orderBy: OrderBy;
     take?: number;
     skip?: number;
-    /** Reem Value's visibility clause for the viewer — see `paginated`. */
+    /** Ohara Value's visibility clause for the viewer — see `paginated`. */
     gate?: Prisma.ProductWhereInput;
   }) {
     const where = args.where ?? PURCHASABLE_PRODUCT_WHERE;
@@ -427,7 +427,7 @@ export class ProductsService {
     const { page, limit, skip } = this.pagination(query);
 
     /**
-     * Reem Value's visibility rules, applied here rather than at each call
+     * Ohara Value's visibility rules, applied here rather than at each call
      * site.
      *
      * `list`, `search` and `byCategory` all funnel through this method, so one

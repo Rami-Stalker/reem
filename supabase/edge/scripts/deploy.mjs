@@ -1,4 +1,4 @@
-// Deploys the Reem API to a Supabase project, without Docker.
+// Deploys the Ohara API to a Supabase project, without Docker.
 //
 //   SUPABASE_URL=https://<ref>.supabase.co SUPABASE_SECRET_KEY=<secret key> \
 //   SUPABASE_ACCESS_TOKEN=<token, or run `supabase login` once> \

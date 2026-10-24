@@ -1,7 +1,7 @@
-import 'package:reem/core/network/api_endpoints.dart';
-import 'package:reem/core/network/base_remote_datasource.dart';
-import 'package:reem/core/shared/models/product_model.dart';
-import 'package:reem/features/catalog/data/datasources/catalog_remote_datasource.dart';
+import 'package:ohara/core/network/api_endpoints.dart';
+import 'package:ohara/core/network/base_remote_datasource.dart';
+import 'package:ohara/core/shared/models/product_model.dart';
+import 'package:ohara/features/catalog/data/datasources/catalog_remote_datasource.dart';
 
 final class CatalogRemoteDataSourceImpl extends BaseRemoteDataSource
     implements CatalogRemoteDataSource {

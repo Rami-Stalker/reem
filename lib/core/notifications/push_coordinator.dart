@@ -3,14 +3,14 @@ import 'dart:async';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:reem/app/bootstrap.dart';
-import 'package:reem/core/notifications/push_message.dart';
-import 'package:reem/core/notifications/push_providers.dart';
-import 'package:reem/core/observability/error_reporter.dart';
-import 'package:reem/core/router/app_router_provider.dart';
-import 'package:reem/features/auth/presentation/providers/auth_provider.dart';
-import 'package:reem/features/auth/presentation/providers/auth_state.dart';
-import 'package:reem/features/settings/presentation/providers/settings_provider.dart';
+import 'package:ohara/app/bootstrap.dart';
+import 'package:ohara/core/notifications/push_message.dart';
+import 'package:ohara/core/notifications/push_providers.dart';
+import 'package:ohara/core/observability/error_reporter.dart';
+import 'package:ohara/core/router/app_router_provider.dart';
+import 'package:ohara/features/auth/presentation/providers/auth_provider.dart';
+import 'package:ohara/features/auth/presentation/providers/auth_state.dart';
+import 'package:ohara/features/settings/presentation/providers/settings_provider.dart';
 
 /// Everything that has to happen *around* a push, wrapped around the app.
 ///

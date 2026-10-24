@@ -1,16 +1,16 @@
 import 'package:equatable/equatable.dart';
 
-import 'package:reem/core/shared/entities/loyalty.dart';
-import 'package:reem/core/shared/entities/product.dart';
-import 'package:reem/features/home/domain/entities/continue_shopping_item.dart';
-import 'package:reem/features/home/domain/entities/dynamic_block.dart';
-import 'package:reem/features/home/domain/entities/featured_store.dart';
-import 'package:reem/features/home/domain/entities/flash_deal.dart';
-import 'package:reem/features/home/domain/entities/hero_banner.dart';
-import 'package:reem/features/home/domain/entities/home_category.dart';
-import 'package:reem/features/home/domain/entities/home_notification.dart';
-import 'package:reem/features/home/domain/entities/nearby_store.dart';
-import 'package:reem/features/home/domain/entities/search_suggestions.dart';
+import 'package:ohara/core/shared/entities/loyalty.dart';
+import 'package:ohara/core/shared/entities/product.dart';
+import 'package:ohara/features/home/domain/entities/continue_shopping_item.dart';
+import 'package:ohara/features/home/domain/entities/dynamic_block.dart';
+import 'package:ohara/features/home/domain/entities/featured_store.dart';
+import 'package:ohara/features/home/domain/entities/flash_deal.dart';
+import 'package:ohara/features/home/domain/entities/hero_banner.dart';
+import 'package:ohara/features/home/domain/entities/home_category.dart';
+import 'package:ohara/features/home/domain/entities/home_notification.dart';
+import 'package:ohara/features/home/domain/entities/nearby_store.dart';
+import 'package:ohara/features/home/domain/entities/search_suggestions.dart';
 
 /// The aggregate of all personalized, home-specific content fetched in one
 /// pass. Product *rails* (recommended / new arrivals / best sellers …) and the

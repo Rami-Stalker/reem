@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/core/router/route_paths.dart';
-import 'package:reem/features/auth/presentation/providers/auth_provider.dart';
-import 'package:reem/features/settings/presentation/widgets/about_sheet.dart';
-import 'package:reem/features/settings/presentation/widgets/help_sheet.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/core/router/route_paths.dart';
+import 'package:ohara/features/auth/presentation/providers/auth_provider.dart';
+import 'package:ohara/features/settings/presentation/widgets/about_sheet.dart';
+import 'package:ohara/features/settings/presentation/widgets/help_sheet.dart';
 
 /// The seller's settings menu, grouped: the storefront, the money, the
 /// account, and the way to a human.
@@ -171,7 +171,7 @@ class SellerProfileMenu extends ConsumerWidget {
           ),
           _Row(
             icon: Icons.info_outline_rounded,
-            label: l10n.aboutReem,
+            label: l10n.aboutOhara,
             color: tint(3),
             onTap: () => showAboutSheet(context),
           ),

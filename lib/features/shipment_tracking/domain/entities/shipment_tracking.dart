@@ -68,7 +68,7 @@ class ShipmentEvent extends Equatable {
 
 /// The delivery company carrying a parcel.
 ///
-/// Reem does not run drivers — a parcel past the boutique's door belongs to a
+/// Ohara does not run drivers — a parcel past the boutique's door belongs to a
 /// carrier — so a tracking page that cannot name the company is a page that
 /// cannot answer "who do I ring". Nothing here is operational: no driver, no
 /// route, no carrier endpoint. Those live on the server.
@@ -84,7 +84,7 @@ class TrackingCarrier extends Equatable {
   final ShipmentStage stage;
 
   /// The carrier's own number for this box, which is what their support desk
-  /// asks for. Different from Reem's tracking code, and both are shown.
+  /// asks for. Different from Ohara's tracking code, and both are shown.
   final String? trackingNumber;
   final String? trackingUrl;
 

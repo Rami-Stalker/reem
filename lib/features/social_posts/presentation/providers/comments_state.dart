@@ -1,4 +1,4 @@
-import 'package:reem/core/shared/entities/comment.dart';
+import 'package:ohara/core/shared/entities/comment.dart';
 
 class CommentsState {
   const CommentsState({

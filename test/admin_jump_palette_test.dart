@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
-import 'package:reem/core/auth/app_permissions.dart';
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/router/route_paths.dart';
-import 'package:reem/features/admin/presentation/widgets/admin_jump_palette.dart';
-import 'package:reem/l10n/app_localizations.dart';
+import 'package:ohara/core/auth/app_permissions.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/router/route_paths.dart';
+import 'package:ohara/features/admin/presentation/widgets/admin_jump_palette.dart';
+import 'package:ohara/l10n/app_localizations.dart';
 
 void main() {
   group('adminJumpDestinations', () {

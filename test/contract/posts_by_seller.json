@@ -138,7 +138,7 @@
         "favorites_count": 0,
         "created_at": "2026-09-03T15:15:51.966Z"
       },
-      "caption": "أحببنا حذاء سهرة ساتان 💕 تسوّقيه الآن على ريم!",
+      "caption": "أحببنا حذاء سهرة ساتان 💕 تسوّقيه الآن على أوهارا!",
       "likes_count": 32,
       "comments_count": 1,
       "shares_count": 17,
@@ -186,8 +186,8 @@
         "brand": {
           "id": "cfce5e75-2022-4137-b20a-cea8d79ccf5c",
           "slug": "reem-atelier",
-          "name_ar": "ريم أتيليه",
-          "name_en": "Reem Atelier",
+          "name_ar": "أوهارا أتيليه",
+          "name_en": "Ohara Atelier",
           "logo_url": null,
           "is_verified": true
         },
@@ -288,7 +288,7 @@
         "favorites_count": 1,
         "created_at": "2026-09-03T15:15:51.879Z"
       },
-      "caption": "أحببنا فستان حرير ميدي أنيق 💕 تسوّقيه الآن على ريم!",
+      "caption": "أحببنا فستان حرير ميدي أنيق 💕 تسوّقيه الآن على أوهارا!",
       "likes_count": 11,
       "comments_count": 3,
       "shares_count": 9,

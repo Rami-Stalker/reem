@@ -5,25 +5,25 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart' show ProviderListenable;
 import 'package:go_router/go_router.dart';
 
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/core/platform/app_haptics.dart';
-import 'package:reem/core/router/route_paths.dart';
-import 'package:reem/core/shared/entities/product.dart';
-import 'package:reem/features/discovery/presentation/providers/collection_state.dart';
-import 'package:reem/features/discovery/presentation/providers/discovery_providers.dart';
-import 'package:reem/features/highlights/presentation/widgets/highlights_rail.dart';
-import 'package:reem/features/product_social/presentation/providers/product_social_providers.dart';
-import 'package:reem/features/product_social/presentation/widgets/product_shelf.dart';
-import 'package:reem/features/social/domain/entities/content.dart';
-import 'package:reem/features/social/presentation/open_stories.dart';
-import 'package:reem/features/social/presentation/providers/social_providers.dart';
-import 'package:reem/features/social/presentation/widgets/interactive_content_card.dart';
-import 'package:reem/features/user_profile/domain/entities/user_profile.dart';
-import 'package:reem/features/user_profile/presentation/providers/user_profile_providers.dart';
-import 'package:reem/features/user_profile/presentation/widgets/my_page_card.dart';
-import 'package:reem/features/user_profile/presentation/widgets/profile_page_header.dart';
-import 'package:reem/features/user_profile/presentation/widgets/seller_reviews_section.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/core/platform/app_haptics.dart';
+import 'package:ohara/core/router/route_paths.dart';
+import 'package:ohara/core/shared/entities/product.dart';
+import 'package:ohara/features/discovery/presentation/providers/collection_state.dart';
+import 'package:ohara/features/discovery/presentation/providers/discovery_providers.dart';
+import 'package:ohara/features/highlights/presentation/widgets/highlights_rail.dart';
+import 'package:ohara/features/product_social/presentation/providers/product_social_providers.dart';
+import 'package:ohara/features/product_social/presentation/widgets/product_shelf.dart';
+import 'package:ohara/features/social/domain/entities/content.dart';
+import 'package:ohara/features/social/presentation/open_stories.dart';
+import 'package:ohara/features/social/presentation/providers/social_providers.dart';
+import 'package:ohara/features/social/presentation/widgets/interactive_content_card.dart';
+import 'package:ohara/features/user_profile/domain/entities/user_profile.dart';
+import 'package:ohara/features/user_profile/presentation/providers/user_profile_providers.dart';
+import 'package:ohara/features/user_profile/presentation/widgets/my_page_card.dart';
+import 'package:ohara/features/user_profile/presentation/widgets/profile_page_header.dart';
+import 'package:ohara/features/user_profile/presentation/widgets/seller_reviews_section.dart';
 
 /// What a page can show.
 enum ProfileTab { products, posts, reels, picks, stories, reviews }
@@ -143,7 +143,7 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
     );
     final profile = state.profile;
 
-    return ReemScrollPage(
+    return OharaScrollPage(
       controller: _scroll,
       onRefresh: _refresh,
       slivers: [

@@ -170,7 +170,7 @@ text of each document opens from inside it. Signing out is offered as the honest
 alternative to agreeing.
 
 It fails open on a network error: this gates the whole app, and a five-second
-blip must not be able to lock a woman out of Reem.
+blip must not be able to lock a woman out of Ohara.
 
 ### Her receipts
 

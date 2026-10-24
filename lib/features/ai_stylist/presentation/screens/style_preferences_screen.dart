@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/features/ai_stylist/domain/entities/style_brief.dart';
-import 'package:reem/features/ai_stylist/domain/entities/stylist_conversation.dart';
-import 'package:reem/features/ai_stylist/domain/repositories/ai_stylist_repository.dart';
-import 'package:reem/features/ai_stylist/presentation/providers/ai_stylist_providers.dart';
-import 'package:reem/l10n/app_localizations.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/features/ai_stylist/domain/entities/style_brief.dart';
+import 'package:ohara/features/ai_stylist/domain/entities/stylist_conversation.dart';
+import 'package:ohara/features/ai_stylist/domain/repositories/ai_stylist_repository.dart';
+import 'package:ohara/features/ai_stylist/presentation/providers/ai_stylist_providers.dart';
+import 'package:ohara/l10n/app_localizations.dart';
 
 /// Her taste, editable.
 ///
@@ -24,7 +24,7 @@ class StylePreferencesScreen extends ConsumerWidget {
 
     return Scaffold(
       backgroundColor: colors.background,
-      appBar: ReemAppBar(title: context.l10n.stylistPreferencesTitle),
+      appBar: OharaAppBar(title: context.l10n.stylistPreferencesTitle),
       body: bootstrapAsync.when(
         loading: () => const Center(child: DsLoadingIndicator()),
         error: (_, _) => DsErrorState(

@@ -1,9 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:reem/core/errors/failure_exception.dart';
-import 'package:reem/core/result/result.dart';
-import 'package:reem/features/settings/domain/entities/coupon_entity.dart';
-import 'package:reem/features/settings/presentation/providers/settings_provider.dart';
+import 'package:ohara/core/errors/failure_exception.dart';
+import 'package:ohara/core/result/result.dart';
+import 'package:ohara/features/settings/domain/entities/coupon_entity.dart';
+import 'package:ohara/features/settings/presentation/providers/settings_provider.dart';
 
 /// Her redeemable coupons, on their own.
 ///

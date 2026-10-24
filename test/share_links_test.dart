@@ -1,14 +1,14 @@
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:reem/core/config/app_env.dart';
-import 'package:reem/core/shared/entities/media.dart';
-import 'package:reem/core/shared/services/share_links.dart';
+import 'package:ohara/core/config/app_env.dart';
+import 'package:ohara/core/shared/entities/media.dart';
+import 'package:ohara/core/shared/services/share_links.dart';
 
 /// The link contract, from both ends.
 ///
 /// A share link is the only thing this app produces that outlives the session
 /// it was made in: it is pasted into WhatsApp, forwarded, and opened weeks
-/// later — often by somebody who has never heard of Reem. So the two halves
+/// later — often by somebody who has never heard of Ohara. So the two halves
 /// tested here are the two that were broken.
 ///
 /// **Building.** Every link used to be a string literal at its call site
@@ -16,7 +16,7 @@ import 'package:reem/core/shared/services/share_links.dart';
 /// pointing at `https://reem.shop`, a host that has never resolved.
 ///
 /// **Reading.** Nothing anywhere could turn one back into a screen. The app had
-/// no route for a link it handed out, so even a woman with Reem installed
+/// no route for a link it handed out, so even a woman with Ohara installed
 /// landed on a 404.
 ///
 /// The server holds the other half of this contract in
@@ -79,7 +79,7 @@ void main() {
     });
 
     test('the app does not claim an invitation', () {
-      // An invite is sent to somebody who does *not* have Reem. Swallowing it
+      // An invite is sent to somebody who does *not* have Ohara. Swallowing it
       // would hide the download button from the one person it was written for.
       expect(route('https://x.test/invite/LAMA7'), isNull);
       expect(ShareLinks.isAppHandled(Uri.parse('https://x.test/invite/LAMA7')), isFalse);

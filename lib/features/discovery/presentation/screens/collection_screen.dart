@@ -3,18 +3,18 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/core/presentation/providers/product_shape_provider.dart';
-import 'package:reem/core/router/route_paths.dart';
-import 'package:reem/core/shared/entities/product.dart';
-import 'package:reem/features/discovery/presentation/providers/collection_notifier.dart';
-import 'package:reem/features/discovery/presentation/providers/collection_state.dart';
-import 'package:reem/features/discovery/presentation/providers/for_you_dismissals_provider.dart';
-import 'package:reem/features/discovery/presentation/widgets/for_you_removal.dart';
-import 'package:reem/features/discovery/presentation/widgets/sponsored_strip.dart';
-import 'package:reem/features/product_social/presentation/providers/product_social_providers.dart';
-import 'package:reem/features/product_social/presentation/widgets/product_shelf.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/core/presentation/providers/product_shape_provider.dart';
+import 'package:ohara/core/router/route_paths.dart';
+import 'package:ohara/core/shared/entities/product.dart';
+import 'package:ohara/features/discovery/presentation/providers/collection_notifier.dart';
+import 'package:ohara/features/discovery/presentation/providers/collection_state.dart';
+import 'package:ohara/features/discovery/presentation/providers/for_you_dismissals_provider.dart';
+import 'package:ohara/features/discovery/presentation/widgets/for_you_removal.dart';
+import 'package:ohara/features/discovery/presentation/widgets/sponsored_strip.dart';
+import 'package:ohara/features/product_social/presentation/providers/product_social_providers.dart';
+import 'package:ohara/features/product_social/presentation/widgets/product_shelf.dart';
 
 /// Every full listing of products — a department, a collection, "see all"
 /// under a rail — in whichever of the three shapes she prefers.

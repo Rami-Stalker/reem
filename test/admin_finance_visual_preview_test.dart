@@ -9,13 +9,13 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/app_localizations.dart';
-import 'package:reem/core/shared/value_objects/money.dart';
-import 'package:reem/features/admin_finance/domain/entities/finance_overview.dart';
-import 'package:reem/features/admin_finance/presentation/widgets/finance_position_grid.dart';
-import 'package:reem/features/admin_finance/presentation/widgets/ledger_health_banner.dart';
-import 'package:reem/l10n/app_localizations.dart' as gen;
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/app_localizations.dart';
+import 'package:ohara/core/shared/value_objects/money.dart';
+import 'package:ohara/features/admin_finance/domain/entities/finance_overview.dart';
+import 'package:ohara/features/admin_finance/presentation/widgets/finance_position_grid.dart';
+import 'package:ohara/features/admin_finance/presentation/widgets/ledger_health_banner.dart';
+import 'package:ohara/l10n/app_localizations.dart' as gen;
 
 final _captureKey = GlobalKey();
 

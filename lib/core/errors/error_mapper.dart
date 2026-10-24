@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 
-import 'package:reem/core/errors/app_exception.dart';
+import 'package:ohara/core/errors/app_exception.dart';
 
 abstract final class ErrorMapper {
   static AppException fromDio(DioException error) {

@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import 'package:reem/core/shared/entities/product.dart';
+import 'package:ohara/core/shared/entities/product.dart';
 
 /// Everything a post card knows about its own engagement, for a product.
 ///

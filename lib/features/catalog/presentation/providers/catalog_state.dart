@@ -1,4 +1,4 @@
-import 'package:reem/core/shared/entities/product.dart';
+import 'package:ohara/core/shared/entities/product.dart';
 
 class CatalogState {
   const CatalogState({

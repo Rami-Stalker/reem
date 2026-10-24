@@ -1,17 +1,17 @@
-import 'package:reem/core/network/api_endpoints.dart';
-import 'package:reem/core/network/base_remote_datasource.dart';
-import 'package:reem/core/shared/entities/loyalty.dart';
-import 'package:reem/core/shared/models/product_model.dart';
-import 'package:reem/features/home/data/datasources/home_content_datasource.dart';
-import 'package:reem/features/home/domain/entities/continue_shopping_item.dart';
-import 'package:reem/features/home/domain/entities/featured_store.dart';
-import 'package:reem/features/home/domain/entities/flash_deal.dart';
-import 'package:reem/features/home/domain/entities/hero_banner.dart';
-import 'package:reem/features/home/domain/entities/home_category.dart';
-import 'package:reem/features/home/domain/entities/home_content.dart';
-import 'package:reem/features/home/domain/entities/home_notification.dart';
-import 'package:reem/features/home/domain/entities/nearby_store.dart';
-import 'package:reem/features/home/domain/entities/search_suggestions.dart';
+import 'package:ohara/core/network/api_endpoints.dart';
+import 'package:ohara/core/network/base_remote_datasource.dart';
+import 'package:ohara/core/shared/entities/loyalty.dart';
+import 'package:ohara/core/shared/models/product_model.dart';
+import 'package:ohara/features/home/data/datasources/home_content_datasource.dart';
+import 'package:ohara/features/home/domain/entities/continue_shopping_item.dart';
+import 'package:ohara/features/home/domain/entities/featured_store.dart';
+import 'package:ohara/features/home/domain/entities/flash_deal.dart';
+import 'package:ohara/features/home/domain/entities/hero_banner.dart';
+import 'package:ohara/features/home/domain/entities/home_category.dart';
+import 'package:ohara/features/home/domain/entities/home_content.dart';
+import 'package:ohara/features/home/domain/entities/home_notification.dart';
+import 'package:ohara/features/home/domain/entities/nearby_store.dart';
+import 'package:ohara/features/home/domain/entities/search_suggestions.dart';
 
 /// The home page, read from the server.
 ///

@@ -1,4 +1,4 @@
-import 'package:reem/core/design_system/foundation/tokens/ds_motion.dart';
+import 'package:ohara/core/design_system/foundation/tokens/ds_motion.dart';
 
 /// Duration tokens — mirrors [DsMotion] for semantic naming in components.
 abstract final class DsDurations {

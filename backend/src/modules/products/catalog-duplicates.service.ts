@@ -54,7 +54,7 @@ interface CandidateRow {
 /**
  * Finds canonical products that look like the same garment listed twice.
  *
- * Reem's catalogue separates the product from the seller's offer on purpose:
+ * Ohara's catalogue separates the product from the seller's offer on purpose:
  * one `Product` row, many `SellerOffer` rows, so five boutiques selling the
  * same dress compete on one page. That design only holds while they are all
  * attached to the *same* product row. When a second row is created for a

@@ -12,7 +12,7 @@ abstract final class DsCurves {
   static const Curve bounce = Curves.bounceOut;
   static const Curve linear = Curves.linear;
 
-  /// Soft, gentle settle — the signature Reem feel for entrances and taps.
+  /// Soft, gentle settle — the signature Ohara feel for entrances and taps.
   static const Curve gentle = Cubic(0.33, 1.0, 0.68, 1.0); // easeOutCubic-ish, softer
   static const Curve gentleIn = Cubic(0.32, 0.0, 0.67, 0.0);
 

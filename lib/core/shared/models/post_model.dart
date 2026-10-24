@@ -1,10 +1,10 @@
 // shared/models/post_model.dart
 
-import 'package:reem/core/shared/entities/post.dart';
-import 'package:reem/core/shared/entities/product.dart';
-import 'package:reem/core/shared/entities/user.dart';
-import 'package:reem/core/shared/models/product_model.dart';
-import 'package:reem/core/shared/models/user_model.dart';
+import 'package:ohara/core/shared/entities/post.dart';
+import 'package:ohara/core/shared/entities/product.dart';
+import 'package:ohara/core/shared/entities/user.dart';
+import 'package:ohara/core/shared/models/product_model.dart';
+import 'package:ohara/core/shared/models/user_model.dart';
 
 class PostModel extends Post {
   const PostModel({

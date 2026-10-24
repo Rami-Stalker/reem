@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/core/router/route_paths.dart';
-import 'package:reem/features/closet/domain/entities/closet_overview.dart';
-import 'package:reem/features/closet/domain/repositories/closet_repository.dart';
-import 'package:reem/features/closet/presentation/providers/closet_providers.dart';
-import 'package:reem/features/closet/presentation/widgets/closet_gap_card.dart';
-import 'package:reem/features/closet/presentation/widgets/closet_item_tile.dart';
-import 'package:reem/features/market/presentation/widgets/market_entry_card.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/core/router/route_paths.dart';
+import 'package:ohara/features/closet/domain/entities/closet_overview.dart';
+import 'package:ohara/features/closet/domain/repositories/closet_repository.dart';
+import 'package:ohara/features/closet/presentation/providers/closet_providers.dart';
+import 'package:ohara/features/closet/presentation/widgets/closet_gap_card.dart';
+import 'package:ohara/features/closet/presentation/widgets/closet_item_tile.dart';
+import 'package:ohara/features/market/presentation/widgets/market_entry_card.dart';
 
 /// خزانتي — the closet's front page.
 ///
@@ -34,7 +34,7 @@ class _MyClosetScreenState extends ConsumerState<MyClosetScreen> {
 
     return Scaffold(
       backgroundColor: colors.background,
-      appBar: ReemAppBar(
+      appBar: OharaAppBar(
         title: context.l10n.navCloset,
         // A tab when she reaches it from the bar, a pushed page when she
         // reaches it from a product: only the second has somewhere to go back.

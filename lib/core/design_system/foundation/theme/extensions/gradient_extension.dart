@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:reem/core/design_system/foundation/theme/extensions/color_extension.dart';
-import 'package:reem/core/design_system/foundation/tokens/ds_gradients.dart';
+import 'package:ohara/core/design_system/foundation/theme/extensions/color_extension.dart';
+import 'package:ohara/core/design_system/foundation/tokens/ds_gradients.dart';
 
 /// Gradient accessors. Theme-aware ones come off the theme extension; the
 /// mode-agnostic brand blends are exposed directly from [DsGradients].

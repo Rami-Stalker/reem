@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
-import 'package:reem/features/ai_stylist/domain/entities/style_brief.dart';
-import 'package:reem/features/ai_stylist/domain/entities/stylist_outfit.dart';
-import 'package:reem/features/ai_stylist/domain/entities/stylist_recommendation.dart';
+import 'package:ohara/features/ai_stylist/domain/entities/style_brief.dart';
+import 'package:ohara/features/ai_stylist/domain/entities/stylist_outfit.dart';
+import 'package:ohara/features/ai_stylist/domain/entities/stylist_recommendation.dart';
 
 enum StylistRole { user, assistant, system }
 

@@ -11,6 +11,8 @@ export function serializeAddress(address: Address) {
     city: address.city,
     address_line: address.addressLine,
     landmark: address.landmark,
+    latitude: address.latitude,
+    longitude: address.longitude,
     is_rural: address.isRural,
     delivery_instructions: address.deliveryInstructions,
     is_default: address.isDefault,

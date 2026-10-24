@@ -1,15 +1,15 @@
-import 'package:reem/core/domain/pagination/paginated_data.dart';
-import 'package:reem/core/network/api_endpoints.dart';
-import 'package:reem/core/network/base_remote_datasource.dart';
-import 'package:reem/core/shared/entities/user.dart';
-import 'package:reem/core/shared/models/user_model.dart';
-import 'package:reem/features/social/data/datasources/social_remote_datasource.dart';
-import 'package:reem/features/social/data/models/content_model.dart';
-import 'package:reem/features/social/data/models/social_models.dart';
-import 'package:reem/features/social/domain/entities/content.dart';
-import 'package:reem/features/social/domain/entities/content_comment.dart';
-import 'package:reem/features/social/domain/entities/content_draft.dart';
-import 'package:reem/features/social/domain/repositories/social_repository.dart';
+import 'package:ohara/core/domain/pagination/paginated_data.dart';
+import 'package:ohara/core/network/api_endpoints.dart';
+import 'package:ohara/core/network/base_remote_datasource.dart';
+import 'package:ohara/core/shared/entities/user.dart';
+import 'package:ohara/core/shared/models/user_model.dart';
+import 'package:ohara/features/social/data/datasources/social_remote_datasource.dart';
+import 'package:ohara/features/social/data/models/content_model.dart';
+import 'package:ohara/features/social/data/models/social_models.dart';
+import 'package:ohara/features/social/domain/entities/content.dart';
+import 'package:ohara/features/social/domain/entities/content_comment.dart';
+import 'package:ohara/features/social/domain/entities/content_draft.dart';
+import 'package:ohara/features/social/domain/repositories/social_repository.dart';
 
 final class SocialRemoteDataSourceImpl extends BaseRemoteDataSource
     implements SocialRemoteDataSource {

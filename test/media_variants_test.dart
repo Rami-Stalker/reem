@@ -6,8 +6,8 @@
 // eager — rewriting a URL the platform does not host — breaks the demo dataset
 // and anything ever linked from outside.
 import 'package:flutter_test/flutter_test.dart';
-import 'package:reem/core/media/media_asset.dart';
-import 'package:reem/core/media/media_variants.dart';
+import 'package:ohara/core/media/media_asset.dart';
+import 'package:ohara/core/media/media_variants.dart';
 
 void main() {
   group('public uploads', () {

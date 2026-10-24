@@ -4,9 +4,9 @@ import type { Opportunity } from './intelligence/market-intelligence.service';
 import type { LifeReading } from './kernel/lifecycle';
 
 /**
- * The wire shape of Reem Market Evolution.
+ * The wire shape of Ohara Market Evolution.
  *
- * Same contract as the rest of Reem: snake_case out, Decimals as numbers,
+ * Same contract as the rest of Ohara: snake_case out, Decimals as numbers,
  * Arabic rendered here rather than in the client. The last of those is the one
  * that matters — every label on these screens is derived from the same lexicon
  * the stylist and the closet reason in, so a slot cannot be called one thing

@@ -34,7 +34,7 @@ function logLevels(): LogLevel[] {
 }
 
 /**
- * The Reem API application, assembled for the edge.
+ * The Ohara API application, assembled for the edge.
  *
  * `AppModule` is imported whole — all 49 feature modules, every guard,
  * interceptor and policy — and exactly five providers are swapped, each for a
@@ -69,7 +69,7 @@ export async function createEdgeApp(runtime: SupabaseRuntime): Promise<NestExpre
 
   const app = moduleRef.createNestApplication<NestExpressApplication>(new ExpressAdapter(), {
     rawBody: true,
-    logger: new StructuredLogger('Reem'),
+    logger: new StructuredLogger('Ohara'),
   });
   app.useLogger(logLevels());
 

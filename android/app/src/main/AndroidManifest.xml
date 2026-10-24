@@ -17,10 +17,10 @@
 
     <!--
       Three permissions `flutter_local_notifications` merges into this manifest
-      that Reem must not ship, removed explicitly.
+      that Ohara must not ship, removed explicitly.
 
       Nothing in this app schedules a notification for a later time or needs to
-      redraw one after a reboot — every notification Reem shows is drawn the
+      redraw one after a reboot — every notification Ohara shows is drawn the
       moment a push arrives. Both alarm permissions oblige a publisher to
       justify them in writing to Google Play, and `RECEIVE_BOOT_COMPLETED`
       makes the app start at boot, which is a battery cost with nothing on the
@@ -57,6 +57,16 @@
     -->
     <uses-permission android:name="android.permission.RECORD_AUDIO"/>
     <uses-feature android:name="android.hardware.microphone" android:required="false"/>
+
+    <!--
+      The location picker's «موقعي الحالي» button. Asked for only when she taps
+      it, while the app is open — never in the background. Coarse is declared
+      too because Android 12+ lets her grant only an approximate position, and
+      the picker still works with one (she nudges the pin the last few metres).
+    -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-feature android:name="android.hardware.location.gps" android:required="false"/>
 
     <application
         android:label="@string/app_name"
@@ -106,7 +116,7 @@
               The custom scheme. Still here, and still load-bearing: on Android
               WhatsApp opens links in an embedded browser, and an embedded
               browser never triggers App Link verification. The landing page's
-              «افتحي في تطبيق ريم» button uses this, and for a large share of
+              «افتحي في تطبيق أوهارا» button uses this, and for a large share of
               real taps it is the only thing that works.
             -->
             <intent-filter>
@@ -136,7 +146,7 @@
               opening the app.
 
               `pathPrefix` is deliberately narrow. `/invite/` is NOT here: an
-              invitation is sent to somebody who does not have Reem, so having
+              invitation is sent to somebody who does not have Ohara, so having
               the app swallow it would hide the download button from the one
               person it was written for.
             -->
@@ -172,7 +182,7 @@
         -->
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
-            android:resource="@drawable/ic_stat_reem" />
+            android:resource="@drawable/ic_stat_ohara" />
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/notification_accent" />

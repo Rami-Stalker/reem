@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/errors/failure_exception.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/core/media/media_asset.dart';
-import 'package:reem/core/router/route_paths.dart';
-import 'package:reem/core/utils/relative_time.dart';
-import 'package:reem/features/auth/presentation/providers/auth_provider.dart';
-import 'package:reem/features/verification/domain/entities/account_verification.dart';
-import 'package:reem/features/verification/presentation/providers/account_verification_provider.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/errors/failure_exception.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/core/media/media_asset.dart';
+import 'package:ohara/core/router/route_paths.dart';
+import 'package:ohara/core/utils/relative_time.dart';
+import 'package:ohara/features/auth/presentation/providers/auth_provider.dart';
+import 'package:ohara/features/verification/domain/entities/account_verification.dart';
+import 'package:ohara/features/verification/presentation/providers/account_verification_provider.dart';
 
 /// «توثيق الحساب» — asking for the badge, and reading the answer.
 ///
@@ -26,7 +26,7 @@ class AccountVerificationScreen extends ConsumerWidget {
     final l10n = context.l10n;
     final claim = ref.watch(accountVerificationProvider);
 
-    return ReemScrollPage(
+    return OharaScrollPage(
       onRefresh: () async => ref.invalidate(accountVerificationProvider),
       slivers: [
         PremiumAppBar(title: l10n.accountVerification, showBack: true),
@@ -302,7 +302,7 @@ class _ClaimFormState extends ConsumerState<_ClaimForm> {
 
           // Private by construction: `MediaPurpose.verification` is stored
           // behind the server's authorisation, readable by her and by a
-          // reviewer and by nobody else on Reem.
+          // reviewer and by nobody else on Ohara.
           DsMediaField(
             label: l10n.accountVerificationFront,
             purpose: MediaPurpose.verification,

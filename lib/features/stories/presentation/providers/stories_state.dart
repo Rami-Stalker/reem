@@ -1,4 +1,4 @@
-import 'package:reem/core/shared/entities/story.dart';
+import 'package:ohara/core/shared/entities/story.dart';
 
 class StoriesState {
   const StoriesState({

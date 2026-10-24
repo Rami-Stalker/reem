@@ -1,8 +1,8 @@
-import 'package:reem/features/admin/data/models/admin_briefing_model.dart';
-import 'package:reem/features/admin/data/models/admin_console_model.dart';
-import 'package:reem/features/admin/data/models/admin_stats_model.dart';
-import 'package:reem/features/admin/data/models/analytics_dashboard_model.dart';
-import 'package:reem/features/admin/data/models/notification_analytics_model.dart';
+import 'package:ohara/features/admin/data/models/admin_briefing_model.dart';
+import 'package:ohara/features/admin/data/models/admin_console_model.dart';
+import 'package:ohara/features/admin/data/models/admin_stats_model.dart';
+import 'package:ohara/features/admin/data/models/analytics_dashboard_model.dart';
+import 'package:ohara/features/admin/data/models/notification_analytics_model.dart';
 
 abstract interface class AdminRemoteDataSource {
   /// What needs attention today, ordered by how much.

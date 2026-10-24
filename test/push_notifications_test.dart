@@ -1,8 +1,8 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:reem/core/notifications/notification_channels.dart';
-import 'package:reem/core/notifications/push_message.dart';
-import 'package:reem/core/router/app_router_provider.dart';
+import 'package:ohara/core/notifications/notification_channels.dart';
+import 'package:ohara/core/notifications/push_message.dart';
+import 'package:ohara/core/router/app_router_provider.dart';
 
 /// The client half of push, tested where it can be tested without a handset.
 ///

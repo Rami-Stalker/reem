@@ -10,7 +10,7 @@ import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:reem/core/network/interceptors/retry_interceptor.dart';
+import 'package:ohara/core/network/interceptors/retry_interceptor.dart';
 
 /// A transport that fails a fixed number of times, then succeeds.
 class _FlakyAdapter implements HttpClientAdapter {
