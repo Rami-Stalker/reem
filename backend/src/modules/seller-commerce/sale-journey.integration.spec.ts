@@ -599,7 +599,7 @@ dbTest('a courier parcel hides the address from the seller', async (world) => {
   assert.equal(detail.customer.phone, null);
   assert.equal(detail.customer.address_line, null);
   // Enough to greet her by and to know which city to pack for.
-  assert.equal(detail.customer.name, 'أوهارا');
+  assert.equal(detail.customer.name, 'ريم');
   assert.equal(detail.customer.governorate, 'دمشق');
 });
 
@@ -631,7 +631,7 @@ dbTest('the customer can ask for more privacy even when the seller ships', async
   );
 
   // She still needs the address to deliver it — the name is what shrinks.
-  assert.equal(detail.customer.name, 'أوهارا');
+  assert.equal(detail.customer.name, 'ريم');
   assert.equal(detail.customer.address_line, 'شارع الجلاء، بناء 12');
   assert.equal(detail.customer.is_masked, true);
 });
