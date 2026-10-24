@@ -5006,6 +5006,122 @@ class AppLocalizationsAr extends AppLocalizations {
   String get sellerAnnouncement => 'إعلان';
 
   @override
+  String get sellerBenchGreetingMorning => 'صباح الخير';
+
+  @override
+  String get sellerBenchGreetingEvening => 'مساء الخير';
+
+  @override
+  String sellerBenchGreetingNamed(String greeting, String name) {
+    return '$greeting، $name';
+  }
+
+  @override
+  String get sellerBenchTodayTakings => 'مبيعات اليوم';
+
+  @override
+  String get sellerBenchGoalReached => 'اكتمل الهدف';
+
+  @override
+  String get sellerBenchStartHere => 'ابدئي من هنا';
+
+  @override
+  String get sellerBenchThen => 'وبعدها';
+
+  @override
+  String get sellerBenchCalm => 'المشغل هادئ — لا شيء ينتظركِ الآن.';
+
+  @override
+  String sellerBenchNewOrders(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count طلب جديد بانتظار تأكيدكِ',
+      many: '$count طلباً جديداً بانتظار تأكيدكِ',
+      few: '$count طلبات جديدة بانتظار تأكيدكِ',
+      two: 'طلبان جديدان بانتظار تأكيدكِ',
+      one: 'طلب جديد واحد بانتظار تأكيدكِ',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get sellerBenchNewOrdersHint => 'كل ساعة انتظار تُبرّد حماس الزبونة.';
+
+  @override
+  String sellerBenchReadyOrders(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count طلب جاهز للشحن',
+      many: '$count طلباً جاهزاً للشحن',
+      few: '$count طلبات جاهزة للشحن',
+      two: 'طلبان جاهزان للشحن',
+      one: 'طلب واحد جاهز للشحن',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get sellerBenchReadyOrdersHint => 'سلّميها للمندوب قبل نهاية اليوم.';
+
+  @override
+  String sellerBenchSoldOut(String title) {
+    return 'نفدت «$title»';
+  }
+
+  @override
+  String get sellerBenchSoldOutHint =>
+      'زوّدي الكمية كي لا تختفي من نتائج البحث.';
+
+  @override
+  String get sellerBenchOpenOrders => 'افتحي الطلبات';
+
+  @override
+  String get sellerBenchOpenProducts => 'افتحي المنتجات';
+
+  @override
+  String get sellerBenchSeamTitle => 'خط الطلبات';
+
+  @override
+  String get sellerBenchSeamCaption => 'النقاط المضيئة تنتظر يدكِ.';
+
+  @override
+  String get sellerBenchToolsTitle => 'أدواتكِ';
+
+  @override
+  String get sellerBenchRailTitle => 'على الراف';
+
+  @override
+  String get sellerBenchRailCaption => 'ما يُباع أكثر، وما يوشك أن ينفد.';
+
+  @override
+  String sellerBenchTagSold(String count) {
+    return 'بيعت $count';
+  }
+
+  @override
+  String sellerBenchTagLeft(String count) {
+    return 'باقي $count';
+  }
+
+  @override
+  String get sellerBenchTagOut => 'نفدت';
+
+  @override
+  String get sellerBenchPatternTitle => 'باترون المبيعات';
+
+  @override
+  String get sellerBenchPatternCaption =>
+      'كل عقدة على الخيط فترة، والذهبية هي الآن.';
+
+  @override
+  String get sellerBenchPatternSemantics => 'المبيعات خلال الفترة المختارة';
+
+  @override
+  String get sellerBenchMoreTitle => 'المزيد من المشغل';
+
+  @override
   String get sellerArchive => 'أرشفة';
 
   @override

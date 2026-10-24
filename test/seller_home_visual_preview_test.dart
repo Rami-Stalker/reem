@@ -36,6 +36,17 @@ Future<void> _loadFonts() async {
       );
     await loader.load();
   }
+  // Material's icon font ships with the SDK, not the app, so a widget test
+  // draws every icon as a box unless it is loaded by hand.
+  final root = Platform.environment['FLUTTER_ROOT'];
+  final icons = File(
+    '$root/bin/cache/artifacts/material_fonts/MaterialIcons-Regular.otf',
+  );
+  if (root != null && icons.existsSync()) {
+    final loader = FontLoader('MaterialIcons')
+      ..addFont(icons.readAsBytes().then((b) => ByteData.view(b.buffer)));
+    await loader.load();
+  }
 }
 
 /// Silences the two plugins these screens reach for that have no
@@ -121,6 +132,30 @@ void main() {
     );
     await _settle(tester);
     await _capture(tester, 'seller_profile_menu');
+  });
+
+  for (final mode in [ThemeMode.light, ThemeMode.dark]) {
+    testWidgets('renders the whole seller workbench in ${mode.name}', (
+      tester,
+    ) async {
+      tester.view.physicalSize = const Size(1170, 9600);
+      tester.view.devicePixelRatio = 3.0;
+      addTearDown(tester.view.reset);
+
+      await tester.pumpWidget(_Preview(themeMode: mode));
+      await _settle(tester);
+      await _capture(tester, 'seller_home_full_${mode.name}');
+    });
+  }
+
+  testWidgets('renders the seller workbench on a tablet', (tester) async {
+    tester.view.physicalSize = const Size(2048, 5600);
+    tester.view.devicePixelRatio = 2.0;
+    addTearDown(tester.view.reset);
+
+    await tester.pumpWidget(const _Preview(themeMode: ThemeMode.light));
+    await _settle(tester);
+    await _capture(tester, 'seller_home_tablet');
   });
 
   testWidgets('renders the seller command centre scrolled to the charts', (
