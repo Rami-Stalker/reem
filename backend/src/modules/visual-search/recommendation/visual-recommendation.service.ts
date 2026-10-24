@@ -27,11 +27,11 @@ import { ScoredVisualMatch, rankVisualMatches } from '../search/visual-ranker';
  * This service is the seam, because it is the one that produces visual
  * neighbours without needing a customer to do anything.
  *
- *  - **Reem AI Stylist.** `similarTo` is what "لقيتلك بديل أرخص بنفس الشكل"
+ *  - **Ohara AI Stylist.** `similarTo` is what "لقيتلك بديل أرخص بنفس الشكل"
  *    needs: hand it the product she liked and a budget ceiling and it returns
  *    the cheaper twin. The stylist's `StyleBrief` is already the filter
  *    parameter here, so no adapter is required.
- *  - **Reem Trend Engine.** `ProductTrendScore` says a product is climbing;
+ *  - **Ohara Trend Engine.** `ProductTrendScore` says a product is climbing;
  *    this says which listings look like it. Together they answer the question
  *    a seller actually asks — "شو الشبيه اللي عم يبيع؟" — which neither can
  *    answer alone.

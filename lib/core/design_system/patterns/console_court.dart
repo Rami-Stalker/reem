@@ -2,7 +2,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
-import 'package:reem/core/design_system/design_system.dart';
+import 'package:ohara/core/design_system/design_system.dart';
 
 /// The operator's home register: **the courtyard of a Damascus house**.
 ///
@@ -15,7 +15,7 @@ import 'package:reem/core/design_system/design_system.dart';
 /// * [PulseRose] — the fountain at the centre: the month's four vital signs as
 ///   the petals of one rose, each growing with its trend, so the *shape* of
 ///   the month reads before any number does.
-/// * [CourtDoor] — the doors around the court, cut to Reem's arch. A door with
+/// * [CourtDoor] — the doors around the court, cut to Ohara's arch. A door with
 ///   someone waiting behind it is lit; a quiet one is not. She can see where
 ///   the work is before reading a word.
 /// * [CourtThreadBead] — the day's thread: what happened, strung as beads on
@@ -463,7 +463,7 @@ class _RosePainter extends CustomPainter {
 // The doors
 // ---------------------------------------------------------------------------
 
-/// A door off the courtyard, cut to Reem's arch.
+/// A door off the courtyard, cut to Ohara's arch.
 ///
 /// [lit] is the whole point: a door with someone waiting behind it glows from
 /// inside, in champagne light on plum, and the count is set large in the

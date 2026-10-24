@@ -1,14 +1,14 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/core/media/media_decode.dart';
-import 'package:reem/core/media/media_variants.dart';
-import 'package:reem/core/utils/relative_time.dart';
-import 'package:reem/features/admin/presentation/widgets/admin_page_header.dart';
-import 'package:reem/features/social/domain/entities/content.dart';
-import 'package:reem/features/social/presentation/providers/admin_content_notifier.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/core/media/media_decode.dart';
+import 'package:ohara/core/media/media_variants.dart';
+import 'package:ohara/core/utils/relative_time.dart';
+import 'package:ohara/features/admin/presentation/widgets/admin_page_header.dart';
+import 'package:ohara/features/social/domain/entities/content.dart';
+import 'package:ohara/features/social/presentation/providers/admin_content_notifier.dart';
 
 /// Everything published, for a moderator.
 ///
@@ -30,7 +30,7 @@ class AdminContentScreen extends ConsumerWidget {
     final state = ref.watch(adminContentProvider);
     final notifier = ref.read(adminContentProvider.notifier);
 
-    return ReemScrollPage(
+    return OharaScrollPage(
       background: const AdminConsoleBackground(),
       onRefresh: notifier.load,
       slivers: [

@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/core/shared/value_objects/money.dart';
-import 'package:reem/core/utils/arabic_numerals.dart';
-import 'package:reem/core/utils/relative_time.dart';
-import 'package:reem/features/seller_orders/domain/entities/seller_order.dart';
-import 'package:reem/features/seller_orders/presentation/providers/seller_orders_provider.dart';
-import 'package:reem/features/seller_orders/presentation/seller_order_labels.dart';
-import 'package:reem/features/seller_orders/presentation/widgets/seller_customer_panel.dart';
-import 'package:reem/features/seller_orders/presentation/widgets/seller_order_action_prompt.dart';
-import 'package:reem/features/seller_orders/presentation/widgets/seller_order_status_chip.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/core/shared/value_objects/money.dart';
+import 'package:ohara/core/utils/arabic_numerals.dart';
+import 'package:ohara/core/utils/relative_time.dart';
+import 'package:ohara/features/seller_orders/domain/entities/seller_order.dart';
+import 'package:ohara/features/seller_orders/presentation/providers/seller_orders_provider.dart';
+import 'package:ohara/features/seller_orders/presentation/seller_order_labels.dart';
+import 'package:ohara/features/seller_orders/presentation/widgets/seller_customer_panel.dart';
+import 'package:ohara/features/seller_orders/presentation/widgets/seller_order_action_prompt.dart';
+import 'package:ohara/features/seller_orders/presentation/widgets/seller_order_status_chip.dart';
 
 /// One parcel, everything about it, and the next thing to do with it.
 ///
@@ -38,7 +38,7 @@ class SellerOrderDetailScreen extends ConsumerWidget {
       }
     });
 
-    return ReemScrollPage(
+    return OharaScrollPage(
       onRefresh: notifier.load,
       background: const SellerAtelierBackground(),
       backgroundColor: atelier.background,

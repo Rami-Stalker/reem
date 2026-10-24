@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:reem/core/analytics/analytics_tracker.dart';
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/core/router/route_paths.dart';
-import 'package:reem/core/shared/value_objects/money.dart';
-import 'package:reem/features/auth/presentation/providers/auth_provider.dart';
-import 'package:reem/features/cart/presentation/providers/cart_providers.dart';
-import 'package:reem/features/checkout/domain/entities/checkout.dart';
-import 'package:reem/features/checkout/presentation/order_labels.dart';
-import 'package:reem/features/checkout/presentation/providers/applied_coupon_provider.dart';
-import 'package:reem/features/checkout/presentation/providers/checkout_controller.dart';
-import 'package:reem/features/checkout/presentation/providers/checkout_providers.dart';
-import 'package:reem/features/checkout/presentation/providers/saved_addresses_provider.dart';
-import 'package:reem/features/checkout/presentation/widgets/cod_confirmation_sheet.dart';
-import 'package:reem/features/policies/presentation/widgets/policy_link.dart';
-import 'package:reem/features/settings/domain/entities/address_entity.dart';
+import 'package:ohara/core/analytics/analytics_tracker.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/core/router/route_paths.dart';
+import 'package:ohara/core/shared/value_objects/money.dart';
+import 'package:ohara/features/auth/presentation/providers/auth_provider.dart';
+import 'package:ohara/features/cart/presentation/providers/cart_providers.dart';
+import 'package:ohara/features/checkout/domain/entities/checkout.dart';
+import 'package:ohara/features/checkout/presentation/order_labels.dart';
+import 'package:ohara/features/checkout/presentation/providers/applied_coupon_provider.dart';
+import 'package:ohara/features/checkout/presentation/providers/checkout_controller.dart';
+import 'package:ohara/features/checkout/presentation/providers/checkout_providers.dart';
+import 'package:ohara/features/checkout/presentation/providers/saved_addresses_provider.dart';
+import 'package:ohara/features/checkout/presentation/widgets/cod_confirmation_sheet.dart';
+import 'package:ohara/features/policies/presentation/widgets/policy_link.dart';
+import 'package:ohara/features/settings/domain/entities/address_entity.dart';
 
 /// The last screen before she pays.
 ///
@@ -290,7 +290,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
     // number that can disagree with the invoice. What is shown before placing
     // is the subtotal and the quoted delivery, each on its own line.
 
-    return ReemScrollPage(
+    return OharaScrollPage(
       bottom: _BottomBar(
         subtotal: subtotal,
         deliveryFee: deliveryFee,
@@ -863,7 +863,7 @@ class _PaymentTile extends StatelessWidget {
             padding: const EdgeInsets.only(top: DsSpacing.sm),
             child: Text(
               // The app's own name for a known method, so checkout and the
-              // order page agree («محفظة ريم»); the server's label for one the
+              // order page agree («محفظة أوهارا»); the server's label for one the
               // app does not know yet.
               switch (context.l10n.paymentMethodName(option.method)) {
                 final name when name != option.method => name,

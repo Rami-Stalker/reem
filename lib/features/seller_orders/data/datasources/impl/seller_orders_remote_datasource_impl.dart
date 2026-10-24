@@ -1,8 +1,8 @@
-import 'package:reem/core/network/api_endpoints.dart';
-import 'package:reem/core/network/base_remote_datasource.dart';
-import 'package:reem/features/seller_orders/data/datasources/seller_orders_remote_datasource.dart';
-import 'package:reem/features/seller_orders/data/models/seller_order_models.dart';
-import 'package:reem/features/seller_orders/domain/entities/seller_order.dart';
+import 'package:ohara/core/network/api_endpoints.dart';
+import 'package:ohara/core/network/base_remote_datasource.dart';
+import 'package:ohara/features/seller_orders/data/datasources/seller_orders_remote_datasource.dart';
+import 'package:ohara/features/seller_orders/data/models/seller_order_models.dart';
+import 'package:ohara/features/seller_orders/domain/entities/seller_order.dart';
 
 final class SellerOrdersRemoteDataSourceImpl extends BaseRemoteDataSource
     implements SellerOrdersRemoteDataSource {

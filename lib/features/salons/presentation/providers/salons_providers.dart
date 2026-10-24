@@ -1,12 +1,12 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 
-import 'package:reem/core/domain/pagination/paginated_data.dart';
-import 'package:reem/core/presentation/providers/core_providers.dart';
-import 'package:reem/features/auth/presentation/providers/auth_provider.dart';
-import 'package:reem/features/salons/data/datasources/salons_remote_datasource.dart';
-import 'package:reem/features/salons/domain/entities/appointment.dart';
-import 'package:reem/features/salons/domain/entities/salon.dart';
+import 'package:ohara/core/domain/pagination/paginated_data.dart';
+import 'package:ohara/core/presentation/providers/core_providers.dart';
+import 'package:ohara/features/auth/presentation/providers/auth_provider.dart';
+import 'package:ohara/features/salons/data/datasources/salons_remote_datasource.dart';
+import 'package:ohara/features/salons/domain/entities/appointment.dart';
+import 'package:ohara/features/salons/domain/entities/salon.dart';
 
 /// «الصالونات والجمال», wired.
 ///

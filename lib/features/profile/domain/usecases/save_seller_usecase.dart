@@ -1,6 +1,6 @@
-import 'package:reem/core/result/result.dart';
+import 'package:ohara/core/result/result.dart';
 
-import 'package:reem/features/profile/domain/repositories/profile_repository.dart';
+import 'package:ohara/features/profile/domain/repositories/profile_repository.dart';
 
 class SaveSellerUseCase {
   const SaveSellerUseCase(this.repository);

@@ -1,8 +1,8 @@
-import 'package:reem/core/network/api_endpoints.dart';
-import 'package:reem/core/network/base_remote_datasource.dart';
-import 'package:reem/features/courier/data/datasources/courier_remote_datasource.dart';
-import 'package:reem/features/courier/data/models/courier_assignment_model.dart';
-import 'package:reem/features/courier/domain/entities/courier_assignment.dart';
+import 'package:ohara/core/network/api_endpoints.dart';
+import 'package:ohara/core/network/base_remote_datasource.dart';
+import 'package:ohara/features/courier/data/datasources/courier_remote_datasource.dart';
+import 'package:ohara/features/courier/data/models/courier_assignment_model.dart';
+import 'package:ohara/features/courier/domain/entities/courier_assignment.dart';
 
 final class CourierRemoteDataSourceImpl extends BaseRemoteDataSource
     implements CourierRemoteDataSource {

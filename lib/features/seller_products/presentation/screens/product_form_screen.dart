@@ -2,20 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/core/platform/unsaved_changes_guard.dart';
-import 'package:reem/core/shared/value_objects/money.dart';
-import 'package:reem/features/ai_assistant/presentation/providers/ai_assistant_provider.dart';
-import 'package:reem/features/catalog/presentation/providers/categories_provider.dart';
-import 'package:reem/features/seller_products/domain/entities/managed_product.dart';
-import 'package:reem/features/seller_products/domain/entities/product_draft.dart';
-import 'package:reem/features/seller_products/domain/entities/product_status.dart';
-import 'package:reem/features/seller_products/presentation/providers/seller_products_providers.dart';
-import 'package:reem/features/seller_products/presentation/widgets/category_attribute_fields.dart';
-import 'package:reem/features/seller_products/presentation/widgets/category_picker_field.dart';
-import 'package:reem/features/seller_products/presentation/widgets/product_status_chip.dart';
-import 'package:reem/l10n/app_localizations.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/core/platform/unsaved_changes_guard.dart';
+import 'package:ohara/core/shared/value_objects/money.dart';
+import 'package:ohara/features/ai_assistant/presentation/providers/ai_assistant_provider.dart';
+import 'package:ohara/features/catalog/presentation/providers/categories_provider.dart';
+import 'package:ohara/features/seller_products/domain/entities/managed_product.dart';
+import 'package:ohara/features/seller_products/domain/entities/product_draft.dart';
+import 'package:ohara/features/seller_products/domain/entities/product_status.dart';
+import 'package:ohara/features/seller_products/presentation/providers/seller_products_providers.dart';
+import 'package:ohara/features/seller_products/presentation/widgets/category_attribute_fields.dart';
+import 'package:ohara/features/seller_products/presentation/widgets/category_picker_field.dart';
+import 'package:ohara/features/seller_products/presentation/widgets/product_status_chip.dart';
+import 'package:ohara/l10n/app_localizations.dart';
 
 /// Writing a listing.
 ///
@@ -359,7 +359,7 @@ class _ProductFormScreenState extends ConsumerState<ProductFormScreen> {
   }
 
   Widget _body(BuildContext context, AppLocalizations l10n, bool isSubmitting) {
-    return ReemScrollPage(
+    return OharaScrollPage(
       // Without these the form inherits the buyer's blush silk — the wrong
       // room for a seller writing a listing.
       background: const SellerAtelierBackground(),

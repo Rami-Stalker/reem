@@ -2,13 +2,13 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:reem/core/shared/value_objects/money.dart';
-import 'package:reem/features/checkout/presentation/order_labels.dart';
-import 'package:reem/features/seller_orders/data/models/seller_order_models.dart';
-import 'package:reem/features/seller_orders/domain/entities/seller_order.dart';
-import 'package:reem/features/seller_orders/presentation/seller_order_labels.dart';
-import 'package:reem/l10n/app_localizations.dart';
-import 'package:reem/l10n/app_localizations_ar.dart';
+import 'package:ohara/core/shared/value_objects/money.dart';
+import 'package:ohara/features/checkout/presentation/order_labels.dart';
+import 'package:ohara/features/seller_orders/data/models/seller_order_models.dart';
+import 'package:ohara/features/seller_orders/domain/entities/seller_order.dart';
+import 'package:ohara/features/seller_orders/presentation/seller_order_labels.dart';
+import 'package:ohara/l10n/app_localizations.dart';
+import 'package:ohara/l10n/app_localizations_ar.dart';
 
 /// Contract tests for the seller's order queue, against the shape
 /// `SellerOrdersService` serialises.

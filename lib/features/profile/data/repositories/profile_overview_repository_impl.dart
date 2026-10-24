@@ -1,8 +1,8 @@
-import 'package:reem/core/base/repository_handler.dart';
-import 'package:reem/core/result/result.dart';
-import 'package:reem/features/profile/data/datasources/profile_overview_datasource.dart';
-import 'package:reem/features/profile/domain/entities/profile_overview.dart';
-import 'package:reem/features/profile/domain/repositories/profile_overview_repository.dart';
+import 'package:ohara/core/base/repository_handler.dart';
+import 'package:ohara/core/result/result.dart';
+import 'package:ohara/features/profile/data/datasources/profile_overview_datasource.dart';
+import 'package:ohara/features/profile/domain/entities/profile_overview.dart';
+import 'package:ohara/features/profile/domain/repositories/profile_overview_repository.dart';
 
 class ProfileOverviewRepositoryImpl
     with RepositoryHandler

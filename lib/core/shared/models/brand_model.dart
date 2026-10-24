@@ -1,6 +1,6 @@
 // shared/models/brand_model.dart
 
-import 'package:reem/core/shared/entities/brand.dart';
+import 'package:ohara/core/shared/entities/brand.dart';
 
 class BrandModel extends Brand {
   const BrandModel({

@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/legacy.dart';
 
-import 'package:reem/core/design_system/design_system.dart';
+import 'package:ohara/core/design_system/design_system.dart';
 
 /// Which shape the catalogue is currently wearing.
 ///

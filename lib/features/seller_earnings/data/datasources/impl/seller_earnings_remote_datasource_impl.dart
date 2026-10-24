@@ -1,8 +1,8 @@
-import 'package:reem/core/network/api_endpoints.dart';
-import 'package:reem/core/network/base_remote_datasource.dart';
-import 'package:reem/features/seller_earnings/data/datasources/seller_earnings_remote_datasource.dart';
-import 'package:reem/features/seller_earnings/data/models/seller_earnings_model.dart';
-import 'package:reem/features/seller_earnings/domain/entities/seller_earnings.dart';
+import 'package:ohara/core/network/api_endpoints.dart';
+import 'package:ohara/core/network/base_remote_datasource.dart';
+import 'package:ohara/features/seller_earnings/data/datasources/seller_earnings_remote_datasource.dart';
+import 'package:ohara/features/seller_earnings/data/models/seller_earnings_model.dart';
+import 'package:ohara/features/seller_earnings/domain/entities/seller_earnings.dart';
 
 final class SellerEarningsRemoteDataSourceImpl extends BaseRemoteDataSource
     implements SellerEarningsRemoteDataSource {

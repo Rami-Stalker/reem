@@ -40,7 +40,7 @@ import { EARNING_RULE_BY_CODE, MATURITY } from './value.constants';
  *
  * The cost of the choice is that six modules are read from here. That is
  * accepted deliberately: the alternative is six modules that know about
- * standing, and a change to what Reem values becoming a change to the reviews
+ * standing, and a change to what Ohara values becoming a change to the reviews
  * module.
  */
 @Injectable()
@@ -334,7 +334,7 @@ export class ValueCollectorService {
    *
    * Two rules, and the gap between them is the point: writing a review earns a
    * little, and writing one that three other women marked helpful earns four
-   * times as much. Reem does not pay for opinions, it pays for opinions that
+   * times as much. Ohara does not pay for opinions, it pays for opinions that
    * turned out to be worth reading.
    */
   private async sweepCraft(since: Date): Promise<string[]> {
@@ -478,7 +478,7 @@ export class ValueCollectorService {
    *
    * Gated on `QUALIFIED` *and* a fraud score under the threshold. The referral
    * module already decides what qualification means — a first order that was
-   * delivered — and re-deciding it here would give Reem two definitions of a
+   * delivered — and re-deciding it here would give Ohara two definitions of a
    * real customer.
    */
   private async sweepAdvocacy(since: Date): Promise<string[]> {

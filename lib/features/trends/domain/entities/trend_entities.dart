@@ -1,4 +1,4 @@
-/// The Reem Trend Engine, as the app sees it.
+/// The Ohara Trend Engine, as the app sees it.
 ///
 /// One thing shapes every type behind this barrel: **a score always arrives
 /// with its evidence.** The server sends the number, the nine components it
@@ -15,6 +15,6 @@
 /// know which one a type came from.
 library;
 
-export 'package:reem/features/trends/domain/entities/trend_insight.dart';
-export 'package:reem/features/trends/domain/entities/trend_overview.dart';
-export 'package:reem/features/trends/domain/entities/trend_score.dart';
+export 'package:ohara/features/trends/domain/entities/trend_insight.dart';
+export 'package:ohara/features/trends/domain/entities/trend_overview.dart';
+export 'package:ohara/features/trends/domain/entities/trend_score.dart';

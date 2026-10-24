@@ -14,7 +14,7 @@ import { ClosetItemService } from './items/closet-item.service';
  * entry, a closet holds whatever a woman had the patience to type on the day she
  * discovered the feature — which is to say, almost nothing, and the gap engine
  * reasoning over almost nothing produces advice that is worse than none.
- * Delivery is the one moment Reem knows for certain she owns a garment, so that
+ * Delivery is the one moment Ohara knows for certain she owns a garment, so that
  * is where the wardrobe grows.
  *
  * Three things keep it honest:

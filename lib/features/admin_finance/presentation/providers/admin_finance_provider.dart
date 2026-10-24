@@ -1,15 +1,15 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
-import 'package:reem/core/errors/failure_exception.dart';
-import 'package:reem/core/presentation/providers/core_providers.dart';
-import 'package:reem/core/result/result.dart';
+import 'package:ohara/core/errors/failure_exception.dart';
+import 'package:ohara/core/presentation/providers/core_providers.dart';
+import 'package:ohara/core/result/result.dart';
 
-import 'package:reem/features/admin_finance/data/datasources/admin_finance_remote_datasource.dart';
-import 'package:reem/features/admin_finance/data/datasources/impl/admin_finance_remote_datasource_impl.dart';
-import 'package:reem/features/admin_finance/data/repositories/admin_finance_repository_impl.dart';
-import 'package:reem/features/admin_finance/domain/entities/finance_overview.dart';
-import 'package:reem/features/admin_finance/domain/entities/pending_transfer.dart';
-import 'package:reem/features/admin_finance/domain/repositories/admin_finance_repository.dart';
+import 'package:ohara/features/admin_finance/data/datasources/admin_finance_remote_datasource.dart';
+import 'package:ohara/features/admin_finance/data/datasources/impl/admin_finance_remote_datasource_impl.dart';
+import 'package:ohara/features/admin_finance/data/repositories/admin_finance_repository_impl.dart';
+import 'package:ohara/features/admin_finance/domain/entities/finance_overview.dart';
+import 'package:ohara/features/admin_finance/domain/entities/pending_transfer.dart';
+import 'package:ohara/features/admin_finance/domain/repositories/admin_finance_repository.dart';
 
 final adminFinanceRemoteDataSourceProvider =
     Provider<AdminFinanceRemoteDataSource>(

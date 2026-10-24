@@ -109,7 +109,7 @@ export class DevInboxController implements OnApplicationBootstrap {
     return `<!doctype html>
 <html lang="en"><head><meta charset="utf-8">
 <meta http-equiv="refresh" content="3">
-<title>Reem — dev inbox</title>
+<title>Ohara — dev inbox</title>
 <style>
   :root { color-scheme: light dark; }
   body { font: 15px/1.5 system-ui, sans-serif; margin: 2rem auto; max-width: 46rem; padding: 0 1rem; }
@@ -124,7 +124,7 @@ export class DevInboxController implements OnApplicationBootstrap {
   .empty { opacity: .6; padding: 2rem 0; }
 </style></head>
 <body>
-  <h1>Reem — one-time codes (development)</h1>
+  <h1>Ohara — one-time codes (development)</h1>
   <p class="note">No SMS provider is contracted yet, so codes are shown here instead of being delivered.
   This page cannot run in production.</p>
   ${

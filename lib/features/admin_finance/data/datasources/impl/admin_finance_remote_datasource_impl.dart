@@ -1,8 +1,8 @@
-import 'package:reem/core/network/api_endpoints.dart';
-import 'package:reem/core/network/base_remote_datasource.dart';
-import 'package:reem/features/admin_finance/data/datasources/admin_finance_remote_datasource.dart';
-import 'package:reem/features/admin_finance/data/models/finance_overview_model.dart';
-import 'package:reem/features/admin_finance/data/models/pending_transfer_model.dart';
+import 'package:ohara/core/network/api_endpoints.dart';
+import 'package:ohara/core/network/base_remote_datasource.dart';
+import 'package:ohara/features/admin_finance/data/datasources/admin_finance_remote_datasource.dart';
+import 'package:ohara/features/admin_finance/data/models/finance_overview_model.dart';
+import 'package:ohara/features/admin_finance/data/models/pending_transfer_model.dart';
 
 final class AdminFinanceRemoteDataSourceImpl extends BaseRemoteDataSource
     implements AdminFinanceRemoteDataSource {

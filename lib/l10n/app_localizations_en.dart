@@ -50,10 +50,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get a11yShare => 'Share';
 
   @override
-  String get aboutReem => 'About Reem';
+  String get aboutOhara => 'About Ohara';
 
   @override
-  String get aboutReemBlurb =>
+  String get aboutOharaBlurb =>
       'A premium social-commerce home for the pieces you love — shopping, discovery and community in one place.';
 
   @override
@@ -79,7 +79,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get accountVerificationBlurb =>
-      'The badge beside your name says Reem has checked who you are. Send a document and we will look at it.';
+      'The badge beside your name says Ohara has checked who you are. Send a document and we will look at it.';
 
   @override
   String get accountVerificationDocType => 'Document type';
@@ -102,7 +102,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get accountVerificationPrivacy =>
-      'Your documents are read only by the staff who review them, and by nobody else on Reem.';
+      'Your documents are read only by the staff who review them, and by nobody else on Ohara.';
 
   @override
   String get accountVerificationResubmit => 'Send again';
@@ -127,7 +127,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get accountVerificationStatusRejected => 'Not approved';
 
   @override
-  String get accountVerificationStatusRevoked => 'Withdrawn by Reem';
+  String get accountVerificationStatusRevoked => 'Withdrawn by Ohara';
 
   @override
   String get accountVerificationStatusUnderReview => 'Being reviewed';
@@ -1114,7 +1114,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get adminWelcome => 'Welcome back';
 
   @override
-  String get aiStylistTitle => 'Reem Stylist';
+  String get aiStylistTitle => 'Ohara Stylist';
 
   @override
   String get all => 'All';
@@ -1243,7 +1243,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get appPreferences => 'App preferences';
 
   @override
-  String get appTitle => 'Reem';
+  String get appTitle => 'Ohara';
 
   @override
   String appVersion(String version) {
@@ -1255,7 +1255,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get appearanceDescription =>
-      'Choose how Reem looks on your device. Your choice is saved automatically.';
+      'Choose how Ohara looks on your device. Your choice is saved automatically.';
 
   @override
   String get apply => 'Apply';
@@ -1455,7 +1455,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get chatRetrySend => 'Try again';
 
   @override
-  String get chatSafetyNote => 'Keep payments inside Reem';
+  String get chatSafetyNote => 'Keep payments inside Ohara';
 
   @override
   String get chatSafetyNoteBody =>
@@ -1957,7 +1957,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get declaredFemaleLabel =>
-      'I declare that I am a woman and accept the Reem terms';
+      'I declare that I am a woman and accept the Ohara terms';
 
   @override
   String get delete => 'Delete';
@@ -2006,7 +2006,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get discoverAskHint => 'What do you need?';
 
   @override
-  String get discoverAskLabel => 'Ask Reem';
+  String get discoverAskLabel => 'Ask Ohara';
 
   @override
   String get discoverAskSend => 'Ask';
@@ -2233,7 +2233,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get faqPaymentAnswer =>
-      'Cash on delivery, or from your Reem wallet. Never pay a boutique outside the app — an order paid outside it is not protected.';
+      'Cash on delivery, or from your Ohara wallet. Never pay a boutique outside the app — an order paid outside it is not protected.';
 
   @override
   String get faqPoints => 'How do loyalty points work?';
@@ -2847,7 +2847,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get homeLoyaltySubtitle => 'Earn rewards on every purchase ✨';
 
   @override
-  String get homeLoyaltyTitle => 'Reem Rewards';
+  String get homeLoyaltyTitle => 'Ohara Rewards';
 
   @override
   String get homeNearbyEyebrow => 'Near you';
@@ -3127,7 +3127,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get matchCodeHint =>
-      'Check that the message shows the same two digits. Reem will never ask you to read a code aloud.';
+      'Check that the message shows the same two digits. Ohara will never ask you to read a code aloud.';
 
   @override
   String get matchCodeLabel => 'Match code';
@@ -3411,11 +3411,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get notifPushBlocked =>
-      'Your phone is blocking Reem\'s notifications.';
+      'Your phone is blocking Ohara\'s notifications.';
 
   @override
   String get notifPushBlockedBody =>
-      'Your phone is blocking Reem, so nothing below will reach you until you allow it in the system settings.';
+      'Your phone is blocking Ohara, so nothing below will reach you until you allow it in the system settings.';
 
   @override
   String get notifPushBlockedTitle => 'Notifications are turned off';
@@ -5877,7 +5877,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get totpSecretLabel => 'Secret key';
 
   @override
-  String get totpSetupTitle => 'Add Reem to your authenticator';
+  String get totpSetupTitle => 'Add Ohara to your authenticator';
 
   @override
   String get totpTitle => 'Authenticator app';
@@ -6532,7 +6532,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get voicePermissionDenied =>
-      'Reem needs permission to use the microphone.';
+      'Ohara needs permission to use the microphone.';
 
   @override
   String get voiceRecord => 'Record a voice note';
@@ -6560,7 +6560,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get walletEmptyTitle => 'Your wallet is empty';
 
   @override
-  String get walletNotWithdrawable => 'Spendable inside Reem only';
+  String get walletNotWithdrawable => 'Spendable inside Ohara only';
 
   @override
   String get walletOffline =>
@@ -6606,7 +6606,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get welcomeBack => 'Welcome back';
 
   @override
-  String get welcomeToReem => 'Welcome to Reem';
+  String get welcomeToOhara => 'Welcome to Ohara';
 
   @override
   String get wishlist => 'Wishlist';
@@ -7185,7 +7185,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get policiesTitle => 'Policies and terms';
 
   @override
-  String get policiesSubtitle => 'The documents that govern your use of Reem';
+  String get policiesSubtitle => 'The documents that govern your use of Ohara';
 
   @override
   String get policiesSectionForYou => 'For you';
@@ -7272,7 +7272,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get policiesConsentIntroNew =>
-      'Please read and accept the following to keep using Reem.';
+      'Please read and accept the following to keep using Ohara.';
 
   @override
   String get policiesConsentIntroUpdated =>
@@ -7796,7 +7796,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get closetEmptyBody =>
-      'Add your pieces — what you bought on Reem and what you already had. That’s how we learn what you’re missing and what you can wear.';
+      'Add your pieces — what you bought on Ohara and what you already had. That’s how we learn what you’re missing and what you can wear.';
 
   @override
   String get closetBringPurchases => 'Bring in my purchases';
@@ -8583,7 +8583,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get valueCancel => 'Cancel';
 
   @override
-  String get valueTitle => 'My standing in Reem';
+  String get valueTitle => 'My standing in Ohara';
 
   @override
   String get valueLoadFailed => 'Your standing couldn’t load.';
@@ -8819,7 +8819,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get valueCardTitle => 'Your standing in Reem';
+  String get valueCardTitle => 'Your standing in Ohara';
 
   @override
   String valueCardCloseTo(String tier) {
@@ -8853,8 +8853,9 @@ class AppLocalizationsEn extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'From $count shops — Reem put them together because they go well.',
-      one: 'From one shop — Reem put them together because they go well.',
+      other:
+          'From $count shops — Ohara put them together because they go well.',
+      one: 'From one shop — Ohara put them together because they go well.',
     );
     return '$_temp0';
   }
@@ -8864,7 +8865,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get marketCheaperOptionsBody =>
-      'Same slot, another piece Reem sees as close to it.';
+      'Same slot, another piece Ohara sees as close to it.';
 
   @override
   String get marketLookTotal => 'Look total';
@@ -8948,7 +8949,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get marketNoMissionsBody =>
-      'Reem only asks for something when it’s worth it and within reach.';
+      'Ohara only asks for something when it’s worth it and within reach.';
 
   @override
   String get marketMissionDone => 'Done';
@@ -8981,7 +8982,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get marketNoOwnListingsBody =>
-      'When Reem finds a piece in your closet that isn’t being worn, she’ll suggest listing it here.';
+      'When Ohara finds a piece in your closet that isn’t being worn, she’ll suggest listing it here.';
 
   @override
   String get marketNoListingsBody =>
@@ -9026,7 +9027,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get marketNoSignal =>
-      'No signal strong enough right now. Reem only speaks when the data is enough.';
+      'No signal strong enough right now. Ohara only speaks when the data is enough.';
 
   @override
   String get marketWorthADrop => 'Worth a drop';
@@ -9433,7 +9434,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'We don’t store card details. Each order is paid when you place it, the way you choose.';
 
   @override
-  String get settingsReemWallet => 'Reem wallet';
+  String get settingsOharaWallet => 'Ohara wallet';
 
   @override
   String get settingsHintCod => 'Pay the courier in cash on delivery';
@@ -10067,11 +10068,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get stylistNotForMe => 'Not for me';
 
   @override
-  String get stylistWelcomeTitle => 'Reem’s personal stylist';
+  String get stylistWelcomeTitle => 'Ohara’s personal stylist';
 
   @override
   String get stylistWelcomeBody =>
-      'Tell me about the occasion, the piece or the budget — I’ll line up options that Reem’s sellers actually have, and tell you why I picked each one.';
+      'Tell me about the occasion, the piece or the budget — I’ll line up options that Ohara’s sellers actually have, and tell you why I picked each one.';
 
   @override
   String get stylistTryAsking => 'Try asking me:';
@@ -10116,7 +10117,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get visualSawSomethingBody =>
-      'Upload a photo of the piece — a screenshot from Instagram, TikTok or Pinterest, or one from your gallery — and we’ll find the closest thing in Reem.';
+      'Upload a photo of the piece — a screenshot from Instagram, TikTok or Pinterest, or one from your gallery — and we’ll find the closest thing in Ohara.';
 
   @override
   String get visualPastSearches => 'Your past searches';
@@ -10139,7 +10140,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get visualComparing =>
-      'Comparing your photo with products actually on Reem.';
+      'Comparing your photo with products actually on Ohara.';
 
   @override
   String get visualNothingClose => 'I didn’t find anything close';
@@ -10345,7 +10346,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get profileShare => 'Share';
 
   @override
-  String get homeAskStylist => 'Ask Reem’s stylist';
+  String get homeAskStylist => 'Ask Ohara’s stylist';
 
   @override
   String get homeAskStylistBody =>
@@ -10476,7 +10477,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get payMethodHawala => 'Local transfer';
 
   @override
-  String get payMethodWallet => 'Reem wallet';
+  String get payMethodWallet => 'Ohara wallet';
 
   @override
   String get rawStatePending => 'Pending';
@@ -10715,7 +10716,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String sellerOrderPlatformDiscountNote(String amount) {
-    return 'A $amount discount was paid by Reem and doesn\'t come out of your earnings.';
+    return 'A $amount discount was paid by Ohara and doesn\'t come out of your earnings.';
   }
 
   @override
@@ -10940,7 +10941,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get homeAuraQuestionNight => 'A quiet moment, just for you';
 
   @override
-  String get homeAskReem => 'Ask Reem';
+  String get homeAskOhara => 'Ask Ohara';
 
   @override
   String get homeAskExample1 => 'A navy evening dress under 50K';
@@ -11017,7 +11018,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get homeMoodTitle => 'What\'s the mood today?';
 
   @override
-  String get homeMoodSubtitle => 'Pick one and Reem styles the whole look';
+  String get homeMoodSubtitle => 'Pick one and Ohara styles the whole look';
 
   @override
   String get homeMoodEvening => 'Evening';
@@ -11056,7 +11057,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get homeMoodPromptTravel => 'Comfortable, stylish travel clothes';
 
   @override
-  String get homeDeckEyebrow => 'Picked for you by Reem';
+  String get homeDeckEyebrow => 'Picked for you by Ohara';
 
   @override
   String get homeDeckTitle => 'Your taste, piece by piece';
@@ -11088,7 +11089,7 @@ class AppLocalizationsEn extends AppLocalizations {
       locale: localeName,
       other: 'You loved $count pieces; they\'re in your likes.',
       one: 'You loved 1 piece; it\'s in your likes.',
-      zero: 'Nothing today? Reem will learn from that.',
+      zero: 'Nothing today? Ohara will learn from that.',
     );
     return '$_temp0';
   }
@@ -11100,7 +11101,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get homeDeckRestart => 'Start over';
 
   @override
-  String get homeBentoEyebrow => 'Reem\'s world';
+  String get homeBentoEyebrow => 'Ohara\'s world';
 
   @override
   String get homeBentoTitle => 'Wander the departments';
@@ -11228,7 +11229,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get authLostSimCaption => 'Recover your account with another number';
 
   @override
-  String get authSectionJoinAs => 'How will you join Reem?';
+  String get authSectionJoinAs => 'How will you join Ohara?';
 
   @override
   String get authRoleBuyerHint => 'Shop, follow and share';
@@ -12000,10 +12001,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get salonWorkspaceLoadError => 'We couldn\'t open your salon.';
 
   @override
-  String get salonOpenOnReem => 'Open your salon on Reem';
+  String get salonOpenOnOhara => 'Open your salon on Ohara';
 
   @override
-  String get salonOpenOnReemBody =>
+  String get salonOpenOnOharaBody =>
       'Introduce your salon, services and hours, and let customers book their appointments straight from the app.';
 
   @override

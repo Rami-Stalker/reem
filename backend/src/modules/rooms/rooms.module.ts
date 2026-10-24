@@ -13,7 +13,7 @@ import { RoomsController } from './rooms.controller';
 import { RoomsService } from './rooms.service';
 
 /**
- * Reem Rooms.
+ * Ohara Rooms.
  *
  * Intent → Room → Decision → Purchase, replacing Product → Cart → Checkout as
  * the path a considered purchase takes.
@@ -48,7 +48,7 @@ import { RoomsService } from './rooms.service';
  *    matches `RoomDecision.slot`.
  *  - **Live collaboration.** `RoomEvent` is already an append-only stream keyed
  *    by room; the chat gateway's pattern would carry it.
- *  - **Reem Value.** A room that reached PURCHASED is evidence of a considered
+ *  - **Ohara Value.** A room that reached PURCHASED is evidence of a considered
  *    purchase; a seventh pillar would read `PurchasePlan` rows.
  */
 @Module({

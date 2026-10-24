@@ -2,15 +2,15 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/core/media/media_decode.dart';
-import 'package:reem/core/media/media_variants.dart';
-import 'package:reem/core/router/route_paths.dart';
-import 'package:reem/core/utils/relative_time.dart';
-import 'package:reem/features/social/domain/entities/content_analytics.dart';
-import 'package:reem/features/social/presentation/content_type_labels.dart';
-import 'package:reem/features/social/presentation/providers/social_providers.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/core/media/media_decode.dart';
+import 'package:ohara/core/media/media_variants.dart';
+import 'package:ohara/core/router/route_paths.dart';
+import 'package:ohara/core/utils/relative_time.dart';
+import 'package:ohara/features/social/domain/entities/content_analytics.dart';
+import 'package:ohara/features/social/presentation/content_type_labels.dart';
+import 'package:ohara/features/social/presentation/providers/social_providers.dart';
 
 /// What a boutique can see about its own content, and about the women carrying
 /// its products around.
@@ -29,7 +29,7 @@ class ContentStudioScreen extends ConsumerWidget {
     final reshares = ref.watch(reshareSummaryProvider);
     final promoters = ref.watch(promotersProvider);
 
-    return ReemScrollPage(
+    return OharaScrollPage(
       background: const SellerAtelierBackground(),
       onRefresh: () async {
         ref.invalidate(contentFormatPerformanceProvider);
@@ -47,7 +47,7 @@ class ContentStudioScreen extends ConsumerWidget {
           sliver: SliverList.list(
             children: [
               // ── What is worth making more of ──────────────────────────
-              ReemSectionHeader(title: context.l10n.studioFormats),
+              OharaSectionHeader(title: context.l10n.studioFormats),
               DsGaps.vSm,
               formats.when(
                 loading: () => const DsLoadingIndicator(),
@@ -72,7 +72,7 @@ class ContentStudioScreen extends ConsumerWidget {
 
               // ── How far it travelled ──────────────────────────────────
               DsGaps.vXl,
-              ReemSectionHeader(title: context.l10n.studioReach),
+              OharaSectionHeader(title: context.l10n.studioReach),
               DsGaps.vSm,
               reshares.when(
                 loading: () => const DsLoadingIndicator(),
@@ -82,7 +82,7 @@ class ContentStudioScreen extends ConsumerWidget {
 
               // ── Who is doing the travelling ───────────────────────────
               DsGaps.vXl,
-              ReemSectionHeader(title: context.l10n.studioPromoters),
+              OharaSectionHeader(title: context.l10n.studioPromoters),
               DsGaps.vXxs,
               Text(
                 context.l10n.studioPromotersHelp,

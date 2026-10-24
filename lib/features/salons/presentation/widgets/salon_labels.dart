@@ -1,6 +1,6 @@
-import 'package:reem/features/salons/domain/entities/appointment.dart';
-import 'package:reem/features/salons/domain/entities/salon.dart';
-import 'package:reem/l10n/app_localizations.dart';
+import 'package:ohara/features/salons/domain/entities/appointment.dart';
+import 'package:ohara/features/salons/domain/entities/salon.dart';
+import 'package:ohara/l10n/app_localizations.dart';
 
 /// The words this feature uses for its enums, in one place.
 ///

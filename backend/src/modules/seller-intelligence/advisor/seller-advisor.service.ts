@@ -217,7 +217,7 @@ export class SellerAdvisorService {
   /**
    * Whether her shelf is empty right now.
    *
-   * A flag rather than a duration: Reem does not journal stock changes, so a
+   * A flag rather than a duration: Ohara does not journal stock changes, so a
    * day count would be invented, and an invented number reads as precise on a
    * screen somebody acts on. See the note on `DiagnosisFacts.outOfStockNow`.
    */

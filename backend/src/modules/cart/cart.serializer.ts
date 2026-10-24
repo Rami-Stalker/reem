@@ -11,7 +11,7 @@ export type CartItemRecord =
  * What checkout actually needs from a line, whatever produced it.
  *
  * Checkout used to take `CartItemRecord[]`, which quietly made "a thing that
- * can be bought" mean "a row in the cart table". Reem Rooms buys from a
+ * can be bought" mean "a row in the cart table". Ohara Rooms buys from a
  * `PurchasePlan` and never writes a cart row, so the requirement is stated
  * structurally instead: an offer, an optional variant of it, and how many.
  *

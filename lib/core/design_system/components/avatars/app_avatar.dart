@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:reem/core/design_system/design_system.dart';
+import 'package:ohara/core/design_system/design_system.dart';
 
 /// A profile portrait inside a gradient ring, with an optional hero.
 ///
@@ -10,7 +10,7 @@ import 'package:reem/core/design_system/design_system.dart';
 ///
 /// It used to fall back to a **fixed Unsplash photograph of a stranger** when
 /// no [imageUrl] was given — which is what the settings header passed, so every
-/// woman in Reem saw the same borrowed face where her own belonged. A missing
+/// woman in Ohara saw the same borrowed face where her own belonged. A missing
 /// picture now falls back to her initials, and to nothing at all if even the
 /// name is unknown.
 class AppAvatar extends StatelessWidget {

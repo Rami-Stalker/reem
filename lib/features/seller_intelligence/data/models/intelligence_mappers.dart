@@ -1,4 +1,4 @@
-import 'package:reem/features/seller_intelligence/domain/entities/intelligence.dart';
+import 'package:ohara/features/seller_intelligence/domain/entities/intelligence.dart';
 
 /// Wire → domain.
 ///

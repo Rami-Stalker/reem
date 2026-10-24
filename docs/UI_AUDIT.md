@@ -146,7 +146,7 @@ flow posts those entries.
 The console was run signed in as the super admin: the dashboard and its
 briefing, content, orders, products, users, sellers, seller applications,
 delivery, finance, commissions, analytics, trends, reports, moderation,
-support, audit logs, system settings, Reem Value, notification campaigns and
+support, audit logs, system settings, Ohara Value, notification campaigns and
 analytics, and policies. Every screen loads without an error. A pending
 seller application was approved from the console; the seller is now
 verified and the decision is in the audit log.
@@ -163,7 +163,7 @@ What that run found and fixed:
 | Counts | «قبل 3 ساعة», «قبل 2 دقيقة», «1 حساب وقّع», «2 ملف». | Arabic plurals. The relative-time fix also reaches the buyer and seller apps. |
 | Voice | Three dashboard findings addressed her in the masculine («راجع»). | «راجعي», «شغّلي». |
 
-Left as is on purpose: «Reem Value» is the feature's name in both languages;
+Left as is on purpose: «Ohara Value» is the feature's name in both languages;
 system-setting keys (`auth.female_only_declaration`) and commission rule names
 are data the operator types; and a decision on a seller application needs a
 written reason even when it approves, because the server records it.
@@ -181,7 +181,7 @@ slow drifting orbs that stand still for anyone who asked for less motion.
 On it: her name and a question sized like a magazine cover («ماذا تلبسين
 الليلة؟»), three of the newest pieces pinned like polaroids, live chips that
 only appear when they are true (a deal counting down, boutiques that posted,
-her bag, unread notifications), and «اسألي ريم» — a field that opens the
+her bag, unread notifications), and «اسألي أوهارا» — a field that opens the
 stylist, with an example sentence that changes every few seconds. Scrolling
 folds the sky into a frosted bar that keeps the bag and the bell.
 

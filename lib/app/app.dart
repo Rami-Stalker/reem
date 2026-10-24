@@ -2,15 +2,15 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:reem/app/app_chrome.dart';
-import 'package:reem/app/bootstrap.dart';
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/app_localizations.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/core/notifications/push_coordinator.dart';
-import 'package:reem/core/platform/app_scroll_behavior.dart';
-import 'package:reem/core/platform/system_chrome_controller.dart';
-import 'package:reem/core/router/app_router_provider.dart';
+import 'package:ohara/app/app_chrome.dart';
+import 'package:ohara/app/bootstrap.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/app_localizations.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/core/notifications/push_coordinator.dart';
+import 'package:ohara/core/platform/app_scroll_behavior.dart';
+import 'package:ohara/core/platform/system_chrome_controller.dart';
+import 'package:ohara/core/router/app_router_provider.dart';
 
 class MyApp extends ConsumerStatefulWidget {
   const MyApp({super.key});

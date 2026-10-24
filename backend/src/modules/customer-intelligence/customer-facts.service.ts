@@ -213,11 +213,11 @@ export class CustomerFactsService {
 }
 
 /**
- * Where Reem's customers are.
+ * Where Ohara's customers are.
  *
  * A constant rather than a per-customer field: the platform serves one country,
  * and inventing a timezone column nobody populates would make every contact
- * hour silently UTC anyway. When Reem sells outside Syria this becomes a
+ * hour silently UTC anyway. When Ohara sells outside Syria this becomes a
  * property of the customer, and this is the one place that changes.
  */
 export const PLATFORM_TIMEZONE = 'Asia/Damascus';

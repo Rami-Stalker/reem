@@ -1,9 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:reem/core/presentation/providers/core_providers.dart';
-import 'package:reem/features/auth/presentation/providers/auth_provider.dart';
-import 'package:reem/features/verification/data/datasources/account_verification_datasource.dart';
-import 'package:reem/features/verification/domain/entities/account_verification.dart';
+import 'package:ohara/core/presentation/providers/core_providers.dart';
+import 'package:ohara/features/auth/presentation/providers/auth_provider.dart';
+import 'package:ohara/features/verification/data/datasources/account_verification_datasource.dart';
+import 'package:ohara/features/verification/domain/entities/account_verification.dart';
 
 final accountVerificationDataSourceProvider =
     Provider<AccountVerificationDataSource>(

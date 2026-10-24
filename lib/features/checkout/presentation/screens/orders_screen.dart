@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/core/router/route_paths.dart';
-import 'package:reem/features/checkout/domain/entities/order.dart';
-import 'package:reem/features/checkout/presentation/providers/checkout_providers.dart';
-import 'package:reem/features/checkout/presentation/providers/orders_notifier.dart';
-import 'package:reem/features/checkout/presentation/widgets/order_status_chip.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/core/router/route_paths.dart';
+import 'package:ohara/features/checkout/domain/entities/order.dart';
+import 'package:ohara/features/checkout/presentation/providers/checkout_providers.dart';
+import 'package:ohara/features/checkout/presentation/providers/orders_notifier.dart';
+import 'package:ohara/features/checkout/presentation/widgets/order_status_chip.dart';
 
 /// Her orders, in one of the four piles her profile counts.
 ///
@@ -33,7 +33,7 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen> {
     final l10n = context.l10n;
     final state = ref.watch(ordersNotifierProvider(_bucket));
 
-    return ReemScrollPage(
+    return OharaScrollPage(
       onRefresh: () => ref.read(ordersNotifierProvider(_bucket).notifier).refresh(),
       slivers: [
         PremiumAppBar(title: l10n.myOrders, showBack: true),

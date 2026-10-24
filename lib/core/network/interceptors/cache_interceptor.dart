@@ -2,12 +2,12 @@ import 'dart:async';
 
 import 'package:dio/dio.dart';
 
-import 'package:reem/core/data/cache/cache_policy.dart';
-import 'package:reem/core/network/http_cache/http_cache_entry.dart';
-import 'package:reem/core/network/http_cache/http_cache_rules.dart';
-import 'package:reem/core/network/http_cache/http_cache_store.dart';
-import 'package:reem/core/observability/error_report.dart';
-import 'package:reem/core/observability/error_reporter.dart';
+import 'package:ohara/core/data/cache/cache_policy.dart';
+import 'package:ohara/core/network/http_cache/http_cache_entry.dart';
+import 'package:ohara/core/network/http_cache/http_cache_rules.dart';
+import 'package:ohara/core/network/http_cache/http_cache_store.dart';
+import 'package:ohara/core/observability/error_report.dart';
+import 'package:ohara/core/observability/error_reporter.dart';
 
 /// Whose cache this is.
 ///

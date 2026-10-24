@@ -15,7 +15,7 @@ import {
 import { ValueBenefitKind, ValuePillar } from '@prisma/client';
 
 /**
- * Reem Value's request shapes.
+ * Ohara Value's request shapes.
  *
  * Note how few there are, and that none of them earns anything. There is no
  * "claim", no "redeem", no "convert" — a woman cannot ask this system for

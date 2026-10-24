@@ -11,15 +11,15 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/app_localizations.dart';
-import 'package:reem/core/shared/entities/brand.dart';
-import 'package:reem/core/shared/entities/category.dart';
-import 'package:reem/core/shared/entities/product.dart';
-import 'package:reem/core/shared/entities/seller_offer.dart';
-import 'package:reem/core/shared/entities/user.dart';
-import 'package:reem/core/shared/value_objects/money.dart';
-import 'package:reem/l10n/app_localizations.dart' as gen;
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/app_localizations.dart';
+import 'package:ohara/core/shared/entities/brand.dart';
+import 'package:ohara/core/shared/entities/category.dart';
+import 'package:ohara/core/shared/entities/product.dart';
+import 'package:ohara/core/shared/entities/seller_offer.dart';
+import 'package:ohara/core/shared/entities/user.dart';
+import 'package:ohara/core/shared/value_objects/money.dart';
+import 'package:ohara/l10n/app_localizations.dart' as gen;
 
 final _captureKey = GlobalKey();
 
@@ -117,7 +117,7 @@ Future<void> _capture(WidgetTester tester, String name) async {
 
 final _seller = User(
   id: 's1',
-  name: 'بوتيك ريم',
+  name: 'بوتيك أوهارا',
   username: 'reem_boutique',
   phone: '+963000000000',
   createdAt: DateTime(2026, 1, 1),
@@ -138,7 +138,7 @@ Product _product(String id, String title, int price, {int? was}) {
     title: title,
     description: '',
     category: _category,
-    brand: const Brand(id: 'b1', slug: 'reem', nameAr: 'ريم', nameEn: 'Reem'),
+    brand: const Brand(id: 'b1', slug: 'reem', nameAr: 'أوهارا', nameEn: 'Ohara'),
     createdAt: DateTime(2026, 8, 1),
     media: const [],
     rating: 4.6,

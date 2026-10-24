@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
-import 'package:reem/core/shared/entities/media.dart';
-import 'package:reem/features/social/domain/entities/content.dart';
+import 'package:ohara/core/shared/entities/media.dart';
+import 'package:ohara/features/social/domain/entities/content.dart';
 
 /// A product she is entitled to tag, and why.
 ///

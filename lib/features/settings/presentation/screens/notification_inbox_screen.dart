@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/core/router/route_paths.dart';
-import 'package:reem/core/utils/relative_time.dart';
-import 'package:reem/features/settings/domain/entities/notification_entity.dart';
-import 'package:reem/features/settings/presentation/providers/settings_provider.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/core/router/route_paths.dart';
+import 'package:ohara/core/utils/relative_time.dart';
+import 'package:ohara/features/settings/domain/entities/notification_entity.dart';
+import 'package:ohara/features/settings/presentation/providers/settings_provider.dart';
 
 /// What the shop has told her, newest first.
 ///
@@ -25,7 +25,7 @@ class NotificationInboxScreen extends ConsumerWidget {
     final state = ref.watch(notificationInboxProvider);
     final notifier = ref.read(notificationInboxProvider.notifier);
 
-    return ReemScrollPage(
+    return OharaScrollPage(
       onRefresh: notifier.load,
       slivers: [
         PremiumAppBar(

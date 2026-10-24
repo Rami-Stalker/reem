@@ -1,7 +1,7 @@
-import 'package:reem/core/result/result.dart';
+import 'package:ohara/core/result/result.dart';
 
-import 'package:reem/features/admin/domain/entities/admin_stats_entity.dart';
-import 'package:reem/features/admin/domain/repositories/admin_repository.dart';
+import 'package:ohara/features/admin/domain/entities/admin_stats_entity.dart';
+import 'package:ohara/features/admin/domain/repositories/admin_repository.dart';
 
 class GetAdminStatsUseCase {
   const GetAdminStatsUseCase(this._repository);

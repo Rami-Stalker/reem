@@ -1,9 +1,9 @@
 import 'package:equatable/equatable.dart';
 
-import 'package:reem/core/shared/value_objects/money.dart';
-import 'package:reem/features/checkout/domain/entities/order.dart' show SellerOrderStatus;
+import 'package:ohara/core/shared/value_objects/money.dart';
+import 'package:ohara/features/checkout/domain/entities/order.dart' show SellerOrderStatus;
 
-export 'package:reem/features/checkout/domain/entities/order.dart' show SellerOrderStatus;
+export 'package:ohara/features/checkout/domain/entities/order.dart' show SellerOrderStatus;
 
 /// How a parcel reaches the customer (Q57) — and therefore what the seller is
 /// allowed to see and to do with it.

@@ -81,10 +81,10 @@ export function otpMessageBody(dispatch: OtpDispatch): string {
         : 'رمز تفعيل حسابكِ';
 
   return [
-    `${purposeLine} في ريم: ${dispatch.code}`,
+    `${purposeLine} في أوهارا: ${dispatch.code}`,
     `رمز المطابقة: ${dispatch.matchCode}`,
     `ينتهي خلال ${dispatch.expiresInMinutes} دقائق.`,
-    'لا تشاركي هذا الرمز مع أحد، ولن يطلبه منك فريق ريم أبداً.',
+    'لا تشاركي هذا الرمز مع أحد، ولن يطلبه منك فريق أوهارا أبداً.',
   ].join('\n');
 }
 

@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 
-import 'package:reem/core/observability/error_report.dart';
-import 'package:reem/core/observability/error_reporter.dart';
+import 'package:ohara/core/observability/error_report.dart';
+import 'package:ohara/core/observability/error_reporter.dart';
 
 /// Turns request failures into breadcrumbs, and server faults into reports.
 ///

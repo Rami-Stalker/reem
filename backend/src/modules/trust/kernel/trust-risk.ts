@@ -80,7 +80,7 @@ function reading(reasons: RiskReason[]): RiskReading {
  * Only one signal here is heavy enough to reach the queue alone — identical
  * text, which somebody had to paste. Everything else, the missing purchase
  * included, is worth less than the WATCH band by itself. That is deliberate:
- * Reem lets a customer review without the order being matched (a gift, an
+ * Ohara lets a customer review without the order being matched (a gift, an
  * order placed on a friend's account), and treating every unverified review
  * as fake would empty the honest half of the review section.
  */

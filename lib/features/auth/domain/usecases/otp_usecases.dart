@@ -1,7 +1,7 @@
-import 'package:reem/core/result/result.dart';
-import 'package:reem/features/auth/domain/entities/auth_account.dart';
+import 'package:ohara/core/result/result.dart';
+import 'package:ohara/features/auth/domain/entities/auth_account.dart';
 
-import 'package:reem/features/auth/domain/repositories/auth_repository.dart';
+import 'package:ohara/features/auth/domain/repositories/auth_repository.dart';
 
 class RequestOtpUseCase {
   const RequestOtpUseCase(this._repository);

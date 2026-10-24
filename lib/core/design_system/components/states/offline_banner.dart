@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:reem/core/design_system/foundation/theme/extensions/color_extension.dart';
-import 'package:reem/core/design_system/foundation/theme/extensions/typography_extension.dart';
-import 'package:reem/core/design_system/foundation/tokens/ds_gaps.dart';
-import 'package:reem/core/design_system/foundation/tokens/ds_motion.dart';
-import 'package:reem/core/design_system/foundation/tokens/ds_sizes.dart';
-import 'package:reem/core/design_system/foundation/tokens/ds_spacing.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/core/network/connection_status.dart';
+import 'package:ohara/core/design_system/foundation/theme/extensions/color_extension.dart';
+import 'package:ohara/core/design_system/foundation/theme/extensions/typography_extension.dart';
+import 'package:ohara/core/design_system/foundation/tokens/ds_gaps.dart';
+import 'package:ohara/core/design_system/foundation/tokens/ds_motion.dart';
+import 'package:ohara/core/design_system/foundation/tokens/ds_sizes.dart';
+import 'package:ohara/core/design_system/foundation/tokens/ds_spacing.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/core/network/connection_status.dart';
 
 /// A slim strip that appears when the handset loses its connection.
 ///

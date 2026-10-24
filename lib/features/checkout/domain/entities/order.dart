@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import 'package:reem/core/shared/value_objects/money.dart';
+import 'package:ohara/core/shared/value_objects/money.dart';
 
 /// The lifecycle of one seller's parcel.
 ///
@@ -155,7 +155,7 @@ class OrderShipment extends Equatable {
 
   /// The delivery company carrying this parcel, when one is.
   ///
-  /// Reem does not run drivers: past the seller's door a parcel belongs to a
+  /// Ohara does not run drivers: past the seller's door a parcel belongs to a
   /// carrier, and the two things a woman needs then are its name and its own
   /// number for her box.
   final OrderCarrier? carrier;

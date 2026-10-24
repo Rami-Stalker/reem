@@ -1,14 +1,14 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:reem/core/errors/failure.dart';
-import 'package:reem/core/errors/failure_exception.dart';
-import 'package:reem/core/presentation/providers/core_providers.dart';
-import 'package:reem/core/result/result.dart';
+import 'package:ohara/core/errors/failure.dart';
+import 'package:ohara/core/errors/failure_exception.dart';
+import 'package:ohara/core/presentation/providers/core_providers.dart';
+import 'package:ohara/core/result/result.dart';
 
-import 'package:reem/features/invoices/data/datasources/impl/invoices_remote_datasource_impl.dart';
-import 'package:reem/features/invoices/data/datasources/invoices_remote_datasource.dart';
-import 'package:reem/features/invoices/data/repositories/invoices_repository_impl.dart';
-import 'package:reem/features/invoices/domain/entities/invoice.dart';
-import 'package:reem/features/invoices/domain/repositories/invoices_repository.dart';
+import 'package:ohara/features/invoices/data/datasources/impl/invoices_remote_datasource_impl.dart';
+import 'package:ohara/features/invoices/data/datasources/invoices_remote_datasource.dart';
+import 'package:ohara/features/invoices/data/repositories/invoices_repository_impl.dart';
+import 'package:ohara/features/invoices/domain/entities/invoice.dart';
+import 'package:ohara/features/invoices/domain/repositories/invoices_repository.dart';
 
 final invoicesRemoteDataSourceProvider = Provider<InvoicesRemoteDataSource>(
   (ref) => InvoicesRemoteDataSourceImpl(ref.watch(dioProvider)),

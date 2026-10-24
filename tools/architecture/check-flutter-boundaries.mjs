@@ -58,7 +58,7 @@ for (const file of files) {
     }
   }
 
-  // Every directive inside lib/ must use `package:reem/...`. The
+  // Every directive inside lib/ must use `package:ohara/...`. The
   // `always_use_package_imports` lint covers `import` but not `export`, so the
   // barrels -- which are almost entirely exports -- would drift back silently.
   // Generated localizations are rewritten by `flutter gen-l10n`, so they are

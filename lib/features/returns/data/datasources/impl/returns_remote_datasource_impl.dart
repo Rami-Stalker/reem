@@ -1,10 +1,10 @@
-import 'package:reem/core/network/api_endpoints.dart';
-import 'package:reem/core/network/base_remote_datasource.dart';
-import 'package:reem/features/returns/data/datasources/returns_remote_datasource.dart';
-import 'package:reem/features/returns/data/models/return_eligibility_model.dart';
-import 'package:reem/features/returns/domain/entities/return_eligibility.dart';
-import 'package:reem/features/seller_returns/data/models/return_request_model.dart';
-import 'package:reem/features/seller_returns/domain/entities/return_request.dart';
+import 'package:ohara/core/network/api_endpoints.dart';
+import 'package:ohara/core/network/base_remote_datasource.dart';
+import 'package:ohara/features/returns/data/datasources/returns_remote_datasource.dart';
+import 'package:ohara/features/returns/data/models/return_eligibility_model.dart';
+import 'package:ohara/features/returns/domain/entities/return_eligibility.dart';
+import 'package:ohara/features/seller_returns/data/models/return_request_model.dart';
+import 'package:ohara/features/seller_returns/domain/entities/return_request.dart';
 
 final class ReturnsRemoteDataSourceImpl extends BaseRemoteDataSource
     implements ReturnsRemoteDataSource {

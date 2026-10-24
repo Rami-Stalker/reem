@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'package:reem/app/bootstrap.dart';
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
+import 'package:ohara/app/bootstrap.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
 class LanguageScreen extends StatelessWidget {
   const LanguageScreen({super.key});
 
@@ -14,7 +14,7 @@ class LanguageScreen extends StatelessWidget {
     return ListenableBuilder(
       listenable: locale,
       builder: (context, _) {
-        return ReemScrollPage(
+        return OharaScrollPage(
           slivers: [
             PremiumAppBar(title: l10n.language, showBack: true),
             SliverPadding(

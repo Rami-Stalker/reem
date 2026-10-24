@@ -54,7 +54,7 @@ const MIN_SCORE = 45;
  * slot. That is the whole algorithm, and it is deliberately simple: the hard
  * work — deciding what complements what, and refusing the pairs that merely
  * look related — was already done when the graph was built, and redoing any of
- * it here would give Reem two opinions about the same two garments.
+ * it here would give Ohara two opinions about the same two garments.
  *
  * ── Why bundles cross sellers ────────────────────────────────────────────
  *
@@ -380,7 +380,7 @@ export class BundlesService {
    * Cheaper ways to fill the same slots.
    *
    * The comparison the brief asked for. Substitutes come from the graph, so
-   * an alternative is one Reem already believes is genuinely equivalent — not
+   * an alternative is one Ohara already believes is genuinely equivalent — not
    * merely the cheapest thing in the category.
    */
   async alternativesFor(bundleId: string) {

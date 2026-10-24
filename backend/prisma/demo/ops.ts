@@ -372,7 +372,7 @@ export async function seedBackOffice(ctx: DemoContext): Promise<void> {
         riskLevel: RiskLevel.LOW,
         actorId: customer.id,
         ipAddress: `31.9.${rng.int(1, 254)}.${rng.int(1, 254)}`,
-        userAgent: 'Reem/1.4.0 (android)',
+        userAgent: 'Ohara/1.4.0 (android)',
         createdAt: rng.pastDate(20),
       },
     });

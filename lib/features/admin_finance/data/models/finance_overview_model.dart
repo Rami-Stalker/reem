@@ -1,5 +1,5 @@
-import 'package:reem/core/shared/value_objects/money.dart';
-import 'package:reem/features/admin_finance/domain/entities/finance_overview.dart';
+import 'package:ohara/core/shared/value_objects/money.dart';
+import 'package:ohara/features/admin_finance/domain/entities/finance_overview.dart';
 
 /// Wire → domain for the finance console.
 ///

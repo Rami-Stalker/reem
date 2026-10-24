@@ -14,18 +14,18 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/errors/failure.dart';
-import 'package:reem/core/localization/app_localizations.dart';
-import 'package:reem/core/result/result.dart';
-import 'package:reem/features/auth/domain/entities/auth_account.dart';
-import 'package:reem/features/auth/domain/repositories/auth_repository.dart';
-import 'package:reem/features/auth/presentation/providers/auth_account_provider.dart';
-import 'package:reem/features/auth/presentation/providers/auth_provider.dart';
-import 'package:reem/features/auth/presentation/screens/seller_verification_screen.dart';
-import 'package:reem/features/policies/domain/entities/policy_document.dart';
-import 'package:reem/features/policies/presentation/providers/policies_provider.dart';
-import 'package:reem/l10n/app_localizations.dart' as gen;
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/errors/failure.dart';
+import 'package:ohara/core/localization/app_localizations.dart';
+import 'package:ohara/core/result/result.dart';
+import 'package:ohara/features/auth/domain/entities/auth_account.dart';
+import 'package:ohara/features/auth/domain/repositories/auth_repository.dart';
+import 'package:ohara/features/auth/presentation/providers/auth_account_provider.dart';
+import 'package:ohara/features/auth/presentation/providers/auth_provider.dart';
+import 'package:ohara/features/auth/presentation/screens/seller_verification_screen.dart';
+import 'package:ohara/features/policies/domain/entities/policy_document.dart';
+import 'package:ohara/features/policies/presentation/providers/policies_provider.dart';
+import 'package:ohara/l10n/app_localizations.dart' as gen;
 
 final _captureKey = GlobalKey();
 
@@ -180,7 +180,7 @@ final _policies = [
     slug: 'seller-terms',
     audience: PolicyAudience.seller,
     title: 'شروط استخدام البائع',
-    summary: 'شروط فتح متجر على ريم: التوثيق، البضاعة، التجهيز، المستحقات.',
+    summary: 'شروط فتح متجر على أوهارا: التوثيق، البضاعة، التجهيز، المستحقات.',
     versionId: '11111111-1111-1111-1111-111111111111',
     version: 1,
     requiredForConsent: true,

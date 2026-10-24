@@ -26,7 +26,7 @@ export async function seedAuthTrail(ctx: DemoContext): Promise<void> {
           phone: customer.phone,
           success: true,
           ipAddress: `31.9.${rng.int(1, 254)}.${rng.int(1, 254)}`,
-          userAgent: 'Reem/1.4.0 (android)',
+          userAgent: 'Ohara/1.4.0 (android)',
           createdAt: rng.pastDate(30),
         },
       });

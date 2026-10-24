@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/features/seller_returns/domain/entities/return_request.dart';
-import 'package:reem/features/seller_returns/presentation/providers/seller_returns_provider.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/features/seller_returns/domain/entities/return_request.dart';
+import 'package:ohara/features/seller_returns/presentation/providers/seller_returns_provider.dart';
 
 /// Every seller-facing word for a return, in one place.
 ///

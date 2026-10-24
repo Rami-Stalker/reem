@@ -346,7 +346,7 @@ export async function seedDeviceFootprint(
         deviceId: deviceRow.id,
         status: 'ACTIVE',
         ipAddress: `31.9.${rng.int(1, 254)}.${rng.int(1, 254)}`,
-        userAgent: `Reem/${device.version} (${device.platform})`,
+        userAgent: `Ohara/${device.version} (${device.platform})`,
         lastSeenAt: rng.pastDate(3),
         idleExpiresAt: rng.futureDate(7, 1),
         absoluteExpiresAt: rng.futureDate(90, 30),

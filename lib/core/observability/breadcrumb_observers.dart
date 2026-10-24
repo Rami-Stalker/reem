@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:reem/core/observability/error_reporter.dart';
+import 'package:ohara/core/observability/error_reporter.dart';
 
 /// Records what she was doing, so a crash report says more than "it threw".
 ///

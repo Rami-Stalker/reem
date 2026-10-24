@@ -36,7 +36,7 @@ function preview(overrides: Partial<SharePreview> = {}): SharePreview {
     kind: 'product',
     path: '/product/abc',
     appRoute: '/product-details?id=abc',
-    label: 'منتج على ريم',
+    label: 'منتج على أوهارا',
     title: 'فستان سهرة',
     description: 'حرير بنقشة وردية',
     imageUrl: 'https://cdn.example.com/dress.jpg',
@@ -102,7 +102,7 @@ test('the product app route keeps the query-parameter spelling the app routes on
 });
 
 test('an invitation is never intercepted by the app', () => {
-  // The one person an invite is written for is the one person without Reem.
+  // The one person an invite is written for is the one person without Ohara.
   assert.ok(!APP_HANDLED_KINDS.includes('referral'));
 });
 
@@ -275,7 +275,7 @@ test('a dead link is a branded page that keeps itself out of the index', () => {
     canonicalUrl: 'https://links.example.com/product/gone',
     headline: 'لم نجد هذا الرابط',
     detail: 'قد تكون البائعة أزالت هذا المنتج.',
-    cta: { label: 'تصفّحي ريم', url: 'https://links.example.com/' },
+    cta: { label: 'تصفّحي أوهارا', url: 'https://links.example.com/' },
   });
   assert.ok(html.includes('<meta name="robots" content="noindex">'));
   assert.ok(html.includes('لم نجد هذا الرابط'));
@@ -286,7 +286,7 @@ test('a dead link is a branded page that keeps itself out of the index', () => {
 test('the site root is indexable and needs no call to action', () => {
   const html = renderMessagePage({
     canonicalUrl: 'https://links.example.com/',
-    headline: 'ريم',
+    headline: 'أوهارا',
     detail: 'سوق نسائي.',
     cta: null,
     noindex: false,

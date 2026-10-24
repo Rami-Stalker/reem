@@ -204,7 +204,7 @@ export class MarketEconomicsService {
     const needs = await this.needsByCategory();
 
     // The platform's own median price, so a category's price index means
-    // "dearer than Reem" rather than "dearer than itself".
+    // "dearer than Ohara" rather than "dearer than itself".
     const prices = rows
       .map((r) => (r.median_price === null ? null : Number(r.median_price)))
       .filter((p): p is number => p !== null)

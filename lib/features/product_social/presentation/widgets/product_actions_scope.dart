@@ -1,8 +1,8 @@
 import 'package:flutter/widgets.dart';
 
-import 'package:reem/core/design_system/patterns/product_actions.dart';
-import 'package:reem/core/shared/entities/product.dart';
-import 'package:reem/features/product_social/presentation/widgets/product_like_button.dart';
+import 'package:ohara/core/design_system/patterns/product_actions.dart';
+import 'package:ohara/core/shared/entities/product.dart';
+import 'package:ohara/features/product_social/presentation/widgets/product_like_button.dart';
 
 /// Installs the product interactions, once, for the whole app.
 ///

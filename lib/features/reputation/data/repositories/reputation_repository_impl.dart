@@ -1,9 +1,9 @@
-import 'package:reem/core/base/repository_handler.dart';
-import 'package:reem/core/result/result.dart';
-import 'package:reem/features/reputation/data/datasources/reputation_remote_datasource.dart';
-import 'package:reem/features/reputation/domain/entities/fit_entities.dart';
-import 'package:reem/features/reputation/domain/entities/reputation_entities.dart';
-import 'package:reem/features/reputation/domain/repositories/reputation_repository.dart';
+import 'package:ohara/core/base/repository_handler.dart';
+import 'package:ohara/core/result/result.dart';
+import 'package:ohara/features/reputation/data/datasources/reputation_remote_datasource.dart';
+import 'package:ohara/features/reputation/domain/entities/fit_entities.dart';
+import 'package:ohara/features/reputation/domain/entities/reputation_entities.dart';
+import 'package:ohara/features/reputation/domain/repositories/reputation_repository.dart';
 
 class ReputationRepositoryImpl
     with RepositoryHandler

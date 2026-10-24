@@ -1,7 +1,7 @@
-import 'package:reem/features/seller_products/data/models/managed_product_model.dart';
-import 'package:reem/features/seller_products/data/models/managed_product_page_model.dart';
-import 'package:reem/features/seller_products/domain/entities/product_draft.dart';
-import 'package:reem/features/seller_products/domain/entities/product_status.dart';
+import 'package:ohara/features/seller_products/data/models/managed_product_model.dart';
+import 'package:ohara/features/seller_products/data/models/managed_product_page_model.dart';
+import 'package:ohara/features/seller_products/domain/entities/product_draft.dart';
+import 'package:ohara/features/seller_products/domain/entities/product_status.dart';
 
 /// Every mutation is addressed by the OFFER's id, except [updateProduct],
 /// which edits the shared catalogue entry and therefore takes the product's.

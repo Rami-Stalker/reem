@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/core/router/route_paths.dart';
-import 'package:reem/features/occasions/presentation/providers/occasions_providers.dart';
-import 'package:reem/features/occasions/presentation/widgets/occasion_card.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/core/router/route_paths.dart';
+import 'package:ohara/features/occasions/presentation/providers/occasions_providers.dart';
+import 'package:ohara/features/occasions/presentation/widgets/occasion_card.dart';
 
 /// «مناسباتي».
 ///
@@ -36,7 +36,7 @@ class _OccasionsScreenState extends ConsumerState<OccasionsScreen>
     final c = context.dsColors;
     return Scaffold(
       backgroundColor: c.background,
-      appBar: ReemAppBar(
+      appBar: OharaAppBar(
         title: context.l10n.occasionsTitle,
         actions: [
           IconButton(

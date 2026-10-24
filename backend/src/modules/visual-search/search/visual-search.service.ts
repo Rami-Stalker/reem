@@ -69,7 +69,7 @@ export interface VisualSearchView {
 }
 
 /**
- * Reem Visual Shopping — the orchestrator.
+ * Ohara Visual Shopping — the orchestrator.
  *
  * It owns the sequence and nothing else. Every step below belongs to a service
  * that can be tested, replaced or switched off on its own:

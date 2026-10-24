@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/core/shared/entities/story.dart';
-import 'package:reem/features/home/presentation/providers/home_provider.dart';
-import 'package:reem/features/home/presentation/widgets/home_section_header.dart';
-import 'package:reem/features/stories/presentation/screens/story_viewer_screen.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/core/shared/entities/story.dart';
+import 'package:ohara/features/home/presentation/providers/home_provider.dart';
+import 'package:ohara/features/home/presentation/widgets/home_section_header.dart';
+import 'package:ohara/features/stories/presentation/screens/story_viewer_screen.dart';
 
 /// The boutiques' stories — today's frames from the shops she follows.
 ///

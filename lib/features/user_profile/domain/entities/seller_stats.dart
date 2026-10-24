@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:reem/core/shared/value_objects/money.dart';
+import 'package:ohara/core/shared/value_objects/money.dart';
 
 /// Aggregate commercial stats for a seller's storefront.
 class SellerStats extends Equatable {

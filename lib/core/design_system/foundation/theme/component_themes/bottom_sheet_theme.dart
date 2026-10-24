@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:reem/core/design_system/foundation/theme/ds_theme_extension.dart';
-import 'package:reem/core/design_system/foundation/tokens/ds_elevations.dart';
-import 'package:reem/core/design_system/foundation/tokens/ds_radius.dart';
+import 'package:ohara/core/design_system/foundation/theme/ds_theme_extension.dart';
+import 'package:ohara/core/design_system/foundation/tokens/ds_elevations.dart';
+import 'package:ohara/core/design_system/foundation/tokens/ds_radius.dart';
 
 BottomSheetThemeData dsBottomSheetTheme(DsThemeExtension ds) {
   final c = ds.colors;

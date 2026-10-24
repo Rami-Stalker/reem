@@ -37,7 +37,7 @@ if (googleServicesFile.exists()) {
     apply(plugin = "com.google.gms.google-services")
 } else {
     logger.lifecycle(
-        "reem: android/app/google-services.json not found — push notifications " +
+        "ohara: android/app/google-services.json not found — push notifications " +
             "are disabled in this build. See lib/core/notifications/push_config.dart.",
     )
 }
@@ -73,7 +73,7 @@ val hasReleaseKeystore = releaseKeystoreFile?.exists() == true
 
 if (!hasReleaseKeystore) {
     logger.warn(
-        "reem: no release keystore configured (android/key.properties). " +
+        "ohara: no release keystore configured (android/key.properties). " +
             "Release builds will be signed with the DEBUG key and cannot be " +
             "published. See android/key.properties.example.",
     )

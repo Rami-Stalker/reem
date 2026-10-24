@@ -16,7 +16,7 @@ import { seasonMatches } from '../items/garment-descriptor';
  * they are, and this rides on top as a bounded adjustment — see
  * `ClosetSuggestionService`. Rewriting the ranker to know about closets would
  * have coupled the conversational stylist to a table it has no business
- * reading, and would have given Reem two ranking functions to keep honest.
+ * reading, and would have given Ohara two ranking functions to keep honest.
  *
  * Pure, like the ranker, and for the same reason: a suggestion whose reasons
  * cannot be reproduced is a suggestion that cannot be defended.

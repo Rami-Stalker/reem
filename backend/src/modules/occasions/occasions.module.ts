@@ -7,7 +7,7 @@ import { OccasionsService } from './occasions.service';
 /**
  * «مناسباتي».
  *
- * She writes down a day — her cousin's wedding, Eid, a graduation — and Reem
+ * She writes down a day — her cousin's wedding, Eid, a graduation — and Ohara
  * helps her get ready for it: a countdown, a look from her closet, a salon
  * booked in time, the gift, and a warning when the people who will be there
  * have already seen the dress.

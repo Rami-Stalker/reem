@@ -1,13 +1,13 @@
 # Notifications
 
-How Reem tells a woman something, and how that reaches her when the app is
+How Ohara tells a woman something, and how that reaches her when the app is
 closed.
 
 ---
 
 ## What this is
 
-Reem has always had *notifications* in the sense of rows in a table. It did not
+Ohara has always had *notifications* in the sense of rows in a table. It did not
 have notifications in the sense that matters: something that appears on a phone
 whose owner is not looking at it. The server collected device tokens through an
 endpoint no client ever called, stamped `PUSH` deliveries `SENT` without
@@ -144,7 +144,7 @@ Three of the four look fine in a debug session, which is why this is the part
 that is usually half-built:
 
 1. **Foreground.** Neither platform draws anything. The app is told and
-   decides; Reem draws it with `flutter_local_notifications` so it looks
+   decides; Ohara draws it with `flutter_local_notifications` so it looks
    identical to the other three.
 2. **Background.** The system draws it. The app is woken on tap.
 3. **Terminated, tapped.** The app is launched cold by the tap and the message

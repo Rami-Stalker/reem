@@ -30,7 +30,7 @@ const DAY_MS = 24 * 60 * 60 * 1000;
 const ATTENTION_ORDER: Disposition[] = ['RESELL', 'DONATE', 'RESTYLE'];
 
 /**
- * Reem Life Cycle, and the resale market that grows out of it.
+ * Ohara Life Cycle, and the resale market that grows out of it.
  *
  * The closet already knows what she owns and when she last wore it; the graph
  * already knows what goes with what. This service adds no facts. It reads

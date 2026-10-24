@@ -31,7 +31,7 @@ export class DeliveryProviderBootstrap implements OnModuleInit {
         data: {
           code: 'internal',
           adapter: 'internal',
-          displayName: 'فريق ريم للتوصيل',
+          displayName: 'فريق أوهارا للتوصيل',
           kind: DeliveryProviderKind.INTERNAL,
           isEnabled: true,
           isDefault: true,

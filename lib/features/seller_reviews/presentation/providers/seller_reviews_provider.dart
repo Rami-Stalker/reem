@@ -1,13 +1,13 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 
-import 'package:reem/core/presentation/providers/core_providers.dart';
-import 'package:reem/core/result/result.dart';
-import 'package:reem/features/seller_reviews/data/datasources/impl/seller_reviews_remote_datasource_impl.dart';
-import 'package:reem/features/seller_reviews/data/datasources/seller_reviews_remote_datasource.dart';
-import 'package:reem/features/seller_reviews/data/repositories/seller_reviews_repository_impl.dart';
-import 'package:reem/features/seller_reviews/domain/entities/seller_review.dart';
-import 'package:reem/features/seller_reviews/domain/repositories/seller_reviews_repository.dart';
+import 'package:ohara/core/presentation/providers/core_providers.dart';
+import 'package:ohara/core/result/result.dart';
+import 'package:ohara/features/seller_reviews/data/datasources/impl/seller_reviews_remote_datasource_impl.dart';
+import 'package:ohara/features/seller_reviews/data/datasources/seller_reviews_remote_datasource.dart';
+import 'package:ohara/features/seller_reviews/data/repositories/seller_reviews_repository_impl.dart';
+import 'package:ohara/features/seller_reviews/domain/entities/seller_review.dart';
+import 'package:ohara/features/seller_reviews/domain/repositories/seller_reviews_repository.dart';
 
 final sellerReviewsRemoteDataSourceProvider =
     Provider<SellerReviewsRemoteDataSource>(

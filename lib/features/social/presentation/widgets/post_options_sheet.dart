@@ -5,18 +5,18 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/core/result/result.dart';
-import 'package:reem/core/router/route_paths.dart';
-import 'package:reem/core/shared/entities/user.dart';
-import 'package:reem/core/shared/services/share_service.dart';
-import 'package:reem/features/auth/presentation/providers/auth_provider.dart';
-import 'package:reem/features/auth/presentation/widgets/auth_prompt_sheet.dart';
-import 'package:reem/features/social/domain/entities/content.dart';
-import 'package:reem/features/social/presentation/providers/social_providers.dart';
-import 'package:reem/features/social/presentation/widgets/edit_content_sheet.dart';
-import 'package:reem/features/social/presentation/widgets/report_sheet.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/core/result/result.dart';
+import 'package:ohara/core/router/route_paths.dart';
+import 'package:ohara/core/shared/entities/user.dart';
+import 'package:ohara/core/shared/services/share_service.dart';
+import 'package:ohara/features/auth/presentation/providers/auth_provider.dart';
+import 'package:ohara/features/auth/presentation/widgets/auth_prompt_sheet.dart';
+import 'package:ohara/features/social/domain/entities/content.dart';
+import 'package:ohara/features/social/presentation/providers/social_providers.dart';
+import 'package:ohara/features/social/presentation/widgets/edit_content_sheet.dart';
+import 'package:ohara/features/social/presentation/widgets/report_sheet.dart';
 
 /// What the «…» on a post is about.
 ///
@@ -96,7 +96,7 @@ enum _PostAction {
 ///
 /// It used to be a glyph that did nothing — or, on a post with a product,
 /// quietly opened the product, which is not what three dots promise. What a
-/// woman expects behind them is the Instagram set, in Reem's register: the
+/// woman expects behind them is the Instagram set, in Ohara's register: the
 /// quiet exits first («غير مهتمة», hide this account), then the useful ones,
 /// and the report last and in red.
 ///

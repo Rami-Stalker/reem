@@ -1,4 +1,4 @@
-import 'package:reem/core/shared/models/product_model.dart';
+import 'package:ohara/core/shared/models/product_model.dart';
 
 abstract interface class CatalogRemoteDataSource {
   Future<List<ProductModel>> getTrendingProducts();

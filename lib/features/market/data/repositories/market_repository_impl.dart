@@ -1,8 +1,8 @@
-import 'package:reem/core/base/repository_handler.dart';
-import 'package:reem/core/result/result.dart';
-import 'package:reem/features/market/data/datasources/market_remote_datasource.dart';
-import 'package:reem/features/market/domain/entities/market.dart';
-import 'package:reem/features/market/domain/repositories/market_repository.dart';
+import 'package:ohara/core/base/repository_handler.dart';
+import 'package:ohara/core/result/result.dart';
+import 'package:ohara/features/market/data/datasources/market_remote_datasource.dart';
+import 'package:ohara/features/market/domain/entities/market.dart';
+import 'package:ohara/features/market/domain/repositories/market_repository.dart';
 
 class MarketRepositoryImpl with RepositoryHandler implements MarketRepository {
   const MarketRepositoryImpl(this.remote);

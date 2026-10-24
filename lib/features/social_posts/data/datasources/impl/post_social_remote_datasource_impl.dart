@@ -1,10 +1,10 @@
-import 'package:reem/core/network/api_endpoints.dart';
-import 'package:reem/core/network/base_remote_datasource.dart';
-import 'package:reem/core/shared/models/comment_model.dart';
-import 'package:reem/features/social_posts/data/datasources/post_social_remote_datasource.dart';
-import 'package:reem/features/social_posts/data/models/comment_page_model.dart';
-import 'package:reem/features/social_posts/data/models/post_engagement_model.dart';
-import 'package:reem/features/social_posts/domain/entities/comment_thread.dart';
+import 'package:ohara/core/network/api_endpoints.dart';
+import 'package:ohara/core/network/base_remote_datasource.dart';
+import 'package:ohara/core/shared/models/comment_model.dart';
+import 'package:ohara/features/social_posts/data/datasources/post_social_remote_datasource.dart';
+import 'package:ohara/features/social_posts/data/models/comment_page_model.dart';
+import 'package:ohara/features/social_posts/data/models/post_engagement_model.dart';
+import 'package:ohara/features/social_posts/domain/entities/comment_thread.dart';
 
 final class PostSocialRemoteDataSourceImpl extends BaseRemoteDataSource
     implements PostSocialRemoteDataSource {

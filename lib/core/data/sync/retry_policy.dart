@@ -1,4 +1,4 @@
-import 'package:reem/core/errors/app_exception.dart';
+import 'package:ohara/core/errors/app_exception.dart';
 
 typedef RetryClassifier = bool Function(Object error);
 

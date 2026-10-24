@@ -28,7 +28,7 @@ export type ReverseStatus = 'pending' | 'verified' | 'unusable';
  * we receive — so the failure has nowhere to occur, and it needs no aggregator
  * contract, which under sanctions is the other thing that can be taken away.
  *
- * It buys one more thing. `matchCode` exists because of "this is Reem support,
+ * It buys one more thing. `matchCode` exists because of "this is Ohara support,
  * read me your code"; it mitigates that attack by making a recited code
  * visibly wrong. A code that travels *from* her handset cannot be recited at
  * all: an attacker wanting her number verified would have to send the message

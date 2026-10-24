@@ -1,8 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
-import 'package:reem/core/presentation/providers/core_providers.dart';
-import 'package:reem/features/value/data/datasources/value_admin_remote_datasource.dart';
-import 'package:reem/features/value/domain/entities/value_admin.dart';
+import 'package:ohara/core/presentation/providers/core_providers.dart';
+import 'package:ohara/features/value/data/datasources/value_admin_remote_datasource.dart';
+import 'package:ohara/features/value/domain/entities/value_admin.dart';
 
 final valueAdminDataSourceProvider = Provider<ValueAdminRemoteDataSource>(
   (ref) => ValueAdminRemoteDataSourceImpl(ref.watch(dioProvider)),

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <!--
-  Reem's privacy manifest.
+  Ohara's privacy manifest.
 
   Apple has required one of these since spring 2024 and rejects an upload that
   uses a required-reason API without declaring why. The app had none. Third
@@ -27,7 +27,7 @@
   same commit.
 
   NSPrivacyCollectedDataTypes below lists what the client demonstrably sends to
-  Reem's own server. It must be kept in step with the answers given in App
+  Ohara's own server. It must be kept in step with the answers given in App
   Store Connect's privacy questionnaire; the two are checked against each other
   during review.
 -->

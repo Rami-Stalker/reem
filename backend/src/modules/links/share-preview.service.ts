@@ -137,7 +137,7 @@ export class SharePreviewService {
       kind: 'product',
       path: buildPath(SHARE_PATHS.product, { id: product.id }),
       appRoute: appRouteFor('product', { id: product.id }),
-      label: 'منتج على ريم',
+      label: 'منتج على أوهارا',
       title: product.title,
       description: summarise(product.description, product.title),
       // The real description or nothing. Falling back to the title here would
@@ -223,10 +223,10 @@ export class SharePreviewService {
 
     const label =
       content.contentType === 'reel'
-        ? 'ريل على ريم'
+        ? 'ريل على أوهارا'
         : content.contentType === 'story'
-          ? 'قصة على ريم'
-          : 'منشور على ريم';
+          ? 'قصة على أوهارا'
+          : 'منشور على أوهارا';
 
     const caption = content.title?.trim() || content.body?.trim() || '';
     const taggedProduct = content.productTags[0]?.product ?? null;
@@ -246,15 +246,15 @@ export class SharePreviewService {
       path: buildPath(SHARE_PATHS.content, { id: content.id }),
       appRoute: appRouteFor('content', { id: content.id }),
       label,
-      title: caption ? truncate(caption, 70) : `${content.author.name} على ريم`,
+      title: caption ? truncate(caption, 70) : `${content.author.name} على أوهارا`,
       // The caption is already the headline, so repeating it as the description
       // gives a messenger two identical lines. This says who wrote it and what
       // it is about instead — which is the part the headline leaves out.
       description: summarise(
         caption && caption.length > 70 ? caption : null,
         tagged
-          ? `${content.author.name} تنسّق ${tagged} — على ريم`
-          : `شاهدي ما نشرته ${content.author.name} على ريم`,
+          ? `${content.author.name} تنسّق ${tagged} — على أوهارا`
+          : `شاهدي ما نشرته ${content.author.name} على أوهارا`,
       ),
       body: caption || null,
       // A post with no picture of its own is usually a post *about* a piece.
@@ -308,19 +308,19 @@ export class SharePreviewService {
       facts.push({ label: 'قطعة معروضة', value: formatCount(liveOffers) });
     }
 
-    const label = isSeller ? 'بائعة على ريم' : 'صفحة على ريم';
+    const label = isSeller ? 'بائعة على أوهارا' : 'صفحة على أوهارا';
 
     return {
       kind,
       path: buildPath(SHARE_PATHS[kind], { id: user.id }),
       appRoute: appRouteFor(kind, { id: user.id }),
-      label: kind === 'storefront' ? 'متجر على ريم' : label,
+      label: kind === 'storefront' ? 'متجر على أوهارا' : label,
       title: user.name,
       description: summarise(
         user.bio,
         isSeller
-          ? `تسوّقي من ${user.name} على ريم`
-          : `تابعي ${user.name} على ريم`,
+          ? `تسوّقي من ${user.name} على أوهارا`
+          : `تابعي ${user.name} على أوهارا`,
       ),
       body: user.bio?.trim() || null,
       imageUrl: this.absolutise(user.imageUrl, origin),
@@ -352,9 +352,9 @@ export class SharePreviewService {
       kind: 'collection',
       path: buildPath(SHARE_PATHS.collection, { key }),
       appRoute: appRouteFor('collection', { key }),
-      label: 'مجموعة على ريم',
+      label: 'مجموعة على أوهارا',
       title,
-      description: `تصفّحي «${title}» على ريم`,
+      description: `تصفّحي «${title}» على أوهارا`,
       imageUrl: this.absolutise(product?.media[0]?.url, origin),
     };
   }
@@ -406,8 +406,8 @@ export class SharePreviewService {
       // Nothing in the app consumes a code yet, so the invitation opens the
       // catalogue rather than a screen that would silently drop it.
       appRoute: '/home',
-      label: 'دعوة إلى ريم',
-      title: `${referral.user.name} تدعوكِ إلى ريم`,
+      label: 'دعوة إلى أوهارا',
+      title: `${referral.user.name} تدعوكِ إلى أوهارا`,
       description:
         'سوق نسائي للأزياء والجمال — استخدمي رمز الدعوة عند إنشاء حسابكِ.',
       imageUrl: this.absolutise(referral.user.imageUrl, origin),
@@ -473,11 +473,11 @@ export class SharePreviewService {
       // The canonical link is the slug's, whichever form was followed.
       path: buildPath(SHARE_PATHS.salon, { id: salon.slug }),
       appRoute: appRouteFor('salon', { id: salon.slug }),
-      label: 'صالون على ريم',
+      label: 'صالون على أوهارا',
       title: salon.name,
       description: summarise(
         salon.tagline ?? salon.about,
-        `${salon.city} — احجزي موعدكِ على ريم`,
+        `${salon.city} — احجزي موعدكِ على أوهارا`,
       ),
       body: salon.about?.trim() || null,
       imageUrl:
@@ -538,7 +538,7 @@ export const COLLECTION_TITLES: Record<string, string> = {
   trending: 'الأكثر رواجاً',
   best_selling: 'الأكثر مبيعاً',
   new_arrivals: 'وصل حديثاً',
-  featured: 'مختارات ريم',
+  featured: 'مختارات أوهارا',
   most_loved: 'الأكثر إعجاباً',
   top_rated: 'الأعلى تقييماً',
   recommended: 'مختارة لكِ',

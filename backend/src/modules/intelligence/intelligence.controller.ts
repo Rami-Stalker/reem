@@ -35,7 +35,7 @@ export class IntelligenceController {
   ) {}
 
   /**
-   * What Reem has to say about this product, to whoever is asking.
+   * What Ohara has to say about this product, to whoever is asking.
    *
    * `@OptionalAuth`, not `@Public`. The difference is the whole endpoint: a
    * public route skips authentication altogether, so `req.user` is never

@@ -1,4 +1,4 @@
-import 'package:reem/features/rewards/domain/entities/rewards_hub.dart';
+import 'package:ohara/features/rewards/domain/entities/rewards_hub.dart';
 
 class RewardsHubModel extends RewardsHub {
   const RewardsHubModel({

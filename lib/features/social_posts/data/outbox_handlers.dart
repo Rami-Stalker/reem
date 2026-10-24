@@ -1,6 +1,6 @@
-import 'package:reem/core/network/api_endpoints.dart';
-import 'package:reem/core/network/base_remote_datasource.dart';
-import 'package:reem/core/sync/outbox_intent.dart';
+import 'package:ohara/core/network/api_endpoints.dart';
+import 'package:ohara/core/network/base_remote_datasource.dart';
+import 'package:ohara/core/sync/outbox_intent.dart';
 
 /// The engagement kinds the outbox knows how to settle.
 abstract final class EngagementIntents {

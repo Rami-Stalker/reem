@@ -1,9 +1,9 @@
-import 'package:reem/core/base/repository_handler.dart';
-import 'package:reem/core/result/result.dart';
-import 'package:reem/features/discovery/domain/entities/product_page.dart';
-import 'package:reem/features/product_social/data/datasources/product_social_remote_datasource.dart';
-import 'package:reem/features/product_social/domain/entities/product_engagement.dart';
-import 'package:reem/features/product_social/domain/repositories/product_social_repository.dart';
+import 'package:ohara/core/base/repository_handler.dart';
+import 'package:ohara/core/result/result.dart';
+import 'package:ohara/features/discovery/domain/entities/product_page.dart';
+import 'package:ohara/features/product_social/data/datasources/product_social_remote_datasource.dart';
+import 'package:ohara/features/product_social/domain/entities/product_engagement.dart';
+import 'package:ohara/features/product_social/domain/repositories/product_social_repository.dart';
 
 final class ProductSocialRepositoryImpl
     with RepositoryHandler

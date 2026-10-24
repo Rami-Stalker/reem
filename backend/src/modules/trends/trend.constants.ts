@@ -1,5 +1,5 @@
 /**
- * Every tuning number the Reem Trend Engine uses, in one file.
+ * Every tuning number the Ohara Trend Engine uses, in one file.
  *
  * They are constants rather than environment variables on purpose. A weight is
  * not configuration — it is part of the definition of the score, and a score

@@ -8,12 +8,12 @@ import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:reem/core/data/cache/cache_policy.dart';
-import 'package:reem/core/network/api_client.dart';
-import 'package:reem/core/network/http_cache/http_cache_entry.dart';
-import 'package:reem/core/network/http_cache/http_cache_rules.dart';
-import 'package:reem/core/network/http_cache/http_cache_store.dart';
-import 'package:reem/core/network/interceptors/cache_interceptor.dart';
+import 'package:ohara/core/data/cache/cache_policy.dart';
+import 'package:ohara/core/network/api_client.dart';
+import 'package:ohara/core/network/http_cache/http_cache_entry.dart';
+import 'package:ohara/core/network/http_cache/http_cache_rules.dart';
+import 'package:ohara/core/network/http_cache/http_cache_store.dart';
+import 'package:ohara/core/network/interceptors/cache_interceptor.dart';
 
 /// A stand-in transport: counts the calls it serves and can be told to fail.
 class _CountingAdapter implements HttpClientAdapter {

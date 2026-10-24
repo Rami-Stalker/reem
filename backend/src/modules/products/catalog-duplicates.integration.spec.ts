@@ -15,7 +15,7 @@ import { CatalogDuplicatesService } from './catalog-duplicates.service';
 /**
  * One garment, listed twice.
  *
- * Reem's catalogue puts one `Product` row behind many `SellerOffer` rows so
+ * Ohara's catalogue puts one `Product` row behind many `SellerOffer` rows so
  * that boutiques selling the same dress compete on one page. A second product
  * row for a garment that already exists splits those offers in half, and the
  * comparison the design exists to provide silently stops happening. Nothing

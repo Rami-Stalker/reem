@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'package:reem/core/design_system/foundation/theme/accessibility/contrast_profiles.dart';
-export 'package:reem/core/design_system/foundation/theme/accessibility/contrast_profiles.dart';
-export 'package:reem/core/design_system/foundation/theme/accessibility/reduced_motion_theme.dart';
+import 'package:ohara/core/design_system/foundation/theme/accessibility/contrast_profiles.dart';
+export 'package:ohara/core/design_system/foundation/theme/accessibility/contrast_profiles.dart';
+export 'package:ohara/core/design_system/foundation/theme/accessibility/reduced_motion_theme.dart';
 
 /// Accessibility configuration bundle for theme factory.
 @immutable

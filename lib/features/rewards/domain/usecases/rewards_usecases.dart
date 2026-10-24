@@ -1,7 +1,7 @@
-import 'package:reem/core/result/result.dart';
+import 'package:ohara/core/result/result.dart';
 
-import 'package:reem/features/rewards/domain/entities/rewards_hub.dart';
-import 'package:reem/features/rewards/domain/repositories/rewards_repository.dart';
+import 'package:ohara/features/rewards/domain/entities/rewards_hub.dart';
+import 'package:ohara/features/rewards/domain/repositories/rewards_repository.dart';
 
 class LoadRewardsHubUseCase {
   const LoadRewardsHubUseCase(this.repository);

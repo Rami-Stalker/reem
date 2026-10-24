@@ -1,9 +1,9 @@
-import 'package:reem/core/domain/pagination/paginated_data.dart';
-import 'package:reem/core/network/api_endpoints.dart';
-import 'package:reem/core/network/base_remote_datasource.dart';
-import 'package:reem/features/salons/data/models/salon_models.dart';
-import 'package:reem/features/salons/domain/entities/appointment.dart';
-import 'package:reem/features/salons/domain/entities/salon.dart';
+import 'package:ohara/core/domain/pagination/paginated_data.dart';
+import 'package:ohara/core/network/api_endpoints.dart';
+import 'package:ohara/core/network/base_remote_datasource.dart';
+import 'package:ohara/features/salons/data/models/salon_models.dart';
+import 'package:ohara/features/salons/domain/entities/appointment.dart';
+import 'package:ohara/features/salons/domain/entities/salon.dart';
 
 /// What she is asking the salon for.
 class BookingRequest {

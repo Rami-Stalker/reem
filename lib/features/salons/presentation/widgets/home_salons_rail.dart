@@ -3,13 +3,13 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/core/router/route_paths.dart';
-import 'package:reem/features/home/presentation/widgets/home_section_header.dart';
-import 'package:reem/features/salons/domain/entities/salon.dart';
-import 'package:reem/features/salons/presentation/providers/salons_providers.dart';
-import 'package:reem/features/salons/presentation/widgets/salon_card.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/core/router/route_paths.dart';
+import 'package:ohara/features/home/presentation/widgets/home_section_header.dart';
+import 'package:ohara/features/salons/domain/entities/salon.dart';
+import 'package:ohara/features/salons/presentation/providers/salons_providers.dart';
+import 'package:ohara/features/salons/presentation/widgets/salon_card.dart';
 
 /// «الصالونات والجمال» on the home page.
 ///

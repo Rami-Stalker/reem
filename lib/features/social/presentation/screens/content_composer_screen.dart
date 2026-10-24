@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/core/media/media_asset.dart';
-import 'package:reem/core/platform/unsaved_changes_guard.dart';
-import 'package:reem/core/shared/entities/media.dart';
-import 'package:reem/features/policies/presentation/widgets/policy_link.dart';
-import 'package:reem/features/social/domain/entities/content.dart';
-import 'package:reem/features/social/domain/entities/content_draft.dart';
-import 'package:reem/features/social/presentation/content_type_labels.dart';
-import 'package:reem/features/social/presentation/providers/composer_notifier.dart';
-import 'package:reem/features/social/presentation/providers/social_providers.dart';
-import 'package:reem/features/social/presentation/widgets/product_tag_picker.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/core/media/media_asset.dart';
+import 'package:ohara/core/platform/unsaved_changes_guard.dart';
+import 'package:ohara/core/shared/entities/media.dart';
+import 'package:ohara/features/policies/presentation/widgets/policy_link.dart';
+import 'package:ohara/features/social/domain/entities/content.dart';
+import 'package:ohara/features/social/domain/entities/content_draft.dart';
+import 'package:ohara/features/social/presentation/content_type_labels.dart';
+import 'package:ohara/features/social/presentation/providers/composer_notifier.dart';
+import 'package:ohara/features/social/presentation/providers/social_providers.dart';
+import 'package:ohara/features/social/presentation/widgets/product_tag_picker.dart';
 
 /// Writing a post, a reel or a story.
 ///
@@ -119,7 +119,7 @@ class _ContentComposerScreenState extends ConsumerState<ContentComposerScreen> {
     ContentTypeOption? type,
   ) {
     final l10n = context.l10n;
-    return ReemScrollPage(
+    return OharaScrollPage(
       // The studio stands in the same slow light as the way in: making
       // something should feel like an occasion, not a form.
       background: const AuthAurora(),

@@ -26,7 +26,7 @@ import { MissionsService } from './missions/missions.service';
 import { LifecycleService } from './resale/lifecycle.service';
 
 /**
- * Reem Market Evolution against the real database.
+ * Ohara Market Evolution against the real database.
  *
  * The kernels prove the arithmetic — 46 cases across economics, drop
  * targeting, life cycle and missions. These prove the claims only Postgres can

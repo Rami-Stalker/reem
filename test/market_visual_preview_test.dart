@@ -1,4 +1,4 @@
-// Renders the Reem Market Evolution screens to PNGs so the design can be
+// Renders the Ohara Market Evolution screens to PNGs so the design can be
 // eyeballed without a session or a running backend. Not an assertion test in
 // the usual sense — it writes `build/visual/market_*.png` and is meant to be
 // run on demand.
@@ -30,22 +30,22 @@ import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/app_localizations.dart';
-import 'package:reem/core/result/result.dart';
-import 'package:reem/features/market/data/models/market_mappers.dart';
-import 'package:reem/features/market/domain/entities/market.dart';
-import 'package:reem/features/market/domain/repositories/market_repository.dart';
-import 'package:reem/features/market/presentation/providers/market_providers.dart';
-import 'package:reem/features/market/presentation/screens/bundle_screen.dart';
-import 'package:reem/features/market/presentation/screens/bundles_screen.dart';
-import 'package:reem/features/market/presentation/screens/drops_screen.dart';
-import 'package:reem/features/market/presentation/screens/missions_screen.dart';
-import 'package:reem/features/market/presentation/screens/resale_market_screen.dart';
-import 'package:reem/features/market/presentation/screens/seller_market_screen.dart';
-import 'package:reem/features/market/presentation/screens/wardrobe_care_screen.dart';
-import 'package:reem/features/market/presentation/widgets/market_pieces.dart';
-import 'package:reem/l10n/app_localizations.dart' as gen;
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/app_localizations.dart';
+import 'package:ohara/core/result/result.dart';
+import 'package:ohara/features/market/data/models/market_mappers.dart';
+import 'package:ohara/features/market/domain/entities/market.dart';
+import 'package:ohara/features/market/domain/repositories/market_repository.dart';
+import 'package:ohara/features/market/presentation/providers/market_providers.dart';
+import 'package:ohara/features/market/presentation/screens/bundle_screen.dart';
+import 'package:ohara/features/market/presentation/screens/bundles_screen.dart';
+import 'package:ohara/features/market/presentation/screens/drops_screen.dart';
+import 'package:ohara/features/market/presentation/screens/missions_screen.dart';
+import 'package:ohara/features/market/presentation/screens/resale_market_screen.dart';
+import 'package:ohara/features/market/presentation/screens/seller_market_screen.dart';
+import 'package:ohara/features/market/presentation/screens/wardrobe_care_screen.dart';
+import 'package:ohara/features/market/presentation/widgets/market_pieces.dart';
+import 'package:ohara/l10n/app_localizations.dart' as gen;
 
 final _captureKey = GlobalKey();
 late final Map<String, dynamic> _fixture;

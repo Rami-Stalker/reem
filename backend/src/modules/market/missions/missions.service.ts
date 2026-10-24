@@ -47,9 +47,9 @@ const CATALOGUE: Array<{
   {
     key: 'describe_closet',
     kind: MissionKind.COMPLETE,
-    titleAr: 'عرّفي ريم بخزانتكِ',
+    titleAr: 'عرّفي أوهارا بخزانتكِ',
     bodyAr:
-      'في خزانتكِ قطع بلا لون ولا قماش. حين تكملينها، تعرف اقتراحات ريم ما يليق بماذا لديكِ فعلاً.',
+      'في خزانتكِ قطع بلا لون ولا قماش. حين تكملينها، تعرف اقتراحات أوهارا ما يليق بماذا لديكِ فعلاً.',
     criteria: { type: 'DESCRIBE_CLOSET', target: 5 },
     ttlDays: 21,
   },
@@ -76,7 +76,7 @@ const CATALOGUE: Array<{
     kind: MissionKind.CONTRIBUTE,
     titleAr: 'نسّقي إطلالة من قطعكِ',
     bodyAr:
-      'من القطع التي لديكِ، نسّقي إطلالة واحدة. تبقى محفوظة لديكِ، وتعرف ريم كيف تكملها حين ينقصها شيء.',
+      'من القطع التي لديكِ، نسّقي إطلالة واحدة. تبقى محفوظة لديكِ، وتعرف أوهارا كيف تكملها حين ينقصها شيء.',
     criteria: { type: 'BUILD_LOOK', target: 1 },
     ttlDays: 21,
   },
@@ -92,19 +92,19 @@ const CATALOGUE: Array<{
     key: 'explore_categories',
     kind: MissionKind.DISCOVER,
     titleAr: 'تصفّحي قسمين لم تزوريهما',
-    bodyAr: 'في ريم أقسام لم تفتحيها قط. مرة واحدة تكفي لتعرفي إن كان فيها ما يناسبكِ.',
+    bodyAr: 'في أوهارا أقسام لم تفتحيها قط. مرة واحدة تكفي لتعرفي إن كان فيها ما يناسبكِ.',
     criteria: { type: 'EXPLORE_CATEGORIES', target: 2 },
     ttlDays: 14,
   },
 ];
 
 /**
- * Reem Missions.
+ * Ohara Missions.
  *
  * An evaluator over evidence, not a task engine. Progress is recomputed from
  * the source tables on every read and never incremented by a client, which is
  * why there is no endpoint here that says "I did it": a mission is completed
- * by doing the thing, and Reem notices.
+ * by doing the thing, and Ohara notices.
  */
 @Injectable()
 export class MissionsService {

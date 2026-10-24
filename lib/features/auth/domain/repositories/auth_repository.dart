@@ -1,6 +1,6 @@
-import 'package:reem/core/result/result.dart';
-import 'package:reem/core/shared/entities/user.dart';
-import 'package:reem/features/auth/domain/entities/auth_account.dart';
+import 'package:ohara/core/result/result.dart';
+import 'package:ohara/core/shared/entities/user.dart';
+import 'package:ohara/features/auth/domain/entities/auth_account.dart';
 
 abstract interface class AuthRepository {
   /// Step one of the main door: a code to whatever number she typed.

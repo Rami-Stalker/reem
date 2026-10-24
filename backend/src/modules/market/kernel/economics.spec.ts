@@ -16,7 +16,7 @@ import {
  *
  * The cases that matter are the ones where demand and supply point in
  * opposite directions, because that is the whole reason this layer exists:
- * every other system in Reem can already count. Only this one says what the
+ * every other system in Ohara can already count. Only this one says what the
  * counts mean together.
  */
 

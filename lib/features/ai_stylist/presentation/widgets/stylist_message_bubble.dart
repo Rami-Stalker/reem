@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/features/ai_stylist/domain/entities/stylist_message.dart';
-import 'package:reem/features/ai_stylist/domain/entities/stylist_outfit.dart';
-import 'package:reem/features/ai_stylist/domain/entities/stylist_recommendation.dart';
-import 'package:reem/features/ai_stylist/presentation/widgets/stylist_outfit_board.dart';
-import 'package:reem/features/ai_stylist/presentation/widgets/stylist_recommendation_card.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/features/ai_stylist/domain/entities/stylist_message.dart';
+import 'package:ohara/features/ai_stylist/domain/entities/stylist_outfit.dart';
+import 'package:ohara/features/ai_stylist/domain/entities/stylist_recommendation.dart';
+import 'package:ohara/features/ai_stylist/presentation/widgets/stylist_outfit_board.dart';
+import 'package:ohara/features/ai_stylist/presentation/widgets/stylist_recommendation_card.dart';
 
 /// One turn in the transcript, with the cards it produced beneath it.
 ///

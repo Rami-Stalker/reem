@@ -1,4 +1,4 @@
-// Builds the Supabase Edge Function `api` from the Reem backend.
+// Builds the Supabase Edge Function `api` from the Ohara backend.
 //
 //   node build.mjs              production bundle  → supabase/functions/api/reem-api.mjs
 //   node build.mjs --sourcemap  same, plus a linked source map (local debugging)
@@ -197,16 +197,16 @@ const result = await esbuild.build({
   // the Deno CLI) does not predefine.
   banner: {
     js: [
-      "import { createRequire as __reemCreateRequire } from 'node:module';",
-      "import { Buffer as __reemBuffer } from 'node:buffer';",
-      "import __reemProcess from 'node:process';",
-      "import { setImmediate as __reemSetImmediate, clearImmediate as __reemClearImmediate } from 'node:timers';",
-      'const require = __reemCreateRequire(import.meta.url);',
-      'globalThis.Buffer ??= __reemBuffer;',
-      'globalThis.process ??= __reemProcess;',
+      "import { createRequire as __oharaCreateRequire } from 'node:module';",
+      "import { Buffer as __oharaBuffer } from 'node:buffer';",
+      "import __oharaProcess from 'node:process';",
+      "import { setImmediate as __oharaSetImmediate, clearImmediate as __oharaClearImmediate } from 'node:timers';",
+      'const require = __oharaCreateRequire(import.meta.url);',
+      'globalThis.Buffer ??= __oharaBuffer;',
+      'globalThis.process ??= __oharaProcess;',
       'globalThis.global ??= globalThis;',
-      'globalThis.setImmediate ??= __reemSetImmediate;',
-      'globalThis.clearImmediate ??= __reemClearImmediate;',
+      'globalThis.setImmediate ??= __oharaSetImmediate;',
+      'globalThis.clearImmediate ??= __oharaClearImmediate;',
       // Version probes (jsonwebtoken, semver-gated code) read these.
       "if (!globalThis.process.version) { try { Object.defineProperty(globalThis.process, 'version', { value: 'v22.0.0', configurable: true }); } catch {} }",
       "if (globalThis.process.versions && !globalThis.process.versions.node) { try { globalThis.process.versions.node = '22.0.0'; } catch {} }",

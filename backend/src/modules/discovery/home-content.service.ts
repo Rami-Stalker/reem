@@ -180,7 +180,7 @@ export class HomeContentService {
     if (tagged) return `/product-details?id=${tagged}`;
 
     // The boutique that published it — but only if a boutique did. An
-    // editorial banner is published by Reem itself, and sending a shopper to
+    // editorial banner is published by Ohara itself, and sending a shopper to
     // the operations account's profile is a worse dead end than the one this
     // fallback exists to prevent, because it looks like a real destination.
     if (row.authorKind === CommerceAuthorKind.SELLER) {
@@ -687,7 +687,7 @@ export class HomeContentService {
     const unique = [...new Set(ids)];
     if (unique.length === 0) return new Map<string, unknown>();
 
-    // Reem Value's visibility rule: a card for a piece she cannot open yet
+    // Ohara Value's visibility rule: a card for a piece she cannot open yet
     // would lead to a «not found» page.
     const gate = await this.visibility.catalogFilter(viewerId);
     const [products, liked] = await Promise.all([

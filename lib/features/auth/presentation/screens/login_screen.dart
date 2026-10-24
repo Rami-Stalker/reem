@@ -5,12 +5,12 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/core/router/route_paths.dart';
-import 'package:reem/features/auth/presentation/providers/auth_provider.dart';
-import 'package:reem/features/auth/presentation/utils/auth_form_validators.dart';
-import 'package:reem/features/auth/presentation/widgets/auth_motion.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/core/router/route_paths.dart';
+import 'package:ohara/features/auth/presentation/providers/auth_provider.dart';
+import 'package:ohara/features/auth/presentation/utils/auth_form_validators.dart';
+import 'package:ohara/features/auth/presentation/widgets/auth_motion.dart';
 
 /// The front door.
 ///
@@ -21,7 +21,7 @@ import 'package:reem/features/auth/presentation/widgets/auth_motion.dart';
 /// correctly before she has typed anything is a question she should not have
 /// to answer.
 ///
-/// The password field is gone from this screen. A password on Reem is optional,
+/// The password field is gone from this screen. A password on Ohara is optional,
 /// off by default, and — by design — cannot admit a handset the account has not
 /// used before, so putting it first would advertise the weaker credential as
 /// the main one. It lives behind [_passwordSheet] for the women who set one and
@@ -170,7 +170,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         DsGaps.vXs,
         AuthHeading(
           eyebrow: l10n.authEyebrow,
-          title: l10n.welcomeToReem,
+          title: l10n.welcomeToOhara,
           subtitle: l10n.signInSubtitle,
         ).authEnter(1),
         DsGaps.vXl,

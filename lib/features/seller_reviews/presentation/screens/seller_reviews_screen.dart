@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/features/seller_reviews/domain/entities/seller_review.dart';
-import 'package:reem/features/seller_reviews/presentation/providers/seller_reviews_provider.dart';
-import 'package:reem/features/seller_reviews/presentation/widgets/seller_review_card.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/features/seller_reviews/domain/entities/seller_review.dart';
+import 'package:ohara/features/seller_reviews/presentation/providers/seller_reviews_provider.dart';
+import 'package:ohara/features/seller_reviews/presentation/widgets/seller_review_card.dart';
 
 /// What people are saying, and her answer to it.
 ///
@@ -34,7 +34,7 @@ class SellerReviewsScreen extends ConsumerWidget {
 
     final rows = _ordered(state.desk.reviews);
 
-    return ReemScrollPage(
+    return OharaScrollPage(
       onRefresh: notifier.refresh,
       background: const SellerAtelierBackground(),
       backgroundColor: context.atelier.background,

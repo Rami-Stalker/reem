@@ -1,6 +1,6 @@
 import 'package:meta/meta.dart';
 
-/// The shapes Reem Market Evolution puts on a screen.
+/// The shapes Ohara Market Evolution puts on a screen.
 ///
 /// Deliberately plain. Every judgement behind these values was made on the
 /// server beside the arithmetic that produced it — which slot a bundle piece

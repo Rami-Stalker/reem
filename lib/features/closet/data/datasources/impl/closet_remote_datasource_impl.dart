@@ -1,12 +1,12 @@
-import 'package:reem/core/network/api_endpoints.dart';
-import 'package:reem/core/network/base_remote_datasource.dart';
-import 'package:reem/features/closet/data/datasources/closet_remote_datasource.dart';
-import 'package:reem/features/closet/data/models/closet_models.dart';
-import 'package:reem/features/closet/domain/entities/closet_gap.dart';
-import 'package:reem/features/closet/domain/entities/closet_item.dart';
-import 'package:reem/features/closet/domain/entities/closet_look.dart';
-import 'package:reem/features/closet/domain/entities/closet_overview.dart';
-import 'package:reem/features/closet/domain/repositories/closet_repository.dart';
+import 'package:ohara/core/network/api_endpoints.dart';
+import 'package:ohara/core/network/base_remote_datasource.dart';
+import 'package:ohara/features/closet/data/datasources/closet_remote_datasource.dart';
+import 'package:ohara/features/closet/data/models/closet_models.dart';
+import 'package:ohara/features/closet/domain/entities/closet_gap.dart';
+import 'package:ohara/features/closet/domain/entities/closet_item.dart';
+import 'package:ohara/features/closet/domain/entities/closet_look.dart';
+import 'package:ohara/features/closet/domain/entities/closet_overview.dart';
+import 'package:ohara/features/closet/domain/repositories/closet_repository.dart';
 
 final class ClosetRemoteDataSourceImpl extends BaseRemoteDataSource
     implements ClosetRemoteDataSource {

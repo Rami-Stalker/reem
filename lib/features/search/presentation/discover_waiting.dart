@@ -1,5 +1,5 @@
-import 'package:reem/core/utils/damascus_time.dart';
-import 'package:reem/features/rooms/domain/entities/room.dart';
+import 'package:ohara/core/utils/damascus_time.dart';
+import 'package:ohara/features/rooms/domain/entities/room.dart';
 
 /// A room with a date coming up, and how many days are left until it.
 typedef UpcomingRoom = ({Room room, int daysLeft});

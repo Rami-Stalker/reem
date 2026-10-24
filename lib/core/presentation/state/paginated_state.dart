@@ -1,5 +1,5 @@
-import 'package:reem/core/domain/pagination/paginated_data.dart';
-import 'package:reem/core/errors/failure.dart';
+import 'package:ohara/core/domain/pagination/paginated_data.dart';
+import 'package:ohara/core/errors/failure.dart';
 
 class PaginatedState<T> {
   const PaginatedState({

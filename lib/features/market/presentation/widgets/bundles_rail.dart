@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/core/router/route_paths.dart';
-import 'package:reem/features/market/domain/entities/market.dart';
-import 'package:reem/features/market/presentation/providers/market_providers.dart';
-import 'package:reem/features/market/presentation/widgets/market_pieces.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/core/router/route_paths.dart';
+import 'package:ohara/features/market/domain/entities/market.dart';
+import 'package:ohara/features/market/presentation/providers/market_providers.dart';
+import 'package:ohara/features/market/presentation/widgets/market_pieces.dart';
 
 /// A rail of assembled looks, for the home page.
 ///

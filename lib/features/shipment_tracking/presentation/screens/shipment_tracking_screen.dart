@@ -4,12 +4,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 // framework's, used to pin document codes left-to-right.
 import 'package:intl/intl.dart' hide TextDirection;
 
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/core/utils/arabic_numerals.dart';
-import 'package:reem/features/shipment_tracking/domain/entities/shipment_tracking.dart';
-import 'package:reem/features/shipment_tracking/presentation/providers/shipment_tracking_provider.dart';
-import 'package:reem/features/shipment_tracking/presentation/widgets/shipment_journey.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/core/utils/arabic_numerals.dart';
+import 'package:ohara/features/shipment_tracking/domain/entities/shipment_tracking.dart';
+import 'package:ohara/features/shipment_tracking/presentation/providers/shipment_tracking_provider.dart';
+import 'package:ohara/features/shipment_tracking/presentation/widgets/shipment_journey.dart';
 
 /// Q64 — «تتبع الشحنة للزبونة».
 ///
@@ -26,7 +26,7 @@ class ShipmentTrackingScreen extends ConsumerWidget {
     final l10n = context.l10n;
     final async = ref.watch(shipmentTrackingProvider(trackingCode));
 
-    return ReemScrollPage(
+    return OharaScrollPage(
       onRefresh: () async =>
           ref.invalidate(shipmentTrackingProvider(trackingCode)),
       slivers: [
@@ -174,7 +174,7 @@ class _StatusHeader extends StatelessWidget {
               value: tracking.orderNumber,
               isCode: true,
             ),
-            // The company carrying it, and their own number for her box. Reem
+            // The company carrying it, and their own number for her box. Ohara
             // hands the parcel over; from there the answer to "where is it" is
             // partly theirs, and she should be able to ask them directly.
             if (tracking.carrier != null) ...[

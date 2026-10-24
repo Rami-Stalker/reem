@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import 'package:reem/core/auth/app_permissions.dart';
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/features/admin/domain/entities/admin_console_entity.dart';
-import 'package:reem/l10n/app_localizations.dart';
+import 'package:ohara/core/auth/app_permissions.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/features/admin/domain/entities/admin_console_entity.dart';
+import 'package:ohara/l10n/app_localizations.dart';
 
 /// What an operator can actually *do* from the console, declared as data.
 ///
@@ -204,7 +204,7 @@ const sellerReviewDecisions = [
 /// What a reviewer may do with a claim on the badge.
 ///
 /// Every one of them carries a required reason, approvals included. The badge
-/// is a public claim Reem makes about a real woman, and a grant nobody can
+/// is a public claim Ohara makes about a real woman, and a grant nobody can
 /// later explain is exactly the state this whole feature replaced.
 const _verificationDecisions = [
   AdminChoice('APPROVED', _lVerificationApprove),

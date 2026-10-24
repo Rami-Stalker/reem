@@ -1,7 +1,7 @@
-import 'package:reem/core/result/result.dart';
-import 'package:reem/core/shared/entities/product.dart';
+import 'package:ohara/core/result/result.dart';
+import 'package:ohara/core/shared/entities/product.dart';
 
-import 'package:reem/features/catalog/domain/repositories/catalog_repository.dart';
+import 'package:ohara/features/catalog/domain/repositories/catalog_repository.dart';
 
 class GetTrendingProductsUseCase {
   const GetTrendingProductsUseCase(this._repository);

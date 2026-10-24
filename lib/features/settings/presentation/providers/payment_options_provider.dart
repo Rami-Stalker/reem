@@ -1,9 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:reem/core/errors/failure_exception.dart';
-import 'package:reem/core/result/result.dart';
-import 'package:reem/features/checkout/domain/entities/checkout.dart';
-import 'package:reem/features/checkout/presentation/providers/checkout_providers.dart';
+import 'package:ohara/core/errors/failure_exception.dart';
+import 'package:ohara/core/result/result.dart';
+import 'package:ohara/features/checkout/domain/entities/checkout.dart';
+import 'package:ohara/features/checkout/presentation/providers/checkout_providers.dart';
 
 /// The payment rails the platform currently accepts.
 ///

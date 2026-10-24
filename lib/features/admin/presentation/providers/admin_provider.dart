@@ -4,24 +4,24 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 
-import 'package:reem/core/auth/app_permissions.dart';
-import 'package:reem/core/errors/failure.dart';
-import 'package:reem/core/errors/failure_exception.dart';
-import 'package:reem/core/network/api_endpoints.dart';
-import 'package:reem/core/presentation/providers/core_providers.dart';
-import 'package:reem/core/result/result.dart';
-import 'package:reem/features/admin/data/datasources/admin_remote_datasource.dart';
-import 'package:reem/features/admin/data/datasources/impl/admin_remote_datasource_impl.dart';
-import 'package:reem/features/admin/data/models/admin_briefing_model.dart';
-import 'package:reem/features/admin/data/repositories/admin_repository_impl.dart';
-import 'package:reem/features/admin/domain/entities/admin_console_entity.dart';
-import 'package:reem/features/admin/domain/entities/analytics_dashboard_entity.dart';
-import 'package:reem/features/admin/domain/repositories/admin_repository.dart';
-import 'package:reem/features/admin/domain/usecases/get_admin_stats_usecase.dart';
-import 'package:reem/features/admin/presentation/providers/admin_actions.dart';
-import 'package:reem/features/admin/presentation/providers/admin_dashboard_notifier.dart';
-import 'package:reem/features/admin/presentation/providers/admin_state.dart';
-import 'package:reem/features/auth/presentation/providers/auth_provider.dart';
+import 'package:ohara/core/auth/app_permissions.dart';
+import 'package:ohara/core/errors/failure.dart';
+import 'package:ohara/core/errors/failure_exception.dart';
+import 'package:ohara/core/network/api_endpoints.dart';
+import 'package:ohara/core/presentation/providers/core_providers.dart';
+import 'package:ohara/core/result/result.dart';
+import 'package:ohara/features/admin/data/datasources/admin_remote_datasource.dart';
+import 'package:ohara/features/admin/data/datasources/impl/admin_remote_datasource_impl.dart';
+import 'package:ohara/features/admin/data/models/admin_briefing_model.dart';
+import 'package:ohara/features/admin/data/repositories/admin_repository_impl.dart';
+import 'package:ohara/features/admin/domain/entities/admin_console_entity.dart';
+import 'package:ohara/features/admin/domain/entities/analytics_dashboard_entity.dart';
+import 'package:ohara/features/admin/domain/repositories/admin_repository.dart';
+import 'package:ohara/features/admin/domain/usecases/get_admin_stats_usecase.dart';
+import 'package:ohara/features/admin/presentation/providers/admin_actions.dart';
+import 'package:ohara/features/admin/presentation/providers/admin_dashboard_notifier.dart';
+import 'package:ohara/features/admin/presentation/providers/admin_state.dart';
+import 'package:ohara/features/auth/presentation/providers/auth_provider.dart';
 
 final adminRemoteDataSourceProvider = Provider<AdminRemoteDataSource>(
   (ref) => AdminRemoteDataSourceImpl(ref.watch(dioProvider)),
@@ -216,7 +216,7 @@ const adminSectionConfigs = {
     defaultStatus: 'PENDING',
   ),
   // «توثيق الحسابات» — the queue behind the badge. Its own section rather
-  // than a filter on Users, because granting it is a public claim Reem makes
+  // than a filter on Users, because granting it is a public claim Ohara makes
   // about a real woman and the decision needs its own record.
   'accountVerifications': AdminSectionConfig(
     key: 'accountVerifications',

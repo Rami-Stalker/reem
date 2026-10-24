@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'package:reem/core/design_system/components/dialogs/ds_dialog.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
+import 'package:ohara/core/design_system/components/dialogs/ds_dialog.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
 
 /// Stands between a half-written form and the back gesture.
 ///

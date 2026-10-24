@@ -12,7 +12,7 @@ import { InternalCronController } from './scheduling/internal-cron.controller';
 import { SupabaseHttp } from './supabase/supabase-http';
 
 /**
- * Everything the Reem API needs to run on Supabase that the backend does not
+ * Everything the Ohara API needs to run on Supabase that the backend does not
  * already have — and nothing more.
  *
  * Global, because the classes that replace backend providers (the storage

@@ -12,14 +12,14 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/app_localizations.dart';
-import 'package:reem/core/result/result.dart';
-import 'package:reem/features/seller_reviews/domain/entities/seller_review.dart';
-import 'package:reem/features/seller_reviews/domain/repositories/seller_reviews_repository.dart';
-import 'package:reem/features/seller_reviews/presentation/providers/seller_reviews_provider.dart';
-import 'package:reem/features/seller_reviews/presentation/screens/seller_reviews_screen.dart';
-import 'package:reem/l10n/app_localizations.dart' as gen;
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/app_localizations.dart';
+import 'package:ohara/core/result/result.dart';
+import 'package:ohara/features/seller_reviews/domain/entities/seller_review.dart';
+import 'package:ohara/features/seller_reviews/domain/repositories/seller_reviews_repository.dart';
+import 'package:ohara/features/seller_reviews/presentation/providers/seller_reviews_provider.dart';
+import 'package:ohara/features/seller_reviews/presentation/screens/seller_reviews_screen.dart';
+import 'package:ohara/l10n/app_localizations.dart' as gen;
 
 final _captureKey = GlobalKey();
 

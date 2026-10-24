@@ -1,4 +1,4 @@
-import 'package:reem/features/seller_returns/domain/entities/return_request.dart';
+import 'package:ohara/features/seller_returns/domain/entities/return_request.dart';
 
 abstract interface class SellerReturnsRemoteDataSource {
   Future<List<ReturnRequest>> queue({ReturnStatus? status});

@@ -80,7 +80,7 @@ test('an unverified review alone stays below the queue', () => {
   assert.deepEqual(reading.reasons.map((r) => r.code), ['no_verified_purchase']);
   assert.ok(
     reading.score < WATCH_AT,
-    'Reem allows reviews without a matched order — a gift, an order on a ' +
+    'Ohara allows reviews without a matched order — a gift, an order on a ' +
       'friend’s account — so this cannot be enough on its own',
   );
 });

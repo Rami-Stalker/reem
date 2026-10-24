@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/media/authorized_media_image.dart';
-import 'package:reem/core/media/media_variants.dart';
-import 'package:reem/core/shared/entities/product.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/media/authorized_media_image.dart';
+import 'package:ohara/core/media/media_variants.dart';
+import 'package:ohara/core/shared/entities/product.dart';
 
 /// The catalogue card the client picked in Q80: *«صورة كبيرة بلا إطار — بصري
 /// وأنيق، معلومات أقل»*.

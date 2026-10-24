@@ -1,7 +1,7 @@
-import 'package:reem/core/shared/value_objects/money.dart';
-import 'package:reem/features/value/domain/entities/value_admin.dart';
+import 'package:ohara/core/shared/value_objects/money.dart';
+import 'package:ohara/features/value/domain/entities/value_admin.dart';
 
-/// Wire decoding for the administrative side of Reem Value.
+/// Wire decoding for the administrative side of Ohara Value.
 ///
 /// Kept apart from `value_models.dart` because the two have different readers
 /// and different risks: a customer's standing must degrade to something

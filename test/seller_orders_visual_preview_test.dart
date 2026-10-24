@@ -15,16 +15,16 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/app_localizations.dart';
-import 'package:reem/core/result/result.dart';
-import 'package:reem/core/shared/value_objects/money.dart';
-import 'package:reem/features/seller_orders/domain/entities/seller_order.dart';
-import 'package:reem/features/seller_orders/domain/repositories/seller_orders_repository.dart';
-import 'package:reem/features/seller_orders/presentation/providers/seller_orders_provider.dart';
-import 'package:reem/features/seller_orders/presentation/screens/seller_order_detail_screen.dart';
-import 'package:reem/features/seller_orders/presentation/screens/seller_orders_screen.dart';
-import 'package:reem/l10n/app_localizations.dart' as gen;
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/app_localizations.dart';
+import 'package:ohara/core/result/result.dart';
+import 'package:ohara/core/shared/value_objects/money.dart';
+import 'package:ohara/features/seller_orders/domain/entities/seller_order.dart';
+import 'package:ohara/features/seller_orders/domain/repositories/seller_orders_repository.dart';
+import 'package:ohara/features/seller_orders/presentation/providers/seller_orders_provider.dart';
+import 'package:ohara/features/seller_orders/presentation/screens/seller_order_detail_screen.dart';
+import 'package:ohara/features/seller_orders/presentation/screens/seller_orders_screen.dart';
+import 'package:ohara/l10n/app_localizations.dart' as gen;
 
 final _captureKey = GlobalKey();
 

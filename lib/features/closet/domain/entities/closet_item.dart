@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:reem/core/shared/value_objects/money.dart';
+import 'package:ohara/core/shared/value_objects/money.dart';
 
 /// A keyed label from the server's closed vocabulary.
 ///
@@ -40,7 +40,7 @@ enum ClosetItemSource {
       };
 
   /// Whether the piece points at something still on sale.
-  bool get isFromReem => this != ClosetItemSource.personal;
+  bool get isFromOhara => this != ClosetItemSource.personal;
 }
 
 enum ClosetItemStatus {

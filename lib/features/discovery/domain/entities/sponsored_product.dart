@@ -1,4 +1,4 @@
-import 'package:reem/core/shared/entities/product.dart';
+import 'package:ohara/core/shared/entities/product.dart';
 
 /// A paid placement: the product it advertises, and the offer that paid.
 ///

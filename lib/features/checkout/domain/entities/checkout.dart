@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 
-import 'package:reem/core/shared/value_objects/money.dart';
-import 'package:reem/features/checkout/domain/entities/order.dart';
+import 'package:ohara/core/shared/value_objects/money.dart';
+import 'package:ohara/features/checkout/domain/entities/order.dart';
 
 /// A delivery destination the platform serves.
 ///
@@ -143,7 +143,7 @@ class CodAssurance extends Equatable {
 
   /// The two digits also printed in the message. If they differ, the message
   /// did not come from this checkout — the same defence the login flow uses
-  /// against "this is Reem support, read me your code".
+  /// against "this is Ohara support, read me your code".
   final String? matchCode;
 
   final DateTime? expiresAt;

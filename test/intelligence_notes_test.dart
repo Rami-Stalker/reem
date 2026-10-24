@@ -1,5 +1,5 @@
 // The one visual rule phase three turns on, checked where only a render can
-// check it: the notes strip must disappear completely when Reem has nothing to
+// check it: the notes strip must disappear completely when Ohara has nothing to
 // say, and a caution must never be buried under the reasons to buy.
 //
 //   flutter test test/intelligence_notes_test.dart
@@ -15,15 +15,15 @@ import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/app_localizations.dart';
-import 'package:reem/core/result/result.dart';
-import 'package:reem/features/intelligence/domain/entities/intelligence_note.dart';
-import 'package:reem/features/intelligence/domain/entities/size_fit.dart';
-import 'package:reem/features/intelligence/domain/repositories/intelligence_repository.dart';
-import 'package:reem/features/intelligence/presentation/providers/intelligence_providers.dart';
-import 'package:reem/features/intelligence/presentation/widgets/product_intelligence_notes.dart';
-import 'package:reem/l10n/app_localizations.dart' as gen;
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/app_localizations.dart';
+import 'package:ohara/core/result/result.dart';
+import 'package:ohara/features/intelligence/domain/entities/intelligence_note.dart';
+import 'package:ohara/features/intelligence/domain/entities/size_fit.dart';
+import 'package:ohara/features/intelligence/domain/repositories/intelligence_repository.dart';
+import 'package:ohara/features/intelligence/presentation/providers/intelligence_providers.dart';
+import 'package:ohara/features/intelligence/presentation/widgets/product_intelligence_notes.dart';
+import 'package:ohara/l10n/app_localizations.dart' as gen;
 
 late final Map<String, dynamic> _fixture;
 
@@ -97,7 +97,7 @@ void main() {
   });
 
   testWidgets('a caution is shown first and shown differently', (tester) async {
-    // The rule that matters most: if Reem is about to say she already owns
+    // The rule that matters most: if Ohara is about to say she already owns
     // one, that must not sit under three reasons to buy.
     const notes = [
       IntelligenceNote(

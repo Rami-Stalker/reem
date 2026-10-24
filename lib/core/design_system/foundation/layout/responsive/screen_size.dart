@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:reem/core/design_system/foundation/tokens/ds_breakpoints.dart';
+import 'package:ohara/core/design_system/foundation/tokens/ds_breakpoints.dart';
 
 enum ScreenSize { compact, medium, expanded, large }
 

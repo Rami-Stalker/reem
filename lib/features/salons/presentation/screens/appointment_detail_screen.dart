@@ -3,17 +3,17 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/core/platform/app_haptics.dart';
-import 'package:reem/core/router/route_paths.dart';
-import 'package:reem/features/auth/presentation/providers/auth_provider.dart';
-import 'package:reem/features/chat/domain/entities/chat_start_request.dart';
-import 'package:reem/features/chat/presentation/widgets/message_seller_button.dart';
-import 'package:reem/features/salons/domain/entities/appointment.dart';
-import 'package:reem/features/salons/presentation/providers/salons_providers.dart';
-import 'package:reem/features/salons/presentation/widgets/appointment_card.dart';
-import 'package:reem/features/salons/presentation/widgets/salon_labels.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/core/platform/app_haptics.dart';
+import 'package:ohara/core/router/route_paths.dart';
+import 'package:ohara/features/auth/presentation/providers/auth_provider.dart';
+import 'package:ohara/features/chat/domain/entities/chat_start_request.dart';
+import 'package:ohara/features/chat/presentation/widgets/message_seller_button.dart';
+import 'package:ohara/features/salons/domain/entities/appointment.dart';
+import 'package:ohara/features/salons/presentation/providers/salons_providers.dart';
+import 'package:ohara/features/salons/presentation/widgets/appointment_card.dart';
+import 'package:ohara/features/salons/presentation/widgets/salon_labels.dart';
 
 /// One booking, in full — and everything either side can do to it.
 ///
@@ -33,7 +33,7 @@ class AppointmentDetailScreen extends ConsumerWidget {
 
     return Scaffold(
       backgroundColor: c.background,
-      appBar: ReemAppBar(
+      appBar: OharaAppBar(
         title: context.l10n.salonAppointmentDetails,
         onBack: () => context.canPop()
             ? context.pop()

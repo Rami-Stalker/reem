@@ -1,5 +1,5 @@
-import 'package:reem/core/shared/models/category_model.dart';
-import 'package:reem/features/catalog/domain/entities/category_node.dart';
+import 'package:ohara/core/shared/models/category_model.dart';
+import 'package:ohara/features/catalog/domain/entities/category_node.dart';
 
 /// Parses `GET /categories`, which answers with the roots and nests the rest.
 ///

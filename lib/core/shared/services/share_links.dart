@@ -1,6 +1,6 @@
-import 'package:reem/core/config/app_env.dart';
+import 'package:ohara/core/config/app_env.dart';
 
-/// The shapes a Reem link can take — the Dart half of a contract the server
+/// The shapes a Ohara link can take — the Dart half of a contract the server
 /// holds the other half of (`backend/src/modules/links/share-links.ts`).
 ///
 /// Every shareable thing has three addresses built from one path:
@@ -13,7 +13,7 @@ import 'package:reem/core/config/app_env.dart';
 /// (`'${shareBaseUrl}/p/$postId'` in one place, `/product/$id` in another) and
 /// nothing anywhere resolved either of them: the app had no route for a link it
 /// handed out, and the server had never heard of one. A shared product opened
-/// an error page even for a woman who had Reem installed.
+/// an error page even for a woman who had Ohara installed.
 ///
 /// ## Adding a kind
 ///
@@ -124,7 +124,7 @@ abstract final class ShareLinks {
   /// Kept in step with the `android:pathPrefix` entries in `AndroidManifest`
   /// and the `components` in `apple-app-site-association`. Deliberately false
   /// for `/invite/:code`: an invitation is sent to somebody who does *not* have
-  /// Reem, so having the app swallow it would hide the download button from the
+  /// Ohara, so having the app swallow it would hide the download button from the
   /// one person it was written for.
   static bool isAppHandled(Uri uri) => routeFor(uri) != null;
 }

@@ -1,10 +1,10 @@
 import 'package:equatable/equatable.dart';
 
-import 'package:reem/features/seller_dashboard/domain/entities/seller_analytics.dart';
-import 'package:reem/features/seller_dashboard/domain/entities/seller_chart_data.dart';
-import 'package:reem/features/seller_dashboard/domain/entities/seller_dashboard_data.dart';
+import 'package:ohara/features/seller_dashboard/domain/entities/seller_analytics.dart';
+import 'package:ohara/features/seller_dashboard/domain/entities/seller_chart_data.dart';
+import 'package:ohara/features/seller_dashboard/domain/entities/seller_dashboard_data.dart';
 
-import 'package:reem/features/seller_dashboard/presentation/providers/seller_dashboard_message.dart';
+import 'package:ohara/features/seller_dashboard/presentation/providers/seller_dashboard_message.dart';
 
 class SellerDashboardState extends Equatable {
   const SellerDashboardState({

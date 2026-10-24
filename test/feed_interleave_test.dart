@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:reem/features/home/presentation/feed_interleave.dart';
+import 'package:ohara/features/home/presentation/feed_interleave.dart';
 
 /// The home page stopped being a stack of shelves with a feed at the bottom;
 /// the shelves are set between the posts instead. These pin the rhythm that

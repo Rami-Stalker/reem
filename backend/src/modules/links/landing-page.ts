@@ -1,7 +1,7 @@
 import { SharePreview } from './share-preview';
 
 /**
- * The page a Reem link opens for somebody who is not inside the app.
+ * The page a Ohara link opens for somebody who is not inside the app.
  *
  * Hand-written HTML rather than a view engine. Three reasons, in order of how
  * much they mattered: a template engine is a dependency whose `views/`
@@ -24,7 +24,7 @@ import { SharePreview } from './share-preview';
  * Bouncing straight to `reem://…` on load looks clever and is hostile: on a
  * phone without the app, iOS shows a modal error and Android's WebView shows
  * `ERR_UNKNOWN_URL_SCHEME` — to a woman who has just been sent a dress by a
- * friend and has never heard of Reem. She gets the page; the app is one
+ * friend and has never heard of Ohara. She gets the page; the app is one
  * obvious tap away.
  */
 
@@ -159,10 +159,10 @@ export function renderLandingPage(options: LandingPageOptions): string {
   const ogType = preview.kind === 'product' ? 'product' : 'article';
 
   const head = [
-    `<title>${escapeHtml(preview.title)} — ريم</title>`,
+    `<title>${escapeHtml(preview.title)} — أوهارا</title>`,
     `<meta name="description" content="${escapeHtml(preview.description)}">`,
     `<link rel="canonical" href="${escapeHtml(canonicalUrl)}">`,
-    `<meta property="og:site_name" content="ريم">`,
+    `<meta property="og:site_name" content="أوهارا">`,
     `<meta property="og:type" content="${ogType}">`,
     `<meta property="og:locale" content="ar_SY">`,
     `<meta property="og:url" content="${escapeHtml(canonicalUrl)}">`,
@@ -245,7 +245,7 @@ export function renderLandingPage(options: LandingPageOptions): string {
     ? `<div class="hero${preview.imageIsPortrait ? ' hero-portrait' : ''}" id="hero">
         <img src="${escapeHtml(image)}" alt="${escapeHtml(preview.title)}" id="hero-image" referrerpolicy="no-referrer">
       </div>`
-    : `<div class="hero hero-empty"><span>ريم</span></div>`;
+    : `<div class="hero hero-empty"><span>أوهارا</span></div>`;
 
   return `<!doctype html>
 <html lang="ar" dir="rtl">
@@ -260,7 +260,7 @@ export function renderLandingPage(options: LandingPageOptions): string {
   </head>
   <body>
     <header class="topbar">
-      <a class="wordmark" href="/">ريم</a>
+      <a class="wordmark" href="/">أوهارا</a>
       <span class="tagline">سوق نسائي للأزياء والجمال</span>
     </header>
 
@@ -275,15 +275,15 @@ export function renderLandingPage(options: LandingPageOptions): string {
         ${facts ? `<ul class="facts">${facts}</ul>` : ''}
         ${body}
 
-        <button class="cta" type="button" id="open-app">افتحي في تطبيق ريم</button>
+        <button class="cta" type="button" id="open-app">افتحي في تطبيق أوهارا</button>
         <p class="cta-hint" id="open-hint" hidden>لم يفتح التطبيق؟ ثبّتيه من الروابط بالأسفل.</p>
         ${storeRow}
       </div>
     </main>
 
     <footer class="footer">
-      <a href="/">ريم — الصفحة الرئيسية</a>
-      <span>© ريم</span>
+      <a href="/">أوهارا — الصفحة الرئيسية</a>
+      <span>© أوهارا</span>
     </footer>
 
     <script nonce="${escapeHtml(nonce)}">${openAppScript(options)}</script>
@@ -299,10 +299,10 @@ export function renderMessagePage(options: MessagePageOptions): string {
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="${BRAND.rose}">
     <link rel="icon" href="${FAVICON}">
-    <title>${escapeHtml(options.headline)} — ريم</title>
+    <title>${escapeHtml(options.headline)} — أوهارا</title>
     <meta name="description" content="${escapeHtml(options.detail)}">
     <meta name="robots" content="${options.noindex === false ? 'index, follow' : 'noindex'}">
-    <meta property="og:site_name" content="ريم">
+    <meta property="og:site_name" content="أوهارا">
     <meta property="og:type" content="website">
     <meta property="og:locale" content="ar_SY">
     <meta property="og:url" content="${escapeHtml(options.canonicalUrl)}">
@@ -312,12 +312,12 @@ export function renderMessagePage(options: MessagePageOptions): string {
   </head>
   <body>
     <header class="topbar">
-      <a class="wordmark" href="/">ريم</a>
+      <a class="wordmark" href="/">أوهارا</a>
       <span class="tagline">سوق نسائي للأزياء والجمال</span>
     </header>
     <main class="card card-plain">
       <div class="detail">
-        <p class="label">ريم</p>
+        <p class="label">أوهارا</p>
         <h1>${escapeHtml(options.headline)}</h1>
         <p class="body">${escapeHtml(options.detail)}</p>
         ${
@@ -328,8 +328,8 @@ export function renderMessagePage(options: MessagePageOptions): string {
       </div>
     </main>
     <footer class="footer">
-      <a href="/">ريم — الصفحة الرئيسية</a>
-      <span>© ريم</span>
+      <a href="/">أوهارا — الصفحة الرئيسية</a>
+      <span>© أوهارا</span>
     </footer>
   </body>
 </html>`;
@@ -397,7 +397,7 @@ function openAppScript(options: LandingPageOptions): string {
   function dropHero() {
     if (!hero) return;
     hero.className = 'hero hero-empty';
-    hero.innerHTML = '<span>ريم</span>';
+    hero.innerHTML = '<span>أوهارا</span>';
   }
   if (heroImage) {
     heroImage.addEventListener('error', dropHero);

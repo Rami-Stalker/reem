@@ -172,7 +172,7 @@
 
 | المفتاح | English | العربية |
 | --- | --- | --- |
-| `aiStylistTitle` | Reem Stylist | مساعِدة ريم |
+| `aiStylistTitle` | Ohara Stylist | مساعِدة أوهارا |
 | `stylistOutfitTitle` | The look | الإطلالة |
 | `stylistPreferencesTitle` | Your style | ذوقكِ |
 | `visualSearchTitle` | Search by photo | البحث بالصورة |

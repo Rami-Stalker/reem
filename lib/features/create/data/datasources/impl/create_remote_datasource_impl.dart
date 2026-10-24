@@ -1,9 +1,9 @@
-import 'package:reem/core/network/api_endpoints.dart';
-import 'package:reem/core/network/base_remote_datasource.dart';
-import 'package:reem/core/shared/entities/media.dart';
-import 'package:reem/core/shared/models/post_model.dart';
-import 'package:reem/core/shared/models/story_model.dart';
-import 'package:reem/features/create/data/datasources/create_remote_datasource.dart';
+import 'package:ohara/core/network/api_endpoints.dart';
+import 'package:ohara/core/network/base_remote_datasource.dart';
+import 'package:ohara/core/shared/entities/media.dart';
+import 'package:ohara/core/shared/models/post_model.dart';
+import 'package:ohara/core/shared/models/story_model.dart';
+import 'package:ohara/features/create/data/datasources/create_remote_datasource.dart';
 
 final class CreateRemoteDataSourceImpl extends BaseRemoteDataSource
     implements CreateRemoteDataSource {

@@ -1,5 +1,5 @@
 /**
- * Translates the Supabase Edge environment into the one the Reem backend reads.
+ * Translates the Supabase Edge environment into the one the Ohara backend reads.
  *
  * The backend is configured entirely through `process.env` (see
  * `backend/src/config/configuration.ts`). Supabase injects its own variables
@@ -126,7 +126,7 @@ export function prepareEnvironment(): SupabaseRuntime {
 
   if (missing.length > 0) {
     throw new Error(
-      'The Reem API cannot start on Supabase — missing configuration:\n' +
+      'The Ohara API cannot start on Supabase — missing configuration:\n' +
         missing.map((m) => `  - ${m}`).join('\n') +
         '\nSee docs/SUPABASE.md, "Edge Function secrets".',
     );

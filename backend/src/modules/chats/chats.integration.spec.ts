@@ -219,7 +219,7 @@ dbTest('two shoppers cannot open a conversation with each other', async (world) 
   const one = await makeUser(world.tx, 'g', UserRole.CUSTOMER);
   const two = await makeUser(world.tx, 'h', UserRole.CUSTOMER);
 
-  // Reem is a marketplace, not a social network: the only conversation it
+  // Ohara is a marketplace, not a social network: the only conversation it
   // brokers is the one between a woman and the boutique she is buying from.
   await assert.rejects(
     world.chats.startConversation(one.id, { participant_id: two.id }),

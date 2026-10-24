@@ -15,36 +15,36 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 import 'package:flutter_riverpod/misc.dart' show Override;
 import 'package:flutter_test/flutter_test.dart';
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/domain/pagination/paginated_data.dart';
-import 'package:reem/core/localization/app_localizations.dart';
-import 'package:reem/core/result/result.dart';
-import 'package:reem/core/shared/entities/brand.dart';
-import 'package:reem/core/shared/entities/category.dart';
-import 'package:reem/core/shared/entities/media.dart';
-import 'package:reem/core/shared/entities/product.dart';
-import 'package:reem/core/shared/entities/seller_offer.dart';
-import 'package:reem/core/shared/entities/user.dart';
-import 'package:reem/core/shared/value_objects/money.dart';
-import 'package:reem/features/auth/presentation/providers/auth_notifier.dart';
-import 'package:reem/features/auth/presentation/providers/auth_provider.dart';
-import 'package:reem/features/auth/presentation/providers/auth_state.dart';
-import 'package:reem/features/discovery/domain/entities/product_page.dart';
-import 'package:reem/features/discovery/presentation/providers/collection_notifier.dart';
-import 'package:reem/features/discovery/presentation/providers/collection_state.dart';
-import 'package:reem/features/discovery/presentation/providers/discovery_providers.dart';
-import 'package:reem/features/discovery/presentation/screens/collection_screen.dart';
-import 'package:reem/features/product_social/domain/entities/product_engagement.dart';
-import 'package:reem/features/product_social/domain/repositories/product_social_repository.dart';
-import 'package:reem/features/product_social/presentation/providers/product_social_providers.dart';
-import 'package:reem/features/social/domain/entities/content.dart';
-import 'package:reem/features/social/domain/repositories/social_repository.dart';
-import 'package:reem/features/social/presentation/providers/social_providers.dart';
-import 'package:reem/features/user_profile/domain/entities/user_profile.dart';
-import 'package:reem/features/user_profile/domain/repositories/user_profile_repository.dart';
-import 'package:reem/features/user_profile/presentation/providers/user_profile_providers.dart';
-import 'package:reem/features/user_profile/presentation/screens/user_profile_screen.dart';
-import 'package:reem/l10n/app_localizations.dart' as gen;
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/domain/pagination/paginated_data.dart';
+import 'package:ohara/core/localization/app_localizations.dart';
+import 'package:ohara/core/result/result.dart';
+import 'package:ohara/core/shared/entities/brand.dart';
+import 'package:ohara/core/shared/entities/category.dart';
+import 'package:ohara/core/shared/entities/media.dart';
+import 'package:ohara/core/shared/entities/product.dart';
+import 'package:ohara/core/shared/entities/seller_offer.dart';
+import 'package:ohara/core/shared/entities/user.dart';
+import 'package:ohara/core/shared/value_objects/money.dart';
+import 'package:ohara/features/auth/presentation/providers/auth_notifier.dart';
+import 'package:ohara/features/auth/presentation/providers/auth_provider.dart';
+import 'package:ohara/features/auth/presentation/providers/auth_state.dart';
+import 'package:ohara/features/discovery/domain/entities/product_page.dart';
+import 'package:ohara/features/discovery/presentation/providers/collection_notifier.dart';
+import 'package:ohara/features/discovery/presentation/providers/collection_state.dart';
+import 'package:ohara/features/discovery/presentation/providers/discovery_providers.dart';
+import 'package:ohara/features/discovery/presentation/screens/collection_screen.dart';
+import 'package:ohara/features/product_social/domain/entities/product_engagement.dart';
+import 'package:ohara/features/product_social/domain/repositories/product_social_repository.dart';
+import 'package:ohara/features/product_social/presentation/providers/product_social_providers.dart';
+import 'package:ohara/features/social/domain/entities/content.dart';
+import 'package:ohara/features/social/domain/repositories/social_repository.dart';
+import 'package:ohara/features/social/presentation/providers/social_providers.dart';
+import 'package:ohara/features/user_profile/domain/entities/user_profile.dart';
+import 'package:ohara/features/user_profile/domain/repositories/user_profile_repository.dart';
+import 'package:ohara/features/user_profile/presentation/providers/user_profile_providers.dart';
+import 'package:ohara/features/user_profile/presentation/screens/user_profile_screen.dart';
+import 'package:ohara/l10n/app_localizations.dart' as gen;
 
 final _captureKey = GlobalKey();
 
@@ -396,7 +396,7 @@ Product _product(String id, String title, int price) => Product(
   title: title,
   description: 'أحمر شفاه مخملي بثبات يدوم طول السهرة.',
   category: _category,
-  brand: const Brand(id: 'b1', slug: 'reem', nameAr: 'ريم', nameEn: 'Reem'),
+  brand: const Brand(id: 'b1', slug: 'reem', nameAr: 'أوهارا', nameEn: 'Ohara'),
   createdAt: DateTime.now().subtract(const Duration(days: 1)),
   rating: 4.7,
   reviewsCount: 32,

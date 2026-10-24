@@ -1,8 +1,8 @@
-import 'package:reem/core/shared/entities/product.dart';
-import 'package:reem/core/shared/entities/user.dart';
+import 'package:ohara/core/shared/entities/product.dart';
+import 'package:ohara/core/shared/entities/user.dart';
 
-import 'package:reem/features/profile/domain/entities/order_entity.dart';
-import 'package:reem/features/profile/domain/entities/wishlist_entity.dart';
+import 'package:ohara/features/profile/domain/entities/order_entity.dart';
+import 'package:ohara/features/profile/domain/entities/wishlist_entity.dart';
 
 class ProfileState {
   const ProfileState({

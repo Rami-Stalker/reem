@@ -1,5 +1,5 @@
-import 'package:reem/core/shared/entities/user.dart';
-import 'package:reem/features/auth/presentation/providers/auth_message.dart';
+import 'package:ohara/core/shared/entities/user.dart';
+import 'package:ohara/features/auth/presentation/providers/auth_message.dart';
 
 class AuthState {
   const AuthState({

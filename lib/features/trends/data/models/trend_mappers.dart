@@ -1,5 +1,5 @@
-import 'package:reem/core/shared/value_objects/money.dart';
-import 'package:reem/features/trends/domain/entities/trend_entities.dart';
+import 'package:ohara/core/shared/value_objects/money.dart';
+import 'package:ohara/features/trends/domain/entities/trend_entities.dart';
 
 /// Parses `/trends/*`.
 ///

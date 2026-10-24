@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:reem/core/design_system/design_system.dart';
+import 'package:ohara/core/design_system/design_system.dart';
 
 /// The "اليوم" / "أمس" seal between days in a conversation.
 class ChatDateDivider extends StatelessWidget {

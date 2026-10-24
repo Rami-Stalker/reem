@@ -1,7 +1,7 @@
-import 'package:reem/core/result/result.dart';
+import 'package:ohara/core/result/result.dart';
 
-import 'package:reem/features/reputation/domain/entities/fit_entities.dart';
-import 'package:reem/features/reputation/domain/entities/reputation_entities.dart';
+import 'package:ohara/features/reputation/domain/entities/fit_entities.dart';
+import 'package:ohara/features/reputation/domain/entities/reputation_entities.dart';
 
 /// The fit half of a product review, in domain terms.
 class ReviewFitInput {

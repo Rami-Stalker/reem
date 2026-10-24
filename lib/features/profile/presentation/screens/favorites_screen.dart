@@ -3,18 +3,18 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/core/media/authorized_media_image.dart';
-import 'package:reem/core/media/media_variants.dart';
-import 'package:reem/core/router/route_names.dart';
-import 'package:reem/core/router/route_paths.dart';
-import 'package:reem/core/shared/entities/post.dart';
-import 'package:reem/core/shared/entities/product.dart';
-import 'package:reem/core/shared/entities/user.dart';
-import 'package:reem/features/profile/domain/entities/wishlist_entity.dart';
-import 'package:reem/features/profile/presentation/providers/profile_provider.dart';
-import 'package:reem/features/profile/presentation/widgets/favorite_product_card.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/core/media/authorized_media_image.dart';
+import 'package:ohara/core/media/media_variants.dart';
+import 'package:ohara/core/router/route_names.dart';
+import 'package:ohara/core/router/route_paths.dart';
+import 'package:ohara/core/shared/entities/post.dart';
+import 'package:ohara/core/shared/entities/product.dart';
+import 'package:ohara/core/shared/entities/user.dart';
+import 'package:ohara/features/profile/domain/entities/wishlist_entity.dart';
+import 'package:ohara/features/profile/presentation/providers/profile_provider.dart';
+import 'package:ohara/features/profile/presentation/widgets/favorite_product_card.dart';
 
 class FavoritesScreen extends ConsumerStatefulWidget {
   const FavoritesScreen({super.key});
@@ -54,7 +54,7 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
         ? 3
         : 2;
 
-    return ReemScrollPage(
+    return OharaScrollPage(
       slivers: [
         PremiumAppBar(title: context.l10n.wishlist),
         SliverPadding(
@@ -121,7 +121,7 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
                 DsSpacing.sm,
               ),
               sliver: SliverToBoxAdapter(
-                child: ReemSectionHeader(
+                child: OharaSectionHeader(
                   title: context.l10n.savedProducts,
                   subtitle: context.l10n.priceDropsBlurb,
                 ),
@@ -255,7 +255,7 @@ class _WishlistHeader extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Expanded(
-          child: ReemSectionHeader(
+          child: OharaSectionHeader(
             title: context.l10n.savedItems,
             subtitle: isLoading
                 ? context.l10n.syncingWishlist
@@ -369,7 +369,7 @@ class _CollectionsSection extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ReemSectionHeader(
+          OharaSectionHeader(
             title: context.l10n.collections,
             subtitle: context.l10n.collectionsBlurb,
           ),
@@ -516,7 +516,7 @@ class _HorizontalSection extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ReemSectionHeader(title: title, subtitle: subtitle),
+          OharaSectionHeader(title: title, subtitle: subtitle),
           const SizedBox(height: DsSpacing.md),
           SizedBox(
             height: height,

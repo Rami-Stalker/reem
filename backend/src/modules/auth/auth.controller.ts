@@ -212,7 +212,7 @@ export class AuthController {
    * She types her number; we send a code.
    *
    * Answers identically for a number with an account and one without, which is
-   * what stops this unauthenticated route being a public "is she on Reem"
+   * what stops this unauthenticated route being a public "is she on Ohara"
    * lookup.
    */
   @Public()

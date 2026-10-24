@@ -6,7 +6,7 @@ import { Money } from '../../common/money';
  * What a coupon needs to know about one line to decide whether it applies.
  *
  * Deliberately a structural type rather than a Prisma payload: the cart, a
- * Reem Rooms purchase plan and the coupon-preview screen all want this answer
+ * Ohara Rooms purchase plan and the coupon-preview screen all want this answer
  * and none of them holds the same row shape.
  */
 export interface ScopedLine {

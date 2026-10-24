@@ -1,4 +1,4 @@
-import 'package:reem/features/profile/domain/entities/profile_overview.dart';
+import 'package:ohara/features/profile/domain/entities/profile_overview.dart';
 
 /// Boundary for the profile-centre overview. Fulfilled today by
 /// [ProfileOverviewMockDataSource]; swap to a remote implementation in

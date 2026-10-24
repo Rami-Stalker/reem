@@ -2,14 +2,14 @@ import 'dart:async';
 
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:reem/core/result/result.dart';
-import 'package:reem/features/ai_stylist/domain/entities/style_brief.dart';
-import 'package:reem/features/ai_stylist/domain/entities/stylist_conversation.dart';
-import 'package:reem/features/ai_stylist/domain/entities/stylist_message.dart';
-import 'package:reem/features/ai_stylist/domain/repositories/ai_stylist_repository.dart';
-import 'package:reem/features/ai_stylist/presentation/providers/stylist_chat_notifier.dart';
-import 'package:reem/features/rooms/domain/entities/room.dart';
-import 'package:reem/features/search/presentation/discover_waiting.dart';
+import 'package:ohara/core/result/result.dart';
+import 'package:ohara/features/ai_stylist/domain/entities/style_brief.dart';
+import 'package:ohara/features/ai_stylist/domain/entities/stylist_conversation.dart';
+import 'package:ohara/features/ai_stylist/domain/entities/stylist_message.dart';
+import 'package:ohara/features/ai_stylist/domain/repositories/ai_stylist_repository.dart';
+import 'package:ohara/features/ai_stylist/presentation/providers/stylist_chat_notifier.dart';
+import 'package:ohara/features/rooms/domain/entities/room.dart';
+import 'package:ohara/features/search/presentation/discover_waiting.dart';
 
 /// Discover opens on what her life says she needs, and on a question that
 /// arrives at the stylist already asked. These pin both halves.

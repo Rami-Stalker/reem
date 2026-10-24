@@ -18,7 +18,7 @@ import { ValueService } from './value.service';
 import { ValueVisibilityService } from './value-visibility.service';
 
 /**
- * Reem Value against the real database.
+ * Ohara Value against the real database.
  *
  * The kernel tests prove the arithmetic. These prove the promises that only the
  * database can settle — and every one of them is a promise the brief made:

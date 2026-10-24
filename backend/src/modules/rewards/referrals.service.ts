@@ -372,7 +372,7 @@ export class ReferralsService {
           maxUses: 1,
           perUserLimit: 1,
           expiresAt,
-          // Reem funds an invite, not the boutique she happens to buy from.
+          // Ohara funds an invite, not the boutique she happens to buy from.
           fundedBySeller: false,
         },
       });

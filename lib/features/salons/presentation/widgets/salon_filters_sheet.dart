@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/features/salons/domain/entities/salon.dart';
-import 'package:reem/features/salons/presentation/providers/salons_providers.dart';
-import 'package:reem/features/salons/presentation/widgets/salon_labels.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/features/salons/domain/entities/salon.dart';
+import 'package:ohara/features/salons/presentation/providers/salons_providers.dart';
+import 'package:ohara/features/salons/presentation/widgets/salon_labels.dart';
 
 /// «البحث والتصفية حسب المنطقة، نوع الخدمة، السعر والتقييم».
 ///

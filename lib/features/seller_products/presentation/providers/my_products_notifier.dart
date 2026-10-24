@@ -1,13 +1,13 @@
 import 'package:flutter_riverpod/legacy.dart';
-import 'package:reem/core/result/result.dart';
+import 'package:ohara/core/result/result.dart';
 
-import 'package:reem/features/seller_products/domain/entities/managed_product.dart';
-import 'package:reem/features/seller_products/domain/entities/product_status.dart';
-import 'package:reem/features/seller_products/domain/usecases/adjust_stock_usecase.dart';
-import 'package:reem/features/seller_products/domain/usecases/archive_listing_usecase.dart';
-import 'package:reem/features/seller_products/domain/usecases/get_my_products_usecase.dart';
-import 'package:reem/features/seller_products/domain/usecases/set_product_status_usecase.dart';
-import 'package:reem/features/seller_products/presentation/providers/my_products_state.dart';
+import 'package:ohara/features/seller_products/domain/entities/managed_product.dart';
+import 'package:ohara/features/seller_products/domain/entities/product_status.dart';
+import 'package:ohara/features/seller_products/domain/usecases/adjust_stock_usecase.dart';
+import 'package:ohara/features/seller_products/domain/usecases/archive_listing_usecase.dart';
+import 'package:ohara/features/seller_products/domain/usecases/get_my_products_usecase.dart';
+import 'package:ohara/features/seller_products/domain/usecases/set_product_status_usecase.dart';
+import 'package:ohara/features/seller_products/presentation/providers/my_products_state.dart';
 
 class MyProductsNotifier extends StateNotifier<MyProductsState> {
   MyProductsNotifier({

@@ -1,24 +1,24 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 
-import 'package:reem/core/errors/failure_exception.dart';
-import 'package:reem/core/presentation/providers/core_providers.dart';
-import 'package:reem/core/result/result.dart';
-import 'package:reem/core/shared/entities/user.dart';
-import 'package:reem/features/user_profile/data/datasources/impl/user_profile_remote_datasource_impl.dart';
-import 'package:reem/features/user_profile/data/datasources/user_profile_remote_datasource.dart';
-import 'package:reem/features/user_profile/data/repositories/user_profile_repository_impl.dart';
-import 'package:reem/features/user_profile/domain/repositories/user_profile_repository.dart';
-import 'package:reem/features/user_profile/domain/usecases/follow_seller_usecase.dart';
-import 'package:reem/features/user_profile/domain/usecases/get_my_profile_usecase.dart';
-import 'package:reem/features/user_profile/domain/usecases/get_user_profile_usecase.dart';
-import 'package:reem/features/user_profile/domain/usecases/unfollow_seller_usecase.dart';
-import 'package:reem/features/user_profile/domain/usecases/update_profile_usecase.dart';
-import 'package:reem/features/user_profile/presentation/providers/edit_profile_notifier.dart';
-import 'package:reem/features/user_profile/presentation/providers/edit_profile_state.dart';
-import 'package:reem/features/user_profile/presentation/providers/user_profile_notifier.dart';
-import 'package:reem/features/user_profile/presentation/providers/user_profile_state.dart';
-import 'package:reem/features/user_profile/presentation/screens/follow_list_screen.dart';
+import 'package:ohara/core/errors/failure_exception.dart';
+import 'package:ohara/core/presentation/providers/core_providers.dart';
+import 'package:ohara/core/result/result.dart';
+import 'package:ohara/core/shared/entities/user.dart';
+import 'package:ohara/features/user_profile/data/datasources/impl/user_profile_remote_datasource_impl.dart';
+import 'package:ohara/features/user_profile/data/datasources/user_profile_remote_datasource.dart';
+import 'package:ohara/features/user_profile/data/repositories/user_profile_repository_impl.dart';
+import 'package:ohara/features/user_profile/domain/repositories/user_profile_repository.dart';
+import 'package:ohara/features/user_profile/domain/usecases/follow_seller_usecase.dart';
+import 'package:ohara/features/user_profile/domain/usecases/get_my_profile_usecase.dart';
+import 'package:ohara/features/user_profile/domain/usecases/get_user_profile_usecase.dart';
+import 'package:ohara/features/user_profile/domain/usecases/unfollow_seller_usecase.dart';
+import 'package:ohara/features/user_profile/domain/usecases/update_profile_usecase.dart';
+import 'package:ohara/features/user_profile/presentation/providers/edit_profile_notifier.dart';
+import 'package:ohara/features/user_profile/presentation/providers/edit_profile_state.dart';
+import 'package:ohara/features/user_profile/presentation/providers/user_profile_notifier.dart';
+import 'package:ohara/features/user_profile/presentation/providers/user_profile_state.dart';
+import 'package:ohara/features/user_profile/presentation/screens/follow_list_screen.dart';
 
 final userProfileRemoteDataSourceProvider =
     Provider<UserProfileRemoteDataSource>(

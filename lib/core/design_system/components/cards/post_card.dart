@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:reem/core/design_system/components/loaders/ds_skeleton.dart';
-import 'package:reem/core/design_system/foundation/theme/extensions/color_extension.dart';
-import 'package:reem/core/design_system/foundation/tokens/ds_radius.dart';
-import 'package:reem/core/design_system/foundation/tokens/ds_spacing.dart';
+import 'package:ohara/core/design_system/components/loaders/ds_skeleton.dart';
+import 'package:ohara/core/design_system/foundation/theme/extensions/color_extension.dart';
+import 'package:ohara/core/design_system/foundation/tokens/ds_radius.dart';
+import 'package:ohara/core/design_system/foundation/tokens/ds_spacing.dart';
 
 /// The content-shaped placeholder a post occupies while the feed loads.
 ///
 /// The card it used to accompany, `DsPostCard`, is gone: the home feed is
-/// built on `ReemPostCard`, and a second post card in the design system was
+/// built on `OharaPostCard`, and a second post card in the design system was
 /// only ever a chance for the two to drift apart. The skeleton stays, because
 /// it is the shape of the real card and nothing else needs to know that.
 class DsPostCardSkeleton extends StatelessWidget {

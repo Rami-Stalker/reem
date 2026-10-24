@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/core/router/route_paths.dart';
-import 'package:reem/features/seller_orders/domain/entities/seller_order.dart';
-import 'package:reem/features/seller_orders/presentation/providers/seller_orders_provider.dart';
-import 'package:reem/features/seller_orders/presentation/seller_order_labels.dart';
-import 'package:reem/features/seller_orders/presentation/widgets/seller_order_action_prompt.dart';
-import 'package:reem/features/seller_orders/presentation/widgets/seller_order_card.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/core/router/route_paths.dart';
+import 'package:ohara/features/seller_orders/domain/entities/seller_order.dart';
+import 'package:ohara/features/seller_orders/presentation/providers/seller_orders_provider.dart';
+import 'package:ohara/features/seller_orders/presentation/seller_order_labels.dart';
+import 'package:ohara/features/seller_orders/presentation/widgets/seller_order_action_prompt.dart';
+import 'package:ohara/features/seller_orders/presentation/widgets/seller_order_card.dart';
 
 /// The seller's queue — the screen she works a sale from.
 ///
@@ -38,7 +38,7 @@ class SellerOrdersScreen extends ConsumerWidget {
       }
     });
 
-    return ReemScrollPage(
+    return OharaScrollPage(
       onRefresh: notifier.refresh,
       background: const SellerAtelierBackground(),
       backgroundColor: atelier.background,

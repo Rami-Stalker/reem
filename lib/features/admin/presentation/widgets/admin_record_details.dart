@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/core/shared/value_objects/money.dart';
-import 'package:reem/features/admin/presentation/providers/admin_actions.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/core/shared/value_objects/money.dart';
+import 'package:ohara/features/admin/presentation/providers/admin_actions.dart';
 
 /// A console record, read as a record rather than as a payload.
 ///

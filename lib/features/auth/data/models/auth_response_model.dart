@@ -1,6 +1,6 @@
-import 'package:reem/core/shared/models/user_model.dart';
+import 'package:ohara/core/shared/models/user_model.dart';
 
-import 'package:reem/features/auth/data/models/token_model.dart';
+import 'package:ohara/features/auth/data/models/token_model.dart';
 
 class AuthResponseModel {
   final UserModel user;

@@ -1,7 +1,7 @@
-import 'package:reem/core/network/api_endpoints.dart';
-import 'package:reem/core/network/base_remote_datasource.dart';
-import 'package:reem/features/occasions/data/models/occasion_models.dart';
-import 'package:reem/features/occasions/domain/entities/occasion.dart';
+import 'package:ohara/core/network/api_endpoints.dart';
+import 'package:ohara/core/network/base_remote_datasource.dart';
+import 'package:ohara/features/occasions/data/models/occasion_models.dart';
+import 'package:ohara/features/occasions/domain/entities/occasion.dart';
 
 /// What she writes down about a day, from the editor.
 ///

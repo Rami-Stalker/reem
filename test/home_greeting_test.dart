@@ -6,9 +6,9 @@
 // wrong, it just quietly says «مساء الخير» over someone's breakfast — so the
 // slot boundaries and the rotation are pinned here.
 import 'package:flutter_test/flutter_test.dart';
-import 'package:reem/core/utils/damascus_time.dart';
-import 'package:reem/features/home/presentation/widgets/home_greeting.dart';
-import 'package:reem/l10n/app_localizations_ar.dart';
+import 'package:ohara/core/utils/damascus_time.dart';
+import 'package:ohara/features/home/presentation/widgets/home_greeting.dart';
+import 'package:ohara/l10n/app_localizations_ar.dart';
 
 void main() {
   final l10n = AppLocalizationsAr();

@@ -1,7 +1,7 @@
-import 'package:reem/core/shared/models/user_model.dart';
+import 'package:ohara/core/shared/models/user_model.dart';
 
-import 'package:reem/features/reputation/domain/entities/fit_entities.dart';
-import 'package:reem/features/reputation/domain/entities/reputation_entities.dart';
+import 'package:ohara/features/reputation/domain/entities/fit_entities.dart';
+import 'package:ohara/features/reputation/domain/entities/reputation_entities.dart';
 
 class ReviewModel extends ReviewEntity {
   const ReviewModel({

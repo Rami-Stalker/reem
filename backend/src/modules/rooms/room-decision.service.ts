@@ -313,7 +313,7 @@ export class RoomDecisionService {
   /**
    * This one.
    *
-   * The moment an intention becomes a purchase — and the only place in Reem
+   * The moment an intention becomes a purchase — and the only place in Ohara
    * Rooms where that happens. Everything before it is argument.
    *
    * Choosing beyond `pickCount` is refused rather than silently allowed: a

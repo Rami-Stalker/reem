@@ -1,6 +1,6 @@
-import 'package:reem/features/closet/data/models/closet_models.dart';
-import 'package:reem/features/occasions/domain/entities/occasion.dart';
-import 'package:reem/features/salons/data/models/salon_models.dart';
+import 'package:ohara/features/closet/data/models/closet_models.dart';
+import 'package:ohara/features/occasions/domain/entities/occasion.dart';
+import 'package:ohara/features/salons/data/models/salon_models.dart';
 
 /// Wire decoding for «مناسباتي».
 ///

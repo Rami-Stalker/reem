@@ -1,7 +1,7 @@
 import { ValueBenefitKind, ValuePillar } from '@prisma/client';
 
 /**
- * Every tunable Reem Value has, and the whole earning table, in one file.
+ * Every tunable Ohara Value has, and the whole earning table, in one file.
  *
  * These are **seeds**, not law. `ValuePolicy` is a row and the active one wins;
  * what is here is what a fresh installation starts with, and what
@@ -125,7 +125,7 @@ export interface EarningRule {
 /**
  * Every way standing can move.
  *
- * Read this table as the answer to "what does Reem actually value?". Note what
+ * Read this table as the answer to "what does Ohara actually value?". Note what
  * is absent: nothing here pays for opening the app, for a streak, for a daily
  * check-in, or for any act whose only cost is attention. A standing that rises
  * because she scrolled is a engagement metric wearing a status badge.
@@ -374,7 +374,7 @@ export const DEFAULT_TIERS = [
     rank: 4,
     demotionBufferScore: 60,
     holdDays: 180,
-    presentation: { tone: 'gold', blurbAr: 'أنتِ ممن يبنون ريم.' },
+    presentation: { tone: 'gold', blurbAr: 'أنتِ ممن يبنون أوهارا.' },
   },
 ] as const;
 

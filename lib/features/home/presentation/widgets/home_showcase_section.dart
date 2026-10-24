@@ -2,18 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/core/platform/app_haptics.dart';
-import 'package:reem/core/presentation/providers/product_shape_provider.dart';
-import 'package:reem/core/router/route_paths.dart';
-import 'package:reem/core/shared/entities/post.dart';
-import 'package:reem/core/shared/entities/product.dart';
-import 'package:reem/features/discovery/domain/entities/product_collection.dart';
-import 'package:reem/features/home/presentation/feed_interleave.dart';
-import 'package:reem/features/home/presentation/providers/home_provider.dart';
-import 'package:reem/features/home/presentation/widgets/home_section_header.dart';
-import 'package:reem/features/home/presentation/widgets/reem_post_card.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/core/platform/app_haptics.dart';
+import 'package:ohara/core/presentation/providers/product_shape_provider.dart';
+import 'package:ohara/core/router/route_paths.dart';
+import 'package:ohara/core/shared/entities/post.dart';
+import 'package:ohara/core/shared/entities/product.dart';
+import 'package:ohara/features/discovery/domain/entities/product_collection.dart';
+import 'package:ohara/features/home/presentation/feed_interleave.dart';
+import 'package:ohara/features/home/presentation/providers/home_provider.dart';
+import 'package:ohara/features/home/presentation/widgets/home_section_header.dart';
+import 'package:ohara/features/home/presentation/widgets/ohara_post_card.dart';
 
 /// The heart of the home page: **one set of pieces, three ways to look at it.**
 ///
@@ -168,7 +168,7 @@ class HomeShowcaseSection extends ConsumerWidget {
           // leaving a double gap between two posts.
           FeedPost(:final post) => Padding(
             padding: _hPad.copyWith(bottom: DsSpacing.xl),
-            child: ReemPostCard(post: post, featured: index == 0)
+            child: OharaPostCard(post: post, featured: index == 0)
                 .animate()
                 .fadeIn(duration: 420.ms, curve: Curves.easeOut)
                 .slideY(

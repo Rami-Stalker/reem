@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:reem/core/design_system/foundation/motion/curves/ds_curves.dart';
-import 'package:reem/core/design_system/foundation/tokens/ds_motion.dart';
+import 'package:ohara/core/design_system/foundation/motion/curves/ds_curves.dart';
+import 'package:ohara/core/design_system/foundation/tokens/ds_motion.dart';
 
 abstract final class DsScaleAnimations {
   /// The app's one pressable surface: a tap that dips the widget slightly and

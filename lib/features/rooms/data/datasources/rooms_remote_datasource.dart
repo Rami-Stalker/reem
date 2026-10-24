@@ -1,7 +1,7 @@
-import 'package:reem/core/network/api_endpoints.dart';
-import 'package:reem/core/network/base_remote_datasource.dart';
-import 'package:reem/features/rooms/data/models/room_models.dart';
-import 'package:reem/features/rooms/domain/entities/room.dart';
+import 'package:ohara/core/network/api_endpoints.dart';
+import 'package:ohara/core/network/base_remote_datasource.dart';
+import 'package:ohara/features/rooms/data/models/room_models.dart';
+import 'package:ohara/features/rooms/domain/entities/room.dart';
 
 /// A new room, as she describes it.
 class RoomDraft {

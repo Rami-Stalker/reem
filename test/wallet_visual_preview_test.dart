@@ -10,13 +10,13 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/app_localizations.dart';
-import 'package:reem/core/shared/value_objects/money.dart';
-import 'package:reem/features/wallet/domain/entities/wallet_transaction.dart';
-import 'package:reem/features/wallet/presentation/widgets/wallet_balance_card.dart';
-import 'package:reem/features/wallet/presentation/widgets/wallet_transaction_tile.dart';
-import 'package:reem/l10n/app_localizations.dart' as gen;
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/app_localizations.dart';
+import 'package:ohara/core/shared/value_objects/money.dart';
+import 'package:ohara/features/wallet/domain/entities/wallet_transaction.dart';
+import 'package:ohara/features/wallet/presentation/widgets/wallet_balance_card.dart';
+import 'package:ohara/features/wallet/presentation/widgets/wallet_transaction_tile.dart';
+import 'package:ohara/l10n/app_localizations.dart' as gen;
 
 final _captureKey = GlobalKey();
 

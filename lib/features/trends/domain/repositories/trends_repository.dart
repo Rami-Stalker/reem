@@ -1,5 +1,5 @@
-import 'package:reem/core/result/result.dart';
-import 'package:reem/features/trends/domain/entities/trend_entities.dart';
+import 'package:ohara/core/result/result.dart';
+import 'package:ohara/features/trends/domain/entities/trend_entities.dart';
 
 /// The Trend Engine's read surface, as the app needs it.
 ///

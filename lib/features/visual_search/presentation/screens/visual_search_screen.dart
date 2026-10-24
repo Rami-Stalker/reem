@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/core/router/route_paths.dart';
-import 'package:reem/features/cart/presentation/providers/cart_providers.dart';
-import 'package:reem/features/visual_search/domain/entities/visual_match.dart';
-import 'package:reem/features/visual_search/domain/entities/visual_search_session.dart';
-import 'package:reem/features/visual_search/presentation/providers/visual_search_notifier.dart';
-import 'package:reem/features/visual_search/presentation/providers/visual_search_providers.dart';
-import 'package:reem/features/visual_search/presentation/providers/visual_search_state.dart';
-import 'package:reem/features/visual_search/presentation/widgets/visual_match_card.dart';
-import 'package:reem/features/visual_search/presentation/widgets/visual_query_header.dart';
-import 'package:reem/features/visual_search/presentation/widgets/visual_refine_bar.dart';
-import 'package:reem/features/visual_search/presentation/widgets/visual_region_strip.dart';
-import 'package:reem/features/visual_search/presentation/widgets/visual_source_sheet.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/core/router/route_paths.dart';
+import 'package:ohara/features/cart/presentation/providers/cart_providers.dart';
+import 'package:ohara/features/visual_search/domain/entities/visual_match.dart';
+import 'package:ohara/features/visual_search/domain/entities/visual_search_session.dart';
+import 'package:ohara/features/visual_search/presentation/providers/visual_search_notifier.dart';
+import 'package:ohara/features/visual_search/presentation/providers/visual_search_providers.dart';
+import 'package:ohara/features/visual_search/presentation/providers/visual_search_state.dart';
+import 'package:ohara/features/visual_search/presentation/widgets/visual_match_card.dart';
+import 'package:ohara/features/visual_search/presentation/widgets/visual_query_header.dart';
+import 'package:ohara/features/visual_search/presentation/widgets/visual_refine_bar.dart';
+import 'package:ohara/features/visual_search/presentation/widgets/visual_region_strip.dart';
+import 'package:ohara/features/visual_search/presentation/widgets/visual_source_sheet.dart';
 
-/// Reem Visual Shopping — البحث بالصورة.
+/// Ohara Visual Shopping — البحث بالصورة.
 ///
 /// One screen with two states rather than two screens, because it is one
 /// action from her side: she arrives with a picture in mind, hands it over,
@@ -57,7 +57,7 @@ class _VisualSearchScreenState extends ConsumerState<VisualSearchScreen> {
 
     return Scaffold(
       backgroundColor: colors.background,
-      appBar: ReemAppBar(
+      appBar: OharaAppBar(
         title: context.l10n.visualSearchTitle,
         actions: [
           if (state.hasSession)

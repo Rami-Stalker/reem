@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/core/router/open_route.dart';
-import 'package:reem/core/utils/relative_time.dart';
-import 'package:reem/features/chat/domain/entities/chat_thread_entity.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/core/router/open_route.dart';
+import 'package:ohara/core/utils/relative_time.dart';
+import 'package:ohara/features/chat/domain/entities/chat_thread_entity.dart';
 
 /// The head of one conversation: who she is talking to, and whether they are
 /// there right now.
@@ -42,7 +42,7 @@ class ChatAppBar extends StatelessWidget {
     // A capsule floating over the conversation rather than a bar across it:
     // the thread runs up behind the header instead of stopping at a ruled
     // line, and the person she is writing to sits in the arch like everyone
-    // else on Reem.
+    // else on Ohara.
     return Padding(
       padding: const EdgeInsets.fromLTRB(
         DsSpacing.md,

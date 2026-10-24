@@ -1,4 +1,4 @@
-import 'package:reem/core/shared/value_objects/money.dart';
+import 'package:ohara/core/shared/value_objects/money.dart';
 
 /// The scored half of the Trend Engine: windows, stages, the nine
 /// components of a score, and the products and facets they are computed for.

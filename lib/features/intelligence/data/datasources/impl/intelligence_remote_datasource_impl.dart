@@ -1,8 +1,8 @@
-import 'package:reem/core/network/api_endpoints.dart';
-import 'package:reem/core/network/base_remote_datasource.dart';
-import 'package:reem/features/intelligence/data/datasources/intelligence_remote_datasource.dart';
-import 'package:reem/features/intelligence/domain/entities/intelligence_note.dart';
-import 'package:reem/features/intelligence/domain/entities/size_fit.dart';
+import 'package:ohara/core/network/api_endpoints.dart';
+import 'package:ohara/core/network/base_remote_datasource.dart';
+import 'package:ohara/features/intelligence/data/datasources/intelligence_remote_datasource.dart';
+import 'package:ohara/features/intelligence/domain/entities/intelligence_note.dart';
+import 'package:ohara/features/intelligence/domain/entities/size_fit.dart';
 
 final class IntelligenceRemoteDataSourceImpl extends BaseRemoteDataSource
     implements IntelligenceRemoteDataSource {

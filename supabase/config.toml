@@ -254,14 +254,14 @@ otp_expiry = 3600
 # content_path = "./supabase/templates/password_changed_notification.html"
 
 [auth.sms]
-# Reem: sign-in is phone-OTP only. A new number signs up through the same flow;
+# Ohara: sign-in is phone-OTP only. A new number signs up through the same flow;
 # whether it becomes an account is decided by the API (/auth/supabase/exchange).
 enable_signup = true
 # If enabled, users need to confirm their phone number before signing in.
 enable_confirmations = true
 # Template for sending OTP to users. Delivery itself goes through the Send SMS
 # hook below, which uses the backend's WhatsApp/SMS/voice chain.
-template = "رمز الدخول إلى ريم: {{ .Code }}"
+template = "رمز الدخول إلى أوهارا: {{ .Code }}"
 # Controls the minimum amount of time that must pass before sending another sms otp.
 max_frequency = "60s"
 
@@ -286,7 +286,7 @@ max_frequency = "60s"
 # enabled = true
 # uri = "pg-functions://<database>/<schema>/<hook_name>"
 
-# Reem: sign-in codes are delivered by the api function through the backend's
+# Ohara: sign-in codes are delivered by the api function through the backend's
 # own transport chain (WhatsApp Cloud → SMS aggregator → voice). On the hosted
 # project the same hook is set in Dashboard → Authentication → Hooks.
 [auth.hook.send_sms]
@@ -424,8 +424,8 @@ enabled = true
 # and column/key alignment. Set to "null" to emit raw, unformatted SQL.
 # format_options = "{\"keywordCase\":\"upper\",\"indent\":2,\"maxWidth\":180,\"commaStyle\":\"trailing\"}"
 
-# ── Reem ───────────────────────────────────────────────────────────────────────
-# The Reem API: the backend/ NestJS application bundled by supabase/edge.
+# ── Ohara ───────────────────────────────────────────────────────────────────────
+# The Ohara API: the backend/ NestJS application bundled by supabase/edge.
 # The gateway's JWT check is off because the API authenticates every request
 # itself — with the platform's own session tokens, the cron secret, or a signed
 # webhook — and serves public routes (catalogue, delivery webhooks) as well.

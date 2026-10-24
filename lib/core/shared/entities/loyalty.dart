@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-/// Reem membership tiers, lowest → highest. Shared across the home rewards
+/// Ohara membership tiers, lowest → highest. Shared across the home rewards
 /// widget and the profile loyalty dashboard.
 enum LoyaltyTier { rose, gold, platinum, diamond }
 

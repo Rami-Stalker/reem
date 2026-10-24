@@ -139,7 +139,7 @@ export class ReturnsService {
   /**
    * Extra return days her standing buys her.
    *
-   * Reem Value's `ENHANCED_RETURNS`. Read here rather than inside
+   * Ohara Value's `ENHANCED_RETURNS`. Read here rather than inside
    * `return-policy.ts` so that file stays a pure function of facts, and read on
    * both paths — the eligibility screen and the request itself — so the two can
    * never tell her different things about the same parcel.

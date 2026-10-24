@@ -29,7 +29,7 @@ class ValueTier extends Equatable {
 
 /// How much evidence there is behind a pillar.
 ///
-/// `insufficient` is not a low score. It means Reem does not yet know, and the
+/// `insufficient` is not a low score. It means Ohara does not yet know, and the
 /// UI says so in those words — telling a woman she scores zero on something it
 /// has never seen her do would be an accusation dressed as arithmetic.
 enum PillarEvidence {

@@ -1,7 +1,7 @@
-import 'package:reem/core/result/result.dart';
-import 'package:reem/core/shared/entities/product.dart';
+import 'package:ohara/core/result/result.dart';
+import 'package:ohara/core/shared/entities/product.dart';
 
-import 'package:reem/features/discovery/domain/entities/product_page.dart';
+import 'package:ohara/features/discovery/domain/entities/product_page.dart';
 
 abstract interface class DiscoveryRepository {
   Future<Result<ProductPage>> getCollection(

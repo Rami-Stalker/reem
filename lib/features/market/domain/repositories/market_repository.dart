@@ -1,9 +1,9 @@
-import 'package:reem/core/result/result.dart';
-import 'package:reem/features/market/domain/entities/market.dart';
+import 'package:ohara/core/result/result.dart';
+import 'package:ohara/features/market/domain/entities/market.dart';
 
 /// The market layer, wrapped in `Result`.
 ///
-/// Same discipline as everywhere else in Reem: the data source throws, the
+/// Same discipline as everywhere else in Ohara: the data source throws, the
 /// repository turns that into a value, and no screen ever sees an exception it
 /// did not ask for.
 abstract interface class MarketRepository {

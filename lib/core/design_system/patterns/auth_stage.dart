@@ -3,8 +3,8 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/router/open_route.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/router/open_route.dart';
 
 /// The sign-in register: **the boutique at dusk**.
 ///

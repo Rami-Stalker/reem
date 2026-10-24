@@ -2,25 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/features/market/presentation/widgets/market_entry_card.dart';
-import 'package:reem/features/seller_dashboard/presentation/providers/seller_dashboard_provider.dart';
-import 'package:reem/features/seller_dashboard/presentation/widgets/seller_ai_insights_widget.dart';
-import 'package:reem/features/seller_dashboard/presentation/widgets/seller_attention_strip.dart';
-import 'package:reem/features/seller_dashboard/presentation/widgets/seller_conversion_metrics_widget.dart';
-import 'package:reem/features/seller_dashboard/presentation/widgets/seller_goals_widget.dart';
-import 'package:reem/features/seller_dashboard/presentation/widgets/seller_header.dart';
-import 'package:reem/features/seller_dashboard/presentation/widgets/seller_low_stock.dart';
-import 'package:reem/features/seller_dashboard/presentation/widgets/seller_orders_overview.dart';
-import 'package:reem/features/seller_dashboard/presentation/widgets/seller_quick_actions.dart';
-import 'package:reem/features/seller_dashboard/presentation/widgets/seller_recent_reviews_widget.dart';
-import 'package:reem/features/seller_dashboard/presentation/widgets/seller_revenue_card.dart';
-import 'package:reem/features/seller_dashboard/presentation/widgets/seller_sales_chart.dart';
-import 'package:reem/features/seller_dashboard/presentation/widgets/seller_store_score_widget.dart';
-import 'package:reem/features/seller_dashboard/presentation/widgets/seller_tasks_widget.dart';
-import 'package:reem/features/seller_dashboard/presentation/widgets/seller_top_products.dart';
-import 'package:reem/features/seller_intelligence/presentation/widgets/intelligence_entry_card.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/features/market/presentation/widgets/market_entry_card.dart';
+import 'package:ohara/features/seller_dashboard/presentation/providers/seller_dashboard_provider.dart';
+import 'package:ohara/features/seller_dashboard/presentation/widgets/seller_ai_insights_widget.dart';
+import 'package:ohara/features/seller_dashboard/presentation/widgets/seller_attention_strip.dart';
+import 'package:ohara/features/seller_dashboard/presentation/widgets/seller_conversion_metrics_widget.dart';
+import 'package:ohara/features/seller_dashboard/presentation/widgets/seller_goals_widget.dart';
+import 'package:ohara/features/seller_dashboard/presentation/widgets/seller_header.dart';
+import 'package:ohara/features/seller_dashboard/presentation/widgets/seller_low_stock.dart';
+import 'package:ohara/features/seller_dashboard/presentation/widgets/seller_orders_overview.dart';
+import 'package:ohara/features/seller_dashboard/presentation/widgets/seller_quick_actions.dart';
+import 'package:ohara/features/seller_dashboard/presentation/widgets/seller_recent_reviews_widget.dart';
+import 'package:ohara/features/seller_dashboard/presentation/widgets/seller_revenue_card.dart';
+import 'package:ohara/features/seller_dashboard/presentation/widgets/seller_sales_chart.dart';
+import 'package:ohara/features/seller_dashboard/presentation/widgets/seller_store_score_widget.dart';
+import 'package:ohara/features/seller_dashboard/presentation/widgets/seller_tasks_widget.dart';
+import 'package:ohara/features/seller_dashboard/presentation/widgets/seller_top_products.dart';
+import 'package:ohara/features/seller_intelligence/presentation/widgets/intelligence_entry_card.dart';
 
 /// The seller's command centre.
 ///
@@ -58,7 +58,7 @@ class SellerHomeScreen extends ConsumerWidget {
     );
     final l10n = context.l10n;
 
-    return ReemScrollPage(
+    return OharaScrollPage(
       onRefresh: () => _refresh(ref),
       background: const SellerAtelierBackground(),
       backgroundColor: context.dsColors.background,

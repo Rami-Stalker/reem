@@ -1,12 +1,12 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:reem/core/presentation/providers/core_providers.dart';
-import 'package:reem/features/intelligence/data/datasources/impl/intelligence_remote_datasource_impl.dart';
-import 'package:reem/features/intelligence/data/datasources/intelligence_remote_datasource.dart';
-import 'package:reem/features/intelligence/data/repositories/intelligence_repository_impl.dart';
-import 'package:reem/features/intelligence/domain/entities/intelligence_note.dart';
-import 'package:reem/features/intelligence/domain/entities/size_fit.dart';
-import 'package:reem/features/intelligence/domain/repositories/intelligence_repository.dart';
+import 'package:ohara/core/presentation/providers/core_providers.dart';
+import 'package:ohara/features/intelligence/data/datasources/impl/intelligence_remote_datasource_impl.dart';
+import 'package:ohara/features/intelligence/data/datasources/intelligence_remote_datasource.dart';
+import 'package:ohara/features/intelligence/data/repositories/intelligence_repository_impl.dart';
+import 'package:ohara/features/intelligence/domain/entities/intelligence_note.dart';
+import 'package:ohara/features/intelligence/domain/entities/size_fit.dart';
+import 'package:ohara/features/intelligence/domain/repositories/intelligence_repository.dart';
 
 /// Wiring for the intelligence notes.
 ///

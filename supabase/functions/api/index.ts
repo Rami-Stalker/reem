@@ -1,4 +1,4 @@
-// The Reem API on Supabase Edge Functions.
+// The Ohara API on Supabase Edge Functions.
 //
 // `reem-api.mjs` is generated — the whole backend/ NestJS application plus the
 // Supabase adapters in supabase/edge/src — by `npm run build` in supabase/edge.

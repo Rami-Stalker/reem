@@ -1,5 +1,5 @@
-import 'package:reem/core/network/api_client.dart';
-import 'package:reem/core/network/interceptors/cache_interceptor.dart';
+import 'package:ohara/core/network/api_client.dart';
+import 'package:ohara/core/network/interceptors/cache_interceptor.dart';
 
 /// The one place the session tells the response cache who is using the app.
 ///

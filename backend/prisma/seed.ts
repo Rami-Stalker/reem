@@ -453,7 +453,7 @@ async function main() {
 
   const admin = await prisma.user.create({
     data: {
-      name: 'إدارة ريم',
+      name: 'إدارة أوهارا',
       username: 'reem_admin',
       phone: '+966500000001',
       passwordHash: adminHash,
@@ -977,7 +977,7 @@ async function main() {
 
   const brands = await Promise.all(
     [
-      { slug: 'reem-atelier', nameAr: 'ريم أتيليه', nameEn: 'Reem Atelier', isVerified: true },
+      { slug: 'reem-atelier', nameAr: 'أوهارا أتيليه', nameEn: 'Ohara Atelier', isVerified: true },
       { slug: 'damas-couture', nameAr: 'دمشق كوتور', nameEn: 'Damas Couture', isVerified: true },
       { slug: 'yasmine', nameAr: 'ياسمين', nameEn: 'Yasmine', isVerified: false },
     ].map((brand) => prisma.brand.create({ data: brand })),
@@ -1172,7 +1172,7 @@ async function main() {
   }
 
   for (const product of products) {
-    const caption = `أحببنا ${product.title} 💕 تسوّقيه الآن على ريم!`;
+    const caption = `أحببنا ${product.title} 💕 تسوّقيه الآن على أوهارا!`;
     await prisma.commerceContent.create({
       data: {
         authorId: product.sellerId,
@@ -1489,7 +1489,7 @@ async function main() {
   console.log('  Seller:   +963931000101 / Seller123!   (رهف الشامي — أتيليه رهف)');
   console.log('  Customer: +966500000005 / Password123! (مها)');
   console.log('  Customer: +963932000201 / Password123! (نور الدين)');
-  console.log('  Courier:  +963940000001 / Courier123!  (فريق ريم للتوصيل)');
+  console.log('  Courier:  +963940000001 / Courier123!  (فريق أوهارا للتوصيل)');
   console.log('\n  Every demo seller uses Seller123!, every shopper Password123!,');
   console.log('  every courier Courier123! (+96394000000{1..4}).');
   console.log('  Backend: http://localhost:3000\n');

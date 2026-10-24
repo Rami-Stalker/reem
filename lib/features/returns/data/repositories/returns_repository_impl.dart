@@ -1,9 +1,9 @@
-import 'package:reem/core/base/repository_handler.dart';
-import 'package:reem/core/result/result.dart';
-import 'package:reem/features/returns/data/datasources/returns_remote_datasource.dart';
-import 'package:reem/features/returns/domain/entities/return_eligibility.dart';
-import 'package:reem/features/returns/domain/repositories/returns_repository.dart';
-import 'package:reem/features/seller_returns/domain/entities/return_request.dart';
+import 'package:ohara/core/base/repository_handler.dart';
+import 'package:ohara/core/result/result.dart';
+import 'package:ohara/features/returns/data/datasources/returns_remote_datasource.dart';
+import 'package:ohara/features/returns/domain/entities/return_eligibility.dart';
+import 'package:ohara/features/returns/domain/repositories/returns_repository.dart';
+import 'package:ohara/features/seller_returns/domain/entities/return_request.dart';
 
 class ReturnsRepositoryImpl with RepositoryHandler implements ReturnsRepository {
   const ReturnsRepositoryImpl(this.remote);

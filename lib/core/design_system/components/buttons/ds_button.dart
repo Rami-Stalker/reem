@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:reem/core/design_system/components/buttons/button_sizes.dart';
-import 'package:reem/core/design_system/components/buttons/button_states.dart';
-import 'package:reem/core/design_system/components/buttons/button_styles.dart';
-import 'package:reem/core/design_system/foundation/motion/animations/scale_animations.dart';
-import 'package:reem/core/design_system/foundation/theme/extensions/color_extension.dart';
-import 'package:reem/core/design_system/foundation/tokens/ds_motion.dart';
-import 'package:reem/core/design_system/foundation/tokens/ds_spacing.dart';
-import 'package:reem/core/design_system/foundation/tokens/ds_typography.dart';
+import 'package:ohara/core/design_system/components/buttons/button_sizes.dart';
+import 'package:ohara/core/design_system/components/buttons/button_states.dart';
+import 'package:ohara/core/design_system/components/buttons/button_styles.dart';
+import 'package:ohara/core/design_system/foundation/motion/animations/scale_animations.dart';
+import 'package:ohara/core/design_system/foundation/theme/extensions/color_extension.dart';
+import 'package:ohara/core/design_system/foundation/tokens/ds_motion.dart';
+import 'package:ohara/core/design_system/foundation/tokens/ds_spacing.dart';
+import 'package:ohara/core/design_system/foundation/tokens/ds_typography.dart';
 
-/// The Reem button — one widget, every variant, fully token-driven.
+/// The Ohara button — one widget, every variant, fully token-driven.
 ///
 /// ```dart
 /// DsButton(label: 'Add to bag', icon: Icons.shopping_bag_outlined, onPressed: ...)

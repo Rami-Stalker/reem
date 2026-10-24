@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 
-import 'package:reem/core/design_system/foundation/theme/dark_theme.dart';
-import 'package:reem/core/design_system/foundation/theme/light_theme.dart';
-import 'package:reem/core/design_system/foundation/theme/theme_mode.dart';
+import 'package:ohara/core/design_system/foundation/theme/dark_theme.dart';
+import 'package:ohara/core/design_system/foundation/theme/light_theme.dart';
+import 'package:ohara/core/design_system/foundation/theme/theme_mode.dart';
 
-export 'package:reem/core/design_system/foundation/theme/dark_theme.dart';
-export 'package:reem/core/design_system/foundation/theme/ds_theme_extension.dart';
-export 'package:reem/core/design_system/foundation/theme/light_theme.dart';
-export 'package:reem/core/design_system/foundation/theme/theme_controller.dart';
-export 'package:reem/core/design_system/foundation/theme/theme_factory.dart';
-export 'package:reem/core/design_system/foundation/theme/theme_mode.dart';
+export 'package:ohara/core/design_system/foundation/theme/dark_theme.dart';
+export 'package:ohara/core/design_system/foundation/theme/ds_theme_extension.dart';
+export 'package:ohara/core/design_system/foundation/theme/light_theme.dart';
+export 'package:ohara/core/design_system/foundation/theme/theme_controller.dart';
+export 'package:ohara/core/design_system/foundation/theme/theme_factory.dart';
+export 'package:ohara/core/design_system/foundation/theme/theme_mode.dart';
 
 /// Application theme entry point.
 abstract final class AppTheme {

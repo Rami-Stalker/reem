@@ -135,7 +135,7 @@ abstract final class RoutePaths {
       ? keywordSearch
       : '$keywordSearch?q=${Uri.encodeQueryComponent(query.trim())}';
 
-  /// Reem AI Stylist. The bare path opens a new conversation; the `:id` form
+  /// Ohara AI Stylist. The bare path opens a new conversation; the `:id` form
   /// resumes one from her history.
   static const stylist = '/stylist';
   static const stylistConversation = '/stylist/c/:id';
@@ -148,9 +148,9 @@ abstract final class RoutePaths {
   static String stylistOutfitOf(String id) => '/stylist/outfits/$id';
   static const stylistPreferences = '/stylist/preferences';
 
-  /// Reem Closet — her wardrobe. Everything under here is hers and hers only;
+  /// Ohara Closet — her wardrobe. Everything under here is hers and hers only;
   /// there is no shareable form of any of these paths, deliberately.
-  // ── Reem Market Evolution (phase four) ───────────────────────────────
+  // ── Ohara Market Evolution (phase four) ───────────────────────────────
   //
   // Full-screen, none of them in the shell's tab set. A bundle and a drop are
   // both *destinations* — she arrives from a card or a notification, looks at
@@ -180,7 +180,7 @@ abstract final class RoutePaths {
   static const closetGap = '/closet/gaps/:id';
   static String closetGapOf(String id) => '/closet/gaps/$id';
 
-  /// Reem Rooms — Intent → Room → Decision → Purchase. The rooms list replaces
+  /// Ohara Rooms — Intent → Room → Decision → Purchase. The rooms list replaces
   /// the cart tab; `/cart` stays for the one-tap purchase that needs no
   /// deliberation.
   static const rooms = '/rooms';
@@ -204,12 +204,12 @@ abstract final class RoutePaths {
   static String roomCompareOf(String id, String decisionId) =>
       '/rooms/$id/decisions/$decisionId/compare';
 
-  /// Reem Value — her standing. One screen, but the feature lives on the
+  /// Ohara Value — her standing. One screen, but the feature lives on the
   /// profile, on home, in the catalogue and in checkout; this is where she goes
   /// to read it, not where it is.
   static const value = '/value';
 
-  /// Reem Visual Shopping. The bare path opens a new search; the `:id` form
+  /// Ohara Visual Shopping. The bare path opens a new search; the `:id` form
   /// reopens one from her history — which still works after the photograph
   /// itself has been deleted, because the search is the descriptor and the
   /// matches, not the picture.
@@ -275,7 +275,7 @@ abstract final class RoutePaths {
   static const adminAccountVerifications = '/admin/account-verifications';
 
   /// Q63 — the delivery companies desk. Carriers, coverage, and the parcels
-  /// none of them accepted. No drivers: Reem does not run a fleet.
+  /// none of them accepted. No drivers: Ohara does not run a fleet.
   static const adminDelivery = '/admin/delivery';
   static const adminFinancials = '/admin/financials';
   static const adminCommissions = '/admin/commissions';
@@ -287,7 +287,7 @@ abstract final class RoutePaths {
   static const adminAuditLogs = '/admin/audit-logs';
   static const adminSystemSettings = '/admin/system-settings';
 
-  /// Running Reem Value: the guarantee, the ladder, the cost, and the policy.
+  /// Running Ohara Value: the guarantee, the ladder, the cost, and the policy.
   static const adminValue = '/admin/value';
   static const adminCampaigns = '/admin/notification-campaigns';
   static const adminNotificationAnalytics = '/admin/notification-analytics';

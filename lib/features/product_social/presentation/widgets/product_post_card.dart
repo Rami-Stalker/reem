@@ -4,13 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/core/platform/app_haptics.dart';
-import 'package:reem/core/shared/entities/product.dart';
-import 'package:reem/features/cart/presentation/providers/cart_providers.dart';
-import 'package:reem/features/product_social/presentation/product_gestures.dart';
-import 'package:reem/features/product_social/presentation/providers/product_social_providers.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/core/platform/app_haptics.dart';
+import 'package:ohara/core/shared/entities/product.dart';
+import 'package:ohara/features/cart/presentation/providers/cart_providers.dart';
+import 'package:ohara/features/product_social/presentation/product_gestures.dart';
+import 'package:ohara/features/product_social/presentation/providers/product_social_providers.dart';
 
 /// One product, told as a post — with everything a post has.
 ///

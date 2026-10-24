@@ -99,7 +99,7 @@ export class CheckoutService {
   /**
    * The cart's door into checkout.
    *
-   * Kept exactly as it was, and now one of two: Reem Rooms buys through
+   * Kept exactly as it was, and now one of two: Ohara Rooms buys through
    * [checkoutLines] with a plan's own lines, never by filling the cart first.
    * Two doors, one till — see the section comment in `schema.prisma`.
    */

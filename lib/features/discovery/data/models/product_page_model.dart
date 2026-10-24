@@ -1,7 +1,7 @@
-import 'package:reem/core/shared/models/product_model.dart';
+import 'package:ohara/core/shared/models/product_model.dart';
 
-import 'package:reem/features/discovery/domain/entities/product_page.dart';
-import 'package:reem/features/discovery/domain/entities/sponsored_product.dart';
+import 'package:ohara/features/discovery/domain/entities/product_page.dart';
+import 'package:ohara/features/discovery/domain/entities/sponsored_product.dart';
 
 class ProductPageModel extends ProductPage {
   const ProductPageModel({

@@ -1,8 +1,8 @@
-import 'package:reem/core/shared/models/product_model.dart';
-import 'package:reem/core/shared/models/user_model.dart';
+import 'package:ohara/core/shared/models/product_model.dart';
+import 'package:ohara/core/shared/models/user_model.dart';
 
-import 'package:reem/features/profile/data/models/order_model.dart';
-import 'package:reem/features/profile/data/models/wishlist_model.dart';
+import 'package:ohara/features/profile/data/models/order_model.dart';
+import 'package:ohara/features/profile/data/models/wishlist_model.dart';
 
 abstract interface class ProfileRemoteDataSource {
   Future<UserModel> getProfile();

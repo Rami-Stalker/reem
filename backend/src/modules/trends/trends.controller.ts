@@ -56,7 +56,7 @@ import {
 } from './trends.serializer';
 
 /**
- * `/trends` — the Reem Trend Engine's read surface.
+ * `/trends` — the Ohara Trend Engine's read surface.
  *
  * Split into two trees rather than one parameterised by role, because they are
  * genuinely different products:

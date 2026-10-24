@@ -130,7 +130,7 @@ export interface WalletStatement {
 /**
  * The customer's store credit.
  *
- * Q42 settles the shape of this feature: the balance is spendable inside Reem
+ * Q42 settles the shape of this feature: the balance is spendable inside Ohara
  * and **cannot be withdrawn as cash**. That is why this class has `credit` and
  * `spend` but no `withdraw` — the restriction is expressed by the absence of a
  * code path, not by a flag some future caller can pass.

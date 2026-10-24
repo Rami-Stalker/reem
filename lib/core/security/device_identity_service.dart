@@ -2,9 +2,9 @@ import 'dart:convert';
 
 import 'package:cryptography/cryptography.dart';
 
-import 'package:reem/core/observability/error_report.dart';
-import 'package:reem/core/observability/error_reporter.dart';
-import 'package:reem/core/storage/secure_storage_service.dart';
+import 'package:ohara/core/observability/error_report.dart';
+import 'package:ohara/core/observability/error_reporter.dart';
+import 'package:ohara/core/storage/secure_storage_service.dart';
 
 /// This device's cryptographic identity.
 ///

@@ -150,7 +150,7 @@ async function makeBasket(tx: Tx, status: OrderStatus = OrderStatus.SHIPPED) {
       items: {
         create: {
           titleSnapshot: 'عطر شرقي ٥٠ مل',
-          sellerSnapshot: 'بوتيك ريم',
+          sellerSnapshot: 'بوتيك أوهارا',
           currency: Currency.SYP,
           unitPrice: '300000',
           quantity: 1,

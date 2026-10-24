@@ -2,7 +2,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/widgets.dart';
 
-/// Reem's arch: the pointed window of an old Damascus house.
+/// Ohara's arch: the pointed window of an old Damascus house.
 ///
 /// Straight jambs, two curves meeting at the crown, softly rounded feet. It is
 /// the frame of the sign-in emblem and of every profile portrait, so the shape

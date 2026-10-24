@@ -1,5 +1,5 @@
-import 'package:reem/core/shared/value_objects/money.dart';
-import 'package:reem/features/invoices/domain/entities/invoice.dart';
+import 'package:ohara/core/shared/value_objects/money.dart';
+import 'package:ohara/features/invoices/domain/entities/invoice.dart';
 
 /// Wire → domain. Every figure stays a [Money]; none passes through `double`.
 class InvoiceModel extends Invoice {

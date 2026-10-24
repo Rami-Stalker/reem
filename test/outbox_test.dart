@@ -5,9 +5,9 @@
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:reem/core/observability/error_reporter.dart';
-import 'package:reem/core/sync/outbox.dart';
-import 'package:reem/core/sync/outbox_intent.dart';
+import 'package:ohara/core/observability/error_reporter.dart';
+import 'package:ohara/core/sync/outbox.dart';
+import 'package:ohara/core/sync/outbox_intent.dart';
 
 /// A server we can lie to.
 class _FakeHandler implements OutboxHandler {

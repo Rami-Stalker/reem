@@ -3,13 +3,13 @@ import 'dart:math' as math;
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/media/media_decode.dart';
-import 'package:reem/core/media/media_variants.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/media/media_decode.dart';
+import 'package:ohara/core/media/media_variants.dart';
 
 /// The profile register: **a portrait in an arch**.
 ///
-/// A page on Reem is a woman, or a boutique, framed the way the sign-in
+/// A page on Ohara is a woman, or a boutique, framed the way the sign-in
 /// journey frames the brand — in the pointed window of an old Damascus house,
 /// standing in slow light. The pieces here are the vocabulary every profile is
 /// built from:

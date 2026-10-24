@@ -2,22 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/features/highlights/presentation/widgets/highlights_rail.dart';
-import 'package:reem/features/seller_dashboard/presentation/providers/seller_dashboard_provider.dart';
-import 'package:reem/features/seller_dashboard/presentation/widgets/seller_ai_insights_widget.dart';
-import 'package:reem/features/seller_dashboard/presentation/widgets/seller_financial_widget.dart';
-import 'package:reem/features/seller_dashboard/presentation/widgets/seller_goals_widget.dart';
-import 'package:reem/features/seller_dashboard/presentation/widgets/seller_profile_menu.dart';
-import 'package:reem/features/seller_dashboard/presentation/widgets/seller_store_header.dart';
-import 'package:reem/features/seller_dashboard/presentation/widgets/seller_store_score_widget.dart';
-import 'package:reem/features/seller_dashboard/presentation/widgets/seller_store_stats.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/features/highlights/presentation/widgets/highlights_rail.dart';
+import 'package:ohara/features/seller_dashboard/presentation/providers/seller_dashboard_provider.dart';
+import 'package:ohara/features/seller_dashboard/presentation/widgets/seller_ai_insights_widget.dart';
+import 'package:ohara/features/seller_dashboard/presentation/widgets/seller_financial_widget.dart';
+import 'package:ohara/features/seller_dashboard/presentation/widgets/seller_goals_widget.dart';
+import 'package:ohara/features/seller_dashboard/presentation/widgets/seller_profile_menu.dart';
+import 'package:ohara/features/seller_dashboard/presentation/widgets/seller_store_header.dart';
+import 'package:ohara/features/seller_dashboard/presentation/widgets/seller_store_score_widget.dart';
+import 'package:ohara/features/seller_dashboard/presentation/widgets/seller_store_stats.dart';
 
 /// The seller's store profile — who the shop is, what it has earned, how it is
 /// performing, and every setting that governs it.
 ///
-/// The page used to fall through to [ReemScrollPage]'s default ground, which
+/// The page used to fall through to [OharaScrollPage]'s default ground, which
 /// is the buyer's blush silk: a seller opened her own store settings and found
 /// herself standing on the customer's carpet. It now paints the atelier.
 class SellerProfileScreen extends ConsumerWidget {
@@ -29,7 +29,7 @@ class SellerProfileScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return ReemScrollPage(
+    return OharaScrollPage(
       onRefresh: () => _refresh(ref),
       background: const SellerAtelierBackground(),
       backgroundColor: context.dsColors.background,

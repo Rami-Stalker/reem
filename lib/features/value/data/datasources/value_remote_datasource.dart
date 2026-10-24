@@ -1,5 +1,5 @@
-import 'package:reem/features/value/domain/entities/value_standing.dart';
-import 'package:reem/features/value/domain/repositories/value_repository.dart';
+import 'package:ohara/features/value/domain/entities/value_standing.dart';
+import 'package:ohara/features/value/domain/repositories/value_repository.dart';
 
 abstract interface class ValueRemoteDataSource {
   Future<ValueStanding> standing();

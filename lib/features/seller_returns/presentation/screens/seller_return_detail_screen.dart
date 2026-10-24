@@ -2,17 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/errors/failure_exception.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/core/media/authorized_media_image.dart';
-import 'package:reem/core/media/media_variants.dart';
-import 'package:reem/core/router/route_paths.dart';
-import 'package:reem/core/utils/relative_time.dart';
-import 'package:reem/features/seller_returns/domain/entities/return_request.dart';
-import 'package:reem/features/seller_returns/presentation/providers/seller_returns_provider.dart';
-import 'package:reem/features/seller_returns/presentation/return_labels.dart';
-import 'package:reem/features/seller_returns/presentation/screens/seller_returns_screen.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/errors/failure_exception.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/core/media/authorized_media_image.dart';
+import 'package:ohara/core/media/media_variants.dart';
+import 'package:ohara/core/router/route_paths.dart';
+import 'package:ohara/core/utils/relative_time.dart';
+import 'package:ohara/features/seller_returns/domain/entities/return_request.dart';
+import 'package:ohara/features/seller_returns/presentation/providers/seller_returns_provider.dart';
+import 'package:ohara/features/seller_returns/presentation/return_labels.dart';
+import 'package:ohara/features/seller_returns/presentation/screens/seller_returns_screen.dart';
 
 /// One return, in full: what she is being asked, what the customer sent as
 /// proof, what it would cost, and what she can do about it.
@@ -26,7 +26,7 @@ class SellerReturnDetailScreen extends ConsumerWidget {
     final l10n = context.l10n;
     final async = ref.watch(sellerReturnProvider(returnId));
 
-    return ReemScrollPage(
+    return OharaScrollPage(
       onRefresh: () async => ref.invalidate(sellerReturnProvider(returnId)),
       background: const SellerAtelierBackground(),
       backgroundColor: context.atelier.background,

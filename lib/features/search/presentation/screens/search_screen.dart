@@ -6,23 +6,23 @@ import 'package:flutter_riverpod/legacy.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/design_system/patterns/product_cues.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/core/presentation/providers/paginated_notifier.dart';
-import 'package:reem/core/presentation/state/paginated_state.dart';
-import 'package:reem/core/router/open_route.dart';
-import 'package:reem/core/router/route_paths.dart';
-import 'package:reem/core/shared/entities/product.dart';
-import 'package:reem/core/shared/entities/user.dart';
-import 'package:reem/core/shared/value_objects/money_format.dart';
-import 'package:reem/features/catalog/domain/entities/category_node.dart';
-import 'package:reem/features/catalog/presentation/providers/categories_provider.dart';
-import 'package:reem/features/discovery/presentation/providers/sponsored_providers.dart';
-import 'package:reem/features/discovery/presentation/widgets/sponsored_strip.dart';
-import 'package:reem/features/home/presentation/widgets/reem_post_card.dart';
-import 'package:reem/features/search/domain/entities/search_suggestions.dart';
-import 'package:reem/features/search/presentation/providers/search_providers.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/design_system/patterns/product_cues.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/core/presentation/providers/paginated_notifier.dart';
+import 'package:ohara/core/presentation/state/paginated_state.dart';
+import 'package:ohara/core/router/open_route.dart';
+import 'package:ohara/core/router/route_paths.dart';
+import 'package:ohara/core/shared/entities/product.dart';
+import 'package:ohara/core/shared/entities/user.dart';
+import 'package:ohara/core/shared/value_objects/money_format.dart';
+import 'package:ohara/features/catalog/domain/entities/category_node.dart';
+import 'package:ohara/features/catalog/presentation/providers/categories_provider.dart';
+import 'package:ohara/features/discovery/presentation/providers/sponsored_providers.dart';
+import 'package:ohara/features/discovery/presentation/widgets/sponsored_strip.dart';
+import 'package:ohara/features/home/presentation/widgets/ohara_post_card.dart';
+import 'package:ohara/features/search/domain/entities/search_suggestions.dart';
+import 'package:ohara/features/search/presentation/providers/search_providers.dart';
 
 class SearchScreen extends ConsumerStatefulWidget {
   const SearchScreen({super.key});
@@ -524,7 +524,7 @@ class _AllResults extends ConsumerWidget {
               ),
               const SizedBox(height: DsSpacing.sm),
               for (final post in hits.posts.take(2)) ...[
-                ReemPostCard(post: post),
+                OharaPostCard(post: post),
                 const SizedBox(height: DsSpacing.lg),
               ],
             ],
@@ -693,7 +693,7 @@ class _PostResults extends ConsumerWidget {
         ),
         itemCount: state.items.length,
         separatorBuilder: (_, _) => const SizedBox(height: DsSpacing.xl),
-        itemBuilder: (context, index) => ReemPostCard(
+        itemBuilder: (context, index) => OharaPostCard(
           key: ValueKey(state.items[index].id),
           post: state.items[index],
         ),

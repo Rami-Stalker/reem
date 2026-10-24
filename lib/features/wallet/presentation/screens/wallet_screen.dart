@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/features/wallet/domain/entities/wallet_transaction.dart';
-import 'package:reem/features/wallet/presentation/providers/wallet_provider.dart';
-import 'package:reem/features/wallet/presentation/widgets/loyalty_convert_card.dart';
-import 'package:reem/features/wallet/presentation/widgets/wallet_balance_card.dart';
-import 'package:reem/features/wallet/presentation/widgets/wallet_transaction_tile.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/features/wallet/domain/entities/wallet_transaction.dart';
+import 'package:ohara/features/wallet/presentation/providers/wallet_provider.dart';
+import 'package:ohara/features/wallet/presentation/widgets/loyalty_convert_card.dart';
+import 'package:ohara/features/wallet/presentation/widgets/wallet_balance_card.dart';
+import 'package:ohara/features/wallet/presentation/widgets/wallet_transaction_tile.dart';
 
 /// Her store credit, and where every piaster of it came from.
 ///
@@ -26,7 +26,7 @@ class WalletScreen extends ConsumerWidget {
 
     _listenForMessages(context, ref);
 
-    return ReemScrollPage(
+    return OharaScrollPage(
       onRefresh: () => ref.read(walletNotifierProvider.notifier).refresh(),
       slivers: [
         PremiumAppBar(title: l10n.wallet, showBack: true),

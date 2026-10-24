@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/core/router/route_paths.dart';
-import 'package:reem/features/visual_search/presentation/providers/visual_search_providers.dart';
-import 'package:reem/features/visual_search/presentation/widgets/visual_match_card.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/core/router/route_paths.dart';
+import 'package:ohara/features/visual_search/presentation/providers/visual_search_providers.dart';
+import 'package:ohara/features/visual_search/presentation/widgets/visual_match_card.dart';
 
 /// "قطع شبيهة بصريًا" — a rail for a product page.
 ///

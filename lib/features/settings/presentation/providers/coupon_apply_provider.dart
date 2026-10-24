@@ -1,11 +1,11 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 
-import 'package:reem/core/result/result.dart';
-import 'package:reem/core/shared/value_objects/money.dart';
-import 'package:reem/features/cart/presentation/providers/cart_providers.dart';
-import 'package:reem/features/checkout/presentation/providers/applied_coupon_provider.dart';
-import 'package:reem/features/settings/presentation/providers/settings_provider.dart';
+import 'package:ohara/core/result/result.dart';
+import 'package:ohara/core/shared/value_objects/money.dart';
+import 'package:ohara/features/cart/presentation/providers/cart_providers.dart';
+import 'package:ohara/features/checkout/presentation/providers/applied_coupon_provider.dart';
+import 'package:ohara/features/settings/presentation/providers/settings_provider.dart';
 
 /// Why a coupon could not be applied from this screen.
 ///

@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/experience/experience_labels.dart';
-import 'package:reem/core/experience/role_experience.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/core/router/open_route.dart';
-import 'package:reem/features/chat/presentation/providers/chat_provider.dart';
-import 'package:reem/features/experience/presentation/providers/role_experience_provider.dart';
-import 'package:reem/features/settings/presentation/providers/settings_provider.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/experience/experience_labels.dart';
+import 'package:ohara/core/experience/role_experience.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/core/router/open_route.dart';
+import 'package:ohara/features/chat/presentation/providers/chat_provider.dart';
+import 'package:ohara/features/experience/presentation/providers/role_experience_provider.dart';
+import 'package:ohara/features/settings/presentation/providers/settings_provider.dart';
 
 class ExperienceSurfaceScreen extends ConsumerWidget {
   const ExperienceSurfaceScreen({super.key, required this.surface, this.title});
@@ -25,7 +25,7 @@ class ExperienceSurfaceScreen extends ConsumerWidget {
     final menuGroups = experience.visibleMenuGroups.toList(growable: false);
     final surfaceTitle = title ?? _titleFor(context, experience, surface);
 
-    return ReemScrollPage(
+    return OharaScrollPage(
       background: switch (role) {
         ExperienceRole.seller => const SellerAtelierBackground(),
         ExperienceRole.admin => const AdminChromeBackground(),

@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import 'package:reem/features/settings/domain/entities/address_entity.dart';
+import 'package:ohara/features/settings/domain/entities/address_entity.dart';
 
 /// An address as she typed it, before the server has one.
 ///

@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:reem/features/social/data/models/social_models.dart';
+import 'package:ohara/features/social/data/models/social_models.dart';
 
 void main() {
   test('«شوهدت من قبل» reads the owner-only viewers payload', () {

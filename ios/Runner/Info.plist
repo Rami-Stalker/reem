@@ -7,7 +7,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>Reem</string>
+	<string>Ohara</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -15,7 +15,7 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>Reem</string>
+	<string>Ohara</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -72,7 +72,7 @@
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
 	<!--
-	  Portrait only on iPhone. Reem's hundred-odd screens are single-column
+	  Portrait only on iPhone. Ohara's hundred-odd screens are single-column
 	  pages — a feed, a product, a checkout — and there is no landscape layout
 	  behind them: rotating produced a stretched column with empty gutters.
 	  The iPad list below stays complete, because a tablet held sideways is the
@@ -95,7 +95,7 @@
 		<string>en</string>
 	</array>
 	<!--
-	  Export compliance. Reem uses HTTPS and the platform keychain and nothing
+	  Export compliance. Ohara uses HTTPS and the platform keychain and nothing
 	  else — no proprietary or non-standard cryptography — which is the exempt
 	  case. Declaring it here answers the question App Store Connect otherwise
 	  asks by hand on every single upload.
@@ -120,7 +120,7 @@
 	<!--
 	  The custom scheme — `reem://product-details?id=…`, `reem://rooms/join/<slug>`.
 	  Kept alongside the Universal Links in Runner.entitlements rather than
-	  replaced by them: it is what the landing page's «افتحي في تطبيق ريم»
+	  replaced by them: it is what the landing page's «افتحي في تطبيق أوهارا»
 	  button opens, which is the path taken whenever a link arrives somewhere
 	  Universal Links do not fire — a pasted URL, an unverified association, a
 	  redirect chain.
@@ -144,10 +144,10 @@
 	  `remote-notification` lets iOS hand a push to the app while it is in the
 	  background — which is what makes the badge on the app icon correct at the
 	  moment she looks at her home screen, rather than at the moment she next
-	  opens Reem.
+	  opens Ohara.
 
 	  Note what is deliberately NOT here: `fetch`. Background fetch is a
-	  different capability, App Review asks what it is for, and Reem has no
+	  different capability, App Review asks what it is for, and Ohara has no
 	  answer — nothing in this app needs to wake up on a timer.
 
 	  The `aps-environment` entitlement in Runner.entitlements is the other

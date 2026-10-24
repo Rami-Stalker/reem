@@ -1,9 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 
-import 'package:reem/core/presentation/providers/core_providers.dart';
-import 'package:reem/features/discovery/data/datasources/discovery_signals.dart';
-import 'package:reem/features/discovery/domain/entities/sponsored_product.dart';
+import 'package:ohara/core/presentation/providers/core_providers.dart';
+import 'package:ohara/features/discovery/data/datasources/discovery_signals.dart';
+import 'package:ohara/features/discovery/domain/entities/sponsored_product.dart';
 
 final discoverySignalsProvider = Provider<DiscoverySignals>(
   (ref) => DiscoverySignals(ref.watch(dioProvider)),

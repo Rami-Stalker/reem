@@ -3,7 +3,7 @@
 // announces nothing, and a layout that survives only at 100% text.
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:reem/core/design_system/design_system.dart';
+import 'package:ohara/core/design_system/design_system.dart';
 
 Widget _host(Widget child, {double textScale = 1.0}) {
   return MaterialApp(
@@ -127,7 +127,7 @@ void main() {
   });
 
   group('the type scale survives large text', () {
-    // Reem's buyers include women who run their phones at 150-200%. A control
+    // Ohara's buyers include women who run their phones at 150-200%. A control
     // whose height is fixed while its text grows is one that swallows its own
     // label, and the failure is invisible at 100%.
     for (final scale in [1.0, 1.5, 2.0]) {

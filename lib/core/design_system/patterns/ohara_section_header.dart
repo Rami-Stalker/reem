@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
 
-class ReemSectionHeader extends StatelessWidget {
-  const ReemSectionHeader({
+class OharaSectionHeader extends StatelessWidget {
+  const OharaSectionHeader({
     super.key,
     required this.title,
     this.subtitle,

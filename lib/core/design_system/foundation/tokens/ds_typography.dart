@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'package:reem/core/design_system/foundation/tokens/ds_colors.dart';
+import 'package:ohara/core/design_system/foundation/tokens/ds_colors.dart';
 
-/// Typography scale for Reem.
+/// Typography scale for Ohara.
 ///
 /// Two family tokens are exposed: [fontFamily] (Cairo) for body/UI and Arabic/
 /// RTL, and [fontFamilyDisplay] (Playfair Display) — an elegant high-contrast

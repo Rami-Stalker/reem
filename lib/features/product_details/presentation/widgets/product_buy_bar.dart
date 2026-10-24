@@ -4,16 +4,16 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/core/platform/app_haptics.dart';
-import 'package:reem/core/router/route_paths.dart';
-import 'package:reem/core/shared/entities/product_variant.dart';
-import 'package:reem/core/shared/entities/seller_offer.dart';
-import 'package:reem/core/shared/value_objects/money.dart';
-import 'package:reem/features/auth/presentation/widgets/auth_prompt_sheet.dart';
-import 'package:reem/features/cart/presentation/providers/cart_providers.dart';
-import 'package:reem/features/rooms/presentation/widgets/propose_to_room_sheet.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/core/platform/app_haptics.dart';
+import 'package:ohara/core/router/route_paths.dart';
+import 'package:ohara/core/shared/entities/product_variant.dart';
+import 'package:ohara/core/shared/entities/seller_offer.dart';
+import 'package:ohara/core/shared/value_objects/money.dart';
+import 'package:ohara/features/auth/presentation/widgets/auth_prompt_sheet.dart';
+import 'package:ohara/features/cart/presentation/providers/cart_providers.dart';
+import 'package:ohara/features/rooms/presentation/widgets/propose_to_room_sheet.dart';
 
 /// The frosted bar pinned to the foot of the product page.
 ///
@@ -167,7 +167,7 @@ class _ProductBuyBarState extends ConsumerState<ProductBuyBar> {
                 ),
               ),
               DsGaps.hMd,
-              // Reem Rooms, beside the cart rather than instead of it. The two
+              // Ohara Rooms, beside the cart rather than instead of it. The two
               // are different gestures: the cart is "I am taking this", a room
               // is "I am thinking about this" — and a shop that only offers the
               // first forces every considered purchase to pretend to be a

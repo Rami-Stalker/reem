@@ -1,4 +1,4 @@
-// Reem Shop — PostgreSQL schema (Prisma).
+// Ohara Shop — PostgreSQL schema (Prisma).
 // All ids are UUIDs. JSON responses are snake_case (handled in serializers).
 
 generator client {
@@ -306,7 +306,7 @@ enum NotificationType {
   promo
   coupon
 
-  /// Reem Rooms — somebody voted, commented or decided in a room she is in.
+  /// Ohara Rooms — somebody voted, commented or decided in a room she is in.
   /// Coalesced per room rather than one per gesture; see `RoomNotifier`.
   room
 
@@ -422,7 +422,7 @@ enum AnalyticsEventType {
   CAMPAIGN_CLICK
   CUSTOM
 
-  // ── Reem Trend Engine signals ────────────────────────────────────────
+  // ── Ohara Trend Engine signals ────────────────────────────────────────
   //
   // Appended, never reordered: the enum is stored by name in Postgres, but
   // client builds in the field send the old names and must keep working.
@@ -904,7 +904,7 @@ enum ReportStatus {
 /// would be lying about its own evidence. Same reasoning as
 /// `order_items.seller_snapshot`.
 ///
-/// `PLATFORM` is Reem itself — an editorial home banner. It exists so
+/// `PLATFORM` is Ohara itself — an editorial home banner. It exists so
 /// `heroBanners()` can stop routing an operations banner to `/user/:id` as
 /// though a boutique had published it.
 enum CommerceAuthorKind {
@@ -985,7 +985,7 @@ model User {
   email                      String?            @unique
   phone                      String?            @unique
   /// Optional, and off by default (owner decision 1). Null is the normal
-  /// state of a Reem account: the code on her SIM is the credential, and a
+  /// state of a Ohara account: the code on her SIM is the credential, and a
   /// password is a convenience she may add for a device we already know.
   passwordHash               String?            @map("password_hash")
   /// When she opted in. Distinguishes "never had one" from "had one, removed
@@ -1180,14 +1180,14 @@ model User {
   following                 Follow[]                     @relation("Follower")
   followers                 Follow[]                     @relation("Following")
 
-  // Reem AI Stylist — her taste, her conversations, and what they produced.
+  // Ohara AI Stylist — her taste, her conversations, and what they produced.
   stylePreference        UserStylePreference?
   styleSignals           UserStyleSignal[]
   stylistConversations   AiStylistConversation[]
   stylistRecommendations AiStylistRecommendation[]
   stylistOutfits         AiStylistOutfit[]
 
-  // Reem Trend Engine — her shop's daily facts, and the advice built on them.
+  // Ohara Trend Engine — her shop's daily facts, and the advice built on them.
   trendDemandDaily       SellerDemandDaily[]     @relation("SellerDemandDaily")
   productHealthSnapshots ProductHealthSnapshot[] @relation("SellerProductHealth")
   healthSnapshots        SellerHealthSnapshot[]  @relation("SellerHealthSnapshots")
@@ -1197,22 +1197,22 @@ model User {
   missions               MissionProgress[]       @relation("UserMissions")
   trendInsights          TrendInsight[]          @relation("SellerTrendInsights")
 
-  // Reem Visual Shopping — what she photographed, and what she asked to see on
+  // Ohara Visual Shopping — what she photographed, and what she asked to see on
   // herself.
   visualSearchSessions VisualSearchSession[]
   visualTryOnRequests  VisualTryOnRequest[]
 
-  // Reem Closet — what she owns, and what she puts together with it.
+  // Ohara Closet — what she owns, and what she puts together with it.
   closet      Closet?
   closetItems ClosetItem[]
   closetLooks ClosetLook[]
 
-  // Reem Value — her standing, what earned it, and what it opened.
+  // Ohara Value — her standing, what earned it, and what it opened.
   valueProfile ValueProfile?
   valueEvents  ValueEvent[]
   valueGrants  ValueBenefitGrant[]
 
-  // Reem Rooms — the intents she is shopping inside, and the plans they became.
+  // Ohara Rooms — the intents she is shopping inside, and the plans they became.
   roomsOwned           Room[]                    @relation("RoomOwner")
   roomsReceiving       Room[]                    @relation("RoomRecipient")
   roomMemberships      RoomMember[]
@@ -1291,7 +1291,7 @@ enum CustomerFeedbackStatus {
   CLOSED
 }
 
-/// What a customer told the people who run Reem.
+/// What a customer told the people who run Ohara.
 ///
 /// Not a support ticket. A ticket is a conversation about *her* problem with
 /// *her* order, and `SupportTicket` already models that — it has messages, a
@@ -1875,7 +1875,7 @@ model PhoneChangeRequest {
 /// that identity documents do not actually answer the question — they prove
 /// who is holding the phone, not who owns the account.
 ///
-/// What does the work instead is structural: only Reem knows what this account
+/// What does the work instead is structural: only Ohara knows what this account
 /// bought and when, two different staff accounts must agree, seventy-two hours
 /// pass during which the number on file is told what is happening, and money
 /// is frozen for a week after. An attacker has to defeat all four.
@@ -1883,7 +1883,7 @@ model AccountRecoveryCase {
   id           String                @id @default(uuid()) @db.Uuid
   /// Resolved server-side from `claimedPhone`. Null while the claim matches no
   /// account — the case is still created and still answered identically, so
-  /// this route cannot be used to ask whether a woman is on Reem.
+  /// this route cannot be used to ask whether a woman is on Ohara.
   userId       String?               @map("user_id") @db.Uuid
   user         User?                 @relation("RecoverySubject", fields: [userId], references: [id], onDelete: Cascade)
   claimedPhone String                @map("claimed_phone")
@@ -1975,7 +1975,7 @@ model OtpRequest {
   userAgent       String?    @map("user_agent")
   /// Two digits shown on screen the moment she asks for a code, and repeated
   /// inside the message. If they do not match, the message did not come from
-  /// this device's request — the only defence against "this is Reem support,
+  /// this device's request — the only defence against "this is Ohara support,
   /// read me the code", the dominant attack in WhatsApp-OTP markets.
   matchCode       String?    @map("match_code")
   /// Binds the challenge to the app instance that asked for it.
@@ -2344,7 +2344,7 @@ model MediaAsset {
 
   messageAttachments MessageAttachment[]
 
-  // Reem Visual Shopping. All three are private uploads on retention clocks,
+  // Ohara Visual Shopping. All three are private uploads on retention clocks,
   // and all three are `SetNull` on the far side: deleting the photograph must
   // leave the search that used it intact, because the search is a vector and a
   // list of products rather than a picture of anybody.
@@ -2395,7 +2395,7 @@ model Category {
   products Product[]
   coupons  Coupon[]
 
-  // Reem Trend Engine.
+  // Ohara Trend Engine.
   demandDaily        CategoryDemandDaily[]
   trendScores        CategoryTrendScore[]
   trendInsights      TrendInsight[]
@@ -2555,7 +2555,7 @@ model Product {
   stylistRecommendations  AiStylistRecommendation[]
   stylistOutfitItems      AiStylistOutfitItem[]
 
-  // Reem Trend Engine — the facts about this product, and what they said.
+  // Ohara Trend Engine — the facts about this product, and what they said.
   demandDaily       ProductDemandDaily[]
   healthSnapshots   ProductHealthSnapshot[]
   affinitiesFrom    ProductAffinity[]       @relation("AffinityFrom")
@@ -2567,17 +2567,17 @@ model Product {
   trendScores       ProductTrendScore[]
   trendInsights     TrendInsight[]
 
-  // Reem Visual Shopping — its photographs as vectors, and the searches they
+  // Ohara Visual Shopping — its photographs as vectors, and the searches they
   // answered.
   imageEmbeddings     ProductImageEmbedding[]
   visualSearchResults VisualSearchResult[]
   visualTryOnRequests VisualTryOnRequest[]
 
-  // Reem Closet — the women who own this, and the looks it is wanted for.
+  // Ohara Closet — the women who own this, and the looks it is wanted for.
   closetItems     ClosetItem[]
   closetLookItems ClosetLookItem[]
 
-  // Reem Rooms — where it is being considered.
+  // Ohara Rooms — where it is being considered.
   roomCandidates RoomCandidate[]
   coupons        Coupon[]
   duplicateLeft  ProductDuplicateVerdict[] @relation("DuplicateLeft")
@@ -3539,7 +3539,7 @@ model Order {
   cashbackEntries   CashbackLedger[]
   invoices          Invoice[]
 
-  /// The Reem Rooms plan this order was placed from, when it came from one
+  /// The Ohara Rooms plan this order was placed from, when it came from one
   /// rather than from the cart. At most one — a plan orders once.
   purchasePlans PurchasePlan[]
 
@@ -6308,7 +6308,7 @@ model Invoice {
   @@map("invoices")
 }
 
-// ═══════════════════════ Reem AI Stylist ═══════════════════════
+// ═══════════════════════ Ohara AI Stylist ═══════════════════════
 //
 // The personal shopping assistant. The split that makes this trustworthy:
 // language understanding produces a *brief* (a structured intent), and the
@@ -6659,7 +6659,7 @@ model AiStylistOutfitItem {
   @@map("ai_stylist_outfit_items")
 }
 
-// ═══════════════════════ Reem Trend Engine ═══════════════════════
+// ═══════════════════════ Ohara Trend Engine ═══════════════════════
 //
 // Market intelligence: what she wants, what is climbing, what is dying, and
 // what nobody is selling her yet.
@@ -7320,10 +7320,10 @@ model TrendEngineRun {
   @@map("trend_engine_runs")
 }
 
-// ═══════════════════════ Reem Visual Shopping ═══════════════════════
+// ═══════════════════════ Ohara Visual Shopping ═══════════════════════
 //
 // Search and shop by photograph. She screenshots a dress on Instagram, hands
-// it to Reem, and gets the closest things anybody here actually sells.
+// it to Ohara, and gets the closest things anybody here actually sells.
 //
 // The section is shaped by one rule, the same one the Trend Engine is built
 // on: **a similarity percentage is computed from pixels and rows, never from a
@@ -7633,12 +7633,12 @@ model VisualTryOnRequest {
   @@map("visual_try_on_requests")
 }
 
-// ═══════════════════════════ Reem Closet ═══════════════════════════
+// ═══════════════════════════ Ohara Closet ═══════════════════════════
 //
 // Her wardrobe as a first-class object, and the reason to buy derived from it.
 //
 // The whole section turns on one decision, made in `ClosetItem`: a garment she
-// bought here and a garment she already owned are **the same row**. A Reem
+// bought here and a garment she already owned are **the same row**. A Ohara
 // product contributes `product_id`; a personal piece contributes a photograph
 // and a title she typed. Everything downstream — looks, gaps, suggestions,
 // "what can I wear today" — reads the normalised descriptor (`slot`, `colours`,
@@ -7675,11 +7675,11 @@ model VisualTryOnRequest {
 /// Where a piece came from. The three cases differ only in provenance — the
 /// engine treats them identically, which is the point of the table.
 enum ClosetItemSource {
-  /// She owns a Reem product and said so herself.
+  /// She owns a Ohara product and said so herself.
   CATALOG
   /// Added automatically when her order was delivered.
   PURCHASE
-  /// Her own garment, photographed. Reem never sold it and may not stock it.
+  /// Her own garment, photographed. Ohara never sold it and may not stock it.
   PERSONAL
 }
 
@@ -8115,7 +8115,7 @@ model ClosetGap {
   @@map("closet_gaps")
 }
 
-// ═══════════════════════════ Reem Value ═══════════════════════════
+// ═══════════════════════════ Ohara Value ═══════════════════════════
 //
 // Her standing on the platform, and the benefits it opens.
 //
@@ -8169,7 +8169,7 @@ model ClosetGap {
 /// The dimensions standing is built from.
 ///
 /// Six rather than one because the brief is "the quality of her relationship
-/// with Reem, not her spending" — and the only way to mean that structurally is
+/// with Ohara, not her spending" — and the only way to mean that structurally is
 /// to make spending one column among several, each scored on its own evidence.
 enum ValuePillar {
   /// Purchases that stuck: delivered, past the return window, not sent back.
@@ -8607,7 +8607,7 @@ model ValueBenefitGrant {
   @@map("value_benefit_grants")
 }
 
-// ═══════════════════════════ Reem Rooms ═══════════════════════════
+// ═══════════════════════════ Ohara Rooms ═══════════════════════════
 //
 // Buying, as a decision rather than a list.
 //
@@ -8635,7 +8635,7 @@ model ValueBenefitGrant {
 //
 // ── What deliberately did not happen ─────────────────────────────────────
 //
-// `CartItem` is not dropped and Reem Rooms does not write to it. A plan reaches
+// `CartItem` is not dropped and Ohara Rooms does not write to it. A plan reaches
 // `CheckoutService` with its own lines, so the cart is not a hidden staging
 // buffer that a room secretly fills — it is simply a different, older door into
 // the same checkout, still there for a one-tap purchase that needs no
@@ -9147,7 +9147,7 @@ model PurchasePlanItem {
   @@map("purchase_plan_items")
 }
 
-// ═════════════════════════ Reem Seller Intelligence ═══════════════════════
+// ═════════════════════════ Ohara Seller Intelligence ═══════════════════════
 //
 // Phase two of the commerce OS: turning the seller's console from a set of
 // tables she reads into a system that tells her what to do next.
@@ -9242,7 +9242,7 @@ model SellerHealthSnapshot {
   /// The eight dimensions as `{key, score, weight, evidence, sample, ar}`.
   dimensions Json
 
-  /// Evidence-weighted, exactly as in Reem Value: a seller with four orders is
+  /// Evidence-weighted, exactly as in Ohara Value: a seller with four orders is
   /// not *bad*, she is *unmeasured*, and scoring her as though the sample were
   /// large is how a marketplace drives away the sellers it just recruited.
   confidence Float @default(0)
@@ -9282,13 +9282,13 @@ enum SellerHealthBand {
   STEADY
   /// Above the marketplace median on most dimensions.
   STRONG
-  /// The sellers Reem would put in front of a first-time buyer.
+  /// The sellers Ohara would put in front of a first-time buyer.
   EXEMPLARY
 }
 
-// ═══════════════════════ Reem Commerce Graph ══════════════════════════════
+// ═══════════════════════ Ohara Commerce Graph ══════════════════════════════
 //
-// Phase three. The layer that lets Reem answer questions no single table can:
+// Phase three. The layer that lets Ohara answer questions no single table can:
 // *does this go with what she owns*, *has she already got one of these*, *who
 // would want this*, *what sells alongside what*.
 //
@@ -9455,7 +9455,7 @@ model ProductAffinity {
   @@map("product_affinities")
 }
 
-// ═════════════════════ Reem Market Evolution (phase 4) ════════════════════
+// ═════════════════════ Ohara Market Evolution (phase 4) ════════════════════
 //
 // Where the model stops describing a shop and starts describing a *market*.
 //
@@ -9544,7 +9544,7 @@ model MarketSignal {
   @@map("market_signals")
 }
 
-// ── Reem Drops ───────────────────────────────────────────────────────────
+// ── Ohara Drops ───────────────────────────────────────────────────────────
 //
 // A launch as an event rather than a row appearing in a list. The parts that
 // make it more than a scheduled sale are the *audience* — chosen from the
@@ -9572,7 +9572,7 @@ enum DropAudience {
 model Drop {
   id String @id @default(uuid()) @db.Uuid
 
-  /// Null for a platform drop curated by Reem itself.
+  /// Null for a platform drop curated by Ohara itself.
   sellerId String? @map("seller_id") @db.Uuid
   seller   User?   @relation("SellerDrops", fields: [sellerId], references: [id], onDelete: Cascade)
 
@@ -9653,7 +9653,7 @@ model DropInvite {
   @@map("drop_invites")
 }
 
-// ── Reem Bundle ──────────────────────────────────────────────────────────
+// ── Ohara Bundle ──────────────────────────────────────────────────────────
 //
 // Selling a solution rather than a product. The pieces come from the commerce
 // graph's complement relations, which is what lets a bundle cross sellers —
@@ -9733,9 +9733,9 @@ model BundleItem {
   @@map("bundle_items")
 }
 
-// ── Reem Life Cycle + Resale ─────────────────────────────────────────────
+// ── Ohara Life Cycle + Resale ─────────────────────────────────────────────
 //
-// What happens to a piece after it is bought. Reem Closet already knows what
+// What happens to a piece after it is bought. Ohara Closet already knows what
 // she owns, when she last wore it and how often; nothing has ever read that
 // forward into "this has gone quiet — would you sell it".
 
@@ -9776,7 +9776,7 @@ model ResaleListing {
   sellerId String @map("seller_id") @db.Uuid
   seller   User   @relation("ResaleListings", fields: [sellerId], references: [id], onDelete: Cascade)
 
-  /// The catalogue entry it came from, when it came from Reem. Null for a
+  /// The catalogue entry it came from, when it came from Ohara. Null for a
   /// piece she added herself.
   productId String?  @map("product_id") @db.Uuid
   product   Product? @relation("ResaleOf", fields: [productId], references: [id], onDelete: SetNull)
@@ -9804,12 +9804,12 @@ model ResaleListing {
   @@map("resale_listings")
 }
 
-// ── Reem Missions ────────────────────────────────────────────────────────
+// ── Ohara Missions ────────────────────────────────────────────────────────
 //
 // Not points with a new name — that mistake was already made and undone once,
-// in Reem Value. A mission is an *invitation to do something worth doing*:
+// in Ohara Value. A mission is an *invitation to do something worth doing*:
 // finish the outfit you started, tell somebody whether the dress ran small,
-// try a shop nobody has tried. Each has to leave Reem better than it found it,
+// try a shop nobody has tried. Each has to leave Ohara better than it found it,
 // which is why every completion is measured from evidence the platform already
 // keeps rather than from a counter a client increments.
 
@@ -9848,7 +9848,7 @@ model Mission {
   /// did not write.
   criteria Json
 
-  /// What it is worth in Reem Value, so the reward is standing rather than a
+  /// What it is worth in Ohara Value, so the reward is standing rather than a
   /// discount. Missions must not become coupons.
   valuePoints Int @default(0) @map("value_points")
 
@@ -9896,13 +9896,13 @@ model MissionProgress {
 
 // ───────────────────────── Delivery integration (Q63 / Q55) ─────────────────
 //
-// Reem owns the order; a delivery company owns the journey. The platform does
+// Ohara owns the order; a delivery company owns the journey. The platform does
 // not run drivers, routes or fleets — it hands a parcel to a carrier and reads
 // back what the carrier says about it.
 //
 // Three tables, deliberately separate from `Shipment`:
 //
-//   * `Shipment` stays what it always was — Reem's own record of the box: the
+//   * `Shipment` stays what it always was — Ohara's own record of the box: the
 //     tracking code the customer was given, the cash due at the door, the
 //     proof, the attempt count, the lifecycle every downstream system reads.
 //   * `DeliveryProviderAccount` is a carrier the platform can dispatch to, and
@@ -10004,7 +10004,7 @@ model DeliveryProviderAccount {
 
 /// One parcel, handed to one carrier.
 ///
-/// `status` is Reem's vocabulary — the same `ShipmentStatus` the rest of the
+/// `status` is Ohara's vocabulary — the same `ShipmentStatus` the rest of the
 /// platform speaks — and `providerStatus` is whatever the carrier called it.
 /// Both are kept: the first is what the app, the ledger and the return window
 /// read; the second is what support needs when a carrier is asked why.
@@ -10365,7 +10365,7 @@ model PolicyDocumentVersion {
 
 /// One version, in one language.
 ///
-/// Arabic is the authoritative text — Reem's customers and its sellers are
+/// Arabic is the authoritative text — Ohara's customers and its sellers are
 /// Syrian, and the contract they are entering is the Arabic one. English is a
 /// courtesy translation and the reader is told so, which is why `locale` is a
 /// column rather than two sets of body fields: a third language is a row.
@@ -10448,7 +10448,7 @@ model PolicyAcceptance {
 //
 // ## Why this is not a second marketplace
 //
-// A salon is a business on Reem, exactly as a boutique is, and it is owned by
+// A salon is a business on Ohara, exactly as a boutique is, and it is owned by
 // the same `User` a boutique is owned by. There is no `SALON` role: the role
 // enum is read by every guard, the permission matrix, the admin console and
 // the client's navigation map, and adding a value to it would touch all four
@@ -10779,7 +10779,7 @@ model Appointment {
   price           Decimal  @db.Decimal(18, 4)
   currency        Currency @default(SYP)
 
-  /// Charged at the chair, not here. Reem takes no money for an appointment in
+  /// Charged at the chair, not here. Ohara takes no money for an appointment in
   /// this release — there is no ledger entry, no escrow and no commission, and
   /// pretending otherwise in the schema would invite a later reader to assume
   /// money moved.
@@ -10964,7 +10964,7 @@ enum ReviewFit {
   RUNS_LARGE
 }
 
-/// «مقاساتي» — what a woman tells Reem about her size, so reviews by women
+/// «مقاساتي» — what a woman tells Ohara about her size, so reviews by women
 /// like her can be found.
 ///
 /// Two numbers and a switch, deliberately. No weight, no body shape, no

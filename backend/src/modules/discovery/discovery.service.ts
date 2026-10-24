@@ -269,7 +269,7 @@ export class DiscoveryService {
     );
 
     // The lists are cached for everyone; what this viewer may not open yet
-    // (Reem Value's early access and exclusives) leaves after the cache.
+    // (Ohara Value's early access and exclusives) leaves after the cache.
     const visible = await this.visibility.visibleAmong(
       viewerId,
       sections.flatMap((section) => section.products.map((p) => p.id)),

@@ -25,7 +25,7 @@ import {
  *
  * The vocabulary is the stylist's, deliberately and without exception: slots
  * from `OutfitSlot`, colours and materials from `stylist-lexicon`, occasions
- * from `OCCASIONS`. Inventing a parallel one here would give Reem two opinions
+ * from `OCCASIONS`. Inventing a parallel one here would give Ohara two opinions
  * about what "كحلي" means, and the two would drift.
  */
 export interface GarmentDescriptor {
@@ -311,7 +311,7 @@ function sizeFromVariant(
 }
 
 /**
- * Describe a garment Reem has never seen.
+ * Describe a garment Ohara has never seen.
  *
  * The only input is what she wrote — a title, maybe a note — so the derivation
  * leans entirely on the lexicon's Arabic surface forms. It is expected to be

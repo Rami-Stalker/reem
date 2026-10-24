@@ -179,14 +179,14 @@ abstract class AppLocalizations {
   /// Menu item
   ///
   /// In en, this message translates to:
-  /// **'About Reem'**
-  String get aboutReem;
+  /// **'About Ohara'**
+  String get aboutOhara;
 
   /// About screen description
   ///
   /// In en, this message translates to:
   /// **'A premium social-commerce home for the pieces you love — shopping, discovery and community in one place.'**
-  String get aboutReemBlurb;
+  String get aboutOharaBlurb;
 
   /// Settings section
   ///
@@ -233,7 +233,7 @@ abstract class AppLocalizations {
   /// Explains what verification is for
   ///
   /// In en, this message translates to:
-  /// **'The badge beside your name says Reem has checked who you are. Send a document and we will look at it.'**
+  /// **'The badge beside your name says Ohara has checked who you are. Send a document and we will look at it.'**
   String get accountVerificationBlurb;
 
   /// Label of the document-type field
@@ -275,7 +275,7 @@ abstract class AppLocalizations {
   /// Privacy note under the document uploads
   ///
   /// In en, this message translates to:
-  /// **'Your documents are read only by the staff who review them, and by nobody else on Reem.'**
+  /// **'Your documents are read only by the staff who review them, and by nobody else on Ohara.'**
   String get accountVerificationPrivacy;
 
   /// Resubmits a claim that was returned or refused
@@ -323,7 +323,7 @@ abstract class AppLocalizations {
   /// Status of a badge that was granted and later revoked
   ///
   /// In en, this message translates to:
-  /// **'Withdrawn by Reem'**
+  /// **'Withdrawn by Ohara'**
   String get accountVerificationStatusRevoked;
 
   /// Status of a claim a reviewer has opened
@@ -2111,7 +2111,7 @@ abstract class AppLocalizations {
   /// Title of the AI stylist screen [re-authored: original wording lost]
   ///
   /// In en, this message translates to:
-  /// **'Reem Stylist'**
+  /// **'Ohara Stylist'**
   String get aiStylistTitle;
 
   /// Filter chip that clears the category filter.
@@ -2357,7 +2357,7 @@ abstract class AppLocalizations {
   /// Application name shown in the task switcher
   ///
   /// In en, this message translates to:
-  /// **'Reem'**
+  /// **'Ohara'**
   String get appTitle;
 
   /// About screen
@@ -2375,7 +2375,7 @@ abstract class AppLocalizations {
   /// Appearance screen description
   ///
   /// In en, this message translates to:
-  /// **'Choose how Reem looks on your device. Your choice is saved automatically.'**
+  /// **'Choose how Ohara looks on your device. Your choice is saved automatically.'**
   String get appearanceDescription;
 
   /// Applies filters
@@ -2765,7 +2765,7 @@ abstract class AppLocalizations {
   /// Marketplace safety note above the conversation list
   ///
   /// In en, this message translates to:
-  /// **'Keep payments inside Reem'**
+  /// **'Keep payments inside Ohara'**
   String get chatSafetyNote;
 
   /// Body of the marketplace safety note
@@ -3689,7 +3689,7 @@ abstract class AppLocalizations {
   /// Mandatory self-declaration on the registration form (Q43/Q138 P1).
   ///
   /// In en, this message translates to:
-  /// **'I declare that I am a woman and accept the Reem terms'**
+  /// **'I declare that I am a woman and accept the Ohara terms'**
   String get declaredFemaleLabel;
 
   /// Button label
@@ -3770,13 +3770,13 @@ abstract class AppLocalizations {
   /// **'Discount'**
   String get discount;
 
-  /// Helper line under the Ask Reem field on Discover.
+  /// Helper line under the Ask Ohara field on Discover.
   ///
   /// In en, this message translates to:
   /// **'Describe the occasion or the feeling — “a summer wedding, something soft, under 60k”'**
   String get discoverAskHelper;
 
-  /// Placeholder of the Ask Reem field on Discover.
+  /// Placeholder of the Ask Ohara field on Discover.
   ///
   /// In en, this message translates to:
   /// **'What do you need?'**
@@ -3785,7 +3785,7 @@ abstract class AppLocalizations {
   /// Label above the Discover question field, which opens the stylist with her question.
   ///
   /// In en, this message translates to:
-  /// **'Ask Reem'**
+  /// **'Ask Ohara'**
   String get discoverAskLabel;
 
   /// Tooltip of the send button on the Discover question field.
@@ -4193,7 +4193,7 @@ abstract class AppLocalizations {
   /// No description provided for @faqPaymentAnswer.
   ///
   /// In en, this message translates to:
-  /// **'Cash on delivery, or from your Reem wallet. Never pay a boutique outside the app — an order paid outside it is not protected.'**
+  /// **'Cash on delivery, or from your Ohara wallet. Never pay a boutique outside the app — an order paid outside it is not protected.'**
   String get faqPaymentAnswer;
 
   /// FAQ question
@@ -5279,7 +5279,7 @@ abstract class AppLocalizations {
   /// Title of the loyalty card on home.
   ///
   /// In en, this message translates to:
-  /// **'Reem Rewards'**
+  /// **'Ohara Rewards'**
   String get homeLoyaltyTitle;
 
   /// Eyebrow above the nearby boutiques section.
@@ -5753,7 +5753,7 @@ abstract class AppLocalizations {
   /// Anti-relay guidance beside the match code
   ///
   /// In en, this message translates to:
-  /// **'Check that the message shows the same two digits. Reem will never ask you to read a code aloud.'**
+  /// **'Check that the message shows the same two digits. Ohara will never ask you to read a code aloud.'**
   String get matchCodeHint;
 
   /// The two digits she compares against the message
@@ -6293,13 +6293,13 @@ abstract class AppLocalizations {
   /// No description provided for @notifPushBlocked.
   ///
   /// In en, this message translates to:
-  /// **'Your phone is blocking Reem\'s notifications.'**
+  /// **'Your phone is blocking Ohara\'s notifications.'**
   String get notifPushBlocked;
 
   /// No description provided for @notifPushBlockedBody.
   ///
   /// In en, this message translates to:
-  /// **'Your phone is blocking Reem, so nothing below will reach you until you allow it in the system settings.'**
+  /// **'Your phone is blocking Ohara, so nothing below will reach you until you allow it in the system settings.'**
   String get notifPushBlockedBody;
 
   /// No description provided for @notifPushBlockedTitle.
@@ -10583,7 +10583,7 @@ abstract class AppLocalizations {
   /// TOTP enrolment: totpSetupTitle
   ///
   /// In en, this message translates to:
-  /// **'Add Reem to your authenticator'**
+  /// **'Add Ohara to your authenticator'**
   String get totpSetupTitle;
 
   /// TOTP enrolment: totpTitle
@@ -11657,7 +11657,7 @@ abstract class AppLocalizations {
   /// Shown when microphone permission is refused.
   ///
   /// In en, this message translates to:
-  /// **'Reem needs permission to use the microphone.'**
+  /// **'Ohara needs permission to use the microphone.'**
   String get voicePermissionDenied;
 
   /// Tooltip on the microphone button in the composer.
@@ -11711,7 +11711,7 @@ abstract class AppLocalizations {
   /// Q42 — the wallet balance cannot be withdrawn as cash.
   ///
   /// In en, this message translates to:
-  /// **'Spendable inside Reem only'**
+  /// **'Spendable inside Ohara only'**
   String get walletNotWithdrawable;
 
   /// Shown when the wallet cannot load because the device is offline.
@@ -11801,8 +11801,8 @@ abstract class AppLocalizations {
   /// Auth screen heading
   ///
   /// In en, this message translates to:
-  /// **'Welcome to Reem'**
-  String get welcomeToReem;
+  /// **'Welcome to Ohara'**
+  String get welcomeToOhara;
 
   /// Screen title
   ///
@@ -12857,7 +12857,7 @@ abstract class AppLocalizations {
   /// No description provided for @policiesSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'The documents that govern your use of Reem'**
+  /// **'The documents that govern your use of Ohara'**
   String get policiesSubtitle;
 
   /// No description provided for @policiesSectionForYou.
@@ -13007,7 +13007,7 @@ abstract class AppLocalizations {
   /// No description provided for @policiesConsentIntroNew.
   ///
   /// In en, this message translates to:
-  /// **'Please read and accept the following to keep using Reem.'**
+  /// **'Please read and accept the following to keep using Ohara.'**
   String get policiesConsentIntroNew;
 
   /// No description provided for @policiesConsentIntroUpdated.
@@ -13847,7 +13847,7 @@ abstract class AppLocalizations {
   ///
   ///
   /// In en, this message translates to:
-  /// **'Add your pieces — what you bought on Reem and what you already had. That’s how we learn what you’re missing and what you can wear.'**
+  /// **'Add your pieces — what you bought on Ohara and what you already had. That’s how we learn what you’re missing and what you can wear.'**
   String get closetEmptyBody;
 
   ///
@@ -15029,7 +15029,7 @@ abstract class AppLocalizations {
   ///
   ///
   /// In en, this message translates to:
-  /// **'My standing in Reem'**
+  /// **'My standing in Ohara'**
   String get valueTitle;
 
   ///
@@ -15401,7 +15401,7 @@ abstract class AppLocalizations {
   ///
   ///
   /// In en, this message translates to:
-  /// **'Your standing in Reem'**
+  /// **'Your standing in Ohara'**
   String get valueCardTitle;
 
   ///
@@ -15422,13 +15422,13 @@ abstract class AppLocalizations {
   /// **'Steady'**
   String get valueCardSteady;
 
-  /// Reem Value console.
+  /// Ohara Value console.
   ///
   /// In en, this message translates to:
   /// **' — tier “{rung}”'**
   String valueAdminSpendingRung(String rung);
 
-  /// Reem Value console.
+  /// Ohara Value console.
   ///
   /// In en, this message translates to:
   /// **'; the top tier is “{rung}”.'**
@@ -15449,7 +15449,7 @@ abstract class AppLocalizations {
   ///
   ///
   /// In en, this message translates to:
-  /// **'{count, plural, =1{From one shop — Reem put them together because they go well.} other{From {count} shops — Reem put them together because they go well.}}'**
+  /// **'{count, plural, =1{From one shop — Ohara put them together because they go well.} other{From {count} shops — Ohara put them together because they go well.}}'**
   String marketLookFromShops(int count);
 
   ///
@@ -15461,7 +15461,7 @@ abstract class AppLocalizations {
   ///
   ///
   /// In en, this message translates to:
-  /// **'Same slot, another piece Reem sees as close to it.'**
+  /// **'Same slot, another piece Ohara sees as close to it.'**
   String get marketCheaperOptionsBody;
 
   ///
@@ -15611,7 +15611,7 @@ abstract class AppLocalizations {
   ///
   ///
   /// In en, this message translates to:
-  /// **'Reem only asks for something when it’s worth it and within reach.'**
+  /// **'Ohara only asks for something when it’s worth it and within reach.'**
   String get marketNoMissionsBody;
 
   ///
@@ -15671,7 +15671,7 @@ abstract class AppLocalizations {
   ///
   ///
   /// In en, this message translates to:
-  /// **'When Reem finds a piece in your closet that isn’t being worn, she’ll suggest listing it here.'**
+  /// **'When Ohara finds a piece in your closet that isn’t being worn, she’ll suggest listing it here.'**
   String get marketNoOwnListingsBody;
 
   ///
@@ -15737,7 +15737,7 @@ abstract class AppLocalizations {
   ///
   ///
   /// In en, this message translates to:
-  /// **'No signal strong enough right now. Reem only speaks when the data is enough.'**
+  /// **'No signal strong enough right now. Ohara only speaks when the data is enough.'**
   String get marketNoSignal;
 
   ///
@@ -16355,8 +16355,8 @@ abstract class AppLocalizations {
   ///
   ///
   /// In en, this message translates to:
-  /// **'Reem wallet'**
-  String get settingsReemWallet;
+  /// **'Ohara wallet'**
+  String get settingsOharaWallet;
 
   ///
   ///
@@ -17363,13 +17363,13 @@ abstract class AppLocalizations {
   ///
   ///
   /// In en, this message translates to:
-  /// **'Reem’s personal stylist'**
+  /// **'Ohara’s personal stylist'**
   String get stylistWelcomeTitle;
 
   ///
   ///
   /// In en, this message translates to:
-  /// **'Tell me about the occasion, the piece or the budget — I’ll line up options that Reem’s sellers actually have, and tell you why I picked each one.'**
+  /// **'Tell me about the occasion, the piece or the budget — I’ll line up options that Ohara’s sellers actually have, and tell you why I picked each one.'**
   String get stylistWelcomeBody;
 
   ///
@@ -17453,7 +17453,7 @@ abstract class AppLocalizations {
   ///
   ///
   /// In en, this message translates to:
-  /// **'Upload a photo of the piece — a screenshot from Instagram, TikTok or Pinterest, or one from your gallery — and we’ll find the closest thing in Reem.'**
+  /// **'Upload a photo of the piece — a screenshot from Instagram, TikTok or Pinterest, or one from your gallery — and we’ll find the closest thing in Ohara.'**
   String get visualSawSomethingBody;
 
   ///
@@ -17495,7 +17495,7 @@ abstract class AppLocalizations {
   ///
   ///
   /// In en, this message translates to:
-  /// **'Comparing your photo with products actually on Reem.'**
+  /// **'Comparing your photo with products actually on Ohara.'**
   String get visualComparing;
 
   ///
@@ -17825,7 +17825,7 @@ abstract class AppLocalizations {
   ///
   ///
   /// In en, this message translates to:
-  /// **'Ask Reem’s stylist'**
+  /// **'Ask Ohara’s stylist'**
   String get homeAskStylist;
 
   ///
@@ -18077,7 +18077,7 @@ abstract class AppLocalizations {
   /// Order and listing status wording.
   ///
   /// In en, this message translates to:
-  /// **'Reem wallet'**
+  /// **'Ohara wallet'**
   String get payMethodWallet;
 
   /// Order and listing status wording.
@@ -18395,7 +18395,7 @@ abstract class AppLocalizations {
   /// Seller order breakdown: a platform-funded coupon, shown as a note rather than a deduction.
   ///
   /// In en, this message translates to:
-  /// **'A {amount} discount was paid by Reem and doesn\'t come out of your earnings.'**
+  /// **'A {amount} discount was paid by Ohara and doesn\'t come out of your earnings.'**
   String sellerOrderPlatformDiscountNote(String amount);
 
   /// Composer chip: a product post.
@@ -18752,31 +18752,31 @@ abstract class AppLocalizations {
   /// **'Users'**
   String get adminReportTypeUsers;
 
-  /// Reem Value standing rung: New.
+  /// Ohara Value standing rung: New.
   ///
   /// In en, this message translates to:
   /// **'New'**
   String get valueRungNew;
 
-  /// Reem Value standing rung: Known.
+  /// Ohara Value standing rung: Known.
   ///
   /// In en, this message translates to:
   /// **'Known'**
   String get valueRungKnown;
 
-  /// Reem Value standing rung: Trusted.
+  /// Ohara Value standing rung: Trusted.
   ///
   /// In en, this message translates to:
   /// **'Trusted'**
   String get valueRungTrusted;
 
-  /// Reem Value standing rung: Insider.
+  /// Ohara Value standing rung: Insider.
   ///
   /// In en, this message translates to:
   /// **'Insider'**
   String get valueRungInsider;
 
-  /// Reem Value standing rung: Circle.
+  /// Ohara Value standing rung: Circle.
   ///
   /// In en, this message translates to:
   /// **'Circle'**
@@ -18833,34 +18833,34 @@ abstract class AppLocalizations {
   /// Label on the home hero's ask-the-stylist field.
   ///
   /// In en, this message translates to:
-  /// **'Ask Reem'**
-  String get homeAskReem;
+  /// **'Ask Ohara'**
+  String get homeAskOhara;
 
-  /// Rotating example inside the ask-Reem field.
+  /// Rotating example inside the ask-Ohara field.
   ///
   /// In en, this message translates to:
   /// **'A navy evening dress under 50K'**
   String get homeAskExample1;
 
-  /// Rotating example inside the ask-Reem field.
+  /// Rotating example inside the ask-Ohara field.
   ///
   /// In en, this message translates to:
   /// **'A comfortable, polished work look'**
   String get homeAskExample2;
 
-  /// Rotating example inside the ask-Reem field.
+  /// Rotating example inside the ask-Ohara field.
   ///
   /// In en, this message translates to:
   /// **'A birthday gift for my sister'**
   String get homeAskExample3;
 
-  /// Rotating example inside the ask-Reem field.
+  /// Rotating example inside the ask-Ohara field.
   ///
   /// In en, this message translates to:
   /// **'What goes with beige shoes?'**
   String get homeAskExample4;
 
-  /// Camera button on the ask-Reem field.
+  /// Camera button on the ask-Ohara field.
   ///
   /// In en, this message translates to:
   /// **'Search by photo'**
@@ -18923,7 +18923,7 @@ abstract class AppLocalizations {
   /// Home section subtitle over the mood tiles.
   ///
   /// In en, this message translates to:
-  /// **'Pick one and Reem styles the whole look'**
+  /// **'Pick one and Ohara styles the whole look'**
   String get homeMoodSubtitle;
 
   /// Mood tile.
@@ -19001,7 +19001,7 @@ abstract class AppLocalizations {
   /// Eyebrow over the swipe deck.
   ///
   /// In en, this message translates to:
-  /// **'Picked for you by Reem'**
+  /// **'Picked for you by Ohara'**
   String get homeDeckEyebrow;
 
   /// Title over the swipe deck.
@@ -19049,7 +19049,7 @@ abstract class AppLocalizations {
   /// Swipe deck end card body.
   ///
   /// In en, this message translates to:
-  /// **'{count, plural, =0{Nothing today? Reem will learn from that.} =1{You loved 1 piece; it\'s in your likes.} other{You loved {count} pieces; they\'re in your likes.}}'**
+  /// **'{count, plural, =0{Nothing today? Ohara will learn from that.} =1{You loved 1 piece; it\'s in your likes.} other{You loved {count} pieces; they\'re in your likes.}}'**
   String homeDeckDoneBody(int count);
 
   /// Swipe deck end card button.
@@ -19067,7 +19067,7 @@ abstract class AppLocalizations {
   /// Eyebrow over the category bento.
   ///
   /// In en, this message translates to:
-  /// **'Reem\'s world'**
+  /// **'Ohara\'s world'**
   String get homeBentoEyebrow;
 
   /// Title over the category bento.
@@ -19277,7 +19277,7 @@ abstract class AppLocalizations {
   /// Heading over the buyer / seller choice
   ///
   /// In en, this message translates to:
-  /// **'How will you join Reem?'**
+  /// **'How will you join Ohara?'**
   String get authSectionJoinAs;
 
   /// Caption on the buyer role card
@@ -20753,14 +20753,14 @@ abstract class AppLocalizations {
   /// Salons
   ///
   /// In en, this message translates to:
-  /// **'Open your salon on Reem'**
-  String get salonOpenOnReem;
+  /// **'Open your salon on Ohara'**
+  String get salonOpenOnOhara;
 
   /// Salons
   ///
   /// In en, this message translates to:
   /// **'Introduce your salon, services and hours, and let customers book their appointments straight from the app.'**
-  String get salonOpenOnReemBody;
+  String get salonOpenOnOharaBody;
 
   /// Salons
   ///

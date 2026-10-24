@@ -1,4 +1,4 @@
-// Renders Reem Visual Shopping to PNGs so the design can be eyeballed without
+// Renders Ohara Visual Shopping to PNGs so the design can be eyeballed without
 // a session, a camera or a running backend. Not an assertion test — it writes
 // `build/visual/visual_search_*.png` and is meant to be run on demand.
 //
@@ -24,17 +24,17 @@ import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/app_localizations.dart';
-import 'package:reem/core/result/result.dart';
-import 'package:reem/features/ai_stylist/domain/entities/stylist_recommendation.dart';
-import 'package:reem/features/visual_search/data/models/visual_search_models.dart';
-import 'package:reem/features/visual_search/domain/entities/visual_match.dart';
-import 'package:reem/features/visual_search/domain/entities/visual_search_session.dart';
-import 'package:reem/features/visual_search/domain/repositories/visual_search_repository.dart';
-import 'package:reem/features/visual_search/presentation/providers/visual_search_providers.dart';
-import 'package:reem/features/visual_search/presentation/screens/visual_search_screen.dart';
-import 'package:reem/l10n/app_localizations.dart' as gen;
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/app_localizations.dart';
+import 'package:ohara/core/result/result.dart';
+import 'package:ohara/features/ai_stylist/domain/entities/stylist_recommendation.dart';
+import 'package:ohara/features/visual_search/data/models/visual_search_models.dart';
+import 'package:ohara/features/visual_search/domain/entities/visual_match.dart';
+import 'package:ohara/features/visual_search/domain/entities/visual_search_session.dart';
+import 'package:ohara/features/visual_search/domain/repositories/visual_search_repository.dart';
+import 'package:ohara/features/visual_search/presentation/providers/visual_search_providers.dart';
+import 'package:ohara/features/visual_search/presentation/screens/visual_search_screen.dart';
+import 'package:ohara/l10n/app_localizations.dart' as gen;
 
 final _captureKey = GlobalKey();
 late final Map<String, dynamic> _fixture;

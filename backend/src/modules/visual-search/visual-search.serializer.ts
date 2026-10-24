@@ -22,7 +22,7 @@ import {
 import { TryOnCapability } from './try-on/visual-try-on.service';
 
 /**
- * The wire shape of Reem Visual Shopping.
+ * The wire shape of Ohara Visual Shopping.
  *
  * `snake_case` throughout, money as `{ amount, currency }`, products through
  * the shared `serializeProduct` — the same three rules the rest of the API

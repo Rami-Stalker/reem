@@ -1,15 +1,15 @@
-import 'package:reem/core/base/repository_handler.dart';
-import 'package:reem/core/result/result.dart';
-import 'package:reem/core/shared/entities/user.dart';
-import 'package:reem/features/settings/data/datasources/settings_remote_datasource.dart';
-import 'package:reem/features/settings/domain/entities/address_draft.dart';
-import 'package:reem/features/settings/domain/entities/address_entity.dart';
-import 'package:reem/features/settings/domain/entities/coupon_entity.dart';
-import 'package:reem/features/settings/domain/entities/coupon_validation.dart';
-import 'package:reem/features/settings/domain/entities/notification_entity.dart';
-import 'package:reem/features/settings/domain/entities/notification_preferences.dart';
-import 'package:reem/features/settings/domain/entities/rewards_entity.dart';
-import 'package:reem/features/settings/domain/repositories/settings_repository.dart';
+import 'package:ohara/core/base/repository_handler.dart';
+import 'package:ohara/core/result/result.dart';
+import 'package:ohara/core/shared/entities/user.dart';
+import 'package:ohara/features/settings/data/datasources/settings_remote_datasource.dart';
+import 'package:ohara/features/settings/domain/entities/address_draft.dart';
+import 'package:ohara/features/settings/domain/entities/address_entity.dart';
+import 'package:ohara/features/settings/domain/entities/coupon_entity.dart';
+import 'package:ohara/features/settings/domain/entities/coupon_validation.dart';
+import 'package:ohara/features/settings/domain/entities/notification_entity.dart';
+import 'package:ohara/features/settings/domain/entities/notification_preferences.dart';
+import 'package:ohara/features/settings/domain/entities/rewards_entity.dart';
+import 'package:ohara/features/settings/domain/repositories/settings_repository.dart';
 
 class SettingsRepositoryImpl with RepositoryHandler implements SettingsRepository {
   const SettingsRepositoryImpl({required this.remote});

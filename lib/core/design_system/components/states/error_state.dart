@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:reem/core/design_system/components/buttons/button_sizes.dart';
-import 'package:reem/core/design_system/components/buttons/button_styles.dart';
-import 'package:reem/core/design_system/components/buttons/ds_button.dart';
-import 'package:reem/core/design_system/foundation/motion/animations/fade_animations.dart';
-import 'package:reem/core/design_system/foundation/theme/extensions/color_extension.dart';
-import 'package:reem/core/design_system/foundation/tokens/ds_radius.dart';
-import 'package:reem/core/design_system/foundation/tokens/ds_spacing.dart';
-import 'package:reem/core/design_system/foundation/tokens/ds_typography.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/core/localization/readable_message.dart';
+import 'package:ohara/core/design_system/components/buttons/button_sizes.dart';
+import 'package:ohara/core/design_system/components/buttons/button_styles.dart';
+import 'package:ohara/core/design_system/components/buttons/ds_button.dart';
+import 'package:ohara/core/design_system/foundation/motion/animations/fade_animations.dart';
+import 'package:ohara/core/design_system/foundation/theme/extensions/color_extension.dart';
+import 'package:ohara/core/design_system/foundation/tokens/ds_radius.dart';
+import 'package:ohara/core/design_system/foundation/tokens/ds_spacing.dart';
+import 'package:ohara/core/design_system/foundation/tokens/ds_typography.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/core/localization/readable_message.dart';
 
 /// A reassuring error state with a retry affordance.
 ///

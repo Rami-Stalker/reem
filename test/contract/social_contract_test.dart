@@ -15,13 +15,13 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:reem/core/shared/models/comment_model.dart';
-import 'package:reem/core/shared/models/post_model.dart';
-import 'package:reem/core/shared/models/story_model.dart';
-import 'package:reem/features/social_posts/data/models/comment_page_model.dart';
-import 'package:reem/features/social_posts/data/models/post_engagement_model.dart';
-import 'package:reem/features/stories/data/models/story_analytics_model.dart';
-import 'package:reem/features/stories/data/models/story_viewer_model.dart';
+import 'package:ohara/core/shared/models/comment_model.dart';
+import 'package:ohara/core/shared/models/post_model.dart';
+import 'package:ohara/core/shared/models/story_model.dart';
+import 'package:ohara/features/social_posts/data/models/comment_page_model.dart';
+import 'package:ohara/features/social_posts/data/models/post_engagement_model.dart';
+import 'package:ohara/features/stories/data/models/story_analytics_model.dart';
+import 'package:ohara/features/stories/data/models/story_viewer_model.dart';
 
 dynamic _raw(String name) =>
     jsonDecode(File('test/contract/$name').readAsStringSync());

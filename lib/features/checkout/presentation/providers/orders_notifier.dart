@@ -1,8 +1,8 @@
 import 'package:flutter_riverpod/legacy.dart';
-import 'package:reem/core/result/result.dart';
+import 'package:ohara/core/result/result.dart';
 
-import 'package:reem/features/checkout/domain/entities/order.dart';
-import 'package:reem/features/checkout/domain/usecases/checkout_usecases.dart';
+import 'package:ohara/features/checkout/domain/entities/order.dart';
+import 'package:ohara/features/checkout/domain/usecases/checkout_usecases.dart';
 
 /// The four piles a shopper thinks in, mirroring the server's `ORDER_BUCKETS`.
 ///

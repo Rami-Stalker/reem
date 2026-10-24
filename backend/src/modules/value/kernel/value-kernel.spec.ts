@@ -25,7 +25,7 @@ import {
  * The kernel is a pure function, so it is tested the way one should be: no
  * database, no fixtures, contributions written by hand. Every assertion below
  * is a property the programme claims about itself, so a change that breaks one
- * is a change to what Reem Value *means*, not a change to how it is computed.
+ * is a change to what Ohara Value *means*, not a change to how it is computed.
  */
 
 const NOW = new Date('2026-09-03T00:00:00Z');

@@ -1,8 +1,8 @@
 import 'dart:convert';
 
-import 'package:reem/core/shared/value_objects/money.dart';
-import 'package:reem/core/shared/value_objects/money_format.dart';
-import 'package:reem/features/admin/domain/entities/admin_console_entity.dart';
+import 'package:ohara/core/shared/value_objects/money.dart';
+import 'package:ohara/core/shared/value_objects/money_format.dart';
+import 'package:ohara/features/admin/domain/entities/admin_console_entity.dart';
 
 class AdminConsoleSectionModel extends AdminConsoleSection {
   const AdminConsoleSectionModel({

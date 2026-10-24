@@ -1,10 +1,10 @@
-import 'package:reem/core/shared/models/user_model.dart';
-import 'package:reem/core/shared/value_objects/money.dart';
-import 'package:reem/features/social/domain/entities/content.dart';
-import 'package:reem/features/social/domain/entities/content_analytics.dart';
-import 'package:reem/features/social/domain/entities/content_audience.dart';
-import 'package:reem/features/social/domain/entities/content_comment.dart';
-import 'package:reem/features/social/domain/entities/content_draft.dart';
+import 'package:ohara/core/shared/models/user_model.dart';
+import 'package:ohara/core/shared/value_objects/money.dart';
+import 'package:ohara/features/social/domain/entities/content.dart';
+import 'package:ohara/features/social/domain/entities/content_analytics.dart';
+import 'package:ohara/features/social/domain/entities/content_audience.dart';
+import 'package:ohara/features/social/domain/entities/content_comment.dart';
+import 'package:ohara/features/social/domain/entities/content_draft.dart';
 
 int _int(dynamic value) => value is int ? value : (value as num?)?.toInt() ?? 0;
 

@@ -1,8 +1,8 @@
-import 'package:reem/core/network/api_endpoints.dart';
-import 'package:reem/core/network/base_remote_datasource.dart';
-import 'package:reem/features/seller_intelligence/data/datasources/seller_intelligence_remote_datasource.dart';
-import 'package:reem/features/seller_intelligence/data/models/intelligence_mappers.dart';
-import 'package:reem/features/seller_intelligence/domain/entities/intelligence.dart';
+import 'package:ohara/core/network/api_endpoints.dart';
+import 'package:ohara/core/network/base_remote_datasource.dart';
+import 'package:ohara/features/seller_intelligence/data/datasources/seller_intelligence_remote_datasource.dart';
+import 'package:ohara/features/seller_intelligence/data/models/intelligence_mappers.dart';
+import 'package:ohara/features/seller_intelligence/domain/entities/intelligence.dart';
 
 final class SellerIntelligenceRemoteDataSourceImpl extends BaseRemoteDataSource
     implements SellerIntelligenceRemoteDataSource {

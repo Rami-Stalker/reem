@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 
-import 'package:reem/core/shared/value_objects/money.dart';
-import 'package:reem/features/shipment_tracking/domain/entities/shipment_tracking.dart';
+import 'package:ohara/core/shared/value_objects/money.dart';
+import 'package:ohara/features/shipment_tracking/domain/entities/shipment_tracking.dart';
 
 /// Q37/Q55 — why a delivery could not be completed.
 enum DeliveryFailureReason {

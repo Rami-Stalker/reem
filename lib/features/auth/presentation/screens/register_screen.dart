@@ -3,14 +3,14 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/core/router/route_paths.dart';
-import 'package:reem/core/shared/entities/user.dart';
-import 'package:reem/features/auth/presentation/providers/auth_provider.dart';
-import 'package:reem/features/auth/presentation/utils/auth_form_validators.dart';
-import 'package:reem/features/auth/presentation/widgets/auth_motion.dart';
-import 'package:reem/features/policies/presentation/widgets/policy_consent_field.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/core/router/route_paths.dart';
+import 'package:ohara/core/shared/entities/user.dart';
+import 'package:ohara/features/auth/presentation/providers/auth_provider.dart';
+import 'package:ohara/features/auth/presentation/utils/auth_form_validators.dart';
+import 'package:ohara/features/auth/presentation/widgets/auth_motion.dart';
+import 'package:ohara/features/policies/presentation/widgets/policy_consent_field.dart';
 
 /// The signup form, reached only after the number has been verified.
 ///
@@ -20,7 +20,7 @@ import 'package:reem/features/policies/presentation/widgets/policy_consent_field
 /// every number in a contact list and locking those women out of ever signing
 /// up under their own.
 ///
-/// The password fields are optional and collapsed by default. A Reem account
+/// The password fields are optional and collapsed by default. A Ohara account
 /// signs in with a code; a password is a convenience she can add, and it can
 /// never admit a device the account has not used before.
 class RegisterScreen extends ConsumerStatefulWidget {
@@ -354,7 +354,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                       icon: Icons.favorite_rounded,
                     ),
                     DsGaps.vXs,
-                    // Q43/Q138 P1 — Reem is a women-only platform, and the
+                    // Q43/Q138 P1 — Ohara is a women-only platform, and the
                     // only enforcement is this declaration. The server refuses
                     // a registration without it, so it is a real gate rather
                     // than a notice: the button stays disabled until she
@@ -485,7 +485,7 @@ class _VerifiedNumber extends StatelessWidget {
 }
 
 /// Lets a new user choose how they want to join: shop as a Customer or sell on
-/// Reem as a Seller. Admins are provisioned separately (never self-registered).
+/// Ohara as a Seller. Admins are provisioned separately (never self-registered).
 class _RoleSelector extends StatelessWidget {
   const _RoleSelector({required this.value, required this.onChanged});
 

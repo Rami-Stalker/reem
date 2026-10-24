@@ -5,11 +5,11 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
-import 'package:reem/core/notifications/notification_channels.dart';
-import 'package:reem/core/notifications/push_config.dart';
-import 'package:reem/core/notifications/push_message.dart';
-import 'package:reem/core/observability/error_report.dart';
-import 'package:reem/core/observability/error_reporter.dart';
+import 'package:ohara/core/notifications/notification_channels.dart';
+import 'package:ohara/core/notifications/push_config.dart';
+import 'package:ohara/core/notifications/push_message.dart';
+import 'package:ohara/core/observability/error_report.dart';
+import 'package:ohara/core/observability/error_reporter.dart';
 
 /// Whether the phone will show her anything.
 enum PushPermission {
@@ -38,14 +38,14 @@ enum PushPermission {
 ///
 /// Registered because Firebase requires it before `onBackgroundMessage` can be
 /// used at all, and kept deliberately empty of work. When a message carries a
-/// `notification` block — every one Reem sends does — the system draws it
+/// `notification` block — every one Ohara sends does — the system draws it
 /// without consulting this at all, so there is nothing here that needs doing.
 ///
 /// The annotation is not optional. Without it the tree-shaker removes this
 /// function from a release build and the handler registration fails at
 /// runtime, in release only, which is exactly the kind of bug that ships.
 @pragma('vm:entry-point')
-Future<void> reemBackgroundMessageHandler(RemoteMessage message) async {
+Future<void> oharaBackgroundMessageHandler(RemoteMessage message) async {
   // A background isolate has its own memory: Firebase has to be initialised
   // again here or every SDK call in this function throws.
   try {
@@ -179,7 +179,7 @@ class PushNotificationService {
       await _createChannels();
       await _initializeLocalPlugin();
 
-      FirebaseMessaging.onBackgroundMessage(reemBackgroundMessageHandler);
+      FirebaseMessaging.onBackgroundMessage(oharaBackgroundMessageHandler);
       FirebaseMessaging.onMessage.listen(_onForegroundMessage);
       FirebaseMessaging.onMessageOpenedApp.listen(_onOpenedFromBackground);
       _messaging!.onTokenRefresh.listen(_tokenRefreshed.add);
@@ -323,9 +323,9 @@ class PushNotificationService {
       settings: const InitializationSettings(
         // `@mipmap/ic_launcher` is wrong here and is what most projects use:
         // Android draws the small icon as a silhouette, so a full-colour
-        // launcher icon renders as a white square. `ic_stat_reem` is a white
+        // launcher icon renders as a white square. `ic_stat_ohara` is a white
         // -on-transparent glyph; see `android/app/src/main/res/drawable`.
-        android: AndroidInitializationSettings('ic_stat_reem'),
+        android: AndroidInitializationSettings('ic_stat_ohara'),
         iOS: DarwinInitializationSettings(
           // Permission is requested through firebase_messaging, once, at the
           // moment she opts in — not here, at startup, where it would spend

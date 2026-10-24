@@ -1,6 +1,6 @@
-import 'package:reem/core/network/api_endpoints.dart';
-import 'package:reem/core/network/base_remote_datasource.dart';
-import 'package:reem/features/verification/domain/entities/account_verification.dart';
+import 'package:ohara/core/network/api_endpoints.dart';
+import 'package:ohara/core/network/base_remote_datasource.dart';
+import 'package:ohara/features/verification/domain/entities/account_verification.dart';
 
 /// `/account-verification` — hers.
 final class AccountVerificationDataSource extends BaseRemoteDataSource {

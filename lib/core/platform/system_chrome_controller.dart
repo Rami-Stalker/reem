@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'package:reem/core/design_system/foundation/tokens/ds_breakpoints.dart';
-import 'package:reem/core/platform/app_platform.dart';
+import 'package:ohara/core/design_system/foundation/tokens/ds_breakpoints.dart';
+import 'package:ohara/core/platform/app_platform.dart';
 
 /// Everything the app tells the operating system about its own window.
 ///
@@ -27,7 +27,7 @@ abstract final class AppSystemChrome {
 
   /// Which way the phone may be held.
   ///
-  /// Reem's 100-odd screens are drawn as single-column portrait pages — a feed,
+  /// Ohara's 100-odd screens are drawn as single-column portrait pages — a feed,
   /// a product, a checkout. On a phone, landscape would be a wide column of
   /// stretched cards with nothing to fill the sides, so it is refused; on a
   /// tablet, where a 10-inch landscape canvas is the *normal* way to hold the

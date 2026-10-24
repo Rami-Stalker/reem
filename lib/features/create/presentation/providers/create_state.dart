@@ -1,7 +1,7 @@
-import 'package:reem/core/shared/entities/post.dart';
-import 'package:reem/core/shared/entities/story.dart';
+import 'package:ohara/core/shared/entities/post.dart';
+import 'package:ohara/core/shared/entities/story.dart';
 
-import 'package:reem/features/create/presentation/providers/create_message.dart';
+import 'package:ohara/features/create/presentation/providers/create_message.dart';
 
 class CreateState {
   const CreateState({

@@ -1,7 +1,7 @@
-import 'package:reem/core/result/result.dart';
+import 'package:ohara/core/result/result.dart';
 
-import 'package:reem/features/discovery/domain/entities/product_page.dart';
-import 'package:reem/features/search/domain/repositories/search_repository.dart';
+import 'package:ohara/features/discovery/domain/entities/product_page.dart';
+import 'package:ohara/features/search/domain/repositories/search_repository.dart';
 
 class SearchProductsUseCase {
   const SearchProductsUseCase(this._repo);

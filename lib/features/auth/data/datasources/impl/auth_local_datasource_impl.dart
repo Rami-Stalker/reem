@@ -1,5 +1,5 @@
-import 'package:reem/core/storage/secure_storage_service.dart';
-import 'package:reem/features/auth/data/datasources/auth_local_datasource.dart';
+import 'package:ohara/core/storage/secure_storage_service.dart';
+import 'package:ohara/features/auth/data/datasources/auth_local_datasource.dart';
 
 class AuthLocalDataSourceImpl implements AuthLocalDataSource {
   const AuthLocalDataSourceImpl(this.storage);

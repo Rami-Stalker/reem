@@ -17,15 +17,15 @@ import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/app_localizations.dart';
-import 'package:reem/core/shared/entities/user.dart';
-import 'package:reem/core/shared/value_objects/money.dart';
-import 'package:reem/features/profile/presentation/widgets/profile_header.dart';
-import 'package:reem/features/user_profile/domain/entities/seller_stats.dart';
-import 'package:reem/features/user_profile/domain/entities/user_profile.dart';
-import 'package:reem/features/user_profile/presentation/widgets/profile_page_header.dart';
-import 'package:reem/l10n/app_localizations.dart' as gen;
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/app_localizations.dart';
+import 'package:ohara/core/shared/entities/user.dart';
+import 'package:ohara/core/shared/value_objects/money.dart';
+import 'package:ohara/features/profile/presentation/widgets/profile_header.dart';
+import 'package:ohara/features/user_profile/domain/entities/seller_stats.dart';
+import 'package:ohara/features/user_profile/domain/entities/user_profile.dart';
+import 'package:ohara/features/user_profile/presentation/widgets/profile_page_header.dart';
+import 'package:ohara/l10n/app_localizations.dart' as gen;
 
 final _captureKey = GlobalKey();
 

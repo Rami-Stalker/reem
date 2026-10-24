@@ -212,7 +212,7 @@ const adminNav: ExperienceNavItem[] = [
 const experienceConfigs: Record<ExperienceRole, ExperienceConfig> = {
   buyer: {
     role: 'buyer',
-    title: 'Reem',
+    title: 'Ohara',
     default_route: '/home',
     profile_route: '/profile',
     visual_identity: {
@@ -328,7 +328,7 @@ const experienceConfigs: Record<ExperienceRole, ExperienceConfig> = {
   },
   seller: {
     role: 'seller',
-    title: 'Reem Seller',
+    title: 'Ohara Seller',
     default_route: '/seller/dashboard',
     profile_route: '/seller/store',
     visual_identity: {
@@ -504,7 +504,7 @@ const experienceConfigs: Record<ExperienceRole, ExperienceConfig> = {
   },
   admin: {
     role: 'admin',
-    title: 'Reem Admin',
+    title: 'Ohara Admin',
     default_route: '/admin',
     profile_route: '/admin/system-settings',
     visual_identity: {

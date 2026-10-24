@@ -4,15 +4,15 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/core/router/route_paths.dart';
-import 'package:reem/core/shared/value_objects/money_format.dart';
-import 'package:reem/features/cart/presentation/providers/cart_providers.dart';
-import 'package:reem/features/checkout/presentation/providers/applied_coupon_provider.dart';
-import 'package:reem/features/settings/domain/entities/coupon_entity.dart';
-import 'package:reem/features/settings/presentation/providers/coupon_apply_provider.dart';
-import 'package:reem/features/settings/presentation/providers/coupons_provider.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/core/router/route_paths.dart';
+import 'package:ohara/core/shared/value_objects/money_format.dart';
+import 'package:ohara/features/cart/presentation/providers/cart_providers.dart';
+import 'package:ohara/features/checkout/presentation/providers/applied_coupon_provider.dart';
+import 'package:ohara/features/settings/domain/entities/coupon_entity.dart';
+import 'package:ohara/features/settings/presentation/providers/coupon_apply_provider.dart';
+import 'package:ohara/features/settings/presentation/providers/coupons_provider.dart';
 
 /// Her coupons.
 ///
@@ -46,14 +46,14 @@ class CouponsScreen extends ConsumerWidget {
           .invalidateForBasket(subtotal),
     );
 
-    return ReemScrollPage(
+    return OharaScrollPage(
       slivers: [
         PremiumAppBar(title: context.l10n.settingsCoupons, showBack: true),
         SliverPadding(
           padding: const EdgeInsets.all(DsSpacing.lg),
           sliver: SliverList(
             delegate: SliverChildListDelegate([
-              ReemSectionHeader(
+              OharaSectionHeader(
                 title: context.l10n.settingsYourOffers,
                 subtitle: context.l10n.settingsYourOffersSubtitle,
               ),

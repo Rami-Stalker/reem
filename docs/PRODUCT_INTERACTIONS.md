@@ -1,6 +1,6 @@
 # Product interactions
 
-Every product in Reem supports **Like, Share, Save, Repost and Comments** —
+Every product in Ohara supports **Like, Share, Save, Repost and Comments** —
 without exception, and wherever it is drawn. The interactions belong to the
 *product*, not to the widget showing it and not to whether it happens to be
 told as a post.

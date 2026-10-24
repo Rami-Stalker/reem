@@ -2,9 +2,9 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/features/visual_search/domain/entities/visual_search_session.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/features/visual_search/domain/entities/visual_search_session.dart';
 
 /// One photograph, picked and already shrunk.
 class PickedQueryImage {
@@ -28,7 +28,7 @@ class PickedQueryImage {
 /// names them instead, so she knows a screenshot is exactly what this expects.
 ///
 /// The share sheet is the real second path into this feature and it is an OS
-/// integration rather than a button: `Share to Reem` from any of those apps
+/// integration rather than a button: `Share to Ohara` from any of those apps
 /// arrives as `VisualSearchSource.shared`.
 class VisualSourceSheet extends StatelessWidget {
   const VisualSourceSheet({super.key, required this.maxEdge});

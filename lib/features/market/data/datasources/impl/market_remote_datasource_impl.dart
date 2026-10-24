@@ -1,8 +1,8 @@
-import 'package:reem/core/network/api_endpoints.dart';
-import 'package:reem/core/network/base_remote_datasource.dart';
-import 'package:reem/features/market/data/datasources/market_remote_datasource.dart';
-import 'package:reem/features/market/data/models/market_mappers.dart';
-import 'package:reem/features/market/domain/entities/market.dart';
+import 'package:ohara/core/network/api_endpoints.dart';
+import 'package:ohara/core/network/base_remote_datasource.dart';
+import 'package:ohara/features/market/data/datasources/market_remote_datasource.dart';
+import 'package:ohara/features/market/data/models/market_mappers.dart';
+import 'package:ohara/features/market/domain/entities/market.dart';
 
 final class MarketRemoteDataSourceImpl extends BaseRemoteDataSource
     implements MarketRemoteDataSource {

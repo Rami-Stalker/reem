@@ -1,5 +1,5 @@
-import 'package:reem/features/admin/presentation/providers/admin_provider.dart';
-import 'package:reem/l10n/app_localizations.dart';
+import 'package:ohara/features/admin/presentation/providers/admin_provider.dart';
+import 'package:ohara/l10n/app_localizations.dart';
 
 /// Localized titles for the admin sections.
 ///

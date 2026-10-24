@@ -852,7 +852,7 @@ export class AnalyticsService {
     const latin = (text: string, fallback: string) =>
       /^[\x20-\x7e\xa0-\xff]*$/.test(text) ? text : fallback;
     return [
-      'Reem Analytics Report',
+      'Ohara Analytics Report',
       `Range: ${dashboard.range.start.slice(0, 10)} to ${dashboard.range.end.slice(0, 10)}`,
       `Orders: ${dashboard.sales.total_orders} (paid ${dashboard.sales.paid_orders})`,
       `Gross revenue: ${formatTotals(dashboard.revenue.gross_revenue)}`,

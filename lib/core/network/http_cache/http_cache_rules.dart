@@ -1,4 +1,4 @@
-import 'package:reem/core/data/cache/cache_policy.dart';
+import 'package:ohara/core/data/cache/cache_policy.dart';
 
 /// What may be cached, and for how long.
 ///

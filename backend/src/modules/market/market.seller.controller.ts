@@ -26,7 +26,7 @@ import {
 } from './market.serializer';
 
 /**
- * A seller's half of Reem Market Evolution.
+ * A seller's half of Ohara Market Evolution.
  *
  * Two things she could not do before: turn a listing into an event addressed
  * to the women who would want it, and see what the market around her own

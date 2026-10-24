@@ -1102,7 +1102,7 @@ export class ReputationService {
       // stored on the row but never served — not to other shoppers, not to
       // the seller, not to moderators. They are used only server-side, to
       // match her review to women her size and to count the anonymous fit
-      // summary. Reem's shoppers are Syrian women, and a named woman's body
+      // summary. Ohara's shoppers are Syrian women, and a named woman's body
       // printed under her review is not something she should have to opt
       // out of.
       fit: review.fit,

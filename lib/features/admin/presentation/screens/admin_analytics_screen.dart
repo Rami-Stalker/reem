@@ -4,18 +4,18 @@ import 'package:dio/dio.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/errors/failure_exception.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/core/network/api_endpoints.dart';
+import 'package:ohara/core/presentation/providers/core_providers.dart';
+import 'package:ohara/core/shared/value_objects/money_format.dart';
+import 'package:ohara/core/utils/relative_time.dart';
+import 'package:ohara/features/admin/domain/entities/analytics_dashboard_entity.dart';
+import 'package:ohara/features/admin/presentation/providers/admin_provider.dart';
+import 'package:ohara/features/admin/presentation/widgets/admin_page_header.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/errors/failure_exception.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/core/network/api_endpoints.dart';
-import 'package:reem/core/presentation/providers/core_providers.dart';
-import 'package:reem/core/shared/value_objects/money_format.dart';
-import 'package:reem/core/utils/relative_time.dart';
-import 'package:reem/features/admin/domain/entities/analytics_dashboard_entity.dart';
-import 'package:reem/features/admin/presentation/providers/admin_provider.dart';
-import 'package:reem/features/admin/presentation/widgets/admin_page_header.dart';
 import 'package:share_plus/share_plus.dart';
 
 class AdminAnalyticsScreen extends ConsumerWidget {

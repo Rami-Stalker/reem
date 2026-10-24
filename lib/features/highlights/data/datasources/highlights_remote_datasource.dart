@@ -1,7 +1,7 @@
-import 'package:reem/core/network/api_endpoints.dart';
-import 'package:reem/core/network/base_remote_datasource.dart';
-import 'package:reem/core/shared/models/story_model.dart';
-import 'package:reem/features/highlights/data/models/highlight_model.dart';
+import 'package:ohara/core/network/api_endpoints.dart';
+import 'package:ohara/core/network/base_remote_datasource.dart';
+import 'package:ohara/core/shared/models/story_model.dart';
+import 'package:ohara/features/highlights/data/models/highlight_model.dart';
 
 /// `/highlights` — «الأبرز».
 final class HighlightsRemoteDataSource extends BaseRemoteDataSource {

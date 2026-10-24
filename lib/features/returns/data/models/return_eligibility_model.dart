@@ -1,4 +1,4 @@
-import 'package:reem/features/returns/domain/entities/return_eligibility.dart';
+import 'package:ohara/features/returns/domain/entities/return_eligibility.dart';
 
 /// Parses `GET /returns/eligibility/:sellerOrderId`.
 abstract final class ReturnEligibilityMapper {

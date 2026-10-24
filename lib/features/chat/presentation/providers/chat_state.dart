@@ -1,5 +1,5 @@
-import 'package:reem/features/chat/domain/entities/chat_message_entity.dart';
-import 'package:reem/features/chat/domain/entities/chat_thread_entity.dart';
+import 'package:ohara/features/chat/domain/entities/chat_message_entity.dart';
+import 'package:ohara/features/chat/domain/entities/chat_thread_entity.dart';
 
 class ChatState {
   const ChatState({

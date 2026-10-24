@@ -1,6 +1,6 @@
-import 'package:reem/core/domain/pagination/paginated_data.dart';
-import 'package:reem/core/shared/entities/product.dart';
-import 'package:reem/features/discovery/domain/entities/sponsored_product.dart';
+import 'package:ohara/core/domain/pagination/paginated_data.dart';
+import 'package:ohara/core/shared/entities/product.dart';
+import 'package:ohara/features/discovery/domain/entities/sponsored_product.dart';
 
 /// A page of products plus the cursor needed for infinite scrolling.
 class ProductPage {

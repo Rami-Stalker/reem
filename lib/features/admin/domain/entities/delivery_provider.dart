@@ -2,7 +2,7 @@ import 'package:equatable/equatable.dart';
 
 /// A delivery company the platform can hand parcels to, as an admin sees it.
 ///
-/// Reem manages orders; a carrier manages the journey. This screen therefore
+/// Ohara manages orders; a carrier manages the journey. This screen therefore
 /// has no drivers, no routes and no fleet in it — the questions it answers are
 /// operational ones: which companies are on, where each of them delivers, which
 /// wins when two cover the same governorate, and whether the platform can

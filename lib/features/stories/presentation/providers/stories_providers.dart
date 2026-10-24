@@ -1,14 +1,14 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 
-import 'package:reem/core/presentation/providers/core_providers.dart';
-import 'package:reem/features/stories/data/datasources/impl/stories_remote_datasource_impl.dart';
-import 'package:reem/features/stories/data/datasources/stories_remote_datasource.dart';
-import 'package:reem/features/stories/data/repositories/stories_repository_impl.dart';
-import 'package:reem/features/stories/domain/repositories/stories_repository.dart';
-import 'package:reem/features/stories/domain/usecases/stories_usecases.dart';
-import 'package:reem/features/stories/presentation/providers/stories_notifier.dart';
-import 'package:reem/features/stories/presentation/providers/stories_state.dart';
+import 'package:ohara/core/presentation/providers/core_providers.dart';
+import 'package:ohara/features/stories/data/datasources/impl/stories_remote_datasource_impl.dart';
+import 'package:ohara/features/stories/data/datasources/stories_remote_datasource.dart';
+import 'package:ohara/features/stories/data/repositories/stories_repository_impl.dart';
+import 'package:ohara/features/stories/domain/repositories/stories_repository.dart';
+import 'package:ohara/features/stories/domain/usecases/stories_usecases.dart';
+import 'package:ohara/features/stories/presentation/providers/stories_notifier.dart';
+import 'package:ohara/features/stories/presentation/providers/stories_state.dart';
 
 final storiesRemoteDataSourceProvider = Provider<StoriesRemoteDataSource>(
   (ref) => StoriesRemoteDataSourceImpl(ref.watch(dioProvider)),

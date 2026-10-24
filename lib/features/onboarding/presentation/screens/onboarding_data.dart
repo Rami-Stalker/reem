@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 
-import 'package:reem/core/localization/l10n_extension.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
 
 class OnboardingData {
   const OnboardingData({

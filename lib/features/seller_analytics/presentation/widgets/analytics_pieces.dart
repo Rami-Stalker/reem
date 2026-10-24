@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/core/shared/value_objects/money.dart';
-import 'package:reem/features/seller_analytics/domain/entities/seller_analytics_report.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/core/shared/value_objects/money.dart';
+import 'package:ohara/features/seller_analytics/domain/entities/seller_analytics_report.dart';
 
 /// A section title with a rule under it, so the page reads as chapters rather
 /// than one long column of numbers.

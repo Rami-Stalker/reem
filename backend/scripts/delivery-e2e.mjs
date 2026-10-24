@@ -5,7 +5,7 @@
  *
  * Stands up a sandbox "delivery company" on localhost, registers it through the
  * admin API, walks a real order to the point where the seller marks it packed,
- * and then plays the carrier: accepting the delivery, and calling Reem's
+ * and then plays the carrier: accepting the delivery, and calling Ohara's
  * webhook — signed — through picked_up → out_for_delivery → delivered.
  *
  * What it proves, which no unit test can:
@@ -369,7 +369,7 @@ await step('the seller packs it, and it goes to the carrier', async () => {
   state.trackingCode = ready.shipment?.tracking_code;
   const carrierBlock = ready.shipment?.carrier;
   if (!carrierBlock) throw new Error('no carrier on the packed parcel');
-  if (carrierBlock.name.includes('ريم')) {
+  if (carrierBlock.name.includes('أوهارا')) {
     throw new Error(`the parcel went to the in-house fleet, not to ${CODE}`);
   }
 

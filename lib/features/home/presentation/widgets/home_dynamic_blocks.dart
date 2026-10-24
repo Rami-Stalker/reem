@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/media/media_decode.dart';
-import 'package:reem/core/media/media_variants.dart';
-import 'package:reem/features/home/domain/entities/dynamic_block.dart';
-import 'package:reem/features/home/presentation/providers/home_content_provider.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/media/media_decode.dart';
+import 'package:ohara/core/media/media_variants.dart';
+import 'package:ohara/features/home/domain/entities/dynamic_block.dart';
+import 'package:ohara/features/home/presentation/providers/home_content_provider.dart';
 
 /// Renders merchandising blocks configured from the admin panel. Generic by
 /// design so new campaigns ship without an app release.

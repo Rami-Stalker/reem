@@ -1,6 +1,6 @@
 // shared/models/user_model.dart
 
-import 'package:reem/core/shared/entities/user.dart';
+import 'package:ohara/core/shared/entities/user.dart';
 
 class UserModel extends User {
   const UserModel({

@@ -1,8 +1,8 @@
 import 'package:flutter_riverpod/legacy.dart';
-import 'package:reem/core/result/result.dart';
+import 'package:ohara/core/result/result.dart';
 
-import 'package:reem/features/stories/domain/usecases/stories_usecases.dart';
-import 'package:reem/features/stories/presentation/providers/stories_state.dart';
+import 'package:ohara/features/stories/domain/usecases/stories_usecases.dart';
+import 'package:ohara/features/stories/presentation/providers/stories_state.dart';
 
 class StoriesNotifier extends StateNotifier<StoriesState> {
   StoriesNotifier({required GetStoriesUseCase getStories})

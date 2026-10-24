@@ -1,9 +1,9 @@
 import 'package:dio/dio.dart';
 
-import 'package:reem/core/data/pagination/paginated_response_mapper.dart';
-import 'package:reem/core/domain/pagination/paginated_data.dart';
-import 'package:reem/core/errors/app_exception.dart';
-import 'package:reem/core/errors/error_mapper.dart';
+import 'package:ohara/core/data/pagination/paginated_response_mapper.dart';
+import 'package:ohara/core/domain/pagination/paginated_data.dart';
+import 'package:ohara/core/errors/app_exception.dart';
+import 'package:ohara/core/errors/error_mapper.dart';
 
 /// Shared HTTP helpers with consistent Dio error mapping.
 abstract base class BaseRemoteDataSource {

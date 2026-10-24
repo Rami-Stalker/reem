@@ -24,7 +24,7 @@ import { DeliveryWebhookService } from './dispatch/delivery-webhook.service';
  * Shipping zones and quotes, the shipment lifecycle, and the integration with
  * the delivery companies that actually carry the parcels.
  *
- * Reem does not run a fleet: it hands a packed parcel to a carrier and reads
+ * Ohara does not run a fleet: it hands a packed parcel to a carrier and reads
  * back what the carrier says. Everything carrier-shaped lives under
  * `providers/` (the adapters) and `dispatch/` (choosing one, calling it,
  * receiving its callbacks, and the admin desk that turns them on and off), and

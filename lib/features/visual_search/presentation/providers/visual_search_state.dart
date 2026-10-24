@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
-import 'package:reem/core/errors/failure.dart';
-import 'package:reem/features/visual_search/domain/entities/visual_search_session.dart';
+import 'package:ohara/core/errors/failure.dart';
+import 'package:ohara/features/visual_search/domain/entities/visual_search_session.dart';
 
 /// What the screen is doing right now.
 ///

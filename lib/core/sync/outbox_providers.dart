@@ -2,11 +2,11 @@ import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:reem/core/network/connection_status.dart';
-import 'package:reem/core/presentation/providers/core_providers.dart';
-import 'package:reem/core/sync/outbox.dart';
-import 'package:reem/core/sync/outbox_intent.dart';
-import 'package:reem/features/social_posts/data/outbox_handlers.dart';
+import 'package:ohara/core/network/connection_status.dart';
+import 'package:ohara/core/presentation/providers/core_providers.dart';
+import 'package:ohara/core/sync/outbox.dart';
+import 'package:ohara/core/sync/outbox_intent.dart';
+import 'package:ohara/features/social_posts/data/outbox_handlers.dart';
 
 /// The app's one outbox, with its handlers registered.
 final outboxProvider = Provider<Outbox>((ref) {

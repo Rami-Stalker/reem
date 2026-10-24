@@ -1,4 +1,4 @@
-import 'package:reem/features/cart/domain/entities/cart.dart';
+import 'package:ohara/features/cart/domain/entities/cart.dart';
 
 class CartState {
   const CartState({

@@ -1,8 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:reem/features/auth/presentation/providers/auth_provider.dart';
-import 'package:reem/features/policies/domain/entities/policy_document.dart';
-import 'package:reem/features/policies/presentation/providers/policies_provider.dart';
+import 'package:ohara/features/auth/presentation/providers/auth_provider.dart';
+import 'package:ohara/features/policies/domain/entities/policy_document.dart';
+import 'package:ohara/features/policies/presentation/providers/policies_provider.dart';
 
 /// What this account still owes a signature on.
 ///
@@ -16,7 +16,7 @@ import 'package:reem/features/policies/presentation/providers/policies_provider.
 ///
 /// Errors resolve to an empty list rather than to a failure state, and that is
 /// the important decision in this file: this provider gates the entire app, so
-/// a five-second network blip must not be able to lock a woman out of Reem.
+/// a five-second network blip must not be able to lock a woman out of Ohara.
 /// The gate fails open, the next launch asks again, and the honest cost is
 /// that a signature can be a few hours late.
 final pendingPoliciesProvider = FutureProvider.autoDispose

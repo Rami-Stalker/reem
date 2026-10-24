@@ -166,7 +166,7 @@ export function complementScore(
  * different slot names, and the graph offered «عباية سهرة» as a complement to
  * «فستان سهرة» until this existed. Nobody wears both.
  *
- * The groupings are not invented here: they are the ones Reem Closet already
+ * The groupings are not invented here: they are the ones Ohara Closet already
  * uses to count outfits, where capacity is
  * `(dresses + abayas + min(tops, bottoms)) × shoes`. That formula treats a
  * dress and an abaya as interchangeable base garments, and treats either as

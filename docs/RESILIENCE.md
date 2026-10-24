@@ -68,7 +68,7 @@ report.
 
 ### What she sees
 
-`ReemErrorWidget` replaces Flutter's release grey box. Flutter already contains
+`OharaErrorWidget` replaces Flutter's release grey box. Flutter already contains
 the damage — a failed `build` is swapped for an error widget and the rest of the
 page carries on — so this only makes the substitute presentable: a tinted block
 with an icon in a small slot, a short Arabic line where there is room. Debug

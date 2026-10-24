@@ -8,7 +8,7 @@ import {
 /**
  * The contract every delivery company implements.
  *
- * Reem does not run drivers. It owns the order, the money and the customer's
+ * Ohara does not run drivers. It owns the order, the money and the customer's
  * expectations; a carrier owns the journey. Everything the platform needs from
  * a carrier is on this interface, and nothing else in the codebase knows which
  * carrier it is talking to — which is what makes adding a second one a class
@@ -48,7 +48,7 @@ export interface DeliveryAddress {
 }
 
 export interface CreateDeliveryInput {
-  /** Reem's own reference. Sent to the carrier so support can match records. */
+  /** Ohara's own reference. Sent to the carrier so support can match records. */
   reference: string;
   /** Stable per parcel — the same value on every retry of the same dispatch. */
   idempotencyKey: string;

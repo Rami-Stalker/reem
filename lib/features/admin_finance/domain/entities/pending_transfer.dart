@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import 'package:reem/core/shared/value_objects/money.dart';
+import 'package:ohara/core/shared/value_objects/money.dart';
 
 /// Q51 — a bank transfer or hawala waiting for finance to match it.
 class PendingTransfer extends Equatable {

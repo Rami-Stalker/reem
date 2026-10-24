@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:reem/core/design_system/foundation/tokens/ds_sizes.dart';
+import 'package:ohara/core/design_system/foundation/tokens/ds_sizes.dart';
 
 /// The app's icon vocabulary: one glyph per concept, plus the size aliases.
 ///
