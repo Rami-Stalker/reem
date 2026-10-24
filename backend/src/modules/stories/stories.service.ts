@@ -7,6 +7,7 @@ import {
   serializeLegacyStory,
 } from '../../common/serializers';
 import { TrendSignalService } from '../trends/collection/trend-signal.service';
+import { contentVisibilityWhere } from '../commerce-content/feed/content-feed.service';
 
 /**
  * `GET /stories` and the two engagement routes — the same contract, over the
@@ -33,26 +34,48 @@ export class StoriesService {
   /** `userId` is absent for a signed-out visitor — see the controller. */
   async list(userId?: string) {
     const stories = await this.prisma.commerceContent.findMany({
+      // The content platform's own visibility rule, so the home rail agrees
+      // with `/content/stories`: her own stories and the followers-only ones
+      // of shops she follows appear, and the accounts she muted do not.
       where: {
-        contentType: 'story',
-        status: CommerceContentStatus.PUBLISHED,
-        expiresAt: { gt: new Date() },
-        visibility: 'PUBLIC',
-        authorIsPublic: true,
+        AND: [
+          contentVisibilityWhere(userId),
+          { contentType: 'story' },
+          { expiresAt: { gt: new Date() } },
+          ...(userId
+            ? [
+                { hiddenBy: { none: { userId } } },
+                { author: { mutesReceived: { none: { muterId: userId } } } },
+              ]
+            : []),
+        ],
       },
       orderBy: { createdAt: 'desc' },
-      include: { author: true, media: { orderBy: { sortOrder: 'asc' } } },
+      include: {
+        author: true,
+        media: { orderBy: { sortOrder: 'asc' } },
+        productTags: {
+          orderBy: { sortOrder: 'asc' },
+          take: 1,
+          select: { productId: true },
+        },
+      },
     });
 
     const viewer = await this.viewerState(
       stories.map((story) => story.id),
       userId,
     );
-    return stories.map((story) => serializeLegacyStory(story, viewer));
+    // `product_id` is additive: the story it tags, for the viewer's
+    // «تسوّقي القطعة». Older clients ignore the key.
+    return stories.map(({ productTags, ...story }) => ({
+      ...serializeLegacyStory(story, viewer),
+      product_id: productTags[0]?.productId ?? null,
+    }));
   }
 
   async recordView(userId: string, storyId: string) {
-    const story = await this.ensureActive(storyId);
+    const story = await this.ensureActive(storyId, userId);
 
     // Owners viewing their own story should not inflate their analytics — and
     // that applies to the trend signal for exactly the same reason.
@@ -114,7 +137,7 @@ export class StoriesService {
   }
 
   async react(userId: string, storyId: string, emoji: string) {
-    const story = await this.ensureActive(storyId);
+    const story = await this.ensureActive(storyId, userId);
 
     const existing = await this.prisma.commerceContentReaction.findUnique({
       where: { contentId_userId: { contentId: storyId, userId } },
@@ -188,9 +211,19 @@ export class StoriesService {
     };
   }
 
-  private async ensureActive(storyId: string) {
+  /**
+   * A live story this viewer may see. The visibility rule is the feeds' one,
+   * so a followers-only story cannot be viewed or reacted to by a stranger
+   * holding its id.
+   */
+  private async ensureActive(storyId: string, viewerId?: string) {
     const story = await this.prisma.commerceContent.findFirst({
-      where: { id: storyId, contentType: 'story' },
+      where: {
+        AND: [
+          { id: storyId, contentType: 'story' },
+          ...(viewerId ? [contentVisibilityWhere(viewerId)] : []),
+        ],
+      },
       select: { id: true, authorId: true, expiresAt: true, status: true },
     });
     if (

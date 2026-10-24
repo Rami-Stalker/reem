@@ -300,9 +300,10 @@ export class ContentSocialController {
   @OptionalAuth()
   async comments(
     @Param('id', ParseUUIDPipe) id: string,
+    @CurrentUser() user: AuthUser | undefined,
     @Query() page: PaginationDto,
   ) {
-    const result = await this.interactions.listComments(id, page);
+    const result = await this.interactions.listComments(id, page, user?.id);
     return {
       data: result.roots.map(serializeContentComment),
       pagination: result.meta,
@@ -358,6 +359,23 @@ export class ContentSocialController {
     @Body() dto: RemoveCommentDto,
   ) {
     return this.interactions.removeComment(user, commentId, dto.reason);
+  }
+
+  // ── Her audience ──────────────────────────────────────────────────────────
+
+  /** «شوهدت من قبل» — who watched her own story or reel. Owner only. */
+  @Get(':id/viewers')
+  @Authorize({
+    action: 'interact',
+    resource: 'content',
+    roles: [UserRole.CUSTOMER, UserRole.SELLER],
+    permissions: [AppPermission.contentInteract],
+  })
+  viewers(
+    @CurrentUser() user: AuthUser,
+    @Param('id', ParseUUIDPipe) id: string,
+  ) {
+    return this.interactions.audience(user, id);
   }
 
   // ── Reporting ─────────────────────────────────────────────────────────────

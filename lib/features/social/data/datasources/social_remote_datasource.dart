@@ -40,6 +40,12 @@ abstract interface class SocialRemoteDataSource {
   Future<List<TaggableProductModel>> taggableProducts({int page, int limit});
   Future<ContentModel> publish(ContentDraft draft);
   Future<void> deleteOwn(String contentId);
+  Future<ContentModel> edit(
+    String contentId, {
+    String? caption,
+    ContentVisibility? visibility,
+  });
+  Future<ContentAudienceModel> audience(String contentId);
 
   Future<ContentViewerStateModel> react(String contentId, {String? emoji});
   Future<ContentViewerStateModel> toggleSave(String contentId);

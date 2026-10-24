@@ -53,6 +53,9 @@ import {
 
 const FEED_CACHE_PREFIX = 'commerce-content:feed';
 
+/** A second VIEW from the same woman inside this window is the same view. */
+const REPEAT_VIEW_WINDOW_MS = 30_000;
+
 interface ContentSnapshot {
   content_type: string;
   title: string | null;
@@ -77,6 +80,49 @@ function isAdmin(user: AuthUser): boolean {
     UserRole.ADMIN,
   ];
   return roles.includes(user.role);
+}
+
+/**
+ * What the author may still do to a piece in this state.
+ *
+ * `REMOVED` belongs to the moderators — publishing, editing, archiving or
+ * rolling it back would each be a way round the takedown. `DELETED` is gone
+ * from her point of view, and answering 404 keeps it that way.
+ */
+export function assertAuthorMayChange(status: CommerceContentStatus): void {
+  if (status === CommerceContentStatus.REMOVED) {
+    throw new ForbiddenException('CONTENT_REMOVED');
+  }
+  if (status === CommerceContentStatus.DELETED) {
+    throw new NotFoundException('Content not found');
+  }
+}
+
+/**
+ * The story schema requires `frames`, and the composer sends media and a
+ * caption like every other format. Rather than make every client learn one
+ * format's private shape, the frames are derived from the media when they
+ * were not given — which is what they are: one frame per picture or clip.
+ */
+export function withDerivedFrames(
+  definition: Pick<CommerceContentTypeDefinition, 'schema'>,
+  payload: Record<string, unknown>,
+  media: { url: string; type?: MediaType | string | null }[],
+): Record<string, unknown> {
+  const schema = definition.schema;
+  const required =
+    typeof schema === 'object' && schema !== null && !Array.isArray(schema)
+      ? (schema as { required?: unknown }).required
+      : undefined;
+  if (!Array.isArray(required) || !required.includes('frames')) return payload;
+  if (Array.isArray(payload?.frames)) return payload;
+  return {
+    ...(payload ?? {}),
+    frames: media.map((item) => ({
+      media_url: item.url,
+      type: item.type ?? MediaType.image,
+    })),
+  };
 }
 
 @Injectable()
@@ -106,15 +152,22 @@ export class CommerceContentService {
     if (!mayPublish(definition, user.role)) {
       throw new ForbiddenException('CONTENT_TYPE_NOT_AVAILABLE_TO_YOU');
     }
-    this.registry.validatePayload(definition, dto.payload);
+    const payload = withDerivedFrames(definition, dto.payload, dto.media ?? []);
+    this.registry.validatePayload(definition, payload);
     this.assertMediaFits(definition, dto.media ?? []);
 
     const productTags = await this.productTagCreates(user, dto.product_tags ?? []);
     const scheduledAt = this.futureDate(dto.scheduled_at, 'scheduled_at');
     const expiresAt = this.expirationDate(dto.expires_at, definition);
-    const moderationStatus = (await this.reviewRequired(user, definition))
-      ? CommerceContentModerationStatus.PENDING
-      : CommerceContentModerationStatus.APPROVED;
+    // Screened here as well as at publish. `APPROVED` has to mean "the words
+    // on it now have been passed", or a caption carrying a phone number is
+    // waved through by the publish gate on the strength of a status it was
+    // given before anybody read it.
+    const flagged = !isAdmin(user) && screenText(dto.title, dto.body).length > 0;
+    const moderationStatus =
+      flagged || (await this.reviewRequired(user, definition))
+        ? CommerceContentModerationStatus.PENDING
+        : CommerceContentModerationStatus.APPROVED;
 
     const author = await this.repo.authorFacts(user.id);
     if (!author) throw new NotFoundException('Author not found');
@@ -132,7 +185,7 @@ export class CommerceContentService {
         : CommerceContentStatus.DRAFT,
       visibility: dto.visibility ?? CommerceContentVisibility.PUBLIC,
       moderationStatus,
-      payload: dto.payload as Prisma.InputJsonValue,
+      payload: payload as Prisma.InputJsonValue,
       metadata: (dto.metadata as Prisma.InputJsonValue) ?? Prisma.JsonNull,
       publicationTargets:
         dto.publication_targets ?? this.registry.defaultChannels(definition),
@@ -150,10 +203,10 @@ export class CommerceContentService {
 
   async update(user: AuthUser, id: string, dto: UpdateCommerceContentDto) {
     const current = await this.ownedOrThrow(user, id);
+    assertAuthorMayChange(current.status);
     const lockedStatuses: CommerceContentStatus[] = [
         CommerceContentStatus.ARCHIVED,
         CommerceContentStatus.EXPIRED,
-        CommerceContentStatus.DELETED,
     ];
     if (lockedStatuses.includes(current.status)) {
       throw new BadRequestException('Archived or expired content cannot be edited');
@@ -161,22 +214,53 @@ export class CommerceContentService {
 
     const full = await this.repo.findById(id);
     if (!full) throw new NotFoundException('Content not found');
-    if (dto.payload) {
-      this.registry.validatePayload(full.typeDefinition, dto.payload);
-    }
+    const definition = full.typeDefinition;
+    const payload = dto.payload
+      ? withDerivedFrames(definition, dto.payload, dto.media ?? full.media ?? [])
+      : undefined;
+    if (payload) this.registry.validatePayload(definition, payload);
+    // The format's rules hold for an edit exactly as for a first draft: a
+    // reel edited down to no video is not a reel, and a story edited up to
+    // nine frames is not the format the viewer will be shown.
+    if (dto.media !== undefined) this.assertMediaFits(definition, dto.media);
+    const expiresAt =
+      dto.expires_at !== undefined
+        ? this.editedExpiry(dto.expires_at, definition, full)
+        : undefined;
 
     const productTags =
       dto.product_tags === undefined
         ? undefined
         : await this.productTagCreates(user, dto.product_tags);
 
+    // An edit to something already approved is a new thing to approve when
+    // the new words trip the screen, or when she is still inside her first
+    // reviewed posts and the caption or the pictures changed. Without this a
+    // piece could be published clean and then edited into whatever the
+    // review gate exists to stop, and nobody would ever look at it again.
+    const title = dto.title !== undefined ? dto.title : full.title;
+    const body = dto.body !== undefined ? dto.body : full.body;
+    const substanceChanged =
+      (dto.title !== undefined && (dto.title?.trim() ?? null) !== full.title) ||
+      (dto.body !== undefined && (dto.body ?? null) !== full.body) ||
+      dto.media !== undefined ||
+      dto.payload !== undefined;
+    const backToReview =
+      !isAdmin(user) &&
+      substanceChanged &&
+      (screenText(title, body).length > 0 ||
+        (await this.reviewRequired(user, definition)));
+    const wasLive =
+      current.status === CommerceContentStatus.PUBLISHED ||
+      current.status === CommerceContentStatus.SCHEDULED;
+
     const content = await this.repo.updateContent(id, {
       ...(dto.title !== undefined && { title: dto.title?.trim() ?? null }),
       ...(dto.body !== undefined && { body: dto.body ?? null }),
       ...(dto.locale !== undefined && { locale: dto.locale }),
       ...(dto.visibility !== undefined && { visibility: dto.visibility }),
-      ...(dto.payload !== undefined && {
-        payload: dto.payload as Prisma.InputJsonValue,
+      ...(payload !== undefined && {
+        payload: payload as Prisma.InputJsonValue,
       }),
       ...(dto.metadata !== undefined && {
         metadata:
@@ -190,9 +274,7 @@ export class CommerceContentService {
       ...(dto.scheduled_at !== undefined && {
         scheduledAt: this.futureDate(dto.scheduled_at, 'scheduled_at'),
       }),
-      ...(dto.expires_at !== undefined && {
-        expiresAt: this.optionalDate(dto.expires_at),
-      }),
+      ...(expiresAt !== undefined && { expiresAt }),
       ...(dto.pinned_until !== undefined && {
         pinnedUntil: this.optionalDate(dto.pinned_until),
       }),
@@ -202,7 +284,19 @@ export class CommerceContentService {
       ...(productTags !== undefined && {
         productTags: { deleteMany: {}, create: productTags },
       }),
+      ...(backToReview && {
+        moderationStatus: CommerceContentModerationStatus.PENDING,
+        ...(wasLive && { status: CommerceContentStatus.IN_REVIEW }),
+      }),
     });
+
+    if (backToReview && wasLive) {
+      this.events.emit(AppEvent.CommerceContentSubmitted, {
+        authorId: content.authorId,
+        contentId: content.id,
+        contentType: content.contentType,
+      });
+    }
 
     await this.saveVersion(user.id, content.id, dto.change_note ?? 'Updated');
     this.invalidateFeeds();
@@ -244,11 +338,26 @@ export class CommerceContentService {
     const content = await this.repo.findById(id);
     if (!content) throw new NotFoundException('Content not found');
 
+    // A moderator's takedown is not undone by the author pressing «نشر»:
+    // the only way back from REMOVED is `reinstate`, which is audited.
+    assertAuthorMayChange(content.status);
     if (content.status === CommerceContentStatus.ARCHIVED) {
       throw new BadRequestException('Archived content cannot be published');
     }
     if (content.status === CommerceContentStatus.REJECTED) {
       throw new BadRequestException('Rejected content must be edited before publishing');
+    }
+    if (
+      content.status === CommerceContentStatus.EXPIRED ||
+      (content.expiresAt && content.expiresAt <= new Date())
+    ) {
+      throw new BadRequestException('CONTENT_EXPIRED');
+    }
+    // Publishing twice is not a second publication. A second tap used to
+    // re-stamp `published_at` and lift an old piece back to the head of every
+    // feed — a way to bump without posting anything new.
+    if (content.status === CommerceContentStatus.PUBLISHED) {
+      return serializeCommerceContent(content);
     }
 
     const flagged = screenText(content.title, content.body);
@@ -259,6 +368,11 @@ export class CommerceContentService {
       moderationRequired &&
       owner.moderationStatus !== CommerceContentModerationStatus.APPROVED
     ) {
+      // Already waiting on a moderator: a second tap is not a second
+      // submission, and must not notify the queue twice.
+      if (content.status === CommerceContentStatus.IN_REVIEW) {
+        return serializeCommerceContent(content);
+      }
       const submitted = await this.repo.updateContent(id, {
         status: CommerceContentStatus.IN_REVIEW,
         moderationStatus: CommerceContentModerationStatus.PENDING,
@@ -295,7 +409,8 @@ export class CommerceContentService {
   }
 
   async archive(user: AuthUser, id: string) {
-    await this.ownedOrThrow(user, id);
+    const owner = await this.ownedOrThrow(user, id);
+    assertAuthorMayChange(owner.status);
     const content = await this.repo.updateContent(id, {
       status: CommerceContentStatus.ARCHIVED,
       archivedAt: new Date(),
@@ -305,11 +420,19 @@ export class CommerceContentService {
   }
 
   async rollback(user: AuthUser, id: string, versionNumber: number) {
-    await this.ownedOrThrow(user, id);
+    const owner = await this.ownedOrThrow(user, id);
+    // Rolling back resets the status to DRAFT, which made it a second way
+    // round a takedown: roll back, then publish.
+    assertAuthorMayChange(owner.status);
     const version = await this.repo.findVersion(id, versionNumber);
     if (!version) throw new NotFoundException('Content version not found');
     const snapshot = this.snapshotOrThrow(version.snapshot);
+    const full = await this.repo.findById(id);
+    if (!full) throw new NotFoundException('Content not found');
+    this.assertMediaFits(full.typeDefinition, snapshot.media ?? []);
     const productTags = await this.productTagCreates(user, snapshot.product_tags);
+    const flagged =
+      !isAdmin(user) && screenText(snapshot.title, snapshot.body).length > 0;
 
     const content = await this.repo.updateContent(id, {
       title: snapshot.title,
@@ -326,6 +449,9 @@ export class CommerceContentService {
       expiresAt: this.optionalDate(snapshot.expires_at),
       pinnedUntil: this.optionalDate(snapshot.pinned_until),
       status: CommerceContentStatus.DRAFT,
+      ...(flagged && {
+        moderationStatus: CommerceContentModerationStatus.PENDING,
+      }),
       publishedAt: null,
       archivedAt: null,
       media: { deleteMany: {}, create: this.mediaCreateArray(snapshot.media) },
@@ -422,6 +548,27 @@ export class CommerceContentService {
     const viewer = userId
       ? await this.repo.findViewer(id, userId)
       : null;
+
+    // Two things a reel's view count must not be: her own replays, and a
+    // client firing VIEW in a loop. The author watching herself is skipped
+    // (the stories route has always done this), and a repeat VIEW from the
+    // same woman inside the window is the same view — a swipe back and
+    // forth, not a second audience.
+    const passive =
+      dto.type === CommerceContentAnalyticsEventType.VIEW ||
+      dto.type === CommerceContentAnalyticsEventType.WATCH_TIME ||
+      dto.type === CommerceContentAnalyticsEventType.IMPRESSION;
+    const repeatView =
+      dto.type === CommerceContentAnalyticsEventType.VIEW &&
+      viewer !== null &&
+      Date.now() - viewer.lastViewedAt.getTime() < REPEAT_VIEW_WINDOW_MS;
+    if ((passive && userId === content.authorId) || repeatView) {
+      return {
+        tracked: false,
+        analytics: serializeCommerceContentAnalytics(content),
+      };
+    }
+
     await this.repo.recordEvent({
       contentId: id,
       actorId: userId,
@@ -468,7 +615,18 @@ export class CommerceContentService {
    * trail and make a takedown look like a change of heart.
    */
   async deleteOwn(user: AuthUser, id: string) {
-    await this.ownedOrThrow(user, id);
+    const owner = await this.ownedOrThrow(user, id);
+    // Idempotent: a second tap on «حذف», or a retry after a dropped
+    // response, is the same deletion.
+    if (owner.status === CommerceContentStatus.DELETED) {
+      return { deleted: true, id };
+    }
+    // A takedown stays a takedown. Letting her delete it would turn REMOVED
+    // into DELETED, which takes the piece out of the moderators' trail and
+    // makes `reinstate` impossible if the removal is appealed.
+    if (owner.status === CommerceContentStatus.REMOVED) {
+      throw new ForbiddenException('CONTENT_REMOVED');
+    }
     const content = await this.repo.updateContent(id, {
       status: CommerceContentStatus.DELETED,
       archivedAt: new Date(),
@@ -648,6 +806,35 @@ export class CommerceContentService {
     const hours = this.registry.expiresAfterHours(definition);
     if (!hours) return undefined;
     return new Date(Date.now() + hours * 60 * 60_000);
+  }
+
+  /**
+   * A new expiry, from an edit.
+   *
+   * For a format that lives a fixed number of hours — a story — the edit may
+   * shorten its life and may not lengthen it, and may not remove the expiry
+   * at all: a story with `expires_at = null` would be a post that dodged the
+   * post rules by being called a story.
+   */
+  private editedExpiry(
+    value: string | null,
+    definition: CommerceContentTypeDefinition,
+    content: { publishedAt: Date | null; createdAt: Date },
+  ): Date | null {
+    const hours = this.registry.expiresAfterHours(definition);
+    if (value === null) {
+      if (hours) throw new BadRequestException('EXPIRY_REQUIRED_FOR_FORMAT');
+      return null;
+    }
+    const date = this.futureDate(value, 'expires_at') as Date;
+    if (hours) {
+      const start = content.publishedAt ?? content.createdAt;
+      const ceiling = new Date(start.getTime() + hours * 60 * 60_000);
+      if (date > ceiling) {
+        throw new BadRequestException(`EXPIRY_BEYOND_${hours}H`);
+      }
+    }
+    return date;
   }
 
   private eventCounterUpdate(

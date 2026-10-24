@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import {
+  CommerceContentModerationStatus,
   CommerceAuthorKind,
   CommerceContentStatus,
   ContentTagBasis,
@@ -13,6 +14,8 @@ import { AppEvent } from '../../common/events/app-events';
 import { serializeLegacyPost } from '../../common/serializers';
 import { ContentAttributionService } from '../commerce-content/attribution/content-attribution.service';
 import { ProductTagPolicyService } from '../commerce-content/tagging/product-tag-policy.service';
+import { assertAuthorMayChange } from '../commerce-content/commerce-content.service';
+import { screenText } from '../commerce-content/content-policy';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 
@@ -106,12 +109,22 @@ export class SellerPostsService {
   }
 
   async update(user: AuthUser, id: string, dto: UpdatePostDto) {
-    await this.ownedOrThrow(user, id);
+    const owner = await this.ownedOrThrow(user, id);
+    assertAuthorMayChange(owner.status);
+    // The same screen the content platform runs on an edit: a caption edited
+    // into an off-platform phone number goes back to a moderator.
+    const flagged = screenText(dto.caption).length > 0;
     const post = await this.prisma.commerceContent.update({
       where: { id },
       data: {
         body: dto.caption,
         payload: { caption: dto.caption, legacy: 'post' },
+        ...(flagged && {
+          moderationStatus: CommerceContentModerationStatus.PENDING,
+          ...(owner.status === CommerceContentStatus.PUBLISHED && {
+            status: CommerceContentStatus.IN_REVIEW,
+          }),
+        }),
       },
       include: this.include,
     });
@@ -128,7 +141,11 @@ export class SellerPostsService {
    * intervened.
    */
   async remove(user: AuthUser, id: string) {
-    await this.ownedOrThrow(user, id);
+    const owner = await this.ownedOrThrow(user, id);
+    if (owner.status === CommerceContentStatus.DELETED) {
+      return { message: 'Post deleted' };
+    }
+    assertAuthorMayChange(owner.status);
     await this.prisma.commerceContent.update({
       where: { id },
       data: {
@@ -142,7 +159,7 @@ export class SellerPostsService {
   private async ownedOrThrow(user: AuthUser, id: string) {
     const owner = await this.prisma.commerceContent.findFirst({
       where: { id, contentType: 'product_post' },
-      select: { id: true, authorId: true },
+      select: { id: true, authorId: true, status: true },
     });
     if (!owner) throw new NotFoundException('Post not found');
     assertCanManage(owner.authorId, user);

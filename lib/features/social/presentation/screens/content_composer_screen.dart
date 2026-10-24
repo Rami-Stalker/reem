@@ -41,6 +41,10 @@ class _ContentComposerScreenState extends ConsumerState<ContentComposerScreen> {
   bool _uploading = false;
   bool _formatApplied = false;
 
+  /// A story may be a photograph or a clip; a reel is always a clip and a
+  /// post always photographs. Only read while the format is a story.
+  bool _storyVideo = false;
+
   /// Selects the format she asked for, once, when the registry has answered —
   /// and never over a choice she has since made herself.
   void _applyInitialFormat(ComposerState state, ComposerNotifier notifier) {
@@ -160,6 +164,31 @@ class _ContentComposerScreenState extends ConsumerState<ContentComposerScreen> {
                   },
                 ),
                 DsGaps.vLg,
+                if (type?.format == ContentFormat.story) ...[
+                  StudioSegment(
+                    options: [
+                      StudioSegmentOption(
+                        icon: Icons.photo_camera_rounded,
+                        label: l10n.composerStoryPhoto,
+                      ),
+                      StudioSegmentOption(
+                        icon: Icons.videocam_rounded,
+                        label: l10n.composerStoryVideo,
+                      ),
+                    ],
+                    selected: _storyVideo ? 1 : 0,
+                    onSelect: state.isSubmitting || _uploading
+                        ? (_) {}
+                        : (index) {
+                            // Switching clears what she picked: the field is
+                            // rebuilt for the other kind, and the draft must
+                            // not keep media the field no longer shows.
+                            notifier.setMedia(const []);
+                            setState(() => _storyVideo = index == 1);
+                          },
+                  ),
+                  DsGaps.vLg,
+                ],
                 ViewfinderFrame(
                   label: type == null
                       ? l10n.composerMediaLabel
@@ -176,20 +205,24 @@ class _ContentComposerScreenState extends ConsumerState<ContentComposerScreen> {
                     // construction, and carrying photographs into a reel would
                     // leave her looking at media the server will refuse.
                     // l10n-ignore: a widget identity, not copy.
-                    key: ValueKey('composer-media-${draft.contentType}'),
+                    key: ValueKey(
+                      // l10n-ignore: a widget identity, not copy.
+                      'composer-media-${draft.contentType}-${_wantsVideo(type)}',
+                    ),
                     label: l10n.composerMediaLabel,
-                    helperText: type?.videoRequired == true
+                    helperText: _wantsVideo(type)
                         ? l10n.composerMediaVideoHelp
                         : null,
                     purpose: MediaPurpose.post,
-                    video: type?.videoRequired ?? false,
-                    maxItems: type?.maxMedia ?? 5,
+                    video: _wantsVideo(type),
+                    // One clip per story or reel: a clip is a whole story.
+                    maxItems: _wantsVideo(type) ? 1 : (type?.maxMedia ?? 5),
                     enabled: !state.isSubmitting,
                     onChanged: (urls) => notifier.setMedia([
                       for (final url in urls)
                         MediaItem(
                           url: url,
-                          type: type?.videoRequired == true
+                          type: _wantsVideo(type)
                               ? MediaType.video
                               : MediaType.image,
                         ),
@@ -287,6 +320,12 @@ class _ContentComposerScreenState extends ConsumerState<ContentComposerScreen> {
       ],
     );
   }
+
+  /// Whether the media field picks clips: always for a reel, by her choice
+  /// for a story, never for a post.
+  bool _wantsVideo(ContentTypeOption? type) =>
+      (type?.videoRequired ?? false) ||
+      (type?.format == ContentFormat.story && _storyVideo);
 
   static IconData _iconOf(ContentFormat format) => switch (format) {
     ContentFormat.reel => Icons.movie_creation_rounded,

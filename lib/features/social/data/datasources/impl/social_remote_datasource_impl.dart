@@ -218,6 +218,35 @@ final class SocialRemoteDataSourceImpl extends BaseRemoteDataSource
   Future<void> deleteOwn(String contentId) =>
       deleteRequest(ApiEndpoints.contentById(contentId));
 
+  @override
+  Future<ContentModel> edit(
+    String contentId, {
+    String? caption,
+    ContentVisibility? visibility,
+  }) async {
+    // The caption lives twice — `body` is what is read, `payload.caption` is
+    // what the format's schema asks for — and an edit that changed one would
+    // leave the two disagreeing.
+    final json = await patchJson(
+      ApiEndpoints.contentById(contentId),
+      body: {
+        if (caption != null) ...{
+          'body': caption,
+          'payload': {'caption': caption},
+        },
+        'visibility': ?visibility?.wire,
+        'change_note': 'Edited in the app',
+      },
+    );
+    return ContentModel.fromJson(json);
+  }
+
+  @override
+  Future<ContentAudienceModel> audience(String contentId) async =>
+      ContentAudienceModel.fromJson(
+        await getJson(ApiEndpoints.contentViewers(contentId)),
+      );
+
   // ── Interactions ──────────────────────────────────────────────────────────
 
   @override

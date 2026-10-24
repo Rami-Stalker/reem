@@ -14988,5 +14988,97 @@
   "occasionPastNoLook": "You didn't record a look for this day. Add one so we can warn you before a repeat.",
   "@occasionPastNoLook": {
     "description": "Occasions: past occasion without a look"
+  },
+  "postMenuEdit": "Edit",
+  "@postMenuEdit": {
+    "description": "Post menu: edit her own post, reel or story"
+  },
+  "contentEditTitle": "Edit",
+  "@contentEditTitle": {
+    "description": "Edit sheet title for her own content"
+  },
+  "contentEditSave": "Save changes",
+  "@contentEditSave": {
+    "description": "Edit sheet: save button"
+  },
+  "contentEdited": "Your changes are saved",
+  "@contentEdited": {
+    "description": "Snackbar after an edit"
+  },
+  "contentEditedUnderReview": "Saved — it's back with our team for a quick look before it shows again",
+  "@contentEditedUnderReview": {
+    "description": "Snackbar after an edit that sent the piece back to moderation"
+  },
+  "audienceTitle": "Seen by",
+  "@audienceTitle": {
+    "description": "Who watched her own story or reel"
+  },
+  "audienceViewers": "Viewers",
+  "@audienceViewers": {
+    "description": "Audience sheet: distinct viewers"
+  },
+  "audienceViews": "Views",
+  "@audienceViews": {
+    "description": "Audience sheet: total plays"
+  },
+  "audienceReactions": "Reactions",
+  "@audienceReactions": {
+    "description": "Audience sheet: reactions"
+  },
+  "audienceEmpty": "Nobody has seen it yet",
+  "@audienceEmpty": {
+    "description": "Audience sheet: empty state title"
+  },
+  "audienceEmptyBody": "When someone watches it, you'll find them here.",
+  "@audienceEmptyBody": {
+    "description": "Audience sheet: empty state body"
+  },
+  "reportDetailTitle": "Tell us a little more",
+  "@reportDetailTitle": {
+    "description": "Report sheet: free-text step for 'something else'"
+  },
+  "reportDetailLabel": "What's wrong with it?",
+  "@reportDetailLabel": {
+    "description": "Report detail field label"
+  },
+  "reportDetailHint": "Optional — a few words help our team act faster",
+  "@reportDetailHint": {
+    "description": "Report detail field hint"
+  },
+  "reportSend": "Send report",
+  "@reportSend": {
+    "description": "Report detail: send button"
+  },
+  "storyMenuDelete": "Delete story",
+  "@storyMenuDelete": {
+    "description": "Story menu: delete her own story"
+  },
+  "storyMenuReport": "Report story",
+  "@storyMenuReport": {
+    "description": "Story menu: report somebody else's story"
+  },
+  "storyDeleteTitle": "Delete this story?",
+  "@storyDeleteTitle": {
+    "description": "Delete story confirmation title"
+  },
+  "storyDeleteBody": "It disappears for everyone straight away, and from any highlight it was in.",
+  "@storyDeleteBody": {
+    "description": "Delete story confirmation body"
+  },
+  "storyDeleted": "Story deleted",
+  "@storyDeleted": {
+    "description": "Snackbar after deleting a story"
+  },
+  "storyShopThis": "Shop this piece",
+  "@storyShopThis": {
+    "description": "Story: open the tagged product"
+  },
+  "composerStoryPhoto": "Photo",
+  "@composerStoryPhoto": {
+    "description": "Composer: a story made of photographs"
+  },
+  "composerStoryVideo": "Video",
+  "@composerStoryVideo": {
+    "description": "Composer: a story that is one clip"
   }
 }

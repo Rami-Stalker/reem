@@ -337,3 +337,57 @@ dbTest('reordering renumbers her rail and refuses a shelf that is not hers', asy
     /not yours/i,
   );
 });
+
+dbTest('a story removed by a moderator, or deleted by her, leaves the shelf', async (world) => {
+  // The production path is a status, never a row delete — the case above
+  // only proves the cascade. This is the one a takedown actually takes.
+  const seller = await makeUser(world.tx, 'q', UserRole.SELLER);
+  const removed = await makeStory(world.tx, seller.id, { role: UserRole.SELLER });
+  const deleted = await makeStory(world.tx, seller.id, { role: UserRole.SELLER });
+  const kept = await makeStory(world.tx, seller.id, { role: UserRole.SELLER });
+  const created = await world.highlights.create(seller.id, {
+    title: 'رف',
+    content_ids: [removed.id, deleted.id, kept.id],
+  });
+
+  await world.tx.commerceContent.update({
+    where: { id: removed.id },
+    data: {
+      status: CommerceContentStatus.REMOVED,
+      removedAt: new Date(),
+      removalReason: 'مخالف لسياسة المحتوى المعتمدة.',
+    },
+  });
+  await world.tx.commerceContent.update({
+    where: { id: deleted.id },
+    data: { status: CommerceContentStatus.DELETED },
+  });
+
+  const after = await world.highlights.detail(created.id, seller.id);
+  assert.equal(after.items_count, 1);
+  assert.deepEqual(
+    (after.stories ?? []).map((story: { id: string }) => story.id),
+    [kept.id],
+  );
+});
+
+dbTest('the archive keeps a story the expiry sweep has already reached', async (world) => {
+  const seller = await makeUser(world.tx, 'r', UserRole.SELLER);
+  const swept = await makeStory(world.tx, seller.id, { role: UserRole.SELLER });
+  await world.tx.commerceContent.update({
+    where: { id: swept.id },
+    data: { status: CommerceContentStatus.EXPIRED },
+  });
+
+  const archive = await world.highlights.archive(seller.id);
+  assert.ok(
+    archive.some((story) => story.id === swept.id),
+    'an expired story fell out of the highlight picker',
+  );
+  // And it can still be put on a shelf.
+  const created = await world.highlights.create(seller.id, {
+    title: 'أرشيف',
+    content_ids: [swept.id],
+  });
+  assert.equal(created.items_count, 1);
+});

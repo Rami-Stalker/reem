@@ -21799,6 +21799,144 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'You didn\'t record a look for this day. Add one so we can warn you before a repeat.'**
   String get occasionPastNoLook;
+
+  /// Post menu: edit her own post, reel or story
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get postMenuEdit;
+
+  /// Edit sheet title for her own content
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get contentEditTitle;
+
+  /// Edit sheet: save button
+  ///
+  /// In en, this message translates to:
+  /// **'Save changes'**
+  String get contentEditSave;
+
+  /// Snackbar after an edit
+  ///
+  /// In en, this message translates to:
+  /// **'Your changes are saved'**
+  String get contentEdited;
+
+  /// Snackbar after an edit that sent the piece back to moderation
+  ///
+  /// In en, this message translates to:
+  /// **'Saved — it\'s back with our team for a quick look before it shows again'**
+  String get contentEditedUnderReview;
+
+  /// Who watched her own story or reel
+  ///
+  /// In en, this message translates to:
+  /// **'Seen by'**
+  String get audienceTitle;
+
+  /// Audience sheet: distinct viewers
+  ///
+  /// In en, this message translates to:
+  /// **'Viewers'**
+  String get audienceViewers;
+
+  /// Audience sheet: total plays
+  ///
+  /// In en, this message translates to:
+  /// **'Views'**
+  String get audienceViews;
+
+  /// Audience sheet: reactions
+  ///
+  /// In en, this message translates to:
+  /// **'Reactions'**
+  String get audienceReactions;
+
+  /// Audience sheet: empty state title
+  ///
+  /// In en, this message translates to:
+  /// **'Nobody has seen it yet'**
+  String get audienceEmpty;
+
+  /// Audience sheet: empty state body
+  ///
+  /// In en, this message translates to:
+  /// **'When someone watches it, you\'ll find them here.'**
+  String get audienceEmptyBody;
+
+  /// Report sheet: free-text step for 'something else'
+  ///
+  /// In en, this message translates to:
+  /// **'Tell us a little more'**
+  String get reportDetailTitle;
+
+  /// Report detail field label
+  ///
+  /// In en, this message translates to:
+  /// **'What\'s wrong with it?'**
+  String get reportDetailLabel;
+
+  /// Report detail field hint
+  ///
+  /// In en, this message translates to:
+  /// **'Optional — a few words help our team act faster'**
+  String get reportDetailHint;
+
+  /// Report detail: send button
+  ///
+  /// In en, this message translates to:
+  /// **'Send report'**
+  String get reportSend;
+
+  /// Story menu: delete her own story
+  ///
+  /// In en, this message translates to:
+  /// **'Delete story'**
+  String get storyMenuDelete;
+
+  /// Story menu: report somebody else's story
+  ///
+  /// In en, this message translates to:
+  /// **'Report story'**
+  String get storyMenuReport;
+
+  /// Delete story confirmation title
+  ///
+  /// In en, this message translates to:
+  /// **'Delete this story?'**
+  String get storyDeleteTitle;
+
+  /// Delete story confirmation body
+  ///
+  /// In en, this message translates to:
+  /// **'It disappears for everyone straight away, and from any highlight it was in.'**
+  String get storyDeleteBody;
+
+  /// Snackbar after deleting a story
+  ///
+  /// In en, this message translates to:
+  /// **'Story deleted'**
+  String get storyDeleted;
+
+  /// Story: open the tagged product
+  ///
+  /// In en, this message translates to:
+  /// **'Shop this piece'**
+  String get storyShopThis;
+
+  /// Composer: a story made of photographs
+  ///
+  /// In en, this message translates to:
+  /// **'Photo'**
+  String get composerStoryPhoto;
+
+  /// Composer: a story that is one clip
+  ///
+  /// In en, this message translates to:
+  /// **'Video'**
+  String get composerStoryVideo;
 }
 
 class _AppLocalizationsDelegate

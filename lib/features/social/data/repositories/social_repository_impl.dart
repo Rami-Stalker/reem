@@ -5,6 +5,7 @@ import 'package:reem/core/shared/entities/user.dart';
 import 'package:reem/features/social/data/datasources/social_remote_datasource.dart';
 import 'package:reem/features/social/domain/entities/content.dart';
 import 'package:reem/features/social/domain/entities/content_analytics.dart';
+import 'package:reem/features/social/domain/entities/content_audience.dart';
 import 'package:reem/features/social/domain/entities/content_comment.dart';
 import 'package:reem/features/social/domain/entities/content_draft.dart';
 import 'package:reem/features/social/domain/repositories/social_repository.dart';
@@ -97,6 +98,19 @@ class SocialRepositoryImpl with RepositoryHandler implements SocialRepository {
   @override
   Future<Result<void>> deleteOwn(String contentId) =>
       guard(() => remote.deleteOwn(contentId));
+
+  @override
+  Future<Result<Content>> edit(
+    String contentId, {
+    String? caption,
+    ContentVisibility? visibility,
+  }) => guard(
+    () => remote.edit(contentId, caption: caption, visibility: visibility),
+  );
+
+  @override
+  Future<Result<ContentAudience>> audience(String contentId) =>
+      guard(() => remote.audience(contentId));
 
   @override
   Future<Result<ContentViewerState>> react(String contentId, {String? emoji}) =>

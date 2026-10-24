@@ -49,6 +49,50 @@ interface TimelineRow {
  * cursor already issued — which is precisely why the timeline is a live query
  * rather than a materialised list somebody has to remember to update.
  */
+/**
+ * The visibility rule, Prisma spelling. Exported so the write paths —
+ * liking, commenting, resharing — ask the same question the feeds do: a
+ * woman who cannot see a followers-only piece cannot act on it either, even
+ * holding its id.
+ *
+ * `viewerId` undefined means a signed-out visitor, who sees only what is
+ * public from an open page.
+ */
+export function contentVisibilityWhere(
+  viewerId?: string,
+): Prisma.CommerceContentWhereInput {
+  const live: Prisma.CommerceContentWhereInput = {
+    status: CommerceContentStatus.PUBLISHED,
+    moderationStatus: { not: 'REJECTED' },
+    OR: [{ expiresAt: null }, { expiresAt: { gt: new Date() } }],
+  };
+
+  const publicBranch: Prisma.CommerceContentWhereInput = {
+    visibility: CommerceContentVisibility.PUBLIC,
+    authorIsPublic: true,
+  };
+
+  if (!viewerId) return { AND: [live, publicBranch] };
+
+  return {
+    AND: [
+      live,
+      {
+        OR: [
+          // Her own, always — including while it is only visible to her.
+          { authorId: viewerId },
+          publicBranch,
+          {
+            visibility: CommerceContentVisibility.FOLLOWERS,
+            authorIsPublic: true,
+            author: { followers: { some: { followerId: viewerId } } },
+          },
+        ],
+      },
+    ],
+  };
+}
+
 @Injectable()
 export class ContentFeedService {
   constructor(
@@ -63,36 +107,7 @@ export class ContentFeedService {
    * only what is public from an open page.
    */
   private visibilityWhere(viewerId?: string): Prisma.CommerceContentWhereInput {
-    const live: Prisma.CommerceContentWhereInput = {
-      status: CommerceContentStatus.PUBLISHED,
-      moderationStatus: { not: 'REJECTED' },
-      OR: [{ expiresAt: null }, { expiresAt: { gt: new Date() } }],
-    };
-
-    const publicBranch: Prisma.CommerceContentWhereInput = {
-      visibility: CommerceContentVisibility.PUBLIC,
-      authorIsPublic: true,
-    };
-
-    if (!viewerId) return { AND: [live, publicBranch] };
-
-    return {
-      AND: [
-        live,
-        {
-          OR: [
-            // Her own, always — including while it is only visible to her.
-            { authorId: viewerId },
-            publicBranch,
-            {
-              visibility: CommerceContentVisibility.FOLLOWERS,
-              authorIsPublic: true,
-              author: { followers: { some: { followerId: viewerId } } },
-            },
-          ],
-        },
-      ],
-    };
+    return contentVisibilityWhere(viewerId);
   }
 
   /**

@@ -46,6 +46,9 @@ class DsVideoPlayer extends StatefulWidget {
     this.fit = BoxFit.cover,
     this.onWatched,
     this.onTap,
+    this.mutePlacement = DsVideoMutePlacement.bottomEnd,
+    this.paused = false,
+    this.onReady,
   });
 
   final String url;
@@ -68,9 +71,25 @@ class DsVideoPlayer extends StatefulWidget {
   /// A tap that is not the mute toggle — opening the piece, usually.
   final VoidCallback? onTap;
 
+  /// Where the sound toggle sits. A full-screen reel carries its own action
+  /// rail at the bottom corner, and the toggle drawn there was hidden under
+  /// it — so a reel puts it at the top, under the app bar.
+  final DsVideoMutePlacement mutePlacement;
+
+  /// Held by the caller — a story frame she is pressing on, or a sheet open
+  /// over the clip. Releasing it resumes where it stopped.
+  final bool paused;
+
+  /// The clip's length, once the decoder knows it. A story viewer times its
+  /// progress bar by this rather than by a fixed dwell.
+  final ValueChanged<Duration>? onReady;
+
   @override
   State<DsVideoPlayer> createState() => _DsVideoPlayerState();
 }
+
+/// Where [DsVideoPlayer] draws its sound toggle.
+enum DsVideoMutePlacement { bottomEnd, topEnd }
 
 /// Enough of the clip on screen to be worth a decoder.
 const double _visibleEnough = 0.6;
@@ -78,9 +97,27 @@ const double _visibleEnough = 0.6;
 /// Session-wide, deliberately not persisted. Unmuting is a decision about
 /// *now* — she is alone, or wearing headphones — not a preference that should
 /// still hold tomorrow morning on a bus.
-bool _mutedForSession = true;
+///
+/// A notifier, so a surface that draws its own sound toggle (the story
+/// viewer, whose taps belong to navigation) flips every playing clip at once.
+final ValueNotifier<bool> dsVideoSessionMuted = ValueNotifier<bool>(true);
+
+bool get _mutedForSession => dsVideoSessionMuted.value;
 
 class _DsVideoPlayerState extends State<DsVideoPlayer> {
+  @override
+  void initState() {
+    super.initState();
+    dsVideoSessionMuted.addListener(_onSessionMute);
+  }
+
+  void _onSessionMute() {
+    final controller = _controller;
+    if (controller == null) return;
+    unawaited(controller.setVolume(_mutedForSession ? 0 : 1));
+    if (mounted) setState(() {});
+  }
+
   VideoPlayerController? _controller;
   bool _initialising = false;
   bool _visible = false;
@@ -95,11 +132,24 @@ class _DsVideoPlayerState extends State<DsVideoPlayer> {
     if (oldWidget.url != widget.url) {
       _release();
       if (_visible) unawaited(_ensureController());
+      return;
+    }
+    if (oldWidget.paused != widget.paused) {
+      final controller = _controller;
+      if (controller == null) return;
+      if (widget.paused) {
+        _accrue();
+        unawaited(controller.pause());
+      } else if (widget.autoplay) {
+        _playingSince = DateTime.now();
+        unawaited(controller.play());
+      }
     }
   }
 
   @override
   void dispose() {
+    dsVideoSessionMuted.removeListener(_onSessionMute);
     _release();
     super.dispose();
   }
@@ -160,8 +210,9 @@ class _DsVideoPlayerState extends State<DsVideoPlayer> {
       _controller = controller;
       _initialising = false;
     });
+    widget.onReady?.call(controller.value.duration);
 
-    if (widget.autoplay) {
+    if (widget.autoplay && !widget.paused) {
       _playingSince = DateTime.now();
       await controller.play();
     }
@@ -187,9 +238,8 @@ class _DsVideoPlayerState extends State<DsVideoPlayer> {
   Future<void> _toggleMute() async {
     final controller = _controller;
     if (controller == null) return;
-    _mutedForSession = !_mutedForSession;
-    await controller.setVolume(_mutedForSession ? 0 : 1);
-    if (mounted) setState(() {});
+    // The listener applies the volume to this clip and every other one.
+    dsVideoSessionMuted.value = !_mutedForSession;
   }
 
   Future<void> _togglePlay() async {
@@ -237,7 +287,11 @@ class _DsVideoPlayerState extends State<DsVideoPlayer> {
                 ),
               ),
             if (ready && widget.showControls) ...[
-              _MuteButton(muted: _mutedForSession, onTap: _toggleMute),
+              _MuteButton(
+                muted: _mutedForSession,
+                onTap: _toggleMute,
+                placement: widget.mutePlacement,
+              ),
               if (!controller.value.isPlaying) const _PlayGlyph(),
               _Progress(controller: controller),
             ],
@@ -285,16 +339,25 @@ class _Poster extends StatelessWidget {
 }
 
 class _MuteButton extends StatelessWidget {
-  const _MuteButton({required this.muted, required this.onTap});
+  const _MuteButton({
+    required this.muted,
+    required this.onTap,
+    required this.placement,
+  });
 
   final bool muted;
   final VoidCallback onTap;
+  final DsVideoMutePlacement placement;
 
   @override
   Widget build(BuildContext context) {
+    final top = placement == DsVideoMutePlacement.topEnd;
     return Positioned(
       right: DsSpacing.md,
-      bottom: DsSpacing.xl,
+      bottom: top ? null : DsSpacing.xl,
+      top: top
+          ? MediaQuery.paddingOf(context).top + kToolbarHeight + DsSpacing.sm
+          : null,
       child: Semantics(
         button: true,
         label: muted ? context.l10n.a11yUnmute : context.l10n.a11yMute,
