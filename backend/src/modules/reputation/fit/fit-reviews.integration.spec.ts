@@ -22,9 +22,9 @@ import { FitProfileService } from './fit-profile.service';
  *
  * `fit-reviews.spec.ts` proves the matching and the summary in isolation.
  * This proves the three things only Postgres can show: that the size on a
- * review is the one that shipped, that the height a review publishes is the
- * band and only with her consent, and that a review cannot carry a photograph
- * that is not her own `review` upload.
+ * review is the one that shipped, that her height and size are stored only as
+ * a band, only with her consent, and never served, and that a review cannot
+ * carry a photograph that is not her own `review` upload.
  *
  * Every case runs inside a transaction that is rolled back.
  */
@@ -253,7 +253,7 @@ async function buyerReviews(
 
 // ── Cases ───────────────────────────────────────────────────────────────────
 
-dbTest('the size on a review is the one that shipped, and the height is a band', async (world) => {
+dbTest('the size on a review is the one that shipped; her body is stored, never served', async (world) => {
   const seller = await makeUser(world.tx, 'sel', UserRole.SELLER);
   const { product, variants } = await makeDress(world.tx, seller.id);
   const ctx = { sellerId: seller.id, productId: product.id, variants };
@@ -265,14 +265,27 @@ dbTest('the size on a review is the one that shipped, and the height is a band',
     fit: ReviewFit.TRUE_TO_SIZE,
   });
 
+  // What goes out is about the piece.
   assert.equal(review.size_bought, 'M');
   assert.equal(review.fit, ReviewFit.TRUE_TO_SIZE);
-  assert.equal(review.height_band, '160–164', 'never 163');
-  assert.equal(review.usual_size, 'M');
-  assert.equal(JSON.stringify(review).includes('163'), false);
+  // What is about her does not — in any form.
+  assert.equal('height_band' in review, false);
+  assert.equal('usual_size' in review, false);
+  for (const listed of await world.reputation.productReviews(product.id)) {
+    assert.deepEqual(
+      Object.keys(listed).filter((key) => /height|usual/.test(key)),
+      [],
+      'no field about her body in the public list',
+    );
+  }
+
+  // It is stored, as a band, for matching.
+  const row = await world.tx.productReview.findUniqueOrThrow({ where: { id: review.id } });
+  assert.equal(row.heightBand, 160, 'never 163');
+  assert.equal(row.usualSize, 'M');
 });
 
-dbTest('she can keep her height and size off a review, or off all of them', async (world) => {
+dbTest('she can keep her height and size out of matching, on one review or all of them', async (world) => {
   const seller = await makeUser(world.tx, 'sel', UserRole.SELLER);
   const { product, variants } = await makeDress(world.tx, seller.id);
 
@@ -284,8 +297,9 @@ dbTest('she can keep her height and size off a review, or off all of them', asyn
     rating: 4,
     share_fit: false,
   });
-  assert.equal(kept.height_band, null);
-  assert.equal(kept.usual_size, null);
+  const keptRow = await world.tx.productReview.findUniqueOrThrow({ where: { id: kept.id } });
+  assert.equal(keptRow.heightBand, null, 'not even stored');
+  assert.equal(keptRow.usualSize, null);
   assert.equal(kept.size_bought, 'S', 'the size that shipped is about the dress, not her');
 
   // Off by default, from her profile.
@@ -293,7 +307,8 @@ dbTest('she can keep her height and size off a review, or off all of them', asyn
   await deliver(world.tx, { customerId: second.id, sellerId: seller.id, productId: product.id }, [variants.L]);
   await world.profiles.set(second.id, { heightCm: 170, usualSize: 'L', shareOnReviews: false });
   const quiet = await world.reputation.createProductReview(second.id, product.id, { rating: 5 });
-  assert.equal(quiet.height_band, null);
+  const quietRow = await world.tx.productReview.findUniqueOrThrow({ where: { id: quiet.id } });
+  assert.equal(quietRow.heightBand, null);
 });
 
 dbTest('two sizes of the same dress in one order record no size at all', async (world) => {

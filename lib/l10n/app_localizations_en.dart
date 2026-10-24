@@ -12684,16 +12684,6 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String fitHeightBand(String band) {
-    return 'Height $band cm';
-  }
-
-  @override
-  String fitUsualSize(String size) {
-    return 'Usually $size';
-  }
-
-  @override
   String fitPhotoOpen(int index) {
     return 'Open photo $index';
   }
@@ -12702,21 +12692,22 @@ class AppLocalizationsEn extends AppLocalizations {
   String get fitQuestion => 'How did it fit?';
 
   @override
-  String get fitPhotosLabel => 'Photos of you wearing it (optional)';
+  String get fitPhotosLabel => 'Photos of the piece (optional)';
 
   @override
   String get fitPhotosHelper =>
-      'Shown to everyone once your review is approved. You can leave your face out.';
+      'Photograph the piece itself — there\'s no need to appear in it. Photos are shown to everyone once your review is approved.';
 
   @override
-  String get fitShareOnReview => 'Show my height and size';
+  String get fitShareOnReview => 'Use my height and size to match this review';
 
   @override
-  String get fitShareOnReviewHint => 'As a 5 cm range, never your exact height';
+  String get fitShareOnReviewHint =>
+      'They are never shown — they only help women your size find your review';
 
   @override
   String get fitAddProfilePrompt =>
-      'Add your height and size to help women like you';
+      'Add your height and size (never shown) to help women like you';
 
   @override
   String get fitAddProfileShort => 'Add my size';
@@ -12729,7 +12720,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get fitProfilePrivacy =>
-      'Only you see this. Your reviews show your height only as a 5 cm range (e.g. 160–164) and only if you agree.';
+      'Only you see this. Your height and size never appear on your reviews or anywhere else — we use them only to show you reviews from women like you, and to count the fit summary without names.';
 
   @override
   String get fitHeightLabel => 'Height';
@@ -12749,11 +12740,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get fitUsualSizeLabel => 'The size you usually wear';
 
   @override
-  String get fitShareDefault => 'Show on my reviews';
+  String get fitShareDefault => 'Use them for my reviews';
 
   @override
   String get fitShareDefaultHint =>
-      'You can still turn it off on any one review';
+      'So women your size can find your reviews. Nothing is shown. You can turn it off on any one review.';
 
   @override
   String get fitProfileSave => 'Save';

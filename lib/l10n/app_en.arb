@@ -15065,24 +15065,6 @@
       }
     }
   },
-  "fitHeightBand": "Height {band} cm",
-  "@fitHeightBand": {
-    "description": "Review card: reviewer height band",
-    "placeholders": {
-      "band": {
-        "type": "String"
-      }
-    }
-  },
-  "fitUsualSize": "Usually {size}",
-  "@fitUsualSize": {
-    "description": "Review card: reviewer usual size",
-    "placeholders": {
-      "size": {
-        "type": "String"
-      }
-    }
-  },
   "fitPhotoOpen": "Open photo {index}",
   "@fitPhotoOpen": {
     "description": "Review card: photo semantics",
@@ -15096,23 +15078,23 @@
   "@fitQuestion": {
     "description": "Composer: fit question"
   },
-  "fitPhotosLabel": "Photos of you wearing it (optional)",
+  "fitPhotosLabel": "Photos of the piece (optional)",
   "@fitPhotosLabel": {
     "description": "Composer: photos field"
   },
-  "fitPhotosHelper": "Shown to everyone once your review is approved. You can leave your face out.",
+  "fitPhotosHelper": "Photograph the piece itself — there's no need to appear in it. Photos are shown to everyone once your review is approved.",
   "@fitPhotosHelper": {
     "description": "Composer: photos privacy helper"
   },
-  "fitShareOnReview": "Show my height and size",
+  "fitShareOnReview": "Use my height and size to match this review",
   "@fitShareOnReview": {
     "description": "Composer: share fit switch"
   },
-  "fitShareOnReviewHint": "As a 5 cm range, never your exact height",
+  "fitShareOnReviewHint": "They are never shown — they only help women your size find your review",
   "@fitShareOnReviewHint": {
     "description": "Composer: share fit hint"
   },
-  "fitAddProfilePrompt": "Add your height and size to help women like you",
+  "fitAddProfilePrompt": "Add your height and size (never shown) to help women like you",
   "@fitAddProfilePrompt": {
     "description": "Composer: prompt to set profile"
   },
@@ -15128,7 +15110,7 @@
   "@fitProfileLoadError": {
     "description": "Fit profile: load failed"
   },
-  "fitProfilePrivacy": "Only you see this. Your reviews show your height only as a 5 cm range (e.g. 160–164) and only if you agree.",
+  "fitProfilePrivacy": "Only you see this. Your height and size never appear on your reviews or anywhere else — we use them only to show you reviews from women like you, and to count the fit summary without names.",
   "@fitProfilePrivacy": {
     "description": "Fit profile: privacy note"
   },
@@ -15160,11 +15142,11 @@
   "@fitUsualSizeLabel": {
     "description": "Fit profile: size picker"
   },
-  "fitShareDefault": "Show on my reviews",
+  "fitShareDefault": "Use them for my reviews",
   "@fitShareDefault": {
     "description": "Fit profile: share default"
   },
-  "fitShareDefaultHint": "You can still turn it off on any one review",
+  "fitShareDefaultHint": "So women your size can find your reviews. Nothing is shown. You can turn it off on any one review.",
   "@fitShareDefaultHint": {
     "description": "Fit profile: share default hint"
   },

@@ -3,7 +3,6 @@ import test from 'node:test';
 import { ReviewFit } from '@prisma/client';
 import {
   FitVoice,
-  bandLabel,
   hasProfile,
   heightBand,
   isNearMe,
@@ -22,12 +21,11 @@ const voice = (overrides: Partial<FitVoice>): FitVoice => ({
   ...overrides,
 });
 
-test('height is published as a 5 cm band, never the centimetre', () => {
+test('height is stored as a 5 cm band, never the centimetre', () => {
   assert.equal(heightBand(163), 160);
   assert.equal(heightBand(160), 160);
   assert.equal(heightBand(164), 160);
   assert.equal(heightBand(165), 165);
-  assert.equal(bandLabel(160), '160–164');
   // A typo is not a height.
   assert.equal(heightBand(16), null);
   assert.equal(heightBand(260), null);

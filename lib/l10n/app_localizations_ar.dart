@@ -12858,16 +12858,6 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
-  String fitHeightBand(String band) {
-    return 'الطول $band سم';
-  }
-
-  @override
-  String fitUsualSize(String size) {
-    return 'مقاسها عادةً $size';
-  }
-
-  @override
   String fitPhotoOpen(int index) {
     return 'افتحي الصورة $index';
   }
@@ -12876,21 +12866,22 @@ class AppLocalizationsAr extends AppLocalizations {
   String get fitQuestion => 'كيف كان المقاس؟';
 
   @override
-  String get fitPhotosLabel => 'صوركِ فيها (اختياري)';
+  String get fitPhotosLabel => 'صور للقطعة (اختياري)';
 
   @override
   String get fitPhotosHelper =>
-      'بتظهر للجميع بعد الموافقة على تقييمكِ. فيكِ تصوّري بدون وجه.';
+      'صوّري القطعة نفسها، ما في داعي تظهري فيها. الصور بتظهر للجميع بعد الموافقة على تقييمكِ.';
 
   @override
-  String get fitShareOnReview => 'أظهري طولي ومقاسي';
+  String get fitShareOnReview => 'استعملي طولي ومقاسي لمطابقة هالتقييم';
 
   @override
-  String get fitShareOnReviewHint => 'كمدى ٥ سم، مش طولكِ بالضبط';
+  String get fitShareOnReviewHint =>
+      'ما بيظهروا لحدا أبداً، بس بيساعدوا البنات اللي بمقاسكِ يلاقوا تقييمكِ';
 
   @override
   String get fitAddProfilePrompt =>
-      'ضيفي طولكِ ومقاسكِ حتى تفيدي البنات اللي متلكِ';
+      'ضيفي طولكِ ومقاسكِ (ما بيظهروا لحدا) حتى تفيدي البنات اللي متلكِ';
 
   @override
   String get fitAddProfileShort => 'ضيفي مقاسي';
@@ -12903,7 +12894,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get fitProfilePrivacy =>
-      'هالمعلومات إلكِ بس. تقييماتكِ بتعرض طولكِ كمدى ٥ سم (مثلاً ١٦٠–١٦٤) وبس إذا وافقتِ.';
+      'هالمعلومات إلكِ بس. طولكِ ومقاسكِ ما بيظهروا أبداً، لا مع تقييماتكِ ولا بأي مكان. منستعملهم بس لنوريكِ تقييمات البنات اللي متلكِ، ولنحسب ملخّص المقاس بدون أسماء.';
 
   @override
   String get fitHeightLabel => 'الطول';
@@ -12923,10 +12914,11 @@ class AppLocalizationsAr extends AppLocalizations {
   String get fitUsualSizeLabel => 'المقاس اللي بتلبسيه عادةً';
 
   @override
-  String get fitShareDefault => 'أظهريها مع تقييماتي';
+  String get fitShareDefault => 'استعمليهم مع تقييماتي';
 
   @override
-  String get fitShareDefaultHint => 'وفيكِ تطفيها لأي تقييم لحاله';
+  String get fitShareDefaultHint =>
+      'حتى البنات اللي بمقاسكِ يلاقوا تقييماتكِ. ما بيظهر شي، وفيكِ تطفيها لأي تقييم لحاله.';
 
   @override
   String get fitProfileSave => 'حفظ';

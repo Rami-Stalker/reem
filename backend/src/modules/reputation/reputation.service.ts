@@ -23,7 +23,6 @@ import { MediaService } from '../media/media.service';
 import { FitProfileService } from './fit/fit-profile.service';
 import {
   FitVoice,
-  bandLabel,
   hasProfile,
   heightBand,
   isNearMe,
@@ -1098,12 +1097,16 @@ export class ReputationService {
       helpful_count: review.helpfulCount,
       seller_reply: review.sellerReply,
       seller_replied_at: review.sellerRepliedAt?.toISOString() ?? null,
-      // «تقييمات من بمقاسي». The height goes out as its band, never a number
-      // a client could print as her height.
+      // «تقييمات من بمقاسي». Only what is about the *piece* goes out: how it
+      // fit and the size that shipped. Her height band and usual size are
+      // stored on the row but never served — not to other shoppers, not to
+      // the seller, not to moderators. They are used only server-side, to
+      // match her review to women her size and to count the anonymous fit
+      // summary. Reem's shoppers are Syrian women, and a named woman's body
+      // printed under her review is not something she should have to opt
+      // out of.
       fit: review.fit,
       size_bought: review.sizeBought,
-      height_band: review.heightBand == null ? null : bandLabel(review.heightBand),
-      usual_size: review.usualSize,
       photos: review.photoUrls,
       created_at: review.createdAt.toISOString(),
       updated_at: review.updatedAt.toISOString(),

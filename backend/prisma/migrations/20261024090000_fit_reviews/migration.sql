@@ -10,10 +10,11 @@
 -- and nothing else: no weight, no body shape, no measurements. It is read only
 -- by her and by the review code at the moment she writes a review.
 --
--- What other women see is the snapshot on the review itself: her height
--- rounded down to a 5 cm band (`height_band`) and her usual size, copied only
--- when she agreed. A band, never the centimetre — enough to compare with, too
--- coarse to identify her by.
+-- A review keeps a coarse snapshot of it — her height rounded down to a 5 cm
+-- band (`height_band`) and her usual size — copied only when she agreed, and
+-- never served to anyone. It exists so «من بمقاسي» can match the review to
+-- women her size and the anonymous fit summary can count it. Reem's shoppers
+-- are women in Syria; a named woman's body is not printed under her review.
 --
 -- `size_bought` is not typed by anyone. It is read from the variant of the
 -- delivered order the review is attached to, so "true to size" always sits

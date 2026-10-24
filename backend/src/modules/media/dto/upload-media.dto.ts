@@ -122,9 +122,9 @@ export function acceptedKinds(purpose: MediaPurpose): MediaType[] {
       // a torn seam against a listing photograph is looking, not watching.
       return [MediaType.image];
     case 'review':
-      // A photograph of the piece on her, under «تقييمات من بمقاسي». Public —
-      // showing other women how it sat is the whole point — and moderated
-      // with the review it belongs to. Stills only: a review card draws a
+      // A photograph of the piece, under «تقييمات من بمقاسي». The composer asks
+      // for the piece itself, not her in it. Public, and moderated with the
+      // review it belongs to. Stills only: a review card draws a
       // strip of thumbnails, and a clip has nowhere to play.
       return [MediaType.image];
     default:

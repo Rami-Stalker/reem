@@ -16,8 +16,6 @@ class ReviewModel extends ReviewEntity {
     required super.createdAt,
     super.fit,
     super.sizeBought,
-    super.heightBand,
-    super.usualSize,
     super.photos,
   });
 
@@ -36,8 +34,6 @@ class ReviewModel extends ReviewEntity {
       // written before them, which is the same as "she did not say".
       fit: ReviewFit.fromWire(json['fit']),
       sizeBought: _text(json['size_bought']),
-      heightBand: _text(json['height_band']),
-      usualSize: _text(json['usual_size']),
       photos: json['photos'] is List
           ? (json['photos'] as List).whereType<String>().toList()
           : const [],

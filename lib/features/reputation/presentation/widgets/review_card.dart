@@ -158,11 +158,11 @@ class ReviewCard extends StatelessWidget {
   }
 }
 
-/// «المقاس: مضبوط · اشترت M · الطول 160–164 · مقاسها عادةً M».
+/// «مقاسه مضبوط · اشترت M».
 ///
-/// The facts that make a review useful to the woman reading it, as small
-/// chips: how it fit, the size that shipped, and — only if she chose to share
-/// them — the reviewer's height band and usual size.
+/// How it fit and the size that shipped — facts about the *piece*. Nothing
+/// about the reviewer's body is drawn here, because the server never sends
+/// it.
 class _FitFacts extends StatelessWidget {
   const _FitFacts({required this.review});
 
@@ -189,22 +189,12 @@ class _FitFacts extends StatelessWidget {
             label: l10n.fitBoughtSize(review.sizeBought!),
             tone: DsBadgeTone.neutral,
           ),
-        if (review.heightBand != null)
-          DsBadge(
-            label: l10n.fitHeightBand(review.heightBand!),
-            tone: DsBadgeTone.neutral,
-          ),
-        if (review.usualSize != null)
-          DsBadge(
-            label: l10n.fitUsualSize(review.usualSize!),
-            tone: DsBadgeTone.neutral,
-          ),
       ],
     );
   }
 }
 
-/// Her photographs of the piece, as a row of thumbnails that open full screen.
+/// The photographs of the piece, as a row of thumbnails that open full screen.
 class _PhotoStrip extends StatelessWidget {
   const _PhotoStrip({required this.photos});
 

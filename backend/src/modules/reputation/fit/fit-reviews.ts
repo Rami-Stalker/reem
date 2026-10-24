@@ -18,23 +18,19 @@ import { normaliseSize } from '../../intelligence/kernel/size-fit';
 export const HEIGHT_MIN_CM = 130;
 export const HEIGHT_MAX_CM = 200;
 
-/** How coarse the height on a public review is. */
+/** How coarse the height stored on a review is. */
 export const HEIGHT_BAND_CM = 5;
 
 /**
- * Her height as a public review shows it: rounded *down* to a 5 cm band, so
- * 163 is «160–164». Never the centimetre — enough to compare bodies with, too
- * coarse to pick her out of a family photograph by.
+ * Her height as a review stores it: rounded *down* to a 5 cm band, so 163 is
+ * 160. Never the centimetre — enough to compare bodies with, too coarse to
+ * identify her by. And never served: the band is used only to match reviews
+ * to women her size, server-side.
  */
 export function heightBand(heightCm: number | null | undefined): number | null {
   if (heightCm == null || !Number.isFinite(heightCm)) return null;
   if (heightCm < HEIGHT_MIN_CM || heightCm > HEIGHT_MAX_CM) return null;
   return Math.floor(heightCm / HEIGHT_BAND_CM) * HEIGHT_BAND_CM;
-}
-
-/** «160–164». */
-export function bandLabel(band: number): string {
-  return `${band}–${band + HEIGHT_BAND_CM - 1}`;
 }
 
 /**

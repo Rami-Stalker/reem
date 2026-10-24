@@ -21884,18 +21884,6 @@ abstract class AppLocalizations {
   /// **'Bought: {size}'**
   String fitBoughtSize(String size);
 
-  /// Review card: reviewer height band
-  ///
-  /// In en, this message translates to:
-  /// **'Height {band} cm'**
-  String fitHeightBand(String band);
-
-  /// Review card: reviewer usual size
-  ///
-  /// In en, this message translates to:
-  /// **'Usually {size}'**
-  String fitUsualSize(String size);
-
   /// Review card: photo semantics
   ///
   /// In en, this message translates to:
@@ -21911,31 +21899,31 @@ abstract class AppLocalizations {
   /// Composer: photos field
   ///
   /// In en, this message translates to:
-  /// **'Photos of you wearing it (optional)'**
+  /// **'Photos of the piece (optional)'**
   String get fitPhotosLabel;
 
   /// Composer: photos privacy helper
   ///
   /// In en, this message translates to:
-  /// **'Shown to everyone once your review is approved. You can leave your face out.'**
+  /// **'Photograph the piece itself — there\'s no need to appear in it. Photos are shown to everyone once your review is approved.'**
   String get fitPhotosHelper;
 
   /// Composer: share fit switch
   ///
   /// In en, this message translates to:
-  /// **'Show my height and size'**
+  /// **'Use my height and size to match this review'**
   String get fitShareOnReview;
 
   /// Composer: share fit hint
   ///
   /// In en, this message translates to:
-  /// **'As a 5 cm range, never your exact height'**
+  /// **'They are never shown — they only help women your size find your review'**
   String get fitShareOnReviewHint;
 
   /// Composer: prompt to set profile
   ///
   /// In en, this message translates to:
-  /// **'Add your height and size to help women like you'**
+  /// **'Add your height and size (never shown) to help women like you'**
   String get fitAddProfilePrompt;
 
   /// Reviews: set profile action
@@ -21959,7 +21947,7 @@ abstract class AppLocalizations {
   /// Fit profile: privacy note
   ///
   /// In en, this message translates to:
-  /// **'Only you see this. Your reviews show your height only as a 5 cm range (e.g. 160–164) and only if you agree.'**
+  /// **'Only you see this. Your height and size never appear on your reviews or anywhere else — we use them only to show you reviews from women like you, and to count the fit summary without names.'**
   String get fitProfilePrivacy;
 
   /// Fit profile: height field
@@ -21995,13 +21983,13 @@ abstract class AppLocalizations {
   /// Fit profile: share default
   ///
   /// In en, this message translates to:
-  /// **'Show on my reviews'**
+  /// **'Use them for my reviews'**
   String get fitShareDefault;
 
   /// Fit profile: share default hint
   ///
   /// In en, this message translates to:
-  /// **'You can still turn it off on any one review'**
+  /// **'So women your size can find your reviews. Nothing is shown. You can turn it off on any one review.'**
   String get fitShareDefaultHint;
 
   /// Fit profile: save

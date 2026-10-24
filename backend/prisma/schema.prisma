@@ -4768,14 +4768,14 @@ model ProductReview {
 
   /// Her height, rounded down to a 5 cm band (160 = 160–164), and her usual
   /// size, copied from her fit profile when she wrote the review and only if
-  /// she agreed to show them. A snapshot, not a link: the review describes
-  /// the body that wore the dress, and changing her profile next year must not
-  /// rewrite it. Never the exact height — a band is enough to compare with
-  /// and too coarse to identify her by.
+  /// she agreed. **Stored for matching, never served**: no payload carries
+  /// them, to anyone. They exist so «من بمقاسي» can find this review for women
+  /// her size and the anonymous fit summary can count it. A snapshot, not a
+  /// link, and never the exact height.
   heightBand Int?    @map("height_band")
   usualSize  String? @map("usual_size") @db.VarChar(8)
 
-  /// Up to four photographs of the piece on her, uploads of purpose `review`.
+  /// Up to four photographs of the piece, uploads of purpose `review`.
   /// Public once the review is approved, and moderated with it.
   photoUrls String[] @default([]) @map("photo_urls")
 
@@ -10971,8 +10971,8 @@ enum ReviewFit {
 /// measurements: those are what make a size profile feel like an examination,
 /// and the two fields here are enough to answer "did it fit someone like me".
 /// Read only by her, and by the review code when she writes a review — it is
-/// never served to anyone else. What other women see is the coarse snapshot
-/// copied onto a review she chose to share it on.
+/// never served to anyone else, and neither is the coarse snapshot a review
+/// keeps of it.
 model FitProfile {
   userId String @id @map("user_id") @db.Uuid
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -10983,8 +10983,8 @@ model FitProfile {
   /// Her usual size, normalised (`M`, `XL`, `38`).
   usualSize String? @map("usual_size") @db.VarChar(8)
 
-  /// Whether her reviews carry the snapshot by default. She can still turn it
-  /// off on any one review.
+  /// Whether her reviews keep the (never shown) snapshot for matching by
+  /// default. She can still turn it off on any one review.
   shareOnReviews Boolean @default(true) @map("share_on_reviews")
 
   createdAt DateTime @default(now()) @map("created_at")

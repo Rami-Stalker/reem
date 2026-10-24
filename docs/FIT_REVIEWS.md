@@ -8,11 +8,16 @@ So a product review can now say:
 
 - **how it fit**: runs small, true to size, or runs large;
 - **the size that shipped**, read from her delivered order, never typed;
-- **the reviewer's height band and usual size**, only if she agrees;
-- and carry **up to four photographs** of the piece on her.
+- and carry **up to four photographs** of the piece itself.
 
 The product page then shows a fit summary, and two filters: «من بمقاسي»
 (women her size) and «مع صور» (with photos).
+
+**Her own height and size are never shown, to anyone.** Reem's shoppers are
+women in Syria, a conservative society, and a named woman's body printed
+under her review is not something she should have to opt out of. They are
+stored on the review only so the server can match it to women her size and
+count the summary, which carries no names.
 
 ---
 
@@ -27,8 +32,8 @@ Migration `20261024090000_fit_reviews`. Purely additive.
 | `fit_profiles` (new) | «مقاساتي»: `height_cm` (130–200), `usual_size`, `share_on_reviews` |
 | `product_reviews.fit` | `RUNS_SMALL` / `TRUE_TO_SIZE` / `RUNS_LARGE`, or null |
 | `product_reviews.size_bought` | The size of the delivered variant |
-| `product_reviews.height_band` | Her height rounded down to 5 cm (160 = 160–164) |
-| `product_reviews.usual_size` | Her usual size at the time |
+| `product_reviews.height_band` | Her height rounded down to 5 cm (160 = 160–164). Stored for matching, never served |
+| `product_reviews.usual_size` | Her usual size at the time. Stored for matching, never served |
 | `product_reviews.photo_urls` | Up to four uploads of purpose `review` |
 
 Code lives in `backend/src/modules/reputation/`:
@@ -49,7 +54,7 @@ A new media purpose, `review`, is public and accepts images only.
 | `reputation/presentation/screens/fit_profile_screen.dart` | «مقاساتي», at `/fit-profile`. Linked from the profile menu, beside her reviews |
 | `reputation/presentation/widgets/product_fit_panel.dart` | The fit summary on a product page |
 | `reputation/presentation/widgets/review_composer.dart` | Gains the fit question, photos, and the share switch (product reviews only) |
-| `reputation/presentation/widgets/review_card.dart` | Shows the fit facts as chips and the photos as a strip |
+| `reputation/presentation/widgets/review_card.dart` | Shows how it fit and the size that shipped as chips, and the photos as a strip |
 | `product_details/presentation/widgets/product_reviews_section.dart` | The panel, the three filter chips, and an empty state per filter |
 
 ---
@@ -61,19 +66,23 @@ A new media purpose, `review`, is public and accepts images only.
   usual size are enough to answer "did it fit someone like me".
 - **The profile has one reader: her.** There is no route that serves another
   woman's profile.
-- **What others see is a snapshot, and a coarse one.** A review copies her
-  height as a 5 cm band and her usual size, and only when she agrees: either
-  her profile's standing choice or a switch on that one review. Editing her
-  profile later does not rewrite old reviews.
-- **The exact height never leaves the server** on someone else's screen. The
-  serializer sends the band as a label (`"160–164"`), never a number.
-- **Photos are public, and she is told so before she adds them**, with a hint
-  that she can leave her face out. They are published only when the review is
-  approved.
-- **Deleting her account takes her body off her reviews.** The review text
-  stays under «حساب محذوف», as the content policy says. But her photographs,
-  height band and usual size are removed from every review she wrote, and her
-  fit profile is deleted. How the piece fit, and the size that shipped, are
+- **Her body is never served.** A review stores a coarse snapshot (her
+  height as a 5 cm band, and her usual size) only when she agrees: her
+  profile's standing choice, or a switch on that one review. The snapshot is
+  used only server-side, for «من بمقاسي» and the summary. No payload carries
+  it: not the public list, not the seller's desk, not the moderation queue,
+  not even her own copy. Editing her profile later does not rewrite old
+  reviews.
+- **The summary has no names.** It is counts and, when enough agree, one
+  sentence.
+- **Photos are of the piece, not of her.** The composer asks for photos of
+  the piece itself and says there is no need to appear in them. They are
+  public, she is told so before adding any, and they are published only when
+  the review is approved.
+- **Deleting her account takes her off her reviews.** The review text stays
+  under «حساب محذوف», as the content policy says. But her photographs and the
+  stored height band and usual size are removed from every review she wrote,
+  and her fit profile is deleted. How the piece fit, and the size that shipped, are
   about the product and remain.
 
 ---
@@ -138,8 +147,8 @@ are claimed (`markAttached`) so the media sweeper keeps them.
 | GET | `/reputation/products/:id/fit` | `{ overall, has_profile, near_me, suggested_size, photos_count }` |
 | POST | `/reputation/products/:id/reviews` | New `fit?`, `photo_urls?` (≤ 4), `share_fit?` |
 
-Every product review payload now carries `fit`, `size_bought`, `height_band`
-(as a label), `usual_size` and `photos`.
+Every product review payload now carries `fit`, `size_bought` and `photos`.
+It never carries `height_band` or `usual_size`.
 
 ---
 

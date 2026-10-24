@@ -4,8 +4,7 @@
 // there — 8 unit tests and 6 integration tests against Postgres. What is
 // worth pinning here is the client's half of the contract:
 //
-//   1. the decoders: a review written before fit existed must still decode,
-//      and the height must arrive as the band the server sent, never a number;
+//   1. the decoders: a review written before fit existed must still decode;
 //   2. the payloads: an emptied height must travel as null so it is cleared;
 //   3. the fit panel and the card, which must draw the server's verdict and
 //      nothing when there is none.
@@ -82,16 +81,12 @@ void main() {
           extra: {
             'fit': 'RUNS_SMALL',
             'size_bought': 'M',
-            'height_band': '160–164',
-            'usual_size': 'S',
             'photos': ['https://cdn/r1.jpg', 7, null],
           },
         ),
       );
       expect(review.fit, ReviewFit.runsSmall);
       expect(review.sizeBought, 'M');
-      expect(review.heightBand, '160–164');
-      expect(review.usualSize, 'S');
       expect(review.photos, [
         'https://cdn/r1.jpg',
       ], reason: 'junk entries dropped');
@@ -169,7 +164,7 @@ void main() {
   });
 
   group('drawing', () {
-    testWidgets('the card shows the fit, the size that shipped and the band', (
+    testWidgets('the card shows how it fit and the size that shipped, nothing about her', (
       tester,
     ) async {
       final review = ReviewModel.fromJson(
@@ -177,7 +172,6 @@ void main() {
           extra: {
             'fit': 'TRUE_TO_SIZE',
             'size_bought': 'M',
-            'height_band': '160–164',
           },
         ),
       );
@@ -186,12 +180,7 @@ void main() {
 
       expect(find.text(_ar.fitTrueToSize), findsOneWidget);
       expect(find.text(_ar.fitBoughtSize('M')), findsOneWidget);
-      expect(find.text(_ar.fitHeightBand('160–164')), findsOneWidget);
-      expect(
-        find.text(_ar.fitUsualSize('M')),
-        findsNothing,
-        reason: 'she did not share it',
-      );
+      expect(find.textContaining('160'), findsNothing);
     });
 
     testWidgets(

@@ -193,12 +193,13 @@ points at them, and its checklist is read from their state on every request:
 
 ## Reviews from women my size
 
-«تقييمات من بمقاسي»: a product review can say how the piece fit, carry up to
-four photographs of it on, and show the reviewer's height (as a 5 cm range)
-and usual size if she agrees. The size she bought is read from her delivered
-order rather than typed. The product page shows a fit summary and filters for
-«من بمقاسي» and «مع صور», matched against the height and size she keeps in
-«مقاساتي», which nobody else can read:
+«تقييمات من بمقاسي»: a product review can say how the piece fit and carry up
+to four photographs of the piece. The size she bought is read from her
+delivered order rather than typed. The product page shows a fit summary and
+filters for «من بمقاسي» and «مع صور», matched against the height and size she
+keeps in «مقاساتي». Those are never shown to anyone, on her reviews or
+anywhere else; the server uses them only for matching and the anonymous
+summary:
 [docs/FIT_REVIEWS.md](docs/FIT_REVIEWS.md).
 
 ## Resilience

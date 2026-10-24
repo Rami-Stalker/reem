@@ -15,8 +15,6 @@ class ReviewEntity extends Equatable {
     required this.createdAt,
     this.fit,
     this.sizeBought,
-    this.heightBand,
-    this.usualSize,
     this.photos = const [],
   });
 
@@ -38,21 +36,15 @@ class ReviewEntity extends Equatable {
   /// The size that shipped, read by the server from her delivered order.
   final String? sizeBought;
 
-  /// Her height as a 5 cm band, «160–164» — only if she chose to share it.
-  final String? heightBand;
-
-  /// Her usual size — only if she chose to share it.
-  final String? usualSize;
-
-  /// Up to four photographs of the piece on her.
+  /// Up to four photographs of the piece.
+  ///
+  /// Note what is *not* here: the reviewer's height and usual size. The
+  /// server stores them to match reviews to women her size and never sends
+  /// them — a named woman's body has no place under her review.
   final List<String> photos;
 
   /// Whether the card has anything to say about fit at all.
-  bool get hasFitFacts =>
-      fit != null ||
-      sizeBought != null ||
-      heightBand != null ||
-      usualSize != null;
+  bool get hasFitFacts => fit != null || sizeBought != null;
 
   @override
   List<Object?> get props => [
@@ -67,8 +59,6 @@ class ReviewEntity extends Equatable {
         createdAt,
     fit,
     sizeBought,
-    heightBand,
-    usualSize,
     photos,
       ];
 }

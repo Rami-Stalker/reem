@@ -103,9 +103,9 @@ enum MediaPurpose {
   /// oversight.
   returnEvidence('return_evidence'),
 
-  /// A photograph of the piece on her, attached to a product review under
-  /// «تقييمات من بمقاسي». Public — showing other women how it sat is the
-  /// point — and moderated with the review it belongs to.
+  /// A photograph of the piece, attached to a product review under
+  /// «تقييمات من بمقاسي». The composer asks for the piece itself, not her in
+  /// it. Public, and moderated with the review it belongs to.
   review('review');
 
   const MediaPurpose(this.wire);
