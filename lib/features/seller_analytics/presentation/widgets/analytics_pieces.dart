@@ -49,7 +49,7 @@ class AnalyticsMetricTile extends StatelessWidget {
     final money = amounts ?? const <Money>[];
 
     // A figure keyed on its leading edge in its own colour — champagne for
-    // the plain ones — like a label stitched to a seam.
+    // the plain ones — like a label on the edge of a gift box.
     return Container(
       padding: const EdgeInsets.all(DsSpacing.md),
       decoration: BoxDecoration(
@@ -282,8 +282,8 @@ class _Bar extends StatelessWidget {
           ],
         ),
         const SizedBox(height: DsSpacing.xs),
-        // Each step a length of tape, as far as the orders carried.
-        TapeMeasure(
+        // Each step a length of ribbon, as far as the orders carried.
+        RibbonGauge(
           value: fraction.clamp(0.0, 1.0),
           max: 1,
           color: color,

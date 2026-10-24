@@ -6,33 +6,36 @@ import 'package:flutter/material.dart';
 import 'package:reem/core/design_system/design_system.dart';
 import 'package:reem/core/router/open_route.dart';
 
-/// The seller's home register: **the workbench of an atelier**.
+/// The seller's home register: **her boutique, behind the counter**.
 ///
-/// A boutique owner is not an analyst. She makes, stocks, ships and answers,
-/// so her home is drawn from the room she does that in rather than from a
-/// reporting tool:
+/// A boutique owner is not an analyst — and she is not necessarily a
+/// dressmaker. She may sell perfume, flowers, jewellery, make-up or clothes,
+/// so nothing here is drawn from one trade. It is drawn from what every
+/// women's shop shares: the counter, the display shelf, the gift tag, the
+/// ribbon a purchase leaves in, and Reem's own arch.
 ///
-/// * [AtelierHero] — a length of plum cloth with a champagne stitch around
-///   its edge: the greeting, the day's takings, and the month's goal.
-/// * [ThreadSpool] — progress toward a goal, as thread wound on a spool.
-/// * [StitchedCard] — the one thing to do now, tacked to the bench with a
-///   running stitch in the colour of its urgency.
-/// * [OrderSeam] — the order pipeline as a seam: every stage a stitch-point,
+/// * [AtelierHero] — a length of satin with a champagne edge: the greeting,
+///   the day's takings, and the month's goal.
+/// * [ArchGauge] — progress toward a goal, as Reem's arch filling with gold.
+/// * [AtelierFocusCard] — the one thing to do now, edged in the colour of its
+///   urgency.
+/// * [OrderPath] — the order pipeline as a dotted path: every stage a stop,
 ///   the ones holding work lit in gold.
-/// * [SewingButton] — her tools, as buttons from a sewing tin.
-/// * [HangerRail] / [HangingPiece] — what sells, hanging on the rail, each
-///   with a swing tag saying how many went or how few are left.
-/// * [ThreadChart] — the takings over time, sewn as a line on pattern paper.
+/// * [PearlButton] — her tools, as polished pearl buttons.
+/// * [DisplayShelf] / [ShelfPiece] — what sells, standing on the shelf, each
+///   with a gift tag saying how many went or how few are left.
+/// * [RibbonChart] — the takings over time, as a satin ribbon with a pearl at
+///   every period.
 ///
-/// Everything resolves from [SellerAtelierPalette], so the bench follows dark
+/// Everything resolves from [SellerAtelierPalette], so the shop follows dark
 /// mode with the rest of the seller's pages.
 
 // ---------------------------------------------------------------------------
-// Stitching
+// Dashed lines
 // ---------------------------------------------------------------------------
 
-/// Draws [path] as a running stitch: short dashes with gaps, round-capped.
-void _stitch(
+/// Draws [path] as a dashed line: short dashes with gaps, round-capped.
+void _dashed(
   Canvas canvas,
   Path path,
   Paint paint, {
@@ -49,8 +52,8 @@ void _stitch(
   }
 }
 
-class _StitchBorderPainter extends CustomPainter {
-  const _StitchBorderPainter({
+class _DashedBorderPainter extends CustomPainter {
+  const _DashedBorderPainter({
     required this.color,
     required this.radius,
     this.inset = DsSpacing.xs,
@@ -72,7 +75,7 @@ class _StitchBorderPainter extends CustomPainter {
           Radius.circular(math.max(0, radius - inset)),
         ),
       );
-    _stitch(
+    _dashed(
       canvas,
       path,
       Paint()
@@ -84,7 +87,7 @@ class _StitchBorderPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(_StitchBorderPainter old) =>
+  bool shouldRepaint(_DashedBorderPainter old) =>
       old.color != color ||
       old.radius != radius ||
       old.inset != inset ||
@@ -95,8 +98,8 @@ class _StitchBorderPainter extends CustomPainter {
 // The hero
 // ---------------------------------------------------------------------------
 
-/// A length of plum cloth: the atelier's header gradient, a fine linen weave,
-/// champagne light from the far corner, and a stitch around the edge.
+/// A length of plum satin: the seller's header gradient, two bands of sheen,
+/// champagne light from the far corner, and a dotted champagne edge.
 /// Copy on it is set in [DsColors.onMedia].
 class AtelierHero extends StatelessWidget {
   const AtelierHero({super.key, required this.child, this.padding});
@@ -117,8 +120,8 @@ class AtelierHero extends StatelessWidget {
       child: ClipRRect(
         borderRadius: DsRadius.borderXxl,
         child: CustomPaint(
-          painter: _ClothPainter(rtl: rtl),
-          foregroundPainter: _StitchBorderPainter(
+          painter: _SatinPainter(rtl: rtl),
+          foregroundPainter: _DashedBorderPainter(
             color: DsColors.gold200.withValues(alpha: 0.55),
             radius: DsRadius.xxl,
           ),
@@ -129,8 +132,8 @@ class AtelierHero extends StatelessWidget {
   }
 }
 
-class _ClothPainter extends CustomPainter {
-  const _ClothPainter({required this.rtl});
+class _SatinPainter extends CustomPainter {
+  const _SatinPainter({required this.rtl});
 
   final bool rtl;
 
@@ -138,7 +141,7 @@ class _ClothPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final rect = Offset.zero & size;
 
-    // Champagne light from the far top corner, as from a workroom window.
+    // Champagne light from the far top corner, as from a shop window.
     final light = Offset(rtl ? size.width * 0.1 : size.width * 0.9, 0);
     canvas.drawRect(
       rect,
@@ -154,41 +157,56 @@ class _ClothPainter extends CustomPainter {
             ),
     );
 
-    // Linen: a fine weave of crossing threads, barely there.
-    final weave = Paint()
-      ..strokeWidth = 1
-      ..color = DsColors.onMedia.withValues(alpha: 0.035);
-    for (double d = -size.height; d < size.width; d += 9) {
-      canvas.drawLine(
-        Offset(d, 0),
-        Offset(d + size.height, size.height),
-        weave,
-      );
-    }
-    for (double d = 0; d < size.width + size.height; d += 9) {
-      canvas.drawLine(
-        Offset(d, 0),
-        Offset(d - size.height, size.height),
-        weave,
+    // Satin: two soft bands of sheen running across the cloth, the way light
+    // lies on a wrapped box.
+    for (final (offset, width, alpha) in const [
+      (0.18, 0.16, 0.07),
+      (0.52, 0.08, 0.05),
+    ]) {
+      final x = size.width * offset;
+      final band = Path()
+        ..moveTo(x, 0)
+        ..lineTo(x + size.width * width, 0)
+        ..lineTo(x + size.width * width - size.height * 0.6, size.height)
+        ..lineTo(x - size.height * 0.6, size.height)
+        ..close();
+      canvas.drawPath(
+        rtl
+            ? band.transform(
+                (Matrix4.identity()
+                      ..translateByDouble(size.width, 0, 0, 1)
+                      ..scaleByDouble(-1, 1, 1, 1))
+                    .storage,
+              )
+            : band,
+        Paint()
+          ..shader = LinearGradient(
+            colors: [
+              DsColors.onMedia.withValues(alpha: 0),
+              DsColors.onMedia.withValues(alpha: alpha),
+              DsColors.onMedia.withValues(alpha: 0),
+            ],
+          ).createShader(rect),
       );
     }
   }
 
   @override
-  bool shouldRepaint(_ClothPainter oldDelegate) => oldDelegate.rtl != rtl;
+  bool shouldRepaint(_SatinPainter oldDelegate) => oldDelegate.rtl != rtl;
 }
 
 // ---------------------------------------------------------------------------
-// The spool
+// The goal
 // ---------------------------------------------------------------------------
 
-/// Progress toward a goal, as thread wound onto a wooden spool.
+/// Progress toward a goal, as Reem's arch filling with gold.
 ///
-/// The wound thread rises with [progress] (0–1); past the goal the spool is
-/// full and the thread turns champagne. The loose end trails away from the
-/// last wrap, so an empty spool still reads as a spool and not as a gap.
-class ThreadSpool extends StatelessWidget {
-  const ThreadSpool({
+/// The arch is the brand's window; here it fills from the floor with
+/// champagne light as the month gets closer to its goal, the surface of the
+/// light gently curved. Full, it glows. It belongs to no trade — it reads as
+/// a lantern to one woman and a perfume bottle to the next.
+class ArchGauge extends StatelessWidget {
+  const ArchGauge({
     super.key,
     required this.progress,
     this.width = 64,
@@ -201,121 +219,108 @@ class ThreadSpool extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final spool = TweenAnimationBuilder<double>(
+    final gauge = TweenAnimationBuilder<double>(
       tween: Tween(begin: 0, end: progress.clamp(0.0, 1.0)),
       duration: DsReducedMotion.duration(DsMotion.slowest),
       curve: DsMotion.gentle,
       builder: (context, value, _) => CustomPaint(
         size: Size(width, width * 1.4),
-        painter: _SpoolPainter(progress: value, full: progress >= 1),
+        painter: _ArchGaugePainter(progress: value, full: progress >= 1),
       ),
     );
     return Semantics(
       image: true,
       label: semanticLabel,
-      child: ExcludeSemantics(child: spool),
+      child: ExcludeSemantics(child: gauge),
     );
   }
 }
 
-class _SpoolPainter extends CustomPainter {
-  const _SpoolPainter({required this.progress, required this.full});
+class _ArchGaugePainter extends CustomPainter {
+  const _ArchGaugePainter({required this.progress, required this.full});
 
   final double progress;
   final bool full;
 
   @override
   void paint(Canvas canvas, Size size) {
-    final w = size.width;
-    final h = size.height;
-    final flange = h * 0.1;
-    final coreLeft = w * 0.24;
-    final coreRight = w * 0.76;
-    final coreTop = flange;
-    final coreBottom = h - flange;
+    final rect = Offset.zero & size;
+    final arch = dsArchPath(rect.deflate(2));
 
-    // The wooden core.
-    final core = Rect.fromLTRB(coreLeft, coreTop, coreRight, coreBottom);
-    canvas.drawRect(
-      core,
+    if (full) {
+      canvas.drawPath(
+        arch,
+        Paint()
+          ..color = DsColors.gold300.withValues(alpha: 0.5)
+          ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 10),
+      );
+    }
+
+    // The empty window: a faint glass.
+    canvas.drawPath(
+      arch,
+      Paint()..color = DsColors.onMedia.withValues(alpha: 0.08),
+    );
+
+    // The light, risen to [progress], its surface gently curved.
+    canvas.save();
+    canvas.clipPath(arch);
+    final level = size.height * (1 - progress);
+    final surface = Path()..moveTo(0, size.height);
+    surface.lineTo(0, level);
+    surface.quadraticBezierTo(
+      size.width * 0.25,
+      level - 3,
+      size.width * 0.5,
+      level,
+    );
+    surface.quadraticBezierTo(size.width * 0.75, level + 3, size.width, level);
+    surface
+      ..lineTo(size.width, size.height)
+      ..close();
+    canvas.drawPath(
+      surface,
       Paint()
         ..shader = const LinearGradient(
-          colors: [DsColors.gold600, DsColors.gold300, DsColors.gold600],
-        ).createShader(core),
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [DsColors.gold200, DsColors.gold500],
+        ).createShader(rect),
     );
+    // A glint on the glass.
+    canvas.drawLine(
+      Offset(size.width * 0.28, size.height * 0.3),
+      Offset(size.width * 0.28, size.height * 0.62),
+      Paint()
+        ..strokeWidth = 2.4
+        ..strokeCap = StrokeCap.round
+        ..color = DsColors.onMedia.withValues(alpha: 0.35),
+    );
+    canvas.restore();
 
-    // The wound thread, from the bottom up, each wrap bulging a little.
-    final wound = (coreBottom - coreTop) * progress;
-    const wrap = 3.2;
-    final threadA = full ? DsColors.gold200 : DsColors.primary400;
-    final threadB = full ? DsColors.gold300 : DsColors.primary500;
-    var i = 0;
-    for (double y = coreBottom - wrap / 2; y > coreBottom - wound; y -= wrap) {
-      final path = Path()
-        ..moveTo(coreLeft - 3, y)
-        ..quadraticBezierTo(w / 2, y + wrap * 0.9, coreRight + 3, y);
-      canvas.drawPath(
-        path,
-        Paint()
-          ..style = PaintingStyle.stroke
-          ..strokeWidth = wrap * 0.95
-          ..strokeCap = StrokeCap.round
-          ..color = i.isEven ? threadA : threadB,
-      );
-      i++;
-    }
-
-    // The loose end, trailing off the last wrap.
-    final endY = math.max(coreTop + 4, coreBottom - wound);
-    final tail = Path()
-      ..moveTo(coreRight + 2, endY)
-      ..cubicTo(
-        w * 1.02,
-        endY - h * 0.05,
-        w * 0.98,
-        endY + h * 0.18,
-        w * 1.1,
-        endY + h * 0.28,
-      );
+    // The frame.
     canvas.drawPath(
-      tail,
+      arch,
       Paint()
         ..style = PaintingStyle.stroke
-        ..strokeWidth = 1.4
-        ..strokeCap = StrokeCap.round
-        ..color = threadA,
+        ..strokeWidth = 2
+        ..color = DsColors.gold200,
     );
-
-    // The two flanges, top and bottom.
-    for (final top in [0.0, h - flange]) {
-      final r = RRect.fromRectAndRadius(
-        Rect.fromLTWH(0, top, w, flange),
-        Radius.circular(flange / 2),
-      );
-      canvas.drawRRect(
-        r,
-        Paint()
-          ..shader = const LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [DsColors.gold200, DsColors.gold500],
-          ).createShader(r.outerRect),
-      );
-    }
   }
 
   @override
-  bool shouldRepaint(_SpoolPainter old) =>
+  bool shouldRepaint(_ArchGaugePainter old) =>
       old.progress != progress || old.full != full;
 }
 
 // ---------------------------------------------------------------------------
-// The stitched card
+// The focus card
 // ---------------------------------------------------------------------------
 
-/// A card tacked to the bench with a running stitch in [accent].
-class StitchedCard extends StatelessWidget {
-  const StitchedCard({
+/// The one thing to do now: a card edged with a dotted line in [accent], the
+/// colour of its urgency.
+class AtelierFocusCard extends StatelessWidget {
+  const AtelierFocusCard({
     super.key,
     required this.child,
     this.accent,
@@ -329,16 +334,16 @@ class StitchedCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final palette = context.atelier;
-    final stitch = accent ?? palette.gold;
+    final edge = accent ?? palette.gold;
     return Container(
       decoration: BoxDecoration(
         color: palette.surface,
         borderRadius: DsRadius.borderXxl,
-        boxShadow: context.glowShadow(stitch, blur: 26, alpha: 0.14),
+        boxShadow: context.glowShadow(edge, blur: 26, alpha: 0.14),
       ),
       child: CustomPaint(
-        foregroundPainter: _StitchBorderPainter(
-          color: stitch.withValues(alpha: 0.75),
+        foregroundPainter: _DashedBorderPainter(
+          color: edge.withValues(alpha: 0.75),
           radius: DsRadius.xxl,
           inset: DsSpacing.xs - DsSpacing.xxxs,
           width: 1.6,
@@ -350,13 +355,13 @@ class StitchedCard extends StatelessWidget {
 }
 
 // ---------------------------------------------------------------------------
-// The seam
+// The order path
 // ---------------------------------------------------------------------------
 
-/// One stitch-point on the [OrderSeam].
+/// One stop on the [OrderPath].
 @immutable
-class SeamStation {
-  const SeamStation({
+class PathStop {
+  const PathStop({
     required this.label,
     required this.count,
     required this.icon,
@@ -371,16 +376,15 @@ class SeamStation {
   final bool lit;
 }
 
-/// The order pipeline as a seam, sewn in reading order.
+/// The order pipeline as a dotted path, in reading order.
 ///
-/// A running stitch joins the stages; each stage is a stitch-point holding
-/// its count. The stages where orders wait on *her* are lit in gold with
+/// A dotted line joins the stages; each stage is a stop holding its count. The stages where orders wait on *her* are lit in gold with
 /// plum ink, so the eye goes to the work, not to the three thousand already
 /// delivered.
-class OrderSeam extends StatelessWidget {
-  const OrderSeam({super.key, required this.stations, this.onTap});
+class OrderPath extends StatelessWidget {
+  const OrderPath({super.key, required this.stations, this.onTap});
 
-  final List<SeamStation> stations;
+  final List<PathStop> stations;
   final ValueChanged<int>? onTap;
 
   static const double _point = 48;
@@ -401,7 +405,7 @@ class OrderSeam extends StatelessWidget {
                 padding: EdgeInsets.symmetric(horizontal: span / 2),
                 child: CustomPaint(
                   size: Size(constraints.maxWidth - span, 2),
-                  painter: _SeamPainter(color: palette.gold),
+                  painter: _PathPainter(color: palette.gold),
                 ),
               );
             },
@@ -412,7 +416,7 @@ class OrderSeam extends StatelessWidget {
           children: [
             for (var i = 0; i < stations.length; i++)
               Expanded(
-                child: _SeamPoint(
+                child: _PathStopView(
                   station: stations[i],
                   palette: palette,
                   onTap: onTap == null ? null : () => onTap!(i),
@@ -425,8 +429,8 @@ class OrderSeam extends StatelessWidget {
   }
 }
 
-class _SeamPainter extends CustomPainter {
-  const _SeamPainter({required this.color});
+class _PathPainter extends CustomPainter {
+  const _PathPainter({required this.color});
 
   final Color color;
 
@@ -435,7 +439,7 @@ class _SeamPainter extends CustomPainter {
     final path = Path()
       ..moveTo(0, size.height / 2)
       ..lineTo(size.width, size.height / 2);
-    _stitch(
+    _dashed(
       canvas,
       path,
       Paint()
@@ -449,13 +453,17 @@ class _SeamPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(_SeamPainter old) => old.color != color;
+  bool shouldRepaint(_PathPainter old) => old.color != color;
 }
 
-class _SeamPoint extends StatelessWidget {
-  const _SeamPoint({required this.station, required this.palette, this.onTap});
+class _PathStopView extends StatelessWidget {
+  const _PathStopView({
+    required this.station,
+    required this.palette,
+    this.onTap,
+  });
 
-  final SeamStation station;
+  final PathStop station;
   final SellerAtelierPalette palette;
   final VoidCallback? onTap;
 
@@ -463,8 +471,8 @@ class _SeamPoint extends StatelessWidget {
   Widget build(BuildContext context) {
     final lit = station.lit;
     final point = Container(
-      width: OrderSeam._point,
-      height: OrderSeam._point,
+      width: OrderPath._point,
+      height: OrderPath._point,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         gradient: lit ? palette.goldGradient : null,
@@ -528,13 +536,13 @@ class _SeamPoint extends StatelessWidget {
 }
 
 // ---------------------------------------------------------------------------
-// The sewing tin
+// The tools
 // ---------------------------------------------------------------------------
 
-/// A tool, as a button from a sewing tin: a disc with a raised rim and four
-/// thread holes, the tool's icon set in its face, its name underneath.
-class SewingButton extends StatelessWidget {
-  const SewingButton({
+/// A tool, as a polished pearl: a lustrous disc with a fine rim and a glint,
+/// the tool's icon set in its face, its name underneath.
+class PearlButton extends StatelessWidget {
+  const PearlButton({
     super.key,
     required this.icon,
     required this.label,
@@ -622,15 +630,6 @@ class _ButtonPainter extends CustomPainter {
           colors: [Color.lerp(face, tint, 0.06)!, Color.lerp(face, tint, 0.2)!],
         ).createShader(Rect.fromCircle(center: c, radius: r)),
     );
-    // The raised rim.
-    canvas.drawCircle(
-      c,
-      r * 0.86,
-      Paint()
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = 1.4
-        ..color = tint.withValues(alpha: 0.35),
-    );
     canvas.drawCircle(
       c,
       r - 0.7,
@@ -639,16 +638,18 @@ class _ButtonPainter extends CustomPainter {
         ..strokeWidth = 1.2
         ..color = tint.withValues(alpha: 0.25),
     );
-    // Four thread holes on the diagonals, inside the rim.
-    final hole = Paint()..color = tint.withValues(alpha: 0.45);
-    for (var k = 0; k < 4; k++) {
-      final a = math.pi / 4 + k * math.pi / 2;
-      canvas.drawCircle(
-        c + Offset(math.cos(a), math.sin(a)) * r * 0.68,
-        r * 0.055,
-        hole,
-      );
-    }
+    // The pearl's glint: a soft crescent of light high on the disc.
+    canvas.drawArc(
+      Rect.fromCircle(center: c, radius: r * 0.72),
+      math.pi * 1.1,
+      math.pi * 0.5,
+      false,
+      Paint()
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = r * 0.12
+        ..strokeCap = StrokeCap.round
+        ..color = DsColors.onMedia.withValues(alpha: 0.55),
+    );
   }
 
   @override
@@ -660,38 +661,59 @@ class _ButtonPainter extends CustomPainter {
 // The rail
 // ---------------------------------------------------------------------------
 
-/// The shop rail: a brass rod the pieces hang from, scrolling sideways.
-class HangerRail extends StatelessWidget {
-  const HangerRail({super.key, required this.children, this.padding});
+/// The display shelf: a polished board the pieces stand on, scrolling
+/// sideways. A bottle, a bouquet, a box of jewellery or a folded dress all
+/// stand on a shelf the same way.
+class DisplayShelf extends StatelessWidget {
+  const DisplayShelf({
+    super.key,
+    required this.children,
+    this.padding,
+    this.pieceWidth = ShelfPiece.defaultWidth,
+  });
 
   final List<Widget> children;
   final EdgeInsetsGeometry? padding;
 
+  /// The width of the [ShelfPiece]s, so the board sits under their photos.
+  final double pieceWidth;
+
   @override
   Widget build(BuildContext context) {
+    final palette = context.atelier;
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       padding: padding,
       child: Stack(
         children: [
-          // The rod, the full length of the rail.
+          // The board, the full length of the shelf, under the photographs.
           Positioned(
-            top: 0,
+            top: ShelfPiece.photoHeightFor(pieceWidth),
             left: 0,
             right: 0,
-            height: DsSpacing.xs,
+            height: ShelfPiece.board,
             child: DecoratedBox(
               decoration: BoxDecoration(
-                borderRadius: DsRadius.borderPill,
+                borderRadius: DsRadius.borderXs,
                 gradient: const LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: [
                     DsColors.gold200,
-                    DsColors.gold500,
+                    DsColors.gold400,
                     DsColors.gold700,
                   ],
+                  stops: [0, 0.45, 1],
                 ),
+                boxShadow: [
+                  BoxShadow(
+                    color: palette.shadow.isEmpty
+                        ? DsColors.transparent
+                        : palette.shadow.first.color,
+                    blurRadius: 10,
+                    offset: const Offset(0, 6),
+                  ),
+                ],
               ),
             ),
           ),
@@ -699,7 +721,7 @@ class HangerRail extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               for (var i = 0; i < children.length; i++) ...[
-                if (i > 0) DsGaps.hMd,
+                if (i > 0) DsGaps.hLg,
                 children[i],
               ],
             ],
@@ -710,34 +732,36 @@ class HangerRail extends StatelessWidget {
   }
 }
 
-/// A piece on the rail: a hanger hooked over the rod, the photograph cut to
-/// Reem's arch, its name, and a swing tag.
-class HangingPiece extends StatelessWidget {
-  const HangingPiece({
+/// A piece on the shelf: the photograph cut to Reem's arch, standing on the
+/// board, a gift tag tied at its side, and its name under the shelf.
+class ShelfPiece extends StatelessWidget {
+  const ShelfPiece({
     super.key,
     required this.image,
     required this.title,
     required this.tag,
     this.tagColor,
     this.onTap,
-    this.width = 136,
+    this.width = defaultWidth,
   });
 
   /// The photograph, or its fallback, filling the arch.
   final Widget image;
   final String title;
 
-  /// The swing tag's line: «١٣٤ قطعة» on a good seller, «باقي ٢» on one
-  /// running out.
+  /// The tag's line: «بيعت ٩٧» on a good seller, «باقي ٢» on one running out.
   final String tag;
 
-  /// The tag's colour — the champagne of a good seller by default, the
-  /// critical red on stock that is nearly gone.
+  /// The tag's colour — champagne for a good seller by default, the critical
+  /// red on stock that is nearly gone.
   final Color? tagColor;
   final VoidCallback? onTap;
   final double width;
 
-  static const double _hangerHeight = 30;
+  static const double defaultWidth = 128;
+  static const double board = DsSpacing.sm;
+
+  static double photoHeightFor(double width) => width * 1.25;
 
   @override
   Widget build(BuildContext context) {
@@ -748,11 +772,6 @@ class HangingPiece extends StatelessWidget {
       width: width,
       child: Column(
         children: [
-          SizedBox(
-            width: width,
-            height: _hangerHeight,
-            child: CustomPaint(painter: _HangerPainter(color: palette.muted)),
-          ),
           Stack(
             clipBehavior: Clip.none,
             children: [
@@ -767,19 +786,20 @@ class HangingPiece extends StatelessWidget {
                     : palette.shadow.first.color,
                 child: SizedBox(
                   width: width,
-                  height: width * 1.25,
+                  height: photoHeightFor(width),
                   child: image,
                 ),
               ),
-              // The swing tag, tied on at the shoulder.
+              // The gift tag, tied at the side.
               PositionedDirectional(
-                top: width * 0.42,
-                end: -DsSpacing.xxs,
+                top: width * 0.5,
+                end: -DsSpacing.xs,
                 child: _SwingTag(label: tag, color: tint, palette: palette),
               ),
             ],
           ),
-          DsGaps.vXs,
+          // Room for the board.
+          const SizedBox(height: board + DsSpacing.sm),
           Text(
             title,
             maxLines: 2,
@@ -799,42 +819,6 @@ class HangingPiece extends StatelessWidget {
       child: piece,
     );
   }
-}
-
-class _HangerPainter extends CustomPainter {
-  const _HangerPainter({required this.color});
-
-  final Color color;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 1.8
-      ..strokeCap = StrokeCap.round
-      ..strokeJoin = StrokeJoin.round
-      ..color = color;
-    final cx = size.width / 2;
-    // The hook, curled over the rod.
-    final hook = Path()
-      ..moveTo(cx, size.height * 0.55)
-      ..lineTo(cx, size.height * 0.3)
-      ..arcToPoint(
-        Offset(cx - 7, size.height * 0.1),
-        radius: const Radius.circular(6),
-        clockwise: false,
-      );
-    canvas.drawPath(hook, paint);
-    // The shoulders, sloping down to the piece.
-    final shoulders = Path()
-      ..moveTo(size.width * 0.16, size.height)
-      ..lineTo(cx, size.height * 0.55)
-      ..lineTo(size.width * 0.84, size.height);
-    canvas.drawPath(shoulders, paint..strokeWidth = 2.2);
-  }
-
-  @override
-  bool shouldRepaint(_HangerPainter old) => old.color != color;
 }
 
 class _SwingTag extends StatelessWidget {
@@ -865,8 +849,8 @@ class _SwingTag extends StatelessWidget {
   }
 }
 
-/// A swing tag: a card with a clipped point on its leading side and an
-/// eyelet for the string.
+/// A gift tag: a card with a clipped point on its leading side and an eyelet
+/// for the ribbon.
 class _TagPainter extends CustomPainter {
   const _TagPainter({required this.fill, required this.edge});
 
@@ -914,16 +898,16 @@ class _TagPainter extends CustomPainter {
 }
 
 // ---------------------------------------------------------------------------
-// The thread chart
+// The ribbon chart
 // ---------------------------------------------------------------------------
 
-/// Takings over time, sewn as a line on pattern paper.
+/// Takings over time, as a satin ribbon laid across a dotted grid.
 ///
-/// A dotted pattern grid, a soft fill under the line, the line itself drawn
-/// as a champagne running stitch over a plum thread, and a knot at every
-/// point — the last one larger, because it is today.
-class ThreadChart extends StatelessWidget {
-  const ThreadChart({
+/// A soft fill under the line, the line itself a plum ribbon with a fine
+/// champagne sheen along it, and a pearl at every point — the last one
+/// larger and gold, because it is now.
+class RibbonChart extends StatelessWidget {
+  const RibbonChart({
     super.key,
     required this.values,
     required this.labels,
@@ -951,11 +935,11 @@ class ThreadChart extends StatelessWidget {
               curve: DsMotion.gentle,
               builder: (context, progress, _) => CustomPaint(
                 size: Size(double.infinity, height),
-                painter: _ThreadChartPainter(
+                painter: _RibbonChartPainter(
                   values: values,
                   progress: progress,
-                  thread: palette.primary,
-                  stitch: palette.gold,
+                  ribbon: palette.primary,
+                  pearl: palette.gold,
                   grid: palette.line,
                   ground: palette.surface,
                 ),
@@ -985,20 +969,20 @@ class ThreadChart extends StatelessWidget {
   }
 }
 
-class _ThreadChartPainter extends CustomPainter {
-  const _ThreadChartPainter({
+class _RibbonChartPainter extends CustomPainter {
+  const _RibbonChartPainter({
     required this.values,
     required this.progress,
-    required this.thread,
-    required this.stitch,
+    required this.ribbon,
+    required this.pearl,
     required this.grid,
     required this.ground,
   });
 
   final List<double> values;
   final double progress;
-  final Color thread;
-  final Color stitch;
+  final Color ribbon;
+  final Color pearl;
   final Color grid;
   final Color ground;
 
@@ -1049,32 +1033,29 @@ class _ThreadChartPainter extends CustomPainter {
         ..shader = LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
-          colors: [thread.withValues(alpha: 0.22), thread.withValues(alpha: 0)],
+          colors: [ribbon.withValues(alpha: 0.22), ribbon.withValues(alpha: 0)],
         ).createShader(Offset.zero & size),
     );
 
-    // The plum thread, and the champagne stitch over it.
+    // The plum ribbon, and the sheen of light along it.
     canvas.drawPath(
       line,
       Paint()
         ..style = PaintingStyle.stroke
-        ..strokeWidth = 3
+        ..strokeWidth = 4
         ..strokeCap = StrokeCap.round
-        ..color = thread,
+        ..color = ribbon,
     );
-    _stitch(
-      canvas,
-      line,
+    canvas.drawPath(
+      line.shift(const Offset(0, -0.8)),
       Paint()
         ..style = PaintingStyle.stroke
-        ..strokeWidth = 1.6
+        ..strokeWidth = 1.2
         ..strokeCap = StrokeCap.round
-        ..color = DsColors.gold100,
-      dash: 5,
-      gap: 5,
+        ..color = DsColors.gold100.withValues(alpha: 0.75),
     );
 
-    // A knot at every point; today's is larger and ringed in gold.
+    // A pearl at every point; the latest is larger and set in gold.
     for (var i = 0; i < points.length; i++) {
       final last = i == points.length - 1;
       canvas.drawCircle(points[i], last ? 7 : 4.5, Paint()..color = ground);
@@ -1084,24 +1065,24 @@ class _ThreadChartPainter extends CustomPainter {
         Paint()
           ..style = PaintingStyle.stroke
           ..strokeWidth = last ? 2.4 : 1.6
-          ..color = last ? stitch : thread,
+          ..color = last ? pearl : ribbon,
       );
-      if (last) canvas.drawCircle(points[i], 3, Paint()..color = stitch);
+      if (last) canvas.drawCircle(points[i], 3, Paint()..color = pearl);
     }
   }
 
   @override
-  bool shouldRepaint(_ThreadChartPainter old) =>
+  bool shouldRepaint(_RibbonChartPainter old) =>
       old.values != values ||
       old.progress != progress ||
-      old.thread != thread ||
-      old.stitch != stitch ||
+      old.ribbon != ribbon ||
+      old.pearl != pearl ||
       old.grid != grid ||
       old.ground != ground;
 }
 
-/// A chapter heading on the bench: the name, a short line under it, and a
-/// trailing link — with a tiny needle-and-thread mark before the name.
+/// A chapter heading in the shop: the name, a short line under it, and a
+/// trailing link — with a small champagne sparkle before the name.
 class AtelierHeading extends StatelessWidget {
   const AtelierHeading({
     super.key,
@@ -1128,9 +1109,9 @@ class AtelierHeading extends StatelessWidget {
                 children: [
                   CustomPaint(
                     size: const Size(DsSpacing.lg, DsSpacing.md),
-                    painter: _NeedleMarkPainter(
-                      needle: palette.muted,
-                      thread: palette.gold,
+                    painter: _SparkleMarkPainter(
+                      minor: palette.muted,
+                      major: palette.gold,
                       rtl: Directionality.of(context) == TextDirection.rtl,
                     ),
                   ),
@@ -1160,58 +1141,49 @@ class AtelierHeading extends StatelessWidget {
   }
 }
 
-class _NeedleMarkPainter extends CustomPainter {
-  const _NeedleMarkPainter({
-    required this.needle,
-    required this.thread,
+class _SparkleMarkPainter extends CustomPainter {
+  const _SparkleMarkPainter({
+    required this.minor,
+    required this.major,
     required this.rtl,
   });
 
-  final Color needle;
-  final Color thread;
+  final Color minor;
+  final Color major;
   final bool rtl;
 
   @override
   void paint(Canvas canvas, Size size) {
-    if (rtl) {
-      canvas.translate(size.width, 0);
-      canvas.scale(-1, 1);
+    // A four-pointed sparkle, and a smaller one beside it.
+    void sparkle(Offset c, double r, Color color) {
+      final path = Path()
+        ..moveTo(c.dx, c.dy - r)
+        ..quadraticBezierTo(c.dx, c.dy, c.dx + r, c.dy)
+        ..quadraticBezierTo(c.dx, c.dy, c.dx, c.dy + r)
+        ..quadraticBezierTo(c.dx, c.dy, c.dx - r, c.dy)
+        ..quadraticBezierTo(c.dx, c.dy, c.dx, c.dy - r)
+        ..close();
+      canvas.drawPath(path, Paint()..color = color);
     }
+
     final h = size.height;
     final w = size.width;
-    // The needle, pointing toward the title.
-    canvas.drawLine(
-      Offset(w * 0.15, h * 0.5),
-      Offset(w, h * 0.5),
-      Paint()
-        ..strokeWidth = 1.8
-        ..strokeCap = StrokeCap.round
-        ..color = needle,
-    );
-    // The thread through its eye, looping back.
-    final loop = Path()
-      ..moveTo(w * 0.2, h * 0.5)
-      ..cubicTo(0, h * 0.5, w * 0.05, h, w * 0.4, h * 0.85);
-    canvas.drawPath(
-      loop,
-      Paint()
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = 1.4
-        ..strokeCap = StrokeCap.round
-        ..color = thread,
-    );
+    final big = Offset(rtl ? w * 0.38 : w * 0.62, h * 0.5);
+    final small = Offset(rtl ? w * 0.82 : w * 0.18, h * 0.22);
+    sparkle(big, h * 0.5, major);
+    sparkle(small, h * 0.22, minor);
   }
 
   @override
-  bool shouldRepaint(_NeedleMarkPainter old) =>
-      old.needle != needle || old.thread != thread || old.rtl != rtl;
+  bool shouldRepaint(_SparkleMarkPainter old) =>
+      old.minor != minor || old.major != major || old.rtl != rtl;
 }
 
 // ---------------------------------------------------------------------------
 // The banner
 // ---------------------------------------------------------------------------
 
-/// A figure stitched onto the [AtelierAppBar]'s banner.
+/// A figure set on the [AtelierAppBar]'s banner.
 @immutable
 class AtelierHighlight {
   const AtelierHighlight({required this.value, required this.label});
@@ -1220,13 +1192,13 @@ class AtelierHighlight {
   final String label;
 }
 
-/// The top of every seller page: a banner of the atelier's plum cloth.
+/// The top of every seller page: a banner of the shop's plum satin.
 ///
-/// Open, it is a length of cloth hung across the top of the page — the
+/// Open, it is a length of satin hung across the top of the page — the
 /// room's medallion, its name in the display serif, a line on what it is
-/// for, and its figures stitched on in champagne. As she scrolls it folds up
-/// into a slim plum bar carrying the name alone, with the stitched hem still
-/// along its bottom edge, so every seller page wears the same cloth.
+/// for, and its figures in champagne. As she scrolls it folds up into a slim
+/// plum bar carrying the name alone, with the dotted champagne edge still
+/// along its bottom, so every seller page wears the same satin.
 ///
 /// The same arguments as [PremiumAppBar] for the common case, so a page
 /// moves across by changing one name.
@@ -1333,7 +1305,7 @@ class _Banner extends StatelessWidget {
     return Stack(
       fit: StackFit.expand,
       children: [
-        // The cloth, hemmed at the bottom.
+        // The satin, edged at the bottom.
         DecoratedBox(
           decoration: BoxDecoration(
             gradient: palette.headerGradient,
@@ -1347,7 +1319,7 @@ class _Banner extends StatelessWidget {
           child: ClipRRect(
             borderRadius: BorderRadius.vertical(bottom: radius),
             child: CustomPaint(
-              painter: _ClothPainter(rtl: rtl),
+              painter: _SatinPainter(rtl: rtl),
               foregroundPainter: _HemPainter(
                 color: DsColors.gold200.withValues(alpha: 0.6),
                 radius: radius.x,
@@ -1396,7 +1368,7 @@ class _Banner extends StatelessWidget {
                       Row(
                         children: [
                           if (icon != null) ...[
-                            _SpoolTop(icon: icon!),
+                            _Medallion(icon: icon!),
                             DsGaps.hMd,
                           ],
                           Expanded(
@@ -1478,7 +1450,7 @@ class _Banner extends StatelessWidget {
   }
 }
 
-/// The hem: a running stitch just above the banner's bottom edge.
+/// The edge: a dotted champagne line just above the banner's bottom.
 class _HemPainter extends CustomPainter {
   const _HemPainter({required this.color, required this.radius});
 
@@ -1492,7 +1464,7 @@ class _HemPainter extends CustomPainter {
     final path = Path()
       ..moveTo(inset, y)
       ..lineTo(size.width - inset, y);
-    _stitch(
+    _dashed(
       canvas,
       path,
       Paint()
@@ -1508,10 +1480,10 @@ class _HemPainter extends CustomPainter {
       old.color != color || old.radius != radius;
 }
 
-/// A room's medallion on the banner: the top of a spool — a champagne ring
-/// round a plum face — with the room's icon in it.
-class _SpoolTop extends StatelessWidget {
-  const _SpoolTop({required this.icon});
+/// A room's medallion on the banner: a champagne ring round a plum face, like
+/// the seal on a gift box, with the room's icon in it.
+class _Medallion extends StatelessWidget {
+  const _Medallion({required this.icon});
 
   final IconData icon;
 
@@ -1541,14 +1513,14 @@ double atelierGutter(BuildContext context) =>
 // The ticket
 // ---------------------------------------------------------------------------
 
-/// A tailor's ticket: a card with a tear-off stub on its far side.
+/// An order ticket: a card with a tear-off stub on its far side.
 ///
 /// The body says what the job is and what to do next; the stub — divided
 /// off by a perforation with a notch punched top and bottom — carries the
 /// figure and the state, tinted in [stubColor], so a column of tickets reads
 /// as a column of states before a word of it is read.
-class TailorTicket extends StatelessWidget {
-  const TailorTicket({
+class OrderTicket extends StatelessWidget {
+  const OrderTicket({
     super.key,
     required this.body,
     required this.stub,
@@ -1626,7 +1598,7 @@ class TailorTicket extends StatelessWidget {
 
 Path _ticketPath(Size size, double stubWidth, bool rtl) {
   final x = rtl ? stubWidth : size.width - stubWidth;
-  const n = TailorTicket._notch;
+  const n = OrderTicket._notch;
   final outline = Path()
     ..addRRect(
       RRect.fromRectAndRadius(
@@ -1683,11 +1655,11 @@ class _TicketPainter extends CustomPainter {
         ).createShader(stubRect),
     );
     // The perforation.
-    _stitch(
+    _dashed(
       canvas,
       Path()
-        ..moveTo(x, TailorTicket._notch + 3)
-        ..lineTo(x, size.height - TailorTicket._notch - 3),
+        ..moveTo(x, OrderTicket._notch + 3)
+        ..lineTo(x, size.height - OrderTicket._notch - 3),
       Paint()
         ..style = PaintingStyle.stroke
         ..strokeWidth = 1.4
@@ -1714,7 +1686,7 @@ class _TicketPainter extends CustomPainter {
       old.line != line;
 }
 
-/// Filters as beads on a thread, in the atelier's colours: the chosen bead
+/// Filters as a row of beads, in the seller's colours: the chosen bead
 /// plum with a champagne edge, the rest quiet, each with its count.
 class AtelierBeads<T> extends StatelessWidget {
   const AtelierBeads({
@@ -1842,11 +1814,11 @@ class _AtelierBead extends StatelessWidget {
   }
 }
 
-/// One bead on a silk thread, for a journey drawn down the page: an order's
+/// One pearl on a dotted line, for a journey drawn down the page: an order's
 /// steps, a return's history. Painted the full height of its row so a list of
-/// them reads as one thread; [done] lights the bead champagne.
-class AtelierThreadBead extends StatelessWidget {
-  const AtelierThreadBead({
+/// them reads as one line; [done] lights the pearl champagne.
+class JourneyBead extends StatelessWidget {
+  const JourneyBead({
     super.key,
     required this.first,
     required this.last,
@@ -1898,7 +1870,7 @@ class _AtelierBeadPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final x = size.width / 2;
-    _stitch(
+    _dashed(
       canvas,
       Path()
         ..moveTo(x, first ? _beadY : 0)
@@ -1935,13 +1907,14 @@ class _AtelierBeadPainter extends CustomPainter {
 }
 
 // ---------------------------------------------------------------------------
-// The swatch
+// The gift tag
 // ---------------------------------------------------------------------------
 
-/// A product as a fabric swatch: a card whose leading edge is cut with
-/// pinking shears, the way a sample is cut from the bolt.
-class SwatchCard extends StatelessWidget {
-  const SwatchCard({
+/// A product as a gift tag: a card whose leading corners are clipped like a
+/// tag's, with an eyelet punched near its leading edge. Every boutique ties a
+/// tag to what it sells, whatever it sells.
+class GiftTagCard extends StatelessWidget {
+  const GiftTagCard({
     super.key,
     required this.child,
     this.onTap,
@@ -1956,7 +1929,7 @@ class SwatchCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final palette = context.atelier;
     final rtl = Directionality.of(context) == TextDirection.rtl;
-    final clipper = _SwatchClipper(rtl: rtl);
+    final clipper = _TagClipper(rtl: rtl);
     return DecoratedBox(
       decoration: BoxDecoration(
         borderRadius: DsRadius.borderXl,
@@ -1976,13 +1949,10 @@ class SwatchCard extends StatelessWidget {
           child: InkWell(
             onTap: onTap,
             child: CustomPaint(
-              foregroundPainter: _SwatchEdgePainter(
-                rtl: rtl,
-                line: palette.line,
-              ),
+              foregroundPainter: _TagEdgePainter(rtl: rtl, line: palette.line),
               child: Padding(
                 padding: padding.add(
-                  EdgeInsetsDirectional.only(start: _SwatchClipper.tooth),
+                  EdgeInsetsDirectional.only(start: _TagClipper.tooth * 2),
                 ),
                 child: child,
               ),
@@ -1994,30 +1964,33 @@ class SwatchCard extends StatelessWidget {
   }
 }
 
-Path _swatchPath(Size size, bool rtl) {
-  const t = _SwatchClipper.tooth;
+Path _tagPath(Size size, bool rtl) {
+  const cut = _TagClipper.tooth * 3;
   const r = DsRadius.xl;
-  final path = Path();
-  // Built left-to-right with the pinked edge on the left, then mirrored for
-  // a right-to-left page so the cut is always on the leading side.
-  path.moveTo(t, 0);
-  path.lineTo(size.width - r, 0);
-  path.quadraticBezierTo(size.width, 0, size.width, r);
-  path.lineTo(size.width, size.height - r);
-  path.quadraticBezierTo(size.width, size.height, size.width - r, size.height);
-  path.lineTo(t, size.height);
-  // The zigzag, bottom to top.
-  var y = size.height;
-  var out = true;
-  while (y > 0) {
-    y = math.max(0, y - t);
-    path.lineTo(out ? 0 : t, y);
-    out = !out;
-  }
-  path.lineTo(t, 0);
-  path.close();
-  if (!rtl) return path;
-  return path.transform(
+  // Built left-to-right with the tag's clipped corners on the left, then
+  // mirrored for a right-to-left page so they are always on the leading
+  // side.
+  final path = Path()
+    ..moveTo(cut, 0)
+    ..lineTo(size.width - r, 0)
+    ..quadraticBezierTo(size.width, 0, size.width, r)
+    ..lineTo(size.width, size.height - r)
+    ..quadraticBezierTo(size.width, size.height, size.width - r, size.height)
+    ..lineTo(cut, size.height)
+    ..lineTo(0, size.height - cut)
+    ..lineTo(0, cut)
+    ..close();
+  // The eyelet, punched through.
+  final eyelet = Path()
+    ..addOval(
+      Rect.fromCircle(
+        center: Offset(_TagClipper.tooth * 1.6, size.height / 2),
+        radius: _TagClipper.tooth * 0.7,
+      ),
+    );
+  final tag = Path.combine(PathOperation.difference, path, eyelet);
+  if (!rtl) return tag;
+  return tag.transform(
     (Matrix4.identity()
           ..translateByDouble(size.width, 0, 0, 1)
           ..scaleByDouble(-1, 1, 1, 1))
@@ -2025,22 +1998,22 @@ Path _swatchPath(Size size, bool rtl) {
   );
 }
 
-class _SwatchClipper extends CustomClipper<Path> {
-  const _SwatchClipper({required this.rtl});
+class _TagClipper extends CustomClipper<Path> {
+  const _TagClipper({required this.rtl});
 
   final bool rtl;
 
   static const double tooth = 6;
 
   @override
-  Path getClip(Size size) => _swatchPath(size, rtl);
+  Path getClip(Size size) => _tagPath(size, rtl);
 
   @override
-  bool shouldReclip(_SwatchClipper old) => old.rtl != rtl;
+  bool shouldReclip(_TagClipper old) => old.rtl != rtl;
 }
 
-class _SwatchEdgePainter extends CustomPainter {
-  const _SwatchEdgePainter({required this.rtl, required this.line});
+class _TagEdgePainter extends CustomPainter {
+  const _TagEdgePainter({required this.rtl, required this.line});
 
   final bool rtl;
   final Color line;
@@ -2048,7 +2021,7 @@ class _SwatchEdgePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     canvas.drawPath(
-      _swatchPath(size, rtl),
+      _tagPath(size, rtl),
       Paint()
         ..style = PaintingStyle.stroke
         ..strokeWidth = 1
@@ -2057,14 +2030,13 @@ class _SwatchEdgePainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(_SwatchEdgePainter old) =>
-      old.rtl != rtl || old.line != line;
+  bool shouldRepaint(_TagEdgePainter old) => old.rtl != rtl || old.line != line;
 }
 
-/// Stock as a length of tape measure: a cream tape with a tick every unit
-/// band, filled up to [value] of [max] in [color].
-class TapeMeasure extends StatelessWidget {
-  const TapeMeasure({
+/// A level as a length of satin ribbon: a champagne track, filled up to
+/// [value] of [max] in [color], with a line of sheen along the top.
+class RibbonGauge extends StatelessWidget {
+  const RibbonGauge({
     super.key,
     required this.value,
     required this.max,
@@ -2086,10 +2058,10 @@ class TapeMeasure extends StatelessWidget {
       curve: DsMotion.gentle,
       builder: (context, fraction, _) => CustomPaint(
         size: Size(double.infinity, height),
-        painter: _TapePainter(
+        painter: _RibbonGaugePainter(
           fraction: fraction,
           color: color,
-          tape: palette.goldSoft,
+          track: palette.goldSoft,
           tick: palette.gold,
           rtl: Directionality.of(context) == TextDirection.rtl,
         ),
@@ -2098,58 +2070,62 @@ class TapeMeasure extends StatelessWidget {
   }
 }
 
-class _TapePainter extends CustomPainter {
-  const _TapePainter({
+class _RibbonGaugePainter extends CustomPainter {
+  const _RibbonGaugePainter({
     required this.fraction,
     required this.color,
-    required this.tape,
+    required this.track,
     required this.tick,
     required this.rtl,
   });
 
   final double fraction;
   final Color color;
-  final Color tape;
+  final Color track;
   final Color tick;
   final bool rtl;
 
   @override
   void paint(Canvas canvas, Size size) {
-    final r = Radius.circular(size.height / 3);
+    final r = Radius.circular(size.height / 2);
     canvas.drawRRect(
       RRect.fromRectAndRadius(Offset.zero & size, r),
-      Paint()..color = tape,
+      Paint()..color = track,
     );
     final w = size.width * fraction;
+    if (w <= 0) return;
     final filled = rtl
         ? Rect.fromLTWH(size.width - w, 0, w, size.height)
         : Rect.fromLTWH(0, 0, w, size.height);
     canvas.drawRRect(
       RRect.fromRectAndRadius(filled, r),
-      Paint()..color = color.withValues(alpha: 0.85),
+      Paint()
+        ..shader = LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [Color.lerp(color, DsColors.onMedia, 0.25)!, color],
+        ).createShader(filled),
     );
-    // The ticks: a long one every fifth.
-    final paint = Paint()
-      ..strokeWidth = 1
-      ..color = tick.withValues(alpha: 0.55);
-    const step = 6.0;
-    var i = 0;
-    for (double x = step; x < size.width; x += step) {
-      final long = i % 5 == 4;
-      canvas.drawLine(
-        Offset(x, 0),
-        Offset(x, size.height * (long ? 0.7 : 0.4)),
-        paint,
-      );
-      i++;
-    }
+    // The sheen, a fine light line along the top of the satin.
+    final y = size.height * 0.3;
+    canvas.drawLine(
+      Offset(filled.left + size.height / 2, y),
+      Offset(
+        math.max(filled.left + size.height / 2, filled.right - size.height / 2),
+        y,
+      ),
+      Paint()
+        ..strokeWidth = math.max(1, size.height * 0.14)
+        ..strokeCap = StrokeCap.round
+        ..color = DsColors.onMedia.withValues(alpha: 0.4),
+    );
   }
 
   @override
-  bool shouldRepaint(_TapePainter old) =>
+  bool shouldRepaint(_RibbonGaugePainter old) =>
       old.fraction != fraction ||
       old.color != color ||
-      old.tape != tape ||
+      old.track != track ||
       old.tick != tick ||
       old.rtl != rtl;
 }

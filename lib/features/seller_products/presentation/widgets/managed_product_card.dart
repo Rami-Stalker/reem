@@ -48,7 +48,7 @@ class ManagedProductCard extends StatelessWidget {
         ? palette.caution
         : palette.positive;
 
-    return SwatchCard(
+    return GiftTagCard(
       onTap: () => onAction(ProductCardAction.edit),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -89,7 +89,7 @@ class ManagedProductCard extends StatelessWidget {
                 Row(
                   children: [
                     Expanded(
-                      child: TapeMeasure(
+                      child: RibbonGauge(
                         value: product.stock.toDouble(),
                         max: 30,
                         color: stockColor,
@@ -182,6 +182,6 @@ class _Placeholder extends StatelessWidget {
         colors: [palette.primarySoft, palette.goldSoft],
       ),
     ),
-    child: Icon(Icons.checkroom_rounded, color: palette.primary),
+    child: Icon(Icons.local_mall_outlined, color: palette.primary),
   );
 }

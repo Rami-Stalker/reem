@@ -116,7 +116,7 @@ class ReturnRequestCard extends StatelessWidget {
       label:
           '${context.returnReasonLabel(request.reason)}، '
           '${context.returnStatusLabel(request.status)}',
-      child: TailorTicket(
+      child: OrderTicket(
         onTap: onOpen,
         stubColor: tone,
         body: body,

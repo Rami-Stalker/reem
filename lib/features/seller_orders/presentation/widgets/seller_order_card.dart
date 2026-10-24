@@ -187,7 +187,7 @@ class SellerOrderCard extends StatelessWidget {
     return Semantics(
       button: true,
       label: '${order.number}، ${context.l10n.parcelStatus(order.status)}',
-      child: TailorTicket(
+      child: OrderTicket(
         onTap: onOpen,
         stubColor: tone,
         body: body,

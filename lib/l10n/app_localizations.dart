@@ -8999,7 +8999,7 @@ abstract class AppLocalizations {
   /// Seller home when nothing needs doing
   ///
   /// In en, this message translates to:
-  /// **'The atelier is calm — nothing is waiting for you right now.'**
+  /// **'Your shop is calm — nothing is waiting for you right now.'**
   String get sellerBenchCalm;
 
   /// Next action: confirm new orders
@@ -9059,7 +9059,7 @@ abstract class AppLocalizations {
   /// Explains the lit stages of the order pipeline
   ///
   /// In en, this message translates to:
-  /// **'The lit points are waiting on you.'**
+  /// **'The lit stops are waiting on you.'**
   String get sellerBenchSeamCaption;
 
   /// Seller home: quick actions
@@ -9071,7 +9071,7 @@ abstract class AppLocalizations {
   /// Seller home: best sellers and pieces running out
   ///
   /// In en, this message translates to:
-  /// **'On the rail'**
+  /// **'On the shelf'**
   String get sellerBenchRailTitle;
 
   /// Explains the rail
@@ -9101,13 +9101,13 @@ abstract class AppLocalizations {
   /// Seller home: revenue chart
   ///
   /// In en, this message translates to:
-  /// **'The sales pattern'**
+  /// **'The rhythm of sales'**
   String get sellerBenchPatternTitle;
 
   /// Explains the revenue chart
   ///
   /// In en, this message translates to:
-  /// **'Every knot on the thread is a period; the gold one is now.'**
+  /// **'Every pearl on the ribbon is a period; the gold one is now.'**
   String get sellerBenchPatternCaption;
 
   /// Screen-reader label of the revenue chart
@@ -9119,7 +9119,7 @@ abstract class AppLocalizations {
   /// Seller home: the remaining panels
   ///
   /// In en, this message translates to:
-  /// **'More from the atelier'**
+  /// **'More about your shop'**
   String get sellerBenchMoreTitle;
 
   /// Product row menu action: retire the listing.

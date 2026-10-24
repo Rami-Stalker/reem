@@ -286,7 +286,7 @@ class _Step extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          AtelierThreadBead(first: isFirst, last: isLast, done: isLast),
+          JourneyBead(first: isFirst, last: isLast, done: isLast),
           DsGaps.hSm,
           Expanded(
             child: Padding(

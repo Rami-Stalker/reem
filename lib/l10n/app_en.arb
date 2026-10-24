@@ -6076,7 +6076,7 @@
   "@sellerBenchThen": {
     "description": "The rest of the seller's to-do list"
   },
-  "sellerBenchCalm": "The atelier is calm — nothing is waiting for you right now.",
+  "sellerBenchCalm": "Your shop is calm — nothing is waiting for you right now.",
   "@sellerBenchCalm": {
     "description": "Seller home when nothing needs doing"
   },
@@ -6131,7 +6131,7 @@
   "@sellerBenchSeamTitle": {
     "description": "Seller home: the order pipeline"
   },
-  "sellerBenchSeamCaption": "The lit points are waiting on you.",
+  "sellerBenchSeamCaption": "The lit stops are waiting on you.",
   "@sellerBenchSeamCaption": {
     "description": "Explains the lit stages of the order pipeline"
   },
@@ -6139,7 +6139,7 @@
   "@sellerBenchToolsTitle": {
     "description": "Seller home: quick actions"
   },
-  "sellerBenchRailTitle": "On the rail",
+  "sellerBenchRailTitle": "On the shelf",
   "@sellerBenchRailTitle": {
     "description": "Seller home: best sellers and pieces running out"
   },
@@ -6169,11 +6169,11 @@
   "@sellerBenchTagOut": {
     "description": "Swing tag on a sold-out piece"
   },
-  "sellerBenchPatternTitle": "The sales pattern",
+  "sellerBenchPatternTitle": "The rhythm of sales",
   "@sellerBenchPatternTitle": {
     "description": "Seller home: revenue chart"
   },
-  "sellerBenchPatternCaption": "Every knot on the thread is a period; the gold one is now.",
+  "sellerBenchPatternCaption": "Every pearl on the ribbon is a period; the gold one is now.",
   "@sellerBenchPatternCaption": {
     "description": "Explains the revenue chart"
   },
@@ -6181,7 +6181,7 @@
   "@sellerBenchPatternSemantics": {
     "description": "Screen-reader label of the revenue chart"
   },
-  "sellerBenchMoreTitle": "More from the atelier",
+  "sellerBenchMoreTitle": "More about your shop",
   "@sellerBenchMoreTitle": {
     "description": "Seller home: the remaining panels"
   },

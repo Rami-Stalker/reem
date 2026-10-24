@@ -137,7 +137,7 @@ class SellerReviewCard extends StatelessWidget {
 
     return review.isAnswered
         ? SellerPanel(child: content)
-        : StitchedCard(
+        : AtelierFocusCard(
             accent: palette.gold,
             padding: DsSpacing.paddingLg,
             child: content,

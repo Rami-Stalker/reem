@@ -14,18 +14,20 @@ import 'package:reem/features/seller_dashboard/presentation/widgets/seller_recen
 import 'package:reem/features/seller_dashboard/presentation/widgets/seller_store_score_widget.dart';
 import 'package:reem/features/seller_intelligence/presentation/widgets/intelligence_entry_card.dart';
 
-/// The seller's home: **the workbench of her atelier**.
+/// The seller's home: **behind the counter of her boutique**.
 ///
-/// Not a reporting dashboard. It opens on a length of plum cloth saying good
-/// morning to her shop by name, with today's takings set large and the
-/// month's goal as thread wound on a spool. Then the one thing to do first,
-/// tacked down with a stitch in the colour of its urgency, and the few after
-/// it. Then the order seam — the stages of an order as stitch-points, the
-/// ones waiting on her lit in gold — her tools as buttons from a sewing tin,
-/// the rail of what sells and what is running out, and the sales pattern.
+/// Not a reporting dashboard, and not a tailor's bench either: a seller on
+/// Reem may sell perfume, flowers, jewellery, make-up or clothes, so the page
+/// is drawn from what every women's shop shares. It opens on a length of plum
+/// satin saying good morning to her shop by name, with today's takings set
+/// large and the month's goal as Reem's arch filling with gold. Then the one
+/// thing to do first, and the few after it; the order path, the stages
+/// waiting on her lit in gold; her tools as pearl buttons; the shelf of what
+/// sells and what is running out, each piece with a gift tag; and the rhythm
+/// of sales as a satin ribbon.
 ///
 /// The older panels (store health, funnel, insights, reviews, goals) follow
-/// under «المزيد من المشغل»: still there, no longer in the way.
+/// under «المزيد عن متجركِ»: still there, no longer in the way.
 class SellerHomeScreen extends ConsumerWidget {
   const SellerHomeScreen({super.key});
 
@@ -51,7 +53,7 @@ class SellerHomeScreen extends ConsumerWidget {
       ),
     );
 
-    // The rail scrolls to the screen's edge, so it pads itself.
+    // The shelf scrolls to the screen's edge, so it pads itself.
     Widget fullBleed(int index, Widget child) => SliverToBoxAdapter(
       child: DsStaggerAnimations.item(index: index, child: child),
     );
@@ -80,18 +82,18 @@ class SellerHomeScreen extends ConsumerWidget {
 
         section(0, const BenchHero()),
         const _Gap(),
-        section(1, const BenchNextStitch()),
+        section(1, const BenchFirstThing()),
         const _Gap(),
-        section(2, const BenchSeam()),
+        section(2, const BenchOrderPath()),
         const _Gap(),
         section(3, const BenchTools()),
         const _Gap(),
-        fullBleed(4, const BenchRail()),
+        fullBleed(4, const BenchShelf()),
         const _Gap(),
-        section(5, const BenchPattern()),
+        section(5, const BenchSalesRhythm()),
         const _Gap(),
 
-        // ── More from the atelier ────────────────────────────────────────
+        // ── More about her shop ──────────────────────────────────────────
         section(6, AtelierHeading(title: l10n.sellerBenchMoreTitle)),
         const _Gap(small: true),
         // The other widgets carry their own side padding.

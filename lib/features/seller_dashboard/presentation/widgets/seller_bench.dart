@@ -15,11 +15,15 @@ import 'package:reem/features/seller_dashboard/presentation/providers/seller_das
 import 'package:reem/features/seller_dashboard/presentation/widgets/seller_format.dart';
 import 'package:reem/features/seller_dashboard/presentation/widgets/seller_labels.dart';
 
-/// The pieces of the seller's home, **the workbench**, in the order her day
-/// goes: how the shop is doing and the month's goal ([BenchHero]); the one
-/// thing to do first and the few after it ([BenchNextStitch]); the order
-/// seam ([BenchSeam]); her tools ([BenchTools]); what is on the rail
-/// ([BenchRail]); and the sales pattern ([BenchPattern]).
+/// The pieces of the seller's home, **behind the counter of her boutique**,
+/// in the order her day goes: how the shop is doing and the month's goal
+/// ([BenchHero]); the one thing to do first and the few after it
+/// ([BenchFirstThing]); the order path ([BenchOrderPath]); her tools
+/// ([BenchTools]); what is on the shelf ([BenchShelf]); and the rhythm of
+/// sales ([BenchSalesRhythm]).
+///
+/// None of it assumes what she sells — perfume, flowers, jewellery, make-up
+/// or clothes all stand on a shelf, carry a tag and leave in a ribbon.
 ///
 /// Each one reads the dashboard state itself and renders nothing until the
 /// store has loaded, so the screen is only a list of sections.
@@ -133,12 +137,12 @@ class BenchHero extends ConsumerWidget {
       ],
     );
 
-    final spool = goal == null
+    final goalGauge = goal == null
         ? null
         : Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              ThreadSpool(
+              ArchGauge(
                 progress: progress,
                 width: compact ? 52 : 64,
                 semanticLabel: '${goal.label} ${(progress * 100).round()}%',
@@ -188,7 +192,7 @@ class BenchHero extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Expanded(child: takings),
-              if (spool != null) ...[DsGaps.hMd, spool],
+              if (goalGauge != null) ...[DsGaps.hMd, goalGauge],
             ],
           ),
         ],
@@ -220,13 +224,13 @@ class _HeroFigure extends StatelessWidget {
 }
 
 // ---------------------------------------------------------------------------
-// The next stitch
+// The next task
 // ---------------------------------------------------------------------------
 
 /// One thing on her list today.
 @immutable
-class _Stitch {
-  const _Stitch({
+class _Task {
+  const _Task({
     required this.title,
     required this.hint,
     required this.icon,
@@ -250,8 +254,8 @@ class _Stitch {
 /// search; then the tasks the server already ranked. Only the first is drawn
 /// large, because a list of equals is how the old page made her read
 /// everything to find anything.
-class BenchNextStitch extends ConsumerWidget {
-  const BenchNextStitch({super.key});
+class BenchFirstThing extends ConsumerWidget {
+  const BenchFirstThing({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -259,10 +263,10 @@ class BenchNextStitch extends ConsumerWidget {
     if (data == null) return const SizedBox.shrink();
     final l10n = context.l10n;
     final palette = context.atelier;
-    final stitches = _stitchesFor(context, data);
+    final tasks = _tasksFor(context, data);
 
-    if (stitches.isEmpty) {
-      return StitchedCard(
+    if (tasks.isEmpty) {
+      return AtelierFocusCard(
         accent: palette.positive,
         child: Row(
           children: [
@@ -283,13 +287,13 @@ class BenchNextStitch extends ConsumerWidget {
       );
     }
 
-    final first = stitches.first;
-    final rest = stitches.skip(1).take(4).toList(growable: false);
+    final first = tasks.first;
+    final rest = tasks.skip(1).take(4).toList(growable: false);
     final accent = context.toneColor(first.tone);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        StitchedCard(
+        AtelierFocusCard(
           accent: accent,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -340,14 +344,14 @@ class BenchNextStitch extends ConsumerWidget {
             style: context.dsText.overline.tint(palette.muted),
           ),
           DsGaps.vXs,
-          for (final (i, stitch) in rest.indexed)
-            _ThenRow(stitch: stitch, last: i == rest.length - 1),
+          for (final (i, task) in rest.indexed)
+            _ThenRow(task: task, last: i == rest.length - 1),
         ],
       ],
     );
   }
 
-  List<_Stitch> _stitchesFor(BuildContext context, SellerDashboardData data) {
+  List<_Task> _tasksFor(BuildContext context, SellerDashboardData data) {
     final l10n = context.l10n;
     final orders = data.orders;
     final soldOut = data.lowStock.where((item) => item.isOutOfStock).toList();
@@ -356,7 +360,7 @@ class BenchNextStitch extends ConsumerWidget {
 
     return [
       if (orders.newOrders > 0)
-        _Stitch(
+        _Task(
           title: l10n.sellerBenchNewOrders(orders.newOrders),
           hint: l10n.sellerBenchNewOrdersHint,
           icon: Icons.receipt_long_rounded,
@@ -365,7 +369,7 @@ class BenchNextStitch extends ConsumerWidget {
           route: RoutePaths.sellerOrders,
         ),
       if (orders.readyForShipment > 0)
-        _Stitch(
+        _Task(
           title: l10n.sellerBenchReadyOrders(orders.readyForShipment),
           hint: l10n.sellerBenchReadyOrdersHint,
           icon: Icons.local_shipping_rounded,
@@ -374,7 +378,7 @@ class BenchNextStitch extends ConsumerWidget {
           route: RoutePaths.sellerOrders,
         ),
       for (final item in soldOut.take(2))
-        _Stitch(
+        _Task(
           title: l10n.sellerBenchSoldOut(item.title),
           hint: l10n.sellerBenchSoldOutHint,
           icon: Icons.inventory_2_rounded,
@@ -383,7 +387,7 @@ class BenchNextStitch extends ConsumerWidget {
           route: RoutePaths.myProducts,
         ),
       for (final task in tasks)
-        _Stitch(
+        _Task(
           title: task.title,
           hint: task.subtitle,
           icon: task.icon,
@@ -394,15 +398,15 @@ class BenchNextStitch extends ConsumerWidget {
 }
 
 class _ThenRow extends StatelessWidget {
-  const _ThenRow({required this.stitch, required this.last});
+  const _ThenRow({required this.task, required this.last});
 
-  final _Stitch stitch;
+  final _Task task;
   final bool last;
 
   @override
   Widget build(BuildContext context) {
     final palette = context.atelier;
-    final tone = context.toneColor(stitch.tone);
+    final tone = context.toneColor(task.tone);
     final row = Padding(
       padding: const EdgeInsets.symmetric(vertical: DsSpacing.sm),
       child: Row(
@@ -414,7 +418,7 @@ class _ThenRow extends StatelessWidget {
               shape: BoxShape.circle,
               color: tone.withValues(alpha: 0.12),
             ),
-            child: Icon(stitch.icon, size: DsSizes.iconXs, color: tone),
+            child: Icon(task.icon, size: DsSizes.iconXs, color: tone),
           ),
           DsGaps.hSm,
           Expanded(
@@ -422,12 +426,12 @@ class _ThenRow extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  stitch.title,
+                  task.title,
                   style: context.dsText.bodyStrong.tint(palette.ink),
                 ),
-                if (stitch.hint.isNotEmpty)
+                if (task.hint.isNotEmpty)
                   Text(
-                    stitch.hint,
+                    task.hint,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: context.dsText.caption.tint(palette.muted),
@@ -435,7 +439,7 @@ class _ThenRow extends StatelessWidget {
               ],
             ),
           ),
-          if (stitch.route != null)
+          if (task.route != null)
             Icon(
               Icons.chevron_right_rounded,
               color: palette.muted,
@@ -447,19 +451,19 @@ class _ThenRow extends StatelessWidget {
       decoration: BoxDecoration(
         border: last ? null : Border(bottom: BorderSide(color: palette.line)),
       ),
-      child: stitch.route == null
+      child: task.route == null
           ? row
-          : InkWell(onTap: () => context.push(stitch.route!), child: row),
+          : InkWell(onTap: () => context.push(task.route!), child: row),
     );
   }
 }
 
 // ---------------------------------------------------------------------------
-// The seam
+// The order path
 // ---------------------------------------------------------------------------
 
-class BenchSeam extends ConsumerWidget {
-  const BenchSeam({super.key});
+class BenchOrderPath extends ConsumerWidget {
+  const BenchOrderPath({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -482,11 +486,11 @@ class BenchSeam extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          OrderSeam(
+          OrderPath(
             onTap: (_) => context.push(RoutePaths.sellerOrders),
             stations: [
               for (final status in flow)
-                SeamStation(
+                PathStop(
                   label: status.labelOf(l10n),
                   count: formatCount(status.countOf(orders)),
                   icon: status.icon,
@@ -577,7 +581,7 @@ class BenchTools extends StatelessWidget {
                 for (final tool in tools)
                   SizedBox(
                     width: width,
-                    child: SewingButton(
+                    child: PearlButton(
                       icon: tool.$1,
                       label: tool.$2,
                       color: tool.$4,
@@ -594,11 +598,11 @@ class BenchTools extends StatelessWidget {
 }
 
 // ---------------------------------------------------------------------------
-// The rail
+// The shelf
 // ---------------------------------------------------------------------------
 
-class BenchRail extends ConsumerWidget {
-  const BenchRail({super.key});
+class BenchShelf extends ConsumerWidget {
+  const BenchShelf({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -608,7 +612,7 @@ class BenchRail extends ConsumerWidget {
     final palette = context.atelier;
 
     // Best sellers first, then whatever is running out that is not already
-    // hanging there — one rail, so «what sells» and «what is nearly gone»
+    // standing there — one shelf, so «what sells» and «what is nearly gone»
     // are read side by side, which is how she restocks.
     // The two lists come from different queries and can name the same piece
     // under different ids, so a piece is matched by its name as well.
@@ -617,7 +621,7 @@ class BenchRail extends ConsumerWidget {
     };
     final pieces = <Widget>[
       for (final product in data.topProducts)
-        HangingPiece(
+        ShelfPiece(
           image: _PieceImage(url: product.imageUrl),
           title: product.title,
           tag: product.isOutOfStock
@@ -632,7 +636,7 @@ class BenchRail extends ConsumerWidget {
         ),
       for (final item in data.lowStock)
         if (!shown.contains(item.id) && !shown.contains(item.title.trim()))
-          HangingPiece(
+          ShelfPiece(
             image: _PieceImage(url: item.imageUrl),
             title: item.title,
             tag: item.isOutOfStock
@@ -663,7 +667,7 @@ class BenchRail extends ConsumerWidget {
           ),
         ),
         DsGaps.vLg,
-        HangerRail(
+        DisplayShelf(
           padding: EdgeInsets.symmetric(horizontal: gutter),
           children: pieces,
         ),
@@ -690,7 +694,7 @@ class _PieceImage extends StatelessWidget {
       ),
       child: Center(
         child: Icon(
-          Icons.checkroom_rounded,
+          Icons.local_mall_outlined,
           size: DsSizes.iconXl,
           color: palette.primary.withValues(alpha: 0.6),
         ),
@@ -708,11 +712,11 @@ class _PieceImage extends StatelessWidget {
 }
 
 // ---------------------------------------------------------------------------
-// The pattern
+// The rhythm of sales
 // ---------------------------------------------------------------------------
 
-class BenchPattern extends ConsumerWidget {
-  const BenchPattern({super.key});
+class BenchSalesRhythm extends ConsumerWidget {
+  const BenchSalesRhythm({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -736,7 +740,7 @@ class BenchPattern extends ConsumerWidget {
                 .setChartPeriod,
           ),
           DsGaps.vLg,
-          ThreadChart(
+          RibbonChart(
             values: [for (final p in points) p.value],
             labels: [for (final p in points) p.label],
             semanticLabel: l10n.sellerBenchPatternSemantics,

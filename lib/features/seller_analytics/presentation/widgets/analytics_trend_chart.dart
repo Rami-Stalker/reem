@@ -118,7 +118,7 @@ class _AnalyticsTrendChartState extends State<AnalyticsTrendChart> {
                   lineTouchData: LineTouchData(
                     touchTooltipData: LineTouchTooltipData(
                       getTooltipColor: (_) => palette.raised,
-                      // One tooltip per point, not one per thread.
+                      // One tooltip per point, not one per line.
                       getTooltipItems: (spots) => [
                         for (final spot in spots)
                           spot.barIndex == 0
@@ -130,8 +130,8 @@ class _AnalyticsTrendChartState extends State<AnalyticsTrendChart> {
                       ],
                     ),
                   ),
-                  // The takings sewn as thread: a plum line with a champagne
-                  // running stitch over it, and a gold knot on the latest
+                  // The takings as a satin ribbon: a plum line with a fine
+                  // champagne sheen along it, and a gold pearl on the latest
                   // point.
                   lineBarsData: [
                     LineChartBarData(
@@ -169,9 +169,8 @@ class _AnalyticsTrendChartState extends State<AnalyticsTrendChart> {
                     LineChartBarData(
                       isCurved: true,
                       curveSmoothness: 0.28,
-                      barWidth: 1.4,
-                      color: DsColors.gold100,
-                      dashArray: const [5, 5],
+                      barWidth: 1.1,
+                      color: DsColors.gold100.withValues(alpha: 0.75),
                       dotData: const FlDotData(show: false),
                       spots: [
                         for (var i = 0; i < values.length; i++)

@@ -42,7 +42,7 @@ class MyProductsScreen extends ConsumerWidget {
       ),
       slivers: [
         AtelierAppBar(
-          icon: Icons.checkroom_rounded,
+          icon: Icons.local_mall_rounded,
           title: l10n.myProducts,
           showBack: true,
         ),

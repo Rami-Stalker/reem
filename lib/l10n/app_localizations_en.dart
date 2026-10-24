@@ -4985,7 +4985,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get sellerBenchCalm =>
-      'The atelier is calm — nothing is waiting for you right now.';
+      'Your shop is calm — nothing is waiting for you right now.';
 
   @override
   String sellerBenchNewOrders(int count) {
@@ -5036,13 +5036,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get sellerBenchSeamTitle => 'The order seam';
 
   @override
-  String get sellerBenchSeamCaption => 'The lit points are waiting on you.';
+  String get sellerBenchSeamCaption => 'The lit stops are waiting on you.';
 
   @override
   String get sellerBenchToolsTitle => 'Your tools';
 
   @override
-  String get sellerBenchRailTitle => 'On the rail';
+  String get sellerBenchRailTitle => 'On the shelf';
 
   @override
   String get sellerBenchRailCaption =>
@@ -5062,17 +5062,17 @@ class AppLocalizationsEn extends AppLocalizations {
   String get sellerBenchTagOut => 'Sold out';
 
   @override
-  String get sellerBenchPatternTitle => 'The sales pattern';
+  String get sellerBenchPatternTitle => 'The rhythm of sales';
 
   @override
   String get sellerBenchPatternCaption =>
-      'Every knot on the thread is a period; the gold one is now.';
+      'Every pearl on the ribbon is a period; the gold one is now.';
 
   @override
   String get sellerBenchPatternSemantics => 'Revenue over the selected period';
 
   @override
-  String get sellerBenchMoreTitle => 'More from the atelier';
+  String get sellerBenchMoreTitle => 'More about your shop';
 
   @override
   String get sellerArchive => 'Archive';

@@ -5029,7 +5029,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get sellerBenchThen => 'وبعدها';
 
   @override
-  String get sellerBenchCalm => 'المشغل هادئ — لا شيء ينتظركِ الآن.';
+  String get sellerBenchCalm => 'متجركِ هادئ — لا شيء ينتظركِ الآن.';
 
   @override
   String sellerBenchNewOrders(int count) {
@@ -5084,13 +5084,13 @@ class AppLocalizationsAr extends AppLocalizations {
   String get sellerBenchSeamTitle => 'خط الطلبات';
 
   @override
-  String get sellerBenchSeamCaption => 'النقاط المضيئة تنتظر يدكِ.';
+  String get sellerBenchSeamCaption => 'النقاط المضيئة تنتظركِ.';
 
   @override
   String get sellerBenchToolsTitle => 'أدواتكِ';
 
   @override
-  String get sellerBenchRailTitle => 'على الراف';
+  String get sellerBenchRailTitle => 'على الرف';
 
   @override
   String get sellerBenchRailCaption => 'ما يُباع أكثر، وما يوشك أن ينفد.';
@@ -5109,17 +5109,17 @@ class AppLocalizationsAr extends AppLocalizations {
   String get sellerBenchTagOut => 'نفدت';
 
   @override
-  String get sellerBenchPatternTitle => 'باترون المبيعات';
+  String get sellerBenchPatternTitle => 'إيقاع المبيعات';
 
   @override
   String get sellerBenchPatternCaption =>
-      'كل عقدة على الخيط فترة، والذهبية هي الآن.';
+      'كل لؤلؤة على الشريط فترة، والذهبية هي الآن.';
 
   @override
   String get sellerBenchPatternSemantics => 'المبيعات خلال الفترة المختارة';
 
   @override
-  String get sellerBenchMoreTitle => 'المزيد من المشغل';
+  String get sellerBenchMoreTitle => 'المزيد عن متجركِ';
 
   @override
   String get sellerArchive => 'أرشفة';
