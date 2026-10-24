@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:reem/core/shared/entities/user.dart';
+import 'package:reem/features/reputation/domain/entities/fit_entities.dart';
 
 class ReviewEntity extends Equatable {
   const ReviewEntity({
@@ -12,6 +13,11 @@ class ReviewEntity extends Equatable {
     this.status = 'pending',
     this.helpfulCount = 0,
     required this.createdAt,
+    this.fit,
+    this.sizeBought,
+    this.heightBand,
+    this.usualSize,
+    this.photos = const [],
   });
 
   final String id;
@@ -24,6 +30,30 @@ class ReviewEntity extends Equatable {
   final int helpfulCount;
   final DateTime createdAt;
 
+  // ── «تقييمات من بمقاسي» ────────────────────────────────────────────────
+
+  /// How it fit her, when she said.
+  final ReviewFit? fit;
+
+  /// The size that shipped, read by the server from her delivered order.
+  final String? sizeBought;
+
+  /// Her height as a 5 cm band, «160–164» — only if she chose to share it.
+  final String? heightBand;
+
+  /// Her usual size — only if she chose to share it.
+  final String? usualSize;
+
+  /// Up to four photographs of the piece on her.
+  final List<String> photos;
+
+  /// Whether the card has anything to say about fit at all.
+  bool get hasFitFacts =>
+      fit != null ||
+      sizeBought != null ||
+      heightBand != null ||
+      usualSize != null;
+
   @override
   List<Object?> get props => [
         id,
@@ -35,6 +65,11 @@ class ReviewEntity extends Equatable {
         status,
         helpfulCount,
         createdAt,
+    fit,
+    sizeBought,
+    heightBand,
+    usualSize,
+    photos,
       ];
 }
 
@@ -118,11 +153,7 @@ class SellerReputationSummary extends Equatable {
 /// What a review was written *about*. A product review carries the piece; a
 /// shop review carries the boutique.
 class ReviewSubject extends Equatable {
-  const ReviewSubject({
-    required this.id,
-    required this.title,
-    this.imageUrl,
-  });
+  const ReviewSubject({required this.id, required this.title, this.imageUrl});
 
   final String id;
   final String title;
@@ -188,11 +219,7 @@ class AuthoredReview extends Equatable {
 
 /// Her reviews plus the two figures the profile already displayed.
 class MyReviews extends Equatable {
-  const MyReviews({
-    this.reviews = const [],
-    this.count = 0,
-    this.average = 0,
-  });
+  const MyReviews({this.reviews = const [], this.count = 0, this.average = 0});
 
   final List<AuthoredReview> reviews;
   final int count;

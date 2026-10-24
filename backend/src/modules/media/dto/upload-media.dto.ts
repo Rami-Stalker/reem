@@ -31,6 +31,7 @@ export const MEDIA_PURPOSES = [
   'try_on',
   'closet',
   'return_evidence',
+  'review',
 ] as const;
 
 export type MediaPurpose = (typeof MEDIA_PURPOSES)[number];
@@ -119,6 +120,12 @@ export function acceptedKinds(purpose: MediaPurpose): MediaType[] {
       // A photograph of the fault, which `POST /returns` requires before it
       // will move money away from a seller. Stills only: a reviewer comparing
       // a torn seam against a listing photograph is looking, not watching.
+      return [MediaType.image];
+    case 'review':
+      // A photograph of the piece on her, under «تقييمات من بمقاسي». Public —
+      // showing other women how it sat is the whole point — and moderated
+      // with the review it belongs to. Stills only: a review card draws a
+      // strip of thumbnails, and a clip has nowhere to play.
       return [MediaType.image];
     default:
       return [MediaType.image, MediaType.video];

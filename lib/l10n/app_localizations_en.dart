@@ -12620,4 +12620,171 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get occasionPastNoLook =>
       'You didn\'t record a look for this day. Add one so we can warn you before a repeat.';
+
+  @override
+  String get fitRunsSmall => 'Runs small';
+
+  @override
+  String get fitTrueToSize => 'True to size';
+
+  @override
+  String get fitRunsLarge => 'Runs large';
+
+  @override
+  String get fitVerdictSmall => 'Most say it runs small — consider a size up';
+
+  @override
+  String get fitVerdictTrue => 'Most say it is true to size';
+
+  @override
+  String get fitVerdictLarge => 'Most say it runs large — consider a size down';
+
+  @override
+  String get fitOpinionsDiffer => 'Opinions differ on the fit';
+
+  @override
+  String get fitPanelTitle => 'How it fits, from women who wore it';
+
+  @override
+  String fitEveryone(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count women said',
+      one: '1 woman said',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String fitLikeYou(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count women your size',
+      one: '1 woman your size',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get fitLikeYouNone => 'No women your size have said yet';
+
+  @override
+  String fitSuggestedSize(String size) {
+    return 'Women your size kept a $size and said it fits';
+  }
+
+  @override
+  String get fitSeeLikeYou => 'See what women your size said';
+
+  @override
+  String fitBoughtSize(String size) {
+    return 'Bought: $size';
+  }
+
+  @override
+  String fitHeightBand(String band) {
+    return 'Height $band cm';
+  }
+
+  @override
+  String fitUsualSize(String size) {
+    return 'Usually $size';
+  }
+
+  @override
+  String fitPhotoOpen(int index) {
+    return 'Open photo $index';
+  }
+
+  @override
+  String get fitQuestion => 'How did it fit?';
+
+  @override
+  String get fitPhotosLabel => 'Photos of you wearing it (optional)';
+
+  @override
+  String get fitPhotosHelper =>
+      'Shown to everyone once your review is approved. You can leave your face out.';
+
+  @override
+  String get fitShareOnReview => 'Show my height and size';
+
+  @override
+  String get fitShareOnReviewHint => 'As a 5 cm range, never your exact height';
+
+  @override
+  String get fitAddProfilePrompt =>
+      'Add your height and size to help women like you';
+
+  @override
+  String get fitAddProfileShort => 'Add my size';
+
+  @override
+  String get fitProfileTitle => 'My size';
+
+  @override
+  String get fitProfileLoadError => 'Couldn\'t load your size';
+
+  @override
+  String get fitProfilePrivacy =>
+      'Only you see this. Your reviews show your height only as a 5 cm range (e.g. 160–164) and only if you agree.';
+
+  @override
+  String get fitHeightLabel => 'Height';
+
+  @override
+  String get fitHeightHint => 'e.g. 162';
+
+  @override
+  String get fitCentimetres => 'cm';
+
+  @override
+  String fitHeightInvalid(int min, int max) {
+    return 'Enter a height between $min and $max cm';
+  }
+
+  @override
+  String get fitUsualSizeLabel => 'The size you usually wear';
+
+  @override
+  String get fitShareDefault => 'Show on my reviews';
+
+  @override
+  String get fitShareDefaultHint =>
+      'You can still turn it off on any one review';
+
+  @override
+  String get fitProfileSave => 'Save';
+
+  @override
+  String get fitProfileSaved => 'Saved';
+
+  @override
+  String get reviewsFilterNearMe => 'Women my size';
+
+  @override
+  String get reviewsFilterPhotos => 'With photos';
+
+  @override
+  String get reviewsNearMeNeedsProfileTitle => 'Tell us your size first';
+
+  @override
+  String get reviewsNearMeNeedsProfileBody =>
+      'Add your height and size and we\'ll show reviews from women like you.';
+
+  @override
+  String get reviewsNearMeNoneTitle => 'No reviews from women your size yet';
+
+  @override
+  String get reviewsNearMeNoneBody =>
+      'Be the first: your review will help the next woman your size.';
+
+  @override
+  String get reviewsPhotosNoneTitle => 'No photos yet';
+
+  @override
+  String get reviewsPhotosNoneBody =>
+      'Reviews with photos of the piece on will appear here.';
 }

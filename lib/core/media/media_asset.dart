@@ -101,7 +101,12 @@ enum MediaPurpose {
   /// able to see it, and so does whoever arbitrates if they disagree. See the
   /// server's `PRIVATE_PURPOSES` for why that is a decision rather than an
   /// oversight.
-  returnEvidence('return_evidence');
+  returnEvidence('return_evidence'),
+
+  /// A photograph of the piece on her, attached to a product review under
+  /// «تقييمات من بمقاسي». Public — showing other women how it sat is the
+  /// point — and moderated with the review it belongs to.
+  review('review');
 
   const MediaPurpose(this.wire);
 

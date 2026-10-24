@@ -12788,4 +12788,176 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get occasionPastNoLook =>
       'ما سجّلتِ إطلالة لهاليوم. ضيفيها حتى ننبّهكِ قبل ما تتكرّر.';
+
+  @override
+  String get fitRunsSmall => 'صغير';
+
+  @override
+  String get fitTrueToSize => 'مقاسه مضبوط';
+
+  @override
+  String get fitRunsLarge => 'كبير';
+
+  @override
+  String get fitVerdictSmall => 'أغلب البنات قالوا صغير — فكّري بمقاس أكبر';
+
+  @override
+  String get fitVerdictTrue => 'أغلب البنات قالوا مقاسه مضبوط';
+
+  @override
+  String get fitVerdictLarge => 'أغلب البنات قالوا كبير — فكّري بمقاس أصغر';
+
+  @override
+  String get fitOpinionsDiffer => 'الآراء مختلفة عن المقاس';
+
+  @override
+  String get fitPanelTitle => 'المقاس حسب اللي لبسوه';
+
+  @override
+  String fitEveryone(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'قالت $count بنت',
+      many: 'قالت $count بنت',
+      few: 'قالت $count بنات',
+      two: 'قالت بنتين',
+      one: 'قالت بنت وحدة',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String fitLikeYou(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count بنت بمقاسكِ',
+      many: '$count بنت بمقاسكِ',
+      few: '$count بنات بمقاسكِ',
+      two: 'بنتين بمقاسكِ',
+      one: 'بنت وحدة بمقاسكِ',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get fitLikeYouNone => 'لسا ما في بنات بمقاسكِ قالوا رأيهن';
+
+  @override
+  String fitSuggestedSize(String size) {
+    return 'البنات اللي بمقاسكِ أخدوا $size وقالوا مضبوط';
+  }
+
+  @override
+  String get fitSeeLikeYou => 'شوفي شو قالت البنات اللي بمقاسكِ';
+
+  @override
+  String fitBoughtSize(String size) {
+    return 'اشترت: $size';
+  }
+
+  @override
+  String fitHeightBand(String band) {
+    return 'الطول $band سم';
+  }
+
+  @override
+  String fitUsualSize(String size) {
+    return 'مقاسها عادةً $size';
+  }
+
+  @override
+  String fitPhotoOpen(int index) {
+    return 'افتحي الصورة $index';
+  }
+
+  @override
+  String get fitQuestion => 'كيف كان المقاس؟';
+
+  @override
+  String get fitPhotosLabel => 'صوركِ فيها (اختياري)';
+
+  @override
+  String get fitPhotosHelper =>
+      'بتظهر للجميع بعد الموافقة على تقييمكِ. فيكِ تصوّري بدون وجه.';
+
+  @override
+  String get fitShareOnReview => 'أظهري طولي ومقاسي';
+
+  @override
+  String get fitShareOnReviewHint => 'كمدى ٥ سم، مش طولكِ بالضبط';
+
+  @override
+  String get fitAddProfilePrompt =>
+      'ضيفي طولكِ ومقاسكِ حتى تفيدي البنات اللي متلكِ';
+
+  @override
+  String get fitAddProfileShort => 'ضيفي مقاسي';
+
+  @override
+  String get fitProfileTitle => 'مقاساتي';
+
+  @override
+  String get fitProfileLoadError => 'ما قدرنا نحمّل مقاساتكِ';
+
+  @override
+  String get fitProfilePrivacy =>
+      'هالمعلومات إلكِ بس. تقييماتكِ بتعرض طولكِ كمدى ٥ سم (مثلاً ١٦٠–١٦٤) وبس إذا وافقتِ.';
+
+  @override
+  String get fitHeightLabel => 'الطول';
+
+  @override
+  String get fitHeightHint => 'مثلاً 162';
+
+  @override
+  String get fitCentimetres => 'سم';
+
+  @override
+  String fitHeightInvalid(int min, int max) {
+    return 'اكتبي طول بين $min و$max سم';
+  }
+
+  @override
+  String get fitUsualSizeLabel => 'المقاس اللي بتلبسيه عادةً';
+
+  @override
+  String get fitShareDefault => 'أظهريها مع تقييماتي';
+
+  @override
+  String get fitShareDefaultHint => 'وفيكِ تطفيها لأي تقييم لحاله';
+
+  @override
+  String get fitProfileSave => 'حفظ';
+
+  @override
+  String get fitProfileSaved => 'انحفظت';
+
+  @override
+  String get reviewsFilterNearMe => 'من بمقاسي';
+
+  @override
+  String get reviewsFilterPhotos => 'مع صور';
+
+  @override
+  String get reviewsNearMeNeedsProfileTitle => 'قوليلنا مقاسكِ أول';
+
+  @override
+  String get reviewsNearMeNeedsProfileBody =>
+      'ضيفي طولكِ ومقاسكِ ومنوريكِ تقييمات البنات اللي متلكِ.';
+
+  @override
+  String get reviewsNearMeNoneTitle => 'لسا ما في تقييمات من بنات بمقاسكِ';
+
+  @override
+  String get reviewsNearMeNoneBody =>
+      'كوني الأولى: تقييمكِ رح يفيد البنت الجاية اللي بمقاسكِ.';
+
+  @override
+  String get reviewsPhotosNoneTitle => 'لسا ما في صور';
+
+  @override
+  String get reviewsPhotosNoneBody =>
+      'التقييمات اللي فيها صور للقطعة ملبوسة بتظهر هون.';
 }

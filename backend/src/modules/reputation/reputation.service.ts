@@ -5,8 +5,10 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import {
+  MediaAssetStatus,
   SellerOrderStatus,
   Prisma,
+  ReviewFit,
   ReviewStatus,
   ReviewTargetType,
   SellerBadgeType,
@@ -16,6 +18,18 @@ import {
 } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 import { serializePublicUser } from '../../common/serializers';
+import { normaliseSize, sizeAttribute } from '../intelligence/kernel/size-fit';
+import { MediaService } from '../media/media.service';
+import { FitProfileService } from './fit/fit-profile.service';
+import {
+  FitVoice,
+  bandLabel,
+  hasProfile,
+  heightBand,
+  isNearMe,
+  suggestedSize,
+  tally,
+} from './fit/fit-reviews';
 import {
   AwardSellerBadgeDto,
   CreateReviewDto,
@@ -42,9 +56,19 @@ const reviewUserSelect = {
   createdAt: true,
 } satisfies Prisma.UserSelect;
 
+/** «تقييمات من بمقاسي»: the two narrowings the product page offers. */
+export type ProductReviewFilter = 'near_me' | 'photos';
+
+/** At most this many photographs on one review. */
+export const MAX_REVIEW_PHOTOS = 4;
+
 @Injectable()
 export class ReputationService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly fitProfiles: FitProfileService,
+    private readonly media: MediaService,
+  ) {}
 
   /**
    * What everyone can read about this product — plus, for the woman asking,
@@ -57,9 +81,19 @@ export class ReputationService {
    * `status`, so the client can show it marked as under review. This is the
    * same rule `myReviews` already follows.
    */
-  async productReviews(productId: string, viewerId?: string) {
+  async productReviews(
+    productId: string,
+    viewerId?: string,
+    filter?: ProductReviewFilter,
+  ) {
     const product = await this.prisma.product.findUnique({ where: { id: productId } });
     if (!product) throw new NotFoundException('Product not found');
+
+    // «من بمقاسي» against a woman who has not said her size is not "nobody
+    // matched", it is a question she has not asked yet. Answered with an
+    // empty list; the client knows from `/fit` why, and offers the profile.
+    const viewer = filter === 'near_me' ? await this.fitProfiles.viewerOf(viewerId) : null;
+    if (filter === 'near_me' && !hasProfile(viewer)) return [];
 
     const reviews = await this.prisma.productReview.findMany({
       where: {
@@ -77,7 +111,58 @@ export class ReputationService {
       orderBy: { createdAt: 'desc' },
       take: 100,
     });
-    return reviews.map((review) => this.serializeProductReview(review));
+
+    const narrowed = reviews.filter((review) => {
+      if (filter === 'photos') return review.photoUrls.length > 0;
+      if (filter === 'near_me') return hasProfile(viewer) && isNearMe(viewer, voiceOf(review));
+      return true;
+    });
+    return narrowed.map((review) => this.serializeProductReview(review));
+  }
+
+  /**
+   * How this piece fits, according to the women who wore it — and, when she
+   * has said her size, according to the ones like her.
+   *
+   * Approved reviews only, hers included only once approved: a summary is a
+   * public statement about the product, unlike the list, which shows her own
+   * pending review back to her.
+   */
+  async productFit(productId: string, viewerId?: string) {
+    const product = await this.prisma.product.findUnique({
+      where: { id: productId },
+      select: { id: true },
+    });
+    if (!product) throw new NotFoundException('Product not found');
+
+    const [rows, viewer] = await Promise.all([
+      this.prisma.productReview.findMany({
+        where: { productId, status: ReviewStatus.APPROVED },
+        select: {
+          fit: true,
+          sizeBought: true,
+          heightBand: true,
+          usualSize: true,
+          photoUrls: true,
+        },
+        orderBy: { createdAt: 'desc' },
+        take: 500,
+      }),
+      this.fitProfiles.viewerOf(viewerId),
+    ]);
+
+    const voices = rows.map(voiceOf);
+    const near = hasProfile(viewer) ? voices.filter((voice) => isNearMe(viewer, voice)) : null;
+
+    return {
+      overall: serializeTally(tally(voices)),
+      has_profile: hasProfile(viewer),
+      near_me: near
+        ? { ...serializeTally(tally(near)), reviews_count: near.length }
+        : null,
+      suggested_size: near ? suggestedSize(near) : null,
+      photos_count: rows.filter((row) => row.photoUrls.length > 0).length,
+    };
   }
 
   async sellerReviews(sellerId: string) {
@@ -328,6 +413,12 @@ export class ReputationService {
 
     await this.assertReviewIsUnique('product', { productId, userId });
 
+    const photoUrls = await this.assertReviewPhotos(userId, dto.photo_urls ?? []);
+    const [sizeBought, snapshot] = await Promise.all([
+      this.sizeBought(orderId, productId),
+      this.fitSnapshot(userId, dto.share_fit),
+    ]);
+
     const verifiedPurchase = true;
     const review = await this.prisma.productReview.create({
       data: {
@@ -339,10 +430,100 @@ export class ReputationService {
         body: dto.body?.trim() || null,
         verifiedPurchase,
         status: ReviewStatus.PENDING,
+        fit: dto.fit ?? null,
+        sizeBought,
+        heightBand: snapshot.heightBand,
+        usualSize: snapshot.usualSize,
+        photoUrls,
       },
       include: { user: { select: reviewUserSelect } },
     });
+    if (photoUrls.length) await this.media.markAttached(userId, photoUrls);
     return this.serializeProductReview(review);
+  }
+
+  /**
+   * The size that shipped, read from the delivered order — never typed.
+   *
+   * Null when the line had no variant or the variant has no size (a perfume,
+   * a bag), or when the order held the piece in two sizes. A review of a one-size piece has nothing to say about sizing, and
+   * pretending otherwise would put it under «من بمقاسي» for nobody.
+   */
+  private async sizeBought(orderId: string, productId: string): Promise<string | null> {
+    const items = await this.prisma.orderItem.findMany({
+      where: {
+        productId,
+        variantId: { not: null },
+        sellerOrder: { orderId, status: SellerOrderStatus.DELIVERED },
+      },
+      select: { variantId: true },
+    });
+    if (!items.length) return null;
+    const variants = await this.prisma.productVariant.findMany({
+      where: { id: { in: items.map((item) => item.variantId!) } },
+      select: { attributes: true },
+    });
+    const sizes = new Set(
+      variants
+        .map((variant) => normaliseSize(sizeAttribute(variant.attributes)))
+        .filter((size): size is string => !!size),
+    );
+    // Two sizes of the same dress in one order is the try-both-keep-one
+    // habit, and the review cannot say which she kept. No size is better
+    // than the wrong one.
+    return sizes.size === 1 ? [...sizes][0].slice(0, 16) : null;
+  }
+
+  /**
+   * The coarse copy of her profile a review carries, when she agrees.
+   *
+   * `share` is her answer on this one review; absent, it falls back to her
+   * profile's standing choice. Either way it is a snapshot: the review
+   * describes the body that wore the piece then, and editing her profile
+   * later does not rewrite it.
+   */
+  private async fitSnapshot(
+    userId: string,
+    share: boolean | undefined,
+  ): Promise<{ heightBand: number | null; usualSize: string | null }> {
+    const none = { heightBand: null, usualSize: null };
+    if (share === false) return none;
+    const profile = await this.fitProfiles.get(userId);
+    if (!profile || (share === undefined && !profile.shareOnReviews)) return none;
+    return { heightBand: heightBand(profile.heightCm), usualSize: profile.usualSize };
+  }
+
+  /**
+   * Every photograph must be her own upload, of purpose `review`.
+   *
+   * Not "any URL": a review is public, and a URL field that accepted anything
+   * would let a review carry somebody else's picture — her private closet
+   * photo, or another woman's — onto a product page. Checked before the row
+   * is written, so a refused photo cannot leave a half-saved review behind.
+   */
+  private async assertReviewPhotos(userId: string, urls: readonly string[]): Promise<string[]> {
+    const unique = [...new Set(urls.map((url) => url.trim()).filter(Boolean))];
+    if (unique.length > MAX_REVIEW_PHOTOS) {
+      throw new BadRequestException(`At most ${MAX_REVIEW_PHOTOS} photos`);
+    }
+    if (!unique.length) return [];
+
+    const ids = await Promise.all(unique.map((url) => this.media.resolveAssetId(url, userId)));
+    if (ids.some((id) => !id)) {
+      throw new BadRequestException('A photo is not one of your uploads');
+    }
+    const assets = await this.prisma.mediaAsset.count({
+      where: {
+        id: { in: ids as string[] },
+        ownerId: userId,
+        purpose: 'review',
+        status: { in: [MediaAssetStatus.PENDING, MediaAssetStatus.ATTACHED] },
+      },
+    });
+    if (assets !== unique.length) {
+      throw new BadRequestException('A photo is not one of your uploads');
+    }
+    return unique;
   }
 
   async createSellerReview(userId: string, sellerId: string, dto: CreateReviewDto) {
@@ -917,6 +1098,13 @@ export class ReputationService {
       helpful_count: review.helpfulCount,
       seller_reply: review.sellerReply,
       seller_replied_at: review.sellerRepliedAt?.toISOString() ?? null,
+      // «تقييمات من بمقاسي». The height goes out as its band, never a number
+      // a client could print as her height.
+      fit: review.fit,
+      size_bought: review.sizeBought,
+      height_band: review.heightBand == null ? null : bandLabel(review.heightBand),
+      usual_size: review.usualSize,
+      photos: review.photoUrls,
       created_at: review.createdAt.toISOString(),
       updated_at: review.updatedAt.toISOString(),
     };
@@ -991,4 +1179,30 @@ export class ReputationService {
   private round(value: number) {
     return Math.round(value * 100) / 100;
   }
+}
+
+/** The fit facts of a review, as `fit-reviews.ts` compares them. */
+function voiceOf(review: {
+  fit: ReviewFit | null;
+  sizeBought: string | null;
+  heightBand: number | null;
+  usualSize: string | null;
+}): FitVoice {
+  return {
+    fit: review.fit,
+    sizeBought: review.sizeBought,
+    heightBand: review.heightBand,
+    usualSize: review.usualSize,
+  };
+}
+
+function serializeTally(value: ReturnType<typeof tally>) {
+  return {
+    runs_small: value.runsSmall,
+    true_to_size: value.trueToSize,
+    runs_large: value.runsLarge,
+    total: value.total,
+    enough: value.enough,
+    verdict: value.verdict,
+  };
 }

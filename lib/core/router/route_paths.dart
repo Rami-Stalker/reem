@@ -173,6 +173,10 @@ abstract final class RoutePaths {
   static const closetItem = '/closet/items/:id';
   static String closetItemOf(String id) => '/closet/items/$id';
   static const closetAddItem = '/closet/add';
+
+  /// «مقاساتي» — her height and usual size, for «تقييمات من بمقاسي». Reached
+  /// from a product's reviews and from the profile menu.
+  static const fitProfile = '/fit-profile';
   static const closetGap = '/closet/gaps/:id';
   static String closetGapOf(String id) => '/closet/gaps/$id';
 

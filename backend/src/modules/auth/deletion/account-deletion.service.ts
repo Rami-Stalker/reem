@@ -80,7 +80,11 @@ const OPEN_SELLER_ORDER: readonly SellerOrderStatus[] = [
  * notifications, her stylist conversations and taste profile, every
  * credential and device. Her public content is taken down, which is what the
  * content policy promises. Reviews she wrote stay, under "حساب محذوف", because
- * they are part of a shop's reputation — also what the policy says.
+ * they are part of a shop's reputation — also what the policy says. What a
+ * review said about *her body* does not stay with it: the photographs of her
+ * wearing the piece, her height band and her usual size are removed, and her
+ * fit profile is deleted. How the piece fit and the size that shipped are
+ * about the product, and remain.
  *
  * Kept: orders and their delivery snapshots, invoices, the ledger and wallet
  * history, payouts, the audit and security logs (fraud and dispute evidence,
@@ -288,6 +292,14 @@ export class AccountDeletionService {
     await tx.notificationPreference.deleteMany({ where: { userId } });
     await tx.userPresence.deleteMany({ where: { userId } });
     await tx.userStylePreference.deleteMany({ where: { userId } });
+    // «تقييمات من بمقاسي». Her review text stays under "حساب محذوف"; the
+    // photographs of her in the piece, and the height and size that
+    // described her, do not.
+    await tx.fitProfile.deleteMany({ where: { userId } });
+    await tx.productReview.updateMany({
+      where: { userId },
+      data: { photoUrls: [], heightBand: null, usualSize: null },
+    });
     await tx.userStyleSignal.deleteMany({ where: { userId } });
     await tx.aiStylistConversation.deleteMany({ where: { userId } });
 
