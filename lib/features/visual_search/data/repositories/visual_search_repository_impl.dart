@@ -1,12 +1,12 @@
 import 'dart:typed_data';
 
-import 'package:reem/core/base/repository_handler.dart';
-import 'package:reem/core/result/result.dart';
-import 'package:reem/features/ai_stylist/domain/entities/stylist_recommendation.dart';
-import 'package:reem/features/visual_search/data/datasources/visual_search_remote_datasource.dart';
-import 'package:reem/features/visual_search/domain/entities/visual_match.dart';
-import 'package:reem/features/visual_search/domain/entities/visual_search_session.dart';
-import 'package:reem/features/visual_search/domain/repositories/visual_search_repository.dart';
+import 'package:ohara/core/base/repository_handler.dart';
+import 'package:ohara/core/result/result.dart';
+import 'package:ohara/features/ai_stylist/domain/entities/stylist_recommendation.dart';
+import 'package:ohara/features/visual_search/data/datasources/visual_search_remote_datasource.dart';
+import 'package:ohara/features/visual_search/domain/entities/visual_match.dart';
+import 'package:ohara/features/visual_search/domain/entities/visual_search_session.dart';
+import 'package:ohara/features/visual_search/domain/repositories/visual_search_repository.dart';
 
 class VisualSearchRepositoryImpl
     with RepositoryHandler

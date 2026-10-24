@@ -1,8 +1,8 @@
-import 'package:reem/core/base/repository_handler.dart';
-import 'package:reem/core/result/result.dart';
-import 'package:reem/features/trends/data/datasources/trends_remote_datasource.dart';
-import 'package:reem/features/trends/domain/entities/trend_entities.dart';
-import 'package:reem/features/trends/domain/repositories/trends_repository.dart';
+import 'package:ohara/core/base/repository_handler.dart';
+import 'package:ohara/core/result/result.dart';
+import 'package:ohara/features/trends/data/datasources/trends_remote_datasource.dart';
+import 'package:ohara/features/trends/domain/entities/trend_entities.dart';
+import 'package:ohara/features/trends/domain/repositories/trends_repository.dart';
 
 class TrendsRepositoryImpl with RepositoryHandler implements TrendsRepository {
   const TrendsRepositoryImpl(this.remote);

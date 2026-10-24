@@ -63,7 +63,7 @@ class User extends Equatable {
   final String? imageUrl;
   final String? location;
   final UserRole role;
-  /// The public badge: Reem has checked who this is.
+  /// The public badge: Ohara has checked who this is.
   ///
   /// Granted by a reviewed `AccountVerification` and by nothing else. It used
   /// to be set the moment an account received a sign-in code, which is why it

@@ -4,17 +4,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/core/router/route_paths.dart';
-import 'package:reem/features/auth/presentation/providers/auth_provider.dart';
-import 'package:reem/features/chat/domain/entities/chat_thread_entity.dart';
-import 'package:reem/features/chat/presentation/providers/chat_notifier.dart';
-import 'package:reem/features/chat/presentation/providers/chat_provider.dart';
-import 'package:reem/features/chat/presentation/providers/chat_state.dart';
-import 'package:reem/features/chat/presentation/widgets/chat_tile.dart';
-import 'package:reem/features/chat/presentation/widgets/encrypted_chat_banner.dart';
-import 'package:reem/features/chat/presentation/widgets/glass_search_bar.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/core/router/route_paths.dart';
+import 'package:ohara/features/auth/presentation/providers/auth_provider.dart';
+import 'package:ohara/features/chat/domain/entities/chat_thread_entity.dart';
+import 'package:ohara/features/chat/presentation/providers/chat_notifier.dart';
+import 'package:ohara/features/chat/presentation/providers/chat_provider.dart';
+import 'package:ohara/features/chat/presentation/providers/chat_state.dart';
+import 'package:ohara/features/chat/presentation/widgets/chat_tile.dart';
+import 'package:ohara/features/chat/presentation/widgets/encrypted_chat_banner.dart';
+import 'package:ohara/features/chat/presentation/widgets/glass_search_bar.dart';
 
 /// Her conversations with the boutiques she buys from.
 ///
@@ -98,7 +98,7 @@ class _ChatsScreenState extends ConsumerState<ChatsScreen> {
       authNotifierProvider.select((s) => s.user?.isSeller ?? false),
     );
 
-    return ReemScrollPage(
+    return OharaScrollPage(
       onRefresh: notifier.refresh,
       slivers: [
         PremiumAppBar(title: l10n.chatsTitle, showBack: true),

@@ -4,13 +4,13 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
+import 'package:ohara/core/shared/services/share_links.dart';
+import 'package:ohara/core/shared/value_objects/money.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
-import 'package:reem/core/shared/services/share_links.dart';
-import 'package:reem/core/shared/value_objects/money.dart';
 import 'package:share_plus/share_plus.dart';
 
-/// Handing something in Reem to somebody outside it.
+/// Handing something in Ohara to somebody outside it.
 ///
 /// Sharing used to be a counter and nothing else: the post card told the server
 /// a share had happened and then did nothing, so the sheet never opened and no
@@ -148,7 +148,7 @@ abstract final class ShareService {
       context: context,
       text: name == null || name.trim().isEmpty
           ? ''
-          : 'تسوّقي من ${name.trim()} على ريم',
+          : 'تسوّقي من ${name.trim()} على أوهارا',
       uri: ShareLinks.storefront(sellerId),
       imageUrl: imageUrl,
     );
@@ -164,7 +164,7 @@ abstract final class ShareService {
       context: context,
       text: [
         if (title != null && title.trim().isNotEmpty) title.trim(),
-        'ساعديني في الاختيار على ريم',
+        'ساعديني في الاختيار على أوهارا',
       ].join('\n'),
       uri: ShareLinks.roomInvite(slug),
     );

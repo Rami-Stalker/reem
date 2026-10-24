@@ -6,7 +6,7 @@ import { ShopperIntelligenceService } from './shopper-intelligence.service';
 import { SizeFitService } from './size-fit.service';
 
 /**
- * Reem Intelligence.
+ * Ohara Intelligence.
  *
  * The layer that turns the graph into sentences. Two audiences, one graph:
  * `ShopperIntelligenceService` answers "what should *she* know about this

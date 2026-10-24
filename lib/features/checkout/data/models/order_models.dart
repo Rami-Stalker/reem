@@ -1,5 +1,5 @@
-import 'package:reem/core/shared/value_objects/money.dart';
-import 'package:reem/features/checkout/domain/entities/order.dart';
+import 'package:ohara/core/shared/value_objects/money.dart';
+import 'package:ohara/features/checkout/domain/entities/order.dart';
 
 DateTime? _dt(dynamic v) =>
     v == null ? null : DateTime.tryParse(v as String);
@@ -207,6 +207,8 @@ class OrderShippingModel extends OrderShipping {
     required super.addressLine,
     super.district,
     super.landmark,
+    super.latitude,
+    super.longitude,
   });
 
   factory OrderShippingModel.fromJson(Map<String, dynamic> json) {
@@ -218,6 +220,8 @@ class OrderShippingModel extends OrderShipping {
       city: json['city'] as String? ?? '',
       addressLine: json['address_line'] as String? ?? '',
       landmark: json['landmark'] as String?,
+      latitude: (json['latitude'] as num?)?.toDouble(),
+      longitude: (json['longitude'] as num?)?.toDouble(),
     );
   }
 }

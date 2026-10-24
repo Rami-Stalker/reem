@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
-import 'package:reem/core/errors/failure.dart';
-import 'package:reem/features/ai_stylist/domain/entities/style_brief.dart';
-import 'package:reem/features/ai_stylist/domain/entities/stylist_message.dart';
+import 'package:ohara/core/errors/failure.dart';
+import 'package:ohara/features/ai_stylist/domain/entities/style_brief.dart';
+import 'package:ohara/features/ai_stylist/domain/entities/stylist_message.dart';
 
 /// The stylist screen, as one value.
 ///

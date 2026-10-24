@@ -1,5 +1,5 @@
-import 'package:reem/features/checkout/domain/entities/order.dart';
-import 'package:reem/l10n/app_localizations.dart';
+import 'package:ohara/features/checkout/domain/entities/order.dart';
+import 'package:ohara/l10n/app_localizations.dart';
 
 /// Wording for the customer's orders.
 ///

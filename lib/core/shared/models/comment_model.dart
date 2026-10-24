@@ -1,8 +1,8 @@
 // shared/models/comment_model.dart
 
-import 'package:reem/core/shared/entities/comment.dart';
-import 'package:reem/core/shared/entities/user.dart';
-import 'package:reem/core/shared/models/user_model.dart';
+import 'package:ohara/core/shared/entities/comment.dart';
+import 'package:ohara/core/shared/entities/user.dart';
+import 'package:ohara/core/shared/models/user_model.dart';
 
 class CommentModel extends Comment {
   const CommentModel({

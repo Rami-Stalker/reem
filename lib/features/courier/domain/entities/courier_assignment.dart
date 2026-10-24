@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 
-import 'package:reem/core/shared/value_objects/money.dart';
-import 'package:reem/features/shipment_tracking/domain/entities/shipment_tracking.dart';
+import 'package:ohara/core/shared/value_objects/money.dart';
+import 'package:ohara/features/shipment_tracking/domain/entities/shipment_tracking.dart';
 
 /// Q37/Q55 — why a delivery could not be completed.
 enum DeliveryFailureReason {
@@ -41,6 +41,8 @@ class CourierAddress extends Equatable {
     required this.city,
     required this.addressLine,
     this.landmark,
+    this.latitude,
+    this.longitude,
   });
 
   final String governorate;
@@ -48,11 +50,29 @@ class CourierAddress extends Equatable {
   final String addressLine;
   final String? landmark;
 
+  /// Where she dropped the pin at checkout. When present it beats the
+  /// address line: a map app finds a coordinate to the metre and a Syrian
+  /// address line to the neighbourhood.
+  final double? latitude;
+  final double? longitude;
+
+  bool get hasPin => latitude != null && longitude != null;
+
+  /// What to hand the map app: the pin when there is one, the words when not.
+  String get mapQuery => hasPin ? '$latitude,$longitude' : oneLine;
+
   String get oneLine =>
       [addressLine, city, governorate].where((p) => p.isNotEmpty).join('، ');
 
   @override
-  List<Object?> get props => [governorate, city, addressLine, landmark];
+  List<Object?> get props => [
+    governorate,
+    city,
+    addressLine,
+    landmark,
+    latitude,
+    longitude,
+  ];
 }
 
 /// One parcel on the courier's round (Q55).

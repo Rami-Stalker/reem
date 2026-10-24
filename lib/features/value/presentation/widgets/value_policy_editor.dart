@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/features/value/domain/entities/value_admin.dart';
-import 'package:reem/features/value/presentation/providers/value_admin_providers.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/features/value/domain/entities/value_admin.dart';
+import 'package:ohara/features/value/presentation/providers/value_admin_providers.dart';
 
 /// The label column beside each slider. Every row in the editor shares it, so
 /// the sliders start on one line down the panel instead of stepping in and out
@@ -18,7 +18,7 @@ const double _sliderLabelWidth = 130;
 ///
 /// That is not ceremony. Activating a policy rescores every profile on the
 /// platform, and a woman who loses a rung overnight because somebody nudged a
-/// weight has been told something about her relationship with Reem that nobody
+/// weight has been told something about her relationship with Ohara that nobody
 /// intended to say. The server supports the sequence with three endpoints; this
 /// screen is what makes it the only available path.
 class ValuePolicySection extends ConsumerWidget {
@@ -290,7 +290,7 @@ class _SimulationSummary extends StatelessWidget {
 /// Only the tunables an operator has a real reason to move are here — the pillar
 /// weights, the commerce ceiling, the half-life, the evidence floor. Per-event
 /// weights and pillar scales are deliberately absent: they are the difference
-/// between "what Reem values" and "how quickly a pillar fills", and changing
+/// between "what Ohara values" and "how quickly a pillar fills", and changing
 /// them from a dialog with no simulation of their own is how a programme drifts
 /// without anybody deciding it should.
 class _PolicyEditorDialog extends ConsumerStatefulWidget {

@@ -1,4 +1,4 @@
-# Reem on Supabase-hosted PostgreSQL
+# Ohara on Supabase-hosted PostgreSQL
 
 ```
 Flutter app ──HTTPS/WebSocket──▶ NestJS API (backend/) ──TLS──▶ PostgreSQL ── hosted by Supabase

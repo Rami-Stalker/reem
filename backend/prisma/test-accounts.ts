@@ -44,40 +44,40 @@ interface AccountSeed {
 const ACCOUNTS: AccountSeed[] = [
   {
     label: 'ADMIN',
-    name: 'إدارة ريم — تجريبي',
+    name: 'إدارة أوهارا — تجريبي',
     username: 'reem_owner',
     phone: '+963911111111',
-    password: 'ReemAdmin#2026',
+    password: 'OharaAdmin#2026',
     role: UserRole.SUPER_ADMIN,
     bio: 'حساب إدارة المنصة للاختبار',
     location: 'دمشق، سوريا',
   },
   {
     label: 'SELLER',
-    name: 'بوتيك ريم — تجريبي',
+    name: 'بوتيك أوهارا — تجريبي',
     username: 'reem_boutique',
     phone: '+963922222222',
-    password: 'ReemSeller#2026',
+    password: 'OharaSeller#2026',
     role: UserRole.SELLER,
     bio: 'بوتيك أزياء نسائية راقية ✨',
     location: 'دمشق، سوريا',
   },
   {
     label: 'CUSTOMER',
-    name: 'زبونة ريم — تجريبي',
+    name: 'زبونة أوهارا — تجريبي',
     username: 'reem_shopper',
     phone: '+963933333333',
-    password: 'ReemBuyer#2026',
+    password: 'OharaBuyer#2026',
     role: UserRole.CUSTOMER,
-    bio: 'أتسوّق على ريم',
+    bio: 'أتسوّق على أوهارا',
     location: 'دمشق، سوريا',
   },
   {
     label: 'COURIER',
-    name: 'مندوب ريم — تجريبي',
+    name: 'مندوب أوهارا — تجريبي',
     username: 'reem_courier',
     phone: '+963944444444',
-    password: 'ReemCourier#2026',
+    password: 'OharaCourier#2026',
     // Deliberately not a privileged role. What makes this account a courier is
     // the `Courier` row attached below, which is the only thing the courier
     // screens check.
@@ -148,8 +148,8 @@ async function main() {
       });
       const verification = {
         status: SellerVerificationStatus.APPROVED,
-        businessName: 'بوتيك ريم',
-        legalName: 'بوتيك ريم للأزياء',
+        businessName: 'بوتيك أوهارا',
+        legalName: 'بوتيك أوهارا للأزياء',
         businessCategory: 'fashion',
         storeDescription: seed.bio,
         storeLogoUrl: `https://i.pravatar.cc/300?u=${seed.username}`,
@@ -159,7 +159,7 @@ async function main() {
         commercialRegistration: 'CR-REEM-BOUTIQUE',
         taxId: 'TAX-REEM-BOUTIQUE',
         bankName: 'بنك بيمو السعودي الفرنسي',
-        accountHolder: 'بوتيك ريم للأزياء',
+        accountHolder: 'بوتيك أوهارا للأزياء',
         iban: 'SY350000123456',
         shippingMethods: ['PLATFORM_COURIER', 'SELLER_SHIPS'],
         returnPolicy: 'الاستبدال والإرجاع خلال ٧ أيام من الاستلام.',
@@ -198,7 +198,7 @@ async function main() {
             data: {
               userId: user.id,
               kind: CourierKind.PLATFORM_STAFF,
-              displayName: 'فريق ريم للتوصيل',
+              displayName: 'فريق أوهارا للتوصيل',
               phone: seed.phone,
               governorates: [],
               isActive: true,

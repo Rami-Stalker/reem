@@ -1,4 +1,4 @@
-// Copies the Reem data — rows and uploaded files — from the local PostgreSQL
+// Copies the Ohara data — rows and uploaded files — from the local PostgreSQL
 // into the Supabase project. Nothing local is changed or deleted.
 //
 //   node scripts/migrate-data.mjs export

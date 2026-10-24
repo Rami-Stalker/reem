@@ -124,7 +124,7 @@ test('garments worn instead of each other never complement', () => {
   const abaya = dress({ productId: 'p2', categoryId: 'c-dresses', slot: 'ABAYA' });
   assert.equal(complementScore(dress(), abaya, 3), 0);
 
-  // Reem Closet counts outfits as (dresses + abayas + min(tops, bottoms)),
+  // Ohara Closet counts outfits as (dresses + abayas + min(tops, bottoms)),
   // so a base garment also stands in for a top-and-bottom pair.
   assert.ok(exclusiveSlots('DRESS', 'ABAYA'));
   assert.ok(exclusiveSlots('ABAYA', 'TOP'));

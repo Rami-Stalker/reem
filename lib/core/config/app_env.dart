@@ -170,4 +170,53 @@ abstract final class AppEnv {
     'APPLE_REDIRECT_URI',
     defaultValue: '',
   );
+
+  // ── Maps ────────────────────────────────────────────────────────────────
+  //
+  // The location picker draws OpenStreetMap data, so it needs no API key and
+  // no billing account, and it works from Syria — where Google's map services
+  // have been unreliable for years. Each source is a define so that a
+  // production build can point at a paid or self-hosted tile server (the free
+  // public ones ask heavy commercial users to move off them) without a code
+  // change.
+
+  /// Street map tiles, `{z}/{x}/{y}` with an optional `{s}` and `{r}`.
+  ///
+  /// OpenStreetMap's own tiles by default: they need no key, and they print
+  /// Syrian street names in Arabic, as they are signed. (CARTO's prettier
+  /// basemaps were the first choice and now answer «API key required».)
+  static const String mapTilesUrl = String.fromEnvironment(
+    'MAP_TILES_URL',
+    defaultValue: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+  );
+
+  /// Streets drawn for a dark interface. Empty means the street tiles are
+  /// darkened on the phone instead, which needs no second tile server.
+  static const String mapDarkTilesUrl = String.fromEnvironment(
+    'MAP_DARK_TILES_URL',
+    defaultValue: '',
+  );
+
+  /// Aerial imagery, for the woman who knows her roof better than her street.
+  static const String mapSatelliteTilesUrl = String.fromEnvironment(
+    'MAP_SATELLITE_TILES_URL',
+    defaultValue:
+        'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+  );
+
+  /// Roads and place names laid over the imagery, so the satellite view still
+  /// says where she is. Comma-separated: each is drawn as its own layer.
+  static const String mapLabelsTilesUrl = String.fromEnvironment(
+    'MAP_LABELS_TILES_URL',
+    defaultValue:
+        'https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Transportation/MapServer/tile/{z}/{y}/{x},'
+        'https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}',
+  );
+
+  /// A Nominatim-compatible geocoder: `/reverse` turns the pin into an
+  /// address and `/search` finds a place by name.
+  static const String geocoderBaseUrl = String.fromEnvironment(
+    'GEOCODER_BASE_URL',
+    defaultValue: 'https://nominatim.openstreetmap.org',
+  );
 }

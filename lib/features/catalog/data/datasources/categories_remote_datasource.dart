@@ -1,5 +1,5 @@
-import 'package:reem/features/catalog/domain/entities/category_attributes.dart';
-import 'package:reem/features/catalog/domain/entities/category_node.dart';
+import 'package:ohara/features/catalog/domain/entities/category_attributes.dart';
+import 'package:ohara/features/catalog/domain/entities/category_node.dart';
 
 abstract interface class CategoriesRemoteDataSource {
   /// The whole tree, nested, roots first.

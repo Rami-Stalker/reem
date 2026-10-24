@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/core/media/authorized_media_image.dart';
-import 'package:reem/core/shared/value_objects/money.dart';
-import 'package:reem/features/market/domain/entities/market.dart';
-import 'package:reem/l10n/app_localizations.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/core/media/authorized_media_image.dart';
+import 'package:ohara/core/shared/value_objects/money.dart';
+import 'package:ohara/features/market/domain/entities/market.dart';
+import 'package:ohara/l10n/app_localizations.dart';
 
 /// The small parts the market screens share.
 ///
@@ -15,7 +15,7 @@ import 'package:reem/l10n/app_localizations.dart';
 /// they are the same kind of sentence and reading them as two different kinds
 /// is how a coherent product starts to feel assembled.
 
-/// A price, formatted the way every other price in Reem is.
+/// A price, formatted the way every other price in Ohara is.
 String sypText(double? value) => value == null
     ? '—'
     : Money(raw: value.toString(), currency: Currency.syp).format();
@@ -100,10 +100,10 @@ IconData dispositionIcon(Disposition disposition) => switch (disposition) {
   Disposition.donate => Icons.volunteer_activism_outlined,
 };
 
-/// A sentence Reem is offering as a reason.
+/// A sentence Ohara is offering as a reason.
 ///
 /// Always attributed by its shape — a soft dot and the muted ink — so a reason
-/// never reads as a fact about the product. It is Reem talking.
+/// never reads as a fact about the product. It is Ohara talking.
 class ReasonLine extends StatelessWidget {
   const ReasonLine({
     super.key,

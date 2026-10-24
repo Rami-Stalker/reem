@@ -1,13 +1,13 @@
 import 'package:flutter_riverpod/legacy.dart';
-import 'package:reem/core/result/result.dart';
+import 'package:ohara/core/result/result.dart';
 
-import 'package:reem/features/settings/domain/usecases/get_addresses_usecase.dart';
-import 'package:reem/features/settings/domain/usecases/get_coupons_usecase.dart';
-import 'package:reem/features/settings/domain/usecases/get_notifications_usecase.dart';
-import 'package:reem/features/settings/domain/usecases/get_rewards_usecase.dart';
-import 'package:reem/features/settings/domain/usecases/update_profile_usecase.dart';
-import 'package:reem/features/settings/presentation/providers/settings_message.dart';
-import 'package:reem/features/settings/presentation/providers/settings_state.dart';
+import 'package:ohara/features/settings/domain/usecases/get_addresses_usecase.dart';
+import 'package:ohara/features/settings/domain/usecases/get_coupons_usecase.dart';
+import 'package:ohara/features/settings/domain/usecases/get_notifications_usecase.dart';
+import 'package:ohara/features/settings/domain/usecases/get_rewards_usecase.dart';
+import 'package:ohara/features/settings/domain/usecases/update_profile_usecase.dart';
+import 'package:ohara/features/settings/presentation/providers/settings_message.dart';
+import 'package:ohara/features/settings/presentation/providers/settings_state.dart';
 
 class SettingsNotifier extends StateNotifier<SettingsState> {
   SettingsNotifier({

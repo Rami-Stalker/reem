@@ -1,5 +1,5 @@
 /**
- * What Reem has to say about one product, to one woman.
+ * What Ohara has to say about one product, to one woman.
  *
  * The whole of phase three's user-facing half comes out of this function. It
  * takes what the graph knows about her and what the catalogue knows about the
@@ -101,7 +101,7 @@ export interface ProductFacts {
 }
 
 export interface ShopperFacts {
-  /** Her wardrobe, from Reem Closet. */
+  /** Her wardrobe, from Ohara Closet. */
   owns: readonly OwnedPiece[];
   /** Saved looks that are still missing something. */
   openLooks: readonly OpenLook[];
@@ -114,7 +114,7 @@ export interface ShopperFacts {
    *
    * Repeat buyers only, and that is the whole point. Every seller she has ever
    * bought a single thing from covered most of the catalogue, so the note fired
-   * on 88 of 100 products — 56% of everything Reem said. A sentence that
+   * on 88 of 100 products — 56% of everything Ohara said. A sentence that
    * appears on nearly every page is wallpaper: it stops being read, and it
    * crowds out the notes that are actually about this product.
    *
@@ -176,7 +176,7 @@ export function verdictsFor(input: {
   //
   // Deliberately the first test and the only one with a cautioning tone. A
   // shop that stops a woman buying a fourth navy dress earns more trust than
-  // one that sells it to her, and this is the note Reem should be proudest of.
+  // one that sells it to her, and this is the note Ohara should be proudest of.
   // Two routes to the same conclusion. The graph's own similarity is the
   // better one — it compares slot, colour, fabric, occasion and price — and
   // the colour test remains for pieces she typed in herself, which never
@@ -349,7 +349,7 @@ export function verdictsFor(input: {
     .slice(0, MAX_NOTES);
 }
 
-/** How much Reem will say about one product before it becomes noise. */
+/** How much Ohara will say about one product before it becomes noise. */
 export const MAX_NOTES = 3;
 
 /**
@@ -369,7 +369,7 @@ export function occasionCompatible(
 /**
  * A caution outranks everything.
  *
- * If Reem is about to tell her she already owns this, that sentence goes
+ * If Ohara is about to tell her she already owns this, that sentence goes
  * first — before anything encouraging her to buy it. Ordering the other way
  * would be a shop that buries its own warning under its own sales copy.
  */

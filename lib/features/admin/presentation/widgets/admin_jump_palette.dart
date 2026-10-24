@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/experience/experience_labels.dart';
-import 'package:reem/core/experience/role_experience.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/l10n/app_localizations.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/experience/experience_labels.dart';
+import 'package:ohara/core/experience/role_experience.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/l10n/app_localizations.dart';
 
 /// One place the jump palette can take her.
 @immutable

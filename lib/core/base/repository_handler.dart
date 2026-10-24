@@ -1,6 +1,6 @@
-import 'package:reem/core/errors/app_exception.dart';
-import 'package:reem/core/errors/failure.dart';
-import 'package:reem/core/result/result.dart';
+import 'package:ohara/core/errors/app_exception.dart';
+import 'package:ohara/core/errors/failure.dart';
+import 'package:ohara/core/result/result.dart';
 
 mixin RepositoryHandler {
   Future<Result<T>> guard<T>(

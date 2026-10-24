@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
-import 'package:reem/core/shared/entities/user.dart';
-import 'package:reem/features/reputation/domain/entities/fit_entities.dart';
+import 'package:ohara/core/shared/entities/user.dart';
+import 'package:ohara/features/reputation/domain/entities/fit_entities.dart';
 
 class ReviewEntity extends Equatable {
   const ReviewEntity({

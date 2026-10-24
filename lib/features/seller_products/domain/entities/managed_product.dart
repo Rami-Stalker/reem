@@ -1,10 +1,10 @@
 import 'package:equatable/equatable.dart';
-import 'package:reem/core/shared/entities/category.dart';
-import 'package:reem/core/shared/entities/media.dart';
-import 'package:reem/core/shared/entities/product_variant.dart';
-import 'package:reem/core/shared/value_objects/money.dart';
+import 'package:ohara/core/shared/entities/category.dart';
+import 'package:ohara/core/shared/entities/media.dart';
+import 'package:ohara/core/shared/entities/product_variant.dart';
+import 'package:ohara/core/shared/value_objects/money.dart';
 
-import 'package:reem/features/seller_products/domain/entities/product_status.dart';
+import 'package:ohara/features/seller_products/domain/entities/product_status.dart';
 
 /// A seller's own listing.
 ///

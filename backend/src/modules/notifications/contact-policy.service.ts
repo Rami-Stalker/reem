@@ -10,7 +10,7 @@ import { PLATFORM_TIMEZONE } from '../customer-intelligence/customer-facts.servi
 /**
  * How much the platform may say, and when.
  *
- * These are the numbers that decide whether Reem is useful or is the app she
+ * These are the numbers that decide whether Ohara is useful or is the app she
  * turns notifications off for — which is a decision she makes once, silently,
  * and never revisits. They are set low on purpose.
  */

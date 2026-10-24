@@ -1,8 +1,8 @@
-import 'package:reem/core/presentation/providers/paginated_notifier.dart';
-import 'package:reem/core/presentation/state/paginated_state.dart';
-import 'package:reem/core/result/result.dart';
-import 'package:reem/features/social/domain/entities/content.dart';
-import 'package:reem/features/social/domain/repositories/social_repository.dart';
+import 'package:ohara/core/presentation/providers/paginated_notifier.dart';
+import 'package:ohara/core/presentation/state/paginated_state.dart';
+import 'package:ohara/core/result/result.dart';
+import 'package:ohara/features/social/domain/entities/content.dart';
+import 'package:ohara/features/social/domain/repositories/social_repository.dart';
 
 typedef ContentFeedState = PaginatedState<Content>;
 

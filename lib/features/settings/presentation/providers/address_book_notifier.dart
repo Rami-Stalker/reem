@@ -1,10 +1,10 @@
 import 'package:flutter_riverpod/legacy.dart';
 
-import 'package:reem/core/errors/failure.dart';
-import 'package:reem/core/result/result.dart';
-import 'package:reem/features/settings/domain/entities/address_draft.dart';
-import 'package:reem/features/settings/domain/entities/address_entity.dart';
-import 'package:reem/features/settings/domain/repositories/settings_repository.dart';
+import 'package:ohara/core/errors/failure.dart';
+import 'package:ohara/core/result/result.dart';
+import 'package:ohara/features/settings/domain/entities/address_draft.dart';
+import 'package:ohara/features/settings/domain/entities/address_entity.dart';
+import 'package:ohara/features/settings/domain/repositories/settings_repository.dart';
 
 /// Her address book.
 ///

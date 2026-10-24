@@ -72,7 +72,7 @@ class ProductFit extends Equatable {
 
   final FitTally overall;
 
-  /// Whether she has told Reem her size. False means «من بمقاسي» has nothing
+  /// Whether she has told Ohara her size. False means «من بمقاسي» has nothing
   /// to compare against yet, which the page answers with the profile.
   final bool hasProfile;
 

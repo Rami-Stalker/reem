@@ -11,8 +11,8 @@
 /// A barrel over five files, so a screen imports one thing.
 library;
 
-export 'package:reem/features/trends/presentation/widgets/trend_charts.dart';
-export 'package:reem/features/trends/presentation/widgets/trend_chrome.dart';
-export 'package:reem/features/trends/presentation/widgets/trend_format.dart';
-export 'package:reem/features/trends/presentation/widgets/trend_palette.dart';
-export 'package:reem/features/trends/presentation/widgets/trend_score_dial.dart';
+export 'package:ohara/features/trends/presentation/widgets/trend_charts.dart';
+export 'package:ohara/features/trends/presentation/widgets/trend_chrome.dart';
+export 'package:ohara/features/trends/presentation/widgets/trend_format.dart';
+export 'package:ohara/features/trends/presentation/widgets/trend_palette.dart';
+export 'package:ohara/features/trends/presentation/widgets/trend_score_dial.dart';

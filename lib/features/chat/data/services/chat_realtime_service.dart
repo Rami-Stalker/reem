@@ -2,8 +2,8 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
 
-import 'package:reem/core/config/app_env.dart';
-import 'package:reem/core/storage/secure_storage_service.dart';
+import 'package:ohara/core/config/app_env.dart';
+import 'package:ohara/core/storage/secure_storage_service.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 /// Names the value that follows it as a bearer token.

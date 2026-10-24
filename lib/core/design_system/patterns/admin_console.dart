@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'package:reem/core/design_system/foundation/theme/extensions/color_extension.dart';
-import 'package:reem/core/design_system/foundation/tokens/ds_colors.dart';
+import 'package:ohara/core/design_system/foundation/theme/extensions/color_extension.dart';
+import 'package:ohara/core/design_system/foundation/tokens/ds_colors.dart';
 
 /// The administrator's visual identity: **the console**.
 ///
@@ -15,7 +15,7 @@ import 'package:reem/core/design_system/foundation/tokens/ds_colors.dart';
 /// device asked for. Everything here resolves from the live theme instead, so
 /// dark mode reaches the admin screens too.
 ///
-/// Reem is still present, but held to the accents: plum for anything the
+/// Ohara is still present, but held to the accents: plum for anything the
 /// operator can act on, so a destructive control never reads as decoration.
 class AdminConsolePalette {
   const AdminConsolePalette({

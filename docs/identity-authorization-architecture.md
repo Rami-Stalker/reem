@@ -1,8 +1,8 @@
-# Reem Authorization, Authentication, and Identity Architecture
+# Ohara Authorization, Authentication, and Identity Architecture
 
 ## Core Philosophy
 
-Reem uses an explicit Guest identity model. A visitor can browse public
+Ohara uses an explicit Guest identity model. A visitor can browse public
 surfaces without a server-side identity, and a guest session is created only
 after the user presses **Continue as Guest**. Failed login, failed registration,
 or session-restore attempts never create guest sessions.

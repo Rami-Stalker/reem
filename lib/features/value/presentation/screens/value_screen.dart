@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/features/value/domain/entities/value_standing.dart';
-import 'package:reem/features/value/presentation/providers/value_providers.dart';
-import 'package:reem/features/value/presentation/widgets/value_pillars.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/features/value/domain/entities/value_standing.dart';
+import 'package:ohara/features/value/presentation/providers/value_providers.dart';
+import 'package:ohara/features/value/presentation/widgets/value_pillars.dart';
 
-/// مكانتي بريم — her standing.
+/// مكانتي بأوهارا — her standing.
 ///
 /// The screen is ordered as an argument. Where she stands comes first, then the
 /// six dimensions it is built from, then what it opens, then what she actually
@@ -23,7 +23,7 @@ class ValueScreen extends ConsumerWidget {
 
     return Scaffold(
       backgroundColor: colors.background,
-      appBar: ReemAppBar(title: context.l10n.valueTitle),
+      appBar: OharaAppBar(title: context.l10n.valueTitle),
       body: standingAsync.when(
         loading: () => const Center(child: DsLoadingIndicator()),
         error: (_, _) => DsErrorState(

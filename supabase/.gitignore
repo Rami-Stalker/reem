@@ -7,7 +7,7 @@
 .env.local
 .env.*.local
 
-# Reem: generated edge bundle and build scratch — rebuilt by `npm run build` in edge/
+# Ohara: generated edge bundle and build scratch — rebuilt by `npm run build` in edge/
 functions/api/reem-api.mjs
 functions/api/reem-api.mjs.map
 edge/.build/

@@ -1,6 +1,6 @@
-import 'package:reem/core/shared/models/product_model.dart';
+import 'package:ohara/core/shared/models/product_model.dart';
 
-import 'package:reem/features/discovery/data/models/product_page_model.dart';
+import 'package:ohara/features/discovery/data/models/product_page_model.dart';
 
 abstract interface class DiscoveryRemoteDataSource {
   Future<ProductPageModel> getCollection(String key,

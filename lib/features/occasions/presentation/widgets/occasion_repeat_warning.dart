@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/features/occasions/domain/entities/occasion.dart';
-import 'package:reem/features/salons/presentation/widgets/salon_labels.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/features/occasions/domain/entities/occasion.dart';
+import 'package:ohara/features/salons/presentation/widgets/salon_labels.dart';
 
 /// «ما لبستيه قدّامهم» — shown when the people she named for this day have
 /// already seen this outfit, or are about to at another occasion.

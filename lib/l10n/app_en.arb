@@ -53,12 +53,12 @@
   "@a11yShare": {
     "description": "Screen-reader label"
   },
-  "aboutReem": "About Reem",
-  "@aboutReem": {
+  "aboutOhara": "About Ohara",
+  "@aboutOhara": {
     "description": "Menu item"
   },
-  "aboutReemBlurb": "A premium social-commerce home for the pieces you love — shopping, discovery and community in one place.",
-  "@aboutReemBlurb": {
+  "aboutOharaBlurb": "A premium social-commerce home for the pieces you love — shopping, discovery and community in one place.",
+  "@aboutOharaBlurb": {
     "description": "About screen description"
   },
   "account": "Account",
@@ -86,7 +86,7 @@
   "@accountVerificationBack": {
     "description": "Label of the back-of-document upload"
   },
-  "accountVerificationBlurb": "The badge beside your name says Reem has checked who you are. Send a document and we will look at it.",
+  "accountVerificationBlurb": "The badge beside your name says Ohara has checked who you are. Send a document and we will look at it.",
   "@accountVerificationBlurb": {
     "description": "Explains what verification is for"
   },
@@ -114,7 +114,7 @@
   "@accountVerificationNote": {
     "description": "Label of the free-text reason field"
   },
-  "accountVerificationPrivacy": "Your documents are read only by the staff who review them, and by nobody else on Reem.",
+  "accountVerificationPrivacy": "Your documents are read only by the staff who review them, and by nobody else on Ohara.",
   "@accountVerificationPrivacy": {
     "description": "Privacy note under the document uploads"
   },
@@ -146,7 +146,7 @@
   "@accountVerificationStatusRejected": {
     "description": "Status of a refused claim"
   },
-  "accountVerificationStatusRevoked": "Withdrawn by Reem",
+  "accountVerificationStatusRevoked": "Withdrawn by Ohara",
   "@accountVerificationStatusRevoked": {
     "description": "Status of a badge that was granted and later revoked"
   },
@@ -1417,7 +1417,7 @@
   "@adminWelcome": {
     "description": "Admin greeting"
   },
-  "aiStylistTitle": "Reem Stylist",
+  "aiStylistTitle": "Ohara Stylist",
   "@aiStylistTitle": {
     "description": "Title of the AI stylist screen [re-authored: original wording lost]"
   },
@@ -1586,7 +1586,7 @@
   "@appPreferences": {
     "description": "Settings section"
   },
-  "appTitle": "Reem",
+  "appTitle": "Ohara",
   "@appTitle": {
     "description": "Application name shown in the task switcher"
   },
@@ -1603,7 +1603,7 @@
   "@appearance": {
     "description": "Menu item"
   },
-  "appearanceDescription": "Choose how Reem looks on your device. Your choice is saved automatically.",
+  "appearanceDescription": "Choose how Ohara looks on your device. Your choice is saved automatically.",
   "@appearanceDescription": {
     "description": "Appearance screen description"
   },
@@ -1856,7 +1856,7 @@
   "@chatRetrySend": {
     "description": "Resends a message that failed"
   },
-  "chatSafetyNote": "Keep payments inside Reem",
+  "chatSafetyNote": "Keep payments inside Ohara",
   "@chatSafetyNote": {
     "description": "Marketplace safety note above the conversation list"
   },
@@ -2374,7 +2374,7 @@
   "@currentPassword": {
     "description": "Field label"
   },
-  "declaredFemaleLabel": "I declare that I am a woman and accept the Reem terms",
+  "declaredFemaleLabel": "I declare that I am a woman and accept the Ohara terms",
   "@declaredFemaleLabel": {
     "description": "Mandatory self-declaration on the registration form (Q43/Q138 P1)."
   },
@@ -2426,13 +2426,13 @@
   },
   "discoverAskHelper": "Describe the occasion or the feeling — “a summer wedding, something soft, under 60k”",
   "@discoverAskHelper": {
-    "description": "Helper line under the Ask Reem field on Discover."
+    "description": "Helper line under the Ask Ohara field on Discover."
   },
   "discoverAskHint": "What do you need?",
   "@discoverAskHint": {
-    "description": "Placeholder of the Ask Reem field on Discover."
+    "description": "Placeholder of the Ask Ohara field on Discover."
   },
-  "discoverAskLabel": "Ask Reem",
+  "discoverAskLabel": "Ask Ohara",
   "@discoverAskLabel": {
     "description": "Label above the Discover question field, which opens the stylist with her question."
   },
@@ -2710,7 +2710,7 @@
   "faqContactSeller": "How do I reach a boutique?",
   "faqContactSellerAnswer": "Open the product, the store, or your order and tap “Message the boutique”. Your conversations are kept under Messages.",
   "faqPayment": "How do I pay?",
-  "faqPaymentAnswer": "Cash on delivery, or from your Reem wallet. Never pay a boutique outside the app — an order paid outside it is not protected.",
+  "faqPaymentAnswer": "Cash on delivery, or from your Ohara wallet. Never pay a boutique outside the app — an order paid outside it is not protected.",
   "faqPoints": "How do loyalty points work?",
   "@faqPoints": {
     "description": "FAQ question"
@@ -3470,7 +3470,7 @@
     "placeholders": {
       "name": {
         "type": "String",
-        "example": "ريم"
+        "example": "أوهارا"
       }
     }
   },
@@ -3482,7 +3482,7 @@
   "@homeLoyaltySubtitle": {
     "description": "Subtitle of the loyalty card on home."
   },
-  "homeLoyaltyTitle": "Reem Rewards",
+  "homeLoyaltyTitle": "Ohara Rewards",
   "@homeLoyaltyTitle": {
     "description": "Title of the loyalty card on home."
   },
@@ -3828,7 +3828,7 @@
   "@manageSecurityBlurb": {
     "description": "Section description"
   },
-  "matchCodeHint": "Check that the message shows the same two digits. Reem will never ask you to read a code aloud.",
+  "matchCodeHint": "Check that the message shows the same two digits. Ohara will never ask you to read a code aloud.",
   "@matchCodeHint": {
     "description": "Anti-relay guidance beside the match code"
   },
@@ -4148,8 +4148,8 @@
   "notifOrdersBlurb": "Payment, packing, shipping and delivery.",
   "notifPush": "Push notifications",
   "notifPushBlurb": "Message alerts, order updates and offers.",
-  "notifPushBlocked": "Your phone is blocking Reem's notifications.",
-  "notifPushBlockedBody": "Your phone is blocking Reem, so nothing below will reach you until you allow it in the system settings.",
+  "notifPushBlocked": "Your phone is blocking Ohara's notifications.",
+  "notifPushBlockedBody": "Your phone is blocking Ohara, so nothing below will reach you until you allow it in the system settings.",
   "notifPushBlockedTitle": "Notifications are turned off",
   "notifPushOpenSettings": "Open settings",
   "notifPushUnavailable": "Push notifications are not available in this version.",
@@ -7096,7 +7096,7 @@
   "@totpSecretLabel": {
     "description": "TOTP enrolment: totpSecretLabel"
   },
-  "totpSetupTitle": "Add Reem to your authenticator",
+  "totpSetupTitle": "Add Ohara to your authenticator",
   "@totpSetupTitle": {
     "description": "TOTP enrolment: totpSetupTitle"
   },
@@ -7935,7 +7935,7 @@
   "@voiceMessage": {
     "description": "Message text carried alongside a voice attachment."
   },
-  "voicePermissionDenied": "Reem needs permission to use the microphone.",
+  "voicePermissionDenied": "Ohara needs permission to use the microphone.",
   "@voicePermissionDenied": {
     "description": "Shown when microphone permission is refused."
   },
@@ -7971,7 +7971,7 @@
   "@walletEmptyTitle": {
     "description": "Empty-state title on the wallet screen."
   },
-  "walletNotWithdrawable": "Spendable inside Reem only",
+  "walletNotWithdrawable": "Spendable inside Ohara only",
   "@walletNotWithdrawable": {
     "description": "Q42 — the wallet balance cannot be withdrawn as cash."
   },
@@ -8031,8 +8031,8 @@
   "@welcomeBack": {
     "description": "Returning-user heading"
   },
-  "welcomeToReem": "Welcome to Reem",
-  "@welcomeToReem": {
+  "welcomeToOhara": "Welcome to Ohara",
+  "@welcomeToOhara": {
     "description": "Auth screen heading"
   },
   "wishlist": "Wishlist",
@@ -8368,7 +8368,7 @@
   "postDeleteBody": "It disappears from your page and from every page it was added to. This can't be undone.",
   "postDeleted": "Post deleted",
   "policiesTitle": "Policies and terms",
-  "policiesSubtitle": "The documents that govern your use of Reem",
+  "policiesSubtitle": "The documents that govern your use of Ohara",
   "policiesSectionForYou": "For you",
   "policiesSectionEveryone": "For everyone",
   "policiesSectionSellers": "For sellers",
@@ -8431,7 +8431,7 @@
   },
   "policiesReadCurrent": "Read the current version",
   "policiesConsentTitle": "Before you carry on",
-  "policiesConsentIntroNew": "Please read and accept the following to keep using Reem.",
+  "policiesConsentIntroNew": "Please read and accept the following to keep using Ohara.",
   "policiesConsentIntroUpdated": "We have updated the following. Please read and accept them to carry on.",
   "policiesConsentAgree": "I have read and accept the documents above",
   "policiesConsentContinue": "Accept and continue",
@@ -8883,7 +8883,7 @@
   "@closetEmptyTitle": {
     "description": ""
   },
-  "closetEmptyBody": "Add your pieces — what you bought on Reem and what you already had. That’s how we learn what you’re missing and what you can wear.",
+  "closetEmptyBody": "Add your pieces — what you bought on Ohara and what you already had. That’s how we learn what you’re missing and what you can wear.",
   "@closetEmptyBody": {
     "description": ""
   },
@@ -9849,7 +9849,7 @@
   "@valueCancel": {
     "description": ""
   },
-  "valueTitle": "My standing in Reem",
+  "valueTitle": "My standing in Ohara",
   "@valueTitle": {
     "description": ""
   },
@@ -10179,7 +10179,7 @@
       }
     }
   },
-  "valueCardTitle": "Your standing in Reem",
+  "valueCardTitle": "Your standing in Ohara",
   "@valueCardTitle": {
     "description": ""
   },
@@ -10202,7 +10202,7 @@
   },
   "valueAdminSpendingRung": " — tier “{rung}”",
   "@valueAdminSpendingRung": {
-    "description": "Reem Value console.",
+    "description": "Ohara Value console.",
     "placeholders": {
       "rung": {
         "type": "String"
@@ -10211,7 +10211,7 @@
   },
   "valueAdminTopRung": "; the top tier is “{rung}”.",
   "@valueAdminTopRung": {
-    "description": "Reem Value console.",
+    "description": "Ohara Value console.",
     "placeholders": {
       "rung": {
         "type": "String"
@@ -10226,7 +10226,7 @@
   "@marketLookFailed": {
     "description": ""
   },
-  "marketLookFromShops": "{count, plural, =1{From one shop — Reem put them together because they go well.} other{From {count} shops — Reem put them together because they go well.}}",
+  "marketLookFromShops": "{count, plural, =1{From one shop — Ohara put them together because they go well.} other{From {count} shops — Ohara put them together because they go well.}}",
   "@marketLookFromShops": {
     "description": "",
     "placeholders": {
@@ -10239,7 +10239,7 @@
   "@marketCheaperOptions": {
     "description": ""
   },
-  "marketCheaperOptionsBody": "Same slot, another piece Reem sees as close to it.",
+  "marketCheaperOptionsBody": "Same slot, another piece Ohara sees as close to it.",
   "@marketCheaperOptionsBody": {
     "description": ""
   },
@@ -10360,7 +10360,7 @@
   "@marketNoMissions": {
     "description": ""
   },
-  "marketNoMissionsBody": "Reem only asks for something when it’s worth it and within reach.",
+  "marketNoMissionsBody": "Ohara only asks for something when it’s worth it and within reach.",
   "@marketNoMissionsBody": {
     "description": ""
   },
@@ -10408,7 +10408,7 @@
   "@marketNoListings": {
     "description": ""
   },
-  "marketNoOwnListingsBody": "When Reem finds a piece in your closet that isn’t being worn, she’ll suggest listing it here.",
+  "marketNoOwnListingsBody": "When Ohara finds a piece in your closet that isn’t being worn, she’ll suggest listing it here.",
   "@marketNoOwnListingsBody": {
     "description": ""
   },
@@ -10457,7 +10457,7 @@
   "@marketReadFailed": {
     "description": ""
   },
-  "marketNoSignal": "No signal strong enough right now. Reem only speaks when the data is enough.",
+  "marketNoSignal": "No signal strong enough right now. Ohara only speaks when the data is enough.",
   "@marketNoSignal": {
     "description": ""
   },
@@ -10981,8 +10981,8 @@
   "@settingsNoCardsStored": {
     "description": ""
   },
-  "settingsReemWallet": "Reem wallet",
-  "@settingsReemWallet": {
+  "settingsOharaWallet": "Ohara wallet",
+  "@settingsOharaWallet": {
     "description": ""
   },
   "settingsHintCod": "Pay the courier in cash on delivery",
@@ -11788,11 +11788,11 @@
   "@stylistNotForMe": {
     "description": ""
   },
-  "stylistWelcomeTitle": "Reem’s personal stylist",
+  "stylistWelcomeTitle": "Ohara’s personal stylist",
   "@stylistWelcomeTitle": {
     "description": ""
   },
-  "stylistWelcomeBody": "Tell me about the occasion, the piece or the budget — I’ll line up options that Reem’s sellers actually have, and tell you why I picked each one.",
+  "stylistWelcomeBody": "Tell me about the occasion, the piece or the budget — I’ll line up options that Ohara’s sellers actually have, and tell you why I picked each one.",
   "@stylistWelcomeBody": {
     "description": ""
   },
@@ -11848,7 +11848,7 @@
   "@visualSawSomething": {
     "description": ""
   },
-  "visualSawSomethingBody": "Upload a photo of the piece — a screenshot from Instagram, TikTok or Pinterest, or one from your gallery — and we’ll find the closest thing in Reem.",
+  "visualSawSomethingBody": "Upload a photo of the piece — a screenshot from Instagram, TikTok or Pinterest, or one from your gallery — and we’ll find the closest thing in Ohara.",
   "@visualSawSomethingBody": {
     "description": ""
   },
@@ -11876,7 +11876,7 @@
   "@visualAnalysing": {
     "description": ""
   },
-  "visualComparing": "Comparing your photo with products actually on Reem.",
+  "visualComparing": "Comparing your photo with products actually on Ohara.",
   "@visualComparing": {
     "description": ""
   },
@@ -12136,7 +12136,7 @@
   "@profileShare": {
     "description": ""
   },
-  "homeAskStylist": "Ask Reem’s stylist",
+  "homeAskStylist": "Ask Ohara’s stylist",
   "@homeAskStylist": {
     "description": ""
   },
@@ -12317,7 +12317,7 @@
   "@payMethodHawala": {
     "description": "Order and listing status wording."
   },
-  "payMethodWallet": "Reem wallet",
+  "payMethodWallet": "Ohara wallet",
   "@payMethodWallet": {
     "description": "Order and listing status wording."
   },
@@ -12589,7 +12589,7 @@
   "@sellerPlanPremium": {
     "description": "Seller profile badge for the PREMIUM level."
   },
-  "sellerOrderPlatformDiscountNote": "A {amount} discount was paid by Reem and doesn't come out of your earnings.",
+  "sellerOrderPlatformDiscountNote": "A {amount} discount was paid by Ohara and doesn't come out of your earnings.",
   "@sellerOrderPlatformDiscountNote": {
     "description": "Seller order breakdown: a platform-funded coupon, shown as a note rather than a deduction.",
     "placeholders": {
@@ -12836,23 +12836,23 @@
   },
   "valueRungNew": "New",
   "@valueRungNew": {
-    "description": "Reem Value standing rung: New."
+    "description": "Ohara Value standing rung: New."
   },
   "valueRungKnown": "Known",
   "@valueRungKnown": {
-    "description": "Reem Value standing rung: Known."
+    "description": "Ohara Value standing rung: Known."
   },
   "valueRungTrusted": "Trusted",
   "@valueRungTrusted": {
-    "description": "Reem Value standing rung: Trusted."
+    "description": "Ohara Value standing rung: Trusted."
   },
   "valueRungInsider": "Insider",
   "@valueRungInsider": {
-    "description": "Reem Value standing rung: Insider."
+    "description": "Ohara Value standing rung: Insider."
   },
   "valueRungCircle": "Circle",
   "@valueRungCircle": {
-    "description": "Reem Value standing rung: Circle."
+    "description": "Ohara Value standing rung: Circle."
   },
   "adminAuditReviewSellerVerification": "Seller verification reviewed",
   "@adminAuditReviewSellerVerification": {
@@ -12891,29 +12891,29 @@
   "@homeAuraQuestionNight": {
     "description": "Home hero question, late night."
   },
-  "homeAskReem": "Ask Reem",
-  "@homeAskReem": {
+  "homeAskOhara": "Ask Ohara",
+  "@homeAskOhara": {
     "description": "Label on the home hero's ask-the-stylist field."
   },
   "homeAskExample1": "A navy evening dress under 50K",
   "@homeAskExample1": {
-    "description": "Rotating example inside the ask-Reem field."
+    "description": "Rotating example inside the ask-Ohara field."
   },
   "homeAskExample2": "A comfortable, polished work look",
   "@homeAskExample2": {
-    "description": "Rotating example inside the ask-Reem field."
+    "description": "Rotating example inside the ask-Ohara field."
   },
   "homeAskExample3": "A birthday gift for my sister",
   "@homeAskExample3": {
-    "description": "Rotating example inside the ask-Reem field."
+    "description": "Rotating example inside the ask-Ohara field."
   },
   "homeAskExample4": "What goes with beige shoes?",
   "@homeAskExample4": {
-    "description": "Rotating example inside the ask-Reem field."
+    "description": "Rotating example inside the ask-Ohara field."
   },
   "homeAskPhoto": "Search by photo",
   "@homeAskPhoto": {
-    "description": "Camera button on the ask-Reem field."
+    "description": "Camera button on the ask-Ohara field."
   },
   "homeBriefStories": "{count, plural, =1{1 boutique posted today} other{{count} boutiques posted today}}",
   "@homeBriefStories": {
@@ -12989,7 +12989,7 @@
   "@homeMoodTitle": {
     "description": "Home section title over the mood tiles."
   },
-  "homeMoodSubtitle": "Pick one and Reem styles the whole look",
+  "homeMoodSubtitle": "Pick one and Ohara styles the whole look",
   "@homeMoodSubtitle": {
     "description": "Home section subtitle over the mood tiles."
   },
@@ -13041,7 +13041,7 @@
   "@homeMoodPromptTravel": {
     "description": "Question the travel mood tile asks the stylist."
   },
-  "homeDeckEyebrow": "Picked for you by Reem",
+  "homeDeckEyebrow": "Picked for you by Ohara",
   "@homeDeckEyebrow": {
     "description": "Eyebrow over the swipe deck."
   },
@@ -13081,7 +13081,7 @@
   "@homeDeckDoneTitle": {
     "description": "Swipe deck end card title."
   },
-  "homeDeckDoneBody": "{count, plural, =0{Nothing today? Reem will learn from that.} =1{You loved 1 piece; it's in your likes.} other{You loved {count} pieces; they're in your likes.}}",
+  "homeDeckDoneBody": "{count, plural, =0{Nothing today? Ohara will learn from that.} =1{You loved 1 piece; it's in your likes.} other{You loved {count} pieces; they're in your likes.}}",
   "@homeDeckDoneBody": {
     "description": "Swipe deck end card body.",
     "placeholders": {
@@ -13098,7 +13098,7 @@
   "@homeDeckRestart": {
     "description": "Swipe deck end card button."
   },
-  "homeBentoEyebrow": "Reem's world",
+  "homeBentoEyebrow": "Ohara's world",
   "@homeBentoEyebrow": {
     "description": "Eyebrow over the category bento."
   },
@@ -13266,7 +13266,7 @@
   "@authLostSimCaption": {
     "description": "Caption under lost your SIM"
   },
-  "authSectionJoinAs": "How will you join Reem?",
+  "authSectionJoinAs": "How will you join Ohara?",
   "@authSectionJoinAs": {
     "description": "Heading over the buyer / seller choice"
   },
@@ -14278,12 +14278,12 @@
   "@salonWorkspaceLoadError": {
     "description": "Salons"
   },
-  "salonOpenOnReem": "Open your salon on Reem",
-  "@salonOpenOnReem": {
+  "salonOpenOnOhara": "Open your salon on Ohara",
+  "@salonOpenOnOhara": {
     "description": "Salons"
   },
-  "salonOpenOnReemBody": "Introduce your salon, services and hours, and let customers book their appointments straight from the app.",
-  "@salonOpenOnReemBody": {
+  "salonOpenOnOharaBody": "Introduce your salon, services and hours, and let customers book their appointments straight from the app.",
+  "@salonOpenOnOharaBody": {
     "description": "Salons"
   },
   "salonStart": "Start",
@@ -15426,5 +15426,53 @@
   "reviewsPhotosNoneBody": "Reviews with photos of the piece on will appear here.",
   "@reviewsPhotosNoneBody": {
     "description": "Photos filter empty"
-  }
+  },
+  "mapPickerTitle": "Pin your location",
+  "mapPickerSearchHint": "Search a neighbourhood, street or landmark…",
+  "mapPickerMoveHint": "Move the map to put the pin at your door",
+  "mapPickerLocating": "Finding you…",
+  "mapPickerReading": "Reading the address…",
+  "mapPickerDeliveryHere": "Delivery spot",
+  "mapPickerConfirm": "Confirm this location",
+  "mapPickerUnknownPlace": "An unnamed spot on the map",
+  "mapPickerUnknownPlaceHint": "That's fine — the pin is enough, and you can add the details next",
+  "mapPickerOutsideSyria": "This spot is outside Syria — we only deliver inside Syria for now",
+  "mapPickerNoResults": "Nothing found — try a nearby name",
+  "mapPickerMyLocation": "My location",
+  "mapPickerStreets": "Streets",
+  "mapPickerSatellite": "Satellite",
+  "mapPickerResetNorth": "Point north",
+  "mapPickerZoomIn": "Zoom in",
+  "mapPickerZoomOut": "Zoom out",
+  "mapPickerRural": "Rural area",
+  "mapPickerLocationOff": "Location is switched off on this phone",
+  "mapPickerLocationDenied": "The app wasn't allowed to see your location",
+  "mapPickerLocationUnavailable": "Couldn't get a fix — move the map by hand",
+  "mapPickerOpenSettings": "Settings",
+  "mapPickerAccuracy": "±{meters} m",
+  "@mapPickerAccuracy": {
+    "description": "Location accuracy radius",
+    "placeholders": {
+      "meters": {
+        "type": "int"
+      }
+    }
+  },
+  "mapPickerJumpTo": "Jump to a governorate",
+  "locationFieldTitle": "Pin your location on the map",
+  "locationFieldSubtitle": "Faster than typing — we'll fill the address for you",
+  "locationFieldOr": "or type the address yourself",
+  "locationFieldChange": "Change",
+  "locationFieldRemove": "Remove the pin",
+  "locationFieldPinned": "Pinned on the map",
+  "locationFieldFilled": "We filled the address from the map — give it a quick look",
+  "locationFieldEditDetails": "Edit the address details",
+  "locationFieldHideDetails": "Hide the details",
+  "locationFieldGovernorateUnmatched": "We couldn't tell the governorate from the map — please pick it below",
+  "locationFieldOpenInMaps": "Open in maps",
+  "shopLocationTitle": "Pin your place on the map",
+  "shopLocationSubtitle": "We'll fill the address, and clients will see exactly where you are",
+  "businessLocationSubtitle": "We'll write the business address from the map",
+  "mapPickerShopHere": "Your place",
+  "mapPickerZoomCloser": "Zoom in to pin the exact door"
 }

@@ -1,11 +1,11 @@
-import 'package:reem/core/network/api_endpoints.dart';
-import 'package:reem/core/network/base_remote_datasource.dart';
-import 'package:reem/features/ai_stylist/data/datasources/ai_stylist_remote_datasource.dart';
-import 'package:reem/features/ai_stylist/data/models/stylist_models.dart';
-import 'package:reem/features/ai_stylist/domain/entities/stylist_conversation.dart';
-import 'package:reem/features/ai_stylist/domain/entities/stylist_outfit.dart';
-import 'package:reem/features/ai_stylist/domain/entities/stylist_recommendation.dart';
-import 'package:reem/features/ai_stylist/domain/repositories/ai_stylist_repository.dart';
+import 'package:ohara/core/network/api_endpoints.dart';
+import 'package:ohara/core/network/base_remote_datasource.dart';
+import 'package:ohara/features/ai_stylist/data/datasources/ai_stylist_remote_datasource.dart';
+import 'package:ohara/features/ai_stylist/data/models/stylist_models.dart';
+import 'package:ohara/features/ai_stylist/domain/entities/stylist_conversation.dart';
+import 'package:ohara/features/ai_stylist/domain/entities/stylist_outfit.dart';
+import 'package:ohara/features/ai_stylist/domain/entities/stylist_recommendation.dart';
+import 'package:ohara/features/ai_stylist/domain/repositories/ai_stylist_repository.dart';
 
 final class AiStylistRemoteDataSourceImpl extends BaseRemoteDataSource
     implements AiStylistRemoteDataSource {

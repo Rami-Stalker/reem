@@ -9,6 +9,7 @@ import {
 } from '../../common/serializers';
 import { AddressDto, UpdateAddressDto } from './dto/address.dto';
 import { CreatePaymentMethodDto } from './dto/create-payment-method.dto';
+import { mentionsPin, pinOf } from '../../common/geo/pin';
 
 @Injectable()
 export class SettingsService {
@@ -42,6 +43,7 @@ export class SettingsService {
           city: dto.city,
           addressLine: dto.address_line,
           landmark: dto.landmark ?? null,
+          ...pinOf(dto),
           isRural: dto.is_rural ?? false,
           deliveryInstructions: dto.delivery_instructions ?? null,
           isDefault,
@@ -74,6 +76,8 @@ export class SettingsService {
             addressLine: dto.address_line,
           }),
           ...(dto.landmark !== undefined && { landmark: dto.landmark }),
+          // A pin is replaced or cleared whole, never half-moved.
+          ...(mentionsPin(dto) && pinOf(dto)),
           ...(dto.is_rural !== undefined && { isRural: dto.is_rural }),
           ...(dto.delivery_instructions !== undefined && {
             deliveryInstructions: dto.delivery_instructions,

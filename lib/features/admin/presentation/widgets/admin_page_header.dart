@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/experience/role_experience.dart';
-import 'package:reem/core/router/route_paths.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/experience/role_experience.dart';
+import 'package:ohara/core/router/route_paths.dart';
 
 /// The top of a console page: a band of the courtyard's sky.
 ///

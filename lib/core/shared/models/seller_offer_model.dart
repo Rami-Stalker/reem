@@ -1,9 +1,9 @@
 // shared/models/seller_offer_model.dart
 
-import 'package:reem/core/shared/entities/seller_offer.dart';
-import 'package:reem/core/shared/models/product_variant_model.dart';
-import 'package:reem/core/shared/models/user_model.dart';
-import 'package:reem/core/shared/value_objects/money.dart';
+import 'package:ohara/core/shared/entities/seller_offer.dart';
+import 'package:ohara/core/shared/models/product_variant_model.dart';
+import 'package:ohara/core/shared/models/user_model.dart';
+import 'package:ohara/core/shared/value_objects/money.dart';
 
 class SellerOfferModel extends SellerOffer {
   const SellerOfferModel({

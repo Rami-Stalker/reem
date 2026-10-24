@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/core/router/route_paths.dart';
-import 'package:reem/features/rooms/presentation/providers/rooms_providers.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/core/router/route_paths.dart';
+import 'package:ohara/features/rooms/presentation/providers/rooms_providers.dart';
 
 /// Where a shared room invite lands.
 ///
@@ -69,7 +69,7 @@ class _RoomJoinScreenState extends ConsumerState<RoomJoinScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: context.dsColors.background,
-      appBar: ReemAppBar(title: context.l10n.roomsRoomTitle),
+      appBar: OharaAppBar(title: context.l10n.roomsRoomTitle),
       body: _error == null
           ? const Center(child: DsLoadingIndicator())
           : DsErrorState(

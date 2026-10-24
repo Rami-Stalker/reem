@@ -1,4 +1,4 @@
-import 'package:reem/features/seller_reviews/domain/entities/seller_review.dart';
+import 'package:ohara/features/seller_reviews/domain/entities/seller_review.dart';
 
 /// Parses `/reputation/seller/reviews`.
 abstract final class SellerReviewMapper {

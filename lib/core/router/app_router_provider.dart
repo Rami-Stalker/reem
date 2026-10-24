@@ -2,152 +2,152 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:reem/core/experience/role_experience.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/core/observability/breadcrumb_observers.dart';
-import 'package:reem/core/router/app_shell.dart';
-import 'package:reem/core/router/auth_guard.dart';
-import 'package:reem/core/router/route_names.dart';
-import 'package:reem/core/router/route_paths.dart';
-import 'package:reem/core/shared/services/share_links.dart';
-import 'package:reem/features/admin/presentation/providers/admin_provider.dart';
-import 'package:reem/features/admin/presentation/screens/admin_analytics_screen.dart';
-import 'package:reem/features/admin/presentation/screens/admin_dashboard_screen.dart';
-import 'package:reem/features/admin/presentation/screens/admin_delivery_screen.dart';
-import 'package:reem/features/admin/presentation/screens/admin_notification_analytics_screen.dart';
-import 'package:reem/features/admin/presentation/screens/admin_orders_screen.dart';
-import 'package:reem/features/admin/presentation/screens/admin_products_screen.dart';
-import 'package:reem/features/admin/presentation/screens/admin_section_screen.dart';
-import 'package:reem/features/admin/presentation/screens/admin_seller_applications_screen.dart';
-import 'package:reem/features/admin/presentation/screens/admin_users_screen.dart';
-import 'package:reem/features/admin/presentation/shell/admin_shell.dart';
-import 'package:reem/features/admin_finance/presentation/screens/admin_finance_screen.dart';
-import 'package:reem/features/ai_stylist/presentation/screens/ai_stylist_screen.dart';
-import 'package:reem/features/ai_stylist/presentation/screens/style_preferences_screen.dart';
-import 'package:reem/features/ai_stylist/presentation/screens/stylist_outfit_screen.dart';
-import 'package:reem/features/auth/domain/entities/auth_account.dart';
-import 'package:reem/features/auth/presentation/providers/auth_provider.dart';
-import 'package:reem/features/auth/presentation/providers/auth_state.dart';
-import 'package:reem/features/auth/presentation/screens/account_recovery_screen.dart';
-import 'package:reem/features/auth/presentation/screens/account_settings_screen.dart';
-import 'package:reem/features/auth/presentation/screens/auth_required_screen.dart';
-import 'package:reem/features/auth/presentation/screens/device_management_screen.dart';
-import 'package:reem/features/auth/presentation/screens/forgot_password_screen.dart';
-import 'package:reem/features/auth/presentation/screens/login_screen.dart';
-import 'package:reem/features/auth/presentation/screens/otp_verification_screen.dart';
-import 'package:reem/features/auth/presentation/screens/phone_change_screen.dart';
-import 'package:reem/features/auth/presentation/screens/register_screen.dart';
-import 'package:reem/features/auth/presentation/screens/security_settings_screen.dart';
-import 'package:reem/features/auth/presentation/screens/seller_verification_screen.dart';
-import 'package:reem/features/auth/presentation/screens/sign_in_code_screen.dart';
-import 'package:reem/features/cart/presentation/screens/cart_screen.dart';
-import 'package:reem/features/chat/presentation/screens/chat_details_screen.dart';
-import 'package:reem/features/chat/presentation/screens/chat_media_gallery_screen.dart';
-import 'package:reem/features/chat/presentation/screens/chats_screen.dart';
-import 'package:reem/features/checkout/presentation/providers/orders_notifier.dart';
-import 'package:reem/features/checkout/presentation/screens/checkout_screen.dart';
-import 'package:reem/features/checkout/presentation/screens/order_detail_screen.dart';
-import 'package:reem/features/checkout/presentation/screens/orders_screen.dart';
-import 'package:reem/features/closet/presentation/screens/add_personal_item_screen.dart';
-import 'package:reem/features/closet/presentation/screens/closet_gap_screen.dart';
-import 'package:reem/features/closet/presentation/screens/closet_item_screen.dart';
-import 'package:reem/features/closet/presentation/screens/closet_look_screen.dart';
-import 'package:reem/features/closet/presentation/screens/closet_looks_screen.dart';
-import 'package:reem/features/closet/presentation/screens/closet_today_screen.dart';
-import 'package:reem/features/closet/presentation/screens/my_closet_screen.dart';
-import 'package:reem/features/courier/presentation/screens/courier_day_screen.dart';
-import 'package:reem/features/create/presentation/screens/add_post_screen.dart';
-import 'package:reem/features/create/presentation/screens/add_story_screen.dart';
-import 'package:reem/features/discovery/domain/entities/product_collection.dart';
-import 'package:reem/features/discovery/presentation/providers/discovery_providers.dart';
-import 'package:reem/features/discovery/presentation/screens/collection_screen.dart';
-import 'package:reem/features/discovery/presentation/widgets/product_collection_title.dart';
-import 'package:reem/features/experience/presentation/screens/experience_surface_screen.dart';
-import 'package:reem/features/home/presentation/screens/categories_screen.dart';
-import 'package:reem/features/home/presentation/screens/category_screen.dart';
-import 'package:reem/features/home/presentation/screens/home_screen.dart';
-import 'package:reem/features/invoices/presentation/screens/invoice_screen.dart';
-import 'package:reem/features/invoices/presentation/screens/order_invoices_screen.dart';
-import 'package:reem/features/market/presentation/screens/bundle_screen.dart';
-import 'package:reem/features/market/presentation/screens/bundles_screen.dart';
-import 'package:reem/features/market/presentation/screens/drops_screen.dart';
-import 'package:reem/features/market/presentation/screens/missions_screen.dart';
-import 'package:reem/features/market/presentation/screens/resale_market_screen.dart';
-import 'package:reem/features/market/presentation/screens/seller_market_screen.dart';
-import 'package:reem/features/market/presentation/screens/wardrobe_care_screen.dart';
-import 'package:reem/features/occasions/presentation/screens/occasion_detail_screen.dart';
-import 'package:reem/features/occasions/presentation/screens/occasion_editor_screen.dart';
-import 'package:reem/features/occasions/presentation/screens/occasions_screen.dart';
-import 'package:reem/features/onboarding/presentation/screens/onboarding_screen.dart';
-import 'package:reem/features/policies/presentation/screens/admin_policies_screen.dart';
-import 'package:reem/features/policies/presentation/screens/policy_centre_screen.dart';
-import 'package:reem/features/policies/presentation/screens/policy_detail_screen.dart';
-import 'package:reem/features/product_details/presentation/screens/product_details_screen.dart';
-import 'package:reem/features/profile/presentation/screens/favorites_screen.dart';
-import 'package:reem/features/profile/presentation/screens/profile_screen.dart';
-import 'package:reem/features/reputation/presentation/screens/fit_profile_screen.dart';
-import 'package:reem/features/reputation/presentation/screens/my_reviews_screen.dart';
-import 'package:reem/features/returns/presentation/screens/return_request_screen.dart';
-import 'package:reem/features/rooms/presentation/screens/compare_screen.dart';
-import 'package:reem/features/rooms/presentation/screens/purchase_plan_screen.dart';
-import 'package:reem/features/rooms/presentation/screens/room_join_screen.dart';
-import 'package:reem/features/rooms/presentation/screens/room_screen.dart';
-import 'package:reem/features/rooms/presentation/screens/rooms_screen.dart';
-import 'package:reem/features/salons/presentation/screens/appointment_detail_screen.dart';
-import 'package:reem/features/salons/presentation/screens/appointments_screen.dart';
-import 'package:reem/features/salons/presentation/screens/salon_booking_screen.dart';
-import 'package:reem/features/salons/presentation/screens/salon_editor_screen.dart';
-import 'package:reem/features/salons/presentation/screens/salon_hours_screen.dart';
-import 'package:reem/features/salons/presentation/screens/salon_queue_screen.dart';
-import 'package:reem/features/salons/presentation/screens/salon_screen.dart';
-import 'package:reem/features/salons/presentation/screens/salon_services_screen.dart';
-import 'package:reem/features/salons/presentation/screens/salon_workspace_screen.dart';
-import 'package:reem/features/salons/presentation/screens/salons_screen.dart';
-import 'package:reem/features/search/presentation/screens/discover_screen.dart';
-import 'package:reem/features/search/presentation/screens/search_screen.dart';
-import 'package:reem/features/seller_analytics/presentation/screens/seller_analytics_screen.dart';
-import 'package:reem/features/seller_dashboard/presentation/screens/seller_home_screen.dart';
-import 'package:reem/features/seller_dashboard/presentation/screens/seller_profile_screen.dart';
-import 'package:reem/features/seller_earnings/presentation/screens/seller_earnings_screen.dart';
-import 'package:reem/features/seller_intelligence/presentation/screens/demand_radar_screen.dart';
-import 'package:reem/features/seller_intelligence/presentation/screens/product_intelligence_screen.dart';
-import 'package:reem/features/seller_intelligence/presentation/screens/seller_health_screen.dart';
-import 'package:reem/features/seller_orders/presentation/screens/seller_order_detail_screen.dart';
-import 'package:reem/features/seller_orders/presentation/screens/seller_orders_screen.dart';
-import 'package:reem/features/seller_products/domain/entities/managed_product.dart';
-import 'package:reem/features/seller_products/presentation/screens/my_products_screen.dart';
-import 'package:reem/features/seller_products/presentation/screens/product_form_screen.dart';
-import 'package:reem/features/seller_returns/presentation/screens/seller_return_detail_screen.dart';
-import 'package:reem/features/seller_returns/presentation/screens/seller_returns_screen.dart';
-import 'package:reem/features/seller_reviews/presentation/screens/seller_reviews_screen.dart';
-import 'package:reem/features/settings/presentation/screens/adresses_screen.dart';
-import 'package:reem/features/settings/presentation/screens/appearance_screen.dart';
-import 'package:reem/features/settings/presentation/screens/coupons_screen.dart';
-import 'package:reem/features/settings/presentation/screens/language_screen.dart';
-import 'package:reem/features/settings/presentation/screens/notification_inbox_screen.dart';
-import 'package:reem/features/settings/presentation/screens/notifications_screen.dart';
-import 'package:reem/features/settings/presentation/screens/payment_methods_screen.dart';
-import 'package:reem/features/settings/presentation/screens/rewards_screen.dart';
-import 'package:reem/features/settings/presentation/screens/settings_screen.dart';
-import 'package:reem/features/shipment_tracking/presentation/screens/shipment_tracking_screen.dart';
-import 'package:reem/features/social/presentation/screens/admin_content_screen.dart';
-import 'package:reem/features/social/presentation/screens/content_composer_screen.dart';
-import 'package:reem/features/social/presentation/screens/content_detail_screen.dart';
-import 'package:reem/features/social/presentation/screens/content_studio_screen.dart';
-import 'package:reem/features/social/presentation/screens/reels_screen.dart';
-import 'package:reem/features/social/presentation/screens/social_feed_screen.dart';
-import 'package:reem/features/splash/presentation/screens/splash_screen.dart';
-import 'package:reem/features/stories/presentation/screens/story_viewer_screen.dart';
-import 'package:reem/features/trends/presentation/screens/admin_trends_screen.dart';
-import 'package:reem/features/trends/presentation/screens/seller_trends_screen.dart';
-import 'package:reem/features/user_profile/presentation/screens/edit_profile_screen.dart';
-import 'package:reem/features/user_profile/presentation/screens/follow_list_screen.dart';
-import 'package:reem/features/user_profile/presentation/screens/user_profile_screen.dart';
-import 'package:reem/features/value/presentation/screens/admin_value_screen.dart';
-import 'package:reem/features/value/presentation/screens/value_screen.dart';
-import 'package:reem/features/verification/presentation/screens/account_verification_screen.dart';
-import 'package:reem/features/visual_search/presentation/screens/visual_search_screen.dart';
-import 'package:reem/features/wallet/presentation/screens/wallet_screen.dart';
+import 'package:ohara/core/experience/role_experience.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/core/observability/breadcrumb_observers.dart';
+import 'package:ohara/core/router/app_shell.dart';
+import 'package:ohara/core/router/auth_guard.dart';
+import 'package:ohara/core/router/route_names.dart';
+import 'package:ohara/core/router/route_paths.dart';
+import 'package:ohara/core/shared/services/share_links.dart';
+import 'package:ohara/features/admin/presentation/providers/admin_provider.dart';
+import 'package:ohara/features/admin/presentation/screens/admin_analytics_screen.dart';
+import 'package:ohara/features/admin/presentation/screens/admin_dashboard_screen.dart';
+import 'package:ohara/features/admin/presentation/screens/admin_delivery_screen.dart';
+import 'package:ohara/features/admin/presentation/screens/admin_notification_analytics_screen.dart';
+import 'package:ohara/features/admin/presentation/screens/admin_orders_screen.dart';
+import 'package:ohara/features/admin/presentation/screens/admin_products_screen.dart';
+import 'package:ohara/features/admin/presentation/screens/admin_section_screen.dart';
+import 'package:ohara/features/admin/presentation/screens/admin_seller_applications_screen.dart';
+import 'package:ohara/features/admin/presentation/screens/admin_users_screen.dart';
+import 'package:ohara/features/admin/presentation/shell/admin_shell.dart';
+import 'package:ohara/features/admin_finance/presentation/screens/admin_finance_screen.dart';
+import 'package:ohara/features/ai_stylist/presentation/screens/ai_stylist_screen.dart';
+import 'package:ohara/features/ai_stylist/presentation/screens/style_preferences_screen.dart';
+import 'package:ohara/features/ai_stylist/presentation/screens/stylist_outfit_screen.dart';
+import 'package:ohara/features/auth/domain/entities/auth_account.dart';
+import 'package:ohara/features/auth/presentation/providers/auth_provider.dart';
+import 'package:ohara/features/auth/presentation/providers/auth_state.dart';
+import 'package:ohara/features/auth/presentation/screens/account_recovery_screen.dart';
+import 'package:ohara/features/auth/presentation/screens/account_settings_screen.dart';
+import 'package:ohara/features/auth/presentation/screens/auth_required_screen.dart';
+import 'package:ohara/features/auth/presentation/screens/device_management_screen.dart';
+import 'package:ohara/features/auth/presentation/screens/forgot_password_screen.dart';
+import 'package:ohara/features/auth/presentation/screens/login_screen.dart';
+import 'package:ohara/features/auth/presentation/screens/otp_verification_screen.dart';
+import 'package:ohara/features/auth/presentation/screens/phone_change_screen.dart';
+import 'package:ohara/features/auth/presentation/screens/register_screen.dart';
+import 'package:ohara/features/auth/presentation/screens/security_settings_screen.dart';
+import 'package:ohara/features/auth/presentation/screens/seller_verification_screen.dart';
+import 'package:ohara/features/auth/presentation/screens/sign_in_code_screen.dart';
+import 'package:ohara/features/cart/presentation/screens/cart_screen.dart';
+import 'package:ohara/features/chat/presentation/screens/chat_details_screen.dart';
+import 'package:ohara/features/chat/presentation/screens/chat_media_gallery_screen.dart';
+import 'package:ohara/features/chat/presentation/screens/chats_screen.dart';
+import 'package:ohara/features/checkout/presentation/providers/orders_notifier.dart';
+import 'package:ohara/features/checkout/presentation/screens/checkout_screen.dart';
+import 'package:ohara/features/checkout/presentation/screens/order_detail_screen.dart';
+import 'package:ohara/features/checkout/presentation/screens/orders_screen.dart';
+import 'package:ohara/features/closet/presentation/screens/add_personal_item_screen.dart';
+import 'package:ohara/features/closet/presentation/screens/closet_gap_screen.dart';
+import 'package:ohara/features/closet/presentation/screens/closet_item_screen.dart';
+import 'package:ohara/features/closet/presentation/screens/closet_look_screen.dart';
+import 'package:ohara/features/closet/presentation/screens/closet_looks_screen.dart';
+import 'package:ohara/features/closet/presentation/screens/closet_today_screen.dart';
+import 'package:ohara/features/closet/presentation/screens/my_closet_screen.dart';
+import 'package:ohara/features/courier/presentation/screens/courier_day_screen.dart';
+import 'package:ohara/features/create/presentation/screens/add_post_screen.dart';
+import 'package:ohara/features/create/presentation/screens/add_story_screen.dart';
+import 'package:ohara/features/discovery/domain/entities/product_collection.dart';
+import 'package:ohara/features/discovery/presentation/providers/discovery_providers.dart';
+import 'package:ohara/features/discovery/presentation/screens/collection_screen.dart';
+import 'package:ohara/features/discovery/presentation/widgets/product_collection_title.dart';
+import 'package:ohara/features/experience/presentation/screens/experience_surface_screen.dart';
+import 'package:ohara/features/home/presentation/screens/categories_screen.dart';
+import 'package:ohara/features/home/presentation/screens/category_screen.dart';
+import 'package:ohara/features/home/presentation/screens/home_screen.dart';
+import 'package:ohara/features/invoices/presentation/screens/invoice_screen.dart';
+import 'package:ohara/features/invoices/presentation/screens/order_invoices_screen.dart';
+import 'package:ohara/features/market/presentation/screens/bundle_screen.dart';
+import 'package:ohara/features/market/presentation/screens/bundles_screen.dart';
+import 'package:ohara/features/market/presentation/screens/drops_screen.dart';
+import 'package:ohara/features/market/presentation/screens/missions_screen.dart';
+import 'package:ohara/features/market/presentation/screens/resale_market_screen.dart';
+import 'package:ohara/features/market/presentation/screens/seller_market_screen.dart';
+import 'package:ohara/features/market/presentation/screens/wardrobe_care_screen.dart';
+import 'package:ohara/features/occasions/presentation/screens/occasion_detail_screen.dart';
+import 'package:ohara/features/occasions/presentation/screens/occasion_editor_screen.dart';
+import 'package:ohara/features/occasions/presentation/screens/occasions_screen.dart';
+import 'package:ohara/features/onboarding/presentation/screens/onboarding_screen.dart';
+import 'package:ohara/features/policies/presentation/screens/admin_policies_screen.dart';
+import 'package:ohara/features/policies/presentation/screens/policy_centre_screen.dart';
+import 'package:ohara/features/policies/presentation/screens/policy_detail_screen.dart';
+import 'package:ohara/features/product_details/presentation/screens/product_details_screen.dart';
+import 'package:ohara/features/profile/presentation/screens/favorites_screen.dart';
+import 'package:ohara/features/profile/presentation/screens/profile_screen.dart';
+import 'package:ohara/features/reputation/presentation/screens/fit_profile_screen.dart';
+import 'package:ohara/features/reputation/presentation/screens/my_reviews_screen.dart';
+import 'package:ohara/features/returns/presentation/screens/return_request_screen.dart';
+import 'package:ohara/features/rooms/presentation/screens/compare_screen.dart';
+import 'package:ohara/features/rooms/presentation/screens/purchase_plan_screen.dart';
+import 'package:ohara/features/rooms/presentation/screens/room_join_screen.dart';
+import 'package:ohara/features/rooms/presentation/screens/room_screen.dart';
+import 'package:ohara/features/rooms/presentation/screens/rooms_screen.dart';
+import 'package:ohara/features/salons/presentation/screens/appointment_detail_screen.dart';
+import 'package:ohara/features/salons/presentation/screens/appointments_screen.dart';
+import 'package:ohara/features/salons/presentation/screens/salon_booking_screen.dart';
+import 'package:ohara/features/salons/presentation/screens/salon_editor_screen.dart';
+import 'package:ohara/features/salons/presentation/screens/salon_hours_screen.dart';
+import 'package:ohara/features/salons/presentation/screens/salon_queue_screen.dart';
+import 'package:ohara/features/salons/presentation/screens/salon_screen.dart';
+import 'package:ohara/features/salons/presentation/screens/salon_services_screen.dart';
+import 'package:ohara/features/salons/presentation/screens/salon_workspace_screen.dart';
+import 'package:ohara/features/salons/presentation/screens/salons_screen.dart';
+import 'package:ohara/features/search/presentation/screens/discover_screen.dart';
+import 'package:ohara/features/search/presentation/screens/search_screen.dart';
+import 'package:ohara/features/seller_analytics/presentation/screens/seller_analytics_screen.dart';
+import 'package:ohara/features/seller_dashboard/presentation/screens/seller_home_screen.dart';
+import 'package:ohara/features/seller_dashboard/presentation/screens/seller_profile_screen.dart';
+import 'package:ohara/features/seller_earnings/presentation/screens/seller_earnings_screen.dart';
+import 'package:ohara/features/seller_intelligence/presentation/screens/demand_radar_screen.dart';
+import 'package:ohara/features/seller_intelligence/presentation/screens/product_intelligence_screen.dart';
+import 'package:ohara/features/seller_intelligence/presentation/screens/seller_health_screen.dart';
+import 'package:ohara/features/seller_orders/presentation/screens/seller_order_detail_screen.dart';
+import 'package:ohara/features/seller_orders/presentation/screens/seller_orders_screen.dart';
+import 'package:ohara/features/seller_products/domain/entities/managed_product.dart';
+import 'package:ohara/features/seller_products/presentation/screens/my_products_screen.dart';
+import 'package:ohara/features/seller_products/presentation/screens/product_form_screen.dart';
+import 'package:ohara/features/seller_returns/presentation/screens/seller_return_detail_screen.dart';
+import 'package:ohara/features/seller_returns/presentation/screens/seller_returns_screen.dart';
+import 'package:ohara/features/seller_reviews/presentation/screens/seller_reviews_screen.dart';
+import 'package:ohara/features/settings/presentation/screens/adresses_screen.dart';
+import 'package:ohara/features/settings/presentation/screens/appearance_screen.dart';
+import 'package:ohara/features/settings/presentation/screens/coupons_screen.dart';
+import 'package:ohara/features/settings/presentation/screens/language_screen.dart';
+import 'package:ohara/features/settings/presentation/screens/notification_inbox_screen.dart';
+import 'package:ohara/features/settings/presentation/screens/notifications_screen.dart';
+import 'package:ohara/features/settings/presentation/screens/payment_methods_screen.dart';
+import 'package:ohara/features/settings/presentation/screens/rewards_screen.dart';
+import 'package:ohara/features/settings/presentation/screens/settings_screen.dart';
+import 'package:ohara/features/shipment_tracking/presentation/screens/shipment_tracking_screen.dart';
+import 'package:ohara/features/social/presentation/screens/admin_content_screen.dart';
+import 'package:ohara/features/social/presentation/screens/content_composer_screen.dart';
+import 'package:ohara/features/social/presentation/screens/content_detail_screen.dart';
+import 'package:ohara/features/social/presentation/screens/content_studio_screen.dart';
+import 'package:ohara/features/social/presentation/screens/reels_screen.dart';
+import 'package:ohara/features/social/presentation/screens/social_feed_screen.dart';
+import 'package:ohara/features/splash/presentation/screens/splash_screen.dart';
+import 'package:ohara/features/stories/presentation/screens/story_viewer_screen.dart';
+import 'package:ohara/features/trends/presentation/screens/admin_trends_screen.dart';
+import 'package:ohara/features/trends/presentation/screens/seller_trends_screen.dart';
+import 'package:ohara/features/user_profile/presentation/screens/edit_profile_screen.dart';
+import 'package:ohara/features/user_profile/presentation/screens/follow_list_screen.dart';
+import 'package:ohara/features/user_profile/presentation/screens/user_profile_screen.dart';
+import 'package:ohara/features/value/presentation/screens/admin_value_screen.dart';
+import 'package:ohara/features/value/presentation/screens/value_screen.dart';
+import 'package:ohara/features/verification/presentation/screens/account_verification_screen.dart';
+import 'package:ohara/features/visual_search/presentation/screens/visual_search_screen.dart';
+import 'package:ohara/features/wallet/presentation/screens/wallet_screen.dart';
 
 final rootNavigatorKey = GlobalKey<NavigatorState>();
 
@@ -256,7 +256,7 @@ final goRouterProvider = Provider<GoRouter>((ref) {
       // An https link she tapped in WhatsApp. Android and iOS hand the app the
       // URL's *path* — `/product/abc` — and the app's own product page has
       // always been `/product-details?id=abc`, so without this the link she
-      // followed lands on the 404 screen even with Reem installed. Pass-through
+      // followed lands on the 404 screen even with Ohara installed. Pass-through
       // shapes like `/user/abc` are already routes; returning them here would
       // be a redirect to the current location, which is a loop.
       final shareRoute = ShareLinks.routeFor(state.uri);
@@ -536,7 +536,7 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const SalonQueueScreen(),
       ),
 
-      // Reem AI Stylist. Full-screen rather than a shell tab: a conversation
+      // Ohara AI Stylist. Full-screen rather than a shell tab: a conversation
       // owns the whole surface, and the bottom bar competing with the composer
       // for the same thumb is the wrong trade.
       GoRoute(
@@ -563,13 +563,13 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state) =>
             StylistOutfitScreen(outfitId: state.pathParameters['id'] ?? ''),
       ),
-      // Reem Closet. Full-screen: her wardrobe is a place she goes into rather
+      // Ohara Closet. Full-screen: her wardrobe is a place she goes into rather
       // than a shelf she glances at, and the grid wants the whole surface.
       //
       // Note what is absent — every one of these is authenticated and none has
       // a shareable form. A list of the clothes a woman owns, photographed in
       // her home, has no public URL by design.
-      // Reem Market Evolution. Full-screen destinations, none of them in the
+      // Ohara Market Evolution. Full-screen destinations, none of them in the
       // shell: a bundle and a drop are each one thing she came to look at, and
       // a bottom bar competing with them is the same trade the closet and the
       // rooms already refused.
@@ -682,14 +682,14 @@ final goRouterProvider = Provider<GoRouter>((ref) {
           decisionId: state.pathParameters['decisionId'] ?? '',
         ),
       ),
-      // Reem Value. Reachable from the profile and from home; full-screen
+      // Ohara Value. Reachable from the profile and from home; full-screen
       // because reading where you stand is not a glance.
       GoRoute(
         path: RoutePaths.value,
         name: RouteNames.value,
         builder: (context, state) => const ValueScreen(),
       ),
-      // Reem Visual Shopping. Full-screen for the same reason the stylist is:
+      // Ohara Visual Shopping. Full-screen for the same reason the stylist is:
       // she is comparing a photograph against a grid, and a bottom bar eating
       // the last row of that grid is the wrong trade.
       GoRoute(
@@ -1011,7 +1011,7 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state) =>
             const AdminShell(child: AdminTrendsScreen()),
       ),
-      // Reem Value's console sits beside market intelligence rather than under
+      // Ohara Value's console sits beside market intelligence rather than under
       // settings: both are engines with a policy behind them, and both are
       // operated rather than configured.
       GoRoute(

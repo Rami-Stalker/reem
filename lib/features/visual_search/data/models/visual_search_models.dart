@@ -1,12 +1,12 @@
-import 'package:reem/core/shared/models/product_model.dart';
-import 'package:reem/core/shared/value_objects/money.dart';
-import 'package:reem/features/ai_stylist/data/models/stylist_models.dart';
-import 'package:reem/features/ai_stylist/domain/entities/stylist_recommendation.dart';
-import 'package:reem/features/visual_search/domain/entities/visual_match.dart';
-import 'package:reem/features/visual_search/domain/entities/visual_search_session.dart';
-import 'package:reem/features/visual_search/domain/entities/visual_understanding.dart';
+import 'package:ohara/core/shared/models/product_model.dart';
+import 'package:ohara/core/shared/value_objects/money.dart';
+import 'package:ohara/features/ai_stylist/data/models/stylist_models.dart';
+import 'package:ohara/features/ai_stylist/domain/entities/stylist_recommendation.dart';
+import 'package:ohara/features/visual_search/domain/entities/visual_match.dart';
+import 'package:ohara/features/visual_search/domain/entities/visual_search_session.dart';
+import 'package:ohara/features/visual_search/domain/entities/visual_understanding.dart';
 
-/// Wire decoding for Reem Visual Shopping.
+/// Wire decoding for Ohara Visual Shopping.
 ///
 /// Free functions rather than `…Model extends …` subclasses, matching the
 /// stylist's decoders next door: these entities are read-only view data with

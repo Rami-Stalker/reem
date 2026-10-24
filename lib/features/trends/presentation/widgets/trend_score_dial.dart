@@ -2,9 +2,9 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/features/trends/domain/entities/trend_entities.dart';
-import 'package:reem/features/trends/presentation/widgets/trend_palette.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/features/trends/domain/entities/trend_entities.dart';
+import 'package:ohara/features/trends/presentation/widgets/trend_palette.dart';
 
 // ── The score dial ───────────────────────────────────────────────────────
 

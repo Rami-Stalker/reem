@@ -23,7 +23,7 @@ import {
 } from '@prisma/client';
 
 /**
- * Reem Rooms' request shapes.
+ * Ohara Rooms' request shapes.
  *
  * Read the verbs and the design is visible: `propose`, `choose`, `skip`,
  * `reject`, `stage`. Not one of them is `addToCart`. The vocabulary is the

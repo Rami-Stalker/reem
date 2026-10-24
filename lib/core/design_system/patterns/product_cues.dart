@@ -1,6 +1,6 @@
-import 'package:reem/core/design_system/components/badges/ds_badge.dart';
-import 'package:reem/core/design_system/components/cards/product_card.dart';
-import 'package:reem/core/shared/entities/product_cue.dart';
+import 'package:ohara/core/design_system/components/badges/ds_badge.dart';
+import 'package:ohara/core/design_system/components/cards/product_card.dart';
+import 'package:ohara/core/shared/entities/product_cue.dart';
 
 /// Turning what the server was willing to claim into what the card draws.
 ///

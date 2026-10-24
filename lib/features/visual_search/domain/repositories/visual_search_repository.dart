@@ -1,11 +1,11 @@
 import 'dart:typed_data';
 
-import 'package:reem/core/result/result.dart';
-import 'package:reem/features/ai_stylist/domain/entities/stylist_recommendation.dart';
-import 'package:reem/features/visual_search/domain/entities/visual_match.dart';
-import 'package:reem/features/visual_search/domain/entities/visual_search_session.dart';
+import 'package:ohara/core/result/result.dart';
+import 'package:ohara/features/ai_stylist/domain/entities/stylist_recommendation.dart';
+import 'package:ohara/features/visual_search/domain/entities/visual_match.dart';
+import 'package:ohara/features/visual_search/domain/entities/visual_search_session.dart';
 
-/// Reem Visual Shopping, from the app's side.
+/// Ohara Visual Shopping, from the app's side.
 ///
 /// One method per thing she does, and nothing that leaks the transport. The
 /// photograph travels as bytes rather than as a path: the picker's temporary

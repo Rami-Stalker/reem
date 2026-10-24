@@ -1,8 +1,8 @@
-import 'package:reem/core/base/repository_handler.dart';
-import 'package:reem/core/result/result.dart';
-import 'package:reem/features/value/data/datasources/value_remote_datasource.dart';
-import 'package:reem/features/value/domain/entities/value_standing.dart';
-import 'package:reem/features/value/domain/repositories/value_repository.dart';
+import 'package:ohara/core/base/repository_handler.dart';
+import 'package:ohara/core/result/result.dart';
+import 'package:ohara/features/value/data/datasources/value_remote_datasource.dart';
+import 'package:ohara/features/value/domain/entities/value_standing.dart';
+import 'package:ohara/features/value/domain/repositories/value_repository.dart';
 
 class ValueRepositoryImpl with RepositoryHandler implements ValueRepository {
   const ValueRepositoryImpl(this.remote);

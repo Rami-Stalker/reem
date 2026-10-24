@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/features/value/domain/entities/value_standing.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/features/value/domain/entities/value_standing.dart';
 
 /// The six dimensions, drawn.
 ///
-/// This is the widget that makes Reem Value legible as something other than a
+/// This is the widget that makes Ohara Value legible as something other than a
 /// points balance: a balance is one bar, and this is six. Seeing that شراء is
 /// full while رأي is empty is the whole argument of the programme, delivered
 /// without a sentence.
@@ -86,7 +86,7 @@ class _PillarRow extends StatelessWidget {
 /// Rendered as dimensions rather than as a number of points, because the
 /// arithmetic that produced it was a division of the shortfall across the
 /// pillars with the most headroom. "٦٠ نقطة" would be a truthful summary of a
-/// points system; this is a truthful summary of what Reem Value actually
+/// points system; this is a truthful summary of what Ohara Value actually
 /// computed.
 class ValueAdviceList extends StatelessWidget {
   const ValueAdviceList({super.key, required this.advice, this.limit = 3});

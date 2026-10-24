@@ -1,7 +1,7 @@
-import 'package:reem/core/result/result.dart';
-import 'package:reem/features/ai_stylist/domain/entities/stylist_conversation.dart';
-import 'package:reem/features/ai_stylist/domain/entities/stylist_outfit.dart';
-import 'package:reem/features/ai_stylist/domain/entities/stylist_recommendation.dart';
+import 'package:ohara/core/result/result.dart';
+import 'package:ohara/features/ai_stylist/domain/entities/stylist_conversation.dart';
+import 'package:ohara/features/ai_stylist/domain/entities/stylist_outfit.dart';
+import 'package:ohara/features/ai_stylist/domain/entities/stylist_recommendation.dart';
 
 /// A brief assembled from controls rather than typed.
 ///

@@ -1,10 +1,10 @@
 // shared/models/story_model.dart
 
-import 'package:reem/core/shared/entities/media.dart';
-import 'package:reem/core/shared/entities/story.dart';
-import 'package:reem/core/shared/entities/user.dart';
-import 'package:reem/core/shared/models/media_model.dart';
-import 'package:reem/core/shared/models/user_model.dart';
+import 'package:ohara/core/shared/entities/media.dart';
+import 'package:ohara/core/shared/entities/story.dart';
+import 'package:ohara/core/shared/entities/user.dart';
+import 'package:ohara/core/shared/models/media_model.dart';
+import 'package:ohara/core/shared/models/user_model.dart';
 
 class StoryModel extends Story {
   const StoryModel({

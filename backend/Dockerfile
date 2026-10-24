@@ -1,4 +1,4 @@
-# Reem API — production image.
+# Ohara API — production image.
 #
 #   docker build -t reem-api backend
 #   docker run --env-file backend/.env.production -p 3000:3000 reem-api

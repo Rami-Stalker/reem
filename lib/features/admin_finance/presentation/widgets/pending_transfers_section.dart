@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/core/result/result.dart';
-import 'package:reem/features/admin_finance/domain/entities/pending_transfer.dart';
-import 'package:reem/features/admin_finance/presentation/providers/admin_finance_provider.dart';
-import 'package:reem/features/checkout/presentation/order_labels.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/core/result/result.dart';
+import 'package:ohara/features/admin_finance/domain/entities/pending_transfer.dart';
+import 'package:ohara/features/admin_finance/presentation/providers/admin_finance_provider.dart';
+import 'package:ohara/features/checkout/presentation/order_labels.dart';
 
 /// Q51 — the bank transfers and hawala finance still has to match.
 ///

@@ -5,7 +5,7 @@ import { GraphQueryService } from './graph-query.service';
 import { GraphScheduler } from './graph.scheduler';
 
 /**
- * Reem Commerce Graph.
+ * Ohara Commerce Graph.
  *
  * A projection layer, not a source of truth: everything in it is derived from
  * tables that already exist, and the whole thing could be dropped and rebuilt.

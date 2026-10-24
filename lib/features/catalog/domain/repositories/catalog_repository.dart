@@ -1,5 +1,5 @@
-import 'package:reem/core/result/result.dart';
-import 'package:reem/core/shared/entities/product.dart';
+import 'package:ohara/core/result/result.dart';
+import 'package:ohara/core/shared/entities/product.dart';
 
 abstract interface class CatalogRepository {
   Future<Result<List<Product>>> getTrendingProducts();

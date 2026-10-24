@@ -1,5 +1,5 @@
-import 'package:reem/core/result/result.dart';
-import 'package:reem/features/seller_returns/domain/entities/return_request.dart';
+import 'package:ohara/core/result/result.dart';
+import 'package:ohara/features/seller_returns/domain/entities/return_request.dart';
 
 /// What the seller may do about goods coming back.
 ///

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:reem/core/design_system/foundation/tokens/ds_spacing.dart';
+import 'package:ohara/core/design_system/foundation/tokens/ds_spacing.dart';
 
 extension DsSpacingContext on BuildContext {
   double get spacingXs => DsSpacing.xs;

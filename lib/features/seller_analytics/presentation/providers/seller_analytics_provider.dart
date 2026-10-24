@@ -1,13 +1,13 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 
-import 'package:reem/core/presentation/providers/core_providers.dart';
-import 'package:reem/core/result/result.dart';
-import 'package:reem/features/seller_analytics/data/datasources/impl/seller_analytics_remote_datasource_impl.dart';
-import 'package:reem/features/seller_analytics/data/datasources/seller_analytics_remote_datasource.dart';
-import 'package:reem/features/seller_analytics/data/repositories/seller_analytics_repository_impl.dart';
-import 'package:reem/features/seller_analytics/domain/entities/seller_analytics_report.dart';
-import 'package:reem/features/seller_analytics/domain/repositories/seller_analytics_repository.dart';
+import 'package:ohara/core/presentation/providers/core_providers.dart';
+import 'package:ohara/core/result/result.dart';
+import 'package:ohara/features/seller_analytics/data/datasources/impl/seller_analytics_remote_datasource_impl.dart';
+import 'package:ohara/features/seller_analytics/data/datasources/seller_analytics_remote_datasource.dart';
+import 'package:ohara/features/seller_analytics/data/repositories/seller_analytics_repository_impl.dart';
+import 'package:ohara/features/seller_analytics/domain/entities/seller_analytics_report.dart';
+import 'package:ohara/features/seller_analytics/domain/repositories/seller_analytics_repository.dart';
 
 final sellerAnalyticsRemoteDataSourceProvider =
     Provider<SellerAnalyticsRemoteDataSource>(

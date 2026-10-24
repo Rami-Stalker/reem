@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/core/media/authorized_media_image.dart';
-import 'package:reem/core/media/media_variants.dart';
-import 'package:reem/core/router/route_paths.dart';
-import 'package:reem/features/create/presentation/providers/create_provider.dart';
-import 'package:reem/features/create/presentation/providers/create_state.dart';
-import 'package:reem/features/create/presentation/widgets/create_header.dart';
-import 'package:reem/features/create/presentation/widgets/post_caption_field.dart';
-import 'package:reem/features/seller_products/domain/entities/managed_product.dart';
-import 'package:reem/features/seller_products/domain/entities/product_status.dart';
-import 'package:reem/features/seller_products/presentation/providers/seller_products_providers.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/core/media/authorized_media_image.dart';
+import 'package:ohara/core/media/media_variants.dart';
+import 'package:ohara/core/router/route_paths.dart';
+import 'package:ohara/features/create/presentation/providers/create_provider.dart';
+import 'package:ohara/features/create/presentation/providers/create_state.dart';
+import 'package:ohara/features/create/presentation/widgets/create_header.dart';
+import 'package:ohara/features/create/presentation/widgets/post_caption_field.dart';
+import 'package:ohara/features/seller_products/domain/entities/managed_product.dart';
+import 'package:ohara/features/seller_products/domain/entities/product_status.dart';
+import 'package:ohara/features/seller_products/presentation/providers/seller_products_providers.dart';
 
 class AddPostScreen extends ConsumerStatefulWidget {
   const AddPostScreen({super.key});
@@ -65,7 +65,7 @@ class _AddPostScreenState extends ConsumerState<AddPostScreen> {
         .toList(growable: false);
     final selectedProduct = _selectedProduct(products);
 
-    return ReemScrollPage(
+    return OharaScrollPage(
       onRefresh: () => ref.read(myProductsNotifierProvider.notifier).refresh(),
       slivers: [
         PremiumAppBar(title: context.l10n.createPostTitle, showBack: true),

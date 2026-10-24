@@ -339,7 +339,7 @@ export class StylistConversationService {
           return {
             title: entry.product.title,
             priceLabel: price,
-            sellerName: offer?.seller.name ?? 'بائعة على ريم',
+            sellerName: offer?.seller.name ?? 'بائعة على أوهارا',
             reason: entry.reasonText,
             inStock: (offer?.stock ?? 0) > 0,
           };

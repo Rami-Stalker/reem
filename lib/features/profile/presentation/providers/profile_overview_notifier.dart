@@ -1,8 +1,8 @@
 import 'package:flutter_riverpod/legacy.dart';
 
-import 'package:reem/core/result/result.dart';
-import 'package:reem/features/profile/domain/usecases/get_profile_overview_usecase.dart';
-import 'package:reem/features/profile/presentation/providers/profile_overview_state.dart';
+import 'package:ohara/core/result/result.dart';
+import 'package:ohara/features/profile/domain/usecases/get_profile_overview_usecase.dart';
+import 'package:ohara/features/profile/presentation/providers/profile_overview_state.dart';
 
 /// Loads and refreshes the profile-centre overview, keeping the last good data
 /// on screen during a refresh.

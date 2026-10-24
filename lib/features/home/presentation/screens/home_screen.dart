@@ -2,39 +2,39 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/experience/role_experience.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/core/router/route_paths.dart';
-import 'package:reem/core/router/tab_reselect.dart';
-import 'package:reem/features/discovery/domain/entities/product_collection.dart';
-import 'package:reem/features/experience/presentation/providers/role_experience_provider.dart';
-import 'package:reem/features/experience/presentation/screens/experience_surface_screen.dart';
-import 'package:reem/features/home/presentation/providers/home_content_provider.dart';
-import 'package:reem/features/home/presentation/providers/home_provider.dart';
-import 'package:reem/features/home/presentation/widgets/home_continue_shopping.dart';
-import 'package:reem/features/home/presentation/widgets/home_dynamic_blocks.dart';
-import 'package:reem/features/home/presentation/widgets/home_featured_stores.dart';
-import 'package:reem/features/home/presentation/widgets/home_flash_deals.dart';
-import 'package:reem/features/home/presentation/widgets/home_hero_carousel.dart';
-import 'package:reem/features/home/presentation/widgets/home_loyalty_card.dart';
-import 'package:reem/features/home/presentation/widgets/home_nearby_stores.dart';
-import 'package:reem/features/home/presentation/widgets/home_notifications_summary.dart';
-import 'package:reem/features/home/presentation/widgets/home_recently_viewed.dart';
-import 'package:reem/features/home/presentation/widgets/home_showcase_section.dart';
-import 'package:reem/features/home/presentation/widgets/home_stories_rail.dart';
-import 'package:reem/features/home/presentation/widgets/home_wishlist_highlights.dart';
-import 'package:reem/features/home/presentation/widgets/living/home_aura.dart';
-import 'package:reem/features/home/presentation/widgets/living/home_bento.dart';
-import 'package:reem/features/home/presentation/widgets/living/home_mood_dial.dart';
-import 'package:reem/features/home/presentation/widgets/living/home_pulse.dart';
-import 'package:reem/features/home/presentation/widgets/living/home_style_deck.dart';
-import 'package:reem/features/market/presentation/screens/drops_screen.dart';
-import 'package:reem/features/market/presentation/widgets/bundles_rail.dart';
-import 'package:reem/features/profile/presentation/providers/profile_provider.dart';
-import 'package:reem/features/salons/presentation/widgets/home_salons_rail.dart';
-import 'package:reem/features/seller_dashboard/presentation/screens/seller_home_screen.dart';
-import 'package:reem/features/value/presentation/widgets/value_standing_card.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/experience/role_experience.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/core/router/route_paths.dart';
+import 'package:ohara/core/router/tab_reselect.dart';
+import 'package:ohara/features/discovery/domain/entities/product_collection.dart';
+import 'package:ohara/features/experience/presentation/providers/role_experience_provider.dart';
+import 'package:ohara/features/experience/presentation/screens/experience_surface_screen.dart';
+import 'package:ohara/features/home/presentation/providers/home_content_provider.dart';
+import 'package:ohara/features/home/presentation/providers/home_provider.dart';
+import 'package:ohara/features/home/presentation/widgets/home_continue_shopping.dart';
+import 'package:ohara/features/home/presentation/widgets/home_dynamic_blocks.dart';
+import 'package:ohara/features/home/presentation/widgets/home_featured_stores.dart';
+import 'package:ohara/features/home/presentation/widgets/home_flash_deals.dart';
+import 'package:ohara/features/home/presentation/widgets/home_hero_carousel.dart';
+import 'package:ohara/features/home/presentation/widgets/home_loyalty_card.dart';
+import 'package:ohara/features/home/presentation/widgets/home_nearby_stores.dart';
+import 'package:ohara/features/home/presentation/widgets/home_notifications_summary.dart';
+import 'package:ohara/features/home/presentation/widgets/home_recently_viewed.dart';
+import 'package:ohara/features/home/presentation/widgets/home_showcase_section.dart';
+import 'package:ohara/features/home/presentation/widgets/home_stories_rail.dart';
+import 'package:ohara/features/home/presentation/widgets/home_wishlist_highlights.dart';
+import 'package:ohara/features/home/presentation/widgets/living/home_aura.dart';
+import 'package:ohara/features/home/presentation/widgets/living/home_bento.dart';
+import 'package:ohara/features/home/presentation/widgets/living/home_mood_dial.dart';
+import 'package:ohara/features/home/presentation/widgets/living/home_pulse.dart';
+import 'package:ohara/features/home/presentation/widgets/living/home_style_deck.dart';
+import 'package:ohara/features/market/presentation/screens/drops_screen.dart';
+import 'package:ohara/features/market/presentation/widgets/bundles_rail.dart';
+import 'package:ohara/features/profile/presentation/providers/profile_provider.dart';
+import 'package:ohara/features/salons/presentation/widgets/home_salons_rail.dart';
+import 'package:ohara/features/seller_dashboard/presentation/screens/seller_home_screen.dart';
+import 'package:ohara/features/value/presentation/widgets/value_standing_card.dart';
 
 /// Role-aware home screen dispatcher — renders [SellerHomeScreen] for sellers
 /// and the buyer home feed for customers. Both share the same tab slot so the
@@ -129,7 +129,7 @@ class _BuyerHomeScreenState extends ConsumerState<_BuyerHomeScreen> {
 
     ref.listen(tabReselectProvider(_homeBranch), (_, _) => _scrollToTop());
 
-    return ReemScrollPage(
+    return OharaScrollPage(
       controller: _scrollController,
       onRefresh: () => _refresh(ref),
       slivers: [

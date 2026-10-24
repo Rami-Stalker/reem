@@ -139,7 +139,7 @@ export class ClosetItemService {
   // ── Adding ────────────────────────────────────────────────────────────
 
   /**
-   * She owns this Reem product.
+   * She owns this Ohara product.
    *
    * Idempotent on (product, variant): tapping "أضيفي لخزانتي" twice is one
    * garment. Enforced in code rather than by a unique index because a woman may
@@ -288,7 +288,7 @@ export class ClosetItemService {
   /**
    * A delivered line becomes a garment.
    *
-   * The one moment Reem knows for certain she owns something, which is why the
+   * The one moment Ohara knows for certain she owns something, which is why the
    * closet fills itself from here rather than from an order being placed. The
    * `orderItemId` unique index makes a replayed delivery event a no-op, so this
    * is safe to call from an event handler that may fire more than once.

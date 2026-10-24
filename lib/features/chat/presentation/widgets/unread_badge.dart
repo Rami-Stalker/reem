@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:reem/core/design_system/design_system.dart';
+import 'package:ohara/core/design_system/design_system.dart';
 
 /// How many messages are waiting, pressed into a wax seal.
 class UnreadBadge extends StatelessWidget {

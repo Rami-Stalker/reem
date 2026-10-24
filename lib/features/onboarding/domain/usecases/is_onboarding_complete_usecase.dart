@@ -1,4 +1,4 @@
-import 'package:reem/features/onboarding/domain/repositories/onboarding_repository.dart';
+import 'package:ohara/features/onboarding/domain/repositories/onboarding_repository.dart';
 
 class IsOnboardingCompleteUseCase {
   const IsOnboardingCompleteUseCase(this._repository);

@@ -50,10 +50,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get a11yShare => 'مشاركة';
 
   @override
-  String get aboutReem => 'عن ريم';
+  String get aboutOhara => 'عن أوهارا';
 
   @override
-  String get aboutReemBlurb =>
+  String get aboutOharaBlurb =>
       'بيت راقٍ للتسوّق الاجتماعي يجمع القطع التي تحبّينها — تسوّق واكتشاف ومجتمع في مكان واحد.';
 
   @override
@@ -79,7 +79,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get accountVerificationBlurb =>
-      'علامة التوثيق جنب اسمك بتقول إنّ ريم تحققت من هويتك. ابعتي وثيقة ومنراجعها.';
+      'علامة التوثيق جنب اسمك بتقول إنّ أوهارا تحققت من هويتك. ابعتي وثيقة ومنراجعها.';
 
   @override
   String get accountVerificationDocType => 'نوع الوثيقة';
@@ -101,7 +101,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get accountVerificationPrivacy =>
-      'وثائقك ما بيقرأها إلا الفريق اللي بيراجعها، وما بتظهر لحدا تاني على ريم.';
+      'وثائقك ما بيقرأها إلا الفريق اللي بيراجعها، وما بتظهر لحدا تاني على أوهارا.';
 
   @override
   String get accountVerificationResubmit => 'إعادة الإرسال';
@@ -227,7 +227,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get actionStoreProfile => 'صفحة المتجر';
 
   @override
-  String get actionStylist => 'مساعِدة ريم';
+  String get actionStylist => 'مساعِدة أوهارا';
 
   @override
   String get actionTrends => 'محرّك الرائج';
@@ -1125,7 +1125,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get adminWelcome => 'مرحباً بعودتكِ';
 
   @override
-  String get aiStylistTitle => 'مساعِدة ريم';
+  String get aiStylistTitle => 'مساعِدة أوهارا';
 
   @override
   String get all => 'الكل';
@@ -1259,7 +1259,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get appPreferences => 'تفضيلات التطبيق';
 
   @override
-  String get appTitle => 'ريم';
+  String get appTitle => 'أوهارا';
 
   @override
   String appVersion(String version) {
@@ -1271,7 +1271,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get appearanceDescription =>
-      'اختاري كيف يظهر تطبيق ريم على جهازكِ. يُحفظ تفضيلكِ تلقائياً.';
+      'اختاري كيف يظهر تطبيق أوهارا على جهازكِ. يُحفظ تفضيلكِ تلقائياً.';
 
   @override
   String get apply => 'تطبيق';
@@ -1471,7 +1471,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get chatRetrySend => 'جرّبي مرة تانية';
 
   @override
-  String get chatSafetyNote => 'أبقي الدفع داخل ريم';
+  String get chatSafetyNote => 'أبقي الدفع داخل أوهارا';
 
   @override
   String get chatSafetyNoteBody =>
@@ -1740,7 +1740,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get collectionDeals => 'كل العروض';
 
   @override
-  String get collectionFeatured => 'مختارات ريم';
+  String get collectionFeatured => 'مختارات أوهارا';
 
   @override
   String get collectionMostLoved => 'الأكثر إعجاباً';
@@ -1967,7 +1967,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get declaredFemaleLabel =>
-      'أُقرّ بأنني أنثى، وأوافق على شروط استخدام ريم';
+      'أُقرّ بأنني أنثى، وأوافق على شروط استخدام أوهارا';
 
   @override
   String get delete => 'حذف';
@@ -2016,7 +2016,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get discoverAskHint => 'ماذا تحتاجين؟';
 
   @override
-  String get discoverAskLabel => 'اسألي ريم';
+  String get discoverAskLabel => 'اسألي أوهارا';
 
   @override
   String get discoverAskSend => 'اسألي';
@@ -2248,7 +2248,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get faqPaymentAnswer =>
-      'الدفع عند الاستلام، أو من محفظتكِ في ريم. لا تدفعي لأي متجر خارج التطبيق — الطلب المدفوع خارجه غير محمي.';
+      'الدفع عند الاستلام، أو من محفظتكِ في أوهارا. لا تدفعي لأي متجر خارج التطبيق — الطلب المدفوع خارجه غير محمي.';
 
   @override
   String get faqPoints => 'كيف تعمل نقاط الولاء؟';
@@ -2872,7 +2872,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get homeLoyaltySubtitle => 'اكسبي نقاطاً مع كل عملية شراء ✨';
 
   @override
-  String get homeLoyaltyTitle => 'مكافآت ريم';
+  String get homeLoyaltyTitle => 'مكافآت أوهارا';
 
   @override
   String get homeNearbyEyebrow => 'قريبة منكِ';
@@ -3161,7 +3161,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get matchCodeHint =>
-      'تأكّدي أن الرسالة تحمل الرقمين نفسهما. لن يطلب منك فريق ريم قراءة الرمز أبدًا.';
+      'تأكّدي أن الرسالة تحمل الرقمين نفسهما. لن يطلب منك فريق أوهارا قراءة الرمز أبدًا.';
 
   @override
   String get matchCodeLabel => 'رمز المطابقة';
@@ -3443,11 +3443,11 @@ class AppLocalizationsAr extends AppLocalizations {
   String get notifPushBlurb => 'تنبيهات الرسائل وتحديثات الطلبات والعروض.';
 
   @override
-  String get notifPushBlocked => 'جوّالكِ مانع إشعارات ريم.';
+  String get notifPushBlocked => 'جوّالكِ مانع إشعارات أوهارا.';
 
   @override
   String get notifPushBlockedBody =>
-      'هاتفكِ يمنع إشعارات ريم، فلن يصلكِ شيء مما يلي حتى تسمحي بها من إعدادات النظام.';
+      'هاتفكِ يمنع إشعارات أوهارا، فلن يصلكِ شيء مما يلي حتى تسمحي بها من إعدادات النظام.';
 
   @override
   String get notifPushBlockedTitle => 'الإشعارات مطفية';
@@ -6050,7 +6050,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get totpSecretLabel => 'المفتاح السرّي';
 
   @override
-  String get totpSetupTitle => 'أضيفي ريم إلى تطبيق المصادقة';
+  String get totpSetupTitle => 'أضيفي أوهارا إلى تطبيق المصادقة';
 
   @override
   String get totpTitle => 'تطبيق المصادقة';
@@ -6716,7 +6716,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get voiceMessage => 'ملاحظة صوتية';
 
   @override
-  String get voicePermissionDenied => 'يحتاج ريم إذن استخدام الميكروفون.';
+  String get voicePermissionDenied => 'يحتاج أوهارا إذن استخدام الميكروفون.';
 
   @override
   String get voiceRecord => 'سجّلي ملاحظة صوتية';
@@ -6744,7 +6744,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get walletEmptyTitle => 'محفظتكِ فارغة الآن';
 
   @override
-  String get walletNotWithdrawable => 'يُستخدم داخل ريم فقط';
+  String get walletNotWithdrawable => 'يُستخدم داخل أوهارا فقط';
 
   @override
   String get walletOffline => 'لا يوجد اتصال. سنحدّث رصيدكِ عند عودة الشبكة.';
@@ -6789,7 +6789,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get welcomeBack => 'مرحباً بعودتكِ';
 
   @override
-  String get welcomeToReem => 'مرحباً بكِ في ريم';
+  String get welcomeToOhara => 'مرحباً بكِ في أوهارا';
 
   @override
   String get wishlist => 'المفضّلة';
@@ -7379,7 +7379,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get policiesTitle => 'السياسات والشروط';
 
   @override
-  String get policiesSubtitle => 'الوثائق التي تحكم استخدامك لريم';
+  String get policiesSubtitle => 'الوثائق التي تحكم استخدامك لأوهارا';
 
   @override
   String get policiesSectionForYou => 'يخصّك';
@@ -7466,7 +7466,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get policiesConsentIntroNew =>
-      'اقرئي الوثائق التالية ووافقي عليها لمتابعة استخدام ريم.';
+      'اقرئي الوثائق التالية ووافقي عليها لمتابعة استخدام أوهارا.';
 
   @override
   String get policiesConsentIntroUpdated =>
@@ -8004,7 +8004,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get closetEmptyBody =>
-      'ضعي فيها قطعكِ — ما اشتريتِه من ريم وما لديكِ من قبل. من هنا نعرف ما ينقصكِ وما يمكنكِ لبسه.';
+      'ضعي فيها قطعكِ — ما اشتريتِه من أوهارا وما لديكِ من قبل. من هنا نعرف ما ينقصكِ وما يمكنكِ لبسه.';
 
   @override
   String get closetBringPurchases => 'أضيفي مشترياتي';
@@ -8815,7 +8815,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get valueCancel => 'إلغاء';
 
   @override
-  String get valueTitle => 'مكانتي في ريم';
+  String get valueTitle => 'مكانتي في أوهارا';
 
   @override
   String get valueLoadFailed => 'تعذّر تحميل مكانتكِ.';
@@ -9050,7 +9050,7 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
-  String get valueCardTitle => 'مكانتكِ في ريم';
+  String get valueCardTitle => 'مكانتكِ في أوهارا';
 
   @override
   String valueCardCloseTo(String tier) {
@@ -9084,10 +9084,10 @@ class AppLocalizationsAr extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'القطع من $count محلاً — جمعتها ريم لأنها تليق ببعضها.',
-      few: 'القطع من $count محلات — جمعتها ريم لأنها تليق ببعضها.',
-      two: 'القطع من محلّين — جمعتها ريم لأنها تليق ببعضها.',
-      one: 'القطع من محل واحد — جمعتها ريم لأنها تليق ببعضها.',
+      other: 'القطع من $count محلاً — جمعتها أوهارا لأنها تليق ببعضها.',
+      few: 'القطع من $count محلات — جمعتها أوهارا لأنها تليق ببعضها.',
+      two: 'القطع من محلّين — جمعتها أوهارا لأنها تليق ببعضها.',
+      one: 'القطع من محل واحد — جمعتها أوهارا لأنها تليق ببعضها.',
     );
     return '$_temp0';
   }
@@ -9097,7 +9097,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get marketCheaperOptionsBody =>
-      'الخانة نفسها، بقطعة أخرى تراها ريم قريبة منها.';
+      'الخانة نفسها، بقطعة أخرى تراها أوهارا قريبة منها.';
 
   @override
   String get marketLookTotal => 'مجموع الإطلالة';
@@ -9181,7 +9181,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get marketNoMissionsBody =>
-      'لا تطلب منكِ ريم شيئاً إلا حين يكون مستحقاً وفي متناولكِ.';
+      'لا تطلب منكِ أوهارا شيئاً إلا حين يكون مستحقاً وفي متناولكِ.';
 
   @override
   String get marketMissionDone => 'أنجزتِها';
@@ -9214,7 +9214,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get marketNoOwnListingsBody =>
-      'حين تجد ريم قطعة لا تُلبس في خزانتكِ، تقترح عليكِ عرضها هنا.';
+      'حين تجد أوهارا قطعة لا تُلبس في خزانتكِ، تقترح عليكِ عرضها هنا.';
 
   @override
   String get marketNoListingsBody =>
@@ -9261,7 +9261,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get marketNoSignal =>
-      'لا إشارة قوية بما يكفي الآن. لا تتكلّم ريم إلا حين تكفي البيانات.';
+      'لا إشارة قوية بما يكفي الآن. لا تتكلّم أوهارا إلا حين تكفي البيانات.';
 
   @override
   String get marketWorthADrop => 'تستحق إطلاقاً';
@@ -9675,7 +9675,7 @@ class AppLocalizationsAr extends AppLocalizations {
       'لا نحفظ بيانات بطاقات. تُدفع كل عملية عند إتمامها بالطريقة التي تختارينها.';
 
   @override
-  String get settingsReemWallet => 'محفظة ريم';
+  String get settingsOharaWallet => 'محفظة أوهارا';
 
   @override
   String get settingsHintCod => 'تدفعين نقداً للمندوبة عند الاستلام';
@@ -10329,11 +10329,11 @@ class AppLocalizationsAr extends AppLocalizations {
   String get stylistNotForMe => 'ليس لي';
 
   @override
-  String get stylistWelcomeTitle => 'مساعدة ريم الشخصية';
+  String get stylistWelcomeTitle => 'مساعدة أوهارا الشخصية';
 
   @override
   String get stylistWelcomeBody =>
-      'أخبريني عن المناسبة، أو القطعة، أو الميزانية — وأرتّب لكِ خيارات متوفرة فعلاً لدى بائعات ريم، وأخبركِ لماذا اخترت كل قطعة.';
+      'أخبريني عن المناسبة، أو القطعة، أو الميزانية — وأرتّب لكِ خيارات متوفرة فعلاً لدى بائعات أوهارا، وأخبركِ لماذا اخترت كل قطعة.';
 
   @override
   String get stylistTryAsking => 'جرّبي أن تسأليني:';
@@ -10377,7 +10377,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get visualSawSomethingBody =>
-      'ارفعي صورة القطعة — لقطة شاشة من إنستغرام أو تيك توك أو بنترست، أو صورة من الاستوديو — ونجد لكِ أقرب ما يوجد في ريم.';
+      'ارفعي صورة القطعة — لقطة شاشة من إنستغرام أو تيك توك أو بنترست، أو صورة من الاستوديو — ونجد لكِ أقرب ما يوجد في أوهارا.';
 
   @override
   String get visualPastSearches => 'بحوثكِ السابقة';
@@ -10400,7 +10400,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get visualComparing =>
-      'نقارن الصورة بصور المنتجات الموجودة فعلاً في ريم.';
+      'نقارن الصورة بصور المنتجات الموجودة فعلاً في أوهارا.';
 
   @override
   String get visualNothingClose => 'لم أجد شيئاً قريباً';
@@ -10612,7 +10612,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get profileShare => 'مشاركة';
 
   @override
-  String get homeAskStylist => 'اسألي مساعِدة ريم';
+  String get homeAskStylist => 'اسألي مساعِدة أوهارا';
 
   @override
   String get homeAskStylistBody =>
@@ -10743,7 +10743,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get payMethodHawala => 'حوالة داخلية';
 
   @override
-  String get payMethodWallet => 'محفظة ريم';
+  String get payMethodWallet => 'محفظة أوهارا';
 
   @override
   String get rawStatePending => 'قيد الانتظار';
@@ -10996,7 +10996,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String sellerOrderPlatformDiscountNote(String amount) {
-    return 'حسم بقيمة $amount تحمّلته ريم عنكِ، ولا يُخصم من أرباحكِ.';
+    return 'حسم بقيمة $amount تحمّلته أوهارا عنكِ، ولا يُخصم من أرباحكِ.';
   }
 
   @override
@@ -11219,7 +11219,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get homeAuraQuestionNight => 'لحظة هادئة لكِ وحدكِ';
 
   @override
-  String get homeAskReem => 'اسألي ريم';
+  String get homeAskOhara => 'اسألي أوهارا';
 
   @override
   String get homeAskExample1 => 'فستان سهرة كحلي تحت 50 ألف';
@@ -11304,7 +11304,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get homeMoodTitle => 'على أي مزاج اليوم؟';
 
   @override
-  String get homeMoodSubtitle => 'اختاري، وريم تقترح الإطلالة كاملة';
+  String get homeMoodSubtitle => 'اختاري، وأوهارا تقترح الإطلالة كاملة';
 
   @override
   String get homeMoodEvening => 'سهرة';
@@ -11343,7 +11343,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get homeMoodPromptTravel => 'ملابس مريحة وأنيقة للسفر';
 
   @override
-  String get homeDeckEyebrow => 'اختارتها ريم لكِ';
+  String get homeDeckEyebrow => 'اختارتها أوهارا لكِ';
 
   @override
   String get homeDeckTitle => 'ذوقكِ، قطعة قطعة';
@@ -11377,7 +11377,7 @@ class AppLocalizationsAr extends AppLocalizations {
       few: 'أعجبتكِ $count قطع، وحفظناها في إعجاباتكِ.',
       two: 'أعجبتكِ قطعتان، وحفظناهما في إعجاباتكِ.',
       one: 'أعجبتكِ قطعة واحدة، وحفظناها في إعجاباتكِ.',
-      zero: 'لم يعجبكِ شيء اليوم؟ ستتعلّم ريم من ذلك.',
+      zero: 'لم يعجبكِ شيء اليوم؟ ستتعلّم أوهارا من ذلك.',
     );
     return '$_temp0';
   }
@@ -11389,7 +11389,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get homeDeckRestart => 'من جديد';
 
   @override
-  String get homeBentoEyebrow => 'عالم ريم';
+  String get homeBentoEyebrow => 'عالم أوهارا';
 
   @override
   String get homeBentoTitle => 'تجوّلي بين الأقسام';
@@ -11519,7 +11519,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get authLostSimCaption => 'استعيدي حسابكِ برقم آخر';
 
   @override
-  String get authSectionJoinAs => 'كيف ستنضمّين إلى ريم؟';
+  String get authSectionJoinAs => 'كيف ستنضمّين إلى أوهارا؟';
 
   @override
   String get authRoleBuyerHint => 'تسوّقي وتابعي وشاركي';
@@ -12282,10 +12282,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get salonWorkspaceLoadError => 'ما قدرنا نفتح صالونك.';
 
   @override
-  String get salonOpenOnReem => 'افتحي صالونك على ريم';
+  String get salonOpenOnOhara => 'افتحي صالونك على أوهارا';
 
   @override
-  String get salonOpenOnReemBody =>
+  String get salonOpenOnOharaBody =>
       'عرّفي عن صالونك وخدماتك وأوقات عملك، وخلّي الزبونات يحجزن مواعيدهن مباشرة من التطبيق.';
 
   @override
@@ -13139,4 +13139,132 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get reviewsPhotosNoneBody =>
       'التقييمات اللي فيها صور للقطعة ملبوسة بتظهر هون.';
+
+  @override
+  String get mapPickerTitle => 'حدّدي موقعكِ';
+
+  @override
+  String get mapPickerSearchHint => 'ابحثي عن حي، شارع أو معلم…';
+
+  @override
+  String get mapPickerMoveHint => 'حرّكي الخريطة ليصير الدبوس عند بابكِ';
+
+  @override
+  String get mapPickerLocating => 'عم نحدّد موقعكِ…';
+
+  @override
+  String get mapPickerReading => 'عم نقرأ العنوان…';
+
+  @override
+  String get mapPickerDeliveryHere => 'موقع التوصيل';
+
+  @override
+  String get mapPickerConfirm => 'تأكيد هذا الموقع';
+
+  @override
+  String get mapPickerUnknownPlace => 'مكان بلا اسم على الخريطة';
+
+  @override
+  String get mapPickerUnknownPlaceHint =>
+      'ولا يهمّكِ — الدبوس بيكفي، وبتقدري تكتبي التفاصيل بعدين';
+
+  @override
+  String get mapPickerOutsideSyria =>
+      'هالموقع برّا سوريا، والتوصيل حالياً جوّا سوريا بس';
+
+  @override
+  String get mapPickerNoResults => 'ما لقينا هالمكان، جرّبي اسم قريب منه';
+
+  @override
+  String get mapPickerMyLocation => 'موقعي الحالي';
+
+  @override
+  String get mapPickerStreets => 'شوارع';
+
+  @override
+  String get mapPickerSatellite => 'قمر صناعي';
+
+  @override
+  String get mapPickerResetNorth => 'توجيه للشمال';
+
+  @override
+  String get mapPickerZoomIn => 'تكبير';
+
+  @override
+  String get mapPickerZoomOut => 'تصغير';
+
+  @override
+  String get mapPickerRural => 'منطقة ريفية';
+
+  @override
+  String get mapPickerLocationOff => 'خدمة الموقع مطفية بالموبايل';
+
+  @override
+  String get mapPickerLocationDenied => 'ما في إذن للتطبيق يشوف موقعكِ';
+
+  @override
+  String get mapPickerLocationUnavailable =>
+      'ما قدرنا نلقط موقعكِ، حرّكي الخريطة بإيدكِ';
+
+  @override
+  String get mapPickerOpenSettings => 'الإعدادات';
+
+  @override
+  String mapPickerAccuracy(int meters) {
+    return '±$meters م';
+  }
+
+  @override
+  String get mapPickerJumpTo => 'انتقلي لمحافظة';
+
+  @override
+  String get locationFieldTitle => 'حدّدي موقعكِ على الخريطة';
+
+  @override
+  String get locationFieldSubtitle => 'أسرع من الكتابة — منعبّي العنوان عنكِ';
+
+  @override
+  String get locationFieldOr => 'أو اكتبي العنوان بنفسكِ';
+
+  @override
+  String get locationFieldChange => 'تغيير';
+
+  @override
+  String get locationFieldRemove => 'إزالة الموقع';
+
+  @override
+  String get locationFieldPinned => 'محدّد على الخريطة';
+
+  @override
+  String get locationFieldFilled =>
+      'عبّينا العنوان من الخريطة، اطّلعي عليه بسرعة';
+
+  @override
+  String get locationFieldEditDetails => 'تعديل تفاصيل العنوان';
+
+  @override
+  String get locationFieldHideDetails => 'إخفاء التفاصيل';
+
+  @override
+  String get locationFieldGovernorateUnmatched =>
+      'ما قدرنا نعرف المحافظة من الخريطة، اختاريها من تحت';
+
+  @override
+  String get locationFieldOpenInMaps => 'فتح بالخرائط';
+
+  @override
+  String get shopLocationTitle => 'حدّدي مكانكِ على الخريطة';
+
+  @override
+  String get shopLocationSubtitle =>
+      'منعبّي العنوان، والزبونات بيشوفوا مكانكِ بالضبط';
+
+  @override
+  String get businessLocationSubtitle => 'منكتب عنوان النشاط من الخريطة';
+
+  @override
+  String get mapPickerShopHere => 'موقع محلّكِ';
+
+  @override
+  String get mapPickerZoomCloser => 'قرّبي لتحددي الباب بالضبط';
 }

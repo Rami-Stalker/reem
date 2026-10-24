@@ -24,7 +24,7 @@ import { PlanView } from './purchase-plan.service';
 import { RoomRecord } from './rooms.service';
 
 /**
- * The wire shape of Reem Rooms.
+ * The wire shape of Ohara Rooms.
  *
  * Two rules run through this file.
  *

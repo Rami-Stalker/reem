@@ -1,9 +1,9 @@
-import 'package:reem/core/shared/models/product_model.dart';
-import 'package:reem/core/shared/value_objects/money.dart';
-import 'package:reem/features/closet/domain/entities/closet_gap.dart';
-import 'package:reem/features/closet/domain/entities/closet_item.dart';
-import 'package:reem/features/closet/domain/entities/closet_look.dart';
-import 'package:reem/features/closet/domain/entities/closet_overview.dart';
+import 'package:ohara/core/shared/models/product_model.dart';
+import 'package:ohara/core/shared/value_objects/money.dart';
+import 'package:ohara/features/closet/domain/entities/closet_gap.dart';
+import 'package:ohara/features/closet/domain/entities/closet_item.dart';
+import 'package:ohara/features/closet/domain/entities/closet_look.dart';
+import 'package:ohara/features/closet/domain/entities/closet_overview.dart';
 
 /// Wire decoding for the closet.
 ///

@@ -2,7 +2,7 @@
   "name": "reem-supabase-edge",
   "version": "1.0.0",
   "private": true,
-  "description": "Builds the Reem API (backend/, unmodified) into the Supabase Edge Function `api`.",
+  "description": "Builds the Ohara API (backend/, unmodified) into the Supabase Edge Function `api`.",
   "scripts": {
     "build": "node build.mjs",
     "typecheck": "node ../../backend/node_modules/typescript/bin/tsc -p tsconfig.json --noEmit",

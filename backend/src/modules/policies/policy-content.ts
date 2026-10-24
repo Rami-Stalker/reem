@@ -66,11 +66,11 @@ The Arabic text is the binding one. This English translation is provided for con
 
 const CUSTOMER_TERMS_AR = `## من نحن
 
-«ريم» منصة تسوّق اجتماعية نسائية تجمع بائعات ومشتريات في مكان واحد. المنصة وسيط تقني: نحن نوفّر مكان العرض والطلب والدفع والمتابعة، أما عقد البيع نفسه فهو بينك وبين البائعة.
+«أوهارا» منصة تسوّق اجتماعية نسائية تجمع بائعات ومشتريات في مكان واحد. المنصة وسيط تقني: نحن نوفّر مكان العرض والطلب والدفع والمتابعة، أما عقد البيع نفسه فهو بينك وبين البائعة.
 
 ## من يحق له استخدام المنصة
 
-- ريم منصة نسائية. عند إنشاء الحساب تُقرّين بأنك أنثى، وهذا الإقرار شرط لإتمام التسجيل.
+- أوهارا منصة نسائية. عند إنشاء الحساب تُقرّين بأنك أنثى، وهذا الإقرار شرط لإتمام التسجيل.
 - يجب أن تكوني قد أتممتِ 18 عامًا، أو أن تستخدمي المنصة بإشراف وليّ أمرك.
 - الحساب شخصي. لا تُشاركي رمز الدخول الذي يصلك، ولا تسمحي لغيرك باستخدام حسابك.
 
@@ -124,11 +124,11 @@ ${AR_FOOTER}`;
 
 const CUSTOMER_TERMS_EN = `## Who we are
 
-Reem is a women's social shopping platform that brings sellers and shoppers together in one place. We are a technical intermediary: we provide the place to browse, order, pay and follow up, while the contract of sale itself is between you and the seller.
+Ohara is a women's social shopping platform that brings sellers and shoppers together in one place. We are a technical intermediary: we provide the place to browse, order, pay and follow up, while the contract of sale itself is between you and the seller.
 
 ## Who may use the platform
 
-- Reem is a women's platform. When you create an account you declare that you are a woman, and that declaration is a condition of registering.
+- Ohara is a women's platform. When you create an account you declare that you are a woman, and that declaration is a condition of registering.
 - You must be 18 or over, or use the platform under the supervision of your guardian.
 - An account is personal. Do not share the sign-in code you receive, and do not let anyone else use your account.
 
@@ -184,7 +184,7 @@ ${EN_FOOTER}`;
 
 const SELLER_TERMS_AR = `## طبيعة العلاقة
 
-بفتحك متجرًا على ريم تصبحين بائعة مستقلة تستخدم المنصة لعرض بضاعتك وبيعها. ريم ليست طرفًا في عقد البيع ولا مالكةً للبضاعة، وإنما توفّر مكان العرض وأدوات الطلب والتحصيل والتوصيل.
+بفتحك متجرًا على أوهارا تصبحين بائعة مستقلة تستخدم المنصة لعرض بضاعتك وبيعها. أوهارا ليست طرفًا في عقد البيع ولا مالكةً للبضاعة، وإنما توفّر مكان العرض وأدوات الطلب والتحصيل والتوصيل.
 
 ## التوثيق قبل البيع
 
@@ -233,7 +233,7 @@ ${AR_FOOTER}`;
 
 const SELLER_TERMS_EN = `## The nature of the relationship
 
-By opening a shop on Reem you become an independent seller using the platform to display and sell your goods. Reem is not a party to the contract of sale and does not own the goods; it provides the place to display them and the tools to order, collect payment and deliver.
+By opening a shop on Ohara you become an independent seller using the platform to display and sell your goods. Ohara is not a party to the contract of sale and does not own the goods; it provides the place to display them and the tools to order, collect payment and deliver.
 
 ## Verification before selling
 
@@ -410,7 +410,7 @@ const RETURNS_AR = `## المهلة
 ## المسار الزمني
 
 1. تفتحين طلب الإرجاع من صفحة الطلب وتختارين السبب والكمية.
-2. تردّ البائعة بالقبول أو الرفض **خلال 48 ساعة**. عدم الرد خلال المهلة يُحيل الطلب إلى فريق ريم.
+2. تردّ البائعة بالقبول أو الرفض **خلال 48 ساعة**. عدم الرد خلال المهلة يُحيل الطلب إلى فريق أوهارا.
 3. عند القبول تُرتَّب إعادة الطرد، ويُفحَص عند الاستلام.
 4. يُصرَف المبلغ **خلال 3 أيام عمل** من قبول الإرجاع أو من استلام البضاعة، أيهما أبعد.
 
@@ -426,7 +426,7 @@ const RETURNS_AR = `## المهلة
 
 ## إذا رُفض طلبك
 
-الرفض يصدر مع سبب مكتوب. إذا لم تقتنعي به، يمكنك تصعيد الطلب إلى فريق ريم من صفحة الطلب نفسها، ويُنظر فيه وفق «آلية الشكاوى والنزاعات».
+الرفض يصدر مع سبب مكتوب. إذا لم تقتنعي به، يمكنك تصعيد الطلب إلى فريق أوهارا من صفحة الطلب نفسها، ويُنظر فيه وفق «آلية الشكاوى والنزاعات».
 
 ${AR_FOOTER}`;
 
@@ -458,7 +458,7 @@ You may ask to return a product **within 7 days of the parcel being delivered to
 ## The timeline
 
 1. You open a return request from the order page and choose the reason and the quantity.
-2. The seller answers, accepting or refusing, **within 48 hours**. No answer within that time sends the request to the Reem team.
+2. The seller answers, accepting or refusing, **within 48 hours**. No answer within that time sends the request to the Ohara team.
 3. On acceptance the parcel's return is arranged, and it is inspected on receipt.
 4. The money is issued **within 3 working days** of acceptance or of the goods being received, whichever is later.
 
@@ -568,7 +568,7 @@ ${EN_FOOTER}`;
 
 const DISPUTES_AR = `## قبل أن تفتحي نزاعًا
 
-معظم المشكلات تُحلّ في رسالة واحدة. ابدئي بمراسلة البائعة من صفحة الطلب: المحادثة مرتبطة بالطلب، وما يُكتب فيها يصل إلى فريق ريم إذا صار الأمر نزاعًا، فلا تحتاجين إلى إعادة الشرح.
+معظم المشكلات تُحلّ في رسالة واحدة. ابدئي بمراسلة البائعة من صفحة الطلب: المحادثة مرتبطة بالطلب، وما يُكتب فيها يصل إلى فريق أوهارا إذا صار الأمر نزاعًا، فلا تحتاجين إلى إعادة الشرح.
 
 ## متى يُفتح النزاع
 
@@ -590,7 +590,7 @@ const DISPUTES_AR = `## قبل أن تفتحي نزاعًا
 | المرحلة | المهلة |
 | --- | --- |
 | ردّ البائعة على الشكوى | 48 ساعة |
-| القرار الأول من فريق ريم | 7 أيام عمل |
+| القرار الأول من فريق أوهارا | 7 أيام عمل |
 | الاعتراض على القرار | 7 أيام من إبلاغك به |
 | القرار النهائي | 7 أيام عمل من الاعتراض |
 
@@ -616,7 +616,7 @@ ${AR_FOOTER}`;
 
 const DISPUTES_EN = `## Before you open a dispute
 
-Most problems are settled in one message. Start by messaging the seller from the order page: the conversation is attached to the order, and what is written in it reaches the Reem team if the matter becomes a dispute, so you never have to explain twice.
+Most problems are settled in one message. Start by messaging the seller from the order page: the conversation is attached to the order, and what is written in it reaches the Ohara team if the matter becomes a dispute, so you never have to explain twice.
 
 ## When a dispute may be opened
 
@@ -638,7 +638,7 @@ A dispute is opened from the order page, **within 14 days** of delivery or of th
 | Stage | Time |
 | --- | --- |
 | Seller's reply to the complaint | 48 hours |
-| First decision by the Reem team | 7 working days |
+| First decision by the Ohara team | 7 working days |
 | Appeal against the decision | 7 days from being told |
 | Final decision | 7 working days from the appeal |
 
@@ -666,16 +666,16 @@ ${EN_FOOTER}`;
 
 const LIABILITY_AR = `## الخلاصة أولًا
 
-ريم منصة وسيطة. عقد البيع بينك وبين البائعة، والبائعة مسؤولة عن بضاعتها. مسؤولية ريم هي عن المنصة نفسها وعن الخدمات التي تقدّمها بذاتها: الطلب، والتحصيل، وحجز المال، والتوثيق، وفضّ النزاع.
+أوهارا منصة وسيطة. عقد البيع بينك وبين البائعة، والبائعة مسؤولة عن بضاعتها. مسؤولية أوهارا هي عن المنصة نفسها وعن الخدمات التي تقدّمها بذاتها: الطلب، والتحصيل، وحجز المال، والتوثيق، وفضّ النزاع.
 
-## ما تضمنه ريم
+## ما تضمنه أوهارا
 
 - أن يكون كل طلب مسجّلًا بحالته وتوقيتاته، وأن يكون هذا السجل متاحًا للطرفين.
 - أن تبقى مستحقات البائعة محجوزة حتى التسليم وانقضاء مهلة الإرجاع، فلا يُطالَب أحد بمال غادر بالفعل.
 - أن تُوثَّق كل بائعة قبل البيع، وأن يُتاح الإبلاغ عن أي متجر أو منتج.
 - أن يُنظر في كل نزاع وفق مهل معلنة وقرار مسبَّب.
 
-## ما لا تضمنه ريم
+## ما لا تضمنه أوهارا
 
 - ملاءمة المنتج لذوقك أو لمقاسك، ما دام مطابقًا لوصفه وصوره.
 - دقة ما تكتبه البائعة عن بضاعتها؛ هي المسؤولة عنه، ونحن نتصرّف عند ثبوت المخالفة.
@@ -697,11 +697,11 @@ const LIABILITY_AR = `## الخلاصة أولًا
 
 ## شركة التوصيل
 
-التوصيل تُنفّذه شركات مستقلة. التلف أو الفقد أثناء النقل يُعالَج عبر آلية النزاعات، وتتولّى ريم متابعته مع الشركة الناقلة نيابةً عن الطرفين.
+التوصيل تُنفّذه شركات مستقلة. التلف أو الفقد أثناء النقل يُعالَج عبر آلية النزاعات، وتتولّى أوهارا متابعته مع الشركة الناقلة نيابةً عن الطرفين.
 
 ## حدود المسؤولية
 
-في جميع الأحوال، لا تتجاوز مسؤولية ريم المالية تجاه أي طرف عن طلب واحد **قيمة ذلك الطلب مضافًا إليها أجور توصيله**. ولا تُسأل ريم عن الأضرار غير المباشرة أو الأرباح الفائتة.
+في جميع الأحوال، لا تتجاوز مسؤولية أوهارا المالية تجاه أي طرف عن طلب واحد **قيمة ذلك الطلب مضافًا إليها أجور توصيله**. ولا تُسأل أوهارا عن الأضرار غير المباشرة أو الأرباح الفائتة.
 
 لا يُقصد بهذا البند إسقاط أي حق لا يجيز القانون النافذ إسقاطه.
 
@@ -713,16 +713,16 @@ ${AR_FOOTER}`;
 
 const LIABILITY_EN = `## The short version
 
-Reem is an intermediary platform. The contract of sale is between you and the seller, and the seller is responsible for her goods. Reem's responsibility is for the platform itself and for the services it provides in its own right: ordering, collection, holding the money, verification, and resolving disputes.
+Ohara is an intermediary platform. The contract of sale is between you and the seller, and the seller is responsible for her goods. Ohara's responsibility is for the platform itself and for the services it provides in its own right: ordering, collection, holding the money, verification, and resolving disputes.
 
-## What Reem guarantees
+## What Ohara guarantees
 
 - That every order is recorded with its state and its timings, and that this record is available to both sides.
 - That a seller's earnings are held until delivery and the end of the return window, so that nobody is asked for money that has already left.
 - That every seller is verified before selling, and that any shop or product can be reported.
 - That every dispute is considered within published time limits and decided with a stated reason.
 
-## What Reem does not guarantee
+## What Ohara does not guarantee
 
 - That a product will suit your taste or your size, so long as it matches its description and photographs.
 - The accuracy of what a seller writes about her goods; she is responsible for that, and we act when a breach is established.
@@ -744,11 +744,11 @@ Reem is an intermediary platform. The contract of sale is between you and the se
 
 ## The courier
 
-Delivery is carried out by independent companies. Damage or loss in transit is handled through the disputes process, and Reem pursues it with the carrier on behalf of both sides.
+Delivery is carried out by independent companies. Damage or loss in transit is handled through the disputes process, and Ohara pursues it with the carrier on behalf of both sides.
 
 ## Limits of liability
 
-In every case, Reem's financial liability to any party in respect of a single order does not exceed **the value of that order plus its delivery charge**. Reem is not liable for indirect loss or for lost profit.
+In every case, Ohara's financial liability to any party in respect of a single order does not exceed **the value of that order plus its delivery charge**. Ohara is not liable for indirect loss or for lost profit.
 
 Nothing in this clause is intended to exclude a right that the law in force does not permit to be excluded.
 
@@ -762,11 +762,11 @@ ${EN_FOOTER}`;
 
 const CONTENT_AR = `## ما الذي تشمله هذه السياسة
 
-كل ما يُنشر على ريم: المنشورات والريلز والقصص، التعليقات والردود، صور المنتجات وأوصافها، التقييمات، أسماء المتاجر وصورها، والرسائل بين المستخدمات.
+كل ما يُنشر على أوهارا: المنشورات والريلز والقصص، التعليقات والردود، صور المنتجات وأوصافها، التقييمات، أسماء المتاجر وصورها، والرسائل بين المستخدمات.
 
 ## قاعدة الاحتشام
 
-ريم مساحة نسائية، والالتزام بالاحتشام شرط لا استثناء فيه:
+أوهارا مساحة نسائية، والالتزام بالاحتشام شرط لا استثناء فيه:
 
 - يُمنع العُري أو ما يقاربه.
 - الملابس الداخلية وملابس السباحة تُعرَض على مانيكان أو مسطّحة، **لا على جسد**.
@@ -775,7 +775,7 @@ const CONTENT_AR = `## ما الذي تشمله هذه السياسة
 
 ## ملكية ما تنشرينه
 
-أنتِ مالكة محتواك. بنشره تمنحين ريم ترخيصًا غير حصري بعرضه داخل المنصة وفي الترويج لها، ويسقط هذا الترخيص عند حذف المحتوى — عدا النسخ التي يفرض القانون أو النزاع القائم الاحتفاظ بها.
+أنتِ مالكة محتواك. بنشره تمنحين أوهارا ترخيصًا غير حصري بعرضه داخل المنصة وفي الترويج لها، ويسقط هذا الترخيص عند حذف المحتوى — عدا النسخ التي يفرض القانون أو النزاع القائم الاحتفاظ بها.
 
 لا تنشري ما لا تملكين حقوقه: صورة متجر آخر، تصميمًا لغيرك، أو مقطعًا موسيقيًا مرخّصًا.
 
@@ -818,11 +818,11 @@ ${AR_FOOTER}`;
 
 const CONTENT_EN = `## What this policy covers
 
-Everything published on Reem: posts, reels and stories, comments and replies, product photographs and descriptions, reviews, shop names and images, and messages between users.
+Everything published on Ohara: posts, reels and stories, comments and replies, product photographs and descriptions, reviews, shop names and images, and messages between users.
 
 ## The modesty rule
 
-Reem is a women's space, and modesty is a condition with no exceptions:
+Ohara is a women's space, and modesty is a condition with no exceptions:
 
 - Nudity, or anything approaching it, is prohibited.
 - Underwear and swimwear are shown on a mannequin or laid flat, **never on a body**.
@@ -831,7 +831,7 @@ Reem is a women's space, and modesty is a condition with no exceptions:
 
 ## Ownership of what you publish
 
-You own your content. By publishing it you grant Reem a non-exclusive licence to display it inside the platform and in promoting the platform. That licence ends when you delete the content — other than copies the law or a live dispute requires us to keep.
+You own your content. By publishing it you grant Ohara a non-exclusive licence to display it inside the platform and in promoting the platform. That licence ends when you delete the content — other than copies the law or a live dispute requires us to keep.
 
 Do not publish what you do not hold the rights to: another shop's photograph, someone else's design, or licensed music.
 
@@ -896,14 +896,14 @@ export const POLICY_SEED: readonly PolicySeedDocument[] = [
       {
         locale: 'ar',
         title: 'شروط استخدام العميل',
-        summary: 'حقوقك والتزاماتك كمشترية على ريم: الحساب، الطلب، الدفع، الإلغاء.',
+        summary: 'حقوقك والتزاماتك كمشترية على أوهارا: الحساب، الطلب، الدفع، الإلغاء.',
         body: CUSTOMER_TERMS_AR,
       },
       {
         locale: 'en',
         title: 'Customer Terms of Use',
         summary:
-          'Your rights and obligations as a shopper on Reem: account, ordering, payment, cancellation.',
+          'Your rights and obligations as a shopper on Ohara: account, ordering, payment, cancellation.',
         body: CUSTOMER_TERMS_EN,
       },
     ],
@@ -919,14 +919,14 @@ export const POLICY_SEED: readonly PolicySeedDocument[] = [
       {
         locale: 'ar',
         title: 'شروط استخدام البائع',
-        summary: 'شروط فتح متجر على ريم: التوثيق، البضاعة، التجهيز، المستحقات.',
+        summary: 'شروط فتح متجر على أوهارا: التوثيق، البضاعة، التجهيز، المستحقات.',
         body: SELLER_TERMS_AR,
       },
       {
         locale: 'en',
         title: 'Seller Terms of Use',
         summary:
-          'The terms for opening a shop on Reem: verification, goods, fulfilment, earnings.',
+          'The terms for opening a shop on Ohara: verification, goods, fulfilment, earnings.',
         body: SELLER_TERMS_EN,
       },
     ],
@@ -1034,14 +1034,14 @@ export const POLICY_SEED: readonly PolicySeedDocument[] = [
       {
         locale: 'ar',
         title: 'مسؤولية المنصة والبائع',
-        summary: 'أين تنتهي مسؤولية ريم وأين تبدأ مسؤولية البائعة والمشترية.',
+        summary: 'أين تنتهي مسؤولية أوهارا وأين تبدأ مسؤولية البائعة والمشترية.',
         body: LIABILITY_AR,
       },
       {
         locale: 'en',
         title: 'Platform and Seller Liability',
         summary:
-          "Where Reem's responsibility ends and the seller's and buyer's begin.",
+          "Where Ohara's responsibility ends and the seller's and buyer's begin.",
         body: LIABILITY_EN,
       },
     ],

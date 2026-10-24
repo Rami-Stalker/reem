@@ -2,15 +2,15 @@ import 'package:app_settings/app_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/errors/failure_exception.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/core/notifications/push_notification_service.dart';
-import 'package:reem/core/notifications/push_providers.dart';
-import 'package:reem/core/result/result.dart';
-import 'package:reem/features/settings/domain/entities/notification_preferences.dart';
-import 'package:reem/features/settings/presentation/providers/settings_provider.dart';
-import 'package:reem/l10n/app_localizations.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/errors/failure_exception.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/core/notifications/push_notification_service.dart';
+import 'package:ohara/core/notifications/push_providers.dart';
+import 'package:ohara/core/result/result.dart';
+import 'package:ohara/features/settings/domain/entities/notification_preferences.dart';
+import 'package:ohara/features/settings/presentation/providers/settings_provider.dart';
+import 'package:ohara/l10n/app_localizations.dart';
 
 class NotificationsScreen extends ConsumerStatefulWidget {
   const NotificationsScreen({super.key});
@@ -52,7 +52,7 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
     final preferences = ref.watch(notificationPreferencesProvider);
     final permission = ref.watch(pushPermissionProvider).value;
 
-    return ReemScrollPage(
+    return OharaScrollPage(
       // Returned rather than awaited-and-dropped: `refresh` hands back the
       // rebuilt value, and discarding it is what the analyzer flags.
       onRefresh: () => ref.refresh(notificationPreferencesProvider.future),

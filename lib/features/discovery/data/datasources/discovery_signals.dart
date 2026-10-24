@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 
-import 'package:reem/core/network/api_endpoints.dart';
+import 'package:ohara/core/network/api_endpoints.dart';
 
 /// The taps the server cannot see for itself.
 ///

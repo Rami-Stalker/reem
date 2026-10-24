@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/core/utils/relative_time.dart';
-import 'package:reem/features/social/domain/entities/content_audience.dart';
-import 'package:reem/features/social/presentation/providers/social_providers.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/core/utils/relative_time.dart';
+import 'package:ohara/features/social/domain/entities/content_audience.dart';
+import 'package:ohara/features/social/presentation/providers/social_providers.dart';
 
 /// «شوهدت من قبل» — who watched her story or reel, and what they sent back.
 ///

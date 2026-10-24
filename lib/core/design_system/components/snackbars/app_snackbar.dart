@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 
-import 'package:reem/core/design_system/foundation/theme/extensions/color_extension.dart';
-import 'package:reem/core/design_system/foundation/theme/extensions/typography_extension.dart';
-import 'package:reem/core/design_system/foundation/tokens/ds_radius.dart';
-import 'package:reem/core/design_system/foundation/tokens/ds_spacing.dart';
-import 'package:reem/core/localization/readable_message.dart';
-import 'package:reem/l10n/app_localizations.dart';
+import 'package:ohara/core/design_system/foundation/theme/extensions/color_extension.dart';
+import 'package:ohara/core/design_system/foundation/theme/extensions/typography_extension.dart';
+import 'package:ohara/core/design_system/foundation/tokens/ds_radius.dart';
+import 'package:ohara/core/design_system/foundation/tokens/ds_spacing.dart';
+import 'package:ohara/core/localization/readable_message.dart';
+import 'package:ohara/l10n/app_localizations.dart';
 
 enum DsSnackbarType { info, success, warning, error }
 
-/// Reem-styled floating snackbars with a leading status icon and optional action.
+/// Ohara-styled floating snackbars with a leading status icon and optional action.
 abstract final class DsSnackbar {
   static void show(
     BuildContext context, {

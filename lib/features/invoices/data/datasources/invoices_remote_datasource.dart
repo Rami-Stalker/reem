@@ -1,4 +1,4 @@
-import 'package:reem/features/invoices/data/models/invoice_model.dart';
+import 'package:ohara/features/invoices/data/models/invoice_model.dart';
 
 abstract interface class InvoicesRemoteDataSource {
   /// Every document raised against one order (Q51 — hers and each seller's).

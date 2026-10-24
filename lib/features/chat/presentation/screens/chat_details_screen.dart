@@ -4,30 +4,30 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/core/media/media_asset.dart';
-import 'package:reem/core/media/media_limits.dart';
-import 'package:reem/core/media/media_providers.dart';
-import 'package:reem/core/router/route_paths.dart';
-import 'package:reem/core/utils/relative_time.dart';
-import 'package:reem/features/auth/presentation/providers/auth_provider.dart';
-import 'package:reem/features/chat/data/services/chat_realtime_service.dart';
-import 'package:reem/features/chat/domain/entities/chat_message_entity.dart';
-import 'package:reem/features/chat/presentation/providers/chat_notifier.dart';
-import 'package:reem/features/chat/presentation/providers/chat_provider.dart';
-import 'package:reem/features/chat/presentation/providers/chat_state.dart';
-import 'package:reem/features/chat/presentation/widgets/attachment_sheet.dart';
-import 'package:reem/features/chat/presentation/widgets/chat_app_bar.dart';
-import 'package:reem/features/chat/presentation/widgets/chat_date_divider.dart';
-import 'package:reem/features/chat/presentation/widgets/chat_input.dart';
-import 'package:reem/features/chat/presentation/widgets/file_message_bubble.dart';
-import 'package:reem/features/chat/presentation/widgets/image_message_bubble.dart';
-import 'package:reem/features/chat/presentation/widgets/message_bubble.dart';
-import 'package:reem/features/chat/presentation/widgets/message_delivery_status.dart';
-import 'package:reem/features/chat/presentation/widgets/typing_indicator.dart';
-import 'package:reem/features/chat/presentation/widgets/voice_message_bubble.dart';
-import 'package:reem/features/chat/presentation/widgets/voice_recorder_bar.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/core/media/media_asset.dart';
+import 'package:ohara/core/media/media_limits.dart';
+import 'package:ohara/core/media/media_providers.dart';
+import 'package:ohara/core/router/route_paths.dart';
+import 'package:ohara/core/utils/relative_time.dart';
+import 'package:ohara/features/auth/presentation/providers/auth_provider.dart';
+import 'package:ohara/features/chat/data/services/chat_realtime_service.dart';
+import 'package:ohara/features/chat/domain/entities/chat_message_entity.dart';
+import 'package:ohara/features/chat/presentation/providers/chat_notifier.dart';
+import 'package:ohara/features/chat/presentation/providers/chat_provider.dart';
+import 'package:ohara/features/chat/presentation/providers/chat_state.dart';
+import 'package:ohara/features/chat/presentation/widgets/attachment_sheet.dart';
+import 'package:ohara/features/chat/presentation/widgets/chat_app_bar.dart';
+import 'package:ohara/features/chat/presentation/widgets/chat_date_divider.dart';
+import 'package:ohara/features/chat/presentation/widgets/chat_input.dart';
+import 'package:ohara/features/chat/presentation/widgets/file_message_bubble.dart';
+import 'package:ohara/features/chat/presentation/widgets/image_message_bubble.dart';
+import 'package:ohara/features/chat/presentation/widgets/message_bubble.dart';
+import 'package:ohara/features/chat/presentation/widgets/message_delivery_status.dart';
+import 'package:ohara/features/chat/presentation/widgets/typing_indicator.dart';
+import 'package:ohara/features/chat/presentation/widgets/voice_message_bubble.dart';
+import 'package:ohara/features/chat/presentation/widgets/voice_recorder_bar.dart';
 
 class ChatDetailsScreen extends ConsumerStatefulWidget {
   const ChatDetailsScreen({super.key, required this.chatId});
@@ -198,7 +198,7 @@ class _ChatDetailsScreenState extends ConsumerState<ChatDetailsScreen>
     return Scaffold(
       resizeToAvoidBottomInset: true,
       backgroundColor: context.dsColors.background,
-      // The same slow light as the rest of Reem's stage. It replaces a live
+      // The same slow light as the rest of Ohara's stage. It replaces a live
       // full-screen blur under two drifting orbs, which repainted the whole
       // conversation behind every frame of their animation.
       body: Stack(

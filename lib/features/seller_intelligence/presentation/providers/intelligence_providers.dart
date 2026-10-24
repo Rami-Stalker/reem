@@ -1,11 +1,11 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:reem/core/presentation/providers/core_providers.dart';
-import 'package:reem/features/seller_intelligence/data/datasources/impl/seller_intelligence_remote_datasource_impl.dart';
-import 'package:reem/features/seller_intelligence/data/datasources/seller_intelligence_remote_datasource.dart';
-import 'package:reem/features/seller_intelligence/data/repositories/seller_intelligence_repository_impl.dart';
-import 'package:reem/features/seller_intelligence/domain/entities/intelligence.dart';
-import 'package:reem/features/seller_intelligence/domain/repositories/seller_intelligence_repository.dart';
+import 'package:ohara/core/presentation/providers/core_providers.dart';
+import 'package:ohara/features/seller_intelligence/data/datasources/impl/seller_intelligence_remote_datasource_impl.dart';
+import 'package:ohara/features/seller_intelligence/data/datasources/seller_intelligence_remote_datasource.dart';
+import 'package:ohara/features/seller_intelligence/data/repositories/seller_intelligence_repository_impl.dart';
+import 'package:ohara/features/seller_intelligence/domain/entities/intelligence.dart';
+import 'package:ohara/features/seller_intelligence/domain/repositories/seller_intelligence_repository.dart';
 
 /// Wiring for the three intelligence screens.
 ///

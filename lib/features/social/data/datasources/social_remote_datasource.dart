@@ -1,11 +1,11 @@
-import 'package:reem/core/domain/pagination/paginated_data.dart';
-import 'package:reem/core/shared/entities/user.dart';
-import 'package:reem/features/social/data/models/content_model.dart';
-import 'package:reem/features/social/data/models/social_models.dart';
-import 'package:reem/features/social/domain/entities/content.dart';
-import 'package:reem/features/social/domain/entities/content_comment.dart';
-import 'package:reem/features/social/domain/entities/content_draft.dart';
-import 'package:reem/features/social/domain/repositories/social_repository.dart';
+import 'package:ohara/core/domain/pagination/paginated_data.dart';
+import 'package:ohara/core/shared/entities/user.dart';
+import 'package:ohara/features/social/data/models/content_model.dart';
+import 'package:ohara/features/social/data/models/social_models.dart';
+import 'package:ohara/features/social/domain/entities/content.dart';
+import 'package:ohara/features/social/domain/entities/content_comment.dart';
+import 'package:ohara/features/social/domain/entities/content_draft.dart';
+import 'package:ohara/features/social/domain/repositories/social_repository.dart';
 
 /// The HTTP surface of the content platform.
 abstract interface class SocialRemoteDataSource {

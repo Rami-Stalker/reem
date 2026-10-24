@@ -1,8 +1,8 @@
 import 'dart:typed_data';
 
-import 'package:reem/features/ai_stylist/domain/entities/stylist_recommendation.dart';
-import 'package:reem/features/visual_search/domain/entities/visual_match.dart';
-import 'package:reem/features/visual_search/domain/entities/visual_search_session.dart';
+import 'package:ohara/features/ai_stylist/domain/entities/stylist_recommendation.dart';
+import 'package:ohara/features/visual_search/domain/entities/visual_match.dart';
+import 'package:ohara/features/visual_search/domain/entities/visual_search_session.dart';
 
 abstract interface class VisualSearchRemoteDataSource {
   Future<VisualSearchBootstrap> bootstrap();

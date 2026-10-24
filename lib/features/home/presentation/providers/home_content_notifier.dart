@@ -1,8 +1,8 @@
 import 'package:flutter_riverpod/legacy.dart';
 
-import 'package:reem/core/result/result.dart';
-import 'package:reem/features/home/domain/usecases/get_home_content_usecase.dart';
-import 'package:reem/features/home/presentation/providers/home_content_state.dart';
+import 'package:ohara/core/result/result.dart';
+import 'package:ohara/features/home/domain/usecases/get_home_content_usecase.dart';
+import 'package:ohara/features/home/presentation/providers/home_content_state.dart';
 
 /// Loads and refreshes the home page's bespoke merchandising content. Keeps the
 /// last successful content on screen during a refresh so pull-to-refresh never

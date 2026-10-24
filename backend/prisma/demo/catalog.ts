@@ -108,7 +108,7 @@ export async function seedCatalog(ctx: DemoContext): Promise<DemoProduct[]> {
     const row = await prisma.brand.create({
       data: {
         ...brand,
-        description: `علامة ${brand.nameAr} — منتقاة بعناية على ريم.`,
+        description: `علامة ${brand.nameAr} — منتقاة بعناية على أوهارا.`,
         logoUrl: productImage('logo,boutique', `brand-${brand.slug}`),
       },
     });

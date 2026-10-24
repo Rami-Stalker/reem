@@ -35,7 +35,7 @@ import { PolicyAdminService } from './policy-admin.service';
  * Behind `policy:manage`, which only SUPER_ADMIN and OPERATIONS_ADMIN hold.
  * Deliberately not `content:manage`: that one is held by every seller on the
  * platform, and publishing a version of the terms of use is not a content
- * moderation action — it changes the contract between Reem and every account.
+ * moderation action — it changes the contract between Ohara and every account.
  *
  * Every write here is recorded by `AdminAuditInterceptor` — who, which route,
  * which document, and whether it succeeded — without this file asking.

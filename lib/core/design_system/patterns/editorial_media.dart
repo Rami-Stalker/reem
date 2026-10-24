@@ -1,7 +1,7 @@
 /// The furniture of an editorial image plate — the frame itself, the glass
 /// chips that float over it, and the "shop this" plate at its foot.
 ///
-/// These were private to `ReemPostCard`, which was fine while the feed was the
+/// These were private to `OharaPostCard`, which was fine while the feed was the
 /// only surface telling a product as a full-bleed image. It is not: the
 /// category and collection pages offer the same post shape now, and copying a
 /// hundred and thirty lines of frosted plate into a second file is exactly how
@@ -13,12 +13,12 @@ import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/media/media_decode.dart';
-import 'package:reem/core/media/media_variants.dart';
-import 'package:reem/core/shared/entities/media.dart';
-import 'package:reem/core/shared/entities/product.dart';
-import 'package:reem/core/shared/value_objects/money_format.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/media/media_decode.dart';
+import 'package:ohara/core/media/media_variants.dart';
+import 'package:ohara/core/shared/entities/media.dart';
+import 'package:ohara/core/shared/entities/product.dart';
+import 'package:ohara/core/shared/value_objects/money_format.dart';
 
 /// One frame of a gallery: the photograph, with a play badge over a video.
 class DsMediaFrame extends StatelessWidget {

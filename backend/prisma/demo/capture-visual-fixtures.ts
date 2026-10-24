@@ -1,5 +1,5 @@
 /**
- * Runs Reem Visual Shopping over the seeded shop and captures what it produces.
+ * Runs Ohara Visual Shopping over the seeded shop and captures what it produces.
  *
  *   npx ts-node -r tsconfig-paths/register prisma/demo/capture-visual-fixtures.ts
  *

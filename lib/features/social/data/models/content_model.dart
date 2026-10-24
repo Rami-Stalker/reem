@@ -1,8 +1,8 @@
-import 'package:reem/core/shared/entities/media.dart';
-import 'package:reem/core/shared/models/media_model.dart';
-import 'package:reem/core/shared/models/product_model.dart';
-import 'package:reem/core/shared/models/user_model.dart';
-import 'package:reem/features/social/domain/entities/content.dart';
+import 'package:ohara/core/shared/entities/media.dart';
+import 'package:ohara/core/shared/models/media_model.dart';
+import 'package:ohara/core/shared/models/product_model.dart';
+import 'package:ohara/core/shared/models/user_model.dart';
+import 'package:ohara/features/social/domain/entities/content.dart';
 
 /// Decoding the content platform's wire shape.
 ///

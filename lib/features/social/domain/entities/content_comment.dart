@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:reem/core/shared/entities/user.dart';
+import 'package:ohara/core/shared/entities/user.dart';
 
 /// A comment, and the replies under it.
 ///

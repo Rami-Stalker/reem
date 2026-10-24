@@ -1,6 +1,6 @@
-import 'package:reem/core/shared/value_objects/money.dart';
-import 'package:reem/features/courier/domain/entities/courier_assignment.dart';
-import 'package:reem/features/shipment_tracking/domain/entities/shipment_tracking.dart';
+import 'package:ohara/core/shared/value_objects/money.dart';
+import 'package:ohara/features/courier/domain/entities/courier_assignment.dart';
+import 'package:ohara/features/shipment_tracking/domain/entities/shipment_tracking.dart';
 
 class CourierAssignmentModel extends CourierAssignment {
   const CourierAssignmentModel({
@@ -37,6 +37,8 @@ class CourierAssignmentModel extends CourierAssignment {
         city: address['city'] as String? ?? '',
         addressLine: address['address_line'] as String? ?? '',
         landmark: address['landmark'] as String?,
+        latitude: (address['latitude'] as num?)?.toDouble(),
+        longitude: (address['longitude'] as num?)?.toDouble(),
       ),
       // Absent means prepaid — deliberately not coerced to zero, because a
       // zero amount and "nothing to collect" read differently to a courier.

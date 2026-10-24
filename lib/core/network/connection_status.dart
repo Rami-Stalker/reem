@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:reem/core/presentation/providers/core_providers.dart';
+import 'package:ohara/core/presentation/providers/core_providers.dart';
 
 /// Whether the handset currently has a route to the network.
 ///

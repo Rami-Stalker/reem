@@ -1,23 +1,23 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
-import 'package:reem/core/domain/pagination/paginated_data.dart';
-import 'package:reem/core/errors/failure_exception.dart';
-import 'package:reem/core/presentation/providers/core_providers.dart';
-import 'package:reem/core/presentation/providers/paginated_notifier.dart';
-import 'package:reem/core/presentation/state/paginated_state.dart';
-import 'package:reem/core/result/result.dart';
-import 'package:reem/core/shared/entities/user.dart';
-import 'package:reem/features/auth/presentation/providers/auth_provider.dart';
-import 'package:reem/features/social/data/datasources/impl/social_remote_datasource_impl.dart';
-import 'package:reem/features/social/data/datasources/social_remote_datasource.dart';
-import 'package:reem/features/social/data/repositories/social_repository_impl.dart';
-import 'package:reem/features/social/domain/entities/content.dart';
-import 'package:reem/features/social/domain/entities/content_analytics.dart';
-import 'package:reem/features/social/domain/entities/content_audience.dart';
-import 'package:reem/features/social/domain/repositories/social_repository.dart';
-import 'package:reem/features/social/presentation/providers/composer_notifier.dart';
-import 'package:reem/features/social/presentation/providers/content_comments_notifier.dart';
-import 'package:reem/features/social/presentation/providers/content_feed_notifier.dart';
+import 'package:ohara/core/domain/pagination/paginated_data.dart';
+import 'package:ohara/core/errors/failure_exception.dart';
+import 'package:ohara/core/presentation/providers/core_providers.dart';
+import 'package:ohara/core/presentation/providers/paginated_notifier.dart';
+import 'package:ohara/core/presentation/state/paginated_state.dart';
+import 'package:ohara/core/result/result.dart';
+import 'package:ohara/core/shared/entities/user.dart';
+import 'package:ohara/features/auth/presentation/providers/auth_provider.dart';
+import 'package:ohara/features/social/data/datasources/impl/social_remote_datasource_impl.dart';
+import 'package:ohara/features/social/data/datasources/social_remote_datasource.dart';
+import 'package:ohara/features/social/data/repositories/social_repository_impl.dart';
+import 'package:ohara/features/social/domain/entities/content.dart';
+import 'package:ohara/features/social/domain/entities/content_analytics.dart';
+import 'package:ohara/features/social/domain/entities/content_audience.dart';
+import 'package:ohara/features/social/domain/repositories/social_repository.dart';
+import 'package:ohara/features/social/presentation/providers/composer_notifier.dart';
+import 'package:ohara/features/social/presentation/providers/content_comments_notifier.dart';
+import 'package:ohara/features/social/presentation/providers/content_feed_notifier.dart';
 
 // ── Wiring ──────────────────────────────────────────────────────────────────
 

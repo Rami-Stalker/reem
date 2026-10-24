@@ -1,11 +1,11 @@
-import 'package:reem/core/domain/pagination/paginated_data.dart';
-import 'package:reem/core/result/result.dart';
-import 'package:reem/core/shared/entities/user.dart';
-import 'package:reem/features/social/domain/entities/content.dart';
-import 'package:reem/features/social/domain/entities/content_analytics.dart';
-import 'package:reem/features/social/domain/entities/content_audience.dart';
-import 'package:reem/features/social/domain/entities/content_comment.dart';
-import 'package:reem/features/social/domain/entities/content_draft.dart';
+import 'package:ohara/core/domain/pagination/paginated_data.dart';
+import 'package:ohara/core/result/result.dart';
+import 'package:ohara/core/shared/entities/user.dart';
+import 'package:ohara/features/social/domain/entities/content.dart';
+import 'package:ohara/features/social/domain/entities/content_analytics.dart';
+import 'package:ohara/features/social/domain/entities/content_audience.dart';
+import 'package:ohara/features/social/domain/entities/content_comment.dart';
+import 'package:ohara/features/social/domain/entities/content_draft.dart';
 
 /// A tray of live stories, grouped by whoever posted them.
 class StoryGroup {

@@ -1,6 +1,6 @@
-import 'package:reem/features/value/domain/entities/value_standing.dart';
+import 'package:ohara/features/value/domain/entities/value_standing.dart';
 
-/// Wire decoding for Reem Value.
+/// Wire decoding for Ohara Value.
 ///
 /// Free functions rather than model subclasses, matching the stylist and the
 /// closet. Every decoder is total: a missing field yields the empty value

@@ -61,7 +61,7 @@ export class VoiceTransport implements OtpTransport {
           locale: 'ar',
           // Repeated because a caller who missed the first reading has no way
           // to ask for it again.
-          text: `رمز ريم الخاص بك هو ${spoken}. أكرر: ${spoken}.`,
+          text: `رمز أوهارا الخاص بك هو ${spoken}. أكرر: ${spoken}.`,
         }),
         signal: AbortSignal.timeout(15_000),
       });

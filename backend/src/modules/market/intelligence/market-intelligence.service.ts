@@ -67,13 +67,13 @@ export interface Opportunity {
 }
 
 /**
- * Reem Market Intelligence.
+ * Ohara Market Intelligence.
  *
  * ── What this is not ─────────────────────────────────────────────────────
  *
  * It is not a second trend engine. `trends/admin/*` already answers rising
  * categories, unmet search demand, price movement and seller performance, and
- * rebuilding any of that here would give Reem two numbers for one question —
+ * rebuilding any of that here would give Ohara two numbers for one question —
  * which in practice means the wrong one gets quoted.
  *
  * What was genuinely missing is *interpretation*: the trend engine says demand
@@ -297,7 +297,7 @@ export class MarketIntelligenceService {
       };
     })
       // An "opportunity" with nothing to do about it is an observation, and
-      // this surface is the one place in Reem that promises otherwise. If a
+      // this surface is the one place in Ohara that promises otherwise. If a
       // finding has no action for *this* audience, it does not belong on
       // their screen — it belongs on the trend engine's.
       .filter((opportunity) => opportunity.action.length > 0);
@@ -343,7 +343,7 @@ export class MarketIntelligenceService {
  * Two audiences, because the same finding is a different sentence depending on
  * who can act on it: a supply gap tells a seller to stock, and tells the admin
  * to find someone who will. Written here rather than in the client for the
- * same reason every other engine in Reem does it — the numbers and the words
+ * same reason every other engine in Ohara does it — the numbers and the words
  * describing them have to change together or one of them starts lying.
  */
 function phrase(
@@ -357,7 +357,7 @@ function phrase(
     ? Math.round((evidence['growth'] as number) * 100)
     : null;
   const sellers = evidence['sellers'];
-  // A count of one is a person, not a segment. Reem applies a k-anonymity
+  // A count of one is a person, not a segment. Ohara applies a k-anonymity
   // floor of three to every other aggregate it shows about shoppers, and an
   // opportunity screen is not the place to make an exception — «وحدة عندها
   // نقص» in a category with five products names somebody.

@@ -1,11 +1,11 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
-import 'package:reem/core/config/app_env.dart';
-import 'package:reem/core/network/api_endpoints.dart';
-import 'package:reem/core/network/interceptors/device_proof_interceptor.dart';
-import 'package:reem/core/security/device_identity_service.dart';
-import 'package:reem/core/security/device_proof_signer.dart';
-import 'package:reem/core/storage/secure_storage_service.dart';
+import 'package:ohara/core/config/app_env.dart';
+import 'package:ohara/core/network/api_endpoints.dart';
+import 'package:ohara/core/network/interceptors/device_proof_interceptor.dart';
+import 'package:ohara/core/security/device_identity_service.dart';
+import 'package:ohara/core/security/device_proof_signer.dart';
+import 'package:ohara/core/storage/secure_storage_service.dart';
 
 /// Attaches the access token to every request and transparently refreshes it on
 /// a 401 — the client never sees an expired-token failure for a still-valid
@@ -213,7 +213,7 @@ class AuthInterceptor extends Interceptor {
     return {
       'X-Reem-Device-Id': deviceId,
       'X-Reem-Device-Fingerprint': deviceId,
-      'X-Reem-Device-Name': 'Reem ${defaultTargetPlatform.name}',
+      'X-Reem-Device-Name': 'Ohara ${defaultTargetPlatform.name}',
       'X-Reem-Platform': defaultTargetPlatform.name,
       if (guestToken != null && guestToken.isNotEmpty)
         'X-Reem-Guest-Token': guestToken,

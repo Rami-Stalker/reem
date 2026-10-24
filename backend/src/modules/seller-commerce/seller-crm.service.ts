@@ -14,7 +14,7 @@ const CRM_WINDOW_DAYS = 365;
  * Silence after her last order from *this boutique* that reads as gone.
  *
  * Shorter than the platform's own lapsed threshold, deliberately. A customer
- * who has not bought from Reem in five months is lapsed from Reem; a customer
+ * who has not bought from Ohara in five months is lapsed from Ohara; a customer
  * who has not bought from this boutique in three months while buying happily
  * elsewhere is a customer this boutique lost, and that is the thing the seller
  * can actually do something about.

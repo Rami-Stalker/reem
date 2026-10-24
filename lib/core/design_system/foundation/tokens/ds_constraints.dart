@@ -1,4 +1,4 @@
-import 'package:reem/core/design_system/foundation/tokens/ds_sizes.dart';
+import 'package:ohara/core/design_system/foundation/tokens/ds_sizes.dart';
 
 /// Layout constraint constants for content width and touch targets.
 ///

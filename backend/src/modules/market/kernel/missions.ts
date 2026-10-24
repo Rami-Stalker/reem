@@ -3,7 +3,7 @@
  *
  * The reason most of these systems are worthless is that they invent a task,
  * attach a token to it, and hope the token is motivating enough to cover the
- * fact that the task was pointless. Reem's version starts from the other end:
+ * fact that the task was pointless. Ohara's version starts from the other end:
  * a mission may only ask for something that is *already* worth doing for her
  * own reasons — describing the pieces in her closet makes every future
  * suggestion better, reviewing a dress she actually wore helps the next woman

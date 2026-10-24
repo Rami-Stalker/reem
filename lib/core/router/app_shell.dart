@@ -3,17 +3,17 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/experience/experience_labels.dart';
-import 'package:reem/core/experience/role_experience.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/core/router/open_route.dart';
-import 'package:reem/core/router/route_paths.dart';
-import 'package:reem/core/router/tab_reselect.dart';
-import 'package:reem/core/sync/outbox_providers.dart';
-import 'package:reem/features/cart/presentation/providers/cart_providers.dart';
-import 'package:reem/features/experience/presentation/providers/role_experience_provider.dart';
-import 'package:reem/features/social/presentation/widgets/create_sheet.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/experience/experience_labels.dart';
+import 'package:ohara/core/experience/role_experience.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/core/router/open_route.dart';
+import 'package:ohara/core/router/route_paths.dart';
+import 'package:ohara/core/router/tab_reselect.dart';
+import 'package:ohara/core/sync/outbox_providers.dart';
+import 'package:ohara/features/cart/presentation/providers/cart_providers.dart';
+import 'package:ohara/features/experience/presentation/providers/role_experience_provider.dart';
+import 'package:ohara/features/social/presentation/widgets/create_sheet.dart';
 
 class AppShell extends ConsumerWidget {
   const AppShell({super.key, required this.navigationShell});

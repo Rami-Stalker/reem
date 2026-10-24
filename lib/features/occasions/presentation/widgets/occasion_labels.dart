@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/features/occasions/domain/entities/occasion.dart';
-import 'package:reem/features/salons/presentation/widgets/salon_labels.dart';
-import 'package:reem/l10n/app_localizations.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/features/occasions/domain/entities/occasion.dart';
+import 'package:ohara/features/salons/presentation/widgets/salon_labels.dart';
+import 'package:ohara/l10n/app_localizations.dart';
 
 /// The words and icons «مناسباتي» draws with, in one place, so that a kind of
 /// day is called the same thing on the card, the detail page and the editor.

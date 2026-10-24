@@ -42,10 +42,10 @@ async function phone(bare) {
   if (verified.error) throw verified.error;
   const accessToken = verified.data.session.access_token;
   const exchange = await api('POST', '/auth/supabase/exchange', null, { access_token: accessToken });
-  const reemToken = exchange.tokens.access_token;
-  await api('POST', '/auth/supabase/link', reemToken, { access_token: accessToken });
+  const oharaToken = exchange.tokens.access_token;
+  await api('POST', '/auth/supabase/link', oharaToken, { access_token: accessToken });
   await supabase.realtime.setAuth(accessToken);
-  return { supabase, reemToken, userId: exchange.user.id, accessToken };
+  return { supabase, oharaToken, userId: exchange.user.id, accessToken };
 }
 
 function subscribe(supabase, topic, onEvent) {
@@ -66,7 +66,7 @@ const seller = await phone(SELLER);
 console.log(`customer ${customer.userId} · seller ${seller.userId}`);
 
 // The conversation between the two (created once, then reused).
-const thread = await api('POST', '/chats', customer.reemToken, { seller_id: seller.userId });
+const thread = await api('POST', '/chats', customer.oharaToken, { seller_id: seller.userId });
 const chatId = thread.id ?? thread.data?.id;
 check('conversation resolved', Boolean(chatId), chatId);
 
@@ -79,7 +79,7 @@ check('customer joins her private topic', own.status === 'SUBSCRIBED', own.error
 
 const marker = `realtime-test ${Date.now()}`;
 const sentAt = Date.now();
-await api('POST', `/chats/${chatId}/messages`, seller.reemToken, { content: marker, client_id: `rt-${sentAt}` });
+await api('POST', `/chats/${chatId}/messages`, seller.oharaToken, { content: marker, client_id: `rt-${sentAt}` });
 for (let waited = 0; waited < 15000 && !received; waited += 250) await new Promise((r) => setTimeout(r, 250));
 const payload = received?.payload;
 check(

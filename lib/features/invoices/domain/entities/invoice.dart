@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import 'package:reem/core/shared/value_objects/money.dart';
+import 'package:ohara/core/shared/value_objects/money.dart';
 
 /// Q51 — «الاثنين»: one invoice for the whole order, one per seller.
 enum InvoiceKind {

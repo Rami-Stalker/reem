@@ -1,4 +1,4 @@
-# Reem Application Architecture
+# Ohara Application Architecture
 
 ## Overview
 
@@ -86,13 +86,13 @@ Providers should:
 
 ## Import Convention
 
-Every directive inside `lib/` uses `package:reem/...`, never a relative path.
+Every directive inside `lib/` uses `package:ohara/...`, never a relative path.
 Relative imports break the moment a file moves -- folding the widget tree into
 the design system meant rewriting 102 of them by hand, which is the reason this
 rule exists.
 
 ```dart
-import 'package:reem/core/design_system/design_system.dart';  // yes
+import 'package:ohara/core/design_system/design_system.dart';  // yes
 import '../../../../core/design_system/design_system.dart';   // no
 ```
 
@@ -147,7 +147,7 @@ node tools/architecture/check-flutter-boundaries.mjs
 
 Fails when a `domain/` library imports Flutter, Riverpod, Dio, `go_router`, or
 a `data/`/`presentation/` sibling, and when any directive under `lib/` uses a
-relative path instead of `package:reem/...`. It also prints advisory debt queues --
+relative path instead of `package:ohara/...`. It also prints advisory debt queues --
 presentation reaching for infrastructure, debug prints, DTOs inheriting from
 entities, files over 500 lines -- which are meant to be burned down gradually,
 not fixed in one pass.
@@ -166,7 +166,7 @@ node tools/architecture/find-unreachable-dart.mjs
 ```
 
 Fails when any library under `lib/` is reachable from neither `main.dart` nor a
-test. Reachability is resolved through real paths, for both `package:reem/...`
+test. Reachability is resolved through real paths, for both `package:ohara/...`
 and relative URIs, and iterated to a fixed point so that a file kept alive only
 by another dead file is still reported.
 

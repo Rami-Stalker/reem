@@ -1,6 +1,6 @@
 # Design system
 
-Everything visual in the Reem client comes from `lib/core/design_system/`. This
+Everything visual in the Ohara client comes from `lib/core/design_system/`. This
 document is the contract: what to reach for, and what never to write.
 
 The short version:
@@ -46,7 +46,7 @@ So the rule is not "use nice colours". The rule is that a screen may choose its
 Feature code imports one barrel:
 
 ```dart
-import 'package:reem/core/design_system/design_system.dart';
+import 'package:ohara/core/design_system/design_system.dart';
 ```
 
 ---
@@ -59,7 +59,7 @@ Read `primary`, `surface`, `onSurfaceVariant`, `border`, `success`, `price`,
 
 ### The three registers
 
-Reem has three audiences and three palettes, all resolved from the live theme
+Ohara has three audiences and three palettes, all resolved from the live theme
 so every one of them follows dark mode:
 
 | Register | Accessor | Character |
@@ -168,7 +168,7 @@ is exactly one number behind each concept.
 Every scrolling screen is:
 
 ```dart
-ReemScrollPage(
+OharaScrollPage(
   onRefresh: notifier.load,
   slivers: [
     PremiumAppBar(title: context.l10n.myOrders, showBack: true),
@@ -181,7 +181,7 @@ ReemScrollPage(
 `PremiumAppBar` resolves its register from the route (buyer / seller / admin)
 and paints a pinned frosted bar with a gradient title. It takes `subtitle`,
 `bottom` and `flexibleContent`, so a screen that wants a hero balance or a
-cover photo in the header does not have to leave the pattern. `ReemAppBar` is
+cover photo in the header does not have to leave the pattern. `OharaAppBar` is
 the box-layout twin for `Scaffold(appBar:)` screens and lightboxes.
 
 Do not hand-roll a `SliverAppBar`. The six screens that did were the six that
@@ -237,7 +237,7 @@ there:
 - **Controls announce themselves** — label, button role, enabled state. A
   *disabled* control still announces, so an unavailable action is
   distinguishable from a missing one.
-- **The layout survives large text.** Reem's buyers include women running their
+- **The layout survives large text.** Ohara's buyers include women running their
   phones at 150–200%. Any widget with a fixed dimension around growing text is
   a silent failure at 100% — `DsChip` overflowed its row by 170px at 2× until
   its label was made `Flexible`. Add new components to that group.

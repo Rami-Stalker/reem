@@ -12,14 +12,14 @@ import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/app_localizations.dart';
-import 'package:reem/core/shared/entities/product_variant.dart';
-import 'package:reem/core/shared/value_objects/money.dart';
-import 'package:reem/features/intelligence/domain/entities/size_fit.dart';
-import 'package:reem/features/intelligence/presentation/providers/intelligence_providers.dart';
-import 'package:reem/features/product_details/presentation/widgets/product_fit_line.dart';
-import 'package:reem/l10n/app_localizations.dart' as gen;
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/app_localizations.dart';
+import 'package:ohara/core/shared/entities/product_variant.dart';
+import 'package:ohara/core/shared/value_objects/money.dart';
+import 'package:ohara/features/intelligence/domain/entities/size_fit.dart';
+import 'package:ohara/features/intelligence/presentation/providers/intelligence_providers.dart';
+import 'package:ohara/features/product_details/presentation/widgets/product_fit_line.dart';
+import 'package:ohara/l10n/app_localizations.dart' as gen;
 
 final _captureKey = GlobalKey();
 

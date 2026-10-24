@@ -21,7 +21,7 @@ async function bootstrap() {
     // One JSON object per line in production, with the request id attached, so
     // a support agent can search for the string the customer read off her
     // screen. Development keeps the readable format — see `StructuredLogger`.
-    logger: new StructuredLogger('Reem'),
+    logger: new StructuredLogger('Ohara'),
   });
   const config = app.get(ConfigService);
 
@@ -205,7 +205,7 @@ async function bootstrap() {
   await app.listen(port, host);
 
   const path = prefix ? `/${prefix}` : '';
-  Logger.log(`Reem API listening on ${host}:${port}${path}`, 'Bootstrap');
+  Logger.log(`Ohara API listening on ${host}:${port}${path}`, 'Bootstrap');
   Logger.log(
     `Physical devices should use http://<your-computer-LAN-IP>:${port}${path}`,
     'Bootstrap',

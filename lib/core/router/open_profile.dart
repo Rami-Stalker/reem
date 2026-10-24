@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:reem/core/router/route_paths.dart';
+import 'package:ohara/core/router/route_paths.dart';
 
 /// Opens somebody's page from inside a bottom sheet.
 ///

@@ -1,4 +1,4 @@
-import 'package:reem/core/shared/entities/user.dart';
+import 'package:ohara/core/shared/entities/user.dart';
 
 class RegisterRequestModel {
   final String firstName;

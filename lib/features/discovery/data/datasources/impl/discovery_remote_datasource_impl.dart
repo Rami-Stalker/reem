@@ -1,8 +1,8 @@
-import 'package:reem/core/network/api_endpoints.dart';
-import 'package:reem/core/network/base_remote_datasource.dart';
-import 'package:reem/core/shared/models/product_model.dart';
-import 'package:reem/features/discovery/data/datasources/discovery_remote_datasource.dart';
-import 'package:reem/features/discovery/data/models/product_page_model.dart';
+import 'package:ohara/core/network/api_endpoints.dart';
+import 'package:ohara/core/network/base_remote_datasource.dart';
+import 'package:ohara/core/shared/models/product_model.dart';
+import 'package:ohara/features/discovery/data/datasources/discovery_remote_datasource.dart';
+import 'package:ohara/features/discovery/data/models/product_page_model.dart';
 
 final class DiscoveryRemoteDataSourceImpl extends BaseRemoteDataSource
     implements DiscoveryRemoteDataSource {

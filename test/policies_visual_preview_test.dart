@@ -13,18 +13,18 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/app_localizations.dart';
-import 'package:reem/core/router/route_paths.dart';
-import 'package:reem/features/policies/domain/entities/admin_policy.dart';
-import 'package:reem/features/policies/domain/entities/policy_document.dart';
-import 'package:reem/features/policies/presentation/providers/admin_policies_provider.dart';
-import 'package:reem/features/policies/presentation/providers/policies_provider.dart';
-import 'package:reem/features/policies/presentation/screens/admin_policies_screen.dart';
-import 'package:reem/features/policies/presentation/screens/policy_centre_screen.dart';
-import 'package:reem/features/policies/presentation/screens/policy_consent_screen.dart';
-import 'package:reem/features/policies/presentation/screens/policy_detail_screen.dart';
-import 'package:reem/l10n/app_localizations.dart' as gen;
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/app_localizations.dart';
+import 'package:ohara/core/router/route_paths.dart';
+import 'package:ohara/features/policies/domain/entities/admin_policy.dart';
+import 'package:ohara/features/policies/domain/entities/policy_document.dart';
+import 'package:ohara/features/policies/presentation/providers/admin_policies_provider.dart';
+import 'package:ohara/features/policies/presentation/providers/policies_provider.dart';
+import 'package:ohara/features/policies/presentation/screens/admin_policies_screen.dart';
+import 'package:ohara/features/policies/presentation/screens/policy_centre_screen.dart';
+import 'package:ohara/features/policies/presentation/screens/policy_consent_screen.dart';
+import 'package:ohara/features/policies/presentation/screens/policy_detail_screen.dart';
+import 'package:ohara/l10n/app_localizations.dart' as gen;
 
 final _captureKey = GlobalKey();
 
@@ -196,7 +196,7 @@ final _policies = <PolicySummary>[
     slug: 'customer-terms',
     audience: PolicyAudience.customer,
     title: 'شروط استخدام العميل',
-    summary: 'حقوقك والتزاماتك كمشترية على ريم: الحساب، الطلب، الدفع، الإلغاء.',
+    summary: 'حقوقك والتزاماتك كمشترية على أوهارا: الحساب، الطلب، الدفع، الإلغاء.',
     versionId: 'v-customer-terms-1',
     version: 1,
     requiredForConsent: true,
@@ -248,7 +248,7 @@ final _policies = <PolicySummary>[
     slug: 'seller-terms',
     audience: PolicyAudience.seller,
     title: 'شروط استخدام البائع',
-    summary: 'شروط فتح متجر على ريم: التوثيق، البضاعة، التجهيز، المستحقات.',
+    summary: 'شروط فتح متجر على أوهارا: التوثيق، البضاعة، التجهيز، المستحقات.',
     versionId: 'v-seller-terms-1',
     version: 1,
     requiredForConsent: true,
@@ -281,7 +281,7 @@ final _adminDocuments = <AdminPolicyDocument>[
           AdminPolicyTranslation(
             locale: 'ar',
             title: 'شروط استخدام العميل',
-            summary: 'حقوقك والتزاماتك كمشترية على ريم.',
+            summary: 'حقوقك والتزاماتك كمشترية على أوهارا.',
             body: '## من نحن. منصة تسوّق اجتماعية نسائية.',
           ),
         ],
@@ -298,7 +298,7 @@ final _adminDocuments = <AdminPolicyDocument>[
           AdminPolicyTranslation(
             locale: 'ar',
             title: 'شروط استخدام العميل',
-            summary: 'حقوقك والتزاماتك كمشترية على ريم.',
+            summary: 'حقوقك والتزاماتك كمشترية على أوهارا.',
             body: '## من نحن. منصة تسوّق اجتماعية نسائية.',
           ),
         ],

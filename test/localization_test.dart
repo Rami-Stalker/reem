@@ -3,8 +3,8 @@ import 'dart:io';
 
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:reem/core/localization/app_localizations.dart';
-import 'package:reem/l10n/app_localizations_ar.dart';
+import 'package:ohara/core/localization/app_localizations.dart';
+import 'package:ohara/l10n/app_localizations_ar.dart';
 
 /// Guards the two things that are easy to regress silently: the Arabic copy
 /// addressing the customer as a woman, and Arabic being the fallback locale.
@@ -56,7 +56,7 @@ void main() {
       expect(ar.buyNow, 'اشتري الآن');
       expect(ar.writeComment, 'اكتبي تعليقاً…');
       expect(ar.shareMoment, 'شاركي لحظتكِ');
-      expect(ar.welcomeToReem, 'مرحباً بكِ في ريم'); // was: مرحباً بك
+      expect(ar.welcomeToOhara, 'مرحباً بكِ في أوهارا'); // was: مرحباً بك
       expect(ar.contactSupport, 'تواصلي مع الدعم');
       expect(ar.followDeviceLanguage, 'اتّبعي لغة الجهاز'); // was ungrammatical
     });

@@ -1,9 +1,9 @@
 import 'package:equatable/equatable.dart';
 
-import 'package:reem/core/shared/value_objects/money.dart';
-import 'package:reem/features/checkout/domain/entities/order.dart' show SellerOrderStatus;
+import 'package:ohara/core/shared/value_objects/money.dart';
+import 'package:ohara/features/checkout/domain/entities/order.dart' show SellerOrderStatus;
 
-export 'package:reem/features/checkout/domain/entities/order.dart' show SellerOrderStatus;
+export 'package:ohara/features/checkout/domain/entities/order.dart' show SellerOrderStatus;
 
 /// How a parcel reaches the customer (Q57) — and therefore what the seller is
 /// allowed to see and to do with it.
@@ -89,6 +89,8 @@ class SellerOrderCustomer extends Equatable {
     this.district,
     this.addressLine,
     this.landmark,
+    this.latitude,
+    this.longitude,
     this.deliveryInstructions,
     this.maskedBecause,
   });
@@ -101,6 +103,13 @@ class SellerOrderCustomer extends Equatable {
   final String? district;
   final String? addressLine;
   final String? landmark;
+
+  /// The pin she dropped — only sent when the seller ships it herself.
+  final double? latitude;
+  final double? longitude;
+
+  bool get hasPin => latitude != null && longitude != null;
+
   final String? deliveryInstructions;
 
   /// The server's own explanation for the masking, in Arabic.
@@ -126,6 +135,8 @@ class SellerOrderCustomer extends Equatable {
     district,
     addressLine,
     landmark,
+    latitude,
+    longitude,
     deliveryInstructions,
     maskedBecause,
   ];

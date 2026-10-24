@@ -1,4 +1,4 @@
-# Reem
+# Ohara
 
 Women-focused social-commerce platform. A Flutter client at the repository
 root, a NestJS + PostgreSQL API in [`backend/`](backend/).
@@ -79,7 +79,7 @@ spaces itself off the 4px grid. See [docs/DESIGN_SYSTEM.md](docs/DESIGN_SYSTEM.m
 node tools/architecture/check-localization.mjs
 ```
 
-Fails on any English literal in presentation code. Reem is Arabic-first; an
+Fails on any English literal in presentation code. Ohara is Arabic-first; an
 English string in a widget is a screen a customer cannot read. A literal that
 genuinely is not copy — a dialling mask, an intl date pattern, a record id the
 server matches on — carries an inline `// l10n-ignore: <reason>`.
@@ -182,7 +182,7 @@ money — she pays at the chair: [docs/SALONS.md](docs/SALONS.md).
 
 ## My occasions
 
-«مناسباتي»: she writes down a wedding, Eid or birthday, and Reem helps her get
+«مناسباتي»: she writes down a wedding, Eid or birthday, and Ohara helps her get
 ready — a countdown, a look from her closet, what that look is missing, the
 salon, the gift, and a reminder a week, three days and one day before. It also
 warns her when the people she named for the day have already seen the outfit.

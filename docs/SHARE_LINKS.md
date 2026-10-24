@@ -4,14 +4,14 @@ What a woman pastes into WhatsApp, and what happens when her friend taps it.
 
 ## The defect this replaces
 
-Every link Reem had ever shared pointed at `https://reem.shop`. That host has
+Every link Ohara had ever shared pointed at `https://reem.shop`. That host has
 never existed — it is NXDOMAIN, not a parked page — so nothing resolved:
 WhatsApp drew no preview because there was no server to ask, and the tap ended
 on the browser's «تعذّر الوصول إلى الموقع» page. Three further gaps sat behind
 it:
 
 - No `https` App Links or Universal Links were declared on either platform, so
-  even with Reem installed a link opened a browser.
+  even with Ohara installed a link opened a browser.
 - The link shapes did not match any route. `/product/<id>` is not the app's
   product page (`/product-details?id=…`), and `/p/<id>` mapped to
   `/content/:id`, which had a path constant, a route *name* — and no route, no
@@ -46,7 +46,7 @@ resolver in `share-preview.service.ts`, a route on `LinksController`, and a
 `GoRoute` if the app should open it.
 
 A referral link is deliberately **not** claimed by the app. An invitation is
-sent to somebody who does not have Reem; having the app swallow it would hide
+sent to somebody who does not have Ohara; having the app swallow it would hide
 the download button from the one person it was written for.
 
 ## What happens when a link is tapped
@@ -59,7 +59,7 @@ to the in-app route via `ShareLinks.routeFor`.
 **App installed, link opened inside WhatsApp on Android.** WhatsApp uses an
 embedded browser, and an embedded browser never triggers App Link
 verification. This is a large share of real taps. The landing page renders, and
-its «افتحي في تطبيق ريم» button opens `reem://…` — the custom scheme, which is
+its «افتحي في تطبيق أوهارا» button opens `reem://…` — the custom scheme, which is
 why that scheme is still registered alongside the App Links.
 
 **App not installed.** The landing page is the destination: the photograph, the

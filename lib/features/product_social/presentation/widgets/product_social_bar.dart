@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/core/shared/entities/product.dart';
-import 'package:reem/core/shared/value_objects/money_format.dart';
-import 'package:reem/features/product_social/presentation/product_gestures.dart';
-import 'package:reem/features/product_social/presentation/providers/product_social_providers.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/core/shared/entities/product.dart';
+import 'package:ohara/core/shared/value_objects/money_format.dart';
+import 'package:ohara/features/product_social/presentation/product_gestures.dart';
+import 'package:ohara/features/product_social/presentation/providers/product_social_providers.dart';
 
 /// The post gestures on the product page.
 ///

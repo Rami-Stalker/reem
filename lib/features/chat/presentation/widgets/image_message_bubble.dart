@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'package:reem/core/media/authorized_media_image.dart';
-import 'package:reem/core/media/media_lightbox.dart';
-import 'package:reem/core/media/media_variants.dart';
+import 'package:ohara/core/media/authorized_media_image.dart';
+import 'package:ohara/core/media/media_lightbox.dart';
+import 'package:ohara/core/media/media_variants.dart';
 
 /// A photograph in a conversation.
 ///

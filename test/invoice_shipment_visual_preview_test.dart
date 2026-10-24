@@ -10,19 +10,19 @@ import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/app_localizations.dart';
-import 'package:reem/core/result/result.dart';
-import 'package:reem/core/shared/value_objects/money.dart';
-import 'package:reem/features/invoices/domain/entities/invoice.dart';
-import 'package:reem/features/invoices/domain/repositories/invoices_repository.dart';
-import 'package:reem/features/invoices/presentation/providers/invoices_provider.dart';
-import 'package:reem/features/invoices/presentation/screens/invoice_screen.dart';
-import 'package:reem/features/shipment_tracking/domain/entities/shipment_tracking.dart';
-import 'package:reem/features/shipment_tracking/domain/repositories/shipment_tracking_repository.dart';
-import 'package:reem/features/shipment_tracking/presentation/providers/shipment_tracking_provider.dart';
-import 'package:reem/features/shipment_tracking/presentation/screens/shipment_tracking_screen.dart';
-import 'package:reem/l10n/app_localizations.dart' as gen;
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/app_localizations.dart';
+import 'package:ohara/core/result/result.dart';
+import 'package:ohara/core/shared/value_objects/money.dart';
+import 'package:ohara/features/invoices/domain/entities/invoice.dart';
+import 'package:ohara/features/invoices/domain/repositories/invoices_repository.dart';
+import 'package:ohara/features/invoices/presentation/providers/invoices_provider.dart';
+import 'package:ohara/features/invoices/presentation/screens/invoice_screen.dart';
+import 'package:ohara/features/shipment_tracking/domain/entities/shipment_tracking.dart';
+import 'package:ohara/features/shipment_tracking/domain/repositories/shipment_tracking_repository.dart';
+import 'package:ohara/features/shipment_tracking/presentation/providers/shipment_tracking_provider.dart';
+import 'package:ohara/features/shipment_tracking/presentation/screens/shipment_tracking_screen.dart';
+import 'package:ohara/l10n/app_localizations.dart' as gen;
 
 final _captureKey = GlobalKey();
 
@@ -169,7 +169,7 @@ final _invoice = Invoice(
     ),
     InvoiceLine(
       title: 'عطر شرقي فاخر ٥٠ مل',
-      seller: 'بوتيك ريم',
+      seller: 'بوتيك أوهارا',
       quantity: 1,
       unitPrice: _m('300000'),
       unitDiscount: _m('0'),

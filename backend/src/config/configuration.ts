@@ -108,7 +108,7 @@ export default () => ({
     bodyTemplate: process.env.PUSH_BODY_TEMPLATE,
     /**
      * How many times a transient failure is retried before the delivery gives
-     * up. Low on purpose: everything Reem pushes has a shelf life measured in
+     * up. Low on purpose: everything Ohara pushes has a shelf life measured in
      * hours, so a message that has failed five times over a rising backoff is
      * one she no longer needs.
      */
@@ -413,7 +413,7 @@ export default () => ({
     maxRate: process.env.FX_MAX_RATE ?? '100000',
   },
   /**
-   * Reem AI Stylist.
+   * Ohara AI Stylist.
    *
    * Off by default, and the feature works with it off — the stylist's
    * understanding has a complete rules implementation and its retrieval is
@@ -447,7 +447,7 @@ export default () => ({
   },
 
   /**
-   * Reem Visual Shopping.
+   * Ohara Visual Shopping.
    *
    * The feature is complete with none of this set. The default embedder is a
    * deterministic perceptual descriptor computed in process, the default index
@@ -540,7 +540,7 @@ export default () => ({
   },
 
   /**
-   * Reem Trend Engine.
+   * Ohara Trend Engine.
    *
    * The scheduler is **off by default**, and that is not caution for its own
    * sake: the nightly run reads the whole order history and rewrites ten
@@ -592,7 +592,7 @@ export default () => ({
   },
 
   /**
-   * Reem Market Evolution.
+   * Ohara Market Evolution.
    *
    * Its nightly sweep reads every live category and product against the
    * platform's own medians, so it carries the same default as the trend engine

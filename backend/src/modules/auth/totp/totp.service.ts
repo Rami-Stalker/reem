@@ -51,7 +51,7 @@ export const PRIVILEGED_ROLES: UserRole[] = [
 @Injectable()
 export class TotpService {
   private readonly key: Buffer;
-  private readonly issuer = 'Reem';
+  private readonly issuer = 'Ohara';
 
   constructor(
     private readonly prisma: PrismaService,

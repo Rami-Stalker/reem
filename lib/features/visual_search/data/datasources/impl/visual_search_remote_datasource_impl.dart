@@ -1,15 +1,15 @@
 import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
-import 'package:reem/core/errors/app_exception.dart';
-import 'package:reem/core/errors/error_mapper.dart';
-import 'package:reem/core/network/api_endpoints.dart';
-import 'package:reem/core/network/base_remote_datasource.dart';
-import 'package:reem/features/ai_stylist/domain/entities/stylist_recommendation.dart';
-import 'package:reem/features/visual_search/data/datasources/visual_search_remote_datasource.dart';
-import 'package:reem/features/visual_search/data/models/visual_search_models.dart';
-import 'package:reem/features/visual_search/domain/entities/visual_match.dart';
-import 'package:reem/features/visual_search/domain/entities/visual_search_session.dart';
+import 'package:ohara/core/errors/app_exception.dart';
+import 'package:ohara/core/errors/error_mapper.dart';
+import 'package:ohara/core/network/api_endpoints.dart';
+import 'package:ohara/core/network/base_remote_datasource.dart';
+import 'package:ohara/features/ai_stylist/domain/entities/stylist_recommendation.dart';
+import 'package:ohara/features/visual_search/data/datasources/visual_search_remote_datasource.dart';
+import 'package:ohara/features/visual_search/data/models/visual_search_models.dart';
+import 'package:ohara/features/visual_search/domain/entities/visual_match.dart';
+import 'package:ohara/features/visual_search/domain/entities/visual_search_session.dart';
 
 final class VisualSearchRemoteDataSourceImpl extends BaseRemoteDataSource
     implements VisualSearchRemoteDataSource {

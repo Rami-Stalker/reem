@@ -1,5 +1,5 @@
-name: reem
-description: "Reem — a women's social marketplace: storefront, content, and wallet in one app."
+name: ohara
+description: "Ohara — a women's social marketplace: storefront, content, and wallet in one app."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -74,7 +74,7 @@ dependencies:
   # both are build-time code generators that belonged in dev_dependencies,
   # there is no `build_runner` and not one generated file in the tree.
 
-  # Firebase suite. Only the messaging half: Reem's identity is its own
+  # Firebase suite. Only the messaging half: Ohara's identity is its own
   # (OTP over WhatsApp, device-anchored), its catalogue is Postgres and its
   # media is Supabase Storage, so `firebase_auth`, `cloud_firestore` and
   # `firebase_storage` would each be a second answer to a question already
@@ -129,7 +129,7 @@ dependencies:
   # the network. Already present transitively; declared because this code
   # imports it directly.
   path: ^1.9.1
-  # Handing a post or a product to WhatsApp — which is how Reem actually
+  # Handing a post or a product to WhatsApp — which is how Ohara actually
   # travels between friends here. Opens the OS share sheet; the link it
   # carries is built from `AppEnv.shareBaseUrl`.
   share_plus: ^13.3.0
@@ -180,6 +180,9 @@ dependencies:
   # that silently does nothing from then on is worse than no switch, so the
   # toggle sends her to the only place the decision can still be changed.
   app_settings: ^9.0.0
+  flutter_map: ^8.3.2
+  latlong2: ^0.10.1
+  geolocator: ^14.1.2
 
 dev_dependencies:
   flutter_test:

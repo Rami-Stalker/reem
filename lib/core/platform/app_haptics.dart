@@ -1,6 +1,6 @@
 import 'package:flutter/services.dart';
 
-import 'package:reem/core/platform/app_platform.dart';
+import 'package:ohara/core/platform/app_platform.dart';
 
 /// Feedback named by what happened, not by how hard the phone should buzz.
 ///

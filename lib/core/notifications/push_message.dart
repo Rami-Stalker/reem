@@ -1,7 +1,7 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:meta/meta.dart';
 
-import 'package:reem/core/notifications/notification_channels.dart';
+import 'package:ohara/core/notifications/notification_channels.dart';
 
 /// One push, as the client reads it.
 ///
@@ -41,7 +41,7 @@ class PushMessage {
       // The visible sentence is duplicated into `data` by the server precisely
       // so the foreground handler can draw it: a data-only message has no
       // `notification` block to read it from.
-      title: notification?.title ?? _nonEmpty(data['title']) ?? 'ريم',
+      title: notification?.title ?? _nonEmpty(data['title']) ?? 'أوهارا',
       body: notification?.body ?? _nonEmpty(data['body']) ?? '',
       channel: PushChannel.fromId(data['channel_id']),
       deepLink: _nonEmpty(data['deep_link']),

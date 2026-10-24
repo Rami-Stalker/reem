@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 
-import 'package:reem/core/shared/entities/product.dart';
+import 'package:ohara/core/shared/entities/product.dart';
 
 /// Where a product's interactions are drawn, on every shape that draws a
 /// product.

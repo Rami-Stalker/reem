@@ -1,5 +1,5 @@
-import 'package:reem/core/shared/value_objects/money.dart';
-import 'package:reem/features/seller_orders/domain/entities/seller_order.dart';
+import 'package:ohara/core/shared/value_objects/money.dart';
+import 'package:ohara/features/seller_orders/domain/entities/seller_order.dart';
 
 /// Wire → domain for the seller's queue.
 ///
@@ -151,6 +151,8 @@ final class SellerOrderMapper {
       district: json['district'] as String?,
       addressLine: json['address_line'] as String?,
       landmark: json['landmark'] as String?,
+      latitude: (json['latitude'] as num?)?.toDouble(),
+      longitude: (json['longitude'] as num?)?.toDouble(),
       deliveryInstructions: json['delivery_instructions'] as String?,
       maskedBecause: json['masked_because'] as String?,
     );

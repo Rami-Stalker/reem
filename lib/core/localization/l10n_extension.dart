@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:reem/l10n/app_localizations.dart';
+import 'package:ohara/l10n/app_localizations.dart';
 
 extension L10nExtension on BuildContext {
   AppLocalizations get l10n => AppLocalizations.of(this)!;

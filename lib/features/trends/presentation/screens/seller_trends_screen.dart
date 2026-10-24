@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/features/trends/domain/entities/trend_entities.dart';
-import 'package:reem/features/trends/presentation/providers/trends_providers.dart';
-import 'package:reem/features/trends/presentation/widgets/trend_cards.dart';
-import 'package:reem/features/trends/presentation/widgets/trend_pieces.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/features/trends/domain/entities/trend_entities.dart';
+import 'package:ohara/features/trends/presentation/providers/trends_providers.dart';
+import 'package:ohara/features/trends/presentation/widgets/trend_cards.dart';
+import 'package:ohara/features/trends/presentation/widgets/trend_pieces.dart';
 
 /// The seller's Trend Engine.
 ///
@@ -30,7 +30,7 @@ class SellerTrendsScreen extends ConsumerWidget {
     final l10n = context.l10n;
     final overview = state.overview;
 
-    return ReemScrollPage(
+    return OharaScrollPage(
       onRefresh: notifier.refresh,
       background: const SellerAtelierBackground(),
       backgroundColor: context.atelier.background,

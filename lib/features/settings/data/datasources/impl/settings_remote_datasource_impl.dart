@@ -1,16 +1,16 @@
-import 'package:reem/core/network/api_endpoints.dart';
-import 'package:reem/core/network/base_remote_datasource.dart';
-import 'package:reem/core/shared/models/user_model.dart';
-import 'package:reem/core/shared/value_objects/money.dart';
-import 'package:reem/features/settings/data/datasources/settings_remote_datasource.dart';
-import 'package:reem/features/settings/data/models/address_model.dart';
-import 'package:reem/features/settings/data/models/coupon_model.dart';
-import 'package:reem/features/settings/data/models/notification_preferences_model.dart';
-import 'package:reem/features/settings/data/models/notification_settings_model.dart';
-import 'package:reem/features/settings/data/models/rewards_model.dart';
-import 'package:reem/features/settings/domain/entities/address_draft.dart';
-import 'package:reem/features/settings/domain/entities/coupon_validation.dart';
-import 'package:reem/features/settings/domain/entities/notification_preferences.dart';
+import 'package:ohara/core/network/api_endpoints.dart';
+import 'package:ohara/core/network/base_remote_datasource.dart';
+import 'package:ohara/core/shared/models/user_model.dart';
+import 'package:ohara/core/shared/value_objects/money.dart';
+import 'package:ohara/features/settings/data/datasources/settings_remote_datasource.dart';
+import 'package:ohara/features/settings/data/models/address_model.dart';
+import 'package:ohara/features/settings/data/models/coupon_model.dart';
+import 'package:ohara/features/settings/data/models/notification_preferences_model.dart';
+import 'package:ohara/features/settings/data/models/notification_settings_model.dart';
+import 'package:ohara/features/settings/data/models/rewards_model.dart';
+import 'package:ohara/features/settings/domain/entities/address_draft.dart';
+import 'package:ohara/features/settings/domain/entities/coupon_validation.dart';
+import 'package:ohara/features/settings/domain/entities/notification_preferences.dart';
 
 final class SettingsRemoteDataSourceImpl extends BaseRemoteDataSource
     implements SettingsRemoteDataSource {

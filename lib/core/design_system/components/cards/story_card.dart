@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:reem/core/design_system/components/avatars/ds_avatar.dart';
-import 'package:reem/core/design_system/components/loaders/ds_skeleton.dart';
-import 'package:reem/core/design_system/foundation/motion/animations/scale_animations.dart';
-import 'package:reem/core/design_system/foundation/theme/extensions/color_extension.dart';
-import 'package:reem/core/design_system/foundation/theme/extensions/typography_extension.dart';
-import 'package:reem/core/design_system/foundation/tokens/ds_gaps.dart';
-import 'package:reem/core/design_system/foundation/tokens/ds_sizes.dart';
-import 'package:reem/core/design_system/foundation/tokens/ds_spacing.dart';
+import 'package:ohara/core/design_system/components/avatars/ds_avatar.dart';
+import 'package:ohara/core/design_system/components/loaders/ds_skeleton.dart';
+import 'package:ohara/core/design_system/foundation/motion/animations/scale_animations.dart';
+import 'package:ohara/core/design_system/foundation/theme/extensions/color_extension.dart';
+import 'package:ohara/core/design_system/foundation/theme/extensions/typography_extension.dart';
+import 'package:ohara/core/design_system/foundation/tokens/ds_gaps.dart';
+import 'package:ohara/core/design_system/foundation/tokens/ds_sizes.dart';
+import 'package:ohara/core/design_system/foundation/tokens/ds_spacing.dart';
 
 /// A circular story bubble (avatar + gradient ring + label) for story rails.
 class DsStoryCard extends StatelessWidget {

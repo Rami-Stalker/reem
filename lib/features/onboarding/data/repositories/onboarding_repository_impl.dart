@@ -1,5 +1,5 @@
-import 'package:reem/features/onboarding/data/datasources/onboarding_local_datasource.dart';
-import 'package:reem/features/onboarding/domain/repositories/onboarding_repository.dart';
+import 'package:ohara/features/onboarding/data/datasources/onboarding_local_datasource.dart';
+import 'package:ohara/features/onboarding/domain/repositories/onboarding_repository.dart';
 
 class OnboardingRepositoryImpl implements OnboardingRepository {
   const OnboardingRepositoryImpl(this._local);

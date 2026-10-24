@@ -5,9 +5,9 @@ import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:reem/core/network/interceptors/telemetry_interceptor.dart';
-import 'package:reem/core/observability/error_report.dart';
-import 'package:reem/core/observability/error_reporter.dart';
+import 'package:ohara/core/network/interceptors/telemetry_interceptor.dart';
+import 'package:ohara/core/observability/error_report.dart';
+import 'package:ohara/core/observability/error_reporter.dart';
 
 class _RecordingSink implements ErrorSink {
   final List<ErrorReport> reports = [];

@@ -1,8 +1,8 @@
 import 'package:equatable/equatable.dart';
 
-import 'package:reem/core/shared/entities/post.dart';
-import 'package:reem/core/shared/entities/product.dart';
-import 'package:reem/core/shared/entities/user.dart';
+import 'package:ohara/core/shared/entities/post.dart';
+import 'package:ohara/core/shared/entities/product.dart';
+import 'package:ohara/core/shared/entities/user.dart';
 
 /// The top hits for one phrase across everything a woman can look for.
 ///

@@ -1,5 +1,5 @@
-import 'package:reem/core/result/result.dart';
-import 'package:reem/features/value/domain/entities/value_standing.dart';
+import 'package:ohara/core/result/result.dart';
+import 'package:ohara/features/value/domain/entities/value_standing.dart';
 
 class ValueEventPage {
   final List<ValueEvent> events;
@@ -10,7 +10,7 @@ class ValueEventPage {
   bool get hasMore => nextCursor != null;
 }
 
-/// Reem Value's client contract.
+/// Ohara Value's client contract.
 ///
 /// Note what is missing and will stay missing: there is no `earn`, no `redeem`,
 /// no `convert`. Standing is computed by the server from evidence it already

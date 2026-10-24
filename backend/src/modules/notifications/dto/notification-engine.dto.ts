@@ -184,7 +184,7 @@ export class CreateCampaignDto extends DispatchNotificationDto {
   /**
    * Only the app's own scheme. A campaign link is opened by the router on
    * every recipient's phone, so an `https://` link here would be a phishing
-   * page delivered by Reem to its whole audience.
+   * page delivered by Ohara to its whole audience.
    */
   @IsOptional()
   @IsString()

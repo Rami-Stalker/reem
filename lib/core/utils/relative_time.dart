@@ -1,7 +1,7 @@
 import 'package:intl/intl.dart';
 
-import 'package:reem/core/utils/arabic_numerals.dart';
-import 'package:reem/l10n/app_localizations.dart';
+import 'package:ohara/core/utils/arabic_numerals.dart';
+import 'package:ohara/l10n/app_localizations.dart';
 
 /// "قبل ٣ دقائق" / "3 minutes ago", in the reader's language.
 ///

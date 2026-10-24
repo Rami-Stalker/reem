@@ -1,4 +1,4 @@
-import 'package:reem/features/market/domain/entities/market.dart';
+import 'package:ohara/features/market/domain/entities/market.dart';
 
 /// The wire, decoded.
 ///

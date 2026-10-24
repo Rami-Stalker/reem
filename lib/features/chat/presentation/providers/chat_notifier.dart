@@ -2,19 +2,19 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter_riverpod/legacy.dart';
-import 'package:reem/core/result/result.dart';
+import 'package:ohara/core/result/result.dart';
 
-import 'package:reem/features/chat/data/models/chat_message_model.dart';
-import 'package:reem/features/chat/domain/entities/chat_message_entity.dart';
-import 'package:reem/features/chat/domain/entities/chat_start_request.dart';
-import 'package:reem/features/chat/domain/entities/chat_thread_entity.dart';
-import 'package:reem/features/chat/domain/usecases/get_messages_usecase.dart';
-import 'package:reem/features/chat/domain/usecases/get_thread_usecase.dart';
-import 'package:reem/features/chat/domain/usecases/get_threads_usecase.dart';
-import 'package:reem/features/chat/domain/usecases/mark_chat_read_usecase.dart';
-import 'package:reem/features/chat/domain/usecases/send_message_usecase.dart';
-import 'package:reem/features/chat/domain/usecases/start_conversation_usecase.dart';
-import 'package:reem/features/chat/presentation/providers/chat_state.dart';
+import 'package:ohara/features/chat/data/models/chat_message_model.dart';
+import 'package:ohara/features/chat/domain/entities/chat_message_entity.dart';
+import 'package:ohara/features/chat/domain/entities/chat_start_request.dart';
+import 'package:ohara/features/chat/domain/entities/chat_thread_entity.dart';
+import 'package:ohara/features/chat/domain/usecases/get_messages_usecase.dart';
+import 'package:ohara/features/chat/domain/usecases/get_thread_usecase.dart';
+import 'package:ohara/features/chat/domain/usecases/get_threads_usecase.dart';
+import 'package:ohara/features/chat/domain/usecases/mark_chat_read_usecase.dart';
+import 'package:ohara/features/chat/domain/usecases/send_message_usecase.dart';
+import 'package:ohara/features/chat/domain/usecases/start_conversation_usecase.dart';
+import 'package:ohara/features/chat/presentation/providers/chat_state.dart';
 
 /// How long "typing…" survives without being renewed. The composer renews it
 /// every few seconds while she types; a peer whose phone lost signal mid-word

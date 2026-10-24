@@ -1,16 +1,16 @@
 import 'package:flutter_riverpod/legacy.dart';
-import 'package:reem/core/result/result.dart';
+import 'package:ohara/core/result/result.dart';
 
-import 'package:reem/features/profile/domain/usecases/collection_items_usecase.dart';
-import 'package:reem/features/profile/domain/usecases/create_wishlist_collection_usecase.dart';
-import 'package:reem/features/profile/domain/usecases/get_favorites_usecase.dart';
-import 'package:reem/features/profile/domain/usecases/get_orders_usecase.dart';
-import 'package:reem/features/profile/domain/usecases/get_profile_usecase.dart';
-import 'package:reem/features/profile/domain/usecases/get_wishlist_overview_usecase.dart';
-import 'package:reem/features/profile/domain/usecases/save_post_usecase.dart';
-import 'package:reem/features/profile/domain/usecases/save_seller_usecase.dart';
-import 'package:reem/features/profile/domain/usecases/share_wishlist_collection_usecase.dart';
-import 'package:reem/features/profile/presentation/providers/profile_state.dart';
+import 'package:ohara/features/profile/domain/usecases/collection_items_usecase.dart';
+import 'package:ohara/features/profile/domain/usecases/create_wishlist_collection_usecase.dart';
+import 'package:ohara/features/profile/domain/usecases/get_favorites_usecase.dart';
+import 'package:ohara/features/profile/domain/usecases/get_orders_usecase.dart';
+import 'package:ohara/features/profile/domain/usecases/get_profile_usecase.dart';
+import 'package:ohara/features/profile/domain/usecases/get_wishlist_overview_usecase.dart';
+import 'package:ohara/features/profile/domain/usecases/save_post_usecase.dart';
+import 'package:ohara/features/profile/domain/usecases/save_seller_usecase.dart';
+import 'package:ohara/features/profile/domain/usecases/share_wishlist_collection_usecase.dart';
+import 'package:ohara/features/profile/presentation/providers/profile_state.dart';
 
 class ProfileNotifier extends StateNotifier<ProfileState> {
   ProfileNotifier({required GetProfileUseCase getProfileUseCase})

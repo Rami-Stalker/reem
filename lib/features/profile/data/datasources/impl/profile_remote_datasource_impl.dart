@@ -1,10 +1,10 @@
-import 'package:reem/core/network/api_endpoints.dart';
-import 'package:reem/core/network/base_remote_datasource.dart';
-import 'package:reem/core/shared/models/product_model.dart';
-import 'package:reem/core/shared/models/user_model.dart';
-import 'package:reem/features/profile/data/datasources/profile_remote_datasource.dart';
-import 'package:reem/features/profile/data/models/order_model.dart';
-import 'package:reem/features/profile/data/models/wishlist_model.dart';
+import 'package:ohara/core/network/api_endpoints.dart';
+import 'package:ohara/core/network/base_remote_datasource.dart';
+import 'package:ohara/core/shared/models/product_model.dart';
+import 'package:ohara/core/shared/models/user_model.dart';
+import 'package:ohara/features/profile/data/datasources/profile_remote_datasource.dart';
+import 'package:ohara/features/profile/data/models/order_model.dart';
+import 'package:ohara/features/profile/data/models/wishlist_model.dart';
 
 final class ProfileRemoteDataSourceImpl extends BaseRemoteDataSource
     implements ProfileRemoteDataSource {

@@ -291,7 +291,7 @@ export function readMarket(
   };
 }
 
-/** Growth with a floor under the denominator, as everywhere else in Reem. */
+/** Growth with a floor under the denominator, as everywhere else in Ohara. */
 export function growthOf(recent: number, previous: number): number {
   const base = Math.max(previous, 3);
   return (recent - previous) / base;

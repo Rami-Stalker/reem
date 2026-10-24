@@ -1,10 +1,10 @@
 import 'package:dio/dio.dart';
 
-import 'package:reem/core/errors/error_mapper.dart';
-import 'package:reem/core/network/api_endpoints.dart';
-import 'package:reem/core/network/base_remote_datasource.dart';
-import 'package:reem/features/discovery/data/models/product_page_model.dart';
-import 'package:reem/features/product_social/domain/entities/product_engagement.dart';
+import 'package:ohara/core/errors/error_mapper.dart';
+import 'package:ohara/core/network/api_endpoints.dart';
+import 'package:ohara/core/network/base_remote_datasource.dart';
+import 'package:ohara/features/discovery/data/models/product_page_model.dart';
+import 'package:ohara/features/product_social/domain/entities/product_engagement.dart';
 
 /// The wire half of product social.
 final class ProductSocialRemoteDataSource extends BaseRemoteDataSource {

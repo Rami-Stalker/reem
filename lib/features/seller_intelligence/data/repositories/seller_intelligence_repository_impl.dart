@@ -1,8 +1,8 @@
-import 'package:reem/core/base/repository_handler.dart';
-import 'package:reem/core/result/result.dart';
-import 'package:reem/features/seller_intelligence/data/datasources/seller_intelligence_remote_datasource.dart';
-import 'package:reem/features/seller_intelligence/domain/entities/intelligence.dart';
-import 'package:reem/features/seller_intelligence/domain/repositories/seller_intelligence_repository.dart';
+import 'package:ohara/core/base/repository_handler.dart';
+import 'package:ohara/core/result/result.dart';
+import 'package:ohara/features/seller_intelligence/data/datasources/seller_intelligence_remote_datasource.dart';
+import 'package:ohara/features/seller_intelligence/domain/entities/intelligence.dart';
+import 'package:ohara/features/seller_intelligence/domain/repositories/seller_intelligence_repository.dart';
 
 class SellerIntelligenceRepositoryImpl
     with RepositoryHandler

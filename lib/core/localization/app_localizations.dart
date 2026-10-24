@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:reem/l10n/app_localizations.dart';
+import 'package:ohara/l10n/app_localizations.dart';
 
 final class L10nSetup {
   L10nSetup._();
@@ -13,7 +13,7 @@ final class L10nSetup {
   ];
 
   /// Arabic is first, and that ordering is load-bearing: Flutter falls back to
-  /// `supportedLocales.first` for any locale it cannot match. Reem is an
+  /// `supportedLocales.first` for any locale it cannot match. Ohara is an
   /// Arabic-first Syrian platform whose customers are addressed in Arabic, so a
   /// device set to French must land on Arabic RTL — not on English.
   ///
@@ -33,8 +33,8 @@ final class L10nSetup {
   ///
   /// An `en-US` device does *not* reach this callback any more: "follow the
   /// device" is resolved to Arabic before `MaterialApp` is built (see
-  /// `ReemApp`), because the client deferred the English interface (Q91) and a
-  /// Syrian customer opening Reem in a browser that reports `en-US` was being
+  /// `OharaApp`), because the client deferred the English interface (Q91) and a
+  /// Syrian customer opening Ohara in a browser that reports `en-US` was being
   /// handed a half-translated product. English stays a deliberate choice made
   /// in settings, and that choice arrives here as an explicit `Locale('en')`.
   static Locale localeResolutionCallback(

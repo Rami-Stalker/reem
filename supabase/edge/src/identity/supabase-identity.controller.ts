@@ -47,7 +47,7 @@ export class SupabaseLinkDto {
 }
 
 /**
- * Sign-in through Supabase Auth, session through the Reem API.
+ * Sign-in through Supabase Auth, session through the Ohara API.
  *
  * Supabase Auth owns the one-time code: the app calls `signInWithOtp` and
  * `verifyOtp` against it directly, and the code is delivered by the Send SMS
@@ -58,7 +58,7 @@ export class SupabaseLinkDto {
  * unmodified sign-in path.
  *
  * The result is one identity in two places, joined by
- * `reem_supabase.identity_links`: the Reem session authorises every API call,
+ * `reem_supabase.identity_links`: the Ohara session authorises every API call,
  * and the Supabase session authorises the two things the app reaches directly
  * — Realtime channels and (in future) Storage — under Row Level Security.
  */
@@ -76,7 +76,7 @@ export class SupabaseIdentityController {
 
   /**
    * A confirmed Supabase session in, the same answer `POST /auth/otp/login/verify`
-   * gives out: a Reem session, or a registration ticket for a new number.
+   * gives out: a Ohara session, or a registration ticket for a new number.
    */
   @Public()
   @Throttle({ default: { limit: 10, ttl: 60_000 } })
@@ -110,11 +110,11 @@ export class SupabaseIdentityController {
   }
 
   /**
-   * Binds the caller's Supabase session to the Reem account she is signed in
+   * Binds the caller's Supabase session to the Ohara account she is signed in
    * to. Called after registration — the account did not exist at exchange
    * time — and after a phone change, which it carries across to Supabase.
    */
-  @SelfScoped('binds only the caller: the Reem user comes from her access token, the auth user from her own Supabase session')
+  @SelfScoped('binds only the caller: the Ohara user comes from her access token, the auth user from her own Supabase session')
   @Throttle({ default: { limit: 10, ttl: 60_000 } })
   @Post('link')
   @HttpCode(HttpStatus.OK)

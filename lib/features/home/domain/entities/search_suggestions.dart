@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-/// Drives the smart-search entry: trending queries across Reem, the user's own
+/// Drives the smart-search entry: trending queries across Ohara, the user's own
 /// recent searches, and personalized suggestions.
 class SearchSuggestions extends Equatable {
   const SearchSuggestions({

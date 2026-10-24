@@ -1,9 +1,9 @@
-import 'package:reem/core/network/api_endpoints.dart';
-import 'package:reem/core/network/base_remote_datasource.dart';
-import 'package:reem/core/shared/models/story_model.dart';
-import 'package:reem/features/stories/data/datasources/stories_remote_datasource.dart';
-import 'package:reem/features/stories/data/models/story_analytics_model.dart';
-import 'package:reem/features/stories/data/models/story_viewer_model.dart';
+import 'package:ohara/core/network/api_endpoints.dart';
+import 'package:ohara/core/network/base_remote_datasource.dart';
+import 'package:ohara/core/shared/models/story_model.dart';
+import 'package:ohara/features/stories/data/datasources/stories_remote_datasource.dart';
+import 'package:ohara/features/stories/data/models/story_analytics_model.dart';
+import 'package:ohara/features/stories/data/models/story_viewer_model.dart';
 
 final class StoriesRemoteDataSourceImpl extends BaseRemoteDataSource
     implements StoriesRemoteDataSource {

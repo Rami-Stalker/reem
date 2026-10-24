@@ -71,7 +71,7 @@ export const AppPermission = {
    * privacy, returns, commissions, disputes, liability, content.
    *
    * Its own permission rather than `contentManage`, which every seller holds:
-   * publishing a version of the terms of use changes the contract between Reem
+   * publishing a version of the terms of use changes the contract between Ohara
    * and a hundred thousand accounts, and the person who moderates a caption is
    * not the person who should be able to do that. Held by SUPER_ADMIN and
    * OPERATIONS_ADMIN, and by nobody else by default.

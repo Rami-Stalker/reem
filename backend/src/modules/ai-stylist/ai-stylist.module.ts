@@ -10,7 +10,7 @@ import { StylistConversationService } from './stylist-conversation.service';
 import { BriefExtractorService } from './understanding/brief-extractor.service';
 
 /**
- * Reem AI Stylist.
+ * Ohara AI Stylist.
  *
  * Sits beside the existing `AiAssistantModule` rather than replacing it: that
  * one answers "what should this rail show" for feeds and product pages, this
@@ -71,11 +71,11 @@ import { BriefExtractorService } from './understanding/brief-extractor.service';
       },
     },
   ],
-  // `BriefExtractorService` is exported for Reem Visual Shopping: refining a
+  // `BriefExtractorService` is exported for Ohara Visual Shopping: refining a
   // photo search in words must use *this* parser and *this* vocabulary, not a
   // second one that will drift from it.
   //
-  // `ProductRetrievalService` is exported for Reem Closet, which turns a
+  // `ProductRetrievalService` is exported for Ohara Closet, which turns a
   // wardrobe gap into a `StyleBrief` and answers it here. That is the whole
   // integration between the two features, and it means a closet suggestion
   // cannot reach a product the stylist would refuse to show — the modesty

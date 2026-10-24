@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/features/ai_stylist/domain/entities/stylist_recommendation.dart';
-import 'package:reem/features/product_social/presentation/widgets/product_like_button.dart';
-import 'package:reem/features/visual_search/domain/entities/visual_match.dart';
-import 'package:reem/features/visual_search/presentation/widgets/visual_similarity_badge.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/features/ai_stylist/domain/entities/stylist_recommendation.dart';
+import 'package:ohara/features/product_social/presentation/widgets/product_like_button.dart';
+import 'package:ohara/features/visual_search/domain/entities/visual_match.dart';
+import 'package:ohara/features/visual_search/presentation/widgets/visual_similarity_badge.dart';
 
 /// Two lines of `bodySmall`, reserved whether or not there is a reason.
 const double _reasonHeight = 34;

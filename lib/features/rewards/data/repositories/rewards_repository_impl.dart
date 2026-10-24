@@ -1,8 +1,8 @@
-import 'package:reem/core/base/repository_handler.dart';
-import 'package:reem/core/result/result.dart';
-import 'package:reem/features/rewards/data/datasources/rewards_remote_datasource.dart';
-import 'package:reem/features/rewards/domain/entities/rewards_hub.dart';
-import 'package:reem/features/rewards/domain/repositories/rewards_repository.dart';
+import 'package:ohara/core/base/repository_handler.dart';
+import 'package:ohara/core/result/result.dart';
+import 'package:ohara/features/rewards/data/datasources/rewards_remote_datasource.dart';
+import 'package:ohara/features/rewards/domain/entities/rewards_hub.dart';
+import 'package:ohara/features/rewards/domain/repositories/rewards_repository.dart';
 
 class RewardsRepositoryImpl
     with RepositoryHandler

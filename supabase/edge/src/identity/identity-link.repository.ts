@@ -7,14 +7,14 @@ export interface IdentityLink {
 }
 
 /**
- * `reem_supabase.identity_links` — which Supabase auth user is which Reem user.
+ * `reem_supabase.identity_links` — which Supabase auth user is which Ohara user.
  *
  * The table lives outside `public` on purpose: Prisma's schema does not know
  * it, so the backend running on its own server never sees it and its
  * migrations never fight it. Row Level Security reads it through
- * `reem_supabase.current_user_id()` to turn `auth.uid()` into a Reem user id.
+ * `reem_supabase.current_user_id()` to turn `auth.uid()` into a Ohara user id.
  *
- * One auth user per Reem user and one Reem user per auth user: both columns
+ * One auth user per Ohara user and one Ohara user per auth user: both columns
  * are unique, and `link` replaces whichever side was bound before.
  */
 @Injectable()

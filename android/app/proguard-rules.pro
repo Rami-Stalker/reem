@@ -1,4 +1,4 @@
-# Reem — R8 keep rules for the release build.
+# Ohara — R8 keep rules for the release build.
 #
 # Shrinking is on (see build.gradle.kts). Flutter's own engine classes are kept
 # by the rules the Flutter Gradle plugin contributes; what follows is for this

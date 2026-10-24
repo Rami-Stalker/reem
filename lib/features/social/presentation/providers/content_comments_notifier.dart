@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/legacy.dart';
-import 'package:reem/core/result/result.dart';
-import 'package:reem/features/social/domain/entities/content_comment.dart';
-import 'package:reem/features/social/domain/repositories/social_repository.dart';
+import 'package:ohara/core/result/result.dart';
+import 'package:ohara/features/social/domain/entities/content_comment.dart';
+import 'package:ohara/features/social/domain/repositories/social_repository.dart';
 
 class ContentCommentsState {
   const ContentCommentsState({

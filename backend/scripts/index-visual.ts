@@ -1,5 +1,5 @@
 /**
- * Runs one Reem Visual Shopping indexing pass on demand.
+ * Runs one Ohara Visual Shopping indexing pass on demand.
  *
  * The hourly sweep in `ProductIndexerService` is off by default
  * (`VISUAL_SEARCH_INDEXER_ENABLED`), which is right for a laptop and wrong for

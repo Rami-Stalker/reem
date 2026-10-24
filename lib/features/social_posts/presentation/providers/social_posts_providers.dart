@@ -1,19 +1,19 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 
-import 'package:reem/core/presentation/providers/core_providers.dart';
-import 'package:reem/features/auth/presentation/providers/auth_provider.dart';
-import 'package:reem/features/social_posts/data/datasources/impl/post_social_remote_datasource_impl.dart';
-import 'package:reem/features/social_posts/data/datasources/post_social_remote_datasource.dart';
-import 'package:reem/features/social_posts/data/repositories/post_social_repository_impl.dart';
-import 'package:reem/features/social_posts/domain/entities/comment_thread.dart';
-import 'package:reem/features/social_posts/domain/repositories/post_social_repository.dart';
-import 'package:reem/features/social_posts/domain/usecases/add_comment_usecase.dart';
-import 'package:reem/features/social_posts/domain/usecases/delete_comment_usecase.dart';
-import 'package:reem/features/social_posts/domain/usecases/get_comments_usecase.dart';
-import 'package:reem/features/social_posts/domain/usecases/post_engagement_usecases.dart';
-import 'package:reem/features/social_posts/presentation/providers/comments_notifier.dart';
-import 'package:reem/features/social_posts/presentation/providers/comments_state.dart';
+import 'package:ohara/core/presentation/providers/core_providers.dart';
+import 'package:ohara/features/auth/presentation/providers/auth_provider.dart';
+import 'package:ohara/features/social_posts/data/datasources/impl/post_social_remote_datasource_impl.dart';
+import 'package:ohara/features/social_posts/data/datasources/post_social_remote_datasource.dart';
+import 'package:ohara/features/social_posts/data/repositories/post_social_repository_impl.dart';
+import 'package:ohara/features/social_posts/domain/entities/comment_thread.dart';
+import 'package:ohara/features/social_posts/domain/repositories/post_social_repository.dart';
+import 'package:ohara/features/social_posts/domain/usecases/add_comment_usecase.dart';
+import 'package:ohara/features/social_posts/domain/usecases/delete_comment_usecase.dart';
+import 'package:ohara/features/social_posts/domain/usecases/get_comments_usecase.dart';
+import 'package:ohara/features/social_posts/domain/usecases/post_engagement_usecases.dart';
+import 'package:ohara/features/social_posts/presentation/providers/comments_notifier.dart';
+import 'package:ohara/features/social_posts/presentation/providers/comments_state.dart';
 
 final postSocialRemoteDataSourceProvider = Provider<PostSocialRemoteDataSource>(
   (ref) => PostSocialRemoteDataSourceImpl(ref.watch(dioProvider)),

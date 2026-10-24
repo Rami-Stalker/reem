@@ -19,7 +19,7 @@ export interface RegistrationTicketClaims {
  * The bridge between "she proved she holds this number" and "she filled in the
  * signup form".
  *
- * Registration on Reem is OTP-first: the number is verified *before* the
+ * Registration on Ohara is OTP-first: the number is verified *before* the
  * account exists, which is the opposite of the old flow where an account was
  * created for any number anybody typed and verification came later, if at all.
  * That old ordering let one person register every number in a contact list —

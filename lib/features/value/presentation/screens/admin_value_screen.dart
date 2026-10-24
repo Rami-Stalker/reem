@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/features/admin/presentation/widgets/admin_page_header.dart';
-import 'package:reem/features/value/domain/entities/value_admin.dart';
-import 'package:reem/features/value/presentation/providers/value_admin_providers.dart';
-import 'package:reem/features/value/presentation/widgets/value_policy_editor.dart';
-import 'package:reem/l10n/app_localizations.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/features/admin/presentation/widgets/admin_page_header.dart';
+import 'package:ohara/features/value/domain/entities/value_admin.dart';
+import 'package:ohara/features/value/presentation/providers/value_admin_providers.dart';
+import 'package:ohara/features/value/presentation/widgets/value_policy_editor.dart';
+import 'package:ohara/l10n/app_localizations.dart';
 
-/// Running Reem Value.
+/// Running Ohara Value.
 ///
 /// The order of this screen is the order an operator should think in, and it is
 /// deliberate:
@@ -33,9 +33,9 @@ class AdminValueScreen extends ConsumerWidget {
         children: [
           AdminPageHeader(
             // The feature's name, which is a name in both languages: the
-            // Arabic console says «ريم فاليو» aloud and writes it this way.
+            // Arabic console says «أوهارا فاليو» aloud and writes it this way.
             // l10n-ignore: a product name, not copy.
-            title: 'Reem Value',
+            title: 'Ohara Value',
             icon: Icons.workspace_premium_rounded,
             subtitle: context.l10n.valueAdminSubtitle,
             actions: [
@@ -117,7 +117,7 @@ class AdminValueScreen extends ConsumerWidget {
 /// The programme's promise, checked.
 ///
 /// Rendered as a banner rather than a row in a table because it is not a
-/// statistic — it is a pass/fail on the one claim Reem Value makes about
+/// statistic — it is a pass/fail on the one claim Ohara Value makes about
 /// itself. When it fails, the screen should be uncomfortable to look at.
 class _GuaranteeBanner extends StatelessWidget {
   const _GuaranteeBanner({required this.guarantee});

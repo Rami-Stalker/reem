@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:reem/core/shared/entities/user.dart';
+import 'package:ohara/core/shared/entities/user.dart';
 
 class StoryViewerEntry extends Equatable {
   final User user;

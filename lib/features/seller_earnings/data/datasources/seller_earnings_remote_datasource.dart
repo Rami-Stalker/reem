@@ -1,5 +1,5 @@
-import 'package:reem/features/seller_earnings/data/models/seller_earnings_model.dart';
-import 'package:reem/features/seller_earnings/domain/entities/seller_earnings.dart';
+import 'package:ohara/features/seller_earnings/data/models/seller_earnings_model.dart';
+import 'package:ohara/features/seller_earnings/domain/entities/seller_earnings.dart';
 
 abstract interface class SellerEarningsRemoteDataSource {
   Future<SellerEarningsModel> load();

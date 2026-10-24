@@ -2,7 +2,7 @@
 <!--
   Android 12 replaced the launch theme with a system splash screen and shows it
   whether an app opts in or not. Left unconfigured it draws the launcher icon
-  on the OEM's default plate — which on a light phone meant Reem's rose
+  on the OEM's default plate — which on a light phone meant Ohara's rose
   monogram on stark white for a beat, then the app's own cream. These keys make
   the system screen the app's own: the brand ground and the adaptive icon's
   foreground layer, both resolved day/night through @color (see values/colors.xml

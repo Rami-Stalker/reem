@@ -6,5 +6,5 @@
 /// buried in it.
 library;
 
-export 'package:reem/features/trends/presentation/widgets/admin_trend_charts.dart';
-export 'package:reem/features/trends/presentation/widgets/admin_trend_lists.dart';
+export 'package:ohara/features/trends/presentation/widgets/admin_trend_charts.dart';
+export 'package:ohara/features/trends/presentation/widgets/admin_trend_lists.dart';

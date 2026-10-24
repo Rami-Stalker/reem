@@ -10,7 +10,7 @@ import { ValueService } from './value.service';
 import { ValueVisibilityService } from './value-visibility.service';
 
 /**
- * Reem Value.
+ * Ohara Value.
  *
  * Her standing on the platform, computed from the quality of her relationship
  * with it rather than from what she has spent, and the benefits that standing

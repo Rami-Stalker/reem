@@ -46,7 +46,7 @@ export interface DiagnosisFacts {
   /**
    * Whether her shelf is empty right now.
    *
-   * A flag rather than a duration, deliberately. Reem does not journal stock
+   * A flag rather than a duration, deliberately. Ohara does not journal stock
    * changes, so "it was empty for eleven days" is a number nobody can compute
    * — and a fabricated one would read as precise on a screen a seller acts on.
    * The advice is the same either way: restock. What she needs to know is that

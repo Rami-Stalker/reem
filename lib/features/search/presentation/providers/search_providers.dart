@@ -1,23 +1,23 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 
-import 'package:reem/core/errors/failure_exception.dart';
-import 'package:reem/core/presentation/providers/core_providers.dart';
-import 'package:reem/core/presentation/providers/paginated_notifier.dart';
-import 'package:reem/core/presentation/state/paginated_state.dart';
-import 'package:reem/core/result/result.dart';
-import 'package:reem/core/shared/entities/post.dart';
-import 'package:reem/core/shared/entities/user.dart';
-import 'package:reem/features/discovery/presentation/providers/collection_notifier.dart';
-import 'package:reem/features/discovery/presentation/providers/collection_state.dart';
-import 'package:reem/features/discovery/presentation/providers/sponsored_providers.dart';
-import 'package:reem/features/search/data/datasources/impl/search_remote_datasource_impl.dart';
-import 'package:reem/features/search/data/datasources/search_remote_datasource.dart';
-import 'package:reem/features/search/data/repositories/search_repository_impl.dart';
-import 'package:reem/features/search/domain/entities/search_suggestions.dart';
-import 'package:reem/features/search/domain/entities/unified_search.dart';
-import 'package:reem/features/search/domain/repositories/search_repository.dart';
-import 'package:reem/features/search/domain/usecases/search_products_usecase.dart';
+import 'package:ohara/core/errors/failure_exception.dart';
+import 'package:ohara/core/presentation/providers/core_providers.dart';
+import 'package:ohara/core/presentation/providers/paginated_notifier.dart';
+import 'package:ohara/core/presentation/state/paginated_state.dart';
+import 'package:ohara/core/result/result.dart';
+import 'package:ohara/core/shared/entities/post.dart';
+import 'package:ohara/core/shared/entities/user.dart';
+import 'package:ohara/features/discovery/presentation/providers/collection_notifier.dart';
+import 'package:ohara/features/discovery/presentation/providers/collection_state.dart';
+import 'package:ohara/features/discovery/presentation/providers/sponsored_providers.dart';
+import 'package:ohara/features/search/data/datasources/impl/search_remote_datasource_impl.dart';
+import 'package:ohara/features/search/data/datasources/search_remote_datasource.dart';
+import 'package:ohara/features/search/data/repositories/search_repository_impl.dart';
+import 'package:ohara/features/search/domain/entities/search_suggestions.dart';
+import 'package:ohara/features/search/domain/entities/unified_search.dart';
+import 'package:ohara/features/search/domain/repositories/search_repository.dart';
+import 'package:ohara/features/search/domain/usecases/search_products_usecase.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // ── Infrastructure / use cases ──────────────────────────────────────────────

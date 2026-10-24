@@ -1,15 +1,15 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 
-import 'package:reem/core/presentation/providers/core_providers.dart';
-import 'package:reem/features/create/data/datasources/create_remote_datasource.dart';
-import 'package:reem/features/create/data/datasources/impl/create_remote_datasource_impl.dart';
-import 'package:reem/features/create/data/repositories/create_repository_impl.dart';
-import 'package:reem/features/create/domain/repositories/create_repository.dart';
-import 'package:reem/features/create/domain/usecases/create_post_usecase.dart';
-import 'package:reem/features/create/domain/usecases/create_story_usecase.dart';
-import 'package:reem/features/create/presentation/providers/create_notifier.dart';
-import 'package:reem/features/create/presentation/providers/create_state.dart';
+import 'package:ohara/core/presentation/providers/core_providers.dart';
+import 'package:ohara/features/create/data/datasources/create_remote_datasource.dart';
+import 'package:ohara/features/create/data/datasources/impl/create_remote_datasource_impl.dart';
+import 'package:ohara/features/create/data/repositories/create_repository_impl.dart';
+import 'package:ohara/features/create/domain/repositories/create_repository.dart';
+import 'package:ohara/features/create/domain/usecases/create_post_usecase.dart';
+import 'package:ohara/features/create/domain/usecases/create_story_usecase.dart';
+import 'package:ohara/features/create/presentation/providers/create_notifier.dart';
+import 'package:ohara/features/create/presentation/providers/create_state.dart';
 
 final createRemoteDataSourceProvider = Provider<CreateRemoteDataSource>(
   (ref) => CreateRemoteDataSourceImpl(ref.watch(dioProvider)),

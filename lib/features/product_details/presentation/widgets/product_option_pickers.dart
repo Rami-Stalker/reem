@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/core/shared/entities/product_variant.dart';
-import 'package:reem/core/shared/entities/seller_offer.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/core/shared/entities/product_variant.dart';
+import 'package:ohara/core/shared/entities/seller_offer.dart';
 
 /// Pickers for the choices a product actually offers.
 ///
 /// The page previously carried a `ProductSizeSelector` hard-coded to
 /// XS–XL and a `ProductColorSelector` hard-coded to four Material swatches,
-/// neither of which was connected to the catalogue. A Reem product carries
+/// neither of which was connected to the catalogue. A Ohara product carries
 /// [OfferVariant]s whose `attributes` map holds the real axes — المقاس,
 /// اللون, الحجم — so the picker is generated from them and a product with no
 /// options renders nothing at all.

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:reem/core/localization/locale_storage.dart';
+import 'package:ohara/core/localization/locale_storage.dart';
 
 /// Manages app locale with persistence and [MaterialApp] integration.
 class LocaleController extends ChangeNotifier {

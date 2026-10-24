@@ -1,6 +1,6 @@
-import 'package:reem/core/result/result.dart';
+import 'package:ohara/core/result/result.dart';
 
-import 'package:reem/features/auth/domain/repositories/auth_repository.dart';
+import 'package:ohara/features/auth/domain/repositories/auth_repository.dart';
 
 class ForgotPasswordUseCase {
   const ForgotPasswordUseCase(this._repository);

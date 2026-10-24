@@ -14,14 +14,14 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:reem/core/router/app_router_provider.dart';
-import 'package:reem/core/router/route_paths.dart';
-import 'package:reem/features/salons/data/datasources/salons_remote_datasource.dart';
-import 'package:reem/features/salons/data/models/salon_models.dart';
-import 'package:reem/features/salons/domain/entities/appointment.dart';
-import 'package:reem/features/salons/domain/entities/salon.dart';
-import 'package:reem/features/salons/presentation/widgets/salon_labels.dart';
-import 'package:reem/l10n/app_localizations.dart';
+import 'package:ohara/core/router/app_router_provider.dart';
+import 'package:ohara/core/router/route_paths.dart';
+import 'package:ohara/features/salons/data/datasources/salons_remote_datasource.dart';
+import 'package:ohara/features/salons/data/models/salon_models.dart';
+import 'package:ohara/features/salons/domain/entities/appointment.dart';
+import 'package:ohara/features/salons/domain/entities/salon.dart';
+import 'package:ohara/features/salons/presentation/widgets/salon_labels.dart';
+import 'package:ohara/l10n/app_localizations.dart';
 
 /// The salon labels are Arabic-first; the tests read them in Arabic.
 final _ar = lookupAppLocalizations(const Locale('ar'));

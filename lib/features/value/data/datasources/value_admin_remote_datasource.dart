@@ -1,7 +1,7 @@
-import 'package:reem/core/network/api_endpoints.dart';
-import 'package:reem/core/network/base_remote_datasource.dart';
-import 'package:reem/features/value/data/models/value_admin_models.dart';
-import 'package:reem/features/value/domain/entities/value_admin.dart';
+import 'package:ohara/core/network/api_endpoints.dart';
+import 'package:ohara/core/network/base_remote_datasource.dart';
+import 'package:ohara/features/value/data/models/value_admin_models.dart';
+import 'package:ohara/features/value/domain/entities/value_admin.dart';
 
 abstract interface class ValueAdminRemoteDataSource {
   Future<ValueDistribution> distribution();

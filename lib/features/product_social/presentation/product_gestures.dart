@@ -5,23 +5,23 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/core/platform/app_haptics.dart';
-import 'package:reem/core/router/route_paths.dart';
-import 'package:reem/core/shared/entities/media.dart';
-import 'package:reem/core/shared/entities/product.dart';
-import 'package:reem/core/shared/services/share_service.dart';
-import 'package:reem/features/auth/presentation/providers/auth_provider.dart';
-import 'package:reem/features/auth/presentation/widgets/auth_prompt_sheet.dart';
-import 'package:reem/features/product_social/domain/entities/product_engagement.dart';
-import 'package:reem/features/product_social/presentation/providers/product_social_providers.dart';
-import 'package:reem/features/profile/presentation/providers/profile_provider.dart';
-import 'package:reem/features/profile/presentation/widgets/save_to_collection_sheet.dart';
-import 'package:reem/features/social/presentation/widgets/report_sheet.dart';
-import 'package:reem/features/social_posts/domain/entities/comment_thread.dart';
-import 'package:reem/features/social_posts/presentation/widgets/comment_sheet.dart';
-import 'package:reem/features/user_profile/presentation/providers/user_profile_providers.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/core/platform/app_haptics.dart';
+import 'package:ohara/core/router/route_paths.dart';
+import 'package:ohara/core/shared/entities/media.dart';
+import 'package:ohara/core/shared/entities/product.dart';
+import 'package:ohara/core/shared/services/share_service.dart';
+import 'package:ohara/features/auth/presentation/providers/auth_provider.dart';
+import 'package:ohara/features/auth/presentation/widgets/auth_prompt_sheet.dart';
+import 'package:ohara/features/product_social/domain/entities/product_engagement.dart';
+import 'package:ohara/features/product_social/presentation/providers/product_social_providers.dart';
+import 'package:ohara/features/profile/presentation/providers/profile_provider.dart';
+import 'package:ohara/features/profile/presentation/widgets/save_to_collection_sheet.dart';
+import 'package:ohara/features/social/presentation/widgets/report_sheet.dart';
+import 'package:ohara/features/social_posts/domain/entities/comment_thread.dart';
+import 'package:ohara/features/social_posts/presentation/widgets/comment_sheet.dart';
+import 'package:ohara/features/user_profile/presentation/providers/user_profile_providers.dart';
 
 /// The post gestures, on a product — one implementation for every surface.
 ///

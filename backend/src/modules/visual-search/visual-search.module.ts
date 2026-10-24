@@ -29,7 +29,7 @@ import { VECTOR_INDEX } from './vector/vector-index';
 import { VisualSearchController } from './visual-search.controller';
 
 /**
- * Reem Visual Shopping.
+ * Ohara Visual Shopping.
  *
  * Sits beside `AiStylistModule` rather than inside it, and imports it: the
  * stylist owns the *vocabulary* — the colour lexicon, `StyleBrief`,

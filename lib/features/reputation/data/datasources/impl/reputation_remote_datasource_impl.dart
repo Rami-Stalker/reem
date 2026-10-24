@@ -1,8 +1,8 @@
-import 'package:reem/core/network/api_endpoints.dart';
-import 'package:reem/core/network/base_remote_datasource.dart';
-import 'package:reem/features/reputation/data/datasources/reputation_remote_datasource.dart';
-import 'package:reem/features/reputation/data/models/reputation_models.dart';
-import 'package:reem/features/reputation/domain/entities/fit_entities.dart';
+import 'package:ohara/core/network/api_endpoints.dart';
+import 'package:ohara/core/network/base_remote_datasource.dart';
+import 'package:ohara/features/reputation/data/datasources/reputation_remote_datasource.dart';
+import 'package:ohara/features/reputation/data/models/reputation_models.dart';
+import 'package:ohara/features/reputation/domain/entities/fit_entities.dart';
 
 final class ReputationRemoteDataSourceImpl extends BaseRemoteDataSource
     implements ReputationRemoteDataSource {

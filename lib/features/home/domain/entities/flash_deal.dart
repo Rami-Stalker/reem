@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import 'package:reem/core/shared/entities/product.dart';
+import 'package:ohara/core/shared/entities/product.dart';
 
 /// A time-boxed, limited-quantity offer. The price/discount live on [product];
 /// this adds the urgency layer — a deadline and a stock-claimed meter.

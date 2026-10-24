@@ -2,8 +2,8 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:reem/core/experience/role_experience.dart';
-import 'package:reem/core/router/route_paths.dart';
+import 'package:ohara/core/experience/role_experience.dart';
+import 'package:ohara/core/router/route_paths.dart';
 
 /// The two navigation defects the suite could not have caught.
 ///

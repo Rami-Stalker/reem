@@ -1,4 +1,4 @@
-# Reem Commerce Content Platform
+# Ohara Commerce Content Platform
 
 ## What it is
 

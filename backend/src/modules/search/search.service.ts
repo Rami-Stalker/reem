@@ -59,7 +59,7 @@ export class SearchService {
     // still Prisma's, applied to that set. See `ProductMatcher` for why the
     // two are split.
     const matches = await this.matcher.match(dto.q);
-    // Reem Value's visibility rule, in the query so the count and the pages
+    // Ohara Value's visibility rule, in the query so the count and the pages
     // agree. Without it, search listed new arrivals inside their early-access
     // window to women who could not open them — a tap answered «not found».
     const gate = await this.visibility.catalogFilter(viewerId);

@@ -1,4 +1,4 @@
-// Reem Shop — PostgreSQL schema (Prisma).
+// Ohara Shop — PostgreSQL schema (Prisma).
 // All ids are UUIDs. JSON responses are snake_case (handled in serializers).
 
 generator client {

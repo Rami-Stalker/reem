@@ -7,21 +7,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/core/media/media_variants.dart';
-import 'package:reem/core/router/route_paths.dart';
-import 'package:reem/core/shared/entities/product.dart';
-import 'package:reem/core/utils/damascus_time.dart';
-import 'package:reem/features/auth/presentation/providers/auth_provider.dart';
-import 'package:reem/features/cart/presentation/providers/cart_providers.dart';
-import 'package:reem/features/discovery/domain/entities/product_collection.dart';
-import 'package:reem/features/home/presentation/providers/home_content_provider.dart';
-import 'package:reem/features/home/presentation/providers/home_provider.dart';
-import 'package:reem/features/home/presentation/widgets/home_greeting.dart';
-import 'package:reem/features/home/presentation/widgets/living/aura_palette.dart';
-import 'package:reem/features/home/presentation/widgets/living/live_countdown.dart';
-import 'package:reem/l10n/app_localizations.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/core/media/media_variants.dart';
+import 'package:ohara/core/router/route_paths.dart';
+import 'package:ohara/core/shared/entities/product.dart';
+import 'package:ohara/core/utils/damascus_time.dart';
+import 'package:ohara/features/auth/presentation/providers/auth_provider.dart';
+import 'package:ohara/features/cart/presentation/providers/cart_providers.dart';
+import 'package:ohara/features/discovery/domain/entities/product_collection.dart';
+import 'package:ohara/features/home/presentation/providers/home_content_provider.dart';
+import 'package:ohara/features/home/presentation/providers/home_provider.dart';
+import 'package:ohara/features/home/presentation/widgets/home_greeting.dart';
+import 'package:ohara/features/home/presentation/widgets/living/aura_palette.dart';
+import 'package:ohara/features/home/presentation/widgets/living/live_countdown.dart';
+import 'package:ohara/l10n/app_localizations.dart';
 
 /// The top of the home: a sky that knows what time it is, and what is
 /// waiting for her.
@@ -31,7 +31,7 @@ import 'package:reem/l10n/app_localizations.dart';
 /// ([AuraPalette]); her name and a question sized like a magazine cover
 /// stand on it; under them a row of live chips says what changed since she
 /// last looked (a deal ticking down, boutiques that posted, a bag waiting);
-/// and the field at the bottom asks rather than searches — «اسألي ريم» opens
+/// and the field at the bottom asks rather than searches — «اسألي أوهارا» opens
 /// the stylist, with an example that changes every few seconds so she knows
 /// she can speak to it in sentences.
 ///
@@ -347,7 +347,7 @@ class _AuraContent extends ConsumerWidget {
               DsGaps.vLg,
               _BriefChips(palette: palette, onStoriesTap: onStoriesTap),
               DsGaps.vMd,
-              _AskReem(palette: palette),
+              _AskOhara(palette: palette),
             ],
           ),
         ],
@@ -588,21 +588,21 @@ class _PulseDot extends StatelessWidget {
   Widget build(BuildContext context) => PulseDotIndicator(color: color);
 }
 
-/// «اسألي ريم» — a field that asks rather than searches.
+/// «اسألي أوهارا» — a field that asks rather than searches.
 ///
 /// The example inside it changes every few seconds. A plain "search" hint
 /// teaches keywords; a sentence teaches that she can describe what she wants
 /// the way she would to a friend in a shop, which is what the stylist reads.
-class _AskReem extends StatefulWidget {
-  const _AskReem({required this.palette});
+class _AskOhara extends StatefulWidget {
+  const _AskOhara({required this.palette});
 
   final AuraPalette palette;
 
   @override
-  State<_AskReem> createState() => _AskReemState();
+  State<_AskOhara> createState() => _AskOharaState();
 }
 
-class _AskReemState extends State<_AskReem> {
+class _AskOharaState extends State<_AskOhara> {
   Timer? _timer;
   int _example = 0;
 
@@ -635,7 +635,7 @@ class _AskReemState extends State<_AskReem> {
 
     return Semantics(
       button: true,
-      label: l10n.homeAskReem,
+      label: l10n.homeAskOhara,
       child: GestureDetector(
         onTap: () => context.push(RoutePaths.stylist),
         child: ClipRRect(
@@ -685,7 +685,7 @@ class _AskReemState extends State<_AskReem> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          l10n.homeAskReem,
+                          l10n.homeAskOhara,
                           style: context.dsText.captionStrong.tint(
                             palette.inkMuted,
                           ),

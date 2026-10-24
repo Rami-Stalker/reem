@@ -1,7 +1,7 @@
-import 'package:reem/features/seller_dashboard/domain/entities/seller_analytics.dart';
-import 'package:reem/features/seller_dashboard/domain/entities/seller_chart_data.dart';
-import 'package:reem/features/seller_dashboard/domain/entities/seller_orders_summary.dart';
-import 'package:reem/l10n/app_localizations.dart';
+import 'package:ohara/features/seller_dashboard/domain/entities/seller_analytics.dart';
+import 'package:ohara/features/seller_dashboard/domain/entities/seller_chart_data.dart';
+import 'package:ohara/features/seller_dashboard/domain/entities/seller_orders_summary.dart';
+import 'package:ohara/l10n/app_localizations.dart';
 
 /// Localized labels for the dashboard's enums.
 ///

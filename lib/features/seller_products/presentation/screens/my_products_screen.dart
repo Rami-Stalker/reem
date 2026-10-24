@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/core/router/route_paths.dart';
-import 'package:reem/features/seller_products/domain/entities/managed_product.dart';
-import 'package:reem/features/seller_products/domain/entities/product_status.dart';
-import 'package:reem/features/seller_products/presentation/providers/seller_products_providers.dart';
-import 'package:reem/features/seller_products/presentation/widgets/managed_product_card.dart';
-import 'package:reem/features/seller_products/presentation/widgets/product_status_chip.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/core/router/route_paths.dart';
+import 'package:ohara/features/seller_products/domain/entities/managed_product.dart';
+import 'package:ohara/features/seller_products/domain/entities/product_status.dart';
+import 'package:ohara/features/seller_products/presentation/providers/seller_products_providers.dart';
+import 'package:ohara/features/seller_products/presentation/widgets/managed_product_card.dart';
+import 'package:ohara/features/seller_products/presentation/widgets/product_status_chip.dart';
 
 class MyProductsScreen extends ConsumerWidget {
   const MyProductsScreen({super.key});
@@ -28,7 +28,7 @@ class MyProductsScreen extends ConsumerWidget {
     final palette = context.atelier;
     final l10n = context.l10n;
 
-    return ReemScrollPage(
+    return OharaScrollPage(
       background: const SellerAtelierBackground(),
       backgroundColor: palette.background,
       floatingActionButton: FloatingActionButton.extended(

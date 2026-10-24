@@ -5,18 +5,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:reem/core/auth/app_permissions.dart';
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/core/router/route_paths.dart';
-import 'package:reem/core/shared/value_objects/money_format.dart';
-import 'package:reem/core/utils/relative_time.dart';
-import 'package:reem/features/admin/data/models/admin_briefing_model.dart';
-import 'package:reem/features/admin/domain/entities/admin_stats_entity.dart';
-import 'package:reem/features/admin/presentation/providers/admin_provider.dart';
-import 'package:reem/features/admin/presentation/widgets/admin_briefing_panel.dart';
-import 'package:reem/features/admin/presentation/widgets/admin_jump_palette.dart';
-import 'package:reem/features/experience/presentation/providers/role_experience_provider.dart';
+import 'package:ohara/core/auth/app_permissions.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/core/router/route_paths.dart';
+import 'package:ohara/core/shared/value_objects/money_format.dart';
+import 'package:ohara/core/utils/relative_time.dart';
+import 'package:ohara/features/admin/data/models/admin_briefing_model.dart';
+import 'package:ohara/features/admin/domain/entities/admin_stats_entity.dart';
+import 'package:ohara/features/admin/presentation/providers/admin_provider.dart';
+import 'package:ohara/features/admin/presentation/widgets/admin_briefing_panel.dart';
+import 'package:ohara/features/admin/presentation/widgets/admin_jump_palette.dart';
+import 'package:ohara/features/experience/presentation/providers/role_experience_provider.dart';
 
 /// The console's home: **the courtyard**.
 ///

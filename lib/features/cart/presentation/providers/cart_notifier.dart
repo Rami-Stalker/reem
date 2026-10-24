@@ -1,9 +1,9 @@
 import 'package:flutter_riverpod/legacy.dart';
-import 'package:reem/core/result/result.dart';
+import 'package:ohara/core/result/result.dart';
 
-import 'package:reem/features/cart/domain/entities/cart.dart';
-import 'package:reem/features/cart/domain/usecases/cart_usecases.dart';
-import 'package:reem/features/cart/presentation/providers/cart_state.dart';
+import 'package:ohara/features/cart/domain/entities/cart.dart';
+import 'package:ohara/features/cart/domain/usecases/cart_usecases.dart';
+import 'package:ohara/features/cart/presentation/providers/cart_state.dart';
 
 class CartNotifier extends StateNotifier<CartState> {
   CartNotifier({

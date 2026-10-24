@@ -24,7 +24,7 @@ import { ClosetTodayService } from './today/today.service';
  * The unit tests prove the four kernels in isolation. This proves the claims
  * that only the database can settle:
  *
- *   - a garment Reem never sold reaches the engine on equal terms with one it
+ *   - a garment Ohara never sold reaches the engine on equal terms with one it
  *     did — the premise the whole feature rests on;
  *   - a gap survives recompute, and a dismissal survives it too;
  *   - a look may hold a slot she cannot fill, and that slot becomes a gap;
@@ -139,7 +139,7 @@ async function someProduct(db: PrismaService, slug: string): Promise<string> {
 
 // ── The premise ─────────────────────────────────────────────────────────
 
-dbTest('a garment Reem never sold is a first-class member of the closet', async (world) => {
+dbTest('a garment Ohara never sold is a first-class member of the closet', async (world) => {
   const userId = await someCustomer(world.db);
 
   const personal = await world.items.addPersonal(userId, {

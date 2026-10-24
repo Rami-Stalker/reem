@@ -1,4 +1,4 @@
-import 'package:reem/features/user_profile/domain/entities/user_profile.dart';
+import 'package:ohara/features/user_profile/domain/entities/user_profile.dart';
 
 class UserProfileState {
   const UserProfileState({

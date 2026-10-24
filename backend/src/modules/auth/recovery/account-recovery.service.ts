@@ -123,7 +123,7 @@ export class AccountRecoveryService {
    * has a *privileged* account, or has never been seen. This route is
    * unauthenticated by necessity — she cannot sign in, that is the whole
    * premise — which makes any variation in the answer a free oracle for asking
-   * whether a given woman is on Reem.
+   * whether a given woman is on Ohara.
    */
   async submit(dto: SubmitRecoveryCaseDto, context: RequestContext) {
     // The contact number is verified first, so the queue only ever contains

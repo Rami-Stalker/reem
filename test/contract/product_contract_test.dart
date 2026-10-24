@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:reem/core/shared/models/product_model.dart';
-import 'package:reem/core/shared/value_objects/money.dart';
+import 'package:ohara/core/shared/models/product_model.dart';
+import 'package:ohara/core/shared/value_objects/money.dart';
 
 /// Contract tests against **real captured responses** from the backend.
 ///

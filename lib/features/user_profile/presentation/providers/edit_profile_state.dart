@@ -1,6 +1,6 @@
-import 'package:reem/core/shared/entities/user.dart';
+import 'package:ohara/core/shared/entities/user.dart';
 
-import 'package:reem/features/user_profile/presentation/providers/edit_profile_message.dart';
+import 'package:ohara/features/user_profile/presentation/providers/edit_profile_message.dart';
 
 class EditProfileState {
   const EditProfileState({

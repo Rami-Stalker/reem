@@ -2,15 +2,15 @@ import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
-import 'package:reem/core/presentation/providers/core_providers.dart';
-import 'package:reem/core/result/result.dart';
-import 'package:reem/features/visual_search/data/datasources/impl/visual_search_remote_datasource_impl.dart';
-import 'package:reem/features/visual_search/data/datasources/visual_search_remote_datasource.dart';
-import 'package:reem/features/visual_search/data/repositories/visual_search_repository_impl.dart';
-import 'package:reem/features/visual_search/domain/entities/visual_match.dart';
-import 'package:reem/features/visual_search/domain/repositories/visual_search_repository.dart';
-import 'package:reem/features/visual_search/presentation/providers/visual_search_notifier.dart';
-import 'package:reem/features/visual_search/presentation/providers/visual_search_state.dart';
+import 'package:ohara/core/presentation/providers/core_providers.dart';
+import 'package:ohara/core/result/result.dart';
+import 'package:ohara/features/visual_search/data/datasources/impl/visual_search_remote_datasource_impl.dart';
+import 'package:ohara/features/visual_search/data/datasources/visual_search_remote_datasource.dart';
+import 'package:ohara/features/visual_search/data/repositories/visual_search_repository_impl.dart';
+import 'package:ohara/features/visual_search/domain/entities/visual_match.dart';
+import 'package:ohara/features/visual_search/domain/repositories/visual_search_repository.dart';
+import 'package:ohara/features/visual_search/presentation/providers/visual_search_notifier.dart';
+import 'package:ohara/features/visual_search/presentation/providers/visual_search_state.dart';
 
 // ── Infrastructure ──────────────────────────────────────────────────────
 

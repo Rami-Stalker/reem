@@ -10,8 +10,8 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:reem/core/shared/entities/post.dart';
-import 'package:reem/core/shared/models/post_model.dart';
+import 'package:ohara/core/shared/entities/post.dart';
+import 'package:ohara/core/shared/models/post_model.dart';
 
 void main() {
   late List<PostModel> posts;

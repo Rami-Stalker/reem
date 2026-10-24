@@ -1,6 +1,6 @@
-import 'package:reem/core/network/api_endpoints.dart';
-import 'package:reem/core/network/base_remote_datasource.dart';
-import 'package:reem/features/policies/domain/entities/policy_document.dart';
+import 'package:ohara/core/network/api_endpoints.dart';
+import 'package:ohara/core/network/base_remote_datasource.dart';
+import 'package:ohara/features/policies/domain/entities/policy_document.dart';
 
 /// The policy centre's data.
 ///

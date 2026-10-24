@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 
-import 'package:reem/core/design_system/foundation/theme/extensions/color_extension.dart';
+import 'package:ohara/core/design_system/foundation/theme/extensions/color_extension.dart';
 
 /// The meaning a status carries, independent of what colour draws it.
 ///

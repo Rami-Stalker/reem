@@ -1,9 +1,9 @@
-import 'package:reem/core/network/api_endpoints.dart';
-import 'package:reem/core/network/base_remote_datasource.dart';
-import 'package:reem/features/value/data/datasources/value_remote_datasource.dart';
-import 'package:reem/features/value/data/models/value_models.dart';
-import 'package:reem/features/value/domain/entities/value_standing.dart';
-import 'package:reem/features/value/domain/repositories/value_repository.dart';
+import 'package:ohara/core/network/api_endpoints.dart';
+import 'package:ohara/core/network/base_remote_datasource.dart';
+import 'package:ohara/features/value/data/datasources/value_remote_datasource.dart';
+import 'package:ohara/features/value/data/models/value_models.dart';
+import 'package:ohara/features/value/domain/entities/value_standing.dart';
+import 'package:ohara/features/value/domain/repositories/value_repository.dart';
 
 final class ValueRemoteDataSourceImpl extends BaseRemoteDataSource
     implements ValueRemoteDataSource {

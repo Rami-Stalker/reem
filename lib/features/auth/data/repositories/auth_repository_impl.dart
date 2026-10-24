@@ -2,18 +2,18 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/foundation.dart';
-import 'package:reem/core/base/repository_handler.dart';
-import 'package:reem/core/errors/app_exception.dart';
-import 'package:reem/core/network/network_info.dart';
-import 'package:reem/core/result/result.dart';
-import 'package:reem/core/security/device_identity_service.dart';
-import 'package:reem/core/shared/entities/user.dart';
-import 'package:reem/features/auth/data/datasources/auth_local_datasource.dart';
-import 'package:reem/features/auth/data/datasources/auth_remote_datasource.dart';
-import 'package:reem/features/auth/data/models/identity_models.dart';
-import 'package:reem/features/auth/data/models/token_model.dart';
-import 'package:reem/features/auth/domain/entities/auth_account.dart';
-import 'package:reem/features/auth/domain/repositories/auth_repository.dart';
+import 'package:ohara/core/base/repository_handler.dart';
+import 'package:ohara/core/errors/app_exception.dart';
+import 'package:ohara/core/network/network_info.dart';
+import 'package:ohara/core/result/result.dart';
+import 'package:ohara/core/security/device_identity_service.dart';
+import 'package:ohara/core/shared/entities/user.dart';
+import 'package:ohara/features/auth/data/datasources/auth_local_datasource.dart';
+import 'package:ohara/features/auth/data/datasources/auth_remote_datasource.dart';
+import 'package:ohara/features/auth/data/models/identity_models.dart';
+import 'package:ohara/features/auth/data/models/token_model.dart';
+import 'package:ohara/features/auth/domain/entities/auth_account.dart';
+import 'package:ohara/features/auth/domain/repositories/auth_repository.dart';
 
 class AuthRepositoryImpl with RepositoryHandler implements AuthRepository {
   AuthRepositoryImpl({
@@ -65,7 +65,7 @@ class AuthRepositoryImpl with RepositoryHandler implements AuthRepository {
         await _ensureConnected();
         // A fresh nonce per attempt, kept only until the code comes back. It is
         // what lets the server prove the code was entered by the install that
-        // asked for it — so a code read aloud to "Reem support" cannot be spent
+        // asked for it — so a code read aloud to "Ohara support" cannot be spent
         // from their handset.
         final nonce = _newClientNonce();
         _pendingNonce = nonce;

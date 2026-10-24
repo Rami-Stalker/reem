@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:reem/core/design_system/foundation/theme/extensions/color_extension.dart';
-import 'package:reem/core/design_system/foundation/tokens/ds_motion.dart';
-import 'package:reem/core/design_system/foundation/tokens/ds_radius.dart';
+import 'package:ohara/core/design_system/foundation/theme/extensions/color_extension.dart';
+import 'package:ohara/core/design_system/foundation/tokens/ds_motion.dart';
+import 'package:ohara/core/design_system/foundation/tokens/ds_radius.dart';
 import 'package:shimmer/shimmer.dart';
 
 /// Wraps any subtree in a theme-aware shimmer sweep. Compose with [DsSkeleton]

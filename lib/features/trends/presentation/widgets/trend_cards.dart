@@ -5,6 +5,6 @@
 
 library;
 
-export 'package:reem/features/trends/presentation/widgets/admin_trend_cards.dart';
-export 'package:reem/features/trends/presentation/widgets/seller_trend_card.dart';
-export 'package:reem/features/trends/presentation/widgets/trend_insight_card.dart';
+export 'package:ohara/features/trends/presentation/widgets/admin_trend_cards.dart';
+export 'package:ohara/features/trends/presentation/widgets/seller_trend_card.dart';
+export 'package:ohara/features/trends/presentation/widgets/trend_insight_card.dart';

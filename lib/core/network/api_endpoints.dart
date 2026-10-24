@@ -405,7 +405,7 @@ abstract final class ApiEndpoints {
   static String aiSimilarProducts(String productId) =>
       '/ai/products/$productId/similar';
 
-  // Reem AI Stylist — the conversational assistant. Separate from the rails
+  // Ohara AI Stylist — the conversational assistant. Separate from the rails
   // above: those answer "what should this shelf show", this answers a sentence.
   static const stylistBootstrap = '/ai/stylist/bootstrap';
   static const stylistConversations = '/ai/stylist/conversations';
@@ -421,7 +421,7 @@ abstract final class ApiEndpoints {
   static const stylistPreferences = '/ai/stylist/preferences';
   static const stylistPreferencesRefresh = '/ai/stylist/preferences/refresh';
 
-  // Reem Closet — her wardrobe. Not under `/ai`: nothing here is generated.
+  // Ohara Closet — her wardrobe. Not under `/ai`: nothing here is generated.
   // A gap is arithmetic over her own rows, and the only route that reaches the
   // catalog at all is `closetGapSuggestions`.
   static const closet = '/closet';
@@ -454,7 +454,7 @@ abstract final class ApiEndpoints {
 
   static const closetToday = '/closet/today';
 
-  // Reem Value — her standing. Note the absence of an "earn" or "redeem"
+  // Ohara Value — her standing. Note the absence of an "earn" or "redeem"
   // endpoint: standing is computed from evidence the platform already holds,
   // and nothing a client sends can move it. Claiming a benefit costs nothing,
   // which is why it is `claim` and not `redeem`.
@@ -466,7 +466,7 @@ abstract final class ApiEndpoints {
   static const valueBenefitClaim = '/value/benefits/claim';
   static String valueGrantUse(String id) => '/value/benefits/grants/$id/use';
 
-  // Reem Rooms — Intent → Room → Decision → Purchase.
+  // Ohara Rooms — Intent → Room → Decision → Purchase.
   //
   // Read the verbs: propose, choose, skip, reject, stage. Not one of them is
   // "add to cart", and there is no route that buys something that was never
@@ -542,7 +542,7 @@ abstract final class ApiEndpoints {
   static const adminValueSweep = '/admin/value/sweep';
   static const adminValueRecompute = '/admin/value/recompute';
 
-  // Reem Visual Shopping — search and shop by photograph. The image is posted
+  // Ohara Visual Shopping — search and shop by photograph. The image is posted
   // to `visualSearches` directly rather than through `mediaUploads` first: the
   // server has to be the one that decides the bytes are private, re-encodes
   // them and stamps a retention clock on them, and a two-step flow would leave
@@ -704,9 +704,9 @@ abstract final class ApiEndpoints {
 
   // ── Delivery companies (Q63) ──────────────────────────────────────────
   //
-  // Reem does not run drivers: parcels are carried by delivery companies, and
+  // Ohara does not run drivers: parcels are carried by delivery companies, and
   // these routes are the operations desk for them. The app never talks to a
-  // carrier — only to Reem, which holds every credential.
+  // carrier — only to Ohara, which holds every credential.
   static const adminDeliveryProviders = '/admin/delivery/providers';
   static String adminDeliveryProviderEnable(String id) =>
       '/admin/delivery/providers/$id/enable';
@@ -753,7 +753,7 @@ abstract final class ApiEndpoints {
   static String notificationAdminCampaignRun(String id) =>
       '/notifications/admin/campaigns/$id/run';
 
-  // ── Reem Trend Engine ──────────────────────────────────────────────────
+  // ── Ohara Trend Engine ──────────────────────────────────────────────────
   //
   // Two trees, not one parameterised by role. `/trends/seller/*` is always
   // scoped to the caller on the server and accepts no seller id, so there is
@@ -766,7 +766,7 @@ abstract final class ApiEndpoints {
   static String trendsSellerInsight(String id) =>
       '/trends/seller/insights/$id';
 
-  /// Reem Intelligence (phase three). Optional auth: a signed-out visitor
+  /// Ohara Intelligence (phase three). Optional auth: a signed-out visitor
   /// gets catalogue facts, a signed-in shopper gets what applies to her.
   static String intelligenceNotes(String productId) =>
       '/intelligence/products/$productId/notes';
@@ -775,7 +775,7 @@ abstract final class ApiEndpoints {
   static String intelligenceRelated(String productId) =>
       '/intelligence/products/$productId/related';
 
-  // ── Reem Market Evolution (phase four) ───────────────────────────────
+  // ── Ohara Market Evolution (phase four) ───────────────────────────────
   //
   // The shopper's half. Drops, bundles and the resale market take optional
   // auth — signed out shows what is open to everyone, signed in adds what she

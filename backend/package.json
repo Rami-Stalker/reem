@@ -1,7 +1,7 @@
 {
   "name": "reem-api",
   "version": "2.0.0",
-  "description": "Reem Shop REST API — NestJS + PostgreSQL backend for the Flutter client",
+  "description": "Ohara Shop REST API — NestJS + PostgreSQL backend for the Flutter client",
   "private": true,
   "engines": {
     "node": ">=18.18.0"

@@ -17,7 +17,7 @@ import { TrendsOrchestrator } from './trends.orchestrator';
 import { TrendsScheduler } from './trends.scheduler';
 
 /**
- * Reem Trend Engine.
+ * Ohara Trend Engine.
  *
  * Sits inside the existing API rather than beside it: same Nest process, same
  * Prisma client, same guards, same `PricingModule` for currency. There is no

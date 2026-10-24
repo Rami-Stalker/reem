@@ -77,7 +77,7 @@ export interface HttpProviderConfig {
     quoteCurrency?: string;
     quoteEtaMinutes?: string;
   };
-  /** The carrier's own words, mapped onto Reem's. */
+  /** The carrier's own words, mapped onto Ohara's. */
   statusMap?: Record<string, string>;
   failureMap?: Record<string, string>;
   /** Body template keys, for carriers whose field names differ wildly. */

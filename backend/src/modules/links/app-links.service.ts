@@ -63,7 +63,7 @@ export class AppLinksService {
 
     const components = appLinkPatterns().map((pattern) => ({
       '/': pattern,
-      comment: `Reem share link: ${pattern}`,
+      comment: `Ohara share link: ${pattern}`,
     }));
 
     return {

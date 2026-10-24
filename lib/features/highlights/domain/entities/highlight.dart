@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import 'package:reem/core/shared/entities/story.dart';
+import 'package:ohara/core/shared/entities/story.dart';
 
 /// «الأبرز» — a named shelf of stories a woman keeps on her page.
 ///

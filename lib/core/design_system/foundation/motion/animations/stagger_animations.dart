@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 
-import 'package:reem/core/design_system/foundation/theme/accessibility/reduced_motion_theme.dart';
-import 'package:reem/core/design_system/foundation/tokens/ds_motion.dart';
+import 'package:ohara/core/design_system/foundation/theme/accessibility/reduced_motion_theme.dart';
+import 'package:ohara/core/design_system/foundation/tokens/ds_motion.dart';
 
 abstract final class DsStaggerAnimations {
   /// One entry of a staggered reveal, for grids and sliver lists where the

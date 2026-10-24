@@ -1,6 +1,6 @@
-import 'package:reem/core/shared/entities/product_variant.dart';
-import 'package:reem/features/seller_products/domain/entities/product_draft.dart';
-import 'package:reem/features/seller_products/domain/entities/product_status.dart';
+import 'package:ohara/core/shared/entities/product_variant.dart';
+import 'package:ohara/features/seller_products/domain/entities/product_draft.dart';
+import 'package:ohara/features/seller_products/domain/entities/product_status.dart';
 
 /// Serialises a [ProductDraft] into the two payloads the backend accepts.
 ///

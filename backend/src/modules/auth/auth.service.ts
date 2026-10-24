@@ -98,7 +98,7 @@ export class AuthService {
    * Registration used to mint an account for any number anybody typed, with
    * verification arriving later or never — so one person could sit down and
    * claim every number in a contact list, permanently locking women who had
-   * never heard of Reem out of signing up under their own number. Now the code
+   * never heard of Ohara out of signing up under their own number. Now the code
    * comes first (`POST /auth/otp/login`), and this endpoint will only accept a
    * `registration_ticket` issued off the back of it.
    *
@@ -351,7 +351,7 @@ export class AuthService {
 
   // Social sign-in was removed deliberately, not misplaced.
   //
-  // Identity on Reem is phone-only by locked requirement, so Google/Apple gave
+  // Identity on Ohara is phone-only by locked requirement, so Google/Apple gave
   // the platform a second identity namespace the product does not have — and
   // the code that resolved it produced an unauthenticated account-takeover:
   // with no `id_token` present the verifier trusted the raw request body,
@@ -371,7 +371,7 @@ export class AuthService {
    * same shape, same masked destination, same expiry. That uniformity is the
    * whole security property of this endpoint. It is unauthenticated by
    * necessity, and any difference in the answer turns it into a public lookup
-   * for "is this woman on Reem", which on this platform is a question with
+   * for "is this woman on Ohara", which on this platform is a question with
    * consequences well beyond the account.
    *
    * A number with no account still gets a real code: that is how signup starts,

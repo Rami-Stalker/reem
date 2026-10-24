@@ -1,8 +1,8 @@
-import 'package:reem/core/base/repository_handler.dart';
-import 'package:reem/core/result/result.dart';
-import 'package:reem/features/courier/data/datasources/courier_remote_datasource.dart';
-import 'package:reem/features/courier/domain/entities/courier_assignment.dart';
-import 'package:reem/features/courier/domain/repositories/courier_repository.dart';
+import 'package:ohara/core/base/repository_handler.dart';
+import 'package:ohara/core/result/result.dart';
+import 'package:ohara/features/courier/data/datasources/courier_remote_datasource.dart';
+import 'package:ohara/features/courier/domain/entities/courier_assignment.dart';
+import 'package:ohara/features/courier/domain/repositories/courier_repository.dart';
 
 class CourierRepositoryImpl with RepositoryHandler implements CourierRepository {
   const CourierRepositoryImpl(this.remote);

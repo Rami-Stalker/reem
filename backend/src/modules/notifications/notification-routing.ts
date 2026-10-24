@@ -90,7 +90,7 @@ export function channelFor(type: NotificationType): PushChannelId {
 /**
  * How long the provider should keep trying, in seconds.
  *
- * FCM's default is four weeks, which is absurd for everything Reem sends: a
+ * FCM's default is four weeks, which is absurd for everything Ohara sends: a
  * chat message delivered on Thursday about a conversation she had on Monday
  * is not a late notification, it is a wrong one. Each of these is "after this,
  * she has found out some other way".

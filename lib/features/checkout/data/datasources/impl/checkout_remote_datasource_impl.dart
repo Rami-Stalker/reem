@@ -1,11 +1,11 @@
-import 'package:reem/core/network/api_endpoints.dart';
-import 'package:reem/core/network/base_remote_datasource.dart';
-import 'package:reem/core/shared/value_objects/money.dart';
-import 'package:reem/features/checkout/data/datasources/checkout_remote_datasource.dart';
-import 'package:reem/features/checkout/data/models/checkout_models.dart';
-import 'package:reem/features/checkout/data/models/order_models.dart';
-import 'package:reem/features/checkout/domain/entities/checkout.dart';
-import 'package:reem/features/checkout/domain/entities/order.dart';
+import 'package:ohara/core/network/api_endpoints.dart';
+import 'package:ohara/core/network/base_remote_datasource.dart';
+import 'package:ohara/core/shared/value_objects/money.dart';
+import 'package:ohara/features/checkout/data/datasources/checkout_remote_datasource.dart';
+import 'package:ohara/features/checkout/data/models/checkout_models.dart';
+import 'package:ohara/features/checkout/data/models/order_models.dart';
+import 'package:ohara/features/checkout/domain/entities/checkout.dart';
+import 'package:ohara/features/checkout/domain/entities/order.dart';
 
 final class CheckoutRemoteDataSourceImpl extends BaseRemoteDataSource
     implements CheckoutRemoteDataSource {
@@ -84,6 +84,10 @@ final class CheckoutRemoteDataSourceImpl extends BaseRemoteDataSource
             'address_line': shipping.addressLine,
             if (shipping.landmark != null && shipping.landmark!.isNotEmpty)
               'landmark': shipping.landmark,
+            if (shipping.latitude != null && shipping.longitude != null) ...{
+              'latitude': shipping.latitude,
+              'longitude': shipping.longitude,
+            },
           },
         // Backend expects the uppercase enum value.
         'payment_method': paymentMethod.toUpperCase(),

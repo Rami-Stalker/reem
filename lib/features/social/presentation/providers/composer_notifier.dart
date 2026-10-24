@@ -1,10 +1,10 @@
 import 'package:flutter_riverpod/legacy.dart';
-import 'package:reem/core/result/result.dart';
-import 'package:reem/core/shared/entities/media.dart';
-import 'package:reem/features/social/domain/entities/content.dart';
-import 'package:reem/features/social/domain/entities/content_draft.dart';
-import 'package:reem/features/social/domain/repositories/social_repository.dart';
-import 'package:reem/l10n/app_localizations.dart';
+import 'package:ohara/core/result/result.dart';
+import 'package:ohara/core/shared/entities/media.dart';
+import 'package:ohara/features/social/domain/entities/content.dart';
+import 'package:ohara/features/social/domain/entities/content_draft.dart';
+import 'package:ohara/features/social/domain/repositories/social_repository.dart';
+import 'package:ohara/l10n/app_localizations.dart';
 
 /// What the composer has to say, as meaning rather than copy.
 ///

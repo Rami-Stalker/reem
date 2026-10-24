@@ -26,7 +26,7 @@ export const RETURN_WINDOW_DAYS = 7;
 /**
  * When the right to return a parcel expires, counted from delivery.
  *
- * `extraDays` is Reem Value's `ENHANCED_RETURNS` benefit, passed in by the
+ * `extraDays` is Ohara Value's `ENHANCED_RETURNS` benefit, passed in by the
  * caller rather than looked up here — this file stays a pure function of facts
  * somebody else has already read, which is what lets the eligibility screen and
  * the check that runs when she asks share one implementation.
@@ -154,7 +154,7 @@ export interface ParcelReturnFacts {
   readonly deliveredAt: Date | null;
   readonly now?: Date;
   /**
-   * Extra days her standing buys her — Reem Value's `ENHANCED_RETURNS`.
+   * Extra days her standing buys her — Ohara Value's `ENHANCED_RETURNS`.
    *
    * Optional and defaulting to none, so every existing caller keeps the Q56
    * window unchanged and only the paths that have looked up her benefit pass

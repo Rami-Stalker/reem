@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:reem/core/config/app_env.dart';
+import 'package:ohara/core/config/app_env.dart';
 
 /// The two things a production build must never do: fall back to a loopback
 /// API, and talk to it in the clear.

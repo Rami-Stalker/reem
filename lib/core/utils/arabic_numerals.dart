@@ -6,7 +6,7 @@
 /// in one script beside its date in another — which reads as a bug even when
 /// each half is defensible on its own.
 ///
-/// Reem settles on **Western digits**, because that is what Syrian shoppers
+/// Ohara settles on **Western digits**, because that is what Syrian shoppers
 /// see on price tags, on bank apps, and in the numbers sellers type in. Money
 /// already formats that way, so dates are brought to match rather than the
 /// other way round.

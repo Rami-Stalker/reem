@@ -26,7 +26,7 @@ import { ReturnsService } from './returns.service';
     CommissionsModule,
     FinanceModule,
     OrderWorkflowModule,
-    // Reem Value — read only, for the `ENHANCED_RETURNS` benefit. The value
+    // Ohara Value — read only, for the `ENHANCED_RETURNS` benefit. The value
     // module knows nothing about returns; the dependency runs one way.
     ValueModule,
   ],

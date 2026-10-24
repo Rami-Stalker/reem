@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'package:reem/features/reputation/domain/entities/fit_entities.dart';
-import 'package:reem/l10n/app_localizations.dart';
+import 'package:ohara/features/reputation/domain/entities/fit_entities.dart';
+import 'package:ohara/l10n/app_localizations.dart';
 
 /// The words «تقييمات من بمقاسي» draws with, in one place, so a fit is called
 /// the same thing on the card, the summary and the composer.

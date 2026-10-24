@@ -1,7 +1,7 @@
-import 'package:reem/core/shared/models/user_model.dart';
-import 'package:reem/core/shared/value_objects/money.dart';
-import 'package:reem/features/salons/domain/entities/appointment.dart';
-import 'package:reem/features/salons/domain/entities/salon.dart';
+import 'package:ohara/core/shared/models/user_model.dart';
+import 'package:ohara/core/shared/value_objects/money.dart';
+import 'package:ohara/features/salons/domain/entities/appointment.dart';
+import 'package:ohara/features/salons/domain/entities/salon.dart';
 
 /// Wire decoding for «الصالونات والجمال».
 ///

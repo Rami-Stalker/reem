@@ -1,7 +1,7 @@
-import 'package:reem/core/result/result.dart';
+import 'package:ohara/core/result/result.dart';
 
-import 'package:reem/features/profile/domain/entities/wishlist_entity.dart';
-import 'package:reem/features/profile/domain/repositories/profile_repository.dart';
+import 'package:ohara/features/profile/domain/entities/wishlist_entity.dart';
+import 'package:ohara/features/profile/domain/repositories/profile_repository.dart';
 
 class ShareWishlistCollectionUseCase {
   const ShareWishlistCollectionUseCase(this.repository);

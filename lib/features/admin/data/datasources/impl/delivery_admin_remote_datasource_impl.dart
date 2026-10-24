@@ -1,10 +1,10 @@
-import 'package:reem/core/network/api_endpoints.dart';
-import 'package:reem/core/network/base_remote_datasource.dart';
-import 'package:reem/features/admin/domain/entities/delivery_provider.dart';
+import 'package:ohara/core/network/api_endpoints.dart';
+import 'package:ohara/core/network/base_remote_datasource.dart';
+import 'package:ohara/features/admin/domain/entities/delivery_provider.dart';
 
 /// The carrier desk's data.
 ///
-/// Every route here is on Reem's own API. The app never calls a delivery
+/// Every route here is on Ohara's own API. The app never calls a delivery
 /// company: it has no base URL, no key and no reason to — the platform holds
 /// the integration, and this screen reads and flips its switches.
 final class DeliveryAdminRemoteDataSource extends BaseRemoteDataSource {

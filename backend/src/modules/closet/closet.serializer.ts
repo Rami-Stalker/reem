@@ -58,7 +58,7 @@ export function sourceLabel(source: ClosetItemSource): string {
     case ClosetItemSource.PURCHASE:
       return 'من مشترياتكِ';
     case ClosetItemSource.CATALOG:
-      return 'من ريم';
+      return 'من أوهارا';
     default:
       return 'قطعة شخصية';
   }

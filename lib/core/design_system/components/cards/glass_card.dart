@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'package:reem/core/design_system/effects/glassmorphism/glass_container.dart';
-import 'package:reem/core/design_system/foundation/tokens/ds_radius.dart';
-import 'package:reem/core/design_system/foundation/tokens/ds_spacing.dart';
+import 'package:ohara/core/design_system/effects/glassmorphism/glass_container.dart';
+import 'package:ohara/core/design_system/foundation/tokens/ds_radius.dart';
+import 'package:ohara/core/design_system/foundation/tokens/ds_spacing.dart';
 
 class DsGlassCard extends StatelessWidget {
   const DsGlassCard({

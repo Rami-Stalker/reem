@@ -1,4 +1,4 @@
-import 'package:reem/features/seller_reviews/domain/entities/seller_review.dart';
+import 'package:ohara/features/seller_reviews/domain/entities/seller_review.dart';
 
 abstract interface class SellerReviewsRemoteDataSource {
   Future<SellerReviewDesk> desk({bool unansweredOnly});

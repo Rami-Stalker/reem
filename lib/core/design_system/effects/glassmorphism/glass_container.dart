@@ -2,11 +2,11 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
-import 'package:reem/core/design_system/foundation/theme/extensions/color_extension.dart';
-import 'package:reem/core/design_system/foundation/theme/extensions/gradient_extension.dart';
-import 'package:reem/core/design_system/foundation/theme/extensions/shadow_extension.dart';
-import 'package:reem/core/design_system/foundation/tokens/ds_blur.dart';
-import 'package:reem/core/design_system/foundation/tokens/ds_opacity.dart';
+import 'package:ohara/core/design_system/foundation/theme/extensions/color_extension.dart';
+import 'package:ohara/core/design_system/foundation/theme/extensions/gradient_extension.dart';
+import 'package:ohara/core/design_system/foundation/theme/extensions/shadow_extension.dart';
+import 'package:ohara/core/design_system/foundation/tokens/ds_blur.dart';
+import 'package:ohara/core/design_system/foundation/tokens/ds_opacity.dart';
 
 class GlassContainer extends StatelessWidget {
   const GlassContainer({

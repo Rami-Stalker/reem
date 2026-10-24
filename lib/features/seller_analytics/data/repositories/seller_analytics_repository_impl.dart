@@ -1,8 +1,8 @@
-import 'package:reem/core/base/repository_handler.dart';
-import 'package:reem/core/result/result.dart';
-import 'package:reem/features/seller_analytics/data/datasources/seller_analytics_remote_datasource.dart';
-import 'package:reem/features/seller_analytics/domain/entities/seller_analytics_report.dart';
-import 'package:reem/features/seller_analytics/domain/repositories/seller_analytics_repository.dart';
+import 'package:ohara/core/base/repository_handler.dart';
+import 'package:ohara/core/result/result.dart';
+import 'package:ohara/features/seller_analytics/data/datasources/seller_analytics_remote_datasource.dart';
+import 'package:ohara/features/seller_analytics/domain/entities/seller_analytics_report.dart';
+import 'package:ohara/features/seller_analytics/domain/repositories/seller_analytics_repository.dart';
 
 class SellerAnalyticsRepositoryImpl
     with RepositoryHandler

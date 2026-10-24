@@ -1,4 +1,4 @@
-import 'package:reem/features/profile/domain/entities/profile_overview.dart';
+import 'package:ohara/features/profile/domain/entities/profile_overview.dart';
 
 /// State for the aggregated profile-centre overview.
 class ProfileOverviewState {

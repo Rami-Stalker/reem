@@ -1,10 +1,10 @@
-import 'package:reem/core/base/repository_handler.dart';
-import 'package:reem/core/result/result.dart';
-import 'package:reem/features/admin/data/datasources/admin_remote_datasource.dart';
-import 'package:reem/features/admin/domain/entities/admin_console_entity.dart';
-import 'package:reem/features/admin/domain/entities/admin_stats_entity.dart';
-import 'package:reem/features/admin/domain/entities/analytics_dashboard_entity.dart';
-import 'package:reem/features/admin/domain/repositories/admin_repository.dart';
+import 'package:ohara/core/base/repository_handler.dart';
+import 'package:ohara/core/result/result.dart';
+import 'package:ohara/features/admin/data/datasources/admin_remote_datasource.dart';
+import 'package:ohara/features/admin/domain/entities/admin_console_entity.dart';
+import 'package:ohara/features/admin/domain/entities/admin_stats_entity.dart';
+import 'package:ohara/features/admin/domain/entities/analytics_dashboard_entity.dart';
+import 'package:ohara/features/admin/domain/repositories/admin_repository.dart';
 
 class AdminRepositoryImpl with RepositoryHandler implements AdminRepository {
   const AdminRepositoryImpl({required this.remote});

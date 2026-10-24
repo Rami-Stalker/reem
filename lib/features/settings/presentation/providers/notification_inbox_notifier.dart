@@ -1,10 +1,10 @@
 import 'package:flutter_riverpod/legacy.dart';
 
-import 'package:reem/core/result/result.dart';
-import 'package:reem/features/settings/domain/entities/notification_entity.dart';
-import 'package:reem/features/settings/domain/usecases/get_notifications_usecase.dart';
-import 'package:reem/features/settings/domain/usecases/mark_notifications_read_usecase.dart';
-import 'package:reem/features/settings/presentation/providers/notification_inbox_state.dart';
+import 'package:ohara/core/result/result.dart';
+import 'package:ohara/features/settings/domain/entities/notification_entity.dart';
+import 'package:ohara/features/settings/domain/usecases/get_notifications_usecase.dart';
+import 'package:ohara/features/settings/domain/usecases/mark_notifications_read_usecase.dart';
+import 'package:ohara/features/settings/presentation/providers/notification_inbox_state.dart';
 
 /// Everything the customer has been told, and whether she has read it.
 ///

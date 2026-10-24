@@ -1,10 +1,10 @@
 import 'package:flutter_riverpod/legacy.dart';
-import 'package:reem/core/result/result.dart';
-import 'package:reem/features/ai_stylist/domain/entities/stylist_message.dart';
-import 'package:reem/features/ai_stylist/domain/entities/stylist_outfit.dart';
-import 'package:reem/features/ai_stylist/domain/entities/stylist_recommendation.dart';
-import 'package:reem/features/ai_stylist/domain/repositories/ai_stylist_repository.dart';
-import 'package:reem/features/ai_stylist/presentation/providers/stylist_chat_state.dart';
+import 'package:ohara/core/result/result.dart';
+import 'package:ohara/features/ai_stylist/domain/entities/stylist_message.dart';
+import 'package:ohara/features/ai_stylist/domain/entities/stylist_outfit.dart';
+import 'package:ohara/features/ai_stylist/domain/entities/stylist_recommendation.dart';
+import 'package:ohara/features/ai_stylist/domain/repositories/ai_stylist_repository.dart';
+import 'package:ohara/features/ai_stylist/presentation/providers/stylist_chat_state.dart';
 
 /// Drives one stylist conversation.
 ///

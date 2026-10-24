@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import 'package:reem/core/shared/entities/category.dart';
+import 'package:ohara/core/shared/entities/category.dart';
 
 /// A category with the branch beneath it — root → section → leaf.
 ///

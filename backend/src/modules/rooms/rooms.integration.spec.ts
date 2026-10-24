@@ -24,7 +24,7 @@ import { RoomNotifier } from './room-notifier.service';
 import { RoomsService } from './rooms.service';
 
 /**
- * Reem Rooms against the real catalogue.
+ * Ohara Rooms against the real catalogue.
  *
  * The kernel tests prove the decision arithmetic. These prove the claims that
  * only the database can settle — and each one is a claim the brief made:

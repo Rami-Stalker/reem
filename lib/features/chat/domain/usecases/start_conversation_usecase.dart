@@ -1,8 +1,8 @@
-import 'package:reem/core/result/result.dart';
+import 'package:ohara/core/result/result.dart';
 
-import 'package:reem/features/chat/domain/entities/chat_start_request.dart';
-import 'package:reem/features/chat/domain/entities/chat_thread_entity.dart';
-import 'package:reem/features/chat/domain/repositories/chat_repository.dart';
+import 'package:ohara/features/chat/domain/entities/chat_start_request.dart';
+import 'package:ohara/features/chat/domain/entities/chat_thread_entity.dart';
+import 'package:ohara/features/chat/domain/repositories/chat_repository.dart';
 
 /// Opens the conversation a request describes, or reopens the one that already
 /// covers it — the server matches on the (buyer, seller, product, parcel) tuple

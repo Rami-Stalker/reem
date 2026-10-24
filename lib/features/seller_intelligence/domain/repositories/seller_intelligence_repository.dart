@@ -1,5 +1,5 @@
-import 'package:reem/core/result/result.dart';
-import 'package:reem/features/seller_intelligence/domain/entities/intelligence.dart';
+import 'package:ohara/core/result/result.dart';
+import 'package:ohara/features/seller_intelligence/domain/entities/intelligence.dart';
 
 abstract interface class SellerIntelligenceRepository {
   Future<Result<DemandRadar>> radar({int? days});

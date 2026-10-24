@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:reem/core/design_system/design_system.dart';
+import 'package:ohara/core/design_system/design_system.dart';
 
 /// The publishing register: **a small studio**.
 ///

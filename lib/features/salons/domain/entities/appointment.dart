@@ -1,8 +1,8 @@
 import 'package:equatable/equatable.dart';
 
-import 'package:reem/core/shared/entities/user.dart';
-import 'package:reem/core/shared/value_objects/money.dart';
-import 'package:reem/features/salons/domain/entities/salon.dart';
+import 'package:ohara/core/shared/entities/user.dart';
+import 'package:ohara/core/shared/value_objects/money.dart';
+import 'package:ohara/features/salons/domain/entities/salon.dart';
 
 /// Where a booking is in its life.
 ///

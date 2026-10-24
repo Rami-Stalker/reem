@@ -358,6 +358,8 @@ export class ShipmentsService {
                 city: true,
                 addressLine: true,
                 landmark: true,
+                latitude: true,
+                longitude: true,
                 deliveryInstructions: true,
                 privacyMaskEnabled: true,
               },
@@ -397,6 +399,8 @@ export class ShipmentsService {
                 city: true;
                 addressLine: true;
                 landmark: true;
+                latitude: true;
+                longitude: true;
                 deliveryInstructions: true;
                 privacyMaskEnabled: true;
               };
@@ -431,6 +435,10 @@ export class ShipmentsService {
         city: order.city,
         address_line: order.addressLine,
         landmark: order.landmark,
+        // Q55 — the pin she dropped, so the courier navigates to the door
+        // rather than to the middle of the district.
+        latitude: order.latitude,
+        longitude: order.longitude,
       },
       /// Q55 «يرى ملاحظات التوصيل مثل اتصل قبل الوصول».
       delivery_instructions: order.deliveryInstructions,

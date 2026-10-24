@@ -1,19 +1,19 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
-import 'package:reem/core/design_system/design_system.dart';
-import 'package:reem/core/localization/l10n_extension.dart';
-import 'package:reem/core/media/media_decode.dart';
-import 'package:reem/core/media/media_variants.dart';
-import 'package:reem/core/router/open_route.dart';
-import 'package:reem/core/shared/entities/media.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/core/media/media_decode.dart';
+import 'package:ohara/core/media/media_variants.dart';
+import 'package:ohara/core/router/open_route.dart';
+import 'package:ohara/core/shared/entities/media.dart';
 
 /// The product's own photographs, full-bleed, swipeable.
 ///
 /// This replaces a header that showed one hard-coded Unsplash dress to every
 /// product in the catalogue. The chrome over it — back, favourite, share — is
 /// the app's [DsIconButton] on the glass variant, so it reads the same as the
-/// controls floating over any other image in Reem.
+/// controls floating over any other image in Ohara.
 ///
 /// **Why there is a thumbnail rail.** A swipe was the only way to reach the
 /// second and third photograph, and the only hint that they existed was a row

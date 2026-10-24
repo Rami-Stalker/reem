@@ -1,11 +1,11 @@
-import 'package:reem/core/base/repository_handler.dart';
-import 'package:reem/core/result/result.dart';
-import 'package:reem/features/closet/data/datasources/closet_remote_datasource.dart';
-import 'package:reem/features/closet/domain/entities/closet_gap.dart';
-import 'package:reem/features/closet/domain/entities/closet_item.dart';
-import 'package:reem/features/closet/domain/entities/closet_look.dart';
-import 'package:reem/features/closet/domain/entities/closet_overview.dart';
-import 'package:reem/features/closet/domain/repositories/closet_repository.dart';
+import 'package:ohara/core/base/repository_handler.dart';
+import 'package:ohara/core/result/result.dart';
+import 'package:ohara/features/closet/data/datasources/closet_remote_datasource.dart';
+import 'package:ohara/features/closet/domain/entities/closet_gap.dart';
+import 'package:ohara/features/closet/domain/entities/closet_item.dart';
+import 'package:ohara/features/closet/domain/entities/closet_look.dart';
+import 'package:ohara/features/closet/domain/entities/closet_overview.dart';
+import 'package:ohara/features/closet/domain/repositories/closet_repository.dart';
 
 class ClosetRepositoryImpl with RepositoryHandler implements ClosetRepository {
   const ClosetRepositoryImpl(this.remote);
