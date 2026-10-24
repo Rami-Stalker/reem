@@ -88,8 +88,13 @@ class _FakeRepository implements ChatRepository {
     List<Map<String, dynamic>> attachments = const [],
     String? clientId,
     String? currentUserId,
+    String? productId,
   }) {
-    sends.add({'content': content, 'client_id': clientId});
+    sends.add({
+      'content': content,
+      'client_id': clientId,
+      'product_id': productId,
+    });
     if (pendingSend case final completer?) return completer.future;
     if (failSends) {
       return Future.value(const Error(NetworkFailure('لا يوجد اتصال')));
@@ -315,6 +320,56 @@ void main() {
       expect(
         repository.sends.map((s) => s['client_id']).toSet(),
         hasLength(1),
+      );
+    });
+
+    test('a question about a piece carries the piece, retries included',
+        () async {
+      final repository = _FakeRepository()..failSends = true;
+      final notifier = _notifier(repository);
+      await notifier.load();
+
+      const dress = ChatProductRef(id: 'product-7', title: 'فستان سهرة');
+      expect(
+        await notifier.sendMessage('هل يتوفر مقاس M؟', about: dress),
+        isFalse,
+      );
+      // Drawn with its card at once, before the server has answered.
+      expect(notifier.state.messages.single.product, dress);
+
+      repository.failSends = false;
+      expect(await notifier.retry(notifier.state.messages.single), isTrue);
+      // Both attempts name the piece, so the retry is still about it.
+      expect(
+        repository.sends.map((s) => s['product_id']),
+        everyElement('product-7'),
+      );
+    });
+
+    test("the server's product card is read from the message metadata", () {
+      final message = ChatMessageModel.fromJson({
+        ..._json(id: 'm-1', sender: _peer, sentAt: '2026-10-21T10:00:00Z'),
+        'metadata': {
+          'product': {
+            'id': 'product-7',
+            'title': 'فستان سهرة',
+            'image_url': 'https://cdn.example/dress.jpg',
+            'price': {'amount': '250000.0000', 'currency': 'SYP'},
+          },
+        },
+      }, currentUserId: _me);
+
+      expect(message.product?.id, 'product-7');
+      expect(message.product?.title, 'فستان سهرة');
+      expect(message.product?.imageUrl, 'https://cdn.example/dress.jpg');
+      expect(message.product?.price, isNotNull);
+      expect(
+        ChatMessageModel.fromJson(
+          _json(id: 'm-2', sender: _peer, sentAt: '2026-10-21T10:00:00Z'),
+          currentUserId: _me,
+        ).product,
+        isNull,
+        reason: 'a plain message has no card',
       );
     });
 

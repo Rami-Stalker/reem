@@ -21,6 +21,7 @@ import 'package:ohara/features/chat/presentation/widgets/attachment_sheet.dart';
 import 'package:ohara/features/chat/presentation/widgets/chat_app_bar.dart';
 import 'package:ohara/features/chat/presentation/widgets/chat_date_divider.dart';
 import 'package:ohara/features/chat/presentation/widgets/chat_input.dart';
+import 'package:ohara/features/chat/presentation/widgets/chat_product_card.dart';
 import 'package:ohara/features/chat/presentation/widgets/file_message_bubble.dart';
 import 'package:ohara/features/chat/presentation/widgets/image_message_bubble.dart';
 import 'package:ohara/features/chat/presentation/widgets/message_bubble.dart';
@@ -30,9 +31,13 @@ import 'package:ohara/features/chat/presentation/widgets/voice_message_bubble.da
 import 'package:ohara/features/chat/presentation/widgets/voice_recorder_bar.dart';
 
 class ChatDetailsScreen extends ConsumerStatefulWidget {
-  const ChatDetailsScreen({super.key, required this.chatId});
+  const ChatDetailsScreen({super.key, required this.chatId, this.about});
 
   final String chatId;
+
+  /// Opened from a product page: the piece she is asking about, pinned above
+  /// the composer until her first message carries it.
+  final ChatProductRef? about;
 
   @override
   ConsumerState<ChatDetailsScreen> createState() => _ChatDetailsScreenState();
@@ -62,6 +67,10 @@ class _ChatDetailsScreenState extends ConsumerState<ChatDetailsScreen>
 
   /// The composer is replaced by the recorder while this is true.
   bool _recording = false;
+
+  /// The piece her next text message is about. One message carries it, as
+  /// in a WhatsApp reply; after that the conversation simply continues.
+  late ChatProductRef? _about = widget.about;
 
   ChatMessagesNotifier get _messages =>
       ref.read(chatMessagesNotifierProvider(widget.chatId).notifier);
@@ -151,7 +160,9 @@ class _ChatDetailsScreenState extends ConsumerState<ChatDetailsScreen>
 
   Future<void> _sendText(String text) async {
     _jumpToNewest();
-    final sent = await _messages.sendMessage(text);
+    final about = _about;
+    if (about != null) setState(() => _about = null);
+    final sent = await _messages.sendMessage(text, about: about);
     if (!sent && mounted) _warn(context.l10n.chatSendFailed);
   }
 
@@ -231,7 +242,12 @@ class _ChatDetailsScreenState extends ConsumerState<ChatDetailsScreen>
                   onCompleted: _sendVoiceNote,
                   onCancelled: () => setState(() => _recording = false),
                 )
-              else
+              else ...[
+                if (_about case final about?)
+                  ChatAboutProductBar(
+                    product: about,
+                    onClear: () => setState(() => _about = null),
+                  ),
                 ChatInput(
                   // Only an upload in flight holds the composer: a text
                   // message is on screen the moment it is sent, so she can
@@ -242,6 +258,7 @@ class _ChatDetailsScreenState extends ConsumerState<ChatDetailsScreen>
                   onVoice: () => setState(() => _recording = true),
                   onSend: (text) => unawaited(_sendText(text)),
                 ),
+              ],
             ],
           ),
         ],
@@ -542,6 +559,7 @@ class _MessageRow extends StatelessWidget {
         tail: endsRun,
       ),
     };
+    final product = message.product;
 
     final l10n = context.l10n;
     final colors = context.dsColors;
@@ -578,6 +596,10 @@ class _MessageRow extends StatelessWidget {
           ? CrossAxisAlignment.end
           : CrossAxisAlignment.start,
       children: [
+        if (product != null) ...[
+          ChatProductCard(product: product, isMe: message.isMine),
+          DsGaps.vXxs,
+        ],
         Opacity(opacity: message.isPending ? 0.7 : 1, child: bubble),
         if (showMeta) ...[
           DsGaps.vXxs,

@@ -16,6 +16,7 @@ import 'package:ohara/features/auth/presentation/providers/auth_provider.dart';
 import 'package:ohara/features/auth/presentation/widgets/auth_prompt_sheet.dart';
 import 'package:ohara/features/product_social/domain/entities/product_engagement.dart';
 import 'package:ohara/features/product_social/presentation/providers/product_social_providers.dart';
+import 'package:ohara/features/product_social/presentation/widgets/product_listing_scope.dart';
 import 'package:ohara/features/profile/presentation/providers/profile_provider.dart';
 import 'package:ohara/features/profile/presentation/widgets/save_to_collection_sheet.dart';
 import 'package:ohara/features/social/presentation/widgets/report_sheet.dart';
@@ -229,10 +230,19 @@ final class ProductGestures {
     final l10n = context.l10n;
     final engagement = _current;
     final seller = product.displaySeller;
+    // Read before the sheet opens: the sheet is on the root navigator, and
+    // the listing's scope is only above the card.
+    final listing = ProductListingScope.maybeOf(context);
 
     final action = await DsBottomSheet.choose<_ProductAction>(
       context,
       choices: [
+        if (listing != null)
+          DsSheetChoice(
+            value: _ProductAction.listing,
+            label: listing.label,
+            icon: listing.icon,
+          ),
         DsSheetChoice(
           value: _ProductAction.pick,
           label: engagement.isPicked
@@ -282,6 +292,9 @@ final class ProductGestures {
     if (action == null || !context.mounted) return;
 
     switch (action) {
+      case _ProductAction.listing:
+        if (!await _signedIn() || !context.mounted) return;
+        await listing?.onSelected(product);
       case _ProductAction.pick:
         await pick();
       case _ProductAction.save:
@@ -309,4 +322,13 @@ final class ProductGestures {
   }
 }
 
-enum _ProductAction { pick, save, open, seller, share, copyLink, report }
+enum _ProductAction {
+  listing,
+  pick,
+  save,
+  open,
+  seller,
+  share,
+  copyLink,
+  report,
+}

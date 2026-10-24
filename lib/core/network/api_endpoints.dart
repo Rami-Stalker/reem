@@ -248,6 +248,10 @@ abstract final class ApiEndpoints {
   /// Everything her profile centre renders, in one call.
   static const profileOverview = '/users/me/overview';
   static const discoveryRecommended = '/discovery/recommended';
+
+  /// «إزالة من المختارة لكِ» — POST removes, DELETE is its «تراجع».
+  static String discoveryRecommendedDismiss(String productId) =>
+      '/discovery/recommended/$productId/dismiss';
   static String discoveryCollection(String key) =>
       '/discovery/collections/$key';
   static String discoveryCategory(String category) =>

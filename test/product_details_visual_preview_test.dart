@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ohara/core/design_system/design_system.dart';
 import 'package:ohara/core/localization/app_localizations.dart';
@@ -77,6 +78,12 @@ class _PreviewState extends State<_Preview> {
 
   @override
   Widget build(BuildContext context) {
+    // The headline reads her bookmark from the shared engagement store, so
+    // the page body needs the app's provider scope, as it has in the app.
+    return ProviderScope(child: _app(context));
+  }
+
+  Widget _app(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       themeMode: widget.themeMode,

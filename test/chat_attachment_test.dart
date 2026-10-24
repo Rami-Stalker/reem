@@ -792,6 +792,7 @@ class _FakeChatRepository implements ChatRepository {
     List<Map<String, dynamic>> attachments = const [],
     String? clientId,
     String? currentUserId,
+    String? productId,
   }) async {
     clientIds.add(clientId);
     if (failSends) return const Error(NetworkFailure('لا يوجد اتصال'));

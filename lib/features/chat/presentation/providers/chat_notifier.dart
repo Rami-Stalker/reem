@@ -264,11 +264,12 @@ class ChatThreadNotifier extends StateNotifier<ChatThreadState> {
 /// What a message she sent was, kept until the server has it — so a failed
 /// one can be sent again exactly as it was.
 class _Outgoing {
-  const _Outgoing(this.content, this.kind, this.attachments);
+  const _Outgoing(this.content, this.kind, this.attachments, this.product);
 
   final String content;
   final String kind;
   final List<Map<String, dynamic>> attachments;
+  final ChatProductRef? product;
 }
 
 /// One conversation's messages.
@@ -384,7 +385,9 @@ class ChatMessagesNotifier extends StateNotifier<ChatMessagesState> {
     };
   }
 
-  Future<bool> sendMessage(String content) => send(content: content);
+  /// [about] attaches the piece she is asking about; see [ChatProductRef].
+  Future<bool> sendMessage(String content, {ChatProductRef? about}) =>
+      send(content: content, about: about);
 
   /// Draws the message at once, then sends it.
   ///
@@ -398,12 +401,13 @@ class ChatMessagesNotifier extends StateNotifier<ChatMessagesState> {
     required String content,
     String kind = 'TEXT',
     List<Map<String, dynamic>> attachments = const [],
+    ChatProductRef? about,
   }) async {
     final text = content.trim();
     if (_chatId.isEmpty || (text.isEmpty && attachments.isEmpty)) return false;
 
     final clientId = _newClientId();
-    _outbox[clientId] = _Outgoing(text, kind, attachments);
+    _outbox[clientId] = _Outgoing(text, kind, attachments, about);
     final local = ChatMessageEntity(
       id: 'local:$clientId',
       chatId: _chatId,
@@ -414,6 +418,9 @@ class ChatMessagesNotifier extends StateNotifier<ChatMessagesState> {
       kind: attachments.isEmpty ? 'text' : kind.toLowerCase(),
       status: ChatMessageStatus.sending,
       clientId: clientId,
+      // Drawn with its card at once; the server's copy, built from the
+      // catalogue, replaces it when it answers.
+      product: about,
       attachments: [
         for (final (index, attachment) in attachments.indexed)
           ChatAttachmentEntity(
@@ -455,6 +462,7 @@ class ChatMessagesNotifier extends StateNotifier<ChatMessagesState> {
       attachments: outgoing.attachments,
       clientId: clientId,
       currentUserId: currentUserId,
+      productId: outgoing.product?.id,
     );
     if (!mounted) return result is Success;
     switch (result) {

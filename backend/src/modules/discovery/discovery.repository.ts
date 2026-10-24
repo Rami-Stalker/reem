@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Prisma, ProductStatus } from '@prisma/client';
+import { AiStylistFeedback, Prisma, ProductStatus } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 import { categorySubtreeIds } from '../../common/catalog/category-subtree';
 import {
@@ -24,13 +24,16 @@ export class DiscoveryRepository {
     orderBy: ProductOrderBy,
     skip: number,
     take: number,
+    // Same shape as the card include; only *which* offer rides on the card
+    // may differ (see `sellerCardInclude`).
+    include: typeof PRODUCT_CARD_INCLUDE = PRODUCT_CARD_INCLUDE,
   ): Promise<DiscoveryProduct[]> {
     return this.prisma.product.findMany({
       where,
       orderBy,
       skip,
       take,
-      include: PRODUCT_CARD_INCLUDE,
+      include,
     });
   }
 
@@ -81,6 +84,63 @@ export class DiscoveryRepository {
       .sort((a, b) => b[1] - a[1])
       .slice(0, limit)
       .map(([category]) => category);
+  }
+
+  // ── «إزالة من المختارة لكِ» ────────────────────────────────────────────
+  //
+  // Stored as the stylist's own `DISMISSED` signal rather than in a table of
+  // its own: it is the same fact — "she was shown this and pushed it away" —
+  // and the style profile already reads it as a negative weight, so a piece
+  // removed here also stops pulling the stylist towards things like it.
+
+  /** Weight the style profile gives a dismissal (see `style-preference`). */
+  private static readonly DISMISS_WEIGHT = -4;
+
+  /** Bounded: an exclusion list is a `NOT IN`, and it must stay cheap. */
+  private static readonly DISMISSED_CAP = 500;
+
+  async productExists(productId: string): Promise<boolean> {
+    const row = await this.prisma.product.findUnique({
+      where: { id: productId },
+      select: { id: true },
+    });
+    return row !== null;
+  }
+
+  async dismissRecommendation(userId: string, productId: string) {
+    await this.prisma.userStyleSignal.upsert({
+      where: {
+        userId_productId_feedback: {
+          userId,
+          productId,
+          feedback: AiStylistFeedback.DISMISSED,
+        },
+      },
+      create: {
+        userId,
+        productId,
+        feedback: AiStylistFeedback.DISMISSED,
+        weight: DiscoveryRepository.DISMISS_WEIGHT,
+      },
+      update: { weight: DiscoveryRepository.DISMISS_WEIGHT },
+    });
+  }
+
+  async restoreRecommendation(userId: string, productId: string) {
+    await this.prisma.userStyleSignal.deleteMany({
+      where: { userId, productId, feedback: AiStylistFeedback.DISMISSED },
+    });
+  }
+
+  /** What she has taken out of «مختارة لكِ», newest first. */
+  async dismissedProductIds(userId: string): Promise<string[]> {
+    const rows = await this.prisma.userStyleSignal.findMany({
+      where: { userId, feedback: AiStylistFeedback.DISMISSED },
+      select: { productId: true },
+      orderBy: { createdAt: 'desc' },
+      take: DiscoveryRepository.DISMISSED_CAP,
+    });
+    return rows.map((row) => row.productId);
   }
 }
 

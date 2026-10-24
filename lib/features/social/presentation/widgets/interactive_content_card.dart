@@ -8,7 +8,6 @@ import 'package:ohara/core/design_system/design_system.dart';
 import 'package:ohara/core/localization/l10n_extension.dart';
 import 'package:ohara/core/result/result.dart';
 import 'package:ohara/core/router/route_paths.dart';
-import 'package:ohara/core/shared/entities/user.dart';
 import 'package:ohara/core/shared/services/share_service.dart';
 import 'package:ohara/features/auth/presentation/providers/auth_provider.dart';
 import 'package:ohara/features/auth/presentation/widgets/auth_prompt_sheet.dart';
@@ -31,17 +30,11 @@ class InteractiveContentCard extends ConsumerStatefulWidget {
   const InteractiveContentCard({
     super.key,
     required this.content,
-    this.resharedBy,
-    this.reshareNote,
     this.featured = false,
     this.onRemoved,
   });
 
   final Content content;
-
-  /// Set when this sits on a woman's page because she added it.
-  final User? resharedBy;
-  final String? reshareNote;
   final bool featured;
 
   /// The owning list should drop this card — she hid it, muted its author, or
@@ -230,8 +223,6 @@ class _InteractiveContentCardState
     return ContentCard(
       content: content,
       featured: widget.featured,
-      resharedBy: widget.resharedBy,
-      reshareNote: widget.reshareNote,
       onOpenAuthor: (userId) =>
           unawaited(context.push(RoutePaths.userProfileOf(userId))),
       onOpenProduct: (productId) =>

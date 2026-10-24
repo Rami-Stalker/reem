@@ -318,12 +318,12 @@ class _Composer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(
-        left: DsSpacing.md,
-        right: DsSpacing.md,
-        top: DsSpacing.sm,
-        // Above the keyboard, not under it.
-        bottom: MediaQuery.viewInsetsOf(context).bottom + DsSpacing.md,
+      // The sheet scaffold already lifts its body above the keyboard.
+      padding: const EdgeInsets.fromLTRB(
+        DsSpacing.md,
+        DsSpacing.sm,
+        DsSpacing.md,
+        DsSpacing.md,
       ),
       child: Row(
         children: [

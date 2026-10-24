@@ -4,11 +4,9 @@ import {
   Logger,
   NotFoundException,
 } from '@nestjs/common';
+import { createHash } from 'node:crypto';
 import { Prisma, PromotionPlacement } from '@prisma/client';
-import {
-  MAX_SLOTS,
-  PromotionsService,
-} from '../promotions/promotions.service';
+import { MAX_SLOTS, PromotionsService } from '../promotions/promotions.service';
 import { buildMeta } from '../../common/dto/pagination.dto';
 import { CacheService } from '../../common/cache/cache.service';
 import { GraphQueryService } from '../graph/graph-query.service';
@@ -16,7 +14,9 @@ import { ValueVisibilityService } from '../value/value-visibility.service';
 import { serializeProduct } from '../../common/serializers';
 import {
   LIVE_OFFER_WHERE,
+  PRODUCT_CARD_INCLUDE,
   PURCHASABLE_PRODUCT_WHERE,
+  sellerCardInclude,
 } from '../../common/catalog/product-include';
 import {
   DiscoveryProduct,
@@ -183,12 +183,15 @@ export class DiscoveryService {
       ...this.buildFilters(dto),
     };
     return this.paginated(
-      `${PREFIX}seller:${sellerId}:${dto.filterSignature()}`,
+      // `v2`: entries cached before the card carried her own offer must not
+      // be served after a deploy.
+      `${PREFIX}seller:v2:${sellerId}:${dto.filterSignature()}`,
       where,
       this.resolveOrderBy(dto.sort, [{ createdAt: 'desc' }]),
       dto,
       viewerId,
       60_000,
+      sellerCardInclude(sellerId),
     );
   }
 
@@ -231,20 +234,54 @@ export class DiscoveryService {
 
   async recommended(dto: DiscoveryQueryDto, viewerId?: string) {
     if (!viewerId) return this.collection('trending', dto, undefined);
-    const categories = await this.repo.preferredCategories(viewerId);
+    const [categories, dismissed] = await Promise.all([
+      this.repo.preferredCategories(viewerId),
+      this.repo.dismissedProductIds(viewerId),
+    ]);
     const where: Prisma.ProductWhereInput = {
       ...PURCHASABLE_PRODUCT_WHERE,
       ...(categories.length ? { category: { slug: { in: categories } } } : {}),
+      // «إزالة من المختارة لكِ» — gone from this shelf for good, not just
+      // from the page she removed it on.
+      ...(dismissed.length ? { id: { notIn: dismissed } } : {}),
     };
     const signature = [...categories].sort().join(',');
+    // The page is cached by what shapes it. Two women with the same favourite
+    // departments share an entry; one who removed a piece gets her own.
+    const removed = dismissed.length
+      ? createHash('sha1')
+          .update([...dismissed].sort().join(','))
+          .digest('hex')
+          .slice(0, 16)
+      : '-';
     return this.paginated(
-      `${PREFIX}rec:${signature}:${dto.filterSignature()}`,
+      `${PREFIX}rec:${signature}:${removed}:${dto.filterSignature()}`,
       where,
       [{ rating: 'desc' }, { ordersCount: 'desc' }],
       dto,
       viewerId,
       60_000,
     );
+  }
+
+  /**
+   * «إزالة من المختارة لكِ». Idempotent: removing twice is one removal.
+   *
+   * No cache to drop — the shelf's cache key carries her removals, so the
+   * next read is already a different entry.
+   */
+  async dismissRecommendation(userId: string, productId: string) {
+    if (!(await this.repo.productExists(productId))) {
+      throw new NotFoundException('Product not found');
+    }
+    await this.repo.dismissRecommendation(userId, productId);
+    return { product_id: productId, dismissed: true };
+  }
+
+  /** The «تراجع» on the removal: the piece may be suggested again. */
+  async restoreRecommendation(userId: string, productId: string) {
+    await this.repo.restoreRecommendation(userId, productId);
+    return { product_id: productId, dismissed: false };
   }
 
   /** Aggregated home payload — sections are de-duplicated across each other. */
@@ -324,6 +361,7 @@ export class DiscoveryService {
     dto: DiscoveryQueryDto,
     viewerId: string | undefined,
     ttlMs: number,
+    include?: typeof PRODUCT_CARD_INCLUDE,
   ) {
     // The heavy query (findMany + count) is cached; per-user `is_liked` is a
     // cheap overlay applied after the cache hit.
@@ -332,7 +370,7 @@ export class DiscoveryService {
       ttlMs,
       async () => {
         const [products, total] = await Promise.all([
-          this.repo.findMany(where, orderBy, dto.skip, dto.limit),
+          this.repo.findMany(where, orderBy, dto.skip, dto.limit, include),
           this.repo.count(where),
         ]);
         return { products, total };
@@ -349,7 +387,10 @@ export class DiscoveryService {
     const shown = products.filter((p) => visible.has(p.id));
 
     const favSet = viewerId
-      ? await this.repo.favoriteSet(viewerId, shown.map((p) => p.id))
+      ? await this.repo.favoriteSet(
+          viewerId,
+          shown.map((p) => p.id),
+        )
       : new Set<string>();
 
     return {

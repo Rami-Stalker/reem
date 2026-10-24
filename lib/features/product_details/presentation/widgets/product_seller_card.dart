@@ -6,6 +6,7 @@ import 'package:ohara/core/localization/l10n_extension.dart';
 import 'package:ohara/core/router/route_paths.dart';
 import 'package:ohara/core/shared/entities/product.dart';
 import 'package:ohara/core/shared/entities/seller_offer.dart';
+import 'package:ohara/features/chat/domain/entities/chat_message_entity.dart';
 import 'package:ohara/features/chat/domain/entities/chat_start_request.dart';
 import 'package:ohara/features/chat/presentation/widgets/message_seller_button.dart';
 
@@ -89,6 +90,9 @@ class ProductSellerCard extends StatelessWidget {
               productId: product.id,
               sellerId: seller.id,
             ),
+            // The conversation opens with this piece pinned, so the
+            // boutique sees which one she is asking about.
+            about: ChatProductRef.of(product, offer: selected),
           ),
         ],
       ),

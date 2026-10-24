@@ -14,6 +14,7 @@ class SendMessageUseCase {
     List<Map<String, dynamic>> attachments = const [],
     String? clientId,
     String? currentUserId,
+    String? productId,
   }) =>
       _repository.sendMessage(
         chatId: chatId,
@@ -22,5 +23,6 @@ class SendMessageUseCase {
         attachments: attachments,
         clientId: clientId,
         currentUserId: currentUserId,
+        productId: productId,
       );
 }

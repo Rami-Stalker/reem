@@ -13141,6 +13141,85 @@ class AppLocalizationsAr extends AppLocalizations {
       'التقييمات اللي فيها صور للقطعة ملبوسة بتظهر هون.';
 
   @override
+  String get forYouRemove => 'إزالة من المختارة لكِ';
+
+  @override
+  String get forYouRemoved =>
+      'أزلناها من المختارة لكِ، ولن تظهر لكِ فيها مجدداً.';
+
+  @override
+  String get chatProductInquiry => 'استفسار عن هذه القطعة';
+
+  @override
+  String get chatAskingAbout => 'تسألين عن';
+
+  @override
+  String get chatAskingAboutClear => 'إزالة القطعة من الرسالة';
+
+  @override
+  String get productAskBoutique => 'اسألي المتجر';
+
+  @override
+  String productStatViews(int count, String label) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$label مشاهدة',
+      few: '$label مشاهدات',
+      two: 'مشاهدتان',
+      one: 'مشاهدة واحدة',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String productStatSaves(int count, String label) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'في $label مفضّلة',
+      few: 'في $label مفضّلات',
+      two: 'في مفضّلتين',
+      one: 'في مفضّلة واحدة',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String productStatSold(int count, String label) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'بيعت $label قطعة',
+      few: 'بيعت $label قطع',
+      two: 'بيعت قطعتان',
+      one: 'بيعت قطعة واحدة',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get reviewsRatePrompt => 'اضغطي على النجوم لتقييم القطعة';
+
+  @override
+  String reviewsRatingMeaning(String stars) {
+    String _temp0 = intl.Intl.selectLogic(stars, {
+      '1': 'سيئة',
+      '2': 'مقبولة',
+      '3': 'جيدة',
+      '4': 'جيدة جداً',
+      '5': 'ممتازة',
+      'other': '',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String reviewsRatedOutOfFive(int stars) {
+    return 'قيّمتها بـ $stars من ٥';
+  }
+
+  @override
   String get mapPickerTitle => 'حدّدي موقعكِ';
 
   @override

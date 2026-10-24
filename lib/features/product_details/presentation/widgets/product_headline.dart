@@ -1,21 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:ohara/core/design_system/design_system.dart';
 import 'package:ohara/core/localization/l10n_extension.dart';
 import 'package:ohara/core/shared/entities/product.dart';
+import 'package:ohara/core/shared/value_objects/money_format.dart';
+import 'package:ohara/features/product_social/presentation/product_gestures.dart';
 
-/// Category, name, rating and the social counts — the top of the page body.
+/// Category, name, rating and what the piece has done — the top of the body.
 ///
-/// Everything here is the product's own. It replaces a block that read
-/// "Dresses · New in / Elegant Silk Midi Dress / ★★★★★ 4.9 (2.4k reviews)"
-/// for every item in the catalogue.
-class ProductHeadline extends StatelessWidget {
+/// Every figure is counted from the rows behind it when the page is served
+/// (see `ProductsService.liveCounters`): the stars are the average of approved
+/// reviews, a view is one person once a day and never the boutique herself,
+/// «في مفضّلة» is the favourites that hold it, and «بيعت» is units in orders
+/// that were not cancelled. Each says what it counts in words, because a bare
+/// heart beside a bare number read as decoration — and the heart already
+/// means the public like, which the action bar right below carries.
+class ProductHeadline extends ConsumerWidget {
   const ProductHeadline({super.key, required this.product});
 
   final Product product;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final text = context.dsText;
     final colors = context.dsColors;
     final l10n = context.l10n;
@@ -26,13 +33,48 @@ class ProductHeadline extends StatelessWidget {
       if (product.brand != null) product.brand!.name(arabic: arabic),
     ].join(' · ');
 
+    // Her own bookmark moves the figure at once: the count was served with
+    // her old answer in it, so that answer is taken out and the current one
+    // put in.
+    final savedNow = ProductGestures.watch(ref, product).isSaved;
+    final saves =
+        (product.favoritesCount - (product.isLiked ? 1 : 0) + (savedNow ? 1 : 0))
+            .clamp(0, 1 << 31);
+
+    final stats = [
+      if (product.viewsCount > 0)
+        _Stat(
+          icon: Icons.visibility_outlined,
+          label: l10n.productStatViews(
+            product.viewsCount,
+            formatCount(product.viewsCount),
+          ),
+          tint: colors.onSurfaceVariant,
+        ),
+      if (saves > 0)
+        _Stat(
+          icon: Icons.bookmark_rounded,
+          label: l10n.productStatSaves(saves, formatCount(saves)),
+          tint: colors.primary,
+        ),
+      if (product.ordersCount > 0)
+        _Stat(
+          icon: DsIcons.cart,
+          label: l10n.productStatSold(
+            product.ordersCount,
+            formatCount(product.ordersCount),
+          ),
+          tint: colors.success,
+        ),
+    ];
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         if (eyebrow.isNotEmpty) Text(eyebrow, style: text.overline),
         DsGaps.vXs,
         Text(product.title, style: text.pageTitle),
-        if (product.rating > 0 || product.reviewsCount > 0) ...[
+        if (product.reviewsCount > 0) ...[
           DsGaps.vSm,
           Row(
             children: [
@@ -48,31 +90,14 @@ class ProductHeadline extends StatelessWidget {
             ],
           ),
         ],
-        DsGaps.vSm,
-        Wrap(
-          spacing: DsSpacing.md,
-          runSpacing: DsSpacing.xs,
-          children: [
-            // Saves, views and purchases — each one a count of rows the
-            // platform actually holds. A fourth figure used to lead this row,
-            // `likesCount`, which nothing on the platform ever incremented.
-            _Stat(
-              icon: DsIcons.likeFilled,
-              value: product.favoritesCount,
-              tint: colors.favorite,
-            ),
-            _Stat(
-              icon: Icons.visibility_rounded,
-              value: product.viewsCount,
-              tint: colors.onSurfaceVariant,
-            ),
-            _Stat(
-              icon: DsIcons.cart,
-              value: product.ordersCount,
-              tint: colors.primary,
-            ),
-          ],
-        ),
+        if (stats.isNotEmpty) ...[
+          DsGaps.vSm,
+          Wrap(
+            spacing: DsSpacing.md,
+            runSpacing: DsSpacing.xs,
+            children: stats,
+          ),
+        ],
       ],
     );
   }
@@ -107,34 +132,21 @@ class _Stars extends StatelessWidget {
 }
 
 class _Stat extends StatelessWidget {
-  const _Stat({required this.icon, required this.value, required this.tint});
+  const _Stat({required this.icon, required this.label, required this.tint});
 
   final IconData icon;
-  final int value;
+  final String label;
   final Color tint;
 
   @override
   Widget build(BuildContext context) {
-    if (value <= 0) return const SizedBox.shrink();
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
         Icon(icon, size: DsSizes.iconXs, color: tint),
         DsGaps.hXxs,
-        Text(
-          _compact(value),
-          style: context.dsText.caption.semibold.tint(tint),
-        ),
+        Text(label, style: context.dsText.caption.semibold.tint(tint)),
       ],
     );
-  }
-
-  /// 1.2k rather than 1234 — the exact figure is noise next to a heart.
-  static String _compact(int value) {
-    if (value >= 1000000) {
-      return '${(value / 1000000).toStringAsFixed(1)}M';
-    }
-    if (value >= 1000) return '${(value / 1000).toStringAsFixed(1)}k';
-    return '$value';
   }
 }

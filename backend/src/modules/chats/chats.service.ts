@@ -18,6 +18,8 @@ import {
   NotificationCategory,
 } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
+import { LIVE_OFFER_WHERE } from '../../common/catalog/product-include';
+import { Money } from '../../common/money/money';
 import { MediaService } from '../media/media.service';
 import {
   ChatWithRelations,
@@ -35,6 +37,13 @@ import {
   SendMessageDto,
   StartConversationDto,
 } from './dto/chat.dto';
+
+/** A client-sent metadata blob as an object to extend, whatever was sent. */
+function asRecord(value: unknown): Record<string, unknown> {
+  return value !== null && typeof value === 'object' && !Array.isArray(value)
+    ? (value as Record<string, unknown>)
+    : {};
+}
 
 const messageInclude = {
   attachments: true,
@@ -329,6 +338,16 @@ export class ChatsService {
       ),
     );
 
+    // The piece she is asking about, as the boutique will see it on the
+    // message. Built here from the catalogue rather than taken from the
+    // phone, so a card can never show a price or a photo that is not real.
+    const product = dto.product_id
+      ? await this.productReference(dto.product_id, chat.sellerId)
+      : null;
+    const metadata = product
+      ? { ...asRecord(dto.metadata), product }
+      : dto.metadata;
+
     const message = await this.prisma.message.create({
       data: {
         chatId,
@@ -336,7 +355,7 @@ export class ChatsService {
         clientId: dto.client_id,
         kind,
         content,
-        metadata: dto.metadata as Prisma.InputJsonValue,
+        metadata: metadata as Prisma.InputJsonValue,
         status: MessageDeliveryStatus.SENT,
         attachments: attachments.length
           ? {
@@ -372,7 +391,18 @@ export class ChatsService {
 
     await this.prisma.chat.update({
       where: { id: chatId },
-      data: { updatedAt: new Date() },
+      data: {
+        updatedAt: new Date(),
+        // What the conversation is about now — the header and the next
+        // notification's subject follow the latest piece asked about.
+        ...(product
+          ? {
+              type: ChatContextType.PRODUCT,
+              productId: product.id,
+              title: product.title,
+            }
+          : {}),
+      },
     });
 
     // The upload is now part of a conversation, so it is no longer an orphan.
@@ -673,6 +703,40 @@ export class ChatsService {
         ),
       ),
     ];
+  }
+
+  /**
+   * A product as a message carries it: enough for a card, priced at *this*
+   * boutique's live offer when she has one (the conversation is with her, not
+   * with the cheapest seller of the same catalogue entry).
+   */
+  private async productReference(productId: string, sellerId: string | null) {
+    const product = await this.prisma.product.findUnique({
+      where: { id: productId },
+      select: {
+        id: true,
+        title: true,
+        media: {
+          orderBy: { sortOrder: 'asc' },
+          take: 1,
+          select: { url: true },
+        },
+        offers: {
+          where: { ...LIVE_OFFER_WHERE, ...(sellerId ? { sellerId } : {}) },
+          orderBy: [{ priceSyp: 'asc' }, { price: 'asc' }],
+          take: 1,
+          select: { price: true, currency: true },
+        },
+      },
+    });
+    if (!product) throw new NotFoundException('Product not found');
+    const offer = product.offers[0];
+    return {
+      id: product.id,
+      title: product.title,
+      image_url: product.media[0]?.url ?? null,
+      price: offer ? Money.of(offer.price, offer.currency).toJSON() : null,
+    };
   }
 
   async assertMember(chatId: string, userId: string) {

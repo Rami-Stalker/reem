@@ -47,6 +47,14 @@ class DiscoveryRepositoryImpl
       guard(() => remote.getRecommended(page: page, limit: limit));
 
   @override
+  Future<Result<void>> dismissRecommendation(String productId) =>
+      guard(() => remote.dismissRecommendation(productId));
+
+  @override
+  Future<Result<void>> restoreRecommendation(String productId) =>
+      guard(() => remote.restoreRecommendation(productId));
+
+  @override
   Future<Result<Map<String, List<Product>>>> getHome() =>
       guard<Map<String, List<Product>>>(() async {
         final raw = await remote.getHome();

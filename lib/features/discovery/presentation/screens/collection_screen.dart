@@ -10,6 +10,8 @@ import 'package:ohara/core/router/route_paths.dart';
 import 'package:ohara/core/shared/entities/product.dart';
 import 'package:ohara/features/discovery/presentation/providers/collection_notifier.dart';
 import 'package:ohara/features/discovery/presentation/providers/collection_state.dart';
+import 'package:ohara/features/discovery/presentation/providers/for_you_dismissals_provider.dart';
+import 'package:ohara/features/discovery/presentation/widgets/for_you_removal.dart';
 import 'package:ohara/features/discovery/presentation/widgets/sponsored_strip.dart';
 import 'package:ohara/features/product_social/presentation/providers/product_social_providers.dart';
 import 'package:ohara/features/product_social/presentation/widgets/product_shelf.dart';
@@ -29,6 +31,7 @@ class CollectionScreen extends ConsumerStatefulWidget {
     required this.provider,
     required this.title,
     this.sponsoredKey,
+    this.forYou = false,
   });
 
   final StateNotifierProvider<CollectionNotifier, CollectionState> provider;
@@ -37,6 +40,10 @@ class CollectionScreen extends ConsumerStatefulWidget {
   /// Where this listing's paid slots are published, when it sells any —
   /// see `sponsoredSlotsProvider`. Null for listings with no placements.
   final String? sponsoredKey;
+
+  /// «مختارة لكِ»: each card's «…» offers «إزالة من المختارة لكِ», and what
+  /// she removes leaves the listing at once.
+  final bool forYou;
 
   @override
   ConsumerState<CollectionScreen> createState() => _CollectionScreenState();
@@ -73,6 +80,22 @@ class _CollectionScreenState extends ConsumerState<CollectionScreen> {
   Widget build(BuildContext context) {
     final state = ref.watch(widget.provider);
     final colors = context.dsColors;
+    final removed = widget.forYou
+        ? ref.watch(forYouDismissalsProvider)
+        : const <String>{};
+    final items = removed.isEmpty
+        ? state.items
+        : state.items
+              .where((product) => !removed.contains(product.id))
+              .toList(growable: false);
+
+    // One shelf, one switcher, one set of interactions — shared with the home
+    // showcase and a boutique's page, which each carried their own copy of
+    // this block and had drifted apart.
+    final Widget shelf = SliverProductShelf(
+      products: items,
+      onTapProduct: _openProduct,
+    );
 
     return Scaffold(
       backgroundColor: colors.background,
@@ -94,7 +117,7 @@ class _CollectionScreenState extends ConsumerState<CollectionScreen> {
                 hasScrollBody: false,
                 child: DsLoadingIndicator(),
               )
-            else if (state.isEmpty)
+            else if (state.isEmpty || (!state.isLoading && items.isEmpty))
               SliverFillRemaining(
                 hasScrollBody: false,
                 child: DsEmptyState(
@@ -110,13 +133,7 @@ class _CollectionScreenState extends ConsumerState<CollectionScreen> {
                     child: SponsoredStrip(slotsKey: key),
                   ),
                 ),
-              // One shelf, one switcher, one set of interactions — shared with
-              // the home showcase and a boutique's page, which each carried
-              // their own copy of this block and had drifted apart.
-              SliverProductShelf(
-                products: state.items,
-                onTapProduct: _openProduct,
-              ),
+              if (widget.forYou) ForYouRemovalScope(child: shelf) else shelf,
               if (state.isLoadingMore)
                 const SliverToBoxAdapter(
                   child: Padding(
