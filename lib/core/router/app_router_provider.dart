@@ -85,6 +85,7 @@ import 'package:reem/features/policies/presentation/screens/policy_detail_screen
 import 'package:reem/features/product_details/presentation/screens/product_details_screen.dart';
 import 'package:reem/features/profile/presentation/screens/favorites_screen.dart';
 import 'package:reem/features/profile/presentation/screens/profile_screen.dart';
+import 'package:reem/features/reputation/presentation/screens/fit_profile_screen.dart';
 import 'package:reem/features/reputation/presentation/screens/my_reviews_screen.dart';
 import 'package:reem/features/returns/presentation/screens/return_request_screen.dart';
 import 'package:reem/features/rooms/presentation/screens/compare_screen.dart';
@@ -814,6 +815,12 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         path: RoutePaths.myReviews,
         name: RouteNames.myReviews,
         builder: (context, state) => const MyReviewsScreen(),
+      ),
+      // «مقاساتي». Hers, so behind sign-in like every route not listed public.
+      GoRoute(
+        path: RoutePaths.fitProfile,
+        name: RouteNames.fitProfile,
+        builder: (context, state) => const FitProfileScreen(),
       ),
       GoRoute(
         path: RoutePaths.rewards,

@@ -1111,6 +1111,9 @@ model User {
   // «مناسباتي» — the weddings, Eids and birthdays she is getting ready for.
   occasions Occasion[]
 
+  // «مقاساتي» — her height and usual size, for «تقييمات من بمقاسي».
+  fitProfile FitProfile?
+
   // ── The content platform ──────────────────────────────────────────────
   authoredContents          CommerceContent[]            @relation("AuthoredCommerceContents")
   removedContents           CommerceContent[]            @relation("CommerceContentRemovers")
@@ -4751,6 +4754,30 @@ model ProductReview {
   /// place: a thread would imply a conversation nobody moderates.
   sellerReply     String?   @map("seller_reply")
   sellerRepliedAt DateTime? @map("seller_replied_at")
+
+  // ── «تقييمات من بمقاسي» ──────────────────────────────────────────────
+
+  /// How it fit, in her words: small, true, large. The one thing a return
+  /// reason cannot say — `SIZE_ISSUE` has no direction.
+  fit ReviewFit?
+
+  /// The size she received, read from the delivered order's variant — never
+  /// typed. A review saying "true to size" is only useful beside the size it
+  /// was true of, and that size has to be the one that shipped.
+  sizeBought String? @map("size_bought") @db.VarChar(16)
+
+  /// Her height, rounded down to a 5 cm band (160 = 160–164), and her usual
+  /// size, copied from her fit profile when she wrote the review and only if
+  /// she agreed. **Stored for matching, never served**: no payload carries
+  /// them, to anyone. They exist so «من بمقاسي» can find this review for women
+  /// her size and the anonymous fit summary can count it. A snapshot, not a
+  /// link, and never the exact height.
+  heightBand Int?    @map("height_band")
+  usualSize  String? @map("usual_size") @db.VarChar(8)
+
+  /// Up to four photographs of the piece, uploads of purpose `review`.
+  /// Public once the review is approved, and moderated with it.
+  photoUrls String[] @default([]) @map("photo_urls")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -10924,4 +10951,44 @@ model Occasion {
   @@index([lookId])
   @@index([appointmentId])
   @@map("occasions")
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// «تقييمات من بمقاسي» — her fit profile
+// ─────────────────────────────────────────────────────────────────────────────
+
+/// How a piece fit, as the woman who wore it says.
+enum ReviewFit {
+  RUNS_SMALL
+  TRUE_TO_SIZE
+  RUNS_LARGE
+}
+
+/// «مقاساتي» — what a woman tells Reem about her size, so reviews by women
+/// like her can be found.
+///
+/// Two numbers and a switch, deliberately. No weight, no body shape, no
+/// measurements: those are what make a size profile feel like an examination,
+/// and the two fields here are enough to answer "did it fit someone like me".
+/// Read only by her, and by the review code when she writes a review — it is
+/// never served to anyone else, and neither is the coarse snapshot a review
+/// keeps of it.
+model FitProfile {
+  userId String @id @map("user_id") @db.Uuid
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  /// Centimetres, 130–200.
+  heightCm Int? @map("height_cm")
+
+  /// Her usual size, normalised (`M`, `XL`, `38`).
+  usualSize String? @map("usual_size") @db.VarChar(8)
+
+  /// Whether her reviews keep the (never shown) snapshot for matching by
+  /// default. She can still turn it off on any one review.
+  shareOnReviews Boolean @default(true) @map("share_on_reviews")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("fit_profiles")
 }

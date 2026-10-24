@@ -191,6 +191,17 @@ The look is a closet look and the salon is an appointment; the occasion only
 points at them, and its checklist is read from their state on every request:
 [docs/OCCASIONS.md](docs/OCCASIONS.md).
 
+## Reviews from women my size
+
+«تقييمات من بمقاسي»: a product review can say how the piece fit and carry up
+to four photographs of the piece. The size she bought is read from her
+delivered order rather than typed. The product page shows a fit summary and
+filters for «من بمقاسي» and «مع صور», matched against the height and size she
+keeps in «مقاساتي». Those are never shown to anyone, on her reviews or
+anywhere else; the server uses them only for matching and the anonymous
+summary:
+[docs/FIT_REVIEWS.md](docs/FIT_REVIEWS.md).
+
 ## Resilience
 
 Crash handling, PII-safe error reporting with breadcrumbs, and the offline
@@ -264,6 +275,7 @@ flutter test tools/icons/generate_app_icons.dart
 | [PRODUCT_INTERACTIONS.md](docs/PRODUCT_INTERACTIONS.md) | Like/Share/Save/Repost/Comments on every product surface, and the one store behind them |
 | [SHARE_LINKS.md](docs/SHARE_LINKS.md) | Share links, App Links / Universal Links, the landing pages, and the two well-known files |
 | [SALONS.md](docs/SALONS.md) | «الصالونات والجمال»: the booking invariant, availability, statuses, the two jobs, and why an appointment carries no money |
+| [FIT_REVIEWS.md](docs/FIT_REVIEWS.md) | «تقييمات من بمقاسي»: fit facts and photos on reviews, the privacy rules for height and size, and who counts as "my size" |
 | [OCCASIONS.md](docs/OCCASIONS.md) | «مناسباتي»: the derived checklist, the countdown and why it rings once per mark, and the repeat warning |
 | [DEPLOYMENT.md](docs/DEPLOYMENT.md) | **Run one API process.** The single-instance constraint, the nightly job order, production env guards |
 | [production-gap-analysis.md](docs/production-gap-analysis.md) | Pre-launch audit: what is complete, what is thin, what is missing, in priority order |

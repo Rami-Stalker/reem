@@ -51,6 +51,19 @@ export function normaliseSize(raw: unknown): string | null {
   return multiX ? `${'X'.repeat(Number(multiX[1]))}L` : size;
 }
 
+/**
+ * The size a variant is, from its attributes (`{ size: "M", colour: … }`), or
+ * null when the variant has none. Shared by the fit rates here and by the size
+ * a review records as bought, so both read a variant's size the same way.
+ */
+export function sizeAttribute(attributes: unknown): string | null {
+  if (attributes === null || typeof attributes !== 'object') return null;
+  const size = (attributes as Record<string, unknown>).size;
+  return typeof size === 'string' || typeof size === 'number'
+    ? String(size)
+    : null;
+}
+
 function sizeRank(size: string): [number, number, string] {
   const letter = LETTER_ORDER.indexOf(size);
   if (letter >= 0) return [0, letter, size];

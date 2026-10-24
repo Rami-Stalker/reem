@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { PrismaClient, SessionStatus, UserRole } from '@prisma/client';
+import { PrismaClient, ReviewFit, SessionStatus, UserRole } from '@prisma/client';
 
 import { PrismaService } from '../../../prisma/prisma.service';
 import { AuditService } from '../audit.service';
@@ -143,6 +143,55 @@ dbTest('the account is emptied, signed out everywhere, and its number freed', as
     where: { actorId: user.id, action: 'account_deleted' },
   });
   assert.ok(audit);
+});
+
+dbTest('her reviews stay, but not her photos, her height or her size', async () => {
+  const user = await makeUser();
+  const stamp = `${Date.now()}${(seq += 1)}`;
+  const category = await prisma.category.create({
+    data: { slug: `deletion-cat-${stamp}`, nameAr: 'فئة', nameEn: 'Cat' },
+  });
+  const product = await prisma.product.create({
+    data: {
+      slug: `deletion-prod-${stamp}`,
+      title: 'فستان',
+      description: 'اختبار',
+      categoryId: category.id,
+    },
+  });
+  try {
+    await prisma.fitProfile.create({
+      data: { userId: user.id, heightCm: 163, usualSize: 'M' },
+    });
+    const review = await prisma.productReview.create({
+      data: {
+        productId: product.id,
+        userId: user.id,
+        rating: 5,
+        body: 'القماش ثقيل',
+        fit: ReviewFit.TRUE_TO_SIZE,
+        sizeBought: 'M',
+        heightBand: 160,
+        usualSize: 'M',
+        photoUrls: ['https://cdn.example/her-photo.jpg'],
+      },
+    });
+
+    await deletion.deleteAccount(user.id, 'moving on');
+
+    assert.equal(await prisma.fitProfile.count({ where: { userId: user.id } }), 0);
+    const after = await prisma.productReview.findUniqueOrThrow({ where: { id: review.id } });
+    assert.equal(after.body, 'القماش ثقيل', 'the review itself stays');
+    assert.equal(after.fit, ReviewFit.TRUE_TO_SIZE, 'how it fit is about the dress');
+    assert.equal(after.sizeBought, 'M');
+    assert.deepEqual(after.photoUrls, [], 'photographs of her do not stay');
+    assert.equal(after.heightBand, null);
+    assert.equal(after.usualSize, null);
+  } finally {
+    await prisma.productReview.deleteMany({ where: { productId: product.id } });
+    await prisma.product.delete({ where: { id: product.id } });
+    await prisma.category.delete({ where: { id: category.id } });
+  }
 });
 
 dbTest('a deleted account cannot be deleted twice', async () => {

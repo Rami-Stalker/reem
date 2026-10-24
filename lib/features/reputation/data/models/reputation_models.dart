@@ -1,5 +1,6 @@
 import 'package:reem/core/shared/models/user_model.dart';
 
+import 'package:reem/features/reputation/domain/entities/fit_entities.dart';
 import 'package:reem/features/reputation/domain/entities/reputation_entities.dart';
 
 class ReviewModel extends ReviewEntity {
@@ -13,6 +14,9 @@ class ReviewModel extends ReviewEntity {
     super.status,
     super.helpfulCount,
     required super.createdAt,
+    super.fit,
+    super.sizeBought,
+    super.photos,
   });
 
   factory ReviewModel.fromJson(Map<String, dynamic> json) {
@@ -26,9 +30,59 @@ class ReviewModel extends ReviewEntity {
       status: json['status'] as String? ?? 'pending',
       helpfulCount: json['helpful_count'] as int? ?? 0,
       createdAt: DateTime.parse(json['created_at'] as String),
+      // «تقييمات من بمقاسي». Absent on a shop review and on every review
+      // written before them, which is the same as "she did not say".
+      fit: ReviewFit.fromWire(json['fit']),
+      sizeBought: _text(json['size_bought']),
+      photos: json['photos'] is List
+          ? (json['photos'] as List).whereType<String>().toList()
+          : const [],
     );
   }
 }
+
+String? _text(Object? value) {
+  final text = value is String ? value.trim() : null;
+  return text == null || text.isEmpty ? null : text;
+}
+
+FitTally fitTallyFromJson(Object? value) {
+  final json = value is Map
+      ? Map<String, dynamic>.from(value)
+      : const <String, dynamic>{};
+  int count(String key) => (json[key] as num?)?.toInt() ?? 0;
+  return FitTally(
+    runsSmall: count('runs_small'),
+    trueToSize: count('true_to_size'),
+    runsLarge: count('runs_large'),
+    total: count('total'),
+    enough: json['enough'] == true,
+    verdict: ReviewFit.fromWire(json['verdict']),
+  );
+}
+
+ProductFit productFitFromJson(Map<String, dynamic> json) {
+  final near = json['near_me'];
+  return ProductFit(
+    overall: fitTallyFromJson(json['overall']),
+    hasProfile: json['has_profile'] == true,
+    nearMe: near is Map ? fitTallyFromJson(near) : null,
+    nearMeReviews: near is Map
+        ? ((near['reviews_count'] as num?)?.toInt() ?? 0)
+        : 0,
+    suggestedSize: _text(json['suggested_size']),
+    photosCount: (json['photos_count'] as num?)?.toInt() ?? 0,
+  );
+}
+
+FitProfile fitProfileFromJson(Map<String, dynamic> json) => FitProfile(
+  heightCm: (json['height_cm'] as num?)?.toInt(),
+  usualSize: _text(json['usual_size']),
+  shareOnReviews: json['share_on_reviews'] != false,
+  sizes: json['sizes'] is List
+      ? (json['sizes'] as List).whereType<String>().toList()
+      : const [],
+);
 
 class SellerBadgeModel extends SellerBadgeEntity {
   const SellerBadgeModel({
@@ -93,15 +147,18 @@ class SellerReputationSummaryModel extends SellerReputationSummary {
 
   factory SellerReputationSummaryModel.fromJson(Map<String, dynamic> json) {
     return SellerReputationSummaryModel(
-      seller: UserModel.fromJson(Map<String, dynamic>.from(json['seller'] as Map)),
+      seller: UserModel.fromJson(
+        Map<String, dynamic>.from(json['seller'] as Map),
+      ),
       reputation: SellerReputationModel.fromJson(
         Map<String, dynamic>.from(json['reputation'] as Map),
       ),
       badges: (json['badges'] as List? ?? [])
           .whereType<Map>()
-          .map((item) => SellerBadgeModel.fromJson(
-                Map<String, dynamic>.from(item),
-              ))
+          .map(
+            (item) =>
+                SellerBadgeModel.fromJson(Map<String, dynamic>.from(item)),
+          )
           .toList(),
     );
   }
@@ -126,7 +183,8 @@ class AuthoredReviewModel extends AuthoredReview {
     return AuthoredReviewModel(
       id: json['id'] as String,
       rating: (json['rating'] as num?)?.toInt() ?? 0,
-      isAboutProduct: (json['target_type'] as String?)?.toUpperCase() != 'SELLER',
+      isAboutProduct:
+          (json['target_type'] as String?)?.toUpperCase() != 'SELLER',
       subject: ReviewSubject(
         id: subject is Map ? subject['id'] as String? ?? '' : '',
         title: subject is Map ? subject['title'] as String? ?? '' : '',
@@ -143,11 +201,7 @@ class AuthoredReviewModel extends AuthoredReview {
 }
 
 class MyReviewsModel extends MyReviews {
-  const MyReviewsModel({
-    super.reviews,
-    super.count,
-    super.average,
-  });
+  const MyReviewsModel({super.reviews, super.count, super.average});
 
   factory MyReviewsModel.fromJson(Map<String, dynamic> json) {
     final data = json['data'];
@@ -155,8 +209,11 @@ class MyReviewsModel extends MyReviews {
       reviews: data is List
           ? data
               .whereType<Map>()
-              .map((e) =>
-                  AuthoredReviewModel.fromJson(Map<String, dynamic>.from(e)))
+                .map(
+                  (e) => AuthoredReviewModel.fromJson(
+                    Map<String, dynamic>.from(e),
+                  ),
+                )
               .toList()
           : const [],
       count: (json['count'] as num?)?.toInt() ?? 0,

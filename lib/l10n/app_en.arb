@@ -15080,5 +15080,206 @@
   "composerStoryVideo": "Video",
   "@composerStoryVideo": {
     "description": "Composer: a story that is one clip"
+  },
+  "fitRunsSmall": "Runs small",
+  "@fitRunsSmall": {
+    "description": "Fit: runs small"
+  },
+  "fitTrueToSize": "True to size",
+  "@fitTrueToSize": {
+    "description": "Fit: true to size"
+  },
+  "fitRunsLarge": "Runs large",
+  "@fitRunsLarge": {
+    "description": "Fit: runs large"
+  },
+  "fitVerdictSmall": "Most say it runs small — consider a size up",
+  "@fitVerdictSmall": {
+    "description": "Fit summary verdict"
+  },
+  "fitVerdictTrue": "Most say it is true to size",
+  "@fitVerdictTrue": {
+    "description": "Fit summary verdict"
+  },
+  "fitVerdictLarge": "Most say it runs large — consider a size down",
+  "@fitVerdictLarge": {
+    "description": "Fit summary verdict"
+  },
+  "fitOpinionsDiffer": "Opinions differ on the fit",
+  "@fitOpinionsDiffer": {
+    "description": "Fit summary: no majority"
+  },
+  "fitPanelTitle": "How it fits, from women who wore it",
+  "@fitPanelTitle": {
+    "description": "Fit panel title"
+  },
+  "fitEveryone": "{count, plural, =1{1 woman said} other{{count} women said}}",
+  "@fitEveryone": {
+    "description": "Fit panel: overall heading",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "fitLikeYou": "{count, plural, =1{1 woman your size} other{{count} women your size}}",
+  "@fitLikeYou": {
+    "description": "Fit panel: near-me heading",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "fitLikeYouNone": "No women your size have said yet",
+  "@fitLikeYouNone": {
+    "description": "Fit panel: no near-me voices"
+  },
+  "fitSuggestedSize": "Women your size kept a {size} and said it fits",
+  "@fitSuggestedSize": {
+    "description": "Fit panel: suggested size",
+    "placeholders": {
+      "size": {
+        "type": "String"
+      }
+    }
+  },
+  "fitSeeLikeYou": "See what women your size said",
+  "@fitSeeLikeYou": {
+    "description": "Fit panel: prompt to set profile"
+  },
+  "fitBoughtSize": "Bought: {size}",
+  "@fitBoughtSize": {
+    "description": "Review card: size that shipped",
+    "placeholders": {
+      "size": {
+        "type": "String"
+      }
+    }
+  },
+  "fitPhotoOpen": "Open photo {index}",
+  "@fitPhotoOpen": {
+    "description": "Review card: photo semantics",
+    "placeholders": {
+      "index": {
+        "type": "int"
+      }
+    }
+  },
+  "fitQuestion": "How did it fit?",
+  "@fitQuestion": {
+    "description": "Composer: fit question"
+  },
+  "fitPhotosLabel": "Photos of the piece (optional)",
+  "@fitPhotosLabel": {
+    "description": "Composer: photos field"
+  },
+  "fitPhotosHelper": "Photograph the piece itself — there's no need to appear in it. Photos are shown to everyone once your review is approved.",
+  "@fitPhotosHelper": {
+    "description": "Composer: photos privacy helper"
+  },
+  "fitShareOnReview": "Use my height and size to match this review",
+  "@fitShareOnReview": {
+    "description": "Composer: share fit switch"
+  },
+  "fitShareOnReviewHint": "They are never shown — they only help women your size find your review",
+  "@fitShareOnReviewHint": {
+    "description": "Composer: share fit hint"
+  },
+  "fitAddProfilePrompt": "Add your height and size (never shown) to help women like you",
+  "@fitAddProfilePrompt": {
+    "description": "Composer: prompt to set profile"
+  },
+  "fitAddProfileShort": "Add my size",
+  "@fitAddProfileShort": {
+    "description": "Reviews: set profile action"
+  },
+  "fitProfileTitle": "My size",
+  "@fitProfileTitle": {
+    "description": "Fit profile: title and menu row"
+  },
+  "fitProfileLoadError": "Couldn't load your size",
+  "@fitProfileLoadError": {
+    "description": "Fit profile: load failed"
+  },
+  "fitProfilePrivacy": "Only you see this. Your height and size never appear on your reviews or anywhere else — we use them only to show you reviews from women like you, and to count the fit summary without names.",
+  "@fitProfilePrivacy": {
+    "description": "Fit profile: privacy note"
+  },
+  "fitHeightLabel": "Height",
+  "@fitHeightLabel": {
+    "description": "Fit profile: height field"
+  },
+  "fitHeightHint": "e.g. 162",
+  "@fitHeightHint": {
+    "description": "Fit profile: height hint"
+  },
+  "fitCentimetres": "cm",
+  "@fitCentimetres": {
+    "description": "Fit profile: unit"
+  },
+  "fitHeightInvalid": "Enter a height between {min} and {max} cm",
+  "@fitHeightInvalid": {
+    "description": "Fit profile: height out of range",
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "fitUsualSizeLabel": "The size you usually wear",
+  "@fitUsualSizeLabel": {
+    "description": "Fit profile: size picker"
+  },
+  "fitShareDefault": "Use them for my reviews",
+  "@fitShareDefault": {
+    "description": "Fit profile: share default"
+  },
+  "fitShareDefaultHint": "So women your size can find your reviews. Nothing is shown. You can turn it off on any one review.",
+  "@fitShareDefaultHint": {
+    "description": "Fit profile: share default hint"
+  },
+  "fitProfileSave": "Save",
+  "@fitProfileSave": {
+    "description": "Fit profile: save"
+  },
+  "fitProfileSaved": "Saved",
+  "@fitProfileSaved": {
+    "description": "Fit profile: saved"
+  },
+  "reviewsFilterNearMe": "Women my size",
+  "@reviewsFilterNearMe": {
+    "description": "Product reviews filter"
+  },
+  "reviewsFilterPhotos": "With photos",
+  "@reviewsFilterPhotos": {
+    "description": "Product reviews filter"
+  },
+  "reviewsNearMeNeedsProfileTitle": "Tell us your size first",
+  "@reviewsNearMeNeedsProfileTitle": {
+    "description": "Near-me filter without a profile"
+  },
+  "reviewsNearMeNeedsProfileBody": "Add your height and size and we'll show reviews from women like you.",
+  "@reviewsNearMeNeedsProfileBody": {
+    "description": "Near-me filter without a profile"
+  },
+  "reviewsNearMeNoneTitle": "No reviews from women your size yet",
+  "@reviewsNearMeNoneTitle": {
+    "description": "Near-me filter empty"
+  },
+  "reviewsNearMeNoneBody": "Be the first: your review will help the next woman your size.",
+  "@reviewsNearMeNoneBody": {
+    "description": "Near-me filter empty"
+  },
+  "reviewsPhotosNoneTitle": "No photos yet",
+  "@reviewsPhotosNoneTitle": {
+    "description": "Photos filter empty"
+  },
+  "reviewsPhotosNoneBody": "Reviews with photos of the piece on will appear here.",
+  "@reviewsPhotosNoneBody": {
+    "description": "Photos filter empty"
   }
 }

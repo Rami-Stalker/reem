@@ -62,6 +62,13 @@ class ProfileMenu extends ConsumerWidget {
                   : null,
               onTap: () => context.push(RoutePaths.myReviews),
             ),
+            // Beside her reviews, because that is what it is for: the size
+            // that lets her reviews help women like her, and theirs help her.
+            _MenuRow(
+              icon: Icons.straighten_rounded,
+              label: context.l10n.fitProfileTitle,
+              onTap: () => context.push(RoutePaths.fitProfile),
+            ),
             _MenuRow(
               icon: Icons.notifications_none_rounded,
               label: context.l10n.notifications,
