@@ -26,7 +26,7 @@ class EarningsBalanceCards extends StatelessWidget {
     final l10n = context.l10n;
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: DsSpacing.lg),
+      padding: EdgeInsets.symmetric(horizontal: atelierGutter(context)),
       child: Column(
         children: [
           _AvailableCard(
@@ -73,24 +73,10 @@ class _AvailableCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final palette = context.atelier;
 
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(DsSpacing.xl),
-      decoration: BoxDecoration(
-        // Her balance, in her palette. This card used to wear the buyer's
-        // signature rose.
-        gradient: palette.headerGradient,
-        borderRadius: DsRadius.borderCard,
-        boxShadow: [
-          BoxShadow(
-            color: palette.primary.withValues(alpha: 0.24),
-            blurRadius: 28,
-            offset: const Offset(0, 14),
-          ),
-        ],
-      ),
+    // Her balance on the atelier's cloth, with the stitch round its edge —
+    // the same cloth as the home's takings, because it is the same money.
+    return AtelierHero(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -99,7 +85,9 @@ class _AvailableCard extends StatelessWidget {
               Expanded(
                 child: Text(
                   l10n.earningsAvailable,
-                  style: context.dsText.labelMedium.bold.tint(DsColors.onMedia).copyWith(letterSpacing: 0.6),
+                  style: context.dsText.labelMedium.bold
+                      .tint(DsColors.onMedia)
+                      .copyWith(letterSpacing: 0.6),
                 ),
               ),
               if (isRefreshing)
@@ -113,7 +101,9 @@ class _AvailableCard extends StatelessWidget {
             child: Text(
               amount.format(),
               maxLines: 1,
-              style: context.dsText.hero.tint(DsColors.onMedia).copyWith(height: 1.1),
+              style: context.dsText.hero.displayFamily.bold
+                  .tint(DsColors.gold200)
+                  .copyWith(height: 1.1),
             ),
           ),
           const SizedBox(height: DsSpacing.sm),
@@ -202,7 +192,9 @@ class _SecondaryTile extends StatelessWidget {
             hint,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
-            style: context.dsText.caption.tint(colors.onSurfaceVariant).copyWith(height: 1.3),
+            style: context.dsText.caption
+                .tint(colors.onSurfaceVariant)
+                .copyWith(height: 1.3),
           ),
         ],
       ),

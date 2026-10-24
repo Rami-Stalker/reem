@@ -43,7 +43,13 @@ class SellerOrdersScreen extends ConsumerWidget {
       background: const SellerAtelierBackground(),
       backgroundColor: atelier.background,
       slivers: [
-        PremiumAppBar(title: l10n.sellerOrdersTitle, showBack: true),
+        AtelierAppBar(
+          icon: Icons.receipt_long_rounded,
+          title: l10n.sellerOrdersTitle,
+          showBack: true,
+        ),
+        // Air between the banner and the page.
+        DsGaps.sliverMd,
 
         SliverToBoxAdapter(
           child: _Tabs(
@@ -77,23 +83,22 @@ class SellerOrdersScreen extends ConsumerWidget {
             // The queue is a shell TAB now, not a pushed page, so the last
             // card has to clear the seller's navigation bar rather than
             // hiding the final order of the day behind it.
-            padding: const EdgeInsets.fromLTRB(
+            padding: EdgeInsets.fromLTRB(
+              atelierGutter(context),
               DsSpacing.md,
-              DsSpacing.xs,
-              DsSpacing.md,
-              140,
+              atelierGutter(context),
+              DsSizes.bottomSafeGap + DsSpacing.huge,
             ),
             sliver: SliverList.separated(
               itemCount: state.orders.length,
-              separatorBuilder: (_, _) => const SizedBox(height: DsSpacing.sm),
+              separatorBuilder: (_, _) => DsGaps.vMd,
               itemBuilder: (context, index) {
                 final order = state.orders[index];
                 return SellerOrderCard(
                   order: order,
                   isBusy: state.busyOrderId == order.id,
-                  onOpen: () => context.push(
-                    RoutePaths.sellerOrderDetailFor(order.id),
-                  ),
+                  onOpen: () =>
+                      context.push(RoutePaths.sellerOrderDetailFor(order.id)),
                   onAction: (action) => _run(context, ref, order, action),
                 );
               },
@@ -146,26 +151,20 @@ class _Tabs extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 44,
-      child: ListView.separated(
-        scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.symmetric(horizontal: DsSpacing.md),
-        itemCount: SellerQueueTab.values.length,
-        separatorBuilder: (_, _) => const SizedBox(width: DsSpacing.xs),
-        itemBuilder: (context, index) {
-          final tab = SellerQueueTab.values[index];
-          final count = countFor(tab);
-          return DsChip(
+    return AtelierBeads<SellerQueueTab>(
+      padding: EdgeInsets.symmetric(horizontal: atelierGutter(context)),
+      selected: selected,
+      onSelected: onSelect,
+      options: [
+        for (final tab in SellerQueueTab.values)
+          (
+            value: tab,
             label: context.l10n.queueTab(tab),
-            selected: tab == selected,
             // Zero is left off rather than shown: a row of "0"s reads as
-            // failure, and the absence of a badge already says the same thing.
-            count: count > 0 ? count : null,
-            onTap: () => onSelect(tab),
-          );
-        },
-      ),
+            // failure, and the absence of a count already says the same.
+            count: countFor(tab) > 0 ? countFor(tab) : null,
+          ),
+      ],
     );
   }
 }
@@ -180,9 +179,7 @@ class _QueueSkeleton extends StatelessWidget {
       child: Column(
         children: [
           for (var i = 0; i < 4; i++) ...[
-            const DsShimmer(
-              child: DsSkeleton.box(height: 148),
-            ),
+            const DsShimmer(child: DsSkeleton.box(height: 148)),
             const SizedBox(height: DsSpacing.sm),
           ],
         ],

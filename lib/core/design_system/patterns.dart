@@ -1,5 +1,7 @@
 // Reem screen patterns — page scaffolds, app chrome, product surfaces.
 export 'package:reem/core/design_system/patterns/admin_console.dart';
+// The seller's home: the atelier workbench — cloth, spool, seam, rail.
+export 'package:reem/core/design_system/patterns/atelier_workbench.dart';
 // The sign-in journey's stage: aurora ground, arch emblem, frosted panel.
 export 'package:reem/core/design_system/patterns/auth_stage.dart';
 // Buying: the boutique bag, the ticket, the receipt.

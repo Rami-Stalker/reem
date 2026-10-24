@@ -4961,6 +4961,120 @@ class AppLocalizationsEn extends AppLocalizations {
   String get sellerAnnouncement => 'Announcement';
 
   @override
+  String get sellerBenchGreetingMorning => 'Good morning';
+
+  @override
+  String get sellerBenchGreetingEvening => 'Good evening';
+
+  @override
+  String sellerBenchGreetingNamed(String greeting, String name) {
+    return '$greeting, $name';
+  }
+
+  @override
+  String get sellerBenchTodayTakings => 'Today\'s takings';
+
+  @override
+  String get sellerBenchGoalReached => 'Goal reached';
+
+  @override
+  String get sellerBenchStartHere => 'Start here';
+
+  @override
+  String get sellerBenchThen => 'After that';
+
+  @override
+  String get sellerBenchCalm =>
+      'Your shop is calm — nothing is waiting for you right now.';
+
+  @override
+  String sellerBenchNewOrders(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count new orders are waiting for you to confirm',
+      one: 'One new order is waiting for you to confirm',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get sellerBenchNewOrdersHint =>
+      'Every hour of waiting cools a customer\'s excitement.';
+
+  @override
+  String sellerBenchReadyOrders(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count orders are ready to ship',
+      one: 'One order is ready to ship',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get sellerBenchReadyOrdersHint =>
+      'Hand them to the courier before the day ends.';
+
+  @override
+  String sellerBenchSoldOut(String title) {
+    return '“$title” has sold out';
+  }
+
+  @override
+  String get sellerBenchSoldOutHint =>
+      'Restock it so it does not drop out of search.';
+
+  @override
+  String get sellerBenchOpenOrders => 'Open orders';
+
+  @override
+  String get sellerBenchOpenProducts => 'Open products';
+
+  @override
+  String get sellerBenchSeamTitle => 'The order seam';
+
+  @override
+  String get sellerBenchSeamCaption => 'The lit stops are waiting on you.';
+
+  @override
+  String get sellerBenchToolsTitle => 'Your tools';
+
+  @override
+  String get sellerBenchRailTitle => 'On the shelf';
+
+  @override
+  String get sellerBenchRailCaption =>
+      'What sells, and what is about to run out.';
+
+  @override
+  String sellerBenchTagSold(String count) {
+    return '$count sold';
+  }
+
+  @override
+  String sellerBenchTagLeft(String count) {
+    return '$count left';
+  }
+
+  @override
+  String get sellerBenchTagOut => 'Sold out';
+
+  @override
+  String get sellerBenchPatternTitle => 'The rhythm of sales';
+
+  @override
+  String get sellerBenchPatternCaption =>
+      'Every pearl on the ribbon is a period; the gold one is now.';
+
+  @override
+  String get sellerBenchPatternSemantics => 'Revenue over the selected period';
+
+  @override
+  String get sellerBenchMoreTitle => 'More about your shop';
+
+  @override
   String get sellerArchive => 'Archive';
 
   @override

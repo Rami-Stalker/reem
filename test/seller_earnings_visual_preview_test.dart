@@ -30,6 +30,17 @@ Future<void> _loadFonts() async {
       );
     await loader.load();
   }
+  // Material's icon font ships with the SDK, not the app, so a widget test
+  // draws every icon as a box unless it is loaded by hand.
+  final root = Platform.environment['FLUTTER_ROOT'];
+  final icons = File(
+    '$root/bin/cache/artifacts/material_fonts/MaterialIcons-Regular.otf',
+  );
+  if (root != null && icons.existsSync()) {
+    final loader = FontLoader('MaterialIcons')
+      ..addFont(icons.readAsBytes().then((b) => ByteData.view(b.buffer)));
+    await loader.load();
+  }
 }
 
 void main() {

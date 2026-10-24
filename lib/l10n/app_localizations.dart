@@ -8954,6 +8954,174 @@ abstract class AppLocalizations {
   /// **'Announcement'**
   String get sellerAnnouncement;
 
+  /// Seller home greeting before noon
+  ///
+  /// In en, this message translates to:
+  /// **'Good morning'**
+  String get sellerBenchGreetingMorning;
+
+  /// Seller home greeting after noon
+  ///
+  /// In en, this message translates to:
+  /// **'Good evening'**
+  String get sellerBenchGreetingEvening;
+
+  /// Seller home greeting with the store's name
+  ///
+  /// In en, this message translates to:
+  /// **'{greeting}, {name}'**
+  String sellerBenchGreetingNamed(String greeting, String name);
+
+  /// Label above today's revenue on the seller home
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s takings'**
+  String get sellerBenchTodayTakings;
+
+  /// The monthly goal is met
+  ///
+  /// In en, this message translates to:
+  /// **'Goal reached'**
+  String get sellerBenchGoalReached;
+
+  /// The most important thing to do now on the seller home
+  ///
+  /// In en, this message translates to:
+  /// **'Start here'**
+  String get sellerBenchStartHere;
+
+  /// The rest of the seller's to-do list
+  ///
+  /// In en, this message translates to:
+  /// **'After that'**
+  String get sellerBenchThen;
+
+  /// Seller home when nothing needs doing
+  ///
+  /// In en, this message translates to:
+  /// **'Your shop is calm — nothing is waiting for you right now.'**
+  String get sellerBenchCalm;
+
+  /// Next action: confirm new orders
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{One new order is waiting for you to confirm} other{{count} new orders are waiting for you to confirm}}'**
+  String sellerBenchNewOrders(int count);
+
+  /// Why confirming new orders matters
+  ///
+  /// In en, this message translates to:
+  /// **'Every hour of waiting cools a customer\'s excitement.'**
+  String get sellerBenchNewOrdersHint;
+
+  /// Next action: hand ready orders to the courier
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{One order is ready to ship} other{{count} orders are ready to ship}}'**
+  String sellerBenchReadyOrders(int count);
+
+  /// Why shipping ready orders matters
+  ///
+  /// In en, this message translates to:
+  /// **'Hand them to the courier before the day ends.'**
+  String get sellerBenchReadyOrdersHint;
+
+  /// Next action: a product is out of stock
+  ///
+  /// In en, this message translates to:
+  /// **'“{title}” has sold out'**
+  String sellerBenchSoldOut(String title);
+
+  /// Why restocking matters
+  ///
+  /// In en, this message translates to:
+  /// **'Restock it so it does not drop out of search.'**
+  String get sellerBenchSoldOutHint;
+
+  /// Button to the seller's orders
+  ///
+  /// In en, this message translates to:
+  /// **'Open orders'**
+  String get sellerBenchOpenOrders;
+
+  /// Button to the seller's products
+  ///
+  /// In en, this message translates to:
+  /// **'Open products'**
+  String get sellerBenchOpenProducts;
+
+  /// Seller home: the order pipeline
+  ///
+  /// In en, this message translates to:
+  /// **'The order seam'**
+  String get sellerBenchSeamTitle;
+
+  /// Explains the lit stages of the order pipeline
+  ///
+  /// In en, this message translates to:
+  /// **'The lit stops are waiting on you.'**
+  String get sellerBenchSeamCaption;
+
+  /// Seller home: quick actions
+  ///
+  /// In en, this message translates to:
+  /// **'Your tools'**
+  String get sellerBenchToolsTitle;
+
+  /// Seller home: best sellers and pieces running out
+  ///
+  /// In en, this message translates to:
+  /// **'On the shelf'**
+  String get sellerBenchRailTitle;
+
+  /// Explains the rail
+  ///
+  /// In en, this message translates to:
+  /// **'What sells, and what is about to run out.'**
+  String get sellerBenchRailCaption;
+
+  /// Swing tag on a best seller
+  ///
+  /// In en, this message translates to:
+  /// **'{count} sold'**
+  String sellerBenchTagSold(String count);
+
+  /// Swing tag on a piece running low
+  ///
+  /// In en, this message translates to:
+  /// **'{count} left'**
+  String sellerBenchTagLeft(String count);
+
+  /// Swing tag on a sold-out piece
+  ///
+  /// In en, this message translates to:
+  /// **'Sold out'**
+  String get sellerBenchTagOut;
+
+  /// Seller home: revenue chart
+  ///
+  /// In en, this message translates to:
+  /// **'The rhythm of sales'**
+  String get sellerBenchPatternTitle;
+
+  /// Explains the revenue chart
+  ///
+  /// In en, this message translates to:
+  /// **'Every pearl on the ribbon is a period; the gold one is now.'**
+  String get sellerBenchPatternCaption;
+
+  /// Screen-reader label of the revenue chart
+  ///
+  /// In en, this message translates to:
+  /// **'Revenue over the selected period'**
+  String get sellerBenchPatternSemantics;
+
+  /// Seller home: the remaining panels
+  ///
+  /// In en, this message translates to:
+  /// **'More about your shop'**
+  String get sellerBenchMoreTitle;
+
   /// Product row menu action: retire the listing.
   ///
   /// In en, this message translates to:

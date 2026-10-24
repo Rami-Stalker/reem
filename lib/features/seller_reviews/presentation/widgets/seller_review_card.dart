@@ -29,8 +29,9 @@ class SellerReviewCard extends StatelessWidget {
     final palette = context.atelier;
     final l10n = context.l10n;
 
-    return SellerPanel(
-      child: Column(
+    // A review still waiting on her answer is tacked down with a champagne
+    // stitch, so the unanswered ones stand out of the list without a badge.
+    final content = Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
@@ -113,24 +114,34 @@ class SellerReviewCard extends StatelessWidget {
           else
             Align(
               alignment: AlignmentDirectional.centerStart,
-              child: TextButton.icon(
-                onPressed: onReply,
-                icon: Icon(
-                  review.isAnswered
-                      ? Icons.edit_outlined
-                      : Icons.reply_rounded,
-                  size: 16,
-                ),
-                label: Text(
-                  review.isAnswered
-                      ? l10n.reviewsEditReply
-                      : l10n.reviewsReplyAction,
-                ),
-              ),
+              child: review.isAnswered
+                  ? TextButton.icon(
+                      onPressed: onReply,
+                      icon: const Icon(Icons.edit_outlined, size: DsSizes.iconXs),
+                      label: Text(l10n.reviewsEditReply),
+                    )
+                  // The one thing to do with an unanswered review, so it is a
+                  // real button rather than a link.
+                  : IntrinsicWidth(
+                      child: DsButton(
+                        label: l10n.reviewsReplyAction,
+                        icon: Icons.reply_rounded,
+                        size: DsButtonSize.sm,
+                        isExpanded: false,
+                        onPressed: onReply,
+                      ),
+                    ),
             ),
         ],
-      ),
-    );
+      );
+
+    return review.isAnswered
+        ? SellerPanel(child: content)
+        : AtelierFocusCard(
+            accent: palette.gold,
+            padding: DsSpacing.paddingLg,
+            child: content,
+          );
   }
 }
 
@@ -188,7 +199,7 @@ class _Stars extends StatelessWidget {
         for (var i = 1; i <= 5; i++)
           Icon(
             i <= rating ? Icons.star_rounded : Icons.star_outline_rounded,
-            size: 16,
+            size: DsSizes.iconSm,
             color: i <= rating ? palette.gold : palette.line,
           ),
       ],

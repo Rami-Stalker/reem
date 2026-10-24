@@ -33,7 +33,24 @@ class SellerAnalyticsScreen extends ConsumerWidget {
       background: const SellerAtelierBackground(),
       backgroundColor: context.atelier.background,
       slivers: [
-        PremiumAppBar(title: l10n.sellerAnalytics),
+        AtelierAppBar(
+          icon: Icons.insights_rounded,
+          title: l10n.sellerAnalytics,
+          highlights: [
+            if (report != null && !report.isEmpty) ...[
+              AtelierHighlight(
+                value: '${report.realtime.todayOrders}',
+                label: l10n.analyticsTodayOrders,
+              ),
+              AtelierHighlight(
+                value: '${report.conversion.overallRate}%',
+                label: l10n.analyticsConversionOverall,
+              ),
+            ],
+          ],
+        ),
+        // Air between the banner and the page.
+        DsGaps.sliverMd,
         SliverToBoxAdapter(
           child: _PeriodBar(
             selected: state.period,
@@ -175,7 +192,7 @@ class SellerAnalyticsScreen extends ConsumerWidget {
       const SliverToBoxAdapter(child: SizedBox(height: DsSpacing.md)),
       SliverToBoxAdapter(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: DsSpacing.lg),
+          padding: EdgeInsets.symmetric(horizontal: atelierGutter(context)),
           child: AnalyticsMetricTile(
             label: l10n.analyticsConversionOverall,
             value: '${report.conversion.overallRate}%',
@@ -249,7 +266,6 @@ class _PeriodBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final palette = context.atelier;
     final l10n = context.l10n;
 
     String label(AnalyticsPeriod period) => switch (period) {
@@ -259,33 +275,14 @@ class _PeriodBar extends StatelessWidget {
       AnalyticsPeriod.year => l10n.analyticsPeriodYear,
     };
 
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      padding: const EdgeInsets.symmetric(
-        horizontal: DsSpacing.lg,
-        vertical: DsSpacing.sm,
-      ),
-      child: Row(
-        children: [
-          for (final period in AnalyticsPeriod.values)
-            Padding(
-              padding: const EdgeInsetsDirectional.only(end: DsSpacing.sm),
-              child: ChoiceChip(
-                label: Text(label(period)),
-                selected: selected == period,
-                onSelected: (_) => onSelect(period),
-                selectedColor: palette.primarySoft,
-                backgroundColor: palette.surface,
-                side: BorderSide(
-                  color: selected == period ? palette.primary : palette.line,
-                ),
-                labelStyle: selected == period
-                ? context.dsText.tab.bold.tint(palette.primary)
-                : context.dsText.tab.medium.tint(palette.ink),
-              ),
-            ),
-        ],
-      ),
+    return AtelierBeads<AnalyticsPeriod>(
+      padding: EdgeInsets.symmetric(horizontal: atelierGutter(context)),
+      selected: selected,
+      onSelected: onSelect,
+      options: [
+        for (final period in AnalyticsPeriod.values)
+          (value: period, label: label(period), count: null),
+      ],
     );
   }
 }

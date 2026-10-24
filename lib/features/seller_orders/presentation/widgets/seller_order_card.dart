@@ -35,159 +35,163 @@ class SellerOrderCard extends StatelessWidget {
     final primary = order.primaryAction;
     final canCancel = order.actions.contains(SellerOrderAction.cancel);
 
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: onOpen,
-        borderRadius: BorderRadius.circular(DsRadius.lg),
-        child: Ink(
-          padding: const EdgeInsets.all(DsSpacing.md),
-          decoration: BoxDecoration(
-            color: atelier.surface,
-            borderRadius: BorderRadius.circular(DsRadius.lg),
-            border: Border.all(color: atelier.line),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        // The number is the thing she quotes on the phone, so
-                        // it is pinned LTR: an order number with Arabic digit
-                        // shaping around it becomes unreadable aloud.
-                        Directionality(
-                          textDirection: TextDirection.ltr,
-                          child: Text(
-                            order.number,
-                            textAlign: TextAlign.left,
-                            style: context.dsText.tileTitle.bold.tint(atelier.ink),
-                          ),
-                        ),
-                        DsGaps.vXxxs,
-                        Text(
-                          _subtitle(context),
-                          style: context.dsText.bodySmall.tint(atelier.muted),
-                        ),
-                      ],
-                    ),
-                  ),
-                  SellerOrderStatusChip(status: order.status),
-                ],
-              ),
+    final tone = SellerOrderStatusChip.toneOf(order.status, atelier);
 
-              const SizedBox(height: DsSpacing.sm),
-              Divider(height: 1, color: atelier.line),
-              const SizedBox(height: DsSpacing.sm),
-
-              Row(
-                children: [
-                  Icon(Icons.person_outline, size: 16, color: atelier.muted),
-                  DsGaps.hXxs,
-                  Expanded(
-                    child: Text(
-                      order.customer.name,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: context.dsText.bodySmall.tint(atelier.ink),
-                    ),
-                  ),
-
-                  // Her share, not the customer's total. Gold, because on this
-                  // screen it is the only number that is hers.
-                  Text(
-                    order.net.format(),
-                    style: context.dsText.tileTitle.bold.tint(atelier.gold),
-                  ),
-                ],
-              ),
-
-              if (order.isCashOnDelivery && !order.isPaid) ...[
-                const SizedBox(height: DsSpacing.xs),
-                Row(
-                  children: [
-                    Icon(
-                      Icons.payments_outlined,
-                      size: 14,
-                      color: atelier.caution,
-                    ),
-                    DsGaps.hXxs,
-                    Text(
-                      l10n.sellerOrderCashOnDelivery,
-                      style: context.dsText.caption.tint(atelier.caution),
-                    ),
-                  ],
-                ),
-              ],
-
-              // Only shown when the platform actually wants her to do
-              // something differently. A "low risk" line on ninety per cent of
-              // her queue is a line she stops reading, and then the one that
-              // matters is invisible too.
-              if (order.codRisk case final risk?
-                  when risk.isElevated || risk.awaitingConfirmation) ...[
-                const SizedBox(height: DsSpacing.xs),
-                Row(
-                  children: [
-                    Icon(
-                      risk.awaitingConfirmation
-                          ? Icons.hourglass_empty_rounded
-                          : Icons.info_outline_rounded,
-                      size: 14,
-                      color: risk.tier == 'high'
-                          ? atelier.caution
-                          : atelier.muted,
-                    ),
-                    DsGaps.hXxs,
-                    Expanded(
-                      child: Text(
-                        risk.awaitingConfirmation
-                            ? l10n.sellerOrderAwaitingCustomerCode
-                            : risk.label,
-                        style: context.dsText.caption.tint(risk.tier == 'high'
-                              ? atelier.caution
-                              : atelier.muted),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-
-              if (primary != null || canCancel) ...[
-                const SizedBox(height: DsSpacing.md),
-                Row(
-                  children: [
-                    if (primary != null)
-                      Expanded(
-                        child: DsButton(
-                          label: l10n.parcelAction(primary),
-                          size: DsButtonSize.sm,
-                          isLoading: isBusy,
-                          onPressed: isBusy ? null : () => onAction(primary),
-                        ),
-                      ),
-                    if (primary != null && canCancel)
-                      const SizedBox(width: DsSpacing.xs),
-                    if (canCancel)
-                      DsButton(
-                        label: l10n.parcelAction(SellerOrderAction.cancel),
-                        variant: DsButtonVariant.ghost,
-                        size: DsButtonSize.sm,
-                        isExpanded: false,
-                        onPressed: isBusy
-                            ? null
-                            : () => onAction(SellerOrderAction.cancel),
-                      ),
-                  ],
-                ),
-              ],
-            ],
+    // The job on the ticket's body; her money and the parcel's state on the
+    // tear-off stub, tinted in the state's colour.
+    final body = Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // The number is the thing she quotes on the phone, so it is pinned
+        // LTR: an order number with Arabic digit shaping around it becomes
+        // unreadable aloud.
+        Directionality(
+          textDirection: TextDirection.ltr,
+          child: Text(
+            order.number,
+            textAlign: TextAlign.left,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: context.dsText.tileTitle.bold.tint(atelier.ink),
           ),
         ),
+        DsGaps.vXxxs,
+        Text(
+          _subtitle(context),
+          style: context.dsText.bodySmall.tint(atelier.muted),
+        ),
+        DsGaps.vSm,
+        Row(
+          children: [
+            Icon(
+              Icons.person_outline,
+              size: DsSizes.iconXs,
+              color: atelier.muted,
+            ),
+            DsGaps.hXxs,
+            Expanded(
+              child: Text(
+                order.customer.name,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: context.dsText.bodySmall.tint(atelier.ink),
+              ),
+            ),
+          ],
+        ),
+        if (order.isCashOnDelivery && !order.isPaid) ...[
+          DsGaps.vXs,
+          Row(
+            children: [
+              Icon(
+                Icons.payments_outlined,
+                size: DsSizes.iconXxs,
+                color: atelier.caution,
+              ),
+              DsGaps.hXxs,
+              Flexible(
+                child: Text(
+                  l10n.sellerOrderCashOnDelivery,
+                  style: context.dsText.caption.tint(atelier.caution),
+                ),
+              ),
+            ],
+          ),
+        ],
+        // Only shown when the platform actually wants her to do something
+        // differently. A "low risk" line on ninety per cent of her queue is a
+        // line she stops reading, and then the one that matters is invisible
+        // too.
+        if (order.codRisk case final risk?
+            when risk.isElevated || risk.awaitingConfirmation) ...[
+          DsGaps.vXs,
+          Row(
+            children: [
+              Icon(
+                risk.awaitingConfirmation
+                    ? Icons.hourglass_empty_rounded
+                    : Icons.info_outline_rounded,
+                size: DsSizes.iconXxs,
+                color: risk.tier == 'high' ? atelier.caution : atelier.muted,
+              ),
+              DsGaps.hXxs,
+              Expanded(
+                child: Text(
+                  risk.awaitingConfirmation
+                      ? l10n.sellerOrderAwaitingCustomerCode
+                      : risk.label,
+                  style: context.dsText.caption.tint(
+                    risk.tier == 'high' ? atelier.caution : atelier.muted,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+        if (primary != null || canCancel) ...[
+          DsGaps.vMd,
+          Row(
+            children: [
+              if (primary != null)
+                Expanded(
+                  child: DsButton(
+                    label: l10n.parcelAction(primary),
+                    size: DsButtonSize.sm,
+                    isLoading: isBusy,
+                    onPressed: isBusy ? null : () => onAction(primary),
+                  ),
+                ),
+              if (primary != null && canCancel) DsGaps.hXs,
+              if (canCancel)
+                DsButton(
+                  label: l10n.parcelAction(SellerOrderAction.cancel),
+                  variant: DsButtonVariant.ghost,
+                  size: DsButtonSize.sm,
+                  isExpanded: false,
+                  onPressed: isBusy
+                      ? null
+                      : () => onAction(SellerOrderAction.cancel),
+                ),
+            ],
+          ),
+        ],
+      ],
+    );
+
+    final stub = Column(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          context.l10n.parcelStatus(order.status),
+          textAlign: TextAlign.center,
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+          style: context.dsText.captionStrong.tint(tone),
+        ),
+        // Her share, not the customer's total. Gold, because on this screen
+        // it is the only number that is hers.
+        FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Text(
+            order.net.format(),
+            textAlign: TextAlign.center,
+            style: context.dsText.cardTitle.displayFamily.bold.tint(
+              atelier.gold,
+            ),
+          ),
+        ),
+        Icon(Icons.chevron_right_rounded, size: DsSizes.iconSm, color: tone),
+      ],
+    );
+
+    return Semantics(
+      button: true,
+      label: '${order.number}، ${context.l10n.parcelStatus(order.status)}',
+      child: OrderTicket(
+        onTap: onOpen,
+        stubColor: tone,
+        body: body,
+        stub: stub,
       ),
     );
   }

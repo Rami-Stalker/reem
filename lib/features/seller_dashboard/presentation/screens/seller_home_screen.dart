@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:reem/core/design_system/design_system.dart';
@@ -7,46 +6,30 @@ import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/features/market/presentation/widgets/market_entry_card.dart';
 import 'package:reem/features/seller_dashboard/presentation/providers/seller_dashboard_provider.dart';
 import 'package:reem/features/seller_dashboard/presentation/widgets/seller_ai_insights_widget.dart';
-import 'package:reem/features/seller_dashboard/presentation/widgets/seller_attention_strip.dart';
+import 'package:reem/features/seller_dashboard/presentation/widgets/seller_bench.dart';
 import 'package:reem/features/seller_dashboard/presentation/widgets/seller_conversion_metrics_widget.dart';
 import 'package:reem/features/seller_dashboard/presentation/widgets/seller_goals_widget.dart';
 import 'package:reem/features/seller_dashboard/presentation/widgets/seller_header.dart';
-import 'package:reem/features/seller_dashboard/presentation/widgets/seller_low_stock.dart';
-import 'package:reem/features/seller_dashboard/presentation/widgets/seller_orders_overview.dart';
-import 'package:reem/features/seller_dashboard/presentation/widgets/seller_quick_actions.dart';
 import 'package:reem/features/seller_dashboard/presentation/widgets/seller_recent_reviews_widget.dart';
-import 'package:reem/features/seller_dashboard/presentation/widgets/seller_revenue_card.dart';
-import 'package:reem/features/seller_dashboard/presentation/widgets/seller_sales_chart.dart';
 import 'package:reem/features/seller_dashboard/presentation/widgets/seller_store_score_widget.dart';
-import 'package:reem/features/seller_dashboard/presentation/widgets/seller_tasks_widget.dart';
-import 'package:reem/features/seller_dashboard/presentation/widgets/seller_top_products.dart';
 import 'package:reem/features/seller_intelligence/presentation/widgets/intelligence_entry_card.dart';
 
-/// The seller's command centre.
+/// The seller's home: **behind the counter of her boutique**.
 ///
-/// The page is ordered the way a shopkeeper's morning goes, not the way the
-/// data model is shaped. It used to be twelve panels of equal weight, so
-/// finding out whether anything was on fire meant reading all of them.
+/// Not a reporting dashboard, and not a tailor's bench either: a seller on
+/// Reem may sell perfume, flowers, jewellery, make-up or clothes, so the page
+/// is drawn from what every women's shop shares. It opens on a length of plum
+/// satin saying good morning to her shop by name, with today's takings set
+/// large and the month's goal as Reem's arch filling with gold. Then the one
+/// thing to do first, and the few after it; the order path, the stages
+/// waiting on her lit in gold; her tools as pearl buttons; the shelf of what
+/// sells and what is running out, each piece with a gift tag; and the rhythm
+/// of sales as a satin ribbon.
 ///
-/// **Act** — what is waiting on her, and the shortcuts that clear it.
-/// **Measure** — the money, the trend, the order pipeline.
-/// **Steer** — what is selling, what is running out.
-/// **Grow** — store health, funnel, insights, reviews, tasks, goals.
-///
-/// Everything reads from the atelier palette, so the dashboard is legible in
-/// dark mode instead of painting white cards on aubergine.
-/// Anchors the tasks panel so the attention strip can bring it into view.
-///
-/// The strip's "open tasks" alert had `onTap: null` while the list it counts
-/// sits further down this same page — the one alert of the three that led
-/// nowhere. Scrolling to it is the honest destination; there is no separate
-/// tasks screen to push.
-final GlobalKey _tasksSectionKey = GlobalKey();
-
+/// The older panels (store health, funnel, insights, reviews, goals) follow
+/// under «المزيد عن متجركِ»: still there, no longer in the way.
 class SellerHomeScreen extends ConsumerWidget {
   const SellerHomeScreen({super.key});
-
-  static const double _gap = DsSpacing.xl;
 
   Future<void> _refresh(WidgetRef ref) =>
       ref.read(sellerDashboardNotifierProvider.notifier).refresh();
@@ -57,6 +40,23 @@ class SellerHomeScreen extends ConsumerWidget {
       sellerDashboardNotifierProvider.select((s) => s.error),
     );
     final l10n = context.l10n;
+    final gutter = benchGutter(context);
+
+    // A gutter-wide section of the bench, entering with the shared rise.
+    Widget section(int index, Widget child) => SliverToBoxAdapter(
+      child: DsStaggerAnimations.item(
+        index: index,
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: gutter),
+          child: child,
+        ),
+      ),
+    );
+
+    // The shelf scrolls to the screen's edge, so it pads itself.
+    Widget fullBleed(int index, Widget child) => SliverToBoxAdapter(
+      child: DsStaggerAnimations.item(index: index, child: child),
+    );
 
     return ReemScrollPage(
       onRefresh: () => _refresh(ref),
@@ -66,14 +66,10 @@ class SellerHomeScreen extends ConsumerWidget {
         const SellerHeaderSliver(),
 
         if (error != null)
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(
-                DsSpacing.lg,
-                DsSpacing.xxxs,
-                DsSpacing.lg,
-                DsSpacing.md,
-              ),
+          section(
+            0,
+            Padding(
+              padding: const EdgeInsets.only(bottom: DsSpacing.md),
               child: DsErrorState(
                 icon: Icons.cloud_off_rounded,
                 title: l10n.sellerDashboardUnavailable,
@@ -84,133 +80,58 @@ class SellerHomeScreen extends ConsumerWidget {
             ),
           ),
 
-        // ── Act ──────────────────────────────────────────────────────────
-        _box(
-          SellerAttentionStrip(
-            onOpenTasks: () {
-              final target = _tasksSectionKey.currentContext;
-              if (target == null) return;
-              Scrollable.ensureVisible(
-                target,
-                duration: const Duration(milliseconds: 420),
-                curve: Curves.easeOutCubic,
-                alignment: 0.1,
-              );
-            },
-          ),
-        ),
-        const _Gap(_gap),
+        section(0, const BenchHero()),
+        const _Gap(),
+        section(1, const BenchFirstThing()),
+        const _Gap(),
+        section(2, const BenchOrderPath()),
+        const _Gap(),
+        section(3, const BenchTools()),
+        const _Gap(),
+        fullBleed(4, const BenchShelf()),
+        const _Gap(),
+        section(5, const BenchSalesRhythm()),
+        const _Gap(),
 
-        _box(const SellerQuickActions()),
-        const _Gap(_gap),
-
-        // ── Measure ──────────────────────────────────────────────────────
-        const _Rule(),
-        _box(const SellerRevenueCard()),
-        const _Gap(_gap),
-
-        _box(const SellerSalesChart()),
-        const _Gap(_gap),
-
-        _box(const SellerOrdersOverview()),
-        const _Gap(_gap),
-
-        // ── Steer ────────────────────────────────────────────────────────
-        const _Rule(),
-        _box(const SellerTopProducts()),
-        const _Gap(_gap),
-
-        _box(const SellerLowStockAlert()),
-        const _Gap(_gap),
-
-        // ── Grow ─────────────────────────────────────────────────────────
-        const _Rule(),
-        // Phase two's way in. Placed at the head of Grow because that is what
-        // it is for, and above the older store-score widget because it is the
-        // measured version of the same idea.
-        _box(const IntelligenceEntryCard()),
-        const _Gap(_gap),
-
-        // Phase four, directly under it: the same idea widened from her own
-        // shop to the market around it.
-        _box(const SellerMarketEntryCard()),
-        const _Gap(_gap),
-
-        _box(const SellerStoreScoreWidget()),
-        const _Gap(_gap),
-
-        _box(const SellerConversionMetricsWidget()),
-        const _Gap(_gap),
-
-        _box(const SellerAiInsightsWidget()),
-        const _Gap(_gap),
-
-        _box(const SellerRecentReviewsWidget()),
-        const _Gap(_gap),
-
-        _box(SellerTasksWidget(key: _tasksSectionKey)),
-        const _Gap(_gap),
-
-        _box(const SellerGoalsWidget()),
+        // ── More about her shop ──────────────────────────────────────────
+        section(6, AtelierHeading(title: l10n.sellerBenchMoreTitle)),
+        const _Gap(small: true),
+        // The other widgets carry their own side padding.
+        const _More(child: IntelligenceEntryCard()),
+        const _More(child: SellerMarketEntryCard()),
+        const _More(child: SellerStoreScoreWidget()),
+        const _More(child: SellerConversionMetricsWidget()),
+        const _More(child: SellerAiInsightsWidget()),
+        const _More(child: SellerRecentReviewsWidget()),
+        const _More(child: SellerGoalsWidget()),
 
         // Breathing room above the floating bottom bar.
         DsGaps.sliverBottomSafe,
       ],
     );
   }
+}
 
-  static Widget _box(Widget child) => SliverToBoxAdapter(
-    child: child
-        .animate()
-        .fadeIn(duration: 420.ms, curve: Curves.easeOut)
-        .slideY(
-          begin: 0.05,
-          end: 0,
-          duration: 420.ms,
-          curve: Curves.easeOutCubic,
-        ),
+class _More extends StatelessWidget {
+  const _More({required this.child});
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) => SliverToBoxAdapter(
+    child: Padding(
+      padding: const EdgeInsets.only(bottom: DsSpacing.xl),
+      child: child,
+    ),
   );
 }
 
-/// A hairline between chapters — quieter than the buyer's sparkle divider,
-/// because a workroom does not need ornament to know where it is.
-class _Rule extends StatelessWidget {
-  const _Rule();
-
-  @override
-  Widget build(BuildContext context) {
-    final palette = context.atelier;
-    return SliverToBoxAdapter(
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(
-          DsSpacing.lg,
-          DsSpacing.xxxs,
-          DsSpacing.lg,
-          DsSpacing.xl,
-        ),
-        child: Container(
-          height: 1,
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                palette.line.withValues(alpha: 0),
-                palette.line,
-                palette.line.withValues(alpha: 0),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
 class _Gap extends StatelessWidget {
-  const _Gap(this.height);
+  const _Gap({this.small = false});
 
-  final double height;
+  final bool small;
 
   @override
   Widget build(BuildContext context) =>
-      SliverToBoxAdapter(child: SizedBox(height: height));
+      SliverToBoxAdapter(child: small ? DsGaps.vLg : DsGaps.vXxl);
 }

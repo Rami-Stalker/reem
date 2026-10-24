@@ -20,7 +20,7 @@ class SellerOrderStatusChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final atelier = context.atelier;
-    final tone = _tone(status, atelier);
+    final tone = toneOf(status, atelier);
 
     return Container(
       padding: EdgeInsets.symmetric(
@@ -42,7 +42,8 @@ class SellerOrderStatusChip extends StatelessWidget {
     );
   }
 
-  static Color _tone(SellerOrderStatus status, SellerAtelierPalette atelier) =>
+  /// The colour a status is drawn in, wherever it is drawn.
+  static Color toneOf(SellerOrderStatus status, SellerAtelierPalette atelier) =>
       switch (status) {
         // Waiting on her.
         SellerOrderStatus.newOrder ||

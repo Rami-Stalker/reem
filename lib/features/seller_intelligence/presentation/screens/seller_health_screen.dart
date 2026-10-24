@@ -39,7 +39,12 @@ class SellerHealthScreen extends ConsumerWidget {
       background: const SellerAtelierBackground(),
       backgroundColor: palette.background,
       slivers: [
-        PremiumAppBar(title: context.l10n.siShopHealth),
+        AtelierAppBar(
+          icon: Icons.favorite_rounded,
+          title: context.l10n.siShopHealth,
+        ),
+        // Air between the banner and the page.
+        DsGaps.sliverMd,
         ...async.when(
           loading: () => [
             const SliverToBoxAdapter(

@@ -31,7 +31,13 @@ class SellerReturnDetailScreen extends ConsumerWidget {
       background: const SellerAtelierBackground(),
       backgroundColor: context.atelier.background,
       slivers: [
-        PremiumAppBar(title: l10n.sellerReturnsTitle, showBack: true),
+        AtelierAppBar(
+          icon: Icons.assignment_return_rounded,
+          title: l10n.sellerReturnsTitle,
+          showBack: true,
+        ),
+        // Air between the banner and the page.
+        DsGaps.sliverMd,
         switch (async) {
           AsyncError(:final error) => SliverToBoxAdapter(
             child: Padding(

@@ -37,7 +37,12 @@ class SellerMarketScreen extends ConsumerWidget {
       background: const SellerAtelierBackground(),
       backgroundColor: palette.background,
       slivers: [
-        PremiumAppBar(title: context.l10n.marketSellerTitle),
+        AtelierAppBar(
+          icon: Icons.storefront_rounded,
+          title: context.l10n.marketSellerTitle,
+        ),
+        // Air between the banner and the page.
+        DsGaps.sliverMd,
 
         SectionTitle(
           title: context.l10n.marketOpportunities,

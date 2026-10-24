@@ -33,7 +33,13 @@ class CourierDayScreen extends ConsumerWidget {
     return ReemScrollPage(
       onRefresh: notifier.load,
       slivers: [
-        PremiumAppBar(title: l10n.courierDay, showBack: true),
+        AtelierAppBar(
+          icon: Icons.local_shipping_rounded,
+          title: l10n.courierDay,
+          showBack: true,
+        ),
+        // Air between the banner and the page.
+        DsGaps.sliverMd,
 
         if (state.isLoading && state.assignments.isEmpty)
           const SliverToBoxAdapter(child: _Skeleton())

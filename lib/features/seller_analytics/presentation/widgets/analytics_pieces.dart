@@ -15,40 +15,18 @@ class AnalyticsSectionHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final palette = context.atelier;
     return Padding(
-      padding: const EdgeInsets.fromLTRB(
-        DsSpacing.lg,
-        DsSpacing.xl,
-        DsSpacing.lg,
-        DsSpacing.sm,
+      padding: EdgeInsets.fromLTRB(
+        atelierGutter(context),
+        DsSpacing.xxl,
+        atelierGutter(context),
+        DsSpacing.md,
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            title,
-            style: context.dsText.cardTitle.displayFamily.bold.tint(palette.ink),
-          ),
-          if (hint != null) ...[
-            DsGaps.vXxxs,
-            Text(
-              hint!,
-              style: context.dsText.caption.tint(palette.muted),
-            ),
-          ],
-        ],
-      ),
+      child: AtelierHeading(title: title, caption: hint),
     );
   }
 }
 
-/// One figure with its name.
-///
-/// [amounts] rather than a single value because the server aggregates money
-/// within a currency and never across one. A seller listing in both SYP and
-/// USD sees two lines here; converting them into one would require an exchange
-/// rate the platform does not have and must not invent.
 class AnalyticsMetricTile extends StatelessWidget {
   const AnalyticsMetricTile({
     super.key,
@@ -70,8 +48,18 @@ class AnalyticsMetricTile extends StatelessWidget {
     final palette = context.atelier;
     final money = amounts ?? const <Money>[];
 
-    return SellerPanel(
+    // A figure keyed on its leading edge in its own colour — champagne for
+    // the plain ones — like a label on the edge of a gift box.
+    return Container(
       padding: const EdgeInsets.all(DsSpacing.md),
+      decoration: BoxDecoration(
+        color: palette.surface,
+        borderRadius: DsRadius.borderLg,
+        border: BorderDirectional(
+          start: BorderSide(color: tone ?? palette.gold, width: DsSpacing.xxs),
+        ),
+        boxShadow: palette.shadow,
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
@@ -110,10 +98,7 @@ class AnalyticsMetricTile extends StatelessWidget {
               ),
           if (hint != null) ...[
             DsGaps.vXxxs,
-            Text(
-              hint!,
-              style: context.dsText.caption.tint(palette.muted),
-            ),
+            Text(hint!, style: context.dsText.caption.tint(palette.muted)),
           ],
         ],
       ),
@@ -123,11 +108,7 @@ class AnalyticsMetricTile extends StatelessWidget {
 
 /// One figure, scaled down rather than cut off.
 class _Figure extends StatelessWidget {
-  const _Figure({
-    required this.text,
-    required this.size,
-    required this.color,
-  });
+  const _Figure({required this.text, required this.size, required this.color});
 
   final String text;
   final double size;
@@ -142,7 +123,9 @@ class _Figure extends StatelessWidget {
         text,
         maxLines: 1,
         softWrap: false,
-        style: context.dsText.labelStrong.bold.tint(color).copyWith(fontSize: size),
+        style: context.dsText.labelStrong.bold.displayFamily
+            .tint(color)
+            .copyWith(fontSize: size * 1.15),
       ),
     );
   }
@@ -161,7 +144,7 @@ class AnalyticsMetricGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: DsSpacing.lg),
+      padding: EdgeInsets.symmetric(horizontal: atelierGutter(context)),
       child: LayoutBuilder(
         builder: (context, constraints) {
           final columns = constraints.maxWidth >= 900
@@ -172,21 +155,19 @@ class AnalyticsMetricGrid extends StatelessWidget {
 
           final rows = <List<Widget>>[];
           for (var i = 0; i < tiles.length; i += columns) {
-            rows.add(
-              tiles.sublist(i, (i + columns).clamp(0, tiles.length)),
-            );
+            rows.add(tiles.sublist(i, (i + columns).clamp(0, tiles.length)));
           }
 
           return Column(
             children: [
               for (var r = 0; r < rows.length; r++) ...[
-                if (r > 0) const SizedBox(height: DsSpacing.sm),
+                if (r > 0) DsGaps.vMd,
                 IntrinsicHeight(
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       for (var c = 0; c < columns; c++) ...[
-                        if (c > 0) const SizedBox(width: DsSpacing.sm),
+                        if (c > 0) DsGaps.hMd,
                         // A short final row keeps the column rhythm rather
                         // than stretching two tiles across four columns.
                         Expanded(
@@ -230,7 +211,7 @@ class AnalyticsFunnel extends StatelessWidget {
         : steps.map((s) => s.count).reduce((a, b) => a > b ? a : b);
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: DsSpacing.lg),
+      padding: EdgeInsets.symmetric(horizontal: atelierGutter(context)),
       child: SellerPanel(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -301,17 +282,12 @@ class _Bar extends StatelessWidget {
           ],
         ),
         const SizedBox(height: DsSpacing.xs),
-        ClipRRect(
-          borderRadius: DsRadius.borderPill,
-          child: Stack(
-            children: [
-              Container(height: 10, color: palette.background),
-              FractionallySizedBox(
-                widthFactor: fraction.clamp(0.0, 1.0),
-                child: Container(height: 10, color: color),
-              ),
-            ],
-          ),
+        // Each step a length of ribbon, as far as the orders carried.
+        RibbonGauge(
+          value: fraction.clamp(0.0, 1.0),
+          max: 1,
+          color: color,
+          height: DsSpacing.md,
         ),
       ],
     );
@@ -331,7 +307,7 @@ class AnalyticsProductTable extends StatelessWidget {
     final l10n = context.l10n;
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: DsSpacing.lg),
+      padding: EdgeInsets.symmetric(horizontal: atelierGutter(context)),
       child: SellerPanel(
         padding: const EdgeInsets.symmetric(vertical: DsSpacing.xs),
         child: Column(
@@ -347,10 +323,12 @@ class AnalyticsProductTable extends StatelessWidget {
                 child: Row(
                   children: [
                     SizedBox(
-                      width: 24,
+                      width: DsSizes.controlSm,
                       child: Text(
                         '${i + 1}',
-                        style: context.dsText.caption.bold.tint(palette.muted),
+                        style: context.dsText.metricSmall.displayFamily.tint(
+                          i == 0 ? palette.gold : palette.muted,
+                        ),
                       ),
                     ),
                     Expanded(
@@ -376,7 +354,9 @@ class AnalyticsProductTable extends StatelessWidget {
                         for (final amount in rows[i].revenue)
                           Text(
                             amount.format(),
-                            style: context.dsText.labelMedium.bold.tint(palette.ink),
+                            style: context.dsText.labelMedium.bold.tint(
+                              palette.ink,
+                            ),
                           ),
                       ],
                     ),

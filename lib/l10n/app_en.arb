@@ -6040,6 +6040,151 @@
   "@sellerAnnouncement": {
     "description": "Seller shortcut."
   },
+  "sellerBenchGreetingMorning": "Good morning",
+  "@sellerBenchGreetingMorning": {
+    "description": "Seller home greeting before noon"
+  },
+  "sellerBenchGreetingEvening": "Good evening",
+  "@sellerBenchGreetingEvening": {
+    "description": "Seller home greeting after noon"
+  },
+  "sellerBenchGreetingNamed": "{greeting}, {name}",
+  "@sellerBenchGreetingNamed": {
+    "description": "Seller home greeting with the store's name",
+    "placeholders": {
+      "greeting": {
+        "type": "String"
+      },
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "sellerBenchTodayTakings": "Today's takings",
+  "@sellerBenchTodayTakings": {
+    "description": "Label above today's revenue on the seller home"
+  },
+  "sellerBenchGoalReached": "Goal reached",
+  "@sellerBenchGoalReached": {
+    "description": "The monthly goal is met"
+  },
+  "sellerBenchStartHere": "Start here",
+  "@sellerBenchStartHere": {
+    "description": "The most important thing to do now on the seller home"
+  },
+  "sellerBenchThen": "After that",
+  "@sellerBenchThen": {
+    "description": "The rest of the seller's to-do list"
+  },
+  "sellerBenchCalm": "Your shop is calm — nothing is waiting for you right now.",
+  "@sellerBenchCalm": {
+    "description": "Seller home when nothing needs doing"
+  },
+  "sellerBenchNewOrders": "{count, plural, =1{One new order is waiting for you to confirm} other{{count} new orders are waiting for you to confirm}}",
+  "@sellerBenchNewOrders": {
+    "description": "Next action: confirm new orders",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "sellerBenchNewOrdersHint": "Every hour of waiting cools a customer's excitement.",
+  "@sellerBenchNewOrdersHint": {
+    "description": "Why confirming new orders matters"
+  },
+  "sellerBenchReadyOrders": "{count, plural, =1{One order is ready to ship} other{{count} orders are ready to ship}}",
+  "@sellerBenchReadyOrders": {
+    "description": "Next action: hand ready orders to the courier",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "sellerBenchReadyOrdersHint": "Hand them to the courier before the day ends.",
+  "@sellerBenchReadyOrdersHint": {
+    "description": "Why shipping ready orders matters"
+  },
+  "sellerBenchSoldOut": "“{title}” has sold out",
+  "@sellerBenchSoldOut": {
+    "description": "Next action: a product is out of stock",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "sellerBenchSoldOutHint": "Restock it so it does not drop out of search.",
+  "@sellerBenchSoldOutHint": {
+    "description": "Why restocking matters"
+  },
+  "sellerBenchOpenOrders": "Open orders",
+  "@sellerBenchOpenOrders": {
+    "description": "Button to the seller's orders"
+  },
+  "sellerBenchOpenProducts": "Open products",
+  "@sellerBenchOpenProducts": {
+    "description": "Button to the seller's products"
+  },
+  "sellerBenchSeamTitle": "The order seam",
+  "@sellerBenchSeamTitle": {
+    "description": "Seller home: the order pipeline"
+  },
+  "sellerBenchSeamCaption": "The lit stops are waiting on you.",
+  "@sellerBenchSeamCaption": {
+    "description": "Explains the lit stages of the order pipeline"
+  },
+  "sellerBenchToolsTitle": "Your tools",
+  "@sellerBenchToolsTitle": {
+    "description": "Seller home: quick actions"
+  },
+  "sellerBenchRailTitle": "On the shelf",
+  "@sellerBenchRailTitle": {
+    "description": "Seller home: best sellers and pieces running out"
+  },
+  "sellerBenchRailCaption": "What sells, and what is about to run out.",
+  "@sellerBenchRailCaption": {
+    "description": "Explains the rail"
+  },
+  "sellerBenchTagSold": "{count} sold",
+  "@sellerBenchTagSold": {
+    "description": "Swing tag on a best seller",
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "sellerBenchTagLeft": "{count} left",
+  "@sellerBenchTagLeft": {
+    "description": "Swing tag on a piece running low",
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "sellerBenchTagOut": "Sold out",
+  "@sellerBenchTagOut": {
+    "description": "Swing tag on a sold-out piece"
+  },
+  "sellerBenchPatternTitle": "The rhythm of sales",
+  "@sellerBenchPatternTitle": {
+    "description": "Seller home: revenue chart"
+  },
+  "sellerBenchPatternCaption": "Every pearl on the ribbon is a period; the gold one is now.",
+  "@sellerBenchPatternCaption": {
+    "description": "Explains the revenue chart"
+  },
+  "sellerBenchPatternSemantics": "Revenue over the selected period",
+  "@sellerBenchPatternSemantics": {
+    "description": "Screen-reader label of the revenue chart"
+  },
+  "sellerBenchMoreTitle": "More about your shop",
+  "@sellerBenchMoreTitle": {
+    "description": "Seller home: the remaining panels"
+  },
   "sellerArchive": "Archive",
   "@sellerArchive": {
     "description": "Product row menu action: retire the listing."

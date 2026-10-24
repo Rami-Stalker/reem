@@ -32,7 +32,14 @@ class SellerEarningsScreen extends ConsumerWidget {
       background: const SellerAtelierBackground(),
       backgroundColor: context.atelier.background,
       slivers: [
-        PremiumAppBar(title: l10n.sellerEarnings, showBack: true),
+        AtelierAppBar(
+          icon: Icons.account_balance_wallet_rounded,
+          title: l10n.sellerEarnings,
+          subtitle: earnings == null ? null : l10n.earningsAvailable,
+          showBack: true,
+        ),
+        // Air between the banner and the page.
+        DsGaps.sliverMd,
 
         if (state.isLoading)
           const SliverToBoxAdapter(child: _EarningsSkeleton())
@@ -71,7 +78,9 @@ class SellerEarningsScreen extends ConsumerWidget {
               itemCount: _otherPayouts(state).length,
               separatorBuilder: (_, _) => const SizedBox(height: DsSpacing.xs),
               itemBuilder: (context, index) => Padding(
-                padding: const EdgeInsets.symmetric(horizontal: DsSpacing.lg),
+                padding: EdgeInsets.symmetric(
+                  horizontal: atelierGutter(context),
+                ),
                 child: _PendingPayoutTile(payout: _otherPayouts(state)[index]),
               ),
             ),
@@ -99,7 +108,9 @@ class SellerEarningsScreen extends ConsumerWidget {
               itemCount: earnings.movements.length,
               separatorBuilder: (_, _) => const SizedBox(height: DsSpacing.xs),
               itemBuilder: (context, index) => Padding(
-                padding: const EdgeInsets.symmetric(horizontal: DsSpacing.lg),
+                padding: EdgeInsets.symmetric(
+                  horizontal: atelierGutter(context),
+                ),
                 child: EarningsMovementTile(
                   movement: earnings.movements[index],
                 ),
@@ -150,18 +161,13 @@ class SellerEarningsScreen extends ConsumerWidget {
   Widget _sectionHeader(BuildContext context, String title) {
     return SliverToBoxAdapter(
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(
-          DsSpacing.lg,
+        padding: EdgeInsets.fromLTRB(
+          atelierGutter(context),
           DsSpacing.xxxs,
-          DsSpacing.lg,
+          atelierGutter(context),
           DsSpacing.md,
         ),
-        child: Text(
-          title,
-          style: Theme.of(
-            context,
-          ).textTheme.titleMedium?.copyWith(fontWeight: DsTypography.bold),
-        ),
+        child: AtelierHeading(title: title),
       ),
     );
   }
