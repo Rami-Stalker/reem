@@ -86,7 +86,10 @@ class _ReviewComposerSheet extends ConsumerStatefulWidget {
 class _ReviewComposerSheetState extends ConsumerState<_ReviewComposerSheet> {
   final _title = TextEditingController();
   final _body = TextEditingController();
-  var _rating = 5;
+  /// Nothing until she chooses. It used to open on five stars, so a review
+  /// sent without touching them went out as 5★ — a rating nobody gave, and
+  /// the reason the stars under reviewers' names looked made up.
+  var _rating = 0;
   var _submitting = false;
 
   ReviewFit? _fit;
@@ -141,6 +144,19 @@ class _ReviewComposerSheetState extends ConsumerState<_ReviewComposerSheet> {
               );
             }),
           ),
+          Padding(
+            padding: const EdgeInsetsDirectional.only(start: DsSpacing.xs),
+            child: Text(
+              _rating == 0
+                  ? l10n.reviewsRatePrompt
+                  : l10n.reviewsRatingMeaning('$_rating'),
+              style: _rating == 0
+                  ? context.dsText.caption
+                  : context.dsText.captionStrong.tint(
+                      context.dsColors.warning,
+                    ),
+            ),
+          ),
           DsGaps.vSm,
           DsInputField(
             controller: _title,
@@ -162,7 +178,10 @@ class _ReviewComposerSheetState extends ConsumerState<_ReviewComposerSheet> {
           SizedBox(
             width: double.infinity,
             child: FilledButton.icon(
-              onPressed: _submitting || _uploading ? null : _submit,
+              // A review is its rating first; the words are optional.
+              onPressed: _submitting || _uploading || _rating == 0
+                  ? null
+                  : _submit,
               icon: const Icon(Icons.send_rounded),
               label: Text(l10n.reviewsSubmit),
             ),

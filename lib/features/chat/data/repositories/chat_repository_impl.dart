@@ -49,6 +49,7 @@ class ChatRepositoryImpl with RepositoryHandler implements ChatRepository {
     List<Map<String, dynamic>> attachments = const [],
     String? clientId,
     String? currentUserId,
+    String? productId,
   }) =>
       guard(
         () => remote.sendMessage(
@@ -58,6 +59,7 @@ class ChatRepositoryImpl with RepositoryHandler implements ChatRepository {
           attachments: attachments,
           clientId: clientId,
           currentUserId: currentUserId,
+          productId: productId,
         ),
       );
 

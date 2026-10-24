@@ -1,3 +1,4 @@
+import 'package:reem/core/shared/value_objects/money.dart';
 import 'package:reem/features/chat/domain/entities/chat_message_entity.dart';
 
 class ChatAttachmentModel extends ChatAttachmentEntity {
@@ -56,6 +57,7 @@ class ChatMessageModel extends ChatMessageEntity {
     super.deliveredAt,
     super.readAt,
     super.clientId,
+    super.product,
   });
 
   /// [currentUserId], when known, decides [isMine] by comparing it with the
@@ -92,6 +94,7 @@ class ChatMessageModel extends ChatMessageEntity {
           ? senderId == currentUserId
           : json['is_mine'] as bool? ?? false,
       clientId: json['client_id'] as String?,
+      product: _productRef(json['metadata']),
     );
   }
 
@@ -112,8 +115,32 @@ class ChatMessageModel extends ChatMessageEntity {
       'read_at': readAt?.toIso8601String(),
       'is_mine': isMine,
       'client_id': ?clientId,
+      if (product case final product?)
+        'metadata': {
+          'product': {
+            'id': product.id,
+            'title': product.title,
+            'image_url': product.imageUrl,
+            'price': product.price?.toJson(),
+          },
+        },
     };
   }
+}
+
+/// `metadata.product`, when the message was sent about a piece.
+ChatProductRef? _productRef(dynamic metadata) {
+  if (metadata is! Map) return null;
+  final product = metadata['product'];
+  if (product is! Map) return null;
+  final id = product['id'];
+  if (id is! String || id.isEmpty) return null;
+  return ChatProductRef(
+    id: id,
+    title: product['title'] as String? ?? '',
+    imageUrl: product['image_url'] as String?,
+    price: Money.tryFromJson(product['price']),
+  );
 }
 
 DateTime? _date(dynamic value) {

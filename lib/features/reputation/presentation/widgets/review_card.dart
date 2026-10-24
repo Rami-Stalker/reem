@@ -64,18 +64,32 @@ class ReviewCard extends StatelessWidget {
                         style: context.dsText.body.semibold,
                       ),
                     ),
-                    Row(
-                      children: List.generate(
-                        5,
-                        (index) => Icon(
-                          index < review.rating
-                              ? Icons.star_rounded
-                              : Icons.star_border_rounded,
-                          color: colors.warning,
-                          size: 16,
+                    // The stars she chose when she wrote it — the review's own
+                    // `rating`, 1 to 5, validated by the server.
+                    if (review.rating >= 1 && review.rating <= 5)
+                      Semantics(
+                        label: context.l10n.reviewsRatedOutOfFive(
+                          review.rating,
+                        ),
+                        excludeSemantics: true,
+                        child: Row(
+                          children: [
+                            for (var index = 0; index < 5; index++)
+                              Icon(
+                                index < review.rating
+                                    ? Icons.star_rounded
+                                    : Icons.star_border_rounded,
+                                color: colors.warning,
+                                size: 16,
+                              ),
+                            DsGaps.hXxs,
+                            Text(
+                              '${review.rating}/5',
+                              style: context.dsText.caption.tabular,
+                            ),
+                          ],
                         ),
                       ),
-                    ),
                   ],
                 ),
               ),

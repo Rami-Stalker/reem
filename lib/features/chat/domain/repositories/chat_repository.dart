@@ -27,6 +27,7 @@ abstract interface class ChatRepository {
     List<Map<String, dynamic>> attachments = const [],
     String? clientId,
     String? currentUserId,
+    String? productId,
   });
 
   Future<Result<void>> markRead(String chatId, {String? messageId});

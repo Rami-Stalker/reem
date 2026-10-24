@@ -32,5 +32,11 @@ abstract interface class DiscoveryRepository {
 
   Future<Result<ProductPage>> getRecommended({int page, int limit});
 
+  /// Takes a piece out of her «مختارة لكِ» for good.
+  Future<Result<void>> dismissRecommendation(String productId);
+
+  /// Undoes [dismissRecommendation].
+  Future<Result<void>> restoreRecommendation(String productId);
+
   Future<Result<Map<String, List<Product>>>> getHome();
 }

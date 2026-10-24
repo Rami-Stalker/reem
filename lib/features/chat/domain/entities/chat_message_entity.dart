@@ -1,4 +1,42 @@
 import 'package:equatable/equatable.dart';
+import 'package:reem/core/shared/entities/product.dart';
+import 'package:reem/core/shared/entities/seller_offer.dart';
+import 'package:reem/core/shared/value_objects/money.dart';
+
+/// The piece a message is about — «اسألي عن هذه القطعة».
+///
+/// Drawn above the text as a small card, the way a forwarded product looks
+/// in WhatsApp, so the boutique reads *which* piece is being asked about
+/// rather than guessing from "is it still available?". The server builds it
+/// from the catalogue; the phone only says which product.
+class ChatProductRef extends Equatable {
+  const ChatProductRef({
+    required this.id,
+    required this.title,
+    this.imageUrl,
+    this.price,
+  });
+
+  /// The piece as she sees it on its page, priced at the offer she has
+  /// selected — the boutique she is about to write to.
+  factory ChatProductRef.of(Product product, {SellerOffer? offer}) =>
+      ChatProductRef(
+        id: product.id,
+        title: product.title,
+        imageUrl: product.coverUrl,
+        price: (offer ?? product.bestOffer)?.price,
+      );
+
+  final String id;
+  final String title;
+  final String? imageUrl;
+
+  /// The boutique's own live price, when she has one.
+  final Money? price;
+
+  @override
+  List<Object?> get props => [id, title, imageUrl, price];
+}
 
 class ChatAttachmentEntity extends Equatable {
   const ChatAttachmentEntity({
@@ -63,6 +101,7 @@ class ChatMessageEntity extends Equatable {
     this.deliveredAt,
     this.readAt,
     this.clientId,
+    this.product,
   });
 
   final String id;
@@ -81,6 +120,9 @@ class ChatMessageEntity extends Equatable {
   /// It is how the server's copy finds the optimistic one it replaces, and
   /// how a retry is recognised as the same message rather than a second one.
   final String? clientId;
+
+  /// The piece this message asks about, when it was sent from a product.
+  final ChatProductRef? product;
 
   bool get isImage => kind == 'image' || attachments.any((a) => a.kind == 'image');
   bool get isVoice => kind == 'voice' || attachments.any((a) => a.kind == 'voice');
@@ -116,6 +158,7 @@ class ChatMessageEntity extends Equatable {
       deliveredAt: deliveredAt ?? this.deliveredAt,
       readAt: readAt ?? this.readAt,
       clientId: clientId,
+      product: product,
     );
   }
 
@@ -133,5 +176,6 @@ class ChatMessageEntity extends Equatable {
         deliveredAt,
         readAt,
         clientId,
+        product,
       ];
 }

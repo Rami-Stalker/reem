@@ -10,5 +10,7 @@ abstract interface class DiscoveryRemoteDataSource {
   Future<ProductPageModel> getSeller(String sellerId, {int page, int limit});
   Future<ProductPageModel> getSimilar(String productId, {int page, int limit});
   Future<ProductPageModel> getRecommended({int page, int limit});
+  Future<void> dismissRecommendation(String productId);
+  Future<void> restoreRecommendation(String productId);
   Future<Map<String, List<ProductModel>>> getHome();
 }

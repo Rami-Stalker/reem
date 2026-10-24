@@ -6,6 +6,7 @@ import 'package:reem/core/design_system/design_system.dart';
 import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/features/auth/presentation/widgets/auth_prompt_sheet.dart';
+import 'package:reem/features/chat/domain/entities/chat_message_entity.dart';
 import 'package:reem/features/chat/domain/entities/chat_start_request.dart';
 import 'package:reem/features/chat/presentation/providers/chat_provider.dart';
 
@@ -16,11 +17,15 @@ import 'package:reem/features/chat/presentation/providers/chat_provider.dart';
 /// identical from the product page, the storefront and the order.
 ///
 /// Returns true when a conversation was opened.
+///
+/// [about] opens the conversation with that piece pinned above the composer,
+/// so the first message goes out carrying its card — see [ChatProductRef].
 Future<bool> openConversation(
   BuildContext context,
   WidgetRef ref,
-  ChatStartRequest request,
-) async {
+  ChatStartRequest request, {
+  ChatProductRef? about,
+}) async {
   final l10n = context.l10n;
 
   // A guest can browse and even fill a bag, but a conversation belongs to an
@@ -44,7 +49,10 @@ Future<bool> openConversation(
     return false;
   }
 
-  await context.push('${RoutePaths.chatDetails}?id=${thread.id}');
+  await context.push(
+    '${RoutePaths.chatDetails}?id=${thread.id}',
+    extra: about,
+  );
   return true;
 }
 
@@ -62,9 +70,13 @@ class MessageSellerButton extends ConsumerStatefulWidget {
     this.variant = DsButtonVariant.secondary,
     this.size = DsButtonSize.md,
     this.isExpanded = true,
+    this.about,
   });
 
   final ChatStartRequest request;
+
+  /// The piece to pin in the conversation; see [openConversation].
+  final ChatProductRef? about;
 
   /// Defaults to «راسلي المتجر»; an order parcel names itself instead.
   final String? label;
@@ -85,7 +97,12 @@ class _MessageSellerButtonState extends ConsumerState<MessageSellerButton> {
     if (_busy) return;
     setState(() => _busy = true);
     try {
-      await openConversation(context, ref, widget.request);
+      await openConversation(
+        context,
+        ref,
+        widget.request,
+        about: widget.about,
+      );
     } finally {
       if (mounted) setState(() => _busy = false);
     }

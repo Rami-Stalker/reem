@@ -182,7 +182,8 @@ class _ChoiceRow<T> extends StatelessWidget {
 }
 
 /// A consistent layout shell for bottom-sheet content: header (title + close)
-/// and a body that is scrollable by default and respects the keyboard inset.
+/// and a body that is scrollable by default. Every variant keeps its lowest
+/// element above the keyboard, so content inside must not add the inset again.
 class DsSheetScaffold extends StatelessWidget {
   const DsSheetScaffold({
     super.key,
@@ -263,6 +264,12 @@ class DsSheetScaffold extends StatelessWidget {
             ),
           );
 
+    // The keyboard is paid for exactly once, by whatever sits lowest: the
+    // pinned footer when there is one, otherwise the body. A non-scrollable
+    // body used to pay nothing, so a short form — naming a highlight, a new
+    // collection — opened with its field and its Save button under the
+    // keyboard, and the sheet did not rise to meet it.
+    final bodyInset = footer == null ? viewInsets : 0.0;
     final body = Padding(padding: padding, child: child);
 
     return Column(
@@ -272,10 +279,13 @@ class DsSheetScaffold extends StatelessWidget {
         Flexible(
           child: scrollable
               ? SingleChildScrollView(
-                  padding: EdgeInsets.only(bottom: viewInsets),
+                  padding: EdgeInsets.only(bottom: bodyInset),
                   child: body,
                 )
-              : body,
+              : Padding(
+                  padding: EdgeInsets.only(bottom: bodyInset),
+                  child: body,
+                ),
         ),
         if (footer != null)
           Padding(

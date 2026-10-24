@@ -8,6 +8,7 @@ import 'package:reem/core/localization/l10n_extension.dart';
 import 'package:reem/core/router/route_paths.dart';
 import 'package:reem/core/router/tab_reselect.dart';
 import 'package:reem/features/discovery/domain/entities/product_collection.dart';
+import 'package:reem/features/discovery/presentation/providers/for_you_dismissals_provider.dart';
 import 'package:reem/features/experience/presentation/providers/role_experience_provider.dart';
 import 'package:reem/features/experience/presentation/screens/experience_surface_screen.dart';
 import 'package:reem/features/home/presentation/providers/home_content_provider.dart';
@@ -264,11 +265,21 @@ class _CollectionRail extends ConsumerWidget {
     final section = ref.watch(
       homeNotifierProvider.select((s) => s.sectionOf(collection)),
     );
+    // What she took out of «مختارة لكِ» on its full page leaves this rail
+    // too, without waiting for the next refresh.
+    final removed = collection == ProductCollection.recommended
+        ? ref.watch(forYouDismissalsProvider)
+        : const <String>{};
+    final products = removed.isEmpty
+        ? section.products
+        : section.products
+              .where((product) => !removed.contains(product.id))
+              .toList(growable: false);
 
     return ProductRail(
       eyebrow: eyebrow,
       title: title,
-      products: section.products,
+      products: products,
       isLoading: section.isLoading && !section.hasItems,
       onSeeAll: () => context.push(RoutePaths.collectionOf(collection.key)),
       onTapProduct: (p) => context.push(RoutePaths.productDetailsOf(p.id)),

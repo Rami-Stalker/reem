@@ -16,11 +16,11 @@ import 'package:reem/features/social/domain/entities/content.dart';
 ///
 /// Two things it must always get right:
 ///
-/// **The boutique keeps its credit.** When this is a reshare, [resharedBy] is
-/// the woman who added it and [content.author] is still the boutique — the
-/// attribution line says both, in that order, and tapping the author goes to
-/// the boutique. A card that let the resharer read as the source would defeat
-/// the entire feature.
+/// **The boutique keeps its credit.** A reshare on a woman's page is drawn
+/// as the boutique's own post — [content.author] heads it and tapping the
+/// author goes to the boutique. There is no «أضافته … إلى صفحتها» band above
+/// it: the page it sits on already says whose picks these are, and the band
+/// repeated it over every card.
 ///
 /// **The way to buy is always one tap.** The shop plate sits over the foot of
 /// the image, not below the fold, because the whole premise is that discovery
@@ -37,16 +37,10 @@ class ContentCard extends StatefulWidget {
     required this.onShare,
     this.onReshare,
     this.onMore,
-    this.resharedBy,
-    this.reshareNote,
     this.featured = false,
   });
 
   final Content content;
-
-  /// Set when this is somebody else's post on a woman's page.
-  final User? resharedBy;
-  final String? reshareNote;
 
   final void Function(String userId) onOpenAuthor;
   final void Function(String productId) onOpenProduct;
@@ -97,13 +91,6 @@ class _ContentCardState extends State<ContentCard>
       padding: const EdgeInsets.symmetric(horizontal: DsSpacing.gutter),
       child: DsImmersivePost(
         featured: widget.featured,
-        banner: widget.resharedBy == null
-            ? null
-            : _ReshareBanner(
-                resharer: widget.resharedBy!,
-                note: widget.reshareNote,
-                onTap: () => widget.onOpenAuthor(widget.resharedBy!.id),
-              ),
         authorName: author.name,
         authorImageUrl: author.imageUrl,
         authorVerified: author.isVerified,
@@ -147,67 +134,6 @@ class _ContentCardState extends State<ContentCard>
         onShare: widget.onShare,
         onSave: widget.onSave,
         onPick: widget.onReshare,
-      ),
-    );
-  }
-}
-
-/// «أضافتها إلى صفحتها» — who put this here, above whose post it is.
-class _ReshareBanner extends StatelessWidget {
-  const _ReshareBanner({
-    required this.resharer,
-    required this.onTap,
-    this.note,
-  });
-
-  final User resharer;
-  final String? note;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final c = context.dsColors;
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        width: double.infinity,
-        color: c.primaryContainer,
-        padding: const EdgeInsets.symmetric(
-          horizontal: DsSpacing.md,
-          vertical: DsSpacing.sm,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Icon(
-                  Icons.autorenew_rounded,
-                  size: DsSizes.iconXs,
-                  color: c.onPrimaryContainer,
-                ),
-                DsGaps.hXs,
-                Flexible(
-                  child: Text(
-                    context.l10n.contentResharedBy(resharer.name),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: context.dsText.caption.tint(c.onPrimaryContainer),
-                  ),
-                ),
-              ],
-            ),
-            if (note != null && note!.isNotEmpty) ...[
-              DsGaps.vXxs,
-              Text(
-                note!,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: context.dsText.body.tint(c.onPrimaryContainer),
-              ),
-            ],
-          ],
-        ),
       ),
     );
   }

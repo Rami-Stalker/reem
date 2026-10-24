@@ -104,6 +104,7 @@ class _ProductDetailsScreenState extends ConsumerState<ProductDetailsScreen> {
     return Scaffold(
       backgroundColor: context.dsColors.background,
       bottomNavigationBar: ProductBuyBar(
+        product: product,
         offer: offer,
         variant: variant,
         quantity: _quantity,

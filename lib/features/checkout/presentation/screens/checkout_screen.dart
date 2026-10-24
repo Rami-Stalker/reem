@@ -310,8 +310,9 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
               DsSpacing.lg,
               DsSpacing.lg,
               DsSpacing.lg,
-              // Clears the ticket floating over the foot of the page.
-              DsSizes.bottomSafeGap + DsSpacing.massive,
+              // The ticket floating over the foot of the page is cleared by
+              // `ReemScrollPage` itself, measured rather than guessed.
+              DsSpacing.lg,
             ),
             sliver: SliverToBoxAdapter(
               child: Form(

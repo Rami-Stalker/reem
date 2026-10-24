@@ -3894,5 +3894,22 @@
   "reviewsNearMeNoneTitle": "لسا ما في تقييمات من بنات بمقاسكِ",
   "reviewsNearMeNoneBody": "كوني الأولى: تقييمكِ رح يفيد البنت الجاية اللي بمقاسكِ.",
   "reviewsPhotosNoneTitle": "لسا ما في صور",
-  "reviewsPhotosNoneBody": "التقييمات اللي فيها صور للقطعة ملبوسة بتظهر هون."
+  "reviewsPhotosNoneBody": "التقييمات اللي فيها صور للقطعة ملبوسة بتظهر هون.",
+  "forYouRemove": "إزالة من المختارة لكِ",
+  "forYouRemoved": "أزلناها من المختارة لكِ، ولن تظهر لكِ فيها مجدداً.",
+  "chatProductInquiry": "استفسار عن هذه القطعة",
+  "chatAskingAbout": "تسألين عن",
+  "chatAskingAboutClear": "إزالة القطعة من الرسالة",
+  "productAskBoutique": "اسألي المتجر",
+  "productStatViews": "{count, plural, =1{مشاهدة واحدة} =2{مشاهدتان} few{{label} مشاهدات} other{{label} مشاهدة}}",
+  "@productStatViews": {"description": "Unique views of a product page: one per person per day.", "placeholders": {"count": {"type": "int"}, "label": {"type": "String"}}},
+  "productStatSaves": "{count, plural, =1{في مفضّلة واحدة} =2{في مفضّلتين} few{في {label} مفضّلات} other{في {label} مفضّلة}}",
+  "@productStatSaves": {"description": "How many shoppers keep this product in their favourites.", "placeholders": {"count": {"type": "int"}, "label": {"type": "String"}}},
+  "productStatSold": "{count, plural, =1{بيعت قطعة واحدة} =2{بيعت قطعتان} few{بيعت {label} قطع} other{بيعت {label} قطعة}}",
+  "@productStatSold": {"description": "Units of this product sold in orders that were not cancelled.", "placeholders": {"count": {"type": "int"}, "label": {"type": "String"}}},
+  "reviewsRatePrompt": "اضغطي على النجوم لتقييم القطعة",
+  "reviewsRatingMeaning": "{stars, select, 1{سيئة} 2{مقبولة} 3{جيدة} 4{جيدة جداً} 5{ممتازة} other{}}",
+  "@reviewsRatingMeaning": {"description": "What the chosen number of stars means, shown under the stars in the review composer.", "placeholders": {"stars": {"type": "String"}}},
+  "reviewsRatedOutOfFive": "قيّمتها بـ {stars} من ٥",
+  "@reviewsRatedOutOfFive": {"description": "Screen-reader label for a review's stars.", "placeholders": {"stars": {"type": "int"}}}
 }

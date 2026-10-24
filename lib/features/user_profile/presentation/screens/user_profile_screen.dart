@@ -442,8 +442,6 @@ class _PostsTab extends ConsumerWidget {
           ResharedContentEntry(:final reshare) => InteractiveContentCard(
             key: ValueKey(entry.entryId),
             content: reshare.content,
-            resharedBy: reshare.resharer,
-            reshareNote: reshare.note,
           ),
           _ => InteractiveContentCard(
             key: ValueKey(entry.entryId),
